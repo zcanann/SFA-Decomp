@@ -101,7 +101,6 @@ extern void Obj_Shatter(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ObjGroup_AddObject(int* obj, int group);
-extern f32 Vec_distance(f32* a, f32* b);
 
 #pragma dont_inline on
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};

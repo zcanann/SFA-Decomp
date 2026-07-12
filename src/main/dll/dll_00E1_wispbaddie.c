@@ -623,7 +623,6 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
 
 void fn_8015039C(GameObject* obj, int animState)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
     GameObject* player;
     f32 distance;
     f32 rumbleFalloff;

@@ -294,7 +294,7 @@ void cmbsrc_updateVisuals(GameObject* obj, int state)
                                                radiusScaled - sourceState->radius,
                                            lbl_803E7380, timeDelta);
     }
-    dist = Vec_distance(viewSlot + 0x44, (int)&obj->anim.worldPosX);
+        dist = Vec_distance((f32*)(viewSlot + 0x44), &obj->anim.worldPosX);
     if (sourceState->active == 1)
     {
         if (dist <= (f32)(u32)(setup->colorDistance << 3))

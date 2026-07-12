@@ -523,8 +523,8 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                         missile = loadObjectAtObject((int)obj, setup);
                         if ((void*)missile != NULL)
                         {
-                            prod = lbl_803DC188 * Vec_distance((int*)&(obj)->anim.worldPosX,
-                                                               (int*)&((GameObject*)player)->anim.worldPosX);
+                            prod = lbl_803DC188 * Vec_distance(&(obj)->anim.worldPosX,
+                                                               &((GameObject*)player)->anim.worldPosX);
                             target[0] = ((GameObject*)player)->anim.localPosX +
                                         (f32)(s32)randomGetRange(lo = (int)-prod, hi = (int)prod);
                             target[1] = ((GameObject*)player)->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);

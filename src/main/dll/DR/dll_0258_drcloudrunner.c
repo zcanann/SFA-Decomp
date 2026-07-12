@@ -224,7 +224,7 @@ int DR_CloudRunner_stateHandler01(GameObject* obj, int baddie)
         return 0;
     }
     inner = (obj)->extra;
-    Vec_distance((int)&(obj)->anim.worldPosX, (int)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX);
+    Vec_distance(&(obj)->anim.worldPosX, &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX);
     if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xb54, lbl_803E83F8, lbl_803E840C))
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_lfoot_taunt);

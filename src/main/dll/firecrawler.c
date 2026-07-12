@@ -596,7 +596,6 @@ void crawler_initVariant(int* obj, int* st)
 void fn_80157CDC(int obj, int state)
 {
     extern void CameraShake_ApplyRadial(f32, f32, f32, f32, f32);
-    extern f32 Vec_distance(int, int);
     extern void doRumble(f32 duration);
     extern void firecrawler_spawnFirepipe(int, int);
     extern void fn_80157B58(int, int);
@@ -643,7 +642,8 @@ void fn_80157CDC(int obj, int state)
                 void* player = Obj_GetPlayerObject();
                 if ((((GameObject*)player)->objectFlags & FIRECRAWLER_OBJFLAG_PARENT_SLACK) == 0)
                 {
-                    f32 dist = Vec_distance(obj + 0x18, (int)player + 0x18);
+                    f32 dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX,
+                                            &((GameObject*)player)->anim.worldPosX);
                     if (dist <= lbl_803E2B80)
                     {
                         f32 amt = lbl_803E2BA4 - dist / lbl_803E2B80;

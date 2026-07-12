@@ -67,7 +67,7 @@ void ARWBlocker_update(GameObject* obj)
 
     if ((u32)arwing == 0)
         arwing = Obj_GetPlayerObject();
-    if (Vec_distance((int)&objAnim->worldPosX, (int)&((GameObject*)arwing)->anim.worldPosX) < lbl_803E721C)
+        if (Vec_distance(&objAnim->worldPosX, &((GameObject*)arwing)->anim.worldPosX) < lbl_803E721C)
     {
         int alpha = (int)(lbl_803E7220 * timeDelta + (f32)(u32)objAnim->alpha);
         if (alpha > 0xff)

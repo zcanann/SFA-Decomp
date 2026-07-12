@@ -131,7 +131,6 @@ extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern f32 Vec_distance(void* a, void* b);
 extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
@@ -287,7 +286,8 @@ int babycloudrunner_tryCapture(void* p)
     player = Obj_GetPlayerObject();
     r = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
     flag = 0;
-    if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)r->innerRadius)
+    if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
+        (f32)(s16)r->innerRadius)
     {
         if (sub->runnerState == 3)
         {
@@ -443,7 +443,8 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         char* pp = Obj_GetPlayerObject();
         BabyCloudRunnerPlacement* def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
         int found = 0;
-        if (Vec_distance(pp + 0x18, (char*)((int)obj + 0x18)) < (f32)def2->innerRadius && sub2->runnerState == 3 &&
+        if (Vec_distance((f32*)(pp + 0x18), (f32*)((char*)((int)obj + 0x18))) < (f32)def2->innerRadius &&
+            sub2->runnerState == 3 &&
             (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
         {
             found = 1;
@@ -483,7 +484,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
             *(f32*)((char*)sub->linkedObj + 8) = sub->scale;
         }
         sub->behaviourState = 0xb;
-        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)def->innerRadius &&
+        if (Vec_distance((f32*)((char*)obj + 0x18), (f32*)(player + 0x18)) < (f32)def->innerRadius &&
             (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
             sub->behaviourState = 7;
@@ -619,10 +620,11 @@ void babycloudrunner_update(int* obj)
                 {
                     near = (int*)ObjGroup_FindNearestObject(BABYCLOUDRUNNER_OBJGROUP, obj, 0);
                     if (near != NULL &&
-                        Vec_distance((char*)((int)near + 0x18), (char*)sub + 0x18) < gBabyCloudRunnerTargetNearDist)
+                        Vec_distance(&((GameObject*)near)->anim.worldPosX, (f32*)((char*)sub + 0x18)) < gBabyCloudRunnerTargetNearDist)
                     {
                         sandworm_turnTowardTargetAnim((int)obj, (int)near, sub, 0);
-                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) >
+                        if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
+                                         &((GameObject*)near)->anim.worldPosX) >
                             gBabyCloudRunnerPlayerFarDist)
                         {
                             fn_8014C66C(near, obj);
@@ -648,7 +650,8 @@ void babycloudrunner_update(int* obj)
                     fn_8019E3F4(obj);
                 }
             }
-            inRange = Vec_distance((char*)((int)obj + 0x18), player + 0x18) < (f32)(def->innerRadius / 2);
+            inRange = Vec_distance(&((GameObject*)obj)->anim.worldPosX, (f32*)(player + 0x18)) <
+                      (f32)(def->innerRadius / 2);
             if (sub->runnerState == 2)
             {
                 radius = (f32)def->outerRadius;
@@ -683,7 +686,7 @@ void babycloudrunner_update(int* obj)
                     char* pp = Obj_GetPlayerObject();
                     def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
                     found = 0;
-                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)def2->innerRadius && sub2->runnerState == 3 &&
+                    if (Vec_distance((f32*)(pp + 0x18), &((GameObject*)obj)->anim.worldPosX) < (f32)def2->innerRadius && sub2->runnerState == 3 &&
                         (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
                     {
                         found = 1;

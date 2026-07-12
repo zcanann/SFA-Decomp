@@ -137,7 +137,6 @@ extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
 
 extern void ObjGroup_AddObject(u32 obj, int group);
 

@@ -70,7 +70,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void objUpdateOpacity(int obj);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();

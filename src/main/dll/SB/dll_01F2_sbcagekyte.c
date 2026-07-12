@@ -80,7 +80,6 @@ void SB_CageKyte_hitDetect(void)
 
 void SB_CageKyte_update(GameObject* obj)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
     GameObject* player;

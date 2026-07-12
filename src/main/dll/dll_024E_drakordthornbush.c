@@ -192,7 +192,7 @@ void drakord_thornbush_update(GameObject* obj)
             }
             break;
         case THORNBUSH_SEQ_LIGHTNING:
-            if (Vec_distance((int*)((char*)Obj_GetPlayerObject() + 0x18), (int*)&(obj)->anim.worldPosX) <
+            if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX, &(obj)->anim.worldPosX) <
                 (f32)(s32)(((DrakordThornbushPlacement*)setup)->baseRadius << 1))
             {
                 ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), (int)obj, 5, 1, 0);

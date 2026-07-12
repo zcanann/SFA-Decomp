@@ -77,7 +77,6 @@ extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern void vecRotateZXY(void* in, void* out);
 extern int ObjList_FindObjectById(int id);
-extern f32 Vec_distance(f32* a, f32* b);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);

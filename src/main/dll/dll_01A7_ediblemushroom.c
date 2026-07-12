@@ -55,7 +55,6 @@ extern void Obj_StartModelFadeIn(u8* obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ObjMsg_AllocQueue();
-extern f32 Vec_distance(int a, int b);
 
 void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
@@ -761,7 +760,7 @@ void EdibleMushroom_init(GameObject* obj, int aux)
 
     if ((void*)player != NULL)
     {
-        dist = Vec_distance(player + 0x18, (int)obj + 0x18);
+        dist = Vec_distance(&((GameObject*)player)->anim.worldPosX, &obj->anim.worldPosX);
         ((EdibleMushroomState*)state)->currentTargetDistance = dist;
         ((EdibleMushroomState*)state)->previousTargetDistance = dist;
     }

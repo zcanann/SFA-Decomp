@@ -103,7 +103,7 @@ void barrelgener_update(GameObject* obj)
 
     if ((u32)mainGetBit(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
     {
-        if (Vec_distance((int)obj + 24, player + 24) < lbl_803E6C24)
+        if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E6C24)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);

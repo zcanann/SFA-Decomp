@@ -112,7 +112,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
     case 0:
         fn_8003B228((GameObject*)(obj), sub);
-        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
+    dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
         if (gb48 == 0)
         {
             if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius ||
@@ -142,7 +142,7 @@ int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         fn_8003B228((GameObject*)(obj), sub);
         break;
     case 1:
-        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
+        dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
         if (gb48 == 0)
         {
             if (dist < (f32)((CfPrisonGuardMapData*)def)->watchRadius)
@@ -277,7 +277,7 @@ void CFPrisonGuard_update(int* obj)
     /* 0x44: the free-the-prisoner event - once set, the guard no
        longer chases (it also arms the cage switch, see cfprisoncage) */
     bit44 = mainGetBit(GAMEBIT_ITEM_PrisonKey_Got);
-    dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
+    dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
     if (sub->flags == 1)
     {
         waterfx_consumePendingImpactNearPoint(&((GameObject*)obj)->anim.localPosX, lbl_803E4268);

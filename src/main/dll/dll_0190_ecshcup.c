@@ -65,7 +65,6 @@ extern const f32 lbl_803E50C8;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 ObjGroup_FindNearestObject();
-extern f32 Vec_distance(f32* a, f32* b);
 extern int getAngle(float y, float x);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 

@@ -230,6 +230,7 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(void* model, int id, void* animBase);
+void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);

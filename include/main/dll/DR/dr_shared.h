@@ -265,7 +265,6 @@ extern int Obj_PredictInterceptPoint(GameObject* player, f32 v, f32* objPos, f32
 extern void PSVECNormalize(f32* out, f32* in);
 extern void PSVECScale(f32* out, f32* in, f32 scale);
 extern void PSVECAdd(f32* out, f32* a, f32* b);
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803DC2B0;
 extern f32 lbl_803DC2B4;
 extern f32 lbl_803DC2B8;

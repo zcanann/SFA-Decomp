@@ -94,7 +94,6 @@ extern s16 gDRCloudRunnerHeadingAngleOffset;
 extern s16 gDRCloudRunnerSmoothedRotX;
 extern s16 gDRCloudRunnerGameBitIds;
 extern int gDRCloudRunnerCurveIds[];
-extern f32 Vec_distance(int a, int b);
 extern void* Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;

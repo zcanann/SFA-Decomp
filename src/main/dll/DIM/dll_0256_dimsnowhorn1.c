@@ -572,7 +572,7 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
     }
 
     if (mainGetBit(bit_a) != 0 && mainGetBit(bit_b) != 0 && player != NULL &&
-        Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) < lbl_803E828C)
+        Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E828C)
     {
         switch (inner->mode)
         {
@@ -596,7 +596,7 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
         switch (phase)
         {
         case 1:
-            if (Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) < lbl_803E8290)
+            if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E8290)
             {
                 o1 = ObjList_FindObjectById(id_a);
                 if (o1 != NULL)
@@ -609,7 +609,8 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
             break;
         case 0:
         case 2:
-            if ((u32)phase == 0 || Vec_distance((char*)player + 0x18, (void*)&(obj)->anim.worldPosX) > lbl_803E8240)
+            if ((u32)phase == 0 ||
+                Vec_distance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) > lbl_803E8240)
             {
                 o1 = ObjList_FindObjectById(id_a);
                 o2 = ObjList_FindObjectById(id_c);
@@ -1278,7 +1279,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         statePtr = *(int*)&(obj)->extra;
         playerObj = (char*)Obj_GetPlayerObject();
         if (playerObj != NULL &&
-            Vec_distance((void*)((int)playerObj + 0x18), (void*)&(obj)->anim.worldPosX) < lbl_803E8240 &&
+            Vec_distance(&((GameObject*)playerObj)->anim.worldPosX, &(obj)->anim.worldPosX) < lbl_803E8240 &&
             ((DIMSnowHorn1State*)statePtr)->mountMode == 0)
         {
             ((DIMSnowHorn1State*)statePtr)->playerNearby = 1;

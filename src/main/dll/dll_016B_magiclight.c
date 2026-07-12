@@ -26,7 +26,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 #define MAGICLIGHT_SEQ_PROXIMITY 0x16b
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 Vec_distance(f32* a, f32* b);
 
 #pragma scheduling off
 #pragma peephole off

@@ -36,7 +36,6 @@ extern s32 Sfx_IsPlayingFromObjectChannel(void* obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(int* from, int* to);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 a, int b, int c, int d, f32 e, void* params);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
@@ -560,7 +559,7 @@ f32 fn_801EA678(GameObject* obj, int state)
         if (lbl_803DC0BC == -1)
         {
             rank = Obj_GetPlayerObject();
-            d = Vec_distance((int*)&obj->anim.worldPosX, (int*)(rank + 0x18));
+            d = Vec_distance(&obj->anim.worldPosX, (f32*)(rank + 0x18));
             d = d * lbl_803E5AF8;
         }
         else

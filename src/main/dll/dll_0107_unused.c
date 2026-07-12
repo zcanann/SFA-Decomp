@@ -39,7 +39,6 @@ extern u32 ObjMsg_SendToObject();
 extern u32 Obj_GetYawDeltaToObject();
 extern int Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern f32 Vec_distance(f32* a, f32* b);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E3A58 = 0.0f;

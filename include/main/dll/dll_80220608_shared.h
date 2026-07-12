@@ -508,7 +508,6 @@ extern void modelLightStruct_setProjectionNearZ(ModelLight* light, f32 v);
 extern void modelLightStruct_setProjectionFarZ(ModelLight* light, f32 v);
 
 extern u32* ObjGroup_GetObjects(int group, int* count);
-extern f32 Vec_distance(int a, int b);
 
 typedef struct TimerFlags
 {

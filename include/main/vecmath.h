@@ -22,6 +22,7 @@ f32 Vec3_Length(f32 *v);
 void Vec3_Cross(f32 *a, f32 *b, f32 *out);
 void Vec3_ReflectAgainstNormal(f32 *normal, f32 *velocity, f32 *out);
 f32 Vec3_Normalize(f32 *v);
+f32 Vec_distance(f32* a, f32* b);
 void mtx44ScaleRow1(f32* matrix, f32 scale);
 void mtx44Transpose(f32* src, f32* dst);
 void Matrix_TransformPoint(f32* matrix, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ);

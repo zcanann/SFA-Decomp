@@ -38,7 +38,6 @@ extern const f32 lbl_803E44B4;
 extern f32 gRollingBarrelCurveInitData;
 
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
 extern int getAngle(float y, float x);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);

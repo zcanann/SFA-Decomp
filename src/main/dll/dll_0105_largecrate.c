@@ -52,7 +52,6 @@ extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);
 extern int Obj_GetPlayerObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);

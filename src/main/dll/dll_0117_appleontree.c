@@ -78,7 +78,6 @@ extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
 extern u32 ObjMsg_SendToObject();
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);

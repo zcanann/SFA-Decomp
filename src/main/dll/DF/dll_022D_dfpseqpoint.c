@@ -50,7 +50,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
 extern int lockLevel(s32 val, int idx);
 extern void warpToMap(int idx, s8 transType);
-extern f32 Vec_distance(f32* a, f32* b);
 
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

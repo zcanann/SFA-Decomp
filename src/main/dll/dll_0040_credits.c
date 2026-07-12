@@ -11,7 +11,8 @@
  * texture. Credits_render / Credits_frameEnd are empty stubs.
  */
 #include "main/texture.h"
-#include "main/engine_shared.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
 #include "main/dll/dll_0040_credits.h"
 
 /* credits texture asset loaded at init (freed in Credits_release) */

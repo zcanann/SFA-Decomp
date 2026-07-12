@@ -16,8 +16,10 @@
  */
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/engine_shared.h"
+#include "main/object_transform.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 typedef struct CameraArwingWork
 {

@@ -64,7 +64,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(void* obj);
 extern s16 getAngle(f32 dx, f32 dz);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);

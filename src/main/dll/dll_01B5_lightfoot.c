@@ -156,7 +156,9 @@ void lightfoot_update(GameObject* obj)
             if (mainGetBit(0xc42) && mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0)
             {
                 void* other = ObjList_FindObjectById(0x499B5);
-                if (other != NULL && Vec_distance((char*)obj + 0x18, (char*)other + 0x18) < lbl_803E8214)
+                if (other != NULL &&
+                    Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)other)->anim.worldPosX) <
+                        lbl_803E8214)
                 {
                     mainSetBits(((GroundBaddieState*)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;
@@ -188,7 +190,9 @@ void lightfoot_update(GameObject* obj)
             if (mainGetBit(0xc46) && mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0)
             {
                 void* other = ObjList_FindObjectById(0x499B6);
-                if (other != NULL && Vec_distance((char*)obj + 0x18, (char*)other + 0x18) < lbl_803E8214)
+                if (other != NULL &&
+                    Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)other)->anim.worldPosX) <
+                        lbl_803E8214)
                 {
                     mainSetBits(((GroundBaddieState*)inner)->gameBitA, 1);
                     buf[3] = lbl_803E8180;

@@ -17,7 +17,6 @@ extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
 
-extern f32 Vec_distance(void* posA, void* posB);
 extern void Obj_RemoveFromUpdateList(void* obj);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 
@@ -108,7 +107,7 @@ void spellstone_update(SpellStoneObject* obj)
         if (state->state == SPELLSTONE_STATE_ACTIVE)
         {
             playerObj = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->worldPosX, (u8*)playerObj + 0x18) < lbl_803E6758)
+            if (Vec_distance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX) < lbl_803E6758)
             {
                 mainSetBits(def->completeEvent, 1);
             }

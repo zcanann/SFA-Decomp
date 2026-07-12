@@ -107,7 +107,7 @@ STATIC_ASSERT(sizeof(SeqPointState) == 0x10);
 void VFP_Block1_update(GameObject* obj)
 {
     int player = (int)Obj_GetPlayerObject();
-    f32 dist = Vec_distance((void*)(player + 0x18), &(obj)->anim.worldPosX);
+    f32 dist = Vec_distance(&((GameObject*)player)->anim.worldPosX, &obj->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x40) != 0)
     {
         if (dist < lbl_803E6100)
@@ -355,7 +355,7 @@ void spellStoneUseFn_801fd270(GameObject* obj)
     *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     if ((*gGameUIInterface)->isEventReady(gSpellStoneEventId) != 0)
     {
-        if (Vec_distance(&obj->anim.worldPosX, (char*)player + 0x18) < lbl_803E6150)
+        if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E6150)
         {
             mainSetBits(state->completeGameBit, 1);
             state->used = 1;
@@ -575,7 +575,8 @@ void SeqPoint_update(int* obj)
     switch (self->mode)
     {
     case SEQPOINT_MODE_RADIUS:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+        if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+              self->triggerRadius))
             return;
         (*gObjectTriggerInterface)->runSequence(self->sequenceId, obj, -1);
         self->done = 1;
@@ -589,7 +590,8 @@ void SeqPoint_update(int* obj)
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_AND_BIT:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+        if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+              self->triggerRadius))
             return;
         if (self->conditionBit == -1)
             return;
@@ -599,7 +601,8 @@ void SeqPoint_update(int* obj)
         self->done = 1;
         break;
     case SEQPOINT_MODE_RADIUS_BIT_ONCE:
-        if (!(Vec_distance((char*)obj + 0x18, (char*)player + 0x18) < self->triggerRadius))
+        if (!(Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+              self->triggerRadius))
             return;
         if (self->conditionBit == -1)
             return;

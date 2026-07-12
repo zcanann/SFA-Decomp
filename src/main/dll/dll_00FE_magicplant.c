@@ -102,7 +102,6 @@ extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern f32 Vec_distance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);

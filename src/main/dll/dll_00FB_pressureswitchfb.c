@@ -66,7 +66,6 @@
 extern int ObjGroup_FindNearestObject();
 extern void ObjGroup_AddObject();
 extern int fn_80295C5C(GameObject* player);
-extern f32 Vec_distance(f32* a, f32* b);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
 extern f32 lbl_803E3760;

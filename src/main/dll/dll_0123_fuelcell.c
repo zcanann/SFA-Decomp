@@ -36,7 +36,6 @@ extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjModel_SetPostRenderCallback(u8* model, void* callback);
 extern void mm_free_(void* ptr);
-extern f32 Vec_distance(f32* a, f32* b);
 
 extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);

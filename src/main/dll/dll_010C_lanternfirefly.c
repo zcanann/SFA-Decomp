@@ -68,7 +68,6 @@ extern int Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void vecRotateZXY(void* rotation, f32* outVec);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);

@@ -51,7 +51,6 @@ extern const f32 lbl_803E4B04;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(GameObject* obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void ObjHits_AddContactObject(int obj, int contactObj);
 extern void saveGame_saveObjectPos(int obj);
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);

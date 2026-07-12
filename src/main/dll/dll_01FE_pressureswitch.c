@@ -84,7 +84,6 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern void* getTrickyObject(void);
-extern f32 Vec_distance(f32* a, f32* b);
 
 int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

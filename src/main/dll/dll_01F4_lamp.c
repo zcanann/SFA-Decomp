@@ -30,7 +30,6 @@
 
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 

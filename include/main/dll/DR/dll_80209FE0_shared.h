@@ -154,7 +154,6 @@ extern int arrayIndexOf();
 extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
 extern void* playerGetFocusObject(int obj);
-extern f32 Vec_distance(int* from, int* to);
 extern int* Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern f32 lbl_803E6598;

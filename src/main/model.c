@@ -731,12 +731,12 @@ ObjModelChain* ObjModelChain_Alloc(void* models, int count)
     return state;
 }
 
-void Model_GetVertexPosition(u8* model, int vertexIndex, f32* out)
+void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out)
 {
     s16* vertex;
 
-    vertex = (s16*)(((ModelFileHeader*)model)->vertices + vertexIndex * 6);
-    if ((((ModelFileHeader*)model)->flags & 0x800) != 0)
+    vertex = (s16*)(model->vertices + vertexIndex * 6);
+    if ((model->flags & 0x800) != 0)
     {
         out[0] = vertex[0];
         out[1] = vertex[1];

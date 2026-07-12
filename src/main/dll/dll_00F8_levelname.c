@@ -51,7 +51,6 @@ extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
 extern void mainSetBits(int eventId, int value);
-extern f32 Vec_distance(f32* a, f32* b);
 
 int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

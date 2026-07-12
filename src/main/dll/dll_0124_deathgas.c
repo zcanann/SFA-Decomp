@@ -9,7 +9,6 @@
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
 extern int playerIsDisguised(void);
-extern f32 Vec_distance(void* a, void* b);
 extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
 
 int DeathGas_getExtraSize(void) { return 0x10; }
@@ -100,7 +99,8 @@ void DeathGas_update(int* obj)
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised()
         && ((GameObject*)player)->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
-        && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius)
+        && Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <=
+               state->radius)
     {
         if (!state->draining)
         {

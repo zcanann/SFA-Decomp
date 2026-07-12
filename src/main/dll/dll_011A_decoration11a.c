@@ -16,8 +16,11 @@
  * The extra block is 0x1c bytes: f32 boundsMax[3], boundsMin[3], radius.
  */
 #include "main/game_object.h"
-#include "main/engine_shared.h"
+#include "main/gameplay_runtime.h"
+#include "main/model.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_011A_decoration11a.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum
@@ -28,10 +31,7 @@ enum
 };
 
 extern void* ObjGroup_GetObjects();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
-extern void Model_GetVertexPosition(int* model, int idx, f32* out);
 
 int decoration11a_getExtraSize(void)
 {
@@ -217,17 +217,17 @@ void decoration11a_init(int* obj, u8* def)
         calc_decor_bounds:
         {
             int i;
-            int* m;
+            ModelFileHeader* m;
             f32* state;
             f32 vertexPos[3];
             f32 magB;
             f32 maxMag;
 
             state = ((GameObject*)obj)->extra;
-            m = **(int***)(*(int*)&((GameObject*)obj)->anim.banks);
+            m = (ModelFileHeader*)**(int***)(*(int*)&((GameObject*)obj)->anim.banks);
             Model_GetVertexPosition(m, 0, state);
             Model_GetVertexPosition(m, 0, state + 3);
-            for (i = 1; i < *(u16*)((char*)m + 0xe4); i++)
+            for (i = 1; i < m->vertexCount; i++)
             {
                 Model_GetVertexPosition(m, i, vertexPos);
                 decoration11a_expandBoundsWithVertex(vertexPos, state, state + 3);

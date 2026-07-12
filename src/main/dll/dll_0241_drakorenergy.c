@@ -55,7 +55,6 @@ extern s16 lbl_803DC178;
 extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern int Obj_GetPlayerObject(void);
 extern void objMove(int, f32, f32, f32);
-extern f32 Vec_distance(int, int);
 extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
@@ -152,7 +151,8 @@ void drakorenergy_update(int obj)
             mathSinf(gDrakorEnergyPi * (f32)((DrakorEnergyState*)state)->phase / gDrakorEnergyPhaseDivisor);
         objMove(obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
-        if (Vec_distance(obj + 0x18, player + 0x18) < gDrakorEnergySeekRange)
+        if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+            gDrakorEnergySeekRange)
         {
             ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_CHASING;
         }

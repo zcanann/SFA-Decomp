@@ -28,7 +28,6 @@ extern f32 timeDelta;
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern void lightSetFieldBC_8001db14(ModelLightStruct* p, u8 v);
 
-extern f32 Vec_distance(f32* a, f32* b);
 extern int Obj_GetPlayerObject(void);
 extern void* objCreateLight(int arg, u8 addToList);
 extern void modelLightStruct_setDistanceAttenuation(ModelLightStruct* light, f32 min, f32 max);

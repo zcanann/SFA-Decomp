@@ -156,7 +156,6 @@ enum
 
 void SB_ShipGun_update(GameObject* obj)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
 
     extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
     extern void* Obj_GetPlayerObject(void);
