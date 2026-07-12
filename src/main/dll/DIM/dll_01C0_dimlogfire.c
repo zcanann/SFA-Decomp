@@ -20,24 +20,8 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/dll/DIM/DIMboulder.h"
-
-typedef struct DimlogfirePlacement
-{
-    u8 pad0[0x1E - 0x0];
-    s16 douseGameBit;
-    u8 pad20[0x68 - 0x20];
-    void* linkedObjPtr; /* 0x68 pointer to an object; its vtable[0x28/4] method is invoked */
-    u8 pad6C[0x70 - 0x6C];
-} DimlogfirePlacement;
-
-typedef struct DimlogfireObjectDef
-{
-    u8 pad0[0x1A - 0x0];
-    s16 initMode;
-    s16 strengthInit;
-    s16 douseGameBit;
-} DimlogfireObjectDef;
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -66,10 +50,8 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void queueGlowRender(int* obj);
 extern f32 lbl_803E4820;
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -83,17 +65,16 @@ extern f32 lbl_803E4834;
 extern f32 lbl_803E4838;
 extern f32 lbl_803E483C;
 
-int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int Sfx_PlayFromObject(int* obj, int sfxId);
-    DimLogFireState* state = ((GameObject*)obj)->extra;
+    DimLogFireState* state = obj->extra;
     if (state->mode == DIMLOGFIRE_MODE_LIT)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mushdizzylp12);
     }
     else
     {
-        Sfx_StopObjectChannel(obj, 64);
+        Sfx_StopObjectChannel((u32)obj, 64);
     }
     switch (animUpdate->triggerCommand)
     {
@@ -110,11 +91,11 @@ int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     if (state->smokeToggle != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, DIMLOGFIRE_PARTFX_SMOKE, NULL, 0, -1, NULL);
-        Sfx_StopObjectChannel(obj, 5);
+        Sfx_StopObjectChannel((u32)obj, 5);
     }
     else
     {
-        Sfx_StopObjectChannel(obj, 1);
+        Sfx_StopObjectChannel((u32)obj, 1);
     }
     animUpdate->triggerCommand = 0;
     return 0;
@@ -136,39 +117,40 @@ int DIMLogFire_getObjectTypeId(void)
     return 0x1;
 }
 
-void DIMLogFire_free(int* obj, int mode)
+void DIMLogFire_free(GameObject* obj, int mode)
 {
     extern void Obj_FreeObject(void* o);
-    DimLogFireState* inner = ((GameObject*)obj)->extra;
+    DimLogFireState* inner = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if ((void*)inner->subObj != NULL && mode == 0)
     {
         Obj_FreeObject((int*)inner->subObj);
     }
-    ObjGroup_RemoveObject(obj, DIMLOGFIRE_GROUP);
+    ObjGroup_RemoveObject((int)obj, DIMLOGFIRE_GROUP);
     if ((void*)inner->light != NULL)
     {
         ModelLightStruct_free((void*)inner->light);
     }
 }
 
-void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DimLogFireState* state;
     int* subobj;
     if ((s32)visible != 0)
     {
-        state = ((GameObject*)obj)->extra;
+        state = obj->extra;
         subobj = (int*)state->subObj;
         if (subobj != NULL)
         {
             int* q = (int*)((ObjAnimComponent*)subobj)->banks[((ObjAnimComponent*)subobj)->bankIndex];
             *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
-            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)((int*)state->subObj, p2, p3, p4, p5,
-                                                                                   lbl_803E4820);
+            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
+                (GameObject*)state->subObj, p2, p3, p4, p5, lbl_803E4820);
         }
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4820);
+        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
+                                                                                     lbl_803E4820);
         if (*(void**)&state->light != NULL)
         {
             if (*(u8*)((char*)*(void**)&state->light + 0x2f8) != 0)
@@ -185,13 +167,13 @@ void DIMLogFire_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void DIMLogFire_update(GameObject* obj)
 {
     extern int getTrickyObject(void);
-    extern void Sfx_PlayFromObject(int obj, int sfxId);
     int flickerFlagA;
     int flickerFlagB;
     int rand;
     s16 alpha;
     u32 light;
-    int tricky;
+    GameObject* tricky;
+    DimlogfirePlacement* placement;
     DimLogFireState* state;
     struct
     {
@@ -199,7 +181,7 @@ void DIMLogFire_update(GameObject* obj)
     } vec;
 
     state = (obj)->extra;
-    tricky = *(int*)&(obj)->anim.placementData;
+    placement = (DimlogfirePlacement*)obj->anim.placementData;
     (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     switch (state->mode)
     {
@@ -208,7 +190,7 @@ void DIMLogFire_update(GameObject* obj)
         {
             modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
         }
-        Sfx_PlayFromObject((int)obj, SFXTRIG_mushdizzylp12);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mushdizzylp12);
         state->flickerTimerA = state->flickerTimerA - timeDelta;
         if (state->flickerTimerA <= lbl_803E4828)
         {
@@ -245,15 +227,14 @@ void DIMLogFire_update(GameObject* obj)
             ObjHits_DisableObject((int)obj);
             state->mode = DIMLOGFIRE_MODE_LIT;
             state->dousedLatch = 1;
-            mainSetBits(((DimlogfirePlacement*)tricky)->douseGameBit, 1);
+            mainSetBits(placement->douseGameBit, 1);
         }
-        tricky = getTrickyObject();
-        if ((u32)tricky != 0)
+        tricky = (GameObject*)getTrickyObject();
+        if (tricky != NULL)
         {
             if (((obj)->anim.resetHitboxFlags & INTERACT_FLAG_IN_RANGE) != 0)
             {
-                (*(void (**)(int, int, int, int))(**(int**)&((DimlogfirePlacement*)tricky)->linkedObjPtr + 0x28))(
-                    tricky, (int)obj, 1, 4);
+                (*(void (**)(GameObject*, GameObject*, int, int))((u8*)*tricky->anim.dll + 0x28))(tricky, obj, 1, 4);
             }
             (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         }
@@ -297,7 +278,7 @@ void DIMLogFire_update(GameObject* obj)
     }
 }
 
-void DIMLogFire_init(int obj, int def)
+void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
 {
     extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius);
     extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
@@ -311,10 +292,10 @@ void DIMLogFire_init(int obj, int def)
     ObjGroup_AddObject(obj, DIMLOGFIRE_GROUP);
     state = ((GameObject*)obj)->extra;
     state->unk20 = 0;
-    state->initMode = ((DimlogfireObjectDef*)def)->initMode;
-    state->strengthInit = (s8)((DimlogfireObjectDef*)def)->strengthInit;
+    state->initMode = def->initMode;
+    state->strengthInit = (s8)def->strengthInit;
     state->strength = *(u8*)&state->strengthInit;
-    if (mainGetBit(((DimlogfireObjectDef*)def)->douseGameBit) != 0)
+    if (mainGetBit(def->douseGameBit) != 0)
     {
         state->mode = DIMLOGFIRE_MODE_LIT;
         state->dousedLatch = 1;

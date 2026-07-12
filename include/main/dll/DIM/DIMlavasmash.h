@@ -5,11 +5,9 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 
-void DIMLogFire_update(GameObject* obj);
 u32 FUN_801b09dc(u32 param_1, u32 param_2, ObjAnimUpdateState* animUpdate);
 void FUN_801b0ae8(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int param_10);
-void DIMLogFire_init(int obj, int def);
 int dimsnowball_getExtraSize(void);
 int dimsnowball_getObjectTypeId(void);
 void dimsnowball_free(void);

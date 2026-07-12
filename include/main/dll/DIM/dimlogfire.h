@@ -5,6 +5,23 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_update.h"
+#include "main/obj_placement.h"
+
+typedef struct DimlogfirePlacement
+{
+    ObjPlacement base;
+    u8 pad18[6];
+    s16 douseGameBit;
+} DimlogfirePlacement;
+
+typedef struct DimlogfireObjectDef
+{
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 initMode;
+    s16 strengthInit;
+    s16 douseGameBit;
+} DimlogfireObjectDef;
 
 /*
  * Per-object extra state for the dimlogfire burning log
@@ -34,6 +51,16 @@ STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
 int MoonSeedPlantingSpot_SeqFn(int obj);
 int CCGasVentControl_SeqFn(GameObject* obj);
-int DIMLogFire_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+int DIMLogFire_getExtraSize(void);
+int DIMLogFire_getObjectTypeId(void);
+void DIMLogFire_free(GameObject* obj, int mode);
+void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void DIMLogFire_update(GameObject* obj);
+void DIMLogFire_init(int obj, DimlogfireObjectDef* def);
+
+STATIC_ASSERT(offsetof(DimlogfirePlacement, douseGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(DimlogfireObjectDef, initMode) == 0x1A);
+STATIC_ASSERT(offsetof(DimlogfireObjectDef, douseGameBit) == 0x1E);
 
 #endif /* MAIN_DLL_DIM_DIMLOGFIRE_H_ */
