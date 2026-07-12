@@ -2294,8 +2294,7 @@ int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32
 
 int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 {
-    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, nx, step_y, dot, proj, vy4,
-        vy5, disc, dy, ny, len2;
+    f32 cc, dx, t1, sum, px, dx2, dy2, B, nB, step8, root, denom, step_x, t2, t, hitX, hitY, step_y, dot, nx, proj, vy4, vy5, disc, dy, ny, len2;
 
     if (__AR_Callback == r)
         return 0;
