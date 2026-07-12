@@ -2431,8 +2431,13 @@ void walkgroupFindExitPointFn_800dc398(void)
                             z0 = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10);
                             x1 = OBJFSA_CORNER(curve, slotPtr + 0x36, 0x8);
                             z1 = OBJFSA_CORNER(curve, slotPtr + 0x37, 0x10);
-                            np->exit0X = (s16)((x0 + x1) * lbl_803E0608);
-                            np->exit0Z = (s16)((z0 + z1) * lbl_803E0608);
+                            {
+                                f32 sm;
+                                sm = x0 + x1;
+                                np->exit0X = (s16)(sm * lbl_803E0608);
+                                sm = z0 + z1;
+                                np->exit0Z = (s16)(sm * lbl_803E0608);
+                            }
 
                             OBJFSA_SET_NEWPATCH_PLANE(0, z1 - z0, x0 - x1, x0, z0);
 
@@ -2444,8 +2449,13 @@ void walkgroupFindExitPointFn_800dc398(void)
                             x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
                             z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
                             np = &OBJFSA_NEWPATCH;
-                            np->exit1X = (s16)((x2 + x3) * lbl_803E0608);
-                            np->exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+                            {
+                                f32 sm;
+                                sm = x2 + x3;
+                                np->exit1X = (s16)(sm * lbl_803E0608);
+                                sm = z2 + z3;
+                                np->exit1Z = (s16)(sm * lbl_803E0608);
+                            }
 
                             OBJFSA_SET_NEWPATCH_PLANE(2, z3 - z2, x2 - x3, x2, z2);
 
