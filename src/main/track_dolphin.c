@@ -2373,18 +2373,23 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 {
     u32 fmt;
     u32 w;
-    int bf;
-    u32 wB;
+    u32 h;
     u32 wA;
-    int i;
-    int redA;
+    int i12;
+    int i4;
+    int i6;
     int texA;
     int texB;
     int j;
+    int i;
+    u32 wB;
     int redB;
+    int bf;
+    int redA;
     int rf;
     int gf;
-    u32 h;
+    u8* p;
+    u16 outv;
 
     if (src1 == NULL)
         return;
@@ -2416,28 +2421,23 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         {
             for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
             {
-                int im, i5;
                 j = 0;
-                im = i & 0xfffffffc;
-                i5 = (i & 3) * 8;
+                w = i & 0xfffffffc;
+                h = (i & 3) * 8;
                 for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
-                    int i6 = (j & 3) * 2;
-                    int i4;
-                    int i12;
-                    u8* p;
-                    u16 outv;
+                    i6 = (j & 3) * 2;
                     p = src1 + i6;
                     i4 = (j >> 2) * 0x20;
                     p += i4;
-                    p += i5;
-                    i12 = (int)*(u16*)(src1 + 0xa) * im * 2;
+                    p += h;
+                    i12 = (int)*(u16*)(src1 + 0xa) * w * 2;
                     p += i12;
                     texA = *(u16*)(p + 0x60);
                     redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
                     p = src2 + i6;
                     p += i4;
-                    p += i5;
+                    p += h;
                     p += i12;
                     texB = *(u16*)(p + 0x60);
                     redB = (u8)(((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13));
@@ -2453,7 +2453,7 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                     outv = bf | (rf | gf);
                     p = dst + i6;
                     p += i4;
-                    p += i5;
+                    p += h;
                     p += i12;
                     *(u16*)(p + 0x60) = outv;
                 }
