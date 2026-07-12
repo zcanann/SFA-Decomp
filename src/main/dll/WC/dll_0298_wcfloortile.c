@@ -195,9 +195,9 @@ void wcfloortile_update(int obj)
     }
 }
 
-void arwarwing_clampToFlightBounds(GameObject* obj, int state)
+void arwarwing_clampToFlightBounds(GameObject* obj, ArwingState* state)
 {
-    ArwingState* arwing = (ArwingState*)state;
+    ArwingState* arwing = state;
     f32 hy;
     f32 lx;
     f32 hx;
@@ -231,9 +231,9 @@ void arwarwing_clampToFlightBounds(GameObject* obj, int state)
     arwing->camPos[2] = lbl_803E6ECC;
 }
 
-void arwarwing_updateFlightPhysics(GameObject* obj, int state)
+void arwarwing_updateFlightPhysics(GameObject* obj, ArwingState* state)
 {
-    ArwingState* arwing = (ArwingState*)state;
+    ArwingState* arwing = state;
     f32 v[3];
     f32 cz;
     int diff;
@@ -365,9 +365,9 @@ void arwarwing_updateFlightPhysics(GameObject* obj, int state)
     arwarwing_clampToFlightBounds(obj, state);
 }
 
-void arwarwing_updateBombFire(GameObject* obj, int state)
+void arwarwing_updateBombFire(GameObject* obj, ArwingState* state)
 {
-    ArwingState* arwing = (ArwingState*)state;
+    ArwingState* arwing = state;
     if (*(void**)&arwing->activeBombObj != NULL)
         return;
     {
@@ -402,9 +402,9 @@ void arwarwing_updateBombFire(GameObject* obj, int state)
     }
 }
 
-void arwarwing_spawnBomb(GameObject* obj, int state, int side)
+void arwarwing_spawnBomb(GameObject* obj, ArwingState* state, int side)
 {
-    ArwingState* arwing = (ArwingState*)state;
+    ArwingState* arwing = state;
     f32 pz, py, px;
     ArwingBombSetup* setup;
     u8 cnt;
@@ -433,7 +433,7 @@ void arwarwing_spawnBomb(GameObject* obj, int state, int side)
     Sfx_PlayFromObject((int)obj, SFXTRIG_ar_badhit16);
 }
 
-void arwarwing_updateThrusters(GameObject* obj, int state)
+void arwarwing_updateThrusters(GameObject* obj, ArwingState* state)
 {
 
     CameraViewSlot* slot;
@@ -451,24 +451,24 @@ void arwarwing_updateThrusters(GameObject* obj, int state)
     setMatrixFromObjectPos(mtx, &src);
 
     Matrix_TransformPoint(
-        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF0, (f32*)(((ArwingState*)state)->thrusterL + 0xc),
-        (f32*)(((ArwingState*)state)->thrusterL + 0x10), (f32*)(((ArwingState*)state)->thrusterL + 0x14));
-    *(f32*)(((ArwingState*)state)->thrusterL + 0x18) = *(f32*)(((ArwingState*)state)->thrusterL + 0xc);
-    *(f32*)(((ArwingState*)state)->thrusterL + 0x1c) = *(f32*)(((ArwingState*)state)->thrusterL + 0x10);
-    *(f32*)(((ArwingState*)state)->thrusterL + 0x20) = *(f32*)(((ArwingState*)state)->thrusterL + 0x14);
-    *(s16*)(((ArwingState*)state)->thrusterL + 4) = -slot->roll;
-    *(s16*)(((ArwingState*)state)->thrusterL + 2) = -slot->pitch;
-    *(s16*)(((ArwingState*)state)->thrusterL + 0) = 0x8000 - slot->yaw;
+        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF0, (f32*)(state->thrusterL + 0xc),
+        (f32*)(state->thrusterL + 0x10), (f32*)(state->thrusterL + 0x14));
+    *(f32*)(state->thrusterL + 0x18) = *(f32*)(state->thrusterL + 0xc);
+    *(f32*)(state->thrusterL + 0x1c) = *(f32*)(state->thrusterL + 0x10);
+    *(f32*)(state->thrusterL + 0x20) = *(f32*)(state->thrusterL + 0x14);
+    *(s16*)(state->thrusterL + 4) = -slot->roll;
+    *(s16*)(state->thrusterL + 2) = -slot->pitch;
+    *(s16*)(state->thrusterL + 0) = 0x8000 - slot->yaw;
 
     Matrix_TransformPoint(
-        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF4, (f32*)(((ArwingState*)state)->thrusterR + 0xc),
-        (f32*)(((ArwingState*)state)->thrusterR + 0x10), (f32*)(((ArwingState*)state)->thrusterR + 0x14));
-    *(f32*)(((ArwingState*)state)->thrusterR + 0x18) = *(f32*)(((ArwingState*)state)->thrusterR + 0xc);
-    *(f32*)(((ArwingState*)state)->thrusterR + 0x1c) = *(f32*)(((ArwingState*)state)->thrusterR + 0x10);
-    *(f32*)(((ArwingState*)state)->thrusterR + 0x20) = *(f32*)(((ArwingState*)state)->thrusterR + 0x14);
-    *(s16*)(((ArwingState*)state)->thrusterR + 4) = -slot->roll;
-    *(s16*)(((ArwingState*)state)->thrusterR + 2) = -slot->pitch;
-    *(s16*)(((ArwingState*)state)->thrusterR + 0) = 0x8000 - slot->yaw;
+        mtx, lbl_803E6ECC, *(f32*)&lbl_803E6ECC, lbl_803E6EF4, (f32*)(state->thrusterR + 0xc),
+        (f32*)(state->thrusterR + 0x10), (f32*)(state->thrusterR + 0x14));
+    *(f32*)(state->thrusterR + 0x18) = *(f32*)(state->thrusterR + 0xc);
+    *(f32*)(state->thrusterR + 0x1c) = *(f32*)(state->thrusterR + 0x10);
+    *(f32*)(state->thrusterR + 0x20) = *(f32*)(state->thrusterR + 0x14);
+    *(s16*)(state->thrusterR + 4) = -slot->roll;
+    *(s16*)(state->thrusterR + 2) = -slot->pitch;
+    *(s16*)(state->thrusterR + 0) = 0x8000 - slot->yaw;
 }
 
 /* the shared header leaves dont_inline stuck on; clamps must inline to match */
@@ -488,9 +488,9 @@ static inline f32 arwarwing_readTriggerL(void)
     return -(f32)(u32)(u8)padGetLTrigger(0) / lbl_803E6ED4;
 }
 
-void arwarwing_readControls(GameObject* obj, int state)
+void arwarwing_readControls(GameObject* obj, ArwingState* state)
 {
-    ArwingState* aw = (ArwingState*)state;
+    ArwingState* aw = state;
     f32 nx;
     f32 ny;
     f32 tv;
@@ -554,37 +554,37 @@ void arwarwing_readControls(GameObject* obj, int state)
 
 #pragma dont_inline on
 #pragma opt_propagation off
-void arwarwing_updateBarrelRoll(GameObject* obj, int state)
+void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
 {
     f32 zero;
     f32 direction;
 
-    ((ArwingState*)state)->barrelRollAngle =
-        (int)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
-              (f32)((ArwingState*)state)->barrelRollAngle);
+    state->barrelRollAngle =
+        (int)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
+              (f32)state->barrelRollAngle);
     obj->anim.rotZ =
-        (s16)(timeDelta * (((ArwingState*)state)->barrelRollDirection * ((ArwingState*)state)->barrelRollSpeedScale) +
+        (s16)(timeDelta * (state->barrelRollDirection * state->barrelRollSpeedScale) +
               (f32) * &obj->anim.rotZ);
-    direction = ((ArwingState*)state)->barrelRollDirection;
+    direction = state->barrelRollDirection;
     zero = lbl_803E6ECC;
     if (direction > zero)
     {
         {
-            int tgt = ((ArwingState*)state)->rotZTrimCur;
+            int tgt = state->rotZTrimCur;
             int angle;
             int hi = tgt + 0xffff;
             int mid = tgt + 0x8000;
-            angle = ((ArwingState*)state)->barrelRollAngle;
+            angle = state->barrelRollAngle;
             if (angle > hi)
             {
-                ((ArwingState*)state)->mode = 0;
-                ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle - 0xffff;
-                ((ArwingState*)state)->rotZBlend = zero;
-                ((ArwingState*)state)->maxSpeedX =
-                    ((ArwingState*)state)->maxSpeedX / ((ArwingState*)state)->barrelRollMaxSpeedScale;
-                ((ArwingState*)state)->accelX =
-                    ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
-                arwarwingbo_setActiveVisible((GameObject*)(((ArwingState*)state)->bombObj), 0, 0);
+                state->mode = 0;
+                state->rotZTrimCur = state->barrelRollAngle - 0xffff;
+                state->rotZBlend = zero;
+                state->maxSpeedX =
+                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
+                state->accelX =
+                    state->accelX / state->barrelRollAccelScale;
+                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
             }
             else if (angle > mid)
             {
@@ -595,32 +595,32 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
                     d += 0xffff;
                 if (d < 0)
                     d = -d;
-                ((ArwingState*)state)->barrelRollSpeedScale = d / ((ArwingState*)state)->barrelRollDecelRange;
-                if (((ArwingState*)state)->barrelRollSpeedScale < lbl_803E6EF8)
-                    ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6EF8;
-                else if (((ArwingState*)state)->barrelRollSpeedScale > lbl_803E6ED0)
-                    ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6ED0;
+                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
+                if (state->barrelRollSpeedScale < lbl_803E6EF8)
+                    state->barrelRollSpeedScale = lbl_803E6EF8;
+                else if (state->barrelRollSpeedScale > lbl_803E6ED0)
+                    state->barrelRollSpeedScale = lbl_803E6ED0;
             }
         }
     }
     else
     {
         {
-            int tgt = ((ArwingState*)state)->rotZTrimCur;
+            int tgt = state->rotZTrimCur;
             int angle;
             int lo = tgt - 0xffff;
             int mid = tgt - 0x8000;
-            angle = ((ArwingState*)state)->barrelRollAngle;
+            angle = state->barrelRollAngle;
             if (angle < lo)
             {
-                ((ArwingState*)state)->mode = 0;
-                ((ArwingState*)state)->rotZTrimCur = ((ArwingState*)state)->barrelRollAngle + 0xffff;
-                ((ArwingState*)state)->rotZBlend = zero;
-                ((ArwingState*)state)->maxSpeedX =
-                    ((ArwingState*)state)->maxSpeedX / ((ArwingState*)state)->barrelRollMaxSpeedScale;
-                ((ArwingState*)state)->accelX =
-                    ((ArwingState*)state)->accelX / ((ArwingState*)state)->barrelRollAccelScale;
-                arwarwingbo_setActiveVisible((GameObject*)(((ArwingState*)state)->bombObj), 0, 0);
+                state->mode = 0;
+                state->rotZTrimCur = state->barrelRollAngle + 0xffff;
+                state->rotZBlend = zero;
+                state->maxSpeedX =
+                    state->maxSpeedX / state->barrelRollMaxSpeedScale;
+                state->accelX =
+                    state->accelX / state->barrelRollAccelScale;
+                arwarwingbo_setActiveVisible((GameObject*)(state->bombObj), 0, 0);
             }
             else if (angle > mid)
             {
@@ -631,11 +631,11 @@ void arwarwing_updateBarrelRoll(GameObject* obj, int state)
                     d += 0xffff;
                 if (d < 0)
                     d = -d;
-                ((ArwingState*)state)->barrelRollSpeedScale = d / ((ArwingState*)state)->barrelRollDecelRange;
-                if (((ArwingState*)state)->barrelRollSpeedScale < lbl_803E6EF8)
-                    ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6EF8;
-                else if (((ArwingState*)state)->barrelRollSpeedScale > lbl_803E6ED0)
-                    ((ArwingState*)state)->barrelRollSpeedScale = lbl_803E6ED0;
+                state->barrelRollSpeedScale = d / state->barrelRollDecelRange;
+                if (state->barrelRollSpeedScale < lbl_803E6EF8)
+                    state->barrelRollSpeedScale = lbl_803E6EF8;
+                else if (state->barrelRollSpeedScale > lbl_803E6ED0)
+                    state->barrelRollSpeedScale = lbl_803E6ED0;
             }
         }
     }
