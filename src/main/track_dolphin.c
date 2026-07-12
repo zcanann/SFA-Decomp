@@ -4026,8 +4026,9 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
         t = *(u16*)blk;
         for (; t < tEnd; t++)
         {
-            u16* tw = fn_80028354(hdr, t);
-            f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
+            u16* twn = fn_80028354(hdr, t);
+            u16* tw;
+            f32 tMinY, tMaxX, tMinX, tMaxY, tMinZ, tMaxZ;
             int j;
             u8* vout;
             s16 *xs, *ys, *zs;
@@ -4041,9 +4042,7 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
             tMaxY = tMaxX;
             tMinZ = tMinX;
             tMaxZ = tMaxX;
-            j = 0;
-            vout = (u8*)cur;
-            for (; j < 3; j++)
+            for (j = 0, tw = twn, vout = (u8*)cur; j < 3; j++)
             {
                 s16* v = ObjModel_GetBaseVertexCoords((ModelFileHeader*)hdr, *tw);
                 f32 fx, fy, fz;
