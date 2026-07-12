@@ -22,6 +22,7 @@
 #include "main/object_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"

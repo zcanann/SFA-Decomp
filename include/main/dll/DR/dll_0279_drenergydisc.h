@@ -9,6 +9,9 @@ typedef struct DrEnergyDiscState
     u8 activated : 1;
 } DrEnergyDiscState;
 
+extern int lbl_803DC380;
+extern f32 lbl_803E6BB0;
+
 typedef struct DrenergydiscPlacement
 {
     u8 pad0[0x1E - 0x0];

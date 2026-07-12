@@ -76,8 +76,10 @@ extern f32 lbl_803E70B4;
 extern f32 lbl_803E70B8;
 extern f32 lbl_803E70BC;
 extern f32 lbl_803E70C0;
+extern f32 lbl_803E70C4;
 extern f32 lbl_803E70C8;
 extern f32 lbl_803E70CC;
+extern f32 lbl_803E70D8;
 extern RingTable lbl_8032B720[];
 
 int ring_getExtraSize(void);

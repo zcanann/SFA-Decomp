@@ -46,8 +46,6 @@
 #include "main/frame_timing.h"
 
 /* Pattern wrappers. */
-extern int lbl_803DC380;
-extern f32 lbl_803E6BB0;
 
 extern f32 lbl_803E6DB4;
 extern f32 lbl_803E6DB8;
@@ -70,8 +68,6 @@ extern void logPrintf(void* fmt, ...);
 
 
 
-extern f32 lbl_803E72E8;
-extern f32 lbl_803E72B0;
 
 
 
@@ -85,25 +81,16 @@ extern int getAngle(f32 dx, f32 dz);
 
 
 
-extern f32 lbl_803E70C4;
-extern f32 lbl_803E70D8;
 
 
 
 
 
 
-extern f32 lbl_803E7078;
-extern f32 lbl_803E7150;
-
-extern f32 lbl_803E7218;
-extern f32 lbl_803E71E4;
-extern f32 lbl_803E704C;
 
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E7188;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -126,7 +113,6 @@ extern f32 lbl_803E6F00;
 
 
 
-extern f32 lbl_803E7154;
 
 
 #pragma dont_inline on
@@ -165,7 +151,6 @@ extern ModgfxInterface** gModgfxInterface;
 
 #pragma dont_inline reset
 
-extern f32 lbl_803E70A0;
 
 extern f32 lbl_803E6ECC;
 
@@ -180,7 +165,6 @@ extern f32 lbl_803E6ECC;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E71A8;
 
 
 extern f32 lbl_803E6EF8;
@@ -206,7 +190,6 @@ extern f32 lbl_803E6EF4;
 #pragma dont_inline reset
 
 
-extern f32 lbl_803E7044;
 #pragma dont_inline on
 #pragma dont_inline reset
 
@@ -218,8 +201,6 @@ extern f32 lbl_803E7044;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E7040;
-extern f32 lbl_803E7048;
 
 
 #pragma dont_inline on

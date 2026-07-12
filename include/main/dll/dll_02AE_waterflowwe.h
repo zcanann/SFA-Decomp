@@ -63,6 +63,8 @@ extern const f32 gWaterFlowAngleFullScale;
 extern const f32 gWaterFlowFilterCoeff;
 extern const f32 gWaterFlowDecayCoeff;
 extern const f32 gWaterFlowMaxMagnitude;
+extern f32 lbl_803E72B0;
+extern f32 lbl_803E72E8;
 
 void waterflowwe_calcCurrentVector(GameObject* obj, f32* currentX, f32* currentZ);
 int waterflowwe_getExtraSize(void);

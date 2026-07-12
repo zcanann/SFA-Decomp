@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/obj_placement.h"
 
+extern f32 lbl_803E7218;
 extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
 

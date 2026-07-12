@@ -31,6 +31,9 @@ STATIC_ASSERT(offsetof(ARWGeneratorSetup, velocityX) == 0x1C);
 STATIC_ASSERT(offsetof(ARWGeneratorSetup, spreadX) == 0x22);
 STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnMode) == 0x25);
 
+extern f32 lbl_803E7150;
+extern f32 lbl_803E7154;
+
 int arwgenerato_getExtraSize(void);
 int arwgenerato_getObjectTypeId(void);
 void arwgenerato_free(void);
