@@ -75,7 +75,13 @@ def objdump_norm(objdump: Path, obj: Path, symbol: str):
 
 
 def match_score(t: list[str], c: list[str]):
-    """(pct, regions): exact-normalized-instruction match ratio and #regions."""
+    """(pct, regions): exact-normalized-instruction match ratio and #regions.
+
+    This is only a fast pre-filter proxy. The DECIDING metric is the true
+    objdiff fuzzy% (fuzzy_measure below); a sibling proved region-count can be
+    ANTI-correlated with fuzzy for unroll/schedule-sensitive functions, so never
+    rank or commit on this proxy alone.
+    """
     if not t or not c:
         return -1.0, 999
     sm = difflib.SequenceMatcher(None, t, c, autojunk=False)
@@ -83,6 +89,83 @@ def match_score(t: list[str], c: list[str]):
     pct = 200.0 * matched / (len(t) + len(c))
     regions = sum(1 for op in sm.get_opcodes() if op[0] != "equal")
     return pct, regions
+
+
+# --------------------------------------------------- ground-truth fuzzy%
+def _rv(b, i):
+    r = 0; s = 0
+    while True:
+        x = b[i]; i += 1; r |= (x & 0x7f) << s
+        if not x & 0x80:
+            break
+        s += 7
+    return r, i
+
+
+def _fields(b):
+    i = 0; o = []
+    while i < len(b):
+        t, i = _rv(b, i); f = t >> 3; w = t & 7
+        if w == 0:
+            v, i = _rv(b, i); o.append((f, 0, v))
+        elif w == 2:
+            l, i = _rv(b, i); o.append((f, 2, b[i:i + l])); i += l
+        elif w == 5:
+            o.append((f, 5, b[i:i + 4])); i += 4
+        elif w == 1:
+            o.append((f, 1, b[i:i + 8])); i += 8
+    return o
+
+
+def report_unit_name(unit: dict) -> str:
+    """config unit name (e.g. 'main/render.c') -> report/proto name
+    ('main/main/render')."""
+    name = unit["name"].replace("\\", "/").rsplit(".", 1)[0]
+    return "main/" + name
+
+
+def decode_fuzzy(binpb: bytes, report_unit: str, symbol: str):
+    import struct as _st
+    for f, w, v in _fields(binpb):
+        if f != 2 or w != 2:
+            continue
+        u = _fields(v); un = None
+        for a, b2, c in u:
+            if a == 1 and b2 == 2:
+                un = c.decode(errors="replace")
+        if un != report_unit:
+            continue
+        for a, b2, c in u:
+            if a == 4 and b2 == 2:
+                fn = _fields(c); nm = None; fz = None
+                for d, e, g in fn:
+                    if d == 1 and e == 2:
+                        nm = g.decode(errors="replace")
+                    if d == 3 and e == 5:
+                        fz = _st.unpack("<f", g)[0]
+                if nm == symbol:
+                    return fz
+    return None
+
+
+def fuzzy_measure(report_unit: str, symbol: str, version: str,
+                  retries: int = 8) -> float:
+    """True objdiff fuzzy_match_percent for one function. Regenerates the whole
+    report (fast: objects are prebuilt) and decodes the proto. `report generate`
+    is all-or-nothing, so a concurrent agent mid-rebuild can make it fail -- we
+    retry with backoff. Returns -1.0 if it never succeeds."""
+    out = Path(f"/tmp/bm_fuzzy_{version}.binpb")
+    for attempt in range(retries):
+        r = subprocess.run(
+            ["build/tools/objdiff-cli", "report", "generate",
+             "-o", str(out), "-f", "proto"],
+            cwd=REPO, capture_output=True, text=True)
+        if r.returncode == 0 and out.is_file():
+            fz = decode_fuzzy(out.read_bytes(), report_unit, symbol)
+            if fz is not None:
+                return fz
+        time.sleep(0.4 * (attempt + 1))
+    return -1.0
 
 
 # ------------------------------------------------------------- source parse
@@ -402,21 +485,33 @@ def main():
     if not cur_o.is_file():
         rebuild(unit["object"], args.version)
     t_norm = objdump_norm(objdump, tgt_o, args.symbol)
+    report_unit = report_unit_name(unit)
 
-    def measure():
+    def proxy():
         c = objdump_norm(objdump, cur_o, args.symbol)
         return match_score(t_norm, c)
 
-    base_pct, base_reg = measure()
-    print(f"baseline: {base_pct:.3f}%  regions={base_reg}")
+    def fuzzy():
+        return fuzzy_measure(report_unit, args.symbol, args.version)
 
-    results = []
-    best = (base_pct, -base_reg, 0)  # (pct, -regions, variant_idx)
+    base_proxy, base_reg = proxy()
+    base_fz = fuzzy()
+    if base_fz < 0:
+        raise SystemExit(
+            "could not read baseline fuzzy (report generate failed -- a "
+            "concurrent build may be in flight; retry).")
+    print(f"baseline: fuzzy={base_fz:.4f}%  proxy={base_proxy:.3f}%  "
+          f"regions={base_reg}  (report_unit={report_unit})")
+
+    # DECIDING metric is fuzzy; proxy/regions are informational only. A sibling
+    # proved region-count can be anti-correlated with fuzzy, so we never rank on
+    # it. results: (fuzzy, proxy, reg, order)
+    results = [(base_fz, base_proxy, base_reg, variants[0])]
+    best = (base_fz, base_proxy, 0)  # (fuzzy, proxy, variant_idx)
     t0 = time.time()
     try:
         for vi, order in enumerate(variants):
             if vi == 0:
-                results.append((base_pct, base_reg, order))
                 continue
             if time.time() - t0 > args.time_budget:
                 print(f"# time budget hit after {vi} variants")
@@ -425,37 +520,47 @@ def main():
             src_file.write_bytes(newsrc.encode("latin-1"))
             if not rebuild(unit["object"], args.version):
                 print(f"[{vi:3d}] BUILD FAIL {order}")
-                results.append((-1.0, 999, order))
+                results.append((-1.0, -1.0, 999, order))
                 continue
-            pct, reg = measure()
-            results.append((pct, reg, order))
+            px, reg = proxy()
+            fz = fuzzy()
+            results.append((fz, px, reg, order))
             flag = ""
-            if (pct, -reg) > (best[0], best[1]):
-                best = (pct, -reg, vi)
+            # rank strictly by fuzzy; proxy only breaks exact-fuzzy ties
+            if (fz, px) > (best[0], best[1]):
+                best = (fz, px, vi)
                 flag = "  <== best"
-            print(f"[{vi:3d}] {pct:7.3f}% reg={reg:2d} {list(order)}{flag}")
+            note = " (fuzzy read FAILED)" if fz < 0 else ""
+            print(f"[{vi:3d}] fuzzy={fz:8.4f}% proxy={px:7.3f}% reg={reg:2d} "
+                  f"{list(order)}{flag}{note}")
     finally:
         # restore original before deciding
         src_file.write_bytes(original)
 
-    print("\n# ranked (top 12):")
-    for pct, reg, order in sorted(results, key=lambda r: (-r[0], r[1]))[:12]:
-        print(f"  {pct:7.3f}% reg={reg:2d} {list(order)}")
+    print("\n# ranked by FUZZY (top 12):")
+    for fz, px, reg, order in sorted(results, key=lambda r: (-r[0], -r[1]))[:12]:
+        print(f"  fuzzy={fz:8.4f}% proxy={px:7.3f}% reg={reg:2d} {list(order)}")
 
-    best_pct, neg_reg, best_vi = best
-    improved = (best_pct, neg_reg) > (base_pct, -base_reg)
-    if improved and (args.apply_best or True):
+    best_fz, best_px, best_vi = best
+    # commit gate: true fuzzy must strictly rise
+    improved = best_fz > base_fz + 1e-4
+    if improved:
         newsrc, _ = render(variants[best_vi])
         src_file.write_bytes(newsrc.encode("latin-1"))
         rebuild(unit["object"], args.version)
+        confirm = fuzzy()
         print(f"\n# APPLIED best variant #{best_vi}: "
-              f"{base_pct:.3f}% -> {best_pct:.3f}%  (proxy metric)")
+              f"fuzzy {base_fz:.4f}% -> {confirm:.4f}%")
         print(f"# order = {list(variants[best_vi])}")
-        print("# CONFIRM with report.json regen for true objdiff fuzzy%.")
+        if confirm <= base_fz + 1e-4:
+            print("# WARNING: re-measured fuzzy did NOT confirm the gain -- "
+                  "restoring original.")
+            src_file.write_bytes(original)
+            rebuild(unit["object"], args.version)
     else:
         rebuild(unit["object"], args.version)
-        print(f"\n# no improvement (best {best_pct:.3f}% vs base {base_pct:.3f}%); "
-              "restored original.")
+        print(f"\n# no fuzzy improvement (best {best_fz:.4f}% vs "
+              f"base {base_fz:.4f}%); restored original.")
 
 
 if __name__ == "__main__":
