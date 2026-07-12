@@ -2507,7 +2507,6 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
 #pragma opt_propagation off
 void expgfx_resetAllPools(void)
 {
-    u32* slotPoolBases;
     u16* refCountPtr;
     u32* poolActiveMasks;
     s8* poolActiveCounts;
@@ -2520,6 +2519,7 @@ void expgfx_resetAllPools(void)
     ExpgfxTableEntry* tableEntry;
     ExpgfxStaticDataLayout* staticData;
     u32 activeBit;
+    u32* slotPoolBases;
     u32 inactiveBitMask;
     int tableIndex;
     ExpgfxRuntimeDataLayout* runtime[1];
