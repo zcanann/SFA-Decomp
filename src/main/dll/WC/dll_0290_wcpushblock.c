@@ -19,7 +19,18 @@
  * controller's own mode machine (timers, save points, map gating, music),
  * co-located in this TU. Offsets/bit values inferred from code.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
+#include "main/game_timer.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/mapEventTypes.h"
+#include "main/objhits.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
+#include "main/objtexture.h"
+#include "main/sky_interface.h"
+#include "main/vecmath.h"
 #include "main/lightmap_api.h"
 #include "main/object_api.h"
 #include "main/gameloop_api.h"
