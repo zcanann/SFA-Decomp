@@ -1,7 +1,17 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/engine_shared.h"
+#include "main/audio/sfx.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/frame_timing.h"
+#include "main/gametext.h"
+#include "main/gameloop_api.h"
+#include "main/minimap_api.h"
 #include "main/model_engine.h"
+#include "main/mm.h"
+#include "main/pause_menu_api.h"
+#include "main/resource.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
