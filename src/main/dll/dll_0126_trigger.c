@@ -42,6 +42,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/dll_02B5_timer.h"
+#include "main/dll/headdisplay.h"
 
 /* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */

@@ -10,6 +10,7 @@
  * / taunt text lines are shown.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/headdisplay.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/dll/ARW/dll_02A7_arwproximit.h"

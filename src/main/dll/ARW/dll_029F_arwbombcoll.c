@@ -11,6 +11,7 @@
  * compares the Arwing's current and previous Z against the pickup's Z.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/headdisplay.h"
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/dll_02A0_ring.h"
 

@@ -12,6 +12,7 @@
  * course-specific text; commitRingChoice picks the follow-up music.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/headdisplay.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"

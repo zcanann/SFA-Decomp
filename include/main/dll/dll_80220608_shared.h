@@ -132,7 +132,6 @@ extern f32 lbl_803E6E90;
 
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern int ObjModel_GetBaseVertexCoords(int model, int idx);
-extern int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6E70;
 extern f32 lbl_803E6E74;
 extern f32 lbl_803E6E78;
@@ -204,8 +203,6 @@ extern void Obj_SetActiveModelIndex(int obj, int index);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern void textureFree(void* tex);
-extern void* textureLoadAsset(int id);
 
 
 extern int fn_80080150(int state);
@@ -259,7 +256,6 @@ extern f32 lbl_803E7058;
 extern f32 lbl_803E70E0;
 extern f32 lbl_803E7188;
 extern void arwingHudSetVisible(int mode);
-extern void fn_80125D04(void);
 extern void setIsOvercast(int value);
 
 #pragma dont_inline on
@@ -287,8 +283,6 @@ extern f32 lbl_803E703C;
 extern f32 lbl_803E70EC;
 extern f32 lbl_803E70F0;
 extern f32 lbl_803E70F4;
-extern void gameTextFn_80125ba4(int id);
-extern void pauseMenuCreateHeads(void);
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -393,7 +387,6 @@ extern const f32 lbl_803E75F8;
 extern void fn_8006CB50(void);
 extern int ObjModel_GetRenderOp(int model, int idx);
 
-extern void ObjPath_GetPointWorldPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);
 extern int lbl_803DC508;
@@ -417,7 +410,6 @@ extern const f32 lbl_803E7480;
 extern int gf_levelcon_SeqFn(int obj, int eventId, ObjAnimUpdateState* animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
 extern void creditsStart(void);
-extern void gameTextShow(int id);
 extern const f32 lbl_803E7460;
 extern const f32 lbl_803E7464;
 extern const f32 lbl_803E7468;
@@ -439,7 +431,6 @@ extern const f32 lbl_803E7454;
 extern const f32 lbl_803E7458;
 
 extern f32 lbl_803E738C;
-extern int cmbsrc_update(GameObject* obj);
 
 extern f32 lbl_803E7360;
 extern f32 lbl_803E7364;
@@ -458,7 +449,6 @@ extern f32 lbl_803E7388;
 extern f32 lbl_803E7390;
 extern f32 lbl_803E7394;
 extern f32 lbl_803E7398;
-extern f32 interpolate(f32 a, f32 b, f32 c);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 brightness, int b, int c, int d, f32 e, int f);
 extern void fn_80098B18(int obj, f32 brightness, int b, int c, int d, void* vec);
 extern void lightSetField4D(void* light, int v);
@@ -496,7 +486,6 @@ extern const f32 lbl_803E732C;
 
 #pragma dont_inline reset
 
-extern void* ObjList_GetObjects(int* startIndex, int* objectCount);
 
 extern int* gPlayerInterface;
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 val);
@@ -619,8 +608,6 @@ extern f32 lbl_803E7000;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern int ObjTrigger_IsSet(int obj);
-extern void hudFn_8011f38c(int arg);
 extern int fn_80296A9C(GameObject* player, int p2);
 extern int objGetFirstChild(void);
 extern void staffSetGlow(int staff, int p2, int p3);
@@ -640,7 +627,6 @@ extern f32 lbl_803E6F68;
 extern f32 lbl_803E6F38;
 void arwarwinggu_setTextureFrame(GameObject* obj, int p2);
 
-extern void ObjLink_AttachChild(int obj, int child, int p3);
 extern f32 lbl_803E6F2C;
 extern f32 lbl_803E6F70;
 extern f32 lbl_803E6F74;
@@ -810,7 +796,6 @@ extern f32 lbl_803E719C;
 extern f32 lbl_803E71A0;
 extern f32 lbl_803E71A4;
 
-extern void ObjPath_GetPointLocalPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z);
 
 typedef struct
 {
@@ -823,7 +808,6 @@ extern f32 lbl_803E71AC;
 extern f32 lbl_803E71B0;
 extern f32 lbl_803E71B4;
 
-extern void setMatrixFromObjectTransposed(void* transform, f32* mtx);
 extern f32 lbl_803E718C;
 extern f32 lbl_803E7190;
 extern f32 gArwingSquadronPi;

@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/dll/LGT/lgt_types.h"
 #include "main/obj_placement.h"
+#include "main/texture.h"
 
 extern f32 lbl_802C2618[];
 extern f32 lbl_803E7260;
@@ -47,7 +48,7 @@ typedef struct ProjectedLightSetup
 typedef struct ProjectedLightState
 {
     ModelLight* light;
-    void* texture;
+    Texture* texture;
 } ProjectedLightState;
 
 STATIC_ASSERT(sizeof(ProjectedLightState) == 0x8);

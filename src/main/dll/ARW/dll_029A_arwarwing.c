@@ -26,6 +26,7 @@
  * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
  */
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/headdisplay.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
