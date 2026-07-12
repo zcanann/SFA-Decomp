@@ -10,5 +10,6 @@ s32 SaveGame_getCamActionNo(void);
 int getSaveGameLoadStatus(void);
 void saveGame_save();
 void* saveGameGetEnvState(void);
+void saveGame_saveObjectPos(int* obj);
 
 #endif /* MAIN_DLL_SAVEGAME_H_ */

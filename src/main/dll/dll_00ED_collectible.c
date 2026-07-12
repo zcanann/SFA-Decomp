@@ -18,6 +18,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "main/dll/savegame.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objprint_api.h"
@@ -45,7 +46,6 @@
 extern void ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-extern void saveGame_saveObjectPos(int obj);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void playerAddHealth(void* player, int amount);
@@ -555,7 +555,7 @@ void collectible_setPosition(int* obj, f32 f1, f32 f2, f32 f3)
     ((CollectibleState*)inner)->basePosZ = f3;
     if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
     {
-        saveGame_saveObjectPos((int)obj);
+        saveGame_saveObjectPos(obj);
     }
 }
 

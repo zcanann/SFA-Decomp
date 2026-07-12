@@ -390,7 +390,6 @@ void fn_802BF0C8(int obj, int inner, int bit);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
-extern void saveGame_saveObjectPos(int obj);
 
 extern u8 gDRCloudRunnerMoveParamTable[];
 extern int lbl_803E83A0;

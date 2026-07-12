@@ -285,7 +285,6 @@ extern int gKytesMumQuestBits[];
 extern int gKytesMumTriggerIds[];
 extern int gKytesMumQuestIdleSfxTable[];
 extern int ObjTrigger_IsSet(int obj);
-extern void saveGame_saveObjectPos(int obj);
 extern int objGetAnimState80A(GameObject* obj);
 extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;

@@ -18,6 +18,7 @@
  * 0x04 drop-disabled, 0x08 suppress position save.
  */
 #include "main/game_object.h"
+#include "main/dll/savegame.h"
 #include "main/objhits.h"
 #include "main/dll/player_objects.h"
 #include "main/gameplay_runtime.h"
@@ -60,7 +61,6 @@ extern int isTrickyNear(void* player);
 
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
-extern void saveGame_saveObjectPos(int* obj);
 
 void objSaveFn_800ea774(int* obj)
 {

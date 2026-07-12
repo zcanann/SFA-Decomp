@@ -19,6 +19,7 @@
  * game bit.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/savegame.h"
 #include "main/debug.h"
 #include "main/dll/moveLib.h"
 #include "main/game_object.h"
@@ -325,7 +326,7 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     count = 0;
     Obj_GetPlayerObject();
     runtime = (KytesMumRuntime*)(obj)->extra;
-    saveGame_saveObjectPos((int)obj);
+    saveGame_saveObjectPos((int*)obj);
     ObjHits_DisableObject((int)obj);
     for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
     {

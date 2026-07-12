@@ -8,6 +8,7 @@
  * landing on a contact object, and a floor clamp), then persists the
  * object's position. Re-split from a former multi-object TU. */
 #include "main/audio/sfx_ids.h"
+#include "main/dll/savegame.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
@@ -52,7 +53,6 @@ extern const f32 lbl_803E4B04;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(GameObject* obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
 extern void ObjHits_AddContactObject(int obj, int contactObj);
-extern void saveGame_saveObjectPos(int obj);
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
 
@@ -175,7 +175,7 @@ void dll_1DA_update(int obj)
     {
         ((GameObject*)obj)->anim.localPosY = *(f32*)state;
     }
-    saveGame_saveObjectPos(obj);
+    saveGame_saveObjectPos((int*)obj);
 }
 
 void dll_1DA_init(GameObject* obj)

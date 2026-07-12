@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/dll/savegame.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"
@@ -176,7 +177,6 @@ extern void dll_2E_func08(u8* sub, int b, int c);
 extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
-extern void saveGame_saveObjectPos(int obj);
 extern void playerAddRemoveMagic(void* player, int n);
 extern f32 timeDelta;
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
@@ -993,7 +993,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     stk = gCfGuardianHeadingTemplate;
     if (((GameObject*)obj)->seqIndex < 0)
     {
-        saveGame_saveObjectPos((int)obj);
+        saveGame_saveObjectPos((int*)obj);
         return 0;
     }
     if (sub->questState != CFGUARDIAN_LANDING)

@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/dll/savegame.h"
 #include "main/object_api.h"
 #include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"
@@ -190,7 +191,6 @@ void fn_801A7B10(GameObject* obj)
     }
 }
 
-extern void saveGame_saveObjectPos(int obj);
 extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern f32 lbl_803E454C;
@@ -223,7 +223,7 @@ void fn_801A79E0(GameObject* obj)
         (obj)->anim.localPosX = state->homeX;
         (obj)->anim.localPosY = state->homeY;
         (obj)->anim.localPosZ = state->homeZ;
-        saveGame_saveObjectPos((int)obj);
+        saveGame_saveObjectPos((int*)obj);
     }
 }
 #pragma dont_inline reset
@@ -235,7 +235,7 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
     (obj)->anim.localPosX = x;
     (obj)->anim.localPosY = y;
     (obj)->anim.localPosZ = z;
-    saveGame_saveObjectPos((int)obj);
+    saveGame_saveObjectPos((int*)obj);
 }
 
 #pragma scheduling off
@@ -379,7 +379,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 Vec_distance(f32 * a, f32 * b);
-    extern void saveGame_saveObjectPos(void* obj);
 
     int i;
     int count;
@@ -438,7 +437,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                 obj->anim.localPosX = state->homeX;
                 obj->anim.localPosY = state->homeY;
                 obj->anim.localPosZ = state->homeZ;
-                saveGame_saveObjectPos(obj);
+                saveGame_saveObjectPos((int*)obj);
             }
             else
             {
@@ -452,7 +451,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                     obj->anim.localPosX = ((GameObject*)list[i])->anim.localPosX;
                     obj->anim.localPosY = ((GameObject*)list[i])->anim.localPosY;
                     obj->anim.localPosZ = ((GameObject*)list[i])->anim.localPosZ;
-                    saveGame_saveObjectPos(obj);
+                    saveGame_saveObjectPos((int*)obj);
                 }
                 {
                     f32 y = obj->anim.localPosY;
