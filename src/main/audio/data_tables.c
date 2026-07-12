@@ -253,11 +253,8 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
         {
             if (dataCurveNum < 2048)
             {
-                {
-                    DATA_TAB* curve = t->curve;
-                    for (j = dataCurveNum - 1; j >= i; --j)
-                        curve[j + 1] = curve[j];
-                }
+                for (j = dataCurveNum - 1; j >= i; --j)
+                    ((DATA_TAB*)(t->sdir + 128))[j + 1] = ((DATA_TAB*)(t->sdir + 128))[j];
                 ++dataCurveNum;
             }
             else
