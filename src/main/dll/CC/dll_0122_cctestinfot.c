@@ -243,3 +243,8 @@ u32 gFXEmitObjDescriptor[14] = {0x00000000,
                                 (u32)FxEmit_free,
                                 (u32)FxEmit_getObjectTypeId,
                                 (u32)FxEmit_getExtraSize};
+
+__declspec(section ".sdata2") f32 lbl_803E3C88 = 600.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3C8C = 0.0f;
+#pragma explicit_zero_data reset

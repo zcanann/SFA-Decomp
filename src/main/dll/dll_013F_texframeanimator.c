@@ -196,3 +196,8 @@ ObjDescriptorTable gSfxPlayerObjDescriptor = {{0x00000000, 0x00000000, 0x0000000
                                                0x00000000, (u32)sfxplayerObj_init, (u32)sfxplayerObj_update, 0x00000000,
                                                0x00000000, (u32)sfxplayerObj_free, 0x00000000,
                                                (u32)sfxplayerObj_getExtraSize}};
+
+__declspec(section ".sdata2") f32 lbl_803E4060 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4064 = 0.0f;
+#pragma explicit_zero_data reset
