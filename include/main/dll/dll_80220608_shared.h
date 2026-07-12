@@ -119,22 +119,13 @@ extern f32 lbl_803E6E7C;
 extern f32 PSVECDistance(void* a, void* b);
 extern f32 lbl_803E6E94;
 
-extern f32 lbl_803E6E98;
 extern f32 lbl_803E6E2C;
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;
 
 extern int fn_80065640(void);
 extern void fn_80065574(int a, GameObject* b, int c);
-extern f32 lbl_803E6E9C;
 extern f32 lbl_803E6EA0;
-extern f32 lbl_803E6EA4;
-extern f32 lbl_803E6EA8;
-extern f32 lbl_803E6EAC;
-extern f32 lbl_803E6EB0;
-extern f32 lbl_803E6EB4;
-extern f32 lbl_803E6EB8;
-extern f32 lbl_803E6EBC;
 
 extern f32 lbl_803E6E28;
 extern f32 lbl_803E6E30;
@@ -447,10 +438,7 @@ extern f32 lbl_803E6C1C;
 
 
 
-extern f32 lbl_803E6EC8;
-extern f32 lbl_803E6ED4;
 extern f32 lbl_803E6ED8;
-extern f32 lbl_8032B4A8[];
 
 
 #endif
