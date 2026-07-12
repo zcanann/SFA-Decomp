@@ -8,7 +8,6 @@
  * mcstaffeffe_SeqFn (defined alongside mcupgradema in DLL 0x2B8) drives
  * the player's staff glow from sequence events.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

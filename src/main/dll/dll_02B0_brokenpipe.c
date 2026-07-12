@@ -8,7 +8,6 @@
  * the model's base root-motion scale. update polls the priority hit-react
  * system, flashing a light-blue hit effect on a cooldown.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/game_object.h"
 #include "main/objhits.h"

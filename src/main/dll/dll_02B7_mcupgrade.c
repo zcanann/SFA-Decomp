@@ -12,14 +12,19 @@
  * which lives in the cnthitobjec TU (DLL 0x2B6). Sibling object mcupgradema
  * lives in DLL 0x2B8.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/tricky.h"
 #include "main/dll/mcupgrade_state.h"
 #include "main/dll/player_api.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/game_ui_interface.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/objlib.h"
+#include "main/objseq.h"
 
 void mcupgrade_update(GameObject* obj)
 {
