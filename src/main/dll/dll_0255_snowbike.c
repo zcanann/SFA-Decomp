@@ -129,7 +129,6 @@ extern void Sfx_SetObjectSfxVolume(int obj, int sfx, u8 vol, f32 v);
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern void OSReport(const char* msg, ...);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
 extern f32 oneOverTimeDelta;

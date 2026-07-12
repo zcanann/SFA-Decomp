@@ -4,17 +4,7 @@
 #include "ghidra_import.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
-
-typedef struct CamTalkTransformInput {
-  u16 yaw;
-  u16 pitch;
-  u16 roll;
-  u16 pad;
-  f32 scale;
-  f32 x;
-  f32 y;
-  f32 z;
-} CamTalkTransformInput;
+#include "main/vecmath.h"
 
 void CameraModeBike_update(CameraObject *camera);
 void CameraModeBike_init(CameraObject *camera);

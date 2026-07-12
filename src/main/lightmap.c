@@ -57,7 +57,6 @@ extern f32 changeMode_803DEC00;
 extern f32 gLightmapDegToBamScale;
 extern F32Pair changed_803DEC08;
 extern f32 lbl_803DEC0C;
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern FrustumPlane gViewFrustumPlanes[];
 extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);

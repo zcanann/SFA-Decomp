@@ -97,7 +97,6 @@ extern const f32 lbl_803E4A90;
 
 extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
 extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 FbWGPipe GXWGFifo : (0xCC008000);
 

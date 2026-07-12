@@ -81,7 +81,6 @@ extern void fn_8003B0D0(GameObject* obj, int b, void* c, int d);
 extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
 extern void Tricky_applyFloorResponse(GameObject* obj, int state);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32);
 
 extern void objMove(short* obj, f32 dx, f32 dy, f32 dz);

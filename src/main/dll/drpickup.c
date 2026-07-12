@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E5AE8;
@@ -14,7 +15,6 @@ extern f32 lbl_803E5C28;
 extern f32 lbl_803E5C2C;
 extern f32 lbl_803E5C30;
 
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void PSVECAdd(const void* a, const void* b, void* ab);
 extern float powfBitEstimate(float x, float y);
 
@@ -86,10 +86,10 @@ void fn_801EC1AC(int obj, int state)
     }
     ((DRPickupState*)state)->localOffsetZ = (*(f32*)(state + 0x430) + target) * timeDelta;
 
-    Matrix_TransformPoint((void*)(state + 0x6c), ((DRPickupState*)state)->localOffsetX,
+    Matrix_TransformPoint((f32*)(state + 0x6c), ((DRPickupState*)state)->localOffsetX,
                           ((DRPickupState*)state)->localOffsetY, ((DRPickupState*)state)->localOffsetZ, &out[0],
                           &out[1], &out[2]);
-    Matrix_TransformPoint((void*)(state + 0x12c), out[0], out[1], out[2], &out[0], &out[1], &out[2]);
+    Matrix_TransformPoint((f32*)(state + 0x12c), out[0], out[1], out[2], &out[0], &out[1], &out[2]);
     PSVECAdd(out, (void*)(state + 0x494), (void*)(state + 0x494));
 
     ((DRPickupState*)state)->angVel414 =

@@ -627,7 +627,6 @@ void dbegg_update(GameObject* obj)
 
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern f32 Vec_xzDistance(int, int);
-    extern void Vec3_Normalize(int);
     extern f32 PSVECMag(int);
     extern void logPrintf(char* fmt, ...);
     extern void ObjHits_EnableObject(int);
@@ -919,7 +918,7 @@ void dbegg_update(GameObject* obj)
                     ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
                 if (fx > lbl_803E6254 * timeDelta)
                 {
-                    Vec3_Normalize((int)obj + 0x24);
+                    Vec3_Normalize((f32*)((int)obj + 0x24));
                     (obj)->anim.velocityX = (obj)->anim.velocityX * (lbl_803E6254 * timeDelta);
                     (obj)->anim.velocityY = (obj)->anim.velocityY * (lbl_803E6254 * timeDelta);
                     (obj)->anim.velocityZ = (obj)->anim.velocityZ * (lbl_803E6254 * timeDelta);

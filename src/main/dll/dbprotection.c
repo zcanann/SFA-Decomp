@@ -143,7 +143,6 @@ extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 
 extern f32 sqrtf(f32 x);
 extern int getAngle(float y, float x);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
 

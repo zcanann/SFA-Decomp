@@ -28,7 +28,6 @@ extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 extern void fn_8003A168(GameObject* p1, int p2);
 extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void buttonDisable(int port, u32 mask);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void saveGame_saveObjectPos(int obj);
 
 int dim2prisonmammoth_defaultStateHandler(void)

@@ -14,6 +14,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
+#include "main/vecmath.h"
 
 #define BONE_PARTICLE_EFFECT_PARTFX       0x28c
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
@@ -48,7 +49,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
 extern void Sfx_PlayFromObject(void* obj, int id);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
@@ -218,7 +218,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                     dy = dy * lbl_803DF4BC;
                 }
                 dz = dz * lbl_803DF4BC;
-                Matrix_TransformPoint(mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
+                Matrix_TransformPoint((f32*)mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                 k = 0;
                 scaleA = (f32*)(base + 0x90);
                 scaleB = (f32*)base;
@@ -248,7 +248,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                         vtx.vy = scaleC[1] * sc;
                         vtx.vz = scaleC[2] * *(f32*)(base + id * 4 + 0x664);
                     }
-                    Matrix_TransformPoint(mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
+                    Matrix_TransformPoint((f32*)mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                     vtx.vx = vtx.vx + playerMapOffsetX;
                     vtx.vz = vtx.vz + playerMapOffsetZ;
                     ((ParticleSlot*)*grp)[k + row].posX = dx + (vtx.vx - ((GameObject*)obj)->anim.localPosX);

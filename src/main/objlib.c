@@ -25,7 +25,6 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_BuildWorldTransformMatrix(u8* obj, f32* mtx, int flags);
-extern void mtx44Transpose(f32* src, f32* dst);
 extern int* Obj_GetActiveModel(int obj);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);

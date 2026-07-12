@@ -71,7 +71,6 @@ extern f32 lbl_803E2984;
 extern f32 lbl_803E2988;
 extern f32 lbl_803E298C;
 
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern f32 sqrtf(f32 x);
 extern void fn_8014CF7C(int obj, int state, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int state, f32* vec, f32 a, f32 b, f32 c, int d);

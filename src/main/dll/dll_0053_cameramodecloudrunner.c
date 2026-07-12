@@ -31,7 +31,6 @@ extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
 extern int getAngle(float y, float x);
 extern int playerGetFocusObject(int obj);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 
 void CameraModeCloudRunner_copyToCurrent(void)
 {

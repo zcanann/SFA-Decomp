@@ -86,7 +86,6 @@ extern f32 lbl_803E3564;
 extern f32 lbl_803E356C;
 extern f32 lbl_803E3580;
 extern f32 lbl_803E3584;
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int getAngle(float y, float x);
 
 extern void memcpy(void* dst, void* src, int n);

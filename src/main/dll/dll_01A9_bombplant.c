@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "main/dll/dll_01A9_bombplant.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/vecmath.h"
 #define BOMBPLANT_HIT_VOLUME_SLOT 5
 #define BOMBPLANT_PARTFX 0x7f1
 #define BOMBPLANT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -35,8 +36,6 @@ extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, i
 extern f32 gBombPlantExplosionScale;
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
-extern void setMatrixFromObjectPos(void* mtx, void* build);
-extern void Matrix_TransformPoint(void* mtx, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 extern f32 lbl_803E536C;
 extern f32 gBombPlantSporeOffsetScale;
@@ -106,13 +105,6 @@ void bombplant_explode(int* obj, int unused, int* p3)
     }
 }
 
-typedef struct
-{
-    s16 pos[3];
-    f32 w;
-    f32 v[3];
-} MushSpawnBuild;
-
 /* Spore spawn descriptor (Obj_AllocObjectSetup 0x24): ObjPlacement head
  * extended with the spore's seeded yaw / parent-rotX slots. */
 typedef struct
@@ -140,26 +132,26 @@ void bombplant_throwSpore(int* obj, int* p2)
 
     if (Obj_IsLoadingLocked())
     {
-        MushSpawnBuild bd;
-        f32 mtx[4][4];
+        MatrixTransform bd;
+        f32 mtx[16];
         f32 tz, ty, tx;
 
         spore = Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
-        bd.pos[0] = ((GameObject*)obj)->anim.rotX;
-        bd.pos[1] = ((GameObject*)obj)->anim.rotY;
-        bd.pos[2] = ((GameObject*)obj)->anim.rotZ;
-        bd.v[0] = lbl_803E536C;
-        bd.v[1] = lbl_803E536C;
-        bd.v[2] = lbl_803E536C;
-        bd.w = lbl_803E5370;
+        bd.rotX = ((GameObject*)obj)->anim.rotX;
+        bd.rotY = ((GameObject*)obj)->anim.rotY;
+        bd.rotZ = ((GameObject*)obj)->anim.rotZ;
+        bd.x = lbl_803E536C;
+        bd.y = lbl_803E536C;
+        bd.z = lbl_803E536C;
+        bd.scale = lbl_803E5370;
         setMatrixFromObjectPos(mtx, &bd);
         Matrix_TransformPoint(mtx, lbl_803E536C, lbl_803E5370, lbl_803E536C, &tx, &ty, &tz);
-        bd.v[0] = gBombPlantSporeOffsetScale * tx;
-        bd.v[1] = gBombPlantSporeOffsetScale * ty;
-        bd.v[2] = gBombPlantSporeOffsetScale * tz;
-        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.v[0];
-        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.v[1];
-        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.v[2];
+        bd.x = gBombPlantSporeOffsetScale * tx;
+        bd.y = gBombPlantSporeOffsetScale * ty;
+        bd.z = gBombPlantSporeOffsetScale * tz;
+        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.x;
+        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.y;
+        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.z;
         spore->color[1] = 1;
         spore->color[0] = 2;
         spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);

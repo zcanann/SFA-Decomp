@@ -59,7 +59,6 @@ extern const f32 lbl_803E05C4;
 extern int getAngle(float y, float x);
 extern f32 sqrtf(f32 x);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void objMove(int* obj, f32 vx, f32 vy, f32 vz);
 
 #pragma opt_common_subs off

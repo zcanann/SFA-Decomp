@@ -618,7 +618,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     lim = (f32*)(base + ((int)idx >> 1) * 4 + 0xa8);
     if (mag > *lim)
     {
-        Vec3_Normalize((void*)(obj + 0x24));
+        Vec3_Normalize((f32*)(obj + 0x24));
         ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX * ((mag + *lim) * (d8 = lbl_803E83D8));
         ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (d8 * (mag + *lim));
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * (d8 * (mag + *lim));
@@ -628,7 +628,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         lim = (f32*)(base + ((int)idx >> 1) * 4 + 0xb4);
         if (mag < *lim)
         {
-            Vec3_Normalize((void*)(obj + 0x24));
+            Vec3_Normalize((f32*)(obj + 0x24));
             ((GameObject*)obj)->anim.velocityX =
                 ((GameObject*)obj)->anim.velocityX * ((mag + *lim) * (d8 = lbl_803E83D8));
             ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY * (d8 * (mag + *lim));

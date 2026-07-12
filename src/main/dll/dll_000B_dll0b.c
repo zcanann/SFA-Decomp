@@ -1037,7 +1037,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void selectTexture(u8* tex, int mapId);
 extern int getAngle(float y, float x);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
-extern void mtx44Transpose(f32* src, f32* dst);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);

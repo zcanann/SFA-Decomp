@@ -65,7 +65,7 @@ f32 DIMSnowHorn1_func19(GameObject* obj, f32* out);
 void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i);
 void DIMSnowHorn1_setMountMode(GameObject* obj, int value);
 int DIMSnowHorn1_func16(void);
-void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ);
+void DIMSnowHorn1_func15(s16* packed, f32* outX, f32* outY, f32* outZ);
 int DIMSnowHorn1_func14(GameObject* obj);
 int DIMSnowHorn1_render2(GameObject* obj);
 void DIMSnowHorn1_modelMtxFn(GameObject* obj, f32* out_x, f32* out_y, f32* out_z);

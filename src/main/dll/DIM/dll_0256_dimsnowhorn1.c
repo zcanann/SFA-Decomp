@@ -822,10 +822,8 @@ int DIMSnowHorn1_func16(void)
     return 0;
 }
 
-void DIMSnowHorn1_func15(s16* packed, u32 outX, u32 outY, u32 outZ)
+void DIMSnowHorn1_func15(s16* packed, f32* outX, f32* outY, f32* outZ)
 {
-    extern void setMatrixFromObjectPos(void* matrix, void* packedTransform);
-    extern void Matrix_TransformPoint(void* matrix, double x, double y, double z, u32 outX, u32 outY, u32 outZ);
     MatrixTransform transform;
     f32 matrix[16];
 

@@ -38,7 +38,6 @@ extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(int* from, int* to);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 a, int b, int c, int d, f32 e, void* params);
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;

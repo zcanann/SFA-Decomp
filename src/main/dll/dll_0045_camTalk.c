@@ -33,8 +33,6 @@ extern f32 lbl_803E17D0;
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void vecRotateZXY(void* params, void* outVec);
-extern u32 setMatrixFromObjectPos();
-extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
@@ -73,7 +71,7 @@ void CameraModeBike_update(CameraObject* camera)
     float posZ;
     float posY;
     float posX;
-    CamTalkTransformInput xformIn;
+    MatrixTransform xformIn;
     float mtxBuf[17];
 
     (*gCameraInterface)->getDefaultHandlerEntry();
@@ -85,9 +83,9 @@ void CameraModeBike_update(CameraObject* camera)
         xformIn.y = target->anim.worldPosY;
         xformIn.z = target->anim.worldPosZ;
         xformIn.scale = lbl_803E1788;
-        *(s16*)&xformIn.yaw = target->anim.rotX;
-        xformIn.pitch = gCamTalkBikeState->pitchTarget;
-        xformIn.roll = 0;
+        xformIn.rotX = target->anim.rotX;
+        xformIn.rotY = gCamTalkBikeState->pitchTarget;
+        xformIn.rotZ = 0;
         setMatrixFromObjectPos(mtxBuf, &xformIn);
         Matrix_TransformPoint(mtxBuf, lbl_803E1780, lbl_803E178C, lbl_803E1780, &posZ, &posY, &posX);
         angleDelta = 0x8000 - target->anim.rotX;
