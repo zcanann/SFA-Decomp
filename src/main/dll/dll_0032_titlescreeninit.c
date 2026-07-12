@@ -56,7 +56,7 @@ typedef struct LoadingScreenTexture
 /* Localized DVD-read-error string (docblock: "localized error string (text id 0x565)"). */
 #define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
-extern int gTitleScreenInitLoadingTextures[];
+int gTitleScreenInitLoadingTextures[4];
 extern u8 lbl_803DC968;
 extern u8 gTitleScreenInitDvdErrorLatched;
 extern u32 gTitleScreenInitLoadingFrameCounter;

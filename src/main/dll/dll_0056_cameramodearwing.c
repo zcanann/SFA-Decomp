@@ -53,7 +53,7 @@ typedef struct CameraArwingWork
     u8 pad5F[0x60 - 0x5F];
 } CameraArwingWork;
 
-extern f32 gCamArwingWork[];
+f32 gCamArwingWork[24];
 extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA4;
 extern f32 lbl_803E1BA8;

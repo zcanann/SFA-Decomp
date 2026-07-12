@@ -864,6 +864,7 @@ main/dll/dll_0055_cameramodeperv.c:
 
 main/dll/dll_0056_cameramodearwing.c:
 	.text       start:0x80110E30 end:0x801115E4
+	.bss        start:0x803A43C0 end:0x803A4420
 
 main/dll/dll_0057_cameramodetitle.c:
 	.text       start:0x801115E4 end:0x80111D14
@@ -879,6 +880,7 @@ main/dll/dll_002E_moveLib.c:
 
 main/dll/dll_0032_titlescreeninit.c:
 	.text       start:0x801159E4 end:0x80115F20
+	.bss        start:0x803A4438 end:0x803A4448
 	.sdata2     start:0x803E1CE8 end:0x803E1CF0
 
 main/dll/dll_0033_nrareware.c:
