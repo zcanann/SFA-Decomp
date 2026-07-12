@@ -441,7 +441,7 @@ void loadMapForCameraPos(float x, float y, float z)
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 
-void* mapBlockFn_800592e4(void)
+MapRomList* mapBlockFn_800592e4(void)
 {
     char* p = (char*)lbl_803822A0[0];
     int v = *(s16*)(p + 0x594);
@@ -454,7 +454,7 @@ void* mapBlockFn_800592e4(void)
         return 0;
     }
     {
-        void* res = gLoadedRomListPages[v];
+        MapRomList* res = gLoadedRomListPages[v];
         if (res == 0)
         {
             return res;

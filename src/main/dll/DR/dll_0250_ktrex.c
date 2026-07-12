@@ -318,8 +318,8 @@ int ktrex_isPlayerInLaneThreatRange(GameObject* obj)
     case 1:
     case 2:
         center = obj->anim.localPosZ;
-        lo = (center - gKTRexLaneThreatHalfWidth) - *(f32*)((char*)gKTRexMapBlock + 0x28);
-        hi = (gKTRexLaneThreatHalfWidth + center) - *(f32*)((char*)gKTRexMapBlock + 0x28);
+        lo = (center - gKTRexLaneThreatHalfWidth) - gKTRexMapBlock->worldZ;
+        hi = (gKTRexLaneThreatHalfWidth + center) - gKTRexMapBlock->worldZ;
         if (lo > lbl_803E6840 || hi < lbl_803E6840)
         {
             return 0;
@@ -328,8 +328,8 @@ int ktrex_isPlayerInLaneThreatRange(GameObject* obj)
     case 4:
     case 8:
         center = obj->anim.localPosX;
-        lo = (center - gKTRexLaneThreatHalfWidth) - *(f32*)((char*)gKTRexMapBlock + 0x24);
-        hi = (gKTRexLaneThreatHalfWidth + center) - *(f32*)((char*)gKTRexMapBlock + 0x24);
+        lo = (center - gKTRexLaneThreatHalfWidth) - gKTRexMapBlock->worldX;
+        hi = (gKTRexLaneThreatHalfWidth + center) - gKTRexMapBlock->worldX;
         if (lo > lbl_803E6844 || hi < lbl_803E6844)
         {
             return 0;
@@ -1035,7 +1035,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     rt->hitCountdown = 3;
     gKTRexResource = Resource_Acquire(0x5a, 1);
     (obj)->unkF8 = 0;
-    gKTRexMapBlock = (void*)mapBlockFn_800592e4();
+    gKTRexMapBlock = mapBlockFn_800592e4();
     ((KTRexArenaState*)gKTRexState)->light = objCreateLight(0, 1);
     if (((KTRexArenaState*)gKTRexState)->light != 0)
     {

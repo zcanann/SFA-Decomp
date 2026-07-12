@@ -140,7 +140,6 @@ extern f32 lbl_803E6F00;
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
 
 
-extern int mapBlockFn_800592e4(void);
 
 extern f32 lbl_803E7154;
 
