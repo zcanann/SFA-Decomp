@@ -272,7 +272,7 @@ void DoSetPitch(McmdVoiceState* svoice)
     u32 ofrq;
     u32 octave;
     s32 key;
-    u8 oKey;
+    s32 oKey;
     u16* kf = (u16*)lbl_8032EDD0;
 
     frq = svoice->targetPitch & 0xFFFFFF;
