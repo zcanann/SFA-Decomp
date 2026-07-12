@@ -246,7 +246,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         else if (*(void**)(*(int*)&(obj)->anim.placementData + 0x14) == NULL)
         {
             ObjHits_DisableObject((u32)obj);
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         else
         {
@@ -332,7 +332,7 @@ void wmwallcrawler_update(int obj)
                 if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                 {
                     ObjHits_DisableObject((u32)ob);
-                    Obj_FreeObject(ob);
+                    Obj_FreeObject((GameObject*)ob);
                 }
                 else
                 {
@@ -362,7 +362,7 @@ void wmwallcrawler_update(int obj)
                     if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                     {
                         ObjHits_DisableObject((u32)ob);
-                        Obj_FreeObject(ob);
+                        Obj_FreeObject((GameObject*)ob);
                     }
                     else
                     {
@@ -383,7 +383,7 @@ void wmwallcrawler_update(int obj)
                 if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                 {
                     ObjHits_DisableObject((u32)ob);
-                    Obj_FreeObject(ob);
+                    Obj_FreeObject((GameObject*)ob);
                 }
                 else
                 {
@@ -430,7 +430,7 @@ void wmwallcrawler_update(int obj)
                                 else if (*(void**)(*(int*)&((GameObject*)ob)->anim.placementData + 0x14) == 0)
                                 {
                                     ObjHits_DisableObject((u32)ob);
-                                    Obj_FreeObject(ob);
+                                    Obj_FreeObject((GameObject*)ob);
                                 }
                                 else
                                 {

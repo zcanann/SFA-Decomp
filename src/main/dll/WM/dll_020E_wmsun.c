@@ -362,7 +362,7 @@ void wmsun_update(GameObject* obj)
     {
         if (mainGetBit(0x38f) != 0)
         {
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject(obj);
         }
         else
         {
@@ -422,7 +422,7 @@ void wmsun_update(GameObject* obj)
             (obj)->anim.rotX += state->riseStep;
             if (state->renderEnabled == 0)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject(obj);
             }
         }
         return;

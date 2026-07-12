@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object.h"
 #include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "main/vecmath.h"
@@ -103,7 +104,6 @@ extern u32 FUN_80293f90();
 extern u32 FUN_80294ccc();
 extern void modelLightStruct_freeSlot(void* state);
 extern int modelLightStruct_createPointLight(int obj, int red, int green, int blue, int alpha);
-extern void Obj_FreeObject(int obj);
 extern void storeZeroToFloatParam(void* timer);
 extern void s16toFloat(void* timer, int duration);
 extern int timerCountDown(void* timer);

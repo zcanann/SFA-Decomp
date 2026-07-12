@@ -290,7 +290,7 @@ void firefly_update(int obj)
             }
             if (state->despawnTimer <= lbl_803E5EC4)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
         else
