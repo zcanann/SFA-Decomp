@@ -15,7 +15,8 @@
 #include "main/lightmap_api.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "main/gamebits.h"
+#include "main/voxmaps.h"
 #include "main/dll/dll_013A_visanimator.h"
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);

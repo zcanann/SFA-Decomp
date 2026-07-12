@@ -7,9 +7,14 @@
  * own velocity, fading its alpha up to a cap over its life timer before
  * freeing itself when the timer runs out.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "dolphin/mtx.h"
+#include "main/camera.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object.h"
 #include "main/object_api.h"
+#include "main/shader_api.h"
+#include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
 

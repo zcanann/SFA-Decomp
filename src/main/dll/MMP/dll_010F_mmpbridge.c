@@ -11,7 +11,8 @@
 #include "main/debug.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/dll/dll_80220608_shared.h"
+#include "main/frame_timing.h"
+#include "main/objhits.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
 
 #define BRIDGE_TEX_OFFSET_START 0x800
