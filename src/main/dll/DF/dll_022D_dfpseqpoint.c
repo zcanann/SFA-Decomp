@@ -44,7 +44,7 @@ typedef struct DfpseqpointPlacement
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
-extern f32 lbl_803E63B8;
+__declspec(section ".sdata2") f32 lbl_803E63B8 = 1.0f;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int mapGetDirIdx(int idx);
