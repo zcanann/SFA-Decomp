@@ -5071,19 +5071,19 @@ int doLotsOfMath(void* ptA, void* ptB, f32 radius, int flags, void* out, int* ob
             lb[2] = -dz;
             la[2] = dx;
             {
-                f32 q0 = -dz * (lbl_803DECB8 * -dz + ax2);
-                f32 q1 = dx * (lbl_803DECB8 * dx + az2);
+                f32 q0 = lb[2] * (lbl_803DECB8 * lb[2] + ax2);
+                f32 q1 = la[2] * (lbl_803DECB8 * la[2] + az2);
                 ld[2] = -(q0 + q1);
             }
             lb[3] = dz;
             la[3] = -dx;
             {
-                f32 q0 = dz * (radius * dz + ax2);
-                f32 q1 = -dx * (radius * -dx + az2);
+                f32 q0 = lb[3] * (radius * lb[3] + ax2);
+                f32 q1 = la[3] * (radius * la[3] + az2);
                 ld[3] = -(q0 + q1);
             }
-            lbl_803DCF54 = lbl_803DECD4 * (dz * radius);
-            lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
+            lbl_803DCF54 = lbl_803DECD4 * (lb[3] * radius);
+            lbl_803DCF50 = lbl_803DECD4 * (la[3] * radius);
 
             {
                 f32 *ap, *bp, *dp;
