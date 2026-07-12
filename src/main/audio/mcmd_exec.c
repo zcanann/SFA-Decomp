@@ -54,6 +54,8 @@ extern u8 voiceAdsrDecayTable[];
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
 extern void fn_802712C8(McmdVoiceState* state); /* synthStartSynthJobHandling */
 
+#pragma exceptions on
+
 /*
  * Choose a randomized note/velocity command and dispatch it through the
  * normal set-key handler.
