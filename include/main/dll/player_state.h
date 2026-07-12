@@ -313,7 +313,7 @@ typedef struct PlayerState {
     f32 curveSpeedScale; /* speed->curve-sample multiplier: u = speed*curveSpeedScale, the eval position into paramCurve0-4 */
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
-    int focusObject; /* object handle for camera setFocus / sequence-trigger interactions */
+    GameObject* focusObject; /* camera focus / sequence-trigger interaction object */
     u8 pad7F4[0x7F8 - 0x7F4];
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;

@@ -238,7 +238,7 @@ f32 fn_802966F4(GameObject* obj)
 GameObject* playerGetFocusObject(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
-    return (GameObject*)inner->focusObject;
+    return inner->focusObject;
 }
 
 int EmissionController_IsLingering(GameObject* obj)
@@ -3327,7 +3327,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 {
                     seq->movementState = 6;
                 }
-                if (*(u32*)&((PlayerState*)inner)->focusObject != 0)
+                if (((PlayerState*)inner)->focusObject != NULL)
                 {
                     (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x18);
                     *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
@@ -3541,7 +3541,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         if (dsq < best || found == 0)
                         {
                             best = dsq;
-                            ((PlayerState*)inner)->focusObject = va;
+                            ((PlayerState*)inner)->focusObject = (GameObject*)va;
                             found = 1;
                         }
                     }
@@ -3553,7 +3553,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     ((PlayerState*)inner)->unk6A8 = ((PlayerState*)inner)->savedPosY;
                     ((PlayerState*)inner)->unk6AC = ((PlayerState*)inner)->savedPosZ;
                     ((PlayerState*)inner)->unk6B0 = ((PlayerState*)inner)->savedPosZ;
-                    va = ((PlayerState*)inner)->focusObject;
+                    va = (int)((PlayerState*)inner)->focusObject;
                     (*(void (*)(int, int)) * (int*)((char*)*(int*)(*(int*)(va + 0x68)) + 0x3c))(va, 2);
                     ((GameObject*)obj)->anim.flags |= 8;
                     ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -3624,7 +3624,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
                 break;
             case 4:
-                obj2 = ((PlayerState*)inner)->focusObject;
+                obj2 = (int)((PlayerState*)inner)->focusObject;
                 (*gCameraInterface)->setFocus((void*)obj2, 0);
                 (*gObjectTriggerInterface)->setCamVars(0x45, 0, 0, 0);
                 ((PlayerState*)inner)->moveSequence = 0;
@@ -3641,7 +3641,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 break;
             case 0xb:
             {
-                int gb = ((PlayerState*)inner)->focusObject;
+                int gb = (int)((PlayerState*)inner)->focusObject;
                 if ((u32)gb != 0 && *(s16*)(gb + 0x46) == 0x416)
                 {
                     (*gCameraInterface)->setFocus((void*)gb, 0);
@@ -3952,7 +3952,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         lbl_803DE458 = 0;
     }
     {
-        int g = ((PlayerState*)inner)->focusObject;
+        int g = (int)((PlayerState*)inner)->focusObject;
         if ((u32)g != 0 && (*(int (*)(int)) * (int*)((char*)*(int*)(*(int*)(g + 0x68)) + 0x38))(g) == 2)
         {
             seq->flags &= ~3;
@@ -4515,7 +4515,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             int cur = *objs;
             if ((*(int (*)(int, int)) * (int*)((char*)*(int*)*(int*)(cur + 0x68) + 0x20))(cur, obj) != 0)
             {
-                ((PlayerState*)state)->focusObject = cur;
+                ((PlayerState*)state)->focusObject = (GameObject*)cur;
                 return 0xa;
             }
             objs++;
@@ -5815,7 +5815,7 @@ int playerStateOnCloudRunner(GameObject* obj, int state)
 int playerState19(GameObject* obj, int state)
 {
     PlayerState* inner = obj->extra;
-    int sub = inner->focusObject;
+    int sub = (int)inner->focusObject;
     void* vec;
     int kind;
     int joint;
@@ -5954,7 +5954,7 @@ int playerState19(GameObject* obj, int state)
         (*(void (*)(int, int))(*(int*)(*(int*)*(int*)((char*)sub + 0x68) + 0x3c)))(sub, 0);
         fn_802AB5A4(obj, (int)inner, 7);
         ObjHits_EnableObject(obj);
-        inner->focusObject = 0;
+        inner->focusObject = NULL;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
@@ -8029,14 +8029,14 @@ void playerDoHitDetection(int obj)
             }
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HITDETECT;
-        if ((void*)((PlayerState*)inner)->focusObject != NULL &&
+        if (((PlayerState*)inner)->focusObject != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
              arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
-            (*(void (*)(int, f32*, f32*, f32*))(*(int*)(*(int*)(*(int*)(((PlayerState*)inner)->focusObject + 0x68)) +
-                                                        0x34)))(((PlayerState*)inner)->focusObject, &x, &y, &z);
+            (*(void (*)(int, f32*, f32*, f32*))(*(int*)(*(int*)(*(int*)((int)((PlayerState*)inner)->focusObject + 0x68)) +
+                                                        0x34)))((int)((PlayerState*)inner)->focusObject, &x, &y, &z);
             (*gCameraInterface)->overridePos(x, y, z);
-            fn_802A9D0C(obj, inner, ((PlayerState*)inner)->focusObject, 0, 0, 0, 0, 0);
+            fn_802A9D0C(obj, inner, (int)((PlayerState*)inner)->focusObject, 0, 0, 0, 0, 0);
         }
         if (*(s8*)&((PlayerState*)inner)->baddie.physicsActive == 1 && (*(int*)((char*)inner + 4) & 0x100000) == 0)
         {
@@ -8298,7 +8298,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             damage = **(s8**)&((PlayerState*)inner)->playerStatus;
             break;
         case 0x15:
-            switch (*(s16*)(((PlayerState*)inner)->focusObject + 0x46))
+            switch (((PlayerState*)inner)->focusObject->anim.seqId)
             {
             case 0x714:
                 Camera_EnableViewYOffset();
@@ -11034,14 +11034,14 @@ int playerStopRidingObject(GameObject* obj)
     (*gCameraInterface)->loadTriggeredCamAction(0, 1, 0);
     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
 
-    sub = inner->focusObject;
+    sub = (int)inner->focusObject;
     if ((void*)sub != NULL)
     {
         (*(void (**)(int, int))((char*)*((GameObject*)sub)->anim.dll + 0x3c))(sub, 0);
         (*gCameraInterface)->setFocus((void*)obj, 0);
         obj->anim.flags &= ~8;
         obj->anim.modelState->flags &= ~0x1000LL;
-        inner->focusObject = 0;
+        inner->focusObject = NULL;
         obj->anim.activeMove = -1;
         (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))((int)obj, (int)inner, 1);
         *(int*)&inner->baddie.unk304 = (int)fn_802A514C;
@@ -13206,7 +13206,7 @@ void fn_802B4ED8(GameObject* obj, int p2, int mode)
         if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
             arrayIndexOf(&lbl_803DC6C4, 2, inner->baddie.controlMode) != -1)
         {
-            int p = inner->focusObject;
+            int p = (int)inner->focusObject;
             (*(void (*)(int, f32))(*(int*)((char*)*(int*)*(int*)((char*)p + 0x68) + 0x50)))(
                 p, obj->anim.modelInstance->rootMotionScaleBase);
         }
@@ -13777,7 +13777,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
              arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
-            fn_802A9D0C(obj, inner, ((PlayerState*)inner)->focusObject, a, b, c, d, 1);
+            fn_802A9D0C(obj, inner, (int)((PlayerState*)inner)->focusObject, a, b, c, d, 1);
         }
         if (((PlayerState*)inner)->teleportAnimActive == 1)
         {
@@ -13789,7 +13789,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
              arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
-                int held = *(int*)&((PlayerState*)inner)->focusObject;
+                int held = (int)((PlayerState*)inner)->focusObject;
                 (*(void (*)(f32)) * (int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(
                     ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
             }
@@ -14903,7 +14903,7 @@ int playerStateMountBike(GameObject* obj, int state, f32 fv)
 {
     char* base = (char*)lbl_80332EC0;
     PlayerState* inner = obj->extra;
-    int sub = inner->focusObject;
+    int sub = (int)inner->focusObject;
     void* joint;
     f32 j0[3];
     f32 j1[3];
