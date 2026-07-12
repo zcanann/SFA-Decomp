@@ -264,7 +264,6 @@ extern f32 lbl_803E4578;
 #pragma peephole off
 void fn_801A7CC4(GameObject* obj)
 {
-    extern void* Obj_GetPlayerObject(void);
     MmpMoonrockState* state = obj->extra;
     struct
     {
@@ -277,8 +276,8 @@ void fn_801A7CC4(GameObject* obj)
         f32 y;
         f32 z;
     } rotIn;
-    int* player = Obj_GetPlayerObject();
-    int* playerState = ((GameObject*)player)->extra;
+    GameObject* player = Obj_GetPlayerObject();
+    u8* playerState = player->extra;
     f32 zeroVel = lbl_803E4554;
     obj->anim.velocityX = zeroVel;
     obj->anim.velocityY = lbl_803E4570 * *(f32*)((char*)playerState + 0x298) + lbl_803E456C;
@@ -289,7 +288,7 @@ void fn_801A7CC4(GameObject* obj)
     rotIn.length = lbl_803E457C;
     rotIn.angleZ = 0;
     rotIn.angleY = 0;
-    rotIn.angleX = ((GameObject*)player)->anim.rotX;
+    rotIn.angleX = player->anim.rotX;
     vecRotateZXY(&rotIn, &obj->anim.velocityX);
     state->flags |= MOONROCK_FLAG_THROWN;
 }
@@ -535,7 +534,6 @@ extern f32 gMoonRockWobbleAmplitude;
 void mmp_moonrock_update(GameObject* obj)
 {
     extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
-    extern void* Obj_GetPlayerObject(void);
     MmpMoonrockState* state = obj->extra;
     u8 grabbed;
     int particleHeight;

@@ -48,7 +48,6 @@ extern void ObjGroup_AddObject(u32 obj, int group);
 extern u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void playerAddHealth(void* player, int amount);
 extern int gameBitIncrement(int bit);
 extern void saveGame_unsaveObjectPos(int* obj);
 extern f32 gCollectibleDespawnTimerDuration;

@@ -10,5 +10,6 @@ void fn_80296A9C(GameObject* player, int delta);
 GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(void* player);
 void playerAddMoney(GameObject* obj, int amount);
+void playerAddHealth(GameObject* obj, int amount);
 
 #endif /* MAIN_DLL_PLAYER_API_H_ */

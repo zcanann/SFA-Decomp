@@ -19,6 +19,7 @@
 #include "main/dll/dll_00FC_babycloudrunner.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0117_appleontree.h"
+#include "main/dll/player_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct AppleontreeObjectDef
@@ -182,14 +183,12 @@ void AppleOnTree_setPosition(GameObject* obj, float* pos)
  * particle FX + sfx + free-or-disable. */
 void appleontree_handleCollectableHit(GameObject* obj)
 {
-    extern void playerAddHealth(int player, u16 amount);
-    extern int Obj_GetPlayerObject(void);
     int state = *(int*)&obj->extra;
-    int player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
 
-    if (!(Vec_xzDistance((float*)(player + 0x18), (float*)&obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
+    if (!(Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
         return;
-    if (!(Vec_distance((float*)(player + 0x18), (float*)&obj->anim.worldPosX) < gAppleOnTreePickupRange))
+    if (!(Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupRange))
         return;
 
     if (mainGetBit(GAMEBIT_SawApple) == 0)
@@ -568,8 +567,6 @@ int fn_8017DF34(GameObject* obj, int state, f32 y)
 #pragma inline_max_size(1)
 void AppleOnTree_update(int objArg)
 {
-    extern void playerAddHealth(u8 * player, int v);
-    extern u8* Obj_GetPlayerObject(void);
     extern u64 ObjHits_DisableObject();
     float fa;
     int obj;

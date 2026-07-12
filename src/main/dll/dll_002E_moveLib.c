@@ -468,10 +468,9 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, 
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
 {
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
-    extern int Obj_GetPlayerObject(void);
     s16 pair[2];
     int mode;
-    int player;
+    GameObject* player;
     u8* phasePtr;
 
     player = Obj_GetPlayerObject();
@@ -509,7 +508,8 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
                 s->setupFlag = 0;
                 s->phase = MOVELIB_PHASE_RUN;
             case MOVELIB_PHASE_RUN:
-                if (objAnimFn_80115650(obj, player, &s->turnState, (char*)s, (char*)s, pair, &s->targetX) == 0)
+                if (objAnimFn_80115650(obj, (PostObject*)player, &s->turnState, (char*)s, (char*)s, pair,
+                                      &s->targetX) == 0)
                 {
                     s->phase = MOVELIB_PHASE_DONE;
                 }
@@ -520,7 +520,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
                 s->animPhase = lbl_803E1CC4;
                 break;
             }
-            *(int*)&s->lastTarget = player;
+            s->lastTarget = player;
             ObjAnim_AdvanceCurrentMove((int)obj, s->animPhase, framesThisStep, NULL);
             if (s->phase == MOVELIB_PHASE_FINISH)
             {

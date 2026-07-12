@@ -320,7 +320,6 @@ void SH_LevelControl_setMusic(short* obj)
 void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
 {
     extern s16 lbl_80327618[];
-    extern void* Obj_GetPlayerObject(void);
 
     int player;
     u8 i;
@@ -497,7 +496,6 @@ typedef struct ShopkeeperObject
 #pragma peephole off
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* state)
 {
-    extern int Obj_GetPlayerObject(void);
 
     ShopkeeperObject* thornTailObj;
     ShopkeeperObject* playerObj;
@@ -583,7 +581,6 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState* sta
 
 void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 {
-    extern int Obj_GetPlayerObject(void);
 
     ShopkeeperObject* playerObj;
 
@@ -646,13 +643,13 @@ void SH_LevelControl_update(GameObject* obj)
     extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
     extern void SH_LevelControl_doThornTailEvents(int obj, u32* state);
     extern void SH_LevelControl_runBloopEvent(GameObject * obj, u32 * state);
-    extern int Obj_GetPlayerObject(void);
     extern void SH_LevelControl_setMusic(u32 * state);
 
     u32* state;
     u32 val;
     u32 val2;
     u32 val3;
+    GameObject* player;
     u8 animEvt;
     u8* base = lbl_80327618;
 
@@ -781,8 +778,8 @@ void SH_LevelControl_update(GameObject* obj)
                 buttonDisable(0, PAD_BUTTON_A);
                 buttonDisable(0, PAD_BUTTON_B);
                 buttonDisable(0, PAD_BUTTON_MENU);
-                val = Obj_GetPlayerObject();
-                if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+                player = Obj_GetPlayerObject();
+                if ((player->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(7, (void*)obj, 0xffffffff);
                     mainSetBits(GAMEBIT_SH_PushedSwitchInWell, 1);
@@ -820,7 +817,7 @@ void SH_LevelControl_update(GameObject* obj)
         }
         val = mainGetBit(GAMEBIT_SH_Related0090);
         if (((val != 0) && (val = mainGetBit(GAMEBIT_SH_Related0EB3), val == 0)) &&
-            (val = Obj_GetPlayerObject(), (((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
+            (player = Obj_GetPlayerObject(), (player->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0))
         {
             mainSetBits(GAMEBIT_SH_Related0EB3, 1);
         }
@@ -853,8 +850,8 @@ void SH_LevelControl_update(GameObject* obj)
                 buttonDisable(0, PAD_BUTTON_A);
                 buttonDisable(0, PAD_BUTTON_B);
                 buttonDisable(0, PAD_BUTTON_MENU);
-                val = Obj_GetPlayerObject();
-                if ((((GameObject*)val)->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+                player = Obj_GetPlayerObject();
+                if ((player->objectFlags & SHLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
                 {
                     (*gObjectTriggerInterface)->runSequence(4, (void*)obj, 0xffffffff);
                     mainSetBits(GAMEBIT_SH_Related0177, 1);
