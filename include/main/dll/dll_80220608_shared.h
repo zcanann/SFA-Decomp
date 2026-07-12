@@ -23,6 +23,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
+#include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
@@ -45,8 +46,6 @@ extern f32 lbl_803E6BB0;
 extern f32 lbl_803E6BC8;
 extern void cloudClearOverridePosition(int obj);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void ObjGroup_RemoveObject(int obj, int group);
-extern void ObjGroup_AddObject(int obj, int group);
 extern f32 lbl_803E6C20;
 extern int lbl_803DC398;
 extern void storeZeroToFloatParam(void* timer);
@@ -212,12 +211,9 @@ STATIC_ASSERT(offsetof(WCLevelContInterface, traceMoveB) == 0x54);
 
 extern u8 fn_80296414(GameObject* player, int obj, int dir);
 extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, GameObject* player);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void objfx_spawnBoxBurst(void* obj, u8 idx, u8 kind, u8 mode, u8 chance, void* origin, int flags, f32 f8val,
                                 f32 mulX, f32 mulY, f32 mulZ);
-extern void ObjHits_DisableObject(u32 obj);
-extern void ObjHits_EnableObject(u32 obj);
 extern int gameBitIncrement(int id);
 extern f32 gWcPushBlockControllerSearchRange;
 extern f32 lbl_803E6D5C;
@@ -365,7 +361,6 @@ extern f32 lbl_803E6E90;
 
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern int ObjModel_GetBaseVertexCoords(int model, int idx);
-extern void ObjHits_DisableObject(u32 obj);
 extern int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6E70;
 extern f32 lbl_803E6E74;
@@ -504,7 +499,6 @@ extern void modelLightStruct_setProjectionTevModes(ModelLight* light, int a, int
 extern void modelLightStruct_setProjectionNearZ(ModelLight* light, f32 v);
 extern void modelLightStruct_setProjectionFarZ(ModelLight* light, f32 v);
 
-extern u32* ObjGroup_GetObjects(int group, int* count);
 
 typedef struct TimerFlags
 {
@@ -669,14 +663,11 @@ typedef struct CntHitFlags
 
 extern f32 lbl_803E7430;
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
-extern void ObjHits_DisableObject(u32 obj);
-extern void ObjHits_EnableObject(u32 obj);
 
 extern int lbl_8032BEF8[];
 extern u8 lbl_803DC42C;
 extern int lbl_803DC428;
 extern int arrayIndexOf(int array, int count, int value);
-extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 
 extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
@@ -731,7 +722,6 @@ extern void Music_Trigger(int id, int p2);
 #pragma dont_inline reset
 
 extern int getArwing(void);
-extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void spawnExplosion(int obj, f32 v, int a, int b, int c, int d, int e, int f, int g);
 extern int getAngle(f32 dx, f32 dz);
 extern void doRumble(f32 v);
@@ -867,7 +857,6 @@ extern void fn_8006CB50(void);
 extern void unlockLevel(int a, int b, int c);
 extern int ObjModel_GetRenderOp(int model, int idx);
 
-extern int ObjHits_GetPriorityHit(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume);
 extern void ObjPath_GetPointWorldPosition(GameObject* obj, int idx, f32* x, f32* y, f32* z, int p6);
 extern void DIMexplosionFn_8009a96c(int obj, f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i, int j,
                                     int k);
@@ -971,9 +960,6 @@ extern const f32 lbl_803E72F8;
 extern const f32 lbl_803E7308;
 extern void vecRotateZXY(int obj, f32* vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
-extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex,
-                                              u32* outHitVolume, float* outHitPosX, float* outHitPosY,
-                                              float* outHitPosZ);
 extern f32 gTreeEffectColors[];
 extern const f32 lbl_803E730C;
 extern const f32 lbl_803E7310;
@@ -1022,7 +1008,6 @@ extern void dll_2E_setLookAtMaxDistance(int state, f32 a);
 extern int gEarthWalkerMoveBlendData;
 extern f32 gEarthWalkerLookAtMaxDistance;
 
-extern int Obj_IsObjectAlive(int obj);
 extern f32 lbl_803E6C24;
 extern f32 lbl_803E6C28;
 extern f32 lbl_803E6C2C;
@@ -1460,7 +1445,6 @@ extern f32 PSVECDistance(void* a, void* b);
 extern int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, int p2, f32 a, f32 b, f32 c, int p6);
 extern int voxmaps_traceWorldLine(void* p1, void* p2);
 extern void PSVECSubtract(void* a, void* b, void* ab);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 gDrBarrelGenGrabRange;
@@ -1472,7 +1456,6 @@ extern f32 lbl_803DC3B0;
 extern f32 gDrBarrelGenGrabYOffset;
 
 extern void PSVECSubtract(void* a, void* b, void* ab);
-extern int ObjGroup_FindNearestObject(int group, int obj, f32* out);
 extern f32 lbl_803E6CA0;
 extern f32 lbl_803E6CA8;
 extern f32 lbl_803E6CAC;
