@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
@@ -74,7 +75,7 @@ typedef struct NwMammothState {
   f32 playerDistanceSq;
   f32 partfxTimer;
   u8 pad20[0x24 - 0x20];
-  void *trackedObject;
+  GameObject *trackedObject;
   void *playerObject;
   u8 pad2C[0x48 - 0x2C];
   u8 *triggerList;

@@ -3,6 +3,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_01A1_nwmammoth.h"
 #include "main/screen_transition.h"
@@ -65,10 +66,9 @@ extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
 extern int* ObjList_FindObjectById(int id);
 extern void fn_8014C66C(int* o, int* target);
-extern int* tumbleweedbush_findNearestActive(void* pos);
+extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
-extern void Obj_FreeObject(int o);
 extern f32 lbl_803E5210;
 extern u32 ObjGroup_AddObject();
 extern int ObjTrigger_IsSetById(int obj, int triggerId);
@@ -391,8 +391,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
     extern f32 vec3f_distanceSquared(void* a, void* b);
     NwMammothState* state = (NwMammothState*)st;
-    int* tw2;
-    int* tw;
+    GameObject* tw2;
+    GameObject* tw;
     int nearestObj = ObjGroup_FindNearestObject(NWMAMMOTH_TARGET_OBJGROUP, obj, 0);
     switch (state->stateIndex)
     {
@@ -463,7 +463,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     else
                     {
                         tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
-                        if (tw == NULL || vec3f_distanceSquared(&((GameObject*)tw)->anim.worldPosX, &o2[6]) >=
+                        if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, &o2[6]) >=
                                               gNwMammothTumbleweedDistSqThreshold)
                         {
                             if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX,
@@ -478,7 +478,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                         }
                         else
                         {
-                            fn_8014C66C(o2, tw);
+                            fn_8014C66C(o2, (int*)tw);
                         }
                     }
                 }
@@ -496,9 +496,9 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
             if (state->trackedObject == NULL)
             {
                 short* cfg = ((GameObject*)obj)->anim.placementData;
-                if (tw2 != NULL && ((GameObject*)tw2)->anim.seqId == 0x3fb)
+                if (tw2 != NULL && tw2->anim.seqId == 0x3fb)
                 {
-                    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)tw2)->anim.worldPosX) <
+                    if (getXZDistance(&((GameObject*)obj)->anim.worldPosX, &tw2->anim.worldPosX) <
                         (f32)(s32)(cfg[0xc] * cfg[0xc]))
                     {
                         if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
@@ -506,9 +506,9 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_snowstep);
                         }
                         /* Tumbleweed bush DLL interface +0x30: is the bush busy? +0x2C: send it rolling to a target position */
-                        if ((*(int (**)(int*))((char*)*((GameObject*)tw2)->anim.dll + 0x30))(tw2) == 0)
+                        if ((*(int (**)(int*))((char*)*tw2->anim.dll + 0x30))((int*)tw2) == 0)
                         {
-                            (*(void (**)(int*, f32*))((char*)*((GameObject*)tw2)->anim.dll + 0x2c))(tw2,
+                            (*(void (**)(int*, f32*))((char*)*tw2->anim.dll + 0x2c))((int*)tw2,
                                                                                                     &state->spawnPosX);
                             state->trackedObject = tw2;
                             state->stateIndex = 0xe;
@@ -525,18 +525,18 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         break;
     }
     case 0xe:
-        if (getXZDistance(&state->spawnPosX, (char*)&((GameObject*)state->trackedObject)->anim.worldPosX) <
+        if (getXZDistance(&state->spawnPosX, &state->trackedObject->anim.worldPosX) <
             gNwMammothCaptureDist)
         {
             Sfx_PlayFromObject((u32)obj, SFXTRIG_mammoth_annoyed);
-            fn_80163980(*(int*)&state->trackedObject);
+            fn_80163980((int)state->trackedObject);
             state->stateIndex = 0xf;
         }
         break;
     case 0xf:
         if (state->runtimeFlags & NW_MAMMOTH_RUNTIME_ANIM_ENDED)
         {
-            Obj_FreeObject(*(int*)&state->trackedObject);
+            Obj_FreeObject(state->trackedObject);
             state->trackedObject = NULL;
             if (++state->uiMessageCount > 3)
             {

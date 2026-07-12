@@ -1,6 +1,7 @@
 /* DIM wood door falling debris updater [801B13E8-801B13F0) */
 
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
@@ -37,7 +38,6 @@ extern f32 lbl_803DBEF0;
 
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
 extern void spawnExplosion(int* obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void Obj_FreeObject(int* obj);
 
 /* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
@@ -101,7 +101,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
     ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 + framesThisStep;
     if (((GameObject*)obj)->unkF4 > 1200)
     {
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
     }
     else if (((DIMwooddoorUpdateFallingDebrisState*)extra)->unk7 != 0)
     {
