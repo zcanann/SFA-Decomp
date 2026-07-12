@@ -24,6 +24,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
@@ -354,7 +355,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
 int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 {
     extern int* gPlayerInterface;
-    extern void Obj_FreeObject(int* obj);
     extern f32 lbl_803E2DC8;
     GroundBaddieState* sub = obj->extra;
     f32* v;
@@ -378,7 +378,7 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
         ObjMsg_SendToObjects(0, 3, (int)obj, 0xe0000, (int)obj);
         if (obj->anim.placementData == NULL)
         {
-            Obj_FreeObject((int*)obj);
+            Obj_FreeObject((GameObject*)obj);
             return 0;
         }
         return 4;
@@ -843,7 +843,6 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
     }
 }
 
-extern void Obj_FreeObject(int* obj);
 
 void dll_CE_hitDetect_nop(void)
 {
@@ -1019,7 +1018,7 @@ void dll_CE_free(int* obj)
         int* sub = ((GameObject*)obj)->childObjs[0];
         if (sub != NULL)
         {
-            Obj_FreeObject(sub);
+            Obj_FreeObject((GameObject*)sub);
             ((GameObject*)obj)->childObjs[0] = NULL;
         }
     }

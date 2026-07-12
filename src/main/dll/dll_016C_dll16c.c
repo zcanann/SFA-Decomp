@@ -19,6 +19,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/gamebits.h"
@@ -76,7 +77,6 @@ extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void Obj_FreeObject(int*);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
@@ -106,7 +106,7 @@ int dll_16C_getObjectTypeId(void)
 
 void dll_16C_free(int* obj)
 {
-    int* child = (int*)((GameObject*)obj)->childObjs[0];
+    GameObject* child = ((GameObject*)obj)->childObjs[0];
     if (child != NULL)
         Obj_FreeObject(child);
 }
@@ -214,7 +214,7 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
-            Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
+            Obj_FreeObject((GameObject*)((GameObject*)obj)->childObjs[0]);
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
             ((GameObject*)obj)->childCount = 0;
         }
@@ -317,7 +317,7 @@ void dll_16C_update(int* obj)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
         {
-            Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
+            Obj_FreeObject((GameObject*)((GameObject*)obj)->childObjs[0]);
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
             ((GameObject*)obj)->childCount = 0;
         }

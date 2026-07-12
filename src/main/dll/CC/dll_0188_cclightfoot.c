@@ -41,7 +41,7 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 /* Per-object Lightfoot state block (obj->extra, cclightfoot_getExtraSize = 0x18). */
 typedef struct CcLightfootState
 {
-    int childObj;  /* 0x00: spawned child marker object handle */
+    GameObject* childObj;  /* 0x00: spawned child marker object */
     int playerObj; /* 0x04: cached player object */
     int targetA;   /* 0x08: target actor A object */
     int targetB;   /* 0x0C: target actor B object */
@@ -54,6 +54,7 @@ typedef struct CcLightfootState
 STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/DIMsnowball.h"
@@ -83,7 +84,7 @@ void cclightfoot_free(int* obj, int flag)
 {
     extern u32 ObjLink_DetachChild();
     CcLightfootState* state = ((GameObject*)obj)->extra;
-    void* sub = (void*)state->childObj;
+    GameObject* sub = state->childObj;
     if (sub != NULL)
     {
         if (((GameObject*)obj)->childObjs[0] != NULL)
@@ -152,7 +153,7 @@ int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
             case 1:
                 if ((obj)->childObjs[0] != NULL)
                 {
-                    ObjLink_DetachChild(obj, state->childObj);
+                    ObjLink_DetachChild(obj, (int)state->childObj);
                 }
                 break;
             case 2:
@@ -179,7 +180,6 @@ extern u8 gCcLightfootHitCooldown[8];
 extern int getAngle(float y, float x);
 extern f32 enemy_getHealthFraction(register int obj);
 extern void fn_8014C66C(int obj, int target);
-extern int Obj_FreeObject(int o);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
@@ -400,9 +400,9 @@ void cclightfoot_update(int obj)
         {
             if (Obj_IsLoadingLocked() != 0)
             {
-                state->childObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
-                                                  *(int*)&((GameObject*)obj)->anim.parent);
-                ObjLink_AttachChild(obj, state->childObj, 0);
+                state->childObj = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, CCLIGHTFOOT_CHILD_OBJ_MARKER), 5, -1, -1,
+                                                               *(int*)&((GameObject*)obj)->anim.parent);
+                ObjLink_AttachChild(obj, (int)state->childObj, 0);
             }
             state->playerObj = (int)Obj_GetPlayerObject();
             state->targetA = ObjList_FindObjectById(CCLIGHTFOOT_TARGET_ACTOR_A);
@@ -572,11 +572,11 @@ void cclightfoot_update(int obj)
         }
         break;
     case CCLIGHTFOOT_STATE_DESPAWN:
-        if ((u32)state->childObj != 0)
+        if (state->childObj != NULL)
         {
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
-                ObjLink_DetachChild(obj, state->childObj);
+                ObjLink_DetachChild(obj, (int)state->childObj);
             }
             Obj_FreeObject(state->childObj);
             state->childObj = 0;
