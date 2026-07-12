@@ -79,9 +79,10 @@ void dll_28B_update(int obj)
     MatrixTransform xform;
     f32 mtx[16];
     int state = *(int*)&((GameObject*)obj)->extra;
-    int player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
 
-    ((Dll28BState*)state)->playerDistance = Vec_xzDistance(obj + 0x18, player + 0x18);
+    ((Dll28BState*)state)->playerDistance =
+        Vec_xzDistance((f32*)(obj + 0x18), &player->anim.worldPosX);
     ((Dll28BState*)state)->objectFlagsMirror |= OBJFLAG_BIT_2000000;
     dt = timeDelta;
     (*(void (**)(int, int, f32, f32, void*, void*))(*gPlayerInterface + 0x8))(obj, state, dt, dt, gDll28BStateHandlers,

@@ -214,7 +214,7 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
 void enemymushroom_update(int* obj)
 {
     char* state;
-    u8* player;
+    GameObject* player;
     int* src;
     MushHitInfo hv;
     int hitObject;
@@ -450,7 +450,7 @@ void enemymushroom_update(int* obj)
             if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
                 (u16)(int)(gKillerMushroomDetectRangeScale * (f32)((EnemymushroomPlacement*)src)->detectRange))
             {
-                if (fn_8029610C(player) >= gKillerMushroomTriggerAnimSpeed)
+                if (fn_8029610C((u8*)player) >= gKillerMushroomTriggerAnimSpeed)
                 {
                     ((EnemyMushroomState*)state)->stateFlags =
                         (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);

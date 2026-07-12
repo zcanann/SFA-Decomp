@@ -81,7 +81,7 @@ void linkb_levcontrol_update(int* obj)
 {
     LinkbLevState* state;
     int* tricky;
-    int* player;
+    GameObject* player;
     u8* cur;
 
     state = ((GameObject*)obj)->extra;

@@ -45,7 +45,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
 {
     DrLightBeaState* state = *(DrLightBeaState**)&(obj)->extra;
     int setup = *(int*)&(obj)->anim.placementData;
-    int player;
+    GameObject* player;
     f32 targetXform[6];
     f32 sourcePos[3];
     f32 targetPos[3];
@@ -58,9 +58,9 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
         if (((DrlightbeaPlacement*)setup)->targetId == 0)
         {
             player = Obj_GetPlayerObject();
-            state->handle->end[0] = ((GameObject*)player)->anim.localPosX;
-            state->handle->end[1] = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
-            state->handle->end[2] = ((GameObject*)player)->anim.localPosZ;
+            state->handle->end[0] = player->anim.localPosX;
+            state->handle->end[1] = lbl_803E6BB8 + player->anim.localPosY;
+            state->handle->end[2] = player->anim.localPosZ;
         }
         lightningRender(state->handle);
         state->handle->timer += 1;
@@ -99,9 +99,9 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             else
             {
                 player = Obj_GetPlayerObject();
-                targetPos[0] = ((GameObject*)player)->anim.localPosX;
-                targetPos[1] = lbl_803E6BB8 + ((GameObject*)player)->anim.localPosY;
-                targetPos[2] = ((GameObject*)player)->anim.localPosZ;
+                targetPos[0] = player->anim.localPosX;
+                targetPos[1] = lbl_803E6BB8 + player->anim.localPosY;
+                targetPos[2] = player->anim.localPosZ;
             }
             state->handle = (LightningEffect*)lightningCreate(sourcePos, targetPos, lbl_803E6BBC, lbl_803E6BC0,
                                                               randomGetRange(5, 0xf), 0x60, 0);

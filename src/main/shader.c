@@ -56,7 +56,7 @@ int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
     s8 found;
     s8 i;
     int* tbl;
-    int* player;
+    GameObject* player;
     int off;
     f32* p;
     f32 d;
@@ -666,7 +666,7 @@ void playerVecFn_8005a9b0(void)
     _Vec3 camPos;
     _ScalePack scales;
     _PlaneDirPack planes;
-    int* player;
+    GameObject* player;
     int* viewSlot;
     f32* outPtr;
     int i;
@@ -1889,7 +1889,7 @@ int objUpdateOpacity(char* obj)
     f32 range;
     f32 d;
     f32 near;
-    int* player;
+    GameObject* player;
     u8 i;
     f32 o1, o2, o3;
     f32 sz;

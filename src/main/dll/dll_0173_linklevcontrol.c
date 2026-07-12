@@ -182,13 +182,14 @@ void link_levcontrol_free(GameObject* obj)
 void link_levcontrol_update(int* obj)
 {
     LinkLevControlState* state = ((GameObject*)obj)->extra;
-    f32* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     if (player == NULL)
         return;
 
     if ((s32)state->areaCell != (s32)((GameObject*)obj)->anim.mapEventSlot)
     {
-        if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
+        if ((s32)((GameObject*)obj)->anim.mapEventSlot ==
+            coordsToMapCell(player->anim.localPosX, player->anim.localPosZ))
         {
             link_levcontrol_applyEnterAreaEffects(obj);
         }
@@ -197,11 +198,12 @@ void link_levcontrol_update(int* obj)
             return;
         }
     }
-    if ((s32)((GameObject*)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5]))
+    if ((s32)((GameObject*)obj)->anim.mapEventSlot ==
+        coordsToMapCell(player->anim.localPosX, player->anim.localPosZ))
     {
         link_levcontrol_updateAreaMusic(obj);
     }
-    state->areaCell = coordsToMapCell(player[3], player[5]);
+    state->areaCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
 }
 
 void link_levcontrol_init(int* obj)

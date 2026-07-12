@@ -2,6 +2,7 @@
 #define DR_SHARED_H
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
@@ -102,7 +103,6 @@ extern void ktrex_initialiseStateHandlerTables(void);
 extern int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ObjGroup_RemoveObject(int obj, int group);
-extern void* Obj_GetPlayerObject(void);
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int trackId, int restart);
 extern void Obj_FreeObject(int obj);
@@ -196,7 +196,6 @@ extern void** gBaddieControlInterface;
 extern void* ObjPath_GetPointModelMtx(int obj, int idx);
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int* getTrickyObject(void);
 extern int playerGetFocusObject(void);
 extern int dll_2E_func0A(int a, f32* buf);
@@ -335,7 +334,6 @@ extern f32 lbl_803E68F8;
 extern f32 lbl_803E6B40;
 extern u8 lbl_803DC308;
 extern void objSoundFn_800392f0(int obj, int a, void* b, int c);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 lbl_803DC324;

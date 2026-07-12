@@ -16,6 +16,7 @@
 #include "main/dll/drakorenergystate_struct.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -53,9 +54,7 @@ extern f32 lbl_803DC174;
 extern s16 lbl_803DC178;
 
 extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
-extern int Obj_GetPlayerObject(void);
 extern void objMove(int, f32, f32, f32);
-extern f32 Vec_xzDistance(int, int);
 extern void playerAddHealth(int obj, int amount);
 
 extern int Obj_PredictInterceptPoint(GameObject*, f32, f32*, f32*);
@@ -104,7 +103,7 @@ void drakorenergy_update(int obj)
 {
     int state = *(int*)&((GameObject*)obj)->extra;
     int placement;
-    int player;
+    GameObject* player;
     f32 zeroF;
     f32 dist;
     f32 spd;
@@ -159,10 +158,10 @@ void drakorenergy_update(int obj)
         objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
         break;
     case DRAKORENERGY_MODE_CHASING:
-        dist = Vec_xzDistance(obj + 0x18, player + 0x18);
+        dist = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
         if (dist < lbl_803DC168)
         {
-            playerAddHealth(player, gDrakorEnergyHealAmount);
+            playerAddHealth((int)player, gDrakorEnergyHealAmount);
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_COLLECTED;
         }

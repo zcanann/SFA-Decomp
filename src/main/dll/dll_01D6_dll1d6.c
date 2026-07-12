@@ -203,7 +203,7 @@ void dll_1D6_update(int* obj)
     int* def;
     int* model;
     ObjTextureRuntimeSlot* tex;
-    int* player;
+    GameObject* player;
     f32 mtx[20];
     s16 ang[6];
     f32 lx, ly, lz;
@@ -292,11 +292,11 @@ void dll_1D6_update(int* obj)
     ang[1] = 0;
     ang[2] = 0;
     mtxRotateByVec3s(&mtx[3], ang);
-    Matrix_TransformPoint(&mtx[3], ((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosY,
-                          ((GameObject*)player)->anim.localPosZ, &lx, &ly, &lz);
+    Matrix_TransformPoint(&mtx[3], player->anim.localPosX, player->anim.localPosY, player->anim.localPosZ, &lx, &ly,
+                          &lz);
     if ((extra->flags1D & 2) != 0)
     {
-        ly = ((GameObject*)obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
+        ly = ((GameObject*)obj)->anim.localPosY - player->anim.localPosY;
         if (ly < lbl_803E4A88)
         {
             ly = -ly;

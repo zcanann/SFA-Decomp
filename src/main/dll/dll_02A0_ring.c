@@ -160,7 +160,7 @@ void ring_init(GameObject* obj, int setup)
 void ring_update(int obj)
 {
     RingState* state = ((GameObject*)obj)->extra;
-    int arwing;
+    GameObject* arwing;
     RingPlacement* setup;
     int bit;
     int alpha;
@@ -172,9 +172,9 @@ void ring_update(int obj)
     f32 spawnBuf[6];
     f32 mtx[12];
 
-    arwing = getArwing();
+    arwing = (GameObject*)getArwing();
     setup = (RingPlacement*)((GameObject*)obj)->anim.placementData;
-    if (arwing == 0u)
+    if (arwing == NULL)
         arwing = Obj_GetPlayerObject();
 
     switch (state->phase)
@@ -261,10 +261,10 @@ void ring_update(int obj)
         }
         if (state->flags.bit80 != 0)
         {
-            if (arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0 &&
-                arwbombcoll_checkArwingCollision((GameObject*)(obj), state, arwing) != 0)
+            if (arwarwing_isDead((int)arwing) == 0 && arwarwing_isExplodingOrWarping((int)arwing) == 0 &&
+                arwbombcoll_checkArwingCollision((GameObject*)(obj), state, (int)arwing) != 0)
             {
-                Ring_onCollect((GameObject*)(obj), state, arwing);
+                Ring_onCollect((GameObject*)(obj), state, (int)arwing);
             }
         }
         ((GameObject*)obj)->anim.rotX = (f32)(int)((GameObject*)obj)->anim.rotX + lbl_803E70B8 * timeDelta;
@@ -272,15 +272,15 @@ void ring_update(int obj)
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > lbl_803E70A0)
         {
-            if ((void*)arwing != NULL)
+            if (arwing != NULL)
             {
                 ((GameObject*)obj)->anim.velocityX =
-                    oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
+                    oneOverTimeDelta * (arwing->anim.localPosX - ((GameObject*)obj)->anim.localPosX);
                 ((GameObject*)obj)->anim.velocityY =
                     oneOverTimeDelta * (state->arwingYOffset +
-                                        (((GameObject*)arwing)->anim.localPosY - ((GameObject*)obj)->anim.localPosY));
+                                        (arwing->anim.localPosY - ((GameObject*)obj)->anim.localPosY));
                 ((GameObject*)obj)->anim.velocityZ =
-                    oneOverTimeDelta * (((GameObject*)arwing)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
+                    oneOverTimeDelta * (arwing->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ);
                 objMove(obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                         ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
             }

@@ -291,13 +291,13 @@ int hightop_stateHandler06(GameObject* obj, u8* state)
 
 void HighTop_func0F(int obj, f32* ox, f32* oy, f32* oz)
 {
-    int* player;
+    GameObject* player;
     MatrixTransform pos;
     f32 mtx[16];
     player = Obj_GetPlayerObject();
-    pos.x = ((GameObject*)player)->anim.localPosX;
-    pos.y = ((GameObject*)player)->anim.localPosY;
-    pos.z = ((GameObject*)player)->anim.localPosZ;
+    pos.x = player->anim.localPosX;
+    pos.y = player->anim.localPosY;
+    pos.z = player->anim.localPosZ;
     pos.rotX = ((GameObject*)player)->anim.rotX;
     pos.rotY = ((GameObject*)player)->anim.rotY;
     pos.rotZ = ((GameObject*)player)->anim.rotZ;
@@ -956,7 +956,7 @@ int hightop_stateHandler04(int obj, int stateArg)
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x78);
         ObjAnim_SetCurrentMove(obj, move, lbl_803E6AA8, 0);
     }
-    player = Obj_GetPlayerObject();
+    player = (int*)Obj_GetPlayerObject();
     if (player != 0)
     {
         f32 dy = ((GameObject*)player)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;

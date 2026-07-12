@@ -123,7 +123,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     int* placement = *(int**)&(obj)->anim.placementData;
     int* state = (obj)->extra;
     ObjTextureRuntimeSlot* tex;
-    int* player;
+    GameObject* player;
     int moved;
     u32 level;
     int scroll;
@@ -237,8 +237,8 @@ void KT_RexFloorSwitch_update(GameObject* obj)
             xHi -= gKTrexFloorSwitchTriggerBoxInset;
             zLo += gKTrexFloorSwitchTriggerBoxInset;
             zHi -= gKTrexFloorSwitchTriggerBoxInset;
-            if (((GameObject*)player)->anim.localPosX >= xLo && ((GameObject*)player)->anim.localPosX <= xHi &&
-                ((GameObject*)player)->anim.localPosZ >= zLo && ((GameObject*)player)->anim.localPosZ <= zHi)
+            if (player->anim.localPosX >= xLo && player->anim.localPosX <= xHi && player->anim.localPosZ >= zLo &&
+                player->anim.localPosZ <= zHi)
             {
                 ((KtrexfloorswitchState*)state)->graceTimer = 5;
             }

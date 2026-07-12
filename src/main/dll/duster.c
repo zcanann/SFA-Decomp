@@ -144,7 +144,6 @@ extern f32 lbl_803DBCEC;
 extern int getAngle(float y, float x);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject();
-extern int Obj_IsLoadingLocked(void);
 extern int objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern void fn_80154D0C(int, int, u16*, float*);

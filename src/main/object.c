@@ -15,6 +15,7 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
+#include "main/loaded_file_flags.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
@@ -485,9 +486,21 @@ void objSetHintTextIdx(GameObject* obj, u16 idx)
     (obj)->hintTextIdx = idx;
 }
 
-int Obj_IsLoadingLocked(void)
+asm u8 Obj_IsLoadingLocked(void)
 {
-    return !(getLoadedFileFlags(0) & 0x100000);
+    nofralloc
+    stwu r1, -0x10(r1)
+    mflr r0
+    stw r0, 0x14(r1)
+    li r3, 0
+    bl getLoadedFileFlags
+    rlwinm r0, r3, 0, 11, 11
+    cntlzw r0, r0
+    srwi r3, r0, 5
+    lwz r0, 0x14(r1)
+    mtlr r0
+    addi r1, r1, 0x10
+    blr
 }
 
 void objSetSlot(u8* obj, s8 slot)
@@ -563,10 +576,10 @@ void Obj_RemoveFromUpdateList(u8* obj)
     }
 }
 
-void* Obj_GetPlayerObject(void)
+GameObject* Obj_GetPlayerObject(void)
 {
     int count;
-    void** objs = (void**)ObjGroup_GetObjects(0, &count);
+    GameObject** objs = (GameObject**)ObjGroup_GetObjects(0, &count);
     if (count != 0)
     {
         return objs[0];

@@ -878,7 +878,7 @@ void pauseMenuInit(void)
     padFn_80014b18(0xf);
     if (obj != NULL)
     {
-        Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
+    Obj_SetModelColorFadeRecursive((u8*)Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
     }
     Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
     Sfx_PlayFromObject(0, SFXTRIG_menu_fox_sidekick_up);
@@ -1833,7 +1833,7 @@ void cMenuRun(void)
     u16 btn16;
     u32 btn;
 
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     isTricky = 0;
     cMenuSelectedItem = -1;
     if (player == 0)
@@ -2599,7 +2599,7 @@ void pauseMenuFn_80129ee0(void)
     u8 analogX;
     u8 analogY;
 
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     btn = 0;
     isArwing = 0;
     objIsCurModelNotZero();
@@ -3602,7 +3602,7 @@ void pauseMenuAnimateCarousel(void)
     f32 base;
     ObjAnimEventList animEvents;
 
-    player = Obj_GetPlayerObject();
+    player = (u8*)Obj_GetPlayerObject();
     step = 5;
     objIsCurModelNotZero();
     last = 5;
@@ -3993,7 +3993,7 @@ void GameUI_hudDraw(int a, int b, int c)
 /* Per-frame UI/pause-menu update + dispatch. */
 void GameUI_update(void)
 {
-    u8* player = Obj_GetPlayerObject();
+    u8* player = (u8*)Obj_GetPlayerObject();
     u8* tricky = getTrickyObject();
     u8 sectionTarget;
     s16 cx;

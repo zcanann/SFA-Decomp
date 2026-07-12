@@ -1026,17 +1026,17 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
 {
     MatrixTransform pos;
     f32 mtx[16];
-    int* src = Obj_GetPlayerObject();
+    GameObject* src = Obj_GetPlayerObject();
     if (src == NULL)
     {
-        src = (int*)obj;
+        src = (GameObject*)obj;
     }
-    pos.x = ((GameObject*)src)->anim.localPosX;
-    pos.y = ((GameObject*)src)->anim.localPosY;
-    pos.z = ((GameObject*)src)->anim.localPosZ;
-    pos.rotX = *(s16*)src;
-    pos.rotY = ((GameObject*)src)->anim.rotY;
-    pos.rotZ = ((GameObject*)src)->anim.rotZ;
+    pos.x = src->anim.localPosX;
+    pos.y = src->anim.localPosY;
+    pos.z = src->anim.localPosZ;
+    pos.rotX = src->anim.rotX;
+    pos.rotY = src->anim.rotY;
+    pos.rotZ = src->anim.rotZ;
     pos.scale = lbl_803E6A48;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);

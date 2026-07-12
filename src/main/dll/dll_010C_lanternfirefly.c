@@ -245,7 +245,8 @@ void LanternFireFly_update(GameObject* obj)
     if (LANTERN_FIREFLY_IS_ACTIVE(state))
     {
         state->speed =
-            (f32)(lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX, (void*)(Obj_GetPlayerObject() + 0x18)) +
+            (f32)(lbl_803E3AC4 * Vec_distance((void*)&(obj)->anim.worldPosX,
+                                              &((GameObject*)Obj_GetPlayerObject())->anim.worldPosX) +
                   lbl_803E3AC0);
     }
     state->splineT += state->speed * timeDelta;

@@ -1298,7 +1298,7 @@ int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag)
     int cmdArg = (cmd >> 8) & 0xff;
     u8* slotPtr;
     int pair[2];
-    u8* player;
+    GameObject* player;
     u8 flags;
     u8* slotFlags;
     int trackId;
@@ -3844,7 +3844,7 @@ int ObjSeq_start(int seqIdx, u8* obj, int flags)
     int size;
     s16 heading;
     int camArg;
-    u8* player;
+    GameObject* player;
     int doCam;
     u8* newObj;
     u8* slotPtr;
@@ -4010,8 +4010,8 @@ checked:
             objId = *(u16*)(walk2 + 6);
             if (objId == 0x1f || objId == 0)
             {
-                u8* pp = Obj_GetPlayerObject();
-                *(u16*)(pp + 0xb0) |= OBJECT_OBJFLAG_SEQ_ATTACHED;
+                GameObject* pp = Obj_GetPlayerObject();
+                pp->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
             }
             if (objId == 0xffff)
             {
@@ -5084,7 +5084,7 @@ void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq)
 void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
 {
     void (*callback)(void* ctx, u8* obj);
-    u8* player;
+    GameObject* player;
     int clearBit;
 
     callback = ((ObjSeqState*)seq)->freeCallback;
@@ -5117,7 +5117,7 @@ void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq)
     if ((((u32)((ObjSeqState*)seq)->flags136[0] >> 2) & 1U) != 0U)
     {
         player = Obj_GetPlayerObject();
-        (*gMapEventInterface)->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0, getCurMapLayer());
+        (*gMapEventInterface)->savePoint((int)&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
         clearBit = 0;
         {
             struct SeqByte136

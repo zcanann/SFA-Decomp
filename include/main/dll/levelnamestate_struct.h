@@ -7,11 +7,13 @@ typedef struct LevelnameState
 {
     u8 pad0[0x8 - 0x0];
     s32 holdDuration;
-    u8 padC[0xE - 0xC];
+    u8 triggerRadius;
+    u8 unk0D;
     s16 gameBit;
     s16 holdTimer;
     s16 bannerY;
-    u8 pad14[0x18 - 0x14];
+    u8 phase;
+    u8 pad15[0x18 - 0x15];
 } LevelnameState;
 
 #endif

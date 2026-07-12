@@ -102,7 +102,7 @@ void DFP_Floorbar_update(GameObject* obj)
     int mode;
     u8 active;
     u32 sequenceValue;
-    u8* playerObj;
+    GameObject* playerObj;
     f32 yDelta;
     f32 xMid;
     f32 zDelta;
@@ -189,13 +189,13 @@ void DFP_Floorbar_update(GameObject* obj)
     if (playerObj == NULL)
         return;
 
-    yDelta = (obj)->anim.localPosY - ((GameObject*)playerObj)->anim.localPosY;
+    yDelta = obj->anim.localPosY - playerObj->anim.localPosY;
     if (yDelta < 0.0f)
         yDelta = yDelta * lbl_803E6414;
     if (yDelta < 100.0f)
     {
-        xMid = ((GameObject*)playerObj)->anim.localPosX - ((obj)->anim.localPosX - 100.0f);
-        zDelta = (obj)->anim.localPosZ - ((GameObject*)playerObj)->anim.localPosZ;
+        xMid = playerObj->anim.localPosX - (obj->anim.localPosX - 100.0f);
+        zDelta = obj->anim.localPosZ - playerObj->anim.localPosZ;
         if (zDelta < 0.0f)
             zDelta = zDelta * lbl_803E6414;
         if (zDelta < 18.0f)

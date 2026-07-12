@@ -99,11 +99,11 @@ void barrelgener_initialise(void)
 void barrelgener_update(GameObject* obj)
 {
     BarrelGeneratorState* state = (obj)->extra;
-    int player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
 
     if ((u32)mainGetBit(GAMEBIT_BARRELGENER_TRIGGERED) == 0)
     {
-        if (Vec_distance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < lbl_803E6C24)
+        if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < lbl_803E6C24)
         {
             (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
             mainSetBits(GAMEBIT_BARRELGENER_TRIGGERED, 1);
@@ -472,7 +472,7 @@ int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, int targetPos, int outPos
     int gridA[2];
     int i;
 
-    if ((u32)obj != Obj_GetPlayerObject())
+    if ((GameObject*)obj != Obj_GetPlayerObject())
     {
         PSVECSubtract((void*)&(obj)->anim.localPosX, &(obj)->anim.previousLocalPosX, vel);
     }

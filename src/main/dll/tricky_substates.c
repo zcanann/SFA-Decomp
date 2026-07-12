@@ -95,7 +95,6 @@ extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, u8* pos, int 
 extern int trickyMove(u8* obj, u8* pos);
 extern int getAngle(float y, float x);
 extern void trickyTurnTowardYaw(u8* obj, s16 yaw);
-extern f32 Vec_xzDistance(void* a, void* b);
 extern u32 gTrickySubstateSfxIdPairB;
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern f32 getXZDistance(f32* a, f32* b);
@@ -295,7 +294,8 @@ void trickyDigTunnel(u8* obj, u8* state)
         break;
     case 5:
         trickyDebugPrint((char*)(base + 0x7f8),
-                         Vec_xzDistance(obj + 0x18, &((TrickyCurveNode*)((TrickyState*)state)->unk704)->x));
+                         Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
+                                        &((TrickyCurveNode*)((TrickyState*)state)->unk704)->x));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
         if (trickyMove(obj, pos) == 0)

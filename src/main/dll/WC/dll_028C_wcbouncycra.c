@@ -165,7 +165,7 @@ void WCBouncyCra_initialise(void)
 {
 }
 
-int wcblock_isPlayerAwayFromStoredCell(int obj, int stateArg, int player)
+int wcblock_isPlayerAwayFromStoredCell(int obj, int stateArg, GameObject* player)
 {
     WCBlockState* state = (WCBlockState*)stateArg;
     ObjAnimComponent* objAnim;

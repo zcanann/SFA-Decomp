@@ -250,7 +250,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
             (*(void (**)(u8*, int, f32*, u8*, f32))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st, unused);
             sfx = 5;
         }
-        if (obj == Obj_GetPlayerObject())
+        if ((GameObject*)obj == Obj_GetPlayerObject())
         {
             if (*(s16*)(*(u32*)&((GameObject*)obj)->extra + 0x81a) == 1)
             {

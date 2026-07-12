@@ -3039,7 +3039,7 @@ void skyFn_8008aee8(void)
     int texB;
     u8* texC;
     s16* cam;
-    u8* player;
+    GameObject* player;
     int cell;
     u8* tbl;
     u8* channel;
@@ -3067,7 +3067,7 @@ void skyFn_8008aee8(void)
     if (gSkyState != NULL)
     {
         if ((player = Obj_GetPlayerObject()) != NULL &&
-            (((cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ)) ==
+            (((cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ)) ==
               0x30) ||
              cell == 0x2b))
         {

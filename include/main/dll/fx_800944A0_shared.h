@@ -7,6 +7,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/mm.h"
 #include "main/cloud_action_runtime.h"
@@ -249,7 +250,6 @@ extern void gxSetPeControl_ZCompLoc_(int zcomploc);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetCullMode(int mode);
 extern void GXSetTevKColor(int id, void* color);
-extern u8* Obj_GetPlayerObject(void);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 v);
@@ -299,7 +299,6 @@ extern int lbl_802C20EC[];
 extern int lbl_802C2104[];
 extern f32 gExpgfxFrameTimerA;
 extern f32 gWaterfxRippleGrowSpeed;
-extern u8 Obj_IsLoadingLocked(void);
 extern u8* Obj_AllocObjectSetup(int size, int id);
 extern void* Obj_SetupObject(void* obj, int a, int b, int c, int d);
 extern f32 lbl_803DF3AC;

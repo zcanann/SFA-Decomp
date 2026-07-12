@@ -3355,7 +3355,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
     }
     else
     {
-        if (obj == Obj_GetPlayerObject())
+        if ((GameObject*)obj == Obj_GetPlayerObject())
             f30 = 10.0f;
         else
             f30 = ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale;

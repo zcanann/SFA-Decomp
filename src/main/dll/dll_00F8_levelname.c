@@ -92,24 +92,23 @@ void LevelName_hitDetect(void)
 {
 }
 
-void LevelName_update(int* obj)
+void LevelName_update(GameObject* obj)
 {
-    u8* state;
-    int* player;
+    LevelnameState* state;
+    GameObject* player;
 
-    state = ((GameObject*)obj)->extra;
-    switch (state[LEVELNAME_PHASE])
+    state = obj->extra;
+    switch (state->phase)
     {
     case LEVELNAME_PHASE_WAIT:
         player = Obj_GetPlayerObject();
-        if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
-            (f32)(u32)state[LEVELNAME_TRIGGER_DIST])
+        if (Vec_distance(&obj->anim.worldPosX, &player->anim.worldPosX) < (f32)(u32)state->triggerRadius)
         {
             if (((LevelnameState*)state)->gameBit != -1)
             {
                 mainSetBits(((LevelnameState*)state)->gameBit, 1);
             }
-            state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_IN;
+            state->phase = LEVELNAME_PHASE_SLIDE_IN;
         }
         break;
     case LEVELNAME_PHASE_SLIDE_IN:
@@ -118,7 +117,7 @@ void LevelName_update(int* obj)
         if (((LevelnameState*)state)->bannerY > LEVELNAME_BANNER_Y_MAX)
         {
             ((LevelnameState*)state)->bannerY = LEVELNAME_BANNER_Y_MAX;
-            state[LEVELNAME_PHASE] = LEVELNAME_PHASE_HOLD;
+            state->phase = LEVELNAME_PHASE_HOLD;
         }
         break;
     case LEVELNAME_PHASE_HOLD:
@@ -126,7 +125,7 @@ void LevelName_update(int* obj)
         ((LevelnameState*)state)->holdTimer += framesThisStep;
         if ((u32)((LevelnameState*)state)->holdTimer > (u32)((LevelnameState*)state)->holdDuration)
         {
-            state[LEVELNAME_PHASE] = LEVELNAME_PHASE_SLIDE_OUT;
+            state->phase = LEVELNAME_PHASE_SLIDE_OUT;
         }
         ((LevelnameState*)state)->bannerY =
             (s16)((s32)(lbl_803E36E0 *
@@ -141,7 +140,7 @@ void LevelName_update(int* obj)
         if (((LevelnameState*)state)->bannerY < 0)
         {
             ((LevelnameState*)state)->bannerY = 0;
-            state[LEVELNAME_PHASE] = LEVELNAME_PHASE_IDLE;
+            state->phase = LEVELNAME_PHASE_IDLE;
         }
         break;
     case LEVELNAME_PHASE_IDLE:

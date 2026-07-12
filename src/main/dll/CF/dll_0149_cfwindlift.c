@@ -95,7 +95,6 @@ extern int ObjGroup_AddObject();
 extern u32 ObjMsg_SendToObject(void* obj, u32 message, void* sender, u32 param);
 extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern f32 Vec_xzDistance(void* a, void* b);
 extern int Obj_SetActiveModelIndex(int* obj, int idx);
 
 /* fn_8019C784: per-rider wind lift physics - track the rider while
@@ -106,7 +105,7 @@ extern int Obj_SetActiveModelIndex(int* obj, int idx);
  * phase bits. */
 void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, u32 dur, f32 height)
 {
-    char* player;
+    GameObject* player;
     f32 lim;
     f32 rise;
     f32 over;
@@ -125,7 +124,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     {
         return;
     }
-    dist = Vec_xzDistance((char*)rider + 0x18, (char*)obj + 0x18);
+    dist = Vec_xzDistance(&((GameObject*)rider)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if (dist > lbl_803E4170 + height && (slot->phaseFlags & 0xe0) == 0)
     {
         return;
@@ -278,7 +277,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             slot->phaseFlags |= WLSLOT_LATCH;
             if (pm != 0)
             {
-                ((GameObject*)player)->anim.velocityY = lbl_803E416C;
+                player->anim.velocityY = lbl_803E416C;
             }
         }
         if (pm != 0)
@@ -346,7 +345,7 @@ void WindLift_update(int* obj)
     u8* def;
     WindLiftSub* sub = ((GameObject*)obj)->extra;
     int level;
-    char* player;
+    GameObject* player;
     f32 pull;
     int idx;
     int j;

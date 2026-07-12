@@ -53,7 +53,7 @@ void DeathGas_update(int* obj)
 
     DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject*)obj)->anim.placementData;
     DeathGasState* state = ((GameObject*)obj)->extra;
-    int* player;
+    GameObject* player;
     u8 active;
     int bit;
 
@@ -98,8 +98,8 @@ void DeathGas_update(int* obj)
 
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised()
-        && ((GameObject*)player)->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
-        && Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <=
+        && player->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
+        && Vec_distance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <=
                state->radius)
     {
         if (!state->draining)

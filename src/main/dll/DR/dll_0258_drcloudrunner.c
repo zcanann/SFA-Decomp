@@ -1152,7 +1152,7 @@ void fn_802BF4D8(GameObject* obj)
     void* newObj;
     int setup;
     f32 dist;
-    if (Obj_IsLoadingLocked(obj) == 0)
+        if (Obj_IsLoadingLocked() == 0)
     {
         return;
     }

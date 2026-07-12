@@ -260,7 +260,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
     int player;
     int i;
 
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     state = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
@@ -285,7 +285,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
             }
             else if (eventId == 2)
             {
-                playerSetHaveSpell((GameObject*)(player), 0, 1);
+                playerSetHaveSpell((GameObject*)player, 0, 1);
                 playerAddRemoveMagic(player, 5);
             }
         }

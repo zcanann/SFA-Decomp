@@ -144,7 +144,8 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.rotX = angle;
     }
 
-    if (getXZDistance((int*)(Obj_GetPlayerObject() + 0x18), (int*)&((GameObject*)obj)->anim.worldPosX) <
+    if (getXZDistance((int*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
+                      (int*)&((GameObject*)obj)->anim.worldPosX) <
         gSpScarabPickupRadius)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);

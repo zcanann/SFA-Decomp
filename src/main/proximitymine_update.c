@@ -244,11 +244,11 @@ void ProximityMine_update(ProximityMineObject* obj)
         case PROXIMITYMINE_MODE_WAITING:
         {
             f32 trigger;
-            ProximityMineObject* player;
+            GameObject* player;
 
             trigger = obj->def->parameter;
             player = Obj_GetPlayerObject();
-            if (Vec_distance(&obj->prevX, &player->prevX) < trigger)
+            if (Vec_distance(&obj->prevX, &player->anim.worldPosX) < trigger)
             {
                 state->mode = PROXIMITYMINE_MODE_ARMED;
                 s16toFloat(&state->resetTimer, 0x78);
@@ -267,10 +267,10 @@ void ProximityMine_update(ProximityMineObject* obj)
         {
             f32 dist;
             f32 zero;
-            ProximityMineObject* player;
+            GameObject* player;
 
             player = Obj_GetPlayerObject();
-            dist = Vec_xzDistance(&obj->prevX, &player->prevX);
+            dist = Vec_xzDistance(&obj->prevX, &player->anim.worldPosX);
             state->mode = PROXIMITYMINE_MODE_FLIGHT;
             obj->velocityX = lbl_803E6768;
             obj->velocityY = sqrtf(dist) / lbl_803DC244 + lbl_803E677C * lbl_803DC248;

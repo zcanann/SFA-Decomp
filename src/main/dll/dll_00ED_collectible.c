@@ -666,17 +666,17 @@ void collectible_applyPickup(int* obj)
         switch (((GameObject*)obj)->anim.seqId)
         {
         case COLLECTIBLE_ITEM_ENERGY_EGG:
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
+            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
             itemPickupDoParticleFx(obj, lbl_803E3454, 3, 40);
             break;
         case COLLECTIBLE_ITEM_APPLE:
             playerAddHealth(Obj_GetPlayerObject(), 2);
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_lockoff22);
+            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             itemPickupDoParticleFx(obj, lbl_803E3454, 1, 40);
             break;
         default:
-            Sfx_PlayFromObject(Obj_GetPlayerObject(), SFXTRIG_cam90_c);
+            Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_cam90_c);
             itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
             break;
         }
@@ -844,7 +844,7 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
 void collectible_checkProximityPickup(GameObject *obj, u8* state)
 {
     extern void collectible_applyPickup(int obj);
-    u8* player;
+    GameObject* player;
     s16* attach;
     u8* focus;
     f32 dist;
@@ -863,7 +863,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
     focus = playerGetFocusObject();
     if (focus == NULL)
     {
-        focus = player;
+        focus = (u8*)player;
     }
     dist = Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)focus)->anim.worldPosX);
     dy = ((GameObject*)focus)->anim.worldPosY - (obj)->anim.worldPosY;
@@ -871,7 +871,8 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
     {
         dy = -dy;
     }
-    if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale && Obj_IsParentSlackClear(player) != 0)
+    if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale &&
+        Obj_IsParentSlackClear((u8*)player) != 0)
     {
         ((CollectibleState*)state)->pickupMsgValue = -1;
         switch ((obj)->anim.seqId)
@@ -879,7 +880,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             if (mainGetBit(GAMEBIT_SawBigHealth) == 0)
             {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 mainSetBits(GAMEBIT_SawBigHealth, 1);
             }
             else
@@ -897,7 +898,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         case COLLECTIBLE_ITEM_APPLE:
             if (mainGetBit(GAMEBIT_SawApple) == 0)
             {
-                ObjMsg_SendToObject(player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
+                ObjMsg_SendToObject((u8*)player, COLLECTIBLE_MSG_IN_RANGE, obj, state + 0x48);
                 mainSetBits(GAMEBIT_SawApple, 1);
             }
             else

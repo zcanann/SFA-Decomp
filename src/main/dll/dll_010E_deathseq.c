@@ -75,7 +75,7 @@ void DeathSeq_update(int* obj)
     s16* cam = Camera_GetCurrentViewSlot();
     DeathSeqState* state = ((GameObject*)obj)->extra;
     int ready;
-    int* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     ObjTextureRuntimeSlot* tex;
 
     ready = 0;

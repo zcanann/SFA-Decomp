@@ -45,13 +45,13 @@ void ccqueen_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 void ccqueen_update(int* obj)
 {
     u8* charState;
-    int* player;
+    GameObject* player;
 
     charState = ((GameObject*)obj)->extra;
     if (mainGetBit(GAMEBIT_QUEEN_LATCHED) == 0 && mainGetBit(GAMEBIT_GAS_PUZZLE_DONE) != 0)
     {
         player = Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <
+        if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) <
             18225.0f)
         {
             mainSetBits(GAMEBIT_QUEEN_LATCHED, 1);

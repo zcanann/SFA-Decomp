@@ -214,7 +214,7 @@ void fn_801513AC(GameObject* obj, u8* state)
 
 void fn_8015165C(GameObject* obj, u8* state)
 {
-    u8* player;
+    GameObject* player;
     u8* p20;
     u8* p28;
     u8 t;
@@ -414,7 +414,7 @@ void sharpClawInit(int obj, u8* state)
 
 void fn_80151C68(int obj, u8* state)
 {
-    u8* player;
+    GameObject* player;
     u8* setup;
 
     player = Obj_GetPlayerObject();
@@ -423,7 +423,7 @@ void fn_80151C68(int obj, u8* state)
     {
         if (player != NULL && playerGetMoney(player) >= 25)
         {
-            playerAddMoney(player, -25);
+        playerAddMoney((u8*)player, -25);
             mainSetBits(*(s16*)(setup + 0x1c), 1);
             *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[2];
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;

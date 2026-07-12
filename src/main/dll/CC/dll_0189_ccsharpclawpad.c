@@ -34,7 +34,7 @@ void CCSharpclawPad_update(GameObject* obj)
 {
     SharpClawPadParticleArgs particleArgs;
     f32* state;
-    int* player;
+    GameObject* player;
 
     if (mainGetBit(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a)) != 0)
     {
@@ -75,7 +75,7 @@ void CCSharpclawPad_update(GameObject* obj)
             }
         }
         player = Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 100.0f &&
+        if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < 100.0f &&
             playerIsDisguised((int)player) != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);

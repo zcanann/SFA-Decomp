@@ -10,7 +10,7 @@ int LevelName_getObjectTypeId(void);
 void LevelName_free(void);
 void LevelName_render(void);
 void LevelName_hitDetect(void);
-void LevelName_update(int* obj);
+void LevelName_update(GameObject* obj);
 void LevelName_init(GameObject* obj, int objDef);
 void LevelName_release(void);
 void LevelName_initialise(void);

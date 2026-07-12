@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DR_802BBC10_SHARED_H
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -94,7 +95,6 @@ extern s16 gDRCloudRunnerHeadingAngleOffset;
 extern s16 gDRCloudRunnerSmoothedRotX;
 extern s16 gDRCloudRunnerGameBitIds;
 extern int gDRCloudRunnerCurveIds[];
-extern void* Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
@@ -118,7 +118,6 @@ extern void* gDIMSnowHorn1Texture;
 extern f32 lbl_803E8410;
 extern int* gPlayerInterface;
 extern f32 lbl_803E82C0;
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 extern f32 gEarthWarriorMatrix[];
@@ -172,7 +171,6 @@ extern void fn_8003B500(GameObject* obj, int q, f32 f);
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
-extern u8 Obj_IsLoadingLocked();
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
 extern void vecRotateZXY(void* a, void* b);

@@ -40,7 +40,7 @@ void drearthcal_hitDetect(void)
 #pragma peephole off
 void drearthcal_update(int obj)
 {
-    int player;
+    GameObject* player;
     int i;
     struct
     {
@@ -71,7 +71,7 @@ void drearthcal_update(int obj)
             {
                 {
                     int elem = ((int*)*(int*)(obj + 0x58))[i + 0x40];
-                    if ((u32)elem == player)
+                    if ((GameObject*)elem == player)
                     {
                         ((GameObject*)obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
                     }

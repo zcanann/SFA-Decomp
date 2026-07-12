@@ -2,6 +2,7 @@
 #define SFA_DLL_PLAYER_80295318_SHARED_H
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objseq_api.h"
@@ -526,7 +527,6 @@ extern f32 lbl_803E7F44;
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E8038;
 extern f32 lbl_803E7F34;
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 Camera_GetFovY(void);
@@ -614,7 +614,6 @@ extern f32 lbl_803E811C;
 extern f32 lbl_803E80E4;
 extern const f32 lbl_803E7ED8;
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern int gPlayerEggObject;
@@ -667,7 +666,6 @@ extern f32 lbl_803E8238;
 extern f32 lbl_803E823C;
 extern f32 lbl_803DC690;
 extern int lbl_803DC688;
-extern int Obj_GetPlayerObject(void);
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern void doRumble(f32 a);
 extern f32 lbl_803DC67C;

@@ -880,7 +880,7 @@ void dll_D3_update(int* obj)
     int trans;
     int* state;
     LandedArwingState* extra;
-    int* player;
+    GameObject* player;
     int hitCount;
     int rc;
     int hits;

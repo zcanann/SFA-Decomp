@@ -87,7 +87,6 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-extern int Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 PSVECMag(f32* v);

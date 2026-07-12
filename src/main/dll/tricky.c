@@ -1112,7 +1112,7 @@ void fearTestMeterDraw(void)
 void hudDrawAirMeter(void)
 {
     int sc0, sc1, sc2, sc3;
-    int* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     int* m = airMeter;
     AirMeterFlags* p = (AirMeterFlags*)airMeter;
     s16 alpha;
@@ -1321,7 +1321,7 @@ void hudDrawFn_80121440(void)
     int hcArg = 0;
     int krazoa = 0;
     int magicId;
-    int* player;
+    GameObject* player;
     f32 op;
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
@@ -1351,7 +1351,7 @@ void hudDrawFn_80121440(void)
         int cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
         if (!(base->magicCur > lbl_803E1F9C && base->magicCur < lbl_803E1FA8 && ((int)base->magicCur & 8)) &&
             !(base->scarabCur > *(f32*)&lbl_803E1F9C && base->scarabCur < lbl_803E1FA8 && ((int)base->scarabCur & 8)) &&
-            !(cell == 0 && (void*)playerGetFocusObject(player) != NULL))
+        !(cell == 0 && (void*)playerGetFocusObject((int*)player) != NULL))
         {
             for (i = 0; (int)(u8)i < (base->magicCount >> 2); i++)
             {

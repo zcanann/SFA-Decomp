@@ -31,7 +31,6 @@
 #include "main/audio/sfx_ids.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
 extern void Obj_FreeObject(int obj);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;

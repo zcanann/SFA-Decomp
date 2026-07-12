@@ -286,7 +286,7 @@ void tree_update(GameObject* obj)
 {
     TreeState* state = obj->extra;
     int hit;
-    int player;
+    GameObject* player;
     int i;
     u16 playerDist;
     f32 dx, dz, dist;
@@ -372,14 +372,14 @@ void tree_update(GameObject* obj)
             }
         }
         player = Obj_GetPlayerObject();
-        if ((void*)player == NULL || (state->flags & TREE_FLAG_DISABLE_PLAYER_PROXIMITY) ||
+        if (player == NULL || (state->flags & TREE_FLAG_DISABLE_PLAYER_PROXIMITY) ||
             !(state->flags & TREE_FLAG_BURST_MODE_MASK))
         {
             return;
         }
         {
-            dx = obj->anim.localPosX - ((GameObject*)player)->anim.localPosX;
-            dz = obj->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
+            dx = obj->anim.localPosX - player->anim.localPosX;
+            dz = obj->anim.localPosZ - player->anim.localPosZ;
             dist = sqrtf(dx * dx + dz * dz);
             playerDist = dist;
             if (playerDist < state->proximityRadius)

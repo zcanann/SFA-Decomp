@@ -202,7 +202,7 @@ void sc_levelcontrol_hitDetect(void)
 void sc_levelcontrol_update(GameObject *obj)
 {
     int state = *(int*)&(obj)->extra;
-    u8* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
 
     if ((obj)->unkF4 != 0)
     {
@@ -245,7 +245,7 @@ void sc_levelcontrol_update(GameObject *obj)
     }
     if (((ScLevelControlState*)state)->areaCell != 0xe)
     {
-        if (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0xe)
+        if (coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == 0xe)
         {
             u8 c = ((int (*)(s32))(*gMapEventInterface)->getMapAct)(SCLEVELCONTROL_MAP_SWAPCIRCLE);
             Obj_GetPlayerObject();
@@ -274,7 +274,7 @@ void sc_levelcontrol_update(GameObject *obj)
         }
     }
     if (((ScLevelControlState*)state)->fadeTimer &&
-        (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+        (player->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->fadeTimer)
         {
@@ -296,7 +296,7 @@ void sc_levelcontrol_update(GameObject *obj)
         }
     }
     else if (((ScLevelControlState*)state)->timer10 &&
-             (((GameObject*)player)->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
+             (player->objectFlags & SCLEVELCONTROL_OBJFLAG_PARENT_SLACK) == 0)
     {
         if (lbl_803E5550 == ((ScLevelControlState*)state)->timer10)
         {
@@ -315,8 +315,7 @@ void sc_levelcontrol_update(GameObject *obj)
             mainSetBits(GAMEBIT_TOTEMPOLE_REAR, 0);
         }
     }
-    ((ScLevelControlState*)state)->areaCell = coordsToMapCell(((GameObject*)player)->anim.localPosX,
-                                                              ((GameObject*)player)->anim.localPosZ);
+    ((ScLevelControlState*)state)->areaCell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
     if ((u32)mainGetBit(0xcdc) != 0)
     {
         if (((ScLevelControlState*)state)->fog0C > lbl_803E5558)

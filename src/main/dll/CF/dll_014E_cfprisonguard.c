@@ -63,7 +63,7 @@ extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
  * queued-message drain. */
 int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    char* player;
+    GameObject* player;
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
     s8 gb50;
     s8 gb48;
@@ -253,7 +253,7 @@ void CFPrisonGuard_hitDetect(int* obj)
 void CFPrisonGuard_update(int* obj)
 {
     CfPrisonGuardState* sub;
-    int* player;
+    GameObject* player;
     u8* def;
     int bit44;
     f32 dist;

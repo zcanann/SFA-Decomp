@@ -21,7 +21,6 @@
 /* object id sideload_update defers into existence once its arming game bit is set */
 #define SIDELOAD_CHILD_OBJ 0x24
 
-extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 

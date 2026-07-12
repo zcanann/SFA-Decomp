@@ -5875,7 +5875,6 @@ void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int vari
 extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
 extern int fn_8006C754(void);
 extern int fn_8006C74C(void);
-extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803DEAF4;
 extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
@@ -5887,7 +5886,7 @@ void fn_8004D230(void)
     f32 mtx1[4][4];
     f32 mtx2[3][4];
     u8* obj1;
-    u8* player;
+    GameObject* player;
     u8* obj2;
     int id;
     f32 dist;

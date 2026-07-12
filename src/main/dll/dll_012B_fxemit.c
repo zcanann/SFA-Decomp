@@ -300,7 +300,7 @@ void FxEmit_update(FxEmitObject* obj)
 {
     FxEmitState* state;
     FxEmitPlacement* def;
-    ObjAnimComponent* player;
+    GameObject* player;
     s16 emitCount;
     s8 rotStep;
     f32 dx;
@@ -398,9 +398,9 @@ void FxEmit_update(FxEmitObject* obj)
                 emitCount = state->emitCount;
                 if (emitCount >= 0 || (emitCount < 0 && obj->emitCooldown <= 0))
                 {
-                    dx = obj->objAnim.worldPosX - player->worldPosX;
-                    dy = obj->objAnim.worldPosY - player->worldPosY;
-                    dz = obj->objAnim.worldPosZ - player->worldPosZ;
+                    dx = obj->objAnim.worldPosX - player->anim.worldPosX;
+                    dy = obj->objAnim.worldPosY - player->anim.worldPosY;
+                    dz = obj->objAnim.worldPosZ - player->anim.worldPosZ;
                     if (emitCount == 0)
                     {
                         state->suppressed = 1;

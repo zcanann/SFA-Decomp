@@ -11976,7 +11976,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     int v;
 
     (*(void (*)(int, int, int, void*, void*, void*))(*(int*)(*gBaddieControlInterface + 0x14)))(
-        obj, Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
+        obj, (int)Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
     ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
     mode = ((GameObject*)obj)->unkF8;
     if (mode == 2)
@@ -11992,7 +11992,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     else
     {
         characterDoEyeAnims((GameObject*)(obj), inner + 0x3ac);
-        *(int*)&((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
+        ((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
         v = *(int*)&((PlayerState*)sub)->baddie.posX;
         if (v >= 0x49942 || v < 0x4993f)
         {
@@ -13605,7 +13605,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
             }
             if ((*gGameUIInterface)->isEventReady(0x953) != 0 && gPlayerChildObject == NULL)
             {
-                int player;
+                GameObject* player;
                 void* att;
                 buttonDisable(0, PAD_BUTTON_A);
                 if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
@@ -13626,11 +13626,11 @@ int playerState08(GameObject* obj, int state, f32 fv)
                     *(u8*)(setup + 0x6) = 0xff;
                     *(u8*)(setup + 0x5) = 1;
                     *(u8*)(setup + 0x7) = 0xff;
-                    ((ObjPlacement*)setup)->posX = ((GameObject*)player)->anim.localPosX;
-                    ((ObjPlacement*)setup)->posY = ((GameObject*)player)->anim.localPosY;
-                    ((ObjPlacement*)setup)->posZ = ((GameObject*)player)->anim.localPosZ;
-                    att = (void*)Obj_SetupObject((int)setup, 4, ((GameObject*)player)->anim.mapEventSlot, -1,
-                                                 *(int*)&((GameObject*)player)->anim.parent);
+                    ((ObjPlacement*)setup)->posX = player->anim.localPosX;
+                    ((ObjPlacement*)setup)->posY = player->anim.localPosY;
+                    ((ObjPlacement*)setup)->posZ = player->anim.localPosZ;
+                    att = (void*)Obj_SetupObject((int)setup, 4, player->anim.mapEventSlot, -1,
+                                                 *(int*)&player->anim.parent);
                     gPlayerChildObject = att;
                 }
                 ((void (*)(int, void*, int))ObjLink_AttachChild)((int)obj, att, 1);

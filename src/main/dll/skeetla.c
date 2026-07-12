@@ -190,7 +190,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
         state->contactTimer += timeDelta;
         if (state->contactTimer >= lbl_803E242C)
         {
-            if (vec3f_distanceSquared((f32*)(obj + 0x18), (f32*)(Obj_GetPlayerObject() + 0x18)) > lbl_803E2430)
+            if (vec3f_distanceSquared((f32*)(obj + 0x18), &Obj_GetPlayerObject()->anim.worldPosX) > lbl_803E2430)
             {
                 state->contactTimer -= lbl_803E242C;
                 ((GameObject*)obj)->anim.modelInstance->runtimeSourceHitMask = 0x7f;

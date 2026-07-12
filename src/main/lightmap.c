@@ -906,7 +906,7 @@ void sceneDraw(void)
     char* q;
     int i;
     u8* cursor;
-    int* player;
+    GameObject* player;
     u8 flag;
     int t;
     GXColor8 c;
@@ -1087,7 +1087,7 @@ void sceneDrawTransparentPolys(void)
     int (*e)[4];
     int i;
     int* block;
-    int* player;
+    GameObject* player;
     GXColor8 c4copy, c4;
     GXColor8 c5copy, c5;
     GXColor8 c6copy, c6;
@@ -1109,7 +1109,7 @@ void sceneDrawTransparentPolys(void)
             block = (int*)e[i][0];
             Obj_GetActiveModel(block);
             player = Obj_GetPlayerObject();
-            if (block == player)
+            if ((GameObject*)block == player)
             {
                 if (playerIsDisguised(block) == 0)
                 {

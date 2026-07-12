@@ -173,7 +173,7 @@ int kytesmum_spawnInteractionCallback(GameObject* obj)
 
 int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg)
 {
-    int* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     KytesMumSetup* setup = ((KytesMumObject*)obj)->setup;
     f32 dist;
     ObjHits_DisableObject((int)obj);
@@ -270,10 +270,10 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
 
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
 {
-    int* player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     int* tricky = getTrickyObject();
     KytesMumRuntime* runtime = ((KytesMumObject*)obj)->runtime;
-    if (objGetAnimState80A((GameObject*)(player)) == 0x40)
+    if (objGetAnimState80A(player) == 0x40)
     {
         return 1;
     }

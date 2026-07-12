@@ -2233,16 +2233,15 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     gObjShadowNear = 0;
     if (((ObjAnimComponent*)obj)->modelInstance->flags & 0x400)
     {
-        int* player = Obj_GetPlayerObject();
+        GameObject* player = Obj_GetPlayerObject();
         int* cam = (int*)(*gCameraInterface)->getCamera();
-        if (player != NULL && !(((GameObject*)player)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) &&
-            *(int**)&((GameObject*)cam)->anim.targetObj == player)
+        if (player != NULL && !(player->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) &&
+            ((GameObject*)cam)->anim.targetObj == player)
         {
             f32 d = lbl_803DEA38 + (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale +
                                     *(f32*)&((GameObject*)obj)->anim.targetObj);
-            f32 dist = Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
-                                                            ((GameObject*)player)->anim.worldPosY,
-                                                            ((GameObject*)player)->anim.worldPosZ);
+            f32 dist = Camera_DistanceToCurrentViewPosition(player->anim.worldPosX, player->anim.worldPosY,
+                                                            player->anim.worldPosZ);
             if (d > -dist)
             {
                 gObjShadowNear = 1;

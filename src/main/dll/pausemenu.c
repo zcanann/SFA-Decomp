@@ -136,7 +136,7 @@ extern void fn_80128470(int v);
 
 void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
 {
-    int* player;
+    GameObject* player;
     ObjModel* model;
     s32 alpha;
     s32 x;
@@ -513,7 +513,7 @@ void pauseMenuDraw(int* arg1, int* arg2, int* arg3)
     }
 }
 
-void pauseMenuDrawStatus_801274A0(int* arg1)
+void pauseMenuDrawStatus_801274A0(GameObject* arg1)
 {
     s8 i8;
     s32 ty1;

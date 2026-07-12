@@ -136,7 +136,6 @@ extern int unlockLevel(s32 val, int idx, int flag);
 extern void Music_Trigger(int id, int arg);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern int getAngle(float y, float x);
-extern f32 Vec_xzDistance(void* a, void* b);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
@@ -212,7 +211,7 @@ void fn_801C2914(int obj)
         turnStep = (s32)(((f32)angleDelta * timeDelta) / lbl_803E4E70);
         ((GameObject*)obj)->anim.rotX += turnStep;
 
-        distance = Vec_xzDistance((void*)(obj + 0x18), player + 0x18);
+        distance = Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18));
         if (distance <= gDfShShrineFadeDistance)
         {
             ((GameObject*)obj)->anim.alpha = (u8)(s32)(lbl_803E4E78 * (distance / gDfShShrineFadeDistance));

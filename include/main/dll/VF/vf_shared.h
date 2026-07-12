@@ -2,6 +2,7 @@
 #define MAIN_DLL_VF_VF_SHARED_H_
 
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "ghidra_import.h"
 #include "main/vecmath.h"
@@ -245,9 +246,7 @@ extern f32 FLOAT_803e6d74;
 extern f32 FLOAT_803e6d78;
 extern f32 FLOAT_803e6d7c;
 extern f32 FLOAT_803e6d80;
-extern void* Obj_GetPlayerObject(void);
 extern int getAngle(f32 dx, f32 dy);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
 extern void fn_801F4D54(int obj, int state);

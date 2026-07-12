@@ -168,7 +168,7 @@ void sfxplayerObj_update(u8* obj)
 {
     SfxplayerObjState* state;
     u8* data;
-    u8* focusObj;
+    GameObject* focusObj;
     u16 soundId;
     int bitState;
 

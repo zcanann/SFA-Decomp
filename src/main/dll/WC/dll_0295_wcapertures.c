@@ -178,7 +178,7 @@ void wcapertures_update(GameObject* obj)
     ObjAnimComponent* objAnim = &obj->anim;
     WCAperturesSetup* setup = (WCAperturesSetup*)obj->anim.placementData;
     WCAperturesState* state = obj->extra;
-    int player = Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     void* light;
     int alpha, target;
 
@@ -196,7 +196,7 @@ void wcapertures_update(GameObject* obj)
         break;
     case WCAPERTURES_MODE_ARMED:
         if ((*gCameraInterface)->getMode() == WCAPERTURES_CAMERA_MODE &&
-            fn_802969F0(player) == WCAPERTURES_PLAYER_STATE)
+            fn_802969F0((int)player) == WCAPERTURES_PLAYER_STATE)
         {
             state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
             if (Camera_GetFovY() <= lbl_803E6E38 && (obj->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))

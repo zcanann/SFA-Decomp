@@ -45,7 +45,7 @@ void ktfallingrocks_update(GameObject* obj)
 {
     int placement = *(int*)&(obj)->anim.placementData;
     MatrixTransform params;
-    char* player;
+    GameObject* player;
     int i;
     if (mainGetBit(((KtfallingrocksPlacement*)placement)->triggerBit) == 0)
     {
@@ -56,8 +56,8 @@ void ktfallingrocks_update(GameObject* obj)
     {
         return;
     }
-    (obj)->anim.localPosX = ((GameObject*)player)->anim.localPosX;
-    (obj)->anim.localPosZ = ((GameObject*)player)->anim.localPosZ;
+    obj->anim.localPosX = player->anim.localPosX;
+    obj->anim.localPosZ = player->anim.localPosZ;
     for (i = 0; i < 10; i++)
     {
         params.x = (obj)->anim.localPosX + (f32)(int)randomGetRange(-200, 200);

@@ -87,7 +87,7 @@ void GM_MazeWell_update(unsigned int obj)
     s16* questBits = lbl_8032A730;
     s32* questBits32 = (s32*)questBits;
     GmmazewellState* state = ((GameObject*)obj)->extra;
-    u8* player;
+    GameObject* player;
     int matchedBit;
     s16* questBitPtr;
     enum QuestWellRow i;
@@ -98,7 +98,7 @@ void GM_MazeWell_update(unsigned int obj)
         if (player != 0)
         {
             (*gMapEventInterface)
-                ->savePoint((int)(player + 0xc), ((GameObject*)player)->anim.rotX, 0, getCurMapLayer());
+                ->savePoint((int)&player->anim.localPosX, player->anim.rotX, 0, getCurMapLayer());
             state->savepointSet = 1;
         }
     }

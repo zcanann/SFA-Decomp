@@ -82,7 +82,7 @@ void DFP_Lightni_render(DfpLightniObject* obj)
 
 void DFP_Lightni_update(DfpLightniObject* obj)
 {
-    DfpLightniObject* playerObj;
+    GameObject* playerObj;
     int eventActive;
     u32 eventBlocked;
     DfpLightniState* state;
@@ -114,13 +114,13 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                 {
                     end[0] =
                         gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
-                        playerObj->position[0];
+                        playerObj->anim.localPosX;
                     end[1] =
                         gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN, DFPLIGHTNI_RANDOM_Y_MAX) +
-                        playerObj->position[1];
+                        playerObj->anim.localPosY;
                     end[2] =
                         gDfpLightningOffsetScale * randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN, DFPLIGHTNI_RANDOM_XZ_MAX) +
-                        playerObj->position[2];
+                        playerObj->anim.localPosZ;
                 }
                 else
                 {
