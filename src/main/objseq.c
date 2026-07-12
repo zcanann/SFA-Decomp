@@ -1726,7 +1726,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     }
 
     ((ObjSeqState*)seq)->curFrame = found;
-    action = ObjSeq_GetActiveModel(activeObj);
+    action = (u8*)((ObjAnimComponent*)activeObj)->banks[((ObjAnimComponent*)activeObj)->bankIndex];
     if (action != NULL)
     {
         val = ObjSeq_SampleTrackCurve(seq, 13, -1);
