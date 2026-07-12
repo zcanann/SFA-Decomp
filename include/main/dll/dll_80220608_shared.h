@@ -140,7 +140,6 @@ extern f32 lbl_803E6EE8;
 extern f32 lbl_803E6EFC;
 extern f32 lbl_803E6F00;
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);
-extern void fn_8008020C(int rx, int ry, int rz, f32 x, f32 y, f32 z, f32 p7);
 
 extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
