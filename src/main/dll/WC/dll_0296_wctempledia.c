@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/WC/dll_0296_wctempledia.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -8,56 +9,12 @@
 #define WCTEMPLE_DIA_ALL_STAGES_MASK  7
 #define WCTEMPLE_DIA_VISIBLE_OVERRIDE 0x100
 
-#define WCTEMPLE_DIA_SETUP_TYPE_OFFSET        0x18
-#define WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET  0x1e
-
-#define WCTEMPLE_DIA_STATE_CURRENT_SPEED 0x00
-#define WCTEMPLE_DIA_STATE_TARGET_SPEED  0x04
-#define WCTEMPLE_DIA_STATE_STAGE_MASK    0x08
-#define WCTEMPLE_DIA_STATE_FLAGS         0x09
-#define WCTEMPLE_DIA_STATE_TARGET_TABLE  0x0c
-#define WCTEMPLE_DIA_STATE_GAMEBITS      0x10
-
 #define WCTEMPLE_DIA_FLAG_SOLVED 1
 
 #define WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG 2
 
 #define WCTEMPLE_DIA_RESET_SFX 0x487
 #define WCTEMPLE_DIA_STAGE_SFX 0x409
-
-typedef struct WCTempleDiaSetup
-{
-    ObjPlacement base;
-    s8 type;
-    u8 modelIndex;
-    u8 pad1A[WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET - 0x1A];
-    s16 solvedBit;
-    u8 pad20[0x24 - 0x20];
-} WCTempleDiaSetup;
-
-typedef struct WCTempleDiaState
-{
-    f32 currentSpeed;
-    f32 targetSpeed;
-    u8 stageMask;
-    u8 flags;
-    u8 pad0A[WCTEMPLE_DIA_STATE_TARGET_TABLE - 0x0A];
-    f32* targetTable;
-    s16* gamebits;
-} WCTempleDiaState;
-
-STATIC_ASSERT(sizeof(WCTempleDiaState) == WCTEMPLE_DIA_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCTempleDiaSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTempleDiaState, currentSpeed) == WCTEMPLE_DIA_STATE_CURRENT_SPEED);
-STATIC_ASSERT(offsetof(WCTempleDiaState, targetSpeed) == WCTEMPLE_DIA_STATE_TARGET_SPEED);
-STATIC_ASSERT(offsetof(WCTempleDiaState, stageMask) == WCTEMPLE_DIA_STATE_STAGE_MASK);
-STATIC_ASSERT(offsetof(WCTempleDiaState, flags) == WCTEMPLE_DIA_STATE_FLAGS);
-STATIC_ASSERT(offsetof(WCTempleDiaState, targetTable) == WCTEMPLE_DIA_STATE_TARGET_TABLE);
-STATIC_ASSERT(offsetof(WCTempleDiaState, gamebits) == WCTEMPLE_DIA_STATE_GAMEBITS);
-STATIC_ASSERT(offsetof(WCTempleDiaSetup, type) == WCTEMPLE_DIA_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCTempleDiaSetup, modelIndex) == WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET);
 
 void wctempledia_syncPartVisibility(GameObject* obj, u8 mask)
 {
@@ -208,27 +165,26 @@ void wctempledia_update(GameObject* obj)
     }
 }
 
-void wctempledia_init(GameObject* obj, int setup)
+void wctempledia_init(GameObject* obj, WCTempleDiaSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTempleDiaState* state = ((GameObject*)obj)->extra;
-    WCTempleDiaSetup* setupData = (WCTempleDiaSetup*)setup;
     int i;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(setupData->type << 8);
-    *(u8*)&objAnim->bankIndex = setupData->modelIndex;
+    ((GameObject*)obj)->anim.rotX = (s16)(setup->type << 8);
+    *(u8*)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
     {
         objAnim->bankIndex = 0;
     }
     if (objAnim->bankIndex == 0)
     {
-        state->gamebits = &gWcTempleDiaGameBitsA;
+        state->gamebits = gWcTempleDiaGameBitsA;
         state->targetTable = gWcTempleDiaTargetSpeedTableA;
     }
     else
     {
-        state->gamebits = &gWcTempleDiaGameBitsB;
+        state->gamebits = gWcTempleDiaGameBitsB;
         state->targetTable = gWcTempleDiaTargetSpeedTableB;
     }
     for (i = 0; i < WCTEMPLE_DIA_STAGE_COUNT; i++)
@@ -238,7 +194,7 @@ void wctempledia_init(GameObject* obj, int setup)
             state->stageMask |= (1 << i);
         }
     }
-    if ((u32)mainGetBit(setupData->solvedBit) != 0)
+    if ((u32)mainGetBit(setup->solvedBit) != 0)
     {
         state->stageMask = WCTEMPLE_DIA_ALL_STAGES_MASK;
         state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;

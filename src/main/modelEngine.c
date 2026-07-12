@@ -8,6 +8,7 @@
 #include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/dll/WC/dll_028F_wcpressures.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
+#include "main/dll/WC/dll_0296_wctempledia.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/dll/dll_02B2_dustmotesou.h"
@@ -183,7 +184,7 @@ extern ResourceDescriptor gVFP_lavapoolObjDescriptor, gVFP_lavastarObjDescriptor
     gVisAnimatorObjDescriptor, gVortexObjDescriptor, gWCBeaconObjDescriptor,
     gWCBouncyCraObjDescriptor;
 extern ResourceDescriptor gWCFloorTileObjDescriptor, gWCLevelContObjDescriptor,
-    gWCPushBlockObjDescriptor, gWCTempleBriObjDescriptor, gWCTempleDiaObjDescriptor,
+    gWCPushBlockObjDescriptor, gWCTempleBriObjDescriptor,
     gWCTileObjDescriptor;
 extern ResourceDescriptor gWM_ColumnObjDescriptor, gWM_GalleonObjDescriptor,
     gWM_GeneralScalesObjDescriptor, gWM_LaserTargetObjDescriptor, gWM_LevelControlObjDescriptor,
@@ -1547,7 +1548,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gSunTempleObjDescriptor,
     (ResourceDescriptor*)&gWCTempleObjDescriptor,
     (ResourceDescriptor*)&gWCApertureSObjDescriptor,
-    &gWCTempleDiaObjDescriptor,
+    (ResourceDescriptor*)&gWCTempleDiaObjDescriptor,
     &gWCTempleBriObjDescriptor,
     &gWCFloorTileObjDescriptor,
     (ResourceDescriptor*)&dll_299,
