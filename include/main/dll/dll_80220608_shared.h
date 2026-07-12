@@ -159,7 +159,6 @@ extern f32 lbl_803E704C;
 
 /* Arwing family (untouched: arwarwinggu, arwlevelcon, arwsquadron). */
 extern f32 lbl_803E7058;
-extern f32 lbl_803E70E0;
 extern f32 lbl_803E7188;
 extern void arwingHudSetVisible(int mode);
 
@@ -175,9 +174,6 @@ extern void C_VECHalfAngle(void* out, void* a, void* b);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E70EC;
-extern f32 lbl_803E70F0;
-extern f32 lbl_803E70F4;
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -196,8 +192,6 @@ extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
 
-extern f32 lbl_803E70E4;
-extern f32 lbl_803E70E8;
 extern int mapBlockFn_800592e4(void);
 
 extern f32 lbl_803E7154;

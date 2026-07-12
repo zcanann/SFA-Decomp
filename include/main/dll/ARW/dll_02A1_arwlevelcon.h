@@ -48,6 +48,12 @@ STATIC_ASSERT(offsetof(ARWLevelConState, streamId) == 0x1C);
 STATIC_ASSERT(offsetof(ARWLevelConState, ringChoiceTriggerId) == 0x20);
 
 extern ObjectDescriptor gARWLevelConObjDescriptor;
+extern f32 lbl_803E70E0;
+extern f32 lbl_803E70E4;
+extern f32 lbl_803E70E8;
+extern f32 lbl_803E70EC;
+extern f32 lbl_803E70F0;
+extern f32 lbl_803E70F4;
 
 void arwlevelcon_onSeqFree(GameObject* obj);
 int arwlevelcon_SeqFn(GameObject* obj, int unused, ObjSeqState* seq);
