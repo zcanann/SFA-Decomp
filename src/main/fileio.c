@@ -17,7 +17,7 @@ void dvdCheckError(void)
     {
         gAudioStreamPlayAddrCallbackDone = 0;
         gAudioStreamPlayAddrCallbackResult = 0;
-        DVDGetStreamPlayAddrAsync(lbl_80339950, AudioStream_PlayAddrCallback);
+        DVDGetStreamPlayAddrAsync(&lbl_80339950, (DVDCBCallback)AudioStream_PlayAddrCallback);
     }
 
     status = DVDGetDriveStatus();
@@ -106,13 +106,15 @@ void dvdCheckError(void)
 }
 
 #pragma dont_inline on
-int DVDRead(void* fileInfo, void* buf, int size, int offset)
+int DVDRead(DVDFileInfo* fileInfo, void* buf, int size, int offset)
 {
+    typedef int (*DVDReadAsyncPrioCompatFn)(void*, void*, int, int, void (*)(void*), int);
     u8 resetSeen = 0;
     gDvdReadCallbackResult = 0;
     while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 || gDvdReadCallbackResult == -3)
     {
-        DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
+        ((DVDReadAsyncPrioCompatFn)DVDReadAsyncPrio)(fileInfo, buf, size, offset,
+                                                     (void (*)(void*))fileReadCb_80015954, 2);
         while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1)
         {
             padUpdate();
@@ -138,19 +140,20 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
 }
 #pragma dont_inline reset
 
-void fileReadCb_80015954(void* result)
+void fileReadCb_80015954(s32 result, DVDFileInfo* fileInfo)
 {
-    gDvdReadCallbackResult = (int)result;
+    (void)fileInfo;
+    gDvdReadCallbackResult = result;
 }
 
-void setFileInfo(void* fileInfo)
+void setFileInfo(DVDFileInfo* fileInfo)
 {
     gFileInfo = fileInfo;
 }
 
-void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
+void* loadFileByPathAsync(char* path, int* outSize, int unused, DVDCallback cb)
 {
-    void* fileInfo;
+    DVDFileInfo* fileInfo;
     int size;
     u32 alignedSize;
     void* buf;
@@ -167,7 +170,7 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
     else
     {
         guard = testAndSetOnlyUseHeap3_u8(0);
-        fileInfo = mmAllocTagged(0x3c, 0xFACEFEED, NULL);
+        fileInfo = mmAllocTagged(sizeof(DVDFileInfo), 0xFACEFEED, NULL);
         testAndSetOnlyUseHeap3_u8(guard);
     }
     if (DVDOpen(path, fileInfo) == 0)
@@ -200,7 +203,7 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
 
 void* loadFileByPath(char* path, int* outSize)
 {
-    u8 fileInfo[0x3c];
+    DVDFileInfo fileInfo;
     int size;
     u32 alignedSize;
     void* buf;
@@ -209,23 +212,23 @@ void* loadFileByPath(char* path, int* outSize)
         *outSize = 0;
     }
     DVDSetAutoInvalidation(1);
-    if (DVDOpen(path, fileInfo) == 0)
+    if (DVDOpen(path, &fileInfo) == 0)
     {
         return NULL;
     }
-    size = *(u32*)(fileInfo + 0x34);
+    size = fileInfo.length;
     alignedSize = (size + 0x1f) & ~0x1f;
     buf = mmAllocTagged(alignedSize, 0x7d7d7d7d, NULL);
     if (buf == NULL)
     {
         return NULL;
     }
-    if (DVDRead(fileInfo, buf, alignedSize, 0) == -1)
+    if (DVDRead(&fileInfo, buf, alignedSize, 0) == -1)
     {
         mm_free(buf);
         return NULL;
     }
-    if (DVDClose(fileInfo) == 0)
+    if (DVDClose(&fileInfo) == 0)
     {
         mm_free(buf);
         return NULL;

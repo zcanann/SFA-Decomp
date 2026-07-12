@@ -8,6 +8,8 @@
 #include "main/mm.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/frame_timing.h"
+#include "main/fileio.h"
+#include "dolphin/dvd.h"
 
 typedef struct
 {
@@ -19,11 +21,6 @@ typedef struct
     int key;
     int val;
 } SeqSortPair;
-
-typedef struct
-{
-    u8 pad[0x3c];
-} DVDFileInfoStub;
 
 typedef struct
 {
@@ -138,9 +135,6 @@ extern void Obj_FreeObject(int obj);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
-extern int DVDOpen(char* fileName, DVDFileInfoStub* fi);
-extern int DVDClose(DVDFileInfoStub* fi);
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern int cardProbe(int chan);
 extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);
@@ -581,7 +575,7 @@ int saveGame_doWrite(int slot)
 void loadMemCardImages(void)
 {
     char* names = sMemoryCardFileNameString;
-    DVDFileInfoStub fi;
+    DVDFileInfo fi;
     u64* p;
     u16 i[1];
     u64 x[1];

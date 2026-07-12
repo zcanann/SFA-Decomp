@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "dolphin/ar.h"
+#include "dolphin/dvd.h"
 
 #define SFX_OBJECT_CHANNEL_COUNT 56
 #define SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE 1
@@ -24,6 +25,26 @@ typedef struct AudioArqRequestEntry {
 } AudioArqRequestEntry;
 
 STATIC_ASSERT(sizeof(AudioArqRequestEntry) == 0x30);
+
+typedef struct AudioDvdStreamContext {
+    DVDCommandBlock preparedCommand;
+    DVDCommandBlock stopAtEndCommand;
+    DVDFileInfo fileInfo;
+    u8 pad9C[4];
+} AudioDvdStreamContext;
+
+STATIC_ASSERT(sizeof(AudioDvdStreamContext) == 0xA0);
+STATIC_ASSERT(offsetof(AudioDvdStreamContext, preparedCommand) == 0x00);
+STATIC_ASSERT(offsetof(AudioDvdStreamContext, stopAtEndCommand) == 0x30);
+STATIC_ASSERT(offsetof(AudioDvdStreamContext, fileInfo) == 0x60);
+
+typedef struct AudioDvdStreamStorage {
+    DVDCommandBlock currentCommand;
+    AudioDvdStreamContext prepared;
+} AudioDvdStreamStorage;
+
+STATIC_ASSERT(sizeof(AudioDvdStreamStorage) == 0xD0);
+STATIC_ASSERT(offsetof(AudioDvdStreamStorage, prepared) == 0x30);
 
 typedef struct MusicTrackSlot {
     s16 id;
@@ -248,8 +269,8 @@ void Music_Update(void);
 void Sfx_UpdateObjectSounds(void);
 void Sfx_StopAllObjectSounds(void);
 void AudioStream_UpdateFadeTimer(void);
-void AudioStream_CancelCallback(s32 result);
-void fn_8000D0B4(void);
+void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
+void fn_8000D0B4(s32 result, DVDCommandBlock* block);
 void fn_80008EDC(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
 

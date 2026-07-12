@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_H_
 
 #include "types.h"
+#include "dolphin/dvd.h"
 
 extern u8 gAudioStreamDvdState;
 extern u8 gAudioStreamPlaying;
@@ -33,7 +34,7 @@ u32 AudioStream_GetCurrentId(void);
 void AudioStream_SetVolume(u8 volume);
 void AudioStream_SetDefaultVolume(u8 volume);
 void AudioStream_Init(void);
-void AudioStream_PrepareCallback(void);
+void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
 void AudioStream_PlayAddrCallback(u32 result);
 int AudioStream_Play(int id, void (*preparedCallback)(void));
 void audioStopByMask(int mask);
@@ -49,19 +50,19 @@ void doNothing_8000CF54(void);
 void audioFn_8000b694(u32 value);
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
 void fn_80009008(u32 request);
-void MIDIWADLoadedCallback(int status, void* fileInfo);
+void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 int musicInitMidiWad(void);
-void poolDataMLoadedCallback(int status, void* fileInfo);
-void poolDataSLoadedCallback(int status, void* fileInfo);
-void projectDataMLoadedCallback(int status, void* fileInfo);
-void projectDataSLoadedCallback(int status, void* fileInfo);
-void sampleBufferMLoadedCallback(int status, void* fileInfo);
-void sampleBufferSLoadedCallback(int status, void* fileInfo);
-void sampleDirectoryMLoadedCallback(int status, void* fileInfo);
-void sampleDirectorySLoadedCallback(int status, void* fileInfo);
-void sfxTriggersLoadedCallback(int status, void* fileInfo);
-void musicTriggersLoadedCallback(int status, void* fileInfo);
-void streamsLoadedCallback(int status, void* fileInfo);
+void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, u32 callbackArg1, u32 callbackArg2,
                           u32 callbackArg3);
 void audioSetSoundMode(int mode, u8 forceFlag);

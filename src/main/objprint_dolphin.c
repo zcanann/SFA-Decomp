@@ -326,8 +326,6 @@ void renderResetFn_8003fc60(void)
     gObjGxKColorCache[0] = 0;
 }
 
-extern s32 DVDGetCommandBlockStatus(void* block);
-
 // DVDGetCommandBlockStatus() command-block states (DVD_STATE_*)
 #define DVD_STATE_FATAL_ERROR   -1
 #define DVD_STATE_END           0
@@ -343,7 +341,7 @@ extern s32 DVDGetCommandBlockStatus(void* block);
 #define DVD_STATE_CANCELED      10
 #define DVD_STATE_RETRY         11
 
-int fn_80041D98(void* block)
+int fn_80041D98(DVDCommandBlock* block)
 {
     s32 status;
     if (block == NULL)
@@ -3363,9 +3361,7 @@ extern void* lbl_803DCC8C;
 extern u32 lbl_8035F3E8[];
 u32 gObjBlockStatus[0x63F6];
 extern void AtomicSList_Push(void** list, void* node);
-extern int DVDClose(void* fileInfo);
-
-void tex0tab1readCb(s32 result, void* fileInfo)
+void tex0tab1readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3392,7 +3388,7 @@ void tex0tab1readCb(s32 result, void* fileInfo)
     }
 }
 
-void tex0tab2readCb(s32 result, void* fileInfo)
+void tex0tab2readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3419,7 +3415,7 @@ void tex0tab2readCb(s32 result, void* fileInfo)
     }
 }
 
-void tex1tab1readCb(s32 result, void* fileInfo)
+void tex1tab1readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3446,7 +3442,7 @@ void tex1tab1readCb(s32 result, void* fileInfo)
     }
 }
 
-void tex1tab2readCb(s32 result, void* fileInfo)
+void tex1tab2readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3473,7 +3469,7 @@ void tex1tab2readCb(s32 result, void* fileInfo)
     }
 }
 
-void romListReadCb(s32 result, void* fileInfo)
+void romListReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     lbl_803DCC74 = 0;
     if (result < 0)
@@ -3508,7 +3504,7 @@ int unlockLevel(s32 val, int idx, int flag)
 
 extern int lbl_803DCC88;
 
-void dvdReadCb_80041d30(s32 result, void* fileInfo)
+void dvdReadCb_80041d30(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3523,7 +3519,7 @@ void dvdReadCb_80041d30(s32 result, void* fileInfo)
     }
 }
 
-void animReadCb(s32 result, void* fileInfo)
+void animReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3547,7 +3543,7 @@ void animReadCb(s32 result, void* fileInfo)
     }
 }
 
-void animCurvReadCb(s32 result, void* fileInfo)
+void animCurvReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3571,7 +3567,7 @@ void animCurvReadCb(s32 result, void* fileInfo)
     }
 }
 
-void animCurvTabReadCb(s32 result, void* fileInfo)
+void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3595,7 +3591,7 @@ void animCurvTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-void animTabReadCb(s32 result, void* fileInfo)
+void animTabReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3619,7 +3615,7 @@ void animTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-void blocksReadCb(s32 result, void* fileInfo)
+void blocksReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3643,7 +3639,7 @@ void blocksReadCb(s32 result, void* fileInfo)
     }
 }
 
-void blocksTabReadCb(s32 result, void* fileInfo)
+void blocksTabReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3667,7 +3663,7 @@ void blocksTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-void modelsReadCb(s32 result, void* fileInfo)
+void modelsReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3691,7 +3687,7 @@ void modelsReadCb(s32 result, void* fileInfo)
     }
 }
 
-void modelsTabReadCb(s32 result, void* fileInfo)
+void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3715,7 +3711,7 @@ void modelsTabReadCb(s32 result, void* fileInfo)
     }
 }
 
-void tex0readCb(s32 result, void* fileInfo)
+void tex0readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3739,7 +3735,7 @@ void tex0readCb(s32 result, void* fileInfo)
     }
 }
 
-void tex1ReadCb(s32 result, void* fileInfo)
+void tex1ReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3763,7 +3759,7 @@ void tex1ReadCb(s32 result, void* fileInfo)
     }
 }
 
-void voxMapReadCb(s32 result, void* fileInfo)
+void voxMapReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3787,7 +3783,7 @@ void voxMapReadCb(s32 result, void* fileInfo)
     }
 }
 
-void voxMapTabReadCb(s32 result, void* fileInfo)
+void voxMapTabReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {

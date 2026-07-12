@@ -25,6 +25,7 @@
 #include "main/vecmath.h"
 #include "dolphin/ai.h"
 #include "dolphin/ar.h"
+#include "dolphin/dvd.h"
 
 extern s32 gAttractMovieState;
 extern int sndFXKeyOff(u32 handle);
@@ -32,7 +33,6 @@ extern int sndFXCheck(u32 handle);
 extern int sndFXCtrl(u32 handle, u32 ctrl, u32 value);
 extern int sndFXCtrl14(u32 handle, u32 ctrl, u32 value);
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
-extern s32 DVDCancelStreamAsync(void *streamInfo, void *callback);
 extern void OSReport(char *message, ...);
 extern s32 getGameState(void);
 extern u32 mainGetBit(u32 bit);
@@ -64,9 +64,6 @@ extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
 extern f32 sqrtf(f32 x);
 extern void debugPrintf(char *message, ...);
-extern int DVDGetDriveStatus(void);
-extern int DVDCheckDisk(void);
-extern void DVDGetStreamPlayAddrAsync(void *buf, void *callback);
 extern void setTimeStop(int frames);
 extern void cutsceneFadeInOut(int mode);
 extern f32 fabsf(f32 x);
@@ -88,14 +85,9 @@ extern int PADRecalibrate(u32 mask);
 extern int PADReset(u32 mask);
 extern u8 lbl_803DCCA5;
 extern void sndMasterVolume(u8 volume, u16 time, u8 musicFlag, u8 fxFlag);
-extern int DVDOpen(char* path, void* fileInfo);
-extern void DVDSetAutoInvalidation(int autoInval);
 extern void DCStoreRange(void* addr, u32 nBytes);
-extern int DVDReadAsyncPrio(void* fileInfo, void* buf, int size, int offset, void (*cb)(void*), int prio);
 extern void checkReset(void);
 extern void waitNextFrame(void);
-extern int DVDPrepareStreamAsync(void* fileInfo, int a, int b, void (*cb)(void));
-extern int DVDStopStreamAtEndAsync(void* fileInfo, int a);
 extern u8 pauseMenuState;
 extern int getHudHiddenFrameCount(void);
 extern int getMinimapY(void);

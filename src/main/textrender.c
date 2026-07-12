@@ -104,7 +104,7 @@ typedef struct
 
 typedef struct
 {
-    u8 pad00[0x3c];
+    DVDFileInfo fileInfo;
     void* loadHandle;
     int loadedSize;
     int state;
@@ -342,7 +342,6 @@ int getHudHiddenFrameCount(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
 extern void* memcpy(void* dst, const void* src, int n);
-extern void DVDCancelAsync(void* fileInfo, void* callback);
 extern void textDisplayFn_800168dc(int a, int b);
 extern void gameTextFn_8001658c(int a, int b, int c);
 extern void gameTextRenderStrs(int a, int b);
@@ -1931,10 +1930,12 @@ void subtitleStart(int x)
 
 u8 curGameTexts[0x260];
 
-void dvdCancelCallback_8001b39c(int a, u8* match)
+void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block)
 {
     int i;
+    u8* match = (u8*)block;
     u8* p = curGameTexts;
+    (void)result;
     for (i = 8; i != 0; i--)
     {
         if (match == p)
@@ -1946,8 +1947,9 @@ void dvdCancelCallback_8001b39c(int a, u8* match)
     }
 }
 
-void gameTextOpenCallback_8001b3d0(int status, u8* match)
+void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
 {
+    u8* match = (u8*)fileInfo;
     int i;
     u8* p = curGameTexts;
     if (status != -1 && status != -3)
@@ -2133,9 +2135,9 @@ void gameTextRun(void)
                 freeSlot->sourceId = sourceId;
                 sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
-                setFileInfo(freeSlot);
+                setFileInfo(&freeSlot->fileInfo);
                 freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                                           &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
+                                                           &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
                 setFileInfo(NULL);
                 pending[0x24] = GAMETEXT_INVALID_DIR;
                 pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
@@ -2401,7 +2403,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
             if (slot->state == 1)
             {
                 slot->state = 4;
-                DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
+                DVDCancelAsync(&slot->fileInfo.cb, dvdCancelCallback_8001b39c);
             }
             if (slot->state == 3 && slot->active != 0)
             {
@@ -2435,9 +2437,9 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
     sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextSequencePathFormat, sequenceId,
             *(char**)(languageTable + languageTableOffset));
-    setFileInfo(freeSlot);
+    setFileInfo(&freeSlot->fileInfo);
     freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                               &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
+                                               &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
 }
@@ -2479,7 +2481,7 @@ void gameTextLoadForCurMap(int sourceId)
             if (slot->state == 1)
             {
                 slot->state = 4;
-                DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
+                DVDCancelAsync(&slot->fileInfo.cb, dvdCancelCallback_8001b39c);
             }
             if (slot->state == 3 && slot->active != 0)
             {
@@ -2523,9 +2525,9 @@ void gameTextLoadForCurMap(int sourceId)
         freeSlot->sourceId = sourceId;
         sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
                 sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang][0]);
-        setFileInfo(freeSlot);
+        setFileInfo(&freeSlot->fileInfo);
         freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
-                                                   &freeSlot->loadedSize, 1, (void (*)(void*))gameTextOpenCallback_8001b3d0);
+                                                   &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
         *dirPtr = GAMETEXT_INVALID_DIR;
         *langPtr = GAMETEXT_INVALID_LANGUAGE;

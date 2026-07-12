@@ -403,7 +403,8 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(gAudioStreamDvdBlockPrepared, fn_8000D0B4) == 0)
+        if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+                                 fn_8000D0B4) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
         }
@@ -420,7 +421,7 @@ void AudioStream_StopAll(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
@@ -482,8 +483,9 @@ void AudioStream_SetVolume(u8 volume)
 }
 #pragma dont_inline reset
 
-void AudioStream_CancelCallback(s32 result)
+void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block)
 {
+    (void)block;
     if (result == 0)
     {
         AISetStreamPlayState(AI_STREAM_STOP);
@@ -498,7 +500,7 @@ void AudioStream_StopCurrent(void)
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        if (DVDCancelStreamAsync((DVDCommandBlock*)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
         {
             OSReport(sDvdCancelStreamWarning);
             gAudioStreamPlaying = 0;
@@ -517,8 +519,10 @@ void AudioStream_StopCurrent(void)
     }
 }
 
-void fn_8000D0B4(void)
+void fn_8000D0B4(s32 result, DVDCommandBlock* block)
 {
+    (void)result;
+    (void)block;
     gAudioStreamDvdState = 0;
 }
 
@@ -526,7 +530,8 @@ void AudioStream_CancelPrepared(void)
 {
     AISetStreamVolLeft(0);
     AISetStreamVolRight(0);
-    if (DVDCancelStreamAsync(gAudioStreamDvdBlockPrepared, fn_8000D0B4) == 0)
+    if (DVDCancelStreamAsync(&((AudioDvdStreamContext*)gAudioStreamDvdBlockPrepared)->preparedCommand,
+                             fn_8000D0B4) == 0)
     {
         OSReport(sDvdCancelStreamWarning);
     }
@@ -609,8 +614,10 @@ void AudioStream_Init(void)
 }
 #pragma dont_inline reset
 
-void AudioStream_PrepareCallback(void)
+void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo)
 {
+    (void)result;
+    (void)fileInfo;
     if (getGameState() != 1)
     {
         gAudioStreamDvdState = 0;
@@ -1709,7 +1716,7 @@ void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamF
     }
 }
 
-void MIDIWADLoadedCallback(int status, void* fileInfo)
+void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     if (status == -1)
     {
@@ -1758,7 +1765,7 @@ int musicInitMidiWad(void)
         gAudioPendingLoadFlags |= AUDIO_LOAD_MIDI_WAD;
         saved = testAndSetOnlyUseHeap3_u8(0);
         gMidiWadFileData =
-            loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, (void (*)(void*))MIDIWADLoadedCallback);
+            loadFileByPathAsync(sMidiWadPath, &gMidiWadLoadedSize, 0, MIDIWADLoadedCallback);
         testAndSetOnlyUseHeap3_u8(saved);
     }
     if (gAudioCompletedLoadFlags & AUDIO_LOAD_MIDI_WAD)
@@ -1808,7 +1815,7 @@ int musicInitMidiWad(void)
 }
 #pragma opt_strength_reduction reset
 
-void poolDataMLoadedCallback(int status, void* fileInfo)
+void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1830,7 +1837,7 @@ void poolDataMLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void poolDataSLoadedCallback(int status, void* fileInfo)
+void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1852,7 +1859,7 @@ void poolDataSLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void projectDataMLoadedCallback(int status, void* fileInfo)
+void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1874,7 +1881,7 @@ void projectDataMLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void projectDataSLoadedCallback(int status, void* fileInfo)
+void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1896,7 +1903,7 @@ void projectDataSLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void sampleBufferMLoadedCallback(int status, void* fileInfo)
+void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1918,7 +1925,7 @@ void sampleBufferMLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void sampleBufferSLoadedCallback(int status, void* fileInfo)
+void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1940,7 +1947,7 @@ void sampleBufferSLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
+void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1962,7 +1969,7 @@ void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void sampleDirectorySLoadedCallback(int status, void* fileInfo)
+void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -1984,7 +1991,7 @@ void sampleDirectorySLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void sfxTriggersLoadedCallback(int status, void* fileInfo)
+void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -2006,7 +2013,7 @@ void sfxTriggersLoadedCallback(int status, void* fileInfo)
     }
 }
 
-void musicTriggersLoadedCallback(int status, void* fileInfo)
+void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -2029,7 +2036,7 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
 }
 
 #pragma opt_propagation off
-void streamsLoadedCallback(int status, void* fileInfo)
+void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo)
 {
     u32 saved;
     if (status < 0)
@@ -2164,16 +2171,30 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
 
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
+    typedef int (*DVDOpenCompatFn)(char*, void*);
+    typedef s32 (*DVDCancelStreamAsyncCompatFn)(void*, void*);
+    typedef int (*DVDPrepareStreamAsyncCompatFn)(void*, int, int, void (*)(void));
+    typedef int (*DVDStopStreamAtEndAsyncCompatFn)(void*, int);
     extern char sAdpExtension;
     char path[64];
     u8 vol;
-    u8* dvd = (u8*)(int)gAudioStreamDvdBlockCurrent;
-    int* fadeTbl = gAudioStreamFadeTable;
-    StreamEntry* s = gStreamsData;
-    int count = gStreamsCount;
-    int slot = -1;
+    register u8* dvdTemp;
+    register u8* dvd;
+    int* fadeTbl;
+    StreamEntry* s;
+    int count;
+    int slot;
     int i;
     u8 stopped;
+
+    asm {
+        lis dvdTemp, gAudioStreamDvdBlockCurrent@ha
+        addi dvd, dvdTemp, gAudioStreamDvdBlockCurrent@l
+    }
+    fadeTbl = gAudioStreamFadeTable;
+    s = gStreamsData;
+    count = gStreamsCount;
+    slot = -1;
 
     if (id == 1228)
     {
@@ -2213,7 +2234,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         goto ret0;
     }
-    if (DVDOpen(path, dvd + 0x90) == 0)
+    if (((DVDOpenCompatFn)DVDOpen)(path, dvd + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
     {
         return 0;
     }
@@ -2222,7 +2243,8 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync((u8*)(int)gAudioStreamDvdBlockCurrent, AudioStream_CancelCallback) == 0)
+        if (((DVDCancelStreamAsyncCompatFn)DVDCancelStreamAsync)(
+                dvd + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
         {
             OSReport((char*)fadeTbl + 0xC);
             gAudioStreamPlaying = 0;
@@ -2285,8 +2307,10 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     gAudioStreamPreparedCallback = preparedCallback;
     gAudioStreamPreparingId = slot;
     gAudioStreamDvdState = 1;
-    DVDPrepareStreamAsync(dvd + 0x90, 0, 0, AudioStream_PrepareCallback);
-    DVDStopStreamAtEndAsync(dvd + 0x60, 0);
+    ((DVDPrepareStreamAsyncCompatFn)DVDPrepareStreamAsync)(
+        dvd + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
+    ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
+        dvd + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
     return 1;
 ret0:
     return 0;
@@ -2855,13 +2879,13 @@ void audioLoadTriggerData(void)
         mmSetFreeDelay(delay);
     }
     gAudioPendingLoadFlags |= AUDIO_LOAD_MUSIC_TRIGGERS;
-    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, (void (*)(void*))musicTriggersLoadedCallback);
+    gMusicTriggersData = loadFileByPathAsync(base + 0x1b4, &info, 1, musicTriggersLoadedCallback);
     gMusicTriggersCount = (u32)info >> 4;
     gAudioPendingLoadFlags |= AUDIO_LOAD_SFX_TRIGGERS;
-    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, (void (*)(void*))sfxTriggersLoadedCallback);
+    gSfxTriggersData = loadFileByPathAsync(base + 0x1cc, &info, 1, sfxTriggersLoadedCallback);
     gSfxTriggersCount = (u32)info >> 5;
     gAudioPendingLoadFlags |= AUDIO_LOAD_STREAMS;
-    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, (void (*)(void*))streamsLoadedCallback);
+    gStreamsData = loadFileByPathAsync(base + 0x1e0, &info, 1, streamsLoadedCallback);
     gStreamsCount = info / sizeof(StreamEntry);
 }
 #pragma dont_inline reset
@@ -2934,17 +2958,17 @@ int audioInit(void)
         testAndSet_onlyUseHeap3(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_POOL;
         gAudioStarfoxMPoolDataHandle =
-            loadFileByPathAsync(base + 0x228, NULL, 0, (void (*)(void*))poolDataMLoadedCallback);
+            loadFileByPathAsync(base + 0x228, NULL, 0, poolDataMLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_PROJECT;
         gAudioStarfoxMProjectDataHandle =
-            loadFileByPathAsync(base + 0x23c, NULL, 0, (void (*)(void*))projectDataMLoadedCallback);
+            loadFileByPathAsync(base + 0x23c, NULL, 0, projectDataMLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_DIR;
         gAudioStarfoxMSampleDirectoryHandle =
-            loadFileByPathAsync(base + 0x250, NULL, 0, (void (*)(void*))sampleDirectoryMLoadedCallback);
+            loadFileByPathAsync(base + 0x250, NULL, 0, sampleDirectoryMLoadedCallback);
         testAndSet_onlyUseHeap3(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_M_SAMPLE_BUF;
         gAudioStarfoxMSampleBufferHandle =
-            loadFileByPathAsync(base + 0x264, NULL, 0, (void (*)(void*))sampleBufferMLoadedCallback);
+            loadFileByPathAsync(base + 0x264, NULL, 0, sampleBufferMLoadedCallback);
         if (gAudioStarfoxMPoolDataHandle == NULL || gAudioStarfoxMProjectDataHandle == NULL ||
             gAudioStarfoxMSampleDirectoryHandle == NULL || gAudioStarfoxMSampleBufferHandle == NULL)
         {
@@ -2965,17 +2989,17 @@ int audioInit(void)
         testAndSet_onlyUseHeap3(1);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_POOL;
         gAudioStarfoxSPoolDataHandle =
-            loadFileByPathAsync(base + 0x278, NULL, 0, (void (*)(void*))poolDataSLoadedCallback);
+            loadFileByPathAsync(base + 0x278, NULL, 0, poolDataSLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_PROJECT;
         gAudioStarfoxSProjectDataHandle =
-            loadFileByPathAsync(base + 0x28c, NULL, 0, (void (*)(void*))projectDataSLoadedCallback);
+            loadFileByPathAsync(base + 0x28c, NULL, 0, projectDataSLoadedCallback);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_DIR;
         gAudioStarfoxSSampleDirectoryHandle =
-            loadFileByPathAsync(base + 0x2a0, NULL, 0, (void (*)(void*))sampleDirectorySLoadedCallback);
+            loadFileByPathAsync(base + 0x2a0, NULL, 0, sampleDirectorySLoadedCallback);
         testAndSet_onlyUseHeap3(0);
         gAudioPendingLoadFlags |= AUDIO_LOAD_S_SAMPLE_BUF;
         gAudioStarfoxSSampleBufferHandle =
-            loadFileByPathAsync(base + 0x2b4, NULL, 0, (void (*)(void*))sampleBufferSLoadedCallback);
+            loadFileByPathAsync(base + 0x2b4, NULL, 0, sampleBufferSLoadedCallback);
         if (gAudioStarfoxSPoolDataHandle == NULL || gAudioStarfoxSProjectDataHandle == NULL ||
             gAudioStarfoxSSampleDirectoryHandle == NULL || gAudioStarfoxSSampleBufferHandle == NULL)
         {
