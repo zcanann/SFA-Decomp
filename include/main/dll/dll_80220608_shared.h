@@ -106,17 +106,11 @@ extern f32 lbl_803E6E60;
 extern f32 lbl_803E6E64;
 extern f32 lbl_803E6E68;
 
-extern f32 lbl_803E6E90;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-extern f32 lbl_803E6E70;
-extern f32 lbl_803E6E74;
-extern f32 lbl_803E6E78;
-extern f32 lbl_803E6E7C;
 
 extern f32 PSVECDistance(void* a, void* b);
-extern f32 lbl_803E6E94;
 
 extern f32 lbl_803E72E8;
 extern f32 lbl_803E72B0;

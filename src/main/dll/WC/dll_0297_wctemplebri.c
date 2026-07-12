@@ -21,20 +21,6 @@
 #define WCTEMPLEBRI_RENDER_TYPE_BASE  0x400
 #define WCTEMPLEBRI_RENDER_TYPE_SHIFT 0xb
 
-#define WCTEMPLEBRI_SETUP_TYPE_OFFSET        0x18
-#define WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET 0x19
-#define WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET  0x1e
-
-#define WCTEMPLEBRI_STATE_MAX_Y          0x00
-#define WCTEMPLEBRI_STATE_SORTED_OFFSETS 0x04
-#define WCTEMPLEBRI_STATE_PART_FLAGS     0x40
-#define WCTEMPLEBRI_STATE_PART_COUNT     0x4f
-#define WCTEMPLEBRI_STATE_PART_ALPHA     0x50
-#define WCTEMPLEBRI_STATE_ACTIVE         0x5f
-#define WCTEMPLEBRI_STATE_WAVE_PHASE_A   0x60
-#define WCTEMPLEBRI_STATE_WAVE_PHASE_B   0x62
-#define WCTEMPLEBRI_STATE_FLAGS          0x66
-
 #define WCTEMPLEBRI_FLAG_SOLVED       1
 #define WCTEMPLEBRI_GLOBAL_ACTIVE_BIT 0xedb
 
@@ -53,49 +39,8 @@
 #define WCTEMPLEBRI_OBJFLAG_HIDDEN             0x4000
 #define WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-typedef struct WCTempleBriSetup
+void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
 {
-    ObjPlacement base;
-    s8 type;
-    u8 modelIndex;
-    u8 pad1A[WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET - 0x1A];
-    s16 solvedBit;
-    u8 pad20[0x24 - 0x20];
-} WCTempleBriSetup;
-
-typedef struct WCTempleBriState
-{
-    f32 maxY;
-    f32 sortedOffsets[15];
-    u8 partFlags[15];
-    u8 partCount;
-    u8 partAlpha[15];
-    u8 active;
-    u16 wavePhaseA;
-    u16 wavePhaseB;
-    u8 pad64[WCTEMPLEBRI_STATE_FLAGS - 0x64];
-    u8 flags;
-    u8 pad67;
-} WCTempleBriState;
-
-STATIC_ASSERT(sizeof(WCTempleBriState) == WCTEMPLEBRI_EXTRA_SIZE);
-STATIC_ASSERT(sizeof(WCTempleBriSetup) == 0x24);
-STATIC_ASSERT(offsetof(WCTempleBriState, maxY) == WCTEMPLEBRI_STATE_MAX_Y);
-STATIC_ASSERT(offsetof(WCTempleBriState, sortedOffsets) == WCTEMPLEBRI_STATE_SORTED_OFFSETS);
-STATIC_ASSERT(offsetof(WCTempleBriState, partFlags) == WCTEMPLEBRI_STATE_PART_FLAGS);
-STATIC_ASSERT(offsetof(WCTempleBriState, partCount) == WCTEMPLEBRI_STATE_PART_COUNT);
-STATIC_ASSERT(offsetof(WCTempleBriState, partAlpha) == WCTEMPLEBRI_STATE_PART_ALPHA);
-STATIC_ASSERT(offsetof(WCTempleBriState, active) == WCTEMPLEBRI_STATE_ACTIVE);
-STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseA) == WCTEMPLEBRI_STATE_WAVE_PHASE_A);
-STATIC_ASSERT(offsetof(WCTempleBriState, wavePhaseB) == WCTEMPLEBRI_STATE_WAVE_PHASE_B);
-STATIC_ASSERT(offsetof(WCTempleBriState, flags) == WCTEMPLEBRI_STATE_FLAGS);
-STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET);
-STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
-STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
-
-void wctemplebri_updateModelWarp(GameObject* obj, int p2)
-{
-    WCTempleBriState* state = (WCTempleBriState*)p2;
     ObjTextureRuntimeSlot* tex;
     int phase;
 
@@ -133,7 +78,7 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     animUpdate->sequenceEventActive = 0;
     animUpdate->activeHitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
     animUpdate->hitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
-    wctemplebri_updateModelWarp(obj, (int)state);
+    wctemplebri_updateModelWarp(obj, state);
     if (animUpdate->triggerCommand == WCTEMPLEBRI_PAYLOAD_TRIGGER)
     {
         state->active = 1;
@@ -230,7 +175,7 @@ void wctemplebri_update(GameObject* obj)
 
     Obj_GetPlayerObject();
     state = obj->extra;
-    wctemplebri_updateModelWarp(obj, (int)state);
+    wctemplebri_updateModelWarp(obj, state);
     model = Obj_GetActiveModel(obj);
     modelBase = model->file;
     i = 0;
@@ -279,11 +224,10 @@ void wctemplebri_update(GameObject* obj)
     }
 }
 
-void wctemplebri_init(GameObject* obj, int initData)
+void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     WCTempleBriState* state;
-    WCTempleBriSetup* setup = (WCTempleBriSetup*)initData;
     ObjModel* model;
     int i;
     int maxY;
