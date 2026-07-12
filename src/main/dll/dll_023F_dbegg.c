@@ -115,7 +115,6 @@ typedef enum DbEggMode
 } DbEggMode;
 extern u32 FUN_80006824();
 extern u64 FUN_800305f8();
-extern u32 ObjMsg_SendToObject();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
@@ -585,8 +584,7 @@ FUN_80200558(u64 arg1, double arg2, double arg3, u64 arg4, u64 arg5,
         ((DbStealerwormControl*)control)->linkedObj = *(u32*)&((GroundBaddieState*)state)->baddie.targetObj;
         ((DbStealerwormControl*)control)->msgSlotIndex = 0x24;
         ((DbStealerwormControl*)control)->msgMode = 0;
-        ObjMsg_SendToObject(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ((DbStealerwormControl*)control)->linkedObj,
-                            0x11, obj, 0x12, arg13, arg14, arg15, arg16);
+        ObjMsg_SendToObject((void*)((DbStealerwormControl*)control)->linkedObj, 0x11, (void*)obj, 0x12);
         FUN_80006824(obj, SFXfoot_ice_run_3);
     }
     if (lbl_803E6F84 < ((GameObject*)obj)->anim.currentMoveProgress)
@@ -607,7 +605,6 @@ void dbegg_initialise(void)
 void dbegg_init(GameObject* obj)
 {
     extern void dbegg_setupFromDef(GameObject * obj, int* state);
-    extern u32 ObjMsg_AllocQueue();
     ObjModelState* modelState;
     dbegg_setupFromDef(obj, (obj)->extra);
     ObjMsg_AllocQueue(obj, 8);
