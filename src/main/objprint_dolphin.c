@@ -1293,9 +1293,9 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     MatrixTransform blk;
     int* mdl = p2;
     u8* data = (u8*)mdl[22];
-    s16* uvs;
-    s16* verts;
     int i;
+    s16* verts;
+    s16* uvs;
     int off;
     f32* vm = Camera_GetViewMatrix();
     Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
