@@ -193,7 +193,7 @@ void fn_80039264(s32* p)
 
 extern int lbl_802CAE88[10];
 
-void* seqFn_800394a0(void)
+int* seqFn_800394a0(void)
 {
     return lbl_802CAE88;
 }

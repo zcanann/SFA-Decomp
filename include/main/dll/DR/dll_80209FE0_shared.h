@@ -215,9 +215,7 @@ extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int 
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
-extern void objAnimFn_80038f38(GameObject* obj, int p);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, void* x, void* y, void* z, int p);
-extern int* seqFn_800394a0(void);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];

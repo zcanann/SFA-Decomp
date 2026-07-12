@@ -179,7 +179,6 @@ extern int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* anim
 extern f32 lbl_803E6A2C;
 extern f32 lbl_803E6B30;
 extern s16 gHighTopMovementSfxIds;
-extern void seqFn_800394a0(int obj);
 extern void fn_8009A8C8(int obj, f32 v);
 extern f32 gKTRexLaneThreatHalfWidth;
 extern f32 lbl_803E6840;
@@ -323,8 +322,6 @@ extern u8 lbl_8032AAB0[];
 extern f32 lbl_803E6B44;
 extern f32 lbl_803E6ADC;
 extern f32 gHighTopAirMeterSfxInterval;
-extern void characterDoEyeAnims(GameObject* obj, void* p);
-extern void objAnimFn_80038f38(GameObject* obj, void* p);
 extern void ktrex_updateAttackEffects(GameObject* obj);
 extern void curvesSetupMoveNetworkCurve(void* curve);
 extern f32 lbl_803E6A70;

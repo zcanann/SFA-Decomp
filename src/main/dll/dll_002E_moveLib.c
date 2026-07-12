@@ -20,6 +20,7 @@
 #include "main/camera_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/objprint.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
 #include "main/dll/baddie_state.h"
@@ -246,7 +247,6 @@ f32 dll_2E_func0B(int obj, int arg)
 
 void fn_80114B1C(int* obj)
 {
-    extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
     MoveLibState* state;
@@ -335,7 +335,6 @@ int dll_2E_func0C(int idx, char* outArg)
  * tables. */
 void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
 {
-    extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern void fn_8003AC14(GameObject * obj, void* types, int count);
     extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
@@ -367,7 +366,6 @@ void dll_2E_func05(GameObject* obj, MoveLibState* s, s16 a, s16 b, int count)
  * current path point position. */
 void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
 {
-    extern void* seqFn_800394a0(void);
     extern void fn_8003AC14(GameObject * obj, void* types, int count);
     struct
     {
@@ -472,7 +470,6 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, 
 #pragma optimization_level 2
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16 b)
 {
-    extern void* seqFn_800394a0(void);
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern int Obj_GetPlayerObject(void);
     s16 pair[2];
@@ -647,7 +644,6 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
     extern int objMathFn_8003a380(u16 * obj, u32 target, float* pos, int pathState, short* turnState, float targetYaw,
                                   int mode, short yawLimit);
     extern int fn_80038F1C(int a, int b);
-    extern void* seqFn_800394a0();
     extern int objFn_8003acfc();
     extern int fn_8003AC14();
     extern int fn_8003A9C0();
@@ -846,7 +842,6 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     extern s16 objMathFn_8003a380(PostObjAnimComponent * objAnim, PostObject * obj, void* primary, void* secondary,
                                   s16* events, double distance, int eventCount, int eventState);
     extern void fn_80038F1C(int a, int b);
-    extern PostMotionTarget* seqFn_800394a0(void);
     int yawDelta;
     PostMotionTarget* motion;
     s16 hitResult;
@@ -856,7 +851,7 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
     void* secondary;
     s16 turnDelta;
 
-    motion = seqFn_800394a0();
+    motion = (PostMotionTarget*)seqFn_800394a0();
     if (obj->motion != 0)
     {
         if ((obj->motion->flags & 2) != 0)

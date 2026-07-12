@@ -9,6 +9,7 @@
 #include "main/curve.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"
+#include "main/objprint.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objtexture.h"
@@ -284,7 +285,6 @@ extern f32 lbl_803DF038;
 extern f32 gObjSeqDegreesToAngle;
 extern f32 lbl_803DF040;
 extern f32 lbl_803DF044;
-extern int* seqFn_800394a0(void);
 extern u8 lbl_803DB411;
 extern int objSeqObjs;
 extern int lbl_803DB714;

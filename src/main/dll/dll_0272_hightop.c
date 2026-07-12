@@ -20,6 +20,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
+#include "main/objprint.h"
 #include "main/objhits.h"
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
@@ -368,7 +369,7 @@ int hightop_stateHandler05(GameObject* obj, u8* state)
 int HighTop_seqFn(GameObject* obj)
 {
     HighTopRuntime* runtime;
-    seqFn_800394a0((int)obj);
+    seqFn_800394a0();
     runtime = (obj)->extra;
     runtime->flags &= ~1;
     runtime->flagsC49.b4 = 0;
@@ -765,8 +766,8 @@ void HighTop_update(GameObject* obj)
     (*(void (**)(int, char*, f32, f32, void**, void*))((char*)*gPlayerInterface + 0x8))(
         self, state, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
     hightop_playMovementSfx(self, (int)state, (int)state);
-    characterDoEyeAnims((GameObject*)(self), (void*)(state + 0x38c));
-    objAnimFn_80038f38((GameObject*)(self), (void*)(state + 0x3bc));
+    characterDoEyeAnims((GameObject*)(self), (int)(state + 0x38c));
+    objAnimFn_80038f38((GameObject*)(self), (char*)(state + 0x3bc));
     dll_2E_func03((GameObject*)self, (MoveLibState*)(state + 0x3ec));
     if (ObjTrigger_IsSet(self) != 0)
     {

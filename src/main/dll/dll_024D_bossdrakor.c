@@ -22,6 +22,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
+#include "main/objprint.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
@@ -317,9 +318,9 @@ void bossdrakor_update(int obj)
     }
     if (randFn_80080100(200) != 0 && ((DrakorFlags*)((char*)state + 0x198))->b40)
     {
-        objAudioFn_80039270(obj, state + 0x130, 0x2ff);
+    objAudioFn_80039270(obj, (void*)(state + 0x130), 0x2ff);
     }
-    objAnimFn_80038f38((GameObject*)(obj), state + 0x130);
+    objAnimFn_80038f38((GameObject*)(obj), (char*)(state + 0x130));
     if (((DrakorFlags*)((char*)state + 0x198))->b04)
     {
         player = (int)Obj_GetPlayerObject();

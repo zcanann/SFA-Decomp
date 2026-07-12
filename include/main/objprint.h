@@ -58,5 +58,7 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 
 void objAudioFn_80039270(u32 obj, void* p, u16 sfxId);
 void characterDoEyeAnims(GameObject* obj, int state);
+int* seqFn_800394a0(void);
+void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi);
 
 #endif /* MAIN_OBJPRINT_H_ */
