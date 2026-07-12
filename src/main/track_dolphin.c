@@ -2794,8 +2794,9 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
 
     if ((u8)type == 3)
     {
-        f32 fa, fb, scale;
-        f32 b0, a0;
+        f32 fa, scale;
+        f32 a0, b0;
+        f32 fb;
         b[0] = c[0];
         b[1] = c[1];
         b[2] = c[2];
