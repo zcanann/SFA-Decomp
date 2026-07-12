@@ -55,8 +55,6 @@ extern void ObjHits_DisableObject(FirePipeObject* obj);
 extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
-extern void storeZeroToFloatParam(f32* p);
-extern void s16toFloat(f32* p, s16 val);
 extern int objIsFrozen(FirePipeObject* obj);
 extern int modelLightStruct_createPointLight(FirePipeObject* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);

@@ -353,7 +353,7 @@ void wmwallcrawler_update(int obj)
                     {
                         (*gPartfxInterface)->spawnObject((void*)ob, WMWALLCRAWLER_PARTFX, NULL, 0, -1, NULL);
                     }
-                    s16toFloat(st + 0x28c, 100);
+                    s16toFloat((f32*)&((WmwallcrawlerState*)st)->despawnTimer, 100);
                     return;
                 }
                 if (timerCountDown((f32*)&((WmwallcrawlerState*)st)->despawnTimer) != 0)
@@ -538,7 +538,8 @@ void wmwallcrawler_update(int obj)
                                  (int)randomGetRange(0, 0x14) == 0)
                         {
                             ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_CHASE;
-                            s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
+                            s16toFloat((f32*)&((WmwallcrawlerState*)st)->attackTimer,
+                                       (s16)(randomGetRange(0, 0x14) + 0x32));
                         }
                     }
                     else
@@ -550,7 +551,7 @@ void wmwallcrawler_update(int obj)
                             if (mode == WMWALLCRAWLER_MODE_IDLE)
                             {
                                 ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_DESCEND;
-                                s16toFloat(st + 0x288, 2);
+                                s16toFloat((f32*)&((WmwallcrawlerState*)st)->attackTimer, 2);
                                 ((GameObject*)ob)->anim.rotZ = 0;
                             }
                             else if (mode == WMWALLCRAWLER_MODE_DESCEND)
@@ -565,7 +566,8 @@ void wmwallcrawler_update(int obj)
                                     ((GameObject*)ob)->anim.localPosY = ((WmwallcrawlerState*)st)->homeY;
                                     ((GameObject*)ob)->anim.velocityY = lbl_803E5FB0;
                                     ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_CHASE;
-                                    s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
+                                    s16toFloat((f32*)&((WmwallcrawlerState*)st)->attackTimer,
+                                               (s16)(randomGetRange(0, 0x14) + 0x32));
                                     ((WmwallcrawlerState*)st)->triggerRadius =
                                         ((WmwallcrawlerState*)st)->triggerRadius * lbl_803E5FEC;
                                     ObjAnim_SetCurrentMove(ob, 0, lbl_803E5FB0, 0);
@@ -695,7 +697,8 @@ void wmwallcrawler_update(int obj)
                                         ((GameObject*)ob)->anim.localPosZ =
                                             d * -((GameObject*)ob)->anim.velocityZ + ((GameObject*)ob)->anim.localPosZ;
                                     }
-                                    s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 100));
+                                    s16toFloat((f32*)&((WmwallcrawlerState*)st)->attackTimer,
+                                               (s16)(randomGetRange(0, 0x14) + 100));
                                 }
                                 ang =
                                     getAngle(((GameObject*)player)->anim.localPosX - ((GameObject*)ob)->anim.localPosX,
@@ -743,7 +746,8 @@ void wmwallcrawler_update(int obj)
                                 ((GameObject*)ob)->anim.localPosY = ((WmwallcrawlerState*)st)->homeY;
                                 ((GameObject*)ob)->anim.velocityY = lbl_803E5FB0;
                                 ((WmwallcrawlerState*)st)->mode = WMWALLCRAWLER_MODE_CHASE;
-                                s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 0x32));
+                                s16toFloat((f32*)&((WmwallcrawlerState*)st)->attackTimer,
+                                           (s16)(randomGetRange(0, 0x14) + 0x32));
                                 ((WmwallcrawlerState*)st)->triggerRadius =
                                     ((WmwallcrawlerState*)st)->triggerRadius * lbl_803E5FEC;
                                 ObjAnim_SetCurrentMove(ob, 0, lbl_803E5FB0, 0);
@@ -782,9 +786,9 @@ void wmwallcrawler_init(GameObject* obj, int spawn)
     state->triggerRadius = (f32)(int)mapData->triggerRadius;
     state->variant = mapData->variant;
     state->flags = gWallCrawlerVariantFlags[state->variant];
-    storeZeroToFloatParam(&state->explodeTimer);
-    storeZeroToFloatParam(&state->despawnTimer);
-    storeZeroToFloatParam(&state->attackTimer);
+    storeZeroToFloatParam((f32*)&state->explodeTimer);
+    storeZeroToFloatParam((f32*)&state->despawnTimer);
+    storeZeroToFloatParam((f32*)&state->attackTimer);
     flags = state->flags;
     if ((flags & WMWALLCRAWLER_FLAG_START_ACTIVE) != 0)
     {
@@ -793,14 +797,14 @@ void wmwallcrawler_init(GameObject* obj, int spawn)
     }
     else if ((flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0)
     {
-        s16toFloat(&state->explodeTimer, 0x4b0);
+        s16toFloat((f32*)&state->explodeTimer, 0x4b0);
         state->triggerRadius = lbl_803E6030;
         (obj)->anim.rotZ = 0;
         state->mode = WMWALLCRAWLER_MODE_DESCEND;
     }
     else
     {
-        s16toFloat(&state->attackTimer, 0x190);
+        s16toFloat((f32*)&state->attackTimer, 0x190);
         (obj)->anim.rotZ = -0x7fff;
         state->mode = WMWALLCRAWLER_MODE_IDLE;
     }

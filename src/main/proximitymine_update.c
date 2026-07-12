@@ -39,8 +39,6 @@ extern f32 lbl_803E679C;
 extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 extern void queueGlowRender(void* effect);
-extern void storeZeroToFloatParam(f32* p);
-extern void s16toFloat(f32* p, s16 val);
 extern void modelLightStruct_updateGlowAlpha(void* light);
 extern int objUpdateOpacity(char* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);

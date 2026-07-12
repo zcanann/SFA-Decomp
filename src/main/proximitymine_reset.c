@@ -3,6 +3,7 @@
 #include "main/objhits.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/maketex.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 
@@ -12,8 +13,6 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-extern void storeZeroToFloatParam(f32* p);
-extern void s16toFloat(f32* p, s16 val);
 extern void fn_8009A8C8(void* obj, f32 param2);
 extern void modelLightStruct_freeSlot(void* handle);
 

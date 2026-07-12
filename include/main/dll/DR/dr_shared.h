@@ -25,6 +25,7 @@
 #include "main/shader_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
+#include "main/maketex.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objhits.h"
@@ -112,7 +113,6 @@ extern int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateSta
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void ModelLightStruct_free(void* p);
 extern void Music_Trigger(int trackId, int restart);
-extern void storeZeroToFloatParam(void* timer);
 extern GameUIInterface** gGameUIInterface;
 extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int DR_CageControl_SeqFn(GameObject* obj);
@@ -266,7 +266,6 @@ extern f32 lbl_803E6A78;
 extern f32 lbl_803E6A7C;
 extern f32 lbl_803E6A80;
 extern f32 lbl_803E6A84;
-extern void s16toFloat(void* timer, int v);
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E69E4;
 extern f32 lbl_803E6A18;

@@ -114,7 +114,7 @@ void timer_init(GameObject* obj, TimerSetup* setup)
     TimerState* state = (obj)->extra;
     TimerSetup* setupData = setup;
 
-    storeZeroToFloatParam((void*)state);
+    storeZeroToFloatParam(&state->countdownTimer);
     state->mode = setupData->mode;
     state->lightScale = lbl_803E7424;
     state->flags.expired = 0;
@@ -140,7 +140,7 @@ void timer_update(GameObject* obj)
         expiredThisFrame = 0;
         if (flags->manual == 0 && (void*)mainGetBit(setup->startGameBit) == NULL)
         {
-            storeZeroToFloatParam((void*)state);
+            storeZeroToFloatParam(&state->countdownTimer);
             if (state->mode == TIMER_MODE_GLOBAL)
             {
                 switch (((TimerSetup*)(obj)->anim.placementData)->base.mapId)
@@ -154,7 +154,7 @@ void timer_update(GameObject* obj)
             }
             expiredThisFrame = 1;
         }
-        if (timerCountDown((void*)state) != 0)
+        if (timerCountDown(&state->countdownTimer) != 0)
         {
             mainSetBits(setup->expiredGameBit, 1);
             mainSetBits(setup->startGameBit, 0);
@@ -186,10 +186,10 @@ void timer_update(GameObject* obj)
     {
         if ((void*)mainGetBit(setup->startGameBit) != NULL || flags->manual != 0)
         {
-            storeZeroToFloatParam((void*)state);
+            storeZeroToFloatParam(&state->countdownTimer);
             if (setup->durationMinutes != 0)
             {
-                s16toFloat((void*)state, (s16)(setup->durationMinutes * 60));
+                s16toFloat(&state->countdownTimer, (s16)(setup->durationMinutes * 60));
             }
             switch (state->mode)
             {

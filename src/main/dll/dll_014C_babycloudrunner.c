@@ -124,11 +124,9 @@ extern f32 lbl_803E4254;
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void storeZeroToFloatParam(void* p);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern f32 s16toFloat(int a, int b);
 extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern void* getTrickyObject(void);
 extern void fn_8014C66C(int* a, void* b);
@@ -155,7 +153,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
     sub->turnLatch = 0;
     sub->behaviourState = def->behaviourState;
     sub->unkCC = 0;
-    storeZeroToFloatParam(sub);
+    storeZeroToFloatParam(&sub->unk00);
     sub->linkedObj = 0;
     sub->roostYaw = ((GameObject*)obj)->anim.rotX;
     sub->flags22C = 0;
@@ -291,7 +289,7 @@ int babycloudrunner_tryCapture(void* p)
     }
     if (flag != 0)
     {
-        s16toFloat((int)sub, 0x3c);
+        s16toFloat(&sub->unk00, 0x3c);
         ((GameObject*)obj)->unkF4 = 1;
         ((GameObject*)obj)->anim.rotX = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
@@ -603,7 +601,8 @@ void babycloudrunner_update(int* obj)
                         (*gGameUIInterface)
                             ->initAirMeter(gBabyCloudRunnerAirMeterValues[sub->runnerIndex],
                                            BABYCLOUDRUNNER_AIRMETER_BGTEXTURE);
-                        s16toFloat((int)&sub->countdownTimer, (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
+                        s16toFloat(&sub->countdownTimer,
+                                   (s16)gBabyCloudRunnerAirMeterValues[sub->runnerIndex]);
                     }
                     fn_8019E3F4(obj);
                     return;

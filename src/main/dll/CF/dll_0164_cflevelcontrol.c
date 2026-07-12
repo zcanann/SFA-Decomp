@@ -19,11 +19,13 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
+#include "main/maketex.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 typedef struct CflevelcontrolState
 {
-    u8 pad0[0x8 - 0x0];
+    f32 timer;
+    u8 pad4[0x8 - 0x4];
     s32 unk8;
     u8 padC[0xD - 0xC];
     s8 unkD;
@@ -64,8 +66,6 @@ extern f32 lbl_803E43E8;
 extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
 
-extern void s16toFloat(void* p, int duration);
-extern void storeZeroToFloatParam(void* p);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int playerIsDisguised(int obj);
@@ -280,8 +280,8 @@ void cflevelcontrol_init(u8* obj, u8* params)
     sub = ((GameObject*)obj)->extra;
     ((CflevelcontrolState*)sub)->unk8 = 0;
     ((CflevelcontrolState*)sub)->unkD = -1;
-    storeZeroToFloatParam(sub);
-    s16toFloat(sub, 0x1e0);
+    storeZeroToFloatParam(&((CflevelcontrolState*)sub)->timer);
+    s16toFloat(&((CflevelcontrolState*)sub)->timer, 0x1e0);
     ((CfLevelControlFlags*)(sub + 0xc))->b6 = 0;
     ((GameObject*)obj)->animEventCallback = CFLevelControl_SeqFn;
     mainSetBits(GAMEBIT_CFRelated0983, *(int*)(*(int*)&((GameObject*)obj)->anim.placementData + 0x14) != 0x2cef);

@@ -9,6 +9,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
+#include "main/maketex.h"
 
 typedef struct DREarthWarriorPlacement
 {
@@ -71,7 +72,8 @@ typedef struct DREarthWarriorState
     u8 unk14E8;
     u8 pad14E9[0x14ED - 0x14E9];
     u8 unk14ED;
-    u8 pad14EE[0x14F4 - 0x14EE];
+    u8 pad14EE[0x14F0 - 0x14EE];
+    f32 airMeterTimer;
     s8 unk14F4;
     u8 unk14F5;
     u8 pad14F6[0x14F8 - 0x14F6];
@@ -259,8 +261,6 @@ extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1
 extern void doRumble(f32 duration);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern void storeZeroToFloatParam(int p);
-extern void s16toFloat(int p, int v);
 extern void fn_802BC788(GameObject*);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);
@@ -1425,8 +1425,8 @@ void DR_EarthWarrior_init(GameObject* obj, int def)
     }
     ((ByteFlags*)((char*)inner + 0x14ec))->b08 = 0;
     *(u8*)&((DREarthWarriorState*)inner)->unk14F4 = 2;
-    storeZeroToFloatParam(inner + 0x14f0);
-    s16toFloat(inner + 0x14f0, 0x1e);
+    storeZeroToFloatParam(&((DREarthWarriorState*)inner)->airMeterTimer);
+    s16toFloat(&((DREarthWarriorState*)inner)->airMeterTimer, 0x1e);
     ((ByteFlags*)((char*)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState*)inner)->unk14F5 = 1;
     ((DREarthWarriorState*)inner)->helperObj = NULL;

@@ -106,7 +106,6 @@ void flamethrowerspe_hitDetect(void)
 #pragma opt_common_subs off
 void flamethrowerspe_update(int* obj)
 {
-    extern void s16toFloat(f32 * p, s16 val);
     extern u32 ObjHits_EnableObject();
     extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
@@ -147,7 +146,6 @@ void flamethrowerspe_update(int* obj)
 
 void flamethrowerspe_init(int* obj, int* params)
 {
-    extern void storeZeroToFloatParam(f32 * p);
     extern u64 ObjHits_DisableObject();
     int* state = ((GameObject*)obj)->extra;
     storeZeroToFloatParam(&((FlamethrowerspeState*)state)->lifeTimer);

@@ -133,7 +133,7 @@ void drakord_thornbush_hitDetect(int obj)
             }
             if (((DrakordThornbushPlacement*)setup)->regrowDelay != 0)
             {
-                s16toFloat((void*)&((DrakordThornbushState*)inner)->growth,
+                s16toFloat(&((DrakordThornbushState*)inner)->growth,
                            ((DrakordThornbushPlacement*)setup)->regrowDelay);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject((u32)obj);

@@ -4,6 +4,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
+#include "main/maketex.h"
 #include "main/render.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -41,8 +42,6 @@ int unlockLevel(s32 val, int idx, int flag);
 void envFxActFn_800887f8(u8 value);
 void setMotionBlur(int mode, f32 amount);
 void streamFn_8000a380(int mask, int mode, int time);
-void storeZeroToFloatParam(void *timer);
-void s16toFloat(void *timer, int duration);
 void *getTrickyObject(void);
 
 #endif /* MAIN_GAMEPLAY_RUNTIME_H_ */

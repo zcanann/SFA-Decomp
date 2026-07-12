@@ -83,8 +83,6 @@ extern f32 lbl_803E3180;
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void s16toFloat(void* timer, int duration);
-extern void storeZeroToFloatParam(void* timer);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
@@ -131,8 +129,8 @@ void pollenfragment_init(GameObject* obj, int config)
     ((XyzAnimatorState*)state)->unk18 = 0;
     *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
     ((XyzAnimatorState*)state)->rowCount = 0;
-    s16toFloat(state + 9, 0xe10);
-    storeZeroToFloatParam(state + 8);
+    s16toFloat(&((PollenFragmentExtra*)state)->lifetimeTimer, 0xe10);
+    storeZeroToFloatParam(&((PollenFragmentExtra*)state)->deathTimer);
 }
 
 void pollenfragment_release(void)
@@ -281,7 +279,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject((u32)obj);
-            s16toFloat(extra + 0x20, 0x78);
+            s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
         }
         if (((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0)
         {
@@ -292,7 +290,7 @@ void pollenfragment_hitDetect(GameObject* obj)
                 spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
-            s16toFloat(extra + 0x20, 0x78);
+            s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
         }
     }
 }
@@ -325,7 +323,7 @@ void pollenfragment_update(int obj)
     }
     if (timerCountDown(&((PollenFragmentExtra*)extra)->lifetimeTimer) != 0)
     {
-        s16toFloat(extra + 0x20, 0x78);
+        s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
     }
     if (*(void**)&((GameObject*)obj)->ownerObj != NULL)
     {
@@ -444,6 +442,6 @@ void pollenfragment_update(int obj)
             spawnExplosionLegacy(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
-        s16toFloat(extra + 0x20, 0x78);
+        s16toFloat(&((PollenFragmentExtra*)extra)->deathTimer, 0x78);
     }
 }

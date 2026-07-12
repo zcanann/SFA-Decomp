@@ -271,7 +271,7 @@ void bossdrakor_update(int obj)
         bossdrakor_spawnAttackObjects((GameObject*)(obj), state, ((BossDrakorState*)state)->attackType);
         if (((BossDrakorState*)state)->attackTimerDuration != lbl_803E6510)
         {
-            s16toFloat((void*)&((BossDrakorState*)state)->attackTimer,
+            s16toFloat(&((BossDrakorState*)state)->attackTimer,
                        (int)((BossDrakorState*)state)->attackTimerDuration);
         }
     }
@@ -548,7 +548,7 @@ void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action)
                             *mstate = spd;
                             drakormissile_startActiveLaunch((GameObject*)(missile));
                             storeZeroToFloatParam(&((BossDrakorState*)state)->jawAnimAngle);
-                            s16toFloat((void*)&((BossDrakorState*)state)->jawAnimAngle, 0x1e);
+                            s16toFloat(&((BossDrakorState*)state)->jawAnimAngle, 0x1e);
                             Sfx_PlayFromObject((int)obj, SFXTRIG__UNK);
                             Sfx_PlayFromObject((int)obj, SFXTRIG_cahit2_c);
                         }
@@ -628,13 +628,13 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         break;
     case 2:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
-        s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x1e);
+        s16toFloat(&((BossDrakorState*)state)->attackTimer, 0x1e);
         ((BossDrakorState*)state)->attackType = 2;
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6510;
         break;
     case 3:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
-        s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x5a);
+        s16toFloat(&((BossDrakorState*)state)->attackTimer, 0x5a);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6540;
         ((BossDrakorState*)state)->attackType = 1;
         ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x84);
@@ -642,7 +642,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         break;
     case 4:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
-        s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x3c);
+        s16toFloat(&((BossDrakorState*)state)->attackTimer, 0x3c);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6544;
         ((BossDrakorState*)state)->attackType = 1;
         ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x88);
@@ -650,7 +650,7 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         break;
     case 5:
         storeZeroToFloatParam(&((BossDrakorState*)state)->attackTimer);
-        s16toFloat((void*)&((BossDrakorState*)state)->attackTimer, 0x1e);
+        s16toFloat(&((BossDrakorState*)state)->attackTimer, 0x1e);
         ((BossDrakorState*)state)->attackTimerDuration = lbl_803E6548;
         ((BossDrakorState*)state)->attackType = 1;
         ((BossDrakorState*)state)->missileBaseSpeed = *(f32*)((char*)tbl + 0x8c);

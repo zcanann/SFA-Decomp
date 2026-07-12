@@ -49,7 +49,7 @@ typedef enum CrCloudRacePhase {
 
 typedef struct CrCloudRaceState {
   u8 unk0[4];
-  u8 timer[4];
+  f32 timer;
   u8 phase;
   u8 flags;
   u8 unkA[2];

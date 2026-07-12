@@ -15,8 +15,6 @@
 extern f32 lbl_803E6760;
 
 
-extern void storeZeroToFloatParam(void* timer);
-extern void s16toFloat(void* timer, int duration);
 
 static inline int crfueltank_animFrame(CrFuelTankDef* def)
 {

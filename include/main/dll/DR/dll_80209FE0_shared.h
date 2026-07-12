@@ -19,6 +19,7 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/maketex.h"
 #include "main/objHitReact.h"
 #include "main/render.h"
 #include "main/objhits.h"
@@ -131,7 +132,6 @@ extern f64 DOUBLE_803e8280;
 extern void ModelLightStruct_free(int light);
 extern void Music_Trigger(int id, int value);
 extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
-extern void storeZeroToFloatParam(f32* p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
 extern int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
@@ -145,7 +145,6 @@ extern f32 lbl_803E657C;
 extern f32 lbl_803E65C0;
 extern f32 lbl_803E65C4;
 extern f32 lbl_803E65C8;
-extern void s16toFloat(void* p, int v);
 extern int arrayIndexOf();
 extern f32 lbl_803E6598;
 extern f32 lbl_803E65A8;

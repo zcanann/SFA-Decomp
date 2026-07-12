@@ -95,8 +95,6 @@ extern const f32 lbl_803E4328;
 extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
-extern void storeZeroToFloatParam(f32* p);
-extern void s16toFloat(f32* p, s16 val);
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
 extern void Obj_RemoveFromUpdateList(int obj);

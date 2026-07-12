@@ -94,10 +94,10 @@ void crcloudrace_updateRaceState(int obj)
     case CRCLOUDRACE_PHASE_ABORT:
         mainSetBits(CRCLOUDRACE_GAMEBIT_TOTEM_LATCH, 0);
         inner->phase = CRCLOUDRACE_PHASE_COUNTDOWN;
-        s16toFloat((char*)inner->timer, CRCLOUDRACE_COUNTDOWN_FRAMES);
+        s16toFloat(&inner->timer, CRCLOUDRACE_COUNTDOWN_FRAMES);
         break;
     case CRCLOUDRACE_PHASE_COUNTDOWN:
-        if (timerCountDown((char*)inner->timer) != 0)
+        if (timerCountDown(&inner->timer) != 0)
         {
             inner->phase = CRCLOUDRACE_PHASE_RELOAD_DRAG_ROCK;
         }
@@ -217,7 +217,7 @@ void crcloudrace_init(CrCloudRaceObject* obj)
     state = obj->state;
     obj->animEventCallback = crcloudrace_completionCallback;
     state->phase = CRCLOUDRACE_PHASE_START;
-    storeZeroToFloatParam(state->timer);
+    storeZeroToFloatParam(&state->timer);
     mainSetBits(CRCLOUDRACE_GAMEBIT_START_LATCH_A, 1);
     streamFn_8000a380(3, 2, 1000);
     return;

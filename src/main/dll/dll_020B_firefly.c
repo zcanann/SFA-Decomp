@@ -46,8 +46,8 @@ typedef struct FireFlyState
     u8 activeFlags; /* 0x6C: FireFlyActiveBits */
     u8 pad6D[0x70 - 0x6D];
     f32 despawnTimer;          /* 0x70: post-collect frames; sparkles above 170, frees at 0 */
-    u8 lifeTimer[0x7C - 0x74]; /* 0x74: float-param timer (timerCountDown);
-                                  expiry despawns the timed placement variant */
+    f32 lifeTimer;          /* 0x74: expiry despawns the timed placement variant */
+    u8 pad78[0x7C - 0x78];
     u8 flags;                  /* 0x7C: FIREFLY_FLAG_PLAYER_TOUCHED */
     u8 pad7D[0x80 - 0x7D];
     s16 messageParam; /* 0x80: outparam for the talk message */
@@ -277,7 +277,7 @@ void firefly_update(int obj)
     }
     else
     {
-        if (timerCountDown(state->lifeTimer) != 0)
+        if (timerCountDown(&state->lifeTimer) != 0)
         {
             state->despawnTimer = 180.0f;
         }
@@ -311,10 +311,10 @@ void firefly_init(GameObject* obj, int def)
     (obj)->anim.alpha = 0;
     (obj)->animEventCallback = firefly_animEventCallback;
     ObjMsg_AllocQueue(obj, 1);
-    storeZeroToFloatParam(state->lifeTimer);
+    storeZeroToFloatParam(&state->lifeTimer);
     if (mapData->variantParam == 0x7f)
     {
-        s16toFloat(state->lifeTimer, 0xe10);
+        s16toFloat(&state->lifeTimer, 0xe10);
     }
 }
 
