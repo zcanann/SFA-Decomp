@@ -19,7 +19,7 @@ STATIC_ASSERT(offsetof(WmTorchPlacement, unk1C) == 0x1C);
 
 typedef struct WmTorchState
 {
-    void* linkedObj;
+    GameObject* linkedObj;
     f32 unk04; /* from placement unk1A */
     u8 pad08[2];
     s16 unk0A;    /* from placement unk1C */

@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
 #include "main/objanim_update.h"
@@ -270,7 +271,7 @@ typedef struct DIMbossObject {
   int (*updateState)(struct DIMbossObject *obj,u32 param_2,
                      ObjAnimUpdateState *animUpdate);
   u8 padC0[0xC8 - 0xC0];
-  void *childObject;
+  GameObject *childObject;
   u8 padCC[0xE4 - 0xCC];
   u8 updateMode;
   u8 padE5[0xF4 - 0xE5];

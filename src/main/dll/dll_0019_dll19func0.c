@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
@@ -58,7 +59,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
-extern void Obj_FreeObject(u8* obj);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern GameObject* Obj_SetupObject(ObjPlacement* setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
@@ -232,7 +232,7 @@ void dll_19_func19(u8* cam, u8* ctx)
     }
     if (*(void**)&((GameObject*)cam)->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(void**)&((GameObject*)cam)->childObjs[0]);
+        Obj_FreeObject(*(GameObject**)&((GameObject*)cam)->childObjs[0]);
         *(int*)&((GameObject*)cam)->childObjs[0] = 0;
     }
     if (Obj_IsLoadingLocked() != 0)

@@ -13,6 +13,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
@@ -30,7 +31,6 @@ extern f32 lbl_803E5DF0; /* flame param */
 extern f32 lbl_803E5DF4; /* model scale factor */
 extern f32 lbl_803E5DF8; /* model scale factor */
 extern f32 lbl_803E5DE8; /* sound-loop radius */
-extern void Obj_FreeObject(u8* obj);
 
 int wmtorch_getExtraSize(void)
 {

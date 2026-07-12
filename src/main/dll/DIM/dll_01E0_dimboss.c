@@ -7,6 +7,7 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
@@ -70,7 +71,6 @@ extern u32 ModelLightStruct_free();
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
 #define DIMBOSS_ENVFX_B 0xdc
-extern void Obj_FreeObject(u8* obj);
 extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                         u32 p4, u32 p5, f32 scale);
@@ -442,7 +442,7 @@ int DIMboss_getObjectTypeId(void)
 void DIMboss_free(DIMbossObject* obj)
 {
     DIMbossRuntime* runtime;
-    void* childObject;
+    GameObject* childObject;
     void* effect;
 
     runtime = obj->runtime;

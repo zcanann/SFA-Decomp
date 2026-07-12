@@ -2,6 +2,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -83,7 +84,6 @@ extern const f32 lbl_803E53F4;
 
 extern void ModelLightStruct_free(void* light);
 extern int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam);
-extern void Obj_FreeObject(u8* obj);
 extern void objMove(void* obj, f32 x, f32 y, f32 z);
 extern void* objCreateLight(void* obj, int arg);
 extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
@@ -296,7 +296,7 @@ void BombPlantSpore_update(void* obj)
         state->detonateTimer -= timeDelta;
         if (state->detonateTimer <= lbl_803E5394)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
         return;
     }
