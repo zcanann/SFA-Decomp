@@ -1,4 +1,10 @@
-#include "main/dll/dll_80220608_shared.h"
+#include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objtexture.h"
+#include "main/vecmath.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/dll/dll_02B3_vortex.h"
@@ -208,11 +214,10 @@ void Vortex_hitDetect(void)
 {
 }
 
-void Vortex_init(int obj, int initData)
+void Vortex_init(GameObject* obj, VortexSetup* setup)
 {
-    GameObject* o = (GameObject*)obj;
+    GameObject* o = obj;
     f32(*base)[3] = gVortexScaleParams;
-    VortexSetup* setup = (VortexSetup*)initData;
     VortexState* state = o->extra;
     u8 i;
 

@@ -54,7 +54,7 @@ int ARWBombColl_getObjectTypeId(void);
 void ARWBombColl_free(void);
 void ARWBombColl_hitDetect(void);
 void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale);
-void ARWBombColl_init(GameObject* obj, int setup);
+void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup);
 void ARWBombColl_release(void);
 void ARWBombColl_initialise(void);
 void ARWBombColl_update(int obj);

@@ -12,8 +12,16 @@
  * placement speed/range defaults, seeds the curve and start position,
  * and render draws the device, its path light pulses and the held barrel.
  */
-#include "main/dll/dll_80220608_shared.h"
 #include "dolphin/mtx.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/objanim.h"
+#include "main/objlib.h"
+#include "main/vecmath.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0158_gunpowderbarrel.h"
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
@@ -282,11 +290,11 @@ void DR_BarrelGr_update(GameObject* obj)
     }
 }
 
-void DR_BarrelGr_init(GameObject* obj, int setup)
+void DR_BarrelGr_init(GameObject* obj, DrbarrelgrPlacement* setup)
 {
     int one;
     DrbarrelgrState* state;
-    DrbarrelgrPlacement* placement = (DrbarrelgrPlacement*)setup;
+    DrbarrelgrPlacement* placement = setup;
 
     one = 1;
     state = obj->extra;

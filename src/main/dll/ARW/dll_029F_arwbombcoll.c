@@ -10,7 +10,13 @@
  * an axis-aligned proximity test (flag bit10) or a plane-crossing test that
  * compares the Arwing's current and previous Z against the pickup's Z.
  */
-#include "main/dll/dll_80220608_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/audio/sfx.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/gameplay_runtime.h"
+#include "main/objhits.h"
+#include "main/vecmath.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/headdisplay.h"
@@ -47,10 +53,10 @@ void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
-void ARWBombColl_init(GameObject* obj, int setup)
+void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup)
 {
     ObjAnimComponent* objAnim = &obj->anim;
-    ARWBombCollSetup* mapData = (ARWBombCollSetup*)setup;
+    ARWBombCollSetup* mapData = setup;
 
     obj->anim.rotX = (s16)(mapData->rotX << 8);
     objAnim->alpha = 0;
@@ -116,7 +122,8 @@ void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
 void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
 {
     GameObject* arwingObj = arwing;
-    int setup = *(int*)&obj->anim.placementData;
+    ArwbombcollHandleArwingHitPlacement* setup =
+        (ArwbombcollHandleArwingHitPlacement*)obj->anim.placementData;
     u8 mode = state->mode;
     if (mode == 0)
     {
@@ -139,7 +146,7 @@ void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
     else if (mode == 3 || mode == 4)
     {
         Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        gameBitIncrement(((ArwbombcollHandleArwingHitPlacement*)setup)->eventId);
+        gameBitIncrement(setup->eventId);
     }
     else
     {

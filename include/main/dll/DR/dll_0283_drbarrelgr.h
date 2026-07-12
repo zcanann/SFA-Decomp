@@ -74,7 +74,7 @@ void DR_BarrelGr_free(GameObject* obj);
 void DR_BarrelGr_render(GameObject* obj, int p2, int p3, int p4, int p5);
 void DR_BarrelGr_hitDetect(void);
 void DR_BarrelGr_update(GameObject* obj);
-void DR_BarrelGr_init(GameObject* obj, int setup);
+void DR_BarrelGr_init(GameObject* obj, DrbarrelgrPlacement* setup);
 void DR_BarrelGr_release(void);
 void DR_BarrelGr_initialise(void);
 

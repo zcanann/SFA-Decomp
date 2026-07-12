@@ -70,7 +70,7 @@ int Vortex_getObjectTypeId(void);
 void Vortex_free(GameObject* obj);
 void Vortex_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void Vortex_hitDetect(void);
-void Vortex_init(int obj, int initData);
+void Vortex_init(GameObject* obj, VortexSetup* setup);
 void Vortex_update(GameObject* obj);
 void Vortex_release(void);
 void Vortex_initialise(void);
