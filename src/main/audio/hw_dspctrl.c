@@ -173,6 +173,7 @@ static void DoDepopFade(s32* dspStart, s16* dspDelta, s32* hostSum)
         dspCmdMaxPtr = dspCmdPtr + 0xC0;                                                                               \
     }
 
+#pragma opt_loop_invariants off
 void salBuildCommandList(s16* dest, u32 nsDelay)
 {
     DSPstudioinfo* msp;
@@ -1052,6 +1053,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     }
     DCStoreRangeNoSync(dspCmdCurBase, (u32)dspCmdPtr - (u32)dspCmdCurBase);
 }
+#pragma opt_loop_invariants reset
 
 int salSynthSendMessage(int synth, int msg)
 {
