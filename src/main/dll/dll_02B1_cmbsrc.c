@@ -563,7 +563,8 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
             }
             modelLightStruct_setDiffuseColor(
                 state->light, (c0 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30])[mapData->colorIndex * 3],
-                (c1 = c0 + 1)[mapData->colorIndex * 3], (c2 = c0 + 2)[mapData->colorIndex * 3], 0xff);
+                (c1 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30 + 1])[mapData->colorIndex * 3],
+                (c2 = &gCmbsrcColorRgbTable[(u8)lightVariant * 0x30 + 2])[mapData->colorIndex * 3], 0xff);
             modelLightStruct_setSpecularColor(state->light, c0[mapData->colorIndex * 3], c1[mapData->colorIndex * 3],
                                               c2[mapData->colorIndex * 3], 0xff);
             {
