@@ -6,6 +6,37 @@
 typedef struct RomCurveDef RomCurveDef;
 typedef struct RomCurveWalker RomCurveWalker;
 
+#define ROM_CURVE_PATH_LINK_COUNT 5
+
+typedef struct RomCurvePathNode
+{
+  u8 pad00[0x08];
+  f32 x;
+  f32 y;
+  f32 z;
+  s32 selfId;
+  u8 pad18;
+  s8 type;
+  u8 pad1A;
+  s8 directionMask;
+  s32 links[ROM_CURVE_PATH_LINK_COUNT];
+  u8 pad30;
+  u8 tag0;
+  u8 tag1;
+  u8 tag2;
+  s16 sampleA;
+  s16 sampleB;
+  s16 sampleC;
+  s8 sampleD;
+} RomCurvePathNode;
+
+STATIC_ASSERT(offsetof(RomCurvePathNode, x) == 0x08);
+STATIC_ASSERT(offsetof(RomCurvePathNode, selfId) == 0x14);
+STATIC_ASSERT(offsetof(RomCurvePathNode, directionMask) == 0x1B);
+STATIC_ASSERT(offsetof(RomCurvePathNode, links) == 0x1C);
+STATIC_ASSERT(offsetof(RomCurvePathNode, tag0) == 0x31);
+STATIC_ASSERT(offsetof(RomCurvePathNode, sampleA) == 0x34);
+
 typedef void (*RomCurveVoidFn)(void);
 typedef RomCurveDef **(*RomCurveGetCurvesFn)(int *outCount);
 typedef int (*RomCurveFindFn)(int *types,int typeCount,int action,f32 x,f32 y,f32 z);

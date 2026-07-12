@@ -20,46 +20,11 @@
  */
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/engine_shared.h"
+#include "main/debug.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
-/*
- * A single ROM curve-node as returned by gRomCurveInterface->getById.
- * Single-owner layout for this unit (and its sibling dll_8010a104.c,
- * which still uses raw offsets). Only the fields touched here are named.
- */
-typedef struct RomCurveNode
-{
-    /* 0x00 */ u8 pad00[0x08];
-    /* 0x08 */ f32 x;
-    /* 0x0C */ f32 y;
-    /* 0x10 */ f32 z;
-    /* 0x14 */ int selfId;
-    /* 0x18 */ u8 pad18[0x03];
-    /* 0x1B */ u8 dirMask;
-    /* 0x1C */ int neighbours[5];
-    /* 0x30 */ u8 pad30;
-    /* 0x31 */ u8 tag0;
-    /* 0x32 */ u8 tag1;
-    /* 0x33 */ u8 tag2;
-    /* 0x34 */ s16 sampleA;
-    /* 0x36 */ s16 sampleB;
-    /* 0x38 */ s16 sampleC;
-    /* 0x3A */ s8 sampleD;
-} RomCurveNode;
-
-STATIC_ASSERT(offsetof(RomCurveNode, x) == 0x08);
-STATIC_ASSERT(offsetof(RomCurveNode, y) == 0x0C);
-STATIC_ASSERT(offsetof(RomCurveNode, z) == 0x10);
-STATIC_ASSERT(offsetof(RomCurveNode, selfId) == 0x14);
-STATIC_ASSERT(offsetof(RomCurveNode, dirMask) == 0x1B);
-STATIC_ASSERT(offsetof(RomCurveNode, neighbours) == 0x1C);
-STATIC_ASSERT(offsetof(RomCurveNode, tag0) == 0x31);
-STATIC_ASSERT(offsetof(RomCurveNode, tag1) == 0x32);
-STATIC_ASSERT(offsetof(RomCurveNode, tag2) == 0x33);
-STATIC_ASSERT(offsetof(RomCurveNode, sampleA) == 0x34);
-STATIC_ASSERT(offsetof(RomCurveNode, sampleB) == 0x36);
-STATIC_ASSERT(offsetof(RomCurveNode, sampleC) == 0x38);
-STATIC_ASSERT(offsetof(RomCurveNode, sampleD) == 0x3A);
+typedef RomCurvePathNode RomCurveNode;
 
 /* curve-node field offsets (raw walking-pointer accesses below) */
 #define NODE_SELF_ID    0x14
