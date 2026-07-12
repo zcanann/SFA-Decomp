@@ -16,6 +16,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/player_control_interface.h"
+#include "main/object_descriptor.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
@@ -1550,4 +1551,37 @@ u8 gDIMSnowHorn1ConfigTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x0C,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC2, 0x0C, 0x00, 0x00,
+};
+
+f32 lbl_80335128[] = {0.0f, 0.05f, 0.03f, 0.85f};
+
+ObjectDescriptor24 gDIMSnowHorn1ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)DIMSnowHorn1_initialise,
+    (ObjectDescriptorCallback)DIMSnowHorn1_release,
+    0,
+    (ObjectDescriptorCallback)DIMSnowHorn1_init,
+    (ObjectDescriptorCallback)DIMSnowHorn1_update,
+    (ObjectDescriptorCallback)DIMSnowHorn1_hitDetect,
+    (ObjectDescriptorCallback)DIMSnowHorn1_render,
+    (ObjectDescriptorCallback)DIMSnowHorn1_free,
+    (ObjectDescriptorCallback)DIMSnowHorn1_getObjectTypeId,
+    DIMSnowHorn1_getExtraSize,
+    (ObjectDescriptorCallback)DIMSnowHorn1_setScale,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func11,
+    (ObjectDescriptorCallback)DIMSnowHorn1_modelMtxFn,
+    (ObjectDescriptorCallback)DIMSnowHorn1_render2,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func14,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func15,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func16,
+    (ObjectDescriptorCallback)DIMSnowHorn1_setMountMode,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func18,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func19,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func20,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func21,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func22,
+    (ObjectDescriptorCallback)DIMSnowHorn1_func23,
 };
