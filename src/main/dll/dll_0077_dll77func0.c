@@ -13,7 +13,6 @@
 
 STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80314980[];
 
 /* referenced via *(f32*)& so the 0.0 base keeps its additive fadds (a literal

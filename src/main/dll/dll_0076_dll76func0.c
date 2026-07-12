@@ -33,7 +33,6 @@ typedef struct
     GfxCmd entries[32];         /* +0x60 */
 } GfxBuf;
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80314950[];
 
 static const f32 c999 = 999.0f;

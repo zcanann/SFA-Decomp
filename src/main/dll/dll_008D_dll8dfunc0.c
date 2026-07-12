@@ -28,7 +28,6 @@
 #define DLL8D_EFFECT_ID_VARIANT1 0xc0d
 #define DLL8D_EFFECT_ID_VARIANT2 0x23b
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll8DEffectParamBlock[];
 extern f32 lbl_803E10E0;
 extern f32 lbl_803E10E4;

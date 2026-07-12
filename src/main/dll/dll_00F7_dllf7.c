@@ -31,7 +31,6 @@
 /* child object id spawned via DllF7GasSetup buffer (gas cloud) */
 #define DLLF7_CHILD_OBJ_GAS 0xb
 
-extern ModgfxInterface** gModgfxInterface;
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 

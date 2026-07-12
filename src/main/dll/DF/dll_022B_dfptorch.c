@@ -30,7 +30,6 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE  0x1a3
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDfpTorchSequenceState;
 extern int gDfpTorchEffectParams[];
 extern void objUpdateOpacity(int);

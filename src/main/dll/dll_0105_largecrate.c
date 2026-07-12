@@ -53,7 +53,6 @@ extern void vecRotateZXY(void* p, f32* v);
 extern int getAngle(float y, float x);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
-extern ModgfxInterface** gModgfxInterface;
 extern int* lbl_803DDAC8;
 extern u8 framesThisStep;
 extern f32 timeDelta;

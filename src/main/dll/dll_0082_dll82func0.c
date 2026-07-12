@@ -11,7 +11,6 @@
 #define DLL82_EFFECT_ID_VARIANT3_4 0xd9
 #define DLL82_EFFECT_ID_DEFAULT    0x2e
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315770[];
 extern f32 lbl_803E0EB0;
 extern f32 lbl_803E0EB4;

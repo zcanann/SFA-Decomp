@@ -52,7 +52,6 @@ typedef struct Cup197State
 
 #define CUP_STAGE_COMPLETE_BIT 0x472
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 framesThisStep;
 extern int gDll197ResourceParamTemplate[];
 extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */

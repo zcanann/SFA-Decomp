@@ -17,7 +17,6 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL84_EFFECT_ID 0x3f
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gFoodbagFxTextureData[];
 extern f32 lbl_803E0F20;
 extern f32 lbl_803E0F24;

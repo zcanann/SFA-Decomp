@@ -13,7 +13,6 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_005E_dll5efunc0.h"
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll5EFunc03SequenceData[];
 
 #include "main/dll/dll_0058_dummy58.h"

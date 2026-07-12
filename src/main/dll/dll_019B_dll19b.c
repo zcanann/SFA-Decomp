@@ -22,7 +22,6 @@ extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern ModgfxInterface** gModgfxInterface;
 extern void ObjMsg_AllocQueue(void* obj, int capacity);
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern int ObjMsg_Pop(int obj, int* msg, int* a, int* b);

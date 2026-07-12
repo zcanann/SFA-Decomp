@@ -110,7 +110,6 @@ typedef struct DFSHLaserBeamObject
         obj, id, a, flags, owner, unk)
 
 extern f32 timeDelta;
-extern ModgfxInterface** gModgfxInterface;
 extern void* gLaserBeamEffectResource;
 extern u8 framesThisStep;
 extern f32 lbl_803E4EC0;

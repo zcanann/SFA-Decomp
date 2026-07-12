@@ -23,7 +23,6 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5158;
-extern ModgfxInterface** gModgfxInterface;
 
 /* Env-fx ids activated per anim seq event (getEnvfxAct 3rd arg):
  * A on event 1, B on event 2 (default id when no override is set). */

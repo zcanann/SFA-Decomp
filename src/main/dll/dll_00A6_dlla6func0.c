@@ -32,7 +32,6 @@ typedef struct
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLLA6_EFFECT_ID 0x26a
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80318DF0[];
 extern u8 gDllA6EffectHwWords[];
 extern u8 lbl_803DB980;

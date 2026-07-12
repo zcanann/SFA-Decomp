@@ -18,7 +18,6 @@
 
 #define FX_VARIANT_BURST 4
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gFoodbagEffectTemplate[];
 extern u8 lbl_803DB8F0;
 extern u8 lbl_803DB8F4;

@@ -25,7 +25,6 @@ typedef struct FoodbagFxBuilder
     void (*slot4)(void);
 } FoodbagFxBuilder;
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0ED8;
 extern f32 lbl_803E0EDC;
 extern f32 lbl_803E0EE0;

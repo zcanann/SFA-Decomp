@@ -65,7 +65,6 @@ STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL95_EFFECT_ID 0x46
 
-extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80317528[];
 extern u8 lbl_803DB940[8];

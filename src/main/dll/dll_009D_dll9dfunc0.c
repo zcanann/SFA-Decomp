@@ -50,7 +50,6 @@ typedef struct
 /* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
    gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318038[];
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E13F8;
 extern f32 lbl_803E13FC;
 extern f32 lbl_803E1400;

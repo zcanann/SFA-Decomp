@@ -25,7 +25,6 @@ typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flag
 
 #define WMTORCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E5DEC; /* 90.0: unk04 default */
 extern f32 lbl_803E5DF0; /* flame param */
 extern f32 lbl_803E5DF4; /* model scale factor */

@@ -12,7 +12,6 @@
 #include "main/dll/dll_0077_dll77func0.h"
 #include "main/dll/dll_0078_dll78func0.h"
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0BE8, lbl_803E0BEC, lbl_803E0BF0, lbl_803E0BF4, lbl_803E0BF8, lbl_803E0BFC;
 extern f32 lbl_803E0C00, lbl_803E0C04, lbl_803E0C08, lbl_803E0C0C, lbl_803E0C10, lbl_803E0C14;
 extern f32 lbl_803E0C18, lbl_803E0C1C, lbl_803E0C20, lbl_803E0C24, lbl_803E0C28, lbl_803E0C2C;

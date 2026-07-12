@@ -52,7 +52,6 @@ typedef struct
 #define DLL98_EFFECT_ID_VARIANT1 0x3f0
 #define DLL98_EFFECT_ID_DEFAULT  0x3f3
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_803178B0[];
 extern f32 lbl_803E1318;
 extern f32 lbl_803E131C;

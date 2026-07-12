@@ -15,7 +15,6 @@ enum
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80312E58[];
 extern f32 lbl_803E0930;
 extern f32 lbl_803E0934;

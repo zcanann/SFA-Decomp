@@ -18,7 +18,6 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL7D_EFFECT_ID 0x89
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315030[];
 extern int lbl_803DD4B0;
 extern f32 lbl_803E0DD8;

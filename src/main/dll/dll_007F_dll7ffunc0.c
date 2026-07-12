@@ -18,7 +18,6 @@
 #define DLL7F_EFFECT_ID_VARIANT0 0x156
 #define DLL7F_EFFECT_ID_DEFAULT  0x8a
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80315328[];
 extern u8 lbl_803DB8E8;
 extern f32 lbl_803E0E20;

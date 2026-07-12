@@ -29,7 +29,6 @@ typedef struct
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9E_EFFECT_ID 0x46c
 
-extern ModgfxInterface** gModgfxInterface;
 
 /* lbl_80318260: shared texture + halfword table; lbl_803E1418..1440:
  * gfx-constant pool. Home TU unknown. */

@@ -779,7 +779,6 @@ extern void setPendingMapLoad(int v);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_Play(int a, void* cb);
 extern void AudioStream_StartPrepared(void);
-extern ModgfxInterface** gModgfxInterface;
 extern f32 gPlayerPartFxParams[];
 extern f32 lbl_803E7FFC;
 extern f32 lbl_803E7EC8;

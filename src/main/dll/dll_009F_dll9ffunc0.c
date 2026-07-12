@@ -39,7 +39,6 @@ typedef struct
 /* fl bit 0: derive effect position from sourceObj / posSource */
 #define DLL9F_FLAG_POSITIONED 0x1
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll9fEffectDataTable[];
 extern f32 lbl_803E1448;
 extern f32 lbl_803E144C;

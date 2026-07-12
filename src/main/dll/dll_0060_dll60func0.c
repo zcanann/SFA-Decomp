@@ -29,7 +29,6 @@ enum
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL60_EFFECT_ID 0x46
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E0830;
 extern f32 lbl_803E0834;
 extern f32 lbl_803E0838;

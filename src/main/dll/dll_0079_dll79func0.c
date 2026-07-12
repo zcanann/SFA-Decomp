@@ -25,7 +25,6 @@
 #define DLL79_EFFECT_ID_VARIANT1 0x89
 #define DLL79_EFFECT_ID_VARIANT2 0x23b
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll79EffectModelBlock[];
 extern u8 lbl_803DB8D8;
 extern f32 lbl_803E0CB0, lbl_803E0CB4, lbl_803E0CB8, lbl_803E0CBC, lbl_803E0CC0, lbl_803E0CC4;

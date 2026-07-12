@@ -17,7 +17,6 @@ STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL7B_EFFECT_ID 0x8e
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll7BEffectResourceData[];
 extern f32 lbl_803E0D38, lbl_803E0D3C, lbl_803E0D40, lbl_803E0D44, lbl_803E0D48, lbl_803E0D4C;
 extern f32 lbl_803E0D50, lbl_803E0D54, lbl_803E0D58, lbl_803E0D5C, lbl_803E0D60, lbl_803E0D64;

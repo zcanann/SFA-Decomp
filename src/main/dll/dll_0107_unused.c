@@ -54,7 +54,6 @@ static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
 
 #pragma dont_inline on
-extern ModgfxInterface** gModgfxInterface;
 extern void* lbl_803DDAD0;
 extern void* lbl_803DDAD4;
 

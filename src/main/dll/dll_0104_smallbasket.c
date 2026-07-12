@@ -131,7 +131,6 @@ extern const f32 lbl_803E3970;
 void SmallBasket_init(GameObject* obj, int def);
 void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
-extern ModgfxInterface** gModgfxInterface;
 extern void* gSmallBasketResource;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern const f32 lbl_803E3974;

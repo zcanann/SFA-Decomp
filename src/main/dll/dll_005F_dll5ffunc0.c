@@ -25,7 +25,6 @@ STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL5F_EFFECT_ID 0x48
 
-extern ModgfxInterface** gModgfxInterface;
 
 extern u8 lbl_80312650[];
 extern f32 lbl_803E0800;

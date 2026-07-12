@@ -57,7 +57,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-extern ModgfxInterface** gModgfxInterface;
 extern int gSbMiniFireResourceVariant;
 extern void fn_80053ED0(int);
 extern void fn_80053EBC(int);

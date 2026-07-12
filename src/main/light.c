@@ -36,7 +36,6 @@ extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
 extern f32 lbl_803E6150;
-extern ModgfxInterface** gModgfxInterface;
 extern void* gVfpDragHeadResource;
 extern f32 lbl_803E6138;
 extern int SeqPoint_SeqFn(int, int, ObjAnimUpdateState*);

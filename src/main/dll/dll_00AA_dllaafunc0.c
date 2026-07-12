@@ -13,7 +13,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/dll_00AA_dllaafunc0.h"
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80319168[];
 
 void dll_AA_func03(int sourceObj, int variant, u8* posSource, u32 seqFlags)

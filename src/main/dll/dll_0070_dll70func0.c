@@ -22,7 +22,6 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL70_EFFECT_ID 0x45
 
-extern ModgfxInterface** gModgfxInterface;
 
 extern u8 gDll70Func03GfxLayoutTable[];
 extern int lbl_803DB8D0; /* symbols.txt size:0x8; only &lbl is taken so width is inert */

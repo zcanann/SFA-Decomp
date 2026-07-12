@@ -22,7 +22,6 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL8E_EFFECT_ID 0x26a
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
 extern u8 gDll8EEffectTexture;

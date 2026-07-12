@@ -24,7 +24,6 @@
 #include "main/dll/dll_0000_gameui.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
-extern ModgfxInterface** gModgfxInterface;
 extern u32 DAT_803dda68;
 extern f64 DOUBLE_803df840;
 extern f32 lbl_803DC2D0;

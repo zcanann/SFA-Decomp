@@ -49,7 +49,6 @@ typedef struct GfxBuf
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL93_EFFECT_ID 0x89
 
-extern ModgfxInterface** gModgfxInterface;
 extern u8 lbl_80317260[];
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;

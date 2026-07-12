@@ -28,7 +28,6 @@
 /* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
-extern ModgfxInterface** gModgfxInterface;
 extern f32 lbl_803E31C0;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);

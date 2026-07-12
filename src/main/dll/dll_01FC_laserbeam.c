@@ -32,7 +32,6 @@
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/gamebit_ids.h"
 extern void textureFree(u8* tex);
-extern ModgfxInterface** gModgfxInterface;
 
 #define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 

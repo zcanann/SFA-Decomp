@@ -2268,7 +2268,6 @@ void mapLoadUnloadObjects(int flag)
 
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
-extern ModgfxInterface** gModgfxInterface;
 extern int gMapBlockOriginX;
 extern int gMapBlockOriginZ;
 extern int gMapBlockOriginWorldX;
