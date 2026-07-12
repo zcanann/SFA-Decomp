@@ -14,7 +14,6 @@
 extern void titleScreenPositionElements(f32 a, f32 b);
 extern void fn_80135814(int p1, int p2);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern float mathSinf(float x);
 extern void nameEntryTextDrawFunc(void);
 
 extern void titleScreenShowCopyright(u8 arg);

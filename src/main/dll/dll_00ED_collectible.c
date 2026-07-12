@@ -45,8 +45,6 @@ extern void saveGame_saveObjectPos(int obj);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern void objMove(int* obj, f32 x, f32 y, f32 z);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void playerAddHealth(void* player, int amount);
 extern int gameBitIncrement(int bit);
 extern void saveGame_unsaveObjectPos(int* obj);

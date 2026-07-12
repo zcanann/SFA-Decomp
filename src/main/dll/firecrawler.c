@@ -137,8 +137,6 @@ extern f32 gCrawlerS8Norm127;
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
 extern int gCrawlerNearbyObjectBuffer[];
 extern f32 lbl_803E2B80;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 lbl_803E2C98;
 extern f32 lbl_803E2C9C;
 extern f32 gCrawlerPi;

@@ -123,8 +123,6 @@ extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
 extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 void fn_8016F260(int* obj, int* state, int* other);
 extern const f32 gFireballSpiralAmplitude;
 extern const f32 gFireballPi;

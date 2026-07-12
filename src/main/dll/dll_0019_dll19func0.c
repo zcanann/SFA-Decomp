@@ -12,8 +12,6 @@
 #define DLL19_TARGET_OBJGROUP 4
 #define DLL19_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 extern int getAngle(float y, float x);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcloudrunner_state.h"

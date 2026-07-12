@@ -25,8 +25,6 @@ extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern void cutsceneFadeInOut(int a);
 extern void Obj_FreeObject(int* obj);
 extern void showDeathMenu(void);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 extern void Camera_SetFovY(f32 fovY);
 
