@@ -1102,6 +1102,7 @@ void fearTestMeterDraw(void)
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
+#pragma opt_propagation off
 void hudDrawAirMeter(void)
 {
     int sc0, sc1, sc2, sc3;
@@ -1189,12 +1190,14 @@ void hudDrawAirMeter(void)
                           m[2] - clampedC, 0x1a, 0);
         drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100, clampedC, 0x1a,
                           0);
+        cy = 0x1a4 - ((u32) * (u16*)((char*)m[0xd] + 0xc) >> 1);
         drawTexture((void*)m[0xd], (f32)(int)(by + m[2]), (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100);
         break;
     }
     }
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
+#pragma opt_propagation reset
 
 f32 lbl_803A8950[0x18];
 
