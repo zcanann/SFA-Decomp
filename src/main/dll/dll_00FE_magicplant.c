@@ -20,6 +20,7 @@
  * clears the child pointer (gem released) -> FADE_OUT.
  */
 #include "main/dll/dusterstate_types.h"
+#include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00FE_magicplant.h"
@@ -77,8 +78,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #define MAGICPLANT_IDLE_TIMER_MAX  600
 
 extern void* gCameraInterface;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
 extern f32 gMagicPlantHitReactAnimStep;

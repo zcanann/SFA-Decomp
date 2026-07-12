@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
@@ -37,8 +38,6 @@ typedef struct WarpVec
     f32 pad;
 } WarpVec;
 extern u8 lbl_80386648[];
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern const f32 gMapBlockWorldSize;
 extern void OSReport(const char* msg, ...);
 

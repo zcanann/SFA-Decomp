@@ -10,6 +10,7 @@
  * DLL_F7, Checkpoint4).
  */
 #include "main/dll/xyzanimator.h"
+#include "main/shader_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -197,8 +198,6 @@ extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
 extern void objSetMtxFn_800412d4(f32* m);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern void objfx_spawnMaskedHitEffect(int* obj, f32 scale, int a, int b, int c, void* params);
 extern void objfx_spawnLightPulse(GameObject* obj, f32 scale, int a, int b, int c, f32 v, void* params);
 extern void objfx_spawnDirectionalBurst(int* obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, u32 f);

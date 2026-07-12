@@ -12,6 +12,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/texture.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/sky.h"
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
@@ -193,7 +194,6 @@ extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
 extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
-extern void* textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
 extern f32* Camera_GetInverseViewMatrix(void);
 extern f32 Camera_GetFarPlane(void);

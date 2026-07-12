@@ -1,5 +1,6 @@
 /* DLL 0x011D - treasurechest (treasure chest interactive object). TU: 0x8018A8BC-0x8018ADB4. */
 #include "main/dll/CF/dll_165.h"
+#include "main/shader_api.h"
 #include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -56,8 +57,6 @@ extern void* lbl_803DDAE0;
 extern f32 lbl_803E3C24;
 extern ChestHitParams lbl_802C22B0;
 extern int lbl_803DDAE4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 

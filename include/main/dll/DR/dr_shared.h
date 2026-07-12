@@ -13,6 +13,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/mapEventTypes.h"
 #include "main/render.h"
+#include "main/shader_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
 #include "main/objanim.h"
@@ -247,8 +248,6 @@ extern f32 lbl_803E6964;
 extern int* Obj_GetActiveModel();
 extern f32* ObjModel_GetJointMatrix(int* model, int jointIdx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E67BC;
 extern f32 lbl_803E67B4;
 extern f32 lbl_803E67C0;

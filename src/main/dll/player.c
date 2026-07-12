@@ -1397,7 +1397,7 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         if ((((PlayerState*)inner)->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
-            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
+            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNoInt() != 0)
         {
             int z[2];
             void** p[1];
@@ -4856,7 +4856,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
-            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
+            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNoInt() != 0)
         {
             int z[2];
             void** p[1];
@@ -5107,7 +5107,7 @@ int playerStateAimStaff(int obj, int state)
             (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
             if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
                 *(s16*)((char*)*(int*)((char*)*(int*)&((GameObject*)obj)->extra + 0x35c) + 0x4) == 0 ||
-                getCurSeqNo() != 0)
+                getCurSeqNoInt() != 0)
             {
                 int z[2];
                 void** p[1];
@@ -6029,7 +6029,7 @@ void fn_80296124(GameObject* obj, void* p2, void* p3)
 int fn_8029605C(GameObject* obj, f32* p2, f32* p3)
 {
     void* inner = obj->extra;
-    if (inner == NULL || getCurSeqNo() != 0)
+    if (inner == NULL || getCurSeqNoInt() != 0)
     {
         return 0;
     }
@@ -6045,7 +6045,7 @@ int fn_8029605C(GameObject* obj, f32* p2, f32* p3)
 void fn_8029A420(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
-    if (inner->curAnimId != 0x42 && getCurSeqNo() == 0)
+    if (inner->curAnimId != 0x42 && getCurSeqNoInt() == 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
     }
@@ -6081,7 +6081,7 @@ void fn_8029DAE0(GameObject* obj, int* p2)
     u8 c;
     *p2 &= ~0x4000;
     c = inner->curAnimId;
-    if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0)
+    if (c != 0x48 && c != 0x47 && getCurSeqNoInt() == 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
     }
@@ -9589,7 +9589,7 @@ int playerState30(GameObject* obj, int state, f32 fv)
         pfx.mode = 1;
         (*gPartfxInterface)->spawnObject((void*)gPlayerPathObject, 0x7f5, &pfx, h[0] + 1, -1, NULL);
         if ((inner->buttonsHeld & gPlayerHeldButtonMask) == 0 ||
-            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNo() != 0)
+            *(s16*)((char*)*(int*)((char*)*(int*)&obj->extra + 0x35c) + 0x4) == 0 || getCurSeqNoInt() != 0)
         {
             int z[2];
             void** p[1];
@@ -9831,7 +9831,7 @@ void fn_8029FFD0(GameObject* obj, int p2)
     if (v != 0x15 && v != 0x14 && v != 0x12 && v != 0x13 && v != 0xe && v != 0xf && v != 0x10)
     {
         u8 c = inner->curAnimId;
-        if (c != 0x48 && c != 0x47 && c != 0x42 && getCurSeqNo() == 0)
+        if (c != 0x48 && c != 0x47 && c != 0x42 && getCurSeqNoInt() == 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
             inner->curAnimId = 0x42;
@@ -10909,7 +10909,7 @@ void fn_8029A4A8(GameObject* obj, int p2)
 
     if (((PlayerState*)p2)->baddie.controlMode != 0x2b)
     {
-        if (inner->curAnimId != 0x42 && getCurSeqNo() == 0)
+        if (inner->curAnimId != 0x42 && getCurSeqNoInt() == 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x3c, 0xfe);
         }
@@ -12631,7 +12631,7 @@ void playerRunActiveSpells(GameObject* obj, int state)
         }
         break;
     case GAMEBIT_STAFF_ABILITY_FREEZE_BLAST:
-        if (lbl_803DE42C != 0 && getCurSeqNo() != 0)
+        if (lbl_803DE42C != 0 && getCurSeqNoInt() != 0)
         {
             ((PlayerState*)state)->animState = -1;
             z[0] = 0;
@@ -13978,7 +13978,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     {
         ok = 0;
     }
-    if (ok != 0 && (((PlayerState*)inner)->buttonsHeld & PAD_TRIGGER_L) != 0 && getCurSeqNo() == 0)
+    if (ok != 0 && (((PlayerState*)inner)->buttonsHeld & PAD_TRIGGER_L) != 0 && getCurSeqNoInt() == 0)
     {
         if (!((ByteFlags*)((char*)inner + 0x3f1))->b20 && !((ByteFlags*)((char*)inner + 0x3f0))->b10)
         {
@@ -14036,7 +14036,7 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
         }
         ((ByteFlags*)((char*)inner + 0x3f1))->b20 = 0;
         if (((ByteFlags*)((char*)inner + 0x3f1))->b10 && ((PlayerState*)inner)->curAnimId != 0x48 &&
-            ((PlayerState*)inner)->curAnimId != 0x47 && getCurSeqNo() == 0)
+            ((PlayerState*)inner)->curAnimId != 0x47 && getCurSeqNoInt() == 0)
         {
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             ((ByteFlags*)((char*)inner + 0x3f1))->b10 = 0;
@@ -15937,7 +15937,7 @@ void fn_802A514C(GameObject* obj, int state)
             if (((ByteFlags*)((char*)inner + 0x3f1))->b10)
             {
                 u8 anim = inner->curAnimId;
-                if (anim != 0x48 && anim != 0x47 && getCurSeqNo() == 0)
+                if (anim != 0x48 && anim != 0x47 && getCurSeqNoInt() == 0)
                 {
                     (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                     ((ByteFlags*)((char*)inner + 0x3f1))->b10 = 0;
@@ -16706,7 +16706,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         f32 prog;
         setAButtonIcon(2);
         lbl_803DE488 = lbl_803DE488 - lbl_803E7EE0;
-        if ((inner->buttonsJustPressedIfNotBusy & PAD_BUTTON_A) != 0 || getCurSeqNo() != 0)
+        if ((inner->buttonsJustPressedIfNotBusy & PAD_BUTTON_A) != 0 || getCurSeqNoInt() != 0)
         {
             buttonDisable(0, PAD_BUTTON_A);
             lbl_803DE460 = lbl_803DE460 - fv;
@@ -17606,7 +17606,7 @@ void fn_802AE9C8(GameObject* obj, int inner, int state)
     }
     ((ByteFlags*)((char*)inner + 0x3f1))->b20 = 0;
     if (((ByteFlags*)((char*)inner + 0x3f1))->b10 && ((PlayerState*)inner)->curAnimId != 0x48 &&
-        ((PlayerState*)inner)->curAnimId != 0x47 && getCurSeqNo() == 0)
+        ((PlayerState*)inner)->curAnimId != 0x47 && getCurSeqNoInt() == 0)
     {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         ((ByteFlags*)((char*)inner + 0x3f1))->b10 = 0;
@@ -17876,7 +17876,7 @@ void playerProcessQueuedItemCommand(GameObject* obj, int state)
     }
 
     cmd = ((PlayerState*)state)->queuedItemCommand;
-    if (cmd != -1 && cmd != ((PlayerState*)state)->animState && getCurSeqNo() == 0)
+    if (cmd != -1 && cmd != ((PlayerState*)state)->animState && getCurSeqNoInt() == 0)
     {
         s16 sel = ((PlayerState*)state)->queuedItemCommand;
         noMatch = 0;
@@ -17914,7 +17914,7 @@ void playerProcessQueuedItemCommand(GameObject* obj, int state)
                 if (f1->b10)
                 {
                     u8 c = ((PlayerState*)state)->curAnimId;
-                    if (c != 0x48 && c != 0x47 && getCurSeqNo() == 0)
+                    if (c != 0x48 && c != 0x47 && getCurSeqNoInt() == 0)
                     {
                         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                         f1->b10 = 0;

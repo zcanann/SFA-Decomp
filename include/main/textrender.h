@@ -2,6 +2,7 @@
 #define MAIN_TEXTRENDER_H_
 
 #include "ghidra_import.h"
+#include "main/textrender_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"

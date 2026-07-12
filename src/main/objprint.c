@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/shader_api.h"
 #include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint.h"
@@ -654,8 +655,6 @@ void objSoundFn_800392f0(int obj, int state, int soundDef, u8 force)
 }
 
 extern int Obj_GetActiveModel(int obj);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 void objPosFn_80039510(GameObject* obj, int key, int out)
 {

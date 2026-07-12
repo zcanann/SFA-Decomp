@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/shader_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -430,8 +431,6 @@ extern f32 lbl_803DEA64;
 extern f32 lbl_803DEA68;
 extern const f32 lbl_803DEA1C;
 extern f32 lbl_803DEA6C;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern u8 gObjShadowColor[4];
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void modelRenderCb_8003c268();

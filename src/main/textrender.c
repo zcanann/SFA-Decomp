@@ -13,6 +13,7 @@
 #include "main/fileio.h"
 #include "main/textrender.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/rcp_dolphin_api.h"
 
 typedef struct
 {
@@ -82,15 +83,6 @@ typedef struct
     int state;
     u8 _pad2[8];
 } GameTextStateElem;
-
-typedef struct
-{
-    int opcode;
-    int arg0;
-    int arg1;
-    int arg2;
-    int arg3;
-} GameTextSlot;
 
 typedef f32 Mtx[3][4];
 
@@ -274,8 +266,6 @@ extern u8 lbl_803DC980;
 extern int gSubtitlesEnabled;
 extern u16 lbl_803DC9AA;
 extern u16 lbl_803DC9A8;
-extern int lbl_803DC9C8;
-extern GameTextSlot lbl_8033A540[];
 extern int gGameTextClearColor;
 extern int gGameTextLastDir;
 extern void* gCurTextBox;
@@ -336,7 +326,6 @@ extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
-extern void gxSetScissorRect(int a, int b, int c, int d, int e, int f);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 int getHudHiddenFrameCount(void);
@@ -352,7 +341,6 @@ extern void gameTextBoxFn_800164b0(int id, int idx, int* x0, int* x1, int* y0, i
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int scale);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, int w, int h, int part, int flag);
-extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 extern u16 OSGetFontEncode(void);
 extern void OSLoadFont(void* buf, void* tmp);
 extern void OSGetFontWidth(u8* s, int* width);
@@ -1565,10 +1553,10 @@ void gameTextSetCharset(int charset, int flags)
     }
     if (gameTextDrawFunc == NULL || (flags & 2))
     {
-        int i = lbl_803DC9C8;
+        int i = gGameTextCommandCount;
         GameTextSlot* s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         s->opcode = 0xf;
         s->arg0 = charset;
     }
@@ -1595,9 +1583,9 @@ void gameTextLoadDir(int dirId)
         lbl_803DC99C = 0;
         if (gameTextDrawFunc == NULL)
         {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
+            slotIndex = gGameTextCommandCount;
+            gGameTextCommandCount = slotIndex + 1;
+            cmd = &gGameTextCommandSlots[slotIndex];
             cmd->opcode = 0xf;
             cmd->arg0 = GAMETEXT_SLOT_ERROR;
         }
@@ -1609,9 +1597,9 @@ void gameTextLoadDir(int dirId)
         gameTextCharset = GAMETEXT_SLOT_HUD;
         if (gameTextDrawFunc == NULL)
         {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
+            slotIndex = gGameTextCommandCount;
+            gGameTextCommandCount = slotIndex + 1;
+            cmd = &gGameTextCommandSlots[slotIndex];
             cmd->opcode = 0xf;
             cmd->arg0 = GAMETEXT_SLOT_HUD;
         }
@@ -1623,9 +1611,9 @@ void gameTextLoadDir(int dirId)
         gameTextCharset = GAMETEXT_SLOT_DIALOGUE;
         if (gameTextDrawFunc == NULL)
         {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
+            slotIndex = gGameTextCommandCount;
+            gGameTextCommandCount = slotIndex + 1;
+            cmd = &gGameTextCommandSlots[slotIndex];
             cmd->opcode = 0xf;
             cmd->arg0 = GAMETEXT_SLOT_DIALOGUE;
         }
@@ -1646,7 +1634,7 @@ void gameTextResetCursor(int flags)
     }
     if (flags & 2)
     {
-        int* p = &lbl_8033A540[lbl_803DC9C8++].opcode;
+        int* p = &gGameTextCommandSlots[gGameTextCommandCount++].opcode;
         *p = 0xb;
     }
 }
@@ -1659,18 +1647,18 @@ void gameTextSetWindow(u8* textBox)
 
     if (textBox == NULL)
     {
-        i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         gCurTextBox = NULL;
         s->opcode = 8;
         s->arg0 = 0xff;
     }
     else
     {
-        i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         idx = (textBox - (u8*)gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
@@ -1694,10 +1682,10 @@ void gameTextSetCursor(u16 x, u16 y, int flags)
     }
     if (flags & 2)
     {
-        int i = lbl_803DC9C8;
+        int i = gGameTextCommandCount;
         GameTextSlot* s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         s->opcode = 0xa;
         s->arg0 = (u16)x;
         s->arg1 = (u16)y;
@@ -1793,10 +1781,10 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
     }
     else
     {
-        int i = lbl_803DC9C8;
+        int i = gGameTextCommandCount;
         GameTextSlot* s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         s->opcode = 3;
         s->arg0 = r;
         s->arg1 = g;
@@ -1815,10 +1803,10 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     }
     else
     {
-        int i = lbl_803DC9C8;
+        int i = gGameTextCommandCount;
         GameTextSlot* s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
         s->opcode = 4;
         s->arg0 = idx;
         s->arg1 = x;
@@ -2059,7 +2047,7 @@ void gameTextInitFn_8001a234(void)
     lbl_803DC9A6 = 0xff;
     lbl_803DC9A5 = 0xff;
     lbl_803DC9A4 = 0xff;
-    lbl_803DC9C8 = 0;
+    gGameTextCommandCount = 0;
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
     gGameTextBufferIndex = 0;
     textWindow = gameTextBase + 0x40;
@@ -2203,7 +2191,7 @@ void gameTextRun(void)
     lbl_803DC9AA = 0;
     lbl_803DC9A8 = 0;
 
-    i = lbl_803DC9C8;
+    i = gGameTextCommandCount;
     while (i-- != 0)
     {
         switch (cmd->opcode)
@@ -2318,7 +2306,7 @@ void gameTextRun(void)
     {
         Sfx_StopFromObject(0, SFXTRIG_clock_loop);
     }
-    lbl_803DC9C8 = 0;
+    gGameTextCommandCount = 0;
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
     i = 0x94;
@@ -3565,7 +3553,7 @@ u8 gGameTextBase[0x20];
 u8 lbl_803399A0[0x20];
 u8 lbl_803399C0[0x280];
 u32 lbl_80339C40[0x240];
-GameTextSlot lbl_8033A540[0xA00 / sizeof(GameTextSlot)];
+GameTextSlot gGameTextCommandSlots[0xA00 / sizeof(GameTextSlot)];
 
 /* .data jump tables (attributed from auto object; pointer tables regenerate
  * ADDR32 relocs). The compiler also emits its own anonymous copies for the

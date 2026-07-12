@@ -15,6 +15,7 @@
  * poles of the tracking test).
  */
 #include "main/objlib.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
@@ -69,8 +70,6 @@ extern f32 lbl_803E55FC;
 extern f32 lbl_803E5600;
 extern f32 lbl_803E5604;
 extern f32 lbl_803E5608;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;

@@ -1,5 +1,6 @@
 /* DLL 0x801E991C - SPScarab [801E991C-...) */
 #include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/shader_api.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
@@ -27,8 +28,6 @@ extern int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 extern void selectTexture(int tex, int p);
 extern void textureSetupFn_800799c0(void);

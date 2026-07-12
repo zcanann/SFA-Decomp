@@ -15,6 +15,7 @@
  *   explosion_initialise   - precompute the expf falloff scales
  */
 #include "main/dll/explosiondebris_struct.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/fbtextbl_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -99,8 +100,6 @@ extern f32 gExplosionFalloffScaleRed;
 extern f32 gExplosionDebrisColorScale;
 extern f32 gExplosionDebrisAlphaScale;
 extern f32 gExplosionDebrisSpeedScale;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 

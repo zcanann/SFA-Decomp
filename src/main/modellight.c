@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/shader_api.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
 #include "main/gameplay_runtime.h"
@@ -48,8 +49,6 @@ typedef struct ModelLightCornerBlock
 #define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
 
 extern u8 gModelLightCount;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE750;
 extern f32 lbl_803DE754;
 extern f32 lbl_803DE758;

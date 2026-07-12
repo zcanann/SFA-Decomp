@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/shader_api.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -773,8 +774,6 @@ extern f32 lbl_803E6F00;
 extern f32 lbl_803E6F5C;
 extern f32 lbl_803E6FF4;
 extern f32 lbl_803E6FF8;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 mathSinf(f32 x);
 extern void Obj_BuildWorldTransformMatrix(int obj, void* mtx, int p3);
 extern void PSMTXMultVec(void* mtx, void* src, void* dst);

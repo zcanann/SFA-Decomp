@@ -1,4 +1,5 @@
 #include "main/newclouds_state.h"
+#include "main/shader_api.h"
 #include "main/audio/sfx.h"
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
@@ -299,7 +300,6 @@ void dll_07_func07(int arg)
 }
 
 extern char sSnowKillSnowCloudInvalidCloudId[];
-extern void debugPrintf(char* fmt, ...);
 
 #pragma dont_inline on
 void newclouds_killSnowCloud(int cloudId, int flag)
@@ -533,8 +533,6 @@ extern void selectTexture(char* tex, int slot);
 extern void GXSetCurrentMtx(u32 id);
 
 extern void srand(int seed);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int gNewCloudLightningFogColor;
 extern const f32 lbl_803DF1D4;
 

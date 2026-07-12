@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
@@ -299,8 +300,6 @@ extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
 extern int getAngle(float y, float x);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int gTrickyFrozenFxColors[];
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;

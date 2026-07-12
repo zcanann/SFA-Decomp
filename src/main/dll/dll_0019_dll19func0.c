@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objhits.h"
 #include "main/mm.h"
@@ -72,8 +73,6 @@ extern const f32 lbl_803E1C6C;
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32* pos, int* grid);
 extern f32 lbl_803E1C64;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E1C40;
 extern f32 lbl_803E1C44;
 extern f32 lbl_803E1C4C;

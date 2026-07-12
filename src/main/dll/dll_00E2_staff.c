@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
@@ -888,8 +889,6 @@ void MikaBomb_init(int* obj);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);

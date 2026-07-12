@@ -1,4 +1,6 @@
 #include <string.h>
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -13,7 +15,6 @@ extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, in
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
-extern void debugPrintf(char* fmt, ...);
 extern float mathCosf(float x);
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
@@ -41,8 +42,6 @@ typedef struct ObjHitsVec3
 } ObjHitsVec3;
 
 extern f32 gObjHitsPriorityHitTickDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {

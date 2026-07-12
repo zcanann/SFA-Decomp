@@ -9,10 +9,12 @@
 #include "main/audio/sfx.h"
 #include "main/audio/snd3d.h"
 #include "main/audio/snd_core.h"
+#include "main/audio/snd_groups_api.h"
 #include "main/audio/snd_reverb.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/attract_movie_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/debug.h"
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
@@ -27,14 +29,17 @@
 #include "main/mm.h"
 #include "main/newclouds.h"
 #include "main/object_api.h"
+#include "main/objseq_api.h"
 #include "main/pad.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/resource.h"
 #include "main/render.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/sky_interface.h"
 #include "main/table_file.h"
+#include "main/textrender_api.h"
 #include "main/voxmaps.h"
 #include "main/vecmath.h"
 #include "track/intersect_api.h"
@@ -52,15 +57,6 @@
 #include "dolphin/os/OSRtc.h"
 #include "dolphin/pad.h"
 
-extern int getCurSeqNo(void);
-extern void debugPrintf(char *message, ...);
-extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
-extern int lbl_803DC9C8;
-extern u8 lbl_8033A540[];
-extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
 
 #endif

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
@@ -51,8 +52,6 @@ extern u32 renderFlags;
 
 extern f32 encoderType_803DEBF8;
 extern f32 displayOffsetH_803DEBFC;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803DEBCC;
 extern f32 lbl_803DEBDC;
 extern f32 changeMode_803DEC00;

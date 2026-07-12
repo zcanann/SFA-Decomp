@@ -1,4 +1,5 @@
 #include "main/dll/bonespawndata_struct.h"
+#include "main/shader_api.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
@@ -45,8 +46,6 @@ extern const f32 lbl_803DF4B8;
 extern const f32 lbl_803DF4BC;
 extern f32 lbl_803DF4C0;
 extern f32 lbl_803DF4C4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 extern void Sfx_PlayFromObject(void* obj, int id);
 extern void Camera_LoadModelViewMatrix(void* a, int b, void* c, f32 e, f32 f, int d);

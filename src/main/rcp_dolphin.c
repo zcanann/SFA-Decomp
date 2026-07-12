@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -252,8 +253,6 @@ void timeOfDayFn_80055038(void)
     p[0x40] = (u8)(p[0x40] | 0x20);
 }
 
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 #pragma peephole on
 void fn_80054F74(int* p, f32* vec)
 {

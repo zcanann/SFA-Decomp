@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -10,6 +11,7 @@
 #include "main/mm.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/frame_timing.h"
+#include "main/objseq_api.h"
 #include "main/fileio.h"
 #include "dolphin/dvd.h"
 
@@ -130,7 +132,6 @@ extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
 extern int objModelGetVecFn_800395d8(GameObject* obj, int idx);
-extern void debugPrintf(char* fmt, ...);
 extern void AudioStream_CancelPrepared(void);
 extern void Obj_FreeObject(int obj);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);

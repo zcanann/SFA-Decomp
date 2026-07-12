@@ -3,6 +3,8 @@
 
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/debug.h"
+#include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -197,7 +199,6 @@ extern void* memset(void* dst, int c, int n);
 extern void Obj_FreeObject(int obj);
 extern void textureFree(int tex);
 extern int textureLoadAsset(int id);
-extern void debugPrintf(char* fmt, ...);
 extern char sWaterfxDllAllocFailed[];
 extern int gExpgfxRuntimeData[];
 extern int gExpgfxTextureFreeInProgress;
@@ -281,8 +282,6 @@ extern void fn_8007BD8C(int a, int b);
 extern void fn_8007C664(int a);
 extern void fn_800542F4(void);
 extern void fn_80095164(WaterParticle* s);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int lbl_802C1FF8[];
 extern int lbl_802C200C[];
 extern const f32 lbl_803DF35C;

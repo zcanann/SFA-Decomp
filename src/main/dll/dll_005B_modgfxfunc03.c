@@ -12,6 +12,7 @@
  * its active model is missing.
  */
 #include "main/effect_interfaces.h"
+#include "main/debug.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
@@ -29,7 +30,6 @@ extern u8 lbl_803DB8B0, lbl_803DB8B4;
 extern u32 lbl_803E0730;
 extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;
 extern const f32 lbl_803E0748, lbl_803E074C, lbl_803E0750, lbl_803E0754;
-extern void debugPrintf(char* fmt, ...);
 
 static inline u8* Gameplay_GetActiveModel(void* obj)
 {

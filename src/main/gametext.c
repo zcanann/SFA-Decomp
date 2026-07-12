@@ -65,11 +65,11 @@ void* gameTextGetCurBox(void)
 
 void gameTextFn_80016c18(int a, int b)
 {
-    int i = lbl_803DC9C8++;
-    int* e = (int*)&lbl_8033A540[i * 0x14];
-    e[0] = 1;
-    e[1] = a;
-    e[2] = b;
+    int i = gGameTextCommandCount++;
+    GameTextSlot* e = &gGameTextCommandSlots[i];
+    e->opcode = 1;
+    e->arg0 = a;
+    e->arg1 = b;
 }
 
 void gameTextFreePhrase(int* p)
@@ -88,19 +88,19 @@ void gameTextFreePhrase(int* p)
 void gameTextFn_80016810(int a, int b, int c)
 {
     int i;
-    int* e;
+    GameTextSlot* e;
     if (gameTextDrawFunc != NULL)
     {
         gameTextFn_8001658c(a, b, c);
     }
     else
     {
-        i = lbl_803DC9C8++;
-        e = (int*)&lbl_8033A540[i * 0x14];
-        e[0] = 2;
-        e[1] = a;
-        e[2] = b;
-        e[3] = c;
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 2;
+        e->arg0 = a;
+        e->arg1 = b;
+        e->arg2 = c;
     }
 }
 
@@ -130,39 +130,39 @@ int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 void gameTextShowTimeStr(char* str)
 {
     int i;
-    int* e;
+    GameTextSlot* e;
     char* buf;
-    i = lbl_803DC9C8++;
-    e = (int*)&lbl_8033A540[i * 0x14];
-    e[0] = 5;
+    i = gGameTextCommandCount++;
+    e = &gGameTextCommandSlots[i];
+    e->opcode = 5;
     buf = lbl_803DC9C4;
     lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
-    e[1] = (int)buf;
+    e->arg0 = (int)buf;
 }
 
 void gameTextShow(int a)
 {
     int i;
-    int* e;
+    GameTextSlot* e;
     if (gameTextDrawFunc != NULL)
     {
         gameTextFn_8001658c(a, 0, 0);
     }
     else
     {
-        i = lbl_803DC9C8++;
-        e = (int*)&lbl_8033A540[i * 0x14];
-        e[0] = 2;
-        e[1] = a;
-        e[2] = 0;
-        e[3] = 0;
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 2;
+        e->arg0 = a;
+        e->arg1 = 0;
+        e->arg2 = 0;
     }
 }
 
 void gameTextShowStr(char* text, int box, int arg2, int arg3)
 {
     int i;
-    int* e;
+    GameTextSlot* e;
     char* buf;
     if (gameTextDrawFunc != NULL)
     {
@@ -173,22 +173,22 @@ void gameTextShowStr(char* text, int box, int arg2, int arg3)
     }
     else
     {
-        i = lbl_803DC9C8++;
-        e = (int*)&lbl_8033A540[i * 0x14];
-        e[0] = 7;
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 7;
         buf = lbl_803DC9C4;
         lbl_803DC9C4 = gameStrcpy(buf, text) + 1;
-        e[1] = (int)buf;
-        e[2] = box;
-        e[3] = arg2;
-        e[4] = arg3;
+        e->arg0 = (int)buf;
+        e->arg1 = box;
+        e->arg2 = arg2;
+        e->arg3 = arg3;
     }
 }
 
 void gameTextAppendStr(char* str, int arg2)
 {
     int i;
-    int* e;
+    GameTextSlot* e;
     char* buf;
     if (gameTextDrawFunc != NULL)
     {
@@ -196,13 +196,13 @@ void gameTextAppendStr(char* str, int arg2)
     }
     else
     {
-        i = lbl_803DC9C8++;
-        e = (int*)&lbl_8033A540[i * 0x14];
-        e[0] = 6;
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 6;
         buf = lbl_803DC9C4;
         lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
-        e[1] = (int)buf;
-        e[2] = arg2;
+        e->arg0 = (int)buf;
+        e->arg1 = arg2;
     }
 }
 

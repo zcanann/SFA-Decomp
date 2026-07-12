@@ -1,4 +1,6 @@
 #include "main/dll/objpathtransform_struct.h"
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -29,7 +31,6 @@ extern int* Obj_GetActiveModel(int obj);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 
-extern void debugPrintf(char* fmt, ...);
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
 extern float mathSinf(float x);
@@ -88,8 +89,6 @@ extern f32 gObjHitsPriorityHitTickDelta;
 extern f32 lbl_803DE914;
 extern f32 lbl_803DE968;
 extern f32 OBJLIB_UNIT_SCALE;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE970;
 extern f32 lbl_803DE974;
 extern f32 lbl_803DE978;

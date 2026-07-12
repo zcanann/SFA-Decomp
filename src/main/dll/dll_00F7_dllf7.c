@@ -8,6 +8,7 @@
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/shader_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -110,8 +111,6 @@ extern f32 lbl_803E3418;
 extern void fn_8003B5E0(int a, int b, int c, u8 d);
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 extern void* gDllF7Resource5B;
 extern void* gDllF7Resource5A;

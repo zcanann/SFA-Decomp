@@ -13,6 +13,7 @@
  * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/objseq_api.h"
 #include "main/vecmath.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll_000A_expgfx.h"
@@ -82,7 +83,6 @@ extern void storeZeroToFloatParam(void* timer);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80080150(int p);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern int getCurSeqNo(void);
 extern int timerCountDown(int timer);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, void* vel, int rate, f32 a, f32 b);
@@ -310,7 +310,7 @@ void pollenfragment_update(int obj)
     XyzVec pos;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
-    if (getCurSeqNo() != 0)
+    if (getCurSeqNoInt() != 0)
     {
         Obj_FreeObject(obj);
         return;

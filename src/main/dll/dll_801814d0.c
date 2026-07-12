@@ -12,6 +12,7 @@
  * optionally disables itself.
  */
 #include "main/dll/dusterstate_types.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -48,8 +49,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 extern int lbl_803DBDA0;
 extern f32 lbl_803DBDA4;
 extern f32 lbl_803DBDA8;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 

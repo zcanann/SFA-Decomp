@@ -1,4 +1,5 @@
 #include "main/tex_dolphin.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
@@ -18,8 +19,6 @@ extern f32 CurrTiming_803DEC20;
 extern const f32 gTexIndMtxScale;
 extern f32 FBSet_803DEC28;
 extern const f32 lbl_803DEC2C;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern int lbl_803DEBB0;
 extern int gTexDimmedLightList;
 extern int gTexBlockLightList;

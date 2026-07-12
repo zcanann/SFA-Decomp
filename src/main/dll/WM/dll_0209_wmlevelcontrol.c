@@ -13,6 +13,7 @@
  * decaying 0.02/tick after) is up.
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
+#include "main/objseq_api.h"
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objlib.h"
@@ -83,7 +84,6 @@ extern f32 gWmLevelControlLightIntensityRange;    /* 128.0: light-intensity blen
 extern f32 gWmLevelControlOverrideLightIntensity; /* 100.0: override light intensity */
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
-extern int getCurSeqNo(void);
 extern int mapGetDirIdx(int idx);
 extern int unlockLevel(s32 val, int idx, int flag);
 extern int lockLevel(s32 val, int idx);
@@ -264,7 +264,7 @@ void WM_LevelControl_update(GameObject* obj)
         mode6 = (*gMapEventInterface)->getMapAct((int)(obj)->anim.mapEventSlot);
         mode6 = __cntlzw(6 - (mode6 & 0xff));
         mode6 = mode6 >> 5;
-        if ((((int)mode6 == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
+        if ((((int)mode6 == 0) || (loadingDone = getCurSeqNoInt(), loadingDone == 0)) ||
             (mode6 = mainGetBit(GAMEBIT_WMRelated0A7F), mode6 == 0))
         {
             SCGameBitLatch_UpdateInverted(&state->latch, 0x10, -1, -1, 0xa7f, 0xa6);

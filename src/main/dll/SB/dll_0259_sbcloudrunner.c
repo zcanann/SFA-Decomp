@@ -18,6 +18,7 @@
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/shader_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -149,8 +150,6 @@ extern f32 lbl_803E5CB0;
 extern f32 lbl_803E5CB4;
 extern const f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 

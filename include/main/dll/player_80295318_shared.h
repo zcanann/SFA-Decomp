@@ -4,6 +4,8 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/objseq_api.h"
+#include "main/shader_api.h"
 #include "main/dll/player_state.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -423,8 +425,6 @@ extern f32 lbl_803DC6E0;
 extern f32 lbl_803DC6E4;
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern void vecRotateZXY(void* a, void* b);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7FE8;
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void* out1, void* out2);
@@ -436,7 +436,6 @@ extern void objSetAnimField48to0(int* obj);
 extern s16* objModelGetVecFn_800395d8(GameObject* obj, int idx);
 extern const f32 lbl_803E7EE0;
 extern f32 lbl_803E7EF0;
-extern int getCurSeqNo(void);
 extern void setTimeStop(int x);
 extern void cutsceneEnterExit(int a, int b);
 extern f32 lbl_803E8060;
@@ -756,8 +755,6 @@ extern f32 lbl_803E80CC;
 extern f32 lbl_803E80D0;
 extern f32 lbl_803E7FBC;
 extern f32 lbl_803E7F68;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E7F84;
 extern f32 lbl_803E8184;
 extern f32 lbl_803E8188;

@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/bonespawndata_struct.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
@@ -337,8 +338,6 @@ void fn_800A1040(s16 sequenceId, int forceAll)
 #pragma dont_inline reset
 
 extern void Sfx_PlayFromObject(void* obj, int id);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern void GXSetCullMode(int mode);

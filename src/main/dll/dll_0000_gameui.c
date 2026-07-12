@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/objseq_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/pause_menu_api.h"
 #include "main/dll/cmenu_item_table.h"
@@ -292,7 +293,6 @@ extern f32 lbl_803E21C0;
 extern f32 lbl_803E21C4;
 extern f32 lbl_803E21C8;
 extern f32 lbl_803E21CC;
-extern int getCurSeqNo(void);
 extern u8 AudioStream_IsPreparing(void);
 extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
@@ -2750,7 +2750,7 @@ void pauseMenuFn_80129ee0(void)
             canOpen = 1;
             audioFree = 0;
             if ((player == 0 || !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
-                getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0)
+                getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0)
             {
                 audioFree = 1;
             }

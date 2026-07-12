@@ -18,6 +18,7 @@
  * adds map time and sets the placement game bit, and re-evaluates chase state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/hagabonstate_struct.h"
@@ -88,8 +89,6 @@ extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
 extern int lbl_803DBC70;
 extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern void* Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32* a, f32* b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);

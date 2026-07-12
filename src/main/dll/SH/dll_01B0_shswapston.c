@@ -10,6 +10,7 @@
  * issued through the map-event interface.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/model_engine.h"
 #include "main/mapEvent.h"
@@ -42,8 +43,6 @@ typedef struct WarpstoneUpdateMenuAnimObjState
 
 extern int lbl_803DC050;
 extern int lbl_803DDBF4;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;
 extern f32 lbl_803E549C;
 

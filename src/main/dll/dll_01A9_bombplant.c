@@ -1,5 +1,6 @@
 /* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
 #include "main/audio/sfx_ids.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/dll/bombplant_placement.h"
@@ -43,8 +44,6 @@ extern f32 gBombPlantGrowRateMin;
 extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
 extern f32 timeDelta;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern void* Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Obj_SetModelColorFadeRecursive(u8* obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf);

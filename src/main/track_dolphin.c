@@ -1,4 +1,6 @@
 #include "main/map_block.h"
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frustum.h"
@@ -260,8 +262,6 @@ extern u8 lbl_803DCF4D;
 extern int gMapDynamicSlots;
 extern u8 lbl_803DCE06;
 extern int gGlowLightList[];
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern char gViewFrustumPlanes[];
 extern u8 lbl_803DCE98;
 extern f32* lbl_803DCF38;
@@ -361,7 +361,6 @@ extern void GXSetArray(int attr, void* base, int stride);
 extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
-extern void debugPrintf(char* fmt, ...);
 extern void memcpy(void* dst, void* src, int n);
 extern void checkLoadBlock(int v, int* outA, int* outB);
 extern int mapTextureOverrideAcquire(int tex, int value, int type);

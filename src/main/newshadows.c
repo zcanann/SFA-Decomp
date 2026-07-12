@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/texture.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXManage.h"
@@ -259,7 +260,6 @@ extern u32 FUN_802947f8();
 extern u32 SQRT();
 extern void GXLoadTexObj(void* obj, int id);
 extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
-extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 extern void drawTexture(void* p, f32 f1, f32 f2, int a, int b);
 extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, GXTexFmt fmt, GXBool mipmap);

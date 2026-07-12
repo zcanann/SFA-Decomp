@@ -1,4 +1,6 @@
 #include "main/asset_load.h"
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "main/dll/objmodel_types.h"
 #include "main/model.h"
 #include "main/model_engine.h"
@@ -198,8 +200,6 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
 extern void* memset(void* dst, int val, int n);
 extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
 extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
@@ -1346,7 +1346,6 @@ lbl_ABT_done:
 #pragma dont_inline reset
 #pragma peephole off
 
-extern void debugPrintf(char* fmt, ...);
 extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
 u8 gModelJointScratchBuffer[0x140];
 

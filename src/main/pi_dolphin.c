@@ -1,4 +1,5 @@
 #include "dolphin/PPCArch.h"
+#include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
@@ -4302,7 +4303,6 @@ extern u8 lbl_803DB5F8;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
-extern void* textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11);
 extern void newshadows_getReflectionScrollOffsets(f32* x, f32* y);
 extern float mathSinf(float x);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
@@ -4722,8 +4722,6 @@ extern f32 lbl_803DEB20;
 extern f32 LastLength_803DEB24;
 extern f32 lbl_803DEB28;
 extern f32 SaveStart_803DEAD0;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 void fn_8004E0FC(void)
 {

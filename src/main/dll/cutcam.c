@@ -21,6 +21,7 @@
  * Hermite curve during a mode transition.
  */
 #include "main/dll/CAM/cutCam.h"
+#include "main/objseq_api.h"
 #include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
@@ -45,7 +46,6 @@ extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f)
 extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
-extern int getCurSeqNo();
 extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
@@ -235,7 +235,7 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
         }
         else
         {
-            cond = getCurSeqNo();
+            cond = getCurSeqNoInt();
             if (((cond == 0) && (buttons = getPadFn_80014d9c(0), (buttons & PAD_TRIGGER_L) != 0)) &&
                 ((camera->anim.flags & 4) == 0))
             {

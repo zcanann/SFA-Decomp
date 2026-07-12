@@ -6,6 +6,7 @@
  * combat-state driver that runs the AI and controls Tricky interaction.
  */
 #include "main/dll/DIM/DIM2lift.h"
+#include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
@@ -460,8 +461,6 @@ extern void ObjMsg_SendToObject(int to, int msg, int obj, int data);
 extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f32 lbl_803E4C10;
 extern u8 gDim2IcicleHitDescTemplate[];
 extern u8 gDim2IcicleHitFxBuffer[];

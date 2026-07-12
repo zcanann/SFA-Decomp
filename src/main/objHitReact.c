@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
@@ -11,8 +12,6 @@
 #include "main/resource.h"
 #include "main/frame_timing.h"
 
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 
 int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
                        float* reactionStepScale)

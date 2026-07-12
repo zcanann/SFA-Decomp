@@ -16,6 +16,7 @@
  * Home TU of these symbols and the SFXPLAYER_* constants is MMP_moonrock.
  */
 #include "main/dll/MMP/MMP_moonrock.h"
+#include "main/objseq_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -56,7 +57,6 @@ STATIC_ASSERT(offsetof(SfxplayerObjState, flags) == 0x4);
 
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
-extern int getCurSeqNo(void);
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
@@ -176,7 +176,7 @@ void sfxplayerObj_update(u8* obj)
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
     if ((data[0x1c] & SFXPLAYER_FLAG_ROM_CURVE) != 0)
     {
-        if (getCurSeqNo() != 0)
+        if (getCurSeqNoInt() != 0)
         {
             focusObj = (*gCameraInterface)->getCamera();
             ((void (*)(int, int, f32, f32, f32, u8*, u8*, u8*))(*gRomCurveInterface)->slot20)(

@@ -1,4 +1,6 @@
 #include "dolphin/mtx.h"
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "math.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
@@ -138,7 +140,6 @@ extern void dll_0B_initialise(void);
 
 ExpgfxWGPipe GXWGFifo : (0xCC008000);
 
-extern void debugPrintf(char* fmt, ...);
 extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
@@ -150,8 +151,6 @@ extern const f32 lbl_803DF35C;
 extern f32 lbl_803DF384;
 extern f32 lbl_803DF418;
 extern const f32 lbl_803DF358;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern f64 gExpgfxU16ToDoubleBias;
 extern f32 gExpgfxYVelocityPositiveLimit;
 extern f32 gExpgfxYVelocityFastStep;

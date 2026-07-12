@@ -1,4 +1,6 @@
 #include "main/dll/objpathtransform_struct.h"
+#include "main/shader_api.h"
+#include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objmodel_types.h"
 #include "main/asset_load.h"
@@ -142,8 +144,6 @@ typedef struct CharSpawn
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 extern s8 gObjPtrTableCount;
 extern int gObjPtrTable[];
 extern int gObjTablesBinCount;
@@ -199,7 +199,6 @@ extern void Obj_RegisterObject(u8* obj, int b);
 extern void objLoadPlayerFromSave(u8* obj);
 extern void modelInitBones(f32 scale, void* model);
 extern int shadowInit(void* obj, int cursor, int arg);
-extern void debugPrintf(char* fmt, ...);
 extern int objCallback_80074d04();
 extern int modelCb_80073d04();
 extern int modelCb_80074518();

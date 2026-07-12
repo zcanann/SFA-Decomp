@@ -1,5 +1,6 @@
 /* DLL 0x01B7 — SC music-tree objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
+#include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/scmusictreesetup_struct.h"
@@ -84,8 +85,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void* vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void* vec);
-extern f32 playerMapOffsetX;
-extern f32 playerMapOffsetZ;
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
