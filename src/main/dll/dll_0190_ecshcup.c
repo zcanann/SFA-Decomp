@@ -1,9 +1,14 @@
 /* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
 #include "main/dll_000A_expgfx.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/engine_shared.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct EcshCupState
 {
