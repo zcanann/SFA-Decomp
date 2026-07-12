@@ -70,18 +70,20 @@ extern f32 lbl_803E4210;
 extern int* gCfMainCrystalObj;
 
 extern void PSVECNormalize(f32* out, f32* in);
-extern f32 gCfMainCrystalPylonBeamY;
-extern f32 lbl_803E41DC;
-extern f32 lbl_803E41E0;
-extern f32 lbl_803E41E4;
-extern f32 lbl_803E41E8;
-extern f32 lbl_803E41EC;
-extern f32 lbl_803E41F0;
-extern f32 lbl_803E41F4;
-extern f32 gCfMainCrystalHumVolumeFull;
-extern f32 gCfMainCrystalHumVolumeBase;
-extern f32 lbl_803E4200;
-extern f32 gCfMainCrystalHumVolumeApproachRate;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 gCfMainCrystalPylonBeamY = 1945.0f;
+__declspec(section ".sdata2") f32 lbl_803E41DC = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E41E0 = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803E41E4 = -80.0f;
+__declspec(section ".sdata2") f32 lbl_803E41E8 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E41EC = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E41F0 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E41F4 = 250.0f;
+__declspec(section ".sdata2") f32 gCfMainCrystalHumVolumeFull = 0.66f;
+__declspec(section ".sdata2") f32 gCfMainCrystalHumVolumeBase = 0.33f;
+__declspec(section ".sdata2") f32 lbl_803E4200 = 3.0f;
+__declspec(section ".sdata2") f32 gCfMainCrystalHumVolumeApproachRate = 0.0625f;
+#pragma explicit_zero_data off
 
 /* fn_8019D9F0: main crystal beam update -
  * collect the three pylon positions from messages, re-request missing ones,

@@ -33,18 +33,20 @@ enum
 
 extern f32 gSpDrapeSwingLeftMoveTable;  /* swing-left move-id table */
 extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
-extern f32 lbl_803E5AA0;
-extern f32 gSpDrapeNearRadiusSq; /* squared player-proximity radius */
-extern f32 lbl_803E5AA8;
-extern f32 gSpDrapeLeaveRadius; /* player-left radius (re-close) */
-extern f32 lbl_803E5AB0;
-extern f32 lbl_803E5AB4;
-extern f32 gSpDrapeReopenProgress;
-extern f32 lbl_803E5ABC;
-extern f32 lbl_803E5AC0;
-extern f32 lbl_803E5AC4;
-extern f32 gSpDrapePi;
-extern f32 lbl_803E5ACC;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5AA0 = 0.0f;
+__declspec(section ".sdata2") f32 gSpDrapeNearRadiusSq = 4900.0f; /* squared player-proximity radius */
+__declspec(section ".sdata2") f32 lbl_803E5AA8 = 0.0175f;
+__declspec(section ".sdata2") f32 gSpDrapeLeaveRadius = 8100.0f; /* player-left radius (re-close) */
+__declspec(section ".sdata2") f32 lbl_803E5AB0 = 0.0165f;
+__declspec(section ".sdata2") f32 lbl_803E5AB4 = 0.0144f;
+__declspec(section ".sdata2") f32 gSpDrapeReopenProgress = 0.6f;
+__declspec(section ".sdata2") f32 lbl_803E5ABC = 0.0072f;
+__declspec(section ".sdata2") f32 lbl_803E5AC0 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E5AC4 = 32767.0f;
+__declspec(section ".sdata2") f32 gSpDrapePi = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E5ACC = 32768.0f;
+#pragma explicit_zero_data off
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);

@@ -1609,7 +1609,7 @@ main/dll/CF/dll_014A_cfpowerbase.c:
 
 main/dll/CF/dll_014B_cfmaincrystal.c:
 	.text       start:0x8019D9F0 end:0x8019E3F4
-	.sdata2     start:0x803E4208 end:0x803E4210
+	.sdata2     start:0x803E41D8 end:0x803E4210
 
 main/dll/dll_014C_babycloudrunner.c:
 	.text       start:0x8019E3F4 end:0x8019F540
@@ -2276,7 +2276,7 @@ main/dll/SP/dll_0287_spscarab.c:
 main/dll/SP/dll_0288_spdrape.c:
 	.text       start:0x801E9328 end:0x801E97DC
 	.data       start:0x80328450 end:0x803284A4
-	.sdata2     start:0x803E5AD0 end:0x803E5AD8
+	.sdata2     start:0x803E5AA0 end:0x803E5AD8
 
 main/dll/SP/dll_0289_spitembeam.c:
 	.text       start:0x801E97DC end:0x801E991C
