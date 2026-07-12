@@ -17,16 +17,24 @@
 #include "main/fileio.h"
 #include "main/frame_timing.h"
 #include "main/gametext.h"
+#include "main/gamebits.h"
+#include "main/gameloop_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
 #include "main/newclouds.h"
+#include "main/object_api.h"
 #include "main/pad.h"
+#include "main/pi_dolphin_api.h"
 #include "main/resource.h"
 #include "main/render.h"
 #include "main/sky_interface.h"
 #include "main/table_file.h"
 #include "main/voxmaps.h"
 #include "main/vecmath.h"
+#include "track/intersect_api.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
+#include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/ai.h"
 #include "dolphin/ar.h"
 #include "dolphin/dvd.h"
@@ -40,38 +48,19 @@
 extern s32 gAttractMovieState;
 extern BOOL Movie_SetVolumeFade(int volume, int fadeFrames);
 extern s32 getGameState(void);
-extern u32 mainGetBit(u32 bit);
 extern u8 pauseMenuGetState(void);
-extern void matrixFn_8006ff0c(f32* matrix, s16* out, f32 fovY, f32 aspect, f32 nearPlane, f32 farPlane, f32 scale);
-extern void *memmove(void *dest, const void *src, u32 count);
 extern int randomGetRange(int min, int max);
-extern f32 mathSinf(f32 x);
-extern f32 mathCosf(f32 x);
-extern void *Obj_GetPlayerObject(void);
-extern int Obj_IsLoadingLocked(void);
 extern int getCurSeqNo(void);
 extern f32 sqrtf(f32 x);
 extern void debugPrintf(char *message, ...);
-extern void setTimeStop(int frames);
-extern void cutsceneFadeInOut(int mode);
 extern f32 fabsf(f32 x);
-extern u32 getScreenResolution(void);
 extern void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern int memcmp(const void* lhs, const void* rhs, u32 size);
-extern void* memcpy(void* dst, const void* src, u32 size);
-extern void* memset(void* dst, int value, u32 size);
 extern int lbl_803DC9C8;
 extern u8 lbl_8033A540[];
-extern int sprintf(char* buf, const char* fmt, ...);
-extern char* strcpy(char* dst, const char* src);
-extern char* strcat(char* dst, const char* src);
 extern u8 lbl_803DCCA5;
-extern void checkReset(void);
-extern void waitNextFrame(void);
 extern u8 pauseMenuState;
-extern int getHudHiddenFrameCount(void);
 extern int getMinimapY(void);
 extern void drawHudBox(int a, s16 b, int c, int d, int e, int f);
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
