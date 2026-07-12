@@ -1,6 +1,7 @@
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
@@ -82,7 +83,6 @@ extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
-extern void Obj_FreeObject(int obj);
 extern void vecRotateZXY(s16* rotation, f32* outVec);
 extern int ObjHits_GetPriorityHit(GameObject* obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
@@ -284,12 +284,12 @@ void sfxplayer_free(int obj, int arg1)
         {
             if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
             {
-                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
+                Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
             }
             handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
             if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
             {
-                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
+                Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
             }
             handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
             Sfx_PlayFromObject(obj, SFXPLAYER_TIMEOUT_RESET_SFX);
@@ -363,12 +363,12 @@ void sfxplayer_update(GameObject* obj)
                 {
                     if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                     {
-                        Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
+                        Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
                     }
                     handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
                     if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
                     {
-                        Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
+                        Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                     }
                     handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
                     Sfx_PlayFromObject((int)obj, SFXPLAYER_SFX_TIMEOUT_RESET);
@@ -394,12 +394,12 @@ void sfxplayer_update(GameObject* obj)
                         {
                             if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] != 0)
                             {
-                                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
+                                Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING]);
                             }
                             handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING] = 0;
                             if (handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] != 0)
                             {
-                                Obj_FreeObject(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
+                                Obj_FreeObject((GameObject*)handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]);
                             }
                             handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1] = 0;
                             Sfx_PlayFromObject(0, SFXPLAYER_SFX_RING_HIT);

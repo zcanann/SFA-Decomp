@@ -2,6 +2,7 @@
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -79,7 +80,6 @@ typedef struct SnowClawBombSetup
     s16 launchAngle; /* 0x1a */
 } SnowClawBombSetup;
 
-extern void Obj_FreeObject(int obj);
 extern int playerGetFocusObject(int obj);
 extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern void s16toFloat(void* p, int duration);
@@ -172,7 +172,7 @@ void snowclaw_free(GameObject* obj)
 {
     if (obj->childObjs[0] != NULL)
     {
-        Obj_FreeObject(*(int*)&obj->childObjs[0]);
+        Obj_FreeObject(*(GameObject**)&obj->childObjs[0]);
     }
 }
 
@@ -613,7 +613,7 @@ void snowclaw_update(GameObject* obj)
     {
         if (obj->childObjs[0] != NULL)
         {
-            Obj_FreeObject(*(int*)&obj->childObjs[0]);
+            Obj_FreeObject(*(GameObject**)&obj->childObjs[0]);
             *(int*)&obj->childObjs[0] = 0;
             obj->childCount = 0;
         }
@@ -812,7 +812,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     {
         if (obj->childObjs[0] != 0)
         {
-            Obj_FreeObject(*(int*)&obj->childObjs[0]);
+            Obj_FreeObject(*(GameObject**)&obj->childObjs[0]);
             *(int*)&obj->childObjs[0] = 0;
             obj->childCount = 0;
         }
