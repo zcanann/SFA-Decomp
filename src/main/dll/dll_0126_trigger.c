@@ -100,7 +100,6 @@ extern void timeOfDayFn_80055038(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern int ObjList_GetObjects(int* first, int* count);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
-extern void textureFree(int tex);
 extern void mainSetBits(int eventId, int value);
 extern int getTrickyObject(void);
 extern void gameTextFn_80125ba4(int id);
@@ -564,7 +563,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             t2 = (int)getLoadedTexture(*tbl);
                             if ((void*)t2 != NULL)
                             {
-                                textureFree(t2);
+                                textureFree((u8*)t2);
                             }
                         }
                     }

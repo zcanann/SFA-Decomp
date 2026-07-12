@@ -2,6 +2,7 @@
 #define MAIN_MODEL_H_
 
 #include "global.h"
+#include "main/texture.h"
 
 /*
  * ModelFileHeader - in-place header of a loaded .MOD model file. Offset
@@ -183,6 +184,7 @@ typedef struct ObjModel {
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex);
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex);
 void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback);
+Texture* ObjModel_GetTexture(ModelFileHeader* modelFile, int textureIndex);
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);

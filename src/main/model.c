@@ -65,9 +65,9 @@ void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out)
     out[2] = *(f32*)(jointMtx + 0x2c);
 }
 
-void* ObjModel_GetTexture(u8* model, int textureIndex)
+Texture* ObjModel_GetTexture(ModelFileHeader* model, int textureIndex)
 {
-    return textureIdxToPtr(((ModelFileHeader*)model)->textureIds[textureIndex]);
+    return textureIdxToPtr(model->textureIds[textureIndex]);
 }
 
 s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex)

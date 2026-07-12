@@ -19,6 +19,7 @@
  * point-sprite render state is built in waterfx_setupSplashDropPointRender.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/texture.h"
 #include "main/camera.h"
 #include "dolphin/os/OSCache.h"
 
@@ -661,22 +662,22 @@ void waterfx_release(void)
     }
     if (gWaterfxRippleTexture != NULL)
     {
-        textureFree((int)gWaterfxRippleTexture);
+        textureFree((u8*)gWaterfxRippleTexture);
         gWaterfxRippleTexture = NULL;
     }
     if (gWaterfxSplashTexture0 != NULL)
     {
-        textureFree((int)gWaterfxSplashTexture0);
+        textureFree((u8*)gWaterfxSplashTexture0);
         gWaterfxSplashTexture0 = NULL;
     }
     if (gWaterfxSplashTexture1 != NULL)
     {
-        textureFree((int)gWaterfxSplashTexture1);
+        textureFree((u8*)gWaterfxSplashTexture1);
         gWaterfxSplashTexture1 = NULL;
     }
     if (gWaterfxWakeTexture != NULL)
     {
-        textureFree((int)gWaterfxWakeTexture);
+        textureFree((u8*)gWaterfxWakeTexture);
         gWaterfxWakeTexture = NULL;
     }
     if (gWaterfxSplashDisplayList != NULL)
@@ -723,10 +724,10 @@ void waterfx_initialise(void)
     gWaterfxSplashCount = NULL;
     gWaterfxDropCount = NULL;
     gWaterfxWakeCount = NULL;
-    gWaterfxRippleTexture = (void*)textureLoadAsset(WATERFX_TEXTURE_RIPPLE);
-    gWaterfxSplashTexture0 = (void*)textureLoadAsset(WATERFX_TEXTURE_SPLASH0);
-    gWaterfxSplashTexture1 = (void*)textureLoadAsset(WATERFX_TEXTURE_SPLASH1);
-    gWaterfxWakeTexture = (void*)textureLoadAsset(WATERFX_TEXTURE_WAKE);
+    gWaterfxRippleTexture = textureLoadAsset(WATERFX_TEXTURE_RIPPLE);
+    gWaterfxSplashTexture0 = textureLoadAsset(WATERFX_TEXTURE_SPLASH0);
+    gWaterfxSplashTexture1 = textureLoadAsset(WATERFX_TEXTURE_SPLASH1);
+    gWaterfxWakeTexture = textureLoadAsset(WATERFX_TEXTURE_WAKE);
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }

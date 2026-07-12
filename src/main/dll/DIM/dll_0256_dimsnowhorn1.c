@@ -1414,7 +1414,7 @@ void DIMSnowHorn1_release(void)
     v = *p;
     if (v != NULL)
     {
-        textureFree((int)v);
+        textureFree((u8*)v);
     }
     *p = zero;
 }

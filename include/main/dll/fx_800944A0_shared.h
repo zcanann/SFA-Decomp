@@ -16,6 +16,7 @@
 #include "main/camera.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
+#include "main/texture.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/frame_timing.h"
@@ -201,8 +202,6 @@ extern u8 gWaterfxPendingImpactPositionValid;
 extern f32 gWaterfxPendingImpactPosition[];
 extern f32 PSVECSquareDistance(f32* a, f32* b);
 extern void* memset(void* dst, int c, int n);
-extern void textureFree(int tex);
-extern int textureLoadAsset(int id);
 extern char sWaterfxDllAllocFailed[];
 extern int gExpgfxRuntimeData[];
 extern int gExpgfxTextureFreeInProgress;
@@ -210,10 +209,10 @@ extern void waterfx_drawFn_800953fc(void);
 extern void* gWaterfxSplashTexCoordArray;
 extern void* gWaterfxSplashPosArray;
 extern void* gWaterfxSplashDisplayList;
-extern void* gWaterfxWakeTexture;
-extern void* gWaterfxSplashTexture1;
-extern void* gWaterfxSplashTexture0;
-extern void* gWaterfxRippleTexture;
+extern Texture* gWaterfxWakeTexture;
+extern Texture* gWaterfxSplashTexture1;
+extern Texture* gWaterfxSplashTexture0;
+extern Texture* gWaterfxRippleTexture;
 extern void* gWaterfxDropPool;
 extern void* gWaterfxDropCount;
 extern void* gWaterfxWakePool;

@@ -174,9 +174,9 @@ void Rcp_DisableBlurFilter(void)
     bEnableBlurFilter = 0x0;
 }
 
-void fn_800541A4(s16* p, s16 v)
+void fn_800541A4(Texture* texture, s16 frameStep)
 {
-    *(s16*)((char*)p + 0x14) = v;
+    texture->animationFrameStep = frameStep;
 }
 
 extern u32 gRcpRenderFlags;
@@ -881,7 +881,7 @@ void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, vo
 
 extern u8 framesThisStep;
 
-void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
+void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
 {
     u32 a, b, c;
     u32 flags;
@@ -905,10 +905,10 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
         }
         else if (a == 0)
         {
-            *cnt += *(u16*)(def + 0x14) * framesThisStep;
-            if (*cnt >= *(u16*)(def + 0x10))
+            *cnt += texture->animationFrameStep * framesThisStep;
+            if (*cnt >= texture->animationFrameCount)
             {
-                *cnt = *(u16*)(def + 0x10) * 2 - 1 - *cnt;
+                *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
                 if (*cnt < 0)
                 {
                     *cnt = 0;
@@ -922,7 +922,7 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
         }
         else
         {
-            *cnt -= *(u16*)(def + 0x14) * framesThisStep;
+            *cnt -= texture->animationFrameStep * framesThisStep;
             if (*cnt < 0)
             {
                 *cnt = 0;
@@ -933,9 +933,9 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
     else if (b != 0)
     {
         if (a == 0)
-            *cnt += *(u16*)(def + 0x14) * framesThisStep;
+            *cnt += texture->animationFrameStep * framesThisStep;
         else
-            *cnt -= *(u16*)(def + 0x14) * framesThisStep;
+            *cnt -= texture->animationFrameStep * framesThisStep;
         do
         {
             flag2 = 0;
@@ -945,9 +945,9 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
                 node[0] &= ~0x80000LL;
                 flag2 = 1;
             }
-            if (*cnt >= *(u16*)(def + 0x10))
+            if (*cnt >= texture->animationFrameCount)
             {
-                *cnt = *(u16*)(def + 0x10) * 2 - 1 - *cnt;
+                *cnt = texture->animationFrameCount * 2 - 1 - *cnt;
                 node[0] |= 0x80000LL;
                 flag2 = 1;
             }
@@ -955,15 +955,15 @@ void textureAnimFn_80053f2c(u8* def, u32* node, int* cnt)
     }
     else if (a == 0)
     {
-        *cnt += *(u16*)(def + 0x14) * framesThisStep;
-        while (*cnt >= *(u16*)(def + 0x10))
-            *cnt -= *(u16*)(def + 0x10);
+        *cnt += texture->animationFrameStep * framesThisStep;
+        while (*cnt >= texture->animationFrameCount)
+            *cnt -= texture->animationFrameCount;
     }
     else
     {
-        *cnt -= *(u16*)(def + 0x14) * framesThisStep;
+        *cnt -= texture->animationFrameStep * framesThisStep;
         while (*cnt < 0)
-            *cnt += *(u16*)(def + 0x10);
+            *cnt += texture->animationFrameCount;
     }
 }
 

@@ -40,6 +40,7 @@
 #include "main/screen_transition.h"
 #include "main/objlib.h"
 #include "main/texture.h"
+#include "main/rcp_dolphin_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/pad.h"
@@ -354,17 +355,16 @@ u8 gCMenuItemEnabledTable[0x3C0];
 int gCMenuItemTargetTable[0xBA];
 extern void* gTrickyHudCachedIconTexture;
 extern s16 gTrickyHudCachedIconIndex;
-extern void* gGameUiBlinkTexture;
+extern Texture* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
 extern void gameTextFn_80016c18(int text, int* arg);
 extern int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
-extern void textureAnimFn_80053f2c(void* tex, int* a, int* b);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
 
-extern int lbl_803DD828;
-extern int lbl_803DD82C;
+extern s32 lbl_803DD828;
+extern u32 lbl_803DD82C;
 extern f32 lbl_803E1E70;
 
 extern int cameraGetTargetType(void);
@@ -3888,7 +3888,7 @@ void GameUI_release(void)
 
     gameUiClearItemSlots(g);
 
-    textureFree(gGameUiBlinkTexture);
+    textureFree((u8*)gGameUiBlinkTexture);
 }
 #pragma opt_propagation reset
 

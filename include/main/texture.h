@@ -27,7 +27,9 @@ typedef struct Texture {
     u16 width;
     u16 height;
     u16 refCount;
-    u8 unk10[6];
+    u16 animationFrameCount;
+    u8 unk12[2];
+    u16 animationFrameStep;
     u8 format;
     u8 wrapS;
     u8 wrapT;
@@ -49,6 +51,8 @@ typedef struct Texture {
 } Texture;
 
 STATIC_ASSERT(offsetof(Texture, width) == 0xA);
+STATIC_ASSERT(offsetof(Texture, animationFrameCount) == 0x10);
+STATIC_ASSERT(offsetof(Texture, animationFrameStep) == 0x14);
 STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);

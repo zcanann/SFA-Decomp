@@ -14,6 +14,8 @@
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/model.h"
+#include "main/rcp_dolphin_api.h"
 
 /* object def numbers (== seqId) of the Arwing's attached models */
 enum
@@ -57,15 +59,15 @@ void arwarwinggu_setTextureFrame(GameObject* obj, int textureFrame)
 #pragma peephole off
 void arwarwinggu_applyTextureFrame(GameObject* obj)
 {
-    int model;
+    ObjModel* model;
     ObjTextureRuntimeSlot* texture;
     ArwingGuState* state = (obj)->extra;
-    int anim;
-    model = (int)Obj_GetActiveModel(obj);
+    Texture* anim;
+    model = Obj_GetActiveModel(obj);
     texture = objFindTexture(obj, 0, 0);
-    anim = ObjModel_GetTexture(*(int*)model, 0);
-    fn_800541A4(anim, (u16)state->texture.textureFrame);
-    textureAnimFn_80053f2c(anim, (int)state, (int)texture);
+    anim = ObjModel_GetTexture(model->file, 0);
+    fn_800541A4Promoted(anim, (u16)state->texture.textureFrame);
+    textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
 }
 #pragma scheduling on
 #pragma peephole on
@@ -114,11 +116,11 @@ void ARWArwingGu_update(GameObject* obj)
     case ARWGU_DEF_ENGINE:
     {
         ArwingGuState* state = (obj)->extra;
-        int model = (int)Obj_GetActiveModel(obj);
+        ObjModel* model = Obj_GetActiveModel(obj);
         ObjTextureRuntimeSlot* texture = objFindTexture(obj, 0, 0);
-        int anim = ObjModel_GetTexture(*(int*)model, 0);
-        fn_800541A4(anim, (u16)state->texture.textureFrame);
-        textureAnimFn_80053f2c(anim, (int)state, (int)texture);
+        Texture* anim = ObjModel_GetTexture(model->file, 0);
+        fn_800541A4Promoted(anim, (u16)state->texture.textureFrame);
+        textureAnimFn_80053f2c(anim, &state->texture.textureAnimFlags, &texture->textureId);
         break;
     }
     case ARWGU_DEF_GUN_L:

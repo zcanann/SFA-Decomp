@@ -361,7 +361,6 @@ extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 
 extern int objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int p5, int p6);
-extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void* gDIMSnowHorn1Texture;

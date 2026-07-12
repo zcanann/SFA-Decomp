@@ -1774,7 +1774,6 @@ void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount)
 extern void envFxFn_80088884(void);
 extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
-extern int textureAnimFn_80053f2c(void* tex, void* a, void* b);
 
 extern f32 timeDelta;
 extern s32 lbl_803DCE00;
@@ -1786,7 +1785,7 @@ void updateEnvironment(int mode)
     if (mode == 0)
     {
         char* entry;
-        void* tex;
+        Texture* tex;
         int z[2];
         int w[2];
         f32 deltaY;
@@ -1803,9 +1802,9 @@ void updateEnvironment(int mode)
         {
             entry = (char*)lbl_803DCE6C + z[1];
             if (*(s16*)(entry + 12) != 0 && (tex = *(void**)entry) != NULL &&
-                *(u16*)((char*)tex + 0x10) != 0x100 && *(u16*)((char*)tex + 0x14) != 0)
+                tex->animationFrameCount != 0x100 && tex->animationFrameStep != 0)
             {
-                textureAnimFn_80053f2c(tex, entry + 8, entry + 4);
+                textureAnimFn_80053f2c(tex, (u32*)(entry + 8), (s32*)(entry + 4));
             }
             z[1] += 0x10;
             z[0]++;

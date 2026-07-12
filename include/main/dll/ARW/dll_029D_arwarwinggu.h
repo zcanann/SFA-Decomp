@@ -7,7 +7,7 @@
 
 typedef struct ArwingGuTextureState
 {
-    u8 textureAnim[4];
+    u32 textureAnimFlags;
     int textureFrame;
 } ArwingGuTextureState;
 
