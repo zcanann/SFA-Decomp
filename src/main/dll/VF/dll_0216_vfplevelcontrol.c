@@ -247,3 +247,8 @@ void VFP_LevelControl_initialise(void)
 {
     lbl_803DC148 = VFP_TIMER_INIT;
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E6060 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E6064 = 0.0f;
+#pragma explicit_zero_data reset
