@@ -1292,7 +1292,7 @@ u32 ObjMsg_Peek(void* obj, u32* outMessage, u32* outSender, u32* outParam)
     return 0;
 }
 
-u32 ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
+int ObjMsg_Pop(void* obj, u32* outMessage, u32* outSender, u32* outParam)
 {
     ObjMsgQueue* queue;
     ObjMsgQueueSlotBase* slot;

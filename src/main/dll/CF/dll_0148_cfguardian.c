@@ -26,6 +26,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/player_status.h"
 #include "main/objseq.h"
+#include "main/objlib.h"
 #include "main/object_descriptor.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
@@ -160,12 +161,6 @@ extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
 extern int ObjHits_EnableObject();
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
-extern void ObjMsg_AllocQueue(void* obj, int capacity);
-extern bool ObjTrigger_UpdateIdBlockFlag(int obj);
-extern int ObjTrigger_IsSet();
 extern int objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
@@ -909,7 +904,7 @@ int cfguardian_updateMain(GameObject* obj)
         break;
     }
     dll_2E_func03((GameObject*)obj, (MoveLibState*)sub);
-    if (ObjTrigger_IsSet(obj) != 0)
+    if (ObjTrigger_IsSet((int)obj) != 0)
     {
         buttonDisable(0, PAD_BUTTON_A);
         if ((*gGameUIInterface)->isEventReady(0x2e8) != 0)
@@ -1080,7 +1075,7 @@ void cfguardian_init(int* obj, u8* params)
     stk2 = gCfGuardianHitboxTemplateB;
     if (sub == NULL)
         return;
-    ObjMsg_AllocQueue(obj, 4);
+    ObjMsg_AllocQueue((void*)obj, 4);
     sub->questState = mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE);
     ((GameObject*)obj)->unkF4 = 1;
     ((GameObject*)obj)->animEventCallback = cfguardian_SeqFn;
