@@ -17,6 +17,7 @@
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx.h"
 #include "main/camera.h"

@@ -106,6 +106,4 @@ extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 extern ObjectDescriptor dll_F7;
 
-int KaldaChompSpit_getObjectTypeId(void);
-int KaldaChompSpit_getExtraSize(void);
 #endif /* MAIN_DLL_GENPROPS_H_ */

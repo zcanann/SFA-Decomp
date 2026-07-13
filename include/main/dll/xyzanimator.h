@@ -40,11 +40,6 @@ typedef struct PollenExtra
 #define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES   60
 #define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
 
-void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void KaldaChompSpit_hitDetect(void);
-void KaldaChompSpit_init(GameObject* obj);
-void KaldaChompSpit_release(void);
-void KaldaChompSpit_initialise(void);
 void FUN_80169d38(u64 param_1, u64 param_2, u64 param_3, double param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, short* param_9);
 int FUN_8016a534(double param_1, double param_2, float* param_3, float* param_4, char param_5);
@@ -106,9 +101,5 @@ extern PollenFragmentConfig* lbl_8032059C[];
 
 /* extern-cleanup: consolidated prototypes */
 void quakeSpellFn_8016cee8(int* obj, int* x);
-
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-void KaldaChompSpit_free(int* obj);
-void KaldaChompSpit_update(int obj);
 
 #endif /* MAIN_DLL_DLL_13C_H_ */

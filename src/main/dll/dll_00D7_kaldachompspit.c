@@ -22,6 +22,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

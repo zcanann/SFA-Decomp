@@ -20,6 +20,7 @@
 #include "main/objseq_api.h"
 #include "main/vecmath.h"
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

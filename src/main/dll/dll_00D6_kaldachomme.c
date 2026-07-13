@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/VF/vf_shared.h"
 
@@ -46,9 +47,6 @@ STATIC_ASSERT(offsetof(KaldaChompMePlacement, rollBits) == 0x1a);
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
 extern f32 lbl_803E30D8;
-
-int KaldaChompSpit_getExtraSize(void);
-int KaldaChompSpit_getObjectTypeId(void);
 
 void kaldachompme_setLinkedMouthMode(u8* obj, u8 mode)
 {

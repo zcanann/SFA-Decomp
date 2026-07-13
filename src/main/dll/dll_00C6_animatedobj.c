@@ -11,14 +11,12 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/dll_0125_curve_api.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
-
-extern int KaldaChompSpit_getObjectTypeId(void);
-extern int KaldaChompSpit_getExtraSize(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
