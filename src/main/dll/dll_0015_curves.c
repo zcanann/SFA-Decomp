@@ -28,6 +28,7 @@
 #include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0015_curves.h"
+#include "main/object_descriptor.h"
 #include "main/game_ui_interface.h"
 #include "main/lightmap.h"
 #include "main/textrender.h"
@@ -1822,3 +1823,22 @@ int saveFileStruct_isCheatActive(u8 idx)
     }
     return 0;
 }
+
+ObjectDescriptor12 lbl_803116E0 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)dll_15_initialise_nop,
+    (ObjectDescriptorCallback)dll_15_release_nop,
+    0,
+    (ObjectDescriptorCallback)curves_clear,
+    (ObjectDescriptorCallback)dll_15_func04,
+    (ObjectDescriptorCallback)dll_15_func05,
+    (ObjectDescriptorCallback)dll_15_func06,
+    (ObjectDescriptorCallback)dll_15_func07,
+    (ObjectDescriptorCallback)dll_15_func08,
+    (ObjectDescriptorExtraSizeCallback)curves_getCurves,
+    (ObjectDescriptorCallback)dll_15_func0A,
+    (ObjectDescriptorCallback)dll_15_func0B,
+};
