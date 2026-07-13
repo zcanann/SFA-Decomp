@@ -171,3 +171,8 @@ void CameraModeCloudRunner_release(void)
 void CameraModeCloudRunner_initialise(void)
 {
 }
+
+u32 lbl_80319EF8[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeCloudRunner_initialise, (u32)CameraModeCloudRunner_release,
+        0x00000000, (u32)CameraModeCloudRunner_init, (u32)CameraModeCloudRunner_update,
+        (u32)CameraModeCloudRunner_free, (u32)CameraModeCloudRunner_copyToCurrent, 0x00000000};

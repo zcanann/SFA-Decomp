@@ -161,3 +161,8 @@ void CameraModeForceBehind_release(void)
 void CameraModeForceBehind_initialise(void)
 {
 }
+
+u32 lbl_80319EC8[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeForceBehind_initialise, (u32)CameraModeForceBehind_release,
+        0x00000000, (u32)CameraModeForceBehind_init, (u32)CameraModeForceBehind_update,
+        (u32)CameraModeForceBehind_free, (u32)CameraModeForceBehind_copyToCurrent, 0x00000000};

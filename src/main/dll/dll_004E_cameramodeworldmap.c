@@ -422,3 +422,8 @@ void CameraModeWorldMap_update(u8* obj)
                                    *(int*)&camera->anim.parent);
 }
 #pragma opt_propagation reset
+
+u32 lbl_80319E08[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeWorldMap_initialise, (u32)CameraModeWorldMap_release,
+        0x00000000, (u32)CameraModeWorldMap_init, (u32)CameraModeWorldMap_update,
+        (u32)CameraModeWorldMap_free, (u32)CameraModeWorldMap_copyToCurrent, 0x00000000};

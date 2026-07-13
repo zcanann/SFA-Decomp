@@ -879,26 +879,32 @@ main/dll/dll_004D_cameramodenpcspeak.c:
 
 main/dll/dll_004E_cameramodeworldmap.c:
 	.text       start:0x8010E51C end:0x8010F2F8
+	.data       start:0x80319E08 end:0x80319E38
 
 main/dll/dll_004F_dll4f.c:
 	.text       start:0x8010F2F8 end:0x8010F540
 	.sdata2     start:0x803E1A88 end:0x803E1AC0
+	.data       start:0x80319E38 end:0x80319E68
 
 main/dll/dll_0050_cameramodecrawl.c:
 	.text       start:0x8010F540 end:0x8010FA54
 	.sdata2     start:0x803E1AC0 end:0x803E1AE0
+	.data       start:0x80319E68 end:0x80319E98
 
 main/dll/dll_0051_cameramodecannon.c:
 	.text       start:0x8010FA54 end:0x8010FC74
 	.sdata2     start:0x803E1AE0 end:0x803E1B00
+	.data       start:0x80319E98 end:0x80319EC8
 
 main/dll/dll_0052_cameramodeforcebehind.c:
 	.text       start:0x8010FC74 end:0x801101E4
 	.sdata2     start:0x803E1B10 end:0x803E1B18
+	.data       start:0x80319EC8 end:0x80319EF8
 
 main/dll/dll_0053_cameramodecloudrunner.c:
 	.text       start:0x801101E4 end:0x801106B4
 	.sdata2     start:0x803E1B20 end:0x803E1B40
+	.data       start:0x80319EF8 end:0x80319F28
 
 main/dll/dll_0054_dll54.c:
 	.text       start:0x801106B4 end:0x80110C80

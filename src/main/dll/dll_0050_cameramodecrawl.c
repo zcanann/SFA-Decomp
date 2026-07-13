@@ -164,3 +164,8 @@ void CameraModeCrawl_release(void)
 void CameraModeCrawl_initialise(void)
 {
 }
+
+u32 lbl_80319E68[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeCrawl_initialise, (u32)CameraModeCrawl_release,
+        0x00000000, (u32)CameraModeCrawl_init, (u32)CameraModeCrawl_update,
+        (u32)CameraModeCrawl_free, (u32)CameraModeCrawl_copyToCurrent, 0x00000000};

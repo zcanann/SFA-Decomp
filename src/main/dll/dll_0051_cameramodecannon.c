@@ -79,3 +79,8 @@ void CameraModeCannon_release(void)
 void CameraModeCannon_initialise(void)
 {
 }
+
+u32 lbl_80319E98[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeCannon_initialise, (u32)CameraModeCannon_release,
+        0x00000000, (u32)CameraModeCannon_init, (u32)CameraModeCannon_update,
+        (u32)CameraModeCannon_free, (u32)CameraModeCannon_copyToCurrent, 0x00000000};
