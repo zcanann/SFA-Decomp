@@ -255,38 +255,31 @@ main/dll/dll_0022_effect9.c:
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
 	.data       start:0x80310C88 end:0x80310D1C
-	.bss        start:0x8039C3B0 end:0x8039C3C8
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
 	.data       start:0x80310D48 end:0x80310D7C
-	.bss        start:0x8039C3C8 end:0x8039C3E0
 
 main/dll/dll_0025_effect12.c:
 	.text       start:0x800C56E0 end:0x800C65B4
 	.data       start:0x80310DA8 end:0x80310DE4
-	.bss        start:0x8039C3E0 end:0x8039C3F8
 	.sdata2     start:0x803DFFF8 end:0x803E0000
 
 main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
 	.data       start:0x80310E10 end:0x80310E88
-	.bss        start:0x8039C3F8 end:0x8039C410
 	.sdata2     start:0x803E0098 end:0x803E0178
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
-	.bss        start:0x8039C410 end:0x8039C428
 
 main/dll/dll_0028_effect15.c:
 	.text       start:0x800C9140 end:0x800CA3CC
 	.data       start:0x80310F60 end:0x80310FB4
-	.bss        start:0x8039C428 end:0x8039C440
 	.sdata2     start:0x803E0178 end:0x803E0180
 
 main/dll/dll_0026_effect13.c:
 	.text       start:0x800CA3CC end:0x800CA930
-	.bss        start:0x8039C440 end:0x8039C458
 	.sdata2     start:0x803E0180 end:0x803E01B8
 
 main/dll/dll_002A_effect17.c:
@@ -2411,7 +2404,6 @@ main/dll/dll_0200_dll200.c:
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
-	.sdata2     start:0x803E5DC8 end:0x803E5DE0
 
 main/dll/WM/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
@@ -3026,7 +3018,6 @@ dolphin/os/OSFont.c:
 	.data       start:0x8032CCC8 end:0x8032D7D2
 	.sdata      start:0x803DC548 end:0x803DC54A
 	.sbss       start:0x803DDE28 end:0x803DDE38
-	.sdata2     start:0x803E7610 end:0x803E7618
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x8024377C end:0x80243FE8
@@ -3097,7 +3088,6 @@ dolphin/mtx/mtxvec.c:
 
 dolphin/mtx/mtx44.c:
 	.text       start:0x802475C8 end:0x80247730
-	.sdata2     start:0x803E7630 end:0x803E7648
 
 dolphin/mtx/vec.c:
 	.text       start:0x80247730 end:0x802479D0
@@ -3115,7 +3105,6 @@ dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
 	.data       start:0x8032D830 end:0x8032DC20
 	.sdata      start:0x803DC560 end:0x803DC568
-	.sbss       start:0x803DDEE8 end:0x803DDF08
 	.sbss       start:0x803DDEE8 end:0x803DDF08
 
 dolphin/dvd/dvdFatal.c:
