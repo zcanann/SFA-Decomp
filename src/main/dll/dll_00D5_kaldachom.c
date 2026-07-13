@@ -57,7 +57,7 @@ extern void fn_802961FC(int a, u8 type);
 
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants; the
    gKaldachom*SpawnScratch globals are mutable scratch (fx spawn position / radius). */
-extern u32 gKaldachomCombatParams[];
+__declspec(section ".rodata") u32 gKaldachomCombatParams[4] = {8, 255, 255, 120};
 extern f32 gKaldachomDustSpawnScratch;
 extern f32 gKaldachomMouthSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];

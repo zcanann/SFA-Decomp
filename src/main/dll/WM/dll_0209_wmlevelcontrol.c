@@ -83,7 +83,8 @@ __declspec(section ".sdata2") f32 gWmLevelControlLightIntensityBase = 32.0f;
 __declspec(section ".sdata2") f32 gWmLevelControlLightIntensityRange = 128.0f;
 __declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f;
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
-extern f32 gWmLevelControlSkyVecTable[];          /* sky light/color/fog vector table */
+__declspec(section ".rodata") f32 gWmLevelControlSkyVecTable[12] = {
+    -1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f}; /* sky light/color/fog vector table */
 extern u8 gWmLevelControlSkyColorFrom;            /* sky-color blend source triplet */
 extern u8 gWmLevelControlSkyColorTo;              /* sky-color blend target triplet */
 extern u8 gWmLevelControlLightColorFrom;          /* light-color blend source triplet */

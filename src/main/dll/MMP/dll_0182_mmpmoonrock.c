@@ -520,7 +520,7 @@ extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u8 volume, f32 sc
 
 extern void objParticleFn_80099d84(void* obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);
-extern char gMoonRockSpawnParams[];
+char gMoonRockSpawnParams[0x18];
 extern f32 gMoonRockAlphaMax;
 extern f32 lbl_803E4588;
 extern f32 lbl_803E458C;

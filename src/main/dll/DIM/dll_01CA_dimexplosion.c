@@ -73,7 +73,7 @@ STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 #define GX_QUADS   0x80
 #define GX_VTXFMT2 2
 
-extern int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
+int gExplosionTextures[GEXPLOSION_TEXTURE_COUNT];
 extern f32 lbl_803E492C;
 extern f32 lbl_803E4930;
 extern f32 lbl_803E4934;

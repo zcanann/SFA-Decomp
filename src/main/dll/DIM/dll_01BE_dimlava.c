@@ -68,7 +68,9 @@ extern f32 lbl_803E47F0;
 extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;
 extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
-extern u8 gDimLavaDebrisBaseVec[];
+__declspec(section ".rodata") u8 gDimLavaDebrisBaseVec[16] = {
+    0x3F, 0x99, 0x99, 0x9A, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 
 static inline int* DIMcannon_GetActiveModel(void* obj)

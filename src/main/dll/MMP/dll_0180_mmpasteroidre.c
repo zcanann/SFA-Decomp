@@ -35,7 +35,7 @@ extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
-extern PartFxSpawnParams gMmpAsteroidDustSpawnParams;
+PartFxSpawnParams gMmpAsteroidDustSpawnParams;
 extern int gMmpAsteroidDustHeightParam;
 extern f32 lbl_803E44E8;
 extern f32 lbl_803E44F8;

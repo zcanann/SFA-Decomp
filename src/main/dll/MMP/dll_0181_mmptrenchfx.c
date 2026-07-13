@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 #define MMPTRENCHFX_PARTFX_EMIT 0x71F
 #define MMPTRENCHFX_PARTFX_TICK 0x720
 
-extern char lbl_803AC930[];
+char lbl_803AC930[0x18];
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;

@@ -28,7 +28,7 @@ STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 /* state->maskBits: bits 4..6 toggled together as one group */
 #define ANIMSPACECRAFT_MASK_GROUP 0x70
 
-extern char lbl_803AC948[];
+char lbl_803AC948[0x18];
 __declspec(section ".sdata2") f32 lbl_803E4770 = 143.0f;  /* glow spawn offsets */
 __declspec(section ".sdata2") f32 lbl_803E4774 = 16.0f;
 __declspec(section ".sdata2") f32 lbl_803E4778 = -79.0f;

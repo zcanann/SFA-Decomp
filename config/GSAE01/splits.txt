@@ -276,11 +276,12 @@ main/dll/dll_0027_effect14.c:
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
+	.data       start:0x80310E88 end:0x80310F38
 	.bss        start:0x8039C410 end:0x8039C428
 
 main/dll/dll_0028_effect15.c:
 	.text       start:0x800C9140 end:0x800CA3CC
-	.data       start:0x80310F60 end:0x80310FB4
+	.data       start:0x80310F38 end:0x80310FB4
 	.bss        start:0x8039C428 end:0x8039C440
 	.sdata2     start:0x803E0178 end:0x803E0180
 
@@ -1207,6 +1208,7 @@ main/dll/texscroll2.c:
 
 main/dll/dll_00D5_kaldachom.c:
 	.text       start:0x8016821C end:0x80169360
+	.rodata     start:0x802C2210 end:0x802C2220
 	.data       start:0x80320418 end:0x80320458
 
 main/dll/dll_00D6_kaldachomme.c:
@@ -1249,6 +1251,7 @@ main/dll/dll_00DD_gcbaddieshield.c:
 main/dll/dll_00DE_baddieinterestp.c:
 	.text       start:0x8016BB10 end:0x8016BE70
 	.data       start:0x803206C8 end:0x80320700
+	.sdata2     start:0x803E3220 end:0x803E3228
 
 main/dll/dll_00C6_animatedobj.c:
 	.text       start:0x8016BE70 end:0x8016C4AC
@@ -1343,6 +1346,8 @@ main/dll/dll_00F3_flameblast.c:
 
 main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
+	.sdata2     start:0x803E3648 end:0x803E3678
+	.sdata2     start:0x803E3678 end:0x803E3680
 
 main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
@@ -1744,13 +1749,16 @@ main/dll/dll_017F_moonseedbush.c:
 main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
 	.data       start:0x803231D0 end:0x803231E0
+	.bss        start:0x803AC900 end:0x803AC918
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
+	.bss        start:0x803AC918 end:0x803AC930
 	.sdata2     start:0x803E4548 end:0x803E45B8
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
+	.bss        start:0x803AC930 end:0x803AC948
 	.sdata2     start:0x803E45B8 end:0x803E45C0
 
 main/dll/MMP/dll_0183_mmpgyservent.c:
@@ -1816,6 +1824,7 @@ main/dll/IM/dll_016D_imicepillar.c:
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
+	.bss        start:0x803AC948 end:0x803AC960
 	.sdata2     start:0x803E4770 end:0x803E4788
 
 main/dll/IM/dll_016F_imspacethruster.c:
@@ -1839,6 +1848,7 @@ main/dll/dll_0173_linklevcontrol.c:
 
 main/dll/DIM/dll_01BE_dimlava.c:
 	.text       start:0x801AF9E4 end:0x801B02BC
+	.rodata     start:0x802C2318 end:0x802C2328
 
 main/dll/DIM/dll_01BF_dimlavaball.c:
 	.text       start:0x801B02BC end:0x801B0670
@@ -1897,6 +1907,7 @@ main/dll/DIM/dll_01C9_dimdismountpoint.c:
 main/dll/DIM/dll_01CA_dimexplosion.c:
 	.text       start:0x801B3DE4 end:0x801B57BC
 	.data       start:0x80325528 end:0x803255C8
+	.bss        start:0x803AC960 end:0x803AC970
 
 main/dll/DIM/dll_01CB_dimwooddoor2.c:
 	.text       start:0x801B57BC end:0x801B5A28
@@ -2431,6 +2442,7 @@ main/dll/WM/dll_0204_wmtorch.c:
 
 main/dll/dll_0206_lightsource.c:
 	.text       start:0x801F33B4 end:0x801F3C2C
+	.rodata     start:0x802C2488 end:0x802C24B8
 	.sdata2     start:0x803E5E08 end:0x803E5E58
 
 main/dll/WM/dll_0207_wmworm.c:
@@ -2440,6 +2452,7 @@ main/dll/WM/dll_0207_wmworm.c:
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
+	.rodata     start:0x802C24B8 end:0x802C24E8
 	.data       start:0x80328BB0 end:0x80328C08
 	.sdata2     start:0x803E5E70 end:0x803E5E88
 	.sdata2     start:0x803E5E88 end:0x803E5E90
@@ -2667,6 +2680,7 @@ main/worldobj.c:
 
 main/snowclaw.c:
 	.text       start:0x8020F214 end:0x802106C0
+	.rodata     start:0x802C2520 end:0x802C2540
 	.data       start:0x8032A310 end:0x8032A370
 
 main/crcloudrace.c:

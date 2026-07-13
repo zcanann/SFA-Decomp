@@ -120,7 +120,7 @@ extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
-extern u32 gSnowClawPulseTable[8];
+__declspec(section ".rodata") u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
 extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
 extern f32 lbl_803DC218;
