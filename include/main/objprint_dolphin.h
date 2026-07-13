@@ -91,6 +91,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow);
 void* getCurrentDataFile(int id);
 
 int loadMapAndParent(int mapId);
+u32 loadTableFiles(void);
 int lockLevel(s32 val, int idx);
 int mapUnload(int mapId, int flags);
 int unlockLevel(s32 val, int idx, int flag);
