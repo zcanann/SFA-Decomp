@@ -159,3 +159,29 @@ void Effect19_release(void)
 void Effect19_initialise(void)
 {
 }
+
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_803110D8 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect19_initialise,
+    (ObjectDescriptorCallback)Effect19_release,
+    0,
+    (ObjectDescriptorCallback)Effect19_func03_nop,
+    (ObjectDescriptorCallback)Effect19_func04,
+    (ObjectDescriptorCallback)Effect19_func05,
+};
