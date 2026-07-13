@@ -1545,59 +1545,10 @@ void iceBaddie_release_nop(void)
 {
 }
 
-void ChukChuk_free(void);
-void ChukChuk_hitDetect(void);
-void ChukChuk_release(void);
-void ChukChuk_initialise(void);
-void ChukChuk_init(u8* obj, u8* params);
-int ChukChuk_getExtraSize(void);
-int ChukChuk_getObjectTypeId(void);
-void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void ChukChuk_update(short* obj);
-void ChukChuk_setScale(int obj, int v);
-
 void iceBaddie_initialise(void)
 {
     fn_8015DAE8();
 }
-
-ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)ChukChuk_initialise,
-        (ObjectDescriptorCallback)ChukChuk_release,
-        0,
-        (ObjectDescriptorCallback)ChukChuk_init,
-        (ObjectDescriptorCallback)ChukChuk_update,
-        (ObjectDescriptorCallback)ChukChuk_hitDetect,
-        (ObjectDescriptorCallback)ChukChuk_render,
-        (ObjectDescriptorCallback)ChukChuk_free,
-        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
-        ChukChuk_getExtraSize,
-        (ObjectDescriptorCallback)ChukChuk_setScale,
-    },
-    0,
-};
-
-ObjectDescriptor gIceBallObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)IceBall_initialise,
-    (ObjectDescriptorCallback)IceBall_release,
-    0,
-    (ObjectDescriptorCallback)IceBall_init,
-    (ObjectDescriptorCallback)IceBall_update,
-    (ObjectDescriptorCallback)IceBall_hitDetect,
-    (ObjectDescriptorCallback)IceBall_render,
-    (ObjectDescriptorCallback)IceBall_free,
-    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
-    IceBall_getExtraSize,
-};
 
 /* --- icebaddie .data reconstruction (0x8031FD80-0x8031FEA8) --- */
 #include "main/object_descriptor.h"

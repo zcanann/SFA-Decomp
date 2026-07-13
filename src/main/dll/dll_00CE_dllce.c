@@ -837,23 +837,8 @@ void dll_CE_release_nop(void)
 {
 }
 
-void ChukChuk_free(void);
-
-void ChukChuk_hitDetect(void);
-
-void ChukChuk_release(void);
-
-void ChukChuk_initialise(void);
-
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
-
-void ChukChuk_init(u8* obj, u8* params);
-void IceBall_hitDetect(void);
-
-void IceBall_release(void);
-
-void IceBall_initialise(void);
 
 int dll_CE_getExtraSize_ret_1052(void)
 {
@@ -863,27 +848,10 @@ int dll_CE_getObjectTypeId(void)
 {
     return 0x49;
 }
-int ChukChuk_getExtraSize(void);
-int ChukChuk_getObjectTypeId(void);
-int IceBall_getExtraSize(void);
-int IceBall_getObjectTypeId(void);
-
 s16 dll_CE_setScale(int* obj)
 {
     return ((BaddieState*)((GameObject*)obj)->extra)->controlMode;
 }
-
-void ChukChuk_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-
-void IceBall_free(void);
-
-void ChukChuk_update(short* obj);
-
-void ChukChuk_setScale(int obj, int v);
-
-void IceBall_init(void* obj);
 
 int fn_8015E00C(int obj, u8* state)
 {
@@ -1008,43 +976,6 @@ void dll_CE_free(int* obj)
     ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 32);
 }
 
-ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)ChukChuk_initialise,
-        (ObjectDescriptorCallback)ChukChuk_release,
-        0,
-        (ObjectDescriptorCallback)ChukChuk_init,
-        (ObjectDescriptorCallback)ChukChuk_update,
-        (ObjectDescriptorCallback)ChukChuk_hitDetect,
-        (ObjectDescriptorCallback)ChukChuk_render,
-        (ObjectDescriptorCallback)ChukChuk_free,
-        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
-        ChukChuk_getExtraSize,
-        (ObjectDescriptorCallback)ChukChuk_setScale,
-    },
-    0,
-};
-
-ObjectDescriptor gIceBallObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)IceBall_initialise,
-    (ObjectDescriptorCallback)IceBall_release,
-    0,
-    (ObjectDescriptorCallback)IceBall_init,
-    (ObjectDescriptorCallback)IceBall_update,
-    (ObjectDescriptorCallback)IceBall_hitDetect,
-    (ObjectDescriptorCallback)IceBall_render,
-    (ObjectDescriptorCallback)IceBall_free,
-    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
-    IceBall_getExtraSize,
-};
 
 u8 lbl_8031FEA8[] = {
     0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0,
