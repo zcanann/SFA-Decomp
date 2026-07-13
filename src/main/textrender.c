@@ -1004,8 +1004,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             if (g->lang == GAMETEXT_FONT_FACE)
             {
-                int iw = g->width + (g->advanceX + g->offsetX);
-                int ih = g->height + (g->advanceY + g->offsetY);
+                int iw = g->advanceX + g->width + g->offsetX;
+                int ih = g->advanceY + g->height + g->offsetY;
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 gxSetScissorRect(0, 0, *(s16*)(winBase + 0xfd4), *(s16*)(winBase + 0xfd6),
                                  *(s16*)(winBase + 0xfd4) + *(u16*)(winBase + 0xfc8),
