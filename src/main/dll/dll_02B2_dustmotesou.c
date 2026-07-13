@@ -126,3 +126,21 @@ void dustmotesou_release(void)
 void dustmotesou_initialise(void)
 {
 }
+
+ObjectDescriptor gDustMoteSouObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dustmotesou_initialise,
+    (ObjectDescriptorCallback)dustmotesou_release,
+    0,
+    (ObjectDescriptorCallback)dustmotesou_init,
+    (ObjectDescriptorCallback)dustmotesou_update,
+    (ObjectDescriptorCallback)dustmotesou_hitDetect,
+    (ObjectDescriptorCallback)dustmotesou_render,
+    (ObjectDescriptorCallback)dustmotesou_free,
+    (ObjectDescriptorCallback)dustmotesou_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dustmotesou_getExtraSize,
+};
+

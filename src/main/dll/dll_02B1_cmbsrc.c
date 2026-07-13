@@ -675,6 +675,8 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
 
+u8 gCmbsrcColorSoundIdTable[16] = {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'};
+
 f32 gCmbsrcColorRadiusScaleTable[] = {
     100.0f, 100.0f, 120.0f, 200.0f, 100.0f, 100.0f, 100.0f, 100.0f,
     100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 100.0f, 150.0f,
@@ -689,4 +691,20 @@ u8 gCmbsrcColorRgbTable[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-u8 gCmbsrcColorSoundIdTable[16] = {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'};
+ObjectDescriptor gCmbSrcObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cmbsrc_initialise,
+    (ObjectDescriptorCallback)cmbsrc_release,
+    0,
+    (ObjectDescriptorCallback)cmbsrc_init,
+    (ObjectDescriptorCallback)cmbsrc_update,
+    (ObjectDescriptorCallback)cmbsrc_hitDetect,
+    (ObjectDescriptorCallback)cmbsrc_render,
+    (ObjectDescriptorCallback)cmbsrc_free,
+    (ObjectDescriptorCallback)cmbsrc_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)cmbsrc_getExtraSize,
+};
+
