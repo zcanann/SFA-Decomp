@@ -55,7 +55,10 @@
 #include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_link.h"
+#include "main/obj_list.h"
+#include "main/obj_path.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebit_ids.h"
 

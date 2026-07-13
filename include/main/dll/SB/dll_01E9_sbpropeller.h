@@ -6,7 +6,6 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
-#include "main/objlib.h"
 
 u32 sbGetPropeller(void);
 

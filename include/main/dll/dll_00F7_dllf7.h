@@ -8,7 +8,6 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/objprint.h"
-#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 

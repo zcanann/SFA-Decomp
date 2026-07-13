@@ -6,7 +6,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0015_curves.h"
-#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "string.h"
