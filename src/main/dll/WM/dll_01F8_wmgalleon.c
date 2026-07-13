@@ -1,5 +1,6 @@
 /* DLL 0x01F8 (wmgalleon) - WM galleon and object creator [0x801EFF7C-0x801F06D8). */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
+#include "main/object_descriptor.h"
 extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -91,6 +92,33 @@ __declspec(section ".sdata2") f32 lbl_803E5CF4 = 5.0f;
 
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
+
+void WM_Galleon_initialise(void);
+void WM_Galleon_release(void);
+void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
+void WM_Galleon_update(int* obj);
+void WM_Galleon_hitDetect(void);
+void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void WM_Galleon_free(int* obj, int leavingMap);
+int WM_Galleon_getObjectTypeId(void);
+int WM_Galleon_getExtraSize(void);
+
+ObjectDescriptor gWM_GalleonObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_Galleon_initialise,
+    (ObjectDescriptorCallback)WM_Galleon_release,
+    0,
+    (ObjectDescriptorCallback)WM_Galleon_init,
+    (ObjectDescriptorCallback)WM_Galleon_update,
+    (ObjectDescriptorCallback)WM_Galleon_hitDetect,
+    (ObjectDescriptorCallback)WM_Galleon_render,
+    (ObjectDescriptorCallback)WM_Galleon_free,
+    (ObjectDescriptorCallback)WM_Galleon_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_Galleon_getExtraSize,
+};
 
 int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
