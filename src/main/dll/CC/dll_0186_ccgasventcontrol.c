@@ -13,6 +13,7 @@
  * The extra-state byte at +0 is the state-machine index (0..7).
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -65,7 +66,6 @@ STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern int* ObjGroup_GetObjects(int group, int* count);
 

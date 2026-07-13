@@ -14,6 +14,7 @@
  * of SCGameBitLatch records that mirror world state into game bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/object_render_legacy.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -57,7 +58,6 @@ extern f32 lbl_803E46D8;
 extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 extern void gameBitFn_800ea2e0(int idx);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_801AC108(GameObject* obj, int* extra);
 extern void fn_801AC01C(GameObject* obj);
 extern void Music_Trigger(int id, int arg);

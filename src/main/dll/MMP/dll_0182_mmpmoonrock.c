@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/savegame.h"
 #include "main/object_api.h"
 #include "main/carryable_interface.h"
@@ -62,7 +63,6 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #pragma scheduling on
 #pragma peephole on

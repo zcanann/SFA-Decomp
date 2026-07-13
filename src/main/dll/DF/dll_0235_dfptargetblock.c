@@ -4,6 +4,7 @@
  * path points, plays impact/loop sfx and reports completion.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
@@ -63,7 +64,6 @@ extern const f32 lbl_803E64D4;
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
                               int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjHits_GetPriorityHit(GameObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 

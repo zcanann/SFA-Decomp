@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
@@ -132,7 +133,6 @@ extern u8 gDfShShrinePendingReward;
 extern u16 gDfShShrineRewardTable[];
 extern const f32 lbl_803E4E8C;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int arg);

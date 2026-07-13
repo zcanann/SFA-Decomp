@@ -11,6 +11,7 @@
  * cached map-act at +0xC.
  */
 #include "main/sky_interface.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
@@ -33,7 +34,6 @@
 
 extern int lbl_80323548[];
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern void Music_Trigger(int id, int arg);
 extern void fn_80088870(void* a, void* b, void* c, void* d);

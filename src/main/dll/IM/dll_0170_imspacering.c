@@ -9,6 +9,7 @@
  * the whole swarm tracks the spacecraft.
  */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -16,7 +17,6 @@
 
 extern GameObject* lbl_803DDB48;
 extern f32 lbl_803E47B8;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int IMSpaceRing_getExtraSize(void)
 {
