@@ -79,6 +79,8 @@
 #define PAD_BUTTON_B    0x200
 #define PAD_BUTTON_MENU 0x1000
 
+#define GAMEUI_MIN(a, b) ((a) < (b) ? (a) : (b))
+
 extern void saveGame_save();
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
@@ -1056,7 +1058,6 @@ void pauseMenuDrawText(void)
     void* handle;
     int saved;
     s16 cur;
-    s16 target;
     s16 mirrored;
     s32 v[4];
 
@@ -1086,25 +1087,24 @@ void pauseMenuDrawText(void)
     if (alpha > 0xff)
         alpha = 0xff;
 
-    target = cur;
     if (lbl_803DD774 > 0x7f)
     {
-        target = (s16)(0xff - lbl_803DD774);
+        cur = (s16)(0xff - lbl_803DD774);
     }
-    target = (s16)(target - 0x14);
-    target = (s16)((target < 0 ? 0 : target) << 4);
-    if (target > 0x10e)
-        target = 0x10e;
+    cur -= 0x14;
+    if (cur < 0)
+        cur = 0;
+    cur *= 0x10;
+    if (cur > 0x10e)
+        cur = 0x10e;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
     gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
     gameTextResetCursor(1);
 
     {
-        s16 width = (s16)(v[2] - v[3]);
-        int blit_x = width + 0x28;
         s16 clamped;
-        clamped = (s16)((target < blit_x) ? target : blit_x);
+        clamped = (s16)GAMEUI_MIN((s16)(v[2] - v[3]) + 0x28, cur);
         if (clamped < 0)
             clamped = 0;
         *(u16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
