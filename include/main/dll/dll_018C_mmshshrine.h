@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_LASER19F_H_
-#define MAIN_DLL_LASER19F_H_
+#ifndef MAIN_DLL_DLL_018C_MMSHSHRINE_H_
+#define MAIN_DLL_DLL_018C_MMSHSHRINE_H_
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
@@ -22,5 +22,8 @@ void MMSH_Shrine_free(GameObject* param_1);
 void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char flag);
 void MMSH_Shrine_hitDetect(void);
 void MMSH_Shrine_update(int param_1);
+void MMSH_Shrine_init(GameObject* obj, int def);
+void MMSH_Shrine_release(void);
+void MMSH_Shrine_initialise(void);
 
-#endif /* MAIN_DLL_LASER19F_H_ */
+#endif /* MAIN_DLL_DLL_018C_MMSHSHRINE_H_ */
