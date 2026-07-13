@@ -3021,13 +3021,13 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 
 int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
 {
+    RomCurveDef* node;
     RomCurveDef* cand;
     u32* idWrite;
     u32 candWalk;
     u32 cur;
     f32* probe;
     u32* idRead;
-    RomCurveDef* node;
     f32* qscan;
     f32* distWrite;
     int li;
@@ -3066,7 +3066,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     probe = distRead;
     idRead = resultIds;
     qscan = queueDist;
-    for (; li < 4; li++, cur += 4)
+    for (; li < 4; cur += 4, li++)
     {
         if (*(s32*)(cur + 0x1c) <= -1)
         {
@@ -3083,9 +3083,8 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
             continue;
         }
         queueDist[0] = SQ(node->z - start->z) + (SQ(node->x - start->x) + SQ(node->y - start->y));
-        pos = 0;
-        count = 1;
-        queueIds[pos++] = idx;
+        count = 0;
+        queueIds[count++] = idx;
         visited[idx] = 1;
         done = 0;
         distWrite = probe;
@@ -3116,7 +3115,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                 }
                 else
                 {
-                    for (k = 0, candWalk = (u32)node; k < 4; k++, candWalk += 4)
+                    for (k = 0, candWalk = (u32)node; k < 4; candWalk += 4, k++)
                     {
                         if (((-1 < *(s32*)(candWalk + 0x1c)) &&
                              ((cand = RomCurve_findByIdWithIndex(*(s32*)(candWalk + 0x1c), &idx)) != NULL)) &&
@@ -3152,21 +3151,21 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     }
     if (found > 0)
     {
-        best[0] = 0;
-        best[1] = best[0];
-        for (; best[1] < found; best[1]++)
+        best[1] = 0;
+        best[0] = best[1];
+        for (; best[0] < found; best[0]++)
         {
-            if (*distRead < bestDists[best[0]])
+            if (*distRead < bestDists[best[1]])
             {
-                best[0] = best[1];
+                best[1] = best[0];
             }
             distRead++;
         }
         if (outLink != NULL)
         {
-            *outLink = resultLinks[best[0]];
+            *outLink = resultLinks[best[1]];
         }
-        return resultIds[best[0]];
+        return resultIds[best[1]];
     }
     return -1;
 }
@@ -3224,7 +3223,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     distRead = bestDists;
     probe = distRead;
     qscan = queueDist;
-    for (; li < 4; li++, cur += 4)
+    for (; li < 4; cur += 4, li++)
     {
         if (*(s32*)(cur + 0x1c) <= -1)
         {
