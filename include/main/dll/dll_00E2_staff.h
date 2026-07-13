@@ -5,6 +5,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"

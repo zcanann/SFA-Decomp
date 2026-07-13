@@ -36,6 +36,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
+#include "main/objprint_api.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
 extern int trickyFn_8013b368();
@@ -103,7 +104,6 @@ extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
 void fn_80144B50(u8* obj, u8* state);
-extern void objPosFn_80039510(GameObject* obj, int flags, float* out);
 extern f32 lbl_803E24C8;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);

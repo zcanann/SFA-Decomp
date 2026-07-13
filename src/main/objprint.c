@@ -659,7 +659,7 @@ void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* sou
 }
 
 
-void objPosFn_80039510(GameObject* obj, int key, int out)
+void objPosFn_80039510(GameObject* obj, int key, f32* outPosition)
 {
     int* table;
     int i;
@@ -682,11 +682,11 @@ void objPosFn_80039510(GameObject* obj, int key, int out)
     }
     model = (int)Obj_GetActiveModel(obj);
     model = (int)ObjModel_GetJointMatrix((u8*)model, joint);
-    *(f32*)((char*)out + 0) = *(f32*)((char*)model + 0xc);
-    *(f32*)((char*)out + 4) = *(f32*)((char*)model + 0x1c);
-    *(f32*)((char*)out + 8) = *(f32*)((char*)model + 0x2c);
-    *(f32*)((char*)out + 0) = *(f32*)((char*)out + 0) + playerMapOffsetX;
-    *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
+    outPosition[0] = *(f32*)((char*)model + 0xc);
+    outPosition[1] = *(f32*)((char*)model + 0x1c);
+    outPosition[2] = *(f32*)((char*)model + 0x2c);
+    outPosition[0] += playerMapOffsetX;
+    outPosition[2] += playerMapOffsetZ;
 }
 
 extern void PSMTXConcat(void* a, void* b, void* c);

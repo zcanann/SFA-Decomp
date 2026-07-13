@@ -12,6 +12,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/sky_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0015_curves.h"
@@ -5467,7 +5468,7 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
         inner->activeHitWindow = -1;
         if (*(s16*)((char*)path + 0x44) == 0x2d)
         {
-            objSetAnimField48to0((int*)path);
+            objSetAnimField48to0((GameObject*)path);
             (*(void (*)(int, int)) * (int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x38))(
                 path, *(u8*)((inner->moveSlots + 0x5c) + (u32)inner->moveSlotIndex * 0xb0));
             (*(void (*)(int, f32, f32)) * (int*)(*(int*)(*(int*)((char*)path + 0x68)) + 0x4c))(
@@ -6006,7 +6007,7 @@ void fn_8029BC08(GameObject* obj)
     Player_GetObjHitsState(obj)->objectHitMask = 0;
     if (((GameObject*)gPlayerPathObject)->anim.classId == 0x2d)
     {
-        objSetAnimField48to0((int*)gPlayerPathObject);
+        objSetAnimField48to0((GameObject*)gPlayerPathObject);
     }
     gPlayerSubState = 1;
 }

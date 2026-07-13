@@ -653,10 +653,10 @@ s32 staff_getSwipeTextureIndex(int* obj)
     return ((StaffState*)(int*)((GameObject*)obj)->extra)->swipeTextureIndex;
 }
 
-void objSetAnimField48to0(int* obj)
+void objSetAnimField48to0(GameObject* obj)
 {
-    s32 v = 0x0;
-    *(s32*)((char*)(int*)((GameObject*)obj)->extra + 0x48) = v;
+    StaffState* state = obj->extra;
+    state->activeSlot = NULL;
 }
 
 void playerRenderQuakeSpell(int* obj)
