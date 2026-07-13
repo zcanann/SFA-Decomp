@@ -1,13 +1,15 @@
 /*
  * projmagicstream (DLL 0xAC) - retired projectile object.
  *
- * One of the dll_66 family of stubbed-out projectile DLLs. The object has
+ * One of the stubbed-out projectile DLLs. The object has
  * no behaviour left: release/initialise are empty and doUnsupported just
  * logs the "no longer supported" string and returns the failure sentinel.
  * The slot is kept so the DLL id stays valid.
  */
-#include "main/dll/dll_66.h"
 #include "dolphin/os/OSReport.h"
+#include "types.h"
+#include "main/dll/dll_00AC_projmagicstream.h"
+#include "main/dll/dll_00AD_projmagicemmit1.h"
 
 /* descriptor/ptr table auto 0x80319410-0x80319430.
  * Union u64 member forces the retail 8-byte alignment (table follows an odd-length

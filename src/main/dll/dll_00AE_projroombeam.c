@@ -1,13 +1,15 @@
 /*
  * projroombeam (DLL 0xAE) - retired projectile object.
  *
- * One of the dll_66 family of stubbed-out projectile DLLs. The object has
+ * One of the stubbed-out projectile DLLs. The object has
  * no behaviour left: release/initialise are empty and doUnsupported just
  * logs the "no longer supported" string and returns the failure sentinel.
  * The slot is kept so the DLL id stays valid.
  */
-#include "main/dll/dll_66.h"
 #include "dolphin/os/OSReport.h"
+#include "types.h"
+#include "main/dll/dll_00AE_projroombeam.h"
+#include "main/dll/dll_00AF_projlightning1.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

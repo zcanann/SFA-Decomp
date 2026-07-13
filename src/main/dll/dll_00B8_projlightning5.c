@@ -5,11 +5,9 @@
  * point now only logs a "no longer supported" message and returns the
  * unsupported sentinel (-1). release/initialise are empty stubs kept so the
  * DLL still exports the standard projectile lifecycle entry points. One of
- * a family of identical retired projectile DLLs sharing dll_66.h
- * (projdummy, projmagicstream, projroombeam, projlightning1..7).
+ * a family of identical retired projectile DLLs.
  */
 #include "dolphin/os.h"
-#include "main/dll/dll_66.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B8_projlightning5.h"
 #include "main/dll/dll_00B9_projlightning7.h"

@@ -19,6 +19,7 @@
 #include "main/dll/dll_00A8_dlla8func0.h"
 #include "main/dll/dll_00A9_dlla9func0.h"
 #include "main/dll/dll_00AA_dllaafunc0.h"
+#include "main/dll/dll_00AB_projdummy.h"
 
 typedef struct
 {
@@ -240,9 +241,6 @@ void dll_A6_func00_nop(void)
 u8 gDllA6EffectHwWords[] = {0x00, 0x00, 0x00, 0x46, 0x00, 0x46, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-extern void projdummy_doUnsupported();
-extern void projdummy_release();
-extern void projdummy_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* lbl_80318E20[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_A6_func00_nop, dll_A6_func01_nop, (void*)0x00000000, dll_A6_func03};

@@ -6,16 +6,12 @@
  * initialise are empty. The behaviour was removed before retail, so the
  * DLL exists purely to keep the object id slot wired up.
  */
-#include "main/dll/dll_66.h"
 #include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00BA_projlightning6.h"
+#include "main/dll/dll_00B4_projenergise1.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
-
-extern void projenergise1_doUnsupported(void);
-extern void projenergise1_release(void);
-extern void projenergise1_initialise(void);
 
 int projlightning6_doUnsupported(void)
 {

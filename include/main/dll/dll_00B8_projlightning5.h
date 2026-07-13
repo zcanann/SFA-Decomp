@@ -1,6 +1,8 @@
 #ifndef MAIN_DLL_DLL_00B8_PROJLIGHTNING5_H_
 #define MAIN_DLL_DLL_00B8_PROJLIGHTNING5_H_
 
+extern char sProjlightning5DoNoLongerSupported[];
+
 int projlightning5_doUnsupported(void);
 void projlightning5_release(void);
 void projlightning5_initialise(void);
