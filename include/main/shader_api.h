@@ -26,5 +26,13 @@ void mapTextureOverrideSetValue(int type, u32 key, int value);
 int objUpdateOpacity(struct GameObject* obj);
 void playerUpdateFn_8005649c(void);
 void doPendingMapLoads(void);
+void mapReloadWithFadeout(void);
+void initMaps(void);
+void unloadMap(void);
+void beginLoadingMap(void);
+void goToNextMapLayer(void);
+void goToPrevMapLayer(void);
+void playerVecFn_8005a9b0(void);
+s32 getCurMapLayer(void);
 
 #endif /* MAIN_SHADER_API_H_ */

@@ -38,7 +38,7 @@
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/pad.h"
-#include "main/shader.h"
+#include "main/shader_api.h"
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 

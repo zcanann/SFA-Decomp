@@ -29,7 +29,7 @@
 #include "main/object_render_legacy.h"
 #include "main/pad_api.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/shader.h"
+#include "main/shader_api.h"
 #include "main/object_api.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/path_control_interface.h"

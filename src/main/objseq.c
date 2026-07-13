@@ -23,6 +23,7 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
+#include "main/shader_api.h"
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -97,7 +98,6 @@ extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
-extern int getCurMapLayer(void);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);

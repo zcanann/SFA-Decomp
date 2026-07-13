@@ -37,7 +37,6 @@
 #include "main/newshadows.h"
 #include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"
-#include "main/shader.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin.h"
 #include "main/rcp_dolphin.h"

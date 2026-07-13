@@ -18,6 +18,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+#include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
@@ -70,7 +71,6 @@ extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
 
 extern int playerIsDisguised(int obj);
-extern int getCurMapLayer(void);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,

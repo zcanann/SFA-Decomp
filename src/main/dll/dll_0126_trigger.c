@@ -42,7 +42,7 @@
 #include "main/sky_state.h"
 #include "main/lightmap.h"
 #include "main/rcp_dolphin.h"
-#include "main/shader.h"
+#include "main/shader_api.h"
 #include "dolphin/os/OSReport.h"
 #include "main/model.h"
 #include "main/sky_api.h"

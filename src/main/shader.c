@@ -4,6 +4,7 @@
 #include "main/gameloop_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/debug.h"
+#include "main/frustum.h"
 #include "main/shader_api.h"
 #include "main/textrender_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -24,7 +25,6 @@
 #include "main/sky_api.h"
 
 #define skyFn_80088c94ByteMode(flags, mode) ((void (*)(int, u8))skyFn_80088c94)((flags), (mode))
-#include "main/shader.h"
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "main/object_transform.h"
@@ -48,6 +48,7 @@ extern char sShaderDebugStrings[];
 #define MAP_BLOCK_LAYER_COUNT 5
 #define FRUSTUM_PLANE_COUNT   5
 extern int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
+void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
 typedef struct WarpVec
 {
     f32 x;

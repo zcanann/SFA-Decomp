@@ -22,7 +22,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
 #include "main/rcp_dolphin.h"
-#include "main/shader.h"
+#include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0000_gameui_api.h"

@@ -396,7 +396,6 @@ void renderObjects(s8* opacity)
 
 extern s8 curMapType;
 extern int lbl_803DCEA8;
-extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
 
 void sceneRender(void)
