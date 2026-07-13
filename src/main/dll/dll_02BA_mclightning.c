@@ -4,7 +4,7 @@
 #include "main/newclouds.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"

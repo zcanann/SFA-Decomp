@@ -9,7 +9,7 @@
  * each descriptor is defined by its own DLL.
  */
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EB_siderepel.h"
 

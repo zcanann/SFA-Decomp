@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/map_block.h"
 #include "dolphin/os/OSCache.h"

@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/model_light.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objtexture.h"
 #include "main/maketex_timer_api.h"
 #include "main/dll/dll_02B5_timer.h"

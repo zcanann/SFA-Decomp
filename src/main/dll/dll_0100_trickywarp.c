@@ -22,7 +22,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 
 typedef struct TrickyWarpCurveEntry
 {

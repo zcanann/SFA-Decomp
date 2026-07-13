@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objanim_update.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_0115_dll115.h"

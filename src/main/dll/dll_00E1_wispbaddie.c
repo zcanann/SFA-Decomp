@@ -13,7 +13,7 @@
 #include "main/object_api.h"
 #include "main/dll/dll_00E1_wispbaddie.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/mm.h"
 #include "string.h"
 #include "main/dll/objfsa.h"

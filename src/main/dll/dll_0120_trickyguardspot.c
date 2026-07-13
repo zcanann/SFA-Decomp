@@ -8,7 +8,7 @@
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 
 int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
 

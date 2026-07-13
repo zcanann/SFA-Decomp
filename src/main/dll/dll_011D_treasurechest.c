@@ -10,7 +10,7 @@
 #include "main/resource.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 
 typedef struct ChestHitParams

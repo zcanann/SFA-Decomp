@@ -8,7 +8,7 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"

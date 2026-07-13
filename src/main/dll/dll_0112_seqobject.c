@@ -16,7 +16,7 @@
 #include "main/object_render.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/rcp_dolphin.h"
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);

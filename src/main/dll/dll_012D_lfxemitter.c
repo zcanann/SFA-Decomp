@@ -4,7 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/mm.h"
 #include "main/pi_dolphin.h"
 #include "main/dll/objfsa.h"

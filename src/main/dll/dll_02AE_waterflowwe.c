@@ -23,7 +23,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/vecmath.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14

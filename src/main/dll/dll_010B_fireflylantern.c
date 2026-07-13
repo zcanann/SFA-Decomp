@@ -8,7 +8,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 
 /* object group this object belongs to */

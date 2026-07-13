@@ -22,7 +22,7 @@
 #include "main/gamebits.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00FB_pressureswitchfb.h"

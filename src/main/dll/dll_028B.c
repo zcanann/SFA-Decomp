@@ -15,7 +15,7 @@
  */
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
 #include "main/dll/moveLib.h"

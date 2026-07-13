@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_00EE_effectbox.h"
 

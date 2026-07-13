@@ -21,7 +21,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
