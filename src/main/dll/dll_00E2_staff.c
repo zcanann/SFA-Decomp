@@ -37,6 +37,7 @@
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
+#include "main/dll/dll_0125_curve_api.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"

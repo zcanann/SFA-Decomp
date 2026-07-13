@@ -9,6 +9,7 @@
  * (getExtraSize/getObjectTypeId/func11/setScale/free) are stubs.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_0125_curve_api.h"
 #include "main/dll/genprops.h"
 #include "main/objlib.h"
 

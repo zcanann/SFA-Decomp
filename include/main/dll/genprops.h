@@ -90,13 +90,6 @@ u32 FUN_80171310(int param_1);
 void FUN_80171354(int param_1, int param_2);
 void FUN_801713ac(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9);
-void curve_setScale(void);
-void curve_free(void);
-int curve_func0B(void);
-int curve_getExtraSize(void);
-int curve_getObjectTypeId(void);
-void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
-void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
 extern ObjectDescriptor gMikaBombObjDescriptor;
 extern ObjectDescriptor gMikaBombShadowObjDescriptor;
