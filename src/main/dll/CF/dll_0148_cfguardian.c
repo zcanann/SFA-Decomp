@@ -192,18 +192,6 @@ extern f32 oneOverTimeDelta;
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
  * [1] the alt (event 7) sfx, [2] the "selection" sfx played once if any
  * 1..4 marker event fired. Returns the last 1..4 marker seen. */
-/* Object-descriptor callbacks and data tables, defined below. */
-void cfguardian_initialise(void);
-void cfguardian_release(void);
-void cfguardian_init(int* obj, u8* params);
-void cfguardian_update(GameObject* obj);
-void cfguardian_hitDetect(int* obj);
-void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void cfguardian_free(int* obj, int keep);
-int cfguardian_getObjectTypeId(void);
-int cfguardian_getExtraSize(void);
-int cfguardian_setScale(int* obj);
-
 extern u8 lbl_80322798[];
 extern u8 lbl_803227A4[];
 extern u8 lbl_803227B0[];

@@ -15,5 +15,15 @@
 
 int* findRomCurvePointNearObject(int* obj, int p2, int* outVec, int p4);
 int cfguardianSteerToward(int* obj, int* target, f32 speed, int p4);
+int cfguardian_setScale(int* obj);
+int cfguardian_getExtraSize(void);
+int cfguardian_getObjectTypeId(void);
+void cfguardian_free(int* obj, int keep);
+void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void cfguardian_hitDetect(int* obj);
+void cfguardian_update(GameObject* obj);
+void cfguardian_init(int* obj, u8* params);
+void cfguardian_release(void);
+void cfguardian_initialise(void);
 
-#endif
+#endif /* MAIN_DLL_CF_DLL_0148_CFGUARDIAN_H_ */
