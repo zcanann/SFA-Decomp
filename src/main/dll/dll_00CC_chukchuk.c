@@ -18,7 +18,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/scarab.h"
+#include "main/dll/dll_00CC_chukchuk.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"

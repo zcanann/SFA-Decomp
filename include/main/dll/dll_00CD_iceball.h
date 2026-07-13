@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_00CD_ICEBALL_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 void fn_8015FBEC(GameObject* obj);
 void fn_8015FCCC(GameObject* obj);
@@ -14,5 +15,6 @@ void IceBall_update(u16* obj, int unused);
 void IceBall_init(GameObject* obj);
 void IceBall_release(void);
 void IceBall_initialise(void);
+extern ObjectDescriptor gIceBallObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00CD_ICEBALL_H_ */

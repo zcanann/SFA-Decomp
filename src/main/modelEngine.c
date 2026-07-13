@@ -7,6 +7,8 @@
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"
 #include "main/dll/dll_00D4_skeetlawall.h"
+#include "main/dll/dll_00CC_chukchuk.h"
+#include "main/dll/dll_00CD_iceball.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
@@ -89,7 +91,7 @@ extern ResourceDescriptor gCCqueenObjDescriptor, gCCriverflowObjDescriptor, gCFC
 extern ResourceDescriptor gCFPerchObjDescriptor, gCFPowerBaseObjDescriptor, gCFPrisonCageObjDescriptor,
     gCFPrisonGuardObjDescriptor, gCFPrisonUncleObjDescriptor, gCF_DoorLightObjDescriptor;
 extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor, gCannonClawObjDescriptor,
-    gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukChukObjDescriptor, gChukaObjDescriptor,
+    gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukaObjDescriptor,
     gCloudPrisonControlObjDescriptor;
 extern ResourceDescriptor gColdWaterControlObjDescriptor, gControlLightObjDescriptor,
     gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor, gCurveFishObjDescriptor, gCurveObjDescriptor;
@@ -137,7 +139,7 @@ extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescr
 extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHighTopObjDescriptor,
     gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor, gIMIcePillarObjDescriptor;
 extern ResourceDescriptor gIMSpaceRingGenObjDescriptor, gIMSpaceRingObjDescriptor, gIMSpaceThrusterObjDescriptor,
-    gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor, gInfoPointObjDescriptor;
+    gIceBaddieObjDescriptor, gIceblastObjDescriptor, gInfoPointObjDescriptor;
 extern ResourceDescriptor gInfoTextObjDescriptor, gInvHitObjDescriptor, gInvisibleHitSwitchObjDescriptor,
     gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
@@ -1103,8 +1105,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gBaddieObjDescriptor,
     &gIceBaddieObjDescriptor,
     &dll_CB,
-    &gChukChukObjDescriptor,
-    &gIceBallObjDescriptor,
+    (ResourceDescriptor*)&gChukChukObjDescriptor,
+    (ResourceDescriptor*)&gIceBallObjDescriptor,
     &dll_CE,
     &gCannonClawObjDescriptor,
     &gGrimbleObjDescriptor,
