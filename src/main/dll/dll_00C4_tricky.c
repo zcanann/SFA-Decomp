@@ -1520,7 +1520,7 @@ void Tricky_update(int obj)
     {
         u8* commandCursor = (u8*)state + i * 8;
 
-        for (; i >= 0; i--, commandCursor -= 8)
+        for (; i >= 0; commandCursor -= 8, i--)
         {
             *(u8*)(commandCursor + 0x74e) -= 1;
             if (*(s8*)(commandCursor + 0x74e) == 0)
