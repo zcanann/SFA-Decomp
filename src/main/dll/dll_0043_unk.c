@@ -33,6 +33,13 @@
 
 #define PAD_TRIGGER_Z 0x10
 
+typedef struct CameraModeStaffAnimSettings
+{
+    s16 approachThresholdDegrees;
+    u8 turnGate;
+    u8 snapToTarget;
+} CameraModeStaffAnimSettings;
+
 /* Camera mode ids passed to setMode() (== the target camera-mode DLL number). */
 #define CAMMODE_DEFAULT    0x42 /* dll_0042 - default/release camera */
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
@@ -257,8 +264,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
     f32 localPos[3];
     int pointCount;
     int i;
+    CameraModeStaffAnimSettings* cfg = (CameraModeStaffAnimSettings*)settings;
 
-    settings[3] = 1;
+    cfg->snapToTarget = 1;
     target = (GameObject*)camera->anim.targetObj;
 
     if (gCamcontrolPathState == NULL)
@@ -306,7 +314,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         approachAngle = -approachAngle;
     }
 
-    threshold = (s16)(gCamStaffAnimDegToBams * (f32)(*(s16*)settings));
+    threshold = (s16)(gCamStaffAnimDegToBams * (f32)cfg->approachThresholdDegrees);
     if (approachAngle < threshold)
     {
         gCamcontrolPathState->active = 1;
@@ -326,7 +334,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
             gCamcontrolPathState->actionParamZ + (target->anim.worldPosY + gCamcontrolPathState->actionParamY);
         localPos[2] = (cosFacing * pathRadius) + target->anim.worldPosZ;
 
-        if (settings[3] != 0)
+        if (cfg->snapToTarget != 0)
         {
             camcontrol_getTargetPosition(camera, &target->anim, localPos, NULL);
         }
@@ -415,7 +423,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         {
             pathAngle = -pathAngle;
         }
-        if ((pathAngle > 0x2000) && (settings[2] != 0))
+        if ((pathAngle > 0x2000) && (cfg->turnGate != 0))
         {
             Sfx_PlayFromObject(0, SFXTRIG_mv_totem_stop);
         }

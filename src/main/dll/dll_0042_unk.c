@@ -36,6 +36,30 @@
 
 #define gCamcontrolModeSettings cameraMtxVar57
 
+typedef struct CameraModeNormalInitData
+{
+    u8 pad0;
+    s8 transitionFrames;
+    s8 fov;
+    u8 minDistance;
+    u8 maxDistance;
+    u8 pad5;
+    u8 lowerHeightOffset;
+    u8 letterboxOffset;
+    u8 upperHeightOffset;
+    u8 slideRight;
+    u8 slideLeft;
+    u8 distanceAdjustRate;
+    u8 heightAdjustRate;
+    u8 snapToTarget;
+    u8 pad0e[0x19 - 0x0e];
+    u8 fovWide;
+    u16 maxDistanceWide;
+    u16 minDistanceWide;
+    u8 pad1e;
+    u8 heightOffsetWide;
+} CameraModeNormalInitData;
+
 extern f32 lbl_803DD52C;
 extern f32 lbl_803E1688;
 extern f32 lbl_803E168C;
@@ -848,6 +872,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
     f32 vOutD;
     f32 fVal;
     u32 uVal;
+    CameraModeNormalInitData* p = (CameraModeNormalInitData*)data;
 
     gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
     gCamcontrolModeSettings->collisionState = 0;
@@ -862,17 +887,17 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         memset(gCamcontrolModeSettings, 0, sizeof(CamcontrolModeSettings));
         if (data != NULL)
         {
-            fVal = (f32)(u32) * (u16*)(data + 0x1c);
+            fVal = (f32)(u32)p->minDistanceWide;
             gCamcontrolModeSettings->minDistance = fVal;
             gCamcontrolModeSettings->targetMinDistance = fVal;
-            fVal = (f32)(u32) * (u16*)(data + 0x1a);
+            fVal = (f32)(u32)p->maxDistanceWide;
             gCamcontrolModeSettings->maxDistance = fVal;
             gCamcontrolModeSettings->targetMaxDistance = fVal;
-            fVal = (f32)(u32)data[0x1f];
+            fVal = (f32)(u32)p->heightOffsetWide;
             gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
             gCamcontrolModeSettings->lowerHeightOffset = fVal;
             gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)data[0x1f];
+            fVal = (f32)(u32)p->heightOffsetWide;
             gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
             gCamcontrolModeSettings->upperHeightOffset = fVal;
             gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
@@ -914,7 +939,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         cam->anim.rotZ = 0;
         if (data != NULL)
         {
-            cam->fov = (f32)(u32)data[0x19];
+            cam->fov = (f32)(u32)p->fovWide;
         }
         break;
     case 4:
@@ -940,18 +965,18 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         if (data != NULL)
         {
             gCamcontrolModeSettings->targetTargetHeight = lbl_803E16F0;
-            fVal = (f32)(u32)data[6];
+            fVal = (f32)(u32)p->lowerHeightOffset;
             gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
             gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
-            fVal = (f32)(u32)data[8];
+            fVal = (f32)(u32)p->upperHeightOffset;
             gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
             gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
-            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)data[3];
-            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)data[4];
-            gCamcontrolModeSettings->fov = (f32) * (s8*)(data + 2);
-            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)data[9];
-            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)data[0xa];
-            uVal = data[0xb];
+            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)p->minDistance;
+            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)p->maxDistance;
+            gCamcontrolModeSettings->fov = (f32)p->fov;
+            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)p->slideRight;
+            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)p->slideLeft;
+            uVal = p->distanceAdjustRate;
             if (uVal != 0)
             {
                 gCamcontrolModeSettings->targetDistanceAdjustRate = uVal / gCamcontrolByteRateNormalizer;
@@ -960,7 +985,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
             {
                 gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
             }
-            uVal = data[0xc];
+            uVal = p->heightAdjustRate;
             if (uVal != 0)
             {
                 gCamcontrolModeSettings->targetHeightAdjustRate = uVal / gCamcontrolByteRateNormalizer;
@@ -969,9 +994,9 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
             {
                 gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
             }
-            gCamcontrolModeSettings->transitionTimer = (s16) * (s8*)(data + 1);
-            gCamcontrolModeSettings->transitionDuration = (s16) * (s8*)(data + 1);
-            *(u8*)&cam->letterboxTargetOffset = data[7];
+            gCamcontrolModeSettings->transitionTimer = (s16)p->transitionFrames;
+            gCamcontrolModeSettings->transitionDuration = (s16)p->transitionFrames;
+            *(u8*)&cam->letterboxTargetOffset = p->letterboxOffset;
         }
         else
         {
@@ -1002,7 +1027,7 @@ void CameraModeNormal_init(CameraObject* cam, int mode, u8* data)
         gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
         gCamcontrolModeSettings->savedDistanceAdjustRate = gCamcontrolModeSettings->distanceAdjustRate;
         gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
-        if ((data != NULL) && (data[0xd] != 0))
+        if ((data != NULL) && (p->snapToTarget != 0))
         {
             camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             Obj_TransformWorldPointToLocal(cam->anim.worldPosX, cam->anim.worldPosY, cam->anim.worldPosZ,

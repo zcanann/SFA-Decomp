@@ -27,6 +27,16 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_004B_cameramodeclimb.h"
 
+typedef struct CameraModeClimbInitArgs
+{
+    s8 pad0;
+    s8 duration;
+    s8 distance;
+    s8 relativePosition;
+    s8 maxHeight;
+    s8 minHeight;
+} CameraModeClimbInitArgs;
+
 #pragma dont_inline on
 
 extern f32 lbl_803E19A0;
@@ -180,17 +190,20 @@ void CameraModeClimb_init(int camera, int mode, s8* args)
     switch (mode)
     {
     case 2:
+    {
+        CameraModeClimbInitArgs* a = (CameraModeClimbInitArgs*)args;
         gCamClimbState->startRelativePosition = gCamClimbState->relativePosition;
         gCamClimbState->startMinHeight = gCamClimbState->minHeight;
         gCamClimbState->startMaxHeight = gCamClimbState->maxHeight;
         gCamClimbState->startDistance = gCamClimbState->targetDistance;
-        gCamClimbState->targetRelativePosition = (u16)(int)(gCamClimbDegreesToBinaryAngle * (f32)(s8)args[3]);
-        gCamClimbState->endMinHeight = (f32)(s8)args[5];
-        gCamClimbState->endMaxHeight = (f32)(s8)args[4];
-        gCamClimbState->endDistance = (f32)(s8)args[2];
-        gCamClimbState->transitionTimer = (s16)(s8)args[1];
-        gCamClimbState->transitionDuration = (s16)(s8)args[1];
+        gCamClimbState->targetRelativePosition = (u16)(int)(gCamClimbDegreesToBinaryAngle * (f32)a->relativePosition);
+        gCamClimbState->endMinHeight = (f32)a->minHeight;
+        gCamClimbState->endMaxHeight = (f32)a->maxHeight;
+        gCamClimbState->endDistance = (f32)a->distance;
+        gCamClimbState->transitionTimer = (s16)a->duration;
+        gCamClimbState->transitionDuration = (s16)a->duration;
         break;
+    }
     case 1:
     default:
         memset(gCamClimbState, 0, sizeof(CameraModeClimbState));
