@@ -343,8 +343,8 @@ static void ReadROM(void* buf, int length, int offset) {
     }
 }
 
-__declspec(section ".sdata2") const u32 lbl_803E7610 = 0x2ABE003D;
-__declspec(section ".sdata2") const u32 lbl_803E7614 = 0x003D003D;
+extern const u32 lbl_803E7610;
+extern const u32 lbl_803E7614;
 
 static inline u32 GetFontSize(u8* buf) {
     if (buf[0] == 'Y' && buf[1] == 'a' && buf[2] == 'y') {

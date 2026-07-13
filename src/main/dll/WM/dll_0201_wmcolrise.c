@@ -19,13 +19,13 @@
 
 #define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
-__declspec(section ".sdata2") f32 lbl_803E5DC8 = 1.0f; /* render scale */
+extern f32 lbl_803E5DC8; /* 1.0: render scale */
 extern f32 timeDelta;
-__declspec(section ".sdata2") f32 lbl_803E5DCC = 3.0f;   /* rider height to trigger the rise */
-__declspec(section ".sdata2") f32 lbl_803E5DD0 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E5DD4 = 100.0f; /* raised height above placement */
-__declspec(section ".sdata2") f32 lbl_803E5DD8 = 0.5f;   /* settle speed when overshot */
-__declspec(section ".sdata2") f32 lbl_803E5DDC = 0.25f;  /* rise speed */
+extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
+extern f32 lbl_803E5DD0;       /* 20.0 */
+extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */
+extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
+extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
 extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
 
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
