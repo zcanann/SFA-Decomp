@@ -10,6 +10,7 @@
  * game bit is set (or always, when the bit is -1).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_020F_wmspiritset.h"
@@ -39,7 +40,7 @@ void wmspiritset_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 
     if ((visibilityGameBit == -1 || mainGetBit(visibilityGameBit) != 0) && vis != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
     }
 }
 

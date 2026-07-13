@@ -12,6 +12,7 @@
  * barrels), and hidden. Event 2 retires the green crystal's bursts.
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
@@ -132,7 +133,7 @@ void WM_newcrystal_free(void)
 
 void WM_newcrystal_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
+    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f); /* literal, not the named 1.0 extern (#71 pool shape) */
 }
 
 void WM_newcrystal_hitDetect(void)

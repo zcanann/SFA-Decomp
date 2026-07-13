@@ -17,6 +17,7 @@
  * game bits 0x2AA-0x2AF are set.
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_render.h"
 #include "main/object.h"
 #include "main/maketex.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -234,7 +235,7 @@ void wmwallcrawler_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     }
     if (vis != 0 && ((WmwallcrawlerState*)inner)->despawnTimer == 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5FB4); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5FB4); /* 1.0f */
     }
 }
 

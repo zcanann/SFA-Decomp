@@ -249,7 +249,6 @@ extern f32 lbl_803E5EF0;
 extern void skyFn_80088c94(int skyId, int enabled);
 extern int getSkyColorFn_80088e08(int skyId);
 extern void objSetAnimStateFlags(int obj, int arg, int enable);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E5F10;
 extern void Music_Trigger(int id, int a);
 extern int lbl_803DC148;
@@ -271,11 +270,5 @@ extern f32 lbl_803E5F9C;
 extern f32 lbl_803E6090;
 extern f32 lbl_803E60A4;
 extern f32 lbl_803E609C;
-
-/* Intra-family forward declarations (from the original per-unit header). */
-void FireFlyFn_801f4f88(GameObject* obj);
-void firefly_free(GameObject* obj);
-void firefly_update(int obj);
-void firefly_init(GameObject* obj, int def);
 
 #endif /* MAIN_DLL_WM_WM_SHARED_H_ */

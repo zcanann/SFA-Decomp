@@ -32,6 +32,7 @@
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
@@ -338,7 +339,7 @@ void wmsun_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
     if (vis != 0 && state->renderEnabled != 0)
     {
         doNothing_8005D148(p2, 0x10000);
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
         doNothing_8005D14C(p2, 0x10000);
     }
 }

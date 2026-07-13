@@ -12,6 +12,7 @@
  * DLLs (0x143) and the palace sun (0x21D).
  */
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -220,7 +221,7 @@ void wmseqpoint_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5F10); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F10); /* 1.0f */
     }
 }
 
