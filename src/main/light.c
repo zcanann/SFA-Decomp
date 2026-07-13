@@ -2,6 +2,7 @@
 #include "dolphin/mtx/vec.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/expgfx_interface.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/objhits.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"

@@ -10,6 +10,7 @@
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/cloudaction_interface.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/frustum.h"
 #include "main/lightmap_api.h"

@@ -5,6 +5,7 @@
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/gamebits.h"
 #include "main/main_internal.h"
 #include "main/objprint_api.h"

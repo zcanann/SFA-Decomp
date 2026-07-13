@@ -18,6 +18,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/resource.h"

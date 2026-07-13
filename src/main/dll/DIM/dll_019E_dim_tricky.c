@@ -3,6 +3,7 @@
 #include "main/dll/dll_019E_dim_tricky.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"

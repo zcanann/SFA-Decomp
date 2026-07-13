@@ -8,6 +8,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"

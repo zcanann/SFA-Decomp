@@ -13,6 +13,7 @@ extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/obj_message.h"
 #include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"

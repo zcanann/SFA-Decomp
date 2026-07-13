@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/debug.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
