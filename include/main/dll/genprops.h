@@ -16,9 +16,6 @@ void FUN_8016b7d4(u16* param_1);
 void FUN_8016b970(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8016b9a8(int param_1);
 void FUN_8016ba18(u16* param_1);
-void staticCamera_free(int param_1);
-void staticCamera_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void staticCamera_init(short* param_1, int param_2, int param_3);
 void FUN_8016bbb8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8016bbec(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, short* param_9);
