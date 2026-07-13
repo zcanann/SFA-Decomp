@@ -674,8 +674,14 @@ typedef struct
     f32 v[5];
 } _ScalePack;
 
-extern _PlaneDirPack sPlayerFrustumPlaneDirs;
-extern _ScalePack sPlayerFrustumPlaneScales;
+__declspec(section ".rodata") _PlaneDirPack sPlayerFrustumPlaneDirs = {
+    {{0.0f, 0.0f, 1.0f},
+     {1.0f, 0.0f, 0.0f},
+     {-1.0f, 0.0f, 0.0f},
+     {0.0f, 1.0f, 0.0f},
+     {0.0f, -1.0f, 0.0f}}};
+__declspec(section ".rodata") _ScalePack sPlayerFrustumPlaneScales = {
+    {0.0f, -25.0f, -25.0f, -25.0f, -25.0f}};
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
 extern void PSMTXMultVec(f32* mtx, Vec* in, f32* out);
