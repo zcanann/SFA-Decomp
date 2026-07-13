@@ -43,21 +43,26 @@
 
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
-extern f32 lbl_803E3E98;
-extern f32 lbl_803E3E9C;
-extern f32 gWarpPadProximityBurstDistSq;
-extern f32 lbl_803E3EA4;
-extern f32 lbl_803E3EA8;
-extern f32 lbl_803E3EAC;
-extern f32 lbl_803E3EB0;
-extern f32 gWarpPadPulseStage1Time;
-extern f32 gWarpPadPulseStage2Time;
-extern f32 lbl_803E3EBC;
-extern f32 lbl_803E3EC0;
-extern f32 lbl_803E3EC4;
-extern f32 gWarpPadPulseStage3Time;
-extern f32 lbl_803E3ECC;
-extern f32 gWarpPadPulseEndTime;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3E98 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E3E9C = 55.0f;
+__declspec(section ".sdata2") f32 gWarpPadProximityBurstDistSq = 409600.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EA4 = 0.75f;
+__declspec(section ".sdata2") f32 lbl_803E3EA8 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EAC = 110.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EB0 = 0.5f;
+__declspec(section ".sdata2") f32 gWarpPadPulseStage1Time = 120.0f;
+__declspec(section ".sdata2") f32 gWarpPadPulseStage2Time = 360.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EBC = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E3EC0 = 0.0009f;
+__declspec(section ".sdata2") f32 lbl_803E3EC4 = 240.0f;
+__declspec(section ".sdata2") f32 gWarpPadPulseStage3Time = 420.0f;
+__declspec(section ".sdata2") f32 lbl_803E3ECC = 0.00036f;
+__declspec(section ".sdata2") f32 gWarpPadPulseEndTime = 480.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3ED4 = 0.0f;
+#pragma explicit_zero_data off
 extern f32 gWarpPadTriggerDist;
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 

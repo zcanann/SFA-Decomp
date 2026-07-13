@@ -14,10 +14,18 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 
-extern f32 lbl_803E31D8;
-extern f32 lbl_803E31DC;
-extern f32 lbl_803E31E0;
-extern f32 lbl_803E31E4;
+__declspec(section ".sdata2") f32 lbl_803E31C0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E31C4 = 4.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E31C8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 gMikaBombGravityAccel = 0.01f;
+__declspec(section ".sdata2") f32 gMikaBombMinFallVelocity = -2.5f;
+__declspec(section ".sdata2") f32 lbl_803E31D4 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E31D8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E31DC = 14.0f;
+__declspec(section ".sdata2") f32 lbl_803E31E0 = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E31E4 = 16384.0f;
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 

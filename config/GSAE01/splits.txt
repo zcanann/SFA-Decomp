@@ -255,31 +255,38 @@ main/dll/dll_0022_effect9.c:
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
 	.data       start:0x80310C88 end:0x80310D1C
+	.bss        start:0x8039C3B0 end:0x8039C3C8
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
 	.data       start:0x80310D48 end:0x80310D7C
+	.bss        start:0x8039C3C8 end:0x8039C3E0
 
 main/dll/dll_0025_effect12.c:
 	.text       start:0x800C56E0 end:0x800C65B4
 	.data       start:0x80310DA8 end:0x80310DE4
+	.bss        start:0x8039C3E0 end:0x8039C3F8
 	.sdata2     start:0x803DFFF8 end:0x803E0000
 
 main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
 	.data       start:0x80310E10 end:0x80310E88
+	.bss        start:0x8039C3F8 end:0x8039C410
 	.sdata2     start:0x803E0098 end:0x803E0178
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
+	.bss        start:0x8039C410 end:0x8039C428
 
 main/dll/dll_0028_effect15.c:
 	.text       start:0x800C9140 end:0x800CA3CC
 	.data       start:0x80310F60 end:0x80310FB4
+	.bss        start:0x8039C428 end:0x8039C440
 	.sdata2     start:0x803E0178 end:0x803E0180
 
 main/dll/dll_0026_effect13.c:
 	.text       start:0x800CA3CC end:0x800CA930
+	.bss        start:0x8039C440 end:0x8039C458
 	.sdata2     start:0x803E0180 end:0x803E01B8
 
 main/dll/dll_002A_effect17.c:
@@ -1222,6 +1229,7 @@ main/dll/dll_00DB_mikabomb.c:
 main/dll/dll_00DC_mikabombshadow.c:
 	.text       start:0x8016B710 end:0x8016B898
 	.data       start:0x80320620 end:0x80320658
+	.sdata2     start:0x803E31C0 end:0x803E31E8
 
 main/dll/dll_025A_staticcamera.c:
 	.text       start:0x8016B898 end:0x8016B99C
@@ -1527,6 +1535,8 @@ main/dll/CF/dll_012A_cfcrate.c:
 main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
 	.data       start:0x80321F70 end:0x80321F80
+	.sdata2     start:0x803E3E30 end:0x803E3E58
+	.sdata2     start:0x803E3E58 end:0x803E3E60
 
 main/dll/dll_0130_areafxemit.c:
 	.text       start:0x8018F148 end:0x8018FF28
@@ -1538,6 +1548,7 @@ main/dll/dll_012D_lfxemitter.c:
 
 main/dll/warppad.c:
 	.text       start:0x8019042C end:0x80190BD4
+	.sdata2     start:0x803E3E98 end:0x803E3ED8
 	.sdata2     start:0x803E3ED8 end:0x803E3EE0
 
 main/dll/dll_012C_transporter.c:
@@ -2600,6 +2611,7 @@ main/dll/DF/dll_0237_dfpsppl.c:
 main/dll/dll_0238_linkalevco.c:
 	.text       start:0x8020930C end:0x80209810
 	.data       start:0x80329C80 end:0x80329CB8
+	.sdata2     start:0x803E64D8 end:0x803E64E0
 
 main/textblock.c:
 	.text       start:0x80209810 end:0x802098B4
@@ -2612,7 +2624,7 @@ main/platform1.c:
 main/dfplightni.c:
 	.text       start:0x80209958 end:0x80209FE0
 	.data       start:0x80329DD0 end:0x80329E08
-	.sdata2     start:0x803E64F0 end:0x803E64F8
+	.sdata2     start:0x803E64E0 end:0x803E64F8
 
 main/dfppowersl.c:
 	.text       start:0x80209FE0 end:0x8020A1C8
@@ -3014,6 +3026,7 @@ dolphin/os/OSFont.c:
 	.data       start:0x8032CCC8 end:0x8032D7D2
 	.sdata      start:0x803DC548 end:0x803DC54A
 	.sbss       start:0x803DDE28 end:0x803DDE38
+	.sdata2     start:0x803E7610 end:0x803E7618
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x8024377C end:0x80243FE8
@@ -3074,6 +3087,7 @@ dolphin/db/db.c:
 dolphin/mtx/mtx.c:
 	.text       start:0x80246E54 end:0x80247494
 	.sdata      start:0x803DC550 end:0x803DC558
+	.sdata2     start:0x803E7618 end:0x803E7630
 
 dolphin/dvd/DVDLowFirstRead.c:
 	.sdata      start:0x803DC558 end:0x803DC560
@@ -3083,9 +3097,11 @@ dolphin/mtx/mtxvec.c:
 
 dolphin/mtx/mtx44.c:
 	.text       start:0x802475C8 end:0x80247730
+	.sdata2     start:0x803E7630 end:0x803E7648
 
 dolphin/mtx/vec.c:
 	.text       start:0x80247730 end:0x802479D0
+	.sdata2     start:0x803E7648 end:0x803E7658
 
 dolphin/mtx/psmtx.c:
 	.text       start:0x802479D0 end:0x80247A1C

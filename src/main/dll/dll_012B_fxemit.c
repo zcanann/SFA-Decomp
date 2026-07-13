@@ -39,13 +39,25 @@ typedef struct FxEmitWorldSpawnArgs
     f32 z;
 } FxEmitWorldSpawnArgs;
 
-/* lbl_803E3E48/4C/50 have no header home; the rest are per-TU externs
-   (the per-file spelling is load-bearing for codegen). */
-
 extern char sCFTreasSharpyDebugFormat[];
-extern f32 lbl_803E3E48;
-extern f32 lbl_803E3E4C;
-extern f32 lbl_803E3E50;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3E30 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E3E34 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E3E38 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E3C = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E40 = 600.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3E44 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E3E48 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3E4C = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E3E50 = 0.1f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3E54 = 0.0f;
+#pragma explicit_zero_data off
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
     (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))
