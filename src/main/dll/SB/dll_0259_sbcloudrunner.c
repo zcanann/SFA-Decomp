@@ -27,6 +27,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
+#include "main/dll/bwalphaanim.h"
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
@@ -160,7 +161,6 @@ extern const f32 lbl_803E5CC0;
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void SB_CloudRunner_onSeqFree(void);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);

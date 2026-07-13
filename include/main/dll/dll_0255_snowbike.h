@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_BW_BWALPHAANIM_H_
-#define MAIN_DLL_BW_BWALPHAANIM_H_
+#ifndef MAIN_DLL_DLL_0255_SNOWBIKE_H_
+#define MAIN_DLL_DLL_0255_SNOWBIKE_H_
 
 #include "ghidra_import.h"
 #include "global.h"
@@ -159,4 +159,4 @@ STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
 void SnowBike_update(GameObject* obj);
 
-#endif /* MAIN_DLL_BW_BWALPHAANIM_H_ */
+#endif /* MAIN_DLL_DLL_0255_SNOWBIKE_H_ */

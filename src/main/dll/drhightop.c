@@ -9,7 +9,7 @@
  * collision response and impact particle bursts (fn_801EB634), steering /
  * pitch-roll integration with rumble + camera shake (fn_801EB940), and the
  * exhaust/contrail particle drivers blended toward per-state targets
- * (fn_801EBD60). State lives in SnowBikeState (BWalphaanim.h); flags428 is
+ * (fn_801EBD60). State lives in SnowBikeState (dll_0255_snowbike.h); flags428 is
  * a bitfield overlay byte read via the Hightop* flag structs below.
  * Entry points are dispatched from dll_0255_snowbike.c.
  */
@@ -23,7 +23,7 @@
 #include "main/gamebits.h"
 #include "main/maketex_api.h"
 #include "main/objhits.h"
-#include "main/dll/BW/BWalphaanim.h"
+#include "main/dll/dll_0255_snowbike.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/objfx_api.h"

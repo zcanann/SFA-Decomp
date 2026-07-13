@@ -7,7 +7,7 @@
  * SeqFn seeds on entry, see SB/dll_0259_sbcloudrunner.c). rotX is
  * rebased by 0x4000 (quarter-turn) to recover the rider yaw.
  */
-#include "main/dll/BW/BWalphaanim.h"
+#include "main/dll/dll_0255_snowbike.h"
 #include "main/game_object.h"
 #include "main/dll/bwalphaanim.h"
 

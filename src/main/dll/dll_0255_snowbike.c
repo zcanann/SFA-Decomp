@@ -8,7 +8,7 @@
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
-#include "main/dll/BW/BWalphaanim.h"
+#include "main/dll/dll_0255_snowbike.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
