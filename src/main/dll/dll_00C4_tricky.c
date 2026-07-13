@@ -1539,9 +1539,9 @@ void Tricky_update(int obj)
         ((TrickyState*)state)->stateFlags |= 0x10000LL;
     }
     trickyState->cooldownC -= timeDelta;
-    if (trickyState->cooldownC < lbl_803E23DC)
+    if (trickyState->cooldownC < 0.0f)
     {
-        trickyState->cooldownC = lbl_803E23DC;
+        trickyState->cooldownC = 0.0f;
     }
     if ((((TrickyState*)state)->stateFlags & 4) != 0)
     {
@@ -1569,9 +1569,9 @@ void Tricky_update(int obj)
         }
     }
     trickyState->voiceCooldown -= timeDelta;
-    if (trickyState->voiceCooldown < lbl_803E23DC)
+    if (trickyState->voiceCooldown < 0.0f)
     {
-        trickyState->voiceCooldown = lbl_803E23DC;
+        trickyState->voiceCooldown = 0.0f;
     }
     if (((TrickyState*)state)->voiceCooldown > lbl_803E23DC)
     {
