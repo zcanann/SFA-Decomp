@@ -1,7 +1,8 @@
-#ifndef MAIN_DLL_BABYCLOUDRUNNERSTATE_STRUCT_H_
-#define MAIN_DLL_BABYCLOUDRUNNERSTATE_STRUCT_H_
+#ifndef MAIN_DLL_DLL_014C_BABYCLOUDRUNNER_H_
+#define MAIN_DLL_DLL_014C_BABYCLOUDRUNNER_H_
 
-#include "types.h"
+#include "main/game_object.h"
+#include "main/objanim_update.h"
 
 typedef struct BabyCloudRunnerState
 {
@@ -35,4 +36,15 @@ typedef struct BabyCloudRunnerState
     u8 pad245[3];
 } BabyCloudRunnerState;
 
-#endif
+int babycloudrunner_getExtraSize(void);
+int babycloudrunner_getObjectTypeId(void);
+void babycloudrunner_free(int* obj);
+void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void babycloudrunner_hitDetect(void);
+void babycloudrunner_update(int* obj);
+void babycloudrunner_init(int* obj, u8* def);
+void babycloudrunner_release(void);
+void babycloudrunner_initialise(void);
+int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+
+#endif /* MAIN_DLL_DLL_014C_BABYCLOUDRUNNER_H_ */

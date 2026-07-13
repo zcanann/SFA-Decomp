@@ -4,6 +4,14 @@
 #include "types.h"
 #include "main/game_object.h"
 
+typedef struct GcRobotLightBeaState
+{
+    void* light; /* modelLightStruct point light */
+    int unk4;
+    u8 hitFlags; /* 0x80 = player caught in the beam */
+    u8 pad9[3];
+} GcRobotLightBeaState;
+
 u32 fn_801A0174(int* obj);
 int gcrobotlightbea_getExtraSize(void);
 int gcrobotlightbea_getObjectTypeId(void);

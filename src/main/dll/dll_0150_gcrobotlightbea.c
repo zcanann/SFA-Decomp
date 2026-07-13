@@ -19,7 +19,6 @@
  */
 #include "main/dll/cfguardian_state.h"
 #include "main/dll/bit80_struct.h"
-#include "main/dll/gcrobotlightbeastate_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
@@ -30,13 +29,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
-#include "main/dll/babycloudrunnerstate_struct.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
-
-/* Per-object extra state for the baby CloudRunner
- * (babycloudrunner_getExtraSize == 0x248). */
-
-STATIC_ASSERT(sizeof(BabyCloudRunnerState) == 0x248);
 
 /* Per-object extra state for the CloudRunner guardian
  * (cfguardian_getExtraSize == 0xa9c). */

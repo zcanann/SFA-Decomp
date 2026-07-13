@@ -11,7 +11,6 @@
 #include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/babycloudrunnerflags_struct.h"
-#include "main/dll/gcrobotlightbeastate_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/dll/cfpowerbasestate_struct.h"
 #include "main/dll/cfmaincrystalstate_types.h"
@@ -24,6 +23,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/dll_014C_babycloudrunner.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
@@ -32,7 +32,6 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/objprint.h"
-#include "main/dll/babycloudrunnerstate_struct.h"
 #include "main/dll/dll_00C9_enemy.h"
 
 /* Per-object extra state for the baby CloudRunner
@@ -78,11 +77,6 @@ STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
  * (CFPrisonGuard_getExtraSize == 0x3c). */
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
-
-/* Per-object extra state for the robot light beacon
- * (gcrobotlightbea_getExtraSize == 0xc). */
-
-STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 typedef struct
 {

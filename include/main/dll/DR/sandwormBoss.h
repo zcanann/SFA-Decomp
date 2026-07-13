@@ -74,10 +74,6 @@ void FUN_8019e7cc(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8, int* param_9);
 void FUN_8019e964(u64 param_1, double param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9);
-int babycloudrunner_getObjectTypeId(void);
-void babycloudrunner_init(int* obj, u8* def);
-int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-void babycloudrunner_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8019ec44(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u32 param_9);
 void FUN_8019ecf0(int param_1);
