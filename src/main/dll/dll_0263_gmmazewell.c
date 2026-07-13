@@ -19,7 +19,7 @@
 #include "main/audio.h"
 #include "main/shader.h"
 #include "main/pad.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0263_gmmazewell.h"
 

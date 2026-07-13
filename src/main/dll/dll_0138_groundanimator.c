@@ -1,6 +1,6 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/object_render_legacy.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"

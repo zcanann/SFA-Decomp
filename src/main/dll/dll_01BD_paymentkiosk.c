@@ -12,7 +12,7 @@
  * sequence, seq id 0x476).
  */
 #include "main/dll/DB/DBrockfall.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/player_api.h"

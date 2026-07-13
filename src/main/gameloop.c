@@ -4,6 +4,7 @@
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
 #include "main/map_load.h"
+#include "main/objprint_render_api.h"
 #include "dolphin/pad.h"
 #include "dolphin/vi.h"
 #include "dolphin/dvd.h"
@@ -953,7 +954,6 @@ extern void loadDataFiles(void);
 extern void audioUpdate(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
-extern void objRenderFuzz(void);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
 
@@ -990,7 +990,7 @@ void gameLoop(void)
                     objRenderModelAndHitVolumes(*p, 0, 0, 0, 0, lbl_803DE7A8);
                     if (((GameObject*)*p)->anim.seqId == 0x882 || ((GameObject*)*p)->anim.seqId == 0x887)
                     {
-                        objRenderFuzz();
+                        objRenderFuzz((int*)*p);
                     }
                     p++;
                 }

@@ -18,7 +18,7 @@
 #include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/vecmath.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"

@@ -10,7 +10,6 @@
 #include "main/maketex_api.h"
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
-#include "main/objprint_dolphin.h"
 #include "main/objprint_render_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"

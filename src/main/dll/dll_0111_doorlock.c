@@ -16,7 +16,7 @@
  * unlock sequence.
  */
 #include "main/game_object.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/obj_group.h"
 #include "main/obj_trigger.h"
 #include "main/objseq.h"

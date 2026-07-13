@@ -2,7 +2,7 @@
 #include "main/object_render_legacy.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/genpropswgpipe_struct.h"

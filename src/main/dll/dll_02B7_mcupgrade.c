@@ -13,7 +13,7 @@
  * lives in DLL 0x2B8.
  */
 #include "main/dll/dll_02B6_cnthitobjec.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/dll/tricky_api.h"

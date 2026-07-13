@@ -6,7 +6,7 @@
 #include "main/shader_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/objfx.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/frame_timing.h"

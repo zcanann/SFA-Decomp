@@ -16,7 +16,7 @@
  */
 #include "main/dll/groundanimator_state.h"
 #include "main/object_render_legacy.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"

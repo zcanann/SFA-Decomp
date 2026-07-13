@@ -1,6 +1,6 @@
 /* DLL 0x01AB — bombplantingspot (Sauria bomb planting spot / trigger). TU: 0x801D3FF4–0x801D4198. */
 #include "main/objseq.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/game_object.h"
 #include "main/obj_trigger.h"
 #include "main/dll/dll_01AB_bombplantingspot.h"

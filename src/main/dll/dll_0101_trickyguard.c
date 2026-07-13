@@ -20,7 +20,7 @@
  * in dll_00FE_magicplant.h).
  */
 #include "main/game_object.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"

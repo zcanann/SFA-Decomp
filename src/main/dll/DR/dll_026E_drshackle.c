@@ -14,7 +14,7 @@
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/object_render.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

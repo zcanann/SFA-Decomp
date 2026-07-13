@@ -4,7 +4,7 @@
  * while intact, allows Tricky to push through it.
  */
 #include "main/dll/dimicewallstate_struct.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

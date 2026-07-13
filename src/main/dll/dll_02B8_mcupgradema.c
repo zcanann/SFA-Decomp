@@ -14,7 +14,7 @@
  * the object's configured level, or clears it.
  */
 #include "main/dll/dll_02B8_mcupgradema.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/player_objects.h"

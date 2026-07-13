@@ -26,7 +26,7 @@
 #include "main/game_object.h"
 #include "main/track_dolphin_api.h"
 #include "main/obj_group.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/dll/bwalphaanim.h"

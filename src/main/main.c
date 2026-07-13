@@ -1,6 +1,6 @@
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"

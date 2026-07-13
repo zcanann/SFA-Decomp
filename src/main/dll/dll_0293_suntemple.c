@@ -27,7 +27,7 @@
  * hitDetect helper.
  */
 #include "main/dll/dll_0293_suntemple.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/game_timer.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"

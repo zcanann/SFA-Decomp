@@ -6,7 +6,7 @@
  * altar back to its idle state.
  */
 #include "main/dll/DR/dr_shared.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/object.h"
 #include "main/maketex_timer_api.h"
 #include "main/obj_placement.h"

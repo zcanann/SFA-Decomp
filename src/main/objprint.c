@@ -2,7 +2,7 @@
 #include "main/modellight_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/frame_timing.h"
-#include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
