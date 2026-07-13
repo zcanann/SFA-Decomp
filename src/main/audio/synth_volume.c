@@ -1,5 +1,6 @@
 #include "main/dll/synthfade_struct.h"
 #include "main/audio/inp_ctrl.h"
+#include "main/audio/synth_voice.h"
 #include "main/audio/voice_manage.h"
 
 #pragma exceptions on
@@ -29,7 +30,6 @@ extern u8* synthVoice;
 extern f32 lbl_803E7798;
 extern f32 lbl_803E77A8;
 extern f32 lbl_803E77D4;
-extern void synthDispatchFadeAction(SynthFade* fade);
 
 /*
  * Route synth fade commands to one slot or to the broadcast pseudo-slots

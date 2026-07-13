@@ -1,4 +1,5 @@
 #include "main/audio/snd_synth_api.h"
+#include "main/audio/synth_voice.h"
 
 #pragma exceptions on
 #include "main/audio/mcmd.h"
@@ -36,7 +37,6 @@ extern u32 synthFlags;
 extern u8* synthVoice;
 
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
-extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux);
 extern void hwRemoveInput(u8 idx, void* input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);

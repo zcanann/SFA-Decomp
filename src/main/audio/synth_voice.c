@@ -1,4 +1,5 @@
 #include "global.h"
+#include "main/audio/synth_voice.h"
 #include "main/audio/mcmd.h"
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
@@ -12,14 +13,14 @@
 
 #pragma exceptions on
 
-typedef struct SynthDelayedNode
+struct SynthDelayedNode
 {
     struct SynthDelayedNode* next;
     struct SynthDelayedNode* prev;
     u8 voiceIndex;
     u8 bucketIndex;
     u8 pad[2];
-} SynthDelayedNode;
+};
 
 typedef void (*SynthDelayedBucketCallback)(int voiceIndex);
 
@@ -51,7 +52,6 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET   0x11c
 
 extern u8 gSynthDelayBucketCursor;
-extern void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay);
 
 extern void macHandle(u32 delta);
 
