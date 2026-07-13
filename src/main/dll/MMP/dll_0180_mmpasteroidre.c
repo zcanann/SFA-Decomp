@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/camera_shake_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/MMP/dll_0180_mmpasteroidre.h"
 

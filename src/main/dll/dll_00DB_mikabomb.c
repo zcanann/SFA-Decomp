@@ -23,6 +23,7 @@
 #include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
+#include "main/camera_shake_api.h"
 #define MIKABOMB_HIT_VOLUME_SLOT 5
 
 /* Shadow-bomb object spawned at init, cached into MikabombState.shadowObj. */
@@ -41,7 +42,6 @@ extern f32 lbl_803E31C8;
 extern f32 gMikaBombGravityAccel;
 extern f32 gMikaBombMinFallVelocity;
 extern f32 lbl_803E31D4;
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 
 typedef struct MikabombState
 {

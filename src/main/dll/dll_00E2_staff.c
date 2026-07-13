@@ -432,8 +432,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
     }
 }
 
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);

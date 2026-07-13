@@ -17,6 +17,7 @@
  * constants in the DLL's shared .sdata2 pool.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/camera_shake_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/obj_placement.h"
 #include "main/objfx.h"

@@ -236,7 +236,6 @@ extern void playerPullOutStaff(GameObject* obj, int idx);
 extern void playerPutAwayStaff(GameObject* obj, int idx);
 extern void playerLock(GameObject* player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
-extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
 
