@@ -4,7 +4,6 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
-#include "main/maketex.h"
 #include "main/render.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"

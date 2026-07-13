@@ -5,6 +5,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/maketex_timer_api.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/objlib.h"

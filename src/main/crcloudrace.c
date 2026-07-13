@@ -6,6 +6,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gameplay_runtime.h"
+#include "main/maketex_timer_api.h"
 #include "main/objlib.h"
 
 typedef void (*CrCloudRaceRenderScaleFn)(double scale);
