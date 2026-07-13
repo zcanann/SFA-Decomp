@@ -36,6 +36,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/maketex_random_api.h"
+#include "main/maketex_sequence_api.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
@@ -73,7 +74,6 @@ extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
-extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);
 extern void SHthorntail_updateDustEffects(int obj);
