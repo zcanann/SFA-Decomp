@@ -24,6 +24,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
+#include "main/vecmath_distance_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
     ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))
@@ -3759,7 +3760,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     va = *(int*)obj2;
                     if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, *(s16*)(va + 0x46)) != -1)
                     {
-                        f32 dsq = vec3f_distanceSquared((void*)(va + 0x18), (void*)(obj + 0x18));
+                        f32 dsq = vec3f_distanceSquared((f32*)(va + 0x18), (f32*)(obj + 0x18));
                         if (dsq < best || found == 0)
                         {
                             best = dsq;

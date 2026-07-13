@@ -18,6 +18,7 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
+#include "main/vecmath_distance_api.h"
 
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN       0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
@@ -45,8 +46,6 @@ extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* 
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-
 void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);

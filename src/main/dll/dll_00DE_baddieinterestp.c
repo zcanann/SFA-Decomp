@@ -15,6 +15,7 @@
 #include "main/dll/genprops.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/vecmath_distance_api.h"
 
 typedef struct BaddieinterestpPlacement
 {
@@ -35,7 +36,6 @@ extern f32 lbl_803E3220;
 extern f32 lbl_803E3224;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* ObjGroup_GetObjects();
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void fn_801504BC(int* obj, int kind);
 
 int BaddieInterestP_getExtraSize(void)

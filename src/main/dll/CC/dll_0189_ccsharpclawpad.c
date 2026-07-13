@@ -16,10 +16,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/CC/dll_0189_ccsharpclawpad.h"
+#include "main/vecmath_distance_api.h"
 
 #define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
 
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int playerIsDisguised(int obj);
 
 int CCSharpclawPad_getExtraSize(void)

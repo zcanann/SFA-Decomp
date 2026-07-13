@@ -43,6 +43,7 @@
 #include "main/screen_transition.h"
 #include "main/objlib.h"
 #include "main/texture.h"
+#include "main/vecmath_distance_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/maybeTemplate.h"
@@ -368,7 +369,6 @@ extern u32 lbl_803DD82C;
 extern f32 lbl_803E1E70;
 
 extern int cameraGetTargetType(void);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern int cMenuCountAvailableEntries(int bit, int x);
 extern int getHudHiddenFrameCount(void);
 

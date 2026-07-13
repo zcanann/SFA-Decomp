@@ -20,6 +20,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/vecmath_distance_api.h"
 
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((u32 (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
@@ -389,7 +390,6 @@ void fn_801CEA14(short* obj, u8* st, u8* mapData)
 
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
-    extern f32 vec3f_distanceSquared(void* a, void* b);
     NwMammothState* state = (NwMammothState*)st;
     GameObject* tw2;
     GameObject* tw;
@@ -463,11 +463,11 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     else
                     {
                         tw = tumbleweedbush_findNearestActive(&((GameObject*)o2)->anim.worldPosX);
-                        if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, &o2[6]) >=
+                        if (tw == NULL || vec3f_distanceSquared(&tw->anim.worldPosX, (f32*)&o2[6]) >=
                                               gNwMammothTumbleweedDistSqThreshold)
                         {
-                            if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX,
-                                                      &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
+                            if (vec3f_distanceSquared(&((GameObject*)state->playerObject)->anim.worldPosX,
+                                                      (f32*)&o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
                                 fn_8014C66C((GameObject*)o2, (GameObject*)obj);
                             }
@@ -666,7 +666,6 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     extern void fn_801CEA14(int obj, void* state, void* objDef);
     extern void fn_801CED2C(int obj, void* state, void* objDef);
     extern void fn_801CEE0C(int obj, void* state, void* objDef);
-    extern f32 vec3f_distanceSquared(f32 * obj, f32 * p2);
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
                                  u32 reactionState, float* reactionStepScale);
     int triggerIndex;

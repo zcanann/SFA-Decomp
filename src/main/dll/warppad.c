@@ -29,6 +29,7 @@
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/vecmath_distance_api.h"
 
 #define WARPPAD_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -59,8 +60,6 @@ extern f32 lbl_803E3ECC;
 extern f32 gWarpPadPulseEndTime;
 extern f32 gWarpPadTriggerDist;
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
 void warpPadFn_8019042c(GameObject* obj)

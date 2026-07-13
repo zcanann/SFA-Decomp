@@ -34,6 +34,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
 #include "main/textrender.h"
+#include "main/vecmath_distance_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 
@@ -2998,7 +2999,6 @@ int fn_8004B148(int* p)
     return count;
 }
 
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 #pragma ppc_unroll_speculative off
 int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {

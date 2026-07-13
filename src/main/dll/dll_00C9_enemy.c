@@ -901,7 +901,6 @@ typedef struct
 
 int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
-    extern f32 vec3f_distanceSquared(void* a, void* b);
     int i;
     TrickyTargetRec* cur;
     int state;
@@ -982,7 +981,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
             b4 = flags & 4;
             for (; i < count; i++)
             {
-                d2 = vec3f_distanceSquared(obj + 0xc, arr[i] + 0xc);
+                d2 = vec3f_distanceSquared((f32*)(obj + 0xc), (f32*)(arr[i] + 0xc));
                 if ((d2 < radius) && (arr[i] != obj))
                 {
                     cur->obj = arr[i];
@@ -1674,7 +1673,6 @@ void enemy_update(int obj)
     extern void objAnimFn_8014a9f0(int obj, u8* state);
     extern void fn_8014B878(int obj, u8* state);
     extern void baddieTurnTowardTarget(int obj, u8* state);
-    extern f32 vec3f_distanceSquared(f32 * a, f32 * b);
     extern void baddieInstantiateWeapon(GameObject * obj, u8 * state);
     u8* player;
     u8* state;

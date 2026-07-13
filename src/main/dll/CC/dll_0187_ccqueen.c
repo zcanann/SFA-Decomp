@@ -13,6 +13,7 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/CC/dll_0187_ccqueen.h"
+#include "main/vecmath_distance_api.h"
 
 #define CCQUEEN_OBJFLAG_UPDATE_DISABLED 0x8000
 
@@ -21,8 +22,6 @@
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
 extern u32 ObjHits_DisableObject();
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
-
 static const Vec3s ccqueenEyeSetupA = {0x1e, 0, 0};
 static const Vec3s ccqueenEyeSetupB = {0x19, 0x19, 0x19};
 

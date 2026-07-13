@@ -84,7 +84,6 @@ extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);

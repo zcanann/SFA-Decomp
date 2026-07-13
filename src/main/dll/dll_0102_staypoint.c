@@ -26,6 +26,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_80136a40.h"
+#include "main/vecmath_distance_api.h"
 
 typedef struct StayPointSetup
 {
@@ -43,8 +44,6 @@ typedef struct StayPointSetup
 #define STAYPOINT_PRIORITY_MENU 0x10
 
 extern f32 lbl_803E38A8; /* stay-point engage radius, squared */
-
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 void StayPoint_update(int obj)
 {

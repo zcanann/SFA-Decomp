@@ -20,6 +20,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/NW/dll_01A2_nwtricky.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/vecmath_distance_api.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK       0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN             0x4000
@@ -30,7 +31,6 @@
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
 extern f32 lbl_803E5268;

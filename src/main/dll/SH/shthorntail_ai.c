@@ -38,7 +38,6 @@ extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
-extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void OSReport(const char* msg, ...);
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
@@ -79,7 +78,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
              (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
         {
             fn_8014C66C((GameObject*)objects[index], (GameObject*)obj);
-            if ((vec3f_distanceSquared(&objects[index]->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
+            if ((vec3f_distanceSquared((f32*)&objects[index]->pos, (f32*)&obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
                 (mainGetBit(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {
                 linkedEventPending = 1;

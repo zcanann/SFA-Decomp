@@ -41,7 +41,6 @@ extern f32 gBombPlantSporeOffsetScale;
 extern f32 gBombPlantGrowRateMin;
 extern f32 gBombPlantGrowDuration;
 extern int objIsFrozen(u8* obj);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 gBombPlantTriggerDistSq;
 extern f32 gBombPlantGrowRateDecay;
 extern f32 lbl_803E5380;

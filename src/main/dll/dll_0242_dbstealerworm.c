@@ -2372,8 +2372,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
     extern f32 Vec_xzDistance(int, int);
-    extern f32 vec3f_distanceSquared(int, int);
-
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E62B8;
     extern f32 lbl_803E6300;
@@ -2474,7 +2472,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
         o = *objs;
         if ((u32)o != player)
         {
-            ds = vec3f_distanceSquared(player + 0x18, o + 0x18);
+            ds = vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(o + 0x18));
             if (ds > bestD)
             {
                 bestD = ds;

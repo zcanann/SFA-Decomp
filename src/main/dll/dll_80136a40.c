@@ -190,8 +190,6 @@ extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 extern int dll_19_func1B(GameObject* p);
-extern f32 vec3f_distanceSquared(int, int);
-
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
@@ -617,7 +615,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
                             goto next;
                     }
                     {
-                        f32 dist = vec3f_distanceSquared(origin + 0x18, *objs + 0x18);
+                        f32 dist = vec3f_distanceSquared((f32*)(origin + 0x18), (f32*)(*objs + 0x18));
                         if (dist < bestDistSq)
                         {
                             bestDistSq = dist;

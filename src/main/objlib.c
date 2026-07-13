@@ -23,7 +23,6 @@ typedef struct ObjLibRegionList ObjLibRegionList;
 extern u32 buttonGetDisabled(int port);
 extern void buttonDisable(int port, u32 mask);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);

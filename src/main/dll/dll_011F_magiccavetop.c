@@ -16,6 +16,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/vecmath_distance_api.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define MAGICCAVETOP_CAMMODE_DEFAULT 0x42
@@ -70,9 +71,6 @@ typedef struct MagiccavetopState
 
 
 
-
-
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 
 
 

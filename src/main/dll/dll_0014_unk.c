@@ -35,6 +35,7 @@
 #include "main/dll/modgfx.h"
 #include "string.h"
 #include "main/dll/dll_0014_unk.h"
+#include "main/vecmath_distance_api.h"
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT   4
 #define OBJFSA_PATCHGROUP_STRIDE        0x28
@@ -121,7 +122,6 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
 extern u32 countLeadingZeros();
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
-extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
 extern float mathCosf(float x);
 extern float mathSinf(float x);
 
@@ -2691,7 +2691,6 @@ void fn_800D9EE8(float* p)
 #pragma scheduling off
 int fn_800DB240(int p1, f32* outVec, u16 id)
 {
-    extern f32 vec3f_distanceSquared(int, int);
     u8 i;
     f32 d1;
 
@@ -2704,12 +2703,12 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
     outVec[1] = *(f32*)(p1 + 4);
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
-    d1 = vec3f_distanceSquared(p1, (int)outVec);
+    d1 = vec3f_distanceSquared((f32*)p1, outVec);
 
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit1X;
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit1Z;
 
-    if (vec3f_distanceSquared(p1, (int)outVec) < d1)
+    if (vec3f_distanceSquared((f32*)p1, outVec) < d1)
     {
         return 1;
     }

@@ -112,7 +112,6 @@ typedef struct
 #pragma opt_loop_invariants off
 void FuelCell_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    extern f32 vec3f_distanceSquared(f32* a, f32* b);
     int** list;
     u8* slot;
     FuelcellState* state;

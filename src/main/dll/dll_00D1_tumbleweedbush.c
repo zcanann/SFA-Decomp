@@ -32,6 +32,7 @@
 #include "main/sky_interface.h"
 #include "main/objfx.h"
 #include "main/objlib_api.h"
+#include "main/vecmath_distance_api.h"
 
 typedef struct TumbleweedBushState
 {
@@ -61,7 +62,6 @@ extern u8 gTumbleweedBushHitCooldownState;
 
 extern f32 lbl_803E2F44;
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 gTumbleweedBushNearestInitDist;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);
