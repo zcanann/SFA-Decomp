@@ -13,8 +13,6 @@
  *     twice (measure then draw) and rasterizes glyphs through
  *     fn_80136A40 (per-glyph texture select + textRenderChar) and
  *     debugPrintDrawRecord (record interpreter: color/tab/newline/position tags).
- *   - The title-screen ObjectDescriptor (gTitleScreenObjDescriptor) and
- *     its forwarded callbacks.
  *   - Tricky companion helpers: queued-path particle emission
  *     (Tricky_emitQueuedPathParticles), command-target selection,
  *     blend-channel weight animation and impress/GameBit state pokes.
@@ -250,26 +248,6 @@ void* trickyGetQueuedPathParticlePos(GameObject* obj)
 {
     return &((TrickyImpressState*)obj->extra)->renderPosX;
 }
-
-ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)TitleScreen_initialise,
-        (ObjectDescriptorCallback)TitleScreen_release,
-        0,
-        (ObjectDescriptorCallback)TitleScreen_init,
-        (ObjectDescriptorCallback)TitleScreen_update,
-        (ObjectDescriptorCallback)TitleScreen_hitDetect,
-        (ObjectDescriptorCallback)TitleScreen_render,
-        (ObjectDescriptorCallback)TitleScreen_free,
-        (ObjectDescriptorCallback)TitleScreen_getObjectTypeId,
-        TitleScreen_getExtraSize,
-    },
-    0,
-};
 
 /* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx

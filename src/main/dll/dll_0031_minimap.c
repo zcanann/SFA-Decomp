@@ -665,28 +665,6 @@ u16 getMinimapY(void)
     return lbl_803DD938;
 }
 
-int TitleScreen_getObjectTypeId(u8* obj);
-
-ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)TitleScreen_initialise,
-        (ObjectDescriptorCallback)TitleScreen_release,
-        0,
-        (ObjectDescriptorCallback)TitleScreen_init,
-        (ObjectDescriptorCallback)TitleScreen_update,
-        (ObjectDescriptorCallback)TitleScreen_hitDetect,
-        (ObjectDescriptorCallback)TitleScreen_render,
-        (ObjectDescriptorCallback)TitleScreen_free,
-        (ObjectDescriptorCallback)TitleScreen_getObjectTypeId,
-        TitleScreen_getExtraSize,
-    },
-    0,
-};
-
 #pragma dont_inline on
 void Minimap_setupCompassBlip(void)
 {
