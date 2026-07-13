@@ -1091,44 +1091,6 @@ void dll_D3_release_nop(void)
 {
 }
 
-void SkeetlaWall_free(void);
-
-void SkeetlaWall_hitDetect(void);
-
-void SkeetlaWall_update(void);
-
-void SkeetlaWall_release(void);
-
-void SkeetlaWall_initialise(void);
-
-int SkeetlaWall_getExtraSize(void);
-int SkeetlaWall_getObjectTypeId(void);
-
-void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
-
-void SkeetlaWall_init(GameObject* obj, u8* def);
-
-ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)SkeetlaWall_initialise,
-        (ObjectDescriptorCallback)SkeetlaWall_release,
-        0,
-        (ObjectDescriptorCallback)SkeetlaWall_init,
-        (ObjectDescriptorCallback)SkeetlaWall_update,
-        (ObjectDescriptorCallback)SkeetlaWall_hitDetect,
-        (ObjectDescriptorCallback)SkeetlaWall_render,
-        (ObjectDescriptorCallback)SkeetlaWall_free,
-        (ObjectDescriptorCallback)SkeetlaWall_getObjectTypeId,
-        SkeetlaWall_getExtraSize,
-        (ObjectDescriptorCallback)SkeetlaWall_setScale,
-    },
-    0,
-};
-
 void fn_80167550(int obj, int otherObj)
 {
     int* state = ((GameObject*)obj)->extra;
