@@ -14,11 +14,11 @@
  * its exact role is unconfirmed.
  */
 #include "main/dll/debug/prof.h"
+#include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/savedata_struct.h"
 #include "dolphin/os/OSRtc.h"
 extern int saveFileStruct_isCheatActive();
-extern int isCheatUnlocked(u8);
 extern int Rcp_GetColorFilterEnabled(void);
 extern int* gTitleMenuLinkInterface;
 extern int* gTitleMenuItemInterface;

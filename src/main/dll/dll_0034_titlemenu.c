@@ -25,7 +25,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/textrender.h"
-#include "main/dll/dll_0015_curves.h"
+#include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame.h"
 extern bool prepareAttractMode();
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);

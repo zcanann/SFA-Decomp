@@ -15,7 +15,7 @@
  * event is currently ready.
  */
 #include "main/dll/DR/dr_shared.h"
-#include "main/dll/savegame.h"
+#include "main/dll/dll_0015_save_settings.h"
 #include "main/audio.h"
 #include "main/shader.h"
 #include "main/pad.h"

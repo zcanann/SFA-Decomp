@@ -13,7 +13,7 @@
 #include "main/dll/cameramodetitlepose_struct.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
-#include "main/dll/savegame.h"
+#include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/attract_movie_api.h"
