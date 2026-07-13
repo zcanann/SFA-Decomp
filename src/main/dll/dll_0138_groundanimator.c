@@ -463,8 +463,10 @@ void groundanimator_update(int* obj)
                 g->flags = g->flags | 2;
                 Sfx_PlayFromObject((u32)obj, (&lbl_803DBDF0)[((GroundanimatorPlacement*)r20)->sfxIndex]);
             }
+            off2[0] = 0;
+            off2[1] = off2[0];
             blkIdx = 0;
-            for (off2[0] = 0, off2[1] = off2[0]; blkIdx < g->entryCount; blkIdx++)
+            for (; blkIdx < g->entryCount; blkIdx++)
             {
                 entry = mapBlockFn_800606ec((int*)block, g->blockEntries[blkIdx]);
                 mid = *(u16*)entry;
