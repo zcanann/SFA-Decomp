@@ -5,6 +5,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/debug.h"
 #include "main/shader_api.h"
+#include "main/textrender_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
 #include "main/audio/audio_control_api.h"
@@ -871,7 +872,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 
 extern int isRomListLoading(void);
 extern void loadDataFiles(void);
-extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];

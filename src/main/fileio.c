@@ -3,6 +3,7 @@
 #include "main/fileio.h"
 #include "main/gameloop_api.h"
 #include "main/gametext.h"
+#include "main/textrender_api.h"
 #include "main/loaded_file_flags.h"
 #include "main/mm.h"
 #include "main/pad.h"

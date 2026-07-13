@@ -19,6 +19,7 @@
 #include "main/mm.h"
 #include "main/pi_frame_api.h"
 #include "main/texture.h"
+#include "main/textrender_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/sky.h"
 #include "main/sky_api.h"
@@ -197,7 +198,6 @@ extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void loadDataFiles(void);
-extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern void* objCreateLight(int, int);
 extern void modelLightStruct_setLightKind(void*, int);

@@ -10,6 +10,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
+#include "main/textrender_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -3861,7 +3862,6 @@ void mapLoadDataFiles(int mapIdx)
 }
 
 extern void loadDataFiles(int);
-extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 

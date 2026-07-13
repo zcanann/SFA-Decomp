@@ -14,6 +14,7 @@
 #include "main/texture.h"
 #include "main/dll/player_state.h"
 #include "main/sky_interface.h"
+#include "main/textrender_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXPixel.h"
@@ -6353,7 +6354,6 @@ void showMemCardError(u8 err)
     extern void gameTextSetColor(int, int, int, int);
     extern void* gameTextGet(int textId);
     extern void gameTextShowStr(int str, int x, int y, int yPos);
-    extern void gameTextRun(void);
     extern int GXFlush_(u8 visible, int unused);
 
     extern void setGameState(int state);
@@ -6742,7 +6742,6 @@ void cardShowLoadingMsg(u8 kind)
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void gameTextFn_80016810(int a, int b, int c);
-    extern void gameTextRun(void);
     extern int GXFlush_(u8 visible, int unused);
 
     int* buttons;

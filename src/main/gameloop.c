@@ -605,8 +605,6 @@ void mapLoadByCoords(int arg)
 
 void gameTextInitFn_8001a234(void);
 
-void gameTextRun(void);
-
 extern void videoInit(void* rmode, int arg);
 
 extern void initLoadingScreenTextures(void);
@@ -616,7 +614,6 @@ extern u8 audioInit(void);
 
 extern u8 initLoadFiles(void);
 
-extern void gameTextRun(void);
 extern void viFn_8004a56c(int arg);
 
 extern void mapInitFn_8006fccc(void);

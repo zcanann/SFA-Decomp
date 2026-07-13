@@ -25,7 +25,6 @@ void subtitleBuildLineTable(void);
 int subtitleIsActive(void);
 
 void* getCurGameText(void);
-void gameTextRun(void);
 void gameTextLoadTaskText(int taskId);
 int setSubtitlesEnabled(int enabled);
 

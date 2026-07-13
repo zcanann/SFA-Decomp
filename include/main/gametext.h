@@ -43,7 +43,6 @@ extern f32 lbl_803DB3D0;
 void gameTextAppendStr(char* str, int arg2);
 void* gameTextGet(int textId);
 void gameTextSetColor(int r, int g, int b, int a);
-void gameTextRun(void);
 void* gameTextGetCurBox(void);
 void gameTextFn_80016c18(int a, int b);
 void gameTextFreePhrase(int* phrase);
