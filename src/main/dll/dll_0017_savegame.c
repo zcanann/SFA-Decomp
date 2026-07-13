@@ -33,6 +33,7 @@
 #include "dolphin/os/OSReboot.h"
 #include "string.h"
 #include "main/gamebits.h"
+#include "main/gameloop_api.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0016_screentransition.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"

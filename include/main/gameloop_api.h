@@ -7,6 +7,7 @@
 
 int getGameState(void);
 void checkReset(void);
+void cutsceneExit(void);
 void cutsceneEnterExit(int entering, int affectSounds);
 void cutsceneFadeInOut(int mode);
 void setTimeStop(int frames);

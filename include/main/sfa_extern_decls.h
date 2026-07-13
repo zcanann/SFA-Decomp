@@ -5,7 +5,6 @@
 
 void whirlpool_updateWhileFrozen(void);
 void cutSceneFn_8011dd30(void);
-void cutsceneExit(void);
 void doNothing_afterRenderObject(void);
 void doNothing_beforeRenderObject(void);
 void drawViewFinderHud(void);
