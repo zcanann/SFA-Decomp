@@ -506,6 +506,7 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     u8* c0;
     CmbSrcState* state = cmbsrc->state;
     int lightVariant;
+    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
 
     switch (cmbsrc->objAnim.seqId)
     {
