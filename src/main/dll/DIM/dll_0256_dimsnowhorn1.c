@@ -7,7 +7,10 @@
  * the full per-frame tick.
  */
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "main/audio/sfx_legacy.h"
+#include "main/gamebits.h"
 #include "main/object_render_legacy.h"
+#include "main/pad_api.h"
 #include "main/object_api.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/tricky_api.h"
