@@ -1,0 +1,6 @@
+#ifndef MAIN_DLL_BADDIE_CONTROL_INTERFACE_H_
+#define MAIN_DLL_BADDIE_CONTROL_INTERFACE_H_
+
+extern int* gBaddieControlInterface;
+
+#endif /* MAIN_DLL_BADDIE_CONTROL_INTERFACE_H_ */

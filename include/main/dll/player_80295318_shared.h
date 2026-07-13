@@ -10,6 +10,7 @@
 #include "main/objseq_api.h"
 #include "main/shader_api.h"
 #include "main/dll/player_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll/rom_curve_interface.h"
@@ -62,7 +63,6 @@ extern u32 FUN_80081110();
 extern u32 FUN_8008111c();
 extern u32 FUN_80081120();
 extern u32 FUN_80081124();
-extern int* gBaddieControlInterface;
 extern void fn_8011F6E0(int button, u8 angle, int mag);
 extern void fn_8011F6D4(int flag);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
