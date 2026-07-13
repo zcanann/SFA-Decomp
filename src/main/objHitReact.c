@@ -13,6 +13,8 @@
 #include "main/frame_timing.h"
 
 
+__declspec(section ".rodata") ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
+
 int ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount, u32 reactionState,
                        float* reactionStepScale)
 {

@@ -1849,6 +1849,11 @@ typedef struct IndTexMtx23
     f32 m[6];
 } IndTexMtx23;
 
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1B10 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
+
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
