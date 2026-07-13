@@ -2300,7 +2300,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                 {
                     val = lbl_803DEFB0;
                 }
-                scroll = (int)(gObjSeqTexScrollScale * val);
+                scroll = gObjSeqTexScrollScale * val;
                 if (tex1 != NULL)
                 {
                     tex1->offsetS = scroll;
