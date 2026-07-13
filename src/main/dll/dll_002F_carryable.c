@@ -18,7 +18,8 @@
  * 0x04 drop-disabled, 0x08 suppress position save.
  */
 #include "main/game_object.h"
-#include "main/dll/savegame.h"
+#include "main/dll/dll_002F_carryable.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/objhits.h"
 #include "main/dll/player_objects.h"
 #include "main/gameplay_runtime.h"
@@ -62,16 +63,16 @@ extern int isTrickyNear(void* player);
 extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
-void objSaveFn_800ea774(int* obj)
+void objSaveFn_800ea774(GameObject* obj)
 {
-    u8* sub = ((GameObject*)obj)->extra;
+    u8* sub = obj->extra;
     sub[5] = 0;
     sub[6] = 0;
     if ((sub[7] & 8) == 0)
     {
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E06D8;
+        obj->anim.localPosY = obj->anim.localPosY + lbl_803E06D8;
         saveGame_saveObjectPos(obj);
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E06D8;
+        obj->anim.localPosY = obj->anim.localPosY - lbl_803E06D8;
     }
 }
 
@@ -292,7 +293,7 @@ int Carryable_updateHeld(u8* obj)
             if ((((CarryableUpdateHeldState*)h2)->flags & CARRYABLE_FLAG_SUPPRESS_POS_SAVE) == 0)
             {
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E06D8;
-                saveGame_saveObjectPos((int*)obj);
+                saveGame_saveObjectPos((GameObject*)obj);
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E06D8;
             }
         }

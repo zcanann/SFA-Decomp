@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/mm.h"
@@ -188,7 +189,6 @@ extern int getCurUiDll(void);
 extern void playerAddHealth(u8* player, int v);
 
 void loadMapForCurrentSaveGame(void);
-void saveGame_saveObjectPos(int* obj);
 
 u8 gSaveGameData[0xF70];
 u8 saveData[228];
@@ -867,11 +867,11 @@ void loadMapForCurrentSaveGame(void)
     saveGameLoadStatus = 2;
 }
 
-void saveGame_saveObjectPos(int* obj)
+void saveGame_saveObjectPos(GameObject* obj)
 {
     int objectId;
     int i;
-    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0)
+    if ((obj->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0 || (s32)saveGameLoadStatus != 0)
     {
         return;
     }
@@ -880,20 +880,20 @@ void saveGame_saveObjectPos(int* obj)
         objectId = ((SaveGameImage*)gSaveGameData)->positions[i].objectId;
         if (objectId == 0)
             break;
-        if (*(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14) == objectId)
+        if (*(u32*)(*(u8**)&obj->anim.placementData + 0x14) == objectId)
             break;
     }
     if (i == SAVEGAME_OBJECT_POSITION_COUNT)
         return;
     *(u32*)((int)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + (i << 4)) =
-        *(u32*)(*(u8**)&((GameObject*)obj)->anim.placementData + 0x14);
-    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 4) + (i << 4)) = ((GameObject*)obj)->anim.localPosX;
-    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 8) + (i << 4)) = ((GameObject*)obj)->anim.localPosY;
+        *(u32*)(*(u8**)&obj->anim.placementData + 0x14);
+    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 4) + (i << 4)) = obj->anim.localPosX;
+    *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 8) + (i << 4)) = obj->anim.localPosY;
     *(f32*)((int)gSaveGameData + (SAVEGAME_OBJECT_POSITION_OFFSET + 12) + (i << 4)) =
-        ((GameObject*)obj)->anim.localPosZ;
-    *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8) = ((GameObject*)obj)->anim.localPosX;
-    ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
+        obj->anim.localPosZ;
+    *(f32*)(*(int*)&obj->anim.placementData + 8) = obj->anim.localPosX;
+    ((GameObject*)obj->anim.placementData)->anim.localPosX = obj->anim.localPosY;
+    ((GameObject*)obj->anim.placementData)->anim.localPosY = obj->anim.localPosZ;
 }
 
 void SaveGame_setCamActionNo(s16 actionNo)

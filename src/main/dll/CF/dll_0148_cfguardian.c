@@ -987,7 +987,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     stk = gCfGuardianHeadingTemplate;
     if (((GameObject*)obj)->seqIndex < 0)
     {
-        saveGame_saveObjectPos((int*)obj);
+        saveGame_saveObjectPos((GameObject*)obj);
         return 0;
     }
     if (sub->questState != CFGUARDIAN_LANDING)

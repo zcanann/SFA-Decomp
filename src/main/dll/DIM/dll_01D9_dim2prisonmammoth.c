@@ -230,7 +230,7 @@ void dim2prisonmammoth_update(int obj)
     ((Dim2prisonmammothState*)inner)->flags |= 0x400000;
     (*(void (*)(int, int, f32, f32, int, void*))(*(int*)((char*)*gPlayerInterface + 0x8)))(
         obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
-    saveGame_saveObjectPos((int*)obj);
+    saveGame_saveObjectPos((GameObject*)obj);
 }
 
 void dim2prisonmammoth_init(int obj, int params)

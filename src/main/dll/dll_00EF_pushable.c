@@ -8,6 +8,7 @@
 #include "main/dll/pushable.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_00EF_pushable.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/objseq.h"
@@ -191,7 +192,6 @@ void fn_80174BFC(GameObject* obj, int ext)
     extern int objBboxFn_800640cc(f32 * from, f32 * to, f32 radius, int mode, void* hit, void* obj, int p7, int p8,
                                   u8 p9, int p10);
     extern int Sfx_PlayFromObject(int a, int b);
-    extern void saveGame_saveObjectPos(void* obj);
     int def;
     int i;
     s8 bits;
@@ -511,7 +511,6 @@ static inline int* Transporter_GetActiveModel(void* obj)
 #pragma peephole off
 void pushable_free(int* obj)
 {
-    extern int saveGame_saveObjectPos(int* obj);
     u8* def = *(u8**)&((GameObject*)obj)->anim.placementData;
     PushableState* sub = ((GameObject*)obj)->extra;
     s16 type = ((GameObject*)obj)->anim.seqId;
@@ -529,7 +528,7 @@ void pushable_free(int* obj)
         if (((PushablePlacement*)def)->gameBit > -1 && type != 0x54a && type != 0x5ae && type != 0x108 &&
             sub->savePosEnabled != 0)
         {
-            saveGame_saveObjectPos(obj);
+            saveGame_saveObjectPos((GameObject*)obj);
         }
         break;
     }
@@ -555,7 +554,6 @@ int pushable_getObjectTypeId(void)
 void pushable_update(int* obj)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfxId);
-    extern int saveGame_saveObjectPos(int* obj);
     PushableState* state;
     u8* def;
     void* player;
@@ -641,7 +639,7 @@ void pushable_update(int* obj)
         s16 t = ((GameObject*)obj)->anim.seqId;
         if (t != 0x54a && t != 0x5ae && t != 0x108 && state->savePosEnabled != 0 && (state->flags & 8) == 0)
         {
-            saveGame_saveObjectPos(obj);
+            saveGame_saveObjectPos((GameObject*)obj);
         }
     }
 }

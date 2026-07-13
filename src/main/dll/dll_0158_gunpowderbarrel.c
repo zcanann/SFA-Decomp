@@ -260,7 +260,7 @@ void gunpowderbarrel_triggerExplosion(GameObject *obj)
                 (obj)->anim.localPosX = ((GameObject*)best)->anim.localPosX;
                 (obj)->anim.localPosY = ((GameObject*)best)->anim.localPosY;
                 (obj)->anim.localPosZ = ((GameObject*)best)->anim.localPosZ;
-                saveGame_saveObjectPos((int*)obj);
+                saveGame_saveObjectPos((GameObject*)obj);
                 (obj)->anim.localPosX = x;
                 (obj)->anim.localPosY = y;
                 (obj)->anim.localPosZ = z;
@@ -845,7 +845,7 @@ void gunpowderbarrel_update(GameObject *obj)
         if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0 && ((GpbHeldFlags*)&state->heldFlags)->onGround != 0 &&
             (state->motionFlags & 2) == 0)
         {
-            saveGame_saveObjectPos((int*)obj);
+            saveGame_saveObjectPos((GameObject*)obj);
         }
     }
     if ((state->motionFlags & 2) != 0 || ((GpbHeldFlags*)&state->heldFlags)->held != 0 ||
@@ -1099,7 +1099,7 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
             (obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
             (obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
             (obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
-            saveGame_saveObjectPos((int*)obj);
+            saveGame_saveObjectPos((GameObject*)obj);
             (obj)->anim.localPosX = sx;
             (obj)->anim.localPosY = sy;
             (obj)->anim.localPosZ = sz;

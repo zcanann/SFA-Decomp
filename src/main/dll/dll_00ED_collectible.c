@@ -549,7 +549,7 @@ void collectible_setPosition(int* obj, f32 f1, f32 f2, f32 f3)
     ((CollectibleState*)inner)->basePosZ = f3;
     if (mainGetBit(((CollectibleState*)inner)->hideGameBit) == 0)
     {
-        saveGame_saveObjectPos(obj);
+        saveGame_saveObjectPos((GameObject*)obj);
     }
 }
 

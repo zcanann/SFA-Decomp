@@ -330,7 +330,7 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     count = 0;
     Obj_GetPlayerObject();
     runtime = (KytesMumRuntime*)(obj)->extra;
-    saveGame_saveObjectPos((int*)obj);
+    saveGame_saveObjectPos((GameObject*)obj);
     ObjHits_DisableObject((int)obj);
     for (; questBits[count] != -1 && mainGetBit(questBits[count]) != 0; count++)
     {

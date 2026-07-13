@@ -223,7 +223,7 @@ void fn_801A79E0(GameObject* obj)
         (obj)->anim.localPosX = state->homeX;
         (obj)->anim.localPosY = state->homeY;
         (obj)->anim.localPosZ = state->homeZ;
-        saveGame_saveObjectPos((int*)obj);
+        saveGame_saveObjectPos((GameObject*)obj);
     }
 }
 #pragma dont_inline reset
@@ -235,7 +235,7 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
     (obj)->anim.localPosX = x;
     (obj)->anim.localPosY = y;
     (obj)->anim.localPosZ = z;
-    saveGame_saveObjectPos((int*)obj);
+    saveGame_saveObjectPos((GameObject*)obj);
 }
 
 #pragma scheduling off
@@ -436,7 +436,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                 obj->anim.localPosX = state->homeX;
                 obj->anim.localPosY = state->homeY;
                 obj->anim.localPosZ = state->homeZ;
-                saveGame_saveObjectPos((int*)obj);
+                saveGame_saveObjectPos((GameObject*)obj);
             }
             else
             {
@@ -450,7 +450,7 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
                     obj->anim.localPosX = ((GameObject*)list[i])->anim.localPosX;
                     obj->anim.localPosY = ((GameObject*)list[i])->anim.localPosY;
                     obj->anim.localPosZ = ((GameObject*)list[i])->anim.localPosZ;
-                    saveGame_saveObjectPos((int*)obj);
+                    saveGame_saveObjectPos((GameObject*)obj);
                 }
                 {
                     f32 y = obj->anim.localPosY;

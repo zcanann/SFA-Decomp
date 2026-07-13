@@ -388,8 +388,6 @@ extern f32 lbl_803E8268;
 extern f32 lbl_803E826C;
 extern f32 lbl_80335128[];
 extern GameObject* gPlayerStaffObject;
-extern void objThrowFn_80182504(GameObject* a);
-extern void objSaveFn_800ea774(int a);
 extern int lbl_803DB0DC[];
 extern int lbl_803DB0D0[];
 extern f32 lbl_803E7EE4;

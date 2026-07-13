@@ -175,7 +175,7 @@ void dll_1DA_update(int obj)
     {
         ((GameObject*)obj)->anim.localPosY = *(f32*)state;
     }
-    saveGame_saveObjectPos((int*)obj);
+    saveGame_saveObjectPos((GameObject*)obj);
 }
 
 void dll_1DA_init(GameObject* obj)
