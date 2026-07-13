@@ -71,15 +71,25 @@ void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E34B0);
 }
 
+typedef struct MagicgemObjectDef
+{
+    u8 pad0[0xb - 0x0];
+    s8 magicAmount;
+    u8 padC[0x26 - 0xc];
+    u8 bankIndex;
+    u8 pad27[0x2e - 0x27];
+    s16 spawnMode;
+} MagicgemObjectDef;
+
 static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int player)
 {
-    int ref = (int)obj->anim.modelInstance->extraSetupData;
+    MagicgemObjectDef* ref = (MagicgemObjectDef*)obj->anim.modelInstance->extraSetupData;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     itemPickupDoParticleFxLegacy((int)obj, lbl_803E34B0, state->mode, 0x28);
     ObjHits_DisableObject(obj);
     Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
     Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
-    playerAddRemoveMagic(player, (int)*(s8*)(ref + 0xb));
+    playerAddRemoveMagic(player, (int)ref->magicAmount);
     state->flags27A = state->flags27A & ~5;
     state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
     state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;
@@ -294,14 +304,6 @@ void MagicDust_update(GameObject* obj)
 LAB_80173f80:
     return;
 }
-
-typedef struct MagicgemObjectDef
-{
-    u8 pad0[0x26 - 0x0];
-    u8 bankIndex;
-    u8 pad27[0x2e - 0x27];
-    s16 spawnMode;
-} MagicgemObjectDef;
 
 void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
 {
