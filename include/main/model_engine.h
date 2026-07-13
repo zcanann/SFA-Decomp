@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_timer.h"
+#include "main/model_engine_ui_api.h"
 
 typedef struct ModelRenderInstrsState {
     void* instrs;
@@ -108,7 +109,6 @@ void model_adjustModelList(ModelList* list, int index);
 void modelInitModelList(ModelList* list, s16 index, void* header);
 ModelList* allocModelStruct(int capacity, int dataSize);
 
-int getCurUiDll(void);
 int getUiDllFn_80014930(void);
 void loadUiDll(int index);
 void fn_8001404C(s32 value);

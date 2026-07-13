@@ -1,5 +1,6 @@
 #include "main/obj_placement.h"
 #include "main/model_engine.h"
+#include "main/model_engine_ui_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/debug.h"
@@ -7192,7 +7193,6 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
 
 extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();
-extern int getCurUiDll(void);
 
 extern u8 lbl_803DC6A8[8];
 extern u8 lbl_803DC6B0[2];

@@ -24,6 +24,7 @@
 #include "main/audio/audio_control_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/model_engine.h"
+#include "main/model_engine_ui_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/mm.h"
 #include "main/dll/gameplay.h"
@@ -185,7 +186,6 @@ extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
-extern int getCurUiDll(void);
 extern void playerAddHealth(u8* player, int v);
 
 void loadMapForCurrentSaveGame(void);

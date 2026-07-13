@@ -24,6 +24,7 @@
 #include "main/object_api.h"
 #include "main/obj_query.h"
 #include "main/model_engine.h"
+#include "main/model_engine_ui_api.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
 #include "main/objfx.h"
@@ -72,7 +73,6 @@ extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
-extern int getCurUiDll(void);
 extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);

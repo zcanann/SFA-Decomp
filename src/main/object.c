@@ -4,6 +4,7 @@
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/model.h"
+#include "main/model_engine_ui_api.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
 #include "main/audio/stream_api.h"
@@ -193,7 +194,6 @@ extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
 extern void playerDoHitDetection(int obj);
-extern int getCurUiDll(void);
 extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);

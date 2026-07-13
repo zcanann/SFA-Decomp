@@ -24,6 +24,7 @@
 #include "main/object_render_legacy.h"
 #include "main/audio.h"
 #include "main/model_engine.h"
+#include "main/model_engine_ui_api.h"
 #include "main/sky_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
@@ -327,7 +328,6 @@ extern u16 lbl_803DD994;
 extern u16 gTitleScreenCreditTimer;
 extern u16 gTitleScreenCreditIndex;
 extern s16 gTitleScreenCreditDelay;
-extern int getCurUiDll(void);
 extern f32 timeDelta;
 
 /* Reset the per-frame state group: latch showCredits = 1 and zero five
