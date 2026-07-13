@@ -13,9 +13,48 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/dll/SB/dll_01EE_sbcannonball.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
+
+#define SB_CANNONBALL_EXTRA_SIZE 0x24
+
+#define SB_CLOUDBALL_ALIAS_OBJECT_TYPE  0x0119
+
+#define SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG 0x01
+#define SB_CANNONBALL_INITIAL_BURST_FLAG          0x02
+#define SB_CANNONBALL_SOLID_HITBOX_FLAG           0x0001
+
+#define SB_CANNONBALL_BURST_PARTICLE_ID        170
+#define SB_CANNONBALL_TRAIL_PARTICLE_ID        169
+#define SB_CANNONBALL_IMPACT_SMOKE_PARTICLE_ID 167
+#define SB_CANNONBALL_IMPACT_SPARK_PARTICLE_ID 171
+#define SB_CANNONBALL_SMOKE_PARTICLE_COUNT     50
+#define SB_CANNONBALL_SPARK_PARTICLE_COUNT     10
+
+#define SB_CANNONBALL_SETUP_SIZE     4
+#define SB_CANNONBALL_SETUP_MODEL_ID 389
+#define SB_CANNONBALL_SETUP_PARAM    5
+#define SB_CANNONBALL_ROTATION_STEP  4000
+
+#define SB_CANNONBALL_HITBOX_ENABLE_DELAY 15
+#define SB_CANNONBALL_HITBOX_TYPE         5
+#define SB_CANNONBALL_HITBOX_PRIORITY     1
+#define SB_CANNONBALL_HITBOX_SIZE         16
+
+#define SB_CANNONBALL_IMPACT_SFX          0x31D
+#define SB_CANNONBALL_IMPACT_VISUAL_TIMER 25
+
+#define SB_CANNONBALL_LIGHT_KIND     1
+#define SB_CANNONBALL_LIGHT_FIELD50  2
+#define SB_CANNONBALL_LIGHT_RED      200
+#define SB_CANNONBALL_LIGHT_GREEN    60
+#define SB_CANNONBALL_LIGHT_BLUE     0
+#define SB_CANNONBALL_LIGHT_ALPHA    0
+#define SB_CANNONBALL_LIGHT_FIELD_BC 1
+
+#define SB_CANNONBALL_LAUNCH_SFX 53
+#define SB_CANNONBALL_LOOP_SFX   714
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 

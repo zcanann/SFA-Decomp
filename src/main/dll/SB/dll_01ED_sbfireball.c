@@ -8,11 +8,21 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/sbfireballstate_struct.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/game_object.h"
-#include "main/dll/TREX/TREX_trex.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/SB/dll_01ED_sbfireball.h"
+
+#define SB_FIREBALL_EXTRA_SIZE          0x18
+#define SB_FIREBALL_SPIN_STEP           -800
+#define SB_FIREBALL_TRAIL_PARTICLE_ID   169
+#define SB_FIREBALL_SETUP_SIZE          4
+#define SB_FIREBALL_SETUP_MODEL_ID      389
+#define SB_FIREBALL_SETUP_PARAM         5
+#define SB_FIREBALL_HITBOX_ENABLE_DELAY 15
+#define SB_FIREBALL_HITBOX_TYPE         5
+#define SB_FIREBALL_HITBOX_PRIORITY     1
+#define SB_FIREBALL_HITBOX_SIZE         16
+#define SB_FIREBALL_SOLID_HITBOX_FLAG   1
 
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 

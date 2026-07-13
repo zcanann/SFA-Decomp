@@ -26,12 +26,44 @@
 #include "main/obj_list.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/TREX/TREX_levelcontrol.h"
+#include "main/dll/SB/dll_01EE_sbcannonball.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx.h"
 #include "main/dll/fx_800944A0_shared.h"
+
+#define SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE 0x008C
+#define SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE     0x008E
+#define SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE  0x0139
+
+#define SB_SHIPGUN_START_HEALTH            2
+#define SB_SHIPGUN_WAKE_DELAY              60
+#define SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT  4
+#define SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT 8
+#define SB_SHIPGUN_FAST_FIRE_GALLEON_STAGE 3
+#define SB_SHIPGUN_VOLLEY_SIZE             3
+#define SB_SHIPGUN_FIRE_DELAY_VARIANCE     40
+#define SB_SHIPGUN_SLOW_FIRE_DELAY         120
+#define SB_SHIPGUN_FAST_FIRE_DELAY         80
+#define SB_SHIPGUN_CANNONBALL_LIFETIME     120
+
+#define SB_SHIPGUN_CANNONBALL_ALLOC_SIZE  0x18
+#define SB_SHIPGUN_CANNONBALL_MODEL_FIELD 2
+#define SB_SHIPGUN_CANNONBALL_FLAGS_FIELD 1
+#define SB_SHIPGUN_CANNONBALL_BYTE_FF     0xFF
+
+#define SB_SHIPGUN_HIT_REACT_TYPE  0x0F
+#define SB_SHIPGUN_HIT_REACT_POWER 200
+#define SB_SHIPGUN_HIT_ANIM_A      0x36
+#define SB_SHIPGUN_HIT_ANIM_B      0x3A
+#define SB_SHIPGUN_FIRE_ANIM       0x3C
+#define SB_SHIPGUN_RANGE_FAR_ANIM  0x40
+#define SB_SHIPGUN_RANGE_NEAR_ANIM 0x312
+
+#define SB_SHIPGUN_SMOKE_PARTICLE_ID    0x7AA
+#define SB_SHIPGUN_SMOKE_PARTICLE_FLAGS 0x0C0A
+#define SB_SHIPGUN_SMOKE_PARTICLE_PARAM 2
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
