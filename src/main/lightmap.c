@@ -26,13 +26,7 @@
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
 extern u32 DAT_803dda68;
-extern f64 DOUBLE_803df840;
 extern f32 lbl_803DC2D0;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803DDAD4;
-extern f32 lbl_803DDAD8;
-extern f32 lbl_803DF834;
 extern f32 lbl_803DF89C;
 
 typedef struct

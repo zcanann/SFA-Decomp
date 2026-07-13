@@ -40,7 +40,6 @@ extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
 extern int gArwingAttachmentItemSetIdle[];
 extern f32 lbl_803E5D9C;
-extern f32 gArwingAttachmentU32ToDoubleBias;
 extern int gArwingAttachmentItemSetWander[];
 extern ArwAttachTarget gArwingAttachmentTargets[];
 extern char sArwingAttachmentDiffFormat[];

@@ -57,7 +57,6 @@ extern u32 ObjGroup_AddObject();
 #pragma peephole on
 extern f32 lbl_803E3FC4;
 extern const f32 lbl_803E3F98;
-extern void fn_801923F8(int* cfg);
 extern const f32 lbl_803E3FB8;
 extern void* mapBlockFn_800606ec(int* obj, int idx);
 extern int mapBlockFn_80060678(void* entry);

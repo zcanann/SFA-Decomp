@@ -51,7 +51,6 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define SWARMBADDIE_FLAG_CHASE_MASK      0x06
 
-extern u32 DAT_803de6d0;
 extern f32 lbl_803E2678;
 extern f32 lbl_803E267C;
 extern f32 lbl_803E2680;

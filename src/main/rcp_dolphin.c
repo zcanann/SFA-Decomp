@@ -87,12 +87,6 @@ extern int FUN_8025a850();
 extern u32 GXSetBlendMode();
 extern u64 FUN_80286834();
 extern u32 FUN_80286880();
-extern u32 lbl_803DC070;
-extern f32 lbl_803DDAC8;
-extern f32 lbl_803DDACC;
-extern f32 lbl_803DDAD0;
-extern f32 lbl_803DF818;
-extern f32 lbl_803DF81C;
 
 void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5, u8 wrapS, u8 wrapT, u8 minFilter,
                   u8 magFilter)
