@@ -26,14 +26,18 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_descriptor.h"
 #include "main/object_render.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
 #include "main/objprint_api.h"
 #include "main/obj_placement.h"
+#include "main/pad.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0258_drcloudrunner.h"
 #include "main/player_control_interface.h"
+#include "main/vecmath.h"
 
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
@@ -258,7 +262,7 @@ int DR_CloudRunner_stateHandler03(GameObject* obj, int baddie)
         if (((ByteFlags*)&inner->flagsBC0)->b20)
         {
             ((ByteFlags*)&inner->flagsBC0)->b20 = 0;
-            fn_802BF0C8((int)obj, baddie, ((ByteFlags*)&inner->flagsBC0)->b20);
+            fn_802BF0C8(obj, (CloudRunnerState*)baddie, ((ByteFlags*)&inner->flagsBC0)->b20);
         }
     }
     switch ((obj)->anim.currentMove)
@@ -435,7 +439,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
     }
     (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
-    fn_802BF0C8((int)obj, inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
+    fn_802BF0C8(obj, (CloudRunnerState*)inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);
     dll_2E_func08((MoveLibState*)(inner + 0x4c4), 0x12c, 0x78);
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
@@ -491,7 +495,7 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
         if (!((ByteFlags*)&inner->flagsBC0)->b20)
         {
             ((ByteFlags*)&inner->flagsBC0)->b20 = 1;
-            fn_802BF0C8(obj, baddie, ((ByteFlags*)&inner->flagsBC0)->b20);
+            fn_802BF0C8((GameObject*)obj, (CloudRunnerState*)baddie, ((ByteFlags*)&inner->flagsBC0)->b20);
         }
         ObjAnim_SetCurrentMove(obj, *(s16*)(base + 0x68), lbl_803E83A4, 0);
         inner->pitchAngle = *(s16*)(base + 0x74);
@@ -797,11 +801,11 @@ int DR_CloudRunner_stateHandler05(int obj, int baddie, f32 f)
     return 0;
 }
 
-void fn_802BF0C8(int obj, int baddie, int mode)
+void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode)
 {
     u8* base = gDRCloudRunnerMoveParamTable;
     int stk = lbl_803E83A0;
-    u8* pathState = (u8*)&((CloudRunnerState*)baddie)->baddie + 4;
+    u8* pathState = (u8*)&state->baddie + 4;
     u8 moveMode;
     pathState[0x25b] = 1;
     moveMode = mode;
@@ -823,7 +827,7 @@ void fn_802BF0C8(int obj, int baddie, int mode)
         (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0x48, &lbl_803DC784, 8);
         (*gPathControlInterface)->setup(pathState, 1, base + 0x3c, &lbl_803DC780, &stk);
     }
-    (*gPathControlInterface)->attachObject((void*)obj, pathState);
+    (*gPathControlInterface)->attachObject(obj, pathState);
 }
 
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
@@ -1112,9 +1116,9 @@ void DR_CloudRunner_update(GameObject* obj)
         inner->moveFlags &= ~1;
     }
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x4c4));
-    objAnimFn_80038f38(obj, (int)((char*)inner + 0x494));
-    fn_8003B500(obj, (int)((char*)inner + 0x464), lbl_803E83A4);
-    characterDoEyeAnims(obj, (int)inner + 0x464);
+    objAnimFn_80038f38IntStateLegacy(obj, (int)((char*)inner + 0x494));
+    fn_8003B500IntStateLegacy(obj, (int)((char*)inner + 0x464), lbl_803E83A4);
+    characterDoEyeAnimsIntStateLegacy(obj, (int)inner + 0x464);
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {
         if (inner->flightState == CLOUDRUNNER_FLIGHT_GROUNDED)

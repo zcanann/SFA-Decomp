@@ -3969,7 +3969,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     }
     if (((u32) * (u8*)((char*)inner + 0x3f2) >> 6 & 1) != 0)
     {
-        characterDoEyeAnims((GameObject*)(obj), (int)((char*)inner + 0x364));
+        characterDoEyeAnimsState((GameObject*)obj, (char*)inner + 0x364);
     }
     if (gPlayerSubState == 2)
     {
@@ -12002,7 +12002,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     }
     else
     {
-        characterDoEyeAnims((GameObject*)(obj), inner + 0x3ac);
+        characterDoEyeAnimsState((GameObject*)obj, inner + 0x3ac);
         ((PlayerState*)state)->baddie.targetObj = Obj_GetPlayerObject();
         v = *(int*)&((PlayerState*)sub)->baddie.posX;
         if (v >= 0x49942 || v < 0x4993f)
@@ -16196,7 +16196,7 @@ void playerDoEyeAnims(GameObject* obj, int state)
 
     if ((s8) * (s8*)(((PlayerState*)state)->playerStatus) > 0)
     {
-        characterDoEyeAnims(obj, state + 0x364);
+        characterDoEyeAnimsState(obj, state + 0x364);
     }
     else
     {

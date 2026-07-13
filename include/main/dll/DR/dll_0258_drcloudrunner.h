@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/objanim_update.h"
+#include "main/dll/DR/cloudrunner_state.h"
 
 /* placement record passed to init / read by the state handlers */
 typedef struct DRCloudRunnerPlacement
@@ -64,6 +65,13 @@ void DR_CloudRunner_setGroundMarkerMatrix(GameObject* obj);
 int DR_CloudRunner_func14(GameObject* obj);
 void DR_CloudRunner_modelMtxFn(GameObject* obj, f32* x, f32* y, f32* z);
 int DR_CloudRunner_stateHandler07(GameObject* obj);
+int DR_CloudRunner_stateHandler00(GameObject* obj);
+int DR_CloudRunner_stateHandler01(GameObject* obj, int state);
+int DR_CloudRunner_stateHandler02(GameObject* obj, int state);
+int DR_CloudRunner_stateHandler03(GameObject* obj, int state);
+int DR_CloudRunner_stateHandler04(GameObject* obj, int state);
+int DR_CloudRunner_stateHandler05(int obj, int state, f32 value);
+int DR_CloudRunner_stateHandler06(GameObject* obj, int state);
 void DR_CloudRunner_free(GameObject* obj);
 void DR_CloudRunner_initialise(void);
 void DR_CloudRunner_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 vis);
@@ -74,5 +82,6 @@ void DR_CloudRunner_init(GameObject* obj, int p2);
 void DR_CloudRunner_func23(GameObject* obj, int mode, int* out);
 void DR_CloudRunner_hitDetect(GameObject* obj);
 void DR_CloudRunner_update(GameObject* obj);
+void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode);
 
 #endif /* MAIN_DLL_DR_DLL_0258_DRCLOUDRUNNER_H_ */

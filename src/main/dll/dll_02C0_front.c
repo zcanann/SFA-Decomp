@@ -26,6 +26,7 @@
 #include "main/camera.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/dll/baddie/Tumbleweed.h"
@@ -524,7 +525,6 @@ void fn_80134870(int obj, u8* arr);
  * blend, and the one-shot envfx/sky setup. */
 void TitleScreen_update(u8* obj)
 {
-    extern void characterDoEyeAnims(GameObject * obj, void* state);
     extern void fn_8003B228(GameObject * obj, void* p);
     extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);
     extern void Sfx_PlayFromObject(u8 * obj, u32 sfxId);
@@ -670,7 +670,7 @@ void TitleScreen_update(u8* obj)
         }
         else if (t >= 0x77d && t < 0x781)
         {
-            characterDoEyeAnims((GameObject*)(obj), state);
+            characterDoEyeAnimsState((GameObject*)obj, state);
         }
         model = Obj_GetActiveModel((GameObject*)obj);
         if (model->file->morphTargetCount != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&

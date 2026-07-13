@@ -10,6 +10,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct TrickyState
 {
@@ -131,7 +132,6 @@ extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern void objSetAnimSpeedTo1(int* obj);
-extern void objAudioFn_800393f8(int obj, void* p2, int p3, int p4, int p5, int p6);
 extern void* ObjGroup_GetObjects(int group, int* count);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);
@@ -283,7 +283,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                         {
                             if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                             {
-                                objAudioFn_800393f8((int)obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
+                                objAudioFn_800393f8Legacy(obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
                             }
                         }
                     }
@@ -377,7 +377,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                         {
                             if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                             {
-                                objAudioFn_800393f8((int)obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
+                                objAudioFn_800393f8Legacy(obj, (char*)i + 0x3a8, 0x29d, 0, -1, 0);
                             }
                         }
                     }
@@ -601,7 +601,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8((int)obj, (char*)temp + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x29d, 0, -1, 0);
                     }
                 }
             }
@@ -639,7 +639,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8((int)obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -664,7 +664,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8((int)obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (char*)temp + 0x3a8, 0x299, 0x100, -1, 0);
                     }
                 }
             }

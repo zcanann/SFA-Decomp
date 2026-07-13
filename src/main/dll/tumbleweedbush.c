@@ -24,6 +24,7 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct TrickyGrowlState
 {
@@ -52,7 +53,6 @@ extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
-extern void objAudioFn_800393f8(void* obj, void* p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 extern void objSetAnimSpeedTo1(int* obj);
@@ -83,7 +83,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
                     }
                 }
             }
@@ -114,7 +114,7 @@ void trickyGrowl(void* obj, void* trickyState)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
                         {
-                            objAudioFn_800393f8(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, (char*)state + 0x3a8, 0x299, 0x100, -1, 0);
                         }
                     }
                 }
@@ -168,7 +168,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 {
                     if (Sfx_IsPlayingFromObjectChannel((u32)(int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8(obj, (char*)digState + 0x3a8, 0x29d, 0, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (char*)digState + 0x3a8, 0x29d, 0, -1, 0);
                     }
                 }
             }

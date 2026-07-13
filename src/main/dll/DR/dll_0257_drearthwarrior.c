@@ -1,16 +1,24 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/dll/DR/dll_0257_drearthwarrior.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/camera.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
+#include "main/objprint_sound_api.h"
 #include "main/objprint_api.h"
+#include "main/pad.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/player_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
 #include "main/maketex.h"
+#include "main/vecmath.h"
 
 #define storeZeroToFloatParamLegacy(timer) \
     ((void (*)(int))storeZeroToFloatParam)((timer))
@@ -402,7 +410,7 @@ int DR_EarthWarrior_stateHandler03(GameObject* obj, int baddie)
                 inner->sub.unk8EC = lbl_803DC76C;
                 Camera_EnableViewYOffset();
                 CameraShake_SetAllMagnitudes(lbl_803E8338);
-                playerAddHealth((int)Obj_GetPlayerObject(), -1);
+                playerAddHealth(Obj_GetPlayerObject(), -1);
                 inner->sub.health = 0;
             }
             return inner->sub.savedControlMode + 1;
@@ -479,7 +487,7 @@ void DR_EarthWarrior_func23(GameObject* obj, int mode)
     {
     case 1:
         inner->sub.health += 4;
-        objAudioFn_800393f8((int)obj, (char*)inner + 0x3bc, 0x291, 0x1000, -1, 1);
+        objAudioFn_800393f8(obj, (ObjSoundState*)((char*)inner + 0x3bc), 0x291, 0x1000, -1, 1);
         inner->sub.unk8EC = lbl_803E82E8;
         *(f32*)((char*)lbl_8033527C + 0x24) = inner->sub.unk8EC;
         break;
@@ -1181,7 +1189,7 @@ void DR_EarthWarrior_hitDetect(GameObject* obj)
                     return;
                 }
                 {
-                    objAudioFn_800393f8((int)obj, (void*)((char*)inner + 0x3bc), 0x28e, 0x1000, -1, 1);
+                    objAudioFn_800393f8(obj, (ObjSoundState*)((char*)inner + 0x3bc), 0x28e, 0x1000, -1, 1);
                     {
                         s16 d = obj->anim.rotX - (u16)((GameObject*)hitObj)->anim.rotX;
                         if (d > 0x8000)
@@ -1300,8 +1308,8 @@ void DR_EarthWarrior_update(GameObject* obj)
         (obj)->anim.velocityZ = z;
         fn_802BE6E8(obj, framesThisStep, -1);
     }
-    characterDoEyeAnims(obj, (int)((char*)inner + 0x38c));
-    objAnimFn_80038f38(obj, (int)((char*)inner + 0x3bc));
+    characterDoEyeAnimsState(obj, (char*)inner + 0x38c);
+    objAnimFn_80038f38(obj, (char*)inner + 0x3bc);
     dll_2E_func03(obj, (MoveLibState*)((char*)inner + 0x3ec));
     if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
     {

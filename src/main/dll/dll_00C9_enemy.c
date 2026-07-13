@@ -10,6 +10,7 @@
 #include "main/camera_interface.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/model.h"
@@ -80,7 +81,6 @@ extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
-extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern void fn_8003B0D0(GameObject* obj, int b, void* c, int d);
 extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
@@ -213,7 +213,7 @@ void objAnimFn_8014a9f0(short* obj, int state)
     memcpy((void*)(state + 0x2b8), obj + 0x12, 0xc);
     if ((((TrickyState*)state)->controlFlags & 0x400) != 0)
     {
-        characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x26c));
+        characterDoEyeAnimsState((GameObject*)obj, state + 0x26c);
     }
     if ((*(void**)&((TrickyState*)state)->actionTargetObj != 0) && ((((TrickyState*)state)->controlFlags & 0x800) != 0))
     {

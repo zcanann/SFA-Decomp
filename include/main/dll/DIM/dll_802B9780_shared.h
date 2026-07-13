@@ -42,7 +42,6 @@ extern u64 FUN_80006a68();
 extern u32 FUN_80006a6c();
 extern double FUN_80017708();
 extern u32 FUN_8001776c();
-extern u32 objAnimFn_80038f38();
 extern u32 FUN_80039468();
 extern u32 FUN_8003a1c4();
 extern u32 FUN_8003b444();
@@ -298,7 +297,6 @@ typedef struct
 
 extern u8 gDIMSnowHorn1ConfigTable[];
 extern void fn_8003A168(GameObject* obj, int q);
-extern void fn_8003B500(GameObject* obj, int q, f32 f);
 extern void fn_802BB4B4(GameObject* obj, int a, int slot);
 extern int getCurMapLayer(void);
 extern f32 getXZDistance(int a, int b);
@@ -315,13 +313,6 @@ extern void* gEarthWarriorResource;
 
 extern int gDRCloudRunnerStateHandlers[];
 extern void* gDRCloudRunnerDefaultStateHandler;
-extern int DR_CloudRunner_stateHandler00(GameObject* obj);
-extern int DR_CloudRunner_stateHandler01(GameObject* obj, int p2);
-extern int DR_CloudRunner_stateHandler02(GameObject* obj, int p2);
-extern int DR_CloudRunner_stateHandler03(GameObject* obj, int p2);
-extern int DR_CloudRunner_stateHandler04(GameObject* obj, int p2);
-extern void DR_CloudRunner_stateHandler05();
-extern void DR_CloudRunner_stateHandler06();
 
 extern int gDim2PrisonMammothStateHandlers[];
 extern int gDREarthWarriorStateHandlers[];
@@ -330,9 +321,6 @@ extern void* gDREarthWarriorDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(GameObject* obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(GameObject* obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(GameObject* obj, int p2);
-extern void DR_EarthWarrior_stateHandler01();
-extern void DR_EarthWarrior_stateHandler02();
-extern int DR_EarthWarrior_stateHandler03(GameObject* obj, int p2);
 
 extern f32 lbl_803E82C0;
 extern f32 gPrisonMammothMoveSpeed;
@@ -347,7 +335,6 @@ extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
 extern s16 gDRCloudRunnerDefaultRotX;
-extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
 extern f32 lbl_803DC76C;
@@ -359,7 +346,6 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 
-extern int objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int p5, int p6);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void* gDIMSnowHorn1Texture;
@@ -384,7 +370,6 @@ extern f32 gDIMSnowHorn1Gravity;
 
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
-void fn_802BF0C8(int obj, int inner, int bit);
 
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];

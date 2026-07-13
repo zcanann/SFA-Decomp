@@ -26,6 +26,7 @@
 #include "main/debug.h"
 #include "main/dll/moveLib.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_0266_kytesmum.h"
 #include "main/dll/DR/dll_0265_drcreator.h"
@@ -129,7 +130,7 @@ void kytesmum_update(GameObject* obj)
         runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
     }
     kytesmum_playAnimationEventSfx((int)obj, runtime->animEvents, runtime->eventSfxTable);
-    characterDoEyeAnims(obj, (int)runtime->eyeAnimState);
+    characterDoEyeAnimsState(obj, runtime->eyeAnimState);
     objAnimFn_80038f38(obj, (char*)&runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, (u32)obj, &nearDist);
     if ((void*)nearest != NULL)

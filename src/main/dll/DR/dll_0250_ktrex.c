@@ -8,6 +8,7 @@
 #include "main/vecmath.h"
 #include "main/objprint_dolphin.h"
 #include "main/objprint_api.h"
+#include "main/objprint_character_api.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/DR/dll_0250_ktrex.h"
 #include "main/newclouds.h"
@@ -518,7 +519,7 @@ void ktrex_update(int obj)
         }
         runtime->playerDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
-    characterDoEyeAnims((GameObject*)(obj), (char*)gKTRexRuntime + 0x3ac);
+    characterDoEyeAnimsState((GameObject*)obj, (char*)gKTRexRuntime + 0x3ac);
     zm[0] = 0;
     zc[0] = zm[0];
     bitA = lbl_803DC290;

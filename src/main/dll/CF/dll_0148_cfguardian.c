@@ -31,6 +31,9 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
+#include "main/objprint_sound_api.h"
 
 #define CFGUARDIAN_OBJGROUP        0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
@@ -161,7 +164,6 @@ extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
 extern int ObjHits_EnableObject();
-extern int objAnimFn_80038f38();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
@@ -173,7 +175,6 @@ extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair templ
 extern int animatedObjGetSeqId(int* p);
 extern void playerAddRemoveMagic(void* player, int n);
 extern f32 timeDelta;
-extern void objAudioFn_800393f8(int obj, void* p, int a, int b, int c, int d);
 extern u8 framesThisStep;
 extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
@@ -183,7 +184,6 @@ extern int randFn_80080100(int n);
 extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern void buttonDisable(int port, u32 mask);
-extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;                /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 extern f32 oneOverTimeDelta;
@@ -962,10 +962,10 @@ int cfguardian_updateMain(GameObject* obj)
     ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
-        objAudioFn_800393f8((int)obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
+        objAudioFn_800393f8Legacy(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);
     }
-    objAnimFn_80038f38(obj, sub->audioBlock);
-    characterDoEyeAnims(obj, sub->eyeBlock);
+    objAnimFn_80038f38(obj, (char*)sub->audioBlock);
+    characterDoEyeAnimsState(obj, sub->eyeBlock);
     if (sub->questState != mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE))
     {
         mainSetBits(GAMEBIT_GUARDIAN_QUEST_STATE, sub->questState);

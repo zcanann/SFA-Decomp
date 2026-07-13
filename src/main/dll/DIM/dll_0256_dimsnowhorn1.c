@@ -18,6 +18,8 @@
 #include "main/player_control_interface.h"
 #include "main/object_descriptor.h"
 #include "main/objprint_api.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
@@ -1247,7 +1249,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         if (((DIMSnowHorn1State*)data)->hitReactState != 0)
         {
             fn_8003A168(obj, data + 0x980);
-            characterDoEyeAnims(obj, data + 0x980);
+            characterDoEyeAnimsState(obj, data + 0x980);
             return;
         }
     }
@@ -1297,7 +1299,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         {
             ((DIMSnowHorn1State*)statePtr)->playerNearby = 0;
         }
-        fn_8003B500(obj, data + 0x980, lbl_803E8234);
+        fn_8003B500FloatLegacy(obj, (s16*)(data + 0x980), lbl_803E8234);
         break;
     }
     switch (((DIMSnowHorn1State*)data)->mode)
@@ -1394,7 +1396,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         }
         break;
     }
-    characterDoEyeAnims(obj, data + 0x980);
+    characterDoEyeAnimsState(obj, data + 0x980);
     v.x = (obj)->anim.localPosX;
     v.y = (obj)->anim.localPosY;
     v.z = (obj)->anim.localPosZ;

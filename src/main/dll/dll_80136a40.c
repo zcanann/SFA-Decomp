@@ -39,6 +39,7 @@
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
 #include "main/gamebit_ids.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct TrickyImpressState
 {
@@ -182,7 +183,6 @@ extern u32 mainGetBit(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern u32 getScreenResolution(void);
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
-extern void objAudioFn_800393f8(u8*, u8*, int, int, int, int);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
@@ -478,7 +478,7 @@ int fn_80138920(GameObject* obj, int sfxId, int vol)
     }
     if (Sfx_IsPlayingFromObjectChannel((u8*)obj, 16) != 0)
         return 0;
-    objAudioFn_800393f8((u8*)obj, b + 936, sfxId, vol, -1, 0);
+    objAudioFn_800393f8Legacy(obj, b + 936, sfxId, vol, -1, 0);
     return 1;
 }
 

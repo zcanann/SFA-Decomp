@@ -25,6 +25,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/objprint_sound_api.h"
 #include "main/dll/tricky_rollroute.h"
 
 /* The "ball" is the Tricky cannonball's TrickyState extra block: substate is
@@ -49,7 +50,6 @@ extern f32 lbl_803E250C;
    trickyFn_8013b368: trickyfollow (block-scope signature override of
    trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57). */
 extern f32 getXZDistance(f32* a, f32* b);
-extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
@@ -183,7 +183,7 @@ void trickyFn_80141290(int obj, int ball)
                 ((((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                  !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
             {
-                objAudioFn_800393f8(obj, (void*)(sfxState + 0x3a8), 0x29b, 0x1000, -1, 0);
+                objAudioFn_800393f8Legacy(obj, (void*)(sfxState + 0x3a8), 0x29b, 0x1000, -1, 0);
             }
         }
     }

@@ -31,6 +31,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct
 {
@@ -81,7 +82,6 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern void objAudioFn_800393f8(int obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
@@ -155,7 +155,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
-                            objAudioFn_800393f8((int)obj, (void*)(extra + 936), 861, 1280, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 861, 1280, -1, 0);
                         }
                     }
                 }
@@ -262,7 +262,7 @@ void fn_8013F100(GameObject* obj, register int state)
                     }
                     if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                     {
-                        objAudioFn_800393f8((int)obj, (void*)(extra + 936), 865, 1280, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 865, 1280, -1, 0);
                     }
                 }
             }
@@ -471,7 +471,7 @@ void fn_8013F9E4(GameObject* obj, int state)
                     {
                         if (((s32 (*)(void*, u32))Sfx_IsPlayingFromObjectChannel)(obj, 16) == 0)
                         {
-                            ((void (*)(void*, void*, int, int, int, int))objAudioFn_800393f8)(obj, (void*)(extra + 936), 864, 1280, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, (void*)(extra + 936), 864, 1280, -1, 0);
                         }
                     }
                 }

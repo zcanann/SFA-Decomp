@@ -8,6 +8,7 @@
  * driven by the dll_2E_func* helpers.
  */
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/dll/moveLib.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
@@ -21,7 +22,6 @@
 
 extern u32 ObjHits_DisableObject();
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
-extern void characterDoEyeAnims(GameObject* obj, void* p);
 
 static const Vec3s ccqueenEyeSetupA = {0x1e, 0, 0};
 static const Vec3s ccqueenEyeSetupB = {0x19, 0x19, 0x19};
@@ -63,7 +63,7 @@ void ccqueen_update(int* obj)
     {
         ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, timeDelta, NULL);
         dll_2E_func03((GameObject*)obj, (MoveLibState*)charState);
-        characterDoEyeAnims((GameObject*)obj, charState + 0x624);
+        characterDoEyeAnimsState((GameObject*)obj, charState + 0x624);
     }
 }
 

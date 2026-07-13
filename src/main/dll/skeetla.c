@@ -30,6 +30,7 @@
 #include "main/lightmap.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/skeetla.h"
+#include "main/objprint_sound_api.h"
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP      0x40 /* DLL 0xEB siderepel */
@@ -87,7 +88,6 @@ extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern f32 getXZDistance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
-extern void objAudioFn_800393f8(u8* obj, void* audio, int sfxId, int volume, int param5, int param6);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
@@ -441,7 +441,7 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))
     {
-        objAudioFn_800393f8(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
+        objAudioFn_800393f8Legacy(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
     }
 }
 

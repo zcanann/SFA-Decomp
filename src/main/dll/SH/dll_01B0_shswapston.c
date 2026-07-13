@@ -16,6 +16,9 @@
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
+#include "main/objprint_sound_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_query.h"
@@ -102,7 +105,6 @@ void warpstone_free(GameObject* obj, int mode)
 
 void warpstone_hitDetect(GameObject* obj)
 {
-    extern void objAudioFn_800393f8(int obj, int* p, int a, int b, int c, int d);
     int* state = (obj)->extra;
     f32 pos[3];
     f32 lightPos[3];
@@ -120,7 +122,7 @@ void warpstone_hitDetect(GameObject* obj)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
         }
-        objAudioFn_800393f8((int)obj, state + 5, 171, -1280, -1, 0);
+        objAudioFn_800393f8Legacy(obj, state + 5, 171, -1280, -1, 0);
     }
 }
 
@@ -438,12 +440,9 @@ extern f32 lbl_803E54AC;
 
 extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
-extern void objAnimFn_80038f38(GameObject* obj, int* animState);
-extern void characterDoEyeAnims(GameObject* obj, void* state);
 
 void warpstone_update(int obj)
 {
-    extern void objAudioFn_800393f8(int obj, void* state, int sfxId, int a, int b, int c);
     int state;
     int child;
     int advanceResult;
@@ -469,11 +468,11 @@ void warpstone_update(int obj)
     {
         if (randFn_80080100(100) != 0)
         {
-            objAudioFn_800393f8(obj, (void*)(state + 0x14), 0xab, -0x100, -1, 0);
+            objAudioFn_800393f8Legacy(obj, (void*)(state + 0x14), 0xab, -0x100, -1, 0);
         }
         if (randFn_80080100(500) != 0)
         {
-            objAudioFn_800393f8(obj, (void*)(state + 0x14), 0x417, -0x500, -1, 0);
+            objAudioFn_800393f8Legacy(obj, (void*)(state + 0x14), 0x417, -0x500, -1, 0);
         }
     }
 
@@ -562,8 +561,8 @@ void warpstone_update(int obj)
         }
     }
 
-    objAnimFn_80038f38((GameObject*)(obj), (int*)(state + 0x14));
-    characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x44));
+    objAnimFn_80038f38((GameObject*)obj, (char*)(state + 0x14));
+    characterDoEyeAnimsState((GameObject*)obj, state + 0x44);
     if (mainGetBit(GAMEBIT_SH_SawWarpStoneIntro) == 0)
     {
         ((WarpstoneState*)state)->activated = 0;

@@ -12,6 +12,8 @@
  * a one-shot init guard that stops the looping SFX on channel 0x7f.
  */
 #include "main/game_object.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
 #include "main/object_api.h"
 #include "main/objanim_update.h"
 #include "main/dll/SH/dll_01AC_shqueenearthwalker.h"
@@ -27,9 +29,7 @@
 extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
 
 extern void Sfx_StopObjectChannel(void* obj, int channel);
-extern int fn_8003B500(GameObject* obj, void* p2, f32 f1);
 extern int fn_8003B228(GameObject* obj, void* p2);
-extern int characterDoEyeAnims(GameObject* obj, void* p2);
 
 int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnimUpdateState* animUpdate)
 {
@@ -77,7 +77,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
             state->targetX = player->anim.localPosX;
             state->targetY = player->anim.localPosY;
             state->targetZ = player->anim.localPosZ;
-            fn_8003B500(obj, (u8*)state + 0x8, lbl_803E53F8);
+            fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
         }
         animUpdate->hitVolumePair &= ~0x40;
         if ((state->flags & QEW_FLAG_EYE_ANIMS) != 0)
@@ -86,7 +86,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
         }
         else
         {
-            characterDoEyeAnims(obj, (u8*)state + 0x8);
+            characterDoEyeAnimsState(obj, (u8*)state + 0x8);
         }
     }
     return 0;

@@ -34,9 +34,9 @@
 #include "main/dll/tricky_state.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/objprint_sound_api.h"
 extern int ObjGroup_FindNearestObject();
 extern void ObjLink_AttachChild();
-extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int param5, int param6);
 extern int trickyFn_8013b368();
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 
@@ -135,7 +135,7 @@ static inline void trickyPlayWhineSfx(u32 id, u8* obj)
         (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
         Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
     {
-        objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
+        objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, id, 0x500, -1, 0);
     }
 }
 
@@ -257,7 +257,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                 Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
             {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
+                objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
             }
         }
         spd = ((f32(**)(u8*, u8*))(**(u8***)(((TrickyState*)state)->followObj + 0x68)))[8](
@@ -287,7 +287,7 @@ void trickyDigTunnel(u8* obj, u8* state)
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                 Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
             {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
+                objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, id, 0x500, -1, 0);
             }
         }
         break;
@@ -583,7 +583,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                              ((GameObject*)obj)->anim.currentMove < 0x29) &&
                             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                         {
-                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
                         }
                     }
                     if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
@@ -750,7 +750,7 @@ int trickyFn_80142a14(int obj, int state)
             {
                 if (Sfx_IsPlayingFromObjectChannel(obj, 16) == 0)
                 {
-                    objAudioFn_800393f8(obj, (void*)(tex + 0x3a8), sfxId, 1280, -1, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(tex + 0x3a8), sfxId, 1280, -1, 0);
                 }
             }
         }
@@ -806,7 +806,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                     (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                     Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                 {
-                    objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29d, 0, -1, 0);
+                    objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x29d, 0, -1, 0);
                 }
                 state[0xa] = 10;
             }
@@ -864,7 +864,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
             {
                 if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                 {
-                    objAudioFn_800393f8((int)obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
                 }
             }
         }
@@ -994,7 +994,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                 Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
             {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x357, 0, -1, 0);
+                objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x357, 0, -1, 0);
             }
             objAnimFn_8013a3f0((int)obj, 0x26, lbl_803E251C, 0);
             state[0xa] = 5;
@@ -1102,7 +1102,7 @@ u32 trickyFn_80143388(GameObject* obj, int* trickyState)
         {
             if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
             {
-                objAudioFn_800393f8((int)obj, (void*)(ref + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                objAudioFn_800393f8Legacy(obj, (void*)(ref + 0x3a8), 0x357, 0, 0xffffffff, 0);
             }
         }
     }
@@ -1173,11 +1173,11 @@ int trickyFn_801434b0(GameObject* obj, int* trickyState)
             bval = *((char*)trickyState + b[0]);
             if (bval == '\0')
             {
-                objAudioFn_800393f8((int)obj, (void*)(trickyState + 0xea), 0x390, 0x500, -1, 0);
+                objAudioFn_800393f8Legacy(obj, (void*)(trickyState + 0xea), 0x390, 0x500, -1, 0);
             }
             else if (bval == '\a')
             {
-                objAudioFn_800393f8((int)obj, (void*)(trickyState + 0xea), 0x391, 0x100, -1, 0);
+                objAudioFn_800393f8Legacy(obj, (void*)(trickyState + 0xea), 0x391, 0x100, -1, 0);
             }
         }
         fval = *(float*)(trickyState + 0x1d1) - timeDelta;
@@ -1273,7 +1273,7 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
             ((obj)->anim.currentMove >= 0x30 || (obj)->anim.currentMove < 0x29) &&
             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
         {
-            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
+            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
         }
         ((TrickyState*)state)->sfxRepeatTimer = lbl_803E2440;
     }
@@ -1332,7 +1332,7 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
             ((obj)->anim.currentMove >= 0x30 || (obj)->anim.currentMove < 0x29) &&
             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
         {
-            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
+            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
         ((TrickyState*)state)->stateFlags |= 0x10;
         ((u8*)state)[0xa] = 4;
@@ -1438,7 +1438,7 @@ int trickyFn_80143c04(GameObject* obj, int state)
                     {
                         if (Sfx_IsPlayingFromObjectChannel((int)obj, 16) == 0)
                         {
-                            objAudioFn_800393f8((int)obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, (void*)(tex + 0x3a8), 861, 1280, -1, 0);
                         }
                     }
                 }
@@ -1526,7 +1526,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
             ((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
              !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
         {
-            objAudioFn_800393f8(obj, (void*)(done + 0x3a8), 0x353, 0x500, 0xffffffff, 0);
+            objAudioFn_800393f8Legacy(obj, (void*)(done + 0x3a8), 0x353, 0x500, 0xffffffff, 0);
         }
         return 0;
     }
@@ -1562,7 +1562,7 @@ u32 fn_80143DD4(int obj, int* trickyState)
                      (((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                      !Sfx_IsPlayingFromObjectChannel(obj, 0x10)))
                 {
-                    objAudioFn_800393f8(obj, (void*)(extra + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(extra + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
                 objAnimFn_8013a3f0(obj, 0x26, lbl_803E251C, 0);
                 ((TrickyState*)trickyState)->substate = 5;
@@ -1666,7 +1666,7 @@ void objAnimFn_801441c0(u8* obj, u8* state)
             (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
         {
-            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
+            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
         }
         ((TrickyState*)state)->stateFlags |= 0x10;
         state[0xa] = 4;
@@ -1696,7 +1696,7 @@ void tricky_startRandomIdleMove(GameObject* obj, int trickyState)
             {
                 if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                 {
-                    objAudioFn_800393f8((int)obj, (void*)(state + 0x3a8), 0x357, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(state + 0x3a8), 0x357, 0, 0xffffffff, 0);
                 }
             }
         }
@@ -1937,7 +1937,7 @@ void fn_80144B50(u8* obj, u8* state)
                 (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                 Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
             {
-                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x34f, 0x500, -1, 0);
+                objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x34f, 0x500, -1, 0);
             }
         }
         else
@@ -1981,7 +1981,7 @@ void fn_80144B50(u8* obj, u8* state)
                              ((GameObject*)obj)->anim.currentMove < 0x29) &&
                             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                         {
-                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                         }
                     }
                     else
@@ -1992,7 +1992,7 @@ void fn_80144B50(u8* obj, u8* state)
                              ((GameObject*)obj)->anim.currentMove < 0x29) &&
                             Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                         {
-                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                            objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                         }
                     }
                 }
@@ -2003,7 +2003,7 @@ void fn_80144B50(u8* obj, u8* state)
                         (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29) &&
                         Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0)
                     {
-                        objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                        objAudioFn_800393f8Legacy(obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
                     }
                     state[0xa] = 10;
                     ((TrickyState*)state)->stateFlags |= 0x10;

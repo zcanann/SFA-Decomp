@@ -19,6 +19,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/scarab.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/objlib.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -81,7 +82,6 @@ extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
 
 extern void* memcpy(void* dst, const void* src, int n);
-extern void characterDoEyeAnims(GameObject* obj, u8* a);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 void ChukChuk_free(void);
@@ -225,7 +225,7 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
         d.z = ((GameObject*)targetObj)->anim.worldPosZ - ((GameObject*)obj)->anim.worldPosZ;
         state->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    characterDoEyeAnims((GameObject*)(obj), sub->eyeAnimState);
+    characterDoEyeAnimsState((GameObject*)obj, sub->eyeAnimState);
     if ((sub->configFlags & 1) == 0)
     {
         (*(void (**)(int*, u8*, u8*, int, int, int, int))(*(int*)gBaddieControlInterface + 0x3c))(

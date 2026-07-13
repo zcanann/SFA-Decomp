@@ -33,6 +33,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/frame_timing.h"
+#include "main/objprint_sound_api.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */
@@ -79,7 +80,6 @@ extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
 extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
-extern void objAudioFn_800393f8(int* obj, void* p2, int sfx, int p4, int p5, int p6);
 extern f32 getXZDistance(f32* a, f32* b);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -165,7 +165,7 @@ typedef struct
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)                                                    \
                 {                                                                                                      \
-                    objAudioFn_800393f8(obj, cfg + 0x3a8, snd, p4, -1, 0);                                             \
+                    objAudioFn_800393f8Legacy(obj, cfg + 0x3a8, snd, p4, -1, 0);                                       \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \

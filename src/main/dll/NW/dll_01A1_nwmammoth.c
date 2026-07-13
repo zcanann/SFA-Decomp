@@ -4,6 +4,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/object.h"
 #include "main/objlib.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -74,7 +75,6 @@ extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
 extern void fn_8003A168(GameObject* obj, void* p);
-extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern void fn_801CDF94(GameObject* obj, void* state, int flag);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
@@ -720,7 +720,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
         if (state->hitReactState != 0)
         {
             fn_8003A168((GameObject*)obj, state->eyeAnimState);
-            characterDoEyeAnims((GameObject*)obj, state->eyeAnimState);
+            characterDoEyeAnimsState((GameObject*)obj, state->eyeAnimState);
             return;
         }
     }

@@ -4,6 +4,9 @@
 #include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/objprint_api.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_character_api.h"
+#include "main/objprint_sound_api.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
@@ -193,8 +196,6 @@ extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern u32 ObjPath_GetPointWorldPositionArray();
 extern u32 ObjPath_GetPointWorldPosition();
-extern u32 objAnimFn_80038f38();
-extern void objAudioFn_800393f8(int obj, void* audio, int soundId, int volume, int arg5, int arg6);
 extern f32 getXZDistance(f32* a, f32* b);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void freeAndNull(void* p);
@@ -284,7 +285,6 @@ extern f32 lbl_803E3244;
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int ObjModel_ClearBlendChannels(int model);
-extern void characterDoEyeAnims(GameObject* obj, void* p);
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
 extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
@@ -395,7 +395,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                   (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
             {
-                objAudioFn_800393f8(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+                objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
             }
         }
         Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trwhin1);
@@ -429,7 +429,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
                       (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
                 {
-                    objAudioFn_800393f8(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
                 }
             }
             else if (Obj_IsLoadingLocked())
@@ -489,7 +489,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     if ((((TrickyState*)state)->stateFlags & 1) != 0)
     {
         animUpdate->hitVolumePair &= ~0x40;
-        characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x378));
+        characterDoEyeAnimsState((GameObject*)obj, state + 0x378);
         return (*gObjectTriggerInterface)->func20((void*)obj, (u8*)animUpdate, 1, 0xf, 0x1e, 0, 0);
     }
     return 0;
@@ -641,7 +641,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                                                                 (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                                                                !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                 {
-                    objAudioFn_800393f8(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
+                    objAudioFn_800393f8Legacy(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, 0x17c);
                 flagsB[0] = -1;
@@ -708,7 +708,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                                (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
                               !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
                         {
-                            objAudioFn_800393f8(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
+                            objAudioFn_800393f8Legacy(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
                     }
                     else if ((((promptC) &&
@@ -717,7 +717,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                                 (((GameObject*)objVal)->anim.currentMove < 0x29)))) &&
                              !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
                     {
-                        objAudioFn_800393f8(objVal, (void*)(refC + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
+                        objAudioFn_800393f8Legacy(objVal, (void*)(refC + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
                 }
                 setup = (u16*)Obj_AllocObjectSetup(0x20, 0x175);
@@ -815,7 +815,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
               (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))))
         {
-            objAudioFn_800393f8((int)obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
+            objAudioFn_800393f8Legacy(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
     }
     doNothing_onTrickyFree();
@@ -858,7 +858,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0)                                                  \
                 {                                                                                                      \
-                    objAudioFn_800393f8((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                          \
+                    objAudioFn_800393f8Legacy((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                    \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
@@ -1502,9 +1502,9 @@ void Tricky_update(int obj)
     else
     {
         fn_8003A230((GameObject*)(obj), (void*)(state + 0x378), lbl_803E23DC);
-        characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x378));
+        characterDoEyeAnimsState((GameObject*)obj, state + 0x378);
     }
-    objAnimFn_80038f38((GameObject*)(obj), state + 0x3a8);
+    objAnimFn_80038f38((GameObject*)obj, (char*)state + 0x3a8);
     {
         u8* pathCursor;
         TrickyState* pathState;
@@ -1573,7 +1573,7 @@ void Tricky_update(int obj)
                 }
                 else
                 {
-                    objAudioFn_800393f8(obj, (u8*)st + 0x3a8, 0x298, 0x500, 0xffffffff, 0);
+                    objAudioFn_800393f8Legacy(obj, (u8*)st + 0x3a8, 0x298, 0x500, 0xffffffff, 0);
                     played = 1;
                 }
                 break;
@@ -3055,7 +3055,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
                 if ((sfxDisabled == 0) && (((obj)->anim.currentMove >= 0x30) || ((obj)->anim.currentMove < 0x29)) &&
                     (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))
                 {
-                    objAudioFn_800393f8((int)obj, (void*)(sfxState + 0x3a8), 0x360, 0x500, -1, 0);
+                    objAudioFn_800393f8Legacy(obj, (void*)(sfxState + 0x3a8), 0x360, 0x500, -1, 0);
                 }
             }
 

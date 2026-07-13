@@ -519,7 +519,7 @@ static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int 
     return found;
 }
 
-void characterDoEyeMovements(GameObject* obj, int state, f32 unused);
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
 
 void fn_8003B228(GameObject* obj, int state)
 {
@@ -587,17 +587,17 @@ void modelInitMtxs(int def, int model)
 extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
 extern f32 lbl_803DE9A4;
 
-void objAudioFn_800393f8(u32 obj, int state, u16 sfx, int pitch, int volume, u8 force)
+void objAudioFn_800393f8(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int volume, u8 force)
 {
-    if (force == 0 && Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
+    if (force == 0 && Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
     {
         return;
     }
-    Sfx_PlayFromObjectChannel(obj, 0x10, sfx);
-    *(f32*)((char*)state + 0xc) = volume;
-    *(s16*)((char*)state + 0x14) = (s16)(-pitch);
-    *(u8*)((char*)state + 0) = 1;
-    *(f32*)((char*)state + 4) = lbl_803DE99C;
+    Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
+    state->timer = volume;
+    state->pitch = (s16)(-pitch);
+    state->active = 1;
+    state->blendWeight = lbl_803DE99C;
 }
 
 void fn_8003B500(GameObject* obj, s16* state)
@@ -1519,7 +1519,7 @@ void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, i
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
-void characterDoEyeAnims(GameObject* obj, int state)
+void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state)
 {
     ObjTextureRuntimeSlot* a;
     ObjTextureRuntimeSlot* b;
@@ -1536,21 +1536,21 @@ void characterDoEyeAnims(GameObject* obj, int state)
         int v;
 
         v = b->textureId;
-        st = *(s8*)(state + 0x1e);
+        st = state->blinkState;
 
         switch (st & 0xf)
         {
         case 0:
         {
-            s8 t = *(s8*)(state + 0x1f);
+            s8 t = state->blinkTimer;
             if (t > 0)
             {
-                *(s8*)(state + 0x1f) = t - framesThisStep;
+                state->blinkTimer = t - framesThisStep;
             }
             else if ((int)randomGetRange(0, 1000) > 0x3de)
             {
-                *(u8*)(state + 0x1e) = 1;
-                *(u8*)(state + 0x1f) = 0;
+                state->blinkState = 1;
+                state->blinkTimer = 0;
             }
         }
         break;
@@ -1561,8 +1561,8 @@ void characterDoEyeAnims(GameObject* obj, int state)
                 if (v < 0)
                 {
                     v = 0;
-                    *(u8*)(state + 0x1e) = 0;
-                    *(u8*)(state + 0x1f) = 0;
+                    state->blinkState = 0;
+                    state->blinkTimer = 0;
                 }
             }
             else
@@ -1573,14 +1573,14 @@ void characterDoEyeAnims(GameObject* obj, int state)
                     if (v - 0x200 < 0)
                     {
                         v = 0;
-                        *(u8*)(state + 0x1e) = 0;
+                        state->blinkState = 0;
                     }
                     else
                     {
                         v = 0x2ff;
-                        *(s8*)(state + 0x1e) = -127;
+                        state->blinkState = -127;
                     }
-                    *(u8*)(state + 0x1f) = 0x28;
+                    state->blinkTimer = 0x28;
                 }
             }
             a->textureId = v;
@@ -1591,7 +1591,7 @@ void characterDoEyeAnims(GameObject* obj, int state)
     }
 }
 
-void characterDoEyeMovements(GameObject* obj, int state, f32 unused)
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused)
 {
     ObjTextureRuntimeSlot* foundA;
     ObjTextureRuntimeSlot* foundB;
@@ -1607,39 +1607,39 @@ void characterDoEyeMovements(GameObject* obj, int state, f32 unused)
     }
 
     flag = 0;
-    t = *(s16*)(state + 0x22);
+    t = state->movementStep;
     if (t == 0)
     {
         flag = 1;
     }
     if (t > 0)
     {
-        if (foundA->offsetS >= *(int*)(state + 0x24))
+        if (foundA->offsetS >= state->movementTarget)
         {
             flag = 1;
         }
     }
     if (t < 0)
     {
-        if (foundA->offsetS <= *(int*)(state + 0x24))
+        if (foundA->offsetS <= state->movementTarget)
         {
             flag = 1;
         }
     }
     if (flag != 0)
     {
-        *(int*)(state + 0x24) = randomGetRange(-0x3e8, 0x3e8);
-        *(s16*)(state + 0x22) = (*(int*)(state + 0x24) < foundA->offsetS) ? -0x96 : 0x96;
-        *(s8*)(state + 0x20) = randomGetRange(0x1e, 0x64);
+        state->movementTarget = randomGetRange(-0x3e8, 0x3e8);
+        state->movementStep = (state->movementTarget < foundA->offsetS) ? -0x96 : 0x96;
+        state->movementTimer = randomGetRange(0x1e, 0x64);
     }
-    timer = *(s8*)(state + 0x20);
+    timer = state->movementTimer;
     if (timer > 0)
     {
-        *(s8*)(state + 0x20) = timer - framesThisStep;
+        state->movementTimer = timer - framesThisStep;
     }
     else
     {
-        foundA->offsetS = (s16)(foundA->offsetS + *(s16*)(state + 0x22) * framesThisStep);
+        foundA->offsetS = (s16)(foundA->offsetS + state->movementStep * framesThisStep);
         foundA->offsetT = 0;
         foundB->offsetS = foundA->offsetS;
         foundB->offsetT = 0;

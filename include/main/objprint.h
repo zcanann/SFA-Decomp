@@ -3,35 +3,11 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/objprint_anim_api.h"
 #include "main/objprint_api.h"
+#include "main/objprint_character_api.h"
+#include "main/objprint_sound_api.h"
 #include "main/objtexture.h"
-
-typedef struct ObjSoundState
-{
-    u8 active;
-    u8 pad01[3];
-    f32 blendWeight;
-    u8 pad08[4];
-    f32 timer;
-    u8 pad10[4];
-    s16 pitch;
-    u8 pad16[0x1a];
-} ObjSoundState;
-
-typedef struct ObjSoundDef
-{
-    s16 sfxId;
-    s16 pitch;
-    u8 blendCount;
-    u8 pad05;
-} ObjSoundDef;
-
-STATIC_ASSERT(sizeof(ObjSoundState) == 0x30);
-STATIC_ASSERT(offsetof(ObjSoundState, timer) == 0x0c);
-STATIC_ASSERT(offsetof(ObjSoundState, pitch) == 0x14);
-STATIC_ASSERT(sizeof(ObjSoundDef) == 6);
-
-void objAnimFn_80038f38(GameObject* param_1, char* param_2);
 void FUN_80039130(u32 param_1, int* param_2);
 void FUN_800392e0(u32* param_1);
 void FUN_800392ec(u32 param_1, u8* param_2, u16 param_3);
@@ -82,11 +58,8 @@ void modelCalcVtxGroupMtxs(int def, int model);
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
 
-void objAudioFn_80039270(u32 obj, void* p, u16 sfxId);
-void characterDoEyeAnims(GameObject* obj, int state);
 void fn_80039264(s32* state);
 void objModelAndSoundFn_80039118(int obj, int state);
 void objModelClearVecFn_8003aa40(GameObject* obj);
-void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force);
 
 #endif /* MAIN_OBJPRINT_H_ */

@@ -14,6 +14,7 @@
  */
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
@@ -163,6 +164,6 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     else
     {
         fn_8003A230(obj, (void*)(state + 0x40c), lbl_803E520C);
-        characterDoEyeAnims(obj, (void*)(state + 0x40c));
+        characterDoEyeAnimsState(obj, state + 0x40c);
     }
 }

@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/dll/SH/SHroot.h"
@@ -87,7 +88,6 @@ extern void warpstone_release(void);
 
 extern void warpstone_initialise(void);
 
-extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -317,7 +317,7 @@ u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjA
             return 0;
         }
         animUpdate->hitVolumePair &= ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
-        characterDoEyeAnims((GameObject*)obj, (int)runtime->collisionShapeState);
+        characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
     }
     runtime->activeMoveValid = 0;
     objAudioFn_8006ef38((int)obj, (int)&animUpdate->animEvents, 8, (int)runtime->renderPathPoints,
@@ -524,7 +524,7 @@ void SHthorntail_update(SHthorntailObject* obj)
         }
         else
         {
-            characterDoEyeAnims((GameObject*)obj, (int)runtime->collisionShapeState);
+            characterDoEyeAnimsState((GameObject*)obj, runtime->collisionShapeState);
         }
         runtime->behaviorFlags = runtime->behaviorFlags & ~2;
         if (((runtime->behaviorFlags & 4) == 0) && (val = ObjTrigger_IsSet((int)obj), val != 0))

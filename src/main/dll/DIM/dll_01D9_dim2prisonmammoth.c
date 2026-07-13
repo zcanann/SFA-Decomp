@@ -6,6 +6,7 @@
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/objprint_character_api.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
@@ -27,7 +28,6 @@ extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
 extern void fn_8003A168(GameObject* p1, int p2);
-extern void characterDoEyeAnims(GameObject* obj, int p2);
 extern void buttonDisable(int port, u32 mask);
 
 int dim2prisonmammoth_defaultStateHandler(void)
@@ -201,11 +201,11 @@ void dim2prisonmammoth_update(int obj)
         if (((Dim2prisonmammothState*)inner)->hitReactState != 0)
         {
             fn_8003A168((GameObject*)(obj), inner + 0x35c);
-            characterDoEyeAnims((GameObject*)(obj), inner + 0x35c);
+            characterDoEyeAnimsState((GameObject*)obj, inner + 0x35c);
             return;
         }
     }
-    characterDoEyeAnims((GameObject*)(obj), inner + 0x35c);
+    characterDoEyeAnimsState((GameObject*)obj, inner + 0x35c);
     v.x = ((GameObject*)obj)->anim.localPosX;
     v.y = ((GameObject*)obj)->anim.localPosY;
     v.z = ((GameObject*)obj)->anim.localPosZ;

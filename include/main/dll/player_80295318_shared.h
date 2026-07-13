@@ -675,7 +675,6 @@ extern f32 lbl_803E7F24;
 extern f32 lbl_803E7FC0;
 extern f32 lbl_803E7F0C;
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
-extern void characterDoEyeAnims(GameObject* obj, int q);
 extern f32 lbl_803E820C;
 extern f32 lbl_803E7EB4;
 extern void playerShadowFn_80062a30(int obj);
