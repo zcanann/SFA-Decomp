@@ -11,6 +11,7 @@
  * itself once it falls past the floor.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/expgfx_interface.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/audio/sfx_ids.h"

@@ -15,6 +15,7 @@
  * the object's expgfx source.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/expgfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/dll_021B.h"

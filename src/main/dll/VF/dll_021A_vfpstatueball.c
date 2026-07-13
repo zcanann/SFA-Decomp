@@ -13,6 +13,7 @@
  * particle-burst model.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/expgfx_interface.h"
 #include "main/objhits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"

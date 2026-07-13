@@ -15,6 +15,7 @@
  * from the hit-disable game bit.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/dll/expgfx_interface.h"
 #include "main/pad_api.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
