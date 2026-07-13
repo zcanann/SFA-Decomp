@@ -10,7 +10,7 @@
 #include "main/shader_api.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/vecmath.h"

@@ -4,7 +4,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
-#include "main/objlib.h"
+#include "main/obj_link.h"
 #include "main/dll/dll_00FD.h"
 #include "main/game_ui_interface.h"
 #include "main/objseq.h"

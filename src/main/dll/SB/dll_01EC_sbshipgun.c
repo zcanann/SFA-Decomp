@@ -23,7 +23,7 @@
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/obj_path.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/TREX/TREX_levelcontrol.h"

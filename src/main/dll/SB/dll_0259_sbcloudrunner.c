@@ -25,7 +25,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/track_dolphin_api.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objprint_dolphin.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"

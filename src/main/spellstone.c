@@ -2,7 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/spellstone.h"
 #include "main/spellstone_idle.h"
-#include "main/objlib.h"
+#include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_update_list.h"
 #include "main/dll/fx_800944A0_shared.h"
 

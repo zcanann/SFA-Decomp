@@ -24,7 +24,7 @@
 #include "main/camera.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/obj_path.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/pad.h"
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"

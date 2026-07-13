@@ -15,7 +15,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/light.h"
-#include "main/objlib.h"
 #include "main/resource.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera.h"

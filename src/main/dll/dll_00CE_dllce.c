@@ -38,7 +38,8 @@
 #include "main/sky_interface.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_list.h"
 #include "main/obj_message.h"
 #include "main/player_control_interface.h"
 

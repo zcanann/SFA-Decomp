@@ -8,7 +8,7 @@
 #include "main/main.h"
 #include "main/objprint_api.h"
 #include "main/objtexture.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/resource.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_ids.h"

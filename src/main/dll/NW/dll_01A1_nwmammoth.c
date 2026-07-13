@@ -8,7 +8,7 @@
 #include "main/obj_path.h"
 #include "main/objprint_character_api.h"
 #include "main/object.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/screen_transition.h"
 #include "main/dll/NW/dll_01A1_nwmammoth.h"

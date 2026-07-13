@@ -18,7 +18,6 @@
 #include "main/dll/anim.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
 #include "main/objhits.h"
 #include "main/obj_message.h"
 #include "main/dll/fx_800944A0_shared.h"

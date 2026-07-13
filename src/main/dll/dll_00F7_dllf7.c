@@ -23,7 +23,6 @@
 #include "main/resource.h"
 #include "main/objprint.h"
 #include "main/objprint_api.h"
-#include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 

@@ -12,7 +12,7 @@
 #include "main/frustum.h"
 #include "main/lightmap.h"
 #include "main/newclouds.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/objprint_render_api.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
