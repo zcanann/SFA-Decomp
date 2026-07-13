@@ -110,7 +110,6 @@ extern f32 lbl_803DF66C;
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
 {
-    extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
     extern f32 lbl_803DE9A4;
     extern f32 lbl_803DE9C8;
     extern f32 lbl_803DE99C;
@@ -151,7 +150,7 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
             pi = OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)(*pi + 0xf9) != 0)
             {
-                ObjModel_SetBlendChannelTargets((int)pi, 2, *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
+                ObjModel_SetBlendChannelTargets((ObjModel*)pi, 2, *(s8*)(*(int*)((char*)pi + 0x28) + 0x2d), -1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
         }
@@ -616,7 +615,6 @@ void fn_8003B500(GameObject* obj, s16* state)
     }
 }
 
-extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
 extern f32 lbl_803DB464;
 
 void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force)
@@ -643,7 +641,8 @@ void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* sou
         model = (int)OBJPRINT_ACTIVE_BANK(obj);
         if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
         {
-            ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
+            ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
+                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
                                             lbl_803DE99C / lbl_803DB464, 0);
             did = 1;
         }
@@ -821,7 +820,8 @@ void objModelAndSoundFn_80039118(int obj, int state)
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
             {
-                ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), -1,
+                ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
+                                                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), -1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
         }
@@ -838,7 +838,8 @@ void objModelAndSoundFn_80039118(int obj, int state)
             model = (int)OBJPRINT_ACTIVE_BANK(obj);
             if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
             {
-                ObjModel_SetBlendChannelTargets(model, 2, *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
+                ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
+                                                *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), kfval - 1,
                                                 lbl_803DE99C / lbl_803DB464, 0);
             }
             *(f32*)((char*)state + 8) = *(f32*)((char*)state + 8) + *(f32*)((char*)state + 0xc);

@@ -2,6 +2,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/debug.h"
 #include "main/object_api.h"
+#include "main/model.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
@@ -304,7 +305,6 @@ extern f32 SendMailData;
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
-extern void ObjModel_SetBlendChannelTargets(void* action, int mode, int target, int channel, int p5, f32 t);
 int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmd, int flags, void* out);
 void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src);
 
@@ -2559,11 +2559,13 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         sub = *(s16*)(cmd + 2) & 0xff;
         if (sub < 0xf)
         {
-            ObjModel_SetBlendChannelTargets(action, 2, *(s8*)(*(u8**)(action + 0x28) + 0x2d), sub - 1, 0, t);
+            ObjModel_SetBlendChannelTargets((ObjModel*)action, 2, *(s8*)(*(u8**)(action + 0x28) + 0x2d), sub - 1,
+                                            t, 0);
         }
         else
         {
-            ObjModel_SetBlendChannelTargets(action, 0, *(s8*)(*(u8**)(action + 0x28) + 0xd), sub - 1, 0, t);
+            ObjModel_SetBlendChannelTargets((ObjModel*)action, 0, *(s8*)(*(u8**)(action + 0x28) + 0xd), sub - 1,
+                                            t, 0);
         }
         break;
     case SEQACT_STORYBOARD:

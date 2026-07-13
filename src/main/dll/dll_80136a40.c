@@ -29,6 +29,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/model.h"
 #include "main/object.h"
 #include "main/dll/baddie/Tumbleweed.h"
 #include "main/mapEventTypes.h"
@@ -187,8 +188,6 @@ extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
-extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
-extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
 extern int dll_19_func1B(GameObject* p);
 extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
@@ -683,12 +682,12 @@ void fn_80138D7C(int obj, int state)
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
 void Tricky_updateBlendChannelWeight(int obj, u8* state)
 {
-    int model;
+    ObjModel* model;
     f32 target;
     Obj_GetActiveModel((GameObject*)obj);
     if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
     {
-        model = (int)Obj_GetActiveModel((GameObject*)obj);
+        model = Obj_GetActiveModel((GameObject*)obj);
         ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
         *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
         ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
@@ -751,7 +750,7 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state)
                 }
             }
         }
-        ObjModel_SetBlendChannelWeight((int)Obj_GetActiveModel((GameObject*)obj), 1,
+        ObjModel_SetBlendChannelWeight(Obj_GetActiveModel((GameObject*)obj), 1,
                                        lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
     }
 }

@@ -254,15 +254,15 @@ void setGQR7Packed(int a, int b, int c, int d)
 }
 
 #pragma dont_inline off
-int ObjModel_HasActiveBlendChannels(u8* model)
+int ObjModel_HasActiveBlendChannels(ObjModel* model)
 {
     ObjModelBlendChannel* ch;
 
-    if (((ObjModel*)model)->file->morphTargetPtrs == NULL)
+    if (model->file->morphTargetPtrs == NULL)
     {
         return 0;
     }
-    ch = ((ObjModel*)model)->blendChannels;
+    ch = model->blendChannels;
     if (ch[0].weight != ch[0].targetWeight || (ch[0].flags0E & 0xe))
     {
         return 1;
@@ -278,15 +278,15 @@ int ObjModel_HasActiveBlendChannels(u8* model)
     return 0;
 }
 
-void ObjModel_SetBlendChannelWeight(u8* model, int channel, f32 weight)
+void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
 {
     ObjModelBlendChannel* ch;
 
-    if (channel > 2 || ((ObjModel*)model)->file->morphTargetPtrs == NULL)
+    if (channel > 2 || model->file->morphTargetPtrs == NULL)
     {
         return;
     }
-    ch = ((ObjModel*)model)->blendChannels + channel;
+    ch = model->blendChannels + channel;
     if (weight != ch->weight)
     {
         ch->weight = weight;
@@ -779,26 +779,24 @@ void ObjModel_InitScratchBuffers(void)
     gModelCacheBuffersB[5] = c + 0x3800;
 }
 
-extern void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 weight, int flags);
-
 #pragma dont_inline off
 void ObjModel_ClearBlendChannels(ObjModel* model)
 {
     if (model->file->morphTargetPtrs != NULL)
     {
-        ObjModel_SetBlendChannelTargets((u8*)model, 0, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets((u8*)model, 1, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets((u8*)model, 2, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
     }
 }
 
 extern f32 lbl_803DE840;
 
-void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 weight, int flags)
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags)
 {
     ObjModelBlendChannel* ch;
     u8* hdr;
-    if (channel > 2 || ((ModelFileHeader*)(hdr = *(u8**)model))->morphTargetPtrs == NULL)
+    if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargetPtrs == NULL)
     {
         return;
     }
@@ -814,7 +812,7 @@ void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 w
     {
         return;
     }
-    ch = ((ObjModel*)model)->blendChannels + channel;
+    ch = model->blendChannels + channel;
     if (a == -1 && b == -1)
     {
         if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1)

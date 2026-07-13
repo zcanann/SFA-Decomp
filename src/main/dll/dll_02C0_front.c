@@ -529,8 +529,6 @@ void TitleScreen_update(u8* obj)
     extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);
     extern void Sfx_PlayFromObject(u8 * obj, u32 sfxId);
     extern void fn_80134870(u8 * obj, u8 * arr);
-    extern int ObjModel_HasActiveBlendChannels(ObjModel * model);
-    extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 
     u8* state = ((GameObject*)obj)->extra;
     int objHandle = (int)obj;
@@ -678,7 +676,7 @@ void TitleScreen_update(u8* obj)
         {
             blend = model->blendChannels;
             morphTarget = randomGetRange(0, model->file->morphTargetCount);
-            ObjModel_SetBlendChannelTargets((int)model, 0, blend->morphTargetB, morphTarget - 1, lbl_803E2360, 0);
+            ObjModel_SetBlendChannelTargets(model, 0, blend->morphTargetB, morphTarget - 1, lbl_803E2360, 0);
         }
         lbl_803DBC08 = -1;
         lbl_803DBC09 = -1;

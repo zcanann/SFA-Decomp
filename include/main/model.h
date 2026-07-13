@@ -266,7 +266,10 @@ STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
 void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out);
+int ObjModel_HasActiveBlendChannels(ObjModel* model);
 void ObjModel_ClearBlendChannels(ObjModel* model);
+void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight);
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int targetA, int targetB, f32 weight, int flags);
 ObjModelChain *ObjModelChain_Alloc(void *models, int count);
 void ObjModelChain_SetOrigin(ObjModelChain *chain, f32 x, f32 y, f32 z);
 void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);

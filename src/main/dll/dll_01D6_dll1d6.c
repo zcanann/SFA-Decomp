@@ -18,6 +18,7 @@
 #include "main/asset_load.h"
 #include "main/pi_dolphin.h"
 #include "main/game_object.h"
+#include "main/model.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
@@ -95,15 +96,12 @@ extern f32 lbl_803E4A84;
 extern const f32 lbl_803E4A8C;
 extern const f32 lbl_803E4A90;
 
-extern void ObjModel_SetBlendChannelTargets(int* model, int a, int b, int c, f32 w, int d);
-extern void ObjModel_SetBlendChannelWeight(int* model, int a, f32 w);
-
 FbWGPipe GXWGFifo : (0xCC008000);
 
-static inline int* DIM2snowball_GetActiveModel(GameObject* obj)
+static inline ObjModel* DIM2snowball_GetActiveModel(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
+    return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
 #pragma scheduling on
@@ -154,7 +152,7 @@ void dll_1D6_free(int* obj)
 void dll_1D6_init(int* obj, u8* params)
 {
     Dll1D6State* extra;
-    int* model;
+    ObjModel* model;
     int i;
 
     ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)params + 0x18) << 8);
@@ -201,7 +199,7 @@ void dll_1D6_update(int* obj)
 {
     Dll1D6State* extra;
     int* def;
-    int* model;
+    ObjModel* model;
     ObjTextureRuntimeSlot* tex;
     GameObject* player;
     f32 mtx[20];
