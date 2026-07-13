@@ -1,5 +1,6 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/newshadows_audio_api.h"
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/mm.h"

@@ -42,6 +42,7 @@
 #include "main/audio/music_api.h"
 #include "main/gameloop_api.h"
 #include "main/lightmap_api.h"
+#include "main/newshadows_audio_api.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
@@ -7010,7 +7011,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
     if ((((ByteFlags*)(((char*)inner) + 0x3f1))->b01 != 0) && (((ByteFlags*)(((char*)inner) + 0x3f0))->b01 == 0))
     {
         ((ByteFlags*)(((char*)inner) + 0x3f0))->b01 = 1;
-        sfx = audioPickSoundEffect_8006ed24(ps->surfaceType, ps->footstepSoundId);
+        sfx = audioPickSoundEffectIntLegacy(ps->surfaceType, ps->footstepSoundId);
         if (hdiff > lbl_803E8104)
         {
             s8 hv;
@@ -12159,7 +12160,7 @@ int playerState3D(int obj, int state, f32 fv)
     if ((((PlayerState*)state)->baddie.moveEventFlags & 2) == 0 &&
         ((GameObject*)obj)->anim.currentMoveProgress > lbl_803E7F18)
     {
-        Sfx_PlayFromObject(obj, audioPickSoundEffect_8006ed24(inner->surfaceType, inner->footstepSoundId));
+        Sfx_PlayFromObject(obj, audioPickSoundEffectIntLegacy(inner->surfaceType, inner->footstepSoundId));
         ((PlayerState*)state)->baddie.moveEventFlags |= 2;
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
@@ -16258,8 +16259,8 @@ int fn_802ADC08(GameObject* obj, int inner, int p3)
     {
         u16 snd;
         doRumble(lbl_803E7F10);
-        Sfx_PlayFromObject((int)obj, (u16)audioPickSoundEffect_8006ed24(((PlayerState*)inner)->surfaceType,
-                                                                   ((PlayerState*)inner)->footstepSoundId));
+        Sfx_PlayFromObject((int)obj, (u16)audioPickSoundEffectIntLegacy(((PlayerState*)inner)->surfaceType,
+                                                                        ((PlayerState*)inner)->footstepSoundId));
         if (((PlayerState*)inner)->characterId == 0)
         {
             snd = 0x2cf;
@@ -16783,7 +16784,7 @@ int playerStateSlideDownLadder(GameObject* obj, int state, f32 fv)
     case 0x37:
         if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) != 0)
         {
-            int snd = audioPickSoundEffect_8006ed24(inner->surfaceType, inner->footstepSoundId);
+            int snd = audioPickSoundEffectIntLegacy(inner->surfaceType, inner->footstepSoundId);
             Sfx_PlayFromObject((int)obj, snd);
             doRumble(lbl_803E7F10);
             if (inner->waterDepth > lbl_803E7EA4)

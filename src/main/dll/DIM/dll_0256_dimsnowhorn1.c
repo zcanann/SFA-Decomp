@@ -14,6 +14,7 @@
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/newshadows_audio_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pad_api.h"
 #include "main/object_api.h"
@@ -1031,7 +1032,6 @@ int DIMSnowHorn1_setScale(GameObject* obj)
 #pragma dont_inline on
 void fn_802BB998(int obj, int pointState, int inputState)
 {
-    extern u16 audioPickSoundEffect_8006ed24(u8 id, int bank);
     extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     u8 flags;
     u8 pointIndex;
@@ -1077,7 +1077,7 @@ void fn_802BB998(int obj, int pointState, int inputState)
                 count--;
             }
 
-            sfxId = audioPickSoundEffect_8006ed24((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9);
+            sfxId = audioPickSoundEffectU16Legacy((u8)(s8) * (s8*)&((BaddieState*)inputState)->paletteSlot, 9);
             Sfx_PlayFromObject(obj, sfxId);
             doRumble(lbl_803E8244);
         }
