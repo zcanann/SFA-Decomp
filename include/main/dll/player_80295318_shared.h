@@ -656,7 +656,6 @@ extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* 
                               int p10);
 extern int gPlayerSfxTimerC;
 extern f32 lbl_803E7FA8;
-extern void superQuakeFn_8016d9fc(void* a);
 extern f32 lbl_803E8068;
 extern f32 lbl_803E806C;
 extern f32 lbl_803E7EA0;
@@ -676,7 +675,6 @@ extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];
 extern f32 lbl_803E8130;
-extern void staffDoGrowShrinkAnim(void* a, int b, int c, int d);
 
 /* forward declarations for graduated functions */
 void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);

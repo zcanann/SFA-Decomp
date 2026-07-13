@@ -17517,7 +17517,7 @@ int playerStateSuperQuake(GameObject* obj, int state, f32 fv)
                 trickyImpress((GameObject*)tricky);
             }
             Sfx_PlayFromObject((int)obj, SFXTRIG_staff_boulder_move1);
-            superQuakeFn_8016d9fc((char*)obj + 0xc);
+            superQuakeFn_8016d9fc(&obj->anim.localPosX);
             ((ByteFlags*)((char*)inner + 0x3f3))->b10 = 1;
             doRumble(lbl_803E7F30);
         }
@@ -18346,7 +18346,7 @@ void staffAnimate(int obj, int state)
         u8 b = ((PlayerState*)state)->staffActionRequest;
         if (b == 1)
         {
-            staffDoGrowShrinkAnim(gPlayerPathObject, 0, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
+            staffDoGrowShrinkAnim((GameObject*)gPlayerPathObject, 0, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
             ((PlayerState*)state)->staffGrown = 0;
             if (*(s16*)&((PlayerState*)state)->staffAnimState != 0 &&
                 *(s16*)&((PlayerState*)state)->staffAnimState != 0xf)
@@ -18356,7 +18356,7 @@ void staffAnimate(int obj, int state)
         }
         else if (b == 4)
         {
-            staffDoGrowShrinkAnim(gPlayerPathObject, 1, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
+            staffDoGrowShrinkAnim((GameObject*)gPlayerPathObject, 1, ((ByteFlags*)((char*)state + 0x3f4))->b08, 0);
             ((PlayerState*)state)->staffGrown = 1;
             if (*(s16*)&((PlayerState*)state)->staffAnimState != 0 &&
                 *(s16*)&((PlayerState*)state)->staffAnimState != 0xf)
@@ -18394,7 +18394,7 @@ void staffAnimate(int obj, int state)
             }
             if (((GameObject*)obj)->anim.activeMoveProgress >= lbl_803E7F1C)
             {
-                staffDoGrowShrinkAnim(gPlayerPathObject, 1, 0, 0);
+                staffDoGrowShrinkAnim((GameObject*)gPlayerPathObject, 1, 0, 0);
                 *(s16*)&((PlayerState*)state)->staffAnimState = 3;
                 changed = 1;
             }
@@ -18503,7 +18503,7 @@ void staffAnimate(int obj, int state)
             {
                 if (((PlayerState*)state)->staffActionRequest == 0)
                 {
-                    staffDoGrowShrinkAnim(gPlayerPathObject, 0, 0, 0);
+                    staffDoGrowShrinkAnim((GameObject*)gPlayerPathObject, 0, 0, 0);
                     *(s16*)&((PlayerState*)state)->staffAnimState = 1;
                     changed = 1;
                 }

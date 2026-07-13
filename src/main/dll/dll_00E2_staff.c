@@ -845,15 +845,15 @@ extern f32 lbl_803E3320;
 extern f32 lbl_803E3288;
 extern f32 lbl_803E3324;
 
-void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
+void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 {
     extern void Sfx_PlayFromObject(int* obj, int sfx);
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     if (grow != 0)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate < lbl_803E32B4)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_stpos4_b);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_stpos4_b);
         }
         if (flag2 == 0)
         {
@@ -868,7 +868,7 @@ void staffDoGrowShrinkAnim(int* obj, u8 grow, u8 flag2)
     {
         if (((StaffDoGrowShrinkAnimState*)state)->growShrinkAnimRate > lbl_803E32B4)
         {
-            Sfx_PlayFromObject(obj, SFXTRIG_wp_stapo1_b);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_wp_stapo1_b);
         }
         if (flag2 == 0)
         {
