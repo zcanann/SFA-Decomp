@@ -1633,7 +1633,7 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
 }
 #pragma opt_unroll_count 0
 
-void dll_15_func07(void* arg1, CurvesCollisionState* state)
+void dll_15_func07(void* obj, CurvesCollisionState* state)
 {
     u32 flags;
     s8 type;
@@ -1651,7 +1651,7 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
             mask |= 0x1;
         if ((s32)(flags & 0x01000000) != 0)
             mask |= 0x20;
-        hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
+        hitDetectFn_800691c0(obj, state->hitBounds, mask, 1);
     }
 }
 
