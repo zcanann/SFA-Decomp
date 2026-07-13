@@ -1,4 +1,4 @@
-#include "dolphin/mtx.h"
+#include "dolphin/mtx/vec.h"
 
 __declspec(section ".sdata2") const float lbl_803E7648 = 0.5f;
 __declspec(section ".sdata2") const float lbl_803E764C = 3.0f;

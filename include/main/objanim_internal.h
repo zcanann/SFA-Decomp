@@ -342,12 +342,22 @@ typedef struct ObjAnimComponent {
   };
   s16 flags;
   f32 rootMotionScale;
-  f32 localPosX;
-  f32 localPosY;
-  f32 localPosZ;
-  f32 worldPosX;
-  f32 worldPosY;
-  f32 worldPosZ;
+  union {
+    struct {
+      f32 localPosX;
+      f32 localPosY;
+      f32 localPosZ;
+    };
+    Vec3f localPos;
+  };
+  union {
+    struct {
+      f32 worldPosX;
+      f32 worldPosY;
+      f32 worldPosZ;
+    };
+    Vec3f worldPos;
+  };
   union {
     struct {
       f32 velocityX;

@@ -2,13 +2,9 @@
 #define MAIN_VEC_TYPES_H
 
 #include "global.h"
+#include "dolphin/mtx/vec_types.h"
 
-typedef struct Vec3f
-{
-    f32 x;
-    f32 y;
-    f32 z;
-} Vec3f;
+typedef Vec Vec3f;
 
 typedef struct Vec3s
 {

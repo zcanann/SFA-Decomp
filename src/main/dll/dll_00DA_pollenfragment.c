@@ -9,6 +9,7 @@
  * non-owner object. Timed variants fade their alpha out and self-free.
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "dolphin/mtx/vec.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/maketex_timer_api.h"
@@ -50,19 +51,19 @@ typedef struct PollenFragmentExtra
     int ownerObj; /* 0x00: owner captured on first update */
     f32 speed;    /* 0x04: steering speed factor */
     f32 timer;    /* 0x08: lifetime/strength timer */
-    f32 velX;     /* 0x0C */
-    f32 velY;     /* 0x10 */
-    f32 velZ;     /* 0x14 */
+    union {
+        struct {
+            f32 velX; /* 0x0C */
+            f32 velY; /* 0x10 */
+            f32 velZ; /* 0x14 */
+        };
+        Vec velocity;
+    };
     u8 unk18[4];
     PollenFragmentDef* def; /* 0x1C */
     f32 deathTimer;         /* 0x20 */
     f32 lifetimeTimer;      /* 0x24 */
 } PollenFragmentExtra;
-
-typedef struct
-{
-    f32 x, y, z;
-} XyzVec;
 
 #define POLLENFRAGMENT_HIT_VOLUME_SLOT 0x16
 
@@ -86,11 +87,6 @@ extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void PSVECSubtract(void* a, void* b, void* out);
-extern f32 PSVECMag(void* v);
-extern void PSVECNormalize(void* src, void* dst);
-extern void PSVECScale(void* src, void* dst, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* out);
 
 void pollenfragment_init(GameObject* obj, int config)
 {
@@ -215,9 +211,9 @@ void pollenfragment_update(int obj)
     int i;
     f32 horizDamping;
     f32 t;
-    XyzVec dir;
-    XyzVec sc;
-    XyzVec pos;
+    Vec dir;
+    Vec sc;
+    Vec pos;
 
     extra = *(u8**)&((GameObject*)obj)->extra;
     if (getCurSeqNoInt() != 0)
@@ -291,10 +287,10 @@ void pollenfragment_update(int obj)
             pos.y = prod * lbl_803E3168 + ((GameObject*)nearObj)->anim.worldPosY;
             pos.z = ((GameObject*)nearObj)->anim.worldPosZ;
         }
-        PSVECSubtract(&pos, (void*)(obj + 0x18), &dir);
+        PSVECSubtract(&pos, &((GameObject*)obj)->anim.worldPos, &dir);
         PSVECMag(&dir);
         PSVECNormalize(&dir, &dir);
-        PSVECSubtract(&dir, extra + 0xc, &sc);
+        PSVECSubtract(&dir, &((PollenFragmentExtra*)extra)->velocity, &sc);
         ((PollenFragmentExtra*)extra)->velX = dir.x;
         ((PollenFragmentExtra*)extra)->velY = dir.y;
         ((PollenFragmentExtra*)extra)->velZ = dir.z;
