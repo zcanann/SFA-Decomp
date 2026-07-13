@@ -67,3 +67,8 @@ void Dummy39_initialise(void)
 {
     lbl_803DD728 = DUMMY39_COUNTDOWN_FRAMES;
 }
+
+u32 lbl_8031ADD0[10] = {0x00000000, 0x00000000, 0x00000000, 0x00050000,
+        (u32)Dummy39_initialise, (u32)Dummy39_release,
+        0x00000000, (u32)Dummy39_run, (u32)Dummy39_frameEnd,
+        (u32)Dummy39_render};

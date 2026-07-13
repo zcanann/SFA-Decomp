@@ -1005,13 +1005,16 @@ main/dll/dll_0037_optionsscreen.c:
 
 main/dll/dll_0038_weirdunusedmenu.c:
 	.text       start:0x8011D51C end:0x8011D854
+	.data       start:0x8031AD20 end:0x8031ADD0
 	.sdata2     start:0x803E1DF8 end:0x803E1E00
 
 main/dll/dll_0039_dummy39.c:
 	.text       start:0x8011D854 end:0x8011D900
+	.data       start:0x8031ADD0 end:0x8031ADF8
 
 main/dll/dll_003A_dummy3a.c:
 	.text       start:0x8011D900 end:0x8011D918
+	.data       start:0x8031ADF8 end:0x8031AE20
 
 main/dll/dll_8011d918.c:
 	.text       start:0x8011D918 end:0x8011D9B0
