@@ -35,7 +35,7 @@
 #include "main/model_engine.h"
 #include "main/map_load.h"
 #include "main/fileio.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/savegame.h"

@@ -28,7 +28,7 @@
 #include "main/texture.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/frame_timing.h"
 
 extern void TitleMenuItem_setAButtonToggle(void);
@@ -94,8 +94,6 @@ extern void MWTRACE(int boxId);
 #define PAD_BUTTON_START 0x1000
 #define PAD_ACCEPT_MASK  (PAD_BUTTON_A | PAD_BUTTON_START)
 
-extern void fn_8001BDD4(int mode); /* mode 3: free the three subtitle textures */
-extern void fn_8001BE2C(int mode); /* mode 3: (re)load the three subtitle textures */
 extern void* memcpy(void* dst, const void* src, int size);
 
 typedef struct LinkMenuItemDB

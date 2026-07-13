@@ -31,7 +31,7 @@
 #include "main/object_descriptor.h"
 #include "main/game_ui_interface.h"
 #include "main/lightmap_api.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/objhits.h"
 #include <string.h>
 #include "main/game_object.h"

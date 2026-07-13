@@ -23,6 +23,7 @@
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0015_curves.h"
+#include "main/textrender_api.h"
 
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
@@ -32,7 +33,6 @@ extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
 extern void* gameTextGet(int textId);
-extern int getCurGameText(void);
 
 void hintTextFn_800ea174(u8* out)
 {
@@ -59,7 +59,7 @@ void* saveGameGetCurHint(void)
 
 int hintTextMapFn_800ea264(void)
 {
-    int ret = getCurGameText();
+    int ret = (int)getCurGameText();
     u8* texts = getLastSavedGameTexts();
     gameTextLoadDir(lbl_803A4218[lbl_803119E0[texts[5]]]);
     return ret;

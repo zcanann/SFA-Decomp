@@ -24,7 +24,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame.h"
 extern bool prepareAttractMode();

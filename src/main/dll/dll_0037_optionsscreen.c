@@ -25,7 +25,7 @@
 #include "main/lightmap_render_control_api.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/FRONT/title_menu.h"

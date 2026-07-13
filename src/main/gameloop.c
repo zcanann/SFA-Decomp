@@ -45,7 +45,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
 

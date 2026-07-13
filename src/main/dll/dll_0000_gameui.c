@@ -297,7 +297,6 @@ extern f32 lbl_803E21C0;
 extern f32 lbl_803E21C4;
 extern f32 lbl_803E21C8;
 extern f32 lbl_803E21CC;
-extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
@@ -2769,7 +2768,7 @@ void pauseMenuFn_80129ee0(void)
                 }
                 if (lbl_803DD772 != 0 || lbl_803DD770 != 0)
                 {
-                    lbl_803DD8DC = getCurGameText();
+                    lbl_803DD8DC = (int)getCurGameText();
                     if (lbl_803DD8E0 == lbl_803DD7D6)
                     {
                         hintTextMapFn_800ea264();
@@ -2789,7 +2788,7 @@ void pauseMenuFn_80129ee0(void)
                 else
                 {
                     pauseMenuState = 1;
-                    lbl_803DD8DC = getCurGameText();
+                    lbl_803DD8DC = (int)getCurGameText();
                     gameTextLoadDir(0xb);
                 }
             }
@@ -2940,7 +2939,7 @@ void pauseMenuFn_80129ee0(void)
                     }
                     else
                     {
-                        gGameUiCurHintTextMap = getCurGameText();
+                        gGameUiCurHintTextMap = (int)getCurGameText();
                     }
                     AudioStream_Play(randomGetRange(0, 1) + 0x271d, AudioStream_StartPrepared);
                     break;

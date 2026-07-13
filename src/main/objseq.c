@@ -294,7 +294,6 @@ extern int playerStatusIsPositive(GameObject* obj);
 extern void playerSetInCutscene(GameObject* obj);
 extern void playerSetCutsceneCameraFlag(GameObject* obj);
 extern void playerSetOverrideParentSlack(GameObject* obj);
-extern void gameTextLoadTaskText(int taskId);
 
 extern int lbl_803DB724;
 extern f32 lbl_803DD074;

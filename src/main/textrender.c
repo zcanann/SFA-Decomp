@@ -3,6 +3,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/gametext_charset_api.h"
 #include "main/gametext_task_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/mm.h"
@@ -13,7 +14,7 @@
 #include "main/dll/savedata_struct.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/rcp_dolphin_api.h"
 

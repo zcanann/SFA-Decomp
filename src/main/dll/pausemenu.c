@@ -20,7 +20,7 @@
 #include "main/dll/savegame.h"
 #include "main/model.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "main/textrender.h"
+#include "main/textrender_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/pausemenu.h"

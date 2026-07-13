@@ -139,7 +139,6 @@ extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
 extern void doNothing_8000CF54(int);
-extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
