@@ -105,6 +105,14 @@ typedef struct ObjModelRenderOp
     u32 flags;
 } ObjModelRenderOp;
 
+// ObjModelRenderOp.flags (+0x3C) bits
+#define SHADER_FLAG_BACKFACE_CULL      0x8
+#define SHADER_FLAG_PROJECTED_TEX_PASS 0x100
+#define SHADER_FLAG_ALPHA_TEST_OPAQUE  0x400
+#define SHADER_FLAG_WATER_CAUSTIC      0x20000
+#define SHADER_FLAG_DECAL_LAYER        0x100000
+#define SHADER_FLAG_FORCE_BLEND        0x40000000
+
 #define OBJPRINT_MODEL_DEF(obj)         (((ObjAnimComponent*)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent*)(obj))->bankIndex)
 
@@ -1045,7 +1053,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     u32 alpha;
     u8 cull;
     u32 sf;
-    if (obj[0x37] < 0xff || ((sf = *(u32*)(shader + 0x3c)) & 0x40000000))
+    if (obj[0x37] < 0xff || ((sf = *(u32*)(shader + 0x3c)) & SHADER_FLAG_FORCE_BLEND))
     {
         blend = 1;
         if (((ModelFileHeader*)m)->flags & 0x400)
@@ -1070,7 +1078,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
             alpha = 0;
         }
     }
-    else if (sf & 0x400)
+    else if (sf & SHADER_FLAG_ALPHA_TEST_OPAQUE)
     {
         blend = 0;
         if (((ModelFileHeader*)m)->flags & 0x400)
@@ -1102,7 +1110,7 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
         zcomploc = 1;
         alpha = 0;
     }
-    if (*(u32*)(shader + 0x3c) & 8)
+    if (*(u32*)(shader + 0x3c) & SHADER_FLAG_BACKFACE_CULL)
     {
         cull = 1;
     }
@@ -2642,7 +2650,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
             layer = Shader_getLayer(shader, layerIdx);
             if ((layer[4] & 0x80) == mask)
             {
-                if ((*(u32*)(shader + 0x3c) & 0x100000) && layerIdx == 1)
+                if ((*(u32*)(shader + 0x3c) & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
                 {
                     gxTextureFn_80050e28(p3[0] != 0 ? 1 : 0);
                     return 1;
@@ -2965,7 +2973,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         {
             gxTextureFn_80050e28(refs[0] != 0 ? 1 : 0);
         }
-        if (((ObjModelRenderOp*)op)->flags & 0x100000)
+        if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_DECAL_LAYER)
         {
             u8* l1 = Shader_getLayer((u8*)op, 1);
             {
@@ -3000,7 +3008,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         getColor803dd01c(&fogc);
         renderHeavyFog(&fogc);
     }
-    if (((ObjModelRenderOp*)op)->flags & 0x100)
+    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_PROJECTED_TEX_PASS)
     {
         f32* vm = Camera_GetViewMatrix();
         Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
@@ -3024,7 +3032,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             gxTextureFn_80052638(color);
         }
     }
-    if (((ObjModelRenderOp*)op)->flags & 0x20000)
+    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_WATER_CAUSTIC)
     {
         fn_80118240();
     }
@@ -3038,7 +3046,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         else
         {
             u8 zon = 1;
-            if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & 0x40000000) || shad)
+            if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_FORCE_BLEND) || shad)
             {
                 u16 f2;
                 GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
@@ -3060,7 +3068,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
             }
-            else if (((ObjModelRenderOp*)op)->flags & 0x400)
+            else if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
             {
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (*(u16*)(p2 + 2) & 0x400)
@@ -3086,7 +3094,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 }
                 GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
-            if (((ObjModelRenderOp*)op)->flags & 0x400)
+            if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
             {
                 zon = 0;
             }

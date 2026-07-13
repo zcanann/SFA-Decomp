@@ -18,6 +18,13 @@
 #define DVD_STATE_WRONG_DISK  6
 #define DVD_STATE_RETRY       11
 
+// gameTextShow() message ids for the on-screen disk-error prompts
+#define GAMETEXT_MSG_DVD_FATAL_ERROR 0x339
+#define GAMETEXT_MSG_DVD_RETRY       0x33a
+#define GAMETEXT_MSG_DVD_COVER_OPEN  0x33c
+#define GAMETEXT_MSG_DVD_NO_DISK     0x33d
+#define GAMETEXT_MSG_DVD_WRONG_DISK  0x33e
+
 DVDCommandBlock lbl_80339950;
 
 void dvdCheckError(void)
@@ -37,7 +44,7 @@ void dvdCheckError(void)
     switch (status)
     {
     case DVD_STATE_FATAL_ERROR:
-        msgId = 0x339;
+        msgId = GAMETEXT_MSG_DVD_FATAL_ERROR;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
         {
@@ -48,7 +55,7 @@ void dvdCheckError(void)
         }
         break;
     case DVD_STATE_NO_DISK:
-        msgId = 0x33d;
+        msgId = GAMETEXT_MSG_DVD_NO_DISK;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
         {
@@ -58,7 +65,7 @@ void dvdCheckError(void)
         }
         break;
     case DVD_STATE_COVER_OPEN:
-        msgId = 0x33c;
+        msgId = GAMETEXT_MSG_DVD_COVER_OPEN;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
         {
@@ -68,7 +75,7 @@ void dvdCheckError(void)
         }
         break;
     case DVD_STATE_WRONG_DISK:
-        msgId = 0x33e;
+        msgId = GAMETEXT_MSG_DVD_WRONG_DISK;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
         {
@@ -78,7 +85,7 @@ void dvdCheckError(void)
         }
         break;
     case DVD_STATE_RETRY:
-        msgId = 0x33a;
+        msgId = GAMETEXT_MSG_DVD_RETRY;
         stopRumble2();
         if (gDvdErrorPauseActive == 0)
         {
