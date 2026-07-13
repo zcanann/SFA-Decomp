@@ -22,6 +22,7 @@
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_bbox_api.h"
 #include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"

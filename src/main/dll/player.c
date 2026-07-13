@@ -24,6 +24,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "track/intersect_api.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_bbox_api.h"
 #include "main/vecmath_distance_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
@@ -45,23 +46,51 @@
 #include "main/newshadows_audio_api.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
-#include "main/dll/player_80295318_shared.h"
+#include "main/object_transform.h"
+#include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/objseq_api.h"
+#include "main/shader_api.h"
+#include "main/dll/player_state.h"
+#include "main/dll/baddie_control_interface.h"
+#include "main/camera_interface.h"
+#include "main/camera.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
+#include "main/mapEventTypes.h"
+#include "main/mm.h"
+#include "main/objanim.h"
+#include "main/objanim_update.h"
+#include "main/objtexture.h"
+#include "main/objseq.h"
+#include "main/dll/player_motion.h"
+#include "main/dll/player_objects.h"
+#include "main/dll/player_status.h"
+#include "main/dll/player_target.h"
+#include "main/resource.h"
+#include "main/sky_interface.h"
+#include "main/vecmath.h"
+#include "main/dll/path_control_interface.h"
+#include "main/frame_timing.h"
+#include "main/byte_flags.h"
+#include "main/pad.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTransform.h"
+#include "string.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/dll_0104_smallbasket.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/objlib.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
-#include "main/dll/player_state.h"
 #include "main/dll/player.h"
-#include "main/dll/player_objects.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebits.h"
 #include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/object_transform.h"
-#include "main/camera.h"
 #include "main/player_control_interface.h"
 
 /* forward declarations for graduated functions */
@@ -2860,8 +2889,6 @@ extern f32 lbl_803E8004;
 #pragma opt_common_subs off
 int playerStateClimbWall(GameObject* obj, int state)
 {
-    extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8,
-                                  int p9, int p10);
     int mask;
     ObjModel* jt;
     int inner;
@@ -2943,7 +2970,7 @@ int playerStateClimbWall(GameObject* obj, int state)
             pnt[1] = ((PlayerState*)inner)->savedPosY;
             pnt[2] = -(30.0f * ((PlayerState*)inner)->groundNormalZ - ((PlayerState*)inner)->savedPosZ);
             {
-                int r = objBboxFn_800640cc((void*)((char*)inner + 0x768), pnt, 0.0f, 3, &hit, (int)obj, 1, 3, 0xff, 0);
+                int r = objBboxFnIntLegacy((void*)((char*)inner + 0x768), pnt, 0.0f, 3, &hit, (int)obj, 1, 3, 0xff, 0);
                 if (r != 0)
                 {
                     obj->anim.localPosX = pnt[0];
@@ -3151,7 +3178,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                         dst[0] = -(ph * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
                         dst[2] = -(ph * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
-                        if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
+                        if (objBboxFnIntLegacy(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << i;
                         }
@@ -3178,7 +3205,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                         dst[0] = -(dy * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
                         dst[2] = -(dy * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
-                        if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
+                        if (objBboxFnIntLegacy(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << (i + 2);
                         }
@@ -4248,8 +4275,6 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         s8 kind;
         u8 padC[2];
     } SweepHit;
-    extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8,
-                                  int p9, int p10);
     f32* dir;
     int objCount;
     f32 nearDist;
@@ -4450,7 +4475,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             end[1] = ((GameObject*)obj)->anim.localPosY;
             end[2] = ((GameObject*)obj)->anim.localPosZ;
         }
-        hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+        hit = objBboxFnIntLegacy(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         if (flagA != 0 && hit != 0)
         {
             ((PlayerState*)state)->probeHitDist = buf.dist;
@@ -4517,7 +4542,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 end[1] = ((GameObject*)obj)->anim.localPosY;
                 end[2] = ((GameObject*)obj)->anim.localPosZ;
             }
-            hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+            hit = objBboxFnIntLegacy(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
         }
         if (hit == 0)
         {
@@ -17219,8 +17244,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         toVec[0] = fromVec[0] - lbl_803E7F5C * mathSinf(gPlayerPi * (f32)(int)inner->targetYaw / lbl_803E7F98);
         toVec[1] = fromVec[1];
         toVec[2] = fromVec[2] - lbl_803E7F5C * mathCosf(gPlayerPi * (f32)(int)inner->targetYaw / lbl_803E7F98);
-        if (((int (*)(void*, void*, f32, int, void*, int, int, int, int, int))objBboxFn_800640cc)(
-                fromVec, toVec, lbl_803E7EA4, 3, hitBuf, (int)obj, 1, 1, 0xff, 0) != 0)
+        if (objBboxFnIntLegacy(fromVec, toVec, lbl_803E7EA4, 3, hitBuf, (int)obj, 1, 1, 0xff, 0) != 0)
         {
             lbl_803DE490 = *(f32*)(hitBuf + 0x3c) - lbl_803E7F30;
         }
