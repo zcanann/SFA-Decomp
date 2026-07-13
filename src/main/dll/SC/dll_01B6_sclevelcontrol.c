@@ -29,7 +29,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/audio/music_trigger_ids.h"
 
 #define SCLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000

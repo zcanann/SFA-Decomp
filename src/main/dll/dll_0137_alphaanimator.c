@@ -28,7 +28,7 @@
 #include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/mm.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 
 typedef struct AlphaanimatorPlacement
 {

@@ -10,7 +10,10 @@
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frustum.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
+#include "main/lightmap_lifecycle_api.h"
+#include "main/lightmap_render_control_api.h"
+#include "main/lightmap_render_queue_api.h"
 #include "main/newclouds.h"
 #include "main/obj_list.h"
 #include "main/objprint_render_api.h"
@@ -33,6 +36,9 @@ extern u32 mapBlockRender_setVtxDcrs();
 extern u32 DAT_803dda68;
 extern f32 lbl_803DC2D0;
 extern f32 lbl_803DF89C;
+
+void sceneDraw(void);
+void sceneDrawTransparentPolys(void);
 
 typedef struct
 {

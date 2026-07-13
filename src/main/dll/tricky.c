@@ -41,7 +41,7 @@
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXGeometry.h"

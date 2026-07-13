@@ -18,7 +18,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 #include "main/curve.h"

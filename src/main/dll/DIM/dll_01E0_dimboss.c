@@ -28,7 +28,7 @@
 #include "main/gameloop_api.h"
 #include "main/gametext.h"
 #include "main/textrender_api.h"
-#include "main/lightmap.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/rcp_dolphin.h"

@@ -32,7 +32,6 @@
 #include "main/object_api.h"
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
-#include "main/lightmap.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/skeetla.h"
 #include "main/objprint_sound_api.h"

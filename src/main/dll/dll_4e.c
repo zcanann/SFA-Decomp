@@ -25,7 +25,7 @@
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/debug/prof.h"
 #include "main/dll/dll_0015_save_settings.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"
 

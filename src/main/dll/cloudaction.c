@@ -22,6 +22,7 @@
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
 #include "main/objtexture.h"
+#include "main/lightmap_api.h"
 #include "main/sky_interface.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
@@ -50,7 +51,6 @@ extern void fn_8008DAE8(int obj);
 extern void fn_800412B8(int a, int b, int c);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int shouldDrawClouds(void);
-extern u8 isOvercast(void);
 extern void fn_80060490(int* a, int* b, int* c, int* d);
 extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
@@ -183,7 +183,7 @@ void renderClouds(int a, int b, int c, int d)
 
     if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        if (isOvercast())
+        if (isOvercastByteLegacy())
         {
             fn_8008DAE8((int)lbl_8039AB28.mainCloudObj);
         }

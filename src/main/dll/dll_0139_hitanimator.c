@@ -19,7 +19,7 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/track_dolphin_api.h"
 
 /* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by

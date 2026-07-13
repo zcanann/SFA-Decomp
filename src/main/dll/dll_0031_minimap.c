@@ -32,7 +32,7 @@
 #include "main/pad.h"
 #include "main/camera.h"
 #include "main/obj_group.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"

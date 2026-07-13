@@ -40,7 +40,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/sky_state.h"
-#include "main/lightmap.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/shader_api.h"
 #include "dolphin/os/OSReport.h"

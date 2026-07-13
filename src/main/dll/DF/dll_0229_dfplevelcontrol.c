@@ -18,7 +18,7 @@
 #include "main/obj_message.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx.h"

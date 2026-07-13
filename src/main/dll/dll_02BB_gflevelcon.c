@@ -25,7 +25,7 @@
 #include "main/obj_list.h"
 #include "main/screen_transition.h"
 #include "main/sky_api.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/render.h"

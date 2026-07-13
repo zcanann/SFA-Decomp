@@ -30,7 +30,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
-#include "main/lightmap.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"

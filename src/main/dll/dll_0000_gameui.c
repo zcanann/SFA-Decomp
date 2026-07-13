@@ -60,7 +60,7 @@
 #include "main/pad.h"
 #include "main/gamebits.h"
 #include "main/dll/tricky.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx.h"

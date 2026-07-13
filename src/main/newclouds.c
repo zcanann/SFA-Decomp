@@ -26,7 +26,7 @@
 #include "main/dll/savegame_env_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/gameloop_api.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/mm.h"
 #include "main/render.h"
 #include "main/vecmath.h"
@@ -731,7 +731,7 @@ void drawSkyStars(void)
     f32 t;
 
     timeOk = (*gSkyInterface)->getSunPosition(&t);
-    if (((u8 (*)(void))isOvercast)() != 0)
+    if (isOvercastByteLegacy() != 0)
     {
         if (timeOk != 0)
         {

@@ -30,7 +30,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/object_descriptor.h"
 #include "main/game_ui_interface.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/textrender.h"
 #include "main/objhits.h"
 #include <string.h>

@@ -24,7 +24,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/sky_api.h"
 #include "main/audio/music_trigger_ids.h"

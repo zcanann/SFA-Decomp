@@ -19,7 +19,7 @@
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/obj_list.h"
-#include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
