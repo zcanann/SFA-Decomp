@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 #define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMSNOWBALL1C2_OBJFLAG_HIDDEN 0x4000
 
@@ -135,3 +136,20 @@ void dimsnowball1c2_release(void)
 void dimsnowball1c2_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMSnowBall1C2ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimsnowball1c2_initialise,
+    (ObjectDescriptorCallback)dimsnowball1c2_release,
+    0,
+    (ObjectDescriptorCallback)dimsnowball1c2_init,
+    (ObjectDescriptorCallback)dimsnowball1c2_update,
+    (ObjectDescriptorCallback)dimsnowball1c2_hitDetect,
+    (ObjectDescriptorCallback)dimsnowball1c2_render,
+    (ObjectDescriptorCallback)dimsnowball1c2_free,
+    (ObjectDescriptorCallback)dimsnowball1c2_getObjectTypeId,
+    dimsnowball1c2_getExtraSize,
+};
