@@ -14,9 +14,6 @@
  * picks a new randomized targetProgress. The render pass spawns bone/object
  * particle effects from the unk400 fx-flag bits. When the object is asleep
  * (unkF4 != 0) update wakes it from the saved map-event time slot.
- *
- * This TU also carries the tumbleweedbush object descriptor (a separate
- * sibling object whose handlers live in another TU).
  */
 #include "main/game_object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -62,19 +59,6 @@ extern f32 lbl_803E2F28;
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
-void TumbleWeedBush_free(void);
-void TumbleWeedBush_hitDetect(void);
-void TumbleWeedBush_release(void);
-void TumbleWeedBush_initialise(void);
-void TumbleWeedBush_init(u8* obj, u8* params, int param3);
-int TumbleWeedBush_getExtraSize(void);
-int TumbleWeedBush_getObjectTypeId(void);
-void TumbleWeedBush_update(int* obj);
-void TumbleWeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-/* TumbleWeedBush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
- * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
-void TumbleWeedBush_setScale(u8* obj, void* match);
-
 int grimble_animEventCallback(void);
 void fn_801627F4(GameObject* obj);
 
@@ -526,27 +510,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     (ObjectDescriptorCallback)grimble_free,
     (ObjectDescriptorCallback)grimble_getObjectTypeId,
     grimble_getExtraSize,
-};
-
-ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)TumbleWeedBush_initialise,
-        (ObjectDescriptorCallback)TumbleWeedBush_release,
-        0,
-        (ObjectDescriptorCallback)TumbleWeedBush_init,
-        (ObjectDescriptorCallback)TumbleWeedBush_update,
-        (ObjectDescriptorCallback)TumbleWeedBush_hitDetect,
-        (ObjectDescriptorCallback)TumbleWeedBush_render,
-        (ObjectDescriptorCallback)TumbleWeedBush_free,
-        (ObjectDescriptorCallback)TumbleWeedBush_getObjectTypeId,
-        TumbleWeedBush_getExtraSize,
-        (ObjectDescriptorCallback)TumbleWeedBush_setScale,
-    },
-    0,
 };
 
 extern void cannonclaw_getExtraSize();
