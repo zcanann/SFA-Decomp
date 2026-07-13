@@ -13,6 +13,7 @@
  * emitting the 0x1f7 sparkle particle on a randomized cooldown.
  */
 #include "main/dll/dll197state_struct.h"
+#include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
@@ -66,7 +67,6 @@ extern f32 lbl_803E513C;
 extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void objUpdateOpacity(int obj);

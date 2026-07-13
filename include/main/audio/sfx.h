@@ -2,13 +2,13 @@
 #define MAIN_AUDIO_SFX_H_
 
 #include "global.h"
+#include "main/audio/sfx_play_api.h"
 
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_SetObjectSoundsPaused(s32 paused);
-void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
 u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);

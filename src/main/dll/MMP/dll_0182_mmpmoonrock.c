@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/savegame.h"
 #include "main/object_api.h"
@@ -376,7 +377,6 @@ extern f32 gMoonRockPickupRange;
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 Vec_distance(f32 * a, f32 * b);
 
     int i;
@@ -533,7 +533,6 @@ extern f32 gMoonRockWobbleAmplitude;
 
 void mmp_moonrock_update(GameObject* obj)
 {
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     MmpMoonrockState* state = obj->extra;
     u8 grabbed;
     int particleHeight;

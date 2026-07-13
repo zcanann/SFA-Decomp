@@ -19,6 +19,7 @@
  * latches the object's local position as the home position.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -135,7 +136,6 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);

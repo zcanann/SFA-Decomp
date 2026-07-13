@@ -1,5 +1,6 @@
 /* DLL 0xE1 - wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
 #include "main/dll/rom_curve_interface.h"
+#include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/swarmbaddiestate_struct.h"
@@ -47,7 +48,6 @@ void SwarmBaddie_release(void);
 
 void SwarmBaddie_initialise(void);
 
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;

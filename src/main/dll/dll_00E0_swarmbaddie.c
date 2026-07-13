@@ -16,6 +16,7 @@
  * the hagabon_* and wispbaddie_* callbacks live in the sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/swarmbaddiestate_struct.h"
@@ -74,7 +75,6 @@ extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern int gSwarmBaddieLastCurvePoint;
 extern int ObjHits_GetPriorityHitWithPosition();
-extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)

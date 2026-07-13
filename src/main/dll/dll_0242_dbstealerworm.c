@@ -25,6 +25,7 @@
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/objanim.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "main/dll/dll22cstate_struct.h"
@@ -286,7 +287,7 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
         sub_40c->msgSlotIndex = slotIndex;
         sub_40c->msgMode = 0;
         ObjMsg_SendToObject((void*)sub_40c->linkedObj, 17, obj, 18);
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mn_dimspit6);
     }
     *(s8*)&bs->stateTag = 18;
     if (*(char*)&bs->moveJustStartedA != '\0')
@@ -371,7 +372,6 @@ int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie)
 {
 
     extern int gDbStealerwormSfxIds[];
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 lbl_803E6340;
     BaddieState* bs = (BaddieState*)baddie;
     DbStealerwormControl* sub_40c;
@@ -484,7 +484,7 @@ int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
     }
     if (*(s8*)&bs->moveDone != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_eggylaugh116);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mn_eggylaugh116);
         sub_40c->unk04 = lbl_803E62C8;
         ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
         *(u32*)&bs->targetObj = 0;
@@ -802,7 +802,7 @@ int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie)
         sub->msgSlotIndex = 0x24;
         sub->msgMode = 0;
         ObjMsg_SendToObject((void*)sub->linkedObj, 0x11, obj, 0x12);
-        Sfx_PlayFromObject(obj, SFXTRIG_mn_dimspit6);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_mn_dimspit6);
     }
     if ((obj)->anim.currentMoveProgress > lbl_803E62EC)
     {
@@ -1223,7 +1223,6 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 void fn_80203144(GameObject* obj, int groundState, int baddie)
 {
 
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern int lbl_80329640[];
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E6354;
@@ -1824,7 +1823,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62CC;

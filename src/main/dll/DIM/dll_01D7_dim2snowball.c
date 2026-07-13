@@ -7,6 +7,7 @@
  * on floor-hit via their hit-callback vtable.
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
@@ -116,7 +117,6 @@ void dim2snowball_hitDetect(void)
 void dim2snowball_update(int* obj)
 {
     extern void Obj_FreeObject(int* obj);
-    extern void Sfx_PlayFromObject(u32 obj, u16 sfxId);
     int* extra = ((GameObject*)obj)->extra;
     int** results;
     int count;
