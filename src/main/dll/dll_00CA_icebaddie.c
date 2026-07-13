@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -165,7 +166,6 @@ extern f32 lbl_803E2CFC;
 extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern void renderWhirlpool(void);
 
-extern void fn_8003B5E0(int a, int b, int c, u8 d);
 
 extern u8 gIceBaddieStateHandlersA[];
 extern u8 gIceBaddieStateHandlersB[];

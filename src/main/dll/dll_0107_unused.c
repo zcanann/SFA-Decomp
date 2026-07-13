@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 #include "main/dll/player_state.h"
 #include "main/objlib.h"
+#include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -115,7 +116,6 @@ void dll_107_free(int* obj)
 
 void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
-    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     WindLift107State* state;
     s16 spitTimer;

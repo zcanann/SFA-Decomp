@@ -17,6 +17,7 @@
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/player_control_interface.h"
 #include "main/object_descriptor.h"
+#include "main/objprint_api.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */

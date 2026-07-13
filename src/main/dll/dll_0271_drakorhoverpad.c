@@ -21,6 +21,7 @@
 #include "main/curve.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
+#include "main/objprint_api.h"
 #include "main/dll/dll_0271_drakorhoverpad.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"

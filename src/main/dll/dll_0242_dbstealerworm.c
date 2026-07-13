@@ -46,6 +46,7 @@
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 #include "main/objprint.h"
+#include "main/objprint_api.h"
 #include "main/vecmath.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -995,7 +996,6 @@ int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
 
 void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern void objParticleFn_80099d84(int, f32, int, f32, int);
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62C8;

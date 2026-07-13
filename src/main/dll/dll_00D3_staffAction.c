@@ -26,6 +26,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/objhits.h"
@@ -47,7 +48,6 @@
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
-extern void fn_8003B950(void* mtx);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
@@ -460,7 +460,7 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 mtx[12] = (obj)->anim.localPosX - playerMapOffsetX;
                 mtx[13] = (obj)->anim.localPosY;
                 mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
-                fn_8003B950(mtx);
+                fn_8003B950((f32*)mtx);
                 objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2FF4);
                 fn_8003B950(0);
             }

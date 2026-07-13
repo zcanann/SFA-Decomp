@@ -7,6 +7,7 @@
 #include "main/pad.h"
 #include "main/vecmath.h"
 #include "main/objprint_dolphin.h"
+#include "main/objprint_api.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/DR/dll_0250_ktrex.h"
 #include "main/newclouds.h"
@@ -456,7 +457,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     }
     if (gKTRexRuntime->bobPhase != lbl_803E67B8)
     {
-        fn_8003B5E0(200, 0, 0, (int)gKTRexRuntime->bobPhase);
+        fn_8003B5E0IntAlphaLegacy(200, 0, 0, (int)gKTRexRuntime->bobPhase);
     }
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6818);
     ObjPath_GetPointWorldPosition(obj, 1, (f32*)((char*)gKTRexState + 0x130), (f32*)((char*)gKTRexState + 0x134),

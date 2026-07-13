@@ -23,6 +23,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/tricky.h"
 #include "main/dll/objfx_api.h"
+#include "main/objprint_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/objprint.h"

@@ -25,6 +25,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -689,7 +690,6 @@ void dll_CE_func0B(GameObject* obj, int v)
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
-    extern void fn_8003B5E0(int a, int b, int c, u8 d);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E10;
     GroundBaddieState* sub = ((GameObject*)p1)->extra;

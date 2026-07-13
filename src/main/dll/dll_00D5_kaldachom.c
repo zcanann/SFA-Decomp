@@ -14,6 +14,7 @@
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00D5_kaldachom.h"
@@ -51,7 +52,6 @@ extern int Obj_SetupObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern u32 fn_8003B5E0();
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 objParticleFn_80099d84();
 
@@ -390,7 +390,7 @@ void kaldachom_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
         case 0:
             if (((GroundBaddieState*)state)->glowAlpha != lbl_803E3060)
             {
-                fn_8003B5E0(200, 0, 0, (int)((GroundBaddieState*)state)->glowAlpha);
+                fn_8003B5E0IntAlphaLegacy(200, 0, 0, (int)((GroundBaddieState*)state)->glowAlpha);
             }
             ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3078);
             if ((((GroundBaddieState*)state)->flags400 & 0x60) != 0)

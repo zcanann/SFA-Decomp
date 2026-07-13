@@ -25,6 +25,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_descriptor.h"
+#include "main/objprint_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -121,7 +122,7 @@ int DR_CloudRunner_func11(GameObject* obj)
 
 void DR_CloudRunner_setGroundMarkerMatrix(GameObject* obj)
 {
-    fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
+    fn_8003B950((f32*)ObjPath_GetPointModelMtx(obj, 2));
 }
 
 int DR_CloudRunner_func14(GameObject* obj)

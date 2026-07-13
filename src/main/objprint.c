@@ -6,6 +6,7 @@
 #include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint.h"
+#include "main/objprint_api.h"
 #include "main/object_render.h"
 #include "main/dll/modgfx.h"
 #include "main/mm.h"
@@ -164,9 +165,9 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
 
 extern u32 lbl_803DCC10;
 extern u8 lbl_803DCC3C;
-void fn_8003B950(u32 x)
+void fn_8003B950(f32* matrix)
 {
-    lbl_803DCC10 = x;
+    lbl_803DCC10 = (u32)matrix;
 }
 u8 fn_8003BB74(void)
 {

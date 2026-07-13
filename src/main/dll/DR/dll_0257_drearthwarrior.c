@@ -527,7 +527,7 @@ void DR_EarthWarrior_func22(GameObject* obj, f32 scale)
     v.scale = scale / (obj)->anim.modelInstance->rootMotionScaleBase;
     setMatrixFromObjectPos(gEarthWarriorMatrix, &v);
     mtx44_mult(gEarthWarriorMatrix, (void*)mtx, gEarthWarriorMatrix);
-    fn_8003B950((int)gEarthWarriorMatrix);
+    fn_8003B950(gEarthWarriorMatrix);
 }
 
 int DR_EarthWarrior_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

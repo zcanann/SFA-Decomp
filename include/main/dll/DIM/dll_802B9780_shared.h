@@ -18,7 +18,6 @@ extern f32 lbl_803E8298;
 extern f32 lbl_803E829C;
 extern f32 lbl_803E82A0;
 
-extern void fn_8003B950(void* matrix);
 
 extern f32 gDIMSnowHorn1ModelMtx[16];
 
