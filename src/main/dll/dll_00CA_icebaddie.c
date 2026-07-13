@@ -959,13 +959,13 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
     }
     if (((GroundBaddieState*)state)->baddie.controlMode != 4)
     {
-        ObjPath_GetPointWorldPosition((int)obj, 2, &((IceBaddieControl*)control)->effectPosX,
+        ObjPath_GetPointWorldPosition(obj, 2, &((IceBaddieControl*)control)->effectPosX,
                                       &((IceBaddieControl*)control)->effectPosY,
                                       &((IceBaddieControl*)control)->effectPosZ, 0);
     }
     else
     {
-        ObjPath_GetPointWorldPosition((int)obj, 0, &((IceBaddieControl*)control)->effectPosX,
+        ObjPath_GetPointWorldPosition(obj, 0, &((IceBaddieControl*)control)->effectPosX,
                                       &((IceBaddieControl*)control)->effectPosY,
                                       &((IceBaddieControl*)control)->effectPosZ, 0);
     }
@@ -979,7 +979,7 @@ void iceBaddie_updateEffectAnchors(GameObject* obj, int state)
     pathX = lbl_803E2D14;
     pathY = lbl_803E2DA0;
     pathZ = lbl_803E2DA4;
-    ObjPath_GetPointWorldPosition((int)obj, 0, &pathX, &pathY, &pathZ, 1);
+    ObjPath_GetPointWorldPosition(obj, 0, &pathX, &pathY, &pathZ, 1);
     if ((((IceBaddieControl*)control)->effectFlags & ICEBADDIE_FX_ARM_ICEBALL) != 0)
     {
         transformedX = lbl_803E2DA8;

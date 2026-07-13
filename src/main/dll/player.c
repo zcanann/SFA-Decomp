@@ -16507,7 +16507,7 @@ void playerDoEyeAnims(GameObject* obj, int state)
         {
             e = 0;
         }
-        playerEyeAnimFn_80038988(obj, (PlayerBlinkState*)(state + 0x364), e);
+        ((void (*)(int, int, u16))playerEyeAnimFn_80038988)((int)obj, state + 0x364, e);
     }
     if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
     {

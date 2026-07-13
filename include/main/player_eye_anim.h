@@ -3,8 +3,6 @@
 
 #include "main/game_object.h"
 
-typedef struct PlayerBlinkState PlayerBlinkState;
-
-void playerEyeAnimFn_80038988(GameObject* obj, PlayerBlinkState* blinkState, u32 flags);
+void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags);
 
 #endif /* MAIN_PLAYER_EYE_ANIM_H_ */

@@ -2124,13 +2124,13 @@ typedef enum ObjLibBlinkMode
     OBJLIB_BLINK_MODE_WINK_LEFT = 5,  /* hold shut, left eye scaled apart */
 } ObjLibBlinkMode;
 
-struct PlayerBlinkState
+typedef struct PlayerBlinkState
 {
     u8 pad[0x2b];
     u8 mode;   /* 0x2b */
     u8 timer;  /* 0x2c */
     u8 amount; /* 0x2d */
-};
+} PlayerBlinkState;
 
 static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
 {
@@ -2162,10 +2162,10 @@ static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
     return joint;
 }
 
-void playerEyeAnimFn_80038988(GameObject* obj, PlayerBlinkState* blinkState, u32 flags)
+void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
 {
 
-    PlayerBlinkState* bs = blinkState;
+    PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
     f32 leftScale;
     s16 rotation;
     ObjAnimComponent* objAnim;
@@ -2174,7 +2174,7 @@ void playerEyeAnimFn_80038988(GameObject* obj, PlayerBlinkState* blinkState, u32
     f32 rightScale;
     f32 wave;
 
-    objAnim = &obj->anim;
+    objAnim = (ObjAnimComponent*)obj;
     step = lbl_803DE998 * timeDelta;
     rightScale = (leftScale = lbl_803DE99C);
     switch (bs->mode)
