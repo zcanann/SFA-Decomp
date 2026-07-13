@@ -284,7 +284,7 @@ void bossdrakor_update(int obj)
         if (((BossDrakorState*)state)->attackTimerDuration != lbl_803E6510)
         {
             s16toFloat(&((BossDrakorState*)state)->attackTimer,
-                       (int)((BossDrakorState*)state)->attackTimerDuration);
+                       ((BossDrakorState*)state)->attackTimerDuration);
         }
     }
     if ((((GameObject*)obj)->objectFlags & BOSSDRAKOR_OBJFLAG_RENDERED) == 0)
