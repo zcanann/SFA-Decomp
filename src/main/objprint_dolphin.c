@@ -19,7 +19,6 @@
 #include "main/object_transform.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
-#include "main/objprint_dolphin.h"
 #include "main/objprint_render_api.h"
 #include "main/table_file.h"
 #include "main/fileio.h"
@@ -30,6 +29,11 @@
 #include "main/dll/FRONT/n_options.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/dll_80136a40.h"
+
+void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
+void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
+void objRenderChild(int* child, int* parent, u8 isShadow);
+
 #define GX_AOP_AND        0
 #define GX_BL_ZERO        0
 #define GX_BM_NONE        0
