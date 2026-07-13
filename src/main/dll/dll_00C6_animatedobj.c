@@ -4,6 +4,7 @@
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -282,11 +283,6 @@ int animatedobj_getExtraSize(void) { return 0x140; }
 
 void dim2roofrub_free(int* obj);
 
-void staff_func10(int* obj, s32 v);
-void staff_setHitReactValue(int* obj, s32 v);
-void staff_addHitReactValue(int* obj, s32 delta);
-void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2);
 
 void restartmarker_init(int* obj, int* state);
 

@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/vecmath_distance_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_api.h"
@@ -89,11 +90,6 @@ extern void GCbaddieShield_update(int* obj);
 
 
 
-extern void staff_func10(int* obj, s32 v);
-extern void staff_setHitReactValue(int* obj, s32 v);
-extern void staff_addHitReactValue(int* obj, s32 delta);
-extern void staff_getHitGeometryPoints(int* obj, f32* outA, f32* outB);
-extern void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2);
 
 
 
