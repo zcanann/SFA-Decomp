@@ -16,6 +16,7 @@
  * computes the highlight fade (lbl_803DD8D4).
  */
 #include "main/camera_interface.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
@@ -93,8 +94,6 @@ extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
 
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);

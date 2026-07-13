@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/newshadows_audio_api.h"
@@ -235,7 +236,6 @@ extern u32 FUN_80064384();
 extern u32 objAudioFn_8006ef38();
 extern u32 FUN_8006f788();
 extern u32 FUN_8006f790();
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_800709e8();
 extern u32 FUN_80080f6c();
 extern u32 FUN_802420e0();

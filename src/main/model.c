@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -20,8 +21,6 @@
 #define GX_AOP_AND 0
 #define GX_LEQUAL 3
 #define GX_ALWAYS 7
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot);
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);

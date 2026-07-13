@@ -19,6 +19,7 @@
  * input-override state round it out.
  */
 #include "main/dll/ppcwgpipe_struct.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/dll/dll_003B_menu.h"
@@ -264,8 +265,6 @@ extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 
 extern int ObjGroup_FindNearestObject();
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);

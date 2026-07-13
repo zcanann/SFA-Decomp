@@ -12,6 +12,7 @@
  * grow/shrink lock-on animation is in staffDoGrowShrinkAnim.
  *
  */
+#include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -95,9 +96,6 @@ typedef struct StaffDoGrowShrinkAnimState
     s16 unkB0;
     u8 padB2[0xB8 - 0xB2];
 } StaffDoGrowShrinkAnimState;
-
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 void staff_func0F(void)
 {

@@ -47,8 +47,6 @@
 #define GX_LEQUAL     3
 #define PAD_BUTTON_A  0x100
 #define PAD_BUTTON_B  0x200
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern u32 FUN_80259858();
 extern u32 FUN_8025aeac();
 extern u32 FUN_8025b054();

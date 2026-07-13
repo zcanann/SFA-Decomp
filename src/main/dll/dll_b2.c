@@ -11,6 +11,7 @@
  * fixed alpha-compare / cull state used for HUD icons.
  */
 #include "main/dll/dll_B2.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/model.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "dolphin/gx/GXPixel.h"
@@ -34,9 +35,6 @@ typedef struct CamcontrolIconColor
 } CamcontrolIconColor;
 
 extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-
 #define GX_BM_NONE        0
 #define GX_BM_BLEND       1
 #define GX_BL_ZERO        0

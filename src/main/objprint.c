@@ -84,8 +84,6 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 }
 
 extern u32 objRenderFuzzFn_8003d6f8();
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
 {

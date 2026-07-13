@@ -1,5 +1,6 @@
 #include "dolphin/os/OSReport.h"
 #include "main/frame_timing.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/asset_load.h"
 #include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
@@ -84,8 +85,6 @@
 
 extern u32 FUN_800033a8();
 extern u32 FUN_80017830();
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern int FUN_8025a850();
 extern u32 GXSetBlendMode();
 extern u64 FUN_80286834();

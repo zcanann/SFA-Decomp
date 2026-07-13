@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/lightmap_api.h"
@@ -330,7 +331,6 @@ extern f32 lbl_803DB660;
 
 extern u32 FUN_80017790();
 extern u32 FUN_8001779c();
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);

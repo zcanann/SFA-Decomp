@@ -16,6 +16,7 @@
  *    counters and the THP frame rate, when the next video frame is due.
  */
 #include "dolphin/ai.h"
+#include "track/intersect_depth_state_api.h"
 #include "dolphin/os.h"
 #include "dolphin/vi.h"
 #include "main/dll/FRONT/attract_movie.h"
@@ -52,8 +53,6 @@ extern u32 lbl_803DD678;               /* AI DMA double-buffer index */
 extern f32 lbl_803E1D50;               /* playback time accumulator */
 extern OSMessageQueue lbl_803A5CCC[1]; /* spent texture-set queue */
 
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                               GXBool normalize, u32 pt_texmtx);
 extern void GXSetNumTexGens(u8 nTexGens);

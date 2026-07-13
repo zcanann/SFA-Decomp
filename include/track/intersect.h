@@ -3,6 +3,7 @@
 
 #include "dolphin/gx.h"
 #include "main/game_object.h"
+#include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "ghidra_import.h"
 
@@ -20,8 +21,6 @@ void clearScreenWidth(void);
 void matrixFn_8006ff0c(float* param_6, short* param_7, f32 param_1, f32 param_2, f32 param_3, f32 param_4, f32 param_5);
 void normalize(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
-void gxSetPeControl_ZCompLoc_(u32 param_1);
-void gxSetZMode_(u32 param_1, int param_2, u32 param_3);
 void resetSomeGxFlags(void);
 void setHudOpacity(u8 param_1);
 void _gxSetFogParams(void);

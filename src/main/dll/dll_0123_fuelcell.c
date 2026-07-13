@@ -1,5 +1,6 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/dll/dll_0123_fuelcell.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -32,8 +33,6 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_MSG_IN_RANGE 0x7000a  /* sent to player when grab is offered */
 #define FUELCELL_MSG_RELEASE 0x7000b   /* player dropped/deposited the cell */
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_PlayFromObject(GameObject* obj, int soundId);

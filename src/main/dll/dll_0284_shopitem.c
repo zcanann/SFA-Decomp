@@ -15,6 +15,7 @@
  * resetHitboxMode interaction bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
@@ -89,8 +90,6 @@ STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
-extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
 #define GX_BM_NONE     0

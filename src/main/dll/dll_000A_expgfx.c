@@ -1,4 +1,5 @@
 #include "dolphin/mtx.h"
+#include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
@@ -194,8 +195,6 @@ extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void selectTexture(int handle, int slot);
 extern void setupReflectionIndirectTev(u32 flag);
-extern void gxSetPeControl_ZCompLoc_(u32 zcomploc);
-extern void gxSetZMode_(u32 compEnable, int func, u32 updateEnable);
 extern void _gxSetFogParams(void);
 extern void fn_80079180(void);
 extern void geomDrawFn_800796f0(void);
