@@ -864,11 +864,11 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     z = lbl_803E23DC;                                                                                                  \
     *(f32*)((state) + 0x71c) = z;                                                                                      \
     *(f32*)((state) + 0x720) = z;                                                                                      \
-    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & ~0x10LL;                                                       \
-    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & ~0x10000LL;                                                    \
-    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & ~0x20000LL;                                                    \
-    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & ~0x40000LL;                                                    \
-    *(u8*)((state) + 0xd) = 0xFF
+    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & (u64)~0x10U;                                                  \
+    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & (u64)~0x10000U;                                               \
+    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & (u64)~0x20000U;                                               \
+    *(u32*)((state) + 0x54) = *(u32*)((state) + 0x54) & (u64)~0x40000U;                                               \
+    ((TrickyState*)(state))->commandPhase = -1
 
 #define TRICKY_VOICE(obj, sfx, vol)                                                                                    \
     {                                                                                                                  \
