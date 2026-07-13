@@ -5,6 +5,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/obj_link.h"
+#include "main/obj_path.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -93,8 +94,6 @@ extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
 extern int objUpdateOpacity(int sub);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;
@@ -437,7 +436,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
             }
         }
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E670C);
-        ObjPath_GetPointWorldPosition((int)obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
+        ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState*)inner)->posX, &((SnowclawState*)inner)->posY,
                                       &((SnowclawState*)inner)->posZ, 0);
         *(u8*)((char*)obj + 0x37) = oldFlag;
         if (((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 != 0)

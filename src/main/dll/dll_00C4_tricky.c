@@ -14,6 +14,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
@@ -189,8 +190,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
-extern u32 ObjPath_GetPointWorldPositionArray();
-extern u32 ObjPath_GetPointWorldPosition();
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
 extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int pointCount, int arg7);
@@ -2709,12 +2708,12 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
         pathPoint = pathState;
         do
         {
-            ObjPath_GetPointWorldPosition(obj, i + 4, (float*)(pathPoint + 0x3d8), (u32*)(pathPoint + 0x3dc),
+            ObjPath_GetPointWorldPosition(obj, i + 4, (float*)(pathPoint + 0x3d8), (float*)(pathPoint + 0x3dc),
                                           (float*)(pathPoint + 0x3e0), 0);
             pathPoint = pathPoint + 0xc;
             i = i + 1;
         } while (i < 4);
-        ObjPath_GetPointWorldPosition(obj, 8, (float*)(pathState + 0x408), (u32*)(pathState + 0x40c),
+        ObjPath_GetPointWorldPosition(obj, 8, (float*)(pathState + 0x408), (float*)(pathState + 0x40c),
                                       (float*)(pathState + 0x410), 0);
         pathInfo = objModelGetVecFn_800395d8(obj, 0);
         *(s16*)(pathState + 0x414) = pathInfo[1];

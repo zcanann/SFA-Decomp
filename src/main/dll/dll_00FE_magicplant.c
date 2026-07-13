@@ -26,6 +26,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/obj_link.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -97,8 +98,6 @@ extern s16 gMagicPlantGemDefIds[4];
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern int objIsFrozen(int obj);
 
 void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
@@ -407,7 +406,7 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             if (child->ownerObj != NULL)
             {
-                ObjPath_GetPointWorldPosition(obj, 0, &child->anim.localPosX, &child->anim.localPosY,
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &child->anim.localPosX, &child->anim.localPosY,
                                               &child->anim.localPosZ, 0);
             }
         }

@@ -7,6 +7,7 @@
 #include "main/dll/SC/dll_01B7_scmusictree.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -83,7 +84,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 
-extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);

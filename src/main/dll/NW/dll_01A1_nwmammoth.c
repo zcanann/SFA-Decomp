@@ -5,6 +5,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/objprint_character_api.h"
 #include "main/object.h"
 #include "main/objlib.h"
@@ -635,7 +636,6 @@ void NW_mammoth_free(GameObject* obj)
 
 void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
     extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     int i;
     void* node;
@@ -644,10 +644,12 @@ void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vis
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
     {
-        ObjPath_GetPointWorldPosition(obj, i, (char*)node + i * 0xc + 0x45c, (char*)node + i * 0xc + 0x460,
-                                      (char*)node + i * 0xc + 0x464, 0);
+        ObjPath_GetPointWorldPosition(obj, i, (f32*)((char*)node + i * 0xc + 0x45c),
+                                      (f32*)((char*)node + i * 0xc + 0x460),
+                                      (f32*)((char*)node + i * 0xc + 0x464), 0);
     }
-    ObjPath_GetPointWorldPosition(obj, 4, (char*)node + 0xc, (char*)node + 0x10, (char*)node + 0x14, 0);
+    ObjPath_GetPointWorldPosition(obj, 4, (f32*)((char*)node + 0xc), (f32*)((char*)node + 0x10),
+                                  (f32*)((char*)node + 0x14), 0);
 }
 
 enum NwMammothStateFlag

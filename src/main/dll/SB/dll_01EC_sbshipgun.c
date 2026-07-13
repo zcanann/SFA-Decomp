@@ -22,6 +22,7 @@
 #include "main/camera_shake_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
+#include "main/obj_path.h"
 #include "main/objlib.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -154,8 +155,6 @@ enum
 void SB_ShipGun_update(GameObject* obj)
 {
 
-    extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                              int useInputPosition);
     char phase;
     float boost;
     GameObject* player;
@@ -383,7 +382,7 @@ void SB_ShipGun_update(GameObject* obj)
         {
             spawnArgs.scale = lbl_803E58A8;
             spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-            ObjPath_GetPointWorldPosition((int)obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
+            ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
             spawnArgs.posX = spawnArgs.posX - (obj)->anim.worldPosX;
             spawnArgs.posY = spawnArgs.posY - (obj)->anim.worldPosY;
             spawnArgs.posZ = spawnArgs.posZ - (obj)->anim.worldPosZ;
@@ -415,7 +414,7 @@ void SB_ShipGun_update(GameObject* obj)
             }
             spawnArgs.scale = lbl_803E58A8;
             spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-            ObjPath_GetPointWorldPosition((int)obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
+            ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
             spawnArgs.posX = spawnArgs.posX - (obj)->anim.worldPosX;
             spawnArgs.posY = spawnArgs.posY - (obj)->anim.worldPosY;
             spawnArgs.posZ = spawnArgs.posZ - (obj)->anim.worldPosZ;

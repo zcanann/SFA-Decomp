@@ -19,6 +19,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -138,9 +139,6 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY, f32* outZ,
-                                          int useInputPosition);
-
 void WCPushBlock_SpawnFromPath(s16* path)
 {
     WCPushBlockObjectSetup* setup;
@@ -173,7 +171,7 @@ void WCPushBlock_SpawnFromPath(s16* path)
     setup->linkB = 0xff;
     setup->placementMode = 2;
     setup->group = 1;
-    ObjPath_GetPointWorldPosition(path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y, &setup->z, 0);
+    ObjPath_GetPointWorldPosition((GameObject*)path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y, &setup->z, 0);
 
     block = (WCPushBlockObject*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
     if (block == NULL)

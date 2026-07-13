@@ -24,6 +24,7 @@
 #include "main/object_api.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
+#include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
@@ -67,8 +68,6 @@ extern f32 lbl_803E54A0;
 extern f32 lbl_803E549C;
 
 extern u32 getButtonsJustPressed(int port);
-extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
@@ -144,8 +143,8 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         {
             model = (int*)Obj_GetActiveModel(player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex, &x, &y, &z,
-                                          0);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex,
+                                          &x, &y, &z, 0);
             objSetPos((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }

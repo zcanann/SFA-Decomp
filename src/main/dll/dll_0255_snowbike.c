@@ -5,6 +5,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/obj_path.h"
 #include "main/obj_group.h"
 #include "main/camera.h"
 #include "main/audio/sfx.h"
@@ -128,7 +129,6 @@ extern void* mapRomListFindItem(int a, int b, int c, int d, int e);
 extern int gSnowBikeMountRomListTable[];
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void fn_801E991C(void* obj, void* path);
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
@@ -499,12 +499,14 @@ void SnowBike_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
     if (visible == -1)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
-        ObjPath_GetPointWorldPosition(obj, 0, (char*)path + 0x3e8, (char*)path + 0x3ec, (char*)path + 0x3f0, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)path + 0x3e8),
+                                      (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
     }
     else
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);
-        ObjPath_GetPointWorldPosition(obj, 0, (char*)path + 0x3e8, (char*)path + 0x3ec, (char*)path + 0x3f0, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)path + 0x3e8),
+                                      (f32*)((char*)path + 0x3ec), (f32*)((char*)path + 0x3f0), 0);
     }
 }
 

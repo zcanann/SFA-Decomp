@@ -31,6 +31,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
@@ -84,7 +85,6 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern u64 ObjPath_GetPointWorldPosition();
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
 extern f32 lbl_803E2CC8;
@@ -289,7 +289,8 @@ void firecrawler_spawnFirepipe(int* obj)
     if (Obj_IsLoadingLocked() != 0)
     {
         child = (int*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
-        ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)child + 0x8),
+                                      (f32*)((char*)child + 0xc), (f32*)((char*)child + 0x10), 0);
         ((FirepipeSetup*)child)->head.color[0] = 1;
         ((FirepipeSetup*)child)->head.color[1] = 4;
         ((FirepipeSetup*)child)->head.color[2] = 0xff;
@@ -805,7 +806,8 @@ void fn_80157B58(int* obj, u8* state)
     {
         int child;
         int setup = (int)Obj_AllocObjectSetup(0x24, 0x869);
-        ObjPath_GetPointWorldPosition(obj, 0, setup + 8, setup + 0xc, setup + 0x10, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(setup + 8), (f32*)(setup + 0xc),
+                                      (f32*)(setup + 0x10), 0);
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[2] = 0xff;

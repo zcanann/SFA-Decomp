@@ -32,6 +32,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -94,7 +95,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(GameObject* player);
@@ -166,7 +166,8 @@ void enemymushroom_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
     if (visible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5310);
-        ObjPath_GetPointWorldPosition(obj, 0, (char*)state + 0x20, (char*)state + 0x24, (char*)state + 0x28, 0);
+        ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)state + 0x20), (f32*)((char*)state + 0x24),
+                                      (f32*)((char*)state + 0x28), 0);
     }
 }
 

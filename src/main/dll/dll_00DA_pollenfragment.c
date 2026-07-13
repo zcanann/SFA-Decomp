@@ -21,6 +21,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/objfx.h"
 
 #define s16toFloatLegacy(timer, duration) \
@@ -84,7 +85,6 @@ extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 
-extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 
@@ -277,7 +277,7 @@ void pollenfragment_update(int obj)
     {
         if (def->usePath)
         {
-            ObjPath_GetPointWorldPosition(nearObj, 0, &pos.x, &pos.y, &pos.z, 0);
+            ObjPath_GetPointWorldPosition((GameObject*)nearObj, 0, &pos.x, &pos.y, &pos.z, 0);
         }
         else
         {

@@ -15,6 +15,7 @@
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/obj_group.h"
 #include "main/objprint_api.h"
@@ -50,8 +51,6 @@
 #define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
 #define KALDACHOM_EFFECT_RESOURCE_ID         0x5a /* shared effect resource -> gKaldachomEffectResource */
 
-extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
-                                          int useInputPosition);
 extern u32 objParticleFn_80099d84();
 
 extern void fn_802961FC(int a, u8 type);
