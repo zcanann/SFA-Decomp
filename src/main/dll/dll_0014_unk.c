@@ -338,6 +338,82 @@ static inline int Objfsa_FindRomCurveById(int curveId)
     return 0;
 }
 
+static inline u32 RomCurve_GetId(RomCurveDef* curve)
+{
+    return curve->id;
+}
+
+static inline int RomCurve_IsLinkIdValid(int linkId)
+{
+    return -1 < linkId;
+}
+
+static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
+{
+    int high;
+    int low;
+    int mid;
+
+    if ((s32)curveId < 0)
+    {
+        return NULL;
+    }
+
+    high = nRomCurves - 1;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        if (curveId > RomCurve_GetId(romCurves[mid]))
+        {
+            low = mid + 1;
+        }
+        else if (curveId < RomCurve_GetId(romCurves[mid]))
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            return romCurves[mid];
+        }
+    }
+
+    return NULL;
+}
+
+static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
+{
+    int high;
+    int low;
+    int mid;
+
+    if ((s32)curveId < 0)
+    {
+        return NULL;
+    }
+
+    high = lim;
+    low = 0;
+    while (high >= low)
+    {
+        mid = (high + low) >> 1;
+        if (curveId > RomCurve_GetId(romCurves[mid]))
+        {
+            low = mid + 1;
+        }
+        else if (curveId < RomCurve_GetId(romCurves[mid]))
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            return romCurves[mid];
+        }
+    }
+
+    return NULL;
+}
+
 #pragma scheduling off
 #pragma peephole off
 static inline int Objfsa_RomCurveIsBlocked(int curve)
@@ -2619,21 +2695,19 @@ int RomCurve_func16(double x, double y, double z)
     u32* top;
     int candidateCount;
     int category;
+    ObjfsaRomCurveDef* curve;
+    int id;
     int i;
-    int curve;
-    int* curveList;
     int out;
-    int currentCurve;
 
     candidateCount = 0;
     i = 0;
-    curveList = (int*)romCurves;
     for (; i < nRomCurves && candidateCount < 20; i++)
     {
-        curve = curveList[i];
-        if (((ObjfsaRomCurveDef*)curve)->type == ROMCURVE_TYPE_17)
+        curve = (ObjfsaRomCurveDef*)romCurves[i];
+        if (curve->type == ROMCURVE_TYPE_17)
         {
-            candidateIds[candidateCount++] = ((ObjfsaRomCurveDef*)curve)->id;
+            candidateIds[candidateCount++] = curve->id;
         }
     }
 
@@ -2645,14 +2719,16 @@ int RomCurve_func16(double x, double y, double z)
             return candidateIds[0];
         }
 
-        currentCurve = Objfsa_FindRomCurveById(candidateIds[0]);
-        category = ((ObjfsaRomCurveDef*)currentCurve)->action;
+        id = candidateIds[0];
+        curve = (ObjfsaRomCurveDef*)RomCurve_FindByIdInline(id);
+        category = curve->action;
         i = 0;
         while (i < candidateCount)
         {
-            currentCurve = Objfsa_FindRomCurveById(candidateIds[i]);
-            if (((ObjfsaRomCurveDef*)currentCurve)->action == category)
+            curve = (ObjfsaRomCurveDef*)RomCurve_FindByIdWithLimit(candidateIds[i], nRomCurves - 1);
+            if (curve->action == category)
             {
+                top--;
                 candidateCount--;
                 candidateIds[i] = candidateIds[candidateCount];
             }
@@ -2715,82 +2791,6 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
     outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
     return 1;
-}
-
-static inline u32 RomCurve_GetId(RomCurveDef* curve)
-{
-    return curve->id;
-}
-
-static inline int RomCurve_IsLinkIdValid(int linkId)
-{
-    return -1 < linkId;
-}
-
-static inline RomCurveDef* RomCurve_FindByIdInline(u32 curveId)
-{
-    int high;
-    int low;
-    int mid;
-
-    if ((s32)curveId < 0)
-    {
-        return NULL;
-    }
-
-    high = nRomCurves - 1;
-    low = 0;
-    while (high >= low)
-    {
-        mid = (high + low) >> 1;
-        if (curveId > RomCurve_GetId(romCurves[mid]))
-        {
-            low = mid + 1;
-        }
-        else if (curveId < RomCurve_GetId(romCurves[mid]))
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            return romCurves[mid];
-        }
-    }
-
-    return NULL;
-}
-
-static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
-{
-    int high;
-    int low;
-    int mid;
-
-    if ((s32)curveId < 0)
-    {
-        return NULL;
-    }
-
-    high = lim;
-    low = 0;
-    while (high >= low)
-    {
-        mid = (high + low) >> 1;
-        if (curveId > RomCurve_GetId(romCurves[mid]))
-        {
-            low = mid + 1;
-        }
-        else if (curveId < RomCurve_GetId(romCurves[mid]))
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            return romCurves[mid];
-        }
-    }
-
-    return NULL;
 }
 
 #pragma opt_propagation off
@@ -3756,35 +3756,29 @@ int RomCurve_countRandomPoints(RomCurveDef* curve)
 
 int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 {
-    u32* idCursor;
     RomCurveDef** windowCursor;
     float* outXStart;
     float* outXCursor;
     float* outYCursor;
     float* outZCursor;
-    int low;
-    int mid;
-    int high;
+    u32 curveId;
     RomCurveDef* resolvedCurve;
     RomCurveDef** resolveCursor;
     RomCurveDef* reloaded;
     int foundCount;
-    u32 curveId;
     int remaining;
     RomCurveDef* windowCurves[4];
 
     foundCount = 0;
-    idCursor = curveIds;
     resolveCursor = windowCurves;
     windowCursor = resolveCursor;
     outXStart = outX;
     outXCursor = outX;
     outYCursor = outY;
     outZCursor = outZ;
-    remaining = 4;
     for (remaining = 4; remaining != 0; remaining--)
     {
-        curveId = *idCursor;
+        curveId = *curveIds;
         resolvedCurve = RomCurve_FindByIdInline(curveId);
         *windowCursor = resolvedCurve;
         reloaded = *windowCursor;
@@ -3795,7 +3789,7 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
             *outZCursor = reloaded->z;
             foundCount = foundCount + 1;
         }
-        idCursor++;
+        curveIds++;
         windowCursor = windowCursor + 1;
         outXCursor++;
         outYCursor = outYCursor + 1;
