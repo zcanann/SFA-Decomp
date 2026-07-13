@@ -227,11 +227,11 @@ void PressureSwitchFB_update(GameObject* obj)
         {
             state->contactTimer = 5;
         }
-        if (*(s8*)(*(int*)(obj + 0x58) + 0x10f) > 0)
+        if (*(s8*)(*(int*)((u8*)obj + 0x58) + 0x10f) > 0)
         {
-            for (i = 0, off = 0; i < *(s8*)(*(int*)(obj + 0x58) + 0x10f); i++)
+            for (i = 0, off = 0; i < *(s8*)(*(int*)((u8*)obj + 0x58) + 0x10f); i++)
             {
-                other = *(u32*)(*(int*)(obj + 0x58) + off + 0x100);
+                other = *(u32*)(*(int*)((u8*)obj + 0x58) + off + 0x100);
                 if ((((GameObject*)other)->anim.classId == 1) || (((GameObject*)other)->anim.classId == 2) ||
                     (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_A) ||
                     (((GameObject*)other)->anim.seqId == PRESSURESWITCHFB_TRACKED_SEQID_B))
