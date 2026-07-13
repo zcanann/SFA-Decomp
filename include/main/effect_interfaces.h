@@ -217,32 +217,6 @@ STATIC_ASSERT(offsetof(ModgfxInterface, spawnSequence) == 0x50);
 STATIC_ASSERT(offsetof(ModgfxInterface, addSequenceFlags) == 0x54);
 STATIC_ASSERT(offsetof(ModgfxInterface, getLastSpawnHandle) == 0x58);
 
-typedef void (*SkyEnvfxUpdateFn)(struct GameObject* source, struct GameObject* target, void* entry, int flags, u16 idx);
-typedef void (*SkyOnMapSetupFn)(void);
-typedef void (*SkyRunFn)(void);
-typedef void (*SkyApplyFogColorFn)(int slot);
-typedef int (*SkyRet0Fn)(void);
-typedef void (*SkyApplyTextColorFn)(int slot);
-
-typedef struct Sky2Interface {
-  u8 pad00[0x04];
-  SkyEnvfxUpdateFn updateEnvfxAct;
-  SkyOnMapSetupFn onMapSetup;
-  SkyRunFn run;
-  SkyApplyFogColorFn applyFogColor;
-  SkyRet0Fn ret0;
-  SkyApplyTextColorFn applyTextColor;
-} Sky2Interface;
-
-STATIC_ASSERT(offsetof(Sky2Interface, updateEnvfxAct) == 0x04);
-STATIC_ASSERT(offsetof(Sky2Interface, onMapSetup) == 0x08);
-STATIC_ASSERT(offsetof(Sky2Interface, run) == 0x0C);
-STATIC_ASSERT(offsetof(Sky2Interface, applyFogColor) == 0x10);
-STATIC_ASSERT(offsetof(Sky2Interface, ret0) == 0x14);
-STATIC_ASSERT(offsetof(Sky2Interface, applyTextColor) == 0x18);
-
-extern Sky2Interface **gSky2Interface;
-
 extern ModgfxInterface **gModgfxInterface;
 
 #endif /* MAIN_EFFECT_INTERFACES_H_ */

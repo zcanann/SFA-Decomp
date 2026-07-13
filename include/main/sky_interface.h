@@ -70,4 +70,31 @@ STATIC_ASSERT(offsetof(SkyInterface, return0b) == 0x54);
 
 extern SkyInterface **gSkyInterface;
 
+typedef void (*Sky2UpdateEnvfxActFn)(struct GameObject* source, struct GameObject* target,
+                                     void* entry, int flags, u16 idx);
+typedef void (*Sky2OnMapSetupFn)(void);
+typedef void (*Sky2RunFn)(void);
+typedef void (*Sky2ApplyFogColorFn)(int slot);
+typedef int (*Sky2Ret0Fn)(void);
+typedef void (*Sky2ApplyTextColorFn)(int slot);
+
+typedef struct Sky2Interface {
+    u8 pad00[0x04];
+    Sky2UpdateEnvfxActFn updateEnvfxAct;
+    Sky2OnMapSetupFn onMapSetup;
+    Sky2RunFn run;
+    Sky2ApplyFogColorFn applyFogColor;
+    Sky2Ret0Fn ret0;
+    Sky2ApplyTextColorFn applyTextColor;
+} Sky2Interface;
+
+STATIC_ASSERT(offsetof(Sky2Interface, updateEnvfxAct) == 0x04);
+STATIC_ASSERT(offsetof(Sky2Interface, onMapSetup) == 0x08);
+STATIC_ASSERT(offsetof(Sky2Interface, run) == 0x0C);
+STATIC_ASSERT(offsetof(Sky2Interface, applyFogColor) == 0x10);
+STATIC_ASSERT(offsetof(Sky2Interface, ret0) == 0x14);
+STATIC_ASSERT(offsetof(Sky2Interface, applyTextColor) == 0x18);
+
+extern Sky2Interface** gSky2Interface;
+
 #endif /* MAIN_SKY_INTERFACE_H_ */
