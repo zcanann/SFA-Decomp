@@ -4530,7 +4530,7 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
 }
 
 extern IndTexMtx23 lbl_802C1DC8;
-extern IndTexMtx23 lbl_802C1DE0;
+extern IndTexMtx23 lbl_802C1DE0[];
 extern void fn_80293C64(f32 angle, f32* s, f32* c);
 extern void fn_8006C504(void* out);
 extern void getTextureFn_8006c5e4(void* out);
@@ -4571,7 +4571,7 @@ void fn_8004DA54(char* p1)
     f32 t;
     u8* tex24;
     m1 = lbl_802C1DC8;
-    m2 = lbl_802C1DE0;
+    m2 = lbl_802C1DE0[0];
     tex24 = *(u8**)(p1 + 0x24);
     if (tex24 != 0)
     {
@@ -4901,7 +4901,7 @@ void fn_8004E0FC(void)
     lbl_803DCD68 += 2;
 }
 
-extern IndTexMtx23 lbl_802C1D68;
+extern IndTexMtx23 lbl_802C1D68[];
 extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
@@ -4920,7 +4920,7 @@ void renderHeavyFog(int* fogColorPtr)
     int kc;
     f32(*iv)[4];
     f32 k;
-    im = lbl_802C1D68;
+    im = lbl_802C1D68[0];
     iv = (f32(*)[4])Camera_GetInverseViewMatrix();
     mcc[0][0] = lbl_803DEACC;
     mcc[0][1] = lbl_803DEACC;
@@ -7087,6 +7087,24 @@ __declspec(section ".rodata") InflateBaseExtra gInflateDistCodes[30] = {
     {65, 5},    {97, 5},    {129, 6},   {193, 6},   {257, 7},   {385, 7},
     {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
     {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
+__declspec(section ".rodata") struct piIndMtx lbl_802C1D50 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1D68[4] = {
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
+    {{{3.0f, -1.0f, 1.0f}, {1.0f, -1.0f, 3.0f}}},
+    {{{1.0f, -2.0f, 1.0f}, {-2.0f, -1.0f, 1.0f}}},
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1DC8 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1DE0[2] = {
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
+    {{{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}}};
+__declspec(section ".rodata") struct piIndMtx lbl_802C1E10 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+__declspec(section ".rodata") IndTexMtx23 lbl_802C1E28 = {
+    {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}}};
+__declspec(section ".rodata") IndTexMtx23 gTexIndMtxTable = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
 extern u8 lbl_803DCD20[];
 extern u8 lbl_803DCD18[];
 extern u8 lbl_80377880[0x14];
