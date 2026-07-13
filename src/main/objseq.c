@@ -28,7 +28,6 @@
 #include "main/object.h"
 #include "main/objlib.h"
 #include "main/pad.h"
-#include "main/sfa_extern_decls.h"
 #include "main/maketex_api.h"
 #include "main/maketex_sequence_api.h"
 #include "main/gameplay_runtime.h"
