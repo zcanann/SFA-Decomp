@@ -81,7 +81,6 @@ void FUN_80170ed8(int param_1, int param_2, int param_3, int param_4, int param_
 void FUN_80170f60(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, u16* param_9);
 void FUN_80170f64(u16* param_1, int param_2);
-void sideload_update(int param_1);
 void FUN_8017121c(int param_1);
 void FUN_80171240(int param_1, int param_2);
 void FUN_801712a8(double param_1, double param_2, double param_3, int param_4);
