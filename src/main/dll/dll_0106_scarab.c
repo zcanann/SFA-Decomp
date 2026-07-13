@@ -68,6 +68,7 @@ extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, 
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(void* obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(void* obj, void* p2, void* p3, int p4, void* p5, int p6);
+#pragma opt_propagation off
 void Scarab_update(GameObject* obj)
 {
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -529,6 +530,7 @@ void Scarab_update(GameObject* obj)
         }
     }
 }
+#pragma opt_propagation reset
 
 extern u8 gScarabColorVariantsA;
 extern u8 gScarabColorVariantsB;
