@@ -180,3 +180,49 @@ void CloudPrisonControl_update(GameObject* obj)
         }
     }
 }
+
+u32 gCloudPrisonControlObjDescriptor[30] = {0x00000000,
+                                            0x00000000,
+                                            0x00000000,
+                                            0x00090000,
+                                            (u32)CloudPrisonControl_initialise,
+                                            (u32)CloudPrisonControl_release,
+                                            0x00000000,
+                                            (u32)CloudPrisonControl_init,
+                                            (u32)CloudPrisonControl_update,
+                                            (u32)CloudPrisonControl_hitDetect,
+                                            (u32)CloudPrisonControl_render,
+                                            (u32)CloudPrisonControl_free,
+                                            (u32)CloudPrisonControl_getObjectTypeId,
+                                            (u32)CloudPrisonControl_getExtraSize,
+                                            0x00000000,
+                                            0x00000000,
+                                            0x00000000,
+                                            0x00000000,
+                                            0x41b00000,
+                                            0x00000000,
+                                            0x00000000,
+                                            0x41c00000,
+                                            0x41c80000,
+                                            0x00000000,
+                                            0x41f00000,
+                                            0xc1c80000,
+                                            0x00000000,
+                                            0x41b80000,
+                                            0x41a00000,
+                                            0x41800000};
+u32 lbl_80322798[3] = {0x00000001, 0x00000006, 0x0000000d};
+u32 lbl_803227A4[3] = {0x0000000f, 0x00000006, 0xffffffff};
+u32 lbl_803227B0[3] = {0x00000005, 0xffffffff, 0xffffffff};
+u32 lbl_803227BC[3] = {0x00000002, 0xffffffff, 0xffffffff};
+u32 lbl_803227C8[3] = {0x00000008, 0x00000006, 0xffffffff};
+u32 lbl_803227D4[3] = {0x0000000c, 0xffffffff, 0xffffffff};
+u32 lbl_803227E0[3] = {0x0000000e, 0xffffffff, 0xffffffff};
+u32 lbl_803227EC[3] = {0x0000000e, 0x00000006, 0xffffffff};
+u32 lbl_803227F8[3] = {0x0000000e, 0x00000006, 0xffffffff};
+u32 lbl_80322804[3] = {0x00000009, 0x00000006, 0xffffffff};
+u32 lbl_80322810[3] = {0x00000005, 0xffffffff, 0xffffffff};
+u32 lbl_8032281C[3] = {0x0000000b, 0xffffffff, 0xffffffff};
+u32 lbl_80322828[3] = {0x0000000a, 0xffffffff, 0xffffffff};
+u32 lbl_80322834[3] = {0x0000000e, 0x00000006, 0x00000010};
+u32 lbl_80322840[3] = {0xffffffff, 0xffffffff, 0xffffffff};
