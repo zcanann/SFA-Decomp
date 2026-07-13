@@ -435,7 +435,7 @@ void DR_CloudRunner_init(GameObject* obj, int def)
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
     fn_802BF0C8((int)obj, inner, ((ByteFlags*)((char*)inner + 0xbc0))->b20);
     dll_2E_func05(obj, (MoveLibState*)((char*)inner + 0x4c4), -0x11c7, 0x1555, 1);
-    dll_2E_func08(inner + 0x4c4, 0x12c, 0x78);
+    dll_2E_func08((MoveLibState*)(inner + 0x4c4), 0x12c, 0x78);
     ObjGroup_AddObject((int)obj, ARWARWING_OBJGROUP);
     ((ByteFlags*)((char*)inner + 0xbc0))->b01 = 0;
 }

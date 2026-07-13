@@ -215,12 +215,11 @@ void dll_2E_func04(int* state, int target)
     ((MoveLibState*)state)->lockTarget = (GameObject*)target;
 }
 
-void dll_2E_func08(int obj, int v1, int v2)
+void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelayMin)
 {
-    MoveLibState* s = (MoveLibState*)obj;
-    s->reattackDelayBase = v1;
-    s->reattackDelayMin = v2;
-    s->reattackTimer = v1;
+    state->reattackDelayBase = reattackDelayBase;
+    state->reattackDelayMin = reattackDelayMin;
+    state->reattackTimer = reattackDelayBase;
 }
 
 void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int count)

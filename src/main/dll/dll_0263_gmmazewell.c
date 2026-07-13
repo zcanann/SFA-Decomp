@@ -15,6 +15,7 @@
  * event is currently ready.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/gameplay.h"
 #include "main/audio.h"
 #include "main/shader.h"
 #include "main/pad.h"

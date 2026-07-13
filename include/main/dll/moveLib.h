@@ -60,6 +60,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* state);
 void dll_2E_func05(GameObject* obj, MoveLibState* state, s16 minYaw, s16 maxYaw, int count);
 void dll_2E_func06(GameObject* obj, MoveLibState* state, int point);
 int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* state, s16 minYaw, s16 maxYaw);
+void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelayMin);
 void dll_2E_func09(MoveLibState* state, const void* turnTable, const void* eventTable, int count);
 void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value);
 int dll_2E_func0A(int curvePointIndex, void* out);

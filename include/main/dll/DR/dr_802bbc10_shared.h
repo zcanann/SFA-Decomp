@@ -110,7 +110,6 @@ extern f32 lbl_803E8410;
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 extern f32 gEarthWarriorMatrix[];
-extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
 extern void characterDoEyeAnims(GameObject* obj, int q);

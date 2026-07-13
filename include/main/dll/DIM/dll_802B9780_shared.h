@@ -383,7 +383,6 @@ extern int gDIMSnowHorn1PathCollisionData;
 extern f32 gDIMSnowHorn1Gravity;
 
 
-extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
 void fn_802BF0C8(int obj, int inner, int bit);

@@ -394,7 +394,7 @@ void HighTop_init(GameObject* obj, u8* arg)
     (*gPathControlInterface)->setup(pathState, 4, &base[0xa8], &base[0xd8], &local8);
     (*gPathControlInterface)->attachObject(obj, pathState);
     dll_2E_func05(obj, (MoveLibState*)runtime->lookController, -4551, 23665, 6);
-    dll_2E_func08((char*)runtime->lookController, 300, 120);
+    dll_2E_func08((MoveLibState*)runtime->lookController, 300, 120);
     dll_2E_func09((MoveLibState*)runtime->lookController, &local2, &local1, 6);
     runtime->flags |= 2;
     runtime->flags |= 8;

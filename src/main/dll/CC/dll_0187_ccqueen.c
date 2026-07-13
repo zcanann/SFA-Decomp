@@ -20,7 +20,6 @@
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
 extern u32 ObjHits_DisableObject();
-extern void dll_2E_func08(u8* sub, int a, int b);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void characterDoEyeAnims(GameObject* obj, void* p);
 
@@ -78,7 +77,7 @@ void ccqueen_init(int* obj, u8* placement)
     buf1 = ccqueenEyeSetupB;
     ((GameObject*)obj)->anim.rotX = (s16)(placement[0x1a] << 8);
     dll_2E_func05((GameObject*)obj, (MoveLibState*)charState, 0x71c7, 0x3555, 3);
-    dll_2E_func08(charState, 0x258, 0xf0);
+    dll_2E_func08((MoveLibState*)charState, 0x258, 0xf0);
     dll_2E_func09((MoveLibState*)charState, &buf1, &buf2, 3);
     charState[0x611] = (u8)(charState[0x611] | 0xa);
 }

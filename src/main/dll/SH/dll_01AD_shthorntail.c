@@ -93,7 +93,6 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 modelInitBones();
 extern void fn_8003B228(GameObject* obj, int p2);
-extern void dll_2E_func08(int obj, int v1, int v2);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
 
@@ -628,7 +627,7 @@ void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config)
     (*gSHthorntailPathControlInterface)->bindObject(obj, moveScratch);
     obj->animEventCallback = SHthorntail_updateLevelControlState;
     dll_2E_func05((GameObject*)obj, (MoveLibState*)runtime, 0xffffdc72, 0x2aaa, 3);
-    dll_2E_func08((int)runtime, 400, 0x78);
+    dll_2E_func08((MoveLibState*)runtime, 400, 0x78);
     ObjGroup_AddObject((int)obj, THORNTAIL_OBJGROUP);
 }
 

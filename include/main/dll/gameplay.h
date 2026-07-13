@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void saveFileStruct_unlockCheat(u32 param_1);
+void saveFileStruct_unlockCheat(u8 idx);
 u32 isCheatUnlocked(u32 param_1);
 void saveFileStruct_resetVolumes(void);
 u8 * getSaveFileStruct(void);
