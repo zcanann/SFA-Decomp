@@ -138,7 +138,7 @@ void crrockfall_release(void)
 
 #pragma scheduling off
 #pragma peephole off
-void crrockfall_init(int* obj, u8* params)
+void crrockfall_init(int* obj, CrrockfallPlacement* params)
 {
     CrRockfallState* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
@@ -146,8 +146,8 @@ void crrockfall_init(int* obj, u8* params)
 
     state->mode = zcEn3_ROCKFALL_MODE_ARMED;
     state->startY = ((GameObject*)obj)->anim.localPosY;
-    state->fallDelay = *(s16*)((char*)params + 0x1e);
-    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)params[0x1b] / gRockfallScaleDivisor;
+    state->fallDelay = params->fallDelay;
+    ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)params->scaleByte / gRockfallScaleDivisor;
 
     hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
     if (hitState != NULL)
@@ -343,7 +343,7 @@ void crrockfall_update(int* obj)
             else
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_jbike_bombbeep);
-                spawnExplosionLegacy(obj, (f32)(u32)((CrrockfallPlacement*)placement)->explosionScale, 1, 1, 0, 1,
+                spawnExplosionLegacy(obj, (f32)(u32)((CrrockfallPlacement*)placement)->scaleByte, 1, 1, 0, 1,
                                      1, 1, 1);
             }
         }
