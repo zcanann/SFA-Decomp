@@ -5,7 +5,6 @@
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/objprint.h"
 #include "main/dll/dll_00E5_shield_api.h"
 
 #endif

@@ -6,7 +6,7 @@
 #include "main/objanim_internal.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
-#include "main/objprint.h"
+#include "main/objprint_sound_api.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 

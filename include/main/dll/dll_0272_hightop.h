@@ -6,7 +6,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-#include "main/objprint.h"
+#include "main/objprint_sound_api.h"
 
 typedef struct HtInitData
 {

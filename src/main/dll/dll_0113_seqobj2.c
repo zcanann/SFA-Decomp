@@ -23,7 +23,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/obj_group.h"
-#include "main/objprint.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
 #include "dolphin/os.h"

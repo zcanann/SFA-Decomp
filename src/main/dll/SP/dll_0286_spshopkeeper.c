@@ -25,7 +25,7 @@
 #include "main/mapEvent.h"
 #include "main/model_engine.h"
 #include "main/objanim.h"
-#include "main/objprint.h"
+#include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/moveLib.h"
 #include "main/object_api.h"

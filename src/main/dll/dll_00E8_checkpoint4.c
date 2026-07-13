@@ -12,7 +12,6 @@
  * own DLLs and are referenced here as externs).
  */
 #include "main/dll/checkpoint4.h"
-#include "main/objprint.h"
 #include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00E9_setuppoint.h"

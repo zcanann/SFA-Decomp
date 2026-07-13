@@ -22,7 +22,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
-#include "main/objprint.h"
+#include "main/objprint_api.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
 #include "main/dll/baddie_state.h"

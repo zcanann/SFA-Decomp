@@ -30,7 +30,8 @@
 #include "main/gamebits_api.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
-#include "main/objprint.h"
+#include "main/objprint_anim_api.h"
+#include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C9_enemy.h"
 
 /* Per-object extra state for the baby CloudRunner

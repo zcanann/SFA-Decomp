@@ -49,7 +49,6 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
-#include "main/objprint.h"
 #include "main/objprint_api.h"
 #include "main/vecmath.h"
 #include "main/obj_group.h"

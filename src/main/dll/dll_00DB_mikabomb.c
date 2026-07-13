@@ -19,7 +19,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
-#include "main/objprint.h"
 #include "main/object_render.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
