@@ -17,6 +17,7 @@
  * 2-slot live-objects table at lbl_803DBBC8.
  */
 #include "main/texture.h"
+#include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -124,7 +125,6 @@ void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
 
 extern int objIsCurModelNotZero(int obj);
-extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);

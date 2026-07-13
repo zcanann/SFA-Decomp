@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
@@ -1216,7 +1217,6 @@ void removeButtonObject(u32 h)
 }
 #pragma peephole reset
 
-extern void* gameTextGetBox(int box);
 extern void GXSetCopyFilter(int aa, u8* samplePattern, int vf, u8* vfilter);
 extern int lbl_803DB428;
 extern int lbl_803DB42C;

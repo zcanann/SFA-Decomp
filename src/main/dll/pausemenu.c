@@ -3,6 +3,7 @@
  */
 
 #include "main/dll/hud_textures.h"
+#include "main/gametext_box_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/object_api.h"
 #include "ghidra_import.h"
@@ -122,7 +123,6 @@ extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, 
 extern void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, int p8, int p9);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextMeasureFn_800163c4(void* text, s32 a, s32 b, s32 c, s32* o1, s32* o2, s32* o3, s32* o4);
-extern void* gameTextGetBox(int box);
 extern void gameTextFn_8001628c(int id, int a, int b, s32* o1, s32* o2, s32* o3, s32* o4);
 extern u16 getNextTaskHintText(void);
 extern void fn_80128120(void* obj, u8 v);

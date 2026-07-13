@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -406,7 +407,6 @@ extern s8 gCMenuScriptedInput;
 extern u16 yButtonState;
 extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
-extern void* gameTextGetBox(int box);
 extern void gameTextAppendStr(char* str, int arg2);
 extern int cMenuSetItems(int handle, int flag);
 

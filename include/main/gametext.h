@@ -2,6 +2,7 @@
 #define MAIN_GAMETEXT_H_
 
 #include "types.h"
+#include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
 
 typedef struct TextDisplayState TextDisplayState;
@@ -48,7 +49,6 @@ void gameTextFn_80016810(int a, int b, int c);
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
 void gameTextShowTimeStr(char* str);
 void gameTextShowStr(char* text, int box, int arg2, int arg3);
-void* gameTextGetBox(int box);
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
                                 int* outMinY);

@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
@@ -68,7 +69,6 @@ typedef struct TitlescreenState
     f32 unk34;
 } TitlescreenState;
 
-extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
