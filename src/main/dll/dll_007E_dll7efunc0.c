@@ -28,16 +28,16 @@ extern f32 lbl_803E0E14;
 extern f32 lbl_803E0E18;
 extern f32 lbl_803E0E1C;
 
-void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* arg6)
+void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scalePtr)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315258;
     f32 s = lbl_803E0E00;
     FbCmd* e;
     FbCmd* p;
-    if (arg6 != NULL)
+    if (scalePtr != NULL)
     {
-        s = *arg6;
+        s = *scalePtr;
     }
     if ((u32)posSource != 0)
     {
