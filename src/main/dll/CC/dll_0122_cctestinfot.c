@@ -15,6 +15,7 @@
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/dll/dll_010E_deathseq.h"
+#include "main/dll/dll_0124_deathgas.h"
 #include "main/dll/dll_0127_dll127.h"
 #include "main/dll/dll_0129_campfire.h"
 #include "main/dll/DR/dll_0128_kttorch.h"
@@ -36,19 +37,15 @@ extern void FxEmit_render(void);
 extern void FuelCell_getExtraSize(void);
 extern void FxEmit_hitDetect(void);
 
-extern void DeathGas_getExtraSize(void);
 extern void FuelCell_free(void);
 extern void FxEmit_update(void);
 
-extern void DeathGas_free(void);
 extern void FuelCell_render(void);
 extern void FxEmit_init(void);
 
-extern void DeathGas_update(void);
 extern void FuelCell_update(void);
 extern void FxEmit_release(void);
 
-extern void DeathGas_init(void);
 extern void FuelCell_init(void);
 extern void FxEmit_initialise(void);
 extern int playerIsDisguised(void);
