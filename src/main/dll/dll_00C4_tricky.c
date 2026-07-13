@@ -708,7 +708,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         else if (((TrickyState*)state)->childB != NULL)
         {
             *(float*)(state + 0x7b4) = *(float*)(state + 0x7b4) - timeDelta;
-            if ((double)*(float*)(state + 0x7b4) <= (double)lbl_803E23DC)
+            if (*(float*)(state + 0x7b4) <= lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (GameObject**)(state + 0x7b0)); /* raw: arrow form shifts bytes */
             }
@@ -785,7 +785,7 @@ int Tricky_updateSideCommandPrompts(int obj)
         else if (((TrickyState*)state)->childA != NULL)
         {
             *(float*)(state + 0x7ac) = *(float*)(state + 0x7ac) - timeDelta;
-            if ((double)*(float*)(state + 0x7ac) <= (double)lbl_803E23DC)
+            if (*(float*)(state + 0x7ac) <= lbl_803E23DC)
             {
                 objAnimFreeChildren(objVal, state, (GameObject**)(state + 0x7a8)); /* raw: arrow form shifts bytes */
             }
@@ -1562,9 +1562,9 @@ void Tricky_update(int obj)
         trickyState->stateFlags |= 0x10000LL;
     }
     trickyState->cooldownC -= timeDelta;
-    if (trickyState->cooldownC < lbl_803E23DC)
+    if (trickyState->cooldownC < 0.0f)
     {
-        trickyState->cooldownC = lbl_803E23DC;
+        trickyState->cooldownC = 0.0f;
     }
     if ((trickyState->stateFlags & 4) != 0)
     {
@@ -1605,9 +1605,9 @@ void Tricky_update(int obj)
         }
     }
     trickyState->voiceCooldown -= timeDelta;
-    if (trickyState->voiceCooldown < lbl_803E23DC)
+    if (trickyState->voiceCooldown < 0.0f)
     {
-        trickyState->voiceCooldown = lbl_803E23DC;
+        trickyState->voiceCooldown = 0.0f;
     }
     if (trickyState->voiceCooldown > lbl_803E23DC)
     {
