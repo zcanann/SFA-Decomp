@@ -129,9 +129,24 @@ extern f32 lbl_803E33C0;
 extern const f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
 
-/* staff/shield per-segment scale table; lives in the shared
- * descriptor-catalogue data (0x80320A28), split out of this TU */
-extern f32 lbl_80320A28[];
+f32 lbl_80320A28[] = {
+    0.5f,
+    0.55f,
+    0.65f,
+    0.7f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.5f,
+    0.3f,
+    0.3f,
+    0.3f,
+    0.3f,
+};
 
 
 GameObject* fn_801702D4(GameObject* obj, f32 fv)

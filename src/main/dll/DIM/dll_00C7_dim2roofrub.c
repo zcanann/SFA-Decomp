@@ -189,10 +189,6 @@ ObjectDescriptor gDIM2RoofRubObjDescriptor = {
     dim2roofrub_getExtraSize,
 };
 
-f32 lbl_80320A28[] = {
-    0.5f, 0.55f, 0.65f, 0.7f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.3f, 0.3f, 0.3f, 0.3f,
-};
-
 u32 jumptable_80320AA0[] = {
     (u32)((char*)staffFn_80170380 + 0x10C), (u32)((char*)staffFn_80170380 + 0x184),
     (u32)((char*)staffFn_80170380 + 0x35C), (u32)((char*)staffFn_80170380 + 0x3D0),
