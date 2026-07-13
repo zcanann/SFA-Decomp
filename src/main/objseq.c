@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/vecmath_distance_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/debug.h"
 #include "main/object_api.h"
@@ -238,7 +239,6 @@ extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);

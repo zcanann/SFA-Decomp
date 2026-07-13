@@ -43,7 +43,6 @@
 extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
 void EdibleMushroom_init(GameObject* obj, int aux);

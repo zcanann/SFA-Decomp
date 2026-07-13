@@ -59,7 +59,6 @@ extern f32 gWarpPadPulseStage3Time;
 extern f32 lbl_803E3ECC;
 extern f32 gWarpPadPulseEndTime;
 extern f32 gWarpPadTriggerDist;
-extern f32 Vec_xzDistance(f32* a, f32* b);
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
 void warpPadFn_8019042c(GameObject* obj)

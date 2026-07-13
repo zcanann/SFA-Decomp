@@ -1,5 +1,6 @@
 /* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
@@ -70,7 +71,6 @@ extern const f32 lbl_803E50C4;
 extern const f32 lbl_803E50C8;
 
 extern u32 ObjGroup_FindNearestObject();
-extern f32 Vec_xzDistance(f32* a, f32* b);
 
 void ecsh_cup_hitDetect(void)
 {

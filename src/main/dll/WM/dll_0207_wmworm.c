@@ -16,6 +16,7 @@
  * back to its recorded home position.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/vecmath_distance_api.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
@@ -28,7 +29,6 @@ __declspec(section ".sdata2") f32 lbl_803E5E60 = 0.01f; /* chase speed factor */
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5E64 = 0.0f;
 #pragma explicit_zero_data off
-extern f32 Vec_xzDistance(f32* a, f32* b);
 
 int WM_Worm_getExtraSize(void)
 {

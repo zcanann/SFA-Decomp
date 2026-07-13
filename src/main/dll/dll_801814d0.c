@@ -12,6 +12,7 @@
  * optionally disables itself.
  */
 #include "main/dll/dusterstate_types.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 
 extern void* ObjGroup_GetObjects();
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_801816F8(int obj, int arg, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 

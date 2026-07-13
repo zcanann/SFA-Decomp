@@ -1,5 +1,6 @@
 /* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
@@ -84,7 +85,6 @@ extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void objSetAnimStateFlags(int* player, int a, int b);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
 extern f32 lbl_803E5008;

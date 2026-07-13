@@ -18,6 +18,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "main/vecmath_distance_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
@@ -61,7 +62,6 @@ extern f32 lbl_803E3458;
 extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
 extern f32 lbl_803E348C;
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(u8 * player);
 extern f32 gCollectiblePickupRange;
 extern f32 gCollectibleSpinDamping;

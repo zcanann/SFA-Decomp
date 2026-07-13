@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/objlib.h"
 #include "main/object_api.h"
@@ -143,7 +144,6 @@ extern void gpsh_shrine_init(void);
 extern void gpsh_shrine_release(void);
 extern void gpsh_shrine_initialise(void);
 
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
 extern void skyFn_80088c94(int flags, int mode);

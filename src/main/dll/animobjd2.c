@@ -25,6 +25,7 @@
  *                                   drives the shared TRICKY_* state macros.
  */
 #include "main/dll/tricky_state.h"
+#include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
@@ -65,7 +66,6 @@ typedef struct AnimObjD2DripSetup
     u8 pad18[0x1a - 0x18];
     s16 index; /* 0x1a */
 } AnimObjD2DripSetup;
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);

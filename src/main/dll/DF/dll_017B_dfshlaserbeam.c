@@ -4,6 +4,7 @@
  * geometry and texture, drives sfx channels and proximity damage.
  */
 #include "main/effect_interfaces.h"
+#include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -146,7 +147,6 @@ extern const f32 lbl_803E4F4C;
 
 extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);

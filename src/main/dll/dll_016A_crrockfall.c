@@ -14,6 +14,7 @@
  * rock by height fraction and player distance and hides it once shattered.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/crrockfallplacement_struct.h"
@@ -57,9 +58,7 @@ extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
 extern f32 gRockfallGravity;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern f32 Vec_distance(f32* a, f32* b);
 extern void fn_800628CC(int* obj);
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 void crrockfall_free(void)

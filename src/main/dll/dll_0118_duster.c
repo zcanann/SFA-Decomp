@@ -18,6 +18,7 @@
  * complete bit lives at activeGameBit + 0x64.
  */
 #include "main/obj_placement.h"
+#include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
@@ -99,7 +100,6 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 extern f32 timeDelta;
 
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,

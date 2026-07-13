@@ -1,5 +1,6 @@
 /* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -83,7 +84,6 @@ extern f32 lbl_803E3810;
 extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
 void dll_FC_free_nop(void);
 int dll_FC_getExtraSize_ret_8(void);

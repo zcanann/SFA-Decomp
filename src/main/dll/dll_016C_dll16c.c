@@ -15,6 +15,7 @@
  * MagicLight and CrRockfall layouts are size-asserted here as a build guard.
  */
 #include "main/dll/blob10_struct.h"
+#include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/dll16cstate_struct.h"
@@ -80,7 +81,6 @@ extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern f32 Vec_distance(f32* a, f32* b);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 
 void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,

@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
+#include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/savegame.h"
@@ -63,7 +64,6 @@ typedef struct MmpMoonrockPlacement
     u8 pad22[0x28 - 0x22];
 } MmpMoonrockPlacement;
 
-extern f32 Vec_xzDistance(f32* a, f32* b);
 
 #pragma scheduling on
 #pragma peephole on

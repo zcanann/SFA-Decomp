@@ -1,6 +1,7 @@
 /* DLL 0x0120 (trickyguardspot) — Tricky guard spot object. */
 
 #include "main/dll/dll_0120_trickyguardspot.h"
+#include "main/vecmath_distance_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/cannon.h"
 #include "main/game_object.h"
@@ -17,7 +18,6 @@ typedef struct TrickyguardspotPlacement
     s16 trickyInRangeGameBit;
 } TrickyguardspotPlacement;
 
-extern f32 Vec_xzDistance(f32* a, f32* b);
 extern u8 framesThisStep;
 
 int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
