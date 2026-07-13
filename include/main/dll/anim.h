@@ -151,17 +151,6 @@ void drakorenergy_init(int* obj, u8* init);
 void drakorenergy_release(void);
 void drakorenergy_initialise(void);
 
-int dbholecontrol1_getExtraSize(void);
-int dbholecontrol1_getObjectTypeId(void);
-void dbholecontrol1_free(int x);
-void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void dbholecontrol1_hitDetect(void);
-void dbholecontrol1_update(int* obj);
-void dbholecontrol1_init(int* obj, u8* params);
-int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-void dbholecontrol1_release(void);
-void dbholecontrol1_initialise(void);
-
 void DFP_LevelControl_setScale(int unused, u8* out);
 int DFP_LevelControl_getExtraSize(void);
 int DFP_LevelControl_getObjectTypeId(void);
@@ -182,14 +171,5 @@ void DFP_ObjCreator_update(GameObject* obj);
 void DFP_ObjCreator_init(GameObject* obj, s8* def);
 void DFP_ObjCreator_release(void);
 void DFP_ObjCreator_initialise(void);
-
-int dll_22C_getExtraSize_ret_16(void);
-int dll_22C_getObjectTypeId(void);
-void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void dll_22C_init(GameObject* obj, char* p);
-int dll_22C_SeqFn(void);
-void dll_22C_hitDetect_nop(void);
-void dll_22C_release_nop(void);
-void dll_22C_initialise_nop(void);
 
 #endif /* MAIN_DLL_ANIM_H_ */

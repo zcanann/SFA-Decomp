@@ -15,7 +15,6 @@
 #include "main/dll/blastflags4_types.h"
 #include "main/dll/dfp_types.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/anim.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
