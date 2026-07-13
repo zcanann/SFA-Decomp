@@ -27,7 +27,7 @@
 #include "main/object_transform.h"
 #include "main/mm.h"
 #include "main/voxmaps.h"
-#include "main/dll/baddie/dll_003B_menu.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame.h"
 #include "main/track_dolphin.h"
 #include "main/objprint_dolphin.h"

@@ -20,7 +20,7 @@
  */
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/player_api.h"
-#include "main/dll/baddie/dll_003B_menu.h"
+#include "main/dll/dll_003B_menu.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/object_api.h"

@@ -35,7 +35,7 @@
 #include "main/gametext.h"
 #include "main/frame_timing.h"
 #include "main/dll/headdisplay.h"
-#include "main/dll/baddie/dll_003B_menu.h"
+#include "main/dll/dll_003B_menu.h"
 
 /* head-display panel scroll-width animation bounds */
 #define HEADPANEL_WIDTH_MAX  0x152

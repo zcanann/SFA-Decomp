@@ -15,7 +15,7 @@
  * to GameBit 0x44F) or the cancel id (lbl_803DD8F4) on B. It bails while the
  * HUD is hidden.
  */
-#include "types.h"
+#include "main/dll/dll_003B_menu.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/gameloop_api.h"
