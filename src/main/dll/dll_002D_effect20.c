@@ -151,6 +151,34 @@ extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 
+extern int randFn_80080100(int n);
+
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80311100 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect20_initialise,
+    (ObjectDescriptorCallback)Effect20_release,
+    0,
+    (ObjectDescriptorCallback)Effect20_func03_nop,
+    (ObjectDescriptorCallback)Effect20_func04,
+    (ObjectDescriptorCallback)Effect20_func05,
+};
+
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     f32* extraArgs)
 {
