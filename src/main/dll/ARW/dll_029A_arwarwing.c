@@ -46,7 +46,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
-#include "main/maketex.h"
+#include "main/maketex_sequence_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/headdisplay.h"
 #include "main/game_object.h"

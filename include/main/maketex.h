@@ -57,6 +57,4 @@ void FUN_8007fb80(u32 param_1,u32 param_2,short param_3,u32 param_4,
                  u32 param_5,u32 param_6,u32 param_7,u32 param_8);
 
 
-void fn_8008020C(s16 rx, s16 ry, s16 rz, f32 x, f32 y, f32 z, f32 w);
-
 #endif /* MAIN_MAKETEX_H_ */
