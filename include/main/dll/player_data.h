@@ -46,4 +46,37 @@ extern s16 gPlayerMoveTableB[14];
 extern s16 gPlayerMoveSlotTable[44];
 extern GameObject* gPlayerInteractTarget;
 
+extern int lbl_80332EC0[];
+extern s16 lbl_80332EF0[];
+extern s16 lbl_80332F2C[];
+extern s16 lbl_80332F48[];
+extern s16 lbl_80332F78[];
+extern s16 lbl_80332F88[];
+extern s16 lbl_80333110[];
+extern int lbl_80333250[];
+extern s16 lbl_803332B0[];
+extern s16 lbl_8033366C[];
+extern f32 lbl_8033369C[];
+extern f32 lbl_803DAF88[];
+extern u8 lbl_803DE42C;
+extern f32 lbl_803DE430;
+extern f32 lbl_803DE438;
+extern f32 lbl_803DE43C;
+extern f32 lbl_803DE440;
+extern u8 lbl_803DE458;
+extern u8 lbl_803DE459;
+extern f32 lbl_803DE45C;
+extern f32 lbl_803DE460;
+extern f32 lbl_803DE464;
+extern f32 lbl_803DE468;
+extern s8 lbl_803DE46C;
+extern f32 lbl_803DE478;
+extern f32 lbl_803DE488;
+extern u8 lbl_803DE48C;
+extern u8 lbl_803DE48D;
+extern f32 lbl_803DE490;
+extern f32 lbl_803DE494;
+extern f32 lbl_803DE498;
+extern s16 lbl_803DE4B0;
+
 #endif /* MAIN_DLL_PLAYER_DATA_H_ */
