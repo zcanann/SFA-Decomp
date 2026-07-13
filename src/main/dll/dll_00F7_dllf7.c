@@ -17,7 +17,6 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
-#include "main/dll/genprops.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
 #include "main/resource.h"

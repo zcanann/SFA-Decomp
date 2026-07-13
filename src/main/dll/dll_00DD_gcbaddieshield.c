@@ -11,7 +11,6 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/dll/genprops.h"
 #include "main/frame_timing.h"
 
 extern f32 lbl_803E31F8;

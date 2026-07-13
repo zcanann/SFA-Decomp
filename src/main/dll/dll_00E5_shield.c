@@ -29,7 +29,6 @@
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
-#include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
 #include "main/objlib.h"

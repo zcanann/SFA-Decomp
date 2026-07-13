@@ -48,7 +48,6 @@
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/objlib.h"

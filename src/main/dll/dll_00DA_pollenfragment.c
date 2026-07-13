@@ -24,7 +24,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/genprops.h"
 
 #define s16toFloatLegacy(timer, duration) \
     ((void (*)(void*, int))s16toFloat)((timer), (duration))

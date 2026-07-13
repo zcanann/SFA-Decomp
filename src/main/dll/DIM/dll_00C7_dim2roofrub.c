@@ -125,7 +125,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"

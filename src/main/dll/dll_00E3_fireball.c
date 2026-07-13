@@ -21,7 +21,6 @@
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
-#include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00E3_fireball.h"

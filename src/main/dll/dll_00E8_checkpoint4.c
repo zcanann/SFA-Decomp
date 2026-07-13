@@ -13,7 +13,6 @@
  */
 #include "main/dll/xyzanimator.h"
 #include "main/dll/checkpoint4.h"
-#include "main/dll/genprops.h"
 #include "main/objprint.h"
 #include "main/object_render.h"
 #include "main/objlib.h"

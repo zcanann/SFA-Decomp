@@ -18,7 +18,6 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/genprops.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/objprint.h"

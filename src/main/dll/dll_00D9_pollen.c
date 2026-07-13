@@ -29,7 +29,6 @@
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/vecmath.h"
-#include "main/dll/genprops.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #define POLLEN_HIT_VOLUME_SLOT 0x16
