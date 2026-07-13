@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 typedef struct TriggerPlacement
 {
@@ -70,6 +71,8 @@ STATIC_ASSERT(offsetof(TriggerState, targetPosX) == 0x1C);
 STATIC_ASSERT(offsetof(TriggerState, gameBit) == 0x80);
 STATIC_ASSERT(offsetof(TriggerState, gateBits) == 0x82);
 STATIC_ASSERT(sizeof(TriggerState) == 0xAC);
+
+extern ObjectDescriptor gTriggerObjDescriptor;
 
 void Trigger_render(void);
 void Trigger_update(void);

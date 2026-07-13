@@ -24,7 +24,6 @@
  * Trigger_render/update/release/initialise are stubs; Trigger_free stops
  * any sfx the trigger started.
  */
-#include "main/dll/DR/hightop.h"
 #include "main/frame_timing.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"
