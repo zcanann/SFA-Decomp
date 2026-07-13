@@ -14,6 +14,7 @@
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/gametext_show_api.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
@@ -96,7 +97,6 @@ extern u8 gWmLevelControlBlendedFogColor;         /* blended fog-color out-tripl
 extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-triplet */
 extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void setDrawLights(int v);
 extern int getSkyColorFn_80088e08(int slot);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);

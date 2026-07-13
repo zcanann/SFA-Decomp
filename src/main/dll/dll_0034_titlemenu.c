@@ -2,6 +2,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/game_timer_control_api.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/sky_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
@@ -64,7 +65,6 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 
-extern void setDrawLights(int v);
 extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);

@@ -20,6 +20,7 @@
 #include "main/objfx.h"
 #include "main/objanim_update.h"
 #include "main/gamebits.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/MMP/dll_0180_mmpasteroidre.h"
@@ -31,7 +32,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
-extern void setDrawLights(int v);
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
 extern PartFxSpawnParams gMmpAsteroidDustSpawnParams;

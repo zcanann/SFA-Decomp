@@ -25,6 +25,7 @@
  */
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/gametext_show_api.h"
+#include "main/lightmap_render_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
@@ -71,7 +72,6 @@ extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
-extern void setDrawLights(int v);
 extern void skySetOverrideLightColorEnabled(u8 enabled);
 extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 extern f32 fn_8008ED88(void);

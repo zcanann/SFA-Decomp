@@ -44,7 +44,6 @@ extern int gWorldPlanetLoadedMapId;
 extern f32 gWorldPlanetPathProgress;
 extern f32 lbl_803E65F8;
 extern u16 getNextTaskHintText(void);
-extern void setDrawLights(int v);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 
