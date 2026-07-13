@@ -117,18 +117,6 @@ void FUN_80204f20(int obj);
 void FUN_80204f7c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_802051e0(u32 param_1);
 
-int dbegg_setLaunchVelocity(GameObject* obj, f32* v);
-int dbegg_setScale(GameObject* obj);
-int dbegg_getExtraSize(void);
-int dbegg_getObjectTypeId(void);
-void dbegg_free(int x);
-void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
-void dbegg_hitDetect(GameObject* obj);
-void dbegg_update(GameObject* obj);
-void dbegg_init(GameObject* obj);
-void dbegg_release(void);
-void dbegg_initialise(void);
-
 int GCRobotBlast_getExtraSize(void);
 int GCRobotBlast_func08_ret_0(void);
 int GCRobotBlast_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
