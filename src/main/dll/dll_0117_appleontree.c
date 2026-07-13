@@ -19,7 +19,6 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/dll/dll_00FC_babycloudrunner.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/dll/player_api.h"
 #include "main/audio/sfx_trigger_ids.h"

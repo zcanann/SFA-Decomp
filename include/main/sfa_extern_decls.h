@@ -4,9 +4,6 @@
 #include "types.h"
 
 void* RomList_GetLoadedPages(void);
-int AppleOnTree_getExtraSize(void);
-void AppleOnTree_setScale(void);
-void cMenuRotateFn_80124d80(void);
 void clearCurSeqNo(void);
 void whirlpool_updateWhileFrozen(void);
 void cutSceneFn_8011dd30(void);
@@ -40,14 +37,8 @@ void salHandleAuxProcessing(void);
 void setLinkIsRotated(void);
 void setLinkNotRotated(void);
 int spellstone_idleCallback(void);
-int SPScarab_getExtraSize(void);
-int SPScarab_getObjectTypeId(void);
-void SPScarab_hitDetect(void);
-void SPScarab_render(void);
 void streamCb_80080384(void);
 void timeListFn_8012df14(void);
-int TitleScreen_getExtraSize(void);
-void TitleScreen_hitDetect(void);
 void updateReflectionTextures(void);
 void viewFn_80129c74(void);
 

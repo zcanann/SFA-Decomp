@@ -72,6 +72,8 @@ extern ObjectDescriptor gDllFCObjDescriptor;
 
 void AppleOnTree_update(int param_1);
 void AppleOnTree_init(int obj, int def);
+int AppleOnTree_getExtraSize(void);
+void AppleOnTree_setScale(void);
 
 
 /* extern-cleanup: defining-file public prototypes */

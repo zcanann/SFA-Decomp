@@ -12,6 +12,8 @@
 #include "main/dll/FRONT/dll_0034_n_filemenu.h"
 
 int TitleScreen_getObjectTypeId(u8* obj);
+int TitleScreen_getExtraSize(void);
+void TitleScreen_hitDetect(void);
 
 void titleScreenTextDrawFunc(void);
 void creditsStart(void);
