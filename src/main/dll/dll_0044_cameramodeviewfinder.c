@@ -52,7 +52,6 @@
 #define VIEWFINDER_MODE_FADE_BACK   4
 #define VIEWFINDER_MODE_IDLE        5
 
-extern f32 interpolate(f32 a, f32 t, f32 exp);
 
 
 extern void firstPersonZoomOutOnExit(int a, int b);

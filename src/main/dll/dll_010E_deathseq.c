@@ -23,8 +23,6 @@ extern void removeButtonObject(int* obj);
 extern int playerIsDead(void);
 extern void playerSetIsDead(GameObject* player, int v);
 
-extern f32 interpolate(f32 a, f32 t, f32 exp);
-
 /* .sdata2 constant pool */
 static const f32 lbl_803E3D18 = 50.0f;
 static const f32 lbl_803E3D1C = 0.0f;

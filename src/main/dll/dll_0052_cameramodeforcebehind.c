@@ -13,6 +13,7 @@
 #include "main/dll/player_motion.h"
 #include "main/frame_timing.h"
 #include "main/object_transform.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_0052_cameramodeforcebehind.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -27,7 +28,6 @@ extern f32 gCamForceBehindTraceDistance;      /* derived horizontal trace distan
 extern f32 gCamForceBehindPlacementRadius;    /* derived orbit radius used to place the camera */
 extern f32 gCamForceBehindEaseRate;           /* yaw/pitch ease rate fed to interpolate() */
 extern void camcontrol_traceFromTarget();
-extern f32 interpolate(f32 a, f32 t, f32 exp);
 
 void CameraModeForceBehind_copyToCurrent(void)
 {
