@@ -2602,8 +2602,7 @@ void expgfx_resetAllPools(void)
 
     resourceEntry = runtime[0]->resourceTable;
     {
-        s32 z0 = 0, z1 = 0, z2 = 0, z3 = 0, z4 = 0;
-        expgfx_clearResourceTable(resourceEntry, z0, z1, z2, z3, z4);
+        expgfx_clearResourceTable(resourceEntry, 0, 0, 0, 0, 0);
     }
 }
 #pragma opt_propagation reset
