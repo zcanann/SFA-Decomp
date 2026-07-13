@@ -63,6 +63,34 @@ typedef struct DIMSnowHorn1State
 STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
+extern f32 lbl_80335128[];
+extern s16 lbl_803DC73C[2];
+extern f32 lbl_803DC740[2];
+extern s16 lbl_803DC748;
+extern f32 lbl_803E8234;
+extern f32 lbl_803E8238;
+extern f32 lbl_803E823C;
+extern f32 lbl_803E8240;
+extern f32 lbl_803E8244;
+extern f32 lbl_803E8248;
+extern f32 lbl_803E824C;
+extern f32 lbl_803E8250;
+extern f32 lbl_803E8254;
+extern f32 lbl_803E8258;
+extern f32 lbl_803E825C;
+extern f32 lbl_803E8260;
+extern f32 lbl_803E8264;
+extern f32 lbl_803E8268;
+extern f32 lbl_803E826C;
+extern f32 lbl_803E8278;
+extern f32 lbl_803E827C;
+extern f32 lbl_803E8280;
+extern f32 lbl_803E8284;
+extern f32 lbl_803E8288;
+extern f32 lbl_803E828C;
+extern f32 lbl_803E8290;
+extern f32 lbl_803E8294;
+
 void DIMSnowHorn1_func23(void);
 int DIMSnowHorn1_defaultStateHandler(void);
 int DIMSnowHorn1_stateHandler04(GameObject* obj, int state);
