@@ -132,7 +132,6 @@ extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32*
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
 extern void gameTextSetCursor(int a, int b, int c);
-extern int gameTextGetCharset(void);
 extern u8 gMinimapEnabled;
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;

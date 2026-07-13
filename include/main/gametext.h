@@ -39,7 +39,6 @@ extern f32 lbl_803DB3D0;
 
 void gameTextAppendStr(char* str, int arg2);
 void* gameTextGet(int textId);
-int gameTextGetCharset(void);
 void gameTextSetColor(int r, int g, int b, int a);
 void gameTextRun(void);
 void* gameTextGetCurBox(void);

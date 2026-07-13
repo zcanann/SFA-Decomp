@@ -132,7 +132,6 @@ extern f32 lbl_803E2044; /*  43.0f  (FOV value) */
 extern s8 lbl_803DBA64;
 extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
-extern int gameTextGetCharset(void);
 extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 /* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
