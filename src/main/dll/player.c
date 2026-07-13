@@ -2159,7 +2159,6 @@ int playerStateMoving(int obj, int state)
     return 0;
 }
 
-extern s16 gPlayerPrevMoveId;
 extern f32 lbl_803E8020;
 
 #pragma opt_propagation reset
@@ -6140,7 +6139,6 @@ typedef struct
     int b;
 } ColPair;
 
-extern int gPlayerSfxTimerD;
 extern int lbl_803E7E78;
 extern f32 lbl_803E7FDC;
 extern f32 lbl_803E7FE0;
@@ -7564,7 +7562,6 @@ void fn_802B0EA4(GameObject* obj, int inner, int state)
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x1800000LL;
 }
 
-extern s16 gPlayerStopMoves[4];
 extern f32 lbl_803E8084;
 extern f32 lbl_803E8088;
 
@@ -8188,8 +8185,6 @@ typedef struct
     f32 x, y, z;
 } VecXYZ;
 
-extern int gPlayerSfxTimerA;
-extern int gPlayerStepSfxTimer;
 extern int lbl_802C2C68[];
 extern f32 lbl_803E8134;
 
@@ -13764,8 +13759,6 @@ int playerState08(GameObject* obj, int state, f32 fv)
     }
 }
 
-extern int* gPlayerShadowInterface;
-extern u8 gPlayerSurfacePfxModeTable[];
 extern int lbl_803E7E68;
 extern int lbl_803E7E6C;
 
@@ -13972,8 +13965,6 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     }
 }
 
-extern u64 gPlayerLastSfxFrame;
-extern u64 gPlayerFrameCounter;
 
 typedef struct
 {

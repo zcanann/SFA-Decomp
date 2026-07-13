@@ -8,6 +8,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_data.h"
 #include "main/dll/player_state.h"
 
 typedef struct
@@ -53,13 +54,5 @@ int playerStateAttack(GameObject* obj, int state, f32 fv);
 int playerState1D(int obj, int state, f32 fv);
 int playerStateIdle(int obj, int state, f32 fv);
 int playerState08(GameObject* obj, int state, f32 fv);
-
-extern s16 gPlayerMoveSlotData[2464];
-extern f32 gPlayerAnimSpeedThresholds[36];
-extern int gPlayerMoveTableA[48];
-extern s16 gPlayerSpellGameBits[52];
-extern s16 gPlayerMoveTableB[14];
-extern s16 gPlayerMoveSlotTable[44];
-extern GameObject* gPlayerInteractTarget;
 
 #endif
