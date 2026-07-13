@@ -3569,7 +3569,7 @@ RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex)
 static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {
     int bit;
-    u32* lp = curve->base.linkIds;
+    s32* lp = curve->base.linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
@@ -3584,7 +3584,7 @@ static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 {
     int bit;
-    u32* lp = curve->base.linkIds;
+    s32* lp = curve->base.linkIds;
 
     for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
@@ -3600,7 +3600,7 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
     u32 mask;
-    u32* lp;
+    s32* lp;
     RomCurvePlacementDef* next;
     int done;
     int n;
