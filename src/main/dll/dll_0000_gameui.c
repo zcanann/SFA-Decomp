@@ -26,6 +26,7 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
+#include "main/gametext_show_str_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"
@@ -201,7 +202,6 @@ extern f32 lbl_803E2130;
 extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
 extern char* getHighScoreEntry(u8 track, u8 row);
-extern void gameTextShowStr(char* text, int box, int x, int y);
 extern struct
 {
     u16 unk0;

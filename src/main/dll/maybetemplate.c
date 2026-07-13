@@ -25,6 +25,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/player_status.h"
 #include "main/gameplay_runtime.h"
+#include "main/gametext_show_str_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/gameloop_api.h"
@@ -204,7 +205,6 @@ extern void drawFn_8011e8d8(int tex, f32 x, f32 y, int a, int b, int w, int h, i
 extern void drawScaledTexture(int texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(int texture, f32 x, f32 y, int alpha, int arg);
 extern void gameTextSetColor(int r, int g, int b, int a);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void hudDrawCMenu(int a, int b, int c);
 extern int gameTextGet();
 extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
