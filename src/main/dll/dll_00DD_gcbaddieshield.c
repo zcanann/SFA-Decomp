@@ -13,15 +13,13 @@
 #include "main/dll/genprops.h"
 #include "main/frame_timing.h"
 
-__declspec(section ".sdata2") f32 lbl_803E31F8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E31FC = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E3200 = 1800.0f;
-__declspec(section ".sdata2") f32 lbl_803E3204 = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E3208 = 64.0f;
-__declspec(section ".sdata2") f32 lbl_803E320C = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E3210 = 0.015625f;
+extern f32 lbl_803E31F8;
+extern f32 lbl_803E31FC;
+extern f32 lbl_803E3200;
+extern f32 lbl_803E3204;
+extern f32 lbl_803E3208;
+extern f32 lbl_803E320C;
+extern f32 lbl_803E3210;
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int GCbaddieShield_getExtraSize(void)
