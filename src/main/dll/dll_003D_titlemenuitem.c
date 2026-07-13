@@ -55,7 +55,7 @@ extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void* gameTextGetPhrase(int textId, int phraseIndex);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
-extern void gameTextAppendStr(char* str, int arg2);
+extern void gameTextAppendStr(char* str, int box);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {

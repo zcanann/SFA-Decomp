@@ -86,7 +86,7 @@ extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-ran
 extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextFn_80016810(int a, int b, int c);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern void gameTextShowStr(char* text, int box, int x, int y);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
 #define PAD_BUTTON_A     0x100

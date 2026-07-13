@@ -201,7 +201,7 @@ extern f32 lbl_803E2130;
 extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
 extern char* getHighScoreEntry(u8 track, u8 row);
-extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
+extern void gameTextShowStr(char* text, int box, int x, int y);
 extern struct
 {
     u16 unk0;
@@ -406,7 +406,7 @@ extern s8 gCMenuScriptedInput;
 extern u16 yButtonState;
 extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
-extern void gameTextAppendStr(char* str, int arg2);
+extern void gameTextAppendStr(char* str, int box);
 extern int cMenuSetItems(int handle, int flag);
 
 /* ===== EN v1.0 retargeted leaves ========================================== */

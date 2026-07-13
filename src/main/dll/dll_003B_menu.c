@@ -110,23 +110,23 @@ void Menu_func07(int v)
 #pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
-void Menu_func06(int arg1, int unused2, int unused3, int arg4, int arg5)
+void Menu_func06(int resultId, int unused2, int unused3, int itemWidth, int defaultIndex)
 {
-    if (arg5 == lbl_803DD8F0)
+    if (defaultIndex == lbl_803DD8F0)
     {
-        lbl_803DD8F5 = arg1;
+        lbl_803DD8F5 = resultId;
     }
-    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg4);
+    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + itemWidth);
     lbl_803DD8F0++;
 }
 
-void Menu_func05(int arg1, int unused2, int arg3, int arg4)
+void Menu_func05(int resultId, int unused2, int itemWidth, int defaultIndex)
 {
-    if (arg4 == lbl_803DD8F0)
+    if (defaultIndex == lbl_803DD8F0)
     {
-        lbl_803DD8F5 = arg1;
+        lbl_803DD8F5 = resultId;
     }
-    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + arg3);
+    lbl_803DD8F2 = (s16)((s32)lbl_803DD8F2 + itemWidth);
     lbl_803DD8F0++;
 }
 #pragma peephole reset
