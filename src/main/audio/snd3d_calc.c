@@ -6,10 +6,10 @@ typedef struct S3DActiveNode
 {
     struct S3DActiveNode* next;
     f32 distance;
-    f32 arg1;
-    f32 arg2;
-    f32 arg3;
-    f32 arg4;
+    f32 pan;
+    f32 frontBack;
+    f32 azimuth;
+    f32 pitch;
     Snd3DEmitter* emitter;
 } S3DActiveNode;
 
@@ -354,7 +354,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter* emitter, f32 distance)
  * s3dInsertActiveEmitter - active spatial voice node insert.
  */
 #pragma opt_lifetimes off
-int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3, f32 arg4)
+int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 frontBack, f32 azimuth, f32 pitch)
 {
     S3DMixGroup* group;
     S3DActiveNode* scan;
@@ -420,10 +420,10 @@ int s3dInsertActiveEmitter(Snd3DEmitter* emitter, f32 distance, f32 arg1, f32 ar
     {
         S3DActiveNode* newNode = &((S3DActiveNode*)(base + 0x450))[lbl_803DE36C];
         newNode->emitter = emitter;
-        newNode->arg4 = arg4;
-        newNode->arg1 = arg1;
-        newNode->arg2 = arg2;
-        newNode->arg3 = arg3;
+        newNode->pitch = pitch;
+        newNode->pan = pan;
+        newNode->frontBack = frontBack;
+        newNode->azimuth = azimuth;
     }
     ((S3DActiveNode*)(base + 0x450))[lbl_803DE36C++].distance = distance;
     return 1;
@@ -523,7 +523,7 @@ void s3dStartQueuedEmitters(void)
             {
                 emitter->age = one;
             }
-            s3dApplyEmitterControls(emitter, node->distance, node->arg1, node->arg2, node->arg3, node->arg4);
+            s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth, node->pitch);
             emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
             lbl_803CC910[groupIndex].sortedCount++;
             if (lbl_803CC910[groupIndex].sortedHead != (S3DSortedNode*)0x0)

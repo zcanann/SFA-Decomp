@@ -333,7 +333,7 @@ typedef struct
     u32 deferred[20];
 } LightmapDrawQueue;
 
-void renderObjects(s8* arg0)
+void renderObjects(s8* opacity)
 {
     int i;
     u32 flags;
@@ -358,7 +358,7 @@ void renderObjects(s8* arg0)
         flags = ((GameObject*)obj)->anim.modelInstance->flags;
         if ((flags & OBJDEF_FLAG_DEFERRED_RENDER) != 0 || ((((GameObject*)obj)->anim.modelInstance->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER) != 0))
         {
-            if (arg0[idx] != 0 && gLightmapDeferredObjectCount < 0x14)
+            if (opacity[idx] != 0 && gLightmapDeferredObjectCount < 0x14)
             {
                 slot = gLightmapDeferredObjectCount;
                 gLightmapDeferredObjectCount = slot + 1;

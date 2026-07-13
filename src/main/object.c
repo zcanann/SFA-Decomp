@@ -841,15 +841,15 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
     }
 }
 
-GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int arg2, int arg3, void* parent)
+GameObject* Obj_SetupObject(ObjPlacement* data, int flags, int mapLayer, int objIndex, void* parent)
 {
     GameObject* obj;
     if (getLoadedFileFlags(0) & 0x100000)
     {
-        OSReport(sObjSetupObjectLoadingLockedWarning, arg3);
+        OSReport(sObjSetupObjectLoadingLockedWarning, objIndex);
         return NULL;
     }
-    obj = loadCharacter((s16*)data, flags, arg2, arg3, parent, 0);
+    obj = loadCharacter((s16*)data, flags, mapLayer, objIndex, parent, 0);
     if (obj != NULL)
     {
         Obj_RegisterObject(obj, flags);
