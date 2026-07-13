@@ -7,6 +7,8 @@
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
 #include "main/dll/DIM/dll_01E5_dimbossspit.h"
 #include "main/dll/DIM/dll_01E7_dimbossfire.h"
+#include "main/dll/DF/dfropenode.h"
+#include "main/dll/dfbarrelanim.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
@@ -32,25 +34,6 @@ extern void ccriverflow_getExtraSize(void);
 extern void ccriverflow_init(void);
 extern void ccriverflow_render(void);
 extern void ccriverflow_update(void);
-extern void dfropenode_free(GameObject*);
-extern void dfropenode_getWorldPosAtPhase(void);
-extern void dfropenode_findNearestRopePoint(GameObject*);
-extern void dfropenode_getAngle(void);
-extern void dfropenode_setVisible(void);
-extern void dfropenode_isVisible(void);
-extern void dfropenode_setMinY(void);
-extern void dfropenode_clearLinkedObj(void);
-extern void dfropenode_getExtraSize(void);
-extern void dfropenode_getObjectTypeId(void);
-extern void dfropenode_hitDetect(void);
-extern void dfropenode_init(void);
-extern void dfropenode_initialise(void);
-extern void dfropenode_advancePhaseByDistance(GameObject*);
-extern void dfropenode_release(void);
-extern void dfropenode_render(void);
-extern void dfropenode_applyForceAtPhase(void);
-extern void dfropenode_getPlaneEquation(void);
-extern void dfropenode_update(void);
 extern void DFSH_Door2Speci_free(void);
 extern void DFSH_Door2Speci_getExtraSize(void);
 extern void DFSH_Door2Speci_getObjectTypeId(void);

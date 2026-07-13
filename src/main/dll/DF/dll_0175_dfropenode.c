@@ -5,7 +5,8 @@
  */
 #include "main/game_object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/DF/DFbarrelanim.h"
+#include "main/dll/DF/dfropenode.h"
+#include "main/dll/dfbarrelanim.h"
 #include "main/objlib.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/dll/DF/dll_196.h"
@@ -499,9 +500,6 @@ void dfropenode_hitDetect(void)
 
 void dfropenode_update(DFropenodeObject* obj)
 {
-    extern DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused,
-                                 s32 count, f32 tickScale);
-
     DFropenodeExtra* extra;
     u8* objDef;
     DFropenodeObject* linkedObj;
