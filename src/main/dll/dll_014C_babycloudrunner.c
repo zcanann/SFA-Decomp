@@ -10,7 +10,6 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
-#include "main/dll/cfprisonunclestate_struct.h"
 #include "main/dll/babycloudrunnerflags_struct.h"
 #include "main/dll/gcrobotlightbeastate_struct.h"
 #include "main/dll/cfprisonguardstate_struct.h"
@@ -79,11 +78,6 @@ STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
  * (CFPrisonGuard_getExtraSize == 0x3c). */
 
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
-
-/* Per-object extra state for the CloudRunner prison uncle
- * (cfprisonuncle_getExtraSize == 0xa8). */
-
-STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */

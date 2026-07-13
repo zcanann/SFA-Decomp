@@ -8,7 +8,6 @@
  * the sequence script). Once he is gone (0x50) only his companion
  * object still renders. Carved from the sandwormBoss 10-DLL container.
  */
-#include "main/dll/cfprisonunclestate_struct.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -65,20 +64,20 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     CfPrisonUncleState* sub = obj->extra;
     if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0)
     {
-        if (*(void**)&sub->target != NULL && objUpdateOpacity((GameObject*)sub->target) != 0)
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                  lbl_803E4288);
+            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                        lbl_803E4288);
         }
     }
     else if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0 && visible != 0)
     {
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
                                                                                     lbl_803E4288);
-        if (*(void**)&sub->target != NULL && objUpdateOpacity((GameObject*)sub->target) != 0)
+        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
-            ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                  lbl_803E4288);
+            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
+                                                                                        lbl_803E4288);
         }
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
@@ -87,13 +86,12 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         {
             if (visible != 0)
             {
-                if (objUpdateOpacity((GameObject*)sub->target) != 0)
+                if (objUpdateOpacity(sub->target) != 0)
                 {
-                    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                          lbl_803E4288);
-                    ObjPath_GetPointWorldPosition((GameObject*)sub->target, 0, &obj->anim.localPosX,
-                                                  &((GameObject*)obj)->anim.localPosY,
-                                                  &((GameObject*)obj)->anim.localPosZ, 0);
+                    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3,
+                                                                                                p4, p5, lbl_803E4288);
+                    ObjPath_GetPointWorldPosition(sub->target, 0, &obj->anim.localPosX, &obj->anim.localPosY,
+                                                  &obj->anim.localPosZ, 0);
                 }
                 ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
                                                                                               lbl_803E4288);
@@ -101,10 +99,10 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         }
         else
         {
-            if (objUpdateOpacity((GameObject*)sub->target) != 0)
+            if (objUpdateOpacity(sub->target) != 0)
             {
-                ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                      lbl_803E4288);
+                ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4,
+                                                                                            p5, lbl_803E4288);
             }
             if (visible != 0)
             {
@@ -128,7 +126,7 @@ void cfprisonuncle_update(GameObject* obj)
     CfPrisonUncleState* sub = obj->extra;
     void* player;
     int msgArg, objectIndex, objectCount, msgType, msgFlag;
-    int* objects;
+    GameObject** objects;
     int i;
     if (sub == NULL)
         return;
@@ -140,10 +138,10 @@ void cfprisonuncle_update(GameObject* obj)
     }
     if (*(void**)&sub->target == NULL)
     {
-        objects = ObjList_GetObjects(&objectIndex, &objectCount);
+        objects = (GameObject**)ObjList_GetObjects(&objectIndex, &objectCount);
         for (i = objectIndex; i < objectCount; i++)
         {
-            if (((GameObject*)objects[i])->anim.classId == 0x3d)
+            if (objects[i]->anim.classId == 0x3d)
             {
                 sub->target = objects[i];
                 i = objectCount;
