@@ -11,7 +11,6 @@
  */
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/dll/dll1ceplacement_struct.h"
-#include "main/dll/fnexplosionreleasev11unusedstate_struct.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
