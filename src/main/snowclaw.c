@@ -13,7 +13,8 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
-#include "main/maketex.h"
+#include "main/maketex_random_api.h"
+#include "main/maketex_timer_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* object group queried to find this object's target */

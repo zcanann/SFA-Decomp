@@ -26,7 +26,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/savegame.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
 #include "main/track_dolphin_api.h"

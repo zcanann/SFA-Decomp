@@ -5,7 +5,7 @@
 #include "main/game_object.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/DR/dr_shared.h"
-#include "main/maketex.h"
+#include "main/maketex_random_api.h"
 #include "main/dll/dll_0021_effect8.h"
 
 extern f32 lbl_803DB818;

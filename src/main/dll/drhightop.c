@@ -21,7 +21,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
-#include "main/maketex.h"
+#include "main/maketex_api.h"
 #include "main/objhits.h"
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"

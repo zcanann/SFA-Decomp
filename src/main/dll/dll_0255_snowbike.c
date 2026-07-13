@@ -17,7 +17,7 @@
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
-#include "main/maketex.h"
+#include "main/maketex_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 

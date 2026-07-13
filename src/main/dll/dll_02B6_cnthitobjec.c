@@ -21,7 +21,7 @@
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/maketex.h"
+#include "main/maketex_api.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_02B6_cnthitobjec.h"

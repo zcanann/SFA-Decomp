@@ -15,7 +15,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/model.h"
-#include "main/maketex.h"
+#include "main/maketex_api.h"
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"

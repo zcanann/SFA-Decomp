@@ -18,7 +18,8 @@
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/player_api.h"
-#include "main/maketex.h"
+#include "main/maketex_api.h"
+#include "main/maketex_timer_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
 #include "main/object_render.h"

@@ -17,7 +17,8 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "main/dll/DR/dr_shared.h"
-#include "main/maketex.h"
+#include "main/maketex_random_api.h"
+#include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/pad.h"
 #include "main/dll/moveLib.h"
