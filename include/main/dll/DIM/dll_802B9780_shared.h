@@ -275,22 +275,6 @@ extern u32 _DAT_803df140;
  */
 typedef struct
 {
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    s16 hc;
-    u8 pad_e[2];
-    f32 f10;
-    f32 f14;
-    f32 f18;
-    s16 h1c;
-    u16 h1e;
-    u16 h20;
-    u8 pad_22[2];
-} SnowHornEntry;
-
-typedef struct
-{
     u8 pad[0x94];
     u8 flag;
 } SnowHornFlags;

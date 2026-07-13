@@ -20,6 +20,7 @@
  */
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/debug.h"
+#include "main/byte_flags.h"
 #include "main/object_api.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/moveLib.h"

@@ -6,6 +6,8 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
+extern char sDrCreatorTimeFormat[];
+
 /* Obj_AllocObjectSetup(36,...) buffer composed in DR_Creator_update and
  * DR_Creator_SeqFn. Head is the common ObjPlacement;
  * tail (0x18..0x23) is file-local. */

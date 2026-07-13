@@ -5,6 +5,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/camera.h"
+#include "main/byte_flags.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/object_render.h"

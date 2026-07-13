@@ -32,21 +32,11 @@
 #include "main/vecmath.h"
 #include "main/dll/path_control_interface.h"
 #include "main/frame_timing.h"
+#include "main/byte_flags.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
 typedef struct CurvesCollisionState CurvesCollisionState;
 
-typedef struct
-{
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-    u8 b08 : 1;
-    u8 b04 : 1;
-    u8 b02 : 1;
-    u8 b01 : 1;
-} ByteFlags;
 typedef struct
 {
     u8 pad[0x7ac];
