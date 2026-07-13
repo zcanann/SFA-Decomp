@@ -41,6 +41,13 @@
 #define PAD_BUTTON_B  0x200
 #define PAD_TRIGGER_Z 0x010
 
+typedef struct CameraModeViewfinderInitArgs
+{
+    f32 radius;
+    f32 yOffset;
+    u16 height;
+} CameraModeViewfinderInitArgs;
+
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define VIEWFINDER_CAMMODE_DEFAULT 0x42
 
@@ -494,6 +501,7 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
     f32 cosv;
     f32 sinv;
     f32 zero;
+    CameraModeViewfinderInitArgs* a = (CameraModeViewfinderInitArgs*)args;
 
     camObj = (s16*)((GameObject*)obj)->anim.targetObj;
     if (lbl_803DD548 == NULL)
@@ -501,9 +509,9 @@ void CameraModeViewfinder_init(s16* obj, int mode, int* args)
         lbl_803DD548 = mmAlloc(sizeof(ViewfinderState), 0xf, 0);
     }
     memset(lbl_803DD548, 0, sizeof(ViewfinderState));
-    *(f32*)lbl_803DD548 = *(f32*)args;
-    lbl_803DD548->height = (f32)(u32) * (u16*)((int)args + 8);
-    lbl_803DD548->yOffset = *(f32*)(args + 1);
+    *(f32*)lbl_803DD548 = a->radius;
+    lbl_803DD548->height = (f32)(u32)a->height;
+    lbl_803DD548->yOffset = a->yOffset;
     lbl_803DD548->yawSpeed = lbl_803E17C4;
     diff = 0x8000 - obj[0] - camObj[0];
     if (diff < 0)
