@@ -146,7 +146,7 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 extern void** gBaddieControlInterface;
 extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
-extern u8 lbl_80329514[];
+extern u32 lbl_80329514[];
 extern f32 lbl_803E62BC;
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
@@ -500,7 +500,7 @@ void dbstealerworm_init(int* obj, u8* def, int flag)
     p40c = *(int**)&((GroundBaddieState*)sub)->control;
     memset(p40c, 0, sizeof(DbStealerwormControl));
     ((DbStealerwormControl*)p40c)->unk08 = lbl_803E62FC;
-    ((DbStealerwormControl*)p40c)->cfg = (int)&lbl_80329514[((s16) * (s16*)(def + 0x24)) * 8];
+    ((DbStealerwormControl*)p40c)->cfg = (int)&lbl_80329514[((s16) * (s16*)(def + 0x24)) * 2];
     randomValue = randomGetRange(0xa, 0x12c);
     ((DbStealerwormControl*)p40c)->countdown = (f32)(s32)randomValue;
     ((DbStealerwormFlags44*)&((DbStealerwormControl*)p40c)->flags44)->flag20 = def[0x2b] & 1;
@@ -1333,7 +1333,7 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 {
 
-    extern u8 lbl_80329514[];
+    extern u32 lbl_80329514[];
     extern f32 lbl_803E62AC;
     GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub;
@@ -1360,7 +1360,7 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
                 Obj_FreeObject(obj);
                 return 0;
             }
-            entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->cfgTableIndex * 8];
+            entry = (char*)&lbl_80329514[((DbstealerwormPlacement*)data)->cfgTableIndex * 2];
             count = *(s16*)(entry + 4);
             for (; count != 0;)
             {
@@ -2005,7 +2005,7 @@ void dbstealerworm_update(u8* objp)
     extern f32 lbl_803E6388;
     extern f32 lbl_803E638C;
     extern u8 lbl_803AD0C0[];
-    extern u8 lbl_803293B8[];
+    extern u32 lbl_803293B8[];
     char* st;
     char* tbl;
     int blob;
@@ -2344,7 +2344,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     extern f32 lbl_803E6308;
     extern f32 lbl_803E630C;
     extern f32 lbl_803E62CC;
-    extern u8 lbl_803293B8[];
+    extern u32 lbl_803293B8[];
     char* tbl = (char*)lbl_803293B8;
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
@@ -2592,6 +2592,43 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
 /* if (p6) objRenderModelAndHitVolumes(lbl_803E6408). */
 
 /* if (b->_8 && (b->_8->_6 & 0x40)) clear. */
+
+u32 lbl_803293B8[18] = {0x00000000, 0x00000000, 0x00000000, 0x00000007, 0x00000000, 0x00000024,
+                        0x00000009, 0x00000000, 0x00000024, 0x00000008, 0x00000000, 0x00000003,
+                        0x0000000a, 0x00000000, 0x00000003, 0x00000001, 0x00000000, 0x00000000};
+u32 lbl_80329400[18] = {0x00000000, 0x00000000, 0x00000000, 0x00000007, 0x00000000, 0x00000024,
+                        0x00000009, 0x00000000, 0x00000024, 0x00000008, 0x00000000, 0x0000001e,
+                        0x0000000a, 0x00000000, 0x0000001e, 0x00000001, 0x00000000, 0x00000000};
+u32 lbl_80329448[15] = {0x00000000, 0x00000000, 0x00000000, 0x00000007, 0x00000000, 0x00000024,
+                        0x00000009, 0x00000000, 0x00000024, 0x00000007, 0x00000000, 0x0000001e,
+                        0x00000001, 0x00000000, 0x00000000};
+u32 lbl_80329484[18] = {0x00000000, 0x00000000, 0x00000000, 0x00000007, 0x00000000, 0x00000024,
+                        0x00000009, 0x00000000, 0x00000024, 0x00000008, 0x00000000, 0x00000000,
+                        0x0000000a, 0x00000000, 0x00000000, 0x00000001, 0x00000000, 0x00000000};
+u32 lbl_803294CC[9] = {0x00000000, 0x00000000, 0x00000000, 0x0000000b, 0x00000000, 0x00000024,
+                       0x00000001, 0x00000000, 0x00000000};
+u32 lbl_803294F0[9] = {0x00000000, 0x00000000, 0x00000000, 0x0000000f, 0x00000000, 0x00000000,
+                       0x00000001, 0x00000000, 0x00000000};
+u32 lbl_80329514[72] = {(u32)lbl_803293B8, 0x00060000, (u32)lbl_80329400, 0x00060000,
+                        (u32)lbl_80329448, 0x00050000, (u32)lbl_80329484, 0x00060000,
+                        (u32)lbl_803294CC, 0x00030000, (u32)lbl_803294F0, 0x00030000,
+                        0x706f704f, 0x75744f66, 0x47726f75, 0x6e640062,
+                        0x75727374, 0x496e746f, 0x47726f75, 0x6e006269,
+                        0x74654174, 0x7461636b, 0x20202020, 0x00737461,
+                        0x6e645374, 0x696c6c20, 0x20202000, 0x7374616e,
+                        0x64416e64, 0x53706974, 0x20200068, 0x69744669,
+                        0x6768744d, 0x61696e20, 0x20006669, 0x6768745f,
+                        0x64696520, 0x20202020, 0x0072756e, 0x746f5f4f,
+                        0x626a6563, 0x74202000, 0x72756e74, 0x6f5f5468,
+                        0x726f774f, 0x626a0070, 0x69636b75, 0x705f4f62,
+                        0x6a656374, 0x20007468, 0x726f775f, 0x41744f62,
+                        0x6a656374, 0x00776169, 0x745f666f, 0x724f626a,
+                        0x65637400, 0x57616974, 0x5f666f72, 0x5f746872,
+                        0x6f770074, 0x72795f74, 0x6f5f6361, 0x74636820,
+                        0x20006361, 0x7463685f, 0x4f626a65, 0x63742020,
+                        0x004b696c, 0x6c5f4f62, 0x6a656374, 0x20202000};
+int lbl_80329634[3] = {0x000001ed, 0x000001ed, 0x000001ec};
+int lbl_80329640[4] = {0x00000000, 0x000001f0, 0x000001f1, 0x000001f1};
 
 int gDbStealerwormSfxIds[] = {
     498, 498, 498, 149, 149, 5, 5, 5, 5, 5, 5, 5, 5, 5,  5,  5,  5,  5,  5,  2,  5,      5,
