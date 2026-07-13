@@ -21,6 +21,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
+#include "main/dll/projgfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/dll/waterfx_interface.h"

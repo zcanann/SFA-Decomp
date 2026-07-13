@@ -2,6 +2,7 @@
 #define MAIN_DLL_MODGFX_H_
 
 #include "ghidra_import.h"
+#include "main/dll/projgfx_interface.h"
 #include "main/vecmath.h"
 #include "main/expgfx_internal.h"
 #include "main/object_descriptor.h"
