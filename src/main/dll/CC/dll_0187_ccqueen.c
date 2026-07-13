@@ -15,6 +15,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/CC/dll_0187_ccqueen.h"
 #include "main/vecmath_distance_api.h"
+#include "main/object_descriptor.h"
 
 #define CCQUEEN_OBJFLAG_UPDATE_DISABLED 0x8000
 
@@ -80,3 +81,20 @@ void ccqueen_init(int* obj, u8* placement)
     dll_2E_func09((MoveLibState*)charState, &buf1, &buf2, 3);
     charState[0x611] = (u8)(charState[0x611] | 0xa);
 }
+
+ObjectDescriptor gCCqueenObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ccqueen_init,
+    (ObjectDescriptorCallback)ccqueen_update,
+    0,
+    (ObjectDescriptorCallback)ccqueen_render,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)ccqueen_getExtraSize,
+};
