@@ -18,7 +18,7 @@
 #include "main/object_update_list.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"

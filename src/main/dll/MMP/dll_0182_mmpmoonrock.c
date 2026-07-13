@@ -16,7 +16,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
 #include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"

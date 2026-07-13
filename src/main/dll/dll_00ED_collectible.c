@@ -16,7 +16,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objprint_api.h"

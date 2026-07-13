@@ -9,7 +9,7 @@
  * object's position. Re-split from a former multi-object TU. */
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"

@@ -4,5 +4,6 @@
 #include "main/game_object.h"
 
 void saveGame_saveObjectPos(GameObject* obj);
+void saveGame_unsaveObjectPos(GameObject* obj);
 
 #endif /* MAIN_DLL_SAVEGAME_OBJECT_API_H_ */

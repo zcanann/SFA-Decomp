@@ -25,7 +25,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/maketex_timer_api.h"
 #include "main/lightmap_api.h"

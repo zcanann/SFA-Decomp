@@ -3,7 +3,7 @@
  * animations, hit-react, and the tail-whip player interaction. */
 #include "main/dll/baddie_state.h"
 #include "main/pad_api.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_object_api.h"
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
