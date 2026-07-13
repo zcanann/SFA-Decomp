@@ -92,11 +92,7 @@ typedef struct
     u8 slotD : 2;
 } TrickySlotBits;
 
-typedef struct
-{
-    void* pad[9];
-    void (*handlers[1])(int obj, int state);
-} TrickyHandlerTable;
+typedef void (*TrickyHandlerFn)(int obj, int state);
 
 typedef struct
 {
@@ -945,6 +941,10 @@ void Tricky_update(int obj)
     int sfxId;
     u8* cursor;
     TrickyState* st;
+    struct
+    {
+        int index;
+    } childLoop;
     int i;
     int setup;
     int count;
@@ -952,7 +952,6 @@ void Tricky_update(int obj)
     int step;
     int played;
     int talking;
-    int sfx2;
     u8* target;
     f32 z;
     u8 blockFlags[120];
@@ -1054,8 +1053,8 @@ void Tricky_update(int obj)
             ((GameObject*)obj)->anim.worldPosY = trickyState->homePosY;
             ((GameObject*)obj)->anim.worldPosZ = trickyState->homePosZ;
             ObjHits_SyncObjectPosition(obj);
-            i = 0;
-            trickyState->followPhase = i;
+            childLoop.index = 0;
+            trickyState->followPhase = childLoop.index;
             z = lbl_803E23DC;
             trickyState->prevSpeed = z;
             trickyState->speed = z;
@@ -1070,12 +1069,10 @@ void Tricky_update(int obj)
                 trickyState->stateFlags =
                     trickyState->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
                 childCursor = (u8*)state;
-                do
+                for (; childLoop.index < 7; childCursor += 4, childLoop.index++)
                 {
                     objSetAnimSpeedTo1(*(int*)(childCursor + 0x700));
-                    childCursor += 4;
-                    i++;
-                } while (i < 7);
+                }
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
                 TRICKY_VOICE(obj, 0x29d, 0);
             }
@@ -1422,7 +1419,7 @@ void Tricky_update(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     trickyState->heightUpdateActive = 1;
-    ((TrickyHandlerTable*)base)->handlers[trickyState->stateIndex](obj, state);
+    ((TrickyHandlerFn*)(base + 0x24))[trickyState->stateIndex](obj, state);
     trickyState->stateFlags &= ~(u64)0x2;
     trickyState->animTransitionTimer += timeDelta;
     if (trickyState->animTransitionTimer > lbl_803E247C)
@@ -1669,11 +1666,14 @@ void Tricky_update(int obj)
     }
     if (talking != 0)
     {
-        cursor = (u8*)state + 0x80c;
+        u8* soundCursor;
+        int sfx2;
+
+        soundCursor = (u8*)state + 0x80c;
         sfx2 = 0;
-        for (i = 0, count = *(s8*)(cursor + 0x1b); i < count; i++)
+        for (i = 0, count = *(s8*)(soundCursor + 0x1b); i < count; i++)
         {
-            switch (*(s8*)(cursor + i + 0x13))
+            switch (*(s8*)(soundCursor + i + 0x13))
             {
             case 0:
             case 1:
