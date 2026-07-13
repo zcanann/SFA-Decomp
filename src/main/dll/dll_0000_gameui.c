@@ -2971,7 +2971,6 @@ void pauseMenuFn_80129ee0(void)
             lbl_803DD78C = t;
             if (t < 0)
             {
-                int k;
                 lbl_803DD78C = 0;
                 if (isArwing != 0)
                 {
@@ -2983,8 +2982,14 @@ void pauseMenuFn_80129ee0(void)
                     AudioStream_StopCurrent();
                 }
                 {
+                    struct
+                    {
+                        int index;
+                    } cleanup;
                     GameObject** p;
-                    for (k = 0, p = (GameObject**)&hud->anims[0]; k < 4; p++, k++)
+                    cleanup.index = 0;
+                    p = (GameObject**)&hud->anims[0];
+                    for (; cleanup.index < 4; p++, cleanup.index++)
                     {
                         if (*p != 0)
                         {
