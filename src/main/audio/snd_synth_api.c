@@ -22,7 +22,7 @@
 #define SND_OUTPUTMODE_STEREO   1 /* plain stereo */
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
-extern u8 lbl_803BCC90[];
+extern u8 gSynthVoiceNotes[];
 extern u8 lbl_803BD150[];
 extern void* lbl_803BD9A4[8];
 extern void* lbl_803BD9C4[8];
@@ -59,7 +59,7 @@ void sndSeqVolume(int seqId, int volume, int time, int mode)
  */
 u16 seqGetMIDIPriority(u8 slot, u8 event)
 {
-    return *(u16*)(lbl_803BCC90 + slot * 32 + event * 2);
+    return *(u16*)(gSynthVoiceNotes + slot * 32 + event * 2);
 }
 
 /*

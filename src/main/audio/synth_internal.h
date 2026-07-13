@@ -358,8 +358,8 @@ extern u32 gSynthDelayedActionWord1;
 extern SynthFade gSynthFades[0x20];
 extern u32 gSynthFadeMask;
 
-extern SynthVoice gSynthVoices[SYNTH_MAX_VOICES];
 extern u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
+extern SynthVoice gSynthVoices[SYNTH_MAX_VOICES];
 extern SynthVoice* gSynthFreeVoices;
 extern SynthVoice* gSynthQueuedVoices;
 extern SynthVoice* gSynthAllocatedVoices;

@@ -65,7 +65,6 @@ typedef struct SynthPage
 
 extern SynthSeqRuntime lbl_803AF550;
 extern u8 lbl_803BD964[0x40];
-extern u16 lbl_803BCC90[8][0x10];
 extern int gSynthCurrentVoiceSlotIndex;
 extern void fn_8026E864(void);
 extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
@@ -269,7 +268,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
         for (i = 0; i < 16; i++)
         {
             prg = ms[4];
-            lbl_803BCC90[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
+            gSynthVoiceNotes[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
             if ((u8)i != 9)
             {
                 prg = nseq->normTrans[prg];
@@ -300,7 +299,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
 
     for (i = 0; i < 16; i++)
     {
-        lbl_803BCC90[seqId][i] = 0xFFFF;
+        gSynthVoiceNotes[seqId][i] = 0xFFFF;
     }
 
     for (i = 0; i < 16; i++)
@@ -746,4 +745,5 @@ done:
     }
 }
 
+u16 gSynthVoiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 SynthVoice gSynthVoices[SYNTH_MAX_VOICES];
