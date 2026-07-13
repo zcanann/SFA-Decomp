@@ -3,6 +3,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
+#include "main/gametext_task_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/mm.h"
 #include "main/texture.h"
@@ -329,7 +330,6 @@ extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
-extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void textDisplayFn_800168dc(int a, int b);
 extern void gameTextFn_8001658c(int a, int b, int c);
