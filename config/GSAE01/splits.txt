@@ -200,6 +200,7 @@ main/dll/viewfinder.c:
 
 main/dll/objfx.c:
 	.text       start:0x800969B0 end:0x8009AD44
+	.rodata     start:0x802C1FD8 end:0x802C2160
 
 main/dll/expgfxresource.c:
 	.text       start:0x8009AD44 end:0x8009B0E0

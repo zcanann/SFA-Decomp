@@ -76,6 +76,12 @@ typedef struct ObjFxColorTable
     u16 values[15];
 } ObjFxColorTable;
 
+typedef struct ObjFxSparkleEffectTable
+{
+    ObjFxS32Table5 counts;
+    u16 records[3][34];
+} ObjFxSparkleEffectTable;
+
 STATIC_ASSERT(sizeof(ObjFxParticleEmitter) == 0x18);
 STATIC_ASSERT(sizeof(ObjFxS32Table5) == 0x14);
 STATIC_ASSERT(sizeof(ObjFxU16Table11) == 0x16);
@@ -89,9 +95,10 @@ STATIC_ASSERT(sizeof(ObjFxU16Table9) == 0x12);
 STATIC_ASSERT(sizeof(ObjFxU16Table8) == 0x10);
 STATIC_ASSERT(sizeof(ObjFxRandomBurstTable) == 0x34);
 STATIC_ASSERT(sizeof(ObjFxColorTable) == 0x1E);
+STATIC_ASSERT(sizeof(ObjFxSparkleEffectTable) == 0xE0);
 
 extern ObjFxS32Table5 lbl_802C1FF8;
-extern ObjFxS32Table5 lbl_802C200C;
+extern ObjFxSparkleEffectTable lbl_802C200C;
 extern ObjFxU16Table11 lbl_802C20EC;
 extern ObjFxU16Table7 lbl_802C2104;
 extern ObjFxU16Table11 lbl_802C2114;
