@@ -62,6 +62,32 @@ extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80310DE8 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect14_initialise,
+    (ObjectDescriptorCallback)Effect14_release,
+    0,
+    (ObjectDescriptorCallback)Effect14_func03_nop,
+    (ObjectDescriptorCallback)Effect14_func04,
+    (ObjectDescriptorCallback)Effect14_func05_nop,
+};
+
 int Effect14_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, u16* extraArgs)
 {
     EffectSrcParams rotCtx;

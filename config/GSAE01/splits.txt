@@ -259,18 +259,18 @@ main/dll/dll_0023_effect10.c:
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
-	.data       start:0x80310D48 end:0x80310D7C
+	.data       start:0x80310D20 end:0x80310D7C
 	.bss        start:0x8039C3C8 end:0x8039C3E0
 
 main/dll/dll_0025_effect12.c:
 	.text       start:0x800C56E0 end:0x800C65B4
-	.data       start:0x80310DA8 end:0x80310DE4
+	.data       start:0x80310D80 end:0x80310DE4
 	.bss        start:0x8039C3E0 end:0x8039C3F8
 	.sdata2     start:0x803DFFF8 end:0x803E0000
 
 main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
-	.data       start:0x80310E10 end:0x80310E88
+	.data       start:0x80310DE8 end:0x80310E88
 	.bss        start:0x8039C3F8 end:0x8039C410
 	.sdata2     start:0x803E0098 end:0x803E0178
 
