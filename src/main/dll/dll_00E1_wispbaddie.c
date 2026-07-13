@@ -20,6 +20,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
+#include "main/camera_shake_api.h"
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -69,7 +70,6 @@ STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern void fn_801513AC(GameObject* obj, int state);
 extern f32 lbl_803E2708;
 extern f32 lbl_803E270C;

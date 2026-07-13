@@ -47,6 +47,7 @@
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/camera_shake_api.h"
 
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
@@ -589,7 +590,6 @@ void crawler_initVariant(int* obj, int* st)
 #pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
 {
-    extern void CameraShake_ApplyRadial(f32, f32, f32, f32, f32);
     extern void doRumble(f32 duration);
     extern void firecrawler_spawnFirepipe(int, int);
     extern void fn_80157B58(int, int);
