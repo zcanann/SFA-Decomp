@@ -14,7 +14,7 @@
  * shrine below the village. Distinct from sctotempole (the 4 standing totem
  * poles of the tracking test).
  */
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"

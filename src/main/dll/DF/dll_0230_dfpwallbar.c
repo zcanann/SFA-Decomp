@@ -8,7 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/baddie/chuka.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DF/dll_0230_dfpwallbar.h"
 

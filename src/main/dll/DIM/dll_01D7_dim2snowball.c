@@ -46,7 +46,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/object.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DIM2SNOWBALL_OBJFLAG_HITDETECT_DISABLED 0x2000

@@ -19,7 +19,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);

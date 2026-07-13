@@ -9,7 +9,7 @@
 #include "main/dll/SC/dll_01B8_sctotempole.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/model_engine.h"

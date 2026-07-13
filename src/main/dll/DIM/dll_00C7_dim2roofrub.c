@@ -17,7 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 
 #define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800
 

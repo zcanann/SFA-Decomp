@@ -21,7 +21,7 @@
 #include "main/object_api.h"
 #include "main/dll/cup1C3.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

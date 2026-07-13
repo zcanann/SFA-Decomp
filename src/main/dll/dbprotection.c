@@ -25,7 +25,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 
 #define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/frame_timing.h"

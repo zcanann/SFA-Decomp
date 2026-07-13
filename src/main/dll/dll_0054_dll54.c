@@ -22,7 +22,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "string.h"
 #include "main/object_transform.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/dll/dll_0054_dll54.h"
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */

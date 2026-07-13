@@ -16,7 +16,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/IM/dll_0171_imspaceringgen.h"

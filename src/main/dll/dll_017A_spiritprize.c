@@ -18,7 +18,7 @@
 #include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/lightmap.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"

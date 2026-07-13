@@ -30,7 +30,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/SC/sctotembond.h"
 #include "main/dll/SC/sc_shared.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"

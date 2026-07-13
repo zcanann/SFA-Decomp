@@ -20,7 +20,7 @@
 #include "dolphin/mtx/vec.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/gameplay_runtime.h"
 #include "main/voxmaps.h"
 

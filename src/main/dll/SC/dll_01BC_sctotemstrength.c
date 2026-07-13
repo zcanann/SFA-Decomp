@@ -19,7 +19,7 @@
 #include "main/screen_transition.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/SC/sc_shared.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/pad.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"

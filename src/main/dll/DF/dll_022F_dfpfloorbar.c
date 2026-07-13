@@ -13,7 +13,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"

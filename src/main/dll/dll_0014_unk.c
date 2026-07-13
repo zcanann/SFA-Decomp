@@ -31,7 +31,7 @@
 #include "main/curve_eval.h"
 #include "main/voxmaps.h"
 #include "main/dll/dll_0015_curves.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "string.h"

@@ -31,7 +31,7 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "main/dll/dll_000B_dll0b.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
 
 #define DLL0B_OBJFLAG_RENDERED 0x800

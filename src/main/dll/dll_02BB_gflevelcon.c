@@ -22,7 +22,7 @@
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/screen_transition.h"
 #include "main/sky_api.h"
 #include "main/lightmap.h"

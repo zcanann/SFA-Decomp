@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_list.h"
 #include "main/objseq.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/dll_018D_mmshscales.h"
