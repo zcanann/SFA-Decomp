@@ -191,8 +191,6 @@ extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, in
 extern void lightSetColor(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
-extern void skyFn_8008a04c(void);
-extern void skyFn_8008a500(void);
 extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
