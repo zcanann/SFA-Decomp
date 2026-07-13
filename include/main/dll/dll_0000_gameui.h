@@ -123,7 +123,6 @@ typedef struct
 /* extern-cleanup: defining-file public prototypes */
 void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
-void CMenu_SetFadeCounter(s16 v);
 void pauseMenuDoSave(void);
 void perspectiveFn_80129db4(void);
 

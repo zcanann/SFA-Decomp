@@ -12,6 +12,7 @@ int registerNewScore(s8 tableId, int score, u8 kind, int mode);
 void timeListFn_8012df14(void);
 void textureFreeFn_8012fcec(void);
 void viewFn_80129c74(void);
+void CMenu_SetFadeCounter(s16 value);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 
