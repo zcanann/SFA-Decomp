@@ -2,6 +2,7 @@
 #define MAIN_TEXTRENDER_H_
 
 #include "ghidra_import.h"
+#include "main/gametext_charset_api.h"
 #include "main/textrender_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
@@ -21,7 +22,6 @@ int gameTextGetCharset(void);
 void* getCurGameText(void);
 void gameTextRun(void);
 void gameTextLoadTaskText(int taskId);
-void gameTextSetCharset(int charset, int flags);
 int setSubtitlesEnabled(int enabled);
 
 #endif

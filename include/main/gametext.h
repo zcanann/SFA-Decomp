@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
 
 typedef struct TextDisplayState TextDisplayState;
@@ -39,7 +40,6 @@ extern f32 lbl_803DB3D0;
 void gameTextAppendStr(char* str, int arg2);
 void* gameTextGet(int textId);
 int gameTextGetCharset(void);
-void gameTextSetCharset(int charset, int flags);
 void gameTextSetColor(int r, int g, int b, int a);
 void gameTextRun(void);
 void* gameTextGetCurBox(void);

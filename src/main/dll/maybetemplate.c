@@ -203,7 +203,6 @@ extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, i
 extern void drawFn_8011e8d8(int tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
 extern void drawScaledTexture(int texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(int texture, f32 x, f32 y, int alpha, int arg);
-extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void hudDrawCMenu(int a, int b, int c);

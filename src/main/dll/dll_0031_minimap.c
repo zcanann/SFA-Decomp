@@ -18,6 +18,7 @@
  */
 #include "main/texture.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -132,7 +133,6 @@ extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
 extern void gameTextSetCursor(int a, int b, int c);
 extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int charset, int flags);
 extern u8 gMinimapEnabled;
 extern u8 lbl_803DD7BA;
 extern s16 lbl_803DD7A2;

@@ -24,6 +24,7 @@
 
 #include "main/dll/dll_0000_gameui.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_charset_api.h"
 #include "main/gametext_show_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -132,7 +133,6 @@ extern s8 lbl_803DBA64;
 extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
 extern int gameTextGetCharset(void);
-extern void gameTextSetCharset(int charset, int flags);
 extern void gameTextSetCursor(u16, u16, s32);
 extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 /* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
