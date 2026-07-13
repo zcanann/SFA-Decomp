@@ -78,6 +78,11 @@ void CameraModeNpcSpeak_initialise(void)
 {
 }
 
+u32 lbl_80319DA8[11] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeNpcSpeak_initialise, (u32)CameraModeNpcSpeak_release,
+        0x00000000, (u32)CameraModeNpcSpeak_init, (u32)CameraModeNpcSpeak_update,
+        (u32)CameraModeNpcSpeak_free, (u32)CameraModeNpcSpeak_copyToCurrent};
+
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
 {
     CameraObject* camera = (CameraObject*)obj;
@@ -265,6 +270,8 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
     camcontrol_traceMove(&camera->anim.worldPosX, &va, &gCamNpcSpeakState->cameraX, traceWork, 3, 1, 1, lbl_803E1A20);
 }
 #undef target
+
+f32 lbl_80319DF8[4] = {-3.0f, -3.5f, -3.5f, -3.0f};
 
 void CameraModeNpcSpeak_update(u8* obj)
 {
