@@ -52,6 +52,7 @@
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 u8 gCamcontrolStateStorage[0x148];
+CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
 extern f32 gCamcontrolSavedFocusWorldZ;
 extern f32 gCamcontrolSavedFocusWorldY;
