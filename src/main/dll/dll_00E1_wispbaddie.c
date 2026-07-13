@@ -38,8 +38,6 @@
 #define WISPBADDIE_FLAG_CHASE_PLAYER    0x02
 #define WISPBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define WISPBADDIE_FLAG_CHASE_MASK      0x06
-extern int ObjHits_GetPriorityHitWithPosition();
-
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;
@@ -233,7 +231,7 @@ void wispbaddie_update(GameObject* obj)
 
     state = (obj)->extra;
     curve = state->curve;
-    hit = ObjHits_GetPriorityHitWithPosition(obj, &dx, &hitX, &hitY, &hitZ, &dy, &dz);
+    hit = ObjHits_GetPriorityHitWithPosition(obj, (int*)&dx, (int*)&hitX, (u32*)&hitY, &hitZ, &dy, &dz);
     if (hit != 0)
     {
         state->hitRadius = lbl_803E2708;

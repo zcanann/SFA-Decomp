@@ -8,6 +8,7 @@
  * driven by the dll_2E_func* helpers.
  */
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/moveLib.h"
 #include "main/gamebits.h"
@@ -21,7 +22,6 @@
 #define GAMEBIT_QUEEN_RETIRED   0x1c3 /* queen leaves: hidden + hits disabled */
 #define GAMEBIT_GAS_PUZZLE_DONE 0xa3
 
-extern u32 ObjHits_DisableObject();
 static const Vec3s ccqueenEyeSetupA = {0x1e, 0, 0};
 static const Vec3s ccqueenEyeSetupB = {0x19, 0x19, 0x19};
 

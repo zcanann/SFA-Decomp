@@ -516,7 +516,6 @@ void dbstealerworm_release(void)
 
 void dbstealerworm_init(int* obj, u8* def, int flag)
 {
-    extern u32 ObjHits_EnableObject();
     u8* sub;
     int* p40c;
     u8 mode;

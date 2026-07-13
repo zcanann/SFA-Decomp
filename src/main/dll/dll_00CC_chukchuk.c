@@ -15,6 +15,7 @@
 #include "main/object_api.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/scarab.h"
@@ -31,9 +32,6 @@
 #define CHUKCHUK_FLAG_PRIMED        0x1
 #define CHUKCHUK_FLAG_DEAD          0x2
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
-
-extern u32 ObjHits_DisableObject();
-extern int ObjHits_GetPriorityHit();
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
@@ -240,7 +238,7 @@ void ChukChuk_update(short* obj)
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_zyck_call02);
         }
         v->prevDistance = di;
-        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit.hitObject, &hit.sphereIndex, &hit.hitVolume) == 14)
+        if (ObjHits_GetPriorityHit((GameObject*)(obj), &hit.hitObject, &hit.sphereIndex, (u32*)&hit.hitVolume) == 14)
         {
             v->hitsLeft -= 1;
             if (v->hitsLeft < 1)

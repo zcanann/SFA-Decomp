@@ -8,6 +8,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
@@ -64,7 +65,6 @@ extern const f32 lbl_803E64D4;
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
                               int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
-extern int ObjHits_GetPriorityHit(GameObject* obj, DfpTargetBlockObject** hitObj, int* priority, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 
 int dfptargetblock_getExtraSize(void)
@@ -166,7 +166,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
     obj->prevZ = obj->z;
 
     hitObj = NULL;
-    hitType = ObjHits_GetPriorityHit((GameObject*)(obj), &hitObj, &priority, 0);
+    hitType = ObjHits_GetPriorityHit((GameObject*)(obj), (int*)&hitObj, &priority, 0);
     if ((hitType != 0) && (hitObj != NULL) && (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH) &&
         (hitType == DFPTARGETBLOCK_HIT_TYPE_PUSH))
     {

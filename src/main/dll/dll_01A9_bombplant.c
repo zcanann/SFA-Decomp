@@ -161,7 +161,6 @@ void bombplant_throwSpore(int* obj, int* p2)
 int bombplant_SeqFn(int* obj)
 {
     extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-    extern void ObjHits_RefreshObjectState(int* obj);
     float* state = ((GameObject*)obj)->extra;
 
     if (((EnemyMushroomState*)state)->resetToSpawn != 0)
@@ -180,7 +179,7 @@ int bombplant_SeqFn(int* obj)
         ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->heightTarget / ((EnemyMushroomState*)
             state)->riseDuration;
         ((EnemyMushroomState*)state)->timer = ((EnemyMushroomState*)state)->riseDuration;
-        ObjHits_RefreshObjectState(obj);
+        ObjHits_RefreshObjectState((int)obj);
         ((EnemyMushroomState*)state)->resetToSpawn = 0;
         ((EnemyMushroomState*)state)->flags = (u8)(((EnemyMushroomState*)state)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
     }
@@ -208,7 +207,6 @@ int bombplant_SeqFn(int* obj)
 
 void bombplant_init(GameObject *obj, void* param, int flag)
 {
-    extern u32 ObjHits_RefreshObjectState();
     void* state;
     void* p4c;
     s16 bitId;
@@ -239,7 +237,7 @@ void bombplant_init(GameObject *obj, void* param, int flag)
         ((BombPlantState*)state)->growRate =
             ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
         ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-        ObjHits_RefreshObjectState(obj);
+        ObjHits_RefreshObjectState((int)obj);
         ((BombPlantState*)state)->stateIndex = 1;
     }
     else
@@ -250,7 +248,7 @@ void bombplant_init(GameObject *obj, void* param, int flag)
         (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
         (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
         (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-        ObjHits_RefreshObjectState(obj);
+        ObjHits_RefreshObjectState((int)obj);
     }
 }
 
@@ -259,7 +257,6 @@ void bombplant_update(void* obj)
     extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
     extern void Sfx_PlayFromObject(void* obj, int sndId);
     extern void bombplant_explode(void* obj, void* stateEntry, void* state);
-    extern u32 ObjHits_RefreshObjectState();
     void* state;
     u8* entry;
     void* param;
@@ -347,7 +344,7 @@ void bombplant_update(void* obj)
             ((BombPlantState*)state)->growRate =
                 ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
             ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-            ObjHits_RefreshObjectState(obj);
+            ObjHits_RefreshObjectState((int)obj);
         }
         if (((GameObject*)obj)->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
         {

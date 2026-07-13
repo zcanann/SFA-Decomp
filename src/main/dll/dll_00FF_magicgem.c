@@ -6,6 +6,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
@@ -100,7 +101,6 @@ static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int p
 
 void MagicDust_update(GameObject* obj)
 {
-    extern u32 ObjHits_DisableObject();
     float fval;
     u8 flagsByte;
     int player;
@@ -307,7 +307,6 @@ LAB_80173f80:
 
 void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
 {
-    extern u32 ObjHits_DisableObject();
     short mode;
     u32 randVal;
     int ref;

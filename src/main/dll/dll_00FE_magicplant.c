@@ -25,6 +25,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
 #include "main/object.h"
@@ -95,7 +96,6 @@ extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
 extern s16 gMagicPlantGemDefIds[4];
 
-extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
 extern int objIsFrozen(int obj);
@@ -117,7 +117,8 @@ void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, Magic
     playerObj = (GameObject*)player;
     *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
 
-    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitPos[0], &hitPos[1], &hitPos[2]);
+    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, (u32*)&hitObj, &hitPos[0], &hitPos[1],
+                                                 &hitPos[2]);
     if ((hitKind != 0) && (hitObj != 0))
     {
         switch (hitKind)
@@ -260,8 +261,8 @@ void MagicPlant_update(int obj)
     *(u8*)&plant->objAnim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
     if (objIsFrozen(obj) != 0)
     {
-        hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObj, &hitA, &hitB, &hitPos[0], &hitPos[1],
-                                                     &hitPos[2]);
+        hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObj, &hitA, (u32*)&hitB, &hitPos[0],
+                                                     &hitPos[1], &hitPos[2]);
         if ((hitKind != 0) && (hitKind != 0x10))
         {
             hitPos[0] += playerMapOffsetX;

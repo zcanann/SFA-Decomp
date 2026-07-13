@@ -12,6 +12,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/track_dolphin_api.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
@@ -77,7 +78,6 @@ extern f32 lbl_803E24C0;
 extern char lbl_8031D2E8[];
 
 extern int isInWalkGroupOrPatch(f32* pos);
-extern void ObjHits_SyncObjectPosition(u8* obj);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
 extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
 extern u16 Objfsa_GetPatchGroupIdAtPoint(void* pos);
@@ -182,7 +182,7 @@ int trickyFn_8013b368(u8* obj, f32 vel, u8* state)
         ((GameObject*)obj)->anim.worldPosX = ((TrickyState*)state)->homePosX;
         ((GameObject*)obj)->anim.worldPosY = ((TrickyState*)state)->homePosY;
         ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
-        ObjHits_SyncObjectPosition(obj);
+        ObjHits_SyncObjectPosition((u32)obj);
     }
     target = *(u8**)&((TrickyState*)state)->targetPosPtr;
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), 0);
@@ -1332,7 +1332,7 @@ state_selected:
             ((GameObject*)obj)->anim.worldPosX = ((TrickyState*)state)->homePosX;
             ((GameObject*)obj)->anim.worldPosY = ((TrickyState*)state)->homePosY;
             ((GameObject*)obj)->anim.worldPosZ = ((TrickyState*)state)->homePosZ;
-            ObjHits_SyncObjectPosition(obj);
+            ObjHits_SyncObjectPosition((u32)obj);
         }
     }
     step = ((TrickyState*)state)->followPhase;

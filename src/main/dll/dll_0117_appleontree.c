@@ -558,7 +558,6 @@ int fn_8017DF34(GameObject* obj, int state, f32 y)
 #pragma inline_max_size(1)
 void AppleOnTree_update(int objArg)
 {
-    extern u64 ObjHits_DisableObject();
     float fa;
     int obj;
     int val;

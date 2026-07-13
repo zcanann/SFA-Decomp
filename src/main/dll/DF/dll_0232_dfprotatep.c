@@ -2,6 +2,7 @@
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
@@ -81,7 +82,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #define SFXPLAYER_OBJECT_FLAGS            0x6000
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern int ObjHits_GetPriorityHit(GameObject* obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 /* .sdata2 constant pool */
 static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
@@ -383,7 +383,7 @@ void sfxplayer_update(GameObject* obj)
                 {
                     hitObj = 0;
                     hitType = ObjHits_GetPriorityHit((GameObject*)(handles[i * SFXPLAYER_EFFECT_HANDLES_PER_RING + 1]),
-                                                     &hitObj, 0x0, 0x0);
+                                                     (int*)&hitObj, 0x0, 0x0);
                     if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET)
                     {
                         mode = (*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot);

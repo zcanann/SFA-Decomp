@@ -10,6 +10,7 @@
 #include "main/dll/moveLib.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/DIM/DIM2icicle.h"
@@ -70,7 +71,6 @@ extern u32 ModelLightStruct_free();
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
 #define DIMBOSS_ENVFX_B 0xdc
-extern u32 ObjHits_RegisterActiveHitVolumeObject();
 extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                         u32 p4, u32 p5, f32 scale);
 
@@ -523,7 +523,7 @@ void DIMboss_update(DIMbossObject* obj)
                 topState->introSinkHeight = lbl_803E4BD8;
             }
         }
-        ObjHits_RegisterActiveHitVolumeObject(obj);
+        ObjHits_RegisterActiveHitVolumeObject((int)obj);
         if (obj->updateInitialized == 0)
         {
             obj->anim.localPosX = config->spawnX;

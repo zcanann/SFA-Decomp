@@ -628,7 +628,6 @@ void dbegg_update(GameObject* obj)
     extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern f32 Vec_xzDistance(int, int);
     extern f32 PSVECMag(int);
-    extern void ObjHits_EnableObject(int);
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];
     extern int lbl_803E61C0;

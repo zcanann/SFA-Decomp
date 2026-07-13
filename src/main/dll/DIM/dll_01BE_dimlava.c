@@ -16,8 +16,7 @@
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
-
-extern u32 ObjHits_DisableObject();
+#include "main/objhits.h"
 
 void imicepillar_free(void);
 
@@ -64,7 +63,6 @@ typedef struct
 
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
-extern u32 ObjHits_EnableObject();
 extern f32 lbl_803E47F0;
 extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;

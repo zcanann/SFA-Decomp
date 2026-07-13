@@ -54,7 +54,6 @@
 #define DLLCE_PARTFX_SPRAY    0x343
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern void ObjHits_RegisterActiveHitVolumeObject();
-extern void ObjHits_EnableObject();
 
 int fn_8015E3A0(GameObject* obj, int state)
 {

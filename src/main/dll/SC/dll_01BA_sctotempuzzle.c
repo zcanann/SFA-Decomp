@@ -17,6 +17,7 @@
 #include "main/objlib.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
@@ -84,7 +85,6 @@ extern f32 lbl_803E5628;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 
-extern int ObjHits_GetPriorityHitWithPosition();
 extern void sc_totempuzzle_animEventCallback(int obj);
 
 int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleState* state)
@@ -238,8 +238,8 @@ void sc_totempuzzle_update(ScTotemPuzzleObject* obj)
     int countB, startB;
 
     state = obj->state;
-    hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitNx, &hitNy, &hitNz, &lightArgs[3],
-                                                 &lightArgs[4], &lightArgs[5]);
+    hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), (int*)&hitNx, (int*)&hitNy, (u32*)&hitNz,
+                                                 &lightArgs[3], &lightArgs[4], &lightArgs[5]);
     if ((obj->puzzleIndex == SC_TOTEMPUZZLE_CAP_INDEX) || (mainGetBit(GAMEBIT_SC_totempuzzle_running) != 0) ||
         (mainGetBit(0xc10) == 0))
     {

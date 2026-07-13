@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/dll/savegame.h"
@@ -165,7 +166,6 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
-extern int ObjHits_EnableObject();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */

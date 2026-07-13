@@ -63,7 +63,6 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define CCLIGHTFOOT_OBJFLAG_HIDDEN 0x4000
-extern int ObjHits_PollPriorityHitWithCooldown();
 
 int cclightfoot_getExtraSize(void)
 {
@@ -577,7 +576,7 @@ void cclightfoot_update(int obj)
     stateId = state->state;
     if (stateId >= CCLIGHTFOOT_STATE_GUARD && stateId <= CCLIGHTFOOT_STATE_RECOVER)
     {
-        if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), gCcLightfootHitCooldown, 0, hitPos) != 0)
+        if (ObjHits_PollPriorityHitWithCooldown((GameObject*)(obj), (f32*)gCcLightfootHitCooldown, 0, hitPos) != 0)
         {
             if (getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4690)
             {

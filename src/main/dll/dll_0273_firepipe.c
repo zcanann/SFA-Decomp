@@ -30,6 +30,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/objfx.h"
 #include "main/object.h"
@@ -50,9 +51,6 @@ extern void modelLightStruct_freeSlot(int p);
 extern void Obj_InsertIntoUpdateList(int obj);
 extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 
-extern void ObjHits_EnableObject(FirePipeObject* obj);
-extern void ObjHits_DisableObject(FirePipeObject* obj);
-extern int ObjHits_GetPriorityHit(GameObject* obj, int a, int b, int c);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
 extern int objIsFrozen(FirePipeObject* obj);

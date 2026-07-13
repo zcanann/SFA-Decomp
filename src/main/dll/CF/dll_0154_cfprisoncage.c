@@ -13,6 +13,7 @@
 
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/object_render_legacy.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
@@ -60,8 +61,6 @@ enum
 
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
-extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
-
 /* CFPrisonCage_SeqFn: lock interaction once the opened bit is set;
  * everything past the cage early-return is the SWITCH's logic - drain
  * the message queue (granting the opened bit on the keyed message),

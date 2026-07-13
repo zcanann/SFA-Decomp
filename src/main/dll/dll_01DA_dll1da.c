@@ -13,6 +13,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
@@ -51,8 +52,6 @@ extern f32 lbl_803E4AFC;
 extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
 
-extern int ObjHits_GetPriorityHit(GameObject* obj, void** outHitObj, int* outSphereIdx, u32* outHitVolume);
-extern void ObjHits_AddContactObject(int obj, int contactObj);
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
 
@@ -82,7 +81,7 @@ void dll_1DA_hitDetect(GameObject* obj)
     void* hi;
     void* player;
     f32 k;
-    int hit = ObjHits_GetPriorityHit(obj, &hi, NULL, NULL);
+    int hit = ObjHits_GetPriorityHit(obj, (int*)&hi, NULL, NULL);
     if (hit == 0xE)
     {
         player = Obj_GetPlayerObject();

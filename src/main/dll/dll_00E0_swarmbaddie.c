@@ -69,7 +69,6 @@ extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern int gSwarmBaddieLastCurvePoint;
-extern int ObjHits_GetPriorityHitWithPosition();
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
@@ -196,7 +195,8 @@ void SwarmBaddie_update(GameObject* obj)
 
     state = *(SwarmBaddieState**)&(obj)->extra;
     oldTarget = state->curve;
-    if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, &hitA, &hitE, &hitC, &hitF) != 0)
+    if (ObjHits_GetPriorityHitWithPosition(obj, &hitD, &hitB, (u32*)&hitA, (f32*)&hitE, (f32*)&hitC,
+                                           (f32*)&hitF) != 0)
     {
         state->hitVolumeEnvelope = lbl_803E26B0;
     }
