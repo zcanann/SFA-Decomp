@@ -218,11 +218,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
                 idx = 0x58;
             }
             {
-                u32 packed = (u32)(acc & 0xffff);
+                u32 packed = (u16)acc;
                 int curBit = state->bit;
                 int bo = curBit >> 3;
                 u8* dp;
-                packed <<= ((8 - (curBit & 7)) + sh16);
+                packed <<= (sh16 + (8 - (curBit & 7)));
                 dp = (u8*)state->instrs;
                 dp[bo] |= (packed >> 16) & 0xff;
                 dp = (u8*)state->instrs;
@@ -264,11 +264,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
                 idx = 0x58;
             }
             {
-                u32 packed = (u32)(acc & 0xffff);
+                u32 packed = (u16)acc;
                 int curBit = state->bit;
                 int bo = curBit >> 3;
                 u8* dp;
-                packed <<= ((8 - (curBit & 7)) + sh16);
+                packed <<= (sh16 + (8 - (curBit & 7)));
                 dp = (u8*)state->instrs;
                 dp[bo] |= (packed >> 16) & 0xff;
                 dp = (u8*)state->instrs;
@@ -312,11 +312,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             idx = 0x58;
         }
         {
-            u32 packed = (u32)(acc & 0xffff);
+            u32 packed = (u16)acc;
             int curBit = state->bit;
             int bo = curBit >> 3;
             u8* dp;
-            packed <<= ((8 - (curBit & 7)) + sh16);
+            packed <<= (sh16 + (8 - (curBit & 7)));
             dp = (u8*)state->instrs;
             dp[bo] |= (packed >> 16) & 0xff;
             dp = (u8*)state->instrs;
