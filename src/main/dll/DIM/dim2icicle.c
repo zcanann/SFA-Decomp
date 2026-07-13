@@ -14,6 +14,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"

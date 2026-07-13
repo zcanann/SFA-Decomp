@@ -54,6 +54,7 @@
 #include "main/shader_api.h"
 #include "main/dll/player_state.h"
 #include "main/dll/baddie_control_interface.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll/rom_curve_interface.h"

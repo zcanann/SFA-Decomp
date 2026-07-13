@@ -68,18 +68,6 @@ STATIC_ASSERT(offsetof(EffectInterface, freeObject) == 0x18);
 
 extern EffectInterface **gPartfxInterface;
 
-typedef void (*BoneParticleEffectSpawnFn)(void *obj, int effectId, void *extraArg,
-                                          int probability, void *boneSpawnData);
-
-typedef struct BoneParticleEffectInterface {
-  u8 pad00[0x0C];
-  BoneParticleEffectSpawnFn spawnEffect;
-} BoneParticleEffectInterface;
-
-STATIC_ASSERT(offsetof(BoneParticleEffectInterface, spawnEffect) == 0x0C);
-
-extern BoneParticleEffectInterface **gBoneParticleEffectInterface;
-
 typedef int (*ExpgfxSpawnEffectFn)(void *config, int preferredPoolIndex, int sourceId,
                                    int flags);
 typedef void (*ExpgfxUpdateFrameStateFn)(int sourceMode, int sourceId, int unused0,

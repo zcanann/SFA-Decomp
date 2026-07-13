@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_0018_BONEPARTICLEEFFECT_H_
 
 #include "ghidra_import.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/game_object.h"
 
 typedef u8 BoneFxJRow[16];

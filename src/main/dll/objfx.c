@@ -21,6 +21,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera.h"
 #include "main/camera_shake_api.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/expgfx_resource_api.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"

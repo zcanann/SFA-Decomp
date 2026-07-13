@@ -23,6 +23,7 @@
 #include "main/dll/dll_00C4_tricky.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/cmenu_item_table.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/skeetla_route_api.h"
 #include "main/dll/path_control_interface.h"

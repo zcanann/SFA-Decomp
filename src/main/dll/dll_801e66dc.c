@@ -13,6 +13,7 @@
  *     returns it (1-based); otherwise returns 0.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/boneparticleeffect_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_801e66dc.h"
 
