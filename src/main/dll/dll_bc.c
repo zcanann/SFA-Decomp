@@ -10,6 +10,7 @@
 #include "main/dll/dll_BC.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
+#include "main/dll/dll_02C0_front_api.h"
 
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {

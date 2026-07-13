@@ -64,8 +64,4 @@ STATIC_ASSERT(offsetof(HudTextures, tex134) == 0x134);
 STATIC_ASSERT(offsetof(HudTextures, unk13C) == 0x13C);
 STATIC_ASSERT(offsetof(HudTextures, tex170) == 0x170);
 
-
-/* extern-cleanup: consolidated prototypes */
-f32 gameTextFn_80019c00(void);
-
 #endif

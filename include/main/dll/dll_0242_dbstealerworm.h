@@ -29,6 +29,7 @@ int dbstealerworm_stateHandlerB03(int obj, int baddie);
 int dbstealerworm_stateHandlerB04(int obj, int baddie);
 int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie);
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie);
+void fn_80202EF0(GameObject* obj, int baddie);
 
 s16 dbstealerworm_setScale(int* obj);
 int dbstealerworm_getExtraSize(void);

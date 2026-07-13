@@ -13,6 +13,7 @@ void resetLotsOfRenderVars(void);
 void textureFn_800528bc(void);
 void gxColorFn_800523d0(void);
 void texRestructRefs(int mode);
+void Rcp_DisableBlurFilter(void);
 void Rcp_DisableDistortionFilter(void);
 void Rcp_SetSpiritVisionEnabled(u8 enabled);
 void fn_80053ED0(u32 bits);

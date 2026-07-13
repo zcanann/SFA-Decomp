@@ -32,6 +32,7 @@
 #include "main/dll/CAM/dll_0043_unk.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/dll_0047_cameramodeteststrength.h"
+#include "main/dll/dll_02C0_front_api.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/mm.h"

@@ -18,6 +18,7 @@
 #include "main/mm.h"
 #include "main/maketex_api.h"
 #include "main/dll/CAM/cutCam.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_transform.h"
 #include "main/obj_query.h"

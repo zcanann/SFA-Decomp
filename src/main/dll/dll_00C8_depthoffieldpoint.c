@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/dll/CAM/cutCam.h"
+#include "main/rcp_dolphin_api.h"
 
 #define DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN 0x4000
 

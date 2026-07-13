@@ -36,8 +36,4 @@ void camMoveFn_80104040(CameraObject *camera, GameObject *target);
 void camcontrol_updateModeSettings(int camera);
 void doNothing_80103660(int unused);
 
-
-/* extern-cleanup: consolidated prototypes */
-void Rcp_DisableBlurFilter(void);
-
 #endif /* MAIN_DLL_CAM_CUTCAM_H_ */

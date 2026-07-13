@@ -22,5 +22,6 @@ void subtitleUpdateAndDraw(int mode);
 void* gameTextGetPhrase(int textId, int phraseIndex);
 void gameTextResetCursor(int flags);
 void gameTextSetDrawFunc(void* drawFunc);
+f32 gameTextFn_80019c00(void);
 
 #endif /* MAIN_TEXTRENDER_API_H_ */

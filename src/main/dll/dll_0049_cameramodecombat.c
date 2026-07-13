@@ -5,6 +5,7 @@
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "main/pad.h"
