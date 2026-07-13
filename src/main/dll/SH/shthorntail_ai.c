@@ -16,6 +16,7 @@
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/vecmath.h"
 #include "main/frustum.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
@@ -32,7 +33,6 @@
 
 extern u32 gSHthorntailDataTables[][4];
 extern char sSHthorntailAngleYawDebug[];
-extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ;
 extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;

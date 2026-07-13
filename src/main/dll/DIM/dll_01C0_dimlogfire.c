@@ -14,6 +14,7 @@
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/dll/imanimspacecraftstate_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 #include "main/modellight_api.h"
@@ -48,7 +49,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMLOGFIRE_GROUP 0x31
 
 
-extern f32 timeDelta;
 extern void ModelLightStruct_free(void* light);
 extern void queueGlowRender(int* obj);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);

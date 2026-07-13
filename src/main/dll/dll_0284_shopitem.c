@@ -15,6 +15,7 @@
  * resetHitboxMode interaction bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
@@ -102,7 +103,6 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 #define GX_ALWAYS      7
 #define GX_AOP_AND     0
 
-extern f32 timeDelta;
 extern void forceAButtonIcon(int icon);
 
 extern void fn_801F4ECC(int obj, int sub);

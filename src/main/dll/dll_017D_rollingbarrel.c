@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/objfsa.h"
@@ -21,7 +22,6 @@ typedef struct
 
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 
-extern f32 timeDelta;
 extern s16 gRollingBarrelExplodingCount;
 extern int gRollingBarrelCurveInitPair;
 extern const f32 lbl_803E4468;

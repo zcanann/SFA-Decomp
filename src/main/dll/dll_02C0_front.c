@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/frame_timing.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
@@ -330,7 +331,6 @@ extern u16 lbl_803DD994;
 extern u16 gTitleScreenCreditTimer;
 extern u16 gTitleScreenCreditIndex;
 extern s16 gTitleScreenCreditDelay;
-extern f32 timeDelta;
 
 /* Reset the per-frame state group: latch showCredits = 1 and zero five
  * halfword/byte counters. */

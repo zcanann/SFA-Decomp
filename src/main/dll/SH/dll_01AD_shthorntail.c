@@ -10,6 +10,7 @@
 #include "main/dll/SH/SHthorntail.h"
 #include "main/effect_interfaces.h"
 #include "main/frustum.h"
+#include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/moveLib.h"
@@ -55,7 +56,6 @@ typedef struct SHthorntailTailSwingEffectScratch
 #define SHTHORNTAIL_STATE_TRIGGER0_SFX(tables)     ((u16*)((tables) + SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET))
 #define SHTHORNTAIL_STATE_TRIGGER7_SFX(tables)     ((u8*)((tables) + SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET))
 
-extern f32 timeDelta;
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;

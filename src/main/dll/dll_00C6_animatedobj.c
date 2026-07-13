@@ -3,9 +3,9 @@
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
+#include "main/frame_timing.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
-extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"

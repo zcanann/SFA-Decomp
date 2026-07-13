@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -41,7 +42,6 @@ extern f32 PSVECDotProduct(float*, float*);
 extern void PSVECCrossProduct(float*, float*, float*);
 extern void PSVECNormalize(float*, float*);
 extern u32 lbl_803DBCD0;
-extern f32 timeDelta;
 extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;
 extern f32 lbl_803E29A0;

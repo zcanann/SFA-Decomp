@@ -15,6 +15,7 @@
  * cfPrisonGuard_getPullRateMode: clamps the setup size param to [0,2].
  */
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -49,7 +50,6 @@ typedef struct PrisonGuardRotationWork
     f32 tz;
 } PrisonGuardRotationWork;
 
-extern f32 timeDelta;
 extern const f32 lbl_803E3BBC;
 extern const f32 lbl_803E3BC4;
 extern f32 lbl_803E3BC8;

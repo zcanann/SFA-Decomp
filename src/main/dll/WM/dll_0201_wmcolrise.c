@@ -11,6 +11,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/frame_timing.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
@@ -20,7 +21,6 @@
 #define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
 extern f32 lbl_803E5DC8; /* 1.0: render scale */
-extern f32 timeDelta;
 extern const f32 lbl_803E5DCC; /* 3.0: rider height to trigger the rise */
 extern f32 lbl_803E5DD0;       /* 20.0 */
 extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */

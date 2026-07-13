@@ -8,9 +8,9 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 
-extern f32 timeDelta;
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"

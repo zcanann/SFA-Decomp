@@ -21,6 +21,7 @@
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -64,7 +65,6 @@ typedef struct TumbleweedBushPlacement
 } TumbleweedBushPlacement;
 
 
-extern f32 timeDelta;
 extern f32 lbl_803E2F48;
 extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;

@@ -5,6 +5,7 @@
  */
 #include "main/vecmath.h"
 #include "main/dll/lavaball1bfstate_struct.h"
+#include "main/frame_timing.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
 
@@ -15,7 +16,6 @@
 #define DIMLAVABALL_SUBOBJ_ID 0x18d
 
 extern int Obj_AllocObjectSetup(int kind, int id);
-extern f32 timeDelta;
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"

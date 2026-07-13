@@ -20,6 +20,7 @@
  *     readout (dll_3F_updateTimerReadout).
  */
 #include "main/texture.h"
+#include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -124,7 +125,6 @@ extern void* gDebugFontTex0;
 extern void* debugLogEnd;
 extern int gDebugRecordCount;
 extern f32 lbl_803E2408;
-extern f32 timeDelta;
 extern u32 gDebugPrintOriginX;
 extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;

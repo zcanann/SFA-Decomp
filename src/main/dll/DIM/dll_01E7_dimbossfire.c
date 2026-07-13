@@ -7,6 +7,7 @@
  * sphere hitbox.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -25,8 +26,6 @@
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 #define MODEL_LIGHT_KIND_POINT 2
-extern f32 timeDelta;
-
 extern void ModelLightStruct_free(ModelLightStruct* light);
 
 extern f32 lbl_80325D68[];

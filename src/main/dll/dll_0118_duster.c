@@ -18,6 +18,7 @@
  * complete bit lives at activeGameBit + 0x64.
  */
 #include "main/obj_placement.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -98,7 +99,6 @@ extern f32 gDusterObjDriftSpinRate;
 extern f32 gDusterObjPickupRangeY;
 extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
-extern f32 timeDelta;
 
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);

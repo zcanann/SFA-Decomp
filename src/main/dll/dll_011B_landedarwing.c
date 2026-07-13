@@ -16,6 +16,7 @@
  * Hit state is packed into a one-byte flag word (LandedArwingHitFlagBits).
  */
 #include "main/obj_placement.h"
+#include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/player_api.h"
@@ -200,7 +201,6 @@ int landed_arwing_getExtraSize(void)
     return 0x1c;
 }
 
-extern f32 timeDelta;
 extern void objRenderModelAndHitVolumes(f32);
 void landed_arwing_free(GameObject* obj)
 {

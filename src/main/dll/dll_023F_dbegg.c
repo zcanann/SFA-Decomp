@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
@@ -118,7 +119,6 @@ extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
 extern void Obj_RemoveFromUpdateList(int obj);
-extern f32 timeDelta;
 
 typedef struct DbeggPlacement
 {

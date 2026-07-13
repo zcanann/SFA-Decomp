@@ -13,6 +13,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -44,7 +45,6 @@ extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
 extern u32* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
-extern f32 timeDelta;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4BEC;

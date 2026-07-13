@@ -13,6 +13,7 @@
  * opcodes that toggle the light and drive the model sway parameters.
  */
 #include "main/dll/dll_018C_mmshshrine.h"
+#include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
@@ -78,7 +79,6 @@ enum MMSHShrinePhase
     MMSH_SHRINE_PHASE_RESET = 5       /* clear flags, return to idle         */
 };
 
-extern f32 timeDelta;
 extern f32 lbl_803E4F40;
 extern f32 lbl_803E4F50;
 extern f32 lbl_803E4F54;

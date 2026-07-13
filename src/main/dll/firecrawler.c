@@ -24,6 +24,7 @@
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
 #include "main/camera_interface.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -150,7 +151,6 @@ extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
 extern u8 gSnowwormSeqIndexReset[4];
 extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
-extern f32 timeDelta;
 extern f32 lbl_803E2B2C;
 extern f32 lbl_803E2B28;
 extern f32 lbl_803E2B34;

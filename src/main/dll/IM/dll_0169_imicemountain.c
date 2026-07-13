@@ -14,6 +14,7 @@
  * of SCGameBitLatch records that mirror world state into game bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/render.h"
@@ -56,7 +57,6 @@ STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 extern f32 lbl_803E46E0;
 extern f32 lbl_803E46D8;
-extern f32 timeDelta;
 extern f32 lbl_803E46DC;
 extern void gameBitFn_800ea2e0(int idx);
 extern void fn_801AC108(GameObject* obj, int* extra);

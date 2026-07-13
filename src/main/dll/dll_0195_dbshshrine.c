@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
 #include "main/audio/audio_control_api.h"
@@ -56,7 +57,6 @@
 #define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
