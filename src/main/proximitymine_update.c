@@ -156,17 +156,16 @@ void ProximityMine_update(ProximityMineObject* obj)
         obj->height += state->verticalStep * timeDelta;
         if (state->targetObj != NULL)
         {
-            if (objUpdateOpacity((GameObject*)state->targetObj) != 0)
+            if (objUpdateOpacity(state->targetObj) != 0)
             {
-                ObjPath_GetPointWorldPosition((GameObject*)state->targetObj, obj->pathIndex, &obj->posX, &obj->posY,
-                                               &obj->posZ,
-                                              0);
+                ObjPath_GetPointWorldPosition(state->targetObj, obj->pathIndex, &obj->posX, &obj->posY, &obj->posZ,
+                                               0);
             }
             else
             {
-                obj->posX = ((ProximityMineObject*)state->targetObj)->posX;
-                obj->posY = ((ProximityMineObject*)state->targetObj)->posY;
-                obj->posZ = ((ProximityMineObject*)state->targetObj)->posZ;
+                obj->posX = state->targetObj->anim.localPosX;
+                obj->posY = state->targetObj->anim.localPosY;
+                obj->posZ = state->targetObj->anim.localPosZ;
             }
         }
         if (timerCountDown(&state->lifespanTimer) != 0)

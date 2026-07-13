@@ -6,6 +6,8 @@
 
 #define PROXIMITYMINE_HIT_VOLUME_SLOT 13
 
+struct GameObject;
+
 /* Runtime state of a proximity mine (ProximityMineState.mode). */
 typedef enum ProximityMineMode {
   PROXIMITYMINE_MODE_LAUNCHING = -1, /* compute launch velocity then fall through to flight */
@@ -30,7 +32,7 @@ typedef struct ProximityMineEffect {
 } ProximityMineEffect;
 
 typedef struct ProximityMineState {
-  void *targetObj;
+  struct GameObject *targetObj;
   ProximityMineEffect *effectHandle;
   f32 triggerDistance;
   f32 verticalStep;
@@ -81,7 +83,7 @@ typedef struct ProximityMineObject {
   u8 unkAC[0xc];
   ProximityMineState *state;
   u8 unkBC[8];
-  void *pendingTarget;
+  struct GameObject *pendingTarget;
   u8 unkC8[0x2c];
   int pathIndex;
 } ProximityMineObject;
