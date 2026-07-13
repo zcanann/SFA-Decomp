@@ -10,6 +10,7 @@
  * skips render).
  */
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -41,7 +42,6 @@ extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
 
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

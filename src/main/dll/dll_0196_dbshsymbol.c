@@ -12,6 +12,7 @@
  * sfx, and reports completion once spinProgress reaches DBSH_SPIN_DONE.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/dbshsymbol_types.h"
@@ -42,7 +43,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 extern u8 gDbShSymbolScuffPlayed;
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);

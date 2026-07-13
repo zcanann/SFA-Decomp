@@ -1,4 +1,5 @@
 #include "main/obj_placement.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -80,7 +81,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #define SFXPLAYER_OBJECT_FLAGS            0x6000
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int ObjHits_GetPriorityHit(GameObject* obj, u32* outHitObject, int* outSphereIndex, u32* outHitVolume);
 
 /* .sdata2 constant pool */

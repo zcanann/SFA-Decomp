@@ -1,5 +1,6 @@
 /* DLL 0x01B9 (sccloudrunnera) — SC CloudRunner A level control [0x801DCC70-0x801DD170). */
 #include "main/game_object.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
@@ -8,7 +9,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */

@@ -16,6 +16,7 @@
  * leaves object group 14.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -108,7 +109,6 @@ extern f32 lbl_803E3674;
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 void DoorF4_hitDetect(void)
 {

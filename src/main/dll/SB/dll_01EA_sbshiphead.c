@@ -9,6 +9,7 @@
  * vtable (slots 0x20/0x28/0x2c) and through DBprotection_getCameraState.
  */
 #include "main/obj_placement.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -39,7 +40,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int DBprotection_getCameraState(u32 g);
 extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);

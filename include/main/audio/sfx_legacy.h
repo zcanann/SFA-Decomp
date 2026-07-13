@@ -2,8 +2,8 @@
 #define MAIN_AUDIO_SFX_LEGACY_H_
 
 #include "types.h"
+#include "main/audio/sfx_play_legacy_api.h"
 
-void Sfx_PlayFromObject(int obj, int sfxId);
 void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 void Sfx_StopFromObject(int obj, int sfxId);
 int Sfx_IsPlayingFromObject(int obj, u16 sfxId);

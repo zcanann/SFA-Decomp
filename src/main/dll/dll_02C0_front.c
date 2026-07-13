@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/audio.h"
 #include "main/model_engine.h"
@@ -290,7 +291,6 @@ extern f32 lbl_803E2350;
 extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
-extern void Sfx_PlayFromObject(int obj, int sfxId);
 
 /* Set up the title-screen translation matrix at gTitleScreenMtx and derive
  * the three normalized cursor positions from the supplied (a, b) coordinates. */

@@ -19,6 +19,7 @@
  * here only so the descriptor tables can take their addresses.
  */
 #include "main/objanim.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -102,7 +103,7 @@ int fn_8015E3A0(GameObject* obj, int state)
         ((GroundBaddieState*)state)->baddie.eventFlags =
             ((GroundBaddieState*)state)->baddie.eventFlags & ~BADDIE_EVENT_FOOTSTEP;
         *(u8*)(child + 0x8) = (u8)(*(u8*)(child + 0x8) | 0x1);
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_rach_bite_266);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_bite_266);
     }
     return 0;
 }
@@ -142,25 +143,25 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_95);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_95);
             }
         }
         else
         {
             if (((GameObject*)player)->anim.seqId != 0)
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_wp_stftest122_1f2);
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXTRIG_swd);
+                Sfx_PlayFromObject((int)obj, SFXTRIG_swd);
             }
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_boar1_c_267);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_267);
     }
     *(s8*)&state->baddie.stateTag = 3;
     state->baddie.moveSpeed = lbl_803E2DD4;
@@ -388,7 +389,6 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 
 int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DCC;
     extern f32 lbl_803E2DD0;
@@ -664,7 +664,6 @@ void fn_8015ED1C(int obj, int state, int target)
 #pragma opt_common_subs off
 void dll_CE_func0B(GameObject* obj, int v)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     GroundBaddieState* sub = obj->extra;
     GroundBaddieState* sub2 = (GroundBaddieState*)(int)sub;
 
@@ -737,7 +736,6 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
 
 void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void fn_8015ED1C(int p1, int p2, int p3);
     extern void fn_8015EB6C(GameObject* obj, int p2, int p3);
     extern void fn_8015EA48(GameObject * obj, u8 * p);
