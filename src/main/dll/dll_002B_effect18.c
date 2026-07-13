@@ -17,6 +17,32 @@ extern f32 gEffect18SineValueA;
 extern f32 gEffect18Progress0;
 extern f32 gEffect18Progress1;
 
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80311038 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect18_initialise,
+    (ObjectDescriptorCallback)Effect18_release,
+    0,
+    (ObjectDescriptorCallback)Effect18_func03_nop,
+    (ObjectDescriptorCallback)Effect18_func04,
+    (ObjectDescriptorCallback)Effect18_func05,
+};
+
 int Effect18_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     void* extraArgs)
 {
