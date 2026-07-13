@@ -25,7 +25,7 @@
 #include "main/obj_placement.h"
 #include "main/resource.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll1fbsetup_struct.h"

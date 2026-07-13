@@ -22,7 +22,7 @@ STATIC_ASSERT(sizeof(WmObjCreatorPlacement) == 0x24);
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"

@@ -8,7 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/dll/trickycurve_state.h"
 #include "main/mapEvent.h"
 #include "main/dll/sfxplayer.h"

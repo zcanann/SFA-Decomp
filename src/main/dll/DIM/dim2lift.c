@@ -23,7 +23,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/pad.h"
 #include "main/player_control_interface.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 
 #define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10

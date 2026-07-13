@@ -50,7 +50,7 @@
 #include "main/camera.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/texture.h"
 #include "main/vecmath_distance_api.h"
 #include "main/rcp_dolphin_api.h"

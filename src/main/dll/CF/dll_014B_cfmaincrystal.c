@@ -11,7 +11,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/camera.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

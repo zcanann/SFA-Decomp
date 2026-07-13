@@ -11,7 +11,7 @@
  * gates model-state shadow fade-out on the active trigger sequence.
  */
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"

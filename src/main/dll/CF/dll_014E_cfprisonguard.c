@@ -12,7 +12,7 @@
 #include "main/game_object.h"
 #include "main/object_update_list.h"
 #include "main/dll/player_api.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objseq.h"

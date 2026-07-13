@@ -12,7 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"

@@ -16,7 +16,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/texture.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/gamebit_ids.h"
 
 typedef struct DFSHLaserBeamConfig

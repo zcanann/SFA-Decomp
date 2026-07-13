@@ -16,7 +16,7 @@
  *   list), any other id is appended to the deferred-message queue.
  */
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/VF/vf_shared.h"
 

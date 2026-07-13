@@ -7,7 +7,7 @@
 #include "main/game_object.h"
 #include "main/dll/CF/dll_0153_cfperch.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 

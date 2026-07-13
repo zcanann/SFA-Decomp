@@ -24,7 +24,7 @@
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/frame_timing.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT       0x468

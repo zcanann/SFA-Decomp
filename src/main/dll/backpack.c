@@ -18,7 +18,7 @@
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
-#include "main/objlib.h"
+#include "main/obj_message.h"
 #include "main/player_control_interface.h"
 #include "main/frame_timing.h"
 
