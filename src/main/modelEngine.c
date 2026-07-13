@@ -2,6 +2,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_00D7_kaldachompspit_api.h"
+#include "main/dll/dll_00D8_pinponspike_api.h"
+#include "main/dll/dll_00D9_pollen_api.h"
+#include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
@@ -128,8 +132,7 @@ extern ResourceDescriptor gIMMultiSeqObjDescriptor, gIMSpaceRingGenObjDescriptor
     gIMSpaceThrusterObjDescriptor, gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor,
     gInfoPointObjDescriptor;
 extern ResourceDescriptor gInfoTextObjDescriptor, gInvHitObjDescriptor, gInvisibleHitSwitchObjDescriptor,
-    gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKaldaChompMeObjDescriptor, gKaldaChompSpitObjDescriptor,
-    gKtFallingrocksObjDescriptor;
+    gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKaldaChompMeObjDescriptor, gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKtRexObjDescriptor, gKytesMumObjDescriptor, gLFXEmitterObjDescriptor,
     gLINKBLevControlObjDescriptor;
@@ -147,11 +150,10 @@ extern ResourceDescriptor gMagicPlantObjDescriptor, gMikaBombObjDescriptor, gMik
     gMoonSeedBushObjDescriptor, gMoonSeedPlantingSpotObjDescriptor, gNWSH_levconObjDescriptor, gNW_animiceObjDescriptor,
     gNW_geyserObjDescriptor;
 extern ResourceDescriptor gNW_iceObjDescriptor, gNW_levcontrolObjDescriptor, gNW_mammothObjDescriptor,
-    gNW_trickyObjDescriptor, gPaymentKioskObjDescriptor, gPinPonSpikeObjDescriptor, gPlatform1ObjDescriptor,
-    gPointLightObjDescriptor;
-extern ResourceDescriptor gPollenFragmentObjDescriptor, gPollenObjDescriptor, gPortalSpellDoorObjDescriptor,
-    gPressureSwitchFBObjDescriptor, gPressureSwitchObjDescriptor, gProjectedLightObjDescriptor,
-    gProjectileSwitchObjDescriptor, gProximityMineObjDescriptor;
+    gNW_trickyObjDescriptor, gPaymentKioskObjDescriptor, gPlatform1ObjDescriptor, gPointLightObjDescriptor;
+extern ResourceDescriptor gPortalSpellDoorObjDescriptor, gPressureSwitchFBObjDescriptor,
+    gPressureSwitchObjDescriptor, gProjectedLightObjDescriptor, gProjectileSwitchObjDescriptor,
+    gProximityMineObjDescriptor;
 extern ResourceDescriptor gPushableObjDescriptor, gReStartMarkerObjDescriptor, gRingObjDescriptor,
     gRollingBarrelObjDescriptor, gSB_CageKyteObjDescriptor, gSB_CannonBallObjDescriptor, gSB_CloudBallObjDescriptor,
     gSB_CloudRunnerObjDescriptor;
@@ -1108,10 +1110,10 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSkeetlaWallObjDescriptor,
     &gKaldaChomObjDescriptor,
     &gKaldaChompMeObjDescriptor,
-    &gKaldaChompSpitObjDescriptor,
-    &gPinPonSpikeObjDescriptor,
-    &gPollenObjDescriptor,
-    &gPollenFragmentObjDescriptor,
+    (ResourceDescriptor*)&gKaldaChompSpitObjDescriptor,
+    (ResourceDescriptor*)&gPinPonSpikeObjDescriptor,
+    (ResourceDescriptor*)&gPollenObjDescriptor,
+    (ResourceDescriptor*)&gPollenFragmentObjDescriptor,
     &gMikaBombObjDescriptor,
     &gMikaBombShadowObjDescriptor,
     &gGCbaddieShieldObjDescriptor,
