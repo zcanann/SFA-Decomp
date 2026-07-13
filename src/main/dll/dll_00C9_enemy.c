@@ -26,7 +26,6 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/enemy_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"

@@ -3,7 +3,58 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/objanim_update.h"
+
+/* obj+0xB8 extra record for the generic enemy family. */
+typedef struct EnemyState {
+    u8 unk0[0x4 - 0x0];
+    u32 flags;
+    u8 unk8[0x29C - 0x8];
+    GameObject* trackedObj;
+    u8 unk2A0[0x2A8 - 0x2A0];
+    f32 aggroRange; /* engagement range derived from placement data */
+    f32 sightRange; /* patrol/detection range used by curve setup */
+    s16 current;    /* numerator used by enemy_getHealthFraction */
+    u16 max;        /* spawn-time denominator */
+    s16 unk2B4;
+    s16 unk2B6;
+    u8 unk2B8[0x2D8 - 0x2B8];
+    f32 freezeRecoverTimer;
+    u32 controlFlags;
+    int initialFlags;
+    u32 flags2E4;
+    int flags2E8;
+    s16 unk2EC;
+    u8 unk2EE[0x2F2 - 0x2EE];
+    u8 curveIndex;
+    u8 curveParamA;
+    u8 curveParamB;
+    u8 unk2F5[0x2F8 - 0x2F5];
+    s16 unk2F8;
+    u8 unk2FA[0x2FC - 0x2FA];
+    f32 health;
+    f32 animDeltaScale;
+    f32 unk304;
+    f32 unk308;
+    f32 particleScale;
+    f32 unk310;
+    u8 unk314[0x324 - 0x314];
+    f32 unk324;
+    f32 unk328;
+    f32 unk32C;
+    f32 unk330;
+    f32 intervalTimer;
+    s16 phaseAngle;
+    u8 unk33A[0x340 - 0x33A];
+    int lastHitObject;
+    u8 unk344[0x368 - 0x344];
+    int modelLight;
+    int tailSimHandle;
+    u8 unk370[0x374 - 0x370];
+} EnemyState;
+
+STATIC_ASSERT(offsetof(EnemyState, aggroRange) == 0x2A8);
 
 void objAnimFn_8014a9f0(short* obj, int state);
 void FUN_8014ab58(u64 param_1, double param_2, double param_3, double param_4, double param_5, double param_6,
