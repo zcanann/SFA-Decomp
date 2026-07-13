@@ -89,8 +89,6 @@ extern u32 FUN_80294ccc();
 extern void modelLightStruct_freeSlot(void* state);
 extern int modelLightStruct_createPointLight(int obj, int red, int green, int blue, int alpha);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int mode, int count);
-extern void firefly_animEventCallback(void);
-extern void fn_801F4C28(int obj, void* state);
 extern u32 DAT_801f5cc4;
 extern u32 DAT_802c2c68;
 extern u32 DAT_802c2c6c;
@@ -235,7 +233,6 @@ extern f32 FLOAT_803e6d74;
 extern f32 FLOAT_803e6d78;
 extern f32 FLOAT_803e6d7c;
 extern f32 FLOAT_803e6d80;
-extern void fn_801F4D54(int obj, int state);
 extern f32 lbl_803E5EA8;
 extern f32 lbl_803E5EB4;
 extern f64 lbl_803E5ED0;
@@ -264,11 +261,5 @@ extern f32 lbl_803E5F9C;
 extern f32 lbl_803E6090;
 extern f32 lbl_803E60A4;
 extern f32 lbl_803E609C;
-
-/* Intra-family forward declarations (from the original per-unit header). */
-void FireFlyFn_801f4f88(GameObject* obj);
-void firefly_free(GameObject* obj);
-void firefly_update(int obj);
-void firefly_init(GameObject* obj, int def);
 
 #endif /* MAIN_DLL_VF_VF_SHARED_H_ */

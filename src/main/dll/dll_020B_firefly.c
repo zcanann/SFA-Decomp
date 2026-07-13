@@ -21,6 +21,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_020B_firefly.h"
+#include "main/dll/LGT/LGTcontrollight.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
 
@@ -117,7 +118,7 @@ void FireFlyFn_801f4f88(GameObject* obj)
         }
         else
         {
-            fn_801F4D54((int)obj, (int)state);
+            fn_801F4D54((int)obj, (u8*)state);
         }
         state->splineX[0] = state->splineX[1];
         state->splineY[0] = state->splineY[1];
@@ -307,7 +308,7 @@ void firefly_init(GameObject* obj, int def)
 
     state = (obj)->extra;
     mapData = (FireFlyMapData*)def;
-    fn_801F4C28((int)obj, state);
+    fn_801F4C28((u8*)obj, (u8*)state);
     (obj)->anim.alpha = 0;
     (obj)->animEventCallback = firefly_animEventCallback;
     ObjMsg_AllocQueue(obj, 1);
