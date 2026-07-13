@@ -10,8 +10,6 @@ void doNothing_afterRenderObject(void);
 void doNothing_beforeRenderObject(void);
 void drawViewFinderHud(void);
 void fn_8001FE90(void);
-void fn_8004D6D8(void);
-void fn_80050F2C(void);
 u8 fn_8012DDA4(void);
 void init(void);
 u32 isRomListLoading(void);

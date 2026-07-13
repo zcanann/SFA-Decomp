@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/pad.h"
 #include "main/pi_frame_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/camera_interface.h"
@@ -20,7 +21,6 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #define GX_AOP_AND        0
 #define GX_BL_ZERO        0
