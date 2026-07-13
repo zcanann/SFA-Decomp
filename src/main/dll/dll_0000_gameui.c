@@ -3600,6 +3600,7 @@ void pauseMenuAnimateCarousel(void)
     u8 k;
     u8 last;
     u8* player;
+    u8 count;
     s16 step;
     int kk;
     s16 delta;
@@ -3608,14 +3609,14 @@ void pauseMenuAnimateCarousel(void)
     ObjAnimEventList animEvents;
 
     player = (u8*)Obj_GetPlayerObject();
-    step = 5;
+    count = 5;
     objIsCurModelNotZero();
     last = 5;
     k = 1;
     if ((u8)pauseMenuIsFox() == 0)
     {
         k = 4;
-        step = 2;
+        count = 2;
     }
     if (player != NULL)
     {
@@ -3628,7 +3629,7 @@ void pauseMenuAnimateCarousel(void)
     }
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 || flag == 0)
     {
-        step -= 1;
+        count -= 1;
         last = 4;
     }
     {
@@ -3636,7 +3637,8 @@ void pauseMenuAnimateCarousel(void)
         int neg;
         cur = gPauseMenuSwivelAngle;
         neg = -lbl_803DBA64;
-        delta = neg * (step = 0x10000 / (u8)step) - cur;
+        step = 0x10000 / count;
+        delta = neg * step - cur;
     }
     if (delta > 0x8000)
     {
