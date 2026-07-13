@@ -33,7 +33,7 @@ extern u8 gCamTitleCurPose;
 extern u8 gCamTitlePrevPose;
 extern u8 gCamTitleStartPosePending;
 extern f32 titleScreenCamProgress;
-extern CameraModeTitlePose gCamTitleStartPose;
+CameraModeTitlePose gCamTitleStartPose;
 extern u8 dll_19_func03_nop[];
 extern u8 dll_19_func04_nop[];
 extern u8 dll_19_func05[];

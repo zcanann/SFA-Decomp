@@ -30,7 +30,7 @@ typedef struct AllocVoice
 #define AV_PRIO(i)               (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
 #define AV_FXFLAG(i)             (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
 
-extern VoiceIdSlot voiceFreeListSlots[];
+VoiceIdSlot voiceFreeListSlots[64];
 extern u8* synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 synthIdleWaitActive;

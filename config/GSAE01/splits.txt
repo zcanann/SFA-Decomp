@@ -936,6 +936,7 @@ main/dll/dll_0056_cameramodearwing.c:
 main/dll/dll_0057_cameramodetitle.c:
 	.text       start:0x801115E4 end:0x80111D14
 	.data       start:0x80319FB8 end:0x8031A0E0
+	.bss        start:0x803A4420 end:0x803A4438
 	.sdata2     start:0x803E1BE0 end:0x803E1C18
 
 main/dll/dll_0019_dll19func0.c:
@@ -3567,6 +3568,7 @@ main/audio/voice_alloc.c:
 	extab       start:0x80005968 end:0x80005970
 	extabindex  start:0x800061AC end:0x800061B8
 	.text       start:0x8027975C end:0x80279C7C
+	.bss        start:0x803CB190 end:0x803CB290
 
 main/audio/voice_manage.c:
 	extab       start:0x80005970 end:0x80005988
@@ -3910,6 +3912,7 @@ dolphin/TRK_MINNOW_DOLPHIN/targcont.c:
 
 dolphin/TRK_MINNOW_DOLPHIN/target_options.c:
 	.text       start:0x8028D34C end:0x8028D368
+	.bss        start:0x803DAAB0 end:0x803DAAB8
 
 dolphin/TRK_MINNOW_DOLPHIN/mslsupp.c:
 	.text       start:0x8028D368 end:0x8028D4A8
