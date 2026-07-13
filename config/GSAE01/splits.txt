@@ -1697,6 +1697,7 @@ main/dll/dll_015F_attractor.c:
 
 main/dll/CF/dll_0162_cfmagicwall.c:
 	.text       start:0x801A4380 end:0x801A4524
+	.sdata2     start:0x803E43D8 end:0x803E43E0
 	.sdata2     start:0x803E43E0 end:0x803E43E8
 
 main/dll/CF/dll_0164_cflevelcontrol.c:
@@ -1719,6 +1720,7 @@ main/dll/MMP/dll_017E_mmplevelcontrol.c:
 main/dll/dll_017F_moonseedbush.c:
 	.text       start:0x801A6C28 end:0x801A6F4C
 	.data       start:0x80323198 end:0x803231D0
+	.sdata2     start:0x803E44D0 end:0x803E44E0
 	.sdata2     start:0x803E44E0 end:0x803E44E8
 
 main/dll/MMP/dll_0180_mmpasteroidre.c:
