@@ -5,6 +5,7 @@
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
@@ -270,7 +271,6 @@ extern void GXCopyTex(void* dest, GXBool clear);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 extern void GXInvalidateTexAll(void);
 extern float __fabsf(float);
-extern float fn_802943F4(float x);
 extern float floor(float);
 extern void fn_80069EB8();
 extern int getHudHiddenFrameCount(void);

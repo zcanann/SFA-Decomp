@@ -34,7 +34,6 @@
 #include "main/audio/music_api.h"
 #include "main/gameloop_api.h"
 #include "main/lightmap_api.h"
-#include "main/pad_api.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_80295318_shared.h"
@@ -6231,9 +6230,9 @@ int playerState1D(int obj, int state, f32 fv)
         break;
     }
     prev = *(u8*)&((PlayerState*)inner)->stickDirection;
-    t = (f32)padGetStickX(0) / lbl_803E7FA8;
+    t = (f32)padGetStickXS8(0) / lbl_803E7FA8;
     xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
-    t2 = (f32)padGetStickY(0) / lbl_803E7FA8;
+    t2 = (f32)padGetStickYS8(0) / lbl_803E7FA8;
     yc = (t2 < lbl_803E7ECC) ? lbl_803E7ECC : ((t2 > lbl_803E7EE0) ? lbl_803E7EE0 : t2);
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0)
     {
@@ -10676,8 +10675,8 @@ void playerDoControls(GameObject* obj, int state, f32 fv)
     if ((((PlayerState*)state)->flags360 & 0x200000) == 0u && ((PlayerState*)state)->characterId != -1 &&
         (c = ((PlayerState*)state)->curAnimId) != 0x44 && c != 0x4e)
     {
-        ((PlayerState*)state)->stickX = padGetStickX(0);
-        ((PlayerState*)state)->stickY = padGetStickY(0);
+        ((PlayerState*)state)->stickX = padGetStickXS8(0);
+        ((PlayerState*)state)->stickY = padGetStickYS8(0);
         ((PlayerState*)state)->buttonsHeld = (u16)getButtonsHeld(0);
         ((PlayerState*)state)->buttonsJustPressed = (u16)getButtonsJustPressed(0);
         ((PlayerState*)state)->buttonsJustPressedIfNotBusy = (u16)getButtonsJustPressedIfNotBusy(0);

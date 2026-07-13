@@ -31,7 +31,6 @@ extern void fn_80054F74(int obj, float* pos);
 
 extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
-extern float fn_802943F4(float x);
 extern int playerIsDisguised(int obj);
 
 #define OBJGROUP_COUNT                0x54

@@ -370,7 +370,6 @@ extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
 extern void fn_80296EB4(u8* p1, u8* p2);
 extern f32 fn_802925C4(f32 x, f32 y);
-extern float fn_802943F4(float x);
 extern float floor(float x);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
 extern void GXClearVtxDesc(void);

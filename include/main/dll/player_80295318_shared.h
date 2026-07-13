@@ -33,9 +33,11 @@
 #include "main/dll/path_control_interface.h"
 #include "main/frame_timing.h"
 #include "main/byte_flags.h"
+#include "main/pad.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTransform.h"
+#include "string.h"
 
 /* external symbol declarations */
 extern void fn_8005D108();
@@ -492,8 +494,6 @@ extern s16 lbl_803DC748;
 extern f32 lbl_803E813C;
 extern void fn_8014C63C(int* obj);
 extern void fn_8014C66C(int* obj, int x);
-extern s8 padGetStickX(int channel);
-extern s8 padGetStickY(int channel);
 extern void fn_8011F34C(int a);
 extern f32 lbl_803E7F34;
 extern f32 lbl_803E8238;
@@ -524,7 +524,6 @@ extern f32 lbl_803E7F2C;
 extern f32 lbl_803E7F40;
 extern f32 lbl_803E805C;
 extern s16 lbl_80333110[];
-extern u16 getButtons_80014dd8(int port);
 extern f32 lbl_803E7F20;
 extern f32 lbl_803E7F14;
 extern f32 lbl_803E7F18;
@@ -541,7 +540,6 @@ extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
 extern f32 lbl_803E8070;
 extern f32 lbl_803E7F30;
-extern void* memcpy(void* dst, const void* src, u32 size);
 extern f32 lbl_803E800C;
 extern f32 lbl_803E8138;
 extern f32 lbl_803E8050;
@@ -607,7 +605,6 @@ extern f32 lbl_803E7ED0;
 extern f32 lbl_803E80D4;
 extern f32 lbl_803E80D8;
 extern f32 lbl_803E80AC;
-extern f32 fn_802943F4(f32 x);
 extern f32 lbl_803E7E80;
 extern f32 lbl_803E7E84;
 extern f32 lbl_803E7E88;

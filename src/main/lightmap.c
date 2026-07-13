@@ -63,7 +63,6 @@ extern f32 fn_80293AC4(int v);
 extern f32 fn_80293D0C(int v);
 extern f32 fn_80292248(f32 v);
 extern float floor(float x);
-extern float fn_802943F4(float x);
 
 #pragma scheduling off
 #pragma peephole off
