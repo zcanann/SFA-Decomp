@@ -7,7 +7,6 @@
  * pickup object on break) and grants the placement's game bit on destruction.
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"

@@ -18,7 +18,6 @@
  *
  * TU: 0x8016B230-0x8016B2E0.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"

@@ -8,7 +8,6 @@
  * curve_render just forwards a render fn when visible. The remaining callbacks
  * (getExtraSize/getObjectTypeId/func11/setScale/free) are stubs.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_0125_curve_api.h"
 #include "main/objlib.h"
 

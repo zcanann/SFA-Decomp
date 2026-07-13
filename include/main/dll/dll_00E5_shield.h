@@ -1,7 +1,6 @@
 #ifndef MAIN_DLL_DLL_00E5_SHIELD_H_
 #define MAIN_DLL_DLL_00E5_SHIELD_H_
 
-#include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"

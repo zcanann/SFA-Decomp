@@ -1,7 +1,6 @@
 #ifndef MAIN_DLL_DLL_00F7_DLLF7_H_
 #define MAIN_DLL_DLL_00F7_DLLF7_H_
 
-#include "main/dll/xyzanimator.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

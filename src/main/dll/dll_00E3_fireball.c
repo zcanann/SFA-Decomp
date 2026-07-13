@@ -11,7 +11,6 @@
  * stateFlags: bit0 = launch position latched, bit1 = (unused here),
  * bit3 = disabled/no-update, bit4 = affected by gravity+ground snap.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"

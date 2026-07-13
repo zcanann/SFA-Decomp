@@ -9,7 +9,6 @@
  * bit. The retail TU also owns the gBaddieInterestPObjDescriptor table.
  */
 
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/object_render_legacy.h"
 #include "main/sky_interface.h"

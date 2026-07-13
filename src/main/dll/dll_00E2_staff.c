@@ -19,7 +19,6 @@
  * checkpoint4. The bodies of those neighbours live in their own DLL units; the
  * descriptor tables and shared lbl_ data live here.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/checkpoint4.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"

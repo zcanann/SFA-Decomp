@@ -7,7 +7,6 @@
  * frees itself once the counter runs out; render draws the model while
  * obj->unkF4 == 0.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/game_object.h"
 #include "main/object.h"

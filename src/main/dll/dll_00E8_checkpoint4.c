@@ -11,7 +11,6 @@
  * setuppoint / collectible / magicgem siblings (their callbacks live in their
  * own DLLs and are referenced here as externs).
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/checkpoint4.h"
 #include "main/objprint.h"
 #include "main/object_render.h"

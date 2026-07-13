@@ -1,5 +1,4 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/checkpoint4.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"

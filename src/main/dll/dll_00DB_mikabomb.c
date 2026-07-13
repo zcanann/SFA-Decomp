@@ -8,7 +8,6 @@
  * kicks a camera shake and spawns its explosion effect before freeing.
  * Resource 0x5b is acquired at init.
  */
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath.h"
