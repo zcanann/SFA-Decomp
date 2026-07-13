@@ -6,7 +6,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
-#include "main/dll/player_80295318_shared.h"
 #include "main/dll/player_api.h"
 #include "main/dll/player_data.h"
 #include "main/dll/player_state.h"

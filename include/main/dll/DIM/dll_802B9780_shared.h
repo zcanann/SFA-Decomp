@@ -11,7 +11,6 @@
 #include "main/vecmath.h"
 #include "main/newclouds.h"
 #include "main/unknown/autos/placeholder_80295318.h"
-#include "main/dll/player_80295318_shared.h"
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 

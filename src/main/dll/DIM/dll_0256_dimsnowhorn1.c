@@ -7,12 +7,18 @@
  * the full per-frame tick.
  */
 #include "main/dll/DIM/dll_802B9780_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_legacy.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "main/gamebits.h"
+#include "main/game_ui_interface.h"
+#include "main/mapEventTypes.h"
 #include "main/object_render_legacy.h"
 #include "main/pad_api.h"
 #include "main/object_api.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
