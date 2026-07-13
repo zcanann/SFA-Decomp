@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
+#include "main/dll/dll_00E5_shield_api.h"
 
 void Shield_init(int* obj, void* initData);
 

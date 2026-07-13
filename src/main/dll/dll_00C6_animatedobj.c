@@ -2,6 +2,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
+#include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -290,7 +291,6 @@ void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2);
 
 void restartmarker_init(int* obj, int* state);
 
-void staffFn_80170380(int* obj, int cmd);
 
 void Shield_init(int* obj, void* initData);
 

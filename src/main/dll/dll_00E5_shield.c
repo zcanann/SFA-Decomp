@@ -143,25 +143,24 @@ void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void Shield_free(GameObject* obj);
 int Shield_getExtraSize(void);
 int Shield_getObjectTypeId(void);
-void staffFn_80170380(int* obj, int cmd);
 
-int* fn_801702D4(int* obj, f32 fv)
+GameObject* fn_801702D4(GameObject* obj, f32 fv)
 {
     void* alloc;
-    int* new_obj;
+    GameObject* new_obj;
     if ((u8)Obj_IsLoadingLocked() == 0)
         return NULL;
     alloc = Obj_AllocObjectSetup(36, 2102);
-    ((ObjPlacement*)alloc)->posX = ((GameObject*)obj)->anim.worldPosX;
-    ((ObjPlacement*)alloc)->posY = ((GameObject*)obj)->anim.worldPosY;
-    ((ObjPlacement*)alloc)->posZ = ((GameObject*)obj)->anim.worldPosZ;
+    ((ObjPlacement*)alloc)->posX = obj->anim.worldPosX;
+    ((ObjPlacement*)alloc)->posY = obj->anim.worldPosY;
+    ((ObjPlacement*)alloc)->posZ = obj->anim.worldPosZ;
     ((ObjPlacement*)alloc)->color[0] = 1;
     ((ObjPlacement*)alloc)->color[1] = 1;
     ((ObjPlacement*)alloc)->color[3] = 255;
-    new_obj = Obj_SetupObject(alloc, 5, -1, -1, 0);
+    new_obj = (GameObject*)Obj_SetupObject(alloc, 5, -1, -1, 0);
     if (new_obj != NULL)
     {
-        ((GameObject*)new_obj)->anim.rootMotionScale = fv;
+        new_obj->anim.rootMotionScale = fv;
     }
     return new_obj;
 }
@@ -184,7 +183,7 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 #pragma opt_common_subs off
-void staffFn_80170380(int* obj, int cmd)
+void staffFn_80170380(GameObject* obj, int cmd)
 {
     extern int objCreateLight(int* obj, int arg);
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
@@ -194,7 +193,7 @@ void staffFn_80170380(int* obj, int cmd)
     GameObject* glow;
     GameObject* player;
     tbl[0] = lbl_80320A28;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     player = Obj_GetPlayerObject();
     glow = NULL;
     if (player != NULL)
@@ -308,8 +307,8 @@ void staffFn_80170380(int* obj, int cmd)
                     t1 += 1;
                 }
             }
-            Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
-            Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
         }
         break;
     case 2:
@@ -388,8 +387,8 @@ void staffFn_80170380(int* obj, int cmd)
                 t1 += 1;
             }
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
-        Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
         break;
     case 5:
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
@@ -436,8 +435,8 @@ void staffFn_80170380(int* obj, int cmd)
                 t1 += 1;
             }
         }
-        Sfx_PlayFromObject(obj, SFXTRIG_lockon3_on);
-        Sfx_PlayFromObject(obj, SFXTRIG_lrope_powerup);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_lockon3_on);
+        Sfx_PlayFromObject((int*)obj, SFXTRIG_lrope_powerup);
         break;
     }
     case 6:
@@ -722,11 +721,11 @@ void Shield_init(int* obj, void* initData)
     ObjModel_SetPostRenderCallback((ObjModel*)model, postRenderSetAlphaBlendState);
     if (((GameObject*)obj)->anim.seqId == SHIELD_SEQID_STAFF_MODE5)
     {
-        staffFn_80170380(obj, 5);
+        staffFn_80170380((GameObject*)obj, 5);
     }
     else
     {
-        staffFn_80170380(obj, 7);
+        staffFn_80170380((GameObject*)obj, 7);
     }
 }
 

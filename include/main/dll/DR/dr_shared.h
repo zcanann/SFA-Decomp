@@ -213,8 +213,6 @@ extern f32 lbl_803E699C;
 extern f32 lbl_803E690C;
 extern f32 lbl_803E6920;
 extern f32 lbl_803E6938;
-extern int fn_801702D4(int obj, f32 v);
-extern void staffFn_80170380(int handle, int v);
 extern f32 lbl_803E68F0;
 extern f32 lbl_803E68F4;
 extern f32 lbl_803E68F8;

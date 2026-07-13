@@ -26,6 +26,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_00E5_shield_api.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -282,7 +283,6 @@ void restartmarker_init(int* obj, int* state);
 
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
-void staffFn_80170380(int* obj, int cmd);
 
 void Shield_init(int* obj, void* initData);
 

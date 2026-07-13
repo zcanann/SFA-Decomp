@@ -10,6 +10,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_00E5_shield_api.h"
 #include "main/sky_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
@@ -3088,7 +3089,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     va = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     vb = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 9);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_802A93F4;
-    if (*(void**)&gPlayerStaffObject != NULL)
+    if (gPlayerStaffObject != NULL)
     {
         staffFn_80170380(gPlayerStaffObject, 0);
     }
@@ -3108,16 +3109,15 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             *(s16*)(gPlayerEggObject + 6) |= 0x4000;
         }
     }
-    if (*(void**)&gPlayerStaffObject == NULL && Obj_IsLoadingLocked() != 0)
+    if (gPlayerStaffObject == NULL && Obj_IsLoadingLocked() != 0)
     {
         gPlayerStaffObject =
-            (int)Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1, ((GameObject*)obj)->anim.parent);
+            (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1, ((GameObject*)obj)->anim.parent);
     }
-    if (*(void**)&gPlayerStaffObject != NULL)
+    if (gPlayerStaffObject != NULL)
     {
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &((GameObject*)gPlayerStaffObject)->anim.localPosX,
-                                      &((GameObject*)gPlayerStaffObject)->anim.localPosY,
-                                      &((GameObject*)gPlayerStaffObject)->anim.localPosZ, 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &gPlayerStaffObject->anim.localPosX,
+                                      &gPlayerStaffObject->anim.localPosY, &gPlayerStaffObject->anim.localPosZ, 0);
     }
     if ((((u32) * (u8*)((char*)inner + 0x3f3) >> 3 & 1) != 0 || ((PlayerState*)inner)->animState == 0x40) &&
         ((u32) * (u8*)((char*)inner + 0x3f4) >> 7 & 1) == 0)
@@ -7065,16 +7065,16 @@ void playerUpdate(GameObject* obj)
                     *(s16*)(gPlayerEggObject + 6) = *(s16*)(gPlayerEggObject + 6) | 0x4000;
                 }
             }
-            if ((u32)gPlayerStaffObject == 0 && Obj_IsLoadingLocked() != 0)
+            if (gPlayerStaffObject == NULL && Obj_IsLoadingLocked() != 0)
             {
-                gPlayerStaffObject = (int)Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1,
-                                                          obj->anim.parent);
+                gPlayerStaffObject = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1,
+                                                                  obj->anim.parent);
             }
-            if ((u32)gPlayerStaffObject != 0)
+            if (gPlayerStaffObject != NULL)
             {
-                ObjPath_GetPointWorldPosition((GameObject*)obj, 4, (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosX),
-                                              (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosY),
-                                              (void*)(&((GameObject*)gPlayerStaffObject)->anim.localPosZ), 0);
+                ObjPath_GetPointWorldPosition((GameObject*)obj, 4, (void*)&gPlayerStaffObject->anim.localPosX,
+                                              (void*)&gPlayerStaffObject->anim.localPosY,
+                                              (void*)&gPlayerStaffObject->anim.localPosZ, 0);
             }
             if (*(s16**)&obj->anim.parent != NULL)
             {
@@ -10454,9 +10454,9 @@ void fn_802B4DE0(GameObject* obj)
         ObjLink_DetachChild(obj, (int)gPlayerPathObject);
         gPlayerPathObject = NULL;
     }
-    if ((u32)gPlayerStaffObject != 0)
+    if (gPlayerStaffObject != NULL)
     {
-        gPlayerStaffObject = 0;
+        gPlayerStaffObject = NULL;
     }
     for (i = 0, off = 0; i < inner->moveSlotCount; i++)
     {
