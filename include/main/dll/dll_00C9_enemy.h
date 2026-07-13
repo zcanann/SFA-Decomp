@@ -68,7 +68,7 @@ void FUN_8014c690(u64 param_1, double param_2, double param_3, u64 param_4, u64 
 void FUN_8014c694(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9);
 void FUN_8014c78c(u32 param_1, u32 param_2, int param_3, int* param_4);
-int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate);
+int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate);
 void fn_8014C66C(GameObject* obj, GameObject* target);
 void fn_8014C5C0(GameObject* obj);
 void fn_8014C63C(GameObject* obj);

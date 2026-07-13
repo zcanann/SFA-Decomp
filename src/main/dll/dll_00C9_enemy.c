@@ -1038,7 +1038,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     return n;
 }
 
-int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
+int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void fn_8014B878(int* node, int* sub);
     extern void baddieTurnTowardTarget(int* node, int* sub);
@@ -1061,8 +1061,8 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
             obj = (int*)getTrickyObject();
             if (obj != NULL)
             {
-                (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(obj, 1,
-                                                                                                              node);
+                (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(
+                    obj, 1, (int*)node);
                 ((TrickyState*)sub)->flags2DC |= 0x200000LL;
                 ((TrickyState*)sub)->actionTargetObj = (GameObject*)obj;
             }
@@ -1103,8 +1103,8 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
     }
     if ((((TrickyState*)sub)->flags2DC & 0x1800) == 0)
     {
-        baddieTurnTowardTarget(node, (int*)sub);
-        fn_8014B878(node, (int*)sub);
+        baddieTurnTowardTarget((int*)node, (int*)sub);
+        fn_8014B878((int*)node, (int*)sub);
     }
     if (n29[0x2e] != -1)
     {
