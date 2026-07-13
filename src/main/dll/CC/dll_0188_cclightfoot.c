@@ -57,7 +57,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/obj_link.h"
 #include "main/obj_list.h"
 #include "main/obj_trigger.h"
-#include "main/dll/DIM/DIMsnowball.h"
+#include "main/dll/CC/dll_0188_cclightfoot.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
