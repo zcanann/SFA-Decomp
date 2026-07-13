@@ -393,11 +393,11 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
 void fn_80007F78(u8* anim, u16* dst, u16* out)
 {
     f32 t = *(f32*)(anim + 0x4);
+    u64 end;
     u64 outPos = (u32)out;
     int curB = *(u16*)(anim + 0x4c);
     u64 posA = *(u32*)(anim + 0x2c);
     u64 tp = *(u32*)(anim + 0x34) + 4;
-    u64 end;
     u64 bufA;
     u64 bufB;
     s64 tmp;
