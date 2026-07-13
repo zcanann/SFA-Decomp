@@ -8,25 +8,7 @@
 int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg);
 int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg);
 int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg);
-u32 FUN_801620c0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, int param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                 u32 param_15, u32 param_16);
-bool FUN_8016228c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8, int param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                  u32 param_15, u32 param_16);
-u32 FUN_80162450(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, short* param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                 u32 param_15, u32 param_16);
-u32 FUN_801628c4(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, u32 param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                 u32 param_15, u32 param_16);
-u32 FUN_80162b78(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                 u64 param_8, u32 param_9, int param_10, u32 param_11, u32 param_12, u32 param_13, u32 param_14,
-                 u32 param_15, u32 param_16);
-void FUN_80162ec0(short* param_1);
 void cannonclaw_release(void);
-void FUN_80163220(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_80163308(int param_1);
 
 extern ObjectDescriptor gGrimbleObjDescriptor;
 extern ObjectDescriptor gCannonClawObjDescriptor;
