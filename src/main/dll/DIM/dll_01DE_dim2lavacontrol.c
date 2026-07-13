@@ -2,6 +2,7 @@
  * triggers env-fx transitions, drives music track changes based on player
  * carry state, and maintains the countdown-armed SCGameBitLatch triggers. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
+#include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
 #include "main/render.h"
@@ -29,7 +30,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 
-extern int getSaveGameLoadStatus(void);
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"

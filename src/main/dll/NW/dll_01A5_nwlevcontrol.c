@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"
 #include "main/sky_api.h"
 #include "main/object_api.h"
@@ -80,7 +81,6 @@ extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
 extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
-extern int getSaveGameLoadStatus(void);
 extern void gameTimerStop(void);
 
 void nw_levcontrol_update(int objArg)

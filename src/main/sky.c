@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "main/dll/savegame_load_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -231,7 +232,6 @@ extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, 
 extern u32 getScreenResolution(void);
 extern void* memset(void* dst, int c, int n);
 extern u8* saveGameGetEnvState(void);
-extern int getSaveGameLoadStatus(void);
 
 int getEnvFxBit2BA(void)
 {

@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
 #include "main/object.h"
@@ -70,7 +71,6 @@ enum LinkbLevStage
 
 extern u8 lbl_803238D8[];
 extern f32 lbl_803E47C8;
-extern int getSaveGameLoadStatus(void);
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 
