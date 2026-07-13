@@ -2816,7 +2816,6 @@ void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
 extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
 extern s16 gModelRootRotZ;
-extern void ObjModel_SampleJointTransform(u8* model, int a, int b, f32 t, f32 s, f32* outPos, s16* outRot);
 extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 
 void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
@@ -2831,7 +2830,7 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     ch = ((ObjModel*)model)->animStateA;
     if (ch->moveControlFlags & 4)
     {
-        ObjModel_SampleJointTransform(model, 0, 0, ((GameObject*)obj)->anim.currentMoveProgress,
+        ObjModel_SampleJointTransform((ObjModel*)model, 0, 0, ((GameObject*)obj)->anim.currentMoveProgress,
                                       ((GameObject*)obj)->anim.rootMotionScale, pos, rot);
         gModelRootRotX = rot[0];
         gModelRootRotY = rot[1];
@@ -3483,14 +3482,14 @@ void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad
 extern f32 lbl_803DE880;
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 
-void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot)
+void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot)
 {
     ObjAnimState* ch;
     int saved;
     s16 srot[3];
     u8* anim;
 
-    if (((ObjModel*)model)->file->animationCount == 0)
+    if (model->file->animationCount == 0)
     {
         f32 z = lbl_803DE828;
         outPos[0] = z;
@@ -3502,11 +3501,11 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     }
     if (b != 0)
     {
-        ch = ((ObjModel*)model)->animStateB;
+        ch = model->animStateB;
     }
     else
     {
-        ch = ((ObjModel*)model)->animStateA;
+        ch = model->animStateA;
     }
     saved = *(int*)&ch->moveFrameData;
     {
@@ -3516,7 +3515,7 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
         ObjAnimFrameCommand** p = &ch->moveFrameData;
         ch->moveFrameData = p[idx];
     }
-    if (*(u16*)(*(u8**)model + 2) & 0x40)
+    if (model->file->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
         if (idx > 1)
         {
@@ -3534,7 +3533,7 @@ void ObjModel_SampleJointTransform(u8* model, int b, int idx, f32 t, f32 s, f32*
     else
     {
         u16* p = &ch->moveCacheSlot;
-        anim = ((u8**)((ModelFileHeader*)*(u8**)model)->animationModelPtrs)[p[idx]];
+        anim = ((u8**)model->file->animationModelPtrs)[p[idx]];
     }
     ch->framePhase = t * ch->frameLength;
     {

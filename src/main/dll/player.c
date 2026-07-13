@@ -22,6 +22,9 @@
     ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
+#define ObjModel_SampleJointTransformLegacy(model, animState, frameSource, phase, rootMotionScale, outPosition, outRotation) \
+    ((void (*)(int, int, int, f32, f32, void*, void*))ObjModel_SampleJointTransform)( \
+        (model), (animState), (frameSource), (phase), (rootMotionScale), (outPosition), (outRotation))
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -80,10 +83,10 @@ int playerStateNop3E(void)
     return 0x0;
 }
 
-static inline int* Player_GetActiveModel(int obj)
+static inline ObjModel* Player_GetActiveModel(int obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (int*)objAnim->banks[objAnim->bankIndex];
+    return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
 static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
@@ -2155,14 +2158,14 @@ extern f32 lbl_803E8020;
 #pragma opt_propagation reset
 int playerStateOnLadder(int obj, int state)
 {
-    int jt;
+    ObjModel* jt;
     int inner;
     f32 t;
     f32 spd;
     f32 ph;
     f32 buf1[3];
     f32 buf2[3];
-    f32 tmp[2];
+    s16 tmp[3];
     f32 outY;
 
     inner = *(int*)&((GameObject*)obj)->extra;
@@ -2223,7 +2226,7 @@ int playerStateOnLadder(int obj, int state)
             t = (mag < lbl_803E7EFC) ? lbl_803E7EFC : ((mag > lbl_803E7EE0) ? lbl_803E7EE0 : mag);
         }
     }
-    jt = (int)Player_GetActiveModel(obj);
+    jt = Player_GetActiveModel(obj);
     spd = lbl_803E7EA4;
     ph = ((PlayerState*)state)->baddie.moveSpeed;
     gPlayerPrevMoveId = gPlayerCurrentMoveId;
@@ -2659,7 +2662,7 @@ int playerStateClimbWall(GameObject* obj, int state)
     extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8,
                                   int p9, int p10);
     int mask;
-    int jt;
+    ObjModel* jt;
     int inner;
     int b6;
     int b7;
@@ -2675,7 +2678,7 @@ int playerStateClimbWall(GameObject* obj, int state)
     f32 out1[3];
     f32 pnt[3];
     f32 dst[3];
-    f32 tmp[2];
+    s16 tmp[3];
 
     inner = *(int*)&obj->extra;
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -2699,7 +2702,7 @@ int playerStateClimbWall(GameObject* obj, int state)
         *(u32*)((char*)state + 4) |= 0x8000000;
         obj->anim.velocityY = z;
     }
-    jt = (int)Player_GetActiveModel((int)obj);
+    jt = Player_GetActiveModel((int)obj);
     ph = ((PlayerState*)state)->baddie.moveSpeed;
     gPlayerPrevMoveId = gPlayerCurrentMoveId;
     switch ((s16)gPlayerCurrentMoveId)
@@ -5834,7 +5837,7 @@ int playerState19(GameObject* obj, int state)
     int sub = (int)inner->focusObject;
     void* vec;
     int kind;
-    int joint;
+    ObjModel* joint;
     int n;
     f32 t;
     f32 pos1[3];
@@ -5896,7 +5899,7 @@ int playerState19(GameObject* obj, int state)
         obj->anim.rotY = 0;
         obj->anim.rotZ = 0;
         ObjAnim_SetCurrentMove((int)obj, ((s16*)inner->moveSequence)[n], lbl_803E7EA4, 1);
-        joint = (int)Player_GetActiveModel((int)obj);
+        joint = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4, obj->anim.rootMotionScale, pos1, ang);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, pos2, ang);
         ang[0] = inner->targetYaw;
@@ -9111,10 +9114,10 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
     f32 fz;
     s16* tbl;
     int flags;
-    int model;
+    ObjModel* model;
     u8 ic;
     f32 buf1[3];
-    f32 buf2[2];
+    s16 buf2[3];
     f32 pos[2];
     *(u32*)&in0->flags360 &= ~PLAYER_FLAG_HITDETECT;
     *(u32*)&in0->flags360 |= PLAYER_FLAG_NO_POS_VELOCITY;
@@ -9179,7 +9182,7 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
                 fn_802A71E0((int)obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598), (int*)((char*)inner + 0x56c),
                             lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
         }
-        model = (int)Player_GetActiveModel((int)obj);
+        model = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, buf1, buf2);
         fz = lbl_803E7EA4;
         inner->moveOffsetX = fz;
@@ -9214,15 +9217,15 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
 
 int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags)
 {
-    int model;
+    ObjModel* model;
     int uf;
     u8 mf;
     int sel;
     int blend;
     f32 v1, v2, t;
     f32 buf1[3];
-    f32 buf2[2];
-    model = (int)Player_GetActiveModel(obj);
+    s16 buf2[3];
+    model = Player_GetActiveModel(obj);
     mf = 0;
     uf = (u8)flags;
     if (uf & 0x2)
@@ -9877,8 +9880,8 @@ int playerStateClimbDownFromWall(GameObject* obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         u8 ic;
-        int model;
-        f32 buf2[2];
+        ObjModel* model;
+        s16 buf2[3];
         f32 buf1[3];
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         ic = inner->curAnimId;
@@ -9889,7 +9892,7 @@ int playerStateClimbDownFromWall(GameObject* obj, int state)
         ObjAnim_SetCurrentMove((int)obj, lbl_80332F48[0x13], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, lbl_80332F48[0x14], 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F34;
-        model = (int)Player_GetActiveModel((int)obj);
+        model = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, buf1, buf2);
         inner->moveOffsetX = inner->groundNormalX * buf1[2];
         inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
@@ -9955,8 +9958,8 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
         u8 ic;
-        int model;
-        f32 buf2[2];
+        ObjModel* model;
+        s16 buf2[3];
         f32 buf1[3];
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
         ic = inner->curAnimId;
@@ -9967,7 +9970,7 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
         ObjAnim_SetCurrentMove((int)obj, lbl_80332F48[0x11], lbl_803E7EA4, 1);
         Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent*)obj, lbl_80332F48[0x12], 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
-        model = (int)Player_GetActiveModel((int)obj);
+        model = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, buf1, buf2);
         inner->moveOffsetX = inner->groundNormalX * buf1[2];
         inner->moveOffsetZ = inner->groundNormalZ * buf1[2];
@@ -12887,12 +12890,12 @@ void fn_802AABE4(int obj)
 {
     s16* movp;
     f32* outp;
-    int model;
+    ObjModel* model;
     short i;
-    f32 out2[2];
+    s16 out2[3];
     f32 out1[5];
 
-    model = (int)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
+    model = (ObjModel*)((ObjAnimComponent*)obj)->banks[((ObjAnimComponent*)obj)->bankIndex];
 
     ObjAnim_SetCurrentMove(obj, *(s16*)((PlayerState*)((GameObject*)obj)->extra)->moveAnimTable, lbl_803E7EA4, 0);
     ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EA4, ((GameObject*)obj)->anim.rootMotionScale, out1, out2);
@@ -14863,8 +14866,9 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
         inner->climbTargetY = inner->climbStepHeight * (f32)(int)inner->climbStep + inner->climbBaseY;
         inner->climbStartY = obj->anim.localPosY;
         {
-            int joint = (int)Player_GetActiveModel((int)obj);
-            f32 scratch[2], camBuf[2];
+            ObjModel* joint = Player_GetActiveModel((int)obj);
+            s16 scratch[3];
+            f32 camBuf[2];
             ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, jp,
                                           scratch);
             lbl_803DE438 = obj->anim.localPosY + jp[1];
@@ -14919,7 +14923,7 @@ int playerStateMountBike(GameObject* obj, int state, f32 fv)
     char* base = (char*)lbl_80332EC0;
     PlayerState* inner = obj->extra;
     int sub = (int)inner->focusObject;
-    void* joint;
+    ObjModel* joint;
     f32 j0[3];
     f32 j1[3];
     f32 wpos[3];
@@ -15013,10 +15017,8 @@ int playerStateMountBike(GameObject* obj, int state, f32 fv)
         inner->yaw = inner->targetYaw;
         ObjAnim_SetCurrentMove((int)obj, ((s16*)inner->moveSequence)[sel], lbl_803E7EA4, 4);
         joint = Player_GetActiveModel((int)obj);
-        ObjModel_SampleJointTransform((int)joint, 0, 0, lbl_803E7EA4, obj->anim.rootMotionScale, j0,
-                                      scratch);
-        ObjModel_SampleJointTransform((int)joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, j1,
-                                      scratch);
+        ObjModel_SampleJointTransformLegacy((int)joint, 0, 0, lbl_803E7EA4, obj->anim.rootMotionScale, j0, scratch);
+        ObjModel_SampleJointTransformLegacy((int)joint, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, j1, scratch);
         (*(void (*)(int, void*, void*, void*))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x28)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         wpos[0] = wpos[0] - obj->anim.localPosX;

@@ -270,6 +270,8 @@ int ObjModel_HasActiveBlendChannels(ObjModel* model);
 void ObjModel_ClearBlendChannels(ObjModel* model);
 void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight);
 void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int targetA, int targetB, f32 weight, int flags);
+void ObjModel_SampleJointTransform(ObjModel* model, int animState, int frameSource, f32 phase, f32 rootMotionScale,
+                                   f32* outPosition, s16* outRotation);
 ObjModelChain *ObjModelChain_Alloc(void *models, int count);
 void ObjModelChain_SetOrigin(ObjModelChain *chain, f32 x, f32 y, f32 z);
 void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);

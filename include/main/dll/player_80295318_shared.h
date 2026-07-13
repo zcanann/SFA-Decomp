@@ -391,7 +391,6 @@ extern f32 lbl_803DC6E0;
 extern f32 lbl_803DC6E4;
 extern f32 lbl_803E7FA4;
 extern f32 lbl_803E7FE8;
-extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void* out1, void* out2);
 extern f32 lbl_803E7ED4;
 extern f32 lbl_803E7F08;
 extern void* gPlayerPathObject;
