@@ -44,12 +44,10 @@
 #include "string.h"
 
 /* external symbol declarations */
-extern void fn_8011F6D4(int flag);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
 extern void objRenderFuzz(int obj);
 extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
-extern void fn_8011F34C(int a);
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
 extern void playerShadowFn_80062a30(int obj);
 extern int lbl_803DCF34;
@@ -63,6 +61,5 @@ extern void fn_80078740(void);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 
 extern f32 vec3f_distanceSquared(void* a, void* b);
-extern void hudFn_8011f38c(int arg);
 extern void __set_debug_bba(int a);
 #endif
