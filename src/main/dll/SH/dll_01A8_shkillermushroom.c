@@ -211,6 +211,25 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     ObjGroup_AddObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
+void enemymushroom_update(int* obj);
+
+ObjectDescriptor gEnemyMushroomObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)enemymushroom_initialise,
+    (ObjectDescriptorCallback)enemymushroom_release,
+    0,
+    (ObjectDescriptorCallback)enemymushroom_init,
+    (ObjectDescriptorCallback)enemymushroom_update,
+    (ObjectDescriptorCallback)enemymushroom_hitDetect,
+    (ObjectDescriptorCallback)enemymushroom_render,
+    (ObjectDescriptorCallback)enemymushroom_free,
+    (ObjectDescriptorCallback)enemymushroom_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)enemymushroom_getExtraSize,
+};
+
 /* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,
  * hit reaction, pop and respawn. */
 #pragma opt_common_subs off

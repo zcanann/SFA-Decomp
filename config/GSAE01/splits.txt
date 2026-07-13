@@ -2207,7 +2207,7 @@ main/dll/DIM/dim_boss.c:
 
 main/dll/SH/dll_01A8_shkillermushroom.c:
 	.text       start:0x801D1BFC end:0x801D286C
-	.data       start:0x80326C78 end:0x80326CBC
+	.data       start:0x80326C78 end:0x80326D20
 
 main/dll/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
