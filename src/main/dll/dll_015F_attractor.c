@@ -20,6 +20,7 @@
 #include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_015F_attractor.h"
+#include "main/vecmath.h"
 
 #define ATTRACTOR_OBJ_GROUP 0x1e
 

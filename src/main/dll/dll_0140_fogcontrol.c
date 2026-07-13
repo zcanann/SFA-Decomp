@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/pi_dolphin_api.h"
 #include "main/dll/dll_0140_fogcontrol.h"
 
 #define FOGCONTROL_OBJFLAG_HIDDEN 0x4000
@@ -27,8 +28,6 @@
 #define FOG_FLAG_FAST_IN  0x02 /* ramp-in uses fast speed 0.005 (else 0.02) */
 #define FOG_FLAG_FAST_OUT 0x04 /* ramp-out uses fast speed 0.005 (else 0.02) */
 #define FOG_FLAG_ENABLE   0x08 /* fog volume is placed/active */
-
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 
 int FogControl_getExtraSize(void)
 {

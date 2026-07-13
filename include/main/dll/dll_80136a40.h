@@ -17,6 +17,7 @@ void fn_80138908(GameObject* obj, int value);
 int fn_80138920(GameObject* obj, int sfxId, int volume);
 void debugPrintInit(void);
 void debugPrintReset(void);
+void debugPrintfxy(int x, int y, char* fmt, ...);
 void errDisplayInstallHandlers(void);
 void errDisplayThreadMain(void);
 void reportAllocFail(void);

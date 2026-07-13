@@ -4,6 +4,7 @@
 #include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"
@@ -3264,7 +3265,7 @@ void setColor_803db5d0(u8 r, u8 g, u8 b)
     (&lbl_803DB5D0)[2] = b;
 }
 
-void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e)
+void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
 {
     lbl_803DCD28 = 1;
     lbl_803DCD44 = a;

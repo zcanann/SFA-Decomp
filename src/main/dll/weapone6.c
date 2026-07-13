@@ -33,6 +33,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/objprint_sound_api.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 
 typedef struct
 {

@@ -37,6 +37,7 @@
 #include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */

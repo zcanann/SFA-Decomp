@@ -18,6 +18,7 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0014_api.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */

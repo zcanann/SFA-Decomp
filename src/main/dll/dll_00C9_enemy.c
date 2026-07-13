@@ -36,6 +36,7 @@
 #include "main/gamebits.h"
 #include "main/dll/tricky_api.h"
 #include "main/lightmap.h"
+#include "main/lightmap_api.h"
 #include "main/frame_timing.h"
 #include "main/model.h"
 #include "main/model_engine.h"

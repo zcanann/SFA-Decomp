@@ -35,6 +35,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/skeetla.h"
 #include "main/objprint_sound_api.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* group owned by another DLL, queried here */

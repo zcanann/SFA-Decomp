@@ -41,6 +41,7 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/objprint_api.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 extern int trickyFn_8013b368();
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 

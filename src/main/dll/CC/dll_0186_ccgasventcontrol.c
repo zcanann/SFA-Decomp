@@ -27,6 +27,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/pi_dolphin_api.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define CCGASVENTCONTROL_CAMMODE_DEFAULT 0x42
@@ -64,9 +65,6 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, airMeter) == 0x4);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
-
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-
 
 __declspec(section ".sdata2") f32 lbl_803E4618 = 100.0f;
 __declspec(section ".sdata2") f32 lbl_803E461C = 127.0f;

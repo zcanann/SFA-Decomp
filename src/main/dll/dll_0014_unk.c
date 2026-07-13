@@ -37,6 +37,7 @@
 #include "string.h"
 #include "main/dll/dll_0014_unk.h"
 #include "main/vecmath_distance_api.h"
+#include "main/shader_api.h"
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT   4
 #define OBJFSA_PATCHGROUP_STRIDE        0x28

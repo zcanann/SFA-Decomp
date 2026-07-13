@@ -126,18 +126,8 @@ STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
 
 /* extern-cleanup: consolidated prototypes */
-void disableHeavyFog(void);
-void trickyReportError(const char* fmt, ...);
-int atan2_8002178c(f32 dx, f32 dz);
-void mapBlockFn_80059c2c(u8* outFlags);
 void fn_8003A230(GameObject* obj, void* p, f32 f);
-int isInBounds(f32 x, f32 z);
 void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte);
 void objSetHintTextIdx(GameObject* obj, u16 idx);
-
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-void trickyDebugPrint(const char* fmt, ...);
-void debugPrintfxy(int x, int y, char* fmt, ...);
-int atan2i(int y, int x);
 
 #endif

@@ -5,12 +5,11 @@
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
+#include "main/pi_dolphin_api.h"
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
 extern int playerIsDisguised(void);
-extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
-
 int DeathGas_getExtraSize(void) { return 0x10; }
 
 typedef struct

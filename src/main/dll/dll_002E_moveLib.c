@@ -36,6 +36,7 @@
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))

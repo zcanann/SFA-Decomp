@@ -25,6 +25,7 @@
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/dll/dll_80136a40.h"
 #define GX_AOP_AND        0
 #define GX_BL_ZERO        0
 #define GX_BM_NONE        0

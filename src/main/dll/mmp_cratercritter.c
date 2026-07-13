@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/dll/mmp_cratercritter.h"
+#include "main/dll/dll_00C4_tricky_api.h"
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 

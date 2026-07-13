@@ -56,10 +56,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define SCLEVELCONTROL_ENVFX_D 0x246
 #define SCLEVELCONTROL_ENVFX_E 0x51
 
-
-
-extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
-
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 gScLevelControlMusicStepSequence[4];
 
