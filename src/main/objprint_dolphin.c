@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
+#include "main/pad.h"
 #include "main/pi_frame_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
@@ -3853,7 +3854,6 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
 }
 
-extern void padUpdate(void);
 extern void loadDataFiles(int);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);

@@ -10,6 +10,7 @@
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/pad.h"
 #include "main/curve_eval.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
@@ -200,7 +201,6 @@ extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int 
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
-extern void padUpdate(void);
 extern void loadDataFiles(void);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);

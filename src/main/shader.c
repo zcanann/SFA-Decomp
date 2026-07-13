@@ -16,6 +16,7 @@
 #include "main/mldf_fileid.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
+#include "main/pad.h"
 #include "main/sky_interface.h"
 #include "main/sky_api.h"
 
@@ -871,7 +872,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 }
 
 extern int isRomListLoading(void);
-extern void padUpdate(void);
 extern void loadDataFiles(void);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);
