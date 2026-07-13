@@ -17,6 +17,7 @@
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/obj_group.h"
 #include "main/audio/sfx.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -111,8 +112,6 @@ typedef struct FireballState
 /* anim.seqId of the hit object that triggers combat-source recolor. */
 #define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern const f32 lbl_803E3330;
 extern const f32 lbl_803E3354;

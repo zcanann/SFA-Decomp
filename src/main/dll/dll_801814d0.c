@@ -16,6 +16,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803DBDA8;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 
-extern void* ObjGroup_GetObjects();
 extern void fn_801816F8(int obj, int arg, u8* state);
 extern int Sfx_IsPlayingFromObject(int obj, u16 sfxId);
 
@@ -94,7 +94,7 @@ void fn_801814D0(int obj, int arg, u8* state)
                     }
                     return;
                 }
-                groupObjects = ObjGroup_GetObjects(DUSTER_AREADAMAGE_OBJGROUP, &hitWork[0]);
+                groupObjects = (int*)ObjGroup_GetObjects(DUSTER_AREADAMAGE_OBJGROUP, &hitWork[0]);
                 i = 0;
                 objects = groupObjects;
                 for (; i < hitWork[0]; i++)

@@ -22,6 +22,7 @@
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "main/obj_group.h"
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie_control_interface.h"
@@ -202,8 +203,6 @@ extern void GXSetBreakPtCallback(void* cb);
 extern void VISetNextFrameBuffer(void* fb);
 extern void VIFlush(void);
 extern void VIWaitForRetrace(void);
-extern int* ObjGroup_GetObjects(int, int*);
-extern int ObjGroup_ContainsObject(int, int);
 int TitleScreen_getObjectTypeId(u8* obj);
 
 u8 debugLogBuffer[0x1100];
@@ -536,7 +535,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
 
     bestDistSq = maxRadius;
     closest = 0;
-    tmpList = ObjGroup_GetObjects(3, &count);
+    tmpList = (int*)ObjGroup_GetObjects(3, &count);
     bestDistSq = bestDistSq * bestDistSq;
     i = 0;
     objs = tmpList;

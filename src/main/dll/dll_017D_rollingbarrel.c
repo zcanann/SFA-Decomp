@@ -9,6 +9,7 @@
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
@@ -41,11 +42,6 @@ extern const f32 lbl_803E44AC;
 extern const f32 lbl_803E44B0;
 extern const f32 lbl_803E44B4;
 extern f32 gRollingBarrelCurveInitData;
-
-extern int* ObjGroup_GetObjects(int groupId, int* outCount);
-extern void ObjGroup_RemoveObject(int obj, int groupId);
-extern void ObjGroup_AddObject(u32 obj, int group);
-
 
 #pragma dont_inline on
 void fn_801A5D88(GameObject* obj, int explosionVariant)
@@ -100,7 +96,7 @@ void RollingBarrel_free(int obj)
 {
     RollingBarrelState* state = ((GameObject*)obj)->extra;
     int count;
-    int* arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
+    int* arr = (int*)ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
     u32 groupObj;
     for (i = 0; i < count; i++)

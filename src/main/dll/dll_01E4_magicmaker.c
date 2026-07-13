@@ -14,6 +14,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/obj_group.h"
 #define OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -28,8 +29,6 @@
 extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
-
-extern int* ObjGroup_GetObjects(int group, int* countOut);
 
 int magicmaker_getExtraSize(void)
 {
@@ -73,7 +72,7 @@ void magicmaker_update(GameObject* obj)
         if ((u32)mainGetBit(MAGICMAKER_SPAWN_GAMEBIT) != 0u)
         {
             mainSetBits(MAGICMAKER_SPAWN_GAMEBIT, 0);
-            objList = ObjGroup_GetObjects(MAGICMAKER_CREATURE_GROUP, &groupCount);
+            objList = (int*)ObjGroup_GetObjects(MAGICMAKER_CREATURE_GROUP, &groupCount);
             matchCount = 0;
             for (i = 0; i < groupCount; i++)
             {

@@ -10,6 +10,7 @@
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/obj_group.h"
 #include "main/frame_timing.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -68,7 +69,6 @@ extern void DBSH_Symbol_init(void);
 #define GPSHSHRINE_OBJGROUP 0xb
 #define GPSHSHRINE_MAP_SHRINE 0xb
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
-extern u64 ObjGroup_RemoveObject();
 
 
 extern void ModelLightStruct_free(void* light);
@@ -89,7 +89,6 @@ extern f32 lbl_803E5020;
 extern f32 gGpShShrineAlphaFadeDistance;
 extern f32 lbl_803E5028;
 
-extern void* ObjGroup_GetObjects();
 
 
 
@@ -116,7 +115,7 @@ void gpsh_shrine_free(int* obj)
         state[0] = NULL;
     }
     gameTimerStop();
-    ObjGroup_RemoveObject(obj, GPSHSHRINE_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, GPSHSHRINE_OBJGROUP);
     Music_Trigger(MUSICTRIG_DIM_Snow, 0);
     Music_Trigger(MUSICTRIG_CC_Visit1, 0);
     Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
@@ -447,7 +446,7 @@ void gpsh_shrine_update(GameObject *obj)
                 else if (isGameTimerDisabled())
                 {
                     ((GpshShrineState*)data)->puzzleState = 7;
-                    objs = ObjGroup_GetObjects(GPSHSHRINE_SPAWNED_OBJGROUP, &count);
+                    objs = (int*)ObjGroup_GetObjects(GPSHSHRINE_SPAWNED_OBJGROUP, &count);
                     for (; count != 0; count--)
                     {
                         Obj_FreeObject((GameObject*)objs[count - 1]);

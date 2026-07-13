@@ -1,5 +1,6 @@
 /* DLL 0x243 - DBHoleControl1 [801FE118-801FEB30) */
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/dll/baddie_state.h"
@@ -118,7 +119,6 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     extern int Obj_AllocObjectSetup(int, int);
     extern void memcpy(int, void*, int);
-    extern int* ObjGroup_GetObjects(int, int*);
     int newObj;
     void* res;
     int* objs;
@@ -152,7 +152,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (mainGetBit(((Dbholecontrol1Placement*)data)->hideGameBit) != 0 || lbl_803DDCE0 != 0)
     {
-        objs = ObjGroup_GetObjects(DBEGG_OBJGROUP, &count);
+        objs = (int*)ObjGroup_GetObjects(DBEGG_OBJGROUP, &count);
         ObjMsg_SendToObjects(0, 3, (void*)obj, 17, 0);
         while (count-- != 0)
         {

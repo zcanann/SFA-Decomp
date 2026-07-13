@@ -4,6 +4,7 @@
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_0048_cameramodestatic.h"
 
@@ -12,7 +13,6 @@
 
 extern CameraModeStaticState* lbl_803DD558;
 extern f32 lbl_803E1878;
-extern void* ObjGroup_GetObjects();
 
 #pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
@@ -30,7 +30,7 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 
     bestDist = lbl_803E1878;
     best = NULL;
-    tmpList = ObjGroup_GetObjects(7, &count);
+    tmpList = (int*)ObjGroup_GetObjects(7, &count);
     for (i = 0, list = tmpList; i < count; i++)
     {
         obj = (int*)*list;

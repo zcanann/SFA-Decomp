@@ -14,6 +14,7 @@
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/obj_group.h"
 #include "main/vecmath_distance_api.h"
 
 typedef struct BaddieinterestpPlacement
@@ -33,7 +34,6 @@ typedef struct BaddieinterestpPlacement
 
 extern f32 lbl_803E3220;
 extern f32 lbl_803E3224;
-extern void* ObjGroup_GetObjects();
 extern void fn_801504BC(int* obj, int kind);
 
 int BaddieInterestP_getExtraSize(void)
@@ -72,7 +72,7 @@ void BaddieInterestP_update(int* obj)
          mainGetBit((int)((BaddieinterestpPlacement*)params)->doneGameBit) == 0))
     {
         int count;
-        int* objs = ObjGroup_GetObjects(3, &count);
+        int* objs = (int*)ObjGroup_GetObjects(3, &count);
         if (count > 0)
         {
             u32 id = (u32)(u16)((BaddieinterestpPlacement*)params)->targetIdHi << 16;

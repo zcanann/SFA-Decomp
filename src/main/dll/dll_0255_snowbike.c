@@ -5,6 +5,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/camera.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
@@ -97,7 +98,6 @@ typedef struct SnowBikeSetTypeState
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern int lbl_803DC0BC;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
@@ -150,7 +150,6 @@ extern u32 lbl_803E5AE0;
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern void SnowBike_SeqFn();
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern f32 lbl_803DC0B8;
 extern f32 lbl_803DC0C0;
 extern f32 lbl_803DC0C4;

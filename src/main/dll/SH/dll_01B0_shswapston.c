@@ -22,6 +22,7 @@
 #include "main/objprint_sound_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/obj_query.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
@@ -438,7 +439,6 @@ extern f32 lbl_803E54A4;
 extern f32 lbl_803E54A8;
 extern f32 lbl_803E54AC;
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
 extern void fn_8003ADC4(GameObject* obj, int target, void* state, int a, int b, int c);
 
 void warpstone_update(int obj)

@@ -21,6 +21,7 @@
 #include "main/object_api.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/obj_group.h"
 #include "main/gamebits.h"
 #include "main/dll/CC/dll_0186_ccgasventcontrol.h"
 #include "main/audio/sfx.h"
@@ -64,11 +65,6 @@ STATIC_ASSERT(offsetof(CcgasventcontrolState, fogRise) == 0x8);
 STATIC_ASSERT(offsetof(CcgasventcontrolState, ventCount) == 0xC);
 STATIC_ASSERT(sizeof(CcgasventcontrolState) == 0x10);
 
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-
-
-extern int* ObjGroup_GetObjects(int group, int* count);
-
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
 
 
@@ -101,7 +97,7 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
     if (mainGetBit(GAMEBIT_GAS_ACTIVE) != 0)
     {
         int cnt;
-        int* list = ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
+        int* list = (int*)ObjGroup_GetObjects(CCGASVENT_GROUP, &cnt);
         f32 thr;
         i = 0;
         thr = lbl_803E4618;

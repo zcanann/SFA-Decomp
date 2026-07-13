@@ -4,6 +4,7 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/obj_group.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie/trickyfollow.h"
 #include "main/object_api.h"
@@ -130,7 +131,6 @@ extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void objSetAnimSpeedTo1(int* obj);
-extern void* ObjGroup_GetObjects(int group, int* count);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
@@ -432,7 +432,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
     int* list;
     int i;
 
-    list = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
+    list = (int*)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     for (i = 0; (s16)i < count; i++)
     {
         if ((u32)*list == target)
@@ -724,7 +724,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* trickyState)
     int* groupObjects;
     u32 best = 0;
 
-    groupObjects = ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
+    groupObjects = (int*)ObjGroup_GetObjects(TRICKY_GUARD_APPROACH_GROUP, &count);
     i = 0;
     list = groupObjects;
     for (; (s16)i < count; i++)

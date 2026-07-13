@@ -17,6 +17,7 @@
  */
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
+#include "main/obj_group.h"
 #include "main/model.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_011A_decoration11a.h"
@@ -30,7 +31,6 @@ enum
     DECOR11A_MODEL_C = 0x7a3
 };
 
-extern void* ObjGroup_GetObjects();
 extern void objWorldToLocalPos(f32* out, int obj, f32* pos);
 
 int decoration11a_getExtraSize(void)
@@ -79,7 +79,7 @@ void decoration11a_hitDetect(int obj)
 
 check_decor_objects:
     state = ((GameObject*)obj)->extra;
-    objects = ObjGroup_GetObjects(2, &count);
+    objects = (int*)ObjGroup_GetObjects(2, &count);
     while (count != 0)
     {
         if (Vec_distance((f32*)(*objects + 0x18), (f32*)(obj + 0x18)) < state[6])

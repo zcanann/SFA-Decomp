@@ -13,12 +13,10 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
+#include "main/obj_group.h"
 #include "main/dll/dll_013D_explodeanimator.h"
 
 #define EXPLODEANIMATOR_OBJGROUP 0x1a
-
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
 
 int ExplodeAnimator_getExtraSize(void)
 {
@@ -89,7 +87,7 @@ void ExplodeAnimator_init(int* obj, int* def)
         flag = 0;
     }
     ((ExplodeanimatorState*)state)->flags = flag;
-    ObjGroup_AddObject(obj, EXPLODEANIMATOR_OBJGROUP);
+    ObjGroup_AddObject((int)obj, EXPLODEANIMATOR_OBJGROUP);
 }
 
 void ExplodeAnimator_release(void)

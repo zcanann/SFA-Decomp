@@ -17,6 +17,7 @@
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
 
@@ -69,8 +70,6 @@ extern f32 lbl_803E3C0C;
 extern f32 gStaffActivatedMinRootMotionScale;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);

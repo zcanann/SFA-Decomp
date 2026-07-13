@@ -30,6 +30,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objtexture.h"
@@ -62,7 +63,6 @@ extern const f32 gSpiritDoorLockOrbitMaxDist;
 extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 
 int SpiritDoorLock_getExtraSize(void)
@@ -180,7 +180,7 @@ void SpiritDoorLock_update(GameObject* obj)
         {
             Sfx_KeepAliveLoopedObjectSound((int)obj, SPIRITDOORLOCK_LOOP_SFX);
         }
-        orbitObjs = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
+        orbitObjs = (int*)ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &orbitCount);
         angleStep = 0x10000 / state->orbitCount;
         angle = state->spinAngle;
         orbitOffset[1] = gSpiritDoorLockOrbitOffsetY;

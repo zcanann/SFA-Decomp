@@ -13,6 +13,7 @@
 #include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/curve.h"
 #include "main/dll/CF/windlift.h"
 #include "main/audio/sfx.h"
@@ -67,7 +68,6 @@ extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
 
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -178,7 +178,7 @@ void LanternFireFly_free(u8* obj, int flag)
     {
         lbl_803DDAD8 = 0;
     }
-    ObjGroup_RemoveObject(obj, LANTERNFIREFLY_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, LANTERNFIREFLY_OBJGROUP);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
