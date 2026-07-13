@@ -40,6 +40,13 @@
 typedef void (*ExplosionSpawnFlameSpdFirst)(int obj, f32 spd, int gen, f32 x, f32 y, f32 z);
 typedef int (*HitDetectFloatsFirst)(int obj, f32 x, f32 y, f32 z, int out, int p3);
 
+typedef struct ExplosionPlacement
+{
+    u8 pad00[0x1a];
+    s16 scaleParam;
+    s16 configFlags;
+} ExplosionPlacement;
+
 STATIC_ASSERT(sizeof(ExplosionPartfxSource) == 0x38);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, rootMotionScale) == 0x08);
 STATIC_ASSERT(offsetof(ExplosionPartfxSource, localPosX) == 0x0C);
@@ -655,13 +662,13 @@ void explosion_init(GameObject* obj, int def)
     int i;
     int debrisCount;
     ((ExplosionState*)state)->flameCount = 0;
-    if (*(s16*)((char*)def + 0x1a) == 0)
+    if (((ExplosionPlacement*)def)->scaleParam == 0)
     {
         scale = lbl_803E49A8;
     }
     else
     {
-        scale = (f32)(int)*(s16*)((char*)def + 0x1a) * lbl_803E4974;
+        scale = (f32)(int)((ExplosionPlacement*)def)->scaleParam * lbl_803E4974;
         if (scale > lbl_803E49A8)
         {
             scale = lbl_803E49A8;
@@ -670,9 +677,9 @@ void explosion_init(GameObject* obj, int def)
     ((ExplosionSpawnFlameSpdFirst)explosion_spawnFlame)((int)obj, lbl_803E49AC * scale, 0, obj->anim.localPosX,
                                                         obj->anim.localPosY, obj->anim.localPosZ);
     obj->objectFlags |= DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED;
-    ((ExplosionState*)state)->modelKind = *(s16*)((char*)def + 0x1c) & 3;
+    ((ExplosionState*)state)->modelKind = ((ExplosionPlacement*)def)->configFlags & 3;
     Obj_SetActiveModelIndex(obj, ((ExplosionState*)state)->modelKind);
-    if (*(s16*)((char*)def + 0x1c) & 4)
+    if (((ExplosionPlacement*)def)->configFlags & 4)
     {
         ((ExplosionState*)state)->driftYSpeed = lbl_803E49A4;
     }
@@ -695,7 +702,7 @@ void explosion_init(GameObject* obj, int def)
     {
         ((ExplosionState*)state)->groundY = obj->anim.localPosY;
     }
-    if (*(s16*)((char*)def + 0x1c) & 0x10)
+    if (((ExplosionPlacement*)def)->configFlags & 0x10)
     {
         debrisCount = (int)((f32)(lbl_803E49B8 * scale) / lbl_803E49A8);
         for (i = 0, cursor = state; i < debrisCount; i++)
@@ -751,7 +758,7 @@ void explosion_init(GameObject* obj, int def)
         ((ExplosionState*)state)->debrisCount = 0;
     }
     ((ExplosionState*)state)->light = 0;
-    if (*(s16*)((char*)def + 0x1c) & 0x20)
+    if (((ExplosionPlacement*)def)->configFlags & 0x20)
     {
         ((ExplosionState*)state)->light = objCreateLight(0, 1);
         if (*(void**)&((ExplosionState*)state)->light != NULL)
@@ -767,7 +774,7 @@ void explosion_init(GameObject* obj, int def)
         }
     }
     obj->anim.alpha = 0xff;
-    if (*(s16*)((char*)def + 0x1c) & 8)
+    if (((ExplosionPlacement*)def)->configFlags & 8)
     {
         if (((ExplosionState*)state)->nearGround == 0)
         {
