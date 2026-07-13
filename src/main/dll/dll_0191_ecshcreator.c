@@ -29,6 +29,16 @@
 
 extern f32 lbl_803E4FF8;
 
+typedef struct EcshCreatorPlacement
+{
+    ObjPlacement head;
+    s16 gameBit;         /* 0x18 */
+    u8 pad1a[0x1e - 0x1a];
+    s8 rotByte;          /* 0x1e: object yaw seed (<<8 -> anim.rotX) */
+    s8 gameBitOffset;    /* 0x1f: added to spawned child gameBit */
+    u8 groupSlotOffset;  /* 0x20: added to base group slot */
+} EcshCreatorPlacement;
+
 extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 
 int ecsh_creator_getExtraSize(void)
@@ -117,18 +127,19 @@ void ecsh_creator_update(GameObject* obj)
     }
 }
 
-void ecsh_creator_init(GameObject* obj, s8* def)
+void ecsh_creator_init(GameObject* obj, s8* defArg)
 {
     EcshCreatorState* state = (EcshCreatorState*)obj->extra;
-    obj->anim.rotX = (s16)((s32)def[0x1e] << 8);
+    EcshCreatorPlacement* def = (EcshCreatorPlacement*)defArg;
+    obj->anim.rotX = (s16)((s32)def->rotByte << 8);
     obj->unkF8 = 0;
     state->countdown = ECSH_COUNTDOWN_START;
     state->active = 0;
     *(u8*)((char*)obj + 0x37) = 0xff; /* anim.pad37[0], adjacent to anim.alpha */
     obj->anim.alpha = 0xff;
-    state->gameBit = *(s16*)(def + 0x18);
+    state->gameBit = def->gameBit;
     state->groupSlot = 2;
-    state->groupSlot += (u8)def[0x20];
+    state->groupSlot += def->groupSlotOffset;
 }
 
 void ecsh_creator_release(void)

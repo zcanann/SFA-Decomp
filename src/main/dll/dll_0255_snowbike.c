@@ -720,8 +720,20 @@ typedef struct
     u8 b01 : 1;
 } SnowBikeFlags;
 
+typedef struct SnowBikePlacement
+{
+    u8 pad00[0x18];
+    u8 yawByte;
+    u8 startFlag;
+    s16 unk1a;
+    u8 param1c;
+    u8 param1d;
+    s16 gameBitId;
+    u8 pad20[0x24 - 0x20];
+} SnowBikePlacement;
+
 #pragma inline_max_size(4000)
-static inline void SnowBike_initBody(int obj, u8* params, int flag)
+static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int flag)
 {
     extern void fn_801EC928(int obj, u8* state);
     f32 fv;
@@ -745,7 +757,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_OWNS_PLACEMENT_DATA;
         Obj_ClearModelSlotIndex(obj);
     }
-    rot = params[0x18] << 8;
+    rot = params->yawByte << 8;
     ((SnowBikeState*)state)->yawCurrent = rot;
     ((SnowBikeState*)state)->yaw = rot;
     ((GameObject*)obj)->anim.rotX = rot;
@@ -765,15 +777,15 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
             }
         }
     }
-    if (params[0x19] != 0)
+    if (params->startFlag != 0)
     {
         ((SnowBikeFlags*)(state + 0x428))->b02 = 1;
     }
     ((SnowBikeState*)state)->checkpointIndexA = -1;
     ((SnowBikeState*)state)->checkpointIndexB = -1;
     ((SnowBikeState*)state)->checkpointIndexC = -1;
-    ((SnowBikeState*)state)->unk05C = params[0x1c];
-    ((SnowBikeState*)state)->unk05D = params[0x1d];
+    ((SnowBikeState*)state)->unk05C = params->param1c;
+    ((SnowBikeState*)state)->unk05D = params->param1d;
     ((SnowBikeState*)state)->posSnapshotX = ((GameObject*)obj)->anim.localPosX;
     ((SnowBikeState*)state)->posSnapshotY = ((GameObject*)obj)->anim.localPosY;
     ((SnowBikeState*)state)->posSnapshotZ = ((GameObject*)obj)->anim.localPosZ;
@@ -792,8 +804,8 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
     ((SnowBikeState*)state)->homePosY = ((GameObject*)obj)->anim.worldPosY;
     ((SnowBikeState*)state)->homePosZ = ((GameObject*)obj)->anim.worldPosZ;
     ((SnowBikeState*)state)->pathProgress = lbl_803E5AE8;
-    ((SnowBikeState*)state)->unk448 = *(s16*)(params + 0x1a);
-    ((SnowBikeState*)state)->gameBitId = *(s16*)(params + 0x1e);
+    ((SnowBikeState*)state)->unk448 = params->unk1a;
+    ((SnowBikeState*)state)->gameBitId = params->gameBitId;
     if (mainGetBit(((SnowBikeState*)state)->gameBitId) != 0)
     {
         ((SnowBikeFlags*)(state + 0x428))->b04 = 1;
@@ -903,7 +915,7 @@ static inline void SnowBike_initBody(int obj, u8* params, int flag)
 
 void SnowBike_init(int obj, u8* params, int flag)
 {
-    SnowBike_initBody(obj, params, flag);
+    SnowBike_initBody(obj, (SnowBikePlacement*)params, flag);
 }
 #pragma inline_max_size reset
 

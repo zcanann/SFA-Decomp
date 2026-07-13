@@ -51,6 +51,15 @@
 #define HIGHTOP_OBJGROUP       0xa
 #define ARWARWING_OBJGROUP     0x26
 
+typedef struct HighTopPlacement
+{
+    u8 pad00[0x18];
+    s8 rotByte;          /* 0x18: yaw seed (<<8 -> anim.rotX) */
+    u8 unk19;            /* 0x19 -> runtime.unkC45 */
+    s16 airMeterParam;   /* 0x1a */
+    s16 curveScaleParam; /* 0x1c */
+} HighTopPlacement;
+
 int hightop_defaultStateHandler(void)
 {
     return 0x0;
@@ -369,6 +378,7 @@ void HighTop_init(GameObject* obj, u8* arg)
 {
     u8* base = lbl_8032AAB0;
     HighTopRuntime* runtime = (obj)->extra;
+    HighTopPlacement* p = (HighTopPlacement*)arg;
     u8* pathState;
     int* node;
     HtInitData local1;
@@ -377,9 +387,9 @@ void HighTop_init(GameObject* obj, u8* arg)
     local8 = lbl_803E6AA0;
     local1 = gHighTopLookInitData1;
     local2 = gHighTopLookInitData2;
-    (obj)->anim.rotX = (s16)((s8)arg[0x18] << 8);
+    (obj)->anim.rotX = (s16)(p->rotByte << 8);
     (obj)->animEventCallback = HighTop_seqFn;
-    runtime->unkC45 = arg[0x19];
+    runtime->unkC45 = p->unk19;
     runtime->turnRateThreshold = 5;
     *(s8*)&runtime->substate = -1;
     node = *(int**)&(obj)->anim.modelState;
@@ -402,19 +412,19 @@ void HighTop_init(GameObject* obj, u8* arg)
     dll_2E_func09((MoveLibState*)runtime->lookController, &local2, &local1, 6);
     runtime->flags |= 2;
     runtime->flags |= 8;
-    runtime->airMeterRemaining = *(s16*)(arg + 0x1a);
+    runtime->airMeterRemaining = p->airMeterParam;
     runtime->flags |= 1;
     (obj)->anim.modelInstance->runtimeSourceHitMask = 127;
     runtime->flagsC49.b4 = 0;
     runtime->flagsC49.b7 = 0;
-    gHighTopAirMeterInitValue = *(s16*)(arg + 0x1a);
-    if (*(s16*)(arg + 0x1c) == 0)
+    gHighTopAirMeterInitValue = p->airMeterParam;
+    if (p->curveScaleParam == 0)
     {
         runtime->curveFollowSpeedScale = lbl_803E6B50;
     }
     else
     {
-        runtime->curveFollowSpeedScale = (f32) * (s16*)(arg + 0x1c) / lbl_803E6B54;
+        runtime->curveFollowSpeedScale = (f32)p->curveScaleParam / lbl_803E6B54;
     }
     runtime->flagsC49.b6 = 0;
     runtime->flagsC4A.b0 = 0;

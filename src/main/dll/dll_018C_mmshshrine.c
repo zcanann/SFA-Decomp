@@ -112,6 +112,12 @@ typedef struct MMSHShrineRuntime
     u8 pad25[3];
 } MMSHShrineRuntime;
 
+typedef struct MMSHShrinePlacement
+{
+    u8 pad00[0x1a];
+    s16 initCountParam; /* 0x1a: >>8 seeds runtime initCount */
+} MMSHShrinePlacement;
+
 typedef struct MMSHShrineObject
 {
     s16 yaw;
@@ -383,15 +389,16 @@ void MMSH_Shrine_init(GameObject* obj, int def)
 {
     int light;
     MMSHShrineRuntime* state;
+    MMSHShrinePlacement* p = (MMSHShrinePlacement*)def;
 
     state = obj->extra;
     ((MMSHShrineObject*)obj)->yaw = 0;
     obj->animEventCallback = MMSH_Shrine_SeqFn;
     state->initCount = 10;
     state->phase = MMSH_SHRINE_PHASE_IDLE;
-    if (0 < *(short*)(def + 0x1a))
+    if (0 < p->initCountParam)
     {
-        state->initCount = *(short*)(def + 0x1a) >> 8;
+        state->initCount = p->initCountParam >> 8;
     }
     mainSetBits(MMSH_SHRINE_GB_RESET_A, 0);
     mainSetBits(MMSH_SHRINE_GB_12D, 0);

@@ -30,6 +30,12 @@ typedef struct EcshCupState
     u8 pad2F[0x30 - 0x2F];
 } EcshCupState;
 
+typedef struct EcshCupPlacement
+{
+    u8 pad00[0x1a];
+    s16 slotId; /* 0x1a */
+} EcshCupPlacement;
+
 typedef struct
 {
     f32 x;
@@ -273,6 +279,7 @@ void ecsh_cup_init(int obj, int def)
 {
     int state;
     f32 dist;
+    EcshCupPlacement* p = (EcshCupPlacement*)def;
 
     state = *(int*)&((GameObject*)obj)->extra;
     dist = lbl_803E5064;
@@ -289,7 +296,7 @@ void ecsh_cup_init(int obj, int def)
         ((EcshCupState*)state)->velZ = fz;
     }
     ((EcshCupState*)state)->currentMode = 0;
-    ((EcshCupState*)state)->slotId = *(s16*)(def + 0x1a);
+    ((EcshCupState*)state)->slotId = p->slotId;
     ((EcshCupState*)state)->bobTimer = randomGetRange(0, 0x258);
     ((EcshCupState*)state)->spinRate = randomGetRange(-0x320, 0x320);
     *(u8*)&((EcshCupState*)state)->bobDir = 1;
