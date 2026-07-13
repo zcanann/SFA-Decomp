@@ -603,22 +603,10 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
                 p += 0x20;
             }
         }
-        if (mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0)
-        {
-            magicVal = 0xc8;
-        }
-        else if (mainGetBit(GAMEBIT_ITEM_100ScarabBag_Got) != 0)
-        {
-            magicVal = 0x64;
-        }
-        else if (mainGetBit(GAMEBIT_ITEM_50ScarabBag_Got) != 0)
-        {
-            magicVal = 0x32;
-        }
-        else
-        {
-            magicVal = 0xa;
-        }
+        magicVal = mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0   ? 0xc8
+                   : mainGetBit(GAMEBIT_ITEM_100ScarabBag_Got) != 0 ? 0x64
+                   : mainGetBit(GAMEBIT_ITEM_50ScarabBag_Got) != 0  ? 0x32
+                                                                    : 0xa;
         lbl_803DD734 = magicVal;
         *(s16*)(lbl_8031BB90 + 0x160) = magicVal != 0 ? (u8)0x4e : (u8)0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
