@@ -83,7 +83,7 @@ typedef struct ObjSeqTurnState
 
 extern int lbl_803DD044;
 extern u8 curSeqNo;
-extern u32 focusedNpc;
+extern GameObject* focusedNpc;
 extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
@@ -162,7 +162,7 @@ u8 getCurSeqNo(void)
 {
     return curSeqNo;
 }
-u32 getFocusedNpc(void)
+GameObject* getFocusedNpc(void)
 {
     return focusedNpc;
 }
@@ -422,30 +422,30 @@ void ObjSeq_preempt(int key, int value)
     lbl_803DD124++;
 }
 
-void cameraFocusNpc(int param1, u8* obj)
+void cameraFocusNpc(int param1, GameObject* obj)
 {
     struct
     {
         f32 vec[3];
         u8 tag;
     } buf;
-    f32* p;
+    ObjHitVolumeRuntimeTransform* hitTransform;
 
     if ((*gCameraInterface)->getMode() == MAKETEX_CAMMODE_NPCSPEAK)
         return;
-    focusedNpc = (u32)obj;
-    p = *(f32**)(obj + 0x74);
-    if (p == NULL || param1 == 7 || param1 == 6)
+    focusedNpc = obj;
+    hitTransform = obj->anim.hitVolumeTransforms;
+    if (hitTransform == NULL || param1 == 7 || param1 == 6)
     {
-        buf.vec[0] = ((GameObject*)obj)->anim.worldPosX;
-        buf.vec[1] = ((GameObject*)obj)->anim.worldPosY;
-        buf.vec[2] = ((GameObject*)obj)->anim.worldPosZ;
+        buf.vec[0] = obj->anim.worldPosX;
+        buf.vec[1] = obj->anim.worldPosY;
+        buf.vec[2] = obj->anim.worldPosZ;
     }
     else
     {
-        buf.vec[0] = p[0];
-        buf.vec[1] = p[1];
-        buf.vec[2] = p[2];
+        buf.vec[0] = hitTransform->jointX;
+        buf.vec[1] = hitTransform->jointY;
+        buf.vec[2] = hitTransform->jointZ;
     }
     buf.tag = (u8)param1;
     (*gCameraInterface)->setMode(MAKETEX_CAMMODE_NPCSPEAK, 1, 0, 0x10, buf.vec, 0, 0xff);

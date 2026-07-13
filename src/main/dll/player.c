@@ -6,6 +6,7 @@
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/maketex_api.h"
 #include "main/objprint_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/objfx_api.h"
@@ -13,6 +14,7 @@
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/viewfinder.h"
 #include "main/sky_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0015_curves.h"
@@ -3233,7 +3235,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             int d;
             seq->flags &= ~0x4c;
             seq->savedFlags &= ~0x48;
-            obj2 = getFocusedNpc();
+            obj2 = (int)getFocusedNpc();
             if (objModelGetVecFn_800395d8((GameObject*)(obj2), 0) != 0)
             {
                 objPosFn_80039510((GameObject*)(obj2), 0, npos);
@@ -3557,7 +3559,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 for (endFlag = 0; endFlag < objCount; endFlag++)
                 {
                     va = *(int*)obj2;
-                    if ((u32)va != 0 && arrayIndexOf((void*)(tbl + 0x13c), 9, *(s16*)(va + 0x46)) != -1)
+                    if ((u32)va != 0 && arrayIndexOf((int*)(tbl + 0x13c), 9, *(s16*)(va + 0x46)) != -1)
                     {
                         f32 dsq = vec3f_distanceSquared((void*)(va + 0x18), (void*)(obj + 0x18));
                         if (dsq < best || found == 0)
@@ -3626,7 +3628,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                         ((PlayerState*)inner)->moveSequenceFlags = 4;
                         ObjAnim_SetCurrentMove(obj, 0xf8, 0.0f, 1);
                     }
-                    if (arrayIndexOf((void*)(tbl + 0x160), 4, *(s16*)(va + 0x46)) != -1)
+                    if (arrayIndexOf((int*)(tbl + 0x160), 4, *(s16*)(va + 0x46)) != -1)
                     {
                         (**(void (**)(int, int, int))((char*)(*gPlayerInterface) + 0x14))(obj, (int)inner, 0x1a);
                         *(void (**)(int))((char*)inner + 0x304) = (void (*)(int))fn_8029F67C;
@@ -3670,7 +3672,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     (*gCameraInterface)->loadTriggeredCamAction(0, 0x69, 0);
                     (*gObjectTriggerInterface)->setCamVars(0x42, 4, 0, 0);
                 }
-                else if ((u32)gb != 0 && arrayIndexOf((void*)(tbl + 0x160), 4, *(s16*)(gb + 0x46)) != -1)
+                else if ((u32)gb != 0 && arrayIndexOf((int*)(tbl + 0x160), 4, *(s16*)(gb + 0x46)) != -1)
                 {
                     (*gObjectTriggerInterface)->setCamVars(0x53, 0, 0, 0);
                 }
@@ -8049,7 +8051,7 @@ void playerDoHitDetection(int obj)
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HITDETECT;
         if (((PlayerState*)inner)->focusObject != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
-             arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
+             arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             (*(void (*)(int, f32*, f32*, f32*))(*(int*)(*(int*)(*(int*)((int)((PlayerState*)inner)->focusObject + 0x68)) +
                                                         0x34)))((int)((PlayerState*)inner)->focusObject, &x, &y, &z);
@@ -13220,7 +13222,7 @@ void fn_802B4ED8(GameObject* obj, int p2, int mode)
     if (*(void**)((char*)inner + 0x7f0) != NULL)
     {
         if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
-            arrayIndexOf(&lbl_803DC6C4, 2, inner->baddie.controlMode) != -1)
+            arrayIndexOf((int*)&lbl_803DC6C4, 2, inner->baddie.controlMode) != -1)
         {
             int p = (int)inner->focusObject;
             (*(void (*)(int, f32))(*(int*)((char*)*(int*)*(int*)((char*)p + 0x68) + 0x50)))(
@@ -13791,7 +13793,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
     {
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
-             arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
+             arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             fn_802A9D0C(obj, inner, (int)((PlayerState*)inner)->focusObject, a, b, c, d, 1);
         }
@@ -13802,7 +13804,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         (*(void (*)(int))(*(int*)(*gPlayerShadowInterface + 0x8)))(obj);
         if (*(void**)((char*)inner + 0x7f0) != NULL &&
             ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 ||
-             arrayIndexOf(&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
+             arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
                 int held = (int)((PlayerState*)inner)->focusObject;
@@ -15054,7 +15056,7 @@ int playerStateMountBike(GameObject* obj, int state, f32 fv)
     {
         ObjAnim_SetCurrentMove((int)obj, *(s16*)inner->moveSequence, lbl_803E7EA4, 1);
         (*(void (*)(int, int))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x3c)))(sub, 2);
-        if (arrayIndexOf((s16*)(base + 0x160), 4, *(s16*)((char*)sub + 0x46)) != -1)
+        if (arrayIndexOf((int*)(base + 0x160), 4, *(s16*)((char*)sub + 0x46)) != -1)
         {
             *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_8029F67C;
             return 0x1b;

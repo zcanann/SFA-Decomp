@@ -22,6 +22,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/viewfinder_state.h"
+#include "main/dll/viewfinder.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -55,7 +56,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 
-extern void viewFinderSetZoom(f32 fov);
 
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern char sCam5BYDebugFormat;

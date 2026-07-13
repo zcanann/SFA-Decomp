@@ -4257,7 +4257,7 @@ gotFlags:
 
     if (doCam != 0)
     {
-        cameraFocusNpc(camArg, obj);
+        cameraFocusNpc(camArg, (GameObject*)obj);
     }
     mm_free(buf);
     lbl_803DD078 = 0;

@@ -2,6 +2,7 @@
 #define MAIN_MAKETEX_H_
 
 #include "ghidra_import.h"
+#include "main/maketex_api.h"
 
 void FUN_8007e77c(u64 param_1,double param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
@@ -56,10 +57,8 @@ void FUN_8007fb80(u32 param_1,u32 param_2,short param_3,u32 param_4,
 /* extern-cleanup: defining-file public prototypes */
 void seqClearTaskTexts(void);
 void endObjSequence(int seq);
-void cameraFocusNpc(int param1, u8* obj);
 
 int randFn_80080100(int n);
-int arrayIndexOf(int* array, int count, int value);
 int fn_80080150(const f32* value);
 int timerCountDown(f32* timer);
 void storeZeroToFloatParam(f32* timer);

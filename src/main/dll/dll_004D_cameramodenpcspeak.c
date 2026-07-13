@@ -16,6 +16,7 @@
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/mm.h"
+#include "main/maketex_api.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_transform.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803DB9C4;
 
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int getFocusedNpc(void);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);
@@ -106,7 +106,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
     }
     else
     {
-        GameObject* focus = (GameObject*)getFocusedNpc();
+        GameObject* focus = getFocusedNpc();
         f32* fpos;
         if (focus == NULL)
         {
@@ -232,7 +232,7 @@ void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
         }
     }
 
-    if (mode != 6 && mode != 7 && (npc = (GameObject*)getFocusedNpc()) != NULL)
+    if (mode != 6 && mode != 7 && (npc = getFocusedNpc()) != NULL)
     {
         GameObject* tgt = target;
         s16 sd;

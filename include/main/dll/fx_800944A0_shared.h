@@ -336,8 +336,6 @@ void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval);
 void waterfx_onMapSetup(void);
 void waterfx_release(void);
 void waterfx_initialise(void);
-void viewFinderSetZoom(f32 zoom);
-void viewFinderSetZoomTo50(void);
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);

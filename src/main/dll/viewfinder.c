@@ -10,7 +10,8 @@
  * Driven from the player viewfinder/camera-mode code (player.c,
  * dll_0044_cameramodeviewfinder.c).
  */
-#include "main/dll/fx_800944A0_shared.h" /* lbl_803DB790/DF348/DF34C + own forward-decls live only here */
+#include "main/dll/viewfinder.h"
+#include "main/dll/fx_800944A0_shared.h"
 
 void viewFinderSetZoom(f32 zoom)
 {
