@@ -62,7 +62,6 @@ extern int lbl_803DDAE4;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void playerPullOutStaff(GameObject* obj, int enabled);
 
 int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

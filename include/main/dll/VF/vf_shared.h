@@ -16,6 +16,7 @@
 #include "main/mm.h"
 #include "main/objseq.h"
 #include "main/render.h"
+#include "main/object_render_legacy.h"
 
 extern u64 FUN_80006724();
 extern u64 FUN_80006728();
@@ -241,7 +242,6 @@ extern f32 lbl_803E5EE8;
 extern f32 lbl_803E5EEC;
 extern f32 lbl_803E5EC4;
 extern f32 lbl_803E5EF0;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int lbl_80328CC8[];
 extern f32 lbl_803E5F10;
 extern int lbl_803DC148;
