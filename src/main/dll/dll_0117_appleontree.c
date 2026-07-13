@@ -87,9 +87,6 @@ int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-extern void AppleOnTree_init();
-extern void AppleOnTree_update();
-
 ObjectDescriptor gWM_ColumnObjDescriptor = {
     0,
     0,
