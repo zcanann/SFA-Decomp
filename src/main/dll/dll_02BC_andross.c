@@ -442,6 +442,35 @@ void andross_render(int obj, int p2, int p3, int p4, int p5)
 void andross_hitDetect(void)
 {
 }
+int gAndrossSpawnObjectIds[] = {
+    0x0004AA57,
+    0x0004AA66,
+    0x0004AA96,
+    0x0004AA97,
+};
+
+f32 gAndrossMoveAnimSpeeds[23] = {
+    0.01f, 0.01f, 0.005f, 0.005f, 0.08f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f,
+    0.03f, 0.03f, 0.02f,  0.02f,  0.01f, 0.02f,  0.02f,  0.02f,  0.02f,  0.007f, 0.003f,
+};
+
+ObjectDescriptor gAndrossObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)andross_init,
+    (ObjectDescriptorCallback)andross_update,
+    (ObjectDescriptorCallback)andross_hitDetect,
+    (ObjectDescriptorCallback)andross_render,
+    (ObjectDescriptorCallback)andross_free,
+    (ObjectDescriptorCallback)andross_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)andross_getExtraSize,
+};
+
 void andross_update(int obj)
 {
     GameObject* boss;
@@ -2352,18 +2381,6 @@ void andross_init(int obj, ObjPlacement* setup)
     mainSetBits(0xd, 0);
     unlockLevel(0, 0, 1);
 }
-
-int gAndrossSpawnObjectIds[] = {
-    0x0004AA57,
-    0x0004AA66,
-    0x0004AA96,
-    0x0004AA97,
-};
-
-f32 gAndrossMoveAnimSpeeds[23] = {
-    0.01f, 0.01f, 0.005f, 0.005f, 0.08f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f, 0.007f,
-    0.03f, 0.03f, 0.02f,  0.02f,  0.01f, 0.02f,  0.02f,  0.02f,  0.02f,  0.007f, 0.003f,
-};
 
 int gAndrossRotationTargetDivisor = 20;
 int gAndrossRotationSmoothingDivisor = 10;
