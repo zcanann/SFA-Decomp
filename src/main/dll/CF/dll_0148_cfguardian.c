@@ -32,6 +32,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
@@ -166,7 +167,6 @@ extern f32 lbl_803E415C;
 extern int Curve_AdvanceAlongPath(int p1);
 extern int ObjHits_EnableObject();
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */

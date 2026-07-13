@@ -3,10 +3,7 @@
 
 #include "global.h"
 #include "main/gamebit_ids.h"
-
-u32 mainGetBit(int eventId);
-void mainSetBits(int eventId, int value);
-
+#include "main/gamebits_api.h"
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void hudFn_8011f6f0(u8 x);

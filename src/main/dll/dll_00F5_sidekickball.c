@@ -35,6 +35,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 #include "main/dll/tricky_api.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK       0x1000
@@ -54,7 +55,6 @@ extern const f32 lbl_803E368C;
 extern const f32 lbl_803E3690;
 extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
-extern u32 mainGetBit(int eventId);
 extern f32 timeDelta;
 extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
@@ -511,8 +511,6 @@ u8 trickyBallMove(u8* obj)
 
 void SidekickBall_init(GameObject* obj)
 {
-
-    extern void mainSetBits(int eventId, int value);
     u8 pathFlag;
     u8* state;
     int objDef;

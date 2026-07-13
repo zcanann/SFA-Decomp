@@ -29,6 +29,7 @@
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
 #include "main/gameloop_api.h"
+#include "main/gamebits_api.h"
 #include "main/maketex.h"
 #include "main/objprint.h"
 #include "main/dll/babycloudrunnerstate_struct.h"
@@ -126,7 +127,6 @@ extern f32 lbl_803E4254;
 
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
-extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);

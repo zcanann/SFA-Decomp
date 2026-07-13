@@ -50,8 +50,6 @@ extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
-extern void mainSetBits(int eventId, int value);
-
 int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int* state = obj->extra;

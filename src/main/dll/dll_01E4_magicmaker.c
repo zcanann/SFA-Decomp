@@ -16,6 +16,7 @@
 #define OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
+#include "main/gamebits_api.h"
 #include "main/dll/dll_01E4_magicmaker.h"
 
 #define MAGICMAKER_SPAWN_GAMEBIT       0x26b /* set-by-others trigger; cleared each spawn attempt */
@@ -27,7 +28,6 @@ extern u16 lbl_80325CE8[];
 extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
-extern void mainSetBits(int eventId, int value);
 extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);

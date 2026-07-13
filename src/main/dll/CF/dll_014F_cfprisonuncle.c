@@ -17,13 +17,13 @@
 #include "main/objlib.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 #include "main/dll/CF/dll_014F_cfprisonuncle.h"
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 extern f32 lbl_803E428C;
 extern f32 lbl_803E4288;
-extern u32 mainGetBit(int eventId);
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern int objUpdateOpacity(int sub);

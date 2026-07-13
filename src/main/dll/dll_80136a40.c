@@ -43,6 +43,7 @@
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 #include "main/objprint_sound_api.h"
 
 typedef struct TrickyImpressState
@@ -182,7 +183,6 @@ extern u32 gDebugMarginBottom;
 
 extern u64 ObjLink_DetachChild();
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern u32 mainGetBit(int eventId);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern u32 getScreenResolution(void);
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);

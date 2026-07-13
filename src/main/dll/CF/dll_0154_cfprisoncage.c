@@ -20,6 +20,7 @@
 #include "main/objseq.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/gamebit_ids.h"
+#include "main/gamebits_api.h"
 
 typedef struct CfPrisonCageMapData
 {
@@ -60,7 +61,6 @@ enum
 
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
-extern u32 mainGetBit(int eventId);
 extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
 /* CFPrisonCage_SeqFn: lock interaction once the opened bit is set;
