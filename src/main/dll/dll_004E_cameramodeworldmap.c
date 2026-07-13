@@ -22,10 +22,10 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/CAM/camworldmap_state.h"
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/object_transform.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 
 

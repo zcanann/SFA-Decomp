@@ -22,7 +22,6 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/newshadows.h"
-#include "main/sfa_extern_decls.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00E2_staff_api.h"

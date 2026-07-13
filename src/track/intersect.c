@@ -17,8 +17,8 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
+#include "main/newshadows.h"
 #include "main/pad.h"
-#include "main/sfa_extern_decls.h"
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
