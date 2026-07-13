@@ -4,6 +4,7 @@
  * geometry and texture, drives sfx channels and proximity damage.
  */
 #include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
@@ -112,9 +113,7 @@ typedef struct DFSHLaserBeamObject
     ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
         obj, id, a, flags, owner, unk)
 
-extern f32 timeDelta;
 extern void* gLaserBeamEffectResource;
-extern u8 framesThisStep;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;

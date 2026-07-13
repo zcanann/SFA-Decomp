@@ -19,6 +19,7 @@
  * input-override state round it out.
  */
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/dll/dll_003B_menu.h"
 #include "main/game_object.h"
@@ -205,7 +206,6 @@ extern u8 lbl_803DD75B;
 extern s16 lbl_803DD772;
 extern u8 pauseMenuFrameCounter;
 extern int gCMenuSections[];
-extern u8 framesThisStep;
 extern const f32 hudElementOpacity;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FA0;
@@ -243,7 +243,6 @@ extern s16 cMenuFadeCounter;
 extern f32 lbl_803DD844, lbl_803DD83C;
 extern const f32 gTrickyHudNearestObjMaxDist;
 extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
-extern f32 timeDelta;
 extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
 extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
 extern const f32 lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;

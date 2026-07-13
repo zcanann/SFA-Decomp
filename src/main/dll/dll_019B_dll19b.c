@@ -1,5 +1,6 @@
 /* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
 #include "main/dll/torch1CD.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
@@ -36,8 +37,6 @@ extern f32 lbl_803E5194;
 extern f32 lbl_803E5198;
 extern f32 lbl_803E519C;
 extern f32 lbl_803E51A0;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 
 /* Romlist placement for the 0x19B torch object. The standard ObjPlacement
  * header occupies 0x00..0x18; this class stores a packed activation-distance

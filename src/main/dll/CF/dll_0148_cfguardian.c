@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/dll/savegame.h"
 #include "main/object_api.h"
@@ -174,8 +175,6 @@ extern void objSeqInitFn_80080078(void* p, int n);
 extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void playerAddRemoveMagic(void* player, int n);
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -184,7 +183,6 @@ extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;                /* per-event sfx-id table passed to cfguardianPlayEventSfx */
-extern f32 oneOverTimeDelta;
 
 /* cfguardianPlayEventSfx: walk this step's triggered anim events and play the
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,

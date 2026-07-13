@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/frame_timing.h"
 #include "main/dll/savegame.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
@@ -94,7 +95,6 @@ extern s16 gMinimapInfoTextY;
 extern s16 gMinimapInfoTextX;
 extern CMenuSection gCMenuSections[];
 extern s16 gCMenuActivatedId;
-extern u8 framesThisStep;
 extern s32 lbl_803DBA5C;
 extern f32 lbl_803DBAA4;
 extern u8 lbl_803DD75B;
@@ -118,7 +118,6 @@ extern u8 gPauseMenuHintIndex;
 extern u8 gPauseMenuTextCharset;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
-extern f32 timeDelta;
 extern void* gameTextGet(int textId);
 extern void* lbl_803A9410[6];
 extern s16 lbl_803DD784;

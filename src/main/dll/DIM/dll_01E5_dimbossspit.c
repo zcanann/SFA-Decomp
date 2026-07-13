@@ -7,6 +7,7 @@
  * light whose intensity flickers frame-by-frame.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/camera_shake_api.h"
 #include "main/pad_api.h"
 #include "main/vecmath.h"
@@ -61,8 +62,6 @@ typedef struct DIMbossspitState
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
 extern f32 lbl_803E4D44;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;

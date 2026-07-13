@@ -3,6 +3,7 @@
  * beetles. TU = 0x801843C0..0x80185868.
  */
 #include "main/dll/CF/CFguardian.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
@@ -40,8 +41,6 @@ STATIC_ASSERT(sizeof(WindLift107State) == 0x2c);
 
 STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern u32 gScarabMoneyValues;
 extern f32 lbl_803E39F4;
 extern f32 lbl_803E39F8;

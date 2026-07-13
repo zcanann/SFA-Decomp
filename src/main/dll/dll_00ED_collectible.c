@@ -13,6 +13,7 @@
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
@@ -36,8 +37,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern void saveGame_unsaveObjectPos(int* obj);
 extern f32 gCollectibleDespawnTimerDuration;
 extern f32 lbl_803E3454;

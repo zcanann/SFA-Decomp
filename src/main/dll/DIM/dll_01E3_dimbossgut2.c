@@ -6,6 +6,7 @@
  * hitbox that resets after each contact burst.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
@@ -28,8 +29,6 @@
 
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;

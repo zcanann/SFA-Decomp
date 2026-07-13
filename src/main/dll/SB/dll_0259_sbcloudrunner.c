@@ -18,6 +18,7 @@
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
@@ -146,8 +147,6 @@ enum
 #define COLORFADE_RUMBLE_PRESET 4000 /* anim.rotY written on a fade hit */
 
 extern f32 lbl_803E5C70;
-extern u8 framesThisStep;
-extern f32 timeDelta;
 extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;

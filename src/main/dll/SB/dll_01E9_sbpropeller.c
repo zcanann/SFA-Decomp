@@ -10,6 +10,7 @@
  * (offsets 0x20/0x24/0x28) for camera/state info.
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/vecmath.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -40,10 +41,8 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
 
 
-extern f32 timeDelta;
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int DBprotection_getCameraState(u32 g);
-extern u8 framesThisStep;
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;
 extern f32 lbl_803E5818;

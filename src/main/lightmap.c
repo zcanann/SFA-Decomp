@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
@@ -831,7 +832,6 @@ typedef struct
     u8 r, g, b, a;
 } GXColor8;
 
-extern u8 framesThisStep;
 extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
@@ -1765,7 +1765,6 @@ extern void envFxFn_80088884(void);
 extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 
-extern f32 timeDelta;
 extern s32 lbl_803DCE00;
 
 #pragma fp_contract off

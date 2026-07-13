@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/objlib.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -54,7 +55,6 @@ typedef struct Dll19Placement
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 timeDelta;
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
 extern u8 lbl_802C2190[];
@@ -83,7 +83,6 @@ extern f32 lbl_803E1C78;
 extern f32 lbl_803E1C7C;
 extern const f32 gDll19AnglePi;
 extern const f32 gDll19BinaryAngleScale;
-extern u8 framesThisStep;
 
 int dll_19_func1B(GameObject *obj)
 {

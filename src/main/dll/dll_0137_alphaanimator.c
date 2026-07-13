@@ -18,6 +18,7 @@
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -59,8 +60,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define ALPHAANIM_MODE_GATED    2 /* direction follows live gate bit; sfx on gate flip */
 #define ALPHAANIM_MODE_TIMED    3 /* timeDelta float fade (fadeA/fadeMax) */
 
-extern u8 framesThisStep;
-extern f32 timeDelta;
 
 int AlphaAnimator_getExtraSize(void)
 {

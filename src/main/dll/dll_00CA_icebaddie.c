@@ -29,6 +29,7 @@
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
@@ -156,8 +157,6 @@ extern f32 lbl_803E2DA8;
 extern f32 lbl_803E2DAC;
 extern f32 lbl_803E2DB0;
 extern f32 lbl_803E2DB4;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803E2CE8;
 extern f32 lbl_803E2CEC;
 extern f32 lbl_803E2CF0;

@@ -9,6 +9,7 @@
  * non-owner object. Timed variants fade their alpha out and self-free.
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/maketex_timer_api.h"
 #include "main/object_api.h"
@@ -68,8 +69,6 @@ typedef struct
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 extern f32 lbl_803E3158;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern f32 lbl_803DBD48;
 extern f32 lbl_803DBD4C;
 extern const f32 lbl_803E315C;

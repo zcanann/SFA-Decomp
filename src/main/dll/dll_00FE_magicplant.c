@@ -20,6 +20,7 @@
  * clears the child pointer (gem released) -> FADE_OUT.
  */
 #include "main/dll/dusterstate_types.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
@@ -90,8 +91,6 @@ extern f32 gMagicPlantIdleAnimStep;
 extern f32 lbl_803E3890;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
-extern f32 timeDelta;
-extern u8 framesThisStep;
 extern s16 gMagicPlantGemDefIds[4];
 
 extern int ObjHits_GetPriorityHitWithPosition();

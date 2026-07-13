@@ -1,5 +1,6 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
+#include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/rom_curve_interface.h"
@@ -1487,9 +1488,6 @@ u32 mapLoadDataFile(int mapId, int fileId)
 }
 
 
-extern f32 timeDelta;
-extern f32 oneOverTimeDelta;
-extern u8 framesThisStep;
 extern char sZlbBlockTag;
 
 extern asm BOOL OSRestoreInterrupts(register BOOL level);

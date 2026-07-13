@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/objprint_dolphin.h"
 #include "main/model.h"
 #include "main/object_api.h"
@@ -92,7 +93,6 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     extern f32 lbl_803DE9C8;
     extern f32 lbl_803DE99C;
     extern f32 lbl_803DB464;
-    extern u8 framesThisStep;
     s16* found;
     int timer;
 
@@ -305,7 +305,6 @@ void objRenderShadowIfVisible(GameObject* obj)
 #pragma dont_inline on
 int fn_800399C0(s16* curve, s16* state)
 {
-    extern f32 timeDelta;
     extern f32 lbl_803DE9A4;
     extern f32 lbl_803DE9D8;
     extern f32 lbl_803DE9DC;
@@ -463,8 +462,6 @@ void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi)
         keys++;
     }
 }
-
-extern u8 framesThisStep;
 
 static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind)
 {
@@ -773,8 +770,6 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         walk += 4;
     }
 }
-
-extern f32 timeDelta;
 
 void objModelAndSoundFn_80039118(int obj, int state)
 {
