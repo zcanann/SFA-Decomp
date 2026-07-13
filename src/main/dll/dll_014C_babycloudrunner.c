@@ -96,7 +96,6 @@ extern u32 ObjHits_EnableObject();
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
-int CFPrisonGuard_getExtraSize(void);
 
 #pragma scheduling off
 #pragma peephole off

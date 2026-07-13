@@ -8,7 +8,6 @@
  * trigger and, when the base is powered and its UI event clears, marks
  * it done and notifies via its type-index sequence.
  */
-#include "main/dll/cfpowerbasestate_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objlib.h"

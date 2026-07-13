@@ -92,10 +92,8 @@ u32 FUN_8019f0fc(int param_1);
 void FUN_8019f16c(int param_1);
 void FUN_8019f1ac(int param_1);
 void FUN_8019f1dc(void);
-int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 int CFPerch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int CFPrisonCage_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-int CFPrisonGuard_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 
 #endif /* MAIN_DLL_DR_SANDWORMBOSS_H_ */

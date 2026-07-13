@@ -6,7 +6,6 @@
  * the convergence beam. Carved from the sandwormBoss container.
  */
 
-#include "main/dll/cfmaincrystalstate_types.h"
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
