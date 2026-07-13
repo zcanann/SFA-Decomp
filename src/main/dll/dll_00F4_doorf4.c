@@ -95,19 +95,21 @@ STATIC_ASSERT(offsetof(DoorF4Placement, gameBitC) == 0x20);
 #define DOORF4_ENVFX_OFF 0xe
 
 extern f32 lbl_803E3680;
-extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
-extern f32 gDoorF4Pi;
-extern f32 gDoorF4BinaryAngleScale;
-extern f32 lbl_803E3648;
-extern f32 lbl_803E3658;
-extern f32 lbl_803E365C;
-extern f32 lbl_803E3660;
-extern f32 lbl_803E3664;
-extern f32 lbl_803E3668;
-extern f32 lbl_803E366C;
-extern f32 lbl_803E3670;
-extern f32 lbl_803E3674;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3648 = 0.0f;
+__declspec(section ".sdata2") f32 gDoorF4Pi = 3.1415927410125732f;
+__declspec(section ".sdata2") f32 gDoorF4BinaryAngleScale = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E3654 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E3658 = -30.0f;
+__declspec(section ".sdata2") f32 lbl_803E365C = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E3660 = 320.0f;
+__declspec(section ".sdata2") f32 lbl_803E3664 = 160.0f;
+__declspec(section ".sdata2") f32 lbl_803E3668 = -200.0f;
+__declspec(section ".sdata2") f32 lbl_803E366C = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E3670 = -60.0f;
+__declspec(section ".sdata2") f32 lbl_803E3674 = 1000.0f;
+#pragma explicit_zero_data off
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);

@@ -1278,6 +1278,8 @@ main/dll/dll_00E3_fireball.c:
 main/dll/dll_00E4_flamethrowerspe.c:
 	.text       start:0x80170004 end:0x801702D4
 	.data       start:0x803209C0 end:0x80320A28
+	.sdata2     start:0x803E3388 end:0x803E3398
+	.sdata2     start:0x803E3398 end:0x803E33A0
 
 main/dll/dll_00E5_shield.c:
 	.text       start:0x801702D4 end:0x80171300
@@ -1439,6 +1441,7 @@ main/dll/dll_0104_smallbasket.c:
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
+	.rodata     start:0x802C2280 end:0x802C2298
 	.data       start:0x80321728 end:0x803217C0
 
 main/dll/dll_0106_scarab.c:
@@ -1906,6 +1909,7 @@ main/dll/DIM/dll_01C9_dimdismountpoint.c:
 
 main/dll/DIM/dll_01CA_dimexplosion.c:
 	.text       start:0x801B3DE4 end:0x801B57BC
+	.rodata     start:0x802C2328 end:0x802C2338
 	.data       start:0x80325528 end:0x803255C8
 	.bss        start:0x803AC960 end:0x803AC970
 
@@ -2274,6 +2278,7 @@ main/dll/dbprotection.c:
 
 main/dll/SB/dll_01E8_sbgalleon.c:
 	.text       start:0x801E1588 end:0x801E2570
+	.rodata     start:0x802C23F8 end:0x802C2428
 
 main/dll/SB/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
@@ -2372,6 +2377,7 @@ main/dll/dll_801e991c.c:
 
 main/dll/drcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854
+	.rodata     start:0x802C2428 end:0x802C2470
 
 main/dll/DR/drshackle.c:
 	.text       start:0x801EA854 end:0x801EAE4C

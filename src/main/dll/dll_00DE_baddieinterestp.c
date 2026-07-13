@@ -32,8 +32,8 @@ typedef struct BaddieinterestpPlacement
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
 } BaddieinterestpPlacement;
 
-extern f32 lbl_803E3220;
-extern f32 lbl_803E3224;
+__declspec(section ".sdata2") f32 lbl_803E3220 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3224 = 1600.0f;
 extern void fn_801504BC(int* obj, int kind);
 
 int BaddieInterestP_getExtraSize(void)
