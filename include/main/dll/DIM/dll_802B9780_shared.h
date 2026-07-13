@@ -309,15 +309,10 @@ extern f32 lbl_803E82D0;
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 
-extern void* gEarthWarriorResource;
 
-extern int gDRCloudRunnerStateHandlers[];
-extern void* gDRCloudRunnerDefaultStateHandler;
 
 extern int gDim2PrisonMammothStateHandlers[];
-extern int gDREarthWarriorStateHandlers[];
 extern void* gDim2PrisonMammothDefaultStateHandler;
-extern void* gDREarthWarriorDefaultStateHandler;
 extern int dim2prisonmammoth_stateHandler01(GameObject* obj, int p2);
 extern int dim2prisonmammoth_stateHandler02(GameObject* obj, int p2);
 extern int dim2prisonmammoth_stateHandler03(GameObject* obj, int p2);
@@ -334,7 +329,6 @@ extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
-extern s16 gDRCloudRunnerDefaultRotX;
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
 extern f32 lbl_803DC76C;
@@ -356,7 +350,6 @@ extern f32 lbl_803E8410;
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
 
-extern f32 gEarthWarriorMatrix[];
 
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
@@ -373,7 +366,6 @@ extern f32 lbl_803E8424;
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
-extern u8 gDRCloudRunnerMoveParamTable[];
 extern int lbl_803E83A0;
 extern int lbl_803DC770;
 extern int lbl_803DC774;
@@ -382,7 +374,6 @@ extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
 
-extern int gDRCloudRunnerAirMeterBaseline;
 extern f32 lbl_803E83B4;
 
 extern char sOnCloudFormat[];

@@ -49,6 +49,18 @@ typedef struct
     f32 z;
 } Vec3x;
 
+extern void* gDRCloudRunnerStateHandlers[];
+extern void* gDRCloudRunnerDefaultStateHandler;
+extern s16 gDRCloudRunnerDefaultRotX;
+extern s16 gDRCloudRunnerHeadingAngleOffset;
+extern s16 gDRCloudRunnerSmoothedRotX;
+extern s16 gDRCloudRunnerGameBitIds[4];
+extern const int gDRCloudRunnerCurveIds[4];
+extern u8 gDRCloudRunnerMoveParamTable[];
+extern int gDRCloudRunnerAirMeterBaseline;
+extern const Vec3x gDRCloudRunnerVecTable[];
+extern s16 gDRCloudRunnerRollAngleLimits;
+
 int DR_CloudRunner_defaultStateHandler(void);
 void DR_CloudRunner_func21(void);
 int DR_CloudRunner_func20(void);
