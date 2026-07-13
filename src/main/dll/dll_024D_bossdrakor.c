@@ -30,6 +30,7 @@
 #include "main/dll/dll_0271_drakorhoverpad.h"
 #include "main/render.h"
 #include "main/object.h"
+#include "main/object_update_list.h"
 #include "main/obj_placement.h"
 #include "main/objprint.h"
 #include "main/game_object.h"
@@ -749,7 +750,7 @@ void bossdrakor_hitDetect(GameObject* obj)
             {
                 mainSetBits(((BossdrakorPlacement*)setup)->defeatedGameBit, 1);
                 spawnExplosionLegacy((int*)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
-                Obj_RemoveFromUpdateList((int*)obj);
+                Obj_RemoveFromUpdateList((u8*)obj);
                 (*gMapEventInterface)->setMapAct(BOSSDRAKOR_MAP_ARENA, 3);
                 mainSetBits(GAMEBIT_ITEM_WaterSpellStone2_Got, 1);
             }

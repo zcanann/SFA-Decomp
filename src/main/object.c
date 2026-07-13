@@ -25,6 +25,7 @@
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
 #include "main/object.h"
+#include "main/object_update_list.h"
 #include "main/object_api.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin.h"

@@ -146,7 +146,6 @@ extern f32 lbl_803E6544;
 extern f32 lbl_803E6548;
 extern f32 lbl_803E654C;
 extern int gBossDrakorMoveStateTable[];
-extern int Obj_RemoveFromUpdateList(int* obj);
 extern f32 lbl_803E6514;
 extern f32 lbl_803E6518;
 extern f32 lbl_803E6520;

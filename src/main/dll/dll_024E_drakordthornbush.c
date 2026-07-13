@@ -21,6 +21,7 @@
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
+#include "main/object_update_list.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/objfx.h"
@@ -145,7 +146,7 @@ void drakord_thornbush_hitDetect(int obj)
             }
             else
             {
-                Obj_RemoveFromUpdateList((int*)obj);
+                Obj_RemoveFromUpdateList((u8*)obj);
                 ObjHits_DisableObject((u32)obj);
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
