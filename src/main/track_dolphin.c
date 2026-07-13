@@ -3762,7 +3762,7 @@ void initTextures(void)
 char sTrackNoFreeLastLineError[] = "NO FREE LAST LINE\n";
 
 #pragma opt_common_subs off
-void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, int slot, u8 arg8)
+void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, int p8, int p9, u8 slot, u8 arg8)
 {
     f32 w0[3];
     f32 w1[3];
@@ -3836,7 +3836,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         }
         if (hit == 0)
             continue;
-        if ((u8)slot != 0xff)
+        if (slot != 0xff)
         {
             char* fl;
             k = 0;
@@ -3844,7 +3844,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
             do
             {
                 if (*(u8*)(fl + 0x14) != 0 && *(u32*)fl == (u32)self && *(u32*)(fl + 4) == (u32)o &&
-                    *(u8*)(fl + 0x15) == (u8)slot)
+                    *(u8*)(fl + 0x15) == slot)
                 {
                     *(u8*)(fl + 0x14) = 0;
                     e = (int*)fl;
@@ -3869,7 +3869,7 @@ void objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, int* out, int* self, in
         Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], (u32)o);
         if (doLotsOfMath(t20, t14, f, p5, out, o, p8, p9, arg8, (int)self) != 0)
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
-        if ((u8)slot != 0xff)
+        if (slot != 0xff)
         {
             char* fl;
             k = 0;
