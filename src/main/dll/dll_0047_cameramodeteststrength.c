@@ -9,7 +9,7 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
-#include "main/dll/CAM/dll_5B.h"
+#include "main/dll/dll_8010a104.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "string.h"

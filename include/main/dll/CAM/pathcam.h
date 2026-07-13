@@ -25,9 +25,6 @@ typedef struct CamcontrolPathSampleWork {
   f32 worldZ[33];
 } CamcontrolPathSampleWork;
 
-void CameraModeNormal_init(CameraObject *cam, int mode, u8 *data);
-void CameraModeNormal_release(void);
-void CameraModeNormal_initialise(void);
 u8 camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,GameObject *target,
                               CameraObject *camera);
 

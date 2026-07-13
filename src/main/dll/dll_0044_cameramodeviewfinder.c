@@ -22,6 +22,7 @@
 #include "main/camera_interface.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/viewfinder_state.h"
+#include "main/dll/dll_0044_cameramodeviewfinder.h"
 #include "main/dll/viewfinder.h"
 #include "main/gamebits.h"
 #include "main/mm.h"

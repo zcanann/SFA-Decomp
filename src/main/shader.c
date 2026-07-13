@@ -2490,8 +2490,6 @@ void beginLoadingMap(void)
     Pause_ResetMenuFrameCounter();
 }
 
-extern void setForceLoadImmediately(void);
-extern void clearForceLoadImmediately(void);
 extern void loadModelAndAnimTabs(void);
 
 extern char sTrackPiLockedFormat[];

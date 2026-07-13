@@ -337,8 +337,4 @@ static inline void OSInitFastCast(void) {
 
 #endif
 
-/* extern-cleanup: consolidated prototypes */
-void setForceLoadImmediately(void);
-void clearForceLoadImmediately(void);
-
 #endif

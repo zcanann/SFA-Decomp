@@ -19,7 +19,6 @@
  * and the number of steps taken.
  */
 #include "main/dll/CAM/camshipbattle5C.h"
-#include "main/dll/CAM/dll_5B.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_8010a104.h"
 

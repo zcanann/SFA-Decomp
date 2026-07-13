@@ -32,6 +32,10 @@
 #include "main/dll/CAM/dll_0043_unk.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/dll_0047_cameramodeteststrength.h"
+#include "main/dll/dll_0042_unk.h"
+#include "main/dll/dll_0044_cameramodeviewfinder.h"
+#include "main/dll/dll_0046_cameramodedebug.h"
+#include "main/dll/dll_0048_cameramodestatic.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_00C9_enemy.h"
@@ -45,45 +49,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
-extern void camcontrol_updateVerticalBounds(void);
-
-extern void CameraModeNormal_func0A(void);
-
-extern void camslide_update(void);
-
-extern void firstperson_updatePitch(void);
-
-extern void CameraModeNormal_follow(void);
-
-extern void CameraModeNormal_copyToCurrent(void);
-extern void CameraModeViewfinder_copyToCurrent(void);
-extern void CameraModeDebug_copyToCurrent_nop(void);
-extern void CameraModeStatic_copyToCurrent(void);
-
-extern void CameraModeNormal_free(void);
-extern void CameraModeViewfinder_free(void);
-extern void CameraModeDebug_free(void);
-extern void CameraModeStatic_free(void);
-
-extern void CameraModeNormal_update(void);
-extern void CameraModeViewfinder_update(void);
-extern void CameraModeDebug_update(void);
-extern void CameraModeStatic_update(void);
-
-extern void CameraModeNormal_init(void);
-extern void CameraModeViewfinder_init(void);
-extern void CameraModeDebug_init(void);
-extern void CameraModeStatic_init(void);
-
-extern void CameraModeNormal_release(void);
-extern void CameraModeViewfinder_release(void);
-extern void CameraModeDebug_release_nop(void);
-extern void CameraModeStatic_release(void);
-
-extern void CameraModeNormal_initialise(void);
-extern void CameraModeViewfinder_initialise(void);
-extern void CameraModeDebug_initialise_nop(void);
-extern void CameraModeStatic_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 u8 gCamcontrolStateStorage[0x148];
