@@ -34,6 +34,7 @@
 #include "main/audio/stream_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
+#include "main/maketex_random_api.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
@@ -66,7 +67,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
                                           int useInputPosition);
 extern int playerHasKrazoaSpirit();
 extern void ObjLink_DetachChild(int obj, int child);
-extern int randFn_80080100(int n);
 extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);

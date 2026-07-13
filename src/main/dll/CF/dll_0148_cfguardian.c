@@ -33,6 +33,7 @@
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
+#include "main/maketex_random_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
@@ -181,7 +182,6 @@ extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
-extern int randFn_80080100(int n);
 extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */

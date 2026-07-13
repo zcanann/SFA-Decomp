@@ -21,6 +21,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/maketex_random_api.h"
 #include "main/dll/dll_002D_effect20.h"
 
 extern f32 gEffect20StepScrollA;
@@ -149,8 +150,6 @@ extern f32 lbl_803E04BC;
 extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
-
-extern int randFn_80080100(int n);
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     f32* extraArgs)
