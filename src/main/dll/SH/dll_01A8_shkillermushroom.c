@@ -35,7 +35,11 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/shader_api.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct EnemymushroomPlacement

@@ -33,7 +33,4 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_api.h"
 
-/* external symbol declarations */
-extern void* memset(void* dst, int c, int n);
-
 #endif

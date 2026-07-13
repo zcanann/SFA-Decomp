@@ -37,6 +37,7 @@
 #include "main/dll/dfp_types.h"
 #include "main/main.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
@@ -45,7 +46,7 @@
 #include "main/objfx.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 #include "main/objprint.h"
@@ -55,6 +56,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_022C_dll22c.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "string.h"
 
 #define ObjGroup_FindNearestObjectForObjectLegacy(group, obj, distance) \
     ((int (*)())ObjGroup_FindNearestObjectForObject)((group), (obj), (distance))

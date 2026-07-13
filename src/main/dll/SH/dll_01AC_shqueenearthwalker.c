@@ -13,6 +13,7 @@
 #include "main/object.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/audio/sfx.h"
@@ -23,7 +24,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_api.h"
 

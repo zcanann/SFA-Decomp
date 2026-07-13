@@ -6,8 +6,10 @@
  */
 #include "main/dll/dll_B3.h"
 #include "dolphin/gx/GXStruct.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/gx/GXLegacyDecls.h"
+#include "main/game_object.h"
 #include "main/model.h"
+#include "track/intersect_api.h"
 
 /* Single render op of the lock icon model (ObjModel_GetRenderOp slot). */
 typedef struct CamcontrolLockIconRenderOp

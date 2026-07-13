@@ -25,13 +25,15 @@
 #include "main/objhits.h"
 #include "main/objHitReact.h"
 #include "main/objfx.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_api.h"
 #include "main/dll/objfsa.h"
 #include "main/gamebits.h"
 #include "main/lightmap.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/skeetla.h"
 #include "main/objprint_sound_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP      0x40 /* DLL 0xEB siderepel */

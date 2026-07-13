@@ -20,7 +20,9 @@
 #include "main/dll/scarab.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 /* child object id spawned by fn_8015F5B0 (docblock: IceBall aimed at the player) */
 #define CHUKCHUK_CHILD_OBJ_ICEBALL 1307

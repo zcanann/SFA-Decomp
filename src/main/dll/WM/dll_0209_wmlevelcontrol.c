@@ -31,7 +31,7 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
