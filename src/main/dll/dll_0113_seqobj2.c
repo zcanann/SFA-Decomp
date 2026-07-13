@@ -16,11 +16,10 @@
  * Game bits used here are per-placement (openGameBit/triggerGameBit), not
  * hardcoded; -1 is the "no bit" sentinel.
  */
-#include "main/dll/alphaanim.h"
 #include "main/dll/IM/dll_0114_immultiseq.h"
+#include "main/dll/dll_0111_doorlock.h"
 #include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_0113_seqobj2.h"
-#include "main/dll/doorlockstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/objlib.h"

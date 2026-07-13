@@ -10,6 +10,7 @@
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
 #include "main/dll/dll_00ED_collectible_api.h"
+#include "main/dll/dll_0111_doorlock.h"
 #include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_0113_seqobj2.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -113,7 +114,7 @@ extern ResourceDescriptor gDeathGasObjDescriptor, gDeathSeqObjDescriptor, gDecor
     gDepthOfFieldPointObjDescriptor, gDfperchwitchObjDescriptor, gDfpfloorbarObjDescriptor, gDfplightniObjDescriptor,
     gDfppowerslObjDescriptor;
 extern ResourceDescriptor gDfpstatue1ObjDescriptor, gDfptargetblockObjDescriptor, gDirectionalLightObjDescriptor,
-    gDll14DObjDescriptor, gDllFCObjDescriptor, gDoorF4ObjDescriptor, gDoorLockObjDescriptor, gDoorObjDescriptor;
+    gDll14DObjDescriptor, gDllFCObjDescriptor, gDoorF4ObjDescriptor, gDoorObjDescriptor;
 extern ResourceDescriptor gDoorswitchObjDescriptor, gDrBarrelGrObjDescriptor, gDrCageControlObjDescriptor,
     gDrCageWithObjDescriptor, gDrChimmeyObjDescriptor, gDrCloudPerObjDescriptor, gDrCreatorObjDescriptor;
 extern ResourceDescriptor gDrEnergyDiscObjDescriptor, gDrGeneratorObjDescriptor, gDrLaserCannonObjDescriptor,
@@ -1171,7 +1172,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDeathSeqObjDescriptor,
     &gMMP_BridgeObjDescriptor,
     &gDoorObjDescriptor,
-    &gDoorLockObjDescriptor,
+    (ResourceDescriptor*)&gDoorLockObjDescriptor,
     (ResourceDescriptor*)&gSeqObjectObjDescriptor,
     (ResourceDescriptor*)&gSeqObj2ObjDescriptor,
     (ResourceDescriptor*)&gIMMultiSeqObjDescriptor,

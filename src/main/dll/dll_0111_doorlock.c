@@ -1,7 +1,7 @@
 /*
  * DLL 0x0111 - door-lock objects [8017AC2C-8017ADB4).
  *
- * A lockable door/gate placed from a DoorLockPlacement (alphaanim.h). Its
+ * A lockable door/gate placed from a DoorLockPlacement. Its
  * lock state mirrors a per-instance game bit (DoorLockPlacement::lockGameBit):
  * when set, the door is hidden (alpha 0) or its hittable flag (unkF8) cleared,
  * depending on the placement mode flags at def+0x1B / modeFlags.
@@ -19,8 +19,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
-#include "main/dll/doorlockstate_struct.h"
-#include "main/dll/alphaanim.h"
+#include "main/dll/dll_0111_doorlock.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
 

@@ -2,8 +2,8 @@
 
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/dll/alphaanim.h"
 #include "main/objtexture.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"

@@ -10,6 +10,7 @@
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00F6_area.h"
+#include "main/dll/dll_0111_doorlock.h"
 #include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_00F8_levelname.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
@@ -35,11 +36,6 @@ extern void ProjectileSwitch_initialise(void);
 extern void ProjectileSwitch_release(void);
 extern void ProjectileSwitch_render(GameObject*);
 extern void ProjectileSwitch_update(GameObject*);
-extern void Lock_DoorLock_free(void);
-extern void Lock_DoorLock_getExtraSize(void);
-extern void Lock_DoorLock_init(void);
-extern void Lock_DoorLock_render(void);
-extern void Lock_DoorLock_update(GameObject*);
 int area_getExtraSize(void)
 {
     return 0x0;
