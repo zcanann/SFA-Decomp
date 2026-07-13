@@ -203,7 +203,6 @@ extern f32 lbl_803E6B64;
 extern int gKytesMumQuestBits[];
 extern int gKytesMumTriggerIds[];
 extern int gKytesMumQuestIdleSfxTable[];
-extern int objGetAnimState80A(GameObject* obj);
 extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;
 extern f32 lbl_803E6990;

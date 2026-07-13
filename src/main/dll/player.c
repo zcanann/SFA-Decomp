@@ -9,6 +9,7 @@
 #include "main/objprint_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/objfx_api.h"
+#include "main/dll/player_api.h"
 #include "main/sky_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \

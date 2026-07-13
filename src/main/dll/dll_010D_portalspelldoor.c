@@ -3,6 +3,7 @@
  * TU = 0x80186498..0x80186704.
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
@@ -88,7 +89,6 @@ extern void Fall_Ladders_initialise(void);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int playerHasSpell(GameObject* obj, int spell);
-extern int objGetAnimState80A(GameObject* player);
 extern void playerCancelSpell(int player, int v);
 
 int PortalSpellDoor_getExtraSize(void)

@@ -6,6 +6,7 @@
 #include "main/effect_interfaces.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
@@ -151,7 +152,6 @@ extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
 extern float mathSinf(float x);
 extern float mathCosf(float x);
-extern int objGetAnimState80A(GameObject* obj);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 
 void DFSH_LaserBeam_free(int* obj)

@@ -25,6 +25,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -1229,7 +1230,6 @@ void staffDrawSwipe(int* obj, int* swipe)
     }
 }
 
-extern int objGetAnimState80A(GameObject* obj);
 extern f32 lbl_803E330C;
 extern f32 lbl_803E3310;
 extern f32 lbl_803E332C;

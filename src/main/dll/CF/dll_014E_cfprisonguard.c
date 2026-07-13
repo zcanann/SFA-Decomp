@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll/cfprisonguardstate_struct.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -53,7 +54,6 @@ extern int ObjHits_DisableObject();
 extern int ObjHits_EnableObject();
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern int objGetAnimState80A(GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the

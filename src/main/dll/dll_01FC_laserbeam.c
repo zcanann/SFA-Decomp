@@ -20,6 +20,7 @@
 #include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
 #include "main/gameplay_runtime.h"
@@ -153,7 +154,6 @@ void LaserBeam_update(int obj2)
 
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
-    extern int objGetAnimState80A(GameObject * obj);
     extern float mathCosf(float x);
     extern float mathSinf(float x);
     extern int* gLaserBeamObjModgfxResource;

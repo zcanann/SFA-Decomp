@@ -4,6 +4,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/objHitReact.h"
@@ -32,7 +33,6 @@ extern void PSMTXConcat(float* a, float* b, float* out);
 extern float PSVECSquareDistance(float* a, float* b);
 extern float fn_802943F4(float x);
 extern int playerIsDisguised(int obj);
-extern int objGetAnimState80A(GameObject* obj);
 
 #define OBJGROUP_COUNT                0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT   (OBJGROUP_COUNT + 1)

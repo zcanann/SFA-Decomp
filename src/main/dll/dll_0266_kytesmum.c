@@ -22,6 +22,7 @@
 #include "main/pad.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
+#include "main/dll/player_api.h"
 #include "main/debug.h"
 #include "main/dll/moveLib.h"
 #include "main/game_object.h"

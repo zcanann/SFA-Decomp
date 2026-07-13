@@ -22,6 +22,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/frame_timing.h"
@@ -76,7 +77,6 @@ STATIC_ASSERT(sizeof(TrickyCurveTriggerState) == 0x14);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, scale) == 0x08);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
-extern int objGetAnimState80A(GameObject* obj);
 
 extern u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */

@@ -938,7 +938,6 @@ int playerGetCurHealth(GameObject* obj);
 void playerAddHealth(GameObject* obj, int amount);
 void saveSetOverrideHealth(int v);
 void playerCancelSpell(GameObject* obj, int p2);
-int objGetAnimState80A(GameObject* obj);
 void fn_80296BBC(GameObject* obj);
 void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
 void playerLock(GameObject* obj, int lock);
