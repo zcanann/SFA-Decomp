@@ -1119,7 +1119,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void fn_8014B878(int* arg1, int* sub)
+void fn_8014B878(int* obj, int* sub)
 {
     int* player;
     int* tricky;
@@ -1134,7 +1134,7 @@ void fn_8014B878(int* arg1, int* sub)
     {
         ((TrickyState*)sub)->flags2DC &= ~0x800000LL;
         camTarget = (int*)(*gCameraInterface)->getOverrideTarget();
-        if (camTarget == arg1)
+        if (camTarget == obj)
         {
             ((TrickyState*)sub)->flags2DC |= 0x800200LL;
         }
@@ -1198,7 +1198,7 @@ void fn_8014B878(int* arg1, int* sub)
     {
         if ((((TrickyState*)sub)->controlFlags & 0x1000) != 0)
         {
-            u8 r = baddieTargetFn_8014a150((GameObject*)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
+            u8 r = baddieTargetFn_8014a150((GameObject*)obj, (u8*)sub, (f32*)((char*)obj + 0x18),
                                            (u8*)((TrickyState*)sub)->actionTargetObj + 0x18);
             if (r != 0)
                 ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
@@ -1238,7 +1238,7 @@ void fn_8014B878(int* arg1, int* sub)
         {
             if ((((TrickyState*)sub)->controlFlags & 0x40) != 0)
             {
-                baddieFn_8014a304(arg1, sub, ((TrickyState*)sub)->waterLevel);
+                baddieFn_8014a304(obj, sub, ((TrickyState*)sub)->waterLevel);
             }
             else
             {

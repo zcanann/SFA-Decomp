@@ -49,8 +49,8 @@ enum
         (pos)[2] = (f32)(s32)randomGetRange(-range, range);                                                            \
     } while (0)
 
-#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, arg6)                                             \
-    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(arg6))
+#define CF_EMITTER_SPAWN_PARTFX(obj, effectId, args, flags, modelId, extraArgs)                                        \
+    (*gPartfxInterface)->spawnObject((void*)(obj), (effectId), (args), (flags), (modelId), (void*)(extraArgs))
 
 #define CF_EMITTER_ROTATE_FROM_LOCAL(obj, state, args, rot)                                                            \
     do                                                                                                                 \

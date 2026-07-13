@@ -43,7 +43,7 @@ __declspec(section ".sdata2") f32 lbl_803E15F4 = 130.0f;
 __declspec(section ".sdata2") f32 lbl_803E15F8 = 255.0f;
 __declspec(section ".sdata2") f32 lbl_803E15FC = 0.01f;
 
-void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5, u8* extraArgs)
+void dll_A9_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 modelId, u8* extraArgs)
 {
     struct
     {

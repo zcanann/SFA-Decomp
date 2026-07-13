@@ -31,7 +31,7 @@ extern f32 lbl_803E1584;
 extern f32 lbl_803E1588;
 
 void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
-                   u32 arg5, /* unused -- passed in r8 by caller */
+                   u32 modelId, /* unused -- passed in r8 by caller */
                    u32* extraArgs)
 {
     struct

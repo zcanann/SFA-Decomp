@@ -183,7 +183,7 @@ extern f32 lbl_803E2D78;
 extern f32 lbl_803E2D7C;
 extern f32 lbl_803E2D80;
 extern f32 lbl_803E2DB8;
-extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
+extern void objRenderModelAndHitVolumes(int obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, f32 scale);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1192,7 +1192,7 @@ void iceBaddie_free(GameObject* obj)
 }
 #pragma opt_common_subs reset
 
-void iceBaddie_render(GameObject* obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
+void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, s8 visible)
 {
     GroundBaddieState* state = (obj)->extra;
 
@@ -1205,7 +1205,7 @@ void iceBaddie_render(GameObject* obj, int arg1, int arg2, int arg3, int arg4, s
     {
         fn_8003B5E0(0xc8, 0, 0, state->glowAlpha);
     }
-    objRenderModelAndHitVolumes((int)obj, arg1, arg2, arg3, arg4, lbl_803E2D48);
+    objRenderModelAndHitVolumes((int)obj, fwdArg2, fwdArg3, fwdArg4, fwdArg5, lbl_803E2D48);
     iceBaddie_updateEffectAnchors((GameObject*)obj, (int)state);
 }
 

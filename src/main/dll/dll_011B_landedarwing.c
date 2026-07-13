@@ -100,8 +100,8 @@ typedef struct LandedArwingFxPoint
 {
     f32 scale;
     u8 pathPoint;
-    u8 arg5;
-    u8 arg6;
+    u8 mode;
+    u8 mask;
     u8 pad;
 } LandedArwingFxPoint;
 
@@ -159,8 +159,8 @@ void landed_arwing_renderPathEffects(GameObject* obj)
             scratch.y -= (obj)->anim.localPosY;
             scratch.z -= (obj)->anim.localPosZ;
             objfx_spawnMaskedHitEffectLegacy(obj, (obj)->anim.rootMotionScale * gLandedArwingPathFxTable[i].scale,
-                                             4, gLandedArwingPathFxTable[i].arg5,
-                                             gLandedArwingPathFxTable[i].arg6, scratch.effectPos);
+                                             4, gLandedArwingPathFxTable[i].mode,
+                                             gLandedArwingPathFxTable[i].mask, scratch.effectPos);
             i++;
         }
     }

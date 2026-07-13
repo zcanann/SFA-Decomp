@@ -47,7 +47,7 @@ __declspec(section ".sdata2") f32 lbl_803E15C8 = -8.0f;
 __declspec(section ".sdata2") f32 lbl_803E15CC = 0.0f;
 #pragma explicit_zero_data off
 
-void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 arg5, u8* extraArgs)
+void dll_A8_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, u32 modelId, u8* extraArgs)
 {
     struct
     {
