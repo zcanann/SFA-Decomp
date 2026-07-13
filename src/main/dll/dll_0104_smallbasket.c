@@ -1034,7 +1034,7 @@ void SmallBasket_update(GameObject* obj)
         state->randomTimer -= framesThisStep;
         if (state->carryState != 0)
         {
-            if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(def + 0x8)) >=
+            if (getXZDistance(&(obj)->anim.worldPosX, &((ObjPlacement*)def)->posX) >=
                 (f32)(state->leashRange * state->leashRange))
             {
                 zf = lbl_803E3938;

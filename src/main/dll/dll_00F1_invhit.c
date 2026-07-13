@@ -37,8 +37,12 @@ typedef struct InvHitState
 
 typedef struct InvhitObjectDef
 {
-    u8 pad0[0x1C - 0x0];
-    void* anchorObj;
+    u8 pad0[0x18];
+    u8 radius;       /* 0x18: primaryRadius / unkF8 seed */
+    u8 shapeFlags;   /* 0x19 */
+    u8 mode;         /* 0x1a: InvHitState.mode selector */
+    u8 pad1b[0x1C - 0x1B];
+    void* anchorObj; /* 0x1c */
 } InvhitObjectDef;
 
 #define INVHIT_OBJFLAG_HIDDEN             0x4000
@@ -109,13 +113,13 @@ void InvHit_init(int* obj, u8* def)
     InvHitState* state = ((GameObject*)obj)->extra;
     char* sub;
 
-    state->mode = def[0x1a];
+    state->mode = ((InvhitObjectDef*)def)->mode;
     sub = *(char**)&((GameObject*)obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags & ~1;
     switch (state->mode)
     {
     case INVHIT_MODE_PROXIMITY_DAMAGE:
-        ((GameObject*)obj)->unkF8 = def[0x18];
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
         break;
     case INVHIT_MODE_FIXED_RADIUS:
         sub[0x62] = 1;
@@ -131,16 +135,16 @@ void InvHit_init(int* obj, u8* def)
         sub[0x6b] = 0;
         break;
     case INVHIT_MODE_PUBLISH_POS:
-        ((GameObject*)obj)->unkF8 = def[0x18];
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
         ((GameObject*)obj)->unkF4 = 0;
         break;
     case INVHIT_MODE_LOCKON_GATE:
-        ((GameObject*)obj)->unkF8 = def[0x18];
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
         ((GameObject*)obj)->unkF4 = 0;
         break;
     case INVHIT_MODE_SELF_FREE:
         sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
         sub[0xae] = 0;
         sub[0x6e] = 0xa;
@@ -153,7 +157,7 @@ void InvHit_init(int* obj, u8* def)
         break;
     case INVHIT_MODE_ATTACH:
         sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
         sub[0xae] = 0;
         sub[0x6e] = 0xb;
@@ -167,8 +171,8 @@ void InvHit_init(int* obj, u8* def)
         sub[0x6b] = 0;
         break;
     case INVHIT_MODE_PASSIVE_VOLUME:
-        ((ObjHitsPriorityState*)sub)->shapeFlags = def[0x19];
-        ((ObjHitsPriorityState*)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState*)sub)->shapeFlags = ((InvhitObjectDef*)def)->shapeFlags;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
         ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 1;
         sub[0xae] = 0;
         sub[0xaf] = 0;
