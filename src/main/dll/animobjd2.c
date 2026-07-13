@@ -174,8 +174,8 @@ typedef struct
 #pragma opt_common_subs off
 void fn_8013E0D0(int* obj, u8* st)
 {
-    TrickyState* t = (TrickyState*)st;
     GameObject* gobj = (GameObject*)obj;
+    TrickyState* t = (TrickyState*)st;
     char* str = lbl_8031D2E8;
     int* best = NULL;
     f32 bestd = lbl_803E23DC;
