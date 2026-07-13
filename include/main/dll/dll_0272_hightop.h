@@ -6,6 +6,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
+#include "main/objprint.h"
 
 typedef struct HtInitData
 {
@@ -34,7 +35,8 @@ typedef struct HightopPlacement
 typedef struct HighTopRuntime
 {
     BaddieState baddie;
-    u8 pad35C[0x3ec - 0x35c];
+    u8 pad35C[0x3bc - 0x35c];
+    ObjSoundState modelSoundState;
     u8 lookController[0x9fd - 0x3ec];
     u8 flags;
     u8 pad9FE[0xb18 - 0x9fe];
@@ -94,6 +96,7 @@ STATIC_ASSERT(sizeof(HighTopDeathSpawn) == 0x2C);
 STATIC_ASSERT(sizeof(HightopPlacement) == 0x20);
 STATIC_ASSERT(sizeof(HighTopRuntime) == 0xC4C);
 STATIC_ASSERT(offsetof(HighTopRuntime, flags) == 0x9FD);
+STATIC_ASSERT(offsetof(HighTopRuntime, modelSoundState) == 0x3BC);
 STATIC_ASSERT(offsetof(HighTopRuntime, turnRateThreshold) == 0xC16);
 STATIC_ASSERT(offsetof(HighTopRuntime, substate) == 0xC4B);
 STATIC_ASSERT(offsetof(HighTopObject, anim) == 0x00);

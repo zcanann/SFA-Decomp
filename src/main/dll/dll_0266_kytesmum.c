@@ -117,8 +117,8 @@ void kytesmum_update(GameObject* obj)
     if ((s16)(runtime->idleSfxTimer -= framesThisStep) < 0)
     {
         runtime->idleSfxTimer = randomGetRange(0x32, 0x1f4);
-        objSoundFn_800392f0((int)obj, (int)runtime->modelSoundState,
-                            (void*)((char*)runtime->idleSfxTable + randomGetRange(0, 3) * 6), 0);
+        objSoundFn_800392f0(obj, &runtime->modelSoundState,
+                            &runtime->idleSfxTable[randomGetRange(0, 3)], 0);
     }
     if (ObjAnim_AdvanceCurrentMove((int)obj, runtime->animSpeed, timeDelta,
                                                                     (ObjAnimEventList*)runtime->animEvents) != 0)
@@ -128,8 +128,8 @@ void kytesmum_update(GameObject* obj)
         runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
     }
     kytesmum_playAnimationEventSfx((int)obj, runtime->animEvents, runtime->eventSfxTable);
-    characterDoEyeAnims(obj, runtime->eyeAnimState);
-    objAnimFn_80038f38(obj, runtime->modelSoundState);
+    characterDoEyeAnims(obj, (int)runtime->eyeAnimState);
+    objAnimFn_80038f38(obj, (char*)&runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(KYTESMUM_TARGET_OBJGROUP, (u32)obj, &nearDist);
     if ((void*)nearest != NULL)
     {
@@ -265,7 +265,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
         kytesMum->interactionCallback = kytesmum_updateInteractionRangeCallback;
         break;
     }
-    runtime->idleSfxTable = &moveSets[3];
+    runtime->idleSfxTable = (ObjSoundDef*)&moveSets[3];
     runtime->animSpeed = lbl_803E699C;
     startMove = randomGetRange(0, 1) * 2;
     startMove = *(s16*)((char*)runtime->moveSet + startMove);
@@ -336,7 +336,7 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     }
     if (count > 0)
     {
-        runtime->idleSfxTable = gKytesMumQuestIdleSfxTable;
+        runtime->idleSfxTable = (ObjSoundDef*)gKytesMumQuestIdleSfxTable;
     }
     mainSetBits(0xeb9, count == 1);
     next = triggerIds[count];

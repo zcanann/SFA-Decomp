@@ -554,7 +554,8 @@ void HighTop_hitDetect(GameObject* obj)
         return;
     }
     Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&l8, lbl_803E6B40);
-    objSoundFn_800392f0((int)obj, (int)((char*)runtime + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
+    objSoundFn_800392f0(obj, &runtime->modelSoundState,
+                        (ObjSoundDef*)(&lbl_803DC308 + randomGetRange(0, 0) * 6), 1);
     st = runtime->baddie.controlMode;
     if (st != 3)
     {
@@ -662,7 +663,8 @@ void HighTop_update(GameObject* obj)
     }
     if ((int)randomGetRange(0, 0x64) == 0)
     {
-        objSoundFn_800392f0(self, (int)(state + 0x3bc), &lbl_8032AAB0[randomGetRange(0, 2) * 6], 0);
+        objSoundFn_800392f0((GameObject*)self, &((HighTopRuntime*)state)->modelSoundState,
+                            (ObjSoundDef*)&lbl_8032AAB0[randomGetRange(0, 2) * 6], 0);
     }
     if (runtime->flagsC49.b7 != 0)
     {
@@ -1042,7 +1044,8 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (randFn_80080100(0x64) != 0)
         {
-            objSoundFn_800392f0((int)obj, (int)((char*)state + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);
+            objSoundFn_800392f0(obj, &state->modelSoundState,
+                                (ObjSoundDef*)(&lbl_803DC308 + randomGetRange(0, 0) * 6), 1);
         }
         if ((s8)stateArg->baddie.moveDone != 0)
         {

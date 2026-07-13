@@ -618,7 +618,7 @@ void fn_8003B500(GameObject* obj, s16* state)
 extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
 extern f32 lbl_803DB464;
 
-void objSoundFn_800392f0(int obj, int state, int soundDef, u8 force)
+void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force)
 {
     u16 sfx;
     s16 pitch;
@@ -626,17 +626,17 @@ void objSoundFn_800392f0(int obj, int state, int soundDef, u8 force)
     int model;
     int did;
 
-    pitch = *(s16*)((char*)soundDef + 2);
-    sfx = (u16) * (s16*)((char*)soundDef + 0);
+    pitch = soundDef->pitch;
+    sfx = (u16)soundDef->sfxId;
     if (force != 0 || Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
     {
         Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
-        *(f32*)((char*)state + 0xc) = lbl_803DE9C8;
-        *(s16*)((char*)state + 0x14) = (s16)(-pitch);
-        *(u8*)((char*)state + 0) = 1;
-        *(f32*)((char*)state + 4) = lbl_803DE99C;
+        state->timer = lbl_803DE9C8;
+        state->pitch = (s16)(-pitch);
+        state->active = 1;
+        state->blendWeight = lbl_803DE99C;
     }
-    count = *(u8*)((char*)soundDef + 4);
+    count = soundDef->blendCount;
     if (count != 0)
     {
         model = (int)OBJPRINT_ACTIVE_BANK(obj);
@@ -652,7 +652,7 @@ void objSoundFn_800392f0(int obj, int state, int soundDef, u8 force)
         }
         if (did != 0)
         {
-            *(s16*)((char*)soundDef + 2) = 0;
+            soundDef->pitch = 0;
         }
     }
 }

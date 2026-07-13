@@ -222,7 +222,6 @@ extern f32 lbl_803E68F4;
 extern f32 lbl_803E68F8;
 extern f32 lbl_803E6B40;
 extern u8 lbl_803DC308;
-extern void objSoundFn_800392f0(int obj, int a, void* b, int c);
 extern f32 lbl_803DC324;
 extern s16 lbl_803DC314;
 extern u8 lbl_8032AAB0[];

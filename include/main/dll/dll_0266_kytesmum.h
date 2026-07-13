@@ -6,6 +6,7 @@
 #include "main/objanim_internal.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
+#include "main/objprint.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
@@ -29,9 +30,9 @@ typedef struct KytesMumRuntime
 {
     u8 pad000[0x654];
     u8 eyeAnimState[0x684 - 0x654];
-    u8 modelSoundState[0x6b4 - 0x684];
+    ObjSoundState modelSoundState;
     u8 animEvents[0x6d0 - 0x6b4];
-    void* idleSfxTable;
+    ObjSoundDef* idleSfxTable;
     KytesMumUpdateCallback updateCallback;
     s16* eventSfxTable;
     KytesMumMoveSet* moveSet;
