@@ -25,6 +25,8 @@
 #include "main/dll/expgfx_resource_api.h"
 #include "main/pad_api.h"
 #include "main/dll/waterfx.h"
+#include "main/dll/cloudaction.h"
+#include "main/dll/ppcwgpipe_struct.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_api.h"
@@ -41,15 +43,6 @@ typedef struct
     f32 y;
     f32 z;
 } ParticleEmit;
-typedef union
-{
-    u8 u8;
-    u16 u16;
-    u32 u32;
-    s16 s16;
-    s32 s32;
-    f32 f32;
-} PPCWGPipe;
 typedef struct
 {
     int v[5];
@@ -104,12 +97,6 @@ typedef struct
 } ParticleTbl8;
 typedef struct
 {
-    int a[5];
-    int b[4];
-    int c[5];
-} CloudEnvTbl;
-typedef struct
-{
     u16 a;
     u16 b;
 } ParticlePair;
@@ -126,7 +113,6 @@ typedef struct
 extern f32 lbl_803DF348;
 extern f32 lbl_803DF34C;
 extern f32 lbl_803DB790;
-extern int lbl_803DB618[2];
 extern void* memset(void* dst, int c, int n);
 extern const f32 lbl_803DF354;
 extern f32 lbl_803DF384;
@@ -155,9 +141,6 @@ extern const f32 lbl_803DF358;
 extern f32 lbl_803DF368;
 extern f32 gObjFxPi;
 extern f32 lbl_803DF370;
-extern int gCloudActionEnvTbl[];
-extern f32 lbl_803DF2DC;
-extern int saveGameGetEnvState(void);
 extern int gObjFxRandomBurstTbl[];
 extern f32 lbl_803DF394;
 extern f32 lbl_803DF398;
@@ -170,14 +153,6 @@ extern void modelLightStruct_setEnabled(void* light, int b, f32 a);
 extern void modelLightStruct_startColorFade(void* light, int a, int b);
 
 /* forward declarations for graduated FX functions */
-void cloudaction_func08_nop(void);
-void cloudaction_func09_nop(void);
-void cloudaction_free(void);
-void cloudaction_func05(void);
-void cloudaction_onMapSetup(void);
-void cloudaction_update(int p1, int p2, u8* state, int p4, int val);
-void cloudaction_release(void);
-void cloudaction_initialise(void);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);
 

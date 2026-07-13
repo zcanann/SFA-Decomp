@@ -16,26 +16,29 @@
  * the texture-scroll step; cloudaction_func05() scrolls the main layer's
  * texture each frame.
  */
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/cloudaction.h"
+#include "main/dll/waterfx.h"
+#include "main/dll/ppcwgpipe_struct.h"
+#include "main/cloud_action_runtime.h"
+#include "main/cloud_layer_state.h"
+#include "main/objtexture.h"
+#include "main/sky_interface.h"
+#include "main/shader_api.h"
+#include "main/vecmath.h"
+#include "main/dll/savegame.h"
+#include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/sky_api.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXEnum.h"
+#include "string.h"
 
 CloudActionRuntime lbl_8039AB28;
-
-extern volatile f32 gCloudActionGlareQuadSize;
-extern const f32 lbl_803DF2B4;
-extern const f32 lbl_803DF2C0;
-extern const f32 lbl_803DF2C4;
-extern const f32 lbl_803DF2C8;
-extern const f32 lbl_803DF2CC;
-extern const f32 lbl_803DF2D0;
-extern const f32 lbl_803DF2D4;
-extern const f32 lbl_803DF2D8;
 
 extern void __kill_critical_regions(void);
 
@@ -54,9 +57,6 @@ extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern void fn_8008EDE8(f32* pos);
-extern void gxTextureFn_800794e0(void);
-extern void gxBlendFn_800789ac(void);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
@@ -312,8 +312,8 @@ void cloudaction_onMapSetup(void)
 
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
 {
-    CloudEnvTbl* tbl = (CloudEnvTbl*)gCloudActionEnvTbl;
-    int envState;
+    CloudEnvTbl* tbl = &gCloudActionEnvTbl;
+    void* envState;
 
     envState = saveGameGetEnvState();
     if (state == NULL)
@@ -324,7 +324,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         return;
     }
-    *(s16*)(envState + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
+    *(s16*)((u8*)envState + 0xa) = (s16)((s16) * (u16*)(state + 0x24) - 1);
     if ((state[0x59] & 1) == 0)
     {
         return;
@@ -345,15 +345,16 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (state[0x5d] < 5)
         {
-            if (lbl_8039AB28.mainCloudAssetId != tbl->a[state[0x5d]])
+            if (lbl_8039AB28.mainCloudAssetId != tbl->mainCloudAssetIds[state[0x5d]])
             {
                 if (lbl_8039AB28.mainCloudObj != NULL)
                 {
                     Obj_FreeObject(lbl_8039AB28.mainCloudObj);
                 }
                 lbl_8039AB28.mainCloudObj =
-                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->a[state[0x5d]]), 4, -1, -1, 0);
-                lbl_8039AB28.mainCloudAssetId = tbl->a[state[0x5d]];
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->mainCloudAssetIds[state[0x5d]]),
+                                                 4, -1, -1, 0);
+                lbl_8039AB28.mainCloudAssetId = tbl->mainCloudAssetIds[state[0x5d]];
             }
         }
     }
@@ -370,15 +371,16 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (state[0x5b] < 4)
         {
-            if (lbl_8039AB28.upperCloudAssetId != tbl->b[state[0x5b]])
+            if (lbl_8039AB28.upperCloudAssetId != tbl->upperCloudAssetIds[state[0x5b]])
             {
                 if (lbl_8039AB28.upperCloudObj != NULL)
                 {
                     Obj_FreeObject(lbl_8039AB28.upperCloudObj);
                 }
                 lbl_8039AB28.upperCloudObj =
-                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->b[state[0x5b]]), 4, -1, -1, 0);
-                lbl_8039AB28.upperCloudAssetId = tbl->b[state[0x5b]];
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->upperCloudAssetIds[state[0x5b]]),
+                                                 4, -1, -1, 0);
+                lbl_8039AB28.upperCloudAssetId = tbl->upperCloudAssetIds[state[0x5b]];
             }
         }
     }
@@ -395,15 +397,16 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     {
         if (state[0x5a] < 5)
         {
-            if (lbl_8039AB28.lowerCloudAssetId != tbl->c[state[0x5a]])
+            if (lbl_8039AB28.lowerCloudAssetId != tbl->lowerCloudAssetIds[state[0x5a]])
             {
                 if (lbl_8039AB28.lowerCloudObj != NULL)
                 {
                     Obj_FreeObject(lbl_8039AB28.lowerCloudObj);
                 }
                 lbl_8039AB28.lowerCloudObj =
-                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->c[state[0x5a]]), 4, -1, -1, 0);
-                lbl_8039AB28.lowerCloudAssetId = tbl->c[state[0x5a]];
+                    (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, tbl->lowerCloudAssetIds[state[0x5a]]),
+                                                 4, -1, -1, 0);
+                lbl_8039AB28.lowerCloudAssetId = tbl->lowerCloudAssetIds[state[0x5a]];
             }
         }
     }
@@ -429,8 +432,10 @@ void cloudaction_initialise(void)
     gCloudOverrideObject = NULL;
 }
 
-int gCloudActionEnvTbl[] = {
-    0, 1575, 1577, 1886, 1525, 0, 1576, 1890, 2147, 0, 1578, 2140, 2145, 2147,
+CloudEnvTbl gCloudActionEnvTbl = {
+    {0, 1575, 1577, 1886, 1525},
+    {0, 1576, 1890, 2147},
+    {0, 1578, 2140, 2145, 2147},
 };
 
 /* descriptor/ptr table auto 0x8030f7e8-0x8030f86c */
