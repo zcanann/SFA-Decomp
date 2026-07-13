@@ -1,5 +1,6 @@
 /* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
 #include "main/dll/torch1CD.h"
+#include "main/object_render_legacy.h"
 #include "main/debug.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll19cstate_struct.h"
@@ -28,7 +29,6 @@ extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 Vec_distance(f32* a, f32* b);
 extern void playerCancelSpell(int obj, int a);
 char sShrineTimeFormat[] = "time %d\n";

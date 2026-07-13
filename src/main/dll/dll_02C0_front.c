@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/object_render_legacy.h"
 #include "main/audio.h"
 #include "main/model_engine.h"
 #include "main/sky_api.h"
@@ -216,7 +217,6 @@ void TitleScreen_initialise(void)
 
 extern u8 gTitleScreenCreditsStarted;
 extern int gTitleScreenCreditsEndTriggered;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* When visible and ready, render via objRenderFn; once the credits flag
  * fires, set the one-shot trigger 0x57 and release the attract-mode movie

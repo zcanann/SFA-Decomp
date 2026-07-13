@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
@@ -66,7 +67,6 @@
 extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E61CC;
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);

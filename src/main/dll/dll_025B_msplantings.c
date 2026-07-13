@@ -12,6 +12,7 @@
  * setScale is the trigger-volume callback that cuts/harvests.
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
@@ -51,7 +52,6 @@
 /* ObjHits priority-hit result that cuts the plant */
 #define MSPLANTING_HIT_CUT 0x1A
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern float mathSinf(float x);
 

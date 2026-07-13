@@ -12,6 +12,7 @@
  * sfx, and reports completion once spinProgress reaches DBSH_SPIN_DONE.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/dbshsymbol_types.h"
 #include "main/game_object.h"
@@ -50,7 +51,6 @@ extern void timerSetToCountUp(void);
 extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E50E0 = 127.0f;

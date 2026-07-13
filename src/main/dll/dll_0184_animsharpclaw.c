@@ -13,6 +13,7 @@
  * menu control vtable slot 2, and stops the object's sfx channel.
  */
 #include "main/objanim_update.h"
+#include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
@@ -27,7 +28,6 @@ extern u8 framesThisStep;
 
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 

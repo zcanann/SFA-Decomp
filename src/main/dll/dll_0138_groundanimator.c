@@ -1,5 +1,6 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
 #include "main/dll/mmp_moonrock.h"
+#include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/lightmap_api.h"
@@ -48,7 +49,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define GROUNDANIMATOR_OBJGROUP        0x31
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int ObjGroup_FindNearestObject();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();

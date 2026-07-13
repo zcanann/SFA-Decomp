@@ -22,6 +22,7 @@
  * object flag 0x2000.
  */
 #include "main/dll/dim2conveyorstate_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dim2pathgeneratorstate_struct.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
@@ -87,7 +88,6 @@ extern f32 lbl_803E4B1C;
 extern f32 lbl_803E4B20;
 extern f32 lbl_803E4B24;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int dll_1DB_getExtraSize(void)
 {

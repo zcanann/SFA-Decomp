@@ -1,5 +1,6 @@
 /* DLL 0x243 - DBHoleControl1 [801FE118-801FEB30) */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll22cstate_struct.h"
@@ -58,7 +59,6 @@ extern int gDBStealerWormStateHandlersB[];
 extern int lbl_803DDCE0;
 
 extern void Obj_RemoveFromUpdateList(int* obj);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* mapRomListFindItem(int, int, int, int, int);
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();

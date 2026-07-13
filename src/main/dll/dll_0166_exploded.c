@@ -1,5 +1,6 @@
 /* DLL 0x166 - Exploded [801A39B4-801A39D0) */
 #include "main/dll/drexplodable_types.h"
+#include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
 #include "main/dll/IM/IMicicle.h"
 #include "main/frame_timing.h"
@@ -27,7 +28,6 @@ extern f32 lbl_803E4404;
 extern f32 gExplodedGroundFriction;
 extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
 
 void exploded_free(void)

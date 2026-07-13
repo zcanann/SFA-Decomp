@@ -15,6 +15,7 @@
  * resetHitboxMode interaction bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
 #include "main/dll/shopkeeperstate_struct.h"
@@ -85,7 +86,6 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void fn_801E83B0(int obj, int, int, int, int);
 extern void GXSetBlendMode(int type, int src, int dst, int op);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);

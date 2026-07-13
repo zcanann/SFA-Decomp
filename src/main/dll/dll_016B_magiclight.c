@@ -11,6 +11,7 @@
  * off trigger sequence 0 once, on the first update.
  */
 #include "main/dll/magiclightstate_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"
@@ -25,7 +26,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 /* seqId of the main proximity-triggered variant (subtype-selected L-actions) */
 #define MAGICLIGHT_SEQ_PROXIMITY 0x16b
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #pragma scheduling off
 #pragma peephole off

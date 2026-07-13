@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
@@ -44,7 +45,6 @@ extern f32 gRollingBarrelCurveInitData;
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void ObjGroup_RemoveObject(int obj, int groupId);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 #pragma dont_inline on

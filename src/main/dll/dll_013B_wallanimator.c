@@ -15,6 +15,7 @@
  * layout STATIC_ASSERTs below).
  */
 #include "main/dll/groundanimator_state.h"
+#include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -62,7 +63,6 @@ STATIC_ASSERT(sizeof(WallanimatorState) == 8);
 #define WALLANIMATOR_PARTFX_DEBRIS 0xca
 #define WALLANIMATOR_PARTFX_DUST   0xcb
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 u8 wallanimator_modelMtxFn(int* obj)
 {

@@ -14,6 +14,7 @@
  * ARWarwingattachment merely references it.
  */
 #include "main/audio/sfx.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/gamebits.h"
 #include "main/dll/laserbeamstate_struct.h"
@@ -82,7 +83,6 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 #define PSWITCH_TRIGGER_SEQ_ID 0x6d
 #define PSWITCH_CHIME_SEQ_ID   0x146
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

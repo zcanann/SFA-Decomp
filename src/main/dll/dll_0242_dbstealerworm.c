@@ -25,6 +25,7 @@
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/objanim.h"
+#include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "main/dll/dll22cstate_struct.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
@@ -141,7 +142,6 @@ extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void DFP_LevelControl_free(void);
 extern void DFP_LevelControl_getExtraSize(void);
 extern void DFP_LevelControl_getObjectTypeId(void);

@@ -5,6 +5,7 @@
  * definitions here are collapsed to forward prototypes.
  */
 #include "main/dll/cfguardian_state.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
@@ -125,7 +126,6 @@ extern f32 lbl_803E4254;
 
 extern u32 ObjHits_DisableObject();
 extern u32 ObjHits_EnableObject();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);

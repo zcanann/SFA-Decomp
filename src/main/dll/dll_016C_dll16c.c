@@ -15,6 +15,7 @@
  * MagicLight and CrRockfall layouts are size-asserted here as a build guard.
  */
 #include "main/dll/blob10_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
@@ -77,7 +78,6 @@ extern f32 lbl_803E4758;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objUpdateOpacity(int* obj);
 extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
 extern f32 Vec_distance(f32* a, f32* b);
