@@ -7,7 +7,6 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gDoorF4ObjDescriptor;
-extern ObjectDescriptor gSidekickBallObjDescriptor;
 
 int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 void FUN_80178370(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
@@ -32,9 +31,5 @@ void DoorF4_update(int* obj);
 void DoorF4_init(int* obj, int* params);
 void DoorF4_release(void);
 void DoorF4_initialise(void);
-
-int SidekickBall_getExtraSize(void);
-void SidekickBall_free(int obj);
-void SidekickBall_render(GameObject* p1, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_AUTOTRANSPORTER_H_ */

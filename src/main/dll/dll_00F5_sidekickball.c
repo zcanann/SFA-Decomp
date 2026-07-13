@@ -16,7 +16,6 @@
  * external area_* callbacks.
  */
 #include "dolphin/os/OSReport.h"
-#include "main/dll/dll_00F4_doorf4.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -24,7 +23,6 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
-#include "main/dll/sidekickball_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/objlib.h"
