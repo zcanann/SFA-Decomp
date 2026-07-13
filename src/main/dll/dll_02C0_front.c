@@ -38,6 +38,7 @@
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/model.h"
+#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/objseq.h"
 #include "main/dll/FRONT/dll_0034_n_filemenu.h"
@@ -961,7 +962,6 @@ void creditsStart_(void)
 }
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
-extern u16 fn_80130124(void);
 extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;

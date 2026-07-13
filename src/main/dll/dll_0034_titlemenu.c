@@ -1,6 +1,7 @@
 /* DLL 0x0034 — title menu [8011611C-801166C8) */
 #include "dolphin/os/OSReport.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/lightmap_render_control_api.h"
