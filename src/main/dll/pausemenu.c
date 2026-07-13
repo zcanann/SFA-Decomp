@@ -596,7 +596,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
         j = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
         i += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
         gbCount = i + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-        gbCount += j;
+        gbCount = j + gbCount;
         {
             s8 k;
             u8* p;
