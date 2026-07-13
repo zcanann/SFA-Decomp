@@ -50,7 +50,12 @@ typedef struct DrakorCurveNode
 
 typedef struct DrakorHoverpadUpdateMainPlacement
 {
-    u8 pad0[0x20 - 0x0];
+    s16 subtype;
+    u8 pad02[0x18 - 0x02];
+    s8 rotXByte;
+    u8 pad19[0x1a - 0x19];
+    s16 unk1a;
+    u8 pad1c[0x20 - 0x1c];
     s16 activateGameBit;
     u8 pad22[0x28 - 0x22];
 } DrakorHoverpadUpdateMainPlacement;
@@ -205,10 +210,11 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc)
     u8* p = (obj)->extra;
     HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
     Flags377* g = (Flags377*)(p + 0x179);
+    DrakorHoverpadUpdateMainPlacement* d = (DrakorHoverpadUpdateMainPlacement*)desc;
     f32 initialSpeed;
 
-    (obj)->anim.rotX = (s16)(*(s8*)((char*)desc + 0x18) << 8);
-    ((DrakorHoverpadState*)p)->unk118 = (f32) * (s16*)((char*)desc + 0x1a);
+    (obj)->anim.rotX = (s16)(d->rotXByte << 8);
+    ((DrakorHoverpadState*)p)->unk118 = (f32)d->unk1a;
     initialSpeed = lbl_803E6A3C;
     ((DrakorHoverpadState*)p)->speed = initialSpeed;
     f->bit20 = 0;
@@ -217,7 +223,7 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc)
     ((DrakorHoverpadState*)p)->unk11C = initialSpeed;
     ((DrakorHoverpadState*)p)->unk120 = initialSpeed;
     ((DrakorHoverpadState*)p)->frameCounter = 0;
-    switch (*(s16*)desc)
+    switch (d->subtype)
     {
     case DRAKORHOVERPAD_SUBTYPE_TRACKING:
         g->f10 = 1;
