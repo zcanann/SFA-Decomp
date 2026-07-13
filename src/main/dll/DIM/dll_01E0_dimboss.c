@@ -93,6 +93,22 @@ extern f32 lbl_803E4C4C;
 extern f32 lbl_803E4C50;
 extern f32 lbl_803E4C54;
 extern f32 lbl_803E4C78;
+ObjectDescriptor12 gDIM_BossObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)DIMboss_initialise,
+    (ObjectDescriptorCallback)DIMboss_release,
+    0,
+    (ObjectDescriptorCallback)DIMboss_init,
+    (ObjectDescriptorCallback)DIMboss_update,
+    (ObjectDescriptorCallback)DIMboss_hitDetect,
+    (ObjectDescriptorCallback)DIMboss_render,
+    (ObjectDescriptorCallback)DIMboss_free,
+    (ObjectDescriptorCallback)DIMboss_getObjectTypeId,
+    DIMboss_getExtraSize,
+    (ObjectDescriptorCallback)DIMboss_setScale,
+    (ObjectDescriptorCallback)DIMboss_func0B,
+};
+
 char sDIMBossFreeingAssetsForDIMBoss[] = "<DIMBoss.c> freeing assets for DIMBoss\n";
 char sDIMBossLoadingAssetsForDIMTop[] = "<DIMBoss.c> loading assets for DIMTop\n";
 
@@ -700,22 +716,6 @@ void DIMboss_initialise(void)
 {
     DIMboss_initialiseAnimTables();
 }
-
-ObjectDescriptor12 gDIM_BossObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
-    (ObjectDescriptorCallback)DIMboss_initialise,
-    (ObjectDescriptorCallback)DIMboss_release,
-    0,
-    (ObjectDescriptorCallback)DIMboss_init,
-    (ObjectDescriptorCallback)DIMboss_update,
-    (ObjectDescriptorCallback)DIMboss_hitDetect,
-    (ObjectDescriptorCallback)DIMboss_render,
-    (ObjectDescriptorCallback)DIMboss_free,
-    (ObjectDescriptorCallback)DIMboss_getObjectTypeId,
-    DIMboss_getExtraSize,
-    (ObjectDescriptorCallback)DIMboss_setScale,
-    (ObjectDescriptorCallback)DIMboss_func0B,
-};
 
 void DIMboss_initialiseAnimTables(void)
 {
