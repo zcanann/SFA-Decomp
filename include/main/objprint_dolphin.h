@@ -96,5 +96,6 @@ int lockLevel(s32 val, int idx);
 int mapUnload(int mapId, int flags);
 int unlockLevel(s32 val, int idx, int flag);
 void defragMemory(int mode);
+void mapLoadDataFiles(int mapIdx);
 
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

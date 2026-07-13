@@ -1,4 +1,5 @@
 #include "main/camera_interface.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"

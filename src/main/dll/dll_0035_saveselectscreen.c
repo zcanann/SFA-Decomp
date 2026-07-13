@@ -21,6 +21,7 @@
 #include "main/screen_transition.h"
 #include "main/texture.h"
 #include "main/gameplay_runtime.h"
+#include "main/gameloop_api.h"
 #include "main/mm.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/dll_43.h"

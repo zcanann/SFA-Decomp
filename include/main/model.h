@@ -290,6 +290,7 @@ void ObjModel_InitRenderBuffers(void);
 void ObjModel_InitResourceCaches(void);
 void ObjModel_InitScratchBuffers(void);
 void modelFn_800292e0(void);
+void* loadAnimation(int hdr, s16 id, int b, u8* bufout);
 
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);

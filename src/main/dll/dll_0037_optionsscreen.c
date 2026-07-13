@@ -62,7 +62,6 @@ extern s8 lbl_803DD704;  /* exit fade countdown */
 extern int lbl_803DD700; /* last highlighted item (for select sfx) */
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern u8 shouldShowCredits(void);
-extern void titleScreenTextDrawFunc(void);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 
 #pragma scheduling off

@@ -43,6 +43,7 @@
 #include "main/audio/sfx_legacy.h"
 #include "main/audio/music_api.h"
 #include "main/gameloop_api.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/lightmap_api.h"
 #include "main/newshadows_audio_api.h"
 #include "main/objfx.h"

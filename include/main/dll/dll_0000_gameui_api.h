@@ -15,6 +15,8 @@ void viewFn_80129c74(void);
 void CMenu_SetFadeCounter(s16 value);
 void showHelpText(s16 val);
 u8 getWorldMapVoiceoverTimer(void);
+void Pause_SetDisabled(u8 disabled);
+void Pause_ResetMenuFrameCounter(void);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 

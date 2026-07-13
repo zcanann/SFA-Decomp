@@ -34,6 +34,7 @@
 #include "main/object_api.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin.h"
+#include "main/track_dolphin_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 

@@ -6,6 +6,9 @@
 typedef struct ObjModel ObjModel;
 
 GameObject* Obj_GetPlayerObject(void);
+void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int unused);
+void Obj_InitObjectSystem(void);
+void Obj_ResetObjectSystem(void);
 int objMove(GameObject* obj, f32 dx, f32 dy, f32 dz);
 GameObject* ObjList_FindObjectById(u32 objectId);
 u8 Obj_IsLoadingLocked(void);

@@ -15,6 +15,7 @@
  * / nameEntryTextDrawFunc, writing through GXWGFifo). showCredits gates
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
+#include "main/dll/dll_02C0_front.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/gametext_box_api.h"

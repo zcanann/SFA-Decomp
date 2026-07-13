@@ -24,5 +24,7 @@ void mapBlockFn_80059c2c(u8* outFlags);
 s32 getCurMapType(void);
 void mapTextureOverrideSetValue(int type, u32 key, int value);
 int objUpdateOpacity(struct GameObject* obj);
+void playerUpdateFn_8005649c(void);
+void doPendingMapLoads(void);
 
 #endif /* MAIN_SHADER_API_H_ */

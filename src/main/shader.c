@@ -35,8 +35,10 @@
 #include "main/objprint_dolphin.h"
 #include "main/fileio.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
+#include "main/track_dolphin_api.h"
 #include "dolphin/os/OSCache.h"
 extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();

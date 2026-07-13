@@ -20,6 +20,7 @@
 #include "main/pi_dolphin.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/sky_state.h"
+#include "main/track_dolphin_api.h"
 #include "main/mm.h"
 #include "string.h"
 #include "main/newshadows.h"
@@ -832,7 +833,6 @@ typedef struct
     u8 r, g, b, a;
 } GXColor8;
 
-extern void objShadowFn_80062498(int* obj, int p2, int p3, u8 frames);
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
 extern int playerIsDisguised(int* obj);
