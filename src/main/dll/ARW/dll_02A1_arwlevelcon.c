@@ -11,7 +11,8 @@
  * the branching exit. ringEventCallback drives the sequence's camera and
  * course-specific text; commitRingChoice picks the follow-up music.
  */
-#include "main/audio.h"
+#include "main/audio/music_api.h"
+#include "main/audio/stream_api.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"

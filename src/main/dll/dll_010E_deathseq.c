@@ -7,7 +7,7 @@
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
 #include "main/rcp_dolphin.h"
-#include "main/audio.h"
+#include "main/audio/stream_api.h"
 #include "main/camera.h"
 #include "main/gameloop_api.h"
 #include "main/lightmap_api.h"

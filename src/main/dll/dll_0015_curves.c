@@ -39,6 +39,7 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
+#include "main/audio/audio_control_api.h"
 
 typedef struct CurvesHitScratch
 {
@@ -91,8 +92,6 @@ extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int
                                 int arg6);
 extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern void setRumbleEnabled(u8 enabled);
-extern void audioSetSoundMode(int mode, u8 forceFlag);
-extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 
@@ -1738,9 +1737,9 @@ void loadSaveSettings(void)
     audioSetSoundMode(saveData.soundMode, 0);
     (*gGameUIInterface)->setUnusedHudSetting(saveData.gameUiSetting);
     (*gCameraInterface)->func1D(saveData.cameraSetting);
-    audioSetVolumes(saveData.sfxVolume, 10, 0, 1, 0);
-    audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
-    audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
+    audioSetVolumesU8(saveData.sfxVolume, 10, 0, 1, 0);
+    audioSetVolumesU8(saveData.musicVolume, 10, 1, 0, 0);
+    audioSetVolumesU8(saveData.speechVolume, 10, 0, 0, 1);
 }
 
 void* getSaveFileStruct(void)

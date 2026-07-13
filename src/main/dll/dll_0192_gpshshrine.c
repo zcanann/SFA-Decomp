@@ -19,7 +19,7 @@
 #include "main/dll/creator1C4.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/audio.h"
+#include "main/audio/audio_control_api.h"
 #include "main/model_engine.h"
 #include "main/map_load.h"
 #include "main/pi_dolphin_api.h"

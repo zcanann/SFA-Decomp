@@ -1,4 +1,4 @@
-#include "main/audio.h"
+#include "main/audio/stream_api.h"
 #include "main/audio/sfx.h"
 #include "main/fileio.h"
 #include "main/gameloop_api.h"

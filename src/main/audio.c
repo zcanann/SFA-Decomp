@@ -1,4 +1,6 @@
-#include "main/audio.h"
+#include "main/audio/audio_control_api.h"
+#include "main/audio/music_api.h"
+#include "main/audio/stream_api.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/sfx.h"

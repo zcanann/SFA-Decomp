@@ -17,7 +17,7 @@
 #include "main/dll/dll_0238_linkalevco.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
-#include "main/audio.h"
+#include "main/audio/stream_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/map_load.h"

@@ -18,7 +18,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/audio.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4D.h"
 #include "main/dll/dll_4E.h"

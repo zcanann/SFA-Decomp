@@ -36,6 +36,7 @@
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
 #include "main/audio/stream_api.h"
+#include "main/audio/audio_control_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/maketex_random_api.h"
@@ -75,7 +76,6 @@ extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
-extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);
 extern void SHthorntail_updateDustEffects(int obj);
 
@@ -310,7 +310,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
         {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
-            doNothing_8000CF54(0);
+            doNothing_8000CF54Int(0);
             animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A;
         }
     }

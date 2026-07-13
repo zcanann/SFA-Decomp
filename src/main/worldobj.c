@@ -10,6 +10,7 @@
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"
+#include "main/audio/stream_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
@@ -62,7 +63,6 @@ extern f32 lbl_803E6658;
 extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
-extern int gAudioStreamCurrentId;
 extern f32 gWorldObjAdvanceMoveTable[];
 extern f32 lbl_803E667C;
 extern f32 gWorldObjPi;

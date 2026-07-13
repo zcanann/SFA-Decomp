@@ -2,5 +2,6 @@
 #define MAIN_AUDIO_MUSIC_API_H_
 
 void Music_Trigger(int id, int arg);
+void Music_PlayTrackByIndex(int index);
 
 #endif /* MAIN_AUDIO_MUSIC_API_H_ */

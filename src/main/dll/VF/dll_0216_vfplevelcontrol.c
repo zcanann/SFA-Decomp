@@ -15,7 +15,7 @@
  *  - two music latches driven through SCGameBitLatch_Update.
  */
 #include "main/dll/VF/vf_shared.h"
-#include "main/audio.h"
+#include "main/audio/music_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/render.h"

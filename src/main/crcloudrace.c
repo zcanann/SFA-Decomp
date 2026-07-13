@@ -1,6 +1,6 @@
 #include "main/crcloudrace.h"
 #include "main/pi_dolphin_api.h"
-#include "main/audio.h"
+#include "main/audio/stream_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/dll/player_api.h"

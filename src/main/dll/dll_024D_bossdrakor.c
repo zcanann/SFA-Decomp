@@ -20,7 +20,7 @@
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "dolphin/mtx/mtx_legacy.h"
-#include "main/audio.h"
+#include "main/audio/music_api.h"
 #include "main/gametext_show_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/rcp_dolphin_api.h"

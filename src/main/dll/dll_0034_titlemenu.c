@@ -89,8 +89,6 @@ extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 extern f32 lbl_803E1D28;
-extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
-extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 
 extern u8* lbl_803DD498;
@@ -689,7 +687,7 @@ void TitleMenu_initialise(void)
         titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
         gAttractMoviePlaybackEnabled = 1;
         Movie_SetVolumeFade(0, 0);
-        audioSetVolumes(0, 10, 1, 0, 0);
+        audioSetVolumesU8(0, 10, 1, 0, 0);
         gTitleMenuSelectionFade = 0;
     }
     else

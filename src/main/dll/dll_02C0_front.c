@@ -26,7 +26,7 @@
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
-#include "main/audio.h"
+#include "main/audio/stream_api.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
 #include "main/sky_api.h"

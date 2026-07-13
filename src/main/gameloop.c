@@ -3,6 +3,8 @@
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
+#include "main/audio/audio_control_api.h"
+#include "main/audio/stream_api.h"
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
 #include "dolphin/pad.h"
@@ -610,7 +612,6 @@ extern void videoInit(void* rmode, int arg);
 extern void initLoadingScreenTextures(void);
 
 
-extern u8 audioInit(void);
 
 extern u8 initLoadFiles(void);
 
@@ -695,7 +696,7 @@ void init(void)
         waitNextFrame();
         if (audioDone == 0)
         {
-            audioDone = audioInit();
+            audioDone = audioInitU8();
         }
         if (once == 0)
         {
@@ -950,7 +951,6 @@ void gameUpdate(void)
 extern void voxmaps_updateTimers(void);
 extern void viewportEffectFn_8000e380(void);
 extern void loadDataFiles(void);
-extern void audioUpdate(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void doNothing_endOfFrame(void);
@@ -1341,12 +1341,8 @@ void askProgressiveScanMode(void)
 
 extern void AISetStreamVolLeft(int vol);
 extern void AISetStreamVolRight(int vol);
-extern void audioStopAll(void);
 extern void AISetStreamPlayState(int state);
 #define AI_STREAM_STOP 0
-extern void audioReset(void);
-extern u8 gAudioStreamPlaying;
-extern u8 gAudioStreamDvdState;
 extern u8 lbl_803DCCA6;
 extern u8 gGameLoopResetComboDebounce;
 extern f32 gGameLoopResetHoldTimer;

@@ -24,6 +24,7 @@
 #include "main/objseq_api.h"
 #include "main/fileio.h"
 #include "main/audio/stream_api.h"
+#include "main/audio/audio_control_api.h"
 #include "dolphin/dvd.h"
 
 typedef struct
@@ -138,7 +139,6 @@ extern f32 lbl_803DD074;
 extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
-extern void doNothing_8000CF54(int);
 extern void subtitleStart(int);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
@@ -338,7 +338,7 @@ int timerCountDown(f32* p)
 void streamCb_80080384(void)
 {
     AudioStream_IsPreparing();
-    doNothing_8000CF54(0);
+    doNothing_8000CF54Int(0);
     if ((s32)lbl_803DB71C != -1)
     {
         gameTextLoadTaskText(lbl_803DB71C);

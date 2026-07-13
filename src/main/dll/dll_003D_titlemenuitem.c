@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/textrender_api.h"
 #include "main/gametext_api.h"
+#include "main/audio/music_api.h"
 
 #define TITLE_MENU_FLAG_ENABLED          0x01
 #define TITLE_MENU_FLAG_WRAP             0x02
@@ -52,7 +53,6 @@ extern f32 lbl_803E21F8;
 void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT]; /* cached menu textures */
 extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids for the cache */
 
-extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 

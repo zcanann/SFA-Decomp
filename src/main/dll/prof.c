@@ -14,6 +14,7 @@
  * its exact role is unconfirmed.
  */
 #include "main/dll/debug/prof.h"
+#include "main/audio/audio_control_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/titlemenuitem_struct.h"
 #include "main/dll/savedata_struct.h"

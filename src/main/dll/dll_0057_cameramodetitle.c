@@ -17,7 +17,8 @@
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/attract_movie_api.h"
-#include "main/audio.h"
+#include "main/audio/audio_control_api.h"
+#include "main/audio/music_api.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 
 /* title-screen music tracks crossfaded as pose 4 is entered/left */

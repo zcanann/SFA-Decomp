@@ -272,6 +272,12 @@ extern int gAudioMemAllocHook;
 extern int gAudioMemFreeHook;
 extern u8 gAudioReverbSettings[];
 extern u32 gAudioAramBlock[0x2C / sizeof(u32)];
+extern f32 lbl_803DE5D4;
+extern f32 lbl_803DE568;
+extern f32 lbl_803DE550;
+extern f32 lbl_803DE554;
+extern f32 lbl_803DE558;
+extern f32 lbl_803DE55C;
 
 int sndSeqPlayEx(int a, int b, void* bank, MusicSeqStartParams* params, int e);
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode);
@@ -284,5 +290,30 @@ void AudioStream_CancelCallback(s32 result, DVDCommandBlock* block);
 void fn_8000D0B4(s32 result, DVDCommandBlock* block);
 void fn_80008EDC(u32 request);
 void Music_LoadChannelForTrigger(MusicTrigger* trigger);
+u32 audioFlagFn_8000a188(u32 mask);
+void audioFree(void* ptr);
+void* _audioAlloc(u32 size);
+s32 Music_GetActivePriority(void);
+void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* vector);
+f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);
+int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third);
+void fn_80009008(u32 request);
+void MIDIWADLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+int musicInitMidiWad(void);
+void poolDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void poolDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void projectDataSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleBufferMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleBufferSLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectoryMLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sampleDirectorySLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void sfxTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void musicTriggersLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void streamsLoadedCallback(s32 status, DVDFileInfo* fileInfo);
+void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 callback, u32 callbackArg1, u32 callbackArg2,
+                          u32 callbackArg3);
+void audioLoadTriggerData(void);
+void fn_80008F38(void* addr, u32 dest, u32 size);
 
 #endif /* MAIN_AUDIO_INTERNAL_H_ */
