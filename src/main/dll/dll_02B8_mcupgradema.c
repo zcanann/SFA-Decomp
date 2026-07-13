@@ -25,7 +25,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/objseq.h"
 
 /* obj is a word, not a pointer: the shared-header prototype fixes the

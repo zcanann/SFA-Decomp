@@ -9,7 +9,7 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"

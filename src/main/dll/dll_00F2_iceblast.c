@@ -14,7 +14,7 @@
 #include "main/dll/dll_00F2_iceblast.h"
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
 

@@ -35,7 +35,7 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
-#include "main/objlib.h"
+#include "main/obj_query.h"
 #include "main/pad.h"
 #include "main/voxmaps.h"
 #include "string.h"

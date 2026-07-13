@@ -7,7 +7,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"

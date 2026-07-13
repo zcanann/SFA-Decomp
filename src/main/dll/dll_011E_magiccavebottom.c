@@ -4,7 +4,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/sky_api.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"

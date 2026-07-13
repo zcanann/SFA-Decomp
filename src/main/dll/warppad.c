@@ -26,7 +26,7 @@
 #include "main/dll/CF/warp_pad.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"

@@ -9,7 +9,7 @@
  * disables its hit volume.
  */
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"

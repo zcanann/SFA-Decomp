@@ -24,7 +24,7 @@
 #include "main/game_ui_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/objseq.h"
 
 void mcupgrade_update(GameObject* obj)

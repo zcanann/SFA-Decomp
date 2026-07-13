@@ -22,7 +22,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
-#include "main/objlib.h"
+#include "main/obj_trigger.h"
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/pad.h"

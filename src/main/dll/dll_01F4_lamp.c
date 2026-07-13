@@ -17,7 +17,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_01F4_lamp.h"
 

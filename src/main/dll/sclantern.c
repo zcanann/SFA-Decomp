@@ -12,7 +12,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/frame_timing.h"
 #include "main/dll/SC/dll_01B0_shswapston.h"
 

@@ -22,7 +22,7 @@
 #include "main/object.h"
 #include "main/objanim.h"
 #include "main/objHitReact.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/vecmath.h"
 #include "main/shader_api.h"
 #include "main/objprint_api.h"

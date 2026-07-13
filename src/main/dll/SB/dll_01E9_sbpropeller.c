@@ -17,7 +17,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
-#include "main/objlib.h"
+#include "main/obj_path.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/object_render.h"
 #include "main/object_api.h"
