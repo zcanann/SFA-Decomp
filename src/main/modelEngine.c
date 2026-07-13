@@ -9,6 +9,7 @@
 #include "main/dll/dll_00D4_skeetlawall.h"
 #include "main/dll/dll_00CC_chukchuk.h"
 #include "main/dll/dll_00CD_iceball.h"
+#include "main/dll/dll_00D0_grimble.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
@@ -90,7 +91,7 @@ extern ResourceDescriptor gCCqueenObjDescriptor, gCCriverflowObjDescriptor, gCFC
     gCFMainCrystalObjDescriptor;
 extern ResourceDescriptor gCFPerchObjDescriptor, gCFPowerBaseObjDescriptor, gCFPrisonCageObjDescriptor,
     gCFPrisonGuardObjDescriptor, gCFPrisonUncleObjDescriptor, gCF_DoorLightObjDescriptor;
-extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor, gCannonClawObjDescriptor,
+extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor,
     gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukaObjDescriptor,
     gCloudPrisonControlObjDescriptor;
 extern ResourceDescriptor gColdWaterControlObjDescriptor, gControlLightObjDescriptor,
@@ -135,7 +136,7 @@ extern ResourceDescriptor gFirePipeObjDescriptor, gFireballObjDescriptor, gFlagO
     gFlameThrowerSpeObjDescriptor, gFlameblastObjDescriptor, gFlammableVineObjDescriptor, gFogControlObjDescriptor,
     gFuelCellObjDescriptor;
 extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescriptor, gGPSH_ObjCreatorObjDescriptor,
-    gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor, gGrimbleObjDescriptor;
+    gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor;
 extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHighTopObjDescriptor,
     gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor, gIMIcePillarObjDescriptor;
 extern ResourceDescriptor gIMSpaceRingGenObjDescriptor, gIMSpaceRingObjDescriptor, gIMSpaceThrusterObjDescriptor,
@@ -1108,8 +1109,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     (ResourceDescriptor*)&gChukChukObjDescriptor,
     (ResourceDescriptor*)&gIceBallObjDescriptor,
     &dll_CE,
-    &gCannonClawObjDescriptor,
-    &gGrimbleObjDescriptor,
+    (ResourceDescriptor*)&gCannonClawObjDescriptor,
+    (ResourceDescriptor*)&gGrimbleObjDescriptor,
     &gTumbleWeedBushObjDescriptor,
     &gTumbleweedObjDescriptor,
     &dll_D3,
