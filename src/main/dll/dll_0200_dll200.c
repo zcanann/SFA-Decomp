@@ -26,6 +26,13 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0200_dll200.h"
+#include "main/obj_placement.h"
+
+typedef struct Dll200Placement
+{
+    ObjPlacement head;
+    s8 rotXByte;
+} Dll200Placement;
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 
@@ -195,16 +202,17 @@ void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 void dll_200_init(int* obj, int* arg)
 {
     Dll200State* state;
+    Dll200Placement* def = (Dll200Placement*)arg;
     ((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)arg + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)def->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = dll_200_SeqFn;
     state = ((GameObject*)obj)->extra;
-    state->defNoLow = (u8) * (s16*)arg;
+    state->defNoLow = (u8)def->head.objectId;
     state->unk1C = 0;
     state->unk18 = 0;
-    state->homeX = *(f32*)((char*)arg + 0x8);
-    state->homeY = *(f32*)((char*)arg + 0xc);
-    state->homeZ = *(f32*)((char*)arg + 0x10);
+    state->homeX = def->head.posX;
+    state->homeY = def->head.posY;
+    state->homeZ = def->head.posZ;
     state->latch24 = mainGetBit(GAMEBIT_WM_GalleonRelated00D0);
     state->counter27 = 0;
     state->mode = 1;
