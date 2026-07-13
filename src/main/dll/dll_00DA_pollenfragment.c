@@ -308,6 +308,7 @@ void pollenfragment_update(int obj)
 {
     u8* extra;
     u8* nearObj;
+    PollenFragmentDef* def;
     void* hit;
     int i;
     f32 horizDamping;
@@ -374,9 +375,9 @@ void pollenfragment_update(int obj)
     }
     nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, obj, 0);
     if (nearObj != NULL &&
-        (!(((PollenFragmentExtra*)extra)->def)->timed || ((PollenFragmentExtra*)extra)->timer < lbl_803E3164))
+        (!(def = ((PollenFragmentExtra*)extra)->def)->timed || ((PollenFragmentExtra*)extra)->timer < lbl_803E3164))
     {
-        if ((((PollenFragmentExtra*)extra)->def)->usePath)
+        if (def->usePath)
         {
             ObjPath_GetPointWorldPosition(nearObj, 0, &pos.x, &pos.y, &pos.z, 0);
         }
