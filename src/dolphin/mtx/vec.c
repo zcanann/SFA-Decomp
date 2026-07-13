@@ -1,8 +1,11 @@
 #include "dolphin/mtx.h"
 
-extern const float lbl_803E7648;  // 0.5f
-extern const float lbl_803E764C;  // 3.0f
-extern const float lbl_803E7650;  // 2.0f
+__declspec(section ".sdata2") const float lbl_803E7648 = 0.5f;
+__declspec(section ".sdata2") const float lbl_803E764C = 3.0f;
+__declspec(section ".sdata2") const float lbl_803E7650 = 2.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const float lbl_803E7654 = 0.0f;
+#pragma explicit_zero_data off
 
 #define FP2 fp2
 #define FP3 fp3

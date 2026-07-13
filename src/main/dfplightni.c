@@ -5,9 +5,14 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 
-extern f32 gDfpLightningTimerMax;
-extern f32 lbl_803E64E4;
-extern f32 gDfpLightningTimerInactiveMax;
+__declspec(section ".sdata2") f32 gDfpLightningTimerMax = 1000.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E64E4 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 gDfpLightningTimerInactiveMax = 1010.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E64EC = 0.0f;
+#pragma explicit_zero_data off
 extern f32 gDfpLightningTimerActiveReset;
 extern f32 gDfpLightningOffsetScale;
 extern f32 gDfpLightningRadiusMin;

@@ -3,12 +3,14 @@
 
 static f32 lbl_803DC550[] = { 0.0f, 1.0f };
 
-extern const f32 lbl_803E7618;
-extern const f32 lbl_803E761C;
-extern const f32 lbl_803E7620;
-extern const f32 lbl_803E7624;
-extern const f32 lbl_803E7628;
-extern const f32 lbl_803E762C;
+__declspec(section ".sdata2") const f32 lbl_803E7618 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const f32 lbl_803E761C = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") const f32 lbl_803E7620 = 2.0f;
+__declspec(section ".sdata2") const f32 lbl_803E7624 = -1.0f;
+__declspec(section ".sdata2") const f32 lbl_803E7628 = 0.5f;
+__declspec(section ".sdata2") const f32 lbl_803E762C = 0.017453292f;
 extern void fn_80246E54(void);
 extern void fn_80246E80(void);
 extern void fn_80246EB4(void);

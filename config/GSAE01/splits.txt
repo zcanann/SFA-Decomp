@@ -2604,6 +2604,7 @@ main/dll/DF/dll_0237_dfpsppl.c:
 main/dll/dll_0238_linkalevco.c:
 	.text       start:0x8020930C end:0x80209810
 	.data       start:0x80329C80 end:0x80329CB8
+	.sdata2     start:0x803E64D8 end:0x803E64E0
 
 main/textblock.c:
 	.text       start:0x80209810 end:0x802098B4
@@ -2616,7 +2617,7 @@ main/platform1.c:
 main/dfplightni.c:
 	.text       start:0x80209958 end:0x80209FE0
 	.data       start:0x80329DD0 end:0x80329E08
-	.sdata2     start:0x803E64F0 end:0x803E64F8
+	.sdata2     start:0x803E64E0 end:0x803E64F8
 
 main/dfppowersl.c:
 	.text       start:0x80209FE0 end:0x8020A1C8
@@ -3018,6 +3019,7 @@ dolphin/os/OSFont.c:
 	.data       start:0x8032CCC8 end:0x8032D7D2
 	.sdata      start:0x803DC548 end:0x803DC54A
 	.sbss       start:0x803DDE28 end:0x803DDE38
+	.sdata2     start:0x803E7610 end:0x803E7618
 
 dolphin/os/OSInterrupt.c:
 	.text       start:0x8024377C end:0x80243FE8
@@ -3078,6 +3080,7 @@ dolphin/db/db.c:
 dolphin/mtx/mtx.c:
 	.text       start:0x80246E54 end:0x80247494
 	.sdata      start:0x803DC550 end:0x803DC558
+	.sdata2     start:0x803E7618 end:0x803E7630
 
 dolphin/dvd/DVDLowFirstRead.c:
 	.sdata      start:0x803DC558 end:0x803DC560
@@ -3087,9 +3090,11 @@ dolphin/mtx/mtxvec.c:
 
 dolphin/mtx/mtx44.c:
 	.text       start:0x802475C8 end:0x80247730
+	.sdata2     start:0x803E7630 end:0x803E7648
 
 dolphin/mtx/vec.c:
 	.text       start:0x80247730 end:0x802479D0
+	.sdata2     start:0x803E7648 end:0x803E7658
 
 dolphin/mtx/psmtx.c:
 	.text       start:0x802479D0 end:0x80247A1C

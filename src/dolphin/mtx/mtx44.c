@@ -2,12 +2,14 @@
 
 extern f32 tanf(f32);
 
-extern const f32 lbl_803E7630;
-extern const f32 lbl_803E7634;
-extern const f32 lbl_803E7638;
-extern const f32 lbl_803E763C;
-extern const f32 lbl_803E7640;
-extern const f32 lbl_803E7644;
+__declspec(section ".sdata2") f32 lbl_803E7630 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E7634 = 2.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E7638 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E763C = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E7640 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E7644 = 0.017453292f;
 
 void C_MTXPerspective(Mtx44 m, f32 fovY, f32 aspect, f32 n, f32 f) {
     f32 angle;

@@ -55,7 +55,10 @@
 /* per-instance extra block reserved by the object system; unused by this TU */
 #define LINKA_LEVCONTROL_EXTRA_SIZE 4
 
-extern f32 lbl_803E64D8;
+__declspec(section ".sdata2") f32 lbl_803E64D8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E64DC = 0.0f;
+#pragma explicit_zero_data off
 
 int LinkALevControl_seqFn(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
