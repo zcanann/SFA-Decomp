@@ -2,7 +2,7 @@
 #define MAIN_DLL_DLL_00CB_DLLCB_H_
 
 #include "main/game_object.h"
-#include "main/dll/scarab.h"
+#include "main/dll/baddie_state.h"
 
 int fn_801601C4(GameObject* obj, GroundBaddieState* p);
 int fn_8016043C(GameObject* obj, GroundBaddieState* p);

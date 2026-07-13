@@ -16,5 +16,6 @@ void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state);
 
 /* extern-cleanup: defining-file public prototypes */
 void iceBaddie_updateEffectAnchors(GameObject* obj, int state);
+void iceBaddie_update(GameObject* obj, int unusedA, int unusedB);
 
 #endif /* MAIN_DLL_ICEBADDIE_H_ */

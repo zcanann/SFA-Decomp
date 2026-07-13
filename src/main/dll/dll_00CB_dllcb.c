@@ -18,7 +18,6 @@
 #include "main/dll/chukchukstate_struct.h"
 #include "main/dll/baddie_control_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/dll/scarab.h"
 #include "main/game_object.h"
 #include "main/objprint_character_api.h"
 #include "main/obj_group.h"

@@ -16,12 +16,13 @@
  * (unkF4 != 0) update wakes it from the saved map-event time slot.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/obj_group.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/scarab.h"
+#include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"

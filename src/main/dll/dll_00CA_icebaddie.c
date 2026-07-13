@@ -42,7 +42,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
-#include "main/dll/scarab.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
