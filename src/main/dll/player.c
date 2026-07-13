@@ -16967,7 +16967,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         prog = (f32)count / lbl_803E7F64;
         if (prog >= lbl_803E7F68)
         {
-            fn_80189C68((int)gPlayerInteractTarget);
+            staffactivated_spawnMapEventDebris(gPlayerInteractTarget);
             Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? SFXTRIG_impact3 : SFXTRIG_literun116));
             ObjAnim_SetCurrentMove(obj, 0xd0, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C;

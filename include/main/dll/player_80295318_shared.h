@@ -45,7 +45,6 @@
 
 /* external symbol declarations */
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
-extern void fn_80189C68(int a);
 extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern f32 vec3f_distanceSquared(void* a, void* b);
