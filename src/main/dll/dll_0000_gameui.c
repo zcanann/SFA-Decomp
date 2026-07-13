@@ -2332,6 +2332,8 @@ void fn_80128470(int alpha)
  * map layout with location labels. */
 void mapScreenDrawHud(int p1, int p2, int p3)
 {
+    u8* candidates;
+    s16 h0;
     if (pauseMenuState != 0)
     {
         return;
@@ -2340,25 +2342,22 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     {
         extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
         extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
-        s16 v = gWorldMapVoiceoverTimer;
-        s16 alpha = (s16)(v * 0xf);
-        s16 h0;
-        s16 w;
-        s16 x;
-        s16 y;
+        s16 v, alpha, w, x, y;
         int h;
+        v = gWorldMapVoiceoverTimer;
+        alpha = v;
+        alpha *= 0xf;
         if (alpha > 0xff)
         {
             alpha = 0xff;
         }
+        h0 = v;
+        h0 -= 0x14;
+        if (h0 < 0)
         {
-            int hh = v - 0x14;
-            if ((s16)hh < 0)
-            {
-                hh = 0;
-            }
-            h0 = (s16)(hh << 4);
+            h0 = 0;
         }
+        h0 *= 0x10;
         if (h0 > *(u16*)(gTextBoxes + 0x186))
         {
             h0 = (s16) * (u16*)(gTextBoxes + 0x186);
@@ -2386,11 +2385,10 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             {
                 int i;
                 int tmp;
-                u8* base;
                 u8* p;
                 i = 0;
-                base = (u8*)(int)gGameUiTaskHintCandidates;
-                p = base;
+                candidates = (u8*)(int)gGameUiTaskHintCandidates;
+                p = candidates;
                 for (; i < GAMEUI_TASK_HINT_COUNT; i++)
                 {
                     if (mainGetBit(gTaskHintTable[*p].bit_id))
@@ -2424,18 +2422,21 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     taskCount++;
                 }
-                if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[0] * 28 + 0x18))
-                    tmp = (s8)gGameUiTaskHintCandidates[0];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[1] * 28 + 0x18))
-                    tmp = (s8)gGameUiTaskHintCandidates[1];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[2] * 28 + 0x18))
-                    tmp = (s8)gGameUiTaskHintCandidates[2];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[3] * 28 + 0x18))
-                    tmp = (s8)gGameUiTaskHintCandidates[3];
-                else if (taskCount >= *(u8*)((u8*)gTaskHintTable + base[4] * 28 + 0x18))
-                    tmp = (s8)gGameUiTaskHintCandidates[4];
-                else
-                    tmp = -1;
+                {
+                    TaskHintEntry* entry = gTaskHintTable;
+                    if (taskCount >= entry[candidates[0]].thresh)
+                        tmp = (s8)gGameUiTaskHintCandidates[0];
+                    else if (taskCount >= entry[candidates[1]].thresh)
+                        tmp = (s8)gGameUiTaskHintCandidates[1];
+                    else if (taskCount >= entry[candidates[2]].thresh)
+                        tmp = (s8)gGameUiTaskHintCandidates[2];
+                    else if (taskCount >= entry[candidates[3]].thresh)
+                        tmp = (s8)gGameUiTaskHintCandidates[3];
+                    else if (taskCount >= entry[candidates[4]].thresh)
+                        tmp = (s8)gGameUiTaskHintCandidates[4];
+                    else
+                        tmp = -1;
+                }
                 li_ = (s8)tmp;
             }
             {
@@ -2502,10 +2503,13 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int iv[2];
             f32 s;
             f32 k;
+            HudTextures* textures;
+            row = 0;
             iv[0] = 0;
             iv[1] = iv[0];
+            textures = (HudTextures*)hudTextures;
             k = lbl_803E204C;
-            for (row = 0; row < 0x96; row += 4)
+            for (; row < 0x96; row += 4)
             {
                 int alpha0, alpha1, jitter1, jitter0, rawAlpha;
                 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
@@ -2514,13 +2518,13 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x32),
+                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x32),
                                    (u8)(alpha0 > 0xff ? 0xff : alpha0), 0x100, 0x82, 2, jitter0, jitter1);
                 rawAlpha = (int)((f32)alpha * (lbl_803E2010 + s));
                 alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
                 jitter1 = randomGetRange(0, 0x1e) << 1;
                 jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(((HudTextures*)hudTextures)->tex150, lbl_803E1F48, (f32)(row + 0x34),
+                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x34),
                                    (u8)(alpha1 > 0xff ? 0xff : alpha1), 0x100, 0x82, 2, jitter0, jitter1);
                 iv[0] += 0x3520;
                 iv[1] += 0x1f40;
