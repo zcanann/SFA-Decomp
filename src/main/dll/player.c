@@ -8,6 +8,7 @@
 #include "main/model.h"
 #include "main/objprint_api.h"
 #include "main/objprint_dolphin.h"
+#include "main/dll/objfx_api.h"
 #include "main/sky_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
@@ -8165,7 +8166,6 @@ typedef struct
     f32 x, y, z;
 } VecXYZ;
 
-extern void fn_8009A8C8(int obj, f32 fv);
 extern int gPlayerSfxTimerA;
 extern int gPlayerStepSfxTimer;
 extern int lbl_802C2C68[];
@@ -8562,7 +8562,7 @@ void fn_802AFB0C(int obj, int inner, int state)
             }
             if (((PlayerState*)state)->baddie.controlMode == 0x1a)
             {
-                fn_8009A8C8(obj, lbl_803E8134);
+                fn_8009A8C8((GameObject*)obj, lbl_803E8134);
             }
             ((PlayerState*)inner)->idleHoldTimer = lbl_803E7EA4;
             ((PlayerState*)inner)->idleWaitTimer = randomGetRange(800, 0x44c);
@@ -13882,12 +13882,13 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         {
             tbl[0] = lbl_803E7E68;
             tbl[1] = lbl_803E7E6C;
-            objParticleFn_80099d84(obj, lbl_803E7E9C, tbl[((((PlayerState*)inner)->knockKindBits >> 5) & 7) - 1] & 0xff,
-                                   lbl_803E7EE0, 0);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E7E9C,
+                                   tbl[((((PlayerState*)inner)->knockKindBits >> 5) & 7) - 1] & 0xff,
+                                   lbl_803E7EE0, NULL);
         }
         if ((((PlayerState*)inner)->pendingFxFlags & 1) != 0)
         {
-            objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E7E9C, 8, lbl_803E7EE0, NULL);
         }
         if (((PlayerState*)inner)->waterDepth > lbl_803E7EA4)
         {

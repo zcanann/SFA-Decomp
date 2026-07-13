@@ -22,6 +22,7 @@
 #include "main/pad.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/tricky.h"
+#include "main/dll/objfx_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/objprint.h"
@@ -271,7 +272,7 @@ void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRun
     }
     if ((s32)state->baddie.eventFlags & 0x100)
     {
-        fn_8009A8C8((int)obj, lbl_803E6B30);
+        fn_8009A8C8(obj, lbl_803E6B30);
         Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds);
     }
 }
@@ -563,7 +564,7 @@ void HighTop_hitDetect(GameObject* obj)
     if (st == 2 || st == 8)
     {
         runtime->airMeterRemaining -= 1;
-        fn_8009A8C8((int)obj, lbl_803E6B30);
+        fn_8009A8C8(obj, lbl_803E6B30);
         if (runtime->airMeterRemaining <= 0)
         {
             (*gGameUIInterface)->airMeterSetShutdown();

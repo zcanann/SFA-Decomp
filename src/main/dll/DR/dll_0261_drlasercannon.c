@@ -8,6 +8,7 @@
 #include "main/game_object.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
+#include "main/dll/objfx_api.h"
 #include "main/object_update_list.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -425,7 +426,7 @@ void DR_LaserCannon_hitDetect(GameObject* obj)
         state->lastHitObject = hitObject;
         state->health -= hitVolume;
         Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E68F0);
-        fn_8009A8C8((int)obj, lbl_803E68F4);
+        fn_8009A8C8(obj, lbl_803E68F4);
         Sfx_PlayFromObject((int)obj, SFXTRIG_ar_awghitobj16);
         if (state->health <= 0)
         {
@@ -510,8 +511,7 @@ void DR_LaserCannon_update(GameObject* obj)
     }
     else
     {
-        ((void (*)(void*, f32, int, int, f32))objfx_spawnFrameTimedHitPulse)(obj, lbl_803E6900, 1,
-                                                                             (u8)(5 - state->health), lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, (u8)(5 - state->health), lbl_803E6904);
         if (state->warningObject != NULL)
         {
             staffFn_80170380((int)state->warningObject, DR_LASERCANNON_WARNING_HIDE_MODE);

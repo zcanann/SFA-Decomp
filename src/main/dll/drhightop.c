@@ -26,6 +26,7 @@
 #include "main/dll/BW/BWalphaanim.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/path_control_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
@@ -113,7 +114,6 @@ extern f32 PSVECMag(void* vec);
 extern void PSVECScale(f32* dst, f32* src, f32 s);
 extern void PSVECNormalize(void* src, void* dst);
 extern f32 PSVECDotProduct(void* a, void* b);
-extern void fn_8009A8C8();
 extern void SnowBike_resetToRomListPosition();
 
 void fn_801EAE4C(short* obj, int stateRaw)
@@ -438,7 +438,7 @@ void fn_801EB634(GameObject* obj, int stateRaw)
         if (((hit != 0) && (hitObj = hit, *(u32*)& st->linkedObj = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
             (hitKind = arrayIndexOf(gDrHighTopHitObjectKinds, 0xc, (int)*(short*)(hitObj + 0x46)), hitKind != -1))
         {
-            fn_8009A8C8(obj, (double)lbl_803E5BB0);
+            fn_8009A8C8((GameObject*)obj, lbl_803E5BB0);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x551, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x552, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void*)obj, 0x554, NULL, 4, -1, NULL);

@@ -3,6 +3,7 @@
 #include "main/objhits.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/dll/objfx_api.h"
 #include "main/maketex.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
@@ -13,7 +14,6 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-extern void fn_8009A8C8(void* obj, f32 param2);
 extern void modelLightStruct_freeSlot(void* handle);
 
 void proximitymine_resetToIdle(ProximityMineObject* obj)
@@ -35,7 +35,7 @@ void proximitymine_resetToIdle(ProximityMineObject* obj)
     ObjHits_EnableObject((u32)obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     storeZeroToFloatParam(&state->resetTimer);
-    fn_8009A8C8(obj, lbl_803E676C);
+    fn_8009A8C8((GameObject*)obj, lbl_803E676C);
     {
         f32 dist = state->triggerDistance - lbl_803E6774;
         spawnExplosionLegacy(obj, dist * lbl_803DC24C + lbl_803E6770, 1, 1, 0, 1, 0, 1, 0);

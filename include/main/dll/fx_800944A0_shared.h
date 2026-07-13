@@ -340,10 +340,8 @@ void viewFinderSetZoom(f32 zoom);
 void viewFinderSetZoomTo50(void);
 void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
-void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);
 void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval);
-void fn_8009A8C8(u8* obj, f32 thresh);
 void expgfx_updateResourceEntries(int unused);
 int expgfx_acquireResourceEntry(int resourceId);
 

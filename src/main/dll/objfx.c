@@ -546,7 +546,7 @@ void objShowButtonGlow(void* obj, u8 mode, f32 intensity)
     }
 }
 
-void objfx_spawnFrameTimedHitPulse(void* obj, u8 a, u8 b, f32 c, f32 d)
+void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 c, u8 a, u8 b, f32 d)
 {
     Tbl5 t1 = *(Tbl5*)lbl_802C1FF8;
     Tbl5 t2 = *(Tbl5*)lbl_802C200C;
@@ -1212,7 +1212,7 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
     }
 }
 
-void fn_8009A8C8(u8* obj, f32 thresh)
+void fn_8009A8C8(GameObject* obj, f32 thresh)
 {
     GameObject* player = Obj_GetPlayerObject();
     if (player == NULL)
@@ -1225,7 +1225,7 @@ void fn_8009A8C8(u8* obj, f32 thresh)
     }
     {
         f32 d = Camera_DistanceToCurrentViewPosition(
-            ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ);
+            obj->anim.worldPosX, obj->anim.worldPosY, obj->anim.worldPosZ);
         if (d <= thresh)
         {
             f32 t = lbl_803DF354 - d / thresh;

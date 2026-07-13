@@ -8,6 +8,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/objfx.h"
+#include "main/dll/objfx_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/game_object.h"
@@ -78,7 +79,7 @@ void drgenerator_hitDetect(GameObject* obj)
     }
     state[0x19a] = *(u8*)(state + 0x19a) - hitVolume;
     Obj_SpawnHitLightAndFade(obj, (const Vec3f*)&hitPosX, lbl_803E6B5C);
-    ((void (*)(void*, f32))fn_8009A8C8)(obj, lbl_803E6B60);
+    fn_8009A8C8(obj, lbl_803E6B60);
     if (state[0x19a] > 0)
     {
         return;
