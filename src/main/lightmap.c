@@ -25,6 +25,7 @@
 #include "main/sfa_extern_decls.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/dll_00E2_staff_api.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
 extern u32 DAT_803dda68;
@@ -876,7 +877,6 @@ extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
 extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
 extern void doHeatEffect(int v);
-extern void quakeSpellTextureFn_8016dbf4(void);
 extern u8 bEnableDistortionFilter;
 extern f32 distortionFilterAngle1;
 extern f32 distortionFilterAngle2;

@@ -16,7 +16,7 @@
 #include "main/dll/dll_02B8_mcupgradema.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_02B9_mcstaffeffe.h"
-#include "main/dll/dll_00E2_staff.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/player_objects.h"
 /* mcupgrade_state.h: only McUpgradeMaSetup + MCUPGRADE_OBJ_FLAG_COLLECTED used here. */
 #include "main/dll/mcupgrade_state.h"

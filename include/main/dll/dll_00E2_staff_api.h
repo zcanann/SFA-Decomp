@@ -9,6 +9,7 @@ extern u32 lbl_80320978[];
 
 void objSetAnimField48to0(GameObject* obj);
 void quakeSpellFn_8016cee8(int* obj, int* obj2);
+void quakeSpellTextureFn_8016dbf4(void);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 alternateRate, int unused);
 void staff_free(int* obj);
@@ -28,8 +29,10 @@ void staff_initialise(void);
 void staff_modelMtxFn(int* obj, int p4, int p5);
 void staff_release(void);
 void staff_render(void);
+void staffSetGlow(GameObject* obj, u8 attackType, u8 enable);
 void staff_setScale(void);
 void staff_setHitReactValue(int* obj, s32 value);
+void staff_setupSwipe(int p1, u8* swipe, int p3, int p4);
 void staff_startSwipe(int* obj, s16 index, f32 arg2, f32 arg3);
 void staff_update(int* obj);
 void superQuakeFn_8016d9fc(f32* position);

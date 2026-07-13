@@ -8,7 +8,7 @@
 #include "main/model.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/player_objects.h"
-#include "main/dll/dll_00E2_staff.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/gamebits.h"
 #include "main/objprint_dolphin.h"
 #include "main/pad.h"

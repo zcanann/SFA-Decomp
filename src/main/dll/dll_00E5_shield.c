@@ -32,7 +32,7 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 #include "main/dll/dll_00E5_shield.h"
-#include "main/dll/dll_00E2_staff.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 

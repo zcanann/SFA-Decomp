@@ -57,7 +57,7 @@
 #include "dolphin/gx/GXDraw.h"
 #include "dolphin/gx/GXEnum.h"
 #include "string.h"
-#include "main/dll/dll_00E2_staff.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C8_depthoffieldpoint_api.h"
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe_api.h"
