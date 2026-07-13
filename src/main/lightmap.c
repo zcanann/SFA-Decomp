@@ -2,6 +2,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
+#include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
@@ -839,7 +840,6 @@ extern void fn_802B4ED8(int* obj, int a, int b);
 extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);
-extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern void GXSetChanCtrl(GXChannelID chan, GXBool enable, GXColorSrc amb_src, GXColorSrc mat_src, u32 light_mask, GXDiffuseFn diff_fn, GXAttnFn attn_fn);
 extern void GXSetChanAmbColor(int chan, GXColor8* c);
 extern void GXSetNumChans(u8 nChans);

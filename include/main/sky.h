@@ -123,7 +123,6 @@ void* fn_80089A58(void);
 int getSunPos(f32* outTime);
 void fn_8008B88C(int* outTimer);
 void fn_800897D4(int slot, f32* x, f32* y, f32* z);
-void objGetColor(int slot, u8* red, u8* green, u8* blue);
 void dll_06_func0B(int* x, int* y);
 void dll_06_func0A(int* a, int* b, int* c, f32* scale);
 void dll_06_func0E(void);

@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/pi_frame_api.h"
 #include "main/shader_api.h"
+#include "main/sky_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
@@ -1739,7 +1740,6 @@ extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
 extern void ObjModel_ToggleMatrixBuffer(int* am);
 extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int len2);
-extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern ObjModelRenderCb ObjModel_GetRenderCallback(int* am);
 extern void _gxSetFogParams(void);

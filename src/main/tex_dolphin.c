@@ -1,5 +1,6 @@
 #include "main/tex_dolphin.h"
 #include "main/shader_api.h"
+#include "main/sky_api.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
@@ -64,7 +65,6 @@ extern int textureCrazyPointerFollowFn_80054c30();
 extern void fn_8005D3B4();
 extern void textureFn_8006c4e0();
 extern void fn_80088730();
-extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 typedef struct TexOverride

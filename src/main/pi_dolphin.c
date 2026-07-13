@@ -4227,7 +4227,6 @@ void textureFn_80051348(void* p1, u8 p2)
     lbl_803DCD69 += 1;
 }
 
-extern void objGetColor(int slot, u8* red, u8* green, u8* blue);
 extern int lbl_803DCD78;
 
 void fn_80051528(void* p1, void* mtx)
