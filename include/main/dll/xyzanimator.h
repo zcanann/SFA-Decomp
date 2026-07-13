@@ -4,19 +4,7 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
-
-typedef struct PollenFragmentConfig
-{
-    s16 spawnSfxId;
-    s16 loopSfxId;    /* 0x02: looped object sound (Sfx_KeepAliveLoopedObjectSound) */
-    s16 explodeSfxId; /* 0x04: explosion sfx, -1 = none (Sfx_PlayFromObjectLimited) */
-    s16 effectObjectId;
-    s16 burstFxId; /* 0x08: burst particle-fx object id (spawnObject) */
-    s16 auraFxId;  /* 0x0A: aura particle-fx object id, -1 = none (spawnObject) */
-    f32 scale;
-    s16 targetGroup; /* 0x10: object-group id for homing (ObjGroup_FindNearestObject) */
-    u16 flags;
-} PollenFragmentConfig;
+#include "main/dll/dll_00DA_pollenfragment_api.h"
 
 typedef struct PollenExtra
 {
@@ -92,12 +80,6 @@ extern ObjectDescriptor gKaldaChompSpitObjDescriptor;
 extern ObjectDescriptor gPinPonSpikeObjDescriptor;
 extern ObjectDescriptor gPollenObjDescriptor;
 extern ObjectDescriptor gPollenFragmentObjDescriptor;
-extern PollenFragmentConfig lbl_80320538;
-extern PollenFragmentConfig lbl_8032054C;
-extern PollenFragmentConfig lbl_80320560;
-extern PollenFragmentConfig lbl_80320574;
-extern PollenFragmentConfig lbl_80320588;
-extern PollenFragmentConfig* lbl_8032059C[];
 
 /* extern-cleanup: consolidated prototypes */
 void quakeSpellFn_8016cee8(int* obj, int* x);
