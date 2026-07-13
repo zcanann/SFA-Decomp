@@ -1037,6 +1037,7 @@ main/dll/dll_8011d918.c:
 
 main/dll/tricky.c:
 	.text       start:0x8011D9B0 end:0x80121C4C
+	.rodata     start:0x802C21A0 end:0x802C21C8
 	.bss        start:0x803A87F0 end:0x803A89B0
 
 main/dll/maybetemplate.c:

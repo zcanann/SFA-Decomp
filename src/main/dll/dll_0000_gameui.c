@@ -1501,13 +1501,20 @@ void drawWorldMapHud(void)
 /* Number of best-time entries in the race-times list (bits[6]). */
 #define GAMEUI_TIME_LIST_COUNT 6
 
+extern u16 lbl_802C21A0[GAMEUI_TIME_LIST_COUNT];
+
 /* Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
 void timeListDraw(void)
 {
-    u16 bits[GAMEUI_TIME_LIST_COUNT] = {0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8};
+    struct TimeIdList
+    {
+        u16 ids[GAMEUI_TIME_LIST_COUNT];
+    };
+    u16 bits[GAMEUI_TIME_LIST_COUNT];
     char buf[0x24];
 
+    *(struct TimeIdList*)bits = *(struct TimeIdList*)lbl_802C21A0;
     if (pauseMenuState != 0)
     {
         return;
