@@ -32,6 +32,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
+#include "main/dll/dll_00E6_restartmarker.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -270,8 +271,6 @@ int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
-
-void restartmarker_init(int* obj, int* state);
 
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);

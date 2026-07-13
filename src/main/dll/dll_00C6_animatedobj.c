@@ -6,6 +6,7 @@
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -281,8 +282,6 @@ int animatedobj_getExtraSize(void) { return 0x140; }
 
 void dim2roofrub_free(int* obj);
 
-
-void restartmarker_init(int* obj, int* state);
 
 
 ObjectDescriptor gMikaBombObjDescriptor = {

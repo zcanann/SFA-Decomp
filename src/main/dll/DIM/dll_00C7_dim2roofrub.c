@@ -16,6 +16,7 @@
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/object_render_legacy.h"
 
@@ -260,8 +261,6 @@ void dim2roofrub_free(int* obj)
     Sfx_StopObjectChannel(obj, 0x7f);
 }
 
-
-void restartmarker_init(int* obj, int* state);
 
 
 ObjectDescriptor gMikaBombObjDescriptor = {
