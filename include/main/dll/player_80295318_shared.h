@@ -44,26 +44,6 @@
 #include "string.h"
 
 /* external symbol declarations */
-extern void fn_8005D108();
-extern u32 FUN_8006f764();
-extern u32 FUN_80070ec8();
-extern u32 FUN_80071d70();
-extern u32 FUN_80071f8c();
-extern u32 FUN_80071f90();
-extern int FUN_8007f3c8();
-extern int FUN_8007f7c0();
-extern int FUN_8007f810();
-extern u32 FUN_80080f34();
-extern u32 FUN_80080f3c();
-extern u32 FUN_800810d8();
-extern u32 FUN_800810dc();
-extern u32 FUN_800810f4();
-extern u32 FUN_800810f8();
-extern u32 FUN_80081110();
-extern u32 FUN_8008111c();
-extern u32 FUN_80081120();
-extern u32 FUN_80081124();
-extern void fn_8011F6E0(int button, u8 angle, int mag);
 extern void fn_8011F6D4(int flag);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
 extern void objRenderFuzz(int obj);
