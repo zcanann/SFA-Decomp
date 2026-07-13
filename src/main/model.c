@@ -1405,7 +1405,7 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 
 #define WALKANIM_COPY_SLOT(J, K)                                                          \
     *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
-    *(u8*)(stk + (J) + 0x60 + (K)) = *(u8*)(channel + (J) + 0x60 + (K));                  \
+    *(u8*)(stk + (J) + 0x60 + (K)) = *((u8*)(channel + (J) + 0x60) + (K));                \
     *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
     *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
     *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
