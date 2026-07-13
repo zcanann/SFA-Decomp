@@ -33,8 +33,8 @@
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
 #include "main/objprint_dolphin.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/tricky_api.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/dll_011B_landedarwing.h"
 #include "main/dll/ARW/dll_029D_arwarwinggu.h"
 

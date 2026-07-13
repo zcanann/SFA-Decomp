@@ -6,12 +6,9 @@
 void whirlpool_updateWhileFrozen(void);
 void doNothing_afterRenderObject(void);
 void doNothing_beforeRenderObject(void);
-u8 fn_8012DDA4(void);
 void init(void);
 u32 isRomListLoading(void);
 u32 rand(void);
 int return0_8002A5B8();
-void timeListFn_8012df14(void);
-void viewFn_80129c74(void);
 
 #endif

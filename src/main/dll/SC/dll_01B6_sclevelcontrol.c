@@ -23,7 +23,7 @@
 #include "main/sky_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/sfa_extern_decls.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"

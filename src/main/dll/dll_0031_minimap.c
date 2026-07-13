@@ -32,7 +32,6 @@
 #include "main/pad.h"
 #include "main/camera.h"
 #include "main/objlib.h"
-#include "main/sfa_extern_decls.h"
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
