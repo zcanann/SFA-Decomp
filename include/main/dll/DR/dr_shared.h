@@ -39,28 +39,12 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 #include "main/frame_timing.h"
-
-typedef struct
-{
-    s16 v[9];
-} HtInitData;
+#include "main/dll/DR/dr_types.h"
 
 typedef struct
 {
     int v[3];
 } QuestTriple;
-
-typedef struct
-{
-    u8 b0 : 1;
-    u8 b1 : 1;
-    u8 b2 : 1;
-    u8 b3 : 1;
-    u8 b4 : 1;
-    u8 b5 : 1;
-    u8 b6 : 1;
-    u8 b7 : 1;
-} BitFlags8;
 
 typedef struct
 {
@@ -112,14 +96,6 @@ extern int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* an
 extern int DR_CageControl_SeqFn(GameObject* obj);
 extern void firepipe_clearLinkedUpdateFlag(int handle);
 extern void buttonDisable(int index, u32 flags);
-extern void* gHighTopStateHandlers[];
-extern void* gHighTopDefaultStateHandler;
-extern int hightop_stateHandler01();
-extern int hightop_stateHandler02(GameObject* obj, int p, f32 t);
-extern int hightop_stateHandler04();
-extern int hightop_stateHandler07();
-extern int hightop_stateHandler09();
-extern int hightop_stateHandler10();
 extern int DR_Creator_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern char sDrCreatorTimeFormat[];
 extern const f32 lbl_803E69A8;
@@ -142,14 +118,11 @@ extern int lbl_8032AB48[];
 extern s16 lbl_8032A730[];
 extern u8 lbl_803DC968;
 extern void saveFileStruct_unlockCheat(int v);
-extern HtInitData gHighTopLookInitData1;
-extern HtInitData gHighTopLookInitData2;
 extern int lbl_803E6AA0;
 extern int lbl_803DC318;
 extern f32 lbl_803E6B4C;
 extern f32 lbl_803E6B50;
 extern f32 lbl_803E6B54;
-extern int gHighTopAirMeterInitValue;
 extern void dll_2E_func08(void* p, int a, int b);
 extern f32 lbl_803E69C0;
 extern f32 lbl_803E69C4;
@@ -164,7 +137,6 @@ extern int lbl_803DDD40;
 extern int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6A2C;
 extern f32 lbl_803E6B30;
-extern s16 gHighTopMovementSfxIds;
 extern void fn_8009A8C8(int obj, f32 v);
 extern f32 lbl_803E6840;
 extern f32 lbl_803E6844;
@@ -174,7 +146,6 @@ extern void** gBaddieControlInterface;
 extern void fn_8003B950(f32* mtx);
 extern s16 gHighTopLookYawOffset;
 extern f32 lbl_803E69F0;
-extern f32 gHighTopGroundMarkerMtx[];
 extern void Obj_RemoveFromUpdateList(int obj);
 extern f32 lbl_803E68C0;
 extern void ObjModel_CopyJointTranslation(void* model, int joint, f32* out);
@@ -273,7 +244,6 @@ extern s16 lbl_803DC314;
 extern u8 lbl_8032AAB0[];
 extern f32 lbl_803E6B44;
 extern f32 lbl_803E6ADC;
-extern f32 gHighTopAirMeterSfxInterval;
 extern void curvesSetupMoveNetworkCurve(void* curve);
 extern f32 lbl_803E6A70;
 extern f32 lbl_803E6818;
@@ -345,7 +315,6 @@ extern f32 lbl_803E67EC;
 extern f32 lbl_803E6B24;
 extern f32 lbl_803E6B28;
 extern f32 lbl_803E6B2C;
-extern s16 gHighTopBandMoveIds;
 extern f32 lbl_803E6AAC;
 extern f32 lbl_803E6AB0;
 extern f32 lbl_803E6AD8;
@@ -357,18 +326,12 @@ extern f32 lbl_803E6AF0;
 extern void fn_80039264(void* p);
 extern void objModelAndSoundFn_80039118(int obj, void* p);
 extern f32 lbl_803E6B04;
-extern f32 gHighTopDegToAngle;
 extern f32 lbl_803E6B0C;
 extern f32 lbl_803E6B10;
 extern f32 lbl_803E6B14;
-extern f32 gHighTopPi;
 extern f32 lbl_803E6B1C;
 extern f32 lbl_803E6B20;
-extern f32 gHighTopBandSpeedThresholds[];
-extern int gHighTopIdleSequenceWeights[];
-extern int gHighTopIdleSequenceIds[];
 extern f32 lbl_803E6AA4;
-extern s16 gHighTopProgressGameBitIds;
 extern void getYButtonItem(s16* out);
 extern void objModelClearVecFn_8003aa40(GameObject* obj);
 
