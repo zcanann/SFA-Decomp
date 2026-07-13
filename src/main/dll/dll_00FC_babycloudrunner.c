@@ -71,8 +71,8 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 #define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT  0x2
 #define BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER  0x4
 
-extern f32 lbl_803E3848; /* render distance constant */
-extern f32 lbl_803E384C; /* initial max-distance for the nearest-object search */
+__declspec(section ".sdata2") f32 lbl_803E3848 = 1.0f;    /* render distance constant */
+__declspec(section ".sdata2") f32 lbl_803E384C = 100.0f;  /* initial max-distance for the nearest-object search */
 
 int dll_FC_getExtraSize_ret_8(void)
 {

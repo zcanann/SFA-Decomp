@@ -1404,6 +1404,7 @@ main/dll/dll_0115_dll115.c:
 
 main/dll/WM/dll_0116_wmcolumn.c:
 	.text       start:0x8017D37C end:0x8017D818
+	.sdata2     start:0x803E37B8 end:0x803E37C8
 
 main/dll/dll_0117_appleontree.c:
 	.text       start:0x8017D818 end:0x8017EC10
@@ -1411,6 +1412,7 @@ main/dll/dll_0117_appleontree.c:
 
 main/dll/dll_00FC_babycloudrunner.c:
 	.text       start:0x8017EC10 end:0x8017EF6C
+	.sdata2     start:0x803E3848 end:0x803E3850
 
 main/dll/dll_00FD.c:
 	.text       start:0x8017EF6C end:0x8017F4F4

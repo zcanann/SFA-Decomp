@@ -42,10 +42,10 @@ typedef struct WmColumnPlacement
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
-extern f32 lbl_803E37B8; /* 1.0: render scale */
-extern f32 lbl_803E37BC; /* 10000.0: nearest-object sentinel */
-extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
-extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
+__declspec(section ".sdata2") f32 lbl_803E37B8 = 1.0f;        /* render scale */
+__declspec(section ".sdata2") f32 lbl_803E37BC = 10000.0f;    /* nearest-object sentinel */
+__declspec(section ".sdata2") f32 lbl_803E37C0 = 35.0f;       /* scene-spot snap radius */
+__declspec(section ".sdata2") f32 lbl_803E37C4 = 60.0f;       /* pickup prompt distance */
 
 extern u32 playerGetStateFlag310(int obj);
 
