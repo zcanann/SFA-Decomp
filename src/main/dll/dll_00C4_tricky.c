@@ -236,16 +236,7 @@ extern u32 lbl_803DBC40;
 extern u32 lbl_803DBC48;
 extern f32 lbl_803DC074;
 extern u16 lbl_803E23C0;
-extern f32 lbl_803E23DC;
-extern f32 lbl_803E23E8;
-extern f32 lbl_803E2410;
-extern f32 lbl_803E2414;
-extern f32 lbl_803E243C;
-extern f32 lbl_803E2440;
-extern f32 lbl_803E2444;
 extern f32 lbl_803E24B8;
-extern f32 lbl_803E2454;
-extern f32 lbl_803E2458;
 extern f32 lbl_803E247C;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E2524;
@@ -291,7 +282,6 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
-extern f32 lbl_803E2418;
 extern int gTrickyFrozenFxColors[];
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;
@@ -338,8 +328,6 @@ extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int h
                                          int sector);
 extern int gTrickyCmdQueryInit[];
 extern TrickySfxPair lbl_803E23C4;
-extern f32 lbl_803E2408;
-extern f32 lbl_803E23EC;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24D8;
 extern f32 lbl_803E2538;
@@ -358,6 +346,40 @@ extern void drchimmey_countdownCallback(void);
 extern void fn_801DA9CC(GameObject*);
 extern void fn_8003A168(GameObject* obj, void* p);
 extern void fn_8003B228(GameObject* obj, void* p);
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") u16 gSkeetlaFootstepSfxId2 = 0x355;
+__declspec(section ".sdata2") f32 lbl_803E23DC = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E23E0 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E23E4 = 0.004f;
+__declspec(section ".sdata2") f32 lbl_803E23E8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E23EC = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E23F0 = 0.7f;
+__declspec(section ".sdata2") f32 lbl_803E23F4 = -0.01f;
+__declspec(section ".sdata2") f32 lbl_803E23F8 = 2.0f;
+__declspec(section ".sdata2") f64 lbl_803E2400 = 4503599627370496.0;
+__declspec(section ".sdata2") f32 lbl_803E2408 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E240C = 196.0f;
+__declspec(section ".sdata2") f32 lbl_803E2410 = -100000.0f;
+__declspec(section ".sdata2") f32 lbl_803E2414 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E2418 = 3.4028235e38f;
+__declspec(section ".sdata2") f32 lbl_803E241C = -0.15f;
+__declspec(section ".sdata2") f32 lbl_803E2420 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E2424 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E2428 = -0.17f;
+__declspec(section ".sdata2") f32 lbl_803E242C = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803E2430 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E2434 = 0.014f;
+__declspec(section ".sdata2") f32 lbl_803E2438 = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E243C = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E2440 = 600.0f;
+__declspec(section ".sdata2") f32 lbl_803E2444 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2448 = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E244C = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E2450 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E2454 = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E2458 = 32768.0f;
+#pragma explicit_zero_data off
 
 void frozenEnemyFn_80149bb4(int* obj, u32 flags, f32 f, u16 val);
 void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloorY, f32* nearestSpecialY);
@@ -1541,9 +1563,9 @@ void Tricky_update(int obj)
         trickyState->stateFlags |= 0x10000LL;
     }
     trickyState->cooldownC -= timeDelta;
-    if (trickyState->cooldownC < 0.0f)
+    if (trickyState->cooldownC < lbl_803E23DC)
     {
-        trickyState->cooldownC = 0.0f;
+        trickyState->cooldownC = lbl_803E23DC;
     }
     if ((trickyState->stateFlags & 4) != 0)
     {
@@ -1584,9 +1606,9 @@ void Tricky_update(int obj)
         }
     }
     trickyState->voiceCooldown -= timeDelta;
-    if (trickyState->voiceCooldown < 0.0f)
+    if (trickyState->voiceCooldown < lbl_803E23DC)
     {
-        trickyState->voiceCooldown = 0.0f;
+        trickyState->voiceCooldown = lbl_803E23DC;
     }
     if (trickyState->voiceCooldown > lbl_803E23DC)
     {
