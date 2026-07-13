@@ -19,6 +19,7 @@
  * parent Galleon's phase through the Galleon DLL's interface vtable.
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/camera_shake_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
@@ -66,7 +67,6 @@ STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
 extern f32 lbl_803E5888;
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern const f32 lbl_803E588C;
 extern f32 lbl_803E5890;
 extern f32 lbl_803E5894;

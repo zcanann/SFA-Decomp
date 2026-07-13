@@ -2,6 +2,7 @@
 #define MAIN_CAMERA_H_
 
 #include "global.h"
+#include "main/camera_shake_api.h"
 #include "main/vecmath.h"
 
 typedef struct _GXRenderModeObj GXRenderModeObj;
@@ -106,7 +107,6 @@ f32* Camera_GetInverseViewMatrix(void);
 CameraViewSlot* Camera_GetCurrentViewSlot(void);
 u8 CameraShake_IsActive(void);
 void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-void CameraShake_SetAllMagnitudes(f32 magnitude);
 void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix);
 void Obj_UpdateWorldTransform(CameraViewSlot* view);

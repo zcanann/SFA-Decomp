@@ -7,6 +7,7 @@
  * light whose intensity flickers frame-by-frame.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/camera_shake_api.h"
 #include "main/pad_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -62,7 +63,6 @@ extern void ModelLightStruct_free(ModelLightStruct* light);
 extern f32 lbl_803E4D44;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;

@@ -130,7 +130,6 @@ extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
 extern f32 lbl_803E5B28;

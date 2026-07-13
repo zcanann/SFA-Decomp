@@ -7,6 +7,7 @@
  * an attack on one of its model parts.
  */
 #include "main/game_object.h"
+#include "main/camera_shake_api.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
@@ -38,7 +39,6 @@ extern f32 lbl_803E4CA4;
 extern f32 lbl_803E4CA8;
 extern f32 lbl_803E4CAC;
 extern f32 lbl_803E4CB0;
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
 int DIMbosstonsil_updateHitReaction(void* obj, DIMbosstonsilState* state, int unused)
 {

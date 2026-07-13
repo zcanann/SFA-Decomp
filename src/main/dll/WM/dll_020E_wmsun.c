@@ -157,7 +157,6 @@ extern WmSunVec3 gWmSunGlareSun; /* (0, 0, -1) */
 extern f32 gWmSunGlareIntensity; /* glare intensity */
 extern f32 gWmSunGlareDamping;   /* glare damping accumulator */
 extern f32 oneOverTimeDelta;
-extern void CameraShake_SetAllMagnitudes(f32 magnitude);
 
 int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
 {
