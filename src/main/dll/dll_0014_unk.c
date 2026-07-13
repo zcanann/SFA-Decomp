@@ -1836,8 +1836,11 @@ fail:
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
-    f32* scanBase;
     u32 cur;
+    f32* scanBase;
+    f32* probe;
+    f32* distRead;
+    f32* distWrite;
     int queueCurve;
     int directIndex;
     int directSlot;
@@ -1872,7 +1875,12 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
     }
 
     candidateCount = 0;
-    for (directSlot = 0, cur = startCurve, scanBase = queueDistances; directSlot < 4; directSlot++, cur += 4)
+    directSlot = 0;
+    cur = startCurve;
+    distRead = candidateDistances;
+    probe = distRead;
+    scanBase = queueDistances;
+    for (; directSlot < 4; cur += 4, directSlot++)
     {
         directLinkId = *(s32*)(cur + 0x1c);
         if (directLinkId <= -1)
@@ -1904,6 +1912,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         visited[directIndex] = 1;
 
         found = 0;
+        distWrite = probe;
         do
         {
             if (queueCount > 0)
@@ -1916,7 +1925,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 if (*(u8*)(queueCurve + 0x34) == 1)
                 {
                     found = 1;
-                    candidateDistances[candidateCount] = distance;
+                    *distWrite = distance;
+                    probe++;
+                    distWrite++;
                     candidateIds[candidateCount++] = *(s32*)(cur + 0x1c);
                     continue;
                 }
@@ -1992,16 +2003,17 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         }
 
         *previousCurveId = *(s32*)(startCurve + 0x14);
-        sel[0] = 0;
-        sel[1] = sel[0];
-        for (; sel[1] < candidateCount; sel[1]++)
+        sel[1] = 0;
+        sel[0] = sel[1];
+        for (; sel[0] < candidateCount; sel[0]++)
         {
-            if (candidateDistances[sel[1]] < candidateDistances[sel[0]])
+            if (*distRead < candidateDistances[sel[1]])
             {
-                sel[0] = sel[1];
+                sel[1] = sel[0];
             }
+            distRead++;
         }
-        return candidateIds[sel[0]];
+        return candidateIds[sel[1]];
     }
     return -1;
 }
@@ -2793,19 +2805,18 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     return 1;
 }
 
-#pragma opt_propagation off
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase)
 {
     RomCurveDef* curves[4];
     f32 tdx;
     f32 tdz;
-    f32 dx;
+    f32 tangentDx;
     f32 startPhase;
     f32 segmentDx;
     f32 dz;
     f32 tangentDz;
-    f32 tangentDx;
+    f32 dx;
     f32 segmentDz;
     f32 tangentLen;
     f32 numer;
@@ -2920,7 +2931,6 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     return 0;
 }
 
-#pragma opt_propagation reset
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
     RomCurveDef* curve;
@@ -3240,9 +3250,8 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
             continue;
         }
         queueDist[0] = SQ(node->z - curve->z) + (SQ(node->x - curve->x) + SQ(node->y - curve->y));
-        pos = 0;
-        count = 1;
-        queueIds[pos++] = idx;
+        count = 0;
+        queueIds[count++] = idx;
         visited[idx] = 1;
         done = 0;
         distWrite = probe;
@@ -3322,17 +3331,17 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
             }
         }
         *outCurveId = curve->id;
-        best[0] = 0;
-        best[1] = best[0];
-        for (; best[1] < found; best[1]++)
+        best[1] = 0;
+        best[0] = best[1];
+        for (; best[0] < found; best[0]++)
         {
-            if (*distRead < bestDists[best[0]])
+            if (*distRead < bestDists[best[1]])
             {
-                best[0] = best[1];
+                best[1] = best[0];
             }
             distRead++;
         }
-        return results[best[0]];
+        return results[best[1]];
     }
     return -1;
 }
@@ -3358,9 +3367,10 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     candidateCount = 0;
     for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++)
     {
-        if (curve->linkIds[linkIndex] > -1)
+        linkId = curve->linkIds[linkIndex];
+        if (linkId > -1)
         {
-            linkedCurve = RomCurve_FindByIdInline(curve->linkIds[linkIndex]);
+            linkedCurve = RomCurve_FindByIdInline(linkId);
 
             for (typeIndex = 0; typeIndex < typeCount; typeIndex++)
             {
