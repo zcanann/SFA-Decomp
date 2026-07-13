@@ -42,7 +42,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

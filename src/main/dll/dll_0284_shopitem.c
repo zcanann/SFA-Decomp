@@ -29,7 +29,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/dll/LGT/LGTcontrollight.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/gameloop_api.h"
 #include "main/newclouds.h"
 #include "main/model.h"

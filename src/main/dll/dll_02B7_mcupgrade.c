@@ -16,7 +16,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_02B7_mcupgrade.h"
 #include "main/dll/dll_02B8_mcupgradema.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/dll/mcupgrade_state.h"
 #include "main/dll/player_api.h"
 #include "main/gamebits.h"

@@ -23,7 +23,6 @@
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/tricky.h"
 #include "main/dll/tricky_api.h"
 #include "main/model_engine.h"
 #include "main/dll/trex_lazerwall.h"

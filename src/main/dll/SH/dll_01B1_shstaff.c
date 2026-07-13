@@ -72,7 +72,7 @@ void sh_staff_free(int* obj, int flag)
 #include "main/dll/DR/shstaff_state.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/objlib_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"

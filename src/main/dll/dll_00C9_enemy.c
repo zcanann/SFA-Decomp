@@ -34,7 +34,7 @@
 #include "main/vecmath.h"
 #include "main/dll/duster.h"
 #include "main/gamebits.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/lightmap.h"
 #include "main/frame_timing.h"
 #include "main/model.h"

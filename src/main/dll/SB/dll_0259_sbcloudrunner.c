@@ -32,7 +32,7 @@
 #include "main/gamebits.h"
 #include "main/texture.h"
 #include "main/audio/sfx.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/object.h"
 #include "main/objlib_api.h"
 #include "main/pad.h"

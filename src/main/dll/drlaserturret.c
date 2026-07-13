@@ -27,7 +27,6 @@
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/tricky.h"
 #include "main/model_engine.h"
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

@@ -45,7 +45,6 @@
 #include "dolphin/gx/GXTransform.h"
 #include "main/camera.h"
 #include "main/dll/dll_0014_api.h"
-#include "main/dll/tricky.h"
 #include "main/gameloop_api.h"
 #include "main/textrender.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

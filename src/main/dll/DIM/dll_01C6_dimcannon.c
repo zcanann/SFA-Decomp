@@ -23,7 +23,7 @@
 #include "main/pad.h"
 #include "main/dll/DIM/dll_01C6_dimcannon.h"
 #include "main/dll/dll_801b1d84.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objlib.h"

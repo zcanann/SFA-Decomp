@@ -26,7 +26,7 @@
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/MMP/dll_0182_mmpmoonrock.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/lightmap.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"

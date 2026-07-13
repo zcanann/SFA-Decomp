@@ -14,7 +14,7 @@
 #include "main/dll/TREX/TREX_Lazerwall.h"
 #include "main/dll/dll_801e66dc.h"
 #include "main/dll/player_api.h"
-#include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
 #include "main/effect_interfaces.h"
