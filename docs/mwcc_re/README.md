@@ -48,6 +48,11 @@ Peephole (`#pragma peephole`, the single most-used pragma, 358 sites) has **no
    by the actual code path, not a black-box correlation.
 
 ## Status / worklist
+- [x] **`Tricky_update` full-TU case study**
+      (`CASE_STUDY_tricky_update.md`): validated examples of block-scoped local
+      lifetimes, direct callback-table address association, a small aggregate
+      preserving a zero web, low-word flag clears, and compiler-generated pool
+      symbol caveats. These are observed levers, not universal bans or rules.
 - [x] TU map (`assert_map_GC2.0.txt`) + generator tool restored.
 - [x] Pragma → pass → address map (`PRAGMAS.md`).
 - [x] **`Scheduler.c` decompiled** (`recovered/Scheduler.c`) — dependency DAG
