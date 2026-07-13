@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_update_list.h"
 #include "main/objlib.h"
 #include "main/objprint_api.h"
@@ -440,7 +441,6 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
 
 void pushable_handleMsgs(GameObject* obj)
 {
-    extern void Obj_FreeObject(void* obj);
     PushableState* state;
     int msgSender;
     int msg;

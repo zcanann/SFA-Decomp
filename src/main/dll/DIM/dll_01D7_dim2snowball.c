@@ -43,6 +43,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
@@ -116,7 +117,6 @@ void dim2snowball_hitDetect(void)
 
 void dim2snowball_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj);
     int* extra = ((GameObject*)obj)->extra;
     int** results;
     int count;
@@ -195,7 +195,7 @@ void dim2snowball_update(int* obj)
             (*gPartfxInterface)->spawnObject(obj, PARTFX_SNOWBALL_IMPACT, evt, 4, -1, NULL);
             if (((GameObject*)obj)->anim.alpha == 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
                 return;
             }
             objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
@@ -238,7 +238,7 @@ void dim2snowball_update(int* obj)
             oneOverTimeDelta * (((GameObject*)obj)->anim.localPosZ - ((GameObject*)obj)->anim.previousLocalPosZ);
         if (done != 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
             return;
         }
         if (*(u8*)((char*)*(int**)&((Dim2SnowballState*)extra)->curveData + (((Dim2SnowballState*)extra)->curve.idx >>

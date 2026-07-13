@@ -517,7 +517,6 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
 void collectible_update(int obj)
 {
     extern void collectible_updateLooseMotion(int obj);
-    extern void Obj_FreeObject(int obj);
     extern void collectible_applyPickup(int obj);
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
@@ -539,7 +538,7 @@ void collectible_update(int obj)
             ObjHits_DisableObject((u32)obj);
             if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
             {
-                Obj_FreeObject(obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
         return;

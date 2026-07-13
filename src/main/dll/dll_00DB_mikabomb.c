@@ -80,7 +80,7 @@ void MikaBomb_free(GameObject* obj, int mode)
     void** inner = (obj)->extra;
     if (inner[0] != NULL && mode == 0)
     {
-        Obj_FreeObject(inner[0]);
+        Obj_FreeObject((GameObject*)inner[0]);
         inner[0] = NULL;
     }
     (*gModgfxInterface)->detachSource((void*)obj);
@@ -99,7 +99,6 @@ void MikaBomb_hitDetect(void)
 
 void MikaBomb_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj);
     int* state = ((GameObject*)obj)->extra;
     u32 timer = ((GameObject*)obj)->anim.alpha;
 
@@ -115,7 +114,7 @@ void MikaBomb_update(int* obj)
         {
             Sfx_StopObjectChannel(obj, 0x7f);
             ((GameObject*)obj)->anim.alpha = 0;
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
             return;
         }
     }
@@ -155,7 +154,7 @@ void MikaBomb_update(int* obj)
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
                                   gMikaBombCameraShakeFalloff);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
-                Obj_FreeObject((int*)*st);
+                Obj_FreeObject((GameObject*)*st);
                 *st = 0;
             }
             ObjHits_DisableObject((u32)obj);
@@ -178,7 +177,7 @@ void MikaBomb_update(int* obj)
                 CameraShake_Start(gMikaBombCameraShakeMagnitude, gMikaBombCameraShakeDuration,
                                   gMikaBombCameraShakeFalloff);
                 ((GameObject*)obj)->anim.alpha = 0xfe;
-                Obj_FreeObject((int*)*st);
+                Obj_FreeObject((GameObject*)*st);
                 *st = 0;
                 ((MikabombState*)state)->exploded = 1;
             }

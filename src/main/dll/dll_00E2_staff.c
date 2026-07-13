@@ -524,12 +524,11 @@ typedef struct QuakePartVec
 
 void superQuakeFn_8016d9fc(f32* pos)
 {
-    extern void Obj_FreeObject(int* obj);
     int* player;
 
     if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->active != 0)
     {
-        Obj_FreeObject(((StaffQuakeSpellState*)gStaffQuakeSpellState)->object);
+        Obj_FreeObject((GameObject*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object);
         ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object = NULL;
     }
     ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posX = pos[0];
@@ -779,7 +778,6 @@ extern f32 lbl_803E32F0;
 
 void staff_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj);
     u8* state = ((GameObject*)obj)->extra;
     SwipeRecord* swp;
     int n;
@@ -885,7 +883,7 @@ void staff_update(int* obj)
             if (((StaffQuakeSpellState*)gStaffQuakeSpellState)->fade < lbl_803E3288)
             {
                 q->active = 0;
-                Obj_FreeObject(q->object);
+                Obj_FreeObject((GameObject*)q->object);
                 q->object = NULL;
             }
         }

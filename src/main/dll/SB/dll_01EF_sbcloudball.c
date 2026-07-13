@@ -20,6 +20,7 @@
 #define MODEL_LIGHT_KIND_POINT 2
 
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/modellight_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -137,7 +138,6 @@ void SB_CloudBall_hitDetect(GameObject* obj)
 
 void SB_CloudBall_update(GameObject* obj)
 {
-    extern void Obj_FreeObject(int obj);
     extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
     SBCloudBallState* state = obj->extra;
@@ -150,7 +150,7 @@ void SB_CloudBall_update(GameObject* obj)
         if (state->fadeTimer <= zero)
         {
             state->fadeTimer = zero;
-            Obj_FreeObject((int)obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
     else

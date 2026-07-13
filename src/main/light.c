@@ -8,6 +8,7 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/obj_placement.h"
@@ -635,7 +636,6 @@ void SeqPoint_update(int* obj)
 #pragma peephole off
 void VFPDragHead_update(int* obj)
 {
-    extern void Obj_FreeObject(int* obj);
     int state = (s8)(*(s8**)&((GameObject*)obj)->anim.placementData)[0x19];
     VfpDragHeadState* self2;
 
@@ -665,7 +665,7 @@ void VFPDragHead_update(int* obj)
             ((GameObject*)obj)->anim.velocityZ * timeDelta + ((GameObject*)obj)->anim.localPosZ;
         if (self2->despawnTimer > 0)
             return;
-        Obj_FreeObject(obj);
+        Obj_FreeObject((GameObject*)obj);
     }
     else if (state == 0)
     {

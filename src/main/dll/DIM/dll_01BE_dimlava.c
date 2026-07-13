@@ -25,6 +25,7 @@ int imicepillar_getObjectTypeId(void);
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/audio/sfx.h"
@@ -231,7 +232,6 @@ void lavaball1be_init(s16* obj, u8* p)
 void lavaball1be_update(s16* obj)
 {
     extern int Sfx_PlayFromObject(int* obj, int sfxId);
-    extern void Obj_FreeObject(void* o);
     Lavaball1beState* state;
     ObjHitsPriorityState* sub;
 
@@ -250,7 +250,7 @@ void lavaball1be_update(s16* obj)
         ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
         if (((GameObject*)obj)->unkF4 < 0)
         {
-            Obj_FreeObject(obj);
+            Obj_FreeObject((GameObject*)obj);
         }
     }
     else

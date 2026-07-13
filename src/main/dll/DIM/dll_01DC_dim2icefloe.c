@@ -6,6 +6,7 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
@@ -85,7 +86,6 @@ typedef struct
 
 void dim2icefloe_update(GameObject *obj)
 {
-    extern int Obj_FreeObject(int obj);
     int sub = *(int*)&(obj)->extra;
     if (*(void**)&((Dim2IceFloeState*)sub)->followedObj != NULL &&
         (((GameObject*)((Dim2IceFloeState*)sub)->followedObj)->objectFlags & DIM2ICEFLOE_OBJFLAG_FREED) != 0)
@@ -143,7 +143,7 @@ void dim2icefloe_update(GameObject *obj)
             }
             if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - gDim2IceFloeSinkFreeThreshold)
             {
-                Obj_FreeObject((int)obj);
+                Obj_FreeObject((GameObject*)obj);
             }
         }
         break;

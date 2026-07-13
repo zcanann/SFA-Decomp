@@ -14,6 +14,7 @@
 #include "main/dll/sbcloudballstate_struct.h"
 
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -91,7 +92,6 @@ void SB_MiniFire_hitDetect(void)
 
 void SB_MiniFire_update(GameObject* obj)
 {
-    extern void Obj_FreeObject(int obj);
     f32 buf[6];
     f32 dx;
     f32 dy;
@@ -128,7 +128,7 @@ void SB_MiniFire_update(GameObject* obj)
     obj->unkF4 = obj->unkF4 - framesThisStep;
     if (obj->unkF4 < 0)
     {
-        Obj_FreeObject((int)obj);
+        Obj_FreeObject((GameObject*)obj);
     }
 }
 

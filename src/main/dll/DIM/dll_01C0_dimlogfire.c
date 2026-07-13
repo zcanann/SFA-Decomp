@@ -121,12 +121,11 @@ int DIMLogFire_getObjectTypeId(void)
 
 void DIMLogFire_free(GameObject* obj, int mode)
 {
-    extern void Obj_FreeObject(void* o);
     DimLogFireState* inner = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if ((void*)inner->subObj != NULL && mode == 0)
     {
-        Obj_FreeObject((int*)inner->subObj);
+        Obj_FreeObject((GameObject*)inner->subObj);
     }
     ObjGroup_RemoveObject((int)obj, DIMLOGFIRE_GROUP);
     if ((void*)inner->light != NULL)
