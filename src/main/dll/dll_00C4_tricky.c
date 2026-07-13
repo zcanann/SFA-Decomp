@@ -339,7 +339,6 @@ extern void fn_801FD4A8(GameObject*);
 extern void fn_801B0784(GameObject*);
 extern void drchimmey_countdownCallback(void);
 extern void fn_801DA9CC(GameObject*);
-extern void fn_8003A168(GameObject* obj, void* p);
 extern void fn_8003B228(GameObject* obj, void* p);
 
 #pragma explicit_zero_data on
@@ -1533,7 +1532,7 @@ void Tricky_update(int obj)
     }
     if (((GameObject*)obj)->anim.currentMove == 0x2a)
     {
-        fn_8003A168((GameObject*)(obj), (void*)(state + 0x378));
+        fn_8003A168PointerStateLegacy((GameObject*)(obj), (void*)(state + 0x378));
         fn_8003B228((GameObject*)(obj), (void*)(state + 0x378));
     }
     else
