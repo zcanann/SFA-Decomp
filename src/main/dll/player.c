@@ -14,6 +14,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_01B5_lightfoot.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/dll/viewfinder.h"
