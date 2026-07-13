@@ -10,6 +10,7 @@
  * issued through the map-event interface.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/objprint_dolphin.h"
@@ -66,7 +67,6 @@ extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, 
 extern int playerHasKrazoaSpirit();
 extern void ObjLink_DetachChild(int obj, int child);
 extern int randFn_80080100(int n);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);

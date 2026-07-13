@@ -10,6 +10,7 @@
  * skips render).
  */
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -42,7 +43,6 @@ extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void ObjLink_DetachChild(int* parent, int* child);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

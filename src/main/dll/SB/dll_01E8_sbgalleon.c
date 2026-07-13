@@ -24,6 +24,7 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/sky_api.h"
@@ -97,7 +98,6 @@ extern f32 lbl_803E57E0;
 extern f32 lbl_803E57F0;
 extern f32 lbl_803E5724;
 extern u32 gSbGalleon;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E57FC;
 extern f32 lbl_803E5800;
 extern f32 lbl_803E5804;

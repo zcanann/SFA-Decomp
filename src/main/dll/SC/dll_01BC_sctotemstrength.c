@@ -7,6 +7,7 @@
  * FElevControl descriptor tail.)
  */
 #include "main/camera_interface.h"
+#include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/VF/platform1.h"
@@ -33,7 +34,6 @@ extern int isGameTimerDisabled(void);
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(u8 x);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
 extern const f32 lbl_803E5668;

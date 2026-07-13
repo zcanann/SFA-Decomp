@@ -9,6 +9,7 @@
  * placement record at offset 0x1E.
  */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
@@ -25,7 +26,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern f32 lbl_803E59C0;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int SB_ShipGunBroke_getExtraSize(void)
 {

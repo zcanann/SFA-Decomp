@@ -1,5 +1,6 @@
 /* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/object_render_legacy.h"
 #include "main/sky_api.h"
 #include "main/render.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -96,7 +97,6 @@ enum ShopItemIndex
 extern u8 lbl_80327FD0[];
 extern f32 lbl_803E59C8;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
 extern int gameBitIncrement(int bit);

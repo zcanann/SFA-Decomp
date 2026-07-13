@@ -9,6 +9,7 @@
  * 0.125/tick back to placement height.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -26,7 +27,6 @@ extern f32 lbl_803E5DD4;       /* 100.0: raised height above placement */
 extern f32 lbl_803E5DD8;       /* 0.5: settle speed when overshot */
 extern f32 lbl_803E5DDC;       /* 0.25: rise speed */
 extern f32 lbl_803E5DE0;       /* 0.125: sink speed */
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

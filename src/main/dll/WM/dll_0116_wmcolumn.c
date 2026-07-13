@@ -13,6 +13,7 @@
  * close holding nothing.
  */
 #include "main/carryable_interface.h"
+#include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
@@ -46,7 +47,6 @@ extern f32 lbl_803E37C0; /* 35.0: scene-spot snap radius */
 extern f32 lbl_803E37C4; /* 60.0: pickup prompt distance */
 
 extern u32 playerGetStateFlag310(int obj);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int WM_Column_getExtraSize(void)
 {

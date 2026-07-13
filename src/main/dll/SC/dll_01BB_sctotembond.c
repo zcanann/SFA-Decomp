@@ -16,6 +16,7 @@
  * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -90,7 +91,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(u32 x);
 

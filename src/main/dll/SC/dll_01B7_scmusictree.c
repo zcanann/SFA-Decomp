@@ -1,5 +1,6 @@
 /* DLL 0x01B7 — SC music-tree objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
+#include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -81,7 +82,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
