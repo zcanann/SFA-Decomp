@@ -52,13 +52,15 @@ typedef struct FlamethrowerspeState
 #define FLAMETHROWERSPE_PHASE_LAUNCH 1 /* compute launch velocity, then -> ACTIVE */
 #define FLAMETHROWERSPE_PHASE_ACTIVE 2 /* fly + shrink until the lifetime timer expires */
 
-extern f32 lbl_803E3388;
 extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
-extern f32 lbl_803E338C;
 extern void firepipe_releaseEffectObject(int* obj);
-extern f32 lbl_803E3390;
-extern f32 lbl_803E3394;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3388 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E338C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E3390 = 0.10000000149011612f;
+__declspec(section ".sdata2") f32 lbl_803E3394 = 0.11999999731779099f;
+#pragma explicit_zero_data off
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
