@@ -2,19 +2,7 @@
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
-#include "main/dll/dll_00E5_shield_api.h"
-#include "main/dll/dll_00DD_gcbaddieshield_api.h"
-#include "main/dll/dll_00DC_mikabombshadow_api.h"
-#include "main/dll/dll_00DB_mikabomb_api.h"
-#include "main/dll/dll_00DE_baddieinterestp_api.h"
-#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
-#include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
-#include "main/dll/dll_00E6_restartmarker.h"
-#include "main/dll/dll_00F7_dllf7_api.h"
-#include "main/dll/dll_0125_curve_api.h"
-#include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 extern f32 timeDelta;
@@ -26,9 +14,6 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 #include "main/objhits.h"
 #include "main/sfa_extern_decls.h"
-#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
-#include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 
 /* object group this object joins while active */
 #define ANIMATEDOBJ_OBJGROUP 7
