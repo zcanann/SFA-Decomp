@@ -13,13 +13,16 @@
 
 typedef struct Dll19CPlacement
 {
-    u8 pad0[0x8 - 0x0];
+    u8 pad0[0x4 - 0x0];
+    u8 color[4];
     f32 posX;
     f32 posY;
     f32 posZ;
     u8 pad14[0x19 - 0x14];
     u8 unk19;
-    u8 pad1A[0x20 - 0x1A];
+    u8 pad1A[0x1E - 0x1A];
+    s8 rotXByte;
+    s8 unk1F;
 } Dll19CPlacement;
 
 /* type id of the child object dll_19C_update spawns once its gate bit + spawn timer elapse */
@@ -76,7 +79,7 @@ void dll_19C_update(int* obj)
     {
         ((Dll19CState*)sub)->spawnTimer = (s16)(((Dll19CState*)sub)->spawnTimer - ((Dll19CState*)sub)->active * framesThisStep);
     }
-    if (((Dll19CState*)sub)->spawnTimer <= 0 && (s8)def[0x1f] == 0 && Obj_IsLoadingLocked() != 0)
+    if (((Dll19CState*)sub)->spawnTimer <= 0 && ((Dll19CPlacement*)def)->unk1F == 0 && Obj_IsLoadingLocked() != 0)
     {
         setup = Obj_AllocObjectSetup(0x18, DLL19C_CHILD_OBJ);
         setup->posX = ((Dll19CPlacement*)def)->posX;
@@ -84,10 +87,10 @@ void dll_19C_update(int* obj)
         setup->posZ = ((Dll19CPlacement*)def)->posZ;
         setup->objectId = DLL19C_CHILD_OBJ;
         setup->mapId = -1;
-        *(u8*)((char*)setup + 4) = def[4];
-        *(u8*)((char*)setup + 5) = def[5];
-        *(u8*)((char*)setup + 6) = def[6];
-        *(u8*)((char*)setup + 7) = def[7];
+        setup->color[0] = ((Dll19CPlacement*)def)->color[0];
+        setup->color[1] = ((Dll19CPlacement*)def)->color[1];
+        setup->color[2] = ((Dll19CPlacement*)def)->color[2];
+        setup->color[3] = ((Dll19CPlacement*)def)->color[3];
         Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
         ((Dll19CState*)sub)->spawnTimer = 0x64;
         ((Dll19CState*)sub)->active = 0;
@@ -98,7 +101,7 @@ void dll_19C_init(GameObject *obj, u8* initData)
 {
     register int self = (int)obj;
     register int state = *(int*)&((GameObject*)self)->extra;
-    *(short*)self = (short)((int)(signed char)initData[0x1e] << 8);
+    *(short*)self = (short)((int)((Dll19CPlacement*)initData)->rotXByte << 8);
     ((GameObject*)self)->unkF8 = 0;
     ((Dll19CState*)state)->spawnTimer = 0x64;
     ((Dll19CState*)state)->active = 0;
