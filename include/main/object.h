@@ -13,6 +13,7 @@ ObjPlacement* Obj_AllocObjectSetup(int size, int type);
 GameObject* loadObjectAtObject(GameObject* source, ObjPlacement* setup);
 GameObject* Obj_SetupObject(ObjPlacement* setup, int flags, int mapLayer, int objIndex, void* parent);
 GameObject* getTrickyObject(void);
+void mapSetupPlayer(void);
 
 int objGetFlagsE5_2(u8* obj);
 

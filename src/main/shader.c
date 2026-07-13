@@ -2282,7 +2282,6 @@ extern int lbl_803DCE00;
 extern u8 lbl_803DCEBD;
 extern f32 gShaderDefaultTimeOfDay;
 extern void mapInitFn_8006fccc(void);
-extern void mapSetupPlayer(void);
 extern void* saveGameGetEnvState(void);
 
 void beginLoadingMap(void)

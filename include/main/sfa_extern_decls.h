@@ -13,7 +13,6 @@ void fn_8001FE90(void);
 u8 fn_8012DDA4(void);
 void init(void);
 u32 isRomListLoading(void);
-void mapSetupPlayer(void);
 u32 rand(void);
 void resetYbutton(void);
 int return0_8002A5B8();
