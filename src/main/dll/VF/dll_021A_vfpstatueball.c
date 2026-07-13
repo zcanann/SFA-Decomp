@@ -13,6 +13,7 @@
  * particle-burst model.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/objhits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -102,7 +103,7 @@ void VFP_statueball_update(int* obj)
 
     if ((u32)mainGetBit(state->gameBit) == 0)
     {
-        hitType = ObjHits_GetPriorityHit((GameObject*)obj, &hitObj, 0, 0);
+        hitType = ObjHits_GetPriorityHit((GameObject*)obj, (int*)&hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
             (((GameObject*)hitObj)->anim.seqId == VFPSTATUEBALL_HIT_SEQID))
         {

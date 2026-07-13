@@ -66,7 +66,7 @@ void FlammableVine_hitDetect(GameObject* obj)
     def = *(u8**)&(obj)->anim.placementData;
     if ((state->flags & 3) == 0)
     {
-        if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a)
+        if (ObjHits_GetPriorityHit(obj, 0, 0, (u32*)&hitObj) == 0x1a)
         {
             if (((FlammablevineObjectDef*)def)->burnedBit != -1)
             {

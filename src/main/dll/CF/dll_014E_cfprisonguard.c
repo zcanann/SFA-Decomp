@@ -17,6 +17,7 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
@@ -50,8 +51,6 @@ extern f32 lbl_803E4280;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
-extern int ObjHits_DisableObject();
-extern int ObjHits_EnableObject();
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);

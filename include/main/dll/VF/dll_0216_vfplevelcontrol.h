@@ -39,6 +39,8 @@ STATIC_ASSERT(sizeof(VfpLevelControlState) == 0x1c);
 STATIC_ASSERT(offsetof(VfpLevelControlLatch, fields.sequenceStep) == 0x04);
 STATIC_ASSERT(offsetof(VfpLevelControlSetup, areaMode) == 0x1A);
 
+extern int lbl_803DC148;
+
 void fn_801F9804(GameObject* obj);
 int VFP_LevelControl_getExtraSize(void);
 int VFP_LevelControl_getObjectTypeId(void);
