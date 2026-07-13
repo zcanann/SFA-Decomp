@@ -475,20 +475,3 @@ void sc_totemstrength_update(u8* obj)
         }
     }
 }
-
-ObjectDescriptor gFElevControlObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)FElevControl_initialise,
-    (ObjectDescriptorCallback)FElevControl_release,
-    0,
-    (ObjectDescriptorCallback)FElevControl_init,
-    (ObjectDescriptorCallback)FElevControl_update,
-    (ObjectDescriptorCallback)FElevControl_hitDetect,
-    (ObjectDescriptorCallback)FElevControl_render,
-    (ObjectDescriptorCallback)FElevControl_free,
-    (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
-    FElevControl_getExtraSize,
-};
