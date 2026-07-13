@@ -28,6 +28,9 @@
 #define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000
 
+__declspec(section ".rodata") Dll28BMoveBlendData gDll28BMoveBlendDataA = {{0x00050005, 0x000A000A, 0x000A000A, 0x000A000A}};
+__declspec(section ".rodata") Dll28BMoveBlendData gDll28BMoveBlendDataB = {{0x0005000A, 0x00140014, 0x00140014, 0x00140014}};
+
 int dll_28B_getExtraSize(void)
 {
     return sizeof(Dll28BState);
