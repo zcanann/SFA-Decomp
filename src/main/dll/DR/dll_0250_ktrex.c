@@ -50,6 +50,8 @@ extern void drakormissile_init(GameObject*);
 extern void drakormissile_release(void);
 extern void drakormissile_initialise(void);
 
+__declspec(section ".rodata") KtrexMsgBlob gKTRexMsgTemplate = {{6, 0x69, 0x69, 0xFF}};
+
 static inline f32* KTRex_GetActiveContactPointTable(GameObject* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
