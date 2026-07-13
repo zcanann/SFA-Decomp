@@ -811,7 +811,7 @@ void hudUpdateMinimapReveal(void)
 
 void hudDrawButtons(int unk1, int unk2, int unk3)
 {
-    char slots[68];
+    int textPtr;
     u32 label;
     int ax0;
     int ax1;
@@ -845,7 +845,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     int prevCharset;
     int prevCharset2;
     int textObj;
-    int textPtr;
+    char slots[68];
     u32 glyph;
     int wid;
     u8 bi;
