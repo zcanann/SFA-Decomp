@@ -4,6 +4,9 @@
 #include "types.h"
 #include "main/game_object.h"
 #include "main/dll/swarmbaddiestate_struct.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gSwarmBaddieObjDescriptor;
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state);
 int SwarmBaddie_getExtraSize(void);

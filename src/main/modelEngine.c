@@ -7,6 +7,8 @@
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
+#include "main/dll/dll_00DF_hagabon.h"
+#include "main/dll/dll_00E0_swarmbaddie.h"
 #include "main/dll/dll_00ED_collectible_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0293_suntemple.h"
@@ -127,9 +129,8 @@ extern ResourceDescriptor gFirePipeObjDescriptor, gFireballObjDescriptor, gFlagO
     gFuelCellObjDescriptor;
 extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescriptor, gGPSH_ObjCreatorObjDescriptor,
     gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor, gGrimbleObjDescriptor;
-extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHagabonObjDescriptor,
-    gHighTopObjDescriptor, gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor,
-    gIMIcePillarObjDescriptor;
+extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHighTopObjDescriptor,
+    gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor, gIMIcePillarObjDescriptor;
 extern ResourceDescriptor gIMMultiSeqObjDescriptor, gIMSpaceRingGenObjDescriptor, gIMSpaceRingObjDescriptor,
     gIMSpaceThrusterObjDescriptor, gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor,
     gInfoPointObjDescriptor;
@@ -180,9 +181,8 @@ extern ResourceDescriptor gSidekickBallObjDescriptor, gSideloadObjDescriptor, gS
 extern ResourceDescriptor gSoftBodyObjDescriptor, gSpellStoneObjDescriptor, gSpiritDoorLockObjDescriptor,
     gSpiritDoorSpiritObjDescriptor, gSpiritPrizeObjDescriptor, gStaffActivatedObjDescriptor, gStaffObjDescriptor,
     gStaticCameraObjDescriptor;
-extern ResourceDescriptor gStayPointObjDescriptor, gSwarmBaddieObjDescriptor,
-    gTexFrameAnimatorObjDescriptor, gTexscroll2ObjDescriptor, gTexscrollObjDescriptor, gTextBlockObjDescriptor,
-    gTimerObjDescriptor;
+extern ResourceDescriptor gStayPointObjDescriptor, gTexFrameAnimatorObjDescriptor, gTexscroll2ObjDescriptor,
+    gTexscrollObjDescriptor, gTextBlockObjDescriptor, gTimerObjDescriptor;
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTransporterObjDescriptor, gTreasureChestObjDescriptor,
     gTreeBirdObjDescriptor, gTrickyCurveObjDescriptor, gTrickyGuardObjDescriptor, gTrickyGuardSpotObjDescriptor;
 extern ResourceDescriptor gTrickyObjDescriptor, gTrickyWarpObjDescriptor, gTriggerObjDescriptor,
@@ -1120,8 +1120,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gMikaBombShadowObjDescriptor,
     &gGCbaddieShieldObjDescriptor,
     &gBaddieInterestPObjDescriptor,
-    &gHagabonObjDescriptor,
-    &gSwarmBaddieObjDescriptor,
+    (ResourceDescriptor*)&gHagabonObjDescriptor,
+    (ResourceDescriptor*)&gSwarmBaddieObjDescriptor,
     &gWispBaddieObjDescriptor,
     &gStaffObjDescriptor,
     &gFireballObjDescriptor,
