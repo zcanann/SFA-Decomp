@@ -5,6 +5,7 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor23 gStaffObjDescriptor;
+extern u32 lbl_80320978[];
 
 void objSetAnimField48to0(GameObject* obj);
 void staff_addHitReactValue(int* obj, s32 delta);

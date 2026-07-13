@@ -23,6 +23,7 @@
 #include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -136,9 +137,6 @@ extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
 extern int objCreateLight(int* obj, int arg);
-
-/* fireball light tint per colorIndex; lives in the staff TU's data (0x80320978) */
-extern u32 lbl_80320978[];
 
 u8 fn_8016F16C(int* obj)
 {
