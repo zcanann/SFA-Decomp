@@ -1318,7 +1318,6 @@ main/dll/dll_00F9_projectileswitch.c:
 
 main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
-	.sdata2     start:0x803E3730 end:0x803E3740
 	.sdata2     start:0x803E3740 end:0x803E3750
 
 main/dll/dll_00FB_pressureswitchfb.c:
