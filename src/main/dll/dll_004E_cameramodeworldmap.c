@@ -223,8 +223,8 @@ void CameraModeWorldMap_update(u8* obj)
                 if (gCamWorldMapState->focusBlendTimer != 0)
                 {
                     GameObject* f = ObjList_FindObjectById(gCamWorldMapState->focusObjectId);
-                    f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     f32 dz = f->anim.worldPosZ - objA->anim.worldPosZ;
+                    f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     CameraModeWorldMapState* st;
                     s16 angleDelta;
                     f32 cur;
