@@ -107,7 +107,7 @@ void dll_19D_update(GameObject* obj)
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8) * (u8*)(def + 0x19);
+    vec[2] = (float)(int)(s8)((Dll19DPlacement*)def)->variant;
 
     if ((((Dll19DState*)state)->flags & 1) == 0)
     {
