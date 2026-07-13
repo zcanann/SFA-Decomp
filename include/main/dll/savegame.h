@@ -16,7 +16,6 @@ u32 isCheatUnlocked(u32 idx);
 void saveFileStruct_resetVolumes(void);
 u8* getSaveFileStruct(void);
 void saveGame_unsaveObjectPos(GameObject* obj);
-void loadSaveSettings(u64 p1, u64 p2, u64 p3, u64 p4, u64 p5, u64 p6, u64 p7, u64 p8);
 int saveFn_800e8508(void);
 void gplaySaveGame(int param);
 void titleDoLoadSave(void);

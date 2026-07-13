@@ -25,6 +25,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/textrender.h"
+#include "main/dll/dll_0015_curves.h"
+#include "main/dll/savegame.h"
 extern bool prepareAttractMode();
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 
@@ -66,9 +68,6 @@ extern f32 lbl_803E1D18;
 #pragma dont_inline on
 
 extern void memCardFn_8007dd04(u8 retry);
-extern void loadSaveSettings(void);
-extern int saveFn_800e8508(void);
-extern void titleDoLoadSave(void);
 extern float titleScreenGetCamProgress(void);
 extern void titleScreenFn_80130464(u8 v);
 

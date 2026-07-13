@@ -279,6 +279,7 @@ void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int su
 int pushable_savePos(int obj);
 u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit);
 void saveFileStruct_setCheatActive(u8 param_1, u8 param_2);
+void loadSaveSettings(void);
 
 /* extern-cleanup: defining-file public prototypes */
 void* getLastSavedGameTexts(void);
