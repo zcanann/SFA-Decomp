@@ -26,6 +26,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/savegame.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_internal.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
@@ -1585,30 +1586,32 @@ void timeListDraw(void)
  * selection pulse highlight. */
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
+    s16 x;
+    s16 y;
+    TextSlot* box = gameTextGetBox(0x36);
     s16 w;
     s16 h;
-    s16 y;
-    u8* box = gameTextGetBox(0x36);
-    s16 x;
+    int top;
+    int left;
     int pulse;
     char buf[0x20];
 
     gHighScorePulseAngle += gHighScorePulseAngleStep;
     pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
-    h = (s16) * (u16*)(box + 0xa);
-    w = (s16) * (u16*)(box + 0x8);
-    y = *(s16*)(box + 0x16);
-    x = *(s16*)(box + 0x14);
+    h = (s16)box->f0a;
+    w = (s16)box->f08;
+    y = box->f16;
+    x = box->f14;
 
-    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), 0xff, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), 0xff, 0x100, w, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, 0xff, 0x100, 5, h, 0);
+    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(left = x - 5), (f32)(top = y - 5), 0xff, 0x100);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)top, 0xff, 0x100, w, 5, 0);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)left, y, 0xff, 0x100, 5, h, 0);
     drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, 0xff, 0x100, w, h, 0);
     drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
     drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), 0xff, 0x100, 5, 5, 2);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     gameTextFn_80016810(0x345, 0, 0xa);
@@ -1634,9 +1637,10 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             gameTextShowStr(buf, 0x87, 0, k * 0x1e + 0x5a);
             if (starred != 0)
             {
-                u8* box2 = gameTextGetBox(0x87);
-                drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(*(s16*)(box2 + 0x14) + 0x64),
-                            (f32)(*(s16*)(box2 + 0x16) + k * 0x1e + 0x57), 0xff, 0x100);
+                TextSlot* box2 = gameTextGetBox(0x87);
+                s16 starY = box2->f16 + k * 0x1e;
+                drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(box2->f14 + 0x64),
+                            (f32)(starY + 0x57), 0xff, 0x100);
                 gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
             }
         }
