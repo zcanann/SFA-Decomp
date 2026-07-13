@@ -1238,13 +1238,16 @@ void pauseMenuFn_8012b77c(void)
  * then a row of edge/corner segments tweened in from both directions. */
 void boxDrawFn_8012975c(void)
 {
-    int ty;
-    int av;
-    int uv;
-    int i;
+    struct
+    {
+        int ty;
+        int av;
+        int uv;
+        int i;
+    } args;
     s8 idx;
-    s8 j;
     int alpha;
+    s8 j;
     f64 scaled;
 
     if (lbl_803DD770 == 0)
@@ -1253,29 +1256,27 @@ void boxDrawFn_8012975c(void)
     }
     idx = lbl_803DD770 & 0x1f;
     drawTexture(((HudTextures*)hudTextures)->tex110, lbl_803E213C, lbl_803E2140, 0xff, 0x100);
-    j = 2;
-    alpha = 0xaa;
-    for (; j >= 0; j--)
+    for (j = 2, alpha = 0xaa; j >= 0; j--)
     {
-        i = idx;
-        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha), (u16)(uv = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av, (u16)uv, 0x18,
-                          0x34, 1);
-        idx = (i + 3) & 0x1f;
+        args.i = idx;
+        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * args.i)),
+                    (f32)(args.ty = 0x5f - args.i / 4), (u8)(args.av = 0xff - alpha),
+                    (u16)(args.uv = args.i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), args.ty, (u8)args.av,
+                          (u16)args.uv, 0x18, 0x34, 1);
+        idx = (args.i + 3) & 0x1f;
         alpha -= 0x55;
     }
     idx = (lbl_803DD770 & 0x1f) ^ 0x10;
-    j = 2;
-    alpha = 0xaa;
-    for (; j >= 0; j--)
+    for (j = 2, alpha = 0xaa; j >= 0; j--)
     {
-        i = idx;
-        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * i)),
-                    (f32)(ty = 0x5f - i / 4), (u8)(av = 0xff - alpha), (u16)(uv = i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), ty, (u8)av, (u16)uv, 0x18,
-                          0x34, 1);
-        idx = (i + 3) & 0x1f;
+        args.i = idx;
+        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * args.i)),
+                    (f32)(args.ty = 0x5f - args.i / 4), (u8)(args.av = 0xff - alpha),
+                    (u16)(args.uv = args.i * 2 + 0xbb));
+        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), args.ty, (u8)args.av,
+                          (u16)args.uv, 0x18, 0x34, 1);
+        idx = (args.i + 3) & 0x1f;
         alpha -= 0x55;
     }
 }
