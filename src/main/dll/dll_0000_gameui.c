@@ -2597,7 +2597,7 @@ void pauseMenuFn_80129ee0(void)
     menuMin = 1;
     menuMax = 5;
     charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
-    if (lbl_803E1E3C == gameTextFn_80019c00())
+    if (!gameTextFn_80019c00())
     {
         btn = getButtonsJustPressed(0);
         getButtonsHeld(0);
