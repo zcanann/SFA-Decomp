@@ -29,11 +29,11 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/dll_0105_largecrate.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
-#include "main/dll/cfperch_state.h"
 #include "main/dll/player_status.h"
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -47,24 +47,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
-
-extern void largecrate_getExtraSize(void);
-
-extern void largecrate_getObjectTypeId(void);
-
-extern void largecrate_free(void);
-
-extern void largecrate_render(GameObject*);
-
-extern void largecrate_hitDetect(void);
-
-extern void largecrate_update(GameObject*);
-
-extern void largecrate_init(GameObject*);
-
-extern void largecrate_release(void);
-
-extern void largecrate_initialise(void);
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SMALLBASKET_OBJGROUP                   0x10

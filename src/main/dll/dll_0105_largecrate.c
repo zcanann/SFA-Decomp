@@ -120,10 +120,6 @@ typedef struct CratePickupSetup /* dropType 9 (0x259) */
     s16 field20; /* 0x20 */
 } CratePickupSetup;
 
-void largecrate_updateConveyorSlide(GameObject* obj, int def);
-void largecrate_update(GameObject* obj);
-void largecrate_free(int obj);
-
 f32 largecrate_getReticleDistance(GameObject* obj)
 {
     u8* state = obj->extra;
