@@ -13,7 +13,7 @@
  */
 #include "main/dll/shopkeeperstate_struct.h"
 #include "main/dll/pushcartstate97_types.h"
-#include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"

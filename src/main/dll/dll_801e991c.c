@@ -1,5 +1,5 @@
 /* DLL 0x801E991C - SPScarab [801E991C-...) */
-#include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/dll/SP/dll_0287_spscarab.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXEnum.h"

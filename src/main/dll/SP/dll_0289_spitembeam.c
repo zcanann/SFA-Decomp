@@ -9,7 +9,7 @@
  * longer available, or has already been bought, the beam hides and
  * despawns itself.
  */
-#include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/objtexture.h"
 #include "main/game_object.h"
 #include "main/dll/SP/dll_0289_spitembeam.h"

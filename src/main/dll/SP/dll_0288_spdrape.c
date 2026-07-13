@@ -10,7 +10,7 @@
  * machine keyed on the active animation move; it rustles (sfx 0x13f),
  * swings (0x140) and flutters (0x141) and re-opens if the player lingers.
  */
-#include "main/dll/DR/dll_0287_spscarab.h"
+#include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
