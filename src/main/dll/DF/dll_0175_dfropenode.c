@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/camera.h"
+#include "track/intersect_api.h"
 
 #define DFROPENODE_OBJGROUP 0x17
 
@@ -31,7 +32,6 @@ extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);
 extern void gxBlendFn_80078b4c(void);
-extern void fn_80078740(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);

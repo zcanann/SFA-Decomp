@@ -57,7 +57,6 @@ extern void fn_80189C68(int a);
 extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
-extern void fn_80078740(void);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 
 extern f32 vec3f_distanceSquared(void* a, void* b);
