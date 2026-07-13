@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/pad.h"

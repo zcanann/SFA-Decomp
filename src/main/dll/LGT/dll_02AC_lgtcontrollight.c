@@ -11,7 +11,7 @@
  */
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/vecmath.h"
 #include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"

@@ -7,7 +7,7 @@
  * can find and follow it. The object itself has no per-frame behaviour
  * here - update/render/hitDetect are all stubs; the work lives in nwice.
  */
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/game_object.h"
 #include "main/dll/NW/nw_shared.h"
 #include "main/dll/NW/dll_01A3_nwanimice.h"

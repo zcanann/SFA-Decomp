@@ -7,7 +7,7 @@
 #include "main/dll/DIM/dll_01C8_dimbridgecogmai.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"

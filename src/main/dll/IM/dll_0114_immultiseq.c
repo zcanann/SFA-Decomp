@@ -14,7 +14,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);

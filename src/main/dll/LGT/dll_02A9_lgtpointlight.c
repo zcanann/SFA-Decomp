@@ -18,7 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/model_light.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/sky_state.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"

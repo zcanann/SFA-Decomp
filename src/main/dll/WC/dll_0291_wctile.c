@@ -15,7 +15,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/model.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_0291_wctile.h"

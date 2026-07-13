@@ -33,7 +33,7 @@
 #include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/mm.h"
 #include "string.h"
 #define HAGABON_HIT_VOLUME_SLOT 10

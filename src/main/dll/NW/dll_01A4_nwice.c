@@ -1,5 +1,5 @@
 /* DLL 0x01A4 - NW ice objects [801CF78C-801CF7E8) */
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/NW/dll_01A4_nwice.h"

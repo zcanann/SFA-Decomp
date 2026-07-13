@@ -34,7 +34,7 @@
 #include "main/player_control_interface.h"
 #include "main/rcp_dolphin.h"
 #include "main/screen_transition.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/vecmath.h"
 #include "main/dll/SP/dll_0286_spshopkeeper.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

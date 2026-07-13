@@ -12,7 +12,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objseq.h"
 
 #include "main/dll/DR/dll_0280_drcloudper.h"

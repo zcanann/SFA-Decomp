@@ -17,7 +17,7 @@
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objtexture.h"
 #include "main/debug.h"
 #include "main/dll/dll_0293_suntemple.h"

@@ -3,7 +3,7 @@
 #include "main/game_timer.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/sky_interface.h"
 #include "main/dll/WC/dll_0290_wcpushblock.h"

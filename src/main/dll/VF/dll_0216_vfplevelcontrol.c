@@ -20,7 +20,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/sky_api.h"
 #include "main/lightmap_api.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"

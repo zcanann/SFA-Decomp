@@ -23,7 +23,7 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 

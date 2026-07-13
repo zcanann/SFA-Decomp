@@ -24,7 +24,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/mm.h"
 #include "string.h"
 #include "main/frame_timing.h"

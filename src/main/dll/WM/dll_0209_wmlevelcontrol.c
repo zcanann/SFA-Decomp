@@ -28,7 +28,7 @@
 #define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
     ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/dll/SC/SCtotemlogpuz.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"

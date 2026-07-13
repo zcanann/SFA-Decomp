@@ -26,7 +26,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/sky_interface.h"

@@ -40,7 +40,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"

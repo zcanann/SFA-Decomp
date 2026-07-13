@@ -31,7 +31,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "main/pad.h"
 #include "main/camera.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/lightmap.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

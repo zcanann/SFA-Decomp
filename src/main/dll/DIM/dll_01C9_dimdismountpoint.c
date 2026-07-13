@@ -9,7 +9,7 @@
 #include "main/dll/DIM/dll_01C9_dimdismountpoint.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objprint_dolphin.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"

@@ -5,7 +5,7 @@
  * set it is removed. A gameBit of -1 means "always on". init also derives
  * the surface height from the model base height plus a placement offset.
  */
-#include "main/objlib.h"
+#include "main/obj_group.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/gamebits.h"

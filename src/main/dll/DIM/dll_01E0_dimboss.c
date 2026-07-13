@@ -34,7 +34,7 @@
 #include "main/sky_api.h"
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
 
 #define DIMBOSS_OBJGROUP 3
 
