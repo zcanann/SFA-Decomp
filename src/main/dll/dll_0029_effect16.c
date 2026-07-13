@@ -58,6 +58,32 @@ extern f32 gEffect16Pi;
 extern f32 gEffect16SinPhaseScale;
 WaterfxCfg gEffect16DefaultSpawnSource;
 
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80310E88 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect16_initialise,
+    (ObjectDescriptorCallback)Effect16_release,
+    0,
+    (ObjectDescriptorCallback)Effect16_func03_nop,
+    (ObjectDescriptorCallback)Effect16_func04,
+    (ObjectDescriptorCallback)Effect16_func05,
+};
+
 int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)
 {
