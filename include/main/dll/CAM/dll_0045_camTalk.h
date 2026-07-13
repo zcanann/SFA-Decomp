@@ -6,6 +6,8 @@
 #include "main/game_object.h"
 #include "main/vecmath.h"
 
+void CameraModeBike_copyToCurrent(f32* inputs);
+void CameraModeBike_free(void);
 void CameraModeBike_update(CameraObject *camera);
 void CameraModeBike_init(CameraObject *camera);
 void CameraModeBike_release(void);

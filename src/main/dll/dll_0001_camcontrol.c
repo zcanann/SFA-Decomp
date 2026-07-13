@@ -28,6 +28,9 @@
 #include "dolphin/os.h"
 #include "main/asset_load.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
+#include "main/dll/CAM/dll_0043_unk.h"
+#include "main/dll/CAM/dll_0045_camTalk.h"
+#include "main/dll/CAM/dll_0047_cameramodeteststrength.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/mm.h"
@@ -51,52 +54,34 @@ extern void firstperson_updatePitch(void);
 extern void CameraModeNormal_follow(void);
 
 extern void CameraModeNormal_copyToCurrent(void);
-extern void CameraModeStaffAnim_copyToCurrent(void);
-extern void CameraModeBike_copyToCurrent(void);
 extern void CameraModeViewfinder_copyToCurrent(void);
 extern void CameraModeDebug_copyToCurrent_nop(void);
 extern void CameraModeStatic_copyToCurrent(void);
-extern void CameraModeTestStrength_copyToCurrent(void);
 
 extern void CameraModeNormal_free(void);
-extern void camcontrol_releasePathState(void);
-extern void CameraModeBike_free(void);
 extern void CameraModeViewfinder_free(void);
 extern void CameraModeDebug_free(void);
 extern void CameraModeStatic_free(void);
-extern void CameraModeTestStrength_free(void);
 
 extern void CameraModeNormal_update(void);
-extern void camclimb_update(void);
-extern void CameraModeBike_update(void);
 extern void CameraModeViewfinder_update(void);
 extern void CameraModeDebug_update(void);
 extern void CameraModeStatic_update(void);
-extern void CameraModeTestStrength_update(void);
 
 extern void CameraModeNormal_init(void);
-extern void CameraModeStaffAnim_init(void);
-extern void CameraModeBike_init(void);
 extern void CameraModeViewfinder_init(void);
 extern void CameraModeDebug_init(void);
 extern void CameraModeStatic_init(void);
-extern void CameraModeTestStrength_init(void);
 
 extern void CameraModeNormal_release(void);
-extern void CameraModeStaffAnim_release(void);
-extern void CameraModeBike_release(void);
 extern void CameraModeViewfinder_release(void);
 extern void CameraModeDebug_release_nop(void);
 extern void CameraModeStatic_release(void);
-extern void CameraModeTestStrength_release(void);
 
 extern void CameraModeNormal_initialise(void);
-extern void CameraModeStaffAnim_initialise(void);
-extern void CameraModeBike_initialise(void);
 extern void CameraModeViewfinder_initialise(void);
 extern void CameraModeDebug_initialise_nop(void);
 extern void CameraModeStatic_initialise(void);
-extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 u8 gCamcontrolStateStorage[0x148];

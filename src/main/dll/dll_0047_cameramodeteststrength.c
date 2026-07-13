@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/curve.h"
 #include "main/dll/CAM/camcannon_state.h"
+#include "main/dll/CAM/dll_0047_cameramodeteststrength.h"
 #include "main/camera_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
