@@ -21,7 +21,9 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
+#include "main/frame_timing.h"
 
 /*
  * Per-instance runtime state stored in GameObject::extra

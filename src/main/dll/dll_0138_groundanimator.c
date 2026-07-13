@@ -16,7 +16,8 @@
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
 #include "main/track_dolphin.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "main/shader_api.h"
 
 typedef struct GroundanimatorPlacement
 {

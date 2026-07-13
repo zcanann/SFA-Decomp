@@ -5,7 +5,6 @@
 #include "main/crfueltank.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/dll/fx_800944A0_shared.h"
 
 /* GameObject anim.flags bit (== OBJANIM_FLAG_HIDDEN): hides the tank from
    render/update; toggled with the hit-volume enable/disable. */
