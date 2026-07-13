@@ -3,20 +3,11 @@
 #include "main/dll/dll_0120_trickyguardspot.h"
 #include "main/vecmath_distance_api.h"
 #include "main/objprint_dolphin.h"
-#include "main/dll/cannon.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
-typedef struct TrickyguardspotPlacement
-{
-    u8 pad0[0x1A - 0x0];
-    s16 triggerRange;
-    u8 pad1C[0x1E - 0x1C];
-    s16 trickyInRangeGameBit;
-} TrickyguardspotPlacement;
 
 extern u8 framesThisStep;
 
@@ -51,7 +42,7 @@ void TrickyGuardSpot_update(TrickyGuardSpotObject* obj)
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0)
         {
             if (Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
-                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement*)placement)->triggerRange)
+                               (f32*)((char*)tricky + 0x18)) < (f32)(s32)((TrickyGuardSpotPlacement*)placement)->triggerRadius)
             {
                 *(int*)state = *(int*)state - framesThisStep;
                 flags->trickyInRange = 1;
@@ -77,7 +68,7 @@ void TrickyGuardSpot_update(TrickyGuardSpotObject* obj)
         TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
         *(int*)state = placement[0x19] * 0x3c;
     }
-    mainSetBits(((TrickyguardspotPlacement*)placement)->trickyInRangeGameBit, flags->trickyInRange);
+    mainSetBits(((TrickyGuardSpotPlacement*)placement)->rangeGameBit, flags->trickyInRange);
 }
 
 void TrickyGuardSpot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* def)
