@@ -7,18 +7,14 @@ typedef struct FSTEntry {
     /* 0x08 */ unsigned int nextEntryOrLength;
 } FSTEntry;
 
-extern OSBootInfo* BootInfo_803DDEE8;
-extern FSTEntry* FstStart_803DDEEC;
-extern char* FstStringStart_803DDEF0;
-extern u32 MaxEntryNum_803DDEF4;
-extern u32 lbl_803DDEF8;
+static OSBootInfo* BootInfo;
+static FSTEntry* FstStart;
+static char* FstStringStart;
+static u32 MaxEntryNum;
+static u32 sDvdfsCurrentDirEntry;
+OSThreadQueue __DVDThreadQueue;
+u32 __DVDLongFileNameFlag;
 __declspec(section ".sdata") static const char sDvdfsFileName[] = "dvdfs.c";
-
-#define BootInfo BootInfo_803DDEE8
-#define FstStart FstStart_803DDEEC
-#define FstStringStart FstStringStart_803DDEF0
-#define MaxEntryNum MaxEntryNum_803DDEF4
-#define sDvdfsCurrentDirEntry lbl_803DDEF8
 
 static char sDVDIllegalPathFormatMessage[] =
     "DVDConvertEntrynumToPath(possibly DVDOpen or DVDChangeDir or DVDOpenDir): "
