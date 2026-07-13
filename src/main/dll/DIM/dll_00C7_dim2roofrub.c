@@ -189,10 +189,6 @@ ObjectDescriptor gDIM2RoofRubObjDescriptor = {
     dim2roofrub_getExtraSize,
 };
 
-u32 lbl_803209C0[] = {
-    0x0000004F, 0xFFC40000, 0x0000001F, 0x0000004F, 0x00C4FF00, 0x00000005, 0x0000004F, 0x00C4FF00, 0x0000001E,
-};
-
 f32 lbl_80320A28[] = {
     0.5f, 0.55f, 0.65f, 0.7f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.3f, 0.3f, 0.3f, 0.3f,
 };

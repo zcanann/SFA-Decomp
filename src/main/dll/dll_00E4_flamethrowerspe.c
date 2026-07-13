@@ -63,9 +63,18 @@ extern f32 lbl_803E3394;
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
-/* hit-volume config triples; lives in the shared descriptor-catalogue data
- * (0x803209C0), split out of this TU by the retail layout */
-extern u32 lbl_803209C0[];
+
+u32 lbl_803209C0[] = {
+    0x0000004F,
+    0xFFC40000,
+    0x0000001F,
+    0x0000004F,
+    0x00C4FF00,
+    0x00000005,
+    0x0000004F,
+    0x00C4FF00,
+    0x0000001E,
+};
 
 void flamethrowerspe_modelMtxFn(void)
 {
