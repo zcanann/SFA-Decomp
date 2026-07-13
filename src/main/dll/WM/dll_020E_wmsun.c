@@ -153,8 +153,8 @@ extern f32 lbl_803E5F7C;         /* 50.0f */
 extern f32 lbl_803E5F80;         /* 0.8f */
 extern f32 lbl_803E5F84;         /* 2400.0f */
 extern f32 lbl_803E5F88;         /* 2.8f */
-extern WmSunVec3 gWmSunGlareDir; /* (0, 0, -1) */
-extern WmSunVec3 gWmSunGlareSun; /* (0, 0, -1) */
+__declspec(section ".rodata") WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
+__declspec(section ".rodata") WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 extern f32 gWmSunGlareIntensity; /* glare intensity */
 extern f32 gWmSunGlareDamping;   /* glare damping accumulator */
 

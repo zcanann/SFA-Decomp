@@ -859,6 +859,7 @@ main/dll/dll_60.c:
 
 main/dll/dll_0049_cameramodecombat.c:
 	.text       start:0x8010BF08 end:0x8010CEC0
+	.data       start:0x80319CE8 end:0x80319D18
 
 main/dll/dll_004A_cameramodeshipbattle.c:
 	.text       start:0x8010CEC0 end:0x8010D33C
@@ -2502,6 +2503,7 @@ main/dll/WM/dll_020D_wmseqpoint.c:
 
 main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
+	.rodata     start:0x802C24E8 end:0x802C2500
 	.sdata2     start:0x803E5F20 end:0x803E5F70
 	.sdata2     start:0x803E5F70 end:0x803E5F78
 
