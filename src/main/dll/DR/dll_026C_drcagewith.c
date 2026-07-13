@@ -7,6 +7,7 @@
  * that marks the cage already opened (openedGameBit).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"

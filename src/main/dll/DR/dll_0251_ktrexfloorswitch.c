@@ -14,6 +14,7 @@
  * pointer - distinct from this object's flags byte at the same offset).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
 

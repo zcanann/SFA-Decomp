@@ -10,6 +10,7 @@
  * drshackle.c build unit (DRshackle.h).
  */
 #include "main/dll/DR/dr_shared.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"

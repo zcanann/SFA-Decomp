@@ -28,6 +28,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/shader.h"
 
 typedef struct WarpPointObjectDef
 {

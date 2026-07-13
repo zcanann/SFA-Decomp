@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/vecmath.h"
 #include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/player_objects.h"

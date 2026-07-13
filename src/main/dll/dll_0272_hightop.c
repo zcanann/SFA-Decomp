@@ -18,6 +18,7 @@
  */
 #include "main/dll/DR/dr_shared.h"
 #include "main/maketex.h"
+#include "main/vecmath.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
