@@ -30,7 +30,6 @@
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"
-#include "main/dll/baddie/Tumbleweed.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "stdarg.h"

@@ -1,4 +1,5 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
+#include "main/dll/dll_00D2_tumbleweed.h"
 #include "main/audio/sfx_ids.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -266,7 +267,6 @@ void tumbleweed_update(GameObject *obj)
 #pragma opt_loop_invariants off
 void tumbleweed_updateStateMachine(GameObject* obj)
 {
-    extern void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
     int aux;
     int sphereIndex;
     u32 hitVolume;
@@ -615,7 +615,6 @@ void tumbleweed_updateEffects(GameObject *obj)
 
 void tumbleweed_updateTargetedStateMachine(GameObject *obj)
 {
-    extern void tumbleweed_updateRollingMotion(GameObject* obj, int aux);
     int sphereIndex;
     u32 hitVolume;
     int hitObject;

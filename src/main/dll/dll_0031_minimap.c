@@ -27,7 +27,6 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/dll/baddie/Tumbleweed.h"
 #include "main/gamebits.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/pad.h"
