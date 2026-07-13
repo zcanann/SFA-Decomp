@@ -3184,23 +3184,25 @@ void pauseMenuFn_80129ee0(void)
             }
             else
             {
-                s16 nullId;
-                void* nullTexture;
-                void** p;
+                struct {
+                    u8 k;
+                    void* nullTexture;
+                    s16 nullId;
+                } clear;
                 int idx;
-                u8 k;
-                k = 0;
-                nullTexture = NULL;
-                nullId = 0;
-                for (; k < 0x28; k++)
+                void** p;
+                clear.k = 0;
+                clear.nullTexture = NULL;
+                clear.nullId = 0;
+                for (; clear.k < 0x28; clear.k++)
                 {
-                    idx = k;
+                    idx = clear.k;
                     p = (void**)((u8*)&hud->textures3A8[0] + idx * 4);
                     if (*p != NULL)
                     {
                         textureFree(*p);
-                        *p = nullTexture;
-                        *(s16*)((u8*)&hud->texIds358[0] + idx * 2) = nullId;
+                        *p = clear.nullTexture;
+                        *(s16*)((u8*)&hud->texIds358[0] + idx * 2) = clear.nullId;
                     }
                 }
                 pauseMenuSetupTitle(0x3a9, 0, 2, 0);
