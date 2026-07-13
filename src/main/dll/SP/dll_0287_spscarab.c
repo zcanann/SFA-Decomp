@@ -71,7 +71,6 @@ extern f32 gSpScarabAngleToRadiansDivisor;
 extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
 
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern f32 getXZDistance(int* p1, int* p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 
 int SPScarab_getExtraSize(void)
@@ -140,8 +139,8 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.rotX = angle;
     }
 
-    if (getXZDistance((int*)&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
-                      (int*)&((GameObject*)obj)->anim.worldPosX) <
+    if (getXZDistance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
+                      &((GameObject*)obj)->anim.worldPosX) <
         gSpScarabPickupRadius)
     {
         Sfx_PlayFromObject(obj, (u16)((SpscarabState*)state)->sfxId);

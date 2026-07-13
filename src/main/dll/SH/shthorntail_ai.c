@@ -37,7 +37,6 @@ extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
-extern f32 getXZDistance(Vec* a, Vec* b);
 extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
@@ -144,7 +143,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
     if (config->leashRadiusByte != '\0')
     {
         value = (int)Obj_GetPlayerObject();
-        dist = getXZDistance(&object->pos, (Vec*)(value + PLAYER_POS_OFFSET));
+        dist = getXZDistance((f32*)&object->pos, (f32*)(value + PLAYER_POS_OFFSET));
         if (dist < SHTHORNTAIL_CLOSE_ATTACK_DISTANCE)
         {
             behaviorState = runtime->behaviorState;
@@ -158,7 +157,7 @@ u32 SHthorntail_chooseNextState(SHthorntailObject* object, SHthorntailRuntime* r
             }
             return nextState;
         }
-        dist = getXZDistance(&object->pos, &config->homePos);
+        dist = getXZDistance((f32*)&object->pos, (f32*)&config->homePos);
         if (dist > (float)(s32)(config->leashRadiusByte * config->leashRadiusByte))
         {
             value = (s16)getAngle(object->modelPos.x - config->homePos.x, object->modelPos.z - config->homePos.z);

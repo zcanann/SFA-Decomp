@@ -21,6 +21,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/sky_api.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -97,7 +98,6 @@ extern int playerHasSpell(GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern int getSaveGameLoadStatus(void);
-extern void timeOfDayFn_80055000(void);
 extern void Music_Trigger(int id, int arg);
 
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";

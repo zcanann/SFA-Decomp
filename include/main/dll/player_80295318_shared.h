@@ -1098,7 +1098,6 @@ int DIMSnowHorn1_stateHandler01(GameObject* obj, int state, f32 fv);
 int DIMSnowHorn1_stateHandler00(GameObject* obj);
 extern f32 vec3f_distanceSquared(void* a, void* b);
 extern void hudFn_8011f38c(int arg);
-extern void Rcp_SetSpiritVisionEnabled(int on);
 extern void viewFinderSetZoomTo50(void);
 extern void __set_debug_bba(int a);
 extern int getFocusedNpc(void);

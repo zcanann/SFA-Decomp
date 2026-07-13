@@ -32,6 +32,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
@@ -101,7 +102,6 @@ extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
-extern void timeOfDayFn_80055038(void);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);

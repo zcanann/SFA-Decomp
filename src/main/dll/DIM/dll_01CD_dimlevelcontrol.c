@@ -20,6 +20,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/mapEvent.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
@@ -52,7 +53,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 
 
 extern f32 lbl_803E4A20;
-extern void timeOfDayFn_80055000(void);
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 STATIC_ASSERT(sizeof(Dll1D6State) == 0x20);
 STATIC_ASSERT(sizeof(TruthHornIceState) == 0x8);

@@ -71,7 +71,6 @@ extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
 extern void fn_8014C66C(int* o, int* target);
 extern GameObject* tumbleweedbush_findNearestActive(void* pos);
-extern f32 getXZDistance(void* a, void* b);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
 extern void fn_8003A168(GameObject* obj, void* p);

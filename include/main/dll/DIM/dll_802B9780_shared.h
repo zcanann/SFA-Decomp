@@ -283,7 +283,6 @@ extern u8 gDIMSnowHorn1ConfigTable[];
 extern void fn_8003A168(GameObject* obj, int q);
 extern void fn_802BB4B4(GameObject* obj, int a, int slot);
 extern int getCurMapLayer(void);
-extern f32 getXZDistance(int a, int b);
 extern f32 lbl_803E82AC;
 extern f32 lbl_803E82B0;
 extern f32 lbl_803E82B4;

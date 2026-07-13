@@ -36,7 +36,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_PlayFromObject(GameObject* obj, int soundId);
-extern f32 getXZDistance(void* a, void* b);
 typedef struct
 {
     u16 msg; // 0x0

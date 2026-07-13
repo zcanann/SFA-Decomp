@@ -12,6 +12,7 @@
  */
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/VF/dll_0218_vfpminifire.h"

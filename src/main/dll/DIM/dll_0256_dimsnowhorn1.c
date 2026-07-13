@@ -1310,7 +1310,7 @@ void DIMSnowHorn1_update(GameObject* obj)
         nearDist = lbl_803E8240;
         found = (char*)ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
         if (((DIMSnowHorn1State*)data)->mountMode == 0 && ((DIMSnowHorn1State*)data)->baddie.controlMode == 7 &&
-            getXZDistance(player + 0x18, (int)&(obj)->anim.worldPosX) < lbl_803E82B4)
+            getXZDistance((f32*)(player + 0x18), &(obj)->anim.worldPosX) < lbl_803E82B4)
         {
             if (found != NULL && (*(u8*)&((GameObject*)found)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE))
             {

@@ -8,6 +8,11 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 void* textureAlloc(u16 width, u16 height, int format, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
                    u8 minFilter, u8 magFilter);
 void Rcp_DisableDistortionFilter(void);
+void Rcp_SetSpiritVisionEnabled(u8 enabled);
+void fn_80053ED0(u32 bits);
+void fn_80053EBC(u32 bits);
+void timeOfDayFn_80055000(void);
+void timeOfDayFn_80055038(void);
 void setMotionBlur(u8 enabled, f32 amount);
 void warpToMap(int idx, s8 transType);
 void fn_800541A4(Texture* texture, s16 frameStep);

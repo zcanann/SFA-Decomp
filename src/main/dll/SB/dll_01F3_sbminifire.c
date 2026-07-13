@@ -58,8 +58,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 extern int gSbMiniFireResourceVariant;
-extern void fn_80053ED0(int);
-extern void fn_80053EBC(int);
 
 int SB_MiniFire_getExtraSize(void)
 {
