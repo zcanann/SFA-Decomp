@@ -27,7 +27,9 @@
 
 typedef struct Dll1D6Placement
 {
-    u8 pad0[0x1A - 0x0];
+    u8 pad0[0x18 - 0x0];
+    s8 rotXParam; /* 0x18: <<8 -> anim.rotX seed */
+    u8 pad19[0x1A - 0x19];
     s16 upTimer;
     s16 downTimer;
     u8 pad1E[0x20 - 0x1E];
@@ -149,23 +151,24 @@ void dll_1D6_free(int* obj)
     (&gDll1D6SlotInUse)[state->slot] = 0;
 }
 
-void dll_1D6_init(int* obj, u8* params)
+void dll_1D6_init(int* obj, u8* paramsBytes)
 {
+    Dll1D6Placement* params = (Dll1D6Placement*)paramsBytes;
     Dll1D6State* extra;
     ObjModel* model;
     int i;
 
-    ((GameObject*)obj)->anim.rotX = (s16)(*(s8*)((char*)params + 0x18) << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)(params->rotXParam << 8);
     extra = ((GameObject*)obj)->extra;
     model = DIM2snowball_GetActiveModel((GameObject*)(obj));
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
-    extra->upTimer = *(s16*)((char*)params + 0x1a);
+    extra->upTimer = params->upTimer;
     if (extra->upTimer < 15)
     {
         extra->upTimer = 15;
     }
-    extra->downTimer = *(s16*)((char*)params + 0x1c);
+    extra->downTimer = params->downTimer;
     if (extra->downTimer < 15)
     {
         extra->downTimer = 15;
