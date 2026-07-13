@@ -24,6 +24,7 @@
 #include "main/audio/sfx.h"
 #include "main/maketex_timer_api.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/player_staff_api.h"
 
 typedef struct CflevelcontrolState
 {
@@ -70,7 +71,6 @@ extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
 
 extern int playerIsDisguised(int obj);
-extern void staffToggle(GameObject* obj, int a);
 extern int getCurMapLayer(void);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);

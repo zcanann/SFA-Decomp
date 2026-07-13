@@ -56,6 +56,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0191_ecshcreator.h"
+#include "main/dll/player_staff_api.h"
 
 typedef struct EcshIntPair
 {
@@ -149,7 +150,6 @@ extern void gpsh_shrine_initialise(void);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
 extern int objIsCurModelNotZero(void* obj);
-extern void staffToggle(GameObject* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
 extern int objGetAnimStateFlags(int* player, int flags);

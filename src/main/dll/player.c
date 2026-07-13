@@ -111,7 +111,6 @@ int fn_80295C88(int obj);
 int fn_80295CBC(GameObject* obj);
 int playerIsDisguised(int obj);
 int playerIsPathFollowing(int obj);
-void staffToggle(GameObject* obj, int a);
 void playerSetDisguised(GameObject* obj, int mode);
 int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 void fn_802960E4(void);

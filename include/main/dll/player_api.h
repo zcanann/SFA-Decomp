@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/dll/player_staff_api.h"
 
 int objFn_802962b4(GameObject* obj);
 int objGetAnimState80A(GameObject* obj);

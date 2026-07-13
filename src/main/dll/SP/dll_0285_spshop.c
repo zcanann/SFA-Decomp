@@ -8,6 +8,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
+#include "main/dll/player_staff_api.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -101,7 +102,6 @@ extern f32 lbl_803E59C8;
 
 extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
-extern void staffToggle(GameObject* obj, int a);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 
