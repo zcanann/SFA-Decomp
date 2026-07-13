@@ -170,11 +170,11 @@ extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
-extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
+__declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
+__declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 extern void objSeqInitFn_80080078(void* p, int n);
-extern GuardianMsg gCfGuardianHeadingTemplate; /* active/idle heading-pair template (cfguardian_SeqFn) */
+__declspec(section ".rodata") GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern void playerAddRemoveMagic(void* player, int n);
 extern int cfguardian_updateMain();
