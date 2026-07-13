@@ -20,7 +20,7 @@
 #include "main/audio/sfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
-#include "main/dll/baddie/skeetla.h"
+#include "main/dll/skeetla_route_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/tricky_state.h"

@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/skeetla_route_api.h"
 
 typedef struct SkeetlaParticleSpawnArgs
 {
@@ -16,8 +17,6 @@ typedef struct SkeetlaParticleSpawnArgs
     f32 z;
 } SkeetlaParticleSpawnArgs;
 
-void trickyUpdateCollisionAndPathState(u8* obj);
-int trickyAdvanceRouteTargetAhead(int obj, RomCurveWalker* route, f32 speed);
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 int trickyMove(u8* obj, f32* targetPos);
 int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags);
