@@ -191,3 +191,8 @@ void dll_54_release_nop(void)
 void dll_54_initialise_nop(void)
 {
 }
+
+u32 dll_54[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)dll_54_initialise_nop, (u32)dll_54_release_nop,
+        0x00000000, (u32)dll_54_init, (u32)dll_54_update,
+        (u32)dll_54_func05, (u32)dll_54_func06_nop, 0x00000000};

@@ -271,3 +271,8 @@ void CameraModeArwing_update(u8* obj)
                                    *(int*)&((GameObject*)obj)->anim.parent);
 }
 #pragma opt_propagation reset
+
+u32 lbl_80319F88[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModeArwing_initialise, (u32)CameraModeArwing_release,
+        0x00000000, (u32)CameraModeArwing_init, (u32)CameraModeArwing_update,
+        (u32)CameraModeArwing_free, (u32)CameraModeArwing_copyToCurrent, 0x00000000};

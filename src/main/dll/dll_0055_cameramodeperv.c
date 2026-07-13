@@ -73,3 +73,8 @@ void CameraModePerv_release(void)
 void CameraModePerv_initialise(void)
 {
 }
+
+u32 lbl_80319F58[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
+        (u32)CameraModePerv_initialise, (u32)CameraModePerv_release,
+        0x00000000, (u32)CameraModePerv_init, (u32)CameraModePerv_update,
+        (u32)CameraModePerv_free, (u32)CameraModePerv_copyToCurrent, 0x00000000};
