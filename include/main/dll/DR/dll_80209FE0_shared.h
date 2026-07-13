@@ -125,7 +125,6 @@ extern f64 DOUBLE_803e8238;
 extern f64 DOUBLE_803e8268;
 extern f64 DOUBLE_803e8280;
 
-extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
 extern f32 lbl_803E6588;
 extern f32 gThornBushLightScaleMax;
 extern f32 lbl_803E6590;

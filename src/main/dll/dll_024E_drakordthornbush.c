@@ -21,6 +21,7 @@
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
+#include "main/object_render.h"
 #include "main/object_update_list.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
@@ -73,7 +74,8 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         Obj_UpdateLightningCluster((GameObject*)p1, ((DrakordThornbushState*)inner)->lightningEntries, 3, lightScale,
                                    &((DrakordThornbushState*)inner)->light);
     }
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6594);
+    ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
+        (GameObject*)p1, p2, p3, p4, p5, lbl_803E6594);
 }
 
 void drakord_thornbush_hitDetect(int obj)

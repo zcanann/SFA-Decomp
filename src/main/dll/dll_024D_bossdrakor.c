@@ -33,6 +33,7 @@
 #include "main/object_update_list.h"
 #include "main/obj_placement.h"
 #include "main/objprint.h"
+#include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/modellight_api.h"
@@ -888,7 +889,7 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     f32 pos0;
     ModelLightStruct* light;
     int val;
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E651C);
+    objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E651C);
     ObjPath_GetPointWorldPosition((GameObject*)p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
                                   &((BossDrakorState*)inner)->homePosZ, 0);
     if (((BossDrakorState*)inner)->lightObj != NULL)
