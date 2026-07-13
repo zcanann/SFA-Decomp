@@ -3850,13 +3850,13 @@ void cMenuSelectFirstEnabledItem(int idx, s8 flag)
  * resets the item slot tables. */
 static void gameUiClearItemSlots(GameUiHud* g)
 {
+    int k;
+    void** tex;
     u8 j;
     s16* rowS16;
     u8* rowU8;
     for (j = 0; j < 64; j++)
     {
-        int k;
-        void** tex;
         k = j;
         tex = (void**)((u8*)&g->itemTextures + k * 4);
         if (*tex != NULL)
