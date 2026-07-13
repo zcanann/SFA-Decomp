@@ -63,7 +63,6 @@ extern f32 lbl_803E26FC;
 extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
 
-extern float mathSinf(float x);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);

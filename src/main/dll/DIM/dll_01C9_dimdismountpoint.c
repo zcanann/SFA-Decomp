@@ -5,6 +5,7 @@
  * the player is on.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
@@ -27,8 +28,6 @@ extern f32 lbl_803E4910;
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
 extern f32 lbl_803E4918;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 lbl_803E490C;
 
 void DIMDismountPoint_func0B(GameObject *obj, int flag)

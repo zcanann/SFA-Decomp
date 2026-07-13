@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/player_api.h"
@@ -255,7 +256,6 @@ extern f32 gYButtonIconAnim;
 extern f32 lbl_803DBA84;
 
 extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
-extern float mathSinf(float x);
 extern GridEntry lbl_8031B818[];
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
@@ -347,7 +347,6 @@ extern f32 lbl_803E2188;
 extern f32 lbl_803E218C;
 extern const f32 lbl_803E2190;
 extern f32 lbl_803E2194;
-extern float mathCosf(float x);
 extern u8 gGameUiHelpTextPending;
 extern s16 gGameUiHelpTextId;
 extern u8 gGameUiUnusedHudSetting;

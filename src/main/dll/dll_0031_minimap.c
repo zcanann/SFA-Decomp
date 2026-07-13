@@ -17,6 +17,7 @@
  * 2-slot live-objects table at lbl_803DBBC8.
  */
 #include "main/texture.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -126,8 +127,6 @@ extern void* gameTextGetBox(int box);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextShow(int a);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);

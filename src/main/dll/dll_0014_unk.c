@@ -122,8 +122,6 @@ extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hi
 extern u32 countLeadingZeros();
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
 
 int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId(int curve, int exclude, int pickIdx);

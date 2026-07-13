@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -891,8 +892,6 @@ extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 void Shield_update(int* obj);
 

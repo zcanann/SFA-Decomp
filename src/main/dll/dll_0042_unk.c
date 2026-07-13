@@ -22,6 +22,7 @@
  * player target throughout.
  */
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/cutCam.h"
@@ -77,7 +78,6 @@ extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, 
 extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
                                             int pointCount);
-extern float mathSinf(float x);
 extern f32 fn_802966F4(GameObject* obj);                     /* returns a target proximity/distance scalar */
 extern void playerGetTimeScale(GameObject* obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(GameObject* obj);

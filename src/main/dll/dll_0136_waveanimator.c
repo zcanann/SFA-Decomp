@@ -10,6 +10,7 @@
  * instance is destroyed (lbl_803DDAE8 is the live-instance refcount).
  */
 #include "main/dll/waveanimatorobjectdef_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
@@ -52,7 +53,6 @@ extern f32 lbl_803E3F5C;   /* G ramp slope */
 extern f32 lbl_803E3F60;   /* B ramp base */
 extern f32 lbl_803E3F64;   /* B ramp slope */
 extern f32 lbl_803E3F70;   /* model scale */
-extern float mathSinf(float x);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(int* obj, int group);
 

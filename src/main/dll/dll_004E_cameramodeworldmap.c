@@ -28,8 +28,6 @@
 #include "main/sfa_extern_decls.h"
 #include "main/dll/VF/vf_shared.h"
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 /* CameraModeWorldMapState.mode: which world-map camera _update runs */
 #define WORLDMAP_CAMERA_FREE_OVERVIEW 0 /* C-stick orbit + focus blend */

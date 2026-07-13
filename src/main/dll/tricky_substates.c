@@ -116,8 +116,6 @@ extern f32 lbl_803E249C;
 extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f64 lbl_803E2528;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;

@@ -1,8 +1,7 @@
 /* DLL 0x004F - Camera mode misc handler [0x8010F2F8-0x8010F540). */
 #include "main/mm.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/curve.h"
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 #include "main/camera_object.h"
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"

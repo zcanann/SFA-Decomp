@@ -66,8 +66,6 @@ extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
 extern int playerGetMoney(void* player);
 extern void playerAddMoney(u8* player, int amount);
 extern void hudFn_8011f38c(u8 x);
-extern float mathCosf(float x);
-extern float mathSinf(float x);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];

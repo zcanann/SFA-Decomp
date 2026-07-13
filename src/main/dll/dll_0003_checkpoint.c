@@ -32,8 +32,6 @@ extern s16 lbl_803DD414;
 extern s16 lbl_803DD416;
 extern f32 lbl_803E04E8;
 extern f32 lbl_803E0500;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 gCheckpointPi;
 extern f32 gCheckpointAngleToRadians;
 extern f32 gCheckpointWidthScale;

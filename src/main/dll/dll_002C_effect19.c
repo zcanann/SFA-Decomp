@@ -13,6 +13,7 @@
  * request consumed by gExpgfxInterface->spawnEffect (expgfx_addremove).
  */
 #include "main/dll/partfxspawn_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
@@ -27,7 +28,6 @@ extern f32 gEffect19Osc1Value;
 extern f32 gEffect19Osc0Value;
 extern f32 gEffect19ScrollPhase0;
 extern f32 gEffect19ScrollPhase1;
-extern float mathSinf(float x);
 
 int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     f32* extraArgs)

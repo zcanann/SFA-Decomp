@@ -4,6 +4,7 @@
  * geometry and texture, drives sfx channels and proximity damage.
  */
 #include "main/effect_interfaces.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -150,8 +151,6 @@ extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 p
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 
 void DFSH_LaserBeam_free(int* obj)

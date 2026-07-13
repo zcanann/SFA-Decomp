@@ -249,8 +249,6 @@ LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiu
     return p;
 }
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 extern int snowPrintSnowCloud(int arg, int x);
 extern void drawFn_80079e64(double s1, u8 mtxIdx, void* vec, double s2, u8 a0, u8 a1, double s3);

@@ -12,6 +12,7 @@
  * The per-object extra block is DimMagicBridgeState (getExtraSize == 0x68).
  */
 #include "main/dll/dimmagicbridge_state.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/game_object.h"
@@ -38,7 +39,6 @@ extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
 
 extern int EmissionController_IsLingering(GameObject* player);
-extern float mathSinf(float x);
 
 #pragma scheduling off
 #pragma peephole off

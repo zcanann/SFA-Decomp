@@ -16,6 +16,7 @@
  * the layouts of related objects shipped in the same DLL.
  */
 #include "main/dll/dll1fbstate_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
 #include "main/effect_interfaces.h"
@@ -154,8 +155,6 @@ void LaserBeam_update(int obj2)
 
     extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
-    extern float mathCosf(float x);
-    extern float mathSinf(float x);
     extern int* gLaserBeamObjModgfxResource;
     extern u8 framesThisStep;
     extern f32 timeDelta;

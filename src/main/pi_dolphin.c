@@ -4305,7 +4305,6 @@ extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
 extern void newshadows_getReflectionScrollOffsets(f32* x, f32* y);
-extern float mathSinf(float x);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
 extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format,
@@ -4531,7 +4530,6 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
 
 extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0;
-extern float mathCosf(float x);
 extern void fn_80293C64(f32 angle, f32* s, f32* c);
 extern void fn_8006C504(void* out);
 extern void getTextureFn_8006c5e4(void* out);

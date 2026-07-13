@@ -289,8 +289,6 @@ extern void fn_8006C5CC(int* out);
 extern int objIsCurModelNotZero(void* obj);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
 extern f32 fn_8029454C(f32);
 extern int depthReadRequestPoll(int x, int y, void* fn);

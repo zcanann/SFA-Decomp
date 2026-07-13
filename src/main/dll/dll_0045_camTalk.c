@@ -1,5 +1,6 @@
 /* DLL 0x0045 - camera talk / NPC-speak mode [80107AEC-8010847C) */
 #include "main/dll/CAM/cambike_state.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/mm.h"
 #include "main/dll/CAM/dll_0045_camTalk.h"
 #include "main/dll/CAM/cutCam.h"
@@ -30,8 +31,6 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;
 extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);

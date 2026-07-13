@@ -11,6 +11,7 @@
  * activeGameBit / lockGameBit and the STAFFACTIVATED_ENABLE_GAMEBIT.
  */
 #include "main/effect_interfaces.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/staffflags_struct.h"
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
@@ -68,8 +69,6 @@ extern f32 lbl_803E3C0C;
 extern f32 gStaffActivatedMinRootMotionScale;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 extern int playerIsPathFollowing(void);

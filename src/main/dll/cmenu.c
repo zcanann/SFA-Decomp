@@ -16,6 +16,7 @@
  * computes the highlight fade (lbl_803DD8D4).
  */
 #include "main/camera_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -101,7 +102,6 @@ extern int getHudHiddenFrameCount(void);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void gxColorFn_80052764(void* p);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
-extern float mathCosf(float x);
 
 int cMenuSetItems(s16* items, char useTricky)
 {

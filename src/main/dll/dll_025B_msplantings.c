@@ -12,6 +12,7 @@
  * setScale is the trigger-volume callback that cuts/harvests.
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/vecmath.h"
@@ -53,7 +54,6 @@
 #define MSPLANTING_HIT_CUT 0x1A
 
 
-extern float mathSinf(float x);
 
 #pragma scheduling off
 #pragma peephole off

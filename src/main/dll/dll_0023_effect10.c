@@ -21,6 +21,7 @@
  * Effect10_func03_nop / Effect10_release / Effect10_initialise are no-ops.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -72,7 +73,6 @@ extern f32 gEffect10SineValueB;
 extern f32 gEffect10SineValueA;
 extern f32 gEffect10Pi;
 extern f32 gEffect10SinePhaseScale;
-extern float mathSinf(float x);
 
 int Effect10_func04(s16* obj, int id, EffectSrcParams* src, u32 flags, u8 srcByte, f32* extraParam)
 {

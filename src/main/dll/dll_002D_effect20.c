@@ -17,6 +17,7 @@
  * stubs.
  */
 #include "main/dll/partfxspawn_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
@@ -149,8 +150,6 @@ extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern int randFn_80080100(int n);
 
 int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,

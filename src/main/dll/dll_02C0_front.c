@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
@@ -71,7 +72,6 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int a);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
-extern float mathCosf(float x);
 
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;

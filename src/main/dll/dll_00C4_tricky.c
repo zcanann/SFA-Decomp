@@ -217,8 +217,6 @@ extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7, int arg8,
                               int arg9, int arg10);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern u32 gTrickyVisibilityBitsInit[4];
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];

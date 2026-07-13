@@ -111,13 +111,11 @@ extern f32 lbl_803E20C0;
 extern f32 lbl_803E20C4;
 extern f32 lbl_803E20CC;
 
-extern float mathSinf(float x);
 extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 mode, s32 flag);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void gameTextFn_80016810(int a, int b, int c);
-extern float mathCosf(float x);
 extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);

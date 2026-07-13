@@ -88,8 +88,6 @@ extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, in
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern float mathCosf(float x);
-extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gameplay_runtime.h"
@@ -13,7 +14,6 @@ extern f32 gEffect17SinValueB;
 extern f32 gEffect17SinValueA;
 extern f32 gEffect17AnimProgressA;
 extern f32 gEffect17AnimProgressB;
-extern float mathSinf(float x);
 
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)

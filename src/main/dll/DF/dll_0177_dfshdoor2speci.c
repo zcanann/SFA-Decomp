@@ -5,6 +5,7 @@
  * state 2 drives a cosine pulse of the texture id.
  */
 #include "main/game_object.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
@@ -39,7 +40,6 @@ extern f32 lbl_803E4E38;
 extern f32 lbl_803E4E3C;
 extern f32 lbl_803E4E40;
 
-extern float mathCosf(float x);
 
 int DFSH_Door2Speci_SeqFn(GameObject* obj)
 {

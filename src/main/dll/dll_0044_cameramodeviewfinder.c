@@ -52,8 +52,6 @@
 #define VIEWFINDER_MODE_FADE_BACK   4
 #define VIEWFINDER_MODE_IDLE        5
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 
 

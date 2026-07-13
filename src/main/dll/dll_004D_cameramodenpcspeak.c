@@ -54,8 +54,6 @@ extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
 extern f32 lbl_803DB9C4;
 
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void fn_8010DB7C(GameObject* target, f32* outX, f32* outY, f32* outZ);

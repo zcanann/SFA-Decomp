@@ -49,8 +49,6 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
 extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 extern u8 gCutCamBboxBlocked; /* last bbox-hit result */
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */

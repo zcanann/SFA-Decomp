@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/DR/dll_0257_drearthwarrior.h"
 #include "main/dll/moveLib.h"
 #include "main/dll/tricky_api.h"
@@ -275,8 +276,6 @@ extern EWColorTbl gDREarthWarriorColors;
 extern char gEarthWarriorTailChainDesc;
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern void doRumble(f32 duration);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void fn_802BC788(GameObject*);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);

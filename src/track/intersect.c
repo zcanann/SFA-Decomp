@@ -1,4 +1,5 @@
 #include "dolphin/card.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/effect_interfaces.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -796,8 +797,6 @@ extern f32 lbl_803DEE7C;
 extern f32 Gq;
 extern int lbl_803DD03C;
 extern int lbl_803968C0[];
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 void matrixFn_8006ff0c(float* mat, short* out, f32 fov, f32 aspect, f32 near, f32 far, f32 scale)
 {

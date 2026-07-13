@@ -16,6 +16,7 @@
  * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
@@ -88,8 +89,6 @@ extern f32 lbl_803E5650;
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
 extern void fn_8011F6D4(u32 x);

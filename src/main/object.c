@@ -193,8 +193,6 @@ extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
 extern void playerDoHitDetection(int obj);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern int getCurUiDll(void);
 extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);

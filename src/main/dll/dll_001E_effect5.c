@@ -11,6 +11,7 @@
  * lbl_803109B8 object descriptor complete the TU.
  */
 #include "main/dll/mtxbuildarg_struct.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
@@ -47,7 +48,6 @@ extern f32 gEffect5Pi;
 extern f32 gEffect5SinPhaseScale;
 extern f32 gEffect5AnimProgressA;
 extern f32 gEffect5AnimProgressB;
-extern float mathSinf(float x);
 
 void* lbl_803109B8[10] = {(void*)0x00000000,  (void*)0x00000000, (void*)0x00000000, (void*)0x00050000,
                           Effect5_initialise, Effect5_release,   (void*)0x00000000, Effect5_func03_nop,

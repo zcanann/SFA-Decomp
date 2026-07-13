@@ -1,5 +1,6 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
 #include "main/audio/sfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objprint_character_api.h"
@@ -93,8 +94,6 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 modelInitBones();
 extern void fn_8003B228(GameObject* obj, int p2);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {

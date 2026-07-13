@@ -83,8 +83,6 @@ extern const f32 gDbEggAngleHalfPeriod;
 extern const f32 lbl_803E6200;
 extern const f32 lbl_803E6204;
 extern const f32 lbl_803E6208;
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);

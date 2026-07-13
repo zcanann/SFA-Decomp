@@ -21,6 +21,7 @@
  * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll/tricky_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/savegame.h"
@@ -101,8 +102,6 @@ extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
-extern float mathSinf(float x);
-extern float mathCosf(float x);
 extern f32 lbl_803E4338;
 extern f32 gGunpowderBarrelPi;
 extern f32 gGunpowderBarrelHalfAngleUnit;
