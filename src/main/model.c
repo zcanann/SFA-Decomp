@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
@@ -196,8 +197,6 @@ void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
 }
 
 extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32 * mtx, f32 * in, f32 * out);
-extern void PSMTXMultVecSR(f32 * mtx, f32 * in, f32 * out);
 
 void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
 {
@@ -291,10 +290,6 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
 }
 
 typedef f32 Mtx[3][4];
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern void PSVECNormalize(f32 * src, f32 * dst);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
 extern int* gModelAnimOffsetTable;
 
 #pragma opt_propagation off
@@ -612,7 +607,6 @@ int loadModelAndAnimTabs(void)
 extern void* memcpy(void* dst, const void* src, int n);
 extern u32 PPCMfhid2(void);
 
-extern f32 PSVECDotProduct(f32 * a, f32 * b);
 
 void copyToCache(void* dst, void* src, u32 count);
 
@@ -2382,7 +2376,6 @@ typedef struct
     u8* buf;
 } AnimBufSel;
 
-extern void PSVECCrossProduct(f32 * a, f32 * b, f32 * out);
 extern f32 gModelJitterAxis[];
 
 #pragma dont_inline on
@@ -2443,7 +2436,6 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     }
 }
 
-extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 
 typedef struct ObjHitBufs
 {
@@ -2567,7 +2559,6 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
 }
 #pragma opt_loop_invariants reset
 
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXReorder(f32 * src, f32 * dst);
 
 #pragma scheduling on
@@ -3567,9 +3558,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     outPos[2] *= s;
 }
 
-extern void PSMTXCopy(f32 * src, f32 * dst);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
-extern void PSMTXIdentity(f32 * m);
 extern f32 fn_802920A4(f32 x);
 extern f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;

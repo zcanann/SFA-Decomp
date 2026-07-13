@@ -19,6 +19,7 @@
  * input-override state round it out.
  */
 #include "main/dll/ppcwgpipe_struct.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
@@ -272,14 +273,8 @@ extern void setTimeStop(int v);
 extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void textureFn_8004c264(void* this, int x);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void C_MTXPerspective(f32* m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
-extern void PSMTXCopy(f32* src, f32* dst);
 extern void* Shader_getLayer(char* base, int idx);
 extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);

@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/bonespawndata_struct.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
@@ -1029,7 +1030,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 
 extern s16 renderModeSetOrGet(int mode);
 extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void selectTexture(u8* tex, int mapId);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void gxTevAddTextureFrameBlendStages(void);

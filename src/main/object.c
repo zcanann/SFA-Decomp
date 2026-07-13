@@ -6,6 +6,7 @@
 #include "main/model.h"
 #include "main/model_engine_ui_api.h"
 #include "main/asset_load.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/audio/stream_api.h"
 #include "main/camera_interface.h"
@@ -170,12 +171,9 @@ extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 
 extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void objList_remove(void* list, void* item);
-extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
@@ -197,8 +195,6 @@ extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
-extern void PSMTXRotAxisRad(f32* m, f32* axis, f32 angle);
 u16 modelFileHeaderGetCullDistance(u8* modelFile);
 void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);

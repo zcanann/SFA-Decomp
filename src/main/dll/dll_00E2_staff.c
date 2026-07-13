@@ -13,6 +13,7 @@
  *
  */
 #include "track/intersect_depth_state_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -428,9 +429,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
     }
 }
 
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 
 
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
@@ -472,7 +470,6 @@ void staff_initialise(void)
 }
 
 extern void quakeSpellTextureFn_8007366c(int param);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern f32 gStaffHalfPi;

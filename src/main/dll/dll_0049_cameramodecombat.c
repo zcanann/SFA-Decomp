@@ -1,5 +1,6 @@
 /* DLL 0x0049 (cameramodecombat) — Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
 #include "main/camera_interface.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
 #include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/CAM/cutCam.h"
@@ -49,11 +50,6 @@ extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
 extern float powfBitEstimate(float x, float y);
-extern void PSVECSubtract(f32 * a, f32 * b, f32 * out);
-extern f32 PSVECMag(f32 * v);
-extern void PSVECNormalize(f32 * v, f32 * out);
-extern void PSVECScale(f32* v, f32* out, f32 s);
-extern void PSVECAdd(f32 * a, f32 * b, f32 * out);
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 
 void CameraModeCombat_copyToCurrent(void)

@@ -16,6 +16,7 @@
  * external area_* callbacks.
  */
 #include "dolphin/os/OSReport.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
@@ -55,9 +56,6 @@ extern const f32 lbl_803E3690;
 extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
 extern void fn_8002A5DC(int obj);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* src, f32* dst);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
 extern const f32 gSidekickBallRestitution;
 extern const f32 lbl_803E36B4;
 extern const f32 gSidekickBallFloorDamping;

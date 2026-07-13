@@ -21,6 +21,7 @@
  * main/dll/DR/gunpowderbarrel_state.h.
  */
 #include "main/dll/tricky_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
@@ -89,7 +90,6 @@ extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
-extern f32 PSVECMag(f32 * v);
 extern f32 lbl_803DBE84;
 extern f32 lbl_803E4324;
 extern const f32 lbl_803E4328;

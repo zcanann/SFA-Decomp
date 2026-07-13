@@ -6,6 +6,7 @@
  * combat-state driver that runs the AI and controls Tricky interaction.
  */
 #include "main/dll/DIM/DIM2lift.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/object.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
@@ -71,7 +72,6 @@ typedef struct IcicleState
     u8 index;
 } IcicleState;
 
-extern void PSMTXMultVec(f32* mtx, f32* src, f32* dst);
 extern void memcpy(void* dst, void* src, int n);
 extern const f32 lbl_803E4BCC;
 extern const f32 lbl_803E4C34;

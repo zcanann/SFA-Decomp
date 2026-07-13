@@ -23,6 +23,7 @@
  * segment count (high nibble, CURVES_POINT_COUNT_SEGMENT_SHIFT).
  */
 #include "dolphin/os.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/savedata_struct.h"
 #include "main/camera_interface.h"
@@ -89,8 +90,6 @@ extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, in
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
                                 int arg6);
 extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern f32 PSVECMag(f32* v);
 extern void setRumbleEnabled(u8 enabled);
 extern void audioSetSoundMode(int mode, u8 forceFlag);
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);

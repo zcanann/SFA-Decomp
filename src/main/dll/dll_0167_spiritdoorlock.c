@@ -25,6 +25,7 @@
  * SpiritDoorLockMapData. Both are defined in IMspacecraft.h.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
@@ -63,7 +64,6 @@ extern void modelLightStruct_freeSlot(void** lightSlot);
 extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern int* ObjGroup_GetObjects(int groupId, int* outCount);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
-extern void PSVECAdd(f32* a, f32* b, f32* out);
 
 int SpiritDoorLock_getExtraSize(void)
 {

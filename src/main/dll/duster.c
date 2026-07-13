@@ -28,6 +28,7 @@
  * creature's voice set (fox_*, en_*, watery_*, foxcom_*).
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
@@ -147,10 +148,6 @@ extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern void fn_80154D0C(int, int, u16*, float*);
 extern u32 fn_80154FB4(short*, int, u32, double);
 extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* in, f32* out);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern u32 fn_80295CBC();
 
 #pragma opt_common_subs off

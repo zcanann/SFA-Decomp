@@ -18,6 +18,7 @@
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -159,7 +160,6 @@ extern const f32 lbl_803E5CC0;
 
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
-extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);

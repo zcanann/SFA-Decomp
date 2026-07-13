@@ -7,6 +7,7 @@
  */
 
 #include "main/render.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
@@ -70,7 +71,6 @@ extern f32 lbl_803E4210;
 
 extern int* gCfMainCrystalObj;
 
-extern void PSVECNormalize(f32* out, f32* in);
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 gCfMainCrystalPylonBeamY = 1945.0f;
 __declspec(section ".sdata2") f32 lbl_803E41DC = 20.0f;

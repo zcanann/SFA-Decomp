@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
@@ -77,13 +78,9 @@ extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
 extern void GXInitLightAttnA(u8* lt_obj, f32 a0, f32 a1, f32 a2);
 extern void GXInitLightAttn(u8* lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
 extern void* memset(void* dst, int val, int n);
-extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void PSMTXMultVecSR(f32* mtx, f32* in, f32* out);
 extern void Vec_normalize(f32* dst, f32* src);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* src, f32* dst);
 extern void GXInitSpecularDir(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightColor(u8* lt_obj, void* color);
 extern void GXLoadLightObjImm(u8* lt_obj, int lightId);
@@ -92,13 +89,7 @@ extern void GXInitLightDir(u8* lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightAttnK(u8* lt_obj, f32 k0, f32 k1, f32 k2);
 extern void GXSetChanCtrl(int channel, int enable, int ambSrc, int matSrc, int lightMask, int diffFn, int attnFn);
 extern void GXSetNumChans(u8 nChans);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void PSVECAdd(f32* a, f32* b, f32* out);
-extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void GXInitLightSpot(u8* lt_obj, f32 cutoff, int spot_func);
-extern f32 PSVECMag(f32* v);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void C_MTXLightPerspective(f32* m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
 void objSetEventName(ModelLightStruct* light, int name)

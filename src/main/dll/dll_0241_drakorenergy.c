@@ -14,6 +14,7 @@
  * gPartfxInterface / objfx_spawnFlaggedTrailBurst.
  */
 #include "main/dll/drakorenergystate_struct.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -57,9 +58,6 @@ extern s16 lbl_803DC178;
 extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern void playerAddHealth(int obj, int amount);
 
-extern void PSVECSubtract(f32*, f32*, f32*);
-extern void PSVECNormalize(f32*, f32*);
-extern void PSVECScale(f32*, f32*, f32);
 extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
 
 void DrakorEnergy_func0B_nop(void)

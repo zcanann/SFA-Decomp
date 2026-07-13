@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -37,10 +38,6 @@ extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
 extern void fn_80154328(int obj, int* state);
 extern void fn_8015536C(f32* out, f32* axis, f32 a, f32 b);
-extern void PSVECSubtract(float*, float*, float*);
-extern f32 PSVECDotProduct(float*, float*);
-extern void PSVECCrossProduct(float*, float*, float*);
-extern void PSVECNormalize(float*, float*);
 extern u32 lbl_803DBCD0;
 extern f32 lbl_803E2990;
 extern f32 lbl_803E2994;

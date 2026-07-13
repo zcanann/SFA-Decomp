@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -27,8 +28,6 @@ extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
 
-extern void PSMTXConcat(float* a, float* b, float* out);
-extern float PSVECSquareDistance(float* a, float* b);
 extern int playerIsDisguised(int obj);
 
 #define OBJGROUP_COUNT                0x54

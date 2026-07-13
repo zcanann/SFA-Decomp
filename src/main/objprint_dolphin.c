@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
@@ -451,8 +452,6 @@ extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
-extern void PSMTXConcat(f32* a, f32* b, f32* ab);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
 extern int depthReadRequestPoll(int x, int y, int* obj);
@@ -1293,7 +1292,6 @@ typedef union
 } ObjWGPipe;
 
 extern ObjWGPipe GXWGFifo : (0xCC008000);
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
 
@@ -1742,7 +1740,6 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
     }
 }
 
-extern void PSMTXCopy(f32* src, f32* dst);
 extern f32 gObjJointMtxTemp[];
 extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
@@ -1906,7 +1903,6 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 }
 
 extern void ObjModel_ToggleVertexBuffer(int* am);
-extern void PSMTXIdentity(f32* m);
 extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
 f32 gObjBoneMtxBuffer[0xC00];
 extern void ObjModel_ApplyBlendChannels(int* am);
@@ -2183,7 +2179,6 @@ u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x
 extern void modelInitBoneMtxs(int* am, f32* out);
 extern void model_multMtxs(int* am, f32* wm);
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 
 #pragma opt_dead_assignments off
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)

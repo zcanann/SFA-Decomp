@@ -12,6 +12,7 @@
  * attack window; inWhirlpoolGroup holds per-instance counters/flags.
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
@@ -88,7 +89,6 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-extern f32 PSVECMag(f32* v);
 
 void mikaladon_init(GameObject* obj, int state)
 {

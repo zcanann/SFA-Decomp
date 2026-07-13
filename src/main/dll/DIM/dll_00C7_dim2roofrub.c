@@ -4,6 +4,7 @@
  * animation sequences and particle effects when the player walks over it.
  */
 #include "main/shader_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/objfx.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
@@ -76,9 +77,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern f32 lbl_803E3270;
 
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \

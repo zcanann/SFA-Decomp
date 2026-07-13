@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
@@ -28,7 +29,6 @@ extern float fcos16(int angle);
 extern int rand(void);
 extern f32 fsin16(int angle);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern f32 __kernel_sin(f32);
 extern f32 __kernel_cos(f32, f32);
 

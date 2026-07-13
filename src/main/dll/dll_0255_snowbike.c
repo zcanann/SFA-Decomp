@@ -1,5 +1,6 @@
 /* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
 #include "dolphin/os/OSReport.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/path_control_interface.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -129,7 +130,6 @@ extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p
 extern void fn_801E991C(void* obj, void* path);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void fn_801EB940(int obj, u8* state);
-extern f32 PSVECMag(f32* v);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
 extern f32 lbl_803E5B28;
@@ -170,8 +170,6 @@ extern void fn_801EBD60(int obj, u8* state);
 extern void drcloudcage_updateEngineFx(int obj, u8* state, f32 speed, int val, u8* p, int n);
 extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
-extern void PSVECScale(f32* src, f32* dst, f32 scale);
-extern void PSVECAdd(f32* a, f32* b, f32* dst);
 extern float powfBitEstimate(float x, float y);
 extern f32 lbl_803E5B6C;
 extern f32 lbl_803E5BA0;

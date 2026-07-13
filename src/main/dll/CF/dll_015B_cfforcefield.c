@@ -8,6 +8,7 @@
  * field re-arms if the collapse bit is cleared again.
  */
 #include "main/game_object.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
@@ -73,7 +74,6 @@ extern f32 lbl_803DBE90;   /* ring radius scale */
 extern int lbl_803DBE94;   /* burst position jitter, +/- units */
 extern int lbl_803DBE98;   /* collapse rotY rate */
 extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
-extern void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);
 
 int cfforcefield_getExtraSize(void)
 {

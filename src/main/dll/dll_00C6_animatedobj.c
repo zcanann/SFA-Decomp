@@ -1,5 +1,6 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/object_render_legacy.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
@@ -95,9 +96,6 @@ extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E322C;
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
 extern f32 lbl_803E3230;
 
