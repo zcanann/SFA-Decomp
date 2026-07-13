@@ -226,11 +226,21 @@ void SnowBike_modelMtxFn(GameObject* obj, f32* x, f32* y, f32* z)
     *z = ((SnowBikeMountState*)state)->modelMtxPosZ;
 }
 
+typedef struct SnowBikeRomListItem
+{
+    u8 pad00[0x8];
+    f32 posX;
+    f32 posY;
+    f32 posZ;
+    u8 pad14[0x29 - 0x14];
+    u8 yawByte;
+} SnowBikeRomListItem;
+
 void SnowBike_resetToRomListPosition(GameObject* obj)
 {
     int state = *(int*)&obj->extra;
     int* table;
-    void* found;
+    SnowBikeRomListItem* found;
     f32 zero;
 
     table = (int*)((int)gSnowBikeMountRomListTable + (int)(((SnowBikeMountState*)state)->romListGroupIndex) * 12);
@@ -239,10 +249,10 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
     {
         if (((SnowBikeMountState*)state)->romListGroupIndex != 0)
         {
-            obj->anim.localPosX = *(f32*)((char*)found + 0x8);
-            obj->anim.localPosY = *(f32*)((char*)found + 0xc);
-            obj->anim.localPosZ = *(f32*)((char*)found + 0x10);
-            obj->anim.rotX = (s16)((*(u8*)((char*)found + 0x29)) << 8);
+            obj->anim.localPosX = found->posX;
+            obj->anim.localPosY = found->posY;
+            obj->anim.localPosZ = found->posZ;
+            obj->anim.rotX = (s16)((found->yawByte) << 8);
         }
         (*gCheckpointInterface)->findRouteForObject(obj, (CheckpointRouteState*)(state + 0x28), 0);
         ((SnowBikeMountState*)state)->savedPosX = obj->anim.localPosX;
