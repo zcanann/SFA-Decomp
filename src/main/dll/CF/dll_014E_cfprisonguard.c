@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll/CF/dll_014E_cfprisonguard.h"
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/dll/player_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_ids.h"
@@ -50,7 +51,6 @@ extern f32 lbl_803E4280;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
-extern int Obj_RemoveFromUpdateList(int* obj);
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
@@ -268,7 +268,7 @@ void CFPrisonGuard_update(int* obj)
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         ObjHits_DisableObject(obj);
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         return;
     }
     /* 0x44: the free-the-prisoner event - once set, the guard no

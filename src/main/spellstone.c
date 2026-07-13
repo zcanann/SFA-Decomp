@@ -3,6 +3,7 @@
 #include "main/spellstone.h"
 #include "main/spellstone_idle.h"
 #include "main/objlib.h"
+#include "main/object_update_list.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 /* object group this object joins while active */
@@ -17,7 +18,6 @@ extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
 
-extern void Obj_RemoveFromUpdateList(void* obj);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 
 int spellstone_getState(SpellStoneObject* obj)
@@ -93,7 +93,7 @@ void spellstone_update(SpellStoneObject* obj)
     {
         mainSetBits(*(&lbl_803DC228 + def->eventIndex), 1);
         obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);
     }
     else
@@ -102,7 +102,7 @@ void spellstone_update(SpellStoneObject* obj)
         if (eventActive != 0)
         {
             obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
         }
         if (state->state == SPELLSTONE_STATE_ACTIVE)
         {

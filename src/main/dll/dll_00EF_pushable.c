@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/objlib.h"
 #include "main/objprint_api.h"
 #include "main/dll/pushable.h"
@@ -105,7 +106,6 @@ extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
-extern void Obj_RemoveFromUpdateList(int* obj);
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
@@ -629,7 +629,7 @@ void pushable_update(int* obj)
         }
         if (mainGetBit(GAMEBIT_PushableRelated0272) != 0)
         {
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjHits_DisableObject((u32)obj);
             ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         }

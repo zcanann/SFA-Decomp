@@ -32,6 +32,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
+#include "main/object_update_list.h"
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -49,7 +50,6 @@
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void modelLightStruct_freeSlot(int p);
 extern void Obj_InsertIntoUpdateList(int obj);
-extern void Obj_RemoveFromUpdateList(FirePipeObject* obj);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern void queueGlowRender(void);
@@ -171,7 +171,7 @@ void firepipe_releaseEffectObject(FirePipeObject* obj)
     {
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->objectFlags &= ~FIREPIPE_OBJFLAG_ACTIVE;
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ((GameObject*)obj)->objectFlags |= FIREPIPE_OBJFLAG_UPDATE_DISABLED;
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }

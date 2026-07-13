@@ -13,6 +13,7 @@
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/object_update_list.h"
 #include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
@@ -91,7 +92,6 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 
@@ -126,7 +126,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
         ObjHits_DisableObject(obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         sub->flags22C = (u8)(sub->flags22C & ~1);
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
     else
@@ -493,7 +493,7 @@ void babycloudrunner_update(int* obj)
     {
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->flags22C &= ~1;
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
     }
@@ -515,7 +515,7 @@ void babycloudrunner_update(int* obj)
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             sub->flags22C &= ~1;
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
             ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;

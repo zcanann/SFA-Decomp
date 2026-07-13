@@ -15,6 +15,7 @@
  * hits off).
  */
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/object.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
@@ -32,7 +33,6 @@
 /* object group this object joins while active */
 #define FLAMMABLEVINE_OBJGROUP 0x31
 
-extern void Obj_RemoveFromUpdateList(int obj);
 
 int FlammableVine_getExtraSize(void)
 {
@@ -160,7 +160,7 @@ checked_vine_use:
             state->burnTimer = zero;
             state->flags = state->flags & ~1;
             state->flags = state->flags | 2;
-            Obj_RemoveFromUpdateList((int)obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjHits_DisableObject((u32)obj);
         }
     }
@@ -233,7 +233,7 @@ void FlammableVine_init(GameObject* obj, FlammablevineObjectDef* def)
 
     if (def->burnedBit != -1 && mainGetBit(def->burnedBit) != 0)
     {
-        Obj_RemoveFromUpdateList((int)obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ObjHits_DisableObject((u32)obj);
         (obj)->anim.alpha = 0;
         state->flags = state->flags | 2;

@@ -1,5 +1,6 @@
 /* DLL 0x243 - DBHoleControl1 [801FE118-801FEB30) */
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/obj_group.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
@@ -59,7 +60,6 @@ extern int gDBStealerWormStateHandlersA[];
 extern int gDBStealerWormStateHandlersB[];
 extern int lbl_803DDCE0;
 
-extern void Obj_RemoveFromUpdateList(int* obj);
 extern void* mapRomListFindItem(int, int, int, int, int);
 extern int dbstealerworm_stateHandlerB06();
 extern int dbstealerworm_stateHandlerB05();
@@ -195,7 +195,7 @@ void dbholecontrol1_update(int* obj)
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     if (mainGetBit(((Dbholecontrol1Placement*)def)->hideGameBit) != 0)
     {
-        Obj_RemoveFromUpdateList(obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
     else if (mainGetBit(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)

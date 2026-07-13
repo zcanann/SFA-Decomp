@@ -15,6 +15,7 @@
 
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/object_update_list.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 #include "main/dll/savegame.h"
@@ -167,7 +168,6 @@ extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
 extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-extern int Obj_RemoveFromUpdateList(int* obj);
 extern GuardianVec gCfGuardianHitboxTemplateA; /* hitbox template copied at init */
 extern GuardianVec gCfGuardianHitboxTemplateB; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
@@ -838,7 +838,7 @@ int cfguardian_updateMain(GameObject* obj)
         }
         obj->anim.alpha = 0;
         ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
-        Obj_RemoveFromUpdateList((int*)obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         sub->questState = CFGUARDIAN_PARKED_HIDDEN;
         break;
@@ -882,7 +882,7 @@ int cfguardian_updateMain(GameObject* obj)
         break;
     case CFGUARDIAN_PARKED_HIDDEN: /* parked and hidden */
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
-        Obj_RemoveFromUpdateList((int*)obj);
+        Obj_RemoveFromUpdateList((u8*)obj);
         ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~1;
         break;
     }
@@ -1077,7 +1077,7 @@ void cfguardian_init(int* obj, u8* params)
         if (((CfGuardianMapData*)params)->variant == 0)
         {
             ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
         }
     }
     else if (mainGetBit(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)

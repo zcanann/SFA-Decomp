@@ -24,6 +24,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
+#include "main/object_update_list.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
@@ -114,7 +115,6 @@ enum
     WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
 };
 
-extern void Obj_RemoveFromUpdateList(int obj);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 gWallCrawlerSpeedCap;
 extern u8 gWallCrawlerHitCount;
@@ -256,7 +256,7 @@ void wmwallcrawler_hitDetect(GameObject* obj)
         }
         else
         {
-            Obj_RemoveFromUpdateList((int)obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjHits_DisableObject((u32)obj);
             ObjGroup_RemoveObject((int)obj, WMWALLCRAWLER_OBJGROUP);
             (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -342,7 +342,7 @@ void wmwallcrawler_update(int obj)
                 }
                 else
                 {
-                    Obj_RemoveFromUpdateList(ob);
+                    Obj_RemoveFromUpdateList((u8*)ob);
                     ObjHits_DisableObject((u32)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -372,7 +372,7 @@ void wmwallcrawler_update(int obj)
                     }
                     else
                     {
-                        Obj_RemoveFromUpdateList(ob);
+                        Obj_RemoveFromUpdateList((u8*)ob);
                         ObjHits_DisableObject((u32)ob);
                         ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                         ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -393,7 +393,7 @@ void wmwallcrawler_update(int obj)
                 }
                 else
                 {
-                    Obj_RemoveFromUpdateList(ob);
+                    Obj_RemoveFromUpdateList((u8*)ob);
                     ObjHits_DisableObject((u32)ob);
                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -440,7 +440,7 @@ void wmwallcrawler_update(int obj)
                                 }
                                 else
                                 {
-                                    Obj_RemoveFromUpdateList(ob);
+                                    Obj_RemoveFromUpdateList((u8*)ob);
                                     ObjHits_DisableObject((u32)ob);
                                     ObjGroup_RemoveObject(ob, WMWALLCRAWLER_OBJGROUP);
                                     ((GameObject*)ob)->anim.flags |= OBJANIM_FLAG_HIDDEN;

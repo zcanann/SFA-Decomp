@@ -30,6 +30,7 @@
 #include "main/maketex_timer_api.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/track_dolphin_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -98,7 +99,6 @@ extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
 extern void memset(void* p, int c, int n);
 extern int playerIsDisguised(u8 * player);
-extern void Obj_RemoveFromUpdateList(int obj);
 extern u32 playerGetStateFlag310(u8 * player);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
@@ -799,7 +799,7 @@ void gunpowderbarrel_update(GameObject *obj)
             }
             if (gen == 0)
             {
-                Obj_RemoveFromUpdateList((int)obj);
+                Obj_RemoveFromUpdateList((u8*)obj);
                 ObjHits_DisableObject((int)obj);
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 s16toFloat(&state->respawnTimer, 0x3c);
@@ -822,7 +822,7 @@ void gunpowderbarrel_update(GameObject *obj)
                 (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 return;
             }
-            Obj_RemoveFromUpdateList((int)obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjHits_DisableObject((int)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }

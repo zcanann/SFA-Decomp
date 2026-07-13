@@ -25,6 +25,7 @@
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
@@ -118,7 +119,6 @@ extern u64 FUN_800305f8();
 extern f32 lbl_803E6F40;
 extern f32 lbl_803E6F80;
 extern f32 lbl_803E6F84;
-extern void Obj_RemoveFromUpdateList(int obj);
 
 typedef struct DbeggPlacement
 {
@@ -211,7 +211,7 @@ void dbegg_processMessages(GameObject* obj)
                 {
                     gameBitIncrement((int)config->activationEventId);
                 }
-                Obj_RemoveFromUpdateList((int)obj);
+                    Obj_RemoveFromUpdateList((u8*)obj);
                 (obj)->anim.flags = (s16)((obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 ObjGroup_RemoveObject((int)obj, DBEGG_OBJGROUP);
                 break;
