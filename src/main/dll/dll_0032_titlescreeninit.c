@@ -19,7 +19,7 @@
 #include "main/dll/FRONT/dll_0032_n_rareware.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "dolphin/os.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXGet.h"

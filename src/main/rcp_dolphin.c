@@ -2,7 +2,7 @@
 #include "main/frame_timing.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/asset_load.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -1766,7 +1766,6 @@ void initFn_800534f8(void)
     gRcpDistortTexture = textureLoadAsset(RCP_DISTORT_TEXTURE_ID);
 }
 
-extern void* getCurrentDataFile(int id);
 int gRcpTexBankCount[3];
 int* gRcpTexBankTable[3];
 extern u16* gRcpTexIdRemap;

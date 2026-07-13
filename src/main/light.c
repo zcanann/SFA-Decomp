@@ -4,6 +4,7 @@
 #include "main/objhits.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/map_load.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"

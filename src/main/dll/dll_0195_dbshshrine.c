@@ -14,7 +14,7 @@
 #include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/objseq.h"

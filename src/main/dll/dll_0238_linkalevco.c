@@ -20,7 +20,7 @@
 #include "main/audio.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/gameplay_runtime.h"
 #include "main/objseq.h"
 

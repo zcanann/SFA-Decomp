@@ -9,7 +9,7 @@
 #include "main/lightmap_api.h"
 #include "main/sky_api.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/dll/FRONT/dll_44.h"
 #include "main/dll/FRONT/picmenu.h"
 #include "main/attract_movie_api.h"

@@ -25,7 +25,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gametext.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/rcp_dolphin.h"
 #include "main/audio/music_trigger_ids.h"
 

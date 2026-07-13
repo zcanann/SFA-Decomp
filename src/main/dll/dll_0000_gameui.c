@@ -35,7 +35,7 @@
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/dll/player_api.h"
 #include "main/dll/dll_003B_menu.h"
 #include "main/objseq_api.h"

@@ -16,7 +16,7 @@
 #include "main/gametext_show_api.h"
 #include "main/pad_api.h"
 #include "main/audio/music_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/debug.h"
 #include "main/object_api.h"
 #include "main/render.h"

@@ -18,7 +18,7 @@
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/objseq_api.h"
 #include "main/game_object.h"
 #include "main/sky_api.h"

@@ -36,7 +36,8 @@
 #include "main/obj_trigger.h"
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
-#include "main/objprint_dolphin.h"
+#include "main/loaded_file_flags.h"
+#include "main/map_load.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/dll_011B_landedarwing.h"
@@ -98,8 +99,6 @@ typedef struct LandedArwingUpdateDamageTexturePlacement
     s16 damageStateGameBit;
     u8 pad26[0x28 - 0x26];
 } LandedArwingUpdateDamageTexturePlacement;
-
-extern void setLoadedFileFlags_blocks1(void);
 
 typedef struct LandedArwingFxPoint
 {

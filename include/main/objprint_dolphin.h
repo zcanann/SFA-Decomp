@@ -2,8 +2,6 @@
 #define MAIN_OBJPRINT_DOLPHIN_H_
 
 #include "ghidra_import.h"
-#include "main/loaded_file_flags.h"
-#include "main/table_file.h"
 
 typedef struct GameObject GameObject;
 
@@ -86,18 +84,5 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
 void objRenderChild(int* child, int* parent, u8 isShadow);
 
-
-/* extern-cleanup: defining-file public prototypes */
-void* getCurrentDataFile(int id);
-
-int loadMapAndParent(int mapId);
-u32 loadTableFiles(void);
-int lockLevel(s32 val, int idx);
-int mapUnload(int mapId, int flags);
-int unlockLevel(s32 val, int idx, int flag);
-void defragMemory(int mode);
-void mapLoadDataFiles(int mapIdx);
-void setForceLoadImmediately(void);
-void clearForceLoadImmediately(void);
 
 #endif /* MAIN_OBJPRINT_DOLPHIN_H_ */

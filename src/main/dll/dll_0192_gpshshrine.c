@@ -21,7 +21,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

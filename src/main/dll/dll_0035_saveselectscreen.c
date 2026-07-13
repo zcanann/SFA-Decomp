@@ -33,7 +33,7 @@
 #include "main/gametext.h"
 #include "main/mm.h"
 #include "main/model_engine.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/fileio.h"
 #include "main/textrender.h"
 #include "main/audio/sfx_trigger_ids.h"

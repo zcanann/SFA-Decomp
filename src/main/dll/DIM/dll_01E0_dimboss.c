@@ -6,7 +6,7 @@
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/audio/music_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/dll/moveLib.h"
 #include "main/render.h"
 #include "main/game_object.h"

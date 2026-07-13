@@ -10,7 +10,7 @@
 #include "main/dll/player_objects.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/gamebits.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/pad.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin.h"

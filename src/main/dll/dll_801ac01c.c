@@ -12,7 +12,7 @@
  */
 #include "main/game_object.h"
 #include "main/pi_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/game_ui_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"

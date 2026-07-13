@@ -76,6 +76,7 @@ void sh_staff_free(int* obj, int flag)
 #include "main/dll/tricky_api.h"
 #include "main/obj_path.h"
 #include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct ShStaffPlacement

@@ -17,7 +17,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/audio.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"

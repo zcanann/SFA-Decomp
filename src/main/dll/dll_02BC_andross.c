@@ -20,7 +20,7 @@
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"

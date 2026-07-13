@@ -3,7 +3,7 @@
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "dolphin/pad.h"
 #include "dolphin/vi.h"
 #include "dolphin/dvd.h"

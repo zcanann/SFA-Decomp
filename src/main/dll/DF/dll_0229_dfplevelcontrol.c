@@ -7,7 +7,7 @@
  */
 #include "main/dll/dfp_types.h"
 #include "main/audio/music_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/object_api.h"
 #include "main/main.h"
 #include "main/game_object.h"

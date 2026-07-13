@@ -13,7 +13,8 @@
 #include "dolphin/os/OSCache.h"
 #include "main/rcp_dolphin.h"
 #include "main/pi_dolphin.h"
-#include "main/objprint_dolphin.h"
+#include "main/loaded_file_flags.h"
+#include "main/table_file.h"
 #include "main/frame_timing.h"
 #define GX_BM_BLEND 1
 #define GX_BL_ONE 1

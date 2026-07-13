@@ -6,7 +6,7 @@
 #include "main/camera.h"
 #include "main/pad.h"
 #include "main/vecmath.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/DR/dr_shared.h"

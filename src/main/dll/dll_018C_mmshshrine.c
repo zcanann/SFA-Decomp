@@ -24,7 +24,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
 #include "main/dll/dll_018D_mmshscales.h"

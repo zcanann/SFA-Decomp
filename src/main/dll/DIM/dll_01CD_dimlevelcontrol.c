@@ -7,7 +7,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/render.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"

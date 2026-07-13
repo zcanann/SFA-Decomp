@@ -8,7 +8,7 @@
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/gamebits.h"
 #include "main/main.h"
 #include "main/game_object.h"

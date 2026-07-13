@@ -25,7 +25,7 @@
 #include "main/dll/savegame_object_api.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/mm.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_status.h"

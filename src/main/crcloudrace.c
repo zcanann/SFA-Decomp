@@ -2,7 +2,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/audio.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/objprint_dolphin.h"
+#include "main/map_load.h"
 #include "main/dll/player_api.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gameplay_runtime.h"
