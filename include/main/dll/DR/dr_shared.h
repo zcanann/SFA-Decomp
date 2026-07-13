@@ -25,7 +25,6 @@
 #include "main/shader_api.h"
 #include "main/model_engine.h"
 #include "main/mm.h"
-#include "main/maketex.h"
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 #include "main/objhits.h"

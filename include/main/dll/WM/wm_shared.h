@@ -16,7 +16,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/maketex.h"
 #include "main/mm.h"
 #include "main/objseq.h"
 #include "main/objhits.h"

@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/curve_eval.h"
 #include "main/dll/WM/wm_shared.h"
+#include "main/maketex_timer_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"

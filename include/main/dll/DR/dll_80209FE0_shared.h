@@ -19,7 +19,6 @@
 #include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEventTypes.h"
-#include "main/maketex.h"
 #include "main/objHitReact.h"
 #include "main/render.h"
 #include "main/objhits.h"

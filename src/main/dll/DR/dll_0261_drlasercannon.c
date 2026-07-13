@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/maketex_timer_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/vecmath.h"
 #include "main/object.h"
