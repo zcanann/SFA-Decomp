@@ -933,7 +933,7 @@ void Tricky_update(int obj)
     int played;
     int talking;
     int sfx2;
-    u32 target;
+    u8* target;
     f32 z;
     s8 flagsByte;
     u8 blockFlags[120];
@@ -1308,10 +1308,10 @@ void Tricky_update(int obj)
                         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.worldPosZ;
                         *(int*)&((TrickyState*)state)->followObj =
                             (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, ((GameObject*)obj)->anim.parent);
-                        target = (u32) & ((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
-                        if (*(u32*)&((TrickyState*)state)->targetPosPtr != target)
+                        target = (u8*)&((GameObject*)((TrickyState*)state)->followObj)->anim.worldPosX;
+                        if (((TrickyState*)state)->targetPosPtr != target)
                         {
-                            *(u32*)&((TrickyState*)state)->targetPosPtr = target;
+                            ((TrickyState*)state)->targetPosPtr = target;
                             *(s32*)&((TrickyState*)state)->stateFlags &= ~(u64)0x400;
                             ((TrickyState*)state)->linkedWalkGroup = 0;
                         }
@@ -1501,14 +1501,19 @@ void Tricky_update(int obj)
         characterDoEyeAnims((GameObject*)(obj), (void*)(state + 0x378));
     }
     objAnimFn_80038f38((GameObject*)(obj), state + 0x3a8);
-    st = ((GameObject*)obj)->extra;
-    cursor = (u8*)st->targetPosPtr;
-    st->previousPathPoint = (f32*)cursor;
-    if (st->previousPathPoint != NULL)
     {
-        st->previousPathX = *(f32*)cursor;
-        st->previousPathY = *(f32*)(cursor + 4);
-        st->previousPathZ = *(f32*)(cursor + 8);
+        u8* pathCursor;
+        TrickyState* pathState;
+
+        pathState = ((GameObject*)obj)->extra;
+        pathCursor = (u8*)pathState->targetPosPtr;
+        pathState->previousPathPoint = (f32*)pathCursor;
+        if (pathState->previousPathPoint != NULL)
+        {
+            pathState->previousPathX = *(f32*)pathCursor;
+            pathState->previousPathY = *(f32*)(pathCursor + 4);
+            pathState->previousPathZ = *(f32*)(pathCursor + 8);
+        }
     }
     ((TrickyState*)state)->prevSpeed = ((TrickyState*)state)->speed;
     i = ((TrickyState*)state)->commandCount - 1;
