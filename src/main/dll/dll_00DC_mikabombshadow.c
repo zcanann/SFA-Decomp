@@ -8,6 +8,7 @@
  * shared shadow renderer while a shadow-cast slot is bound.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00DC_mikabombshadow_api.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
 #include "main/objhits.h"

@@ -21,15 +21,6 @@ void FUN_8016b2e4(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_
                   u64 param_8, int param_9, int param_10);
 void FUN_8016b39c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8016b3c4(u32 param_1);
-int MikaBombShadow_getExtraSize(void);
-int MikaBombShadow_getObjectTypeId(void);
-void MikaBombShadow_free(void);
-void MikaBombShadow_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void MikaBombShadow_hitDetect(void);
-void MikaBombShadow_update();
-void MikaBombShadow_init();
-void MikaBombShadow_release(void);
-void MikaBombShadow_initialise(void);
 void FUN_8016b7d4(u16* param_1);
 void FUN_8016b970(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_8016b9a8(int param_1);

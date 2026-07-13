@@ -5,6 +5,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
+#include "main/dll/dll_00DC_mikabombshadow_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
@@ -261,8 +262,6 @@ extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
 extern f32 lbl_803E3230;
-
-void MikaBombShadow_update(int* obj);
 
 
 
@@ -673,8 +672,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 
 
 
-
-void MikaBombShadow_init(int* obj);
 
 
 void animatedobj_free(int* obj, int seqFlag)

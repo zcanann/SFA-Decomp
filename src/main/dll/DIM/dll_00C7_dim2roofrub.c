@@ -15,6 +15,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
+#include "main/dll/dll_00DC_mikabombshadow_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
@@ -217,8 +218,6 @@ extern f32 lbl_803E326C;
 extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
 extern f32 gDim2RoofRubPi;
-
-void MikaBombShadow_update(int* obj);
 
 void staff_func0F(void);
 
@@ -592,8 +591,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     },
     0,
 };
-
-void MikaBombShadow_init(int* obj);
 
 void dim2roofrub_init(int* obj, int* params)
 {

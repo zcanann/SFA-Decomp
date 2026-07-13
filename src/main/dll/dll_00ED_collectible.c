@@ -21,6 +21,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
+#include "main/dll/dll_00DC_mikabombshadow_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
@@ -113,7 +114,6 @@ extern f32 lbl_803E34A0;
 
 
 
-extern void MikaBombShadow_update(int* obj);
 /* ObjMsg slots: collectible notifies the player it is in range, player
    replies to trigger the pickup. */
 #define COLLECTIBLE_MSG_IN_RANGE 0x7000a

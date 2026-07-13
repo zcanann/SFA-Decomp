@@ -32,6 +32,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
+#include "main/dll/dll_00DC_mikabombshadow_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
@@ -217,8 +218,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 
 extern void* Obj_AllocObjectSetup(int size, int b);
-
-void MikaBombShadow_update(int* obj);
 
 void staff_func0F(void)
 {
@@ -779,8 +778,6 @@ void staff_release(void)
         gStaffSwipeResource = NULL;
     }
 }
-
-void MikaBombShadow_init(int* obj);
 
 extern f32 lbl_803E3328;
 typedef struct StaffQuakeSpellState
