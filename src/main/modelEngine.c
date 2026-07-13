@@ -40,6 +40,7 @@
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/dll/dll_02BE_androssbrain.h"
 #include "main/dll/dll_02BD_androsshand.h"
+#include "main/dll/IM/dll_0114_immultiseq.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
@@ -132,9 +133,8 @@ extern ResourceDescriptor gGCRobotLightBeaObjDescriptor, gGCbaddieShieldObjDescr
     gGPSH_SceneObjDescriptor, gGPSH_ShrineObjDescriptor, gGmMazeWellObjDescriptor, gGrimbleObjDescriptor;
 extern ResourceDescriptor gGroundAnimatorObjDescriptor, gGunPowderBarrelObjDescriptor, gHighTopObjDescriptor,
     gHitAnimatorObjDescriptor, gIMAnimSpaceCraftObjDescriptor, gIMIceMountainObjDescriptor, gIMIcePillarObjDescriptor;
-extern ResourceDescriptor gIMMultiSeqObjDescriptor, gIMSpaceRingGenObjDescriptor, gIMSpaceRingObjDescriptor,
-    gIMSpaceThrusterObjDescriptor, gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor,
-    gInfoPointObjDescriptor;
+extern ResourceDescriptor gIMSpaceRingGenObjDescriptor, gIMSpaceRingObjDescriptor, gIMSpaceThrusterObjDescriptor,
+    gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor, gInfoPointObjDescriptor;
 extern ResourceDescriptor gInfoTextObjDescriptor, gInvHitObjDescriptor, gInvisibleHitSwitchObjDescriptor,
     gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
@@ -1173,7 +1173,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gDoorLockObjDescriptor,
     &gSeqObjectObjDescriptor,
     (ResourceDescriptor*)&gSeqObj2ObjDescriptor,
-    &gIMMultiSeqObjDescriptor,
+    (ResourceDescriptor*)&gIMMultiSeqObjDescriptor,
     &lbl_80321428,
     &gWM_ColumnObjDescriptor,
     &gAppleOnTreeObjDescriptor,

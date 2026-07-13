@@ -17,9 +17,9 @@
  * hardcoded; -1 is the "no bit" sentinel.
  */
 #include "main/dll/alphaanim.h"
+#include "main/dll/IM/dll_0114_immultiseq.h"
 #include "main/dll/dll_0113_seqobj2.h"
 #include "main/dll/seqobjectstate_struct.h"
-#include "main/dll/immultiseqstate_struct.h"
 #include "main/dll/doorlockstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
@@ -254,7 +254,7 @@ const char sSeqObjNeedBitUsedBitFormat[40] = "newseqobj %d: Need Bit %d, Used Bi
 
 /* descriptor/ptr table auto 0x803213f0-0x80321460; 8-aligned union places it at
  * 0x803213F0 after the 4-byte retail pad gap_07_803213EC_data (dll_013F idiom) */
-ObjDescriptorAlign8 gIMMultiSeqObjDescriptor = {{
+IMMultiSeqDescriptorAlign8 gIMMultiSeqObjDescriptor = {{
     0x00000000,
     0x00000000,
     0x00000000,

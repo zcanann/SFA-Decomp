@@ -9,14 +9,6 @@
 
 extern ObjectDescriptor gDoorLockObjDescriptor;
 extern ObjectDescriptor gSeqObjectObjDescriptor;
-/* 8-aligned via union so MWCC emits the 4-byte retail pad (gap_07_803213EC_data) before it;
- * same idiom as dll_013F_texframeanimator / dll_00B1_projlightning3. */
-typedef union ObjDescriptorAlign8
-{
-    ObjectDescriptor desc;
-    u64 align8;
-} ObjDescriptorAlign8;
-extern ObjDescriptorAlign8 gIMMultiSeqObjDescriptor;
 
 typedef struct DoorLockPlacement
 {
@@ -46,20 +38,6 @@ typedef struct SeqObjectPlacement
     u8 warpMapId;
     u8 pad25[3];
 } SeqObjectPlacement;
-
-typedef struct IMMultiSeqPlacement
-{
-    ObjPlacement base;
-    s16 completionGameBits[4];
-    s16 activeGameBits[4];
-    u8 initialYaw;
-    u8 pad29;
-    u8 modelBankIndex;
-    u8 pad2B;
-    s8 triggerIds[4];
-    u8 polarityMask;
-    u8 pad31[3];
-} IMMultiSeqPlacement;
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 void Lock_DoorLock_init(short* obj, DoorLockPlacement* config);
@@ -92,16 +70,5 @@ void SeqObject_free(GameObject* obj);
 void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SeqObject_update(GameObject* obj);
 void SeqObject_init(GameObject* obj, SeqObjectPlacement* params);
-
-int IMMultiSeq_getExtraSize(void);
-int IMMultiSeq_getObjectTypeId(void);
-void IMMultiSeq_free(int x);
-void IMMultiSeq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void IMMultiSeq_hitDetect(void);
-void IMMultiSeq_update(int* obj);
-void IMMultiSeq_init(int* obj, IMMultiSeqPlacement* params);
-void IMMultiSeq_release(void);
-void IMMultiSeq_initialise(void);
-int IMMultiSeq_SeqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
 #endif /* MAIN_DLL_ALPHAANIM_H_ */

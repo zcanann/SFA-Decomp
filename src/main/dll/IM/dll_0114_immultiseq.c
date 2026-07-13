@@ -10,8 +10,7 @@
  * (when its completion bit flips) and rewinds (when an earlier
  * completion bit clears).
  */
-#include "main/dll/alphaanim.h"
-#include "main/dll/immultiseqstate_struct.h"
+#include "main/dll/IM/dll_0114_immultiseq.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
