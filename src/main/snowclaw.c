@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
@@ -101,6 +102,14 @@ extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern f32 lbl_803E66E0;
 
+u8 gSnowClawMoveTable[] = {
+    0x00, 0x00, 0x03, 0x89, 0x00, 0x00, 0x03, 0x8D, 0x00, 0x00, 0x03, 0x8A, 0x00, 0x00, 0x03, 0x8E,
+    0x00, 0x00, 0x04, 0xD3, 0x00, 0x00, 0x04, 0xD4, 0x00, 0x00, 0x01, 0x6D, 0x00, 0x00, 0x01, 0x6C,
+    0x00, 0x00, 0x01, 0x70, 0x00, 0x00, 0x01, 0x6F, 0x00, 0x00, 0x03, 0xE8, 0x00, 0x00, 0x03, 0xEA,
+};
+
+s32 lbl_8032A340[4] = {150, 200, 300, 400};
+
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 extern f32 lbl_803E6720;
 extern f32 lbl_803E6724;
@@ -140,6 +149,23 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis);
 void snowclaw_hitDetect(GameObject* obj);
 void snowclaw_update(GameObject* obj);
 int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq);
+
+ObjectDescriptor gSnowClawObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)snowclaw_initialise,
+    (ObjectDescriptorCallback)snowclaw_release,
+    0,
+    (ObjectDescriptorCallback)snowclaw_init,
+    (ObjectDescriptorCallback)snowclaw_update,
+    (ObjectDescriptorCallback)snowclaw_hitDetect,
+    (ObjectDescriptorCallback)snowclaw_render,
+    (ObjectDescriptorCallback)snowclaw_free,
+    (ObjectDescriptorCallback)snowclaw_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)snowclaw_getExtraSize,
+};
 
 int snowclaw_getExtraSize(void)
 {
@@ -834,10 +860,3 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     return 0;
 }
 
-u8 gSnowClawMoveTable[] = {
-    0x00, 0x00, 0x03, 0x89, 0x00, 0x00, 0x03, 0x8D, 0x00, 0x00, 0x03, 0x8A, 0x00, 0x00, 0x03, 0x8E,
-    0x00, 0x00, 0x04, 0xD3, 0x00, 0x00, 0x04, 0xD4, 0x00, 0x00, 0x01, 0x6D, 0x00, 0x00, 0x01, 0x6C,
-    0x00, 0x00, 0x01, 0x70, 0x00, 0x00, 0x01, 0x6F, 0x00, 0x00, 0x03, 0xE8, 0x00, 0x00, 0x03, 0xEA,
-};
-
-s32 lbl_8032A340[4] = {150, 200, 300, 400};
