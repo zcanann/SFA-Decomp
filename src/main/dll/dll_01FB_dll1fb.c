@@ -27,9 +27,12 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
 #define PAD_BUTTON_A 0x100
-extern f32 lbl_803E5D00;
-extern f32 lbl_803E5D04;
-extern f32 lbl_803E5D08;
+__declspec(section ".sdata2") f32 lbl_803E5D00 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5D04 = 0.01f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5D08 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E5D0C = 0.0f;
+#pragma explicit_zero_data off
 
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))

@@ -52,7 +52,10 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
 
 extern u8 lbl_803DDC78;
-extern f32 lbl_803E5CF8;
+__declspec(section ".sdata2") f32 lbl_803E5CF8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5CFC = 0.0f;
+#pragma explicit_zero_data off
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

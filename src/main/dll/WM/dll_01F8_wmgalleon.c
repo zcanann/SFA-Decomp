@@ -84,10 +84,10 @@ extern s8 lbl_803DDC70;
 extern int* gScreensInterface;
 extern u32* lbl_803DCA94;
 extern void* lbl_803DDC74;
-extern f32 lbl_803E5CE8;
-extern f32 lbl_803E5CEC;
-extern f32 lbl_803E5CF0;
-extern f32 lbl_803E5CF4;
+__declspec(section ".sdata2") f32 lbl_803E5CE8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5CEC = -121.0f;
+__declspec(section ".sdata2") f32 lbl_803E5CF0 = 116.0f;
+__declspec(section ".sdata2") f32 lbl_803E5CF4 = 5.0f;
 
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
