@@ -18,6 +18,7 @@
 #include "main/objhits.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/camera.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/pad.h"
@@ -35,7 +36,6 @@ extern f32 lbl_803E4BD8;
 extern f32 lbl_803E4C24;
 extern f32 lbl_803E4C00;
 extern int lbl_80325AA0[6];
-extern int* gBaddieControlInterface;
 extern int lbl_80325960[16];
 extern f32 gDim2LiftMoveSpeedByDir[16];
 extern f32 lbl_803E4C04;

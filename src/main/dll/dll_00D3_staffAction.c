@@ -21,6 +21,7 @@
  * (skeetlawall), an 11-slot object whose callbacks live in a sibling unit.
  */
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -54,7 +55,6 @@ extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, 
                                             int pointCount);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
-extern int* gBaddieControlInterface;
 extern const f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;

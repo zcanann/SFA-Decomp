@@ -16,6 +16,7 @@
  * their own DLL TUs.
  */
 #include "main/dll/chukchukstate_struct.h"
+#include "main/dll/baddie_control_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/scarab.h"
 #include "main/game_object.h"
@@ -68,7 +69,6 @@ extern f32 lbl_803E2E70;
 extern f32 lbl_803E2E74;
 extern f32 lbl_803E2E78;
 extern f32 lbl_803E2E9C;
-extern int* gBaddieControlInterface;
 extern void* gDllCBStateHandlers[];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];

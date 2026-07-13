@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/cf_doorlight_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/dll/cf_doorlight.h"
 #include "main/dll/wallanimator.h"
 #include "main/objhits.h"
@@ -50,7 +51,6 @@ extern f32 lbl_803E3080;
 extern f32 lbl_803E3084;
 extern f32 lbl_803E3088;
 extern f32 lbl_803E308C;
-extern int* gBaddieControlInterface;
 
 int kaldachom_stateHandlerB05(int obj, int baddieState)
 {

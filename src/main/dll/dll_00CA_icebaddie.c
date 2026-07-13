@@ -36,6 +36,7 @@
 #include "main/vecmath.h"
 #include "main/objanim.h"
 #include "main/dll/chukchukstate_struct.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/effect_interfaces.h"
@@ -181,7 +182,6 @@ extern f32 lbl_803E2D74;
 extern f32 lbl_803E2D78;
 extern f32 lbl_803E2D7C;
 extern f32 lbl_803E2D80;
-extern int* gBaddieControlInterface;
 extern f32 lbl_803E2DB8;
 extern void objRenderModelAndHitVolumes(int obj, int arg1, int arg2, int arg3, int arg4, f32 scale);
 

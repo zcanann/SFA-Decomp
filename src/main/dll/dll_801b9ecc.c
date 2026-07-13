@@ -3,11 +3,11 @@
  * into the boss anim-fn table at slot 5 from dll_01E0_dimboss).
  */
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/player_control_interface.h"
 #include "main/dll/dll_801b9ecc.h"
 
-extern int* gBaddieControlInterface;
 extern u8 lbl_803DDB84;
 extern u8 lbl_80325960[];
 extern u8 gDIMbossAnimController[];

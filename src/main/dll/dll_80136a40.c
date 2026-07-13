@@ -25,6 +25,7 @@
 #include "main/vecmath.h"
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
@@ -144,7 +145,6 @@ extern f32 lbl_803E23F4;
 extern f32 lbl_803E23F8;
 extern f32 lbl_803E240C;
 extern const f32 lbl_803E2418;
-extern int* gBaddieControlInterface;
 extern u8 enableDebugText;
 extern u16* debugDrawFrameBuffer;
 extern u16* externalFrameBuffer1;

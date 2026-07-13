@@ -24,6 +24,7 @@
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/dll/chukchukstate_struct.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
 #include "main/object.h"
@@ -170,7 +171,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 int fn_8015DC04(int obj, GroundBaddieState* state)
 {
 
-    extern int* gBaddieControlInterface;
     extern f64 lbl_803E2DC0;
     int count;
     int i;
@@ -389,7 +389,6 @@ int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
-    extern int* gBaddieControlInterface;
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2DCC;
     extern f32 lbl_803E2DD0;
@@ -567,7 +566,6 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 
 void fn_8015EB6C(GameObject* obj, int state, int target)
 {
-    extern int* gBaddieControlInterface;
     extern f32 timeDelta;
     extern f32 lbl_803E2DEC;
     extern f32 lbl_803E2E00;
@@ -620,7 +618,6 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
 
 void fn_8015ED1C(int obj, int state, int target)
 {
-    extern int* gBaddieControlInterface;
     extern u8 lbl_8031FEA8[];
     extern u8 lbl_8031FF20[];
     extern u8 lbl_803AC580[];
@@ -709,7 +706,6 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_CE_init(GameObject* obj, u8* def, int flags)
 {
-    extern int* gBaddieControlInterface;
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E14;
     GroundBaddieState* sub;
@@ -745,7 +741,6 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
     extern void fn_8015ED1C(int p1, int p2, int p3);
     extern void fn_8015EB6C(GameObject* obj, int p2, int p3);
     extern void fn_8015EA48(GameObject * obj, u8 * p);
-    extern int* gBaddieControlInterface;
     extern void* gChukChukMoveHandlers[];
     extern void* gChukChukCheckHandlers[];
     extern f32 timeDelta;
@@ -901,7 +896,6 @@ int fn_8015E00C(int obj, u8* state)
     return 0;
 }
 
-extern int* gBaddieControlInterface;
 extern f32 lbl_803E2DC8;
 
 int fn_8015DE50(int* obj, GroundBaddieState* state)
