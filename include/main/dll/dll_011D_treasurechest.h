@@ -1,10 +1,10 @@
-#ifndef MAIN_DLL_CF_DLL_165_H_
-#define MAIN_DLL_CF_DLL_165_H_
+#ifndef MAIN_DLL_DLL_011D_TREASURECHEST_H_
+#define MAIN_DLL_DLL_011D_TREASURECHEST_H_
 
 #include "main/game_object.h"
-#include "global.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
+#include "types.h"
 
 typedef struct TreasureChestSetup
 {
@@ -17,12 +17,15 @@ typedef struct TreasureChestSetup
     u8 pad20[0x24 - 0x20];
 } TreasureChestSetup;
 
-void staffactivated_init(int obj, int setup);
 int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);
-void TreasureChest_free(void);
 void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TreasureChest_free(void);
 void TreasureChest_hitDetect(GameObject* obj);
+void TreasureChest_update(GameObject* obj);
+void TreasureChest_release(void);
+void TreasureChest_initialise(void);
+void TreasureChest_init(int* obj);
 
-#endif /* MAIN_DLL_CF_DLL_165_H_ */
+#endif /* MAIN_DLL_DLL_011D_TREASURECHEST_H_ */

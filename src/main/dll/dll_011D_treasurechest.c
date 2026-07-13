@@ -1,5 +1,5 @@
 /* DLL 0x011D - treasurechest (treasure chest interactive object). TU: 0x8018A8BC-0x8018ADB4. */
-#include "main/dll/CF/dll_165.h"
+#include "main/dll/dll_011D_treasurechest.h"
 #include "main/shader_api.h"
 #include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"

@@ -1,7 +1,6 @@
 /*
- * cctestinfot - Cape Claw (mapId 47) "test info" help-prompt object (DLL 0x0122;
- * descriptor gCCTestInfotObjDescriptor is declared extern in CFtoggleswitch.h). The
- * object only reacts while the player is disguised: it caches the disguise
+ * cctestinfot - Cape Claw (mapId 47) "test info" help-prompt object (DLL 0x0122).
+ * The object only reacts while the player is disguised: it caches the disguise
  * state, drives the model's hint-text index / active model from it, and -
  * once its ObjTrigger fires - shows help text from the model's helpTextIds
  * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
@@ -15,6 +14,7 @@
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/dll/dll_010E_deathseq.h"
+#include "main/dll/dll_0123_fuelcell.h"
 #include "main/dll/dll_0124_deathgas.h"
 #include "main/dll/dll_0127_dll127.h"
 #include "main/dll/dll_0129_campfire.h"
@@ -34,19 +34,14 @@ extern void FxEmit_free(void);
 
 extern void FxEmit_render(void);
 
-extern void FuelCell_getExtraSize(void);
 extern void FxEmit_hitDetect(void);
 
-extern void FuelCell_free(void);
 extern void FxEmit_update(void);
 
-extern void FuelCell_render(void);
 extern void FxEmit_init(void);
 
-extern void FuelCell_update(void);
 extern void FxEmit_release(void);
 
-extern void FuelCell_init(void);
 extern void FxEmit_initialise(void);
 extern int playerIsDisguised(void);
 

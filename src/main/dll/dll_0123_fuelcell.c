@@ -1,4 +1,5 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
+#include "main/dll/dll_0123_fuelcell.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
