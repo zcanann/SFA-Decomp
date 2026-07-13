@@ -2383,10 +2383,10 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             int taskCount, taskPartial;
             int hint;
             {
-                u8* base;
-                u8* p;
                 int i;
                 int tmp;
+                u8* base;
+                u8* p;
                 i = 0;
                 base = (u8*)(int)gGameUiTaskHintCandidates;
                 p = base;
