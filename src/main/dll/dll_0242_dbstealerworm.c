@@ -60,6 +60,7 @@
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_022C_dll22c.h"
+#include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
 
@@ -169,15 +170,6 @@ extern void DFP_ObjCreator_initialise(void);
 extern void DFP_ObjCreator_release(void);
 extern void DFP_ObjCreator_render(void);
 extern void DFP_ObjCreator_update(GameObject*);
-extern void doorswitch_free(void);
-extern void doorswitch_getExtraSize(void);
-extern void doorswitch_getObjectTypeId(void);
-extern void doorswitch_hitDetect(void);
-extern void doorswitch_init(void);
-extern void doorswitch_initialise(void);
-extern void doorswitch_release(void);
-extern void doorswitch_render(void);
-extern void doorswitch_update(void);
 
 int dbstealerworm_stateHandlerB04(int obj, int baddie)
 {

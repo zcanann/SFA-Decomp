@@ -12,7 +12,7 @@
 #include "main/gamebits.h"
 #include "main/main.h"
 #include "main/game_object.h"
-#include "main/dll/anim.h"
+#include "main/dll/DF/dll_022D_dfpseqpoint.h"
 #include "main/objseq.h"
 #include "main/dll/fx_800944A0_shared.h"
 

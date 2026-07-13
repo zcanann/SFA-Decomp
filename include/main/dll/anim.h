@@ -13,8 +13,6 @@ extern ObjectDescriptor gDBHoleControl1ObjDescriptor;
 extern ObjectDescriptor10WithPadding gDFP_LevelControlObjDescriptor;
 extern ObjectDescriptor gDFP_ObjCreatorObjDescriptor;
 extern ObjectDescriptor gDoorswitchObjDescriptor;
-extern ObjectDescriptor gDFP_seqpointObjDescriptor;
-extern ObjectDescriptor gDFP_TorchObjDescriptor;
 
 void FUN_801feb30(void);
 void FUN_801ff8b8(short* param_1);
@@ -119,18 +117,6 @@ void FUN_80204f20(int obj);
 void FUN_80204f7c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_802051e0(u32 param_1);
 
-extern char sDoorswitchInitNoLongerSupported[];
-
-int doorswitch_getExtraSize(void);
-int doorswitch_getObjectTypeId(void);
-void doorswitch_free(void);
-void doorswitch_render(void);
-void doorswitch_hitDetect(void);
-void doorswitch_update(void);
-void doorswitch_init(void);
-void doorswitch_release(void);
-void doorswitch_initialise(void);
-
 int dbegg_setLaunchVelocity(GameObject* obj, f32* v);
 int dbegg_setScale(GameObject* obj);
 int dbegg_getExtraSize(void);
@@ -197,17 +183,6 @@ void DFP_ObjCreator_init(GameObject* obj, s8* def);
 void DFP_ObjCreator_release(void);
 void DFP_ObjCreator_initialise(void);
 
-int DFP_seqpoint_getExtraSize(void);
-int DFP_seqpoint_getObjectTypeId(void);
-void DFP_seqpoint_free(void);
-void DFP_seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void DFP_seqpoint_hitDetect(void);
-void DFP_seqpoint_update(GameObject* obj);
-void DFP_seqpoint_init(int* obj, u8* init);
-int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
-void DFP_seqpoint_release(void);
-void DFP_seqpoint_initialise(void);
-
 int dll_22C_getExtraSize_ret_16(void);
 int dll_22C_getObjectTypeId(void);
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -216,15 +191,5 @@ int dll_22C_SeqFn(void);
 void dll_22C_hitDetect_nop(void);
 void dll_22C_release_nop(void);
 void dll_22C_initialise_nop(void);
-
-int DFP_Torch_getExtraSize(void);
-int DFP_Torch_getObjectTypeId(void);
-void DFP_Torch_free(int obj);
-void DFP_Torch_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void DFP_Torch_hitDetect(void);
-void DFP_Torch_update(int obj);
-void DFP_Torch_init(int obj, int param2);
-void DFP_Torch_release(void);
-void DFP_Torch_initialise(void);
 
 #endif /* MAIN_DLL_ANIM_H_ */

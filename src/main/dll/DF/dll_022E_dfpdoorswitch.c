@@ -4,7 +4,9 @@
  * "<doorswitch Init>No Longer supported" via OSReport; the object holds no
  * extra state.
  */
-#include "main/dll/anim.h"
+#include "main/dll/DF/dll_022B_dfptorch.h"
+#include "main/dll/DF/dll_022D_dfpseqpoint.h"
+#include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "dolphin/os/OSReport.h"
 
 int doorswitch_getExtraSize(void)

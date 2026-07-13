@@ -4,6 +4,7 @@
  * sfx effects while lit, and latches its lit-state gamebit.
  */
 #include "main/dll/dfptorchstate_struct.h"
+#include "main/dll/DF/dll_022B_dfptorch.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
