@@ -2862,7 +2862,7 @@ void pauseMenuFn_80129ee0(void)
                     {
                         lbl_803DBA64 = menuMin;
                     }
-                    if ((s8)lbl_803DBA64 != prev)
+                    if ((s8)lbl_803DBA64 != (u8)prev)
                     {
                         Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
                     }
