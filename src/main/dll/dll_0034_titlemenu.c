@@ -1,6 +1,7 @@
 /* DLL 0x0034 — title menu [8011611C-801166C8) */
 #include "dolphin/os/OSReport.h"
 #include "main/dll/FRONT/dll_39.h"
+#include "main/dll/dll_02C0_front_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/sky_api.h"
@@ -23,9 +24,7 @@
 #include "main/frame_timing.h"
 #include "main/textrender.h"
 extern bool prepareAttractMode();
-extern void titleScreenShowCopyright(u8 arg);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern void titleScreenPositionElements(f32 a, f32 b);
 extern void titleScreenTextDrawFunc(void);
 
 static char sNRarewareReportTag[] = "n_rareware\n";

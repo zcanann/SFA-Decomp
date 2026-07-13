@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4E.h"
+#include "main/dll/dll_02C0_front_api.h"
 #include "main/frame_timing.h"
 #include "main/gametext.h"
 #include "main/gameplay_runtime.h"
@@ -62,9 +63,7 @@ extern int lbl_803DD700; /* last highlighted item (for select sfx) */
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern u8 shouldShowCredits(void);
 extern void titleScreenTextDrawFunc(void);
-extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
-extern void titleScreenShowCopyright(u8 arg);
 
 #pragma scheduling off
 #pragma peephole off

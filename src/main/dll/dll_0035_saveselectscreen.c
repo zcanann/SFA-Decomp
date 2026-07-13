@@ -27,6 +27,7 @@
 #include "main/audio/sfx.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_02C0_front.h"
+#include "main/dll/dll_02C0_front_api.h"
 #include "main/gametext.h"
 #include "main/mm.h"
 #include "main/model_engine.h"
@@ -107,9 +108,7 @@ extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void* outPtr);
 
-extern void titleScreenPositionElements(f32 a, f32 b);
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
-extern void titleScreenShowCopyright(u8 arg);
 extern u8 gSaveSelectInfoTextIds;
 extern u16 gSaveSelectSlotTextIds[4];
 extern char sFrontendPercentFormat;
