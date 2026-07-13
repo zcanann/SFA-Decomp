@@ -165,17 +165,6 @@ void drakorenergy_init(int* obj, u8* init);
 void drakorenergy_release(void);
 void drakorenergy_initialise(void);
 
-s16 dbstealerworm_setScale(int* obj);
-int dbstealerworm_getExtraSize(void);
-int dbstealerworm_getObjectTypeId(void);
-void dbstealerworm_free(int* obj);
-void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void dbstealerworm_hitDetect(GameObject* obj);
-void dbstealerworm_update(u8* objp);
-void dbstealerworm_init(int* obj, u8* def, int param3);
-void dbstealerworm_release(void);
-void dbstealerworm_initialise(void);
-
 int dbholecontrol1_getExtraSize(void);
 int dbholecontrol1_getObjectTypeId(void);
 void dbholecontrol1_free(int x);

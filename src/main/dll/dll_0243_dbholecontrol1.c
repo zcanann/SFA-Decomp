@@ -21,6 +21,7 @@
 #include "main/objhits.h"
 #include "main/obj_message.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 
 /*
@@ -55,36 +56,9 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 #define DBHOLECONTROL1_CHILD_OBJ 1337
 
 extern f32 lbl_803E6390;
-extern int gDBStealerWormStateHandlersA[];
-extern int gDBStealerWormStateHandlersB[];
 extern int lbl_803DDCE0;
 
 extern void* mapRomListFindItem(int, int, int, int, int);
-extern int dbstealerworm_stateHandlerB06();
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA02();
-int dbstealerworm_stateHandlerB04(int obj, int p);
-int dbstealerworm_stateHandlerB02(int obj, int baddie);
-int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA03(int obj, int baddie);
-int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerB00(int obj, int baddie);
-int dbstealerworm_stateHandlerB03(int obj, int baddie);
-int dbstealerworm_stateHandlerB01(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA04(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie);
-int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie);
 
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {

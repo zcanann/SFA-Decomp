@@ -25,6 +25,8 @@ typedef struct Dbholecontrol1Placement
     u8 pad2F[0x30 - 0x2F];
 } Dbholecontrol1Placement;
 
+void DBstealerwo_setFuncPtrs_80203c78(void);
+
 int dbholecontrol1_getExtraSize(void);
 int dbholecontrol1_getObjectTypeId(void);
 void dbholecontrol1_free(int obj);

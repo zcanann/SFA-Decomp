@@ -66,12 +66,4 @@ void SB_ShipMast_init(void);
 void SB_ShipMast_release(void);
 void SB_ShipMast_initialise(void);
 
-int dbstealerworm_stateHandlerA02();
-int dbstealerworm_stateHandlerA04();
-int dbstealerworm_stateHandlerA0A();
-int dbstealerworm_stateHandlerA0D();
-int dbstealerworm_stateHandlerA0E();
-int dbstealerworm_stateHandlerB05();
-int dbstealerworm_stateHandlerB06();
-
 #endif /* MAIN_DLL_DB_DBSTEALERWORM_H_ */

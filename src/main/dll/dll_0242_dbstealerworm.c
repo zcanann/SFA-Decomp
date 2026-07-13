@@ -58,6 +58,7 @@
 #include "main/obj_query.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
+#include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_022C_dll22c.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
@@ -144,7 +145,6 @@ extern void** gBaddieControlInterface;
 extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
-extern int gDBStealerWormStateHandlersA[];
 extern f32 lbl_803E62BC;
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
@@ -178,16 +178,6 @@ extern void doorswitch_initialise(void);
 extern void doorswitch_release(void);
 extern void doorswitch_render(void);
 extern void doorswitch_update(void);
-
-extern int dbstealerworm_stateHandlerB06();
-extern int dbstealerworm_stateHandlerB05();
-extern int dbstealerworm_stateHandlerA0E();
-extern int dbstealerworm_stateHandlerA0D();
-extern int dbstealerworm_stateHandlerA0A();
-extern int dbstealerworm_stateHandlerA04();
-extern int dbstealerworm_stateHandlerA02();
-extern void dbstealerworm_initialise(void);
-extern void dbstealerworm_release(void);
 
 int dbstealerworm_stateHandlerB04(int obj, int baddie)
 {
