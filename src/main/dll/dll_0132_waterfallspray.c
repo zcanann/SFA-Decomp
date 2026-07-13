@@ -1,4 +1,5 @@
 /* DLL 0x132 - waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_api.h"
 

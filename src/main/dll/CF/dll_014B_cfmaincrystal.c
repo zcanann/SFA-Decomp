@@ -6,6 +6,7 @@
  * the convergence beam. Carved from the sandwormBoss container.
  */
 
+#include "main/dll/partfx_interface.h"
 #include "main/render.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll_000A_expgfx.h"
@@ -17,7 +18,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014B_cfmaincrystal.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"

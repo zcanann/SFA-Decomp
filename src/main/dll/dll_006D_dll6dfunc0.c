@@ -9,7 +9,8 @@
  * in sibling units - dropped here to match the retail object, which holds
  * only these three functions.)
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

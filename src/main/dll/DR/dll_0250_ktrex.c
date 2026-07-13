@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/model_light.h"
 #include "main/model.h"

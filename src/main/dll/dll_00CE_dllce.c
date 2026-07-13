@@ -18,6 +18,7 @@
  * objects (defined in sibling TUs); their callbacks are forward-declared
  * here only so the descriptor tables can take their addresses.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/objanim.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
@@ -32,7 +33,6 @@
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/dll_00CE_dllce.h"
 #include "main/mapEventTypes.h"

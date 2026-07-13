@@ -13,7 +13,8 @@
  *
  * dll_79_func00_nop / dll_79_func01_nop are the DLL's empty entry stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0079_dll79func0.h"

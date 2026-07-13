@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"

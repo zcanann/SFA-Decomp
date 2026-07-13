@@ -12,7 +12,8 @@
  * (sourceObj +0x18..+0x20) and/or the position source (posSource
  * +0x0c..+0x14). extraArgs, when non-NULL, overrides the base scale.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0092_dll92func0.h"

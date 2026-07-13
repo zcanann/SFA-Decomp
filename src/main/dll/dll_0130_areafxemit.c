@@ -17,6 +17,7 @@
  * permanently suppresses it once set. Sequence event id 1 (AreaFxEmit_SeqFn)
  * also triggers an emit.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"

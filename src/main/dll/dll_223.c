@@ -6,11 +6,11 @@
  * acknowledges, animates, and progresses through damage when the player lands
  * an attack on one of its model parts.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/camera_shake_api.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_223.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/player_control_interface.h"

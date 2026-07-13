@@ -9,7 +9,8 @@
  * taken from the source object's transform, or from a PartFxSpawnParams
  * packet when no object is supplied.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0076_dll76func0.h"

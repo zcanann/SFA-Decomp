@@ -10,7 +10,8 @@
  * or, when no source object is given, from the spawn-param packet
  * (posSource + 0xc..0x14). func00/func01 are the DLL's unused entry stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00A5_dlla5func0.h"
 

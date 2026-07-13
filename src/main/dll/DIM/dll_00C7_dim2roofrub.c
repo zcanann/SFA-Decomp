@@ -3,6 +3,7 @@
  * The dim2roofrub object is a GC-map interactive surface that triggers
  * animation sequences and particle effects when the player walks over it.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/shader_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/objfx.h"

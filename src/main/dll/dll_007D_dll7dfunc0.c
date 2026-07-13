@@ -9,7 +9,8 @@
  * counter advanced per spawn. The trailing func01/func00 nops are this
  * DLL's empty lifecycle stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

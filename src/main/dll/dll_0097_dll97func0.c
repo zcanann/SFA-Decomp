@@ -10,7 +10,8 @@
  * size/scale constants; `flags` is OR'd into the buffer command flags.
  * The sibling DLL 0x98 (dll_0098_dll98func0.c) follows the same shape.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0097_dll97func0.h"

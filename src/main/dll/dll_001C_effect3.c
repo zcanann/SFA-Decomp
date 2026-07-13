@@ -10,6 +10,7 @@
  * explicit PartFxSpawnParams source over the attached object. The object's
  * vtable (projgfx_funcs) is otherwise all nop/unsupported callbacks.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

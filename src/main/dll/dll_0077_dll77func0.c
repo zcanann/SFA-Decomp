@@ -5,9 +5,10 @@
  * gModgfxInterface->spawnEffect; the two nop leaves are the DLL's
  * empty func00/func01 entry points.
  */
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "ghidra_import.h"
 #include "main/game_object.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0077_dll77func0.h"
 

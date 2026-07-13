@@ -13,6 +13,7 @@
  * projgfx_funcs descriptor) was copy-pasted in from the sibling effect DLLs
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"

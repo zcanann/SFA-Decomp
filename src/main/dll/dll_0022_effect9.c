@@ -17,6 +17,7 @@
  *  - Effect9: preset-effect spawner (Effect9_func04, switch over effectId-949)
  *    plus a per-frame animation tick (Effect9_func05).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"

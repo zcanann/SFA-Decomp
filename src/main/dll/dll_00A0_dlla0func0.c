@@ -14,7 +14,8 @@
  *
  * func00/func01 are exported no-ops (other DLL entry slots).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A0_dlla0func0.h"

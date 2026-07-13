@@ -16,8 +16,8 @@
  *   7  self-free once the owner's hit list no longer references it.
  * InvHit_free releases the expgfx source for mode 4.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object.h"

@@ -7,6 +7,7 @@
  * plays a hit sfx, spawns smoke/spark bursts, and arms a cooldown before
  * freeing itself. TU: 0x801E341C-0x801E34C0.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/object.h"

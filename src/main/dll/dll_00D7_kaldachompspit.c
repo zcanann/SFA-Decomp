@@ -8,7 +8,7 @@
  * early when its hit-react target is the player or Tricky, on any contact,
  * or once its unkF4 lifetime runs out, then frees itself.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"

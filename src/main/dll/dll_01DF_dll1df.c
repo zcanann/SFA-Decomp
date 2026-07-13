@@ -12,7 +12,7 @@
  * The seqId==209 if/else in update assigns the same value in both arms but is
  * intentional and must not be collapsed to a single assignment.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objtexture.h"

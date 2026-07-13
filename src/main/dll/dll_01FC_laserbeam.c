@@ -15,12 +15,13 @@
  * WMGalleon*, WMSeqObjectSetup, LaserBeamPlacement, LightSourceState) document
  * the layouts of related objects shipped in the same DLL.
  */
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/obj_placement.h"

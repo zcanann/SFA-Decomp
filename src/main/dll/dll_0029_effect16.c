@@ -16,6 +16,7 @@
  * (two looping 0..1 scroll accumulators and two sin-driven values
  * stepped by framesThisStep). The remaining entry points are no-ops.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"

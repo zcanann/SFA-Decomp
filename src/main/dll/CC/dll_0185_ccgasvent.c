@@ -5,7 +5,7 @@
  * is set the vent watches the nearest group-5 object: once it is far enough
  * away (>= 10.0) it starts spawning the gas particle effect each tick.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"

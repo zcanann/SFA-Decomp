@@ -4,7 +4,8 @@
  * dll_7B_func03 builds a modgfx command list on the stack and submits it
  * (the save-icon / preview effect).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

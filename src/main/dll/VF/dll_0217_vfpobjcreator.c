@@ -12,6 +12,7 @@
  *    trails.
  * The spawn cadence is driven by spawnTimer counting down spawnInterval.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/object_api.h"

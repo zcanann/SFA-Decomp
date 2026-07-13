@@ -8,6 +8,7 @@
  * SBShipHeadState extra block. The Galleon is queried through its anim.dll
  * vtable (slots 0x20/0x28/0x2c) and through DBprotection_getCameraState.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -19,7 +20,6 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
 #include "main/obj_message.h"

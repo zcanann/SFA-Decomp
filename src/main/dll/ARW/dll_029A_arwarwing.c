@@ -25,6 +25,7 @@
  * (updateThrusters, readControls, updateFlightPhysics, updateBombFire,
  * clampToFlightBounds, spawnBomb) are defined in a sibling TU.
  */
+#include "main/dll/partfx_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
@@ -33,7 +34,6 @@
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/loaded_file_flags.h"

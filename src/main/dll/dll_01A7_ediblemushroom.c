@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

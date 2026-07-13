@@ -10,7 +10,8 @@
  * spawn's scale is taken from the spawn-param packet (posSource + 8)
  * divided by 5. func00/func01 are the DLL's unused entry-point stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll_00AA_dllaafunc0.h"
 
 extern u8 lbl_80319168[];

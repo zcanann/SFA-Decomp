@@ -14,6 +14,7 @@
  * counter bits 0x13D/0x5D6 increment, the model hides, sparkles
  * briefly and frees itself 180 frames later.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/curve_eval.h"
 #include "main/dll/WM/wm_shared.h"

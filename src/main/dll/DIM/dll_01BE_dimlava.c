@@ -10,6 +10,7 @@
 #define LAVA1BE_FLAG_HOMING_OFF 0x08
 #define LAVA1BE_FLAG_INACTIVE   0x10
 #define LAVA1BE_FLAG_FALLING    0x20
+#include "main/dll/partfx_interface.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/object_api.h"
 #include "main/modellight_api.h"
@@ -24,7 +25,6 @@
 #include "main/object.h"
 #include "main/objfx.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 #include "main/vecmath.h"

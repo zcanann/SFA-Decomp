@@ -12,7 +12,8 @@
  *
  * func00_nop / func01_nop are this DLL's empty exported entry slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h" /* family cross-sibling header (7C..90 convention); also supplies undefined4 + this DLL's own func03 decl */
 

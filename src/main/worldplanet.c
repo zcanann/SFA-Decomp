@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_api.h"
 #include "main/render.h"
@@ -10,7 +11,6 @@
 
 #define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/object.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/screen_transition.h"
 #include "main/worldobj.h"

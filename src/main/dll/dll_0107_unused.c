@@ -2,12 +2,13 @@
  * DLL 0x107 - unreachable wind-lift/blow-vent object (no OBJECTS.bin def
  * references it: retail cut content). TU = 0x80185868..0x8018646C.
  */
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/camera_interface.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/player_state.h"
 #include "main/obj_group.h"

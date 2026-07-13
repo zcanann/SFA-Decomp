@@ -14,6 +14,7 @@
  * also house the wave/alpha/ground/vis animator state - hence the
  * layout STATIC_ASSERTs below).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/object_render_legacy.h"
 #include "main/objprint_render_api.h"
@@ -21,7 +22,6 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/dll/alphaanimatorstate_struct.h"
 #include "main/dll/visanimatorstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
 #include "main/gamebits.h"

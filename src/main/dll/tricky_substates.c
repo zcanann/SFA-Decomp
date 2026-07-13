@@ -12,11 +12,11 @@
  * most states. Water-vs-land animation selection (the repeated
  * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/tricky_substates.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_00C4_tricky.h"
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"

@@ -28,6 +28,7 @@
  * objects whose handler bodies live elsewhere: the ChukChuk ice-spitter
  * (gChukChukObjDescriptor) and its IceBall projectile (gIceBallObjDescriptor).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/objprint_api.h"
@@ -40,7 +41,6 @@
 #include "main/dll/baddie_control_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"

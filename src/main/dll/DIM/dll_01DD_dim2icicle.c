@@ -23,7 +23,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 
-#include "main/effect_interfaces.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

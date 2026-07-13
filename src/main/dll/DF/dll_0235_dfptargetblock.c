@@ -3,6 +3,7 @@
  * the player knocks along a path: it raycasts for hits, snaps to stored
  * path points, plays impact/loop sfx and reports completion.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -13,7 +14,6 @@
 #include "main/dll/fruit.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/dll_0235_dfptargetblock.h"
 #include "main/gamebits.h"

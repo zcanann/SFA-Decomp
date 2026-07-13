@@ -11,6 +11,7 @@
  * engine routine - and therefore the same effect and sound - as the gunpowder
  * barrels), and hidden. Event 2 retires the green crystal's bursts.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/WM/wm_shared.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/object_render.h"

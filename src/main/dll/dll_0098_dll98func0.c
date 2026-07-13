@@ -11,7 +11,8 @@
  * flag bit 0 is set, the spawn position is offset by the source object's
  * world position (ctx+0x18) or the posSource frame (posSource+0xc).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0098_dll98func0.h"

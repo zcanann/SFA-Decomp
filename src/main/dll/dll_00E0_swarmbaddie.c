@@ -12,6 +12,7 @@
  * particle fx (0x336). The shared pressure-switch resource (DAT_803de6d0)
  * is acquired/freed through the pi_dolphin helpers.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -20,7 +21,6 @@
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/curve_walker.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"

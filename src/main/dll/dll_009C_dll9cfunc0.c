@@ -10,7 +10,7 @@
  * the passed parameter packet (parent, +0x0C). func00/func01 are the DLL's nop
  * lifecycle slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 

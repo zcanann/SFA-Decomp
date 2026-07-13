@@ -15,6 +15,7 @@
  * registry teardown, expgfx pool alloc); they are matched in their sibling effect
  * DLLs, not in this object's symbol set.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"

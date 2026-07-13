@@ -17,6 +17,7 @@
  * the bird's body rotation and advances the flap animation; the two-op
  * "(d - 0x10000) + 1" forms below are the shortest-arc angle wrap-clamps.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"

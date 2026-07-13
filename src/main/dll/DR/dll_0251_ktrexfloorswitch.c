@@ -13,6 +13,7 @@
  * (so 'runtime' there overlays KtlazerwallState, where 0x10 is the bolt
  * pointer - distinct from this object's flags byte at the same offset).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_shared.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/newclouds.h"

@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/vec.h"
 #include "main/asset_load.h"

@@ -24,6 +24,7 @@
  *   if (p6) objRenderModelAndHitVolumes(lbl_803E6408).
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/objanim.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
@@ -40,7 +41,6 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
 #include "main/objfx.h"

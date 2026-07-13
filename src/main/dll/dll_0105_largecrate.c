@@ -17,13 +17,13 @@
  *
  * GAMEBIT_SFX_MUTE (0xa71) gates the rob-wave warning sfx.
  */
+#include "main/dll/modgfx_interface.h"
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object.h"

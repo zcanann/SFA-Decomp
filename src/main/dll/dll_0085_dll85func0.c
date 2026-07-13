@@ -11,7 +11,8 @@
  * lbl_803E0Fxx float-constant pool, the lbl_803DB8Fx texture handles and
  * the gFoodbagEffectTemplate effect-template table) live in the foodbag base TU.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

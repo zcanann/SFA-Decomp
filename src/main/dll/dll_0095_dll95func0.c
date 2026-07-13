@@ -13,7 +13,8 @@
  * the types are redefined locally here because the part command array is
  * inline in the header rather than a separate buffer.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0095_dll95func0.h"

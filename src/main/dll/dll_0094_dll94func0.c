@@ -9,7 +9,8 @@
  * forward decl exist to align this object's function set with the v1.0
  * asm. Sibling of dll_0093 (same GfxCmd/GfxBuf layout and func03 shape).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0094_dll94func0.h"

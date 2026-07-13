@@ -6,6 +6,7 @@
  * transparent sphere hitbox, and a shrinking hit volume.  Carries a green glow
  * light whose intensity flickers frame-by-frame.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/camera_shake_api.h"

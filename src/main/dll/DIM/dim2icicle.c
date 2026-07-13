@@ -5,6 +5,7 @@
  * (score tracking, game-bit setting, hit-effect spawning), and the main
  * combat-state driver that runs the AI and controls Tricky interaction.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/object.h"
@@ -15,7 +16,6 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/boneparticleeffect_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"

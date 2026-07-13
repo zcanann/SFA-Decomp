@@ -12,7 +12,8 @@
  * and optionally biased by the source object's world position and the
  * caller's spawn-parameter packet, then handed to the modgfx interface.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/modgfx_types.h"

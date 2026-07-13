@@ -13,6 +13,7 @@
  * draw helper (objRenderModelAndHitVolumes) and particle bursts come from
  * gPartfxInterface / objfx_spawnFlaggedTrailBurst.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/drakorenergystate_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_0282_barrelgener.h"

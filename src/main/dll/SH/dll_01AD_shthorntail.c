@@ -1,4 +1,5 @@
 /* DLL 0x1AD - SHThorntail [801D58E4-801D5ED4) */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath.h"
@@ -10,7 +11,6 @@
 #include "main/obj_trigger.h"
 #include "main/dll/SH/SHroot.h"
 #include "main/dll/SH/SHthorntail.h"
-#include "main/effect_interfaces.h"
 #include "main/frustum.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"

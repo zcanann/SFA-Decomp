@@ -14,6 +14,7 @@
  * different light position and glow scale); seqId 0x717 takes the same
  * zero-Y-offset fx path in update.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"

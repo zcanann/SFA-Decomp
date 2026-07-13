@@ -7,7 +7,8 @@
  * (the save/preview gameplay code at 0x800e....) are drift duplicates that
  * belong to the main DOL, not to this DLL, and have been dropped.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005D_dll5dfunc0.h"

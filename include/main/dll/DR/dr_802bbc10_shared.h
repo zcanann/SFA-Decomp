@@ -11,7 +11,6 @@
 #include "main/voxmaps.h"
 #include "main/audio/sfx.h"
 #include "main/camera.h"
-#include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"

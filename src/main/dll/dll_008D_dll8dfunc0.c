@@ -16,7 +16,8 @@
  *
  * dll_8D_func00_nop / dll_8D_func01_nop are empty export-table slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

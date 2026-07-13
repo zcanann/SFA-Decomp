@@ -11,6 +11,7 @@
  * contact point and freezes it. Visible motes emit a particle (fx 0x4ba)
  * each frame. The object frees itself once hidden and idle.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
@@ -19,7 +20,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx.h"
 #include "main/camera.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object.h"

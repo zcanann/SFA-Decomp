@@ -12,6 +12,7 @@
  * render does a camera line-of-sight check (voxmaps_traceLine) before
  * emitting the 0x1f7 sparkle particle on a randomized cooldown.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_api.h"

@@ -12,7 +12,8 @@
  * dll_9D_func00_nop / dll_9D_func01_nop are the DLL's empty entry-point
  * thunks.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 

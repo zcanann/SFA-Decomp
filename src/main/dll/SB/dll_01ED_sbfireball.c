@@ -6,6 +6,7 @@
  * after a short delay. It expires when its life timer runs out, and on
  * a hit bursts a cloud of impact particles before being freed.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/game_object.h"

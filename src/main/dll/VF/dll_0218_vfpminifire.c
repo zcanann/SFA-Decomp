@@ -10,6 +10,7 @@
  * it fires a burst of flame particles, fades its alpha out, and frees
  * itself once it falls past the floor.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/game_object.h"

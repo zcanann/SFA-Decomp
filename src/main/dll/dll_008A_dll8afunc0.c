@@ -7,7 +7,8 @@
  * sourceObj is null, from posSource (offsets 0xc/0x10/0x14). func00/func01
  * are unused stub slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

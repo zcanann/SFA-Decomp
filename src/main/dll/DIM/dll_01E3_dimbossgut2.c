@@ -5,6 +5,7 @@
  * breath fx, and hosts a green point light.  Hit-detection uses a sphere
  * hitbox that resets after each contact burst.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"

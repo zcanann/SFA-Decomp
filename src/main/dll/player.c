@@ -1,3 +1,5 @@
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
@@ -58,7 +60,6 @@
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/waterfx_interface.h"
 
 #define Waterfx_SpawnSimpleRippleLegacy(interface, x, y, z, sourceId, radius) \

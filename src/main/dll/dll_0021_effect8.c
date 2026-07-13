@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"

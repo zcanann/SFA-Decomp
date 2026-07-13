@@ -14,6 +14,7 @@
  * fn_80169EF4 computes the launch angle that lands a projectile of the
  * given speed under gravity at a target offset (used cross-TU by duster).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -22,7 +23,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

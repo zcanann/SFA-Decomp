@@ -12,7 +12,8 @@
  * All draw geometry/colour constants come from .sdata2 (lbl_803E14xx) and the
  * sprite asset table lbl_803188D8 (.data); both are owned elsewhere.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A1_dlla1func0.h"

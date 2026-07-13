@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_001B_EFFECT2_H_
 #define MAIN_DLL_DLL_001B_EFFECT2_H_
 
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 /* Per-config velocity-range band count (emit[6]/sub[6]/col[6] parallel tables). */
 #define EFFECT2_VELOCITY_RANGE_COUNT 6

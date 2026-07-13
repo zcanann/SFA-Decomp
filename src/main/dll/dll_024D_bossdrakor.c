@@ -18,6 +18,7 @@
  * map-act 0x1d=3 and game bit 0x83c, and grants the defeat bit stored in the
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/music_api.h"

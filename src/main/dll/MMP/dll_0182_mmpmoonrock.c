@@ -12,6 +12,7 @@
  * spawns ambient particles.
  */
 
+#include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -19,7 +20,6 @@
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
 #include "main/carryable_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
 #include "main/obj_group.h"

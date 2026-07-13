@@ -14,7 +14,6 @@
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
 #include "main/camera.h"
-#include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/texture.h"
 #include "main/resource.h"

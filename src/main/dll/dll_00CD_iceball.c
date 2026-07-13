@@ -16,6 +16,7 @@
  * IceBall_init primes the lifetime (0xb4) and full alpha; render/free toggle
  * the camera view-Y offset for the impact shake.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
 #include "main/object_render_legacy.h"
@@ -23,7 +24,6 @@
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"

@@ -1,8 +1,8 @@
 #ifndef MAIN_DLL_DLL_0021_EFFECT8_H_
 #define MAIN_DLL_DLL_0021_EFFECT8_H_
 
+#include "main/dll/partfx_interface.h"
 #include "types.h"
-#include "main/effect_interfaces.h"
 
 void Effect8_func03_nop(void);
 void Effect8_release(void);

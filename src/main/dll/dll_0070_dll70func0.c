@@ -10,7 +10,8 @@
  *     world-position override: a non-null sourceObj uses the GameObject
  *     world position, a null one uses posSource as a PartFxSpawnParams packet.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0070_dll70func0.h"

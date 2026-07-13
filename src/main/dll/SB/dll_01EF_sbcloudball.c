@@ -11,6 +11,7 @@
  * (FireBall / KyteCage / SeqDoor / ShipBattle stubs) so every v1.0 asm
  * symbol has a source definition.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/shipbattlestate_struct.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/sbkytecagestate_struct.h"
@@ -26,7 +27,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "main/objfx.h"

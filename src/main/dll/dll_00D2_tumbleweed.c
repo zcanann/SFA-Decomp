@@ -1,4 +1,5 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll_00D2_tumbleweed.h"
 #include "main/audio/sfx_ids.h"
 #include "main/vecmath.h"
@@ -10,7 +11,6 @@
 #include "main/objfx.h"
 #include "main/object_api.h"
 #include "main/object.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"

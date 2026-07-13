@@ -9,9 +9,10 @@
  * effect from either a context object (sourceObj+0x18..0x20) or a
  * PartFxSpawnParams source.
  */
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fb_cmd.h"
 #include "main/game_object.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/dll_0072_dll72func0.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */

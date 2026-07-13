@@ -10,10 +10,10 @@
  * mouth path points. State-machine handler tables A/B are populated at
  * initialise time and stepped by gPlayerInterface slot 8 each update.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_path.h"
 #include "main/object.h"

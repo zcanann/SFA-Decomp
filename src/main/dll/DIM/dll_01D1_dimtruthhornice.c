@@ -4,6 +4,7 @@
  * Tricky can deliver fire hits via vtable dispatch (slot 0x28 of Tricky's type at
  * offset 0x68). Also contains fn_801B6D40 (generic byte-damage helper shared by
  * this DLL group). */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/object.h"
 #include "main/dll/dimwooddoor2state_struct.h"
@@ -35,7 +36,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"

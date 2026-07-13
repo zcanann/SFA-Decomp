@@ -5,7 +5,6 @@
  * hit-detect against nearby water surfaces. The spike rises toward a placement-
  * defined ceiling (maxHeight) and spawns a waterfx ripple when it surfaces.
  */
-#include "main/effect_interfaces.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/debug.h"
 #include "main/object_api.h"

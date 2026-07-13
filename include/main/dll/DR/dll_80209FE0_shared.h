@@ -14,7 +14,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/rom_curve_interface.h"

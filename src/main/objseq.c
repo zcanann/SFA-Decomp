@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/asset_load.h"
 #include "main/game_timer_control_api.h"
 #include "main/vecmath_distance_api.h"
@@ -25,7 +26,6 @@
 #include "main/gamebits.h"
 #include "main/shader_api.h"
 #include "main/sky_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/obj_group.h"

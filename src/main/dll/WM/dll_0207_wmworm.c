@@ -15,6 +15,7 @@
  * frames in obj->unkF4 before it may fire again. Out of range it snaps
  * back to its recorded home position.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/object_api.h"
 #include "main/game_object.h"

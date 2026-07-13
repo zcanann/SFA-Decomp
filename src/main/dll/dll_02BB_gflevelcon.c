@@ -14,7 +14,6 @@
  * and fn_8023A3E4 is the hit-reaction handler (three breakable hit
  * zones + texture-state swaps).
  */
-#include "main/effect_interfaces.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"

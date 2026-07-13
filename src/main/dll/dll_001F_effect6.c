@@ -16,6 +16,7 @@
  * lives canonically in modgfx.c; only the two Effect6 symbols above
  * are compared against the target object.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

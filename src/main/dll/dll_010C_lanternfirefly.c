@@ -1,6 +1,7 @@
 /*
  * LanternFireFly (DLL 0x10C). TU = 0x80186704..0x801871C8.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/CF/CFcrystal.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"

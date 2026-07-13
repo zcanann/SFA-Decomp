@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 #include "main/dll/expgfx_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/object_descriptor.h"
 #include "main/dll/expgfx_resource_api.h"
 

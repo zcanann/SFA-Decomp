@@ -10,6 +10,7 @@
  * Effect5_func03_nop / Effect5_release / Effect5_initialise stubs and the
  * lbl_803109B8 object descriptor complete the TU.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/mtxbuildarg_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"

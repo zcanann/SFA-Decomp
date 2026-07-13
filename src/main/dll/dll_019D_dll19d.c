@@ -1,4 +1,5 @@
 /* DLL 0x019D — dll19d / torch1CD group. TU: 0x801CC998–0x801CCFA4. */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll_019D_dll19d.h"
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"

@@ -6,6 +6,7 @@
  * green = flameColor==0) that fades out with the active timer, and maintains a
  * sphere hitbox.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"

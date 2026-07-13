@@ -18,6 +18,7 @@
  * overlays for the placement record and for the few extra fields the
  * shared struct does not yet name.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/cloudrunner_state.h"
 #include "main/debug.h"
 #include "main/byte_flags.h"

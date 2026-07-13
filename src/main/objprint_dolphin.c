@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
@@ -12,7 +13,6 @@
 #include "main/sky_api.h"
 #include "main/textrender_api.h"
 #include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/mldf_fileid.h"
 #include "main/model.h"

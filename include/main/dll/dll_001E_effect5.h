@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_001E_EFFECT5_H_
 #define MAIN_DLL_DLL_001E_EFFECT5_H_
 
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 void Effect5_func03_nop(void);
 void Effect5_release(void);

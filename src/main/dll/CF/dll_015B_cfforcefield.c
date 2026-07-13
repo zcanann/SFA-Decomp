@@ -7,12 +7,12 @@
  * field down (rotY ramp + shrinking ring) and then disables it; the
  * field re-arms if the collapse bit is cleared again.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"

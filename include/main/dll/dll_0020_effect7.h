@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_0020_EFFECT7_H_
 #define MAIN_DLL_DLL_0020_EFFECT7_H_
 
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 void Effect7_func03_nop(void);
 void Effect7_release(void);

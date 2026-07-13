@@ -19,6 +19,7 @@
  * for the next event. Live-verified end-to-end in Dolphin: ACTIVE -> HIT_REACT
  * clears the child pointer (gem released) -> FADE_OUT.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
@@ -32,7 +33,6 @@
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
 #include "main/dll/dll_00FD.h"

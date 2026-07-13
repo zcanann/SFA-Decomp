@@ -7,6 +7,7 @@
  * scattered within +/-200 units, plays the rockfall sfx, then clears the
  * bit so the burst only fires once per trigger.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/game_object.h"

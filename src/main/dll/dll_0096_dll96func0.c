@@ -10,7 +10,8 @@
  * null). Effect constants/textures come from lbl_803175E8 and the lbl_803E12xx
  * float pool.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/savegame.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0096_dll96func0.h"

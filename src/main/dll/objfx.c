@@ -16,6 +16,7 @@
  * particle-effect resource ids; the float lbl_803DFxxx symbols are tuning
  * constants in the DLL's shared .sdata2 pool.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/objfx.h"
 #include "main/dll/viewfinder.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -23,7 +24,6 @@
 #include "main/camera_shake_api.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/expgfx_resource_api.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 #include "main/object_api.h"

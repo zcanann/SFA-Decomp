@@ -1,8 +1,8 @@
 #ifndef MAIN_DLL_DLL_001A_EFFECT1_H_
 #define MAIN_DLL_DLL_001A_EFFECT1_H_
 
+#include "main/dll/partfx_interface.h"
 #include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 
 void Effect1_func03_nop(void);
 void Effect1_release(void);

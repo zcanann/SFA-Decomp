@@ -1,4 +1,5 @@
 /* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_legacy_api.h"

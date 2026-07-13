@@ -19,7 +19,7 @@
  * The per-object extra state is WarpPadState and the placement record
  * is WarpPadPlacement (both in CF/warp_pad.h).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/game_object.h"

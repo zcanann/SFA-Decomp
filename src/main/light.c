@@ -1,4 +1,5 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
+#include "main/dll/partfx_interface.h"
 #include "dolphin/mtx/vec.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/expgfx_interface.h"

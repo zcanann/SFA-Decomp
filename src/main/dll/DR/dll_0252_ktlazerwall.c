@@ -11,6 +11,7 @@
  * tracks the firing/lightning state, with extra[1] holding the previous
  * frame's flags so sfx fire on edges.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
 #include "main/newclouds.h"

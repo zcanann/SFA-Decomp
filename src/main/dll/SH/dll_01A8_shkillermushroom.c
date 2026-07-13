@@ -28,6 +28,7 @@
  * come from the gKillerMushroomStateAnimMoves / gKillerMushroomStateAnimRates
  * tables.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -37,7 +38,6 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"

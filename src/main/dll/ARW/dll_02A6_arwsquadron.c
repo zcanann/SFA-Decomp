@@ -1,7 +1,7 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/maketex_timer_api.h"

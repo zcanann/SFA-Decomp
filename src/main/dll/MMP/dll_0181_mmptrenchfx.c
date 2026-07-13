@@ -11,6 +11,7 @@
  * position.
  */
 
+#include "main/dll/partfx_interface.h"
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

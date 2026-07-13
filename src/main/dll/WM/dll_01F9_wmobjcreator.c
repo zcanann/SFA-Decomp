@@ -9,7 +9,7 @@
  * spawnTimer from spawnPeriod + randomGetRange(0, spawnJitter); most
  * modes gate on the placement game bit (-1 = always).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"

@@ -1,4 +1,5 @@
 /* DLL 0x199 - NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
@@ -6,7 +7,6 @@
 #include "main/object_api.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/dll/dll199state_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"

@@ -1,4 +1,5 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
+#include "main/dll/partfx_interface.h"
 #include "main/proximitymine.h"
 #include "main/vecmath_distance_api.h"
 #include "main/maketex_timer_api.h"
@@ -11,7 +12,6 @@
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/obj_path.h"
-#include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"

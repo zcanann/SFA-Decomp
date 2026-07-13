@@ -1,8 +1,8 @@
 #ifndef MAIN_DLL_DLL_0022_EFFECT9_H_
 #define MAIN_DLL_DLL_0022_EFFECT9_H_
 
+#include "main/dll/partfx_interface.h"
 #include "types.h"
-#include "main/effect_interfaces.h"
 
 void Effect9_func03_nop(void);
 void Effect9_release(void);

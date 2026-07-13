@@ -10,7 +10,8 @@
  * (+0xc..). The two trailing _nop entry points are the DLL's empty
  * func00/func01 slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

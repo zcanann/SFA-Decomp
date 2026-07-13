@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/os.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"

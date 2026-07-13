@@ -10,7 +10,8 @@
  *     effect is positioned from the source object (offset 0x18..0x20) or, if
  *     none, from the PartFxSpawnParams pos fields.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

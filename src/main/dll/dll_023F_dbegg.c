@@ -24,6 +24,7 @@
  * this object's pool; the remaining FUN_ drift duplicates of the
  * 0x80200740-0x80204320 sibling handlers were dead and removed.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/object_update_list.h"
 #include "main/frame_timing.h"

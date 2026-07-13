@@ -27,7 +27,6 @@
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"

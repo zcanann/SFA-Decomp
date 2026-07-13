@@ -1,4 +1,4 @@
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"

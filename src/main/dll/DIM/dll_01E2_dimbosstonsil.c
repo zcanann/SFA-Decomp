@@ -5,6 +5,7 @@
  * and the hit-count route-phase tracking (gDIMbosstonsilRoutePhase) that controls
  * which health phase the tonsil starts in across attempts.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/mapEvent.h"
 #include "main/audio/music_api.h"
 #include "main/vecmath.h"
@@ -16,7 +17,6 @@
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/baddie_state.h"
-#include "main/effect_interfaces.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/pad.h"

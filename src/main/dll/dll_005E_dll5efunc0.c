@@ -6,7 +6,7 @@
  * no-ops. The trailing tables chain the sibling dll_5F..dll_6E stub
  * entry points.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

@@ -11,7 +11,8 @@
  * when a context object is given, else posSource+0xc). func00/func01 are the
  * DLL's empty entry/exit stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

@@ -13,12 +13,12 @@
  * a bitfield overlay byte read via the Hightop* flag structs below.
  * Entry points are dispatched from dll_0255_snowbike.c.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/checkpoint_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/maketex_api.h"

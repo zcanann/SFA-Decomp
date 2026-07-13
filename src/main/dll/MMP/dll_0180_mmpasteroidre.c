@@ -12,10 +12,10 @@
  * 0x88B when it expires.
  */
 
+#include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebit_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/objanim_update.h"

@@ -14,7 +14,8 @@
  * Sibling DLL 0xA0 (dll_00A0_dlla0func0.c) is the same builder with a
  * different table/effect id.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_009F_dll9ffunc0.h"
 #include "main/dll/dll_00A0_dlla0func0.h"

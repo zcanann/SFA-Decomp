@@ -12,6 +12,7 @@
  * game bit, and unsave their saved position. Per-seqId spin/bob motion and a
  * bounce/path-follow physics step (gPathControlInterface) run while idle.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"

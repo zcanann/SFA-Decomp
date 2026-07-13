@@ -20,7 +20,7 @@
  * Both variants cache the entry side per axis (xSide/ySide/zSide) in the
  * trigger state so the burst variant can detect a midline crossing.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"

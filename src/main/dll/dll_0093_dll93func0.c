@@ -9,7 +9,8 @@
  * position (when the caller-supplied flag bit 0 is set), then hands the
  * buffer to the mod-gfx interface's spawnEffect.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0093_dll93func0.h"
 

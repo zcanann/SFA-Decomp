@@ -13,7 +13,8 @@
  * packet (posSource + 0xc..0x14). func00/func01 are the DLL's unused
  * entry-point stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_00A7_dlla7func0.h"

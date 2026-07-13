@@ -14,13 +14,13 @@
  * registers/unregisters in object group PRESSURESWITCHFB_REMOVE_GROUP_ID and can
  * drive a linked Tricky object via its vtable when not pressed.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
-#include "main/effect_interfaces.h"
 #include "main/objtexture.h"
 #include "main/obj_group.h"
 #include "main/object_api.h"

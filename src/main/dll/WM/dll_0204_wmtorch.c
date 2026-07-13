@@ -7,11 +7,11 @@
  * around the player; free releases the flame and the optional linked
  * object.
  */
+#include "main/dll/modgfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"

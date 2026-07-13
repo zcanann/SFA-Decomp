@@ -8,7 +8,8 @@
  * position or the caller's spawn-param packet. func00/func01 are the
  * DLL's unused entry-point stubs.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0067_dll67func0.h"

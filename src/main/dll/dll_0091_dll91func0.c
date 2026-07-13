@@ -8,7 +8,8 @@
  * resource blob (gDll91Func0ResourceBlob); the position/scale constants live in a
  * shared float pool (lbl_803E11D8..lbl_803E1208).
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0091_dll91func0.h"
 

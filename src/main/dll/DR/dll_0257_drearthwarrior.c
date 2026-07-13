@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"

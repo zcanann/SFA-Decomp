@@ -9,12 +9,12 @@
  * propeller queries the parent Galleon through its anim.dll vtable
  * (offsets 0x20/0x24/0x28) for camera/state info.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/vecmath.h"
 #include "main/dll/sbpropellerstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/obj_path.h"

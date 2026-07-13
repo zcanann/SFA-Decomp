@@ -3,6 +3,7 @@
  * rotation, optionally follows a path-control surface bounce, fades over a
  * per-setup lifetime window, and emits two trail particles per frame while
  * fully opaque. */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

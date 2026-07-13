@@ -16,6 +16,7 @@
  * gWallCrawlerVariantFlags. All crawlers despawn for good once the six progress
  * game bits 0x2AA-0x2AF are set.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/object_render.h"
 #include "main/object.h"

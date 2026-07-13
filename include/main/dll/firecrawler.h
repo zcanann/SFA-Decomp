@@ -11,7 +11,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
 

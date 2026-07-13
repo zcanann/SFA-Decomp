@@ -7,6 +7,7 @@
  * NOTE: mainGetBit is used implicitly (no include); adding gamebits.h changes
  * codegen at the  cast call sites — leave it implicit.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 

@@ -12,6 +12,7 @@
  * grow/shrink lock-on animation is in staffDoGrowShrinkAnim.
  *
  */
+#include "main/dll/partfx_interface.h"
 #include "track/intersect_depth_state_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"

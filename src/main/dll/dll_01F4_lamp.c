@@ -10,6 +10,7 @@
  * latches the sequence's "A" control flag and spawns a burst of impact
  * particles. Lamp_free stops the SFX channel and releases the exp-gfx source.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render.h"

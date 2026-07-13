@@ -3,7 +3,6 @@
 
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/carryable_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/mapEventTypes.h"

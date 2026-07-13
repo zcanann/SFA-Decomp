@@ -11,13 +11,13 @@
  * decrements it and runs object sequence 0. render tints the model per phase;
  * setScale is the trigger-volume callback that cuts/harvests.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object_api.h"

@@ -19,6 +19,7 @@
  *   - Misc object teardown (objAnimFreeChildren) and a minimap timer
  *     readout (dll_3F_updateTimerReadout).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -27,7 +28,6 @@
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie_control_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"

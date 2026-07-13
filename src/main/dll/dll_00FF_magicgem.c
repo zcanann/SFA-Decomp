@@ -1,4 +1,5 @@
 /* DLL 0x00FF — magic-gem / collectible objects [80173224-801732A4) */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"

@@ -3,7 +3,6 @@
 
 #include "global.h"
 #include "ghidra_import.h"
-#include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"

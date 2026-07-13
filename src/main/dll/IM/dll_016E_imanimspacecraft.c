@@ -8,6 +8,7 @@
  * spawns engine-glow particles while the light is lit. init seeds the
  * five spacecraft game bits and the shared particle-spawn position.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/imanimspacecraftstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

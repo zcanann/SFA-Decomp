@@ -4,6 +4,7 @@
  * a sequence callback for animation events, and tracks a hit-strength counter
  * that douses the flame when depleted.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object.h"
 #include "main/vecmath.h"

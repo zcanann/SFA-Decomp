@@ -13,7 +13,6 @@
  * DrMusicContFlags cache at 0x8.
  */
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"

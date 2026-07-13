@@ -12,6 +12,7 @@
  * timeout expires; partfx_release frees them all. partfx_initialise zeroes the
  * timeout table and cached-module count.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/debug.h"
 #include "main/dll/mtxbuildarg_struct.h"

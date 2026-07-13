@@ -1,4 +1,5 @@
 /* DLL 0xE1 - wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
@@ -8,7 +9,6 @@
 #include "main/dll/hagabonstate_struct.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00E1_wispbaddie.h"

@@ -1,8 +1,8 @@
 /* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "main/objseq.h"

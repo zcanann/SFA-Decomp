@@ -8,7 +8,8 @@
  * position source (+0xC..0x14). The list is handed to the modgfx
  * interface's spawnEffect. func00/func01 are nops.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

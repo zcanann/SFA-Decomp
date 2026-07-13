@@ -3,7 +3,6 @@
 
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
 

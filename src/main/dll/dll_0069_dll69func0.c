@@ -12,7 +12,8 @@
  *     entry 2's depth; posSource supplies the spawn position.
  * func00/func01 are the table's no-op slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0069_dll69func0.h"

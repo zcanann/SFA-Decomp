@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/CF/laser.h"
 #include "main/object_render_legacy.h"

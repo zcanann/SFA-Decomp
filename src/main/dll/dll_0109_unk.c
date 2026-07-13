@@ -10,8 +10,8 @@
  * render is suppressed while broken or respawning (phase != 0), and
  * otherwise falls through to the carryable visibility test.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/carryable_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"

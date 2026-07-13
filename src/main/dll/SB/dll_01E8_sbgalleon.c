@@ -23,6 +23,7 @@
  * with those DBprotection handlers. Handlers register through the standard
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
@@ -43,7 +44,6 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/obj_group.h"

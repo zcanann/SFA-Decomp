@@ -3,6 +3,7 @@
  * implemented on the shared TrickyCurve state machine and sfxplayer: a
  * curve-driven hazard/barrier with per-state update handlers.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"

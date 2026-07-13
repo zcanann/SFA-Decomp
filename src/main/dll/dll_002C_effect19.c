@@ -12,6 +12,7 @@
  * ExpgfxSpawnConfig (include/main/expgfx_internal.h), the 0x64-byte spawn
  * request consumed by gExpgfxInterface->spawnEffect (expgfx_addremove).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/game_object.h"

@@ -11,9 +11,9 @@
  * The ARM mode is also raised by interactCallback. Camera/player/partfx
  * numeric meanings are inferred.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/model_light.h"

@@ -1,5 +1,5 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/objtexture.h"

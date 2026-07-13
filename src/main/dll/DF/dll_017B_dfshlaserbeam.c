@@ -3,7 +3,8 @@
  * sweeping/pulsing laser-beam hazard: it tracks the player, animates beam
  * geometry and texture, drives sfx channels and proximity damage.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath_distance_api.h"

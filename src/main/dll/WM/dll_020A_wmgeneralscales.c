@@ -9,12 +9,12 @@
  * 'scalessword' child object on demand. He starts hidden (phase 1
  * skips render).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/obj_link.h"
 #include "main/object.h"

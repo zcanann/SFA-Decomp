@@ -6,6 +6,7 @@
  * spawns particle fx on impact (partfx 518), and damages SharpClaw (object type 214)
  * on floor-hit via their hit-callback vtable.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dimmagicbridge_state.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
@@ -41,7 +42,6 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/audio/sfx_ids.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"

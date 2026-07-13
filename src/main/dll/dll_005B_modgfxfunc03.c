@@ -11,7 +11,8 @@
  * effectId. Returns the spawnEffect handle, or -1 if the source object or
  * its active model is missing.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/debug.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"

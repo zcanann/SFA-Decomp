@@ -2,7 +2,8 @@
  * dll82func0 (DLL 0x82) - a foodbag-family modgfx effect builder.
  * dll_82_func03 is the effect spawn; func00/func01 are the DLL's empty slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

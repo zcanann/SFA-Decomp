@@ -18,6 +18,7 @@
  * The gun caches the ridden Cloudrunner object in state[0] and reads its
  * parent Galleon's phase through the Galleon DLL's interface vtable.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/camera_shake_api.h"
 #include "main/object_render_legacy.h"

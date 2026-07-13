@@ -11,12 +11,12 @@
  * BaddieState->controlFlags bit 0x2000 gates path advance; 0x40000000 the
  * attack window; inWhirlpoolGroup holds per-instance counters/flags.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/obj_placement.h"

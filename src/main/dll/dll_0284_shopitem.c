@@ -14,6 +14,7 @@
  * Help text and the A-button buy prompt are raised from the per-frame
  * resetHitboxMode interaction bits.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"

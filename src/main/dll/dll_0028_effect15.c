@@ -10,6 +10,7 @@
  * (object fields +0x18/+0x1c/+0x20). The remaining entry points are empty
  * DLL lifecycle stubs.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"

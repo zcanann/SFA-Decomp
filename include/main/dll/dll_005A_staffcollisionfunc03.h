@@ -1,8 +1,8 @@
 #ifndef MAIN_DLL_DLL_005A_STAFFCOLLISIONFUNC03_H_
 #define MAIN_DLL_DLL_005A_STAFFCOLLISIONFUNC03_H_
 
+#include "main/dll/partfx_interface.h"
 #include "global.h"
-#include "main/effect_interfaces.h"
 
 typedef struct
 {

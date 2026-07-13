@@ -1,4 +1,5 @@
 /* DLL 0x01AA (bombplantspore) - Bomb plant spore projectile [0x801D3378-0x801D3FF4). */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"

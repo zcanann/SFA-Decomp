@@ -11,9 +11,9 @@
  *
  * FEseqobject_update kicks sequence 0 once per frame until bit 0x75 is set.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/feseqobjecteffectparams_struct.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"

@@ -10,7 +10,8 @@
  * (object 0x18/0x1c/0x20) or, if absent, by the PartFxSpawnParams packet
  * at posSource.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

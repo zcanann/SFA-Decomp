@@ -23,6 +23,7 @@
  * (CrawlerSeq12 / CrawlerSeq16 / CrawlerDescriptor). controlFlags bits
  * 0x80000000 (just-triggered) and 0x40000000 (active) gate the move dispatch.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/camera_interface.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
@@ -46,7 +47,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/gameloop_api.h"
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"

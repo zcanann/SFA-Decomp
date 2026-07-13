@@ -19,6 +19,7 @@
  * (toggle continuous emit). init lives here too; the placement is
  * defined by FXEMIT_DEF_ID 0x5A7.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/object_api.h"
 #include "main/game_object.h"

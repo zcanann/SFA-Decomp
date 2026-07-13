@@ -16,6 +16,7 @@
  * Effect20_func03_nop, Effect20_release, and Effect20_initialise are empty
  * stubs.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll_000A_expgfx.h"

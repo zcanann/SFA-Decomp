@@ -12,11 +12,11 @@
  * Tricky follows, gated by game bits on each curve. skeetla_spawnLinkedSparks
  * emits the contact-spark particles for the object Tricky is linked to.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin_api.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_state.h"

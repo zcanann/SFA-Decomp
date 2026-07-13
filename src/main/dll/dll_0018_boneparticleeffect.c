@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "main/shader_api.h"
 #include "main/dll/fxnode9_struct.h"

@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/mtx.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"

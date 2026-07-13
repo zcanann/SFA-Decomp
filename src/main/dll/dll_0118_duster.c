@@ -17,6 +17,7 @@
  * already-complete markers (completeGameBit == activeGameBit); below that the
  * complete bit lives at activeGameBit + 0x64.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
@@ -30,7 +31,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_00FE_magicplant.h"
-#include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"

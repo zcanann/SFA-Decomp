@@ -1,7 +1,7 @@
+#include "main/dll/partfx_interface.h"
 #include "dolphin/card.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
-#include "main/effect_interfaces.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"

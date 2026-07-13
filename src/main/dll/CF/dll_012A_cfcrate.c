@@ -6,6 +6,7 @@
  * update dispatches per-type motion/SFX on the romlist type id, and the
  * SeqFn handles the few types with anim-event work.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"

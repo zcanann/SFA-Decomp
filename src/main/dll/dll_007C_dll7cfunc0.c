@@ -7,7 +7,8 @@
  * spawn position is offset by the source object's (ctx) or posSource's
  * world position. func00/func01 are the DLL's empty entry-point slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 #include "main/dll/dll_007C_dll7cfunc0.h"

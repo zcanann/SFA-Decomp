@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_001F_EFFECT6_H_
 #define MAIN_DLL_DLL_001F_EFFECT6_H_
 
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 void Effect6_func03_nop(void);
 void Effect6_release(void);

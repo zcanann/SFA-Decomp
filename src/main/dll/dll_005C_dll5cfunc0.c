@@ -10,7 +10,8 @@
  * object's transform (offsets 0x18/0x1c/0x20) when one is supplied,
  * otherwise from the PartFxSpawnParams packet.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/modgfx_types.h"

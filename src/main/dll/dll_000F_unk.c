@@ -11,10 +11,10 @@
  * cross-TU .sdata2 floats (lbl_803Exxxx); the lbl_803DD4xx globals are
  * per-frame scratch carrying yaw/position between the update sub-passes.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/object_api.h"
 #include "main/dll/objfsa_romcurve.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/baddie_state.h"

@@ -8,6 +8,7 @@
  * 0x482 fragment object), and bursts (explosion fx + sfx) on contact with a
  * non-owner object. Timed variants fade their alpha out and self-free.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "dolphin/mtx/vec.h"
 #include "main/frame_timing.h"

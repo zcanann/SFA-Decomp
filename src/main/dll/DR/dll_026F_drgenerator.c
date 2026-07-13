@@ -6,6 +6,7 @@
  * also be enabled or disabled at runtime from the placement's watch
  * game bit (watchGameBit).
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"

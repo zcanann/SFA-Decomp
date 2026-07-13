@@ -6,6 +6,7 @@
  * input and the air-meter while mounted, and DIMSnowHorn1_update coordinates
  * the full per-frame tick.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "ghidra_import.h"
@@ -20,7 +21,6 @@
 #include "main/unknown/autos/placeholder_802BBC10.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_legacy.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"

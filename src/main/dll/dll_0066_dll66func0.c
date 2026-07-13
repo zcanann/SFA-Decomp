@@ -4,7 +4,8 @@
  * dll_66_func03 builds a fixed modgfx command list (GfxCmd entries off
  * lbl_803131A8) and submits it via gModgfxInterface->spawnEffect.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"

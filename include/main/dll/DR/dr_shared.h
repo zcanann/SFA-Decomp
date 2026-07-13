@@ -14,7 +14,6 @@
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
-#include "main/effect_interfaces.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"

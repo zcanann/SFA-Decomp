@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_DLL_001D_EFFECT4_H_
 #define MAIN_DLL_DLL_001D_EFFECT4_H_
 
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 void Effect4_func03_nop(void);
 void Effect4_release(void);

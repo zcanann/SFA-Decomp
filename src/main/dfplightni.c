@@ -1,3 +1,4 @@
+#include "main/dll/partfx_interface.h"
 #include "main/dfplightni.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"

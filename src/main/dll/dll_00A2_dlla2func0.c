@@ -11,7 +11,8 @@
  *     world-position override: a non-null sourceObj uses the GameObject
  *     world position, a null one uses posSource as a position packet.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A2_dlla2func0.h"

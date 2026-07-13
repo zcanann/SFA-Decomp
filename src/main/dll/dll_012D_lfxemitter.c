@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/mm.h"

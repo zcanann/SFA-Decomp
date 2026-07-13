@@ -10,8 +10,8 @@
  * or directly once its game bit becomes set, after first locating a
  * nearby object in object group 4.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/dll_019F_nwtreebrid.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"

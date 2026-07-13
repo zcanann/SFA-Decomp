@@ -10,7 +10,7 @@
  * header is anchored to the target/parent object positions when its
  * low flag bit is set. lbl_803E13xx are shared f32 effect constants.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
 

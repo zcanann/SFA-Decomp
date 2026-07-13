@@ -10,7 +10,7 @@
  * interaction bits, and per-object enable is gated by the setup's
  * activeGameBit / lockGameBit and the STAFFACTIVATED_ENABLE_GAMEBIT.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/staffflags_struct.h"
 #include "main/game_object.h"

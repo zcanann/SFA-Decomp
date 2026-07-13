@@ -13,7 +13,8 @@
  *
  * func00/func01 are the empty DLL entry-table slots for this object.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 

@@ -13,7 +13,7 @@ typedef struct WmNewCrystalState
     u8 pad69[3];
 } WmNewCrystalState;
 
-/* layout-compatible with the PartFxSpawnParams head (effect_interfaces.h) */
+/* layout-compatible with the PartFxSpawnParams head (partfx_interface.h) */
 typedef struct WmNewCrystalParticleParams
 {
     u8 pad0[6];

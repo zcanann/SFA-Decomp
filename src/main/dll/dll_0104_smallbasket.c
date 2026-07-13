@@ -23,11 +23,11 @@
  * objThrowFn_80182504 is the external entry the player code calls to launch
  * a held basket.
  */
+#include "main/dll/modgfx_interface.h"
 #include "main/dll/dll_0104_smallbasket.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
-#include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/dll_0105_largecrate.h"

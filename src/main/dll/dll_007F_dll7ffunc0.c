@@ -8,7 +8,8 @@
  * the effect track the source object's (or posSource's) world position.
  * dll_7F_func00_nop/func01_nop are the DLL's empty init/free export slots.
  */
-#include "main/effect_interfaces.h"
+#include "main/dll/modgfx_interface.h"
+#include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"

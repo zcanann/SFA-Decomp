@@ -35,7 +35,6 @@
 #include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/curve.h"
-#include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/object_render_legacy.h"

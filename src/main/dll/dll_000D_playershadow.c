@@ -10,6 +10,7 @@
  * particle effects (partfx ids 0x72/0x73/0x190) at random barycentric points
  * on the struck triangles relative to the camera.
  */
+#include "main/dll/partfx_interface.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
