@@ -193,12 +193,6 @@ u32 lbl_80320768[] = {
     0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
 };
 
-extern u16 lbl_803208A0[];
-
-u32 lbl_803208E8[] = {
-    0, 0, 0, 0, 0, 0, 0x01020000, 0, 0,
-};
-
 ObjectDescriptor23 gStaffObjDescriptor = {
     0,
     0,

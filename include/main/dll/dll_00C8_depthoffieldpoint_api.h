@@ -5,6 +5,8 @@
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
+extern u16 lbl_803208A0[];
+extern u32 lbl_803208E8[];
 
 int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 int depthoffieldpoint_getExtraSize(void);
