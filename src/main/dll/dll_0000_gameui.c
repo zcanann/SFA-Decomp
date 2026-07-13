@@ -3834,8 +3834,9 @@ static void gameUiClearItemSlots(GameUiHud* g)
     u8* rowU8;
     for (j = 0; j < 64; j++)
     {
+        int k;
         void** tex;
-        int k = j;
+        k = j;
         tex = (void**)((u8*)&g->itemTextures + k * 4);
         if (*tex != NULL)
         {
