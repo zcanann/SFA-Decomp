@@ -58,7 +58,8 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
-extern u8 lbl_802C2190[];
+__declspec(section ".rodata") u8 lbl_802C2190[16] = {
+    0x00, 0x23, 0x00, 0x69, 0x00, 0x33, 0x00, 0x64, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
