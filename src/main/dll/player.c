@@ -12242,7 +12242,7 @@ void playerAnimate(int obj, int state, f32 fv)
     Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
-    playerShadowFn_80062a30(obj);
+    playerShadowFn_80062a30((int*)obj);
     ((PlayerState*)state)->emissionState = 0;
     *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;
@@ -14544,7 +14544,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         else
         {
             tris = lbl_803DCF34;
-            verts = lbl_803DCF38;
+            verts = (int)lbl_803DCF38;
         }
         planes[0] = out[9];
         planes[1] = 0.0f;
@@ -14767,7 +14767,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     else
     {
         tbl1 = lbl_803DCF34;
-        tbl2 = lbl_803DCF38;
+        tbl2 = (int)lbl_803DCF38;
     }
     planes[0].nx = -*(f32*)((char*)d + 0x24);
     planes[0].ny = lbl_803E7EA4;

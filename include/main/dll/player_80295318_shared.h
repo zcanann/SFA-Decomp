@@ -49,9 +49,6 @@ extern void objRenderFuzz(int obj);
 extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
-extern void playerShadowFn_80062a30(int obj);
-extern int lbl_803DCF34;
-extern int lbl_803DCF38;
 extern int hitDetectFn_800658a4(int a, void* p, int flag, f32 x, f32 y, f32 z);
 extern void fn_80189C68(int a);
 extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj, int p7, int p8, int p9,
