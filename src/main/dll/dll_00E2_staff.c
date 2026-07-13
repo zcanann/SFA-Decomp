@@ -603,7 +603,9 @@ typedef struct SwipeVertex
     s16 pad12;
 } SwipeVertex;
 
-extern SwipeColorTable gStaffSwipeColorTable;
+__declspec(section ".rodata") SwipeColorTable gStaffSwipeColorTable = {{
+    0x08, 0xFF, 0xBE, 0x78, 0x08, 0xFF, 0xFF, 0x78,
+    0x08, 0xB4, 0xF0, 0xFF, 0x08, 0xAA, 0xFF, 0xAA}};
 void staffDrawSwipe(int* obj, int* swipe);
 
 void staff_hitDetectGeometry(int* obj)
