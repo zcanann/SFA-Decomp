@@ -11,7 +11,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/barrel.h"
-#include "main/dll/scarab.h"
+#include "main/dll/dll_80161130.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"

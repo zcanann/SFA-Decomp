@@ -16,7 +16,7 @@
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/scarab.h"
+#include "main/dll/dll_80161130.h"
 #include "main/dll/grimble_state.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
