@@ -24,6 +24,8 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXEnum.h"
 
+CloudActionRuntime lbl_8039AB28;
+
 extern volatile f32 gCloudActionGlareQuadSize;
 extern const f32 lbl_803DF2B4;
 extern const f32 lbl_803DF2C0;

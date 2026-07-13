@@ -23,6 +23,8 @@
 #include "main/camera.h"
 #include "dolphin/os/OSCache.h"
 
+f32 gWaterfxPendingImpactPosition[4];
+
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 #define WATERFX_POOL_SIZE    30
