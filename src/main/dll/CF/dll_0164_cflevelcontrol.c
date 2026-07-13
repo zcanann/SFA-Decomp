@@ -76,7 +76,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
                                   int musicId);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                           int musicId);
-extern void objSetSlot(u8* obj, s8 slot);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -296,7 +295,7 @@ void cflevelcontrol_init(u8* obj, u8* params)
     (*gMapEventInterface)->setObjGroupStatus(((GameObject*)obj)->anim.mapEventSlot, 0x16, 0);
     ((CfLevelControlFlags*)(sub + 0xc))->b5 = mainGetBit(GAMEBIT_CFLever0974);
     ((CfLevelControlFlags*)(sub + 0xc))->b4 = mainGetBit(GAMEBIT_CFLever0975);
-    objSetSlot(obj, 0x51);
+    objSetSlot((GameObject*)obj, 0x51);
     ((CfLevelControlFlags*)(sub + 0xc))->b3 = 1;
 }
 

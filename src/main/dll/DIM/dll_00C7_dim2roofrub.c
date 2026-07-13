@@ -192,7 +192,6 @@ extern void GCbaddieShield_update(int* obj);
 
 extern void Shield_update(int* obj);
 
-extern void objSetSlot(int* obj, int slot);
 extern f32 lbl_803E3270;
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -621,7 +620,7 @@ void dim2roofrub_init(int* obj, int* params)
 {
     int* state;
     int f4;
-    objSetSlot(obj, 0x64);
+    objSetSlot((GameObject*)obj, 0x64);
     state = ((GameObject*)obj)->extra;
     ((Dim2roofrubState*)state)->unk6A = ((Dim2roofrubPlacement*)params)->unk1A;
     ((Dim2roofrubState*)state)->unk6E = -1;

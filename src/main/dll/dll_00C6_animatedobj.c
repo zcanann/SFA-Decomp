@@ -251,7 +251,6 @@ extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 
-extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;
 extern void* ObjList_GetObjects(int* outA, int* outB);
@@ -716,7 +715,7 @@ void animatedobj_init(int* obj, int* params)
 {
     int* state;
     int f4;
-    objSetSlot(obj, 0x64);
+    objSetSlot((GameObject*)obj, 0x64);
     state = ((GameObject*)obj)->extra;
     ((AnimatedobjState*)state)->unk6A = ((AnimatedobjPlacement*)params)->unk1A;
     ((AnimatedobjState*)state)->unk6E = -1;

@@ -108,7 +108,6 @@ extern f32 lbl_803E56C8;
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void objSetSlot(void* obj, int slot);
 extern int gSbGalleonSkyTexA;
 extern int gSbGalleonSkyTexB;
 extern f32 lbl_803E580C;
@@ -556,7 +555,7 @@ void SB_Galleon_init(GameObject* obj)
     ObjHitsPriorityState* hitState;
     gSbGalleon = (u32)obj;
     ObjGroup_AddObject((u32)obj, SBGALLEON_OBJGROUP);
-    objSetSlot(obj, 0x5a);
+    objSetSlot((GameObject*)obj, 0x5a);
     obj->animEventCallback = SB_Galleon_SeqFn;
     state->posX = obj->anim.localPosX;
     state->posY = obj->anim.localPosY;

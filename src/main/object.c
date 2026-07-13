@@ -490,16 +490,16 @@ asm u8 Obj_IsLoadingLocked(void)
     blr
 }
 
-void objSetSlot(u8* obj, s8 slot)
+void objSetSlot(GameObject* obj, s8 slot)
 {
     if (slot == 0x5a)
     {
-        if ((((ObjAnimComponent*)obj)->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0)
+        if ((obj->anim.modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0)
         {
             return;
         }
     }
-    ((GameObject*)obj)->anim.activeHitboxMode = slot;
+    obj->anim.activeHitboxMode = slot;
 }
 
 void fn_8002B758(void* v)

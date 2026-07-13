@@ -9,7 +9,6 @@
 #include "main/dll/dll_02B1_cmbsrc.h"
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objSetSlot(int obj, int slot);
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
@@ -198,7 +197,7 @@ void sc_cloudrunnera_init(GameObject *obj, int def)
     f32 base;
     s32 objF4;
 
-    objSetSlot((int)obj, 0x64);
+    objSetSlot(obj, 0x64);
     seq = (obj)->extra;
     seq->gameBit = ((ScCloudrunneraPlacement*)def)->gameBit;
     seq->flags = -1;

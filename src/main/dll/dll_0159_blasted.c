@@ -17,7 +17,6 @@ extern int lbl_803DDB18;
 
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern void objSetSlot(int* obj, int slot);
 
 /* Flags every trigger/volume in the map block under the object that
  * carries the given event id: sets bits 0..1 on matching block entries
@@ -188,7 +187,7 @@ void blasted_init(GameObject* obj, int placement)
     u8 progress;
 
     state[0xc / 4] = 0;
-    objSetSlot((int*)obj, 0x51);
+    objSetSlot((GameObject*)obj, 0x51);
     targ = *(int**)&(obj)->anim.hitReactState;
     ((ObjHitsPriorityState*)targ)->flags = (s16)(((ObjHitsPriorityState*)targ)->flags | 1);
     ((BlastedState*)state)->pieceCount = (u8)setup->pieceCount;

@@ -14,6 +14,7 @@
  */
 #include "main/objanim_update.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0184_animsharpclaw.h"
 
@@ -29,7 +30,6 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
-extern void objSetSlot(void* obj, int slot);
 
 #pragma scheduling off
 #pragma dont_inline on
@@ -168,7 +168,7 @@ void animsharpclaw_init(int* obj, u8* init)
     int prevLinkCount;
 
     ((GameObject*)obj)->animEventCallback = NULL;
-    objSetSlot(obj, 0x64);
+    objSetSlot((GameObject*)obj, 0x64);
     inner = ((GameObject*)obj)->extra;
     ((AnimsharpclawState*)inner)->unk6A = ((AnimsharpclawPlacement*)init)->unk1A;
     ((AnimsharpclawState*)inner)->unk6E = -1;

@@ -89,7 +89,6 @@ extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;
 
-extern void objSetSlot(int* obj, int slot);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -298,7 +297,7 @@ void WM_Galleon_init(int* obj, WMGalleonSetup* setup)
     {
         return;
     }
-    objSetSlot(obj, 0x5a);
+    objSetSlot((GameObject*)obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = WM_Galleon_SeqFn;
     OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;

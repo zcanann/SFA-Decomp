@@ -107,7 +107,6 @@ extern void Obj_RemoveFromUpdateList(int* obj);
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
-extern void objSetSlot(s16* obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
@@ -668,7 +667,7 @@ void pushable_init(s16* obj, char* def)
     *obj = ((PushableObjectDef*)def)->rotXByte << 8;
     ((GameObject*)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement*)def)->posY;
     ObjGroup_AddObject((int)obj, PUSHABLE_OBJGROUP);
-    objSetSlot(obj, 0x5a);
+    objSetSlot((GameObject*)obj, 0x5a);
     ((GameObject*)obj)->animEventCallback = pushable_SeqFn;
     state = ((GameObject*)obj)->extra;
     state->pointCount = 0;

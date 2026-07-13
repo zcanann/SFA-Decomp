@@ -688,7 +688,6 @@ extern f32 lbl_803E8218;
 extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
-extern void objSetSlot(int obj, int slot);
 extern int gPlayerModelChainConfig;
 extern int lbl_803DC6A4;
 extern f32 lbl_803DC6C0;

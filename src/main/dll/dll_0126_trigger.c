@@ -98,7 +98,6 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 extern u8 framesThisStep;
 
 extern int getLActions();
-extern void objSetSlot(u8* obj, s8 slot);
 extern int mainGetBit(int eventId);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
@@ -151,7 +150,7 @@ void Trigger_init(u8* obj, u8* params)
     u8* state;
     f32 range;
 
-    objSetSlot(obj, 0x28);
+    objSetSlot((GameObject*)obj, 0x28);
     state = ((GameObject*)obj)->extra;
     switch (((TriggerPlacement*)params)->typeId)
     {

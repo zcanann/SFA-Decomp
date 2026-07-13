@@ -12263,7 +12263,7 @@ void objLoadPlayerFromSave(int obj)
     lbl_803DE459 = 0;
     ObjGroup_AddObject((int)obj, 0);
     ObjGroup_AddObject((int)obj, PLAYER_OBJGROUP);
-    objSetSlot(obj, 0x3c);
+    objSetSlot((GameObject*)obj, 0x3c);
     ObjMsg_AllocQueue((void*)obj, 0x14);
     ((GameObject*)obj)->animEventCallback = (void*)player_SeqFn;
     *(int*)&((GameObject*)obj)->anim.placementData = 0;
