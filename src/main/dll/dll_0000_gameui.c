@@ -2986,19 +2986,19 @@ void pauseMenuFn_80129ee0(void)
                     AudioStream_StopCurrent();
                 }
                 {
-                    char** p;
-                    for (k = 0, p = &hud->anims[0]; k < 4; p++, k++)
+                    GameObject** p;
+                    for (k = 0, p = (GameObject**)&hud->anims[0]; k < 4; p++, k++)
                     {
                         if (*p != 0)
                         {
-                            *(int*)(*(char**)(*p + 0x64) + 0x4) = 0;
-                            *(int*)(*(char**)(*p + 0x64) + 0x8) = 0;
-                            if (*(u32*)(*p + 0x4c) > 0x90000000)
+                            (*p)->anim.modelState->shadowTexture = NULL;
+                            (*p)->anim.modelState->shadowWorkBuffer = NULL;
+                            if ((u32)(*p)->anim.placementData > 0x90000000)
                             {
-                                *(u32*)(*p + 0x4c) = 0;
+                                (*p)->anim.placementData = NULL;
                             }
-                            Obj_FreeObject((GameObject*)*p);
-                            *p = 0;
+                            Obj_FreeObject(*p);
+                            *p = NULL;
                         }
                     }
                 }
@@ -3070,8 +3070,8 @@ void pauseMenuFn_80129ee0(void)
                 }
                 else
                 {
-                    u8 k;
                     int gi;
+                    u8 k;
                     for (k = 0; k < 0xc; k++)
                     {
                         gi = k;
@@ -3114,10 +3114,12 @@ void pauseMenuFn_80129ee0(void)
                 }
                 pauseMenuRunSubmenu(lbl_803DD7C4);
                 {
-                    u8 i = 0;
-                    int k = 0;
                     u8 idx;
+                    int k;
+                    u8 i;
                     int bit;
+                    i = 0;
+                    k = 0;
                     while ((bit = *(int*)((u8*)&tbl->list740[0] + (idx = k) * 4)) > -1)
                     {
                         s16 texId = 0xbf0;
@@ -3132,13 +3134,16 @@ void pauseMenuFn_80129ee0(void)
                     }
                 }
                 {
-                    int i = 0xa;
-                    int k = 0;
                     s16* it;
+                    int k;
+                    s16 texId;
+                    int i;
                     int id;
+                    i = 0xa;
+                    k = 0;
                     while ((id = *(it = (s16*)((u8*)&tbl->items[0] + (u8)k * 16))) > -1)
                     {
-                        s16 texId = 0xbf0;
+                        texId = 0xbf0;
                         if (mainGetBit(id))
                         {
                             texId = it[3];
