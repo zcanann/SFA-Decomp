@@ -1,6 +1,5 @@
 /* DLL 0x00FA (invisiblehitswitch) — Invisible hit switch object [0x8017A8EC-0x8017AC2C). */
 #include "main/dll/tFrameAnimator.h"
-#include "main/objlib.h"
 #include "main/frame_timing.h"
 
 

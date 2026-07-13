@@ -32,7 +32,6 @@
 #include "main/lightmap.h"
 #include "main/textrender.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
 #include <string.h>
 #include "main/game_object.h"
 #include "main/gamebits.h"

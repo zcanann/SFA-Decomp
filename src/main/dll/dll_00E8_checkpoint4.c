@@ -14,7 +14,7 @@
 #include "main/dll/checkpoint4.h"
 #include "main/objprint.h"
 #include "main/object_render.h"
-#include "main/objlib.h"
+#include "main/game_object.h"
 #include "main/dll/dll_00E9_setuppoint.h"
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"

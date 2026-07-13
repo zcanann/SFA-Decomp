@@ -9,7 +9,6 @@
  * (getExtraSize/getObjectTypeId/func11/setScale/free) are stubs.
  */
 #include "main/dll/dll_0125_curve_api.h"
-#include "main/objlib.h"
 
 extern f32 lbl_803E33F0;
 extern f32 lbl_803E33F4;

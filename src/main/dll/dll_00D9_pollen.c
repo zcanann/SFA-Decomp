@@ -24,7 +24,6 @@
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
 #include "main/objhits.h"
-#include "main/objlib.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"

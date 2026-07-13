@@ -31,7 +31,6 @@
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objprint.h"
-#include "main/objlib.h"
 #include "main/dll/dll_00E5_shield.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"

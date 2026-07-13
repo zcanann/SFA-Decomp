@@ -8,7 +8,6 @@
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-#include "main/objlib.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 

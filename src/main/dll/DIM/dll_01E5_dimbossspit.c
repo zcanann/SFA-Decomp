@@ -21,7 +21,6 @@
 #include "main/modellight_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/objlib.h"
 #include "main/objhits.h"
 
 #define MODEL_LIGHT_KIND_POINT 2

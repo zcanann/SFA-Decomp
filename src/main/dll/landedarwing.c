@@ -10,7 +10,6 @@
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/objlib.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 

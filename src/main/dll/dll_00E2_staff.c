@@ -32,7 +32,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
-#include "main/objlib.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
