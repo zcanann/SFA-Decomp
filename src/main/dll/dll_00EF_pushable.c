@@ -113,6 +113,34 @@ extern f64 lbl_803E3538;
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern int modelFileHeaderGetCullDistance(int hdr);
 
+int pushable_render2(GameObject* obj);
+void pushable_modelMtxFn(GameObject* obj, int modelNo);
+int pushable_func0B(GameObject* obj, int other);
+void pushable_free(int* obj);
+void pushable_update(int* obj);
+void pushable_init(s16* obj, char* def);
+
+ObjectDescriptor14 gPushableObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)pushable_init,
+    (ObjectDescriptorCallback)pushable_update,
+    (ObjectDescriptorCallback)pushable_hitDetect,
+    (ObjectDescriptorCallback)pushable_render,
+    (ObjectDescriptorCallback)pushable_free,
+    (ObjectDescriptorCallback)pushable_getObjectTypeId,
+    (ObjectDescriptorCallback)pushable_getExtraSize,
+    (ObjectDescriptorCallback)pushable_setScale,
+    (ObjectDescriptorCallback)pushable_func0B,
+    (ObjectDescriptorCallback)pushable_modelMtxFn,
+    (ObjectDescriptorCallback)pushable_render2,
+};
+
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 extern void fn_8007FE04(int* array, int* count, int value);
 extern f32 gPushableU16ScaleDenom;
