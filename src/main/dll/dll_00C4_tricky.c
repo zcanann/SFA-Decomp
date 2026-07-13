@@ -1620,9 +1620,13 @@ void Tricky_update(int obj)
         sfx2 = 0;
         for (i = 0, count = *(s8*)(cursor + 0x1b); i < count; i++)
         {
-            if (*(s8*)(cursor + i + 0x13) < 3 && *(s8*)(cursor + i + 0x13) >= 0)
+            switch (*(s8*)(cursor + i + 0x13))
             {
+            case 0:
+            case 1:
+            case 2:
                 sfx2 = 0x433;
+                break;
             }
         }
         if (sfx2 != 0)
