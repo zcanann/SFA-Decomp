@@ -3,6 +3,51 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "global.h"
+
+/* LargeCrateState.dropType selector values dispatched by
+ * largecrate_spawnDropContents. Distinct from the LARGECRATE_DROP_* object ids
+ * below, these map to (fruit 0x3d3/4/5, gas 0xb/0x3cd, pickup 0x259); 7/8
+ * spawn nothing. */
+enum LargeCrateDropType {
+    LARGECRATE_DROPTYPE_FRUIT_A = 1,
+    LARGECRATE_DROPTYPE_FRUIT_B = 2,
+    LARGECRATE_DROPTYPE_FRUIT_C = 3,
+    LARGECRATE_DROPTYPE_GAS = 5,
+    LARGECRATE_DROPTYPE_GAS_ALT = 6,
+    LARGECRATE_DROPTYPE_NONE_A = 7,
+    LARGECRATE_DROPTYPE_NONE_B = 8,
+    LARGECRATE_DROPTYPE_PICKUP = 9
+};
+
+/* The obj+0xB8 extra record for this TU. Field meanings were recovered by
+ * observing the crate break and pickup chain; unkC and unk12 are init-only. */
+typedef struct LargeCrateState {
+    s32 breakTimeBonus; /* amount passed to mapEvent addTime() on break */
+    f32 animTimer;      /* respawn/fade-in progress (1.0 -> 0.0) */
+    s16 breakTimer;     /* post-break hide/respawn countdown */
+    s16 idleTimer;      /* idle random re-roll timer */
+    s16 unkC;           /* init-only (set to 0x190) */
+    s16 brokenGameBit;  /* persistent already-broken game bit */
+    u8 unk10;
+    u8 dropType;        /* LargeCrateDropType */
+    u8 unk12;           /* init-only (from placement+0x1a) */
+    u8 damageTaken;     /* accumulated hit damage this break cycle */
+    s16 hitSfxId;       /* non-breaking hit sfx */
+    s16 explodeSfxId;   /* breaking sfx */
+    s16 spinSpeed;      /* hit-reaction spin, decays each frame */
+    u8 unk1A[0x1C - 0x1A];
+    f32 slidePhase;     /* conveyor/bob phase seed */
+    u16 slideOffset;    /* conveyor slide offset addend */
+    u8 unk22[0x24 - 0x22];
+    f32 homeX;          /* placement/home local X */
+    u8 damageThreshold; /* damage needed to break */
+    u8 unk29[0x2C - 0x29];
+} LargeCrateState;
+
+STATIC_ASSERT(offsetof(LargeCrateState, hitSfxId) == 0x14);
+STATIC_ASSERT(offsetof(LargeCrateState, homeX) == 0x24);
+STATIC_ASSERT(offsetof(LargeCrateState, damageThreshold) == 0x28);
 
 /* largecrate (DLL 0x105) tuning constants and entry points. */
 

@@ -14,7 +14,6 @@
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
-#include "main/dll/infopointstate_struct.h"
 #include "main/dll/dll_00EC_infopoint.h"
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000

@@ -28,7 +28,6 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
-#include "main/dll/largecrate_state.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
