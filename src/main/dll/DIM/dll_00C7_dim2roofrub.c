@@ -19,6 +19,7 @@
 #include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/dll_00C6_animatedobj_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/dll_0125_curve_api.h"
@@ -224,7 +225,6 @@ void staff_render(void);
 
 void staff_hitDetect(void);
 
-int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void)
 {
     return 0x140;

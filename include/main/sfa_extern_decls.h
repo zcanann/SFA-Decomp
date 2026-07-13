@@ -8,7 +8,6 @@ void ObjModel_InitResourceCaches(void);
 void ObjModel_InitScratchBuffers(void);
 void* RomList_GetLoadedPages(void);
 f32 SaveGame_getPlayTime(void);
-int animatedobj_getExtraSize(void);
 int AppleOnTree_getExtraSize(void);
 void AppleOnTree_setScale(void);
 void cMenuRotateFn_80124d80(void);
