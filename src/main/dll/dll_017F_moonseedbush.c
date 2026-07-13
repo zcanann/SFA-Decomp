@@ -41,9 +41,11 @@ STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
 #define MOONSEEDBUSH_SEED_PLANTED 1 /* planted, growing */
 #define MOONSEEDBUSH_SEED_GROWN   2 /* fully grown / triggered */
 
-extern f32 lbl_803E44D0;
-extern f32 lbl_803E44D4;
-extern f32 lbl_803E44D8;
+__declspec(section ".sdata2") f32 lbl_803E44D0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E44D4 = 0.015625f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E44D8 = 0.0f;
+#pragma explicit_zero_data off
 
 #pragma peephole off
 #pragma scheduling off
