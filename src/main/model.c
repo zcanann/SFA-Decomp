@@ -782,13 +782,13 @@ void ObjModel_InitScratchBuffers(void)
 extern void ObjModel_SetBlendChannelTargets(u8* model, int channel, int a, int b, f32 weight, int flags);
 
 #pragma dont_inline off
-void ObjModel_ClearBlendChannels(u8* model)
+void ObjModel_ClearBlendChannels(ObjModel* model)
 {
-    if (((ObjModel*)model)->file->morphTargetPtrs != NULL)
+    if (model->file->morphTargetPtrs != NULL)
     {
-        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets((u8*)model, 0, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets((u8*)model, 1, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets((u8*)model, 2, -1, -1, lbl_803DE828, 7);
     }
 }
 

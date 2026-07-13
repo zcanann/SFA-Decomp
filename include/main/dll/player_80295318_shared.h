@@ -644,7 +644,6 @@ extern f32 lbl_803E8008;
 extern s16 lbl_803DC69C;
 extern s16 lbl_803DC698;
 extern void viewFinderSetZoom(f32 zoom);
-extern int ObjModel_ClearBlendChannels();
 extern void* gPlayerChildObject;
 extern f32 lbl_803E80CC;
 extern f32 lbl_803E80D0;

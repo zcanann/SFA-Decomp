@@ -274,7 +274,6 @@ extern f32 lbl_803E3244;
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_AddLoopedObjectSound(int obj, int sfxId);
-extern int ObjModel_ClearBlendChannels(int model);
 extern int fn_80138D7C(int obj, int state);
 extern void Tricky_updateBlendChannelWeight(int obj, int state);
 extern u8 Objfsa_GetWalkGroupIndexAtPoint(void* pos, int patchInfo);
@@ -427,7 +426,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         if (((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit5 == 0)
         {
-            ObjModel_ClearBlendChannels((int)Obj_GetActiveModel((GameObject*)obj));
+            ObjModel_ClearBlendChannels(Obj_GetActiveModel((GameObject*)obj));
             ((TrickyByteFlags*)&((TrickyState*)state)->unk82E)->bit6 = 0;
         }
     }
