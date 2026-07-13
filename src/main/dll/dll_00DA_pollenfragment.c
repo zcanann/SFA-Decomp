@@ -201,7 +201,7 @@ void pollenfragment_hitDetect(GameObject* obj)
 }
 
 #pragma opt_strength_reduction on
-#pragma opt_common_subs off
+#pragma opt_common_subs on
 void pollenfragment_update(int obj)
 {
     u8* extra;
