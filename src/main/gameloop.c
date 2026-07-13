@@ -32,7 +32,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/gameloop.h"
-#include "main/sfa_extern_decls.h"
 #include "main/newshadows.h"
 #include "main/track_dolphin.h"
 #include "main/shader.h"

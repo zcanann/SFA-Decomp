@@ -24,6 +24,7 @@
 #include "main/gameloop_api.h"
 
 void gameLoop(void);
+void init(void);
 void doQueuedLoads(void);
 void askProgressiveScanMode(void);
 int return1_800202BC(void);
