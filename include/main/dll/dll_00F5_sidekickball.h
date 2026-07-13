@@ -42,9 +42,9 @@ void fn_80179678(GameObject* obj, GameObject* source);
 int SidekickBall_getExtraSize(void);
 void SidekickBall_free(int obj);
 void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void SidekickBall_update(u8* self);
+void SidekickBall_update(GameObject* obj);
 void SidekickBall_init(GameObject* obj);
-u8 trickyBallMove(u8* obj);
+u8 trickyBallMove(GameObject* obj);
 void FUN_80179ad4(void);
 void FUN_80179afc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState);
 void FUN_80179b34(double param_1,double param_2,double param_3,u64 param_4,u64 param_5
