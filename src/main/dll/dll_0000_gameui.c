@@ -3472,7 +3472,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     int div15;
     s8 cnt;
-    s16 v;
+    int v;
     int scaled;
     s16 ofs;
     f32 quarter;
@@ -3505,12 +3505,12 @@ void fn_80128A7C(u8 i, int alpha, int flag)
             s16 idv = lbl_803DD824[i].id;
             if (idv == 0x4a || idv == 0x4c)
             {
-                v = (s32)lbl_803DD748 & 0x1f;
+                v = (s16)((s32)lbl_803DD748 & 0x1f);
                 if (v & 0x10)
                 {
                     v ^= 0x1f;
                 }
-                v *= div15;
+                v = (s16)((s16)v * div15);
             }
             else
             {
