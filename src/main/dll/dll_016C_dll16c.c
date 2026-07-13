@@ -21,6 +21,8 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_016C_dll16c.h"
@@ -79,11 +81,6 @@ extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
 extern int objUpdateOpacity(int* obj);
-extern void ObjPath_GetPointWorldPosition(int* obj, int idx, f32* x, f32* y, f32* z, int e);
-extern int* ObjGroup_GetObjects(int group, int* countOut);
-
-void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
-                                    int reissueMove);
 
 void dll_16C_release(void)
 {
@@ -102,9 +99,9 @@ int dll_16C_getObjectTypeId(void)
     return 0x3;
 }
 
-void dll_16C_free(int* obj)
+void dll_16C_free(GameObject* obj)
 {
-    GameObject* child = ((GameObject*)obj)->childObjs[0];
+    GameObject* child = obj->childObjs[0];
     if (child != NULL)
         Obj_FreeObject(child);
 }
@@ -114,7 +111,7 @@ void dll_16C_free(int* obj)
 void dll_16C_hitDetect(GameObject* obj)
 {
     Dll16CState* extra = (obj)->extra;
-    void* p = extra->linkedObj;
+    GameObject* p = extra->linkedObj;
     if (p != NULL)
     {
         if ((*(int (**)(void*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
@@ -124,38 +121,38 @@ void dll_16C_hitDetect(GameObject* obj)
     }
 }
 
-void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
+void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     Dll16CState* extra;
-    int* linkedObj;
+    GameObject* linkedObj;
     int hit;
 
-    if (((GameObject*)obj)->anim.seqId != DLL16C_RENDER_GATE_SEQID)
+    if (obj->anim.seqId != DLL16C_RENDER_GATE_SEQID)
     {
         if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
         {
             if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0)
                 return;
         }
-        extra = ((GameObject*)obj)->extra;
+        extra = obj->extra;
         linkedObj = extra->linkedObj;
         hit = 0;
         if (linkedObj != NULL)
         {
-            if ((*(int (**)(int*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
+            if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
             {
                 hit = 1;
             }
         }
         if (hit != 0)
         {
-            ((GameObject*)obj)->anim.flags |= 8;
-            visible = objUpdateOpacity(linkedObj);
+            obj->anim.flags |= 8;
+            visible = objUpdateOpacity((int*)linkedObj);
             dll_16C_syncSubObjectTransform(obj, linkedObj, p1, p2, p3, p4, visible, extra->opacity, 1);
         }
         else
         {
-            ((GameObject*)obj)->anim.flags &= ~8;
+            obj->anim.flags &= ~8;
         }
         if (visible != 0 && extra->opacity != 0)
         {
@@ -164,14 +161,16 @@ void dll_16C_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             {
                 *(u8*)((char*)obj + 0x37) = extra->opacity;
             }
-            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4758);
+            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
+                                                                                        lbl_803E4758);
             ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
             *(u8*)((char*)obj + 0x37) = saved;
         }
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E4758);
+        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
+                                                                                    lbl_803E4758);
     }
 }
 
@@ -193,43 +192,43 @@ void dll_16C_init(GameObject* obj, void* placement)
 
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
-int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int* linkedObj;
-    int* extra = ((GameObject*)obj)->extra;
+    GameObject* linkedObj;
+    Dll16CState* extra = obj->extra;
     s16 ids[5];
 
-    ((Dll16CState*)extra)->opacity = 0xff;
-    linkedObj = (int*)*extra;
+    extra->opacity = 0xff;
+    linkedObj = extra->linkedObj;
     if (animUpdate->triggerCommand == 3)
     {
-        ((Dll16CState*)extra)->subObjIndex = -1;
+        extra->subObjIndex = -1;
         animUpdate->triggerCommand = 0;
     }
     *(Blob10*)ids = *(Blob10*)lbl_802C2308;
 
-    if (((Dll16CState*)extra)->subObjIndex != ((Dll16CState*)extra)->subObjIndexApplied)
+    if (extra->subObjIndex != extra->subObjIndexApplied)
     {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
+        if (obj->childObjs[0] != NULL)
         {
-            Obj_FreeObject((GameObject*)((GameObject*)obj)->childObjs[0]);
-            *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-            ((GameObject*)obj)->childCount = 0;
+            Obj_FreeObject((GameObject*)obj->childObjs[0]);
+            *(int*)&obj->childObjs[0] = 0;
+            obj->childCount = 0;
         }
         if (Obj_IsLoadingLocked())
         {
-            s8 idx = ((Dll16CState*)extra)->subObjIndex;
+            s8 idx = extra->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] = (int)Obj_SetupObject(
-                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, ((GameObject*)obj)->anim.parent);
-                ((GameObject*)obj)->childCount = 1;
+                *(int*)&obj->childObjs[0] =
+                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, obj->anim.parent);
+                obj->childCount = 1;
             }
-            ((Dll16CState*)extra)->subObjIndexApplied = ((Dll16CState*)extra)->subObjIndex;
+            extra->subObjIndexApplied = extra->subObjIndex;
         }
         else
         {
-            ((Dll16CState*)extra)->subObjIndexApplied = 0;
+            extra->subObjIndexApplied = 0;
         }
     }
 
@@ -237,28 +236,28 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     if (linkedObj != NULL && animUpdate->triggerCommand == 2)
     {
-        ((Dll16CState*)extra)->unk04 = lbl_803E4758;
-        ((Dll16CState*)extra)->snapX = ((Dll16CState*)extra)->pathPointX;
-        ((Dll16CState*)extra)->snapY = ((Dll16CState*)extra)->pathPointY;
-        ((Dll16CState*)extra)->snapZ = ((Dll16CState*)extra)->pathPointZ;
-        (*(void (**)(int*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 2);
+        extra->unk04 = lbl_803E4758;
+        extra->snapX = extra->pathPointX;
+        extra->snapY = extra->pathPointY;
+        extra->snapZ = extra->pathPointZ;
+        (*(void (**)(GameObject*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
-        if (((GameObject*)obj)->anim.modelState != NULL)
+        if (obj->anim.modelState != NULL)
         {
-            ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+            obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         animUpdate->hitVolumePair &= ~4;
         animUpdate->triggerCommand = 0;
     }
     else if (linkedObj != NULL && animUpdate->triggerCommand == 1)
     {
-        (*(void (**)(int*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 0);
+        (*(void (**)(GameObject*, int))(**(int**)((char*)linkedObj + 0x68) + 0x3c))(linkedObj, 0);
         animUpdate->triggerCommand = 0;
     }
 
     if (linkedObj != NULL)
     {
-        if ((*(int (**)(int*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
+        if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
         {
             animUpdate->hitVolumePair &= ~3;
         }
@@ -268,65 +267,64 @@ int dll_16C_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
 /* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
-void dll_16C_syncSubObjectTransform(void* dst, void* src, int p1, int p2, int p3, int p4, int visible, int opacity,
-                                    int reissueMove)
+void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
+                                    int opacity, int reissueMove)
 {
     if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
     {
         u8 saved = *(u8*)((char*)src + 0x37);
         *(u8*)((char*)src + 0x37) = opacity;
-        (*(void (**)(void*, int, int, int, int, int))(**(int**)&((GameObject*)src)->anim.dll + 0x10))(src, p1, p2, p3,
-                                                                                                      p4, -1);
+        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
         *(u8*)((char*)src + 0x37) = saved;
     }
-    ((GameObject*)dst)->anim.previousWorldPosX = ((GameObject*)dst)->anim.worldPosX;
-    ((GameObject*)dst)->anim.previousWorldPosY = ((GameObject*)dst)->anim.worldPosY;
-    ((GameObject*)dst)->anim.previousWorldPosZ = ((GameObject*)dst)->anim.worldPosZ;
-    ((GameObject*)dst)->anim.previousLocalPosX = ((GameObject*)dst)->anim.localPosX;
-    ((GameObject*)dst)->anim.previousLocalPosY = ((GameObject*)dst)->anim.localPosY;
-    ((GameObject*)dst)->anim.previousLocalPosZ = ((GameObject*)dst)->anim.localPosZ;
+    dst->anim.previousWorldPosX = dst->anim.worldPosX;
+    dst->anim.previousWorldPosY = dst->anim.worldPosY;
+    dst->anim.previousWorldPosZ = dst->anim.worldPosZ;
+    dst->anim.previousLocalPosX = dst->anim.localPosX;
+    dst->anim.previousLocalPosY = dst->anim.localPosY;
+    dst->anim.previousLocalPosZ = dst->anim.localPosZ;
     {
         f32 x, y, z;
-        (*(void (**)(void*, f32*, f32*, f32*))(**(int**)&((GameObject*)src)->anim.dll + 0x28))(src, &x, &y, &z);
-        ((GameObject*)dst)->anim.localPosX = x;
-        ((GameObject*)dst)->anim.localPosY = y;
-        ((GameObject*)dst)->anim.localPosZ = z;
+        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
+        dst->anim.localPosX = x;
+        dst->anim.localPosY = y;
+        dst->anim.localPosZ = z;
     }
-    ((GameObject*)dst)->anim.rotX = ((GameObject*)src)->anim.rotX;
-    ((GameObject*)dst)->anim.rotY = ((GameObject*)src)->anim.rotY;
-    ((GameObject*)dst)->anim.rotZ = ((GameObject*)src)->anim.rotZ;
-    ((GameObject*)dst)->anim.worldPosX = ((GameObject*)dst)->anim.localPosX;
-    ((GameObject*)dst)->anim.worldPosY = ((GameObject*)dst)->anim.localPosY;
-    ((GameObject*)dst)->anim.worldPosZ = ((GameObject*)dst)->anim.localPosZ;
-    ((GameObject*)dst)->anim.velocityX = ((GameObject*)src)->anim.velocityX;
-    ((GameObject*)dst)->anim.velocityY = ((GameObject*)src)->anim.velocityY;
-    ((GameObject*)dst)->anim.velocityZ = ((GameObject*)src)->anim.velocityZ;
+    dst->anim.rotX = src->anim.rotX;
+    dst->anim.rotY = src->anim.rotY;
+    dst->anim.rotZ = src->anim.rotZ;
+    dst->anim.worldPosX = dst->anim.localPosX;
+    dst->anim.worldPosY = dst->anim.localPosY;
+    dst->anim.worldPosZ = dst->anim.localPosZ;
+    dst->anim.velocityX = src->anim.velocityX;
+    dst->anim.velocityY = src->anim.velocityY;
+    dst->anim.velocityZ = src->anim.velocityZ;
 }
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
  * its move and fade opacity by distance to the player. */
-void dll_16C_update(int* obj)
+void dll_16C_update(GameObject* obj)
 {
-    Dll16CState* extra = ((GameObject*)obj)->extra;
+    Dll16CState* extra = obj->extra;
     s16 ids[5];
 
     *(Blob10*)ids = *(Blob10*)lbl_802C2308;
     if (extra->subObjIndex != extra->subObjIndexApplied)
     {
-        if (((GameObject*)obj)->childObjs[0] != NULL)
+        if (obj->childObjs[0] != NULL)
         {
-            Obj_FreeObject((GameObject*)((GameObject*)obj)->childObjs[0]);
-            *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-            ((GameObject*)obj)->childCount = 0;
+            Obj_FreeObject((GameObject*)obj->childObjs[0]);
+            *(int*)&obj->childObjs[0] = 0;
+            obj->childCount = 0;
         }
         if (Obj_IsLoadingLocked())
         {
             s8 idx = extra->subObjIndex;
             if (idx > 0)
             {
-                *(int*)&((GameObject*)obj)->childObjs[0] = (int)Obj_SetupObject(
-                    Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, ((GameObject*)obj)->anim.parent);
-                ((GameObject*)obj)->childCount = 1;
+                *(int*)&obj->childObjs[0] =
+                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, obj->anim.parent);
+                obj->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
         }
@@ -338,12 +336,12 @@ void dll_16C_update(int* obj)
 
     if (extra->linkedObj == NULL)
     {
-        int* objs;
+        GameObject** objs;
         int count;
         int i;
         int sel;
-        objs = ObjGroup_GetObjects(10, &count);
-        switch (((GameObject*)obj)->anim.seqId)
+        objs = (GameObject**)ObjGroup_GetObjects(10, &count);
+        switch (obj->anim.seqId)
         {
         case 365:
         case 883:
@@ -356,34 +354,33 @@ void dll_16C_update(int* obj)
         }
         for (i = 0; i < count; i++)
         {
-            if (sel == ((GameObject*)objs[i])->anim.seqId)
+            if (sel == objs[i]->anim.seqId)
             {
-                extra->linkedObj = (void*)objs[i];
+                extra->linkedObj = objs[i];
                 i = count;
             }
         }
     }
 
-    if (((GameObject*)obj)->anim.seqId == DLL16C_RENDER_GATE_SEQID || mainGetBit(GAMEBIT_IM_BikeRelated03A2) != 0)
+    if (obj->anim.seqId == DLL16C_RENDER_GATE_SEQID || mainGetBit(GAMEBIT_IM_BikeRelated03A2) != 0)
     {
-        int* sub = extra->linkedObj;
+        GameObject* sub = extra->linkedObj;
         f32 b;
         f32 blend;
         f32 a;
-        if (((GameObject*)obj)->anim.currentMove != 0x100)
+        if (obj->anim.currentMove != 0x100)
         {
             ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 0);
         }
-        (*(void (**)(int*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
+        (*(void (**)(GameObject*, f32*))(**(int**)((char*)sub + 0x68) + 0x44))(sub, &blend);
         blend = lbl_803E474C;
-        (*(void (**)(int*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
+        (*(void (**)(GameObject*, f32*, f32*))(**(int**)((char*)sub + 0x68) + 0x40))(sub, &a, &b);
         ObjAnim_AdvanceCurrentMove((int)obj, blend, (f32)(u32)framesThisStep, NULL);
         if (extra->linkedObj != NULL)
         {
             f32 fade;
-            int* player = (int*)Obj_GetPlayerObject();
-            fade =
-                Vec_distance(&((GameObject*)extra->linkedObj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
+            GameObject* player = Obj_GetPlayerObject();
+            fade = Vec_distance(&extra->linkedObj->anim.worldPosX, &player->anim.worldPosX);
             fade = (fade - lbl_803E475C) / lbl_803E4760;
             if (fade < lbl_803E4748)
             {
@@ -395,17 +392,17 @@ void dll_16C_update(int* obj)
             }
             fade = lbl_803E4758 - fade;
             extra->opacity = lbl_803E4764 * fade;
-            if (((GameObject*)obj)->anim.modelState != NULL)
+            if (obj->anim.modelState != NULL)
             {
-                ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+                obj->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         }
         else
         {
             extra->opacity = 0xff;
-            if (((GameObject*)obj)->anim.modelState != NULL)
+            if (obj->anim.modelState != NULL)
             {
-                ((GameObject*)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
+                obj->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
             }
         }
     }
