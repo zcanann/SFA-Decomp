@@ -97,7 +97,7 @@ void objFn_80198fa4(GameObject* obj, MmpGyserventPlacement* placement)
 #undef rotMtx
 }
 
-void objSeqMoveFn_80199188(GameObject* obj, int arg2)
+void objSeqMoveFn_80199188(GameObject* obj, int seqArg)
 {
     f32 distSqA;
     f32 dyB;
@@ -149,10 +149,10 @@ void objSeqMoveFn_80199188(GameObject* obj, int arg2)
     }
     leg = nearEnd ? -1 : -2;
 end:
-    objInterpretSeq((int)obj, arg2, leg, distSqB);
+    objInterpretSeq((int)obj, seqArg, leg, distSqB);
 }
 
-void objSeqFn_801992ec(GameObject* obj, int arg2)
+void objSeqFn_801992ec(GameObject* obj, int seqArg)
 {
     MmpGyserventState* state;
     f32 dx0, dy0, dz0, d0;
@@ -179,5 +179,5 @@ void objSeqFn_801992ec(GameObject* obj, int arg2)
     {
         cat = (d0 < state->nearRadiusSq) ? -1 : -2;
     }
-    objInterpretSeq((int)obj, arg2, cat, d1);
+    objInterpretSeq((int)obj, seqArg, cat, d1);
 }
