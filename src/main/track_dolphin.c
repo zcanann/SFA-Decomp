@@ -3964,10 +3964,8 @@ int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 sc
     Matrix_TransformPoint(desc->currentMatrix, x1, y1, z0, &xc, &ytmp, &zc);
     Matrix_TransformPoint(desc->currentMatrix, x1, y1, z1, &xd, &y1, &zd);
 
-    x1 = xa;
-    x0 = x1;
-    z1 = za;
-    z0 = z1;
+    x0 = x1 = xa;
+    z0 = z1 = za;
     if (xb < x1)
         x0 = xb;
     if (xb > x1)
