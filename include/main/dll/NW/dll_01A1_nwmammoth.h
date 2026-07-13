@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DIM2CONVEYOR_H_
-#define MAIN_DLL_DIM2CONVEYOR_H_
+#ifndef MAIN_DLL_NW_DLL_01A1_NWMAMMOTH_H_
+#define MAIN_DLL_NW_DLL_01A1_NWMAMMOTH_H_
 
 #include "global.h"
 #include "ghidra_import.h"
@@ -225,4 +225,4 @@ void FUN_801cf1a0(u64 param_1,double param_2,double param_3,u64 param_4,
                  short *param_9);
 int NW_tricky_getExtraSize(void);
 
-#endif /* MAIN_DLL_DIM2CONVEYOR_H_ */
+#endif /* MAIN_DLL_NW_DLL_01A1_NWMAMMOTH_H_ */

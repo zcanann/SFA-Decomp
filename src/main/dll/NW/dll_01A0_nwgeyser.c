@@ -18,7 +18,7 @@
 #include "main/objhits.h"
 #include "main/objtexture.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
-#include "main/dll/dim2conveyor.h"
+#include "main/dll/NW/dll_01A1_nwmammoth.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/audio/sfx.h"
