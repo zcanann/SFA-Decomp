@@ -20,11 +20,13 @@
 #include "main/dll/dll_00EB_siderepel.h"
 #include "main/dll/dll_00ED_collectible_api.h"
 
-extern const f32 lbl_803E3420;
-extern f32 lbl_803E3424;
-extern f32 lbl_803E3428;
-extern const f32 lbl_803E342C;
-extern f32 lbl_803E3430;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3420 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3424 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E3428 = 0.0078125f;
+__declspec(section ".sdata2") f32 lbl_803E342C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E3430 = 2.0f;
+#pragma explicit_zero_data off
 
 extern void MagicDust_getExtraSize();
 extern void MagicDust_free();

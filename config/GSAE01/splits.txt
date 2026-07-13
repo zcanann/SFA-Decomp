@@ -1256,6 +1256,8 @@ main/dll/dll_00DE_baddieinterestp.c:
 main/dll/dll_00C6_animatedobj.c:
 	.text       start:0x8016BE70 end:0x8016C4AC
 	.data       start:0x80320730 end:0x80320768
+	.sdata2     start:0x803E3228 end:0x803E3238
+	.sdata2     start:0x803E3238 end:0x803E3240
 
 main/dll/DIM/dll_00C7_dim2roofrub.c:
 	.text       start:0x8016C4AC end:0x8016CD48
@@ -1300,6 +1302,7 @@ main/dll/dll_00F7_dllf7.c:
 main/dll/dll_00E8_checkpoint4.c:
 	.text       start:0x801719E0 end:0x80171BAC
 	.data       start:0x80320B70 end:0x80320CFC
+	.sdata2     start:0x803E3420 end:0x803E3438
 	.sdata2     start:0x803E3438 end:0x803E3440
 
 main/dll/dll_00EA_sideload.c:

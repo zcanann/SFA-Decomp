@@ -93,10 +93,12 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
-extern f32 lbl_803E3228;
-extern f32 lbl_803E322C;
 extern void objRenderModel(int* obj);
-extern f32 lbl_803E3230;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3228 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E322C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E3230 = 3.1415927410125732f;
+#pragma explicit_zero_data off
 
 
 
