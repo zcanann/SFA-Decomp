@@ -20,6 +20,7 @@ STATIC_ASSERT(offsetof(MapRomList, worldZ) == 0x28);
 
 void* fn_80059334(int x, int z);
 MapRomList* mapBlockFn_800592e4(void);
+s32 getCurMapType(void);
 void mapTextureOverrideSetValue(int type, u32 key, int value);
 int objUpdateOpacity(struct GameObject* obj);
 

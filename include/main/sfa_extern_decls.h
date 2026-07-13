@@ -16,7 +16,6 @@ void fn_8004D6D8(void);
 void fn_80050F2C(void);
 u8 fn_8012DDA4(void);
 void fn_80133934(void);
-s32 getCurMapType(void);
 void init(void);
 u32 isRomListLoading(void);
 int isWidescreen(void);
