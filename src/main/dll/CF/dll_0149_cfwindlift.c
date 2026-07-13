@@ -12,7 +12,8 @@
 
 #include "main/game_object.h"
 #include "main/audio/music_api.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_message.h"
 #include "main/object_api.h"
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"

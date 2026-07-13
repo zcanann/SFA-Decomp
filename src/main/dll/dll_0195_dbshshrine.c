@@ -22,7 +22,8 @@
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_message.h"
 #include "main/audio/music_trigger_ids.h"
 
 #define DBSHSHRINE_OBJGROUP   0xb

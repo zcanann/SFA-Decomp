@@ -19,7 +19,8 @@
 #include "main/dll/tricky_api.h"
 #include "main/vecmath.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_list.h"
 
 /* object group this column joins */
 #define WMCOLUMN_OBJGROUP        4
