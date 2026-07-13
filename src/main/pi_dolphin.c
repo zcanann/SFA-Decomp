@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "dolphin/PPCArch.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXStruct.h"
@@ -6407,7 +6408,6 @@ extern void OSSleepThread(void* q);
 
 extern void GXInvalidateVtxCache(void);
 
-extern void OSReport(const char* msg, ...);
 extern int GXReadDrawSync(void);
 extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);

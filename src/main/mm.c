@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/gameplay.h"
@@ -91,7 +92,6 @@ extern char sMmFreeMemoryUsageCorruptedError[];
 extern void LCQueueWait();
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void heapFree(int region, int slotIdx);
-extern void OSReport(const char* msg, ...);
 extern int GXFlush_(u8 visible, int unused);
 extern void* OSAllocFromHeap(int heap, int size);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);

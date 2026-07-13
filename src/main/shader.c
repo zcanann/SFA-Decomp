@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "main/asset_load.h"
 #include "main/pi_dolphin_api.h"
 #include "main/debug.h"
@@ -45,7 +46,6 @@ typedef struct WarpVec
 } WarpVec;
 extern u8 lbl_80386648[];
 extern const f32 gMapBlockWorldSize;
-extern void OSReport(const char* msg, ...);
 
 #include "main/object.h"
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)

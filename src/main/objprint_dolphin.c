@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
@@ -1159,7 +1160,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 extern void modelMtxFn_8003be38(u8* hdr, int* model, f32* mtx, f32* m1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
-extern void OSReport(const char* msg, ...);
 
 #pragma optimization_level 2
 void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)

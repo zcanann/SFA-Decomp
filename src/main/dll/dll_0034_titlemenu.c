@@ -1,4 +1,5 @@
 /* DLL 0x0034 — title menu [8011611C-801166C8) */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
@@ -28,7 +29,6 @@ extern void titleScreenTextDrawFunc(void);
 static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern void printHeapStats(int mode);
-extern void OSReport(const char* msg, ...);
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern u8 gTitleMenuSelectionFade;
 extern u8 gTitleMenuSelection;

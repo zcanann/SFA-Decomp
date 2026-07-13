@@ -1,4 +1,5 @@
 /* DLL 0x255 - SnowBike [801EC7A0-801ECEC4) */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/path_control_interface.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -130,7 +131,6 @@ extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* 
 extern void fn_801EB940(int obj, u8* state);
 extern f32 PSVECMag(f32* v);
 extern void CameraShake_SetAllMagnitudes(f32 magnitude);
-extern void OSReport(const char* msg, ...);
 extern s16 gSnowBikeHitObjectIdTable[];
 extern char sSnowBikeVelDebugFmt;
 extern f32 lbl_803E5B28;

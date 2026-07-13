@@ -12,6 +12,7 @@
  *  - SHthorntail_chooseNextState: picks the next behavior state from
  *    player distance, leash radius, facing error and frustum visibility.
  */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/vecmath.h"
 #include "main/frustum.h"
@@ -39,7 +40,6 @@ extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
-extern void OSReport(const char* msg, ...);
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
 void SHthorntail_update(SHthorntailObject* obj);
 void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);

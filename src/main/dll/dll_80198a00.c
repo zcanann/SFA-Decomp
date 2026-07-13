@@ -1,5 +1,6 @@
 /* DLL 0x80198A00 - WaveAnimator model-matrix hook [80198A00-...) */
 
+#include "dolphin/os/OSReport.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -39,7 +40,6 @@ extern const char sMoonrockTriggerIdentFormat[];
 
 extern u32 objInterpretSeq(void* obj, int seqArg, s8 legCode, int distSq);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
-extern void OSReport(const char* msg, ...);
 
 void fn_80198A00(u8* obj, int seqArg)
 {

@@ -15,6 +15,7 @@
  * gAreaObjDescriptor is an unrelated "area" object table built from
  * external area_* callbacks.
  */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/dll_00F4_doorf4.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
@@ -55,7 +56,6 @@ extern const f32 lbl_803E3694;
 extern const f32 lbl_803E3698;
 extern u32 mainGetBit(int eventId);
 extern f32 timeDelta;
-extern void OSReport(const char* msg, ...);
 extern void fn_8002A5DC(int obj);
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern void PSVECNormalize(f32* src, f32* dst);

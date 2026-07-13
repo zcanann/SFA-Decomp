@@ -22,6 +22,7 @@
  * The whole DLL is exposed to the rest of the game through gRomCurveInterface;
  * it owns no game objects of its own.
  */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/objfsa.h"
@@ -116,7 +117,6 @@ extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern const f32 gRomCurveFindDistInit;
 
-extern void OSReport(const char* msg, ...);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
 extern u32 countLeadingZeros();

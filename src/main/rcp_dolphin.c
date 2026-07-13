@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "main/asset_load.h"
 #include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
@@ -2191,7 +2192,6 @@ void gxTextureFn_80052efc(void)
 #pragma opt_common_subs reset
 #undef mtx
 
-extern void OSReport(const char* msg, ...);
 extern void printHeapStats(int mode);
 extern char sRcpTexRestructStrings[];
 

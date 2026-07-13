@@ -17,6 +17,7 @@
  * Item flag bits (LINK_FLAG_*) select draw style; navigation honors
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
+#include "dolphin/os/OSReport.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
 #include "main/gametext_show_api.h"
 #include "main/hud_visibility_api.h"
@@ -78,7 +79,6 @@ extern s8 gTumbleweedBushPulseDir;             /* highlight pulse direction */
 extern s8 gTumbleweedBushInputEnabled;         /* input enabled after first update */
 extern const char* gTumbleweedBushDefaultText; /* default message text */
 extern void* saveFileSelect_saveSlots;
-extern void OSReport(const char* msg, ...);
 extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error format string */
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */
 

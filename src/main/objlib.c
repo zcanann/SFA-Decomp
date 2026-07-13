@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -22,7 +23,6 @@
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
-extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);

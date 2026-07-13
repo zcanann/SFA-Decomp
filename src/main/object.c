@@ -1,3 +1,4 @@
+#include "dolphin/os/OSReport.h"
 #include "main/dll/objpathtransform_struct.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -175,7 +176,6 @@ extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst)
 extern void Obj_BuildInverseWorldTransformMatrix(u8* obj, f32* out);
 extern void objList_remove(void* list, void* item);
 extern void PSMTXConcat(f32* a, f32* b, f32* ab);
-extern void OSReport(const char* msg, ...);
 extern void* memcpy(void* dst, const void* src, int n);
 extern void objFreeObjDef(u8* def, int flags);
 extern void Obj_RegisterObject(GameObject* obj, int b);
