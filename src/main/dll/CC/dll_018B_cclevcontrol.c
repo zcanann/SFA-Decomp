@@ -22,7 +22,7 @@
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_load_api.h"
 #include "main/gametext.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"

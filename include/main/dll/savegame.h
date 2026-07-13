@@ -8,7 +8,6 @@
 void SaveGame_setCamActionNo(s16 actionNo);
 s32 SaveGame_getCamActionNo(void);
 f32 SaveGame_getPlayTime(void);
-void clearSaveGameLoadingFlag(void);
 char* getSaveFileName(void);
 int saveFn_800e8508(void);
 void gplaySaveGame(int param);
@@ -21,8 +20,6 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 s8 SaveGame_findTransientMapBit(int mapId, int bit);
 void SaveGame_updateTransientMapBits(void);
 int saveSelect_getInfo(void* out);
-s32 isSaveGameLoading(void);
-void setSaveGameLoadingFlag(void);
 void updateSavedHealth(void);
 
 void* saveGameGetEnvState(void);
