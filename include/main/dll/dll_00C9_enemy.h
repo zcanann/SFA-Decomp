@@ -28,6 +28,15 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
                                          f32 maxVel, f32 drag);
 f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
+int enemy_getExtraSize(void);
+int enemy_getObjectTypeId(void);
+void enemy_release(void);
+void enemy_initialise(void);
+void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void enemy_hitDetect(GameObject* obj);
+void enemy_free(GameObject* obj, int flag);
+void enemy_update(int obj);
+void enemy_init(GameObject* obj, u8* setup, int flag);
 u32 FUN_8014ca90(int param_1);
 void FUN_8014caf4(int param_1, u32* param_2, float* param_3, float* param_4);
 void FUN_8014cbbc(int param_1);
