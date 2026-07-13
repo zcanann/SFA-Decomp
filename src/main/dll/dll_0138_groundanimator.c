@@ -5,6 +5,7 @@
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/audio/sfx.h"
 #include "main/dll/waveanimatorobjectdef_struct.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -48,10 +49,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 #define GROUNDANIMATOR_OBJFLAG_FREED   0x40
 #define GROUNDANIMATOR_OBJGROUP        0x31
 #define GROUNDANIMATOR_TARGET_OBJGROUP 0x4
-
-extern int ObjGroup_FindNearestObject();
-extern u64 ObjGroup_RemoveObject();
-extern u32 ObjGroup_AddObject();
 
 #pragma scheduling on
 #pragma peephole on
@@ -119,7 +116,7 @@ void groundanimator_init(int* obj, int* desc)
             vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
             vstate->flags |= 2;
         }
-        ObjGroup_AddObject(obj, GROUNDANIMATOR_OBJGROUP);
+        ObjGroup_AddObject((int)obj, GROUNDANIMATOR_OBJGROUP);
         if (*(u8*)&((WaveanimatorObjectDef*)desc)->period > 1)
         {
             *(u8*)&((WaveanimatorObjectDef*)desc)->period = 0;
@@ -183,7 +180,7 @@ void groundanimator_free(int* obj, int flag)
     {
         mm_free((void*)w->falloffBuf);
     }
-    ObjGroup_RemoveObject(obj, GROUNDANIMATOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, GROUNDANIMATOR_OBJGROUP);
 }
 
 f32 groundanimator_setScale(int* obj, int* target)
@@ -382,7 +379,7 @@ void groundanimator_update(int* obj)
         if (*(void**)&g->linkedObj == NULL)
         {
             nd = lbl_803E3F98;
-            g->linkedObj = ObjGroup_FindNearestObject(GROUNDANIMATOR_TARGET_OBJGROUP, obj, &nd);
+            g->linkedObj = ObjGroup_FindNearestObject(GROUNDANIMATOR_TARGET_OBJGROUP, (int)obj, &nd);
             near = (void*)g->linkedObj;
             if (near != NULL)
             {

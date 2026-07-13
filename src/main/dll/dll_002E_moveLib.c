@@ -21,6 +21,7 @@
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objprint.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
@@ -87,12 +88,10 @@ extern void n_rareware_release(void);
 extern void TitleScreenInit_initialise(void);
 extern void n_rareware_initialise(void);
 
-extern int ObjGroup_FindNearestObjectToPoint();
 extern int objAnimFn_80115650();
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern void normalize(f32* x, f32* y, f32* z);
-extern int ObjGroup_FindNearestObject();
 
 f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int steps)
 {
@@ -713,7 +712,8 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
             targetObj = s->lockTarget;
             target = (u32)(targetObj != NULL
                                ? targetObj
-                               : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, obj, &sv)));
+                               : (targetObj =
+                                      (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, (int)obj, (f32*)&sv)));
             if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)

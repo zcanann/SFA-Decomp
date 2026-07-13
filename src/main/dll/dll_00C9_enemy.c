@@ -11,6 +11,7 @@
 #include "main/object_render_legacy.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objprint_character_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -76,8 +77,6 @@ typedef struct
 /* camera mode DLL 0x49 = dll_0049_cameramodecombat */
 #define ENEMY_CAMMODE_COMBAT 0x49
 
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
 extern void tricky_handleDefeat(GameObject* obj, int state);
@@ -149,9 +148,6 @@ extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
 extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
-extern u32 ObjGroup_ContainsObject();
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern u32 ObjGroup_AddObject();
 extern u64 ObjLink_DetachChild();
 extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
@@ -919,7 +915,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     n = 0;
     if ((flags & 1) != 0)
     {
-        tgt = (short*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, obj, &radius);
+        tgt = (short*)ObjGroup_FindNearestObject(ENEMY_OBJGROUP, (int)obj, &radius);
         out->obj = tgt;
         if (tgt != 0)
         {
@@ -970,7 +966,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     else
     {
         radius = radius * radius;
-        arr = ObjGroup_GetObjects(ENEMY_OBJGROUP, &count);
+        arr = (short**)ObjGroup_GetObjects(ENEMY_OBJGROUP, &count);
         if (count != 0)
         {
             i = 0;
@@ -1644,7 +1640,7 @@ void enemy_free(GameObject* obj, int flag)
         hagabonMK2_stopLoopSfx((int)obj, state);
         break;
     case 0x851:
-        if ((int)ObjGroup_ContainsObject(obj, ENEMY_OBJGROUP_SECONDARY) != 0)
+        if ((int)ObjGroup_ContainsObject((u32)obj, ENEMY_OBJGROUP_SECONDARY) != 0)
         {
             ObjGroup_RemoveObject((int)obj, ENEMY_OBJGROUP_SECONDARY);
         }
@@ -2069,7 +2065,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         {
             *(int*)&((EnemyState*)state)->flags2E4 = *(int*)&((EnemyState*)state)->flags2E4 & -39;
         }
-        ObjGroup_AddObject(obj, ENEMY_OBJGROUP);
+        ObjGroup_AddObject((int)obj, ENEMY_OBJGROUP);
         state[0x2f0] = 7;
         state[0x2ef] = 2;
         if (*(void**)state == NULL)

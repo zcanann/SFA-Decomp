@@ -10,6 +10,7 @@
 #include "main/dll/player_objects.h"
 #include "main/dll/player_staff_api.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -103,8 +104,6 @@ extern f32 lbl_803E59C8;
 
 extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
-extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
@@ -303,7 +302,7 @@ int shop_getObjectTypeId(void)
 void shop_free(int* obj)
 {
     skyFn_80088c94(7, 0);
-    ObjGroup_RemoveObject(obj, SPSHOP_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, SPSHOP_OBJGROUP);
     Music_Trigger(MUSICTRIG_communicator, 0);
     mainSetBits(GAMEBIT_PlayerInShop, 0);
 }

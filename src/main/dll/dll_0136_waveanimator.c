@@ -13,6 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/mm.h"
 
@@ -53,9 +54,6 @@ extern f32 lbl_803E3F5C;   /* G ramp slope */
 extern f32 lbl_803E3F60;   /* B ramp base */
 extern f32 lbl_803E3F64;   /* B ramp slope */
 extern f32 lbl_803E3F70;   /* model scale */
-extern void ObjGroup_RemoveObject(int* obj, int group);
-extern void ObjGroup_AddObject(int* obj, int group);
-
 void fn_801923F8(int* cfgArg);
 
 void waveanimator_modelMtxFn(GameObject* obj, int a, int b, int c)
@@ -208,7 +206,7 @@ void waveanimator_free(int* obj)
         if (lbl_803DDAEC != NULL)
             mm_free(lbl_803DDAEC);
     }
-    ObjGroup_RemoveObject(obj, WAVEANIMATOR_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, WAVEANIMATOR_OBJGROUP);
 }
 
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -274,7 +272,7 @@ void waveanimator_init(int* obj, int* desc)
     {
         fn_801923F8((int*)state);
     }
-    ObjGroup_AddObject(obj, WAVEANIMATOR_OBJGROUP);
+    ObjGroup_AddObject((int)obj, WAVEANIMATOR_OBJGROUP);
     lbl_803DDAE8++;
 }
 

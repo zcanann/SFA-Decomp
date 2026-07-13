@@ -31,6 +31,7 @@
 #include "main/dll/ediblemushroom.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -93,7 +94,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int idx, void* out0, void* out1, void* out2, int flag);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
@@ -103,7 +103,6 @@ extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern void ObjGroup_AddObject(int* obj, int group);
 
 #pragma dont_inline on
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
@@ -208,7 +207,7 @@ void enemymushroom_init(EnemyMushroomObject* obj, EnemyMushroomMapData* arg, int
     {
         enemymushroom_resetToSpawn(obj, state, 0);
     }
-    ObjGroup_AddObject((int*)obj, SHKILLERMUSHROOM_OBJGROUP);
+    ObjGroup_AddObject((int)obj, SHKILLERMUSHROOM_OBJGROUP);
 }
 
 /* Per-frame state machine: dormant -> inflate -> chase -> deflate cycle,

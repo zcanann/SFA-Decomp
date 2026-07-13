@@ -21,6 +21,7 @@
 #include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/mapEventTypes.h"
@@ -242,7 +243,6 @@ void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
 #pragma scheduling off
 void mmp_moonrock_free(int obj)
 {
-    extern void ObjGroup_RemoveObject(u32 obj, int group);
     ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
     (*gCarryableInterface)->free(obj);
 }
@@ -337,7 +337,6 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
 
 void mmp_moonrock_init(GameObject* obj, int param2)
 {
-    extern u32 ObjGroup_AddObject();
     MmpMoonrockState* state = (obj)->extra;
     u8 kind;
     (obj)->objectFlags = (obj)->objectFlags | MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED;
@@ -363,7 +362,7 @@ void mmp_moonrock_init(GameObject* obj, int param2)
     }
     (*gCarryableInterface)->initAnim((void*)obj, *(int*)&(obj)->extra, 0x32);
     (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x2c))((int)state, 1);
-    ObjGroup_AddObject(obj, MMPMOONROCK_OBJGROUP);
+    ObjGroup_AddObject((int)obj, MMPMOONROCK_OBJGROUP);
     state->homeX = (obj)->anim.localPosX;
     state->homeY = (obj)->anim.localPosY;
     state->homeZ = (obj)->anim.localPosZ;

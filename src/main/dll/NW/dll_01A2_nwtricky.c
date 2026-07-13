@@ -14,6 +14,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
@@ -30,7 +31,6 @@
  * SnowHorn herd objects (seqId 0x13a)"). */
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
-extern int** ObjGroup_GetObjects(int group, int* countOut);
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5260 = 0.0f;
 #pragma explicit_zero_data off
@@ -88,7 +88,7 @@ void NW_tricky_update(int* obj)
     case 0:
         if (mainGetBit(0xd11))
         {
-            objects = ObjGroup_GetObjects(3, &count);
+            objects = (int**)ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
                 if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
@@ -130,7 +130,7 @@ void NW_tricky_update(int* obj)
                 }
             }
 
-            objects = ObjGroup_GetObjects(3, &count);
+            objects = (int**)ObjGroup_GetObjects(3, &count);
             for (i = 0, scan = objects; i < count; scan++, i++)
             {
                 if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)

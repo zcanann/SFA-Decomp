@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/frame_timing.h"
 #include "main/mapEvent.h"
 #include "main/objhits.h"
@@ -150,7 +151,6 @@ void dll_F7_hitDetect(void)
 
 void dll_F7_update(int* obj)
 {
-    extern u32 ObjGroup_FindNearestObject();
     DllF7State* state = ((GameObject*)obj)->extra;
     DllF7HitBlock blk;
     f32 radius;
@@ -224,7 +224,7 @@ void dll_F7_update(int* obj)
         {
             int* near;
             radius = lbl_803E3414;
-            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, obj, &radius);
+            near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, (int)obj, &radius);
             if (near != NULL)
             {
                 ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX =

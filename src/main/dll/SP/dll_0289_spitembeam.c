@@ -12,6 +12,7 @@
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/objtexture.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/dll/SP/dll_0289_spitembeam.h"
 
 /* slots on the shop object's interface vtable (obj+0x68) queried per item */
@@ -32,7 +33,6 @@ enum
 #define SPITEMBEAM_TARGET_OBJGROUP 9
 
 extern f32 lbl_803E5AD8;
-extern int* ObjGroup_FindNearestObject(int group, int* obj, f32* dist);
 
 int spitembeam_getExtraSize(void)
 {
@@ -67,7 +67,8 @@ void spitembeam_update(int* obj)
     searchRadius = lbl_803E5AD8;
     if (shop == NULL)
     {
-        *(int**)&((GameObject*)obj)->unkF4 = ObjGroup_FindNearestObject(SPITEMBEAM_TARGET_OBJGROUP, obj, &searchRadius);
+        *(int**)&((GameObject*)obj)->unkF4 =
+            (int*)ObjGroup_FindNearestObject(SPITEMBEAM_TARGET_OBJGROUP, (int)obj, &searchRadius);
     }
     else
     {

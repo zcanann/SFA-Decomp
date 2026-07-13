@@ -20,6 +20,7 @@
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/dll/dll_00C9_enemy.h"
 
 #define SHTHORNTAIL_OBJ_TYPE                0x4d7
@@ -39,7 +40,6 @@ extern f32 SHTHORNTAIL_TAIL_SWING_WINDUP_TIME;
 extern f32 SHTHORNTAIL_TAIL_SWING_RECOVER_TIME;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
-extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
 void SHthorntail_update(SHthorntailObject* obj);
 void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -69,7 +69,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
         }
         linkedConfigRow = (u32*)((u8*)linkedConfigRow + SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES);
     }
-    objects = ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
+    objects = (SHthorntailObject**)ObjGroup_GetObjects(SHTHORNTAIL_OBJ_GROUP, &count);
     for (index = 0; index < count; index++)
     {
         if ((objects[index]->objType == SHTHORNTAIL_OBJ_TYPE) &&

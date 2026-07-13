@@ -20,6 +20,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
@@ -86,13 +87,11 @@ extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
-extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
 extern void* ObjList_GetObjects(int* outA, int* outB);
-extern void** ObjGroup_GetObjects(int group, int* countOut);
 
 #pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)
@@ -253,7 +252,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
     }
 
     if ((coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ) == 0xe) ||
-        ((u32)ObjGroup_FindNearestObject(SKEETLA_TARGET_OBJGROUP, obj, &nearestDistance) != 0u))
+        ((u32)ObjGroup_FindNearestObject(SKEETLA_TARGET_OBJGROUP, (int)obj, &nearestDistance) != 0u))
     {
         state->pathControlFlags &= ~4;
     }
@@ -1215,7 +1214,7 @@ void trickyApplyObjectAvoidanceToStep(f32* start, f32* end, f32* guardPoint)
     ObjHitsPriorityState* hitState;
     u16 minRadius;
 
-    objects = ObjGroup_GetObjects(SIDEREPEL_OBJGROUP, &count);
+    objects = (void**)ObjGroup_GetObjects(SIDEREPEL_OBJGROUP, &count);
     for (i = 0; i < count; i++)
     {
         obj = objects[i];

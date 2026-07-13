@@ -4,6 +4,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objprint_character_api.h"
 #include "main/object.h"
 #include "main/objlib.h"
@@ -622,11 +623,10 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
 }
 void NW_mammoth_free(GameObject* obj)
 {
-    extern void ObjGroup_RemoveObject(void* obj, int group);
     void* node;
 
     node = (obj)->extra;
-    ObjGroup_RemoveObject(obj, NW_MAMMOTH_GROUP_ID);
+    ObjGroup_RemoveObject((int)obj, NW_MAMMOTH_GROUP_ID);
     if ((((NwMammothState*)node)->runtimeFlags & NW_MAMMOTH_RUNTIME_UI_MESSAGE) != 0)
     {
         (*gGameUIInterface)->airMeterShutdown();

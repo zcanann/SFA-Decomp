@@ -29,6 +29,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
@@ -82,7 +83,6 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern int ObjGroup_FindNearestObject();
 extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
 extern f32 lbl_803E2CC0;
@@ -1384,7 +1384,7 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         if (fn_80295C88(Obj_GetPlayerObject()) != 0)
         {
             range = lbl_803E2B48;
-            other = (GameObject*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, obj, &range);
+            other = (GameObject*)ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)obj, &range);
             if (other != NULL)
             {
                 s16 yaw = Obj_GetYawDeltaToObject((GameObject*)obj, other, &range);

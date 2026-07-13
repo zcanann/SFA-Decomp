@@ -7,6 +7,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
+#include "main/obj_group.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
@@ -76,8 +77,6 @@ extern const f32 lbl_803E50C0;
 extern const f32 lbl_803E50C4;
 extern const f32 lbl_803E50C8;
 
-extern u32 ObjGroup_FindNearestObject();
-
 void ecsh_cup_hitDetect(void)
 {
 }
@@ -120,7 +119,7 @@ void ecsh_cup_update(short* obj)
     buf[0] = 0;
     if (gEcShCupNearestObject == 0)
     {
-        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
+        gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, (int)obj, &dist);
     }
     if (gEcShCupNearestObject != 0 && *(short*)(gEcShCupNearestObject + 0x44) != 0)
     {

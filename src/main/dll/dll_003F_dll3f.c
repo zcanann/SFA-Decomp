@@ -15,6 +15,7 @@
 #include "main/texture.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
 #include "main/model_engine.h"
@@ -28,8 +29,6 @@
 extern f32 lbl_803E22A0;
 extern void* lbl_803DD960;
 __declspec(section ".sdata") extern char lbl_803DBBF0[];
-
-extern int ObjGroup_FindNearestObject();
 
 #pragma scheduling off
 #pragma peephole off
@@ -52,7 +51,7 @@ void dll_3F_updateTimerReadout(void* obj)
         gameTimerRunContext(obj);
     }
     player = Obj_GetPlayerObject();
-    nearest = (void*)ObjGroup_FindNearestObject(9, player, &maxDist);
+    nearest = (void*)ObjGroup_FindNearestObject(9, (int)player, &maxDist);
     if (nearest != NULL)
     {
         ((void (*)(void*, int*, int*, int*))(*(void***)((GameObject*)nearest)->anim.dll)[21])(nearest, &start, &elapsed,

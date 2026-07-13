@@ -13,6 +13,7 @@
 #include "main/frustum.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
@@ -186,10 +187,6 @@ extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
-extern int ObjGroup_FindNearestObject(int group, u32 obj, float* maxDistance);
-extern void* ObjGroup_GetObjects();
-extern u64 ObjGroup_RemoveObject();
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern u32 ObjPath_GetPointWorldPositionArray();
@@ -805,7 +802,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[6]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[7]);
     freeAndNull((void*)((TrickyState*)state)->voxBlocks[8]);
-    ObjGroup_RemoveObject(obj, TRICKY_OBJGROUP);
+    ObjGroup_RemoveObject((int)obj, TRICKY_OBJGROUP);
     (*gExpgfxInterface)->freeSource((u32)obj);
     if ((shouldKeepFlameChildren == 0) &&
         ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0))
@@ -2795,7 +2792,7 @@ void Tricky_hitDetect(GameObject* obj)
     if ((((TrickyState*)state)->statusFlags >> 5 & 1) != 0u)
     {
         {
-            int* t = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
+            int* t = (int*)ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP, count);
             i = 0;
             objects = t;
         }
@@ -3045,7 +3042,7 @@ u8* Tricky_findNearestGroup4BObject(u8* obj, TrickyState* state)
     int i;
 
     result = 0;
-    objs = ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, count);
+    objs = (int*)ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, count);
     d = getXZDistance(&((GameObject*)state->playerObj)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX);
     if ((d >= lbl_803E2538) || (state->cooldownA > lbl_803E23DC))
     {

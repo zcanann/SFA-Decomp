@@ -25,6 +25,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/dll_003B_menu.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/object.h"
@@ -265,7 +266,6 @@ extern u16 gViewFinderCamAngle;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 
-extern int ObjGroup_FindNearestObject();
 extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);
@@ -1412,7 +1412,7 @@ void hudDrawFn_80121440(void)
         int c2 = 0, c1 = 0, c0 = 0;
         f32 radius = gTrickyHudNearestObjMaxDist;
         int* near;
-        near = (int*)ObjGroup_FindNearestObject(9, Obj_GetPlayerObject(), &radius);
+        near = (int*)ObjGroup_FindNearestObject(9, (int)Obj_GetPlayerObject(), &radius);
         if (near != NULL && pauseMenuState == 0)
         {
             (*(void (*)(int*, int*, int*, int*)) *

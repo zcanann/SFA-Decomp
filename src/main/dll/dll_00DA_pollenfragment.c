@@ -20,6 +20,7 @@
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/objfx.h"
 
 #define s16toFloatLegacy(timer, duration) \
@@ -83,7 +84,6 @@ extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 
-extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
@@ -271,7 +271,7 @@ void pollenfragment_update(int obj)
         (*gPartfxInterface)
             ->spawnObject((void*)obj, (int)(((PollenFragmentExtra*)extra)->def)->auraFx, NULL, 1, -1, NULL);
     }
-    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, obj, 0);
+    nearObj = (u8*)ObjGroup_FindNearestObject((int)(((PollenFragmentExtra*)extra)->def)->targetGroup, (int)obj, 0);
     if (nearObj != NULL &&
         (!(def = ((PollenFragmentExtra*)extra)->def)->timed || ((PollenFragmentExtra*)extra)->timer < lbl_803E3164))
     {

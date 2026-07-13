@@ -11,6 +11,7 @@
 #include "main/gamebits.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/object_api.h"
+#include "main/obj_group.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -98,7 +99,6 @@ void dll_FD_hitDetect(GameObject *obj)
 
 void dll_FD_update(u16* obj)
 {
-    extern u32 ObjGroup_FindNearestObject();
     u8 mode;
     u32 found;
     u32 bitVal;
@@ -112,7 +112,7 @@ void dll_FD_update(u16* obj)
     state = (Dll14DState*)((GameObject*)obj)->extra;
     if (*(void**)&state->anchorObj == NULL)
     {
-        found = ObjGroup_FindNearestObject((u32)placement->groupId, obj, &dist);
+        found = ObjGroup_FindNearestObject((u32)placement->groupId, (int)obj, &dist);
         state->anchorObj = found;
         if (*(void**)&state->anchorObj == NULL)
         {

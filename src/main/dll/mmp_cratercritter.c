@@ -2,6 +2,7 @@
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/dll/mmp_cratercritter.h"
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -17,7 +18,6 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
 extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
-extern u8** ObjGroup_GetObjects(int kind, int* count);
 extern int trickyFn_8013b368(u8* obj, f32 dist, u8* state);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
@@ -55,7 +55,7 @@ void trickyFn_8013d8f0(u8* self, u8* state)
         return;
     }
 
-    objsList = ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, &count);
+    objsList = (u8**)ObjGroup_GetObjects(TRICKYWARP_OBJ_GROUP, &count);
     i = 0;
     objs = objsList;
     rejectDist = lbl_803E24C4;

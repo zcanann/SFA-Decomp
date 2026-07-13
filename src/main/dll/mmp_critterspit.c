@@ -17,6 +17,7 @@
  */
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/vecmath_distance_api.h"
@@ -35,7 +36,6 @@ struct CritterFlags
 extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 
-extern u8* ObjGroup_FindNearestObject(int kind, u8* self, f32* outDist);
 extern int coordsToMapCell(u8* p, f32 a, f32 b);
 int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
 {
@@ -49,7 +49,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
         result = 1;
     }
 
-    if (ObjGroup_FindNearestObject(PRESSURESWITCHFB_REMOVE_GROUP_ID, tricky, &dist) != NULL)
+    if ((u8*)ObjGroup_FindNearestObject(PRESSURESWITCHFB_REMOVE_GROUP_ID, (int)tricky, &dist) != NULL)
     {
         return 0;
     }

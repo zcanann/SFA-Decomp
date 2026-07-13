@@ -16,6 +16,7 @@
  * (unkF4 != 0) update wakes it from the saved map-event time slot.
  */
 #include "main/game_object.h"
+#include "main/obj_group.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
@@ -56,8 +57,6 @@ extern f32 lbl_803E2F1C;
 extern f32 gGrimblePathSearchMaxDist;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 int grimble_animEventCallback(void);
 void fn_801627F4(GameObject* obj);
@@ -280,7 +279,7 @@ void fn_801627F4(GameObject* obj)
     char* sub;
 
     state = obj->extra;
-    ptr = ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
+    ptr = (void*)ObjGroup_GetObjects(DFROPENODE_OBJGROUP, &count);
     if (count != 0)
     {
         sub = (char*)((GroundBaddieState*)state)->control;
