@@ -1,5 +1,4 @@
 /* DLL 0x0138 (groundanimator) - Ground animator object [0x80193100-0x80193DBC). */
-#include "main/dll/mmp_moonrock.h"
 #include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"

@@ -7,7 +7,7 @@
  * just forwards a fixed scale to objRenderModelAndHitVolumes when visible.
  * init guards on state == NULL before writing (absent in texscroll2).
  */
-#include "main/dll/mmp_moonrock.h"
+#include "main/dll/dll_0134_texscroll2.h"
 #include "main/dll/VF/vf_shared.h"
 
 int texscroll_getExtraSize(void)

@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
-#include "main/dll/mmp_moonrock.h"
+#include "main/dll/dll_0134_texscroll2.h"
 #include "main/dll/VF/vf_shared.h"
 
 extern f32 lbl_803E3F30;

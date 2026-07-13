@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_DLL_182_H_
-#define MAIN_DLL_DLL_182_H_
+#ifndef MAIN_DLL_DLL_0134_TEXSCROLL2_H_
+#define MAIN_DLL_DLL_0134_TEXSCROLL2_H_
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
@@ -109,4 +109,4 @@ void texscroll2_update(TexScroll2Object *obj);
 void texscroll2_init(TexScroll2Object *obj, TexScrollPlacement *placement, int loadFlags);
 void texscroll_init(TexScrollObject *obj, TexScrollPlacement *placement, int loadFlags);
 
-#endif /* MAIN_DLL_DLL_182_H_ */
+#endif /* MAIN_DLL_DLL_0134_TEXSCROLL2_H_ */

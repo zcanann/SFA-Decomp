@@ -18,7 +18,7 @@
  *  - 0x08/0x0C/0x10 f32: placement position (187/350/178 dll sites +
  *    engine consensus)
  *  - 0x14 s32 mapId: 157 dll sites; name follows the established
- *    TexScrollPlacement convention (mmp_moonrock.h)
+ *    TexScrollPlacement convention (dll_0134_texscroll2.h)
  * Everything from 0x18 on is class-specific - per-family
  * <Family>Placement structs carry those fields, either by embedding
  * this head (struct { ObjPlacement head; ... }) or by mirroring with
