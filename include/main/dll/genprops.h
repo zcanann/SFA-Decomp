@@ -51,7 +51,6 @@ void FUN_8016e668(u32 param_1);
 void FUN_8016e7e8(int param_1);
 void FUN_8016e834(int param_1);
 void FUN_8016e858(int param_1);
-void staff_func0E(void);
 void FUN_8016ecf8(int param_1);
 void FUN_8016edac(void);
 void FUN_8016edb0(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
@@ -109,15 +108,4 @@ extern ObjectDescriptor dll_F7;
 
 int KaldaChompSpit_getObjectTypeId(void);
 int KaldaChompSpit_getExtraSize(void);
-void staff_free(int* obj);
-void staff_modelMtxFn(int* obj, int p4, int p5);
-s16 staff_getHitReactValue(int* obj);
-s32 staff_getSwipeTextureIndex(int* obj);
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-void staff_update(int* obj);
-void staff_init(int* obj);
-void staff_release(void);
-void staff_initialise(void);
-void staff_hitDetectGeometry(int* obj);
-
 #endif /* MAIN_DLL_GENPROPS_H_ */

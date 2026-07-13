@@ -216,22 +216,10 @@ extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
 extern f32 gDim2RoofRubPi;
 
-void staff_func0F(void);
-
-void staff_func0B(void);
-
-void staff_setScale(void);
-
-void staff_render(void);
-
-void staff_hitDetect(void);
-
 int dim2roofrub_getExtraSize(void)
 {
     return 0x140;
 }
-int staff_getExtraSize(void);
-int staff_getObjectTypeId(void);
 void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
