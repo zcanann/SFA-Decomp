@@ -15,7 +15,8 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_path.h"
 #include "main/gameplay_runtime.h"
 
 typedef struct TreeBirdState

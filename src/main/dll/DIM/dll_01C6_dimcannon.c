@@ -27,7 +27,9 @@
 #include "main/dll/tricky_api.h"
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_message.h"
+#include "main/obj_path.h"
 
 #define PAD_BUTTON_A                         0x100
 #define PAD_BUTTON_B                         0x200

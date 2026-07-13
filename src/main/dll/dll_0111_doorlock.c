@@ -17,7 +17,8 @@
  */
 #include "main/game_object.h"
 #include "main/objprint_dolphin.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_trigger.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0111_doorlock.h"
 #include "main/gamebits.h"

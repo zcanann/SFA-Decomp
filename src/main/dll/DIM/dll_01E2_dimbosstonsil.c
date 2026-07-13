@@ -22,7 +22,8 @@
 #include "main/pad.h"
 #include "main/sky_api.h"
 #include "main/frame_timing.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_path.h"
 
 #define DIMBOSSTONSIL_OBJGROUP 3
 #define DIMBOSSTONSIL_PARTFX   0x4bd

@@ -4,7 +4,8 @@
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
-#include "main/objlib.h"
+#include "main/obj_group.h"
+#include "main/obj_trigger.h"
 #include "main/objseq.h"
 
 #define DREARTHCAL_OBJFLAG_RENDERED 0x800
