@@ -19,7 +19,6 @@
 #include "main/gameplay_runtime.h"
 #include "dolphin/vi.h"
 #include "main/pad.h"
-#include "main/sfa_extern_decls.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

@@ -32,7 +32,6 @@
 #include "main/objlib.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/dll_00ED_collectible_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
