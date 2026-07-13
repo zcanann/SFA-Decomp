@@ -21,7 +21,6 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gameplay_runtime.h"
-#include "main/gameloop.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

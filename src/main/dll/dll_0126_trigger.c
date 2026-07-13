@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/frame_timing.h"
+#include "main/gameloop_api.h"
 #include "main/map_load.h"
 #include "main/object.h"
 #include "main/dll/player_api.h"
@@ -106,7 +107,6 @@ extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
 extern void gameTextFn_80125ba4(int id);
 extern void envFxFn_800887cc(void);
-extern int return1_800202BC(void);
 extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);

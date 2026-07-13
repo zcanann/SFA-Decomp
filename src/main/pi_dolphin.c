@@ -6794,7 +6794,6 @@ void logGpuHang(void)
     }
 }
 
-extern void setShouldResetNextFrame(int v);
 extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;

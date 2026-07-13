@@ -10,6 +10,7 @@
 #include "main/effect_interfaces.h"
 #include "main/texture.h"
 #include "main/game_object.h"
+#include "main/gameloop_api.h"
 #include "main/object.h"
 #include "main/mapEvent.h"
 #include "main/modellight_api.h"
@@ -1838,7 +1839,6 @@ doneBank1:
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern u8 lbl_803DCA40;
-extern void mapReload(void);
 extern void blankScreen(int);
 
 void loadNextMap(void)

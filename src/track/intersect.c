@@ -16,6 +16,7 @@
 #include "main/sky_interface.h"
 #include "main/textrender_api.h"
 #include "main/gameplay_runtime.h"
+#include "main/gameloop_api.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
@@ -6356,7 +6357,6 @@ void showMemCardError(u8 err)
     extern void gameTextShowStr(int str, int x, int y, int yPos);
     extern int GXFlush_(u8 visible, int unused);
 
-    extern void setGameState(int state);
     extern f32 fn_80293AC4(int v);
 
     int opts[8];

@@ -6,8 +6,12 @@
 #include "main/hud_visibility_api.h"
 
 int getGameState(void);
+int return1_800202BC(void);
 void fn_8001FE90(void);
 void checkReset(void);
+void setShouldResetNextFrame(int reset);
+void mapReload(void);
+void setGameState(int state);
 void cutsceneExit(void);
 void cutsceneEnterExit(int entering, int affectSounds);
 void cutsceneFadeInOut(int mode);
