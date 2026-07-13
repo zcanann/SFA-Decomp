@@ -36,7 +36,9 @@ typedef struct AppleOnTreeState
                            0x7000a handler reads *param as this gamebit id: bit>0 ->
                            mainGetBit(bit) gates + mainSetBits(bit,1), else the no-bit
                            grab path; -1 = no gamebit (player.c). */
-    s16 unk5E;
+    s16 pickupMsgValue; /* 0x5E: payload word of the grab-trigger descriptor; the
+                           player's 0x7000a handler copies *(param+2) into its
+                           interaction slot (matches collectible/ediblemushroom). */
     f32 unk60;
 } AppleOnTreeState;
 

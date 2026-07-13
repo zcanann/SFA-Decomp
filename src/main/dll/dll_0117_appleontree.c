@@ -192,7 +192,7 @@ void appleontree_handleCollectableHit(GameObject* obj)
     {
         (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
         ((AppleOnTreeState*)state)->triggerGameBit = -1;
-        ((AppleOnTreeState*)state)->unk5E = 0;
+        ((AppleOnTreeState*)state)->pickupMsgValue = 0;
         ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
         mainSetBits(GAMEBIT_SawApple, 1);
