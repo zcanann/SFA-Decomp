@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_IM_IMICICLE_H_
-#define MAIN_DLL_IM_IMICICLE_H_
+#ifndef MAIN_DLL_DLL_0166_EXPLODED_H_
+#define MAIN_DLL_DLL_0166_EXPLODED_H_
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
@@ -107,60 +107,6 @@ STATIC_ASSERT(offsetof(ExplodedObject, modelData) == offsetof(ObjAnimComponent, 
 STATIC_ASSERT(offsetof(ExplodedObject, objectTypeTag) == offsetof(ObjAnimComponent, bankIndex));
 STATIC_ASSERT(offsetof(ExplodedObject, state) == 0xB8);
 
-void cfforcefield_free(void);
-void cfforcefield_render(void);
-void cfforcefield_hitDetect(void);
-int cfforcefield_getExtraSize(void);
-int cfforcefield_getObjectTypeId(void);
-void cfforcefield_update(u8* obj);
-void cfforcefield_init(s16* obj, void* data);
-void cfforcefield_release(void);
-void cfforcefield_initialise(void);
-
-int SlidingDoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState* animUpdate);
-int SlidingDoor_getExtraSize(void);
-int SlidingDoor_getObjectTypeId(void);
-void SlidingDoor_free(void);
-void SlidingDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void SlidingDoor_hitDetect(void);
-void SlidingDoor_update(u8* obj);
-void SlidingDoor_init(u8* obj, u8* data);
-void SlidingDoor_release(void);
-void SlidingDoor_initialise(void);
-
-void attractor_getTarget(u8* obj, void** out);
-int attractor_setScale(int* obj);
-int attractor_getExtraSize(void);
-int attractor_getObjectTypeId(void);
-void attractor_free(int x);
-void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void attractor_hitDetect(void);
-void attractor_update(void);
-void attractor_init(s16* obj, void* data);
-void attractor_release(void);
-void attractor_initialise(void);
-
-int cfmagicwall_getExtraSize(void);
-int cfmagicwall_getObjectTypeId(void);
-void cfmagicwall_free(void);
-void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void cfmagicwall_hitDetect(void);
-void cfmagicwall_update(GameObject* obj);
-void cfmagicwall_init(s16* dst, void* src);
-void cfmagicwall_release(void);
-void cfmagicwall_initialise(void);
-
-int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
-int cflevelcontrol_getExtraSize(void);
-int cflevelcontrol_getObjectTypeId(void);
-void cflevelcontrol_free(int param_1);
-void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void cflevelcontrol_hitDetect(void);
-void cflevelcontrol_update(GameObject* obj);
-void cflevelcontrol_init(u8* obj, u8* params);
-void cflevelcontrol_release(void);
-void cflevelcontrol_initialise(void);
-
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter,
                               ExplodedObjectState* state);
 void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data);
@@ -176,26 +122,4 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra);
 void exploded_release(void);
 void exploded_initialise(void);
 
-/* Legacy Ghidra split helpers kept until their callers are restructured. */
-void FUN_801a3ac0(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8, u32 param_9);
-void FUN_801a3cc4(u16* param_1, int param_2);
-void FUN_801a3ee8(void);
-void FUN_801a4290(u16* param_1, int param_2);
-void FUN_801a42e8(u32 param_1, u32 param_2, ObjAnimUpdateState* animUpdate);
-void FUN_801a44f8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801a45d0(short* param_1, u32* param_2);
-void FUN_801a45f8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801a4620(u16* param_1, int param_2);
-void FUN_801a466c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801a4694(u16* param_1);
-u32 FUN_801a4810(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7, u64 param_8,
-                 u32 param_9, u32 param_10, ObjAnimUpdateState* animUpdate);
-void FUN_801a4924(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-void FUN_801a494c(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8);
-void FUN_801a522c(int param_1);
-void FUN_801a5230(u32 param_1, u32 param_2, int param_3, float* param_4);
-void FUN_801a5420(u16* param_1, int param_2, int param_3);
-
-#endif /* MAIN_DLL_IM_IMICICLE_H_ */
+#endif /* MAIN_DLL_DLL_0166_EXPLODED_H_ */

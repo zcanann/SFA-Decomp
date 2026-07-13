@@ -2,7 +2,7 @@
 #include "main/dll/drexplodable_types.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
-#include "main/dll/IM/IMicicle.h"
+#include "main/dll/dll_0166_exploded.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/gameplay_runtime.h"

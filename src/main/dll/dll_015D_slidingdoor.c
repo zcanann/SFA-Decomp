@@ -23,7 +23,6 @@ STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
 STATIC_ASSERT(offsetof(DrExplodableState, children) == 0x690);
 STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 
-#include "main/dll/IM/IMicicle.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
