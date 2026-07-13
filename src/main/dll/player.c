@@ -14,6 +14,7 @@
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/CF/staffactivated_helpers.h"
 #include "main/dll/viewfinder.h"
 #include "main/sky_api.h"
 #include "main/object_render_legacy.h"
@@ -11319,11 +11320,11 @@ int playerState34(GameObject* obj, int state)
         break;
     default:
         ObjAnim_SetCurrentMove((int)obj, 0xdd, k, 0);
-        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
-                                               (char*)obj + 0x14);
+        staffactivated_calcInteractionTargetXZ(gPlayerInteractTarget, &((GameObject*)obj)->anim.localPosX,
+                                               &((GameObject*)obj)->anim.localPosZ);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
         ((PlayerState*)state)->baddie.moveEventFlags = 0;
-        inner->targetYaw = *(s16*)((char*)gPlayerInteractTarget);
+        inner->targetYaw = gPlayerInteractTarget->anim.rotX;
         inner->yaw = inner->targetYaw;
         if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
@@ -13466,7 +13467,6 @@ int playerState25(int obj, int state)
 }
 
 extern int gameBitDecrement(int bit);
-extern u8 objGetByteParam1C(int obj);
 extern f32 lbl_803E8054;
 
 int playerState08(GameObject* obj, int state, f32 fv)
@@ -13565,10 +13565,10 @@ int playerState08(GameObject* obj, int state, f32 fv)
             for (i = 0; i < cnt41; i++)
             {
                 int o = *list;
-                gPlayerInteractTarget = o;
+                gPlayerInteractTarget = (GameObject*)o;
                 if ((*(u8*)((char*)o + 0xaf) & 4) != 0 && (*(u8*)((char*)o + 0xaf) & 0x10) == 0)
                 {
-                    switch ((u8)objGetByteParam1C(o))
+                    switch ((u8)objGetByteParam1C(gPlayerInteractTarget))
                     {
                     case 2:
                         setAButtonIcon(2);
@@ -15850,7 +15850,7 @@ void playerCastSpell(int a, int b, int c)
         gPlayerSelectedItem = GAMEBIT_STAFF_ABILITY_FREEZE_BLAST;
         break;
     case GAMEBIT_STAFF_ABILITY_STAFF_BOOSTER:
-        gPlayerInteractTarget = *(int*)&((PlayerState*)b)->cameraTargetObject;
+        gPlayerInteractTarget = ((PlayerState*)b)->cameraTargetObject;
         (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(a, b, 0x32);
         *(int*)&((PlayerState*)b)->baddie.unk304 = (int)fn_802994A4;
         break;
@@ -16739,7 +16739,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? SFXTRIG_impact3 : SFXTRIG_literun116));
                 lbl_803DE460 = (f32)(int)randomGetRange(0xa, 0x12);
             }
-            switch (cfPrisonGuard_getPullRateMode((GameObject*)(gPlayerInteractTarget)))
+            switch (cfPrisonGuard_getPullRateMode(gPlayerInteractTarget))
             {
             case 2:
                 lbl_803DE488 = lbl_803DE488 + lbl_803E7F50;
@@ -16778,7 +16778,7 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
         prog = (f32)count / lbl_803E7F64;
         if (prog >= lbl_803E7F68)
         {
-            fn_80189C68(gPlayerInteractTarget);
+            fn_80189C68((int)gPlayerInteractTarget);
             Sfx_PlayFromObject(obj, (u16)(inner->characterId == 0 ? SFXTRIG_impact3 : SFXTRIG_literun116));
             ObjAnim_SetCurrentMove(obj, 0xd0, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F6C;
@@ -16821,10 +16821,10 @@ int playerStateStaffLiftRock(int obj, int state, f32 fv)
     default:
         ObjAnim_SetCurrentMove(obj, 0xab, lbl_803E7EA4, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F40;
-        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget),
+        staffactivated_calcInteractionTargetXZ(gPlayerInteractTarget,
                                                &((GameObject*)obj)->anim.localPosX,
                                                &((GameObject*)obj)->anim.localPosZ);
-        inner->targetYaw = *(s16*)gPlayerInteractTarget + 0x8000;
+        inner->targetYaw = gPlayerInteractTarget->anim.rotX + 0x8000;
         inner->yaw = inner->targetYaw;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {
@@ -17016,10 +17016,10 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         ObjAnim_SetCurrentMove((int)obj, 0x4, zero, 0);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F84;
         lbl_803DE494 = obj->anim.localPosY;
-        inner->targetYaw = *(s16*)gPlayerInteractTarget;
+        inner->targetYaw = gPlayerInteractTarget->anim.rotX;
         inner->yaw = inner->targetYaw;
-        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (f32*)((char*)obj + 0xc),
-                                               (f32*)((char*)obj + 0x14));
+        staffactivated_calcInteractionTargetXZ(gPlayerInteractTarget, &((GameObject*)obj)->anim.localPosX,
+                                               &((GameObject*)obj)->anim.localPosZ);
         fn_802AB5A4(obj, (int)inner, 7);
         *(int*)((char*)state + 0x4) |= 0x8000000;
         fromVec[0] = obj->anim.localPosX;
@@ -17371,7 +17371,7 @@ int playerState35(GameObject* obj, int state)
             ((PlayerState*)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject((int)obj, SFXTRIG_staff_rapidfire);
-            cfPrisonGuard_setGameBitMirror((GameObject*)(gPlayerInteractTarget), 0);
+            cfPrisonGuard_setGameBitMirror(gPlayerInteractTarget, 0);
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -17401,7 +17401,7 @@ int playerState35(GameObject* obj, int state)
             ((PlayerState*)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject((int)obj, SFXTRIG_staff_rapidfire);
-            cfPrisonGuard_setGameBitMirror((GameObject*)(gPlayerInteractTarget), 1);
+            cfPrisonGuard_setGameBitMirror(gPlayerInteractTarget, 1);
         }
         if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
         {
@@ -17428,11 +17428,11 @@ int playerState35(GameObject* obj, int state)
         {
             ObjAnim_SetCurrentMove((int)obj, 0xe0, lbl_803E7EA4, 0);
         }
-        staffactivated_calcInteractionTargetXZ((GameObject*)(gPlayerInteractTarget), (char*)obj + 0xc,
-                                               (char*)obj + 0x14);
+        staffactivated_calcInteractionTargetXZ(gPlayerInteractTarget, &((GameObject*)obj)->anim.localPosX,
+                                               &((GameObject*)obj)->anim.localPosZ);
         ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F40;
         ((PlayerState*)state)->baddie.moveEventFlags = 0;
-        inner->targetYaw = *(s16*)gPlayerInteractTarget;
+        inner->targetYaw = gPlayerInteractTarget->anim.rotX;
         inner->yaw = inner->targetYaw;
         if (gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
         {

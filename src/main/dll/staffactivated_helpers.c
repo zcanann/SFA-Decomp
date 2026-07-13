@@ -130,9 +130,9 @@ void cfPrisonGuard_setGameBitMirror(GameObject* obj, u8 flag)
     }
 }
 
-u32 cfPrisonGuard_isGameBitMirrorSet(int* obj)
+int cfPrisonGuard_isGameBitMirrorSet(GameObject* obj)
 {
-    return (((StaffActivatedState*)((GameObject*)obj)->extra)->flags >> 5) & 1;
+    return (((StaffActivatedState*)obj->extra)->flags >> 5) & 1;
 }
 
 void staffactivated_spawnMapEventDebris(GameObject* obj)

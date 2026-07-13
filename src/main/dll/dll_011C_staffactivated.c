@@ -115,22 +115,22 @@ void staffactivated_calcInteractionTargetXZ(GameObject* obj, f32* outX, f32* out
     }
 }
 
-u32 cfPrisonGuard_getLiftHeight(int* obj)
+u32 cfPrisonGuard_getLiftHeight(GameObject* obj)
 {
-    StaffActivatedState* state = ((GameObject*)obj)->extra;
+    StaffActivatedState* state = obj->extra;
     return state->liftHeight;
 }
 
-void cfPrisonGuard_setLiftHeight(int* obj, int height)
+void cfPrisonGuard_setLiftHeight(GameObject* obj, int height)
 {
-    StaffActivatedState* state = ((GameObject*)obj)->extra;
+    StaffActivatedState* state = obj->extra;
     state->liftHeight = height;
     state->liftReset = 1;
 }
 
-u8 objGetByteParam1C(int* obj)
+u8 objGetByteParam1C(GameObject* obj)
 {
-    StaffActivatedSetup* setup = (StaffActivatedSetup*)((GameObject*)obj)->anim.placementData;
+    StaffActivatedSetup* setup = (StaffActivatedSetup*)obj->anim.placementData;
     return setup->mode;
 }
 
