@@ -18,7 +18,7 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
 extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
 extern u8** ObjGroup_GetObjects(int kind, int* count);
-extern int trickyFn_8013b368(u8* arg1, f32 dist, u8* arg2);
+extern int trickyFn_8013b368(u8* obj, f32 dist, u8* state);
 extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
 #pragma peephole on

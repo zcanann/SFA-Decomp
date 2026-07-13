@@ -215,7 +215,7 @@ void dll_200_init(int* obj, int* arg)
 }
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
+int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, int unused2)
 {
     u8 mode;
     int i;
@@ -227,7 +227,7 @@ int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, i
     case 0:
         break;
     case 1:
-        dll_200_unlockFireBlasterSpell((int*)obj, unused, animUpdate, arg3);
+        dll_200_unlockFireBlasterSpell((int*)obj, unused, animUpdate, unused2);
         break;
     case 2:
         break;
@@ -258,7 +258,7 @@ int dll_200_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate, i
 #pragma opt_strength_reduction reset
 
 #pragma opt_strength_reduction off
-int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int arg3)
+int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* animUpdate, int unused2)
 {
     int state;
     int player;

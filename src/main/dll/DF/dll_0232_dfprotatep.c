@@ -269,12 +269,12 @@ int sfxplayer_getObjectTypeId(void)
     return 0x0;
 }
 
-void sfxplayer_free(int obj, int arg1)
+void sfxplayer_free(int obj, int flag)
 {
     u32* handles;
     s16 i;
 
-    if (arg1 == 0)
+    if (flag == 0)
     {
         handles = (u32*)gSfxplayerEffectHandles;
         for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++)

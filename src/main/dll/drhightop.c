@@ -302,7 +302,7 @@ void SnowBike_onSeqFree(int* obj)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->worldPosZ = ((GameObject*)obj)->anim.worldPosZ;
 }
 
-int SnowBike_SeqFn(short* obj, int arg2, ObjSeqState* seq)
+int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq)
 {
     typedef struct HightopMatrixSeed
     {

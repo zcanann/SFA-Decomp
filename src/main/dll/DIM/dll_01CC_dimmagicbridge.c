@@ -74,13 +74,13 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
     (obj)->anim.alpha = state->segmentGlow[1];
 }
 
-void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
+void dimmagicbridge_scrollTextureChannels(int obj, u8* extra)
 {
-    DimMagicBridgeState* state = (DimMagicBridgeState*)obj;
+    DimMagicBridgeState* state = (DimMagicBridgeState*)extra;
     ObjTextureRuntimeSlot* tex;
     s32 phase;
 
-    tex = objFindTexture((GameObject*)arg1, 0, 0);
+    tex = objFindTexture((GameObject*)obj, 0, 0);
     tex->offsetT += 0x14;
     if (tex->offsetT > 10000)
     {
@@ -91,7 +91,7 @@ void dimmagicbridge_scrollTextureChannels(int arg1, u8* obj)
     {
         tex->offsetS -= 10000;
     }
-    tex = objFindTexture((GameObject*)arg1, 1, 0);
+    tex = objFindTexture((GameObject*)obj, 1, 0);
     tex->offsetT += 0x1e;
     if (tex->offsetT > 10000)
     {

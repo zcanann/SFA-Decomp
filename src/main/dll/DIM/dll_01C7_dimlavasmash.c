@@ -26,7 +26,7 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 extern f32 lbl_803E48F8;
 
-extern int mapBlockFn_800606ec(int arg1, int idx);
+extern int mapBlockFn_800606ec(int map, int idx);
 extern int mapBlockFn_80060678(void);
 extern int Shader_getLayer(int layer, int idx);
 
