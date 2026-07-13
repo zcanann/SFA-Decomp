@@ -84,7 +84,6 @@
 
 #define GAMEUI_MIN(a, b) ((a) < (b) ? (a) : (b))
 
-extern void saveGame_save();
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
 extern u16 gWorldMapVoiceoverTimer;

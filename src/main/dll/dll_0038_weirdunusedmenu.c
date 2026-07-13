@@ -29,6 +29,7 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0038_weirdunusedmenu.h"
+#include "main/dll/savegame.h"
 
 /* title-menu link interface vtable slot offsets (gTitleMenuLinkInterface) */
 #define TITLEMENULINK_SETUP_WIDGETS 0x4
@@ -65,7 +66,6 @@ extern u8 gWeirdMenuPhase;                 /* phase: 0 idle, 1 saving */
 extern WeirdMenuWork gWeirdMenuWidgetWork; /* widget work area */
 extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written at init, not read in this TU */
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
-extern void saveGame_save();
 extern u32 gameTextGet(int textId);
 
 void WeirdUnusedMenu_render(void)

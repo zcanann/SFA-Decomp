@@ -38,6 +38,7 @@
 #include "main/textrender.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/dll/savegame.h"
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -99,7 +100,6 @@ void* lbl_803A8680[4];
 extern SaveSelectPanel gSaveSelectPanels[];
 extern u8 lbl_8031A7F8[];
 extern s16 gSaveSelectTextureIds;
-extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 
 void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
@@ -108,8 +108,6 @@ extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern int gSaveSelectInfoStartSlot;
 extern char sFrontendStringFormat;
 extern char lbl_803DBA20;
-extern int saveSelect_getInfo(void* outPtr);
-
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern u8 gSaveSelectInfoTextIds;
 extern u16 gSaveSelectSlotTextIds[4];
@@ -119,8 +117,6 @@ extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
-extern void trySaveGame(int slot);
-extern int gplayNewGame(char* name, int slot);
 extern void* memcpy(void* dst, void* src, int n);
 extern void saveSetOverrideHealth(int arg);
 extern TitleMenuControl* gMapEventInterface;
