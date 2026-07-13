@@ -28,7 +28,7 @@
 #define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define POINTLIGHT_MAX_SPOT_BRIGHTNESS    0x5a
 
-void pointlight_setEffectState(GameObject* obj, int enabled)
+void pointlight_setEffectState(GameObject* obj, u8 enabled)
 {
     GameObject* object = obj;
     PointLightState* state = object->extra;

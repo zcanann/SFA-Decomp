@@ -73,7 +73,7 @@ STATIC_ASSERT(offsetof(PointLightSetup, glowEnabled) == 0x3E);
 STATIC_ASSERT(offsetof(PointLightSetup, affectsAabbLightSelection) == 0x3F);
 STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 
-void pointlight_setEffectState(GameObject* obj, int enabled);
+void pointlight_setEffectState(GameObject* obj, u8 enabled);
 int PointLight_getExtraSize(void);
 int PointLight_getObjectTypeId(void);
 void PointLight_free(GameObject* obj);
