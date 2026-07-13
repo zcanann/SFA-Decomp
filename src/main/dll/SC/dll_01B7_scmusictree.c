@@ -4,7 +4,7 @@
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
-#include "main/dll/scmusictreesetup_struct.h"
+#include "main/dll/SC/dll_01B7_scmusictree.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"

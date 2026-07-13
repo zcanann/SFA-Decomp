@@ -6,6 +6,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/dll/SC/sc_shared.h"
+#include "main/dll/SC/dll_01B8_sctotempole.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objlib.h"

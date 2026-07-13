@@ -16,7 +16,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/game_object.h"
-#include "main/dll/CR/CRsnowbike.h"
+#include "main/dll/SC/dll_01B6_sclevelcontrol.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"

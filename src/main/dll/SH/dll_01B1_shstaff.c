@@ -21,6 +21,9 @@
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/dll/player_staff_api.h"
+#include "main/dll/SC/dll_01B6_sclevelcontrol.h"
+#include "main/dll/SC/dll_01B7_scmusictree.h"
+#include "main/dll/SC/dll_01B8_sctotempole.h"
 #include "main/frame_timing.h"
 
 /* ShStaffState.phase pickup / carry state machine (see file header) */
@@ -103,53 +106,17 @@ extern f32 gShStaffFizzSfxTimerInit;
 extern f32 gShStaffMapUnloadDistSq;
 extern f32 gShStaffMapLoadDistSq;
 
-extern void sc_levelcontrol_getAnimEventState(void);
-
-extern void sc_levelcontrol_applyAnimEventState(GameObject*);
-
-extern void sc_levelcontrol_getExtraSize(void);
-extern void sc_musictree_getExtraSize(void);
-extern void sc_totempole_getExtraSize(void);
-
-extern void sc_levelcontrol_getObjectTypeId(void);
-extern void sc_musictree_getObjectTypeId(void);
-extern void sc_totempole_getObjectTypeId(void);
-
-extern void sc_levelcontrol_free(GameObject*);
-extern void sc_musictree_free(void);
-extern void sc_totempole_free(void);
-
-extern void sc_levelcontrol_render(void);
-extern void sc_musictree_render(void);
-extern void sc_totempole_render(void);
-
-extern void sc_levelcontrol_hitDetect(void);
-extern void sc_musictree_hitDetect(void);
-extern void sc_totempole_hitDetect(void);
-
 extern void sh_beacon_getExtraSize(void);
-extern void sc_levelcontrol_update(GameObject*);
-extern void sc_musictree_update(void);
-extern void sc_totempole_update(void);
 
 extern void sh_beacon_free(GameObject*);
-extern void sc_levelcontrol_init(GameObject*);
-extern void sc_musictree_init(void);
-extern void sc_totempole_init(GameObject*);
 
 extern void SH_StaffHaze_render(GameObject*);
 extern void sh_beacon_update(GameObject*);
 extern void SH_EmptyTumbleW_update(GameObject*);
-extern void sc_levelcontrol_release(void);
-extern void sc_musictree_release(void);
-extern void sc_totempole_release(void);
 
 extern void SH_StaffHaze_update(GameObject*);
 extern void sh_beacon_init(GameObject*);
 extern void SH_EmptyTumbleW_init(void);
-extern void sc_levelcontrol_initialise(void);
-extern void sc_musictree_initialise(void);
-extern void sc_totempole_initialise(void);
 
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
