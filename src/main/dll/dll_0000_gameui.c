@@ -3469,9 +3469,9 @@ void pauseMenuDoSave(void)
  * toward the panel edge while lbl_803DD75C runs. */
 void fn_80128A7C(u8 i, int alpha, int flag)
 {
-    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    int div15;
     s8 cnt;
+    int div15;
+    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     int v;
     int scaled;
     s16 ofs;
