@@ -23,7 +23,6 @@
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
 #include "main/maketex_timer_api.h"
-#include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/player_staff_api.h"
 
 typedef struct CflevelcontrolState

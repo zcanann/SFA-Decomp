@@ -16,7 +16,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014B_cfmaincrystal.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/effect_interfaces.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 
 #define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */

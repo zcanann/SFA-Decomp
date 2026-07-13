@@ -29,7 +29,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/dll/DIM/dll_01DD_dim2icicle.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 
 #define DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED 0x2000

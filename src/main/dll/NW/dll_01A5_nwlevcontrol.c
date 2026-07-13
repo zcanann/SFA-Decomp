@@ -26,7 +26,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 
 /* obj+0xB8 per-class state block (getExtraSize == 0x14). */

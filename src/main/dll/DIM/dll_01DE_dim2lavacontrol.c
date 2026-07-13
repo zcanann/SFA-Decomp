@@ -31,7 +31,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
 
 /* Env-effect ids co-activated on the unkF4 restore tick (immediately when

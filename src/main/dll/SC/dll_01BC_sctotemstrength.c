@@ -22,7 +22,8 @@
 #include "main/objlib.h"
 #include "main/pad.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 #define PAD_BUTTON_A 0x100
 
