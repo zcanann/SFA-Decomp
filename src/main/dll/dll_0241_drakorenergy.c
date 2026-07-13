@@ -218,3 +218,22 @@ void drakorenergy_release(void)
 void drakorenergy_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDrakorEnergyObjDescriptor = {
+    0,
+    0,
+    0,
+    0xB0000,
+    (ObjectDescriptorCallback)drakorenergy_initialise,
+    (ObjectDescriptorCallback)drakorenergy_release,
+    0,
+    (ObjectDescriptorCallback)drakorenergy_init,
+    (ObjectDescriptorCallback)drakorenergy_update,
+    (ObjectDescriptorCallback)drakorenergy_hitDetect,
+    (ObjectDescriptorCallback)drakorenergy_render,
+    (ObjectDescriptorCallback)drakorenergy_free,
+    (ObjectDescriptorCallback)drakorenergy_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drakorenergy_getExtraSize,
+    (ObjectDescriptorCallback)drakorenergy_setScale,
+    (ObjectDescriptorCallback)DrakorEnergy_func0B_nop,
+};

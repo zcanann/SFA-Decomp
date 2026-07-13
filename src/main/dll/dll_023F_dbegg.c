@@ -620,6 +620,8 @@ typedef struct DbEggIntPair
     s32 b;
 } DbEggIntPair;
 
+char sAnimGreaterMessage[11] = " GREATER \n\000";
+
 void dbegg_update(GameObject* obj)
 {
     extern void dbegg_setupFromDef(GameObject * obj, int* state);
@@ -630,7 +632,7 @@ void dbegg_update(GameObject* obj)
     extern f32 Vec_xzDistance(int, int);
     extern f32 PSVECMag(int);
     extern f32 oneOverTimeDelta;
-    extern char sAnimGreaterMessage[];
+    extern char sAnimGreaterMessage[11];
     extern int lbl_803E61C0;
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
@@ -1024,4 +1026,3 @@ void dbegg_update(GameObject* obj)
 #undef hitState
 }
 
-char sAnimGreaterMessage[11] = " GREATER \n\000";

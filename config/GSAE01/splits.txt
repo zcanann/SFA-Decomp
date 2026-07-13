@@ -2591,13 +2591,15 @@ main/main.c:
 
 main/dll/dll_023F_dbegg.c:
 	.text       start:0x801FE118 end:0x801FF884
-	.data       start:0x803292F8 end:0x80329304
+	.data       start:0x803292F8 end:0x8032933C
 
 main/dll/dll_0240_gcrobotblast.c:
 	.text       start:0x801FF884 end:0x801FF9B0
+	.data       start:0x80329340 end:0x80329378
 
 main/dll/dll_0241_drakorenergy.c:
 	.text       start:0x801FF9B0 end:0x801FFE18
+	.data       start:0x80329378 end:0x803293B8
 	.sdata2     start:0x803E6298 end:0x803E62A0
 
 main/dll/dll_0242_dbstealerworm.c:

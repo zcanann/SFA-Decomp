@@ -85,3 +85,18 @@ void GCRobotBlast_release(void)
 void GCRobotBlast_initialise(void)
 {
 }
+
+u32 lbl_80329340[14] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x000d0000,
+                        (u32)GCRobotBlast_initialise,
+                        (u32)GCRobotBlast_release,
+                        0x00000000,
+                        (u32)GCRobotBlast_init,
+                        (u32)GCRobotBlast_update,
+                        (u32)GCRobotBlast_hitDetect,
+                        (u32)GCRobotBlast_render,
+                        (u32)GCRobotBlast_free,
+                        (u32)GCRobotBlast_getObjectTypeId,
+                        (u32)GCRobotBlast_getExtraSize};
