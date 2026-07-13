@@ -460,7 +460,7 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
-extern u8 gDim2IcicleHitDescTemplate[];
+__declspec(section ".rodata") int gDim2IcicleHitDescTemplate[4] = {6, 0x69, 0x69, 0xFF};
 extern u8 gDim2IcicleHitFxBuffer[];
 
 typedef struct IcicleHitDesc
