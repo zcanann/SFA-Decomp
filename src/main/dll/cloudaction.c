@@ -56,7 +56,6 @@ extern void GXSetColorUpdate(int enable);
 extern void fn_8008EDE8(f32* pos);
 extern void gxTextureFn_800794e0(void);
 extern void gxBlendFn_800789ac(void);
-extern void PSMTXMultVec(void* m, f32* src, f32* dst);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);

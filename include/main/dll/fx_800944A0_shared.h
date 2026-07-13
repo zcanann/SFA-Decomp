@@ -24,6 +24,10 @@
 #include "main/objfx_hit_emitter_api.h"
 #include "main/dll/expgfx_resource_api.h"
 #include "main/pad_api.h"
+#include "main/dll/waterfx.h"
+#include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "track/intersect_api.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct
@@ -37,64 +41,6 @@ typedef struct
     f32 y;
     f32 z;
 } ParticleEmit;
-typedef struct
-{
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 pad6;
-    s16 u;
-    s16 v;
-    u8 padc[3];
-    u8 a;
-} WaterVtx;
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 w;
-    f32 f10;
-    s16 active;
-    s16 f16;
-    u8 f18;
-    u8 pad19[3];
-} WaterEntry;
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 f0c;
-    f32 f10;
-    f32 f14;
-    u8 vtxColors[0x20]; /* 0x18: 8 per-vertex RGBA colors, uploaded via GXSetArray(GX_VA_CLR0) */
-    u8 active;
-    u8 pad39[3];
-} WaterParticle;
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 w;
-    f32 f10;
-    s16 f14;
-    s16 active;
-    s16 f18;
-    u8 pad1a[2];
-} WaterEntry7;
-typedef struct
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 f0c;
-    f32 f10;
-    f32 f14;
-    s8 idx;
-    u8 pad19[3];
-} WaterDrop;
 typedef union
 {
     u8 u8;
@@ -104,25 +50,6 @@ typedef union
     s32 s32;
     f32 f32;
 } PPCWGPipe;
-typedef struct
-{
-    s16 f8;
-    s16 fa;
-    s16 fc;
-    u8 pade[2];
-    f32 f10;
-    f32 x;
-    f32 y;
-    f32 z;
-} WaterDrawObj;
-typedef struct
-{
-    u8 pad0;
-    u8 b1;
-    u8 b2;
-    u8 b3;
-    u8 pad4[12];
-} VtxDesc;
 typedef struct
 {
     int v[5];
@@ -196,86 +123,17 @@ typedef struct
 } ColorTbl;
 
 /* external symbol declarations */
-extern f32 lbl_803DF318;
 extern f32 lbl_803DF348;
 extern f32 lbl_803DF34C;
 extern f32 lbl_803DB790;
-extern f32 gWaterfxRippleScale;
 extern int lbl_803DB618[2];
-extern u8 gWaterfxPendingImpactPositionValid;
-extern f32 gWaterfxPendingImpactPosition[];
-extern f32 PSVECSquareDistance(f32* a, f32* b);
 extern void* memset(void* dst, int c, int n);
-extern char sWaterfxDllAllocFailed[];
-extern void waterfx_drawFn_800953fc(void);
-extern void* gWaterfxSplashTexCoordArray;
-extern void* gWaterfxSplashPosArray;
-extern void* gWaterfxSplashDisplayList;
-extern Texture* gWaterfxWakeTexture;
-extern Texture* gWaterfxSplashTexture1;
-extern Texture* gWaterfxSplashTexture0;
-extern Texture* gWaterfxRippleTexture;
-extern void* gWaterfxDropPool;
-extern void* gWaterfxDropCount;
-extern void* gWaterfxWakePool;
-extern void* gWaterfxWakeCount;
-extern void* gWaterfxSplashPool;
-extern void* gWaterfxSplashCount;
-extern void* gWaterfxRipplePool;
-extern void* gWaterfxRippleCount;
-extern void* gWaterfxWakeVtxDesc;
-extern void* gWaterfxWakeVtx;
-extern void* gWaterfxRippleVtxDesc;
-extern void* gWaterfxRippleVtx;
-extern void GXSetPointSize(int size, int fmt);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void GXSetCurrentMtx(int id);
-extern void GXSetTevKColorSel(int stage, int sel);
-extern void GXSetTevKAlphaSel(int stage, int sel);
-extern void GXSetNumIndStages(int n);
-extern void GXSetNumTexGens(int n);
-extern void GXSetNumTevStages(int n);
-extern void GXSetNumChans(int n);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevSwapMode(int stage, int ras, int tex);
-extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int reg);
-extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int reg);
-extern void GXSetBlendMode(int type, int src, int dst, int op);
-extern void gxSetZMode_(int compEnable, int func, int updateEnable);
-extern void gxSetPeControl_ZCompLoc_(int zcomploc);
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-extern void GXSetCullMode(int mode);
-extern void GXSetTevKColor(int id, void* color);
 extern const f32 lbl_803DF354;
 extern f32 lbl_803DF384;
 extern f32 lbl_803DF3A0;
 extern f32 lbl_803DF3A4;
 extern f32 lbl_803DF3A8;
-extern f32 lbl_803DF300;
-extern f32 lbl_803DF31C;
-extern f32 lbl_803DF2EC;
-extern f32 lbl_803DF2FC;
-extern f32 lbl_803DF320;
-extern f32 lbl_803DF2E8;
-extern f32 lbl_803DF338;
-extern f32 lbl_803DF33C;
-extern f32 gWaterfxWakeGrowSpeed;
-extern f32 gWaterfxDropGravity;
-extern const f32 gWaterfxDropDamping;
-extern f32 lbl_803DF334;
-extern void GXSetArray(int attr, void* base, int stride);
-extern void GXBegin(int type, int fmt, int count);
-extern void fn_8007D670(void);
-extern void fn_8007CAF4(int a);
-extern void fn_8007BD8C(int a, int b);
-extern void fn_8007C664(int a);
 extern void fn_800542F4(void);
-extern void fn_80095164(WaterParticle* s);
 extern int lbl_802C1FF8[];
 extern int lbl_802C200C[];
 extern const f32 lbl_803DF35C;
@@ -288,7 +146,6 @@ extern int depthReadRequestPoll(int x, int y, void* obj);
 extern int lbl_802C20EC[];
 extern int lbl_802C2104[];
 extern f32 gExpgfxFrameTimerA;
-extern f32 gWaterfxRippleGrowSpeed;
 extern f32 lbl_803DF3AC;
 extern f32 lbl_803DF3B0;
 extern f32 lbl_803DF390;
@@ -321,19 +178,6 @@ void cloudaction_onMapSetup(void);
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val);
 void cloudaction_release(void);
 void cloudaction_initialise(void);
-void waterfx_setupSplashDropPointRender(void);
-int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist);
-void waterfx_spawnRipple(f32 a, f32 b, f32 c, s16 p1, f32 d, int p2);
-void waterfx_setRippleScale(int flag, f32 val);
-void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d);
-void waterfx_spawnSplashBurst(void* obj, f32 a, f32 b, f32 c, f32 d);
-int waterfx_spawnSplashDrops(WaterParticle* src, int idx, int count, f32 v);
-void waterfx_func05(int p1, int p2);
-void waterfx_run(void);
-void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval);
-void waterfx_onMapSetup(void);
-void waterfx_release(void);
-void waterfx_initialise(void);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);
 

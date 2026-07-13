@@ -18,7 +18,20 @@
  * Tunables live in the lbl_803DF2xx/lbl_803DF3xx config block; the splash
  * point-sprite render state is built in waterfx_setupSplashDropPointRender.
  */
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/dll/waterfx.h"
+#include "main/dll/ppcwgpipe_struct.h"
+#include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/sky_interface.h"
+#include "main/shader_api.h"
+#include "main/frame_timing.h"
+#include "main/mm.h"
+#include "main/vecmath.h"
+#include "main/debug.h"
+#include "main/lightmap_api.h"
+#include "main/rcp_dolphin_api.h"
+#include "track/intersect_api.h"
 #include "main/texture.h"
 #include "main/camera.h"
 #include "dolphin/os/OSCache.h"
@@ -81,14 +94,6 @@ extern const f32 lbl_803DF2F8;
 extern const f32 lbl_803DF304;
 extern f32 gWaterfxPi;
 extern const f32 lbl_803DF314;
-extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
-extern void PSMTXConcat(void* a, void* b, void* ab);
-extern void GXCallDisplayList(void* list, u32 nbytes);
-extern void GXSetMisc(int token, int val);
-extern void GXBeginDisplayList(void* list, u32 size);
-extern int GXEndDisplayList(void);
-extern void GXResetWriteGatherPipe(void);
 extern f32 fn_802942EC(f32);
 extern f32 fn_80293F7C(f32);
 
@@ -373,7 +378,7 @@ void waterfx_func05(int obj, int renderParam)
         GXSetCullMode(GX_CULL_NONE);
         if ((int)gWaterfxRippleCount != 0)
         {
-            fn_8007CAF4((int)gWaterfxRippleTexture);
+            ((void (*)(int))fn_8007CAF4)((int)gWaterfxRippleTexture);
         }
         for (i = 0, oPool = 0, o32 = 0; i < WATERFX_POOL_SIZE;
              oPool += 0x1c, o32 += 0x20, i++)
@@ -578,9 +583,9 @@ void waterfx_func04(u8* objHeader, u16 limbMask, f32* impactPositions, u8* surfa
 void waterfx_onMapSetup(void)
 {
     int i;
-    VtxDesc* vd;
+    WaterVtxDesc* vd;
     {
-        vd = (VtxDesc*)gWaterfxRippleVtxDesc;
+        vd = (WaterVtxDesc*)gWaterfxRippleVtxDesc;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)
         {
             WaterEntry7* e;
@@ -618,7 +623,7 @@ void waterfx_onMapSetup(void)
     {
         f32 initScale;
         f32 initPos;
-        vd = (VtxDesc*)gWaterfxWakeVtxDesc;
+        vd = (WaterVtxDesc*)gWaterfxWakeVtxDesc;
         initPos = lbl_803DF300;
         initScale = lbl_803DF318;
         for (i = 0; i < WATERFX_POOL_SIZE; i++)

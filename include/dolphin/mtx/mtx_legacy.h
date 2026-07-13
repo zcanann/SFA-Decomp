@@ -4,14 +4,17 @@
 #include "types.h"
 
 f32 PSVECMag(f32* v);
+f32 PSVECSquareDistance(f32* a, f32* b);
 f32 PSVECDotProduct(f32* a, f32* b);
 void PSVECAdd(f32* a, f32* b, f32* out);
 void PSVECCrossProduct(f32* a, f32* b, f32* out);
-void PSVECNormalize(void* src, void* dst);
+void PSVECNormalize(f32* src, f32* dst);
 void PSVECScale(f32* in, f32* out, f32 scale);
 void PSVECSubtract(f32* a, f32* b, f32* out);
 void PSMTXCopy(f32* src, f32* dst);
 void PSMTXConcat(f32* a, f32* b, f32* out);
+void PSMTXScale(f32* mtx, f32 x, f32 y, f32 z);
+void PSMTXTrans(f32* mtx, f32 x, f32 y, f32 z);
 void PSMTXIdentity(f32* mtx);
 void PSMTXMultVec(f32* mtx, f32* src, f32* dst);
 void PSMTXMultVecSR(f32* mtx, f32* src, f32* dst);

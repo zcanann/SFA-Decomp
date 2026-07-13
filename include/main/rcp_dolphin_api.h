@@ -17,6 +17,7 @@ void timeOfDayFn_80055038(void);
 void setMotionBlur(u8 enabled, f32 amount);
 void warpToMap(int idx, s8 transType);
 void fn_800541A4(Texture* texture, s16 frameStep);
+void fn_800542F4(void);
 void textureAnimFn_80053f2c(const Texture* texture, u32* flags, s32* frame);
 
 #define fn_800541A4Promoted(texture, frameStep) \
