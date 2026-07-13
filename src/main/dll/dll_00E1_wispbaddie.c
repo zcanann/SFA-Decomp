@@ -39,16 +39,6 @@
 #define WISPBADDIE_FLAG_CHASE_MASK      0x06
 extern int ObjHits_GetPriorityHitWithPosition();
 
-void Hagabon_release(void);
-
-void Hagabon_initialise(void);
-
-void SwarmBaddie_hitDetect(void);
-
-void SwarmBaddie_release(void);
-
-void SwarmBaddie_initialise(void);
-
 extern f32 lbl_803E26D0;
 extern f32 lbl_803E26D4;
 extern f32 lbl_803E26D8;
@@ -122,10 +112,6 @@ void wispbaddie_hitDetect(void)
 {
 }
 
-void Hagabon_hitDetect(GameObject* obj);
-
-void SwarmBaddie_free(GameObject* obj);
-
 void wispbaddie_free(GameObject* obj)
 {
     void** state = (obj)->extra;
@@ -137,18 +123,6 @@ void wispbaddie_free(GameObject* obj)
     }
 }
 
-void Hagabon_free(GameObject* obj);
-
-void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc);
-
-void Hagabon_init(GameObject* obj, int data, int skip_alloc);
-
-void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-
-int Hagabon_getExtraSize(void);
-int Hagabon_getObjectTypeId(void);
-int SwarmBaddie_getExtraSize(void);
-int SwarmBaddie_getObjectTypeId(void);
 int wispbaddie_getExtraSize(void)
 {
     return 0x2c;
@@ -158,7 +132,6 @@ int wispbaddie_getObjectTypeId(void)
     return 0x9;
 }
 
-void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
@@ -241,44 +214,6 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
 }
-
-void SwarmBaddie_update(GameObject* obj);
-
-void Hagabon_update(int obj);
-
-ObjectDescriptor gHagabonObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Hagabon_initialise,
-    (ObjectDescriptorCallback)Hagabon_release,
-    0,
-    (ObjectDescriptorCallback)Hagabon_init,
-    (ObjectDescriptorCallback)Hagabon_update,
-    (ObjectDescriptorCallback)Hagabon_hitDetect,
-    (ObjectDescriptorCallback)Hagabon_render,
-    (ObjectDescriptorCallback)Hagabon_free,
-    (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
-    Hagabon_getExtraSize,
-};
-
-ObjectDescriptor gSwarmBaddieObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)SwarmBaddie_initialise,
-    (ObjectDescriptorCallback)SwarmBaddie_release,
-    0,
-    (ObjectDescriptorCallback)SwarmBaddie_init,
-    (ObjectDescriptorCallback)SwarmBaddie_update,
-    (ObjectDescriptorCallback)SwarmBaddie_hitDetect,
-    (ObjectDescriptorCallback)SwarmBaddie_render,
-    (ObjectDescriptorCallback)SwarmBaddie_free,
-    (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
-    SwarmBaddie_getExtraSize,
-};
 
 void wispbaddie_update(GameObject* obj)
 {

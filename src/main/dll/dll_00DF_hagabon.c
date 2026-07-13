@@ -94,16 +94,6 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void SwarmBaddie_hitDetect(void);
-void SwarmBaddie_release(void);
-void SwarmBaddie_initialise(void);
-void SwarmBaddie_free(GameObject* obj);
-void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc);
-int SwarmBaddie_getExtraSize(void);
-int SwarmBaddie_getObjectTypeId(void);
-void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void SwarmBaddie_update(GameObject* obj);
-
 void Hagabon_release(void)
 {
 }
@@ -475,21 +465,4 @@ ObjectDescriptor gHagabonObjDescriptor = {
     (ObjectDescriptorCallback)Hagabon_free,
     (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
     Hagabon_getExtraSize,
-};
-
-ObjectDescriptor gSwarmBaddieObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)SwarmBaddie_initialise,
-    (ObjectDescriptorCallback)SwarmBaddie_release,
-    0,
-    (ObjectDescriptorCallback)SwarmBaddie_init,
-    (ObjectDescriptorCallback)SwarmBaddie_update,
-    (ObjectDescriptorCallback)SwarmBaddie_hitDetect,
-    (ObjectDescriptorCallback)SwarmBaddie_render,
-    (ObjectDescriptorCallback)SwarmBaddie_free,
-    (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
-    SwarmBaddie_getExtraSize,
 };

@@ -1,6 +1,6 @@
 /*
  * swarmbaddie (DLL 0x00E0) - the swarming flying baddie (a "wisp"-class
- * pest) plus the hagabon variant's object descriptor.
+ * pest).
  *
  * A swarmbaddie follows a ROM curve path (allocated per-instance via the
  * rom-curve interface) while bobbing on yaw/roll sine waves. When the
@@ -11,9 +11,6 @@
  * whose channel volume tracks an attack envelope + sine wobble, and emits
  * particle fx (0x336). The shared pressure-switch resource (DAT_803de6d0)
  * is acquired/freed through the pi_dolphin helpers.
- *
- * This TU exports both gSwarmBaddieObjDescriptor and gHagabonObjDescriptor;
- * the hagabon_* and wispbaddie_* callbacks live in the sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_api.h"
