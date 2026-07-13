@@ -17,8 +17,8 @@
  * hardcoded; -1 is the "no bit" sentinel.
  */
 #include "main/dll/alphaanim.h"
+#include "main/dll/dll_0113_seqobj2.h"
 #include "main/dll/seqobjectstate_struct.h"
-#include "main/dll/seqobj2state_struct.h"
 #include "main/dll/immultiseqstate_struct.h"
 #include "main/dll/doorlockstate_struct.h"
 #include "main/game_object.h"

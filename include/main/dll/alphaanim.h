@@ -9,7 +9,6 @@
 
 extern ObjectDescriptor gDoorLockObjDescriptor;
 extern ObjectDescriptor gSeqObjectObjDescriptor;
-extern ObjectDescriptor gSeqObj2ObjDescriptor;
 /* 8-aligned via union so MWCC emits the 4-byte retail pad (gap_07_803213EC_data) before it;
  * same idiom as dll_013F_texframeanimator / dll_00B1_projlightning3. */
 typedef union ObjDescriptorAlign8
@@ -80,7 +79,6 @@ int SeqObject_SeqFn(GameObject* obj, int* anim, ObjAnimUpdateState* animUpdate);
 void seqObj2_free(int param_1);
 void seqObj2_update(int param_1);
 void seqObj2_init(short* param_1, int param_2);
-int SeqObj2_seqFn(int* obj, int* anim, ObjAnimUpdateState* animUpdate);
 
 int Lock_DoorLock_getExtraSize(void);
 void Lock_DoorLock_free(int x);
@@ -94,16 +92,6 @@ void SeqObject_free(GameObject* obj);
 void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SeqObject_update(GameObject* obj);
 void SeqObject_init(GameObject* obj, SeqObjectPlacement* params);
-
-int SeqObj2_getExtraSize(void);
-int SeqObj2_getObjectTypeId(void);
-void SeqObj2_free(int x);
-void SeqObj2_render(void);
-void SeqObj2_hitDetect(void);
-void SeqObj2_update(int* obj);
-void SeqObj2_init(int* obj, SeqObjectPlacement* def);
-void SeqObj2_release(void);
-void SeqObj2_initialise(void);
 
 int IMMultiSeq_getExtraSize(void);
 int IMMultiSeq_getObjectTypeId(void);
