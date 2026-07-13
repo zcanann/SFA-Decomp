@@ -9,6 +9,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
+#include "main/dll/dll_00D4_skeetlawall.h"
 
 typedef struct SkeetlaWallState
 {
@@ -33,15 +34,15 @@ typedef struct SkeetlaWallPlacement
     u8 shapeFlag;  /* 0x1e */
 } SkeetlaWallPlacement;
 
-void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte)
+void SkeetlaWall_setScale(GameObject* obj, f32* outVec, u8* outByte)
 {
-    SkeetlaWallState* state = ((GameObject*)obj)->extra;
-    outVec[0] = ((GameObject*)obj)->anim.worldPosX - (f32)(u32)state->negXExtent;
-    outVec[1] = ((GameObject*)obj)->anim.worldPosX + (f32)(u32)state->posXExtent;
-    outVec[2] = ((GameObject*)obj)->anim.worldPosZ + (f32)(u32)state->posZExtent;
-    outVec[3] = ((GameObject*)obj)->anim.worldPosZ - (f32)(u32)state->negZExtent;
-    outVec[4] = ((GameObject*)obj)->anim.worldPosY + (f32)(u32)state->posYExtent;
-    outVec[5] = ((GameObject*)obj)->anim.worldPosY - (f32)(u32)state->negYExtent;
+    SkeetlaWallState* state = obj->extra;
+    outVec[0] = obj->anim.worldPosX - (f32)(u32)state->negXExtent;
+    outVec[1] = obj->anim.worldPosX + (f32)(u32)state->posXExtent;
+    outVec[2] = obj->anim.worldPosZ + (f32)(u32)state->posZExtent;
+    outVec[3] = obj->anim.worldPosZ - (f32)(u32)state->negZExtent;
+    outVec[4] = obj->anim.worldPosY + (f32)(u32)state->posYExtent;
+    outVec[5] = obj->anim.worldPosY - (f32)(u32)state->negYExtent;
     outByte[0] = state->shapeFlag;
 }
 

@@ -1532,7 +1532,7 @@ void Tricky_update(int obj)
     }
     else
     {
-        fn_8003A230((GameObject*)(obj), (void*)(state + 0x378), lbl_803E23DC);
+        fn_8003A230((GameObject*)obj, (CharacterEyeAnimState*)(state + 0x378), lbl_803E23DC);
         characterDoEyeAnimsState((GameObject*)obj, state + 0x378);
     }
     objAnimFn_80038f38((GameObject*)obj, (char*)state + 0x3a8);

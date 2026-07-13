@@ -14,6 +14,7 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/landedArwing.h"
+#include "main/dll/dll_00D3_staffAction.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/gameplay_runtime.h"
@@ -55,20 +56,6 @@ extern f32 lbl_803E2FF4;
 extern f32 lbl_803E2FF8;
 extern f32 lbl_803E2FFC;
 extern f32 lbl_803E3000;
-
-extern void fn_80165B3C(GameObject* obj, int state);
-extern void landedarwing_moveSurfaceCrawler(int obj, int state);
-extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(GameObject* obj, f32 x, f32 y, f32 z, f32 scale);
-void dll_D3_initialise(void);
-void dll_D3_release_nop(void);
-void dll_D3_init(GameObject* obj, int def, int flag);
-void dll_D3_update(int* obj);
-void dll_D3_hitDetect_nop(void);
-void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
-void dll_D3_free(int obj);
-int dll_D3_getObjectTypeId(void);
-int dll_D3_getExtraSize_ret_1188(void);
 
 int LandedArwing_ReturnZero(void)
 {
@@ -240,7 +227,7 @@ update_action:
     }
     else
     {
-        landedarwing_moveSurfaceCrawler((int)obj, (int)state);
+        landedarwing_moveSurfaceCrawler((short*)obj, state);
     }
     if ((int)state->scriptTimer <= (int)(u32)framesThisStep)
     {

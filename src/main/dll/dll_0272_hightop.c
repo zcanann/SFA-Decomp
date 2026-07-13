@@ -29,6 +29,7 @@
 #include "main/game_object.h"
 #include "main/objprint.h"
 #include "main/objhits.h"
+#include "main/object_api.h"
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"

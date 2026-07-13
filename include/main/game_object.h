@@ -123,11 +123,4 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeBlue) == 0xEE);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
-void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
-
-/* extern-cleanup: consolidated prototypes */
-void fn_8003A230(GameObject* obj, void* p, f32 f);
-void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte);
-void objSetHintTextIdx(GameObject* obj, u16 idx);
-
 #endif

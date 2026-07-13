@@ -6,6 +6,7 @@
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"
+#include "main/dll/dll_00D4_skeetlawall.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
@@ -178,8 +179,7 @@ extern ResourceDescriptor gSetuppointObjDescriptor, gSfxPlayerObjDescriptor, gSf
     gShieldObjDescriptor, gShipBattleObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
     gShopObjDescriptor;
 extern ResourceDescriptor gSidekickBallObjDescriptor, gSideloadObjDescriptor, gSiderepelObjDescriptor,
-    gSkeetlaWallObjDescriptor, gSlidingDoorObjDescriptor, gSmallBasketObjDescriptor, gSnowBikeObjDescriptor,
-    gSnowClawObjDescriptor;
+    gSlidingDoorObjDescriptor, gSmallBasketObjDescriptor, gSnowBikeObjDescriptor, gSnowClawObjDescriptor;
 extern ResourceDescriptor gSoftBodyObjDescriptor, gSpellStoneObjDescriptor, gSpiritDoorLockObjDescriptor,
     gSpiritDoorSpiritObjDescriptor, gSpiritPrizeObjDescriptor, gStaffActivatedObjDescriptor, gStaffObjDescriptor,
     gStaticCameraObjDescriptor;
@@ -1111,7 +1111,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gTumbleWeedBushObjDescriptor,
     &gTumbleweedObjDescriptor,
     &dll_D3,
-    &gSkeetlaWallObjDescriptor,
+    (ResourceDescriptor*)&gSkeetlaWallObjDescriptor,
     &gKaldaChomObjDescriptor,
     (ResourceDescriptor*)&gKaldaChompMeObjDescriptor,
     (ResourceDescriptor*)&gKaldaChompSpitObjDescriptor,

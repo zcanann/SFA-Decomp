@@ -163,7 +163,7 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
     }
     else
     {
-        fn_8003A230(obj, (void*)(state + 0x40c), lbl_803E520C);
+        fn_8003A230(obj, (CharacterEyeAnimState*)(state + 0x40c), lbl_803E520C);
         characterDoEyeAnimsState(obj, state + 0x40c);
     }
 }

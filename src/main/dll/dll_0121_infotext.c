@@ -1,5 +1,6 @@
 /* DLL 0x0121 — infotext. TU: 0x8018B9F0–0x8018BB00. */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"

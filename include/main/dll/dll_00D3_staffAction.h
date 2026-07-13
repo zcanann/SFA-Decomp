@@ -24,7 +24,15 @@ void updateConstrainedChaseVelocity(GameObject* obj, float targetX, float target
 void FUN_80166e9c(double param_1, double param_2, double param_3, double param_4, int param_5);
 void FUN_8016716c(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9);
+void dll_D3_initialise(void);
+void dll_D3_release_nop(void);
+void dll_D3_init(GameObject* obj, int def, int flag);
+void dll_D3_update(int* obj);
+void dll_D3_hitDetect_nop(void);
 void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void dll_D3_free(int obj);
+int dll_D3_getObjectTypeId(void);
+int dll_D3_getExtraSize_ret_1188(void);
 void FUN_8016725c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /* extern-cleanup: defining-file public prototypes */

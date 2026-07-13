@@ -822,7 +822,7 @@ void objModelAndSoundFn_80039118(int obj, int state)
 
 extern f32 lbl_803DE9E4;
 
-void fn_8003A230(GameObject* obj, void* state, f32 val)
+void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
 {
     s16* found;
     int flag;

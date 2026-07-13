@@ -21,6 +21,7 @@ STATIC_ASSERT(sizeof(CharacterEyeAnimState) == 0x28);
 STATIC_ASSERT(offsetof(CharacterEyeAnimState, headYaw) == 0x14);
 
 void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state);
+void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 scale);
 void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle);
 
 #define characterDoEyeAnimsState(obj, state) characterDoEyeAnims((obj), (CharacterEyeAnimState*)(state))

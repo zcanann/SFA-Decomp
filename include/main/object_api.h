@@ -16,6 +16,8 @@ void Obj_SetModelColorOverrideRecursive(GameObject* obj, u8 red, u8 green, u8 bl
 void Obj_Shatter(GameObject* obj);
 void Obj_StartModelFadeIn(GameObject* obj, int frames);
 void Obj_SetActiveModelIndex(GameObject* obj, int idx);
+void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int yBound, u8 radiusOrHeight, u8 flags);
+void objSetHintTextIdx(GameObject* obj, u16 idx);
 void objSetSlot(GameObject* obj, s8 slot);
 
 #endif /* MAIN_OBJECT_API_H_ */
