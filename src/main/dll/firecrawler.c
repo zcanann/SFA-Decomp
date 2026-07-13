@@ -35,6 +35,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/dll/curve_walker.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
@@ -169,7 +170,6 @@ extern void modelLightStruct_setSpecularColor();
 extern void modelLightStruct_setDistanceAttenuation();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
-extern void sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern float powfBitEstimate(float x, float y);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
