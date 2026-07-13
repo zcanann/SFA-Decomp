@@ -7,6 +7,7 @@
  * in both nodes' link arrays.
  */
 #include "main/dll/DF/DFbarrel.h"
+#include "main/dll/dfpulley.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 
@@ -21,8 +22,6 @@
 
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
-
-extern void DFPulley_integrateLinks(u8* self);
 
 void DFRope_UpdateSimulation(DFRope* self)
 {
@@ -91,7 +90,7 @@ void DFRope_UpdateSimulation(DFRope* self)
                 PSVECScale(&tmp, (Vec*)link->force, -link->stiffness * (link->length - link->restLength));
             }
         }
-        DFPulley_integrateLinks((u8*)self);
+        DFPulley_integrateLinks(self);
     }
 
     i = 0;

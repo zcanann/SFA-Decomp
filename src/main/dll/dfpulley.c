@@ -11,6 +11,7 @@
  * (semi-implicit Euler).
  */
 #include "main/dll/DF/DFbarrel.h"
+#include "main/dll/dfpulley.h"
 #include "dolphin/mtx.h"
 
 extern f32 lbl_803E4DFC; /* 0.0f, dfbarrel TU */
