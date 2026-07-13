@@ -17,8 +17,8 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00D6_kaldachomme_api.h"
 #include "main/dll/kaldachom_state.h"
-#include "main/dll/wallanimator.h"
 #include "main/objhits.h"
 #include "main/dll/texscroll2.h"
 

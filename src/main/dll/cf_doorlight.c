@@ -24,7 +24,7 @@
 #include "main/dll/cf_doorlight_state.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/cf_doorlight.h"
-#include "main/dll/wallanimator.h"
+#include "main/dll/dll_00D6_kaldachomme_api.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
 #include "main/gameplay_runtime.h"

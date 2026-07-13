@@ -16,6 +16,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/dll/dll_00D6_kaldachomme_api.h"
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"

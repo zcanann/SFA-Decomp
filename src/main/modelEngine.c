@@ -2,6 +2,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/dll_00D6_kaldachomme_api.h"
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"
@@ -132,7 +133,7 @@ extern ResourceDescriptor gIMMultiSeqObjDescriptor, gIMSpaceRingGenObjDescriptor
     gIMSpaceThrusterObjDescriptor, gIceBaddieObjDescriptor, gIceBallObjDescriptor, gIceblastObjDescriptor,
     gInfoPointObjDescriptor;
 extern ResourceDescriptor gInfoTextObjDescriptor, gInvHitObjDescriptor, gInvisibleHitSwitchObjDescriptor,
-    gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKaldaChompMeObjDescriptor, gKtFallingrocksObjDescriptor;
+    gKT_TorchObjDescriptor, gKaldaChomObjDescriptor, gKtFallingrocksObjDescriptor;
 extern ResourceDescriptor gKtLazerlightObjDescriptor, gKtLazerwallObjDescriptor, gKtRexFloorSwitchObjDescriptor,
     gKtRexLevelObjDescriptor, gKtRexObjDescriptor, gKytesMumObjDescriptor, gLFXEmitterObjDescriptor,
     gLINKBLevControlObjDescriptor;
@@ -1109,7 +1110,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &dll_D3,
     &gSkeetlaWallObjDescriptor,
     &gKaldaChomObjDescriptor,
-    &gKaldaChompMeObjDescriptor,
+    (ResourceDescriptor*)&gKaldaChompMeObjDescriptor,
     (ResourceDescriptor*)&gKaldaChompSpitObjDescriptor,
     (ResourceDescriptor*)&gPinPonSpikeObjDescriptor,
     (ResourceDescriptor*)&gPollenObjDescriptor,

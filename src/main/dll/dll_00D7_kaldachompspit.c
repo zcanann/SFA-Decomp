@@ -59,32 +59,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-int KaldaChompMe_getExtraSize(void);
-int KaldaChompMe_getObjectTypeId(void);
-void KaldaChompMe_free(void);
-void KaldaChompMe_render(int p1, int p2, int p3, int p4, int p5, s8 renderFlag);
-void KaldaChompMe_hitDetect(void);
-void KaldaChompMe_update(GameObject* obj);
-void KaldaChompMe_init(GameObject* obj, int params);
-void KaldaChompMe_release(void);
-void KaldaChompMe_initialise(void);
-
-ObjectDescriptor gKaldaChompMeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)KaldaChompMe_initialise,
-    (ObjectDescriptorCallback)KaldaChompMe_release,
-    0,
-    (ObjectDescriptorCallback)KaldaChompMe_init,
-    (ObjectDescriptorCallback)KaldaChompMe_update,
-    (ObjectDescriptorCallback)KaldaChompMe_hitDetect,
-    (ObjectDescriptorCallback)KaldaChompMe_render,
-    (ObjectDescriptorCallback)KaldaChompMe_free,
-    (ObjectDescriptorCallback)KaldaChompMe_getObjectTypeId,
-    KaldaChompMe_getExtraSize,
-};
 
 #pragma dont_inline on
 void kaldachompspit_burst(GameObject* obj)
