@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/DR/dll_0257_drearthwarrior.h"
 #include "main/dll/moveLib.h"
@@ -266,7 +267,6 @@ extern f32 lbl_803E8388;
 extern f32 lbl_803E838C;
 extern f32 lbl_803E8394;
 extern f32 GXIndTexMtxScale1024;
-extern f32 oneOverTimeDelta;
 extern int lbl_803E82D8;
 extern u8 gDREarthWarriorInitData[];
 extern u8 gDREarthWarriorRowIndices[];

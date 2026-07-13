@@ -28,6 +28,7 @@
  * flicker table and scroll-fades a texture once bit 0x38F is set.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -156,7 +157,6 @@ extern WmSunVec3 gWmSunGlareDir; /* (0, 0, -1) */
 extern WmSunVec3 gWmSunGlareSun; /* (0, 0, -1) */
 extern f32 gWmSunGlareIntensity; /* glare intensity */
 extern f32 gWmSunGlareDamping;   /* glare damping accumulator */
-extern f32 oneOverTimeDelta;
 
 int wmsun_animEventCallback(int obj, int unused, ObjAnimUpdateState* actor)
 {

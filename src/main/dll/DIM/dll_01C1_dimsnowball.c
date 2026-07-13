@@ -4,6 +4,7 @@
  * and drives a hit-detect object that clears its target on impact.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/dll/imspacethrusterstate_struct.h"
@@ -62,7 +63,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMSNOWBALL_OBJFLAG_HIDDEN       0x4000
 #define DIMSNOWBALL_OBJFLAG_FREED        0x40
 
-extern f32 oneOverTimeDelta;
 extern s16 lbl_803DBEE8;
 extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E484C;

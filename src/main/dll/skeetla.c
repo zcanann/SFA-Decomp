@@ -80,7 +80,6 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E2478;
 extern f32 lbl_803E2480;
 extern const f32 lbl_803E2484;
-extern f32 oneOverTimeDelta;
 extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
