@@ -6828,8 +6828,10 @@ int saveCb_8007e748(int saveId, int size, void* dst)
     return 0;
 }
 
-/* .bss block 0x80391DC0-0x803965E0 */
+/* .bss block 0x80391DC0-0x803967C0 */
 f32 gWaterFxState[4];
 void* gWaterFxTextures[4];
 u8 gWaterRipples[0x1000];
 u8 gWaterSplashQuads[0x3800];
+DepthReadRequest gDepthReadResults[0x14];
+DepthReadRequest gDepthReadPendingQueue[0x14];
