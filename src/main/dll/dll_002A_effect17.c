@@ -15,6 +15,32 @@ extern f32 gEffect17SinValueA;
 extern f32 gEffect17AnimProgressA;
 extern f32 gEffect17AnimProgressB;
 
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80310FE0 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect17_initialise,
+    (ObjectDescriptorCallback)Effect17_release,
+    0,
+    (ObjectDescriptorCallback)Effect17_func03_nop,
+    (ObjectDescriptorCallback)Effect17_func04,
+    (ObjectDescriptorCallback)Effect17_func05,
+};
+
 int Effect17_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)
 {
