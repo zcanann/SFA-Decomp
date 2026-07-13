@@ -29,25 +29,30 @@
 #define DLL8D_EFFECT_ID_VARIANT2 0x23b
 
 extern u8 gDll8DEffectParamBlock[];
-extern f32 lbl_803E10E0;
-extern f32 lbl_803E10E4;
-extern f32 lbl_803E10E8;
-extern f32 lbl_803E10EC;
-extern f32 lbl_803E10F0;
-extern f32 lbl_803E10F4;
-extern f32 lbl_803E10F8;
-extern f32 lbl_803E10FC;
-extern f32 lbl_803E1100;
-extern f32 lbl_803E1104;
-extern f32 lbl_803E1108;
-extern f32 lbl_803E110C;
-extern f32 lbl_803E1110;
-extern f32 lbl_803E1114;
-extern f32 lbl_803E1118;
-extern f32 lbl_803E111C;
-extern f32 lbl_803E1120;
-extern f32 lbl_803E1124;
-extern f32 lbl_803E1128;
+__declspec(section ".sdata2") f32 lbl_803E10E0 = 999.0f;
+__declspec(section ".sdata2") f32 lbl_803E10E4 = 94.0f;
+__declspec(section ".sdata2") f32 lbl_803E10E8 = 95.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E10EC = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E10F0 = 32640.0f;
+__declspec(section ".sdata2") f32 lbl_803E10F4 = 3.2f;
+__declspec(section ".sdata2") f32 lbl_803E10F8 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E10FC = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E1100 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E1104 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E1108 = 28.0f;
+__declspec(section ".sdata2") f32 lbl_803E110C = 96.0f;
+__declspec(section ".sdata2") f32 lbl_803E1110 = 97.0f;
+__declspec(section ".sdata2") f32 lbl_803E1114 = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E1118 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E111C = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E1120 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E1124 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E1128 = 800.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E112C = 0.0f;
+#pragma explicit_zero_data off
 
 int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
