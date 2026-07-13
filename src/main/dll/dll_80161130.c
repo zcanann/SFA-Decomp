@@ -446,44 +446,6 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     return 0;
 }
 
-ObjectDescriptor11WithPadding gChukChukObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)ChukChuk_initialise,
-        (ObjectDescriptorCallback)ChukChuk_release,
-        0,
-        (ObjectDescriptorCallback)ChukChuk_init,
-        (ObjectDescriptorCallback)ChukChuk_update,
-        (ObjectDescriptorCallback)ChukChuk_hitDetect,
-        (ObjectDescriptorCallback)ChukChuk_render,
-        (ObjectDescriptorCallback)ChukChuk_free,
-        (ObjectDescriptorCallback)ChukChuk_getObjectTypeId,
-        ChukChuk_getExtraSize,
-        (ObjectDescriptorCallback)ChukChuk_setScale,
-    },
-    0,
-};
-
-ObjectDescriptor gIceBallObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)IceBall_initialise,
-    (ObjectDescriptorCallback)IceBall_release,
-    0,
-    (ObjectDescriptorCallback)IceBall_init,
-    (ObjectDescriptorCallback)IceBall_update,
-    (ObjectDescriptorCallback)IceBall_hitDetect,
-    (ObjectDescriptorCallback)IceBall_render,
-    (ObjectDescriptorCallback)IceBall_free,
-    (ObjectDescriptorCallback)IceBall_getObjectTypeId,
-    IceBall_getExtraSize,
-};
-
 int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
 {
     int* target;
