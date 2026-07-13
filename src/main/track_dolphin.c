@@ -415,7 +415,6 @@ extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);
 extern int getHudHiddenFrameCount(void);
 
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
