@@ -3,9 +3,6 @@
 
 #include "types.h"
 
-void ObjModel_InitRenderBuffers(void);
-void ObjModel_InitResourceCaches(void);
-void ObjModel_InitScratchBuffers(void);
 void* RomList_GetLoadedPages(void);
 f32 SaveGame_getPlayTime(void);
 int AppleOnTree_getExtraSize(void);
@@ -44,7 +41,6 @@ void linkDrawFn_801302c0(void);
 void linkDrawFn_80130484(void);
 u32 loadTableFiles(void);
 void mapSetupPlayer(void);
-void modelFn_800292e0(void);
 u32 rand(void);
 void reportAllocFail(void);
 void resetYbutton(void);

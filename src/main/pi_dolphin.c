@@ -8,6 +8,7 @@
 #include "main/pi_dolphin.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
+#include "main/model.h"
 #include "dolphin/os/OSCache.h"
 #include "string.h"
 #include "main/pad.h"
@@ -6412,7 +6413,6 @@ extern void VISetNextFrameBuffer(void* fb);
 extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
 extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
 
-extern void modelFn_800292e0(void);
 extern void GXInitFifoBase(void* fifo, void* base, u32 size);
 extern void GXSetCPUFifo(void* fifo);
 extern void GXSetGPFifo(void* fifo);

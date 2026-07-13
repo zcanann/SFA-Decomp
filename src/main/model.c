@@ -9,7 +9,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
-#include "main/sfa_extern_decls.h"
 #include "main/rcp_dolphin.h"
 #include "main/pi_dolphin.h"
 #include "main/objprint_dolphin.h"
