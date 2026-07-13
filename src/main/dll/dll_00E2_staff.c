@@ -79,57 +79,6 @@
 /* swipe/attack lingering trail: single follow-up spawn after the burst cluster */
 #define STAFF_PARTFX_SWIPE_TRAIL 0x7b3
 
-ObjectDescriptor gKaldaChompSpitObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
-    (ObjectDescriptorCallback)KaldaChompSpit_release,
-    0,
-    (ObjectDescriptorCallback)KaldaChompSpit_init,
-    (ObjectDescriptorCallback)KaldaChompSpit_update,
-    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
-    (ObjectDescriptorCallback)KaldaChompSpit_render,
-    (ObjectDescriptorCallback)KaldaChompSpit_free,
-    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
-    KaldaChompSpit_getExtraSize,
-};
-
-ObjectDescriptor gPinPonSpikeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pinponspike_initialise,
-    (ObjectDescriptorCallback)pinponspike_release,
-    0,
-    (ObjectDescriptorCallback)pinponspike_init,
-    (ObjectDescriptorCallback)pinponspike_update,
-    (ObjectDescriptorCallback)pinponspike_hitDetect,
-    (ObjectDescriptorCallback)pinponspike_render,
-    (ObjectDescriptorCallback)pinponspike_free,
-    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
-    pinponspike_getExtraSize,
-};
-
-ObjectDescriptor gPollenObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Pollen_initialise,
-    (ObjectDescriptorCallback)Pollen_release,
-    0,
-    (ObjectDescriptorCallback)Pollen_init,
-    (ObjectDescriptorCallback)Pollen_update,
-    (ObjectDescriptorCallback)Pollen_hitDetect,
-    (ObjectDescriptorCallback)Pollen_render,
-    (ObjectDescriptorCallback)Pollen_free,
-    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
-    Pollen_getExtraSize,
-};
-
 PollenFragmentConfig lbl_80320538 = {
     0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
 };
@@ -153,24 +102,6 @@ PollenFragmentConfig lbl_80320588 = {
 PollenFragmentConfig* lbl_8032059C[] = {
     &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
 };
-
-ObjectDescriptor gPollenFragmentObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollenfragment_initialise,
-    (ObjectDescriptorCallback)pollenfragment_release,
-    0,
-    (ObjectDescriptorCallback)pollenfragment_init,
-    (ObjectDescriptorCallback)pollenfragment_update,
-    (ObjectDescriptorCallback)pollenfragment_hitDetect,
-    (ObjectDescriptorCallback)pollenfragment_render,
-    (ObjectDescriptorCallback)pollenfragment_free,
-    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
-    pollenfragment_getExtraSize,
-};
-
 
 typedef struct StaffSwipeSlot
 {
@@ -249,110 +180,8 @@ int staff_getObjectTypeId(void)
 {
     return 0x9;
 }
-ObjectDescriptor gMikaBombObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)MikaBomb_initialise,
-    (ObjectDescriptorCallback)MikaBomb_release,
-    0,
-    (ObjectDescriptorCallback)MikaBomb_init,
-    (ObjectDescriptorCallback)MikaBomb_update,
-    (ObjectDescriptorCallback)MikaBomb_hitDetect,
-    (ObjectDescriptorCallback)MikaBomb_render,
-    (ObjectDescriptorCallback)MikaBomb_free,
-    (ObjectDescriptorCallback)MikaBomb_getObjectTypeId,
-    MikaBomb_getExtraSize,
-};
-
-ObjectDescriptor gMikaBombShadowObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)MikaBombShadow_initialise,
-    (ObjectDescriptorCallback)MikaBombShadow_release,
-    0,
-    (ObjectDescriptorCallback)MikaBombShadow_init,
-    (ObjectDescriptorCallback)MikaBombShadow_update,
-    (ObjectDescriptorCallback)MikaBombShadow_hitDetect,
-    (ObjectDescriptorCallback)MikaBombShadow_render,
-    (ObjectDescriptorCallback)MikaBombShadow_free,
-    (ObjectDescriptorCallback)MikaBombShadow_getObjectTypeId,
-    MikaBombShadow_getExtraSize,
-};
-
-ObjectDescriptor gStaticCameraObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)StaticCamera_initialise,
-    (ObjectDescriptorCallback)StaticCamera_release,
-    0,
-    (ObjectDescriptorCallback)StaticCamera_init,
-    (ObjectDescriptorCallback)StaticCamera_update,
-    (ObjectDescriptorCallback)StaticCamera_hitDetect,
-    (ObjectDescriptorCallback)StaticCamera_render,
-    (ObjectDescriptorCallback)StaticCamera_free,
-    (ObjectDescriptorCallback)StaticCamera_getObjectTypeId,
-    StaticCamera_getExtraSize,
-};
-
-ObjectDescriptor gGCbaddieShieldObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)GCbaddieShield_initialise,
-    (ObjectDescriptorCallback)GCbaddieShield_release,
-    0,
-    (ObjectDescriptorCallback)GCbaddieShield_init,
-    (ObjectDescriptorCallback)GCbaddieShield_update,
-    (ObjectDescriptorCallback)GCbaddieShield_hitDetect,
-    (ObjectDescriptorCallback)GCbaddieShield_render,
-    (ObjectDescriptorCallback)GCbaddieShield_free,
-    (ObjectDescriptorCallback)GCbaddieShield_getObjectTypeId,
-    GCbaddieShield_getExtraSize,
-};
-
-ObjectDescriptor gBaddieInterestPObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)BaddieInterestP_initialise,
-    (ObjectDescriptorCallback)BaddieInterestP_release,
-    0,
-    (ObjectDescriptorCallback)BaddieInterestP_init,
-    (ObjectDescriptorCallback)BaddieInterestP_update,
-    (ObjectDescriptorCallback)BaddieInterestP_hitDetect,
-    (ObjectDescriptorCallback)BaddieInterestP_render,
-    (ObjectDescriptorCallback)BaddieInterestP_free,
-    (ObjectDescriptorCallback)BaddieInterestP_getObjectTypeId,
-    BaddieInterestP_getExtraSize,
-};
-
 u32 lbl_80320700[] = {
     0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
-
-ObjectDescriptor gAnimatedObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)animatedobj_init,
-    (ObjectDescriptorCallback)animatedobj_update,
-    0,
-    (ObjectDescriptorCallback)animatedobj_render,
-    (ObjectDescriptorCallback)animatedobj_free,
-    0,
-    animatedobj_getExtraSize,
 };
 
 u32 lbl_80320768[] = {
@@ -362,40 +191,6 @@ u32 lbl_80320768[] = {
     0xBFFC28F6, 0x3C23D70A, 0x09200000, 0xC02EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0xC032E148,
     0xBF795810, 0xBFFC49BA, 0x3C23D70A, 0x09200000, 0xC033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000,
     0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
-};
-
-ObjectDescriptor gDIM2RoofRubObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)dim2roofrub_init,
-    (ObjectDescriptorCallback)dim2roofrub_update,
-    0,
-    (ObjectDescriptorCallback)dim2roofrub_render,
-    (ObjectDescriptorCallback)dim2roofrub_free,
-    0,
-    dim2roofrub_getExtraSize,
-};
-
-ObjectDescriptor gDepthOfFieldPointObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)depthoffieldpoint_init,
-    (ObjectDescriptorCallback)depthoffieldpoint_update,
-    0,
-    0,
-    0,
-    0,
-    depthoffieldpoint_getExtraSize,
 };
 
 extern u16 lbl_803208A0[];
@@ -440,69 +235,12 @@ u32 lbl_80320978[] = {
     0xFF000000,
 };
 
-ObjectDescriptor10WithPadding gFireballObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-        (ObjectDescriptorCallback)Fireball_initialise,
-        (ObjectDescriptorCallback)Fireball_release,
-        0,
-        (ObjectDescriptorCallback)Fireball_init,
-        (ObjectDescriptorCallback)Fireball_update,
-        (ObjectDescriptorCallback)Fireball_hitDetect,
-        (ObjectDescriptorCallback)Fireball_render,
-        (ObjectDescriptorCallback)Fireball_free,
-        (ObjectDescriptorCallback)Fireball_getObjectTypeId,
-        Fireball_getExtraSize,
-    },
-    0,
-};
-
 u32 lbl_803209C0[] = {
     0x0000004F, 0xFFC40000, 0x0000001F, 0x0000004F, 0x00C4FF00, 0x00000005, 0x0000004F, 0x00C4FF00, 0x0000001E,
 };
 
-ObjectDescriptor13 gFlameThrowerSpeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
-    (ObjectDescriptorCallback)flamethrowerspe_initialise,
-    (ObjectDescriptorCallback)flamethrowerspe_release,
-    0,
-    (ObjectDescriptorCallback)flamethrowerspe_init,
-    (ObjectDescriptorCallback)flamethrowerspe_update,
-    (ObjectDescriptorCallback)flamethrowerspe_hitDetect,
-    (ObjectDescriptorCallback)flamethrowerspe_render,
-    (ObjectDescriptorCallback)flamethrowerspe_free,
-    (ObjectDescriptorCallback)flamethrowerspe_getObjectTypeId,
-    flamethrowerspe_getExtraSize,
-    (ObjectDescriptorCallback)flamethrowerspe_setScale,
-    (ObjectDescriptorCallback)flamethrowerspe_func0B,
-    (ObjectDescriptorCallback)flamethrowerspe_modelMtxFn,
-};
-
 f32 lbl_80320A28[] = {
     0.5f, 0.55f, 0.65f, 0.7f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.3f, 0.3f, 0.3f, 0.3f,
-};
-
-ObjectDescriptor gShieldObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Shield_initialise,
-    (ObjectDescriptorCallback)Shield_release,
-    0,
-    (ObjectDescriptorCallback)Shield_init,
-    (ObjectDescriptorCallback)Shield_update,
-    (ObjectDescriptorCallback)Shield_hitDetect,
-    (ObjectDescriptorCallback)Shield_render,
-    (ObjectDescriptorCallback)Shield_free,
-    (ObjectDescriptorCallback)Shield_getObjectTypeId,
-    Shield_getExtraSize,
 };
 
 u32 jumptable_80320AA0[] = {
@@ -510,67 +248,6 @@ u32 jumptable_80320AA0[] = {
     (u32)((char*)staffFn_80170380 + 0x35C), (u32)((char*)staffFn_80170380 + 0x3D0),
     (u32)((char*)staffFn_80170380 + 0x584), (u32)((char*)staffFn_80170380 + 0x550),
     (u32)((char*)staffFn_80170380 + 0x65C), (u32)((char*)staffFn_80170380 + 0x84),
-};
-
-ObjectDescriptor12 gCurveObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)curve_init,
-    0,
-    0,
-    (ObjectDescriptorCallback)curve_render,
-    (ObjectDescriptorCallback)curve_free,
-    (ObjectDescriptorCallback)curve_getObjectTypeId,
-    curve_getExtraSize,
-    (ObjectDescriptorCallback)curve_setScale,
-    (ObjectDescriptorCallback)curve_func0B,
-};
-
-ObjectDescriptor gReStartMarkerObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0, (ObjectDescriptorCallback)restartmarker_init, 0, 0, 0, 0, 0, 0,
-};
-
-ObjectDescriptor dll_F7 = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dll_F7_initialise,
-    (ObjectDescriptorCallback)dll_F7_release,
-    0,
-    (ObjectDescriptorCallback)dll_F7_init,
-    (ObjectDescriptorCallback)dll_F7_update,
-    (ObjectDescriptorCallback)dll_F7_hitDetect,
-    (ObjectDescriptorCallback)dll_F7_render,
-    (ObjectDescriptorCallback)dll_F7_free,
-    (ObjectDescriptorCallback)dll_F7_getObjectTypeId,
-    dll_F7_getExtraSize,
-};
-
-ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
-    {
-        0,
-        0,
-        0,
-        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-        (ObjectDescriptorCallback)checkpoint4_initialise,
-        (ObjectDescriptorCallback)checkpoint4_release,
-        0,
-        (ObjectDescriptorCallback)checkpoint4_init,
-        (ObjectDescriptorCallback)checkpoint4_update,
-        (ObjectDescriptorCallback)checkpoint4_hitDetect,
-        (ObjectDescriptorCallback)checkpoint4_render,
-        (ObjectDescriptorCallback)checkpoint4_free,
-        (ObjectDescriptorCallback)checkpoint4_getObjectTypeId,
-        checkpoint4_getExtraSize,
-        (ObjectDescriptorCallback)checkpoint4_setScale,
-    },
-    0,
 };
 
 typedef struct StaffState
