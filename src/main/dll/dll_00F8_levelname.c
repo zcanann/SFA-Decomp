@@ -45,9 +45,9 @@
 #define LEVELNAME_SEQEV_SHOW    1 /* anim event id that triggers the banner */
 #define LEVELNAME_SEQFN_HANDLED 4 /* LevelName_SeqFn return when the show event fired */
 
-extern f32 lbl_803E36E0;
-extern f32 lbl_803E36E4;
-extern f32 lbl_803E36E8;
+__declspec(section ".sdata2") f32 lbl_803E36E0 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E36E4 = 3.1415927410125732f;
+__declspec(section ".sdata2") f32 lbl_803E36E8 = 32768.0f;
 
 int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

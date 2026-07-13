@@ -1365,6 +1365,7 @@ main/dll/dll_00F6_area.c:
 
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
+	.sdata2     start:0x803E36E0 end:0x803E36F0
 	.sdata2     start:0x803E36F0 end:0x803E3700
 
 main/dll/dll_00F9_projectileswitch.c:
