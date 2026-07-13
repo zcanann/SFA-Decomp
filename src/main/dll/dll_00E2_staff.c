@@ -11,13 +11,6 @@
  * impact sfx/water splashes from the contact hit-volume index, and the
  * grow/shrink lock-on animation is in staffDoGrowShrinkAnim.
  *
- * This translation unit also defines the ObjectDescriptors and small helpers
- * for the neighbouring objects packed into the same module: kaldachompspit,
- * pinponspike, pollen(+fragment), mikabomb(+shadow), static camera, gc baddie
- * shield, baddie interest point, animated obj, dim2roofrub, depth-of-field
- * point, fireball, flamethrowerspe, shield, curve, restart marker, dll_F7 and
- * checkpoint4. The bodies of those neighbours live in their own DLL units; the
- * descriptor tables and shared lbl_ data live here.
  */
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
@@ -29,18 +22,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
-#include "main/dll/dll_00E5_shield_api.h"
-#include "main/dll/dll_00DD_gcbaddieshield_api.h"
-#include "main/dll/dll_00DC_mikabombshadow_api.h"
-#include "main/dll/dll_00DB_mikabomb_api.h"
-#include "main/dll/dll_00DE_baddieinterestp_api.h"
-#include "main/dll/dll_00C6_animatedobj_api.h"
-#include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
-#include "main/dll/dll_00E6_restartmarker.h"
-#include "main/dll/dll_00F7_dllf7_api.h"
-#include "main/dll/dll_0125_curve_api.h"
-#include "main/dll/dll_025A_staticcamera.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -59,8 +40,6 @@
 #include "string.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C8_depthoffieldpoint_api.h"
-#include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
