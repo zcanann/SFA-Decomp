@@ -19,7 +19,6 @@
  */
 #include "main/game_object.h"
 #include "main/vecmath_distance_api.h"
-#include "main/dll/checkpoint4.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00DC_mikabombshadow_api.h"
