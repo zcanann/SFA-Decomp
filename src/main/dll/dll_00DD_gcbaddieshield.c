@@ -8,6 +8,7 @@
  * obj->unkF4 == 0.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/genprops.h"

@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/vecmath_distance_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
@@ -76,8 +77,6 @@ extern f32 gCollectibleDefaultScale;
 extern f32 gCollectibleLifetimeTimer;
 extern f32 lbl_803E349C;
 extern f32 lbl_803E34A0;
-extern void GCbaddieShield_update(int* obj);
-
 
 
 

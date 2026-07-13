@@ -14,6 +14,7 @@
 #include "main/objfx.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/object_render_legacy.h"
@@ -189,8 +190,6 @@ typedef struct Dim2roofrubState
 
 extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void GCbaddieShield_update(int* obj);
-
 extern f32 lbl_803E3270;
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -592,8 +591,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     },
     0,
 };
-
-void GCbaddieShield_update(int* obj);
 
 void MikaBombShadow_init(int* obj);
 

@@ -31,6 +31,7 @@
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -269,8 +270,6 @@ int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
-
-extern void GCbaddieShield_update(int* obj);
 
 void restartmarker_init(int* obj, int* state);
 
@@ -743,8 +742,6 @@ void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2)
     *(void**)((char*)slots + 0x48) = slot;
 }
 
-
-void GCbaddieShield_update(int* obj);
 
 void staff_free(int* obj)
 {

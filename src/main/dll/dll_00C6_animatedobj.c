@@ -4,6 +4,7 @@
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
+#include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
@@ -238,8 +239,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void GCbaddieShield_update(int* obj);
-
 
 
 
@@ -671,8 +670,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
     },
     0,
 };
-
-void GCbaddieShield_update(int* obj);
 
 
 
