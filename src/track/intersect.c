@@ -5,6 +5,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"

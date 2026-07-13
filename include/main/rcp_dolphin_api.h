@@ -8,6 +8,11 @@ void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2);
 void* textureAlloc(u16 width, u16 height, int format, u8 mip, u8 maxLod, u8 wrapS, u8 wrapT,
                    u8 minFilter, u8 magFilter);
 void* textureLoad(int texId, u8 flag);
+void* textureIdxToPtr(int index);
+void resetLotsOfRenderVars(void);
+void textureFn_800528bc(void);
+void gxColorFn_800523d0(void);
+void texRestructRefs(int mode);
 void Rcp_DisableDistortionFilter(void);
 void Rcp_SetSpiritVisionEnabled(u8 enabled);
 void fn_80053ED0(u32 bits);

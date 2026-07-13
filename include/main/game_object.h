@@ -131,7 +131,6 @@ void subtitleFn_8001b700(void);
 void trickyReportError(const char* fmt, ...);
 u8 isAreaNameTextActive(void);
 int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t);
-void renderResetFn_8003fc60(void);
 void __GXAbortWaitPECopyDone(void);
 void gameUiResetMenuState(void);
 int atan2_8002178c(f32 dx, f32 dz);
@@ -147,17 +146,12 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t);
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t);
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
-void* textureIdxToPtr(int idx);
 void trickyDebugPrint(const char* fmt, ...);
-void resetLotsOfRenderVars(void);
-void textureFn_800528bc(void);
 void showHelpText(s16 val);
 void* gameTextGetPhrase(int textId, int phraseIndex);
-void gxColorFn_800523d0(void);
 void fn_8004D230(void);
 void fn_8004D928(void);
 void texFlagFn_80023cbc(int v);
-void texRestructRefs(int mode);
 int testAndSet_onlyUseHeaps1and2(int v);
 int mmGetRegionForPtr(u8* ptr);
 int getHeapItemSize(void* ptr);

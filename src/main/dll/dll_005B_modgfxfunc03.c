@@ -14,6 +14,7 @@
 #include "main/effect_interfaces.h"
 #include "main/debug.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/modgfx_types.h"

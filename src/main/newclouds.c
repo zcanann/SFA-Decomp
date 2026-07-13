@@ -14,6 +14,7 @@
 #include "main/camera.h"
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
+#include "main/rcp_dolphin_api.h"
 #include "dolphin/gx/GXDispList.h"
 #include "dolphin/gx/GXEnum.h"
 #include "dolphin/os/OSCache.h"

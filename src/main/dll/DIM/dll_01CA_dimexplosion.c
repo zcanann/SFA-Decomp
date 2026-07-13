@@ -24,6 +24,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objprint_render_api.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/object.h"

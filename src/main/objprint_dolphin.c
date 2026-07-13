@@ -2,6 +2,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/modellight_api.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
 #include "main/pad.h"

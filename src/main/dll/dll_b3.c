@@ -8,6 +8,7 @@
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "main/game_object.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/model.h"
 #include "track/intersect_api.h"
 

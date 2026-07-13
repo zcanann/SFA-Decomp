@@ -11,6 +11,7 @@
  * fixed alpha-compare / cull state used for HUD icons.
  */
 #include "main/dll/dll_B2.h"
+#include "main/rcp_dolphin_api.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/model.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"

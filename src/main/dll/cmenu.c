@@ -27,6 +27,7 @@
 #include "main/pause_menu_api.h"
 #include "main/gamebits.h"
 #include "main/texture.h"
+#include "main/rcp_dolphin_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/camera.h"
 #include "main/dll/tricky_api.h"
