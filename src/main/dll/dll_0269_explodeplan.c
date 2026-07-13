@@ -13,6 +13,11 @@
 #include "main/game_object.h"
 #include "main/dll/dll_0269_explodeplan.h"
 
+__declspec(section ".sdata2") f32 lbl_803E69D0 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E69D4 = 0.0f;
+#pragma explicit_zero_data off
+
 #define EXPLODEPLAN_OBJECT_TYPE_ID 0x0
 
 int explodeplan_getExtraSize(void)

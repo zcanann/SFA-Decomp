@@ -21,6 +21,11 @@
 
 #include "main/dll/DR/dll_0279_drenergydisc.h"
 
+__declspec(section ".sdata2") f32 lbl_803E6BB0 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E6BB4 = 0.0f;
+#pragma explicit_zero_data off
+
 #define DRENERGYDISC_OBJFLAG_HIDDEN             0x4000
 #define DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED 0x2000
 

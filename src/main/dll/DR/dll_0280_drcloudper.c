@@ -17,6 +17,13 @@
 
 #include "main/dll/DR/dll_0280_drcloudper.h"
 
+__declspec(section ".sdata2") f32 lbl_803E6BF0 = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E6BF4 = 32768.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E6BF8 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E6BFC = 0.0f;
+#pragma explicit_zero_data off
+
 #define DRCLOUDPER_GROUP_TRIGGER        0x13
 #define DRCLOUDPER_GROUP_SURFACE        0x39
 #define DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT 0x7a9

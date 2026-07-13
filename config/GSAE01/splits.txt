@@ -2697,12 +2697,15 @@ main/dll/DR/dll_0265_drcreator.c:
 
 main/dll/dll_0269_explodeplan.c:
 	.text       start:0x8021A008 end:0x8021A13C
+	.sdata2     start:0x803E69D0 end:0x803E69D8
 
 main/dll/DR/dll_0268_drcagecontrol.c:
 	.text       start:0x8021A13C end:0x8021A42C
+	.sdata2     start:0x803E69D8 end:0x803E69E0
 
 main/dll/DR/dll_026B_drchimmey.c:
 	.text       start:0x8021A42C end:0x8021A62C
+	.sdata2     start:0x803E69E0 end:0x803E69F0
 
 main/dll/DR/dll_026C_drcagewith.c:
 	.text       start:0x8021A62C end:0x8021ACE8
@@ -2728,16 +2731,19 @@ main/dll/dll_0273_firepipe.c:
 
 main/dll/DR/dll_0279_drenergydisc.c:
 	.text       start:0x80220608 end:0x80220808
+	.sdata2     start:0x803E6BB0 end:0x803E6BB8
 
 main/dll/DR/dll_027C_drlightbea.c:
 	.text       start:0x80220808 end:0x80220AD0
+	.sdata2     start:0x803E6BB8 end:0x803E6BC8
 
 main/dll/DR/dll_027E_drmusiccont.c:
 	.text       start:0x80220AD0 end:0x80221178
+	.sdata2     start:0x803E6BC8 end:0x803E6BF0
 
 main/dll/DR/dll_0280_drcloudper.c:
 	.text       start:0x80221178 end:0x80221430
-	.sdata2     start:0x803E6C00 end:0x803E6C08
+	.sdata2     start:0x803E6BF0 end:0x803E6C08
 
 main/dll/DR/dll_0281_drearthcal.c:
 	.text       start:0x80221430 end:0x80221670

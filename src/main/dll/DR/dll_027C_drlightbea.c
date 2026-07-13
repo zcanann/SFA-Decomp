@@ -26,6 +26,13 @@
 
 #include "main/dll/DR/dll_027C_drlightbea.h"
 
+__declspec(section ".sdata2") f32 lbl_803E6BB8 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E6BBC = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E6BC0 = 0.1f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E6BC4 = 0.0f;
+#pragma explicit_zero_data off
+
 int DR_LightBea_getExtraSize(void)
 {
     return 0xc;

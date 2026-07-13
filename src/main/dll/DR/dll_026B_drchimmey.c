@@ -13,6 +13,15 @@
 #include "main/object_render.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
 
+__declspec(section ".sdata2") f32 lbl_803E69E0 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E69E4 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E69E8 = 90.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E69EC = 0.0f;
+#pragma explicit_zero_data off
+
 int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
 {
     DRChimmeyState* state = obj->state;
