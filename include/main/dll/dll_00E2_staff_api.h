@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00E2_STAFF_API_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor23 gStaffObjDescriptor;
 
 void objSetAnimField48to0(GameObject* obj);
 void staff_addHitReactValue(int* obj, s32 delta);

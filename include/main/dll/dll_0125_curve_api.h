@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_0125_CURVE_API_H_
 
 #include "main/dll/dll_0015_curves.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor12 gCurveObjDescriptor;
 
 void curve_free(void);
 int curve_func0B(void);

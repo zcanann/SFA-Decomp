@@ -3,20 +3,4 @@
 
 #include "main/object_descriptor.h"
 
-extern ObjectDescriptor gMikaBombObjDescriptor;
-extern ObjectDescriptor gMikaBombShadowObjDescriptor;
-extern ObjectDescriptor gStaticCameraObjDescriptor;
-extern ObjectDescriptor gGCbaddieShieldObjDescriptor;
-extern ObjectDescriptor gBaddieInterestPObjDescriptor;
-extern ObjectDescriptor gAnimatedObjDescriptor;
-extern ObjectDescriptor gDIM2RoofRubObjDescriptor;
-extern ObjectDescriptor gDepthOfFieldPointObjDescriptor;
-extern ObjectDescriptor23 gStaffObjDescriptor;
-extern ObjectDescriptor10WithPadding gFireballObjDescriptor;
-extern ObjectDescriptor gShieldObjDescriptor;
-extern ObjectDescriptor13 gFlameThrowerSpeObjDescriptor;
-extern ObjectDescriptor12 gCurveObjDescriptor;
-extern ObjectDescriptor gReStartMarkerObjDescriptor;
-extern ObjectDescriptor dll_F7;
-
 #endif /* MAIN_DLL_GENPROPS_H_ */

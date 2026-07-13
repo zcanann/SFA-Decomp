@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00DB_MIKABOMB_API_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gMikaBombObjDescriptor;
 
 void MikaBomb_free(GameObject* obj, int mode);
 int MikaBomb_getExtraSize(void);

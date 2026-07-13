@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00E5_SHIELD_API_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gShieldObjDescriptor;
 
 GameObject* fn_801702D4(GameObject* obj, f32 rootMotionScale);
 void Shield_free(GameObject* obj);

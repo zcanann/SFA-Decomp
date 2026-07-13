@@ -3,6 +3,9 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gStaticCameraObjDescriptor;
 
 typedef struct StaticCameraState
 {

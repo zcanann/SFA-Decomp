@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00DE_BADDIEINTERESTP_API_H_
 
 #include "types.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gBaddieInterestPObjDescriptor;
 
 void BaddieInterestP_free(void);
 int BaddieInterestP_getExtraSize(void);

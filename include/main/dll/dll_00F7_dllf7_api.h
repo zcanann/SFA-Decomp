@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00F7_DLLF7_API_H_
 
 #include "types.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor dll_F7;
 
 void dll_F7_free(int obj);
 int dll_F7_getExtraSize(void);

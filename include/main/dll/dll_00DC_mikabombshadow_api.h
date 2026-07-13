@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00DC_MIKABOMBSHADOW_API_H_
 
 #include "types.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gMikaBombShadowObjDescriptor;
 
 void MikaBombShadow_free(void);
 int MikaBombShadow_getExtraSize(void);

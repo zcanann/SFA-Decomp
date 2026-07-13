@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00DD_GCBADDIESHIELD_API_H_
 
 #include "types.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gGCbaddieShieldObjDescriptor;
 
 void GCbaddieShield_free(void);
 int GCbaddieShield_getExtraSize(void);
