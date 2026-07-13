@@ -101,8 +101,6 @@ extern float fsin16Approx(int angle);
 extern void drawPartialTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e, int f);
 extern void drawScaledTexture(int tex, f32 a, f32 b, u8 alpha, int scale, int c, int d, int e);
 extern void drawTexture(int tex, f32 x, f32 y, u8 alpha, int scale);
-extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-
 void drawFn_80125424(void)
 {
     int i;

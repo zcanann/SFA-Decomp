@@ -53,6 +53,7 @@
 #include "dolphin/gx/GXTransform.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx.h"
+#include "main/audio/stream_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -151,8 +152,6 @@ extern int lbl_803DD81C;
 extern u8 lbl_803DD781;
 extern GridEntry lbl_8031BD30[];
 
-extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern void AudioStream_StartPrepared(void);
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
 extern f32 lbl_803E213C;
@@ -297,14 +296,12 @@ extern f32 lbl_803E21C0;
 extern f32 lbl_803E21C4;
 extern f32 lbl_803E21C8;
 extern f32 lbl_803E21CC;
-extern u8 AudioStream_IsPreparing(void);
 extern int getCurGameText(void);
 extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
 extern int fn_80296C4C(u8* player);
 extern void playerHeal(u8* player);
-extern void AudioStream_StopCurrent(void);
 extern void updateSavedHealth(void);
 extern u16* saveGameGetCurHint(void);
 extern void gameTextLoadForMap_800571f0(int v);
@@ -403,7 +400,6 @@ extern int airMeter;
  * symbol is declared exactly once with a single consistent type. */
 
 extern void cutsceneFadeInOut(int a);
-extern void Music_Trigger(int id, int arg);
 extern int objIsCurModelNotZero();
 extern u8 cMenuState;
 extern u8 cMenuOpen;
@@ -2838,7 +2834,7 @@ void pauseMenuFn_80129ee0(void)
             u16 b2;
             padGetAnalogInput(0, &analogX, &analogY);
             pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 && AudioStream_IsPreparing() == 0)
+            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentIdLegacy() == 0 && AudioStream_IsPreparing() == 0)
             {
                 ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
                 lbl_803DD781 = 0;

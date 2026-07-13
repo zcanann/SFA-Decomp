@@ -23,7 +23,6 @@ extern void removeButtonObject(int* obj);
 extern int playerIsDead(void);
 extern void playerSetIsDead(GameObject* player, int v);
 
-extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 
 /* .sdata2 constant pool */

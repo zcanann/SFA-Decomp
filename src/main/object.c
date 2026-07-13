@@ -5,6 +5,7 @@
 #include "main/model.h"
 #include "main/asset_load.h"
 #include "main/audio/sfx.h"
+#include "main/audio/stream_api.h"
 #include "main/camera_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -196,7 +197,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern int getCurUiDll(void);
 extern void fn_80013B6C(int* p, int n);
-extern void AudioStream_StopAll(void);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);
 extern void intersectModLineBuild(u8* buf);

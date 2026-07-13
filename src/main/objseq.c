@@ -5,6 +5,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
 #include "main/audio/sfx.h"
+#include "main/audio/stream_api.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"
@@ -91,7 +92,6 @@ extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
 extern int isGameTimerDisabled(void);
-extern void AudioStream_CancelPrepared(void);
 extern int getCurMapLayer(void);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
@@ -143,7 +143,6 @@ extern f32 lbl_803DEFC8;
 extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF024;
 extern f32 lbl_803DF028;
-extern void Music_Trigger(int id, int restart);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 lbl_803DEFE8;
@@ -242,7 +241,6 @@ extern f32 Vec_xzDistance(f32* a, f32* b);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
-extern int AudioStream_Play(int id, void (*preparedCallback)(void));
 
 extern int gObjSeqStreamTableB[];
 extern int lbl_803DB718;

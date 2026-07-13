@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "dolphin/dvd.h"
+#include "main/audio/stream_api.h"
 
 extern u8 gAudioStreamDvdState;
 extern u8 gAudioStreamPlaying;
@@ -23,20 +24,6 @@ void audioUpdate(void);
 u32 audioFlagFn_8000a188(u32 mask);
 void audioFree(void* ptr);
 void* _audioAlloc(u32 size);
-u8 AudioStream_IsPreparing(void);
-void AudioStream_CancelPrepared(void);
-void AudioStream_StartPrepared(void);
-void AudioStream_StopCurrent(void);
-void AudioStream_StopAll(void);
-u32 AudioStream_GetMusicFadeFlagA(void);
-u32 AudioStream_GetMusicFadeFlagB(void);
-u32 AudioStream_GetCurrentId(void);
-void AudioStream_SetVolume(u8 volume);
-void AudioStream_SetDefaultVolume(u8 volume);
-void AudioStream_Init(void);
-void AudioStream_PrepareCallback(s32 result, DVDFileInfo* fileInfo);
-void AudioStream_PlayAddrCallback(u32 result);
-int AudioStream_Play(int id, void (*preparedCallback)(void));
 void audioStopByMask(int mask);
 void streamFn_8000a380(int mask, int mode, int time);
 void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);

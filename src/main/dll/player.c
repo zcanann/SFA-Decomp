@@ -25,6 +25,7 @@
 #include "main/curve_eval.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/stream_api.h"
 #include "main/audio/sfx_legacy.h"
 #include "main/audio/music_api.h"
 #include "main/gameloop_api.h"

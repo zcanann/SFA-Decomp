@@ -17,6 +17,7 @@
 #include "main/maketex.h"
 #include "main/objseq_api.h"
 #include "main/fileio.h"
+#include "main/audio/stream_api.h"
 #include "dolphin/dvd.h"
 
 typedef struct
@@ -131,11 +132,9 @@ extern f32 lbl_803DD074;
 extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
-extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
 extern void gameTextLoadTaskText(int taskId);
 extern void subtitleStart(int);
-extern void AudioStream_CancelPrepared(void);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
@@ -149,7 +148,6 @@ extern s32 CARDUnmount(s32 chan);
 extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
 extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern void AudioStream_StartPrepared(void);
 extern void showMemCardError();
 extern void cardGetMessage();
 extern void cardDeleteFn_8007d99c();

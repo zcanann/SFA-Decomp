@@ -30,6 +30,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
+#include "main/audio/stream_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 
@@ -72,7 +73,6 @@ extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
 extern int getCurUiDll(void);
-extern void AudioStream_CancelPrepared(void);
 extern void seqClearTaskTexts(void);
 extern void doNothing_8000CF54(int unused);
 extern void CMenu_SetFadeCounter(s16 v);
