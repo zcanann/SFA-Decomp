@@ -922,6 +922,7 @@ void Tricky_update(int obj)
     int state;
     TrickyState* trickyState;
     int found;
+    int sfxId;
     u8* cursor;
     TrickyState* st;
     int i;
@@ -1582,8 +1583,6 @@ void Tricky_update(int obj)
         ((TrickyState*)state)->impressTimer -= timeDelta;
         if (((TrickyState*)state)->impressTimer <= lbl_803E23DC)
         {
-            int sfxId;
-
             ((TrickyState*)state)->stateFlags &= 0x7FFFFFFF;
             sfxId = ((u16*)&pair)[randomGetRange(0, 1)];
             TRICKY_VOICE(obj, sfxId, 0x500);
