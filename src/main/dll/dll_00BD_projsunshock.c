@@ -6,12 +6,9 @@
  * message and returns the failure sentinel, while release/initialise are
  * empty stubs that keep the DLL loadable.
  */
-#include "main/dll/dll_7A.h"
 #include "dolphin/os/OSReport.h"
-
-extern void projtesla_doUnsupported();
-extern void projtesla_release();
-extern void projtesla_initialise();
+#include "main/dll/dll_00BD_projsunshock.h"
+#include "main/dll/dll_00BE_projtesla.h"
 
 int projsunshock_doUnsupported(void)
 {

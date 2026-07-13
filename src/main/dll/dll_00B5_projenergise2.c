@@ -5,10 +5,10 @@
  * projectile is no longer supported and returns the unsupported sentinel)
  * plus empty release/initialise stubs.
  */
-#include "main/dll/dll_6A.h"
 #include "dolphin/os.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B2_projrobotfire.h"
+#include "main/dll/dll_00B5_projenergise2.h"
 
 #define PROJENERGISE2_UNSUPPORTED -1
 

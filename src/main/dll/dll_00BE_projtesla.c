@@ -5,9 +5,9 @@
  * via OSReport and returns 0. The release and initialise descriptor hooks are
  * empty stubs.
  */
-#include "main/dll/dll_7D.h"
 #include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00BE_projtesla.h"
 #include "main/dll/dll_00BF_projcore1.h"
 
 int projtesla_doUnsupported(void)

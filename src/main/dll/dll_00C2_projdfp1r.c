@@ -6,10 +6,10 @@
  * the load/unload hooks are empty stubs.
  */
 #include "dolphin/os.h"
-#include "main/dll/dll_89.h"
 #include "main/dll/dll_BB.h"
 #include "main/dll/dll_BC.h"
 #include "main/dll/dll_8B.h"
+#include "main/dll/dll_00C2_projdfp1r.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 

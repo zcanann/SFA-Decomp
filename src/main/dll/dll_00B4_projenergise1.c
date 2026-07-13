@@ -7,15 +7,12 @@
  * placeholder that keeps the DLL id valid after the projectile behavior
  * was removed.
  */
-#include "main/dll/modgfx67.h"
 #include "dolphin/os/OSReport.h"
 #include "types.h"
+#include "main/dll/dll_00B4_projenergise1.h"
+#include "main/dll/dll_00B5_projenergise2.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
-
-extern void projenergise2_doUnsupported(void);
-extern void projenergise2_release(void);
-extern void projenergise2_initialise(void);
 
 int projenergise1_doUnsupported(void)
 {

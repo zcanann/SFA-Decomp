@@ -7,13 +7,9 @@
  * The DLL is kept as a placeholder so its slot/id remains valid.
  */
 #include "dolphin/os.h"
-#include "main/dll/modcloudrunner2.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00C1_projcore3.h"
-
-extern void projdfp1r_doUnsupported();
-extern void projdfp1r_release();
-extern void projdfp1r_initialise();
+#include "main/dll/dll_00C2_projdfp1r.h"
 
 int projcore3_doUnsupported(void)
 {

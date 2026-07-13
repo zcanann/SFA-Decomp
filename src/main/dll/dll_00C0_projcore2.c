@@ -5,7 +5,6 @@
  * supported and returns the unsupported sentinel (-1); the DLL's
  * release/initialise lifecycle hooks are empty stubs.
  */
-#include "main/dll/dll_83.h"
 #include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00C0_projcore2.h"

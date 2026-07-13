@@ -1,6 +1,8 @@
 #ifndef MAIN_DLL_DLL_00BF_PROJCORE1_H_
 #define MAIN_DLL_DLL_00BF_PROJCORE1_H_
 
+extern char sProjcore1DoNoLongerSupported[];
+
 int projcore1_doUnsupported(void);
 void projcore1_release(void);
 void projcore1_initialise(void);

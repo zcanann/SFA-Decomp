@@ -5,7 +5,6 @@
  * via OSReport and returns -1; release/initialise are empty.
  */
 #include "dolphin/os.h"
-#include "main/dll/dll_6D.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B2_projrobotfire.h"
 #include "main/dll/dll_00B6_projsquirt1.h"

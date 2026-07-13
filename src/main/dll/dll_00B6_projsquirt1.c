@@ -6,9 +6,7 @@
  * release/initialise descriptor hooks are empty stubs.
  */
 #include "dolphin/os.h"
-#include "main/dll/dll_70.h"
 #include "main/dll/dll_descriptor_table.h"
-#include "main/dll/dll_72.h"
 #include "main/dll/dll_00B6_projsquirt1.h"
 #include "main/dll/dll_00B7_projship1.h"
 

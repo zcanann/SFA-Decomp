@@ -6,16 +6,12 @@
  * message and returns -1. release/initialise are empty lifecycle hooks
  * kept so the object descriptor / DLL loader still resolves.
  */
-#include "main/dll/dll_72.h"
 #include "dolphin/os/OSReport.h"
 #include "main/dll/dll_descriptor_table.h"
 #include "main/dll/dll_00B7_projship1.h"
+#include "main/dll/dll_00BB_projwallpower.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
-
-extern void projwallpower_doUnsupported();
-extern void projwallpower_release();
-extern void projwallpower_initialise();
 
 int projship1_doUnsupported(void)
 {

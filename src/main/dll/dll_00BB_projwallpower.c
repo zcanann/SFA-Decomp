@@ -11,12 +11,9 @@
  * projquakeshock, etc.) which return the -1 unsupported sentinel, wallpower
  * returns 0.
  */
-#include "main/dll/dll_64.h"
 #include "dolphin/os/OSReport.h"
-
-extern void projquakeshock_doUnsupported();
-extern void projquakeshock_release();
-extern void projquakeshock_initialise();
+#include "main/dll/dll_00BB_projwallpower.h"
+#include "main/dll/dll_00BC_projquakeshock.h"
 
 int projwallpower_doUnsupported(void)
 {

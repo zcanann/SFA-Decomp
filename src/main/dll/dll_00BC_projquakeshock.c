@@ -6,14 +6,11 @@
  * code, so this projectile type has been disabled in retail.
  */
 #include "dolphin/os.h"
-#include "main/dll/dll_77.h"
 #include "main/dll/dll_descriptor_table.h"
+#include "main/dll/dll_00BC_projquakeshock.h"
+#include "main/dll/dll_00BD_projsunshock.h"
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
-
-extern void projsunshock_doUnsupported(void);
-extern void projsunshock_release(void);
-extern void projsunshock_initialise(void);
 
 int projquakeshock_doUnsupported(void)
 {
