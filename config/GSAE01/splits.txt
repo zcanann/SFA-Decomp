@@ -966,10 +966,12 @@ main/dll/dll_43.c:
 main/dll/dll_0035_saveselectscreen.c:
 	.text       start:0x8011A0DC end:0x8011B5D4
 	.data       start:0x8031A7BC end:0x8031A880
+	.bss        start:0x803A8658 end:0x803A8690
 
 main/dll/dll_0036_entersavenamescreen.c:
 	.text       start:0x8011B5D4 end:0x8011BFC8
 	.data       start:0x8031A880 end:0x8031A8D0
+	.bss        start:0x803A8690 end:0x803A87D0
 	.sdata2     start:0x803E1DA0 end:0x803E1DD0
 
 main/dll/dll_4e.c:

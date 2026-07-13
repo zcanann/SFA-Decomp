@@ -94,14 +94,14 @@ extern s8 gSaveSelectRefreshCounter;
 extern s8 lbl_803DD6CF;
 extern u8 lbl_803DD6C4;
 extern void* lbl_8031A804[4];
-extern void* lbl_803A8680[4];
+void* lbl_803A8680[4];
 extern SaveSelectPanel gSaveSelectPanels[];
 extern u8 lbl_8031A7F8[];
 extern s16 gSaveSelectTextureIds;
 extern void gplaySaveGame();
 void saveSelectGoToChapterSelect(void);
 
-extern void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
+void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern int gSaveSelectInfoStartSlot;

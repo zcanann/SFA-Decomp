@@ -33,7 +33,8 @@ extern f32 lbl_803E1D9C;
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
 
-extern s32 gEnterSaveNameCharWidths[];
+s32 gEnterSaveNameCharWidths[40];
+s32 gEnterSaveNameCharOffsets[40];
 extern u8 saveFileSelect_currentSlotIndex;
 extern f32 lbl_803DD6D0;
 extern f32 gEnterSaveNameTargetScrollVel;
@@ -47,7 +48,6 @@ void EnterSaveNameScreen_render(void)
 {
     extern u8 gEnterSaveNameBuffer;
     extern int gEnterSaveNameSelectedIndex;
-    extern int gEnterSaveNameCharOffsets[];
     extern void* gameTextGetStr(int id);
     u8 buf[2];
     int i;
@@ -106,7 +106,6 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
 {
     extern char gEnterSaveNameBuffer;
     extern s32 gEnterSaveNameSelectedIndex;
-    extern s32 gEnterSaveNameCharOffsets[];
     extern char* gameTextGetStr(u16 textId);
     s8 stickX;
     int buttons;
@@ -298,7 +297,6 @@ void EnterSaveNameScreen_initialise(void)
 {
     extern char gEnterSaveNameBuffer;
     extern s32 gEnterSaveNameSelectedIndex;
-    extern s32 gEnterSaveNameCharOffsets[];
     extern char* gameTextGetStr(u16 textId);
     int i;
     f32 width;
