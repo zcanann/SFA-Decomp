@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/savegame.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_command_api.h"
@@ -108,9 +109,6 @@ extern s16 lbl_803DD8CA;
 extern s16 lbl_803DD8D0;
 extern s8 gHighScoreActiveTableId;
 extern u8 gHighScoreHighlightRow;
-extern int insertHighScore(u8, u8, int, s32);
-extern int getSaveFileName(void);
-
 extern u8 lbl_803A9440[0x18];
 extern u8 hudTextures[0x198];
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u);
@@ -305,7 +303,6 @@ extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
 extern int fn_80296C4C(u8* player);
 extern void playerHeal(u8* player);
-extern void updateSavedHealth(void);
 extern u16* saveGameGetCurHint(void);
 extern void gameTextLoadForMap_800571f0(int v);
 extern u8 pauseDisabled;
@@ -791,7 +788,7 @@ int pauseMenuIsFox(void)
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
 int registerNewScore(s8 tableId, int score, u8 kind, int mode)
 {
-    gHighScoreHighlightRow = insertHighScore(tableId, kind == 0xa, score, getSaveFileName());
+    gHighScoreHighlightRow = insertHighScore(tableId, kind == 0xa, score, (u8*)getSaveFileName());
     if ((u8)mode == 2 || (u8)mode == 1)
     {
         if (gHighScoreActiveTableId == -1)

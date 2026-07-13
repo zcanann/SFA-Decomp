@@ -15,6 +15,7 @@
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/savegame.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/mapEventTypes.h"

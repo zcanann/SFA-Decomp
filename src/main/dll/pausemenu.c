@@ -17,6 +17,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/savegame.h"
 #include "main/model.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/textrender.h"

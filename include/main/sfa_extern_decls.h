@@ -4,12 +4,10 @@
 #include "types.h"
 
 void* RomList_GetLoadedPages(void);
-f32 SaveGame_getPlayTime(void);
 int AppleOnTree_getExtraSize(void);
 void AppleOnTree_setScale(void);
 void cMenuRotateFn_80124d80(void);
 void clearCurSeqNo(void);
-void clearSaveGameLoadingFlag(void);
 void whirlpool_updateWhileFrozen(void);
 void cutSceneFn_8011dd30(void);
 void cutsceneExit(void);
@@ -27,10 +25,8 @@ void debugPrintInit(void);
 void errDisplayInstallHandlers(void);
 void errDisplayThreadMain(void);
 s32 getCurMapType(void);
-char* getSaveFileName(void);
 void init(void);
 u32 isRomListLoading(void);
-s32 isSaveGameLoading(void);
 int isWidescreen(void);
 void linkDrawFn_801302c0(void);
 void linkDrawFn_80130484(void);
@@ -43,7 +39,6 @@ int return0_8002A5B8();
 void salHandleAuxProcessing(void);
 void setLinkIsRotated(void);
 void setLinkNotRotated(void);
-void setSaveGameLoadingFlag(void);
 int spellstone_idleCallback(void);
 int SPScarab_getExtraSize(void);
 int SPScarab_getObjectTypeId(void);
@@ -54,7 +49,6 @@ void timeListFn_8012df14(void);
 int TitleScreen_getExtraSize(void);
 void TitleScreen_hitDetect(void);
 void updateReflectionTextures(void);
-void updateSavedHealth(void);
 void viewFn_80129c74(void);
 
 #endif
