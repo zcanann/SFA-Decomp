@@ -544,3 +544,16 @@ void CameraModeCombat_release(void)
 void CameraModeCombat_initialise(void)
 {
 }
+
+u32 lbl_80319CE8[12] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00060000,
+                        (u32)CameraModeCombat_initialise,
+                        (u32)CameraModeCombat_release,
+                        0x00000000,
+                        (u32)CameraModeCombat_init,
+                        (u32)CameraModeCombat_update,
+                        (u32)CameraModeCombat_free,
+                        (u32)CameraModeCombat_copyToCurrent,
+                        0x00000000};
