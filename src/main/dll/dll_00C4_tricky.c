@@ -1510,15 +1510,18 @@ void Tricky_update(int obj)
     }
     ((TrickyState*)state)->prevSpeed = ((TrickyState*)state)->speed;
     i = ((TrickyState*)state)->commandCount - 1;
-    cursor = (u8*)state + i * 8;
-    for (; i >= 0; i--, cursor -= 8)
     {
-        *(u8*)(cursor + 0x74e) -= 1;
-        if (*(s8*)(cursor + 0x74e) == 0)
+        u8* commandCursor = (u8*)state + i * 8;
+
+        for (; i >= 0; i--, commandCursor -= 8)
         {
-            memmove((void*)(cursor + 0x748), (void*)(state + (i + 1) * 8 + 0x748),
-                    (((TrickyState*)state)->commandCount - i - 1) * 8);
-            ((TrickyState*)state)->commandCount -= 1;
+            *(u8*)(commandCursor + 0x74e) -= 1;
+            if (*(s8*)(commandCursor + 0x74e) == 0)
+            {
+                memmove((void*)(commandCursor + 0x748), (void*)(state + (i + 1) * 8 + 0x748),
+                        (((TrickyState*)state)->commandCount - i - 1) * 8);
+                ((TrickyState*)state)->commandCount -= 1;
+            }
         }
     }
     if (getXZDistance(&((GameObject*)obj)->anim.worldPosX,
