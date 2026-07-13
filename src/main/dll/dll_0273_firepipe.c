@@ -26,7 +26,7 @@
  * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"

@@ -4,7 +4,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 

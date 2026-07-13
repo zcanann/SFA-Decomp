@@ -19,7 +19,7 @@
 #include "main/model_light.h"
 #include "main/objlib.h"
 #include "main/objtexture.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

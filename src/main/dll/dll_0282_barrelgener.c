@@ -32,7 +32,7 @@
 #include "main/voxmaps.h"
 #include "main/shader_api.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"

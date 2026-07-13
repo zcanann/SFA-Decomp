@@ -1,7 +1,7 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/proximitymine.h"
 #include "main/vecmath_distance_api.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"

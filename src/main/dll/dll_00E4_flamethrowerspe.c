@@ -1,6 +1,6 @@
 /* DLL 0x00E4 (flamethrowerspe) - Flame thrower special effect [0x80170004-0x801702D4). */
 #include "main/dll/dll_00E4_flamethrowerspe.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/objhits.h"

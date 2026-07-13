@@ -8,7 +8,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/obj_placement.h"
 #include "main/object_render.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"

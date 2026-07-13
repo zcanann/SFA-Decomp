@@ -14,7 +14,7 @@
  */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_render_legacy.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/objseq_api.h"

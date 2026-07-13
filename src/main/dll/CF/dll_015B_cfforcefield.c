@@ -8,7 +8,7 @@
  * field re-arms if the collapse bit is cleared again.
  */
 #include "main/game_object.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"

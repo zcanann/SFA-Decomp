@@ -20,7 +20,7 @@
 #include "main/dll/player_motion_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 
 #define storeZeroToFloatParamLegacy(timer) \

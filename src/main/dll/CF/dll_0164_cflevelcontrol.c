@@ -22,7 +22,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/sfx.h"
-#include "main/maketex.h"
+#include "main/maketex_timer_api.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 typedef struct CflevelcontrolState
