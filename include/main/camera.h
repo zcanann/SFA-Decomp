@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/camera_shake_api.h"
+#include "main/vec_types.h"
 #include "main/vecmath.h"
 
 typedef struct _GXRenderModeObj GXRenderModeObj;
@@ -13,9 +14,14 @@ typedef struct CameraViewSlot {
     s16 pitch;
     s16 roll;
     u8 pad06[6];
-    f32 x;
-    f32 y;
-    f32 z;
+    union {
+        struct {
+            f32 x;
+            f32 y;
+            f32 z;
+        };
+        Vec3f position;
+    };
     u8 pad18[0x14];
     f32 shakeMagnitude;
     f32 shakeMagnitudeTarget;
@@ -23,9 +29,14 @@ typedef struct CameraViewSlot {
     f32 shakeTimer;
     f32 shakeFalloff;
     GameObject* parentObject;
-    f32 worldX;
-    f32 worldY;
-    f32 worldZ;
+    union {
+        struct {
+            f32 worldX;
+            f32 worldY;
+            f32 worldZ;
+        };
+        Vec3f worldPosition;
+    };
     s16 worldYaw;
     s16 worldPitch;
     s16 worldRoll;

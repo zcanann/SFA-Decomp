@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "dolphin/mtx/vec.h"
 #include "main/asset_load.h"
 #include "main/gameloop_api.h"
 #include "main/pi_dolphin_api.h"
@@ -647,7 +648,7 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 
 typedef struct
 {
-    f32 v[15];
+    Vec v[5];
 } _PlaneDirPack;
 
 typedef struct
@@ -655,29 +656,21 @@ typedef struct
     f32 v[5];
 } _ScalePack;
 
-typedef struct
-{
-    f32 x, y, z;
-} _Vec3;
-
 extern _PlaneDirPack sPlayerFrustumPlaneDirs;
 extern _ScalePack sPlayerFrustumPlaneScales;
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
-extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
-extern void PSVECScale(f32* in, _Vec3* out, f32 s);
-extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
-extern f32 PSVECDotProduct(_Vec3* a, f32* b);
+extern void PSMTXMultVec(f32* mtx, Vec* in, f32* out);
 
 void playerVecFn_8005a9b0(void)
 {
-    _Vec3 tmp;
-    _Vec3 camPos;
+    Vec tmp;
+    Vec camPos;
     _ScalePack scales;
     _PlaneDirPack planes;
     GameObject* player;
     CameraViewSlot* viewSlot;
-    f32* outPtr;
+    FrustumPlane* outPtr;
     int i;
     f32* invRotMtx;
     f32 clipDist;
@@ -702,13 +695,13 @@ void playerVecFn_8005a9b0(void)
     }
     scales.v[0] = clipDist;
 
-    outPtr = (f32*)gPlayerRelativeFrustumPlanes;
+    outPtr = gPlayerRelativeFrustumPlanes;
     for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
     {
-        PSMTXMultVec(invRotMtx, (_Vec3*)&planes.v[i * 3], &outPtr[i * 5]);
-        PSVECScale(&outPtr[i * 5], &tmp, scales.v[i]);
+        PSMTXMultVec(invRotMtx, &planes.v[i], &outPtr[i].normalX);
+        PSVECScale(&outPtr[i].normal, &tmp, scales.v[i]);
         PSVECAdd(&camPos, &tmp, &tmp);
-        outPtr[i * 5 + 3] = -PSVECDotProduct(&tmp, &outPtr[i * 5]);
+        outPtr[i].distance = -PSVECDotProduct(&tmp, &outPtr[i].normal);
     }
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, FRUSTUM_PLANE_COUNT);
 }

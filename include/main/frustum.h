@@ -2,11 +2,17 @@
 #define MAIN_FRUSTUM_H_
 
 #include "ghidra_import.h"
+#include "main/vec_types.h"
 
 typedef struct FrustumPlane {
-    f32 normalX;
-    f32 normalY;
-    f32 normalZ;
+    union {
+        struct {
+            f32 normalX;
+            f32 normalY;
+            f32 normalZ;
+        };
+        Vec3f normal;
+    };
     f32 distance;
     u8 aabbCornerIndex;
     u8 pad[3];

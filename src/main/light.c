@@ -1,4 +1,5 @@
 /* Light functions and VFP block 1 object [0x801FB9AC-0x801FD4A8). */
+#include "dolphin/mtx/vec.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/objhits.h"
 #include "main/pi_dolphin_api.h"
@@ -47,10 +48,6 @@ extern f32 lbl_803E6128;
 extern f32 lbl_803E610C;
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
-extern void PSVECSubtract(void* a, void* b, void* ab);
-extern void PSVECNormalize(void* in, void* out);
-extern void PSVECScale(void* in, void* out, f32 scale);
-extern void PSVECAdd(void* a, void* b, void* ab);
 extern f32 lbl_803E6118;
 extern f32 lbl_803E6120;
 extern f32 lbl_803E6124;
@@ -529,11 +526,11 @@ void vfpdoorswitch_updateExplodingVariant(GameObject* obj)
         {
             if (obj->anim.currentMoveProgress >= lbl_803E611C)
             {
-                f32 vec[3];
-                PSVECSubtract(&camView->x, &obj->anim.localPosX, vec);
-                PSVECNormalize(vec, vec);
-                PSVECScale(vec, vec, lbl_803E6120);
-                PSVECAdd(&obj->anim.localPosX, vec, &obj->anim.localPosX);
+                Vec vec;
+                PSVECSubtract(&camView->position, &obj->anim.localPos, &vec);
+                PSVECNormalize(&vec, &vec);
+                PSVECScale(&vec, &vec, lbl_803E6120);
+                PSVECAdd(&obj->anim.localPos, &vec, &obj->anim.localPos);
                 obj->anim.worldPosX = obj->anim.localPosX;
                 obj->anim.worldPosY = obj->anim.localPosY;
                 obj->anim.worldPosZ = obj->anim.localPosZ;
