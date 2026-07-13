@@ -290,5 +290,6 @@ void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out);
 int loadModelAndAnimTabs(void);
 void postRenderSetAlphaBlendState(void);
 void playerTailFn_80026b3c();
+void __set_debug_bba(u8* p);
 
 #endif

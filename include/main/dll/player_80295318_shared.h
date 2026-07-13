@@ -47,5 +47,4 @@
 extern int audioPickSoundEffect_8006ed24(u8 id, int bank);
 extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-extern void __set_debug_bba(int a);
 #endif
