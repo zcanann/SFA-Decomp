@@ -5,7 +5,6 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/dll/savegame_object_api.h"
 
-void dll_91_func03(int param_1,int param_2,int param_3,u32 param_4);
 void SaveGame_setCamActionNo(s16 actionNo);
 s32 SaveGame_getCamActionNo(void);
 f32 SaveGame_getPlayTime(void);

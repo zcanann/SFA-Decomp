@@ -10,7 +10,6 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/savegame.h"
 #include "main/dll/dll_0091_dll91func0.h"
 
 typedef struct
