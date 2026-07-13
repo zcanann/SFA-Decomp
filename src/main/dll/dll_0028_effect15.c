@@ -43,7 +43,7 @@ extern f32 lbl_803E0168;
 extern f32 lbl_803E016C;
 extern f32 lbl_803E0170;
 extern f32 lbl_803E0174;
-extern WaterfxCfg gEffect15DefaultSpawnParams;
+WaterfxCfg gEffect15DefaultSpawnParams;
 
 /*
  * cfg field names follow ExpgfxSpawnConfig (the consumer-side definition of

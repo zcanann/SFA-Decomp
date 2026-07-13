@@ -19,7 +19,7 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/dll_0024_effect11.h"
 
-extern EffectSrcParams gEffect11DefaultSrcParams;
+EffectSrcParams gEffect11DefaultSrcParams;
 extern f32 lbl_803DFF3C;
 extern f32 lbl_803DFF40;
 extern f32 lbl_803DFF44;

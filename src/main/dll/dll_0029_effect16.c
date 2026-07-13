@@ -56,7 +56,7 @@ extern f32 lbl_803E00F4;
 extern f32 lbl_803E00F8;
 extern f32 gEffect16Pi;
 extern f32 gEffect16SinPhaseScale;
-extern WaterfxCfg gEffect16DefaultSpawnSource;
+WaterfxCfg gEffect16DefaultSpawnSource;
 
 int Effect16_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     s16* extraArgs)

@@ -23,7 +23,7 @@
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-extern EffectSrcParams gEffect14SharedSrcParams;
+EffectSrcParams gEffect14SharedSrcParams;
 
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;

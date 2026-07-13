@@ -38,7 +38,7 @@
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
 extern f32 lbl_803DFEC8;
-extern EffectSrcParams gEffect10DefaultSrcParams;
+EffectSrcParams gEffect10DefaultSrcParams;
 extern f32 gEffect10ScrollPhaseA;
 extern f32 gEffect10ScrollPhaseB;
 extern f32 lbl_803DFEC4;

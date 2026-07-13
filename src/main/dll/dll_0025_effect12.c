@@ -23,7 +23,7 @@
 
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
-extern EffectSrcParams gEffect12DefaultSrc;
+EffectSrcParams gEffect12DefaultSrc;
 extern f32 lbl_803DFFA8;
 extern f32 lbl_803DFFAC;
 extern f32 lbl_803DFFB0;

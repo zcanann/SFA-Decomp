@@ -8,7 +8,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0026_effect13.h"
 
-extern WaterfxCfg gEffect13DefaultSplashParams;
+WaterfxCfg gEffect13DefaultSplashParams;
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E0180 = 0.0f;
