@@ -390,7 +390,8 @@ void waterfx_func05(int obj, int renderParam)
                 ((void (*)(int, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
                     obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c(&((WaterVtx*)gWaterfxRippleVtx)[i * 4], (char*)gWaterfxRippleVtxDesc + o32, 2);
+                drawFn_8005cf8c((int)&((WaterVtx*)gWaterfxRippleVtx)[i * 4],
+                                  (u8*)gWaterfxRippleVtxDesc + o32, 2);
             }
         }
         i = 0;
@@ -453,7 +454,7 @@ void waterfx_func05(int obj, int renderParam)
                 ((void (*)(int, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
                     obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((char*)gWaterfxWakeVtx + o64, (char*)gWaterfxWakeVtxDesc + o32, 2);
+                drawFn_8005cf8c((int)((char*)gWaterfxWakeVtx + o64), (u8*)gWaterfxWakeVtxDesc + o32, 2);
             }
         }
         fn_800542F4();

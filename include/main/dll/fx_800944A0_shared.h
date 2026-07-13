@@ -20,6 +20,7 @@
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_api.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct
@@ -270,8 +271,6 @@ extern const f32 gWaterfxDropDamping;
 extern f32 lbl_803DF334;
 extern void GXSetArray(int attr, void* base, int stride);
 extern void GXBegin(int type, int fmt, int count);
-extern void setTextColor(int unused, int a, int b, int c, int d);
-extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern void fn_8007D670(void);
 extern void fn_8007CAF4(int a);
 extern void fn_8007BD8C(int a, int b);

@@ -18232,7 +18232,7 @@ void playerDrawTeleportAnim(GameObject* obj)
     f32 mtx[16];
 
     height = ((PlayerState*)state)->teleportAnimProgress;
-    setTextColor((u32*)0, 0xff, 0xff, 0xff, 0x80);
+    setTextColor(0, 0xff, 0xff, 0xff, 0x80);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
@@ -18278,7 +18278,7 @@ void playerDrawTeleportAnim(GameObject* obj)
     setMatrixFromObjectTransposed(&xf, mtx);
     PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
     GXLoadPosMtxImm((const f32(*)[4])mtx, 0);
-    drawFn_8005cf8c(vp, lbl_802C2B30, 0xc);
+    drawFn_8005cf8c((int)vp, lbl_802C2B30, 0xc);
 
     if (((PlayerState*)state)->teleportAnimProgress >= lbl_803E80E0)
     {
