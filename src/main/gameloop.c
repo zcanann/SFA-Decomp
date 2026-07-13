@@ -33,7 +33,6 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 #include "main/sky_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/gameloop_api.h"
 #include "main/gameloop_internal.h"
@@ -49,6 +48,7 @@
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 #include "main/textrender_api.h"
+#include "main/object_render_legacy.h"
 extern u64 camcontrol_setAButtonIconForTarget();
 extern u64 runLoadingScreens();
 

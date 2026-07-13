@@ -12,7 +12,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 #include "main/dll/dll_013D_explodeanimator.h"
 

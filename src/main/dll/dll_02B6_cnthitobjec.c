@@ -20,7 +20,6 @@
 #include "main/audio/sfx.h"
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/maketex_api.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -28,6 +27,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 int cnthitobjec_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
 {

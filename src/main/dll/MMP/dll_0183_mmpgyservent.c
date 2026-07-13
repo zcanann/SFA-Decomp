@@ -11,7 +11,6 @@
 
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

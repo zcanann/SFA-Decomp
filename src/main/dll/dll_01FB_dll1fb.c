@@ -25,7 +25,7 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/obj_message.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 #define PAD_BUTTON_A 0x100
 __declspec(section ".sdata2") f32 lbl_803E5D00 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E5D04 = 0.01f;

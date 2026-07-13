@@ -18,6 +18,16 @@ typedef struct MapRomList
 STATIC_ASSERT(offsetof(MapRomList, worldX) == 0x24);
 STATIC_ASSERT(offsetof(MapRomList, worldZ) == 0x28);
 
+/* MAPINFO.bin per-record map type (curMapType / getCurMapType()). */
+typedef enum MapType
+{
+    MAPTYPE_NORMAL        = 0, /* normal outdoor map */
+    MAPTYPE_SUBMAP        = 1, /* normal submap (dungeon/indoor) */
+    MAPTYPE_UNLOAD_UNUSED = 2, /* unused: unloads all objects immediately on load */
+    MAPTYPE_SUBMAP_UNUSED = 3, /* unused: same as MAPTYPE_UNLOAD_UNUSED; only frontend2 has this */
+    MAPTYPE_NO_HUD        = 4, /* hides PDA HUD; title screen + Arwing maps; no player object spawned */
+} MapType;
+
 void* fn_80059334(int x, int z);
 MapRomList* mapBlockFn_800592e4(void);
 void mapBlockFn_80059c2c(u8* outFlags);

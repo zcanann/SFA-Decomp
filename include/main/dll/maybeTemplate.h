@@ -8,7 +8,6 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_status.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
 
 void pauseMenuDrawStatus(void);

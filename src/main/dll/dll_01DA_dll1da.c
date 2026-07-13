@@ -15,7 +15,6 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

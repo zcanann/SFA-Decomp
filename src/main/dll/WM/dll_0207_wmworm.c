@@ -16,9 +16,10 @@
  * back to its recorded home position.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/object_api.h"
+#include "main/game_object.h"
 #include "main/vecmath_distance_api.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5E58 = 440.0f; /* chase range */

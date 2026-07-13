@@ -16,6 +16,7 @@
  *       of gTrickyHudItemMask for the Tricky-HUD variant.
  */
 #include "main/audio/sfx.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/pause_menu_api.h"
@@ -24,7 +25,6 @@
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 #include "main/dll/player_status.h"
-#include "main/gameplay_runtime.h"
 #include "main/gametext_show_str_api.h"
 #include "main/gametext_api.h"
 #include "dolphin/gx/GXCull.h"

@@ -13,9 +13,9 @@
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 

@@ -21,7 +21,8 @@
 #include "main/objfx.h"
 #include "main/objtexture.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
+#include "main/audio/sfx.h"
 
 typedef struct SCTotemPuzzleState
 {
@@ -221,7 +222,6 @@ void sc_totempuzzle_hitDetect(void)
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
-#include "main/audio/sfx.h"
 
 s16 gTotemPuzzleStepAngles[6] = {-8192, 0, 8192, 16384, 24576, -32768};
 

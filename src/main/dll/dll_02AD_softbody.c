@@ -16,9 +16,9 @@
 #include "main/dll/dll_02AD_softbody.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
+#include "main/object_render_legacy.h"
 
 __declspec(section ".sdata2") f32 lbl_803E7288 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E728C = 0.001f;

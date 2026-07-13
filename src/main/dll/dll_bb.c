@@ -20,7 +20,6 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_BB.h"
 #include "main/camera.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 extern s16 lbl_803DD4C0;

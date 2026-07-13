@@ -26,7 +26,9 @@
 #include "main/dll/dll_00D0_grimble.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/player_control_interface.h"
 

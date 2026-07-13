@@ -7,8 +7,9 @@
  * live in a sibling flight-section TU.
  */
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
+#include "main/game_object.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 
 int arwgenerato_getExtraSize(void)
 {

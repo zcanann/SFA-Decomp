@@ -15,7 +15,6 @@
  * sibling projectile TU.
  */
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
@@ -23,6 +22,7 @@
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/dll/ARW/dll_02A4.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
+#include "main/object_render_legacy.h"
 
 /* Spawn-setup buffer for a squadron ship: ObjPlacement head (pos/color) plus
  * the class-specific rotation bytes the parent seeds (all 0) at +0x18. */

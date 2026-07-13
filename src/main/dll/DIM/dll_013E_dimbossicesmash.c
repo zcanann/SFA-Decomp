@@ -12,7 +12,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 
 /* ice-debris particle spawned along the smash sweep between the previous and current position */
 #define DIMBOSSICESMASH_PARTFX 1000

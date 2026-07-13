@@ -26,7 +26,6 @@
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"

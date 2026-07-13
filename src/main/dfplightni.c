@@ -1,7 +1,7 @@
 #include "main/dfplightni.h"
+#include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 

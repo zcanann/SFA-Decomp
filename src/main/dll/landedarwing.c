@@ -10,7 +10,8 @@
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/frame_timing.h"
 
 /* raw offsets — kept as-is to match staffAction.c handlers */

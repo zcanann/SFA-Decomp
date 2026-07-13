@@ -17,9 +17,9 @@
  * dll_8D_func00_nop / dll_8D_func01_nop are empty export-table slots.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_008D_dll8dfunc0.h"
 
 /* spawnEffect effect ids per variant (docblock: "Each variant emits a distinct

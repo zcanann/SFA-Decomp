@@ -21,10 +21,10 @@
 #include "main/dll/dll_02AE_waterflowwe.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim.h"
 #include "main/obj_group.h"
 #include "main/vecmath.h"
+#include "main/object_render_legacy.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50

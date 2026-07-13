@@ -11,9 +11,9 @@
  * DLL's empty entry/exit stubs.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
-#include "main/gameplay_runtime.h"
 
 extern u8 lbl_80316020[];
 extern f32 lbl_803E0FB0;

@@ -22,7 +22,6 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/obj_trigger.h"
 #include "main/objseq.h"

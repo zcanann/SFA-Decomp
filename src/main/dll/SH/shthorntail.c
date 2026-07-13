@@ -11,7 +11,6 @@
  */
 #include "dolphin/os.h"
 #include "main/dll/SH/SHthorntail.h"
-#include "main/gameplay_runtime.h"
 #include "main/game_object.h"
 #include "main/obj_trigger.h"
 #include "main/vecmath.h"

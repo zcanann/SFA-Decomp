@@ -12,10 +12,10 @@
  * running timer.
  */
 #include "main/audio/sfx.h"
+#include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/game_timer.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/obj_group.h"
 #include "main/objtexture.h"
@@ -23,6 +23,7 @@
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define TIMER_OBJGROUP 0x4c
 

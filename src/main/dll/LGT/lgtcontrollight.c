@@ -12,7 +12,6 @@
  */
 #include "main/dll/LGT/lgtcontrollightrec_struct.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 /* per-frame angular step bounds (1/65536-turn units) */

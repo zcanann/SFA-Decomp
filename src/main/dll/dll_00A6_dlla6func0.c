@@ -13,7 +13,6 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_00A6_dlla6func0.h"
 #include "main/dll/dll_00A7_dlla7func0.h"
 #include "main/dll/dll_00A8_dlla8func0.h"

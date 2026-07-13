@@ -14,7 +14,6 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"

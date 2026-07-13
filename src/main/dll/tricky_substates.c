@@ -29,7 +29,6 @@
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/sky_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/tricky_substates.h"
 #include "main/pad.h"

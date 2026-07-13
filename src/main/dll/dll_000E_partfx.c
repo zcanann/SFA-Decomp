@@ -17,7 +17,6 @@
 #include "main/dll/mtxbuildarg_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/resource.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "stdlib.h"

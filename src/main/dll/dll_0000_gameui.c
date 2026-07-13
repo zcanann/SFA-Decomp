@@ -66,7 +66,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx.h"
 #include "main/audio/stream_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 

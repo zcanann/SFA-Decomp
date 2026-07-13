@@ -17,7 +17,6 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"

@@ -22,7 +22,6 @@
 #include "main/curve.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/model_light.h"
 #include "main/objanim.h"
@@ -41,6 +40,7 @@
 #include "main/newclouds.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 typedef struct ObjUpdateRomCurveFollowVelocityState
 {

@@ -25,7 +25,6 @@
 #include "main/object_api.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/gx/GXStruct.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"

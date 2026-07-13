@@ -10,7 +10,6 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/SH/dll_01A6_shtricky.h"
 

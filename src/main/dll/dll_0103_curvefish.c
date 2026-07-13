@@ -20,13 +20,13 @@
  * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 

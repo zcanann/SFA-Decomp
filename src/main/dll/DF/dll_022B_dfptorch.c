@@ -15,9 +15,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/shader_api.h"
 #include "main/voxmaps.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 

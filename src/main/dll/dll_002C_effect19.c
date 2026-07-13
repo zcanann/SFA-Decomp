@@ -16,7 +16,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
+#include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_002C_effect19.h"
 

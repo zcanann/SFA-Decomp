@@ -10,9 +10,9 @@
 #include "main/obj_placement.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
+#include "main/object_render_legacy.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5D90 = 1.0f; /* render scale */
 #pragma explicit_zero_data on

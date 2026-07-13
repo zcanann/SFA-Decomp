@@ -14,7 +14,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0098_dll98func0.h"
 
 /* one modgfx command entry; mirrors ScreenFxPart's layout */

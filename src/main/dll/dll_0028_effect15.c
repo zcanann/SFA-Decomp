@@ -14,7 +14,6 @@
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0028_effect15.h"
 
 extern f32 lbl_803E0110;

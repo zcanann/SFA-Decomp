@@ -25,7 +25,6 @@
 #include "dolphin/gx/GXGet.h"
 #include "main/dll/tricky.h"
 #include "main/dll/dll_B4.h"
-#include "main/gameplay_runtime.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/fileio.h"

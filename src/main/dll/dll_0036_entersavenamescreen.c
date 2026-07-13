@@ -1,7 +1,6 @@
 /* DLL 0x36 — enter/save name screen controller [8011B5D4-8011B868) */
 #include "main/dll/dll_36.h"
 #include "main/audio/sfx_ids.h"
-#include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/dll/savegame.h"
 #include "main/audio/sfx.h"

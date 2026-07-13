@@ -21,7 +21,10 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/map_load.h"
-#include "main/gameplay_runtime.h"
+#include "main/audio/sfx.h"
+#include "main/gamebits.h"
+#include "main/mm.h"
+#include "main/object_render_legacy.h"
 #include "main/objseq.h"
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B

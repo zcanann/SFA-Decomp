@@ -16,6 +16,7 @@
  * the layouts of related objects shipped in the same DLL.
  */
 #include "main/dll/dll1fbstate_struct.h"
+#include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
@@ -24,7 +25,6 @@
 #include "main/dll/player_api.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_message.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"

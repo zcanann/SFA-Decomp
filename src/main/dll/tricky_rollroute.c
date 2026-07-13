@@ -24,7 +24,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/tricky_state.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/tricky_rollroute.h"

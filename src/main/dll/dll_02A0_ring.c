@@ -21,7 +21,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
@@ -29,6 +28,7 @@
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02A0_ring.h"
+#include "main/object_render_legacy.h"
 
 #define RING_OBJ_ARW_GOLD   0x060b
 #define RING_OBJ_ARW_SILVER 0x060c

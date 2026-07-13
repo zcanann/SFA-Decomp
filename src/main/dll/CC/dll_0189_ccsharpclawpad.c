@@ -8,10 +8,10 @@
  * sets the gameBit and lights the pad.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/obj_trigger.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

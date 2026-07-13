@@ -2,7 +2,6 @@
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/gametext_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_shared_internal.h"

@@ -11,7 +11,6 @@
 #include "main/obj_list.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/dll/DF/dll_196.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/sky_state.h"
 #include "main/texture.h"

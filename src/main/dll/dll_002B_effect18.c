@@ -4,7 +4,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_002B_effect18.h"
 

@@ -2,13 +2,13 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objtexture.h"
 #include "main/vecmath.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/dll/dll_02B3_vortex.h"
 #include "main/gameloop_api.h"
+#include "main/object_render_legacy.h"
 
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 

@@ -12,7 +12,6 @@
 #include "ghidra_import.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/texture.h"
 #include "main/audio/sfx_ids.h"

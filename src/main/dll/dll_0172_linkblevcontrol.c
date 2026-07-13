@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
@@ -23,7 +24,6 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
-#include "main/gameplay_runtime.h"
 
 typedef struct LinkbLevState
 {

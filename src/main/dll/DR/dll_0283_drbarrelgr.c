@@ -16,7 +16,6 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/maketex_timer_api.h"
 #include "main/object_api.h"
 #include "main/objanim.h"
@@ -29,6 +28,7 @@
 #include "main/dll/DR/dll_0283_drbarrelgr.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objfx.h"
+#include "main/object_render_legacy.h"
 
 #define DRBARRELGR_OBJFLAG_RENDERED     0x800
 #define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19 /* DLL 0x158 gunpowderbarrel (update group) */

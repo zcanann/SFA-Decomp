@@ -15,7 +15,6 @@
 #include "main/audio/stream_api.h"
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objseq.h"
 #include "main/dll/tricky.h"
 #include "main/sky_api.h"
@@ -29,6 +28,7 @@
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 /* env effects co-activated once with the sky preset; opaque distinct roles */
 #define ARWLEVELCON_ENVFX_A 0x21f

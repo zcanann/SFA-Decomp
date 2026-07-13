@@ -20,10 +20,10 @@
 #include "main/dll/DIM/dll_01CC_dimmagicbridge.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/os/OSCache.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 

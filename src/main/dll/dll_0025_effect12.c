@@ -17,7 +17,6 @@
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/dll_0025_effect12.h"
 

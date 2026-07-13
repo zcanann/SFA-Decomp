@@ -19,7 +19,6 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_002D_effect20.h"

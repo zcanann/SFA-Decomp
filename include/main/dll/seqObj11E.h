@@ -11,7 +11,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
-#include "main/gameplay_runtime.h"
 
 /*
  * Setup buffer gcRobotLight_init fills for a spawned child object (0x24 bytes from

@@ -21,7 +21,6 @@
 #include "main/frame_timing.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/pad.h"

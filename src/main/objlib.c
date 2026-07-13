@@ -25,7 +25,6 @@
 #include "main/objhits.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
-#include "main/gameplay_runtime.h"
 #include "string.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"

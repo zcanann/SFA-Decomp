@@ -4,7 +4,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/maketex_timer_api.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
@@ -22,6 +21,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
 #define ARW_SQUADRON_PARTFX_FIRE  0x7d1 /* fire effect (pfx.f8 = fireFxScale) */

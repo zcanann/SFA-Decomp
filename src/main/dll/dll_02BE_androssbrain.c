@@ -13,11 +13,11 @@
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
 #include "main/game_ui_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
 

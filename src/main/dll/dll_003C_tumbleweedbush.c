@@ -24,7 +24,6 @@
 #include "main/gametext_show_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/hud_visibility_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "main/gamebits.h"
 #include "main/pad.h"

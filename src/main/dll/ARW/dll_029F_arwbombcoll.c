@@ -14,7 +14,6 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/object_api.h"
@@ -27,6 +26,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
 

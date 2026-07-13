@@ -14,10 +14,10 @@
  *   0x04 ptr  cached player object (Obj_GetPlayerObject)
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0119_coldwatercontrol.h"
 

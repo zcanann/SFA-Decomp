@@ -16,6 +16,7 @@
  * commands the linked target object to begin the challenge.
  */
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
@@ -26,7 +27,6 @@
 #include "main/objtexture.h"
 #include "main/screen_transition.h"
 #include "main/pad.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_engine.h"
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

@@ -18,11 +18,11 @@
  * Game bits owned/used here: 0x617 start, 0x624 win, 0x625 lose, 0x626 running.
  */
 #include "main/mapEvent.h"
+#include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/tricky_api.h"
 #include "main/model_engine.h"
 #include "main/dll/trex_lazerwall.h"

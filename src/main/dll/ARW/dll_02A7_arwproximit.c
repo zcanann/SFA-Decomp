@@ -12,7 +12,6 @@
 #include "main/dll/headdisplay.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/maketex_timer_api.h"
 #include "main/model_light.h"
 #include "main/modellight_api.h"
@@ -22,6 +21,7 @@
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
+#include "main/object_render_legacy.h"
 
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E71D8 = 0.0f;

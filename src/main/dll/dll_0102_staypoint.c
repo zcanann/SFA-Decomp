@@ -23,7 +23,6 @@
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/vecmath_distance_api.h"

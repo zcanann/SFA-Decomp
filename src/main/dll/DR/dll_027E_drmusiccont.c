@@ -16,7 +16,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -28,6 +27,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #include "main/dll/DR/dll_027E_drmusiccont.h"
+#include "main/object_render_legacy.h"
 
 __declspec(section ".sdata2") f32 lbl_803E6BC8 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E6BCC = -15350.0f;

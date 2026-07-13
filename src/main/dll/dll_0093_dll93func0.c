@@ -11,7 +11,6 @@
  */
 #include "main/effect_interfaces.h"
 #include "ghidra_import.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0093_dll93func0.h"
 
 typedef struct GfxCmd

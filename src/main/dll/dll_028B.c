@@ -14,7 +14,8 @@
  * draws the model and the moveLib attachment when visible.
  */
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
+#include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
@@ -24,6 +25,7 @@
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"
 #include "main/player_control_interface.h"
+#include "main/object_render_legacy.h"
 
 #define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000

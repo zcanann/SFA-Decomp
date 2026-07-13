@@ -2,7 +2,6 @@
 #include "main/effect_interfaces.h"
 #include "main/game_timer.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/sky_interface.h"
@@ -15,6 +14,7 @@
 #include "main/sky_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/object_render_legacy.h"
 
 #define WCLEVELCONT_OBJGROUP 0x9
 

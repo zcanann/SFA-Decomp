@@ -18,10 +18,10 @@
  * also triggers an emit.
  */
 #include "main/dll/CF/CFchuckobj.h"
+#include "main/object_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
 typedef struct CFEmitterFxArgs

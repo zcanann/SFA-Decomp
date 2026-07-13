@@ -23,11 +23,11 @@
 #include "main/game_timer.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define WCBEACON_EXTRA_SIZE 0x8
 

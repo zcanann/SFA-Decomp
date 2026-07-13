@@ -16,8 +16,8 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/CF/dll_014A_cfpowerbase.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 

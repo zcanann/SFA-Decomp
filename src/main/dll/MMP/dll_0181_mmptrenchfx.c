@@ -14,7 +14,6 @@
 #include "main/dll/mmptrenchfxstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/dll/MMP/dll_0181_mmptrenchfx.h"

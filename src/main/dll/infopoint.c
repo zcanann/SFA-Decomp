@@ -7,7 +7,7 @@
  * (requires all three = axisCount 3) then fires a random horizontal nudge.
  */
 #include "main/dll/infopoint.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
 
 typedef struct TrickyCurveObject
 {

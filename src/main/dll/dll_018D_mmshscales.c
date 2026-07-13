@@ -20,8 +20,8 @@
 #include "main/object_api.h"
 #include "main/obj_list.h"
 #include "main/objseq.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_018D_mmshscales.h"
+#include "main/object_render_legacy.h"
 
 /* Child object spawned at init and cached in childObjs[0] (scaled x2). */
 #define MMSHSCALES_CHILD_OBJ 0x1b8

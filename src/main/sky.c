@@ -15,7 +15,6 @@
 #include "main/curve_eval.h"
 #include "main/frame_timing.h"
 #include "main/fileio.h"
-#include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "main/mm.h"
 #include "main/pi_frame_api.h"

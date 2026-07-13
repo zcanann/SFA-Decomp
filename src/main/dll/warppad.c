@@ -20,6 +20,7 @@
  * is WarpPadPlacement (both in CF/warp_pad.h).
  */
 #include "main/effect_interfaces.h"
+#include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
@@ -27,7 +28,6 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/obj_trigger.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 

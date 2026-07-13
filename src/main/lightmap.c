@@ -20,7 +20,6 @@
 #include "main/objprint_render_api.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
-#include "main/gameplay_runtime.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/gx/GXManage.h"
 #include "main/sky_state.h"

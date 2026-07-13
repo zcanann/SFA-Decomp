@@ -25,7 +25,6 @@
 #include "main/sky_api.h"
 
 #define skyFn_80088c94ByteMode(flags, mode) ((void (*)(int, u8))skyFn_80088c94)((flags), (mode))
-#include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "main/object_transform.h"
 #include "main/mm.h"
@@ -49,6 +48,14 @@ extern char sShaderDebugStrings[];
 #define FRUSTUM_PLANE_COUNT   5
 extern int gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
+/* One 0x20-byte MAPINFO.bin (fileId 0x1f) record, fetched by mapId via getTabEntry. */
+typedef struct MapInfoRecord
+{
+    u8 unk00[0x1c];
+    s8 mapType; /* +0x1c: MapType */
+    u8 unk1d;
+    s16 unk1e; /* +0x1e */
+} MapInfoRecord;
 typedef struct WarpVec
 {
     f32 x;

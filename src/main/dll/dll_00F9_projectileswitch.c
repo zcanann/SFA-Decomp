@@ -7,9 +7,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 /*
  * Low 2 bits of ProjectileSwitchPlacement.modelIndexAndMode select switch behaviour;

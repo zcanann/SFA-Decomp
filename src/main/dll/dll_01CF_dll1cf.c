@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 
 typedef struct Dll1CFObjectDef
 {

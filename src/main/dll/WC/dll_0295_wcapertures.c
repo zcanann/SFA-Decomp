@@ -16,7 +16,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/objanim_update.h"
 #include "main/dll/WC/dll_0295_wcapertures.h"
@@ -25,6 +24,7 @@
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
+#include "main/object_render_legacy.h"
 
 #pragma dont_inline on
 

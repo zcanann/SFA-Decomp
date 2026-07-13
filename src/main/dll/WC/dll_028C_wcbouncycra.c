@@ -1,8 +1,8 @@
 #include "main/dll/WC/dll_028C_wcbouncycra.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
+#include "main/object_render_legacy.h"
 
 #define WCBLOCK_VARIANT_A          1
 

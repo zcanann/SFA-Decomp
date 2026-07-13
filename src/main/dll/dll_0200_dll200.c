@@ -20,7 +20,7 @@
 #include "main/gamebits.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/pad.h"
 #include "main/vecmath.h"

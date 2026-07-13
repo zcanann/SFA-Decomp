@@ -23,7 +23,6 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"

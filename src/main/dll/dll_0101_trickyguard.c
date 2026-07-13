@@ -24,7 +24,6 @@
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 
 typedef struct TrickyguardPlacement
 {

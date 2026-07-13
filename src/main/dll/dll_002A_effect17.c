@@ -2,7 +2,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_002A_effect17.h"
 

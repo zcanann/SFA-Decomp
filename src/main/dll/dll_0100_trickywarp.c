@@ -16,13 +16,13 @@
  * duster, curvefish); their callbacks live in their own units.
  */
 #include "main/frustum.h"
+#include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0014_api.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 
 typedef struct TrickyWarpCurveEntry

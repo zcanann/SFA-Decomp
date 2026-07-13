@@ -18,13 +18,13 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll1fbsetup_struct.h"
 #include "main/dll/wmgalleonsetup_struct.h"
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);

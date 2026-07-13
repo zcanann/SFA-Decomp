@@ -16,7 +16,6 @@
  */
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/pad.h"
 #include "main/debug.h"
@@ -24,6 +23,7 @@
 #include "main/game_object.h"
 #include "dolphin/pad.h"
 #include "main/dll/LGT/dll_02AA_lgtdirectionallight.h"
+#include "main/object_render_legacy.h"
 
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT      8

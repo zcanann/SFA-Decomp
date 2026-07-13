@@ -12,7 +12,6 @@
  */
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
@@ -23,6 +22,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define MODEL_LIGHT_KIND_POINT 2
 extern u8 lbl_803DB411;

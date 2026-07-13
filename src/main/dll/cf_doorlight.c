@@ -27,7 +27,6 @@
 #include "main/dll/dll_00D6_kaldachomme_api.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
 typedef struct KaldachomPlacement

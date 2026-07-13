@@ -25,7 +25,6 @@
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
@@ -51,6 +50,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/object_render_legacy.h"
 
 #define GAMEBIT_ANDROSS_HIT_CUE_BASE 0x108 /* six consecutive random-hit cue bits */
 

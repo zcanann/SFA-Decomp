@@ -17,13 +17,13 @@
  * matching the retail object.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/object_api.h"
 #include "main/audio/music_api.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/lightmap_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/sky_api.h"

@@ -18,10 +18,10 @@
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "main/objhits.h"
-#include "main/gameplay_runtime.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 typedef struct CfccratePlacement
 {

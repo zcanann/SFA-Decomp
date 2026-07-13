@@ -5,7 +5,6 @@
 #include "main/dll/dll_0166_exploded.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objseq.h"

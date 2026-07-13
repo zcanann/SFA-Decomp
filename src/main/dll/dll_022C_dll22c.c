@@ -24,6 +24,7 @@
  * this family of DLLs shares.
  */
 #include "main/dll/dll22cstate_struct.h"
+#include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
@@ -36,13 +37,13 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_022C_dll22c.h"
+#include "main/object_render_legacy.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off

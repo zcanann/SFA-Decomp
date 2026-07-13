@@ -12,6 +12,7 @@
  * each frame. The object frees itself once hidden and idle.
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_00D9_pollen_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
@@ -22,7 +23,6 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"

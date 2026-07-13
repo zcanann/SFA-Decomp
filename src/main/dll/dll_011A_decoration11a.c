@@ -16,12 +16,12 @@
  * The extra block is 0x1c bytes: f32 boundsMax[3], boundsMin[3], radius.
  */
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 #include "main/model.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_011A_decoration11a.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "main/object_render_legacy.h"
 
 /* model/seq ids of the three variants that carry a collision volume */
 enum

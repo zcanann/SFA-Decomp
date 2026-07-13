@@ -11,7 +11,6 @@
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/effect_interfaces.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
@@ -19,6 +18,7 @@
 #include "main/sky_interface.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */

@@ -13,7 +13,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/screenfx_types.h"
 #include "main/dll/screens.h"
-#include "main/gameplay_runtime.h"
 
 typedef struct
 {

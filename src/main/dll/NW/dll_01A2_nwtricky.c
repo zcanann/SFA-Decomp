@@ -9,7 +9,6 @@
  * command; once 0xd11 is set the herding stops. State 1: meter Tricky's
  * energy via game bit 0x4e3 against the map-event Tricky-energy gauge.
  */
-#include "main/gameplay_runtime.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"

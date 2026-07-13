@@ -1,5 +1,6 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
@@ -9,7 +10,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 #define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
 extern void ModelLightStruct_free(void* effect);
 

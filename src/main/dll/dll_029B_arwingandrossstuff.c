@@ -21,7 +21,6 @@
 #include "dolphin/mtx.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
@@ -36,6 +35,7 @@
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define ARWINGANDROSSSTUFF_OBJGROUP 0x2
 

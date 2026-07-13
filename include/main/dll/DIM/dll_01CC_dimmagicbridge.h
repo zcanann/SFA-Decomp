@@ -9,7 +9,6 @@
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 
 extern ObjectDescriptor gDIMMagicBridgeObjDescriptor;
 

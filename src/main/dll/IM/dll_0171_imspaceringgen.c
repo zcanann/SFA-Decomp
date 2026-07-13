@@ -17,9 +17,9 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_list.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/dll/IM/dll_0171_imspaceringgen.h"
+#include "main/object_render_legacy.h"
 
 /* anim.seqId of the two reference ring objects the generator tracks */
 #define SEQID_RING_A 0x164

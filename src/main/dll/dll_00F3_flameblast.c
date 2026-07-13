@@ -13,7 +13,6 @@
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/objhits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/vecrotatezxy.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/frame_timing.h"

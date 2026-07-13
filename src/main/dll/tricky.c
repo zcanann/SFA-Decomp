@@ -33,7 +33,6 @@
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
-#include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/dll/tricky.h"
 #include "main/dll/maybeTemplate.h"

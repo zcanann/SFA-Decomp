@@ -20,12 +20,12 @@
  * lives in the sibling area unit's table (dll_00F6_area .data+0x38).
  */
 #include "main/dll/tFrameAnimator.h"
+#include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/textrender_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00F8_levelname.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

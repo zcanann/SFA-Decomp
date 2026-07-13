@@ -15,7 +15,6 @@
 #include "dolphin/mtx.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"
 #include "main/objhits.h"
 #include "main/objtexture.h"
@@ -23,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0297_wctemplebri.h"
+#include "main/object_render_legacy.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE        0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE  0x400

@@ -20,7 +20,6 @@
 #include "main/model_engine.h"
 #include "main/map_load.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"
 #include "main/obj_list.h"
 #include "main/screen_transition.h"
@@ -35,6 +34,7 @@
 #include "main/dll/dll_02BB_gflevelcon.h"
 #include "main/gametext_show_api.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
+#include "main/object_render_legacy.h"
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0

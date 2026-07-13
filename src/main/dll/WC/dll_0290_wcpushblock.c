@@ -23,7 +23,6 @@
 #include "main/frame_timing.h"
 #include "main/game_timer.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
@@ -45,6 +44,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
+#include "main/object_render_legacy.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE          0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE    0x400

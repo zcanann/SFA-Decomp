@@ -4,7 +4,6 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_control_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/player_control_interface.h"
 #include "main/dll/dll_801b9ecc.h"
 

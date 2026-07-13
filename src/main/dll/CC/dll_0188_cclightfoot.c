@@ -60,7 +60,6 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/dll/CC/dll_0188_cclightfoot.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

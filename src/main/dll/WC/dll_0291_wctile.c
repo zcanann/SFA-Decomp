@@ -14,13 +14,13 @@
  */
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 #include "main/model.h"
 #include "main/dll/WC/dll_028D_wclevelcont.h"
 #include "main/dll/WC/dll_0291_wctile.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 
 #define WCTILE_RENDER_TYPE_BASE    0x400
 #define WCTILE_RENDER_TYPE_SHIFT   0xb

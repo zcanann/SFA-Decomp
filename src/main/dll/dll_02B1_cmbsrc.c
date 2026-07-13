@@ -21,7 +21,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/model_light.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
@@ -30,6 +29,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
+#include "main/object_render_legacy.h"
 
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 

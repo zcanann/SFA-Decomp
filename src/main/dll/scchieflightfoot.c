@@ -15,8 +15,8 @@
  * the tuning floats. All effects are parented to the player object.
  */
 #include "main/dll/SC/SCchieflightfoot.h"
+#include "main/object_api.h"
 #include "main/effect_interfaces.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 
 typedef struct SHthorntailDustEffectParams

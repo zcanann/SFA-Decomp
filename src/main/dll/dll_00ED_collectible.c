@@ -29,7 +29,6 @@
 #include "main/objfx.h"
 #include "main/obj_placement.h"
 #include "main/dll/collectible_state.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/obj_trigger.h"
@@ -38,6 +37,7 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/dll/dll_00ED_collectible_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
 extern f32 gCollectibleDespawnTimerDuration;

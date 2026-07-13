@@ -13,11 +13,11 @@
  * The motion lbl_803E2F* constants are the shared landed-arwing tuning block.
  */
 #include "main/dll/baddie_state.h"
+#include "main/object_api.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/obj_message.h"
 #include "main/player_control_interface.h"

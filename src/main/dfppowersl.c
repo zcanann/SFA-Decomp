@@ -1,6 +1,6 @@
 #include "main/dfppowersl.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/gameplay_runtime.h"
+#include "main/gamebits.h"
 #include "main/objhits.h"
 
 static inline DfpPowerSlState* dfppowersl_getState(DfpPowerSlObject* obj)

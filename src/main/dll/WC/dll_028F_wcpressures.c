@@ -15,7 +15,6 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim_update.h"
 #include "main/obj_group.h"
 #include "main/objtexture.h"
@@ -30,6 +29,7 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define WCPRESSURES_EXTRA_SIZE        0x7c
 #define WCPRESSURES_OBJECT_GROUP      0x31

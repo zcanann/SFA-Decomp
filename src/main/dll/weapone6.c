@@ -29,7 +29,6 @@
 #include "main/object.h"
 #include "main/dll/dll_00F5_sidekickball.h"
 #include "main/dll/tricky_state.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/objprint_sound_api.h"

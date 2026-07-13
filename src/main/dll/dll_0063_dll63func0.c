@@ -10,7 +10,6 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/mapEventTypes.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0063_dll63func0.h"
 

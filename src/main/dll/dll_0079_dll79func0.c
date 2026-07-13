@@ -15,7 +15,6 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0079_dll79func0.h"
 #include "main/dll/dll_007A_dll7afunc0.h"

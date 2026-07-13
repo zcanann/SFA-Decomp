@@ -37,7 +37,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie_state.h"
 #include "main/objtexture.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/seqObj11E.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"

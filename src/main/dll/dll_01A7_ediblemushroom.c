@@ -13,7 +13,6 @@
 #include "main/audio/sfx.h"
 #include "main/dll/ediblemushroom.h"
 #include "main/objhits.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/audio/sfx_trigger_ids.h"

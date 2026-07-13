@@ -8,8 +8,8 @@
 #include "main/dll/dll_0294_wctemple.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objseq.h"
+#include "main/object_render_legacy.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SEQUENCE_SLOT_CLOSED 0

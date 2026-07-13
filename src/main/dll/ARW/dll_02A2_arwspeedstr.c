@@ -10,13 +10,13 @@
 #include "dolphin/mtx.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 
 int ARWSpeedStr_getExtraSize(void)
 {

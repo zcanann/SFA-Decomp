@@ -28,7 +28,7 @@
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 #include "main/camera.h"
 #include "string.h"
 #include "main/audio/sfx.h"

@@ -1,5 +1,6 @@
 /* DLL 0x1D6 - DIM2 crusher platform [801B63F4-801B6464) */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/object_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -21,9 +22,9 @@
 #include "main/model.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
+#include "main/object_render_legacy.h"
 
 typedef struct Dll1D6Placement
 {

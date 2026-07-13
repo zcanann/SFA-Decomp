@@ -34,7 +34,6 @@
 #include "main/pad.h"
 #include "main/maketex_api.h"
 #include "main/maketex_sequence_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebit_ids.h"
 #include "main/mldf_fileid.h"
 #include "main/frame_timing.h"

@@ -15,7 +15,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/SB/dll_01EE_sbcannonball.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 
 #define SB_CANNONBALL_EXTRA_SIZE 0x24
 

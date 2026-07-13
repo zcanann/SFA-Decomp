@@ -24,7 +24,6 @@
 #include "main/loaded_file_flags.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
-#include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/texture.h"
 #include "main/camera.h"

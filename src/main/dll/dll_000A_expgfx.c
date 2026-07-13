@@ -10,7 +10,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_queue_api.h"

@@ -18,11 +18,11 @@
  * 0x04 drop-disabled, 0x08 suppress position save.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/objhits.h"
 #include "main/dll/player_objects.h"
-#include "main/gameplay_runtime.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"

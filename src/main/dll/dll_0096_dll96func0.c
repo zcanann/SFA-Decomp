@@ -13,7 +13,6 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/savegame.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_0096_dll96func0.h"
 
 typedef struct GfxCmd

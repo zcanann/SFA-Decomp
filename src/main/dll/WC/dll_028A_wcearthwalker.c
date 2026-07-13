@@ -32,12 +32,13 @@
  * from use, not confirmed.
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/curve.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objHitReact.h"

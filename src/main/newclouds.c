@@ -12,7 +12,6 @@
 #include "main/sky_interface.h"
 #include "main/mm.h"
 #include "main/camera.h"
-#include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/gx/GXDispList.h"

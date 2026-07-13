@@ -15,7 +15,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/obj_list.h"
@@ -32,6 +31,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BD_androsshand.h"
+#include "main/object_render_legacy.h"
 
 /* Andross body object id, located once and cached in androssObj. */
 #define ANDROSS_OBJ_ID              0x47b77

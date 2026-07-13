@@ -21,9 +21,9 @@
  * trigger state so the burst variant can detect a midline crossing.
  */
 #include "main/effect_interfaces.h"
+#include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_message.h"
 #include "main/frame_timing.h"
 

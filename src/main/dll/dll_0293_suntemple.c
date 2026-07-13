@@ -32,13 +32,13 @@
 #include "main/game_ui_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
 #include "main/pad.h"
 #include "main/shader_api.h"
+#include "main/object_render_legacy.h"
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 

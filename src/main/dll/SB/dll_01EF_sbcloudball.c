@@ -28,7 +28,6 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"

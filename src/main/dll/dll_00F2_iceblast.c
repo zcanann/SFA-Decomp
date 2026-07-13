@@ -12,11 +12,13 @@
  * else 1). The extra block is an IceblastState (just the countdown timer).
  */
 #include "main/dll/dll_00F2_iceblast.h"
+#include "main/object_api.h"
+#include "main/game_object.h"
 #include "main/objhits.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_path.h"
 #include "main/frame_timing.h"
 #include "main/dll/vecrotatezxy.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(offsetof(IceblastPlacement, useAltHitVolume) == 0x19);
 STATIC_ASSERT(offsetof(IceblastPlacement, initialTimer) == 0x1a);

@@ -13,9 +13,9 @@
  * each descriptor is defined by its own DLL.
  */
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_00EA_sideload.h"
 
 /* object id sideload_update defers into existence once its arming game bit is set */

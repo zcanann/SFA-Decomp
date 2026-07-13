@@ -18,7 +18,6 @@
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mm.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/vi.h"
 #include "main/pad.h"
 #include "main/audio/sfx.h"

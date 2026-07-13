@@ -24,8 +24,8 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 /* Spawn-setup buffer seeded by dll_1CE_update for its child (obj id 0x246):
  * position/color head plus class-specific fields (see the target stb/sth). */

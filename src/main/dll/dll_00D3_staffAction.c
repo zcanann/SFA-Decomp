@@ -847,7 +847,6 @@ void fn_80166444(int obj, int state)
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
-#include "main/gameplay_runtime.h"
 #include "string.h"
 
 typedef struct DllD3Placement

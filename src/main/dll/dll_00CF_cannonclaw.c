@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
-#include "main/gameplay_runtime.h"
+#include "main/object_render_legacy.h"
 
 #define CANNONCLAW_OBJID_TRICKY 0x1723
 #define CANNONCLAW_MOVE_ARM     0x208

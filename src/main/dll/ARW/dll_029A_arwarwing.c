@@ -36,7 +36,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/loaded_file_flags.h"
 #include "main/mapEventTypes.h"
 #include "main/model_light.h"
@@ -70,6 +69,7 @@
 #include "main/dll/ARW/dll_029F_arwbombcoll.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 typedef struct ArwarwingState
 {

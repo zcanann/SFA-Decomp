@@ -35,7 +35,6 @@ FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 

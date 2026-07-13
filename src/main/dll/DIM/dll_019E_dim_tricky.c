@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx_ids.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
 #include "main/shader_api.h"

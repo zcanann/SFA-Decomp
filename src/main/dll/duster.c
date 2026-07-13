@@ -41,7 +41,6 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objhits.h"
 #include "main/sky_interface.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"

@@ -14,9 +14,9 @@
  * spawnEffect alongside the &gDll8EEffectTexture texture.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_008E_dll8efunc0.h"
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */

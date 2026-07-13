@@ -15,7 +15,6 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
 #include "main/objfx.h"
@@ -23,6 +22,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render_legacy.h"
 
 #define ARWARWINGBO_OBJGROUP        0x52
 #define ARWARWINGBO_PARTFX          0x79e

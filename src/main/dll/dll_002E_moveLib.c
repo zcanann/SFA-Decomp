@@ -32,7 +32,6 @@
 #include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/FRONT/POST.h"
 #include "string.h"
-#include "main/gameplay_runtime.h"
 #include "main/obj_path.h"
 #include "main/obj_query.h"
 #include "main/frame_timing.h"

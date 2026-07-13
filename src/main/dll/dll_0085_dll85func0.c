@@ -12,9 +12,9 @@
  * the gFoodbagEffectTemplate effect-template table) live in the foodbag base TU.
  */
 #include "main/effect_interfaces.h"
+#include "main/game_object.h"
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
-#include "main/gameplay_runtime.h"
 
 #define FX_VARIANT_BURST 4
 

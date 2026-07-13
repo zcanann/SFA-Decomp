@@ -13,11 +13,11 @@
 #include "main/effect_interfaces.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_update.h"
 #include "main/objtexture.h"
 #include "main/vecmath.h"
+#include "main/object_render_legacy.h"
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
 

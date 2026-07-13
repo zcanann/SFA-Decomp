@@ -11,6 +11,7 @@
  * random 400-600 frame delay.
  */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/object_api.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
@@ -18,7 +19,6 @@
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 

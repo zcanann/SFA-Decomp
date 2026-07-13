@@ -21,7 +21,6 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/gametext_show_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/mapEvent.h"
 #include "main/model_engine.h"
 #include "main/objanim.h"
@@ -39,6 +38,7 @@
 #include "main/dll/SP/dll_0286_spshopkeeper.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "main/object_render_legacy.h"
 
 #define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
 

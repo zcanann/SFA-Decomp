@@ -8,8 +8,8 @@
  */
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
-#include "main/gameplay_runtime.h"
 #include "main/dll/dll_00D4_skeetlawall.h"
+#include "main/object_render_legacy.h"
 
 typedef struct SkeetlaWallState
 {

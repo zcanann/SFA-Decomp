@@ -21,7 +21,6 @@
 #include "main/vecmath.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/camera.h"
-#include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"

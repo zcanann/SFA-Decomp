@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/gameplay_runtime.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"

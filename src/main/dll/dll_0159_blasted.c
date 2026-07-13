@@ -5,10 +5,10 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/lightmap_api.h"
-#include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
 #include "main/dll/dll_0159_blasted.h"
+#include "main/object_render_legacy.h"
 
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 

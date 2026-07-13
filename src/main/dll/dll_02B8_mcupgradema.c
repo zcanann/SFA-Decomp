@@ -23,7 +23,6 @@
 #include "main/game_object.h"
 #include "main/dll/mcstaffeffe_state.h"
 #include "main/gamebits.h"
-#include "main/gameplay_runtime.h"
 #include "main/object_api.h"
 #include "main/obj_trigger.h"
 #include "main/objseq.h"
