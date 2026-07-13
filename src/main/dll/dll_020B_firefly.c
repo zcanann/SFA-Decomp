@@ -22,6 +22,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/dll_020B_firefly.h"
 #include "main/dll/LGT/LGTcontrollight.h"
+#include "main/model_light.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
 
@@ -233,7 +234,7 @@ void firefly_free(GameObject* obj)
 {
     FireFlyState* state = obj->extra;
 
-    modelLightStruct_freeSlot(state);
+    modelLightStruct_freeSlot((ModelLightStruct**)state);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -273,7 +274,7 @@ void firefly_update(int obj)
         ((FireFlyActiveBits*)&state->activeFlags)->active = isActive;
         if (((FireFlyActiveBits*)&state->activeFlags)->active != 0)
         {
-            state->light = (void*)modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
+            state->light = modelLightStruct_createPointLight((void*)obj, 100, 0xFF, 100, 0);
         }
     }
     else

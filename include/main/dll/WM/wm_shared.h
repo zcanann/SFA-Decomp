@@ -90,8 +90,6 @@ extern u32 FUN_8028688c();
 extern double FUN_80293900();
 extern u32 FUN_80293f90();
 extern u32 FUN_80294ccc();
-extern void modelLightStruct_freeSlot(void* state);
-extern int modelLightStruct_createPointLight(int obj, int red, int green, int blue, int alpha);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int mode, int count);
 extern u32 DAT_801f5cc4;
 extern u32 DAT_802c2c68;
