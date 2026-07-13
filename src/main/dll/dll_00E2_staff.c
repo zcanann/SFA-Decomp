@@ -34,6 +34,7 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
+#include "main/dll/dll_025A_staticcamera.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -779,8 +780,6 @@ void staff_release(void)
 }
 
 void MikaBombShadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
 
 extern f32 lbl_803E3328;
 typedef struct StaffQuakeSpellState

@@ -18,6 +18,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
+#include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/object_render_legacy.h"
 
@@ -592,8 +593,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 };
 
 void MikaBombShadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
 
 void dim2roofrub_init(int* obj, int* params)
 {

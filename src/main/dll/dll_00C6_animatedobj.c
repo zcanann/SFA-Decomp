@@ -8,6 +8,7 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
+#include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -673,8 +674,6 @@ ObjectDescriptor11WithPadding gCheckpoint4ObjDescriptor = {
 
 
 void MikaBombShadow_init(int* obj);
-
-void StaticCamera_init(int* obj, int* params, int flag);
 
 
 void animatedobj_free(int* obj, int seqFlag)
