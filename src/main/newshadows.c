@@ -1830,15 +1830,15 @@ f32 gNewShadowPlacements[0x112];
 void initFn_8006d020(void)
 {
     u8 saved;
-    int attempts;
+    int count;
     int col;
-    int row;
-    int j;
     f32* e;
     int placed;
-    int tex;
-    int count;
+    int attempts;
+    int j;
     u8 collide;
+    int tex;
+    int row;
 
     saved = testAndSet_onlyUseHeap3(1);
     attempts = 0;
