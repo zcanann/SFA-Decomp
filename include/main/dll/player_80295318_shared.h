@@ -34,43 +34,6 @@
 #include "main/frame_timing.h"
 #include "main/byte_flags.h"
 
-/* typedefs (verbatim from placeholder_80295318) */
-typedef struct CurvesCollisionState CurvesCollisionState;
-
-typedef struct
-{
-    u8 pad[0x7ac];
-    s16 moves[8];
-    f32 blend[8];
-    f32 angles[8];
-} MoveTable;
-typedef struct
-{
-    u8 pad0[8];
-    int a8[26];
-    f32 a70[3];
-    f32 a7c[6];
-    f32 a94[7];
-} EmitElem;
-typedef struct
-{
-    s16 unk0;
-    s16 moveIdx;
-    u8 pad[0xb0 - 4];
-} MoveSlot;
-typedef struct
-{
-    f32 nx, ny, nz, d;
-} EmitPlane;
-typedef struct
-{
-    u8 pad00[0x60];
-    s16 anims[14];  /* 0x60 */
-    f32 blends[25]; /* 0x7c */
-    u16 bits[8];    /* 0xe0 */
-    f32 scales[16]; /* 0xf0 */
-} EmitCtrlTbl;
-
 /* external symbol declarations */
 extern void fn_8005D108();
 extern u32 FUN_8006f764();
