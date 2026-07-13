@@ -24,7 +24,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 
-#include "main/dll/DIM/DIM2projrock.h"
+#include "main/dll/DIM/dll_01DC_dim2icefloe.h"
 #include "main/curve.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"

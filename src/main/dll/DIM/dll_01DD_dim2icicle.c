@@ -26,7 +26,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/effect_interfaces.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/DIM/DIM2projrock.h"
+#include "main/dll/DIM/dll_01DD_dim2icicle.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/fx_800944A0_shared.h"
