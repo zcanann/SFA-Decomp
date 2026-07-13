@@ -17,11 +17,7 @@
  * DLLs 0x148/0x149 are defined in DR/dll_0148_cfguardian.c and
  * DR/dll_0149_cfwindlift.c; their prototypes appear here.
  */
-#include "main/dll/cfguardian_state.h"
 #include "main/dll/bit80_struct.h"
-#include "main/dll/cfprisonguardstate_struct.h"
-#include "main/dll/cfpowerbasestate_struct.h"
-#include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -30,25 +26,6 @@
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
-
-/* Per-object extra state for the CloudRunner main crystal
- * (CFMainCrystal_getExtraSize == 0x160). */
-
-STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
-
-/* Per-object extra state for the CloudRunner power base
- * (CFPowerBase_getExtraSize == 0x6). */
-
-STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
-
-/* Per-object extra state for the CloudRunner prison guard
- * (CFPrisonGuard_getExtraSize == 0x3c). */
-
-STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */

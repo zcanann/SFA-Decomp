@@ -4,16 +4,12 @@
  * defined in dll_0148_cfguardian.c and dll_0149_cfwindlift.c; their
  * definitions here are collapsed to forward prototypes.
  */
-#include "main/dll/cfguardian_state.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/dll/wormspitbyte_struct.h"
 #include "main/dll/babycloudrunnerflags_struct.h"
-#include "main/dll/cfprisonguardstate_struct.h"
-#include "main/dll/cfpowerbasestate_struct.h"
-#include "main/dll/cfmaincrystalstate_types.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -58,25 +54,6 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, behaviourState) == 0x1c);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, initialYaw) == 0x1d);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, enableBit) == 0x1e);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, runnerGameBit) == 0x22);
-
-/* Per-object extra state for the CloudRunner guardian
- * (cfguardian_getExtraSize == 0xa9c). */
-STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
-
-/* Per-object extra state for the CloudRunner main crystal
- * (CFMainCrystal_getExtraSize == 0x160). */
-
-STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
-
-/* Per-object extra state for the CloudRunner power base
- * (CFPowerBase_getExtraSize == 0x6). */
-
-STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
-
-/* Per-object extra state for the CloudRunner prison guard
- * (CFPrisonGuard_getExtraSize == 0x3c). */
-
-STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 typedef struct
 {
