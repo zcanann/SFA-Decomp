@@ -13685,7 +13685,6 @@ int playerState25(int obj, int state)
     return 0;
 }
 
-extern int gameBitDecrement(int bit);
 extern f32 lbl_803E8054;
 
 int playerState08(GameObject* obj, int state, f32 fv)

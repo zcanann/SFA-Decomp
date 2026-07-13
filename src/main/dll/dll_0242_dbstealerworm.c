@@ -44,6 +44,7 @@
 #include "main/objseq.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/objhits.h"
 #include "main/player_control_interface.h"
@@ -304,8 +305,6 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
 
 int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
 {
-
-    extern int gameBitIncrement(int bit);
 
     extern int lbl_80329634[];
     extern int lbl_80329640[];

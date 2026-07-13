@@ -38,6 +38,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_00ED_collectible.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub.h"
@@ -49,7 +50,6 @@
 #define COLLECTIBLE_OBJGROUP 4
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern int gameBitIncrement(int bit);
 extern void saveGame_unsaveObjectPos(int* obj);
 extern f32 gCollectibleDespawnTimerDuration;
 extern f32 lbl_803E3454;

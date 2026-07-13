@@ -17,6 +17,7 @@
 #include "main/sky_interface.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
@@ -92,7 +93,6 @@ int NW_mammoth_getExtraSize(void)
 void fn_801CEE0C(int obj, int baddie)
 {
     extern int fn_801CE078(int, int);
-    extern int gameBitDecrement(int bit);
     extern u8 lbl_803DBF70[4];
     extern u8 lbl_803DBF74[4];
     extern u8 lbl_803DBF78[4];

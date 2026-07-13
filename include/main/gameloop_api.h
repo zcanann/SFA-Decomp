@@ -2,10 +2,9 @@
 #define MAIN_GAMELOOP_API_H_
 
 #include "types.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/hud_visibility_api.h"
 
-int gameBitDecrement(int bit);
-int gameBitIncrement(int bit);
 int getGameState(void);
 void checkReset(void);
 void cutsceneEnterExit(int entering, int affectSounds);

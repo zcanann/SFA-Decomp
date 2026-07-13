@@ -4,6 +4,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -45,7 +46,6 @@ extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern int gameBitIncrement(int bit);
 extern void fn_80163990(int obj, int aux);
 extern const f32 lbl_803E2FA0;
 extern const f32 lbl_803E2FAC;

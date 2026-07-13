@@ -12,6 +12,7 @@
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/music_trigger_ids.h"
@@ -100,7 +101,6 @@ extern f32 lbl_803E59C8;
 
 extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
-extern int gameBitIncrement(int bit);
 extern void staffToggle(GameObject* obj, int a);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);

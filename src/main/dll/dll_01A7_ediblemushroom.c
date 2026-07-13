@@ -14,6 +14,7 @@
 #include "main/objhits.h"
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
@@ -44,7 +45,6 @@ extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, i
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
 extern int objIsFrozen(u8* obj);
-extern int gameBitIncrement(int bit);
 void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
 void EdibleMushroom_hitDetect(u8* obj);

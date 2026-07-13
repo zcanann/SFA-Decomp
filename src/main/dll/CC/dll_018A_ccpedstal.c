@@ -10,6 +10,7 @@
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/CC/dll_018A_ccpedstal.h"
@@ -23,9 +24,6 @@ enum
     PEDSTAL_DEF_GATE_A = 0x45f1b,
     PEDSTAL_DEF_GATE_B = 0x45f1c
 };
-
-extern int gameBitDecrement(int bit);
-extern int gameBitIncrement(int bit);
 
 int ccpedstal_getExtraSize(void)
 {

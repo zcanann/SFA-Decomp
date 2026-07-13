@@ -7,6 +7,7 @@
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/objlib.h"
 #include "main/dll/VF/vf_shared.h"
 
@@ -19,8 +20,6 @@
 extern f32 lbl_803E3AF0;
 extern const f32 lbl_803E3AEC;
 extern f32 lbl_803E3AE8;
-
-extern int gameBitDecrement(int bit);
 
 #pragma dont_inline on
 GameObject* FireFlyLantern_spawnFireFly(int* obj)

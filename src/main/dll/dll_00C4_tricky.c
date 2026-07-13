@@ -27,6 +27,7 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
 #include "main/dll/WC/WCbeacon.h"
@@ -202,7 +203,6 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
 extern void doNothing_onTrickyFree(void);
 extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
-extern int gameBitIncrement(int bit);
 extern void objAnimFreeChildren(int a, int b, GameObject** c);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);

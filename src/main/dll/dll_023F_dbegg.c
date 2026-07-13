@@ -49,6 +49,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/anim.h"
 #include "main/gamebits.h"
+#include "main/gameloop_gamebit_api.h"
 #include "main/pad.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
@@ -147,7 +148,6 @@ typedef struct DbeggPlacement
 #pragma optimization_level 2
 void dbegg_processMessages(GameObject* obj)
 {
-    extern int gameBitIncrement(int bit);
     extern const f32 lbl_803E61C8;
     extern const f32 lbl_803E61CC;
 
