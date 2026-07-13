@@ -4,11 +4,9 @@
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
-#include "main/dll/dll19cstate_struct.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/object_api.h"
-#include "main/dll/torch1cd_state.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -63,20 +61,20 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     animUpdate->hitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
 
-    if (((Torch1CDState*)state)->flameFrameVel != 0)
+    if (((Dll19BState*)state)->brightnessBVel != 0)
     {
-        ((Torch1CDState*)state)->flameFrame += ((Torch1CDState*)state)->flameFrameVel;
-        if (((Torch1CDState*)state)->flameFrame <= 1 && ((Torch1CDState*)state)->flameFrameVel <= 0)
+        ((Dll19BState*)state)->brightnessB += ((Dll19BState*)state)->brightnessBVel;
+        if (((Dll19BState*)state)->brightnessB <= 1 && ((Dll19BState*)state)->brightnessBVel <= 0)
         {
-            ((Torch1CDState*)state)->flameFrame = 1;
-            ((Torch1CDState*)state)->flameFrameVel = 0;
+            ((Dll19BState*)state)->brightnessB = 1;
+            ((Dll19BState*)state)->brightnessBVel = 0;
         }
-        else if (((Torch1CDState*)state)->flameFrame >= 0x46 && ((Torch1CDState*)state)->flameFrameVel >= 0)
+        else if (((Dll19BState*)state)->brightnessB >= 0x46 && ((Dll19BState*)state)->brightnessBVel >= 0)
         {
-            ((Torch1CDState*)state)->flameFrame = 0x46;
-            ((Torch1CDState*)state)->flameFrameVel = 0;
+            ((Dll19BState*)state)->brightnessB = 0x46;
+            ((Dll19BState*)state)->brightnessBVel = 0;
         }
-        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38 / 4](3, (u8)((Torch1CDState*)state)->flameFrame);
+        ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38 / 4](3, (u8)((Dll19BState*)state)->brightnessB);
     }
 
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -100,20 +98,20 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 3:
-                ((Torch1CDState*)state)->pendingEvent = 1;
+                ((Dll19BState*)state)->pendingEvent = 1;
                 break;
             case 4:
-                ((Torch1CDState*)state)->phase = 4;
-                ((Torch1CDState*)state)->pendingEvent = 2;
+                ((Dll19BState*)state)->phase = 4;
+                ((Dll19BState*)state)->pendingEvent = 2;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 mainSetBits(0x1d2, 0);
                 mainSetBits(0x126, 1);
-                ((Torch1CDState*)state)->flameFrameVel = -3;
+                ((Dll19BState*)state)->brightnessBVel = -3;
                 break;
             case 5:
-                ((Torch1CDState*)state)->phase = 6;
-                ((Torch1CDState*)state)->pendingEvent = 3;
-                ((Torch1CDState*)state)->flameFrameVel = -3;
+                ((Dll19BState*)state)->phase = 6;
+                ((Dll19BState*)state)->pendingEvent = 3;
+                ((Dll19BState*)state)->brightnessBVel = -3;
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 break;
             case 6:
@@ -121,7 +119,7 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 break;
             case 7:
                 mainSetBits(0x1d2, 0);
-                ((Torch1CDState*)state)->flameFrameVel = -3;
+                ((Dll19BState*)state)->brightnessBVel = -3;
                 break;
             case 8:
                 mainSetBits(0x128, 1);
@@ -134,9 +132,9 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 mainSetBits(0x127, 1);
                 break;
             case 0xb:
-                ((Torch1CDState*)state)->flameFrame = 100;
+                ((Dll19BState*)state)->brightnessB = 100;
                 ((void (**)(int, int, int, u8, int))*gTitleMenuControlInterface)[0x18 / 4](
-                    3, 0x2d, 0x50, (u8)((Torch1CDState*)state)->flameFrame, 0);
+                    3, 0x2d, 0x50, (u8)((Dll19BState*)state)->brightnessB, 0);
                 break;
             }
         }
@@ -169,36 +167,6 @@ void dll_19B_free(int* obj)
 {
     (*gModgfxInterface)->detachSource(obj);
 }
-
-enum Dll19BPhase
-{
-    DLL19B_PHASE_IDLE = 0,       /* wait for player proximity, then arm shrine */
-    DLL19B_PHASE_WAIT_EVENT = 1, /* wait for pendingEvent, then start countdown */
-    DLL19B_PHASE_COUNTDOWN = 2,  /* shrine timer ticking; success or timeout */
-    DLL19B_PHASE_RESOLVE = 3,    /* branch on unlock bit: success vs fail path */
-    DLL19B_PHASE_COMPLETE = 4,   /* set completion bits, finish */
-    DLL19B_PHASE_DONE = 5,       /* terminal, no per-tick handling */
-    DLL19B_PHASE_RESET = 6       /* tear down and return to idle */
-};
-
-typedef struct Dll19BState
-{
-    s16 activationDist; /* 0x00: st[0], proximity trigger distance */
-    s16 timer;          /* 0x02: st[1], frame countdown */
-    s16 brightnessA;    /* 0x04: st[2] */
-    s16 brightnessAVel; /* 0x06: st[3] */
-    s16 brightnessB;    /* 0x08: st[4] */
-    s16 brightnessBVel; /* 0x0a: st[5] */
-    s16 gfxHandle;      /* 0x0c: st[6], modgfx source handle */
-    s16 countdown;      /* 0x0e: st[7], shrine timer */
-    s16 unk10;          /* 0x10: init=0xc8 */
-    u8 unlockCount;     /* 0x12 */
-    u8 phase;           /* 0x13 */
-    u8 pendingEvent;    /* 0x14 */
-    u8 pad15[0x16 - 0x15];
-    u8 displayedFlag; /* 0x16 */
-    u8 pad17[0x18 - 0x17];
-} Dll19BState;
 
 void dll_19B_update(int obj)
 {
