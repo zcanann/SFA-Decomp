@@ -3103,7 +3103,7 @@ void pauseMenuFn_80129ee0(void)
         case 5:
             if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
             {
-                pauseMenuGridFn_8012b4c4();
+                int r = pauseMenuGridFn_8012b4c4();
                 if (lbl_803DD7C4 != 0)
                 {
                     lbl_803DD824 = tbl->gridF70;
@@ -3112,7 +3112,7 @@ void pauseMenuFn_80129ee0(void)
                 {
                     lbl_803DD824 = tbl->gridD70;
                 }
-                pauseMenuRunSubmenu(lbl_803DD7C4);
+                pauseMenuRunSubmenu(r);
                 {
                     u8 idx;
                     int k;
