@@ -40,6 +40,7 @@
 #include "main/gamebits.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_sequence_api.h"
+#include "main/textrender_api.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))

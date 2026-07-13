@@ -11,6 +11,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/minimap_api.h"
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/dll/dll_010E_deathseq.h"

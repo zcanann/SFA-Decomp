@@ -31,6 +31,7 @@
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/gametext_show_str_api.h"
+#include "main/textrender_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"

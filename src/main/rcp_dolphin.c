@@ -22,6 +22,7 @@
 #include "main/sky_api.h"
 #include "main/sky_interface.h"
 #include "main/mm.h"
+#include "main/dll/tricky_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
 

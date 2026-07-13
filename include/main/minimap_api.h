@@ -5,5 +5,6 @@
 
 u16 getMinimapY(void);
 void fn_80133934(void);
+u8 isAreaNameTextActive(void);
 
 #endif /* MAIN_MINIMAP_API_H_ */

@@ -24,6 +24,7 @@
 #include "main/shader.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_0000_gameui_api.h"
 
 #define WORLDPLANET_CAMMODE_WORLDMAP 0x4e /* cameramode DLL dll_004E_cameramodeworldmap */
 

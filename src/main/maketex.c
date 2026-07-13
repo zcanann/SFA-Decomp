@@ -16,6 +16,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/frame_timing.h"
 #include "main/maketex.h"
+#include "main/textrender_api.h"
 #include "main/objseq_api.h"
 #include "main/fileio.h"
 #include "main/audio/stream_api.h"

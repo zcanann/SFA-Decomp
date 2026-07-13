@@ -13,6 +13,8 @@ void timeListFn_8012df14(void);
 void textureFreeFn_8012fcec(void);
 void viewFn_80129c74(void);
 void CMenu_SetFadeCounter(s16 value);
+void showHelpText(s16 val);
+u8 getWorldMapVoiceoverTimer(void);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 

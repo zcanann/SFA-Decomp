@@ -349,7 +349,6 @@ extern char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outC
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8* str);
 extern void* gameTextGet(int textId);
-extern void subtitleFn_8001b700(void);
 extern void loadGameTextSequence();
 extern void setLanguageFn_8001ad64(void* slot);
 extern void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* box);

@@ -37,6 +37,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
+#include "main/textrender_api.h"
 #include "main/pause_menu_api.h"
 void Sfx_PlayFromObject(int obj, int id);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);

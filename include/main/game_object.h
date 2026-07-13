@@ -127,10 +127,7 @@ void Obj_SetActiveHitVolumeBounds(GameObject* obj, int xBound, int zBound, int y
 
 /* extern-cleanup: consolidated prototypes */
 void disableHeavyFog(void);
-void subtitleFn_8001b700(void);
 void trickyReportError(const char* fmt, ...);
-u8 isAreaNameTextActive(void);
-void gameUiResetMenuState(void);
 int atan2_8002178c(f32 dx, f32 dz);
 void mapBlockFn_80059c2c(u8* outFlags);
 void fn_8003A230(GameObject* obj, void* p, f32 f);
@@ -140,11 +137,7 @@ void objSetHintTextIdx(GameObject* obj, u16 idx);
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void trickyDebugPrint(const char* fmt, ...);
-void showHelpText(s16 val);
-void* gameTextGetPhrase(int textId, int phraseIndex);
 void debugPrintfxy(int x, int y, char* fmt, ...);
-u8 getWorldMapVoiceoverTimer(void);
-void gameTextResetCursor(int flags);
 int atan2i(int y, int x);
 
 #endif

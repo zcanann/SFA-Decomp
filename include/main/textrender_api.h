@@ -17,4 +17,8 @@ extern GameTextSlot lbl_8033A540[];
 #define gGameTextCommandCount lbl_803DC9C8
 #define gGameTextCommandSlots lbl_8033A540
 
+void subtitleFn_8001b700(void);
+void* gameTextGetPhrase(int textId, int phraseIndex);
+void gameTextResetCursor(int flags);
+
 #endif /* MAIN_TEXTRENDER_API_H_ */
