@@ -17,7 +17,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "main/dll/DIM/DIMboulder.h"
+#include "main/dll/dll_016B_magiclight.h"
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 

@@ -23,7 +23,6 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
-#include "main/dll/DIM/DIMboulder.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 

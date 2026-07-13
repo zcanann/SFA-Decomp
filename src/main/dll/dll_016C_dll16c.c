@@ -24,7 +24,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
-#include "main/dll/DIM/DIMboulder.h"
+#include "main/dll/dll_016C_dll16c.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
