@@ -6,6 +6,13 @@
 #define INFOTEXT_OBJFLAG_HIDDEN 0x4000
 #define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+typedef struct InfoTextPlacement
+{
+    u8 pad00[0x18];
+    u8 rotByte;     /* 0x18 */
+    u8 hintTextIdx; /* 0x19 */
+} InfoTextPlacement;
+
 int infotext_getExtraSize(void) { return 0x4; }
 
 void infotext_update(int obj)
@@ -38,8 +45,9 @@ void infotext_update(int obj)
 void infotext_init(GameObject *obj, s8* def)
 {
     u32 flags;
+    InfoTextPlacement* p = (InfoTextPlacement*)def;
     flags = (u32)(obj)->objectFlags | (INFOTEXT_OBJFLAG_HIDDEN | INFOTEXT_OBJFLAG_HITDETECT_DISABLED);
     (obj)->objectFlags = flags;
-    (obj)->anim.rotX = (s16)((s32)(u8)def[0x18] << 8);
-    objSetHintTextIdx(obj, (u8)def[0x19]);
+    (obj)->anim.rotX = (s16)((s32)(u8)p->rotByte << 8);
+    objSetHintTextIdx(obj, (u8)p->hintTextIdx);
 }

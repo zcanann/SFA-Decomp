@@ -51,6 +51,18 @@ typedef struct TumbleweedBushState
     u8 pad51[3];
 } TumbleweedBushState;
 
+typedef struct TumbleweedBushPlacement
+{
+    u8 pad00[0x18];
+    u8 rotZByte;   /* 0x18 */
+    u8 rotYByte;   /* 0x19 */
+    u8 rotXByte;   /* 0x1a */
+    u8 radiusByte; /* 0x1b: triggerRadius = *2 */
+    f32 scale;     /* 0x1c: anim.rootMotionScale */
+    u8 pad20[0x23 - 0x20];
+    u8 variant;    /* 0x23 */
+} TumbleweedBushPlacement;
+
 
 extern f32 timeDelta;
 extern f32 lbl_803E2F48;
@@ -89,7 +101,7 @@ void TumbleWeedBush_initialise(void)
 {
 }
 
-void TumbleWeedBush_init(u8* obj, u8* params, int param3)
+void TumbleWeedBush_init(u8* obj, TumbleweedBushPlacement* params, int param3)
 {
     u8* sub;
     f32 t;
@@ -101,12 +113,12 @@ void TumbleWeedBush_init(u8* obj, u8* params, int param3)
 
     sub = ((GameObject*)obj)->extra;
     *(f32*)sub = lbl_803E2F48;
-    ((TumbleweedBushState*)sub)->triggerRadius = (u16)(params[0x1b] * 2);
-    sub[0x4c] = params[0x23];
-    ((GameObject*)obj)->anim.rotZ = (s16)((params[0x18] - 0x7f) << 7);
-    ((GameObject*)obj)->anim.rotY = (s16)((params[0x19] - 0x7f) << 7);
-    ((GameObject*)obj)->anim.rotX = (s16)(params[0x1a] << 8);
-    ((GameObject*)obj)->anim.rootMotionScale = *(f32*)(params + 0x1c);
+    ((TumbleweedBushState*)sub)->triggerRadius = (u16)(params->radiusByte * 2);
+    sub[0x4c] = params->variant;
+    ((GameObject*)obj)->anim.rotZ = (s16)((params->rotZByte - 0x7f) << 7);
+    ((GameObject*)obj)->anim.rotY = (s16)((params->rotYByte - 0x7f) << 7);
+    ((GameObject*)obj)->anim.rotX = (s16)(params->rotXByte << 8);
+    ((GameObject*)obj)->anim.rootMotionScale = params->scale;
     t = ((GameObject*)obj)->anim.rootMotionScale;
     ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (s32)(lbl_803E2F4C * t), (s32)(lbl_803E2F50 * t),
                                (s32)(lbl_803E2F54 * t));

@@ -21,6 +21,18 @@ typedef struct SkeetlaWallState
     u8 shapeFlag;
 } SkeetlaWallState;
 
+typedef struct SkeetlaWallPlacement
+{
+    u8 pad00[0x18];
+    u8 negXExtent; /* 0x18 */
+    u8 posXExtent; /* 0x19 */
+    u8 posZExtent; /* 0x1a */
+    u8 negZExtent; /* 0x1b */
+    u8 posYExtent; /* 0x1c */
+    u8 negYExtent; /* 0x1d */
+    u8 shapeFlag;  /* 0x1e */
+} SkeetlaWallPlacement;
+
 void SkeetlaWall_setScale(int* obj, f32* outVec, u8* outByte)
 {
     SkeetlaWallState* state = ((GameObject*)obj)->extra;
@@ -67,16 +79,16 @@ void SkeetlaWall_update(void)
 {
 }
 
-void SkeetlaWall_init(GameObject* obj, u8* def)
+void SkeetlaWall_init(GameObject* obj, SkeetlaWallPlacement* def)
 {
     SkeetlaWallState* state = obj->extra;
-    state->negXExtent = def[0x18];
-    state->posXExtent = def[0x19];
-    state->posZExtent = def[0x1A];
-    state->negZExtent = def[0x1B];
-    state->posYExtent = def[0x1C];
-    state->negYExtent = def[0x1D];
-    state->shapeFlag = def[0x1E];
+    state->negXExtent = def->negXExtent;
+    state->posXExtent = def->posXExtent;
+    state->posZExtent = def->posZExtent;
+    state->negZExtent = def->negZExtent;
+    state->posYExtent = def->posYExtent;
+    state->negYExtent = def->negYExtent;
+    state->shapeFlag = def->shapeFlag;
 }
 
 void SkeetlaWall_release(void)

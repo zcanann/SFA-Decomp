@@ -25,6 +25,14 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 /* seqId of the main proximity-triggered variant (subtype-selected L-actions) */
 #define MAGICLIGHT_SEQ_PROXIMITY 0x16b
 
+typedef struct MagicLightPlacement
+{
+    u8 pad00[0x18];
+    s8 rotByte;       /* 0x18 */
+    u8 pad19;         /* 0x19 */
+    s16 subtypeParam; /* 0x1a */
+} MagicLightPlacement;
+
 
 #pragma scheduling off
 #pragma peephole off
@@ -112,8 +120,9 @@ void MagicLight_update(GameObject* obj)
 void MagicLight_init(int* obj, u8* params)
 {
     MagicLightState* state;
+    MagicLightPlacement* p = (MagicLightPlacement*)params;
     ((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s8)p->rotByte << 8);
     ((GameObject*)obj)->animEventCallback = MagicLight_SeqFn;
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_GLOW)
     {
@@ -121,7 +130,7 @@ void MagicLight_init(int* obj, u8* params)
     }
     state = ((GameObject*)obj)->extra;
     state->lifetime = randomGetRange(0xc8, 0x258);
-    state->subtype = (s8) * (s16*)(params + 0x1a);
+    state->subtype = (s8)p->subtypeParam;
     state->inRange = 0;
     if (((GameObject*)obj)->anim.seqId == MAGICLIGHT_SEQ_PROXIMITY)
     {

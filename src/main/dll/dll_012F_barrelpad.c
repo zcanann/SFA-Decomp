@@ -16,6 +16,15 @@
 #define BARRELPAD_SEQ_LAUNCH_ACTIVE    0x79  /* active launch burst */
 #define BARRELPAD_SEQ_LAUNCH_SECONDARY 0x748 /* secondary launch state */
 
+typedef struct BarrelPadPlacement
+{
+    u8 pad00[0x18];
+    u8 rotZByte;  /* 0x18 */
+    u8 rotYByte;  /* 0x19 */
+    u8 rotXByte;  /* 0x1a */
+    u8 scaleByte; /* 0x1b: rootMotionScale = /255 */
+} BarrelPadPlacement;
+
 
 int BarrelPad_getExtraSize(void)
 {
@@ -61,12 +70,13 @@ void BarrelPad_update(s16* obj)
 
 void BarrelPad_init(s16* obj, u8* def)
 {
-    ((GameObject*)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
-    ((GameObject*)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
-    ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
-    if (def[0x1b] != 0)
+    BarrelPadPlacement* p = (BarrelPadPlacement*)def;
+    ((GameObject*)obj)->anim.rotZ = (s16)((s32)p->rotZByte << 8);
+    ((GameObject*)obj)->anim.rotY = (s16)((s32)p->rotYByte << 8);
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)p->rotXByte << 8);
+    if (p->scaleByte != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / 255.0f;
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)p->scaleByte / 255.0f;
         if (!((GameObject*)obj)->anim.rootMotionScale)
         {
             ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
