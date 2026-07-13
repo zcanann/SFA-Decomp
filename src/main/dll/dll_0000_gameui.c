@@ -1675,13 +1675,12 @@ void pauseMenuRunSubmenu(int p1)
     else
     {
         f32 old = lbl_803DD768;
-        f32 now = old + timeDelta;
         GridEntry* tbl;
-        lbl_803DD768 = now;
+        lbl_803DD768 += timeDelta;
         switch (pauseMenuState)
         {
         case 3:
-            if (now >= lbl_803E2068 && old < lbl_803E2068)
+            if (lbl_803DD768 >= 600.0f && old < 600.0f)
             {
                 if (lbl_803DD7D6 == lbl_803DD8E0)
                 {
@@ -1699,7 +1698,7 @@ void pauseMenuRunSubmenu(int p1)
             }
             break;
         case 5:
-            if (now >= lbl_803E2068 && old < lbl_803E2068)
+            if (lbl_803DD768 >= 600.0f && old < 600.0f)
             {
                 int id = randomGetRange(0, 3) + 0x2730;
                 int skip = 0x2731;
@@ -1748,9 +1747,12 @@ void pauseMenuRunSubmenu(int p1)
             Sfx_PlayFromObject(0, SFXTRIG_pda_fper_move);
             lbl_803DD7D8 = sel;
             id = lbl_803DD824[sel].id;
-            if (id < 0x4d && id >= 0x4b)
+            switch (id)
             {
+            case 0x4b:
+            case 0x4c:
                 AudioStream_Play(0x2714, AudioStream_StartPrepared);
+                break;
             }
         }
         tbl = lbl_803DD824;
