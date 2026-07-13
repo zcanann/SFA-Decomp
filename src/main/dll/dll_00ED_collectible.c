@@ -23,6 +23,7 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
+#include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_api.h"
@@ -111,9 +112,6 @@ extern f32 lbl_803E34A0;
 
 
 extern void MikaBombShadow_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
-extern void dll_F7_update(int* obj);
-
 /* ObjMsg slots: collectible notifies the player it is in range, player
    replies to trigger the pickup. */
 #define COLLECTIBLE_MSG_IN_RANGE 0x7000a

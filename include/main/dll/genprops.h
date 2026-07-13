@@ -133,11 +133,6 @@ int curve_getExtraSize(void);
 int curve_getObjectTypeId(void);
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params);
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-int dll_F7_getExtraSize(void);
-int dll_F7_getObjectTypeId(void);
-void dll_F7_hitDetect(void);
-void dll_F7_release(void);
-void dll_F7_initialise(void);
 
 extern ObjectDescriptor gMikaBombObjDescriptor;
 extern ObjectDescriptor gMikaBombShadowObjDescriptor;
@@ -171,7 +166,6 @@ s32 staff_getSwipeTextureIndex(int* obj);
 void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void flamethrowerspe_func0B(int* obj);
 void flamethrowerspe_render(void);
-void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void animatedobj_free(int* obj, int seqFlag);
@@ -182,6 +176,5 @@ void staff_init(int* obj);
 void staff_release(void);
 void staff_initialise(void);
 void staff_hitDetectGeometry(int* obj);
-void dll_F7_free(int obj);
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

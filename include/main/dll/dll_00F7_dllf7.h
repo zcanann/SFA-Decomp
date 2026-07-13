@@ -12,8 +12,6 @@
 #include "main/objprint.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
-
-void dll_F7_update(int* obj);
-void dll_F7_init(int* obj, int* params);
+#include "main/dll/dll_00F7_dllf7_api.h"
 
 #endif

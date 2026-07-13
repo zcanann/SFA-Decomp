@@ -8,6 +8,7 @@
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"

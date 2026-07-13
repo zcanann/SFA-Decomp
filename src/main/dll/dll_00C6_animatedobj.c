@@ -7,6 +7,7 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
+#include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -247,8 +248,6 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 
 
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
@@ -697,8 +696,6 @@ void animatedobj_free(int* obj, int seqFlag)
     }
 }
 
-void dll_F7_init(int* obj, int* params);
-
 
 void animatedobj_init(int* obj, int* params)
 {
@@ -890,8 +887,6 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-
-void dll_F7_update(int* obj);
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 

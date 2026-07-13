@@ -17,6 +17,7 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
+#include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/object_render_legacy.h"
 
@@ -132,7 +133,6 @@ extern f32 timeDelta;
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
-#include "main/dll/dll_00F7_dllf7.h"
 #include "main/objlib.h"
 
 #define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800

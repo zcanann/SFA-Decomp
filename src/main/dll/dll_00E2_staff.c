@@ -33,6 +33,7 @@
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
+#include "main/dll/dll_00F7_dllf7_api.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -271,9 +272,6 @@ int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
-
-extern void dll_F7_update(int* obj);
-extern void dll_F7_init(int* obj, int* params);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0,
@@ -866,8 +864,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
     }
 }
 
-void dll_F7_init(int* obj, int* params);
-
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 
 void MikaBomb_init(int* obj);
@@ -878,8 +874,6 @@ extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 
 
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
-
-void dll_F7_update(int* obj);
 
 extern s16 sStaffSwipeTextureIdTable[4];
 extern s16* gStaffSwipeTextureIds;
