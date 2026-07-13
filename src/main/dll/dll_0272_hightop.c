@@ -21,6 +21,7 @@
 #include "main/vecmath.h"
 #include "main/pad.h"
 #include "main/dll/moveLib.h"
+#include "main/dll/tricky.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/objprint.h"
@@ -764,7 +765,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
             move = 2;
             stateArg->baddie.moveSpeed = lbl_803E6AAC;
         }
-        fn_80039264((char*)state + 0xb48);
+        fn_80039264((s32*)((char*)state + 0xb48));
     }
     count = mainGetBit(GAMEBIT_DR_HighTopSwitch1) + mainGetBit(GAMEBIT_DR_HighTopSwitch2) +
             mainGetBit(GAMEBIT_DR_HighTopSwitch3) + mainGetBit(GAMEBIT_DR_HighTopSwitch4);
@@ -786,7 +787,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         state2->flagsC49.b7 = 1;
         (*gGameUIInterface)->initAirMeter(gHighTopAirMeterInitValue, HIGHTOP_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(state2->airMeterRemaining);
-        fn_80039264((char*)state + 0xb48);
+        fn_80039264((s32*)((char*)state + 0xb48));
         return 7;
     }
     if (count == 4)
@@ -794,7 +795,7 @@ int hightop_stateHandler04(int obj, HighTopRuntime* stateArg)
         mainSetBits(0x62a, 1);
         return 0;
     }
-    objModelAndSoundFn_80039118(obj, (char*)state + 0xb48);
+    objModelAndSoundFn_80039118(obj, (int)((char*)state + 0xb48));
     state->stateTimer -= (f32)(u32)framesThisStep;
     if (((GameObject*)obj)->anim.currentMove != 9 && ((GameObject*)obj)->anim.currentMove != 0x11)
     {

@@ -309,8 +309,6 @@ extern f32 lbl_803E6AE4;
 extern f32 lbl_803E6AE8;
 extern f32 lbl_803E6AEC;
 extern f32 lbl_803E6AF0;
-extern void fn_80039264(void* p);
-extern void objModelAndSoundFn_80039118(int obj, void* p);
 extern f32 lbl_803E6B04;
 extern f32 lbl_803E6B0C;
 extern f32 lbl_803E6B10;
@@ -318,11 +316,5 @@ extern f32 lbl_803E6B14;
 extern f32 lbl_803E6B1C;
 extern f32 lbl_803E6B20;
 extern f32 lbl_803E6AA4;
-extern void getYButtonItem(s16* out);
-extern void objModelClearVecFn_8003aa40(GameObject* obj);
-
-void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
-int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg);
-int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg);
 
 #endif
