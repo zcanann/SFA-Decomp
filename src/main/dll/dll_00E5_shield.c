@@ -19,6 +19,7 @@
  * TU: 0x8016B230-0x8016B2E0.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/hud_visibility_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -108,7 +109,6 @@ extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void postRenderSetAlphaBlendState(void);
-extern int getHudHiddenFrameCount(void);
 extern f32 fcos16(u16 angle);
 extern void Sfx_SetObjectSfxVolume(s16* obj, int sfx, int vol, f32 ratio);
 extern f32 lbl_803E33A8;

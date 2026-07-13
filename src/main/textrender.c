@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
 #include "dolphin/gx/GXCull.h"
@@ -328,7 +329,6 @@ extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
-int getHudHiddenFrameCount(void);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, void* color);
 extern int gameTextGetTaskText(int taskId, int* textId, int* dirId);
 extern void* memcpy(void* dst, const void* src, int n);

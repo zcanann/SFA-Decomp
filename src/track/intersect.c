@@ -1,4 +1,5 @@
 #include "dolphin/card.h"
+#include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/effect_interfaces.h"
 #include "main/audio/sfx.h"
@@ -4745,7 +4746,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern int gGxZModeCompareFunc;
     extern u16 fn_8000FA90(void);
     extern u16 fn_8000FA70(void);
-    extern int getHudHiddenFrameCount(void);
     extern f32 fn_80292194(f32 v);
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern void getReflectionTexture2(int* out);

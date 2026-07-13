@@ -1,4 +1,5 @@
 #include "dolphin/mtx.h"
+#include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "math.h"
@@ -186,7 +187,6 @@ extern const f32 lbl_803DF404;
 extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
-extern int getHudHiddenFrameCount(void);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
 extern float __fabsf(float);

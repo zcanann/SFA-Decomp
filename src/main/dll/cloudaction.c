@@ -17,6 +17,7 @@
  * texture each frame.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/camera.h"
@@ -59,7 +60,6 @@ extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern int fn_8008912C(void);
 extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
-extern int getHudHiddenFrameCount(void);
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 

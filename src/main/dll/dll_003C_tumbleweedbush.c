@@ -18,6 +18,7 @@
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
+#include "main/hud_visibility_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
 #include "main/gamebits.h"
@@ -88,7 +89,6 @@ extern void gameTextShow(int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
-extern int getHudHiddenFrameCount(void);
 #define PAD_BUTTON_A     0x100
 #define PAD_BUTTON_B     0x200
 #define PAD_BUTTON_START 0x1000

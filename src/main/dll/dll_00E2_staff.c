@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/shader_api.h"
@@ -688,7 +689,6 @@ void staff_setHitReactValue(int* obj, s32 v)
     *p = v;
 }
 
-extern int getHudHiddenFrameCount(void);
 
 void staff_modelMtxFn(int* obj, int p4, int p5)
 {

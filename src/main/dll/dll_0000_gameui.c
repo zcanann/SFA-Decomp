@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
@@ -369,7 +370,6 @@ extern f32 lbl_803E1E70;
 
 extern int cameraGetTargetType(void);
 extern int cMenuCountAvailableEntries(int bit, int x);
-extern int getHudHiddenFrameCount(void);
 
 extern u8 shouldOpenCMenu;
 int lbl_803A9320[0x11];

@@ -16,6 +16,7 @@
  * computes the highlight fade (lbl_803DD8D4).
  */
 #include "main/camera_interface.h"
+#include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/game_object.h"
@@ -98,7 +99,6 @@ extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
-extern int getHudHiddenFrameCount(void);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void gxColorFn_80052764(void* p);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);

@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -866,7 +867,6 @@ void renderSceneGeometry(int* p1, s8* order);
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
-extern int getHudHiddenFrameCount(void);
 
 extern u8 bEnableBlurFilter;
 extern f32 lbl_803DCE50;

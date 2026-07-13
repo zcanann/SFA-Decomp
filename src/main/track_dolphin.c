@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "main/hud_visibility_api.h"
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -397,7 +398,6 @@ extern int cacheAllocAndCopy(void* p, int size, int* offIn, int* offOut, int bas
 extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);
-extern int getHudHiddenFrameCount(void);
 
 extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);

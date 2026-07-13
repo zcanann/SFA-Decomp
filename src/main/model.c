@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
 #include "main/model.h"
@@ -175,7 +176,6 @@ int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
     return baseSize + resource[8] * resource[7];
 }
 
-int getHudHiddenFrameCount(void);
 
 #pragma scheduling on
 #pragma peephole on

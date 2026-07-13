@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/newshadows_audio_api.h"
 #include "main/texture.h"
@@ -274,7 +275,6 @@ extern void GXInvalidateTexAll(void);
 extern float __fabsf(float);
 extern float floor(float);
 extern void fn_80069EB8();
-extern int getHudHiddenFrameCount(void);
 extern void fn_80060BB0(void);
 extern void fn_8004C234(f32* a, f32* b);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
