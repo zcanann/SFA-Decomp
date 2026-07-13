@@ -27,6 +27,7 @@
 #include "main/obj_placement.h"
 #include "main/objprint.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
 #include "main/sky_api.h"
@@ -130,8 +131,8 @@ void bossdrakor_update(int obj)
         (*gGameUIInterface)->initAirMeter(((BossDrakorState*)state2)->airMeterHandle, BOSSDRAKOR_AIRMETER_BGTEXTURE);
         (*gGameUIInterface)->runAirMeter(((BossDrakorState*)state2)->airMeterHandle);
         ((DrakorFlags*)((char*)state + 0x198))->b10 = 0;
-        ((BossDrakorState*)state)->lightObj = objCreateLight(0, 1);
-        if (*(void**)&((BossDrakorState*)state)->lightObj != NULL)
+        ((BossDrakorState*)state)->lightObj = objCreateLight(NULL, 1);
+        if (((BossDrakorState*)state)->lightObj != NULL)
         {
             modelLightStruct_setLightKind(((BossDrakorState*)state)->lightObj, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0xff, 0xff);
@@ -139,7 +140,7 @@ void bossdrakor_update(int obj)
             modelLightStruct_setupGlow(((BossDrakorState*)state)->lightObj, 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
             modelLightStruct_setDistanceAttenuation(((BossDrakorState*)state)->lightObj, lbl_803E6544, lbl_803E6540);
             lightSetField4D((ModelLightStruct*)((BossDrakorState*)state)->lightObj, 0);
-            modelLightStruct_setEnabled(*(void**)&((BossDrakorState*)state)->lightObj, 1, lbl_803E6520);
+            modelLightStruct_setEnabled(((BossDrakorState*)state)->lightObj, 1, lbl_803E6520);
             modelLightStruct_setDiffuseTargetColor(((BossDrakorState*)state)->lightObj, 0x40, 0, 0x80, 0x40);
             modelLightStruct_setSpecularTargetColor((ModelLightStruct*)((BossDrakorState*)state)->lightObj, 0x40, 0,
                                                      0x80, 0x40);
@@ -595,7 +596,7 @@ void bossdrakor_free(GameObject* obj)
     {
         ObjLink_DetachChild(obj, *(int*)&(obj)->childObjs[0]);
     }
-    if (*(void**)&((BossDrakorState*)inner)->lightObj != NULL)
+    if (((BossDrakorState*)inner)->lightObj != NULL)
     {
         ModelLightStruct_free(((BossDrakorState*)inner)->lightObj);
     }
@@ -618,17 +619,17 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         if (((DrakorFlags*)((char*)state + 0x198))->b40)
         {
             ((BossDrakorState*)state)->moveState = 0x12;
-            if (*(void**)&((BossDrakorState*)state)->lightObj != NULL)
+            if (((BossDrakorState*)state)->lightObj != NULL)
             {
-                modelLightStruct_setEnabled(*(void**)&((BossDrakorState*)state)->lightObj, 0, lbl_803E651C);
+                modelLightStruct_setEnabled(((BossDrakorState*)state)->lightObj, 0, lbl_803E651C);
             }
         }
         else
         {
             ((DrakorFlags*)((char*)state + 0x198))->b40 = 1;
-            if (*(void**)&((BossDrakorState*)state)->lightObj != NULL)
+            if (((BossDrakorState*)state)->lightObj != NULL)
             {
-                modelLightStruct_setEnabled(*(void**)&((BossDrakorState*)state)->lightObj, 1, lbl_803E651C);
+                modelLightStruct_setEnabled(((BossDrakorState*)state)->lightObj, 1, lbl_803E651C);
             }
         }
         break;
@@ -877,23 +878,23 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     f32 pos2;
     f32 pos1;
     f32 pos0;
-    int light;
+    ModelLightStruct* light;
     int val;
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E651C);
     ObjPath_GetPointWorldPosition((GameObject*)p1, 0, &((BossDrakorState*)inner)->homePosX, &((BossDrakorState*)inner)->homePosY,
                                   &((BossDrakorState*)inner)->homePosZ, 0);
-    if (*(void**)&((BossDrakorState*)inner)->lightObj != NULL)
+    if (((BossDrakorState*)inner)->lightObj != NULL)
     {
         ObjPath_GetPointWorldPosition((GameObject*)p1, 5, &pos0, &pos1, &pos2, 0);
         modelLightStruct_setPosition(((BossDrakorState*)inner)->lightObj, pos0, pos1, pos2);
         light = ((BossDrakorState*)inner)->lightObj;
-        if (*(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
+        if (light->glowType != 0 && light->enabled != 0)
         {
-            val = *(u8*)((char*)light + 0x2f9) + (s8) * (u8*)((char*)light + 0x2fa);
+            val = light->glowAlpha + light->glowAlphaStep;
             if (val < 0)
             {
                 val = 0;
-                *(u8*)((char*)light + 0x2fa) = 0;
+                light->glowAlphaStep = 0;
             }
             else if (val > 0xc)
             {
@@ -901,13 +902,13 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
                 if (val > 0xff)
                 {
                     val = 0xff;
-                    *(u8*)((char*)((BossDrakorState*)inner)->lightObj + 0x2fa) = 0;
+                    ((BossDrakorState*)inner)->lightObj->glowAlphaStep = 0;
                 }
             }
-            *(u8*)((char*)((BossDrakorState*)inner)->lightObj + 0x2f9) = val;
+            ((BossDrakorState*)inner)->lightObj->glowAlpha = val;
         }
         light = ((BossDrakorState*)inner)->lightObj;
-        if (*(u8*)((char*)light + 0x2f8) != 0 && *(u8*)((char*)light + 0x4c) != 0)
+        if (light->glowType != 0 && light->enabled != 0)
         {
             queueGlowRender(light);
         }

@@ -22,6 +22,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_024E_drakordthornbush.h"
@@ -51,9 +52,9 @@ void drakord_thornbush_free(int obj)
         Obj_UpdateLightningCluster((GameObject*)obj, ((DrakordThornbushState*)inner)->lightningEntries, 3,
                                    lbl_803E6588, &((DrakordThornbushState*)inner)->light);
     }
-    if (*(void**)&((DrakordThornbushState*)inner)->light != NULL)
+    if (((DrakordThornbushState*)inner)->light != NULL)
     {
-        ModelLightStruct_free((int)((DrakordThornbushState*)inner)->light);
+        ModelLightStruct_free(((DrakordThornbushState*)inner)->light);
     }
 }
 

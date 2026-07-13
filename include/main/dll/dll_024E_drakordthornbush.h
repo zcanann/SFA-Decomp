@@ -5,8 +5,7 @@
 #include "main/game_object.h"
 #include "global.h"
 #include "main/lightningeffect.h"
-
-struct ModelLightStruct;
+#include "main/model_light.h"
 
 typedef struct DrakordThornbushPlacement
 {
@@ -26,7 +25,7 @@ typedef struct DrakordThornbushState
     f32 regrowTimer;                  /* 0x10: hit/regrow countdown */
     LightningEffect* lightningEntries[3];
     u8 pad20[0x64 - 0x20];
-    struct ModelLightStruct* light; /* 0x64: model light handle (lightning variant) */
+    ModelLightStruct* light; /* 0x64: model light handle (lightning variant) */
     f32 lightScale;                   /* 0x68: lightning scale, accumulates over time */
     void* hitTable;                   /* 0x6C: hit-reaction table pointer */
     f32 baseScale;                    /* 0x70: per-variant init scale constant */

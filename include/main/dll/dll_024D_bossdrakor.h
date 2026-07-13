@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "global.h"
 
 typedef struct BossdrakorPlacement
@@ -30,7 +31,7 @@ typedef struct BossDrakorState
     f32 savedPosY;
     f32 savedPosZ;
     u8 pad9C[0xc4];
-    int lightObj; /* 0x160 */
+    ModelLightStruct* lightObj; /* 0x160 */
     f32 moveSpeed;
     int moveState; /* 0x168 */
     int unk16C;
