@@ -2,7 +2,7 @@
 #define MAIN_DLL_DLL_000E_PARTFX_H_
 
 #include "types.h"
-#include "main/effect_interfaces.h"
+#include "main/dll/partfx_interface.h"
 
 typedef int (*PartFxSpawnCallback)(s16*, int, PartFxSpawnParams*, u32, u8, void*);
 
