@@ -10,40 +10,12 @@
 #define LAVA1BE_FLAG_HOMING_OFF 0x08
 #define LAVA1BE_FLAG_INACTIVE   0x10
 #define LAVA1BE_FLAG_FALLING    0x20
-#include "main/dll/linklevcontrolstate_struct.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/object_api.h"
 #include "main/modellight_api.h"
-#include "main/dll/lavaball1bfstate_struct.h"
-#include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
-#include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
-
-/*
- * Per-object extra state for the IM ice-mountain event controller
- * (IMIceMountain_getExtraSize == 0x14).
- */
-typedef struct IMIceMountainState
-{
-    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
-    u8 pad01[3];
-    s32 latchFlags;   /* SCGameBitLatch record; bit 1 = latch fired this frame */
-    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
-    u8 pad09;
-    s16 musicTrack;   /* -1 or 26; Music_Trigger edge latch */
-    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
-    u8 pad0D[3];
-    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
-} IMIceMountainState;
-
-STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 extern u32 ObjHits_DisableObject();
 
@@ -90,15 +62,7 @@ typedef struct
     f32 x, y, z;
 } LavaVec;
 
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
 STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
-
-STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern u32 ObjHits_EnableObject();
 extern f32 lbl_803E47F0;

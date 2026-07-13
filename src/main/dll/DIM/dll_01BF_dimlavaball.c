@@ -3,34 +3,16 @@
  * 0x18D lava-ball sub-object, controls its fire period and game-bit gate,
  * and relaunches it on each fire cycle.
  */
-#include "main/dll/linklevcontrolstate_struct.h"
 #include "main/vecmath.h"
 #include "main/dll/lavaball1bfstate_struct.h"
-#include "main/dll/imspacethrusterstate_struct.h"
-#include "main/dll/lavaball1bestate_struct.h"
-#include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
-#include "main/dll/imicemountainstate_struct.h"
 
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLAVABALL_OBJFLAG_HIDDEN             0x4000
 
 /* Lava-ball sub-object id spawned by lavaball1bf_update (docblock: "the 0x18D lava-ball sub-object"). */
 #define DIMLAVABALL_SUBOBJ_ID 0x18d
-
-/*
- * Per-object extra state for the IM ice-mountain event controller
- * (IMIceMountain_getExtraSize == 0x14).
- */
-
-STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
-
 
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern f32 timeDelta;
@@ -67,14 +49,6 @@ STATIC_ASSERT(offsetof(Lavaball18dSetup, unk18) == 0x18);
 STATIC_ASSERT(offsetof(Lavaball18dSetup, childRot) == 0x1A);
 STATIC_ASSERT(offsetof(Lavaball18dSetup, unk1C) == 0x1C);
 STATIC_ASSERT(sizeof(Lavaball18dSetup) == 0x24);
-
-STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
-
-STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
-
-STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
-
-STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
 
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 

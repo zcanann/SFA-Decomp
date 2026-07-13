@@ -10,16 +10,11 @@
  * /frees a child object from a small id table (Blob10 @ lbl_802C2308) keyed by
  * subObjIndex, and forwards trigger commands (1/2/3) to the linked object's
  * vtable.
- *
- * This TU shares the DIM/magiclight extra-state family; the IMIceMountain,
- * MagicLight and CrRockfall layouts are size-asserted here as a build guard.
  */
 #include "main/dll/blob10_struct.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/dll/magiclightstate_struct.h"
-#include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
@@ -30,44 +25,11 @@
 #include "main/gamebit_ids.h"
 
 /*
- * Per-object extra state for the IM ice-mountain event controller
- * (IMIceMountain_getExtraSize == 0x14).
- */
-typedef struct IMIceMountainState
-{
-    u8 eventState; /* 0..7 event machine (imicemountain_updateEventState) */
-    u8 pad01[3];
-    s32 latchFlags;   /* SCGameBitLatch record; bit 1 = latch fired this frame */
-    s8 warpCountdown; /* state 6: frames until warpToMap(0x1A) */
-    u8 pad09;
-    s16 musicTrack;   /* -1 or 26; Music_Trigger edge latch */
-    u8 mapEventState; /* MEVT_QUERY result at init (1/2/5) */
-    u8 pad0D[3];
-    f32 warningTextTimer; /* shows text 0x351 while above the floor value */
-} IMIceMountainState;
-
-STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
-
-/*
- * Per-object extra state for the magiclight proximity light
- * (MagicLight_getExtraSize == 0x14 for non-0x172 types).
- */
-
-STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-
-/*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
  */
 
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
-
-/*
- * Per-object extra state for the crrockfall falling rock
- * (crrockfall_getExtraSize == 0x14).
- */
-
-STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
