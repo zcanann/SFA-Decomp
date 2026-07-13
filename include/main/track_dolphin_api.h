@@ -8,5 +8,6 @@ int objShadowFn_80062498();
 int fn_80065640(void);
 void fn_80065574(int matchValue, GameObject* obj, int flag);
 void doNothing_80062A50();
+void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);
 
 #endif /* MAIN_TRACK_DOLPHIN_API_H_ */

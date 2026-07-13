@@ -8,6 +8,7 @@
 #include "main/dll/scarabstate_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -66,7 +67,6 @@ extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
 
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void objHitDetectFn_80062e84(int obj, int a, int b);
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
@@ -114,7 +114,7 @@ void LanternFireFly_func0B(GameObject* obj)
     state->field4C = lbl_803E3AA0;
     state->driftRangeZ = (f32)(int)((LanternFireFlyPlacement*)setup)->driftRangeZ;
     state->field6F = 0;
-    objHitDetectFn_80062e84((int)obj, 0, 1);
+    objHitDetectFn_80062e84(obj, NULL, 1);
     player = (int)Obj_GetPlayerObject();
     px = ((GameObject*)player)->anim.worldPosX;
     vec[0] = px;

@@ -1,6 +1,8 @@
 #ifndef MAIN_DLL_DR_GUNPOWDERBARREL_STATE_H_
 #define MAIN_DLL_DR_GUNPOWDERBARREL_STATE_H_
 
+#include "main/game_object.h"
+
 #include "ghidra_import.h"
 #include "global.h"
 
@@ -9,7 +11,7 @@ typedef struct GunpowderBarrelState {
     u8 pad00[7];
     u8 unk07;
     u8 pad08[4];
-    int queuedHitObject;
+    GameObject* queuedHitObject;
     int linkedTimerObject;  /* 0x10 */
     u8 pad14;
     u8 heldByCarryInterface;

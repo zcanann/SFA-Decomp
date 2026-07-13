@@ -28,6 +28,7 @@
 #include "main/maketex.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
@@ -86,7 +87,6 @@ extern f32 lbl_803E4318;
 extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
-extern int objHitDetectFn_80062e84(int p1, int p2, int p3);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern f32 PSVECMag(f32 * v);
 extern f32 lbl_803DBE84;
@@ -430,7 +430,7 @@ void gunpowderbarrel_updatePhysics(int* obj)
             flags = ((ObjAnimComponent*)contact)->modelInstance->flags;
             if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000))
             {
-                *(int**)&((GunpowderBarrelState*)sub)->queuedHitObject = contact;
+                ((GunpowderBarrelState*)sub)->queuedHitObject = (GameObject*)contact;
             }
             else if (((GunpowderBarrelState*)sub)->fallAccum < lbl_803E431C)
             {
@@ -504,7 +504,7 @@ void gunpowderbarrel_hitDetect(int obj)
 
     if ((void*)state->queuedHitObject != NULL)
     {
-        objHitDetectFn_80062e84(obj, state->queuedHitObject, 1);
+        objHitDetectFn_80062e84((GameObject*)obj, state->queuedHitObject, 1);
         state->queuedHitObject = 0;
     }
 

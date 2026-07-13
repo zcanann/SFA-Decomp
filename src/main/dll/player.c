@@ -21,6 +21,7 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0015_curves.h"
 #include "track/intersect_api.h"
+#include "main/track_dolphin_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
     ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))
@@ -854,25 +855,25 @@ int playerState09(GameObject* obj, int state)
                                        obj->anim.worldPosZ, &obj->anim.localPosX,
                                        &obj->anim.localPosY, &obj->anim.localPosZ,
                                        *(int*)&obj->anim.parent);
-        objHitDetectFn_80062e84((int)obj, ((PlayerState*)inner)->groundObject, 1);
+        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
         if (*(void**)((char*)inner + 0x4c4) != NULL)
         {
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                            *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                            *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             ((PlayerState*)inner)->leapTargetY =
-                ((PlayerState*)inner)->leapTargetY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->groundObject->anim.localPosY;
             ((PlayerState*)inner)->leapBaseY =
-                ((PlayerState*)inner)->leapBaseY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                ((PlayerState*)inner)->leapBaseY - ((PlayerState*)inner)->groundObject->anim.localPosY;
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -970,7 +971,7 @@ int playerState0B(GameObject* obj, int state)
                                        obj->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                        (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                        *(int*)&obj->anim.parent);
-        objHitDetectFn_80062e84((int)obj, inner->groundObject, 1);
+        objHitDetectFn_80062e84(obj, inner->groundObject, 1);
         inner->moveStartX = obj->anim.localPosX;
         inner->moveStartY = obj->anim.localPosY;
         inner->moveStartZ = obj->anim.localPosZ;
@@ -979,17 +980,17 @@ int playerState0B(GameObject* obj, int state)
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                            *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                           inner->groundObject);
+                                           (u32)inner->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                            *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                           inner->groundObject);
+                                           (u32)inner->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                           inner->groundObject);
-            inner->leapTargetY = inner->leapTargetY - *(f32*)((char*)inner->groundObject + 0x10);
-            inner->leapBaseY = inner->leapBaseY - *(f32*)((char*)inner->groundObject + 0x10);
+                                           (u32)inner->groundObject);
+            inner->leapTargetY = inner->leapTargetY - inner->groundObject->anim.localPosY;
+            inner->leapBaseY = inner->leapBaseY - inner->groundObject->anim.localPosY;
             inner->unk609 = 0;
         }
         break;
@@ -1104,7 +1105,7 @@ int playerStateGrabLedge(GameObject* obj, int state)
                                        obj->anim.worldPosZ, (f32*)((char*)obj + 0xc),
                                        (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                        *(int*)&obj->anim.parent);
-        objHitDetectFn_80062e84((int)obj, ((PlayerState*)inner)->groundObject, 1);
+        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
         ((PlayerState*)inner)->moveStartX = obj->anim.localPosX;
         ((PlayerState*)inner)->moveStartY = obj->anim.localPosY;
         ((PlayerState*)inner)->moveStartZ = obj->anim.localPosZ;
@@ -1128,19 +1129,19 @@ int playerStateGrabLedge(GameObject* obj, int state)
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5d4), *(f32*)((int)inner + 0x5d8),
                                            *(f32*)((int)inner + 0x5dc), (f32*)((char*)inner + 0x5d4),
                                            (f32*)((char*)inner + 0x5d8), (f32*)((char*)inner + 0x5dc),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5ec), *(f32*)((int)inner + 0x5f0),
                                            *(f32*)((int)inner + 0x5f4), (f32*)((char*)inner + 0x5ec),
                                            (f32*)((char*)inner + 0x5f0), (f32*)((char*)inner + 0x5f4),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             Obj_TransformWorldPointToLocal(*(f32*)((int)inner + 0x5f8), *(f32*)((int)inner + 0x5fc),
                                            *(f32*)((int)inner + 0x600), (f32*)((char*)inner + 0x5f8),
                                            (f32*)((char*)inner + 0x5fc), (f32*)((char*)inner + 0x600),
-                                           ((PlayerState*)inner)->groundObject);
+                                           (u32)((PlayerState*)inner)->groundObject);
             ((PlayerState*)inner)->leapTargetY =
-                ((PlayerState*)inner)->leapTargetY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->groundObject->anim.localPosY;
             ((PlayerState*)inner)->leapBaseY =
-                ((PlayerState*)inner)->leapBaseY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                ((PlayerState*)inner)->leapBaseY - ((PlayerState*)inner)->groundObject->anim.localPosY;
             ((PlayerState*)inner)->unk609 = 0;
         }
         break;
@@ -3754,7 +3755,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 break;
             }
             case 0xf:
-                objHitDetectFn_80062e84(obj, 0, 1);
+                objHitDetectFn_80062e84((GameObject*)obj, NULL, 1);
                 break;
             case 0x10:
             {
@@ -3763,7 +3764,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 t = ObjGroup_FindNearestObject(6, (int)obj, &nearArg);
                 if ((u32)t != 0)
                 {
-                    objHitDetectFn_80062e84(obj, t, 1);
+                    objHitDetectFn_80062e84((GameObject*)obj, (GameObject*)t, 1);
                 }
                 break;
             }
@@ -6651,7 +6652,7 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
         ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
             ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY, ((GameObject*)obj)->anim.worldPosZ,
             (void*)(obj + 0xc), (void*)(obj + 0x10), (void*)(obj + 0x14), *(int*)&((GameObject*)obj)->anim.parent);
-        objHitDetectFn_80062e84(obj, ((PlayerState*)inner)->groundObject, 1);
+        objHitDetectFn_80062e84((GameObject*)obj, ((PlayerState*)inner)->groundObject, 1);
         ((PlayerState*)inner)->moveStartX = ((GameObject*)obj)->anim.localPosX;
         ((PlayerState*)inner)->moveStartY = ((GameObject*)obj)->anim.localPosY;
         ((PlayerState*)inner)->moveStartZ = ((GameObject*)obj)->anim.localPosZ;
@@ -6666,15 +6667,15 @@ int playerStateClimbLedge(int obj, int state, f32 fv)
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
                     ((PlayerState*)inner)->moveEndX, ((PlayerState*)inner)->moveEndY, ((PlayerState*)inner)->moveEndZ,
                     (void*)(inner + 0x5ec), (void*)(inner + 0x5f0), (void*)(inner + 0x5f4),
-                    ((PlayerState*)inner)->groundObject);
+                    (int)((PlayerState*)inner)->groundObject);
                 ((void (*)(f32, f32, f32, void*, void*, void*, int))Obj_TransformWorldPointToLocal)(
                     ((PlayerState*)inner)->moveEnd2X, ((PlayerState*)inner)->moveEnd2Y,
                     ((PlayerState*)inner)->moveEnd2Z, (void*)(inner + 0x5f8), (void*)(inner + 0x5fc),
-                    (void*)(inner + 0x600), ((PlayerState*)inner)->groundObject);
+                    (void*)(inner + 0x600), (int)((PlayerState*)inner)->groundObject);
                 ((PlayerState*)inner)->leapTargetY =
-                    ((PlayerState*)inner)->leapTargetY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                    ((PlayerState*)inner)->leapTargetY - ((PlayerState*)inner)->groundObject->anim.localPosY;
                 ((PlayerState*)inner)->leapBaseY =
-                    ((PlayerState*)inner)->leapBaseY - *(f32*)((char*)((PlayerState*)inner)->groundObject + 0x10);
+                    ((PlayerState*)inner)->leapBaseY - ((PlayerState*)inner)->groundObject->anim.localPosY;
                 ((PlayerState*)inner)->unk609 = 0;
             }
         }
@@ -8046,11 +8047,11 @@ void playerDoHitDetection(int obj)
                 ((fl = ((ObjAnimComponent*)h)->modelInstance->flags) & OBJMODEL_FLAG_SKIP_RESET_UPDATE) != 0 &&
                 (fl & 0x8000) == 0)
             {
-                objHitDetectFn_80062e84(obj, (int)h, 1);
+                objHitDetectFn_80062e84((GameObject*)obj, (GameObject*)h, 1);
             }
             else if (((GameObject*)obj)->anim.parent != NULL && h == NULL)
             {
-                objHitDetectFn_80062e84(obj, 0, 1);
+                objHitDetectFn_80062e84((GameObject*)obj, NULL, 1);
             }
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_HITDETECT;
@@ -13049,7 +13050,7 @@ void fn_80296D20(int obj, void* arg)
 
     if (((GameObject*)obj)->anim.parent == arg)
     {
-        objHitDetectFn_80062e84(obj, 0, 1);
+        objHitDetectFn_80062e84((GameObject*)obj, NULL, 1);
         type = ((PlayerState*)state)->baddie.controlMode;
         if (type == 0xa || type == 0xc)
         {
@@ -14539,12 +14540,12 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         }
         else
         {
-            ((PlayerState*)inner)->groundObject = 0;
+            ((PlayerState*)inner)->groundObject = NULL;
         }
     }
     else
     {
-        ((PlayerState*)inner)->groundObject = 0;
+        ((PlayerState*)inner)->groundObject = NULL;
     }
     return mode;
 }
@@ -14568,7 +14569,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
     f32 threshold;
     EmitPlane planes[2];
 
-    ((PlayerState*)b)->groundObject = 0;
+    ((PlayerState*)b)->groundObject = NULL;
     *(f32*)((char*)d + 0x1c) = *(f32*)((char*)c + 0x1c);
     *(f32*)((char*)d + 0x20) = *(f32*)((char*)c + 0x20);
     *(f32*)((char*)d + 0x24) = *(f32*)((char*)c + 0x24);
@@ -14696,7 +14697,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         {
             if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
             {
-                ((PlayerState*)b)->groundObject = (int)hit;
+                ((PlayerState*)b)->groundObject = (GameObject*)hit;
             }
             if (*(f32*)((char*)d + 0x0) <= lbl_803E80C8)
             {
@@ -14720,7 +14721,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
             {
                 if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
                 {
-                    ((PlayerState*)b)->groundObject = (int)hit;
+                    ((PlayerState*)b)->groundObject = (GameObject*)hit;
                 }
                 return 6;
             }
@@ -14736,7 +14737,7 @@ int fn_802A8EE4(int a, int b, int c, int d, int e)
         }
         if (hit != NULL && (((ObjAnimComponent*)hit)->modelInstance->flags & 0x8000) == 0)
         {
-            ((PlayerState*)b)->groundObject = (int)hit;
+            ((PlayerState*)b)->groundObject = (GameObject*)hit;
         }
         return 3;
     }

@@ -21,6 +21,8 @@
 #include "main/gameplay_runtime.h"
 #include "main/sky_state.h"
 #include "main/track_dolphin.h"
+#include "main/track_dolphin_api.h"
+#include "main/dll/player_api.h"
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
@@ -368,7 +370,6 @@ extern int mapTextureOverrideAcquire(int tex, int value, int type);
 extern int shouldDrawShadows(void);
 extern u16 modelFileHeaderGetCullDistance(u8* modelFile);
 extern void PSMTXMultVecArray(void* m, void* src, void* dst, u32 count);
-extern void fn_80296EB4(u8* p1, u8* p2);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern float floor(float x);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32* a, f32* b);
@@ -2512,93 +2513,97 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 #pragma opt_propagation reset
 #pragma optimization_level reset
 
-void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode)
+void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
 {
-    u8* oldParent;
-    u8* hitReact;
+    u8* objLegacy = (u8*)obj;
+    u8* newParentLegacy = (u8*)newParent;
+    GameObject* oldParent;
+    ObjHitsPriorityState* hitState;
     int yawSum;
     f32 dirX;
     f32 dirZ;
     u8 dirBuf[16];
 
-    oldParent = *(u8**)&((GameObject*)obj)->anim.parent;
-    if (oldParent == newParent)
+    oldParent = (GameObject*)*(u8**)&obj->anim.parent;
+    if ((u8*)oldParent == newParentLegacy)
         return;
 
     if (oldParent != NULL)
-        Obj_BuildTransformMatrices((GameObject*)oldParent);
+        Obj_BuildTransformMatrices(oldParent);
     if (newParent != NULL)
-        Obj_BuildTransformMatrices((GameObject*)newParent);
+        Obj_BuildTransformMatrices(newParent);
 
-    if (((GameObject*)obj)->anim.classId == 1)
+    if (obj->anim.classId == 1)
     {
-        fn_80296EB4(obj, newParent);
+        fn_80296EB4(obj, (int)newParent);
         return;
     }
 
-    *(u8**)(obj + 0x30) = newParent;
-    hitReact = *(u8**)&((GameObject*)obj)->anim.hitReactState;
+    *(u8**)(objLegacy + 0x30) = newParentLegacy;
+    hitState = (ObjHitsPriorityState*)*(u8**)&obj->anim.hitReactState;
     if (oldParent != NULL)
     {
-        Obj_TransformLocalPointToWorld(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                       ((GameObject*)obj)->anim.localPosZ, &((GameObject*)obj)->anim.worldPosX,
-                                       &((GameObject*)obj)->anim.worldPosY, &((GameObject*)obj)->anim.worldPosZ,
+        Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
+                                       obj->anim.localPosZ, &obj->anim.worldPosX,
+                                       &obj->anim.worldPosY, &obj->anim.worldPosZ,
                                        (u32)oldParent);
-        Obj_TransformLocalPointToWorld(*(f32*)(obj + 0x80), *(f32*)(obj + 0x84), *(f32*)(obj + 0x88),
-                                       (f32*)(obj + 0x8c), (f32*)(obj + 0x90), (f32*)(obj + 0x94), (u32)oldParent);
-        Obj_TransformLocalVectorToWorld(((GameObject*)obj)->anim.velocityX, __AR_Callback,
-                                        ((GameObject*)obj)->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
-        yawSum = *(s16*)oldParent + ((GameObject*)obj)->anim.rotX;
+        Obj_TransformLocalPointToWorld(*(f32*)(objLegacy + 0x80), *(f32*)(objLegacy + 0x84),
+                                       *(f32*)(objLegacy + 0x88), (f32*)(objLegacy + 0x8c),
+                                       (f32*)(objLegacy + 0x90), (f32*)(objLegacy + 0x94), (u32)oldParent);
+        Obj_TransformLocalVectorToWorld(obj->anim.velocityX, __AR_Callback,
+                                        obj->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
+        yawSum = *(s16*)oldParent + obj->anim.rotX;
     }
     else
     {
-        dirX = ((GameObject*)obj)->anim.velocityX;
-        dirZ = ((GameObject*)obj)->anim.velocityZ;
-        yawSum = ((GameObject*)obj)->anim.rotX;
+        dirX = obj->anim.velocityX;
+        dirZ = obj->anim.velocityZ;
+        yawSum = obj->anim.rotX;
     }
 
     if (mode != 0)
     {
-        if (*(u8**)(obj + 0x30) != NULL)
+        if (*(u8**)(objLegacy + 0x30) != NULL)
         {
-            Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
-                                           ((GameObject*)obj)->anim.worldPosZ, &((GameObject*)obj)->anim.localPosX,
-                                           &((GameObject*)obj)->anim.localPosY, &((GameObject*)obj)->anim.localPosZ,
-                                           (u32) * (u8**)(obj + 0x30));
-            Obj_TransformWorldPointToLocal(*(f32*)(obj + 0x8c), *(f32*)(obj + 0x90), *(f32*)(obj + 0x94),
-                                           (f32*)(obj + 0x80), (f32*)(obj + 0x84), (f32*)(obj + 0x88),
-                                           (u32) * (u8**)(obj + 0x30));
-            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, (f32*)(obj + 0x24), (f32*)dirBuf,
-                                            (f32*)(obj + 0x2c), (u32) * (u8**)(obj + 0x30));
-            yawSum = yawSum - *(s16*)(*(u8**)(obj + 0x30));
+            Obj_TransformWorldPointToLocal(obj->anim.worldPosX, obj->anim.worldPosY,
+                                           obj->anim.worldPosZ, &obj->anim.localPosX,
+                                           &obj->anim.localPosY, &obj->anim.localPosZ,
+                                           (u32)*(u8**)(objLegacy + 0x30));
+            Obj_TransformWorldPointToLocal(*(f32*)(objLegacy + 0x8c), *(f32*)(objLegacy + 0x90),
+                                           *(f32*)(objLegacy + 0x94), (f32*)(objLegacy + 0x80),
+                                           (f32*)(objLegacy + 0x84), (f32*)(objLegacy + 0x88),
+                                           (u32)*(u8**)(objLegacy + 0x30));
+            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, (f32*)(objLegacy + 0x24), (f32*)dirBuf,
+                                            (f32*)(objLegacy + 0x2c), (u32)*(u8**)(objLegacy + 0x30));
+            yawSum = yawSum - *(s16*)(*(u8**)(objLegacy + 0x30));
             if (yawSum > 0x8000)
                 yawSum -= 0xffff;
             if (yawSum < -0x8000)
                 yawSum += 0xffff;
-            ((GameObject*)obj)->anim.rotX = yawSum;
+            obj->anim.rotX = yawSum;
         }
         else
         {
-            ((GameObject*)obj)->anim.localPosX = ((GameObject*)obj)->anim.worldPosX;
-            ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.worldPosY;
-            ((GameObject*)obj)->anim.localPosZ = ((GameObject*)obj)->anim.worldPosZ;
-            ((GameObject*)obj)->anim.previousLocalPosX = ((GameObject*)obj)->anim.previousWorldPosX;
-            ((GameObject*)obj)->anim.previousLocalPosY = ((GameObject*)obj)->anim.previousWorldPosY;
-            ((GameObject*)obj)->anim.previousLocalPosZ = ((GameObject*)obj)->anim.previousWorldPosZ;
-            ((GameObject*)obj)->anim.velocityX = dirX;
-            ((GameObject*)obj)->anim.velocityZ = dirZ;
-            ((GameObject*)obj)->anim.rotX = yawSum;
+            obj->anim.localPosX = obj->anim.worldPosX;
+            obj->anim.localPosY = obj->anim.worldPosY;
+            obj->anim.localPosZ = obj->anim.worldPosZ;
+            obj->anim.previousLocalPosX = obj->anim.previousWorldPosX;
+            obj->anim.previousLocalPosY = obj->anim.previousWorldPosY;
+            obj->anim.previousLocalPosZ = obj->anim.previousWorldPosZ;
+            obj->anim.velocityX = dirX;
+            obj->anim.velocityZ = dirZ;
+            obj->anim.rotX = yawSum;
         }
     }
 
-    if (hitReact != NULL)
+    if (hitState != NULL)
     {
-        *(f32*)(hitReact + 0x10) = ((GameObject*)obj)->anim.localPosX;
-        *(f32*)(hitReact + 0x14) = ((GameObject*)obj)->anim.localPosY;
-        *(f32*)(hitReact + 0x18) = ((GameObject*)obj)->anim.localPosZ;
-        *(f32*)(hitReact + 0x1c) = ((GameObject*)obj)->anim.worldPosX;
-        *(f32*)(hitReact + 0x20) = ((GameObject*)obj)->anim.worldPosY;
-        *(f32*)(hitReact + 0x24) = ((GameObject*)obj)->anim.worldPosZ;
+        hitState->localPosX = obj->anim.localPosX;
+        hitState->localPosY = obj->anim.localPosY;
+        hitState->localPosZ = obj->anim.localPosZ;
+        hitState->worldPosX = obj->anim.worldPosX;
+        hitState->worldPosY = obj->anim.worldPosY;
+        hitState->worldPosZ = obj->anim.worldPosZ;
     }
 }
 

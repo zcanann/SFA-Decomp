@@ -12,6 +12,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0014_api.h"
@@ -95,7 +96,6 @@ extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
 extern void fn_8004B31C(void* search, u32 route, void* target, int pathId, u32 dir);
 extern void trickyTurnTowardYaw(u8* obj, int yaw);
-extern void objHitDetectFn_80062e84(u8* obj, u8* newParent, int mode);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPos, u8 flag);
 
 static u8* trickyfollow_validateRouteNode(u8* node)
@@ -1108,7 +1108,7 @@ state_selected:
                     ((TrickyState*)state)->arcMoveProgress = k * lbl_803E24A8 + lbl_803E24AC;
                 }
             }
-            objHitDetectFn_80062e84(obj, 0, 0);
+            objHitDetectFn_80062e84((GameObject*)obj, NULL, 0);
             ((TrickyState*)state)->heightUpdateActive = 0;
         }
         break;

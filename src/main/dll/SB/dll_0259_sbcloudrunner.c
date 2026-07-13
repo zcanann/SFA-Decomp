@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/objlib.h"
 #include "main/objprint_dolphin.h"
 #include "main/object_api.h"
@@ -39,7 +40,7 @@
 typedef struct SBCloudRunnerState
 {
     u8 pad0[0x10 - 0x0];
-    s32 targetObj;  /* 0x10: laser-locked target (object type 0x8E) */
+    GameObject* targetObj;  /* 0x10: laser-locked target (object type 0x8E) */
     s32 resource;   /* 0x14: acquired resource handle */
     void* texture0; /* 0x18 */
     void* texture1; /* 0x1C */
@@ -160,7 +161,6 @@ extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void SB_CloudRunner_onSeqFree(void);
-extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int obj, int sel, f32 fval);
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
@@ -239,8 +239,8 @@ void fn_801EEDE0(GameObject* src, f32* out_x, f32* out_y, f32* out_z)
 /* Forward to the laser-locked target's DLL vtable (slot 0x24). */
 void shipBattleFn_801eed24(GameObject* obj)
 {
-    void* target = *(void**)&((SBCloudRunnerState*)obj->extra)->targetObj;
-    void* vt = *((GameObject*)target)->anim.dll;
+    GameObject* target = ((SBCloudRunnerState*)obj->extra)->targetObj;
+    void* vt = *target->anim.dll;
     void (*fn)(void*) = *(void (**)(void*))((char*)vt + 0x24);
     fn(target);
 }
@@ -488,7 +488,7 @@ int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
     {
         if (animUpdate->eventIds[i] == 1)
         {
-            objHitDetectFn_80062e84(player, state->targetObj, 0);
+            objHitDetectFn_80062e84((GameObject*)player, state->targetObj, 0);
             fn_80295918(player, 5, lbl_803E5C70);
             state->done = 1;
         }
@@ -546,7 +546,7 @@ void SB_CloudRunner_update(GameObject* obj)
     setAButtonIcon(6);
     state->stickX = (int)(s8)padGetStickX(0);
     state->stickY = (int)(s8)padGetStickY(0);
-    if (*(void**)&state->targetObj == NULL)
+    if (state->targetObj == NULL)
     {
         int count;
         int* objs = (int*)ObjGroup_GetObjects(3, &count);
@@ -556,7 +556,7 @@ void SB_CloudRunner_update(GameObject* obj)
             int o = objs[i];
             if (((GameObject*)o)->anim.seqId == CLOUDRUNNER_TARGET_TYPE)
             {
-                state->targetObj = o;
+                state->targetObj = (GameObject*)o;
                 i = count;
             }
         }

@@ -89,7 +89,6 @@ extern f32 lbl_803E5CEC;
 extern f32 lbl_803E5CF0;
 extern f32 lbl_803E5CF4;
 
-extern void objHitDetectFn_80062e84(int player, int hitObj, int mode);
 extern void fn_80296BBC(GameObject* player);
 extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
 
@@ -268,7 +267,7 @@ void WM_Galleon_update(int* obj)
         ((GameObject*)player)->anim.localPosX = lbl_803E5CEC;
         ((GameObject*)player)->anim.localPosY = lbl_803E5CF0;
         ((GameObject*)player)->anim.localPosZ = lbl_803E5CF4;
-        objHitDetectFn_80062e84(player, (int)obj, 0);
+        objHitDetectFn_80062e84((GameObject*)player, (GameObject*)obj, 0);
         fn_80296BBC((GameObject*)(player));
         OBJ_S32(obj, 0xf8) = 1;
     }

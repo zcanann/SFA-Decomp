@@ -13,5 +13,7 @@ int playerGetMoney(void* player);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
+/* The raw integer parent preserves the matched player implementation's signed comparisons. */
+void fn_80296EB4(GameObject* obj, int newParent);
 
 #endif /* MAIN_DLL_PLAYER_API_H_ */
