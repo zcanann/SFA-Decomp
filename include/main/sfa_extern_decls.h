@@ -8,7 +8,6 @@ void cutSceneFn_8011dd30(void);
 void doNothing_afterRenderObject(void);
 void doNothing_beforeRenderObject(void);
 void drawViewFinderHud(void);
-void fn_8001FE90(void);
 u8 fn_8012DDA4(void);
 void init(void);
 u32 isRomListLoading(void);
