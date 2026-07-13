@@ -3,6 +3,7 @@
  * manages forward/reverse direction via game bits 3163/3164 with a timed swap (swapTimer). Adds
  * itself to object group 22; music track 0xDF is kept alive while the belt is moving. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/audio/music_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"
@@ -80,7 +81,6 @@ static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 
 void dim2conveyor_getScrollVector(int* obj, int unused, f32* outX, f32* outY)
 {
-    extern void Music_Trigger(int id, int arg);
     Dim2ConveyorState* state = ((GameObject*)obj)->extra;
     int id;
     if (state->musicHold == 0)
@@ -140,7 +140,6 @@ void dim2conveyor_hitDetect(void)
 
 void dim2conveyor_update(int* obj)
 {
-    extern void Music_Trigger(int id, int arg);
 
     Dim2ConveyorState* extra = ((GameObject*)obj)->extra;
     Sfx_PlayFromObject((int)obj, SFXTRIG_mv_liftloop);

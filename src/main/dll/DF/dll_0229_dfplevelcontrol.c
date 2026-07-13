@@ -6,6 +6,7 @@
  * (1504/1505/1507/1508/1589/3671) plus level unlocks and music triggers.
  */
 #include "main/dll/dfp_types.h"
+#include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/object_api.h"
 #include "main/main.h"
@@ -36,7 +37,6 @@ extern s16 lbl_803DC180;
 extern void fn_802960E8(void* playerObj, int p2);
 extern int dbstealerworm_stateHandlerB06();
 int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
-extern void Music_Trigger(int id, int arg);
 extern void fn_80204098(GameObject*);
 extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
 extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);

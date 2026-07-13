@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "dolphin/pad.h"
 #include "dolphin/vi.h"
@@ -565,7 +566,6 @@ int gameBitIncrement(int bit)
 void Obj_FlushDeferredFreeList(void);
 
 extern void mapSetup();
-extern void Music_Trigger(int id, int arg);
 extern u8 lbl_803DCA38;
 extern int gGameLoopPendingMapId;
 extern int gGameLoopPendingMapDataFileId;

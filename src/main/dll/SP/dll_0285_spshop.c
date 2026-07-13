@@ -1,5 +1,6 @@
 /* DLL 0x0285 - SP shop objects [801E4288-801E42F8) */
 #include "main/dll/shipbattlestate_struct.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/sky_api.h"
 #include "main/render.h"
@@ -104,7 +105,6 @@ extern void staffToggle(GameObject* obj, int a);
 extern void skyFn_80088c94(int flags, int mode);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
-extern void Music_Trigger(int id, int arg);
 
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */

@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/texture.h"
+#include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/audio.h"
@@ -355,7 +356,6 @@ int gameTextFn_80134be8(void)
 
 /* If seqId == 0x77d, trigger Music_Trigger(MUSICTRIG_lose_ice_race, 0)
  * and clear showCredits. */
-extern void Music_Trigger(int id, int arg);
 
 void TitleScreen_free(u8* obj)
 {

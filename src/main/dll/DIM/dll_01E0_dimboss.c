@@ -5,6 +5,7 @@
  * driven sequence-flag word (gDIMbossSequenceFlags).
  */
 #include "main/dll/DIM/dll_01E0_dimboss.h"
+#include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/moveLib.h"
 #include "main/render.h"
@@ -37,7 +38,6 @@
 #define DIMBOSS_OBJGROUP 3
 
 u32 gDIMbossAnimController[0x189];
-extern void Music_Trigger(int id, int arg);
 
 
 

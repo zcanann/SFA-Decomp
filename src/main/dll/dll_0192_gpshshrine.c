@@ -1,5 +1,6 @@
 /* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -114,7 +115,6 @@ int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
 void gpsh_shrine_free(int* obj)
 {
-    extern void Music_Trigger(int id, int arg);
     void** state = ((GameObject*)obj)->extra;
     void* light = state[0];
 
@@ -295,7 +295,6 @@ void fn_801C70F0(s16* obj)
 
 void gpsh_shrine_update(GameObject *obj)
 {
-    extern void Music_Trigger(int id, int arg);
     extern int objGetAnimStateFlags(int obj, int flag);
     extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
     extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);

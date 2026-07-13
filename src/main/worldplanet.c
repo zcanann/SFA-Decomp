@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/audio/music_api.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
@@ -45,7 +46,6 @@ extern f32 lbl_803E65F8;
 extern u16 getNextTaskHintText(void);
 extern void setDrawLights(int v);
 extern void audioStopByMask(int mask);
-extern void Music_Trigger(int id, int arg);
 
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);

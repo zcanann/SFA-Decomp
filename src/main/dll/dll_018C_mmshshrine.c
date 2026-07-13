@@ -13,6 +13,7 @@
  * opcodes that toggle the light and drive the model sway parameters.
  */
 #include "main/dll/dll_018C_mmshshrine.h"
+#include "main/audio/music_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -91,7 +92,6 @@ extern int objCreateLight(int arg, int addToList);
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
-extern void Music_Trigger(int id, int arg);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);

@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
 #include "main/dll/dimwooddoor2state_struct.h"
@@ -73,7 +74,6 @@ int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
 void dim_levelcontrol_free(GameObject *obj)
 {
-    extern void Music_Trigger(int id, int arg);
     Music_Trigger(MUSICTRIG_drako_1, 0);
     Music_Trigger(MUSICTRIG_citytombs_ed, 0);
     timeOfDayFn_80055000();
@@ -112,7 +112,6 @@ typedef struct DimLevelControlState
 
 void dim_levelcontrol_update(GameObject *obj)
 {
-    extern void Music_Trigger(int id, int arg);
 
     u8 a;
     u8 b;

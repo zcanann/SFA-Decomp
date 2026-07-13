@@ -13,6 +13,7 @@
  * decaying 0.02/tick after) is up.
  */
 #include "main/dll/WM/dll_0207_wmworm.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
@@ -104,7 +105,6 @@ extern void fn_80089510(int flags, int red, int green, int blue);
 extern void fn_80089578(int flags, int red, int green, int blue);
 extern void skySetOverrideLightDirectionEnabled(u8 enabled);
 extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-extern void Music_Trigger(int id, int arg);
 
 void fn_801F3F18(GameObject* obj)
 {

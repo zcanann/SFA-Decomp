@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
@@ -135,7 +136,6 @@ extern const f32 lbl_803E4E8C;
 
 extern void ModelLightStruct_free(void* light);
 extern void gameTimerStop(void);
-extern void Music_Trigger(int id, int arg);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern float mathSinf(float x);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);

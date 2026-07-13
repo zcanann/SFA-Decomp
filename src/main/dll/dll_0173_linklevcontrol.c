@@ -17,6 +17,7 @@
  * matching the retail object.
  */
 #include "main/dll/linklevcontrolstate_struct.h"
+#include "main/audio/music_api.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
@@ -55,7 +56,6 @@ enum
 
 extern u8 lbl_803239F0[];
 
-extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 extern void skyFn_80088c94(int flags, int mode);

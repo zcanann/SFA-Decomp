@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/audio/music_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/vecmath.h"
@@ -58,7 +59,6 @@ extern f32 lbl_803E50D8;
 
 extern void skyFn_80088c94(int flags, int mode);
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void Music_Trigger(int id, int arg);
 extern void audioStopByMask(int mask);
 extern void ModelLightStruct_free(int light);
 extern void gameTimerStop(void);

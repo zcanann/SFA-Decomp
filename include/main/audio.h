@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_H_
 
 #include "types.h"
+#include "main/audio/music_api.h"
 #include "dolphin/dvd.h"
 #include "main/audio/stream_api.h"
 
@@ -28,7 +29,6 @@ void audioStopByMask(int mask);
 void streamFn_8000a380(int mask, int mode, int time);
 void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
 s32 Music_GetActivePriority(void);
-void Music_Trigger(int id, int arg);
 void Music_PlayTrackByIndex(int index);
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32* vector);
 f32 Sfx_GetListenerRelativeDistance(f32* soundPos, f32* outDelta);

@@ -24,6 +24,7 @@
  * ObjectDescriptor slots (init/update/hitDetect/render/free/getExtraSize).
  */
 #include "main/dll/sbshipheadstate_struct.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
@@ -63,7 +64,6 @@ STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern void SB_Galleon_onSeqFree(int obj);
-extern void Music_Trigger(int id, int arg);
 extern const f32 lbl_803E56CC;
 
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);

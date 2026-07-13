@@ -16,6 +16,7 @@
  * event 2 also calls setMode(0xe, 6) directly.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -91,7 +92,6 @@ extern float mathSinf(float x);
 extern float mathCosf(float x);
 extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
-extern void Music_Trigger(int id, int arg);
 extern void fn_8011F6D4(u32 x);
 
 #pragma dont_inline on

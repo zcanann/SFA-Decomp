@@ -12,6 +12,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
@@ -46,7 +47,6 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
-extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
                                   int textId);
 

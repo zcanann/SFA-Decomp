@@ -14,6 +14,7 @@
  * of SCGameBitLatch records that mirror world state into game bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -60,7 +61,6 @@ extern f32 lbl_803E46DC;
 extern void gameBitFn_800ea2e0(int idx);
 extern void fn_801AC108(GameObject* obj, int* extra);
 extern void fn_801AC01C(GameObject* obj);
-extern void Music_Trigger(int id, int arg);
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);

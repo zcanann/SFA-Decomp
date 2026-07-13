@@ -6,6 +6,7 @@
  * which health phase the tonsil starts in across attempts.
  */
 #include "main/mapEvent.h"
+#include "main/audio/music_api.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
@@ -28,7 +29,6 @@
 
 #define MODEL_LIGHT_KIND_POINT 2
 
-extern void Music_Trigger(int id, int arg);
 
 
 extern void ModelLightStruct_free(void* light);

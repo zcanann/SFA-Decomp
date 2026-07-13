@@ -11,6 +11,7 @@
  * cached map-act at +0xC.
  */
 #include "main/sky_interface.h"
+#include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/render.h"
@@ -35,7 +36,6 @@
 extern int lbl_80323548[];
 
 
-extern void Music_Trigger(int id, int arg);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 

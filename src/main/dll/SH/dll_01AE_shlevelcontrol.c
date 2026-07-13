@@ -12,6 +12,7 @@
  * teardown. init seeds the music latches and clears the bloop bits.
  */
 #include "main/game_ui_interface.h"
+#include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/debug.h"
 #include "main/object_api.h"
@@ -98,7 +99,6 @@ extern int playerHasSpell(GameObject* obj, int spell);
 extern void gameTextShow(int a);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern int getSaveGameLoadStatus(void);
-extern void Music_Trigger(int id, int arg);
 
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 

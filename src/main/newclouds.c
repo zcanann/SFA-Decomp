@@ -1,4 +1,5 @@
 #include "main/newclouds_state.h"
+#include "main/audio/music_api.h"
 #include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/model.h"
@@ -141,7 +142,6 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 }
 
 extern void ModelLightStruct_free(void* p);
-extern void Music_Trigger(int id, int arg);
 void* gNewCloudLayerTextures[4];
 void* gNewClouds[8];
 extern void* lbl_803DD1C8;

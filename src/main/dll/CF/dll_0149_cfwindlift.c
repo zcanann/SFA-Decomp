@@ -11,6 +11,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/audio/music_api.h"
 #include "main/objlib.h"
 #include "main/object_api.h"
 #include "main/dll/player_motion.h"
@@ -91,7 +92,6 @@ extern void CFMainCrystal_init(void);
 extern void CFMainCrystal_release(void);
 extern void CFMainCrystal_initialise(void);
 
-extern void Music_Trigger(int id, int arg);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 
 /* fn_8019C784: per-rider wind lift physics - track the rider while
