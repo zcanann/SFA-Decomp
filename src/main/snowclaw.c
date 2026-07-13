@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/gamebits.h"
@@ -103,7 +104,6 @@ extern f32 lbl_803E66E0;
 extern void ObjLink_DetachChild(void* obj, int* child);
 
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
-extern u8 framesThisStep;
 extern f32 lbl_803E6720;
 extern f32 lbl_803E6724;
 extern f32 lbl_803E6728;

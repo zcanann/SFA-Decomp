@@ -5,6 +5,7 @@
  * from the placement params and resets the spawn countdown.
  */
 #include "main/dll/dimicewallstate_struct.h"
+#include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -56,7 +57,6 @@ typedef struct Dimsnowball1c2Setup
 } Dimsnowball1c2Setup;
 
 extern f32 lbl_803E4860;
-extern u8 framesThisStep;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 lbl_803E4864;

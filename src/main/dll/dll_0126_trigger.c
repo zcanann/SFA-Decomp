@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/dll/DR/hightop.h"
+#include "main/frame_timing.h"
 #include "main/objprint_dolphin.h"
 #include "main/object.h"
 #include "main/dll/player_api.h"
@@ -95,7 +96,6 @@ extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
 extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
-extern u8 framesThisStep;
 
 extern int getLActions();
 extern int mainGetBit(int eventId);

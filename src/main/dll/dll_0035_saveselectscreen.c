@@ -13,6 +13,7 @@
  * other UI DLLs via loadUiDll.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/dll/FRONT/frontend_control.h"
@@ -117,7 +118,6 @@ extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
-extern u8 framesThisStep;
 extern void trySaveGame(int slot);
 extern int gplayNewGame(char* name, int slot);
 extern void* memcpy(void* dst, void* src, int n);

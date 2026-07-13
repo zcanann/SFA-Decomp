@@ -1,5 +1,6 @@
 /* DLL 0x199 - NW shrine level controller / dll199 objects [801CA9C0-801CAD80) */
 #include "main/dll/dll197state_struct.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
@@ -42,7 +43,6 @@ extern f32 lbl_803E5158;
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
-extern u8 framesThisStep;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;
 extern f32 lbl_803E5164;

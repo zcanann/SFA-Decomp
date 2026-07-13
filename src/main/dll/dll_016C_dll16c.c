@@ -12,6 +12,7 @@
  * vtable.
  */
 #include "main/dll/blob10_struct.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
@@ -42,7 +43,6 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 #define DLL16C_RENDER_GATE_SEQID 883
 
 extern u8 lbl_802C2308[];
-extern u8 framesThisStep;
 extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
 extern f32 lbl_803E4758;

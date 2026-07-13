@@ -13,6 +13,7 @@
  * menu control vtable slot 2, and stops the object's sfx channel.
  */
 #include "main/objanim_update.h"
+#include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -24,8 +25,6 @@
 
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern u8 framesThisStep;
-
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern int Obj_AllocObjectSetup(int size, int type);

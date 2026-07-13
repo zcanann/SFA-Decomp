@@ -10,6 +10,7 @@
  * skips render).
  */
 #include "main/dll/LGT/LGTprojectedlight.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
@@ -33,7 +34,6 @@
 /* romlist object type of the sword child (retail 'scalessword') */
 #define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
-extern u8 framesThisStep;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5E98 = 0.0f;
 #pragma explicit_zero_data off

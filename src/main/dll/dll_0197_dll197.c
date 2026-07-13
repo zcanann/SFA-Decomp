@@ -13,6 +13,7 @@
  * emitting the 0x1f7 sparkle particle on a randomized cooldown.
  */
 #include "main/dll/dll197state_struct.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -54,7 +55,6 @@ typedef struct Cup197State
 
 #define CUP_STAGE_COMPLETE_BIT 0x472
 
-extern u8 framesThisStep;
 extern int gDll197ResourceParamTemplate[];
 extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 __declspec(section ".sdata2") f32 lbl_803E5120 = 50.0f;

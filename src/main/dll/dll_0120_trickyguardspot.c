@@ -1,6 +1,7 @@
 /* DLL 0x0120 (trickyguardspot) — Tricky guard spot object. */
 
 #include "main/dll/dll_0120_trickyguardspot.h"
+#include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/game_object.h"
@@ -8,8 +9,6 @@
 #include "main/gameplay_runtime.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-
-extern u8 framesThisStep;
 
 int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
 

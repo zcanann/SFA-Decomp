@@ -1,4 +1,5 @@
 #include "dolphin/os/OSReport.h"
+#include "main/frame_timing.h"
 #include "main/asset_load.h"
 #include "main/objprint_dolphin.h"
 #include "main/shader_api.h"
@@ -876,7 +877,6 @@ void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, vo
     selectTexture((int)result, 1);
 }
 
-extern u8 framesThisStep;
 
 void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
 {
