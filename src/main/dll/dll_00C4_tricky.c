@@ -935,10 +935,10 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         *(f32*)((state) + 0x7c8) = z;                                                                                  \
     }
 
+#pragma opt_propagation off
 void Tricky_update(int obj)
 {
     char* base;
-    void (**handlerBase)(int obj, int state);
     int state;
     TrickyState* trickyState;
     int found;
@@ -955,7 +955,6 @@ void Tricky_update(int obj)
     int sfx2;
     u8* target;
     f32 z;
-    s8 flagsByte;
     u8 blockFlags[120];
     TrickyCmdQuery cmdQuery;
     TrickySfxPair pair;
@@ -997,9 +996,11 @@ void Tricky_update(int obj)
         }
         trickyState->stateFlags &= ~0x40000000LL;
     }
-    flagsByte = trickyState->unk358;
-    trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8, flagsByte & 0x10,
-                     flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
+    {
+        int flagsByte = trickyState->unk358;
+        trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8,
+                         flagsByte & 0x10, flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
+    }
     {
         u8* debugCursor = *(u8**)state;
 
@@ -1332,7 +1333,12 @@ void Tricky_update(int obj)
                         if (trickyState->targetPosPtr != target)
                         {
                             trickyState->targetPosPtr = target;
-                            *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
+                            {
+                                u32 mask;
+                                u32 stateFlags = trickyState->stateFlags;
+                                mask = ~0x400;
+                                trickyState->stateFlags = stateFlags & mask;
+                            }
                             trickyState->linkedWalkGroup = 0;
                         }
                         trickyState->substate = 0;
@@ -1350,7 +1356,12 @@ void Tricky_update(int obj)
                             if (trickyState->targetPosPtr != (u8*)(step + 0x18))
                             {
                                 trickyState->targetPosPtr = (u8*)(step + 0x18);
-                                *(s32*)&trickyState->stateFlags &= ~(u64)0x400;
+                                {
+                                    u32 mask;
+                                    u32 stateFlags = trickyState->stateFlags;
+                                    mask = ~0x400;
+                                    trickyState->stateFlags = stateFlags & mask;
+                                }
                                 trickyState->linkedWalkGroup = 0;
                             }
                             trickyState->stateIndex = 0xd;
@@ -1388,12 +1399,22 @@ void Tricky_update(int obj)
             *(int*)&trickyState->followObj = obj;
             trickyState->stateIndex = 0xf;
             trickyState->idleSfxTimer = (f32)(int)randomGetRange(0x1f4, 0x2ee);
-            trickyState->stateFlags &= ~0x40000LL;
+            {
+                u32 mask;
+                u32 stateFlags = trickyState->stateFlags;
+                mask = ~0x40000;
+                trickyState->stateFlags = stateFlags & mask;
+            }
             trickyState->commandPhase = 3;
             if (trickyState->targetPosPtr != (u8*)&trickyState->wanderTargetX)
             {
                 trickyState->targetPosPtr = (u8*)&trickyState->wanderTargetX;
-                trickyState->stateFlags &= ~0x400LL;
+                {
+                    u32 mask;
+                    u32 stateFlags = trickyState->stateFlags;
+                    mask = ~0x400;
+                    trickyState->stateFlags = stateFlags & mask;
+                }
                 trickyState->linkedWalkGroup = 0;
             }
         }
@@ -1401,8 +1422,7 @@ void Tricky_update(int obj)
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     trickyState->heightUpdateActive = 1;
-    handlerBase = ((TrickyHandlerTable*)base)->handlers;
-    handlerBase[trickyState->stateIndex](obj, state);
+    ((TrickyHandlerTable*)base)->handlers[trickyState->stateIndex](obj, state);
     trickyState->stateFlags &= ~(u64)0x2;
     trickyState->animTransitionTimer += timeDelta;
     if (trickyState->animTransitionTimer > lbl_803E247C)
@@ -1722,6 +1742,7 @@ void Tricky_update(int obj)
     }
 }
 
+#pragma opt_propagation reset
 void Tricky_init(GameObject* obj)
 {
     int state;
