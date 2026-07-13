@@ -19,6 +19,7 @@
 #include "main/dll/dll_00E9_setuppoint.h"
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"
+#include "main/dll/dll_00ED_collectible_api.h"
 
 extern const f32 lbl_803E3420;
 extern f32 lbl_803E3424;
@@ -31,23 +32,6 @@ extern void MagicDust_free();
 extern void MagicDust_render();
 extern void MagicDust_update();
 extern void MagicDust_init();
-extern void collectible_setPosition();
-extern void collectible_getVisibilityBitClear();
-extern void collectible_setVisibilityBitClear();
-extern void collectible_startBounceMotion();
-extern void collectible_getHitRegionId();
-extern void collectible_setDisabled();
-extern void collectible_getIsHidden();
-extern void collectible_getExtraSize();
-extern void collectible_getObjectTypeId();
-extern void collectible_free();
-extern void collectible_render();
-extern void collectible_hitDetect();
-extern void collectible_update();
-extern void collectible_init();
-extern void collectible_release();
-extern void collectible_initialise();
-
 void checkpoint4_setScale(void)
 {
 }
@@ -167,27 +151,29 @@ void* gSetuppointObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (voi
                                       (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
                                       (void*)0x00000000, (void*)0x00000000};
 u8 lbl_80320C58[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-void* gCollectibleObjDescriptor[21] = {(void*)0x00000000,
-                                       (void*)0x00000000,
-                                       (void*)0x00000000,
-                                       (void*)0x00100000,
-                                       collectible_initialise,
-                                       collectible_release,
-                                       (void*)0x00000000,
-                                       collectible_init,
-                                       collectible_update,
-                                       collectible_hitDetect,
-                                       collectible_render,
-                                       collectible_free,
-                                       collectible_getObjectTypeId,
-                                       collectible_getExtraSize,
-                                       collectible_getIsHidden,
-                                       collectible_setDisabled,
-                                       collectible_getHitRegionId,
-                                       collectible_startBounceMotion,
-                                       collectible_setVisibilityBitClear,
-                                       collectible_getVisibilityBitClear,
-                                       collectible_setPosition};
+ObjectDescriptor17 gCollectibleObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_17_SLOTS,
+    (ObjectDescriptorCallback)collectible_initialise,
+    (ObjectDescriptorCallback)collectible_release,
+    0,
+    (ObjectDescriptorCallback)collectible_init,
+    (ObjectDescriptorCallback)collectible_update,
+    (ObjectDescriptorCallback)collectible_hitDetect,
+    (ObjectDescriptorCallback)collectible_render,
+    (ObjectDescriptorCallback)collectible_free,
+    (ObjectDescriptorCallback)collectible_getObjectTypeId,
+    collectible_getExtraSize,
+    (ObjectDescriptorCallback)collectible_getIsHidden,
+    (ObjectDescriptorCallback)collectible_setDisabled,
+    (ObjectDescriptorCallback)collectible_getHitRegionId,
+    (ObjectDescriptorCallback)collectible_startBounceMotion,
+    (ObjectDescriptorCallback)collectible_setVisibilityBitClear,
+    (ObjectDescriptorCallback)collectible_getVisibilityBitClear,
+    (ObjectDescriptorCallback)collectible_setPosition,
+};
 u8 lbl_80320CB8[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 void* gMagicGemObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, MagicDust_init,

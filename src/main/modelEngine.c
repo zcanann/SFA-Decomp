@@ -7,6 +7,7 @@
 #include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll/dll_00D9_pollen_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
+#include "main/dll/dll_00ED_collectible_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0293_suntemple.h"
 #include "main/dll/dll_0294_wctemple.h"
@@ -83,7 +84,7 @@ extern ResourceDescriptor gCFPerchObjDescriptor, gCFPowerBaseObjDescriptor, gCFP
 extern ResourceDescriptor gCRrockfallObjDescriptor, gCampFireObjDescriptor, gCannonClawObjDescriptor,
     gCflightwallObjDescriptor, gCheckpoint4ObjDescriptor, gChukChukObjDescriptor, gChukaObjDescriptor,
     gCloudPrisonControlObjDescriptor;
-extern ResourceDescriptor gColdWaterControlObjDescriptor, gCollectibleObjDescriptor, gControlLightObjDescriptor,
+extern ResourceDescriptor gColdWaterControlObjDescriptor, gControlLightObjDescriptor,
     gCrCloudRaceObjDescriptor, gCrFuelTankObjDescriptor, gCurveFishObjDescriptor, gCurveObjDescriptor;
 extern ResourceDescriptor gDBHoleControl1ObjDescriptor, gDBSH_ShrineObjDescriptor, gDBSH_SymbolObjDescriptor,
     gDB_eggObjDescriptor, gDBstealerwormObjDescriptor, gDFP_LevelControlObjDescriptor, gDFP_ObjCreatorObjDescriptor,
@@ -1133,7 +1134,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gSideloadObjDescriptor,
     &gSiderepelObjDescriptor,
     &gInfoPointObjDescriptor,
-    &gCollectibleObjDescriptor,
+    (ResourceDescriptor*)&gCollectibleObjDescriptor,
     &gEffectBoxObjDescriptor,
     &gPushableObjDescriptor,
     &gWarpPointObjDescriptor,
