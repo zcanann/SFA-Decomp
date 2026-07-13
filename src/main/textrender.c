@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx.h"
 #include "main/gameplay_runtime.h"
@@ -320,9 +321,7 @@ extern int saveFileStruct_isCheatActive(u8 idx);
 extern int utf8GetNextChar(u8* p, int* outLen);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
-extern void textureSetupFn_800799c0(void);
 extern void textRenderSetup(void);
-extern void textRenderSetupFn_80079804(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void selectTexture(u8* tex, int mapId);

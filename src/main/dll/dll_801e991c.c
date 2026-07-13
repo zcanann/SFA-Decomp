@@ -1,5 +1,6 @@
 /* DLL 0x801E991C - SPScarab [801E991C-...) */
 #include "main/dll/DR/dll_0287_spscarab.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/dll/shwgpipe_struct.h"
@@ -30,9 +31,7 @@ extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
 
 extern void selectTexture(int tex, int p);
-extern void textureSetupFn_800799c0(void);
 extern void geomDrawFn_800796f0(void);
-extern void textRenderSetupFn_80079804(void);
 extern void GXSetTevColor(int reg, ShColor color);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 extern void GXSetBlendMode(int a, int b, int c, int d);

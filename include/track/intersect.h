@@ -3,6 +3,7 @@
 
 #include "dolphin/gx.h"
 #include "main/game_object.h"
+#include "track/intersect_render_setup_api.h"
 #include "ghidra_import.h"
 
 void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
@@ -72,8 +73,6 @@ void gxTevAddTextureFrameBlendStages(void);
 void gxTextureFn_800794e0(void);
 void textRenderSetupFn_800795e8(void);
 void geomDrawFn_800796f0(void);
-void textRenderSetupFn_80079804(void);
-void textureSetupFn_800799c0(void);
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);

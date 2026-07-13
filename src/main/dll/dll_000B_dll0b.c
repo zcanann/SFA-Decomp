@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/bonespawndata_struct.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
@@ -348,10 +349,8 @@ extern void setTextColor(void* ctx, int r, int g, int b, int a);
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
-extern void textureSetupFn_800799c0(void);
 extern void geomDrawFn_800796f0(void);
 extern void gxTexColorFn_80079254(void);
-extern void textRenderSetupFn_80079804(void);
 extern void gxBlendFn_80078b4c(void);
 extern void drawFn_8005cf8c(void* a, void* b, int count);
 

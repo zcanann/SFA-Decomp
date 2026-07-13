@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
@@ -381,8 +382,6 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* 
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetupFn_80079804(void);
 extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);

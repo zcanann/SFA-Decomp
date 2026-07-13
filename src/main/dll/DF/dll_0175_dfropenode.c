@@ -28,9 +28,7 @@ extern f32 gRopeNodeMaxDistance;
 extern f32 gRopeNodeDamping;
 extern const f32 gRopeNodeBoundsMargin;
 
-extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
-extern void textRenderSetupFn_80079804(void);
 extern void gxBlendFn_80078b4c(void);
 extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);

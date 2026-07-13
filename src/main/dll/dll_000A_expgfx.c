@@ -1,4 +1,5 @@
 #include "dolphin/mtx.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -198,8 +199,6 @@ extern void gxSetZMode_(u32 compEnable, int func, u32 updateEnable);
 extern void _gxSetFogParams(void);
 extern void fn_80079180(void);
 extern void geomDrawFn_800796f0(void);
-extern void textRenderSetupFn_80079804(void);
-extern void textureSetupFn_800799c0(void);
 extern void fn_8007D670(void);
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;

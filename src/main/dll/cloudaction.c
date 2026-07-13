@@ -17,6 +17,7 @@
  * texture each frame.
  */
 #include "main/dll/fx_800944A0_shared.h"
+#include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
@@ -51,9 +52,7 @@ extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern f32 fn_8008ED88(void);
 extern void fn_8008EDE8(f32* pos);
-extern void textureSetupFn_800799c0(void);
 extern void gxTextureFn_800794e0(void);
-extern void textRenderSetupFn_80079804(void);
 extern void gxBlendFn_800789ac(void);
 extern void PSMTXMultVec(void* m, f32* src, f32* dst);
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);

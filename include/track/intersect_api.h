@@ -2,6 +2,7 @@
 #define TRACK_INTERSECT_API_H_
 
 #include "types.h"
+#include "track/intersect_render_setup_api.h"
 
 u32 getScreenResolution(void);
 u32 objAudioFn_8006ef38(void);
@@ -18,7 +19,5 @@ void normalize(f32* x, f32* y, f32* z);
 void textBlendSetupFn_80078a7c(void);
 void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 void textRenderSetupFn_800795e8(void);
-void textRenderSetupFn_80079804(void);
-void textureSetupFn_800799c0(void);
 
 #endif /* TRACK_INTERSECT_API_H_ */
