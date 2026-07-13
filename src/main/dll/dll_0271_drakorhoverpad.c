@@ -18,6 +18,7 @@
  * are HoverpadFlags / Flags377.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/curve.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
 #include "main/dll/dll_0271_drakorhoverpad.h"
@@ -482,15 +483,15 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
 #undef TGT_NODE
     if (*(int*)&((GameObject*)p)->anim.previousWorldPosY != 0)
     {
-        curvesSetupMoveNetworkCurve(curve);
+        curvesSetupMoveNetworkCurve(&curve->curve);
     }
     if (*(int*)&((GameObject*)p)->anim.previousLocalPosX != 0)
     {
-        Curve_AdvanceAlongPath(curve, lbl_803E6A70);
+        Curve_AdvanceAlongPath(&curve->curve, lbl_803E6A70);
     }
     else
     {
-        Curve_AdvanceAlongPath(curve, lbl_803E6A48);
+        Curve_AdvanceAlongPath(&curve->curve, lbl_803E6A48);
     }
     return 0;
 set_null:
@@ -539,7 +540,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
             curveArg = 0x2a;
             (*gRomCurveInterface)
                 ->initCurve(&((DrakorHoverpadState*)p)->curve, (void*)obj, lbl_803E6A4C, &curveArg, -1);
-            Curve_AdvanceAlongPath(&((DrakorHoverpadState*)p)->curve, lbl_803E6A50);
+            Curve_AdvanceAlongPath(&((DrakorHoverpadState*)p)->curve.curve, lbl_803E6A50);
             (obj)->anim.localPosX = ((DrakorHoverpadState*)p)->curve.posX;
             (obj)->anim.localPosY = ((DrakorHoverpadState*)p)->curve.posY;
             (obj)->anim.localPosZ = ((DrakorHoverpadState*)p)->curve.posZ;
@@ -603,7 +604,7 @@ void drakorhoverpad_updateMain(GameObject* obj)
     ((DrakorHoverpadUpdateMainState*)p)->targetSpeed = lbl_803E6A3C;
     if (lbl_803E6A3C != ((DrakorHoverpadUpdateMainState*)p)->verticalVel)
     {
-        Curve_AdvanceAlongPath(curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
+        Curve_AdvanceAlongPath(&curve->curve, ((DrakorHoverpadUpdateMainState*)p)->verticalVel);
         c = curve->reverse;
         if ((c == 0 && curve->atSegmentEnd != 0) || (c != 0 && curve->atSegmentEnd == 0))
         {

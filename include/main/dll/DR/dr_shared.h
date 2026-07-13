@@ -185,7 +185,6 @@ extern s16 gLaserCannonMaxAimStep;
 extern f32 gKytesMumNearestSearchDist;
 extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
-extern int Curve_AdvanceAlongPath(RomCurveWalker* curve, f32 v);
 extern f32 lbl_803E6A4C;
 extern f32 lbl_803E6A50;
 extern f32 gDrakorHoverpadPi;
@@ -237,7 +236,6 @@ extern s16 lbl_803DC314;
 extern u8 lbl_8032AAB0[];
 extern f32 lbl_803E6B44;
 extern f32 lbl_803E6ADC;
-extern void curvesSetupMoveNetworkCurve(void* curve);
 extern f32 lbl_803E6A70;
 extern f32 lbl_803E6818;
 extern f32 lbl_803E6848;
@@ -328,8 +326,6 @@ extern void getYButtonItem(s16* out);
 extern void objModelClearVecFn_8003aa40(GameObject* obj);
 
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
-int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 a, u8 b, void* out);
-int drakorhoverpad_update(RomCurveWalker* curve, int arg);
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg);
 int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg);
 
