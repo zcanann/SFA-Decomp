@@ -3002,11 +3002,11 @@ void gameTextLoadGraphicsFn_8001a918(void)
         *(u8*)(glyph + 0xf) = 0;
         {
             u32* src = (u32*)buf;
-            int tx = *(u16*)(glyph + 4) >> 3;
             int ty = *(u16*)(glyph + 6) >> 3;
-            int row = ty;
-            int txEnd = tx + 3;
+            int tx = *(u16*)(glyph + 4) >> 3;
             int tyEnd = ty + 3;
+            int txEnd = tx + 3;
+            int row = ty;
             for (; row < tyEnd; row++)
             {
                 int j2 = tx;
