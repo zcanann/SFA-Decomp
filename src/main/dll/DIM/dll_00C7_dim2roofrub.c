@@ -75,27 +75,29 @@ typedef struct Dim2roofrubState
 
 extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern f32 lbl_803E3270;
 
 extern void objRenderModel(int* obj);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern f32 gDim2RoofRubEffectScale;
-extern f32 lbl_803E3244;
-extern f32 lbl_803E3248;
-extern f32 lbl_803E324C;
-extern f32 lbl_803E3250;
-extern f32 lbl_803E3254;
-extern f32 lbl_803E3258;
-extern f32 lbl_803E325C;
-extern f32 lbl_803E3260;
-extern f32 lbl_803E3264;
-extern f32 lbl_803E3268;
-extern f32 lbl_803E326C;
-extern f32 lbl_803E3274;
-extern f32 lbl_803E3278;
-extern f32 gDim2RoofRubPi;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 gDim2RoofRubEffectScale = 0.64f;
+__declspec(section ".sdata2") f32 lbl_803E3244 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3248 = -0.8230000138282776f;
+__declspec(section ".sdata2") f32 lbl_803E324C = -0.08399999886751175f;
+__declspec(section ".sdata2") f32 lbl_803E3250 = -2.5999999046325684f;
+__declspec(section ".sdata2") f32 lbl_803E3254 = 0.02500000037252903f;
+__declspec(section ".sdata2") f32 lbl_803E3258 = 0.699999988079071f;
+__declspec(section ".sdata2") f32 lbl_803E325C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E3260 = 0.20900000631809235f;
+__declspec(section ".sdata2") f32 lbl_803E3264 = -3.5999999046325684f;
+__declspec(section ".sdata2") f32 lbl_803E3268 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E326C = 0.8230000138282776f;
+__declspec(section ".sdata2") f32 lbl_803E3270 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3274 = 6.0f;
+__declspec(section ".sdata2") f32 lbl_803E3278 = 2.5f;
+__declspec(section ".sdata2") f32 gDim2RoofRubPi = 3.1415927410125732f;
+#pragma explicit_zero_data off
 
 int dim2roofrub_getExtraSize(void)
 {
