@@ -27,6 +27,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
@@ -76,7 +77,6 @@ extern u8 gTumbleweedBushHitCooldownState;
 
 extern f32 lbl_803E2F44;
 extern f32 gTumbleweedBushNearestInitDist;
-extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E2F40;
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E2F5C;

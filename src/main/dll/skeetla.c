@@ -20,6 +20,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/obj_group.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -91,7 +92,6 @@ extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
-extern void* ObjList_GetObjects(int* outA, int* outB);
 
 #pragma peephole off
 void trickyUpdateCollisionAndPathState(u8* obj)

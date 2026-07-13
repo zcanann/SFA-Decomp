@@ -8,6 +8,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/obj_link.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -93,7 +94,6 @@ extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
 
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern f32 lbl_803E3228;
-extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E322C;
 extern void objRenderModel(int* obj);
 extern f32 lbl_803E3230;

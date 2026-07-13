@@ -17,6 +17,7 @@
  * the camera view-Y offset for the impact shake.
  */
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -38,7 +39,6 @@ __declspec(section ".sdata2") f32 lbl_803E2E50 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E2E54 = 0.07f;
 __declspec(section ".sdata2") f32 lbl_803E2E58 = 0.97f;
 
-extern void* ObjList_GetObjects(int* outA, int* outB);
 
 #pragma dont_inline on
 #pragma scheduling off

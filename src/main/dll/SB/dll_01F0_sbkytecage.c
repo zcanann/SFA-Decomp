@@ -13,6 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/obj_link.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx.h"
@@ -76,7 +77,6 @@ enum
     SB_KYTECAGE_SEQEV_LATCH_2 = 2
 };
 
-extern void* ObjList_GetObjects(int* outA, int* outB);
 
 int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

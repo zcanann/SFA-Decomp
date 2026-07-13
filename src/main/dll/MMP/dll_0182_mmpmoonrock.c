@@ -21,6 +21,7 @@
 #include "main/carryable_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_list.h"
 #include "main/obj_group.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -370,7 +371,6 @@ void mmp_moonrock_init(GameObject* obj, int param2)
     fn_801A7D74(obj, 1, 2);
 }
 
-extern void* ObjList_GetObjects(int* outA, int* outB);
 
 extern f32 gMoonRockPickupRange;
 
