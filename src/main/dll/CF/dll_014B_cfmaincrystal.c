@@ -10,6 +10,7 @@
 #include "main/render.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objlib.h"
 #include "main/camera.h"
 #include "main/audio/sfx_ids.h"
@@ -63,7 +64,6 @@ typedef struct
 
 STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern f32 lbl_803E4210;
 

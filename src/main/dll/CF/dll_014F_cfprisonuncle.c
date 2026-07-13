@@ -10,6 +10,7 @@
  */
 #include "main/dll/cfprisonunclestate_struct.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/objprint.h"
@@ -22,7 +23,6 @@ STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 extern f32 lbl_803E428C;
 extern f32 lbl_803E4288;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);

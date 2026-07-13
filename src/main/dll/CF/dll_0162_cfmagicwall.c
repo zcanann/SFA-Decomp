@@ -6,6 +6,7 @@
  * using the nearer of player distance and camera distance.
  */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
 #include "main/obj_query.h"
 #include "main/gamebits.h"
@@ -30,7 +31,6 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 
 extern f32 lbl_803E43D8; /* render scale */
 extern f32 lbl_803E43DC; /* 255.0f - full alpha */
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int cfmagicwall_getExtraSize(void)
 {

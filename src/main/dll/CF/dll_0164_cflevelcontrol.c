@@ -17,6 +17,7 @@
 #include "main/dll/alphaanim.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/sky_api.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
@@ -68,7 +69,6 @@ extern f32 lbl_803E43E8;
 extern int lbl_802C22E8[];
 extern f32 lbl_803E43EC;
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int playerIsDisguised(int obj);
 extern void staffToggle(GameObject* obj, int a);
 extern int getCurMapLayer(void);

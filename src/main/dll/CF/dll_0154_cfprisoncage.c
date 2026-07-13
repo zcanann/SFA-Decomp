@@ -13,6 +13,7 @@
 
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
 #include "main/dll/DR/sandwormBoss.h"
@@ -59,7 +60,6 @@ enum
 
 extern f32 lbl_803E42B0;
 extern f32 lbl_803E42B4;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 mainGetBit(int eventId);
 extern int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int a, int b, int c, f32* out_x, f32* out_y, f32* out_z);
 
