@@ -5,6 +5,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/lightmap_api.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/mm.h"
@@ -16,7 +17,6 @@
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
 #include "string.h"
-#include "main/sfa_extern_decls.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
 

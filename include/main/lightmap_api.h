@@ -5,6 +5,7 @@
 #include "main/map_block.h"
 
 void* mapGetBlockAtPos(int x, int y, int layer);
+void* RomList_GetLoadedPages(void);
 MapBlockData* mapGetBlock(int index);
 int coordsToMapCell(f32 x, f32 z);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);

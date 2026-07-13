@@ -3,7 +3,6 @@
 
 #include "types.h"
 
-void* RomList_GetLoadedPages(void);
 void clearCurSeqNo(void);
 void whirlpool_updateWhileFrozen(void);
 void cutSceneFn_8011dd30(void);
