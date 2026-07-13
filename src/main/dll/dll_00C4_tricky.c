@@ -929,7 +929,6 @@ void Tricky_update(int obj)
     int setup;
     int count;
     u32 flags;
-    int diff;
     int step;
     int played;
     int talking;
@@ -1428,37 +1427,41 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_ROTATE) != 0)
     {
-        diff = ((TrickyState*)state)->targetYaw - (u16)((GameObject*)obj)->anim.rotX;
-        if (diff > 0x8000)
+        int rotationDiff;
+        int rotationStep;
+
+        rotationDiff = ((TrickyState*)state)->targetYaw - (u16)((GameObject*)obj)->anim.rotX;
+        if (rotationDiff > 0x8000)
         {
-            diff -= 0xffff;
+            rotationDiff -= 0xffff;
         }
-        if (diff < -0x8000)
+        if (rotationDiff < -0x8000)
         {
-            diff += 0xffff;
+            rotationDiff += 0xffff;
         }
-        step = (int)((f32)((TrickyState*)state)->rotRate * ((TrickyState*)state)->rotStepScale);
-        if ((diff >= 0 ? diff : -diff) >= 4)
+        rotationStep = (int)((f32)((TrickyState*)state)->rotRate * ((TrickyState*)state)->rotStepScale);
+        if ((rotationDiff >= 0 ? rotationDiff : -rotationDiff) >= 4)
         {
-            if ((diff > 0 && step > 0) || (diff < 0 && step < 0))
+            if ((rotationStep > 0 && rotationDiff > 0) || (rotationStep < 0 && rotationDiff < 0))
             {
-                if ((step >= 0 ? step : -step) > (diff >= 0 ? diff : -diff))
+                if ((rotationStep >= 0 ? rotationStep : -rotationStep) >
+                    (rotationDiff >= 0 ? rotationDiff : -rotationDiff))
                 {
-                    ((GameObject*)obj)->anim.rotX += diff;
+                    ((GameObject*)obj)->anim.rotX += rotationDiff;
                 }
                 else
                 {
-                    ((GameObject*)obj)->anim.rotX += step;
+                    ((GameObject*)obj)->anim.rotX += rotationStep;
                 }
             }
             else
             {
-                ((GameObject*)obj)->anim.rotX += step;
+                ((GameObject*)obj)->anim.rotX += rotationStep;
             }
         }
         else
         {
-            ((GameObject*)obj)->anim.rotX += diff;
+            ((GameObject*)obj)->anim.rotX += rotationDiff;
         }
     }
     if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_BACKSTEP) != 0)
