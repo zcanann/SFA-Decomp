@@ -19,6 +19,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/objseq_api.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll_000A_expgfx.h"

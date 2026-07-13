@@ -16,6 +16,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/obj_placement.h"

@@ -4,7 +4,6 @@
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
-#include "main/dll/dll_00DA_pollenfragment_api.h"
 
 typedef struct PollenExtra
 {
