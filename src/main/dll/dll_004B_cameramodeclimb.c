@@ -235,3 +235,16 @@ void CameraModeClimb_release(void)
 void CameraModeClimb_initialise(void)
 {
 }
+
+u32 lbl_80319D48[12] = {0x00000000,
+                       0x00000000,
+                       0x00000000,
+                       0x00060000,
+                       (u32)CameraModeClimb_initialise,
+                       (u32)CameraModeClimb_release,
+                       0x00000000,
+                       (u32)CameraModeClimb_init,
+                       (u32)CameraModeClimb_update,
+                       (u32)CameraModeClimb_free,
+                       (u32)CameraModeClimb_copyToCurrent,
+                       0x00000000};

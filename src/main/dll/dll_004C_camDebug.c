@@ -47,3 +47,16 @@ void CameraModeFixed_release(void)
 void CameraModeFixed_initialise(void)
 {
 }
+
+u32 lbl_80319D78[12] = {0x00000000,
+                       0x00000000,
+                       0x00000000,
+                       0x00060000,
+                       (u32)CameraModeFixed_initialise,
+                       (u32)CameraModeFixed_release,
+                       0x00000000,
+                       (u32)CameraModeFixed_init,
+                       (u32)CameraModeFixed_update,
+                       (u32)CameraModeFixed_free,
+                       (u32)CameraModeFixed_copyToCurrent,
+                       0x00000000};

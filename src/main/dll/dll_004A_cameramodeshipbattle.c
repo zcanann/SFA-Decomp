@@ -181,3 +181,16 @@ void CameraModeShipBattle_free(void)
     mm_free(gCamShipBattleState);
     gCamShipBattleState = 0;
 }
+
+u32 lbl_80319D18[12] = {0x00000000,
+                       0x00000000,
+                       0x00000000,
+                       0x00060000,
+                       (u32)CameraModeShipBattle_initialise,
+                       (u32)CameraModeShipBattle_release,
+                       0x00000000,
+                       (u32)CameraModeShipBattle_init,
+                       (u32)CameraModeShipBattle_update,
+                       (u32)CameraModeShipBattle_free,
+                       (u32)CameraModeShipBattle_copyToCurrent,
+                       0x00000000};

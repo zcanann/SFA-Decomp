@@ -863,13 +863,16 @@ main/dll/dll_0049_cameramodecombat.c:
 
 main/dll/dll_004A_cameramodeshipbattle.c:
 	.text       start:0x8010CEC0 end:0x8010D33C
+	.data       start:0x80319D18 end:0x80319D48
 
 main/dll/dll_004B_cameramodeclimb.c:
 	.text       start:0x8010D33C end:0x8010DAD4
+	.data       start:0x80319D48 end:0x80319D78
 	.sdata2     start:0x803E1990 end:0x803E19A0
 
 main/dll/dll_004C_camDebug.c:
 	.text       start:0x8010DAD4 end:0x8010DB7C
+	.data       start:0x80319D78 end:0x80319DA8
 
 main/dll/dll_004D_cameramodenpcspeak.c:
 	.text       start:0x8010DB7C end:0x8010E51C
