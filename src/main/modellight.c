@@ -4,11 +4,11 @@
 #include "main/dll/ivec3_struct.h"
 #include "main/model_light.h"
 #include "main/modellight_api.h"
+#include "main/modellight_internal.h"
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/camera.h"
 #include "main/texture.h"
-#include "main/modellight.h"
 #include "main/frame_timing.h"
 
 typedef struct

@@ -14,6 +14,7 @@
 #include "main/lightmap_lifecycle_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/modellight_api.h"
 #include "main/newclouds.h"
 #include "main/obj_list.h"
 #include "main/objprint_render_api.h"
@@ -402,7 +403,6 @@ void renderObjects(s8* opacity)
 
 extern s8 curMapType;
 extern int lbl_803DCEA8;
-extern void updateLights(void);
 
 void sceneRender(void)
 {

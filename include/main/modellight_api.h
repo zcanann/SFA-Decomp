@@ -8,6 +8,7 @@ typedef struct ModelLightStruct ModelLightStruct;
 void modelLightChannels_applyGXControls(void);
 void modelLightChannels_reset(u8 useModelRelative);
 void modelLightChannel_configure(int channel, int mode, int materialSource);
+void updateLights(void);
 void lightGetColor(int index, u8* red, u8* green, u8* blue);
 
 int modelLightStruct_getActiveState(ModelLightStruct* light);
