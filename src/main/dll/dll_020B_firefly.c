@@ -23,6 +23,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_020B_firefly.h"
+#include "main/object_descriptor.h"
 #include "main/dll/LGT/LGTcontrollight.h"
 #include "main/model_light.h"
 #include "main/objfx.h"
@@ -348,3 +349,20 @@ void firefly_release(void)
 void firefly_initialise(void)
 {
 }
+
+ObjectDescriptor gFireFlyObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)firefly_initialise,
+    (ObjectDescriptorCallback)firefly_release,
+    0,
+    (ObjectDescriptorCallback)firefly_init,
+    (ObjectDescriptorCallback)firefly_update,
+    (ObjectDescriptorCallback)firefly_hitDetect,
+    (ObjectDescriptorCallback)firefly_render,
+    (ObjectDescriptorCallback)firefly_free,
+    (ObjectDescriptorCallback)firefly_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)firefly_getExtraSize,
+};

@@ -2523,6 +2523,7 @@ main/dll/boulder.c:
 
 main/dll/dll_020B_firefly.c:
 	.text       start:0x801F4F88 end:0x801F568C
+	.data       start:0x80328C30 end:0x80328C68
 
 main/dll/WM/dll_020C_wmspiritplace.c:
 	.text       start:0x801F568C end:0x801F654C
