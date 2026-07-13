@@ -28,6 +28,7 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_api.h"
+#include "main/object_descriptor.h"
 
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
 /* object group scanned for the nearest target (player group) */
@@ -63,6 +64,23 @@ extern int playerHasSpell(GameObject* obj, int param);
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};
 
+ObjectDescriptor gSH_queenearthwalkerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)sh_queenearthwalker_init,
+    (ObjectDescriptorCallback)sh_queenearthwalker_update,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)sh_queenearthwalker_getExtraSize,
+};
+
 int sh_queenearthwalker_getExtraSize(void)
 {
     return 0x40;
@@ -89,10 +107,11 @@ void sh_queenearthwalker_update(GameObject* obj)
     {
         switch (action)
         {
-        case 0:
+        case 2:
             queenFeedFn_801d44a4(obj, state);
             break;
-        case 1:
+        case 3:
+        case 4:
             if (mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
@@ -108,10 +127,10 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
             fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
-        case 2:
+        case 5:
             openPortalFn_801d4364(obj, state);
             break;
-        case 3:
+        case 6:
             if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
@@ -127,7 +146,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
             fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
-        case 4:
+        case 7:
             if (mainGetBit(0x199) != 0)
             {
                 ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
@@ -143,7 +162,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
             fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
-        case 5:
+        case 8:
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
             ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
@@ -151,10 +170,8 @@ void sh_queenearthwalker_update(GameObject* obj)
             ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
             fn_8003B500FloatLegacy(obj, (s16*)((u8*)state + 0x8), lbl_803E53F8);
             break;
-        case 6:
-        case 7:
-        case 8:
-            break;
+        case 0:
+        case 1:
         default:
             break;
         }

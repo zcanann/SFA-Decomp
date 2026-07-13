@@ -2228,7 +2228,7 @@ main/dll/dll_801d4198.c:
 
 main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.text       start:0x801D4364 end:0x801D4CD0
-	.data       start:0x80326E18 end:0x80326E38
+	.data       start:0x80326E18 end:0x80326E98
 
 main/dll/SH/shthorntail_ai.c:
 	.text       start:0x801D4CD0 end:0x801D5174
