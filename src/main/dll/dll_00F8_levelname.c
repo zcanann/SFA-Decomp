@@ -20,7 +20,6 @@
  * lives in the sibling area unit's table (dll_00F6_area .data+0x38).
  */
 #include "main/dll/tFrameAnimator.h"
-#include "main/dll/levelnamestate_struct.h"
 #include "main/game_object.h"
 #include "main/dll/tframeanimator_state.h"
 #include "main/gamebits.h"

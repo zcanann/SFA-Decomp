@@ -10,7 +10,6 @@
  * radius plus hysteresis fires the leave action. MagicLight_update kicks
  * off trigger sequence 0 once, on the first update.
  */
-#include "main/dll/magiclightstate_struct.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/render.h"

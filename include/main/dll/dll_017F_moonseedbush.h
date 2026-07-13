@@ -6,6 +6,12 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 
+typedef struct MoonSeedBushState
+{
+    u8 seedState; /* gamebit value: 0 unplanted, 2 grown (SeqFn) */
+    u8 flags; /* bit 1 = pending update */
+} MoonSeedBushState;
+
 typedef struct MoonSeedBushPlacement
 {
     ObjPlacement base;

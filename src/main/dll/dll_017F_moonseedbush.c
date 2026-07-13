@@ -13,7 +13,6 @@
  *   2 = burst the seed particle fx (one 0x70B + 0x28 x 0x70C spawns).
  * SeqFn returns non-zero until the seed is fully grown.
  */
-#include "main/dll/moonseedbushstate_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
