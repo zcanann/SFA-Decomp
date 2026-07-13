@@ -51,7 +51,6 @@
 #include "main/dll/dll_028B.h"
 #include "main/render.h"
 #include "main/game_object.h"
-#include "main/dll/earthwalker_state.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
