@@ -4,6 +4,7 @@
 #include "main/object_descriptor.h"
 
 extern char sDoorswitchInitNoLongerSupported[];
+extern u32 gDoorswitchObjDescriptor[14];
 extern ObjectDescriptor gDFP_seqpointObjDescriptor;
 extern ObjectDescriptor gDFP_TorchObjDescriptor;
 

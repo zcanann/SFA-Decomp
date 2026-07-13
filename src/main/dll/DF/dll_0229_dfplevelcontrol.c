@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/audio/sfx.h"
+#include "main/dll/DF/dll_0229_dfplevelcontrol.h"
 
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 

@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_023F_DBEGG_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor12 gDB_eggObjDescriptor;
 
 int dbegg_setLaunchVelocity(GameObject* obj, f32* velocity);
 int dbegg_setScale(GameObject* obj);

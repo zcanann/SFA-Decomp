@@ -60,6 +60,8 @@
 #include "main/dll/dll_0243_dbholecontrol1.h"
 #include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_022C_dll22c.h"
+#include "main/dll/DF/dll_0229_dfplevelcontrol.h"
+#include "main/dll/DF/dll_022A_dfpobjcreator.h"
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
@@ -150,26 +152,6 @@ extern f32 lbl_803E62BC;
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
-
-extern void DFP_LevelControl_free(void);
-extern void DFP_LevelControl_getExtraSize(void);
-extern void DFP_LevelControl_getObjectTypeId(void);
-extern void DFP_LevelControl_hitDetect(void);
-extern void DFP_LevelControl_init(GameObject*);
-extern void DFP_LevelControl_initialise(void);
-extern void DFP_LevelControl_release(void);
-extern void DFP_LevelControl_render(void);
-extern void DFP_LevelControl_setScale(void);
-extern void DFP_LevelControl_update(GameObject*);
-extern void DFP_ObjCreator_free(GameObject*);
-extern void DFP_ObjCreator_getExtraSize(void);
-extern void DFP_ObjCreator_getObjectTypeId(void);
-extern void DFP_ObjCreator_hitDetect(void);
-extern void DFP_ObjCreator_init(GameObject*);
-extern void DFP_ObjCreator_initialise(void);
-extern void DFP_ObjCreator_release(void);
-extern void DFP_ObjCreator_render(void);
-extern void DFP_ObjCreator_update(GameObject*);
 
 int dbstealerworm_stateHandlerB04(int obj, int baddie)
 {

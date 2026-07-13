@@ -10,20 +10,7 @@
 #include "main/frame_timing.h"
 #include "main/object.h"
 #include "main/object_api.h"
-
-typedef struct DfpobjcreatorObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s16 gameBit;
-    u8 pad1A[0x1C - 0x1A];
-    s16 spawnPeriod;
-    s8 rotXByte;
-    s8 unk1F;
-    u8 unk20;
-    u8 pad21[0x24 - 0x21];
-    s16 unk24;
-    u8 pad26[0x28 - 0x26];
-} DfpobjcreatorObjectDef;
+#include "main/dll/DF/dll_022A_dfpobjcreator.h"
 
 typedef struct DfpobjcreatorPlacement
 {

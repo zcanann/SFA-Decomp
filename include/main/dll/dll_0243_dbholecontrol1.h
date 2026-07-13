@@ -4,6 +4,8 @@
 #include "types.h"
 #include "main/objanim_update.h"
 
+extern u32 gDBHoleControl1ObjDescriptor[14];
+
 typedef struct Dbholecontrol1Placement
 {
     u8 pad0[0x8 - 0x0];

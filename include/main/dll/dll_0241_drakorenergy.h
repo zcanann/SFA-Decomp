@@ -1,7 +1,10 @@
 #ifndef MAIN_DLL_DLL_0241_DRAKORENERGY_H_
 #define MAIN_DLL_DLL_0241_DRAKORENERGY_H_
 
-#include "types.h"
+#include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor12 gDrakorEnergyObjDescriptor;
 
 typedef struct DrakorenergyPlacement
 {
@@ -24,5 +27,17 @@ typedef struct DrakorenergyPlacement
     s8 unk2E;
     u8 pad_2F[0x30 - 0x2F];
 } DrakorenergyPlacement;
+
+int drakorenergy_setScale(int* obj);
+void DrakorEnergy_func0B_nop(void);
+int drakorenergy_getExtraSize(void);
+int drakorenergy_getObjectTypeId(void);
+void drakorenergy_free(void);
+void drakorenergy_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible);
+void drakorenergy_hitDetect(void);
+void drakorenergy_update(int obj);
+void drakorenergy_init(int* obj, u8* init);
+void drakorenergy_release(void);
+void drakorenergy_initialise(void);
 
 #endif
