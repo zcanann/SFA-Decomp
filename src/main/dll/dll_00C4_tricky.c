@@ -967,8 +967,9 @@ void Tricky_update(int obj)
     }
     if ((((TrickyState*)state)->stateFlags & 0x40000000) != 0)
     {
-        cursor = *(u8**)state;
-        if (*cursor == *(cursor + 1))
+        u8* voiceCursor = *(u8**)state;
+
+        if (*voiceCursor == *(voiceCursor + 1))
         {
             TRICKY_VOICE(obj, 0x364, 0x500);
         }
@@ -981,8 +982,11 @@ void Tricky_update(int obj)
     flagsByte = ((TrickyState*)state)->unk358;
     trickyDebugPrint(base + 0x894, flagsByte & 1, flagsByte & 2, flagsByte & 4, flagsByte & 8, flagsByte & 0x10,
                      flagsByte & 0x20, flagsByte & 0x40, flagsByte & 0x80);
-    cursor = *(u8**)state;
-    trickyDebugPrint(base + 0x8b4, *cursor, *(cursor + 1));
+    {
+        u8* debugCursor = *(u8**)state;
+
+        trickyDebugPrint(base + 0x8b4, *debugCursor, *(debugCursor + 1));
+    }
     if ((((TrickyState*)state)->stateFlags & 0x200) != 0)
     {
         ObjHits_EnableObject(obj);
@@ -1040,15 +1044,17 @@ void Tricky_update(int obj)
             ((TrickyState*)state)->stateFlags &= ~(u64)0x2000;
             if ((((TrickyState*)state)->stateFlags & TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE) != 0)
             {
+                u8* childCursor;
+
                 ((TrickyState*)state)->stateFlags =
                     ((TrickyState*)state)->stateFlags & ~(u64)TRICKY_STATE_FLAG_FLAME_CHILDREN_ACTIVE;
                 ((TrickyState*)state)->stateFlags =
                     ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
-                cursor = (u8*)state;
+                childCursor = (u8*)state;
                 do
                 {
-                    objSetAnimSpeedTo1(*(int*)(cursor + 0x700));
-                    cursor += 4;
+                    objSetAnimSpeedTo1(*(int*)(childCursor + 0x700));
+                    childCursor += 4;
                     i++;
                 } while (i < 7);
                 Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_trpopn_c);
