@@ -2252,9 +2252,8 @@ void fn_80128470(int alpha)
         alpha16 = amp * (s16)alpha;
         fn_80128A7C((u8)lbl_803DD7D8, alpha16, 4);
     }
-    alpha16 = (s16)alpha;
     {
-        int n = alpha16 * (0x200 - lbl_803DD75C);
+        int n = (s16)alpha * (0x200 - lbl_803DD75C);
         gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
     }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
