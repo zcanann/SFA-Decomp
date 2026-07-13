@@ -13,6 +13,7 @@
  * emits the contact-spark particles for the object Tricky is linked to.
  */
 #include "main/dll/objfsa_romcurve.h"
+#include "main/vecmath.h"
 #include "main/lightmap_api.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
@@ -86,7 +87,6 @@ extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int fla
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern int ObjGroup_FindNearestObject(int group, u8* obj, f32* outDistance);
-extern f32 getXZDistance(f32* a, f32* b);
 extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);

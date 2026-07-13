@@ -80,7 +80,6 @@ extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
 extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
-extern f32 getXZDistance(f32* a, f32* b);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;

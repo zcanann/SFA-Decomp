@@ -123,7 +123,6 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E2504;
 
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern f32 getXZDistance(f32* a, f32* b);
 extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
 extern int trickyMove(int p1, void* p2);

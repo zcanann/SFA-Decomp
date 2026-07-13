@@ -141,7 +141,6 @@ extern int isTrickyNear(int obj);
 extern int fn_8029669C(int obj);
 extern int fn_802966B4(int obj);
 extern void fn_801814D0(int obj, int player, int state);
-extern f32 getXZDistance(f32* a, f32* b);
 extern f32 lbl_803E3934;
 extern const f32 lbl_803E3978;
 extern const f32 lbl_803E397C;

@@ -98,7 +98,6 @@ extern float mathCosf(float x);
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
-    extern f32 getXZDistance(int posA, int posB);
     int playerObj;
     int randomIdleWait;
     u8 closeToPlayer;
@@ -108,7 +107,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
     runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
     playerObj = (int)Obj_GetPlayerObject();
     {
-        int cmp = (double)getXZDistance(objectId + 0x18, playerObj + 0x18) < (double)SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
+        int cmp = (double)getXZDistance((f32*)(objectId + 0x18), (f32*)(playerObj + 0x18)) < (double)SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
         closeToPlayer = cmp;
     }
     if (config->impactSfxVariant == 0)
@@ -366,7 +365,6 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
 #pragma opt_common_subs off
 void SHthorntail_update(SHthorntailObject* obj)
 {
-    extern f32 getXZDistance(f32 * posA, f32 * posB);
     extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* table, u32 count, u8 state, float* scratch);
     u8* stateTables;
     s8* eventId;

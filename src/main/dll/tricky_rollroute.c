@@ -18,6 +18,7 @@
  * when the current move is outside the 0x29..0x2f window.
  */
 #include "main/audio/sfx.h"
+#include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/baddie/skeetla.h"
 #include "main/dll/rom_curve_interface.h"
@@ -49,7 +50,6 @@ extern f32 lbl_803E250C;
    Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
    trickyFn_8013b368: trickyfollow (block-scope signature override of
    trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57). */
-extern f32 getXZDistance(f32* a, f32* b);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
 extern void trickyMove(int obj, void* moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);

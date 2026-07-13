@@ -24,7 +24,6 @@ extern f32 lbl_803E34B0;
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
 
-extern f32 getXZDistance(f32* a, f32* b);
 extern int Obj_IsParentSlackClear(int obj);
 extern char sMagicGemCollectedMessage[];
 

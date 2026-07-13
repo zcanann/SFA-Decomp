@@ -239,7 +239,6 @@ extern f32 FLOAT_803e6d74;
 extern f32 FLOAT_803e6d78;
 extern f32 FLOAT_803e6d7c;
 extern f32 FLOAT_803e6d80;
-extern f32 getXZDistance(f32* a, f32* b);
 extern void gameBitIncrement(int eventId);
 extern void fn_801F4D54(int obj, int state);
 extern f32 lbl_803E5EA8;

@@ -183,7 +183,6 @@ void dll_107_hitDetect_nop(void)
 void dll_107_update(GameObject* obj)
 {
 
-    extern f32 getXZDistance(f32 * a, f32 * b);
     typedef struct
     {
         s16 ang;
@@ -426,7 +425,7 @@ void dll_107_update(GameObject* obj)
     state->timer -= framesThisStep;
     if (*(s8*)&state->rideState != 0)
     {
-        if (getXZDistance((void*)&(obj)->anim.worldPosX, (void*)(p4c + 8)) >= (f32)(state->maxDist * state->maxDist))
+        if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(p4c + 8)) >= (f32)(state->maxDist * state->maxDist))
         {
             f32 fz = lbl_803E3A58;
             (obj)->anim.velocityX = fz;

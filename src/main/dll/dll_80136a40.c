@@ -22,6 +22,7 @@
  *     readout (dll_3F_updateTimerReadout).
  */
 #include "main/texture.h"
+#include "main/vecmath.h"
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/effect_interfaces.h"
@@ -188,7 +189,6 @@ extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
 extern void ObjModel_SetBlendChannelWeight(int model, int channel, f32 weight);
-extern f32 getXZDistance(f32* a, f32* b);
 extern int dll_19_func1B(GameObject* p);
 extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);

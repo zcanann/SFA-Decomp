@@ -54,7 +54,6 @@ extern f32 gQueenEarthWalkerTrickyFeedDistance;
 extern f32 gQueenEarthWalkerAttackTimerMin;
 extern f32 gQueenEarthWalkerAttackTimerMax;
 
-extern f32 getXZDistance(f32* a, f32* b);
 extern int fn_8003B228(GameObject* obj, void* p2);
 extern int getYButtonItem(s16* outTrigger);
 extern int playerHasSpell(GameObject* obj, int param);

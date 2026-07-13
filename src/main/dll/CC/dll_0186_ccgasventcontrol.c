@@ -13,6 +13,7 @@
  * The extra-state byte at +0 is the state-machine index (0..7).
  */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/vecmath.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -69,7 +70,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern int* ObjGroup_GetObjects(int group, int* count);
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
-extern f32 getXZDistance(f32* a, f32* b);
 
 
 __declspec(section ".sdata2") f32 lbl_803E4618 = 100.0f;

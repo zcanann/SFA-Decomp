@@ -20,6 +20,7 @@
  * range (0x80321568..0x803216B8) owns them in retail.
  */
 #include "main/game_object.h"
+#include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/dll_0015_curves.h"
@@ -75,7 +76,6 @@ typedef enum CurveFishMode
 /* per-frame cap on the body's yaw turn toward the next path node */
 #define CURVEFISH_MAX_YAW_TURN 0x180
 
-extern f32 getXZDistance(f32* a, f32* b);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
 
 /* ROM curve query key for the fish path curves; first entry of this TU's

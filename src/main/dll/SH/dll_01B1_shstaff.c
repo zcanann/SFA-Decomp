@@ -154,7 +154,6 @@ extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objRenderModel(int obj);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern f32 getXZDistance(f32* a, f32* b);
 extern void staffToggle(GameObject* obj, int a);
 extern void playerPutAwayStaff(GameObject* obj, int mode);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);

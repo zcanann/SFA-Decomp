@@ -53,7 +53,6 @@
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
-extern f32 getXZDistance(f32* a, f32* b);
 extern float mathSinf(float x);
 
 #pragma scheduling off

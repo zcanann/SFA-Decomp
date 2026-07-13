@@ -1,5 +1,6 @@
 /* DLL 0x00D2 (tumbleweed) — Tumbleweed and tumbleweed bush objects [0x80163BBC-0x801650D0). */
 #include "main/audio/sfx_ids.h"
+#include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
@@ -44,7 +45,6 @@ extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
 extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
-extern f32 getXZDistance(f32* a, f32* b);
 extern int gameBitIncrement(int bit);
 extern void fn_80163990(int obj, int aux);
 extern const f32 lbl_803E2FA0;

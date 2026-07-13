@@ -7,6 +7,7 @@
  * GAMEBIT_CC_COMPLETE marks full completion. Nothing else in the game writes
  * the trigger latch. */
 #include "main/dll/DIM/dimlogfire.h"
+#include "main/vecmath.h"
 #include "main/frame_timing.h"
 
 #define GAMEBIT_LIGHTFOOT_TRIGGERED         9
@@ -185,7 +186,6 @@ STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
 
 void cclightfoot_update(int obj)
 {
-    extern f32 getXZDistance(f32 * a, f32 * b);
     LightfootAnimTable* tbl = (LightfootAnimTable*)gCcLightfootAnimTable;
     u32 fallback;
     CcLightfootState* state = ((GameObject*)obj)->extra;

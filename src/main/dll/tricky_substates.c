@@ -13,6 +13,7 @@
  * waterLevel/unk2B0/unk2B4 ladder) chooses swim vs walk anims throughout.
  */
 #include "main/dll/tricky_substates.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_00C4_tricky.h"
 #include "main/effect_interfaces.h"
@@ -97,7 +98,6 @@ extern int trickyMove(u8* obj, u8* pos);
 extern void trickyTurnTowardYaw(u8* obj, s16 yaw);
 extern u32 gTrickySubstateSfxIdPairB;
 extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
-extern f32 getXZDistance(f32* a, f32* b);
 extern u32 gTrickySubstateSfxIdPairA;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;

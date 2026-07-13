@@ -50,7 +50,6 @@ __declspec(section ".sdata2") f32 lbl_803E5ACC = 32768.0f;
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
-extern f32 getXZDistance(f32* a, f32* b);
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,
