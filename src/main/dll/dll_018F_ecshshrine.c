@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/sky_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/objlib.h"
@@ -146,7 +147,6 @@ extern void gpsh_shrine_initialise(void);
 
 extern void ModelLightStruct_free(void* p);
 extern int objCreateLight(int a, int b);
-extern void skyFn_80088c94(int flags, int mode);
 extern int objIsCurModelNotZero(void* obj);
 extern void staffToggle(GameObject* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);

@@ -102,7 +102,6 @@ extern void playerAddMoney(int obj, int amount);
 extern void playerAddHealth(int obj, int amount);
 extern int gameBitIncrement(int bit);
 extern void staffToggle(GameObject* obj, int a);
-extern void skyFn_80088c94(int flags, int mode);
 extern void ObjGroup_RemoveObject(int* obj, int group);
 extern void ObjGroup_AddObject(u32 obj, int group);
 

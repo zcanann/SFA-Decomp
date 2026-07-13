@@ -58,7 +58,6 @@ extern u8 lbl_803239F0[];
 
 extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
-extern void skyFn_80088c94(int flags, int mode);
 
 #pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)

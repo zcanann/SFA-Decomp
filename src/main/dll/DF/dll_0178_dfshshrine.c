@@ -6,6 +6,7 @@
  */
 #include "main/mapEvent.h"
 #include "main/game_timer_control_api.h"
+#include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
@@ -140,7 +141,6 @@ extern void ModelLightStruct_free(void* light);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
-extern void skyFn_80088c94(int flags, int mode);
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
