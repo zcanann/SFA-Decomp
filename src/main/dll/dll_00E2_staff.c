@@ -36,6 +36,7 @@
 #include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
+#include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/dll_0125_curve_api.h"
@@ -239,7 +240,6 @@ void staff_hitDetect(void)
 {
 }
 
-int dim2roofrub_getExtraSize(void);
 int staff_getExtraSize(void)
 {
     return 0xc0;
@@ -248,8 +248,6 @@ int staff_getObjectTypeId(void)
 {
     return 0x9;
 }
-void dim2roofrub_free(int* obj);
-
 ObjectDescriptor gMikaBombObjDescriptor = {
     0,
     0,

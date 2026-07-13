@@ -109,14 +109,11 @@ extern ObjectDescriptor dll_F7;
 
 int KaldaChompSpit_getObjectTypeId(void);
 int KaldaChompSpit_getExtraSize(void);
-void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
-void dim2roofrub_update(int* obj);
 void staff_free(int* obj);
 void staff_modelMtxFn(int* obj, int p4, int p5);
 s16 staff_getHitReactValue(int* obj);
 s32 staff_getSwipeTextureIndex(int* obj);
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
-void dim2roofrub_init(int* obj, int* params);
 void staff_update(int* obj);
 void staff_init(int* obj);
 void staff_release(void);

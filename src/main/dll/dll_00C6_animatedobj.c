@@ -10,6 +10,7 @@
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00C6_animatedobj_api.h"
+#include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/dll_0125_curve_api.h"
@@ -275,10 +276,6 @@ extern f32 lbl_803E3230;
 
 
 int animatedobj_getExtraSize(void) { return 0x140; }
-
-void dim2roofrub_free(int* obj);
-
-
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
