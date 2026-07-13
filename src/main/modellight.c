@@ -71,7 +71,10 @@ extern u8 gModelLightUseModelRelativePositions;
 extern int gModelLightNextGXLightId;
 extern f32 lbl_803DE7A4;
 extern f32 lbl_803DE768;
-extern f32 gModelLightCornerBlock[];
+__declspec(section ".rodata") f32 gModelLightCornerBlock[24] = {
+    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
+    -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
+    -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f};
 
 extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
