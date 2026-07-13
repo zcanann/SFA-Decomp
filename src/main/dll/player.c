@@ -13,6 +13,9 @@
 #include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/sky_api.h"
+#include "main/object_render_legacy.h"
+#include "main/dll/dll_0015_curves.h"
+#include "track/intersect_api.h"
 
 #define ObjHits_SyncObjectPositionIfDirtyLegacy(obj)                                                             \
     ((void (*)(u32))ObjHits_SyncObjectPositionIfDirty)((u32)(obj))

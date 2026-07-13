@@ -19,7 +19,7 @@ void ObjContact_DispatchCallbacks(int objA, int objB);
 void ObjContact_RemoveObjectCallbacks(int param_1);
 int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback);
 u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-void fn_80038988(int param_1, int param_2, u32 param_3);
+void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags);
 void FUN_80038bb0(char param_1, int param_2);
 
 int ObjHits_PollPriorityHitWithCooldown();
