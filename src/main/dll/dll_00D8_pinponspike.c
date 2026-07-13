@@ -18,7 +18,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00D8_pinponspike_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objhits.h"

@@ -7,10 +7,6 @@
  * optionally smooth-turns to face its velocity (or free-spins for the
  * 0x482 fragment object), and bursts (explosion fx + sfx) on contact with a
  * non-owner object. Timed variants fade their alpha out and self-free.
- *
- * This TU also owns the shared ObjectDescriptors and PollenFragmentConfig
- * tables for the xyzanimator object family (kaldachompspit, pinponspike,
- * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_render_legacy.h"
@@ -20,8 +16,6 @@
 #include "main/objseq_api.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
-#include "main/dll/xyzanimator.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

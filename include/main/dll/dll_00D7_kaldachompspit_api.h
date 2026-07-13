@@ -2,6 +2,9 @@
 #define MAIN_DLL_DLL_00D7_KALDACHOMPSPIT_API_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gKaldaChompSpitObjDescriptor;
 
 void KaldaChompSpit_free(int* obj);
 int KaldaChompSpit_getExtraSize(void);

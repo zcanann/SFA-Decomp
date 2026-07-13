@@ -10,14 +10,11 @@
  * arms a 60-frame despawn timer; Pollen_hitDetect snaps the mote to the
  * contact point and freezes it. Visible motes emit a particle (fx 0x4ba)
  * each frame. The object frees itself once hidden and idle.
- *
- * This TU also hosts the ObjectDescriptors for the kaldachompspit, pinponspike
- * and pollenfragment sibling DLLs that share the xyzanimator code.
  */
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_render_legacy.h"
-#include "main/dll/xyzanimator.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
+#include "main/dll/dll_00D9_pollen_api.h"
+#include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx.h"
 #include "main/camera.h"
@@ -31,6 +28,28 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
+
+typedef struct PollenExtra
+{
+    s16 phaseX;
+    s16 unk02;
+    s16 phaseY;
+    s16 phaseSpeed;
+    f32 settleVelocity;
+    f32 driftVelocity;
+    s16 unk10;
+    s16 fragmentSpawnTimer;
+} PollenExtra;
+
+#define POLLEN_FRAGMENT_SETUP_SIZE           0x24
+#define POLLEN_FRAGMENT_SETUP_KIND           5
+#define POLLEN_FRAGMENT_BURST_COUNTER_START  5
+#define POLLEN_FRAGMENT_RANDOM_ANGLE_MAX     0xffff
+#define POLLEN_FRAGMENT_RANDOM_OFFSET_MIN    -50
+#define POLLEN_FRAGMENT_RANDOM_OFFSET_MAX    50
+#define POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES   60
+#define POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET 0xc4
+
 #define POLLEN_HIT_VOLUME_SLOT 0x16
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;

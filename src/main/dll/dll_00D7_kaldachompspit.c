@@ -7,10 +7,6 @@
  * particle fx 0x714/0x715, sfx 0x278 on init / 0x279 on burst). It bursts
  * early when its hit-react target is the player or Tricky, on any contact,
  * or once its unkF4 lifetime runs out, then frees itself.
- *
- * This TU also houses the object descriptors for the sibling objects
- * built from xyzanimator.h (kaldachompme, pinponspike, pollen,
- * pollenfragment) plus the PollenFragmentConfig tables.
  */
 #include "main/effect_interfaces.h"
 #include "main/object_render_legacy.h"
@@ -21,7 +17,6 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
-#include "main/dll/xyzanimator.h"
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
