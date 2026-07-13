@@ -6,6 +6,7 @@
  * defined ceiling (maxHeight) and spawns a waterfx ripple when it surfaces.
  */
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/debug.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
@@ -106,7 +107,7 @@ void mmsh_waterspike_update(int obj)
             ((GameObject*)obj)->unkF4 = randomGetRange(0x3c, 0xf0);
             if (lbl_803E4F84 == riseDelta)
             {
-                ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                (*gWaterfxInterface)->spawnRipple(
                     ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E4F88, 3);
             }

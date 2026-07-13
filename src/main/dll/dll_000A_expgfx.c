@@ -8,6 +8,7 @@
 #include "main/object.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -1197,7 +1198,7 @@ foundFirst:
                                 rot.z = slot->posZ.value;
                             }
                             gExpgfxFrameParityBit = 1;
-                            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                            (*gWaterfxInterface)->spawnRipple(
                                 rot.x, rot.y, rot.z, 0, lbl_803DF35C, 4);
                             (*gWaterfxInterface)->spawnSplashBurst(NULL, rot.x, rot.y, rot.z, gExpgfxSlotMotionStep);
                             if (srcObj != NULL && coordsToMapCell(srcObj->localPosX, srcObj->localPosZ) == 0x10)

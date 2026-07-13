@@ -31,6 +31,7 @@
 #include "main/mm.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/resource.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
@@ -638,7 +639,7 @@ void staff_hitDetectGeometry(int* obj)
             (*gWaterfxInterface)
                 ->spawnSplashBurst(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
                                    lbl_803E32B4);
-            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            (*gWaterfxInterface)->spawnRipple(
                 hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ, 0, lbl_803E32B4, 2);
         }
         else

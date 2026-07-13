@@ -2,6 +2,7 @@
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
@@ -239,7 +240,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         vec = vecs + vecIdx * 3;
         if (((BaddieState*)st)->waterDepth > Vachuff_803DEE20)
         {
-            (*(void (**)(u8*, int, f32*, u8*, f32))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st, unused);
+            (*gWaterfxInterface)->spawnImpactSurface(obj, flags, vecs, st, unused);
             sfx = 5;
         }
         if ((GameObject*)obj == Obj_GetPlayerObject())

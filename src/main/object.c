@@ -11,6 +11,7 @@
 #include "main/audio/stream_api.h"
 #include "main/camera_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/mapEvent.h"
@@ -35,6 +36,9 @@
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+
+#define Waterfx_RunFrameLegacy(interface, frames) \
+    ((void (*)())(interface)->runFrame)((frames))
 
 typedef struct ObjListObjectDef
 {
@@ -1936,7 +1940,7 @@ void Obj_UpdateAllObjects(u8 flags)
             }
         }
     done:
-        (*gWaterfxInterface)->runFrame(framesThisStep);
+        Waterfx_RunFrameLegacy((*gWaterfxInterface), framesThisStep);
     }
     if ((updateFlags & 2) == 0)
     {

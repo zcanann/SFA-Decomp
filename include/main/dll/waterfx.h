@@ -2,6 +2,7 @@
 #define MAIN_DLL_WATERFX_H_
 
 #include "global.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/texture.h"
 
 typedef struct WaterVtx

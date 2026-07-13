@@ -50,6 +50,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/dll/dll_023F_dbegg.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
@@ -792,7 +793,7 @@ void dbegg_update(GameObject* obj)
                                                            : -(surfaceHeight < lbl_803E6200);
                 if (nb != 0)
                 {
-                    ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                    (*gWaterfxInterface)->spawnRipple(
                         (obj)->anim.localPosX, (obj)->anim.localPosY - egg->waterOffset, (obj)->anim.localPosZ,
                         (obj)->anim.rotX, randomGetRange(1, 10), 1);
                 }
@@ -1025,4 +1026,3 @@ void dbegg_update(GameObject* obj)
     }
 #undef hitState
 }
-

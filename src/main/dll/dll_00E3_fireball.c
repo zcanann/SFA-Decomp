@@ -22,6 +22,7 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E3_fireball.h"
@@ -454,7 +455,7 @@ void Fireball_update(int* obj)
                 (*gWaterfxInterface)
                     ->spawnSplashBurst(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, lbl_803E3360);
-                ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                (*gWaterfxInterface)->spawnRipple(
                     ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                     ((GameObject*)obj)->anim.localPosZ, *(s16*)obj, lbl_803E3330, 2);
             }

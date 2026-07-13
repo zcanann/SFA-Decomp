@@ -7,6 +7,7 @@
 #include "main/vecmath.h"
 #include "main/dll/groundAnimator.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"

@@ -4,6 +4,7 @@
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_0026_effect13.h"
 

@@ -24,6 +24,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/dll_01DD_dim2icicle.h"
@@ -161,7 +162,7 @@ void dim2icicle_update(GameObject *obj)
                 (void*)obj, (obj)->anim.localPosX,
                 ((Dim2IcicleState*)sub)->dropY, (obj)->anim.localPosZ,
                 lbl_803E4B7C);
-            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            (*gWaterfxInterface)->spawnRipple(
                 (obj)->anim.localPosX, ((Dim2IcicleState*)sub)->dropY,
                 (obj)->anim.localPosZ, 0, lbl_803E4B80, 2);
             Sfx_PlayFromObject((int)obj, SFXTRIG_mv_curtainopen16);

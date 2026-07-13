@@ -58,6 +58,11 @@
 #include "main/camera.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
+
+#define Waterfx_SpawnSimpleRippleLegacy(interface, x, y, z, sourceId, radius) \
+    ((void (*)(f32, f32, f32, s16, f32))(interface)->spawnSimpleRipple)(      \
+        (x), (y), (z), (sourceId), (radius))
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/mm.h"
@@ -15621,7 +15626,7 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
                                    (obj->anim.localPosY + ((PlayerState*)inner)->waterDepth) -
                                        lbl_803E7F10,
                                    obj->anim.localPosZ, lbl_803E7FFC);
-            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            (*gWaterfxInterface)->spawnRipple(
                 obj->anim.localPosX,
                 obj->anim.localPosY + ((PlayerState*)inner)->waterDepth,
                 obj->anim.localPosZ, 0, lbl_803E80E4, 2);
@@ -16656,14 +16661,14 @@ void fn_802ADE80(GameObject* obj, int inner, int state)
         v.scale = lbl_803E7EE0;
         setMatrixFromObjectPos(mtx, &v);
         Matrix_TransformPoint(mtx, t[0], lbl_803E7EA4, t[2], &t[0], &t[1], &t[2]);
-        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+        (*gWaterfxInterface)->spawnRipple(
             t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], 0, lbl_803E7EA4, 5);
         if (((PlayerState*)inner)->waterDepth > lbl_803E8128 && ((PlayerState*)state)->baddie.animSpeedC > lbl_803E7E9C)
         {
             u16 ang = ((PlayerState*)inner)->targetYaw -
                       getAngle(((PlayerState*)state)->baddie.animSpeedB, ((PlayerState*)state)->baddie.animSpeedA);
-            ((void (*)(f32, f32, f32, s16, f32))(*gWaterfxInterface)->spawnSimpleRipple)(
-                t[0], ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
+            Waterfx_SpawnSimpleRippleLegacy((*gWaterfxInterface), t[0],
+                                            ((PlayerState*)inner)->waterSurfaceY, t[2], ang, lbl_803E7EA4);
         }
     }
     ObjPath_GetPointWorldPosition((GameObject*)obj, 0x13, &v.x, &v.y, &v.z, 0);

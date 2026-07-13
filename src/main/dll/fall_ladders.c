@@ -28,6 +28,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -223,8 +224,7 @@ void fn_80154328(int obj, int state)
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
-        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(tx, *(f32*)(state + 0x32c), tz, 0,
-                                                                                    lbl_803E2990, 3);
+        (*gWaterfxInterface)->spawnRipple(tx, *(f32*)(state + 0x32c), tz, 0, lbl_803E2990, 3);
         if (sqrtf(((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
                   ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ) > lbl_803E29A4)
         {

@@ -9,6 +9,7 @@
 #include "main/camera_interface.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/frustum.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_lifecycle_api.h"

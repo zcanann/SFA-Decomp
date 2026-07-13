@@ -50,6 +50,7 @@ typedef struct CcLightfootState
 
 STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/effect_interfaces.h"
+#include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
