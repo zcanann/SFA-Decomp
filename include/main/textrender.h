@@ -16,6 +16,13 @@ int gameTextFn_8001b44c(int x);
 void gameTextLoadForCurMap(int sourceId);
 void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
+void gameTextInit(void);
+void gameTextInitFn_8001bd14(void);
+void gameTextInitFn_8001c794(void);
+void gameTextLoadGraphicsFn_8001a918(void);
+int getCurLanguage(void);
+void subtitleBuildLineTable(void);
+int subtitleIsActive(void);
 
 void* getCurGameText(void);
 void gameTextRun(void);

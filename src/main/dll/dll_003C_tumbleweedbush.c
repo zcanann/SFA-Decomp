@@ -29,6 +29,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/sfa_extern_decls.h"
+#include "main/textrender.h"
 #include "main/frame_timing.h"
 
 extern void TitleMenuItem_setAButtonToggle(void);

@@ -8,7 +8,6 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
-#include "main/sfa_extern_decls.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/savedata_struct.h"
