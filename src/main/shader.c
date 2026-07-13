@@ -1746,6 +1746,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
 
 void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 {
+    int minVal;
     char* cur;
     int count;
     int pos;
@@ -1753,7 +1754,6 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
     u32 mask;
     int* row;
     int j;
-    int minVal;
     int entry;
     s16 t;
     int step;
