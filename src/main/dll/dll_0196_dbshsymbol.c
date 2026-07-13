@@ -12,6 +12,7 @@
  * sfx, and reports completion once spinProgress reaches DBSH_SPIN_DONE.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/game_timer_control_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -46,10 +47,6 @@ extern u8 gDbShSymbolScuffPlayed;
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void gameTimerInit(s8 flags, int minutes);
-extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
-extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
 
 /* .sdata2 constant pool */

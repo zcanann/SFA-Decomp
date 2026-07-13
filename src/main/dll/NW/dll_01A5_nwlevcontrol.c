@@ -11,6 +11,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/savegame_load_api.h"
+#include "main/game_timer_control_api.h"
 #include "main/gametext_show_api.h"
 #include "main/sky_api.h"
 #include "main/object_api.h"
@@ -73,15 +74,11 @@ enum NwLevControlMode
 };
 
 extern u32 Music_Trigger();
-extern void timerSetToCountUp(void);
-extern void gameTimerInit(s8 flags, int minutes);
 extern u32 SCGameBitLatch_Update();
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
-extern int isGameTimerDisabled(void);
 extern void fn_80088870(char* a, char* b, char* c, char* d);
-extern void gameTimerStop(void);
 
 void nw_levcontrol_update(int objArg)
 {

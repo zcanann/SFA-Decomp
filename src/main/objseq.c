@@ -1,4 +1,5 @@
 #include "main/asset_load.h"
+#include "main/game_timer_control_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/debug.h"
@@ -93,7 +94,6 @@ extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);
 extern int ObjSeq_func20(void* obj, u8* seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
 extern int ObjSeq_EvaluateCondition(int condition, u8* seq, int obj);
-extern int isGameTimerDisabled(void);
 extern int getCurMapLayer(void);
 extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
@@ -236,9 +236,6 @@ extern void playerPullOutStaff(GameObject* obj, int idx);
 extern void playerPutAwayStaff(GameObject* obj, int idx);
 extern void playerLock(GameObject* player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
-extern void gameTimerInit(s8 flags, int minutes);
-extern void timerSetToCountUp(void);
-extern void gameTimerStop(void);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);

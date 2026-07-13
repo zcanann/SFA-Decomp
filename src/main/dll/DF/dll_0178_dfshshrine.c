@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/game_timer_control_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
@@ -136,7 +137,6 @@ extern u16 gDfShShrineRewardTable[];
 extern const f32 lbl_803E4E8C;
 
 extern void ModelLightStruct_free(void* light);
-extern void gameTimerStop(void);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
@@ -145,9 +145,6 @@ extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
-extern void gameTimerInit(s8 flags, int minutes);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern void* objCreateLight(int* obj, int v);

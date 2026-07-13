@@ -7,6 +7,7 @@
  * totem-pole bits (0x81-0x84) on entry and runs the area fog/music/timers. */
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/dll/savegame_load_api.h"
+#include "main/game_timer_control_api.h"
 #include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
@@ -54,10 +55,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define SCLEVELCONTROL_ENVFX_D 0x246
 #define SCLEVELCONTROL_ENVFX_E 0x51
 
-extern void gameTimerStop(void);
-extern void gameTimerInit(s8 flags, int minutes);
-extern void timerSetToCountUp(void);
-extern int isGameTimerDisabled(void);
 
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);

@@ -1,5 +1,6 @@
 /* DLL 0x0034 — title menu [8011611C-801166C8) */
 #include "main/dll/FRONT/dll_39.h"
+#include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
@@ -93,7 +94,6 @@ extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int 
 extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
-extern void gameTimerStop(void);
 
 extern u8* lbl_803DD498;
 

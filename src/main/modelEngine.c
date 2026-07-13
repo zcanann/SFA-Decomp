@@ -34,6 +34,7 @@
 #include "main/dll/dll_02AF_tree.h"
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
+#include "main/game_timer_control_api.h"
 #include "main/gametext.h"
 #include "main/gameloop_api.h"
 #include "main/minimap_api.h"
