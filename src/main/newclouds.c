@@ -261,7 +261,15 @@ typedef struct
     s16 uv[6];
 } SnowFlakeUVs;
 
-extern const SnowFlakeUVs lbl_802C1FCC;
+typedef struct
+{
+    f32 v[3];
+} SnowVec3;
+
+__declspec(section ".rodata") SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
+__declspec(section ".rodata") SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
+__declspec(section ".rodata") SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
+__declspec(section ".rodata") const SnowFlakeUVs lbl_802C1FCC = {{-48, 0, 176, 0, 64, 256}};
 
 #pragma dont_inline off
 void dll_07_func07(int arg)
@@ -1370,11 +1378,12 @@ void snowReposSnowCloud(int cloudId)
         f32 f18;
         f32 f1c;
     } args;
-    f32 dir[3] = {0.0f, 0.0f, 0.0f};
+    f32 dir[3];
     f32 fwd[3];
     f32 from[3];
     f32 to[3];
 
+    *(SnowVec3*)dir = lbl_802C1FC0;
     if (renderModeSetOrGet(-1) == 1)
     {
         return;
@@ -1817,10 +1826,12 @@ void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
         f32 f18;
         f32 f1c;
     } args;
-    f32 posA[3] = {0.0f, 0.0f, 0.0f};
-    f32 posB[3] = {0.0f, 0.0f, 0.0f};
+    f32 posA[3];
+    f32 posB[3];
     f32 vec[3];
 
+    *(SnowVec3*)posA = lbl_802C1FA8;
+    *(SnowVec3*)posB = lbl_802C1FB4;
     env = saveGameGetEnvState();
     if (params == NULL)
     {
