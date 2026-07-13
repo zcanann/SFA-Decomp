@@ -2,6 +2,9 @@
 #define MAIN_DLL_IM_DLL_016D_IMICEPILLAR_H_
 
 #include "types.h"
+#include "main/object_descriptor.h"
+
+extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);

@@ -17,17 +17,12 @@
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
 #include "main/objhits.h"
-
-void imicepillar_free(void);
-
-int imicepillar_getExtraSize(void);
-int imicepillar_getObjectTypeId(void);
+#include "main/dll/IM/dll_016D_imicepillar.h"
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/objfx.h"
-#include "main/dll/DIM/DIMcannon.h"
 #include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
@@ -78,16 +73,6 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
-
-void imicepillar_hitDetect(void);
-
-void imicepillar_update(void);
-
-void imicepillar_init(void);
-
-void imicepillar_release(void);
-
-void imicepillar_initialise(void);
 
 ObjectDescriptor gIMIcePillarObjDescriptor = {
     0,

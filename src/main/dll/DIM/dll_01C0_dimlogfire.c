@@ -19,7 +19,6 @@
 #include "main/object_render_legacy.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
-#include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"

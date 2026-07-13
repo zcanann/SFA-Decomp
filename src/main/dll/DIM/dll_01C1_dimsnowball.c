@@ -10,7 +10,6 @@
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/DIM/DIMcannon.h"
 
 typedef struct DimsnowballState
 {

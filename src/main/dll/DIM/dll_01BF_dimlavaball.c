@@ -19,7 +19,6 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/dll/DIM/DIMcannon.h"
 #include "main/gamebits.h"
 
 typedef struct Lavaball1bfPlacement
