@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/audio/audio_control_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"
@@ -182,7 +183,6 @@ extern SaveGameDefaultPosition gSaveGameDefaultPosition;
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
-extern void audioStopByMask(int mask);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 extern int getCurUiDll(void);

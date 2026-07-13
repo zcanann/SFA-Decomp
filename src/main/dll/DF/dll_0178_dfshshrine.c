@@ -8,6 +8,7 @@
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
@@ -146,7 +147,6 @@ extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetB
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern int objGetAnimStateFlags(int obj, int flag);
-extern void audioStopByMask(int mask);
 extern void* objCreateLight(int* obj, int v);
 
 void fn_801C2914(int obj)

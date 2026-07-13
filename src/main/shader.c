@@ -5,6 +5,7 @@
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/checkpoint_interface.h"
@@ -1137,7 +1138,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     return 0;
 }
 
-extern void audioStopByMask(int mask);
 extern void doNothing_8001F678(int a, int b);
 extern void textureFree(int id);
 extern void fn_80133934(void);

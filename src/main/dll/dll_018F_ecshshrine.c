@@ -38,6 +38,7 @@
  */
 #include "main/game_object.h"
 #include "main/sky_api.h"
+#include "main/audio/audio_control_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/objlib.h"
@@ -151,7 +152,6 @@ extern int objIsCurModelNotZero(void* obj);
 extern void staffToggle(GameObject* player, int a);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
-extern void audioStopByMask(int mask);
 extern int objGetAnimStateFlags(int* player, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);

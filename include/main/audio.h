@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_H_
 
 #include "types.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
 #include "dolphin/dvd.h"
 #include "main/audio/stream_api.h"
@@ -25,7 +26,6 @@ void audioUpdate(void);
 u32 audioFlagFn_8000a188(u32 mask);
 void audioFree(void* ptr);
 void* _audioAlloc(u32 size);
-void audioStopByMask(int mask);
 void streamFn_8000a380(int mask, int mode, int time);
 void audioSetVolumes(int volume, int time, int musicFlag, int fxFlag, int streamFlag);
 s32 Music_GetActivePriority(void);

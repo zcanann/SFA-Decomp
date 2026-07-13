@@ -10,6 +10,7 @@
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/objprint_dolphin.h"
@@ -60,7 +61,6 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void audioStopByMask(int mask);
 extern void ModelLightStruct_free(int light);
 extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);

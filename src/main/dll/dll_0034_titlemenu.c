@@ -10,6 +10,7 @@
 #include "main/attract_movie_api.h"
 #include "main/camera_interface.h"
 #include "main/screen_transition.h"
+#include "main/audio/audio_control_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mm.h"
 #include "main/gameplay_runtime.h"
@@ -91,7 +92,6 @@ extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 extern f32 lbl_803E1D28;
 extern void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag);
-extern void audioStopByMask(int mask);
 extern void audioFn_8000b694(int arg);
 extern int getUiDllFn_80014930(void);
 
