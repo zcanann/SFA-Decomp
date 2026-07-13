@@ -2,7 +2,7 @@
  * dll7dfunc0 (DLL 0x7D) - one entry in the foodbag effect-DLL family
  * (DLLs 0x7C..0x90). dll_7D_func03 builds a 10-entry FbBuf model-graphics
  * command list from sub-textures of the global texture blob lbl_80315030,
- * scales the second sprite by an optional caller scale (arg6), positions
+ * scales the second sprite by an optional caller scale (scaleOverride), positions
  * the effect from either the source object (flags bit 0 set, sourceObj
  * non-null) or a separate position source, then spawns it through
  * gModgfxInterface->spawnEffect. lbl_803DD4B0 is a 0..4 rotating slot
@@ -30,16 +30,16 @@ extern f32 lbl_803E0DF0;
 extern f32 lbl_803E0DF4;
 extern f32 lbl_803E0DF8;
 
-int dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* arg6)
+int dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scaleOverride)
 {
     int ret;
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80315030;
     f32 scale = lbl_803E0DD8;
     FbCmd* entry;
-    if (arg6 != NULL)
+    if (scaleOverride != NULL)
     {
-        scale = *arg6;
+        scale = *scaleOverride;
     }
     entry = buf.entries;
     entry[0].layer = 0;
