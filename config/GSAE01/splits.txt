@@ -1835,6 +1835,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 
 main/dll/DIM/dll_01C2_dimsnowball1c2.c:
 	.text       start:0x801B13E8 end:0x801B15D8
+	.data       start:0x80325360 end:0x80325398
 
 main/dll/DIM/dll_01C3_dimgate.c:
 	.text       start:0x801B15D8 end:0x801B17F4
