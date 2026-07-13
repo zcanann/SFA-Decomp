@@ -31,5 +31,14 @@ typedef struct CfMainCrystalState
 } CfMainCrystalState;
 
 void fn_8019D9F0(int* obj);
+int CFMainCrystal_getExtraSize(void);
+int CFMainCrystal_getObjectTypeId(void);
+void CFMainCrystal_free(int* obj);
+void CFMainCrystal_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void CFMainCrystal_hitDetect(void);
+void CFMainCrystal_update(int* obj);
+void CFMainCrystal_init(int* obj, u8* def);
+void CFMainCrystal_release(void);
+void CFMainCrystal_initialise(void);
 
 #endif
