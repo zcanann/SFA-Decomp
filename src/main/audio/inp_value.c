@@ -142,7 +142,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
             case MCMD_CTRL_VOICE_AGE:
                 tmp = statePtr != NULL ? statePtr->volumeBase >> 9 : 0;
                 break;
-            case 0xA4:
+            case MCMD_CTRL_VOICE_TIME:
                 if (statePtr != NULL)
                 {
                     tmp = ((*(u64*)&synthRealTimeHi) - (*(u64*)&statePtr->startTimeHi)) >> 8;

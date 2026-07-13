@@ -267,7 +267,7 @@ u8 inpTranslateExCtrl(u8 ctrl)
         ctrl = MCMD_CTRL_VOICE_AGE;
         break;
     case 0x88:
-        ctrl = 0xa4;
+        ctrl = MCMD_CTRL_VOICE_TIME;
         break;
     }
     return ctrl;

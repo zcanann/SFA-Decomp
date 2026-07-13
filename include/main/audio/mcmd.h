@@ -69,6 +69,7 @@
 #define MCMD_CTRL_EX_A1 0xA1
 #define MCMD_CTRL_MIDI_LAYER 0xA2
 #define MCMD_CTRL_VOICE_AGE 0xA3
+#define MCMD_CTRL_VOICE_TIME 0xA4
 
 typedef struct McmdCommandArgs {
     u32 flags;

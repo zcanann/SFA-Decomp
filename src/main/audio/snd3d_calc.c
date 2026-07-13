@@ -63,6 +63,7 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 #define S3D_EMITTER_FLAG_AGE_OUT         0x00100000
 #define S3D_CTRL_VOLUME                  0x07
 #define S3D_CTRL_PAN                     0x0a
+#define S3D_CTRL_PITCH_BEND              0x80
 #define S3D_CTRL_SPATIAL_AZIMUTH         0x83
 #define S3D_CTRL_SPATIAL_PITCH           0x84
 #define S3D_CTRL_14BIT_LIMIT             0x3fff
@@ -273,7 +274,7 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
         ctrl = emitter->ctrlList->entries;
         for (i = 0; i < emitter->ctrlList->count; i++)
         {
-            if (((ctrl->controller < 0x40) || (ctrl->controller == 0x80)) ||
+            if (((ctrl->controller < 0x40) || (ctrl->controller == S3D_CTRL_PITCH_BEND)) ||
                 (ctrl->controller == S3D_CTRL_SPATIAL_PITCH))
             {
                 synthFXSetCtrl14(handle, ctrl->controller, ctrl->value);

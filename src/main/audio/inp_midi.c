@@ -104,12 +104,12 @@ u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key)
             {
                 return 0;
             }
-            if (controller == 0x80 || controller == 0x81)
+            if (controller == MCMD_CTRL_PITCH_BEND || controller == MCMD_CTRL_PITCH_BEND + 1)
             {
                 return (st->midiCtrl[key][slot][controller & 0xfe] << 7) |
                              st->midiCtrl[key][slot][(controller & 0xfe) + 1];
             }
-            if (controller == 0x84 || controller == 0x85)
+            if (controller == MCMD_CTRL_DOPPLER || controller == MCMD_CTRL_DOPPLER + 1)
             {
                 return (st->midiCtrl[key][slot][controller & 0xfe] << 7) |
                              st->midiCtrl[key][slot][(controller & 0xfe) + 1];
@@ -129,12 +129,12 @@ u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key)
         {
             return 0;
         }
-        if (controller == 0x80 || controller == 0x81)
+        if (controller == MCMD_CTRL_PITCH_BEND || controller == MCMD_CTRL_PITCH_BEND + 1)
         {
             return (st->fxCtrl[slot][controller & 0xfe] << 7) |
                          st->fxCtrl[slot][(controller & 0xfe) + 1];
         }
-        if (controller == 0x84 || controller == 0x85)
+        if (controller == MCMD_CTRL_DOPPLER || controller == MCMD_CTRL_DOPPLER + 1)
         {
             return (st->fxCtrl[slot][controller & 0xfe] << 7) |
                          st->fxCtrl[slot][(controller & 0xfe) + 1];
@@ -223,7 +223,7 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
         *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) = *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
-    if (controller == 0x80 || controller == 0x81)
+    if (controller == MCMD_CTRL_PITCH_BEND || controller == MCMD_CTRL_PITCH_BEND + 1)
     {
         ctrl = controller & 0xfe;
         *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
@@ -232,7 +232,7 @@ void inpFXCopyCtrl(u8 controller, int dstState, int srcState)
         *(bank + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) = *(bank + srcVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl);
         return;
     }
-    if (controller == 0x84 || controller == 0x85)
+    if (controller == MCMD_CTRL_DOPPLER || controller == MCMD_CTRL_DOPPLER + 1)
     {
         ctrl = controller & 0xfe;
         *(stateBase + INP_MIDI_CTRL_GLOBAL_OFFSET + dstVoice * INP_MIDI_CTRL_BANK_SIZE + ctrl) =
