@@ -300,7 +300,6 @@ void* getTabEntry(void* dst, int fileId, int offset, int size)
 }
 
 typedef f32 Mtx[3][4];
-extern void cutsceneEnterExit(int a, int b);
 
 #pragma dont_inline off
 void cutsceneFadeInOut(int enter)

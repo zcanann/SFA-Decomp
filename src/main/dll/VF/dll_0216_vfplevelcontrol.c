@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 #include "main/sky_api.h"
+#include "main/lightmap_api.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
 #define VFPLEVELCONTROL_OBJGROUP 9
@@ -56,7 +57,6 @@ enum
 
 extern f32 lbl_803E6060;
 
-extern int coordsToMapCell(f32 x, f32 z);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
                                   int musicId);
 /* Advance the ordered spell-tablet puzzle. The four step bits must be

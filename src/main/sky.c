@@ -228,7 +228,6 @@ extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
 extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
-extern int coordsToMapCell(f32 x, f32 z);
 extern u32 getScreenResolution(void);
 extern void* memset(void* dst, int c, int n);
 extern u8* saveGameGetEnvState(void);

@@ -8,6 +8,7 @@ int gameBitIncrement(int bit);
 int getGameState(void);
 int getHudHiddenFrameCount(void);
 void checkReset(void);
+void cutsceneEnterExit(int entering, int affectSounds);
 void cutsceneFadeInOut(int mode);
 void setTimeStop(int frames);
 

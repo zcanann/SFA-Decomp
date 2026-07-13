@@ -10,6 +10,7 @@
 #include "main/audio.h"
 #include "main/camera.h"
 #include "main/gameloop_api.h"
+#include "main/lightmap_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
@@ -17,13 +18,11 @@
 
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
-extern void setPendingMapLoad(int v);
 extern void removeButtonObject(int* obj);
 extern int playerIsDead(void);
 extern void playerSetIsDead(GameObject* player, int v);
 
 extern int AudioStream_Play(int id, void (*preparedCallback)(void));
-extern void cutsceneFadeInOut(int a);
 extern void showDeathMenu(void);
 extern f32 interpolate(f32 a, f32 t, f32 exp);
 

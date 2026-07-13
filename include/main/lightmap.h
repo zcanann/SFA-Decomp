@@ -7,7 +7,6 @@
 void updateVisibleGeometry(void);
 u32 FUN_8005af70(int param_1);
 u32 FUN_8005af9c(int param_1);
-int coordsToMapCell(f32 x, f32 z);
 int * fn_8005B11C(void);
 int FUN_8005b024(void);
 void FUN_8005b12c(float *param_1,float *param_2);

@@ -6,8 +6,10 @@
 
 void* mapGetBlockAtPos(int x, int y, int layer);
 MapBlockData* mapGetBlock(int index);
+int coordsToMapCell(f32 x, f32 z);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
+void setPendingMapLoad(int pending);
 void doNothing_8005D148(void);
 void doNothing_8005D14C(void);
 

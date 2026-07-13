@@ -28,6 +28,7 @@
 #include "main/audio/sfx_legacy.h"
 #include "main/audio/music_api.h"
 #include "main/gameloop_api.h"
+#include "main/lightmap_api.h"
 #include "main/pad_api.h"
 #include "main/objfx.h"
 #include "main/screen_transition.h"
