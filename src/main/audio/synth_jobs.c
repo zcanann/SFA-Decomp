@@ -31,7 +31,6 @@ extern f32 lbl_803E77D8;
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
 extern u8* synthVoice;
-extern f32 lbl_803E77E8;
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern int hwChangeStudio(int slot);   /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */

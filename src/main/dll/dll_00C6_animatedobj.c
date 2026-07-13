@@ -78,8 +78,6 @@ typedef struct AnimatedobjState
 } AnimatedobjState;
 
 extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void ObjGroup_RemoveObject(u32 obj, int group);
-extern void ObjGroup_AddObject(u32 obj, int group);
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 extern void** gTitleMenuControlInterfaceCopy;

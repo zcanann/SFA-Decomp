@@ -16,8 +16,6 @@ extern u8 snd_base_studio;
 extern u8 snd_max_studios;
 extern f32 lbl_803E7880;
 extern f32 lbl_803E7890;
-extern f32 gSnd3dRoomFadeFixedToFloat;
-extern f64 lbl_803E7898;
 extern void synthActivateStudio(u8 studio, int active, int unk);
 extern void synthDeactivateStudio(u8 studio);
 extern void synthAddStudioInput(u8 studio, u8* input);
