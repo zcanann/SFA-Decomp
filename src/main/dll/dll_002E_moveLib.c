@@ -143,6 +143,13 @@ f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int 
     return total;
 }
 
+typedef struct MoveLibWaypointDef
+{
+    u8 pad0[0x2c];
+    s8 angleX;
+    s8 angleY;
+} MoveLibWaypointDef;
+
 int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
 {
     extern f32 fn_80114224(int, int, int, int, int);
@@ -151,6 +158,7 @@ int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
 
     if ((void*)def != NULL)
     {
+        MoveLibWaypointDef* d = (MoveLibWaypointDef*)def;
         s16 angles[3];
         f32 va;
         f32 vb;
@@ -164,8 +172,8 @@ int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
         *(f32*)(state + 0x2c) = vb;
         vecRotateYXZ((s16*)obj, (f32*)(state + 0x18));
         angles[2] = 0;
-        angles[1] = (s16)(s8) * (u8*)(def + 0x2d);
-        angles[0] = (s16)(s8) * (u8*)(def + 0x2c);
+        angles[1] = (s16)d->angleY;
+        angles[0] = (s16)d->angleX;
         vecRotateYXZ(angles, (f32*)(state + 0x24));
         *(f32*)phaseOut = lbl_803E1C90;
         *(f32*)(state + 0x34) = fn_80114224(state, state + 0x18, state + 0xc, state + 0x24, 10);

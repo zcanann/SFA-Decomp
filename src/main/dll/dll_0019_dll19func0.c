@@ -36,7 +36,9 @@ typedef struct Dll19Placement
     s16 stateFlags;
     u8 pad24[0x32 - 0x24];
     u8 progressDenominator;
-    u8 pad33[0x3E8 - 0x33];
+    u8 pad33[0x34 - 0x33];
+    u16 spawnCount;
+    u8 pad36[0x3E8 - 0x36];
     f32 oscValue;
     f32 oscVelocity;
     u8 pad3F0[0x400 - 0x3F0];
@@ -1067,8 +1069,8 @@ f32 dll_19_func0B(int* obj) { return *(f32*)((char*)((GameObject*)obj)->extra + 
 
 u16 dll_19_func0A(GameObject *obj)
 {
-    void* placement = (obj)->anim.placementData;
-    if (placement != NULL) return *(u16*)((char*)placement + 0x34);
+    Dll19Placement* placement = (Dll19Placement*)(obj)->anim.placementData;
+    if (placement != NULL) return placement->spawnCount;
     return 0xd2;
 }
 
