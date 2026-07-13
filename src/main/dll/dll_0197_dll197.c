@@ -56,16 +56,18 @@ typedef struct Cup197State
 extern u8 framesThisStep;
 extern int gDll197ResourceParamTemplate[];
 extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
-extern f32 lbl_803E5120;
-extern f32 lbl_803E5124;
-extern f32 lbl_803E5128;
-extern f32 lbl_803E512C;
-extern f32 lbl_803E5130;
-extern f32 lbl_803E5134;
-extern f32 lbl_803E5138;
-extern f32 lbl_803E513C;
-extern f32 lbl_803E5140;
-extern f32 lbl_803E5144;
+__declspec(section ".sdata2") f32 lbl_803E5120 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E5124 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5128 = 32.0f;
+__declspec(section ".sdata2") f32 lbl_803E512C = -20.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5130 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5134 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E5138 = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E513C = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E5140 = 8192.0f;
+__declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
