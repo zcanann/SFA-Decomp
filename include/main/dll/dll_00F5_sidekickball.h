@@ -34,6 +34,11 @@ STATIC_ASSERT(sizeof(SidekickBallState) == 0x2CC);
 
 extern ObjectDescriptor gSidekickBallObjDescriptor;
 
+int fn_801793A4(GameObject* obj);
+void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* state);
+void fn_8017962C(GameObject* obj);
+int fn_80179650(GameObject* obj);
+void fn_80179678(GameObject* obj, GameObject* source);
 int SidekickBall_getExtraSize(void);
 void SidekickBall_free(int obj);
 void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);

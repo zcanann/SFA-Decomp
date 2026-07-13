@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/dll/dll_00F5_sidekickball.h"
 #include "main/dll/tricky_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/frame_timing.h"
@@ -87,10 +88,6 @@ extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
-extern int fn_80179650(int slot);
-extern void fn_80179678(GameObject* slot, int obj);
-extern void fn_8017962C(int slot);
-extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
 
 void fn_8013F100(GameObject* obj, register int state)
@@ -112,7 +109,7 @@ void fn_8013F100(GameObject* obj, register int state)
         ((TrickyState*)state)->sfxIntervalTimer = (f32)(s32)randomGetRange(150, 300);
         /* fall through */
     case 1:
-        if (fn_80179650(*(int*)&((TrickyState*)state)->unk700) != 0)
+        if (fn_80179650((GameObject*)*(int*)&((TrickyState*)state)->unk700) != 0)
         {
             status = trickyFn_8013b368((int)obj, lbl_803E24F0, state);
             if (status == 0)
@@ -143,7 +140,7 @@ void fn_8013F100(GameObject* obj, register int state)
                 }
                 *(int*)&((TrickyState*)state)->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
                 ((TrickyState*)state)->substate = 3;
-                fn_80179678((GameObject*)(*(int*)&((TrickyState*)state)->unk700), (int)obj);
+                fn_80179678((GameObject*)(*(int*)&((TrickyState*)state)->unk700), obj);
             }
             else if (status == 2)
             {
@@ -378,7 +375,7 @@ void fn_8013F100(GameObject* obj, register int state)
             }
             return;
         }
-        if (fn_801793A4(*(int*)&((TrickyState*)state)->followObj) != 0)
+        if (fn_801793A4((GameObject*)*(int*)&((TrickyState*)state)->followObj) != 0)
         {
             *(float*)&((TrickyState*)state)->unk704 = lbl_803E24EC;
             ((TrickyState*)state)->substate = 1;
@@ -445,7 +442,7 @@ void fn_8013F100(GameObject* obj, register int state)
     }
     else
     {
-        fn_8017962C(*(int*)&((TrickyState*)state)->unk700);
+        fn_8017962C((GameObject*)*(int*)&((TrickyState*)state)->unk700);
     }
 }
 

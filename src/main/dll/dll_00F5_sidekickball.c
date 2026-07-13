@@ -86,9 +86,9 @@ int SidekickBall_getExtraSize(void)
     return 0x2cc;
 }
 
-int fn_801793A4(int* obj)
+int fn_801793A4(GameObject* obj)
 {
-    return *((u8*)(int*)((GameObject*)obj)->extra + 0x274) == 0;
+    return *((u8*)(int*)obj->extra + 0x274) == 0;
 }
 
 void SidekickBall_free(int obj)
@@ -104,25 +104,25 @@ void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
     }
 }
 
-void fn_8017962C(int* obj)
+void fn_8017962C(GameObject* obj)
 {
-    SidekickBallState* state = ((GameObject*)obj)->extra;
+    SidekickBallState* state = obj->extra;
     u8 mode = state->ballMode;
     if (mode != SIDEKICK_BALL_THROWN && mode != SIDEKICK_BALL_HELD)
         return;
     state->fadeTimer = lbl_803E369C;
 }
 
-int fn_80179650(int* obj)
+int fn_80179650(GameObject* obj)
 {
     int result = 0;
-    u8 mode = (*(SidekickBallState**)&((GameObject*)obj)->extra)->ballMode;
+    u8 mode = (*(SidekickBallState**)&obj->extra)->ballMode;
     if (mode == SIDEKICK_BALL_HELD || mode == SIDEKICK_BALL_MOVING)
         result = 1;
     return result;
 }
 
-void fn_80179678(GameObject* obj)
+void fn_80179678(GameObject* obj, GameObject* source)
 {
     SidekickBallState* state = ((GameObject*)obj)->extra;
     state->fadeTimer = lbl_803E369C;
@@ -148,10 +148,8 @@ void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
     state->launchZ = obj->anim.localPosZ;
 }
 
-void trickyBallFn_801793b8(GameObject* obj, u8* paramsRaw)
+void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
 {
-
-    SidekickBallState* params = (SidekickBallState*)paramsRaw;
     GameObject* player;
     int* playerState;
     s16 yItem;
@@ -250,7 +248,6 @@ end:
 
 void SidekickBall_update(u8* self)
 {
-    extern void trickyBallFn_801793b8(GameObject * obj, u8 * state);
     SidekickBallState* state;
     u8* player;
     u8* other;
@@ -324,7 +321,7 @@ void SidekickBall_update(u8* self)
         }
         break;
     case SIDEKICK_BALL_IDLE:
-        trickyBallFn_801793b8((GameObject*)self, (u8*)state);
+        trickyBallFn_801793b8((GameObject*)self, state);
         break;
     default:
         break;
