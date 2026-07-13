@@ -180,9 +180,7 @@ extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-extern void fn_8008C9F4(u8* cfg, u8 flags);
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
-extern void playerEnvFxFn_80088ad4(u8 envFxValue);
 extern void renderSunAndMoon();
 extern void ObjModel_SetRenderCallback(void* model, void* callback);
 extern int moonFxCb_80074110(int obj, int* model, int param);
@@ -195,7 +193,6 @@ extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
 extern void modelLightStruct_getWorldPosition(u8* p, f32* a, f32* b, f32* c);
-extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
