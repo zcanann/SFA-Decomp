@@ -11,7 +11,7 @@
  */
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/DR/DRlaserturret.h"
-#include "main/dll/TREX/TREX_Lazerwall.h"
+#include "main/dll/trex_lazerwall.h"
 #include "main/dll/dll_801e66dc.h"
 #include "main/dll/player_api.h"
 #include "main/dll/tricky_api.h"
