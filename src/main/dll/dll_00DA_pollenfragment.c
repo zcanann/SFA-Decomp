@@ -169,57 +169,6 @@ int pollenfragment_getObjectTypeId(void)
     return 0x0;
 }
 
-ObjectDescriptor gKaldaChompSpitObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
-    (ObjectDescriptorCallback)KaldaChompSpit_release,
-    0,
-    (ObjectDescriptorCallback)KaldaChompSpit_init,
-    (ObjectDescriptorCallback)KaldaChompSpit_update,
-    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
-    (ObjectDescriptorCallback)KaldaChompSpit_render,
-    (ObjectDescriptorCallback)KaldaChompSpit_free,
-    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
-    KaldaChompSpit_getExtraSize,
-};
-
-ObjectDescriptor gPinPonSpikeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pinponspike_initialise,
-    (ObjectDescriptorCallback)pinponspike_release,
-    0,
-    (ObjectDescriptorCallback)pinponspike_init,
-    (ObjectDescriptorCallback)pinponspike_update,
-    (ObjectDescriptorCallback)pinponspike_hitDetect,
-    (ObjectDescriptorCallback)pinponspike_render,
-    (ObjectDescriptorCallback)pinponspike_free,
-    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
-    pinponspike_getExtraSize,
-};
-
-ObjectDescriptor gPollenObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Pollen_initialise,
-    (ObjectDescriptorCallback)Pollen_release,
-    0,
-    (ObjectDescriptorCallback)Pollen_init,
-    (ObjectDescriptorCallback)Pollen_update,
-    (ObjectDescriptorCallback)Pollen_hitDetect,
-    (ObjectDescriptorCallback)Pollen_render,
-    (ObjectDescriptorCallback)Pollen_free,
-    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
-    Pollen_getExtraSize,
-};
-
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
     PollenFragmentExtra* state = ((GameObject*)obj)->extra;
@@ -227,23 +176,6 @@ void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
         return;
     ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
-
-ObjectDescriptor gPollenFragmentObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollenfragment_initialise,
-    (ObjectDescriptorCallback)pollenfragment_release,
-    0,
-    (ObjectDescriptorCallback)pollenfragment_init,
-    (ObjectDescriptorCallback)pollenfragment_update,
-    (ObjectDescriptorCallback)pollenfragment_hitDetect,
-    (ObjectDescriptorCallback)pollenfragment_render,
-    (ObjectDescriptorCallback)pollenfragment_free,
-    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
-    pollenfragment_getExtraSize,
-};
 
 void pollenfragment_hitDetect(GameObject* obj)
 {
