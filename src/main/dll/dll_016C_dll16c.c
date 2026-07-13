@@ -25,6 +25,12 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
+typedef struct Dll16CPlacement
+{
+    u8 pad00[0x27];
+    s8 subObjIndex;
+} Dll16CPlacement;
+
 /*
  * Per-object extra state for the dll_16C map-event boulder proxy
  * (dll_16C_getExtraSize == 0x24).
@@ -148,7 +154,7 @@ void dll_16C_init(GameObject* obj, void* placement)
     }
     extra = obj->extra;
     extra->linkedObj = NULL;
-    extra->subObjIndex = *(s8*)((char*)placement + 0x27);
+    extra->subObjIndex = ((Dll16CPlacement*)placement)->subObjIndex;
     extra->opacity = 0xff;
 }
 
