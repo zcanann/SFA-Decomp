@@ -20,6 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/pad_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -66,7 +67,6 @@ extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written a
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
 extern void saveGame_save();
 extern u32 gameTextGet(int textId);
-extern void buttonDisable(int port, u32 mask);
 
 void WeirdUnusedMenu_render(void)
 {

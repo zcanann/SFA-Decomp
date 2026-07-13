@@ -1,5 +1,6 @@
 /* DLL 0xE1 - wisp baddie / swarmbaddie / hagabon objects [8014F620-8014F9E8) */
 #include "main/dll/rom_curve_interface.h"
+#include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -78,7 +79,6 @@ STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
 extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
-extern void doRumble(f32 duration);
 extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern void fn_801513AC(GameObject* obj, int state);
 extern f32 lbl_803E2708;

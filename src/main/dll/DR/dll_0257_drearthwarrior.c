@@ -275,7 +275,6 @@ extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern char gEarthWarriorTailChainDesc;
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
-extern void doRumble(f32 duration);
 extern void fn_802BC788(GameObject*);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);

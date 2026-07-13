@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/pad_api.h"
 #include "main/dll/savegame.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -183,7 +184,6 @@ extern f32 Vec_xzDistance(void* a, void* b);
 extern int randFn_80080100(int n);
 extern void dll_2E_func04(void* sub, void* target);
 extern void dll_2E_func0C(int a, void* p);
-extern void buttonDisable(int port, u32 mask);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;                /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 extern f32 oneOverTimeDelta;

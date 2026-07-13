@@ -13,6 +13,7 @@
  */
 #include "main/game_ui_interface.h"
 #include "main/gametext_show_api.h"
+#include "main/pad_api.h"
 #include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/debug.h"
@@ -95,7 +96,6 @@ extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
-extern void buttonDisable(int port, u32 mask);
 extern int playerHasSpell(GameObject* obj, int spell);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 extern int getSaveGameLoadStatus(void);

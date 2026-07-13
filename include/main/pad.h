@@ -2,6 +2,7 @@
 #define MAIN_PAD_H_
 
 #include "ghidra_import.h"
+#include "main/pad_api.h"
 
 typedef s8 (*PadGetAxisS8Fn)(int port);
 typedef int (*PadGetAxisIntFn)(int port);
@@ -42,10 +43,7 @@ void padUpdate(void);
 void setJoypadDisabled(void);
 void stopRumble2(void);
 void stopRumble(void);
-u32 buttonGetDisabled(int port);
 u32 getButtonsHeld(int port);
-void buttonDisable(int port, u32 mask);
-void doRumble(f32 duration);
 void setRumbleEnabled(u8 enabled);
 void padClearAnalogInputX(int port);
 void padClearAnalogInputY(int port);

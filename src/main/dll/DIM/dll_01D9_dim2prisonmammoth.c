@@ -2,6 +2,7 @@
  * DIM2 prison area.  Handles idle/stomp/charge state transitions, eye
  * animations, hit-react, and the tail-whip player interaction. */
 #include "main/dll/baddie_state.h"
+#include "main/pad_api.h"
 #include "main/dll/savegame.h"
 #include "main/gamebits.h"
 #include "main/objHitReact.h"
@@ -28,7 +29,6 @@ extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
 extern void fn_8003A168(GameObject* p1, int p2);
-extern void buttonDisable(int port, u32 mask);
 
 int dim2prisonmammoth_defaultStateHandler(void)
 {

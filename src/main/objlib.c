@@ -17,11 +17,10 @@
 #include "string.h"
 #include "main/sfa_extern_decls.h"
 #include "main/frame_timing.h"
+#include "main/pad_api.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
-extern u32 buttonGetDisabled(int port);
-extern void buttonDisable(int port, u32 mask);
 extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void OSReport(const char* msg, ...);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);

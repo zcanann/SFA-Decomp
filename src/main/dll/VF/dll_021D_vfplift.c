@@ -15,6 +15,7 @@
  * from the hit-disable game bit.
  */
 #include "main/dll/VF/vf_shared.h"
+#include "main/pad_api.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/VF/dll_021D_vfplift.h"
@@ -36,8 +37,6 @@
 #define VFPLIFT_STATE_IDLE           0
 #define VFPLIFT_STATE_LOWERED        3
 #define VFPLIFT_STATE_RAISED         4
-
-extern void buttonDisable(int port, u32 mask);
 
 static const f32 gVfpLift1RaisedHeight = 307.0f;
 

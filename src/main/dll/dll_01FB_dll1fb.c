@@ -1,5 +1,6 @@
 /* DLL 0x01FB — WCLaser render object (WarpZone cannon laser). TU: 0x801F0900–0x801F0AE4. */
 #include "main/obj_placement.h"
+#include "main/pad_api.h"
 #include "main/resource.h"
 #include "main/frame_timing.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
@@ -25,7 +26,6 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
-extern void buttonDisable(int port, u32 mask);
 #define PAD_BUTTON_A 0x100
 extern f32 lbl_803E5D00;
 extern f32 lbl_803E5D04;

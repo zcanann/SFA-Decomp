@@ -10,6 +10,7 @@
  * flag at extra+0x16; events 3/4 are no-ops.
  */
 #include "main/game_object.h"
+#include "main/pad_api.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
@@ -26,7 +27,6 @@
 extern f32 lbl_803E3B70;
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
-extern void buttonDisable(int port, u32 mask);
 extern int textureLoadAsset(int id);
 extern void* gameTextGet(int textId);
 
