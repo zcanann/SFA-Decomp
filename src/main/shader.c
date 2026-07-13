@@ -14,6 +14,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"
 #include "main/mldf_fileid.h"
+#include "main/minimap_api.h"
 #include "main/newclouds.h"
 #include "main/objseq.h"
 #include "main/pad.h"
@@ -1139,8 +1140,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 
 extern void doNothing_8001F678(int a, int b);
 extern void textureFree(int id);
-extern void fn_80133934(void);
-
 void unloadMap(void)
 {
     int blk;
