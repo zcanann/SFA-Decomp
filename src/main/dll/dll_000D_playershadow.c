@@ -207,6 +207,17 @@ void playerShadow_setMode(u8 v)
     }
 }
 
+void* playerShadow_funcs[10] = {(void*)0x00000000,
+                                (void*)0x00000000,
+                                (void*)0x00000000,
+                                (void*)0x00050000,
+                                playerShadow_initialise,
+                                playerShadow_release,
+                                (void*)0x00000000,
+                                playerShadow_func03_nop,
+                                playerShadow_renderObject,
+                                playerShadow_setMode};
+
 #pragma scheduling off
 void playerShadow_renderObject(GameObject* obj)
 {
