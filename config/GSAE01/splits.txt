@@ -1843,6 +1843,7 @@ main/dll/DIM/dll_01C3_dimgate.c:
 
 main/dll/DIM/dll_01C4_dimicewall.c:
 	.text       start:0x801B17F4 end:0x801B1B40
+	.data       start:0x803253D0 end:0x80325408
 
 main/dll/DIM/dll_01C5_dimbarrier.c:
 	.text       start:0x801B1B40 end:0x801B1D84
@@ -3078,6 +3079,7 @@ dolphin/dvd/dvdfs.c:
 	.text       start:0x80248870 end:0x802491C4
 	.data       start:0x8032D830 end:0x8032DC20
 	.sdata      start:0x803DC560 end:0x803DC568
+	.sbss       start:0x803DDEE8 end:0x803DDF08
 
 dolphin/dvd/dvdFatal.c:
 	.text       start:0x802491C4 end:0x802491F4

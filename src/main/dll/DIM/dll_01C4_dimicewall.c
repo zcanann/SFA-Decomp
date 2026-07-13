@@ -8,6 +8,7 @@
 #include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
@@ -115,3 +116,20 @@ void dimicewall_init(GameObject *obj, s8* p)
     (obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
     (obj)->objectFlags |= DIMICEWALL_OBJFLAG_HIDDEN;
 }
+
+ObjectDescriptor gDIMIceWallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dimicewall_init,
+    (ObjectDescriptorCallback)dimicewall_update,
+    0,
+    0,
+    0,
+    0,
+    dimicewall_getExtraSize,
+};
