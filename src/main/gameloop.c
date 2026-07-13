@@ -18,6 +18,7 @@
 #include "main/dll/savegame.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/dll_80136a40.h"
 #include "main/mapEventTypes.h"
 #include "main/model_engine.h"
 #include "main/model.h"

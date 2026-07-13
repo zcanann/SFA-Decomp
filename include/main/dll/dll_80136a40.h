@@ -15,5 +15,10 @@ int trickyFn_80138f14(GameObject* tricky);
 void trickyImpress(GameObject* obj);
 void fn_80138908(GameObject* obj, int value);
 int fn_80138920(GameObject* obj, int sfxId, int volume);
+void debugPrintInit(void);
+void debugPrintReset(void);
+void errDisplayInstallHandlers(void);
+void errDisplayThreadMain(void);
+void reportAllocFail(void);
 
 #endif

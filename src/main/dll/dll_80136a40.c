@@ -37,7 +37,6 @@
 #include "main/dll/dll_80136a40.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
-#include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
