@@ -18,6 +18,7 @@
  * the resetHitboxFlags byte, objanim_internal.h): 0x8 = DISABLED,
  * 0x10 = PROMPT_SUPPRESSED.
  */
+#include "main/dll/dll_012C_transporter.h"
 #include "main/dll/CF/CFchuckobj.h"
 #include "main/render.h"
 #include "main/dll/CF/warp_pad.h"

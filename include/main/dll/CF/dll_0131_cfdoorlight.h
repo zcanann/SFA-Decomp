@@ -2,6 +2,7 @@
 #define MAIN_DLL_CF_DLL_0131_CFDOORLIGHT_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 
 typedef struct CfDoorLightFlags
@@ -43,5 +44,15 @@ STATIC_ASSERT(sizeof(CfDoorLightState) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, resetFrame) == 0x18);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, doneEvent) == 0x1E);
 STATIC_ASSERT(offsetof(CfDoorLightMapData, triggerEvent) == 0x20);
+
+int CF_DoorLight_getExtraSize(void);
+int CF_DoorLight_getObjectTypeId(void);
+void CF_DoorLight_free(void);
+void CF_DoorLight_render(void);
+void CF_DoorLight_hitDetect(void);
+void CF_DoorLight_update(GameObject* obj);
+void CF_DoorLight_init(GameObject* obj, CfDoorLightMapData* mapData);
+void CF_DoorLight_release(void);
+void CF_DoorLight_initialise(void);
 
 #endif /* MAIN_DLL_CF_DLL_0131_CFDOORLIGHT_H_ */
