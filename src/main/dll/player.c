@@ -87,7 +87,6 @@
 #include "main/dll/player.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebits.h"
-#include "main/dll/DIM/dll_802B9780_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
