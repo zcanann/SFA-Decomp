@@ -5,6 +5,11 @@
 
 typedef struct ModelLightStruct ModelLightStruct;
 
+void modelLightChannels_applyGXControls(void);
+void modelLightChannels_reset(u8 useModelRelative);
+void modelLightChannel_configure(int channel, int mode, int materialSource);
+void lightGetColor(int index, u8* red, u8* green, u8* blue);
+
 int modelLightStruct_getActiveState(ModelLightStruct* light);
 void modelLightStruct_getDiffuseColor(ModelLightStruct* light, u8* red, u8* green, u8* blue, u8* alpha);
 void lightSetField4D(ModelLightStruct* light, u8 value);

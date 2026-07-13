@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/frame_timing.h"
 #include "main/objprint_dolphin.h"
 #include "main/model.h"
