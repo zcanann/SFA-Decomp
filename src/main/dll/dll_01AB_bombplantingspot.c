@@ -3,7 +3,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
-#include "main/dll/SH/SHrocketmushroom.h"
+#include "main/dll/dll_01AB_bombplantingspot.h"
 #include "main/gamebits.h"
 #include "main/gameloop_api.h"
 

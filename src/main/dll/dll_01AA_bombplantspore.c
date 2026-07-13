@@ -12,7 +12,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/path_control_interface.h"
-#include "main/dll/SH/SHrocketmushroom.h"
+#include "main/dll/dll_01AA_bombplantspore.h"
 #include "main/gameloop_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
@@ -112,8 +112,8 @@ void BombPlantSpore_free(GameObject* obj)
     }
 }
 
-/* These two drift helpers' only callers (BombPlantSpore_update/init) live
- * in the BombPlantSpore TU (SHrocketmushroom.c). */
+/* These two drift helpers' only callers are BombPlantSpore_update/init in
+ * this TU. */
 #pragma dont_inline on
 void bombplantspore_startDriftBurst(GameObject* obj, void* state)
 {

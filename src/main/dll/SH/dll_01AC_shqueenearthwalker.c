@@ -9,7 +9,7 @@
  * and the spell-portal opening. stateIndex selects the locomotion move
  * (gQueenEarthWalkerMoveTable/E24 tables); the flags byte tracks the per-frame mode.
  */
-#include "main/dll/SH/SHrocketmushroom.h"
+#include "main/dll/dll_801d4198.h"
 #include "main/object.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
