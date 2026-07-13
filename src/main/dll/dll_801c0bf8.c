@@ -20,6 +20,7 @@ extern f32 lbl_803E4DE4; /* PI                                                  
 extern f32 lbl_803E4DE8; /* 32768.0f - half-turn in binary-angle (BAMS) units   */
 
 #pragma peephole on
+#pragma dont_inline on
 void fn_801C0BF8(void* templateData, int angle, float* startNode, float* endNode, short* out)
 {
     int startX;
