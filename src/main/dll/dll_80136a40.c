@@ -30,6 +30,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
+#include "dolphin/gx/GXMisc.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"

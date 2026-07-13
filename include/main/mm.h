@@ -11,6 +11,7 @@ void* getCache(void);
 void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);
 void memcpyToCache(void* dst, void* src, u32 count);
+void texFlagFn_80023cbc(int value);
 
 
 /* extern-cleanup: defining-file public prototypes */

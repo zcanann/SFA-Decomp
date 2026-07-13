@@ -12,5 +12,9 @@ u32 mapLoadDataFile(int mapId, int fileId);
 u8 isHeavyFogEnabled(void);
 void fn_8004D6D8(void);
 void fn_80050F2C(void);
+void fn_8004D230(void);
+void fn_8004D928(void);
+void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
+                          int* alphaSelection);
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

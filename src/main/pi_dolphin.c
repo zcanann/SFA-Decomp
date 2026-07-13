@@ -6,6 +6,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "dolphin/gx/GXMisc.h"
 #include "main/pi_dolphin.h"
 #include "main/newshadows.h"
 #include "main/mm.h"
