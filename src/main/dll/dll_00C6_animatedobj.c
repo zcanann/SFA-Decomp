@@ -1,6 +1,7 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
 #include "main/shader_api.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -258,7 +259,6 @@ extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
-extern void objSetMtxFn_800412d4(f32 * m);
 extern f32 lbl_803E3230;
 
 void MikaBombShadow_update(int* obj);
@@ -892,7 +892,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         PSMTXConcat(mRotZ, mB, mC);
         PSMTXConcat(mTransPos, mC, mD);
         PSMTXConcat(mD, mWorldCombined, mFinal);
-        objSetMtxFn_800412d4(mFinal);
+        objSetMtxFn_800412d4((u32)mFinal);
         objRenderModel(obj);
     }
     else

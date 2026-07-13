@@ -265,6 +265,7 @@ STATIC_ASSERT(offsetof(ObjModelChain, unk19) == 0x19);
 STATIC_ASSERT(offsetof(ObjModelChain, enabled) == 0x1A);
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
+void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out);
 ObjModelChain *ObjModelChain_Alloc(void *models, int count);
 void ObjModelChain_SetOrigin(ObjModelChain *chain, f32 x, f32 y, f32 z);
 void ObjModelChain_SetEnabled(ObjModelChain *chain, u8 enabled);

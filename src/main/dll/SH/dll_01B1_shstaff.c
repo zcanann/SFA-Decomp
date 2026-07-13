@@ -152,7 +152,6 @@ extern void sc_totempole_initialise(void);
 
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
-extern void objSetMtxFn_800412d4(f32* mtx);
 extern void objRenderModel(int obj);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern f32 getXZDistance(f32* a, f32* b);
@@ -205,7 +204,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         if (state->phase == SHSTAFF_PHASE_CARRY_RENDER)
         {
             PSMTXConcat((f32*)ObjPath_GetPointModelMtx((void*)player, 0), state->carryMtx, mtxB);
-            objSetMtxFn_800412d4(mtxB);
+            objSetMtxFn_800412d4((u32)mtxB);
             objRenderModel((int)obj);
         }
         else

@@ -23,6 +23,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
+#include "main/objprint_dolphin.h"
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0259_sbcloudrunner.h"
 #include "main/objhits.h"
@@ -156,7 +157,6 @@ extern const f32 lbl_803E5CBC;
 extern const f32 lbl_803E5CC0;
 
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
-extern void objSetMtxFn_800412d4(u32 x);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
 extern void PSMTXMultVec(f32* mtx, f32* in, f32* out);
 extern void SB_CloudRunner_onSeqFree(void);

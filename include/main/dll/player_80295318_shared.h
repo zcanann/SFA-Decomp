@@ -556,7 +556,6 @@ extern int arrayIndexOf(void* arr, int count, int val);
 extern void objRenderFuzz(int obj);
 extern void objRenderFn_800413d4(int obj);
 extern void fuzzRenderFn_800412dc(int obj);
-extern void objSetMtxFn_800412d4(int a);
 extern s16 lbl_803DC6C4;
 extern f32 lbl_803E7F50;
 extern f32 lbl_803E80C4;

@@ -12,6 +12,7 @@
 #include "main/dll/xyzanimator.h"
 #include "main/shader_api.h"
 #include "main/objfx.h"
+#include "main/objprint_dolphin.h"
 #include "main/dll/genpropswgpipe_struct.h"
 
 void MikaBomb_hitDetect(void);
@@ -197,7 +198,6 @@ extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 extern void objRenderModel(int* obj);
-extern void objSetMtxFn_800412d4(f32* m);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
@@ -797,7 +797,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         PSMTXConcat(mRotZ, mB, mC);
         PSMTXConcat(mTransPos, mC, mD);
         PSMTXConcat(mD, mWorldCombined, mFinal);
-        objSetMtxFn_800412d4(mFinal);
+        objSetMtxFn_800412d4((u32)mFinal);
         objRenderModel(obj);
     }
     else

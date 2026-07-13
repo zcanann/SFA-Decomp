@@ -1,5 +1,6 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "main/model_light.h"
+#include "main/model.h"
 #include "main/audio.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
@@ -137,13 +138,13 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot)
     localPoint[1] = lbl_803E67B8;
     localPoint[2] = lbl_803E67B8;
 
-    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
                  point1);
     point1[0] = point1[0] + playerMapOffsetX;
     point1[1] = point1[1] + lbl_803E67BC;
     point1[2] = point1[2] + playerMapOffsetZ;
 
-    PSMTXMultVec(ObjModel_GetJointMatrix(model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
+    PSMTXMultVec((f32*)ObjModel_GetJointMatrix((u8*)model, randomGetRange(0, *(u8*)(*(int*)model + 0xf3) - 1)), localPoint,
                  point2);
     point2[0] = point2[0] + playerMapOffsetX;
     point2[2] = point2[2] + playerMapOffsetZ;
