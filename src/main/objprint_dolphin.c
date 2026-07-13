@@ -1,6 +1,8 @@
 #include "dolphin/os/OSReport.h"
 #include "main/game_object.h"
+#include "main/gameloop_api.h"
 #include "main/object_api.h"
+#include "main/pi_frame_api.h"
 #include "main/shader_api.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
@@ -3853,8 +3855,6 @@ void mapLoadDataFiles(int mapIdx)
 }
 
 extern void padUpdate(void);
-extern void checkReset(void);
-extern void waitNextFrame(void);
 extern void loadDataFiles(int);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);

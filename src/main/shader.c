@@ -1,5 +1,6 @@
 #include "dolphin/os/OSReport.h"
 #include "main/asset_load.h"
+#include "main/gameloop_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/debug.h"
 #include "main/shader_api.h"
@@ -871,8 +872,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 
 extern int isRomListLoading(void);
 extern void padUpdate(void);
-extern void checkReset(void);
-extern void waitNextFrame(void);
 extern void loadDataFiles(void);
 extern void gameTextRun(void);
 extern int GXFlush_(u8 visible, int unused);

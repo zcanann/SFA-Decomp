@@ -7,6 +7,7 @@
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/gameloop_api.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/curve_eval.h"
@@ -15,6 +16,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/camera.h"
 #include "main/mm.h"
+#include "main/pi_frame_api.h"
 #include "main/texture.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/sky.h"
@@ -199,8 +201,6 @@ extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void padUpdate(void);
-extern void checkReset(void);
-extern void waitNextFrame(void);
 extern void loadDataFiles(void);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);

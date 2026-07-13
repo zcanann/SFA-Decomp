@@ -88,8 +88,6 @@ int getGameState(void)
 
 extern u8 gGameLoopInitComplete;
 
-extern void checkReset(void);
-
 void main(void)
 {
     gameState = GAMELOOP_STATE_BOOTING;
@@ -320,7 +318,6 @@ int gameBitDecrement(int bit)
     return 0;
 }
 
-extern void waitNextFrame(void);
 extern int GXFlush_(u8 visible, int unused);
 
 

@@ -126,7 +126,6 @@ u8 isHeavyFogEnabled(void);
 
 #include "main/mldf_fileid.h"
 
-void waitNextFrame(void);
 double SeekTwiceBeforeRead();
 int GXFlush_(u8 visible, int unused);
 int loadAndDecompressDataFile();
