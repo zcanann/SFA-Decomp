@@ -62,6 +62,4 @@ extern s16 gPlayerMoveTableB[14];
 extern s16 gPlayerMoveSlotTable[44];
 extern GameObject* gPlayerInteractTarget;
 
-int objFn_802962b4(GameObject* obj);
-
 #endif

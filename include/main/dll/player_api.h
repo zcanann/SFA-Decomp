@@ -13,6 +13,7 @@ GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(void* player);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
+int playerGetTimeScale(GameObject* obj, f32* out);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);

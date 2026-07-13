@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_transform.h"
 #include "main/object.h"
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -27,6 +28,7 @@
 #include "main/dll/player_objects.h"
 #include "main/dll/player_status.h"
 #include "main/dll/player_target.h"
+#include "main/dll/player_api.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
@@ -37,6 +39,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTransform.h"
+#include "track/intersect_api.h"
 #include "string.h"
 
 /* external symbol declarations */
@@ -399,7 +402,6 @@ extern s16 gPlayerMoveTableC[];
 extern f32 gPlayerMoveSpeedTable[];
 extern f32 lbl_803E8178;
 extern f32 lbl_803E817C;
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern s16 lbl_80332EF0[];
 extern s16 gPlayerCurrentMoveId;
 extern f32 lbl_803E7E90;
@@ -416,7 +418,6 @@ extern f32 lbl_803E7F6C;
 extern u16 gPlayerHeldButtonMask;
 extern f32 lbl_803E7F58;
 extern f32 lbl_803E7F9C;
-extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, u32 obj);
 extern f32 lbl_803E80BC;
 extern f32 lbl_803DE430;
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
@@ -658,11 +659,7 @@ extern u8 gPlayerHudVtxBuf[];
 extern f32 lbl_802C2BF0[];
 extern u8 lbl_802C2B30[];
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
-extern void textureSetupFn_800799c0(void);
-extern void textRenderSetupFn_800795e8(void);
-extern void textRenderSetupFn_80079804(void);
 extern void fn_80078740(void);
-extern void setMatrixFromObjectTransposed(void* transform, f32* mtx);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];
@@ -693,16 +690,11 @@ void fn_802960E4(void);
 void fn_802960E8(void* playerObj, s16 effectId);
 void fn_802960F4(GameObject* obj, int* out);
 f32 fn_8029610C(GameObject* obj);
-int fn_80296118(GameObject* obj);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961A4(int obj, int* out1, f32* out2);
-void objSetXRot(GameObject* obj, int v);
 void fn_802961FC(int a, u8 type);
-f32 fn_80296214(GameObject* obj);
-void fn_80296220(GameObject* obj, f32 v);
 int Obj_IsParentSlackClear(GameObject* obj);
 int fn_80296240(GameObject* obj);
-int objFn_802962b4(GameObject* obj);
 int fn_8029630C(GameObject* obj);
 int objAnimFn_80296328(int obj);
 int playerGetFlags3F0Bit5(GameObject* obj);
@@ -711,24 +703,14 @@ int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerHasSpell(GameObject* obj, int spell);
 int objGetAnimStateFlags(GameObject* obj, int flag);
-int playerGetTimeScale(GameObject* obj, f32* out);
 int playerSetHeldObject(int obj, int held);
 int fn_8029669C(int obj);
 int fn_802966B4(GameObject* obj);
-int playerGetHeldObject(GameObject* obj, int* out);
 f32 fn_802966F4(GameObject* obj);
 int objFn_80296700(int obj);
 void playerPutAwayStaff(GameObject* obj, int mode);
 void playerPullOutStaff(GameObject* obj, int mode);
-int playerGetMoney(void* player);
-void playerAddMoney(GameObject* obj, int amount);
-void fn_8029697C(GameObject* obj, s16* out1, s16* out2);
-int playerGetCurMagic(int obj);
 void playerAddRemoveMagic(GameObject* obj, int amount);
-int playerGetMaxMagic(GameObject* obj);
-int playerGetMaxHealth(GameObject* obj);
-int playerGetCurHealth(GameObject* obj);
-void playerAddHealth(GameObject* obj, int amount);
 void saveSetOverrideHealth(int v);
 void playerCancelSpell(GameObject* obj, int p2);
 void fn_80296BBC(GameObject* obj);
