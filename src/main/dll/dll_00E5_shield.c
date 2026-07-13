@@ -19,6 +19,7 @@
  * TU: 0x8016B230-0x8016B2E0.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
@@ -187,7 +188,6 @@ void staffFn_80170380(GameObject* obj, int cmd)
 {
     extern int objCreateLight(int* obj, int arg);
     extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
-    extern void Sfx_PlayFromObject(int* obj, int sfx);
     f32* tbl[1];
     u8* state;
     GameObject* glow;

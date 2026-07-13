@@ -8,6 +8,7 @@
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
@@ -152,7 +153,6 @@ void dll_F7_hitDetect(void)
 
 void dll_F7_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx);
     extern u32 ObjGroup_FindNearestObject();
     DllF7State* state = ((GameObject*)obj)->extra;
     DllF7HitBlock blk;

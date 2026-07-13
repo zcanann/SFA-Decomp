@@ -11,6 +11,7 @@
  * particles. Lamp_free stops the SFX channel and releases the exp-gfx source.
  */
 #include "main/game_object.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
@@ -31,7 +32,6 @@
 
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
-extern void Sfx_PlayFromObject(int* obj, int sfxId);
 
 int Lamp_getExtraSize(void)
 {

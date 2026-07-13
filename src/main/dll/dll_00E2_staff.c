@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/dll/genpropswgpipe_struct.h"
@@ -847,7 +848,6 @@ extern f32 lbl_803E3324;
 
 void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx);
     int* state = obj->extra;
     if (grow != 0)
     {

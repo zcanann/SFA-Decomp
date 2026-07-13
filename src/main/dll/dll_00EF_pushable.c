@@ -1,5 +1,6 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -553,7 +554,6 @@ int pushable_getObjectTypeId(void)
 
 void pushable_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     PushableState* state;
     u8* def;
     void* player;
@@ -1065,7 +1065,6 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
     extern int objBboxFn_800640cc(f32 * start, f32 * end, f32 radius, int a, int b, int* obj, int c, int d, int e,
                                   int f);
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     extern u32 fn_80174BFC();
     SetScaleParams* pp;
     PushableState* state;

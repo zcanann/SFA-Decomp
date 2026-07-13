@@ -9,6 +9,7 @@
  * Resource 0x5b is acquired at init.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -99,7 +100,6 @@ void MikaBomb_hitDetect(void)
 
 void MikaBomb_update(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx);
     extern void Obj_FreeObject(int* obj);
     extern void ObjHits_EnableObject();
     extern void ObjHits_DisableObject();
