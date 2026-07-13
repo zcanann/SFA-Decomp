@@ -11,12 +11,27 @@ s32 SaveGame_getCamActionNo(void);
 f32 SaveGame_getPlayTime(void);
 void clearSaveGameLoadingFlag(void);
 char* getSaveFileName(void);
+void saveFileStruct_unlockCheat(u8 idx);
+u32 isCheatUnlocked(u32 idx);
+void saveFileStruct_resetVolumes(void);
+u8* getSaveFileStruct(void);
+void saveGame_unsaveObjectPos(GameObject* obj);
+void loadSaveSettings(u64 p1, u64 p2, u64 p3, u64 p4, u64 p5, u64 p6, u64 p7, u64 p8);
+int saveFn_800e8508(void);
+void gplaySaveGame(int param);
+void titleDoLoadSave(void);
+void saveGame_save(void);
+int trySaveGame(int slot);
 int insertHighScore(u8 slot, u8 flag, u32 score, u8* initials);
+int gplayNewGame(char* name, int slot);
+void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
+s8 SaveGame_findTransientMapBit(int mapId, int bit);
+void SaveGame_updateTransientMapBits(void);
+int saveSelect_getInfo(void* out);
 s32 isSaveGameLoading(void);
 void setSaveGameLoadingFlag(void);
 void updateSavedHealth(void);
 
-void saveGame_save();
 void* saveGameGetEnvState(void);
 
 #endif /* MAIN_DLL_SAVEGAME_H_ */

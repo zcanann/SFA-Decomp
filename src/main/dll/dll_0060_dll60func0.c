@@ -14,7 +14,7 @@
  */
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
-#include "main/dll/gameplay.h"
+#include "ghidra_import.h"
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/modgfx_types.h"

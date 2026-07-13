@@ -1980,7 +1980,6 @@ int objUpdateOpacity(GameObject* obj)
 }
 
 extern int objShouldUnload(char* obj);
-extern int SaveGame_findTransientMapBit(int mapId, int bit);
 extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
 

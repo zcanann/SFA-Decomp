@@ -1,7 +1,7 @@
 #include "dolphin/os/OSReport.h"
 #include "ghidra_import.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/gameplay.h"
+#include "main/dll/savegame.h"
 #include "main/attract_movie_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSArena.h"

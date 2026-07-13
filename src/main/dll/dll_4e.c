@@ -24,7 +24,7 @@
 #include "main/dll/dll_4E.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/debug/prof.h"
-#include "main/dll/gameplay.h"
+#include "main/dll/savegame.h"
 #include "main/lightmap.h"
 #include "main/pad.h"
 #include "main/screen_transition.h"

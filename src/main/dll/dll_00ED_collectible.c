@@ -40,7 +40,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
-extern void saveGame_unsaveObjectPos(int* obj);
 extern f32 gCollectibleDespawnTimerDuration;
 extern f32 lbl_803E3454;
 extern f32 lbl_803E345C;
@@ -196,7 +195,7 @@ void collectible_applyPickup(int* obj)
     if (((CollectibleState*)state)->hideGameBit != -1)
     {
         mainSetBits(((CollectibleState*)state)->hideGameBit, 1);
-        saveGame_unsaveObjectPos(obj);
+        saveGame_unsaveObjectPos((GameObject*)obj);
     }
     if (((CollectibleSetup*)params)->collectGameBit != -1)
     {

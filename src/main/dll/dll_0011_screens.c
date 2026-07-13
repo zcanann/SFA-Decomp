@@ -17,7 +17,7 @@
 #include "main/asset_load.h"
 #include "main/pi_dolphin.h"
 #include "main/game_object.h"
-#include "main/dll/gameplay.h"
+#include "ghidra_import.h"
 #include "main/mapEventTypes.h"
 #include "main/mm.h"
 #include "main/dll/modgfx.h"

@@ -3,7 +3,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/gameplay_runtime.h"
 #include "main/pad.h"
-#include "main/dll/gameplay.h"
+#include "main/dll/savegame.h"
 #include "main/audio/sfx.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"

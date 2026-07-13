@@ -3,7 +3,6 @@
 
 #include "main/asset_load.h"
 #include "main/game_object.h"
-#include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/modgfx.h"
 #include "main/gamebits.h"

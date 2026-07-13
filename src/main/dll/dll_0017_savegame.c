@@ -27,7 +27,7 @@
 #include "main/model_engine_ui_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/mm.h"
-#include "main/dll/gameplay.h"
+#include "main/dll/savegame.h"
 #include "main/dll/player_status.h"
 #include "main/mapEventTypes.h"
 #include "dolphin/os/OSReboot.h"
@@ -233,7 +233,7 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition* object)
     return 0;
 }
 
-void saveGame_unsaveObjectPos(u8* obj)
+void saveGame_unsaveObjectPos(GameObject* obj)
 {
     int i;
     SaveGameObjectPosition* slot;
@@ -748,7 +748,7 @@ void SaveGame_func08_nop(void)
 {
 }
 
-u8 getSaveGameLoadStatus(void)
+int getSaveGameLoadStatus(void)
 {
     return saveGameLoadStatus;
 }
