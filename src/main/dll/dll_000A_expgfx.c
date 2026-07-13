@@ -1949,7 +1949,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
-    f32 sinA, cosA;
+    f32 sinB, cosB;
     int slotIndex;
     int alpha;
     ExpgfxSourceObject* sourceObject;
@@ -1962,7 +1962,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 scaleFactor;
     s16 angleA;
     void* viewMatrix;
-    f32 sinB, cosB;
+    f32 sinA, cosA;
     u32 behaviorFlags;
     f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
@@ -2291,16 +2291,16 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 f32 nx = px * cosC - py * sinC;
                 f32 ny = px * sinC + py * cosC;
-                ay_cosB = ny * cosB;
                 pz_sinB = pz * sinB;
+                ay_cosB = ny * cosB;
                 outX = sx + (nx * sinA + cosA * ay_cosB + cosA * pz_sinB);
                 outY = sy + (ny * sinB + (-pz) * cosB);
                 outZ = sz + ((-nx) * cosA + sinA * ay_cosB + sinA * pz_sinB);
             }
             else
             {
-                ay_cosB = py * cosB;
                 pz_sinB = pz * sinB;
+                ay_cosB = py * cosB;
                 outX = sx + (px * sinA + cosA * ay_cosB + cosA * pz_sinB);
                 outY = sy + (py * sinB + (-pz) * cosB);
                 outZ = sz + ((-px) * cosA + sinA * ay_cosB + sinA * pz_sinB);
