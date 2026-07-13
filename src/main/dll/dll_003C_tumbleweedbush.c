@@ -18,6 +18,7 @@
  * LINK_FLAG_DISABLE_NAV_TO / LINK_FLAG_NO_ACCEPT. GameBit 0x44f gates accept.
  */
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
+#include "main/gametext_show_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/texture.h"
@@ -85,7 +86,6 @@ extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextFn_80016810(int a, int b, int c);
 extern void* gameTextGetBox(int box);
-extern void gameTextShow(int a);
 extern void gameTextShowStr(char* text, int box, int arg2, int arg3);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);

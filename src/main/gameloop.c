@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "dolphin/pad.h"
@@ -1070,7 +1071,6 @@ void doQueuedLoads(void)
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 extern int saveGameGetStatus(void);
-extern void gameTextShow(int a);
 extern void gameTextFn_80016810(int a, int b, int c);
 extern void cardSetStatusNeedInit(void);
 extern void cardDeleteFn_8007d99c(void);

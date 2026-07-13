@@ -23,6 +23,7 @@
  */
 
 #include "main/dll/dll_0000_gameui.h"
+#include "main/gametext_show_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/model_engine.h"
@@ -187,7 +188,6 @@ extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
 
 extern float fsin16Precise(int angle);
-extern void gameTextShow(int a);
 extern void gameTextShowTimeStr(char* str);
 extern char sBabySnowwormTimerFormat[];
 extern s16 gTimeListPulseAngle;

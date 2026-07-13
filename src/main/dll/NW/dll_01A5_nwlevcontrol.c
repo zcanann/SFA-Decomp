@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/gametext_show_api.h"
 #include "main/sky_api.h"
 #include "main/object_api.h"
 #include "main/render.h"
@@ -74,7 +75,6 @@ extern u32 Music_Trigger();
 extern void timerSetToCountUp(void);
 extern void gameTimerInit(s8 flags, int minutes);
 extern u32 SCGameBitLatch_Update();
-extern void gameTextShow(int a);
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;

@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/gametext_show_api.h"
 #include "main/audio/music_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/render.h"
@@ -63,7 +64,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextShow(int a);
 extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
 extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;

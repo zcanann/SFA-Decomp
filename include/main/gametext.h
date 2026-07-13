@@ -2,6 +2,7 @@
 #define MAIN_GAMETEXT_H_
 
 #include "types.h"
+#include "main/gametext_show_api.h"
 
 typedef struct TextDisplayState TextDisplayState;
 typedef void (*GameTextSetColorU8Fn)(u8 r, u8 g, u8 b, u8 a);
@@ -46,7 +47,6 @@ void gameTextFreePhrase(int* phrase);
 void gameTextFn_80016810(int a, int b, int c);
 int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId);
 void gameTextShowTimeStr(char* str);
-void gameTextShow(int a);
 void gameTextShowStr(char* text, int box, int arg2, int arg3);
 void* gameTextGetBox(int box);
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
