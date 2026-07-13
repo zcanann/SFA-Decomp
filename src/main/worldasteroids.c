@@ -1,4 +1,5 @@
 #include "main/worldasteroids.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 
@@ -8,7 +9,6 @@ extern f32 lbl_803E65E4;
 extern f32 lbl_803E65E8;
 extern f32 lbl_803E65EC;
 extern f32 lbl_803E65F0;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 fsin16Approx(u16 angle);
 extern f32 fcos16Approx(u16 angle);
 

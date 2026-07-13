@@ -4,6 +4,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 
 #define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
@@ -27,7 +28,6 @@
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E6618;
 /* unlock gamebit per WorldPlanetSlot: [0] Walled City, [1] CloudRunner,
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),

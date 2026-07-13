@@ -3,6 +3,7 @@
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_query.h"
@@ -88,7 +89,6 @@ extern u8 gSnowClawMoveTable[];
 extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objUpdateOpacity(int sub);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
