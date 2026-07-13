@@ -180,10 +180,6 @@ int staff_getObjectTypeId(void)
 {
     return 0x9;
 }
-u32 lbl_80320700[] = {
-    0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
-
 ObjectDescriptor23 gStaffObjDescriptor = {
     0,
     0,

@@ -127,21 +127,6 @@ extern f32 lbl_803E34A0;
 /* idle sparkle spawned randomly for the 0x27f seqId variant in collectible_updateIdleMotion */
 #define COLLECTIBLE_PARTFX_IDLE 0x423
 
-u32 lbl_80320700[] = {
-    0xFFFFFFFF,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
 u8 collectible_getVisibilityBitClear(int* obj) { return ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear; }
 
 int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->unkF4; }

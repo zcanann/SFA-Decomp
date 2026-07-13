@@ -207,21 +207,6 @@ extern f32 lbl_803E3230;
 
 int animatedobj_getExtraSize(void) { return 0x140; }
 
-u32 lbl_80320700[] = {
-    0xFFFFFFFF,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
 ObjectDescriptor gAnimatedObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     0,
