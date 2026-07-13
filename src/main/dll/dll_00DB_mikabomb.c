@@ -9,6 +9,7 @@
  * Resource 0x5b is acquired at init.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"

@@ -6,19 +6,13 @@
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00DC_mikabombshadow_api.h"
+#include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
-
-void MikaBomb_hitDetect(void);
-
-void MikaBomb_free(GameObject *obj, int mode);
-
-int MikaBomb_getExtraSize(void);
-int MikaBomb_getObjectTypeId(void);
 
 extern int KaldaChompSpit_getObjectTypeId(void);
 extern int KaldaChompSpit_getExtraSize(void);
@@ -740,8 +734,6 @@ void animatedobj_init(int* obj, int* params)
     Obj_SetModelRenderOpAlpha(obj, 0xff);
 }
 
-
-void MikaBomb_init(int* obj);
 
 #pragma opt_loop_invariants on
 void animatedobj_update(int* obj)

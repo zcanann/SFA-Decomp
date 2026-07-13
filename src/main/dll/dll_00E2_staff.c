@@ -33,6 +33,7 @@
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/dll/dll_00DC_mikabombshadow_api.h"
+#include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/dll/dll_00E6_restartmarker.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
@@ -73,13 +74,6 @@
 #define STAFF_PARTFX_SWIPE_BURST 0x7b2
 /* swipe/attack lingering trail: single follow-up spawn after the burst cluster */
 #define STAFF_PARTFX_SWIPE_TRAIL 0x7b3
-
-void MikaBomb_hitDetect(void);
-
-void MikaBomb_free(GameObject* obj, int mode);
-
-int MikaBomb_getExtraSize(void);
-int MikaBomb_getObjectTypeId(void);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
     0,
@@ -862,8 +856,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 }
 
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff);
-
-void MikaBomb_init(int* obj);
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);

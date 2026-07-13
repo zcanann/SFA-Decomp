@@ -8,15 +8,6 @@
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 
-int MikaBomb_getExtraSize();
-int MikaBomb_getObjectTypeId();
-void MikaBomb_free();
-void MikaBomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void MikaBomb_hitDetect();
-void MikaBomb_update(int* obj);
-void MikaBomb_init();
-void MikaBomb_release(void);
-void MikaBomb_initialise(void);
 void FUN_8016b2e4(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8, int param_9, int param_10);
 void FUN_8016b39c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
