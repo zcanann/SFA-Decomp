@@ -3221,7 +3221,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0] = -nrm[0];
     planes[1] = -nrm[1];
     planes[2] = -nrm[2];
-    planes[3] = -(planes[2] * verts[0xb] + planes[0] * verts[9] + planes[1] * verts[10]);
+    planes[3] = -(planes[0] * verts[9] + planes[1] * verts[10] + planes[2] * verts[0xb]);
 
     e1x = verts[0x12] - verts[0xf];
     e1y = verts[0x13] - verts[0x10];
@@ -3236,7 +3236,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[5] = -nrm[0];
     planes[6] = -nrm[1];
     planes[7] = -nrm[2];
-    planes[8] = -(planes[7] * verts[0x11] + planes[5] * verts[0xf] + planes[6] * verts[0x10]);
+    planes[8] = -(planes[5] * verts[0xf] + planes[6] * verts[0x10] + planes[7] * verts[0x11]);
 
     e1x = verts[0xf] - verts[0xc];
     e1y = verts[0x10] - verts[0xd];
@@ -3251,7 +3251,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[10] = -nrm[0];
     planes[0xb] = -nrm[1];
     planes[0xc] = -nrm[2];
-    planes[0xd] = -(planes[0xc] * verts[0xe] + planes[10] * verts[0xc] + planes[0xb] * verts[0xd]);
+    planes[0xd] = -(planes[10] * verts[0xc] + planes[0xb] * verts[0xd] + planes[0xc] * verts[0xe]);
 
     e1x = verts[9] - verts[0];
     e1y = verts[10] - verts[1];
@@ -3266,7 +3266,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0xf] = -nrm[0];
     planes[0x10] = -nrm[1];
     planes[0x11] = -nrm[2];
-    planes[0x12] = -(planes[0x11] * verts[2] + planes[0xf] * verts[0] + planes[0x10] * verts[1]);
+    planes[0x12] = -(planes[0xf] * verts[0] + planes[0x10] * verts[1] + planes[0x11] * verts[2]);
 
     e1x = verts[0x12] - verts[0x15];
     e1y = verts[0x13] - verts[0x16];
@@ -3281,7 +3281,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x14] = -nrm[0];
     planes[0x15] = -nrm[1];
     planes[0x16] = -nrm[2];
-    planes[0x17] = -(planes[0x16] * verts[0x17] + planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16]);
+    planes[0x17] = -(planes[0x14] * verts[0x15] + planes[0x15] * verts[0x16] + planes[0x16] * verts[0x17]);
 
     e1x = verts[3] - verts[0];
     e1y = verts[4] - verts[1];
@@ -3296,7 +3296,7 @@ void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8)
     planes[0x19] = -nrm[0];
     planes[0x1a] = -nrm[1];
     planes[0x1b] = -nrm[2];
-    planes[0x1c] = -(planes[0x1b] * verts[2] + planes[0x19] * verts[0] + planes[0x1a] * verts[1]);
+    planes[0x1c] = -(planes[0x19] * verts[0] + planes[0x1a] * verts[1] + planes[0x1b] * verts[2]);
 }
 #pragma opt_lifetimes reset
 
