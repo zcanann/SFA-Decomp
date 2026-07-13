@@ -25,7 +25,7 @@
 #define PLAYERSHADOW_PARTFX_C 0x190
 
 extern u8 gPlayerShadowMode;
-extern u32 gPlayerShadowDefaultParams[];
+__declspec(section ".rodata") u32 gPlayerShadowDefaultParams[4] = {0, 0, 0, 0};
 extern const f32 lbl_803DF46C; /* 0.0f */
 extern const f32 lbl_803DF488;
 extern const f32 lbl_803DF48C;

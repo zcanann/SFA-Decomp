@@ -220,6 +220,7 @@ main/dll/dll_000C_projgfx.c:
 
 main/dll/dll_000D_playershadow.c:
 	.text       start:0x800A3AF0 end:0x800A4338
+	.rodata     start:0x802C2160 end:0x802C2170
 	.data       start:0x8030FDE8 end:0x8030FE38
 
 main/dll/dll_0018_boneparticleeffect.c:
