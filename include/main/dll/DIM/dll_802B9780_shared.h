@@ -12,6 +12,7 @@
 #include "main/newclouds.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
+#include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
 extern f32 lbl_803E8298;
@@ -337,7 +338,6 @@ extern f32 lbl_803DC790;
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
-extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate);
 extern int lbl_803E8230;
 extern int gDIMSnowHorn1PathCollisionData;
 extern f32 gDIMSnowHorn1Gravity;

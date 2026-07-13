@@ -19,6 +19,8 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_01B5_lightfoot.h"
+#include "main/dll/player_api.h"
 #include "main/dll/player_80295318_shared.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
