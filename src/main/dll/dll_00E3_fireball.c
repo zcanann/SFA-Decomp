@@ -141,8 +141,6 @@ extern int objCreateLight(int* obj, int arg);
 /* fireball light tint per colorIndex; lives in the staff TU's data (0x80320978) */
 extern u32 lbl_80320978[];
 
-int Fireball_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
-
 u8 fn_8016F16C(int* obj)
 {
     return ((FireballState*)((GameObject*)obj)->extra)->colorIndex;

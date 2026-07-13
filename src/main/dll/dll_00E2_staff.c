@@ -58,7 +58,7 @@
 #include "string.h"
 #include "main/dll/dll_00E2_staff.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
-#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
@@ -238,10 +238,6 @@ void staff_hitDetect(void)
 {
 }
 
-void Fireball_release(void);
-
-void Fireball_initialise(void);
-
 void flamethrowerspe_modelMtxFn(void);
 
 void flamethrowerspe_free(void);
@@ -263,8 +259,6 @@ int staff_getObjectTypeId(void)
 {
     return 0x9;
 }
-int Fireball_getExtraSize(void);
-int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);

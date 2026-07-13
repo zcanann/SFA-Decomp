@@ -129,7 +129,7 @@ extern f32 timeDelta;
 #include "main/camera_interface.h"
 #include "main/objseq.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
-#include "main/dll/dll_00E3_fireball.h"
+#include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe.h"
 #include "main/objlib.h"
 
@@ -224,10 +224,6 @@ void staff_render(void);
 
 void staff_hitDetect(void);
 
-void Fireball_release(void);
-
-void Fireball_initialise(void);
-
 void flamethrowerspe_modelMtxFn(void);
 
 void flamethrowerspe_free(void);
@@ -246,8 +242,6 @@ int dim2roofrub_getExtraSize(void)
 int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void);
 int staff_getObjectTypeId(void);
-int Fireball_getExtraSize(void);
-int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj)

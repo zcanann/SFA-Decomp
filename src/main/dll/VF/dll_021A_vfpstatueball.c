@@ -19,6 +19,7 @@
 #include "main/objfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/VF/dll_021A_vfpstatueball.h"
 
 #define VFPSTATUEBALL_OBJFLAG_HIDDEN 0x4000
@@ -29,8 +30,6 @@ __declspec(section ".sdata2") f32 lbl_803E60B8 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E60BC = 0.0f;
 #pragma explicit_zero_data off
-extern u8 fn_8016F16C(int* obj);
-
 int VFP_statueball_getExtraSize(void)
 {
     return 0xc;
