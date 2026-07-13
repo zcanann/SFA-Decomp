@@ -21,6 +21,7 @@
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
@@ -89,7 +90,6 @@ extern f32 lbl_803E5650;
 
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
-extern void hudFn_8011f38c(u8 x);
 extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
 extern void fn_8011F6D4(u32 x);
 

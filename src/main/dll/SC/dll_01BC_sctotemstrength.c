@@ -33,7 +33,6 @@
 
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
-extern void hudFn_8011f38c(u8 x);
 extern int gTotemStrengthDeactivateTimer;
 extern int lbl_803DC070;
 extern const f32 lbl_803E5668;

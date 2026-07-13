@@ -24,6 +24,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gameplay_runtime.h"
 #include "main/dll/tricky.h"
+#include "main/dll/tricky_api.h"
 #include "main/model_engine.h"
 #include "main/dll/trex_lazerwall.h"
 
@@ -52,7 +53,6 @@ extern const f32 lbl_803E59E0; /* curve-node Y bias */
 extern u32 lbl_803E59D0;       /* head of the rom-curve search pair (first type id) */
 
 
-extern void hudFn_8011f38c(u8 x);
 
 int TREX_Lazerwall_popQueuedState(int obj, int animState)
 {

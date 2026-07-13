@@ -16,6 +16,7 @@
  * commands the linked target object to begin the challenge.
  */
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/dll/tricky_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -32,7 +33,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
-extern void hudFn_8011f38c(u8 x);
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern int playerGetMoney(void* player);
 extern void* gTitleMenuControlInterfaceCopy;
