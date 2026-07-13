@@ -10,6 +10,7 @@
  * DLL_F7, Checkpoint4).
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/checkpoint4.h"
 #include "main/shader_api.h"
 #include "main/objfx.h"
 #include "main/objprint_dolphin.h"

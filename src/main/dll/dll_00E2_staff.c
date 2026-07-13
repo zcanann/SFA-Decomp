@@ -20,6 +20,7 @@
  * descriptor tables and shared lbl_ data live here.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/dll/checkpoint4.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
