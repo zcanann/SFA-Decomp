@@ -331,8 +331,19 @@ void dll_197_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-void dll_197_init(int obj, int data)
+typedef struct Dll197Placement
 {
+    u8 pad0[0x18 - 0x0];
+    u8 rotXParam;  /* 0x18: low 6 bits -> anim.rotX seed */
+    u8 kind;       /* 0x19: object sub-type selector */
+    s16 scale;     /* 0x1a: rootMotionScale numerator */
+    s16 menuState; /* 0x1c: initial spin-symbol menu state */
+    s16 unk1e;     /* 0x1e: latched into Dll197State word 0 */
+} Dll197Placement;
+
+void dll_197_init(int obj, int dataArg)
+{
+    Dll197Placement* data = (Dll197Placement*)dataArg;
     u8* st;
     void* res;
     struct
@@ -342,32 +353,32 @@ void dll_197_init(int obj, int data)
     } stk;
 
     st = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.rotX = (s16)(((s8) * (u8*)(data + 0x18) & 0x3fu) << 10);
-    if (*(s16*)(data + 0x1a) > 0)
+    ((GameObject*)obj)->anim.rotX = (s16)(((s8)data->rotXParam & 0x3fu) << 10);
+    if (data->scale > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32) * (s16*)(data + 0x1a) / lbl_803E5140;
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)data->scale / lbl_803E5140;
     }
     else
     {
         ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5144;
     }
-    *(u8*)(st + 0xb) = *(u8*)(data + 0x19);
+    *(u8*)(st + 0xb) = data->kind;
     ((Dll197State*)st)->unkC = 0;
     ((Dll197State*)st)->menuState = 0;
-    *(int*)st = *(s16*)(data + 0x1e);
+    *(int*)st = data->unk1e;
     stk.f = lbl_803E513C;
     switch (*(u8*)(st + 0xb))
     {
     case 0:
         ((Dll197State*)st)->unkC = 1;
         res = Resource_Acquire(0x69, 1);
-        if (*(s16*)(data + 0x1c) == 0)
+        if (data->menuState == 0)
         {
             (*(void (**)(int, int, void*, int, int, int))(*(int*)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
         }
         break;
     case 1:
-        ((Dll197State*)st)->menuState = *(s16*)(data + 0x1c);
+        ((Dll197State*)st)->menuState = data->menuState;
         ((Dll197State*)st)->unkD = 0;
         ((Dll197State*)st)->scrollPos = ((Dll197State*)st)->menuState * 0x28 + 0x398;
         ((Dll197State*)st)->unkE = 0;

@@ -603,6 +603,16 @@ typedef struct SwipeRecord
     u8 pad15[0x18 - 0x15];
 } SwipeRecord;
 
+typedef struct SwipeVertex
+{
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 life;
+    s16 alpha;
+    s16 pad12;
+} SwipeVertex;
+
 extern SwipeColorTable gStaffSwipeColorTable;
 void staffDrawSwipe(int* obj, int* swipe);
 
@@ -736,33 +746,30 @@ void staffDrawSwipe(int* obj, int* swipe)
     {
         if ((swp->flags & 2) && swp->vertexCount >= 4)
         {
-            u8* vp;
+            SwipeVertex* vp;
             int j;
             f32 v1, v0, u;
             j = swp->startIndex;
-            vp = swp->vertexData + j * 20;
+            vp = (SwipeVertex*)(swp->vertexData + j * 20);
             for (; j < swp->endIndex - 2; j += 2)
             {
                 u = 0.5f;
                 v0 = 0.0f;
                 v1 = 1.0f;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
-                swipePos3f32(*(f32*)(vp + 0) - playerMapOffsetX, *(f32*)(vp + 4), *(f32*)(vp + 8) - playerMapOffsetZ);
-                swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x10));
+                swipePos3f32(vp[0].x - playerMapOffsetX, vp[0].y, vp[0].z - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)vp[0].alpha);
                 swipeTexCoord2f32(u, v0);
-                swipePos3f32(*(f32*)(vp + 0x14) - playerMapOffsetX, *(f32*)(vp + 0x18),
-                             *(f32*)(vp + 0x1c) - playerMapOffsetZ);
-                swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x24));
+                swipePos3f32(vp[1].x - playerMapOffsetX, vp[1].y, vp[1].z - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)vp[1].alpha);
                 swipeTexCoord2f32(u, v1);
-                swipePos3f32(*(f32*)(vp + 0x3c) - playerMapOffsetX, *(f32*)(vp + 0x40),
-                             *(f32*)(vp + 0x44) - playerMapOffsetZ);
-                swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x4c));
+                swipePos3f32(vp[3].x - playerMapOffsetX, vp[3].y, vp[3].z - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)vp[3].alpha);
                 swipeTexCoord2f32(u, v1);
-                swipePos3f32(*(f32*)(vp + 0x28) - playerMapOffsetX, *(f32*)(vp + 0x2c),
-                             *(f32*)(vp + 0x30) - playerMapOffsetZ);
-                swipeColor4u8(255, 255, 255, (u8) * (s16*)(vp + 0x38));
+                swipePos3f32(vp[2].x - playerMapOffsetX, vp[2].y, vp[2].z - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)vp[2].alpha);
                 swipeTexCoord2f32(u, v0);
-                vp += 0x28;
+                vp += 2;
             }
         }
         swp++;
@@ -795,15 +802,15 @@ void staff_update(int* obj)
         if (swp->flags & 2)
         {
             int j;
-            u8* vp;
+            SwipeVertex* vp;
             j = swp->startIndex;
-            vp = swp->vertexData + j * 20;
+            vp = (SwipeVertex*)(swp->vertexData + j * 20);
             for (; j < swp->endIndex; j += 2)
             {
                 if ((u8*)swp == *(u8**)(state + 0x48))
                 {
                     f32 k = lbl_803E32F4;
-                    f32 t = lbl_803E330C * *(f32*)(state + 0x98) - *(f32*)(vp + 0xc);
+                    f32 t = lbl_803E330C * *(f32*)(state + 0x98) - vp[0].life;
                     f32 clamped;
                     t = k * (t * lbl_803E3310);
                     if (t < lbl_803E32B4)
@@ -818,16 +825,16 @@ void staff_update(int* obj)
                     {
                         clamped = t;
                     }
-                    *(s16*)(vp + 0x10) = k - clamped;
-                    *(s16*)(vp + 0x24) = *(s16*)(vp + 0x10);
+                    vp[0].alpha = k - clamped;
+                    vp[1].alpha = vp[0].alpha;
                 }
                 else
                 {
-                    *(s16*)(vp + 0x10) = -(lbl_803E332C * timeDelta - (f32)(int)*(s16*)(vp + 0x10));
-                    *(s16*)(vp + 0x24) = *(s16*)(vp + 0x10);
+                    vp[0].alpha = -(lbl_803E332C * timeDelta - (f32)(int)vp[0].alpha);
+                    vp[1].alpha = vp[0].alpha;
                 }
                 {
-                    int c = *(s16*)(vp + 0x10);
+                    int c = vp[0].alpha;
                     if (c < 0)
                     {
                         c = 0;
@@ -836,8 +843,8 @@ void staff_update(int* obj)
                     {
                         c = 255;
                     }
-                    *(s16*)(vp + 0x10) = c;
-                    c = *(s16*)(vp + 0x24);
+                    vp[0].alpha = c;
+                    c = vp[1].alpha;
                     if (c < 0)
                     {
                         c = 0;
@@ -846,14 +853,14 @@ void staff_update(int* obj)
                     {
                         c = 255;
                     }
-                    *(s16*)(vp + 0x24) = c;
+                    vp[1].alpha = c;
                 }
-                if (*(s16*)(vp + 0x10) <= 0 && *(s16*)(vp + 0x24) <= 0)
+                if (vp[0].alpha <= 0 && vp[1].alpha <= 0)
                 {
                     swp->vertexCount += -2;
                     swp->startIndex += 2;
                 }
-                vp += 0x28;
+                vp += 2;
             }
             if ((u8*)swp != *(u8**)(state + 0x48) && swp->vertexCount == 0)
             {
