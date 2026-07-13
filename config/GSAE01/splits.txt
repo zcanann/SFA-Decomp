@@ -1135,6 +1135,7 @@ main/dll/tricky_substates.c:
 
 main/dll/dll_00C4_tricky.c:
 	.text       start:0x80144E40 end:0x8014A9F0
+	.rodata     start:0x802C21F0 end:0x802C2210
 	.data       start:0x8031DB3C end:0x8031DBF0
 	.sdata2     start:0x803E23D8 end:0x803E2468
 

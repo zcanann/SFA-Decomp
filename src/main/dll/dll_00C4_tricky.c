@@ -215,7 +215,7 @@ extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7, int arg8,
                               int arg9, int arg10);
-extern u32 gTrickyVisibilityBitsInit[4];
+__declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
 extern char sInWaterMessage[];
@@ -273,7 +273,7 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
-extern int gTrickyFrozenFxColors[];
+__declspec(section ".rodata") int gTrickyFrozenFxColors[4] = {0x08, 0xFF, 0xFF, 0x78};
 extern int* lbl_803DDA50;
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
