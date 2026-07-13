@@ -6829,6 +6829,21 @@ int saveCb_8007e748(int saveId, int size, void* dst)
     return 0;
 }
 
+typedef struct
+{
+    IndMtxInit ind;
+    u32 blk[6][7];
+} IndStageInitData;
+__declspec(section ".rodata") IndStageInitData lbl_802C1EA8 = {
+    {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
+    {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 2, 2, 2, 2, 1, 0},
+     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 2, 2, 1, 0, 0, 0},
+     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 1, 0, 0, 0, 0, 0}}};
+__declspec(section ".rodata") f32 lbl_802C1F68[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
 /* .bss block 0x80391DC0-0x803967C0 */
 f32 gWaterFxState[4];
 void* gWaterFxTextures[4];

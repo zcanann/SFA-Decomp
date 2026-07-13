@@ -158,6 +158,7 @@ main/newshadows.c:
 
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
+	.rodata     start:0x802C1EA8 end:0x802C1F80
 	.bss        start:0x80391DC0 end:0x803967C0
 
 main/maketex.c:
