@@ -1,12 +1,7 @@
 /*
  * DLL 0x00ED — collectible / genprops object group. TU: 0x80171D14–0x801723DC.
  *
- * Hosts the pick-up "collectible" object (the magicgem/scarab family) plus
- * the ObjectDescriptor tables for a batch of sibling genprops objects whose
- * bodies live in other TUs (mikabomb, mikabombshadow, StaticCamera,
- * gcbaddieshield, baddieinterestp, animatedobj, dim2roofrub, depthoffieldpoint,
- * staff, fireball, flamethrowerspe, shield, curve, restartmarker, dll_F7,
- * checkpoint4).
+ * Hosts the pick-up "collectible" object (the magicgem/scarab family).
  *
  * collectible behaviour (init/update/render/SeqFn): each instance is gated by
  * placement game bits (visibilityGameBit / hideGameBit). On player proximity
@@ -19,18 +14,6 @@
  */
 #include "main/game_object.h"
 #include "main/vecmath_distance_api.h"
-#include "main/dll/dll_00E5_shield_api.h"
-#include "main/dll/dll_00DD_gcbaddieshield_api.h"
-#include "main/dll/dll_00DC_mikabombshadow_api.h"
-#include "main/dll/dll_00DB_mikabomb_api.h"
-#include "main/dll/dll_00DE_baddieinterestp_api.h"
-#include "main/dll/dll_00E2_staff_api.h"
-#include "main/dll/dll_00C6_animatedobj_api.h"
-#include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
-#include "main/dll/dll_00E6_restartmarker.h"
-#include "main/dll/dll_00F7_dllf7_api.h"
-#include "main/dll/dll_0125_curve_api.h"
-#include "main/dll/dll_025A_staticcamera.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/player_api.h"
@@ -51,9 +34,6 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_00ED_collectible.h"
-#include "main/dll/dll_00E4_flamethrowerspe_api.h"
-#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
-#include "main/dll/dll_00E3_fireball_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define COLLECTIBLE_OBJGROUP 4
