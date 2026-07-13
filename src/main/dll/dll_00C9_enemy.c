@@ -1533,7 +1533,7 @@ void enemy_initialise(void)
         lbl_803DDA50 = Resource_Acquire(0x5a, 1);
 }
 
-void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int* state = ((GameObject*)obj)->extra;
     if (visible != 0)
@@ -1541,7 +1541,8 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E256C);
+            ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)((int*)obj, p2, p3, p4, p5,
+                                                                                   lbl_803E256C);
             {
                 u32 flags = *(u32*)&((EnemyState*)state)->flags2E8;
                 if ((flags & 3) != 0)
@@ -1555,7 +1556,7 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                     {
                         ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
                     }
-                    objParticleFn_80099d84(obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
+                    objParticleFn_80099d84((int*)obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
                                            ((EnemyState*)state)->modelLight);
                 }
             }
@@ -1565,22 +1566,22 @@ void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
                 }
-                objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
+                objParticleFn_80099d84((int*)obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
                                        ((EnemyState*)state)->modelLight);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
+                Sfx_KeepAliveLoopedObjectSound((int*)obj, SFXTRIG_forcecryslp11);
+                objParticleFn_80099d84((int*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
+                Sfx_KeepAliveLoopedObjectSound((int*)obj, SFXTRIG_forcecryslp11);
+                objParticleFn_80099d84((int*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)
             {
-                objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((int*)obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
             break;
         }

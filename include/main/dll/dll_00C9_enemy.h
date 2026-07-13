@@ -83,7 +83,7 @@ int enemy_getExtraSize(void);
 int enemy_getObjectTypeId(void);
 void enemy_release(void);
 void enemy_initialise(void);
-void enemy_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
+void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void enemy_hitDetect(GameObject* obj);
 void enemy_free(GameObject* obj, int flag);
 void enemy_update(int obj);
