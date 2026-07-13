@@ -2212,7 +2212,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     extern char sAdpExtension;
     char path[64];
     u8 vol;
-    u8* dvd;
+    u8* dvd[1];
     int* fadeTbl;
     StreamEntry* s;
     int count;
@@ -2220,7 +2220,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     int i;
     u8 stopped;
 
-    dvd = (u8*)&gAudioStreamDvdBlockCurrent;
+    dvd[0] = gAudioStreamDvdBlockCurrent;
     fadeTbl = gAudioStreamFadeTable;
     s = gStreamsData;
     count = gStreamsCount;
@@ -2264,7 +2264,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     {
         goto ret0;
     }
-    if (((DVDOpenCompatFn)DVDOpen)(path, dvd + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
+    if (((DVDOpenCompatFn)DVDOpen)(path, dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo)) == 0)
     {
         return 0;
     }
@@ -2274,7 +2274,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
         if (((DVDCancelStreamAsyncCompatFn)DVDCancelStreamAsync)(
-                dvd + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
+                dvd[0] + offsetof(AudioDvdStreamStorage, currentCommand), (void*)AudioStream_CancelCallback) == 0)
         {
             OSReport((char*)fadeTbl + 0xC);
             gAudioStreamPlaying = 0;
@@ -2338,9 +2338,9 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     gAudioStreamPreparingId = slot;
     gAudioStreamDvdState = 1;
     ((DVDPrepareStreamAsyncCompatFn)DVDPrepareStreamAsync)(
-        dvd + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
+        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.fileInfo), 0, 0, (void (*)(void))AudioStream_PrepareCallback);
     ((DVDStopStreamAtEndAsyncCompatFn)DVDStopStreamAtEndAsync)(
-        dvd + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
+        dvd[0] + offsetof(AudioDvdStreamStorage, prepared.stopAtEndCommand), 0);
     return 1;
 ret0:
     return 0;
