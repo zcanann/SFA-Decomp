@@ -11,6 +11,7 @@
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/objprint_api.h"
+#include "main/dll/objfx_api.h"
 #include "main/dll/DR/dll_026C_drcagewith.h"
 
 #define DRCAGEWITH_CHILD_OBJ 1143
@@ -130,7 +131,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
 
     if (bf31->b1 != 0)
     {
-        objParticleFn_80099d84((int)obj, lbl_803E69F8, 6, lbl_803E69F0, 0);
+        objParticleFn_80099d84(obj, lbl_803E69F8, 6, lbl_803E69F0, NULL);
     }
 
     if ((obj)->anim.seqId == 2154 || (obj)->anim.seqId == 2155)

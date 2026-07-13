@@ -11,6 +11,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/game_object.h"
+#include "main/object_update_list.h"
 #include "main/dll/DR/dll_026F_drgenerator.h"
 
 #define DRGENERATOR_OBJGROUP 0x3

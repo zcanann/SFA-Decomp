@@ -8,6 +8,7 @@
 #include "main/game_object.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
+#include "main/object_update_list.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0261_drlasercannon.h"
