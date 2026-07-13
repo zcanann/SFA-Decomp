@@ -2406,7 +2406,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
                 taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
                 taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-                taskCount = taskPartial + taskCount;
+                taskCount = taskCount + taskPartial;
                 if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
                 {
                     taskCount++;
