@@ -11,7 +11,6 @@
  * dll_0044_cameramodeviewfinder.c).
  */
 #include "main/dll/viewfinder.h"
-#include "main/dll/fx_800944A0_shared.h"
 
 void viewFinderSetZoom(f32 zoom)
 {

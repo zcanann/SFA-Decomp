@@ -19,6 +19,7 @@ void normalize(f32* x, f32* y, f32* z);
 void textBlendSetupFn_80078a7c(void);
 void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 void textRenderSetupFn_800795e8(void);
+int depthReadRequestPoll(int x, int y, int requestKey);
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
 void fn_8007BD8C(int handle1, int handle2);
