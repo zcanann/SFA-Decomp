@@ -28,6 +28,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/obj_query.h"
@@ -89,8 +90,6 @@ extern f32 lbl_803E2CC8;
 extern f32 lbl_803E2CCC;
 extern f32 lbl_803E2CD0;
 extern f32 lbl_803E2CD4;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(int* obj, int p1, int p2, int p3, int p4);
 extern void firepipe_setLinkedUpdateFlag(int* obj);
 extern void firepipe_clearLinkedUpdateFlag(int);
 extern f32 lbl_803E2B18;
@@ -290,7 +289,7 @@ void firecrawler_spawnFirepipe(int* obj)
     int* child;
     if (Obj_IsLoadingLocked() != 0)
     {
-        child = Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
+        child = (int*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
         ObjPath_GetPointWorldPosition(obj, 0, (char*)child + 0x8, (char*)child + 0xc, (char*)child + 0x10, 0);
         ((FirepipeSetup*)child)->head.color[0] = 1;
         ((FirepipeSetup*)child)->head.color[1] = 4;
@@ -304,7 +303,7 @@ void firecrawler_spawnFirepipe(int* obj)
         ((FirepipeSetup*)child)->unk20 = 0;
         ((FirepipeSetup*)child)->unk22 = 3;
         ((FirepipeSetup*)child)->unk23 = 0;
-        child = Obj_SetupObject(child, 5, -1, -1, 0);
+        child = (int*)Obj_SetupObject((ObjPlacement*)child, 5, -1, -1, 0);
         if (child != 0)
         {
             ObjLink_AttachChild(obj, child, 0);
@@ -780,14 +779,14 @@ void fn_8015A52C(s16* obj)
     u8 locked = Obj_IsLoadingLocked();
     if (locked != 0)
     {
-        int* setup = Obj_AllocObjectSetup(0x24, 0x51b);
+        int* setup = (int*)Obj_AllocObjectSetup(0x24, 0x51b);
         ((GameObject*)setup)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
         ((GameObject*)setup)->anim.localPosX = lbl_803E2C98 + ((GameObject*)obj)->anim.localPosY;
         ((GameObject*)setup)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
+        setup = (int*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         if (setup != NULL)
         {
             ((GameObject*)setup)->anim.velocityX =
@@ -812,7 +811,7 @@ void fn_80157B58(int* obj, u8* state)
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
+        child = (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         if ((u32)child != 0)
         {
             f32 dur = lbl_803E2B84 * ((f32)((FCVars*)state)->projectileTimer / ((BaddieState*)state)->unk2A8);

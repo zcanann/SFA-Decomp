@@ -17,6 +17,7 @@
 #include "main/dll/explosionpartfxsource_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
@@ -101,8 +102,6 @@ extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
 extern void dimmagicbridge_update(GameObject*);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void Obj_SetupObject(int* obj, int a, int b, int c, int d);
 int dimmagicbridge_getExtraSize(void);
 extern u8 dim_levelcontrol_free[];
 extern u8 dim_levelcontrol_getExtraSize[];
@@ -217,7 +216,7 @@ void dll_1CE_update(int* obj)
     if (Obj_IsLoadingLocked() == 0)
         return;
     {
-        int* no = Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
+        int* no = (int*)Obj_AllocObjectSetup(0x30, DLL1CE_CONTENTS_SUBTYPE);
         ((Dll1CESpawnSetup*)no)->posX = ((Dll1CEPlacement*)q)->posX;
         ((Dll1CESpawnSetup*)no)->posY = lbl_803E49FC + ((Dll1CEPlacement*)q)->posYOffset;
         ((Dll1CESpawnSetup*)no)->posZ = ((Dll1CEPlacement*)q)->posZ;
@@ -230,7 +229,7 @@ void dll_1CE_update(int* obj)
         ((Dll1CESpawnSetup*)no)->field2C = -1;
         ((Dll1CESpawnSetup*)no)->field1A = 5;
         ((Dll1CESpawnSetup*)no)->rotByte = (u8)((s16)((GameObject*)obj)->anim.rotX >> 8);
-        Obj_SetupObject(no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+        Obj_SetupObject((ObjPlacement*)no, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
 }
 #pragma opt_strength_reduction reset

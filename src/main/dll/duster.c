@@ -31,6 +31,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/obj_placement.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
@@ -141,8 +142,6 @@ extern const f32 lbl_803E2B40;
 extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject();
 extern int objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern void fn_80154D0C(int, int, u16*, float*);
@@ -470,7 +469,7 @@ void pollenFn_80155b10(u32 obj, int state)
         {
             velY = lbl_803E2A60;
         }
-        setup = Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
+        setup = (u16*)Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
         ((ObjPlacement*)setup)->posX = a[0];
         ((ObjPlacement*)setup)->posY = a[1];
         ((ObjPlacement*)setup)->posZ = a[2];
@@ -478,7 +477,7 @@ void pollenFn_80155b10(u32 obj, int state)
         ((ObjPlacement*)setup)->color[1] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        ref = Obj_SetupObject(setup, 5, -1, -1, 0);
+        ref = (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         if ((void*)ref != NULL)
         {
             ((GameObject*)ref)->anim.velocityX = velXZ;

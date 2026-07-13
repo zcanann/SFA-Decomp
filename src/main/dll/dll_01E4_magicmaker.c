@@ -13,6 +13,7 @@
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #define OBJFX_HIT_DETECT_SCALE_SECOND_CHARPTR_LEGACY
 #include "main/objfx.h"
 #include "main/object_api.h"
@@ -29,8 +30,6 @@ extern f32 lbl_803E4D8C;
 extern f32 lbl_803E4D88;
 
 extern int* ObjGroup_GetObjects(int group, int* countOut);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 
 int magicmaker_getExtraSize(void)
 {
@@ -90,7 +89,7 @@ void magicmaker_update(GameObject* obj)
             }
             if (matchCount < MAGICMAKER_MAX_CREATURES)
             {
-                objSetup = Obj_AllocObjectSetup(0x30, lbl_80325CE8[randomGetRange(0, 5)]);
+                objSetup = (char*)Obj_AllocObjectSetup(0x30, lbl_80325CE8[randomGetRange(0, 5)]);
                 if (objSetup != NULL)
                 {
                     ((MagicmakerSetup*)objSetup)->unk1A = 0x14;
@@ -105,7 +104,8 @@ void magicmaker_update(GameObject* obj)
                     ((ObjPlacement*)objSetup)->color[1] = ((MagicmakerPlacement*)placement)->colorG;
                     ((ObjPlacement*)objSetup)->color[3] = ((MagicmakerPlacement*)placement)->colorA;
                     ((MagicmakerSetup*)objSetup)->unk2E = 3;
-                    spawnedObj = Obj_SetupObject(objSetup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                    spawnedObj = (char*)Obj_SetupObject((ObjPlacement*)objSetup, 5, obj->anim.mapEventSlot, -1,
+                                                        (void*)*(int*)&obj->anim.parent);
                     if (spawnedObj != NULL)
                     {
                         i = 3;

@@ -29,6 +29,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
@@ -86,8 +87,6 @@ typedef struct SmallBasketThrowSetup
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern u8* Obj_SetupObject(u8* setup, int a, int b, int c, void* d);
 extern f32 gSmallBasketHitVelocity[];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
@@ -225,12 +224,13 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     switch (mode)
     {
     case 1:
-        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_A);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_A);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                       ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -277,13 +277,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 2:
-        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_B);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_B);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x190;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                       ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -330,13 +331,14 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         ((GameObject*)spawned)->anim.rotX = diff;
         break;
     case 3:
-        setup = Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_C);
+        setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_C);
         ((SmallBasketThrowSetup*)setup)->yawByte = randomGetRange(-0x7f, 0x7e);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         ((SmallBasketThrowSetup*)setup)->field1A = 0x7d0;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                       ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;
@@ -386,11 +388,11 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     case 6:
         if (data[0x1e] == 5)
         {
-            setup = Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT);
+            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT);
         }
         else
         {
-            setup = Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT_ALT);
+            setup = (u8*)Obj_AllocObjectSetup(0x30, SMALLBASKET_CHILD_OBJ_EFFECT_ALT);
         }
         setup[0x1a] = 0x14;
         ((SmallBasketThrowSetup*)setup)->field2C = -1;
@@ -408,7 +410,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
             ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         }
         ((SmallBasketThrowSetup*)setup)->field24 = -1;
-        spawned = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        spawned = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                       ((GameObject*)obj)->anim.parent);
         if (slowMo)
         {
             sc = lbl_803E3948;

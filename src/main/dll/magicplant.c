@@ -16,6 +16,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/obj_placement.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -87,8 +88,6 @@ void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int f
 extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern f32 PSVECMag(f32* v);
 
 void mikaladon_init(GameObject* obj, int state)
@@ -370,7 +369,7 @@ void fn_80153640(GameObject* obj, int state)
         fx->color[1] = 1;
         fx->color[2] = 0xff;
         fx->color[3] = 0xff;
-        newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
+        newObj = (int)Obj_SetupObject(fx, 5, -1, -1, 0);
         if ((void*)newObj != NULL)
         {
             ((GameObject*)newObj)->anim.velocityX =

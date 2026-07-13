@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie/trickyfollow.h"
 #include "main/object_api.h"
@@ -128,8 +129,6 @@ extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target,
 extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern void objSetAnimSpeedTo1(int* obj);
 extern void* ObjGroup_GetObjects(int group, int* count);
 
@@ -247,12 +246,14 @@ void trickyFlame(GameObject* obj, int trickyState)
                     ((TrickyRuntime*)trickyState)->flags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
                     for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
+                        setup = (void*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
+                                                           TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = i;
-                        slot[0x700 / 4] =
-                            (void*)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+                        slot[0x700 / 4] = (void*)Obj_SetupObject((ObjPlacement*)setup, 5,
+                                                                (obj)->anim.mapEventSlot, -1,
+                                                                (obj)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_3db);
@@ -341,12 +342,14 @@ void trickyFlame(GameObject* obj, int trickyState)
                     ((TrickyRuntime*)trickyState)->flags |= TRICKY_STATE_HELPERS_ACTIVE_FLAG;
                     for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
+                        setup = (void*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
+                                                           TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = i;
-                        slot[0x700 / 4] =
-                            (void*)Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+                        slot[0x700 / 4] = (void*)Obj_SetupObject((ObjPlacement*)setup, 5,
+                                                                (obj)->anim.mapEventSlot, -1,
+                                                                (obj)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_3db);
@@ -545,11 +548,13 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
                     trickyState->flags = trickyState->flags | TRICKY_STATE_HELPERS_ACTIVE_FLAG;
                     for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        setup = Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE, TRICKY_GUARD_HELPER_DEF_ID);
+                        setup = (void*)Obj_AllocObjectSetup(TRICKY_GUARD_HELPER_SETUP_SIZE,
+                                                           TRICKY_GUARD_HELPER_DEF_ID);
                         *(u8*)((char*)setup + 0x4) = 2;
                         *(u8*)((char*)setup + 0x5) = 1;
                         *(s16*)((char*)setup + 0x1a) = i;
-                        slot[0x700 / 4] = (void*)Obj_SetupObject(setup, 5, obj->mapEventSlot, -1, obj->parent);
+                        slot[0x700 / 4] =
+                            (void*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->mapEventSlot, -1, obj->parent);
                         slot++;
                     }
                     Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_3db);

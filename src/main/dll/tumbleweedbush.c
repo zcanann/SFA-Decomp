@@ -20,6 +20,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/baddie/trickyfollow.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -51,8 +52,6 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(void* setup, int p2, int p3, int p4, void* p5);
 extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 extern void objSetAnimSpeedTo1(int* obj);
@@ -131,11 +130,12 @@ void trickyGrowl(void* obj, void* trickyState)
                     ((TrickyState*)trickyState)->stateFlags | TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, slot = trickyState; i < CHILD_OBJECT_COUNT; slot++, i++)
                 {
-                    setup = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    setup = (void*)Obj_AllocObjectSetup(0x24, 0x4f0);
                     *(u8*)((char*)setup + 0x4) = 2;
                     *(u8*)((char*)setup + 0x5) = 1;
                     *(s16*)((char*)setup + 0x1a) = i;
-                    slot[0x700 / 4] = (void*)Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                    slot[0x700 / 4] = (void*)Obj_SetupObject((ObjPlacement*)setup, 5,
+                                                             ((GameObject*)obj)->anim.mapEventSlot, -1,
                                                              ((GameObject*)obj)->anim.parent);
                 }
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_en_cvdrip1c_3db);

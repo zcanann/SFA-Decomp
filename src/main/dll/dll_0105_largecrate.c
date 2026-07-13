@@ -26,6 +26,7 @@
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
@@ -48,8 +49,6 @@
 #define LARGECRATE_ROB_WAVE_ID_65D7     0x65d7
 #define GAMEBIT_SFX_MUTE                0xa71
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern int* lbl_803DDAC8;
 extern f32 lbl_803E39A8;
 extern const f32 lbl_803E39AC;
@@ -199,12 +198,13 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
     switch (((LargeCrateState*)state)->dropType)
     {
     case LARGECRATE_DROPTYPE_FRUIT_A:
-        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_A);
+        setup = (char*)Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_A);
         ((CrateFragmentSetup*)setup)->head.posX = obj->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = obj->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = obj->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 400;
-        newObj = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        newObj = (char*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1,
+                                        (void*)*(int*)&obj->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -242,13 +242,14 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         *(s16*)newObj = angle;
         break;
     case LARGECRATE_DROPTYPE_FRUIT_B:
-        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_B);
+        setup = (char*)Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_B);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = obj->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = obj->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = obj->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 400;
-        newObj = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        newObj = (char*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1,
+                                        (void*)*(int*)&obj->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -286,13 +287,14 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         *(s16*)newObj = angle;
         break;
     case LARGECRATE_DROPTYPE_FRUIT_C:
-        setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_C);
+        setup = (char*)Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_FRUIT_C);
         ((CrateFragmentSetup*)setup)->spinSeed = randomGetRange(-0x7f, 0x7e);
         ((CrateFragmentSetup*)setup)->head.posX = obj->anim.localPosX;
         ((CrateFragmentSetup*)setup)->head.posY = obj->anim.localPosY;
         ((CrateFragmentSetup*)setup)->head.posZ = obj->anim.localPosZ;
         ((CrateFragmentSetup*)setup)->field1A = 2000;
-        newObj = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        newObj = (char*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1,
+                                        (void*)*(int*)&obj->anim.parent);
         ((GameObject*)newObj)->anim.velocityX = obj->anim.localPosX - playerObj->anim.localPosX;
         ((GameObject*)newObj)->anim.velocityZ = obj->anim.localPosZ - playerObj->anim.localPosZ;
         len = ((GameObject*)newObj)->anim.velocityX * ((GameObject*)newObj)->anim.velocityX +
@@ -333,11 +335,11 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
     case LARGECRATE_DROPTYPE_GAS_ALT:
         if (((LargeCrateState*)state)->dropType == LARGECRATE_DROPTYPE_GAS)
         {
-            setup = Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS);
+            setup = (char*)Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS);
         }
         else
         {
-            setup = Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS_ALT);
+            setup = (char*)Obj_AllocObjectSetup(0x30, LARGECRATE_DROP_GAS_ALT);
         }
         ((CrateGasSetup*)setup)->field1A = 0x14;
         ((CrateGasSetup*)setup)->field2C = -1;
@@ -346,7 +348,8 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
         ((CrateGasSetup*)setup)->head.posY = lbl_803E39C0 + obj->anim.localPosY;
         ((CrateGasSetup*)setup)->head.posZ = obj->anim.localPosZ;
         ((CrateGasSetup*)setup)->field24 = -1;
-        newObj = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        newObj = (char*)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1,
+                                        (void*)*(int*)&obj->anim.parent);
         (**(void (**)(int, f32, f32, f32))(**(int**)&((GameObject*)newObj)->anim.dll + 0x2c))(
             (int)newObj, lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
@@ -357,7 +360,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
     case LARGECRATE_DROPTYPE_PICKUP:
         if (Obj_IsLoadingLocked() != 0)
         {
-            setup = Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_PICKUP);
+            setup = (char*)Obj_AllocObjectSetup(0x24, LARGECRATE_DROP_PICKUP);
             ((CratePickupSetup*)setup)->head.posX = obj->anim.localPosX;
             ((CratePickupSetup*)setup)->head.posY = lbl_803E39A8 + obj->anim.localPosY;
             ((CratePickupSetup*)setup)->head.posZ = obj->anim.localPosZ;
@@ -365,7 +368,7 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
             ((CratePickupSetup*)setup)->head.color[2] = 200;
             ((CratePickupSetup*)setup)->field20 = -1;
             ((CratePickupSetup*)setup)->field1A = 0x7f;
-            Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+            Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, (void*)*(int*)&obj->anim.parent);
         }
         break;
     }

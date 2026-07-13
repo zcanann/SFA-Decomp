@@ -22,6 +22,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
@@ -105,8 +106,6 @@ extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
 void fn_80144B50(u8* obj, u8* state);
 extern f32 lbl_803E24C8;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern u8* Obj_SetupObject(u8* e, int a, int b, int c, void* d);
 extern void objSetAnimSpeedTo1(u8* e);
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E23E4;
@@ -777,12 +776,13 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                 ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_ACTIVE;
                 for (i = 0, p = state; i < 7; p += 4, i++)
                 {
-                    e = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    e = (u8*)Obj_AllocObjectSetup(0x24, 0x4f0);
                     e[4] = 2;
                     e[5] = 1;
                     *(s16*)(e + 0x1a) = i;
-                    *(u8**)(p + 0x700) = Obj_SetupObject(e, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                                         ((GameObject*)obj)->anim.parent);
+                    *(u8**)(p + 0x700) = (u8*)Obj_SetupObject((ObjPlacement*)e, 5,
+                                                              ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                                              ((GameObject*)obj)->anim.parent);
                 }
                 Sfx_PlayFromObject((int)obj, SFXTRIG_en_cvdrip1c_3db);
                 Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
@@ -1277,7 +1277,7 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
     }
     if (((TrickyState*)state)->child == NULL && Obj_IsLoadingLocked() != 0)
     {
-        e = Obj_AllocObjectSetup(0x20, 0x17b);
+        e = (u8*)Obj_AllocObjectSetup(0x20, 0x17b);
         slots[0] = -1;
         slots[1] = -1;
         slots[2] = -1;
@@ -1314,7 +1314,8 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
             idx = -1;
         }
         ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c = idx;
-        ((TrickyState*)state)->child = Obj_SetupObject(e, 4, -1, -1, (obj)->anim.parent);
+        ((TrickyState*)state)->child =
+            (u8*)Obj_SetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
         ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState*)state)->childPhaseTimer0 = z;
