@@ -181,7 +181,8 @@ extern s8 gSaveGameMapActCacheIdx;
 extern u32 pRestartPoint;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
-extern SaveGameDefaultPosition gSaveGameDefaultPosition;
+__declspec(section ".rodata") SaveGameDefaultPosition gSaveGameDefaultPosition = {
+    570.6483764648438f, -82.0f, 15790.8203125f};
 
 extern int loadSaveGame(int slot, void* save);
 extern int _saveGame(int slot, int save, int data);

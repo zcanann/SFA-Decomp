@@ -354,6 +354,7 @@ main/dll/dll_0015_curves.c:
 
 main/dll/dll_0017_savegame.c:
 	.text       start:0x800E8100 end:0x800EA174
+	.rodata     start:0x802C2170 end:0x802C217C
 	.data       start:0x80311720 end:0x80312340
 	.bss        start:0x803A2F80 end:0x803A4218
 
