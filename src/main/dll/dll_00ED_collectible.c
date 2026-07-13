@@ -195,17 +195,6 @@ u32 lbl_80320768[] = {
     0x08400000,
 };
 
-u32 jumptable_80320AA0[] = {
-    (u32)((char*)staffFn_80170380 + 0x10C),
-    (u32)((char*)staffFn_80170380 + 0x184),
-    (u32)((char*)staffFn_80170380 + 0x35C),
-    (u32)((char*)staffFn_80170380 + 0x3D0),
-    (u32)((char*)staffFn_80170380 + 0x584),
-    (u32)((char*)staffFn_80170380 + 0x550),
-    (u32)((char*)staffFn_80170380 + 0x65C),
-    (u32)((char*)staffFn_80170380 + 0x84),
-};
-
 u8 collectible_getVisibilityBitClear(int* obj) { return ((CollectibleState*)((GameObject*)obj)->extra)->visibilityBitClear; }
 
 int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->unkF4; }

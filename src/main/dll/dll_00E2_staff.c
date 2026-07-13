@@ -229,13 +229,6 @@ u32 lbl_80320978[] = {
     0xFF000000,
 };
 
-u32 jumptable_80320AA0[] = {
-    (u32)((char*)staffFn_80170380 + 0x10C), (u32)((char*)staffFn_80170380 + 0x184),
-    (u32)((char*)staffFn_80170380 + 0x35C), (u32)((char*)staffFn_80170380 + 0x3D0),
-    (u32)((char*)staffFn_80170380 + 0x584), (u32)((char*)staffFn_80170380 + 0x550),
-    (u32)((char*)staffFn_80170380 + 0x65C), (u32)((char*)staffFn_80170380 + 0x84),
-};
-
 typedef struct StaffState
 {
     u8 pad00[0x48];
