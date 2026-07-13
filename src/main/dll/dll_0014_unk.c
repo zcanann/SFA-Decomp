@@ -3828,13 +3828,14 @@ int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 
 void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
 {
+    RomCurveDef* adjacent;
     int linkId;
     int adjacentId;
     int low;
     int high;
     int mid;
     int i;
-    RomCurveDef* adjacent;
+    int j;
 
     outIds[0] = ROMCURVE_LINK_ID_NONE;
     outIds[1] = ROMCURVE_LINK_ID_NONE;
@@ -3862,24 +3863,23 @@ void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds)
         }
     }
 
-    adjacentId = outIds[2];
-    if (adjacentId <= -1)
+    if (outIds[2] <= -1)
     {
         return;
     }
-    adjacent = RomCurve_FindByIdInline(adjacentId);
+    adjacent = RomCurve_FindByIdInline(outIds[2]);
 
     if (adjacent == NULL)
     {
         return;
     }
 
-    for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
+    for (j = 0; j < ROMCURVE_LINK_COUNT; j++)
     {
-        linkId = adjacent->linkIds[i];
+        linkId = adjacent->linkIds[j];
         if (linkId != (int)ROMCURVE_LINK_ID_NONE)
         {
-            if ((adjacent->blockedLinkMask & (1 << i)) == 0)
+            if ((adjacent->blockedLinkMask & (1 << j)) == 0)
             {
                 outIds[3] = linkId;
             }
