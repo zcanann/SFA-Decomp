@@ -39,7 +39,10 @@
 
 #define DIMBOSS_OBJGROUP 3
 
+void (*gDIMbossHitDetectAnimTable[12])(void);
+void (*gDIMbossAnimTable[6])(void);
 u32 gDIMbossAnimController[0x189];
+u32 gDIMbossRenderMtx[12];
 
 
 
@@ -78,12 +81,8 @@ extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
 extern void queueGlowRender(void* effect);
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
-extern u32 gDIMbossRenderMtx[];
 extern DIMbossAnimScratch gDIMbossAnimScratchBase;
-extern u32 gDIMbossAnimController[];
 extern u32 lbl_802C2338[];
-extern void (*gDIMbossAnimTable[])(void);
-extern void (*gDIMbossHitDetectAnimTable[])(void);
 extern u32* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
