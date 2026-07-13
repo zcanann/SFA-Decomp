@@ -64,6 +64,7 @@ STATIC_ASSERT(sizeof(DIMSnowHorn1State) == 0xD0C);
 STATIC_ASSERT(offsetof(DIMSnowHorn1State, countdownTimer) == 0xA84);
 
 extern f32 lbl_80335128[];
+extern int lbl_803E8230;
 extern s16 lbl_803DC73C[2];
 extern f32 lbl_803DC740[2];
 extern s16 lbl_803DC748;
@@ -90,6 +91,23 @@ extern f32 lbl_803E8288;
 extern f32 lbl_803E828C;
 extern f32 lbl_803E8290;
 extern f32 lbl_803E8294;
+extern f32 lbl_803E8298;
+extern f32 lbl_803E829C;
+extern f32 lbl_803E82A0;
+extern f32 lbl_803E82A4;
+extern f32 lbl_803E82A8;
+extern f32 lbl_803E82AC;
+extern f32 lbl_803E82B0;
+extern f32 lbl_803E82B4;
+extern f32 gDIMSnowHorn1Gravity;
+
+extern f32 gDIMSnowHorn1ModelMtx[16];
+extern f32 gDIMSnowHorn1DefaultStateHandler;
+extern int gDIMSnowHorn1StateHandlers[];
+extern u8 gDIMSnowHorn1ConfigTable[];
+extern void* gDIMSnowHorn1Texture;
+extern s16 gDIMSnowHorn1TextureId;
+extern int gDIMSnowHorn1PathCollisionData;
 
 void DIMSnowHorn1_func23(void);
 int DIMSnowHorn1_defaultStateHandler(void);
