@@ -29,9 +29,14 @@ STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 #define ANIMSPACECRAFT_MASK_GROUP 0x70
 
 extern char lbl_803AC948[];
-extern f32 lbl_803E4780;                                           /* render scale */
-extern f32 lbl_803E4784;                                           /* init position component */
-extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C; /* glow spawn offsets */
+__declspec(section ".sdata2") f32 lbl_803E4770 = 143.0f;  /* glow spawn offsets */
+__declspec(section ".sdata2") f32 lbl_803E4774 = 16.0f;
+__declspec(section ".sdata2") f32 lbl_803E4778 = -79.0f;
+__declspec(section ".sdata2") f32 lbl_803E477C = -143.0f;
+__declspec(section ".sdata2") f32 lbl_803E4780 = 1.0f;    /* render scale */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4784 = 0.0f;    /* init position component */
+#pragma explicit_zero_data off
 
 void imanimspacecraft_modelMtxFn(void)
 {

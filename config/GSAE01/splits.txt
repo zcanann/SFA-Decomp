@@ -1794,9 +1794,11 @@ main/dll/dll_016C_dll16c.c:
 
 main/dll/IM/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
+	.sdata2     start:0x803E4768 end:0x803E4770
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
+	.sdata2     start:0x803E4770 end:0x803E4788
 
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
@@ -1804,12 +1806,15 @@ main/dll/IM/dll_016F_imspacethruster.c:
 
 main/dll/IM/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
+	.sdata2     start:0x803E47B8 end:0x803E47C0
 
 main/dll/IM/dll_0171_imspaceringgen.c:
 	.text       start:0x801AEAE4 end:0x801AEE2C
+	.sdata2     start:0x803E47C0 end:0x803E47C8
 
 main/dll/dll_0172_linkblevcontrol.c:
 	.text       start:0x801AEE2C end:0x801AF568
+	.sdata2     start:0x803E47C8 end:0x803E47D0
 
 main/dll/dll_0173_linklevcontrol.c:
 	.text       start:0x801AF568 end:0x801AF9E4
@@ -2080,6 +2085,7 @@ main/dll/DIM/dll_019E_dim_tricky.c:
 
 main/dll/NW/dll_019F_nwtreebrid.c:
 	.text       start:0x801CD7DC end:0x801CDC78
+	.sdata2     start:0x803E51F8 end:0x803E5200
 
 main/dll/NW/dll_01A0_nwgeyser.c:
 	.text       start:0x801CDC78 end:0x801CE078
@@ -2090,6 +2096,7 @@ main/dll/NW/dll_01A1_nwmammoth.c:
 
 main/dll/NW/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24
+	.sdata2     start:0x803E5260 end:0x803E5268
 
 main/dll/NW/dll_01A3_nwanimice.c:
 	.text       start:0x801CFB24 end:0x801CFBB4
@@ -2385,6 +2392,7 @@ main/dll/dll_01FF_dll1ff.c:
 
 main/dll/WM/dll_01FD_wmlasertarget.c:
 	.text       start:0x801F1F1C end:0x801F20D4
+	.sdata2     start:0x803E5D90 end:0x803E5D98
 
 main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
@@ -2392,6 +2400,7 @@ main/dll/dll_0200_dll200.c:
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
+	.sdata2     start:0x803E5DC8 end:0x803E5DE0
 
 main/dll/WM/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
@@ -2415,6 +2424,7 @@ main/dll/WM/dll_0209_wmlevelcontrol.c:
 main/dll/WM/dll_020A_wmgeneralscales.c:
 	.text       start:0x801F48C0 end:0x801F4C04
 	.data       start:0x80328C08 end:0x80328C2C
+	.sdata2     start:0x803E5E98 end:0x803E5EA8
 
 main/dll/LGT/lgtcontrollight.c:
 	.text       start:0x801F4C04 end:0x801F4ECC
@@ -2443,6 +2453,7 @@ main/dll/WM/dll_020E_wmsun.c:
 
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
+	.sdata2     start:0x803E5F90 end:0x803E5F98
 
 main/dll/WM/dll_0210_wmplanets.c:
 	.text       start:0x801F7D34 end:0x801F7FF4

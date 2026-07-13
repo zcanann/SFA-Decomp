@@ -16,7 +16,10 @@
 #include "main/dll/IM/dll_0170_imspacering.h"
 
 extern GameObject* lbl_803DDB48;
-extern f32 lbl_803E47B8;
+__declspec(section ".sdata2") f32 lbl_803E47B8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E47BC = 0.0f;
+#pragma explicit_zero_data off
 
 int IMSpaceRing_getExtraSize(void)
 {

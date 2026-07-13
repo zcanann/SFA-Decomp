@@ -31,8 +31,10 @@
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern const f32 lbl_803E5260;
-extern f32 lbl_803E5264;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5260 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5264 = 600.0f;
 extern f32 lbl_803E5268;
 extern int lbl_802C23E8[];
 

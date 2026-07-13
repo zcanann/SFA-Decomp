@@ -70,7 +70,10 @@ enum LinkbLevStage
 };
 
 extern u8 lbl_803238D8[];
-extern f32 lbl_803E47C8;
+__declspec(section ".sdata2") f32 lbl_803E47C8 = 2000.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E47CC = 0.0f;
+#pragma explicit_zero_data off
 extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 

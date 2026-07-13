@@ -14,7 +14,10 @@
 #include "main/frame_timing.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
 
-extern f32 lbl_803E5D90; /* 1.0: render scale */
+__declspec(section ".sdata2") f32 lbl_803E5D90 = 1.0f; /* render scale */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5D94 = 0.0f;
+#pragma explicit_zero_data off
 
 int WM_LaserTarget_getExtraSize(void)
 {

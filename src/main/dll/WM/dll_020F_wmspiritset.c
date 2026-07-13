@@ -15,6 +15,9 @@
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_020F_wmspiritset.h"
 
+__declspec(section ".sdata2") f32 lbl_803E5F90 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F94 = 0.0085f;
+
 /* romlist object-def variant driving this DLL (see docblock): def 921
    'WM_SpiritSet' (romlist type 0x264). */
 #define WMSPIRITSET_SEQID_SPIRITSET 0x264

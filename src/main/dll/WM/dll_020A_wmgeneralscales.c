@@ -34,10 +34,12 @@
 #define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
 extern u8 framesThisStep;
-extern f32 lbl_803E5E98; /* 0.0 */
-extern f32 lbl_803E5E9C; /* 800.0 */
-extern f32 lbl_803E5EA0; /* 1.1: sword scale-up */
-extern f32 lbl_803E5EA4; /* 1.0: render scale */
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5E98 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E5E9C = 800.0f;
+__declspec(section ".sdata2") f32 lbl_803E5EA0 = 1.1f; /* sword scale-up */
+__declspec(section ".sdata2") f32 lbl_803E5EA4 = 1.0f; /* render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);

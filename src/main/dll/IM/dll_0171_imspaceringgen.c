@@ -28,8 +28,8 @@
 #define IMSPACERINGGEN_CHILD_OBJ_RING_PIECE 0x301
 
 extern GameObject* lbl_803DDB48;
-extern f32 lbl_803E47C0; /* render scale */
-extern f32 lbl_803E47C4; /* Y offset applied when chasing ring A */
+__declspec(section ".sdata2") f32 lbl_803E47C0 = 1.0f; /* render scale */
+__declspec(section ".sdata2") f32 lbl_803E47C4 = 9.0f; /* Y offset applied when chasing ring A */
 extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 

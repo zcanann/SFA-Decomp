@@ -42,8 +42,8 @@ typedef struct NwTreeBirdMapData
 
 #define TREEBIRD_SPAWN_PARTICLE(obj, id) (*gPartfxInterface)->spawnObject((void*)(obj), (id), 0, 1, -1, 0)
 
-extern f32 lbl_803E51F8;
-extern f32 lbl_803E51FC;
+__declspec(section ".sdata2") f32 lbl_803E51F8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E51FC = 100.0f;
 
 int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

@@ -8,7 +8,10 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/IM/dll_016D_imicepillar.h"
 
-extern f32 lbl_803E4768;
+__declspec(section ".sdata2") f32 lbl_803E4768 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E476C = 0.0f;
+#pragma explicit_zero_data off
 
 int imicepillar_getExtraSize(void)
 {
