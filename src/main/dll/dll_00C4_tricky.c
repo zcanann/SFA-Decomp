@@ -1848,7 +1848,7 @@ void tricky_handleDefeat(GameObject* obj, int state)
                 mainSetBits(*(s16*)(setup + BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT), 0);
             }
         }
-        ((TrickyState*)state)->actionTargetObj = 0;
+        ((TrickyState*)state)->actionTargetObj = NULL;
         ObjHits_DisableObject((int)obj);
         *(u8*)&(obj)->anim.resetHitboxMode = *(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
         moveId = ((TrickyState*)state)->moveId1;
@@ -2341,7 +2341,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 }
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
-            proj = *(u8**)&((TrickyState*)state)->actionTargetObj;
+            proj = (u8*)((TrickyState*)state)->actionTargetObj;
             if (proj != NULL && ((GameObject*)proj)->anim.classId == 1)
             {
                 fn_802961FC(proj, result);
@@ -2414,7 +2414,7 @@ u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
 
     traceHit[0] = 0;
     visible = 0;
-    if (((TrickyState*)state)->actionTargetObj != 0)
+    if (((TrickyState*)state)->actionTargetObj != NULL)
     {
         probe.x = *(f32*)((int)from + 0);
         probe.y = *(f32*)((int)from + 4);

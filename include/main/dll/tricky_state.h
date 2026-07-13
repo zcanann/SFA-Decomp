@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/dll/curve_walker.h"
+#include "main/game_object.h"
 
 /* Shared TrickyState.stateFlags bits used across the Tricky sidekick / spawned
  * sibling handlers (tricky, tricky_substates, trickyfollow, tumbleweedbush,
@@ -81,7 +82,7 @@ typedef struct TrickyState {
     s16 pathRotY;
     s16 pathRotZ;
     u8 pad294[0x29C - 0x294];
-    u32 actionTargetObj;
+    GameObject* actionTargetObj;
     u16 turnOctant; /* (u16 angleDelta >> 13): which 1/8 sector the turn falls in; used as an anim mode */
     u16 turnAngleDelta; /* signed angle to actionTargetObj minus world rotZ, normalized to +/-0x8000; feeds turnOctant (>>13) */
     u16 targetDist; /* distance to actionTargetObj: (s16)sqrt(dx^2+dy^2+dz^2) */

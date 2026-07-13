@@ -888,27 +888,27 @@ void fn_8003A230(GameObject* obj, void* state, f32 val)
 
 extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(GameObject* obj, int target, int state, int maxAngle)
+void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle)
 {
     s16* found;
 
     found = objFindJointVecByKey(obj, 0);
     if (found != NULL)
     {
-        *(s16*)((char*)state + 0x14) =
-            (s16)((s16)getAngle((obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX,
-                                (obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ) -
+        state->headYaw =
+            (s16)((s16)getAngle((obj)->anim.localPosX - target->anim.localPosX,
+                                (obj)->anim.localPosZ - target->anim.localPosZ) -
                   (obj)->anim.rotX);
         maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
-        if (*(s16*)((char*)state + 0x14) > maxAngle)
+        if (state->headYaw > maxAngle)
         {
-            *(s16*)((char*)state + 0x14) = maxAngle;
+            state->headYaw = maxAngle;
         }
-        if (*(s16*)((char*)state + 0x14) < -maxAngle)
+        if (state->headYaw < -maxAngle)
         {
-            *(s16*)((char*)state + 0x14) = -maxAngle;
+            state->headYaw = -maxAngle;
         }
-        found[1] = *(s16*)((char*)state + 0x14);
+        found[1] = state->headYaw;
     }
 }
 

@@ -8,6 +8,7 @@
 #include "main/model.h"
 #include "main/maketex_api.h"
 #include "main/objprint_api.h"
+#include "main/objprint_character_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
@@ -15631,7 +15632,7 @@ int Lightfoot_UpdateTargetAnimationCycle(GameObject* obj, int state, f32 fv)
     void* p = ((PlayerState*)state)->baddie.targetObj;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0(obj, (GameObject*)p, (CharacterEyeAnimState*)(inner + 0x3ac), 0x19);
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 ||
         *(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
@@ -15660,7 +15661,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
     void* p = ((PlayerState*)state)->baddie.targetObj;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0(obj, (GameObject*)p, (CharacterEyeAnimState*)(inner + 0x3ac), 0x19);
     }
     if (obj->unkF8 == 0)
     {
@@ -15808,7 +15809,7 @@ int Lightfoot_UpdateAnimationCycle(GameObject* obj, int state, f32 fv)
     f32* blends;
     if (p != NULL)
     {
-        fn_8003B0D0(obj, (int)p, inner + 0x3ac, 0x19);
+        fn_8003B0D0(obj, (GameObject*)p, (CharacterEyeAnimState*)(inner + 0x3ac), 0x19);
     }
     a4 = *(int*)((char*)inner + 0x40c);
     moves = *(s16**)((char*)a4 + 0);

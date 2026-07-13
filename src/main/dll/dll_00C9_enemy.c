@@ -81,7 +81,6 @@ extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern u32 fn_80154870();
 extern void* memcpy(void* dst, void* src, int n);
-extern void fn_8003B0D0(GameObject* obj, int b, void* c, int d);
 extern void tricky_handleDefeat(GameObject* obj, int state);
 extern void Tricky_resumeAfterCommand(GameObject* obj, int state);
 extern void Tricky_applyFloorResponse(GameObject* obj, int state);
@@ -215,9 +214,10 @@ void objAnimFn_8014a9f0(short* obj, int state)
     {
         characterDoEyeAnimsState((GameObject*)obj, state + 0x26c);
     }
-    if ((*(void**)&((TrickyState*)state)->actionTargetObj != 0) && ((((TrickyState*)state)->controlFlags & 0x800) != 0))
+    if ((((TrickyState*)state)->actionTargetObj != NULL) && ((((TrickyState*)state)->controlFlags & 0x800) != 0))
     {
-        fn_8003B0D0((GameObject*)(obj), *(int*)&((TrickyState*)state)->actionTargetObj, (void*)(state + 0x26c), 0x19);
+        fn_8003B0D0((GameObject*)obj, ((TrickyState*)state)->actionTargetObj,
+                    (CharacterEyeAnimState*)(state + 0x26c), 0x19);
     }
     ((TrickyState*)state)->prevActionId = ((TrickyState*)state)->actionId;
     flags = ((TrickyState*)state)->flags2DC;
@@ -1067,7 +1067,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
                 (*(void (*)(int*, int, int*))(*(int*)(*(int*)(*(int*)&((GameObject*)obj)->anim.dll) + 0x34)))(obj, 1,
                                                                                                               node);
                 ((TrickyState*)sub)->flags2DC |= 0x200000LL;
-                *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
+                ((TrickyState*)sub)->actionTargetObj = (GameObject*)obj;
             }
             break;
         case 4:
@@ -1075,7 +1075,7 @@ int enemy_SeqFn(int* node, int unused, ObjAnimUpdateState* animUpdate)
             if (obj != NULL)
             {
                 ((TrickyState*)sub)->flags2DC &= ~0x200000LL;
-                *(int**)&((TrickyState*)sub)->actionTargetObj = obj;
+                ((TrickyState*)sub)->actionTargetObj = (GameObject*)obj;
             }
             break;
         case 2:
@@ -1129,7 +1129,7 @@ void fn_8014B878(int* arg1, int* sub)
 
     player = (int*)Obj_GetPlayerObject();
     tricky = (int*)getTrickyObject();
-    target = *(int**)&((TrickyState*)sub)->actionTargetObj;
+    target = (int*)((TrickyState*)sub)->actionTargetObj;
     if (target != NULL && (((TrickyState*)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject*)player)->objectFlags & ENEMY_OBJFLAG_PARENT_SLACK) == 0))
     {
@@ -1171,7 +1171,7 @@ void fn_8014B878(int* arg1, int* sub)
     {
         ((TrickyState*)sub)->flags2DC &= ~0x800600LL;
         if ((((TrickyState*)sub)->controlFlags & 0x10000) != 0 ||
-            (*(int**)&((TrickyState*)sub)->actionTargetObj == player &&
+            (((TrickyState*)sub)->actionTargetObj == (GameObject*)player &&
              (((GameObject*)player)->objectFlags & ENEMY_OBJFLAG_PARENT_SLACK) != 0))
         {
             ((TrickyState*)sub)->flags2DC &= ~0x20000000LL;
@@ -1184,7 +1184,7 @@ void fn_8014B878(int* arg1, int* sub)
         if (r != 0)
             ((TrickyState*)sub)->flags2DC |= 0x200000LL;
     }
-    if (*(int**)&((TrickyState*)sub)->actionTargetObj == player)
+    if (((TrickyState*)sub)->actionTargetObj == (GameObject*)player)
     {
         if (playerIsDisguised(player) != 0)
         {
@@ -1200,7 +1200,7 @@ void fn_8014B878(int* arg1, int* sub)
         if ((((TrickyState*)sub)->controlFlags & 0x1000) != 0)
         {
             u8 r = baddieTargetFn_8014a150((GameObject*)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
-                                           (void*)(*(char**)&((TrickyState*)sub)->actionTargetObj + 0x18));
+                                           (u8*)((TrickyState*)sub)->actionTargetObj + 0x18);
             if (r != 0)
                 ((TrickyState*)sub)->flags2DC |= 0x1000000LL;
             if ((((TrickyState*)sub)->flags2DC & 0x1000000) == 0)
@@ -1225,7 +1225,7 @@ void fn_8014B878(int* arg1, int* sub)
         }
         if ((((TrickyState*)sub)->controlFlags & 0x4000) == 0)
         {
-            f32* t = (f32*)*(int**)&((TrickyState*)sub)->actionTargetObj;
+            f32* t = (f32*)((TrickyState*)sub)->actionTargetObj;
             f32 mag = sqrtf(t[11] * t[11] + (t[9] * t[9] + t[10] * t[10]));
             if (mag > lbl_803E25D4)
                 ((TrickyState*)sub)->flags2DC |= 0x4000000LL;
@@ -1413,7 +1413,7 @@ void fn_8014CD1C(int* node, int* sub, u16 divisor, f32 fa, f32 fb, u8 useScaledR
 #pragma fp_contract off
 void baddieTurnTowardTarget(int* node, int* sub)
 {
-    GameObject* target = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
+    GameObject* target = ((TrickyState*)sub)->actionTargetObj;
     if (target != NULL)
     {
         f32 d[3];
@@ -1468,7 +1468,7 @@ void baddieTurnTowardTarget(int* node, int* sub)
         *(s16*)&((TrickyState*)sub)->targetDist = (s16)dist;
 
         {
-            GameObject* t = *(GameObject**)&((TrickyState*)sub)->actionTargetObj;
+            GameObject* t = ((TrickyState*)sub)->actionTargetObj;
             *(s16*)&((TrickyState*)sub)->targetHeightDelta =
                 (s16)(t->anim.worldPosY - ((GameObject*)node)->anim.worldPosY);
         }

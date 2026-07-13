@@ -395,7 +395,6 @@ extern f32 lbl_803E7EE8;
 extern f32 lbl_803E7EEC;
 extern void fn_8011F6E0(int button, u8 angle, int mag);
 extern void fn_8011F6D4(int flag);
-extern void fn_8003B0D0(GameObject* a, int b, int c, int d);
 extern s16 gPlayerMoveTableC[];
 extern f32 gPlayerMoveSpeedTable[];
 extern f32 lbl_803E8178;
