@@ -25,6 +25,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "dolphin/os.h"
 #include "main/asset_load.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"

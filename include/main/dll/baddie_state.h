@@ -211,12 +211,4 @@ STATIC_ASSERT(offsetof(GroundBaddieState, eyeAnimState) == 0x3AC);
 STATIC_ASSERT(offsetof(GroundBaddieState, targetState) == 0x402);
 STATIC_ASSERT(offsetof(GroundBaddieState, control) == 0x40C);
 
-
-/* extern-cleanup: consolidated prototypes */
-void fn_8001FEA8(void);
-
-
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-float fn_80293DA4(float x);
-
 #endif /* MAIN_DLL_BADDIE_STATE_H_ */

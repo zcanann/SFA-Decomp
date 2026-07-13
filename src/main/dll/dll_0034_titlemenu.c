@@ -6,6 +6,7 @@
 #include "main/gameloop_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/lightmap_render_control_api.h"
+#include "main/lightmap_api.h"
 #include "main/sky_api.h"
 #include "main/model_engine.h"
 #include "main/objprint_dolphin.h"

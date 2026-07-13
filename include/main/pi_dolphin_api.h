@@ -16,6 +16,7 @@ void fn_8004D6D8(void);
 void fn_80050F2C(void);
 void fn_8004D230(void);
 void fn_8004D928(void);
+int fn_8004B218(void* search, u32 timeout);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
 

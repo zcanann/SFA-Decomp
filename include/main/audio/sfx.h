@@ -25,13 +25,4 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj);
 void Sfx_InitObjectChannels(void);
 
-
-/* extern-cleanup: consolidated prototypes */
-void subtitleUpdateAndDraw(int a);
-
-
-/* extern-cleanup: consolidated prototypes (true-def sigs) */
-s32 isTalkingToNpc(void);
-void setShowWorldMapHud(u8 param);
-
 #endif /* MAIN_AUDIO_SFX_H_ */

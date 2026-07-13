@@ -8,6 +8,7 @@
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/gametext.h"
+#include "main/textrender_api.h"
 #include "main/model_engine.h"
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

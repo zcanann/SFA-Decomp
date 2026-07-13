@@ -28,6 +28,8 @@
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00C9_enemy.h"
+#include "main/gameloop_api.h"
 #include "main/object_transform.h"
 #include "main/objseq.h"
 #include "main/dll/player_target.h"

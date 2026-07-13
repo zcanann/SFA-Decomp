@@ -17,6 +17,8 @@ void showHelpText(s16 val);
 u8 getWorldMapVoiceoverTimer(void);
 void Pause_SetDisabled(u8 disabled);
 void Pause_ResetMenuFrameCounter(void);
+s32 isTalkingToNpc(void);
+void setShowWorldMapHud(u8 visible);
 
 #define cMenuGetSelectedItemInt() (((CMenuGetSelectedItemIntFn)cMenuGetSelectedItem)())
 

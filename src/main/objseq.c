@@ -14,6 +14,7 @@
 #include "main/camera.h"
 #include "main/curve.h"
 #include "main/game_ui_interface.h"
+#include "main/dll/dll_0000_gameui_api.h"
 #include "main/objseq.h"
 #include "main/objprint.h"
 #include "main/dll/rom_curve_interface.h"

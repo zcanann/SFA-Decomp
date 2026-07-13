@@ -17,6 +17,7 @@ void setTextColor(int unused, int red, int green, int blue, int alpha);
 void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount);
 void doNothing_8005D148(void);
 void doNothing_8005D14C(void);
+void titleScreenFn_8005cdd4(int enabled);
 
 #define doNothing_8005D148Legacy(a, b) ((void (*)(int, int))doNothing_8005D148)((a), (b))
 #define doNothing_8005D14CLegacy(a, b) ((void (*)(int, int))doNothing_8005D14C)((a), (b))

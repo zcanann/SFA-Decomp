@@ -148,8 +148,6 @@ void crash(void)
 extern int gGameLoopButtonObjects[2];
 extern u8 gGameLoopButtonObjectCount;
 
-void gameTextSetDrawFunc(void* fn);
-
 extern void* memset(void* dst, int val, int n);
 
 u8 getButtonObjects(void** p)

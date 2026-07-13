@@ -16,6 +16,7 @@
  */
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
+#include "main/gameloop_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"

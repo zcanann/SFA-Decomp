@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/track_dolphin_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/gamebits.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0014_api.h"

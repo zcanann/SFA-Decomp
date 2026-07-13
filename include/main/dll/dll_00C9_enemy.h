@@ -79,6 +79,7 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
                                          f32 maxVel, f32 drag);
 f32 sidekickToy_accelerateTowardTargetXZ(GameObject* obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                          f32 maxVel, f32 drag);
+void baddieAfterUpdateBonesCb(GameObject* obj, int* bones);
 int enemy_getExtraSize(void);
 int enemy_getObjectTypeId(void);
 void enemy_release(void);

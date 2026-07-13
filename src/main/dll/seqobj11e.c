@@ -23,6 +23,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"

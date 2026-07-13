@@ -36,6 +36,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/mm.h"
 #include "main/dll/tricky.h"
+#include "main/dll/maybeTemplate.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"

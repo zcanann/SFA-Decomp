@@ -27,6 +27,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"

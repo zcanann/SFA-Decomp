@@ -28,6 +28,7 @@
  * creature's voice set (fox_*, en_*, watery_*, foxcom_*).
  */
 #include "main/audio/sfx_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"

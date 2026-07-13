@@ -15,6 +15,7 @@
 #include "main/dll/objfsa_romcurve.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"

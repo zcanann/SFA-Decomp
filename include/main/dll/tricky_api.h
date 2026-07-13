@@ -14,6 +14,7 @@ void showDeathMenu(void);
 void resetYbutton(void);
 u16 getYButtonItem(s16* out);
 void gameUiResetMenuState(void);
+void hudFn_8011f6f0(u8 value);
 
 #define getYButtonItemLegacy(out) ((int (*)(s16*))getYButtonItem)(out)
 

@@ -13,5 +13,6 @@ void cutsceneEnterExit(int entering, int affectSounds);
 void cutsceneFadeInOut(int mode);
 void setTimeStop(int frames);
 void doNothing_onSaveSelectScreenExit(void);
+void fn_8001FEA8(void);
 
 #endif /* MAIN_GAMELOOP_API_H_ */
