@@ -6,16 +6,16 @@
 
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/main_TRK.h"
 
-extern DSError TRK_mainError_803D8880;
+static DSError TRK_mainError;
 
 DSError TRK_main(void) {
-    TRK_mainError_803D8880 = TRKInitializeNub();
+    TRK_mainError = TRKInitializeNub();
 
-    if (TRK_mainError_803D8880 == DS_NoError) {
+    if (TRK_mainError == DS_NoError) {
         TRKNubWelcome();
         TRKNubMainLoop();
     }
 
-    TRK_mainError_803D8880 = TRKTerminateNub();
-    return TRK_mainError_803D8880;
+    TRK_mainError = TRKTerminateNub();
+    return TRK_mainError;
 }

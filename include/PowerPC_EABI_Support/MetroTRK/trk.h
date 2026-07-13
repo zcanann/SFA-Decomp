@@ -133,6 +133,8 @@ BOOL usr_puts_serial(const char* msg);
 
 extern BOOL gTRKBigEndian;
 extern void* gTRKInputPendingPtr;
+extern u128 TRKvalue128_temp;
+extern Default_PPC gTRKSaveState;
 extern ProcessorState_PPC gTRKCPUState;
 extern ProcessorRestoreFlags_PPC gTRKRestoreFlags;
 extern u8 gTRKInterruptVectorTable[];
