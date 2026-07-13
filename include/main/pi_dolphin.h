@@ -4,7 +4,6 @@
 #include "ghidra_import.h"
 #include "main/pi_dolphin_api.h"
 
-u32 mapLoadDataFile(int param_1, int param_2);
 void FUN_800443fc(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
                  u64 param_5,u64 param_6,u64 param_7,u64 param_8);
 void FUN_80044400(u64 param_1,u64 param_2,u64 param_3,u64 param_4,
@@ -120,14 +119,8 @@ void fn_8004AFA0(int* q, int* elem, int idx);
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
 
 
-/* extern-cleanup: defining-file public prototypes */
-u8 isHeavyFogEnabled(void);
-
-
 #include "main/mldf_fileid.h"
 
 double SeekTwiceBeforeRead();
-int GXFlush_(u8 visible, int unused);
-int loadAndDecompressDataFile();
 
 #endif /* MAIN_PI_DOLPHIN_H_ */
