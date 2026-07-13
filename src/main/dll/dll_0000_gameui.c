@@ -25,6 +25,7 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_charset_api.h"
+#include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/hud_visibility_api.h"
@@ -189,7 +190,6 @@ extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
 
 extern float fsin16Precise(int angle);
-extern void gameTextShowTimeStr(char* str);
 extern char sBabySnowwormTimerFormat[];
 extern s16 gTimeListPulseAngle;
 extern s16 gTimeListPulseAngleStep;

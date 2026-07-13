@@ -4,6 +4,7 @@
 
 #include "main/dll/hud_textures.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_command_api.h"
 #include "main/gametext_show_str_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/object_api.h"
@@ -117,7 +118,6 @@ extern void pauseMenuDrawElement(void* tex, f32 a, f32 b, s32 x, u8 alpha, s32 m
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void boxDrawFn_8012975c(void* a, void* b, void* c);
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextFn_80016810(int a, int b, int c);
 extern void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void drawFn_8011e8d8(void* this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9);

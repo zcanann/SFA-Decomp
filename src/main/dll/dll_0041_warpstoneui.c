@@ -14,6 +14,7 @@
  * frees them. Drawn alpha follows lbl_803DD97C throughout.
  */
 #include "main/texture.h"
+#include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
@@ -49,7 +50,6 @@ extern u8 gWarpStoneUiMenuItemTemplates[];
 extern int* gTitleMenuLinkInterface;
 
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern void gameTextFn_80016810(int a, int b, int c);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
 u8 gWarpStoneUiMenuItems[0x168];

@@ -17,6 +17,7 @@
  */
 #include "main/texture.h"
 #include "main/gametext_box_api.h"
+#include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
@@ -894,7 +895,6 @@ void fn_80134870(int obj, u8* arr)
 
 extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
-extern void gameTextFn_80016810(int a, int b, int c);
 
 typedef struct
 {
