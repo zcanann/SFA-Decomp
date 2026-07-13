@@ -10,9 +10,9 @@
  */
 #include "main/dll/dll_0125_curve_api.h"
 
-extern f32 lbl_803E33F0;
-extern f32 lbl_803E33F4;
-extern f32 lbl_803E33F8;
+__declspec(section ".sdata2") f32 lbl_803E33F0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E33F4 = 1.25f;
+__declspec(section ".sdata2") f32 lbl_803E33F8 = 1.100000023841858f;
 
 int curve_func0B(void)
 {
