@@ -25,6 +25,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -96,8 +97,6 @@ extern s16 gMagicPlantGemDefIds[4];
 extern int ObjHits_GetPriorityHitWithPosition();
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int objIsFrozen(int obj);
@@ -384,7 +383,7 @@ void MagicPlant_free(GameObject* obj, int freeChildren)
     ObjGroup_RemoveObject(obj, MAGICPLANT_OBJGROUP_B);
     if (plant->childLinkActive != 0)
     {
-        ObjLink_DetachChild((int)obj, (int)state->childObject);
+        ObjLink_DetachChild(obj, (int)state->childObject);
         if (freeChildren == 0)
         {
             Obj_FreeObject(state->childObject);

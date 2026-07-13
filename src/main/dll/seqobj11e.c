@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -44,9 +45,6 @@
 /* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
-
-extern u32 ObjLink_DetachChild();
-extern u32 ObjLink_AttachChild();
 
 #pragma scheduling off
 #pragma peephole off
@@ -129,7 +127,7 @@ void fn_80152514(int* obj, u8* state)
         if (child != 0)
         {
             Obj_FreeObject((GameObject*)child);
-            ObjLink_DetachChild(obj, ((GameObject*)obj)->childObjs[0]);
+            ObjLink_DetachChild((GameObject*)obj, (int)((GameObject*)obj)->childObjs[0]);
             *(int*)&((GameObject*)obj)->childObjs[0] = 0;
         }
         *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
@@ -302,7 +300,7 @@ void fn_80152514(int* obj, u8* state)
                 flag = 1;
             }
             *(int*)((u8*)newObj + 0xf4) = flag;
-            ObjLink_AttachChild(obj, newObj, attached);
+            ObjLink_AttachChild((int)obj, (int)newObj, attached);
         }
     }
 }

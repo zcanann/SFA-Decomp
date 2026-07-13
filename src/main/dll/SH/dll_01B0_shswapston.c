@@ -23,6 +23,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/obj_query.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
@@ -69,7 +70,6 @@ extern u32 getButtonsJustPressed(int port);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int playerHasKrazoaSpirit();
-extern void ObjLink_DetachChild(int obj, int child);
 extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
@@ -99,7 +99,7 @@ void warpstone_free(GameObject* obj, int mode)
     int* state = (obj)->extra;
     if (*(void**)state != NULL && mode == 0)
     {
-        ObjLink_DetachChild((int)obj, state[0]);
+        ObjLink_DetachChild(obj, state[0]);
         Obj_FreeObject((GameObject*)state[0]);
     }
 }
@@ -455,7 +455,7 @@ void warpstone_update(int obj)
     child = *(int*)state;
     if ((void*)child != NULL)
     {
-        ObjLink_DetachChild(obj, child);
+        ObjLink_DetachChild((GameObject*)obj, child);
         Obj_FreeObject(*(GameObject**)state);
         *(int*)state = 0;
     }

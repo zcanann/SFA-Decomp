@@ -23,6 +23,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -40,7 +41,6 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/objprint_api.h"
-extern void ObjLink_AttachChild();
 extern int trickyFn_8013b368();
 extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 
@@ -1316,7 +1316,8 @@ int trickyFoodFn_801437d4(GameObject* obj, int* state)
         ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c = idx;
         ((TrickyState*)state)->child =
             (u8*)Obj_SetupObject((ObjPlacement*)e, 4, -1, -1, (obj)->anim.parent);
-        ObjLink_AttachChild(obj, ((TrickyState*)state)->child, ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
+        ObjLink_AttachChild((int)obj, (int)((TrickyState*)state)->child,
+                            ((TrickyPackedSlots*)((u8*)state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState*)state)->childPhaseTimer0 = z;
         ((TrickyState*)state)->childPhaseTimer1 = z;

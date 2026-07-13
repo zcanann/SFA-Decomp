@@ -30,6 +30,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
@@ -83,7 +84,6 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern u32 ObjLink_AttachChild();
 extern u64 ObjPath_GetPointWorldPosition();
 extern f32 lbl_803E2CC0;
 extern f32 lbl_803E2CC4;
@@ -305,7 +305,7 @@ void firecrawler_spawnFirepipe(int* obj)
         child = (int*)Obj_SetupObject((ObjPlacement*)child, 5, -1, -1, 0);
         if (child != 0)
         {
-            ObjLink_AttachChild(obj, child, 0);
+            ObjLink_AttachChild((int)obj, (int)child, 0);
             firepipe_setLinkedUpdateFlag(child);
             ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }

@@ -23,6 +23,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/obj_group.h"
+#include "main/obj_link.h"
 #include "main/debug.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/dll/baddie_control_interface.h"
@@ -178,8 +179,6 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-extern u64 ObjLink_DetachChild();
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
 extern u32 getScreenResolution(void);
 extern int Sfx_IsPlayingFromObjectChannel(u8*, int);
@@ -739,7 +738,7 @@ void objAnimFreeChildren(int a, int b, GameObject** c)
     {
         return;
     }
-    ObjLink_DetachChild(a, (int)*c);
+    ObjLink_DetachChild((GameObject*)a, (int)*c);
     Obj_FreeObject(*c);
     *c = NULL;
     buf[0] = -1;
@@ -764,19 +763,19 @@ void objAnimFreeChildren(int a, int b, GameObject** c)
     {
         if (v0 != NULL)
         {
-            ObjLink_DetachChild(a, v0);
+            ObjLink_DetachChild((GameObject*)a, (int)v0);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj0, 0);
             ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
         else if (v1 != NULL)
         {
-            ObjLink_DetachChild(a, v1);
+            ObjLink_DetachChild((GameObject*)a, (int)v1);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj1, 0);
             ((AnimSlots*)(b + 0x7bc))->s1 = 0;
         }
         else if (v2 != NULL)
         {
-            ObjLink_DetachChild(a, v2);
+            ObjLink_DetachChild((GameObject*)a, (int)v2);
             ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj2, 0);
             ((AnimSlots*)(b + 0x7bc))->s2 = 0;
         }

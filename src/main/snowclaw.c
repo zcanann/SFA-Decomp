@@ -4,6 +4,7 @@
 #include "main/vecmath.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -92,7 +93,6 @@ extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
 extern int objUpdateOpacity(int sub);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
@@ -101,7 +101,6 @@ extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern f32 lbl_803E66E0;
-extern void ObjLink_DetachChild(void* obj, int* child);
 
 u32 gSnowClawHurtSfxTable[8] = {0x2EF, 0x2EE, 0x2ED, 0x2EC, 0x2EB, 0x0497049C, 0x03A2049C, 0x07D007D1};
 extern f32 lbl_803E6720;
@@ -500,7 +499,7 @@ void snowclaw_hitDetect(GameObject* obj)
                     near = (int*)ObjGroup_FindNearestObject(SNOWCLAW_TARGET_OBJGROUP, obj, &dist);
                     if (near != 0)
                     {
-                        ObjLink_DetachChild(obj, near);
+                        ObjLink_DetachChild((GameObject*)obj, (int)near);
                         (*(void (**)(int*, int))((char*)*((GameObject*)near)->anim.dll + 0x20))(near, 2);
                     }
                 }

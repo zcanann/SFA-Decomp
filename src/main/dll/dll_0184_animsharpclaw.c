@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/obj_link.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0184_animsharpclaw.h"
 
@@ -26,8 +27,6 @@
 
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern void ObjLink_DetachChild(int obj, int child);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 #pragma scheduling off
 #pragma dont_inline on
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
@@ -45,7 +44,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             child = (int)((GameObject*)obj)->childObjs[0];
             if ((void*)child != NULL)
             {
-                ObjLink_DetachChild(obj, child);
+                ObjLink_DetachChild((GameObject*)obj, child);
                 Obj_FreeObject((GameObject*)child);
             }
             newChild = (int)Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
@@ -57,7 +56,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             child = (int)((GameObject*)obj)->childObjs[0];
             if ((void*)child != NULL)
             {
-                ObjLink_DetachChild(obj, child);
+                ObjLink_DetachChild((GameObject*)obj, child);
                 Obj_FreeObject((GameObject*)child);
             }
             ((GameObject*)obj)->unkF8 = -1;
@@ -88,7 +87,7 @@ void animsharpclaw_free(GameObject* obj)
     child = (int)(obj)->childObjs[0];
     if ((void*)child != NULL)
     {
-        ObjLink_DetachChild((int)obj, child);
+        ObjLink_DetachChild(obj, child);
         Obj_FreeObject((GameObject*)child);
     }
     (*gObjectTriggerInterface)->freeState(inner);

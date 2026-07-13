@@ -19,6 +19,7 @@
  */
 #include "main/dll/bit80_struct.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
@@ -37,7 +38,6 @@ extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
-extern u32 ObjLink_DetachChild();
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
 extern void modelLightStruct_freeSlot(int* p);
 extern void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);
@@ -75,7 +75,7 @@ void gcrobotlightbea_free(int* obj)
     }
     if (((GameObject*)obj)->ownerObj != NULL)
     {
-        ObjLink_DetachChild(((GameObject*)obj)->ownerObj, obj);
+        ObjLink_DetachChild((GameObject*)((GameObject*)obj)->ownerObj, (int)obj);
     }
 }
 

@@ -16,6 +16,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
@@ -42,8 +43,6 @@ __declspec(section ".sdata2") f32 lbl_803E5E9C = 800.0f;
 __declspec(section ".sdata2") f32 lbl_803E5EA0 = 1.1f; /* sword scale-up */
 __declspec(section ".sdata2") f32 lbl_803E5EA4 = 1.0f; /* render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
-extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern void ObjLink_DetachChild(int* parent, int* child);
 
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -113,7 +112,7 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             int* child = ((GameObject*)obj)->childObjs[0];
             if (child != NULL)
             {
-                ObjLink_DetachChild((int*)obj, child);
+                ObjLink_DetachChild((GameObject*)obj, (int)child);
             }
             break;
         }
@@ -151,7 +150,7 @@ void WM_GeneralScales_free(int* obj)
 {
     int* p = (int*)obj[0xc8 / 4]; /* childObjs[0] */
     if (p != NULL)
-        ObjLink_DetachChild(obj, p);
+        ObjLink_DetachChild((GameObject*)obj, (int)p);
 }
 
 void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)

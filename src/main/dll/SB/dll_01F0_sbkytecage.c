@@ -13,6 +13,7 @@
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/obj_link.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
@@ -75,8 +76,6 @@ enum
     SB_KYTECAGE_SEQEV_LATCH_2 = 2
 };
 
-extern int ObjLink_DetachChild();
-extern int ObjLink_AttachChild();
 extern void* ObjList_GetObjects(int* outA, int* outB);
 
 int SB_KyteCage_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -130,7 +129,7 @@ void SB_KyteCage_free(GameObject* obj)
     void* child = ((SBKyteCageState*)obj->extra)->kyte;
     if (child != NULL)
     {
-        ObjLink_DetachChild(obj, child);
+        ObjLink_DetachChild(obj, (int)child);
     }
 }
 
@@ -158,7 +157,7 @@ void SB_KyteCage_update(GameObject* obj)
             if (((GameObject*)child)->anim.seqId == SB_KYTE_OBJECT_TYPE)
             {
                 state->kyte = (void*)child;
-                ObjLink_AttachChild(obj, state->kyte, 1);
+                ObjLink_AttachChild((int)obj, (int)state->kyte, 1);
                 i = count;
             }
         }
