@@ -19,7 +19,8 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
+#include "main/textrender_api.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -116,7 +117,7 @@ int PaymentKiosk_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
             break;
         }
     }
-    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
     if (st->promptState == 1)
     {
         gameTextShow(lbl_80327AF0[st->textVariant].approachText);

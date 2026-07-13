@@ -2,7 +2,8 @@
 #include "main/audio/sfx.h"
 #include "main/fileio.h"
 #include "main/gameloop_api.h"
-#include "main/gametext.h"
+#include "main/gametext_charset_api.h"
+#include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
 #include "main/loaded_file_flags.h"
 #include "main/mm.h"
@@ -116,7 +117,7 @@ void dvdCheckError(void)
         int prevCharset = gameTextGetCharset();
         Sfx_SetObjectSoundsPaused(1);
         gameTextSetCharset(2, 2);
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
         gameTextShow(msgId);
         if (prevCharset != 2)
         {

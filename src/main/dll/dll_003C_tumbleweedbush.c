@@ -87,7 +87,6 @@ extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-ran
 
 extern u8 lbl_802C8680[];
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern void MWTRACE(int boxId);
 #define PAD_BUTTON_A     0x100
 #define PAD_BUTTON_B     0x200
@@ -398,7 +397,7 @@ void Link_render(void)
 
                 if ((drawItem->flags & LINK_FLAG_DRAW_BLACK_SHADOW) != 0)
                 {
-                    gameTextSetColor(0, 0, 0, (u8)(((linkCount_803dd90e + 1) * linkItemOpacity) >> 8));
+                    gameTextSetColorInt(0, 0, 0, (u8)(((linkCount_803dd90e + 1) * linkItemOpacity) >> 8));
                     gameTextFn_80016810(drawItem->textId, 2, 2);
                 }
 
@@ -420,18 +419,18 @@ void Link_render(void)
                         {
                             alpha = linkItemOpacity * 256 >> 8;
                         }
-                        gameTextSetColor((u8)red, (u8)green, (u8)blue, (u8)alpha);
+                        gameTextSetColorInt((u8)red, (u8)green, (u8)blue, (u8)alpha);
                     }
                     else
                     {
-                        gameTextSetColor((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG,
+                        gameTextSetColorInt((u8)gTumbleweedBushBaseColorR, (u8)gTumbleweedBushBaseColorG,
                                          (u8)gTumbleweedBushBaseColorB,
                                          (u8)((((int)((u32)opacity >> 31)) + opacity) >> 1));
                     }
                 }
                 else
                 {
-                    gameTextSetColor(0xff, 0xff, 0xff, (u8)opacity);
+                    gameTextSetColorInt(0xff, 0xff, 0xff, (u8)opacity);
                 }
 
                 textId = drawItem->textId;

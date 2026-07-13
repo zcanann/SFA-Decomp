@@ -21,6 +21,7 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
+#include "main/textrender_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
@@ -74,7 +75,6 @@ typedef struct TitlescreenState
     f32 unk34;
 } TitlescreenState;
 
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
@@ -374,7 +374,6 @@ extern u8 gTitleScreenCopyrightLatch;
 extern f32 lbl_803E231C;
 extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
-extern void* gameTextGet(int textId);
 
 /* Drive the copyright/title text fade and push text box 0x3d9. */
 #pragma scheduling off
@@ -411,7 +410,7 @@ void titleScreenShowCopyright(u8 arg)
         }
         *(s16*)((char*)box + 0x16) =
             (s16)(lbl_803E2320 * (lbl_803E2318 - gTitleScreenCopyrightFade) + gTitleScreenCopyrightBaseY);
-        gameTextSetColor(0xff, 0xff, 0xff, (s32)(lbl_803E2324 * gTitleScreenCursorX));
+        gameTextSetColorInt(0xff, 0xff, 0xff, (s32)(lbl_803E2324 * gTitleScreenCursorX));
         gameTextShow(FRONT_TEXT_COPYRIGHT);
     }
 }
@@ -946,7 +945,7 @@ void creditsStart_(void)
     {
         alpha = 0xff;
     }
-    gameTextSetColor(0xff, 0xff, 0xff, alpha);
+    gameTextSetColorInt(0xff, 0xff, 0xff, alpha);
     gameTextFn_80016810(gCreditEntries[gTitleScreenCreditIndex].textId, 0, 0);
     lbl_803DD994 += lbl_803DB411;
     gTitleScreenCreditTimer += lbl_803DB411;
@@ -1047,7 +1046,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
         drawTexture(texs2[7], (f32)(int)(xb + 0xa1), lbl_803E2304 + (lbl_803E2300 * gTitleScreenCursorY + (f32)(int)yb),
                     a, 0xff);
     }
-    gameTextSetColor(0xff, 0xff, 0xff, (int)((f64)lbl_803DD9C0 * (lbl_803E2308 - gTitleScreenCursorY)));
+    gameTextSetColorInt(0xff, 0xff, 0xff, (int)((f64)lbl_803DD9C0 * (lbl_803E2308 - gTitleScreenCursorY)));
     gameTextShow(0x3da);
     drawTexture(gTitleScreenTextures[3], (f32)(int)((int)mtx[3] - 0x32),
                 (f32)(int)(0xfe - ((u32)((Texture*)gTitleScreenTextures[3])->width >> 1)), 0xff, 0xff);

@@ -12,7 +12,7 @@
  */
 #include "main/texture.h"
 #include "main/frame_timing.h"
-#include "main/gametext.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0040_credits.h"
 
 /* credits texture asset loaded at init (freed in Credits_release) */

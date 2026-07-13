@@ -285,7 +285,6 @@ extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
 extern f32 fn_8029454C(f32);
 extern int depthReadRequestPoll(int x, int y, void* fn);
-extern void gameTextSetColor(int, int, int, int);
 
 #pragma opt_propagation off
 void gameUiLoadResources(void)
@@ -1572,7 +1571,7 @@ void drawViewFinderHud(void)
             xc = q;
         }
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
-        gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
+        gameTextSetColorInt(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
@@ -1756,7 +1755,7 @@ void drawViewFinderHud(void)
                 if ((u8)r27v != 0)
                 {
                     f32 sn;
-                    gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)r27v * gViewFinderFadeLevel));
+                    gameTextSetColorInt(0, 0xff, 0, (int)((f32)(u8)r27v * gViewFinderFadeLevel));
                     sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
                     gameTextShowStr(buf, 0x93, (int)(lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78),
                                     (int)(gViewFinderBaseY + (lbl_803E1F90 + sn)));
@@ -1798,7 +1797,7 @@ void drawViewFinderHud(void)
             if (dist > lbl_803E1E3C && dist < gTrickyHudNearestObjMaxDist)
             {
                 sprintf(buf, &lbl_803DBB40, dist / lbl_803E1EC4);
-                gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
+                gameTextSetColorInt(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
                 gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }
         }

@@ -15,6 +15,7 @@
 #include "main/objanim_update.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_00EC_infopoint.h"
+#include "main/textrender_api.h"
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -27,7 +28,6 @@ extern f32 lbl_803E3B70;
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 extern int textureLoadAsset(int id);
-extern void* gameTextGet(int textId);
 
 #pragma scheduling off
 #pragma peephole off

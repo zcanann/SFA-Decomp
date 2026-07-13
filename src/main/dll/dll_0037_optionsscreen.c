@@ -19,7 +19,8 @@
 #include "main/dll/dll_4E.h"
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/frame_timing.h"
-#include "main/gametext.h"
+#include "main/gametext_box_api.h"
+#include "main/gametext_show_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/lightmap_api.h"
 #include "main/lightmap_render_control_api.h"
@@ -99,13 +100,13 @@ void OptionsScreen_render(int arg)
     gameTextBoxFn_80134d40(fade, 0, 0);
     if (panel[5] != 0xffff)
     {
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
         *(u8*)((char*)gameTextGetBox(*(u8*)((char*)gameTextGet(panel[5]) + 4)) + 0x1e) = fade;
         gameTextShow(panel[5]);
     }
     if (panel[6] != 0xffff)
     {
-        gameTextSetColor(0xff, 0xff, 0xff, fade);
+        gameTextSetColorInt(0xff, 0xff, 0xff, fade);
         gameTextShow(panel[6]);
     }
 

@@ -7,7 +7,8 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
+#include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/model_engine.h"
 #include "main/pad.h"
@@ -58,9 +59,9 @@ void EnterSaveNameScreen_render(void)
     titleScreenPositionElements(lbl_803E1D80, lbl_803E1D84);
     fn_80135814((int)(gEnterSaveNameScrollPos + lbl_803DD6DC - lbl_803E1D88), 0);
     gameTextBoxFn_80134d40(0xff, 1, 1);
-    gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
+    gameTextSetColorInt(0xc0, 0xc0, 0xc0, 0xff);
     gameTextShow(0x3ae);
-    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
     gameTextShow(0xed);
 
@@ -72,7 +73,7 @@ void EnterSaveNameScreen_render(void)
 
     gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;
 
-    gameTextSetColor(
+    gameTextSetColorInt(
         (int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
         (int)(mathSinf(lbl_803E1D98 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
         (int)(mathSinf(lbl_803E1D9C * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),

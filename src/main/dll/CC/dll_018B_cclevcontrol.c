@@ -23,7 +23,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/dll/savegame_load_api.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"

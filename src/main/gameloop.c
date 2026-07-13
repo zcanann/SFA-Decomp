@@ -378,7 +378,6 @@ void* animationLoad(int id, s16 animId, s16 moveIndex, int cache, int animDef)
     loadAsset(&gGameLoopAssetReq);
 }
 
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
 void Obj_ApplyPendingParentLinks(void);
 

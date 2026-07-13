@@ -23,6 +23,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/textrender_api.h"
+#include "main/gametext_api.h"
 
 #define TITLE_MENU_FLAG_ENABLED          0x01
 #define TITLE_MENU_FLAG_WRAP             0x02
@@ -53,9 +54,7 @@ extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids f
 
 extern void Music_PlayTrackByIndex(int index);
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
-extern void gameTextAppendStr(char* str, int box);
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
@@ -148,10 +147,10 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     case TITLE_MENU_KIND_WINDOW:
         phrase = gameTextGetPhrase(item->extra.window.phraseId,
                                    (item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0 ? 0 : item->value);
-        gameTextSetColor(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
+        gameTextSetColorInt(0, 0, 0, (u8)(((u8)alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
-        gameTextSetColor(0xff, 0xff, 0xff, alpha);
+        gameTextSetColorInt(0xff, 0xff, 0xff, alpha);
         gameTextSetWindowStrPos(item->extra.window.windowId, 0, 0);
         gameTextAppendStr(phrase, item->extra.window.windowId);
         break;

@@ -28,6 +28,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0038_weirdunusedmenu.h"
 #include "main/dll/savegame.h"
 
@@ -66,7 +67,6 @@ extern u8 gWeirdMenuPhase;                 /* phase: 0 idle, 1 saving */
 extern WeirdMenuWork gWeirdMenuWidgetWork; /* widget work area */
 extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written at init, not read in this TU */
 extern u32 gWeirdMenuWidgetLayout[];       /* widget layout descriptor */
-extern u32 gameTextGet(int textId);
 
 void WeirdUnusedMenu_render(void)
 {
@@ -153,7 +153,7 @@ void WeirdUnusedMenu_initialise(void)
     gWeirdMenuTextureA = textureLoadAsset(WEIRDMENU_TEXTURE_A_ID);
     gWeirdMenuTextureB = textureLoadAsset(WEIRDMENU_TEXTURE_B_ID);
     gWeirdMenuTextureC = textureLoadAsset(WEIRDMENU_TEXTURE_C_ID);
-    gWeirdMenuTextHandle = gameTextGet(0);
+    gWeirdMenuTextHandle = gameTextGetLegacy(0);
     (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(
         *(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SETUP_WIDGETS)))(
         (u32*)&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);

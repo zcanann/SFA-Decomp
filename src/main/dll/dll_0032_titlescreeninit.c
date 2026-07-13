@@ -27,6 +27,7 @@
 #include "main/dll/dll_B4.h"
 #include "main/gameplay_runtime.h"
 #include "main/gametext_show_str_api.h"
+#include "main/textrender_api.h"
 #include "main/fileio.h"
 
 typedef struct LoadingScreenTexture
@@ -73,7 +74,6 @@ extern f32 lbl_803E1D00;
 
 extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void* gameTextGetStr(int textId);
 extern void loadSunAndMoon(void);
 

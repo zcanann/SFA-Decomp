@@ -25,6 +25,7 @@
  */
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/gametext_show_api.h"
+#include "main/textrender_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
@@ -69,7 +70,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 extern void SB_Galleon_onSeqFree(int obj);
 extern const f32 lbl_803E56CC;
 
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;

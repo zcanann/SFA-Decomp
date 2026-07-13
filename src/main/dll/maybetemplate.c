@@ -26,6 +26,7 @@
 #include "main/dll/player_status.h"
 #include "main/gameplay_runtime.h"
 #include "main/gametext_show_str_api.h"
+#include "main/gametext_api.h"
 #include "dolphin/gx/GXCull.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/gameloop_api.h"
@@ -204,11 +205,7 @@ extern void drawFn_8011eb3c(int tex, f32 x, f32 y, int a, int b, int c, int w, i
 extern void drawFn_8011e8d8(int tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
 extern void drawScaledTexture(int texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(int texture, f32 x, f32 y, int alpha, int arg);
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern void hudDrawCMenu(int a, int b, int c);
-extern int gameTextGet();
-extern void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
-                                       int* outMinY);
 extern void setTextColor(int unused, int a, int b, int c, int d);
 
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
@@ -460,22 +457,22 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
             gameTextMeasureString((u8*)&buf1, lbl_803E1E68, &width, NULL, NULL, NULL, -1);
             if ((showTarget == 0) && (value >= target))
             {
-                gameTextSetColor(0, 0xFF, 0, alpha);
+                gameTextSetColorInt(0, 0xFF, 0, alpha);
             }
             else
             {
-                gameTextSetColor(0xFF, 0xFF, 0xFF, alpha);
+                gameTextSetColorInt(0xFF, 0xFF, 0xFF, alpha);
             }
             gameTextShowStr((char*)&buf1, 0x93, (int)-(lbl_803E1E70 * width - (f32)(591 - *yPos)), 0x1A9);
             if (showTarget != 0)
             {
                 if (value >= 0)
                 {
-                    gameTextSetColor(0, 0xFF, 0, alpha);
+                    gameTextSetColorInt(0, 0xFF, 0, alpha);
                 }
                 else
                 {
-                    gameTextSetColor(0xFF, 0, 0, alpha);
+                    gameTextSetColorInt(0xFF, 0, 0, alpha);
                 }
                 gameTextShowStr((char*)&buf2, 0x93, (int)-(lbl_803E1E70 * width - (f32)(591 - *yPos)), 0x1A9);
             }
@@ -948,9 +945,9 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 a16 = alpha * lbl_803DD8D4 / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
                 sprintf((char*)&label, &lbl_803DBB58, gCMenuItemIcons[z[0]]);
-                gameTextSetColor(0, 0, 0, a16 & 0xFF);
+                gameTextSetColorInt(0, 0, 0, a16 & 0xFF);
                 gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + z[1] + gCMenuScrollTimer);
-                gameTextSetColor(0xFF, 0xFF, 0xFF, (u8)a16);
+                gameTextSetColorInt(0xFF, 0xFF, 0xFF, (u8)a16);
                 gameTextShowStr((char*)&label, 0x93, 0x246, 0x2A + z[1] + gCMenuScrollTimer);
             }
             z[1] += 0x32;
@@ -1014,17 +1011,17 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             }
             if (gHudAButtonFlashTimer & 8)
             {
-                gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
+                gameTextSetColorInt(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
             else
             {
-                gameTextSetColor(200, 0xE6, 0xFF, lbl_803DD83C);
+                gameTextSetColorInt(200, 0xE6, 0xFF, lbl_803DD83C);
             }
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             if (aButtonIcon > 0x3E8)
             {
-                textObj = gameTextGet();
+                textObj = gameTextGetLegacy();
                 icon = 1;
             }
             else
@@ -1036,7 +1033,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                         icon = bi;
                     }
                 }
-                textObj = gameTextGet(0x2AD);
+                textObj = gameTextGetLegacy(0x2AD);
             }
             if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
             {
@@ -1082,11 +1079,11 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             }
             if (gHudBButtonFlashTimer & 8)
             {
-                gameTextSetColor(0x32, 0x32, 0xFF, lbl_803DD83C);
+                gameTextSetColorInt(0x32, 0x32, 0xFF, lbl_803DD83C);
             }
             else
             {
-                gameTextSetColor(200, 0xE6, 0xFF, lbl_803DD83C);
+                gameTextSetColorInt(200, 0xE6, 0xFF, lbl_803DD83C);
             }
             icon = 0;
             for (bi = icon; bi < 0x1D; bi++)
@@ -1098,7 +1095,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             }
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
-            textObj = gameTextGet(0x2AD);
+            textObj = gameTextGetLegacy(0x2AD);
             if (icon != 0 && (void*)textObj != NULL && *(u16*)(textObj + 2) > *(gp = gHudButtonIcons + icon * 2 + 1))
             {
                 textPtr = *(int*)(*(int*)(textObj + 8) + *gp * 4);
@@ -1176,7 +1173,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
         }
         else
         {
-            gameTextSetColor(0xFF, 0xFF, 0xFF, lbl_803DD83C);
+            gameTextSetColorInt(0xFF, 0xFF, 0xFF, lbl_803DD83C);
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
             gameTextShowStr(&sHudEmptyYSlotMark, 0x93, 0x216, 0x22);

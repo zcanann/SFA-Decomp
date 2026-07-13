@@ -30,7 +30,7 @@
 #include "main/objseq.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/pad.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

@@ -24,7 +24,7 @@
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/map_load.h"
 #include "main/rcp_dolphin.h"
 #include "main/audio/music_trigger_ids.h"
@@ -334,7 +334,7 @@ void IMIceMountain_update(int* obj)
     extra->latchFlags &= ~1;
     if (extra->warningTextTimer > lbl_803E46DC)
     {
-        gameTextSetColor(255, 255, 255, 255);
+        gameTextSetColorInt(255, 255, 255, 255);
         gameTextShow(0x351);
         extra->warningTextTimer = extra->warningTextTimer - timeDelta;
         if (extra->warningTextTimer < *(f32*)&lbl_803E46DC)

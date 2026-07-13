@@ -12,7 +12,6 @@
 #include "main/camera.h"
 #include "main/fileio.h"
 #include "main/frame_timing.h"
-#include "main/gametext.h"
 #include "main/textrender_api.h"
 #include "main/gamebits.h"
 #include "main/gameloop_api.h"

@@ -16,7 +16,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/dll/FRONT/frontend_control.h"
-#include "main/gametext.h"
+#include "main/gametext_show_str_api.h"
+#include "main/textrender_api.h"
 #include "main/pad.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/pad.h"
@@ -121,7 +122,7 @@ void saveSelect_drawText(int unused, int alpha)
 
     drawTexture(lbl_803A8680[1], lbl_803E1D58, lbl_803E1D5C, alpha, 0x100);
     drawTexture(lbl_803A8680[2], lbl_803E1D60, lbl_803E1D5C, alpha, 0x100);
-    gameTextSetColor(0xff, 0xff, 0xff, alpha);
+    gameTextSetColorInt(0xff, 0xff, 0xff, alpha);
 
     saveFileSelect_saveSlots =
         saveFileSelect_saveSlotsBase; /* retail draw path resets the working slot pointer to the base */

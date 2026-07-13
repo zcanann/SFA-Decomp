@@ -24,7 +24,7 @@
 #include "main/dll/tframeanimator_state.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
-#include "main/gametext.h"
+#include "main/textrender_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00F8_levelname.h"

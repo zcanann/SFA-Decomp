@@ -16,6 +16,7 @@
 #include "main/texture.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
+#include "main/textrender_api.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0000_gameui_api.h"
@@ -49,7 +50,6 @@ extern int lbl_803DBC04;
 extern u8 gWarpStoneUiMenuItemTemplates[];
 extern int* gTitleMenuLinkInterface;
 
-extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
 u8 gWarpStoneUiMenuItems[0x168];

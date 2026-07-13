@@ -20,7 +20,7 @@
 #include "main/effect_interfaces.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/gameplay_runtime.h"
 #include "main/mapEvent.h"
 #include "main/model_engine.h"

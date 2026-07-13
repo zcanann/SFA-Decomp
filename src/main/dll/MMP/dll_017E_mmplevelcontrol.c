@@ -21,7 +21,7 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/dll/savegame_load_api.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/map_load.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"

@@ -27,6 +27,7 @@
 #include "main/dll/savegame.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_internal.h"
+#include "main/gametext_api.h"
 #include "main/gametext_charset_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
@@ -102,7 +103,6 @@ extern u8 lbl_803DD75B;
 extern u8 lbl_803DD77F;
 extern s32 lbl_803DD7E0;
 extern void setTimeStop(int v);
-extern void gameTextFreePhrase(void* arg);
 extern u16 curGameText;
 extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;
@@ -113,13 +113,11 @@ extern u8 gHighScoreHighlightRow;
 extern u8 lbl_803A9440[0x18];
 extern u8 hudTextures[0x198];
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u);
-extern void gameTextSetColor(int r, int g, int b, int a);
 extern u8 lbl_8031B050[9];
 extern u8 gPauseMenuHintIndex;
 extern u8 gPauseMenuTextCharset;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
-extern void* gameTextGet(int textId);
 extern void* lbl_803A9410[6];
 extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
@@ -134,7 +132,6 @@ extern s8 lbl_803DBA64;
 extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
 extern void gameTextSetCursor(u16, u16, s32);
-extern void gameTextMeasureFn_800163c4(void*, s32, s32, s32, s32*, s32*, s32*, s32*);
 /* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
 #define GAMEUI_TASK_HINT_COUNT 5
 extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
@@ -255,7 +252,6 @@ extern s16 gYButtonActiveBit;
 extern f32 gYButtonIconAnim;
 extern f32 lbl_803DBA84;
 
-extern void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY);
 extern GridEntry lbl_8031B818[];
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
@@ -356,7 +352,6 @@ extern s16 gTrickyHudCachedIconIndex;
 extern Texture* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
-extern void gameTextFn_80016c18(int text, int* arg);
 extern int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
@@ -403,7 +398,6 @@ extern s8 gCMenuScriptedInput;
 extern u16 yButtonState;
 extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
-extern void gameTextAppendStr(char* str, int box);
 extern int cMenuSetItems(int handle, int flag);
 
 /* ===== EN v1.0 retargeted leaves ========================================== */
@@ -581,7 +575,7 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
     curGameText = id;
     lbl_803DD8CA = -1;
     lbl_803DD8C8 = 1;
-    gameTextFreePhrase(lbl_803A9440);
+    gameTextFreePhrase((int*)lbl_803A9440);
     if (do_input_disable != 0)
     {
         cutsceneFadeInOut(1);
@@ -1094,7 +1088,7 @@ void pauseMenuDrawText(void)
         cur = 0x10e;
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
-    gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
+    gameTextMeasureS32(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
     gameTextResetCursor(1);
 
     {
@@ -1107,7 +1101,7 @@ void pauseMenuDrawText(void)
     }
 
     gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
-    gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
+    gameTextSetColorInt(0xff, 0xff, 0xff, (u8)alpha);
     *(u8*)((u8*)sprite + 0x1e) = alpha;
     gameTextAppendStr(handle, 0x49);
     gameTextResetCursor(2);
@@ -1547,11 +1541,11 @@ void timeListDraw(void)
             b = pulse;
         }
         gameTextFn_80016810(0x2f7, 0, 5);
-        gameTextSetColor(a, a, a, 0xff);
+        gameTextSetColorInt(a, a, a, 0xff);
         gameTextShow(0x2f8);
-        gameTextSetColor(b, b, b, 0xff);
+        gameTextSetColorInt(b, b, b, 0xff);
         gameTextShow(0x2fb);
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
     }
     {
         u16* p;
@@ -1612,7 +1606,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
     drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
 
-    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
     gameTextFn_80016810(0x345, 0, 0xa);
     gameTextFn_80016810(gHighScoreTitleIdTable[gHighScoreActiveTableId].titleId, 0, 0x28);
 
@@ -1626,11 +1620,11 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
             {
-                gameTextSetColor(pulse, pulse, pulse, 0xff);
+                gameTextSetColorInt(pulse, pulse, pulse, 0xff);
             }
             else if (k == gHighScoreHighlightRow + 1)
             {
-                gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+                gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
             }
             gameTextShowStr(name, 0x86, 0, k * 0x1e + 0x5a);
             gameTextShowStr(buf, 0x87, 0, k * 0x1e + 0x5a);
@@ -2261,7 +2255,7 @@ void fn_80128470(int alpha)
     alpha16 = (s16)alpha;
     {
         int n = alpha16 * (0x200 - lbl_803DD75C);
-        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
+        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
     }
     lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
     switch ((int)pauseMenuState)
@@ -2279,7 +2273,7 @@ void fn_80128470(int alpha)
     {
         s16 tx;
         int n = alpha16 * lbl_803DD75C;
-        gameTextSetColor(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
+        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818)
         {
@@ -2534,7 +2528,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     else
     {
         char* gt;
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
         drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
         drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
         drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
@@ -3481,7 +3475,7 @@ void pauseMenuDoSave(void)
     {
         if (lbl_803DB424 != 0)
         {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+            gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
             gameTextShow(0x46e);
         }
     }
@@ -3933,7 +3927,7 @@ void GameUI_hudDraw(int a, int b, int c)
         box = gameTextGetBox(0x7c);
         if (curGameText != 0xffff && lbl_803DD8D0 != 0)
         {
-            gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+            gameTextSetColorInt(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
             box[0x1e] = lbl_803DD8D0;
             if (lbl_803DD8CA != -1)
             {
@@ -3941,7 +3935,7 @@ void GameUI_hudDraw(int a, int b, int c)
             }
             else
             {
-                gameTextFn_80016c18(curGameText, (int*)lbl_803A9440);
+                gameTextFn_80016c18(curGameText, (int)lbl_803A9440);
             }
         }
         ((void (*)(int, int, int))pauseMenuDrawText)(a, b, c);
@@ -3979,7 +3973,7 @@ void GameUI_hudDraw(int a, int b, int c)
             box = gameTextGetBox(0x7c);
             if (curGameText != 0xffff && lbl_803DD8D0 != 0)
             {
-                gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+                gameTextSetColorInt(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
                 box[0x1e] = lbl_803DD8D0;
                 if (lbl_803DD8CA != -1)
                 {
@@ -3987,7 +3981,7 @@ void GameUI_hudDraw(int a, int b, int c)
                 }
                 else
                 {
-                    gameTextFn_80016c18(curGameText, (int*)lbl_803A9440);
+                    gameTextFn_80016c18(curGameText, (int)lbl_803A9440);
                 }
             }
             drawTrickyHudOverlay(a, b, c);

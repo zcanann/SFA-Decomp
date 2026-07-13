@@ -32,7 +32,6 @@ extern u32 lbl_803DD4AC;
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];
-extern void* gameTextGet(int textId);
 
 void hintTextFn_800ea174(u8* out)
 {

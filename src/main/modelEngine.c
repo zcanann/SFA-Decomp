@@ -53,7 +53,9 @@
 #include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
-#include "main/gametext.h"
+#include "main/gametext_box_api.h"
+#include "main/gametext_show_str_api.h"
+#include "main/textrender_api.h"
 #include "main/gameloop_api.h"
 #include "main/minimap_api.h"
 #include "main/model_engine.h"
@@ -876,11 +878,11 @@ void gameTimerRun(void)
 
         if (colorFlag && hundredths < 0x32)
         {
-            gameTextSetColor(0xFF, 0x40, 0x40, 0xFF);
+            gameTextSetColorInt(0xFF, 0x40, 0x40, 0xFF);
         }
         else
         {
-            gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+            gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
         sprintf(gModelEngineTextBuf, &lbl_803DB294, hours / 10);

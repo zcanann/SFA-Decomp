@@ -26,7 +26,7 @@
 #include "main/fileio.h"
 #include "main/loaded_file_flags.h"
 #include "main/gameloop_api.h"
-#include "main/gametext.h"
+#include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/mm.h"
