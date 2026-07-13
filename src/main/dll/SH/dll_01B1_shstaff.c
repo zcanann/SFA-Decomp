@@ -73,7 +73,7 @@ void sh_staff_free(int* obj, int flag)
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 #include "main/dll/tricky_api.h"
-#include "main/objlib_api.h"
+#include "main/obj_path.h"
 #include "main/objprint_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -158,7 +158,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         if (state->phase == SHSTAFF_PHASE_CARRY_ATTACH)
         {
             Obj_BuildWorldTransformMatrix((GameObject*)obj, mtxB, 0);
-            PSMTXInverse((int)ObjPath_GetPointModelMtx((void*)player, 0), mtxA);
+            PSMTXInverse((int)ObjPath_GetPointModelMtx((GameObject*)player, 0), mtxA);
             PSMTXConcat(mtxA, mtxB, state->carryMtx);
             state->phase = SHSTAFF_PHASE_CARRY_RENDER;
         }
@@ -169,7 +169,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         }
         if (state->phase == SHSTAFF_PHASE_CARRY_RENDER)
         {
-            PSMTXConcat((f32*)ObjPath_GetPointModelMtx((void*)player, 0), state->carryMtx, mtxB);
+            PSMTXConcat((f32*)ObjPath_GetPointModelMtx((GameObject*)player, 0), state->carryMtx, mtxB);
             objSetMtxFn_800412d4((u32)mtxB);
             objRenderModel((int)obj);
         }

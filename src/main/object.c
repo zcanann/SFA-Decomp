@@ -17,6 +17,7 @@
 #include "main/mapEvent.h"
 #include "main/object_transform.h"
 #include "main/objHitReact.h"
+#include "main/obj_contact.h"
 #include "main/objhits.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
@@ -1492,7 +1493,7 @@ void objFreeObjDef(u8* obj, int flag)
 
     if (*(u8*)&((GameObject*)obj)->contactRefCount != 0)
     {
-        ObjContact_RemoveObjectCallbacks((int)obj);
+        ObjContact_RemoveObjectCallbacks((GameObject*)obj);
     }
     switch (((GameObject*)obj)->anim.seqId)
     {

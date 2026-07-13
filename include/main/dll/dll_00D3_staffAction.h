@@ -28,6 +28,6 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_8016725c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 
 /* extern-cleanup: defining-file public prototypes */
-void fn_80167550(int obj, int otherObj);
+void fn_80167550(GameObject* obj, GameObject* otherObj);
 
 #endif /* MAIN_DLL_STAFFACTION_H_ */

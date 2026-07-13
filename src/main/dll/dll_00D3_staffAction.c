@@ -30,6 +30,7 @@
 #include "main/objprint_api.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
+#include "main/obj_contact.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/frame_timing.h"
@@ -931,7 +932,7 @@ void dll_D3_update(int* obj)
 
     if (((StaffBits*)&extra->flags92)->b1 == 0u)
     {
-    if (ObjContact_AddCallback((int)obj, (int)player, fn_80167550) != 0)
+    if (ObjContact_AddCallback((GameObject*)obj, player, fn_80167550) != 0)
         {
             ((StaffBits*)&extra->flags92)->b1 = 1;
         }
@@ -1091,8 +1092,8 @@ void dll_D3_release_nop(void)
 {
 }
 
-void fn_80167550(int obj, int otherObj)
+void fn_80167550(GameObject* obj, GameObject* otherObj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
 }

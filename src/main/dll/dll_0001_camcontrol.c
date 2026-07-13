@@ -228,7 +228,7 @@ void camcontrol_updateTargetFeedback(void)
             ObjAnim_AdvanceCurrentMove((int)reticle, gCamcontrolReticleFadeInStep,
                                                                         timeDelta, NULL);
         }
-        result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
+        result = Obj_IsObjectAlive((GameObject*)CAMCONTROL_CAMERA->targetReticleFocus);
         if (result == 0)
         {
             CAMCONTROL_CAMERA->targetReticleFocus = 0;

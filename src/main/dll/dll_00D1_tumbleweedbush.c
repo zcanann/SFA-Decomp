@@ -35,7 +35,6 @@
 #include "main/objhits.h"
 #include "main/sky_interface.h"
 #include "main/objfx.h"
-#include "main/objlib_api.h"
 #include "main/vecmath_distance_api.h"
 
 typedef struct TumbleweedBushState

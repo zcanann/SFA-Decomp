@@ -139,7 +139,7 @@ void barrelgener_update(GameObject* obj)
         }
         if (timerCountDown((void*)&state->releaseTimer) != 0)
         {
-            if (Obj_IsObjectAlive((int)state->queuedObject) != 0)
+            if (Obj_IsObjectAlive(state->queuedObject) != 0)
             {
                 GameObject* releasedBarrel = state->queuedObject;
                 f32 releaseVelocity;

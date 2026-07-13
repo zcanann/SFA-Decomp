@@ -37,7 +37,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/tricky_api.h"
 #include "main/object.h"
-#include "main/objlib_api.h"
+#include "main/obj_path.h"
 #include "main/pad.h"
 
 typedef struct SBCloudRunnerState
@@ -254,7 +254,7 @@ void fn_801EED5C(int* obj, f32* x, f32* y, f32* z)
 
 void fn_801EED80(void* obj)
 {
-    objSetMtxFn_800412d4(ObjPath_GetPointModelMtx((int)obj, 3));
+    objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(obj, 3));
 }
 
 void fn_801EEDC0(int obj, f32* out, int* outInt)

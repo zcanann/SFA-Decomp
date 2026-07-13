@@ -23,7 +23,7 @@
 #include "main/player_control_interface.h"
 #include "main/camera.h"
 #include "main/dll/DIM/DIM2icicle.h"
-#include "main/objlib_api.h"
+#include "main/obj_path.h"
 #include "main/objlib.h"
 #include "main/pad.h"
 #include "main/rcp_dolphin.h"

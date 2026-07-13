@@ -31,6 +31,7 @@
 #include "main/dll/collectible_state.h"
 #include "main/gameplay_runtime.h"
 #include "main/objlib.h"
+#include "main/obj_hit_region.h"
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/dll/dll_00ED_collectible_api.h"

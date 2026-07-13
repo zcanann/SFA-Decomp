@@ -146,7 +146,6 @@ int gunpowderbarrel_getExtraSize(void)
 
 void gunpowderbarrel_free(GameObject *obj, int mode)
 {
-    extern int Obj_IsObjectAlive(int obj);
     int extra;
     void* child;
     extra = *(int*)&(obj)->extra;
@@ -154,7 +153,7 @@ void gunpowderbarrel_free(GameObject *obj, int mode)
     child = (void*)((GunpowderBarrelState*)extra)->linkedTimerObject;
     if (child != NULL && mode == 0)
     {
-        if (Obj_IsObjectAlive((int)child) != 0)
+        if (Obj_IsObjectAlive((GameObject*)child) != 0)
         {
             ObjLink_DetachChild(obj, ((GunpowderBarrelState*)extra)->linkedTimerObject);
             ((GunpowderBarrelState*)extra)->linkedTimerObject = 0;
@@ -475,7 +474,7 @@ void gunpowderbarrel_hitDetect(int obj)
     barrel = (GameObject*)obj;
     state = barrel->extra;
 
-    if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0)
+    if ((int)Obj_IsObjectAlive((GameObject*)state->linkedTimerObject) == 0)
     {
         if ((void*)state->linkedTimerObject != NULL)
         {
@@ -712,7 +711,8 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     else
     {
-        if ((int)Obj_IsObjectAlive(state->linkedTimerObject) == 0 && *(void* *)&state->linkedTimerObject != NULL)
+        if ((int)Obj_IsObjectAlive((GameObject*)state->linkedTimerObject) == 0 &&
+            *(void* *)&state->linkedTimerObject != NULL)
         {
             ObjLink_DetachChild(obj, state->linkedTimerObject);
             state->linkedTimerObject = 0;

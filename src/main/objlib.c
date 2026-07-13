@@ -11,6 +11,9 @@
 #include "main/object_api.h"
 #include "main/mm.h"
 #include "main/objHitReact.h"
+#include "main/obj_contact.h"
+#include "main/obj_hit_region.h"
+#include "main/player_eye_anim.h"
 #define OBJHITS_IMPLEMENTATION
 #include "main/objhits.h"
 #include "main/objlib.h"
@@ -27,6 +30,7 @@ extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern float* ObjModel_GetJointMatrix(int* model, int jointIndex);
 extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInstance);
 extern void fn_80054F74(int obj, float* pos);
+extern char sObjAddObjectTypeReachedMaxTypes[];
 
 extern int playerIsDisguised(int obj);
 
@@ -41,8 +45,8 @@ u8 gObjGroupOffsets[0x58];
 
 typedef struct ObjContactCallbackEntry
 {
-    int objA;
-    int objB;
+    GameObject* objA;
+    GameObject* objB;
     ObjContactCallback callback;
 } ObjContactCallbackEntry;
 
@@ -102,7 +106,6 @@ extern f32 gObjLibBlinkAnglePiDivisor;
 
 #define OBJCONTACT_CALLBACK_CAPACITY      0x10
 #define OBJCONTACT_CALLBACK_LAST_INDEX    (OBJCONTACT_CALLBACK_CAPACITY - 1)
-#define OBJCONTACT_OBJECT_REFCOUNT_OFFSET 0xe9
 #define OBJTRIGGER_FLAGS_OFFSET           0xaf
 #define OBJTRIGGER_CURRENT_ENABLE_FLAG    0x01
 #define OBJTRIGGER_CURRENT_BLOCK_FLAG     0x08
@@ -1490,13 +1493,13 @@ void ObjMsg_AllocQueue(void* obj, int capacity)
     return;
 }
 
-int Obj_IsObjectAlive(int objArg)
+int Obj_IsObjectAlive(GameObject* objArg)
 {
     u32 alive;
-    u32 obj = objArg;
+    GameObject* obj = objArg;
 
     alive = 0;
-    if ((obj != 0) && ((((GameObject*)obj)->objectFlags & OBJLINK_FLAGS_DEAD) == 0))
+    if ((obj != NULL) && ((obj->objectFlags & OBJLINK_FLAGS_DEAD) == 0))
     {
         alive = 1;
     }
@@ -1639,25 +1642,25 @@ void ObjLink_AttachChild(int parent, int child, int linkMode)
     return;
 }
 
-void ObjContact_DispatchCallbacks(int objA, int objB)
+void ObjContact_DispatchCallbacks(GameObject* objA, GameObject* objB)
 {
     int objARefCount;
     int objBRefCount;
     int count;
     ObjContactCallbackEntry* entry;
 
-    objARefCount = *(u8*)(objA + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
-    objBRefCount = *(u8*)(objB + OBJCONTACT_OBJECT_REFCOUNT_OFFSET);
+    objARefCount = objA->contactRefCount;
+    objBRefCount = objB->contactRefCount;
     entry = gObjContactCallbacks;
     count = gObjContactCallbackCount;
     while ((objARefCount != 0) && (objBRefCount != 0) && (count-- != 0))
     {
-        if (((u32)entry->objA == objA) && ((u32)entry->objB == objB))
+        if ((entry->objA == objA) && (entry->objB == objB))
         {
             objARefCount = objARefCount - 1;
             entry->callback(objA, objB);
         }
-        if (((u32)entry->objA == objB) && ((u32)entry->objB == objA))
+        if ((entry->objA == objB) && (entry->objB == objA))
         {
             objBRefCount = objBRefCount - 1;
             entry->callback(objB, objA);
@@ -1667,7 +1670,7 @@ void ObjContact_DispatchCallbacks(int objA, int objB)
     return;
 }
 
-void ObjContact_RemoveObjectCallbacks(int obj)
+void ObjContact_RemoveObjectCallbacks(GameObject* obj)
 {
     int count;
     ObjContactCallbackEntry* entry;
@@ -1676,12 +1679,12 @@ void ObjContact_RemoveObjectCallbacks(int obj)
     count = gObjContactCallbackCount;
     while (count-- > 0)
     {
-        if (((u32)entry->objA == obj) || ((u32)entry->objB == obj))
+        if ((entry->objA == obj) || (entry->objB == obj))
         {
             gObjContactCallbackCount--;
             count--;
-            (*(u8*)(entry->objA + OBJCONTACT_OBJECT_REFCOUNT_OFFSET))--;
-            (*(u8*)(entry->objB + OBJCONTACT_OBJECT_REFCOUNT_OFFSET))--;
+            entry->objA->contactRefCount--;
+            entry->objB->contactRefCount--;
             if ((gObjContactCallbackCount != OBJCONTACT_CALLBACK_LAST_INDEX) && (gObjContactCallbackCount != 0))
             {
                 *entry = gObjContactCallbacks[gObjContactCallbackCount];
@@ -1692,13 +1695,13 @@ void ObjContact_RemoveObjectCallbacks(int obj)
     return;
 }
 
-int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
+int ObjContact_AddCallback(GameObject* obj, GameObject* otherObj, ObjContactCallback callback)
 {
     int count;
     ObjContactCallbackEntry* entry;
     int i;
 
-    if (((void*)obj == NULL) || ((void*)otherObj == NULL))
+    if ((obj == NULL) || (otherObj == NULL))
     {
         return 0;
     }
@@ -1706,7 +1709,7 @@ int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
     count = gObjContactCallbackCount;
     for (i = 0; i != count; i++)
     {
-        if (((u32)entry->objA == obj) && ((u32)entry->objB == otherObj))
+        if ((entry->objA == obj) && (entry->objB == otherObj))
         {
             return 0;
         }
@@ -1720,8 +1723,8 @@ int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
     entry->objA = obj;
     entry->objB = otherObj;
     entry->callback = callback;
-    *(u8*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) += 1;
-    *(u8*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) += 1;
+    obj->contactRefCount += 1;
+    otherObj->contactRefCount += 1;
     gObjContactCallbackCount = gObjContactCallbackCount + 1;
     return 1;
 }
@@ -2115,13 +2118,13 @@ typedef enum ObjLibBlinkMode
     OBJLIB_BLINK_MODE_WINK_LEFT = 5,  /* hold shut, left eye scaled apart */
 } ObjLibBlinkMode;
 
-typedef struct PlayerBlinkState
+struct PlayerBlinkState
 {
     u8 pad[0x2b];
     u8 mode;   /* 0x2b */
     u8 timer;  /* 0x2c */
     u8 amount; /* 0x2d */
-} PlayerBlinkState;
+};
 
 static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
 {
@@ -2153,10 +2156,10 @@ static inline int playerEyeAnim_FindJoint(ObjAnimComponent* objAnim, int tag)
     return joint;
 }
 
-void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
+void playerEyeAnimFn_80038988(GameObject* obj, PlayerBlinkState* blinkState, u32 flags)
 {
 
-    PlayerBlinkState* bs = (PlayerBlinkState*)blinkState;
+    PlayerBlinkState* bs = blinkState;
     f32 leftScale;
     s16 rotation;
     ObjAnimComponent* objAnim;
@@ -2165,7 +2168,7 @@ void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags)
     f32 rightScale;
     f32 wave;
 
-    objAnim = (ObjAnimComponent*)obj;
+    objAnim = &obj->anim;
     step = lbl_803DE998 * timeDelta;
     rightScale = (leftScale = lbl_803DE99C);
     switch (bs->mode)

@@ -84,6 +84,7 @@
 #include "main/dll/dll_0104_smallbasket.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/objlib.h"
+#include "main/player_eye_anim.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player.h"
 #include "main/dll/tricky_api.h"
@@ -7391,7 +7392,8 @@ void playerUpdate(GameObject* obj)
                 }
             }
             fn_802AFB0C((int)obj, inner, inner);
-            if (*(void**)((char*)inner + 0x7f8) != NULL && Obj_IsObjectAlive(((PlayerState*)inner)->heldObj) == 0)
+            if (*(void**)((char*)inner + 0x7f8) != NULL &&
+                Obj_IsObjectAlive((GameObject*)((PlayerState*)inner)->heldObj) == 0)
             {
                 ((PlayerState*)inner)->isHoldingObject = 0;
                 {
@@ -16505,7 +16507,7 @@ void playerDoEyeAnims(GameObject* obj, int state)
         {
             e = 0;
         }
-        ((void (*)(int, int, u16))playerEyeAnimFn_80038988)((int)obj, state + 0x364, e);
+        playerEyeAnimFn_80038988(obj, (PlayerBlinkState*)(state + 0x364), e);
     }
     if ((obj->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) == 0)
     {

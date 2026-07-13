@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objHitReact.h"
+#include "main/obj_contact.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/object_transform.h"
@@ -1691,7 +1692,7 @@ void ObjHits_ApplyPairResponse(int objA, int objB, f32 x, f32 y, f32 z, int flag
     f32 blend;
     f32 invBlend;
 
-    ObjContact_DispatchCallbacks(objA, objB);
+    ObjContact_DispatchCallbacks((GameObject*)objA, (GameObject*)objB);
     animA = &((GameObject*)objA)->anim;
     animB = &((GameObject*)objB)->anim;
     stateA = (ObjHitsPriorityState*)animA->hitReactState;

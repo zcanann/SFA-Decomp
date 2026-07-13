@@ -11,17 +11,4 @@
 #include "main/obj_query.h"
 #include "main/obj_trigger.h"
 
-typedef struct ObjAnimBank ObjAnimBank;
-typedef void (*ObjContactCallback)(int objA, int objB);
-
-extern char sObjAddObjectTypeReachedMaxTypes[];
-void ObjContact_DispatchCallbacks(int objA, int objB);
-void ObjContact_RemoveObjectCallbacks(int param_1);
-int ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback);
-u32 ObjHitRegion_FindContainingId(f32 x, f32 y, f32 z);
-void playerEyeAnimFn_80038988(int obj, int blinkState, u32 flags);
-void FUN_80038bb0(char param_1, int param_2);
-
-int ObjHits_PollPriorityHitWithCooldown();
-
 #endif /* MAIN_OBJLIB_H_ */
