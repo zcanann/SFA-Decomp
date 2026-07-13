@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_LADDERS_H_
-#define MAIN_DLL_LADDERS_H_
+#ifndef MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_
+#define MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
@@ -25,4 +25,4 @@ extern ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor;
 /* extern-cleanup: defining-file public prototypes */
 s8 fn_801631C8(int* obj);
 
-#endif /* MAIN_DLL_LADDERS_H_ */
+#endif /* MAIN_DLL_DLL_00D1_TUMBLEWEEDBUSH_H_ */

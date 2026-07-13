@@ -10,6 +10,8 @@
 #include "main/dll/dll_00CC_chukchuk.h"
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/dll/dll_00D0_grimble.h"
+#include "main/dll/dll_00D1_tumbleweedbush.h"
+#include "main/dll/dll_00D2_tumbleweed.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
@@ -191,7 +193,7 @@ extern ResourceDescriptor gStayPointObjDescriptor, gTexFrameAnimatorObjDescripto
 extern ResourceDescriptor gTitleScreenObjDescriptor, gTransporterObjDescriptor, gTreasureChestObjDescriptor,
     gTreeBirdObjDescriptor, gTrickyCurveObjDescriptor, gTrickyGuardObjDescriptor, gTrickyGuardSpotObjDescriptor;
 extern ResourceDescriptor gTrickyObjDescriptor, gTrickyWarpObjDescriptor, gTriggerObjDescriptor,
-    gTumbleWeedBushObjDescriptor, gTumbleweedObjDescriptor, gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor,
+    gVFPDragHeadObjDescriptor, gVFPLiftObjDescriptor,
     gVFP_Block1ObjDescriptor;
 extern ResourceDescriptor gVFP_DoorSwitchObjDescriptor, gVFP_LaddersObjDescriptor, gVFP_LevelControlObjDescriptor,
     gVFP_ObjCreatorObjDescriptor, gVFP_PlatformObjDescriptor, gVFP_SpellPlaceObjDescriptor, gVFP_coreplatObjDescriptor,
@@ -1111,8 +1113,8 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &dll_CE,
     (ResourceDescriptor*)&gCannonClawObjDescriptor,
     (ResourceDescriptor*)&gGrimbleObjDescriptor,
-    &gTumbleWeedBushObjDescriptor,
-    &gTumbleweedObjDescriptor,
+    (ResourceDescriptor*)&gTumbleWeedBushObjDescriptor,
+    (ResourceDescriptor*)&gTumbleweedObjDescriptor,
     &dll_D3,
     (ResourceDescriptor*)&gSkeetlaWallObjDescriptor,
     &gKaldaChomObjDescriptor,

@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_00D2_TUMBLEWEED_H_
 
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "types.h"
 #include "global.h"
 
@@ -113,5 +114,6 @@ int LandedArwing_ReturnZero(void);
 int LandedArwing_TriggerLaunchTarget(int obj, int target);
 int LandedArwing_UpdateBounceFade(int obj, u32* stateWord);
 int LandedArwing_UpdateRetreatChase(GameObject* obj, int stateWord);
+extern ObjectDescriptor16WithPadding gTumbleweedObjDescriptor;
 
 #endif /* MAIN_DLL_DLL_00D2_TUMBLEWEED_H_ */
