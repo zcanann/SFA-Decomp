@@ -34,7 +34,9 @@ typedef struct BackpackState {
                            0x7000a handler reads *param as this gamebit id: bit>0 ->
                            mainGetBit(bit) gates + mainSetBits(bit,1), else no-bit grab
                            path (player.c). */
-    s16 unk29A;
+    s16 pickupMsgValue; /* 0x29A: payload word of the grab-trigger descriptor; the
+                           player's 0x7000a handler copies *(param+2) into its
+                           interaction slot (matches collectible/ediblemushroom). */
     f32 unk29C;
     f32 phaseTimer;
     u8 unk2A4[0x2A8 - 0x2A4];
@@ -55,7 +57,7 @@ STATIC_ASSERT(offsetof(BackpackState, anchorPosZ) == 0x28C);
 STATIC_ASSERT(offsetof(BackpackState, targetPos) == 0x290);
 STATIC_ASSERT(offsetof(BackpackState, speed) == 0x294);
 STATIC_ASSERT(offsetof(BackpackState, triggerGameBit) == 0x298);
-STATIC_ASSERT(offsetof(BackpackState, unk29A) == 0x29A);
+STATIC_ASSERT(offsetof(BackpackState, pickupMsgValue) == 0x29A);
 STATIC_ASSERT(offsetof(BackpackState, unk29C) == 0x29C);
 STATIC_ASSERT(offsetof(BackpackState, phaseTimer) == 0x2A0);
 

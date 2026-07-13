@@ -396,7 +396,7 @@ void tumbleweed_updateStateMachine(GameObject* obj)
             if (dist < lbl_803E2FB8)
             {
                 ((BackpackState*)aux)->triggerGameBit = 0x195;
-                ((BackpackState*)aux)->unk29A = 0;
+                ((BackpackState*)aux)->pickupMsgValue = 0;
                 ((BackpackState*)aux)->unk29C = lbl_803E2F98;
                 ObjMsg_SendToObject(player, TUMBLEWEED_MSG_IN_RANGE, (void*)obj, (u32)(aux + 0x298));
                 ((BackpackState*)aux)->phase = 4;
