@@ -14,6 +14,7 @@
 #include "main/dll/dll_4D.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/savedata_struct.h"
+#include "main/dll/dll_0015_save_settings.h"
 
 /* misc-panel id stored in lbl_803DBA28 (see dll_0037_optionsscreen.c) */
 #define OPTIONS_PANEL_MISC 3
@@ -43,7 +44,6 @@ extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
 extern int lbl_803A87D0[8]; /* created menu-row widgets of the active panel */
 
 extern int saveFileStruct_isCheatActive(u8 idx);
-extern int isCheatUnlocked(int cheatId);
 
 void languageMenuInit(void)
 {
