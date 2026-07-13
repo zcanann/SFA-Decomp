@@ -200,7 +200,7 @@ void dbholecontrol1_update(int* obj)
     }
     else if (mainGetBit(((Dbholecontrol1Placement*)def)->triggerGameBit) != 0)
     {
-        (*gObjectTriggerInterface)->runSequence(*(s8*)(def + 0x19), obj, -1);
+        (*gObjectTriggerInterface)->runSequence(((Dbholecontrol1Placement*)def)->triggerSeqId, obj, -1);
     }
 }
 

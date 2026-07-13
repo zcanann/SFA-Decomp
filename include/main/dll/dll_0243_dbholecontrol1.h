@@ -10,7 +10,8 @@ typedef struct Dbholecontrol1Placement
     f32 posY;
     f32 posZ;
     s32 mapId;
-    s16 unk18;
+    u8 unk18;
+    s8 triggerSeqId; /* 0x19: run as an object sequence when triggerGameBit is set */
     s16 gameBitA; /* copied into DbHoleControl1State.gameBitA */
     s16 gameBitB; /* copied into DbHoleControl1State.gameBitB */
     s16 hideGameBit;
