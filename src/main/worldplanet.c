@@ -48,7 +48,6 @@ extern u16 getNextTaskHintText(void);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 
-extern void setIsOvercast(int v);
 extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;

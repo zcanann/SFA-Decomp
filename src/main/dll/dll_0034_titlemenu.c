@@ -65,7 +65,6 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 
-extern void setIsOvercast(int v);
 extern void memCardFn_8007dd04(u8 retry);
 extern void loadSaveSettings(void);
 extern int saveFn_800e8508(void);

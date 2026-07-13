@@ -69,7 +69,6 @@ void sceneDraw(void);
 
 u32 isOvercast(void);
 void setDrawCloudsAndLights(int v);
-void setIsOvercast(int v);
 int setWidescreen(u8 enabled);
 
 #endif /* MAIN_LIGHTMAP_H_ */
