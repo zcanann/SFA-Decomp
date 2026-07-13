@@ -33,6 +33,9 @@
 #include "main/dll/path_control_interface.h"
 #include "main/frame_timing.h"
 #include "main/byte_flags.h"
+#include "dolphin/mtx/mtx_legacy.h"
+#include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTransform.h"
 
 /* external symbol declarations */
 extern void fn_8005D108();
@@ -54,7 +57,6 @@ extern u32 FUN_80081110();
 extern u32 FUN_8008111c();
 extern u32 FUN_80081120();
 extern u32 FUN_80081124();
-extern u32 PSVECDotProduct();
 extern f64 DOUBLE_803e8af8;
 extern f64 DOUBLE_803e8b58;
 extern f64 DOUBLE_803e8bd0;
@@ -421,9 +423,6 @@ extern f32 lbl_803E80BC;
 extern int getYButtonItem(s16* out);
 extern f32 lbl_803DE430;
 extern void fn_8014C540(int obj, void* a, void* b, void* c);
-extern f32 PSVECMag(f32* v);
-extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern void PSVECAdd(f32* a, f32* b, f32* out);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
 extern f32 gPlayerPi;
 extern f32 lbl_803E7F98;
@@ -605,13 +604,10 @@ extern f32 lbl_803E7FFC;
 extern f32 lbl_803E7EC8;
 extern f32 lbl_803E7ECC;
 extern f32 lbl_803E7ED0;
-extern void PSMTXMultVec(f32* m, f32* src, f32* dst);
 extern f32 lbl_803E80D4;
 extern f32 lbl_803E80D8;
 extern f32 lbl_803E80AC;
 extern f32 fn_802943F4(f32 x);
-extern void PSMTXRotRad(f32* m, int axis, f32 rad);
-extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern f32 lbl_803E7E80;
 extern f32 lbl_803E7E84;
 extern f32 lbl_803E7E88;
@@ -668,8 +664,6 @@ extern double lbl_803E7F88;
 extern f32 lbl_803E7F90;
 extern int objBboxFn_800640cc(f32 radius, void* from, void* to, int mode, void* hit, int obj, int p7, int p8, int p9,
                               int p10);
-extern void PSVECSubtract(f32* a, f32* b, f32* ab);
-extern void PSVECNormalize(f32* in, f32* out);
 extern int gPlayerSfxTimerC;
 extern f32 lbl_803E7FA8;
 extern void cfPrisonGuard_setGameBitMirror(GameObject* a, int b);
@@ -689,10 +683,7 @@ extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textRenderSetupFn_80079804(void);
 extern void fn_80078740(void);
-extern void GXSetColorUpdate(int update);
 extern void setMatrixFromObjectTransposed(void* transform, f32* mtx);
-extern void PSMTXConcat(f32* a, f32* b, f32* out);
-extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern s16 lbl_8033366C[];
 extern f32 lbl_8033369C[];

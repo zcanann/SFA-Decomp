@@ -18088,7 +18088,7 @@ void playerDrawTeleportAnim(GameObject* obj)
     xf.scale = lbl_803E7F6C;
     setMatrixFromObjectTransposed(&xf, mtx);
     PSMTXConcat(Camera_GetViewMatrix(), mtx, mtx);
-    GXLoadPosMtxImm(mtx, 0);
+    GXLoadPosMtxImm((const f32(*)[4])mtx, 0);
     drawFn_8005cf8c(vp, lbl_802C2B30, 0xc);
 
     if (((PlayerState*)state)->teleportAnimProgress >= lbl_803E80E0)
