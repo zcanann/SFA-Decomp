@@ -4,6 +4,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"

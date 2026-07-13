@@ -22,6 +22,7 @@
  * player target throughout.
  */
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"

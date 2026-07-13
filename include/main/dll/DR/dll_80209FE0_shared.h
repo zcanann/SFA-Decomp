@@ -172,11 +172,6 @@ typedef struct
     u8 b01 : 1;
 } DrakorFlags;
 
-extern void PSVECSubtract(f32* a, f32* b, f32* out);
-extern void PSVECNormalize(f32* in, f32* out);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSVECScale(f32* in, f32* out, f32 scale);
-extern f32 PSVECMag(f32* v);
 extern void drakormissile_startActiveLaunch(GameObject* obj);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];

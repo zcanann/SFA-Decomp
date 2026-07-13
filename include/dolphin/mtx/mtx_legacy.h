@@ -4,6 +4,7 @@
 #include "types.h"
 
 f32 PSVECMag(f32* v);
+f32 PSVECDotProduct(f32* a, f32* b);
 void PSVECAdd(f32* a, f32* b, f32* out);
 void PSVECCrossProduct(f32* a, f32* b, f32* out);
 void PSVECNormalize(void* src, void* dst);
