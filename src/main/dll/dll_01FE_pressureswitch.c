@@ -21,7 +21,7 @@
 #include "main/dll/dll200state_struct.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
+#include "main/dll/dll_01FE_pressureswitch.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
 

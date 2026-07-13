@@ -14,7 +14,6 @@
 #include "main/frame_timing.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/audio/sfx.h"
 #include "main/dll/WM/dll_0201_wmcolrise.h"
 
