@@ -646,7 +646,7 @@ void CameraModeNormal_update(u8* obj)
 {
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     CameraObject* camera = (CameraObject*)obj;
-    GameObject* target = (GameObject*)camera->anim.targetObj;
+    GameObject* target[1];
     float fa;
     int val;
     u32 angleDelta;
@@ -665,15 +665,16 @@ void CameraModeNormal_update(u8* obj)
     u8 wallTraceScratch[116];
     u8 probeTraceScratch[112];
 
-    if (target == NULL)
+    target[0] = (GameObject*)camera->anim.targetObj;
+    if (target[0] == NULL)
     {
         return;
     }
-    if (target->anim.classId == 1)
+    if (target[0]->anim.classId == 1)
     {
-        playerGetTimeScale((GameObject*)target, &dx);
+        playerGetTimeScale((GameObject*)target[0], &dx);
         lbl_803DD52C = timeDelta * dx;
-        val = EmissionController_IsLingering((GameObject*)target);
+        val = EmissionController_IsLingering((GameObject*)target[0]);
         switch (val)
         {
         case 1:
@@ -704,12 +705,12 @@ void CameraModeNormal_update(u8* obj)
     }
     camera->unk13E = 0;
     camcontrol_updateModeSettings((int)camera);
-    camMoveFn_80104040(camera, target);
-    CameraModeNormal_follow(camera, &target->anim);
+    camMoveFn_80104040(camera, target[0]);
+    CameraModeNormal_follow(camera, &target[0]->anim);
     Obj_TransformLocalPointToWorld(camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                    &camera->anim.worldPosX, &camera->anim.worldPosY, &camera->anim.worldPosZ,
                                    (u32)camera->anim.parent);
-    camslide_update(camera, target, gCamcontrolModeSettings->verticalUpperBound,
+    camslide_update(camera, target[0], gCamcontrolModeSettings->verticalUpperBound,
                     gCamcontrolModeSettings->verticalLowerBound);
     camcontrol_updateVerticalBounds(camera, 1, 8, &gCamcontrolModeSettings->verticalUpperBound,
                                     &gCamcontrolModeSettings->verticalLowerBound);
@@ -720,8 +721,8 @@ void CameraModeNormal_update(u8* obj)
              ((gCamcontrolModeSettings->targetActionFlags == 1 && (*(f32*)((u8*)camera + 0x38) >= lbl_803E16AC)))) &&
             (gCamcontrolModeSettings->clampFlags.b7 == 0))
         {
-            if (((camera->anim.worldPosY > lbl_803E16DC + target->anim.worldPosY) &&
-                 (camera->anim.worldPosY < lbl_803E1724 + target->anim.worldPosY)) &&
+            if (((camera->anim.worldPosY > lbl_803E16DC + target[0]->anim.worldPosY) &&
+                 (camera->anim.worldPosY < lbl_803E1724 + target[0]->anim.worldPosY)) &&
                 (camera->anim.parent == NULL))
             {
                 gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 1;
@@ -729,7 +730,7 @@ void CameraModeNormal_update(u8* obj)
         }
         if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
              (*(f32*)((u8*)camera + 0x38) < lbl_803E1728)) &&
-            (target->anim.velocityY <= lbl_803E16AC))
+            (target[0]->anim.velocityY <= lbl_803E16AC))
         {
             gCamcontrolModeSettings->clampFlags.b6 = 1;
             gCamcontrolModeSettings->heightLockLimit = camera->anim.worldPosY;
@@ -744,8 +745,8 @@ void CameraModeNormal_update(u8* obj)
         {
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         }
-        if ((camera->anim.worldPosY > lbl_803E172C + target->anim.worldPosY) ||
-            (camera->anim.worldPosY < lbl_803E1708 + target->anim.worldPosY))
+        if ((camera->anim.worldPosY > lbl_803E172C + target[0]->anim.worldPosY) ||
+            (camera->anim.worldPosY < lbl_803E1708 + target[0]->anim.worldPosY))
         {
             gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
         }
@@ -762,15 +763,15 @@ void CameraModeNormal_update(u8* obj)
         }
         if (10 < gCamcontrolModeSettings->wallAvoidanceTimer)
         {
-            if (target->anim.classId == 1)
+            if (target[0]->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target, &aimX2, &aimY2, &aimZ2);
+                cameraGetPrevPos2((int)target[0], &aimX2, &aimY2, &aimZ2);
             }
             else
             {
-                aimX2 = target->anim.worldPosX;
-                aimY2 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
-                aimZ2 = target->anim.worldPosZ;
+                aimX2 = target[0]->anim.worldPosX;
+                aimY2 = target[0]->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ2 = target[0]->anim.worldPosZ;
             }
             camcontrol_traceMove(&aimX2, &camera->anim.worldPosX, &camera->anim.worldPosX, wallTraceScratch, 3, 1, 1,
                                  lbl_803E1688);
@@ -792,15 +793,15 @@ void CameraModeNormal_update(u8* obj)
         }
         if (5 < gCamcontrolModeSettings->collisionProbeTimer)
         {
-            if (target->anim.classId == 1)
+            if (target[0]->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target, &aimX, &aimY, &aimZ);
+                cameraGetPrevPos2((int)target[0], &aimX, &aimY, &aimZ);
             }
             else
             {
-                aimX = target->anim.worldPosX;
-                aimY = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
-                aimZ = target->anim.worldPosZ;
+                aimX = target[0]->anim.worldPosX;
+                aimY = target[0]->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+                aimZ = target[0]->anim.worldPosZ;
             }
             camcontrol_traceMove(&aimX, &camera->anim.worldPosX, &camera->anim.worldPosX, probeTraceScratch, 3, 1, 1,
                                  lbl_803E1688);
@@ -817,7 +818,7 @@ void CameraModeNormal_update(u8* obj)
     camera->anim.rotX = yaw - gCamcontrolModeSettings->pitchOffset;
     angleDelta =
         0xffffu &
-        getAngle(camera->anim.worldPosY - (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight), dy);
+        getAngle(camera->anim.worldPosY - (target[0]->anim.worldPosY + gCamcontrolModeSettings->targetHeight), dy);
     angleDelta = angleDelta - ((int)camera->anim.rotY & 0xffffU);
     if (0x8000 < (int)angleDelta)
     {
@@ -830,7 +831,7 @@ void CameraModeNormal_update(u8* obj)
     val = interpolate((f32)(int)angleDelta, lbl_803E16A4 / (f32)(u32)gCamcontrolModeSettings->yawResponseFrames,
                       timeDelta);
     camera->anim.rotY = camera->anim.rotY + val;
-    camcontrol_updateTargetAction(camera, target);
+    camcontrol_updateTargetAction(camera, target[0]);
     val = interpolate((f32)camera->anim.rotZ, lbl_803E1730, timeDelta);
     camera->anim.rotZ = camera->anim.rotZ - val;
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
