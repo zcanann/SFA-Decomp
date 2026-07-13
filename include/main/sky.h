@@ -128,7 +128,6 @@ int fn_8008B71C(int slot);
 void skyTimeToDayHourMinute(f32 time, s16* days, s16* hours, s16* minutes);
 void skyGetClockTime(f32* time);
 int dll_06_func0F(void);
-f32 fn_8008ED88(void);
 int return0_80088758(void);
 void doNothing_800887C4(void);
 void doNothing_800887C8(void);

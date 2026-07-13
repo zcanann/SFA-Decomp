@@ -72,7 +72,6 @@ extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
-extern f32 fn_8008ED88(void);
 extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
 extern f32 gSbGalleonSkyLightVecs[12];

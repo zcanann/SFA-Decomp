@@ -21,6 +21,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/model.h"
+#include "main/sky_api.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXEnum.h"
 
@@ -52,7 +53,6 @@ extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
-extern f32 fn_8008ED88(void);
 extern void fn_8008EDE8(f32* pos);
 extern void gxTextureFn_800794e0(void);
 extern void gxBlendFn_800789ac(void);

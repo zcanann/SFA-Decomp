@@ -97,8 +97,6 @@ extern u8 gWmLevelControlBlendedFogColor;         /* blended fog-color out-tripl
 extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-triplet */
 extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-extern int getSkyColorFn_80088e08(int slot);
-extern f32 fn_8008ED88(void);
 extern void fn_80089510(int flags, int red, int green, int blue);
 extern void fn_80089578(int flags, int red, int green, int blue);
 

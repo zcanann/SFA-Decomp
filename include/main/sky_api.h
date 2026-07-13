@@ -4,6 +4,7 @@
 #include "types.h"
 
 void envFxActFn_800887f8(u8 value);
+f32 fn_8008ED88(void);
 void modelTextureFn_80089970(int slot);
 void objGetColor(int slot, u8* red, u8* green, u8* blue);
 int getSkyColorFn_80088e08(int slot);
