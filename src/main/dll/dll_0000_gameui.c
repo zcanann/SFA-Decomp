@@ -1196,13 +1196,10 @@ void pauseMenuFn_8012b77c(void)
 {
     u32 btn = getButtonsJustPressed(0) & 0xffff;
     f32 speed = lbl_803DD764;
-    f32 v = speed * timeDelta + lbl_803DD760;
 
-    *(f32*)&lbl_803DD760 = v;
-    v = (v < lbl_803E2160) ? lbl_803E2160 : v;
-    *(f32*)&lbl_803DD760 = v;
-    v = (v < lbl_803E1F60) ? v : lbl_803E1F60;
-    *(f32*)&lbl_803DD760 = v;
+    lbl_803DD760 += speed * timeDelta;
+    lbl_803DD760 = (lbl_803DD760 > 0.0) ? lbl_803DD760 : 0.0;
+    lbl_803DD760 = (lbl_803DD760 < 1.0) ? lbl_803DD760 : 1.0;
 
     if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) && ((int)btn & PAD_BUTTON_B) && speed > lbl_803E2160)
     {
