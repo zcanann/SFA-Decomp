@@ -8,5 +8,10 @@ void* mapGetBlockAtPos(int x, int y, int layer);
 MapBlockData* mapGetBlock(int index);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
+void doNothing_8005D148(void);
+void doNothing_8005D14C(void);
+
+#define doNothing_8005D148Legacy(a, b) ((void (*)(int, int))doNothing_8005D148)((a), (b))
+#define doNothing_8005D14CLegacy(a, b) ((void (*)(int, int))doNothing_8005D14C)((a), (b))
 
 #endif /* MAIN_LIGHTMAP_API_H_ */

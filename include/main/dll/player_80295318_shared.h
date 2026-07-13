@@ -894,7 +894,6 @@ int EmissionController_IsLingering(GameObject* obj);
 int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerHasSpell(GameObject* obj, int spell);
-void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 int objGetAnimStateFlags(GameObject* obj, int flag);
 int playerGetTimeScale(GameObject* obj, f32* out);
 int playerSetHeldObject(int obj, int held);

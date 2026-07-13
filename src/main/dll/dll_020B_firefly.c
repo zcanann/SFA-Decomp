@@ -24,6 +24,7 @@
 #include "main/dll/LGT/LGTcontrollight.h"
 #include "main/model_light.h"
 #include "main/objfx.h"
+#include "main/gameloop_api.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
 

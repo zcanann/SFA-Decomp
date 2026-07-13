@@ -12,5 +12,6 @@ GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(void* player);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
+void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 
 #endif /* MAIN_DLL_PLAYER_API_H_ */

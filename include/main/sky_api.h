@@ -6,6 +6,7 @@
 void envFxActFn_800887f8(u8 value);
 void modelTextureFn_80089970(int slot);
 void objGetColor(int slot, u8* red, u8* green, u8* blue);
+int getSkyColorFn_80088e08(int slot);
 void skyFn_80088c94(int flags, int mode);
 void skyFn_80088e54(int mode, f32 brightness);
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
@@ -15,5 +16,8 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 void skySetOverrideLightColorEnabled(u8 enabled);
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 void skySetOverrideLightDirectionEnabled(u8 enabled);
+
+#define getSkyColorFn_80088e08ByteLegacy(slot) \
+    ((u8 (*)(int))getSkyColorFn_80088e08)((slot))
 
 #endif /* MAIN_SKY_API_H_ */

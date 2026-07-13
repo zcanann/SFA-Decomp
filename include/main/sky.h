@@ -99,7 +99,6 @@ void envFxFn_800887cc(void);
 void fn_80088870(int a, int b, int c, int d);
 void envFxFn_80088884(void);
 void loadSunAndMoon(void);
-int getSkyColorFn_80088e08(int slot);
 int getSkyColorFn_80088e30(int slot);
 int getSkyStructField24C(void);
 void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue);

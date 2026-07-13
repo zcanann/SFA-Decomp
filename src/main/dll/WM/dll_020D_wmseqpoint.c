@@ -13,6 +13,8 @@
  */
 #include "main/dll/WM/wm_shared.h"
 #include "main/object_render.h"
+#include "main/sky_api.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -154,7 +156,7 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
                     break;
                 case 4:
                     mainSetBits(GAMEBIT_WM_SpiritHead1Fired, 1);
-                    objSetAnimStateFlags(player, 8, 0);
+                    objSetAnimStateFlags((GameObject*)player, 8, 0);
                     mainSetBits(GAMEBIT_ITEM_Spirit1_Used, 1);
                     break;
                 default:
@@ -235,7 +237,6 @@ void wmseqpoint_update(GameObject* obj)
     GameObject* player;
     GameObject* target;
     int i;
-    extern u8 getSkyColorFn_80088e08(int skyId);
 
     player = Obj_GetPlayerObject();
     state = obj->extra;
@@ -291,7 +292,7 @@ void wmseqpoint_update(GameObject* obj)
             }
             else if (state->sequenceId == WMSEQPOINT_SEQ_SKY_TOGGLE)
             {
-                state->skyEnabledLatch = getSkyColorFn_80088e08(0);
+                state->skyEnabledLatch = getSkyColorFn_80088e08ByteLegacy(0);
             }
             (*gObjectTriggerInterface)->runSequence(state->sequenceId, (void*)obj, -1);
             state->doneLatch = 1;
