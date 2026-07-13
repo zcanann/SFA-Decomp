@@ -204,8 +204,6 @@ extern f32 gWaterfxPendingImpactPosition[];
 extern f32 PSVECSquareDistance(f32* a, f32* b);
 extern void* memset(void* dst, int c, int n);
 extern char sWaterfxDllAllocFailed[];
-extern int gExpgfxRuntimeData[];
-extern int gExpgfxTextureFreeInProgress;
 extern void waterfx_drawFn_800953fc(void);
 extern void* gWaterfxSplashTexCoordArray;
 extern void* gWaterfxSplashPosArray;

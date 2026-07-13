@@ -31,7 +31,6 @@
 
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
-extern f32 lbl_803E82C0;
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
@@ -42,12 +41,9 @@ extern f32 GX_F32_256;
 extern f32 lbl_803DC76C;
 extern const f32 lbl_803E8338;
 extern f32 lbl_803E83A8;
-extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
-extern f32 lbl_803E8364;
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
-extern void* gDIMSnowHorn1Texture;
 extern f32 lbl_803E8410;
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
