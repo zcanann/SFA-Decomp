@@ -219,30 +219,6 @@ ObjectDescriptor gPollenObjDescriptor = {
     Pollen_getExtraSize,
 };
 
-PollenFragmentConfig lbl_80320538 = {
-    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
-};
-
-PollenFragmentConfig lbl_8032054C = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
-};
-
-PollenFragmentConfig lbl_80320560 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
-};
-
-PollenFragmentConfig lbl_80320574 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
-};
-
-PollenFragmentConfig lbl_80320588 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
-};
-
-PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
-};
-
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
 {
     PollenFragmentExtra* state = ((GameObject*)obj)->extra;
