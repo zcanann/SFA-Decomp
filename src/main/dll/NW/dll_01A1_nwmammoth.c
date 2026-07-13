@@ -19,6 +19,7 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((u32 (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
@@ -69,7 +70,6 @@ extern u8 lbl_803DBFAC[4];
 extern u8 lbl_803DBFB0[4];
 extern int gNwMammothBushObjectIds[];
 extern int gNwMammothBushGameBits[];
-extern void fn_8014C66C(int* o, int* target);
 extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
@@ -458,7 +458,7 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                     int* o2 = (int*)ObjList_FindObjectById(gNwMammothBushObjectIds[i]);
                     if ((int*)Player_GetTargetObject(*(int*)&state->playerObject) == o2)
                     {
-                        fn_8014C66C(o2, (int*)state->playerObject);
+                        fn_8014C66C((GameObject*)o2, state->playerObject);
                     }
                     else
                     {
@@ -469,16 +469,16 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
                             if (vec3f_distanceSquared((char*)&((GameObject*)state->playerObject)->anim.worldPosX,
                                                       &o2[6]) >= gNwMammothTumbleweedDistSqThreshold)
                             {
-                                fn_8014C66C(o2, obj);
+                                fn_8014C66C((GameObject*)o2, (GameObject*)obj);
                             }
                             else
                             {
-                                fn_8014C66C(o2, (int*)state->playerObject);
+                                fn_8014C66C((GameObject*)o2, state->playerObject);
                             }
                         }
                         else
                         {
-                            fn_8014C66C(o2, (int*)tw);
+                            fn_8014C66C((GameObject*)o2, (GameObject*)tw);
                         }
                     }
                 }

@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/game_object.h"
 
 /*
  * EnemyState - the obj+0xB8 extra record for the enemy_* family in
@@ -14,7 +15,7 @@ typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
     u32 flags;
     u8 unk8[0x29C - 0x8];
-    u8 *trackedObj;
+    GameObject* trackedObj;
     u8 unk2A0[0x2A8 - 0x2A0];
     f32 aggroRange; /* 0x2A8 engagement/aggro range (= setup[0x29]<<3): the enemy
                        only attacks once the target is within this, even though it

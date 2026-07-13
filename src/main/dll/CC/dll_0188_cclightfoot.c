@@ -9,6 +9,7 @@
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #define GAMEBIT_LIGHTFOOT_TRIGGERED         9
 #define GAMEBIT_CC_COMPLETE                 0x24
@@ -171,8 +172,6 @@ extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
 extern u8 gCcLightfootAnimTable[];
 extern u8 gCcLightfootHitCooldown[8];
-extern f32 enemy_getHealthFraction(register int obj);
-extern void fn_8014C66C(int obj, int target);
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 typedef struct LightfootAnimTable
@@ -219,7 +218,7 @@ void cclightfoot_update(int obj)
     o1 = state->targetA;
     if (o1 != 0)
     {
-        if (!(enemy_getHealthFraction(o1) > lbl_803E4680))
+        if (!(enemy_getHealthFraction((GameObject*)o1) > lbl_803E4680))
         {
             valid = 0;
         }
@@ -232,7 +231,7 @@ void cclightfoot_update(int obj)
             goto cc_else;
         }
         o2 = state->targetB;
-        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
+        if (!(enemy_getHealthFraction((GameObject*)o2) > lbl_803E4680))
         {
             valid = 0;
         }
@@ -267,8 +266,8 @@ void cclightfoot_update(int obj)
                     oNear = oNear ^ tmp;
                     oFar = tmp ^ oNear;
                 }
-                fn_8014C66C(oNear, state->playerObj);
-                fn_8014C66C(oFar, obj);
+                fn_8014C66C((GameObject*)oNear, (GameObject*)state->playerObj);
+                fn_8014C66C((GameObject*)oFar, (GameObject*)obj);
                 targetObj = oFar;
                 dist = getXZDistance((f32*)(obj + 0x18), (f32*)(oFar + 0x18));
             }
@@ -279,7 +278,7 @@ void cclightfoot_update(int obj)
                     off = i * 4;
                     *(f32*)((u8*)dists + off) =
                         getXZDistance((f32*)(obj + 0x18), (f32*)(*(int*)((u8*)state + off + 8) + 0x18));
-                    fn_8014C66C(*(int*)((u8*)state + off + 8), obj);
+                    fn_8014C66C((GameObject*)*(int*)((u8*)state + off + 8), (GameObject*)obj);
                 }
                 if (dists[0] < dists[1])
                 {
@@ -297,7 +296,7 @@ void cclightfoot_update(int obj)
     cc_else:
     {
         o2 = state->targetA;
-        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
+        if (!(enemy_getHealthFraction((GameObject*)o2) > lbl_803E4680))
         {
             valid = 0;
         }
@@ -310,7 +309,7 @@ void cclightfoot_update(int obj)
             fallback = state->targetA;
         }
         o2 = state->targetB;
-        if (!(enemy_getHealthFraction(o2) > lbl_803E4680))
+        if (!(enemy_getHealthFraction((GameObject*)o2) > lbl_803E4680))
         {
             valid = 0;
         }
@@ -329,11 +328,11 @@ void cclightfoot_update(int obj)
                  (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback) ||
                 playerIsDisguised(state->playerObj) != 0)
             {
-                fn_8014C66C(fallback, obj);
+                fn_8014C66C((GameObject*)fallback, (GameObject*)obj);
             }
             else
             {
-                fn_8014C66C(fallback, state->playerObj);
+                fn_8014C66C((GameObject*)fallback, (GameObject*)state->playerObj);
             }
             targetObj = fallback;
             dist = getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18));

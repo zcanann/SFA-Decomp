@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 typedef struct DFlanternShrineState
 {
@@ -147,7 +148,6 @@ extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int 
 extern void gameTimerInit(s8 flags, int minutes);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern void fn_8014C5C0(void* obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern void* objCreateLight(int* obj, int v);
@@ -452,7 +452,7 @@ void DFSH_Shrine_update(int objArg)
                     targetObj = ObjList_FindObjectById(targetId);
                     if (targetObj != 0)
                     {
-                        fn_8014C5C0(targetObj);
+                        fn_8014C5C0((GameObject*)targetObj);
                     }
                 }
             }

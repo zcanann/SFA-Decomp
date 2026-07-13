@@ -648,32 +648,32 @@ int enemy_getObjectTypeId(void)
     return 0x14b;
 }
 
-void fn_8014C66C(int* obj, int x)
+void fn_8014C66C(GameObject* obj, GameObject* target)
 {
-    ((EnemyState*)((GameObject*)obj)->extra)->trackedObj = (u8*)x;
+    ((EnemyState*)obj->extra)->trackedObj = target;
 }
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8014C5C0(int* obj)
+void fn_8014C5C0(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
+    int* state = obj->extra;
     ((EnemyState*)state)->current = 0;
 }
 
-void fn_8014C63C(int* obj)
+void fn_8014C63C(GameObject* obj)
 {
-    int* state = ((GameObject*)obj)->extra;
-    ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
+    int* state = obj->extra;
+    ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
 }
 
-u8 fn_8014C4D8(int* obj)
+u8 fn_8014C4D8(GameObject* obj)
 {
     int* state;
     f32 val;
     if (obj == NULL)
         goto null_obj;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     goto have_state;
 null_obj:
     return 0;
@@ -720,13 +720,13 @@ void baddieAfterUpdateBonesCb(GameObject* obj, int* bones)
     }
 }
 
-void fn_8014C540(int* obj, int* outIdx, f32* outA, f32* outB)
+void fn_8014C540(GameObject* obj, int* outIdx, f32* outA, f32* outB)
 {
     int* state;
     f32 fz;
     if (obj != NULL)
     {
-        state = ((GameObject*)obj)->extra;
+        state = obj->extra;
         if (state != NULL)
         {
             *outA = (f32)(u32)((EnemyState*)state)->curveParamA / lbl_803E257C;
@@ -741,12 +741,12 @@ void fn_8014C540(int* obj, int* outIdx, f32* outA, f32* outB)
     *outIdx = 0;
 }
 
-f32 enemy_getHealthFraction(register int obj)
+f32 enemy_getHealthFraction(register GameObject* obj)
 {
     register u16 a;
     register int* state;
     u16 b;
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     if (state == NULL)
         return lbl_803E2574;
     a = ((EnemyState*)state)->max;
@@ -1713,11 +1713,11 @@ void enemy_update(int obj)
     }
     if (((EnemyState*)state)->trackedObj == NULL)
     {
-        ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
+        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
     else if ((((GameObject*)((EnemyState*)state)->trackedObj)->objectFlags & ENEMY_OBJFLAG_FREED) != 0)
     {
-        ((EnemyState*)state)->trackedObj = (u8*)Obj_GetPlayerObject();
+        ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
     baddieInstantiateWeapon((GameObject*)(obj), state);

@@ -421,7 +421,6 @@ extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32*
 extern f32 lbl_803E80BC;
 extern int getYButtonItem(s16* out);
 extern f32 lbl_803DE430;
-extern void fn_8014C540(int obj, void* a, void* b, void* c);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int*** out, int a, int b);
 extern f32 gPlayerPi;
 extern f32 lbl_803E7F98;
@@ -488,8 +487,6 @@ extern f32 lbl_803E8244;
 extern f32 lbl_803E8248;
 extern s16 lbl_803DC748;
 extern f32 lbl_803E813C;
-extern void fn_8014C63C(int* obj);
-extern void fn_8014C66C(int* obj, int x);
 extern void fn_8011F34C(int a);
 extern f32 lbl_803E7F34;
 extern f32 lbl_803E8238;

@@ -43,6 +43,7 @@
 #include "main/dll/player_80295318_shared.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/dll_0104_smallbasket.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/objlib.h"
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/player_state.h"
@@ -5372,7 +5373,7 @@ int playerStateAttack(GameObject* obj, int state, f32 fv)
                 }
                 if ((*(u8*)((char*)state + 0x34a) & 4) != 0 && (*(u8*)((char*)state + 0x34a) & 2) != 0)
                 {
-                    f32 v = (f32)(u8)fn_8014C4D8(*(int*)&((PlayerState*)state)->baddie.targetObj);
+                    f32 v = (f32)(u8)fn_8014C4D8((GameObject*)((PlayerState*)state)->baddie.targetObj);
                     int slot2 = inner->moveSlots + (u32)inner->moveSlotIndex * 0xb0;
                     if (v >= *(f32*)(slot2 + 0x8c))
                     {
@@ -12980,8 +12981,8 @@ void fn_802B4A9C(int obj, int inner, int inner2)
         }
         if (*(int**)&((PlayerState*)inner2)->baddie.targetObj != NULL)
         {
-            fn_8014C540(*(int*)&((PlayerState*)inner2)->baddie.targetObj, (char*)inner + 0x884, (char*)inner + 0x888,
-                        (char*)inner + 0x88c);
+            fn_8014C540((GameObject*)((PlayerState*)inner2)->baddie.targetObj, (int*)&((PlayerState*)inner)->flags884,
+                        &((PlayerState*)inner)->animSpeedDecay, &((PlayerState*)inner)->animSpeedStart);
         }
         else
         {

@@ -31,6 +31,7 @@
 #include "main/maketex.h"
 #include "main/objprint.h"
 #include "main/dll/babycloudrunnerstate_struct.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -128,7 +129,6 @@ extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5,
 extern u32 mainGetBit(int eventId);
 extern int Obj_RemoveFromUpdateList(int* obj);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern void fn_8014C66C(int* a, void* b);
 extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 int CFPrisonGuard_getExtraSize(void);
 
@@ -617,7 +617,7 @@ void babycloudrunner_update(int* obj)
                                          &((GameObject*)near)->anim.worldPosX) >
                             gBabyCloudRunnerPlayerFarDist)
                         {
-                            fn_8014C66C(near, obj);
+                            fn_8014C66C((GameObject*)near, (GameObject*)obj);
                             if (((GameObject*)obj)->anim.currentMove != 0xd)
                             {
                                 ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject*)obj)->anim.currentMoveProgress, 0);
@@ -627,14 +627,14 @@ void babycloudrunner_update(int* obj)
                         }
                         else
                         {
-                            fn_8014C66C(near, Obj_GetPlayerObject());
+                            fn_8014C66C((GameObject*)near, Obj_GetPlayerObject());
                         }
                     }
                     else
                     {
                         if (near != NULL)
                         {
-                            fn_8014C66C(near, Obj_GetPlayerObject());
+                            fn_8014C66C((GameObject*)near, Obj_GetPlayerObject());
                         }
                     }
                     fn_8019E3F4(obj);

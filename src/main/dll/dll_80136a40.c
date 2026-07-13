@@ -37,6 +37,7 @@
 #include "stdarg.h"
 #include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_80136a40.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/sfa_extern_decls.h"
 #include "dolphin/os/OSCache.h"
@@ -189,7 +190,6 @@ extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
 extern int dll_19_func1B(GameObject* p);
-extern f32 enemy_getHealthFraction(register int obj);
 extern f32 vec3f_distanceSquared(int, int);
 
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
@@ -580,7 +580,7 @@ int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTyp
         }
         else
         {
-            obj_extra = enemy_getHealthFraction(*objs);
+            obj_extra = enemy_getHealthFraction((GameObject*)*objs);
         }
 
         data = (int*)*(int*)(*objs + 0x4c);

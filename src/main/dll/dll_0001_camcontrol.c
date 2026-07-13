@@ -29,6 +29,7 @@
 #include "main/asset_load.h"
 #include "main/dll/CAM/dll_0001_camcontrol.h"
 #include "main/dll/savegame.h"
+#include "main/dll/dll_00C9_enemy.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/objlib.h"
@@ -98,7 +99,6 @@ extern void CameraModeStatic_initialise(void);
 extern void CameraModeTestStrength_initialise(void);
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
-extern f32 enemy_getHealthFraction(register int obj); /* target reticle distance for the enemy objType group */
 u8 gCamcontrolStateStorage[0x148];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
 extern f32 gCamcontrolSavedFocusWorldZ;
@@ -293,7 +293,7 @@ void camcontrol_updateTargetFeedback(void)
             case 0x842:
             case 0x84b:
             case 0x851:
-                targetDistance = enemy_getHealthFraction((int)target);
+                targetDistance = enemy_getHealthFraction((GameObject*)target);
                 break;
             case 0x3de:
             case 0x49f:

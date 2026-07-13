@@ -24,6 +24,7 @@
 #include "main/objprint_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #define OBJGROUP_SNOWHORN_PUZZLE        0x13  /* puzzle-target object group for nearest-object search */
 #define DIMSNOWHORN1_OBJGROUP           0xa   /* snowhorn own add/remove group */
@@ -612,10 +613,10 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
             {
                 o1 = (int*)ObjList_FindObjectById(id_a);
                 if (o1 != NULL)
-                    fn_8014C63C(o1);
+                    fn_8014C63C((GameObject*)o1);
                 o1 = (int*)ObjList_FindObjectById(id_b);
                 if (o1 != NULL)
-                    fn_8014C63C(o1);
+                    fn_8014C63C((GameObject*)o1);
                 inner->proximityPhase = 2;
             }
             break;
@@ -627,11 +628,11 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
                 o1 = (int*)ObjList_FindObjectById(id_a);
                 o2 = (int*)ObjList_FindObjectById(id_c);
                 if (o1 != NULL && o2 != NULL)
-                    fn_8014C66C(o1, (int)o2);
+                    fn_8014C66C((GameObject*)o1, (GameObject*)o2);
                 o1 = (int*)ObjList_FindObjectById(id_b);
                 o2 = (int*)ObjList_FindObjectById(id_d);
                 if (o1 != NULL && o2 != NULL)
-                    fn_8014C66C(o1, (int)o2);
+                    fn_8014C66C((GameObject*)o1, (GameObject*)o2);
                 inner->proximityPhase = 1;
             }
             else

@@ -18,6 +18,7 @@
 #include "main/audio/sfx.h"
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #define SHTHORNTAIL_OBJ_TYPE                0x4d7
 #define SHTHORNTAIL_OBJ_GROUP               3
@@ -39,7 +40,6 @@ extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
 
 extern f32 vec3f_distanceSquared(Vec* a, Vec* b);
 extern SHthorntailObject** ObjGroup_GetObjects(int group, int* countOut);
-extern void fn_8014C66C(SHthorntailObject* obj, SHthorntailObject* other);
 extern void OSReport(const char* msg, ...);
 void SHthorntail_init(SHthorntailObject* obj, SHthorntailConfig* config);
 void SHthorntail_update(SHthorntailObject* obj);
@@ -78,7 +78,7 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject* obj)
              (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][2]) ||
              (objects[index]->config->configToken == gSHthorntailDataTables[groupIndex][3])))
         {
-            fn_8014C66C(objects[index], obj);
+            fn_8014C66C((GameObject*)objects[index], (GameObject*)obj);
             if ((vec3f_distanceSquared(&objects[index]->pos, &obj->pos) < SHTHORNTAIL_LINKED_EVENT_DISTANCE_SQ) &&
                 (mainGetBit(SHthorntail_GetLinkedGameBit(objects[index]->config)) == 0u))
             {

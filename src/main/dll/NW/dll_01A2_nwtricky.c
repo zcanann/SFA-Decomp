@@ -19,6 +19,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/NW/dll_01A2_nwtricky.h"
+#include "main/dll/dll_00C9_enemy.h"
 
 #define NWTRICKY_OBJFLAG_PARENT_SLACK       0x1000
 #define NWTRICKY_OBJFLAG_HIDDEN             0x4000
@@ -29,8 +30,6 @@
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
 extern int** ObjGroup_GetObjects(int group, int* countOut);
-extern void fn_8014C66C(int* obj, int* target);
-extern f32 enemy_getHealthFraction(int* obj);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern const f32 lbl_803E5260;
 extern f32 lbl_803E5264;
@@ -91,7 +90,7 @@ void NW_tricky_update(int* obj)
             {
                 if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
                 {
-                    fn_8014C66C(*scan, player);
+                    fn_8014C66C((GameObject*)*scan, (GameObject*)player);
                 }
             }
             mainSetBits(GAMEBIT_Tricky_Usable, 1);
@@ -110,7 +109,7 @@ void NW_tricky_update(int* obj)
                 for (i = 0, ip = ids.ids; i < 3; i++, ip++)
                 {
                     found = (int*)ObjList_FindObjectById(*ip);
-                    if (found != NULL && enemy_getHealthFraction(found) > lbl_803E5260)
+                    if (found != NULL && enemy_getHealthFraction((GameObject*)found) > lbl_803E5260)
                     {
                         (*(void (**)(int*, int, int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x34))(tricky, 1,
                                                                                                          found);
@@ -135,11 +134,11 @@ void NW_tricky_update(int* obj)
                     dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)player)->worldPos);
                     if (vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
                     {
-                        fn_8014C66C(*scan, tricky);
+                        fn_8014C66C((GameObject*)*scan, (GameObject*)tricky);
                     }
                     else
                     {
-                        fn_8014C66C(*scan, player);
+                        fn_8014C66C((GameObject*)*scan, (GameObject*)player);
                     }
                 }
             }
