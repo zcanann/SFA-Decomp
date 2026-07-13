@@ -13,6 +13,7 @@
  */
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/obj_placement.h"
@@ -38,8 +39,6 @@ typedef struct EcshCreatorPlacement
     s8 gameBitOffset;    /* 0x1f: added to spawned child gameBit */
     u8 groupSlotOffset;  /* 0x20: added to base group slot */
 } EcshCreatorPlacement;
-
-extern int Obj_SetupObject(u8* def, int a, int b, int c, int d);
 
 int ecsh_creator_getExtraSize(void)
 {
@@ -117,7 +116,8 @@ void ecsh_creator_update(GameObject* obj)
         p->unk34 = 0xFFFF;
         p->unk1A = 0;
         p->groupSlot = state->groupSlot;
-        ret = Obj_SetupObject((u8*)p, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+        ret = (int)Obj_SetupObject((ObjPlacement*)p, 5, obj->anim.mapEventSlot, -1,
+                                   (void*)*(int*)&obj->anim.parent);
         if ((u32)ret != 0)
         {
             *(u8*)(*(int*)&((GameObject*)ret)->extra + 0x404) = 0x20;

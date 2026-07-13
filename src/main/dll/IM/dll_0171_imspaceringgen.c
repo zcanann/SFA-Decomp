@@ -14,6 +14,7 @@
  */
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/gameplay_runtime.h"
@@ -30,9 +31,6 @@
 extern GameObject* lbl_803DDB48;
 __declspec(section ".sdata2") f32 lbl_803E47C0 = 1.0f; /* render scale */
 __declspec(section ".sdata2") f32 lbl_803E47C4 = 9.0f; /* Y offset applied when chasing ring A */
-extern int Obj_AllocObjectSetup(int extraSize, int id);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
-
 int IMSpaceRingGen_getExtraSize(void)
 {
     return 0xc;
@@ -113,7 +111,7 @@ void IMSpaceRingGen_update(GameObject* obj)
         {
             for (i = 0; i < 10; i++)
             {
-                ring = Obj_AllocObjectSetup(0x24, IMSPACERINGGEN_CHILD_OBJ_RING_PIECE);
+                ring = (int)Obj_AllocObjectSetup(0x24, IMSPACERINGGEN_CHILD_OBJ_RING_PIECE);
                 ((ImSpaceRingSetup*)ring)->base.posX = obj->anim.localPosX;
                 ((ImSpaceRingSetup*)ring)->base.posY = obj->anim.localPosY;
                 ((ImSpaceRingSetup*)ring)->base.posZ = obj->anim.localPosZ;
@@ -132,7 +130,8 @@ void IMSpaceRingGen_update(GameObject* obj)
                 ((ImSpaceRingSetup*)ring)->base.color[2] = setup[6];
                 ((ImSpaceRingSetup*)ring)->base.color[1] = 1;
                 ((ImSpaceRingSetup*)ring)->base.color[3] = 0xff;
-                Obj_SetupObject(ring, 5, obj->anim.mapEventSlot, -1, *(int*)&obj->anim.parent);
+                Obj_SetupObject((ObjPlacement*)ring, 5, obj->anim.mapEventSlot, -1,
+                                (void*)*(int*)&obj->anim.parent);
             }
             obj->unkF4 = 1;
         }

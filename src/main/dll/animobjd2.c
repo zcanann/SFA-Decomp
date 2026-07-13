@@ -29,6 +29,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objlib.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -71,8 +72,6 @@ extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
-extern int Obj_AllocObjectSetup(int size, int id);
-extern int Obj_SetupObject(int o, int p2, int p3, int p4, int p5);
 /* Sfx_* use int* obj / int sfx (not engine_shared.h's u32/u16) so the int* obj
    passed at the call sites needs no cast; including the header would conflict. */
 extern void Sfx_PlayFromObject(int* obj, int sfx);
@@ -309,7 +308,7 @@ void fn_8013E0D0(int* obj, u8* st)
                         TRICKY_RESET((u8*)t);
                         if (t->child == NULL)
                         {
-                            int o = Obj_AllocObjectSetup(0x20, ANIMOBJD2_HELPER_OBJ_ID);
+                            int o = (int)Obj_AllocObjectSetup(0x20, ANIMOBJD2_HELPER_OBJ_ID);
                             s8 slots[4];
                             int free_;
                             slots[0] = -1;
@@ -348,7 +347,9 @@ void fn_8013E0D0(int* obj, u8* st)
                                 free_ = -1;
                             }
                             ((TrickyPackedSlots*)((char*)t + 0x7bc))->c = free_;
-                            *(int*)&t->child = Obj_SetupObject(o, 4, -1, -1, *(int*)&gobj->anim.parent);
+                            *(int*)&t->child =
+                                (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1,
+                                                    (void*)*(int*)&gobj->anim.parent);
                             ObjLink_AttachChild((int)gobj, *(int*)&t->child,
                                                 ((TrickyPackedSlots*)((char*)t + 0x7bc))->c);
                             {
@@ -425,12 +426,13 @@ void fn_8013E0D0(int* obj, u8* st)
                     u8* p = (u8*)t;
                     for (; i < 7; i++)
                     {
-                        int o = Obj_AllocObjectSetup(0x24, ANIMOBJD2_DRIP_OBJ_ID);
+                        int o = (int)Obj_AllocObjectSetup(0x24, ANIMOBJD2_DRIP_OBJ_ID);
                         ((AnimObjD2DripSetup*)o)->head.color[0] = 2;
                         ((AnimObjD2DripSetup*)o)->head.color[1] = 1;
                         ((AnimObjD2DripSetup*)o)->index = i;
-                        *(int*)(p + 0x700) =
-                            Obj_SetupObject(o, 5, gobj->anim.mapEventSlot, -1, *(int*)&gobj->anim.parent);
+                        *(int*)(p + 0x700) = (int)Obj_SetupObject((ObjPlacement*)o, 5,
+                                                                 gobj->anim.mapEventSlot, -1,
+                                                                 (void*)*(int*)&gobj->anim.parent);
                         p += 4;
                     }
                 }

@@ -16,6 +16,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0184_animsharpclaw.h"
@@ -27,9 +28,6 @@ extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern void ObjLink_DetachChild(int obj, int child);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
-extern int Obj_AllocObjectSetup(int size, int type);
-extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
-
 #pragma scheduling off
 #pragma dont_inline on
 int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
@@ -48,11 +46,11 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             if ((void*)child != NULL)
             {
                 ObjLink_DetachChild(obj, child);
-                Obj_FreeObject(child);
+                Obj_FreeObject((GameObject*)child);
             }
-            newChild = Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
-            newChild = Obj_SetupObject(newChild, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
-                                       *(int*)&((GameObject*)obj)->anim.parent);
+            newChild = (int)Obj_AllocObjectSetup(32, ((GameObject*)obj)->unkF8);
+            newChild = (int)Obj_SetupObject((ObjPlacement*)newChild, 4, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                            (void*)*(int*)&((GameObject*)obj)->anim.parent);
             ObjLink_AttachChild(obj, newChild, 0);
             break;
         case 2:
@@ -60,7 +58,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState* animUpdate)
             if ((void*)child != NULL)
             {
                 ObjLink_DetachChild(obj, child);
-                Obj_FreeObject(child);
+                Obj_FreeObject((GameObject*)child);
             }
             ((GameObject*)obj)->unkF8 = -1;
             break;
@@ -91,7 +89,7 @@ void animsharpclaw_free(GameObject* obj)
     if ((void*)child != NULL)
     {
         ObjLink_DetachChild((int)obj, child);
-        Obj_FreeObject(child);
+        Obj_FreeObject((GameObject*)child);
     }
     (*gObjectTriggerInterface)->freeState(inner);
     (*(void (*)(int, int, int, int, int))(*(int*)(*gTitleMenuControlInterface + 0x8)))((int)obj, 0xffff, 0, 0, 0);

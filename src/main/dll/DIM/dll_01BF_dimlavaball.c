@@ -7,6 +7,7 @@
 #include "main/dll/lavaball1bfstate_struct.h"
 #include "main/frame_timing.h"
 #include "main/objseq.h"
+#include "main/object.h"
 #include "main/object_render_legacy.h"
 
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -15,7 +16,6 @@
 /* Lava-ball sub-object id spawned by lavaball1bf_update (docblock: "the 0x18D lava-ball sub-object"). */
 #define DIMLAVABALL_SUBOBJ_ID 0x18d
 
-extern int Obj_AllocObjectSetup(int kind, int id);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -53,7 +53,6 @@ STATIC_ASSERT(sizeof(Lavaball18dSetup) == 0x24);
 STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 extern f32 lbl_803E4810;
-extern int Obj_AllocObjectSetup(int extraSize, int id);
 extern f32 lbl_803E4814;
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
@@ -119,7 +118,6 @@ void lavaball1bf_hitDetect(void)
 
 void lavaball1bf_update(int* obj)
 {
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     u8* setup;
     Lavaball1bfState* state;
     int* spawned;
@@ -143,7 +141,7 @@ void lavaball1bf_update(int* obj)
     }
     if (*(void**)&state->spawnedObj == NULL && Obj_IsLoadingLocked() != 0)
     {
-        int s = Obj_AllocObjectSetup(0x24, DIMLAVABALL_SUBOBJ_ID);
+        int s = (int)Obj_AllocObjectSetup(0x24, DIMLAVABALL_SUBOBJ_ID);
         Lavaball18dSetup* sp = (Lavaball18dSetup*)s;
         *(u8*)(s + 2) = 9;
         sp->head.color[0] = 2;
@@ -158,7 +156,7 @@ void lavaball1bf_update(int* obj)
         sp->unk1C = setup[0x1b];
         sp->head.mapId = ((ObjPlacement*)setup)->mapId;
         *(int*)&state->spawnedObj =
-            ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+            (int)Obj_SetupObject((ObjPlacement*)s, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     }
     spawned = state->spawnedObj;
     timer = state->fireTimer - timeDelta;

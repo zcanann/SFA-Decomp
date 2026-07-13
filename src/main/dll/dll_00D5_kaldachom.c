@@ -15,6 +15,7 @@
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
@@ -48,8 +49,6 @@
 #define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
 #define KALDACHOM_EFFECT_RESOURCE_ID         0x5a /* shared effect resource -> gKaldachomEffectResource */
 
-extern int Obj_AllocObjectSetup();
-extern int Obj_SetupObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
@@ -104,7 +103,7 @@ void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
     } while (work != 0);
     if ((control->spawnedDustObj == NULL) && (loadLocked = Obj_IsLoadingLocked(), loadLocked != '\0'))
     {
-        work = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
+        work = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_DUST);
         ((ObjPlacement*)work)->posX = (obj)->anim.localPosX;
         ((ObjPlacement*)work)->posY = lbl_803E30A8 + (obj)->anim.localPosY;
         ((ObjPlacement*)work)->posZ = (obj)->anim.localPosZ;
@@ -112,7 +111,7 @@ void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)
         ((ObjPlacement*)work)->color[1] = ((ObjPlacement*)placement)->color[1];
         ((ObjPlacement*)work)->color[2] = ((ObjPlacement*)placement)->color[2];
         ((ObjPlacement*)work)->color[3] = ((ObjPlacement*)placement)->color[3];
-        work = Obj_SetupObject(work, 5, 0xffffffff, 0xffffffff, 0);
+        work = (int)Obj_SetupObject((ObjPlacement*)work, 5, 0xffffffff, 0xffffffff, 0);
         control->spawnedDustObj = (void*)work;
         ((GameObject*)control->spawnedDustObj)->anim.rootMotionScale = gKaldachomDustSpawnScratch;
     }
@@ -133,7 +132,7 @@ void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
     if (Obj_IsLoadingLocked() != 0)
     {
         heightOffset = lbl_803E30A0 + (f32)(s32) * (s8*)(ref + 0x28) / lbl_803E30A4;
-        ref = Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
+        ref = (int)Obj_AllocObjectSetup(0x24, KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE);
         if (useUpperMouthPoint != 0)
         {
             ((ObjPlacement*)ref)->posX = control->upperMouthPosX;
@@ -150,7 +149,7 @@ void kaldaChomFn_80168374(GameObject* obj, int state, u8 useUpperMouthPoint)
         ((ObjPlacement*)ref)->color[1] = 4;
         ((ObjPlacement*)ref)->color[2] = 0xff;
         ((ObjPlacement*)ref)->color[3] = 0xff;
-        setup = (u8*)Obj_SetupObject(ref, 5, 0xffffffff, 0xffffffff, 0);
+        setup = (u8*)Obj_SetupObject((ObjPlacement*)ref, 5, 0xffffffff, 0xffffffff, 0);
         if (setup != NULL)
         {
             spd = lbl_803E30AC * (((GroundBaddieState*)state)->baddie.targetDistance /

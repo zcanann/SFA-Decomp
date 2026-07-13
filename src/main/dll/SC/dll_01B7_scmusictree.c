@@ -7,6 +7,7 @@
 #include "main/dll/SC/dll_01B7_scmusictree.h"
 #include "main/dll/sclevelcontrolstate_types.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objprint_api.h"
@@ -83,8 +84,6 @@ STATIC_ASSERT(offsetof(ScMusictreeSetup, unk1C) == 0x1C);
 STATIC_ASSERT(offsetof(ScMusictreeSetup, unk26) == 0x26);
 
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ, int useInputPosition);
-extern int Obj_AllocObjectSetup(int size, int objectId);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
@@ -144,7 +143,7 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
 
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(0x28, SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT);
+        setup = (int)Obj_AllocObjectSetup(0x28, SCMUSICTREE_CHILD_OBJ_AMBIENT_EFFECT);
         ((ScMusictreeSetup*)setup)->head.color[0] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorR;
         ((ScMusictreeSetup*)setup)->head.color[2] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorB;
         ((ScMusictreeSetup*)setup)->head.color[1] = ((ScMusictreeSpawnAmbientEffectPlacement*)def)->colorG;
@@ -162,7 +161,8 @@ void sc_musictree_spawnAmbientEffect(GameObject *obj, int extra, int unused, s8 
         ((ScMusictreeSetup*)setup)->unk25 = -50;
         ((ScMusictreeSetup*)setup)->unk26 = -1;
         ((ScMusictreeSetup*)setup)->unk18 = 0;
-        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int*)&(obj)->anim.parent);
+        state->ambientEffect[idx] =
+            (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, (void*)*(int*)&(obj)->anim.parent);
     }
 }
 #pragma dont_inline reset

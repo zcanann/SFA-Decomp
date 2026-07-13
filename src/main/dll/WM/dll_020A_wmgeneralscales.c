@@ -16,6 +16,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -41,8 +42,6 @@ __declspec(section ".sdata2") f32 lbl_803E5E9C = 800.0f;
 __declspec(section ".sdata2") f32 lbl_803E5EA0 = 1.1f; /* sword scale-up */
 __declspec(section ".sdata2") f32 lbl_803E5EA4 = 1.0f; /* render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjLink_DetachChild(int* parent, int* child);
 
@@ -98,14 +97,14 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         case 5: /* draw the sword: spawn + attach a scalessword child */
             if (((GameObject*)obj)->childObjs[0] == NULL && Obj_IsLoadingLocked() != 0)
             {
-                int setup = Obj_AllocObjectSetup(0x24, WMGENERALSCALES_SWORD_OBJECT_TYPE);
+                int setup = (int)Obj_AllocObjectSetup(0x24, WMGENERALSCALES_SWORD_OBJECT_TYPE);
                 ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
                 ((ObjPlacement*)setup)->posY = ((GameObject*)obj)->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
                 ((ObjPlacement*)setup)->color[0] = 0x20;
                 ((ObjPlacement*)setup)->color[1] = 4;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
-                ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
+                ObjLink_AttachChild(obj, (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0), 0);
                 *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= lbl_803E5EA0;
             }
             break;
