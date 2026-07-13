@@ -3358,10 +3358,9 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     candidateCount = 0;
     for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++)
     {
-        linkId = curve->linkIds[linkIndex];
-        if (linkId > -1)
+        if (curve->linkIds[linkIndex] > -1)
         {
-            linkedCurve = RomCurve_FindByIdInline(linkId);
+            linkedCurve = RomCurve_FindByIdInline(curve->linkIds[linkIndex]);
 
             for (typeIndex = 0; typeIndex < typeCount; typeIndex++)
             {
