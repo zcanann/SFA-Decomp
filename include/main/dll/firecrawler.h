@@ -14,7 +14,6 @@
 #include "main/effect_interfaces.h"
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
-#include "main/sfa_extern_decls.h"
 
 /*
  * FireCrawlerState - BaddieState plus the crawler/HagabonMK2-family tail that

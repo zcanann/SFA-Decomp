@@ -10,7 +10,6 @@
 #include "main/mm.h"
 #include "main/texture.h"
 #include "dolphin/os/OSCache.h"
-#include "main/sfa_extern_decls.h"
 
 void gameTextLoadDir(int dirId);
 int gameTextFn_8001b44c(int x);

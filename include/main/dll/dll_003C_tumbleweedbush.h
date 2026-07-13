@@ -6,7 +6,6 @@
 #include "main/texture.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
-#include "main/sfa_extern_decls.h"
 
 void linkInitTextures(LinkMenuItemDB* item);
 void titleScreenFn_80130464(u8 v);

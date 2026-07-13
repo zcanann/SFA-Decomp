@@ -10,7 +10,6 @@
 #include "main/objtexture.h"
 #include "main/dll/CF/CFBaby.h"
 #include "main/objprint_dolphin.h"
-#include "main/sfa_extern_decls.h"
 
 void landed_arwing_renderPathEffects(GameObject* obj);
 

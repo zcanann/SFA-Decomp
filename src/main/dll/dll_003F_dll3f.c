@@ -18,7 +18,6 @@
 #include "main/object_descriptor.h"
 #include "main/gameplay_runtime.h"
 #include "main/model_engine.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/dll_02C0_front.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_003F_dll3f.h"

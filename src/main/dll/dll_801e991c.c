@@ -6,7 +6,6 @@
 #include "main/dll/shwgpipe_struct.h"
 #include "main/camera.h"
 #include "main/sky_state.h"
-#include "main/sfa_extern_decls.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "main/dll/dll_801e991c.h"
 
