@@ -589,7 +589,6 @@ GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 void collectible_applyPickup(int* obj)
 {
-    extern void itemPickupDoParticleFx(int* obj, f32 f, int a, int b);
     extern void Sfx_PlayFromObject(int* obj, int sfx);
     u8* state = ((GameObject*)obj)->extra;
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -627,13 +626,13 @@ void collectible_applyPickup(int* obj)
         {
         case 90:
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 2, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 2, 40);
             break;
         case 793:
             Sfx_PlayFromObject(obj, SFXTRIG_bapt11_c);
             mainSetBits(GAMEBIT_ITEM_NWFood_Got, 1);
             ((CollectibleState*)state)->hideFrames = 1200;
-            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
             break;
         case 1702:
             {
@@ -643,17 +642,17 @@ void collectible_applyPickup(int* obj)
                     c = c + 1;
                 }
                 mainSetBits(GAMEBIT_ITEM_MoonSeed_Count, c);
-                itemPickupDoParticleFx(obj, lbl_803E3454, 6, 40);
+                itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 6, 40);
                 Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
                 break;
             }
         case 34:
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
             break;
         default:
             Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
             break;
         }
         break;
@@ -663,22 +662,22 @@ void collectible_applyPickup(int* obj)
         case COLLECTIBLE_ITEM_ENERGY_EGG:
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
             playerAddHealth(Obj_GetPlayerObject(), 4);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 3, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 3, 40);
             break;
         case COLLECTIBLE_ITEM_APPLE:
             playerAddHealth(Obj_GetPlayerObject(), 2);
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_lockoff22);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 1, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 1, 40);
             break;
         default:
             Sfx_PlayFromObject((int*)Obj_GetPlayerObject(), SFXTRIG_cam90_c);
-            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
             break;
         }
         break;
     default:
         Sfx_PlayFromObject(obj, SFXTRIG_cam90_c);
-        itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+        itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
         break;
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
@@ -935,7 +934,6 @@ void collectible_update(int obj)
 {
     extern void collectible_updateLooseMotion(int obj);
     extern void Obj_FreeObject(int obj);
-    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     extern void collectible_applyPickup(int obj);
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
@@ -990,7 +988,7 @@ void collectible_update(int obj)
                 {
                     ((GameObject*)obj)->anim.modelState->flags = OBJ_MODEL_STATE_SHADOW_FADE_OUT;
                 }
-                itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+                itemPickupDoParticleFxLegacy(obj, lbl_803E3454, 255, 40);
             }
             ((CollectibleState*)state)->lifetimeTimer = lbl_803E345C;
             return;
@@ -1080,7 +1078,6 @@ void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
 
 void collectible_updateIdleMotion(GameObject *obj)
 {
-    extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     u8* state = (obj)->extra;
 
     switch ((obj)->anim.seqId)
@@ -1109,7 +1106,7 @@ void collectible_updateIdleMotion(GameObject *obj)
         break;
     case 0x22:
         (obj)->anim.rotX = gCollectibleSpinRate * timeDelta + (f32)(obj)->anim.rotX;
-        itemPickupDoParticleFx((int)obj, lbl_803E3454, 10, 1);
+        itemPickupDoParticleFxLegacy((int)obj, lbl_803E3454, 10, 1);
         break;
     case 0x27f:
         if (*(f32*)state < gCollectibleSpinRate)
@@ -1124,7 +1121,7 @@ void collectible_updateIdleMotion(GameObject *obj)
         break;
     case 0x5e8:
         (obj)->anim.rotX = gCollectibleSpinRate * timeDelta + (f32)(obj)->anim.rotX;
-        itemPickupDoParticleFx((int)obj, lbl_803E3454, 9, 1);
+        itemPickupDoParticleFxLegacy((int)obj, lbl_803E3454, 9, 1);
         break;
     }
 }

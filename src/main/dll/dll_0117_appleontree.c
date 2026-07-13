@@ -1,5 +1,6 @@
 /* DLL 0x0117 - appleontree / groundAnimator group. TU: 0x8017D818-0x8017E1A0. */
 #include "main/audio/sfx_ids.h"
+#include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/appleontreestate_struct.h"
@@ -82,10 +83,8 @@ extern f32 lbl_803E3814;
 extern f32 lbl_803E3818;
 
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int fn_80065684(GameObject* a, f32 b, f32 val, f32 d, f32* out, int e);
-extern void itemPickupDoParticleFx(int obj, f32 f1, int p3, int p4);
 void dll_FC_free_nop(void);
 int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
@@ -202,7 +201,7 @@ void appleontree_handleCollectableHit(GameObject* obj)
     else
     {
         playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
-        itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
+        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
         appleontree_markFallen(obj);
     }
@@ -595,7 +594,7 @@ void AppleOnTree_update(int objArg)
             case APPLEONTREE_MSG_PICKUP:
             {
                 playerAddHealth(Obj_GetPlayerObject(), (int)((AppleOnTreeState*)state)->healthRestore);
-                itemPickupDoParticleFx((int)obj, lbl_803E37C8, 0xff, 0x28);
+                itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
                 val = *(int*)&((GameObject*)obj)->extra;
                 if (((GameObject*)obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA)

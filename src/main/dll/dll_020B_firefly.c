@@ -23,6 +23,7 @@
 #include "main/dll/dll_020B_firefly.h"
 #include "main/dll/LGT/LGTcontrollight.h"
 #include "main/model_light.h"
+#include "main/objfx.h"
 
 #define FIREFLY_EXTRA_SIZE 0x88
 
@@ -288,7 +289,7 @@ void firefly_update(int obj)
             state->despawnTimer -= timeDelta;
             if (state->despawnTimer > lbl_803DC128) /* 170 */
             {
-                itemPickupDoParticleFx(obj, lbl_803E5EDC, 4, 5);
+                itemPickupDoParticleFxLegacy(obj, lbl_803E5EDC, 4, 5);
             }
             if (state->despawnTimer <= lbl_803E5EC4)
             {

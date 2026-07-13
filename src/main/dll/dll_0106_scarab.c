@@ -72,7 +72,6 @@ void Scarab_update(GameObject* obj)
 {
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
     extern void PSVECSubtract(void* a, void* b, void* out);
-    extern void itemPickupDoParticleFx(void* obj, f32 scale, int a, int b);
     typedef struct
     {
         f32 x, y, z;
@@ -489,7 +488,7 @@ void Scarab_update(GameObject* obj)
                         ObjHits_DisableObject((u32)obj);
                     }
                     Sfx_PlayFromObject((int)obj, (u16)((ScarabState*)state)->pickupSfx);
-                    itemPickupDoParticleFx(obj, lbl_803E3A00, ((ScarabState*)state)->particleId, 0x28);
+                    itemPickupDoParticleFxLegacy(obj, lbl_803E3A00, ((ScarabState*)state)->particleId, 0x28);
                 }
             }
             if (((ScarabState*)state)->fleeTimer == 0 && obj->anim.seqId == 0x3d6)

@@ -1,5 +1,6 @@
 /* DLL 0x00FF — magic-gem / collectible objects [80173224-801732A4) */
 #include "main/dll_000A_expgfx.h"
+#include "main/objfx.h"
 #include "main/vecmath.h"
 #include "main/dll/magicgemstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -21,7 +22,6 @@
 #define MAGICGEM_GAMEBIT_CLAIMED            0x90d   /* per-frame single-pickup latch */
 
 extern f32 lbl_803E34B0;
-extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
 extern void playerAddRemoveMagic(int obj, int amount);
 
 extern int Obj_IsParentSlackClear(int obj);
@@ -75,7 +75,7 @@ static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int p
 {
     int ref = (int)obj->anim.modelInstance->extraSetupData;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    itemPickupDoParticleFx((int)obj, lbl_803E34B0, state->mode, 0x28);
+    itemPickupDoParticleFxLegacy((int)obj, lbl_803E34B0, state->mode, 0x28);
     ObjHits_DisableObject(obj);
     Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
     Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);

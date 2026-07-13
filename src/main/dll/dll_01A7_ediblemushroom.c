@@ -1,4 +1,5 @@
 #include "main/dll_000A_expgfx.h"
+#include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -42,7 +43,6 @@ extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, i
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
 extern f32 Vec_xzDistance(f32* a, f32* b);
-extern void itemPickupDoParticleFx(u8* obj, f32 scale, int mode, int count);
 extern int objIsFrozen(u8* obj);
 extern int gameBitIncrement(int bit);
 extern f32 vec3f_distanceSquared(f32* a, f32* b);
@@ -383,12 +383,12 @@ void edibleMushroomFn_801d083c(u8* obj, u8* state, u8* other)
                         if (((GameObject*)obj)->anim.seqId == 0x658)
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x18a;
-                            itemPickupDoParticleFx(obj, 1.0f, 0xff, 0x28);
+                            itemPickupDoParticleFxLegacy(obj, 1.0f, 0xff, 0x28);
                         }
                         else
                         {
                             ((EdibleMushroomState*)state)->pickupMsgBitId = 0x119;
-                            itemPickupDoParticleFx(obj, 1.0f, 6, 0x28);
+                            itemPickupDoParticleFxLegacy(obj, 1.0f, 6, 0x28);
                         }
                         ((EdibleMushroomState*)state)->pickupMsgValue = 0;
                         ((EdibleMushroomState*)state)->pickupMsgDelay = 0.4f;
@@ -614,11 +614,11 @@ void EdibleMushroom_update(u8* self)
             mainSetBits(GAMEBIT_ITEM_TrickyFood_GrabInProgress, 0);
             if (((GameObject*)self)->anim.seqId == 0x658)
             {
-                itemPickupDoParticleFx(self, 1.0f, 0xFF, 0x28);
+                itemPickupDoParticleFxLegacy(self, 1.0f, 0xFF, 0x28);
             }
             else
             {
-                itemPickupDoParticleFx(self, 1.0f, 6, 0x28);
+                itemPickupDoParticleFxLegacy(self, 1.0f, 6, 0x28);
             }
             Sfx_PlayFromObject((u32)self, SFXTRIG_cam90_c);
         }
