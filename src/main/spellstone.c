@@ -1,8 +1,8 @@
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
 #include "main/spellstone.h"
+#include "main/spellstone_idle.h"
 #include "main/objlib.h"
-#include "main/sfa_extern_decls.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 /* object group this object joins while active */
