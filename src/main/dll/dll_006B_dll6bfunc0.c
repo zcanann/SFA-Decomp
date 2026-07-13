@@ -25,13 +25,18 @@
 #define DLL6B_EFFECT_ID 0x5e
 
 extern u8 lbl_80313A40[];
-extern f32 lbl_803E0A58;
-extern f32 lbl_803E0A5C;
-extern f32 lbl_803E0A60;
-extern f32 lbl_803E0A64;
-extern f32 lbl_803E0A68;
-extern f32 lbl_803E0A6C;
-extern f32 lbl_803E0A70;
+__declspec(section ".sdata2") f32 lbl_803E0A58 = 255.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0A5C = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0A60 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E0A64 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0A68 = 4000.0f;
+__declspec(section ".sdata2") f32 lbl_803E0A6C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0A70 = 10.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0A74 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_6B_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

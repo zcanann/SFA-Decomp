@@ -18,21 +18,26 @@
 
 extern u8 gDll6FGfxCmdResourceTable[];
 extern u8 gDll6FGfxCmdTexture;
-extern f32 lbl_803E0AB8;
-extern f32 lbl_803E0ABC;
-extern f32 lbl_803E0AC0;
-extern f32 lbl_803E0AC4;
-extern f32 lbl_803E0AC8;
-extern f32 lbl_803E0ACC;
-extern f32 lbl_803E0AD0;
-extern f32 lbl_803E0AD4;
-extern f32 lbl_803E0AD8;
-extern f32 lbl_803E0ADC;
-extern f32 lbl_803E0AE0;
-extern f32 lbl_803E0AE4;
-extern f32 lbl_803E0AE8;
-extern f32 lbl_803E0AEC;
-extern f32 lbl_803E0AF0;
+__declspec(section ".sdata2") f32 lbl_803E0AB8 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E0ABC = 16.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0AC0 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0AC4 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AC8 = 155.0f;
+__declspec(section ".sdata2") f32 lbl_803E0ACC = 235.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AD0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AD4 = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AD8 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E0ADC = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AE0 = 85.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AE4 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AE8 = -0.6f;
+__declspec(section ".sdata2") f32 lbl_803E0AEC = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E0AF0 = 115.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0AF4 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

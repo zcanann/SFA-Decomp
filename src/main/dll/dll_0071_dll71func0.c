@@ -20,15 +20,20 @@
 
 
 extern u8 lbl_80314060[];
-extern f32 lbl_803E0B38;
-extern f32 lbl_803E0B3C;
-extern f32 lbl_803E0B40;
-extern f32 lbl_803E0B44;
-extern f32 lbl_803E0B48;
-extern f32 lbl_803E0B4C;
-extern f32 lbl_803E0B50;
-extern f32 lbl_803E0B54;
-extern f32 lbl_803E0B58;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0B38 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0B3C = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E0B40 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B44 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B48 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B4C = 1.3f;
+__declspec(section ".sdata2") f32 lbl_803E0B50 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B54 = -100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B58 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0B5C = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_71_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

@@ -26,20 +26,22 @@ extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
 extern u8 gDll8EEffectTexture;
 extern u8 gDll8EEffectSpawnResource[8];
-extern f32 lbl_803E1138;
-extern f32 lbl_803E113C;
-extern f32 lbl_803E1140;
-extern f32 lbl_803E1144;
-extern f32 lbl_803E1148;
-extern f32 lbl_803E114C;
-extern f32 lbl_803E1150;
-extern f32 lbl_803E1154;
-extern f32 lbl_803E1158;
-extern f32 lbl_803E115C;
-extern f32 lbl_803E1160;
-extern f32 lbl_803E1164;
-extern f32 lbl_803E1168;
-extern f32 lbl_803E116C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1138 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E113C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E1140 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E1144 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E1148 = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E114C = 145.0f;
+__declspec(section ".sdata2") f32 lbl_803E1150 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E1154 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E1158 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E115C = 21.0f;
+__declspec(section ".sdata2") f32 lbl_803E1160 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E1164 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E1168 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E116C = 200.0f;
 #include "main/dll/dll_008F_dll8ffunc0.h"
 
 #pragma opt_propagation off

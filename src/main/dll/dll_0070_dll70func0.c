@@ -25,21 +25,26 @@
 
 extern u8 gDll70Func03GfxLayoutTable[];
 extern int lbl_803DB8D0; /* symbols.txt size:0x8; only &lbl is taken so width is inert */
-extern f32 lbl_803E0AF8;
-extern f32 lbl_803E0AFC;
-extern f32 lbl_803E0B00;
-extern f32 lbl_803E0B04;
-extern f32 lbl_803E0B08;
-extern f32 lbl_803E0B0C;
-extern f32 lbl_803E0B10;
-extern f32 lbl_803E0B14;
-extern f32 lbl_803E0B18;
-extern f32 lbl_803E0B1C;
-extern f32 lbl_803E0B20;
-extern f32 lbl_803E0B24;
-extern f32 lbl_803E0B28;
-extern f32 lbl_803E0B2C;
-extern f32 lbl_803E0B30;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0AF8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0AFC = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B00 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B04 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E0B08 = 3.5f;
+__declspec(section ".sdata2") f32 lbl_803E0B0C = 205.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B10 = 125.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B14 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B18 = 150.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B1C = 155.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B20 = -10.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B24 = 0.98f;
+__declspec(section ".sdata2") f32 lbl_803E0B28 = 1.02f;
+__declspec(section ".sdata2") f32 lbl_803E0B2C = -30.0f;
+__declspec(section ".sdata2") f32 lbl_803E0B30 = 2.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0B34 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
