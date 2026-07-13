@@ -16,7 +16,7 @@
 #include "main/object_render_legacy.h"
 #include "main/objlib.h"
 #include "main/obj_placement.h"
-#include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/CF/dll_0154_cfprisoncage.h"
 #include "main/objseq.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/gamebit_ids.h"

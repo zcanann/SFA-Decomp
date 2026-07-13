@@ -10,7 +10,6 @@
  */
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
-#include "main/dll/DR/sandwormBoss.h"
 #include "main/objseq.h"
 #include "main/objprint.h"
 #include "main/objlib.h"

@@ -22,7 +22,6 @@
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_ids.h"
-#include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"

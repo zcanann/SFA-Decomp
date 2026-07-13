@@ -18,7 +18,6 @@
 #include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/DR/sandwormBoss.h"
 #include "main/dll/dll_014C_babycloudrunner.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"

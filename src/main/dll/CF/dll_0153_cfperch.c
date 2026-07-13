@@ -5,7 +5,7 @@
  * Carved from the sandwormBoss 10-DLL container.
  */
 #include "main/game_object.h"
-#include "main/dll/DR/sandwormBoss.h"
+#include "main/dll/CF/dll_0153_cfperch.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/gamebits.h"
