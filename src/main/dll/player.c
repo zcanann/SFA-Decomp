@@ -10,6 +10,7 @@
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
 #include "main/dll/player_motion_api.h"
@@ -13438,15 +13439,15 @@ void fn_802B4ED8(GameObject* obj, int p2, int mode)
     m = (u32)(mode & 0xff);
     if (m == 1)
     {
-        objRenderFuzz((int)obj);
+        objRenderFuzz((int*)obj);
     }
     else if (m == 2)
     {
-        objRenderFn_800413d4((int)obj);
+        objRenderFn_800413d4((int*)obj);
     }
     else if (m == 4)
     {
-        fuzzRenderFn_800412dc((int)obj);
+        fuzzRenderFn_800412dc((int*)obj);
     }
     objSetMtxFn_800412d4(0);
     obj->anim.localPosY = obj->anim.localPosY - inner->sinkOffsetY;

@@ -10,6 +10,7 @@
 #include "main/lightmap.h"
 #include "main/newclouds.h"
 #include "main/objlib.h"
+#include "main/objprint_render_api.h"
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 #include "main/gameplay_runtime.h"
@@ -840,7 +841,6 @@ extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
 extern int playerIsDisguised(int* obj);
 extern void fn_802B4ED8(int* obj, int a, int b);
-extern void objRenderFuzz(int* obj);
 extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
 void lightmap_sortTransparentDrawQueue(void);

@@ -8,6 +8,7 @@
 #include "main/model.h"
 #include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
+#include "main/objprint_render_api.h"
 #include "main/fileio.h"
 #include "main/mm.h"
 #include "main/vecmath.h"
