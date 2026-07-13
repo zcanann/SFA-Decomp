@@ -17,12 +17,14 @@
 #define DLL88_EFFECT_ID 0x205
 
 extern u8 lbl_80316240[];
-extern f32 lbl_803E1010;
-extern f32 lbl_803E1014;
-extern f32 lbl_803E1018;
-extern f32 lbl_803E101C;
-extern f32 lbl_803E1020;
-extern f32 lbl_803E1024;
+__declspec(section ".sdata2") f32 lbl_803E1010 = 20.7f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1014 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E1018 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E101C = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E1020 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E1024 = 1.5f;
 
 void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

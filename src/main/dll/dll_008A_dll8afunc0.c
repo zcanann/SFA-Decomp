@@ -16,9 +16,14 @@
 #define DLL8A_EFFECT_ID 0x1fd
 
 extern u8 lbl_80316650[]; /* effect resource table: tex blob + halfword params */
-extern f32 lbl_803E1050;
-extern f32 lbl_803E1054;
-extern f32 lbl_803E1058;
+__declspec(section ".sdata2") f32 lbl_803E1050 = 0.5f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1054 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E1058 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E105C = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_8A_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

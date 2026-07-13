@@ -40,20 +40,22 @@ typedef struct
 #define DLL9F_FLAG_POSITIONED 0x1
 
 extern u8 gDll9fEffectDataTable[];
-extern f32 lbl_803E1448;
-extern f32 lbl_803E144C;
-extern f32 lbl_803E1450;
-extern f32 lbl_803E1454;
-extern f32 lbl_803E1458;
-extern f32 lbl_803E145C;
-extern f32 lbl_803E1460;
-extern f32 lbl_803E1464;
-extern f32 lbl_803E1468;
-extern f32 lbl_803E146C;
-extern f32 lbl_803E1470;
-extern f32 lbl_803E1474;
-extern f32 lbl_803E1478;
-extern f32 lbl_803E147C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1448 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E144C = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E1450 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E1454 = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E1458 = 195.0f;
+__declspec(section ".sdata2") f32 lbl_803E145C = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E1460 = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E1464 = 160.0f;
+__declspec(section ".sdata2") f32 lbl_803E1468 = 740.0f;
+__declspec(section ".sdata2") f32 lbl_803E146C = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E1470 = 85.0f;
+__declspec(section ".sdata2") f32 lbl_803E1474 = -740.0f;
+__declspec(section ".sdata2") f32 lbl_803E1478 = -160.0f;
+__declspec(section ".sdata2") f32 lbl_803E147C = 2.2f;
 
 void dll_9F_func03(short* sourceObj, int variant, int posSource, u32 flags)
 {

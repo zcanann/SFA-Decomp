@@ -50,14 +50,16 @@ typedef struct
 /* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
    gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318038[];
-extern f32 lbl_803E13F8;
-extern f32 lbl_803E13FC;
-extern f32 lbl_803E1400;
-extern f32 lbl_803E1404;
-extern f32 lbl_803E1408;
-extern f32 lbl_803E140C;
-extern f32 lbl_803E1410;
-extern f32 lbl_803E1414;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E13F8 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E13FC = 16.0f;
+__declspec(section ".sdata2") f32 lbl_803E1400 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E1404 = -600.0f;
+__declspec(section ".sdata2") f32 lbl_803E1408 = 105.0f;
+__declspec(section ".sdata2") f32 lbl_803E140C = 1200.0f;
+__declspec(section ".sdata2") f32 lbl_803E1410 = -1200.0f;
+__declspec(section ".sdata2") f32 lbl_803E1414 = 1.0f;
 
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {

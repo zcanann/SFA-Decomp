@@ -33,17 +33,22 @@ typedef struct
 /* lbl_80318260: shared texture + halfword table; lbl_803E1418..1440:
  * gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318260[];
-extern f32 lbl_803E1418;
-extern f32 lbl_803E141C;
-extern f32 lbl_803E1420;
-extern f32 lbl_803E1424;
-extern f32 lbl_803E1428;
-extern f32 lbl_803E142C;
-extern f32 lbl_803E1430;
-extern f32 lbl_803E1434;
-extern f32 lbl_803E1438;
-extern f32 lbl_803E143C;
-extern f32 lbl_803E1440;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1418 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E141C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E1420 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E1424 = -300.0f;
+__declspec(section ".sdata2") f32 lbl_803E1428 = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E142C = 155.0f;
+__declspec(section ".sdata2") f32 lbl_803E1430 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E1434 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E1438 = 125.0f;
+__declspec(section ".sdata2") f32 lbl_803E143C = 600.0f;
+__declspec(section ".sdata2") f32 lbl_803E1440 = 4.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1444 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
