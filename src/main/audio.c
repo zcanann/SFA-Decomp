@@ -41,6 +41,9 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/os/OSRtc.h"
 
+__declspec(section ".rodata") MusicSeqStartParams gMusicSeqStartParamsDefault = {
+    4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
+
 /* gAudioPendingLoadFlags / gAudioCompletedLoadFlags: one bit per async
  * resource load, set when enqueued and cleared/mirrored when the load
  * callback fires. (Pending clears use a 64-bit mask: ~(u64)FLAG.) */
