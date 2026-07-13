@@ -1839,6 +1839,7 @@ main/dll/DIM/dll_01C2_dimsnowball1c2.c:
 
 main/dll/DIM/dll_01C3_dimgate.c:
 	.text       start:0x801B15D8 end:0x801B17F4
+	.data       start:0x80325398 end:0x803253D0
 
 main/dll/DIM/dll_01C4_dimicewall.c:
 	.text       start:0x801B17F4 end:0x801B1B40

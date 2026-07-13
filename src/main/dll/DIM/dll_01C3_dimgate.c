@@ -4,6 +4,7 @@
  * list, latching a gamebit so the gate stays open on reload.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/dll/VF/vf_shared.h"
@@ -120,3 +121,20 @@ void dimgate_release(void)
 void dimgate_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMGateObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimgate_initialise,
+    (ObjectDescriptorCallback)dimgate_release,
+    0,
+    (ObjectDescriptorCallback)dimgate_init,
+    (ObjectDescriptorCallback)dimgate_update,
+    (ObjectDescriptorCallback)dimgate_hitDetect,
+    (ObjectDescriptorCallback)dimgate_render,
+    (ObjectDescriptorCallback)dimgate_free,
+    (ObjectDescriptorCallback)dimgate_getObjectTypeId,
+    dimgate_getExtraSize,
+};
