@@ -479,7 +479,7 @@ void CameraModeCombat_update(short* cam)
 }
 #pragma opt_common_subs reset
 
-void CameraModeCombat_init(CameraObject* camera, u32 arg2, GameObject** targetPtr)
+void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** targetPtr)
 {
     float dx;
     float dz;
