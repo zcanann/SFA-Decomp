@@ -11,10 +11,4 @@
 #include "main/objlib.h"
 #include "main/dll/dll_00E5_shield_api.h"
 
-void Shield_init(int* obj, void* initData);
-
-
-/* extern-cleanup: defining-file public prototypes */
-void Shield_update(int* obj);
-
 #endif

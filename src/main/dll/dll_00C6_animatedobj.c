@@ -247,7 +247,6 @@ extern void GCbaddieShield_update(int* obj);
 
 
 
-extern void Shield_update(int* obj);
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
 extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
@@ -286,8 +285,6 @@ void dim2roofrub_free(int* obj);
 
 void restartmarker_init(int* obj, int* state);
 
-
-void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -897,8 +894,6 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 
-
-void Shield_update(int* obj);
 
 void dll_F7_update(int* obj);
 

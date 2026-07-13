@@ -253,12 +253,6 @@ void flamethrowerspe_release(void);
 
 void flamethrowerspe_initialise(void);
 
-void Shield_hitDetect(void);
-
-void Shield_release(void);
-
-void Shield_initialise(void);
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -274,21 +268,14 @@ int Fireball_getExtraSize(void);
 int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
-int Shield_getExtraSize(void);
-int Shield_getObjectTypeId(void);
-
 void dim2roofrub_free(int* obj);
 
 extern void GCbaddieShield_update(int* obj);
-
-extern void Shield_update(int* obj);
 
 void restartmarker_init(int* obj, int* state);
 
 extern void dll_F7_update(int* obj);
 extern void dll_F7_init(int* obj, int* params);
-
-void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0,
@@ -893,8 +880,6 @@ extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32* a, f32* b, f32* out);
 extern void PSMTXRotRad(f32* m, int axis, f32 rad);
 
-
-void Shield_update(int* obj);
 
 extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
 

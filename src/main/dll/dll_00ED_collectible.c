@@ -110,11 +110,6 @@ extern void GCbaddieShield_update(int* obj);
 
 
 
-extern void Shield_init(int* obj, void* initData);
-extern void Shield_update(int* obj);
-
-
-
 extern void MikaBombShadow_update(int* obj);
 extern void restartmarker_init(int* obj, int* state);
 extern void dll_F7_init(int* obj, int* params);

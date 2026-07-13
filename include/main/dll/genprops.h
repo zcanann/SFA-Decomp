@@ -180,7 +180,6 @@ s32 staff_getSwipeTextureIndex(int* obj);
 void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void flamethrowerspe_func0B(int* obj);
 void flamethrowerspe_render(void);
-void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
 
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
@@ -193,6 +192,5 @@ void staff_release(void);
 void staff_initialise(void);
 void staff_hitDetectGeometry(int* obj);
 void dll_F7_free(int obj);
-void Shield_free(GameObject* obj);
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

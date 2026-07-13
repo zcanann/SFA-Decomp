@@ -191,8 +191,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void GCbaddieShield_update(int* obj);
 
-extern void Shield_update(int* obj);
-
 extern f32 lbl_803E3270;
 
 extern void PSMTXTrans(f32* m, f32 x, f32 y, f32 z);
@@ -244,12 +242,6 @@ void flamethrowerspe_release(void);
 
 void flamethrowerspe_initialise(void);
 
-void Shield_hitDetect(void);
-
-void Shield_release(void);
-
-void Shield_initialise(void);
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void)
 {
@@ -262,9 +254,6 @@ int Fireball_getExtraSize(void);
 int Fireball_getObjectTypeId(void);
 int flamethrowerspe_getExtraSize(void);
 int flamethrowerspe_getObjectTypeId(void);
-int Shield_getExtraSize(void);
-int Shield_getObjectTypeId(void);
-
 void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
@@ -275,8 +264,6 @@ void dim2roofrub_free(int* obj)
 
 void restartmarker_init(int* obj, int* state);
 
-
-void Shield_init(int* obj, void* initData);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
     0,
@@ -886,8 +873,6 @@ void dim2roofrub_update(int* obj)
     }
 }
 #pragma opt_propagation reset
-
-void Shield_update(int* obj);
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 

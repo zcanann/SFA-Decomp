@@ -135,16 +135,6 @@ extern f32 lbl_803E33CC;
 extern f32 lbl_80320A28[];
 
 
-void Shield_hitDetect(void);
-void Shield_release(void);
-void Shield_initialise(void);
-void Shield_init(int* obj, void* initData);
-void Shield_update(int* obj);
-void Shield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
-void Shield_free(GameObject* obj);
-int Shield_getExtraSize(void);
-int Shield_getObjectTypeId(void);
-
 GameObject* fn_801702D4(GameObject* obj, f32 fv)
 {
     void* alloc;
