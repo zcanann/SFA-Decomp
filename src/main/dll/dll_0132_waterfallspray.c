@@ -1,7 +1,7 @@
 /* DLL 0x132 - waterfall spray / XYZ animator / SFX player objects [801978A0-801978A8) */
 #include "main/dll/MMP/MMP_asteroid.h"
 
-#include "main/dll/MMP/MMP_moonrock.h"
+#include "main/dll/dll_0132_waterfallspray.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"

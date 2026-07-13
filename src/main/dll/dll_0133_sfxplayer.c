@@ -13,9 +13,9 @@
  * chosen by flags 0x10 (at object position) and 0x1 (force point form).
  * sfxplayerObj_free tears down any still-active looped sounds.
  *
- * Home TU of these symbols and the SFXPLAYER_* constants is MMP_moonrock.
+ * This TU owns these symbols and the SFXPLAYER_* constants.
  */
-#include "main/dll/MMP/MMP_moonrock.h"
+#include "main/dll/dll_0133_sfxplayer.h"
 #include "main/objseq_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"

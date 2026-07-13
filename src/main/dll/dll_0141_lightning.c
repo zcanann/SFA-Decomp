@@ -1,6 +1,6 @@
 /* DLL 0x0141 (lightning) — MMP lightning object [0x801978A0-0x80197DA8). */
 #include "main/dll/MMP/mmp_moonrock_state.h"
-#include "main/dll/MMP/MMP_moonrock.h"
+#include "main/dll/dll_0141_lightning.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/gameplay_runtime.h"
