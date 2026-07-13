@@ -33,6 +33,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/tricky_state.h"
+#include "main/dll/tricky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
@@ -82,7 +83,6 @@ extern f32 lbl_803E2478;
 extern f32 lbl_803E2518;
 extern f32 lbl_803E251C;
 extern f32 lbl_803E2524;
-extern u16 getYButtonItem(s16* out);
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern u8 lbl_8031D2E8[];

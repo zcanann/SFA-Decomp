@@ -25,6 +25,7 @@
 #include "main/vecmath.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/tricky_api.h"
 
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
 /* object group scanned for the nearest target (player group) */
@@ -55,7 +56,6 @@ extern f32 gQueenEarthWalkerAttackTimerMin;
 extern f32 gQueenEarthWalkerAttackTimerMax;
 
 extern int fn_8003B228(GameObject* obj, void* p2);
-extern int getYButtonItem(s16* outTrigger);
 extern int playerHasSpell(GameObject* obj, int param);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
@@ -266,7 +266,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
         if (cMenuGetSelectedItemInt() == -1)
         {
-            if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d)
+            if (getYButtonItemLegacy(&triggerId) == 0 || triggerId != 0x66d)
             {
                 tricky = getTrickyObject();
                 if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &(obj)->anim.worldPosX) <

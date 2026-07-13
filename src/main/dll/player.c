@@ -4926,7 +4926,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
         s16 item;
         if (inner->buttonsJustPressed & PAD_BUTTON_Y)
         {
-            yitem = getYButtonItem(&item);
+            yitem = getYButtonItemLegacy(&item);
             b28 = 0x800;
         }
         else
@@ -5174,7 +5174,7 @@ int playerStateAimStaff(int obj, int state)
             s16 item;
             if (inner->buttonsJustPressed & PAD_BUTTON_Y)
             {
-                yitem = getYButtonItem(&item);
+            yitem = getYButtonItemLegacy(&item);
                 b28 = 0x800;
             }
             else
@@ -16865,7 +16865,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
     {
         ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     }
-    if ((s16)getYButtonItem(&item) == 1 && item == 0x957)
+    if ((s16)getYButtonItemLegacy(&item) == 1 && item == 0x957)
     {
         mask = 0x900;
     }
@@ -17893,7 +17893,7 @@ void playerProcessQueuedItemCommand(GameObject* obj, int state)
         int yButtonItemResult;
         if (((PlayerState*)state)->buttonsJustPressed & PAD_BUTTON_Y)
         {
-            yButtonItemResult = getYButtonItem(&item);
+            yButtonItemResult = getYButtonItemLegacy(&item);
         }
         if (yButtonItemResult == 1)
         {

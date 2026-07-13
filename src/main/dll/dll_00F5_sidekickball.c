@@ -33,6 +33,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/tricky_api.h"
 #define SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define SIDEKICKBALL_OBJFLAG_PARENT_SLACK       0x1000
 #define SIDEKICKBALL_MSG_PLAYER_GRAB            0x100010 /* tells player to grab/hold the ball */
@@ -45,7 +46,6 @@ extern const f32 lbl_803E36A0;
 extern f32 gSidekickBallFadeDuration;
 extern const f32 gSidekickBallActiveTimeout;
 extern const f32 gSidekickBallMaxAlpha;
-extern u16 getYButtonItem(s16* out);
 extern int isTrickyNear(int* player);
 extern int fn_8029669C(int* player);
 extern const f32 lbl_803E3688;

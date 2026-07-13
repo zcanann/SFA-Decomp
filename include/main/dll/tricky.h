@@ -70,6 +70,5 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c);
 
 void hudFn_8011f38c(u8 x);
 void arwingHudSetVisible(u32 mode);
-u16 getYButtonItem(s16* out);
 
 #endif /* MAIN_DLL_TRICKY_H_ */
