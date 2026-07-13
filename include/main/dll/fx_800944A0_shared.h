@@ -21,6 +21,8 @@
 #include "main/sky_interface.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
+#include "main/objfx_hit_emitter_api.h"
+#include "main/dll/expgfx_resource_api.h"
 
 /* typedefs (verbatim from placeholder_800944A0) */
 typedef struct
@@ -333,10 +335,7 @@ void waterfx_func04(u8* p3, u16 mask, f32* vecs, u8* p6, f32 fval);
 void waterfx_onMapSetup(void);
 void waterfx_release(void);
 void waterfx_initialise(void);
-void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 void objShowButtonGlow(void* obj, u8 mode, f32 intensity);
 void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int p5, int p6, int p7, f32 fval);
-void expgfx_updateResourceEntries(int unused);
-int expgfx_acquireResourceEntry(int resourceId);
 
 #endif

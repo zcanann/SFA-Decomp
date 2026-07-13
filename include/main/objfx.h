@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/objfx_hit_emitter_api.h"
 
 void objLightFn_8009a1dc(void *obj, f32 scale, void *origin, u8 type, void *light);
 void objfx_spawnRandomBurst(void* obj, u8 type, u8 count, void* origin, u8 flagByte, f32 mult);
@@ -65,8 +66,6 @@ void spawnExplosion(GameObject* source, f32 scale, u8 kind, u8 flag4, u8 flag8, 
 #define spawnExplosionLegacy(source, scale, kind, flag4, flag8, flag10, doShake, flag20, initialFlags)            \
     ((void (*)(GameObject*, f32, int, int, int, int, int, int, int))spawnExplosion)(                              \
         (GameObject*)(source), (scale), (kind), (flag4), (flag8), (flag10), (doShake), (flag20), (initialFlags))
-
-void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 #if defined(OBJFX_HIT_DETECT_SCALE_FIRST_LEGACY)
 void hitDetectFn_80097070(f32 scale, int obj, int effect, int variant, int count, int origin);
