@@ -15,6 +15,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
+#include "main/object_render_legacy.h"
 
 void MikaBomb_hitDetect(void);
 
@@ -23,7 +24,6 @@ void MikaBomb_free(GameObject* obj, int mode);
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int KaldaChompSpit_getObjectTypeId(void);
 extern int KaldaChompSpit_getExtraSize(void);
 

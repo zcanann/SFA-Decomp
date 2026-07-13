@@ -11,6 +11,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -37,7 +38,6 @@
 #define CAMMODE_CANNON  0x51 /* dll_0051_cameramodecannon */
 #define CAMMODE_DEFAULT 0x42 /* dll_0042 - default/release camera */
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 extern void* lbl_803DDB50;

@@ -8,6 +8,7 @@
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #define DIMSNOWBALL1C2_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -54,7 +55,6 @@ typedef struct Dimsnowball1c2Setup
 } Dimsnowball1c2Setup;
 
 extern f32 lbl_803E4860;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u8 framesThisStep;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern void* Obj_SetupObject(int a, int b, int c, int d, int e);

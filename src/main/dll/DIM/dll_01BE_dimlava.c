@@ -22,6 +22,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
+#include "main/object_render_legacy.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -52,8 +53,6 @@ void imicepillar_free(void);
 
 int imicepillar_getExtraSize(void);
 int imicepillar_getObjectTypeId(void);
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

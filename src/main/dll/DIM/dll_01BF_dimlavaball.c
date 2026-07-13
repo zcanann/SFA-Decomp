@@ -13,6 +13,7 @@
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/imicemountainstate_struct.h"
 
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -32,8 +33,6 @@ STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
-
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern int Obj_AllocObjectSetup(int kind, int id);
 extern f32 timeDelta;

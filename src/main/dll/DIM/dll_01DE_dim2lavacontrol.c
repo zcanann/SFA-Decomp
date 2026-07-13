@@ -9,6 +9,7 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/player_objects.h"
 
@@ -27,7 +28,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
 extern void Music_Trigger(int id, int arg);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 extern int getSaveGameLoadStatus(void);
 #include "main/gamebits.h"

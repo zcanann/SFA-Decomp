@@ -8,6 +8,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objlib.h"
 #include "main/modellight_api.h"
 #include "main/object.h"
@@ -49,7 +50,6 @@ extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
 extern void ModelLightStruct_free(void* light);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void queueGlowRender(void* light);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void* objCreateLight(int arg, u8 addToList);

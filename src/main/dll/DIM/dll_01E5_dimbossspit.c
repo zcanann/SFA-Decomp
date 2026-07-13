@@ -9,6 +9,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"
@@ -57,7 +58,6 @@ typedef struct DIMbossspitState
 } DIMbossspitState;
 
 extern void ModelLightStruct_free(ModelLightStruct* light);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4D44;
 extern u8 framesThisStep;
 extern f32 timeDelta;
