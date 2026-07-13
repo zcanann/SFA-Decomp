@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/player_control_interface.h"
 #include "main/dll/DIM/dll_223.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG    0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8

@@ -19,7 +19,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 

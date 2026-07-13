@@ -10,7 +10,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
