@@ -98,13 +98,9 @@ extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-tripl
 extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
 extern void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 extern int getSkyColorFn_80088e08(int slot);
-extern void skySetOverrideLightColorEnabled(u8 enabled);
-extern void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
 extern f32 fn_8008ED88(void);
 extern void fn_80089510(int flags, int red, int green, int blue);
 extern void fn_80089578(int flags, int red, int green, int blue);
-extern void skySetOverrideLightDirectionEnabled(u8 enabled);
-extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
 
 void fn_801F3F18(GameObject* obj)
 {

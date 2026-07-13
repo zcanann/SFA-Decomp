@@ -17,6 +17,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/pi_dolphin.h"
 #include "main/screen_transition.h"
+#include "main/sky_api.h"
 #include "main/sky_interface.h"
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
@@ -2061,7 +2062,6 @@ extern void PSMTXScale(f32* m, f32 x, f32 y, f32 z);
 extern void GXSetChanAmbColor(int chan, GXColor8 c);
 extern void GXSetChanMatColor(int chan, GXColor8 c);
 extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
-extern void modelTextureFn_80089970(int slot);
 extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);

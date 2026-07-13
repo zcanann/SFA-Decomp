@@ -107,17 +107,12 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
 void* fn_8008912C(void);
 void skyBuildSunModelMatrix(f32 mtx[3][4]);
 int skyFn_8008919c(int slot);
-void skySetOverrideLightColor(u8 red, u8 green, u8 blue);
-void skySetOverrideLightColorEnabled(u8 enabled);
-void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity);
-void skySetOverrideLightDirectionEnabled(u8 enabled);
 void fn_80089510(int flags, u8 red, u8 green, u8 blue);
 void fn_80089578(int flags, u8 red, u8 green, u8 blue);
 void getTimeOfDay(f32* time);
 void renderSky(void);
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue);
-void modelTextureFn_80089970(int slot);
 void* fn_80089A50(void);
 void* fn_80089A58(void);
 int getSunPos(f32* outTime);

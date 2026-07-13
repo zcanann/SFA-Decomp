@@ -1388,7 +1388,6 @@ typedef struct
     u8 r, g, b, a;
 } ObjGXColor;
 
-extern void modelTextureFn_80089970(int slot);
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
 extern void modelLightStruct_selectObjectLights(u8* model, int* arr, u32 n, s32* cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
