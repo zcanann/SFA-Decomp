@@ -5,6 +5,12 @@
 #include "main/dll/VF/vf_shared.h"
 extern f32 lbl_803E5058;
 
+typedef struct GpshScenePlacement
+{
+    u8 pad0[0x18];
+    s8 rotXByte;
+} GpshScenePlacement;
+
 int gpsh_scene_getExtraSize(void) { return 0x0; }
 int gpsh_scene_getObjectTypeId(void) { return 0x0; }
 
@@ -28,7 +34,8 @@ void gpsh_scene_update(void)
 
 void gpsh_scene_init(int* obj, int* def)
 {
-    ((GameObject*)obj)->anim.rotX = (s16)((s32) * (s8*)((char*)def + 0x18) << 8);
+    GpshScenePlacement* place = (GpshScenePlacement*)def;
+    ((GameObject*)obj)->anim.rotX = (s16)((s32)place->rotXByte << 8);
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
