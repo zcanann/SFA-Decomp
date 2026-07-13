@@ -11,9 +11,9 @@ extern f32 timeDelta;
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
+#include "main/maketex_sequence_api.h"
 #include "main/objseq.h"
 #include "main/objhits.h"
-#include "main/sfa_extern_decls.h"
 
 /* object group this object joins while active */
 #define ANIMATEDOBJ_OBJGROUP 7

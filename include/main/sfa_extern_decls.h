@@ -3,7 +3,6 @@
 
 #include "types.h"
 
-void clearCurSeqNo(void);
 void whirlpool_updateWhileFrozen(void);
 void cutSceneFn_8011dd30(void);
 void cutsceneExit(void);
