@@ -1553,18 +1553,31 @@ void Tricky_update(int obj)
         {
             played = 0;
         }
-        else if (((GameObject*)obj)->anim.currentMove < 0x30 && ((GameObject*)obj)->anim.currentMove >= 0x29)
-        {
-            played = 0;
-        }
-        else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
-        {
-            played = 0;
-        }
         else
         {
-            objAudioFn_800393f8(obj, (u8*)st + 0x3a8, 0x298, 0x500, 0xffffffff, 0);
-            played = 1;
+            switch (((GameObject*)obj)->anim.currentMove)
+            {
+            case 0x29:
+            case 0x2a:
+            case 0x2b:
+            case 0x2c:
+            case 0x2d:
+            case 0x2e:
+            case 0x2f:
+                played = 0;
+                break;
+            default:
+                if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
+                {
+                    played = 0;
+                }
+                else
+                {
+                    objAudioFn_800393f8(obj, (u8*)st + 0x3a8, 0x298, 0x500, 0xffffffff, 0);
+                    played = 1;
+                }
+                break;
+            }
         }
         if (played != 0)
         {
