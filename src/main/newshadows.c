@@ -8,6 +8,7 @@
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
 #include "main/sfa_extern_decls.h"
+#include "main/pi_dolphin.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
 typedef struct NewShadowEntry

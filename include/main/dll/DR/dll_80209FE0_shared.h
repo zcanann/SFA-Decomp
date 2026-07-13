@@ -26,10 +26,6 @@
 #include "main/objanim.h"
 #include "main/objanim_update.h"
 
-extern u32 SnowBike_hitDetect();
-extern double SeekTwiceBeforeRead();
-extern u32 countLeadingZeros();
-
 extern f64 DOUBLE_803e7188;
 extern f64 DOUBLE_803e71c0;
 extern f64 DOUBLE_803e7218;
@@ -129,7 +125,6 @@ extern f64 DOUBLE_803e8238;
 extern f64 DOUBLE_803e8268;
 extern f64 DOUBLE_803e8280;
 
-extern void Music_Trigger(int id, int value);
 extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
 extern int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6588;
@@ -142,7 +137,6 @@ extern f32 lbl_803E657C;
 extern f32 lbl_803E65C0;
 extern f32 lbl_803E65C4;
 extern f32 lbl_803E65C8;
-extern int arrayIndexOf();
 extern f32 lbl_803E6598;
 extern f32 lbl_803E65A8;
 extern f32 gThornBushLightScaleRate;
@@ -155,9 +149,6 @@ extern f32 lbl_803E6548;
 extern f32 lbl_803E654C;
 extern int gBossDrakorMoveStateTable[];
 extern int Obj_RemoveFromUpdateList(int* obj);
-extern void gameTextShow(int id);
-extern void timeOfDayFn_80055000(void);
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E6514;
 extern f32 lbl_803E6518;
 extern f32 lbl_803E6520;
@@ -187,8 +178,6 @@ extern f32 PSVECDotProduct(f32* a, f32* b);
 extern void PSVECScale(f32* in, f32* out, f32 scale);
 extern f32 PSVECMag(f32* v);
 extern void drakormissile_startActiveLaunch(GameObject* obj);
-extern void timeOfDayFn_80055038(void);
-extern int randFn_80080100(int range);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];
 extern s16 lbl_803DC198;

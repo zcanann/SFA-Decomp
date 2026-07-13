@@ -19,6 +19,9 @@
  * placement (defeatedGameBit). Defeat anim events warp to map 0x79 and restore the HUD.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/audio.h"
+#include "main/gametext.h"
+#include "main/rcp_dolphin.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/maketex.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -30,6 +33,7 @@
 #include "main/model_light.h"
 #include "main/modellight_api.h"
 #include "main/objfx.h"
+#include "main/dll/objfx_api.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -831,7 +835,7 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     }
     if (((DrakorFlags*)((char*)inner + 0x198))->b02)
     {
-        objParticleFn_80099d84((int)obj, lbl_803E6518, 6, lbl_803E651C, 0);
+        objParticleFn_80099d84(obj, lbl_803E6518, 6, lbl_803E651C, NULL);
     }
     return 0;
 }
