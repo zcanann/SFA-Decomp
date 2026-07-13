@@ -1226,7 +1226,7 @@ void screenImageDraw(u8 alpha)
     extern f32 lbl_803DEEE8;
     extern f32 lbl_8030EA70[3][3];
     extern f32 lbl_8030EA88[3][3];
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -1412,7 +1412,7 @@ void screenImageDraw(u8 alpha)
 
 void doSpiritVisionFilter(void)
 {
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -1534,7 +1534,7 @@ void doSpiritVisionFilter(void)
 void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -1684,7 +1684,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
     extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -2909,7 +2909,7 @@ u32 objCallback_80074d04(int handle, void* model)
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
     extern u8 gGxZModeUpdateEnable;
@@ -2985,7 +2985,7 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
@@ -3072,7 +3072,7 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
@@ -3150,7 +3150,7 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3194,7 +3194,7 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void Camera_RebuildProjectionMatrix(void);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3240,7 +3240,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 {
     extern f32 hudScale;
     extern u8 gHudTintAlpha;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
     extern void textureFn_8004c264(s16 * obj, int slot);
@@ -3352,7 +3352,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  */
 void drawRect(f32 sx, f32 sy, int x, int y)
 {
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -3424,7 +3424,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     extern u8 gHudTintAlpha;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
     extern void textureFn_8004c264(s16 * obj, int slot);
@@ -3569,7 +3569,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
     extern u8 gHudTintAlpha;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
     extern void textureFn_8004c264(s16 * obj, int slot);
@@ -3690,7 +3690,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
     extern u8 gHudTintAlpha;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
     extern void textureFn_8004c264(s16 * obj, int slot);
@@ -4628,7 +4628,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF4C;
     extern f32 lbl_803DEF50;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -4744,7 +4744,7 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
     extern f32 lbl_803DD00C;
     extern f32 gSynthFadeMask, gSynthDelayedActionWord0, timeDelta;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -4949,7 +4949,7 @@ void doHeatEffect(u8 alpha)
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern void Camera_RebuildProjectionMatrix(void);
     Mtx mtx_44;
     f32 indMtx[6];
@@ -5114,7 +5114,7 @@ void renderMotionBlur(f32 alpha)
 {
     extern f32 lbl_803DEF20;
     extern GXColor lbl_803DB6A0;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -5206,7 +5206,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80;
     extern u32 lbl_803DB69C;
-    extern Mtx hudMatrix;
+    extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
@@ -6851,3 +6851,11 @@ u8 gWaterRipples[0x1000];
 u8 gWaterSplashQuads[0x3800];
 DepthReadRequest gDepthReadResults[0x14];
 DepthReadRequest gDepthReadPendingQueue[0x14];
+
+f32 lbl_803967C0[3][4];
+f32 lbl_803967F0[3][4];
+f32 lbl_80396820[3][4];
+f32 lbl_80396850[3][4];
+f32 hudMatrix[4][4];
+int lbl_803968C0[0x10];
+u8 lbl_80396900[0x18];

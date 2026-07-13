@@ -716,7 +716,7 @@ void Sfx_ClearLoopedObjectSounds(void)
 
 void Sfx_UpdateLoopedObjectSounds(void)
 {
-    SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
     u8* fp;
     u32* op;
     u16* ip;
@@ -780,7 +780,7 @@ void Sfx_UpdateLoopedObjectSounds(void)
 #pragma opt_strength_reduction reset
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
-    SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
     u8* flags = table->flags;
     s32 count;
     u16 sameSfxCount;
@@ -854,7 +854,7 @@ void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
-    SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
     int index;
     int index2;
     s16 i;
@@ -882,7 +882,7 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
 {
-    SfxLoopedObjectSoundTable* table = &gSfxLoopedObjectSoundFlags;
+    SfxLoopedObjectSoundTable* table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
     u16 sfx16;
     u32* op;
     u16* ip;
@@ -922,7 +922,7 @@ void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId)
     s32 count;
     int found;
 
-    table = &gSfxLoopedObjectSoundFlags;
+    table = (SfxLoopedObjectSoundTable*)gSfxLoopedObjectSoundFlags;
     i = 0;
     objectIt = table->objects;
     idIt = table->ids;
@@ -3302,3 +3302,7 @@ SfxTriggerCacheEntry gSfxTriggerLookupCache[16] = {
 
 int gAudioStreamFadeTable[] = {0, 2, 4};
 char sDvdCancelStreamWarning[0x3C] = "WARNING:DVDCancelStreamAsync returned FALSE\012\000\000\000\000/streams/";
+
+u8 gSfxLoopedObjectSoundFlags[0x80];
+u16 gSfxLoopedObjectSoundIds[0x80];
+u32 gSfxLoopedObjectSoundObjects[0x80];

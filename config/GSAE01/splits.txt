@@ -20,7 +20,7 @@ main/render.c:
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
 	.data       start:0x802C4F08 end:0x802C5E00
-	.bss        start:0x80335940 end:0x80336D10
+	.bss        start:0x80335940 end:0x80337090
 	.rodata     start:0x802C1A68 end:0x802C1A88
 
 main/camera.c:
@@ -61,7 +61,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 main/textrender.c:
 	.text       start:0x80017434 end:0x8001CB3C
 	.data       start:0x802C8D40 end:0x802CA100
-	.bss        start:0x80339980 end:0x8033BE40
+	.bss        start:0x80339980 end:0x8033BE60
 
 main/modellight.c:
 	.text       start:0x8001CB3C end:0x8001F54C
@@ -159,7 +159,7 @@ main/newshadows.c:
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 	.rodata     start:0x802C1EA8 end:0x802C1F80
-	.bss        start:0x80391DC0 end:0x803967C0
+	.bss        start:0x80391DC0 end:0x80396918
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
@@ -1033,7 +1033,7 @@ main/dll/dll_8011d918.c:
 
 main/dll/tricky.c:
 	.text       start:0x8011D9B0 end:0x80121C4C
-	.bss        start:0x803A8830 end:0x803A89B0
+	.bss        start:0x803A87F0 end:0x803A89B0
 
 main/dll/maybetemplate.c:
 	.text       start:0x80121C4C end:0x801242DC
@@ -3517,7 +3517,7 @@ main/audio/data_tables.c:
 	extab       start:0x800057F0 end:0x80005880
 	extabindex  start:0x80005F78 end:0x80006050
 	.text       start:0x80273D2C end:0x80275364
-	.bss        start:0x803BFC78 end:0x803CA278
+	.bss        start:0x803BFC78 end:0x803CA2B0
 
 main/audio/mcmd_wait.c:
 	extab       start:0x80005880 end:0x80005888

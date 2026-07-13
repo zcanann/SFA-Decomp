@@ -1804,3 +1804,5 @@ void drawViewFinderHud(void)
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
+
+char lbl_803A87F0[0x40];

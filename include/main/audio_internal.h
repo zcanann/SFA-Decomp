@@ -161,7 +161,9 @@ typedef struct SfxTriggerCacheEntry {
     u16 index;
 } SfxTriggerCacheEntry;
 
-extern SfxLoopedObjectSoundTable gSfxLoopedObjectSoundFlags;
+extern u8 gSfxLoopedObjectSoundFlags[0x80];
+extern u16 gSfxLoopedObjectSoundIds[0x80];
+extern u32 gSfxLoopedObjectSoundObjects[0x80];
 extern u16 gSfxLoopedObjectSoundCount;
 extern SfxObjectChannel gSfxObjectChannels[];
 extern u8 gSfxGlobalCtrlLevel;

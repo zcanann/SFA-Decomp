@@ -3542,3 +3542,6 @@ void* jumptable_802C9E84[16] = {
     (void*)((u8*)gameTextRun + 0x4BC), (void*)((u8*)gameTextRun + 0x4F0), (void*)((u8*)gameTextRun + 0x4C8),
     (void*)((u8*)gameTextRun + 0x504),
 };
+
+void* lbl_8033BE40[5];
+void* gSubtitleBoxTextures[3];
