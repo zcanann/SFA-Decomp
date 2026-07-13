@@ -569,3 +569,5 @@ char sCurvesSetupMoveNetworkCurveBadControlPointCount[] =
 char sCurvesMoveTooFewControlPoints[] = "curvesMove: There must be at least four control points\n";
 char sCurvesMoveBadControlPointCount[] =
     "curvesMove: There must be a multiple of four control points for bezier or hermite curves\n";
+
+f32 gCurveForwardDiffCoeffs[4];
