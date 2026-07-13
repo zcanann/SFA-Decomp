@@ -8,6 +8,7 @@
  * The trailing GXWGFifo swipe* helpers are inlined display-list writers.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
@@ -33,7 +34,6 @@
 #define DLLF7_CHILD_OBJ_GAS 0xb
 
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 typedef struct DllF7Placement

@@ -1,5 +1,6 @@
 /* DLL 0xC6 — animated object [8016984C-801713AC) */
 #include "main/dll/xyzanimator.h"
+#include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/dll/dll_00E5_shield_api.h"
@@ -12,7 +13,6 @@ void MikaBomb_free(GameObject *obj, int mode);
 int MikaBomb_getExtraSize(void);
 int MikaBomb_getObjectTypeId(void);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int KaldaChompSpit_getObjectTypeId(void);
 extern int KaldaChompSpit_getExtraSize(void);
 

@@ -11,6 +11,7 @@
  * initialise time and stepped by gPlayerInterface slot 8 each update.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -52,7 +53,6 @@ extern int Obj_SetupObject();
 extern void ObjGroup_RemoveObject(u32 obj, int group);
 extern void ObjPath_GetPointWorldPosition(void* obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 objParticleFn_80099d84();
 
 extern void fn_802961FC(int a, u8 type);

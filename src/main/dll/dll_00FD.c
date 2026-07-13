@@ -1,5 +1,6 @@
 /* DLL 0x00FD — baby CloudRunner objects [8017EF6C-8017F4F4) */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objprint_dolphin.h"
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
@@ -14,7 +15,6 @@
 
 #define DLL00FD_OBJFLAG_HIDDEN 0x4000
 extern f32 lbl_803E3850;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 

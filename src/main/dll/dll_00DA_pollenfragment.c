@@ -13,6 +13,7 @@
  * pollen, pollenfragment).
  */
 #include "main/dll/MMP/MMP_asteroid.h"
+#include "main/object_render_legacy.h"
 #include "main/maketex.h"
 #include "main/object_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -90,7 +91,6 @@ extern f32 lbl_803E3180;
 extern int ObjGroup_FindNearestObject();
 extern u32 ObjPath_GetPointWorldPosition();
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void PSVECSubtract(void* a, void* b, void* out);
 extern f32 PSVECMag(void* v);

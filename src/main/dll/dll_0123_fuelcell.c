@@ -1,5 +1,6 @@
 /* DLL 0x0123 — fuelcell (fuel cell collectible). TU: 0x8018C000–0x8018C7D8. */
 #include "main/objseq.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -32,7 +33,6 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_PlayFromObject(GameObject* obj, int soundId);

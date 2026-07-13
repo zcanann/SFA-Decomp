@@ -20,6 +20,7 @@
  * clears the child pointer (gem released) -> FADE_OUT.
  */
 #include "main/dll/dusterstate_types.h"
+#include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -101,7 +102,6 @@ extern void ObjLink_AttachChild(int parent, int child, u16 linkMode);
 extern void ObjPath_GetPointWorldPosition(int obj, int pointIndex, float* outX, float* outY, float* outZ,
                                           int useInputPosition);
 extern int objIsFrozen(int obj);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {

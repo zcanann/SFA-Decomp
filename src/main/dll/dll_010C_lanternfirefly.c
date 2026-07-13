@@ -2,6 +2,7 @@
  * LanternFireFly (DLL 0x10C). TU = 0x80186704..0x801871C8.
  */
 #include "main/dll/CF/CFcrystal.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
@@ -72,7 +73,6 @@ extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int LanternFireFly_getExtraSize(void)
 {

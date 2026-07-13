@@ -19,6 +19,7 @@
  * TU: 0x8016B230-0x8016B2E0.
  */
 #include "main/dll/xyzanimator.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
@@ -43,7 +44,6 @@ extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses

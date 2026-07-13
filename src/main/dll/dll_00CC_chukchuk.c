@@ -11,6 +11,7 @@
  * This TU also defines fn_8015F5B0 and the ChukChuk ObjectDescriptor.
  */
 #include "main/obj_placement.h"
+#include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
@@ -29,7 +30,6 @@
 #define CHUKCHUK_FLAG_DEAD          0x2
 #define CHUKCHUK_FLAG_FORCED_ATTACK 0x4
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 

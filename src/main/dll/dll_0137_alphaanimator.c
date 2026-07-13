@@ -18,6 +18,7 @@
  * releases the mode-3 buffer.
  */
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/dll/waveanimatorstate_struct.h"
@@ -60,7 +61,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int AlphaAnimator_getExtraSize(void)
 {

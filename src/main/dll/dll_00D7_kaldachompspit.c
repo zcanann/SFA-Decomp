@@ -13,6 +13,7 @@
  * pollenfragment) plus the PollenFragmentConfig tables.
  */
 #include "main/effect_interfaces.h"
+#include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -62,7 +63,6 @@ extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 int KaldaChompMe_getExtraSize(void);
 int KaldaChompMe_getObjectTypeId(void);
 void KaldaChompMe_free(void);

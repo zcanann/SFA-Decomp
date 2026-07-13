@@ -21,6 +21,7 @@
  * by sibling DLLs.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -61,7 +62,6 @@ extern void* memcpy(void* dst, const void* src, int n);
 extern u8 gTumbleweedBushHitCooldownState;
 
 extern f32 lbl_803E2F44;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 gTumbleweedBushNearestInitDist;
 extern void* Obj_AllocObjectSetup(int size, int b);
 extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);

@@ -16,6 +16,7 @@
  * external area_* callbacks.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
@@ -40,7 +41,6 @@
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern const f32 lbl_803E369C;
 extern const f32 lbl_803E36A0;
 extern f32 gSidekickBallFadeDuration;

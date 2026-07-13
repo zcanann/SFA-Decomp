@@ -1,6 +1,7 @@
 /* DLL 0x0110 - door objects [0x8017B5C8-0x8017BB80). */
 
 #include "main/game_object.h"
+#include "main/object_render_legacy.h"
 #include "main/objseq.h"
 #include "main/dll/alphaanim.h"
 #include "main/objtexture.h"
@@ -51,7 +52,6 @@ typedef struct DoorState
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 

@@ -18,6 +18,7 @@
  * GAMEBIT_SFX_MUTE (0xa71) gates the rob-wave warning sfx.
  */
 #include "main/camera_interface.h"
+#include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -52,7 +53,6 @@ extern char* Obj_SetupObject(char* setup, int a, int b, int c, int d);
 extern int* lbl_803DDAC8;
 extern u8 framesThisStep;
 extern f32 timeDelta;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E39A8;
 extern const f32 lbl_803E39AC;
 extern f32 lbl_803E39B8;

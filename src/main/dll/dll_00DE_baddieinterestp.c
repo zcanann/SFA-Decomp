@@ -10,6 +10,7 @@
  */
 
 #include "main/dll/xyzanimator.h"
+#include "main/object_render_legacy.h"
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/dll/genprops.h"
@@ -34,7 +35,6 @@ typedef struct BaddieinterestpPlacement
 
 extern f32 lbl_803E3220;
 extern f32 lbl_803E3224;
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void* ObjGroup_GetObjects();
 extern void fn_801504BC(int* obj, int kind);
 
