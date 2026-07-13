@@ -19,7 +19,6 @@
 #define TUMBLEWEEDBUSH_SIBLING_C 0x4ba
 #define TUMBLEWEEDBUSH_SIBLING_D 0x4c1
 
-void cannonclaw_update(u8* obj);
 void FUN_80163388(int param_1,u32 param_2,int param_3);
 void FUN_8016338c(void);
 void FUN_801633ac(void);

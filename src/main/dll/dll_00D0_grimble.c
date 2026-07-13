@@ -16,13 +16,14 @@
  * (unkF4 != 0) update wakes it from the saved map-event time slot.
  */
 #include "main/game_object.h"
-#include "main/object_descriptor.h"
 #include "main/obj_group.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/grimble_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/dll_00CF_cannonclaw.h"
+#include "main/dll/dll_00D0_grimble.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/gameplay_runtime.h"
@@ -474,9 +475,6 @@ int grimble_getObjectTypeId(void)
     return 0x59;
 }
 
-#pragma dont_inline on
-void grimble_initialiseStateHandlerTables(void);
-#pragma dont_inline reset
 void grimble_initialise(void)
 {
     grimble_initialiseStateHandlerTables();
@@ -512,15 +510,6 @@ ObjectDescriptor gGrimbleObjDescriptor = {
     grimble_getExtraSize,
 };
 
-extern void cannonclaw_getExtraSize();
-extern void cannonclaw_getObjectTypeId();
-extern void cannonclaw_free();
-extern void cannonclaw_render();
-extern void cannonclaw_hitDetect();
-extern void cannonclaw_update();
-extern void cannonclaw_init();
-extern void cannonclaw_release();
-extern void cannonclaw_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gCannonClawObjDescriptor[14] = {(void*)0x00000000,          (void*)0x00000000,      (void*)0x00000000,
                                       (void*)0x00090000,          cannonclaw_initialise,  cannonclaw_release,
