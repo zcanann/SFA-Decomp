@@ -2,6 +2,7 @@
 #define MAIN_DLL_SAVEGAME_H_
 
 #include "ghidra_import.h"
+#include "main/dll/savegame_env_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/dll/savegame_object_api.h"
 
@@ -21,7 +22,5 @@ s8 SaveGame_findTransientMapBit(int mapId, int bit);
 void SaveGame_updateTransientMapBits(void);
 int saveSelect_getInfo(void* out);
 void updateSavedHealth(void);
-
-void* saveGameGetEnvState(void);
 
 #endif /* MAIN_DLL_SAVEGAME_H_ */

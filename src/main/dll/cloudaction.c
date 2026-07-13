@@ -25,7 +25,7 @@
 #include "main/sky_interface.h"
 #include "main/shader_api.h"
 #include "main/vecmath.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_env_api.h"
 #include "dolphin/gx/GXLegacyDecls.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"

@@ -27,6 +27,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00E2_staff_api.h"
+#include "main/dll/savegame_env_api.h"
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
 extern u32 DAT_803dda68;
@@ -607,8 +608,6 @@ int setWidescreen(u8 v)
     }
     return 0;
 }
-
-extern void* saveGameGetEnvState(void);
 
 void setDrawLights(int v)
 {

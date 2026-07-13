@@ -23,7 +23,8 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/dll/savegame.h"
+#include "main/dll/savegame_env_api.h"
+#include "main/dll/savegame_load_api.h"
 #include "main/gameloop_api.h"
 #include "main/lightmap.h"
 #include "main/mm.h"
@@ -1798,7 +1799,7 @@ extern const f32 lbl_803DF27C;
  * `params` kept as raw u8* here (not CloudSpawnParams*): the NC_CLOUD macro
  * and env slot writes index it as `params + 0x26` / `params + 0x26 * 0xc`
  * byte arithmetic; retyping shifts the index/CSE codegen. `env` is the
- * cross-TU saveGameGetEnvState() blob (would need a shared header).
+ * savegame environment-state blob returned by saveGameGetEnvState().
  */
 void newclouds_updateEnvfxAct(u8* objA, u8* objB, u8* params)
 {

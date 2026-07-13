@@ -1,4 +1,5 @@
 #include "main/sky_state.h"
+#include "main/dll/savegame_env_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/render.h"
@@ -226,8 +227,6 @@ extern void fn_8005CECC(int mode);
 extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
 extern u32 getScreenResolution(void);
 extern void* memset(void* dst, int c, int n);
-extern u8* saveGameGetEnvState(void);
-
 int getEnvFxBit2BA(void)
 {
     return (u8)mainGetBit(GAMEBIT_ENV_dayNo);

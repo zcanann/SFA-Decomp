@@ -24,6 +24,7 @@
 #include "main/mm.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
 
@@ -238,7 +239,6 @@ void textureFn_800528bc(void)
 }
 #pragma dont_inline reset
 
-extern void* saveGameGetEnvState(void);
 extern s32 lbl_803DCE00;
 #pragma peephole off
 void timeOfDayFn_80055000(void)
