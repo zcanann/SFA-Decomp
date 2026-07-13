@@ -1,5 +1,8 @@
 /* DLL 0x019B - torch / fire-effect objects [801CBA98-801CBD88) */
-#include "main/dll/torch1CD.h"
+#include "main/dll/dll_019B_dll19b.h"
+#include "main/dll/dll_019C_dll19c.h"
+#include "main/dll/dll_019D_dll19d.h"
+#include "main/dll/dll_019E_dim_tricky.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
@@ -441,8 +444,6 @@ void dll_19B_init(GameObject* obj, u8* params)
     obj->anim.worldPosZ = obj->anim.localPosZ;
 }
 
-void dll_19C_init(GameObject* obj, u8* initData);
-
 /*__DATA_EXTERNS__*/
 extern void nw_geyser_free();
 extern void nw_geyser_update();
@@ -451,32 +452,6 @@ extern void treebird_getExtraSize();
 extern void treebird_render();
 extern void treebird_update();
 extern void treebird_init();
-extern void dll_19E_getExtraSize();
-extern void dll_19E_getObjectTypeId();
-extern void dll_19E_free();
-extern void dll_19E_render();
-extern void dll_19E_hitDetect();
-extern void dll_19E_update();
-extern void dll_19E_init();
-extern void dll_19E_release();
-extern void dll_19E_initialise();
-extern void dll_19D_getExtraSize();
-extern void dll_19D_getObjectTypeId();
-extern void dll_19D_free();
-extern void dll_19D_render();
-extern void dll_19D_hitDetect();
-extern void dll_19D_update();
-extern void dll_19D_init();
-extern void dll_19D_release();
-extern void dll_19D_initialise();
-extern void dll_19C_getExtraSize();
-extern void dll_19C_getObjectTypeId();
-extern void dll_19C_free();
-extern void dll_19C_render();
-extern void dll_19C_hitDetect();
-extern void dll_19C_update();
-extern void dll_19C_release();
-extern void dll_19C_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* jumptable_8032668C[7] = {(void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490),
                                (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4),

@@ -1,7 +1,8 @@
-#ifndef MAIN_DLL_TORCH1CD_H_
-#define MAIN_DLL_TORCH1CD_H_
+#ifndef MAIN_DLL_DLL_019B_DLL19B_H_
+#define MAIN_DLL_DLL_019B_DLL19B_H_
 
 #include "ghidra_import.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 enum Dll19BPhase
@@ -34,10 +35,15 @@ typedef struct Dll19BState
     u8 pad17[0x18 - 0x17];
 } Dll19BState;
 
-int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
 int dll_19B_getExtraSize(void);
 int dll_19B_getObjectTypeId(void);
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_19B_hitDetect(void);
+void dll_19B_free(int* obj);
+void dll_19B_update(int obj);
+void dll_19B_release(void);
+void dll_19B_initialise(void);
+void dll_19B_init(GameObject* obj, u8* params);
 
-#endif /* MAIN_DLL_TORCH1CD_H_ */
+#endif /* MAIN_DLL_DLL_019B_DLL19B_H_ */

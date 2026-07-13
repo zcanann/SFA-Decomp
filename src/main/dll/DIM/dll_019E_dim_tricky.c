@@ -1,5 +1,6 @@
 /* DLL 0x19E — DIM Tricky companion object: sparkle effect, hit-detect toggle,
  * line-of-sight voxmap trace, and Tricky egg-interact sequence trigger. */
+#include "main/dll/dll_019E_dim_tricky.h"
 #include "main/game_object.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/audio/sfx_ids.h"
@@ -161,7 +162,7 @@ void dll_19E_hitDetect(void)
 {
 }
 
-typedef struct Dll19ESetup
+struct Dll19ESetup
 {
     ObjPlacement base;
     s8 objectType;
@@ -169,7 +170,7 @@ typedef struct Dll19ESetup
     s16 scaleTimer;
     s16 sequenceIndex;
     s16 gameBitId;
-} Dll19ESetup;
+};
 
 STATIC_ASSERT(sizeof(Dll19ESetup) == 0x20);
 STATIC_ASSERT(offsetof(Dll19ESetup, objectType) == 0x18);
