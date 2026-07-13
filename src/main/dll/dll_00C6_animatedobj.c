@@ -164,7 +164,7 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 #include "main/objhits.h"
 #include "main/sfa_extern_decls.h"
-#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe_api.h"
 

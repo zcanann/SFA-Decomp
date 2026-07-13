@@ -57,7 +57,7 @@
 #include "dolphin/gx/GXEnum.h"
 #include "string.h"
 #include "main/dll/dll_00E2_staff.h"
-#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -240,7 +240,6 @@ void staff_hitDetect(void)
 
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
-int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void)
 {
     return 0xc0;

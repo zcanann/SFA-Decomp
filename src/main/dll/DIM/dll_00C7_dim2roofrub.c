@@ -128,7 +128,7 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"
-#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/objlib.h"
@@ -229,7 +229,6 @@ int dim2roofrub_getExtraSize(void)
 {
     return 0x140;
 }
-int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void);
 int staff_getObjectTypeId(void);
 void dim2roofrub_free(int* obj)

@@ -10,12 +10,13 @@
  * filter back down. State lives in a 3-byte extra (DofState).
  */
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/game_object.h"
+#include "main/object_descriptor.h"
+#include "main/dll/CAM/cutCam.h"
 
 #define DEPTHOFFIELDPOINT_OBJFLAG_HIDDEN 0x4000
 
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
-
-int depthoffieldpoint_getExtraSize(void);
 
 typedef struct DofState
 {

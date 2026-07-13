@@ -52,7 +52,7 @@
 #include "main/dll/dll_00ED_collectible.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub.h"
 #include "main/dll/dll_00E4_flamethrowerspe_api.h"
-#include "main/dll/dll_00C8_depthoffieldpoint.h"
+#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
 #include "main/dll/dll_00E3_fireball_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #define COLLECTIBLE_OBJFLAG_HITDETECT_DISABLED 0x2000

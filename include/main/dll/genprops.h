@@ -107,7 +107,6 @@ extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 extern ObjectDescriptor dll_F7;
 
-int depthoffieldpoint_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
 int KaldaChompSpit_getObjectTypeId(void);
 int KaldaChompSpit_getExtraSize(void);
 void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible);
