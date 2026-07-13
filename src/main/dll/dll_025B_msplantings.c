@@ -111,7 +111,7 @@ int MoonSeedPlantingSpot_setScale(int* obj, int arg)
                     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                     mainSetBits(((MoonSeedPlantingSpotState*)inner)->harvestedGameBit, 1);
                     inner[0] = MSPLANTING_PHASE_HARVESTED;
-                    ((GameObject*)obj)->anim.localPosY = *(f32*)((char*)placement + 0xc);
+                    ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)placement)->posY;
                 }
             }
         }
