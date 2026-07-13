@@ -11,7 +11,7 @@
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0046_cameramodedebug.h"
 
 /* camera mode id to restore on B-press exit */

@@ -21,7 +21,7 @@
 #include "main/dll/player_motion.h"
 #include "main/vecmath.h"
 #include "main/object_transform.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0053_cameramodecloudrunner.h"
 
 /* curve-node tag selecting the matrix-based base point in update() */

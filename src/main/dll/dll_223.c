@@ -16,7 +16,8 @@
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/shader_api.h"
 
 #define DIMBOSSTONSIL_HIT_EFFECT_ID     0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3

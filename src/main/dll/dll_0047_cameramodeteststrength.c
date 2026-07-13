@@ -10,7 +10,9 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 #include "main/dll/CAM/dll_5B.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
+#include "string.h"
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMTESTSTRENGTH_CAMMODE_DEFAULT 0x42
