@@ -90,7 +90,6 @@ extern f32 lbl_803E69E8;
 extern f32 lbl_803E6A44;
 extern f32 lbl_803E6B00;
 extern f32 lbl_803E6B58;
-extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern GameUIInterface** gGameUIInterface;
 extern char sDrCreatorTimeFormat[];
 extern const f32 lbl_803E69A8;

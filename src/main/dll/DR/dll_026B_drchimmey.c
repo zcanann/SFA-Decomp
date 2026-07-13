@@ -10,6 +10,7 @@
 #include "main/object.h"
 #include "main/maketex.h"
 #include "main/obj_placement.h"
+#include "main/object_render.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
 
 int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
@@ -28,7 +29,7 @@ void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
     }
 }
 

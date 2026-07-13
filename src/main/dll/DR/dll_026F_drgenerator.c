@@ -12,6 +12,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_02B5_timer.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/object_update_list.h"
 #include "main/dll/DR/dll_026F_drgenerator.h"
 
@@ -55,7 +56,7 @@ void drgenerator_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
     }
 }
 

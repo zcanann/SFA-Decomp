@@ -17,6 +17,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -64,7 +65,7 @@ void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6858);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6858);
     }
 }
 

@@ -7,6 +7,7 @@
 #include "main/dll/player_objects.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"
@@ -293,7 +294,7 @@ void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char
     DrLaserCannonState* state = (obj)->extra;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E68E8);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E68E8);
         ObjPath_GetPointWorldPosition(obj, 0, &state->muzzleX, &state->muzzleY, &state->muzzleZ, 0);
         state->muzzleY = state->muzzleY - lbl_803E68EC;
     }

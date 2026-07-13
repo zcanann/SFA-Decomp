@@ -15,6 +15,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/sky_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
@@ -48,7 +49,7 @@ void KT_RexLevel_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E67A0);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E67A0);
     }
 }
 

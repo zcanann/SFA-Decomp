@@ -10,6 +10,7 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/DR/dll_026C_drcagewith.h"
@@ -90,13 +91,14 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
     int* linkedObj;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
         if (((DrcagewithState*)state)->spawnedObject != 0)
         {
             ObjPath_GetPointWorldPosition(obj, 0, &((DrcagewithState*)state)->spawnedObject->anim.localPosX,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosY,
                                           &((DrcagewithState*)state)->spawnedObject->anim.localPosZ, 0);
-            objRenderModelAndHitVolumes(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5, (double)lbl_803E69F0);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(((DrcagewithState*)state)->spawnedObject, p2, p3, p4, p5,
+                                                        (double)lbl_803E69F0);
             linkedObj = *(int**)&((DrcagewithState*)state)->linkedObject;
             if (linkedObj != 0)
             {
@@ -105,7 +107,7 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
                 ObjPath_GetPointWorldPosition(
                     ((DrcagewithState*)state)->spawnedObject, 0, &((GameObject*)linkedObj)->anim.localPosX,
                     &((GameObject*)linkedObj)->anim.localPosY, &((GameObject*)linkedObj)->anim.localPosZ, 0);
-                objRenderModelAndHitVolumes(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
+                objRenderModelAndHitVolumesFwdDoubleLegacy(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
             }
         }
     }

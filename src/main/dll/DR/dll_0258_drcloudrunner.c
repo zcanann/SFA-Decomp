@@ -25,6 +25,7 @@
 #include "main/dll/moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_descriptor.h"
+#include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
@@ -302,13 +303,13 @@ void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 v
     {
         if (vis == -1)
         {
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E83A8);
             ObjPath_GetPointWorldPosition(obj, 3, (f32*)((char*)inner + 0xae8), (f32*)((char*)inner + 0xaec),
                                           (f32*)((char*)inner + 0xaf0), 0);
         }
         if (inner->flightState != CLOUDRUNNER_FLIGHT_MOUNTED && vis != 0)
         {
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E83A8);
+            objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E83A8);
             dll_2E_func06(obj, (MoveLibState*)((char*)inner + 0x4c4), 0);
         }
     }

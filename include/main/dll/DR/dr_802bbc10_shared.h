@@ -58,7 +58,6 @@ typedef struct
 } SnowHornEntry;
 
 extern u32 objAnimFn_80038f38();
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void* gEarthWarriorResource;

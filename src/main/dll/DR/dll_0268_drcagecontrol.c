@@ -10,6 +10,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/object_render.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0268_drcagecontrol.h"
@@ -70,7 +71,7 @@ void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
     }
 }
 

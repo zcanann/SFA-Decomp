@@ -13,6 +13,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/object_render.h"
 #include "main/objprint_dolphin.h"
 
 #include "main/audio/sfx_ids.h"
@@ -117,7 +118,7 @@ int drshackle_setScale(GameObject* obj, int a, int b, int c, int d, int e, int f
     }
     ObjPath_GetPointWorldPosition((GameObject*)a, b, (f32*)((char*)obj + 0xc), (f32*)((char*)obj + 0x10), (f32*)((char*)obj + 0x14),
                                   0);
-    objRenderModelAndHitVolumes((void*)obj, c, d, e, f, (double)lbl_803E6A2C);
+    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, c, d, e, f, (double)lbl_803E6A2C);
 
     for (i = 0, a = (int)p; i < ((DrshackleState*)p)->slotCount; i++)
     {
@@ -154,7 +155,7 @@ void drshackle_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visi
     int i;
     if (((BitFlags8*)(state + 0x1a))->b0 == 0 && visible != 0)
     {
-        objRenderModelAndHitVolumes((void*)obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
         for (i = 0; i < ((DrshackleState*)state)->slotCount; i++)
         {
             int* entry = ((int**)state)[i];
