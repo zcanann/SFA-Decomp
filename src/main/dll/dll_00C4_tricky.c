@@ -851,15 +851,14 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
 
 #define TRICKY_VOICE(obj, sfx, vol)                                                                                    \
     {                                                                                                                  \
-        TrickyState* voiceState_;                                                                                      \
-        voiceState_ = ((GameObject*)obj)->extra;                                                                       \
-        if (((TrickyByteFlags*)&voiceState_->statusFlags)->bit6 == 0)                                                  \
+        st = ((GameObject*)obj)->extra;                                                                                \
+        if (((TrickyByteFlags*)&st->statusFlags)->bit6 == 0)                                                           \
         {                                                                                                              \
             if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)           \
             {                                                                                                          \
                 if (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0)                                                  \
                 {                                                                                                      \
-                    objAudioFn_800393f8((obj), (u8*)voiceState_ + 0x3a8, (sfx), (vol), 0xffffffff, 0);                 \
+                    objAudioFn_800393f8((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                          \
                 }                                                                                                      \
             }                                                                                                          \
         }                                                                                                              \
