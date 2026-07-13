@@ -4,6 +4,7 @@
  * timer; on expiry fades the barrier out and latches its gamebit.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
@@ -139,3 +140,20 @@ void dimbarrier_release(void)
 void dimbarrier_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMBarrierObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimbarrier_initialise,
+    (ObjectDescriptorCallback)dimbarrier_release,
+    0,
+    (ObjectDescriptorCallback)dimbarrier_init,
+    (ObjectDescriptorCallback)dimbarrier_update,
+    (ObjectDescriptorCallback)dimbarrier_hitDetect,
+    (ObjectDescriptorCallback)dimbarrier_render,
+    (ObjectDescriptorCallback)dimbarrier_free,
+    (ObjectDescriptorCallback)dimbarrier_getObjectTypeId,
+    dimbarrier_getExtraSize,
+};

@@ -6,6 +6,7 @@
  */
 #include "main/dll/DIM/DIM2conveyor.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -157,3 +158,20 @@ void dimbridgecogmai_release(void)
 void dimbridgecogmai_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMBridgeCogMaiObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimbridgecogmai_initialise,
+    (ObjectDescriptorCallback)dimbridgecogmai_release,
+    0,
+    (ObjectDescriptorCallback)dimbridgecogmai_init,
+    (ObjectDescriptorCallback)dimbridgecogmai_update,
+    (ObjectDescriptorCallback)dimbridgecogmai_hitDetect,
+    (ObjectDescriptorCallback)dimbridgecogmai_render,
+    (ObjectDescriptorCallback)dimbridgecogmai_free,
+    (ObjectDescriptorCallback)dimbridgecogmai_getObjectTypeId,
+    dimbridgecogmai_getExtraSize,
+};

@@ -7,6 +7,7 @@
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
@@ -204,3 +205,20 @@ void dimlavasmash_release(void)
 void dimlavasmash_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMLavaSmashObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimlavasmash_initialise,
+    (ObjectDescriptorCallback)dimlavasmash_release,
+    0,
+    (ObjectDescriptorCallback)dimlavasmash_init,
+    (ObjectDescriptorCallback)dimlavasmash_update,
+    (ObjectDescriptorCallback)dimlavasmash_hitDetect,
+    (ObjectDescriptorCallback)dimlavasmash_render,
+    (ObjectDescriptorCallback)dimlavasmash_free,
+    (ObjectDescriptorCallback)dimlavasmash_getObjectTypeId,
+    dimlavasmash_getExtraSize,
+};

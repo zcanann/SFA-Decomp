@@ -1856,6 +1856,7 @@ main/dll/DIM/dll_01C4_dimicewall.c:
 
 main/dll/DIM/dll_01C5_dimbarrier.c:
 	.text       start:0x801B1B40 end:0x801B1D84
+	.data       start:0x80325408 end:0x80325440
 
 main/dll/dll_801b1d84.c:
 	.text       start:0x801B1D84 end:0x801B1FF4
@@ -1865,15 +1866,19 @@ main/dll/DIM/dimwooddoor.c:
 
 main/dll/DIM/dll_01C6_dimcannon.c:
 	.text       start:0x801B2550 end:0x801B3344
+	.data       start:0x80325440 end:0x80325478
 
 main/dll/DIM/dll_01C7_dimlavasmash.c:
 	.text       start:0x801B3344 end:0x801B3768
+	.data       start:0x80325478 end:0x803254B0
 
 main/dll/DIM/dll_01C8_dimbridgecogmai.c:
 	.text       start:0x801B3768 end:0x801B3A68
+	.data       start:0x803254B0 end:0x803254E8
 
 main/dll/DIM/dll_01C9_dimdismountpoint.c:
 	.text       start:0x801B3A68 end:0x801B3DE4
+	.data       start:0x803254E8 end:0x80325528
 
 main/dll/DIM/dll_01CA_dimexplosion.c:
 	.text       start:0x801B3DE4 end:0x801B57BC

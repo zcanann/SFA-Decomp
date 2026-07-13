@@ -11,6 +11,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 #include "main/objprint_api.h"
 #include "main/audio/sfx.h"
@@ -563,3 +564,20 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     return 0;
 }
+
+ObjectDescriptor gDIMCannonObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DIMCannon_initialise,
+    (ObjectDescriptorCallback)DIMCannon_release,
+    0,
+    (ObjectDescriptorCallback)DIMCannon_init,
+    (ObjectDescriptorCallback)DIMCannon_update,
+    (ObjectDescriptorCallback)DIMCannon_hitDetect,
+    (ObjectDescriptorCallback)DIMCannon_render,
+    (ObjectDescriptorCallback)DIMCannon_free,
+    (ObjectDescriptorCallback)DIMCannon_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DIMCannon_getExtraSize,
+};

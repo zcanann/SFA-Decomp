@@ -5,6 +5,7 @@
  * the player is on.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objprint_dolphin.h"
 #include "main/objlib.h"
@@ -142,3 +143,22 @@ void DIMDismountPoint_release(void)
 void DIMDismountPoint_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDIMDismountPointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)DIMDismountPoint_initialise,
+    (ObjectDescriptorCallback)DIMDismountPoint_release,
+    0,
+    (ObjectDescriptorCallback)DIMDismountPoint_init,
+    (ObjectDescriptorCallback)DIMDismountPoint_update,
+    (ObjectDescriptorCallback)DIMDismountPoint_hitDetect,
+    (ObjectDescriptorCallback)DIMDismountPoint_render,
+    (ObjectDescriptorCallback)DIMDismountPoint_free,
+    (ObjectDescriptorCallback)DIMDismountPoint_getObjectTypeId,
+    DIMDismountPoint_getExtraSize,
+    (ObjectDescriptorCallback)DIMDismountPoint_setScale,
+    (ObjectDescriptorCallback)DIMDismountPoint_func0B,
+};
