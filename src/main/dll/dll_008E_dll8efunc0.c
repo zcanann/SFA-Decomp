@@ -187,15 +187,15 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)buf.ctx != 0 && (u32)posSource != 0)
         {
-            buf.pos[0] += *(f32*)(buf.ctx + 0x18) + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] += *(f32*)(buf.ctx + 0x1c) + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1138 + (*(f32*)(buf.ctx + 0x20) + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = lbl_803E1138 + (((GameObject*)buf.ctx)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
         }
         else if ((u32)buf.ctx != 0)
         {
-            buf.pos[0] += *(f32*)(buf.ctx + 0x18);
-            buf.pos[1] += *(f32*)(buf.ctx + 0x1c);
-            buf.pos[2] += *(f32*)(buf.ctx + 0x20);
+            buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ;
         }
         else if ((u32)posSource != 0)
         {
