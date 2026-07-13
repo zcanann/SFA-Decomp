@@ -15,6 +15,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/gameplay_runtime.h"
+#include "main/shader_api.h"
 #include "main/voxmaps.h"
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
@@ -32,7 +33,6 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
 extern u8 gDfpTorchSequenceState;
 extern int gDfpTorchEffectParams[];
-extern void objUpdateOpacity(int);
 
 int DFP_Torch_getExtraSize(void)
 {
@@ -159,7 +159,7 @@ void DFP_Torch_update(int obj)
 
     prm = *(TorchPrm*)gDfpTorchEffectParams;
     Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
-    objUpdateOpacity(obj);
+    objUpdateOpacity((GameObject*)obj);
     switch (state->mode)
     {
     case DFPTORCH_MODE_ALWAYS_LIT:

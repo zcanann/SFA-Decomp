@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
+#include "main/shader_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_016C_dll16c.h"
@@ -42,7 +43,6 @@ extern f32 lbl_803E4758;
 extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
-extern int objUpdateOpacity(int* obj);
 
 void dll_16C_release(void)
 {
@@ -109,7 +109,7 @@ void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
         if (hit != 0)
         {
             obj->anim.flags |= 8;
-            visible = objUpdateOpacity((int*)linkedObj);
+            visible = objUpdateOpacity(linkedObj);
             dll_16C_syncSubObjectTransform(obj, linkedObj, p1, p2, p3, p4, visible, extra->opacity, 1);
         }
         else

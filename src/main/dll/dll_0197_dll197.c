@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/resource.h"
+#include "main/shader_api.h"
 #include "main/gamebits.h"
 #include "main/camera.h"
 #include "main/objhits.h"
@@ -71,7 +72,6 @@ __declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
 
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void objUpdateOpacity(int obj);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
 extern void nwsh_levcon_free();
@@ -113,7 +113,7 @@ void dll_197_update(int obj)
         Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     }
 
-    objUpdateOpacity(obj);
+    objUpdateOpacity((GameObject*)obj);
 
     if (state->hitCooldown > 0)
     {

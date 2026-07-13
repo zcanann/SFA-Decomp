@@ -7,6 +7,7 @@
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
+#include "main/shader_api.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
@@ -41,7 +42,6 @@ extern void modelLightStruct_freeSlot(void* handle);
 extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int objUpdateOpacity(char* obj);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
@@ -156,7 +156,7 @@ void ProximityMine_update(ProximityMineObject* obj)
         obj->height += state->verticalStep * timeDelta;
         if (state->targetObj != NULL)
         {
-            if (objUpdateOpacity(state->targetObj) != 0)
+            if (objUpdateOpacity((GameObject*)state->targetObj) != 0)
             {
                 ObjPath_GetPointWorldPosition((GameObject*)state->targetObj, obj->pathIndex, &obj->posX, &obj->posY,
                                                &obj->posZ,

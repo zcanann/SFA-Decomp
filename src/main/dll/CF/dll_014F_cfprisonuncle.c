@@ -15,6 +15,7 @@
 #include "main/objseq.h"
 #include "main/objprint.h"
 #include "main/objlib.h"
+#include "main/shader_api.h"
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
@@ -26,7 +27,6 @@ extern f32 lbl_803E428C;
 extern f32 lbl_803E4288;
 extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern int objUpdateOpacity(int sub);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a
  * one-shot +2 magic (the Power Room key comes from the script) */
@@ -65,7 +65,7 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     CfPrisonUncleState* sub = obj->extra;
     if (mainGetBit(GAMEBIT_CF_UncleFlewOff) != 0)
     {
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
+        if (*(void**)&sub->target != NULL && objUpdateOpacity((GameObject*)sub->target) != 0)
         {
             ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
                                                                                   lbl_803E4288);
@@ -75,7 +75,7 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     {
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
                                                                                     lbl_803E4288);
-        if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
+        if (*(void**)&sub->target != NULL && objUpdateOpacity((GameObject*)sub->target) != 0)
         {
             ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
                                                                                   lbl_803E4288);
@@ -87,7 +87,7 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         {
             if (visible != 0)
             {
-                if (objUpdateOpacity(sub->target) != 0)
+                if (objUpdateOpacity((GameObject*)sub->target) != 0)
                 {
                     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
                                                                                           lbl_803E4288);
@@ -101,7 +101,7 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         }
         else
         {
-            if (objUpdateOpacity(sub->target) != 0)
+            if (objUpdateOpacity((GameObject*)sub->target) != 0)
             {
                 ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
                                                                                       lbl_803E4288);

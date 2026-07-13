@@ -6,6 +6,7 @@
 #include "main/gameplay_runtime.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
+#include "main/shader_api.h"
 #include "main/camera.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
@@ -26,7 +27,6 @@ __declspec(section ".sdata2") f32 lbl_803E51E8 = 0.1f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E51EC = 0.0f;
 #pragma explicit_zero_data off
-extern int objUpdateOpacity(char* obj);
 extern s8 gDimTrickyEggSequenceStage;
 extern u32 gDimTrickyEggResArgsTemplate[4];
 
@@ -207,7 +207,7 @@ void dll_19E_update(void* obj)
     *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)gDimTrickyEggResArgsTemplate;
 
     ((void (*)(void*, int))Sfx_PlayFromObject)(obj, SFXmn_eggylaugh216);
-    objUpdateOpacity(obj);
+    objUpdateOpacity((GameObject*)obj);
     if (state->settleTimer > 0)
     {
         state->settleTimer -= framesThisStep;

@@ -1883,7 +1883,7 @@ extern f32 lbl_803DEBD4;
 extern f32 lbl_803DEBD8;
 extern f32 lbl_803DEBDC;
 
-int objUpdateOpacity(char* obj)
+int objUpdateOpacity(GameObject* obj)
 {
     u8 op;
     char* ptr;
@@ -1902,20 +1902,20 @@ int objUpdateOpacity(char* obj)
     op = ((GameObject*)obj)->anim.alpha;
     if (op == 0)
     {
-        *(u8*)(obj + 0x37) = 0;
+        *(u8*)((char*)obj + 0x37) = 0;
         return 0;
     }
     ptr = (void*)((GameObject*)obj)->anim.placementData;
     if (ptr != 0 && (*(u8*)(ptr + 5) & 1))
     {
-        *(u8*)(obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
+        *(u8*)((char*)obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
     }
     else
     {
-        range = *(f32*)(obj + 0x40);
+        range = *(f32*)((char*)obj + 0x40);
         if (range < lbl_803DEBB8)
         {
-            *(u8*)(obj + 0x37) = 0;
+            *(u8*)((char*)obj + 0x37) = 0;
             return 0;
         }
         player = Obj_GetPlayerObject();
@@ -1931,7 +1931,7 @@ int objUpdateOpacity(char* obj)
         }
         if (d > range)
         {
-            *(u8*)(obj + 0x37) = 0;
+            *(u8*)((char*)obj + 0x37) = 0;
             return 0;
         }
         alpha = 255;
@@ -1951,16 +1951,16 @@ int objUpdateOpacity(char* obj)
         sz = sz * gMapBlockWorldSize;
         if (sz < 10.0f)
         {
-            *(u8*)(obj + 0x37) = 0;
+            *(u8*)((char*)obj + 0x37) = 0;
             return 0;
         }
         if (sz < 15.0f)
         {
             alpha = (int)(((f32)alpha * (sz - 10.0f)) / 5.0f);
         }
-        *(u8*)(obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
+        *(u8*)((char*)obj + 0x37) = (u8)((alpha * (((GameObject*)obj)->anim.alpha + 1)) >> 8);
     }
-    if (*(u8*)(obj + 0x37) == 0)
+    if (*(u8*)((char*)obj + 0x37) == 0)
     {
         return 0;
     }

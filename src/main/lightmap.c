@@ -1355,7 +1355,6 @@ void lightmap_sortTransparentDrawQueue(void)
 
 
 extern int ObjList_PartitionForRender(int* count);
-extern int objUpdateOpacity(u8 * obj);
 extern void shadowCreate(u8 * obj);
 extern void shadowRenderFn_8006b558(u8 * obj);
 extern void renderShadows(int a, int b, int c);
@@ -1410,7 +1409,7 @@ void getVisibleObjects(s8* opacity)
         }
         if (i >= part)
         {
-            *cur = objUpdateOpacity(o);
+            *cur = objUpdateOpacity((GameObject*)o);
             if (*cur != 0 || (((ObjAnimComponent*)o)->modelInstance->flags & 0x200000) != 0)
             {
                 if ((((ObjAnimComponent*)o)->modelInstance->flags & 0x80000) != 0)
