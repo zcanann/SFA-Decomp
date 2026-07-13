@@ -2,29 +2,11 @@
  * dim2roofrub (DLL 0xC7) - DIM2 roof-rub object and shared DLL glue.
  * The dim2roofrub object is a GC-map interactive surface that triggers
  * animation sequences and particle effects when the player walks over it.
- * This TU also carries the object-descriptor tables and forward-declaration
- * stubs for every other object type bundled into this DLL (StaticCamera,
- * MikaBomb, Staff, Fireball, FlameThrowerSpe, Shield, AnimatedObj,
- * DepthOfFieldPoint, GCbaddieShield, BaddieInterestP, Pollen,
- * PollenFragment, KaldaChompSpit, PinPonSpike, Curve, ReStartMarker,
- * DLL_F7, Checkpoint4).
  */
 #include "main/shader_api.h"
 #include "main/objfx.h"
 #include "main/objprint_dolphin.h"
-#include "main/dll/dll_00E5_shield_api.h"
-#include "main/dll/dll_00DD_gcbaddieshield_api.h"
-#include "main/dll/dll_00DC_mikabombshadow_api.h"
-#include "main/dll/dll_00DB_mikabomb_api.h"
-#include "main/dll/dll_00DE_baddieinterestp_api.h"
-#include "main/dll/dll_00E2_staff_api.h"
-#include "main/dll/dll_00C6_animatedobj_api.h"
 #include "main/dll/DIM/dll_00C7_dim2roofrub_api.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
-#include "main/dll/dll_00E6_restartmarker.h"
-#include "main/dll/dll_00F7_dllf7_api.h"
-#include "main/dll/dll_0125_curve_api.h"
-#include "main/dll/dll_025A_staticcamera.h"
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/object_render_legacy.h"
 
@@ -34,9 +16,6 @@ extern f32 timeDelta;
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/objseq.h"
-#include "main/dll/dll_00C8_depthoffieldpoint_api.h"
-#include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/objlib.h"
 
 #define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800
