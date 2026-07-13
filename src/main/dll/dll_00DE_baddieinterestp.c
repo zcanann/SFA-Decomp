@@ -10,6 +10,7 @@
  */
 
 #include "main/dll/xyzanimator.h"
+#include "main/dll/dll_00DE_baddieinterestp_api.h"
 #include "main/object_render_legacy.h"
 #include "main/sky_interface.h"
 #include "main/game_object.h"
