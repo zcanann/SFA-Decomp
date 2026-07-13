@@ -53,13 +53,4 @@ void FUN_8003c10c(int param_1, int* param_2);
 u32 FUN_8003c1f8(int param_1, int* param_2, int param_3);
 void FUN_8003cb48(u32 param_1, u32 param_2, int param_3);
 
-/* extern-cleanup: defining-file public prototypes */
-void modelCalcVtxGroupMtxs(int def, int model);
-void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
-void fn_80039B54(int obj, s16* curve, s16* state, f32 val);
-
-void fn_80039264(s32* state);
-void objModelAndSoundFn_80039118(int obj, int state);
-void objModelClearVecFn_8003aa40(GameObject* obj);
-
 #endif /* MAIN_OBJPRINT_H_ */

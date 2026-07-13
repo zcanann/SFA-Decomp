@@ -12,6 +12,9 @@ void fn_8003A168(GameObject* obj, int state);
 void fn_8003B608(s16 red, s16 green, s16 blue);
 void fn_8003B5E0(int red, int green, int blue, u8 alpha);
 void fn_8003B950(f32* matrix);
+void modelCalcVtxGroupMtxs(int def, int model);
+void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
+void objModelClearVecFn_8003aa40(GameObject* obj);
 
 #define fn_8003B5E0IntAlphaLegacy(red, green, blue, alpha) \
     ((void (*)(int, int, int, int))fn_8003B5E0)((red), (green), (blue), (alpha))

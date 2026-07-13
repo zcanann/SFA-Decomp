@@ -32,6 +32,8 @@ STATIC_ASSERT(sizeof(ObjSoundDef) == 6);
 void objAudioFn_80039270(u32 obj, void* state, u16 sfxId);
 void objAudioFn_800393f8(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int volume, u8 force);
 void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force);
+void fn_80039264(s32* state);
+void objModelAndSoundFn_80039118(int obj, int state);
 
 #define objAudioFn_800393f8Legacy(obj, state, sfx, pitch, volume, force)                                         \
     ((void (*)(GameObject*, ObjSoundState*, int, int, int, int))objAudioFn_800393f8)(                             \
