@@ -20,7 +20,6 @@ void mapSetupPlayer(void);
 u32 rand(void);
 void resetYbutton(void);
 int return0_8002A5B8();
-void salHandleAuxProcessing(void);
 void timeListFn_8012df14(void);
 void viewFn_80129c74(void);
 
