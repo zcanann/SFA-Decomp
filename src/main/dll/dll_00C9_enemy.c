@@ -1034,6 +1034,29 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     return n;
 }
 
+u32 gEnemySelfAngleFlagClearMask[] = {
+    0x40000, 0x80000, 0x80000, 0x10000, 0x10000, 0x20000, 0x20000, 0x40000,
+};
+
+u32 gEnemyTargetAngleFlagClearMask[] = {
+    0x10000, 0x20000, 0x20000, 0x40000, 0x40000, 0x80000, 0x80000, 0x10000,
+};
+
+void* gBaddieObjDescriptor[14] = {(void*)0x00000000,
+                                  (void*)0x00000000,
+                                  (void*)0x00000000,
+                                  (void*)0x00090000,
+                                  enemy_initialise,
+                                  enemy_release,
+                                  (void*)0x00000000,
+                                  enemy_init,
+                                  enemy_update,
+                                  enemy_hitDetect,
+                                  enemy_render,
+                                  enemy_free,
+                                  enemy_getObjectTypeId,
+                                  enemy_getExtraSize};
+
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
 {
     extern void fn_8014B878(int* node, int* sub);
@@ -2130,10 +2153,3 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
     }
 }
 
-u32 gEnemySelfAngleFlagClearMask[] = {
-    0x40000, 0x80000, 0x80000, 0x10000, 0x10000, 0x20000, 0x20000, 0x40000,
-};
-
-u32 gEnemyTargetAngleFlagClearMask[] = {
-    0x10000, 0x20000, 0x20000, 0x40000, 0x40000, 0x80000, 0x80000, 0x10000,
-};
