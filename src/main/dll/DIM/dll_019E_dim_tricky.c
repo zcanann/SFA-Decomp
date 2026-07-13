@@ -29,7 +29,7 @@ __declspec(section ".sdata2") f32 lbl_803E51E8 = 0.1f;
 __declspec(section ".sdata2") f32 lbl_803E51EC = 0.0f;
 #pragma explicit_zero_data off
 extern s8 gDimTrickyEggSequenceStage;
-extern u32 gDimTrickyEggResArgsTemplate[4];
+__declspec(section ".rodata") u32 gDimTrickyEggResArgsTemplate[4] = {0x3E7, 0x8C, 0x8D, 0x28};
 
 /* Partfx: idle sparkle emitted in render while the object is visible (losVisible);
  * the egg-activation burst emitted 100x in update when the egg turns active. */
