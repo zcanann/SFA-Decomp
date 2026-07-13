@@ -195,3 +195,29 @@ void Effect13_release(void)
 void Effect13_initialise(void)
 {
 }
+
+typedef struct EffectObjectDescriptor {
+    u32 reserved0;
+    u32 reserved1;
+    u32 reserved2;
+    u32 slotCountAndFlags;
+    ObjectDescriptorCallback initialise;
+    ObjectDescriptorCallback release;
+    ObjectDescriptorCallback slot02;
+    ObjectDescriptorCallback func03;
+    ObjectDescriptorCallback func04;
+    ObjectDescriptorCallback func05;
+} EffectObjectDescriptor;
+
+EffectObjectDescriptor lbl_80310FB8 = {
+    0,
+    0,
+    0,
+    0x00050000,
+    (ObjectDescriptorCallback)Effect13_initialise,
+    (ObjectDescriptorCallback)Effect13_release,
+    0,
+    (ObjectDescriptorCallback)Effect13_func03_nop,
+    (ObjectDescriptorCallback)Effect13_func04,
+    (ObjectDescriptorCallback)Effect13_func05_nop,
+};
