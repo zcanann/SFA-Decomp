@@ -441,8 +441,20 @@ void dll_107_update(GameObject* obj)
 }
 #pragma opt_common_subs reset
 
-void dll_107_init(int obj, int p)
+typedef struct WindLift107Placement
 {
+    u8 pad0[0x18 - 0x0];
+    s8 rotXParam;    /* 0x18: <<8 -> anim.rotX seed */
+    s8 radiusParam;  /* 0x19: * gWindLift107RadiusScale -> radius */
+    u8 pad1a[0x1c - 0x1a];
+    s16 reloadParam; /* 0x1c: hold/reload scale (* 0x34BC0) */
+    s16 unk1e;       /* 0x1e */
+    s16 maxDist;     /* 0x20 */
+} WindLift107Placement;
+
+void dll_107_init(int obj, int pArg)
+{
+    WindLift107Placement* p = (WindLift107Placement*)pArg;
     WindLift107State* sub;
     int p54;
     int p64;
@@ -458,7 +470,7 @@ void dll_107_init(int obj, int p)
     sub->ventState = 0;
     sub->launchPhase = 0;
     {
-        s16 v = *(s16*)(p + 0x1c);
+        s16 v = p->reloadParam;
         if (v == 0)
         {
             sub->holdReload = 0;
@@ -474,9 +486,9 @@ void dll_107_init(int obj, int p)
     lbl_803DDAD4 = Resource_Acquire(170, 1);
     sub->timer = 100;
     sub->unk18 = 400;
-    ((GameObject*)obj)->anim.rotX = (s16)(*(char*)(p + 0x18) << 8);
-    sub->unk14 = *(s16*)(p + 0x1e);
-    sub->maxDist = *(s16*)(p + 0x20);
+    ((GameObject*)obj)->anim.rotX = (s16)(p->rotXParam << 8);
+    sub->unk14 = p->unk1e;
+    sub->maxDist = p->maxDist;
     if (sub->maxDist == 0)
     {
         sub->maxDist = 30;
@@ -485,9 +497,9 @@ void dll_107_init(int obj, int p)
     sub->spitTimer = 0;
     sub->glowPulse = 0xff;
     sub->unk27 = 0;
-    if (*(char*)(p + 0x19) != '\0')
+    if (p->radiusParam != '\0')
     {
-        sub->radius = gWindLift107RadiusScale * (f32)(s32) * (char*)(p + 0x19);
+        sub->radius = gWindLift107RadiusScale * (f32)(s32)p->radiusParam;
     }
     else
     {
