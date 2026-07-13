@@ -173,7 +173,7 @@ void fn_80039264(s32* p)
     *p = -1;
 }
 
-extern int lbl_802CAE88[10];
+int lbl_802CAE88[10] = {0, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13};
 
 int* seqFn_800394a0(void)
 {

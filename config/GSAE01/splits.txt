@@ -114,6 +114,7 @@ main/objlib.c:
 main/objprint.c:
 	.text       start:0x80038F38 end:0x8003D6F8
 	.rodata     start:0x802C1B10 end:0x802C1B70
+	.data       start:0x802CAE88 end:0x802CAED0
 
 main/objprint_dolphin.c:
 	.text       start:0x8003D6F8 end:0x800443CC
