@@ -397,6 +397,7 @@ void padUpdate(void)
     u8 toggle;
     u8 other;
     u8 useprev;
+    u8 stickReload;
     s32 i;
 
     padStateBlock = gPadStateBlock;
@@ -536,11 +537,12 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickY = sy;
-            if (*prevStickY < -35)
+            stickReload = *(volatile s8*)prevStickY;
+            if ((s8)stickReload < -35)
             {
                 (*repeatY)++;
             }
-            else if (*prevStickY > 35)
+            else if ((s8)stickReload > 35)
             {
                 (*repeatY)++;
             }
@@ -554,11 +556,12 @@ void padUpdate(void)
                 *repeatY = 0;
             }
             *prevStickX = sx;
-            if (*prevStickX < -35)
+            stickReload = *(volatile s8*)prevStickX;
+            if ((s8)stickReload < -35)
             {
                 (*repeatX)++;
             }
-            else if (*prevStickX > 35)
+            else if ((s8)stickReload > 35)
             {
                 (*repeatX)++;
             }
