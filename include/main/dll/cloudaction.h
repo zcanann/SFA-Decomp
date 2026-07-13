@@ -2,6 +2,7 @@
 #define MAIN_DLL_CLOUDACTION_H_
 
 #include "global.h"
+#include "main/dll/cloudaction_interface.h"
 
 typedef struct CloudEnvTbl
 {

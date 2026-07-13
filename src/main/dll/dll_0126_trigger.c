@@ -30,7 +30,7 @@
 #include "main/object.h"
 #include "main/dll/player_api.h"
 #include "main/camera_interface.h"
-#include "main/effect_interfaces.h"
+#include "main/dll/cloudaction_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"

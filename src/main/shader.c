@@ -14,6 +14,7 @@
 #include "main/camera_interface.h"
 #include "main/checkpoint_interface.h"
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/cloudaction_interface.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"

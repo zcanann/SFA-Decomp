@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/sky_interface.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/cloudaction_interface.h"
 #include "main/game_object.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"

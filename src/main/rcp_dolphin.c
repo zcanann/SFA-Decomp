@@ -8,6 +8,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/cloudaction_interface.h"
 #include "main/texture.h"
 #include "main/game_object.h"
 #include "main/gameloop_api.h"

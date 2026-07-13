@@ -14,6 +14,7 @@
  * of SCGameBitLatch records that mirror world state into game bits.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/dll/cloudaction_interface.h"
 #include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"

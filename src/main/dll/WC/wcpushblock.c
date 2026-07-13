@@ -22,6 +22,7 @@
 #include "main/obj_path.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/dll/cloudaction_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 
@@ -102,14 +103,6 @@ typedef struct WCPushBlockState
     f32 liftBase;
 } WCPushBlockState;
 
-typedef struct WCPushBlockCloudActionInterface
-{
-    u8 pad0[0x20];
-    void (*setRotorAngle)(s16 angle);
-    void (*pad24)(void);
-    void (*moveRelative)(f32 x, f32 z);
-} WCPushBlockCloudActionInterface;
-
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID  0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
 #define WCPUSHBLOCK_SPAWN_PATH_POINT 4
@@ -124,7 +117,6 @@ typedef struct WCPushBlockCloudActionInterface
 #define WCPUSHBLOCK_MAX_ROLL          0x32c8
 #define WCPUSHBLOCK_RIDE_MOVE_ID      0xf
 
-extern WCPushBlockCloudActionInterface** gCloudActionInterface;
 extern f32 lbl_803E5C70;
 extern f32 lbl_803E5C74;
 extern f32 lbl_803E5C78;
@@ -214,7 +206,7 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
 
     (void)obj;
 
-    (*gCloudActionInterface)->setRotorAngle(state->rotorAngle);
+    (*gCloudActionInterface)->func10Nop(state->rotorAngle);
 
     angle = (lbl_803E5C84 * state->rotorAngle) / lbl_803E5C88;
     rotorCos = mathCosf(angle);
@@ -245,7 +237,7 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState* state)
     moveX = moveX * timeDelta;
     moveZ = moveZ / lbl_803E5C98;
     moveX = moveX / lbl_803E5C98;
-    (*gCloudActionInterface)->moveRelative(moveZ, moveX);
+    (*gCloudActionInterface)->func12Nop(moveZ, moveX);
 }
 
 void WCPushBlock_UpdateRideTilt(WCPushBlockObject* obj, WCPushBlockState* state)
