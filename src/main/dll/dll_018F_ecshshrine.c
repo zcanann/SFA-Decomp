@@ -45,6 +45,7 @@
 #include "main/object_api.h"
 #include "main/render.h"
 #include "main/dll/mmshrineanimobj_struct.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 #include "main/dll/mmshrine/ecsh_shrine_state.h"
 #include "main/dll/mmshrine/ecsh_shrine.h"
@@ -193,7 +194,7 @@ u32 gECSH_ShrineObjDescriptor[19] = {0x00000000,
 
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
-    u8* config;
+    ObjPlacement* config;
     MmShrineAnimState* state;
     GameObject* player;
     f32 trigA;
@@ -202,14 +203,14 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
     s32 angleDelta;
     ObjAnimEventList animEvents;
 
-    config = obj->config;
+    config = (ObjPlacement*)obj->config;
     state = (MmShrineAnimState*)obj->state;
     player = Obj_GetPlayerObject();
 
     if ((obj->flags & MMSHRINE_FLAG_POSE_LOCKED) != 0)
     {
         obj->yaw = 0;
-        obj->posY = *(f32*)(config + 0xC);
+        obj->posY = config->posY;
         return;
     }
 
@@ -218,7 +219,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
     state->orbitC = (s16)(state->orbitC + (s32)(gEcShShrineOrbitSpeedC * timeDelta));
 
     obj->posY =
-        lbl_803E4F9C + (*(f32*)(config + 0xC) + mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
+        lbl_803E4F9C + (config->posY + mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
 
     trigA = mathSinf((gEcShShrinePi * state->orbitB) / gEcShShrineAngleUnitScale);
     trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
