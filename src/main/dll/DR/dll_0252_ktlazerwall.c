@@ -12,6 +12,7 @@
  * frame's flags so sfx fire on edges.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
 

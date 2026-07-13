@@ -19,6 +19,7 @@
  * game bit.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/pad.h"
 #include "main/object.h"
 #include "main/dll/savegame.h"
 #include "main/debug.h"

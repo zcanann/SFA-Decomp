@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0273_firepipe.h"
 #include "main/vecmath.h"
 #include "main/object.h"
 #include "main/dll/dll_0282_barrelgener.h"
@@ -97,7 +98,7 @@ typedef struct DrLaserCannonState
     DrLaserCannonAim aim;
     u8 pad176[DR_LASERCANNON_STATE_WARNING_OBJECT - 0x176];
     GameObject* warningObject;
-    int firepipeObject;
+    FirePipeObject* firepipeObject;
     int activeFrames;
     int hitExcludeType;
     f32 bobOffset;
@@ -272,10 +273,10 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
 void DR_LaserCannon_free(GameObject* obj)
 {
     DrLaserCannonState* state = (obj)->extra;
-    if ((void*)state->firepipeObject != NULL)
+    if (state->firepipeObject != NULL)
     {
         firepipe_clearLinkedUpdateFlag(state->firepipeObject);
-        ObjLink_DetachChild(obj, state->firepipeObject);
+        ObjLink_DetachChild(obj, (int)state->firepipeObject);
     }
     if (state->warningObject != NULL)
     {
@@ -467,11 +468,11 @@ void DR_LaserCannon_update(GameObject* obj)
     if (state->flags.b7 != 0)
     {
         nearDist = lbl_803E68F8;
-        if ((state->firepipeObject = ((int (*)(int, void*, f32*))ObjGroup_FindNearestObject)(
+        if ((state->firepipeObject = ((FirePipeObject* (*)(int, GameObject*, f32*))ObjGroup_FindNearestObject)(
                  DR_LASERCANNON_FIREPIPE_GROUP_ID, obj, &nearDist)) != 0u)
         {
             state->hasFirepipe = 1;
-            ((void (*)(void*, int, int))ObjLink_AttachChild)(obj, state->firepipeObject, 0);
+            ((void (*)(GameObject*, FirePipeObject*, int))ObjLink_AttachChild)(obj, state->firepipeObject, 0);
             firepipe_setLinkedUpdateFlag(state->firepipeObject);
         }
         state->flags.b7 = 0;
@@ -603,12 +604,12 @@ void DR_LaserCannon_update(GameObject* obj)
                 break;
             }
         }
-        else if ((void*)state->firepipeObject != NULL)
+        else if (state->firepipeObject != NULL)
         {
             firepipe_clearLinkedUpdateFlag(state->firepipeObject);
         }
     }
-    spawned = state->firepipeObject;
+    spawned = (int)state->firepipeObject;
     if ((void*)spawned != NULL)
     {
         if ((((GameObject*)spawned)->objectFlags & DRLASERCANNON_OBJFLAG_FREED) != 0)
