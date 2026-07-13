@@ -4,7 +4,7 @@
  * hides the cog or triggers an animation sequence depending on the gamebit
  * value; also fires sequence events from the SeqFn callback.
  */
-#include "main/dll/DIM/DIM2conveyor.h"
+#include "main/dll/DIM/dll_01C8_dimbridgecogmai.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/objlib.h"
