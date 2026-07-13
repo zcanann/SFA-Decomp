@@ -2836,7 +2836,7 @@ void pauseMenuFn_80129ee0(void)
                 ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
                 lbl_803DD781 = 0;
             }
-            if ((s8)analogX == 0 || lbl_803DD78C == 0 || lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
+            if ((s8)analogX != 0 || lbl_803DD78C == 0 || lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
             {
                 switch ((s8)lbl_803DBA64)
                 {
@@ -2853,7 +2853,7 @@ void pauseMenuFn_80129ee0(void)
                 }
                 {
                     u8 prev = lbl_803DBA64;
-                    *(u8*)&lbl_803DBA64 = prev + analogX;
+                    *(u8*)&lbl_803DBA64 += analogX;
                     if ((s8)lbl_803DBA64 < menuMin)
                     {
                         lbl_803DBA64 = menuMax;
