@@ -178,10 +178,12 @@ dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 main/dll/cloudaction.c:
 	.text       start:0x800944A0 end:0x80094F7C
 	.data       start:0x8030F7B0 end:0x8030F86C
+	.bss        start:0x8039AB28 end:0x8039AB48
 
 main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994
 	.data       start:0x8030F86C end:0x8030F898
+	.bss        start:0x8039AB48 end:0x8039AB58
 
 main/dll/viewfinder.c:
 	.text       start:0x80096994 end:0x800969B0
@@ -569,8 +571,8 @@ main/dll/dll_008D_dll8dfunc0.c:
 main/dll/dll_008E_dll8efunc0.c:
 	.text       start:0x800F977C end:0x800F9E78
 	.data       start:0x80316C40 end:0x80316E30
-	.sdata2     start:0x803E1170 end:0x803E1398
 	.sdata2     start:0x803E1138 end:0x803E1170
+	.sdata2     start:0x803E1170 end:0x803E1398
 
 main/dll/dll_008F_dll8ffunc0.c:
 	.text       start:0x800F9E78 end:0x800FA16C
