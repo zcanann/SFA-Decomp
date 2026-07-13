@@ -18,8 +18,8 @@
  */
 #include "main/dll/alphaanim.h"
 #include "main/dll/IM/dll_0114_immultiseq.h"
+#include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_0113_seqobj2.h"
-#include "main/dll/seqobjectstate_struct.h"
 #include "main/dll/doorlockstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"

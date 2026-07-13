@@ -10,6 +10,7 @@
 #include "main/dll/dll_00DF_hagabon.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
 #include "main/dll/dll_00ED_collectible_api.h"
+#include "main/dll/dll_0112_seqobject.h"
 #include "main/dll/dll_0113_seqobj2.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0293_suntemple.h"
@@ -171,7 +172,7 @@ extern ResourceDescriptor gSC_totemstrengthObjDescriptor, gSH_BeaconObjDescripto
     gSH_LevelControlObjDescriptor, gSH_queenearthwalkerObjDescriptor, gSH_staffHazeObjDescriptor,
     gSH_staffObjDescriptor, gSH_thorntailObjDescriptor;
 extern ResourceDescriptor gSH_trickyObjDescriptor, gSPDrapeObjDescriptor, gSPScarabObjDescriptor,
-    gSPitembeamObjDescriptor, gScarabObjDescriptor, gSeqObjectObjDescriptor, gSeqPointObjDescriptor;
+    gSPitembeamObjDescriptor, gScarabObjDescriptor, gSeqPointObjDescriptor;
 extern ResourceDescriptor gSetuppointObjDescriptor, gSfxPlayerObjDescriptor, gSfxplayerObjDescriptor,
     gShieldObjDescriptor, gShipBattleObjDescriptor, gShopItemObjDescriptor, gShopKeeperObjDescriptor,
     gShopObjDescriptor;
@@ -1171,7 +1172,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gMMP_BridgeObjDescriptor,
     &gDoorObjDescriptor,
     &gDoorLockObjDescriptor,
-    &gSeqObjectObjDescriptor,
+    (ResourceDescriptor*)&gSeqObjectObjDescriptor,
     (ResourceDescriptor*)&gSeqObj2ObjDescriptor,
     (ResourceDescriptor*)&gIMMultiSeqObjDescriptor,
     &lbl_80321428,

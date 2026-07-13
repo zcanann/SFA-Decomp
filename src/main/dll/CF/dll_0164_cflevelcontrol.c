@@ -14,7 +14,7 @@
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
-#include "main/dll/alphaanim.h"
+#include "main/dll/dll_0112_seqobject.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"

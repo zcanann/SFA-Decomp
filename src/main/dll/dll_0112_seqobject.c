@@ -11,8 +11,7 @@
  * objCallOnloadCallback is a small helper exported for other DLLs (cflevelcontrol)
  * to invoke an object's vtable slot 1 on its placement data.
  */
-#include "main/dll/alphaanim.h"
-#include "main/dll/seqobjectstate_struct.h"
+#include "main/dll/dll_0112_seqobject.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
 #include "main/gamebits.h"
