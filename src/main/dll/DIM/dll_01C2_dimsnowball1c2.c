@@ -10,6 +10,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
@@ -57,8 +58,6 @@ typedef struct Dimsnowball1c2Setup
 } Dimsnowball1c2Setup;
 
 extern f32 lbl_803E4860;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
 extern f32 lbl_803E4864;
 
 int dimsnowball1c2_getExtraSize(void)
@@ -111,7 +110,7 @@ void dimsnowball1c2_update(int* obj)
                 ((Dimsnowball1c2Setup*)np)->childZOffset =
                     (f32)(u32)def->childZOffset +
                     (f32)(int)randomGetRange(0, 100) / lbl_803E4864;
-                Obj_SetupObject((int)np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+                Obj_SetupObject(np, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
                 *(s16*)extra = ((Dimsnowball1c2State*)extra)->spawnPeriod;
             }
         }

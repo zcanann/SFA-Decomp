@@ -14,6 +14,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/mapEvent.h"
@@ -98,9 +99,6 @@ typedef struct DllF7State
     s8 byteB;
 } DllF7State;
 
-extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern const f32 lbl_803E3400;
 extern const f32 lbl_803E3404;
 extern f32 lbl_803E3408;
@@ -211,7 +209,7 @@ void dll_F7_update(int* obj)
         }
         if (state->byteB == 0 && (u8)Obj_IsLoadingLocked() != 0)
         {
-            s16* alloc = Obj_AllocObjectSetup(0x30, DLLF7_CHILD_OBJ_GAS);
+            s16* alloc = (s16*)Obj_AllocObjectSetup(0x30, DLLF7_CHILD_OBJ_GAS);
             ((DllF7GasSetup*)alloc)->field1C = -1;
             ((DllF7GasSetup*)alloc)->posX = ((GameObject*)obj)->anim.localPosX;
             ((DllF7GasSetup*)alloc)->posY = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
@@ -219,7 +217,8 @@ void dll_F7_update(int* obj)
             ((DllF7GasSetup*)alloc)->field1A = 3;
             ((DllF7GasSetup*)alloc)->field2C = -1;
             ((DllF7GasSetup*)alloc)->field24 = -1;
-            Obj_SetupObject(alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+            Obj_SetupObject((ObjPlacement*)alloc, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                            ((GameObject*)obj)->anim.parent);
         }
         else
         {

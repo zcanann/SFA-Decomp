@@ -26,6 +26,7 @@
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/model.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/dll_000A_expgfx.h"
@@ -102,8 +103,6 @@ STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
 STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
-extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
-extern void* Obj_AllocObjectSetup(int size, int b);
 extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void postRenderSetAlphaBlendState(void);
@@ -154,14 +153,14 @@ GameObject* fn_801702D4(GameObject* obj, f32 fv)
     GameObject* new_obj;
     if ((u8)Obj_IsLoadingLocked() == 0)
         return NULL;
-    alloc = Obj_AllocObjectSetup(36, 2102);
+    alloc = (void*)Obj_AllocObjectSetup(36, 2102);
     ((ObjPlacement*)alloc)->posX = obj->anim.worldPosX;
     ((ObjPlacement*)alloc)->posY = obj->anim.worldPosY;
     ((ObjPlacement*)alloc)->posZ = obj->anim.worldPosZ;
     ((ObjPlacement*)alloc)->color[0] = 1;
     ((ObjPlacement*)alloc)->color[1] = 1;
     ((ObjPlacement*)alloc)->color[3] = 255;
-    new_obj = (GameObject*)Obj_SetupObject(alloc, 5, -1, -1, 0);
+    new_obj = Obj_SetupObject((ObjPlacement*)alloc, 5, -1, -1, 0);
     if (new_obj != NULL)
     {
         new_obj->anim.rootMotionScale = fv;

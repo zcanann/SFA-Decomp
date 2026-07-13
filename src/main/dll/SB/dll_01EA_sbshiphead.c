@@ -13,6 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -44,8 +45,6 @@ extern int DBprotection_getCameraState(u32 g);
 extern u32 getSbGalleon(void);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* setup, int a, int b, int c, int d);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
 extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
@@ -249,7 +248,7 @@ void SB_ShipHead_update(GameObject* obj)
         Obj_GetWorldPosition((int)obj, &px, &py, &pz);
         object->anim.localPosY = object->anim.localPosY - lbl_803E5848;
         object->anim.localPosZ += lbl_803E584C;
-        setup = Obj_AllocObjectSetup(0x18, SB_FIREBALL_OBJID);
+        setup = (u8*)Obj_AllocObjectSetup(0x18, SB_FIREBALL_OBJID);
         setup[6] = 0xff;
         setup[7] = 0xff;
         setup[4] = 2;
@@ -257,7 +256,7 @@ void SB_ShipHead_update(GameObject* obj)
         ((ObjPlacement*)setup)->posX = px;
         ((ObjPlacement*)setup)->posY = py;
         ((ObjPlacement*)setup)->posZ = pz;
-        proj = Obj_SetupObject(setup, 5, -1, -1, 0);
+        proj = (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         ddx = ((GameObject*)player)->anim.worldPosX - ((GameObject*)proj)->anim.localPosX;
         ddy = (((GameObject*)player)->anim.worldPosY - gSbShipHeadFireballSpeed) - ((GameObject*)proj)->anim.localPosY;
         ddz = ((GameObject*)player)->anim.worldPosZ - ((GameObject*)proj)->anim.localPosZ;
@@ -272,7 +271,7 @@ void SB_ShipHead_update(GameObject* obj)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_gcexp1_c);
         player = (int)Obj_GetPlayerObject();
-        setup = Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJID);
+        setup = (u8*)Obj_AllocObjectSetup(0x18, SB_PROJECTILE_OBJID);
         ((ObjPlacement*)setup)->posX = lbl_803E5854 + ((GameObject*)player)->anim.worldPosX;
         ((ObjPlacement*)setup)->posY =
             lbl_803E5848 + (((GameObject*)player)->anim.worldPosY + (f32)(int)randomGetRange(-6, 6));
@@ -282,7 +281,7 @@ void SB_ShipHead_update(GameObject* obj)
         setup[5] = 1;
         setup[6] = 0xff;
         setup[7] = 0xff;
-        Obj_SetupObject(setup, 5, -1, -1, 0);
+        Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
     }
     proj = ObjAnim_AdvanceCurrentMove((int)obj, gSbShipHeadAnimAdvanceRate, timeDelta,
                                                                        NULL);

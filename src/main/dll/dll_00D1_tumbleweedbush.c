@@ -27,6 +27,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00D1_tumbleweedbush.h"
 #include "main/obj_placement.h"
@@ -75,8 +76,6 @@ extern u8 gTumbleweedBushHitCooldownState;
 
 extern f32 lbl_803E2F44;
 extern f32 gTumbleweedBushNearestInitDist;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(int* obj, int a, int b, int c, void* d);
 extern void* ObjList_GetObjects(int* outA, int* outB);
 extern f32 lbl_803E2F40;
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
@@ -350,7 +349,7 @@ s8 fn_801631C8(int* obj)
     if (Obj_IsLoadingLocked() == 0)
         return -1;
 
-    newObj = Obj_AllocObjectSetup(0x20, siblingType);
+    newObj = (int*)Obj_AllocObjectSetup(0x20, siblingType);
     ((ObjPlacement*)newObj)->posX =
         ((GameObject*)obj)->anim.localPosX + ((TumbleweedBushState*)state)->pieceOffsets[freeSlot][0];
     ((ObjPlacement*)newObj)->posY =
@@ -390,8 +389,8 @@ s8 fn_801631C8(int* obj)
     }
 
     {
-        int* setup =
-            Obj_SetupObject(newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, ((GameObject*)obj)->anim.parent);
+        int* setup = (int*)Obj_SetupObject((ObjPlacement*)newObj, 5, ((GameObject*)obj)->anim.mapEventSlot, -1,
+                                           ((GameObject*)obj)->anim.parent);
         u8* slotBase = state + 0xc;
         *(int**)(slotBase + freeSlot * 4) = setup;
         {

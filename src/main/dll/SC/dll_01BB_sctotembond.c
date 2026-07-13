@@ -20,6 +20,7 @@
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -88,8 +89,6 @@ extern f32 gTotemBondRingRotateSpeed;
 extern f32 gTotemBondCameraDistance;
 extern f32 lbl_803E5650;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* setup, int mode, int mapLayer, int objIndex, int parent);
 extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
 extern void fn_8011F6D4(u32 x);
 
@@ -110,7 +109,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
         while (i < SC_TOTEMBOND_ORB_COUNT)
         {
             definition = obj->definition;
-            setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE, SC_TOTEMBOND_ORB_OBJECT_ID);
+            setup = (u8*)Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE, SC_TOTEMBOND_ORB_OBJECT_ID);
             ((ObjPlacement*)setup)->posX =
                 radius * mathSinf((3.1415927f * (f32)(s32)(obj->yaw + angleOffset)) / 32768.0f) + obj->x;
             ((ObjPlacement*)setup)->posY = obj->y;
@@ -126,7 +125,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* sta
             ((TotemBondOrbPlacement*)setup)->ringGameBit = gTotemBondRingGameBits[orbIndex];
             ((TotemBondOrbPlacement*)setup)->yawByte = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
             ((TotemBondOrbPlacement*)setup)->unk32 = 1;
-            Obj_SetupObject(setup, 5, -1, -1, 0);
+            Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
             orbIndex++;
             if (orbIndex > 7)
             {

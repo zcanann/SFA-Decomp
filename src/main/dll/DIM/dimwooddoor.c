@@ -11,6 +11,7 @@
 #include "main/audio/sfx.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/objprint_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -59,9 +60,6 @@ typedef struct DIMWoodDoorShardState
     u8 hitRadius;
 } DIMWoodDoorShardState;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int Obj_SetupObject(u8* setup, int group, int mapLayer, int param4, int param5);
-
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBEF0;
@@ -97,7 +95,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     }
 
     modelVec = objModelGetVecFn_800395d8((GameObject*)(obj), 0);
-    setup = Obj_AllocObjectSetup(0x24, DIMWOODDOOR_CHILD_OBJ_SHARD);
+    setup = (u8*)Obj_AllocObjectSetup(0x24, DIMWOODDOOR_CHILD_OBJ_SHARD);
     setup[4] = config->setup04;
     setup[6] = config->setup06;
     setup[5] = config->setup05;
@@ -106,7 +104,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     ((ObjPlacement*)setup)->posY = state->targetY;
     ((ObjPlacement*)setup)->posZ = state->targetZ;
 
-    shard = Obj_SetupObject(setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
+    shard = (int)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)obj)->anim.mapEventSlot, -1, 0);
     shardState = *(DIMWoodDoorShardState**)&((GameObject*)shard)->extra;
     shardState->parent = obj;
     shardState->variant = variant;

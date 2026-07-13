@@ -21,6 +21,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/dll/player_api.h"
 #define OBJFX_ARCED_BURST_REORDERED_LEGACY
 #include "main/objfx.h"
@@ -95,11 +96,8 @@ typedef struct StaffDoGrowShrinkAnimState
     u8 padB2[0xB8 - 0xB2];
 } StaffDoGrowShrinkAnimState;
 
-extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern void gxSetPeControl_ZCompLoc_(u32 zCompLoc);
 extern void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable);
-
-extern void* Obj_AllocObjectSetup(int size, int b);
 
 void staff_func0F(void)
 {
@@ -561,7 +559,7 @@ void superQuakeFn_8016d9fc(f32* pos)
         v.h2 = 0;
         v.h1 = 0;
         (*gPartfxInterface)->spawnObject(player, STAFF_PARTFX_QUAKE, &v, 0x200000, -1, NULL);
-        setup = Obj_AllocObjectSetup(36, STAFF_CHILD_OBJ_QUAKE);
+        setup = (void*)Obj_AllocObjectSetup(36, STAFF_CHILD_OBJ_QUAKE);
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[1] = 2;
@@ -570,7 +568,8 @@ void superQuakeFn_8016d9fc(f32* pos)
         ((ObjPlacement*)setup)->posY = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posY;
         ((ObjPlacement*)setup)->posZ = ((StaffQuakeSpellState*)gStaffQuakeSpellState)->posZ;
         ((StaffQuakeSpellState*)gStaffQuakeSpellState)->object =
-            Obj_SetupObject(setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1, ((GameObject*)player)->anim.parent);
+            (int*)Obj_SetupObject((ObjPlacement*)setup, 5, ((GameObject*)player)->anim.mapEventSlot, -1,
+                                  ((GameObject*)player)->anim.parent);
         if (mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0)
         {
             ((ObjAnimComponent*)((StaffQuakeSpellState*)gStaffQuakeSpellState)->object)->bankIndex = 1;

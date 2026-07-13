@@ -19,6 +19,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
@@ -137,9 +138,6 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern WCPushBlockObject* Obj_SetupObject(WCPushBlockObjectSetup* setup, int mode, int mapLayer, int linkId,
-                                          void* parent);
 extern void ObjPath_GetPointWorldPosition(s16* path, int pointIndex, f32* outX, f32* outY, f32* outZ,
                                           int useInputPosition);
 
@@ -169,14 +167,15 @@ void WCPushBlock_SpawnFromPath(s16* path)
     outVec[2] = lbl_803E5C7C;
     vecRotateZXY(&rotation, outVec);
 
-    setup = Obj_AllocObjectSetup(WCPUSHBLOCK_SPAWN_SETUP_SIZE, WCPUSHBLOCK_SPAWN_OBJECT_ID);
+    setup = (WCPushBlockObjectSetup*)Obj_AllocObjectSetup(WCPUSHBLOCK_SPAWN_SETUP_SIZE,
+                                                          WCPUSHBLOCK_SPAWN_OBJECT_ID);
     setup->linkA = 0xff;
     setup->linkB = 0xff;
     setup->placementMode = 2;
     setup->group = 1;
     ObjPath_GetPointWorldPosition(path, WCPUSHBLOCK_SPAWN_PATH_POINT, &setup->x, &setup->y, &setup->z, 0);
 
-    block = Obj_SetupObject(setup, 5, -1, -1, NULL);
+    block = (WCPushBlockObject*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
     if (block == NULL)
     {
         return;

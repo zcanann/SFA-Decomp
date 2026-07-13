@@ -7,6 +7,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 
 #include "main/game_object.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll_000A_expgfx.h"
@@ -77,12 +78,9 @@ typedef struct AnimatedobjState
     u8 pad118[0x140 - 0x118];
 } AnimatedobjState;
 
-extern int* Obj_SetupObject(void* setup, int mode, int mapLayer, int objIndex, void* parent);
 extern u64 ObjLink_DetachChild();
 extern u32 ObjLink_AttachChild();
 extern void** gTitleMenuControlInterfaceCopy;
-extern void* Obj_AllocObjectSetup(int size, int b);
-extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 
@@ -266,8 +264,8 @@ void animatedobj_update(int* obj)
                     {
                         void* alloc;
                         int* child;
-                        alloc = Obj_AllocObjectSetup(0x18, ANIMATEDOBJ_CHILD_OBJ);
-                        child = Obj_SetupObject(alloc, 4, -1, -1, 0);
+                        alloc = (void*)Obj_AllocObjectSetup(0x18, ANIMATEDOBJ_CHILD_OBJ);
+                        child = (int*)Obj_SetupObject((ObjPlacement*)alloc, 4, -1, -1, 0);
                         ObjLink_AttachChild(obj, child, 0);
                         ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
                         ObjAnim_AdvanceCurrentMove(
