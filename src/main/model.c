@@ -229,8 +229,6 @@ void ObjModelChain_AdvancePhase(ObjModelChain* chain)
     }
 }
 
-extern int textureLoad(int id, int flag);
-
 asm
 void setGQR6(register u32 v)
 {
@@ -1086,7 +1084,7 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
         off = i;
         for (; i < h[0xf2]; i++)
         {
-            tex = textureLoad(-(*(int*)(*(int*)(h + 0x20) + off) | 0x8000), 1);
+            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h + 0x20) + off) | 0x8000), 1);
             *(int*)(*(int*)(h + 0x20) + off) = tex;
             off += 4;
         }

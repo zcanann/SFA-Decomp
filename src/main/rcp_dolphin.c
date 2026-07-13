@@ -1774,8 +1774,6 @@ int gRcpTexBankCount[3];
 int* gRcpTexBankTable[3];
 extern u16* gRcpTexIdRemap;
 extern void* gRcpTexHeaderBuffer;
-void* textureLoad(int texId, u8 flag);
-
 void loadTextureFiles(void)
 {
     int* p;
