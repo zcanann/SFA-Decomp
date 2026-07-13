@@ -15,6 +15,7 @@
 #include "main/pad.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_motion_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
 #include "main/maketex.h"
@@ -618,8 +619,8 @@ void fn_802BE6E8(GameObject* obj, int t, int p3)
     {
         (*gGameUIInterface)->runAirMeter(((DREarthWarriorState*)inner)->airMeterCapacity);
     }
-    fn_802B1BF8((int)obj, sub, inner, timeDelta);
-    fn_802B1B28((int)obj, timeDelta);
+    fn_802B1BF8TimeLegacy((int)obj, sub, inner, timeDelta);
+    fn_802B1B28IntObjectLegacy((int)obj, timeDelta);
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
     (*gPathControlInterface)->advance((void*)obj, (void*)(inner + 4), timeDelta);

@@ -10,6 +10,7 @@
 #include "main/objprint_dolphin.h"
 #include "main/dll/objfx_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_motion_api.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/sky_api.h"
 
@@ -7108,7 +7109,7 @@ void playerUpdate(GameObject* obj)
             playerAnimate((int)obj, inner, dt);
             ((void (*)(int, int, f32))staffAnimate)((int)obj, inner, dt);
             fn_802B1E5C(obj, inner, inner, dt);
-            ((void (*)(int, int, int, f32))fn_802B1BF8)((int)obj, inner, inner, dt);
+            fn_802B1BF8TimeLegacy((int)obj, inner, inner, dt);
             {
                 f32 t = obj->anim.velocityX;
                 obj->anim.velocityX =

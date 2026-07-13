@@ -70,13 +70,6 @@ typedef struct
 } MoveSlot;
 typedef struct
 {
-    u8 pad24[0x24];
-    f32 x;
-    f32 y;
-    f32 z;
-} EmitObj;
-typedef struct
-{
     f32 nx, ny, nz, d;
 } EmitPlane;
 typedef struct
@@ -680,7 +673,6 @@ extern f32 lbl_803E7EB4;
 extern void playerShadowFn_80062a30(int obj);
 extern int gPlayerStateHandlers[];
 extern int gPlayerDefaultStateHandler;
-extern void fn_802B0EA4(GameObject* obj, int state, int sub);
 extern s8 playerCheckIfClimbingOntoWall(int obj, int state, int sub, void* out, f32 fv, u32 n);
 extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
@@ -1067,8 +1059,6 @@ void playerStaffInit(GameObject* obj, int state);
 void playerDoEyeAnims(GameObject* obj, int state);
 void fn_802B18BC(GameObject* obj, int state, f32 fv);
 void playerDoControls(GameObject* obj, int state, f32 fv);
-void fn_802B1B28(GameObject* obj, f32 fv);
-void fn_802B1BF8(EmitObj* a, int b, int state);
 void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt);
 void fn_802B2DA4(void);
 void fn_802B4A9C(int obj, int inner, int inner2);

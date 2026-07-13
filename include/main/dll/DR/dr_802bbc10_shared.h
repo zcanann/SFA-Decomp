@@ -118,9 +118,6 @@ extern f32 lbl_803E83EC;
 extern f32 lbl_803E83F0;
 extern int gDRCloudRunnerVecTable[];
 extern s16 gDRCloudRunnerRollAngleLimits;
-extern void fn_802B0EA4(GameObject* obj, int q, int inner);
-extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
-extern void fn_802B1B28(int obj, f32 t);
 extern char sOnCloudFormat[];
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
@@ -136,7 +133,5 @@ extern f32 lbl_803E8300;
 extern f32 lbl_803E8308;
 extern f32 lbl_803E830C;
 extern f32 lbl_803E83FC;
-int dim2prisonmammoth_SeqFn(int obj, int p2, ObjAnimUpdateState* animUpdate);
-void fn_802BF4D8(GameObject* obj);
 
 #endif

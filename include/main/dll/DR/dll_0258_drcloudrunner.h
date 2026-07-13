@@ -83,5 +83,6 @@ void DR_CloudRunner_func23(GameObject* obj, int mode, int* out);
 void DR_CloudRunner_hitDetect(GameObject* obj);
 void DR_CloudRunner_update(GameObject* obj);
 void fn_802BF0C8(GameObject* obj, CloudRunnerState* state, int mode);
+void fn_802BF4D8(GameObject* obj);
 
 #endif /* MAIN_DLL_DR_DLL_0258_DRCLOUDRUNNER_H_ */
