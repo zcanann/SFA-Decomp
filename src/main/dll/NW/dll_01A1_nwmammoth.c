@@ -12,6 +12,8 @@
 #include "main/screen_transition.h"
 #include "main/dll/dim2conveyor.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
+#include "main/dll/NW/dll_01A5_nwlevcontrol.h"
+#include "main/dll/SH/dll_01A6_shtricky.h"
 #include "main/gameplay_runtime.h"
 #include "main/curve.h"
 #include "main/sky_interface.h"
@@ -913,13 +915,6 @@ int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
 int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
 /*__DATA_EXTERNS__*/
-extern void sh_tricky_getExtraSize();
-extern void sh_tricky_update();
-extern void sh_tricky_init();
-extern void nw_levcontrol_getExtraSize();
-extern void nw_levcontrol_free();
-extern void nw_levcontrol_update();
-extern void nw_levcontrol_init();
 extern void NW_ice_getExtraSize();
 extern void NW_ice_free();
 extern void NW_ice_render();

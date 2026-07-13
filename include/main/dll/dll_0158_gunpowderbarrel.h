@@ -18,5 +18,6 @@ void gunpowderbarrel_setHeldState(GameObject* obj);
 void gunpowderbarrel_clearHeldState(GameObject* obj);
 void gunpowderbarrel_addThrowVelocity(GameObject* obj, f32* velocity);
 int gunpowderbarrel_canBeGrabbed(GameObject* obj);
+void gunpowderbarrel_hitDetect(int obj);
 
 #endif

@@ -7,6 +7,7 @@
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
+#include "main/dll/dll_0195_dbshshrine.h"
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
@@ -34,43 +35,34 @@
 
 extern void gpsh_scene_getExtraSize(void);
 extern void ecsh_cup_getExtraSize(void);
-extern void dbsh_shrine_getExtraSize(void);
 
 extern void gpsh_scene_getObjectTypeId(void);
 extern void ecsh_cup_getObjectTypeId(void);
-extern void dbsh_shrine_getObjectTypeId(void);
 
 extern void gpsh_scene_free(void);
 extern void ecsh_cup_free(void);
-extern void dbsh_shrine_free(GameObject *);
 
 extern void gpsh_scene_render(void);
 extern void ecsh_cup_render(void);
-extern void dbsh_shrine_render(GameObject *);
 
 extern void gpsh_scene_hitDetect(void);
 extern void ecsh_cup_hitDetect(void);
-extern void dbsh_shrine_hitDetect(void);
 extern void DBSH_Symbol_getExtraSize(void);
 
 extern void gpsh_scene_update(void);
 extern void ecsh_cup_update(void);
-extern void dbsh_shrine_update(void);
 extern void DBSH_Symbol_free(void);
 
 extern void gpsh_scene_init(void);
 extern void ecsh_cup_init(void);
-extern void dbsh_shrine_init(void);
 extern void DBSH_Symbol_render(void);
 
 extern void gpsh_scene_release(void);
 extern void ecsh_cup_release(void);
-extern void dbsh_shrine_release(void);
 extern void DBSH_Symbol_update(GameObject *);
 
 extern void gpsh_scene_initialise(void);
 extern void ecsh_cup_initialise(void);
-extern void dbsh_shrine_initialise(void);
 extern void DBSH_Symbol_init(void);
 
 #define GPSHSHRINE_OBJGROUP 0xb

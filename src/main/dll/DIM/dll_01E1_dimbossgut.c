@@ -5,6 +5,8 @@
  * hit-volume pair and suppress sequence events.
  */
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
+#include "main/dll/DIM/dll_01E5_dimbossspit.h"
+#include "main/dll/DIM/dll_01E7_dimbossfire.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
@@ -14,15 +16,6 @@ extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern void DIMbossspit_free(void);
-extern void DIMbossspit_getExtraSize(void);
-extern void DIMbossspit_getObjectTypeId(void);
-extern void DIMbossspit_hitDetect(void);
-extern void DIMbossspit_init(void);
-extern void DIMbossspit_initialise(void);
-extern void DIMbossspit_release(void);
-extern void DIMbossspit_render(void);
-extern void DIMbossspit_update(GameObject*);
 extern void DIMbosstonsil_free(GameObject*);
 extern void DIMbosstonsil_func0B(void);
 extern void DIMbosstonsil_getExtraSize(void);
@@ -76,15 +69,6 @@ extern void DIMbosscrackpar_initialise(void);
 extern void DIMbosscrackpar_release(void);
 extern void DIMbosscrackpar_render(void);
 extern void DIMbosscrackpar_update(void);
-extern void dimbossfire_free(GameObject*);
-extern void dimbossfire_getExtraSize(void);
-extern void dimbossfire_getObjectTypeId(void);
-extern void dimbossfire_hitDetect(void);
-extern void dimbossfire_init(GameObject*);
-extern void dimbossfire_initialise(void);
-extern void dimbossfire_release(void);
-extern void dimbossfire_render(void);
-extern void dimbossfire_update(GameObject*);
 #include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 #include "main/dll/dll_01E4_magicmaker.h"
 

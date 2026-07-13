@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/game_object.h"
 #include "main/objanim_update.h"
 
 /* Dbsh shrine carve twins converged (flybaddie.c + scene1C7.c censuses,
@@ -63,6 +64,15 @@ STATIC_ASSERT(offsetof(DbshShrineObject, mapId) == 0xAC);
 STATIC_ASSERT(offsetof(DbshShrineObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(DbshShrineObject, introDelay) == 0xF4);
 
-void dbsh_shrine_update(DbshShrineObject *obj);
+int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate);
+int dbsh_shrine_getExtraSize(void);
+int dbsh_shrine_getObjectTypeId(void);
+void dbsh_shrine_free(GameObject* obj);
+void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible);
+void dbsh_shrine_hitDetect(void);
+void dbsh_shrine_update(DbshShrineObject* obj);
+void dbsh_shrine_init(DbshShrineObject* obj);
+void dbsh_shrine_release(void);
+void dbsh_shrine_initialise(void);
 
 #endif /* MAIN_DLL_SCENE1C7_H_ */
