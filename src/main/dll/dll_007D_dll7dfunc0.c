@@ -20,15 +20,20 @@
 
 extern u8 lbl_80315030[];
 extern int lbl_803DD4B0;
-extern f32 lbl_803E0DD8;
-extern f32 lbl_803E0DDC;
-extern f32 lbl_803E0DE0;
-extern f32 lbl_803E0DE4;
-extern f32 lbl_803E0DE8;
-extern f32 lbl_803E0DEC;
-extern f32 lbl_803E0DF0;
-extern f32 lbl_803E0DF4;
-extern f32 lbl_803E0DF8;
+__declspec(section ".sdata2") f32 lbl_803E0DD8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0DDC = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0DE0 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E0DE4 = 0.9f;
+__declspec(section ".sdata2") f32 lbl_803E0DE8 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E0DEC = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0DF0 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0DF4 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0DF8 = -6.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0DFC = 0.0f;
+#pragma explicit_zero_data off
 
 int dll_7D_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scaleOverride)
 {

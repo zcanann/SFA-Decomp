@@ -25,23 +25,28 @@ typedef struct FoodbagFxBuilder
     void (*slot4)(void);
 } FoodbagFxBuilder;
 
-extern f32 lbl_803E0ED8;
-extern f32 lbl_803E0EDC;
-extern f32 lbl_803E0EE0;
-extern f32 lbl_803E0EE4;
-extern f32 lbl_803E0EE8;
-extern f32 lbl_803E0EEC;
-extern f32 lbl_803E0EF0;
-extern f32 lbl_803E0EF4;
-extern f32 lbl_803E0EF8;
-extern f32 lbl_803E0EFC;
-extern f32 lbl_803E0F00;
-extern f32 lbl_803E0F04;
-extern f32 lbl_803E0F08;
-extern f32 lbl_803E0F0C;
-extern f32 lbl_803E0F10;
-extern f32 lbl_803E0F14;
-extern f32 lbl_803E0F18;
+__declspec(section ".sdata2") f32 lbl_803E0ED8 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E0EDC = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E0EE0 = 0.15f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0EE4 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0EE8 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EEC = 32.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EF0 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EF4 = 18.5f;
+__declspec(section ".sdata2") f32 lbl_803E0EF8 = 5.4f;
+__declspec(section ".sdata2") f32 lbl_803E0EFC = 80.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F00 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F04 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F08 = -8.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F0C = -32.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F10 = -5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F14 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F18 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0F1C = 0.0f;
+#pragma explicit_zero_data off
 extern u8 gFoodbagEffectTexData[];
 
 void dll_83_func03(int sourceObj, int variant, int posSource, u32 flags)

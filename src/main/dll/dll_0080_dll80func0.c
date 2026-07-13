@@ -20,14 +20,16 @@
 #define DLL80_EFFECT_ID 0x156
 
 extern u8 lbl_80315468[];
-extern f32 lbl_803E0E58;
-extern f32 lbl_803E0E5C;
-extern f32 lbl_803E0E60;
-extern f32 lbl_803E0E64;
-extern f32 lbl_803E0E68;
-extern f32 lbl_803E0E6C;
-extern f32 lbl_803E0E70;
-extern f32 lbl_803E0E74;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0E58 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0E5C = 16383.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E60 = 4.2f;
+__declspec(section ".sdata2") f32 lbl_803E0E64 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E68 = 0.42f;
+__declspec(section ".sdata2") f32 lbl_803E0E6C = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E70 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E74 = -900.0f;
 
 void dll_80_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

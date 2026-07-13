@@ -18,26 +18,28 @@
 #define DLL84_EFFECT_ID 0x3f
 
 extern u8 gFoodbagFxTextureData[];
-extern f32 lbl_803E0F20;
-extern f32 lbl_803E0F24;
-extern f32 lbl_803E0F28;
-extern f32 lbl_803E0F2C;
-extern f32 lbl_803E0F30;
-extern f32 lbl_803E0F34;
-extern f32 lbl_803E0F38;
-extern f32 lbl_803E0F3C;
-extern f32 lbl_803E0F40;
-extern f32 lbl_803E0F44;
-extern f32 lbl_803E0F48;
-extern f32 lbl_803E0F4C;
-extern f32 lbl_803E0F50;
-extern f32 lbl_803E0F54;
-extern f32 lbl_803E0F58;
-extern f32 lbl_803E0F5C;
-extern f32 lbl_803E0F60;
-extern f32 lbl_803E0F64;
-extern f32 lbl_803E0F68;
-extern f32 lbl_803E0F6C;
+__declspec(section ".sdata2") f32 lbl_803E0F20 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E0F24 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E0F28 = 0.15f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0F2C = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0F30 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F34 = 32.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F38 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F3C = 6.6f;
+__declspec(section ".sdata2") f32 lbl_803E0F40 = 2.4f;
+__declspec(section ".sdata2") f32 lbl_803E0F44 = -50.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F48 = 130.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F4C = 6.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F50 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F54 = -8.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F58 = -32.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F5C = -5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F60 = -0.4f;
+__declspec(section ".sdata2") f32 lbl_803E0F64 = -600.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F68 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F6C = 1.0f;
 
 void dll_84_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

@@ -22,19 +22,24 @@ extern u8 gFoodbagEffectTemplate[];
 extern u8 lbl_803DB8F0;
 extern u8 lbl_803DB8F4;
 extern u8 lbl_803DB8FC;
-extern f32 lbl_803E0F70;
-extern f32 lbl_803E0F74;
-extern f32 lbl_803E0F78;
-extern f32 lbl_803E0F7C;
-extern f32 lbl_803E0F80;
-extern f32 lbl_803E0F84;
-extern f32 lbl_803E0F88;
-extern f32 lbl_803E0F8C;
-extern f32 lbl_803E0F90;
-extern f32 lbl_803E0F94;
-extern f32 lbl_803E0F98;
-extern f32 lbl_803E0F9C;
-extern f32 lbl_803E0FA0;
+__declspec(section ".sdata2") f32 lbl_803E0F70 = 10.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0F74 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0F78 = 9.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F7C = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F80 = 16383.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F84 = 190.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F88 = 6.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F8C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F90 = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F94 = 1000.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F98 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0F9C = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0FA0 = 0.1f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0FA4 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

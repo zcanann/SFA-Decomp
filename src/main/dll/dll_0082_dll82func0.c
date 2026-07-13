@@ -12,15 +12,20 @@
 #define DLL82_EFFECT_ID_DEFAULT    0x2e
 
 extern u8 lbl_80315770[];
-extern f32 lbl_803E0EB0;
-extern f32 lbl_803E0EB4;
-extern f32 lbl_803E0EB8;
-extern f32 lbl_803E0EBC;
-extern f32 lbl_803E0EC0;
-extern f32 lbl_803E0EC4;
-extern f32 lbl_803E0EC8;
-extern f32 lbl_803E0ECC;
-extern f32 lbl_803E0ED0;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0EB0 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0EB4 = 0.85f;
+__declspec(section ".sdata2") f32 lbl_803E0EB8 = 0.08f;
+__declspec(section ".sdata2") f32 lbl_803E0EBC = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EC0 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EC4 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0EC8 = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803E0ECC = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0ED0 = 2.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0ED4 = 0.0f;
+#pragma explicit_zero_data off
 
 void dll_82_func03(int sourceObj, int variant, int posSource, u32 flags)
 {

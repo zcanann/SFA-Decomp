@@ -19,14 +19,16 @@
 
 extern u8 lbl_80315258[];
 extern u8 lbl_803DB8E0;
-extern f32 lbl_803E0E00;
-extern f32 lbl_803E0E04;
-extern f32 lbl_803E0E08;
-extern f32 lbl_803E0E0C;
-extern f32 lbl_803E0E10;
-extern f32 lbl_803E0E14;
-extern f32 lbl_803E0E18;
-extern f32 lbl_803E0E1C;
+__declspec(section ".sdata2") f32 lbl_803E0E00 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0E04 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E0E08 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E0C = -6.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E10 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E14 = 6.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E18 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0E1C = -2.5f;
 
 void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg5, f32* scalePtr)
 {
