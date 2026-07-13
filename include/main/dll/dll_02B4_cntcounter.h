@@ -1,10 +1,18 @@
 #ifndef MAIN_DLL_DLL_02B4_CNTCOUNTER_H
 #define MAIN_DLL_DLL_02B4_CNTCOUNTER_H
 
-#include "main/dll/cntcounter_state.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
+
+typedef struct CntCounterState {
+    int remainingCount;
+    u8 displayHud;
+    u8 pad5[0x8 - 0x5];
+} CntCounterState;
+
+STATIC_ASSERT(offsetof(CntCounterState, displayHud) == 0x04);
+STATIC_ASSERT(sizeof(CntCounterState) == 0x08);
 
 typedef struct CntCounterSetup
 {
