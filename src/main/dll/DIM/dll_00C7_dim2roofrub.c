@@ -130,7 +130,7 @@ extern f32 timeDelta;
 #include "main/objseq.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/objlib.h"
 
 #define DIM2ROOFRUB_OBJFLAG_RENDERED 0x800
@@ -224,16 +224,6 @@ void staff_render(void);
 
 void staff_hitDetect(void);
 
-void flamethrowerspe_modelMtxFn(void);
-
-void flamethrowerspe_free(void);
-
-void flamethrowerspe_hitDetect(void);
-
-void flamethrowerspe_release(void);
-
-void flamethrowerspe_initialise(void);
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void)
 {
@@ -242,8 +232,6 @@ int dim2roofrub_getExtraSize(void)
 int depthoffieldpoint_getExtraSize(void);
 int staff_getExtraSize(void);
 int staff_getObjectTypeId(void);
-int flamethrowerspe_getExtraSize(void);
-int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);

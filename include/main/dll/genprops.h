@@ -118,9 +118,6 @@ void staff_free(int* obj);
 void staff_modelMtxFn(int* obj, int p4, int p5);
 s16 staff_getHitReactValue(int* obj);
 s32 staff_getSwipeTextureIndex(int* obj);
-void flamethrowerspe_func0B(int* obj);
-void flamethrowerspe_render(void);
-
 /* extern-cleanup: consolidated prototypes (true-def sigs) */
 void animatedobj_free(int* obj, int seqFlag);
 void animatedobj_init(int* obj, int* params);

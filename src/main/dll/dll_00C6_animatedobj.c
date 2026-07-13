@@ -166,7 +166,7 @@ extern f32 timeDelta;
 #include "main/sfa_extern_decls.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 
 /* object group this object joins while active */
 #define ANIMATEDOBJ_OBJGROUP 7

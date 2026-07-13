@@ -59,7 +59,7 @@
 #include "main/dll/dll_00E2_staff.h"
 #include "main/dll/dll_00C8_depthoffieldpoint.h"
 #include "main/dll/dll_00E3_fireball_api.h"
-#include "main/dll/dll_00E4_flamethrowerspe.h"
+#include "main/dll/dll_00E4_flamethrowerspe_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
@@ -238,16 +238,6 @@ void staff_hitDetect(void)
 {
 }
 
-void flamethrowerspe_modelMtxFn(void);
-
-void flamethrowerspe_free(void);
-
-void flamethrowerspe_hitDetect(void);
-
-void flamethrowerspe_release(void);
-
-void flamethrowerspe_initialise(void);
-
 int animatedobj_getExtraSize(void);
 int dim2roofrub_getExtraSize(void);
 int depthoffieldpoint_getExtraSize(void);
@@ -259,8 +249,6 @@ int staff_getObjectTypeId(void)
 {
     return 0x9;
 }
-int flamethrowerspe_getExtraSize(void);
-int flamethrowerspe_getObjectTypeId(void);
 void dim2roofrub_free(int* obj);
 
 ObjectDescriptor gMikaBombObjDescriptor = {
