@@ -12,8 +12,6 @@
 #include "main/object.h"
 #include "main/effect_interfaces.h"
 #include "main/gameplay_runtime.h"
-#include "main/dll/backpack_state.h"
-#include "main/dll/backpack.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objlib.h"
 #include "main/sky_interface.h"

@@ -5,7 +5,8 @@
 #include "main/object_descriptor.h"
 
 /* Bush variant anim.seqIds and the sibling tumbleweed seqId each one spawns.
- * The sibling ids match backpack.h's TUMBLEWEED_TYPE_1/3/4 (0x39d/0x4ba/0x4c1). */
+ * The sibling ids match dll_00D2_tumbleweed.h's TUMBLEWEED_TYPE_1/3/4
+ * (0x39d/0x4ba/0x4c1). */
 #define TUMBLEWEEDBUSH_SEQ_A 0x28d /* -> sibling 0x39d (sun-gated) */
 #define TUMBLEWEEDBUSH_SEQ_B 0x3fd /* -> sibling 0x3fb */
 #define TUMBLEWEEDBUSH_SEQ_C 0x4b9 /* -> sibling 0x4ba */
