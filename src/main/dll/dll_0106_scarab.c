@@ -22,6 +22,13 @@
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef struct ScarabPlacement
+{
+    ObjPlacement head;
+    u8 pad18[0x1a - 0x18];
+    s16 mode; /* 0x1a: ScarabState.mode selector */
+} ScarabPlacement;
+
 /* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicgem) */
 #define SCARAB_MSG_IN_RANGE     0x7000a /* sent to player when the scarab is in grab range */
 #define SCARAB_MSG_PICKUP       0x7000b /* player collected: award money and despawn */
@@ -541,7 +548,7 @@ void Scarab_init(int* obj, u8* def)
     ScarabState* state = ((GameObject*)obj)->extra;
     int* model;
     state->phase = 0;
-    state->mode = *(s16*)((char*)def + 0x1a);
+    state->mode = ((ScarabPlacement*)def)->mode;
     state->yawSpeed = randomGetRange(0x3e8, 0xfa0);
     state->riseLimit = randomGetRange(0x32, 0x64);
     state->baseY = ((ObjPlacement*)def)->posY;
