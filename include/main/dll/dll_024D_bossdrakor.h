@@ -4,6 +4,7 @@
 #include "types.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
+#include "main/objanim_update.h"
 #include "global.h"
 
 typedef struct BossdrakorPlacement
@@ -59,6 +60,11 @@ int bossdrakor_getExtraSize(void);
 void bossdrakor_update(int obj);
 void bossdrakor_free(GameObject* obj);
 void bossdrakor_hitDetect(GameObject* obj);
+int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+void bossdrakor_handleActionEvent(int obj, int state, int action);
+void bossdrakor_updateHeadTracking(GameObject* obj, int state);
+int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut);
+void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action);
 void bossdrakor_init(GameObject* obj, BossdrakorPlacement* init);
 void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
 

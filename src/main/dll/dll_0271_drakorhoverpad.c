@@ -18,6 +18,7 @@
  * are HoverpadFlags / Flags377.
  */
 #include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0271_drakorhoverpad.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"

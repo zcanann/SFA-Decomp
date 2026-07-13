@@ -126,7 +126,6 @@ extern f64 DOUBLE_803e8268;
 extern f64 DOUBLE_803e8280;
 
 extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
-extern int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 extern f32 lbl_803E6588;
 extern f32 gThornBushLightScaleMax;
 extern f32 lbl_803E6590;
@@ -142,7 +141,6 @@ extern f32 lbl_803E65A8;
 extern f32 gThornBushLightScaleRate;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
-extern void drakorhoverpad_resetPendingMotion(GameObject* obj);
 extern f32 lbl_803E6540;
 extern f32 lbl_803E6544;
 extern f32 lbl_803E6548;
@@ -172,7 +170,6 @@ typedef struct
     u8 b01 : 1;
 } DrakorFlags;
 
-extern void drakormissile_startActiveLaunch(GameObject* obj);
 extern int gBossDrakorMoveSpeedTable[];
 extern int gBossDrakorTurnMoveStates[];
 extern s16 lbl_803DC198;
@@ -192,10 +189,5 @@ extern f32 lbl_803E656C;
 extern f32 lbl_803E6570;
 extern f32 lbl_803E6574;
 extern f32 lbl_803E6578;
-
-void bossdrakor_handleActionEvent(int obj, int state, int action);
-void bossdrakor_updateHeadTracking(GameObject* obj, int state);
-int bossdrakor_chooseNextMove(GameObject* obj, f32* speedOut);
-void bossdrakor_spawnAttackObjects(GameObject* obj, int state, int action);
 
 #endif
