@@ -14,7 +14,6 @@
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
 #include "main/vecmath_distance_api.h"
 
 typedef struct BaddieinterestpPlacement

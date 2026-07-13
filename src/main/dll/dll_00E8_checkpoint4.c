@@ -15,7 +15,6 @@
 #include "main/objprint.h"
 #include "main/object_render.h"
 #include "main/objlib.h"
-#include "main/dll/fx_800944A0_shared.h"
 #include "main/dll/dll_00E9_setuppoint.h"
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"

@@ -26,7 +26,6 @@
 #include "main/dll/MMP/dll_013B_wallanimator.h"
 #include "main/gamebits.h"
 #include "main/objlib.h"
-#include "main/dll/fx_800944A0_shared.h"
 #include "main/audio/sfx.h"
 
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
