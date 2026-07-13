@@ -18,6 +18,8 @@ Exploratory notes derived from the bundled retail assets under `orig/`.
 - [object_def_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_def_packets.md)
 - [object_family_packets.md](/C:/Projects/SFA-Decomp/docs/orig/object_family_packets.md)
 - [romlist_params.md](/C:/Projects/SFA-Decomp/docs/orig/romlist_params.md)
+- [camera_range_catalog.md](/C:/Projects/SFA-Decomp/docs/orig/camera_range_catalog.md)
+- [camera_range_placements.csv](/C:/Projects/SFA-Decomp/docs/orig/camera_range_placements.csv)
 - [modules.md](/C:/Projects/SFA-Decomp/docs/orig/modules.md)
 - [developer_artifacts.md](/C:/Projects/SFA-Decomp/docs/orig/developer_artifacts.md)
 - [embedded_assets.md](/C:/Projects/SFA-Decomp/docs/orig/embedded_assets.md)
