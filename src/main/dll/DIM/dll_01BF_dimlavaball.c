@@ -9,7 +9,6 @@
 #include "main/dll/imspacethrusterstate_struct.h"
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/dll/imanimspacecraftstate_struct.h"
-#include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/objseq.h"
@@ -30,7 +29,6 @@
 STATIC_ASSERT(sizeof(IMIceMountainState) == 0x14);
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
-STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
 

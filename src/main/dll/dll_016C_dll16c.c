@@ -18,7 +18,6 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
-#include "main/dll/dll16cstate_struct.h"
 #include "main/dll/magiclightstate_struct.h"
 #include "main/dll/crrockfall_types.h"
 #include "main/game_object.h"
