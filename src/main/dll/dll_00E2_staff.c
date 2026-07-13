@@ -60,11 +60,11 @@ typedef struct StaffSwipeSlot
 {
     void* buffer;
     f32 unk4;
-    f32 unk8;
-    s16 unkC;
-    s16 unkE;
+    f32 lengthScale;
+    s16 startIndex;
+    s16 endIndex;
     s16 idx;
-    s16 unk12;
+    s16 vertexCount;
     u8 flags;
     u8 pad15[0x18 - 0x15];
 } StaffSwipeSlot;
@@ -303,10 +303,10 @@ void staff_startSwipe(int* obj, s16 idx, f32 f1, f32 f2)
     }
     slot->flags = (u8)(slot->flags | 0x3);
     slot->unk4 = f1;
-    slot->unk8 = f2;
-    slot->unkC = 0;
-    slot->unkE = 0;
-    slot->unk12 = 0;
+    slot->lengthScale = f2;
+    slot->startIndex = 0;
+    slot->endIndex = 0;
+    slot->vertexCount = 0;
     slot->idx = idx;
     *(void**)((char*)slots + 0x48) = slot;
 }
