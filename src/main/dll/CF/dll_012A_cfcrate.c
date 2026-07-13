@@ -54,25 +54,22 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
     (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
 
-__declspec(section ".sdata2") f32 lbl_803E3DD8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3DDC = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f64 lbl_803E3DE0 = 2.0;
-__declspec(section ".sdata2") f32 lbl_803E3DE8 = 40.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DEC = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E3DF0 = 4000.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DF4 = 1000.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DF8 = 0.002f;
-__declspec(section ".sdata2") f32 lbl_803E3DFC = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E00 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E04 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E08 = 180.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E0C = -180.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E10 = 90.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E14 = -90.0f;
-__declspec(section ".sdata2") f64 lbl_803E3E18 = 1.5;
-__declspec(section ".sdata2") f32 lbl_803E3E20 = 75.0f;
+extern f32 lbl_803E3DD8;
+extern f64 lbl_803E3DE0;
+extern const f32 lbl_803E3DE8;
+extern f32 lbl_803E3DEC;
+extern f32 lbl_803E3DF0;
+extern f32 lbl_803E3DF4;
+extern f32 lbl_803E3DF8;
+extern f32 lbl_803E3DFC;
+extern f32 lbl_803E3E00;
+extern f32 lbl_803E3E04;
+extern f32 lbl_803E3E08;
+extern f32 lbl_803E3E0C;
+extern f32 lbl_803E3E10;
+extern f32 lbl_803E3E14;
+extern f64 lbl_803E3E18;
+extern f32 lbl_803E3E20;
 extern void* gCfCrateDefaultSfxTable;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
