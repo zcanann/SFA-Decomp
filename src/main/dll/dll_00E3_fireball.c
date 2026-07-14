@@ -14,7 +14,7 @@
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/obj_group.h"
@@ -34,17 +34,7 @@
 /* object group this object joins while active */
 #define FIREBALL_OBJGROUP 2
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 #define FIREBALL_ROT_COUNT 5
-
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-
-
 
 typedef struct FireballPlacement
 {
@@ -62,7 +52,7 @@ typedef struct FireballPlacement
 
 typedef struct FireballState
 {
-    u8 pad0[0x4 - 0x0];
+    ModelLightStruct* light;
     f32 unk4;
     f32 unk8;
     f32 unkC;
@@ -113,7 +103,6 @@ typedef struct FireballState
 /* anim.seqId of the hit object that triggers combat-source recolor. */
 #define FIREBALL_SEQID_CMBSRC_RECOLOR 0x6e8
 
-extern void ModelLightStruct_free(void* p);
 extern const f32 lbl_803E3330;
 extern const f32 lbl_803E3354;
 extern const f32 lbl_803E3358;
@@ -131,11 +120,8 @@ extern const f32 lbl_803E3364;
 extern const f32 lbl_803E3368;
 extern const f32 lbl_803E336C;
 extern u8 gFireballColorIndexTable[8];
-extern void queueGlowRender(int light);
 extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
-extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
-extern int objCreateLight(int* obj, int arg);
 
 u8 fn_8016F16C(int* obj)
 {
@@ -155,17 +141,17 @@ int Fireball_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
         u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1)
         {
-            if (*(void**)state != NULL)
+            if (((FireballState*)state)->light != NULL)
             {
-                modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E3330);
+                modelLightStruct_setEnabled(((FireballState*)state)->light, 1, lbl_803E3330);
             }
             ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
         else if (cmd == 2)
         {
-            if (*(void**)state != NULL)
+            if (((FireballState*)state)->light != NULL)
             {
-                modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E3330);
+                modelLightStruct_setEnabled(((FireballState*)state)->light, 0, lbl_803E3330);
             }
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -272,11 +258,11 @@ int Fireball_getObjectTypeId(void)
 
 void Fireball_free(int* obj)
 {
-    int* inner = (int*)((GameObject*)obj)->extra;
-    void* ptr = *(void**)inner;
-    if (ptr != NULL)
+    FireballState* state = ((GameObject*)obj)->extra;
+    ModelLightStruct* light = state->light;
+    if (light != NULL)
     {
-        ModelLightStruct_free(ptr);
+        ModelLightStruct_free(light);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
@@ -319,25 +305,25 @@ void Fireball_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
     *(u8*)((char*)*(int**)((char*)model + 0x34) + 8) = gFireballColorIndexTable[((FireballState*)state)->colorIndex];
     ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3354);
-    if (*(int**)state != NULL)
+    if (((FireballState*)state)->light != NULL)
     {
-        if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
+        if (((FireballState*)state)->light->glowType != 0 && ((FireballState*)state)->light->enabled != 0)
         {
-            u16 sum = *(u8*)((char*)*(int**)state + 0x2f9) + *(s8*)((char*)*(int**)state + 0x2fa);
+            u16 sum = ((FireballState*)state)->light->glowAlpha + ((FireballState*)state)->light->glowAlphaStep;
             if (sum > 12)
             {
                 sum += randomGetRange(-12, 12);
                 if (sum > 255)
                 {
                     sum = 255;
-                    *(u8*)((char*)*(int**)state + 0x2fa) = 0;
+                    ((FireballState*)state)->light->glowAlphaStep = 0;
                 }
             }
-            *(u8*)((char*)*(int**)state + 0x2f9) = sum;
+            ((FireballState*)state)->light->glowAlpha = sum;
         }
-        if (*(u8*)((char*)*(int**)state + 0x2f8) != 0 && *(u8*)((char*)*(int**)state + 0x4c) != 0)
+        if (((FireballState*)state)->light->glowType != 0 && ((FireballState*)state)->light->enabled != 0)
         {
-            queueGlowRender(*(int*)state);
+            queueGlowRender(((FireballState*)state)->light);
         }
     }
 }
@@ -364,11 +350,11 @@ void Fireball_hitDetect(int* obj)
         if ((s8)idx != -1)
         {
             ((FireballState*)state)->colorIndex = idx;
-            if (*(void**)state != NULL)
+            if (((FireballState*)state)->light != NULL)
             {
                 int paletteBase = ((FireballState*)state)->colorIndex * 3;
                 u8* pal = (u8*)lbl_80320978;
-                modelLightStruct_setDiffuseColor(*(int**)state, pal[paletteBase], pal[paletteBase + 1],
+                modelLightStruct_setDiffuseColor(((FireballState*)state)->light, pal[paletteBase], pal[paletteBase + 1],
                                                  pal[paletteBase + 2], 0);
             }
         }
@@ -392,10 +378,10 @@ void Fireball_hitDetect(int* obj)
             projectileParticleFxFn_80099660Legacy(obj, lbl_803E3354, 6);
         }
         ((GameObject*)obj)->anim.alpha = 0;
-        if (*(void**)state != NULL)
+        if (((FireballState*)state)->light != NULL)
         {
-            ModelLightStruct_free(*(void**)state);
-            *(void**)state = NULL;
+            ModelLightStruct_free(((FireballState*)state)->light);
+            ((FireballState*)state)->light = NULL;
         }
     }
     ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
@@ -419,9 +405,9 @@ void Fireball_update(int* obj)
     }
     if (((GameObject*)obj)->anim.seqId == FIREBALL_SEQID_HIDDEN)
     {
-        if (*(void**)state != NULL)
+        if (((FireballState*)state)->light != NULL)
         {
-            modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E3330);
+            modelLightStruct_setEnabled(((FireballState*)state)->light, 0, lbl_803E3330);
         }
         ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         return;
@@ -476,10 +462,10 @@ void Fireball_update(int* obj)
             }
             ((FireballState*)state)->fadeoutTimer = lbl_803E3358;
             ((GameObject*)obj)->anim.alpha = 0;
-            if (*(void**)state != NULL)
+            if (((FireballState*)state)->light != NULL)
             {
-                ModelLightStruct_free(*(void**)state);
-                *(int*)state = 0;
+                ModelLightStruct_free(((FireballState*)state)->light);
+                ((FireballState*)state)->light = NULL;
             }
             ObjGroup_RemoveObject((int)obj, FIREBALL_OBJGROUP);
             ObjHits_DisableObject(obj);
@@ -575,28 +561,29 @@ void Fireball_init(int* obj)
                 hitState->trackContactMask = 257;
             }
         }
-        if (*(void**)state == NULL)
+        if (((FireballState*)state)->light == NULL)
         {
-            *(int*)state = objCreateLight(obj, 1);
-            if (*(void**)state != NULL)
+            ((FireballState*)state)->light = objCreateLight(obj, 1);
+            if (((FireballState*)state)->light != NULL)
             {
                 int c;
                 u8* base1;
                 u8* base2;
-                modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
-                lightSetField4D((ModelLightStruct*)*(int*)state, 0);
-                modelLightStruct_setPosition(*(int*)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
-                lightSetFieldBC_8001db14((ModelLightStruct*)*(int*)state, 1);
+                modelLightStruct_setLightKind(((FireballState*)state)->light, MODEL_LIGHT_KIND_POINT);
+                lightSetField4D(((FireballState*)state)->light, 0);
+                modelLightStruct_setPosition(((FireballState*)state)->light, lbl_803E3330, lbl_803E3330,
+                                             lbl_803E3330);
+                lightSetFieldBC_8001db14(((FireballState*)state)->light, 1);
                 c = ((FireballState*)state)->colorIndex * 3;
                 modelLightStruct_setDiffuseColor(
-                    *(int**)state, ((u8*)lbl_80320978)[c],
+                    ((FireballState*)state)->light, ((u8*)lbl_80320978)[c],
                     (base1 = (u8*)lbl_80320978 + 1)[((FireballState*)state)->colorIndex * 3],
                     (base2 = (u8*)lbl_80320978 + 2)[((FireballState*)state)->colorIndex * 3], 0);
-                modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E3358, lbl_803E3378);
+                modelLightStruct_setDistanceAttenuation(((FireballState*)state)->light, lbl_803E3358, lbl_803E3378);
                 c = ((FireballState*)state)->colorIndex * 3;
-                modelLightStruct_setupGlow(*(int*)state, 0, ((u8*)lbl_80320978)[c], base1[c], base2[c], 32,
-                                           lbl_803E337C);
-                modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)*(int*)state, lbl_803E337C);
+                modelLightStruct_setupGlow(((FireballState*)state)->light, 0, ((u8*)lbl_80320978)[c], base1[c],
+                                           base2[c], 32, lbl_803E337C);
+                modelLightStruct_setGlowProjectionRadius(((FireballState*)state)->light, lbl_803E337C);
             }
         }
         ((GameObject*)obj)->anim.alpha = 200;
