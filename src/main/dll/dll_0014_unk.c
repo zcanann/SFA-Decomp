@@ -2765,9 +2765,6 @@ int fn_800DB240(int p1, f32* outVec, u16 id)
     return 1;
 }
 
-#pragma opt_strength_reduction on
-#pragma opt_propagation off
-#pragma peephole off
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase)
 {
@@ -2887,9 +2884,6 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     }
     return 0;
 }
-#pragma opt_strength_reduction reset
-#pragma opt_propagation reset
-#pragma peephole reset
 
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
