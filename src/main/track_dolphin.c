@@ -2730,13 +2730,14 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
         {
             for (i = 0; i < 3; i++)
             {
-                int nxt = i + 1;
+                int nxt;
                 f32 c31;
                 f32 c30;
                 f32 nz, ny, nx, mag;
                 c30 = lbl_803DECC0;
                 c31 = __AR_Callback;
 
+                nxt = i + 1;
                 if (nxt > 2)
                     nxt = 0;
                 vxp[3] = c30 * vec[0] + vxp[i];
