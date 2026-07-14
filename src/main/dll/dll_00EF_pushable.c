@@ -1,6 +1,6 @@
 /* DLL 0xEF - pushable object [80174A80-801755CC) */
 #include "main/audio/sfx_ids.h"
-#include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_play_int_return_legacy_api.h"
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -222,7 +222,6 @@ void fn_80174BFC(GameObject* obj, int ext)
 {
     extern int objBboxFn_800640cc(f32 * from, f32 * to, f32 radius, int mode, void* hit, void* obj, int p7, int p8,
                                   u8 p9, int p10);
-    extern int Sfx_PlayFromObject(int a, int b);
     int def;
     int i;
     s8 bits;
@@ -311,7 +310,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                                 if (hit.id == 1)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+                                    Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
                                     ((PushableState*)ext)->flags |= PUSHABLE_FLAG_PUSH_LOCKED;
                                     *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
                                     saveGame_saveObjectPos(obj);
@@ -323,7 +322,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                                 if (t > -1 && t == hit.id)
                                 {
                                     mainSetBits(gamebit, 1);
-                                    Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
+                                    Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
                                 }
                                 break;
                             }
