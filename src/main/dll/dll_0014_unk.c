@@ -2772,12 +2772,12 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     RomCurveDef* curves[4];
     f32 tdx;
     f32 tdz;
-    f32 tangentDx;
+    f32 dx;
     f32 startPhase;
     f32 segmentDx;
     f32 dz;
     f32 tangentDz;
-    f32 dx;
+    f32 tangentDx;
     f32 segmentDz;
     f32 tangentLen;
     f32 numer;
@@ -2785,18 +2785,12 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     f32 z1;
     f32 endPhase;
     f32 segmentLen;
-    int lim;
-    RomCurveDef** cp;
     int i;
 
     i = 0;
-    cp = curves;
-    lim = nRomCurves - 1;
     while (i < 4)
     {
-        *cp = RomCurve_FindByIdWithLimit(*curveIds, lim);
-        curveIds++;
-        cp++;
+        curves[i] = RomCurve_FindByIdWithLimit(curveIds[i], nRomCurves - 1);
         i++;
     }
 
