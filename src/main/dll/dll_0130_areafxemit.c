@@ -24,6 +24,7 @@
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/object_descriptor.h"
 
 typedef struct CFEmitterFxArgs
 {
@@ -388,3 +389,20 @@ void AreaFxEmit_release(void)
 void AreaFxEmit_initialise(void)
 {
 }
+
+ObjectDescriptor gAreaFXEmitObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)AreaFxEmit_initialise,
+    (ObjectDescriptorCallback)AreaFxEmit_release,
+    0,
+    (ObjectDescriptorCallback)AreaFxEmit_init,
+    (ObjectDescriptorCallback)AreaFxEmit_update,
+    (ObjectDescriptorCallback)AreaFxEmit_hitDetect,
+    (ObjectDescriptorCallback)AreaFxEmit_render,
+    (ObjectDescriptorCallback)AreaFxEmit_free,
+    (ObjectDescriptorCallback)AreaFxEmit_getObjectTypeId,
+    AreaFxEmit_getExtraSize,
+};

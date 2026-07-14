@@ -34,6 +34,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
+#include "main/object_descriptor.h"
 
 /* Env-effect ids activated by Transporter_SeqFn case 8 (env-fx / sky restore
    on arrival), grouped by the destinationId that fires them. Opaque distinct
@@ -57,6 +58,23 @@
 extern f32 lbl_803E3E98;
 extern s16 lbl_803DCEB8;
 
+
+ObjectDescriptor gTransporterObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)Transporter_init,
+    (ObjectDescriptorCallback)Transporter_update,
+    (ObjectDescriptorCallback)Transporter_hitDetect,
+    (ObjectDescriptorCallback)Transporter_render,
+    0,
+    0,
+    Transporter_getExtraSize,
+};
 
 #pragma opt_loop_invariants off
 int Transporter_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)

@@ -18,6 +18,7 @@
 #include "main/map_block.h"
 #include "main/dll/dll_0134_texscroll2.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/object_descriptor.h"
 
 extern f32 lbl_803E3F30;
 extern void* getTablesBinEntry(int i);
@@ -197,3 +198,24 @@ __declspec(section ".sdata2") f32 lbl_803E3F30 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E3F34 = 0.0f;
 #pragma explicit_zero_data reset
+
+ObjectDescriptor11WithPadding gTexscroll2ObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)texscroll2_initialise,
+        (ObjectDescriptorCallback)texscroll2_release,
+        0,
+        (ObjectDescriptorCallback)texscroll2_init,
+        (ObjectDescriptorCallback)texscroll2_update,
+        (ObjectDescriptorCallback)texscroll2_hitDetect,
+        (ObjectDescriptorCallback)texscroll2_render,
+        (ObjectDescriptorCallback)texscroll2_free,
+        (ObjectDescriptorCallback)texscroll2_getObjectTypeId,
+        texscroll2_getExtraSize,
+        (ObjectDescriptorCallback)texscroll2_setScale,
+    },
+    0,
+};

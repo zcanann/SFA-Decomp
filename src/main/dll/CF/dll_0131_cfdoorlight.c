@@ -12,6 +12,7 @@
 #include "main/objtexture.h"
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_0131_cfdoorlight.h"
+#include "main/object_descriptor.h"
 
 #define CFDOORLIGHT_OBJFLAG_HIDDEN             0x4000
 #define CFDOORLIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -106,3 +107,20 @@ void CF_DoorLight_release(void)
 void CF_DoorLight_initialise(void)
 {
 }
+
+ObjectDescriptor gCF_DoorLightObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CF_DoorLight_initialise,
+    (ObjectDescriptorCallback)CF_DoorLight_release,
+    0,
+    (ObjectDescriptorCallback)CF_DoorLight_init,
+    (ObjectDescriptorCallback)CF_DoorLight_update,
+    (ObjectDescriptorCallback)CF_DoorLight_hitDetect,
+    (ObjectDescriptorCallback)CF_DoorLight_render,
+    (ObjectDescriptorCallback)CF_DoorLight_free,
+    (ObjectDescriptorCallback)CF_DoorLight_getObjectTypeId,
+    CF_DoorLight_getExtraSize,
+};

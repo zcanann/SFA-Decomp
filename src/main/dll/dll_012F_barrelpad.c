@@ -9,6 +9,7 @@
 #include "main/objfx.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_012F_barrelpad.h"
+#include "main/object_descriptor.h"
 
 #define BARRELPAD_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -94,3 +95,20 @@ void BarrelPad_release(void)
 void BarrelPad_initialise(void)
 {
 }
+
+ObjectDescriptor gBarrelPadObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)BarrelPad_initialise,
+    (ObjectDescriptorCallback)BarrelPad_release,
+    0,
+    (ObjectDescriptorCallback)BarrelPad_init,
+    (ObjectDescriptorCallback)BarrelPad_update,
+    (ObjectDescriptorCallback)BarrelPad_hitDetect,
+    (ObjectDescriptorCallback)BarrelPad_render,
+    (ObjectDescriptorCallback)BarrelPad_free,
+    (ObjectDescriptorCallback)BarrelPad_getObjectTypeId,
+    BarrelPad_getExtraSize,
+};

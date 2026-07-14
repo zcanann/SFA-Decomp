@@ -1652,10 +1652,12 @@ main/dll/dll_012B_fxemit.c:
 
 main/dll/dll_0130_areafxemit.c:
 	.text       start:0x8018F148 end:0x8018FF28
+	.data       start:0x80321F80 end:0x80321FB8
 	.sdata2     start:0x803E3E60 end:0x803E3E74
 
 main/dll/dll_012D_lfxemitter.c:
 	.text       start:0x8018FF28 end:0x8019042C
+	.data       start:0x80321FB8 end:0x80321FF8
 	.sdata2     start:0x803E3E78 end:0x803E3E98
 
 main/dll/warppad.c:
@@ -1665,20 +1667,25 @@ main/dll/warppad.c:
 
 main/dll/dll_012C_transporter.c:
 	.text       start:0x80190BD4 end:0x80191A70
+	.data       start:0x80321FF8 end:0x80322058
 
 main/dll/CF/dll_012E_cflightwall.c:
 	.text       start:0x80191A70 end:0x80191B60
+	.data       start:0x80322058 end:0x80322090
 	.sdata2     start:0x803E3EE8 end:0x803E3F00
 
 main/dll/dll_012F_barrelpad.c:
 	.text       start:0x80191B60 end:0x80191D00
+	.data       start:0x80322090 end:0x803220C8
 	.sdata2     start:0x803E3F00 end:0x803E3F30
 
 main/dll/CF/dll_0131_cfdoorlight.c:
 	.text       start:0x80191D00 end:0x80191F2C
+	.data       start:0x803220C8 end:0x80322100
 
 main/dll/dll_0134_texscroll2.c:
 	.text       start:0x80191F2C end:0x801922E4
+	.data       start:0x80322100 end:0x80322140
 	.sdata2     start:0x803E3F30 end:0x803E3F38
 
 main/dll/dll_0135_texscroll.c:

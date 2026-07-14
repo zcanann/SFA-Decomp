@@ -5,6 +5,7 @@
  */
 #include "main/game_object.h"
 #include "main/dll/VF/vf_shared.h"
+#include "main/object_descriptor.h"
 
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -67,3 +68,20 @@ void CFLightWall_release(void)
 void CFLightWall_initialise(void)
 {
 }
+
+ObjectDescriptor gCflightwallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFLightWall_initialise,
+    (ObjectDescriptorCallback)CFLightWall_release,
+    0,
+    (ObjectDescriptorCallback)CFLightWall_init,
+    (ObjectDescriptorCallback)CFLightWall_update,
+    (ObjectDescriptorCallback)CFLightWall_hitDetect,
+    (ObjectDescriptorCallback)CFLightWall_render,
+    (ObjectDescriptorCallback)CFLightWall_free,
+    (ObjectDescriptorCallback)CFLightWall_getObjectTypeId,
+    CFLightWall_getExtraSize,
+};

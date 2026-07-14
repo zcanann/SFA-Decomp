@@ -9,6 +9,7 @@
 #include "main/pi_dolphin.h"
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 #include "main/object.h"
 extern LfxEmitterConfig lbl_803AC7B0;
@@ -203,3 +204,22 @@ void lfxemitter_initialise(void)
 {
     lbl_803AC7B0.recordCount = 10000;
 }
+
+ObjectDescriptor12 gLFXEmitterObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)lfxemitter_initialise,
+    (ObjectDescriptorCallback)lfxemitter_release,
+    0,
+    (ObjectDescriptorCallback)lfxemitter_init,
+    (ObjectDescriptorCallback)lfxemitter_update,
+    (ObjectDescriptorCallback)lfxemitter_hitDetect,
+    (ObjectDescriptorCallback)lfxemitter_render,
+    (ObjectDescriptorCallback)lfxemitter_free,
+    (ObjectDescriptorCallback)lfxemitter_getObjectTypeId,
+    lfxemitter_getExtraSize,
+    (ObjectDescriptorCallback)lfxemitter_setScale,
+    (ObjectDescriptorCallback)lfxemitter_func0B,
+};
