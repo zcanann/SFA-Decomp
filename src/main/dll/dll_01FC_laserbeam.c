@@ -28,6 +28,7 @@
 #include "main/resource.h"
 #include "main/obj_message.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll1fbsetup_struct.h"
 #include "main/dll/wmgalleonsetup_struct.h"
@@ -154,7 +155,6 @@ static const f32 lbl_803E5D48 = 0.04f;
 void LaserBeam_update(int obj2)
 {
 
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern int* gLaserBeamObjModgfxResource;
     extern u8 framesThisStep;
