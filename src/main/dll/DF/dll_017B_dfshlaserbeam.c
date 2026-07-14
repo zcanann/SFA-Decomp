@@ -5,6 +5,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -147,7 +148,6 @@ extern const f32 lbl_803E4F44;
 extern const f32 lbl_803E4F48;
 extern const f32 lbl_803E4F4C;
 
-extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
@@ -266,7 +266,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     if (DFSH_LASER_ACTIVE(runtime) != 0)
     {
-        Sfx_SetObjectChannelVolume(obj, 0x40, (int)(lbl_803E4ED0 * runtime->beamVolumeScale), lbl_803E4ED4);
+        Sfx_SetObjectChannelVolumePtrIntLegacy(obj, 0x40, (int)(lbl_803E4ED0 * runtime->beamVolumeScale),
+                                               lbl_803E4ED4);
     }
 
     range = (f32)(int)config->rangeAngle;
