@@ -124,6 +124,10 @@ extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern f32 lbl_803DEF08, lbl_803DEF20;
 extern double lbl_803DEF10, lbl_803DEF18;
 extern u8 lbl_8030E8B0[];
+extern f32 gWaterFxState[4];
+extern u8 gWaterRipples[0x1000];
+extern u8 gWaterSplashQuads[0x3800];
+extern f32 lbl_802C1F68[6];
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -365,8 +369,6 @@ void timeFn_8006f400(f32 step)
     u8* a;
     u8* b;
     u8 value;
-    extern u8 gWaterSplashQuads[];
-    extern u8 gWaterRipples[];
 
     for (i = 0; i < 256; i++)
     {
@@ -408,7 +410,6 @@ void drawFn_8006f500(void)
     extern f32 lbl_803DEE44;
     extern f32 lbl_803DEE48;
     extern void* gWaterFxTextures[];
-    extern u8 gWaterSplashQuads[];
     extern void fn_8000F9B4(void);
 
     GXColor color;
@@ -570,7 +571,6 @@ typedef struct
 #pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
 {
-    extern f32 gWaterFxState[];
     extern f32 lbl_803DEE38;
     extern f32 lbl_803DEE3C;
     extern f32 lbl_803DEE58;
@@ -674,8 +674,6 @@ void fn_8006FC00(int enable)
     int i;
     u8* a;
     u8* b;
-    extern u8 gWaterSplashQuads[];
-    extern u8 gWaterRipples[];
 
     gWaterFxDisabled = enable;
     if (enable != 0)
@@ -709,10 +707,9 @@ void fn_8006FC00(int enable)
 
 void mapInitFn_8006fccc(void)
 {
-    extern u8 gWaterFxState[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
     int i;
-    u8* base = gWaterFxState;
+    u8* base = (u8*)gWaterFxState;
     u8* a = base + 0x1020;
     u8* b = base + 0x0020;
 
@@ -2426,7 +2423,6 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
 int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_802C1F68[6];
     Mtx mtx_90;
     Mtx mtx_60;
     Mtx mtx_30;
