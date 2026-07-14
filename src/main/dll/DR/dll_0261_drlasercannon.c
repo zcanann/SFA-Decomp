@@ -1,21 +1,32 @@
-#include "main/dll/DR/dr_shared.h"
+#include "main/dll/DR/dll_0261_drlasercannon.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/dll/dll_0273_firepipe.h"
+#include "main/dll/DR/dr_types.h"
 #include "main/vecmath.h"
 #include "main/object.h"
+#include "main/object_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_00E5_shield_api.h"
 #include "main/dll/player_objects.h"
 #include "main/dll/player_api.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
+#include "main/obj_group.h"
+#include "main/obj_link.h"
+#include "main/obj_path.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
 #include "main/objprint_api.h"
 #include "main/objfx.h"
 #include "main/dll/objfx_api.h"
 #include "main/object_update_list.h"
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/DR/dll_0261_drlasercannon.h"
 
 #define DRLASERCANNON_OBJFLAG_PARENT_SLACK 0x1000
 #define DRLASERCANNON_OBJFLAG_FREED        0x40
@@ -34,13 +45,6 @@
 #define DR_LASERCANNON_HIDDEN_FLAG      0x4000
 #define DR_LASERCANNON_TRICKY_COOLDOWN  0x258
 #define DR_LASERCANNON_OPTIONAL_GAMEBIT 0xe90
-
-#define DR_LASERCANNON_SETUP_INITIAL_YAW         0x18
-#define DR_LASERCANNON_SETUP_RELOAD_FRAMES       0x19
-#define DR_LASERCANNON_SETUP_TARGET_RANGE        0x1a
-#define DR_LASERCANNON_SETUP_BEAM_SPEED          0x1c
-#define DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT   0x1e
-#define DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT 0x20
 
 #define DR_LASERCANNON_STATE_BEAM_OBJECT      0x00
 #define DR_LASERCANNON_STATE_LAST_HIT_OBJECT  0x0c
@@ -62,31 +66,9 @@
 #define DR_LASERCANNON_STATE_FLAGS            0x1a8
 #define DR_LASERCANNON_STATE_BOB_PHASE        0x1aa
 
-#define DR_LASERCANNON_AIM_YAW   0x14
-#define DR_LASERCANNON_AIM_PITCH 0x44
-
 #define DR_LASERCANNON_WARNING_ACTIVE_MODE 4
 #define DR_LASERCANNON_WARNING_HIDE_MODE   5
 #define DR_LASERCANNON_WARNING_HIT_MODE    6
-
-typedef struct DrLaserCannonSetup
-{
-    u8 pad00[DR_LASERCANNON_SETUP_INITIAL_YAW];
-    s8 initialYaw;
-    s8 reloadFrames;
-    s16 targetRange;
-    s16 beamSpeed;
-    s16 destroyedGameBit;
-    s16 warningOffGameBit;
-} DrLaserCannonSetup;
-
-typedef struct DrLaserCannonAim
-{
-    u8 pad00[DR_LASERCANNON_AIM_YAW];
-    s16 yaw;
-    u8 pad16[DR_LASERCANNON_AIM_PITCH - 0x16];
-    s16 pitch;
-} DrLaserCannonAim;
 
 typedef struct DrLaserCannonState
 {
@@ -115,18 +97,9 @@ typedef struct DrLaserCannonState
     u16 bobPhase;
 } DrLaserCannonState;
 
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, initialYaw) == DR_LASERCANNON_SETUP_INITIAL_YAW);
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, reloadFrames) == DR_LASERCANNON_SETUP_RELOAD_FRAMES);
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, targetRange) == DR_LASERCANNON_SETUP_TARGET_RANGE);
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, beamSpeed) == DR_LASERCANNON_SETUP_BEAM_SPEED);
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, destroyedGameBit) == DR_LASERCANNON_SETUP_DESTROYED_GAMEBIT);
-STATIC_ASSERT(offsetof(DrLaserCannonSetup, warningOffGameBit) == DR_LASERCANNON_SETUP_WARNING_OFF_GAMEBIT);
-STATIC_ASSERT(offsetof(DrLaserCannonAim, yaw) == DR_LASERCANNON_AIM_YAW);
-STATIC_ASSERT(offsetof(DrLaserCannonAim, pitch) == DR_LASERCANNON_AIM_PITCH);
 STATIC_ASSERT(offsetof(DrLaserCannonState, beamObject) == DR_LASERCANNON_STATE_BEAM_OBJECT);
 STATIC_ASSERT(offsetof(DrLaserCannonState, lastHitObject) == DR_LASERCANNON_STATE_LAST_HIT_OBJECT);
 STATIC_ASSERT(offsetof(DrLaserCannonState, muzzleX) == DR_LASERCANNON_STATE_MUZZLE_X);
-STATIC_ASSERT(offsetof(DrLaserCannonState, curveFollow) == DR_LASERCANNON_STATE_CURVE_FOLLOW);
 STATIC_ASSERT(offsetof(DrLaserCannonState, curveFollow) == DR_LASERCANNON_STATE_CURVE_FOLLOW);
 STATIC_ASSERT(offsetof(DrLaserCannonState, animStepScale) == DR_LASERCANNON_STATE_ANIM_STEP_SCALE);
 STATIC_ASSERT(offsetof(DrLaserCannonState, trickyCooldown) == DR_LASERCANNON_STATE_TRICKY_COOLDOWN);
@@ -302,23 +275,23 @@ void DR_LaserCannon_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char
 }
 
 #pragma dont_inline on
-int drlasercannon_getTrackedTarget(int obj, int* arg)
+GameObject* drlasercannon_getTrackedTarget(GameObject* obj, int* cooldownTimer)
 {
     int* tricky = (int*)getTrickyObject();
     GameObject* player;
     GameObject* target;
     int cooldown;
-    if (tricky != 0 && arg != 0 &&
+    if (tricky != 0 && cooldownTimer != 0 &&
         (u8)(*(int (**)(int*))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x40))(tricky))
     {
-        cooldown = *arg - framesThisStep;
-        *arg = cooldown;
+        cooldown = *cooldownTimer - framesThisStep;
+        *cooldownTimer = cooldown;
         if (cooldown < 0)
         {
             (*(void (**)(int*, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x34))(tricky, 0, 0);
-            *arg = DR_LASERCANNON_TRICKY_COOLDOWN;
+            *cooldownTimer = DR_LASERCANNON_TRICKY_COOLDOWN;
         }
-        return (int)tricky;
+        return (GameObject*)tricky;
     }
     player = Obj_GetPlayerObject();
     if (player != 0)
@@ -326,21 +299,20 @@ int drlasercannon_getTrackedTarget(int obj, int* arg)
         target = playerGetFocusObject(player);
         if (target != 0 && (target->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
-            return (int)target;
+            return target;
         }
         if ((player->objectFlags & DRLASERCANNON_OBJFLAG_PARENT_SLACK) == 0)
         {
-            return (int)player;
+            return player;
         }
     }
-    return 0;
+    return NULL;
 }
 #pragma dont_inline reset
 
-void DR_LaserCannon_init(GameObject* obj, char* arg)
+void DR_LaserCannon_init(GameObject* obj, DrLaserCannonSetup* setup)
 {
     DrLaserCannonState* state = (obj)->extra;
-    DrLaserCannonSetup* setup = (DrLaserCannonSetup*)arg;
     f32 fz;
     state->health = DR_LASERCANNON_INITIAL_HEALTH;
     ((void (*)(void*))ObjHits_EnableObject)(obj);
@@ -525,7 +497,7 @@ void DR_LaserCannon_update(GameObject* obj)
             return;
         }
     }
-    target = ((int (*)(void*, int*))drlasercannon_getTrackedTarget)(obj, &state->trickyCooldown);
+    target = (int)drlasercannon_getTrackedTarget(obj, &state->trickyCooldown);
     if ((void*)target != NULL && (state->optionalGameBit == -1 || mainGetBit(state->optionalGameBit) == 0))
     {
         hit = 1;

@@ -12,15 +12,24 @@
  * drawn as DRAKORMISSILE_RENDER_TRAIL_COUNT spun copies plus the body,
  * with an attached point light and glow.
  */
-#include "main/dll/DR/dr_shared.h"
-#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_0262_drakormissile.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
+#include "main/obj_group.h"
+#include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
+#include "main/vecmath.h"
+#include "main/vecmath_distance_api.h"
+#include "main/voxmaps.h"
 
+#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
@@ -33,34 +42,6 @@
 #define DRAKORMISSILE_STATE_EXPLODING 2
 #define DRAKORMISSILE_STATE_STRAIGHT  3
 #define DRAKORMISSILE_STATE_HOMING    4
-
-#define DRAKORMISSILE_RENDER_TRAIL_COUNT 5
-
-/*
- * The 0x38-byte object extra block. The trail is drawn as
- * DRAKORMISSILE_RENDER_TRAIL_COUNT spun copies; each copy i keeps its own
- * yaw/pitch phase and per-frame spin step.
- */
-typedef struct DrakorMissileState
-{
-    ModelLightStruct* light;                              /* 0x00 */
-    u8 state;                                             /* 0x04 */
-    u8 flags;                                             /* 0x05 */
-    u8 pad06[2];                                          /* 0x06 */
-    int timer;                                            /* 0x08 */
-    f32 fadeTime;                                         /* 0x0c */
-    u16 trailYaw[DRAKORMISSILE_RENDER_TRAIL_COUNT];       /* 0x10 */
-    u16 trailYawStep[DRAKORMISSILE_RENDER_TRAIL_COUNT];   /* 0x1a */
-    u16 trailPitch[DRAKORMISSILE_RENDER_TRAIL_COUNT];     /* 0x24 */
-    u16 trailPitchStep[DRAKORMISSILE_RENDER_TRAIL_COUNT]; /* 0x2e */
-} DrakorMissileState;
-
-#define DRAKORMISSILE_SETUP_POS_X 0x08
-#define DRAKORMISSILE_SETUP_POS_Y 0x0c
-#define DRAKORMISSILE_SETUP_POS_Z 0x10
-#define DRAKORMISSILE_SETUP_VEL_X 0x18
-#define DRAKORMISSILE_SETUP_VEL_Y 0x19
-#define DRAKORMISSILE_SETUP_VEL_Z 0x1a
 
 #define DRAKORMISSILE_ACTIVE_TIMER       0x960
 #define DRAKORMISSILE_CLEAR_TIMER        0x80
@@ -129,7 +110,7 @@ void drakormissile_startActiveLaunch(GameObject* obj)
 
 #pragma fp_contract off
 #pragma opt_common_subs off
-void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f32 speed)
+void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameObject* target, f32 speed)
 {
     ModelLightStruct* light;
     f32 dir[3];
@@ -142,9 +123,9 @@ void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f3
     f32 horizDist;
     DrakorMissileState* state = (obj)->extra;
 
-    dir[0] = ((GameObject*)target)->anim.localPosX - ((GameObject*)from)->anim.localPosX;
-    dir[1] = ((GameObject*)target)->anim.localPosY - ((GameObject*)from)->anim.localPosY;
-    dir[2] = ((GameObject*)target)->anim.localPosZ - ((GameObject*)from)->anim.localPosZ;
+    dir[0] = target->anim.localPosX - from->anim.localPosX;
+    dir[1] = target->anim.localPosY - from->anim.localPosY;
+    dir[2] = target->anim.localPosZ - from->anim.localPosZ;
     mag = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]) / speed;
     if (mag != lbl_803E695C)
     {
@@ -152,9 +133,9 @@ void drakormissile_startStraightLaunch(GameObject* obj, int from, int target, f3
         *(f32*)&dir[1] = dir[1] / mag;
         *(f32*)&dir[2] = dir[2] / mag;
     }
-    (obj)->anim.localPosX = ((GameObject*)from)->anim.localPosX;
-    (obj)->anim.localPosY = ((GameObject*)from)->anim.localPosY;
-    (obj)->anim.localPosZ = ((GameObject*)from)->anim.localPosZ;
+    (obj)->anim.localPosX = from->anim.localPosX;
+    (obj)->anim.localPosY = from->anim.localPosY;
+    (obj)->anim.localPosZ = from->anim.localPosZ;
     (obj)->anim.velocityX = dir[0];
     (obj)->anim.velocityY = dir[1];
     (obj)->anim.velocityZ = dir[2];
@@ -411,13 +392,13 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
             (obj)->anim.rotZ = state->trailYaw[i];
             (obj)->anim.rotY = state->trailPitch[i];
             *(u16*)((char*)model + 0x18) &= ~8;
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
         }
         (obj)->anim.rotZ = savedRotZ;
         (obj)->anim.rotY = savedRotY;
         (obj)->anim.rootMotionScale = savedScale;
         objAnim->bankIndex = 0;
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
         if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);
@@ -425,19 +406,19 @@ void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 vi
     }
 }
 
-void drakormissile_init(GameObject* obj, char* setup)
+void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup)
 {
     DrakorMissileState* state = (obj)->extra;
     int i;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumePriority = 0x13;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->hitVolumeId = 1;
     ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags &= ~1;
-    (obj)->anim.localPosX = *(f32*)(setup + DRAKORMISSILE_SETUP_POS_X);
-    (obj)->anim.localPosY = *(f32*)(setup + DRAKORMISSILE_SETUP_POS_Y);
-    (obj)->anim.localPosZ = *(f32*)(setup + DRAKORMISSILE_SETUP_POS_Z);
-    (obj)->anim.velocityX = (f32)(u32)(u8)setup[DRAKORMISSILE_SETUP_VEL_X];
-    (obj)->anim.velocityY = (f32)(u32)(u8)setup[DRAKORMISSILE_SETUP_VEL_Y];
-    (obj)->anim.velocityZ = (f32)(u32)(u8)setup[DRAKORMISSILE_SETUP_VEL_Z];
+    (obj)->anim.localPosX = setup->posX;
+    (obj)->anim.localPosY = setup->posY;
+    (obj)->anim.localPosZ = setup->posZ;
+    (obj)->anim.velocityX = (f32)(u32)setup->velocityX;
+    (obj)->anim.velocityY = (f32)(u32)setup->velocityY;
+    (obj)->anim.velocityZ = (f32)(u32)setup->velocityZ;
     if ((obj)->anim.hitReactState != NULL)
     {
         ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->trackContactMask = 1;
