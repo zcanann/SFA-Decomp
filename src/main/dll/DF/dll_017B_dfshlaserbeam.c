@@ -5,6 +5,7 @@
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/vecmath_distance_api.h"
@@ -146,7 +147,6 @@ extern const f32 lbl_803E4F44;
 extern const f32 lbl_803E4F48;
 extern const f32 lbl_803E4F4C;
 
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, int volume, f32 pitch);
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
@@ -240,7 +240,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
             }
             if (DFSH_LASER_CYCLE_TIMER(runtime) < 0x28)
             {
-                Sfx_StopObjectChannel(obj, 0x40);
+                Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
                 if ((runtime->beamVolumeScale >= lbl_803E4EC0) && (DFSH_LASER_BLOCKED(runtime) == 0))
                 {
                     runtime->beamVolumeScale -= lbl_803E4EC4 * timeDelta;
