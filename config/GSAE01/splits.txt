@@ -2263,6 +2263,7 @@ main/dll/DIM/dll_01D5_dim2conveyor.c:
 main/dll/dll_01D6_dll1d6.c:
 	.text       start:0x801B75B8 end:0x801B7D48
 	.sdata      start:0x803DBF18 end:0x803DBF28
+	.data       start:0x80325758 end:0x80325790
 
 main/dll/DIM/dll_01D7_dim2snowball.c:
 	.text       start:0x801B7D48 end:0x801B837C
@@ -2291,6 +2292,7 @@ main/dll/DIM/dll_01DD_dim2icicle.c:
 main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
 	.sdata      start:0x803DBF28 end:0x803DBF30
+	.data       start:0x803258E8 end:0x80325928
 
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
@@ -2807,29 +2809,33 @@ main/dll/WM/dll_01FD_wmlasertarget.c:
 main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
 	.rodata     start:0x802C2470 end:0x802C2488
-	.data       start:0x80328898 end:0x80328A30
+	.data       start:0x80328898 end:0x80328A68
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
+	.data       start:0x80328A68 end:0x80328AA0
 
 main/dll/WM/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
 	.sdata2     start:0x803E5E00 end:0x803E5E08
+	.data       start:0x80328AA0 end:0x80328B08
 
 main/dll/dll_0206_lightsource.c:
 	.text       start:0x801F33B4 end:0x801F3C2C
 	.rodata     start:0x802C2488 end:0x802C24B8
 	.sdata2     start:0x803E5E08 end:0x803E5E58
+	.data       start:0x80328B08 end:0x80328B40
 
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
 	.sdata2     start:0x803E5E58 end:0x803E5E68
 	.sdata2     start:0x803E5E68 end:0x803E5E70
+	.data       start:0x80328B40 end:0x80328B78
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
 	.rodata     start:0x802C24B8 end:0x802C24E8
-	.data       start:0x80328BB0 end:0x80328C08
+	.data       start:0x80328B78 end:0x80328C08
 	.sdata      start:0x803DC110 end:0x803DC128
 	.sdata2     start:0x803E5E70 end:0x803E5E88
 	.sdata2     start:0x803E5E88 end:0x803E5E90

@@ -22,6 +22,7 @@
 #include "main/vecmath_distance_api.h"
 #include "main/dll/WM/dll_0207_wmworm.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5E58 = 440.0f; /* chase range */
 #pragma explicit_zero_data on
@@ -165,3 +166,20 @@ void WM_Worm_release(void)
 void WM_Worm_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_WormObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_Worm_initialise,
+    (ObjectDescriptorCallback)WM_Worm_release,
+    0,
+    (ObjectDescriptorCallback)WM_Worm_init,
+    (ObjectDescriptorCallback)WM_Worm_update,
+    (ObjectDescriptorCallback)WM_Worm_hitDetect,
+    (ObjectDescriptorCallback)WM_Worm_render,
+    (ObjectDescriptorCallback)WM_Worm_free,
+    (ObjectDescriptorCallback)WM_Worm_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_Worm_getExtraSize,
+};

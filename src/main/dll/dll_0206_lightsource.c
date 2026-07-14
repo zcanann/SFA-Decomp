@@ -18,6 +18,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
+#include "main/object_descriptor.h"
 #define OBJFX_FN_80098B18_BYTE_ARGS_LEGACY
 #include "main/objfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
@@ -360,3 +361,20 @@ void lightsource_release(void)
 void lightsource_initialise(void)
 {
 }
+
+ObjectDescriptor gLightSourceObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)lightsource_initialise,
+    (ObjectDescriptorCallback)lightsource_release,
+    0,
+    (ObjectDescriptorCallback)lightsource_init,
+    (ObjectDescriptorCallback)lightsource_update,
+    (ObjectDescriptorCallback)lightsource_hitDetect,
+    (ObjectDescriptorCallback)lightsource_render,
+    (ObjectDescriptorCallback)lightsource_free,
+    (ObjectDescriptorCallback)lightsource_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)lightsource_getExtraSize,
+};

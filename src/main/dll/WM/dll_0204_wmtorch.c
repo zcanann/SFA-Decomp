@@ -19,6 +19,7 @@
 #include "main/resource.h"
 #include "main/vecmath.h"
 #include "main/dll/WM/dll_0204_wmtorch.h"
+#include "main/object_descriptor.h"
 
 /* slot 1 of the acquired effect resource's vtable: attach the flame */
 typedef void (*WmTorchAttachFlameFn)(u8* obj, int variant, f32* params, int flags, int p5, int p6);
@@ -133,3 +134,24 @@ void wmtorch_release(void)
 void wmtorch_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_TorchObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wmtorch_initialise,
+    (ObjectDescriptorCallback)wmtorch_release,
+    0,
+    (ObjectDescriptorCallback)wmtorch_init,
+    (ObjectDescriptorCallback)wmtorch_update,
+    (ObjectDescriptorCallback)wmtorch_hitDetect,
+    (ObjectDescriptorCallback)wmtorch_render,
+    (ObjectDescriptorCallback)wmtorch_free,
+    (ObjectDescriptorCallback)wmtorch_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wmtorch_getExtraSize,
+};
+
+#pragma explicit_zero_data on
+u32 lbl_80328AD8[12] = {0};
+#pragma explicit_zero_data off

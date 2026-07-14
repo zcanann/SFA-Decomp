@@ -25,6 +25,7 @@
 #include "main/mm.h"
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 s16 gDll1D6SlotTabIndex[4] = {0x10A, 0x14F, 0x151, 0x153};
 #pragma explicit_zero_data on
@@ -349,3 +350,20 @@ void dll_1D6_update(int* obj)
         extra->flags1D &= ~2;
     }
 }
+
+ObjectDescriptor dll_1D6 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1D6_initialise,
+    (ObjectDescriptorCallback)dll_1D6_release,
+    0,
+    (ObjectDescriptorCallback)dll_1D6_init,
+    (ObjectDescriptorCallback)dll_1D6_update,
+    (ObjectDescriptorCallback)dll_1D6_hitDetect,
+    (ObjectDescriptorCallback)dll_1D6_render,
+    (ObjectDescriptorCallback)dll_1D6_free,
+    (ObjectDescriptorCallback)dll_1D6_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_1D6_getExtraSize,
+};

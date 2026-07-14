@@ -23,6 +23,7 @@
 #include "main/objseq_api.h"
 #include "main/game_object.h"
 #include "main/sky_api.h"
+#include "main/object_descriptor.h"
 
 #define skyFn_800895e0Legacy(flags, red, green, blue, m1, m2)                                                     \
     ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
@@ -36,6 +37,33 @@
 #include "main/frame_timing.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
+
+int WM_LevelControl_getExtraSize(void);
+int WM_LevelControl_getObjectTypeId(void);
+void WM_LevelControl_free(int obj);
+void WM_LevelControl_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void WM_LevelControl_hitDetect(void);
+void WM_LevelControl_update(GameObject* obj);
+void WM_LevelControl_init(GameObject* obj);
+void WM_LevelControl_release(void);
+void WM_LevelControl_initialise(void);
+
+ObjectDescriptor gWM_LevelControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_LevelControl_initialise,
+    (ObjectDescriptorCallback)WM_LevelControl_release,
+    0,
+    (ObjectDescriptorCallback)WM_LevelControl_init,
+    (ObjectDescriptorCallback)WM_LevelControl_update,
+    (ObjectDescriptorCallback)WM_LevelControl_hitDetect,
+    (ObjectDescriptorCallback)WM_LevelControl_render,
+    (ObjectDescriptorCallback)WM_LevelControl_free,
+    (ObjectDescriptorCallback)WM_LevelControl_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_LevelControl_getExtraSize,
+};
 
 u8 gWmLevelControlSkyColorFrom[4] = {0x14, 0x20, 0x28, 0};
 u8 gWmLevelControlSkyColorTo[4] = {0x12, 0x1E, 0x23, 0};
@@ -377,3 +405,4 @@ u32 gWM_GeneralScalesObjDescriptor[14] = {0x00000000,
                                           (u32)WM_GeneralScales_free,
                                           (u32)WM_GeneralScales_getObjectTypeId,
                                           (u32)WM_GeneralScales_getExtraSize};
+

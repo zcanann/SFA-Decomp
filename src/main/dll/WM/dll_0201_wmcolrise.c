@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/dll/WM/dll_0201_wmcolrise.h"
+#include "main/object_descriptor.h"
 
 #define OBJ_RIDER_REGISTRY(o) (*(ObjRiderRegistry**)((char*)(o) + 0x58))
 
@@ -146,3 +147,20 @@ void WM_colrise_release(void)
 void WM_colrise_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_colriseObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_colrise_initialise,
+    (ObjectDescriptorCallback)WM_colrise_release,
+    0,
+    (ObjectDescriptorCallback)WM_colrise_init,
+    (ObjectDescriptorCallback)WM_colrise_update,
+    (ObjectDescriptorCallback)WM_colrise_hitDetect,
+    (ObjectDescriptorCallback)WM_colrise_render,
+    (ObjectDescriptorCallback)WM_colrise_free,
+    (ObjectDescriptorCallback)WM_colrise_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_colrise_getExtraSize,
+};

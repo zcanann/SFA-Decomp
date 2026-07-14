@@ -16,6 +16,7 @@
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/player_objects.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -237,3 +238,22 @@ void dim2lavacontrol_init(GameObject *obj, int param2)
     Music_Trigger(MUSICTRIG_WLC_Corridors, 1);
     envFxActFn_800887f8(0);
 }
+
+ObjectDescriptor12 gDIM2LavaControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dim2lavacontrol_init,
+    (ObjectDescriptorCallback)dim2lavacontrol_update,
+    0,
+    (ObjectDescriptorCallback)dim2lavacontrol_render,
+    (ObjectDescriptorCallback)dim2lavacontrol_free,
+    0,
+    (ObjectDescriptorExtraSizeCallback)dim2lavacontrol_getExtraSize,
+    (ObjectDescriptorCallback)dim2lavacontrol_setScale,
+    0,
+};
