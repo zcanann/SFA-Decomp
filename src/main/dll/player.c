@@ -114,7 +114,6 @@ int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
 void fn_802960E4(void);
-void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 void saveSetOverrideHealth(int v);
@@ -6225,26 +6224,26 @@ void fn_8029F67C(GameObject* obj)
     }
 }
 
-void fn_80296124(GameObject* obj, void* p2, void* p3)
+void fn_80296124(GameObject* obj, const Vec3f* position, const Vec3s* rotation, int unused)
 {
     PlayerState* inner = obj->extra;
     *(u32*)&((PlayerState*)inner)->flags360 &= ~0x4000LL;
-    if (p2 != NULL)
+    if (position != NULL)
     {
-        obj->anim.localPosX = *(f32*)((char*)p2 + 0);
-        obj->anim.localPosY = *(f32*)((char*)p2 + 4);
-        obj->anim.localPosZ = *(f32*)((char*)p2 + 8);
+        obj->anim.localPosX = position->x;
+        obj->anim.localPosY = position->y;
+        obj->anim.localPosZ = position->z;
         *(u32*)&((PlayerState*)inner)->flags360 |= 0x4000LL;
     }
-    if (p3 != NULL)
+    if (rotation != NULL)
     {
-        s16 t = *(s16*)((char*)p3 + 0);
+        s16 t = rotation->x;
         obj->anim.rotX = t;
         inner->targetYaw = t;
         inner->yaw = t;
         inner->yaw = inner->targetYaw;
-        obj->anim.rotY = *(s16*)((char*)p3 + 2);
-        obj->anim.rotZ = *(s16*)((char*)p3 + 4);
+        obj->anim.rotY = rotation->y;
+        obj->anim.rotZ = rotation->z;
         *(u32*)&((PlayerState*)inner)->flags360 |= 0x4000LL;
     }
 }

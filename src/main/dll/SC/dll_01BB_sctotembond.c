@@ -38,6 +38,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
+#include "main/dll/player_api.h"
 
 /*
  * Placement record written for each spawned villager/"orb" object
@@ -90,7 +91,6 @@ extern f32 gTotemBondRingRotateSpeed;
 extern f32 gTotemBondCameraDistance;
 extern f32 lbl_803E5650;
 
-extern void fn_80296124(GameObject* player, void* pos, void* obj, int arg);
 extern void fn_8011F6D4(u32 x);
 
 #pragma dont_inline on
@@ -345,7 +345,7 @@ void sc_totembond_update(ScTotemBondObject* obj)
             }
         }
 
-        fn_80296124((GameObject*)(player), &obj->x, obj, 0);
+        fn_80296124((GameObject*)player, (Vec3f*)&obj->x, (Vec3s*)&obj->yaw, 0);
         state->x = obj->x;
         state->y = lbl_803E563C + obj->y;
         state->z = obj->z;
