@@ -160,6 +160,7 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int unused)
 }
 #pragma opt_common_subs reset
 
+#pragma dont_inline on
 void player_applyVelocityStep(int* obj, int* ctx, f32 t)
 {
     int flags;
@@ -260,6 +261,7 @@ void fn_800D8414(int* obj, int* ctx)
     }
 }
 #pragma opt_propagation reset
+#pragma dont_inline reset
 
 void player_updateParticles(int* obj, int unused, int effectId, int count, int mode)
 {
@@ -892,8 +894,6 @@ void player_updateVel(char* p, char* obj, int unused)
 
 void player_update(char* pos, char* state, float dt, float pathDt, int stateFns, int auxStateFns)
 {
-    extern void player_applyVelocityStep(char* pos, char* state, f32 dt);
-    extern void fn_800D8414(char* pos, char* state);
     MatrixTransform localTransform;
     f32 matrix[16];
     int keepPathControls;
@@ -960,7 +960,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if ((*(int*)state & 0x1000000) == 0)
     {
-        fn_800D8414(pos, state);
+        fn_800D8414((int*)pos, (int*)state);
     }
 
     *(u32*)state &= 0xffdfffff;
@@ -990,7 +990,7 @@ void player_update(char* pos, char* state, float dt, float pathDt, int stateFns,
 
     if ((*(int*)state & 0x1000000) == 0)
     {
-        player_applyVelocityStep(pos, state, dt);
+        player_applyVelocityStep((int*)pos, (int*)state, dt);
     }
 
     overrideObj = playerOverride;
