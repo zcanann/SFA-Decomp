@@ -3400,7 +3400,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
  * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
  * (TevColorIn 0xF/0xE/0x8/0xF).
  */
-void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
+void hudDrawColored(Texture* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
@@ -3427,7 +3427,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
-    if (((u32*)obj)[0x14] != 0)
+    if ((u32)obj->imageOffset != 0)
     {
         GXSetTevKAlphaSel(GX_TEVSTAGE1, GX_TEV_KASEL_K0_A);
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
@@ -3448,7 +3448,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264((Texture*)obj, 0);
+    textureFn_8004c264(obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
@@ -3469,8 +3469,8 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     }
     {
         s32 w, h;
-        w = ((((u16*)obj)[5] << 2) * scale) / 256;
-        h = ((((u16*)obj)[6] << 2) * scale) / 256;
+        w = ((obj->width << 2) * scale) / 256;
+        h = ((obj->height << 2) * scale) / 256;
         GXBegin(GX_QUADS, GX_VTXFMT1, 4);
 
         GXWGFifo.u8 = 0x3C;

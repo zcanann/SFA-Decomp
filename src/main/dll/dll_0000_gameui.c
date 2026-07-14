@@ -322,8 +322,6 @@ extern u8 lbl_803DBAA2;
 extern f32 lbl_803E1E60;
 extern PauseTbl lbl_8031AE20;
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
-extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
-extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
 extern GameObject* volatile lbl_803DD868[2];
 extern u32 lbl_803E1E00;
 extern f32 lbl_803E20B8;

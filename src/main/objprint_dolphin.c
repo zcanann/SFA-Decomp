@@ -21,6 +21,7 @@
 #include "main/model.h"
 #include "main/model_render_instrs_api.h"
 #include "main/model_runtime_api.h"
+#include "main/newshadows_shadow_api.h"
 #include "main/object_transform.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
@@ -37,6 +38,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80136a40.h"
 #include "track/intersect_fog_api.h"
+#include "track/intersect_depth_read_api.h"
+#include "track/intersect_hud_api.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -510,9 +513,6 @@ extern f32 lbl_803DEA6C;
 extern u8 gObjShadowColor[4];
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-extern int depthReadRequestPoll(int x, int y, int* obj);
-extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
-extern void hudDrawColored(int a, int b, int c, u32* col, int d, int e);
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
 void objRenderModel(int* obj);
 
@@ -800,7 +800,7 @@ void objRenderModel(int* obj)
         ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
         ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale, &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-    if (sz <= depthReadRequestPoll(sx, sy, obj))
+    if (sz <= depthReadRequestPollPointerKey(sx, sy, obj))
     {
         ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0x20;
     }
@@ -826,9 +826,9 @@ void objRenderModel(int* obj)
         }
     }
     gObjShadowColor[3] = ((GameObject*)obj)->anim.modelState->shadowAlpha;
-    objShadowFn_8006c5f0(obj, &d1, &d2, &d3, &d4);
+    objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
     col = *(u32*)gObjShadowColor;
-    hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
+    hudDrawColoredLegacy(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
 }
 
 typedef struct

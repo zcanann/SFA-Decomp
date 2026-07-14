@@ -60,6 +60,8 @@
 #include "main/dll/tricky.h"
 #include "main/lightmap_api.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/newshadows_shadow_api.h"
+#include "track/intersect_hud_api.h"
 
 char sHudCounterFmt02d[] = "%02d";
 char sHudCounterFmt03d[] = "%03d";
@@ -463,8 +465,6 @@ extern int lbl_803DD8DC;
 extern f32 lbl_803DD820;
 extern u8 lbl_803DBAA2;
 extern const f32 lbl_803E1E60;
-extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
-extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
 extern GameObject* lbl_803DD868[2];
 extern u32 lbl_803E1E00;
 extern const f64 lbl_803E2118;
@@ -3891,7 +3891,7 @@ void pauseMenuDoSave(void)
             {
                 objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
                 colorA = colorB;
-                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
+                hudDrawColoredLegacy(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
             }
         }
     }

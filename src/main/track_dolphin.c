@@ -1,6 +1,7 @@
 #include "main/map_block.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_depth_read_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/lightmap_api.h"
@@ -447,7 +448,6 @@ extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
 extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void skyBuildSunModelMatrix(f32* out);
-extern int depthReadRequestPoll(int x, int y, void* p);
 extern void* fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 extern void allocLotsOfTextures(void);
@@ -3608,8 +3608,8 @@ void renderGlows(void)
             occ = 0;
             for (i = 0; i < 5; i++)
             {
-                int d = depthReadRequestPoll(sx + gSunOcclusionSampleOffsets[i * 2],
-                                             sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
+                int d = depthReadRequestPollPointerKey(sx + gSunOcclusionSampleOffsets[i * 2],
+                                                       sy + gSunOcclusionSampleOffsets[i * 2 + 1], (void*)i);
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
@@ -3667,7 +3667,7 @@ void renderGlows(void)
             Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY, e->worldZ - playerMapOffsetZ,
                                                e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-            d = depthReadRequestPoll(sx, sy, e);
+            d = depthReadRequestPollPointerKey(sx, sy, e);
             if (sz <= d && pauseMenuGetState() == 0)
                 e->glowAlphaStep = 0x10;
             else

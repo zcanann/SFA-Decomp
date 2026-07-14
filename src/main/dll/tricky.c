@@ -21,6 +21,7 @@
 #include "main/dll/ppcwgpipe_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_depth_read_api.h"
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
 #include "main/dll/player_api.h"
@@ -358,8 +359,6 @@ extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
 extern f32 fn_8029454C(f32);
-extern int depthReadRequestPoll(int x, int y, void* fn);
-
 #pragma opt_propagation off
 void gameUiLoadResources(void)
 {
@@ -1870,7 +1869,7 @@ void drawViewFinderHud(void)
         {
             f32 farP = Camera_GetFarPlane();
             f32 nearP = Camera_GetNearPlane();
-            int depth = depthReadRequestPoll(0x140, 0xf0, drawViewFinderHud);
+            int depth = depthReadRequestPollPointerKey(0x140, 0xf0, drawViewFinderHud);
             f32 dist =
                 (-farP * nearP) / (((f32)(u32)depth / gViewFinderDepthMax - lbl_803E1E68) * (farP - nearP) - nearP);
             if (dist > lbl_803E1E3C && dist < gTrickyHudNearestObjMaxDist)

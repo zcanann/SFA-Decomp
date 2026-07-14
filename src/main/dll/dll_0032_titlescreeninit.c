@@ -28,6 +28,7 @@
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/fileio.h"
+#include "track/intersect_hud_api.h"
 
 f32 lbl_803DD5F4;
 s8 gTitleScreenInitFrameStartPending;
@@ -75,7 +76,6 @@ extern f32 gTitleScreenInitAlphaMax;
 extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
-extern void hudDrawColored(int texture, int x, int y, u32* color, u32 scale, int flags);
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
 extern void* gameTextGetStr(int textId);
 extern void loadSunAndMoon(void);
@@ -123,7 +123,7 @@ void runLoadingScreens(void)
         }
         colorBuf.bytes[3] = alpha;
         color = colorBuf.word;
-        hudDrawColored(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
+        hudDrawColoredLegacy(textureSlot, 0x85, 0xaa, &color, 0x100, 0);
     }
     else if (gTitleScreenInitLoadingFrameCounter < 0x1e0)
     {

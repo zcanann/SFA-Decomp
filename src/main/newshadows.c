@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/newshadows_audio_api.h"
 #include "main/texture.h"
+#include "main/newshadows_shadow_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/mm.h"
 #include "dolphin/os/OSCache.h"
@@ -1626,13 +1627,13 @@ void findSomething(void* needle)
 
 u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 
-void objShadowFn_8006c5f0(int obj, u32* outTable, f32* outF, int* outX, int* outY)
+void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, int* outY)
 {
     int idx = (gNewShadowFrameIndex + 1) % NEW_SHADOW_FRAME_COUNT;
     *outTable = gNewShadowFrameTextures[idx];
-    *outF = ((GameObject*)obj)->anim.modelState->shadowScale;
-    *outX = (int)((GameObject*)obj)->anim.modelState->shadowOffsetX;
-    *outY = (int)((GameObject*)obj)->anim.modelState->shadowOffsetY;
+    *outF = obj->anim.modelState->shadowScale;
+    *outX = (int)obj->anim.modelState->shadowOffsetX;
+    *outY = (int)obj->anim.modelState->shadowOffsetY;
 }
 
 void* textureAlloc512(void)

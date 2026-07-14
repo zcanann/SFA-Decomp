@@ -2,6 +2,7 @@
 #define TRACK_INTERSECT_API_H_
 
 #include "types.h"
+#include "track/intersect_depth_read_api.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 
@@ -19,7 +20,6 @@ void normalize(f32* x, f32* y, f32* z);
 void textBlendSetupFn_80078a7c(void);
 void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 void textRenderSetupFn_800795e8(void);
-int depthReadRequestPoll(int x, int y, int requestKey);
 void fn_8007BD8C(int handle1, int handle2);
 void fn_8007C664(int textureHandle);
 void fn_8007CAF4(void);
