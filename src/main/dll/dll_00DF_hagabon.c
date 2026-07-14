@@ -95,14 +95,6 @@ STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 
-void Hagabon_release(void)
-{
-}
-
-void Hagabon_initialise(void)
-{
-}
-
 void fn_8014E1DC(GameObject* obj, HagabonState* state)
 {
     int curve;
@@ -225,15 +217,13 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
     obj->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
 }
 
-void Hagabon_hitDetect(GameObject* obj)
+int Hagabon_getExtraSize(void)
 {
-    ObjHitsPriorityState* hitState;
-
-    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
-    if (hitState->lastHitObject != 0)
-    {
-        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_32b);
-    }
+    return 0x28;
+}
+int Hagabon_getObjectTypeId(void)
+{
+    return 0xb;
 }
 
 #pragma opt_common_subs off
@@ -249,35 +239,6 @@ void Hagabon_free(GameObject* obj)
     }
 }
 #pragma opt_common_subs reset
-
-void Hagabon_init(GameObject* obj, int data, int skip_alloc)
-{
-    HagabonState* state = obj->extra;
-    HagabonPlacement* placement = (HagabonPlacement*)data;
-    state->curveStep = (f32)(s32)placement->curveStepRaw / lbl_803E266C;
-    state->animSpeed = lbl_803E2670;
-    state->chaseRadius = lbl_803E2674 * (f32)(s32)placement->chaseRadiusScale;
-    if (skip_alloc == 0)
-    {
-        *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
-        if (*(void**)&state->curve != NULL)
-        {
-            memset(*(void**)&state->curve, 0, 0x108);
-        }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC70, -1) ==
-            0)
-        {
-            state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;
-        }
-    }
-    if (placement->armGameBit != -1)
-    {
-        if (mainGetBit(placement->armGameBit) != 0)
-        {
-            obj->unkF4 = 1;
-        }
-    }
-}
 
 #pragma opt_common_subs off
 void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -306,13 +267,15 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma opt_common_subs reset
 
-int Hagabon_getExtraSize(void)
+void Hagabon_hitDetect(GameObject* obj)
 {
-    return 0x28;
-}
-int Hagabon_getObjectTypeId(void)
-{
-    return 0xb;
+    ObjHitsPriorityState* hitState;
+
+    hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
+    if (hitState->lastHitObject != 0)
+    {
+        Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_32b);
+    }
 }
 
 #pragma fp_contract off
@@ -450,6 +413,43 @@ void Hagabon_update(int obj)
     fn_8014E1DC((GameObject*)obj, state);
 }
 #pragma fp_contract reset
+
+void Hagabon_init(GameObject* obj, int data, int skip_alloc)
+{
+    HagabonState* state = obj->extra;
+    HagabonPlacement* placement = (HagabonPlacement*)data;
+    state->curveStep = (f32)(s32)placement->curveStepRaw / lbl_803E266C;
+    state->animSpeed = lbl_803E2670;
+    state->chaseRadius = lbl_803E2674 * (f32)(s32)placement->chaseRadiusScale;
+    if (skip_alloc == 0)
+    {
+        *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
+        if (*(void**)&state->curve != NULL)
+        {
+            memset(*(void**)&state->curve, 0, 0x108);
+        }
+        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC70, -1) ==
+            0)
+        {
+            state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;
+        }
+    }
+    if (placement->armGameBit != -1)
+    {
+        if (mainGetBit(placement->armGameBit) != 0)
+        {
+            obj->unkF4 = 1;
+        }
+    }
+}
+
+void Hagabon_release(void)
+{
+}
+
+void Hagabon_initialise(void)
+{
+}
 
 ObjectDescriptor gHagabonObjDescriptor = {
     0,
