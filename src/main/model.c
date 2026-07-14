@@ -2690,7 +2690,6 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
 void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* targetA, void* targetB, int blendScale)
 {
     extern u16 gModelCopyChunkWordLimit;
-    extern void modelApplyBoneTransform(void* in, void* out, u16 n, void** pTargetA, void** pTargetB, int blendScale, u16 pos);
     u16 vtxPos;
     u16 chunk;
     u16 words;
@@ -2738,7 +2737,7 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
         curBuf = bufIdx;
         in = cache + curBuf * 0x2000;
         out = in + 0x1000;
-        modelApplyBoneTransform(in, out, chunk, &targetA, &targetB, blendScale, vtxPos);
+        modelApplyBoneTransform(in, out, chunk, (u8**)&targetA, (u8**)&targetB, blendScale, vtxPos);
         memcpyToCache((u8*)dstVtx + vtxPos * 6, out, words);
         vtxPos += chunk;
         sync = 1;
