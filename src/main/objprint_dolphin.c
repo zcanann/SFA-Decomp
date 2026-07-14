@@ -1797,7 +1797,6 @@ extern f32 gObjJointMtxTemp[];
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
-extern u8* modelFileGetDisplayList(u8* m, int idx);
 
 void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 {
@@ -1941,7 +1940,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             bs.pos = pos + 8;
             idx = (w >> (pos & 7)) & 0xff;
         }
-        dl = modelFileGetDisplayList(m, idx);
+        dl = modelFileGetDisplayListU8Legacy(m, idx);
         GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
     }
 }
@@ -2195,7 +2194,8 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             w |= p[1] << 8;
             w |= p[2] << 16;
             bs.pos = pos + 8;
-            dl = modelFileGetDisplayList(m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
+            dl = modelFileGetDisplayListU8Legacy(
+                m, ((ModelFileHeader*)m)->displayListCount + ((w >> (pos & 7)) & 0xff));
             GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
         }
         break;
@@ -2619,7 +2619,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 w |= p[1] << 8;
                 w |= p[2] << 16;
                 bs.pos = pos + 8;
-                dl = modelFileGetDisplayList(m, (w >> (pos & 7)) & 0xff);
+                dl = modelFileGetDisplayListU8Legacy(m, (w >> (pos & 7)) & 0xff);
                 GXCallDisplayList(*(void**)dl, *(u16*)(dl + 4));
             }
             else

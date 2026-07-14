@@ -13,6 +13,7 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst);
 void ObjModel_BlendVertexStream(u8* mtxs, u8* header, u8* data, int* offsets, u8* out);
 void ObjModel_BlendNormalStream(u8* mtxs, u8* header, u8* data, u8** outputs, int quad);
 void objUpdateHitSpheres(u8* hitState, u8* headerOwner, u8* previousObj, u8* boneMtx, u8* obj);
+void* modelFileGetDisplayList(u8* modelFile, int displayListIndex);
 
 #define ObjModel_ToggleVertexBufferIntLegacy(model) \
     (((void (*)(int*))ObjModel_ToggleVertexBuffer)((model)))
@@ -38,5 +39,7 @@ void objUpdateHitSpheres(u8* hitState, u8* headerOwner, u8* previousObj, u8* bon
 #define objUpdateHitSpheresIntLegacy(hitState, headerOwner, previousObj, boneMtx, obj) \
     (((void (*)(int*, u8*, int*, int, int*))objUpdateHitSpheres)( \
         (hitState), (headerOwner), (previousObj), (boneMtx), (obj)))
+#define modelFileGetDisplayListU8Legacy(modelFile, displayListIndex) \
+    (((u8* (*)(u8*, int))modelFileGetDisplayList)((modelFile), (displayListIndex)))
 
 #endif /* MAIN_MODEL_RUNTIME_API_H_ */
