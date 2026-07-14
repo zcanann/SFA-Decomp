@@ -860,8 +860,8 @@ typedef struct DllD3Placement
 
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
-extern int gStaffActionHitLightParams[];
-extern void* gLandedArwingStateHandlers[];
+void* gLandedArwingStateHandlers[6];
+int gStaffActionHitLightParams[6];
 void* gLandedArwingDefaultStateHandler;
 extern f32 gStaffActionBoundsSearchRadius;
 extern f32 lbl_803E3038;

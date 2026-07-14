@@ -1373,6 +1373,7 @@ main/dll/dll_00CA_icebaddie.c:
 main/dll/dll_00CE_dllce.c:
 	.text       start:0x8015DAE8 end:0x8015F5B0
 	.data       start:0x8031FEA8 end:0x8031FF80
+	.bss        start:0x803AC580 end:0x803AC598
 	.sdata2     start:0x803E2DC0 end:0x803E2E20
 
 main/dll/dll_00CC_chukchuk.c:
@@ -1387,6 +1388,7 @@ main/dll/dll_00CD_iceball.c:
 
 main/dll/dll_00CB_dllcb.c:
 	.text       start:0x801601C4 end:0x80161130
+	.bss        start:0x803AC5D0 end:0x803AC5E8
 
 main/dll/dll_80161130.c:
 	.text       start:0x80161130 end:0x80161F0C
@@ -1418,6 +1420,7 @@ main/dll/landedarwing.c:
 
 main/dll/dll_00D3_staffAction.c:
 	.text       start:0x801659B8 end:0x801675E0
+	.bss        start:0x803AC638 end:0x803AC668
 	.sbss       start:0x803DDA88 end:0x803DDA90
 
 main/dll/dll_00D4_skeetlawall.c:
@@ -1435,6 +1438,7 @@ main/dll/dll_00D5_kaldachom.c:
 	.text       start:0x8016821C end:0x80169360
 	.rodata     start:0x802C2210 end:0x802C2220
 	.data       start:0x80320418 end:0x80320458
+	.bss        start:0x803AC668 end:0x803AC680
 	.sbss       start:0x803DDA90 end:0x803DDAA0
 
 main/dll/dll_00D6_kaldachomme.c:

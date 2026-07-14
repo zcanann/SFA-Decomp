@@ -80,7 +80,7 @@ extern f32 lbl_803E30C0;
 extern f32 lbl_803E30C4;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
-extern u8 gKaldachomHitLightWork[0x18];
+u8 gKaldachomHitLightWork[0x18];
 
 #pragma dont_inline on
 void kaldaChomFn_8016821c(GameObject* obj, KaldaChomControl* control)

@@ -70,7 +70,7 @@ extern f32 lbl_803E2E70;
 extern f32 lbl_803E2E74;
 extern f32 lbl_803E2E78;
 extern f32 lbl_803E2E9C;
-extern void* gDllCBStateHandlers[];
+void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
 extern f32 lbl_803E2E8C;

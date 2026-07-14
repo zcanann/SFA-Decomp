@@ -59,6 +59,8 @@
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern void ObjHits_RegisterActiveHitVolumeObject();
 
+u8 lbl_803AC580[0x18];
+
 /* State handlers implemented by dll_00CA_icebaddie.c. */
 int iceBaddie_updateOpenHitState(GameObject* obj, int state);
 int iceBaddie_updateOpenState(GameObject* obj, int state);
@@ -650,7 +652,6 @@ void fn_8015ED1C(int obj, int state, int target)
 {
     extern u8 lbl_8031FEA8[];
     extern u8 lbl_8031FF20[];
-    extern u8 lbl_803AC580[];
     void* player;
     char* targetObj;
     int result;
