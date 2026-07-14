@@ -19,6 +19,7 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/carryable_interface.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
@@ -311,7 +312,6 @@ void fn_801A80F0(GameObject* obj, u8 flag)
     }
 }
 
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 lbl_803E4548;
 
 int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
