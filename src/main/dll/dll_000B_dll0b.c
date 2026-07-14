@@ -1562,22 +1562,22 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
         {
             u8* buf = (u8*)((ModgfxState*)state)->baseVertexData;
             u8* buf2;
-            f32 noChange = lbl_803DF434;
+            f32 noChange = 1.0f;
             state = (char*)state + ((ModgfxState*)state)->activeVertexBufferIndex * 4;
             buf2 = *(u8**)((char*)state + 0x78);
             for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
             {
-                if (*(f32*)(bp + 0x30) != noChange)
+                if (noChange != *(f32*)(bp + 0x30))
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0) =
                         *(f32*)(bp + 0x30) * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 0);
                 }
-                if (*(f32*)(bp + 0x34) != noChange)
+                if (noChange != *(f32*)(bp + 0x34))
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2) =
                         *(f32*)(bp + 0x34) * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 2);
                 }
-                if (*(f32*)(bp + 0x38) != noChange)
+                if (noChange != *(f32*)(bp + 0x38))
                 {
                     *(s16*)(buf2 + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4) =
                         *(f32*)(bp + 0x38) * (f32) * (s16*)(buf + ((ModgfxVertexGroupCmd*)p)->indices[j] * 16 + 4);
