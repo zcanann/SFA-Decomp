@@ -2,19 +2,9 @@
 #define MAIN_DLL_MMP_GYSERVENT_H_
 
 #include "global.h"
+#include "main/dll/MMP/dll_0183_mmpgyservent.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
-
-typedef struct MmpGyserventPlacement
-{
-    ObjPlacement base;
-    u8 pad18[0x3A - 0x18];
-    u8 reachScale;
-    u8 speed;
-    u8 pad3C;
-    u8 rotX;
-    u8 rotY;
-} MmpGyserventPlacement;
 
 typedef struct MmpGyserventState
 {

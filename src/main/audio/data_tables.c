@@ -4,6 +4,7 @@
  * synthdata.c); SFA's build uses sndBegin/sndEnd for the IRQ guard.
  */
 #include "ghidra_import.h"
+#include "main/audio/dsp_voice.h"
 #include "main/audio/sal_dsp.h"
 
 #pragma exceptions on
@@ -81,18 +82,6 @@ typedef struct FX_GROUP
     u16 fxNum;
     FX_TAB* fxTab;
 } FX_GROUP;
-
-typedef struct SAMPLE_INFO
-{
-    u32 info;
-    void* addr;
-    void* extraData;
-    u32 offset;
-    u32 length;
-    u32 loop;
-    u32 loopLength;
-    u8 compType;
-} SAMPLE_INFO;
 
 typedef struct SynthDataTables
 {

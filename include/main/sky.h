@@ -2,6 +2,7 @@
 #define MAIN_SKY_H_
 
 #include "global.h"
+#include "dolphin/gx/GXFogColor.h"
 #include "main/sky_api.h"
 
 typedef struct SkyBlendStateFlags
@@ -36,14 +37,6 @@ typedef struct Dll06InterpState
     u8 pad310[0x06];
     s8 active;
 } Dll06InterpState;
-
-typedef struct FogColor
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} FogColor;
 
 typedef struct SkyBestIdx
 {

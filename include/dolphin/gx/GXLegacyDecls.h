@@ -1,15 +1,7 @@
 #ifndef DOLPHIN_GX_GXLEGACYDECLS_H_
 #define DOLPHIN_GX_GXLEGACYDECLS_H_
 
-#include "types.h"
-
-typedef struct FogColor
-{
-    u8 r;
-    u8 g;
-    u8 b;
-    u8 a;
-} FogColor;
+#include "dolphin/gx/GXFogColor.h"
 
 void GXBegin(int prim, int fmt, u16 count);
 void GXClearVtxDesc(void);

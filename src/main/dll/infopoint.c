@@ -7,17 +7,8 @@
  * (requires all three = axisCount 3) then fires a random horizontal nudge.
  */
 #include "main/dll/infopoint.h"
+#include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
-
-typedef struct TrickyCurveObject
-{
-    u8 pad0[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 pad18[0xa0];
-    struct TrickyCurveState* state;
-} TrickyCurveObject;
 
 typedef struct TrickyCurveState
 {
@@ -43,7 +34,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
     f32 randomZ;
 
     curve = (TrickyCurveObject*)obj;
-    state = curve->state;
+    state = (TrickyCurveState*)curve->state;
     player = (TrickyCurveObject*)Obj_GetPlayerObject();
     axisCount = 0;
     deltaX = player->x - curve->x;

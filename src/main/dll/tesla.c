@@ -21,6 +21,7 @@
  * trigger state so the burst variant can detect a midline crossing.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -37,16 +38,6 @@
 #define TRICKY_CURVE_PARTFX_BURST      0x399
 #define TRICKY_CURVE_SFX_BURST         0x1c9
 #define TRICKY_CURVE_SFX_COOLDOWN      0x1ca
-
-typedef struct TrickyCurveObject
-{
-    u8 unk0[0xc];
-    f32 x; /* 0x0C: localPosX (GameObject anim) */
-    f32 y; /* 0x10: localPosY */
-    f32 z; /* 0x14: localPosZ */
-    u8 unk18[0xa0];
-    struct TrickyCurveTriggerState* state; /* 0xB8: GameObject extra block */
-} TrickyCurveObject;
 
 typedef struct TrickyCurveTriggerState
 {
@@ -97,7 +88,7 @@ void fn_80206968(TrickyCurveObject* obj)
     f32 zDelta;
     f32 yDelta;
 
-    state = obj->state;
+    state = (TrickyCurveTriggerState*)obj->state;
     player = (GameObject*)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;
@@ -194,7 +185,7 @@ void fn_80206C18(TrickyCurveObject* obj)
     f32 yDelta;
     TrickyCurveBurstPartfxArgs partfxArgs;
 
-    state = obj->state;
+    state = (TrickyCurveTriggerState*)obj->state;
     player = (GameObject*)Obj_GetPlayerObject();
     insideAxes = 0;
     xSide = 0;

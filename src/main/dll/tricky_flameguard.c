@@ -14,13 +14,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
-
-typedef struct TrickyState
-{
-    u8 pad0[0x58 - 0x0];
-    u8 unk58;
-    u8 pad59[0x60 - 0x59];
-} TrickyState;
+#include "main/dll/tricky_state.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET          0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG     0x00000400
@@ -277,7 +271,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                     }
                     Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
                     i = (int)(obj)->extra;
-                    if ((((u32)((TrickyState*)i)->unk58 >> 6) & 1) == 0)
+                    if ((((u32)((TrickyState*)i)->statusFlags >> 6) & 1) == 0)
                     {
                         s16 a0 = (obj)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29)
@@ -373,7 +367,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                     }
                     Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
                     i = (int)(obj)->extra;
-                    if ((((u32)((TrickyState*)i)->unk58 >> 6) & 1) == 0)
+                    if ((((u32)((TrickyState*)i)->statusFlags >> 6) & 1) == 0)
                     {
                         s16 a0 = (obj)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29)
@@ -599,7 +593,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             }
             Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
             temp = (int)((GameObject*)obj)->extra;
-            if ((((u32)((TrickyState*)temp)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)temp)->statusFlags >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
@@ -637,7 +631,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             objAnimFn_8013a3f0((int)obj, 0x33, lbl_803E2444, 0x4000000);
             trickyState->guardTimer = lbl_803E23DC;
             temp = (int)((GameObject*)obj)->extra;
-            if ((((u32)((TrickyState*)temp)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)temp)->statusFlags >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
@@ -662,7 +656,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
         if (randomGetRange(0, 10) == 0)
         {
             temp = (int)((GameObject*)obj)->extra;
-            if ((((u32)((TrickyState*)temp)->unk58 >> 6) & 1) == 0)
+            if ((((u32)((TrickyState*)temp)->statusFlags >> 6) & 1) == 0)
             {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29)
