@@ -20,6 +20,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
@@ -137,7 +138,6 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
