@@ -20,6 +20,8 @@ typedef struct ArwInitCfg
     int a;
     int b;
     u16 c;
+    u16 pad0A;
+    u32 pad0C;
 } ArwInitCfg;
 
 extern GameObject* gArwing;

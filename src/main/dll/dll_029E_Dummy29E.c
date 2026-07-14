@@ -4,14 +4,8 @@
  * (de)initialise pair) is a stub: no per-object state is allocated and no
  * behaviour runs. The DLL exists only to fill the 0x29E id in the object
  * table.
- *
- * arwbombcoll_setLifetime is the odd one out: it is the ARWBombColl lifetime setter,
- * called from arwarwing (DLL 0x29A) and andross (DLL 0x2BC), and lives
- * here purely because of where it landed in the link order.
  */
 #include "main/dll/dll_029E_dummy.h"
-#include "main/dll/ARW/dll_029F_arwbombcoll.h"
-#include "main/game_object.h"
 
 int Dummy29E_getExtraSize(void)
 {
@@ -49,10 +43,4 @@ void Dummy29E_release(void)
 
 void Dummy29E_initialise(void)
 {
-}
-
-void arwbombcoll_setLifetime(GameObject* obj, int lifetime)
-{
-    ARWBombCollState* state = obj->extra;
-    state->lifetime = lifetime;
 }

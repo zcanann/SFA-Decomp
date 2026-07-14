@@ -317,7 +317,7 @@ void cloudaction_func05(void)
 
 void cloudaction_onMapSetup(void)
 {
-    memset(&lbl_8039AB28, 0, sizeof(CloudActionRuntime));
+    memset(&lbl_8039AB28, 0, offsetof(CloudActionRuntime, pad1C));
 }
 
 void cloudaction_update(int p1, int p2, u8* state, int p4, int val)

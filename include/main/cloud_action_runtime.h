@@ -15,11 +15,13 @@ typedef struct CloudActionRuntime {
     u8 pad19;
     u8 layerRenderEnabled;
     u8 pad1B;
+    u32 pad1C;
 } CloudActionRuntime;
 
-STATIC_ASSERT(sizeof(CloudActionRuntime) == 0x1C);
+STATIC_ASSERT(sizeof(CloudActionRuntime) == 0x20);
 STATIC_ASSERT(offsetof(CloudActionRuntime, mainCloudAssetId) == 0x0C);
 STATIC_ASSERT(offsetof(CloudActionRuntime, textureScrollStep) == 0x18);
+STATIC_ASSERT(offsetof(CloudActionRuntime, pad1C) == 0x1C);
 
 extern CloudActionRuntime lbl_8039AB28;
 

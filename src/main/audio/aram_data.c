@@ -95,10 +95,6 @@ void aramInitStreamBuffers(void)
     aramStream = aramTop;
 }
 
-void fn_80284634(void)
-{
-}
-
 /*
  * Look up stream-buffer metadata; if outPos != NULL, store the current
  * position, and return the ARAM address.

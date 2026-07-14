@@ -30,6 +30,12 @@
 
 #define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
 
+void arwbombcoll_setLifetime(GameObject* obj, int lifetime)
+{
+    ARWBombCollState* state = obj->extra;
+    state->lifetime = lifetime;
+}
+
 int ARWBombColl_getExtraSize(void)
 {
     return 8;

@@ -213,7 +213,7 @@ int* lbl_8032BEF8[3] = {
     lbl_803DC420,
 };
 
-ObjectDescriptor gCNThitObjecObjDescriptor = {
+ObjectDescriptor11ExtraSize gCNThitObjecObjDescriptor = {
     0,
     0,
     0,
@@ -228,5 +228,6 @@ ObjectDescriptor gCNThitObjecObjDescriptor = {
     (ObjectDescriptorCallback)cnthitobjec_free,
     (ObjectDescriptorCallback)cnthitobjec_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)cnthitobjec_getExtraSize,
+    0,
 };
 

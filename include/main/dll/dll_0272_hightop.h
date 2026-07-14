@@ -13,6 +13,15 @@ typedef struct HtInitData
     s16 v[9];
 } HtInitData;
 
+typedef struct HtInitDataTable
+{
+    HtInitData init;
+    s16 pad12;
+} HtInitDataTable;
+
+STATIC_ASSERT(sizeof(HtInitData) == 0x12);
+STATIC_ASSERT(sizeof(HtInitDataTable) == 0x14);
+
 typedef struct HighTopDeathSpawn
 {
     ObjPlacement base;
@@ -112,8 +121,8 @@ STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
 extern void* gHighTopStateHandlers[];
 extern void* gHighTopDefaultStateHandler;
-extern HtInitData gHighTopLookInitData1;
-extern HtInitData gHighTopLookInitData2;
+extern HtInitDataTable gHighTopLookInitData1;
+extern HtInitDataTable gHighTopLookInitData2;
 extern int gHighTopAirMeterInitValue;
 extern s16 gHighTopMovementSfxIds;
 extern f32 gHighTopGroundMarkerMtx[];

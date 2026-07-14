@@ -56,8 +56,10 @@ void* gHighTopDefaultStateHandler;
 #include "main/player_control_interface.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".rodata") HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
-__declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
+__declspec(section ".rodata") HtInitDataTable gHighTopLookInitData1 = {{{5, 5, 0, 0, 0, 0, 0, 0, 0}}, 0};
+__declspec(section ".rodata") HtInitDataTable gHighTopLookInitData2 = {
+    {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}}, 0
+};
 
 #define PAD_BUTTON_A 0x100
 
@@ -398,8 +400,8 @@ void HighTop_init(GameObject* obj, HighTopPlacement* placement)
     HtInitData local2;
     int local8;
     local8 = lbl_803E6AA0;
-    local1 = gHighTopLookInitData1;
-    local2 = gHighTopLookInitData2;
+    local1 = gHighTopLookInitData1.init;
+    local2 = gHighTopLookInitData2.init;
     (obj)->anim.rotX = (s16)(placement->rotByte << 8);
     (obj)->animEventCallback = HighTop_seqFn;
     runtime->unkC45 = placement->spawnVariant;

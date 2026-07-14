@@ -66,11 +66,25 @@ f32 lbl_803DBCE8 = 110.0f;
 f32 lbl_803DBCEC = 2.0f;
 int lbl_803DBCF0[2] = {2, 3};
 int lbl_803DBCF8[2] = {2, 3};
-u8 lbl_803DBD00[8] = {0, 0, 0, 0, 0, 0, 0, 6};
-u8 lbl_803DBD08[8] = {0, 0, 0, 0, 0, 0, 0, 6};
-u8 lbl_803DBD10[8] = {0, 0, 0, 0, 0, 0, 0, 6};
-u8 lbl_803DBD18[8] = {0, 0, 0, 0, 0, 0, 0, 6};
-u8 lbl_803DBD20[8] = {0, 0, 0, 0, 0, 0, 0, 5};
+extern u8 lbl_8031FBB8[];
+extern u8 lbl_8031FBD0[];
+extern u8 lbl_8031FBE8[];
+extern u8 lbl_8031FC00[];
+extern u8 lbl_8031FC18[];
+
+typedef struct CrawlerModelChainList
+{
+    u8* modelIds;
+    s32 count;
+} CrawlerModelChainList;
+
+STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
+
+CrawlerModelChainList lbl_803DBD00 = {lbl_8031FBB8, 6};
+CrawlerModelChainList lbl_803DBD08 = {lbl_8031FBD0, 6};
+CrawlerModelChainList lbl_803DBD10 = {lbl_8031FBE8, 6};
+CrawlerModelChainList lbl_803DBD18 = {lbl_8031FC00, 6};
+CrawlerModelChainList lbl_803DBD20 = {lbl_8031FC18, 5};
 u8 gSnowwormSeqIndexReset[4] = {2, 2, 0, 0};
 u8 gSnowwormSeqIndexMax[4] = {0xD, 7, 0, 0};
 u8 lbl_803DBD30[4] = {0x3C, 0xB4, 0, 0};
@@ -459,7 +473,7 @@ u8 lbl_8031FC18[0x14] = {0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0
 
 
 void* gCrawlerModelChainIds[] = {
-    lbl_803DBD00, lbl_803DBD08, lbl_803DBD10, lbl_803DBD18, lbl_803DBD20,
+    &lbl_803DBD00, &lbl_803DBD08, &lbl_803DBD10, &lbl_803DBD18, &lbl_803DBD20,
 };
 
 u8 lbl_8031FC40[0xa8] = {

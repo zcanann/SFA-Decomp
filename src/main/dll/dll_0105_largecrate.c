@@ -70,8 +70,12 @@ typedef union LargeCrateVariantRemap
     int words[3];
 } LargeCrateVariantRemap;
 
-extern LargeCrateVariantRemap gLargeCrateVariantARemap;
-extern LargeCrateVariantRemap gLargeCrateVariantBRemap;
+__declspec(section ".rodata") const LargeCrateVariantRemap gLargeCrateVariantARemap = {
+    {0, 1, 2, 3, 4, 8}
+};
+__declspec(section ".rodata") const LargeCrateVariantRemap gLargeCrateVariantBRemap = {
+    {0, 5, 6, 7, 8, 9}
+};
 
 typedef struct
 {

@@ -3424,10 +3424,11 @@ main/dll/ARW/dll_029D_arwarwinggu.c:
 	.sdata2     start:0x803E7068 end:0x803E7070
 
 main/dll/dll_029E_Dummy29E.c:
-	.text       start:0x8022F52C end:0x8022F588
+	.text       start:0x8022F52C end:0x8022F558
 
 main/dll/ARW/dll_029F_arwbombcoll.c:
-	.text       start:0x8022F588 end:0x8022FE00
+	.text       start:0x8022F558 end:0x8022FE00
+	.sdata2     start:0x803E7070 end:0x803E7078
 
 main/dll/dll_02A0_ring.c:
 	.text       start:0x8022FE00 end:0x802308B4
@@ -4242,6 +4243,7 @@ main/audio/hw_volume.c:
 	extab       start:0x80005B80 end:0x80005BA0
 	extabindex  start:0x800064D0 end:0x80006500
 	.text       start:0x8028383C end:0x80283BA0
+	.sdata2     start:0x803E78E0 end:0x803E78E4
 
 main/audio/hw_input.c:
 	extab       start:0x80005BA0 end:0x80005BA8
@@ -4257,6 +4259,7 @@ main/audio/hw_aram.c:
 	extab       start:0x80005BC0 end:0x80005BD8
 	extabindex  start:0x80006530 end:0x80006554
 	.text       start:0x80283D5C end:0x80283DFC
+	.sdata2     start:0x803E78F0 end:0x803E78F8
 
 main/audio/hw_samplemem.c:
 	extab       start:0x80005BD8 end:0x80005BF0
@@ -4527,12 +4530,14 @@ dolphin/MSL_C/PPCEABI/bare/H/k_cos.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/e_sqrt.c:
 	.text       start:0x802927A4 end:0x80292B44
+	.sdata2     start:0x803E7BD0 end:0x803E7BD8
 
 dolphin/MSL_C/PPCEABI/bare/H/e_atan2.c:
 	.text       start:0x80292B44 end:0x80292D3C
 
 dolphin/MSL_C/PPCEABI/bare/H/s_tan.c:
 	.text       start:0x80292D3C end:0x80292DC0
+	.sdata2     start:0x803E7C10 end:0x803E7C18
 
 dolphin/MSL_C/PPCEABI/bare/H/rand.c:
 	.text       start:0x80292DC0 end:0x80292DEC

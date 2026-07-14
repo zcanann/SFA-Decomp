@@ -81,6 +81,15 @@ typedef struct
 
 typedef struct
 {
+    SnowClawAnimTbl entries;
+    u8 pad0A[6];
+} SnowClawDropObjectTable;
+
+STATIC_ASSERT(sizeof(SnowClawAnimTbl) == 0xA);
+STATIC_ASSERT(sizeof(SnowClawDropObjectTable) == 0x10);
+
+typedef struct
+{
     u32 w[4];
 } SnowClawPulse4;
 
@@ -138,7 +147,9 @@ extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
 __declspec(section ".rodata") u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
-__declspec(section ".rodata") SnowClawAnimTbl gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
+__declspec(section ".rodata") SnowClawDropObjectTable gSnowClawDropObjectTable = {
+    {{0x23, 0x69, 0x33, 0x64, 0x1D}}, {0, 0, 0, 0, 0, 0}
+};
 extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
 extern f32 lbl_803DC218;
@@ -841,7 +852,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         }
         seq->eventIds[i] = 0;
     }
-    tbl = gSnowClawDropObjectTable;
+    tbl = gSnowClawDropObjectTable.entries;
     if (*(s8*)&((SnowclawState*)inner)->dropIndex != ((SnowclawState*)inner)->dropIndexApplied)
     {
         if (obj->childObjs[0] != 0)
