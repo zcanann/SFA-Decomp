@@ -24,6 +24,7 @@
 #include "main/objseq.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -314,3 +315,20 @@ void dim2snowball_release(void)
 void dim2snowball_initialise(void)
 {
 }
+
+ObjectDescriptor gDIM2SnowBallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dim2snowball_initialise,
+    (ObjectDescriptorCallback)dim2snowball_release,
+    0,
+    (ObjectDescriptorCallback)dim2snowball_init,
+    (ObjectDescriptorCallback)dim2snowball_update,
+    (ObjectDescriptorCallback)dim2snowball_hitDetect,
+    (ObjectDescriptorCallback)dim2snowball_render,
+    (ObjectDescriptorCallback)dim2snowball_free,
+    (ObjectDescriptorCallback)dim2snowball_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dim2snowball_getExtraSize,
+};

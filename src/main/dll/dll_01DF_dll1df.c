@@ -20,6 +20,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath_distance_api.h"
+#include "main/object_descriptor.h"
 
 #define DLL1DF_OBJFLAG_HITDETECT_DISABLED 0x2000
 /* particle effect seeded on the proximity-countdown tick while the player is near */
@@ -138,3 +139,20 @@ void dll_1DF_release(void)
 void dll_1DF_initialise(void)
 {
 }
+
+ObjectDescriptor lbl_80325928 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1DF_initialise,
+    (ObjectDescriptorCallback)dll_1DF_release,
+    0,
+    (ObjectDescriptorCallback)dll_1DF_init,
+    (ObjectDescriptorCallback)dll_1DF_update,
+    (ObjectDescriptorCallback)dll_1DF_hitDetect,
+    (ObjectDescriptorCallback)dll_1DF_render,
+    (ObjectDescriptorCallback)dll_1DF_free,
+    (ObjectDescriptorCallback)dll_1DF_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_1DF_getExtraSize,
+};

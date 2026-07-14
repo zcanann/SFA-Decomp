@@ -18,6 +18,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -183,3 +184,20 @@ void dimtruthhornice_init(int* obj, int* def)
         }
     }
 }
+
+ObjectDescriptor gDIMTruthHornIceObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dimtruthhornice_init,
+    (ObjectDescriptorCallback)dimtruthhornice_update,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)dimtruthhornice_getExtraSize,
+};

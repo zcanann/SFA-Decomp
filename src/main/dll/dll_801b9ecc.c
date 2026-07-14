@@ -8,7 +8,9 @@
 #include "main/dll/dll_801b9ecc.h"
 
 extern u8 lbl_803DDB84;
-extern u8 lbl_80325960[];
+int lbl_80325960[16] = {
+    1, 8, 9, 9, 10, 10, 10, 10, 7, 7, 7, 7, 6, 6, 5, 1,
+};
 extern u8 gDIMbossAnimController[];
 extern f32 lbl_803E4BB8;
 

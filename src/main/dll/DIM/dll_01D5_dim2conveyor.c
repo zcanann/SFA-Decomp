@@ -16,6 +16,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -215,3 +216,24 @@ void dim2conveyor_release(void)
 void dim2conveyor_initialise(void)
 {
 }
+
+ObjectDescriptor11WithPadding gDIM2ConveyorObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)dim2conveyor_initialise,
+        (ObjectDescriptorCallback)dim2conveyor_release,
+        0,
+        (ObjectDescriptorCallback)dim2conveyor_init,
+        (ObjectDescriptorCallback)dim2conveyor_update,
+        (ObjectDescriptorCallback)dim2conveyor_hitDetect,
+        (ObjectDescriptorCallback)dim2conveyor_render,
+        (ObjectDescriptorCallback)dim2conveyor_free,
+        (ObjectDescriptorCallback)dim2conveyor_getObjectTypeId,
+        (ObjectDescriptorExtraSizeCallback)dim2conveyor_getExtraSize,
+        (ObjectDescriptorCallback)dim2conveyor_getScrollVector,
+    },
+    0,
+};

@@ -18,6 +18,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -282,3 +283,24 @@ void DIM2PathGenerator_release(void)
 void DIM2PathGenerator_initialise(void)
 {
 }
+
+ObjectDescriptor11WithPadding gDIM2PathGeneratorObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)DIM2PathGenerator_initialise,
+        (ObjectDescriptorCallback)DIM2PathGenerator_release,
+        0,
+        (ObjectDescriptorCallback)DIM2PathGenerator_init,
+        (ObjectDescriptorCallback)DIM2PathGenerator_update,
+        (ObjectDescriptorCallback)DIM2PathGenerator_hitDetect,
+        (ObjectDescriptorCallback)DIM2PathGenerator_render,
+        (ObjectDescriptorCallback)DIM2PathGenerator_free,
+        (ObjectDescriptorCallback)DIM2PathGenerator_getObjectTypeId,
+        (ObjectDescriptorExtraSizeCallback)DIM2PathGenerator_getExtraSize,
+        (ObjectDescriptorCallback)DIM2PathGenerator_getCurveVals,
+    },
+    0,
+};

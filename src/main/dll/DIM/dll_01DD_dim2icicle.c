@@ -7,6 +7,7 @@
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -218,3 +219,20 @@ void dim2icicle_release(void)
 void dim2icicle_initialise(void)
 {
 }
+
+ObjectDescriptor gDIM2IcicleObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dim2icicle_initialise,
+    (ObjectDescriptorCallback)dim2icicle_release,
+    0,
+    (ObjectDescriptorCallback)dim2icicle_init,
+    (ObjectDescriptorCallback)dim2icicle_update,
+    (ObjectDescriptorCallback)dim2icicle_hitDetect,
+    (ObjectDescriptorCallback)dim2icicle_render,
+    (ObjectDescriptorCallback)dim2icicle_free,
+    (ObjectDescriptorCallback)dim2icicle_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dim2icicle_getExtraSize,
+};

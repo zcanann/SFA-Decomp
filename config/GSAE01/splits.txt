@@ -2173,12 +2173,15 @@ main/dll/dll_01CF_dll1cf.c:
 
 main/dll/DIM/dll_01D0_dimtricky.c:
 	.text       start:0x801B6C2C end:0x801B6D40
+	.data       start:0x803256A8 end:0x803256E0
 
 main/dll/DIM/dll_01D1_dimtruthhornice.c:
 	.text       start:0x801B6D40 end:0x801B7154
+	.data       start:0x803256E0 end:0x80325718
 
 main/dll/DIM/dll_01D5_dim2conveyor.c:
 	.text       start:0x801B7154 end:0x801B75B8
+	.data       start:0x80325718 end:0x80325758
 
 main/dll/dll_01D6_dll1d6.c:
 	.text       start:0x801B75B8 end:0x801B7D48
@@ -2186,21 +2189,27 @@ main/dll/dll_01D6_dll1d6.c:
 
 main/dll/DIM/dll_01D7_dim2snowball.c:
 	.text       start:0x801B7D48 end:0x801B837C
+	.data       start:0x80325790 end:0x803257C8
 
 main/dll/DIM/dll_01D8_dim2pathgenerator.c:
 	.text       start:0x801B837C end:0x801B8798
+	.data       start:0x803257C8 end:0x80325808
 
 main/dll/dll_01DA_dll1da.c:
 	.text       start:0x801B8798 end:0x801B8B70
+	.data       start:0x80325808 end:0x80325840
 
 main/dll/dll_01DB_dll1db.c:
 	.text       start:0x801B8B70 end:0x801B8F7C
+	.data       start:0x80325840 end:0x80325878
 
 main/dll/DIM/dll_01DC_dim2icefloe.c:
 	.text       start:0x801B8F7C end:0x801B93FC
+	.data       start:0x80325878 end:0x803258B0
 
 main/dll/DIM/dll_01DD_dim2icicle.c:
 	.text       start:0x801B93FC end:0x801B9810
+	.data       start:0x803258B0 end:0x803258E8
 
 main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
@@ -2208,9 +2217,11 @@ main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
+	.data       start:0x80325928 end:0x80325960
 
 main/dll/dll_801b9ecc.c:
 	.text       start:0x801B9ECC end:0x801BA224
+	.data       start:0x80325960 end:0x803259A0
 
 main/dll/DIM/dim2lift.c:
 	.text       start:0x801BA224 end:0x801BB598

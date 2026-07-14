@@ -17,6 +17,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
 #include "main/gamebit_ids.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -109,3 +110,20 @@ void dim_tricky_init(int* obj)
     u8 v = DIMTRICKY_STATE_WAIT_TRIGGER;
     *((u8*)(int*)((GameObject*)obj)->extra + 0x0) = v;
 }
+
+ObjectDescriptor gDIM_trickyObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dim_tricky_init,
+    (ObjectDescriptorCallback)dim_tricky_update,
+    (ObjectDescriptorCallback)dim_tricky_hitDetect,
+    (ObjectDescriptorCallback)dim_tricky_render,
+    (ObjectDescriptorCallback)dim_tricky_free,
+    (ObjectDescriptorCallback)dim_tricky_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dim_tricky_getExtraSize,
+};

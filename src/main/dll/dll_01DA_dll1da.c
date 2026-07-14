@@ -20,6 +20,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "main/object_descriptor.h"
 
 typedef struct Dll1DAState
 {
@@ -188,3 +189,20 @@ void dll_1DA_release(void)
 void dll_1DA_initialise(void)
 {
 }
+
+ObjectDescriptor dll_1DA = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1DA_initialise,
+    (ObjectDescriptorCallback)dll_1DA_release,
+    0,
+    (ObjectDescriptorCallback)dll_1DA_init,
+    (ObjectDescriptorCallback)dll_1DA_update,
+    (ObjectDescriptorCallback)dll_1DA_hitDetect,
+    (ObjectDescriptorCallback)dll_1DA_render,
+    (ObjectDescriptorCallback)dll_1DA_free,
+    (ObjectDescriptorCallback)dll_1DA_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_1DA_getExtraSize,
+};

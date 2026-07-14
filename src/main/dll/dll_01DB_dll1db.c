@@ -34,6 +34,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 
 typedef struct Dll1DBPlacement
 {
@@ -264,3 +265,20 @@ void dll_1DB_release(void)
 void dll_1DB_initialise(void)
 {
 }
+
+ObjectDescriptor dll_1DB = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_1DB_initialise,
+    (ObjectDescriptorCallback)dll_1DB_release,
+    0,
+    (ObjectDescriptorCallback)dll_1DB_init,
+    (ObjectDescriptorCallback)dll_1DB_update,
+    (ObjectDescriptorCallback)dll_1DB_hitDetect,
+    (ObjectDescriptorCallback)dll_1DB_render,
+    (ObjectDescriptorCallback)dll_1DB_free,
+    (ObjectDescriptorCallback)dll_1DB_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_1DB_getExtraSize,
+};

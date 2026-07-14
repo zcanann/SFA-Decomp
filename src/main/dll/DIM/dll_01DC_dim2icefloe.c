@@ -8,6 +8,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(Dim2ConveyorState) == 0x14);
 
@@ -195,3 +196,20 @@ void dim2icefloe_release(void)
 void dim2icefloe_initialise(void)
 {
 }
+
+ObjectDescriptor gDIM2IceFloeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dim2icefloe_initialise,
+    (ObjectDescriptorCallback)dim2icefloe_release,
+    0,
+    (ObjectDescriptorCallback)dim2icefloe_init,
+    (ObjectDescriptorCallback)dim2icefloe_update,
+    (ObjectDescriptorCallback)dim2icefloe_hitDetect,
+    (ObjectDescriptorCallback)dim2icefloe_render,
+    (ObjectDescriptorCallback)dim2icefloe_free,
+    (ObjectDescriptorCallback)dim2icefloe_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dim2icefloe_getExtraSize,
+};
