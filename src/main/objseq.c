@@ -3203,16 +3203,14 @@ int ObjSeq_update(u8* obj, f32 t)
                 if (cb != NULL)
                 {
                     pressed = cb(((ObjSeqState*)seq)->callbackContext, obj);
+                    break;
                 }
-                else
-                {
-                    pressed = 0;
-                }
-                break;
+                goto set_pressed_zero;
             case 0x1a:
                 pressed = isTalkingToNpc() == 0;
                 break;
             default:
+            set_pressed_zero:
                 pressed = 0;
                 break;
             }
