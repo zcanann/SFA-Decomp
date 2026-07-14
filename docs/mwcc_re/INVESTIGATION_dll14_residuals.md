@@ -324,3 +324,12 @@ pattern specifics (check its source in-tree: what made its return-value copy sur
 inlining). Alternative: find which OTHER web interferes with the pl-chain in target but
 not ours via the igwalk census diff once instruction->web logging lands pre-color.
 Current best probe: wgfep_8anchors.c (8/8 anchors, committed shapes, 140 regions).
+
+## Lever clarification: DIMSnowHorn1_angleTo is a REAL computation (not identity)
+Its inlined body materializes a genuine local web (angleDelta with multiple defs/uses) -
+the +1 edge came from substantive code. For the walkgroup pl chain the extra interfering
+web must therefore be a real value live across the K=1 block in the ORIGINAL source that
+our version lacks or scopes differently (candidates: x/z corner staging across the sqrtf,
+or the pairGid/np value lifetimes). Compare the K=1 block's LIVE SET (target vs probe)
+instruction-by-instruction - the register content difference at any point inside
+0x9a4-0xa40 names the missing web directly. Best probe remains wgfep_8anchors.c.
