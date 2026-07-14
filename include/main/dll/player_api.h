@@ -22,7 +22,7 @@ u8 fn_80296414(GameObject* player, GameObject* otherObj, u8* outDirection);
 int fn_802969F0(GameObject* player);
 void fn_80296A9C(GameObject* player, int delta);
 GameObject* playerGetFocusObject(GameObject* player);
-int playerGetMoney(void* player);
+int playerGetMoney(GameObject* player);
 int playerHasSpell(GameObject* obj, int spell);
 int playerIsDisguised(GameObject* obj);
 void playerAddMoney(GameObject* obj, int amount);

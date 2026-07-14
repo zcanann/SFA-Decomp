@@ -542,9 +542,9 @@ int playerGetCurHealth(GameObject* obj)
     return *(s8*)((char*)inner->playerStatus);
 }
 
-int playerGetMoney(void* player)
+int playerGetMoney(GameObject* player)
 {
-    PlayerState* inner = ((GameObject*)player)->extra;
+    PlayerState* inner = player->extra;
     return *(u8*)((char*)inner->playerStatus + 8);
 }
 

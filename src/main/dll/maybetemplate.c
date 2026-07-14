@@ -960,7 +960,7 @@ void pauseMenuDrawStatus(void)
     }
     statuses[11] = mainGetBit(GAMEBIT_ITEM_MoonSeed_Count);
     statuses[12] = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
-    statuses[3] = playerGetMoney((void*)player);
+    statuses[3] = playerGetMoney((GameObject*)player);
     statuses[9] = *trickyStatus;
     if ((((lbl_803DD792 & 1) != 0) ||
          ((lbl_803E1E3C == PMDS_SCREEN_GET_FADE()) && (PMDS_CAMERA_GET_STATE() != 0x44) &&
