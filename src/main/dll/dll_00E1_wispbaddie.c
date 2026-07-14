@@ -3,6 +3,7 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/pad_api.h"
 #include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_position_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll/swarmbaddiestate_struct.h"
@@ -68,7 +69,6 @@ typedef struct WispEventRow
 STATIC_ASSERT(sizeof(WispEventRow) == 0xc);
 STATIC_ASSERT(offsetof(WispEventRow, moveId) == 0x8);
 
-extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void fn_801513AC(GameObject* obj, int state);
 extern f32 lbl_803E2708;
 extern f32 lbl_803E270C;
@@ -242,7 +242,7 @@ void wispbaddie_update(GameObject* obj)
             state->flags = (u8)(flags & ~WISPBADDIE_FLAG_CHASE_PLAYER);
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_CHASE_LOCKOUT);
         }
-        Sfx_PlayAtPositionFromObject((int)obj, hitZ, dy, dz, SFXTRIG_robolaser16);
+        Sfx_PlayAtPositionFromObjectIntFirstLegacy((int)obj, hitZ, dy, dz, SFXTRIG_robolaser16);
     }
 
     particleParam = 4;
