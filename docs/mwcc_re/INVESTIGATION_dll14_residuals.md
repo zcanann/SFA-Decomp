@@ -442,3 +442,16 @@ explanations are the CMachine addressing emitter's dest-targeting path (0x4c2xxx
 coloring coincidence reachable by web-order steering (the func1C-style levers). The
 kind-2/[ecx+6]==0x13 skip under global 0x5e4843 is a mode flag worth checking against
 compiler options.
+
+## Accumulate: proof by elimination -> CMachine dest-targeting emission
+du-chain analysis: def1 (wg = &base[grp]) and def2 (wg = wg+0x3000) share no def/use =>
+always separate webs => the target's single-register [add r21][addi r21,r21] cannot be two
+webs (the short def1-chain can never earn a saved reg) NOR one variable-web (unconditional
+redef splits) NOR coalesce (decoded: precolored-only). Therefore the target emitted BOTH
+instructions for ONE IR value: the CMachine addressing emitter evaluates the (base+idx*s)
+subexpression directly INTO the destination register and adds the displacement in place -
+a dest-targeting path our source forms do not trigger. Decode entry: the addressing
+emission in the 0x4c2xxx band (CMachine.c, 94 funcs at 0x4bf320-0x4c9590 per assert map);
+find the condition separating dest-targeting from temp-materialization (likely whether the
+value is single-use/addressing context). This same emitter decision plausibly controls
+func1C's preheader materialization direction - one decode, both functions.
