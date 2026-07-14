@@ -2355,6 +2355,8 @@ void drawFn_80125424(void)
     u32 h;
     f32 wave;
     f32 camPos;
+    extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
+    extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
 
     if (gHeadDisplayActive != 0)
     {
