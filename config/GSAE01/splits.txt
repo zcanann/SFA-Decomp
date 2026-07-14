@@ -3509,6 +3509,7 @@ main/unknown/autos/placeholder_8032C984.c:
 
 dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x802428C8
+	.data       start:0x8032C7D0 end:0x8032C984
 
 dolphin/os/OSError.c:
 	.text       start:0x802428C8 end:0x80242C10

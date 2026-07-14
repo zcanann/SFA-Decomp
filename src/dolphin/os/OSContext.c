@@ -6,7 +6,17 @@
 
 volatile OSContext* __OSCurrentContext AT_ADDRESS(OS_BASE_CACHED | 0x00D4);
 volatile OSContext* __OSFPUContext AT_ADDRESS(OS_BASE_CACHED | 0x00D8);
-extern char lbl_8032C7D0[];
+char lbl_8032C7D0[] =
+    "------------------------- Context 0x%08x -------"
+    "------------------\n\000r%-2d  = 0x%08x (%14d)  r%-2"
+    "d  = 0x%08x (%14d)\n\000LR   = 0x%08x               "
+    "    CR   = 0x%08x\n\000\000SRR0 = 0x%08x               "
+    "    SRR1 = 0x%08x\n\000\000\nGQRs----------\n\000\000\000\000gqr%d = "
+    "0x%08x \011 gqr%d = 0x%08x\n\000\000\000\000\n\nFPRs----------\n\000\000\000"
+    "fr%d \011= %d \011 fr%d \011= %d\n\000\000\000\000\n\nPSFs----------\n\000\000\000"
+    "ps%d \011= 0x%x \011 ps%d \011= 0x%x\n\000\000\000\000\nAddress:      B"
+    "ack Chain    LR Save\n\000\000\0000x%08x:   0x%08x    0x%0"
+    "8x\n";
 extern char OSContextFPUUnavailableMessage[];
 
 static asm void __OSLoadFPUContext(register u32 dummy, register OSContext* fpucontext) {
