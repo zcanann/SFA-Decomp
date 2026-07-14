@@ -122,6 +122,8 @@ void modelLightStruct_setDirection(ModelLightStruct *light, f32 x, f32 y, f32 z)
 f32 modelLightStruct_getRadius(ModelLightStruct* light);
 void modelLightStruct_getPosition(ModelLightStruct* light, f32* x, f32* y, f32* z);
 void modelLightStruct_getWorldPosition(ModelLightStruct* light, f32* x, f32* y, f32* z);
+void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
+                                                ModelLightStruct** outLights, int maxLights, int* outCount);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);

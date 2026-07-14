@@ -1328,7 +1328,7 @@ f32 modelLightStruct_getObjectIntensity(u8* light, u8* obj)
 
 #pragma dont_inline off
 void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
-                                                u8** outLights, int maxLights, int* outCount)
+                                                ModelLightStruct** outLights, int maxLights, int* outCount)
 {
     int i;
     f32 delta[3];
@@ -1407,7 +1407,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                 light = candidates[i];
             }
         }
-        outLights[(*outCount)++] = light;
+        outLights[(*outCount)++] = (ModelLightStruct*)light;
         ((ModelLightStruct*)light)->selectionScore = dist;
     }
 }

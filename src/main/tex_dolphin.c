@@ -45,8 +45,6 @@ extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
 extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
 
-extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
-                                                       int count, int* out);
 extern void fn_8004CE0C();
 extern void fn_8004DA54();
 extern void fn_8004E0FC();
@@ -412,7 +410,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
         f32 ax1 = (f32)(b->maxX >> 3) + fldX;
         f32 az1 = (f32)(b->maxZ >> 3) + fldZ;
         modelLightStruct_selectBrightestAabbLights(ax0 + fx, (f32)(b->minY >> 3) + fldY, az0 + fz, ax1 + fx,
-                                                   (f32)(b->maxY >> 3) + fldY, az1 + fz, (u8*)gTexDimmedLightList, 2,
+                                                   (f32)(b->maxY >> 3) + fldY, az1 + fz, gTexDimmedLightList, 2,
                                                    &lightCount);
     }
     resetLotsOfRenderVars();
@@ -648,7 +646,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                     {
                         modelLightStruct_selectBrightestAabbLights(
                             minX + playerMapOffsetX, minY, minZ + playerMapOffsetZ, maxX + playerMapOffsetX, maxY,
-                            maxZ + playerMapOffsetZ, (u8*)gTexBlockLightList, 2, &count);
+                            maxZ + playerMapOffsetZ, gTexBlockLightList, 2, &count);
                     }
                     if ((shader != NULL) &&
                         (((SHADER_FLAGS(shader) & 0x800) != 0 || ((SHADER_FLAGS(shader) & 0x1000) != 0))))
