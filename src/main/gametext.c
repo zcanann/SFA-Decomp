@@ -26,6 +26,32 @@
 #define LANGUAGE_JAPANESE 4
 #define LANGUAGE_SPANISH  5
 
+char sMapDirectoryNameArwing[] = "Arwing";
+char sMapDirectoryNameBoot[] = "Boot";
+char sMapDirectoryNameCRFort[] = "CRFort";
+char sMapDirectoryNameDFPTop[] = "DFPTop";
+char sMapDirectoryNameDesert[] = "Desert";
+char sMapDirectoryNameLINKG[] = "LINKG";
+char sMapDirectoryNameLink[] = "Link";
+char sMapDirectoryNameLinkB[] = "LinkB";
+char sMapDirectoryNameLinkC[] = "LinkC";
+char sMapDirectoryNameLinkD[] = "LinkD";
+char sMapDirectoryNameLinkE[] = "LinkE";
+char sMapDirectoryNameLinkF[] = "LinkF";
+char sMapDirectoryNameLinkH[] = "LinkH";
+char sMapDirectoryNameLinkJ[] = "LinkJ";
+char sMapDirectoryNameMMPass[] = "MMPass";
+char sMapDirectoryNameNWastes[] = "NWastes";
+char sMapDirectoryNameShop[] = "Shop";
+char sMapDirectoryNameSwapHol[] = "SwapHol";
+char sMapDirectoryNameVolcano[] = "Volcano";
+char sMapDirectoryNameWarlock[] = "Warlock";
+char sLanguageNameEnglish[] = "English";
+char sLanguageNameFrench[] = "French";
+char sLanguageNameGerman[] = "German";
+char sLanguageNameItalian[] = "Italian";
+char sLanguageNameSpanish[] = "Spanish";
+
 #pragma auto_inline off
 int isSpace(u32 c)
 {

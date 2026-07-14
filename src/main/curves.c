@@ -4,6 +4,11 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
+int gCurveCachedSampleCount = -1;
+#pragma explicit_zero_data on
+int lbl_803DB274 = 0;
+#pragma explicit_zero_data off
+
 typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 
 void Curve_SampleSegmentPoints(f32* px, f32* py, f32* pz, f32* outX, f32* outY, f32* outZ, int count,

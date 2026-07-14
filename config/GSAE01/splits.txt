@@ -21,17 +21,20 @@ main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
 	.data       start:0x802C4F08 end:0x802C5E00
 	.bss        start:0x80335940 end:0x80337090
+	.sdata      start:0x803DB1E8 end:0x803DB260
 	.rodata     start:0x802C1A68 end:0x802C1A88
 
 main/camera.c:
 	.text       start:0x8000DD74 end:0x8000FE8C
 	.data       start:0x802C5E00 end:0x802C6010
 	.bss        start:0x80337090 end:0x80338790
+	.sdata      start:0x803DB260 end:0x803DB270
 
 main/curves.c:
 	.text       start:0x8000FE8C end:0x80010FF4
 	.data       start:0x802C6010 end:0x802C6160
 	.bss        start:0x80338790 end:0x803387A0
+	.sdata      start:0x803DB270 end:0x803DB278
 
 main/voxmaps.c:
 	.text       start:0x80010FF4 end:0x800139E8
@@ -41,11 +44,13 @@ main/modelEngine.c:
 	.text       start:0x800139E8 end:0x80014A28
 	.data       start:0x802C6300 end:0x802C6E50
 	.bss        start:0x80338818 end:0x803398B0
+	.sdata      start:0x803DB278 end:0x803DB2A8
 
 main/pad.c:
 	.text       start:0x80014A28 end:0x80015624
 	.data       start:0x802C6E50 end:0x802C6E60
 	.bss        start:0x803398B0 end:0x80339950
+	.sdata      start:0x803DB2A8 end:0x803DB2B0
 
 main/fileio.c:
 	.text       start:0x80015624 end:0x80015BC8
@@ -55,6 +60,7 @@ main/fileio.c:
 main/gametext.c:
 	.text       start:0x80015BC8 end:0x800173E4
 	.data       start:0x802C6E98 end:0x802C8D40
+	.sdata      start:0x803DB2B0 end:0x803DB378
 
 dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 	.text       start:0x800173E4 end:0x80017434

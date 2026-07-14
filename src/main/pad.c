@@ -5,6 +5,8 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 #include "dolphin/pad.h"
 
+u8 gPadStickRepeatDelay = 5;
+
 /* Synthesized C-stick-as-direction bits OR'd into the extended button word. */
 #define PADBTN_CSTICK_UP    0x10000
 #define PADBTN_CSTICK_DOWN  0x20000

@@ -65,6 +65,17 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 
+s32 gModelEngineHudNumber = -1;
+int lbl_803DB27C = 0x10;
+int lbl_803DB280 = 0x26;
+int lbl_803DB284 = 0x24;
+int lbl_803DB288 = 0x4A;
+s32 lbl_803DB28C = -1;
+char lbl_803DB290[] = "%d";
+char lbl_803DB294[] = "%01d";
+char lbl_803DB29C[] = ":";
+char lbl_803DB2A0[] = ".";
+
 #define RESOURCE_DESCRIPTOR_COUNT 0x2c1
 
 /* gModelEngineTimerState bits (roles from accessor fns: timerSetToCountUp,
@@ -567,7 +578,7 @@ void hudNumberFn_80014060(void)
 {
     if (gModelEngineHudNumber != -1)
     {
-        sprintf(gModelEngineTextBuf, &lbl_803DB290, gModelEngineHudNumber);
+        sprintf(gModelEngineTextBuf, lbl_803DB290, gModelEngineHudNumber);
         gameTextShowStr(gModelEngineTextBuf, 13, 0, 0);
     }
 }
@@ -885,22 +896,22 @@ void gameTimerRun(void)
             gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
         }
 
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, hours / 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, hours / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5, 3);
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, hours % 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, hours % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB27C + 5, 3);
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes / 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, minutes / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 + 5, 3);
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, minutes % 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, minutes % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + lbl_803DB280 + lbl_803DB27C, 3);
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths / 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths / 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, lbl_803DB280 * 2 + 5, 3);
-        sprintf(gModelEngineTextBuf, &lbl_803DB294, hundredths % 10);
+        sprintf(gModelEngineTextBuf, lbl_803DB294, hundredths % 10);
         gameTextShowStr(gModelEngineTextBuf, 0xD, 5 + lbl_803DB280 * 2 + lbl_803DB27C, 3);
         if (minutes & 1)
         {
-            gameTextShowStr(&lbl_803DB29C, 0xD, lbl_803DB284, 3);
-            gameTextShowStr(&lbl_803DB2A0, 0xD, lbl_803DB288, 3);
+            gameTextShowStr(lbl_803DB29C, 0xD, lbl_803DB284, 3);
+            gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
         }
     }
 }

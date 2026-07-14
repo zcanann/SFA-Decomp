@@ -170,7 +170,7 @@ extern u8 gSfxGlobalCtrlLevel;
 extern u32 gSfxObjectChannelMatchCount;
 extern u64 gSfxObjectChannelAge;
 extern MusicSeqStartParams gMusicSeqStartParamsDefault;
-extern u8 gSfxTriggerExtraTable;
+extern u8 gSfxTriggerExtraTable[];
 extern void* gSfxTriggersData;
 extern int gSfxTriggersCount;
 extern SfxTriggerCacheEntry gSfxTriggerLookupCache[];

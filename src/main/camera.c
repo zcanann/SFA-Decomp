@@ -13,6 +13,11 @@
 #include "dolphin/gx/GXStruct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 
+f32 gCameraNearPlane = 2.5f;
+f32 gCameraFarPlane = 10000.0f;
+f32 gCameraAspectRatio = 1.3333334f;
+f32 lbl_803DB26C = 1.0f;
+
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
 f32 lbl_80338090[64];

@@ -44,6 +44,28 @@
 __declspec(section ".rodata") MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
 
+s8 gAudioSoundMode = -1;
+#pragma explicit_zero_data on
+s32 lbl_803DB1EC = 0;
+#pragma explicit_zero_data off
+char sMusicTrackNameBarren[] = "barren";
+char sMusicTrackNameBarrels[] = "barrels";
+char sMusicTrackNameBloop[] = "bloop";
+char sMusicTrackNameDIMDay[] = "DIM_Day";
+char sMusicTrackNameDrako1[] = "drako_1";
+char sMusicTrackNameDrako2[] = "drako_2";
+char sMusicTrackNameDrako3[] = "drako_3";
+char sMusicTrackNameKptext[] = "kptext";
+char sMusicTrackNameKpwin[] = "kpwin";
+char sMusicTrackNameSlope[] = "slope";
+char sMusicTrackNameTrex2a[] = "trex_2a";
+u8 gSfxTriggerExtraTable[8] = {1, 2, 4, 8, 0x10, 0x20, 0x40, 0};
+u8 gAudioStreamVolumeLeft = 0xFF;
+u8 gAudioStreamVolumeRight = 0xFF;
+u8 gAudioStreamPlayAddrCallbackDone = 1;
+u8 gAudioStreamDefaultVolume = 0x7F;
+char sAdpExtension[] = ".adp";
+
 /* gAudioPendingLoadFlags / gAudioCompletedLoadFlags: one bit per async
  * resource load, set when enqueued and cleared/mirrored when the load
  * callback fires. (Pending clears use a 64-bit mask: ~(u64)FLAG.) */
@@ -275,7 +297,7 @@ int Sfx_ReadTriggerParams(SfxTriggerFull* trigger, u16* outSfxId, u8* outVol, f3
     }
     *outF7 = (f32)(u32)trigger->nearDistanceRaw;
     *outF8 = (f32)(u32)trigger->farDistanceRaw;
-    *outI9 = (&gSfxTriggerExtraTable)[trigger->e_tableIdx];
+    *outI9 = gSfxTriggerExtraTable[trigger->e_tableIdx];
     *outI10 = trigger->e_bit0;
     *outI11 = trigger->e_bit3;
     return 1;
@@ -2214,7 +2236,6 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     typedef s32 (*DVDCancelStreamAsyncCompatFn)(void*, void*);
     typedef int (*DVDPrepareStreamAsyncCompatFn)(void*, int, int, void (*)(void));
     typedef int (*DVDStopStreamAtEndAsyncCompatFn)(void*, int);
-    extern char sAdpExtension;
     char path[64];
     u8 vol;
     u8* dvd[1];
@@ -2265,7 +2286,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     }
     gAudioStreamDvdState = 0;
 
-    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, &sAdpExtension) == 0)
+    if (concatThreeStrings(path, (void*)0x40, (char*)fadeTbl + 0x3C, s->name, sAdpExtension) == 0)
     {
         goto ret0;
     }
