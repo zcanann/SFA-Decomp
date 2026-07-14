@@ -65,8 +65,6 @@
 #define DRAKORHOVERPAD_OBJGROUP 0x46 /* DLL 0x271 drakorhoverpad */
 #define DBHOLECONTROL1_OBJGROUP 0x1e /* DLL 0x243 dbholecontrol1 */
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 /* object-type ids of the attack children Drakor spawns (see file docblock). */
 #define BOSSDRAKOR_CHILD_OBJ_MISSILE 0x70f /* drakormissile (drakormissile_startActiveLaunch) */
 #define BOSSDRAKOR_CHILD_OBJ_ATTACK  0x709 /* spawnAttackObjects: BossdrakorPlacement (airMeterMax/curveStartIndex) */
@@ -959,4 +957,3 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 }
 
 #pragma opt_common_subs reset
-
