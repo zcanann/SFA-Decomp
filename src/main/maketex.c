@@ -117,7 +117,6 @@ extern int gSaveCardImageBuffer;
 extern char sMemoryCardFileNameString[];
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
-extern u8 lbl_803DD05A;
 extern int gObjSeqStreamSuppressed;
 extern int lbl_803DB728;
 extern f32 lbl_803DEFB0;

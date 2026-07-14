@@ -7,6 +7,7 @@ extern char* sMemoryCardFileName;
 extern int lbl_803DB708;
 extern void* lbl_803DD040;
 extern char* lbl_803DD044;
+extern u8 lbl_803DD05A;
 
 typedef int (*SaveGameCallback)(int arg0, int arg1, int arg2, int arg3);
 

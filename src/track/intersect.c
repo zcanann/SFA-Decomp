@@ -141,6 +141,13 @@ extern f32 lbl_803DEF4C, lbl_803DEF50, lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C;
 extern f32 lbl_803DEF60, lbl_803DEF64, lbl_803DEF68, lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
 extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80, lbl_803DEF84, lbl_803DEF88;
 extern f32 lbl_803DEF90, lbl_803DEF94, lbl_803DEF98, lbl_803DEF9C;
+extern f32 lbl_8030EA10[3][3], lbl_8030EA58[3][3], lbl_8030EA70[3][3];
+extern f32 lbl_8030EA88[3][3], lbl_8030EAA0[3][3];
+extern GXColor lbl_803DEEB4, lbl_803E8454;
+extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8, lbl_803DEEAC;
+extern u8 lbl_803DEEB0, lbl_803DEEB2;
+extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
+extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4, lbl_803E8450;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -1000,7 +1007,6 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
 int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_8030EAA0[3][3];
     extern void GXInitTexObj();
 
     void* renderOp;
@@ -1233,8 +1239,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_8030EA70[3][3];
-    extern f32 lbl_8030EA88[3][3];
 
     Mtx mtx_60;
     Mtx mtx_30;
@@ -1523,8 +1527,6 @@ void doSpiritVisionFilter(void)
 
 void doColorFilter(u8* mod)
 {
-    extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
-
     GXColor c0, c1, c2, c3;
 
     *(u32*)&c0 = lbl_803DEEC8;
@@ -1658,7 +1660,6 @@ static inline f32 distortSqrtf(f32 x)
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
     Mtx mtx_d0;
@@ -1899,7 +1900,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_8030EA58[3][3];
     extern void* getTextureFn_8006c744(void);
     extern void fn_8006C6A4(int);
     Mtx mtx_54;
@@ -2263,7 +2263,6 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 int modelCb_80073d04(u8* obj, int* objB)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern GXColor lbl_803DEEB4;
     int handle;
     GXColor colorK;
     GXColor colorB;
@@ -3696,7 +3695,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern GXColor lbl_803E8454;
     extern void fn_8006C5B8(int* out);
     Mtx m58;
     Mtx m28;
@@ -3783,10 +3781,6 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
 void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern u32 lbl_803DEEAC;
-    extern u8 lbl_803DEEB0;
-    extern u8 lbl_803DEEB2;
-    extern u32 lbl_803E8450;
     extern u8 lbl_802C1EA8[0xC0];
     extern void fn_8006C5B8(int* out);
     typedef struct
@@ -4376,9 +4370,6 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
  */
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 {
-    extern u32 lbl_803DEEA0;
-    extern u32 lbl_803DEEA4;
-    extern u32 lbl_803DEEA8;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
     extern void fn_8006C540(int*);
@@ -5194,8 +5185,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
                                     GXColor* k1, GXColor* k2, GXColor* tev1, GXColor* tev2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_8030EA10[3][3];
-
     u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
@@ -6128,7 +6117,6 @@ void showMemCardError(u8 err)
 
 int memCardFn_8007dd04(u8 retry)
 {
-    extern u8 lbl_803DD05A;
     int ret;
 
     if (retry != 0)
