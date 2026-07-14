@@ -22,6 +22,7 @@
  * pointers immediately following at +0x510/+0x514/+0x518.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -34,7 +35,6 @@
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern s32 Sfx_IsPlayingFromObjectChannel(void* obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
@@ -416,7 +416,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
         (distanceScale < lbl_803E5AE8) ? lbl_803E5AE8 : ((distanceScale > lbl_803E5B08) ? lbl_803E5B08 : distanceScale);
     if (channelFlags & 1)
     {
-        if (Sfx_IsPlayingFromObjectChannel(obj, 8))
+        if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 8))
         {
             gDrCloudCageWindVolume = lbl_803E5B0C * clamped;
             if (gDrCloudCageWindVolume < lbl_803E5AE8)
@@ -452,7 +452,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
     }
     if (channelFlags & 2)
     {
-        if (Sfx_IsPlayingFromObjectChannel(obj, 1))
+        if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 1))
         {
             if (((DRCloudCageState*)state)->distanceGate < lbl_803E5B18)
             {
