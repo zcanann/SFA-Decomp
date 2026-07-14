@@ -211,7 +211,7 @@ extern u32 FUN_8025c5f0();
 extern u32 FUN_8025c65c();
 extern u32 FUN_8025c828();
 extern u32 FUN_8025ca04();
-extern u32 FUN_8025ca38();
+extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
 extern u32 FUN_8025cce8();
 extern u32 FUN_8025d8c4();
 extern u32 DAT_803dc0c8;
@@ -274,10 +274,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025be54(0);
     FUN_80258944(2);
     FUN_80259288(2);
-    {
-        extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
-        FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&DAT_803dc0c8);
-    }
+    FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&DAT_803dc0c8);
     gxSetZModeByteLegacy(1, 3, 0);
     gxSetPeControl_ZCompLocByteLegacy(1);
     FUN_8025cce8(1, 4, 5, 5);
