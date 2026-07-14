@@ -6968,6 +6968,7 @@ extern f32 lbl_803DEA94;
 extern f32 lbl_803DEA98;
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void videoInit(void)
 {
     u8 fifo[0x80];
@@ -6989,8 +6990,9 @@ void videoInit(void)
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     lbl_803DCCB8 = GXSetDispCopyYScale((f32)gRenderModeObj->xfbHeight / gRenderModeObj->efbHeight);
-    fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
+    fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2;
     externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
+    fbSize += 0x1f;
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
     next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
     OSSetArenaLo((void*)next);
@@ -7104,6 +7106,7 @@ void videoInit(void)
 }
 
 #pragma opt_common_subs reset
+#pragma opt_propagation reset
 #pragma optimize_for_size on
 #pragma optimization_level 2
 #pragma opt_common_subs off
