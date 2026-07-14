@@ -84,6 +84,116 @@ extern void nwsh_levcon_init();
 extern void nwsh_levcon_release();
 extern void nwsh_levcon_initialise();
 
+typedef struct Dll197Placement
+{
+    u8 pad0[0x18 - 0x0];
+    u8 rotXParam;  /* 0x18: low 6 bits -> anim.rotX seed */
+    u8 kind;       /* 0x19: object sub-type selector */
+    s16 scale;     /* 0x1a: rootMotionScale numerator */
+    s16 menuState; /* 0x1c: initial spin-symbol menu state */
+    s16 unk1e;     /* 0x1e: latched into Dll197State word 0 */
+} Dll197Placement;
+
+int dll_197_getExtraSize(void)
+{
+    return 0x10;
+}
+
+int dll_197_getObjectTypeId(void)
+{
+    return 0x1;
+}
+
+void dll_197_free(int obj)
+{
+    (*gModgfxInterface)->detachSource((void*)obj);
+    (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    struct
+    {
+        u8 pad[0xc];
+        f32 pos[3];
+    } particleParams;
+    f32 dir[3];
+    f32 objTrace[3];
+    f32 cameraTrace[3];
+    s16 startGrid[4];
+    s16 endGrid[4];
+    u8 traceOut[8];
+    Cup197State* state = (obj)->extra;
+    CameraViewSlot* camera;
+    f32 dist;
+    f32 scale;
+    void* dirAlias = dir;
+
+    if (visible == 0)
+    {
+        state->sparkTimer = 0;
+        state->visibleToCamera = 0;
+        return;
+    }
+
+    if (state->active == 0)
+    {
+        return;
+    }
+
+    state->visibleToCamera = 1;
+    camera = Camera_GetCurrentViewSlot();
+    dir[0] = camera->x - (obj)->anim.localPosX;
+    dir[1] = camera->y - (obj)->anim.localPosY;
+    dir[2] = camera->z - (obj)->anim.localPosZ;
+
+    dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
+    if (dist > lbl_803E5120)
+    {
+        scale = lbl_803E5124 / dist;
+        dir[0] = dir[0] * scale;
+        dir[1] = dir[1] * scale;
+        dir[2] = dir[2] * scale;
+
+        objTrace[0] = lbl_803E5128 * dir[0];
+        objTrace[1] = lbl_803E5128 * dir[1];
+        objTrace[2] = lbl_803E5128 * dir[2];
+        objTrace[0] = objTrace[0] + (obj)->anim.localPosX;
+        objTrace[1] = objTrace[1] + (obj)->anim.localPosY;
+        objTrace[2] = objTrace[2] + (obj)->anim.localPosZ;
+        cameraTrace[0] = lbl_803E512C * dir[0];
+        cameraTrace[1] = lbl_803E512C * dir[1];
+        cameraTrace[2] = lbl_803E512C * dir[2];
+        cameraTrace[0] = cameraTrace[0] + camera->x;
+        cameraTrace[1] = cameraTrace[1] + camera->y;
+        cameraTrace[2] = cameraTrace[2] + camera->z;
+
+        voxmaps_worldToGrid((void*)objTrace, startGrid);
+        voxmaps_worldToGrid((void*)cameraTrace, endGrid);
+        if (voxmaps_traceLine((VoxPos*)startGrid, (VoxPos*)endGrid, (VoxPos*)traceOut, NULL, 0) == 0)
+        {
+            state->visibleToCamera = 0;
+            (*gExpgfxInterface)->freeSource((int)obj);
+        }
+    }
+
+    if (state->sparkTimer > 0)
+    {
+        state->sparkTimer -= framesThisStep;
+        return;
+    }
+
+    if (state->visibleToCamera != 0)
+    {
+        particleParams.pos[0] = lbl_803E5130;
+        particleParams.pos[1] = lbl_803E5134;
+        particleParams.pos[2] = lbl_803E5130;
+        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
+    }
+
+    state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
+}
+
 void dll_197_hitDetect(void)
 {
 }
@@ -234,115 +344,6 @@ void dll_197_update(int obj)
     }
 }
 
-int dll_197_getExtraSize(void)
-{
-    return 0x10;
-}
-int dll_197_getObjectTypeId(void)
-{
-    return 0x1;
-}
-
-void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    struct
-    {
-        u8 pad[0xc];
-        f32 pos[3];
-    } particleParams;
-    f32 dir[3];
-    f32 objTrace[3];
-    f32 cameraTrace[3];
-    s16 startGrid[4];
-    s16 endGrid[4];
-    u8 traceOut[8];
-    Cup197State* state = (obj)->extra;
-    CameraViewSlot* camera;
-    f32 dist;
-    f32 scale;
-    void* dirAlias = dir;
-
-    if (visible == 0)
-    {
-        state->sparkTimer = 0;
-        state->visibleToCamera = 0;
-        return;
-    }
-
-    if (state->active == 0)
-    {
-        return;
-    }
-
-    state->visibleToCamera = 1;
-    camera = Camera_GetCurrentViewSlot();
-    dir[0] = camera->x - (obj)->anim.localPosX;
-    dir[1] = camera->y - (obj)->anim.localPosY;
-    dir[2] = camera->z - (obj)->anim.localPosZ;
-
-    dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
-    if (dist > lbl_803E5120)
-    {
-        scale = lbl_803E5124 / dist;
-        dir[0] = dir[0] * scale;
-        dir[1] = dir[1] * scale;
-        dir[2] = dir[2] * scale;
-
-        objTrace[0] = lbl_803E5128 * dir[0];
-        objTrace[1] = lbl_803E5128 * dir[1];
-        objTrace[2] = lbl_803E5128 * dir[2];
-        objTrace[0] = objTrace[0] + (obj)->anim.localPosX;
-        objTrace[1] = objTrace[1] + (obj)->anim.localPosY;
-        objTrace[2] = objTrace[2] + (obj)->anim.localPosZ;
-        cameraTrace[0] = lbl_803E512C * dir[0];
-        cameraTrace[1] = lbl_803E512C * dir[1];
-        cameraTrace[2] = lbl_803E512C * dir[2];
-        cameraTrace[0] = cameraTrace[0] + camera->x;
-        cameraTrace[1] = cameraTrace[1] + camera->y;
-        cameraTrace[2] = cameraTrace[2] + camera->z;
-
-        voxmaps_worldToGrid((void*)objTrace, startGrid);
-        voxmaps_worldToGrid((void*)cameraTrace, endGrid);
-        if (voxmaps_traceLine((VoxPos*)startGrid, (VoxPos*)endGrid, (VoxPos*)traceOut, NULL, 0) == 0)
-        {
-            state->visibleToCamera = 0;
-            (*gExpgfxInterface)->freeSource((int)obj);
-        }
-    }
-
-    if (state->sparkTimer > 0)
-    {
-        state->sparkTimer -= framesThisStep;
-        return;
-    }
-
-    if (state->visibleToCamera != 0)
-    {
-        particleParams.pos[0] = lbl_803E5130;
-        particleParams.pos[1] = lbl_803E5134;
-        particleParams.pos[2] = lbl_803E5130;
-        (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
-    }
-
-    state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
-}
-
-void dll_197_free(int obj)
-{
-    (*gModgfxInterface)->detachSource((void*)obj);
-    (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-typedef struct Dll197Placement
-{
-    u8 pad0[0x18 - 0x0];
-    u8 rotXParam;  /* 0x18: low 6 bits -> anim.rotX seed */
-    u8 kind;       /* 0x19: object sub-type selector */
-    s16 scale;     /* 0x1a: rootMotionScale numerator */
-    s16 menuState; /* 0x1c: initial spin-symbol menu state */
-    s16 unk1e;     /* 0x1e: latched into Dll197State word 0 */
-} Dll197Placement;
-
 void dll_197_init(int obj, int dataArg)
 {
     Dll197Placement* data = (Dll197Placement*)dataArg;
@@ -396,6 +397,8 @@ void dll_197_release(void)
 void dll_197_initialise(void)
 {
 }
+
+
 
 ObjectDescriptor dll_197 = {
     0,
