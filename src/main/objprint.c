@@ -23,10 +23,13 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXCull.h"
+#include "dolphin/gx/GXLighting.h"
+#include "dolphin/gx/GXPixel.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXTransform.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 #include "track/intersect_fog_api.h"
@@ -107,6 +110,12 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 }
 
 extern u32 objRenderFuzzFn_8003d6f8();
+extern void fn_8006C4C0(int* a, int* b, int* c);
+
+typedef void (*ObjPrintSetTevKColorFn)(int id, ObjPrintGXColor color);
+typedef void (*ObjPrintSetChanColorFn)(int chan, ObjPrintGXColor color);
+typedef void (*ObjPrintSetFogFn)(int type, f32 startZ, f32 endZ, f32 nearZ, f32 farZ, ObjPrintGXColor color);
+typedef void (*ObjPrintLoadTexMtxFn)(f32* mtx, int id, int type);
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
 {
@@ -1035,7 +1044,6 @@ int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 #pragma opt_common_subs off
 int fn_8003BB84(f32* m, f32* out)
 {
-    extern void PSVECNormalize(f32 * src, f32 * dst);
     f32 v3[3];
     f32 v1[3];
     f32 v2[3];
@@ -1641,7 +1649,6 @@ void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 
 
 void modelCalcVtxGroupMtxs(int def, int model)
 {
-    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     f32 ma[12];
     f32 mb[12];
     f32 trans[12];
@@ -1861,41 +1868,21 @@ typedef struct IndTexMtx23
     f32 m[6];
 } IndTexMtx23;
 
+typedef void (*ObjPrintSetIndTexMtxFn)(int id, IndTexMtx23* mtx, int scale);
+
 __declspec(section ".rodata") IndTexMtx23 lbl_802C1B10 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
 __declspec(section ".rodata") IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 __declspec(section ".rodata") IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
 __declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 
+#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
+#define GXSetChanAmbColor ((ObjPrintSetChanColorFn)GXSetChanAmbColor)
+#define GXSetChanMatColor ((ObjPrintSetChanColorFn)GXSetChanMatColor)
+#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
+#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
+#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
-                                  GXBool normalize, u32 pt_texmtx);
-
-    extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-    extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-    extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
-    extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                                GXTevRegID out_reg);
-    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                                GXTevRegID out_reg);
-    extern void GXSetTevKColor(int id, ObjPrintGXColor c);
-    extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
-    extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
-    extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-
-    extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
-
-    extern void GXSetNumTevStages(u8 nStages);
-    extern void GXSetNumTexGens(u8 nTexGens);
-    extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
-    extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
-    extern void fn_8006C4C0(int* a, int* b, int* c);
-
-    extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
-    extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
     extern IndTexMtx23 lbl_802C1B40;
     extern IndTexMtx23 lbl_802C1B58;
     extern int lbl_803DCC44;
@@ -2082,11 +2069,19 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
+#undef GXLoadTexMtxImm
+#undef GXSetFog
+#undef GXSetIndTexMtx
+#undef GXSetChanMatColor
+#undef GXSetChanAmbColor
+#undef GXSetTevKColor
 
 typedef struct ObjPrintS10Color
 {
     s16 r, g, b, a;
 } ObjPrintS10Color;
+
+typedef void (*ObjPrintSetTevColorS10Fn)(int id, ObjPrintS10Color color);
 
 static inline int shaderProjDisabled(ModelLightStruct* light)
 {
@@ -2096,34 +2091,13 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
     return flag;
 }
 
+#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
+#define GXSetTevColorS10 ((ObjPrintSetTevColorS10Fn)GXSetTevColorS10)
+#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
+#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
+#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
-                                  GXBool normalize, u32 pt_texmtx);
-
-    extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-    extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-    extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
-    extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-    extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                                GXTevRegID out_reg);
-    extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                                GXTevRegID out_reg);
-    extern void GXSetTevKColor(int id, ObjPrintGXColor c);
-    extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
-    extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
-    extern void GXSetTevColorS10(int id, ObjPrintS10Color c);
-    extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
-    extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
-    extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-
-    extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
-
-    extern void GXSetNumTevStages(u8 nStages);
-    extern void GXSetNumTexGens(u8 nTexGens);
-
-    extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
-    extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;
     extern ObjPrintS10Color lbl_803DE9F4;
@@ -2389,3 +2363,8 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
+#undef GXLoadTexMtxImm
+#undef GXSetFog
+#undef GXSetIndTexMtx
+#undef GXSetTevColorS10
+#undef GXSetTevKColor
