@@ -1674,8 +1674,11 @@ void drawViewFinderHud(void)
         {
             int r30v, r29v, r5v, r28v;
             int t;
+            f64 fx;
+            f32 f15, f16;
+            f32 _r, _cs, _sn, _cx, _sx;
             f32 f18, f19, num;
-            f64 d;
+            f64 d, q;
             d = xc - lbl_803E1F50;
             t = (int)(d * lbl_803E1F58);
             r30v = (t < 0) ? 0 : ((t > 0x8c) ? 0x8c : t);
@@ -1702,7 +1705,6 @@ void drawViewFinderHud(void)
                 u8 r27v = 0xff;
                 int r26v = 0xff;
                 int r25v = 0xf;
-                f64 q;
                 if (r28v >= 0x168)
                     r28v -= 0x168;
                 q = r28v / lbl_803E1F80;
@@ -1755,8 +1757,12 @@ void drawViewFinderHud(void)
                 if ((u8)r27v != 0)
                 {
                     f32 sn;
+                    f32 phase;
+                    f32 scale;
                     gameTextSetColorInt(0, 0xff, 0, (int)((f32)(u8)r27v * gViewFinderFadeLevel));
-                    sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
+                    scale = lbl_803E1EC8;
+                    phase = lbl_803E1F34 - f18;
+                    sn = lbl_803DBAE4 * mathCosf(scale * (phase * lbl_803DBAE0) / lbl_803E1E94);
                     gameTextShowStr(buf, 0x93, (int)(lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78),
                                     (int)(gViewFinderBaseY + (lbl_803E1F90 + sn)));
                 }
@@ -1764,11 +1770,8 @@ void drawViewFinderHud(void)
                     GXColor _c2;
                     GXColor _c;
                     s16 _a;
-                    f32 _r, _cs, _sn, _cx, _sx;
                     u8 alpha = (f32)(u8)r26v * gViewFinderFadeLevel;
-                    f32 f15 = lbl_803E1F34 - f18;
-                    f32 f16;
-                    f64 fx;
+                    f15 = lbl_803E1F34 - f18;
                     _sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
                     f16 = gViewFinderBaseY + ((f32)((u8)r25v + 0x1e0) + _sn);
                     _sn = lbl_803DBAE4 * mathCosf(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94);
