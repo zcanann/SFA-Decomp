@@ -20,8 +20,8 @@
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/dll/NW/dll_01A1_nwmammoth.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/audio/sfx.h"
+#include "main/frame_timing.h"
 
 /* GameBit that erupts/retires the geyser (hides it, drops its sounds). */
 #define GAMEBIT_GEYSER_OFF 0xa

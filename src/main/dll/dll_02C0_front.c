@@ -170,7 +170,6 @@ extern s8 lbl_803DBC08;
 extern s8 lbl_803DBC09;
 extern s8 lbl_803DD990;
 extern s8 lbl_803DD991;
-extern u8 lbl_803DC968;
 extern f32 lbl_803DD9D0;
 extern f32 lbl_803DD9CC;
 extern f32 lbl_803DD9C4;

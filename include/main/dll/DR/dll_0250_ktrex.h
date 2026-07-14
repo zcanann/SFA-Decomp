@@ -200,6 +200,7 @@ extern f32 lbl_803E67EC;
 extern f32 lbl_8032A51C[];
 extern s16 lbl_8032A510[];
 extern f32 lbl_8032A528[];
+extern s16 lbl_8032A730[];
 
 void ktrex_initialiseStateHandlerTables(void);
 int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);

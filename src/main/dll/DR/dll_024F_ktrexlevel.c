@@ -12,8 +12,8 @@
  *
  * The 4-byte extra block holds a single f32 scratch value seeded at init.
  */
-#include "main/dll/DR/dr_shared.h"
 #include "main/render.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
 #include "main/sky_api.h"

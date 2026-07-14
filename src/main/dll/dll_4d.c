@@ -12,9 +12,9 @@
  * render-stale countdown (lbl_803DD706) is reset so the new layout draws.
  */
 #include "main/dll/dll_4D.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/savedata_struct.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/textrender_api.h"
 
 /* misc-panel id stored in lbl_803DBA28 (see dll_0037_optionsscreen.c) */
 #define OPTIONS_PANEL_MISC 3

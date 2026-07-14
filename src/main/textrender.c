@@ -318,7 +318,6 @@ extern int gGameTextBoxCornerInset;
 extern void* gGameTextBoxCornerTexture;
 extern void* gGameTextBoxBgTexture;
 extern u32 gGameTextBoxFillColor;
-extern u8 lbl_803DC968;
 extern u16 gGameTextSjisGlyphTable[];
 extern int lbl_803DB3C4;
 extern int gSubtitleLineIndex;

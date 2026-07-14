@@ -16,6 +16,8 @@ typedef struct GmmazewellState
 STATIC_ASSERT(offsetof(GmmazewellState, pendingDialogue) == 0x4);
 STATIC_ASSERT(sizeof(GmmazewellState) == 0x8);
 
+extern f32 lbl_803E6978;
+
 int GM_MazeWell_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int GM_MazeWell_getExtraSize(void);
 void GM_MazeWell_free(void);

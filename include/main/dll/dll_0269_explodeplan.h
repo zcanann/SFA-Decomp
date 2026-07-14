@@ -23,6 +23,8 @@ STATIC_ASSERT(offsetof(ExplodePlanPlacement, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(ExplodePlanPlacement, removeGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ExplodePlanPlacement) == 0x20);
 
+extern f32 lbl_803E69D0;
+
 int explodeplan_getExtraSize(void);
 int explodeplan_getObjectTypeId(void);
 void explodeplan_free(void);

@@ -50,6 +50,10 @@ STATIC_ASSERT(offsetof(DRChimmeyObject, setup) == 0x4c);
 STATIC_ASSERT(offsetof(DRChimmeyObject, renderFlags) == 0xaf);
 STATIC_ASSERT(offsetof(DRChimmeyObject, state) == 0xb8);
 
+extern f32 lbl_803E69E0;
+extern f32 lbl_803E69E4;
+extern f32 lbl_803E69E8;
+
 int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount);
 int DR_Chimmey_getExtraSize(void);
 void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);

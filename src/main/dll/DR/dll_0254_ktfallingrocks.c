@@ -8,9 +8,11 @@
  * bit so the burst only fires once per trigger.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/expgfx_interface.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

@@ -44,6 +44,12 @@ STATIC_ASSERT(offsetof(DrshackleState, pathPointA) == 0x1B);
 STATIC_ASSERT(offsetof(DrshackleState, pathPointB) == 0x1C);
 STATIC_ASSERT(sizeof(DrshackleState) == 0x20);
 
+extern f32 lbl_803E6A28;
+extern f32 lbl_803E6A2C;
+extern f32 lbl_803E6A30;
+extern int lbl_803DC2F0;
+extern int lbl_803DDD70;
+
 int drshackle_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int drshackle_func0B(GameObject* obj);
 int drshackle_setScale(GameObject* obj, int a, int b, int c, int d, int e, int f);

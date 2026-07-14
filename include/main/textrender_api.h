@@ -15,6 +15,7 @@ typedef void (*GameTextSetColorIntFn)(int r, int g, int b, int a);
 typedef int (*GameTextGetLegacyFn)();
 
 extern int lbl_803DC9C8;
+extern u8 lbl_803DC968;
 extern GameTextSlot lbl_8033A540[];
 
 #define gGameTextCommandCount lbl_803DC9C8

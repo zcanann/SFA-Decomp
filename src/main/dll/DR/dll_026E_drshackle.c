@@ -9,17 +9,19 @@
  * and rattling); the matching attachment logic lives in the separate
  * drshackle.c build unit (DRshackle.h).
  */
-#include "main/dll/DR/dr_shared.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/obj_group.h"
 #include "main/object_render.h"
 #include "main/objprint_render_api.h"
+#include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #include "main/dll/DR/dll_026E_drshackle.h"
+#include "main/dll/DR/dr_types.h"
 
 #define DRSHACKLE_OBJGROUP  0x37
 #define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */

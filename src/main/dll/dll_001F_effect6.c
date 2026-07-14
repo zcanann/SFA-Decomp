@@ -17,11 +17,13 @@
  * are compared against the target object.
  */
 #include "main/dll/partfx_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/dll/modgfx.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_001F_effect6.h"
 
 f32 gEffect6ScrollPhase0 = 0.1f;

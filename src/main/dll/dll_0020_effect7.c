@@ -10,13 +10,16 @@
  * dll_000C_projgfx.c.
  */
 #include "main/dll/partfx_interface.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 #include "main/dll/modgfx.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_0020_effect7.h"
 

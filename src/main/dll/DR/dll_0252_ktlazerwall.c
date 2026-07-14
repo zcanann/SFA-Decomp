@@ -12,10 +12,12 @@
  * frame's flags so sfx fire on edges.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
+#include "main/vecmath.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

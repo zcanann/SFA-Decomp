@@ -14,13 +14,19 @@
  * is suppressed (INTERACT_FLAG_PROMPT_SUPPRESSED) whenever no watched
  * event is currently ready.
  */
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0015_save_settings.h"
+#include "main/dll/DR/dll_0250_ktrex.h"
 #include "main/audio/music_api.h"
+#include "main/game_ui_interface.h"
+#include "main/gamebits.h"
+#include "main/mapEventTypes.h"
 #include "main/shader_api.h"
 #include "main/pad.h"
 #include "main/objprint_render_api.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
+#include "main/objseq.h"
+#include "main/textrender_api.h"
 #include "main/dll/dll_0263_gmmazewell.h"
 
 #define PAD_BUTTON_A 0x100

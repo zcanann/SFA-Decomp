@@ -7,13 +7,14 @@
  * The 4-byte extra holds the runtime sequence id (offset 0) plus a
  * BitFlags8 status byte at offset 4 (b0/b1/b2).
  */
-#include "main/dll/DR/dr_shared.h"
-#include "main/gamebit_ids.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
+#include "main/objseq.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0268_drcagecontrol.h"
+#include "main/dll/DR/dr_types.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69D8 = 1.0f;
 #pragma explicit_zero_data on

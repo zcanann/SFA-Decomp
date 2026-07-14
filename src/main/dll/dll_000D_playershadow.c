@@ -15,7 +15,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/camera.h"
-#include "main/dll/DR/dr_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_000D_playershadow.h"
 
 /* foot/bone particle ids scattered per struck-triangle surface type

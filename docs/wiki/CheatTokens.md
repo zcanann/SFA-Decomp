@@ -141,15 +141,13 @@ This page maps almost completely onto one already-decompiled object and a set of
   - Per `docs/wiki/Objects.md`'s own two-letter-DLL-prefix table, `GM` = "Game Maze (cheat
     tokens)" — this repo's own prior wiki import already names this DLL family after exactly this
     feature.
-  - `dll_0263_gmmazewell.c` includes `main/dll/DR/dr_shared.h` (the Dragon Rock shared-declaration
-    header; `DR` = DragonRock per `docs/wiki/Objects.md`/`AudioStreams.md`), even though the
-    `.c` file itself lives outside the `DR/` subfolder — consistent with (but not proof of) the
-    Well physically being sited at Dragon Rock. Not independently confirmed against placement/map
-    data in this pass.
+  - `dll_0263_gmmazewell.c` includes the K. Triceratops owner header for the quest-bit table below.
+    The table's Dragon Rock ownership is consistent with (but not proof of) the Well physically
+    being sited there. Not independently confirmed against placement/map data in this pass.
 - The wiki's "table" (9 watched bits × {reward bit, follow-up bit, dialogue id}) is the flat
   `s16 lbl_8032A730[44]` array, defined at `src/main/dll/DR/dll_0250_ktrex.c:1961` (`.data:0x8032A730`,
   size `0x58` per `config/GSAE01/symbols.txt`) and declared `extern` in
-  `include/main/dll/DR/dr_shared.h:154`. Its 44 raw values are **byte-identical** to the wiki's
+  `include/main/dll/DR/dll_0250_ktrex.h`. Its 44 raw values are **byte-identical** to the wiki's
   table read column-major:
   ```
   { 0x0ddc, 0x0de2, 0x0dde, 0x0ddd, 0x0de0, 0x0de3, 0x0ddf, 0x0de1, 0x0de4, 0x0000,   // Collected bits (+ pad)

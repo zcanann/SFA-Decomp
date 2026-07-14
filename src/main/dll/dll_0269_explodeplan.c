@@ -9,8 +9,8 @@
  * state so the prop appears or disappears the moment the bit changes.
  * Render is a plain model draw at a fixed scale (lbl_803E69D0).
  */
-#include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/dll/dll_0269_explodeplan.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69D0 = 1.0f;

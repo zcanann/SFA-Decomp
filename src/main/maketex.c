@@ -131,7 +131,6 @@ extern int lbl_80396900[];
 extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
-extern u8 lbl_803DC968;
 extern int gSaveCardImageBuffer;
 extern char sMemoryCardFileNameString[];
 extern void* lbl_803DD040;

@@ -20,16 +20,19 @@
  * pushable TU in the same binary; they are not called from this object.
  */
 #include "main/obj_placement.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/object_descriptor.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
+#include "main/object_api.h"
 #include "main/dll/pushable.h"
 #include "main/dll/dll_00EF_pushable.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/shader_api.h"
+#include "main/vecmath_distance_api.h"
 
 typedef struct WarpPointObjectDef
 {

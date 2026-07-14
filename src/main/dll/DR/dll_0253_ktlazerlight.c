@@ -8,8 +8,8 @@
  * (defaulting to 0x10 when set but zero), the second bit just keeps the
  * light lit. The light is freed when the object is destroyed.
  */
-#include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
+#include "main/gamebits.h"
 #include "main/model_light.h"
 #include "main/dll/DR/dll_0253_ktlazerlight.h"
 
