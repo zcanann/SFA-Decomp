@@ -367,3 +367,12 @@ code adds. gi (u32) in the committed decls is DEAD - vestigial, remove in final 
   +1 pl chain, +~2 instructions; note baseline is ALREADY +2 instructions vs target
   (the site-1 duplicate add r3,r30,r3) - the true original may trade these (the staging
   form could REPLACE the +2 with its own materializations, netting byte-equal).
+
+## BREAKTHROUGH: K=3-only wg staging -> 117 regions (probe wgfep_117.c)
+Expanding ONLY the wg K=3 SET_PLANE with pl/po staging (po = &wg->planeOffsets[3];
+pl = &wg->planes[3]; before the sqrtf) gives the pl-chain census the target needs:
+curve=r22, wg/wg1=r21, wgB=r22 ALL CORRECT, regions 140 -> 117 (best). Remaining:
++4 instructions total (2 baseline site-1 extras + 2 new addis from the staging - the
+original may express K=3 differently to net zero), and the p/pp/listWalk/listIndex grant
+cluster rotated down one slot (p=r26, pp=r25, listWalk=r25, listIndex=r24, back=r27,
+slot36=r29) - retune their decl positions against the new census next.
