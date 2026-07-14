@@ -6,6 +6,7 @@ int playerGetCurMagic(GameObject* playerObj);
 int playerGetMaxMagic(GameObject* playerObj);
 int playerGetMaxHealth(GameObject* playerObj);
 int playerGetCurHealth(GameObject* playerObj);
+int playerStatusIsPositive(GameObject* playerObj);
 int playerIsDead(GameObject* playerObj);
 void playerSetIsDead(GameObject* playerObj, int isDead);
 

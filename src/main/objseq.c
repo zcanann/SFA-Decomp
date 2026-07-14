@@ -29,6 +29,7 @@
 #include "main/sky_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_status.h"
 #include "main/object.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
@@ -246,7 +247,6 @@ extern int gObjSeqMsgIds[];
 extern f32 gObjSeqMsgNearbyRadius;
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
-extern void playerLock(GameObject* player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern int seqStreamFn_8008023c(int slot);
 extern int* seqStreamLookupFn_8007fff8(void* table, int count, int key);
@@ -300,11 +300,6 @@ extern int lbl_803DB71C;
 extern u8 lbl_803DD0D9;
 extern u8 lbl_803DD078;
 extern s16 lbl_8030ECF8[];
-extern int playerStatusIsPositive(GameObject* obj);
-extern void playerSetInCutscene(GameObject* obj);
-extern void playerSetCutsceneCameraFlag(GameObject* obj);
-extern void playerSetOverrideParentSlack(GameObject* obj);
-
 extern int lbl_803DB724;
 extern f32 lbl_803DD074;
 extern f32 RecvDataLeng;
