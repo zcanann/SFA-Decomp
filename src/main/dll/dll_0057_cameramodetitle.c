@@ -34,12 +34,21 @@ f32 titleScreenCamProgress = 1.0f;
 /* gCamTitlePoseTable pose index of the resting title pose */
 #define TITLE_CAM_REST_POSE 4
 
+typedef struct CameraModeTitleStartPose
+{
+    CameraModeTitlePose pose;
+    u32 pad14;
+} CameraModeTitleStartPose;
+
+STATIC_ASSERT(sizeof(CameraModeTitlePose) == 0x14);
+STATIC_ASSERT(sizeof(CameraModeTitleStartPose) == 0x18);
+
 extern CameraModeTitlePose gCamTitlePoseTable[];
 extern u8 gCamTitleCurPose;
 extern u8 gCamTitlePrevPose;
 extern u8 gCamTitleStartPosePending;
 extern f32 titleScreenCamProgress;
-CameraModeTitlePose gCamTitleStartPose;
+CameraModeTitleStartPose gCamTitleStartPose;
 extern u8 dll_19_func03_nop[];
 extern u8 dll_19_func04_nop[];
 extern u8 dll_19_func05[];
@@ -107,12 +116,12 @@ void CameraModeTitle_update(CameraObject* camera)
 {
     if (gCamTitleStartPosePending != 0)
     {
-        gCamTitleStartPose.x = camera->anim.localPosX;
-        gCamTitleStartPose.y = camera->anim.localPosY;
-        gCamTitleStartPose.z = camera->anim.localPosZ;
-        gCamTitleStartPose.yaw = camera->anim.rotX;
-        gCamTitleStartPose.pitch = camera->anim.rotY;
-        gCamTitleStartPose.roll = camera->anim.rotZ;
+        gCamTitleStartPose.pose.x = camera->anim.localPosX;
+        gCamTitleStartPose.pose.y = camera->anim.localPosY;
+        gCamTitleStartPose.pose.z = camera->anim.localPosZ;
+        gCamTitleStartPose.pose.yaw = camera->anim.rotX;
+        gCamTitleStartPose.pose.pitch = camera->anim.rotY;
+        gCamTitleStartPose.pose.roll = camera->anim.rotZ;
         gCamTitleStartPosePending = 0;
     }
     if (gCamTitleCurPose != gCamTitlePrevPose)
@@ -165,14 +174,14 @@ void CameraModeTitle_update(CameraObject* camera)
         ease = (0.5f * ease + (1.5f * ease) * ease) + ease * ((-1.0f * ease) * ease);
 
         camera->anim.localPosX =
-            ease * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.x) + gCamTitleStartPose.x;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].x - gCamTitleStartPose.pose.x) + gCamTitleStartPose.pose.x;
         camera->anim.localPosY =
-            ease * (gCamTitlePoseTable[gCamTitleCurPose].y - gCamTitleStartPose.y) + gCamTitleStartPose.y;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].y - gCamTitleStartPose.pose.y) + gCamTitleStartPose.pose.y;
         camera->anim.localPosZ =
-            ease * (gCamTitlePoseTable[gCamTitleCurPose].z - gCamTitleStartPose.z) + gCamTitleStartPose.z;
+            ease * (gCamTitlePoseTable[gCamTitleCurPose].z - gCamTitleStartPose.pose.z) + gCamTitleStartPose.pose.z;
 
         {
-            u16 sy = gCamTitleStartPose.yaw;
+            u16 sy = gCamTitleStartPose.pose.yaw;
             int d = gCamTitlePoseTable[gCamTitleCurPose].yaw - sy;
             if (__fabsf((f32)d) > 32767.0f)
             {
@@ -185,7 +194,7 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
         {
-            u16 sy = gCamTitleStartPose.pitch;
+            u16 sy = gCamTitleStartPose.pose.pitch;
             int d = gCamTitlePoseTable[gCamTitleCurPose].pitch - sy;
             if (__fabsf((f32)d) > 32767.0f)
             {
@@ -198,7 +207,7 @@ void CameraModeTitle_update(CameraObject* camera)
             }
         }
         {
-            u16 sy = gCamTitleStartPose.roll;
+            u16 sy = gCamTitleStartPose.pose.roll;
             int d = gCamTitlePoseTable[gCamTitleCurPose].roll - sy;
             if (__fabsf((f32)d) > 32767.0f)
             {
