@@ -3,6 +3,7 @@
 #include "main/object_api.h"
 #include "main/newclouds.h"
 #include "main/model.h"
+#include "main/model_light.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/audio/sfx.h"
@@ -51,7 +52,7 @@ f32 lbl_803DD1B0;
 f32 gSnowFlakeWaveValue;
 s16 gSnowFlakeWaveAngle;
 int gNewCloudFlashRotAngle;
-void* gNewCloudModelLight;
+ModelLightStruct* gNewCloudModelLight;
 LightningEffect* lbl_803DD19C;
 u8 gNewCloudBlizzardActive;
 u8 lbl_803DD19A;
@@ -175,12 +176,10 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
     gCloudOverridePositionZ = c;
 }
 
-extern void ModelLightStruct_free(void* p);
 void* gNewCloudLayerTextures[4];
 void* gNewClouds[8];
 extern void* lbl_803DD1C8;
 extern void* lbl_803DD1C4;
-extern void* gNewCloudModelLight;
 extern const f32 lbl_803DF1A4;
 extern f32 gNewCloudOvercastFadeLevel;
 extern f32 lbl_803DB764;
