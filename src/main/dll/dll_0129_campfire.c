@@ -75,8 +75,6 @@ void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void CampFire_update(int obj)
 {
-
-    extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
     CampfireExtra* state;
     int type;
     int mode;
@@ -107,7 +105,7 @@ void CampFire_update(int obj)
         mode = 0;
         if (state->sfxPlaying == 0)
         {
-            Sfx_AddLoopedObjectSound(obj, SFXTRIG_forcecryslp11);
+            Sfx_AddLoopedObjectSoundIntLegacy(obj, SFXTRIG_forcecryslp11);
             state->sfxPlaying = 1;
         }
     }
