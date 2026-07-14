@@ -1053,8 +1053,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     void* renderOp;
     void* tex2;
     void* model;
@@ -1294,8 +1292,6 @@ void screenImageDraw(u8 alpha)
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
 
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_60;
     Mtx mtx_30;
     int handle;
@@ -1475,8 +1471,6 @@ void doSpiritVisionFilter(void)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
 
     updateReflectionTextures();
     selectReflectionTexture(0);
@@ -1595,8 +1589,6 @@ void doColorFilter(u8* mod)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     GXColor c0, c1, c2, c3;
 
     *(u32*)&c0 = lbl_803DEEC8;
@@ -1745,8 +1737,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_d0;
     Mtx mtx_a0;
     Mtx mtx_70;
@@ -1995,8 +1985,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern void* getTextureFn_8006c744(void);
     extern void fn_8006C6A4(int);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_54;
     Mtx mtx_24;
     void* renderOp;
@@ -2240,8 +2228,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     int handle1;
     int handle2;
     f32 a;
@@ -2332,8 +2318,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
 
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -2559,8 +2543,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_90;
     Mtx mtx_60;
     Mtx mtx_30;
@@ -2781,8 +2763,6 @@ u32 objCallback_80074d04(int handle, void* model)
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_ec;
     Mtx mtx_bc;
     Mtx mtx_8c;
@@ -2949,7 +2929,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern f32 hudMatrix[4][4];
     extern f32 lbl_803DEEDC;
-    extern void GXSetZMode();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -3025,7 +3004,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern void GXSetZMode();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -3111,7 +3089,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern void GXSetZMode();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -3277,7 +3254,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetZMode();
     GXColor c;
     s32 w;
     f32 u1, u0, v0, v1;
@@ -3389,8 +3365,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern f32 hudScale;
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -3458,7 +3432,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetZMode();
     GXColor c;
     s32 w, h;
     f32 u0, u1, v0, v1;
@@ -3601,7 +3574,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetZMode();
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3720,7 +3692,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetZMode();
     GXColor c;
     s32 w, h;
 
@@ -3816,8 +3787,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern GXColor lbl_803DC308;
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -3865,8 +3834,6 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4014,8 +3981,6 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     extern int gGxZModeCompareFunc;
     extern u8 lbl_802C1EA8[0xC0];
     extern void fn_8006C5B8(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     typedef struct
     {
         u32 w[7];
@@ -4197,8 +4162,6 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
 
 void fn_80078740(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4222,8 +4185,6 @@ void fn_80078740(void)
 
 void fn_8007880C(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4247,8 +4208,6 @@ void fn_8007880C(void)
 
 void fn_800788DC(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4272,8 +4231,6 @@ void fn_800788DC(void)
 
 void gxBlendFn_800789ac(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4297,8 +4254,6 @@ void gxBlendFn_800789ac(void)
 
 void textBlendSetupFn_80078a7c(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4322,8 +4277,6 @@ void textBlendSetupFn_80078a7c(void)
 
 void gxBlendFn_80078b4c(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4347,8 +4300,6 @@ void gxBlendFn_80078b4c(void)
 
 void gxDebugTextureFn_80078c1c(void)
 {
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc();
     extern u8 gGxZModeUpdateEnable;
     extern int gGxZModeCompareFunc;
     extern u8 gGxZModeCompareEnable;
@@ -4654,8 +4605,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void fn_8006C540(int*);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     int handle;
     GXColor c0, c1, c2;
     Mtx mtx;
@@ -4773,8 +4722,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_58;
     Mtx mtx_28;
     int handle1;
@@ -4962,8 +4909,6 @@ void doHeatEffect(u8 alpha)
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     extern f32 hudMatrix[4][4];
     Mtx mtx_44;
     f32 indMtx[6];
@@ -5132,8 +5077,6 @@ void renderMotionBlur(f32 alpha)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx;
 
     lbl_803DB6A0.a = lbl_803DEF20 * alpha;
@@ -5223,8 +5166,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void getReflectionTexture2(int* out);
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     Mtx mtx_27;
     Mtx mtx_24;
     Mtx mtx_2A;
@@ -5517,8 +5458,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void GXSetZMode();
-    extern void GXSetZCompLoc(u8);
     u8* indBase = (u8*)lbl_8030EA10;
 
     selectReflectionTexture(0);
