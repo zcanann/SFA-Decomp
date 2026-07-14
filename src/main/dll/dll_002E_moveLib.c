@@ -25,7 +25,6 @@
 #include "main/objprint_api.h"
 #include "main/curve_eval.h"
 #include "main/object_descriptor.h"
-#include "main/dll/baddie_state.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
@@ -94,7 +93,7 @@ extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern void normalize(f32* x, f32* y, f32* z);
 
-f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int steps)
+f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const Vec* endTangent, int steps)
 {
     f32 prev_x, prev_y, prev_z;
     f32 total;
@@ -104,33 +103,33 @@ f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int 
     f32 buf[4];
     int i;
 
-    prev_x = *(f32*)(startPos + 0);
-    prev_y = *(f32*)(startPos + 4);
-    prev_z = *(f32*)(startPos + 8);
+    prev_x = start->x;
+    prev_y = start->y;
+    prev_z = start->z;
     total = lbl_803E1C90;
 
     for (i = 1; i < steps + 1; i++)
     {
         t = (f32)i / steps;
 
-        buf[0] = *(f32*)(startPos + 0);
-        buf[1] = *(f32*)(startTangent + 0);
-        buf[2] = *(f32*)(endPos + 0);
-        buf[3] = *(f32*)(endTangent + 0);
+        buf[0] = start->x;
+        buf[1] = startTangent->x;
+        buf[2] = end->x;
+        buf[3] = endTangent->x;
         cur_x = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dx = cur_x - prev_x;
 
-        buf[0] = *(f32*)(startPos + 4);
-        buf[1] = *(f32*)(startTangent + 4);
-        buf[2] = *(f32*)(endPos + 4);
-        buf[3] = *(f32*)(endTangent + 4);
+        buf[0] = start->y;
+        buf[1] = startTangent->y;
+        buf[2] = end->y;
+        buf[3] = endTangent->y;
         cur_y = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dy = cur_y - prev_y;
 
-        buf[0] = *(f32*)(startPos + 8);
-        buf[1] = *(f32*)(startTangent + 8);
-        buf[2] = *(f32*)(endPos + 8);
-        buf[3] = *(f32*)(endTangent + 8);
+        buf[0] = start->z;
+        buf[1] = startTangent->z;
+        buf[2] = end->z;
+        buf[3] = endTangent->z;
         cur_z = Curve_EvalHermiteValuesFirst(buf, t, 0);
         dz = cur_z - prev_z;
 
@@ -143,68 +142,60 @@ f32 fn_80114224(int startPos, int endPos, int startTangent, int endTangent, int 
     return total;
 }
 
-typedef struct MoveLibWaypointDef
+int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteState* state, f32* phaseOut,
+                f32 speed)
 {
-    u8 pad0[0x2c];
-    s8 angleX;
-    s8 angleY;
-} MoveLibWaypointDef;
-
-int fn_80114408(GameObject* obj, int def, int state, int phaseOut, f32 speed)
-{
-    extern f32 fn_80114224(int, int, int, int, int);
     extern f32 lbl_803E1CA0;
     int ret = 0;
 
-    if ((void*)def != NULL)
+    if (def != NULL)
     {
-        MoveLibWaypointDef* d = (MoveLibWaypointDef*)def;
         s16 angles[3];
         f32 va;
         f32 vb;
         va = *(f32*)&lbl_803E1CA0;
-        ((BaddieState*)state)->posY = va;
+        state->end.x = va;
         vb = lbl_803E1C90;
-        ((BaddieState*)state)->posZ = vb;
-        *(f32*)(state + 0x20) = vb;
-        *(f32*)(state + 0x24) = va;
-        *(f32*)(state + 0x28) = vb;
-        *(f32*)(state + 0x2c) = vb;
-        vecRotateYXZ((s16*)obj, (f32*)(state + 0x18));
+        state->end.y = vb;
+        state->end.z = vb;
+        state->endTangent.x = va;
+        state->endTangent.y = vb;
+        state->endTangent.z = vb;
+        vecRotateYXZ((s16*)obj, &state->end.x);
         angles[2] = 0;
-        angles[1] = (s16)d->angleY;
-        angles[0] = (s16)d->angleX;
-        vecRotateYXZ(angles, (f32*)(state + 0x24));
-        *(f32*)phaseOut = lbl_803E1C90;
-        *(f32*)(state + 0x34) = fn_80114224(state, state + 0x18, state + 0xc, state + 0x24, 10);
+        angles[1] = (s16)def->angleY;
+        angles[0] = (s16)def->angleX;
+        vecRotateYXZ(angles, &state->endTangent.x);
+        *phaseOut = lbl_803E1C90;
+        state->length = fn_80114224(&state->start, &state->end, &state->startTangent, &state->endTangent, 10);
     }
     else
     {
-        *(f32*)phaseOut = *(f32*)phaseOut + speed * (f32)(u32)framesThisStep / *(f32*)(state + 0x34);
-        if (*(f32*)phaseOut >= *(f32*)&lbl_803E1CA4)
+        *phaseOut = *phaseOut + speed * (f32)(u32)framesThisStep / state->length;
+        if (*phaseOut >= *(f32*)&lbl_803E1CA4)
         {
             ret = 1;
-            *(f32*)phaseOut = lbl_803E1CA4;
+            *phaseOut = lbl_803E1CA4;
         }
     }
 
     {
         f32 buf[4];
-        buf[0] = *(f32*)(state + 0x00);
-        buf[1] = *(f32*)(state + 0x0c);
-        buf[2] = ((BaddieState*)state)->posY;
-        buf[3] = *(f32*)(state + 0x24);
-        (obj)->anim.localPosX = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
-        buf[0] = *(f32*)(state + 0x04);
-        buf[1] = *(f32*)(state + 0x10);
-        buf[2] = ((BaddieState*)state)->posZ;
-        buf[3] = *(f32*)(state + 0x28);
-        (obj)->anim.localPosY = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
-        buf[0] = *(f32*)(state + 0x08);
-        buf[1] = ((BaddieState*)state)->posX;
-        buf[2] = *(f32*)(state + 0x20);
-        buf[3] = *(f32*)(state + 0x2c);
-        (obj)->anim.localPosZ = Curve_EvalHermiteValuesFirst(buf, *(f32*)phaseOut, 0);
+        buf[0] = state->start.x;
+        buf[1] = state->startTangent.x;
+        buf[2] = state->end.x;
+        buf[3] = state->endTangent.x;
+        (obj)->anim.localPosX = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
+        buf[0] = state->start.y;
+        buf[1] = state->startTangent.y;
+        buf[2] = state->end.y;
+        buf[3] = state->endTangent.y;
+        (obj)->anim.localPosY = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
+        buf[0] = state->start.z;
+        buf[1] = state->startTangent.z;
+        buf[2] = state->end.z;
+        buf[3] = state->endTangent.z;
+        (obj)->anim.localPosZ = Curve_EvalHermiteValuesFirst(buf, *phaseOut, 0);
     }
     return ret;
 }
@@ -396,8 +387,8 @@ void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
 
 /* Advances the object along its movement curve, snapping to ground and
  * easing the yaw toward the path direction. */
-int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, int curveVariant, f32* rootOut,
-                  int* flags)
+int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHermiteState* state,
+                  int curveVariant, f32* rootOut, int* flags)
 {
     int moved;
     int hit;
@@ -415,7 +406,7 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, 
     }
     if (fl & 0x4)
     {
-        if (fn_80114408(obj, 0, state, state + 0x30, phase) != 0)
+        if (fn_80114408(obj, NULL, state, &state->phase, phase) != 0)
         {
             args[0] = 0x19;
             args[1] = 0x15;

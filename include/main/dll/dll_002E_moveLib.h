@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_002E_MOVELIB_H_
 
 #include "global.h"
+#include "dolphin/mtx/vec_types.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/curve_walker.h"
@@ -30,6 +31,29 @@ typedef struct MoveLibTarget
 
 STATIC_ASSERT(offsetof(MoveLibTarget, x) == 0xc);
 STATIC_ASSERT(sizeof(MoveLibTarget) == 0x18);
+
+typedef struct MoveLibWaypointDef
+{
+    u8 pad00[0x2c];
+    s8 angleX;
+    s8 angleY;
+} MoveLibWaypointDef;
+
+typedef struct MoveLibHermiteState
+{
+    Vec start;
+    Vec startTangent;
+    Vec end;
+    Vec endTangent;
+    f32 phase;
+    f32 length;
+} MoveLibHermiteState;
+
+STATIC_ASSERT(offsetof(MoveLibHermiteState, startTangent) == 0xc);
+STATIC_ASSERT(offsetof(MoveLibHermiteState, end) == 0x18);
+STATIC_ASSERT(offsetof(MoveLibHermiteState, endTangent) == 0x24);
+STATIC_ASSERT(offsetof(MoveLibHermiteState, phase) == 0x30);
+STATIC_ASSERT(sizeof(MoveLibHermiteState) == 0x38);
 
 typedef struct MoveLibState
 {
@@ -82,11 +106,14 @@ int dll_2E_func0A(int curvePointIndex, void* out);
 f32 dll_2E_func0B(int obj, int curvePointIndex);
 int dll_2E_func0C(int curvePointIndex, MoveLibTarget* out);
 int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int move, f32* out, u8* flags);
-int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, int curveVariant, f32* rootOut,
-                  int* flags);
+int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHermiteState* state,
+                  int curveVariant, f32* rootOut, int* flags);
 int dll_2E_func0F_ret_0(void);
 void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value);
 void dll_2E_release_nop(void);
 void dll_2E_initialise_nop(void);
+f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const Vec* endTangent, int steps);
+int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteState* state, f32* phaseOut,
+                f32 speed);
 
 #endif /* MAIN_DLL_DLL_002E_MOVELIB_H_ */
