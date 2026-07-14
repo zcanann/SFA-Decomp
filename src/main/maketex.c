@@ -927,7 +927,7 @@ int saveGame(int writeImages)
 /* Saves the game: verifies the existing save slots' checksums, rewrites
  * stale slots and card images, then runs the caller's callback and maps the
  * result to a status code. */
-int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, int (*cb)(int, int, int, int))
+int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, SaveGameCallback cb)
 {
     u64 x[1];
     u16 i[1];
