@@ -119,6 +119,8 @@ void modelLightStruct_setSpecularColor(ModelLightStruct *light, u8 red, u8 green
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *light, f32 cutoff, int spotFunction);
 void modelLightStruct_setPosition(ModelLightStruct *light, f32 x, f32 y, f32 z);
 void modelLightStruct_setDirection(ModelLightStruct *light, f32 x, f32 y, f32 z);
+f32 modelLightStruct_getRadius(ModelLightStruct* light);
+void modelLightStruct_getPosition(ModelLightStruct* light, f32* x, f32* y, f32* z);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);
