@@ -32,6 +32,7 @@
 #include "main/debug.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
+#include "main/track_bbox_api.h"
 #include "main/lightmap_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -74,8 +75,6 @@ extern const f32 lbl_803E61C8;
 extern const f32 gDbEggSpeedByteScale;
 extern int fn_801FE560(GameObject* obj, f32* out, f32 a, f32 b, int p3);
 extern const f32 lbl_803E61CC;
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
 extern const f32 lbl_803E6218;
 extern const f32 lbl_803E621C;
 extern const f32 gDbEggSurfaceNotFound;
@@ -356,7 +355,7 @@ void dbegg_hitDetect(GameObject* obj)
         void* hitFrom = &(obj)->anim.previousLocalPosX;
         void* hitTo = &(obj)->anim.localPosX;
         f32 hitRadius = lbl_803E6218;
-        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, (int)obj, 8, -1, 0xff, 0) != 0)
+        if (objBboxFnIntLegacy(hitFrom, hitTo, hitRadius, 1, NULL, (int)obj, 8, -1, 0xff, 0) != 0)
         {
             f32 damping = lbl_803E621C;
             f32 velocityX = (obj)->anim.velocityX;
