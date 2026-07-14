@@ -1,4 +1,6 @@
 #include "main/dll/DR/dll_0261_drlasercannon.h"
+
+f32 lbl_803DDD68;
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/dll/dll_0273_firepipe.h"

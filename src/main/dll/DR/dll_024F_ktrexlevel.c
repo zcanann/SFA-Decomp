@@ -20,6 +20,8 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/DR/dll_024F_ktrexlevel.h"
 
+int lbl_803DDD40;
+
 #define KTREXLEVEL_ENVFX_A 0x18f
 #define KTREXLEVEL_ENVFX_B 0x18e
 #define KTREXLEVEL_ENVFX_C 0x190

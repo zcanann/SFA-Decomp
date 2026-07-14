@@ -39,6 +39,14 @@
 #include "main/obj_list.h"
 #include "main/obj_path.h"
 #include "main/dll/dll_02BC_andross.h"
+
+s16 gAndrossSwayPhaseX;
+s16 gAndrossSwayPhaseY;
+s16 gGfLevelConRingProjectilePitchSource;
+s16 gGfLevelConProjectileYaw;
+int gGfLevelConRingProjectilePitch;
+int gGfLevelConProjectilePitch;
+f32 gAndrossDistortPhase;
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/dll_02BE_androssbrain.h"

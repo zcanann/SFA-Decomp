@@ -69,7 +69,7 @@ STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, scale) == 0x08);
 STATIC_ASSERT(offsetof(TrickyCurveBurstPartfxArgs, xDelta) == 0x0C);
 
 
-extern u8
+u8
     gTrickyCurveBurstCounter; /* inter-frame burst-fire counter; reset to 0 after TRICKY_CURVE_BURST_LIMIT ticks */
 extern f32 lbl_803E6448;      /* burst partfx scale constant */
 

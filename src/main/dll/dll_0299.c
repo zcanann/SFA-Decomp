@@ -11,6 +11,8 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll_0299.h"
+
+void* lbl_803DDD80;
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/modgfx.h"
 #include "main/game_object.h"

@@ -98,7 +98,7 @@ typedef struct SnowClawBombSetup
 extern int ObjGroup_FindNearestObject(int kind, void* obj, f32* maxDistance);
 extern u8 gSnowClawMoveTable[];
 extern f32 lbl_803E66EC;
-extern int gSnowClawDropBombAngle;
+int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
 extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E66F0;

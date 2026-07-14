@@ -35,7 +35,7 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE  0x1a3
 
-extern u8 gDfpTorchSequenceState;
+u8 gDfpTorchSequenceState;
 __declspec(section ".rodata") int gDfpTorchEffectParams[4] = {0x3E7, 0x8C, 0x8D, 0x28};
 
 int DFP_Torch_getExtraSize(void)

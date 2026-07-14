@@ -19,6 +19,10 @@
  */
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_02AE_waterflowwe.h"
+
+f32 gWaterFlowIdlePhase;
+f32 gWaterFlowFlowPhase;
+GameObject* gWaterFlowPhaseDriver;
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/objanim.h"

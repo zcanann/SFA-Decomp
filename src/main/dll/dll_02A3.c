@@ -16,6 +16,9 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A3.h"
+
+int lbl_803DDD94;
+int lbl_803DDD90;
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 

@@ -41,9 +41,9 @@ typedef struct
 #define GREAT_FOX_EFFECT_COUNT    10
 
 extern f32 lbl_803E6678;
-extern int gWorldObjEffectRenderDelay;
+int gWorldObjEffectRenderDelay;
 extern u8 gWorldObjVariantAlphaTable[8];
-extern int gWorldObjEffectTargetObj;
+int gWorldObjEffectTargetObj;
 extern f32 lbl_803E6668;
 extern f32 lbl_803E66B4;
 extern f32 lbl_803E66C8;

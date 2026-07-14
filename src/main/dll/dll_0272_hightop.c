@@ -17,6 +17,8 @@
  * quartet, and the 0x3F0.. counters).
  */
 #include "main/dll/dll_0272_hightop.h"
+
+void* gHighTopDefaultStateHandler;
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"

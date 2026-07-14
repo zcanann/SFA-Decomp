@@ -26,6 +26,12 @@
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/DR/dll_0250_ktrex.h"
+
+KTRexRuntime* gKTRexRuntime;
+KTRexArenaState* gKTRexState;
+MapRomList* gKTRexMapBlock;
+int gKTRexContactEffectCooldown;
+void* gKTRexResource;
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/dll_0262_drakormissile.h"
 #include "main/dll/rom_curve_interface.h"

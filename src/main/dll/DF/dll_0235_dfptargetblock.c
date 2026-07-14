@@ -65,8 +65,8 @@ typedef struct DfpTargetBlockPartfxArgs
 #define DFPTARGETBLOCK_POINT_STRIDE   0x0C
 
 extern const f32 lbl_803E648C;
-extern f32 gTargetBlockHomeX;
-extern f32 gTargetBlockHomeZ;
+f32 gTargetBlockHomeZ;
+f32 gTargetBlockHomeX;
 extern s32 gTargetBlockHomePos[];
 
 int dfptargetblock_getExtraSize(void)

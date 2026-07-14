@@ -22,6 +22,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #include "main/dll/DR/dll_026E_drshackle.h"
+
+int lbl_803DDD70;
 #include "main/dll/DR/dr_types.h"
 
 int lbl_803DC2F0 = -32768;

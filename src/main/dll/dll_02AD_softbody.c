@@ -14,6 +14,10 @@
  * extra state (getExtraSize returns 0).
  */
 #include "main/dll/dll_02AD_softbody.h"
+
+f32 lbl_803DDDA0;
+f32 lbl_803DDD9C;
+GameObject* lbl_803DDD98;
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/objanim.h"

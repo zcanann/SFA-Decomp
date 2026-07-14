@@ -56,7 +56,7 @@ STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 #define DBHOLECONTROL1_CHILD_OBJ 1337
 
 extern f32 lbl_803E6390;
-extern int lbl_803DDCE0;
+int lbl_803DDCE0;
 
 extern void* mapRomListFindItem(int, int, int, int, int);
 
