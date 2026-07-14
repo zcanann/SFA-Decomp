@@ -3735,7 +3735,10 @@ void highScoreScreenDraw(int p1, int p2, int p3)
         {
             char* e = getHighScoreEntry(gHighScoreActiveTableId, k);
             char* name = e + 4;
-            u32 starred = *(u8*)(e + 3) & 1;
+            int rowY;
+            int starY;
+            u32 starred;
+            starred = *(u8*)(e + 3) & 1;
             sprintf(buf, sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
             {
@@ -3745,15 +3748,15 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             {
                 gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
             }
-            gameTextShowStr(name, 0x86, 0, k * 0x1e + 0x5a);
-            gameTextShowStr(buf, 0x87, 0, k * 0x1e + 0x5a);
+            gameTextShowStr(name, 0x86, 0, rowY = (starY = k * 0x1e) + 0x5a);
+            gameTextShowStr(buf, 0x87, 0, rowY);
             if (starred != 0)
             {
                 TextSlot* box2 = gameTextGetBox(0x87);
-                s16 starY = box2->f16 + k * 0x1e;
+                int boxY = box2->f16;
                 drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(box2->f14 + 0x64),
-                            (f32)(starY + 0x57), 0xff, 0x100);
-                gameTextShowStr(sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
+                            (f32)(starY += boxY + 0x57), 0xff, 0x100);
+                gameTextShowStr(sHighScoreStarMark, 0x87, 0x82, rowY);
             }
         }
     }
