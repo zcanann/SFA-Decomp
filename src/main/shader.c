@@ -1759,18 +1759,17 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
 
 void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 {
-    int minVal;
     char* cur;
     int count;
     int pos;
     u8 found;
     u32 mask;
     int* row;
-    int j;
     int entry;
     s16 t;
     int step;
     int n2;
+    int minVal;
 
     found = 0;
     mask = 0;
@@ -1858,32 +1857,10 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
             entry = tbl[0x21];
             if (entry != -1 && entry < count)
                 minVal = entry;
-            j = 0;
-            for (n2 = 0; n2 < 4; n2++, j += 7)
+            row = (int*)tbl;
+            for (n2 = 0; n2 < 32; n2++)
             {
-                row = (int*)tbl + j + n2;
-                entry = row[0];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[1];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[2];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[3];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[4];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[5];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[6];
-                if (entry != -1 && entry < minVal)
-                    minVal = entry;
-                entry = row[7];
+                entry = row[n2];
                 if (entry != -1 && entry < minVal)
                     minVal = entry;
             }
