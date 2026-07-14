@@ -71,6 +71,8 @@
     ((int (*)())ObjGroup_FindNearestObjectForObject)((group), (obj), (distance))
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
+typedef f32 (*VecXzDistanceIntFn)(int a, int b);
+#define Vec_xzDistanceInt ((VecXzDistanceIntFn)Vec_xzDistance)
 
 typedef struct DbstealerwormPlacement
 {
@@ -2344,7 +2346,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 Vec_xzDistance(int, int);
     extern f32 lbl_803E62B0;
     extern f32 lbl_803E62B8;
     extern f32 lbl_803E6300;
@@ -2434,7 +2435,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
         fn_80202A2C(obj, (int*)(tbl + 0x344), (f32*)(tbl + 0x354), 4, frac);
     }
     player = (int)Obj_GetPlayerObject();
-    ratio = (Vec_xzDistance((int)obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * blob->aggression);
+    ratio = (Vec_xzDistanceInt((int)obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * blob->aggression);
     n = (int)(ratio < lbl_803E62A8 ? lbl_803E62A8 : (ratio > lbl_803E62B0 ? lbl_803E62B0 : ratio));
     logPrintf(tbl + 0x444, n);
     player = (int)Obj_GetPlayerObject();
@@ -2496,8 +2497,6 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 
 int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 Vec_xzDistance(int, int);
-
     extern f32 lbl_803E62C0;
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62C8;
@@ -2536,7 +2535,7 @@ int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
     {
         fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
     }
-    d = Vec_xzDistance((int)obj + 0x18, (int)&((GameObject*)((BaddieState*)baddie)->targetObj)->anim.worldPosX);
+    d = Vec_xzDistanceInt((int)obj + 0x18, (int)&((GameObject*)((BaddieState*)baddie)->targetObj)->anim.worldPosX);
     ((BaddieState*)baddie)->stateTag = 1;
     if (d < lbl_803E62D0)
     {
