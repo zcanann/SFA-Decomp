@@ -2436,6 +2436,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     s8 noExec;
     s8 doUpdate;
     s8 flag8;
+    s8 f;
     u8* seq;
     u8* activeObj;
     u8* cmd;
@@ -2457,12 +2458,10 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
     (void)out;
 
     cmd = *cmdPtr;
-    {
-        s8 f = (s8)flags;
-        noExec = (s8)(f & 1);
-        doUpdate = (s8)(f & 2);
-        flag8 = (s8)(f & 8);
-    }
+    f = (s8)flags;
+    noExec = (s8)(f & 1);
+    doUpdate = (s8)(f & 2);
+    flag8 = (s8)(f & 8);
     if (noExec == 0)
     {
         doUpdate = 1;
@@ -2577,7 +2576,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, voi
         {
             break;
         }
-        if ((flags & 4) != 0)
+        if ((f & 4) != 0)
         {
             break;
         }
