@@ -25,6 +25,8 @@
 #include "main/object_api.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
+__declspec(section ".rodata") f32 lbl_802C25F8[4] = {0.0f, 0.0f, 1.0f, 0.0f};
+
 #define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define POINTLIGHT_MAX_SPOT_BRIGHTNESS    0x5a
 

@@ -71,6 +71,8 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+__declspec(section ".rodata") ArwInitCfg gArwingInitConfig = {0x05030303, 0x03030303, 0x0303};
+
 typedef struct ArwarwingState
 {
     u8 pad0[0x47C - 0x0];

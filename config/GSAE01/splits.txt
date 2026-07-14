@@ -2765,7 +2765,7 @@ main/worldobj.c:
 
 main/snowclaw.c:
 	.text       start:0x8020F214 end:0x802106C0
-	.rodata     start:0x802C2520 end:0x802C2540
+	.rodata     start:0x802C2520 end:0x802C2550
 	.data       start:0x8032A310 end:0x8032A3C8
 
 main/crcloudrace.c:
@@ -2800,6 +2800,7 @@ main/dll/DR/dll_0250_ktrex.c:
 
 main/dll/DR/dll_0251_ktrexfloorswitch.c:
 	.text       start:0x80215A3C end:0x80216620
+	.rodata     start:0x802C2560 end:0x802C2578
 
 main/dll/DR/dll_0252_ktlazerwall.c:
 	.text       start:0x80216620 end:0x80216B48
@@ -2855,6 +2856,7 @@ main/dll/dll_0271_drakorhoverpad.c:
 
 main/dll/dll_0272_hightop.c:
 	.text       start:0x8021CF60 end:0x8021F34C
+	.rodata     start:0x802C2590 end:0x802C25B8
 	.data       start:0x8032AB30 end:0x8032ABC0
 
 main/dll/DR/dll_026F_drgenerator.c:
@@ -2923,6 +2925,7 @@ main/dll/WC/dll_0292_wctrexstatu.c:
 
 main/dll/dll_0293_suntemple.c:
 	.text       start:0x80228478 end:0x80228B38
+	.rodata     start:0x802C25D8 end:0x802C25E8
 
 main/dll/dll_0294_wctemple.c:
 	.text       start:0x80228B38 end:0x80228C68
@@ -2946,6 +2949,7 @@ main/dll/WC/dll_0298_wcfloortile.c:
 
 main/dll/ARW/dll_029A_arwarwing.c:
 	.text       start:0x8022B998 end:0x8022E418
+	.rodata     start:0x802C25E8 end:0x802C25F8
 	.data       start:0x8032B408 end:0x8032B4A8
 
 main/dll/dll_029B_arwingandrossstuff.c:
@@ -2998,16 +3002,19 @@ main/dll/ARW/dll_02A8_arwblocker.c:
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:
 	.text       start:0x80233B0C end:0x8023404C
+	.rodata     start:0x802C25F8 end:0x802C2608
 	.sdata2     start:0x803E7230 end:0x803E7250
 
 main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 	.text       start:0x8023404C end:0x80234748
+	.rodata     start:0x802C2608 end:0x802C2618
 	.data       start:0x8032B9C8 end:0x8032BB00
 	.sdata2     start:0x803E7250 end:0x803E7258
 	.sdata2     start:0x803E7258 end:0x803E7260
 
 main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10
+	.rodata     start:0x802C2618 end:0x802C2628
 	.data       start:0x8032BB00 end:0x8032BB38
 	.sdata2     start:0x803E7260 end:0x803E7280
 

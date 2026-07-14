@@ -40,6 +40,8 @@
 #include "main/shader_api.h"
 #include "main/object_render_legacy.h"
 
+__declspec(section ".rodata") Vec3f lbl_802C25D8 = {-6318.10009765625f, -1232.0f, -5884.0f};
+
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
 #define SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE      0x01

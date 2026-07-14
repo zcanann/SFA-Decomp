@@ -18,6 +18,8 @@
 #include "main/dll/LGT/dll_02AB_lgtprojectedlight.h"
 #include "main/object_descriptor.h"
 
+__declspec(section ".rodata") f32 lbl_802C2618[4] = {0.0f, 0.0f, 1.0f, 0.0f};
+
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
 #define PROJECTEDLIGHT_PROJECTION_ORTHO      0
 

@@ -25,6 +25,8 @@
 #include "main/dll/LGT/dll_02AA_lgtdirectionallight.h"
 #include "main/object_render_legacy.h"
 
+__declspec(section ".rodata") f32 lbl_802C2608[4] = {0.0f, 0.0f, 1.0f, 0.0f};
+
 #define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
 #define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT      8
 
