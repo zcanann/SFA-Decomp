@@ -303,3 +303,14 @@ nadj=29 (measured F40) instead of taking an A-grant like the target - the textbo
    copy / ternary temp / shared named local) to push nadj 29->30 so it parks early and
    pops in the target slot instead of stealing r22.
 Combine in the probe, verify anchors + census, port, score.
+
+## 8/8 anchors achieved WITH committed macro shapes (probe wgfep_8anchors.c)
+Recipe: committed SET_NEWPATCH_PLANE macro (shared pl/po) + decl moves (p after slotPtr,
+listWalk before pp before listIndex) + fresh single-expr tail wgT/wgBT declared last
+((u32)-cast form). Result: wg=r21 wg1=r21 wgB=r22 p=r27 pp=r26 listWalk=r26 listIndex=r25
+slotPtr=r27 ALL CORRECT at 140 regions / 1270 instrs (baseline count). Remaining wrong:
+curve=r23 (want r22, blocked by pl block-1 chain at nadj 29) and back=r28 (want r24).
+The +1-edge lever (inline identity helper on pl) FIXES curve=r22 but applied to all four
+macro chains it reshuffles others (157 regions, wg1=r31). Next: apply the helper to the
+K=1 site only (expand that macro invocation inline or add a variant macro), re-anchor;
+then back(r28->r24); then the tail-init association form; then port + score vs 97.83.
