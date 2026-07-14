@@ -40,10 +40,7 @@
 #include "main/shader_api.h"
 #include "main/object_render_legacy.h"
 
-__declspec(section ".rodata") SunTempleRestartPoint lbl_802C25D8 = {
-    {-6318.10009765625f, -1232.0f, -5884.0f},
-    0,
-};
+__declspec(section ".rodata") Vec3f lbl_802C25D8 = {-6318.10009765625f, -1232.0f, -5884.0f};
 
 /* interact-prompt bits live in anim.resetHitboxFlags (INTERACT_FLAG_*). */
 
@@ -70,7 +67,7 @@ int suntemple_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState* 
     GameObject* gameObj = obj;
     SunTempleSetup* cfg = (SunTempleSetup*)gameObj->anim.placementData;
     int i;
-    Vec3f restartPos = lbl_802C25D8.position;
+    Vec3f restartPos = lbl_802C25D8;
 
     gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     for (i = 0; i < animUpdate->eventCount; i++)

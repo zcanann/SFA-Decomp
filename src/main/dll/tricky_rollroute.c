@@ -23,6 +23,8 @@
 #include "main/dll/skeetla_route_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/objfsa.h"
+#include "main/dll/skeetla.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/tricky_state.h"
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
@@ -44,14 +46,6 @@ extern f32 lbl_803E2420;
 extern f32 lbl_803E2488;
 extern f32 lbl_803E2508;
 extern f32 lbl_803E250C;
-
-/* getXZDistance/randomGetRange: util; objAudioFn_800393f8: audio;
-   Objfsa_GetWalkGroupIndexAtPoint: objfsa; trickyMove: skeetla (Tricky).
-   trickyFn_8013b368: trickyfollow (block-scope signature override of
-   trickyfollow.h's int(u8*,f32,u8*) for this TU's codegen, recipe #57). */
-extern int Objfsa_GetWalkGroupIndexAtPoint(float* pos, void* flag);
-extern void trickyMove(int obj, void* moveState);
-extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
 void trickyFn_80141290(int obj, int ball)
 {
@@ -161,7 +155,7 @@ void trickyFn_80141290(int obj, int ball)
 
         ts->speed = speed;
         trickyAdvanceRouteTargetAhead(obj, &ts->route, ts->speed);
-        trickyMove(obj, (void*)&ts->route.posX);
+        trickyMove((u8*)obj, &ts->route.posX);
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) != 0)
         {
@@ -188,7 +182,7 @@ void trickyFn_80141290(int obj, int ball)
     }
     else
     {
-        trickyFn_8013b368(obj, ball, lbl_803E2488);
+        trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)ball);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&((GameObject*)obj)->anim.worldPosX, NULL) ==
             (walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float*)((int)ts->unk700 + 8), NULL)))
         {

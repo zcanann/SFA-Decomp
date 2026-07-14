@@ -29,12 +29,6 @@ typedef struct SunTempleState
     u8 mapEventMode;
 } SunTempleState;
 
-typedef struct SunTempleRestartPoint
-{
-    Vec3f position;
-    u32 pad0C;
-} SunTempleRestartPoint;
-
 STATIC_ASSERT(offsetof(SunTempleSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SunTempleSetup, flags) == 0x1B);
 STATIC_ASSERT(offsetof(SunTempleSetup, activationGameBit) == 0x1C);
@@ -45,10 +39,9 @@ STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
 STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
 STATIC_ASSERT(sizeof(SunTempleState) == 2);
-STATIC_ASSERT(sizeof(SunTempleRestartPoint) == 0x10);
 
 extern ObjectDescriptor gSunTempleObjDescriptor;
-extern SunTempleRestartPoint lbl_802C25D8;
+extern Vec3f lbl_802C25D8;
 extern f32 lbl_803E6E18;
 
 int suntemple_getExtraSize(void);

@@ -47,7 +47,6 @@ int gObjfsaPatchCount;
 int gObjfsaLastWalkGroupIndex;
 int gObjfsaBlockFlagsChecksum;
 
-#define OBJFSA_PATCHGROUP_PATCH_COUNT   4
 #define OBJFSA_PATCHGROUP_STRIDE        0x28
 #define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
 #define OBJFSA_WALKGROUP_COUNT          0xB5
@@ -80,13 +79,6 @@ typedef struct ObjfsaWalkGroup
     s16 minY;
     u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroup;
-
-typedef struct ObjfsaWalkGroupPatchInfo
-{
-    u8 walkGroupIndex;
-    u8 patchMask;
-    u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
-} ObjfsaWalkGroupPatchInfo;
 
 extern const f32 lbl_803E063C;
 extern f32 lbl_803E0640;

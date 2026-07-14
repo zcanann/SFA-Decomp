@@ -4,6 +4,15 @@
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
 
+#define OBJFSA_PATCHGROUP_PATCH_COUNT 4
+
+typedef struct ObjfsaWalkGroupPatchInfo
+{
+    u8 walkGroupIndex;
+    u8 patchMask;
+    u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
+} ObjfsaWalkGroupPatchInfo;
+
 void player_advanceMove(short *moveState, u32 *obj, f32 dt, int flags);
 void FUN_800d9090(double param_1,double param_2,short *param_3,int param_4);
 void FUN_800d90f8(double param_1,double param_2,double param_3,short *param_4,int param_5);
@@ -86,5 +95,6 @@ u32 FUN_800df46c(u64 param_1,double param_2,double param_3);
 f32 curves_getPathLength(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(int curve,float *outX,float *outY,float *outZ,f32 phase);
 int RomCurve_findProjectedCurveFromStart(int curve,f32 x,f32 y,f32 z,float *outPhase);
+int Objfsa_GetWalkGroupIndexAtPoint(f32* point, ObjfsaWalkGroupPatchInfo* patchInfo);
 
 #endif /* MAIN_DLL_OBJFSA_H_ */
