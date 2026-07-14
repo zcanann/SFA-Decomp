@@ -8,6 +8,23 @@
 #include "main/mm.h"
 #include "main/pi_dolphin_api.h"
 
+u8 gMmRegionCount;
+s16 gMmDeferredFreeCount;
+int gMmFreeDelay;
+int gMmNextStoreHandle;
+int gMmLastFreeTick;
+int gMmStatsPrintCounter;
+int gMmRegion3Used;
+int gMmRegion2Used;
+int gMmRegion1Used;
+int gMmRegion0Used;
+int gMmTickCount;
+int gMmRegion0Size;
+int gMmOpCount;
+u8 lbl_803DCB10;
+int gMmNextAllocId;
+int gMmUseHeap3;
+
 int gMmRegion0SpawnEnabled = 1;
 int gMmUseHeaps1and2 = -1;
 char sMmStoreAllocationTag[] = "mmStore";

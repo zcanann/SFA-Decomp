@@ -10,6 +10,10 @@
 #include "main/texture.h"
 #include "main/frame_timing.h"
 
+int gModelLightNextGXLightId;
+u8 gModelLightUseModelRelativePositions;
+u8 gModelLightCount;
+
 typedef struct
 {
     u8 active;

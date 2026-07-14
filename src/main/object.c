@@ -38,6 +38,29 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+s16 gObjPartitionPivot;
+void* lbl_803DCBC0;
+int* gObjFileOffsetTable;
+int gObjFileCount;
+u8* gObjTablesBinData;
+int* gObjTablesBinIndex;
+int gObjTablesBinCount;
+u8* gObjFileBufferTable;
+u8* gObjFileRefCount;
+s16* gObjSeqToObjIdTable;
+int gObjSeqToObjIdMax;
+void** gObjDeferredFreeList;
+int gObjDeferredFreeCount;
+void* lbl_803DCB90;
+int lbl_803DCB8C;
+void* gObjList;
+int gObjCount;
+static int sObjUnused0;
+int gObjUpdateList;
+u32 gObjUpdateFlags;
+s8 gObjPtrTableCount;
+int lbl_803DCB70;
+
 int gObjDefCaptureMode = 2;
 s16 gObjPlayerSpawnIdTable[2] = {0x1F, 0};
 

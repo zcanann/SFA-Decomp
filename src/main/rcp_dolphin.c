@@ -30,6 +30,46 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
 
+struct LoadedTextureEntry* gLoadedTextures;
+u16* gRcpTexIdRemap;
+int gLoadedTextureCount;
+void* gRcpTexHeaderBuffer;
+u32 lbl_803DCDB4;
+u32 lbl_803DCDB0;
+u8 gRcpTexAllocFailed;
+u32 gRcpRenderFlags;
+u8 gRcpDistortSlotIndex;
+u8 gRcpDistortGroup;
+void* gRcpDistortTexture;
+u32 gRcpWarpDistortListSize;
+u8 gRcpWarpDistortListBuilt;
+static int sRcpUnused0;
+int lbl_803DCD90;
+int lbl_803DCD8C;
+int lbl_803DCD88;
+int lbl_803DCD84;
+int lbl_803DCD80;
+int lbl_803DCD7C;
+int lbl_803DCD78;
+int lbl_803DCD74;
+int lbl_803DCD70;
+int lbl_803DCD6C;
+u8 lbl_803DCD6B;
+u8 lbl_803DCD6A;
+u8 lbl_803DCD69;
+u8 lbl_803DCD68;
+int lbl_803DCD64;
+int lbl_803DCD60;
+int lbl_803DCD5C;
+int lbl_803DCD58;
+int lbl_803DCD54;
+int lbl_803DCD50;
+int lbl_803DCD4C;
+u8 lbl_803DCD4B;
+u8 lbl_803DCD4A;
+u8 lbl_803DCD49;
+u8 lbl_803DCD48;
+
 #pragma explicit_zero_data on
 u32 gRcpDistortAmbColor = 0;
 #pragma explicit_zero_data off

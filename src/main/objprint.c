@@ -28,6 +28,17 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 
+s16 lbl_803DCC18;
+s16 lbl_803DCC16;
+s16 lbl_803DCC14;
+u32 lbl_803DCC10;
+u8 lbl_803DCC0D;
+u8 lbl_803DCC0C;
+u8 lbl_803DCC0B;
+u8 lbl_803DCC0A;
+u8 lbl_803DCC09;
+u8 lbl_803DCC08;
+
 int lbl_803DB460 = 100;
 f32 lbl_803DB464 = 20.0f;
 

@@ -33,6 +33,31 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80136a40.h"
 
+int lbl_803DCC64;
+u8 lbl_803DCC60;
+s32 lbl_803DCC5C;
+u8 gObjOverrideColor;
+u32 gObjCurChanColor;
+f32 gObjShadowDist;
+u8 gObjShadowNear;
+s32 lbl_803DCC48;
+s32 lbl_803DCC44;
+s32 gObjFuzzStep;
+u8 lbl_803DCC3E;
+u8 lbl_803DCC3D;
+u8 lbl_803DCC3C;
+f32 gObjFuzzPhase;
+u8 lbl_803DCC36;
+u8 lbl_803DCC35;
+u8 lbl_803DCC34;
+u32 gObjCachedModel;
+u32 gObjCachedTexture;
+u8 gObjRenderSetupDone;
+u8 lbl_803DCC29;
+u8 gObjOverrideColorPending;
+u32 curObjMtx;
+u8 lbl_803DCC20;
+
 u32 lbl_803DB468 = 0xFFFFFFFF;
 u32 gObjGxDefaultChanColor = 0xFF;
 #pragma explicit_zero_data on
