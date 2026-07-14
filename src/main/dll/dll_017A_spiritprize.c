@@ -24,7 +24,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E98;
 extern f32 lbl_803E4E9C;

@@ -24,8 +24,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 #define DRAKORMISSILE_EXTRA_SIZE     0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2
 #define DRAKORMISSILE_GROUP_ID       0x2

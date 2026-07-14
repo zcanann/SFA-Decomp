@@ -13,8 +13,6 @@
 #include "main/model_light.h"
 #include "main/dll/DR/dll_0253_ktlazerlight.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 int ktlazerlight_getExtraSize(void)
 {
     return 0x14;

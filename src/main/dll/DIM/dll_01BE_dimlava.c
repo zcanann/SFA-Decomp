@@ -13,7 +13,6 @@
 #include "main/dll/partfx_interface.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/object_api.h"
-#include "main/modellight_api.h"
 #include "main/dll/lavaball1bestate_struct.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
@@ -32,7 +31,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define DIMLAVA_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MODEL_LIGHT_KIND_POINT             2
 
 typedef struct Lavaball1bePlacement
 {

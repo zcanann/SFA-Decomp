@@ -28,7 +28,6 @@
 #include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
-#include "main/modellight_api.h"
 #include "main/pad_api.h"
 #include "main/resource.h"
 #include "main/shader_api.h"
@@ -63,8 +62,6 @@ __declspec(section ".rodata") ObjFxU16Table11 lbl_802C2114 = {
 __declspec(section ".rodata") ObjFxRandomBurstTable gObjFxRandomBurstTbl = {
     {{0x000, 0}, {0x3A2, 1}, {0x3A3, 1}, {0x3A4, 1}, {0x3A5, 1}, {0x3A2, 2}, {0x3A3, 2},
      {0x3A4, 2}, {0x3A5, 2}, {0x630, 0}, {0xC10, 0}, {0x630, 0}, {0x62F, 0}}};
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 #define OBJFX_OBJFLAG_PARENT_SLACK 0x1000
 

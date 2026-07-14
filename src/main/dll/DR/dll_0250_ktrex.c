@@ -16,7 +16,6 @@
 #include "main/newclouds.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
-#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -35,7 +34,6 @@
 #define KTREX_OBJGROUP         0x3
 #define KTREX_ADVANCE_MSG      0xe0001 /* notify the struck object to advance its hit reaction */
 #define KTREX_PARTFX_HIT       0x328   /* hit-response effect spawned at the player contact point */
-#define MODEL_LIGHT_KIND_POINT 2
 
 extern void drakormissile_abortStraightFlight(GameObject*);
 extern void drakormissile_modelMtxFn(GameObject*);
