@@ -21,6 +21,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_object_volume_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -95,7 +96,6 @@ STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
 extern void postRenderSetAlphaBlendState(void);
 extern f32 fcos16(u16 angle);
-extern void Sfx_SetObjectSfxVolume(s16* obj, int sfx, int vol, f32 ratio);
 extern f32 lbl_803E33A8;
 extern f32 lbl_803E33AC;
 extern f32 lbl_803E33C4;
@@ -650,7 +650,8 @@ void Shield_update(int* obj)
     {
         ((GameObject*)obj)->anim.alpha = state[1] / state[4] * (f32)(s32)randomGetRange(192, 255);
     }
-    Sfx_SetObjectSfxVolume((s16*)obj, SFXTRIG_lockon3_on, (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
+    Sfx_SetObjectSfxVolumePtrLegacy((s16*)obj, SFXTRIG_lockon3_on,
+                                    (s32)(lbl_803E33E8 * (state[1] / state[4])), lbl_803E33A8);
     if (((GameObject*)obj)->anim.alpha != 0)
     {
         ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
