@@ -87,10 +87,11 @@ typedef SDIR_TAB DataSampleDirBucket;
 typedef FX_GROUP DataFXGroupRef;
 typedef MAC_MAINTAB DataMacroBucket;
 typedef FX_TAB DataFXEntry;
+typedef struct { FX_TAB key; u8 pad[2]; } DataFXSearchKey;
 
 extern SDIR_DATA dataGetSampleSearchKey;
 extern LAYER_TAB dataGetLayerSearchKey;
-extern FX_TAB dataGetFXSearchKey;
+extern DataFXSearchKey dataGetFXSearchKey;
 extern u8 dataSmpSDirTable[];
 extern DATA_TAB dataCurveTable[2048];
 extern DATA_TAB dataKeymapTable[256];

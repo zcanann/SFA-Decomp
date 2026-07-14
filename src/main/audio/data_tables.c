@@ -650,14 +650,14 @@ int IFFifoAlloc(int addr)
     return hwTransAddr(addr);
 }
 
-u8 dataSmpSDirTable[0x600];
-DATA_TAB dataCurveTable[2048];
-DATA_TAB dataKeymapTable[256];
-LAYER_TAB dataLayerTable[256];
-MAC_MAINTAB dataMacroBucketTable[512];
-MAC_SUBTAB dataMacroTable[2048];
-FX_GROUP dataFXGroupTable[128];
-
-SDIR_DATA dataGetSampleSearchKey;
+DataFXSearchKey dataGetFXSearchKey;
 LAYER_TAB dataGetLayerSearchKey;
-FX_TAB dataGetFXSearchKey;
+SDIR_DATA dataGetSampleSearchKey;
+
+FX_GROUP dataFXGroupTable[128];
+MAC_SUBTAB dataMacroTable[2048];
+MAC_MAINTAB dataMacroBucketTable[512];
+LAYER_TAB dataLayerTable[256];
+DATA_TAB dataKeymapTable[256];
+DATA_TAB dataCurveTable[2048];
+u8 dataSmpSDirTable[0x600];

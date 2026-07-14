@@ -42,7 +42,7 @@ extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
 f32 gDrCloudCageWindVolume;
 extern u8 lbl_803AD088[];
-extern struct DRCloudCagePoints gDrCloudCagePointTemplate;
+struct DRCloudCagePoints;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF0;
@@ -108,6 +108,10 @@ typedef struct DRCloudCagePoints
 {
     f32 m[18];
 } DRCloudCagePoints;
+
+const DRCloudCagePoints gDrCloudCagePointTemplate = {
+    {-6.0f, 1.0f, 15.0f, 6.0f, 1.0f, 15.0f, -7.5f, 1.0f, 15.0f, -4.0f, 1.0f,
+     15.0f, 4.0f, 1.0f, 15.0f, 7.5f, 1.0f, 15.0f}};
 
 typedef struct DRCloudCageStateFlags
 {
