@@ -12,6 +12,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/obj_message.h"
 #include "main/objhits.h"
 #include "main/pad.h"
@@ -102,7 +103,6 @@ void dll_1FF_hitDetect_nop(void)
 void dll_1FF_update(int obj)
 {
 
-    extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
     extern const f32 lbl_803E5D84;
     extern const f32 lbl_803E5D88;
     extern const f32 lbl_803E5D8C;
