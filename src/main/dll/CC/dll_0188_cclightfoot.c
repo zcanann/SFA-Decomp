@@ -10,6 +10,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/object_descriptor.h"
 
 #define GAMEBIT_LIGHTFOOT_TRIGGERED         9
 #define GAMEBIT_CC_COMPLETE                 0x24
@@ -182,6 +183,32 @@ typedef struct LightfootAnimTable
 } LightfootAnimTable;
 
 STATIC_ASSERT(sizeof(LightfootAnimTable) == 0x5C);
+
+u8 gCcLightfootAnimTable[92] = {
+    1,   1,   1,  1,   1,   1,   1,  3,   1,   1,   3,  1,   0,   1,   1,   0,   0,   3,   1,   5,   4,   6,   8,
+    6,   7,   9,  7,   2,   0,   3,  0,   0,   60,  35, 215, 10,  60,  117, 194, 143, 60,  163, 215, 10,  60,  163,
+    215, 10,  60, 163, 215, 10,  60, 163, 215, 10,  60, 35,  215, 10,  188, 163, 215, 10,  61,  76,  204, 205, 60,
+    35,  215, 10, 188, 163, 215, 10, 60,  35,  215, 10, 60,  35,  215, 10,  60,  117, 194, 143, 60,  163, 215, 10,
+};
+
+void cclightfoot_update(int obj);
+
+ObjectDescriptor gCClightfootObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)cclightfoot_init,
+    (ObjectDescriptorCallback)cclightfoot_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)cclightfoot_free,
+    0,
+    cclightfoot_getExtraSize,
+};
 
 void cclightfoot_update(int obj)
 {
@@ -625,9 +652,3 @@ void cclightfoot_update(int obj)
     }
 }
 
-u8 gCcLightfootAnimTable[92] = {
-    1,   1,   1,  1,   1,   1,   1,  3,   1,   1,   3,  1,   0,   1,   1,   0,   0,   3,   1,   5,   4,   6,   8,
-    6,   7,   9,  7,   2,   0,   3,  0,   0,   60,  35, 215, 10,  60,  117, 194, 143, 60,  163, 215, 10,  60,  163,
-    215, 10,  60, 163, 215, 10,  60, 163, 215, 10,  60, 35,  215, 10,  188, 163, 215, 10,  61,  76,  204, 205, 60,
-    35,  215, 10, 188, 163, 215, 10, 60,  35,  215, 10, 60,  35,  215, 10,  60,  117, 194, 143, 60,  163, 215, 10,
-};

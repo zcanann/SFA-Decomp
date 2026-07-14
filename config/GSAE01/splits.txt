@@ -1976,24 +1976,28 @@ main/dll/CC/dll_0187_ccqueen.c:
 
 main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
-	.data       start:0x80323408 end:0x80323464
+	.data       start:0x80323408 end:0x803234D8
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
 	.sdata2     start:0x803E46A8 end:0x803E46C8
+	.data       start:0x803234D8 end:0x80323510
 
 main/dll/CC/dll_018A_ccpedstal.c:
 	.text       start:0x801AB6F8 end:0x801ABA84
+	.data       start:0x80323510 end:0x80323548
 
 main/dll/CC/dll_018B_cclevcontrol.c:
 	.text       start:0x801ABA84 end:0x801AC01C
 	.sdata2     start:0x803E46C8 end:0x803E46D8
+	.data       start:0x80323548 end:0x80323660
 
 main/dll/dll_801ac01c.c:
 	.text       start:0x801AC01C end:0x801AC248
 
 main/dll/IM/dll_0169_imicemountain.c:
 	.text       start:0x801AC248 end:0x801ACCFC
+	.data       start:0x80323660 end:0x803236B8
 
 main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440

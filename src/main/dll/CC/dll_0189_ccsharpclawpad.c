@@ -19,6 +19,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
 #include "main/vecmath_distance_api.h"
+#include "main/object_descriptor.h"
 
 #define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
 
@@ -97,3 +98,20 @@ void CCSharpclawPad_init(int* obj, int* placement)
     ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)placement + 24) << 8);
     ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCSHARPCLAWPAD_OBJFLAG_HIDDEN);
 }
+
+ObjectDescriptor gCCSharpclawPadObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)CCSharpclawPad_init,
+    (ObjectDescriptorCallback)CCSharpclawPad_update,
+    0,
+    0,
+    0,
+    0,
+    CCSharpclawPad_getExtraSize,
+};

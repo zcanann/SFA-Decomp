@@ -29,11 +29,20 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/CC/dll_018B_cclevcontrol.h"
+#include "main/object_descriptor.h"
 
 #define CCLEVCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 #define CCLEVCONTROL_ENVFX_A              0x242
 
-extern int lbl_80323548[];
+int lbl_80323548[56] = {
+    0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241,
+    0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x02410241, 0x023F023F, 0x023F023F,
+    0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F,
+    0x023F023F, 0x023F023F, 0x023F023F, 0x023F023F, 0x02400240, 0x02400243, 0x02400243, 0x02430240,
+    0x02400240, 0x02400240, 0x02400240, 0x02400240, 0x02430243, 0x02430240, 0x02400240, 0x02400240,
+    0x02400240, 0x02400240, -1,         -1,         -1,         -1,         -1,         -1,
+    -1,         -1,         -1,         -1,         -1,         -1,         -1,         -1,
+};
 
 
 extern void fn_80088870(void* a, void* b, void* c, void* d);
@@ -174,3 +183,20 @@ void cclevcontrol_init(int* obj)
     state[2] = -1;
     state[3] = (u32)(u8)(*gMapEventInterface)->getMapAct(((GameObject*)obj)->anim.mapEventSlot);
 }
+
+ObjectDescriptor gCClevcontrolObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)cclevcontrol_init,
+    (ObjectDescriptorCallback)cclevcontrol_update,
+    0,
+    (ObjectDescriptorCallback)cclevcontrol_render,
+    (ObjectDescriptorCallback)cclevcontrol_free,
+    0,
+    cclevcontrol_getExtraSize,
+};

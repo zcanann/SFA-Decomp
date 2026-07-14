@@ -29,6 +29,7 @@
 #include "main/map_load.h"
 #include "main/rcp_dolphin.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 /*
  * Per-object extra state for the IM ice-mountain event controller
@@ -202,6 +203,25 @@ int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
  * state 0 idles), advancing avalanche fx, the boulder spawn, level
  * locks and the final warp as the relevant game bits are set. */
 #pragma peephole off
+void IMIceMountain_update(int* obj);
+
+ObjectDescriptor gIMIceMountainObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)IMIceMountain_init,
+    (ObjectDescriptorCallback)IMIceMountain_update,
+    (ObjectDescriptorCallback)IMIceMountain_hitDetect,
+    (ObjectDescriptorCallback)IMIceMountain_render,
+    (ObjectDescriptorCallback)IMIceMountain_free,
+    (ObjectDescriptorCallback)IMIceMountain_getObjectTypeId,
+    IMIceMountain_getExtraSize,
+};
+
 void imicemountain_updateEventState(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;

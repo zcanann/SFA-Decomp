@@ -13,6 +13,7 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/CC/dll_018A_ccpedstal.h"
+#include "main/object_descriptor.h"
 
 #define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000
 
@@ -155,3 +156,20 @@ void ccpedstal_init(int* obj, u8* params)
         break;
     }
 }
+
+ObjectDescriptor gCCpedstalObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ccpedstal_init,
+    (ObjectDescriptorCallback)ccpedstal_update,
+    0,
+    0,
+    0,
+    0,
+    ccpedstal_getExtraSize,
+};
