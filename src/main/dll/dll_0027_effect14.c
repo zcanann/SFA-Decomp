@@ -21,6 +21,48 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0027_effect14.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0000 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E0004 = 0.0003f;
+__declspec(section ".sdata2") f32 lbl_803E0008 = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E000C = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E0010 = 0.003f;
+__declspec(section ".sdata2") f32 lbl_803E0014 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E0018 = 0.16f;
+__declspec(section ".sdata2") f32 lbl_803E001C = 0.0002f;
+__declspec(section ".sdata2") f32 lbl_803E0020 = 0.008f;
+__declspec(section ".sdata2") f32 lbl_803E0024 = 0.025f;
+__declspec(section ".sdata2") f32 lbl_803E0028 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E002C = 0.0035f;
+__declspec(section ".sdata2") f32 lbl_803E0030 = 0.08f;
+__declspec(section ".sdata2") f32 lbl_803E0034 = 0.003921f;
+__declspec(section ".sdata2") f32 lbl_803E0038 = 0.0001f;
+__declspec(section ".sdata2") f32 lbl_803E003C = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E0040 = 0.001f;
+__declspec(section ".sdata2") f32 lbl_803E0044 = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E0048 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E004C = 0.003945f;
+__declspec(section ".sdata2") f32 lbl_803E0050 = 0.0005f;
+__declspec(section ".sdata2") f32 lbl_803E0054 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E0058 = 0.0022f;
+__declspec(section ".sdata2") f32 lbl_803E005C = -2.0f;
+__declspec(section ".sdata2") f32 lbl_803E0060 = 0.00014f;
+__declspec(section ".sdata2") f32 lbl_803E0064 = 0.006f;
+__declspec(section ".sdata2") f32 lbl_803E0068 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E006C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0070 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E0074 = 0.07f;
+__declspec(section ".sdata2") f32 lbl_803E0078 = 0.9f;
+__declspec(section ".sdata2") f32 lbl_803E007C = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E0080 = 0.04f;
+__declspec(section ".sdata2") f32 lbl_803E0084 = 0.0f;
+__declspec(section ".sdata2") f64 lbl_803E0088 = 0.12;
+__declspec(section ".sdata2") f32 lbl_803E0090 = 0.00055f;
+__declspec(section ".sdata2") f32 lbl_803E0094 = 0.002f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 #define EFFECT_FLAG_HAS_SRC 0x200000
 
 EffectSrcParams gEffect14SharedSrcParams;
@@ -58,7 +100,6 @@ extern f32 lbl_803E0074;
 extern f32 lbl_803E0078;
 extern f32 lbl_803E007C;
 extern f32 lbl_803E0080;
-extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 

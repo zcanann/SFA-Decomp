@@ -6,6 +6,16 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+union InvisibleHitSwitchConstF32 { f32 f; };
+__declspec(section ".sdata2") const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E3734 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E3738 = 120.0f;
+__declspec(section ".sdata2") f32 lbl_803E373C = 0.1f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 #define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
 #define INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -44,7 +54,6 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
-extern const f32 lbl_803E3730;
 extern f32 lbl_803E3734;
 extern f32 lbl_803E3738;
 extern f32 lbl_803E373C;
@@ -76,14 +85,14 @@ void InvisibleHitSwitch_update(GameObject *obj)
         }
     }
 
-    if (((InvisibleHitSwitchState*)state)->cooldownTimer > lbl_803E3730)
+    if (((InvisibleHitSwitchState*)state)->cooldownTimer > lbl_803E3730.f)
     {
         ((InvisibleHitSwitchState*)state)->cooldownTimer =
             ((InvisibleHitSwitchState*)state)->cooldownTimer - (f32)(u32)
         framesThisStep;
-        if (((InvisibleHitSwitchState*)state)->cooldownTimer <= lbl_803E3730)
+        if (((InvisibleHitSwitchState*)state)->cooldownTimer <= lbl_803E3730.f)
         {
-            ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730;
+            ((InvisibleHitSwitchState*)state)->cooldownTimer = lbl_803E3730.f;
             mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 0);
         }
         else
@@ -92,7 +101,7 @@ void InvisibleHitSwitch_update(GameObject *obj)
         }
     }
 
-    if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730)
+    if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730.f)
     {
         ((InvisibleHitSwitchState*)state)->activationTimer = ((InvisibleHitSwitchState*)state)->activationTimer - timeDelta;
         if (((InvisibleHitSwitchState*)state)->activationTimer < lbl_803E3734)
@@ -100,13 +109,13 @@ void InvisibleHitSwitch_update(GameObject *obj)
             hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
             if ((int)((InvisibleHitSwitchState*)state)->hitId == hitId)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
+                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730.f;
                 ((InvisibleHitSwitchState*)state)->active = 1;
                 mainSetBits((int)((InvisibleHitSwitchPlacement*)state2)->gameBitId, 1);
             }
-            else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730)
+            else if (((InvisibleHitSwitchState*)state)->activationTimer <= *(f32*)&lbl_803E3730.f)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730;
+                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3730.f;
             }
         }
     }

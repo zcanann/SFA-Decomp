@@ -94,6 +94,10 @@ void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 
 #pragma scheduling off
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E44E8 = 3600.0f;
+#pragma force_active reset
+
 int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
 
@@ -178,6 +182,29 @@ void mmp_asteroid_re_init(GameObject* obj)
         state->baseY2 = v;
     }
 }
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E44F8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E44FC = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E4500 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E4504 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E4508 = 0.051f;
+__declspec(section ".sdata2") f32 lbl_803E450C = 1024.0f;
+__declspec(section ".sdata2") f32 lbl_803E4510 = 875.0f;
+__declspec(section ".sdata2") f32 lbl_803E4514 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E4518 = 0.0f;
+__declspec(section ".sdata2") f32 gMmpAsteroidPi = 3.14159274f;
+__declspec(section ".sdata2") f32 lbl_803E4520 = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E4524 = 182.0f;
+__declspec(section ".sdata2") f32 lbl_803E4528 = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803E452C = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E4530 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E4534 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E4538 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E453C = 22.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
 
 void mmp_asteroid_re_update(int obj)
 {

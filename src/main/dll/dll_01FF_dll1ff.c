@@ -18,6 +18,16 @@
 #include "main/pad.h"
 #include "main/frame_timing.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+union Dll1FFConstF32 { f32 f; };
+__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D80 = { 1.0f };
+__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D84 = { 0.1f };
+__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D88 = { 40.0f };
+__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D8C = { 0.0f };
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 typedef struct Dll1FFState
 {
@@ -46,7 +56,6 @@ typedef struct Dll1FFSlots
 #define DLL1FF_BUTTON_ACTION 0x100    /* action-button mask (button-just-pressed / disable) */
 #define DLL1FF_MSG_GRAB      0x100008 /* ObjMsg kind sent on release */
 
-extern const f32 lbl_803E5D80;
 
 int dll_1FF_getExtraSize_ret_8(void)
 {
@@ -93,7 +102,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5D80);
+    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5D80.f);
 }
 
 void dll_1FF_hitDetect_nop(void)
@@ -103,9 +112,6 @@ void dll_1FF_hitDetect_nop(void)
 void dll_1FF_update(int obj)
 {
 
-    extern const f32 lbl_803E5D84;
-    extern const f32 lbl_803E5D88;
-    extern const f32 lbl_803E5D8C;
     void* player;
     Dll1FFState* state;
     int grab[1];
@@ -139,7 +145,7 @@ void dll_1FF_update(int obj)
             ObjHits_EnableObject(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-            ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject*)obj)->anim.velocityY);
+            ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84.f * timeDelta - ((GameObject*)obj)->anim.velocityY);
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
             count = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
@@ -152,11 +158,11 @@ void dll_1FF_update(int obj)
                 {
                     if (((GameObject*)obj)->anim.localPosY < surf->height)
                     {
-                        if (((GameObject*)obj)->anim.localPosY > surf->height - lbl_803E5D88 || i == 0)
+                        if (((GameObject*)obj)->anim.localPosY > surf->height - lbl_803E5D88.f || i == 0)
                         {
                             landed = surf->object;
                             ((GameObject*)obj)->anim.localPosY = surf->height;
-                            ((GameObject*)obj)->anim.velocityY = lbl_803E5D8C;
+                            ((GameObject*)obj)->anim.velocityY = lbl_803E5D8C.f;
                         }
                     }
                 }

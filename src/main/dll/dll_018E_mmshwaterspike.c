@@ -15,6 +15,14 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4F80 = -9999.0f;
+__declspec(section ".sdata2") f32 lbl_803E4F84 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E4F88 = 0.5f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 #define MMSHWATERSPIKE_HIT_VOLUME_SLOT 9
 
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];

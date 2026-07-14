@@ -28,6 +28,11 @@
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E4288 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E428C = 0.005f;
+#pragma force_active reset
+
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 extern f32 lbl_803E428C;

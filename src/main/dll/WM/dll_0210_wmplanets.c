@@ -20,6 +20,15 @@
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
 #include "main/dll/WM/dll_0210_wmplanets.h"
+#include "main/object_descriptor.h"
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5F98 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F9C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E5FA0 = 0.1f;
+#pragma explicit_zero_data off
+#pragma force_active reset
 
 __declspec(section ".rodata") u32 lbl_802C2500[4] = {0, 0, 0, 0};
 
@@ -124,3 +133,20 @@ void WM_Planets_release(void)
 void WM_Planets_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_PlanetsObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_Planets_initialise,
+    (ObjectDescriptorCallback)WM_Planets_release,
+    0,
+    (ObjectDescriptorCallback)WM_Planets_init,
+    (ObjectDescriptorCallback)WM_Planets_update,
+    (ObjectDescriptorCallback)WM_Planets_hitDetect,
+    (ObjectDescriptorCallback)WM_Planets_render,
+    (ObjectDescriptorCallback)WM_Planets_free,
+    (ObjectDescriptorCallback)WM_Planets_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WM_Planets_getExtraSize,
+};

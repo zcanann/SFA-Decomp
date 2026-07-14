@@ -9,6 +9,15 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0048_cameramodestatic.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 gCamDebugOrbitRadiusInit = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E1874 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E1878 = 100000.0f;
+__declspec(section ".sdata2") f32 lbl_803E187C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMSTATIC_CAMMODE_DEFAULT 0x42
 

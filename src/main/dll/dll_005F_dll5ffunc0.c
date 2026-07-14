@@ -19,6 +19,23 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005F_dll5ffunc0.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0800 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0804 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E0808 = 0.7f;
+__declspec(section ".sdata2") f32 lbl_803E080C = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803E0810 = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0814 = 160.0f;
+__declspec(section ".sdata2") f32 lbl_803E0818 = 115.0f;
+__declspec(section ".sdata2") f32 lbl_803E081C = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0820 = -130.0f;
+__declspec(section ".sdata2") f32 lbl_803E0824 = -4.0f;
+__declspec(section ".sdata2") f32 lbl_803E0828 = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E082C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL5F_EFFECT_ID 0x48
 

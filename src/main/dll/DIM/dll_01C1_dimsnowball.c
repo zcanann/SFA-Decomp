@@ -60,6 +60,16 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4848 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E484C = 0.0625f;
+union DimSnowballConstF32 { f32 f; };
+__declspec(section ".sdata2") const union DimSnowballConstF32 lbl_803E4850 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E4854 = 1000.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 s16 lbl_803DBEE8 = 0x3E6;
 
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
@@ -69,7 +79,6 @@ s16 lbl_803DBEE8 = 0x3E6;
 extern s16 lbl_803DBEE8;
 extern s16 gDimSnowballCoords[];
 extern f32 lbl_803E484C;
-extern const f32 lbl_803E4850;
 extern f32 lbl_803E4854;
 extern f32 lbl_803E4848;
 
@@ -209,7 +218,7 @@ void dimsnowball_update(GameObject* obj)
     }
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
-    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState*)state)->jingleCooldown <= 0)
+    if (dy2 <= lbl_803E4850.f && dy1 <= lbl_803E4850.f && ((DimsnowballState*)state)->jingleCooldown <= 0)
     {
         sqrtf((obj)->anim.velocityZ * (obj)->anim.velocityZ +
               ((obj)->anim.velocityX * (obj)->anim.velocityX + (obj)->anim.velocityY * (obj)->anim.velocityY));
@@ -219,9 +228,9 @@ void dimsnowball_update(GameObject* obj)
         }
         ((DimsnowballState*)state)->jingleCooldown = 0x1e;
     }
-    (obj)->anim.localPosX = x[1] + lbl_803E4850 * (x[2] - x[1]);
-    (obj)->anim.localPosY = y[1] + lbl_803E4850 * (y[2] - y[1]);
-    (obj)->anim.localPosZ = z[1] + lbl_803E4850 * (z[2] - z[1]);
+    (obj)->anim.localPosX = x[1] + lbl_803E4850.f * (x[2] - x[1]);
+    (obj)->anim.localPosY = y[1] + lbl_803E4850.f * (y[2] - y[1]);
+    (obj)->anim.localPosZ = z[1] + lbl_803E4850.f * (z[2] - z[1]);
     (obj)->anim.localPosX = (obj)->anim.localPosX + ((GameObject*)*state)->anim.localPosX;
     (obj)->anim.localPosY = (obj)->anim.localPosY + ((GameObject*)*state)->anim.localPosY;
     (obj)->anim.localPosZ = (obj)->anim.localPosZ + ((GameObject*)*state)->anim.localPosZ;

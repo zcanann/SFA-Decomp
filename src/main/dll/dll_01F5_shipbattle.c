@@ -23,6 +23,13 @@
 #include "main/obj_list.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5958 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E595C = 1.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);

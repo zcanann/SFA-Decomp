@@ -59,6 +59,23 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/obj_link.h"
 #include "main/obj_list.h"
 #include "main/obj_trigger.h"
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4670 = 15.0f;
+__declspec(section ".sdata2") f32 gCcLightfootDistSentinel = 3.40282347e+38f;
+__declspec(section ".sdata2") f32 lbl_803E4678 = 3025.0f;
+__declspec(section ".sdata2") f32 lbl_803E467C = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803E4680 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E4684 = 32400.0f;
+__declspec(section ".sdata2") f32 lbl_803E4688 = 0.8f;
+__declspec(section ".sdata2") f32 gCcLightfootTurnRate = 1024.0f;
+__declspec(section ".sdata2") f32 lbl_803E4690 = 20000.0f;
+__declspec(section ".sdata2") f32 lbl_803E4694 = 0.014f;
+__declspec(section ".sdata2") f32 lbl_803E4698 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E469C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
 #include "main/dll/CC/dll_0188_cclightfoot.h"
 #include "main/dll/player_target.h"
 #include "main/gamebits.h"

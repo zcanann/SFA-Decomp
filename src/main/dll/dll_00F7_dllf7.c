@@ -26,6 +26,20 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+union DllF7ConstF32 { f32 f; };
+__declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3400 = { 0.0f };
+__declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3404 = { 1.0f };
+__declspec(section ".sdata2") f32 lbl_803E3408 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E340C = 1200.0f;
+__declspec(section ".sdata2") f32 lbl_803E3410 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E3414 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E3418 = 120.0f;
+__declspec(section ".sdata2") f32 lbl_803E341C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 #define DLLF7_OBJGROUP        0x3e
 #define DLLF7_TARGET_OBJGROUP 0x4
 
@@ -100,8 +114,6 @@ typedef struct DllF7State
     s8 byteB;
 } DllF7State;
 
-extern const f32 lbl_803E3400;
-extern const f32 lbl_803E3404;
 extern f32 lbl_803E3408;
 extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
@@ -135,11 +147,11 @@ void dll_F7_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (state->byte9 == 0 && visible != 0)
     {
         f32 v = state->bounceOffset;
-        if (v != lbl_803E3400)
+        if (v != lbl_803E3400.f)
         {
             fn_8003B5E0(0xc8, 0, 0, v);
         }
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3404);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3404.f);
     }
 }
 
@@ -178,11 +190,11 @@ void dll_F7_update(int* obj)
         {
             Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
-            state->bounceOffset = lbl_803E3404;
+            state->bounceOffset = lbl_803E3404.f;
             state->bounceVelocity = lbl_803E3408;
             blk.x += playerMapOffsetX;
             blk.z += playerMapOffsetZ;
-            blk.scale = lbl_803E3404;
+            blk.scale = lbl_803E3404.f;
             blk.rotZ = 0;
             blk.rotY = 0;
             blk.rotX = 0;
@@ -236,12 +248,12 @@ void dll_F7_update(int* obj)
         }
         ((void (*)(int*, int, int, int, int, int))((int*)*(int**)gDllF7Resource5B)[1])(obj, 1, 0, 2, -1, 0);
     }
-    if (state->bounceOffset > lbl_803E3400)
+    if (state->bounceOffset > lbl_803E3400.f)
     {
         state->bounceOffset = timeDelta * state->bounceVelocity + state->bounceOffset;
-        if (state->bounceOffset < lbl_803E3400)
+        if (state->bounceOffset < lbl_803E3400.f)
         {
-            state->bounceOffset = lbl_803E3400;
+            state->bounceOffset = lbl_803E3400.f;
         }
         else if (state->bounceOffset > lbl_803E3418)
         {

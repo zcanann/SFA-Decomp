@@ -18,6 +18,13 @@
 #include "main/textrender_api.h"
 #include "main/texture.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3B70 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3B74 = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* shared font/texture asset loaded at init (see file header). */

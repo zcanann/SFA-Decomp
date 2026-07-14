@@ -25,6 +25,13 @@
 #include "main/object_render_legacy.h"
 #include "main/pad.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3798 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E379C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement
 {

@@ -141,3 +141,7 @@ ObjectDescriptor gMMP_trenchFXObjDescriptor = {
     (ObjectDescriptorCallback)mmp_trenchfx_getObjectTypeId,
     mmp_trenchfx_getExtraSize,
 };
+
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E45C0 = 0.1f;
+#pragma force_active reset

@@ -20,6 +20,19 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0060_dll60func0.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0830 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E0834 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E0838 = 150.0f;
+__declspec(section ".sdata2") f32 lbl_803E083C = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E0840 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E0844 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E0848 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E084C = 8.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 enum
 {
     SAVEGAME_EMPTY_TASK_HINT = -1,

@@ -186,3 +186,14 @@ void DR_Creator_initialise(void)
 }
 
 char sDrCreatorTimeFormat[15] = " Time %i : %i \000";
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E69B8 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E69BC = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E69C0 = 3.14159274f;
+__declspec(section ".sdata2") f32 lbl_803E69C4 = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E69C8 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E69CC = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset

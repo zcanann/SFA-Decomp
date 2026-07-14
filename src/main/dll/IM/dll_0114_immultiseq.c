@@ -17,6 +17,13 @@
 #include "main/obj_group.h"
 #include "main/object_render_legacy.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E37A8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E37AC = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 STATIC_ASSERT(sizeof(IMMultiSeqPlacement) == 0x34);
 STATIC_ASSERT(offsetof(IMMultiSeqPlacement, completionGameBits) == 0x18);

@@ -17,6 +17,13 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E55D0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E55D4 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E55D8 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E55DC = -0.01f;
+#pragma force_active reset
+
 u16 lbl_803DC068[4] = {0x2B7, 0x2CB, 0x2CC, 0};
 
 extern int lbl_803DDC08;

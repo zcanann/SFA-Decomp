@@ -358,3 +358,8 @@ void CFPrisonGuard_release(void)
 void CFPrisonGuard_initialise(void)
 {
 }
+
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E4280 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4284 = 1.5f;
+#pragma force_active reset

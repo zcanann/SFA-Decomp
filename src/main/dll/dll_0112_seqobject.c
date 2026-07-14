@@ -19,6 +19,13 @@
 #include "main/obj_group.h"
 #include "main/rcp_dolphin.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E37A0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E37A4 = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerGameBit) == 0x1A);

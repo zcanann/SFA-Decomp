@@ -45,6 +45,7 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "main/camera_shake_api.h"
+#include "main/object_descriptor.h"
 
 /* romlist object-def variants driving this DLL's seqId branches (see
    docblock): def 922 'WM_Crystal' (0x262) and def 907 'WM_sun' (0x2BD). */
@@ -55,6 +56,7 @@
 #define WMSUN_ENVFX_A 0x30
 #define WMSUN_ENVFX_B 0x34
 
+#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5F20 = 0.0f;
 #pragma explicit_zero_data off
@@ -79,6 +81,7 @@ __declspec(section ".sdata2") f32 lbl_803E5F68 = 0.01f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5F6C = 0.0f;
 #pragma explicit_zero_data off
+#pragma force_active reset
 __declspec(section ".rodata") WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
 __declspec(section ".rodata") WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 
@@ -588,3 +591,29 @@ void wmsun_release(void)
 void wmsun_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_sunObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wmsun_initialise,
+    (ObjectDescriptorCallback)wmsun_release,
+    0,
+    (ObjectDescriptorCallback)wmsun_init,
+    (ObjectDescriptorCallback)wmsun_update,
+    (ObjectDescriptorCallback)wmsun_hitDetect,
+    (ObjectDescriptorCallback)wmsun_render,
+    (ObjectDescriptorCallback)wmsun_free,
+    (ObjectDescriptorCallback)wmsun_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wmsun_getExtraSize,
+};
+
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E5F78 = 0.00375f;
+__declspec(section ".sdata2") f32 lbl_803E5F7C = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F80 = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E5F84 = 2400.0f;
+__declspec(section ".sdata2") f32 lbl_803E5F88 = 2.8f;
+__declspec(section ".sdata2") f32 lbl_803E5F8C = 1000.0f;
+#pragma force_active reset

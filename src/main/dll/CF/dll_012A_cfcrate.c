@@ -24,6 +24,29 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E3DD8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E3DDC = 0.0f;
+__declspec(section ".sdata2") f64 lbl_803E3DE0 = 2.0;
+union CfCrateConstF32 { f32 f; };
+__declspec(section ".sdata2") const union CfCrateConstF32 lbl_803E3DE8 = { 40.0f };
+__declspec(section ".sdata2") f32 lbl_803E3DEC = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E3DF0 = 4000.0f;
+__declspec(section ".sdata2") f32 lbl_803E3DF4 = 1000.0f;
+__declspec(section ".sdata2") f32 lbl_803E3DF8 = 0.002f;
+__declspec(section ".sdata2") f32 lbl_803E3DFC = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E00 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E04 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E08 = 180.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E0C = -180.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E10 = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E3E14 = -90.0f;
+__declspec(section ".sdata2") f64 lbl_803E3E18 = 1.5;
+__declspec(section ".sdata2") f32 lbl_803E3E20 = 75.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 u16 gCfCrateDefaultSfxTable[4] = {0x151, 0, 0, 0};
 
 typedef struct CfccratePlacement
@@ -59,7 +82,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 
 extern f32 lbl_803E3DD8;
 extern f64 lbl_803E3DE0;
-extern const f32 lbl_803E3DE8;
 extern f32 lbl_803E3DEC;
 extern f32 lbl_803E3DF0;
 extern f32 lbl_803E3DF4;
@@ -205,10 +227,10 @@ void CFCrate_update(GameObject* obj)
         break;
     case 0x6fc: /* DFP_Water */
         if ((mainGetBit(state->gameBit) != 0) &&
-            ((obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY))
+            ((obj)->anim.localPosY <= lbl_803E3DE8.f + ((CfccratePlacement*)viewslot)->homeY))
         {
             (obj)->anim.localPosY = lbl_803E3DEC * timeDelta + (obj)->anim.localPosY;
-            if ((obj)->anim.localPosY >= lbl_803E3DE8 + ((CfccratePlacement*)viewslot)->homeY)
+            if ((obj)->anim.localPosY >= lbl_803E3DE8.f + ((CfccratePlacement*)viewslot)->homeY)
             {
                 mainSetBits(state->gameBit, 0);
             }

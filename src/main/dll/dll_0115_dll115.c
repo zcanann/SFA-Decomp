@@ -21,6 +21,13 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0115_dll115.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E37B0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E37B4 = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 /* object group this object joins while active */
 #define DLL115_OBJGROUP 0xf
 

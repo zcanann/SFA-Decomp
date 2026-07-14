@@ -181,3 +181,10 @@ int WaterFallSpray_SeqFn(int* obj)
     WaterFallSpray_update(obj);
     return 0;
 }
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E40B8 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E40BC = 60.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset

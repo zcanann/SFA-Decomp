@@ -22,6 +22,11 @@
 #include "main/dll/dll_0119_coldwatercontrol.h"
 #include "main/dll/player_api.h"
 
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E3B68 = -30.0f;
+__declspec(section ".sdata2") f32 lbl_803E3B6C = 240.0f;
+#pragma force_active reset
+
 #define GAMEBIT_COLDWATER_ARM  0x1bf
 #define GAMEBIT_COLDWATER_DONE 0x1bd
 

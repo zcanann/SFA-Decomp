@@ -22,6 +22,29 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 
+#pragma force_active on
+union TargetBlockConstF32 { f32 f; };
+#pragma force_active reset
+extern const union TargetBlockConstF32 lbl_803E6488;
+extern const union TargetBlockConstF32 lbl_803E6490;
+extern const union TargetBlockConstF32 lbl_803E6494;
+extern const union TargetBlockConstF32 lbl_803E6498;
+extern const union TargetBlockConstF32 lbl_803E649C;
+extern const union TargetBlockConstF32 lbl_803E64A0;
+extern const union TargetBlockConstF32 lbl_803E64A4;
+extern const union TargetBlockConstF32 lbl_803E64AC;
+extern const union TargetBlockConstF32 lbl_803E64B0;
+extern const union TargetBlockConstF32 lbl_803E64B4;
+extern const union TargetBlockConstF32 lbl_803E64B8;
+extern const union TargetBlockConstF32 lbl_803E64BC;
+extern const union TargetBlockConstF32 lbl_803E64C0;
+extern const union TargetBlockConstF32 lbl_803E64C4;
+extern const union TargetBlockConstF32 lbl_803E64C8;
+extern const union TargetBlockConstF32 gTargetBlockMinVertexYSeed;
+extern const union TargetBlockConstF32 lbl_803E64D0;
+extern const union TargetBlockConstF32 lbl_803E64D4;
+extern f32 lbl_803E64A8;
+
 typedef struct DfpTargetBlockPartfxArgs
 {
     s16 rotX;
@@ -41,29 +64,10 @@ typedef struct DfpTargetBlockPartfxArgs
 #define DFPTARGETBLOCK_POINT_OFFSET_Z 0x0C
 #define DFPTARGETBLOCK_POINT_STRIDE   0x0C
 
-extern const f32 lbl_803E6488;
 extern const f32 lbl_803E648C;
-extern const f32 lbl_803E6490;
 extern f32 gTargetBlockHomeX;
 extern f32 gTargetBlockHomeZ;
-extern const f32 lbl_803E6494;
-extern const f32 lbl_803E6498;
-extern const f32 lbl_803E649C;
-extern const f32 lbl_803E64A0;
-extern const f32 lbl_803E64A4;
-extern f32 lbl_803E64A8;
-extern const f32 lbl_803E64AC;
-extern const f32 lbl_803E64B0;
-extern const f32 lbl_803E64B4;
-extern const f32 lbl_803E64B8;
-extern const f32 lbl_803E64BC;
-extern const f32 lbl_803E64C0;
 extern s32 gTargetBlockHomePos[];
-extern const f32 lbl_803E64C4;
-extern const f32 lbl_803E64C8;
-extern const f32 gTargetBlockMinVertexYSeed;
-extern const f32 lbl_803E64D0;
-extern const f32 lbl_803E64D4;
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -88,7 +92,7 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         return;
     if (state->stateSfxReady == 0 || state->mode == DFPTARGETBLOCK_AUDIO_MODE_SETTLED)
         return;
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6490);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E6490.f);
 }
 
 static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTargetBlockHome* home,
@@ -102,7 +106,7 @@ static inline void dfptargetblock_resetToHome(DfpTargetBlockObject* obj, DfpTarg
     obj->velX = zero;
     obj->velZ = zero;
     state->mode = DFPTARGETBLOCK_AUDIO_MODE_RESETTING;
-    obj->y = home->y - lbl_803E64AC;
+    obj->y = home->y - lbl_803E64AC.f;
     Sfx_PlayFromObject(obj, DFPTARGETBLOCK_RESET_SFX);
 }
 
@@ -126,6 +130,10 @@ static inline void dfptargetblock_checkSettled(DfpTargetBlockObject* obj, DfpTar
         state->mode = DFPTARGETBLOCK_AUDIO_MODE_LOWERING;
     }
 }
+
+#pragma force_active on
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6488 = { 0.5f };
+#pragma force_active reset
 
 void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 {
@@ -173,11 +181,11 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         velZ = hitObj->velZ;
         if (velX < 0.0f)
         {
-            velX *= lbl_803E6494;
+            velX *= lbl_803E6494.f;
         }
         if (velZ < 0.0f)
         {
-            velZ *= lbl_803E6494;
+            velZ *= lbl_803E6494.f;
         }
         if (velX > velZ)
         {
@@ -187,8 +195,8 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
         {
             hitObj->velX = 0.0f;
         }
-        obj->velX = hitObj->velX * lbl_803E6498;
-        obj->velZ = hitObj->velZ * lbl_803E6498;
+        obj->velX = hitObj->velX * lbl_803E6498.f;
+        obj->velZ = hitObj->velZ * lbl_803E6498.f;
     }
 
     obj->x = obj->velX * timeDelta + obj->x;
@@ -236,22 +244,22 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (mode == 1)
     {
-        if ((dx > lbl_803E649C) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) || (dz > lbl_803E64A8))
+        if ((dx > lbl_803E649C.f) || (dx < lbl_803E64A0.f) || (dz < lbl_803E64A4.f) || (dz > lbl_803E64A8))
         {
             dfptargetblock_resetToHome(obj, home, state);
         }
-        dfptargetblock_checkSettled(obj, state, &lbl_803E64B0);
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64B0.f);
     }
     else if (mode == 2)
     {
-        if ((dx > lbl_803E64B4) || (dx < lbl_803E64B8) || (dz < lbl_803E64A4) || (dz > lbl_803E64BC))
+        if ((dx > lbl_803E64B4.f) || (dx < lbl_803E64B8.f) || (dz < lbl_803E64A4.f) || (dz > lbl_803E64BC.f))
         {
             dfptargetblock_resetToHome(obj, home, state);
 
             effect.x = obj->x;
             effect.y = obj->y;
             effect.z = obj->z;
-            effect.scale = lbl_803E6490;
+            effect.scale = lbl_803E6490.f;
             effect.rotZ = 0;
             effect.rotY = 0;
             effect.rotX = 0;
@@ -263,7 +271,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
                                   -1, NULL);
             }
         }
-        dfptargetblock_checkSettled(obj, state, &lbl_803E64C0);
+        dfptargetblock_checkSettled(obj, state, &lbl_803E64C0.f);
     }
 }
 
@@ -272,6 +280,27 @@ static inline int* ZBomb_GetActiveModel(DfpTargetBlockObject* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
+
+#pragma force_active on
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6490 = { 1.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6494 = { -1.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E6498 = { 0.25f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E649C = { 261.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64A0 = { -11.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64A4 = { -195.0f };
+__declspec(section ".sdata2") f32 lbl_803E64A8 = 16.0f;
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64AC = { 80.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64B0 = { 10.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64B4 = { 30.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64B8 = { -242.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64BC = { 6.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C0 = { 20.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C4 = { 12.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64C8 = { 0.75f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 gTargetBlockMinVertexYSeed = { 10000.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64D0 = { 219.0f };
+__declspec(section ".sdata2") const union TargetBlockConstF32 lbl_803E64D4 = { -158.0f };
+#pragma force_active reset
 
 void dfptargetblock_update(DfpTargetBlockObject* obj)
 {
@@ -286,10 +315,10 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
     if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE)
     {
         buf[3] = lbl_803E648C;
-        buf[4] = lbl_803E64C4;
+        buf[4] = lbl_803E64C4.f;
         buf[5] = lbl_803E648C;
-        objfx_spawnArcedBurstLegacy((int)obj, 5, lbl_803E64C8, 1, 2, 0x32, lbl_803E64C4, lbl_803E64C4,
-                                   lbl_803E64B0, buf, 0);
+        objfx_spawnArcedBurstLegacy((int)obj, 5, lbl_803E64C8.f, 1, 2, 0x32, lbl_803E64C4.f, lbl_803E64C4.f,
+                                   lbl_803E64B0.f, buf, 0);
     }
     else
     {
@@ -322,12 +351,12 @@ void dfptargetblock_update(DfpTargetBlockObject* obj)
         }
         else if (mode == DFPTARGETBLOCK_MODE_LOWERING)
         {
-            if (obj->y >= home->y - lbl_803E64AC)
+            if (obj->y >= home->y - lbl_803E64AC.f)
             {
-                obj->y = lbl_803E6494 * timeDelta + obj->y;
-                if (obj->y <= home->y - lbl_803E64AC)
+                obj->y = lbl_803E6494.f * timeDelta + obj->y;
+                if (obj->y <= home->y - lbl_803E64AC.f)
                 {
-                    obj->y = home->y - lbl_803E64AC;
+                    obj->y = home->y - lbl_803E64AC.f;
                     state->mode = DFPTARGETBLOCK_MODE_SETTLED;
                     mainSetBits((int)state->completionSfxId, 1);
                 }
@@ -365,7 +394,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
     }
     else
     {
-        fconv = (double)gTargetBlockMinVertexYSeed;
+        fconv = (double)gTargetBlockMinVertexYSeed.f;
         for (i = 0; i < (int)(u32)model->vertexCount; i = i + 1)
         {
             Model_GetVertexPosition(model, i, &point.x);
@@ -398,7 +427,7 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
             }
         }
         state->mode = DFPTARGETBLOCK_MODE_RAISING;
-        obj->y = obj->y - lbl_803E64AC;
+        obj->y = obj->y - lbl_803E64AC.f;
         state->completionSfxId = ((DfpTargetBlockPlacement*)placementData)->completionSfxId;
         state->stateSfxId = ((DfpTargetBlockPlacement*)placementData)->stateSfxId;
         bitVal = mainGetBit((int)state->completionSfxId);
@@ -407,8 +436,8 @@ void dfptargetblock_init(DfpTargetBlockObject* obj, int placementData)
         state->stateSfxReady = bitVal;
         if (state->completionSfxReady != '\0')
         {
-            obj->x = obj->x + lbl_803E64D0;
-            obj->z = obj->z + lbl_803E64D4;
+            obj->x = obj->x + lbl_803E64D0.f;
+            obj->z = obj->z + lbl_803E64D4.f;
             state->mode = DFPTARGETBLOCK_MODE_SETTLED;
         }
     }
@@ -465,7 +494,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
         probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
         probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
         originalZ = probe[2];
-        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488.f, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
         {
             deltaX = probe[0] - originalX;
             deltaZ = probe[2] - originalZ;

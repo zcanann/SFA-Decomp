@@ -21,6 +21,17 @@
 #include "main/dll/IM/dll_016F_imspacethruster.h"
 #include "main/object_descriptor.h"
 
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 gImSpaceThrusterWeightMax = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E478C = -0.2f;
+__declspec(section ".sdata2") f32 lbl_803E4790 = 0.2f;
+__declspec(section ".sdata2") f32 gImSpaceThrusterAlphaToWeightScale = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E4798 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E479C = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset
+
 s16 gImSpaceThrusterKeyframeIndexA[6] = {0x160, 0x161, 0x162, 0x163, 0x165, 0};
 s16 gImSpaceThrusterKeyframeIndexB[6] = {3, 4, 5, 6, 7, 0};
 extern f32 gImSpaceThrusterWeightMax;

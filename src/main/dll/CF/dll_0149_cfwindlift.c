@@ -58,12 +58,12 @@ typedef struct
     u8 _f2 : 6;
 } WindLiftSub;
 
+extern f32 gWindLiftHeightByteScale;
+extern f32 gWindLiftDefaultHeight;
 extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
 extern u8 gWindLiftSeqDurationTable[];
 extern u8 gWindLiftSeqGamebitTable[];
-extern f32 gWindLiftHeightByteScale;
-extern f32 gWindLiftDefaultHeight;
 extern const f32 lbl_803E4168;
 extern f32 lbl_803E4170;
 extern f32 lbl_803E4174;
@@ -607,3 +607,12 @@ u32 gCFMainCrystalObjDescriptor[14] = {0x00000000,
                                        (u32)CFMainCrystal_free,
                                        (u32)CFMainCrystal_getObjectTypeId,
                                        (u32)CFMainCrystal_getExtraSize};
+
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 gWindLiftHeightByteScale = 4.0f;
+__declspec(section ".sdata2") f32 gWindLiftDefaultHeight = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E41D0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E41D4 = 0.0f;
+#pragma explicit_zero_data off
+#pragma force_active reset

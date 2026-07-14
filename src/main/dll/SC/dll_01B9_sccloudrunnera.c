@@ -10,6 +10,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
+#pragma force_active on
+__declspec(section ".sdata2") f32 lbl_803E55E0 = 1.0f;
+#pragma force_active reset
+
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
