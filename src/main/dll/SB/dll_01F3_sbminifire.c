@@ -26,6 +26,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 int gSbMiniFireResourceVariant = 1;
 
@@ -165,3 +166,20 @@ void SB_MiniFire_release(void)
 void SB_MiniFire_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_MiniFireObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_MiniFire_initialise,
+    (ObjectDescriptorCallback)SB_MiniFire_release,
+    0,
+    (ObjectDescriptorCallback)SB_MiniFire_init,
+    (ObjectDescriptorCallback)SB_MiniFire_update,
+    (ObjectDescriptorCallback)SB_MiniFire_hitDetect,
+    (ObjectDescriptorCallback)SB_MiniFire_render,
+    (ObjectDescriptorCallback)SB_MiniFire_free,
+    (ObjectDescriptorCallback)SB_MiniFire_getObjectTypeId,
+    SB_MiniFire_getExtraSize,
+};

@@ -29,6 +29,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SBCLOUDBALL_PARTFX               0xa8
@@ -238,3 +239,20 @@ void SB_CloudBall_release(void)
 void SB_CloudBall_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_CloudBallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_CloudBall_initialise,
+    (ObjectDescriptorCallback)SB_CloudBall_release,
+    0,
+    (ObjectDescriptorCallback)SB_CloudBall_init,
+    (ObjectDescriptorCallback)SB_CloudBall_update,
+    (ObjectDescriptorCallback)SB_CloudBall_hitDetect,
+    (ObjectDescriptorCallback)SB_CloudBall_render,
+    (ObjectDescriptorCallback)SB_CloudBall_free,
+    (ObjectDescriptorCallback)SB_CloudBall_getObjectTypeId,
+    SB_CloudBall_getExtraSize,
+};

@@ -23,6 +23,7 @@
 #include "main/object_render.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
@@ -214,3 +215,20 @@ void SB_Propeller_init(GameObject* obj, int placement)
     }
     return;
 }
+
+ObjectDescriptor gSB_PropellerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)SB_Propeller_init,
+    (ObjectDescriptorCallback)SB_Propeller_update,
+    (ObjectDescriptorCallback)SB_Propeller_hitDetect,
+    (ObjectDescriptorCallback)SB_Propeller_render,
+    0,
+    0,
+    SB_Propeller_getExtraSize,
+};

@@ -29,6 +29,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01EA_sbshiphead.h"
+#include "main/object_descriptor.h"
 
 u8 gSbShipHeadHasFiredFireball = 1;
 
@@ -306,3 +307,20 @@ void SB_ShipHead_init(GameObject* obj)
     state->swayB += lbl_803E5830;
     state->swayA += lbl_803E5838;
 }
+
+ObjectDescriptor gSB_ShipHeadObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)SB_ShipHead_init,
+    (ObjectDescriptorCallback)SB_ShipHead_update,
+    0,
+    (ObjectDescriptorCallback)SB_ShipHead_render,
+    (ObjectDescriptorCallback)SB_ShipHead_free,
+    (ObjectDescriptorCallback)SB_ShipHead_getObjectTypeId,
+    SB_ShipHead_getExtraSize,
+};

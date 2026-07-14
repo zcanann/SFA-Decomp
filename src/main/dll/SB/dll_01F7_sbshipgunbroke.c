@@ -19,6 +19,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/dll/SB/dll_01F7_sbshipgunbroke.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
@@ -74,3 +75,20 @@ void SB_ShipGunBroke_release(void)
 void SB_ShipGunBroke_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_ShipGunBrokeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_initialise,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_release,
+    0,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_init,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_update,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_hitDetect,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_render,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_free,
+    (ObjectDescriptorCallback)SB_ShipGunBroke_getObjectTypeId,
+    SB_ShipGunBroke_getExtraSize,
+};

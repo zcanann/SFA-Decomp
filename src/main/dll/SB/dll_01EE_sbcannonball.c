@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx_play_int_return_legacy_api.h"
+#include "main/object_descriptor.h"
 
 #define SB_CANNONBALL_EXTRA_SIZE 0x24
 
@@ -255,3 +256,20 @@ void SB_CannonBall_release(void)
 void SB_CannonBall_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_CannonBallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_CannonBall_initialise,
+    (ObjectDescriptorCallback)SB_CannonBall_release,
+    0,
+    (ObjectDescriptorCallback)SB_CannonBall_init,
+    (ObjectDescriptorCallback)SB_CannonBall_update,
+    (ObjectDescriptorCallback)SB_CannonBall_hitDetect,
+    (ObjectDescriptorCallback)SB_CannonBall_render,
+    (ObjectDescriptorCallback)SB_CannonBall_free,
+    (ObjectDescriptorCallback)SB_CannonBall_getObjectTypeId,
+    SB_CannonBall_getExtraSize,
+};

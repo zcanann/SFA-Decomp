@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_01F6_flag.h"
+#include "main/object_descriptor.h"
 
 enum
 {
@@ -104,3 +105,20 @@ void Flag_release(void)
 void Flag_initialise(void)
 {
 }
+
+ObjectDescriptor gFlagObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)Flag_initialise,
+    (ObjectDescriptorCallback)Flag_release,
+    0,
+    (ObjectDescriptorCallback)Flag_init,
+    (ObjectDescriptorCallback)Flag_update,
+    (ObjectDescriptorCallback)Flag_hitDetect,
+    (ObjectDescriptorCallback)Flag_render,
+    (ObjectDescriptorCallback)Flag_free,
+    (ObjectDescriptorCallback)Flag_getObjectTypeId,
+    Flag_getExtraSize,
+};

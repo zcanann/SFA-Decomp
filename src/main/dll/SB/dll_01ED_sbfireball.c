@@ -14,6 +14,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/SB/dll_01ED_sbfireball.h"
+#include "main/object_descriptor.h"
 
 #define SB_FIREBALL_EXTRA_SIZE          0x18
 #define SB_FIREBALL_SPIN_STEP           -800
@@ -162,3 +163,20 @@ void SB_FireBall_release(void)
 void SB_FireBall_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_FireBallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_FireBall_initialise,
+    (ObjectDescriptorCallback)SB_FireBall_release,
+    0,
+    (ObjectDescriptorCallback)SB_FireBall_init,
+    (ObjectDescriptorCallback)SB_FireBall_update,
+    (ObjectDescriptorCallback)SB_FireBall_hitDetect,
+    (ObjectDescriptorCallback)SB_FireBall_render,
+    (ObjectDescriptorCallback)SB_FireBall_free,
+    (ObjectDescriptorCallback)SB_FireBall_getObjectTypeId,
+    SB_FireBall_getExtraSize,
+};

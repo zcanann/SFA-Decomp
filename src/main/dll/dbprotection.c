@@ -41,6 +41,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/DB/DBstealerworm.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING  0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING  0xa3d
@@ -141,6 +142,29 @@ extern f32 lbl_803E57B8;
 
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
+
+
+ObjectDescriptor15 gSB_GalleonObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_15_SLOTS,
+    (ObjectDescriptorCallback)SB_Galleon_initialise,
+    (ObjectDescriptorCallback)SB_Galleon_release,
+    0,
+    (ObjectDescriptorCallback)SB_Galleon_init,
+    (ObjectDescriptorCallback)SB_Galleon_update,
+    (ObjectDescriptorCallback)SB_Galleon_hitDetect,
+    (ObjectDescriptorCallback)SB_Galleon_render,
+    (ObjectDescriptorCallback)SB_Galleon_free,
+    (ObjectDescriptorCallback)SB_Galleon_getObjectTypeId,
+    SB_Galleon_getExtraSize,
+    (ObjectDescriptorCallback)SB_Galleon_onPartDestroyed,
+    (ObjectDescriptorCallback)SB_Galleon_getStage,
+    (ObjectDescriptorCallback)SB_Galleon_getPhase,
+    (ObjectDescriptorCallback)SB_Galleon_getDamagePhase,
+    (ObjectDescriptorCallback)SB_Galleon_func0E,
+};
 
 void fn_801DFA28(u8* obj)
 {

@@ -22,6 +22,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 /* anim.resetHitboxMode bit forced on each SeqFn / update tick. */
 #define SB_CAGEKYTE_HITBOX_RESET_BIT 0x8
@@ -120,3 +121,20 @@ void SB_CageKyte_release(void)
 void SB_CageKyte_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_CageKyteObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_CageKyte_initialise,
+    (ObjectDescriptorCallback)SB_CageKyte_release,
+    0,
+    (ObjectDescriptorCallback)SB_CageKyte_init,
+    (ObjectDescriptorCallback)SB_CageKyte_update,
+    (ObjectDescriptorCallback)SB_CageKyte_hitDetect,
+    (ObjectDescriptorCallback)SB_CageKyte_render,
+    (ObjectDescriptorCallback)SB_CageKyte_free,
+    (ObjectDescriptorCallback)SB_CageKyte_getObjectTypeId,
+    SB_CageKyte_getExtraSize,
+};

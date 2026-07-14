@@ -25,6 +25,7 @@
 #include "main/pad.h"
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01F0_sbkytecage.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
@@ -229,3 +230,20 @@ void SB_KyteCage_release(void)
 void SB_KyteCage_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_KyteCageObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_KyteCage_initialise,
+    (ObjectDescriptorCallback)SB_KyteCage_release,
+    0,
+    (ObjectDescriptorCallback)SB_KyteCage_init,
+    (ObjectDescriptorCallback)SB_KyteCage_update,
+    (ObjectDescriptorCallback)SB_KyteCage_hitDetect,
+    (ObjectDescriptorCallback)SB_KyteCage_render,
+    (ObjectDescriptorCallback)SB_KyteCage_free,
+    (ObjectDescriptorCallback)SB_KyteCage_getObjectTypeId,
+    SB_KyteCage_getExtraSize,
+};

@@ -320,8 +320,8 @@ main/dll/dll_001E_effect5.c:
 	.text       start:0x800BC244 end:0x800BD43C
 	.data       start:0x803109B8 end:0x80310A20
 	.sdata      start:0x803DB7E0 end:0x803DB7F0
-	.sdata2     start:0x803DFBE0 end:0x803DFC78
 	.sbss       start:0x803DD360 end:0x803DD370
+	.sdata2     start:0x803DFBE0 end:0x803DFC78
 
 main/dll/dll_001F_effect6.c:
 	.text       start:0x800BD43C end:0x800BE034
@@ -390,22 +390,22 @@ main/dll/dll_002A_effect17.c:
 	.text       start:0x800CA930 end:0x800CB690
 	.data       start:0x80310FE0 end:0x80311034
 	.sdata      start:0x803DB850 end:0x803DB860
-	.sdata2     start:0x803E01B8 end:0x803E0220
 	.sbss       start:0x803DD3D0 end:0x803DD3E0
+	.sdata2     start:0x803E01B8 end:0x803E0220
 
 main/dll/dll_002B_effect18.c:
 	.text       start:0x800CB690 end:0x800CCF5C
 	.data       start:0x80311038 end:0x803110D4
 	.sdata      start:0x803DB860 end:0x803DB870
-	.sdata2     start:0x803E0220 end:0x803E02D8
 	.sbss       start:0x803DD3E0 end:0x803DD3F0
+	.sdata2     start:0x803E0220 end:0x803E02D8
 
 main/dll/dll_002C_effect19.c:
 	.text       start:0x800CCF5C end:0x800CD430
 	.data       start:0x803110D8 end:0x80311100
 	.sdata      start:0x803DB870 end:0x803DB880
-	.sdata2     start:0x803E02D8 end:0x803E0310
 	.sbss       start:0x803DD3F0 end:0x803DD400
+	.sdata2     start:0x803E02D8 end:0x803E0310
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
@@ -426,8 +426,8 @@ main/dll/dll_0004_dummy04.c:
 
 main/dll/dll_000F_unk.c:
 	.text       start:0x800D8020 end:0x800D9DCC
-	.sdata2     start:0x803E0598 end:0x803E05A0
 	.sbss       start:0x803DD430 end:0x803DD458
+	.sdata2     start:0x803E0598 end:0x803E05A0
 
 main/dll/dll_0010_uicontroller.c:
 	.text       start:0x800D9DCC end:0x800D9EB4
@@ -627,8 +627,8 @@ main/dll/dll_007C_dll7cfunc0.c:
 
 main/dll/dll_007D_dll7dfunc0.c:
 	.text       start:0x800F4C70 end:0x800F4FA4
-	.sdata2     start:0x803E0DD8 end:0x803E0E00
 	.sbss       start:0x803DD4B0 end:0x803DD4B8
+	.sdata2     start:0x803E0DD8 end:0x803E0E00
 
 main/dll/dll_007E_dll7efunc0.c:
 	.text       start:0x800F4FA4 end:0x800F52E0
@@ -2254,8 +2254,8 @@ main/dll/DIM/dll_01D5_dim2conveyor.c:
 
 main/dll/dll_01D6_dll1d6.c:
 	.text       start:0x801B75B8 end:0x801B7D48
-	.sdata      start:0x803DBF18 end:0x803DBF28
 	.data       start:0x80325758 end:0x80325790
+	.sdata      start:0x803DBF18 end:0x803DBF28
 
 main/dll/DIM/dll_01D7_dim2snowball.c:
 	.text       start:0x801B7D48 end:0x801B837C
@@ -2283,8 +2283,8 @@ main/dll/DIM/dll_01DD_dim2icicle.c:
 
 main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
-	.sdata      start:0x803DBF28 end:0x803DBF30
 	.data       start:0x803258E8 end:0x80325928
+	.sdata      start:0x803DBF28 end:0x803DBF30
 
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
@@ -2624,79 +2624,96 @@ main/dll/dll_0142_felevcontrol.c:
 
 main/dll/dll_0144_dll144.c:
 	.text       start:0x801DF9AC end:0x801DFA28
-	.data       start:0x80327B70 end:0x80327BA8
+	.data       start:0x80327B70 end:0x80327BE0
 
 main/dll/dbprotection.c:
 	.text       start:0x801DFA28 end:0x801E1588
+	.data       start:0x80327BE0 end:0x80327C50
 
 main/dll/SB/dll_01E8_sbgalleon.c:
 	.text       start:0x801E1588 end:0x801E2570
 	.rodata     start:0x802C23F8 end:0x802C2428
+	.data       start:0x80327C50 end:0x80327C88
 	.sdata      start:0x803DC078 end:0x803DC090
 
 main/dll/SB/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
+	.data       start:0x80327C88 end:0x80327CC0
 	.sdata2     start:0x803E5828 end:0x803E5830
 
 main/dll/SB/dll_01EA_sbshiphead.c:
 	.text       start:0x801E2B28 end:0x801E32BC
+	.data       start:0x80327CC0 end:0x80327CF8
 	.sdata      start:0x803DC090 end:0x803DC098
 	.sdata2     start:0x803E5830 end:0x803E5868
 
 main/dll/SB/dll_01EB_sbshipmast.c:
 	.text       start:0x801E32BC end:0x801E341C
+	.data       start:0x80327CF8 end:0x80327D30
 	.sdata2     start:0x803E5868 end:0x803E5888
 
 main/dll/SB/dll_01EC_sbshipgun.c:
 	.text       start:0x801E341C end:0x801E3D30
+	.data       start:0x80327D30 end:0x80327D68
 	.sdata2     start:0x803E5888 end:0x803E58B0
 
 main/dll/SB/dll_01EE_sbcannonball.c:
 	.text       start:0x801E3D30 end:0x801E4288
+	.data       start:0x80327D68 end:0x80327DA0
 	.sdata2     start:0x803E58B0 end:0x803E58D4
 
 main/dll/SB/dll_01ED_sbfireball.c:
 	.text       start:0x801E4288 end:0x801E45AC
+	.data       start:0x80327DA0 end:0x80327DD8
 	.sdata2     start:0x803E58D8 end:0x803E58E4
 
 main/dll/SB/dll_01EF_sbcloudball.c:
 	.text       start:0x801E45AC end:0x801E4AC0
+	.data       start:0x80327DD8 end:0x80327E10
 	.sdata2     start:0x803E58E8 end:0x803E5908
 	.sdata2     start:0x803E5908 end:0x803E5910
 
 main/dll/SB/dll_01F0_sbkytecage.c:
 	.text       start:0x801E4AC0 end:0x801E4F14
+	.data       start:0x80327E10 end:0x80327E48
 	.sdata2     start:0x803E5918 end:0x803E5920
 
 main/dll/SB/dll_01F2_sbcagekyte.c:
 	.text       start:0x801E4F14 end:0x801E5060
+	.data       start:0x80327E48 end:0x80327E80
 
 main/dll/SB/dll_01F1_sbseqdoor.c:
 	.text       start:0x801E5060 end:0x801E519C
+	.data       start:0x80327E80 end:0x80327EB8
 	.sdata2     start:0x803E5920 end:0x803E5928
 
 main/dll/SB/dll_01F3_sbminifire.c:
 	.text       start:0x801E519C end:0x801E55B8
+	.data       start:0x80327EB8 end:0x80327EF0
 	.sdata      start:0x803DC098 end:0x803DC0A0
 	.sdata2     start:0x803E5928 end:0x803E5954
 
 main/dll/dll_01F5_shipbattle.c:
 	.text       start:0x801E55B8 end:0x801E59AC
+	.data       start:0x80327EF0 end:0x80327F28
 	.sdata2     start:0x803E5958 end:0x803E5978
 
 main/dll/dll_01F4_lamp.c:
 	.text       start:0x801E59AC end:0x801E5DC4
+	.data       start:0x80327F28 end:0x80327F60
 	.sdata2     start:0x803E5978 end:0x803E5998
 
 main/dll/dll_01F6_flag.c:
 	.text       start:0x801E5DC4 end:0x801E5F74
+	.data       start:0x80327F60 end:0x80327F98
 
 main/dll/SB/dll_01F7_sbshipgunbroke.c:
 	.text       start:0x801E5F74 end:0x801E6050
+	.data       start:0x80327F98 end:0x80327FD0
 
 main/dll/SP/dll_0285_spshop.c:
 	.text       start:0x801E6050 end:0x801E66DC
-	.data       start:0x80328310 end:0x80328370
+	.data       start:0x80327FD0 end:0x80328370
 
 main/dll/dll_801e66dc.c:
 	.text       start:0x801E66DC end:0x801E67BC
@@ -2714,8 +2731,8 @@ main/dll/SP/dll_0286_spshopkeeper.c:
 
 main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
-	.sdata2     start:0x803E5A30 end:0x803E5A6C
 	.data       start:0x803283E0 end:0x80328418
+	.sdata2     start:0x803E5A30 end:0x803E5A6C
 
 main/dll/SP/dll_0287_spscarab.c:
 	.text       start:0x801E8EA4 end:0x801E9328
@@ -2810,20 +2827,20 @@ main/dll/WM/dll_0201_wmcolrise.c:
 
 main/dll/WM/dll_0204_wmtorch.c:
 	.text       start:0x801F30DC end:0x801F33B4
-	.sdata2     start:0x803E5E00 end:0x803E5E08
 	.data       start:0x80328AA0 end:0x80328B08
+	.sdata2     start:0x803E5E00 end:0x803E5E08
 
 main/dll/dll_0206_lightsource.c:
 	.text       start:0x801F33B4 end:0x801F3C2C
 	.rodata     start:0x802C2488 end:0x802C24B8
-	.sdata2     start:0x803E5E08 end:0x803E5E58
 	.data       start:0x80328B08 end:0x80328B40
+	.sdata2     start:0x803E5E08 end:0x803E5E58
 
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
+	.data       start:0x80328B40 end:0x80328B78
 	.sdata2     start:0x803E5E58 end:0x803E5E68
 	.sdata2     start:0x803E5E68 end:0x803E5E70
-	.data       start:0x80328B40 end:0x80328B78
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.text       start:0x801F3F18 end:0x801F48C0
@@ -2868,8 +2885,8 @@ main/dll/WM/dll_020E_wmsun.c:
 
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
-	.sdata2     start:0x803E5F90 end:0x803E5F98
 	.data       start:0x80328D60 end:0x80328D98
+	.sdata2     start:0x803E5F90 end:0x803E5F98
 
 main/dll/WM/dll_0210_wmplanets.c:
 	.text       start:0x801F7D34 end:0x801F7FF4
@@ -3242,8 +3259,8 @@ main/dll/dll_028B.c:
 
 main/dll/WC/dll_028C_wcbouncycra.c:
 	.text       start:0x8022408C end:0x802243F4
-	.sdata2     start:0x803E6D48 end:0x803E6D50
 	.data       start:0x8032AF78 end:0x8032AFB0
+	.sdata2     start:0x803E6D48 end:0x803E6D50
 
 main/dll/WC/dll_0290_wcpushblock.c:
 	.text       start:0x802243F4 end:0x802261B0
@@ -3412,14 +3429,14 @@ main/dll/dll_02B4_cntcounter.c:
 
 main/dll/dll_02B5_timer.c:
 	.text       start:0x8023852C end:0x80238AB0
-	.sdata      start:0x803DC418 end:0x803DC420
 	.data       start:0x8032BEC0 end:0x8032BEF8
+	.sdata      start:0x803DC418 end:0x803DC420
 
 main/dll/dll_02B6_cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4
+	.data       start:0x8032BEF8 end:0x8032BF40
 	.sdata      start:0x803DC428 end:0x803DC430
 	.sdata2     start:0x803E7428 end:0x803E7440
-	.data       start:0x8032BEF8 end:0x8032BF40
 
 main/dll/dll_02B7_mcupgrade.c:
 	.text       start:0x80238FA4 end:0x80239114
@@ -3435,14 +3452,14 @@ main/dll/dll_02B9_mcstaffeffe.c:
 
 main/dll/dll_02BA_mclightning.c:
 	.text       start:0x8023938C end:0x80239858
+	.data       start:0x8032BFE8 end:0x8032C020
 	.sdata2     start:0x803E7440 end:0x803E7448
 	.sdata2     start:0x803E7448 end:0x803E7450
-	.data       start:0x8032BFE8 end:0x8032C020
 
 main/dll/dll_02BB_gflevelcon.c:
 	.text       start:0x80239858 end:0x80239DD8
-	.sdata2     start:0x803E7450 end:0x803E7490
 	.data       start:0x8032C020 end:0x8032C088
+	.sdata2     start:0x803E7450 end:0x803E7490
 
 main/dll/dll_02BC_andross.c:
 	.text       start:0x80239DD8 end:0x8023F05C
@@ -3458,13 +3475,13 @@ main/dll/dll_02BD_androsshand.c:
 
 main/dll/dll_02BE_androssbrain.c:
 	.text       start:0x8023FC8C end:0x80240010
-	.sdata2     start:0x803E7600 end:0x803E7608
 	.data       start:0x8032C2F0 end:0x8032C328
+	.sdata2     start:0x803E7600 end:0x803E7608
 
 main/dll/dll_02BF_androssligh.c:
 	.text       start:0x80240010 end:0x8024034C
-	.sdata2     start:0x803E7608 end:0x803E7610
 	.data       start:0x8032C328 end:0x8032C360
+	.sdata2     start:0x803E7608 end:0x803E7610
 
 dolphin/base/PPCArch.c:
 	.text       start:0x8024034C end:0x802403D8
@@ -3496,12 +3513,12 @@ dolphin/os/OSCache.c:
 	.text       start:0x802419A4 end:0x80242060
 	.data       start:0x8032C5A0 end:0x8032C7D0
 
-main/unknown/autos/placeholder_8032C984.c:
-	.data       start:0x8032C984 end:0x8032C9A8
-
 dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x802428C8
 	.data       start:0x8032C7D0 end:0x8032C984
+
+main/unknown/autos/placeholder_8032C984.c:
+	.data       start:0x8032C984 end:0x8032C9A8
 
 dolphin/os/OSError.c:
 	.text       start:0x802428C8 end:0x80242C10

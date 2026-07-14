@@ -12,6 +12,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/SB/dll_01EB_sbshipmast.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
@@ -108,3 +109,20 @@ void SB_ShipMast_release(void)
 void SB_ShipMast_initialise(void)
 {
 }
+
+ObjectDescriptor gSB_ShipMastObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_ShipMast_initialise,
+    (ObjectDescriptorCallback)SB_ShipMast_release,
+    0,
+    (ObjectDescriptorCallback)SB_ShipMast_init,
+    (ObjectDescriptorCallback)SB_ShipMast_update,
+    (ObjectDescriptorCallback)SB_ShipMast_hitDetect,
+    (ObjectDescriptorCallback)SB_ShipMast_render,
+    (ObjectDescriptorCallback)SB_ShipMast_free,
+    (ObjectDescriptorCallback)SB_ShipMast_getObjectTypeId,
+    SB_ShipMast_getExtraSize,
+};

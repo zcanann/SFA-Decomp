@@ -37,6 +37,7 @@
 #include "main/object.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 #define SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE 0x008C
 #define SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE     0x008E
@@ -501,3 +502,20 @@ __declspec(section ".sdata2") f32 gSbShipGunCannonballSpeedBoost = 8.0f;
 __declspec(section ".sdata2") f32 gSbShipGunFireCameraShakeMagnitude = 0.1f;
 __declspec(section ".sdata2") f32 lbl_803E58A8 = 2.0f;
 __declspec(section ".sdata2") f32 gSbShipGunNearSfxRangeThreshold = 200.0f;
+
+ObjectDescriptor gSB_ShipGunObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)SB_ShipGun_init,
+    (ObjectDescriptorCallback)SB_ShipGun_update,
+    0,
+    (ObjectDescriptorCallback)SB_ShipGun_render,
+    (ObjectDescriptorCallback)SB_ShipGun_free,
+    0,
+    SB_ShipGun_getExtraSize,
+};

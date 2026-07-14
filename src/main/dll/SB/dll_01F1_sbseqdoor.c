@@ -20,6 +20,7 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/dll/SB/dll_01F1_sbseqdoor.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
@@ -108,3 +109,20 @@ __declspec(section ".sdata2") f32 lbl_803E5920 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5924 = 0.0f;
 #pragma explicit_zero_data reset
+
+ObjectDescriptor gSB_SeqDoorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_SeqDoor_initialise,
+    (ObjectDescriptorCallback)SB_SeqDoor_release,
+    0,
+    (ObjectDescriptorCallback)SB_SeqDoor_init,
+    (ObjectDescriptorCallback)SB_SeqDoor_update,
+    (ObjectDescriptorCallback)SB_SeqDoor_hitDetect,
+    (ObjectDescriptorCallback)SB_SeqDoor_render,
+    (ObjectDescriptorCallback)SB_SeqDoor_free,
+    (ObjectDescriptorCallback)SB_SeqDoor_getObjectTypeId,
+    SB_SeqDoor_getExtraSize,
+};

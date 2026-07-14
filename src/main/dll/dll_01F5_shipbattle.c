@@ -23,6 +23,7 @@
 #include "main/obj_list.h"
 #include "main/model_light.h"
 #include "main/dll/dll_01F5_shipbattle.h"
+#include "main/object_descriptor.h"
 
 #pragma force_active on
 #pragma explicit_zero_data on
@@ -208,3 +209,20 @@ void ShipBattle_release(void)
 void ShipBattle_initialise(void)
 {
 }
+
+ObjectDescriptor gShipBattleObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ShipBattle_initialise,
+    (ObjectDescriptorCallback)ShipBattle_release,
+    0,
+    (ObjectDescriptorCallback)ShipBattle_init,
+    (ObjectDescriptorCallback)ShipBattle_update,
+    (ObjectDescriptorCallback)ShipBattle_hitDetect,
+    (ObjectDescriptorCallback)ShipBattle_render,
+    (ObjectDescriptorCallback)ShipBattle_free,
+    (ObjectDescriptorCallback)ShipBattle_getObjectTypeId,
+    ShipBattle_getExtraSize,
+};

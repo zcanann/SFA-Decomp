@@ -25,6 +25,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_01F4_lamp.h"
+#include "main/object_descriptor.h"
 
 #define LAMP_OBJFLAG_RENDERED 0x800
 
@@ -164,3 +165,20 @@ void Lamp_init(int* obj, int* def)
     *state = 1;
     ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
 }
+
+ObjectDescriptor gLampObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)Lamp_init,
+    (ObjectDescriptorCallback)Lamp_update,
+    0,
+    (ObjectDescriptorCallback)Lamp_render,
+    (ObjectDescriptorCallback)Lamp_free,
+    0,
+    Lamp_getExtraSize,
+};

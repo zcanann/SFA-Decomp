@@ -93,3 +93,20 @@ ObjectDescriptor gFElevControlObjDescriptor = {
     (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
     FElevControl_getExtraSize,
 };
+
+ObjectDescriptor lbl_80327BA8 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_144_initialise,
+    (ObjectDescriptorCallback)dll_144_release,
+    0,
+    (ObjectDescriptorCallback)dll_144_init,
+    (ObjectDescriptorCallback)dll_144_update,
+    (ObjectDescriptorCallback)dll_144_hitDetect,
+    (ObjectDescriptorCallback)dll_144_render,
+    (ObjectDescriptorCallback)dll_144_free,
+    (ObjectDescriptorCallback)dll_144_getObjectTypeId,
+    dll_144_getExtraSize,
+};
