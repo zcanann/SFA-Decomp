@@ -1962,7 +1962,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
             if (queueCount > 0)
             {
                 queueCount--;
-                directIndex = queueIndices[queueCount];
+                directIndex = queueIndices[queueCount & 0xFFFFFFFF];
                 queueCurve = (int)romCurves[directIndex];
                 distance = queueDistances[queueCount];
                 sel[0] = 0;
@@ -3657,6 +3657,7 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
     int link;
     int id;
     int i;
+    f32 tz;
     int idsB[ROMCURVE_LINK_COUNT];
     int idsA[ROMCURVE_LINK_COUNT];
 
@@ -3689,8 +3690,8 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
                 outZ[mB++] = curve->base.z;
                 outX[mB] = next->x;
                 outY[mB] = next->y;
-                outZ[mB++] = next->z;
-                n += 2;
+                tz = next->z;
+                outZ[(n += 2, mB++)] = tz;
                 outX[mB] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
                 outY[mB] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
                 outZ[n++] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
@@ -3728,8 +3729,8 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
                 outZ[mA++] = curve->base.z;
                 outX[mA] = next->x;
                 outY[mA] = next->y;
-                outZ[mA++] = next->z;
-                n += 2;
+                tz = next->z;
+                outZ[(n += 2, mA++)] = tz;
                 outX[mA] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
                 outY[mA] = lbl_803E0610 * ((f32)curve->rotX * mathSinf(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
                 outZ[n++] = lbl_803E0610 * ((f32)curve->rotX * mathCosf(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
