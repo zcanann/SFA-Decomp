@@ -8,6 +8,7 @@
  * fools the beam. ("GC" = GameCube; see the dll_0150 header.)
  */
 #include "main/camera_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/object_render_legacy.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
@@ -154,7 +155,6 @@ extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
 extern int objIsFrozen(int obj);
@@ -1569,36 +1569,36 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                         *(u32*)&((EnemyState*)state)->flags2E8 = flags & ~1LL;
                         *(u32*)&((EnemyState*)state)->flags2E8 = *(u32*)&((EnemyState*)state)->flags2E8 | 2;
                     }
-                    if (*(void**)&((EnemyState*)state)->modelLight == NULL)
+                    if (((EnemyState*)state)->modelLight == NULL)
                     {
-                        ((EnemyState*)state)->modelLight = (int)objCreateLight(0, 1);
+                        ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
                     }
-                    objParticleFn_80099d84((int*)obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
+                    objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
                                            ((EnemyState*)state)->modelLight);
                 }
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 4) != 0)
             {
-                if (*(void**)&((EnemyState*)state)->modelLight == NULL)
+                if (((EnemyState*)state)->modelLight == NULL)
                 {
-                    ((EnemyState*)state)->modelLight = (int)objCreateLight(0, 1);
+                    ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
                 }
-                objParticleFn_80099d84((int*)obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
                                        ((EnemyState*)state)->modelLight);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84((int*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
                 Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
-                objParticleFn_80099d84((int*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)
             {
-                objParticleFn_80099d84((int*)obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E25FC, 7, ((EnemyState*)state)->particleScale, 0);
             }
             break;
         }
@@ -1610,11 +1610,11 @@ void enemy_hitDetect(GameObject* obj)
     u8* state = obj->extra;
     ObjHitsPriorityState* childHitState;
 
-    if (*(void**)&((EnemyState*)state)->modelLight != NULL &&
-        modelLightStruct_getActiveState((ModelLightStruct*)((EnemyState*)state)->modelLight) == 0)
+    if (((EnemyState*)state)->modelLight != NULL &&
+        modelLightStruct_getActiveState(((EnemyState*)state)->modelLight) == 0)
     {
-        ModelLightStruct_free((ModelLightStruct*)((EnemyState*)state)->modelLight);
-        ((EnemyState*)state)->modelLight = 0;
+        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ((EnemyState*)state)->modelLight = NULL;
     }
     ((EnemyState*)state)->lastHitObject = ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject;
     if (((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject != 0)
@@ -1645,10 +1645,10 @@ void enemy_free(GameObject* obj, int flag)
     {
         ObjModelChain_Free((ObjModelChain*)((EnemyState*)state)->tailSimHandle);
     }
-    if (*(void**)&((EnemyState*)state)->modelLight != NULL)
+    if (((EnemyState*)state)->modelLight != NULL)
     {
-        ModelLightStruct_free((ModelLightStruct*)((EnemyState*)state)->modelLight);
-        ((EnemyState*)state)->modelLight = 0;
+        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ((EnemyState*)state)->modelLight = NULL;
     }
     if (*(void**)state != NULL)
     {

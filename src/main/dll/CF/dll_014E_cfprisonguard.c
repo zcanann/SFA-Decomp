@@ -7,6 +7,7 @@
  */
 
 #include "main/dll/bit80_struct.h"
+#include "main/dll/objfx_api.h"
 #include "main/render.h"
 #include "main/dll/CF/dll_014E_cfprisonguard.h"
 #include "main/game_object.h"
@@ -55,7 +56,6 @@ extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
 extern f32 lbl_803E4284;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the
  * alarm on cues, bail when captured or freed, watch player distance and
@@ -235,7 +235,7 @@ void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
             if (sub->alarmRamp < lbl_803E4284)
             {
-                objParticleFn_80099d84((int)obj, lbl_803E4280, 3, sub->alarmRamp, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E4280, 3, sub->alarmRamp, 0);
             }
         }
     }

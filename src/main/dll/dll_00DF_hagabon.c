@@ -18,6 +18,7 @@
  * adds map time and sets the placement game bit, and re-evaluates chase state.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx.h"
@@ -61,7 +62,6 @@ typedef struct HagabonPlacement
 #define HAGABON_FLAG_FADE_IN         0x08
 #define HAGABON_FLAG_FADE_OUT        0x10
 
-extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
 __declspec(section ".sdata2") f32 lbl_803E2608 = 400.0f;
 __declspec(section ".sdata2") f32 lbl_803E260C = 128.0f;
@@ -291,12 +291,12 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             objRenderModelAndHitVolumes(obj, lbl_803E2650);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
-                objParticleFn_80099d84((int)obj, lbl_803E2650, 3,
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E2650, 3,
                                        (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
             }
             if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
             {
-                objParticleFn_80099d84((int)obj, lbl_803E2650, 4,
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E2650, 4,
                                        (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
             }
             break;

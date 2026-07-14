@@ -13,6 +13,7 @@
  * opcodes that toggle the light and drive the model sway parameters.
  */
 #include "main/dll/dll_018C_mmshshrine.h"
+#include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/vecmath.h"
@@ -91,7 +92,6 @@ extern f32 lbl_803E4F60;
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
-extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);
 typedef struct MMSHShrineRuntime
@@ -278,7 +278,8 @@ void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char vi
             modelLightStruct_setEnabled(runtime->light, 1, lbl_803E4F50);
         }
         objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, lbl_803E4F50);
-        objParticleFn_80099d84((int)obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50, (int)runtime->light);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50,
+                               (ModelLightStruct*)runtime->light);
     }
 }
 

@@ -17,6 +17,7 @@
  * constants in the DLL's shared .sdata2 pool.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/dll/objfx.h"
 #include "main/dll/viewfinder.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"

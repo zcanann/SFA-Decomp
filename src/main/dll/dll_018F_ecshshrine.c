@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/dll/objfx_api.h"
 #include "main/sky_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
@@ -398,7 +399,6 @@ void ecsh_shrine_hitDetect(void)
 
 void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
     void** inner = (obj)->extra;
     if (visible == 0)
     {
@@ -413,7 +413,8 @@ void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, lbl_803E4FC8);
     }
     objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4FC8);
-    objParticleFn_80099d84((int)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (int)*inner);
+    objParticleFn_80099d84((GameObject*)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8,
+                           (ModelLightStruct*)*inner);
 }
 
 void ecsh_shrine_free(int* obj)

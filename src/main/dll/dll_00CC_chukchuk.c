@@ -11,6 +11,7 @@
  * This TU also defines fn_8015F5B0 and the ChukChuk ObjectDescriptor.
  */
 #include "main/obj_placement.h"
+#include "main/dll/objfx_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/dll/chukchukstate_struct.h"
@@ -128,7 +129,6 @@ void ChukChuk_hitDetect(void)
 #pragma opt_propagation off
 void ChukChuk_update(short* obj)
 {
-    extern void objParticleFn_80099d84(f32, short*, int, f32, int);
 
     ChukChukState* v;
     u16 di;
@@ -152,7 +152,7 @@ void ChukChuk_update(short* obj)
     if (v->steamTimer)
     {
         v->steamTimer -= timeDelta;
-        objParticleFn_80099d84(1.0f, obj, 1, v->steamTimer / 60.0f, 0);
+        objParticleFn_80099d84((GameObject*)obj, 1.0f, 1, v->steamTimer / 60.0f, 0);
         if (v->steamTimer <= 0.0f)
         {
             v->steamTimer = 0.0f;

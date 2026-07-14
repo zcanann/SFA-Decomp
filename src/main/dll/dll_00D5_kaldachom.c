@@ -11,6 +11,7 @@
  * initialise time and stepped by gPlayerInterface slot 8 each update.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
@@ -51,7 +52,6 @@
 #define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
 #define KALDACHOM_EFFECT_RESOURCE_ID         0x5a /* shared effect resource -> gKaldachomEffectResource */
 
-extern u32 objParticleFn_80099d84();
 
 extern void fn_802961FC(int a, u8 type);
 

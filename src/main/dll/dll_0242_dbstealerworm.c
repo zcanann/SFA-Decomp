@@ -25,6 +25,7 @@
  *   if (b->_8 && (b->_8->_6 & 0x40)) clear.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/objanim.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
@@ -964,7 +965,6 @@ int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
 
 void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objParticleFn_80099d84(int, f32, int, f32, int);
     extern f32 lbl_803E62D0;
     extern f32 lbl_803E62C8;
     GroundBaddieState* state;
@@ -994,7 +994,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
                                                                                   lbl_803E62C8);
             if ((state->flags400 & 0x60) != 0)
             {
-                objParticleFn_80099d84((int)obj, lbl_803E62C8, 3, state->glowAlpha, 0);
+                objParticleFn_80099d84((GameObject*)obj, lbl_803E62C8, 3, state->glowAlpha, 0);
             }
             path = *(char**)&sub->linkedObj;
             if (path != NULL && *(void**)(path + 0x50) != NULL)

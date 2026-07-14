@@ -1,4 +1,5 @@
 #include "main/audio/sfx.h"
+#include "main/dll/objfx_api.h"
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
@@ -95,7 +96,6 @@ extern f32 lbl_803E66EC;
 extern int gSnowClawDropBombAngle;
 extern void objSeqInitFn_80080078(void* table, int n);
 extern int objUpdateOpacity(int sub);
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 extern f32 lbl_803E66F0;
 extern f32 lbl_803E6708;
 extern f32 lbl_803E670C;
@@ -476,7 +476,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
             {
                 ((SnowclawAaFlags*)&((SnowclawState*)inner)->flags)->flag6 = 0;
             }
-            objParticleFn_80099d84((int)obj, lbl_803E670C, 3, ((SnowclawState*)inner)->particleAlpha, 0);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E670C, 3, ((SnowclawState*)inner)->particleAlpha, 0);
         }
     }
 }
@@ -859,4 +859,3 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     }
     return 0;
 }
-

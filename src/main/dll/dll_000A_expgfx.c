@@ -20,6 +20,7 @@
 #include "main/sky_state.h"
 #include "main/tex_dolphin.h"
 #include "main/texture.h"
+#include "main/dll/objfx_api.h"
 #include "dolphin/os/OSFastCast.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -3215,7 +3216,6 @@ ObjectDescriptor14 expgfx_funcs = {
 
 /* Switch jumptables for neighbouring objfx/itempickup particle fx code whose
  * .data was emitted in this unit's address range. */
-extern void objParticleFn_80099d84();
 
 void* jumptable_8030FA9C[8] = {
     (void*)((u8*)objfx_spawnDirectionalBurst + 0x390), (void*)((u8*)objfx_spawnDirectionalBurst + 0x170),

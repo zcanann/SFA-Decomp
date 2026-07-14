@@ -5,6 +5,7 @@
  * and screen transition.
  */
 #include "main/mapEvent.h"
+#include "main/dll/objfx_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -141,7 +142,6 @@ extern u16 gDfShShrineRewardTable[];
 extern const f32 lbl_803E4E8C;
 
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
@@ -319,7 +319,8 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             modelLightStruct_setEnabled(light, 1, lbl_803E4E88);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4E88);
-        objParticleFn_80099d84((int*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88, (int)state->light);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88,
+                               (ModelLightStruct*)state->light);
     }
 }
 

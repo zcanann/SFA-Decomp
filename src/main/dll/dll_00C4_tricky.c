@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/dll/objfx_api.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_limited_object_api.h"
 #include "main/audio/sfx_looped_object_api.h"
@@ -214,7 +215,6 @@ extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
 extern int fn_80296240(GameObject* obj);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
-extern void objParticleFn_80099d84(int obj, f32 scale, int type, f32 extraScale, int light);
 extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7, int arg8,
                               int arg9, int arg10);
 __declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
@@ -2749,7 +2749,7 @@ void Tricky_render(GameObject* obj, int p2, int p3, int p4, int p5, char doRende
         ((TrickyState*)state)->particleTimer = ((TrickyState*)state)->particleTimer - timeDelta;
         if (((TrickyState*)state)->particleTimer > lbl_803E23DC)
         {
-            objParticleFn_80099d84((int)obj, lbl_803E253C, 6, lbl_803E23E8, 0);
+            objParticleFn_80099d84((GameObject*)obj, lbl_803E253C, 6, lbl_803E23E8, 0);
         }
     }
     return;

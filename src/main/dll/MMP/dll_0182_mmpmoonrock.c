@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/partfx_interface.h"
+#include "main/dll/objfx_api.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
@@ -517,7 +518,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-extern void objParticleFn_80099d84(void* obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);
 char gMoonRockSpawnParams[0x18];
 extern f32 gMoonRockAlphaMax;

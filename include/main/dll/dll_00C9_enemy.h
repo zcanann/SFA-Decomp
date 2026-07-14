@@ -6,6 +6,8 @@
 #include "global.h"
 #include "main/objanim_update.h"
 
+struct ModelLightStruct;
+
 /* obj+0xB8 extra record for the generic enemy family. */
 typedef struct EnemyState {
     u8 unk0[0x4 - 0x0];
@@ -49,7 +51,7 @@ typedef struct EnemyState {
     u8 unk33A[0x340 - 0x33A];
     int lastHitObject;
     u8 unk344[0x368 - 0x344];
-    int modelLight;
+    struct ModelLightStruct* modelLight;
     int tailSimHandle;
     u8 unk370[0x374 - 0x370];
 } EnemyState;

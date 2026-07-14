@@ -16,6 +16,7 @@
  * (unkF4 != 0) update wakes it from the saved map-event time slot.
  */
 #include "main/game_object.h"
+#include "main/dll/objfx_api.h"
 #include "main/obj_group.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/grimble_state.h"
@@ -61,7 +62,6 @@ extern f32 lbl_803E2F1C;
 extern f32 gGrimblePathSearchMaxDist;
 extern f32 lbl_803E2F24;
 extern f32 lbl_803E2F28;
-extern void objParticleFn_80099d84(int obj, f32 a, int b, f32 c, int d);
 int grimble_animEventCallback(void);
 void fn_801627F4(GameObject* obj);
 
@@ -363,11 +363,11 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     if ((((GroundBaddieState*)state)->flags400 & 0x60) != 0)
     {
-        objParticleFn_80099d84((int)obj, lbl_803E2EBC, 3, ((GroundBaddieState*)state)->glowAlpha, 0);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E2EBC, 3, ((GroundBaddieState*)state)->glowAlpha, 0);
     }
     if ((((GroundBaddieState*)state)->flags400 & 0x100) != 0)
     {
-        objParticleFn_80099d84((int)obj, lbl_803E2EBC, 4, ((GroundBaddieState*)state)->glowAlpha, 0);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E2EBC, 4, ((GroundBaddieState*)state)->glowAlpha, 0);
         ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 & ~0x100;
     }
 }

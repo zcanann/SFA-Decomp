@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
 #include "main/sky_api.h"
@@ -64,7 +65,6 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
@@ -168,7 +168,8 @@ void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visi
             modelLightStruct_setEnabled(runtime->light, 1, lbl_803E50D8);
         }
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E50D8);
-        objParticleFn_80099d84((int)obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);
+        objParticleFn_80099d84((GameObject*)obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8,
+                               (ModelLightStruct*)runtime->light);
     }
 }
 
