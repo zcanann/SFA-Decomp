@@ -2033,7 +2033,7 @@ main/dll/DIM/dim2lift.c:
 
 main/dll/DIM/dim2icicle.c:
 	.text       start:0x801BB598 end:0x801BCB34
-	.rodata     start:0x802C2348 end:0x802C2358
+	.rodata     start:0x802C2338 end:0x802C2358
 	.data       start:0x803259E0 end:0x80325B04
 
 main/dll/DIM/dll_01E0_dimboss.c:
@@ -2090,6 +2090,7 @@ main/dll/dfbarrelanim.c:
 
 main/dll/DF/dll_0175_dfropenode.c:
 	.text       start:0x801C1740 end:0x801C26E0
+	.rodata     start:0x802C2358 end:0x802C23B8
 
 main/dll/DF/dll_0177_dfshdoor2speci.c:
 	.text       start:0x801C26E0 end:0x801C2914
@@ -2140,6 +2141,7 @@ main/dll/dll_0194_gpshscene.c:
 
 main/dll/dll_0190_ecshcup.c:
 	.text       start:0x801C835C end:0x801C8EBC
+	.rodata     start:0x802C23B8 end:0x802C23C8
 
 main/dll/dll_0195_dbshshrine.c:
 	.text       start:0x801C8EBC end:0x801C9660
@@ -2197,6 +2199,7 @@ main/dll/NW/dll_01A1_nwmammoth.c:
 
 main/dll/NW/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24
+	.rodata     start:0x802C23E8 end:0x802C23F8
 	.sdata2     start:0x803E5260 end:0x803E5268
 
 main/dll/NW/dll_01A3_nwanimice.c:
@@ -2499,6 +2502,7 @@ main/dll/WM/dll_01FD_wmlasertarget.c:
 
 main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
+	.rodata     start:0x802C2470 end:0x802C2488
 	.data       start:0x80328898 end:0x80328A30
 
 main/dll/WM/dll_0201_wmcolrise.c:
@@ -2563,6 +2567,7 @@ main/dll/WM/dll_020F_wmspiritset.c:
 
 main/dll/WM/dll_0210_wmplanets.c:
 	.text       start:0x801F7D34 end:0x801F7FF4
+	.rodata     start:0x802C2500 end:0x802C2510
 	.sdata2     start:0x803E5FA8 end:0x803E5FB0
 
 main/dll/WM/dll_0211_wmwallcrawler.c:

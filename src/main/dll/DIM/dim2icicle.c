@@ -461,6 +461,7 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
+__declspec(section ".rodata") u32 lbl_802C2338[4] = {0x000A0019, 0x0019000A, 0x00140014, 0x00140000};
 __declspec(section ".rodata") int gDim2IcicleHitDescTemplate[4] = {6, 0x69, 0x69, 0xFF};
 extern u8 gDim2IcicleHitFxBuffer[];
 

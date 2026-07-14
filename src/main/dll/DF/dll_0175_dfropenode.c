@@ -37,7 +37,11 @@ extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern void* gRopeNodeTextures;
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
-extern u8 gRopeNodeDisplayList[];
+__declspec(section ".rodata") u8 gRopeNodeDisplayList[96] = {
+    0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 2, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 extern f32 lbl_803E4DF8;
 extern int gRopeNodeTextureAssetIds;
 extern f32 lbl_803DBF50;

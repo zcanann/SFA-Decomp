@@ -20,7 +20,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_0210_wmplanets.h"
 
-extern u32 lbl_802C2500[3]; /* (0.0f, 0.0f, 0.0f) */
+__declspec(section ".rodata") u32 lbl_802C2500[4] = {0, 0, 0, 0};
 
 int WM_Planets_getExtraSize(void)
 {
