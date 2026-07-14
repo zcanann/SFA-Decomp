@@ -4602,10 +4602,12 @@ main/dll/dll_01B5_lightfoot.c:
 main/dll/DIM/dll_0256_dimsnowhorn1.c:
 	.text       start:0x802B9780 end:0x802BC0D0
 	.data       start:0x80335030 end:0x803351A8
+	.bss        start:0x803DB0F0 end:0x803DB160
 
 main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
 	.text       start:0x802BC0D0 end:0x802BC7C0
 	.data       start:0x803351A8 end:0x803351F8
+	.bss        start:0x803DB160 end:0x803DB170
 	.sdata2     start:0x803E82C0 end:0x803E82D4
 
 main/audio/synth_constants.c:
@@ -4618,3 +4620,4 @@ main/dll/DR/dll_0257_drearthwarrior.c:
 main/dll/DR/dll_0258_drcloudrunner.c:
 	.text       start:0x802BF0C8 end:0x802C187C
 	.data       start:0x803356F0 end:0x8033583D
+	.bss        start:0x803DB1C0 end:0x803DB1E0

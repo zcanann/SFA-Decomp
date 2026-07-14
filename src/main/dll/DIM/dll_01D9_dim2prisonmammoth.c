@@ -21,7 +21,7 @@
 #define DIM2PRISONMAMMOTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define PAD_BUTTON_A                                 0x100
 
-extern int gDim2PrisonMammothStateHandlers[];
+int gDim2PrisonMammothStateHandlers[4];
 extern void* gDim2PrisonMammothDefaultStateHandler;
 extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;

@@ -59,6 +59,8 @@
 #include "main/player_control_interface.h"
 #include "main/vecmath.h"
 
+void* gDRCloudRunnerStateHandlers[8];
+
 STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 #define PAD_BUTTON_A 0x100
