@@ -275,15 +275,8 @@ int Transporter_getExtraSize(void)
     return 0x10;
 }
 
-void Transporter_update(int obj)
+void Transporter_render(void)
 {
-    register int self = obj;
-    register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
-    if ((int)setup->warpId != -1)
-    {
-        warpPadPlayerStandingOn((GameObject*)(self));
-    }
-    warpPadFn_8019042c((GameObject*)(self));
 }
 
 void Transporter_hitDetect(int obj)
@@ -350,8 +343,15 @@ void Transporter_hitDetect(int obj)
     state->flags = (u8)((u32)state->flags & ~WARPPAD_FLAG_INTERACTIVE);
 }
 
-void Transporter_render(void)
+void Transporter_update(int obj)
 {
+    register int self = obj;
+    register WarpPadPlacement* setup = (WarpPadPlacement*)((GameObject*)self)->anim.placementData;
+    if ((int)setup->warpId != -1)
+    {
+        warpPadPlayerStandingOn((GameObject*)(self));
+    }
+    warpPadFn_8019042c((GameObject*)(self));
 }
 
 void Transporter_init(GameObject* obj, u8* params)
