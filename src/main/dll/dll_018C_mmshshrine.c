@@ -19,6 +19,7 @@
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
@@ -93,8 +94,6 @@ extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern void objParticleFn_80099d84(int p1, f32 f1, int p2, f32 f2, int p3);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);
-extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, f32 f);
-
 typedef struct MMSHShrineRuntime
 {
     ModelLightStruct* light;
