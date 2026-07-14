@@ -1095,11 +1095,9 @@ void fearTestMeterDraw(void)
     col.g = 0;
     col.b = 0;
     col.a = gFearTestMeterAlpha;
-    {
-        int half = gFearTestMeterMarkerHalfWidth;
-        hudDrawRect((fearTestMeterMarkerX + 0x140) - half, lbl_803DBAEE + 0x32, half + (fearTestMeterMarkerX + 0x140),
-                    (hgt + 0x32) - lbl_803DBAEE, col);
-    }
+    hudDrawRect(-gFearTestMeterMarkerHalfWidth + (fearTestMeterMarkerX + 0x140), lbl_803DBAEE + 0x32,
+                gFearTestMeterMarkerHalfWidth + (fearTestMeterMarkerX + 0x140),
+                (hgt + 0x32) - lbl_803DBAEE, col);
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
 
