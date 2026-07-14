@@ -2481,8 +2481,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             if (*(s8*)(curve + 0x19) == 0x26)
             {
                 gi = *(u8*)(curve + 3);
-                wg = &((ObjfsaWalkGroup*)patchBase[0])[gi];
-                wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
+                wg = (ObjfsaWalkGroup*)((char*)&((ObjfsaWalkGroup*)patchBase[0])[gi] + 0x3000);
                 ((u8*)patchBase[0] + (gi & 0xFFFFFFFF))[OBJFSA_ACTIVE_WALKGROUPS_OFFSET] = 1;
 
                 x0 = OBJFSA_CORNER(curve, curve + 0x4, 0x8);
