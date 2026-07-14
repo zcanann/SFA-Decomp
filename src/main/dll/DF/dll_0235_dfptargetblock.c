@@ -4,6 +4,7 @@
  * path points, plays impact/loop sfx and reports completion.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -65,7 +66,6 @@ extern const f32 lbl_803E64D4;
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
                               int mask, int arg9, int arg10);
 extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
-extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject* obj, u16 sfxId);
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -198,7 +198,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (lbl_803E648C != obj->velX)
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
         velX = obj->velX;
         if (velX < lbl_803E648C)
         {
@@ -215,7 +215,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject* obj)
 
     if (lbl_803E648C != obj->velZ)
     {
-        Sfx_KeepAliveLoopedObjectSound(obj, DFPTARGETBLOCK_LOOP_SFX);
+        Sfx_KeepAliveLoopedObjectSoundPtrU16Legacy(obj, DFPTARGETBLOCK_LOOP_SFX);
         velZ = obj->velZ;
         if (velZ < lbl_803E648C)
         {
