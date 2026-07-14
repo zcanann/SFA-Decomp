@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
@@ -1588,7 +1589,6 @@ void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 }
 
 
-extern void Sfx_StopObjectChannel(void* obj, int ch);
 extern const f32 gModgfxColorClampMax;
 
 typedef void (*ExpFn2)(void*, int);
@@ -1836,7 +1836,7 @@ void dll_0B_func05(void)
                 {
                     if (((ModgfxPendingSpawn*)(E9 + emOff))->param14 == -1)
                     {
-                        Sfx_StopObjectChannel(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj, 0x40);
+                        Sfx_StopObjectChannelPtrLegacy(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj, 0x40);
                     }
                     else
                     {
