@@ -1156,11 +1156,10 @@ void hudDrawAirMeter(void)
     {
         int base;
         int drawY;
-        int off;
+        s8 off;
         int by;
         int cy;
         int clampVal;
-        s16 clampedC;
         switch (((TrickyAirMeter*)m)->bgTextureId)
         {
         case 0x63e:
@@ -1177,7 +1176,7 @@ void hudDrawAirMeter(void)
             base = 0x1a4 - ((u32) * (u16*)((char*)m[0xc] + 0xc) >> 1);
             drawY = base + lbl_803DBAEC;
             drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
-                        (f32)(int)(drawY + (lbl_803DD7F8 + (s8)off)), ((TrickyAirMeter*)m)->alpha, 0x100);
+                        (f32)(int)(lbl_803DD7F8 + (drawY + off)), ((TrickyAirMeter*)m)->alpha, 0x100);
         }
         by = *(u16*)((char*)m[0xc] + 0xa) + 0xb4;
         cy = 0x1a4 - ((u32) * (u16*)((char*)m[0xd] + 0xc) >> 1);
@@ -1187,10 +1186,10 @@ void hudDrawAirMeter(void)
         }
         clampVal = (m[3] < 0) ? 0 : ((m[3] > m[2]) ? m[2] : m[3]);
         m[3] = clampVal;
-        clampedC = clampVal;
-        drawScaledTexture((void*)m[0xf], (f32)(int)(by + clampedC), (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100,
-                          m[2] - clampedC, 0x1a, 0);
-        drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100, clampedC, 0x1a,
+        alpha = clampVal;
+        drawScaledTexture((void*)m[0xf], (f32)(int)(by + alpha), (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100,
+                          m[2] - alpha, 0x1a, 0);
+        drawScaledTexture((void*)m[0xe], (f32)(int)by, (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100, alpha, 0x1a,
                           0);
         cy = 0x1a4 - ((u32) * (u16*)((char*)m[0xd] + 0xc) >> 1);
         drawTexture((void*)m[0xd], (f32)(int)(by + m[2]), (f32)(int)cy, ((TrickyAirMeter*)m)->alpha, 0x100);
