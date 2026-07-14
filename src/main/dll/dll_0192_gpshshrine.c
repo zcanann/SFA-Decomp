@@ -21,6 +21,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/audio_control_api.h"
 #include "main/model_engine.h"
+#include "main/model_light.h"
 #include "main/map_load.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
@@ -71,9 +72,6 @@ extern void DBSH_Symbol_init(void);
 #define GPSHSHRINE_SPAWNED_OBJGROUP 0x10 /* puzzle-spawned objects, freed on completion */
 
 
-extern void ModelLightStruct_free(void* light);
-
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
 extern void objParticleFn_80099d84(void* obj, f32 scale, int type, f32 extraScale, void* light);
 extern f32 lbl_803E5038;
 extern void objSetAnimStateFlags(int* player, int a, int b);
@@ -111,7 +109,7 @@ void gpsh_shrine_free(int* obj)
 
     if (light != NULL)
     {
-        ModelLightStruct_free(light);
+        ModelLightStruct_free((ModelLightStruct*)light);
         state[0] = NULL;
     }
     gameTimerStop();
@@ -133,7 +131,7 @@ void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visi
         void* light = state[0];
         if (light != NULL)
         {
-            modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+            modelLightStruct_setEnabled((ModelLightStruct*)light, 0, lbl_803E5038);
         }
     }
     else
@@ -141,7 +139,7 @@ void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visi
         void* light = state[0];
         if (light != NULL)
         {
-            modelLightStruct_setEnabled(light, 1, lbl_803E5038);
+            modelLightStruct_setEnabled((ModelLightStruct*)light, 1, lbl_803E5038);
         }
         ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5038);
         objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32*)&lbl_803E5038, state[0]);
@@ -150,7 +148,7 @@ void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visi
 
 typedef struct GpshShrineState
 {
-    void* light;
+    ModelLightStruct* light;
     f32 timer;
     f32 sfxTimer;
     s16 anglePhase[3];
@@ -175,7 +173,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     GameObject* player;
     int i;
     u8 ev;
-    void* light;
+    ModelLightStruct* light;
 
     sub = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
@@ -518,7 +516,6 @@ void gpsh_shrine_update(GameObject *obj)
 
 void gpsh_shrine_init(int* obj, int* def)
 {
-    extern void* objCreateLight(int arg, u8 addToList);
     u8* state;
 
     state = ((GameObject*)obj)->extra;
