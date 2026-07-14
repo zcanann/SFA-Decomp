@@ -8,6 +8,7 @@
 #include "main/dll/waterfx_interface.h"
 #include "main/debug.h"
 #include "main/object_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
 #include "main/dll/MMP/dll_013B_wallanimator.h"
@@ -20,8 +21,6 @@ extern char sWaterSpikeInvalidXyzAnimIdWarning[];
 extern f32 lbl_803E4F80;
 extern f32 lbl_803E4F84;
 extern f32 lbl_803E4F88;
-
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 
 int mmsh_waterspike_getExtraSize(void)
 {
