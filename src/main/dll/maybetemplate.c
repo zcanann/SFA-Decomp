@@ -2334,6 +2334,16 @@ void cMenuRotateFn_80124d80(void)
 #define HEADREC_NPC_DIALOGUE 7 /* u8   */
 #define HEADREC_BOX          8 /* u16  */
 
+typedef struct HeadDisplayEntry
+{
+    s32 streamId;
+    u16 textId;
+    u8 panelType;
+    u8 npcDialogue;
+    u16 boxId;
+    u16 unkA;
+} HeadDisplayEntry;
+
 void drawFn_80125424(void)
 {
     int i;
@@ -2497,8 +2507,8 @@ void fn_80125D04(void)
 }
 void gameTextFn_80125ba4(int idx)
 {
-    int textId;
     int boxId;
+    int textId;
 
     if (gHeadDisplayActive == 0)
     {
@@ -2511,32 +2521,31 @@ void gameTextFn_80125ba4(int idx)
         {
             int off = idx * HEADREC_STRIDE;
             u8* base = gHeadDisplayEntryTable;
-            if (*(int*)(base + off) != -1 && AudioStream_IsPreparing() == 0)
+            HeadDisplayEntry* entry;
+            if (((int*)base)[idx * 3] != -1 && AudioStream_IsPreparing() == 0)
             {
-                AudioStream_Play(*(int*)(base + off), AudioStream_StartPrepared);
+                AudioStream_Play(((int*)base)[idx * 3], AudioStream_StartPrepared);
             }
+            entry = (HeadDisplayEntry*)(gHeadDisplayEntryTable + off);
+            if (entry->npcDialogue != 0)
             {
-                u8* e = &gHeadDisplayEntryTable[off];
-                if (e[HEADREC_NPC_DIALOGUE] != 0)
+                (*gGameUIInterface)->showNpcDialogue(entry->textId, 0, 0, 0);
+            }
+            else
+            {
+                boxId = entry->boxId;
+                textId = entry->textId;
+                if (textId != -1 && curGameText == 0xffff)
                 {
-                    (*gGameUIInterface)->showNpcDialogue(*(u16*)(e + HEADREC_TEXT_ID), 0, 0, 0);
-                }
-                else
-                {
-                    boxId = *(u16*)(e + HEADREC_BOX);
-                    textId = *(u16*)(e + HEADREC_TEXT_ID);
-                    if (textId != -1 && curGameText == 0xffff)
-                    {
-                        gameTextGetBox(0x7c);
-                        lbl_803DD7A8 = 1;
-                        lbl_803DD8D0 = 0;
-                        curGameText = textId;
-                        lbl_803DD8C8 = 0;
-                        lbl_803DD8CA = boxId;
-                        lbl_803DD8CC = (f32)(s16)boxId;
-                        gameTextFreePhrase((int*)lbl_803A9440);
-                        lbl_803DD7A9 = 0;
-                    }
+                    gameTextGetBox(0x7c);
+                    lbl_803DD7A8 = 1;
+                    lbl_803DD8D0 = 0;
+                    curGameText = textId;
+                    lbl_803DD8C8 = 0;
+                    lbl_803DD8CA = boxId;
+                    lbl_803DD8CC = (f32)(s16)boxId;
+                    gameTextFreePhrase((int*)lbl_803A9440);
+                    lbl_803DD7A9 = 0;
                 }
             }
         }
@@ -2545,7 +2554,6 @@ void gameTextFn_80125ba4(int idx)
         gHeadDisplayFadeAlpha = 0;
     }
 }
-
 void pauseMenuCreateHeads(void)
 {
     int i;
