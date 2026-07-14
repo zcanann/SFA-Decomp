@@ -1056,19 +1056,19 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     int** p;
     int slot;
     CameraViewSlot* view;
-    void* buf2;
+    u8 texCount;
     void* buf1;
+    void* buf2;
     u8 aligned;
     void* tex;
-    u8 texCount;
     int n131p1;
     int n131;
     f32 dirX;
     f32 dirZ;
     f32 dscale;
 
-    n131 = 0;
     n131p1 = 0;
+    n131 = 0;
     if (a4 != NULL)
     {
         getAmbientColor(*(u8*)((char*)a4 + 0xf2), &ar, &ag, &ab);
