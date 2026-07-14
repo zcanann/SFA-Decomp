@@ -99,7 +99,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern int EmissionController_IsLingering(GameObject* player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 #pragma dont_inline on

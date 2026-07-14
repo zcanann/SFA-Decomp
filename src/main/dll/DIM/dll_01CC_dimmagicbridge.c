@@ -16,6 +16,7 @@
 #include "main/model.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/dll/DIM/dll_01CC_dimmagicbridge.h"
 #include "main/objtexture.h"
@@ -36,8 +37,6 @@ extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;
 extern f32 lbl_803E4A0C;
-
-extern int EmissionController_IsLingering(GameObject* player);
 
 #pragma scheduling off
 #pragma peephole off

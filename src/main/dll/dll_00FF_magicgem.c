@@ -28,7 +28,6 @@
 
 extern f32 lbl_803E34B0;
 
-extern int Obj_IsParentSlackClear(int obj);
 extern char sMagicGemCollectedMessage[];
 
 extern u16 lbl_803E34A8;
@@ -285,7 +284,7 @@ void MagicDust_update(GameObject* obj)
             {
                 dist = getXZDistance(&obj->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
                 fval = gMagicGemPickupRadiusBase + state->collectRadius;
-                if ((dist < fval * fval) && (Obj_IsParentSlackClear(player) != 0))
+                if ((dist < fval * fval) && (Obj_IsParentSlackClear((GameObject*)player) != 0))
                 {
                     val = mainGetBit(MAGICGEM_GAMEBIT_CLAIMED);
                     if (val == 0)

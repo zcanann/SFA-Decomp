@@ -9,6 +9,8 @@ int objFn_802962b4(GameObject* obj);
 int objGetAnimState80A(GameObject* obj);
 int objGetAnimStateFlags(GameObject* obj, int flag);
 int objIsCurModelNotZero(void* obj);
+int Obj_IsParentSlackClear(GameObject* obj);
+int EmissionController_IsLingering(GameObject* obj);
 int playerGetFlags3F0Bit5(GameObject* obj);
 u32 playerGetStateFlag310(GameObject* obj);
 u8 fn_80296414(GameObject* player, GameObject* otherObj, u8* outDirection);

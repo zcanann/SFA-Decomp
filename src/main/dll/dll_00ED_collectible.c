@@ -53,7 +53,6 @@ extern f32 lbl_803E3458;
 extern f32 gCollectibleLaunchSpeed;
 extern f32 gCollectibleLaunchAngle;
 extern f32 lbl_803E348C;
-extern int Obj_IsParentSlackClear(u8 * player);
 extern f32 gCollectiblePickupRange;
 extern f32 gCollectibleSpinDamping;
 extern f32 gCollectibleSpinRate;
@@ -452,7 +451,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
         dy = -dy;
     }
     if (dy < gCollectiblePickupRange && dist < ((CollectibleState*)state)->scale &&
-        Obj_IsParentSlackClear((u8*)player) != 0)
+        Obj_IsParentSlackClear((GameObject*)player) != 0)
     {
         ((CollectibleState*)state)->pickupMsgValue = -1;
         switch ((obj)->anim.seqId)

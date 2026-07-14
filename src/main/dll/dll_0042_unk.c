@@ -25,6 +25,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
@@ -99,8 +100,6 @@ extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 
 extern f32 fn_802966F4(GameObject* obj);                     /* returns a target proximity/distance scalar */
-extern void playerGetTimeScale(GameObject* obj, float* out); /* fills out[] with a target motion scalar */
-extern int EmissionController_IsLingering(GameObject* obj);
 extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
 
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,

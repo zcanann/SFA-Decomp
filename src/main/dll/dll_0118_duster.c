@@ -26,6 +26,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_message.h"
 #include "main/audio/sfx.h"
@@ -101,8 +102,6 @@ extern f32 gDusterObjDriftSpinRate;
 extern f32 gDusterObjPickupRangeY;
 extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
-
-extern int Obj_IsParentSlackClear(int obj);
 
 int duster_SeqFn(u8* obj)
 {
@@ -317,7 +316,7 @@ void duster_update(GameObject* obj)
     }
     if (floorDelta < gDusterObjPickupRangeY &&
         Vec_xzDistance(&playerObj->anim.worldPosX, &obj->anim.worldPosX) < gDusterObjPickupRangeXZ &&
-        Obj_IsParentSlackClear(player) != 0)
+        Obj_IsParentSlackClear((GameObject*)player) != 0)
     {
         if (mainGetBit(GAMEBIT_DUSTER_CARRIED) == 0)
         {
