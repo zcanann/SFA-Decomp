@@ -636,3 +636,14 @@ FINAL STATE OF THE PROBLEM: one emission-placement rule for a merged web's init,
 form higher (99.91 vs 99.49), so V-K lands only when the placement is solved. The same
 placement mechanism likely governs the walkgroup site-1 operand order. One rule, decoded
 via the CMachine emitter reading list, finishes the TU.
+
+## Emitter dest-targeting decision located (0x4c06d0 function)
+The expression emitter at 0x4c06d0: calls the classifier (0x4c2920) on the subexpression
+[ebx+6], compares the result against the node's own field [value+2] (register-need /
+SU-number), and ZEROES the dest-register hint ([esp+4]) when classifier <= node-field -
+then dispatches per node-kind (jump table 0x5b0930). This is the accumulate-vs-materialize
+gate: a subexpression is evaluated INTO the destination register (the accumulate) only
+when the hint survives this compare. Remaining reading: the kind handlers at 0x5b0930
+(ADD-node case) to see how the hint + operand order produce [add dest][addi dest,dest] vs
+temp materialization - one jump-table entry from the finish. Also note 0x4c0690-region has
+a second table 0x5b08fc (checked dl==4, class range [4,0xe]) - the class filter.
