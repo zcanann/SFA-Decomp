@@ -46,6 +46,8 @@
 #define s16toFloatLegacy(timer, duration) \
     ((void (*)(int, int))s16toFloat)((timer), (duration))
 
+typedef int (*DREarthWarriorEventCountdownFn)(ObjAnimComponent* objAnim);
+
 typedef struct DREarthWarriorPlacement
 {
     u8 pad0[0x18 - 0x0];
@@ -785,7 +787,6 @@ void fn_802BCA10(GameObject* obj, int sub, int state)
 
 int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
 {
-    extern int ObjAnim_GetCurrentEventCountdown();
     int inner = *(int*)&(obj)->extra;
     int q = inner + 0xb58;
 #define hitState ((ObjHitsPriorityState*)(obj)->anim.hitReactState)
@@ -1027,7 +1028,7 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
         if ((skip != 0 || (void*)((EarthWarriorSub*)q)->prevMoveTable != (void*)((EarthWarriorSub*)q)->moveTable ||
              (obj)->anim.currentMove !=
                  *(s16*)(((EarthWarriorSub*)q)->moveTable + ((EarthWarriorSub*)q)->attackPhase * 2)) &&
-            (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 ||
+            (((DREarthWarriorEventCountdownFn)ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 ||
              ((ByteFlags*)&((EarthWarriorSub*)q)->flags3F2)->b10 != 0))
         {
             if ((obj)->anim.currentMove == 0x14)
@@ -1054,7 +1055,6 @@ int DR_EarthWarrior_stateHandler02(GameObject* obj, int state)
 
 int DR_EarthWarrior_stateHandler01(GameObject* obj, int baddie)
 {
-    extern int ObjAnim_GetCurrentEventCountdown();
     EarthWarriorState* inner = (obj)->extra;
     EarthWarriorSub* q = &inner->sub;
     int moveId;
@@ -1118,7 +1118,8 @@ int DR_EarthWarrior_stateHandler01(GameObject* obj, int baddie)
         (obj)->anim.currentMove == *(s16*)(q->moveTable + 0x32))
     {
         if (*(s8*)&((BaddieState*)baddie)->moveDone != 0 &&
-            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent*)obj) == 0 && !((ByteFlags*)&inner->sub.flags994)->b01)
+            ((DREarthWarriorEventCountdownFn)ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0 &&
+            !((ByteFlags*)&inner->sub.flags994)->b01)
         {
             ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E8304, 0);
             ((BaddieState*)baddie)->moveSpeed = lbl_803E8354;
