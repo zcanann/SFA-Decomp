@@ -212,7 +212,8 @@ void bossdrakor_update(int obj)
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
     adv = ObjAnim_AdvanceCurrentMove(
-        obj, (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / ((BossDrakorState*)state)->moveSpeed) + lbl_803E6570,
+        obj,
+        (spd = PSVECMag(&((GameObject*)obj)->anim.velocityX) / ((BossDrakorState*)state)->moveSpeed, spd + lbl_803E6570),
         timeDelta, (ObjAnimEventList*)buf);
     if (adv != 0)
     {
