@@ -25,7 +25,7 @@
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/model.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -35,16 +35,6 @@
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-
-extern void modelLightStruct_setLightKind(int light, int value);
-#define MODEL_LIGHT_KIND_POINT 2
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-
-
 
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
  * staff-mode 5, otherwise mode 7"). */
@@ -102,7 +92,6 @@ STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
 STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
-extern void ModelLightStruct_free(void* p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void postRenderSetAlphaBlendState(void);
 extern f32 fcos16(u16 angle);
@@ -187,8 +176,6 @@ ObjectDescriptor gShieldObjDescriptor = {
 #pragma opt_common_subs off
 void staffFn_80170380(GameObject* obj, int cmd)
 {
-    extern int objCreateLight(int* obj, int arg);
-    extern void modelLightStruct_setDiffuseColor(int* light, int r, int g, int b, int a);
     f32* tbl[1];
     u8* state;
     GameObject* glow;
@@ -212,7 +199,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
         }
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
         }
         {
             f32 fade = lbl_803E33AC;
@@ -229,7 +216,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
     case 0:
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
         }
         if (lbl_803E33AC != ((ShieldState*)state)->fadeTarget)
         {
@@ -255,20 +242,21 @@ void staffFn_80170380(GameObject* obj, int cmd)
             }
             if (*(int**)state == NULL)
             {
-                *(int*)state = objCreateLight(0, 1);
+                *(int*)state = (int)objCreateLight(0, 1);
             }
             if (*(int**)state != NULL)
             {
-                modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(*(int*)state, ((GameObject*)obj)->anim.localPosX,
+                modelLightStruct_setLightKind((ModelLightStruct*)*(int*)state, MODEL_LIGHT_KIND_POINT);
+                modelLightStruct_setPosition((ModelLightStruct*)*(int*)state, ((GameObject*)obj)->anim.localPosX,
                                              ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
                                              ((GameObject*)obj)->anim.localPosZ);
-                modelLightStruct_setDiffuseColor(*(int**)state, 0, 255, 255, 255);
-                modelLightStruct_setSpecularColor(*(int*)state, 0, 255, 255, 255);
-                modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E33BC, lbl_803E33C0);
+                modelLightStruct_setDiffuseColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
+                modelLightStruct_setSpecularColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
+                modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, lbl_803E33BC,
+                                                        lbl_803E33C0);
                 lightSetField4D((ModelLightStruct*)*(int*)state, 1);
-                modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
-                modelLightStruct_startColorFade(*(int*)state, 0, 0);
+                modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, lbl_803E33AC);
+                modelLightStruct_startColorFade((ModelLightStruct*)*(int*)state, 0, 0);
                 modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
             }
             {
@@ -326,7 +314,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
         ((ShieldState*)state)->fadeRate = lbl_803E33B4;
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setEnabled(*(int*)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
         }
         Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
         Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
@@ -338,20 +326,20 @@ void staffFn_80170380(GameObject* obj, int cmd)
         }
         if (*(int**)state == NULL)
         {
-            *(int*)state = objCreateLight(0, 1);
+            *(int*)state = (int)objCreateLight(0, 1);
         }
         if (*(int**)state != NULL)
         {
-            modelLightStruct_setLightKind(*(int*)state, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setPosition(*(int*)state, ((GameObject*)obj)->anim.localPosX,
+            modelLightStruct_setLightKind((ModelLightStruct*)*(int*)state, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setPosition((ModelLightStruct*)*(int*)state, ((GameObject*)obj)->anim.localPosX,
                                          ((GameObject*)obj)->anim.localPosY - lbl_803E33B8,
                                          ((GameObject*)obj)->anim.localPosZ);
-            modelLightStruct_setDiffuseColor(*(int**)state, 0, 255, 255, 255);
-            modelLightStruct_setSpecularColor(*(int*)state, 0, 255, 255, 255);
-            modelLightStruct_setDistanceAttenuation(*(int*)state, lbl_803E33BC, lbl_803E33C0);
+            modelLightStruct_setDiffuseColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
+            modelLightStruct_setSpecularColor((ModelLightStruct*)*(int*)state, 0, 255, 255, 255);
+            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)*(int*)state, lbl_803E33BC, lbl_803E33C0);
             lightSetField4D((ModelLightStruct*)*(int*)state, 1);
-            modelLightStruct_setEnabled(*(int*)state, 1, lbl_803E33AC);
-            modelLightStruct_startColorFade(*(int*)state, 0, 0);
+            modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 1, lbl_803E33AC);
+            modelLightStruct_startColorFade((ModelLightStruct*)*(int*)state, 0, 0);
             modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)*(int*)state, 1);
         }
         if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
@@ -487,7 +475,7 @@ void Shield_free(GameObject* obj)
     void** state = (obj)->extra;
     if (state[0] != NULL)
     {
-        ModelLightStruct_free(state[0]);
+        ModelLightStruct_free((ModelLightStruct*)state[0]);
         state[0] = NULL;
     }
     Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
