@@ -10,6 +10,7 @@
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/object_render_legacy.h"
 #include "main/frame_timing.h"
 
 #pragma explicit_zero_data on
@@ -21,8 +22,6 @@ __declspec(section ".sdata2") f32 lbl_803E3208 = 64.0f;
 __declspec(section ".sdata2") f32 lbl_803E320C = 255.0f;
 __declspec(section ".sdata2") f32 lbl_803E3210 = 0.015625f;
 #pragma explicit_zero_data off
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
-
 int GCbaddieShield_getExtraSize(void)
 {
     return 0x8;
@@ -44,7 +43,7 @@ void GCbaddieShield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E31F8);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E31F8);
             break;
         default:
             break;
