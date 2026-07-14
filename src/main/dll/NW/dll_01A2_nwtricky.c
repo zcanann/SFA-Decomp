@@ -37,15 +37,15 @@ __declspec(section ".sdata2") f32 lbl_803E5264 = 600.0f;
 extern f32 lbl_803E5268;
 __declspec(section ".rodata") int lbl_802C23E8[4] = {0xF5B, 0x43EC9, 0x43ED6, 0};
 
-int NW_tricky_getExtraSize(void)
-{
-    return 8;
-}
-
 int NW_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel((u32)getTrickyObject(), 16);
     return 0;
+}
+
+int NW_tricky_getExtraSize(void)
+{
+    return 8;
 }
 
 void NW_tricky_free(int obj)
