@@ -194,3 +194,17 @@ Consequences for the residuals:
   leading statements, or an earlier harmless read).
 - walkgroup: F40's identity falls out of the same rule - it is the ~7th-from-last named
   GPR-webbed declaration; enumerate decls against the trace to name it.
+
+## walkgroup F40 IDENTIFIED: pl (plane-staging pointer) - fix direction proven
+Reverse-decl enumeration against the trace names F40 (nadj 29, steals r22 from curve) as
+`pl` (with F35=wg-site1, A34/A33=wgT/wgBT - all consistent). Probe experiments:
+- Direct np->planes[K] access (no staging): curve reclaims r22 ✓ but LOSES 13 address
+  instructions the target has (target materializes per-block address temps).
+- Block-scoped pl2/po2 via np: curve=r22 ✓, 1262/1268 instrs (6 short - some addresses fold).
+- Block-scoped via OBJFSA_NEWPATCH re-deref: 1266/1268 instrs but web count shifts the
+  first-touch order globally (curve back to r23).
+Next: per-block comparison of the 4 SET_NEWPATCH_PLANE + 2 SET_PLANE sites against target
+asm (np register per block: r28/r3/r4 sequence in target = np also re-derived per block)
+to pick the exact staging form per site; then re-run the anchor set. The target's po/pl are
+SHORT per-block webs (grants r24/r29/r28 shuffle), NOT one function-wide pair - the current
+committed macro's shared pl/po is confirmed decomp-artifact ("false set" class).
