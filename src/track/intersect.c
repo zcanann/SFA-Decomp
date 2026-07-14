@@ -22,6 +22,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
 #include "main/newshadows.h"
+#include "main/objprint_api.h"
 #include "main/pad.h"
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -1048,7 +1049,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern void GXInitTexObj();
 
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
-    extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     void* renderOp;
     void* tex2;
@@ -1177,7 +1177,8 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_GREATER, fn_8003BB74(), GX_AOP_AND, GX_GREATER, fn_8003BB74());
+                GXSetAlphaCompare(GX_GREATER, fn_8003BB74IntLegacy(), GX_AOP_AND, GX_GREATER,
+                                  fn_8003BB74IntLegacy());
             }
             else
             {
@@ -2061,8 +2062,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     }
     else
     {
-        extern int fn_8003BB74(void);
-
         extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
         u8 zCompLoc = 1;
         int ref1;
@@ -2095,8 +2094,8 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                obj_a = (void*)fn_8003BB74();
-                ref1 = fn_8003BB74();
+                obj_a = (void*)fn_8003BB74IntLegacy();
+                ref1 = fn_8003BB74IntLegacy();
                 GXSetAlphaCompare(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
             }
             else
@@ -2525,7 +2524,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
-    extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     Mtx mtx_90;
     Mtx mtx_60;
@@ -2624,8 +2622,8 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                 }
                 {
                     int b;
-                    alpha_byte = fn_8003BB74();
-                    b = fn_8003BB74();
+                    alpha_byte = fn_8003BB74IntLegacy();
+                    b = fn_8003BB74IntLegacy();
                     GXSetAlphaCompare(GX_GREATER, b, GX_AOP_AND, GX_GREATER, alpha_byte);
                 }
             }

@@ -12,6 +12,7 @@ void fn_8003A168(GameObject* obj, int state);
 void fn_8003B608(s16 red, s16 green, s16 blue);
 void fn_8003B5E0(int red, int green, int blue, u8 alpha);
 void fn_8003B950(f32* matrix);
+u8 fn_8003BB74(void);
 void modelCalcVtxGroupMtxs(int def, int model);
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c);
 void objModelClearVecFn_8003aa40(GameObject* obj);
@@ -20,5 +21,6 @@ void objModelClearVecFn_8003aa40(GameObject* obj);
     ((void (*)(int, int, int, int))fn_8003B5E0)((red), (green), (blue), (alpha))
 #define fn_8003A168PointerStateLegacy(obj, state) \
     ((void (*)(GameObject*, void*))fn_8003A168)((obj), (state))
+#define fn_8003BB74IntLegacy() (((int (*)(void))fn_8003BB74)())
 
 #endif /* MAIN_OBJPRINT_API_H_ */
