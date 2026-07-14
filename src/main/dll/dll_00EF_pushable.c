@@ -81,6 +81,8 @@ typedef struct
     s16 pad3;
 } SetScaleParams;
 
+typedef void (*PushableAddContactObjectFn)(int obj, void* contactObj);
+
 /* object group this object joins while active */
 #define PUSHABLE_OBJGROUP 5
 
@@ -661,7 +663,6 @@ void pushable_update(int* obj)
 
 void pushable_init(s16* obj, char* def)
 {
-    extern int fn_80174A80();
     PushableState* state;
     ModelFileHeader* model;
     int* entry;
@@ -865,8 +866,6 @@ void pushable_init(s16* obj, char* def)
 #pragma opt_common_subs off
 void pushable_hitDetect(GameObject* obj)
 {
-    extern u32 fn_80174BFC();
-    extern void ObjHits_AddContactObject(int obj, void* contactObj);
     int i;
     GameObject* player;
     PushableState* state;
@@ -931,7 +930,7 @@ void pushable_hitDetect(GameObject* obj)
             objMove((GameObject*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
             if ((state->flags & 4) == 0)
             {
-                fn_80174BFC(obj, state);
+                fn_80174BFC(obj, (int)state);
             }
             state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
         }
@@ -1027,7 +1026,7 @@ void pushable_hitDetect(GameObject* obj)
                             contactObj = (u32)(*(TrackGroundHit**)((u8*)list + off))->object;
                             if (contactObj != 0)
                             {
-                                ObjHits_AddContactObject(contactObj, obj);
+                                ((PushableAddContactObjectFn)ObjHits_AddContactObject)(contactObj, obj);
                             }
                             cnt2++;
                             found = 1;
@@ -1078,7 +1077,6 @@ void pushable_hitDetect(GameObject* obj)
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
-    extern u32 fn_80174BFC();
     SetScaleParams* pp;
     PushableState* state;
     char ret;
@@ -1262,7 +1260,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         }
         if ((state->flags & 4) == 0)
         {
-            fn_80174BFC(obj, state);
+            fn_80174BFC((GameObject*)obj, (int)state);
         }
         ((void (*)(int*))Obj_BuildTransformMatrices)(obj);
         if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ)
