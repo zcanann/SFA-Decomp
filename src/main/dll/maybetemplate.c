@@ -2331,7 +2331,7 @@ typedef void (*HeadDisplayDrawScaledTextureFn)(void* tex, f32 x, f32 y, u8 alpha
 
 void drawFn_80125424(void)
 {
-    int i;
+    int iv[3];
     u32 width;
     u32 height;
     int type;
@@ -2441,16 +2441,19 @@ void drawFn_80125424(void)
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
-        for (i = 0; i < (int)height; i += 4)
+        iv[0] = 0;
+        iv[1] = iv[0];
+        iv[2] = iv[0];
+        for (; iv[0] < (int)height; iv[0] += 4)
         {
-            wave = lbl_803E204C * fsin16Approx((u16)(i * 0xd48 + lbl_803DD77C * 0x1838));
-            wave = lbl_803E204C * fsin16Approx((u16)(i * 0x7d0 + lbl_803DD77C * 0xfa0)) + wave;
+            wave = lbl_803E204C * fsin16Approx((u16)(iv[1] + lbl_803DD77C * 0x1838));
+            wave = lbl_803E204C * fsin16Approx((u16)(iv[2] + lbl_803DD77C * 0xfa0)) + wave;
             alphaTmp = (int)((f32)(s16)alpha * (lbl_803E2050 + wave));
             alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i),
-                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + iv[0]),
+                               (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
             alphaI = (int)((f32)(s16)alpha * (lbl_803E2010 + wave));
             if (alphaI < 0)
             {
@@ -2458,8 +2461,10 @@ void drawFn_80125424(void)
             }
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2),
-                               (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + iv[0] + 2),
+                               (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
+            iv[1] += 0x3520;
+            iv[2] += 0x1f40;
         }
         HEAD_DISPLAY_DRAW_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width - 5, alpha, 0x100);
         HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
