@@ -884,7 +884,8 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
     u16 sz;
 
     i = (s16)(gSfxLoopedObjectSoundCount - 1);
-    op = &table->objects[i];
+    op = (u32*)table + i;
+    op += 0x60;
     for (; i >= 0; i--)
     {
         if (*op == obj)
