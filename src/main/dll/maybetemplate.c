@@ -619,6 +619,9 @@ typedef struct CounterText
 #define GCMENU_ITEM_ICON_COUNT    7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
 
+#pragma opt_strength_reduction on
+#pragma opt_propagation off
+#pragma peephole off
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
 {
     int t13;
@@ -830,6 +833,9 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
     }
 }
+#pragma opt_strength_reduction reset
+#pragma opt_propagation reset
+#pragma peephole reset
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
 {
@@ -4003,6 +4009,9 @@ void perspectiveFn_80129db4(void)
 }
 
 /* Pause menu master state machine. */
+#pragma opt_common_subs on
+#pragma opt_dead_assignments off
+#pragma scheduling off
 void pauseMenuFn_80129ee0(void)
 {
     PauseTbl* tbl = &lbl_8031AE20;
@@ -4823,6 +4832,9 @@ void pauseMenuFn_80129ee0(void)
         }
     }
 }
+#pragma opt_common_subs reset
+#pragma opt_dead_assignments reset
+#pragma scheduling reset
 
 /* Pause-menu grid cursor stepper. Reads the
  * C-stick X axis, derives a one-step direction, and tweens the grid cursor
