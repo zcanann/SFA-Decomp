@@ -25,6 +25,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/modgfx.h"
 #include "main/sky_state.h"
+#include "main/model_light.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
 
 /* Per-object extra state for the robot light beacon
@@ -39,15 +40,10 @@ extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
 extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
-extern void modelLightStruct_freeSlot(int* p);
-extern void* modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);
 extern void PSVECScale(void* in, void* out, f32 scale);
-extern void modelLightStruct_setDiffuseColor(void* p, int r, int g, int b, int a);
 
 #pragma scheduling off
 #pragma peephole off
@@ -71,7 +67,7 @@ void gcrobotlightbea_free(int* obj)
     GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
     if (state->light != NULL)
     {
-        modelLightStruct_freeSlot((int*)state);
+        modelLightStruct_freeSlot(&state->light);
     }
     if (((GameObject*)obj)->ownerObj != NULL)
     {
@@ -126,7 +122,7 @@ void gcrobotlightbea_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     if (sub->light == NULL)
     {
-        sub->light = modelLightStruct_createPointLight((int)obj, 0xfa, 0xfa, 0xfa, 1);
+        sub->light = modelLightStruct_createPointLight(obj, 0xfa, 0xfa, 0xfa, 1);
         if (sub->light != NULL)
         {
             modelLightStruct_setDistanceAttenuation(sub->light, lbl_803DBE58, 12.0f + lbl_803DBE58);
@@ -142,8 +138,9 @@ void gcrobotlightbea_update(int* obj)
     getAmbientColor(0, &r_byte, &g_byte, &b_byte);
     if (sub->light != NULL)
     {
-        modelLightStruct_setDiffuseColor(sub->light, (s32)(0.7f * (f32)(u32)r_byte), (s32)(0.7f * (f32)(u32)g_byte),
-                                         (s32)(0.7f * (f32)(u32)b_byte), 0xff);
+        ((void (*)(ModelLightStruct*, int, int, int, int))modelLightStruct_setDiffuseColor)(
+            sub->light, (s32)(0.7f * (f32)(u32)r_byte), (s32)(0.7f * (f32)(u32)g_byte),
+            (s32)(0.7f * (f32)(u32)b_byte), 0xff);
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }
@@ -151,7 +148,7 @@ void gcrobotlightbea_update(int* obj)
 void gcrobotlightbea_init(int* obj)
 {
     GcRobotLightBeaState* state = ((GameObject*)obj)->extra;
-    state->light = 0;
+    state->light = NULL;
     state->unk4 = 0;
     ObjHits_EnableObject(obj);
     ((GameObject*)obj)->anim.alpha = 0x80;

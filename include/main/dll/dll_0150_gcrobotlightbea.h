@@ -3,10 +3,11 @@
 
 #include "types.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 
 typedef struct GcRobotLightBeaState
 {
-    void* light; /* modelLightStruct point light */
+    ModelLightStruct* light;
     int unk4;
     u8 hitFlags; /* 0x80 = player caught in the beam */
     u8 pad9[3];
