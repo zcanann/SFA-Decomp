@@ -21,6 +21,7 @@
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/gameloop_api.h"
+#include "main/frame_timing.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
@@ -129,6 +130,17 @@ extern f32 gWaterFxState[4];
 extern u8 gWaterRipples[0x1000];
 extern u8 gWaterSplashQuads[0x3800];
 extern f32 lbl_802C1F68[6];
+extern f32 Gbase;
+extern void* gWaterFxTextures[4];
+extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
+extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
+extern f32 lbl_803DEED8, lbl_803DEEE8, lbl_803DEEEC, lbl_803DEEF0, lbl_803DEEF4;
+extern f32 lbl_803DEF24, lbl_803DEF28, lbl_803DEF30, lbl_803DEF34, lbl_803DEF38;
+extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
+extern f32 lbl_803DEF4C, lbl_803DEF50, lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C;
+extern f32 lbl_803DEF60, lbl_803DEF64, lbl_803DEF68, lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
+extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80, lbl_803DEF84, lbl_803DEF88;
+extern f32 lbl_803DEF90, lbl_803DEF94, lbl_803DEF98, lbl_803DEF9C;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -405,12 +417,6 @@ void timeFn_8006f400(f32 step)
 
 void drawFn_8006f500(void)
 {
-    extern f32 Gbase;
-    extern f32 lbl_803DEE38;
-    extern f32 lbl_803DEE3C;
-    extern f32 lbl_803DEE44;
-    extern f32 lbl_803DEE48;
-    extern void* gWaterFxTextures[];
     extern void fn_8000F9B4(void);
 
     GXColor color;
@@ -572,9 +578,6 @@ typedef struct
 #pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
 {
-    extern f32 lbl_803DEE38;
-    extern f32 lbl_803DEE3C;
-    extern f32 lbl_803DEE58;
     extern int fn_80065768(u8 * obj, f32 x, f32 y, f32 z, f32 * outY, Vec * outNorm, int flag);
 
     WaterFxState* base;
@@ -708,7 +711,6 @@ void fn_8006FC00(int enable)
 
 void mapInitFn_8006fccc(void)
 {
-    extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
     int i;
     u8* base = (u8*)gWaterFxState;
     u8* a = base + 0x1020;
@@ -962,7 +964,6 @@ void _gxSetFogParams(void)
 
 void fogFn_80070404(f32 a, f32 b)
 {
-    extern f32 lbl_803DEED8;
     extern f32 lbl_803DEEDC;
     f32 xc, yc, x, y;
     GXColor c;
@@ -1231,8 +1232,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 
 void screenImageDraw(u8 alpha)
 {
-    extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
-    extern f32 lbl_803DEEE8;
+    extern f32 lbl_803DEEE4;
     extern f32 lbl_8030EA70[3][3];
     extern f32 lbl_8030EA88[3][3];
 
@@ -1658,7 +1658,6 @@ static inline f32 distortSqrtf(f32 x)
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DEF24;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
@@ -2130,11 +2129,8 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
  */
 void quakeSpellTextureFn_8007366c(u8 alpha)
 {
-    extern f32 lbl_803DEF28;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_803DEEEC;
-    extern f32 lbl_803DEF30;
 
     int handle1;
     int handle2;
@@ -2266,7 +2262,7 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 
 int modelCb_80073d04(u8* obj, int* objB)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEF34;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern GXColor lbl_803DEEB4;
     int handle;
     GXColor colorK;
@@ -2353,7 +2349,7 @@ int modelCb_80073d04(u8* obj, int* objB)
 
 int moonFxCb_80074110(u8* obj, int* objB, int slot)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEF38;
+    extern f32 lbl_803DEEDC;
     GXColor colorK;
     GXColor colorFog;
     Mtx mtx;
@@ -2631,8 +2627,7 @@ static inline void forceSingle_inl(f32* p)
 
 u32 objCallback_80074d04(int handle, void* model)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
-    extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
     Mtx mtx_ec;
@@ -4386,8 +4381,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern u32 lbl_803DEEA8;
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_803DEF4C;
-    extern f32 lbl_803DEF50;
     extern void fn_8006C540(int*);
     int handle;
     GXColor c0, c1, c2;
@@ -4492,9 +4485,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 
 void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
-    extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
-    extern f32 timeDelta;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern u16 fn_8000FA90(void);
     extern u16 fn_8000FA70(void);
     extern f32 fn_80292194(f32 v);
@@ -4675,7 +4666,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
     extern u8 lbl_802C1EA8[];
     extern s16 fn_8000FA70(void);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
@@ -4920,7 +4910,6 @@ void renderMotionBlur(f32 alpha)
 void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
 {
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80;
     Mtx mtx_27;
     Mtx mtx_24;
     Mtx mtx_2A;
@@ -5205,7 +5194,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
                                     GXColor* k1, GXColor* k2, GXColor* tev1, GXColor* tev2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DEF64;
     extern f32 lbl_8030EA10[3][3];
 
     u8* indBase = (u8*)lbl_8030EA10;
@@ -5472,7 +5460,7 @@ void fn_8007C664(int texHandle)
 
 void fn_8007CAF4(void)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
@@ -5565,9 +5553,7 @@ void fn_8007CAF4(void)
 #pragma opt_common_subs off
 void gxTextureSetupFn_8007cf7c(void)
 {
-    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
-    extern f32 lbl_803DEF40, lbl_803DEF88;
-    extern f32 lbl_803DEF84;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -5989,7 +5975,6 @@ int loadSaveGame(int a, int b)
 
 void showMemCardError(u8 err)
 {
-    extern f32 lbl_803DEF90, lbl_803DEF94;
     extern u8 lbl_803DB424;
     extern void checkReset(void);
     extern f32 fn_80293AC4(int v);
@@ -6357,9 +6342,6 @@ void cardShowLoadingMsg(u8 kind)
     extern void gameTextSetWindow(int);
     extern int getButtonObjects(int**);
     extern void** gScreenTransitionInterface;
-    extern f32 lbl_803DEF98;
-    extern f32 lbl_803DEF9C;
-
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     int* buttons;
     int saved;
