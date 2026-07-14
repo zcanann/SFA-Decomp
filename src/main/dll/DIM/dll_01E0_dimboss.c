@@ -66,7 +66,6 @@ extern void loadDataFiles(void);
 
 
 extern void fn_801B9ECC(void);
-extern u32 ModelLightStruct_free();
 
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
@@ -74,7 +73,6 @@ extern u32 ModelLightStruct_free();
 extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
                                         u32 p4, u32 p5, f32 scale);
 
-extern void queueGlowRender(void* effect);
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern DIMbossAnimScratch gDIMbossAnimScratchBase;
@@ -451,7 +449,7 @@ void DIMboss_free(DIMbossObject* obj)
 {
     DIMbossRuntime* runtime;
     GameObject* childObject;
-    void* effect;
+    ModelLightStruct* effect;
 
     runtime = obj->runtime;
     mainSetBits(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 0);
@@ -487,7 +485,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
                     u32 p5, char shouldRender)
 {
     DIMbossRuntime* runtime;
-    DIMbossEffect* effect;
+    ModelLightStruct* effect;
 
     runtime = obj->runtime;
     if (shouldRender == 0 || obj->renderPause != 0 || runtime->phase == DIMBOSS_PHASE_NO_RENDER)
