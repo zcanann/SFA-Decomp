@@ -10,6 +10,7 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
 void Obj_InitObjectSystem(void);
 void Obj_ResetObjectSystem(void);
 int objMove(GameObject* obj, f32 dx, f32 dy, f32 dz);
+int objIsFrozen(u8* obj);
 GameObject* ObjList_FindObjectById(u32 objectId);
 u8 Obj_IsLoadingLocked(void);
 ObjModel* Obj_GetActiveModel(GameObject* obj);

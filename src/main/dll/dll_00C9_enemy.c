@@ -162,7 +162,6 @@ extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
-extern int objIsFrozen(int obj);
 extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
 
 extern f32 enemyRespawnDistanceSq;
@@ -1724,7 +1723,7 @@ void enemy_update(int obj)
             return;
         }
     }
-    if (objIsFrozen(obj) != 0)
+    if (objIsFrozen((u8*)obj) != 0)
     {
         baddie_updateWhileFrozen((GameObject*)(obj), state, 1);
         return;

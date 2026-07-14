@@ -100,7 +100,6 @@ extern s16 gMagicPlantGemDefIds[4];
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();
-extern int objIsFrozen(int obj);
 
 void MagicPlant_updateActive(GameObject* obj, MagicPlantSetup* setupParam, MagicPlantState* stateParam)
 {
@@ -261,7 +260,7 @@ void MagicPlant_update(int obj)
     }
 
     *(u8*)&plant->objAnim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    if (objIsFrozen(obj) != 0)
+    if (objIsFrozen((u8*)obj) != 0)
     {
         hitKind = ObjHits_GetPriorityHitWithPosition((GameObject*)(obj), &hitObj, &hitA, (u32*)&hitB, &hitPos[0],
                                                      &hitPos[1], &hitPos[2]);

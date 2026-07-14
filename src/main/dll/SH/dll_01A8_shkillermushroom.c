@@ -98,7 +98,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(GameObject* player);
 extern int playerGetFlags3F0Bit5(GameObject* player);
 extern f32 fn_8029610C(u8* player);
@@ -250,7 +249,7 @@ void enemymushroom_update(int* obj)
     ((GameObject*)obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     ((EnemyMushroomState*)state)->stateFlags |= MUSHROOM_STATEFLAG_ACTIVE;
 
-    if (objIsFrozen(obj))
+    if (objIsFrozen((u8*)obj))
     {
         hitType = ObjHits_GetPriorityHitWithPosition((GameObject*)obj, &hitObject, &hitSphereIndex, &hitVolume, &hv.x,
                                                      &hv.y, &hv.z);

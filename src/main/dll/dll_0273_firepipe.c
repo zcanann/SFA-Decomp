@@ -58,7 +58,6 @@ int lbl_803DC350 = 0x0A;
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void Obj_InsertIntoUpdateList(int obj);
 
-extern int objIsFrozen(FirePipeObject* obj);
 extern f32 lbl_803DC340;
 extern f32 lbl_803DC344;
 extern s16 lbl_803DC348;
@@ -299,7 +298,7 @@ void firepipe_updateState(FirePipeObject* obj)
         }
     }
 
-    if (objIsFrozen(obj) != 0)
+    if (objIsFrozen((u8*)obj) != 0)
     {
         flags->emitting = 0;
         flags->restartPending = 1;
