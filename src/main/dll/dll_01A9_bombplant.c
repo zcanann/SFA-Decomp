@@ -2,6 +2,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/shader_api.h"
@@ -255,7 +256,6 @@ void bombplant_init(GameObject *obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void Sfx_PlayFromObject(void* obj, int sndId);
     extern void bombplant_explode(void* obj, void* stateEntry, void* state);
     void* state;
     u8* entry;
