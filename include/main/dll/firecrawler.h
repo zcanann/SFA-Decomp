@@ -4,6 +4,7 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/model.h"
+#include "main/modellight_api.h"
 #include "main/gamebits.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/baddie_setmove.h"
@@ -24,7 +25,7 @@
 typedef struct FireCrawlerState {
     BaddieState baddie;
     u8 unk35C[0x368 - 0x35C];
-    void *engineLight; /* 0x368: objCreateLight() handle, HagabonMK2 flier glow */
+    ModelLightStruct *engineLight; /* 0x368: HagabonMK2 flier glow */
     ObjModelChain *tailModelChain; /* 0x36c: segmented tail model chain */
 } FireCrawlerState;
 

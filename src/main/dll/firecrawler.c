@@ -35,7 +35,7 @@
 #include "main/obj_link.h"
 #include "main/obj_path.h"
 #include "main/object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/obj_query.h"
 #include "main/model.h"
@@ -161,15 +161,6 @@ extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
 
 extern f32 lbl_803E2BA8;
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind();
-#define MODEL_LIGHT_KIND_POINT 2
-extern void modelLightStruct_setPosition();
-extern void modelLightStruct_setDiffuseColor();
-extern void modelLightStruct_setSpecularColor();
-extern void modelLightStruct_setDistanceAttenuation();
-extern void modelLightStruct_setEnabled();
-extern void modelLightStruct_startColorFade();
 extern float powfBitEstimate(float x, float y);
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
@@ -1297,7 +1288,7 @@ void hagabonMK2_update(s16* obj, u8* state)
         {
             if (((FireCrawlerState*)state)->engineLight == NULL)
             {
-                ((FireCrawlerState*)state)->engineLight = (void*)objCreateLight(0, 1);
+                ((FireCrawlerState*)state)->engineLight = objCreateLight(NULL, 1);
             }
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
@@ -2263,7 +2254,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
         {
             if (((FireCrawlerState*)state)->engineLight == NULL)
             {
-                ((FireCrawlerState*)state)->engineLight = (void*)objCreateLight(0, 1);
+                ((FireCrawlerState*)state)->engineLight = objCreateLight(NULL, 1);
             }
             if (((FireCrawlerState*)state)->engineLight != NULL)
             {
