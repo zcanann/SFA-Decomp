@@ -95,26 +95,29 @@ typedef struct SaveSelectPanel
 
 
 extern u8 lbl_803DB424;
-extern s8 saveFileSelect_currentSlotIndex;
-extern u8 saveFileSelect_saveDirty;
-extern u8 saveFileSelect_debugCheatProgress;
-extern u8 saveFileSelect_saveCheatProgress;
-extern u8 saveFileSelect_cheatInputTimer;
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern TitleMenuControl* gTitleMenuItemInterface;
-extern void* gSaveSelectCachedText;
-extern void* lbl_803DD6AC;
-extern void* gSaveSelectMenuItem;
-extern u8 lbl_803DD6B4;
-extern int gSaveSelectLastSlot;
-extern void* gSaveSelectTexture;
-extern u8 gSaveSelectMenuItemActive;
-extern u8 lbl_803DD6CC;
-extern u8 lbl_803DD6CD;
-extern s8 gSaveSelectRefreshCounter;
-extern s8 lbl_803DD6CF;
-extern u8 lbl_803DD6C4;
+
+s8 lbl_803DD6CF;
+s8 gSaveSelectRefreshCounter;
+u8 lbl_803DD6CD;
+u8 lbl_803DD6CC;
+void* gSaveSelectTexture;
+u8 gSaveSelectMenuItemActive;
+u8 lbl_803DD6C4;
+int gSaveSelectLastSlot;
+u8 saveFileSelect_cheatInputTimer;
+u8 saveFileSelect_saveCheatProgress;
+u8 saveFileSelect_debugCheatProgress;
+void* gSaveSelectMenuItem;
+u8 lbl_803DD6B4;
+FrontendSaveSlot* saveFileSelect_saveSlots;
+void* lbl_803DD6AC;
+FrontendSaveSlot* saveFileSelect_saveSlotsBase;
+u8 saveFileSelect_saveDirty;
+s8 saveFileSelect_currentSlotIndex;
+void* gSaveSelectCachedText;
 extern void* lbl_8031A804[4];
 void* lbl_803A8680[4];
 extern SaveSelectPanel gSaveSelectPanels[];
@@ -122,8 +125,6 @@ extern u8 lbl_8031A7F8[];
 void saveSelectGoToChapterSelect(void);
 
 void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
-extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
-extern FrontendSaveSlot* saveFileSelect_saveSlots;
 extern f32 lbl_803E1D64;
 extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
