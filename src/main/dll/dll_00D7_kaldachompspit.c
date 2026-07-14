@@ -9,6 +9,7 @@
  * or once its unkF4 lifetime runs out, then frees itself.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
@@ -43,7 +44,6 @@ extern f32 lbl_803E30FC;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 typedef struct KaldaChompSpitState
