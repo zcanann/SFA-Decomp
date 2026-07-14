@@ -1,6 +1,7 @@
 /* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/gamebits.h"
 #include "main/render.h"
 #include "main/object_api.h"
@@ -11,7 +12,6 @@
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
-extern int playerIsDisguised(void);
 int DeathGas_getExtraSize(void) { return 0x10; }
 
 typedef struct
@@ -98,7 +98,7 @@ void DeathGas_update(int* obj)
     }
 
     player = Obj_GetPlayerObject();
-    if (!playerIsDisguised()
+    if (!playerIsDisguised(player)
         && player->anim.worldPosY <= 30.0f + ((GameObject*)obj)->anim.worldPosY
         && Vec_distance(&player->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <=
                state->radius)

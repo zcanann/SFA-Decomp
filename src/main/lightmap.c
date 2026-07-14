@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/frame_timing.h"
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
@@ -843,7 +844,6 @@ typedef struct
 
 extern void objDrawFn_80061654(int* obj, int* model);
 extern void fn_8000F9B4(void);
-extern int playerIsDisguised(int* obj);
 extern void fn_802B4ED8(int* obj, int a, int b);
 extern void drawFn_8006f500(void);
 void objDrawFn_8005da48(int* obj);
@@ -1105,7 +1105,7 @@ void sceneDrawTransparentPolys(void)
             player = Obj_GetPlayerObject();
             if ((GameObject*)block == player)
             {
-                if (playerIsDisguised(block) == 0)
+                if (playerIsDisguised((GameObject*)block) == 0)
                 {
                     fn_802B4ED8(block, 1, 1);
                 }

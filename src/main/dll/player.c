@@ -121,7 +121,6 @@ int fn_80295C40(GameObject* obj);
 int fn_80295C5C(GameObject* obj);
 int fn_80295C88(int obj);
 int fn_80295CBC(GameObject* obj);
-int playerIsDisguised(int obj);
 int playerIsPathFollowing(int obj);
 void playerSetDisguised(GameObject* obj, int mode);
 int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
@@ -570,9 +569,9 @@ int playerGetMoney(void* player)
     return *(u8*)((char*)inner->playerStatus + 8);
 }
 
-int playerIsDisguised(int obj)
+int playerIsDisguised(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     return (inner->flags3F3 >> 3) & 1;
 }
 

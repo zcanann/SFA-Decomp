@@ -1896,8 +1896,8 @@ main/dll/CF/dll_014E_cfprisonguard.c:
 
 main/dll/CF/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174
-	.sdata2     start:0x803E4290 end:0x803E4298
 	.data       start:0x80322C00 end:0x80322C38
+	.sdata2     start:0x803E4290 end:0x803E4298
 
 main/dll/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
@@ -1911,8 +1911,8 @@ main/dll/CF/dll_0153_cfperch.c:
 
 main/dll/CF/dll_0154_cfprisoncage.c:
 	.text       start:0x801A0614 end:0x801A0994
-	.sdata2     start:0x803E42B0 end:0x803E42B8
 	.data       start:0x80322CB8 end:0x80322CF0
+	.sdata2     start:0x803E42B0 end:0x803E42B8
 
 main/dll/dll_0157_spiritdoorspirit.c:
 	.text       start:0x801A0994 end:0x801A0B14
@@ -1985,15 +1985,15 @@ main/dll/MMP/dll_0180_mmpasteroidre.c:
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
+	.data       start:0x80323218 end:0x80323250
 	.bss        start:0x803AC918 end:0x803AC930
 	.sdata2     start:0x803E4548 end:0x803E45B8
-	.data       start:0x80323218 end:0x80323250
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
+	.data       start:0x80323250 end:0x80323288
 	.bss        start:0x803AC930 end:0x803AC948
 	.sdata2     start:0x803E45B8 end:0x803E45C0
-	.data       start:0x80323250 end:0x80323288
 
 main/dll/MMP/dll_0183_mmpgyservent.c:
 	.text       start:0x801A8E24 end:0x801A8F88
@@ -2001,18 +2001,18 @@ main/dll/MMP/dll_0183_mmpgyservent.c:
 
 main/dll/dll_0184_animsharpclaw.c:
 	.text       start:0x801A8F88 end:0x801A9468
-	.sdata2     start:0x803E45C8 end:0x803E45D8
 	.data       start:0x803232C0 end:0x803232F8
+	.sdata2     start:0x803E45C8 end:0x803E45D8
 
 main/dll/dll_025B_msplantings.c:
 	.text       start:0x801A9468 end:0x801A9E74
-	.sdata2     start:0x803E45D8 end:0x803E460C
 	.data       start:0x803232F8 end:0x80323340
+	.sdata2     start:0x803E45D8 end:0x803E460C
 
 main/dll/CC/dll_0185_ccgasvent.c:
 	.text       start:0x801A9E74 end:0x801A9FA8
-	.sdata2     start:0x803E4610 end:0x803E4618
 	.data       start:0x80323340 end:0x80323378
+	.sdata2     start:0x803E4610 end:0x803E4618
 
 main/dll/CC/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558
@@ -2031,8 +2031,8 @@ main/dll/CC/dll_0188_cclightfoot.c:
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
-	.sdata2     start:0x803E46A8 end:0x803E46C8
 	.data       start:0x803234D8 end:0x80323510
+	.sdata2     start:0x803E46A8 end:0x803E46C8
 
 main/dll/CC/dll_018A_ccpedstal.c:
 	.text       start:0x801AB6F8 end:0x801ABA84
@@ -2040,8 +2040,8 @@ main/dll/CC/dll_018A_ccpedstal.c:
 
 main/dll/CC/dll_018B_cclevcontrol.c:
 	.text       start:0x801ABA84 end:0x801AC01C
-	.sdata2     start:0x803E46C8 end:0x803E46D8
 	.data       start:0x80323548 end:0x80323660
+	.sdata2     start:0x803E46C8 end:0x803E46D8
 
 main/dll/dll_801ac01c.c:
 	.text       start:0x801AC01C end:0x801AC248
@@ -2056,8 +2056,8 @@ main/dll/dll_016A_crrockfall.c:
 
 main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4
-	.sdata2     start:0x803E4738 end:0x803E4748
 	.data       start:0x80323708 end:0x80323740
+	.sdata2     start:0x803E4738 end:0x803E4748
 
 main/dll/dll_016C_dll16c.c:
 	.text       start:0x801AD7E4 end:0x801AE0EC
@@ -2066,34 +2066,34 @@ main/dll/dll_016C_dll16c.c:
 
 main/dll/IM/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
-	.sdata2     start:0x803E4768 end:0x803E4770
 	.data       start:0x80323778 end:0x803237B0
+	.sdata2     start:0x803E4768 end:0x803E4770
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
+	.data       start:0x803237B0 end:0x80323818
 	.bss        start:0x803AC948 end:0x803AC960
 	.sdata2     start:0x803E4770 end:0x803E4788
-	.data       start:0x803237B0 end:0x80323818
 
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
-	.sdata2     start:0x803E47A0 end:0x803E47A8
 	.data       start:0x80323818 end:0x80323868
+	.sdata2     start:0x803E47A0 end:0x803E47A8
 
 main/dll/IM/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
-	.sdata2     start:0x803E47B8 end:0x803E47C0
 	.data       start:0x80323868 end:0x803238A0
+	.sdata2     start:0x803E47B8 end:0x803E47C0
 
 main/dll/IM/dll_0171_imspaceringgen.c:
 	.text       start:0x801AEAE4 end:0x801AEE2C
-	.sdata2     start:0x803E47C0 end:0x803E47C8
 	.data       start:0x803238A0 end:0x803238D8
+	.sdata2     start:0x803E47C0 end:0x803E47C8
 
 main/dll/dll_0172_linkblevcontrol.c:
 	.text       start:0x801AEE2C end:0x801AF568
-	.sdata2     start:0x803E47C8 end:0x803E47D0
 	.data       start:0x803238D8 end:0x803239F0
+	.sdata2     start:0x803E47C8 end:0x803E47D0
 
 main/dll/dll_0173_linklevcontrol.c:
 	.text       start:0x801AF568 end:0x801AF9E4
@@ -2106,13 +2106,13 @@ main/dll/DIM/dll_01BE_dimlava.c:
 
 main/dll/DIM/dll_01BF_dimlavaball.c:
 	.text       start:0x801B02BC end:0x801B0670
-	.sdata2     start:0x803E4818 end:0x803E4820
 	.data       start:0x80323B48 end:0x80323B88
+	.sdata2     start:0x803E4818 end:0x803E4820
 
 main/dll/DIM/dll_01C0_dimlogfire.c:
 	.text       start:0x801B0670 end:0x801B0DD4
-	.sdata2     start:0x803E4820 end:0x803E4848
 	.data       start:0x80323B88 end:0x80323BC0
+	.sdata2     start:0x803E4820 end:0x803E4848
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
@@ -2547,8 +2547,8 @@ main/dll/SC/dll_01BB_sctotembond.c:
 
 main/dll/SC/dll_01BC_sctotemstrength.c:
 	.text       start:0x801DE430 end:0x801DF110
-	.sdata      start:0x803DC070 end:0x803DC078
 	.data       start:0x80327AB8 end:0x80327AF0
+	.sdata      start:0x803DC070 end:0x803DC078
 
 main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC

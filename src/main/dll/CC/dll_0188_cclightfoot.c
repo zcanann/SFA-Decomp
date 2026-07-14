@@ -52,6 +52,7 @@ typedef struct CcLightfootState
 STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/dll/waterfx_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -163,7 +164,6 @@ int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     return 0;
 }
 
-extern int playerIsDisguised(int obj);
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
 extern f32 lbl_803E4688;
@@ -285,7 +285,7 @@ void cclightfoot_update(int obj)
             if ((getXZDistance((f32*)(obj + 0x18), (f32*)(state->playerObj + 0x18)) < lbl_803E4684 ||
                  (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetA ||
                  (void*)Player_GetTargetObject(state->playerObj) == (void*)state->targetB) &&
-                playerIsDisguised(state->playerObj) == 0)
+                playerIsDisguised((GameObject*)state->playerObj) == 0)
             {
                 if ((void*)Player_GetTargetObject(state->playerObj) == (void*)oFar)
                 {
@@ -353,7 +353,7 @@ void cclightfoot_update(int obj)
             dist = getXZDistance((f32*)(state->playerObj + 0x18), (f32*)(fallback + 0x18));
             if ((getXZDistance((f32*)(obj + 0x18), (f32*)(fallback + 0x18)) < dist &&
                  (void*)Player_GetTargetObject(state->playerObj) != (void*)fallback) ||
-                playerIsDisguised(state->playerObj) != 0)
+                playerIsDisguised((GameObject*)state->playerObj) != 0)
             {
                 fn_8014C66C((GameObject*)fallback, (GameObject*)obj);
             }
@@ -651,4 +651,3 @@ void cclightfoot_update(int obj)
         state->flags &= ~1;
     }
 }
-

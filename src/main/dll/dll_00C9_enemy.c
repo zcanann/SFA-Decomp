@@ -12,6 +12,7 @@
 #include "main/object_render_legacy.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
 #include "main/objprint_character_api.h"
@@ -144,7 +145,6 @@ extern f32 lbl_803E25B8;
 extern f32 lbl_803E25EC;
 extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
-extern int playerIsDisguised(int* p);
 extern void baddieFn_8014a304(int* a, int* s, f32 v);
 extern f32 lbl_803E25D8;
 extern f32 PSVECMag(f32* v);
@@ -1204,7 +1204,7 @@ void fn_8014B878(int* obj, int* sub)
     }
     if (((TrickyState*)sub)->actionTargetObj == (GameObject*)player)
     {
-        if (playerIsDisguised(player) != 0)
+        if (playerIsDisguised((GameObject*)player) != 0)
         {
             ((TrickyState*)sub)->flags2DC |= 8LL;
             if ((((TrickyState*)sub)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)

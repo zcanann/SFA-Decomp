@@ -18,6 +18,7 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
+#include "main/dll/player_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
@@ -71,7 +72,6 @@ extern f32 lbl_803E43E8;
 __declspec(section ".rodata") int lbl_802C22E8[4] = {0x443AB458, 0x44A3A000, 0xC67FE95C, 0};
 extern f32 lbl_803E43EC;
 
-extern int playerIsDisguised(int obj);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -203,11 +203,11 @@ void cflevelcontrol_update(GameObject* obj)
     }
 
     bit94e = mainGetBit(GAMEBIT_CF_HaveStaff);
-    if (bit94e != 0 && playerIsDisguised(player) == 0)
+    if (bit94e != 0 && playerIsDisguised((GameObject*)player) == 0)
     {
         staffToggle((GameObject*)Obj_GetPlayerObject(), 0);
     }
-    else if (bit94e == 0 && playerIsDisguised(player) == 0)
+    else if (bit94e == 0 && playerIsDisguised((GameObject*)player) == 0)
     {
         staffToggle((GameObject*)Obj_GetPlayerObject(), 1);
     }

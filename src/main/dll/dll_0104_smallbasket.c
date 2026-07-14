@@ -29,6 +29,7 @@
 #include "main/vecmath.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_render.h"
 #include "main/track_bbox_api.h"
@@ -112,7 +113,6 @@ void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern void* gSmallBasketResource;
 extern const f32 lbl_803E3974;
-extern int playerIsDisguised(int obj);
 extern u32 playerGetStateFlag310(int obj);
 
 extern int isTrickyNear(int obj);
@@ -880,7 +880,7 @@ void SmallBasket_update(GameObject* obj)
                 if ((obj)->unkF8 == 0)
                 {
                     ObjHits_EnableObject(obj);
-                    if ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0))
+                    if ((state->disguiseGated != 0) && (playerIsDisguised((GameObject*)player) == 0))
                     {
                         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
                     }
@@ -922,7 +922,7 @@ void SmallBasket_update(GameObject* obj)
                     *(u8*)&state->carryState = 2;
                 }
                 if (((state->carryState == 2) && ((obj)->unkF8 == 0)) ||
-                    ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0)))
+                    ((state->disguiseGated != 0) && (playerIsDisguised((GameObject*)player) == 0)))
                 {
                     if (fn_8029669C(player) != 0)
                     {

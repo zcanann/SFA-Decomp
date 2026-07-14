@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
@@ -98,7 +99,6 @@ extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
 extern int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
-extern int playerIsDisguised(void* player);
 extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);
@@ -141,7 +141,6 @@ extern f32 gPushableU16ScaleDenom;
 extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
 __declspec(section ".rodata") int gPushableDefaultBox[4] = {0, 0, 0, 0};
-extern int fn_802969F0(void);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern f32 lbl_803E35A8;
 extern f32 lbl_803E35AC;
@@ -870,6 +869,7 @@ void pushable_hitDetect(GameObject* obj)
     extern u32 fn_80174BFC();
     extern void ObjHits_AddContactObject(int obj, void* contactObj);
     int i;
+    GameObject* player;
     PushableState* state;
     f32* wp;
     f32* hp;
@@ -889,7 +889,7 @@ void pushable_hitDetect(GameObject* obj)
     f32 tmpY;
 
     box = *(PushableBox16*)gPushableDefaultBox;
-    Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     state = obj->extra;
     state->timer_0x110 = state->timer_0x110 - timeDelta;
     if (state->timer_0x110 <= *(f32*)&lbl_803E3528)
@@ -899,7 +899,7 @@ void pushable_hitDetect(GameObject* obj)
     if (state->moveFlags.b7 == 0)
     {
         f32 k;
-        if (fn_802969F0() == 0xd)
+        if (fn_802969F0(player) == 0xd)
         {
             k = lbl_803E35A8;
         }
@@ -1184,7 +1184,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
             state->pushAmountZ = pushAmount;
         }
     }
-    if (playerIsDisguised(player) == 0 && state->moveFlags.b6 == 0)
+    if (playerIsDisguised((GameObject*)player) == 0 && state->moveFlags.b6 == 0)
     {
         hit = 1;
         if (dx > lbl_803E3528)

@@ -19,6 +19,7 @@
  */
 #include "main/dll/bit80_struct.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_link.h"
 #include "main/object_api.h"
@@ -103,7 +104,7 @@ void gcrobotlightbea_hitDetect(GameObject* obj)
     }
     if (hit != Obj_GetPlayerObject())
         return;
-    if (playerIsDisguised(hit) != 0)
+    if (playerIsDisguised((GameObject*)hit) != 0)
         return;
     vec[0] = ((ObjHitsPriorityState*)hit)->primaryRadiusSquared;
     vec[1] = 10.0f + ((ObjHitsPriorityState*)hit)->localPosX;

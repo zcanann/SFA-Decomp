@@ -6,6 +6,7 @@
  * table for a hold time bounded by lbl_803E3C88 / lbl_803E3C8C.
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/obj_trigger.h"
 #include "main/object_descriptor.h"
@@ -44,7 +45,6 @@ extern void FxEmit_init(void);
 extern void FxEmit_release(void);
 
 extern void FxEmit_initialise(void);
-extern int playerIsDisguised(void);
 
 int CCTestInfot_getExtraSize(void)
 {
@@ -54,17 +54,17 @@ int CCTestInfot_getExtraSize(void)
 void CCTestInfot_update(int* obj)
 {
     CctestinfotState* state = ((GameObject*)obj)->extra;
-    Obj_GetPlayerObject();
+    GameObject* player = Obj_GetPlayerObject();
     if (state->disguised != 0)
     {
-        if (playerIsDisguised() == 0)
+        if (playerIsDisguised(player) == 0)
         {
             state->disguised = 0;
         }
     }
     else
     {
-        if (playerIsDisguised() != 0)
+        if (playerIsDisguised(player) != 0)
         {
             state->disguised = 1;
         }

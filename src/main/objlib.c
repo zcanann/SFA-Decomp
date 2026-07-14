@@ -38,7 +38,6 @@ extern void Obj_UpdateObject(ObjAnimComponent* obj, ObjModelInstance* modelInsta
 extern void fn_80054F74(int obj, float* pos);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 
-extern int playerIsDisguised(int obj);
 
 #define OBJGROUP_COUNT                0x54
 #define OBJGROUP_OFFSET_CLEAR_COUNT   (OBJGROUP_COUNT + 1)
@@ -1518,7 +1517,7 @@ bool ObjTrigger_UpdateIdBlockFlag(int obj)
     u8 flags;
 
     disguised = (int)Obj_GetPlayerObject();
-    disguised = playerIsDisguised(disguised);
+    disguised = playerIsDisguised((GameObject*)disguised);
     if (disguised != 0)
     {
         flags = *(u8*)(obj + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;

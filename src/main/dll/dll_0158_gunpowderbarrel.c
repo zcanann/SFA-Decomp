@@ -30,6 +30,7 @@
 #include "main/maketex_timer_api.h"
 #include "main/lightmap_api.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_update_list.h"
 #include "main/track_dolphin_api.h"
 #include "main/track_bbox_api.h"
@@ -106,7 +107,6 @@ extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
 extern void memset(void* p, int c, int n);
-extern int playerIsDisguised(u8 * player);
 extern u32 playerGetStateFlag310(u8 * player);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
@@ -696,7 +696,8 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     if (((GpbHeldFlags*)&state->heldFlags)->held == 0)
     {
-        if (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0)
+        if (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 &&
+            playerIsDisguised((GameObject*)player) == 0)
         {
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
@@ -857,7 +858,8 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     if ((state->motionFlags & 2) != 0 || ((GpbHeldFlags*)&state->heldFlags)->held != 0 ||
         (*(int (**)(int, GunpowderBarrelState*))((char*)*gCarryableInterface + 0x8))((int)obj, state) == 0 ||
-        (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 && playerIsDisguised(player) == 0))
+        (((GpbHeldFlags*)&state->heldFlags)->cannonRangeVariant != 0 &&
+         playerIsDisguised((GameObject*)player) == 0))
     {
         ObjHits_EnableObject((int)obj);
         gunpowderbarrel_triggerExplosion(obj);

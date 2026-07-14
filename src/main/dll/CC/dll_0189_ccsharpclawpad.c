@@ -8,6 +8,7 @@
  * sets the gameBit and lights the pad.
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/obj_trigger.h"
@@ -23,7 +24,6 @@
 
 #define CCSHARPCLAWPAD_OBJFLAG_HIDDEN 0x4000
 
-extern int playerIsDisguised(int obj);
 
 int CCSharpclawPad_getExtraSize(void)
 {
@@ -78,7 +78,7 @@ void CCSharpclawPad_update(GameObject* obj)
         }
         player = Obj_GetPlayerObject();
         if (vec3f_distanceSquared(&obj->anim.worldPosX, &player->anim.worldPosX) < 100.0f &&
-            playerIsDisguised((int)player) != 0)
+            playerIsDisguised(player) != 0)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_menuups16k);
             mainSetBits(*(s16*)(*(int*)&(obj)->anim.placementData + 0x1a), 1);
