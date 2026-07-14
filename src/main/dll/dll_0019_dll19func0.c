@@ -35,6 +35,11 @@
 #include "main/object_transform.h"
 #include "main/player_control_interface.h"
 
+GameObject* gDll19NearestObj;
+u32 lbl_803DD5E0;
+s8 gDll19SeqStallCount;
+f32 gDll19SeqMinDist;
+
 u32 lbl_803DB9E0 = 0x41C80000;
 
 typedef struct Dll19Placement

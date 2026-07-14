@@ -19,6 +19,8 @@
 #include "main/dll/dll_0051_cameramodecannon.h"
 #include "main/objprint_api.h"
 
+CameraModeCannonState* lbl_803DD5A0;
+
 extern CameraModeCannonState* lbl_803DD5A0;
 
 void CameraModeCannon_copyToCurrent(void)

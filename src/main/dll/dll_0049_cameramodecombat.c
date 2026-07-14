@@ -13,6 +13,9 @@
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 
+s32 gCamCombatPrevYawDiff;
+CameraModeCombatState* gCamCombatState;
+
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 #define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42
 #define PAD_BUTTON_B 0x200

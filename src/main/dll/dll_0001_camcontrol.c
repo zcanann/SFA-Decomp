@@ -49,6 +49,39 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+u8* pCamera;
+u8 gCamcontrolHandlerCount;
+CamcontrolHandlerEntry* gCamcontrolCurrentHandler;
+s32 gCamcontrolActiveActionId;
+int gCamcontrolCurrentHandlerIndex;
+s32 gCamcontrolQueuedActionId;
+int gCamcontrolActiveActionPriority;
+int gCamcontrolActiveActionStartFlags;
+void* gCamcontrolQueuedActionData;
+u8 gCamcontrolQueuedActionPending;
+s8 gCamcontrolQueuedActionStartFlags;
+s8 gCamcontrolQueuedActionPriority;
+s32 gCamcontrolQueuedActionBlendFrames;
+u8 gCamcontrolQueuedActionMode;
+int gCamcontrolSavedActionId;
+int gCamcontrolSavedActionPriority;
+int gCamcontrolSavedActionStartFlags;
+f32 gCamcontrolSavedFocusLocalX;
+f32 gCamcontrolSavedFocusLocalY;
+f32 gCamcontrolSavedFocusLocalZ;
+f32 gCamcontrolSavedFocusWorldX;
+f32 gCamcontrolSavedFocusWorldY;
+f32 gCamcontrolSavedFocusWorldZ;
+f32 lbl_803DD4D0;
+u32 lbl_803DD4CC;
+s8 lbl_803DD4CB;
+s8 gCamcontrolTargetState;
+u16 gCamcontrolReticleSpin;
+void* lbl_803DD4C4;
+s16 lbl_803DD4C0;
+CamcontrolReticleObject* gCamcontrolTargetReticle;
+s8 gCamcontrolTargetChanged;
+
 extern void objShowButtonGlow(void* obj, f32 intensity, int mode);
 extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control managed (use its reticle distance) */
 u8 gCamcontrolStateStorage[0x148];

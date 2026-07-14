@@ -12,6 +12,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/player_api.h"
 
+CameraModeBikeState* gCamTalkBikeState;
+
 extern CameraModeBikeState* gCamTalkBikeState;
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E1780;

@@ -24,6 +24,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0053_cameramodecloudrunner.h"
 
+CameraModeCloudRunnerState* lbl_803DD5B8;
+
 f32 lbl_803DB9D0 = 15.0f;
 int lbl_803DB9D4 = -4;
 

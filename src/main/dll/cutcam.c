@@ -35,6 +35,10 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 
+CamcontrolModeSettings* cameraMtxVar57;
+f32 lbl_803DD52C;
+u8 gCutCamBboxBlocked;
+
 #define PAD_TRIGGER_Z 0x10
 #define PAD_TRIGGER_L 0x40
 

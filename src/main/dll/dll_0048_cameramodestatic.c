@@ -9,6 +9,8 @@
 #include "main/vecmath.h"
 #include "main/dll/dll_0048_cameramodestatic.h"
 
+CameraModeStaticState* lbl_803DD558;
+
 #pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 gCamDebugOrbitRadiusInit = 50.0f;

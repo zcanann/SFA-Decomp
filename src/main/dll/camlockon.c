@@ -10,6 +10,8 @@
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 
+CamcontrolPathState* gCamcontrolPathState;
+
 
 #pragma inline_depth(4)
 void camcontrol_buildPathAngles(s16* outArr, u16* outCount, s16 baseAngle, s16 deltaAngle,

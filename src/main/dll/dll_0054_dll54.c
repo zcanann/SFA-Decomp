@@ -27,6 +27,8 @@
 #include "main/obj_list.h"
 #include "main/dll/dll_0054_dll54.h"
 
+CameraMode54State* gCameraModeNpcSpeakState;
+
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define DLL54_CAMMODE_DEFAULT 0x42
 

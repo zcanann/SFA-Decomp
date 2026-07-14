@@ -950,9 +950,11 @@ main/dll/dll_0001_camcontrol.c:
 	.text       start:0x8010224C end:0x80103524
 	.data       start:0x80319B14 end:0x80319CB4
 	.bss        start:0x803A4228 end:0x803A43C0
+	.sbss       start:0x803DD4B8 end:0x803DD528
 
 main/dll/cutcam.c:
 	.text       start:0x80103524 end:0x801046F4
+	.sbss       start:0x803DD528 end:0x803DD538
 
 main/dll/dll_0042_unk.c:
 	.text       start:0x801046F4 end:0x80106654
@@ -962,24 +964,29 @@ main/dll/pathcam.c:
 
 main/dll/camlockon.c:
 	.text       start:0x8010684C end:0x80106F78
+	.sbss       start:0x803DD538 end:0x803DD540
 
 main/dll/dll_0043_unk.c:
 	.text       start:0x80106F78 end:0x80107AEC
 
 main/dll/dll_0045_camTalk.c:
 	.text       start:0x80107AEC end:0x8010847C
+	.sbss       start:0x803DD540 end:0x803DD548
 	.sdata2     start:0x803E17B8 end:0x803E17C0
 
 main/dll/dll_0044_cameramodeviewfinder.c:
 	.text       start:0x8010847C end:0x80109748
 	.sdata      start:0x803DB9A0 end:0x803DB9A8
+	.sbss       start:0x803DD548 end:0x803DD550
 
 main/dll/dll_0046_cameramodedebug.c:
 	.text       start:0x80109748 end:0x80109B04
+	.sbss       start:0x803DD550 end:0x803DD558
 	.sdata2     start:0x803E1868 end:0x803E1870
 
 main/dll/dll_0048_cameramodestatic.c:
 	.text       start:0x80109B04 end:0x8010A104
+	.sbss       start:0x803DD558 end:0x803DD560
 	.sdata2     start:0x803E1870 end:0x803E1888
 
 main/dll/dll_8010a104.c:
@@ -991,6 +998,7 @@ main/dll/camshipbattle5c.c:
 
 main/dll/dll_0047_cameramodeteststrength.c:
 	.text       start:0x8010AEA8 end:0x8010BF08
+	.sbss       start:0x803DD560 end:0x803DD568
 
 main/dll/dll_60.c:
 	.text       start:0x8010BF08 end:0x8010BF08
@@ -998,14 +1006,17 @@ main/dll/dll_60.c:
 main/dll/dll_0049_cameramodecombat.c:
 	.text       start:0x8010BF08 end:0x8010CEC0
 	.data       start:0x80319CE8 end:0x80319D18
+	.sbss       start:0x803DD568 end:0x803DD570
 
 main/dll/dll_004A_cameramodeshipbattle.c:
 	.text       start:0x8010CEC0 end:0x8010D33C
 	.data       start:0x80319D18 end:0x80319D48
+	.sbss       start:0x803DD570 end:0x803DD578
 
 main/dll/dll_004B_cameramodeclimb.c:
 	.text       start:0x8010D33C end:0x8010DAD4
 	.data       start:0x80319D48 end:0x80319D78
+	.sbss       start:0x803DD578 end:0x803DD580
 	.sdata2     start:0x803E1990 end:0x803E19A0
 
 main/dll/dll_004C_camDebug.c:
@@ -1016,46 +1027,55 @@ main/dll/dll_004D_cameramodenpcspeak.c:
 	.text       start:0x8010DB7C end:0x8010E51C
 	.data       start:0x80319DA8 end:0x80319E08
 	.sdata      start:0x803DB9A8 end:0x803DB9C8
+	.sbss       start:0x803DD580 end:0x803DD588
 
 main/dll/dll_004E_cameramodeworldmap.c:
 	.text       start:0x8010E51C end:0x8010F2F8
 	.data       start:0x80319E08 end:0x80319E38
+	.sbss       start:0x803DD588 end:0x803DD590
 
 main/dll/dll_004F_dll4f.c:
 	.text       start:0x8010F2F8 end:0x8010F540
 	.data       start:0x80319E38 end:0x80319E68
+	.sbss       start:0x803DD590 end:0x803DD598
 	.sdata2     start:0x803E1A88 end:0x803E1AC0
 
 main/dll/dll_0050_cameramodecrawl.c:
 	.text       start:0x8010F540 end:0x8010FA54
 	.data       start:0x80319E68 end:0x80319E98
+	.sbss       start:0x803DD598 end:0x803DD5A0
 	.sdata2     start:0x803E1AC0 end:0x803E1AE0
 
 main/dll/dll_0051_cameramodecannon.c:
 	.text       start:0x8010FA54 end:0x8010FC74
 	.data       start:0x80319E98 end:0x80319EC8
+	.sbss       start:0x803DD5A0 end:0x803DD5A8
 	.sdata2     start:0x803E1AE0 end:0x803E1B00
 
 main/dll/dll_0052_cameramodeforcebehind.c:
 	.text       start:0x8010FC74 end:0x801101E4
 	.data       start:0x80319EC8 end:0x80319EF8
 	.sdata      start:0x803DB9C8 end:0x803DB9D0
+	.sbss       start:0x803DD5A8 end:0x803DD5B8
 	.sdata2     start:0x803E1B10 end:0x803E1B18
 
 main/dll/dll_0053_cameramodecloudrunner.c:
 	.text       start:0x801101E4 end:0x801106B4
 	.data       start:0x80319EF8 end:0x80319F28
 	.sdata      start:0x803DB9D0 end:0x803DB9D8
+	.sbss       start:0x803DD5B8 end:0x803DD5C0
 	.sdata2     start:0x803E1B20 end:0x803E1B40
 
 main/dll/dll_0054_dll54.c:
 	.text       start:0x801106B4 end:0x80110C80
 	.data       start:0x80319F28 end:0x80319F58
+	.sbss       start:0x803DD5C0 end:0x803DD5C8
 	.sdata2     start:0x803E1B40 end:0x803E1B78
 
 main/dll/dll_0055_cameramodeperv.c:
 	.text       start:0x80110C80 end:0x80110E30
 	.data       start:0x80319F58 end:0x80319F88
+	.sbss       start:0x803DD5C8 end:0x803DD5D0
 	.sdata2     start:0x803E1B78 end:0x803E1B98
 
 main/dll/dll_0056_cameramodearwing.c:
@@ -1068,12 +1088,14 @@ main/dll/dll_0057_cameramodetitle.c:
 	.data       start:0x80319FB8 end:0x8031A0E0
 	.bss        start:0x803A4420 end:0x803A4438
 	.sdata      start:0x803DB9D8 end:0x803DB9E0
+	.sbss       start:0x803DD5D0 end:0x803DD5D8
 	.sdata2     start:0x803E1BE0 end:0x803E1C18
 
 main/dll/dll_0019_dll19func0.c:
 	.text       start:0x80111D14 end:0x80113F8C
 	.rodata     start:0x802C2190 end:0x802C21A0
 	.sdata      start:0x803DB9E0 end:0x803DB9E8
+	.sbss       start:0x803DD5D8 end:0x803DD5E8
 
 main/dll/dll_002E_moveLib.c:
 	.text       start:0x80113F8C end:0x801159E4
@@ -1082,6 +1104,7 @@ main/dll/dll_002E_moveLib.c:
 main/dll/dll_0032_titlescreeninit.c:
 	.text       start:0x801159E4 end:0x80115F20
 	.bss        start:0x803A4438 end:0x803A4448
+	.sbss       start:0x803DD5E8 end:0x803DD5F8
 	.sdata2     start:0x803E1CE8 end:0x803E1CF0
 
 main/dll/dll_0033_nrareware.c:
@@ -1091,6 +1114,7 @@ main/dll/dll_0033_nrareware.c:
 main/dll/dll_0034_titlemenu.c:
 	.text       start:0x8011611C end:0x8011730C
 	.data       start:0x8031A1D8 end:0x8031A3B0
+	.sbss       start:0x803DD610 end:0x803DD658
 
 main/dll/dll_3b.c:
 	.text       start:0x8011730C end:0x801175A4

@@ -29,6 +29,11 @@
 #include "main/textrender_api.h"
 #include "main/fileio.h"
 
+f32 lbl_803DD5F4;
+s8 gTitleScreenInitFrameStartPending;
+u32 gTitleScreenInitLoadingFrameCounter;
+u8 gTitleScreenInitDvdErrorLatched;
+
 typedef struct LoadingScreenTexture
 {
     u8 _00[0xa];

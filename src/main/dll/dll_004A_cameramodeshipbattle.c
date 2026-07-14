@@ -8,6 +8,8 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_004A_cameramodeshipbattle.h"
 
+CameraModeShipBattleState* gCamShipBattleState;
+
 extern CameraModeShipBattleState* gCamShipBattleState;
 extern f32 lbl_803E1948;
 extern f32 lbl_803E194C;

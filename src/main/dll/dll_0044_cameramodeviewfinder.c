@@ -40,6 +40,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+ViewfinderState* lbl_803DD548;
+
 char sCam5BYDebugFormat[] = "y=%f\n";
 
 #define PAD_BUTTON_B  0x200

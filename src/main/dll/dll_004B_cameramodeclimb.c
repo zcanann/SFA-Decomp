@@ -27,6 +27,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_004B_cameramodeclimb.h"
 
+CameraModeClimbState* gCamClimbState;
+
 typedef struct CameraModeClimbInitArgs
 {
     s8 pad0;

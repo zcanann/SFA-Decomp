@@ -25,6 +25,9 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_004D_cameramodenpcspeak.h"
 
+CameraModeNpcSpeakState* gCamNpcSpeakState;
+f32 lbl_803DD580;
+
 f32 lbl_803DB9A8 = 30.0f;
 f32 lbl_803DB9AC = 30.0f;
 f32 lbl_803DB9B0 = 0.2f;

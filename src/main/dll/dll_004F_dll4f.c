@@ -9,6 +9,8 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
+CameraMode4FState* gCameraMode4FState;
+
 extern CameraMode4FState* gCameraMode4FState;
 
 #pragma scheduling off

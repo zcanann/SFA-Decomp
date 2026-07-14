@@ -28,6 +28,8 @@
 #include "main/object_transform.h"
 #include "main/dll/dll_0050_cameramodecrawl.h"
 
+CameraModeCrawlState* lbl_803DD598;
+
 extern CameraModeCrawlState* lbl_803DD598;
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)

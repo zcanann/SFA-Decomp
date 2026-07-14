@@ -21,6 +21,10 @@
 #include "main/audio/music_api.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 
+u8 gCamTitleCurPose;
+u8 gCamTitlePrevPose;
+u8 gCamTitleStartPosePending;
+
 f32 titleScreenCamProgress = 1.0f;
 
 /* title-screen music tracks crossfaded as pose 4 is entered/left */

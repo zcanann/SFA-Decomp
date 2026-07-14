@@ -14,6 +14,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0046_cameramodedebug.h"
 
+CameraModeDebugState* gCamDebugState;
+
 /* camera mode id to restore on B-press exit */
 #define CAMCONTROL_ACTION_DEFAULT 0x42
 

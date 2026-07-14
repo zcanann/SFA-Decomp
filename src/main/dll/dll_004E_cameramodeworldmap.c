@@ -28,6 +28,8 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 
+CameraModeWorldMapState* gCamWorldMapState;
+
 
 /* CameraModeWorldMapState.mode: which world-map camera _update runs */
 #define WORLDMAP_CAMERA_FREE_OVERVIEW 0 /* C-stick orbit + focus blend */

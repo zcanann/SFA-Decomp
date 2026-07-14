@@ -14,6 +14,8 @@
 #include "main/frame_timing.h"
 #include "string.h"
 
+CamCannonState* lbl_803DD560;
+
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMTESTSTRENGTH_CAMMODE_DEFAULT 0x42
 

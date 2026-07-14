@@ -26,6 +26,33 @@
 #include "main/textrender_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame.h"
+
+u8 gTitleMenuPanelOpen;
+s8 gTitleMenuLoadDelay;
+s8 gTitleMenuNextDllId;
+u8 gAttractMoviePlaybackEnabled;
+u8 gTitleMenuReadyForInput;
+u8 gAttractMovieRetraceCountdown;
+u8 gAttractMovieReplayCountdown;
+s32 gTitleMenuInputCooldown;
+int gAttractMovieOffsetX;
+int gAttractMovieOffsetY;
+NAttractModeMovieDims gAttractMovieDims;
+void* gAttractMovieBuffer0;
+void* gAttractMovieBuffer1;
+void* gAttractMovieBuffer2;
+void* gAttractMovieBuffer3;
+void* gAttractMovieOptionalBuffer;
+void* gAttractMovieWorkBuffer;
+void* gAttractMovieScratchBuffer;
+u8 gAttractMovieAutoplayEnabled;
+u8 gAttractMoviePreparePending;
+u8 lbl_803DD618;
+s8 gTitleMenuSelectionFadeStep;
+u8 gTitleMenuSelectionFade;
+u8 gTitleMenuPreviousSelection;
+u8 gTitleMenuSelection;
+s32 gAttractMovieState;
 extern bool prepareAttractMode();
 extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 
