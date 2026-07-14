@@ -506,3 +506,13 @@ the manual expansion - fix that expansion bug first). FINAL MILE: fix the K3 exp
 ordering, re-add it, then rebalance the decl tuning for the new census - the 8/8+curve
 register file with matched accumulates nets past baseline once the K3 expansion is
 byte-clean. All probes in scratchpad; forms recorded here.
+
+## Refined K3 lever + cluster status (probe wgfep_113.c)
+po-ONLY staging at wg K=3 (`po = &wg->planeOffsets[3];` + direct planes[3] stores) gives
+curve=r22 at just +1 instruction (1271). With p-before-slotPtr and pp/listIndex order:
+113 regions, anchors wg/wg1=r21 wgB=r22 curve=r22 p=r27 pp=r26 listIndex=r25. Remaining
+cycle: listWalk(r24->r26), back(r27->r24), slot36(r29->r28), slotPtr(r26->r27; must color
+AFTER listWalk so interference pushes it to r27 - single moves cascade; needs a scripted
+permutation sweep over decls {slotPtr, pp, listIndex, listWalk, slot} (~15 targeted orders)
+plus the site-1 commutative-operand line. Then score - expected to cross 97.83 given the
+accumulate sites are byte-matched and the instruction excess is down to +3.
