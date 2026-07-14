@@ -114,42 +114,14 @@ extern f32 sqrtf(f32 x);
 
 extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
-extern GXColor lbl_803DB6D0;
-extern GXColor lbl_803DB6D4;
-extern GXColor lbl_803DB6D8;
-extern GXColor lbl_803DB6DC;
-extern GXColor lbl_803DB6E0;
-extern GXColor lbl_803DB6E4;
-extern GXColor lbl_803DB6E8;
-extern GXColor lbl_803DB6EC;
-extern GXColor lbl_803DB6F0;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
-extern u8 gHudTintAlpha;
 extern volatile s32 lbl_803DB700;
-extern u32 screenWidth;
-extern GXColor gFogColor;
-extern u8 gTevIndStageCount;
-extern u8 gTevChanCount;
-extern u8 gTevTexGenCount;
-extern u8 gTevStageCount;
-extern u32 gTevStageCursor;
-extern u32 gTevTexCoordCursor;
-extern u32 gTevTexMapCursor;
 extern u8 lbl_803DD059;
 extern u32 lbl_803DD048;
 extern u32 gSaveCardSerialLo;
 extern u32 lbl_803DD050;
 extern u32 lbl_803DD054;
-extern f32 gFogEndZ;
-extern f32 gFogStartZ;
-extern f32 gFogFarZ;
-extern f32 gFogNearZ;
-extern u8 gWaterFxBank;
-extern u8 gWaterRippleWriteIdx;
-extern u8 gWaterQuadWriteIdx;
-extern u16 gDepthReadPendingCount;
-extern u16 gDepthReadResultCount;
 
 void* fn_8006F388(u32 i)
 {
@@ -700,7 +672,6 @@ void fn_8006FC00(int enable)
     u8* b;
     extern u8 gWaterSplashQuads[];
     extern u8 gWaterRipples[];
-    extern u8 gWaterFxDisabled;
 
     gWaterFxDisabled = enable;
     if (enable != 0)
@@ -736,8 +707,6 @@ void mapInitFn_8006fccc(void)
 {
     extern u8 gWaterFxState[];
     extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
-    extern u32 lbl_803DCFF4;
-    extern u8 gWaterRippleWriteIdx, gWaterQuadWriteIdx, gWaterFxDisabled;
     int i;
     u8* base = gWaterFxState;
     u8* a = base + 0x1020;
@@ -994,8 +963,6 @@ void fogFn_80070404(f32 a, f32 b)
     extern f32 lbl_803DEED8;
     extern f32 lbl_803DEEDC;
     extern f32 gSynthFadeMask;
-    extern f32 gFogEndZ, gFogStartZ, gFogFarZ, gFogNearZ;
-    extern GXColor gFogColor;
     f32 xc, yc, x, y;
     GXColor c;
 
@@ -1023,7 +990,6 @@ void getColor803dd01c(u8* rgbOut)
 
 void fn_800704FC(u8 red, u8 green, u8 blue)
 {
-    extern GXColor gFogColor;
     gFogColor.r = red;
     gFogColor.g = green;
     gFogColor.b = blue;
@@ -1033,8 +999,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
     extern u32 lbl_803DB6F4, lbl_803DB6F8;
-    extern GXColor gFogColor;
-    extern u8 lbl_803DB678;
     extern f32 lbl_8030EAA0[3][3];
     extern void GXInitTexObj();
 
@@ -2405,7 +2369,6 @@ int modelCb_80073d04(u8* obj, int* objB)
 int moonFxCb_80074110(u8* obj, int* objB, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEF38;
-    extern u8 lbl_803DD010;
     GXColor colorK;
     GXColor colorFog;
     Mtx mtx;
@@ -2859,7 +2822,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern f32 hudMatrix[4][4];
     extern f32 lbl_803DEEDC;
-    extern u8 gHudTintAlpha;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -2931,7 +2893,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern u8 gHudTintAlpha;
     f32 scale = hudScale;
     f32 fy4, fx4, fy3, fx3, fy2, fx2, fy1, fx1;
     fx1 = scale * x1;
@@ -3013,7 +2974,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern u8 gHudTintAlpha;
     f32 scale = hudScale;
     f32 fy3, fx3, fy2, fx2, fy1, fx1;
     fx1 = scale * x1;
@@ -3171,7 +3131,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
                         int v_offset)
 {
     extern f32 hudScale;
-    extern u8 gHudTintAlpha;
     extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w;
@@ -3344,7 +3303,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
 {
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern u8 gHudTintAlpha;
     extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w, h;
@@ -3484,7 +3442,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern f32 hudScale;
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
-    extern u8 gHudTintAlpha;
     extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
@@ -3600,7 +3557,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern f32 hudScale;
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
-    extern u8 gHudTintAlpha;
     extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w, h;
@@ -3784,7 +3740,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 gFogEndZ, gFogStartZ, gFogFarZ, gFogNearZ;
     extern GXColor lbl_803E8454;
     extern void fn_8006C5B8(int* out);
     Mtx m58;
@@ -3876,7 +3831,6 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     extern u8 lbl_803DEEB0;
     extern u8 lbl_803DEEB2;
     extern u32 lbl_803E8450;
-    extern f32 gFogStartZ, gFogEndZ, gFogNearZ, gFogFarZ;
     extern u8 lbl_802C1EA8[0xC0];
     extern void fn_8006C5B8(int* out);
     typedef struct
@@ -4388,9 +4342,6 @@ void geomDrawFn_800796f0(void)
  */
 void textRenderSetupFn_80079804(void)
 {
-    extern u8 gTevIndStageCount, gTevChanCount, gTevTexGenCount, gTevStageCount;
-    extern u8 gHudTintAlpha;
-    extern u32 gTevStageCursor;
     GXColor c;
 
     GXSetNumIndStages(gTevIndStageCount);
@@ -4584,7 +4535,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
-    extern f32 lbl_803DD00C;
     extern f32 gSynthFadeMask, gSynthDelayedActionWord0, timeDelta;
     extern f32 hudMatrix[4][4];
     extern u16 fn_8000FA90(void);
@@ -5309,7 +5259,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF64;
     extern u32 lbl_803DB690, lbl_803DB694, lbl_803DB698;
-    extern GXColor gFogColor;
     extern f32 lbl_8030EA10[3][3];
 
     u8* indBase = (u8*)lbl_8030EA10;
@@ -5490,7 +5439,6 @@ void fn_8007C664(int texHandle)
     extern f32 gSynthDelayedActionWord0;
     extern GXColor lbl_803DB688;
     extern GXColor lbl_803DB68C;
-    extern u8 lbl_803DB678;
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -5584,7 +5532,6 @@ void fn_8007CAF4(void)
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
     extern GXColor lbl_803DB680;
     extern GXColor lbl_803DB684;
-    extern u8 lbl_803DB678;
 
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
@@ -5681,8 +5628,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern f32 lbl_803DEF40, lbl_803DEF88;
     extern f32 lbl_803DEF84;
     extern u32 lbl_803DB67C;
-    extern GXColor gFogColor;
-    extern u8 lbl_803DB678;
     extern f32 gSynthDelayedActionWord0;
 
     Mtx mtx_cc;
