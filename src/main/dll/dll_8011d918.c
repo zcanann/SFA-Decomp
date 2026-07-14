@@ -8,14 +8,12 @@
  * each command. Used by the C-menu code in dll 0x00 (gameui).
  */
 #include "ghidra_import.h"
+#include "main/audio/sfx_limited_object_api.h"
 #include "main/dll/dll_8011d918.h"
 
 #pragma scheduling off
 
 extern s16 gCMenuActivatedId;
-/* u16 sfxId is load-bearing: retail masks the arg (clrlwi r4,r4,16) at this
- * call site, unlike the int-sfxId decl in sfx.h/engine_shared.h. */
-extern u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit);
 
 void cMenuPlayTrickyCommandSfx(int obj)
 {
@@ -43,6 +41,6 @@ void cMenuPlayTrickyCommandSfx(int obj)
     }
     if (sfx != 0)
     {
-        Sfx_PlayFromObjectLimited(obj, sfx, 1);
+        Sfx_PlayFromObjectLimitedU32U16Legacy(obj, sfx, 1);
     }
 }
