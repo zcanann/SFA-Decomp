@@ -22,7 +22,6 @@ void fn_802960F4(GameObject* player, f32** outFxOffsets);
 f32 fn_8029610C(GameObject* obj);
 void fn_80296124(GameObject* player, const Vec3f* position, const Vec3s* rotation, int unused);
 void fn_802961A4(GameObject* obj, int* outMove, f32* outChargeLevel);
-void fn_802961FC(GameObject* player, int mode);
 int objGetAnimState80A(GameObject* obj);
 int objGetAnimStateFlags(GameObject* obj, int flag);
 int objIsCurModelNotZero(void* obj);

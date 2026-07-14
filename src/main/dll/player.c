@@ -114,6 +114,7 @@ int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
 void fn_802960E4(void);
+void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8);
 int fn_80297498(void);
@@ -379,16 +380,14 @@ int fn_80295CBC(GameObject* obj)
     return inner->baddie.controlMode == 0x13;
 }
 
-asm void fn_802961FC(GameObject* player, int type)
+void fn_802961FC(int a, u8 type)
 {
-    nofralloc
-    clrlwi r0, r4, 24
-    cmplwi r0, 2
-    ble fn_802961FC_store
-    li r4, 0
-fn_802961FC_store:
-    stb r4, lbl_803DE459
-    blr
+    u8 v = type;
+    if (type > 2)
+    {
+        v = 0;
+    }
+    lbl_803DE459 = v;
 }
 
 int fn_8029630C(GameObject* obj)
