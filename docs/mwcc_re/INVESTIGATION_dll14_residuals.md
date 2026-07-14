@@ -333,3 +333,14 @@ our version lacks or scopes differently (candidates: x/z corner staging across t
 or the pairGid/np value lifetimes). Compare the K=1 block's LIVE SET (target vs probe)
 instruction-by-instruction - the register content difference at any point inside
 0x9a4-0xa40 names the missing web directly. Best probe remains wgfep_8anchors.c.
+
+## 8-anchor probe residue = single-slot rotation
+Remaining saved-reg mismatches form one rotation: curve 23->22 (33x), slot 24->23 (5x),
+np/back 28->24 (9x), slot36 29->28 (12x). One additional parked web in the r24-r29 band
+(the pl block-1 chain parking, as in target) rotates ALL of them into place - confirmed
+directionally by the mass-helper test which fixed curve. The K=1 block is otherwise
+instruction- AND FPR-identical to target (verified side-by-side). Everything now reduces
+to making that ONE chain park: +1 real interference edge at its live range. Folding-proof
+lever forms to try next: a substantive inline helper (angleDelta-style real computation)
+in the K=1 dataflow, or restructuring which corner value stays live across the K=1 sqrtf.
+Volatile/f-perm shuffles downstream will settle with the rotation.
