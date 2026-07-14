@@ -40,6 +40,7 @@
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/frame_timing.h"
+#include "main/model_light.h"
 
 typedef struct
 {
@@ -60,9 +61,6 @@ extern f32 gSpiritDoorLockScaleDecay;
 extern f32 gSpiritDoorLockSpinDownRate;
 extern f32 gSpiritDoorLockOrbitOffsetY;
 extern const f32 gSpiritDoorLockOrbitMaxDist;
-extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
-extern void modelLightStruct_freeSlot(void** lightSlot);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 extern void Obj_TransformLocalVectorByWorldMatrix(int obj, f32* in, f32* out);
 
 int SpiritDoorLock_getExtraSize(void)
@@ -77,9 +75,9 @@ int SpiritDoorLock_getObjectTypeId(void)
 void SpiritDoorLock_free(GameObject* obj)
 {
     SpiritDoorLockState* state = obj->extra;
-    if ((void*)state->light != NULL)
+    if (state->light != NULL)
     {
-        modelLightStruct_freeSlot((void*)&state->light);
+        modelLightStruct_freeSlot(&state->light);
     }
 }
 
@@ -133,9 +131,9 @@ void SpiritDoorLock_update(GameObject* obj)
             {
                 f32 modelScale = (*(f32**)&(obj)->anim.modelInstance)[1] * (f32)(int)placement->scale;
                 (obj)->anim.rootMotionScale = modelScale * gSpiritDoorLockScaleFactor;
-                if ((void*)state->light == NULL)
+                if (state->light == NULL)
                 {
-                    state->light = modelLightStruct_createPointLight((int)obj, 0xff, 0, 0x4d, 0);
+                    state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
                 }
             }
         }
@@ -148,10 +146,10 @@ void SpiritDoorLock_update(GameObject* obj)
             if ((obj)->anim.alpha != 0)
             {
                 (obj)->anim.alpha -= 1;
-                if ((void*)state->light != NULL)
+                if (state->light != NULL)
                 {
                     u32 atten = (u32)(obj)->anim.alpha >> 2;
-                    modelLightStruct_setDistanceAttenuation((void*)state->light, (f32)(int)atten,
+                    modelLightStruct_setDistanceAttenuation(state->light, (f32)(int)atten,
                                                             (f32)(int)(atten + 10));
                 }
                 (obj)->anim.rootMotionScale *= gSpiritDoorLockScaleDecay;
@@ -159,9 +157,9 @@ void SpiritDoorLock_update(GameObject* obj)
             }
             else
             {
-                if ((void*)state->light != NULL)
+                if (state->light != NULL)
                 {
-                    modelLightStruct_freeSlot((void*)&state->light);
+                    modelLightStruct_freeSlot(&state->light);
                 }
             }
         }
@@ -255,7 +253,7 @@ void SpiritDoorLock_init(GameObject* obj, SpiritDoorLockMapData* params, int mod
     if (mode == 0)
     {
         (obj)->anim.alpha = 0;
-        state->light = modelLightStruct_createPointLight((int)obj, 0xff, 0, 0x4d, 0);
+        state->light = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
     }
 }
 

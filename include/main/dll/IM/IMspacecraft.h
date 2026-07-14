@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 #include "ghidra_import.h"
+#include "main/modellight_api.h"
 #include "main/objanim_update.h"
 #include "main/dll/curve_walker.h"
 
@@ -24,7 +25,7 @@
 
 typedef struct SpiritDoorLockState
 {
-    int light;
+    ModelLightStruct* light;
     int spinAngle;
     int active;
     int orbitCount;
