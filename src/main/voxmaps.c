@@ -911,9 +911,9 @@ searched:
         n->parentDir = parentDir;
         n->gCost = count;
         key = (u16)(n->hCost + n->gCost);
-        q = state->queue;
         {
             s16 qcnt = state->queueCount;
+            q = state->queue;
             for (slot = 0; slot <= qcnt; slot++)
             {
                 if ((u16)foundIdx == q[slot].value)
