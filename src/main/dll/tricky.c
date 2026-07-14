@@ -1323,11 +1323,10 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
-    if (base->magicCur >= lbl_803E1E3C || base->scarabCur >= lbl_803E1E3C || base->keyCur >= lbl_803E1E3C ||
-        cMenuFadeCounter != 0)
+    if (base->magicCur >= 0.0f || base->scarabCur >= 0.0f || base->keyCur >= 0.0f || cMenuFadeCounter != 0)
         op = hudElementOpacity;
     else
-        op = lbl_803E1E3C;
+        op = 0.0f;
     if (op > lbl_803DD844)
     {
         f32 t = lbl_803E1FA0 * timeDelta + lbl_803DD844;
@@ -1339,8 +1338,8 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     {
         f32 t = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
         lbl_803DD844 = t;
-        if (t < *(f32*)&lbl_803E1E3C)
-            lbl_803DD844 = lbl_803E1E3C;
+        if (t < 0.0f)
+            lbl_803DD844 = 0.0f;
     }
     alpha = lbl_803DD83C;
     if ((u8)alpha != 0)
@@ -1412,9 +1411,12 @@ void hudDrawFn_80121440(int unused1, int unused2, int unused3)
     }
     {
         int camMode = (*gCameraInterface)->getMode();
-        if (camMode < 0x49 && camMode >= 0x47)
+        switch (camMode)
         {
+        case 0x47:
+        case 0x48:
             drawTexture(base->icon354, lbl_803E1F9C, (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
+            break;
         }
     }
     GXSetScissor(0, 0, 0x280, 0x1e0);
