@@ -529,7 +529,6 @@ void TitleScreen_update(u8* obj)
 {
     extern void fn_8003B228(GameObject * obj, void* p);
     extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);
-    extern void Sfx_PlayFromObject(u8 * obj, u32 sfxId);
     extern void fn_80134870(u8 * obj, u8 * arr);
 
     u8* state = ((GameObject*)obj)->extra;
@@ -577,7 +576,7 @@ void TitleScreen_update(u8* obj)
             {
                 Sfx_StopFromObject(obj, SFXTRIG_fend_pep_snoreout);
                 Sfx_StopFromObject(obj, SFXTRIG_fend_pep_snorein);
-                Sfx_PlayFromObject(obj, SFXTRIG_fend_pep_wakeup);
+                Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_pep_wakeup);
             }
         }
         t = ((GameObject*)obj)->anim.seqId;
@@ -700,7 +699,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2364)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fened_pep_yawn);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fened_pep_yawn);
                     row[phaseSel * 3] = 1;
                 }
                 break;
@@ -721,7 +720,7 @@ void TitleScreen_update(u8* obj)
                     }
                     else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2368)
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_fend_slip_fingersnap);
+                        Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_slip_fingersnap);
                         row[phaseSel * 3] = 1;
                     }
                     p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + phaseSel * 3 + 1;
@@ -732,7 +731,7 @@ void TitleScreen_update(u8* obj)
                     }
                     else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E236C)
                     {
-                        Sfx_PlayFromObject(obj, SFXTRIG_fend_slip_fingersnap);
+                        Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_slip_fingersnap);
                         *p = 1;
                     }
                 }
@@ -751,7 +750,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2370)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_wave);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_wave);
                     row[phaseSel * 3] = 1;
                 }
                 break;
@@ -764,7 +763,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2374)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_armout);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_armout);
                     row[phaseSel * 3] = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + phaseSel * 3 + 1;
@@ -775,7 +774,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2378)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_beep);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_beep);
                     *p = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + phaseSel * 3 + 2;
@@ -786,7 +785,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E237C)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_armin);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_armin);
                     *p = 1;
                 }
                 break;
@@ -799,7 +798,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2368)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_beep);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_beep);
                     row[phaseSel * 3] = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + phaseSel * 3 + 1;
@@ -810,7 +809,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2380)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_beep);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_beep);
                     *p = 1;
                 }
                 p = gTitleScreenSfxFlagGrid + (((GameObject*)obj)->anim.seqId - 0x77d) * 0x12 + phaseSel * 3 + 2;
@@ -821,7 +820,7 @@ void TitleScreen_update(u8* obj)
                 }
                 else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E2384)
                 {
-                    Sfx_PlayFromObject(obj, SFXTRIG_fend_rob_beep);
+                    Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_rob_beep);
                     *p = 1;
                 }
                 break;
