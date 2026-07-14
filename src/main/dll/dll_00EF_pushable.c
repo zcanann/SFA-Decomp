@@ -5,6 +5,7 @@
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/object_render_legacy.h"
 #include "main/object_update_list.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -102,7 +103,6 @@ extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
 extern int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
-extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 extern int playerIsDisguised(void* player);
 extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
@@ -1407,6 +1407,6 @@ void pushable_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             char* hdr = (char*)Transporter_GetActiveModel(obj);
             *(u16*)(*(char**)hdr + 2) = *(u16*)(*(char**)hdr + 2) | 2;
         }
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E3588);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E3588);
     }
 }
