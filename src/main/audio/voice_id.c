@@ -32,7 +32,6 @@ extern u32 vidCurrentId;
 extern void* vidRoot;
 extern void* vidFree;
 extern u16 voicePrioSortRootListRoot;
-extern McmdVoiceState* synthVoice;
 
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
@@ -58,12 +57,12 @@ extern McmdVoiceState* synthVoice;
     s->field->prev = 0;                                                                                                \
     vidFree = s->field
 
-void vidRemoveVoice(int state)
+void vidRemoveVoice(McmdVoiceState* state)
 {
-    McmdVoiceState* s = (McmdVoiceState*)state;
+    McmdVoiceState* s = state;
     if (s->voiceHandle != 0xffffffff)
     {
-        voiceUnregister(state);
+        voiceUnregister((int)state);
         if (s->voicePrevHandle != 0xffffffff)
         {
             synthVoice[s->voicePrevHandle & 0xff].voiceNextHandle = s->voiceNextHandle;
@@ -107,9 +106,9 @@ void vidRemoveVoice(int state)
  * Snapshot the current entry's `next` pointer (state->[0xf8]) into the
  * cached field (state->[0xfc]) and return that next entry's id field.
  */
-int vidMakeRoot(int state)
+u32 vidMakeRoot(McmdVoiceState* state)
 {
-    McmdVoiceState* s = (McmdVoiceState*)state;
+    McmdVoiceState* s = state;
     s->vidMasterListNode = s->vidListNode;
     return s->vidListNode->id;
 }
@@ -119,9 +118,9 @@ int vidMakeRoot(int state)
  * sorted-by-id list to skip any already-in-use ids. Used to assign
  * fresh handles to dynamically-allocated voices.
  */
-u32 vidMakeNew(int state, int returnNewId)
+u32 vidMakeNew(McmdVoiceState* state, int returnNewId)
 {
-    McmdVoiceState* s = (McmdVoiceState*)state;
+    McmdVoiceState* s = state;
     u32 nextId;
     int** cursor;
     int** node;

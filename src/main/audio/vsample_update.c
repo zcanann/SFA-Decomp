@@ -1,4 +1,5 @@
 #include "main/audio/vsample_update.h"
+#include "main/audio/mcmd.h"
 
 #pragma exceptions on
 #include "main/audio/hw_stream.h"
@@ -20,7 +21,6 @@ typedef struct
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND        0xfff
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
 
-extern u8* synthVoice;
 extern u16 synthLoadedGroupCount;
 
 extern u32 hwGetVirtualSampleState(int slot);
@@ -100,7 +100,7 @@ void synthUpdateVirtualSamples(void)
                     }
                     *(u32*)(entry + VIRTUAL_SAMPLE_LAST_TICK_OFFSET) = currentTick;
 
-                    if ((s32)(u32)((s32)(*(u16*)(synthVoice +
+                    if ((s32)(u32)((s32)(*(u16*)((u8*)synthVoice +
                                                  entry[VIRTUAL_SAMPLE_VOICE_OFFSET] *
                                                      SYNTH_VIRTUAL_SAMPLE_VOICE_STRIDE +
                                                  SYNTH_VIRTUAL_SAMPLE_VOICE_RELEASE_OFFSET) *

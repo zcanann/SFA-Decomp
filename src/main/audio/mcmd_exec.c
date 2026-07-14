@@ -11,7 +11,6 @@
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/mcmd_wait.h"
 extern int mcmdLoop();
-extern u8* synthVoice;
 extern u8 lbl_803BD150[];
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
@@ -22,7 +21,6 @@ extern u32 lbl_803BDA34[];
 extern u32 voiceIsRegistered(int state);
 extern void (*synthMessageCallback)(u32 id, u32 message);
 
-#define SYNTH_VOICE_STRIDE      0x404
 #define SYNTH_GLOBAL_REG(index) (lbl_803BDA34[(index) - 0x10])
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
@@ -362,7 +360,7 @@ static inline u32 macPostMessage(u32 vid, u32 mesg)
     u32 v;
 
     if ((v = vidGetInternalId(vid)) != 0xffffffff &&
-        (sv = (McmdVoiceState*)(synthVoice + (v & 0xff) * SYNTH_VOICE_STRIDE))->queuedMessageCount < 4)
+        (sv = &synthVoice[v & 0xff])->queuedMessageCount < 4)
     {
         ++sv->queuedMessageCount;
         sv->queuedMessages[sv->queuedMessageWriteIndex] = mesg;
@@ -431,7 +429,7 @@ void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
     {
         for (i = 0; i < lbl_803BD150[0x210]; i++)
         {
-            voice = (McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE);
+            voice = &synthVoice[i];
             if (voice->macroBase != 0 && (MAC_CFLAGS(voice) & MAC_FLAG64(0, 2)) == 0 && kg == voice->keyGroup)
             {
                 if (kill == 0)
@@ -644,7 +642,7 @@ void macHandleActive(McmdVoiceState* sv)
         }
 
         inpSetMidiLastNote(sv->midiSlot, sv->midiEvent, sv->keyBase);
-        voiceRegister((int)sv);
+        voiceRegister(sv);
         sv->vGroup = sv->startupVGroup;
         sv->studio = sv->startupStudio;
         sv->portamentoTime = 0;
@@ -711,12 +709,12 @@ void macHandleActive(McmdVoiceState* sv)
         switch (cmd & 0x7f)
         {
         case 0x0: /* end of macro */
-            vidRemoveVoice((int)sv);
+            vidRemoveVoice(sv);
             voiceFree((int)sv);
             ex = 1;
             break;
         case 0x1: /* stop */
-            vidRemoveVoice((int)sv);
+            vidRemoveVoice(sv);
             voiceFree((int)sv);
             ex = 1;
             break;
@@ -760,7 +758,7 @@ void macHandleActive(McmdVoiceState* sv)
             }
             else
             {
-                vidRemoveVoice((int)sv);
+                vidRemoveVoice(sv);
                 voiceFree((int)sv);
                 stop = 1;
             }
@@ -1032,7 +1030,7 @@ void macHandleActive(McmdVoiceState* sv)
             }
             else
             {
-                vidRemoveVoice((int)sv);
+                vidRemoveVoice(sv);
                 voiceFree((int)sv);
                 stop = 1;
             }
@@ -1526,8 +1524,8 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol, 
 
         if ((voice = voiceAllocate(priority, maxVoices, allocId, fxFlag != 0 ? 1 : 0)) != 0xffffffff)
         {
-            sv = (McmdVoiceState*)(synthVoice + voice * SYNTH_VOICE_STRIDE);
-            vidRemoveVoice((int)sv);
+            sv = &synthVoice[voice];
+            vidRemoveVoice(sv);
             if (sv->queueMode != 2)
             {
                 if (sv->queueMode == 0)
@@ -1601,7 +1599,7 @@ u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol, 
             sv->voiceHandle = voice | ((macid << 0x10) | ((key & 0xff) << 8));
             voiceSetPriority(sv, priority);
 
-            if ((vid = vidMakeNew((int)sv, new_vid)) != 0xffffffff)
+            if ((vid = vidMakeNew(sv, new_vid)) != 0xffffffff)
             {
                 if (sv->queueMode != 0)
                 {

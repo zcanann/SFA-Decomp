@@ -16,7 +16,6 @@
 
 extern u8 lbl_803CD760[];
 extern u8 lbl_803BD150[];
-extern McmdVoiceState* synthVoice;
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* voice);
 
 static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)

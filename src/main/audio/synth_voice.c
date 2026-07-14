@@ -62,7 +62,6 @@ extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxBIndex[8];
 extern u8 synthAuxAMIDI[8];
 extern u8 synthAuxAIndex[8];
-extern u8* synthVoice;
 extern int synthRealTimeHi;
 extern f32 lbl_803E77D0;
 
@@ -207,7 +206,7 @@ typedef struct SynthHwVoice
     u8 unk402[2];
 } SynthHwVoice;
 
-#define HWVOICE(i)        ((SynthHwVoice*)(synthVoice + (i) * 0x404))
+#define HWVOICE(i)        ((SynthHwVoice*)((u8*)synthVoice + (i) * 0x404))
 #define HWVOICE_FLAGS(sv) (*(u64*)&(sv)->cFlagsHi)
 
 typedef struct SynthMasterFader
@@ -1023,7 +1022,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
         SynthDelayedNode* next = node->next;
         node->bucketIndex = 0xff;
         {
-            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + synthVoice + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
+            if (*(u8*)(node->voiceIndex * SYNTH_VOICE_SLOT_SIZE + (u8*)synthVoice + SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET) == 0)
             {
                 callback(node->voiceIndex);
             }

@@ -1,5 +1,4 @@
 #include "main/dll/synthfade_struct.h"
-#include "main/audio/inp_ctrl.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/voice_manage.h"
 

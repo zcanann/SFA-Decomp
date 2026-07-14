@@ -34,7 +34,6 @@ extern u8 synthAuxBIndex[8];
 extern u8 synthAuxAMIDI[8];
 extern u8 synthAuxAIndex[8];
 extern u32 synthFlags;
-extern u8* synthVoice;
 
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
 extern void hwRemoveInput(u8 idx, void* input);
@@ -186,7 +185,7 @@ void sndOutputMode(int mode)
         u32 i;
         for (i = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; ++i)
         {
-            *(u64*)(synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
+            *(u64*)((u8*)synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
         }
         synthRefreshJobVolumes();
     }
@@ -265,7 +264,7 @@ void synthDeactivateStudio(u8 slot)
     offset = 0;
     for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++)
     {
-        voice = synthVoice + offset;
+        voice = (u8*)synthVoice + offset;
         if (slot == ((McmdVoiceState*)voice)->studio)
         {
             if (((McmdVoiceState*)voice)->voiceHandle != 0xffffffff)

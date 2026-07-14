@@ -136,7 +136,10 @@ typedef struct McmdMacroStackEntry {
 
 typedef struct McmdVoiceState {
     u8 unk00[0x34];
-    u8 *macroBase;
+    union {
+        u8 *macroBase;
+        u32 activeHandle;
+    };
     u8 *macroCursor;
     struct McmdVoiceState *activeNext;
     struct McmdVoiceState *activePrev;
@@ -177,11 +180,17 @@ typedef struct McmdVoiceState {
     union {
         u32 voiceNextHandle;
         u32 callbackNext;
+        u32 child;
+        u32 nextHandle;
     };
-    u32 voicePrevHandle;
+    union {
+        u32 voicePrevHandle;
+        u32 parent;
+    };
     union {
         u32 voiceHandle;
         u32 callbackLinkId;
+        u32 handle;
         u8 voiceHandleBytes[4];
     };
     McmdVidListNode *vidListNode;
@@ -194,19 +203,26 @@ typedef struct McmdVoiceState {
     u8 priorityGroup;
     u8 unk10D;
     u16 priorityScale;
-    u32 priorityValue;
+    union {
+        u32 priorityValue;
+        u32 priorityTick;
+    };
     u32 inputFlags;
     u32 outputFlags;
     union {
         u8 macroAllocating;
         u8 callbackActive;
+        u8 block;
     };
     u8 streamKind;
     u8 vGroup;
     u8 studio;
     u8 track;
     u8 midiSlot;
-    u8 midiEvent;
+    union {
+        u8 midiEvent;
+        u8 midiChannel;
+    };
     u8 midiLayer;
     u32 prevSampleId;
     u32 targetPitch;
@@ -315,6 +331,8 @@ typedef struct McmdVoiceState {
     u16 curOutputVolume;
     u8 unk402[2];
 } McmdVoiceState;
+
+extern McmdVoiceState* synthVoice;
 
 #ifdef STATIC_ASSERT /* mcmd.h has no includes of its own; assert when global.h is in scope */
 STATIC_ASSERT(offsetof(McmdVoiceState, voiceNextHandle) == 0xEC);

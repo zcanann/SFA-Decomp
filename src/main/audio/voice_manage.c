@@ -1,4 +1,5 @@
 #include "main/audio/voice_manage.h"
+#include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
 
@@ -13,7 +14,6 @@ typedef struct VoiceListNode
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
-extern SynthVoiceState* synthVoice;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
@@ -97,12 +97,12 @@ void voiceBreakAndFree(u32 voice)
  */
 void voiceKill(u32 voice)
 {
-    SynthVoiceState* voiceState = SYNTH_VOICE_STATE(voice);
+    McmdVoiceState* voiceState = SYNTH_VOICE_STATE(voice);
 
     if (voiceState->activeHandle != 0)
     {
-        vidRemoveVoice((int)voiceState);
-        voiceState->cFlags &= ~3;
+        vidRemoveVoice(voiceState);
+        *(u64*)&voiceState->inputFlags &= ~3;
         voiceState->priorityTick = 0;
         voiceFree((int)voiceState);
     }
@@ -156,7 +156,7 @@ int voiceKillById(u32 id)
  */
 int voiceIsRegistered(int state)
 {
-    SynthVoiceState* voiceState = (SynthVoiceState*)state;
+    McmdVoiceState* voiceState = (McmdVoiceState*)state;
     u32 voice = voiceState->handle;
     u8 slot;
     u8 channel;
@@ -183,9 +183,9 @@ fail:
 /*
  * Register the state's voice id in either the 1D or 2D slot table.
  */
-void voiceRegister(int state)
+void voiceRegister(McmdVoiceState* state)
 {
-    SynthVoiceState* voiceState = (SynthVoiceState*)state;
+    McmdVoiceState* voiceState = state;
     u32 voice = voiceState->handle;
     u8 slot;
     u8 channel;

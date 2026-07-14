@@ -1,4 +1,5 @@
 #include "main/audio/data_ref.h"
+#include "main/audio/mcmd.h"
 #include "main/audio/synth_job.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/voice_manage.h"
@@ -30,7 +31,6 @@ extern u16 dataKeymapNum;
 extern f32 lbl_803E77D8;
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
-extern u8* synthVoice;
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern int hwChangeStudio(int slot);   /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */
@@ -81,7 +81,7 @@ void synthUpdateJobTable(void)
                 break;
             }
             hwInitSamplePlayback(si->voice, 0xFFFF, &newsmp, 1, -1,
-                                 *(u32*)(synthVoice + si->voice * SYNTH_VOICE_STRIDE + 0xF4), 1, 1);
+                                 synthVoice[si->voice].voiceHandle, 1, 1);
             f = (f32)si->frq / (f32) * (u32*)lbl_803BD150;
             hwSetPitch(si->voice, f * 4096.0f);
             hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16,

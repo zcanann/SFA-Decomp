@@ -2,10 +2,11 @@
 #define MAIN_AUDIO_VOICE_ID_H_
 
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
-void vidRemoveVoice(int state);
-int vidMakeRoot(int state);
-u32 vidMakeNew(int state, int returnNewId);
+void vidRemoveVoice(McmdVoiceState* state);
+u32 vidMakeRoot(McmdVoiceState* voice);
+u32 vidMakeNew(McmdVoiceState* state, int returnNewId);
 int vidGetInternalId(u32 id);
 void voiceRemovePriority(int state);
 

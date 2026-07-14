@@ -16,21 +16,10 @@ typedef struct LAYER
     u8 reserved[3];
 } LAYER;
 
-typedef struct LayerVoice
-{
-    u8 pad0[0xEC];
-    u32 child;
-    u32 parent;
-    u8 padF4[0x11C - 0xF4];
-    u8 block;
-    u8 pad11D[0x404 - 0x11D];
-} LayerVoice;
-
 #ifndef NULL
 #define NULL ((void*)0)
 #endif
 
-extern LayerVoice* synthVoice;
 extern void* dataGetLayer(u16 cid, u16* n);
 extern u16 inpGetMidiCtrl(u8 ctrl, u8 midi, u8 midiSet);
 extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* rejected);
@@ -38,7 +27,7 @@ extern u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u
                     u8 section, u16 step, u16 trackid, u8 new_vid, u8 vGroup, u8 studio, u32 itd);
 extern u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 panning, u8 midi,
                        u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
-extern u32 vidMakeRoot(LayerVoice* voice);
+extern u32 vidMakeRoot(McmdVoiceState* voice);
 
 u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 panning, u8 midi,
                           u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd)

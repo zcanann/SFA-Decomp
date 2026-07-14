@@ -5,7 +5,6 @@
 #include "main/audio/data_tables.h"
 
 #pragma exceptions on
-extern McmdVoiceState* synthVoice;
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
 extern void sndConvertMs(u32* p);

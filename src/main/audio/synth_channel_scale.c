@@ -2,13 +2,11 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/snd_synth_legacy.h"
+#include "main/audio/voice_id.h"
+#include "main/audio/voice_manage.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #pragma exceptions on
-
-#ifndef SYNTH_VOICE_STRIDE
-#define SYNTH_VOICE_STRIDE 0x404
-#endif
 
 typedef struct
 {
@@ -62,7 +60,6 @@ typedef struct
 
 extern u8 lbl_803BCD90[];
 extern u8 lbl_803BD150[];
-extern u8* synthVoice;
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;
@@ -76,9 +73,6 @@ extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 extern SynthPool lbl_803AF550;
 
-extern u32 vidMakeNew(McmdVoiceState* svoice, u32 isMaster);
-extern void vidRemoveVoice(McmdVoiceState* svoice);
-extern void voiceRegister(McmdVoiceState* svoice);
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
@@ -437,12 +431,12 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                 voice->fineTune = 0;
                 voice->portamentoTime = 0;
                 voice->outputFlags = voice->outputFlags | 0x20000LL;
-                vidRemoveVoice((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE));
+                vidRemoveVoice(&synthVoice[i]);
                 if (result == 0xffffffff)
                 {
                     voice->voiceNextHandle = 0xffffffff;
                     voice->voicePrevHandle = 0xffffffff;
-                    result = vidMakeNew((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE), voiceGroup);
+                    result = vidMakeNew(&synthVoice[i], voiceGroup);
                     previousId = voice->voiceHandle;
                 }
                 else
@@ -450,7 +444,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
                     ((McmdVoiceState*)synthVoice)[previousId & 0xff].voiceNextHandle = voice->voiceHandle;
                     voice->voicePrevHandle = previousId;
                     previousId = voice->voiceHandle;
-                    vidMakeNew((McmdVoiceState*)(synthVoice + i * SYNTH_VOICE_STRIDE), 0);
+                    vidMakeNew(&synthVoice[i], 0);
                 }
             }
         }
