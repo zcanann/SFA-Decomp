@@ -1037,7 +1037,7 @@ void pushable_hitDetect(GameObject* obj)
                             u32 contactObj;
                             *hp = probeY;
                             tmpY = tmpY + probeY;
-                            contactObj = (u32)hit->object;
+                            contactObj = (u32)(*(TrackGroundHit**)((u8*)list + off))->object;
                             if (contactObj != 0)
                             {
                                 ObjHits_AddContactObject(contactObj, obj);
