@@ -3002,7 +3002,10 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             }
             gameTextShowStr(buf2, 0x79, 0, textX + 0x78);
             gameTextMeasureS32(buf2, 0x79, 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + textX;
+            {
+                s32 textWidth = b8 - bc;
+                textX = textWidth + textX;
+            }
             textX += 5;
             gameTextFn_80016810(0x441, 0, textX + 0x78);
             gameTextBoundsS32(0x441, 0, 0, &b14, &b10, &bc, &b8);
