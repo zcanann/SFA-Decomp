@@ -63,6 +63,8 @@ extern f32 lbl_803E4008;
 extern const f32 lbl_803E4018;
 
 extern int return0_80060B90(void* blk);
+extern u32 mapBlockFn_80060678(int* block);
+extern void* mapBlockFn_800606ec(int* block, int idx);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {
@@ -93,8 +95,6 @@ f32 objFn_801948c0(u8* obj, u8 coord)
 #pragma opt_lifetimes off
 void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block)
 {
-    extern u32 mapBlockFn_80060678(int* block);
-    extern void* mapBlockFn_800606ec(int* obj, int idx);
     int edgeOffset[1];
     int coordOffset[1];
     int triangleOffset[1];
@@ -167,8 +167,6 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 #pragma opt_loop_invariants off
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 {
-    extern u32 mapBlockFn_80060678(int* block);
-    extern void* mapBlockFn_800606ec(int* obj, int idx);
     VertexS16* vtx;
     int vertexOffset[1];
     int vertexIndex;
@@ -292,10 +290,6 @@ void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void XyzAnimator_update(GameObject* obj)
 {
-    extern void fn_80194C40(u8 * setup, u8 * state, int block);
-    extern void fn_80194964(u8 * setup, u8 * state, int block);
-    extern int mapBlockFn_80060678(void);
-    extern u8* mapBlockFn_800606ec(int block, int idx);
     u8* setup = *(u8**)&obj->anim.placementData;
     u8* state = obj->extra;
     int block;
@@ -319,8 +313,8 @@ void XyzAnimator_update(GameObject* obj)
     {
         for (i = 0; i < ((MapBlockData*)block)->polyGroupCount; i++)
         {
-            row = mapBlockFn_800606ec(block, i);
-            t = mapBlockFn_80060678();
+            row = mapBlockFn_800606ec((int*)block, i);
+            t = mapBlockFn_80060678((int*)row);
             if (((XyzAnimatorPlacement*)setup)->blockLayer == t)
             {
                 ((XyzAnimatorState*)state)->rowCount++;
@@ -382,12 +376,12 @@ void XyzAnimator_update(GameObject* obj)
         ((XyzAnimatorState*)state)->edgeV0zBuffer = alloc;
         alloc = alloc + stride;
         ((XyzAnimatorState*)state)->edgeV1zBuffer = alloc;
-        fn_80194964(setup, state, block);
+        fn_80194964((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
         if (((XyzAnimatorPlacement*)setup)->mode != 4)
         {
-            fn_80194C40(setup, state, block);
+            fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
             ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
-            fn_80194C40(setup, state, block);
+            fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
             ((MapBlockData*)block)->flags4 = ((MapBlockData*)block)->flags4 ^ 1;
         }
     }
@@ -742,7 +736,7 @@ void XyzAnimator_update(GameObject* obj)
         }
         break;
     }
-    fn_80194C40(setup, state, block);
+    fn_80194C40((XyzAnimatorPlacement*)setup, (XyzAnimatorState*)state, block);
 no_update:
     return;
 }
