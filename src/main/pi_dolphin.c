@@ -6984,9 +6984,10 @@ void videoInit(void)
     hi = (u32)OSGetArenaHi();
     memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
     DCStoreRange((void*)(hi - 0x40000), 0x40000);
-    lbl_803DCCE4 = (void*)0x40000;
+    fbSize = 0x40000;
+    lbl_803DCCE4 = (void*)fbSize;
     lbl_803DCCD8 = gLoadingScreenTextures;
-    DCInvalidateRange((char*)gLoadingScreenTextures, 0x40000);
+    DCInvalidateRange((char*)gLoadingScreenTextures, fbSize);
     lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
     lbl_803DCCE0 = lbl_803DCCD8;
     GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
@@ -6998,7 +6999,9 @@ void videoInit(void)
     next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
     OSSetArenaLo((void*)next);
     OSSetArenaLo((void*)(x = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
-    OSSetCurrentHeap(OSCreateHeap((void*)((x + 0x1f) & ~0x1f), (void*)(hi & ~0x1f)));
+    x = (x + 0x1f) & ~0x1f;
+    hi = hi & ~0x1f;
+    OSSetCurrentHeap(OSCreateHeap((void*)x, (void*)hi));
     VIConfigure(gRenderModeObj);
     GXInitFifoBase(fifo, externalFrameBuffer0, 0x10000);
     GXSetCPUFifo(fifo);
