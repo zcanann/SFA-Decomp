@@ -25,6 +25,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/music_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/audio/stream_api.h"
 #include "main/model_engine.h"
@@ -528,7 +529,6 @@ void fn_80134870(int obj, u8* arr);
 void TitleScreen_update(u8* obj)
 {
     extern void fn_8003B228(GameObject * obj, void* p);
-    extern void Sfx_StopFromObject(u8 * obj, u32 sfxId);
     extern void fn_80134870(u8 * obj, u8 * arr);
 
     u8* state = ((GameObject*)obj)->extra;
@@ -574,8 +574,8 @@ void TitleScreen_update(u8* obj)
                 gTitleScreenAnimMoves[((GameObject*)obj)->anim.seqId - 0x77d].moves[1];
             if (((GameObject*)obj)->anim.seqId == 0x77e)
             {
-                Sfx_StopFromObject(obj, SFXTRIG_fend_pep_snoreout);
-                Sfx_StopFromObject(obj, SFXTRIG_fend_pep_snorein);
+                Sfx_StopFromObjectPtrU32Legacy(obj, SFXTRIG_fend_pep_snoreout);
+                Sfx_StopFromObjectPtrU32Legacy(obj, SFXTRIG_fend_pep_snorein);
                 Sfx_PlayFromObjectPtrU32Legacy(obj, SFXTRIG_fend_pep_wakeup);
             }
         }
