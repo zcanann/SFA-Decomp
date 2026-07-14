@@ -32,6 +32,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/object_descriptor.h"
 
 u8 gDfShShrinePendingReward = 1;
 
@@ -140,7 +141,11 @@ extern f32 gDfShShrineFadeDistance;
 extern f32 lbl_803E4E78;
 extern f32 lbl_803E4E88;
 extern u8 gDfShShrinePendingReward;
-extern u16 gDfShShrineRewardTable[];
+u16 gDfShShrineRewardTable[50] = {
+    246, 2997,  247, 2998,  248,  249,   250,  251,   2995, 2996,  60,   60,    60,   60,    600,   600,   600,
+    600, 600,   600, 3000,  3008, 3001,  3009, 3002,  3003, 3004,  3005, 3006,  3007, 4,     36948, 4,     37071,
+    4,   37054, 4,   37083, 4,    37063, 4,    37065, 4,    37066, 4,    37067, 4,    37068, 4,     37070,
+};
 extern const f32 lbl_803E4E8C;
 
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
@@ -325,6 +330,29 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                                (ModelLightStruct*)state->light);
     }
 }
+
+void DFSH_Shrine_update(int objArg);
+void DFSH_Shrine_hitDetect(void);
+void DFSH_Shrine_release(void);
+void DFSH_Shrine_initialise(void);
+void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init);
+
+ObjectDescriptor gDFSH_ShrineObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DFSH_Shrine_initialise,
+    (ObjectDescriptorCallback)DFSH_Shrine_release,
+    0,
+    (ObjectDescriptorCallback)DFSH_Shrine_init,
+    (ObjectDescriptorCallback)DFSH_Shrine_update,
+    (ObjectDescriptorCallback)DFSH_Shrine_hitDetect,
+    (ObjectDescriptorCallback)DFSH_Shrine_render,
+    (ObjectDescriptorCallback)DFSH_Shrine_free,
+    (ObjectDescriptorCallback)DFSH_Shrine_getObjectTypeId,
+    DFSH_Shrine_getExtraSize,
+};
 
 void DFSH_Shrine_update(int objArg)
 {
@@ -550,8 +578,3 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
 
-u16 gDfShShrineRewardTable[50] = {
-    246, 2997,  247, 2998,  248,  249,   250,  251,   2995, 2996,  60,   60,    60,   60,    600,   600,   600,
-    600, 600,   600, 3000,  3008, 3001,  3009, 3002,  3003, 3004,  3005, 3006,  3007, 4,     36948, 4,     37071,
-    4,   37054, 4,   37083, 4,    37063, 4,    37065, 4,    37066, 4,    37067, 4,    37068, 4,     37070,
-};

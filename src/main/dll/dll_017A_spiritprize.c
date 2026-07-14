@@ -23,6 +23,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E98;
@@ -274,3 +275,20 @@ void SpiritPrize_update(GameObject* obj)
         }
     }
 }
+
+ObjectDescriptor gSpiritPrizeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SpiritPrize_initialise,
+    (ObjectDescriptorCallback)SpiritPrize_release,
+    0,
+    (ObjectDescriptorCallback)SpiritPrize_init,
+    (ObjectDescriptorCallback)SpiritPrize_update,
+    (ObjectDescriptorCallback)SpiritPrize_hitDetect,
+    (ObjectDescriptorCallback)SpiritPrize_render,
+    (ObjectDescriptorCallback)SpiritPrize_free,
+    (ObjectDescriptorCallback)SpiritPrize_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SpiritPrize_getExtraSize,
+};

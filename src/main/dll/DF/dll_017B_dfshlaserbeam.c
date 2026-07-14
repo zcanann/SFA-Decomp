@@ -22,6 +22,7 @@
 #include "main/texture.h"
 #include "main/obj_message.h"
 #include "main/gamebit_ids.h"
+#include "main/object_descriptor.h"
 
 typedef struct DFSHLaserBeamConfig
 {
@@ -563,3 +564,20 @@ int fn_801C49B8(void* objArg)
     }
     return 0;
 }
+
+ObjectDescriptor gDFSH_LaserBeamObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_initialise,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_release,
+    0,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_init,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_update,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_hitDetect,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_render,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_free,
+    (ObjectDescriptorCallback)DFSH_LaserBeam_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DFSH_LaserBeam_getExtraSize,
+};

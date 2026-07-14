@@ -32,6 +32,7 @@
 #include "main/sky_api.h"
 #include "main/dll/dll_018D_mmshscales.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
+#include "main/object_descriptor.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -136,6 +137,33 @@ typedef struct MMSHShrineObject
     u8 padBC[MMSH_SHRINE_LOAD_TRIGGER_TIMER - 0xBC];
     s32 loadTriggerTimer;
 } MMSHShrineObject;
+
+int MMSH_Shrine_getExtraSize(void);
+int MMSH_Shrine_getObjectTypeId(void);
+void MMSH_Shrine_free(GameObject* obj);
+void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char visible);
+void MMSH_Shrine_hitDetect(void);
+void MMSH_Shrine_update(int objArg);
+void MMSH_Shrine_init(GameObject* obj, int def);
+void MMSH_Shrine_release(void);
+void MMSH_Shrine_initialise(void);
+
+ObjectDescriptor gMMSH_ShrineObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)MMSH_Shrine_initialise,
+    (ObjectDescriptorCallback)MMSH_Shrine_release,
+    0,
+    (ObjectDescriptorCallback)MMSH_Shrine_init,
+    (ObjectDescriptorCallback)MMSH_Shrine_update,
+    (ObjectDescriptorCallback)MMSH_Shrine_hitDetect,
+    (ObjectDescriptorCallback)MMSH_Shrine_render,
+    (ObjectDescriptorCallback)MMSH_Shrine_free,
+    (ObjectDescriptorCallback)MMSH_Shrine_getObjectTypeId,
+    MMSH_Shrine_getExtraSize,
+};
 
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {

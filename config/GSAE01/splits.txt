@@ -2298,21 +2298,24 @@ main/dll/DF/dll_0177_dfshdoor2speci.c:
 
 main/dll/DF/dll_0178_dfshshrine.c:
 	.text       start:0x801C2914 end:0x801C3618
-	.data       start:0x80325F88 end:0x80325FEC
+	.data       start:0x80325F88 end:0x80326048
 	.sdata      start:0x803DBF60 end:0x803DBF68
 
 main/dll/dll_017A_spiritprize.c:
 	.text       start:0x801C3618 end:0x801C3B68
+	.data       start:0x80326048 end:0x80326080
 
 main/dll/DF/dll_0179_dfshobjcreator.c:
 	.text       start:0x801C3B68 end:0x801C3E3C
+	.data       start:0x80326080 end:0x803260B8
 
 main/dll/DF/dll_017B_dfshlaserbeam.c:
 	.text       start:0x801C3E3C end:0x801C4B10
+	.data       start:0x803260B8 end:0x803260F0
 
 main/dll/dll_018C_mmshshrine.c:
 	.text       start:0x801C4B10 end:0x801C53A0
-	.data       start:0x80326128 end:0x803261D8
+	.data       start:0x803260F0 end:0x803261D8
 
 main/dll/dll_018D_mmshscales.c:
 	.text       start:0x801C53A0 end:0x801C578C

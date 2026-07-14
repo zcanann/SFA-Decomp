@@ -15,6 +15,7 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/object_descriptor.h"
 
 /* Obj_AllocObjectSetup(0x38,...) buffer composed in DFSH_ObjCreator_update.
  * Head is the common ObjPlacement; tail (0x18..0x37) is file-local. */
@@ -170,3 +171,20 @@ void DFSH_ObjCreator_release(void)
 void DFSH_ObjCreator_initialise(void)
 {
 }
+
+ObjectDescriptor gDFSH_ObjCreatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_initialise,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_release,
+    0,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_init,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_update,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_hitDetect,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_render,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_free,
+    (ObjectDescriptorCallback)DFSH_ObjCreator_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DFSH_ObjCreator_getExtraSize,
+};
