@@ -20,6 +20,14 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/rcp_dolphin_api.h"
 
+struct JapaneseDiscStatusResource;
+struct EnglishDiscStatusResource;
+extern struct JapaneseDiscStatusResource lbl_802C981C;
+extern struct EnglishDiscStatusResource sDiscStatusMessageTable;
+extern char sDiscReadingMessage[];
+extern char sDiscInsertPromptLine[];
+extern char sDiscInsertGameDiscLine[];
+
 void* lbl_803DB378 = (void*)-1;
 #pragma explicit_zero_data on
 char lbl_803DB37C[4] = {0};
@@ -33,14 +41,14 @@ char lbl_803DB398[4] = {0};
 #pragma explicit_zero_data off
 char lbl_803DB39C[4] = "\xE3\x80\x80";
 #pragma explicit_zero_data on
-char* lbl_803DB3A0[1] = {0};
+char* lbl_803DB3A0[1] = {(char*)&lbl_802C981C};
 char lbl_803DB3A4[4] = {0};
 char lbl_803DB3A8[4] = {0};
-char* lbl_803DB3AC[1] = {0};
+char* lbl_803DB3AC[1] = {sDiscReadingMessage};
 char lbl_803DB3B0[4] = {0};
-char* lbl_803DB3B4[2] = {0};
+char* lbl_803DB3B4[2] = {sDiscInsertPromptLine, sDiscInsertGameDiscLine};
 char lbl_803DB3BC[4] = {0};
-char* lbl_803DB3C0[1] = {0};
+char* lbl_803DB3C0[1] = {(char*)&sDiscStatusMessageTable};
 #pragma explicit_zero_data off
 int lbl_803DB3C4 = 0x800;
 int gGameTextClearColor = 0xC0;
@@ -588,7 +596,7 @@ char* lbl_802C97F8[] = {
  * status messages, and the latin glyphs (lang 4) the messages still need
  * ("OFF", "NINTENDO GAMECUBE", ...).
  */
-struct
+struct JapaneseDiscStatusResource
 {
     char loadingMessage[16]; /* "Now loading..." */
     DiscStatusMessage messages[7];
@@ -679,7 +687,7 @@ char* sWrongDiscMessageLines[] = {
 };
 
 /* The English disc-status resource ("Loading..." plus the seven messages). */
-struct
+struct EnglishDiscStatusResource
 {
     char loadingMessage[12];
     DiscStatusMessage messages[7];

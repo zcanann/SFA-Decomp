@@ -49,10 +49,10 @@
 #include "main/objprint_sound_api.h"
 #include "track/intersect_screen_api.h"
 
+extern u8 debugLogBuffer[];
+
 u16 gDebugTabWidth = 0x20;
-#pragma explicit_zero_data on
-void* debugLogEnd = 0;
-#pragma explicit_zero_data off
+void* debugLogEnd = debugLogBuffer;
 char sErrDSI[] = "DSI";
 char sErrISI[] = "ISI";
 char sErrFmtPC[] = "PC\t%x";
