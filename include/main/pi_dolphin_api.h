@@ -23,10 +23,28 @@ void* Shader_getLayer(void* shader, int layerIdx);
 void fn_8004CE0C(void* viewMtx);
 void fn_8004DA54(char* shader);
 void fn_8004E0FC(void);
+void fn_8004EECC(void);
 void renderHeavyFog(void* fogColor);
 void fn_8004EF9C(int* color);
 void fn_8004F080(void);
 void fn_8004F2B0(void);
+void fn_8004F380(f32 scale, int* color, f32* position);
+void fn_8004F6D8(f32 scale, int* color, f32* position);
+void fn_8004FA30(f32 scale, int* color, f32* position);
+void fn_8004FDA0(u8* texture, void* texMtx);
 void fn_80051528(void* texture, void* texMtx);
+
+#define fn_8004EECCColorLegacy(color) \
+    (((void (*)(u8*))fn_8004EECC)((color)))
+#define fn_8004F380Legacy(color, position) \
+    (((void (*)(u8*, int*))fn_8004F380)((color), (position)))
+#define fn_8004F6D8Legacy(color, position, chanColor) \
+    (((void (*)(u8*, int*, u8*))fn_8004F6D8)((color), (position), (chanColor)))
+#define fn_8004FA30FloatPosLegacy(color, position) \
+    (((void (*)(u8*, f32*))fn_8004FA30)((color), (position)))
+#define fn_8004FA30IntPosLegacy(color, position) \
+    (((void (*)(u8*, int*))fn_8004FA30)((color), (position)))
+#define fn_8004FDA0ColorLegacy(texture, texMtx, color) \
+    (((void (*)(int*, void*, u8*))fn_8004FDA0)((texture), (texMtx), (color)))
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

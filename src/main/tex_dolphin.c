@@ -48,11 +48,6 @@ extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
 extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
 
-extern void fn_8004EECC();
-extern void fn_8004F380();
-extern void fn_8004F6D8();
-extern void fn_8004FA30();
-extern void fn_8004FDA0();
 extern void fn_8005D3B4();
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
@@ -420,7 +415,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
             colorB = ((int)colorB >> 1) + ((int)colorB >> 2);
             modelLightStruct_getPosition(*lightPtr, &posX, pPosY, pPosZ);
             modelLightStruct_getRadius(*lightPtr);
-            fn_8004FA30(&colorR, &posX);
+            fn_8004FA30FloatPosLegacy(&colorR, &posX);
         }
     }
     textureFn_800528bc();
@@ -653,7 +648,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                             }
                             else
                             {
-                                fn_8004EECC(chanColor);
+                                fn_8004EECCColorLegacy(chanColor);
                             }
                         }
                         else
@@ -663,7 +658,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                             modelLightStruct_getPosition(gTexBlockLightList[0], (f32*)&lightPos[0],
                                                          (f32*)&lightPos[1], (f32*)&lightPos[2]);
                             modelLightStruct_getRadius(gTexBlockLightList[0]);
-                            fn_8004F6D8(lightColor, &lightPos[0], chanColor);
+                            fn_8004F6D8Legacy(lightColor, &lightPos[0], chanColor);
                             for (i = 1; i < count; i = i + 1)
                             {
                                 modelLightStruct_getDiffuseColor(gTexBlockLightList[i], &lightColor[0],
@@ -671,7 +666,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                                 modelLightStruct_getPosition(gTexBlockLightList[i], (f32*)&lightPos[0],
                                                              (f32*)&lightPos[1], (f32*)&lightPos[2]);
                                 modelLightStruct_getRadius(gTexBlockLightList[i]);
-                                fn_8004F380(lightColor, &lightPos[0]);
+                                fn_8004F380Legacy(lightColor, &lightPos[0]);
                             }
                             if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
                             {
@@ -692,7 +687,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                             modelLightStruct_getPosition(gTexBlockLightList[i], (f32*)&lightPos[0],
                                                          (f32*)&lightPos[1], (f32*)&lightPos[2]);
                             modelLightStruct_getRadius(gTexBlockLightList[i]);
-                            fn_8004FA30(lightColor, &lightPos[0]);
+                            fn_8004FA30IntPosLegacy(lightColor, &lightPos[0]);
                         }
                     }
                     if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x2000) != 0))
@@ -990,7 +985,7 @@ LAB_8005F690:
         int* lightList = lbl_803DCE34;
         if (lightList != 0)
         {
-            fn_8004FDA0(lightList, &lbl_80382008, lbl_803DB638);
+            fn_8004FDA0ColorLegacy(lightList, &lbl_80382008, lbl_803DB638);
             goto LAB_8005F6F4;
         }
     }
