@@ -28,6 +28,7 @@
 #include "string.h"
 #include "main/frame_timing.h"
 #include "main/pad_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 
 typedef struct ObjLibRegionList ObjLibRegionList;
 
@@ -1593,7 +1594,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(GameObject* obj, u32 hitFxMode, u3
                                         &effectArgs);
             if ((((sfxId & 0xffff) != 0) && (hitObject != 0)) && (((GameObject*)hitObject)->anim.seqId == 0x69))
             {
-                extern void Sfx_PlayFromObject(int obj, int id);
                 Sfx_PlayFromObject((int)obj, sfxId);
             }
         }
