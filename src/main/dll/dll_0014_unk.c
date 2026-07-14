@@ -621,7 +621,6 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     ObjfsaWalkGroup* wg;
     u32 lpidx;
     u32 clz;
-    int lidx;
     u16 groupIdx;
     u16 pgid;
     u8 i;
@@ -630,6 +629,7 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
     u32 pidx;
     u8 k2;
     ObjfsaPatch* patch;
+    int lidx;
     ObjfsaPatch* lp;
     f32 y;
     for (k = 0, wg = &gObjfsaWalkGroups[currentWalkGroupIndex]; k < 4; k++)
@@ -690,11 +690,12 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
         pgid = gObjfsaPatches[pidx].groupId;
         if (((int)clz & pgid) != 0)
         {
-            lidx = (u16)((int)(pgid & 0xff00) >> 8);
+            pidx = (int)(pgid & 0xff00) >> 8;
+            lidx = pidx & 0xffff;
         }
         else
         {
-            lidx = pgid & 0xff;
+            lidx = (u8)pgid;
         }
         for (k2 = 0, lwg = (u8*)gObjfsaWalkGroups + (lidx & 0xffff) * OBJFSA_PATCHGROUP_STRIDE; k2 < 4; k2++)
         {
