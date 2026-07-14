@@ -120,6 +120,7 @@ extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
 extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern f32 lbl_803DEF08, lbl_803DEF20;
 extern double lbl_803DEF10, lbl_803DEF18;
+extern u8 lbl_8030E8B0[];
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -131,7 +132,6 @@ extern u32 lbl_803DD054;
 
 void* fn_8006F388(u32 i)
 {
-    extern u8 lbl_8030E8B0[];
     u8* base = lbl_8030E8B0;
     switch (i)
     {
@@ -171,7 +171,6 @@ typedef struct
 extern f32 Vachuff_803DEE20;
 extern f32 __THPHuffmanBits_803DEE24;
 extern f32 __THPHuffmanSizeTab_803DEE28;
-extern u8 lbl_8030E8B0[];
 
 /* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
  * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
@@ -365,7 +364,6 @@ void timeFn_8006f400(f32 step)
     u8 value;
     extern u8 gWaterSplashQuads[];
     extern u8 gWaterRipples[];
-    extern f32 Vachuff_803DEE20;
 
     for (i = 0; i < 256; i++)
     {
@@ -408,8 +406,6 @@ void drawFn_8006f500(void)
     extern f32 lbl_803DEE48;
     extern void* gWaterFxTextures[];
     extern u8 gWaterSplashQuads[];
-    extern f32 Vachuff_803DEE20;
-    extern f32 __THPHuffmanBits_803DEE24;
     extern void fn_8000F9B4(void);
 
     GXColor color;
@@ -5756,8 +5752,6 @@ int cardLoadFn_8007d72c(void)
 
     extern void cardSetStatusNoCard2(void);
     extern void* lbl_803DD040;
-    extern volatile s32 lbl_803DB700;
-    extern u32 lbl_803DD048, gSaveCardSerialLo, lbl_803DD050, lbl_803DD054;
     int need_format;
     int res;
     u64 serial;
@@ -5889,7 +5883,6 @@ int cardDeleteFn_8007d99c(void)
     extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
-    extern volatile s32 lbl_803DB700;
     int res;
     int ok;
 
@@ -6011,7 +6004,6 @@ void showMemCardError(u8 err)
 {
     extern f32 lbl_803DEF90, lbl_803DEF94;
     extern u8 lbl_803DB424;
-    extern u8 gSaveCardRetry;
     extern int lbl_803DB708;
     extern void checkReset(void);
     extern int getReflectionTexture1(void);
@@ -6175,7 +6167,6 @@ int memCardFn_8007dd04(u8 retry)
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
-    extern volatile s32 lbl_803DB700;
     int ret;
 
     if (retry != 0)
@@ -6217,7 +6208,6 @@ int memCardFn_8007dd04(u8 retry)
 int cardProbe(u8 retry)
 {
 
-    extern volatile s32 lbl_803DB700;
     s32 memSize;
     s32 sectorSize;
     s32 res;
@@ -6269,7 +6259,6 @@ void _initCardAndDsp(void)
 
 void cardGetMessage(u32* buttons, u32* texts, u32* count)
 {
-    extern u8 lbl_803DD059;
     if (lbl_803DD059 != 0 && (lbl_803DB700 == 7 || lbl_803DB700 == 9))
     {
         lbl_803DB700 = 11;
