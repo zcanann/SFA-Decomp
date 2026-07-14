@@ -23,6 +23,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/objseq.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 
@@ -80,7 +81,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 extern f32 lbl_803E4AA0;
 
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
-extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
 extern f32 lbl_803E4AA4;
 extern f32 lbl_803E4AA8;
 extern f32 lbl_803E4AAC;
@@ -118,7 +118,7 @@ void dim2snowball_hitDetect(void)
 void dim2snowball_update(int* obj)
 {
     int* extra = ((GameObject*)obj)->extra;
-    int** results;
+    TrackGroundHit** results;
     int count;
     int start;
     f32 evt[6];
@@ -248,21 +248,21 @@ void dim2snowball_update(int* obj)
             {
                 int hitCount;
                 ((Dim2SnowballState*)extra)->flagsAC |= 2;
-                hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX,
+                hitCount = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX,
                                          ((GameObject*)obj)->anim.localPosY, ((GameObject*)obj)->anim.localPosZ,
                                          &results, 0, 0);
                 ((Dim2SnowballState*)extra)->floorY = ((GameObject*)obj)->anim.localPosY;
                 while (hitCount > 0)
                 {
-                    int* r;
+                    TrackGroundHit* r;
                     hitCount--;
                     r = results[hitCount];
-                    if (*(f32*)r < ((GameObject*)obj)->anim.localPosY)
+                    if (r->height < ((GameObject*)obj)->anim.localPosY)
                     {
-                        s8 t = *(s8*)((char*)r + 0x14);
+                        s8 t = (s8)r->surfaceType;
                         if (t == 26 || t == 8)
                         {
-                            ((Dim2SnowballState*)extra)->floorY = *(f32*)r;
+                            ((Dim2SnowballState*)extra)->floorY = r->height;
                             hitCount = 0;
                         }
                     }

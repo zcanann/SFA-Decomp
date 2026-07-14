@@ -29,6 +29,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct InvHitState
 {
@@ -67,7 +68,6 @@ __declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 extern f32 lbl_803AC780[];
 
 extern int ObjList_ContainsObject(int obj);
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 
 void InvHit_hitDetect(void)
 {
@@ -213,7 +213,7 @@ void InvHit_update(int* obj)
     case INVHIT_MODE_HOMING_PROJECTILE:
     {
         char* hitState = *(char**)&((GameObject*)obj)->anim.hitReactState;
-        f32** hits[2];
+        TrackGroundHit** hits[2];
         f32 dx2;
         f32 dz2;
         f32 reach;
@@ -263,7 +263,7 @@ void InvHit_update(int* obj)
         }
         {
             s8 tmp =
-                (s8)hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                (s8)hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                          ((GameObject*)obj)->anim.localPosZ, hits, 0, 0);
             i = 0;
             cnt = tmp;
@@ -271,7 +271,7 @@ void InvHit_update(int* obj)
         thr = lbl_803E35F4;
         for (; i < cnt; i++)
         {
-            f32 h = *hits[0][i];
+            f32 h = hits[0][i]->height;
             f32 oy = ((GameObject*)obj)->anim.localPosY;
             if (h < thr + oy && h > oy - thr)
             {

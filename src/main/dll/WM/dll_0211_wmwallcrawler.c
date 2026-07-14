@@ -131,14 +131,14 @@ int wmwallcrawler_animEventCallback(GameObject* obj)
    but the retail unit keeps both bls. No same-TU callees, so the wrap
    is safe (see the dont_inline CAUTION in the playbook). */
 #pragma dont_inline on
-void wmwallcrawler_alignToFloorNormal(GameObject* obj, f32* floorData)
+void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit)
 {
     WcXf mtx;
     f32 in[3];
     u16 ang, ang2;
-    in[0] = floorData[1];
-    in[1] = floorData[2];
-    in[2] = floorData[3];
+    in[0] = floorHit->normalX;
+    in[1] = floorHit->normalY;
+    in[2] = floorHit->normalZ;
     mtx.mc = lbl_803E5FB0;
     mtx.m10 = lbl_803E5FB0;
     mtx.m14 = lbl_803E5FB0;
@@ -247,7 +247,7 @@ void wmwallcrawler_update(GameObject* obj)
     f32 dist;
     f32 sq;
     s8 mode;
-    f32** list;
+    TrackGroundHit** list;
     f32 best;
     f32 d;
     f32 dy;
@@ -443,13 +443,13 @@ void wmwallcrawler_update(GameObject* obj)
                         if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                         {
                             best = lbl_803E5FBC;
-                            hitCount = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX,
+                            hitCount = hitDetectFn_80065e50((GameObject*)ob, ((GameObject*)ob)->anim.localPosX,
                                                             ((GameObject*)ob)->anim.localPosY,
                                                             ((GameObject*)ob)->anim.localPosZ, &list, 0, 0);
                             idx = 0;
                             for (k = 0; k < hitCount; k++)
                             {
-                                d = *list[idx] - ((GameObject*)ob)->anim.localPosY;
+                                d = list[idx]->height - ((GameObject*)ob)->anim.localPosY;
                                 if (d < *(f32*)&lbl_803E5FB0)
                                 {
                                     d = d * *(f32*)&lbl_803E5FE0;
@@ -463,7 +463,7 @@ void wmwallcrawler_update(GameObject* obj)
                             }
                             if (list != 0)
                             {
-                                ((GameObject*)ob)->anim.localPosY = *list[bestIdx];
+                                ((GameObject*)ob)->anim.localPosY = list[bestIdx]->height;
                                 wmwallcrawler_alignToFloorNormal((GameObject*)(ob), list[bestIdx]);
                             }
                             else
@@ -543,13 +543,13 @@ void wmwallcrawler_update(GameObject* obj)
                                 if ((state->flags & WMWALLCRAWLER_FLAG_FLOOR_SNAP) != 0)
                                 {
                                     best = lbl_803E5FBC;
-                                    hitCount = hitDetectFn_80065e50(ob, ((GameObject*)ob)->anim.localPosX,
+                                    hitCount = hitDetectFn_80065e50((GameObject*)ob, ((GameObject*)ob)->anim.localPosX,
                                                                     ((GameObject*)ob)->anim.localPosY,
                                                                     ((GameObject*)ob)->anim.localPosZ, &list, 0, 0);
                                     idx = 0;
                                     for (k = 0; k < hitCount; k++)
                                     {
-                                        d = *list[idx] - ((GameObject*)ob)->anim.localPosY;
+                                        d = list[idx]->height - ((GameObject*)ob)->anim.localPosY;
                                         if (d < *(f32*)&lbl_803E5FB0)
                                         {
                                             d = d * *(f32*)&lbl_803E5FE0;
@@ -563,7 +563,7 @@ void wmwallcrawler_update(GameObject* obj)
                                     }
                                     if (list != 0)
                                     {
-                                        ((GameObject*)ob)->anim.localPosY = *list[bestIdx];
+                                        ((GameObject*)ob)->anim.localPosY = list[bestIdx]->height;
                                         wmwallcrawler_alignToFloorNormal((GameObject*)(ob), list[bestIdx]);
                                     }
                                     else

@@ -150,7 +150,7 @@ void duster_update(GameObject* obj)
     DusterSetup* setup;
     int player;
     GameObject* playerObj;
-    void* floorHits;
+    TrackGroundHit** floorHits;
     int msg;
     int next;
     int floorHitCount;
@@ -203,13 +203,13 @@ void duster_update(GameObject* obj)
     state->priorityHit = 0;
     if (state->flags.floorCached == 0)
     {
-        floorHitCount = hitDetectFn_80065e50((int)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
+        floorHitCount = hitDetectFn_80065e50(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ,
                                              &floorHits, 0, 0);
         bestFloorDelta = gDusterObjFloorSearchMaxDelta;
         bestFloorIndex = -1;
         for (i = 0; i < floorHitCount; i++)
         {
-            floorDelta = **(f32**)((int)floorHits + i * 4) - obj->anim.localPosY;
+            floorDelta = floorHits[i]->height - obj->anim.localPosY;
             if (floorDelta < *(f32*)&lbl_803E38C4)
             {
                 floorDelta = -floorDelta;
@@ -223,7 +223,7 @@ void duster_update(GameObject* obj)
         if (bestFloorIndex != -1)
         {
             state->flags.floorCached = 1;
-            state->floorY = **(f32**)((int)floorHits + bestFloorIndex * 4);
+            state->floorY = floorHits[bestFloorIndex]->height;
             obj->anim.velocityY = lbl_803E38C4;
         }
         if (state->flags.floorCached == 0)

@@ -4,10 +4,23 @@
 #include "types.h"
 #include "main/game_object.h"
 
+typedef struct TrackGroundHit
+{
+    f32 height;
+    f32 normalX;
+    f32 normalY;
+    f32 normalZ;
+    GameObject* object;
+    u8 surfaceType;
+    u8 pad15[3];
+} TrackGroundHit;
+
+STATIC_ASSERT(sizeof(TrackGroundHit) == 0x18);
+
 int objShadowFn_80062498();
 int fn_80065640(void);
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag);
-int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode);
+int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int submode);
 void fn_80065574(int matchValue, GameObject* obj, int flag);
 void doNothing_80062A50();
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);

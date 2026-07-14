@@ -27,6 +27,7 @@
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct PushablePlacement
 {
@@ -114,7 +115,6 @@ extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
-extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern int modelFileHeaderGetCullDistance(int hdr);
 
 int pushable_render2(GameObject* obj);
@@ -900,7 +900,7 @@ void pushable_hitDetect(GameObject* obj)
     MatrixTransform vec;
     f32 hp4[4];
     PushableBox16 box;
-    int list;
+    TrackGroundHit** list;
     f32 tmpY;
 
     box = *(PushableBox16*)gPushableDefaultBox;
@@ -1014,19 +1014,18 @@ void pushable_hitDetect(GameObject* obj)
 
             *hp = y;
             acc = lbl_803E3528;
-            cnt = hitDetectFn_80065e50((int*)obj, wp[0], y, wp[2], (f32***)&list, -1, 0);
+            cnt = (s8)hitDetectFn_80065e50(obj, wp[0], y, wp[2], &list, -1, 0);
             found = 0;
             if (cnt != 0)
             {
                 int j = 0;
                 int off = 0;
-
                 for (; j < cnt; j++)
                 {
-                    f32* h = *(f32**)(list + off);
-                    if (*(s8*)((char*)h + 0x14) == 0xe)
+                    TrackGroundHit* hit = *(TrackGroundHit**)((u8*)list + off);
+                    if ((s8)hit->surfaceType == 0xe)
                     {
-                        f32 d = h[0] - obj->anim.localPosY;
+                        f32 d = hit->height - obj->anim.localPosY;
                         if (d > lbl_803E3528)
                         {
                             acc = acc + d;
@@ -1035,13 +1034,13 @@ void pushable_hitDetect(GameObject* obj)
                     }
                     else if (found == 0)
                     {
-                        f32 probeY = h[0];
-                        if (probeY < lbl_803E3558 + wp[1] && probeY > wp[1] - lbl_803E35C0 && h[2] > lbl_803E35C4)
+                        f32 probeY = hit->height;
+                        if (probeY < lbl_803E3558 + wp[1] && probeY > wp[1] - lbl_803E35C0 && hit->normalY > lbl_803E35C4)
                         {
                             u32 contactObj;
                             *hp = probeY;
                             tmpY = tmpY + probeY;
-                            contactObj = *(u32*)(*(int*)(list + off) + 0x10);
+                            contactObj = (u32)hit->object;
                             if (contactObj != 0)
                             {
                                 ObjHits_AddContactObject(contactObj, obj);

@@ -1451,22 +1451,22 @@ int objShadowFn_80062378(GameObject* obj, u8 param)
 
 int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 {
-    void** arr;
+    TrackGroundHit** arr;
     int n;
     int i;
     f32 best;
     f32 cur;
     f32* arCb;
 
-    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, kinds);
+    n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, kinds);
     if (n != 0)
     {
-        void** arrp;
-        best = y - *(f32*)arr[0];
+        TrackGroundHit** arrp;
+        best = y - arr[0]->height;
         arrp = arr + 1;
         for (i = 1; i < n; i++, arrp++)
         {
-            cur = *(f32*)*arrp;
+            cur = (*arrp)->height;
             cur = y - cur;
             arCb = &__AR_Callback;
             if (cur >= *(f32*)arCb)
@@ -1492,17 +1492,17 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 #pragma dont_inline on
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
-    void** arr;
+    TrackGroundHit** arr;
     int n;
     int i;
     int bestIdx;
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50((int)obj, x, y, z, &arr, 0, flag);
+    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
     if (n != 0)
     {
-        cur = y - *(f32*)arr[0];
+        cur = y - arr[0]->height;
         if (cur >= __AR_Callback)
         {
         }
@@ -1514,7 +1514,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
-            cur = y - *(f32*)arr[i];
+            cur = y - arr[i]->height;
             cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
@@ -1522,7 +1522,7 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
                 bestIdx = i;
             }
         }
-        *outGroundY = y - *(f32*)arr[bestIdx];
+        *outGroundY = y - arr[bestIdx]->height;
         return 0;
     }
     *outGroundY = __AR_Callback;
@@ -1533,17 +1533,17 @@ int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, 
 #pragma dont_inline on
 int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, int flag)
 {
-    void** arr;
+    TrackGroundHit** arr;
     int n;
     int i;
     int bestIdx;
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
+    n = hitDetectFn_80065e50((GameObject*)obj, x, y, z, &arr, 0, flag);
     if (n != 0)
     {
-        cur = y - *(f32*)arr[0];
+        cur = y - arr[0]->height;
         if (cur >= __AR_Callback)
         {
         }
@@ -1555,7 +1555,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
         bestIdx = 0;
         for (i = 1; i < n; i++)
         {
-            cur = y - *(f32*)arr[i];
+            cur = y - arr[i]->height;
             cur = cur >= *(f32*)&__AR_Callback ? cur : -cur;
             if (cur < best)
             {
@@ -1563,10 +1563,10 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
                 bestIdx = i;
             }
         }
-        *outGroundY = y - *(f32*)arr[bestIdx];
-        outNormal[0] = ((f32*)arr[bestIdx])[1];
-        outNormal[1] = ((f32*)arr[bestIdx])[2];
-        outNormal[2] = ((f32*)arr[bestIdx])[3];
+        *outGroundY = y - arr[bestIdx]->height;
+        outNormal[0] = arr[bestIdx]->normalX;
+        outNormal[1] = arr[bestIdx]->normalY;
+        outNormal[2] = arr[bestIdx]->normalZ;
         return 0;
     }
     *outGroundY = __AR_Callback;
@@ -1576,7 +1576,7 @@ int fn_80065768(int obj, f32 x, f32 y, f32 z, f32* outGroundY, f32* outNormal, i
 
 int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY, int* outSurfaceId)
 {
-    void** arr;
+    TrackGroundHit** arr;
     int n;
     int i;
 
@@ -1586,21 +1586,21 @@ int findSurfaceInYRange(int obj, f32 x, f32 lo, f32 z, f32 hi, f32* outSurfaceY,
         hi = lo;
         lo = t;
     }
-    n = hitDetectFn_80065e50(obj, x, lo, z, &arr, 0, 1);
+    n = hitDetectFn_80065e50((GameObject*)obj, x, lo, z, &arr, 0, 1);
     *outSurfaceY = lo;
     *outSurfaceId = 0;
     for (i = 0; i < n; i++)
     {
-        void* elem = arr[i];
-        if (*(s8*)((char*)elem + 0x14) == 14)
+        TrackGroundHit* elem = arr[i];
+        if ((s8)elem->surfaceType == 14)
         {
             continue;
         }
-        if (lo < *(f32*)elem && hi > *(f32*)elem)
+        if (lo < elem->height && hi > elem->height)
         {
-            *outSurfaceId = *(int*)((char*)arr[i] + 0x10);
-            *outSurfaceY = *(f32*)arr[i];
-            return (((f32*)arr[i])[2] < __AR_Size) + 1;
+            *outSurfaceId = (int)arr[i]->object;
+            *outSurfaceY = arr[i]->height;
+            return (arr[i]->normalY < __AR_Size) + 1;
         }
     }
     return 0;
@@ -2595,7 +2595,7 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
 
 u16 gIntersectSegmentTypeTable[0x212];
 
-int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int submode)
+int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int submode)
 {
     u8* base = (u8*)gIntersectSegmentTypeTable;
     TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
@@ -2671,7 +2671,7 @@ int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* out, int mode, int 
         }
     }
 
-    *(u8**)out = base + 0x50;
+    *hitsOut = (TrackGroundHit**)(base + 0x50);
     return lbl_803DCF60;
 }
 

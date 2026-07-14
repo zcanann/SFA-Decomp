@@ -172,10 +172,10 @@ static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
 {
     GameObject* object;
-    RomCurvePoint** list;
+    TrackGroundHit** list;
     int found1;
     int hits;
-    RomCurvePoint* point;
+    TrackGroundHit* point;
     f32 pointY;
     f32 dx;
     f32 dz;
@@ -187,7 +187,7 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
     f32 sum1;
     f32 sum2;
     f32 sum3;
-    RomCurvePoint** hitOut;
+    TrackGroundHit** hitOut;
     f32 heights[5];
 
     object = obj;
@@ -199,7 +199,7 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
         for (i = 0; i < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++)
         {
             heights[i] = collision->points[i][1];
-            hits = hitDetectFn_80065e50((int)obj, collision->points[i][0], object->anim.worldPosY,
+            hits = hitDetectFn_80065e50(obj, collision->points[i][0], object->anim.worldPosY,
                                         collision->points[i][2], &hitOut, -1, 0);
             found1 = 0;
             if (hits != 0)
@@ -210,14 +210,14 @@ void curves_countRandomPoints(GameObject* obj, CurvesCollisionState* collision)
                     if (!found1)
                     {
                         point = *list;
-                        pointY = point->x;
+                        pointY = point->height;
                         if ((pointY < lbl_803E066C + object->anim.worldPosY) &&
-                            ((s8)point->type != ROMCURVE_POINT_TYPE_WATER))
+                            ((s8)point->surfaceType != ROMCURVE_POINT_TYPE_WATER))
                         {
-                            heights[i] = point->x;
-                            sum1 = sum1 + point->y;
-                            sum2 = sum2 + point->z;
-                            sum3 = sum3 + point->w;
+                            heights[i] = point->height;
+                            sum1 = sum1 + point->normalX;
+                            sum2 = sum2 + point->normalY;
+                            sum3 = sum3 + point->normalZ;
                             sum0 = sum0 + pointY;
                             count++;
                             found1 = 1;
@@ -1017,8 +1017,8 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
     int queryMode;
     RomCurvePoint* outPoint;
     int pairCount;
-    RomCurvePoint** hitPoints;
-    RomCurvePoint** hitPointCursor;
+    TrackGroundHit** hitPoints;
+    TrackGroundHit** hitPointCursor;
 
     if ((u32)obj != sCurvesCachedHitObj)
     {
@@ -1031,7 +1031,7 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
         {
             queryMode = -2;
         }
-        sCurvesCachedHitCount = hitDetectFn_80065e50((int)obj, x, (obj)->anim.worldPosY, z, &hitPoints, queryMode, 0);
+        sCurvesCachedHitCount = hitDetectFn_80065e50(obj, x, (obj)->anim.worldPosY, z, &hitPoints, queryMode, 0);
         if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
         {
             sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
@@ -1040,12 +1040,12 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
         outPoint = sCurvesHitPoints;
         for (pairCount = 0; pairCount < sCurvesCachedHitCount; pairCount++)
         {
-            outPoint[pairCount].x = (*hitPointCursor)->x;
-            outPoint[pairCount].y = (*hitPointCursor)->y;
-            outPoint[pairCount].z = (*hitPointCursor)->z;
-            outPoint[pairCount].w = (*hitPointCursor)->w;
-            outPoint[pairCount].flags = (*hitPointCursor)->flags;
-            outPoint[pairCount].type = (*hitPointCursor)->type;
+            outPoint[pairCount].x = (*hitPointCursor)->height;
+            outPoint[pairCount].y = (*hitPointCursor)->normalX;
+            outPoint[pairCount].z = (*hitPointCursor)->normalY;
+            outPoint[pairCount].w = (*hitPointCursor)->normalZ;
+            outPoint[pairCount].flags = (u32)(*hitPointCursor)->object;
+            outPoint[pairCount].type = (*hitPointCursor)->surfaceType;
             hitPointCursor = hitPointCursor + 1;
         }
     }

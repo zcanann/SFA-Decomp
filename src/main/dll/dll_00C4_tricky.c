@@ -45,6 +45,7 @@
 #include "main/gamebit_ids.h"
 #include "main/voxmaps.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -197,7 +198,6 @@ extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern void freeAndNull(void* p);
 extern void trickyVoxAllocFn_8004b5d4(void* out);
-extern u16 hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hits, int pointCount, int arg7);
 extern void objAudioFn_8006edcc(int obj, u16 mask, int arg5, float* points, void* aux, f32 scaleX, f32 scaleY);
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
@@ -2632,10 +2632,10 @@ void Tricky_applyFloorResponse(GameObject* obj, int state)
 
 void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloorY, f32* nearestSpecialY)
 {
-    int hitList[2];
+    TrackGroundHit** hitList[2];
     u16 hitCount;
     u16 i;
-    f32* hit;
+    TrackGroundHit* hit;
     f32 hitY;
     f32 zero;
     f32 nearestSpecialDelta;
@@ -2647,8 +2647,8 @@ void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloor
     defaultY = lbl_803E25C4;
     *nearestFloorY = defaultY;
     *nearestSpecialY = defaultY;
-    hitCount = (u16)hitDetectFn_80065e50((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, (int)obj,
-                                         hitList, 0, 0);
+    hitCount = (u16)hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY,
+                                         (obj)->anim.localPosZ, hitList, 0, 0);
     *nearestFloorY = (obj)->anim.localPosY;
     *nearestSpecialY = (obj)->anim.localPosY;
     nearestSpecialDelta = nearestFloorDelta = lbl_803E25C8;
@@ -2659,22 +2659,22 @@ void Tricky_findNearbyFloorHeights(GameObject* obj, int state, f32* nearestFloor
     *(s8*)&((TrickyState*)state)->surfaceFlags &= ~TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
     for (; i < hitCount; i++)
     {
-        hit = *(f32**)(hitList[0] + ((u32)i << 2));
-        hitY = hit[0];
+        hit = hitList[0][i];
+        hitY = hit->height;
         dy = hitY - (obj)->anim.localPosY;
         absDy = dy;
         if (dy < zero)
         {
             absDy = -dy;
         }
-        if (*(s8*)(hit + 5) == 0xe)
+        if ((s8)hit->surfaceType == 0xe)
         {
             if (absDy < nearestSpecialDelta)
             {
                 ((TrickyState*)state)->nearestSpecialDeltaY = dy;
                 *(s8*)&((TrickyState*)state)->surfaceFlags |= TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR;
                 nearestSpecialDelta = absDy;
-                *nearestSpecialY = **(f32**)(hitList[0] + ((u32)i << 2));
+                *nearestSpecialY = hitList[0][i]->height;
                 if (((TrickyState*)state)->nearestSpecialDeltaY > lbl_803E25A0)
                 {
                     ((TrickyState*)state)->flags2DC |=

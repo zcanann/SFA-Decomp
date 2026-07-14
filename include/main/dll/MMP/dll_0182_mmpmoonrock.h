@@ -9,5 +9,6 @@
 #include "main/gamebits.h"
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode);
+int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* outHeight, int* outObject);
 
 #endif

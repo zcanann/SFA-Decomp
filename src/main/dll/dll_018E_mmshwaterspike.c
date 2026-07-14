@@ -48,15 +48,15 @@ void mmsh_waterspike_hitDetect(void)
 void mmsh_waterspike_update(int obj)
 {
     void* animObj;
-    int* hitPtr;
-    int hitObj;
+    TrackGroundHit** hitPtr;
+    TrackGroundHit* hit;
     int hitCount;
     int i;
     f32 delta;
     f32 newY;
     f32 maxY;
     f32 riseDelta;
-    int* hitList;
+    TrackGroundHit** hitList;
     int placement;
 
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -69,7 +69,7 @@ void mmsh_waterspike_update(int obj)
     else
     {
         logPrintf(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement*)placement)->xyzAnimId);
-        hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        hitCount = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);
         if (hitCount != 0)
         {
@@ -77,10 +77,10 @@ void mmsh_waterspike_update(int obj)
             hitPtr = hitList;
             for (i = 0; i < hitCount; i++)
             {
-                hitObj = *hitPtr;
-                if (*(char*)(hitObj + 0x14) == 0xe)
+                hit = *hitPtr;
+                if ((s8)hit->surfaceType == 0xe)
                 {
-                    delta = *(f32*)hitObj - ((GameObject*)obj)->anim.localPosY;
+                    delta = hit->height - ((GameObject*)obj)->anim.localPosY;
                     if (delta > riseDelta)
                     {
                         riseDelta = delta;

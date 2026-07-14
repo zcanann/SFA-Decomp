@@ -33,11 +33,11 @@
 #include "main/vecmath.h"
 #include "string.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
 extern f32 gDrCloudCageWindVolume;
@@ -167,7 +167,7 @@ void fn_801E9C00(GameObject* obj, int state)
     f32 startZ;
     f32 startY;
     f32 startX;
-    f32** hits;
+    TrackGroundHit** hits;
     MatrixTransform transform;
     f32 matrix[16];
     DRCloudCagePoints localPoints;
@@ -317,20 +317,20 @@ void fn_801E9C00(GameObject* obj, int state)
             hitCount = hitDetectFn_80065e50(obj, endpoint[0], endpoint[1], endpoint[2], &hits, 0, 0x20);
             for (hitIndex = 0; hitIndex < hitCount; hitIndex++)
             {
-                deltaY = hits[hitIndex][0] - endpoint[1];
+                deltaY = hits[hitIndex]->height - endpoint[1];
                 if (activeIndex > 0)
                 {
                     if ((deltaY > zero) && (deltaY < maxDelta))
                     {
                         hitDetected = 1;
-                        endpoint[1] = lbl_803E5AF8 + hits[hitIndex][0];
+                        endpoint[1] = lbl_803E5AF8 + hits[hitIndex]->height;
                         break;
                     }
                 }
                 else if ((deltaY >= minDelta) && (deltaY < maxDelta))
                 {
                     hitDetected = 1;
-                    endpoint[1] = lbl_803E5AF8 + hits[hitIndex][0];
+                    endpoint[1] = lbl_803E5AF8 + hits[hitIndex]->height;
                     break;
                 }
             }

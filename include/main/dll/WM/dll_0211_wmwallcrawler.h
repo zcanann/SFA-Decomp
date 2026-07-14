@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_0211_WMWALLCRAWLER_H_
 
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
@@ -63,7 +64,7 @@ STATIC_ASSERT(sizeof(WmwallcrawlerMapData) == 0x20);
 extern f32 lbl_803E5FB4;
 
 int wmwallcrawler_animEventCallback(GameObject* obj);
-void wmwallcrawler_alignToFloorNormal(GameObject* obj, f32* floorData);
+void wmwallcrawler_alignToFloorNormal(GameObject* obj, TrackGroundHit* floorHit);
 int wmwallcrawler_getExtraSize(void);
 int wmwallcrawler_getObjectTypeId(void);
 void wmwallcrawler_free(GameObject* obj);

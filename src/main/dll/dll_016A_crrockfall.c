@@ -98,19 +98,19 @@ void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 f32 fn_801ACCFC(GameObject* obj)
 {
     CrRockfallState* state = (obj)->extra;
-    int* list;
+    TrackGroundHit** list;
     int count;
     int i;
     int bestIdx;
     f32 bestDist;
-    count = hitDetectFn_80065e50((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
+    count = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
                                  0, 0);
     bestDist = lbl_803E4700;
     bestIdx = -1;
     for (i = 0; i < count; i++)
     {
         f32 dy;
-        if ((dy = (obj)->anim.localPosY - *(f32*)list[i]) > *(f32*)&lbl_803E4704 && dy < bestDist)
+        if ((dy = (obj)->anim.localPosY - list[i]->height) > *(f32*)&lbl_803E4704 && dy < bestDist)
         {
             bestDist = dy;
             bestIdx = i;
@@ -119,7 +119,7 @@ f32 fn_801ACCFC(GameObject* obj)
     if (bestIdx != -1)
     {
         state->floorFound = 1;
-        return *(f32*)list[bestIdx];
+        return list[bestIdx]->height;
     }
     return (obj)->anim.localPosY;
 }

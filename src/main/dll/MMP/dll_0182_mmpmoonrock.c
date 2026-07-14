@@ -94,7 +94,6 @@ int mmp_moonrock_getObjectTypeId(void)
     return 0x0;
 }
 
-extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2);
 extern f32 lbl_803E4554;
 extern f32 gMoonRockGravity;
 extern f32 gMoonRockVelClampMin;
@@ -105,7 +104,6 @@ extern f32 lbl_803E4568;
 #pragma peephole off
 void fn_801A7B10(GameObject* obj)
 {
-    extern int fn_801A78C8(void* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2);
     MmpMoonrockState* state = obj->extra;
     int hitTypeOut[1];
     f32 floorYOut;
@@ -316,9 +314,9 @@ void fn_801A80F0(GameObject* obj, u8 flag)
 
 extern f32 lbl_803E4548;
 
-int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
+int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
 {
-    f32** results;
+    TrackGroundHit** results;
     f32* e;
     int i;
     int count;
@@ -328,11 +326,12 @@ int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32* out1, int* out2)
     *out2 = 0;
     for (i = 0; i < count; i++)
     {
-        if (*(s8*)((u8*)results[i] + 0x14) != 0xE && y < results[i][0] && (y2 > results[i][0] || i == count - 1))
+        if ((s8)results[i]->surfaceType != 0xE && y < results[i]->height &&
+            (y2 > results[i]->height || i == count - 1))
         {
-            *out2 = *(int*)((u8*)results[i] + 0x10);
-            *out1 = results[i][0];
-            return (results[i][2] < lbl_803E4548) + 1;
+            *out2 = (int)results[i]->object;
+            *out1 = results[i]->height;
+            return (results[i]->normalY < lbl_803E4548) + 1;
         }
     }
     return 0;

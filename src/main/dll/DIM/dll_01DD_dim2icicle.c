@@ -32,6 +32,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
+#include "main/track_dolphin_api.h"
 
 #define DIM2ICICLE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -84,8 +85,6 @@ void dim2icicle_hitDetect(void)
 
 void dim2icicle_update(GameObject *obj)
 {
-    extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* out, int a, int b);
-
     ObjHitsPriorityState* hitState;
     int sub;
     int state;
@@ -120,16 +119,16 @@ void dim2icicle_update(GameObject *obj)
         {
             int hitCount;
             int i;
-            int list;
-            hitCount = hitDetectFn_80065e50((obj)->anim.localPosX, (obj)->anim.localPosY,
-                                     (obj)->anim.localPosZ, (int)obj, &list, 0, 0);
+            TrackGroundHit** list;
+            hitCount = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY,
+                                            (obj)->anim.localPosZ, &list, 0, 0);
             ((Dim2IcicleState*)sub)->dropY = lbl_803E4B70;
             for (i = 0; i < hitCount; i++)
             {
-                int p = *(int*)(list + i * 4);
-                if (*(s8*)(p + 0x14) == 0xe)
+                TrackGroundHit* hit = list[i];
+                if ((s8)hit->surfaceType == 0xe)
                 {
-                    ((Dim2IcicleState*)sub)->dropY = *(f32*)p;
+                    ((Dim2IcicleState*)sub)->dropY = hit->height;
                     i = hitCount;
                 }
             }

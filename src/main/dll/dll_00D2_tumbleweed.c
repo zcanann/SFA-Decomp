@@ -19,15 +19,13 @@
 #include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
+#include "main/track_dolphin_api.h"
 
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define TUMBLEWEED_MSG_PICKUP   0x7000b /* player collected: award and burst */
 #define TUMBLEWEED_OBJGROUP 3
 #define TUMBLEWEED_OBJGROUP_SECONDARY 0x31
-
-extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int* hitsOut, int pointCount,
-                                int mask);
 
 extern f32 lbl_803E2F5C;
 extern f32 lbl_803E2F60;
@@ -59,21 +57,21 @@ void tumbleweed_updateRollingMotion(GameObject* obj, int state)
 {
     int hitCount;
     u32 uval;
-    u32* hitEntry;
+    TrackGroundHit** hitEntry;
     int i;
     int bestHit;
     f32 dy;
     f32 bestDy;
     f32 vp;
-    u32* hitList[2];
+    TrackGroundHit** hitList[2];
 
     hitList[0] = 0x0;
     bestDy = lbl_803E2F78;
-    hitCount = hitDetectFn_80065e50(obj->anim.localPosX, obj->anim.localPosY,
-                                 obj->anim.localPosZ, (int)obj, (int*)hitList, 0, 0);
+    hitCount = hitDetectFn_80065e50(obj, obj->anim.localPosX, obj->anim.localPosY,
+                                   obj->anim.localPosZ, hitList, 0, 0);
     for (i = 0, bestHit = 0, hitEntry = hitList[0]; i < hitCount; i++)
     {
-        dy = obj->anim.localPosY - *(float*)*hitEntry;
+        dy = obj->anim.localPosY - (*hitEntry)->height;
         if (dy < 0.0f)
         {
             dy = -1.0f * dy + 10.0f;

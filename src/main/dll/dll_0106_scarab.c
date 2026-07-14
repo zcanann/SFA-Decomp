@@ -23,6 +23,7 @@
 #include "main/objfx.h"
 #include "main/dll/dll_0106_scarab.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct ScarabPlacement
 {
@@ -71,7 +72,6 @@ __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
-extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
 extern int hitDetectFn_800691c0(void* obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(void* obj, void* p2, void* p3, int p4, void* p5, int p6);
@@ -113,7 +113,7 @@ void Scarab_update(GameObject* obj)
     ScarabVec3 start;
     ScarabVec3 end;
     f32 vsub[3];
-    f32** list;
+    TrackGroundHit** list;
     int msg;
     f32 phase;
     u32 money1;
@@ -329,7 +329,7 @@ void Scarab_update(GameObject* obj)
                                              1, 0);
                 for (i = 0; i < count; i++)
                 {
-                    deltaY = *list[i] - obj->anim.localPosY;
+                    deltaY = list[i]->height - obj->anim.localPosY;
                     if (deltaY > lbl_803DBDC8)
                     {
                     }
@@ -345,8 +345,8 @@ void Scarab_update(GameObject* obj)
                 }
                 if (list != NULL)
                 {
-                    obj->anim.localPosY = *list[best[0]];
-                    deltaY = list[best[0]][2];
+                    obj->anim.localPosY = list[best[0]]->height;
+                    deltaY = list[best[0]]->normalY;
                     deltaY = (deltaY >= lbl_803E39F8) ? deltaY : -deltaY;
                     if (deltaY < lbl_803DBDC4)
                     {
@@ -354,7 +354,7 @@ void Scarab_update(GameObject* obj)
                     }
                     else
                     {
-                        fn_801845FC((u8*)obj, list[best[0]], 1, (f32*)bufs.hitBuf);
+                        fn_801845FC((u8*)obj, (f32*)list[best[0]], 1, (f32*)bufs.hitBuf);
                     }
                 }
                 else
@@ -395,14 +395,14 @@ void Scarab_update(GameObject* obj)
                 if (flag != 0)
                 {
                     f32 k;
-                    ang = (u16)getAngle(list[best[0]][1], list[best[0]][3]);
+                    ang = (u16)getAngle(list[best[0]]->normalX, list[best[0]]->normalZ);
                     angleF = ang;
                     angleF = lbl_803DBDCC * angleF + lbl_803E3A2C;
                     obj->anim.rotX = angleF;
-                    obj->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best[0]][1]) + obj->anim.localPosX;
-                    obj->anim.localPosZ = timeDelta * (k * list[best[0]][3]) + obj->anim.localPosZ;
-                    obj->anim.velocityX = list[best[0]][1];
-                    obj->anim.velocityZ = list[best[0]][3];
+                    obj->anim.localPosX = timeDelta * ((k = lbl_803E39F4) * list[best[0]]->normalX) + obj->anim.localPosX;
+                    obj->anim.localPosZ = timeDelta * (k * list[best[0]]->normalZ) + obj->anim.localPosZ;
+                    obj->anim.velocityX = list[best[0]]->normalX;
+                    obj->anim.velocityZ = list[best[0]]->normalZ;
                 }
                 if (flag == 0)
                 {
@@ -441,7 +441,7 @@ void Scarab_update(GameObject* obj)
                                              1, 0);
                 for (i = 0; i < count; i++)
                 {
-                    deltaY = *list[i] - obj->anim.localPosY;
+                    deltaY = list[i]->height - obj->anim.localPosY;
                     if (deltaY < *(f32*)&lbl_803E39F8)
                     {
                         deltaY = deltaY * *(f32*)&lbl_803E3A34;
@@ -454,8 +454,8 @@ void Scarab_update(GameObject* obj)
                 }
                 if (list != NULL)
                 {
-                    obj->anim.localPosY = *list[best[0]];
-                    fn_801845FC((u8*)obj, list[best[0]], 1, (f32*)bufs.hitBuf);
+                    obj->anim.localPosY = list[best[0]]->height;
+                    fn_801845FC((u8*)obj, (f32*)list[best[0]], 1, (f32*)bufs.hitBuf);
                 }
                 else
                 {

@@ -28,6 +28,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 #define PAD_BUTTON_A              0x100
 #define CARRYABLE_MSG_PLAYER_GRAB 0x100008 /* tells player to grab/hold the prop */
@@ -60,7 +61,6 @@ typedef struct CarryableUpdateHeldState
 extern void playerSetHeldObject(void* player, int held);
 extern int isTrickyNear(void* player);
 
-extern int hitDetectFn_80065e50(u8* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
 void objSaveFn_800ea774(GameObject* obj)
@@ -178,7 +178,7 @@ int Carryable_updateRenderState(int* obj, int flag)
 
 int Carryable_updateHeld(u8* obj)
 {
-    f32** list;
+    TrackGroundHit** list;
     void* player;
     u8* held;
     held = ((GameObject*)obj)->extra;
@@ -209,7 +209,7 @@ int Carryable_updateHeld(u8* obj)
         }
         if (((GameObject*)obj)->unkF8 == 0)
         {
-            u8* hit;
+            GameObject* hit;
             int cnt, i, j;
             ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
@@ -219,19 +219,19 @@ int Carryable_updateHeld(u8* obj)
                 ((GameObject*)obj)->anim.localPosY =
                     ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
             }
-            cnt = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            cnt = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                        ((GameObject*)obj)->anim.localPosZ, &list, 0, 1);
             hit = 0;
             i = 0;
             for (j = cnt; j > 0; j--)
             {
-                if (*(s8*)((u8*)list[i] + 0x14) != 0xe)
+                if ((s8)list[i]->surfaceType != 0xe)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < *list[i] &&
-                        ((GameObject*)obj)->anim.localPosY > *list[i] - lbl_803E06E0)
+                    if (((GameObject*)obj)->anim.localPosY < list[i]->height &&
+                        ((GameObject*)obj)->anim.localPosY > list[i]->height - lbl_803E06E0)
                     {
-                        hit = *(u8**)(list[i] + 4);
-                        ((GameObject*)obj)->anim.localPosY = *list[i];
+                        hit = list[i]->object;
+                        ((GameObject*)obj)->anim.localPosY = list[i]->height;
                         ((GameObject*)obj)->anim.velocityY = lbl_803E06E4;
                         break;
                     }
@@ -241,14 +241,14 @@ int Carryable_updateHeld(u8* obj)
             i = 0;
             for (; cnt > 0; cnt--)
             {
-                f32 d = ((GameObject*)obj)->anim.localPosY - *list[i];
+                f32 d = ((GameObject*)obj)->anim.localPosY - list[i]->height;
                 if (d < lbl_803E06E4)
                 {
                     d = -d;
                 }
                 if (d < lbl_803E06E8)
                 {
-                    s8 t2 = *(s8*)((u8*)list[i] + 0x14);
+                    s8 t2 = *(s8*)&list[i]->surfaceType;
                     if (t2 > ((CarryableUpdateHeldState*)held)->surfaceType)
                     {
                         *(s8*)&((CarryableUpdateHeldState*)held)->surfaceType = t2;
@@ -258,7 +258,7 @@ int Carryable_updateHeld(u8* obj)
             }
             if (hit != 0)
             {
-                u8* owner = *(u8**)(hit + 0x58);
+                u8* owner = *(u8**)((u8*)hit + 0x58);
                 u8 slot = (*(u8*)(owner + 0x10f))++;
                 ((void**)(owner + 0x100))[(s8)slot] = obj;
             }

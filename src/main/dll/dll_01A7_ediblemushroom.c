@@ -21,6 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
 #include "main/vecmath_distance_api.h"
+#include "main/track_dolphin_api.h"
 
 #define EDIBLEMUSHROOM_OBJFLAG_HIDDEN       0x4000
 #define EDIBLEMUSHROOM_OBJFLAG_PARENT_SLACK 0x1000
@@ -42,7 +43,6 @@
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 
 
-extern int hitDetectFn_80065e50(void* obj, f32 x, f32 y, f32 z, void* hitsOut, int p6, int p7);
 extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
                               int p10);
 extern int objIsFrozen(u8* obj);
@@ -550,7 +550,7 @@ void EdibleMushroom_hitDetect(u8* obj)
     u8* state;
     u8* mapObj;
     int hitCount;
-    f32** hits;
+    TrackGroundHit** hits;
     int i;
     u8 bboxHit[0x54];
 
@@ -561,13 +561,13 @@ void EdibleMushroom_hitDetect(u8* obj)
         (((((EdibleMushroomState*)state)->flags & EDIBLEMUSHROOM_FLAG_MOVING) != 0) ||
          ((((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags & EDIBLEMUSHROOM_FLAG_MOVING) != 0)))
     {
-        hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        hitCount = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                         ((GameObject*)obj)->anim.localPosZ, &hits, 0, 0);
         for (i = 0; i < hitCount; i++)
         {
-            if (*hits[i] < 10.0f + ((GameObject*)obj)->anim.localPosY)
+            if (hits[i]->height < 10.0f + ((GameObject*)obj)->anim.localPosY)
             {
-                ((GameObject*)obj)->anim.localPosY = *hits[i];
+                ((GameObject*)obj)->anim.localPosY = hits[i]->height;
                 break;
             }
         }

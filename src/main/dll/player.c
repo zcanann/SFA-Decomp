@@ -10978,7 +10978,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
     f32 r;
     f32 pos[3];
     f32 queryParams[4];
-    f32** nearList;
+    TrackGroundHit** nearList;
     f32 pushX;
     f32 pushZ;
 
@@ -11084,10 +11084,11 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
                     lbl_803DE440 = (f32)(int)randomGetRange(0x27, 0x3c);
                 }
             }
-            iv = hitDetectFn_80065e50((int)obj, obj->anim.localPosX, obj->anim.localPosY,
-                                      obj->anim.localPosZ, (int***)&nearList, 0, 0x20);
+            iv = hitDetectFn_80065e50(obj, obj->anim.localPosX, obj->anim.localPosY,
+                                      obj->anim.localPosZ, &nearList, 0, 0x20);
             velMag = -((PlayerState*)state)->sinkOffsetY;
-            if (1 < iv && (velMag = velMag + (**nearList - *nearList[iv - 1]), velMag > lbl_803E7FA0))
+            if (1 < iv &&
+                (velMag = velMag + (nearList[0]->height - nearList[iv - 1]->height), velMag > lbl_803E7FA0))
             {
                 int inner = *(int*)&obj->extra;
                 s8* p = *(s8**)&((PlayerState*)inner)->playerStatus;
@@ -14530,7 +14531,7 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
     f32 z1;
     f32 y2;
     f32 y1;
-    void** list;
+    TrackGroundHit** list;
     f32 planes[8];
     struct
     {
@@ -14689,10 +14690,10 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
         ((void (*)(f32*, f32*, f32*, int))Obj_TransformLocalPointToWorld)(&probe.x, &probe.y, &probe.z,
                                                                           *(int*)&obj->anim.parent);
         {
-            int cnt = hitDetectFn_80065e50((int)obj, probe.x, probe.y, probe.z, (int***)&list, 0, 0x201);
+            int cnt = hitDetectFn_80065e50(obj, probe.x, probe.y, probe.z, &list, 0, 0x201);
             if (cnt != 0)
             {
-                void** pp;
+                TrackGroundHit** pp;
                 f32 best = 10000.0f;
                 f32 best2 = best;
                 int bi = -1;
@@ -14700,20 +14701,20 @@ int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)
                 pp = list;
                 for (; cnt > 0; cnt--)
                 {
-                    f32 dy = probe.y - *(f32*)*pp;
+                    f32 dy = probe.y - (*pp)->height;
                     if (dy >= 0.0f && (best < 0.0f || dy < best))
                     {
                         best = dy;
                         bi = i2;
                     }
-                    if (((f32*)*pp)[2] > 0.707f && dy >= 0.0f && (best2 < 0.0f || dy < best2))
+                    if ((*pp)->normalY > 0.707f && dy >= 0.0f && (best2 < 0.0f || dy < best2))
                     {
                         best2 = dy;
                     }
                     pp++;
                     i2++;
                 }
-                if (best < 40.0f && bi != -1 && ((f32*)list[bi])[2] <= 0.707f && ((f32*)list[bi])[2] > 0.175f)
+                if (best < 40.0f && bi != -1 && list[bi]->normalY <= 0.707f && list[bi]->normalY > 0.175f)
                 {
                     return 0;
                 }
@@ -18452,14 +18453,14 @@ enum HitQueryMask
  */
 int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag)
 {
-    int** hits;
+    TrackGroundHit** hits;
     f32 pos[3];
     f32 y;
     f32 minDist;
     int best;
     int i;
     int count;
-    int* chosen;
+    TrackGroundHit* chosen;
     f32 zero;
 
     *(u8*)((char*)dst + 3) = 0;
@@ -18516,16 +18517,16 @@ int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag)
         PSVECAdd((f32*)((int)dst + 0x48), pos, pos);
         y = *(f32*)((char*)src + 0x3c);
         pos[1] = y;
-        count = hitDetectFn_80065e50((int)obj, pos[0], y, pos[2], &hits, 0, HITQUERY_CLIMB_SURFACE);
+        count = hitDetectFn_80065e50(obj, pos[0], y, pos[2], &hits, 0, HITQUERY_CLIMB_SURFACE);
 
         minDist = 10000.0f;
         best = -1;
         for (i = 0; i < count; i++)
         {
-            int* entry = hits[i];
-            if (*(f32*)((char*)entry + 0x8) > 0.707f)
+            TrackGroundHit* entry = hits[i];
+            if (entry->normalY > 0.707f)
             {
-                f32 d = pos[1] - *(f32*)((char*)entry + 0x0);
+                f32 d = pos[1] - entry->height;
                 if (d < 0.0f)
                 {
                     d = -d;
@@ -18539,7 +18540,7 @@ int player_probeClimbable(GameObject* obj, int p4, int src, int dst, int flag)
         }
 
         chosen = hits[best];
-        *(f32*)((char*)dst + 0x4) = *(f32*)((char*)chosen + 0x0);
+        *(f32*)((char*)dst + 0x4) = chosen->height;
         *(s8*)((char*)dst + 0x1) = (s8)(s32)((2.2f + (*(f32*)((char*)src + 0x3c) - *(f32*)((char*)dst + 0x8))) / 8.8f);
         *(f32*)((char*)dst + 0xc) =
             (*(f32*)((char*)src + 0x3c) - *(f32*)((char*)dst + 0x8)) / (f32) * (s8*)((char*)dst + 0x1);

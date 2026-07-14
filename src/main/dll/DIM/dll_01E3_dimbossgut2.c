@@ -274,7 +274,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     Dimbossgut2Curve* curve;
     int count;
     int i;
-    int* list;
+    TrackGroundHit** list;
     u8 flags;
     f32 z;
 
@@ -296,7 +296,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     curve->f8 = z;
     curve->timer16 = 0;
     curve->f10 = z;
-    count = hitDetectFn_80065e50((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
+    count = hitDetectFn_80065e50(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &list,
                                  0, 0);
     curve->fC = lbl_803E4CD8;
     if (count != 0)
@@ -304,8 +304,8 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
         curve->fC = lbl_803E4D24;
         for (i = 0; i < count; i++)
         {
-            f32 d = *(f32*)list[i] - (obj)->anim.localPosY;
-            if (*(s8*)(list[i] + 0x14) == 0xe)
+            f32 d = list[i]->height - (obj)->anim.localPosY;
+            if ((s8)list[i]->surfaceType == 0xe)
             {
                 if (d > curve->fC)
                 {

@@ -122,13 +122,11 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
     int count;
     int i;
     int j;
-    int off;
-    int off2;
     int camObj;
     int cameraAddr;
     u32 bounds[6];
     f32 pos[3];
-    int hits;
+    TrackGroundHit** hits;
 
     cameraAddr = (int)camera;
     camObj = (int)camera->anim.targetObj;
@@ -153,20 +151,19 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
     }
     if ((flags & 2) != 0)
     {
-        count = hitDetectFn_80065e50(camObj, camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
-                                     &hits, 1, 0x40);
+        count = hitDetectFn_80065e50((GameObject*)camObj, camera->anim.worldPosX, camera->anim.worldPosY,
+                                     camera->anim.worldPosZ, &hits, 1, 0x40);
         *upperBound = -100000.0f;
         *lowerBound = 100000.0f;
         bestUpper = 100000.0f;
         bestLower = 100000.0f;
-        off = 0;
         zLim = 0.0f;
         for (i = 0; i < count; i++)
         {
             zB = 10.0f;
-            if ((*(float**)(hits + off))[2] < zLim)
+            if (hits[i]->normalY < zLim)
             {
-                pt0 = **(float**)(hits + off);
+                pt0 = hits[i]->height;
                 wy = camera->anim.worldPosY;
                 if (pt0 > wy - zB)
                 {
@@ -178,21 +175,19 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
                     if (diff < bestLower)
                     {
                         *lowerBound = pt0;
-                        camera->boundHitZLower = (*(float**)(hits + off))[2];
+                        camera->boundHitZLower = hits[i]->normalY;
                         bestLower = diff;
                     }
                 }
             }
-            off += 4;
         }
-        off2 = 0;
         zLim = 0.0f;
         for (j = 0; j < count; j++)
         {
             zB = 10.0f;
-            if ((*(float**)(hits + off2))[2] > zLim)
+            if (hits[j]->normalY > zLim)
             {
-                pt0 = **(float**)(hits + off2);
+                pt0 = hits[j]->height;
                 wy = camera->anim.worldPosY;
                 if (pt0 < zB + wy)
                 {
@@ -204,12 +199,11 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
                     if (diff < bestUpper)
                     {
                         *upperBound = pt0;
-                        camera->boundHitZUpper = (*(float**)(hits + off2))[2];
+                        camera->boundHitZUpper = hits[j]->normalY;
                         bestUpper = diff;
                     }
                 }
             }
-            off2 += 4;
         }
     }
     Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,

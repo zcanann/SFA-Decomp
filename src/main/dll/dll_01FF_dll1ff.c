@@ -110,11 +110,11 @@ void dll_1FF_update(int obj)
     Dll1FFState* state;
     int grab[1];
     int count;
-    char* landed;
+    GameObject* landed;
     int i;
     u8 slot;
-    char* surf;
-    int hitList[2];
+    TrackGroundHit* surf;
+    TrackGroundHit** hitList[2];
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
@@ -142,20 +142,20 @@ void dll_1FF_update(int obj)
             ((GameObject*)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject*)obj)->anim.velocityY);
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.velocityY * timeDelta + ((GameObject*)obj)->anim.localPosY;
-            count = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            count = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                          ((GameObject*)obj)->anim.localPosZ, hitList, 0, 1);
             landed = NULL;
             for (i = 0; i < count; i++)
             {
-                surf = ((char**)hitList[0])[i];
-                if (*(s8*)(surf + 0x14) != 14)
+                surf = hitList[0][i];
+                if ((s8)surf->surfaceType != 14)
                 {
-                    if (((GameObject*)obj)->anim.localPosY < *(f32*)surf)
+                    if (((GameObject*)obj)->anim.localPosY < surf->height)
                     {
-                        if (((GameObject*)obj)->anim.localPosY > *(f32*)surf - lbl_803E5D88 || i == 0)
+                        if (((GameObject*)obj)->anim.localPosY > surf->height - lbl_803E5D88 || i == 0)
                         {
-                            landed = *(char**)(surf + 0x10);
-                            ((GameObject*)obj)->anim.localPosY = *(f32*)surf;
+                            landed = surf->object;
+                            ((GameObject*)obj)->anim.localPosY = surf->height;
                             ((GameObject*)obj)->anim.velocityY = lbl_803E5D8C;
                         }
                     }
@@ -163,7 +163,7 @@ void dll_1FF_update(int obj)
             }
             if (landed != NULL)
             {
-                Dll1FFSlots* ts = *(Dll1FFSlots**)(landed + 0x58);
+                Dll1FFSlots* ts = *(Dll1FFSlots**)((u8*)landed + 0x58);
                 slot = ts->count;
                 ts->count += 1;
                 ts->slots[(s8)slot].obj = obj;

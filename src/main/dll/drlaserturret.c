@@ -31,7 +31,7 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
-extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
+#include "main/track_dolphin_api.h"
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern int playerGetMoney(void* player);
 extern void* gTitleMenuControlInterfaceCopy;
@@ -118,7 +118,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
     void* playerObj;
     DRLaserTurretState* state;
     void* stack;
-    void** arr;
+    TrackGroundHit** arr;
     int pushState;
     int sum;
     int rng;
@@ -214,18 +214,18 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         animState->aimBlend = lbl_803E59DC;
     }
     animState->aimBlend = lbl_803E59DC;
-    count = hitDetectFn_80065e50(obj, obj->x, obj->y, obj->z, &arr, 0, 0);
+    count = hitDetectFn_80065e50((GameObject*)obj, obj->x, obj->y, obj->z, &arr, 0, 0);
     minDist = lbl_803E5A20;
     for (idx = 0; idx < count; idx++)
     {
-        dist = *(f32*)arr[idx] - obj->y;
+        dist = arr[idx]->height - obj->y;
         if (dist < lbl_803E59DC)
         {
             dist = -dist;
         }
         if (dist < minDist)
         {
-            state->bobBaseY = lbl_803E59E0 + *(f32*)arr[idx];
+            state->bobBaseY = lbl_803E59E0 + arr[idx]->height;
             minDist = dist;
         }
     }

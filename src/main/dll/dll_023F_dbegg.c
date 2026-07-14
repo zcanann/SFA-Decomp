@@ -61,6 +61,7 @@
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/track_dolphin_api.h"
 
 #define DBEGG_OBJGROUP         0x24
 #define DBEGG_SIBLING_OBJGROUP 0x14
@@ -89,7 +90,6 @@ extern const f32 gDbEggAngleHalfPeriod;
 extern const f32 lbl_803E6200;
 extern const f32 lbl_803E6204;
 extern const f32 lbl_803E6208;
-extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int*** listOut, int p6, int p7);
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
@@ -382,13 +382,13 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
     f32 dy;
     int hitCount;
     int i;
-    int** hitList;
-    int** hitCursor;
-    int* hitTri;
+    TrackGroundHit** hitList;
+    TrackGroundHit** hitCursor;
+    TrackGroundHit* hit;
 
     *out = lbl_803E61C8;
-    hitCount = hitDetectFn_80065e50((obj)->anim.localPosX + offsetX, (obj)->anim.localPosY,
-                                    (obj)->anim.localPosZ + offsetZ, (int)obj, &hitList, 0, 0);
+    hitCount = hitDetectFn_80065e50(obj, (obj)->anim.localPosX + offsetX, (obj)->anim.localPosY,
+                                    (obj)->anim.localPosZ + offsetZ, &hitList, 0, 0);
     if (hitCount != 0)
     {
         ground = gDbEggSurfaceNotFound;
@@ -396,9 +396,9 @@ int fn_801FE560(GameObject* obj, f32* out, f32 offsetX, f32 offsetZ, int flag)
         hitCursor = hitList;
         for (i = 0; i < hitCount; i++)
         {
-            hitTri = *hitCursor;
-            dy = *(f32*)hitTri - (obj)->anim.localPosY;
-            if (*(s8*)((u8*)hitTri + 0x14) == 0xe)
+            hit = *hitCursor;
+            dy = hit->height - (obj)->anim.localPosY;
+            if ((s8)hit->surfaceType == 0xe)
             {
                 if (water >= lbl_803E61C8)
                 {

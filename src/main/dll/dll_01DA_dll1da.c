@@ -103,7 +103,7 @@ void dll_1DA_update(int obj)
     f32 damping;
     f32 reflect;
     int hitCount;
-    int floorList;
+    TrackGroundHit** floorList;
     int i;
     RockHitInfo out;
 
@@ -153,16 +153,16 @@ void dll_1DA_update(int obj)
         ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ * damping;
     }
     ((GameObject*)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject*)obj)->anim.localPosY);
-    hitCount = hitDetectFn_80065e50(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+    hitCount = hitDetectFn_80065e50((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                     ((GameObject*)obj)->anim.localPosZ, &floorList, 0, 0x11);
     ((Dll1DAState*)state)->grounded = 0;
     i = 0;
     for (; hitCount > 0; hitCount--)
     {
-        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + **(f32**)(floorList + i * 4))
+        if (((GameObject*)obj)->anim.localPosY < *(f32*)&lbl_803E4B04 + floorList[i]->height)
         {
-            ((GameObject*)obj)->anim.localPosY = **(f32**)(floorList + i * 4);
-            ObjHits_AddContactObject(*(int*)(*(int*)(floorList + i * 4) + 0x10), obj);
+            ((GameObject*)obj)->anim.localPosY = floorList[i]->height;
+            ObjHits_AddContactObject((int)floorList[i]->object, obj);
             ((Dll1DAState*)state)->grounded = 1;
             break;
         }
