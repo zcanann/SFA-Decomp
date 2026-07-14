@@ -2793,10 +2793,8 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
         i++;
     }
 
-    dx = curves[2]->x - curves[1]->x;
-    segmentDx = dx;
-    dz = curves[2]->z - curves[1]->z;
-    segmentDz = dz;
+    segmentDx = (dx = curves[2]->x - curves[1]->x);
+    segmentDz = (dz = curves[2]->z - curves[1]->z);
     if (curves[0] != NULL)
     {
         tdx = curves[1]->x - curves[0]->x;
@@ -2874,7 +2872,8 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
             segmentDz = -dz * segmentLen;
         }
 
-        projX = dx * tangentDx + curves[1]->x;
+        tangentLen = dx * tangentDx + curves[1]->x;
+        projX = tangentLen;
         projY = tdz * tangentDx + curves[1]->y;
         projZ = dz * tangentDx + curves[1]->z;
         *outLateralOffset = -((projX * segmentDz) - (projZ * segmentDx)) + (x * segmentDz - z * segmentDx);
