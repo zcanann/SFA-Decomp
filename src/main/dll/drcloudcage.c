@@ -23,6 +23,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_channel_query_api.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -35,7 +36,6 @@
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u32 volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
@@ -447,7 +447,8 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
             {
                 vol = 0;
             }
-            Sfx_SetObjectChannelVolume(obj, 8, vol & 0xff, lbl_803E5B20 + gDrCloudCageWindVolume / lbl_803E5B08);
+            Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 8, vol & 0xff,
+                                                   lbl_803E5B20 + gDrCloudCageWindVolume / lbl_803E5B08);
         }
     }
     if (channelFlags & 2)
@@ -480,7 +481,8 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
                 {
                     vol = 0;
                 }
-                Sfx_SetObjectChannelVolume(obj, 1, vol & 0xff, lbl_803E5B20 + gDrCloudCageWindVolume);
+                Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 1, vol & 0xff,
+                                                       lbl_803E5B20 + gDrCloudCageWindVolume);
             }
         }
     }
@@ -509,7 +511,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
             ((DRCloudCageState*)state)->channel2Vol = lbl_803E5B30;
         }
         v = ((DRCloudCageState*)state)->channel2Vol;
-        Sfx_SetObjectChannelVolume(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
+        Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
         if (intensity > 5)
         {
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B3C + intensity;
@@ -531,7 +533,7 @@ void drcloudcage_updateEngineFx(f32 distanceScale, GameObject* obj, int state, i
             ((DRCloudCageState*)state)->channel4Vol = lbl_803E5B44;
         }
         v = ((DRCloudCageState*)state)->channel4Vol;
-        Sfx_SetObjectChannelVolume(obj, 4, (int)v, v / lbl_803E5B48);
+        Sfx_SetObjectChannelVolumePtrU32Legacy(obj, 4, (int)v, v / lbl_803E5B48);
         pulse.unkC = lbl_803E5B4C;
         pulse.unk10 = lbl_803E5B50;
         pulse.unk14 = lbl_803E5B54;
