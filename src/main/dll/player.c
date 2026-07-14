@@ -1649,7 +1649,7 @@ int playerStateShootFireball(GameObject* obj, int state, f32 fv)
     setBButtonIcon(0xa);
     if (lbl_803DE42C != 0)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_whit3_c);
+        Sfx_KeepAliveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_whit3_c);
         timer = inner->stateTimer - timeDelta;
         inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
@@ -5100,7 +5100,7 @@ int playerStateTryCastSpell(GameObject* obj, int state, f32 fv)
 
     if (lbl_803DE42C != 0)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_whit3_c);
+        Sfx_KeepAliveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_whit3_c);
         timer = inner->stateTimer - timeDelta;
         inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
@@ -5348,7 +5348,7 @@ int playerStateAimStaff(int obj, int state)
         {
             f32 x;
             int h[1];
-            Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_whit3_c);
+            Sfx_KeepAliveLoopedObjectSoundIntLegacy(obj, SFXTRIG_whit3_c);
             x = inner->stateTimer - timeDelta;
             inner->stateTimer = x;
             if (x <= lbl_803E7EA4)
@@ -9824,7 +9824,7 @@ int playerState30(GameObject* obj, int state, f32 fv)
 
     if (lbl_803DE42C != 0)
     {
-        Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_whit3_c);
+        Sfx_KeepAliveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_whit3_c);
         timer = inner->stateTimer - timeDelta;
         inner->stateTimer = timer;
         if (timer <= lbl_803E7EA4)
@@ -12479,7 +12479,7 @@ int Lightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             snd[0] = lbl_803E8180;
             snd[1] = lbl_803E81C4;
             snd[2] = lbl_803E8180;
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_foot_metal_scuff_455);
+            Sfx_KeepAliveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_foot_metal_scuff_455);
             ((void (*)(int, f32, int, int, int, void*))fn_80098B18)(
                 (int)obj, lbl_803E81C8 * obj->anim.rootMotionScale, 3, mode, 0, snd);
         }
