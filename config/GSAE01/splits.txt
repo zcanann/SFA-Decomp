@@ -1153,14 +1153,17 @@ main/dll/dll_00C9_enemy.c:
 main/dll/dll_00DF_hagabon.c:
 	.text       start:0x8014E1DC end:0x8014EE8C
 	.data       start:0x8031DC88 end:0x8031DCC0
+	.sdata2     start:0x803E2608 end:0x803E2678
 
 main/dll/dll_00E0_swarmbaddie.c:
 	.text       start:0x8014EE8C end:0x8014F620
 	.data       start:0x8031DCC0 end:0x8031DCF8
+	.sdata2     start:0x803E2678 end:0x803E26D0
 
 main/dll/dll_00E1_wispbaddie.c:
 	.text       start:0x8014F620 end:0x801504F8
 	.data       start:0x8031DCF8 end:0x8031F290
+	.sdata2     start:0x803E26D0 end:0x803E2758
 
 main/dll/newseqobj.c:
 	.text       start:0x801504F8 end:0x801511E8
@@ -1171,6 +1174,7 @@ main/dll/seqobj11d.c:
 main/dll/seqobj11e.c:
 	.text       start:0x80152040 end:0x80152EC0
 	.data       start:0x8031F290 end:0x8031F2D8
+	.sdata2     start:0x803E27F8 end:0x803E2898
 
 main/dll/magicplant.c:
 	.text       start:0x80152EC0 end:0x801540A0
@@ -1185,6 +1189,7 @@ main/dll/fireflylantern.c:
 main/dll/duster.c:
 	.text       start:0x8015536C end:0x80157004
 	.data       start:0x8031F2F8 end:0x8031FAE8
+	.sdata2     start:0x803E2A20 end:0x803E2A70
 
 main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
