@@ -1346,7 +1346,6 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
 
 static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 {
-    int neighbor;
     int count;
     u32 mask;
     int i;
@@ -1357,10 +1356,10 @@ static inline int RomCurve_pickRandomControlPointId_2A(int curve)
     mask = 1;
     for (i = 0; i < 4; i = i + 1)
     {
-        neighbor = ((RomCurveDef*)curve)->linkIds[i];
-        if ((-1 < neighbor) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) == 0) && (neighbor != -1))
+        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) == 0) &&
+            (((RomCurveDef*)curve)->linkIds[i] != -1))
         {
-            candidates[count++] = neighbor;
+            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
         }
         mask = mask << 1;
     }
@@ -1377,7 +1376,6 @@ static inline int RomCurve_pickRandomControlPointId_2A(int curve)
 
 static inline int RomCurve_pickRandomControlPointId_2B(int curve)
 {
-    int neighbor;
     int count;
     u32 mask;
     int i;
@@ -1388,10 +1386,10 @@ static inline int RomCurve_pickRandomControlPointId_2B(int curve)
     mask = 1;
     for (i = 0; i < 4; i = i + 1)
     {
-        neighbor = ((RomCurveDef*)curve)->linkIds[i];
-        if ((-1 < neighbor) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) != 0) && (neighbor != -1))
+        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) != 0) &&
+            (((RomCurveDef*)curve)->linkIds[i] != -1))
         {
-            candidates[count++] = neighbor;
+            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
         }
         mask = mask << 1;
     }
