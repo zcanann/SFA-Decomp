@@ -420,3 +420,13 @@ TU than the corpus profiles (but pragma experiments bound this), or (c) the two-
 form colors coincidentally in the target via a coalesce eligibility our build misses
 (decode the upstream move-descriptor flag setting - the same open item as func1C's
 materialization direction; likely ONE shared answer).
+
+## Coalesce-eligibility decode: exact addresses mapped
+Flag writers (or byte [desc+0x24], imm): full-coalesce |=6 at 0x4d036b and 0x4d0fc9
+(inside marker fn ENTRY 0x4d0ea0 taking (value, srcWeb, dstWeb), sets class=4 at +0x25,
+webIndex pair at +0x26/+0x28); |=2-only at 0x4d0bd3/0x4d10d6/0x4fe5ef; loop-pin |=0x40 at
+0x4accd9/0x4acfa4/0x4b0a76/0x4dd8dd. CALLERS of the |=6 marker: 0x435f9e and 0x435fb8
+(CodeGenNumbering band - the "upstream during web/move building"), 0x4adc30, 0x4d0355,
+0x5268a6/0x52690a. Disassembling the guard conditions before the 0x435f9e/0x435fb8 calls
+yields the eligibility rule - the single shared decode expected to explain BOTH residuals
+(walkgroup accumulate register sharing + func1C preheader materialization direction).
