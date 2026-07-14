@@ -13,6 +13,7 @@
 #include "main/obj_placement.h"
 #include "main/dll/objfx_api.h"
 #include "main/object_render_legacy.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/chukchukstate_struct.h"
 #include "main/game_object.h"
@@ -45,9 +46,6 @@ u8 lbl_8031FF80[] = {0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0};
 #pragma peephole off
 void fn_8015F5B0(short* obj)
 {
-
-    extern int Obj_AllocObjectSetup(int size, int id);
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     ChukChukState* sub;
     int setup;
     u8* o;
@@ -57,14 +55,14 @@ void fn_8015F5B0(short* obj)
     sub = ((GameObject*)obj)->extra;
     if (Obj_IsLoadingLocked() != 0)
     {
-        setup = Obj_AllocObjectSetup(36, CHUKCHUK_CHILD_OBJ_ICEBALL);
+        setup = (int)Obj_AllocObjectSetup(36, CHUKCHUK_CHILD_OBJ_ICEBALL);
         ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = 5.0f + ((GameObject*)obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        o = Obj_SetupObject(setup, 5, -1, -1, 0);
+        o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, NULL);
         if (o != NULL)
         {
             pl = Obj_GetPlayerObject();
