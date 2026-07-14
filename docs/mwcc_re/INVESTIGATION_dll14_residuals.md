@@ -455,3 +455,14 @@ emission in the 0x4c2xxx band (CMachine.c, 94 funcs at 0x4bf320-0x4c9590 per ass
 find the condition separating dest-targeting from temp-materialization (likely whether the
 value is single-use/addressing context). This same emitter decision plausibly controls
 func1C's preheader materialization direction - one decode, both functions.
+
+## Association analysis completed: 2D/member decompositions mathematically dead
+The mp4 add-then-addi cases (charDirTbl[i][2], arr[i].member240) all have the constant
+WITHIN the element (inner < row/sizeof). Our +0x3000 exceeds any 40-stride element =>
+no legal 2D/member decomposition exists. The dest-targeting DOES fire for single
+expressions (accumulate emitted into the dest reg) with the constant grouped first -
+the association choice inside the CMachine addressing emitter is the precise decode:
+what makes it emit (base+idx) before +const when the const cannot be an element member.
+Note the target may simply canonicalize the same way ONLY when the addressing node comes
+from a specific IR shape (e.g. pointer-arith on a typed pointer vs int) - enumerate the
+IR-node kinds at the emitter dispatch (0x4c2934's 0x1e000000 kind-bits switch is nearby).
