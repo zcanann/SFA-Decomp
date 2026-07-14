@@ -22,6 +22,7 @@
 #include "main/object_api.h"
 #include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
+#include "string.h"
 
 /*
  * DbStealerwormControl - the per-family control record hung off
@@ -88,9 +89,6 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 
 int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-
-    extern int Obj_AllocObjectSetup(int, int);
-    extern void memcpy(int, void*, int);
     int newObj;
     void* res;
     int* objs;
@@ -110,8 +108,8 @@ int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
             if (res == NULL)
                 continue;
-            newObj = Obj_AllocObjectSetup(56, DBHOLECONTROL1_CHILD_OBJ);
-            memcpy(newObj, res, 56);
+            newObj = (int)Obj_AllocObjectSetup(56, DBHOLECONTROL1_CHILD_OBJ);
+            memcpy((void*)newObj, res, 56);
             ((GameObject*)newObj)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
             ((GameObject*)newObj)->anim.localPosX = ((GameObject*)obj)->anim.localPosY;
             ((GameObject*)newObj)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
