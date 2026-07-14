@@ -20,7 +20,7 @@
 #include "main/dll/DIM/dll_0256_dimsnowhorn1.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/audio/sfx_legacy.h"
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_ui_interface.h"
@@ -1043,7 +1043,6 @@ int DIMSnowHorn1_setScale(GameObject* obj)
 #pragma dont_inline on
 void fn_802BB998(int obj, int pointState, int inputState)
 {
-    extern void Sfx_PlayFromObject(int obj, u16 sfxId);
     u8 flags;
     u8 pointIndex;
     u8 count;
