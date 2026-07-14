@@ -45,6 +45,7 @@
 #include "main/audio/stream_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "track/intersect_screen_api.h"
 #define CAMMODE_VIEWFINDER 0x44
 #define CAMMODE_WORLDMAP 0x4e
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
@@ -376,7 +377,6 @@ extern s8 lbl_803DD8B7;
 extern s16 lbl_803DD8D2;
 extern f32 lbl_803E21D0;
 extern s16 cMenuFadeCounter;
-extern u32 getScreenResolution(void);
 extern s16 gHudTextureIds[];
 extern u8 lbl_803A9398[];
 extern s8 gCMenuPreselectOwnedBit;

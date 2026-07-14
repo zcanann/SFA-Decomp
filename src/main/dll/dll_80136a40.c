@@ -47,6 +47,7 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/objprint_sound_api.h"
+#include "track/intersect_screen_api.h"
 
 u16 gDebugTabWidth = 0x20;
 #pragma explicit_zero_data on
@@ -188,7 +189,6 @@ extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
-extern u32 getScreenResolution(void);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);

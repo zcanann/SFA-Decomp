@@ -1,5 +1,8 @@
 #include "main/game_object.h"
 #include "track/intersect_depth_state_api.h"
+#define INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
+#include "track/intersect_screen_api.h"
+#undef INTERSECT_SCREEN_DIRECT_SIGNED_WIDTH_CALL
 #include "main/hud_visibility_api.h"
 #include "main/object_api.h"
 #include "main/newshadows_audio_api.h"
@@ -318,8 +321,6 @@ extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
 extern u8 fn_800626C8(int* obj, int frames);
 extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
-extern void setScreenWidth(int w);
-extern void clearScreenWidth(void);
 extern f32* ObjModel_GetJointMatrix(int* model, int joint);
 extern void C_MTXOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);

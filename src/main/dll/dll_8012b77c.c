@@ -19,6 +19,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_screen_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/game_object.h"
@@ -489,7 +490,6 @@ extern u8 lbl_803DD7BA;
 extern int lbl_803DD898;
 extern s16 lbl_803DD89E;
 extern const f32 lbl_803E21D0;
-extern u32 getScreenResolution(void);
 extern s16 gHudTextureIds[];
 extern int gGameUiScreenWidthOffset;
 extern int lbl_803DD740;

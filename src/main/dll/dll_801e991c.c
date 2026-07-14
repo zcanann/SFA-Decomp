@@ -2,6 +2,7 @@
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_geom_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "dolphin/gx/GXEnum.h"
@@ -31,7 +32,6 @@ extern ShColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
 
-extern void geomDrawFn_800796f0(void);
 extern void GXSetTevColor(int reg, ShColor color);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);

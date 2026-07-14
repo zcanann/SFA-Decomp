@@ -6,7 +6,9 @@
 #include "track/intersect_depth_read_api.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
+#include "track/intersect_geom_api.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_screen_api.h"
 #include "track/intersect_texture_api.h"
 #include "ghidra_import.h"
 
@@ -17,9 +19,6 @@ void drawFn_8006f500(void);
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type);
 void fn_8006FC00(int param_1);
 void mapInitFn_8006fccc(void);
-u32 getScreenResolution(void);
-void setScreenWidth(u32 param_1);
-void clearScreenWidth(void);
 void matrixFn_8006ff0c(float* param_6, short* param_7, f32 param_1, f32 param_2, f32 param_3, f32 param_4, f32 param_5);
 void normalize(f32* x, f32* y, f32* z);
 void fn_80070234(f32* param_1);
@@ -69,7 +68,6 @@ void gxTexColorFn_80079254(void);
 void gxTevAddTextureFrameBlendStages(void);
 void gxTextureFn_800794e0(void);
 void textRenderSetupFn_800795e8(void);
-void geomDrawFn_800796f0(void);
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);

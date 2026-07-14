@@ -21,6 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/lightmap_text_color_api.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_geom_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/modgfx_types.h"
@@ -360,7 +361,6 @@ extern void GXSetCullMode(int mode);
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
-extern void geomDrawFn_800796f0(void);
 extern void gxTexColorFn_80079254(void);
 extern void gxBlendFn_80078b4c(void);
 extern void drawFn_8005cf8c(void* a, void* b, int count);

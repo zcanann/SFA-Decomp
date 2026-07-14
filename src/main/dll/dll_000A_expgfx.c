@@ -3,6 +3,7 @@
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_fog_api.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_geom_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
@@ -218,7 +219,6 @@ extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
-extern void geomDrawFn_800796f0(void);
 extern void fn_8007D670(void);
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;

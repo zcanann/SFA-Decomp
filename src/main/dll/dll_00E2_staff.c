@@ -17,6 +17,7 @@
 #include "track/intersect_depth_state_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_geom_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
@@ -686,7 +687,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-extern void geomDrawFn_800796f0(void);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int a);

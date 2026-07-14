@@ -1,0 +1,6 @@
+#ifndef TRACK_INTERSECT_GEOM_API_H_
+#define TRACK_INTERSECT_GEOM_API_H_
+
+void geomDrawFn_800796f0(void);
+
+#endif /* TRACK_INTERSECT_GEOM_API_H_ */

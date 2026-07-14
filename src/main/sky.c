@@ -31,6 +31,7 @@
 #include "main/lightmap_render_control_api.h"
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
+#include "track/intersect_screen_api.h"
 
 u8* gSky2State;
 s8 gSky2DrawMode;
@@ -256,7 +257,6 @@ extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
 extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
-extern u32 getScreenResolution(void);
 extern void* memset(void* dst, int c, int n);
 int getEnvFxBit2BA(void)
 {
