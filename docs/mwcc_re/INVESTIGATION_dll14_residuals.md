@@ -287,3 +287,19 @@ target. Conclusion: no separate fix needed - finish the per-site staging alignme
 target 0x8ac-0xc5c) and the phantoms will park identically. The igwalk copy-descriptor log
 provides the phantom census for verifying each iteration (expect identical w-lists when
 the staging is right).
+
+## SYNTHESIS: walkgroup fix = 3 identified pieces (per-block reading of target 0x7c0-0x8c8)
+Target block-0: np held SAVED (r28) across the block; po = addi r29,r28,16 BEFORE sqrtf;
+pl FOLDS to 0(r28) after the call (np still live). Blocks 1-3: np re-derefed into a
+VOLATILE (r3/r4) per block; po AND pl materialize as saved short webs (r29/r24 grants).
+=> The COMMITTED macro (po/pl = shared named vars, OBJFSA_NEWPATCH re-deref) produces
+exactly these instructions (baseline matched them); its pl block-1 du-chain parks at
+nadj=29 (measured F40) instead of taking an A-grant like the target - the textbook
+"one interference edge below threshold" case from the validated levers doc. Fix pieces:
+1. Keep the committed macro (shared pl/po named vars) - shapes are right.
+2. Tail wg/wgB: single-expression fresh wgT/wgBT declared last (fixes F88/F90 splits ->
+   wg=r21/wgB=r22) - association form still to settle ((u32)-cast variant closest).
+3. pl block-1 chain: +1 interference edge (validated lever forms: inlined helper return
+   copy / ternary temp / shared named local) to push nadj 29->30 so it parks early and
+   pops in the target slot instead of stealing r22.
+Combine in the probe, verify anchors + census, port, score.
