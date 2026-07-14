@@ -33,6 +33,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/objhits.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
+#include "main/dll/player_api.h"
 
 #define DIM2ICEFLOE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIM2ICEFLOE_OBJFLAG_FREED 0x40
@@ -50,7 +51,6 @@ typedef struct Dim2IceFloePlacement
 STATIC_ASSERT(offsetof(Dim2IceFloePlacement, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(Dim2IceFloePlacement, curveStep) == 0x1c);
 
-extern void fn_80296D20(void* player, int obj);
 extern f32 lbl_803E4B34;
 extern f32 gDim2IceFloeSinkSpeed;
 extern f32 gDim2IceFloeSinkFreeThreshold;
@@ -139,7 +139,7 @@ void dim2icefloe_update(GameObject *obj)
             {
                 ObjHits_DisableObject((int)obj);
                 (obj)->objectFlags |= 0x100;
-                fn_80296D20(Obj_GetPlayerObject(), (int)obj);
+                fn_80296D20(Obj_GetPlayerObject(), obj);
             }
             if ((obj)->anim.localPosY < ((Dim2IceFloeState*)sub)->curve.sample[1] - gDim2IceFloeSinkFreeThreshold)
             {

@@ -38,6 +38,7 @@ int fn_8029669C(GameObject* obj);
 int fn_802966B4(GameObject* obj);
 int objFn_80296700(GameObject* obj);
 int fn_80296C4C(GameObject* obj);
+void fn_80296D20(GameObject* player, GameObject* parentObj);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);

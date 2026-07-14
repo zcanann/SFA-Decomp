@@ -3,11 +3,10 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/NW/dll_01A4_nwice.h"
+#include "main/dll/player_api.h"
 
 #define NWICE_OBJGROUP      0x3c
 #define NWICE_LINK_OBJGROUP 0x3d /* scanned to find the paired ice object by linkId */
-
-extern void fn_80296D20(int obj, void* arg);
 
 int NW_ice_getExtraSize(void)
 {
@@ -47,7 +46,7 @@ void NW_ice_update(int* obj)
         if (((GameObject*)state->linkedObj)->anim.alpha < 0xc0)
         {
             ObjHits_DisableObject((u32)obj);
-            fn_80296D20((int)Obj_GetPlayerObject(), obj);
+            fn_80296D20(Obj_GetPlayerObject(), (GameObject*)obj);
         }
         else
         {

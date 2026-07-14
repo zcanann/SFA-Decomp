@@ -134,7 +134,6 @@ void fn_80296BBC(GameObject* obj);
 void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
 void playerLock(GameObject* obj, int lock);
 int playerStatusIsPositive(GameObject* obj);
-void fn_80296D20(int obj, void* arg);
 void playerSetInCutscene(GameObject* obj);
 void playerSetCutsceneCameraFlag(GameObject* obj);
 void playerSetOverrideParentSlack(GameObject* obj);
@@ -13248,13 +13247,13 @@ int playerStateFireLaser(int obj, int state)
     return 0;
 }
 
-void fn_80296D20(int obj, void* arg)
+void fn_80296D20(GameObject* obj, GameObject* parentObj)
 {
     int state = (int)((GameObject*)obj)->extra;
     PlayerState* inner = ((GameObject*)obj)->extra;
     short type;
 
-    if (((GameObject*)obj)->anim.parent == arg)
+    if (((GameObject*)obj)->anim.parent == parentObj)
     {
         objHitDetectFn_80062e84((GameObject*)obj, NULL, 1);
         type = ((PlayerState*)state)->baddie.controlMode;
@@ -13268,7 +13267,7 @@ void fn_80296D20(int obj, void* arg)
             staffFn_80170380(gPlayerStaffObject, 2);
             ((ByteFlags*)((char*)inner + 0x3f0))->b02 = 0;
             *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
+            ObjHits_SyncObjectPositionIfDirtyLegacy((int)obj);
             ((ByteFlags*)((char*)inner + 0x3f0))->b40 = 0;
             ((ByteFlags*)((char*)inner + 0x3f0))->b04 = 1;
             ((ByteFlags*)((char*)inner + 0x3f4))->b10 = 1;
@@ -13288,7 +13287,7 @@ void fn_80296D20(int obj, void* arg)
                 *(int*)((char*)inner->heldObj + 0xf8) = 0;
                 inner->heldObj = 0;
             }
-            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 2);
+            (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 2);
             *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A514C;
         }
     }
