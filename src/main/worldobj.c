@@ -6,6 +6,7 @@
 #include "main/modellight_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 
 #define ObjList_FindObjectByIdLegacy(id) ((int (*)(int))ObjList_FindObjectById)(id)
 #include "main/objtexture.h"
@@ -80,7 +81,6 @@ extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
 
 extern void ModelLightStruct_free(int model);
-extern void objRenderModelAndHitVolumes(f32 e);
 extern void queueGlowRender(int model);
 extern int objCreateLight(int obj, int arg);
 extern void modelLightStruct_setLightKind(int light, int v);
@@ -650,7 +650,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
     if (modelId == 0x5f5)
     {
-        objRenderModelAndHitVolumes(lbl_803E6678);
+        ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
         return;
     }
     if (visible == 0)
@@ -664,7 +664,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     case 0x5de:
         if (state->effectState == 0)
         {
-            objRenderModelAndHitVolumes(lbl_803E6678);
+            ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E6678);
         }
         break;
     case 0x5e3:
