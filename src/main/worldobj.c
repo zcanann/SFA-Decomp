@@ -3,7 +3,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
@@ -33,8 +33,6 @@ typedef struct
     u8 mask;
     u8 pad12[2];
 } GreatFoxFxEntry;
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 /* case 0x5e2 spawns 11 scattered copies of this child; the child (handled in
  * case 0x5da below) initializes with random rotation on all axes and random
@@ -82,22 +80,9 @@ extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
 
-extern void ModelLightStruct_free(int model);
-extern void queueGlowRender(int model);
-extern int objCreateLight(int obj, int arg);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
-extern void modelLightStruct_setEnabled(int light, int a, f32 b);
-extern void modelLightStruct_updateGlowAlpha(int light);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(void* obj, f32 scale, int a, int b, int c, void* vec);
 
 int worldobj_getExtraSize(void);
@@ -140,10 +125,10 @@ int worldobj_getObjectTypeId(int* obj)
 void worldobj_free(GameObject* obj)
 {
     WorldObjState* state = (obj)->extra;
-    if (*(void**)&state->light != NULL)
+    if (state->light != NULL)
     {
         ModelLightStruct_free(state->light);
-        state->light = 0;
+        state->light = NULL;
     }
     (*gExpgfxInterface)->freeSource((int)obj);
 }
@@ -191,15 +176,15 @@ void worldobj_init(GameObject* obj, int arg)
         state->orbitRadiusZ = lbl_803E66C8 * dist + base;
         state->orbitRadiusX = state->orbitRadiusZ * (lbl_803E66CC * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) +
                                                      *(f32*)&lbl_803E66CC);
-        state->light = objCreateLight((int)obj, 1);
-        if (*(void**)&state->light != NULL)
+        state->light = objCreateLight(obj, 1);
+        if (state->light != NULL)
         {
             modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E665C, lbl_803E665C);
             modelLightStruct_setDiffuseColor(state->light, 0xff, 0xff, 0xff, 0);
             modelLightStruct_setDistanceAttenuation(state->light, lbl_803E66AC, lbl_803E66D0);
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * state->scale);
-            modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, lbl_803E66A0);
+            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E66A0);
         }
         break;
     case 0x5f5:
@@ -298,7 +283,7 @@ void worldobj_update(GameObject* obj)
     case 0x80f:
         if (state->orbitAngle > 0x8000 || state->orbitAngle < 0)
         {
-            if (*(void**)&state->light != NULL)
+            if (state->light != NULL)
             {
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E6678);
             }
@@ -344,7 +329,7 @@ void worldobj_update(GameObject* obj)
             objfx_spawnFlaggedTrailBurst(obj, lbl_803E6668 * state->scale, 2, 0xdf, 8, vec);
             obj->anim.rotX = lbl_803E668C * timeDelta + (f32)obj->anim.rotX;
             obj->anim.rotY = lbl_803E6690 * timeDelta + (f32)obj->anim.rotY;
-            if (*(void**)&state->light != NULL && modelLightStruct_getActiveState((ModelLightStruct*)state->light) != 0)
+            if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
             {
                 modelLightStruct_updateGlowAlpha(state->light);
             }
@@ -447,10 +432,10 @@ void worldobj_update(GameObject* obj)
         state->spinZStep = gAudioStreamCurrentId != 0;
         ObjAnim_AdvanceCurrentMove((int)obj, gWorldObjAdvanceMoveTable[state->controlByte],
                                                                      timeDelta, (ObjAnimEventList*)&vec[3]);
-        if (state->effectState == 0 && *(void**)&state->light != NULL)
+        if (state->effectState == 0 && state->light != NULL)
         {
             ModelLightStruct_free(state->light);
-            state->light = 0;
+            state->light = NULL;
         }
         break;
     case 0x5df:
@@ -494,10 +479,10 @@ void worldobj_update(GameObject* obj)
             if ((u8)getWorldMapVoiceoverTimer() == 0 && (*gScreenTransitionInterface)->isFinished() != 0 &&
                 gWorldObjEffectRenderDelay == 0)
             {
-                if (*(void**)&state->light == NULL)
+                if (state->light == NULL)
                 {
-                    state->light = ((int (*)(void*, int))objCreateLight)(obj, 1);
-                    if (*(void**)&state->light != NULL)
+                    state->light = objCreateLight(obj, 1);
+                    if (state->light != NULL)
                     {
                         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
                         modelLightStruct_setPosition(state->light, lbl_803E665C, lbl_803E66AC, *(f32*)&lbl_803E665C);
@@ -510,10 +495,10 @@ void worldobj_update(GameObject* obj)
                     }
                 }
             }
-            else if (*(void**)&state->light != NULL)
+            else if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);
-                state->light = 0;
+                state->light = NULL;
             }
             ((WorldObjState*)((GameObject*)gWorldObjEffectTargetObj)->extra)->effectState = 1;
             ((GameObject*)gWorldObjEffectTargetObj)->anim.localPosX = obj->anim.localPosX;
@@ -529,10 +514,10 @@ void worldobj_update(GameObject* obj)
         Obj_SetActiveModelIndex((GameObject*)gWorldObjEffectTargetObj, 0);
             }
         }
-        else if (*(void**)&state->light != NULL)
+        else if (state->light != NULL)
         {
             ModelLightStruct_free(state->light);
-            state->light = 0;
+            state->light = NULL;
         }
         break;
     case 0x61e:
@@ -696,7 +681,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         }
         break;
     case 0x80f:
-        if (*(void**)&state->light != NULL && modelLightStruct_getActiveState((ModelLightStruct*)state->light) != 0)
+        if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         {
             queueGlowRender(state->light);
         }

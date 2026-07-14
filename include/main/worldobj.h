@@ -2,6 +2,7 @@
 #define MAIN_WORLDOBJ_H_
 
 #include "global.h"
+#include "main/modellight_api.h"
 
 typedef struct WorldObjEffectParams {
     u8 pad00[6];
@@ -19,7 +20,7 @@ typedef struct WorldObjSetup {
 } WorldObjSetup;
 
 typedef struct WorldObjState {
-    int light;
+    ModelLightStruct* light;
     u8 pathPointWork[0x25C - 4];
     f32 orbitRadiusZ;
     f32 orbitRadiusX;
@@ -50,6 +51,7 @@ STATIC_ASSERT(offsetof(WorldObjSetup, objectId) == 0x00);
 STATIC_ASSERT(offsetof(WorldObjSetup, variant) == 0x1B);
 
 STATIC_ASSERT(sizeof(WorldObjState) == 0x284);
+STATIC_ASSERT(offsetof(WorldObjState, light) == 0x00);
 STATIC_ASSERT(offsetof(WorldObjState, orbitRadiusZ) == 0x25C);
 STATIC_ASSERT(offsetof(WorldObjState, orbitRadiusX) == 0x260);
 STATIC_ASSERT(offsetof(WorldObjState, orbitStartY) == 0x264);
