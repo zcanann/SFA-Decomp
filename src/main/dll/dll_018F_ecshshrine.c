@@ -67,6 +67,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0191_ecshcreator.h"
 #include "main/dll/player_staff_api.h"
+#include "main/dll/player_api.h"
 
 typedef struct EcshIntPair
 {
@@ -159,7 +160,6 @@ extern void gpsh_shrine_initialise(void);
 
 extern int objIsCurModelNotZero(void* obj);
 extern int objGetAnimStateFlags(int* player, int flags);
-extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
  * in ecsh_shrine_update - the slot->cup maps that follow it in memory are
@@ -289,7 +289,7 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 state->hasTorchSignal = 1;
                 break;
             case 7:
-                objSetAnimStateFlags(player, 8, 1);
+                objSetAnimStateFlags((GameObject*)player, 8, 1);
                 mainSetBits(GAMEBIT_WM_Spirit1Related_0143, 1);
                 mainSetBits(GAMEBIT_K1_SPIRIT_COLLECTED, 1);
                 break;

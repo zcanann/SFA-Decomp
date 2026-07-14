@@ -22,6 +22,7 @@
 #include "main/object_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/player_api.h"
 
 #define NWSH_LEVCON_MAP_SHRINE 0xb /* Krazoa shrine map triggered on activation */
 
@@ -30,8 +31,6 @@
 #define NWSH_LEVCON_ENVFX_C 0x222
 
 extern f32 lbl_803E5150;
-
-extern void objSetAnimStateFlags(void* player, int a, int b);
 
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -46,7 +45,7 @@ int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             switch (animUpdate->eventIds[i])
             {
             case 1:
-                objSetAnimStateFlags(player, 0x10, 1);
+                objSetAnimStateFlags((GameObject*)player, 0x10, 1);
                 mainSetBits(GAMEBIT_ITEM_Spirit6_Got, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 4, 1);
                 (*gMapEventInterface)->setObjGroupStatus(NWSH_LEVCON_MAP_SHRINE, 0x1d, 1);

@@ -26,6 +26,7 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0200_dll200.h"
+#include "main/dll/player_api.h"
 #include "main/obj_placement.h"
 
 typedef struct Dll200Placement
@@ -54,7 +55,6 @@ extern f32 lbl_803E5DA8;
 extern f32 lbl_803E5DAC;
 extern f32 lbl_803E5DB0;
 extern f32 lbl_803E5DB4;
-extern void playerAddRemoveMagic(int obj, int amount);
 extern void playerSetHaveSpell(GameObject* player, int a, int b);
 extern int playerGetCurMagic(void);
 
@@ -284,7 +284,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
         {
             if (animUpdate->eventIds[i] == 4)
             {
-                playerAddRemoveMagic(player, 5);
+                playerAddRemoveMagic((GameObject*)player, 5);
             }
         }
         else if (mode != 2)
@@ -298,7 +298,7 @@ int dll_200_unlockFireBlasterSpell(int* obj, int unused, ObjAnimUpdateState* ani
             else if (eventId == 2)
             {
                 playerSetHaveSpell((GameObject*)player, 0, 1);
-                playerAddRemoveMagic(player, 5);
+                playerAddRemoveMagic((GameObject*)player, 5);
             }
         }
     }

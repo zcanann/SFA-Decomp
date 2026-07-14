@@ -34,6 +34,7 @@
 #include "main/dll/dll_018D_mmshscales.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
 #include "main/object_descriptor.h"
+#include "main/dll/player_api.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -93,7 +94,6 @@ extern f32 lbl_803E4F60;
 
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
-extern void objSetAnimStateFlags(int obj, int flag, int set);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);
 typedef struct MMSHShrineRuntime
@@ -186,7 +186,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
             switch (command)
             {
             case 7:
-                objSetAnimStateFlags(playerObj, 4, 1);
+                objSetAnimStateFlags((GameObject*)playerObj, 4, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_KRYSTAL, 1);
                 mainSetBits(MMSH_SHRINE_SEQ_GB_UNKNOWN_FF, 1);
                 (*gMapEventInterface)->setMapAct(MMSH_SHRINE_SEQ_MAP_DIR, MMSH_SHRINE_SEQ_MAP_EVENT);

@@ -26,12 +26,12 @@
 #include "main/gamebits_api.h"
 #include "main/dll/CF/dll_014F_cfprisonuncle.h"
 #include "main/object_descriptor.h"
+#include "main/dll/player_api.h"
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
 extern f32 lbl_803E428C;
 extern f32 lbl_803E4288;
-extern void playerAddRemoveMagic(void* player, int n);
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a

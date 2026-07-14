@@ -15,6 +15,7 @@ int playerGetMoney(void* player);
 int playerIsDisguised(GameObject* obj);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
+void playerAddRemoveMagic(GameObject* obj, int amount);
 int playerGetTimeScale(GameObject* obj, f32* out);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */

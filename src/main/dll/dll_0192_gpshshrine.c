@@ -9,6 +9,7 @@
 #include "main/render.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object.h"
@@ -75,7 +76,6 @@ extern void DBSH_Symbol_init(void);
 
 
 extern f32 lbl_803E5038;
-extern void objSetAnimStateFlags(int* player, int a, int b);
 extern f32 lbl_803E5000;
 extern f32 lbl_803E5004;
 extern f32 lbl_803E5008;
@@ -191,7 +191,7 @@ int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 sub->activatedFlag = 1;
                 break;
             case 7:
-                objSetAnimStateFlags((int*)player, 0x80, 1);
+                objSetAnimStateFlags((GameObject*)player, 0x80, 1);
                 mainSetBits(0x12b, 1);
                 mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
                 (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);

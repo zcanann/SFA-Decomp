@@ -23,6 +23,7 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_api.h"
 #include "main/dll/DF/DFlantern.h"
+#include "main/dll/player_api.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"
@@ -149,8 +150,6 @@ u16 gDfShShrineRewardTable[50] = {
 };
 extern const f32 lbl_803E4E8C;
 
-extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern void playerAddRemoveMagic(int obj, int amount);
 extern int objGetAnimStateFlags(int obj, int flag);
 
 void fn_801C2914(int obj)
@@ -245,7 +244,7 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((LanternFlagBits*)&state->flags)->on = 1;
                 break;
             case 7:
-                objSetAnimStateFlags(player, 1, 1);
+                objSetAnimStateFlags((GameObject*)player, 1, 1);
                 mainSetBits(GAMEBIT_ITEM_TestCombatSpirit_Got, 1);
                 mainSetBits(GAMEBIT_FlewToPlanet, 1);
                 (*gMapEventInterface)->setMapAct(DFSHSHRINE_MAP_SHRINE, 2);
@@ -383,7 +382,7 @@ void DFSH_Shrine_update(int objArg)
         obj->anim.worldPosX = obj->anim.localPosX;
         obj->anim.worldPosY = obj->anim.localPosY;
         obj->anim.worldPosZ = obj->anim.localPosZ;
-        playerAddRemoveMagic(player, 0x14);
+        playerAddRemoveMagic((GameObject*)player, 0x14);
         mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         gDfShShrinePendingReward = 0;
     }

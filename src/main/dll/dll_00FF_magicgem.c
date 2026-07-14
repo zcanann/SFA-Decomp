@@ -19,13 +19,14 @@
 #include "dolphin/os/OSReport.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
+#include "main/dll/player_api.h"
+
 #define MAGICGEM_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define MAGICGEM_MSG_IN_RANGE               0x7000a /* sent to player when in pickup range */
 #define MAGICGEM_MSG_PICKUP                 0x7000b /* collect: award magic + burst */
 #define MAGICGEM_GAMEBIT_CLAIMED            0x90d   /* per-frame single-pickup latch */
 
 extern f32 lbl_803E34B0;
-extern void playerAddRemoveMagic(int obj, int amount);
 
 extern int Obj_IsParentSlackClear(int obj);
 extern char sMagicGemCollectedMessage[];
@@ -92,7 +93,7 @@ static inline void magicgem_collect(GameObject* obj, MagicGemState* state, int p
     ObjHits_DisableObject(obj);
     Sfx_PlayFromObject((int)obj, (u16)state->sfxId);
     Sfx_StopFromObject((int)obj, SFXTRIG_rfall5_c);
-    playerAddRemoveMagic(player, (int)ref->magicAmount);
+    playerAddRemoveMagic((GameObject*)player, (int)ref->magicAmount);
     state->flags27A = state->flags27A & ~5;
     state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECTED;
     state->flags27A = state->flags27A | MAGICGEM_FLAG_COLLECT_LATCH;

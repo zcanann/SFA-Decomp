@@ -8,6 +8,7 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/dll/player_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/game_timer_control_api.h"
@@ -66,7 +67,6 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void objSetAnimStateFlags(int obj, int flag, int set);
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
@@ -91,7 +91,7 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 runtime->flags.latchStarted = 1;
                 break;
             case 7:
-                objSetAnimStateFlags(player, 2, 1);
+                objSetAnimStateFlags((GameObject*)player, 2, 1);
                 mainSetBits(DBSH_SHRINE_GB_FIRST_RISE, 1);
                 mainSetBits(GAMEBIT_ITEM_SpiritTestStrength_Got, 1);
                 (*gMapEventInterface)->setMapAct(DBSHSHRINE_MAP_SHRINE, 3);

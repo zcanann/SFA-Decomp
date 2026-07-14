@@ -149,7 +149,6 @@ f32 fn_802966F4(GameObject* obj);
 int objFn_80296700(int obj);
 void playerPutAwayStaff(GameObject* obj, int mode);
 void playerPullOutStaff(GameObject* obj, int mode);
-void playerAddRemoveMagic(GameObject* obj, int amount);
 void saveSetOverrideHealth(int v);
 void playerCancelSpell(GameObject* obj, int p2);
 void fn_80296BBC(GameObject* obj);

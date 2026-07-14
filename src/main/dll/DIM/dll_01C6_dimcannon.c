@@ -57,8 +57,6 @@ extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
 extern f32 gDimCannonAnimAdvanceSpeedCur;
 
-extern void playerAddRemoveMagic(void* player, int amount);
-
 extern u8 gDimCannonMaxCharge;
 extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
@@ -508,7 +506,7 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
                 if (((DimCannonState*)state)->aimYaw <= 0 && Player_GetCurrentMagic((int)player) >= 1)
                 {
                     buttonDisable(0, PAD_BUTTON_A);
-                    playerAddRemoveMagic(player, -1);
+                    playerAddRemoveMagic((GameObject*)player, -1);
                     ((DimCannonState*)state)->fireRequested = 1;
                     ((DimCannonState*)state)->airMeterCharge = 0;
                 }

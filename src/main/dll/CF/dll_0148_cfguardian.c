@@ -29,6 +29,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/player_status.h"
+#include "main/dll/player_api.h"
 #include "main/objseq.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -167,7 +168,6 @@ extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table,
 extern void objSeqInitFn_80080078(void* p, int n);
 __declspec(section ".rodata") GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
-extern void playerAddRemoveMagic(void* player, int n);
 extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
