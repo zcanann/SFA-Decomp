@@ -13,6 +13,7 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_looped_object_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/maketex_sequence_api.h"
@@ -90,8 +91,6 @@ extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 
 
-extern void Sfx_RemoveLoopedObjectSoundForObject(int* obj);
-
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
 extern void objRenderModel(int* obj);
 #pragma explicit_zero_data on
@@ -136,7 +135,7 @@ void animatedobj_free(int* obj, int seqFlag)
     (*gObjectTriggerInterface)
         ->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
-    Sfx_RemoveLoopedObjectSoundForObject(obj);
+    Sfx_RemoveLoopedObjectSoundForObjectPtrLegacy(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
     if (((GameObject*)obj)->anim.seqId == 0x774 && ((GameObject*)obj)->childCount != 0)
     {
