@@ -15,6 +15,7 @@
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/flameblast_api.h"
 #include "main/dll/tricky_state.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET          0x54
@@ -125,7 +126,6 @@ extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
 extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
-extern void objSetAnimSpeedTo1(int* obj);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 
@@ -266,7 +266,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                     TRICKY_MARK_HELPERS_FINISHED(trickyState);
                     for (i = 0, slot = (void**)trickyState; i < TRICKY_GUARD_HELPER_COUNT; i++)
                     {
-                        objSetAnimSpeedTo1(slot[0x700 / 4]);
+                        objSetAnimSpeedTo1((GameObject*)slot[0x700 / 4]);
                         slot++;
                     }
                     Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
@@ -362,7 +362,7 @@ void trickyFlame(GameObject* obj, int trickyState)
                     TRICKY_MARK_HELPERS_FINISHED(trickyState);
                     for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++)
                     {
-                        objSetAnimSpeedTo1(slot2[0x700 / 4]);
+                        objSetAnimSpeedTo1((GameObject*)slot2[0x700 / 4]);
                         slot2++;
                     }
                     Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);
@@ -588,7 +588,7 @@ void trickyGuard(ObjAnimComponent* obj, TrickyRuntime* trickyState)
             TRICKY_MARK_HELPERS_FINISHED(trickyState);
             for (i2 = 0, slot2 = (void**)trickyState; i2 < TRICKY_GUARD_HELPER_COUNT; i2++)
             {
-                objSetAnimSpeedTo1(slot2[0x700 / 4]);
+                objSetAnimSpeedTo1((GameObject*)slot2[0x700 / 4]);
                 slot2++;
             }
             Sfx_RemoveLoopedObjectSound((int)obj, SFXTRIG_trpopn_c);

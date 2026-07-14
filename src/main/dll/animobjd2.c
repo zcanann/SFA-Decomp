@@ -42,6 +42,7 @@
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/flameblast_api.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */
@@ -77,7 +78,6 @@ extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
-extern void objSetAnimSpeedTo1(int o);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;
@@ -449,7 +449,7 @@ void fn_8013E0D0(int* obj, u8* st)
                 p = (u8*)t;
                 for (; i < 7; i++)
                 {
-                    objSetAnimSpeedTo1(*(int*)(p + 0x700));
+                    objSetAnimSpeedTo1((GameObject*)*(int*)(p + 0x700));
                     p += 4;
                 }
             }

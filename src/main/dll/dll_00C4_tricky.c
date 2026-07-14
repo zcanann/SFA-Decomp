@@ -35,6 +35,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/skeetla_route_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/flameblast_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
@@ -212,7 +213,6 @@ extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
-extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
 extern int fn_80296240(GameObject* obj);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
@@ -396,7 +396,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((TrickyState*)state)->stateFlags | TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
             for (k = 0, slot = state; k < 7; slot = slot + 4, k = k + 1)
             {
-                objSetAnimSpeedTo1(*(int*)(slot + 0x700));
+                objSetAnimSpeedTo1((GameObject*)*(int*)(slot + 0x700));
             }
             Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
             slot = *(int*)&((GameObject*)obj)->extra;
@@ -430,7 +430,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_FLAME_CHILDREN_CLEANUP;
                 for (j = 0, slot = state; j < 7; slot = slot + 4, j = j + 1)
                 {
-                    objSetAnimSpeedTo1(*(int*)(slot + 0x700));
+                    objSetAnimSpeedTo1((GameObject*)*(int*)(slot + 0x700));
                 }
                 Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
                 slot = *(int*)&((GameObject*)obj)->extra;
@@ -814,7 +814,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         childSlot = state;
         do
         {
-            objSetAnimSpeedTo1(((TrickyDestroyState*)childSlot)->childObj);
+            objSetAnimSpeedTo1((GameObject*)((TrickyDestroyState*)childSlot)->childObj);
             childSlot = childSlot + 4;
             i = i + 1;
         } while (i < 7);
@@ -1064,7 +1064,7 @@ void Tricky_update(int obj)
                 childCursor = (u8*)state;
                 for (; childLoop.index < 7; childCursor += 4, childLoop.index++)
                 {
-                    objSetAnimSpeedTo1(*(int*)(childCursor + 0x700));
+                    objSetAnimSpeedTo1((GameObject*)*(int*)(childCursor + 0x700));
                 }
                 Sfx_RemoveLoopedObjectSoundIntLegacy(obj, SFXTRIG_trpopn_c);
                 TRICKY_VOICE(obj, 0x29d, 0);

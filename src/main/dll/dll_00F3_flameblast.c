@@ -16,6 +16,7 @@
 #include "main/objhits.h"
 #include "main/dll/vecrotatezxy.h"
 #include "main/dll/dll_80136a40.h"
+#include "main/dll/flameblast_api.h"
 #include "main/frame_timing.h"
 
 typedef struct FlameblastState

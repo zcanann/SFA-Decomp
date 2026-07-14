@@ -42,6 +42,7 @@
 #include "main/objprint_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/flameblast_api.h"
 extern int trickyFn_8013b368();
 
 /* GameCube controller button mask */
@@ -106,7 +107,6 @@ extern f32 lbl_803E2514;
 extern f32 lbl_803E24F8;
 void fn_80144B50(u8* obj, u8* state);
 extern f32 lbl_803E24C8;
-extern void objSetAnimSpeedTo1(u8* e);
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E23E4;
 __declspec(section ".rodata") int gTrickyCmdQueryInit[5] = {0, 1, 3, 4, 5};
@@ -797,7 +797,7 @@ int trickyFlameFn_80142b6c(u8* obj, u8* state)
                 ((TrickyState*)state)->stateFlags |= TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
                 for (j = 0, q = state; j < 7; q += 4, j++)
                 {
-                    objSetAnimSpeedTo1(*(u8**)(q + 0x700));
+                    objSetAnimSpeedTo1((GameObject*)*(u8**)(q + 0x700));
                 }
                 Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
                 ptr = ((GameObject*)obj)->extra;

@@ -28,6 +28,7 @@
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/flameblast_api.h"
 
 typedef struct TrickyGrowlState
 {
@@ -55,7 +56,6 @@ extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
 extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
-extern void objSetAnimSpeedTo1(int* obj);
 
 #pragma opt_propagation off
 void trickyGrowl(void* obj, void* trickyState)
@@ -158,7 +158,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 ((TrickyState*)trickyState)->stateFlags | TRICKY_STATE_FLAG_CHILDREN_CLEANUP;
             for (j = 0, slot2 = trickyState; j < CHILD_OBJECT_COUNT; slot2++, j++)
             {
-                objSetAnimSpeedTo1(slot2[0x700 / 4]);
+                objSetAnimSpeedTo1((GameObject*)slot2[0x700 / 4]);
             }
             Sfx_RemoveLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
             digState = ((GameObject*)obj)->extra;
