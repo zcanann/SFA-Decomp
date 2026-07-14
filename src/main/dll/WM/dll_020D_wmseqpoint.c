@@ -11,16 +11,19 @@
  * opcodes (wmseqpoint_SeqFn) drive game bits shared with the shrine
  * DLLs (0x143) and the palace sun (0x21D).
  */
-#include "main/dll/WM/wm_shared.h"
 #include "main/object_render.h"
 #include "main/sky_api.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/render.h"
-#include "main/gamebit_ids.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
+#include "main/objseq.h"
 #include "main/obj_placement.h"
+#include "main/vecmath_distance_api.h"
 #include "main/dll/WM/dll_020D_wmseqpoint.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5F10 = 1.0f;

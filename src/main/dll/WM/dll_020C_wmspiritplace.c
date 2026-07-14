@@ -14,7 +14,6 @@
  * anim.resetHitboxFlags (objanim_internal.h).
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/WM/wm_shared.h"
 #include "main/sky_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/rcp_dolphin_api.h"
@@ -22,9 +21,12 @@
 #include "main/map_load.h"
 #include "main/dll/tricky_api.h"
 #include "main/render.h"
-#include "main/gamebit_ids.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/mapEventTypes.h"
+#include "main/object_descriptor.h"
 #include "main/objanim_update.h"
+#include "main/objseq.h"
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_020C_wmspiritplace.h"
 

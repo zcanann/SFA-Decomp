@@ -385,7 +385,7 @@ grep -rn "void MySym(" include/ | grep -v "_shared.h"
 
 **Keep the local extern** when the symbol only appears in:
 
-- a per-subsystem `*_shared.h` **extern-dump** (`player_80295318_shared.h`, `wm_shared.h`,
+- a per-subsystem `*_shared.h` **extern-dump** (`player_80295318_shared.h`, `dr_802bbc10_shared.h`,
   …) — those are per-DLL scratch collections, not APIs; including one in an unrelated unit
   is wrong, and they frequently disagree on the signature (some declare
   `Obj_FreeObject` returning `int`, others `void`);

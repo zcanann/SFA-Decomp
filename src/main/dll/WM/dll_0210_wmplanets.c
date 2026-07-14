@@ -13,11 +13,12 @@
  * scale from the placement scale byte, the orbit radius from the
  * placement radius byte (* 16, negated), and selects the model bank.
  */
-#include "main/dll/WM/wm_shared.h"
 #include "main/object_render.h"
+#include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/obj_placement.h"
+#include "main/vecmath.h"
 #include "main/dll/WM/dll_0210_wmplanets.h"
 
 __declspec(section ".rodata") u32 lbl_802C2500[4] = {0, 0, 0, 0};
@@ -36,7 +37,7 @@ void WM_Planets_free(void)
 {
 }
 
-void WM_Planets_render(int obj, int p2, int p3, int p4, int p5, s8 vis)
+void WM_Planets_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     if (vis != 0)
     {
@@ -48,13 +49,13 @@ void WM_Planets_hitDetect(void)
 {
 }
 
-void WM_Planets_update(int* obj)
+void WM_Planets_update(GameObject* obj)
 {
     WmPlanetsState* state;
     WmPlanetsVector vec;
     WmPlanetsRotationWork rotate;
 
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
     /* whole-struct copy of the zero vector (#31: paired lwz/stw, not
        three lfs/stfs) */
     {
@@ -86,20 +87,20 @@ void WM_Planets_update(int* obj)
     rotate.yaw = 0;
     vecRotateZXY(&rotate.yaw, vec.f);
 
-    ((GameObject*)obj)->anim.localPosX = vec.f[0] + state->baseX;
-    ((GameObject*)obj)->anim.localPosY = vec.f[1] + state->baseY;
-    ((GameObject*)obj)->anim.localPosZ = vec.f[2] + state->baseZ;
-    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + state->yawStep * (s32)timeDelta);
+    obj->anim.localPosX = vec.f[0] + state->baseX;
+    obj->anim.localPosY = vec.f[1] + state->baseY;
+    obj->anim.localPosZ = vec.f[2] + state->baseZ;
+    obj->anim.rotX = (s16)(obj->anim.rotX + state->yawStep * (s32)timeDelta);
 }
 
-void WM_Planets_init(int* obj, u8* init)
+void WM_Planets_init(GameObject* obj, WmPlanetsMapData* mapData)
 {
-    WmPlanetsState* inner = ((GameObject*)obj)->extra;
-    f32 a = lbl_803E5FA0 * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase; /* 0.1f * */
-    ((GameObject*)obj)->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)((WmPlanetsMapData*)init)->scaleByte);
-    if (*(s16*)init != 0)
+    WmPlanetsState* inner = obj->extra;
+    f32 a = lbl_803E5FA0 * obj->anim.modelInstance->rootMotionScaleBase; /* 0.1f * */
+    obj->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)mapData->scaleByte);
+    if (*(s16*)mapData != 0)
     {
-        inner->orbitRadius = -(f32)(s32)(((WmPlanetsMapData*)init)->radiusByte << 4);
+        inner->orbitRadius = -(f32)(s32)(mapData->radiusByte << 4);
     }
     else
     {
@@ -109,11 +110,11 @@ void WM_Planets_init(int* obj, u8* init)
     inner->yawStep = randomGetRange(0xc8, 0x190);
     inner->orbitYaw = 0;
     inner->orbitPitch = randomGetRange(0, 0x960);
-    inner->baseX = ((GameObject*)obj)->anim.localPosX;
-    inner->baseY = ((GameObject*)obj)->anim.localPosY;
-    inner->baseZ = ((GameObject*)obj)->anim.localPosZ;
-    Obj_SetActiveModelIndex((GameObject*)obj, ((WmPlanetsMapData*)init)->modelIndex);
-    ((GameObject*)obj)->anim.localPosZ = ((WmPlanetsMapData*)init)->base.posZ + inner->orbitRadius;
+    inner->baseX = obj->anim.localPosX;
+    inner->baseY = obj->anim.localPosY;
+    inner->baseZ = obj->anim.localPosZ;
+    Obj_SetActiveModelIndex(obj, mapData->modelIndex);
+    obj->anim.localPosZ = mapData->base.posZ + inner->orbitRadius;
 }
 
 void WM_Planets_release(void)

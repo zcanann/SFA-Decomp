@@ -2,6 +2,7 @@
 #define MAIN_DLL_WM_DLL_0210_WMPLANETS_H_
 
 #include "global.h"
+#include "main/game_object.h"
 #include "main/obj_placement.h"
 
 typedef struct WmPlanetsState
@@ -52,13 +53,17 @@ STATIC_ASSERT(offsetof(WmPlanetsMapData, radiusByte) == 0x19);
 STATIC_ASSERT(offsetof(WmPlanetsMapData, modelIndex) == 0x1A);
 STATIC_ASSERT(sizeof(WmPlanetsMapData) == 0x1C);
 
+extern f32 lbl_803E5F98;
+extern f32 lbl_803E5F9C;
+extern f32 lbl_803E5FA0;
+
 int WM_Planets_getExtraSize(void);
 int WM_Planets_getObjectTypeId(void);
 void WM_Planets_free(void);
-void WM_Planets_render(int p1, int p2, int p3, int p4, int p5, s8 vis);
+void WM_Planets_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
 void WM_Planets_hitDetect(void);
-void WM_Planets_update(int* obj);
-void WM_Planets_init(int* obj, u8* init);
+void WM_Planets_update(GameObject* obj);
+void WM_Planets_init(GameObject* obj, WmPlanetsMapData* mapData);
 void WM_Planets_release(void);
 void WM_Planets_initialise(void);
 

@@ -24,6 +24,9 @@ STATIC_ASSERT(offsetof(WmSpiritSetMapData, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(WmSpiritSetMapData, visibilityGameBit) == 0x1E);
 STATIC_ASSERT(sizeof(WmSpiritSetMapData) == 0x20);
 
+extern f32 lbl_803E5F90;
+extern f32 lbl_803E5F94;
+
 int wmspiritset_getExtraSize(void);
 int wmspiritset_getObjectTypeId(void);
 void wmspiritset_free(void);

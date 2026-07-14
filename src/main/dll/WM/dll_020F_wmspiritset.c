@@ -9,7 +9,7 @@
  * 0.0085; render then draws it only while the placement's visibility
  * game bit is set (or always, when the bit is -1).
  */
-#include "main/dll/WM/wm_shared.h"
+#include "main/gamebits.h"
 #include "main/object_render.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
