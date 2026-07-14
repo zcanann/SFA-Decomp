@@ -56,6 +56,13 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 
+u8 lbl_803DC078[4] = {0x0A, 0x10, 0x1F, 0};
+u8 gSbGalleonSkyColorBEnd[4] = {9, 0x0F, 0x1E, 0};
+u8 gSbGalleonSkyColorAStart[4] = {0x3E, 0x52, 0x64, 0};
+u8 gSbGalleonSkyColorAEnd[4] = {0xC8, 0xE7, 0xFF, 0};
+u8 gSbGalleonSkyColorCStart[4] = {0x3E, 0x52, 0x66, 0};
+u8 gSbGalleonSkyColorCEnd[4] = {0x13, 0x23, 0x36, 0};
+
 #define Sfx_PlayFromObjectLegacy(obj, sfxId) \
     ((void (*)(int, int))Sfx_PlayFromObject)((obj), (sfxId))
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \

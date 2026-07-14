@@ -37,6 +37,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+f32 lbl_803DC3D0 = 0.1f;
+f32 lbl_803DC3D4 = 500.0f;
+f32 lbl_803DC3D8 = 10.0f;
+
 #define ARWINGANDROSSSTUFF_OBJGROUP 0x2
 
 #define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000

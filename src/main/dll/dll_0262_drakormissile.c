@@ -33,6 +33,13 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DC2B0 = 0.9f;
+f32 lbl_803DC2B4 = 0.1f;
+f32 lbl_803DC2B8 = 0.5f;
+f32 gDrakorMissileProximityDetonateDist = 50.0f;
+
+#define MODEL_LIGHT_KIND_POINT 2
+
 #define DRAKORMISSILE_EXTRA_SIZE     0x38
 #define DRAKORMISSILE_OBJECT_TYPE_ID 0x2
 #define DRAKORMISSILE_GROUP_ID       0x2

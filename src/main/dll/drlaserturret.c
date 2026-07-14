@@ -32,12 +32,14 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+
+s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
+__declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
+extern int hitDetectFn_80065e50(void* obj, float x, float y, float z, void* out, int p5, int p6);
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern int playerGetMoney(void* player);
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern s16 gDrLaserTurretIdleAnimMoves[1];
-__declspec(section ".sdata") extern f32 gDrLaserTurretIdleAnimStepScales[3];
 
 extern const f32 lbl_803E59DC;
 extern const f32 lbl_803E59E0;

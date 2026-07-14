@@ -39,6 +39,8 @@
 #include "main/mm.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+s16 gMagicPlantGemDefIds[4] = {0x2C4, 0x2CD, 0x2CE, 0x2CF};
+
 typedef struct MagicPlantChildSetup
 {
     u8 pad00[4];

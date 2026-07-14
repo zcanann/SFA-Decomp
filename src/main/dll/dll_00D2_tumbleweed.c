@@ -21,6 +21,8 @@
 #include "main/object_render_legacy.h"
 #include "main/track_dolphin_api.h"
 
+u8 gTumbleweedCollisionPointData[8] = {0x41, 0xC8, 0, 0, 0, 0, 0, 0};
+
 #define TUMBLEWEED_OBJFLAG_RENDERED 0x800
 #define TUMBLEWEED_MSG_IN_RANGE 0x7000a /* sent to player when grab is offered */
 #define TUMBLEWEED_MSG_PICKUP   0x7000b /* player collected: award and burst */

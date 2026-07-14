@@ -68,6 +68,13 @@
 #include "main/dll/dll_024D_bossdrakor.h"
 #include "main/object_descriptor.h"
 
+f32 lbl_803DC188 = 3.0f;
+f32 lbl_803DC18C = 8.0f;
+f32 lbl_803DC190 = 1.0f;
+f32 lbl_803DC194 = 150.0f;
+s16 lbl_803DC198 = 0xE38;
+s16 lbl_803DC19A = 0x2D8;
+
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
 #define ObjLink_AttachChildLegacy(parent, child, mode) \

@@ -60,6 +60,8 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 
+s16 lbl_803DBEE8 = 0x3E6;
+
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMSNOWBALL_OBJFLAG_HIDDEN       0x4000
 #define DIMSNOWBALL_OBJFLAG_FREED        0x40

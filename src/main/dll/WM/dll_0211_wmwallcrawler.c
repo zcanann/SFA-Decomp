@@ -39,6 +39,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 gWallCrawlerSpeedCap = 0.1f;
+u8 sWallCrawlerCollisionBone[3] = {0x41, 0x20, 0};
+
 #define WMWALLCRAWLER_OBJGROUP        3
 #define WMWALLCRAWLER_PARTFX          0x1a3
 #define WMWALLCRAWLER_TARGET_OBJGROUP 0xa /* nearest group-10 object targeted by the TARGET_NEAREST variant */
@@ -104,7 +107,6 @@ __declspec(section ".sdata2") f32 lbl_803E601C = 0.0f;
 #pragma explicit_zero_data off
 extern u16 gWallCrawlerVariantFlags[];
 extern u8 gWallCrawlerPointCollision[];
-extern u8 sWallCrawlerCollisionBone;
 extern f32 lbl_803E6030;
 extern f32 lbl_803E6034;
 
@@ -780,7 +782,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData)
         state->pathState[0x25b] = 1;
         (*gPathControlInterface)->init((void*)state, 0, 0, 1);
         (*gPathControlInterface)
-            ->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision, &sWallCrawlerCollisionBone, 4);
+            ->setLocalPointCollision((void*)state, 1, gWallCrawlerPointCollision, sWallCrawlerCollisionBone, 4);
         (*gPathControlInterface)->attachObject((void*)obj, state);
         *(u32*)state |= 0x40008;
     }

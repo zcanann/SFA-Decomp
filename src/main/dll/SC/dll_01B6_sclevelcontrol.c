@@ -32,6 +32,8 @@
 #include "main/lightmap_api.h"
 #include "main/audio/music_trigger_ids.h"
 
+u16 gScLevelControlMusicStepSequence[4] = {0x7D, 0x7E, 0x7F, 0};
+
 #define SCLEVELCONTROL_OBJFLAG_PARENT_SLACK 0x1000
 
 /* map-event id of the LightFoot Village map ("swapcircle"); see docblock */

@@ -43,6 +43,8 @@
 #include "main/objprint_sound_api.h"
 #include "main/audio/sfx_play_int_u16_legacy_api.h"
 
+u8 lbl_803DBE20[8] = {0, 0xDD, 0, 0xDE, 0, 0xE0, 0, 0};
+
 #define CFGUARDIAN_OBJGROUP        0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
 
@@ -171,7 +173,6 @@ extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
-extern u8 lbl_803DBE20;                /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 
 /* cfguardianPlayEventSfx: walk this step's triggered anim events and play the
  * matching per-event sfx. sfxIds is a 3-entry table: [0] the move sfx,
@@ -932,7 +933,7 @@ int cfguardian_updateMain(GameObject* obj)
     {
         sub->flagsA9B &= ~GUARDIAN_FLAG_MOVE_LATCHED;
     }
-    ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, &lbl_803DBE20);
+    ((CfPlayEventSfxFn)cfguardianPlayEventSfx)((int*)obj, (u8*)&stk + 12, lbl_803DBE20);
     if (randFn_80080100(0x3c) != 0)
     {
         objAudioFn_800393f8Legacy(obj, sub->audioBlock, GUARDIAN_SFX_CHATTER, 0x1000, -1, 0);

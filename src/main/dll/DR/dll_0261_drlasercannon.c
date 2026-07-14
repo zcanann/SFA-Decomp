@@ -28,6 +28,10 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DC2A8 = 5.0f;
+s16 lbl_803DC2AC = 0x80;
+s16 gLaserCannonMaxAimStep = 0x400;
+
 #define DRLASERCANNON_OBJFLAG_PARENT_SLACK 0x1000
 #define DRLASERCANNON_OBJFLAG_FREED        0x40
 

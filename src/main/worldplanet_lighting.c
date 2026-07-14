@@ -2,15 +2,16 @@
 #include "main/worldplanet_lighting.h"
 #include "main/sky_api.h"
 
-#define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
-    ((u8)(s32)((t) * (f32)((s32)(&to)[idx] - (s32)(&from)[idx]) + (f32)(s32)(&from)[idx]))
+extern u8 lbl_803DC1F4[4];
+extern u8 lbl_803DC1F8[4];
+extern u8 lbl_803DC1FC[4];
+extern u8 lbl_803DC200[4];
+extern u8 lbl_803DC204[4];
+extern u8 lbl_803DC208[8];
 
-extern u8 lbl_803DC1F4;
-extern u8 lbl_803DC1F8;
-extern u8 lbl_803DC1FC;
-extern u8 lbl_803DC200;
-extern u8 lbl_803DC204;
-extern u8 lbl_803DC208;
+#define WORLDPLANET_LERP_BYTE(from, to, idx, t)                                                                        \
+    ((u8)(s32)((t) * (f32)((s32)(to)[idx] - (s32)(from)[idx]) + (f32)(s32)(from)[idx]))
+
 extern f32 gWorldPlanetLightingLerpT;
 extern u8 lbl_803DDD18;
 extern u8 lbl_803DDD1C;

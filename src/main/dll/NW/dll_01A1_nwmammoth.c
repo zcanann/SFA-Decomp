@@ -27,6 +27,27 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/vecmath_distance_api.h"
 
+u8 lbl_803DBF70[4] = {1, 0, 0, 0};
+u8 lbl_803DBF74[4] = {1, 1, 0, 0};
+u8 lbl_803DBF78[4] = {1, 3, 0, 0};
+u8 lbl_803DBF7C[4] = {1, 5, 0, 0};
+u8 lbl_803DBF80[4] = {2, 0, 1, 0};
+u8 lbl_803DBF84[4] = {2, 3, 4, 0};
+u8 lbl_803DBF88[4] = {3, 2, 3, 4};
+u8 lbl_803DBF8C[4] = {2, 5, 6, 0};
+u8 lbl_803DBF90[4] = {1, 7, 0, 0};
+u8 lbl_803DBF94[4] = {2, 8, 9, 0};
+u8 lbl_803DBF98[4] = {3, 0x0A, 0x0B, 0x0C};
+u8 lbl_803DBF9C[4] = {2, 0x0B, 0x0C, 0};
+u8 lbl_803DBFA0[4] = {2, 0x0D, 0x0E, 0};
+u8 lbl_803DBFA4[4] = {1, 0x0F, 0, 0};
+u8 lbl_803DBFA8[4] = {2, 0, 1, 0};
+u8 lbl_803DBFAC[4] = {2, 2, 3, 0};
+u8 lbl_803DBFB0[4] = {1, 4, 0, 0};
+u8 lbl_803DBFB4[4] = {1, 0, 0, 0};
+u8 lbl_803DBFB8[4] = {1, 1, 0, 0};
+u8 lbl_803DBFBC[4] = {1, 2, 0, 0};
+
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((u32 (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
 #define ObjTrigger_IsSetLegacy(obj) \

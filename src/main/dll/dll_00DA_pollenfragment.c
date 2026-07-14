@@ -27,6 +27,9 @@
 #include "main/obj_path.h"
 #include "main/objfx.h"
 
+f32 lbl_803DBD48 = 1024.0f;
+f32 lbl_803DBD4C = 512.0f;
+
 #define s16toFloatLegacy(timer, duration) \
     ((void (*)(void*, int))s16toFloat)((timer), (duration))
 #define storeZeroToFloatParamLegacy(timer) \

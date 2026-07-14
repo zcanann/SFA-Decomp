@@ -25,6 +25,10 @@
 #include "main/player_control_interface.h"
 #include "main/obj_message.h"
 
+int lbl_803DBF30[2] = {0x17F, 0x180};
+s16 gDim2LiftFarFlankMoveChoices[4] = {3, 8, 0, 0};
+
+#define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
 #define DIM2LIFT_HIT_VOLUME_SLOT_9  9
 
@@ -39,7 +43,6 @@ extern int lbl_80325960[16];
 extern f32 gDim2LiftMoveSpeedByDir[16];
 extern f32 lbl_803E4C04;
 extern u32 gDIMbossSequenceFlags;
-extern int lbl_803DBF30;
 extern f32 lbl_803E4BC4;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BCC;
@@ -371,7 +374,7 @@ int DIMbossHitDetect_liftSlam(GameObject* obj, int runtime)
             *(f32*)(*(int*)&((GroundBaddieState*)state)->control + 0xa8) = lbl_803E4BEC;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 1, &lbl_803DBF30);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 1, lbl_803DBF30);
     return 0;
 }
 
@@ -399,7 +402,7 @@ int DIMbossHitDetect_tonsilSlam(GameObject* obj, int runtime)
             ((BaddieState*)runtime)->moveDone = 0;
         }
     }
-    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 0, &lbl_803DBF30);
+    (*(int (**)(int, int, int, int, void*))(*(int*)gPlayerInterface + 0x34))((int)obj, runtime, 0, 0, lbl_803DBF30);
     return 0;
 }
 

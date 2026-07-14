@@ -18,6 +18,8 @@
 #include "main/gameloop_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+u8 lbl_803DBFC0[8] = {0x40, 0xA0, 0, 0, 0, 0, 0, 0};
+
 typedef struct BombplantsporeStartDriftBurstPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -66,7 +68,6 @@ extern const f32 lbl_803E53AC;
 extern f32 lbl_803E53B0;
 extern const f32 lbl_803E53B4;
 extern u8 lbl_80326D98[];
-extern u8 lbl_803DBFC0;
 extern f32 lbl_803E5388;
 extern const f32 lbl_803E538C;
 extern const f32 lbl_803E53B8;
@@ -420,7 +421,7 @@ void BombPlantSpore_init(GameObject* obj, void* param2)
     state->randomPhase = (f32)(int)randomGetRange(0, 1000) / lbl_803E5390;
 
     (*gPathControlInterface)->init(state->pathState, 0, 0x40002, 1);
-    (*gPathControlInterface)->setup(state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
+    (*gPathControlInterface)->setup(state->pathState, 1, lbl_80326D98, lbl_803DBFC0, events);
     (*gPathControlInterface)->attachObject(obj, state->pathState);
     (*gPartfxInterface)->spawnObject(obj, BOMBPLANTSPORE_PARTFX_SPAWN, NULL, 4, -1, NULL);
 

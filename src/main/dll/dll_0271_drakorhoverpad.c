@@ -41,6 +41,11 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DC2F8 = 5.0f;
+s16 lbl_803DC2FC = 3;
+f32 lbl_803DC300 = 5.0f;
+f32 lbl_803DC304 = -40.0f;
+
 /*
  * A ROM curve network node (the record returned by gRomCurveInterface->getById
  * and walked through anim.currentMove / anim.activeMoveProgress / anim.targetObj

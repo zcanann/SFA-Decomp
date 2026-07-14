@@ -25,6 +25,15 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
 
+u8 gScarabColorVariantsA[4] = {2, 0x13, 0x16, 0};
+u8 gScarabColorVariantsB[4] = {0x14, 0x17, 0, 0};
+u8 gScarabColorVariantsC[4] = {0, 0, 0, 0x0C};
+u8 gScarabColorVariantsD[8] = {0x14, 0, 6, 0x13, 5, 7, 4, 0};
+f32 lbl_803DBDC4 = 0.707f;
+f32 lbl_803DBDC8 = 10.0f;
+f32 lbl_803DBDCC = 1.0f;
+f32 lbl_803DBDD0 = 1.0f;
+
 typedef struct ScarabPlacement
 {
     ObjPlacement head;
@@ -535,9 +544,6 @@ void Scarab_update(GameObject* obj)
     }
 }
 
-extern u8 gScarabColorVariantsA;
-extern u8 gScarabColorVariantsB;
-extern u8 gScarabColorVariantsC;
 
 void Scarab_init(int* obj, u8* def)
 {
@@ -552,21 +558,21 @@ void Scarab_init(int* obj, u8* def)
     switch (((GameObject*)obj)->anim.seqId)
     {
     case 0x3d3:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsA)[randomGetRange(0, 2)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsA)[randomGetRange(0, 2)];
         state->pickupSfx = 0x41;
         state->particleId = 4;
         state->burstModel = 2;
         state->moneyKind = 0;
         break;
     case 0x3d4:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsB)[randomGetRange(0, 1)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsB)[randomGetRange(0, 1)];
         state->pickupSfx = 0x42;
         state->particleId = 1;
         state->burstModel = 5;
         state->moneyKind = 1;
         break;
     case 0x3d5:
-        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (&gScarabColorVariantsC)[randomGetRange(0, 3)];
+        *(u8*)((char*)*(int*)((char*)model + 0x34) + 8) = (gScarabColorVariantsC)[randomGetRange(0, 3)];
         state->pickupSfx = 0x43;
         state->particleId = 2;
         state->burstModel = 4;
@@ -584,7 +590,6 @@ void Scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern u8 gScarabColorVariantsD;
 extern f32 lbl_803E3A04;
 
 typedef struct GuardianAngleParams
@@ -680,7 +685,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     if (obj->anim.seqId == 0x3d6)
     {
         i = 0;
-        shellColors = &gScarabColorVariantsD;
+        shellColors = gScarabColorVariantsD;
         for (; i < 7; i++)
         {
             if (*shellColors == *(u8*)(*(int*)(model + 0x34) + 8))
@@ -690,7 +695,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 {
                     i = 0;
                 }
-                *(u8*)(*(int*)(model + 0x34) + 8) = (&gScarabColorVariantsD)[i];
+                *(u8*)(*(int*)(model + 0x34) + 8) = (gScarabColorVariantsD)[i];
                 break;
             }
             shellColors++;

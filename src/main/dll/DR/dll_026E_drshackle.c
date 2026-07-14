@@ -23,6 +23,8 @@
 #include "main/dll/DR/dll_026E_drshackle.h"
 #include "main/dll/DR/dr_types.h"
 
+int lbl_803DC2F0 = -32768;
+
 #define DRSHACKLE_OBJGROUP  0x37
 #define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 

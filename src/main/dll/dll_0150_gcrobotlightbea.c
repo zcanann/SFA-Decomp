@@ -29,6 +29,9 @@
 #include "main/dll/dll_0150_gcrobotlightbea.h"
 #include "main/object_descriptor.h"
 
+f32 lbl_803DBE58 = 50.0f;
+f32 lbl_803DBE5C = 150.0f;
+
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
 

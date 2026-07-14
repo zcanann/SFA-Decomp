@@ -23,6 +23,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DBDD8 = 60.0f;
+
 typedef struct LanternFireFlyPlacement
 {
     u8 pad0[0x18 - 0x0];

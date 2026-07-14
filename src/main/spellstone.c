@@ -9,6 +9,8 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 
+s16 lbl_803DC228[2] = {0x49A, 0x49A};
+
 /* object group this object joins while active */
 #define SPELLSTONE_OBJGROUP 0x1e
 
@@ -16,7 +18,6 @@
    rendered/updated; set when the stone's map event completes. */
 #define SPELLSTONE_OBJFLAG_HIDDEN 0x4000
 
-extern s16 lbl_803DC228;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
@@ -92,7 +93,7 @@ void spellstone_update(SpellStoneObject* obj)
     eventActive = mainGetBit(def->completeEvent);
     if (eventActive != 0)
     {
-        mainSetBits(*(&lbl_803DC228 + def->eventIndex), 1);
+        mainSetBits(*(lbl_803DC228 + def->eventIndex), 1);
         obj->flags = (s16)(obj->flags | SPELLSTONE_OBJFLAG_HIDDEN);
         Obj_RemoveFromUpdateList((u8*)obj);
         (*gMapEventInterface)->setMapAct(0x1d, 2);

@@ -21,6 +21,8 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0000_gameui_api.h"
 
+u8 gWorldObjVariantAlphaTable[8] = {0xFF, 0x99, 0x1A, 0, 0, 0, 0, 0};
+
 typedef struct
 {
     f32 offsetX;

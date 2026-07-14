@@ -30,6 +30,8 @@
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+s16 lbl_803DBDE0[4] = {0x3D3, 0x3D4, 0x3D5, 0x3D6};
+
 typedef struct PrisonGuardStateFlags
 {
     u8 pad[0x1d];

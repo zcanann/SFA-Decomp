@@ -30,6 +30,9 @@
 #include "main/objfx.h"
 #include "main/object_render_legacy.h"
 
+f32 lbl_803DC3B0 = 2.0f;
+f32 gDrBarrelGenGrabYOffset = -50.0f;
+
 #define DRBARRELGR_OBJFLAG_RENDERED     0x800
 #define GUNPOWDERBARREL_UPDATE_OBJGROUP 0x19 /* DLL 0x158 gunpowderbarrel (update group) */
 

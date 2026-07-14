@@ -36,6 +36,15 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/object_descriptor.h"
 
+u8 gBabyCloudRunnerMutterSfxTable[8] = {0, 0xD4, 0, 0xD4, 3, 0x1C, 3, 0x1C};
+u8 gBabyCloudRunnerMutterSfxTableSpecial[8] = {2, 0x92, 2, 0x92, 2, 0x92, 2, 0x92};
+f32 gBabyCloudRunnerTargetNearDist = 160.0f;
+f32 gBabyCloudRunnerPlayerFarDist = 70.0f;
+f32 lbl_803DBE40 = 2.0f;
+f32 lbl_803DBE44 = 0.05f;
+u8 lbl_803DBE48 = 2;
+f32 lbl_803DBE4C = 0.01f;
+
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
 
@@ -70,8 +79,6 @@ extern f32 lbl_803E4228;
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
-extern u8 gBabyCloudRunnerMutterSfxTable;
-extern u8 gBabyCloudRunnerMutterSfxTableSpecial;
 extern f32 lbl_803E4218;
 extern f32 lbl_803E423C;
 extern f32 lbl_803E4240;
@@ -132,7 +139,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
         {
             sub->runnerIndex = -1;
             sub->curveSpeed = lbl_803E4244;
-            sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTableSpecial;
+            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTableSpecial;
         }
         else
         {
@@ -141,7 +148,7 @@ void babycloudrunner_init(int* obj, u8* defBytes)
                 sub->runnerState = 3;
             }
             sub->curveSpeed = lbl_803E4258;
-            sub->mutterSfxTable = &gBabyCloudRunnerMutterSfxTable;
+            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTable;
             ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
         }
         ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;

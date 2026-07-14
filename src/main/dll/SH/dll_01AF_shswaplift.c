@@ -18,6 +18,8 @@
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/dll/tricky_api.h"
 
+s32 lbl_803DC058[2] = {0xC7C, 0xC7D};
+
 /* state byte (extra+0) progression */
 #define WARPSTONELIFT_STATE_IDLE     0 /* not yet swapped; character out of / entering range */
 #define WARPSTONELIFT_STATE_OFFERING 1 /* character present, WarpStone offered via Y-menu */

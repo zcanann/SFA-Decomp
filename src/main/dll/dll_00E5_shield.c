@@ -38,6 +38,15 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+s16 lbl_803DBD70[4] = {-1024, -512, 512, 1024};
+s16 lbl_803DBD78[4] = {-500, 50, 50, 200};
+s16 lbl_803DBD80[4] = {50, -512, 50, 100};
+s16 lbl_803DBD88[4] = {50, 50, 512, 512};
+
+#define MODEL_LIGHT_KIND_POINT 2
+
+
+
 /* anim.seqId of the staff-mode-5 shield variant (docblock: "seqId 0x836 uses
  * staff-mode 5, otherwise mode 7"). */
 #define SHIELD_SEQID_STAFF_MODE5 0x836

@@ -30,6 +30,17 @@
 #include "main/dll/tricky_api.h"
 #include "main/object_descriptor.h"
 
+u8 gQueenEarthWalkerEventTableAct1[4] = {1, 0, 0, 0};
+u8 gQueenEarthWalkerEventTableAct2[4] = {1, 0x14, 0, 0};
+u8 gQueenEarthWalkerEventTableFed[4] = {2, 0x0C, 0x0A, 0};
+u8 gQueenEarthWalkerEventTableFeed[4] = {1, 0x0E, 0, 0};
+u8 gQueenEarthWalkerEventTablePortalDefault[4] = {1, 0x0F, 0, 0};
+u8 gQueenEarthWalkerEventTablePortalReady[4] = {1, 0x10, 0, 0};
+u8 gQueenEarthWalkerEventTableSpell[4] = {1, 0x11, 0, 0};
+u8 gQueenEarthWalkerEventTableBerry[4] = {1, 0x12, 0, 0};
+u8 gQueenEarthWalkerEventTableDeparture[4] = {1, 0x13, 0, 0};
+u8 gQueenEarthWalkerEventTableComplete[8] = {5, 7, 8, 9, 0x0A, 0x0B, 0, 0};
+
 #define SHQUEENEARTHWALKER_OBJFLAG_HIDDEN 0x4000
 /* object group scanned for the nearest target (player group) */
 #define SHQUEENEARTHWALKER_TARGET_OBJGROUP 0xf
@@ -42,16 +53,6 @@
 #define QEW_FLAG_ACTIVE    0x10 /* feed sequence completed; suppress idle attacks */
 #define QEW_FLAG_INIT_DONE 0x20 /* per-frame anim-event handshake (cleared each update) */
 
-extern u8 gQueenEarthWalkerEventTableAct1;
-extern u8 gQueenEarthWalkerEventTableAct2;
-extern u8 gQueenEarthWalkerEventTableFed;
-extern u8 gQueenEarthWalkerEventTableFeed;
-extern u8 gQueenEarthWalkerEventTablePortalDefault;
-extern u8 gQueenEarthWalkerEventTablePortalReady;
-extern u8 gQueenEarthWalkerEventTableSpell;
-extern u8 gQueenEarthWalkerEventTableBerry;
-extern u8 gQueenEarthWalkerEventTableDeparture;
-extern u8 gQueenEarthWalkerEventTableComplete;
 extern f32 lbl_803E53F8;
 extern f32 gQueenEarthWalkerPortalSpellDistance;
 extern f32 gQueenEarthWalkerTrickyFeedDistance;
@@ -114,11 +115,11 @@ void sh_queenearthwalker_update(GameObject* obj)
         case 4:
             if (mainGetBit(GAMEBIT_ITEM_MoonPassKey_Got) != 0)
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
             }
             else
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableFeed;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableFeed;
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
@@ -133,11 +134,11 @@ void sh_queenearthwalker_update(GameObject* obj)
         case 6:
             if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) != 0)
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
             }
             else
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableSpell;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableSpell;
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
@@ -149,11 +150,11 @@ void sh_queenearthwalker_update(GameObject* obj)
         case 7:
             if (mainGetBit(0x199) != 0)
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
             }
             else
             {
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableBerry;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableBerry;
             }
             player = Obj_GetPlayerObject();
             ((QueenEarthWalkerState*)state)->eyeAnimEnabled = 1;
@@ -185,7 +186,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
             (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
             ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
-            ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct1;
+            ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableAct1;
             break;
         case 2:
             if (mainGetBit(GAMEBIT_ITEM_WhiteGrubTub_Used) == 6)
@@ -201,7 +202,7 @@ void sh_queenearthwalker_update(GameObject* obj)
                     ((QueenEarthWalkerState*)state)->stateIndex = 1;
                 }
                 ((QueenEarthWalkerState*)state)->flags |= (QEW_FLAG_LATCHED | QEW_FLAG_EYE_ANIMS);
-                ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableAct2;
+                ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableAct2;
             }
             break;
         case 3:
@@ -218,7 +219,7 @@ void sh_queenearthwalker_update(GameObject* obj)
             (*gObjectTriggerInterface)->preempt((int)target, 0x6a4);
             (*gObjectTriggerInterface)->runSequence(7, target, 8);
             ((QueenEarthWalkerState*)state)->stateIndex = 4;
-            ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableDeparture;
+            ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableDeparture;
             break;
         default:
             break;
@@ -336,7 +337,7 @@ void queenFeedFn_801d44a4(GameObject* obj, void* state)
         Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
         ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_LATCHED;
         ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_EYE_ANIMS;
-        ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableFed;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableFed;
         player = Obj_GetPlayerObject();
         ((u8*)state)[0x8] = 1;
         ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
@@ -357,11 +358,11 @@ void openPortalFn_801d4364(GameObject* obj, void* state)
     (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
     if (mainGetBit(0xc48) != 0)
     {
-        ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
     }
     else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
     {
-        ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTablePortalReady;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalReady;
     }
     else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
     {
@@ -375,11 +376,11 @@ void openPortalFn_801d4364(GameObject* obj, void* state)
     }
     else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
     {
-        ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTableComplete;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
     }
     else
     {
-        ((QueenEarthWalkerState*)state)->eventTable = &gQueenEarthWalkerEventTablePortalDefault;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalDefault;
     }
 
     player = Obj_GetPlayerObject();

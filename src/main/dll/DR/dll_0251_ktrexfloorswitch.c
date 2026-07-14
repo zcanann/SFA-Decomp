@@ -36,6 +36,8 @@ __declspec(section ".rodata") f32 lbl_802C256C[3] = {55.0f, 0.0f, 0.0f};
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
+int gKTrexFloorSwitchCurveFindResult = 0x19;
+
 /* KtrexfloorswitchState.flags (offset 0x10) bits */
 #define KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED 0x1 /* charge cycle maxed+reset; suppresses charging until reactivation */
 #define KTREXFLOORSWITCH_FLAG_RISING        0x2 /* plate rising back up to baseHeight */

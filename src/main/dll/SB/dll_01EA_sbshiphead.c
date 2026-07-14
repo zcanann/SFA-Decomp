@@ -30,6 +30,8 @@
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01EA_sbshiphead.h"
 
+u8 gSbShipHeadHasFiredFireball = 1;
+
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);
 
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);

@@ -16,6 +16,8 @@
 #include "main/dll/dll_0157_spiritdoorspirit.h"
 #include "main/object_descriptor.h"
 
+f32 lbl_803DBE78 = 0.7f;
+
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 
 extern f32 lbl_803DBE78;

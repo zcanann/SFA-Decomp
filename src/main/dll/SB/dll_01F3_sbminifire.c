@@ -27,6 +27,8 @@
 #include "main/resource.h"
 #include "main/vecmath.h"
 
+int gSbMiniFireResourceVariant = 1;
+
 #define SBMINIFIRE_PARTFX 0xa0
 
 /*

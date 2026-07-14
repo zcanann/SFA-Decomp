@@ -71,6 +71,8 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+u8 gArwingCourseMapIds[8] = {7, 0x13, 0x0D, 0x0C, 2, 0, 0, 0};
+
 __declspec(section ".rodata") ArwInitCfg gArwingInitConfig = {0x05030303, 0x03030303, 0x0303};
 
 typedef struct ArwarwingState

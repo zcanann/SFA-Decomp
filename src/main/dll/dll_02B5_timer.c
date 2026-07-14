@@ -25,6 +25,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+f32 lbl_803DC418 = 7.0f;
+f32 lbl_803DC41C = 5.0f;
+
 #define TIMER_OBJGROUP 0x4c
 
 #define TIMER_MODE_GLOBAL 1

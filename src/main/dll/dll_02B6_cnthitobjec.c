@@ -29,6 +29,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+int lbl_803DC428 = 5;
+u8 lbl_803DC42C[4] = {2, 1, 0, 0};
+
 int cnthitobjec_SeqFn(int obj, int unused, CntHitObjectAnimEvent* event)
 {
     int i;
@@ -163,7 +166,7 @@ void cnthitobjec_init(GameObject* obj, CntHitObjectSetup* setup)
     state->remainingHealth = 0;
     setupData->hitSourceProfile = (s8)((u32)setupData->hitSourceProfile % CNTHIT_PROFILE_COUNT);
     state->allowedHitSources = lbl_8032BEF8[setupData->hitSourceProfile];
-    state->allowedHitSourceCount = (&lbl_803DC42C)[setupData->hitSourceProfile];
+    state->allowedHitSourceCount = lbl_803DC42C[setupData->hitSourceProfile];
     if (state->allowedHitSources == &lbl_803DC428)
     {
         ObjHits_ClearSourceMask((ObjAnimComponent*)obj, 8);

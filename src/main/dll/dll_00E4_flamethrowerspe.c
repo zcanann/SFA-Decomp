@@ -10,6 +10,11 @@
 #include "main/objhits.h"
 #include "main/vecmath.h"
 
+f32 lbl_803DBD60 = 2.0f;
+int lbl_803DBD64 = 0x23;
+f32 lbl_803DBD68 = 1.0f;
+f32 lbl_803DBD6C = 8.0f;
+
 
 /* object group this object joins while active */
 #define FLAMETHROWERSPE_OBJGROUP 7

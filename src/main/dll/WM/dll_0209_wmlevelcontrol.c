@@ -36,6 +36,13 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/WM/dll_020A_wmgeneralscales.h"
 
+u8 gWmLevelControlSkyColorFrom[4] = {0x14, 0x20, 0x28, 0};
+u8 gWmLevelControlSkyColorTo[4] = {0x12, 0x1E, 0x23, 0};
+u8 gWmLevelControlLightColorFrom[4] = {0x7E, 0xAD, 0xB0, 0};
+u8 gWmLevelControlLightColorTo[4] = {0xD2, 0xF1, 0xFF, 0};
+u8 gWmLevelControlFogColorFrom[4] = {0x4E, 0x64, 0x6A, 0};
+u8 gWmLevelControlFogColorTo[4] = {0x42, 0x56, 0x55, 0};
+
 /* per-object extra state (getExtraSize == 0x1C) */
 typedef struct WmLevelControlState
 {
@@ -86,12 +93,6 @@ __declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 __declspec(section ".rodata") f32 gWmLevelControlSkyVecTable[12] = {
     -1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f}; /* sky light/color/fog vector table */
-extern u8 gWmLevelControlSkyColorFrom;            /* sky-color blend source triplet */
-extern u8 gWmLevelControlSkyColorTo;              /* sky-color blend target triplet */
-extern u8 gWmLevelControlLightColorFrom;          /* light-color blend source triplet */
-extern u8 gWmLevelControlLightColorTo;            /* light-color blend target triplet */
-extern u8 gWmLevelControlFogColorFrom;            /* fog-color blend source triplet */
-extern u8 gWmLevelControlFogColorTo;              /* fog-color blend target triplet */
 extern f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
 extern f32 gWmLevelControlBlendFactor;            /* current blend factor */
 extern u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byte */
@@ -162,8 +163,8 @@ void fn_801F3F18(GameObject* obj)
        MWCC's word-granular store forwarding otherwise passes the last
        byte stored for all three args - the misforward this fn shipped
        with before the volatile reads. */
-    fromColor = &gWmLevelControlLightColorFrom;
-    toColor = &gWmLevelControlLightColorTo;
+    fromColor = gWmLevelControlLightColorFrom;
+    toColor = gWmLevelControlLightColorTo;
     (&gWmLevelControlBlendedLightColor)[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
     (&gWmLevelControlBlendedLightColor)[1] =
@@ -174,8 +175,8 @@ void fn_801F3F18(GameObject* obj)
                    ((volatile u8*)&gWmLevelControlBlendedLightColor)[1],
                    ((volatile u8*)&gWmLevelControlBlendedLightColor)[2], 0x40, 0x40);
 
-    fromColor = &gWmLevelControlSkyColorFrom;
-    toColor = &gWmLevelControlSkyColorTo;
+    fromColor = gWmLevelControlSkyColorFrom;
+    toColor = gWmLevelControlSkyColorTo;
     (&gWmLevelControlBlendedSkyColor)[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
     (&gWmLevelControlBlendedSkyColor)[1] =
@@ -185,8 +186,8 @@ void fn_801F3F18(GameObject* obj)
     fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1],
                 ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
 
-    fromColor = &gWmLevelControlFogColorFrom;
-    toColor = &gWmLevelControlFogColorTo;
+    fromColor = gWmLevelControlFogColorFrom;
+    toColor = gWmLevelControlFogColorTo;
     (&gWmLevelControlBlendedFogColor)[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
     (&gWmLevelControlBlendedFogColor)[1] =

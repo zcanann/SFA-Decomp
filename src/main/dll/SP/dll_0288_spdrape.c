@@ -22,6 +22,9 @@
 #include "main/frame_timing.h"
 #include "main/dll/SP/dll_0288_spdrape.h"
 
+u8 gSpDrapeSwingLeftMoveTable[4] = {1, 2, 3, 0};
+u8 gSpDrapeSwingRightMoveTable[4] = {4, 5, 6, 0};
+
 #define SPDRAPE_OBJFLAG_HIDDEN             0x4000
 #define SPDRAPE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -33,8 +36,6 @@ enum
     SPDRAPE_MOVE_CLOSE = 2
 };
 
-extern f32 gSpDrapeSwingLeftMoveTable;  /* swing-left move-id table */
-extern f32 gSpDrapeSwingRightMoveTable; /* swing-right move-id table */
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5AA0 = 0.0f;
 __declspec(section ".sdata2") f32 gSpDrapeNearRadiusSq = 4900.0f; /* squared player-proximity radius */
@@ -112,11 +113,11 @@ void spdrape_update(GameObject* obj)
                                 state[2] * ((GameObject*)player)->anim.localPosZ) <
                     lbl_803E5AA0)
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
+                    ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
                 }
                 else
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
+                    ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingRightMoveTable;
                 }
             }
             ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
@@ -167,11 +168,11 @@ void spdrape_update(GameObject* obj)
                                 state[2] * ((GameObject*)player)->anim.localPosZ) <
                     lbl_803E5AA0)
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
+                    ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
                 }
                 else
                 {
-                    ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
+                    ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingRightMoveTable;
                 }
             }
             ObjAnim_SetCurrentMove((int)obj, **(u8**)&((SpdrapeState*)state)->moveTable, lbl_803E5AA0, 0);
@@ -216,11 +217,11 @@ void spdrape_init(int* obj, u8* def)
                 state[3] <
             lbl_803E5AA0)
         {
-            ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingLeftMoveTable;
+            ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingLeftMoveTable;
         }
         else
         {
-            ((SpdrapeState*)state)->moveTable = (int)&gSpDrapeSwingRightMoveTable;
+            ((SpdrapeState*)state)->moveTable = (int)gSpDrapeSwingRightMoveTable;
         }
     }
 }

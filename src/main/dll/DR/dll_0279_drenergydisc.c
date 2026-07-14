@@ -21,6 +21,8 @@
 
 #include "main/dll/DR/dll_0279_drenergydisc.h"
 
+int lbl_803DC380 = -400;
+
 __declspec(section ".sdata2") f32 lbl_803E6BB0 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E6BB4 = 0.0f;

@@ -29,6 +29,21 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0000_gameui_api.h"
 
+u8 gWorldPlanetHintFlagTable[8] = {1, 1, 0, 1, 1, 0, 0, 0};
+u8 gWorldPlanetDefaultSelectOrder[8] = {2, 4, 1, 0, 3, 0, 0, 0};
+u8 gWorldPlanetSelectionToIndex[8] = {0, 1, 2, 3, 4, 0, 0, 0};
+u8 gWorldPlanetTitleStringIds[8] = {0, 1, 2, 3, 4, 0, 0, 0};
+u8 gWorldPlanetWarpMapIndices[6] = {0x76, 0x6E, 0x6F, 0x75, 0x74, 0};
+u8 gWorldPlanetLoadMapIndices[6] = {0x3D, 0x3C, 0x3A, 0x3E, 0x3B, 0};
+u8 gWorldPlanetBriefingSpeakerModel[8] = {2, 2, 1, 0, 0, 0, 0, 0};
+int gWorldPlanetSavedSelection = -1;
+u8 lbl_803DC1F4[4] = {0x21, 0x35, 0x3F, 0};
+u8 lbl_803DC1F8[4] = {9, 0x0F, 0x1E, 0};
+u8 lbl_803DC1FC[4] = {0xFF, 0xE1, 0x87, 0};
+u8 lbl_803DC200[4] = {0xC8, 0xE7, 0xFF, 0};
+u8 lbl_803DC204[4] = {0x74, 0xA2, 0x85, 0};
+u8 lbl_803DC208[8] = {0x13, 0x23, 0x36, 0, 0, 0, 0, 0};
+
 #define WORLDPLANET_CAMMODE_WORLDMAP 0x4e /* cameramode DLL dll_004E_cameramodeworldmap */
 
 #define PAD_BUTTON_A 0x100

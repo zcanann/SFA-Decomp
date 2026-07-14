@@ -20,6 +20,10 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DBE90 = 5.0f;
+int lbl_803DBE94 = 5;
+int lbl_803DBE98 = 0x200;
+
 typedef struct CfForceFieldFlags
 {
     u8 disabled : 1; /* 0x80: field collapsed; skip update work */

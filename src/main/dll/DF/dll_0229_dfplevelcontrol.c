@@ -24,6 +24,10 @@
 #include "main/audio/sfx.h"
 #include "main/dll/DF/dll_0229_dfplevelcontrol.h"
 
+s16 lbl_803DC180 = 0x82;
+u8 lbl_803DC182 = 1;
+u8 lbl_803DC183 = 1;
+
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 
 #define DFPLEVELCONTROL_OBJGROUP 0x9

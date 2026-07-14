@@ -37,6 +37,24 @@
 #include "main/objfx.h"
 #include "main/gameloop_api.h"
 
+s16 lbl_803DC128 = 0xAA;
+
+#define FIREFLY_EXTRA_SIZE 0x88
+
+STATIC_ASSERT(offsetof(FireFlyState, light) == 0x00);
+STATIC_ASSERT(offsetof(FireFlyState, splineX) == 0x04);
+STATIC_ASSERT(offsetof(FireFlyState, splineY) == 0x14);
+STATIC_ASSERT(offsetof(FireFlyState, splineZ) == 0x24);
+STATIC_ASSERT(offsetof(FireFlyState, targetX) == 0x34);
+STATIC_ASSERT(offsetof(FireFlyState, splineT) == 0x40);
+STATIC_ASSERT(offsetof(FireFlyState, kind) == 0x66);
+STATIC_ASSERT(offsetof(FireFlyState, activeFlags) == 0x6C);
+STATIC_ASSERT(offsetof(FireFlyState, despawnTimer) == 0x70);
+STATIC_ASSERT(offsetof(FireFlyState, lifeTimer) == 0x74);
+STATIC_ASSERT(offsetof(FireFlyState, flags) == 0x7C);
+STATIC_ASSERT(offsetof(FireFlyState, messageParam) == 0x80);
+STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
+
 /* state->kind - trail/near particle-fx colour */
 #define FIREFLY_KIND_BLUE_MAIN       1
 #define FIREFLY_KIND_ORANGE_NEAR     3

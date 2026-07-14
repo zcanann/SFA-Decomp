@@ -404,6 +404,14 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
 #include "main/dll/SC/SClantern.h"
 #include "main/audio/sfx.h"
 
+int lbl_803DC038 = 300;
+int lbl_803DC03C = 1;
+int lbl_803DC040 = 200;
+s16 lbl_803DC044 = 0x800;
+int lbl_803DC048 = 3;
+int lbl_803DC04C = 4;
+int lbl_803DC050 = 1;
+
 typedef struct WarpstoneState
 {
     u8 pad0[0xC - 0x0];

@@ -42,6 +42,10 @@
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 
+s16 gSpiritDoorLockSpinSpeed = -256;
+s32 gSpiritDoorLockTexScrollSpeed = 40;
+s32 gSpiritDoorLockTexScrollWrap = 39;
+
 typedef struct
 {
     int a, b, c;

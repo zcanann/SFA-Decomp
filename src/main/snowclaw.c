@@ -22,6 +22,11 @@
 #include "main/maketex_timer_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+f32 lbl_803DC218 = 1.0f;
+f32 lbl_803DC21C = -15.0f;
+int lbl_803DC220 = 3;
+f32 lbl_803DC224 = 0.006f;
+
 /* object group queried to find this object's target */
 #define SNOWCLAW_TARGET_OBJGROUP 0x1e
 /* object group scanned by seqId to find this object's linked mount object */

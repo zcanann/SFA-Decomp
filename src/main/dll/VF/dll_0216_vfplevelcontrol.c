@@ -28,6 +28,8 @@
 #include "main/lightmap_api.h"
 #include "main/dll/VF/dll_0216_vfplevelcontrol.h"
 
+int lbl_803DC148 = 0x82;
+
 #define VFPLEVELCONTROL_OBJGROUP 9
 
 /* Ordered spell-tablet sequence: the four step bits must light in this

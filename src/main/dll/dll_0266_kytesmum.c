@@ -43,6 +43,8 @@
 #include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/dll/DR/dll_0265_drcreator.h"
 
+s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
+
 #define KYTESMUM_OBJGROUP        0x3
 #define KYTESMUM_TARGET_OBJGROUP 0x1
 

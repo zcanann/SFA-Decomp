@@ -20,6 +20,13 @@
 #include "main/camera.h"
 #include "track/intersect_api.h"
 
+int gRopeNodeTextureAssetIds[2] = {0x3CA, 0x5DD};
+#pragma explicit_zero_data on
+void* gRopeNodeTextures[2] = {0};
+#pragma explicit_zero_data off
+f32 lbl_803DBF50[2] = {0.1f, 0.13f};
+u8 gRopeNodeVariantVisibleFlags[8] = {0, 1, 0, 0, 0, 0, 0, 0};
+
 #define DFROPENODE_OBJGROUP 0x17
 
 extern f64 gRopeNodeS32ToDoubleBias;
@@ -33,7 +40,6 @@ extern void textRenderSetupFn_800795e8(void);
 extern void gxBlendFn_80078b4c(void);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
-extern void* gRopeNodeTextures;
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
 __declspec(section ".rodata") u8 gRopeNodeDisplayList[96] = {
@@ -42,9 +48,6 @@ __declspec(section ".rodata") u8 gRopeNodeDisplayList[96] = {
     0, 2, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 extern f32 lbl_803E4DF8;
-extern int gRopeNodeTextureAssetIds;
-extern f32 lbl_803DBF50;
-extern u8 gRopeNodeVariantVisibleFlags;
 extern f32 gRopeNodeLiftHeight;
 
 typedef struct DfropenodePlacement
@@ -575,7 +578,7 @@ void dfropenode_update(DFropenodeObject* obj)
         extra->angle = angle;
 
         extra->rope = DFRope_Create(lbl_803E4DFC, lbl_803E4DFC, lbl_803E4DFC, dx, dy, dz, length, 0x10,
-                                    (&lbl_803DBF50)[((DfropenodePlacement*)objDef)->textureIndex]);
+                                    (lbl_803DBF50)[((DfropenodePlacement*)objDef)->textureIndex]);
 
         extra->minX = obj->posX;
         extra->minZ = obj->posZ;
@@ -633,7 +636,7 @@ void dfropenode_init(DFropenodeObject* obj, u8* objDef)
     DFropenodeExtra* extra;
 
     extra = obj->extra;
-    if ((&gRopeNodeVariantVisibleFlags)[((DfropenodePlacement*)objDef)->textureIndex] == 0)
+    if ((gRopeNodeVariantVisibleFlags)[((DfropenodePlacement*)objDef)->textureIndex] == 0)
     {
         ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags & ~0x80;
     }
@@ -660,6 +663,6 @@ void dfropenode_initialise(void)
 
     for (i = 0; i < 2; i++)
     {
-        (&gRopeNodeTextures)[i] = textureLoadAsset((&gRopeNodeTextureAssetIds)[i]);
+        (gRopeNodeTextures)[i] = textureLoadAsset((gRopeNodeTextureAssetIds)[i]);
     }
 }

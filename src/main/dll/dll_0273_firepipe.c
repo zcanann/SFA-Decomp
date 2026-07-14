@@ -45,6 +45,12 @@
 #include "main/mm.h"
 #include "main/model_light.h"
 
+f32 lbl_803DC340 = -0.01f;
+f32 lbl_803DC344 = 0.3f;
+s16 lbl_803DC348 = 0x3C;
+f32 lbl_803DC34C = 60.0f;
+int lbl_803DC350 = 0x0A;
+
 #define FIREPIPE_OBJGROUP 0x4a
 
 #define FIREPIPE_OBJFLAG_ACTIVE          0x200

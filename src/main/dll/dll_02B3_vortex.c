@@ -10,6 +10,14 @@
 #include "main/gameloop_api.h"
 #include "main/object_render_legacy.h"
 
+s16 gVortexAngleSpeed83D[4] = {8, 0x10, 0x20, 0};
+s16 gVortexAngleSpeedDefault[4] = {0x10, 0x20, 0x40, 0};
+f32 gVortexRadiusScaleInit[2] = {1.0f, 1.0f};
+f32 gVortexAlphaScaleInit835[2] = {0.2f, 0.2f};
+f32 gVortexAlphaScaleInit838[2] = {0.1f, 0.1f};
+s16 gVortexAngleSpeed835[2] = {0x40, 0x80};
+s16 gVortexRotZTable[2] = {-1024, 1024};
+
 #define VORTEX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* partfx ids emitted per vortex visual variant on the particle-timer tick

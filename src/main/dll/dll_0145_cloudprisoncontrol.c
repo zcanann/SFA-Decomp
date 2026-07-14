@@ -20,6 +20,8 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/object_render_legacy.h"
 
+s8 lbl_803DBE08 = 1;
+
 /* Registered prison-member entry (list keyed by the controller's map-event slot). */
 typedef struct CPTargetEntry
 {

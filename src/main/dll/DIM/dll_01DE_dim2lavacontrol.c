@@ -33,6 +33,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
 
+u8 lbl_803DBF28[8] = {0xFF, 0xCD, 0xB9, 0xAA, 0, 0, 0, 0};
+
 /* Env-effect ids co-activated on the unkF4 restore tick (immediately when
    unkF4==2, else deferred); opaque distinct roles per index. */
 #define DIM2LAVACONTROL_ENVFX_A 0x163

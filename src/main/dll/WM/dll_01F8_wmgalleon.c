@@ -20,6 +20,8 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
 
+u32 lbl_803DC0F0 = 3;
+
 STATIC_ASSERT(sizeof(WmObjCreatorState) == 0x8);
 
 STATIC_ASSERT(offsetof(WmObjCreatorPlacement, gameBit) == 0x18);

@@ -24,6 +24,8 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 
+u16 gCfCrateDefaultSfxTable[4] = {0x151, 0, 0, 0};
+
 typedef struct CfccratePlacement
 {
     s16 id;
@@ -71,7 +73,6 @@ extern f32 lbl_803E3E10;
 extern f32 lbl_803E3E14;
 extern f64 lbl_803E3E18;
 extern f32 lbl_803E3E20;
-extern void* gCfCrateDefaultSfxTable;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
 extern f32 lbl_803E3E38;

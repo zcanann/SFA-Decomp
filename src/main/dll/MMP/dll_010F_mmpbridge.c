@@ -15,13 +15,14 @@
 #include "main/objhits.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
 
+__declspec(section ".sdata") char lbl_803DBD90[] = "S %d\n";
+
 #define BRIDGE_TEX_OFFSET_START 0x800
 #define BRIDGE_TEX_OFFSET_MAX   0x131f
 
 #define MMPBRIDGE_OBJFLAG_HIDDEN             0x4000
 #define MMPBRIDGE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-__declspec(section ".sdata") extern char lbl_803DBD90[];
 
 int mmp_bridge_getExtraSize(void)
 {

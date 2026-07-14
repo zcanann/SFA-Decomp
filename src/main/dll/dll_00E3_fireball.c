@@ -30,6 +30,8 @@
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+
+u8 gFireballColorIndexTable[8] = {0, 2, 4, 0, 0, 0, 0, 0};
 #define FIREBALL_HIT_VOLUME_SLOT 14
 
 /* object group this object joins while active */

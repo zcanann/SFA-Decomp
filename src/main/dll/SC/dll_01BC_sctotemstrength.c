@@ -25,6 +25,8 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
+u16 lbl_803DC070[4] = {0x2B6, 0x2D7, 0x2D8, 0};
+
 #define PAD_BUTTON_A 0x100
 
 /* LightFoot Village map-event id (tug-of-war runs while its mode == 6). */
@@ -35,7 +37,6 @@
 extern void fn_801DE320(void* dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern int gTotemStrengthDeactivateTimer;
-extern int lbl_803DC070;
 extern const f32 lbl_803E5668;
 extern const f32 lbl_803E566C;
 extern const f32 lbl_803E5670;
@@ -244,7 +245,7 @@ int platform1_control(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
                         break;
                     }
                 }
-                fn_801DE320(&lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
+                fn_801DE320(lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0)
                 {

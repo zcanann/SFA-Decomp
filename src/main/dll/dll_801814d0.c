@@ -23,6 +23,10 @@
 #include "main/objfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+int lbl_803DBDA0 = 1;
+f32 lbl_803DBDA4 = 15.0f;
+f32 lbl_803DBDA8 = 30.0f;
+
 typedef struct DusterHitEffectPos
 {
     u8 pad00[0xc];

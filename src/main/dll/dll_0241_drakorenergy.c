@@ -29,6 +29,14 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0241_drakorenergy.h"
 
+f32 gDrakorEnergyBobAmplitude = 3.0f;
+f32 gDrakorEnergySeekRange = 900.0f;
+f32 lbl_803DC168 = 20.0f;
+f32 gDrakorEnergyChaseSpeed = 7.0f;
+int gDrakorEnergyHealAmount = 1;
+f32 lbl_803DC174 = 0.4f;
+s16 lbl_803DC178 = 0x200;
+
 STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 
 /* DrakorEnergyState.mode values (see file header comment) */

@@ -35,6 +35,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_024E_drakordthornbush.h"
 
+int gThornBushLightningHitTable[2] = {15, 14};
+int gThornBushThornHitTable[2] = {5, 5};
+f32 gThornBushLightningTimerInit = 300.0f;
+
 /* object def numbers selecting the two thornbush variants (anim.seqId) */
 #define THORNBUSH_SEQ_LIGHTNING          0x709
 #define THORNBUSH_SEQ_THORN              0x727

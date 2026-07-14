@@ -33,6 +33,8 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
 
+u8 gDfShShrinePendingReward = 1;
+
 typedef struct DFlanternShrineState
 {
     ModelLightStruct* light;

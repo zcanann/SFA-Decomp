@@ -49,6 +49,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+
+s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 #define STAFF_QUAKE_HIT_VOLUME_SLOT 17
 
 /* object group the staff joins while active */

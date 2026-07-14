@@ -17,7 +17,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-extern int lbl_803DC068;    /* tracking-test record-time GameBit id table */
+u16 lbl_803DC068[4] = {0x2B7, 0x2CB, 0x2CC, 0};
+
 extern int lbl_803DDC08;
 extern f32 lbl_803E55D0;    /* render fade alpha */
 extern f32 lbl_803E55D4;    /* anim speed when a pole lights */

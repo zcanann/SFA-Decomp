@@ -42,6 +42,15 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
+int lbl_803DC398 = 0x14;
+#pragma explicit_zero_data on
+int lbl_803DC39C = 0;
+#pragma explicit_zero_data off
+f32 lbl_803DC3A0 = 2.0f;
+f32 lbl_803DC3A4 = 0.2f;
+f32 lbl_803DC3A8 = 20.0f;
+u16 lbl_803DC3AC = 0x40;
+
 typedef struct ObjUpdateRomCurveFollowVelocityState
 {
     u8 pad0[0x28C - 0x0];

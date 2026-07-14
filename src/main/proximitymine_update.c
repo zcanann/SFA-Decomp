@@ -21,6 +21,15 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
+s32 lbl_803DC230 = 40;
+f32 lbl_803DC234 = 50.0f;
+u8 lbl_803DC238 = 0x80;
+f32 lbl_803DC23C = 50.0f;
+u8 lbl_803DC240 = 0x80;
+f32 lbl_803DC244 = 15.0f;
+f32 lbl_803DC248 = 0.5f;
+f32 lbl_803DC24C = 0.5f;
+
 #define PROXIMITYMINE_PARTFX 0x51c
 
 extern f32 lbl_803E6768;

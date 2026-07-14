@@ -16,6 +16,8 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
+u8 lbl_803DBDF8[8] = {0x40, 0x80, 0, 0, 0, 0, 0, 0};
+
 /* ice-debris particle spawned along the smash sweep between the previous and current position */
 #define DIMBOSSICESMASH_PARTFX 1000
 

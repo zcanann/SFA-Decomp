@@ -26,6 +26,11 @@
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
 
+s16 gDll1D6SlotTabIndex[4] = {0x10A, 0x14F, 0x151, 0x153};
+#pragma explicit_zero_data on
+u8 gDll1D6SlotInUse[8] = {0};
+#pragma explicit_zero_data off
+
 typedef struct Dll1D6Placement
 {
     u8 pad0[0x18 - 0x0];
@@ -90,8 +95,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern const f32 lbl_803E4A78;
-extern u8 gDll1D6SlotInUse;
-extern s16 gDll1D6SlotTabIndex;
 extern f32 lbl_803E4A88;
 extern const f32 lbl_803E4A7C;
 extern f32 lbl_803E4A80;
@@ -149,7 +152,7 @@ void dll_1D6_free(int* obj)
     }
     mm_free(state->bufA);
     mm_free(state->bufB);
-    (&gDll1D6SlotInUse)[state->slot] = 0;
+    (gDll1D6SlotInUse)[state->slot] = 0;
 }
 
 void dll_1D6_init(int* obj, u8* paramsBytes)
@@ -184,17 +187,17 @@ void dll_1D6_init(int* obj, u8* paramsBytes)
     extra->flags1D = mainGetBit(496) ? 2 : 0;
     for (i = 0; i < 4; i++)
     {
-        if ((&gDll1D6SlotInUse)[i] == 0)
+        if ((gDll1D6SlotInUse)[i] == 0)
         {
-            (&gDll1D6SlotInUse)[i] = 1;
+            (gDll1D6SlotInUse)[i] = 1;
             extra->slot = i;
             i = 4;
         }
     }
     extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (&gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
+    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
     extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((&gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
+    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
     ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
 }
 

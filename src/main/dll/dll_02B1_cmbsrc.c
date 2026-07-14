@@ -30,6 +30,8 @@
 #include "main/dll/dll_02B1_cmbsrc.h"
 #include "main/object_render_legacy.h"
 
+u8 gCmbsrcColorCycleIndexTable[8] = {5, 6, 4, 0, 0, 0, 0, 0};
+
 #define CMBSRC_OBJFLAG_RENDERED 0x800
 
 int cmbsrc_getExtraSize(void)
