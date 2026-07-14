@@ -128,3 +128,14 @@ park/simplify events (round numbers), breakpoint band 0x508~ Simplify loop.
   emits it at the source slot. Candidate: decl-initializer emission order or a coalesce-kept
   copy (see Color_Coalesce identity-sharing in recovered/Coloring.c - eligibility flags are
   set upstream during web/move building, 'the next thing to read').
+
+## New tool: tools/mwcc_re/webmap_lldb.py (instruction->web mapper, needs field decode)
+Breaks on the Apply walk (0x508804) and logs every PCode instruction's opcode + operand
+descriptors (k/c/i fields at inst+0x24+n*0xc). Bootstrap-armed via wibo resolveImports (works
+on macOS lldb/Rosetta, unlike the gdb scripts). Ran successfully on the walkgroup probe
+(2701 instructions). REMAINING: the operand 'i' field (offset +4, 2 bytes) is NOT the web/vreg
+index for all operand kinds (observed values 0-5 = likely physical/precolored); decode the
+RegInfo operand layout (kind codes k0/k3 seen) to map instructions -> web indices, then
+identify the F40 interloper web (nadj 29, steals r22 from curve in the 8/8-anchor config)
+by finding its def/use instructions. Candidates eliminated by decl-move probes: curveList,
+pC, pB, iter, checksum (target's checksum is volatile r5).
