@@ -30,6 +30,7 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
@@ -115,8 +116,6 @@ void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern void* gSmallBasketResource;
 extern const f32 lbl_803E3974;
-extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, double scale);
-
 extern int playerIsDisguised(int obj);
 extern u32 playerGetStateFlag310(int obj);
 
@@ -648,7 +647,7 @@ void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char vi
         }
         else
         {
-            objRenderModelAndHitVolumes((void*)obj, p2, p3, p4, p5, (double)lbl_803E3950);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E3950);
         }
     }
 }
