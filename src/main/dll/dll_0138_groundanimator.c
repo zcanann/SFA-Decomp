@@ -16,7 +16,7 @@
 #include "main/gamebits.h"
 #include "dolphin/os/OSCache.h"
 #include "main/mm.h"
-#include "main/track_dolphin.h"
+#include "main/track_dolphin_api.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
 #include "main/object_descriptor.h"

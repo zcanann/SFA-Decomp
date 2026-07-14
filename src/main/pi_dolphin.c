@@ -20,7 +20,7 @@
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
-#include "main/track_dolphin.h"
+#include "main/track_dolphin_api.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "dolphin/os/OSArena.h"
 #include "dolphin/gx/GXLighting.h"

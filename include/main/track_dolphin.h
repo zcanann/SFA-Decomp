@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-void mapBlockRender_setVtxDcrs(int flag, int *obj, int sh, int *bs);
 void FUN_8005fab0(int param_1,float *param_2);
 void FUN_8005fb68(void);
 void FUN_8005fdec(void);
@@ -115,17 +114,4 @@ void FUN_80064384(int param_1);
 int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask);
 void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
 void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown);
-void initTextures(void);
-void fn_80060BB0(void);
-void* fn_800606DC(int* obj, int idx);
-void* fn_800606FC(int* obj, int idx);
-void gxErrorFn_80060b40(void);
-void* MapBlock_loadFromFile(int blockId);
-void setMapBlockFlag(void);
-void objFn_80065604(void);
-void setupToRenderMapBlock(int* block, void* posMtx);
-void fn_80062894(void);
-void fn_80062808(void);
-void renderGlows(void);
-
 #endif /* MAIN_TRACK_DOLPHIN_H_ */

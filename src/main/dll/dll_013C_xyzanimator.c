@@ -23,6 +23,7 @@
 #include "main/map_block.h"
 #include "dolphin/os/OSCache.h"
 #include "main/object_descriptor.h"
+#include "main/track_dolphin_api.h"
 
 typedef struct MapBlockHdr
 {
@@ -61,8 +62,6 @@ extern f32 lbl_803E4008;
 extern const f32 lbl_803E4018;
 
 extern int return0_80060B90(void* blk);
-extern void* fn_800606DC(int* obj, int idx);
-extern void* fn_800606FC(int* obj, int idx);
 extern void* Shader_getLayer(char* base, int idx);
 
 f32 objFn_801948c0(u8* obj, u8 coord)

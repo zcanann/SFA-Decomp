@@ -54,7 +54,6 @@ int lbl_803DB42C = 0x16A;
 #include "main/gameloop_api.h"
 #include "main/gameloop_internal.h"
 #include "main/newshadows.h"
-#include "main/track_dolphin.h"
 #include "main/track_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/pi_dolphin.h"

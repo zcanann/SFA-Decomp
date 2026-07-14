@@ -38,7 +38,6 @@
 #include "main/warpvec.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame.h"
-#include "main/track_dolphin.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
 #include "main/fileio.h"

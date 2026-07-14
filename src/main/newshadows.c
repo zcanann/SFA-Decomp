@@ -15,6 +15,7 @@
 #include "main/frame_timing.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin.h"
+#include "main/track_dolphin_api.h"
 
 u8 lbl_803DB668[8] = {0xFF, 7, 6, 5, 4, 3, 2, 1};
 f32 lbl_803DB670 = 1.3333334f;
@@ -278,7 +279,6 @@ extern void GXInvalidateTexAll(void);
 extern float __fabsf(float);
 extern float floor(float);
 extern void fn_80069EB8();
-extern void fn_80060BB0(void);
 extern void fn_8004C234(f32* a, f32* b);
 extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
 extern void set_shadowFlag_803dcc29(int x);
