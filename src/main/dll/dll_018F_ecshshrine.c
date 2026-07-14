@@ -40,6 +40,7 @@
 #include "main/sky_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/music_api.h"
 #include "main/obj_group.h"
@@ -156,7 +157,6 @@ extern int objIsCurModelNotZero(void* obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
 extern int objGetAnimStateFlags(int* player, int flags);
-extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
