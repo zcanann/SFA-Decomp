@@ -525,16 +525,17 @@ extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
 extern f32 lbl_803DBC0C;
 u8 gTitleScreenSfxFlagGrid[0x48];
+extern void fn_8003B228(GameObject* obj, int state);
 void fn_80134870(int obj, u8* arr);
+
+typedef void (*TitleScreenObjPrintFn)(GameObject* obj, void* state);
+typedef void (*TitleScreenUpdateSfxFn)(u8* obj, u8* arr);
 
 /* Drive the title screen actor anim state machine, the per-actor
  * footstep/voice sfx flag grid at gTitleScreenSfxFlagGrid, the random blink
  * blend, and the one-shot envfx/sky setup. */
 void TitleScreen_update(u8* obj)
 {
-    extern void fn_8003B228(GameObject * obj, void* p);
-    extern void fn_80134870(u8 * obj, u8 * arr);
-
     u8* state = ((GameObject*)obj)->extra;
     int objHandle = (int)obj;
     u8* p;
@@ -664,12 +665,12 @@ void TitleScreen_update(u8* obj)
                     }
                 }
             }
-            fn_80134870(obj, buf);
+            ((TitleScreenUpdateSfxFn)fn_80134870)(obj, buf);
         }
         t = ((GameObject*)obj)->anim.seqId;
         if (t == 0x77e && ((phase = ((TitlescreenState*)state)->animPhase) == 0 || phase == 4))
         {
-            fn_8003B228((GameObject*)(obj), state);
+            ((TitleScreenObjPrintFn)fn_8003B228)((GameObject*)obj, state);
         }
         else if (t >= 0x77d && t < 0x781)
         {
