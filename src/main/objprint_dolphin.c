@@ -2351,14 +2351,9 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             if (did != 0)
             {
                 int vtx;
-                if (*(u8*)((char*)am + 0x60) != 0)
-                {
-                    vtx = ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1];
-                }
-                else
-                {
-                    vtx = *(int*)&((ModelFileHeader*)m)->vertices;
-                }
+                vtx = *(u8*)((char*)am + 0x60) != 0
+                    ? ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]
+                    : *(int*)&((ModelFileHeader*)m)->vertices;
                 ObjModel_BlendVertexStreamIntLegacy(
                     gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
                     ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
