@@ -57,6 +57,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/camera_shake_api.h"
+#include "main/pad_api.h"
+#include "main/dll/dll_0273_firepipe.h"
 
 f32 lbl_803DBCE0 = 0.7f;
 f32 lbl_803DBCE4 = 2.0f;
@@ -111,8 +113,6 @@ extern f32 lbl_803E2CC8;
 extern f32 lbl_803E2CCC;
 extern f32 lbl_803E2CD0;
 extern f32 lbl_803E2CD4;
-extern void firepipe_setLinkedUpdateFlag(int* obj);
-extern void firepipe_clearLinkedUpdateFlag(int);
 extern f32 lbl_803E2B18;
 extern f32 lbl_803E2B38;
 extern f32 lbl_803E2B40;
@@ -178,6 +178,9 @@ extern f32 lbl_803DBCEC;
 
 extern f32 lbl_803E2BA8;
 extern float powfBitEstimate(float x, float y);
+
+void fn_80157B58(int* obj, u8* state);
+
 extern f32 lbl_803E2C74;
 extern f32 lbl_803E2C30;
 extern f32 lbl_803E2C34;
@@ -287,9 +290,11 @@ void hagabonMK2_stopLoopSfx(int obj)
     Sfx_StopFromObject(obj, SFXTRIG_baddie_rach_death);
 }
 
-void firecrawler_spawnFirepipe(int* obj)
+#pragma dont_inline on
+void firecrawler_spawnFirepipe(int* obj, u8* state)
 {
     int* child;
+    (void)state;
     if (Obj_IsLoadingLocked() != 0)
     {
         child = (int*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
@@ -311,11 +316,12 @@ void firecrawler_spawnFirepipe(int* obj)
         if (child != 0)
         {
             ObjLink_AttachChild((int)obj, (int)child, 0);
-            firepipe_setLinkedUpdateFlag(child);
+            firepipe_setLinkedUpdateFlag((FirePipeObject*)child);
             ((GameObject*)child)->anim.flags = (s16)(((GameObject*)child)->anim.flags | OBJANIM_FLAG_HIDDEN);
         }
     }
 }
+#pragma dont_inline reset
 
 void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
@@ -681,10 +687,6 @@ void crawler_initVariant(int* obj, int* st)
 #pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
 {
-    extern void doRumble(f32 duration);
-    extern void firecrawler_spawnFirepipe(int, int);
-    extern void fn_80157B58(int, int);
-    extern void firepipe_setLinkedUpdateFlag(int);
     extern f32 lbl_803E2BA0;
     extern f32 lbl_803E2BA4;
     typedef struct
@@ -745,21 +747,21 @@ void fn_80157CDC(int obj, int state)
                     {
                         if (((GameObject*)obj)->childObjs[0] == NULL)
                         {
-                            firecrawler_spawnFirepipe(obj, state);
+                            firecrawler_spawnFirepipe((int*)obj, (u8*)state);
                         }
                         else
                         {
-                            firepipe_setLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+                            firepipe_setLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
                         }
                     }
                     else if (((GameObject*)obj)->childObjs[0] != NULL)
                     {
-                        firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+                        firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
                     }
                 }
                 if ((sub->flags & 2) != 0)
                 {
-                    fn_80157B58(obj, state);
+                    fn_80157B58((int*)obj, (u8*)state);
                 }
             }
         }
@@ -1162,7 +1164,7 @@ void crawler_update(int* obj, u8* state)
         }
         if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
         {
-            firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+            firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
         }
         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD | 0x10;
     }
@@ -1186,7 +1188,7 @@ void crawler_update(int* obj, u8* state)
         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x30;
         if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER && ((GameObject*)obj)->childObjs[0] != NULL)
         {
-            firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+            firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
         }
         if (((FCVars*)state)->reactStep != 0)
         {
@@ -1619,7 +1621,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
 
     if (idx == 1 && (obj)->childObjs[0] != NULL)
     {
-        firepipe_clearLinkedUpdateFlag(*(int*)&(obj)->childObjs[0]);
+        firepipe_clearLinkedUpdateFlag((FirePipeObject*)(obj)->childObjs[0]);
     }
     ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x40;
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
@@ -1806,7 +1808,7 @@ void crawler_updateC(s16* obj, u8* state)
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
     if (((GameObject*)obj)->childObjs[0] != NULL)
     {
-        firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+        firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
@@ -2047,7 +2049,7 @@ void crawler_updateB(s16* obj, u8* state)
             Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch_var);
             if (((GameObject*)obj)->childObjs[0] != NULL)
             {
-                firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+                firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
             }
         }
     }
@@ -2140,7 +2142,7 @@ void crawler_updateB(s16* obj, u8* state)
             if (((GameObject*)obj)->anim.seqId == FIRECRAWLER_SEQID_FIRECRAWLER &&
                 ((GameObject*)obj)->childObjs[0] != NULL)
             {
-                firepipe_clearLinkedUpdateFlag(*(int*)&((GameObject*)obj)->childObjs[0]);
+                firepipe_clearLinkedUpdateFlag((FirePipeObject*)((GameObject*)obj)->childObjs[0]);
             }
             if (((FCVars*)state)->reactStep != 0)
             {
