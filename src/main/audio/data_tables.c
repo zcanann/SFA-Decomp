@@ -581,14 +581,11 @@ s32 dataRemoveMacro(u16 mid)
                     }
                 }
 
+                for (i = 0; i < 512; ++i)
                 {
-                    MAC_MAINTAB* mm = t->macMain;
-                    for (i = 0; i < 512; ++i)
+                    if (((MAC_MAINTAB*)((u8*)t + 0x5A00))[i].subTabIndex > base)
                     {
-                        if (mm[i].subTabIndex > base)
-                        {
-                            --mm[i].subTabIndex;
-                        }
+                        --((MAC_MAINTAB*)((u8*)t + 0x5A00))[i].subTabIndex;
                     }
                 }
 
