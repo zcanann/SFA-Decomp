@@ -276,3 +276,14 @@ reference pattern (lfs from sdata2 vs kept-in-FPR) - compare the probe's lbl_803
 usage against the target's f27/f30 preloads in the tail. Likely fix: load zero/div into
 locals ONCE (like the committed `zero = lbl_803E05F0; div = lbl_803E060C;`) at the RIGHT
 scope so no GPR anchor web is needed where the target has none.
+
+## Phantom anchor webs decoded
+The w2->wXX copies are IR-level &sdata2-constant temps that FOLD into sda21 relocs at
+emission (zero instructions emitted - no r2-relative operands exist in either object) yet
+still park in the interference graph and consume saved-reg pop slots. Their indices/nadj
+depend on surrounding live pressure, so they settle once the user-web lifetimes match the
+target. Conclusion: no separate fix needed - finish the per-site staging alignment
+(SET_NEWPATCH_PLANE blocks 0-3 + 2 SET_PLANE sites, np re-deref shape per block against
+target 0x8ac-0xc5c) and the phantoms will park identically. The igwalk copy-descriptor log
+provides the phantom census for verifying each iteration (expect identical w-lists when
+the staging is right).
