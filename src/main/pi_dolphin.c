@@ -254,6 +254,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
     u32 slotSizeAddr; /* &tbl->sizes[slot] + 0x6D68 */
     int ok;
     u32 tmp;
+    int cls[1];
     char buf[56];
 
     if (lbl_803DCC92 != 0)
@@ -281,17 +282,17 @@ u32 mapLoadDataFile(int mapId, int fileId)
             lbl_803DCC92 = 1;
             if (o25 == adj)
             {
-                tmp = 0;
+                cls[0] = 0;
             }
             else if (o47 == adj)
             {
-                tmp = 1;
+                cls[0] = 1;
             }
             else
             {
-                tmp = -1;
+                cls[0] = -1;
             }
-            if ((int)tmp == -1)
+            if (cls[0] == -1)
             {
                 mapLoadDataFile(adj, fileId);
             }
