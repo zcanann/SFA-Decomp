@@ -25,6 +25,7 @@
 #include "main/audio/sfx.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
+#include "main/object_render.h"
 #define UNUSED_HIT_VOLUME_SLOT 0xe
 
 /* object group this object joins */
@@ -119,7 +120,6 @@ void dll_107_free(int* obj)
 
 void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
-    extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
     WindLift107State* state;
     s16 spitTimer;
 
@@ -174,7 +174,7 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
             fn_8003B5E0(200, 30, 30, state->glowPulse);
         }
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A5C);
+    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E3A5C);
 end:;
 }
 

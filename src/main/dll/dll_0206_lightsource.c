@@ -27,6 +27,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_render.h"
 
 #define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTSOURCE_OBJFLAG_RENDERED           0x800
@@ -67,7 +68,6 @@ void lightsource_free(GameObject* obj)
 
 void lightsource_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 alpha);
     ModelLightStruct* light = (*(LightSourceState**)&(obj)->extra)->light;
     if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
@@ -75,7 +75,7 @@ void lightsource_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visi
     }
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, 1.0f);
+        objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 

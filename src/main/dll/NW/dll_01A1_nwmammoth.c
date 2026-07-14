@@ -26,6 +26,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/vecmath_distance_api.h"
+#include "main/object_render.h"
 
 u8 lbl_803DBF70[4] = {1, 0, 0, 0};
 u8 lbl_803DBF74[4] = {1, 1, 0, 0};
@@ -658,12 +659,11 @@ void NW_mammoth_free(GameObject* obj)
 
 void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
     int i;
     void* node;
 
     node = (obj)->extra;
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5210);
+    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++)
     {
         ObjPath_GetPointWorldPosition(obj, i, (f32*)((char*)node + i * 0xc + 0x45c),

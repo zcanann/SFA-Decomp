@@ -44,6 +44,7 @@
 #include "main/obj_list.h"
 #include "main/obj_message.h"
 #include "main/player_control_interface.h"
+#include "main/object_render.h"
 
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
@@ -715,7 +716,6 @@ void dll_CE_func0B(GameObject* obj, int v)
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     extern f32 lbl_803E2DC8;
     extern f32 lbl_803E2E10;
     GroundBaddieState* sub = ((GameObject*)p1)->extra;
@@ -730,7 +730,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     {
         fn_8003B5E0(200, 0, 0, t);
     }
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(p1, p2, p3, p4, p5, lbl_803E2E10);
+    objRenderModelAndHitVolumesFwdLegacy(p1, p2, p3, p4, p5, lbl_803E2E10);
 }
 
 void dll_CE_init(GameObject* obj, u8* def, int flags)

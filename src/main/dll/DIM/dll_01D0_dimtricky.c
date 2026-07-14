@@ -18,6 +18,7 @@
 #include "main/objseq.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/object_render.h"
 
 STATIC_ASSERT(sizeof(DimWoodDoor2State) == 0xC);
 STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
@@ -72,7 +73,7 @@ void dim_tricky_free(void)
 {
 }
 
-void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32); objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A38); }
+void dim_tricky_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumesFwdLegacy(p1, p2, p3, p4, p5, lbl_803E4A38); }
 
 void dim_tricky_hitDetect(void)
 {

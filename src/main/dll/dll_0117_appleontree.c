@@ -24,6 +24,7 @@
 #include "main/dll/dll_0117_appleontree.h"
 #include "main/dll/player_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_render.h"
 
 typedef struct AppleontreeObjectDef
 {
@@ -224,11 +225,10 @@ void AppleOnTree_free(int* obj)
 
 void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
     AppleOnTreeState* inner = ((GameObject*)obj)->extra;
     if ((inner->flags & 2) == 0)
     {
-        objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E37C8);
+        objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
 }
 

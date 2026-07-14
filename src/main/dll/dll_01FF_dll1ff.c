@@ -17,6 +17,7 @@
 #include "main/objhits.h"
 #include "main/pad.h"
 #include "main/frame_timing.h"
+#include "main/object_render.h"
 
 #pragma force_active on
 #pragma explicit_zero_data on
@@ -77,7 +78,6 @@ void dll_1FF_free_nop(void)
    shadow fade-out on whether a trigger sequence is active. */
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 isVisible;
     if (((GameObject*)obj)->unkF8 != 0)
     {
@@ -102,7 +102,7 @@ void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    objRenderModelAndHitVolumes(obj, p1, p2, p3, p4, lbl_803E5D80.f);
+    objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, lbl_803E5D80.f);
 }
 
 void dll_1FF_hitDetect_nop(void)

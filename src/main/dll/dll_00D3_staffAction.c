@@ -39,6 +39,7 @@
 #include "main/player_control_interface.h"
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
+#include "main/object_render.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -434,7 +435,6 @@ void fn_80166E38(f32* out, f32* forward, f32* up)
 
 void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, f32 scale);
     int state;
     f32* slideMtx;
     f32 mtx[15];
@@ -461,12 +461,12 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                 mtx[13] = (obj)->anim.localPosY;
                 mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
                 fn_8003B950((f32*)mtx);
-                objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2FF4);
+                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
                 fn_8003B950(0);
             }
             else
             {
-                objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2FF4);
+                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
             }
             break;
         }

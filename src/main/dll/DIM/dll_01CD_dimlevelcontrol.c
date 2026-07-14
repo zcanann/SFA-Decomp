@@ -34,6 +34,7 @@
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_render.h"
 
 #define DIMLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLEVELCONTROL_OBJFLAG_HIDDEN 0x4000
@@ -82,9 +83,8 @@ void dim_levelcontrol_free(GameObject *obj)
 
 void dim_levelcontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 v);
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4A20);
+    if (v != 0) objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E4A20);
 }
 
 FbWGPipe GXWGFifo : (0xCC008000);
