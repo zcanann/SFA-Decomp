@@ -94,3 +94,20 @@ mechanism: biased coloring of a def1-chain into the dest web (see mp4 charDirTbl
 hit - global-array base differs from register-base case).
 objdiff weighting note: ~90 register-field lines are worth LESS than ~9 shape lines; always
 score via report.json before judging a topology win.
+
+## func1C landed at 99.91% (committed)
+The indexed form WITHOUT a named distRead landed: end loop reads candidateDistances[sel[0]]
+via the SR base web; preheader emission order now matches target exactly
+([mr r27,r30][addi rX,r1,16][mr r26,rX][addi rY,r1,48]). Remaining 4 register-only lines:
+the SR cd-base web (idx 48, nadj 90, created one above the named band) pops r24 while named
+scanBase (idx 46-47) pops r23; target has them swapped. Constraints proven this session:
+- A named web can never outrank the SR base by decl order (base = band-top + 1 always).
+- Dropping scanBase (indexed or pq-direct scan) loses the persistent r24 base web entirely
+  (57 regions) - the named var is load-bearing for the pointer-walk shape.
+- V-K (named distRead) solves the POPS (merged base+distRead keeps named idx 46 -> r23) but
+  emits the addi at source position instead of inside the preheader.
+The two configs are complementary; the original produced both properties at once. Candidate
+unexplored mechanism: park-round reordering (observed once in FPRs: idx48/nadj268 popped
+before idx87/nadj23 - low-nadj webs sink to the last pops). If the merged distRead web can be
+made to park in the sinking class, V-K completes. Next tool: extend select_trace to log the
+park/simplify events (round numbers), breakpoint band 0x508~ Simplify loop.
