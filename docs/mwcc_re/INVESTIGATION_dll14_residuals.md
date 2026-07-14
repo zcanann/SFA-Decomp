@@ -623,3 +623,16 @@ after 9 reservations) or the sweep landscape (K-crossing pattern of the whole gr
 differs. Next: capture the census for a V-K-form build (where the merged web DID pop r23)
 and diff the two censuses web-by-web - the delta names the structure. All search tooling
 in this doc + adj_lldb.py; each run ~2min.
+
+## CONVERGENCE PROOF: V-K is structurally the target (census diff decisive)
+V-K census: merged distRead+base web = idx 46 with 78 parked-neighbors, scanBase = 47
+with 61 - identical compositions to the committed config but with INDICES exchanged.
+Both configs' pops follow strictly DESCENDING INDEX (the degree-evolution nuance was a
+misread; the simulator agrees when run per-config). Therefore: the func1C target IS V-K
+(merged web below scanBase via the named-distRead merge), and its ONLY defect is the
+known single-instruction placement ([addi r23 src-slot] vs [preheader slot 2]).
+FINAL STATE OF THE PROBLEM: one emission-placement rule for a merged web's init, worth
+2 ndiff regions vs the committed config's 4 register lines; objdiff scores the committed
+form higher (99.91 vs 99.49), so V-K lands only when the placement is solved. The same
+placement mechanism likely governs the walkgroup site-1 operand order. One rule, decoded
+via the CMachine emitter reading list, finishes the TU.
