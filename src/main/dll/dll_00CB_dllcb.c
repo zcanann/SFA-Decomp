@@ -24,6 +24,7 @@
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/curve_walker.h"
 #include "main/objseq.h"
@@ -83,7 +84,6 @@ extern f32 lbl_803E2E94;
 
 extern void* memcpy(void* dst, const void* src, int n);
 extern int Curve_AdvanceAlongPath(int* p, f32 t);
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 void ChukChuk_free(void);
 void ChukChuk_hitDetect(void);
 void ChukChuk_release(void);
@@ -460,7 +460,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E2E8C);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2E8C);
             break;
         }
     }
