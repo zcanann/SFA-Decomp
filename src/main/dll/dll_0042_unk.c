@@ -225,7 +225,6 @@ void CameraModeNormal_func0A(float* minDistanceOut, float* maxDistanceOut, float
 void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f32 lowerBound)
 {
 
-    extern f32 interpolate(f32 a, f32 t, f32 exp);
 
     CamSlideObjectState* state;
     f32 minHeight;
@@ -435,7 +434,6 @@ void camslide_update(CameraObject* camera, GameObject* target, f32 upperBound, f
 
 void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
 {
-    extern f32 interpolate(f32 a, f32 t, f32 exp);
     int pitchDelta;
 
     pitchDelta =
@@ -457,7 +455,6 @@ void firstperson_updatePitch(f32 targetY, f32 dist, CameraObject* camera)
 
 void CameraModeNormal_follow(CameraObject* camera, ObjAnimComponent* target)
 {
-    extern f32 interpolate(f32 a, f32 t, f32 exp);
 
     f32 dx;
     f32 dz;
@@ -655,7 +652,6 @@ void CameraModeNormal_free(CameraObject* camera)
 
 void CameraModeNormal_update(u8* obj)
 {
-    extern f32 interpolate(f32 a, f32 t, f32 exp);
     CameraObject* camera = (CameraObject*)obj;
     GameObject* target[1];
     float fa;
