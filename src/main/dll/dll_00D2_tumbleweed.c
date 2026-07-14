@@ -354,8 +354,8 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                     u32 dpdi = (u16)dpdist;
                     if ((f32)dpdi > lbl_803E2F5C && dpdi != 0)
                     {
-                        f32 denom = lbl_803E2F5C * dpdi;
-                        obj->anim.velocityX = obj->anim.velocityX - dpx / denom;
+                        f32 denom;
+                        obj->anim.velocityX = obj->anim.velocityX - dpx / (denom = lbl_803E2F5C * dpdi);
                         obj->anim.velocityZ = obj->anim.velocityZ - dpz / denom;
                     }
                 }
