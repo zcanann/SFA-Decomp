@@ -11,9 +11,9 @@
 #include "main/obj_group.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_stop_channel_api.h"
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 extern u32 fn_80174BFC();
 
