@@ -19,6 +19,15 @@
 #define VOXMAP_SLOT_COUNT           6
 #define VOXMAPS_ROUTE_NODE_CAPACITY 200
 
+int* gVoxMapsMapList;
+void* gVoxMapsScratchBuffer;
+void* gVoxMapsScratchBufferPtr;
+u8 gVoxMapsSlotInUse[8];
+u32 gVoxMapsTransformObj;
+int gVoxMapsMaxMapIndex;
+void* gVoxMapsLargeTextures[2];
+void* gVoxMapsSmallTextures[2];
+
 #pragma dont_inline on
 /* Rank the occupancy bitmap: count set bits in the (ySlot) row up to the cell at
  * (tileX, tileZ), then index nodeBase by that running count. The per-row base count

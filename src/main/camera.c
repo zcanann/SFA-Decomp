@@ -18,6 +18,23 @@ f32 gCameraFarPlane = 10000.0f;
 f32 gCameraAspectRatio = 1.3333334f;
 f32 lbl_803DB26C = 1.0f;
 
+f32 gCameraFarPlaneTransitionStart;
+f32 gCameraFarPlaneTransitionTarget;
+f32 gCameraFovY;
+f32 gCameraOrthoTop;
+f32 gCameraOrthoBottom;
+f32 gCameraOrthoLeft;
+f32 gCameraOrthoRight;
+s32 gCameraProjectionMode;
+u8 gCameraCurrentViewIndex;
+u8 cameraViewYOffsetEnabled;
+s16 lbl_803DC88A;
+s8 gObjTransformMatrixSlot;
+s16 cameraViewportYOffset;
+s16 gCameraViewportYOffset;
+s16 gCameraFarPlaneTransitionFrames;
+s16 gCameraFarPlaneTransitionFramesLeft;
+
 f32 gObjInverseYawTransformMatrices[0x1E][16];
 f32 gObjYawTransformMatrices[0x22][16];
 f32 lbl_80338090[64];

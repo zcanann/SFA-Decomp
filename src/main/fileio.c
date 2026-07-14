@@ -20,6 +20,13 @@
 #define DVD_STATE_WRONG_DISK  6
 #define DVD_STATE_RETRY       11
 
+int gDvdLastDriveStatus;
+u32 gAudioStreamPlayAddrCallbackResult;
+volatile int gDvdReadCallbackResult;
+DVDFileInfo* gFileInfo;
+u8 gDvdCoverOpenErrorActive;
+u8 gDvdErrorPauseActive;
+
 // gameTextShow() message ids for the on-screen disk-error prompts
 #define GAMETEXT_MSG_DVD_FATAL_ERROR 0x339
 #define GAMETEXT_MSG_DVD_RETRY       0x33a

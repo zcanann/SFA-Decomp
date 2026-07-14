@@ -66,6 +66,15 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.h"
 
 s32 gModelEngineHudNumber = -1;
+
+f32 gModelEngineTimerValue;
+f32 gModelEngineTimerDuration;
+s8 gModelEngineTimerFlags;
+u8 gModelEngineTimerState;
+int gModelEnginePrevUiDll;
+int curUiDll;
+int gModelEnginePendingUiDll;
+UiDllVTable** gModelEngineCurUiDllRes;
 int lbl_803DB27C = 0x10;
 int lbl_803DB280 = 0x26;
 int lbl_803DB284 = 0x24;

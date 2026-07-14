@@ -5,6 +5,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
 int gCurveCachedSampleCount = -1;
+
+f32 gCurveForwardDiffStep;
 #pragma explicit_zero_data on
 int lbl_803DB274 = 0;
 #pragma explicit_zero_data off
