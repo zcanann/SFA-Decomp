@@ -108,8 +108,7 @@ void NW_tricky_update(int* obj)
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
-                healthMin = lbl_803E5260;
-                for (i = 0, ip = ids.ids; i < 3; i++, ip++)
+                for (i = 0, ip = ids.ids, healthMin = lbl_803E5260; i < 3; i++, ip++)
                 {
                     found = (int*)ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction((GameObject*)found) > healthMin)
