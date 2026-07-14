@@ -36,7 +36,7 @@ typedef struct PostControl {
   u8 flags;
 } PostControl;
 
-int objAnimFn_80115650(PostObjAnimComponent *objAnim,PostObject *obj,int *turning,
-                PostControl *control,float *turnSpeed,short *moves);
+int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turning, PostControl* control,
+                       float* turnSpeed, short* moves, float* targetPos);
 
 #endif /* MAIN_DLL_FRONT_POST_H_ */
