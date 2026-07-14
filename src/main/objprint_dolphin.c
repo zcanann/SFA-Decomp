@@ -510,7 +510,6 @@ extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
 extern int depthReadRequestPoll(int x, int y, int* obj);
 extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
 extern void hudDrawColored(int a, int b, int c, u32* col, int d, int e);
@@ -925,7 +924,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
             ((GameObject*)child)->anim.localPosY = ((GameObject*)child)->anim.worldPosY;
             ((GameObject*)child)->anim.localPosZ = ((GameObject*)child)->anim.worldPosZ;
         }
-        objRotateFn_8003bce8(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
+        objRotateFn_8003bce8VoidLegacy(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
     }
     *(u8*)((char*)child + 0x37) = ((((GameObject*)child)->anim.alpha + 1) * *(u8*)((char*)parent + 0x37)) >> 8;
     *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
@@ -1225,7 +1224,6 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
 #pragma opt_common_subs reset
 #pragma scheduling reset
 
-extern void modelMtxFn_8003be38(u8* hdr, int* model, f32* mtx, f32* m1);
 extern void GXLoadTexMtxImm(f32* m, int id, int type);
 extern void GXLoadNrmMtxImm(f32* m, int id);
 
@@ -1240,7 +1238,7 @@ void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8
     {
         if (skip == 0)
         {
-            modelMtxFn_8003be38(hdr, model, mtx, m1);
+            modelMtxFn_8003be38PtrLegacy(hdr, model, mtx, m1);
         }
         else
         {

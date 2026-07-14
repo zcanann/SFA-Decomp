@@ -15,8 +15,16 @@ void renderResetFn_8003fc60(void);
 void objRenderFn_80041018(GameObject* obj);
 void objSetMtxFn_800412d4(u32 mtx);
 void modelInitMtxs(int modelFile, int model);
+void modelMtxFn_8003be38(int modelFile, int model, int matrix, int matrix2);
+int objRotateFn_8003bce8(f32* matrix, s16* outX, s16* outY, s16* outZ);
 
 #define modelInitMtxsPtrLegacy(modelFile, model) \
     (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))
+#define modelMtxFn_8003be38PtrLegacy(modelFile, model, matrix, matrix2) \
+    (((void (*)(u8*, int*, f32*, f32*))modelMtxFn_8003be38)( \
+        (modelFile), (model), (matrix), (matrix2)))
+#define objRotateFn_8003bce8VoidLegacy(matrix, outX, outY, outZ) \
+    (((void (*)(f32*, s16*, s16*, s16*))objRotateFn_8003bce8)( \
+        (matrix), (outX), (outY), (outZ)))
 
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */
