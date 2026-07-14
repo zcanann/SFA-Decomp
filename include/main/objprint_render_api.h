@@ -14,5 +14,9 @@ void fuzzRenderFn_800412dc(int* obj);
 void renderResetFn_8003fc60(void);
 void objRenderFn_80041018(GameObject* obj);
 void objSetMtxFn_800412d4(u32 mtx);
+void modelInitMtxs(int modelFile, int model);
+
+#define modelInitMtxsPtrLegacy(modelFile, model) \
+    (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))
 
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */

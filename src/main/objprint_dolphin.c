@@ -1794,7 +1794,6 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
 }
 
 extern f32 gObjJointMtxTemp[];
-extern void modelInitMtxs(u8* m, int* am);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -1827,7 +1826,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             if (gObjCachedModel != (u32)m)
             {
                 ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, gObjJointMtxTemp);
-                modelInitMtxs(m, am);
+                modelInitMtxsPtrLegacy(m, am);
             }
             else
             {
@@ -2062,7 +2061,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
         *(u16*)((char*)am + 0x18) |= 8;
     }
-    modelInitMtxs(m, am);
+    modelInitMtxsPtrLegacy(m, am);
     modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3,
                                          *(u16*)(m + 0xd8) << 3);
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
@@ -2432,7 +2431,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             model_multMtxsIntLegacy(am, wm);
         }
     }
-    modelInitMtxs(m, am);
+    modelInitMtxsPtrLegacy(m, am);
     modelRenderInstrsState_initPtrLegacy(&bs, ((ModelFileHeader*)m)->instrs, *(u16*)(m + 0xd8) << 3,
                                          *(u16*)(m + 0xd8) << 3);
     {
