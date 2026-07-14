@@ -1,6 +1,6 @@
 #include "main/game_object.h"
 #include "main/texture.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/frame_timing.h"
 #include "main/objprint_render_api.h"
@@ -1893,14 +1893,9 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 
     extern void GXSetNumTevStages(u8 nStages);
     extern void GXSetNumTexGens(u8 nTexGens);
-    extern void* objCreateLight(int arg, u8 addToList);
-    extern void modelLightStruct_setLightKind(int* lt, int v);
-    extern void modelLightStruct_setDirection(int* lt, f32 x, f32 y, f32 z);
-    extern void modelLightStruct_setDiffuseColor(int* lt, int r, int g, int b, int a);
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
     extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
     extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);
-    extern void ModelLightStruct_free(int* lt);
     extern void fn_8006C4C0(int* a, int* b, int* c);
 
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
@@ -2040,19 +2035,19 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     }
     else
     {
-        int* lt;
+        ModelLightStruct* lt;
         kc2 = *(ObjPrintGXColor*)&lbl_803DEA00;
-        lt = objCreateLight(obj, 0);
+        lt = objCreateLight((void*)obj, 0);
         if (lt != NULL)
         {
-            modelLightStruct_setLightKind(lt, 4);
+            modelLightStruct_setLightKind(lt, MODEL_LIGHT_KIND_DIRECTIONAL);
             modelLightStruct_setDirection(lt, lbl_803DEA04, lbl_803DEA34, *(f32*)&lbl_803DEA04);
             modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             modelLightChannels_reset(0);
             modelLightChannel_configure(2, 0, 0);
             GXSetChanAmbColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB470);
             GXSetChanMatColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB468);
-            modelLightStruct_loadChannelLight(2, lt, obj);
+            modelLightStruct_loadChannelLight(2, (int*)lt, obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
         }
