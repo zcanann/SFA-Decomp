@@ -2,13 +2,14 @@
 #define MAIN_DLL_DLL_01AA_BOMBPLANTSPORE_H_
 
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 
 typedef struct BombPlantSporeState
 {
     /* 0x000 */ u16 damageType;
     /* 0x002 */ u8 pad02[0x08 - 0x02];
     /* 0x008 */ u8 pathState[0x270 - 0x08];
-    /* 0x270 */ void* light;
+    /* 0x270 */ ModelLightStruct* light;
     /* 0x274 */ f32 fuseTimer;
     /* 0x278 */ f32 driftAmplitude;
     /* 0x27C */ f32 driftSpeed;

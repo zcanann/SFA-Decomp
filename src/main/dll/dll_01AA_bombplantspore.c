@@ -5,7 +5,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/obj_message.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -40,8 +40,6 @@ typedef struct BombPlantSporeStateFlags
     u8 waitingForDetonateAck : 1;
     u8 unused : 6;
 } BombPlantSporeStateFlags;
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 #define BOMBPLANT_GAME_BIT_AVAILABLE_SPORES     0x66c
 #define BOMBPLANTSPORE_MSG_DETONATE             0x7000b
@@ -85,13 +83,6 @@ extern const f32 lbl_803E53EC;
 extern f32 lbl_803E53F0;
 extern const f32 lbl_803E53F4;
 
-extern void ModelLightStruct_free(void* light);
-extern void* objCreateLight(void* obj, int arg);
-extern void modelLightStruct_setEnabled(void* light, int enabled, f32 scale);
-extern void modelLightStruct_setLightKind(void* light, int value);
-extern void modelLightStruct_setDiffuseColor(void* light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-
 int BombPlantSpore_getExtraSize(void)
 {
     return 0x2b4;
@@ -99,16 +90,16 @@ int BombPlantSpore_getExtraSize(void)
 
 void BombPlantSpore_free(GameObject* obj)
 {
-    void* state;
-    void* light;
+    BombPlantSporeState* state;
+    ModelLightStruct* light;
 
     state = obj->extra;
     (*gExpgfxInterface)->freeSource((u32)obj);
-    light = ((BombPlantSporeState*)state)->light;
+    light = state->light;
     if (light != NULL)
     {
         ModelLightStruct_free(light);
-        ((BombPlantSporeState*)state)->light = NULL;
+        state->light = NULL;
     }
 }
 
@@ -413,7 +404,7 @@ void BombPlantSpore_update(GameObject* obj)
 void BombPlantSpore_init(GameObject* obj, void* param2)
 {
     BombPlantSporeState* state;
-    void* light;
+    ModelLightStruct* light;
     f32 randomPhase;
     u32 randAsDouble[2];
     u8 events[8];
