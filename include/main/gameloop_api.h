@@ -5,6 +5,8 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/hud_visibility_api.h"
 
+extern u8 lbl_803DB424;
+
 int getGameState(void);
 int return1_800202BC(void);
 void fn_8001FE90(void);

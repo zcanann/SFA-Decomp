@@ -2623,7 +2623,6 @@ u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
-    extern f32* ObjModel_GetJointMatrix(void* model, int joint);
     Mtx mtx_ec;
     Mtx mtx_bc;
     Mtx mtx_8c;
@@ -2639,7 +2638,7 @@ u32 objCallback_80074d04(int handle, void* model)
     viewMtx = Camera_GetViewMatrix();
     if (model != 0)
     {
-        f32* jm = ObjModel_GetJointMatrix(model, 0);
+        ObjModelJointMatrix* jm = ObjModel_GetJointMatrix((u8*)model, 0);
         f32 px, py, pz, dist;
         PSMTXConcat((f32(*)[4])viewMtx, (f32(*)[4])jm, mtx_8c);
         px = mtx_8c[0][3];
@@ -5948,8 +5947,6 @@ int loadSaveGame(int a, int b)
 
 void showMemCardError(u8 err)
 {
-    extern u8 lbl_803DB424;
-
     int opts[8];
     int msgs[8];
     int count;
