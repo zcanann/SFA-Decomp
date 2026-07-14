@@ -128,6 +128,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
                                                 ModelLightStruct** outLights, int maxLights, int* outCount);
 void modelLightStruct_selectObjectLights(GameObject* object, ModelLightStruct** outLights, int maxLights,
                                          s32* outCount, int typeMask);
+void modelLightStruct_loadChannelLight(int channel, u8* light, u8* object);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);

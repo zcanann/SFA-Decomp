@@ -1895,7 +1895,6 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     extern void GXSetNumTexGens(u8 nTexGens);
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
     extern void GXSetChanMatColor(int chan, ObjPrintGXColor c);
-    extern void modelLightStruct_loadChannelLight(int chan, int* lt, int obj);
     extern void fn_8006C4C0(int* a, int* b, int* c);
 
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
@@ -2047,7 +2046,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
             modelLightChannel_configure(2, 0, 0);
             GXSetChanAmbColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB470);
             GXSetChanMatColor(GX_ALPHA0, *(ObjPrintGXColor*)&lbl_803DB468);
-            modelLightStruct_loadChannelLight(2, (int*)lt, obj);
+            modelLightStruct_loadChannelLight(2, (u8*)lt, (u8*)obj);
             modelLightChannels_applyGXControls();
             ModelLightStruct_free(lt);
         }

@@ -1690,7 +1690,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
 #pragma opt_propagation reset
 #pragma opt_loop_invariants reset
 
-extern void modelLightStruct_loadChannelLight(int idx, void* light, int model);
 extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;
 
@@ -1711,22 +1710,22 @@ int textureFn_80052bb4(int model, f32* params)
     modelLightChannel_configure(2, 0, 0);
     modelLightStruct_setSpecularAttenuation(la, params[0], LastCommandWasRead_803DEB60);
     modelLightStruct_setSpecularColor(la, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(0, la, model);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
     modelLightStruct_setSpecularAttenuation(la, params[1], LastCommandWasRead_803DEB60);
     modelLightStruct_setSpecularColor(la, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(0, la, model);
+    modelLightStruct_loadChannelLight(0, (u8*)la, (u8*)model);
     modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
-    modelLightStruct_loadChannelLight(2, la, model);
+    modelLightStruct_loadChannelLight(2, (u8*)la, (u8*)model);
     modelLightChannel_configure(1, 1, 0);
     modelLightChannel_configure(3, 0, 0);
     modelLightStruct_setSpecularAttenuation(lb, params[0], LastCommandWasRead_803DEB60);
     modelLightStruct_setSpecularColor(lb, 0xff, 0, 0, 0xff);
-    modelLightStruct_loadChannelLight(1, lb, model);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
     modelLightStruct_setSpecularAttenuation(lb, params[1], LastCommandWasRead_803DEB60);
     modelLightStruct_setSpecularColor(lb, 0, 0, 0xff, 0xff);
-    modelLightStruct_loadChannelLight(1, lb, model);
+    modelLightStruct_loadChannelLight(1, (u8*)lb, (u8*)model);
     modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
-    modelLightStruct_loadChannelLight(3, lb, model);
+    modelLightStruct_loadChannelLight(3, (u8*)lb, (u8*)model);
     modelLightChannels_applyGXControls();
     modelLightStruct_setAngularAttenuation(la, lbl_803DEB5C, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     modelLightStruct_setAngularAttenuation(lb, lbl_803DEB5C, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
@@ -2118,7 +2117,7 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
     modelLightChannel_configure(0, 0, 0);
     for (n = 0; n < count; n++)
     {
-        modelLightStruct_loadChannelLight(0, lights[n], (int)model);
+        modelLightStruct_loadChannelLight(0, (u8*)lights[n], (u8*)model);
     }
     modelLightChannels_applyGXControls();
 }

@@ -1449,7 +1449,6 @@ typedef struct
 } ObjGXColor;
 
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
-extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
@@ -1558,7 +1557,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                 p = larr;
                 for (; i < count; i++)
                 {
-                    modelLightStruct_loadChannelLight(ch, (int)*p, model);
+                    modelLightStruct_loadChannelLight(ch, (u8*)*p, model);
                     p++;
                 }
             }
@@ -1609,7 +1608,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                             *sp = 3;
                         }
                         modelLightChannel_configure(*sp, 2, 0);
-                        modelLightStruct_loadChannelLight(*sp, (int)*lp, model);
+                        modelLightStruct_loadChannelLight(*sp, (u8*)*lp, model);
                         GXSetChanAmbColor(*sp, *(ObjGXColor*)&lbl_803DB470);
                         GXSetChanMatColor(*sp, *(ObjGXColor*)&lbl_803DB468);
                         lp++;
