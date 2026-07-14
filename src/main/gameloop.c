@@ -9,6 +9,17 @@
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
 #include "dolphin/pad.h"
+
+u8 framesThisStep = 1;
+u8 lbl_803DB411 = 1;
+f32 timeDelta = 1.0f;
+f32 oneOverTimeDelta = 1.0f;
+int gGameLoopPendingUiDllId = -1;
+f32 gGameLoopMusicFadeTimer = -30.0f;
+u8 lbl_803DB424 = 0xFF;
+u8 gGameLoopResetComboDebounce = 10;
+int lbl_803DB428 = 0xAA;
+int lbl_803DB42C = 0x16A;
 #include "dolphin/vi.h"
 #include "dolphin/dvd.h"
 #include "main/asset_load.h"

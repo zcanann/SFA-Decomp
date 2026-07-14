@@ -19,6 +19,51 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/rcp_dolphin_api.h"
 
+void* lbl_803DB378 = (void*)-1;
+#pragma explicit_zero_data on
+char lbl_803DB37C[4] = {0};
+char lbl_803DB380[4] = {0};
+char lbl_803DB384[4] = {0};
+char lbl_803DB388[4] = {0};
+char lbl_803DB38C[4] = {0};
+char lbl_803DB390[4] = {0};
+char lbl_803DB394[4] = {0};
+char lbl_803DB398[4] = {0};
+#pragma explicit_zero_data off
+char lbl_803DB39C[4] = "\xE3\x80\x80";
+#pragma explicit_zero_data on
+char* lbl_803DB3A0[1] = {0};
+char lbl_803DB3A4[4] = {0};
+char lbl_803DB3A8[4] = {0};
+char* lbl_803DB3AC[1] = {0};
+char lbl_803DB3B0[4] = {0};
+char* lbl_803DB3B4[2] = {0};
+char lbl_803DB3BC[4] = {0};
+char* lbl_803DB3C0[1] = {0};
+#pragma explicit_zero_data off
+int lbl_803DB3C4 = 0x800;
+int gGameTextClearColor = 0xC0;
+int lbl_803DB3CC = 3;
+f32 lbl_803DB3D0 = 0.4f;
+char lbl_803DB3D4[] = "    ";
+#pragma explicit_zero_data on
+int lbl_803DB3DC = 0;
+#pragma explicit_zero_data off
+int gGameTextSavedDir = -1;
+#pragma explicit_zero_data on
+int lbl_803DB3E4 = 0;
+#pragma explicit_zero_data off
+s16 gGameTextBoxTexAssets = 0x1C4;
+int gGameTextBoxCornerInset = 2;
+int gGameTextBoxInset = 0xE;
+int gGameTextBoxColorR = 0xFF;
+int gGameTextBoxColorG = 0xFF;
+int gGameTextBoxColorB = 0xFF;
+int gGameTextBoxColorA = 0xFF;
+#pragma explicit_zero_data on
+int lbl_803DB404 = 0;
+#pragma explicit_zero_data off
+
 typedef struct
 {
     u32 key;     /* 0x00 */
@@ -244,7 +289,6 @@ extern u8* gGameTextLastEntry;
 extern int gCurTextBuffer;
 extern int gGameTextBufferIndex;
 extern f32 gGameTextFadeLimit;
-extern char lbl_803DB3D4;
 extern char* sMapDirectoryNameTable[];
 extern void* curGameTextDir;
 extern int gGameTextSequenceMode;
@@ -1422,7 +1466,7 @@ void* gameTextGet(int textId)
         u8* fb = gameTextBase + *(volatile int*)&gGameTextBufferIndex * 4;
         gGameTextFallbackBuf = (int)(fb + 0x20);
     }
-    sprintf((char*)*(volatile int*)&gCurTextBuffer, &lbl_803DB3D4, textId, sMapDirectoryNameTable[(int)curGameTextDir]);
+    sprintf((char*)*(volatile int*)&gCurTextBuffer, lbl_803DB3D4, textId, sMapDirectoryNameTable[(int)curGameTextDir]);
     *(u16*)gGameTextLastEntry = textId;
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
@@ -2132,7 +2176,7 @@ void gameTextRun(void)
                 {
                     *timer = zero;
                     *alpha = zero;
-                    sprintf(**(char***)(entry + 8), &lbl_803DB3D4);
+                    sprintf(**(char***)(entry + 8), lbl_803DB3D4);
                 }
             }
         }

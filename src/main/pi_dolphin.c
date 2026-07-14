@@ -45,6 +45,59 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 
+char sResourceFileNameSfxTab[] = "SFX.tab";
+char sResourceFileNameSfxBin[] = "SFX.bin";
+char sResourceFileNameNull[] = "NULL";
+char sMapFileNameTemple[] = "temple";
+char sMapFileNameHightop[] = "hightop";
+char sMapFileNameHollow[] = "hollow";
+char sMapFileNameHollow2[] = "hollow2";
+char sMapFileNameWastes[] = "wastes";
+char sMapFileNameWarlock[] = "warlock";
+char sMapFileNameWillow[] = "willow";
+char sMapFileNameArwing[] = "arwing";
+char sMapFileNameDfptop[] = "dfptop";
+char sMapFileNameDragbot[] = "dragbot";
+char sMapFileNameKamdrag[] = "kamdrag";
+char sMapFileNameDuster[] = "duster";
+char sMapFileNameLinkb[] = "linkb";
+char sMapFileNameLinka[] = "linka";
+char sMapFileNameLinkc[] = "linkc";
+char sMapFileNameLinkd[] = "linkd";
+char sMapFileNameLinke[] = "linke";
+char sMapFileNameLinkf[] = "linkf";
+char sMapFileNameLinkg[] = "linkg";
+char sMapFileNameLinkh[] = "linkh";
+char sMapFileNameLinkj[] = "linkj";
+char sMapFileNameLinki[] = "linki";
+char sMapFileNameVolcano[] = "volcano";
+char sMapFileNameDfalls[] = "dfalls";
+char sMapFileNameSwaphol[] = "swaphol";
+char sMapFileNameNwastes[] = "nwastes";
+char sMapFileNameShop[] = "shop";
+char sMapFileNameCrfort[] = "crfort";
+char sMapFileNameMmpass[] = "mmpass";
+char sMapFileNameDesert[] = "desert";
+char sMapFileNameDbay[] = "dbay";
+s32 gObjLevelLockSlots[2] = {-2, -2};
+char sArchivePathFormat[] = "%s/%s";
+char sZlbBlockTag[] = "ZLB";
+char sDirBlockTag[] = "DIR";
+int lbl_803DB5C8 = 1;
+u8 lbl_803DB5CC = 5;
+u16 lbl_803DB5CE = 1;
+u8 lbl_803DB5D0[4] = {0, 0, 0, 0xFF};
+u8 lbl_803DB5D4[8] = {7, 7, 0xC, 0xC, 0xC, 7, 7, 0};
+char sProgramCounterFormat[] = "PC: %x";
+#pragma explicit_zero_data on
+int lbl_803DB5E4 = 0;
+#pragma explicit_zero_data off
+u8 lbl_803DB5E8 = 0xFF;
+u32 lbl_803DB5EC = 0xFFFFFFC0;
+f32 lbl_803DB5F0 = 1.0f;
+int lbl_803DB5F4 = -4;
+u8 lbl_803DB5F8[8] = {0x28, 0x20, 0, 0xFF, 0, 0, 0, 0};
+
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK  2
@@ -68,7 +121,6 @@ extern char* sResourceFileNameTable[];
 extern char sRomlistZlbPathFormat[];
 extern char sResourceFileNameAudioTab[];
 extern u8 lbl_80345E10[]; /* resource file table -- see struct MldfTables */
-extern char sArchivePathFormat;
 extern s16 lbl_803DCC92;
 extern int lbl_803DCC70;
 extern int lbl_803DCC7C;
@@ -846,7 +898,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -935,7 +987,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1016,7 +1068,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1103,7 +1155,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1184,7 +1236,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1271,7 +1323,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1354,7 +1406,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1441,7 +1493,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 mm_free((void*)MLDF_SP_PTR(x));
                 MLDF_SP_PTR(x) = 0;
             }
-            sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
+            sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
             fi = AtomicSList_Pop(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
@@ -1490,10 +1542,8 @@ u32 mapLoadDataFile(int mapId, int fileId)
 }
 
 
-extern char sZlbBlockTag;
 
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
-extern char sDirBlockTag;
 extern int zlbDecompress(void* dst, int size, int out, void* src);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
@@ -2540,7 +2590,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 return 0;
             }
             fileBuf = qptr + offsetFlags;
-            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
                 zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
@@ -2559,7 +2609,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
                 return 0;
             }
             fileBuf = qptr + offsetFlags;
-            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
                 zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
@@ -2596,11 +2646,11 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         {
             entryIndex = offsetFlags & 0xffffff;
             fileBuf = qptr + entryIndex;
-            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+            if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
                 return MLDF_QPTR + (entryIndex + 0x20);
             }
-            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
                 zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
@@ -2612,11 +2662,11 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         {
             entryIndex = offsetFlags & 0xffffff;
             fileBuf = qptr + entryIndex;
-            if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+            if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
             {
                 return MLDF_QPTR + (entryIndex + 0x20);
             }
-            if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+            if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
                 zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
@@ -2651,13 +2701,13 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         DVDRead(&buf, (void*)fileBuf, alignedSize, offsetFlags & 0xffffff);
         DVDClose(&buf);
         DCStoreRange((void*)fileBuf, length);
-        if (strncmp(&sDirBlockTag, (char*)fileBuf, 3) == 0)
+        if (strncmp(sDirBlockTag, (char*)fileBuf, 3) == 0)
         {
             for (;;)
             {
             }
         }
-        if (strncmp((char*)fileBuf, &sZlbBlockTag, 3) == 0)
+        if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
         {
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
             zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
@@ -3082,7 +3132,7 @@ void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8*
             int e = base + (texId & 0xffffff) * 2;
             int v = *(int*)(e + 0xc);
             *outA = *(int*)(e + 8);
-            if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
+            if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
             {
                 *outB = 0xffffffff;
             }
@@ -3194,7 +3244,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
                     int e = base + (texId & 0xffffff) * 2;
                     int v = *(int*)(e + 0xc);
                     *outA = *(int*)(e + 8);
-                    if (strncmp(&sDirBlockTag, (char*)e, 3) == 0)
+                    if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
                     {
                         *outB = 0xffffffff;
                     }
@@ -3231,7 +3281,7 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
                 {
                     v = *(int*)(buf + 0xc);
                     *outA = *(int*)(buf + 8);
-                    if (strncmp(&sDirBlockTag, buf, 3) == 0)
+                    if (strncmp(sDirBlockTag, buf, 3) == 0)
                     {
                         *outB = 0xffffffff;
                     }
@@ -3247,7 +3297,6 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
 }
 
 extern u32 sMapFileNameIndexRemapTable[];
-extern u8 lbl_803DB5D0;
 extern u8 lbl_803DCD31;
 extern f32 lbl_803DCD34;
 extern f32 lbl_803DCD38;
@@ -3262,9 +3311,9 @@ int mapGetDirIdx(int idx)
 
 void setColor_803db5d0(u8 r, u8 g, u8 b)
 {
-    (&lbl_803DB5D0)[0] = r;
-    (&lbl_803DB5D0)[1] = g;
-    (&lbl_803DB5D0)[2] = b;
+    lbl_803DB5D0[0] = r;
+    lbl_803DB5D0[1] = g;
+    lbl_803DB5D0[2] = b;
 }
 
 void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
@@ -3841,7 +3890,6 @@ int GXFlush_(u8 visible, int unused)
 #pragma optimize_for_size reset
 
 extern u8 GXNtsc480Prog[];
-extern u8 lbl_803DB5D4;
 extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
 #pragma peephole on
 void setDisplayCopyFilter(void)
@@ -3853,7 +3901,7 @@ void setDisplayCopyFilter(void)
     }
     else
     {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 1, &lbl_803DB5D4);
+        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
     }
 }
 
@@ -3973,7 +4021,7 @@ void checkLoadBlock(int a, int* pc, int* p8)
             idx = 0x47;
         }
         blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-        if (strncmp(blk, &sZlbBlockTag, 3) != 0)
+        if (strncmp(blk, sZlbBlockTag, 3) != 0)
         {
             *p8 = 0;
             *pc = 0;
@@ -4027,7 +4075,7 @@ void loadVoxMaps(int a, int* pc, int* p8)
         if ((a & 0xf0000000) != 0)
         {
             blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-            if (strncmp(blk, &sZlbBlockTag, 3) != 0)
+            if (strncmp(blk, sZlbBlockTag, 3) != 0)
             {
                 *p8 = 0;
                 *pc = 0;
@@ -4301,7 +4349,6 @@ typedef struct
 extern IndTexMtx23 lbl_802C1E28;
 extern u8* lbl_803DCD2C;
 extern int lbl_803DB5F4;
-extern u8 lbl_803DB5F8;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
@@ -4369,7 +4416,7 @@ void textureFn_8004c330(void* p1, void* mtx)
     GXSetIndTexMtx(GX_ITM_0, m.v, (s8)lbl_803DB5F4);
     GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 7, 1, 0, 0, 0, 0, 3);
-    gxTextureFn_8004bf88(&lbl_803DB5F8, 1, 0, &out_c, &out_8);
+    gxTextureFn_8004bf88(lbl_803DB5F8, 1, 0, &out_c, &out_8);
     GXSetTevKColorSel(lbl_803DCD90, out_c);
     GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
     GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
@@ -6798,7 +6845,6 @@ extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 enableDebugText;
-extern char sProgramCounterFormat;
 
 void gpuErrorHandler(u32 retraceCount)
 {
@@ -6888,7 +6934,7 @@ void gpuErrorHandler(u32 retraceCount)
         {
             debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
         }
-        debugPrintfxy(0x32, 0xa0, &sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
+        debugPrintfxy(0x32, 0xa0, sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
     }
 }
 

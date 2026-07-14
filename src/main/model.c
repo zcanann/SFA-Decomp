@@ -16,6 +16,8 @@
 #include "main/loaded_file_flags.h"
 #include "main/table_file.h"
 #include "main/frame_timing.h"
+
+u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_BM_BLEND 1
 #define GX_BL_ONE 1
 #define GX_BL_SRCALPHA 4

@@ -26,6 +26,9 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
 
+int lbl_803DB460 = 100;
+f32 lbl_803DB464 = 20.0f;
+
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK  2

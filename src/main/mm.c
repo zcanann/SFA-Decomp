@@ -8,6 +8,10 @@
 #include "main/mm.h"
 #include "main/pi_dolphin_api.h"
 
+int gMmRegion0SpawnEnabled = 1;
+int gMmUseHeaps1and2 = -1;
+char sMmStoreAllocationTag[] = "mmStore";
+
 typedef f32 Mtx[3][4];
 
 typedef struct
@@ -67,7 +71,7 @@ extern int gMmLastFreeTick;
 extern char sMmStbfStackTooDeepError[];
 extern s16 gMmDeferredFreeCount;
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
-extern char sMmStoreAllocationTag;
+
 extern int gMmNextStoreHandle;
 extern int gMmStatsPrintCounter;
 extern int gMmTickCount;
@@ -291,7 +295,7 @@ int mmCreateMemoryStore(int size)
         OSReport(msg + 0x218, size, 0x4000);
         return 0;
     }
-    store = (MmStore*)mmAlloc(0x10, 0, (int)&sMmStoreAllocationTag);
+    store = (MmStore*)mmAlloc(0x10, 0, (int)sMmStoreAllocationTag);
     if (store == NULL)
     {
         OSReport(msg + 0x26c);

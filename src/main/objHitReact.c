@@ -12,6 +12,9 @@
 #include "main/resource.h"
 #include "main/frame_timing.h"
 
+f32 lbl_803DB450 = 0.4f;
+char sObjHitReactResetString[7] = "reset\n";
+
 
 __declspec(section ".rodata") ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs = {8, 0xB4, 0xF0, 0xFF};
 

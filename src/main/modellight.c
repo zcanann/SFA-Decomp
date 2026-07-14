@@ -59,7 +59,9 @@ extern f32 lbl_803DE76C;
 extern f32 lbl_803DE790;
 extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
-extern u8 gModelLightColorTable;
+#pragma explicit_zero_data on
+u8 gModelLightColorTable[8] = {0};
+#pragma explicit_zero_data off
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE778;
 extern f32 lbl_803DE78C;
@@ -501,7 +503,7 @@ void modelLightStruct_getWorldPosition(ModelLightStruct* p, f32* x, f32* y, f32*
 
 void lightSetColor(int i, u8 r, u8 g, u8 b)
 {
-    u8* base = &gModelLightColorTable;
+    u8* base = gModelLightColorTable;
     base[i * 4] = r;
     base[i * 4 + 1] = g;
     base[i * 4 + 2] = b;
@@ -560,7 +562,7 @@ void modelLightStruct_setDiffuseColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 
 
 void lightGetColor(int i, u8* r, u8* g, u8* b)
 {
-    u8* base = &gModelLightColorTable;
+    u8* base = gModelLightColorTable;
     *r = base[i * 4];
     *g = base[i * 4 + 1];
     *b = base[i * 4 + 2];

@@ -39,6 +39,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+int gObjDefCaptureMode = 2;
+s16 gObjPlayerSpawnIdTable[2] = {0x1F, 0};
+
 #define Waterfx_RunFrameLegacy(interface, frames) \
     ((void (*)())(interface)->runFrame)((frames))
 

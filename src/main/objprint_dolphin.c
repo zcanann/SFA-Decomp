@@ -30,6 +30,28 @@
 #include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/dll_80136a40.h"
 
+u32 lbl_803DB468 = 0xFFFFFFFF;
+u32 gObjGxDefaultChanColor = 0xFF;
+#pragma explicit_zero_data on
+u32 lbl_803DB470 = 0;
+#pragma explicit_zero_data off
+u32 gObjGxVtxDescCache = 0xFFFFFFFF;
+u8 gObjGxBlendModeCache = 0xFF;
+u8 gObjGxZCompLocCache = 0xFF;
+u32 gObjGxAlphaCompareCache = 0xFFFFFFFF;
+u8 gObjGxZWriteCache = 0xFF;
+u8 gObjGxZCompareCache = 0xFF;
+u8 gObjGxCullModeCache = 0xFF;
+#pragma explicit_zero_data on
+u8 gObjGxKColorCache[4] = {0};
+#pragma explicit_zero_data off
+u8 gObjShadowColor[4] = {0x20, 0x30, 0xFF, 0xFF};
+int lbl_803DB48C = -1;
+int lbl_803DB490 = -1;
+u8 lbl_803DB494[4] = {0xFF, 0xFF, 0xFF, 0xFF};
+int lbl_803DB498 = -3;
+int lbl_803DB49C = -1;
+
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4);
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode);
 void objRenderChild(int* child, int* parent, u8 isShadow);
