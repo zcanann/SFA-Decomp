@@ -22,6 +22,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
+#include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
@@ -100,7 +101,6 @@ extern f32 gDusterObjPickupRangeY;
 extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void* outHits, int e, int f);
 extern int Obj_IsParentSlackClear(int obj);
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
                               int arg9, int arg10);
