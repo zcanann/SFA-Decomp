@@ -386,3 +386,15 @@ block presumably folds them - VERIFY by comparing that exact block; if target K3
 the addis, find the alternative +1-chain source). When instruction-neutral, the register
 alignment (~60 lines) flips the score decisively past baseline. Probe: wgfep_117.c + the
 decl retunes (p before slotPtr, pp/listIndex/listWalk order per anchors above).
+
+## Target wg-K3 verified: NO staging addis (addi rX,r21,12/28 absent in first loop)
+The +1 pl-chain the census needs must be a ZERO-instruction web in the target (like the
+phantom sdata2 anchors). Site-1 accumulate form also still open: mp4 CharMotionCreate
+proves add-then-addi with a register base comes from a DECLARED 2D array with legal inner
+index (charDirTbl[i][2], inner < row size); our +0x3000 exceeds any legal row - so site-1
+is NOT a 2D subscript either; both remaining shapes point to an addressing construct not
+yet identified (possibly the original declared the patch/walkgroup arena with a type that
+makes +0x3000 a legal member/element step, e.g. ObjfsaPatch rows of 0x100 with walkgroup
+overlay via union). NEXT: probe an arena UNION type: union { ObjfsaPatch p[0x100];
+struct { u8 pad[0x3000]; ObjfsaWalkGroup w[0xB5]; }; } and access w[grp] - check both the
+association order AND whether its address web census adds the K1-chain slot.
