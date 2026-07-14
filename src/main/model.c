@@ -2101,6 +2101,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
 {
     u8* hdr = model;
     int total;
+    int va;
 
     if (((ModelFileHeader*)hdr)->animationCount != 0)
     {
@@ -2179,12 +2180,12 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
     {
-        total = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4 + total;
+        total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
         total = total + 4;
     }
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
     {
-        total = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4 + total;
+        total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
         total = total + 4;
     }
     total = total + (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
