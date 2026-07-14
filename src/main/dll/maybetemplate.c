@@ -6158,11 +6158,11 @@ void cMenuRun(void)
         {
             s16 cur = gCMenuSelIndex;
             s16 cy;
-            cMenuSelectedItem = hud->ids848[cur];
-            gCMenuSelUsedBit = hud->ids648[cur];
-            gCMenuSelActiveBit = hud->ids748[cur];
+            cMenuSelectedItem = hud->ownedBits[cur];
+            gCMenuSelUsedBit = hud->usedBits[cur];
+            gCMenuSelActiveBit = hud->activeBits[cur];
             {
-                s16 icon = hud->icons[cur];
+                s16 icon = hud->textIds[cur];
                 if (aButtonIcon == 0)
                 {
                     aButtonIcon = icon;
@@ -6303,7 +6303,7 @@ void cMenuRun(void)
                                 else
                                 {
                                     Sfx_PlayFromObject(0, SFXTRIG_menu_spin);
-                                    yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
+                                    yButtonItemTextureId = hud->textureIds[gCMenuSelIndex];
                                     yButtonItem = cMenuSelectedItem;
                                     gYButtonActiveBit = gCMenuSelActiveBit;
                                     gYButtonUsedBit = gCMenuSelUsedBit;
