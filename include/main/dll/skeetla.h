@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla_route_api.h"
 
 typedef struct SkeetlaParticleSpawnArgs
@@ -19,7 +20,6 @@ typedef struct SkeetlaParticleSpawnArgs
 
 int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 int trickyMove(u8* obj, f32* targetPos);
-int objAnimFn_8013a3f0(int obj, int newState, f32 speed, u32 flags);
 void* trickyFindNearestLinkedRouteEntry(u8* context, u8* routeDef, int linkSelector, int routeFlagValue);
 void* trickyFindPathRouteEntry(u8* state, u32 route, int pathId);
 int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pathId);

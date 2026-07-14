@@ -14,6 +14,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 #include "main/dll/tricky_state.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET          0x54
@@ -124,7 +125,6 @@ extern int Objfsa_FindNearestCurveType24(float* pos, int p2, int p3);
 extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, void* target, int flag);
 extern int trickyMove(int p1, void* p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
-extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void objSetAnimSpeedTo1(int* obj);
 
 int trickyGuardFindBaddieTarget(TrickyRuntime* state);

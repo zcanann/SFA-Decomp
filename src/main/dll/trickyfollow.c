@@ -20,6 +20,7 @@
 #include "main/dll/dll_0014_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 
 /* A plain XYZ point; recovered file-locally for the patch-target scratch slot
  * at TrickyState+0xD4 (an unnamed pad region in tricky_state.h). */
@@ -92,7 +93,6 @@ extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
 extern void fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode);
 extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
-extern void objAnimFn_8013a3f0(u8* obj, int animId, f32 speed, int flags);
 extern void curveFn_800da23c(RomCurveWalker* route);
 extern void fn_800D9F38(RomCurveWalker* route);
 extern void fn_800D9EE8(RomCurveWalker* route);
@@ -616,7 +616,7 @@ state_selected:
                             ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / len;
                         }
                         ((TrickyState*)state)->speed = gTrickyFollowMaxSpeed;
-                        objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
+                        objAnimFn_8013a3f0((int)obj, 0x15, lbl_803E2468, 0x4000000);
                         ((TrickyState*)state)->followPhase = 9;
                         ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
                         break;
@@ -634,11 +634,11 @@ state_selected:
                         }
                         if ((int)randomGetRange(0, 1) != 0)
                         {
-                            objAnimFn_8013a3f0(obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
+                            objAnimFn_8013a3f0((int)obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
                         }
                         else
                         {
-                            objAnimFn_8013a3f0(obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
+                            objAnimFn_8013a3f0((int)obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
                         }
                         ((TrickyState*)state)->verticalDelta =
                             (*(f32*)((u8*)route->nodeA0 + 0xc) - ((GameObject*)obj)->anim.worldPosY) /
@@ -672,7 +672,7 @@ state_selected:
                             ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / len;
                             ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / len;
                         }
-                        objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
+                        objAnimFn_8013a3f0((int)obj, 0x19, lbl_803E249C, 0x40000c0);
                         ((TrickyState*)state)->verticalDelta =
                             (((GameObject*)obj)->anim.worldPosY - *(f32*)((u8*)route->nodeA0 + 0xc)) /
                             gTrickyFollowVerticalDeltaDivisorB;
@@ -957,7 +957,7 @@ state_selected:
                     ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / len;
                 }
                 ((TrickyState*)state)->speed = gTrickyFollowMaxSpeed;
-                objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
+                objAnimFn_8013a3f0((int)obj, 0x15, lbl_803E2468, 0x4000000);
                 ((TrickyState*)state)->followPhase = 9;
                 ((TrickyState*)state)->voiceCooldown = lbl_803E2440;
             }
@@ -1042,7 +1042,7 @@ state_selected:
             arc->riseCoeff = -(gTrickyFollowArcCoefficient * k * k -
                                (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) /
                              k;
-            objAnimFn_8013a3f0(obj, 0x16, v, 0x4000000);
+            objAnimFn_8013a3f0((int)obj, 0x16, v, 0x4000000);
             ((TrickyState*)state)->arcMoveProgress = arc->time / arc->duration;
             ((TrickyState*)state)->speed = lbl_803E24A4;
             ((TrickyState*)state)->followPhase = 10;
@@ -1177,11 +1177,11 @@ state_selected:
                 }
                 if ((int)randomGetRange(0, 1) != 0)
                 {
-                    objAnimFn_8013a3f0(obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
+                    objAnimFn_8013a3f0((int)obj, 0x17, gTrickyFollowAnim17Speed, 0x40000c0);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0(obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
+                    objAnimFn_8013a3f0((int)obj, 0x18, gTrickyFollowAnim18Speed, 0x40000c0);
                 }
                 ((TrickyState*)state)->verticalDelta =
                     (*(f32*)((u8*)route->nodeA0 + 0xc) - ((GameObject*)obj)->anim.worldPosY) /
@@ -1291,7 +1291,7 @@ state_selected:
                     ((TrickyState*)state)->dirX = ((TrickyState*)state)->dirX / len;
                     ((TrickyState*)state)->dirZ = ((TrickyState*)state)->dirZ / len;
                 }
-                objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
+                objAnimFn_8013a3f0((int)obj, 0x19, lbl_803E249C, 0x40000c0);
                 ((TrickyState*)state)->verticalDelta =
                     (((GameObject*)obj)->anim.worldPosY - *(f32*)((u8*)route->nodeA0 + 0xc)) /
                     gTrickyFollowVerticalDeltaDivisorB;

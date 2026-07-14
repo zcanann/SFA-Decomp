@@ -41,6 +41,7 @@
 #include "main/frame_timing.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP    0x4b /* DLL 0x100 trickywarp */
@@ -76,7 +77,6 @@ extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
-extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
 extern void objSetAnimSpeedTo1(int o);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -231,14 +231,14 @@ void fn_8013E0D0(int* obj, u8* st)
                 }
                 if (b != 0)
                 {
-                    objAnimFn_8013a3f0((int*)gobj, 8, lbl_803E243C, 0);
+                    objAnimFn_8013a3f0((int)gobj, 8, lbl_803E243C, 0);
                     t->cooldownC = lbl_803E2440;
                     t->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(str + 0x184);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0((int*)gobj, 0, lbl_803E2444, 0);
+                    objAnimFn_8013a3f0((int)gobj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(str + 0x190);
                 }
             }
@@ -286,7 +286,7 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             if (ok == 0)
             {
-                objAnimFn_8013a3f0((int*)gobj, 0x33, lbl_803E243C, 0);
+                objAnimFn_8013a3f0((int)gobj, 0x33, lbl_803E243C, 0);
             }
             if (*(int*)&t->stateFlags728 != 0)
             {
@@ -395,7 +395,7 @@ void fn_8013E0D0(int* obj, u8* st)
         }
         if (go != 0 && ok != 1)
         {
-            objAnimFn_8013a3f0((int*)gobj, 0x34, lbl_803E2444, 0x4000000);
+            objAnimFn_8013a3f0((int)gobj, 0x34, lbl_803E2444, 0x4000000);
             t->stateFlags |= TRICKY_STATE_RESET_FLAG_10;
             t->substate = ANIMOBJD2_SUBSTATE_SPAWN;
             *(int*)&t->stateFlags728 = 0;
@@ -558,14 +558,14 @@ void fn_8013E0D0(int* obj, u8* st)
                 }
                 if (b != 0)
                 {
-                    objAnimFn_8013a3f0((int*)gobj, 8, lbl_803E243C, 0);
+                    objAnimFn_8013a3f0((int)gobj, 8, lbl_803E243C, 0);
                     t->cooldownC = lbl_803E2440;
                     t->particleTimer = lbl_803E23DC;
                     trickyDebugPrint(str + 0x184);
                 }
                 else
                 {
-                    objAnimFn_8013a3f0((int*)gobj, 0, lbl_803E2444, 0);
+                    objAnimFn_8013a3f0((int)gobj, 0, lbl_803E2444, 0);
                     trickyDebugPrint(str + 0x190);
                 }
             }

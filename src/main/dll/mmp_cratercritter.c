@@ -5,6 +5,7 @@
 #include "main/vecmath.h"
 #include "main/dll/mmp_cratercritter.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
 
@@ -20,7 +21,6 @@ extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
 extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
 extern int trickyFn_8013b368(u8* obj, f32 dist, u8* state);
-extern void objAnimFn_8013a3f0(u8* self, int a, f32 f1, int b);
 
 #pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)
@@ -108,14 +108,14 @@ void trickyFn_8013d8f0(u8* self, u8* state)
 
     if (inWater != 0)
     {
-        objAnimFn_8013a3f0(self, 8, lbl_803E243C, 0);
+        objAnimFn_8013a3f0((int)self, 8, lbl_803E243C, 0);
         ((TrickyState*)state)->cooldownC = lbl_803E2440;
         ((TrickyState*)state)->particleTimer = lbl_803E23DC;
         trickyDebugPrint(sInWaterMessage);
     }
     else
     {
-        objAnimFn_8013a3f0(self, 0, lbl_803E2444, 0);
+        objAnimFn_8013a3f0((int)self, 0, lbl_803E2444, 0);
         trickyDebugPrint(lbl_8031D478);
     }
 }

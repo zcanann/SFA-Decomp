@@ -27,6 +27,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 
 typedef struct TrickyGrowlState
 {
@@ -53,7 +54,6 @@ extern f32 lbl_803E2444;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24CC;
 extern f32 lbl_803E24D0;
-extern void objAnimFn_8013a3f0(void* obj, int p2, float p3, int p4);
 extern int trickyTurnTowardYaw(u8* obj, s16 targetYaw);
 extern void objSetAnimSpeedTo1(int* obj);
 
@@ -88,7 +88,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 }
             }
             ((TrickyState*)trickyState)->substate = TRICKYGROWL_FACE_TARGET;
-            objAnimFn_8013a3f0(obj, 0x33, lbl_803E2444, 0x4000000);
+            objAnimFn_8013a3f0((int)obj, 0x33, lbl_803E2444, 0x4000000);
             *(int*)((char*)trickyState + 0x728) = 0;
         }
         break;
@@ -143,7 +143,7 @@ void trickyGrowl(void* obj, void* trickyState)
                 Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_trpopn_c);
             }
             (*(u8*)((TrickyState*)trickyState)->progressPtr)--;
-            objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
+            objAnimFn_8013a3f0((int)obj, 0x34, lbl_803E2444, 0x4000000);
             ((TrickyState*)trickyState)->stateFlags = ((TrickyState*)trickyState)->stateFlags | 0x10;
             ((TrickyState*)trickyState)->substate = TRICKYGROWL_DIG_END;
             *(int*)((char*)trickyState + 0x728) = 0;

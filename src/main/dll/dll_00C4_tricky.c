@@ -34,6 +34,7 @@
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/skeetla_route_api.h"
+#include "main/dll/skeetla_anim_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
@@ -207,7 +208,6 @@ extern void doNothing_onTrickyInit(void);
 extern void walkgroupFindExitPointFn_800dc398(void);
 extern void objAnimFreeChildren(int a, int b, GameObject** c);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
-extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2);
 extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);

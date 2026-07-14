@@ -33,6 +33,7 @@
 #include "main/gamebit_ids.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
+#include "main/dll/skeetla_anim_api.h"
 
 typedef struct
 {
@@ -83,7 +84,6 @@ extern f32 lbl_803E24F4;
 extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
-extern void objAnimFn_8013a3f0(int obj, int animId, f32 blend, int flags);
 extern int trickyFn_8013b368(int obj, f32 speed, int state);
 extern int trickyFoodFn_8014460c(GameObject* obj, int state);
 extern int tumbleweedbush_findNearestActive(void);
