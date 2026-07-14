@@ -608,24 +608,24 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
                                                c1[mapData->colorIndex * 3], c2[mapData->colorIndex * 3], 0x87,
                                                220.0f * cmbsrc->objAnim.rootMotionScale);
                 }
-            }
-            {
-                int m = mapData->glowProjectionMode & 0x3;
-                if (m == 0)
                 {
-                    modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
-                }
-                else if (m == 1)
-                {
-                    modelLightStruct_setGlowProjectionRadius(state->light, 10.0f);
-                }
-                else if (m == 2)
-                {
-                    modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
-                }
-                else
-                {
-                    modelLightStruct_setGlowProjectionRadius(state->light, 0.0f);
+                    int m = mapData->glowProjectionMode & 0x3;
+                    if (m == 0)
+                    {
+                        modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
+                    }
+                    else if (m == 1)
+                    {
+                        modelLightStruct_setGlowProjectionRadius(state->light, 10.0f);
+                    }
+                    else if (m == 2)
+                    {
+                        modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
+                    }
+                    else
+                    {
+                        modelLightStruct_setGlowProjectionRadius(state->light, 0.0f);
+                    }
                 }
             }
             if (mapData->behaviorFlags & CMBSRC_BEHAVIOR_DISABLE_FIELD4D)

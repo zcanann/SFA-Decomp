@@ -28,10 +28,10 @@
 #include "main/audio/audio_control_api.h"
 #include "dolphin/dvd.h"
 
+extern char sMemoryCardFileNameString[];
+
 u32 lbl_803DB700 = 0xD;
-#pragma explicit_zero_data on
-char* sMemoryCardFileName = 0;
-#pragma explicit_zero_data off
+char* sMemoryCardFileName = sMemoryCardFileNameString;
 int lbl_803DB708 = 0x404040FF;
 
 typedef struct
@@ -114,7 +114,6 @@ extern int lbl_803DD064;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
 extern int gSaveCardImageBuffer;
-extern char sMemoryCardFileNameString[];
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
 extern int gObjSeqStreamSuppressed;
