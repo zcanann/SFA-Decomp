@@ -77,6 +77,8 @@ int dimlavasmash_getObjectTypeId(void)
     return 0x0;
 }
 
+typedef void (*DimLavaSmashSetBlockSurfaceFlagsFn)(int* block, int disable, int surfaceType);
+
 #pragma dont_inline on
 #pragma opt_propagation off
 void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
@@ -168,7 +170,6 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
 
 void dimlavasmash_init(s16* obj, s8* def)
 {
-    extern void dimlavasmash_setBlockSurfaceFlags(int* block, int mode, int v);
     ObjAnimComponent* objAnim;
     int* block;
     DimlavasmashState* inner;
@@ -188,8 +189,10 @@ void dimlavasmash_init(s16* obj, s8* def)
                                                       ((GameObject*)obj)->anim.localPosZ));
         if (block != NULL)
         {
-            dimlavasmash_setBlockSurfaceFlags(block, 1, inner->surfaceLayerId);
-            dimlavasmash_setBlockSurfaceFlags(block, 0, inner->surfaceLayerId + 1);
+            ((DimLavaSmashSetBlockSurfaceFlagsFn)dimlavasmash_setBlockSurfaceFlags)(block, 1,
+                                                                                    inner->surfaceLayerId);
+            ((DimLavaSmashSetBlockSurfaceFlagsFn)dimlavasmash_setBlockSurfaceFlags)(block, 0,
+                                                                                    inner->surfaceLayerId + 1);
         }
     }
     objAnim->bankIndex = def[0x19];
