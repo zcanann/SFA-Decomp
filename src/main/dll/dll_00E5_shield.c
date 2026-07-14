@@ -21,6 +21,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/hud_visibility_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/player_objects.h"
@@ -92,7 +93,6 @@ STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
 STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
-extern int Sfx_StopFromObject(int obj, int sfxId);
 extern void postRenderSetAlphaBlendState(void);
 extern f32 fcos16(u16 angle);
 extern void Sfx_SetObjectSfxVolume(s16* obj, int sfx, int vol, f32 ratio);
@@ -230,8 +230,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         }
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
         ((ShieldState*)state)->fadeRate = lbl_803E33B4;
-        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
         break;
     case 1:
         if (lbl_803E33AC == ((ShieldState*)state)->fadeTarget)
@@ -316,8 +316,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         {
             modelLightStruct_setEnabled((ModelLightStruct*)*(int*)state, 0, lbl_803E33A8);
         }
-        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
         break;
     case 3:
         if (glow != NULL)
@@ -383,8 +383,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         ((ShieldState*)state)->fadeTarget = lbl_803E33AC;
         ((ShieldState*)state)->fadeRate = lbl_803E33B4;
         *(f32*)&((ShieldState*)state)->fadeMax = lbl_803E33CC;
-        Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
-        Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
+        Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
         break;
     case 4:
     {
@@ -478,8 +478,8 @@ void Shield_free(GameObject* obj)
         ModelLightStruct_free((ModelLightStruct*)state[0]);
         state[0] = NULL;
     }
-    Sfx_StopFromObject((int)obj, SFXTRIG_lrope_powerup);
-    Sfx_StopFromObject((int)obj, SFXTRIG_lockon3_on);
+    Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lrope_powerup);
+    Sfx_StopFromObjectIntReturnLegacy((int)obj, SFXTRIG_lockon3_on);
 }
 
 typedef struct ShieldFxVec
