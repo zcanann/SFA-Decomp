@@ -1,10 +1,10 @@
 #include "main/audio/voice_manage.h"
+#include "main/audio/synth_config.h"
 
 #pragma exceptions on
 
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
-extern u8 lbl_803BD150[];
 extern f32 voicePitchUpTable[];
 extern f32 voicePitchDownTable[];
 extern f32 lbl_803E7818;
@@ -139,7 +139,7 @@ u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
     {
         freq = (f32)(u32)(packed & 0xffffff);
     }
-    return __cvt_fp2unsigned((lbl_803E7828 * freq) / (f32)(u32) * (u32*)lbl_803BD150);
+    return __cvt_fp2unsigned((lbl_803E7828 * freq) / (f32)SYNTH_CONFIGURATION->sampleRate);
 }
 
 /*

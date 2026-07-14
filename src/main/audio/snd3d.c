@@ -9,6 +9,7 @@
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/synth_voice.h"
+#include "main/audio/synth_config.h"
 
 #define S3D_UNLINK_EMITTER(emitter)                                                                                    \
     do                                                                                                                 \
@@ -27,7 +28,6 @@
         }                                                                                                              \
     } while (0)
 
-extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 synthIdleWaitActive;
 extern u8 s3dCallCnt;
@@ -252,28 +252,28 @@ int sndInit(u8 voiceCount, u8 streamCount, u8 unk5, u8 stereo, u32 flags, void* 
     gSynthInitialized = 0;
     if (voiceCount <= SND_MAX_VOICES)
     {
-        lbl_803BD150[0x210] = voiceCount;
+        SYNTH_CONFIGURATION->voiceCount = voiceCount;
     }
     else
     {
-        lbl_803BD150[0x210] = SND_MAX_VOICES;
+        SYNTH_CONFIGURATION->voiceCount = SND_MAX_VOICES;
     }
     if (stereo <= SND_MAX_STUDIOS)
     {
-        lbl_803BD150[0x213] = stereo;
+        SYNTH_CONFIGURATION->studioCount = stereo;
     }
     else
     {
-        lbl_803BD150[0x213] = SND_MAX_STUDIOS;
+        SYNTH_CONFIGURATION->studioCount = SND_MAX_STUDIOS;
     }
-    lbl_803BD150[0x211] = streamCount;
-    lbl_803BD150[0x212] = unk5;
+    SYNTH_CONFIGURATION->musicVoiceCount = streamCount;
+    SYNTH_CONFIGURATION->fxVoiceCount = unk5;
     (void)sampleRatePad;
     sampleRate = SND_DEFAULT_SAMPLE_RATE;
-    result = hwInit(&sampleRate, lbl_803BD150[0x210], lbl_803BD150[0x213], flags);
+    result = hwInit(&sampleRate, SYNTH_CONFIGURATION->voiceCount, SYNTH_CONFIGURATION->studioCount, flags);
     if (result == 0)
     {
-        u8 voiceCountSnapshot = lbl_803BD150[0x210];
+        u8 voiceCountSnapshot = SYNTH_CONFIGURATION->voiceCount;
         synthResetLoadedGroupCount();
         dataInit(0, data);
         fn_8026F30C();

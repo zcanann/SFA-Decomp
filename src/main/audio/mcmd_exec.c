@@ -10,8 +10,8 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_channel_scale.h"
 #include "main/audio/mcmd_wait.h"
+#include "main/audio/synth_config.h"
 extern int mcmdLoop();
-extern u8 lbl_803BD150[];
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
 extern int macRealTimeHi;
@@ -389,7 +389,7 @@ void mcmdSendMessage(McmdVoiceState* state, McmdCommandArgs* args)
         targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff)
         {
-            for (i = 0; i < lbl_803BD150[0x210]; i++)
+            for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
             {
                 if (((McmdVoiceState*)synthVoice)[i].macroBase != 0 &&
                     targetInstrument == ((McmdVoiceState*)synthVoice)[i].instrumentKey)
@@ -427,7 +427,7 @@ void mcmdSetKeyGroup(McmdVoiceState* state, McmdCommandArgs* args)
     kill = (u8)(args->flags >> 0x10) != 0;
     if (kg != 0)
     {
-        for (i = 0; i < lbl_803BD150[0x210]; i++)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
         {
             voice = &synthVoice[i];
             if (voice->macroBase != 0 && (MAC_CFLAGS(voice) & MAC_FLAG64(0, 2)) == 0 && kg == voice->keyGroup)
@@ -569,7 +569,7 @@ static inline void mcmdSendKeyOff(McmdVoiceState* svoice, McmdCommandArgs* cstep
 
     voiceid = (svoice->keyBase + ((cstep->flags >> 8) & 0xff)) << 8;
     voiceid |= ((u16)(cstep->flags >> 0x10)) << 0x10;
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         if (((McmdVoiceState*)synthVoice)[i].voiceHandle == (voiceid | i))
         {
@@ -1636,7 +1636,7 @@ void macInit(void)
     macActiveRoot = 0;
     macTimeQueueRoot = 0;
     *(u64*)&macRealTimeHi = 0;
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         ((McmdVoiceState*)synthVoice)[i].macroBase = 0;
         ((McmdVoiceState*)synthVoice)[i].queueMode = 2;

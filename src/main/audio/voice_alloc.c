@@ -3,6 +3,7 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/vidlisttables.h"
+#include "main/audio/synth_config.h"
 
 #pragma exceptions on
 
@@ -31,7 +32,6 @@ typedef struct AllocVoice
 #define AV_FXFLAG(i)             (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
 
 VoiceIdSlot voiceFreeListSlots[64];
-extern u8 lbl_803BD150[];
 extern u8 synthIdleWaitActive;
 extern u16 voicePrioSortRootListRoot;
 extern u8 voiceMusicRunning;
@@ -61,9 +61,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
     {
         if (fxFlag)
         {
-            type_alloc = (voiceFxRunning >= lbl_803BD150[0x212] && lbl_803BD150[0x210] > lbl_803BD150[0x212]);
+            type_alloc = (voiceFxRunning >= SYNTH_CONFIGURATION->fxVoiceCount &&
+                          SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->fxVoiceCount);
 
-            if (lbl_803BD150[0x212] <= maxVoices)
+            if (SYNTH_CONFIGURATION->fxVoiceCount <= maxVoices)
             {
                 goto _skip_alloc;
             }
@@ -72,9 +73,10 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
         }
         else
         {
-            type_alloc = (voiceMusicRunning >= lbl_803BD150[0x211] && lbl_803BD150[0x210] > lbl_803BD150[0x211]);
+            type_alloc = (voiceMusicRunning >= SYNTH_CONFIGURATION->musicVoiceCount &&
+                          SYNTH_CONFIGURATION->voiceCount > SYNTH_CONFIGURATION->musicVoiceCount);
 
-            if (lbl_803BD150[0x211] <= maxVoices)
+            if (SYNTH_CONFIGURATION->musicVoiceCount <= maxVoices)
             {
                 goto _skip_alloc;
             }

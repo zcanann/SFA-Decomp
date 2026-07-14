@@ -4,6 +4,7 @@
 #include "main/audio/snd_synth_legacy.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/synth_config.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #pragma exceptions on
@@ -59,7 +60,6 @@ typedef struct
 #define fabs __fabs
 
 extern u8 lbl_803BCD90[];
-extern u8 lbl_803BD150[];
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;
@@ -405,7 +405,7 @@ int audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
 
     sawHeldVoice = 0;
     result = -1;
-    for (i = 0, voice = (McmdVoiceState*)synthVoice; i < lbl_803BD150[0x210]; ++i, ++voice)
+    for (i = 0, voice = (McmdVoiceState*)synthVoice; i < SYNTH_CONFIGURATION->voiceCount; ++i, ++voice)
     {
         if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff && voice->midiSlot == slot &&
             voice->midiEvent == channel)

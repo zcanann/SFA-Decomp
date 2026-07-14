@@ -13,8 +13,8 @@
 #include "main/audio/hw_samplemem.h"
 #include "main/audio/synth_callback.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/synth_config.h"
 
-#define SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET 0x210
 #define SYNTH_VOICE_DIRTY_FLAGS_OFFSET        0x114
 
 /* sndOutputMode() output configuration (MusyX SND_OUTPUTMODE) */
@@ -23,7 +23,6 @@
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
 extern u8 gSynthVoiceNotes[];
-extern u8 lbl_803BD150[];
 extern void* lbl_803BD9A4[8];
 extern void* lbl_803BD9C4[8];
 extern void* lbl_803BD9E4[8];
@@ -183,7 +182,7 @@ void sndOutputMode(int mode)
     if (oldFlags != synthFlags)
     {
         u32 i;
-        for (i = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             *(u64*)((u8*)synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
         }
@@ -262,7 +261,7 @@ void synthDeactivateStudio(u8 slot)
 
     i = 0;
     offset = 0;
-    for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++)
+    for (; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         voice = (u8*)synthVoice + offset;
         if (slot == ((McmdVoiceState*)voice)->studio)

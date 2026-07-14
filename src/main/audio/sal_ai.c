@@ -1,4 +1,5 @@
 #include "main/audio/sal_ai.h"
+#include "main/audio/synth_config.h"
 
 #pragma exceptions on
 #include "main/audio/sal_dsp.h"
@@ -11,7 +12,6 @@
 #define SAL_AI_CACHED_BASE         0x80000000U
 #define SAL_AI_OUTPUT_SAMPLE_COUNT 0x7d00
 
-extern u8 lbl_803BD150[];
 extern void* salAiCallback;
 extern u32 salAiDmaBuffer;
 extern volatile u32 salDspCallbackEnabled;
@@ -102,7 +102,7 @@ int salInitAi(void* userCallback, u32 unused, u32* outSampleCount)
         AIRegisterDMACallback(salCallback);
         AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) + salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
                   SAL_AI_DMA_CHUNK_SIZE);
-        *(u32*)(lbl_803BD150 + 4) = 0x20;
+        SYNTH_CONFIGURATION->unk04 = 0x20;
         *outSampleCount = SAL_AI_OUTPUT_SAMPLE_COUNT;
         return 1;
     }

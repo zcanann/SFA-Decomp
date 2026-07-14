@@ -1,6 +1,7 @@
 #include "main/audio/data_ref.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/synth_job.h"
+#include "main/audio/synth_config.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/voice_manage.h"
 #include "dolphin/os/OSCache.h"
@@ -23,7 +24,6 @@ typedef struct SynthSampleInfo
 
 #define DATA_KEYMAP_TAB ((DataRefEntry*)(base + 0x4600))
 
-extern u8 lbl_803BD150[];
 extern SynthJob synthJobTable[];
 extern u32 synthFlags;
 extern f32 lbl_803E77D8;
@@ -55,7 +55,7 @@ void synthUpdateJobTable(void)
     }
     synthJobTableCountdown = synthJobTablePeriod;
     si = synthJobTable;
-    for (i = 0; i < lbl_803BD150[0x210]; ++i, ++si)
+    for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i, ++si)
     {
         switch (si->state)
         {
@@ -80,7 +80,7 @@ void synthUpdateJobTable(void)
             }
             hwInitSamplePlayback(si->voice, 0xFFFF, &newsmp, 1, -1,
                                  synthVoice[si->voice].voiceHandle, 1, 1);
-            f = (f32)si->frq / (f32) * (u32*)lbl_803BD150;
+            f = (f32)si->frq / (f32)SYNTH_CONFIGURATION->sampleRate;
             hwSetPitch(si->voice, f * 4096.0f);
             hwSetVolume(si->voice, 0, si->volume * (1 / 127.0f), si->pan << 16, si->surroundPan << 16,
                         si->leftVolume * (1 / 127.0f), si->rightVolume * (1 / 127.0f));
@@ -309,7 +309,7 @@ void synthRefreshJobVolumes(void)
 
     sndBegin();
     volumeScale = lbl_803E77D8;
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         if (synthJobTable[i].state != SYNTH_JOB_STATE_FREE)
         {

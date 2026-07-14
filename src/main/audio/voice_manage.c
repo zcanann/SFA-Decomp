@@ -2,6 +2,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_jobs.h"
+#include "main/audio/synth_config.h"
 
 #pragma exceptions on
 
@@ -14,7 +15,6 @@ typedef struct VoiceListNode
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
-extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];

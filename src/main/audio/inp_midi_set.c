@@ -1,5 +1,6 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
+#include "main/audio/synth_config.h"
 
 #pragma exceptions on
 
@@ -15,7 +16,6 @@
 #define MIDI_RPN_PITCH_BEND_SENSITIVITY 0
 
 extern u8 lbl_803CD760[];
-extern u8 lbl_803BD150[];
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* voice);
 
 static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)
@@ -31,7 +31,7 @@ static inline void inpSetRPNHi(u8 set, u8 channel, u8 value)
     case MIDI_RPN_PITCH_BEND_SENSITIVITY:
         range = value > 24 ? 24 : value;
         st->pbRange[set][channel] = range;
-        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
@@ -66,7 +66,7 @@ static inline void inpSetRPNDec(u8 set, u8 channel)
             --range;
         }
         st->pbRange[set][channel] = range;
-        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
@@ -97,7 +97,7 @@ static inline void inpSetRPNInc(u8 set, u8 channel)
             ++range;
         }
         st->pbRange[set][channel] = range;
-        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
@@ -143,7 +143,7 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         }
 
         st->midiCtrl[set][channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
@@ -172,7 +172,7 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
         }
 
         st->fxCtrl[channel][ctrl] = value & 0x7f;
-        for (i = 0; i < lbl_803BD150[0x210]; ++i)
+        for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i)
         {
             if (set == synthVoice[i].midiEvent && channel == synthVoice[i].midiSlot)
             {
