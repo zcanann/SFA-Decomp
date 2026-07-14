@@ -41,6 +41,7 @@
 #include "main/object.h"
 #include "main/obj_path.h"
 #include "main/pad.h"
+#include "main/object_descriptor.h"
 
 typedef struct SBCloudRunnerState
 {
@@ -596,3 +597,34 @@ void SB_CloudRunner_update(GameObject* obj)
     }
     ((void (*)(int, int))WCPushBlock_UpdateCloudAction)((int)obj, (int)state);
 }
+
+ObjectDescriptor24 gSB_CloudRunnerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SB_CloudRunner_initialise,
+    (ObjectDescriptorCallback)SB_CloudRunner_release,
+    0,
+    (ObjectDescriptorCallback)SB_CloudRunner_init,
+    (ObjectDescriptorCallback)SB_CloudRunner_update,
+    (ObjectDescriptorCallback)SB_CloudRunner_hitDetect,
+    (ObjectDescriptorCallback)SB_CloudRunner_render,
+    (ObjectDescriptorCallback)SB_CloudRunner_free,
+    (ObjectDescriptorCallback)SB_CloudRunner_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SB_CloudRunner_getExtraSize,
+    (ObjectDescriptorCallback)fn_801EEE34,
+    (ObjectDescriptorCallback)fn_801EEE2C,
+    (ObjectDescriptorCallback)fn_801EEE0C,
+    (ObjectDescriptorCallback)fn_801EEE04,
+    (ObjectDescriptorCallback)fn_801EEDFC,
+    (ObjectDescriptorCallback)fn_801EEDE0,
+    (ObjectDescriptorCallback)fn_801EEDD8,
+    (ObjectDescriptorCallback)fn_801EEDD4,
+    (ObjectDescriptorCallback)fn_801EEDC0,
+    (ObjectDescriptorCallback)fn_801EEDB4,
+    (ObjectDescriptorCallback)fn_801EEDAC,
+    (ObjectDescriptorCallback)fn_801EEDA8,
+    (ObjectDescriptorCallback)fn_801EED80,
+    (ObjectDescriptorCallback)fn_801EED7C,
+};
