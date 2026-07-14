@@ -8,6 +8,7 @@
 #include "main/objhits.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_play_int_return_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -52,7 +53,6 @@ typedef struct DoorState
 } DoorState;
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-extern int Sfx_StopFromObject(int obj, int sfxId);
 
 int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -146,7 +146,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
-                    Sfx_StopFromObject(obj, state->movementSfx);
+                    Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
                 }
                 if (state->endpointSfx != 0)
                 {
@@ -169,7 +169,7 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
                 {
-                    Sfx_StopFromObject(obj, state->movementSfx);
+                    Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
                 }
                 if (state->endpointSfx != 0)
                 {
