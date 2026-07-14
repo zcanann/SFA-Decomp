@@ -437,8 +437,6 @@ void drawFn_8006f500(void)
     extern f32 __THPHuffmanBits_803DEE24;
     extern void fn_8000F9B4(void);
 
-    extern void Camera_ApplyFullViewport(void);
-
     GXColor color;
     Mtx camTrans;
     Mtx posMtx;
@@ -999,8 +997,6 @@ void _gxSetFogParams(void)
 
 void fogFn_80070404(f32 a, f32 b)
 {
-    extern f32 Camera_GetNearPlane(void);
-    extern f32 Camera_GetFarPlane(void);
     extern f32 lbl_803DEED8;
     extern f32 lbl_803DEEDC;
     extern f32 gSynthFadeMask;
@@ -1298,7 +1294,6 @@ void screenImageDraw(u8 alpha)
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
 
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_60;
@@ -1480,7 +1475,6 @@ void doSpiritVisionFilter(void)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
 
@@ -1601,7 +1595,6 @@ void doColorFilter(u8* mod)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     GXColor c0, c1, c2, c3;
@@ -1752,9 +1745,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
-    extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY, f32* outZ,
-                                          f32* outRadiusX, f32* outRadiusY, f32* outRadiusZ);
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_d0;
@@ -2957,7 +2947,6 @@ u32 objCallback_80074d04(int handle, void* model)
 
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
-    extern void Camera_RebuildProjectionMatrix(void);
     extern f32 hudMatrix[4][4];
     extern f32 lbl_803DEEDC;
     extern void GXSetZMode();
@@ -3033,7 +3022,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
-    extern void Camera_RebuildProjectionMatrix(void);
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
@@ -3120,7 +3108,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
 
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
-    extern void Camera_RebuildProjectionMatrix(void);
     extern f32 hudMatrix[4][4];
     extern f32 hudScale;
     extern f32 lbl_803DEEDC;
@@ -3198,7 +3185,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
-    extern void Camera_RebuildProjectionMatrix(void);
     extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
@@ -3242,7 +3228,6 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
 
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
-    extern void Camera_RebuildProjectionMatrix(void);
     extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
@@ -3292,7 +3277,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
     s32 w;
@@ -3405,7 +3389,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern f32 hudScale;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
 
@@ -3475,7 +3458,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
     s32 w, h;
@@ -3619,7 +3601,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
 
     GXClearVtxDesc();
@@ -3739,7 +3720,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
     s32 w, h;
@@ -4674,7 +4654,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void fn_8006C540(int*);
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     int handle;
@@ -4794,7 +4773,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern f32 interpolate(f32 a, f32 t, f32 exp);
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_58;
@@ -4987,7 +4965,6 @@ void doHeatEffect(u8 alpha)
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     extern f32 hudMatrix[4][4];
-    extern void Camera_RebuildProjectionMatrix(void);
     Mtx mtx_44;
     f32 indMtx[6];
     int handle2;
@@ -5155,7 +5132,6 @@ void renderMotionBlur(f32 alpha)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx;
@@ -5249,7 +5225,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern void getReflectionTexture2(int* out);
     extern void Camera_ProjectWorldPoint(f32 * out_x, f32 * out_y, f32 * out_z, f32 * out_w, double x, double y,
                                          double z);
-    extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_27;
