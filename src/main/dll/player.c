@@ -7140,7 +7140,7 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
         }
         else if ((hdiff > lbl_803E8108) && (ps->fallSeverity < 2))
         {
-            if (Sfx_IsPlayingFromObject(
+            if (Sfx_IsPlayingFromObjectIntU16Legacy(
                     0, (u16)((((PlayerState*)inner)->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02))) == 0)
             {
                 Sfx_PlayFromObject((int)obj, (u16)((ps->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02)));
@@ -7453,7 +7453,7 @@ void playerUpdate(GameObject* obj)
             }
             if (((ByteFlags*)((char*)inner + 0x3f3))->b20 == 0 && (*(int*)((char*)inner + 0x310) & 1) != 0)
             {
-                if (Sfx_IsPlayingFromObject(
+                if (Sfx_IsPlayingFromObjectIntU16Legacy(
                         (int)obj, (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_jump2 : SFXTRIG_sa_climb02)) == 0)
                 {
                     Sfx_PlayFromObject(
@@ -8752,7 +8752,7 @@ void fn_802AFB0C(int obj, int inner, int state)
                 Sfx_PlayFromObject(
                     obj, (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_foxcom : SFXTRIG_sabrepush163));
                 Sfx_PlayFromObject(obj, SFXTRIG_en_cvdrip1c_393);
-                if (Sfx_IsPlayingFromObject(obj, SFXTRIG_foot_metal_scuff) == 0)
+                if (Sfx_IsPlayingFromObjectIntU16Legacy(obj, SFXTRIG_foot_metal_scuff) == 0)
                 {
                     Sfx_PlayFromObject(obj, SFXTRIG_foot_metal_scuff);
                 }
@@ -13052,7 +13052,7 @@ void fn_802B066C(GameObject* obj, int state)
         ((PlayerState*)state)->knockbackTimer - timeDelta * ((PlayerState*)state)->knockbackDrainRate;
     if (((PlayerState*)state)->knockbackTimer <= (zero = lbl_803E7EA4))
     {
-        if (Sfx_IsPlayingFromObject((int)obj, SFXTRIG_foot_metal_scuff))
+        if (Sfx_IsPlayingFromObjectIntU16Legacy((int)obj, SFXTRIG_foot_metal_scuff))
         {
             Sfx_StopFromObjectIntLegacy((int)obj, SFXTRIG_foot_metal_scuff);
             Sfx_PlayFromObject((int)obj, SFXTRIG_foot_metal_land);
