@@ -65,21 +65,22 @@ extern void Dummy3E_initialise(void);
 
 #define LINK_ITEM_SLOTS 25 /* per-item icon-strip slot capacity */
 
-extern u8 linkFlag_803dd8f8; /* whether navigation input is accepted */
-extern u8 linkIsRotated;     /* swap analog axes (rotated layout) */
-extern s16 linkItemOpacity;
-extern s16 linkCount_803dd90e; /* selected-item highlight pulse counter */
-extern s8 linkSelected;
 extern u8 linkTextures[0x30];                  /* LinkTextureSlot[6] */
-extern s16 gTumbleweedBushSelColorB;           /* selected-color B */
-extern s16 gTumbleweedBushSelColorG;           /* selected-color G */
-extern s16 gTumbleweedBushSelColorR;           /* selected-color R */
-extern s16 gTumbleweedBushBaseColorB;          /* base-color B */
-extern s16 gTumbleweedBushBaseColorG;          /* base-color G */
-extern s16 gTumbleweedBushBaseColorR;          /* base-color R */
-extern s8 gTumbleweedBushPulseDir;             /* highlight pulse direction */
-extern s8 gTumbleweedBushInputEnabled;         /* input enabled after first update */
-extern const char* gTumbleweedBushDefaultText; /* default message text */
+s8 gTumbleweedBushInputEnabled[5];
+s8 linkSelected;
+s8 gTumbleweedBushItemCount;
+s8 gTumbleweedBushPulseDir;
+s16 linkCount_803dd90e;
+s16 linkItemOpacity;
+const char* gTumbleweedBushDefaultText;
+s16 gTumbleweedBushBaseColorR;
+s16 gTumbleweedBushBaseColorG;
+s16 gTumbleweedBushBaseColorB;
+s16 gTumbleweedBushSelColorR;
+s16 gTumbleweedBushSelColorG;
+s16 gTumbleweedBushSelColorB;
+u8 linkIsRotated;
+u8 linkFlag_803dd8f8;
 extern void* saveFileSelect_saveSlots;
 extern char sTumbleweedBushSlotOverflowErr[]; /* "too many slots" overflow error format string */
 extern char sTumbleweedBushNavLinkRangeErr[]; /* base of the nav-link out-of-range error format strings */
@@ -216,7 +217,6 @@ void linkInitTextures(LinkMenuItemDB* item)
 #pragma peephole off
 void Link_func0F(void)
 {
-    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     int i;
 
@@ -231,7 +231,6 @@ void Link_func0F(void)
 #pragma scheduling off
 void Link_copy(u8* srcArg)
 {
-    extern u8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* dst;
     LinkMenuItemDB* src;
@@ -266,7 +265,6 @@ void Link_copy(u8* srcArg)
 #pragma peephole off
 void Link_func0B(u8* srcArg)
 {
-    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* src;
     int i;
@@ -324,7 +322,6 @@ typedef struct LinkMenuItemDA
 void Link_render(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
-    extern s8 gTumbleweedBushItemCount;
     LinkMenuItemDA* item;
     int i;
     int slotIndex;
@@ -527,7 +524,6 @@ typedef struct LinkMenuItem
 u32 Link_update(void)
 {
     extern LinkMenuItem gTumbleweedBushItems[40];
-    extern s8 gTumbleweedBushItemCount;
     int result;
     LinkMenuItem* item;
     u32 buttons;
@@ -617,7 +613,7 @@ u32 Link_update(void)
         }
     }
 
-    if (gTumbleweedBushInputEnabled != 0)
+    if (gTumbleweedBushInputEnabled[0] != 0)
     {
         buttons = getButtonsJustPressed(0);
         acceptPressed = 0;
@@ -661,7 +657,7 @@ u32 Link_update(void)
         gTumbleweedBushPulseDir = (s8)(*(s8*)&gTumbleweedBushPulseDir ^ 1);
     }
 
-    gTumbleweedBushInputEnabled = 1;
+    gTumbleweedBushInputEnabled[0] = 1;
     linkDrawFn_801302c0();
     linkDrawFn_80130484();
     return result;
@@ -705,7 +701,6 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
 {
     extern LinkMenuItem gTumbleweedBushItems[40];
-    extern s8 gTumbleweedBushItemCount;
     int i;
     LinkMenuItem* item;
     const char* defaultText;
@@ -719,7 +714,7 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         linkCount_803dd90e = 0xff;
         linkSelected = selected;
         gTumbleweedBushPulseDir = 0;
-        gTumbleweedBushInputEnabled = 0;
+        gTumbleweedBushInputEnabled[0] = 0;
 
         memcpy(gTumbleweedBushItems, items, count * sizeof(LinkMenuItem));
 
@@ -800,7 +795,6 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 void Link_free(void)
 {
     extern LinkMenuItem gTumbleweedBushItems[40];
-    extern s8 gTumbleweedBushItemCount;
     int i;
 
     for (i = 0; i < gTumbleweedBushItemCount; i++)
@@ -816,7 +810,6 @@ void Link_free(void)
 #pragma peephole off
 void linkDrawFn_801302c0(void)
 {
-    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* sel;
     int resetTimer;
@@ -898,7 +891,6 @@ void linkDrawFn_801302c0(void)
 
 void linkDrawFn_80130484(void)
 {
-    extern s8 gTumbleweedBushItemCount;
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     LinkMenuItemDB* item;
     void* iconTex;
