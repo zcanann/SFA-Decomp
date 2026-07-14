@@ -39,7 +39,7 @@ void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* bounds, u32 mask, i
 void fn_80065574(int matchValue, GameObject* obj, int flag);
 void doNothing_80062A50();
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode);
-void playerShadowFn_80062a30(int* obj);
+void playerShadowFn_80062a30(GameObject* obj);
 void setShadowFlag_803db658(s32 value);
 void mapInitFn_80069990(void);
 void trackIntersect(void);

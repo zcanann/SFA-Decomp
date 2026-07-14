@@ -12284,7 +12284,7 @@ void playerAnimate(int obj, int state, f32 fv)
     Player_GetObjHitsState((GameObject*)(obj))->objectPairHitVolume = 0;
     ((PlayerState*)state)->baddie.physicsActive = 1;
     *(u32*)((char*)state + 0x4) &= ~0x8100000;
-    playerShadowFn_80062a30((int*)obj);
+    playerShadowFn_80062a30((GameObject*)obj);
     ((PlayerState*)state)->emissionState = 0;
     *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_NO_POS_VELOCITY;
     *(int*)state |= 0x1000000;

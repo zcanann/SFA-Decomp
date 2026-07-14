@@ -749,9 +749,9 @@ void mapGetBlocks(void** outPtr, u32* outVal)
 
 /* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
  * its u32 at +0x30. */
-void playerShadowFn_80062a30(int* obj)
+void playerShadowFn_80062a30(GameObject* obj)
 {
-    ObjModelState* p = ((GameObject*)obj)->anim.modelState;
+    ObjModelState* p = obj->anim.modelState;
     if (p == NULL)
         return;
     p->flags &= ~0x2020;
