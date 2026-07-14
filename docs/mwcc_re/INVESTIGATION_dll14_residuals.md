@@ -653,3 +653,12 @@ a second table 0x5b08fc (checked dl==4, class range [4,0xe]) - the class filter.
 accumulate gate. The ADD-expression emitter is among the remaining classifier callers:
 0x4c0982, 0x4c11d8/0x4c122f/0x4c1288/0x4c12e7 cluster (likely the two-operand arithmetic
 emitters) - continue the band reading there.
+
+## Band map: 0x4c11a8-0x4c12fc = SU register-need MAX-walker (recursive core 0x4c0b60,
+classifier consulted per child under a mode byte 0x5e48a8; dispatch 0x5b0a2c). Together
+with the 0x4c0704 hint gate this completes the evaluation-order machinery: SU-numbers
+order subtrees; the gate decides dest-targeting. The association is therefore fully
+determined by the FOLDED TREE (parse-time) + SU ordering - both now understood; the
+V-K statement-level placement question maps to where the SOURCE statement's value sits
+in this tree walk when SR merges it. Remaining reading: the actual PCode-emit calls
+(post-0x4c27c0) for the merged-web init placement.
