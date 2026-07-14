@@ -1004,8 +1004,11 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 int mathFn_800dbff0(float* point)
 {
     s16 up;
+    ObjfsaWalkGroup* wg;
+    ObjfsaWalkGroup* wgLast;
     s16 down;
     u8 j[1];
+    f32 planeOff;
     u8 i[1];
     ObjfsaWalkGroup* g;
     f32 y;
@@ -1019,13 +1022,61 @@ int mathFn_800dbff0(float* point)
     }
     else
     {
-        up = gObjfsaLastWalkGroupIndex + 1;
+        up = 1;
+        up = gObjfsaLastWalkGroupIndex + up;
     }
 
     while (down != up)
     {
-        WALKGROUP_TRY_RETURN(down);
-        WALKGROUP_TRY_RETURN(up);
+        if (Objfsa_IsWalkGroupActive(down))
+        {
+            wg = &gObjfsaWalkGroups[down];
+            g = wg;
+            y = point[1];
+            if (y < g->maxY && y > g->minY)
+            {
+                x = point[0];
+                z = point[2];
+                i[0] = (j[0] = 0);
+                j[0] = 0;
+                for (; i[0] < 4; i[0]++, j[0] += 2)
+                {
+                    if (g->planeOffsets[i[0]] + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)
+                    {
+                        break;
+                    }
+                }
+                if (i[0] == 4)
+                {
+                    gObjfsaLastWalkGroupIndex = down;
+                    return down;
+                }
+            }
+        }
+        if (Objfsa_IsWalkGroupActive(up))
+        {
+            g = &gObjfsaWalkGroups[up];
+            y = point[1];
+            if (y < g->maxY && y > g->minY)
+            {
+                z = point[2];
+                x = point[0];
+                i[0] = (j[0] = 0);
+                j[0] = 0;
+                for (; i[0] < 4; i[0]++, j[0] += 2)
+                {
+                    if (g->planeOffsets[i[0]] + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)
+                    {
+                        break;
+                    }
+                }
+                if (i[0] == 4)
+                {
+                    gObjfsaLastWalkGroupIndex = up;
+                    return up;
+                }
+            }
+        }
 
         down--;
         if (down == -1)
@@ -1039,7 +1090,32 @@ int mathFn_800dbff0(float* point)
         }
     }
 
-    WALKGROUP_TRY_RETURN(down);
+    if (Objfsa_IsWalkGroupActive(down))
+    {
+        wgLast = &gObjfsaWalkGroups[down];
+        g = wgLast;
+        y = point[1];
+        if (y < g->maxY && y > g->minY)
+        {
+            z = point[2];
+            x = point[0];
+            i[0] = (j[0] = 0);
+            j[0] = 0;
+            for (; i[0] < 4; i[0]++, j[0] += 2)
+            {
+                planeOff = g->planeOffsets[i[0]];
+                if (planeOff + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)
+                {
+                    break;
+                }
+            }
+            if (i[0] == 4)
+            {
+                gObjfsaLastWalkGroupIndex = down;
+                return down;
+            }
+        }
+    }
     return 0;
 }
 #pragma opt_common_subs on
@@ -2993,7 +3069,6 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     u32* idRead;
     f32* qscan;
     f32* distWrite;
-    f32* dw;
     int li;
     int found;
     int count;
@@ -3061,19 +3136,19 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                 idx = queueIds[count];
                 node = romCurves[idx];
                 curDist = queueDist[count];
+                best[0] = 0;
                 if ((((int)node->type == typeFilter) || (typeFilter == -1)) &&
                     ((*(u8*)((u8*)node + 0x31) == (int)maxDist ||
                       ((*(u8*)((u8*)node + 0x32) == (int)maxDist || (*(u8*)((u8*)node + 0x33) == (int)maxDist))))))
                 {
                     done = 1;
-                    dw = distWrite;
-                    *dw = curDist;
+                    *distWrite = curDist;
                     if (found < 4)
                     {
                         *idWrite = node->id;
                         probe++;
                         idRead++;
-                        distWrite = dw + 1;
+                        distWrite++;
                         idWrite++;
                         resultLinks[found++] = li;
                     }
@@ -3218,6 +3293,7 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                 idx = queueIds[count];
                 node = romCurves[idx];
                 curDist = queueDist[count];
+                best[0] = 0;
                 if (((int)node->type == typeFilter) && ((actionFilter == -1) || (actionFilter == node->action)))
                 {
                     done = 1;
