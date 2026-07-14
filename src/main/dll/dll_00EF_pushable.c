@@ -146,7 +146,7 @@ extern void fn_8007FE04(int* array, int* count, int value);
 extern f32 gPushableU16ScaleDenom;
 extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
-extern int gPushableDefaultBox[];
+__declspec(section ".rodata") int gPushableDefaultBox[4] = {0, 0, 0, 0};
 extern int fn_802969F0(void);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);

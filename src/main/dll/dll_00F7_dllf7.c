@@ -85,7 +85,8 @@ typedef struct DllF7HitBlock
     f32 z;
 } DllF7HitBlock;
 
-extern DllF7Vec lbl_802C2260;
+__declspec(section ".rodata") DllF7Vec lbl_802C2260 = {
+    {0, 0, 0, 0x08, 0, 0, 0, 0xFF, 0, 0, 0, 0xFF, 0, 0, 0, 0x78}};
 
 /* dll_F7 (bouncing prop) object extra-state */
 typedef struct DllF7State

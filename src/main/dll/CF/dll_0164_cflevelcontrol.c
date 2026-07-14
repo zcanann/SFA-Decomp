@@ -67,7 +67,7 @@ typedef struct CfLevelControlFlags
 
 extern s16 lbl_80323008[];
 extern f32 lbl_803E43E8;
-extern int lbl_802C22E8[];
+__declspec(section ".rodata") int lbl_802C22E8[4] = {0x443AB458, 0x44A3A000, 0xC67FE95C, 0};
 extern f32 lbl_803E43EC;
 
 extern int playerIsDisguised(int obj);

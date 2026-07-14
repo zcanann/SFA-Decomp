@@ -65,8 +65,8 @@ extern f32 lbl_803DBDD0;
 extern f32 lbl_803DBDC4;
 extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
-extern u32 lbl_802C2298[3];
-extern u32 lbl_802C22A4[3];
+__declspec(section ".rodata") u32 lbl_802C2298[3] = {0, 0, 0};
+__declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);

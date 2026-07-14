@@ -42,7 +42,7 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
 
-extern u8 lbl_802C2308[];
+__declspec(section ".rodata") u8 lbl_802C2308[16] = {0, 0x23, 0, 0x69, 0, 0x33, 0, 0x64, 0, 0x1D, 0, 0, 0, 0, 0, 0};
 extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
 extern f32 lbl_803E4758;
