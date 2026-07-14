@@ -2,6 +2,7 @@
 #define MAIN_PROXIMITYMINE_H_
 
 #include "ghidra_import.h"
+#include "main/model_light.h"
 #include "main/object_descriptor.h"
 
 #define PROXIMITYMINE_HIT_VOLUME_SLOT 13
@@ -24,16 +25,9 @@ typedef enum ProximityMineSpawnMode {
   PROXIMITYMINE_SPAWN_PROXIMITY = 2  /* immediately-armed proximity mine */
 } ProximityMineSpawnMode;
 
-typedef struct ProximityMineEffect {
-  u8 unk0[0x4c];
-  u8 visible;
-  u8 unk4D[0x2f8 - 0x4d];
-  u8 active;
-} ProximityMineEffect;
-
 typedef struct ProximityMineState {
   struct GameObject *targetObj;
-  ProximityMineEffect *effectHandle;
+  ModelLightStruct *effectHandle;
   f32 triggerDistance;
   f32 verticalStep;
   u8 unk10[4];
@@ -50,6 +44,9 @@ typedef struct ProximityMineState {
   u8 effectVisible;
   u8 unk31[3];
 } ProximityMineState;
+
+STATIC_ASSERT(offsetof(ProximityMineState, effectHandle) == 0x4);
+STATIC_ASSERT(sizeof(ProximityMineState) == 0x34);
 
 typedef struct ProximityMineCollider {
   u8 unk0[0x50];

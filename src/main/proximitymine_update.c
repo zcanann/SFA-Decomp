@@ -49,13 +49,6 @@ extern f32 lbl_803E6774;
 extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;
 
-extern void modelLightStruct_freeSlot(void* handle);
-extern void queueGlowRender(void* effect);
-extern void modelLightStruct_updateGlowAlpha(void* light);
-extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
-extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
-
 int ProximityMine_getExtraSize(void)
 {
     return sizeof(ProximityMineState);
@@ -81,7 +74,7 @@ void ProximityMine_free(ProximityMineObject* obj)
 void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 p5)
 {
     int mapBlock;
-    ProximityMineEffect* effect;
+    ModelLightStruct* effect;
     ProximityMineState* state;
 
     state = obj->state;
@@ -96,7 +89,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 
         return;
     }
     effect = state->effectHandle;
-    if ((effect != NULL) && (effect->active != 0) && (effect->visible != 0))
+    if ((effect != NULL) && (effect->glowType != 0) && (effect->enabled != 0))
     {
         queueGlowRender(effect);
     }
@@ -210,10 +203,10 @@ void ProximityMine_update(ProximityMineObject* obj)
             }
             if (state->effectHandle != NULL)
             {
-                state->effectHandle->visible = brightness;
+                state->effectHandle->enabled = brightness;
                 modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC238, lbl_803DC234);
                 {
-                    ProximityMineEffect* fx = state->effectHandle;
+                    ModelLightStruct* fx = state->effectHandle;
                     modelLightStruct_setPosition(fx, lbl_803E6768, obj->lightPosY, *(f32*)&lbl_803E6768);
                 }
             }
@@ -231,7 +224,7 @@ void ProximityMine_update(ProximityMineObject* obj)
                 {
                     modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC240, lbl_803DC23C);
                     {
-                        ProximityMineEffect* fx = state->effectHandle;
+                        ModelLightStruct* fx = state->effectHandle;
                         modelLightStruct_setPosition(fx, lbl_803E6768, obj->lightPosY, *(f32*)&lbl_803E6768);
                     }
                 }
@@ -326,11 +319,11 @@ void ProximityMine_update(ProximityMineObject* obj)
             ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, PROXIMITYMINE_HIT_VOLUME_SLOT, 1, 0);
             if (state->effectHandle != NULL)
             {
-                if ((state->effectHandle->visible != 0) && (state->effectVisible == 0))
+                if ((state->effectHandle->enabled != 0) && (state->effectVisible == 0))
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_gal_prophitbird);
                 }
-                state->effectVisible = state->effectHandle->visible;
+                state->effectVisible = state->effectHandle->enabled;
             }
             else
             {

@@ -14,8 +14,6 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-extern void modelLightStruct_freeSlot(void* handle);
-
 void proximitymine_resetToIdle(ProximityMineObject* obj)
 {
     ProximityMineState* state;
