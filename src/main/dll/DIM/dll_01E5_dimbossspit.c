@@ -19,12 +19,9 @@
 #include "main/object.h"
 #include "main/audio/sfx.h"
 #include "main/model_light.h"
-#include "main/modellight_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 /* Partfx by phase (state unk0): FLIGHT_TRAIL streams while the spit ball flies
  * (state 0); BURST is the continuous expanding fx during the burst (takes the
@@ -60,7 +57,6 @@ typedef struct DIMbossspitState
     s32 unk40C;
 } DIMbossspitState;
 
-extern void ModelLightStruct_free(ModelLightStruct* light);
 extern f32 lbl_803E4D44;
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
@@ -106,7 +102,7 @@ void DIMbossspit_updateBurst(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_mn_lummy311);
         CameraShake_SetAllMagnitudes(lbl_803E4D3C);
         doRumble(lbl_803E4D40);
-        if (*(void**)&((DIMbossspitUpdateBurstState*)state)->light != NULL)
+        if (((DIMbossspitUpdateBurstState*)state)->light != NULL)
         {
             modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState*)state)->light, 0, lbl_803E4D44);
         }
@@ -132,10 +128,10 @@ void DIMbossspit_updateBurst(GameObject* obj)
     }
     else
     {
-        if (*(void**)&((DIMbossspitUpdateBurstState*)state)->light != NULL)
+        if (((DIMbossspitUpdateBurstState*)state)->light != NULL)
         {
-            ModelLightStruct_free(*(void**)&((DIMbossspitUpdateBurstState*)state)->light);
-            ((DIMbossspitUpdateBurstState*)state)->light = 0;
+            ModelLightStruct_free(((DIMbossspitUpdateBurstState*)state)->light);
+            ((DIMbossspitUpdateBurstState*)state)->light = NULL;
         }
         (obj)->anim.alpha = 0;
         if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50)
@@ -160,12 +156,14 @@ int DIMbossspit_getObjectTypeId(void)
 void DIMbossspit_free(int objArg)
 {
     int obj = objArg;
-    u32 state;
+    DIMbossspitState* state;
+    ModelLightStruct* light;
 
-    state = *(u32*)(*(int*)&((GameObject*)obj)->extra + 4);
-    if (state != 0)
+    state = ((GameObject*)obj)->extra;
+    light = state->light;
+    if (light != NULL)
     {
-        ModelLightStruct_free((void*)state);
+        ModelLightStruct_free(light);
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
     return;
@@ -262,8 +260,8 @@ void DIMbossspit_init(int obj)
 {
     u8* state = ((GameObject*)obj)->extra;
 
-    *(void**)&((DIMbossspitState*)state)->light = objCreateLight((void*)obj, 1);
-    if (*(void**)&((DIMbossspitState*)state)->light != NULL)
+    ((DIMbossspitState*)state)->light = objCreateLight((void*)obj, 1);
+    if (((DIMbossspitState*)state)->light != NULL)
     {
         modelLightStruct_setLightKind(((DIMbossspitState*)state)->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(((DIMbossspitState*)state)->light, 0, 255, 0, 0);
