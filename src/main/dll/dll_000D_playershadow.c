@@ -19,6 +19,10 @@
 #include "main/dll/dll_000D_playershadow.h"
 #include "main/track_dolphin_api.h"
 
+s16 gPlayerShadowCamRotY;
+s16 lbl_803DD29A;
+u8 gPlayerShadowMode;
+
 /* foot/bone particle ids scattered per struck-triangle surface type
    (index-style; roles opaque). A on surfaces 0x10/0x12; B on 0x11/0x14/0x15;
    C spawned 3x on surface 0x17. */

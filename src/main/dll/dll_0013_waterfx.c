@@ -36,6 +36,29 @@
 #include "main/camera.h"
 #include "dolphin/os/OSCache.h"
 
+void* gWaterfxRippleVtx;
+void* gWaterfxRippleVtxDesc;
+void* gWaterfxWakeVtx;
+void* gWaterfxWakeVtxDesc;
+void* gWaterfxRippleCount;
+void* gWaterfxRipplePool;
+void* gWaterfxSplashCount;
+void* gWaterfxSplashPool;
+void* gWaterfxWakeCount;
+void* gWaterfxWakePool;
+void* gWaterfxDropCount;
+void* gWaterfxDropPool;
+Texture* gWaterfxRippleTexture;
+Texture* gWaterfxSplashTexture0;
+Texture* gWaterfxSplashTexture1;
+Texture* gWaterfxWakeTexture;
+f32 gWaterfxRippleScale;
+void* gWaterfxSplashDisplayList;
+u16 gWaterfxSplashDisplayListSize;
+void* gWaterfxSplashPosArray;
+void* gWaterfxSplashTexCoordArray;
+u8 gWaterfxPendingImpactPositionValid;
+
 f32 gWaterfxPendingImpactPosition[4];
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);

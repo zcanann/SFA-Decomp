@@ -25,6 +25,21 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+int lbl_803DD278;
+int lbl_803DD274;
+int lbl_803DD270;
+int gExpgfxLastAddedSlot;
+u16 gExpgfxPhaseAngleB;
+u16 gExpgfxPhaseAngleA;
+f32 gExpgfxFrameTimerC;
+f32 gExpgfxFrameTimerB;
+f32 gExpgfxFrameTimerA;
+int gExpgfxTextureFreeInProgress;
+u8 gExpgfxRenderResetPending;
+u8 lbl_803DD253;
+volatile u8 gExpgfxFrameParityBit;
+s16 gExpgfxSequenceCounter;
+
 f32 lbl_803DB790 = -50.0f;
 
 typedef union ExpgfxWGPipe

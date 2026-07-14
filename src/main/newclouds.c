@@ -36,6 +36,29 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 
+u8 gNewCloudStarsInitialized;
+char* gNewCloudStarTextureB;
+char* gNewCloudStarTextureA;
+u8 gNewCloudBlizzardActivePrev;
+void* lbl_803DD1C8;
+void* lbl_803DD1C4;
+u8 gNewCloudInitialized;
+f32 gNewCloudScrollPhaseA;
+f32 gNewCloudScrollPhaseB;
+f32 gNewCloudScrollPhaseC;
+f32 lbl_803DD1B0;
+f32 gSnowFlakeWaveValue;
+s16 gSnowFlakeWaveAngle;
+int gNewCloudFlashRotAngle;
+void* gNewCloudModelLight;
+LightningEffect* lbl_803DD19C;
+u8 gNewCloudBlizzardActive;
+u8 lbl_803DD19A;
+u8 lbl_803DD199;
+u8 gNewCloudSnowFlashAlpha;
+f32 gNewCloudOvercastFadeRate;
+f32 lbl_803DD190;
+
 f32 gNewCloudOvercastFadeLevel = 1.0f;
 f32 lbl_803DB764 = 1.0f;
 f32 lbl_803DB768 = 1.0f;

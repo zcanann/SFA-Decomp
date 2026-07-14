@@ -26,6 +26,37 @@
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+int lbl_803DD03C;
+f32 gFogNearZ;
+f32 gFogFarZ;
+u32 gTevStageCursor;
+u32 gTevTexCoordCursor;
+u32 gTevTexMapCursor;
+f32 gFogStartZ;
+f32 gFogEndZ;
+GXColor gFogColor;
+u8 gGxZModeValid;
+u8 gGxZCompLocValid;
+u8 gGxZModeCompareEnable;
+int gGxZModeCompareFunc;
+u8 gGxZModeUpdateEnable;
+u8 gGxZCompLocCached;
+u8 lbl_803DD010;
+f32 lbl_803DD00C;
+u8 gTevStageCount;
+u8 gTevTexGenCount;
+u8 gTevChanCount;
+u8 gTevIndStageCount;
+u32 screenWidth;
+u16 gDepthReadResultCount;
+u16 gDepthReadPendingCount;
+static u32 sIntersectUnused0;
+u8 gWaterFxDisabled;
+u8 gWaterQuadWriteIdx;
+u8 gWaterRippleWriteIdx;
+u32 lbl_803DCFF4;
+u8 gWaterFxBank;
+
 u8 lbl_803DB678 = 0x60;
 u8 gHudTintAlpha = 0xFF;
 u32 lbl_803DB67C = 0xFFFFFF60;

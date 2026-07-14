@@ -17,6 +17,36 @@
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_api.h"
 
+CameraViewSlot* gNewShadowCurrentViewSlot;
+u32 gNewShadowReflectionSmallTexture;
+u32 gNewShadowCausticTexture;
+u32 gNewShadowReflectionTexture2;
+u32 gNewShadowDiskTexture;
+u32 gNewShadowSmallDiskTexture;
+u32 gNewShadowBumpTexture;
+u32 lbl_803DCFCC;
+u32 lbl_803DCFC8;
+u32 lbl_803DCFC4;
+u32 gNewShadowRadialTexture;
+u32 lbl_803DCFBC;
+u32 lbl_803DCFB8;
+u32 lbl_803DCFB4;
+u32 gNewShadowRingTexture;
+f32 gNewShadowReflectionScrollX;
+f32 gNewShadowReflectionScrollY;
+f32 lbl_803DCFA4;
+u16 lbl_803DCFA0;
+u32 gNewShadowRampTexture;
+u32 gNewShadowInverseRampTexture;
+u32 lbl_803DCF94;
+u32 gNewShadowFalloffTexture;
+u8 gNewShadowFrameIndex;
+int gNewShadowLightAngleY;
+int gNewShadowLightAngleX;
+u8 lbl_803DCF80;
+char* gNewShadowReflectionTexture;
+u8 gNewShadowCasterCount;
+
 u8 lbl_803DB668[8] = {0xFF, 7, 6, 5, 4, 3, 2, 1};
 f32 lbl_803DB670 = 1.3333334f;
 

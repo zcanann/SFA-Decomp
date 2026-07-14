@@ -28,6 +28,44 @@
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
 
+u8* gSky2State;
+s8 gSky2DrawMode;
+static u32 sSkyUnusedD;
+u8 gSkyCurrentTextureColor;
+static u8 sSkyUnusedC2;
+static u8 sSkyUnusedC1;
+static u8 sSkyUnusedC0;
+u8 gSkyCurrentAmbientColor;
+static u8 sSkyUnusedB2;
+static u8 sSkyUnusedB1;
+static u8 sSkyUnusedB0;
+u8 gSkyCurrentLightColor;
+static u8 sSkyUnusedA2;
+static u8 sSkyUnusedA1;
+static u8 sSkyUnusedA0;
+u8 gSkySunPositionPrev;
+void* gSkyMoonLight;
+u8 gSkyOverrideLightDirectionEnabled;
+f32 gSkyOverrideLightIntensity;
+u8 gSkyOverrideLightColorEnabled;
+static u8 sSkyUnused02;
+static u8 sSkyUnused01;
+static u8 sSkyUnused00;
+u8 gSkyOverrideLightColor;
+int gSkyObjectsInitialized;
+void* gSkySkyTexture;
+void* gSkyMoonObject;
+u8* gSkySunObject;
+void* gSkySunLight;
+u8 gSkyEnvFxFlags;
+int lbl_803DD13C;
+int lbl_803DD138;
+int lbl_803DD134;
+int lbl_803DD130;
+u8* gSkyState;
+u16 gSkyMoonAlpha;
+u16 gSkySunAlpha;
+
 s8 lbl_803DB750 = 1;
 int lbl_803DB754 = 1;
 u8 lbl_803DB758 = 1;

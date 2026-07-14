@@ -37,6 +37,14 @@
 #include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
 
+ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
+ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
+s16 gModgfxSequenceParamIndex;
+s16 gModgfxLastSpawnHandle;
+f32 gModgfxMotionStep;
+u8 lbl_803DD282;
+s16 gPartfxSequenceIdCounter;
+
 #define DLL0B_OBJFLAG_RENDERED 0x800
 
 /* DLL-id of the object spawned to back a modgfx effect slot (generic effect

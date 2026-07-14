@@ -21,6 +21,15 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 
+s16 gBoneParticleEffectTimer;
+s32 gBoneParticleScrollOffset;
+s16 gBoneParticleStageIndex;
+s32 lbl_803DD2B0;
+f32 gBoneParticleDrift;
+void* gBoneParticleTextureB;
+void* gBoneParticleTextureA;
+s32 gBoneParticleBufferFlip;
+
 #define BONE_PARTICLE_EFFECT_PARTFX       0x28c
 #define BONE_PARTICLE_EFFECT_BUFFER_COUNT 7
 #define BONE_PARTICLE_EFFECT_BUFFER_BYTES 0x140

@@ -31,6 +31,58 @@
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
 
+u32 gTrackTriangleBufferEnd;
+s16 gTrackTriangleCount;
+u8 gActiveTrackBlockCount;
+int lbl_803DCF68;
+int lbl_803DCF64;
+s8 lbl_803DCF60;
+s16 gIntersectLineCount;
+s16 gIntersectPointCount;
+f32 lbl_803DCF58;
+f32 lbl_803DCF54;
+f32 lbl_803DCF50;
+u8 lbl_803DCF4F;
+u8 mapBlockFlag;
+u8 lbl_803DCF4D;
+u8 lbl_803DCF4C;
+int gMapDynamicSlots;
+u8 lbl_803DCF44;
+u32 lbl_803DCF40;
+int gIntersectLineIndexTable;
+f32* lbl_803DCF38;
+int lbl_803DCF34;
+u32 gTrackTriangleBuffer;
+int gShadowVolumeBuffer;
+void* lbl_803DCF24[2];
+int lbl_803DCF20;
+int lbl_803DCF1C;
+int lbl_803DCF18;
+int lbl_803DCF14;
+int lbl_803DCF10;
+int lbl_803DCF0C;
+void* lbl_803DCF08;
+void* lbl_803DCF04;
+f32 gSunDotCos;
+s16 lbl_803DCEFC;
+s16 lbl_803DCEFA;
+s16 lbl_803DCEF8;
+s16 lbl_803DCEF6;
+s16 lbl_803DCEF4;
+s16 gShadowVisibleCount;
+s16 lbl_803DCEF0;
+s8 lbl_803DCEEE;
+s8 lbl_803DCEED;
+s8 lbl_803DCEEC;
+s8 lbl_803DCEEB;
+s8 lbl_803DCEEA;
+u8 lbl_803DCEE9;
+u8 lbl_803DCEE8;
+int lbl_803DCEE4;
+int lbl_803DCEE0;
+f32 gShadowOffsetZ;
+f32 gShadowOffsetX;
+
 f32 gShadowOffsetY = 1.0f;
 f32 lbl_803DB654 = 1.0f;
 s8 gShadowFlag = 10;

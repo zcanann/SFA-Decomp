@@ -188,18 +188,21 @@ main/track_dolphin.c:
 	.data       start:0x8030E868 end:0x8030E8B0
 	.bss        start:0x803879B0 end:0x8038DF48
 	.sdata      start:0x803DB650 end:0x803DB668
+	.sbss       start:0x803DCED8 end:0x803DCF78
 	.sdata2     start:0x803DEC60 end:0x803DEC68
 
 main/newshadows.c:
 	.text       start:0x8006A028 end:0x8006EF38
 	.bss        start:0x8038DF48 end:0x80391DC0
 	.sdata      start:0x803DB668 end:0x803DB678
+	.sbss       start:0x803DCF78 end:0x803DCFF0
 
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 	.rodata     start:0x802C1EA8 end:0x802C1F80
 	.bss        start:0x80391DC0 end:0x80396918
 	.sdata      start:0x803DB678 end:0x803DB700
+	.sbss       start:0x803DCFF0 end:0x803DD040
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
@@ -211,6 +214,7 @@ main/objseq.c:
 	.data       start:0x8030ECA8 end:0x8030EF58
 	.bss        start:0x80396918 end:0x8039A7A8
 	.sdata      start:0x803DB710 end:0x803DB750
+	.sbss       start:0x803DD060 end:0x803DD128
 
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18
@@ -218,6 +222,7 @@ main/sky.c:
 	.data       start:0x8030F2C8 end:0x8030F5A0
 	.bss        start:0x8039A7A8 end:0x8039A818
 	.sdata      start:0x803DB750 end:0x803DB760
+	.sbss       start:0x803DD128 end:0x803DD190
 
 main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
@@ -225,6 +230,7 @@ main/newclouds.c:
 	.data       start:0x8030F5A0 end:0x8030F7B0
 	.bss        start:0x8039A818 end:0x8039AB28
 	.sdata      start:0x803DB760 end:0x803DB780
+	.sbss       start:0x803DD190 end:0x803DD1E0
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
@@ -239,6 +245,7 @@ main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994
 	.data       start:0x8030F86C end:0x8030F898
 	.bss        start:0x8039AB48 end:0x8039AB58
+	.sbss       start:0x803DD1F8 end:0x803DD250
 
 main/dll/viewfinder.c:
 	.text       start:0x80096994 end:0x800969B0
@@ -258,10 +265,12 @@ main/dll/dll_000A_expgfx.c:
 	.data       start:0x8030F898 end:0x8030FD20
 	.bss        start:0x8039AB58 end:0x8039BE98
 	.sdata      start:0x803DB790 end:0x803DB798
+	.sbss       start:0x803DD250 end:0x803DD280
 
 main/dll/dll_000B_dll0b.c:
 	.text       start:0x8009FFF0 end:0x800A3A40
 	.bss        start:0x8039BE98 end:0x8039C2C0
+	.sbss       start:0x803DD280 end:0x803DD298
 
 main/dll/dll_000C_projgfx.c:
 	.text       start:0x800A3A40 end:0x800A3AF0
@@ -271,11 +280,13 @@ main/dll/dll_000D_playershadow.c:
 	.text       start:0x800A3AF0 end:0x800A4338
 	.rodata     start:0x802C2160 end:0x802C2170
 	.data       start:0x8030FDE8 end:0x8030FE38
+	.sbss       start:0x803DD298 end:0x803DD2A0
 	.sdata2     start:0x803DF468 end:0x803DF4A8
 
 main/dll/dll_0018_boneparticleeffect.c:
 	.text       start:0x800A4338 end:0x800A4DF4
 	.data       start:0x8030FE38 end:0x80310560
+	.sbss       start:0x803DD2A0 end:0x803DD2C0
 	.sdata2     start:0x803DF4A8 end:0x803DF4C8
 
 main/dll/dll_000E_partfx.c:
