@@ -36,6 +36,12 @@
 #define ObjModel_SampleJointTransformLegacy(model, animState, frameSource, phase, rootMotionScale, outPosition, outRotation) \
     ((void (*)(int, int, int, f32, f32, void*, void*))ObjModel_SampleJointTransform)( \
         (model), (animState), (frameSource), (phase), (rootMotionScale), (outPosition), (outRotation))
+
+typedef s16 (*PlayerBlendEventLegacyFn)(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
+typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
+
+#define fn_802A71E0Legacy ((PlayerBlendEventLegacyFn)fn_802A71E0)
+#define PSVECScaleLegacy  ((PSVECScaleLegacyFn)PSVECScale)
 #include "main/object_api.h"
 #include "main/curve_eval.h"
 #include "main/objhits.h"
@@ -9363,10 +9369,9 @@ int playerStateClimbOntoWall(GameObject* obj, int state)
             flags |= 0x40;
         }
         {
-            extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
             inner->animEventState =
-                fn_802A71E0((int)obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598), (int*)((char*)inner + 0x56c),
-                            lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
+                fn_802A71E0Legacy((int)obj, tbl[0], tbl[1], (int*)((char*)inner + 0x598),
+                                  (int*)((char*)inner + 0x56c), lbl_803E7EA4, *(f32*)&lbl_803E7EA4, 2, (u8)flags);
         }
         model = Player_GetActiveModel((int)obj);
         ObjModel_SampleJointTransform(model, 0, 0, lbl_803E7EE0, obj->anim.rootMotionScale, buf1, buf2);
@@ -13286,8 +13291,7 @@ void fn_802A81B8(GameObject* obj, int state, f32* out)
         mag = PSVECMag(out);
         if (mag > lbl_803E7EA4)
         {
-            extern void PSVECScale(f32 scale, f32 * src, f32 * dst);
-            PSVECScale(lbl_803E7EE0 / mag, out, out);
+            PSVECScaleLegacy(lbl_803E7EE0 / mag, out, out);
         }
         else
         {
@@ -14973,7 +14977,6 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
     }
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
-        extern s16 fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, int flags);
         s16* tbl;
         int sel;
         f32 jp[3];
@@ -15036,19 +15039,20 @@ int playerStateClimbOntoLadder(GameObject* obj, int state, f32 fv)
         {
             tbl = lbl_80332F78;
         }
-        inner->eventCountdown = fn_802A71E0((int)obj, tbl[sel], tbl[sel + 2], (int*)inner->blendAnchor, (int*)&vb.vx,
-                                            lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
+        inner->eventCountdown =
+            fn_802A71E0Legacy((int)obj, tbl[sel], tbl[sel + 2], (int*)inner->blendAnchor, (int*)&vb.vx,
+                              lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 2, 9);
         {
             int f9 = 0x34;
             if (flag)
             {
                 f9 |= 0x40;
             }
-            fn_802A71E0((int)obj, tbl[sel], tbl[sel + 1], (int*)inner->blendAnchor, (int*)inner->pad51C, lbl_803E7EA4,
-                        ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
+            fn_802A71E0Legacy((int)obj, tbl[sel], tbl[sel + 1], (int*)inner->blendAnchor, (int*)inner->pad51C,
+                              lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, (u8)f9);
         }
-        fn_802A71E0((int)obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->blendAnchor, (int*)inner->pad51C, lbl_803E7EA4,
-                    ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
+        fn_802A71E0Legacy((int)obj, tbl[sel + 2], tbl[sel + 3], (int*)inner->blendAnchor, (int*)inner->pad51C,
+                          lbl_803E7EA4, ((PlayerState*)state)->baddie.moveSpeed, 0, 0x1a);
         inner->climbTargetY = inner->climbStepHeight * (f32)(int)inner->climbStep + inner->climbBaseY;
         inner->climbStartY = obj->anim.localPosY;
         {
