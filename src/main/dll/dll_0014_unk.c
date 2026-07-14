@@ -2319,7 +2319,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 #define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
     exitFz = (f32)(ZF);                                                                                                \
     exitFx = (f32)(XF);                                                                                                \
-    for (edge = 0, normalIdx = 0; edge < 4; edge++, normalIdx += 2)                                                    \
+    for (normalIdx = 0, edge = 0; edge < 4; edge++, normalIdx += 2)                                                    \
     {                                                                                                                  \
         if ((WGP)->planeOffsets[edge] +                                                                                \
                 (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
