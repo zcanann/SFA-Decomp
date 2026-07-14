@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
+#include "main/dll/DR/dr_types.h"
 
 typedef struct DrcagewithPlacement
 {
@@ -20,7 +21,7 @@ typedef struct DrcagewithPlacement
 typedef struct DrcagewithState
 {
     GameObject* spawnedObject; /* 0x0: spawned rope/winch object */
-    s32 linkedObject;          /* 0x4: linked rope object, freed via Obj_FreeObject */
+    GameObject* linkedObject;  /* 0x4: linked rope object */
     f32 unk8;
     u8 padC[0x10 - 0xC];
     f32 unk10;
@@ -29,7 +30,10 @@ typedef struct DrcagewithState
     f32 unk1C;
     f32 unk20;
     f32 angularVel; /* 0x24: damped angular velocity */
-    u8 pad28[0x34 - 0x28];
+    u8 pad28[0x30 - 0x28];
+    u8 scaleMode;
+    BitFlags8 ropeFlags;
+    u8 pad32[0x34 - 0x32];
 } DrcagewithState;
 
 STATIC_ASSERT(offsetof(DrcagewithPlacement, flags) == 0x5);
@@ -40,6 +44,8 @@ STATIC_ASSERT(offsetof(DrcagewithPlacement, openedGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(DrcagewithState, spawnedObject) == 0x0);
 STATIC_ASSERT(offsetof(DrcagewithState, linkedObject) == 0x4);
 STATIC_ASSERT(offsetof(DrcagewithState, angularVel) == 0x24);
+STATIC_ASSERT(offsetof(DrcagewithState, scaleMode) == 0x30);
+STATIC_ASSERT(offsetof(DrcagewithState, ropeFlags) == 0x31);
 STATIC_ASSERT(sizeof(DrcagewithState) == 0x34);
 
 int DR_CageWith_setScale(GameObject* obj);
@@ -50,8 +56,21 @@ void DR_CageWith_free(GameObject* obj, int arg);
 void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
 void DR_CageWith_hitDetect(GameObject* obj);
 void DR_CageWith_update(void);
-void DR_CageWith_init(int obj, char* arg);
+void DR_CageWith_init(GameObject* obj, DrcagewithPlacement* placement);
 void DR_CageWith_release(void);
 void DR_CageWith_initialise(void);
+
+extern f32 lbl_803E69F0;
+extern f32 gDrCageWithFindObjMaxDist;
+extern f32 lbl_803E69F8;
+extern f32 lbl_803E69FC;
+extern f32 lbl_803E6A00;
+extern f32 gDrCageWithAngVelRateMin;
+extern f32 gDrCageWithAngVelRateMax;
+extern f32 lbl_803E6A0C;
+extern f32 lbl_803E6A10;
+extern f32 lbl_803E6A14;
+extern f32 lbl_803E6A18;
+extern f32 lbl_803E6A1C;
 
 #endif /* MAIN_DLL_DR_DLL_026C_DRCAGEWITH_H_ */

@@ -59,7 +59,7 @@ typedef struct DrcreatorState
     f32 velocityY; /* 0x28 */
     f32 velocityZ; /* 0x2C */
     u8 pad30[0xC4 - 0x30];
-    s32 creatorObj; /* 0xC4 */
+    GameObject* creatorObj; /* 0xC4 */
 } DrcreatorState;
 
 STATIC_ASSERT(offsetof(DrcreatorState, gameBitId) == 0x4);
@@ -76,8 +76,15 @@ void DR_Creator_free(void);
 void DR_Creator_render(void);
 void DR_Creator_hitDetect(void);
 void DR_Creator_update(GameObject* obj);
-void DR_Creator_init(GameObject* obj, char* arg);
+void DR_Creator_init(GameObject* obj, DrcreatorPlacement* placement);
 void DR_Creator_release(void);
 void DR_Creator_initialise(void);
+
+extern const f32 lbl_803E69A8;
+extern f32 lbl_803E69C0;
+extern f32 lbl_803E69C4;
+extern f32 lbl_803E69C8;
+extern f32 lbl_803E69BC;
+extern f32 lbl_803E69B8;
 
 #endif /* MAIN_DLL_DR_DLL_0265_DRCREATOR_H_ */
