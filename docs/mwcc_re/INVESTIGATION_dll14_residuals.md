@@ -534,3 +534,10 @@ is load-bearing) - the swap must instead come from slotPtr coloring LATER withou
 back: insert a decl between slotPtr and slot, or shift slotPtr below slot (config B gave
 r23 - overshoot; the r27 window is between). Also remember: score gate needs the site-1
 operand-order line + verifying the fdivs order at the po-staged K3 site.
+
+## LANDED: config G in-tree (commit d1f0c38d2c) - walkgroup 97.83 -> 97.86, TU 99.7763
+First score crossover. Also learned: moving `back` down 16 decl slots cascades (temps'
+indices are FIXED, so named-band shifts change the pop/grant interleave positions -
+"uniform shift" of named webs is NOT neutral). The slotPtr/back/slot36 finish therefore
+needs the exact-simulation (replay decoded rules on the traced census) rather than
+positional surgery. All other pieces are landed.
