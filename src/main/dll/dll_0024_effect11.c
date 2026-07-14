@@ -12,6 +12,7 @@
  * positional offset. Ids that take no source default it to gEffect11DefaultSrcParams.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -45,20 +46,7 @@ extern f32 lbl_803DFF94;
 extern f32 lbl_803DFF98;
 extern f32 lbl_803DFF9C;
 
-typedef struct EffectObjectDescriptor {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback func03;
-    ObjectDescriptorCallback func04;
-    ObjectDescriptorCallback func05;
-} EffectObjectDescriptor;
-
-EffectObjectDescriptor lbl_80310D20 = {
+ObjectDescriptor6 lbl_80310D20 = {
     0,
     0,
     0,

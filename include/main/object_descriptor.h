@@ -6,6 +6,19 @@
 typedef void (*ObjectDescriptorCallback)(void);
 typedef int (*ObjectDescriptorExtraSizeCallback)(void);
 
+typedef struct ObjectDescriptor6 {
+  u32 reserved0;
+  u32 reserved1;
+  u32 reserved2;
+  u32 slotCountAndFlags;
+  ObjectDescriptorCallback initialise;
+  ObjectDescriptorCallback release;
+  ObjectDescriptorCallback slot02;
+  ObjectDescriptorCallback slot03;
+  ObjectDescriptorCallback slot04;
+  ObjectDescriptorCallback slot05;
+} ObjectDescriptor6;
+
 typedef struct ObjectDescriptor {
   u32 reserved0;
   u32 reserved1;
@@ -296,6 +309,7 @@ typedef struct ObjectDescriptor24 {
   ObjectDescriptorCallback slot17;
 } ObjectDescriptor24;
 
+#define OBJECT_DESCRIPTOR_FLAGS_6_SLOTS  0x00050000
 #define OBJECT_DESCRIPTOR_FLAGS_10_SLOTS 0x00090000
 #define OBJECT_DESCRIPTOR_FLAGS_11_SLOTS 0x000A0000
 #define OBJECT_DESCRIPTOR_FLAGS_12_SLOTS 0x000B0000

@@ -4,13 +4,6 @@
 
 #pragma exceptions on
 
-typedef struct InpMidiState
-{
-    u8 pad0[0xC0];
-    u8 midiCtrl[8][16][134]; /* 0x00C0 */
-    u8 fxCtrl[16][134];      /* 0x43C0 */
-} InpMidiState;
-
 /*
  * Push an event onto a 4-slot ring at obj+0x22. Resets counter when
  * the flags byte is zero. Slot layout: [ctrl, flags|0x10 or translated

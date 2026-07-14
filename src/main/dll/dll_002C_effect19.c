@@ -16,6 +16,7 @@
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
@@ -166,20 +167,7 @@ void Effect19_initialise(void)
 {
 }
 
-typedef struct EffectObjectDescriptor {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback func03;
-    ObjectDescriptorCallback func04;
-    ObjectDescriptorCallback func05;
-} EffectObjectDescriptor;
-
-EffectObjectDescriptor lbl_803110D8 = {
+ObjectDescriptor6 lbl_803110D8 = {
     0,
     0,
     0,

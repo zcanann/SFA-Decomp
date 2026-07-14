@@ -3,6 +3,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/frame_timing.h"
 #include "main/objprint_render_api.h"
+#include "main/objprintgxcolor.h"
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
@@ -1841,11 +1842,6 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
     return src[0];
 }
 #pragma opt_loop_invariants reset
-
-typedef struct ObjPrintGXColor
-{
-    u8 r, g, b, a;
-} ObjPrintGXColor;
 
 typedef struct IndTexMtx23
 {

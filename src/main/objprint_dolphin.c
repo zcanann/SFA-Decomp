@@ -20,6 +20,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
+#include "main/objprintgxcolor.h"
 #include "main/table_file.h"
 #include "main/fileio.h"
 #include "main/mm.h"
@@ -111,11 +112,6 @@ void objRenderChild(int* child, int* parent, u8 isShadow);
 #define GX_CULL_BACK      2
 #define GX_TEVREG2        3
 #define GX_KCOLOR0        0
-
-typedef struct ObjPrintGXColor
-{
-    u8 r, g, b, a;
-} ObjPrintGXColor;
 
 /*
  * One render op ("shader") record from the model file's renderOps array,

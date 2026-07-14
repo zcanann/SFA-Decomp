@@ -1,17 +1,7 @@
-#include "ghidra_import.h"
+#include "main/audio/inp_midi.h"
 #include "main/audio/mcmd.h"
 
 #pragma exceptions on
-
-typedef struct InpMidiState
-{
-    u8 pad0[0xC0];
-    u8 midiCtrl[8][16][134]; /* 0x00C0 */
-    u8 fxCtrl[16][134];      /* 0x43C0 */
-    u8 pad1[0x1920];         /* 0x4C20 */
-    u32 globalDirty[8][16];  /* 0x6540 */
-    u8 pbRange[8][16];       /* 0x6740 */
-} InpMidiState;
 
 /* Standard MIDI controller (CC) numbers handled by the RPN setter. */
 #define MIDI_CC_DATA_ENTRY_MSB 6

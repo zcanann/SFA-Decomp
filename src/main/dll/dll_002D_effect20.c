@@ -17,6 +17,7 @@
  * stubs.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/object_descriptor.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll_000A_expgfx.h"
@@ -158,20 +159,7 @@ extern f32 lbl_803E04C8;
 
 extern int randFn_80080100(int n);
 
-typedef struct EffectObjectDescriptor {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback func03;
-    ObjectDescriptorCallback func04;
-    ObjectDescriptorCallback func05;
-} EffectObjectDescriptor;
-
-EffectObjectDescriptor lbl_80311100 = {
+ObjectDescriptor6 lbl_80311100 = {
     0,
     0,
     0,

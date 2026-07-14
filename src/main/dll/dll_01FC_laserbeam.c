@@ -22,6 +22,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/laserbeamstate_struct.h"
 #include "main/dll/dll200state_struct.h"
+#include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/obj_placement.h"
@@ -113,26 +114,6 @@ STATIC_ASSERT(offsetof(LaserBeamPlacement, firePeriod) == 0x1c);
 STATIC_ASSERT(offsetof(LaserBeamPlacement, disableGameBit) == 0x1e);
 
 STATIC_ASSERT(offsetof(LaserBeamState, beamKind) == 0x4e);
-
-/* lightsource_getExtraSize == 0x1c. */
-typedef struct LightSourceState
-{
-    void* light;
-    f32 fxTimer;
-    u8 pad08[4];
-    f32 sparkTimer;
-    int gameBit; /* 0x10: -1 none */
-    u8 mode;     /* 0x14: 1 = hit-toggleable */
-    u8 fxType;
-    u8 fxArg;
-    u8 lit; /* 0x17 */
-    u8 litPrev;
-    u8 sparks;    /* 0x19 */
-    u8 loopFlags; /* 0x1a: LightSourceFlagByte */
-    u8 pad1B;
-} LightSourceState;
-
-STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 
 STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 

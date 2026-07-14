@@ -7,6 +7,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
+#include "main/warpvec.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/texture.h"
 #include "main/game_object.h"
@@ -1895,14 +1896,6 @@ extern f32 gMapBlockWorldSize;
 #define MAP_BLOCK_LAYER_COUNT 5
 extern u8* gMapBlockLayerTables[MAP_BLOCK_LAYER_COUNT];
 extern f32 lbl_803DEBB8;
-
-typedef struct WarpVec
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 pad;
-} WarpVec;
 
 extern WarpVec lbl_80386648[];
 

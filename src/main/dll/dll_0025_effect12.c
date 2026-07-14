@@ -14,6 +14,7 @@
  * to the spawn position.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -43,20 +44,7 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-typedef struct EffectObjectDescriptor {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback func03;
-    ObjectDescriptorCallback func04;
-    ObjectDescriptorCallback func05;
-} EffectObjectDescriptor;
-
-EffectObjectDescriptor lbl_80310D80 = {
+ObjectDescriptor6 lbl_80310D80 = {
     0,
     0,
     0,

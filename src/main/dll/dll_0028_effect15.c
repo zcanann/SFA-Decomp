@@ -12,6 +12,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/waterfxcfg_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
@@ -51,20 +52,7 @@ WaterfxCfg gEffect15DefaultSpawnParams;
  * colorWord0..2 are the u16 spelling of the consumer's color pairs;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores.
  */
-typedef struct EffectObjectDescriptor {
-    u32 reserved0;
-    u32 reserved1;
-    u32 reserved2;
-    u32 slotCountAndFlags;
-    ObjectDescriptorCallback initialise;
-    ObjectDescriptorCallback release;
-    ObjectDescriptorCallback slot02;
-    ObjectDescriptorCallback func03;
-    ObjectDescriptorCallback func04;
-    ObjectDescriptorCallback func05;
-} EffectObjectDescriptor;
-
-EffectObjectDescriptor lbl_80310F38 = {
+ObjectDescriptor6 lbl_80310F38 = {
     0,
     0,
     0,

@@ -15,6 +15,14 @@
 #define TRICKY_STATE_FLAG_CHILDREN_CLEANUP 0x1000  /* child objects torn down this cycle */
 #define TRICKY_STATE_FLAG_MOVE_ADVANCING 0x8000000 /* ObjAnim_AdvanceCurrentMove reported the current move still advancing */
 
+typedef struct TrickyPackedSlots
+{
+    u8 a : 2;
+    u8 b : 2;
+    u8 c : 2;
+    u8 d : 2;
+} TrickyPackedSlots;
+
 /*
  * TrickyState - the obj+0xB8 extra record for the Tricky sidekick handlers
  * in grenade.c (trickyFn_* / trickyFoodFn_* / trickyFlameFn_* take it as

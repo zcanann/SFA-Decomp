@@ -1237,14 +1237,6 @@ int trickyFn_801434b0(GameObject* obj, int* trickyState)
     return 1;
 }
 
-typedef struct TrickyPackedSlots
-{
-    u8 a : 2;
-    u8 b : 2;
-    u8 c : 2;
-    u8 d : 2;
-} TrickyPackedSlots;
-
 #pragma opt_propagation reset
 int trickyFoodFn_801437d4(GameObject* obj, int* state)
 {

@@ -34,6 +34,7 @@
 #include "main/object_transform.h"
 #include "main/mm.h"
 #include "main/voxmaps.h"
+#include "main/warpvec.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/savegame.h"
 #include "main/track_dolphin.h"
@@ -61,13 +62,6 @@ typedef struct MapInfoRecord
     u8 unk1d;
     s16 unk1e; /* +0x1e */
 } MapInfoRecord;
-typedef struct WarpVec
-{
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 pad;
-} WarpVec;
 extern u8 lbl_80386648[];
 extern const f32 gMapBlockWorldSize;
 

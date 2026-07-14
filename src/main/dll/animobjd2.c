@@ -99,14 +99,6 @@ extern f32 lbl_803E24E8;
 
 void* trickyFindCirclingTarget(GameObject* obj, void* state);
 
-typedef struct TrickyPackedSlots
-{
-    u8 a : 2;
-    u8 b : 2;
-    u8 c : 2;
-    u8 d : 2;
-} TrickyPackedSlots;
-
 typedef struct
 {
     u8 a : 1;

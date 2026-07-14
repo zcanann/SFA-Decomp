@@ -13,6 +13,16 @@
 #define INP_MIDI_AUX_BY_KEY_OFFSET 0x6540
 #define INP_MIDI_CHANNEL_DEFAULTS_BY_KEY_OFFSET 0x6740
 
+typedef struct InpMidiState
+{
+    u8 pad0[0xC0];
+    u8 midiCtrl[8][16][134]; /* 0x00C0 */
+    u8 fxCtrl[16][134];      /* 0x43C0 */
+    u8 pad1[0x1920];         /* 0x4C20 */
+    u32 globalDirty[8][16];  /* 0x6540 */
+    u8 pbRange[8][16];       /* 0x6740 */
+} InpMidiState;
+
 void inpSetMidiCtrl(u8 controller, u8 slot, u8 key, u8 value);
 void inpSetMidiCtrl14(u8 controller, u8 slot, u8 key, u16 data);
 u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
