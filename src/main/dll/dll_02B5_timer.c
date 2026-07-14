@@ -24,6 +24,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 f32 lbl_803DC418 = 7.0f;
 f32 lbl_803DC41C = 5.0f;
@@ -251,3 +252,20 @@ void timer_update(GameObject* obj)
         }
     }
 }
+
+ObjectDescriptor gTimerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)timer_init,
+    (ObjectDescriptorCallback)timer_update,
+    0,
+    (ObjectDescriptorCallback)timer_render,
+    (ObjectDescriptorCallback)timer_free,
+    0,
+    (ObjectDescriptorExtraSizeCallback)timer_getExtraSize,
+};

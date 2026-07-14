@@ -8,6 +8,7 @@
 #include "main/dll/dll_02B4_cntcounter.h"
 #include "main/gamebits.h"
 #include "main/model_engine.h"
+#include "main/object_descriptor.h"
 
 int CntCounter_getExtraSize(void)
 {
@@ -89,3 +90,20 @@ void CntCounter_release(void)
 void CntCounter_initialise(void)
 {
 }
+
+ObjectDescriptor gCNTcounterObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CntCounter_initialise,
+    (ObjectDescriptorCallback)CntCounter_release,
+    0,
+    (ObjectDescriptorCallback)CntCounter_init,
+    (ObjectDescriptorCallback)CntCounter_update,
+    (ObjectDescriptorCallback)CntCounter_hitDetect,
+    (ObjectDescriptorCallback)CntCounter_render,
+    (ObjectDescriptorCallback)CntCounter_free,
+    (ObjectDescriptorCallback)CntCounter_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)CntCounter_getExtraSize,
+};

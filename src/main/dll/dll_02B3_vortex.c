@@ -9,6 +9,7 @@
 #include "main/dll/dll_02B3_vortex.h"
 #include "main/gameloop_api.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 s16 gVortexAngleSpeed83D[4] = {8, 0x10, 0x20, 0};
 s16 gVortexAngleSpeedDefault[4] = {0x10, 0x20, 0x40, 0};
@@ -355,4 +356,21 @@ f32 gVortexScaleParams[4][3] = {
     {0.7f, 0.8f, 0.9f},
     {1.0f, 1.2f, 1.4f},
     {0.6f, 0.4f, 0.2f},
+};
+
+ObjectDescriptor gVortexObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)Vortex_initialise,
+    (ObjectDescriptorCallback)Vortex_release,
+    0,
+    (ObjectDescriptorCallback)Vortex_init,
+    (ObjectDescriptorCallback)Vortex_update,
+    (ObjectDescriptorCallback)Vortex_hitDetect,
+    (ObjectDescriptorCallback)Vortex_render,
+    (ObjectDescriptorCallback)Vortex_free,
+    (ObjectDescriptorCallback)Vortex_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)Vortex_getExtraSize,
 };

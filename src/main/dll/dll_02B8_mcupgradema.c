@@ -18,6 +18,7 @@
 #include "main/dll/dll_02B9_mcstaffeffe.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/player_objects.h"
+#include "main/object_descriptor.h"
 /* mcupgrade_state.h: only McUpgradeMaSetup + MCUPGRADE_OBJ_FLAG_COLLECTED used here. */
 #include "main/dll/mcupgrade_state.h"
 #include "main/game_object.h"
@@ -88,3 +89,20 @@ int mcstaffeffe_SeqFn(McStaffEffectObject* staffEffect, int unused, ObjAnimUpdat
     }
     return 0;
 }
+
+ObjectDescriptor gMCUpgradeMaObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)mcupgradema_init,
+    (ObjectDescriptorCallback)mcupgradema_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};

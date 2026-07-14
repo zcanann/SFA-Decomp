@@ -3410,38 +3410,46 @@ main/dll/dll_02B2_dustmotesou.c:
 
 main/dll/dll_02B3_vortex.c:
 	.text       start:0x80237808 end:0x802383E0
-	.data       start:0x8032BE20 end:0x8032BE50
+	.data       start:0x8032BE20 end:0x8032BE88
 	.sdata      start:0x803DC3E8 end:0x803DC418
 
 main/dll/dll_02B4_cntcounter.c:
 	.text       start:0x802383E0 end:0x8023852C
+	.data       start:0x8032BE88 end:0x8032BEC0
 
 main/dll/dll_02B5_timer.c:
 	.text       start:0x8023852C end:0x80238AB0
 	.sdata      start:0x803DC418 end:0x803DC420
+	.data       start:0x8032BEC0 end:0x8032BEF8
 
 main/dll/dll_02B6_cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4
 	.sdata      start:0x803DC428 end:0x803DC430
 	.sdata2     start:0x803E7428 end:0x803E7440
+	.data       start:0x8032BEF8 end:0x8032BF40
 
 main/dll/dll_02B7_mcupgrade.c:
 	.text       start:0x80238FA4 end:0x80239114
+	.data       start:0x8032BF40 end:0x8032BF78
 
 main/dll/dll_02B8_mcupgradema.c:
 	.text       start:0x80239114 end:0x802392B8
+	.data       start:0x8032BF78 end:0x8032BFB0
 
 main/dll/dll_02B9_mcstaffeffe.c:
 	.text       start:0x802392B8 end:0x8023938C
+	.data       start:0x8032BFB0 end:0x8032BFE8
 
 main/dll/dll_02BA_mclightning.c:
 	.text       start:0x8023938C end:0x80239858
 	.sdata2     start:0x803E7440 end:0x803E7448
 	.sdata2     start:0x803E7448 end:0x803E7450
+	.data       start:0x8032BFE8 end:0x8032C020
 
 main/dll/dll_02BB_gflevelcon.c:
 	.text       start:0x80239858 end:0x80239DD8
 	.sdata2     start:0x803E7450 end:0x803E7490
+	.data       start:0x8032C020 end:0x8032C088
 
 main/dll/dll_02BC_andross.c:
 	.text       start:0x80239DD8 end:0x8023F05C

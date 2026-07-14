@@ -25,6 +25,7 @@
 #include "main/object_api.h"
 #include "main/obj_trigger.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 void mcupgrade_update(GameObject* obj)
 {
@@ -73,3 +74,20 @@ int mcupgradema_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     }
     return 0;
 }
+
+ObjectDescriptor gMCUpgradeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)mcupgrade_init,
+    (ObjectDescriptorCallback)mcupgrade_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};

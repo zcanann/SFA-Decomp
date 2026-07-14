@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/objfx.h"
 #include "main/dll/mcstaffeffe_state.h"
+#include "main/object_descriptor.h"
 
 void mcstaffeffe_render(McStaffEffectObject* staffEffect)
 {
@@ -49,3 +50,20 @@ void mcstaffeffe_init(McStaffEffectObject* staffEffect, McStaffEffectSetup* plac
         break;
     }
 }
+
+ObjectDescriptor gMCStaffEffeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)mcstaffeffe_init,
+    (ObjectDescriptorCallback)mcstaffeffe_update,
+    0,
+    (ObjectDescriptorCallback)mcstaffeffe_render,
+    0,
+    0,
+    0,
+};

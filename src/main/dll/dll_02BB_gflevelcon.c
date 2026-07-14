@@ -34,6 +34,7 @@
 #include "main/gametext_show_api.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
@@ -73,6 +74,33 @@
 
 #pragma opt_strength_reduction on
 #pragma opt_loop_invariants off
+int gf_levelcon_getExtraSize(void);
+int gf_levelcon_getObjectTypeId(void);
+void gf_levelcon_hitDetect(void);
+void gf_levelcon_initialise(void);
+void gf_levelcon_release(void);
+void gf_levelcon_free(void);
+void gf_levelcon_update(GameObject* obj);
+void gf_levelcon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void gf_levelcon_init(GameObject* obj);
+
+ObjectDescriptor gGF_LevelConObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)gf_levelcon_initialise,
+    (ObjectDescriptorCallback)gf_levelcon_release,
+    0,
+    (ObjectDescriptorCallback)gf_levelcon_init,
+    (ObjectDescriptorCallback)gf_levelcon_update,
+    (ObjectDescriptorCallback)gf_levelcon_hitDetect,
+    (ObjectDescriptorCallback)gf_levelcon_render,
+    (ObjectDescriptorCallback)gf_levelcon_free,
+    (ObjectDescriptorCallback)gf_levelcon_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)gf_levelcon_getExtraSize,
+};
+
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate)
 {
     GfLevelconHandleScriptEventsState* state = obj->extra;

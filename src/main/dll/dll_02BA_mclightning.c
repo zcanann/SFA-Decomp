@@ -8,6 +8,7 @@
 #include "main/dll/dll_02BA_mclightning.h"
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
+#include "main/object_descriptor.h"
 
 #define MCLIGHTNING_OBJGROUP 0x48
 
@@ -160,3 +161,20 @@ void mclightning_init(GameObject* obj, McLightningSetup* setup)
     state->hitEffectScale = effectScale;
     state->burstEffectChance = effectScale;
 }
+
+ObjectDescriptor gMCLightningObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)mclightning_init,
+    (ObjectDescriptorCallback)mclightning_update,
+    0,
+    (ObjectDescriptorCallback)mclightning_render,
+    (ObjectDescriptorCallback)mclightning_free,
+    0,
+    (ObjectDescriptorExtraSizeCallback)mclightning_getExtraSize,
+};

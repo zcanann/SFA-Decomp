@@ -28,6 +28,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 int lbl_803DC428 = 5;
 u8 lbl_803DC42C[4] = {2, 1, 0, 0};
@@ -203,3 +204,29 @@ int mcupgrade_SeqFn(GameObject* obj, int unused, CntHitObjectAnimEvent* event)
     }
     return 0;
 }
+
+extern int lbl_803DC420[];
+
+int* lbl_8032BEF8[3] = {
+    lbl_803DC420,
+    &lbl_803DC428,
+    lbl_803DC420,
+};
+
+ObjectDescriptor gCNThitObjecObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cnthitobjec_initialise,
+    (ObjectDescriptorCallback)cnthitobjec_release,
+    0,
+    (ObjectDescriptorCallback)cnthitobjec_init,
+    (ObjectDescriptorCallback)cnthitobjec_update,
+    (ObjectDescriptorCallback)cnthitobjec_hitDetect,
+    (ObjectDescriptorCallback)cnthitobjec_render,
+    (ObjectDescriptorCallback)cnthitobjec_free,
+    (ObjectDescriptorCallback)cnthitobjec_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)cnthitobjec_getExtraSize,
+};
+
