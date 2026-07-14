@@ -7,6 +7,7 @@
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
 #include "track/intersect_render_setup_api.h"
+#include "track/intersect_texture_api.h"
 #include "ghidra_import.h"
 
 void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
@@ -31,7 +32,6 @@ void screenImageDraw(u8 alpha);
 void doSpiritVisionFilter(void);
 void doColorFilter(u8* mod);
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod);
-int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3);
 void quakeSpellTextureFn_8007366c(u8 alpha);
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB);
 int modelCb_80073d04(u8* obj, int* objB);

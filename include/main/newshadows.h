@@ -8,7 +8,6 @@ void newshadows_captureProjectedShadow(u16 *object);
 void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount);
 void newshadows_renderQueuedShadowCasters(void);
 void newshadows_queueShadowCaster(int object);
-void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rowsOut);
 void newshadows_getShadowTextureTable16(int *tableOut,int *countOut);
 void FUN_8006af44(u32 *param_1);
 void FUN_8006af50(u32 *param_1);

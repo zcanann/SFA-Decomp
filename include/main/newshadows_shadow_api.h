@@ -3,6 +3,7 @@
 
 #include "main/game_object.h"
 
+void newshadows_getShadowTextureTable4x8(int* tableOut, int* columnsOut, int* rowsOut);
 void objShadowFn_8006c5f0(GameObject* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
 
 /* Preserve the raw object-address view used by partially typed render code. */

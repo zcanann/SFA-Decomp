@@ -40,6 +40,7 @@
 #include "track/intersect_fog_api.h"
 #include "track/intersect_depth_read_api.h"
 #include "track/intersect_hud_api.h"
+#include "track/intersect_texture_api.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -191,7 +192,6 @@ extern u32 FUN_80017608();
 extern u32 FUN_80017620();
 extern void* FUN_80017624();
 
-extern void newshadows_getShadowTextureTable4x8();
 extern void gxSetPeControl_ZCompLoc_(u8 zcomploc);
 extern void gxSetZMode_(u8 enable, int func, u8 update);
 extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
@@ -232,7 +232,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     volatile u32 savedEnvColor;
     int shadowTable;
     int shadowStride;
-    u32 shadowParam;
+    int shadowParam;
     u32 tevColor;
     u32 ambColor;
     u32 envColor;
@@ -1345,7 +1345,6 @@ typedef union
 } ObjWGPipe;
 
 extern ObjWGPipe GXWGFifo : (0xCC008000);
-extern void gxTextureFn_80072dfc(u8* obj, int* p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
 
 #pragma opt_propagation on
@@ -1373,7 +1372,7 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     cm[11] = lbl_803DEA04;
     PSMTXConcat(cm, sm, cm);
     GXLoadTexMtxImm(cm, 0x1e, 0);
-    gxTextureFn_80072dfc(obj, mdl, 0);
+    gxTextureFn_80072dfcIntModelLegacy(obj, mdl, 0);
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_NRM, GX_DIRECT);
@@ -1446,7 +1445,6 @@ typedef struct
     u8 r, g, b, a;
 } ObjGXColor;
 
-extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
