@@ -562,3 +562,14 @@ slot36 and func1C base/scanBase - the last register lines before 100%.
 The nadj-raise route via fn-top init costs the addi's preheader position (source-slot
 emission) without flipping the pop - the round-anomaly threshold (observed at FPR nadj 268)
 is far above scanBase's reachable range. func1C's swap is confirmed simulation-territory.
+
+## Pop model corrected: push order = DEGREE-DROP order across sweeps
+base(48)/scanBase(47) both park-class; they push when their degree relaxes below k as
+volatile neighbors leave. Ours: both drop in the same sweep -> ascending-idx push (47 then
+48) -> base pops first (r24). Target: base pushed in an EARLIER sweep than scanBase =>
+scanBase's degree stayed >= k one sweep longer => scanBase has more parked-class neighbors
+there (composition, not count - nadj 73 vs 90 is not the ordering key). The lever: one
+additional parked-class edge on scanBase (real-computation inline helper on its init, or
+an overlapping parked web) delays its push one sweep and flips the pair. This unifies with
+the walkgroup pl-chain park finding - both are single-edge degree-evolution adjustments,
+and the simulation search space is exactly these compositions.
