@@ -5749,7 +5749,6 @@ int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
 
-    extern void* lbl_803DD040;
     int need_format;
     int res;
     u64 serial;
@@ -5878,8 +5877,6 @@ int cardDeleteFn_8007d99c(void)
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
-    extern void* lbl_803DD040;
-    extern const char* sMemoryCardFileName;
     int res;
     int ok;
 
@@ -6001,7 +5998,6 @@ void showMemCardError(u8 err)
 {
     extern f32 lbl_803DEF90, lbl_803DEF94;
     extern u8 lbl_803DB424;
-    extern int lbl_803DB708;
     extern void checkReset(void);
     extern f32 fn_80293AC4(int v);
 
@@ -6157,7 +6153,6 @@ int memCardFn_8007dd04(u8 retry)
     extern int saveGame(int);
     extern void CARDClose(void*);
     extern u8 lbl_80396900[];
-    extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
     int ret;
 
@@ -6376,7 +6371,6 @@ void cardShowLoadingMsg(u8 kind)
     extern f32 lbl_803DEF9C;
 
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
-    extern int lbl_803DB708;
     int* buttons;
     int saved;
     int frame;
@@ -6436,7 +6430,6 @@ void cardShowLoadingMsg(u8 kind)
  */
 int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
 {
-    extern char* lbl_803DD044;
     extern int saveGame_doWrite(int);
     int ret;
     memcpy(lbl_803DD044 + slot * 0x6EC + 0xA50, src1, 0x6EC);
@@ -6456,7 +6449,6 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
  */
 int saveCb_8007e748(int saveId, int size, void* dst)
 {
-    extern char* lbl_803DD044;
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
     return 0;
 }

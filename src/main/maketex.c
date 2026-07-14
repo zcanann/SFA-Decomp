@@ -94,7 +94,6 @@ typedef struct ObjSeqTurnState
 #define MAKETEX_CAMMODE_NPCSPEAK 0x4d /* cameramode DLL dll_004D_cameramodenpcspeak */
 #define MAKETEX_CAMMODE_DEFAULT  0x42 /* default gameplay cameramode DLL */
 
-extern int lbl_803DD044;
 extern u8 curSeqNo;
 extern GameObject* focusedNpc;
 extern s16 seqGlobal2;
@@ -128,12 +127,10 @@ extern void* lbl_803DD0B8;
 extern int lbl_803DB720;
 extern int lbl_803DD064;
 extern int lbl_80396900[];
-extern char* sMemoryCardFileName;
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
 extern int gSaveCardImageBuffer;
 extern char sMemoryCardFileNameString[];
-extern void* lbl_803DD040;
 extern u64 lbl_803DD048;
 extern u8 lbl_803DD059;
 extern u8 lbl_803DD05A;
@@ -946,7 +943,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     void* m;
 
     m = mmAlloc(0x2000, -1, 0);
-    lbl_803DD044 = (int)m;
+    lbl_803DD044 = (char*)m;
     if (m == NULL)
     {
         lbl_803DB700 = 8;
