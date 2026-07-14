@@ -4209,6 +4209,7 @@ main/audio/inp_ctrl.c:
 	extabindex  start:0x80006428 end:0x80006488
 	.text       start:0x802827C8 end:0x80282FE0
 	.data       start:0x8032FFE0 end:0x80332220
+	.bss        start:0x803D3CA0 end:0x803D3EA0
 
 main/audio/hw_init.c:
 	extab       start:0x80005B50 end:0x80005B70
@@ -4266,6 +4267,7 @@ main/audio/aram_queue.c:
 	extab       start:0x80005BF0 end:0x80005C00
 	extabindex  start:0x80006578 end:0x80006590
 	.text       start:0x80283FA0 end:0x80284224
+	.bss        start:0x803D3F60 end:0x803D41E4
 
 main/audio/aram_init.c:
 	extab       start:0x80005C00 end:0x80005C10

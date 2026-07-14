@@ -3,7 +3,7 @@
 
 #pragma exceptions on
 
-extern u8 lbl_803D3F60[];
+u8 lbl_803D3F60[0x284];
 extern u8 lbl_803D41E4[];
 
 /*
