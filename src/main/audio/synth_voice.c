@@ -10,6 +10,7 @@
 #include "main/audio/synth_queue.h"
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_voice_params.h"
+#include "main/audio/hw_voice_start.h"
 
 #pragma exceptions on
 
@@ -225,7 +226,6 @@ extern u16 voiceScaleSampleRate(u32 rate);
 
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 
-extern void hwStart(u32 voice, u8 studio);
 extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);
 extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);

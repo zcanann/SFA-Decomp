@@ -4,6 +4,7 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/voice_manage.h"
+#include "main/audio/hw_voice_start.h"
 #include "dolphin/os/OSCache.h"
 
 #pragma exceptions on
@@ -36,7 +37,6 @@ extern void hwInitSamplePlayback(u32 voice, u32 keyInfo, SynthSampleInfo* sample
                                  u32 d);
 extern void hwSetPitch(u32 voice, s32 pitch);
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
-extern void hwStart(u32 voice, u8 studio);
 extern void hwSetStreamLoopPS(u32 voice, u32 ps);
 
 void synthUpdateJobTable(void)
