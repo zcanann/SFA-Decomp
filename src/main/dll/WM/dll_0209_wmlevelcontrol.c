@@ -122,12 +122,12 @@ __declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
 __declspec(section ".rodata") f32 gWmLevelControlSkyVecTable[12] = {
     -1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f}; /* sky light/color/fog vector table */
-extern f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
-extern f32 gWmLevelControlBlendFactor;            /* current blend factor */
-extern u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byte */
-extern u8 gWmLevelControlBlendedFogColor;         /* blended fog-color out-triplet */
-extern u8 gWmLevelControlBlendedSkyColor;         /* blended sky-color out-triplet */
-extern u8 gWmLevelControlBlendedLightColor;       /* blended light-color out-triplet */
+u8 gWmLevelControlBlendedLightColor[4];    /* blended light-color out-triplet */
+u8 gWmLevelControlBlendedSkyColor[4];      /* blended sky-color out-triplet */
+u8 gWmLevelControlBlendedFogColor[4];      /* blended fog-color out-triplet */
+u8 gWmLevelControlBlendedLightIntensity;   /* blended light-intensity byte */
+f32 gWmLevelControlBlendFactor;            /* current blend factor */
+f32 gWmLevelControlBlendHold;              /* restore-blend hold flag */
 extern void fn_80089510(int flags, int red, int green, int blue);
 extern void fn_80089578(int flags, int red, int green, int blue);
 
@@ -194,11 +194,11 @@ void fn_801F3F18(GameObject* obj)
        with before the volatile reads. */
     fromColor = gWmLevelControlLightColorFrom;
     toColor = gWmLevelControlLightColorTo;
-    (&gWmLevelControlBlendedLightColor)[0] =
+    gWmLevelControlBlendedLightColor[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedLightColor)[1] =
+    gWmLevelControlBlendedLightColor[1] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedLightColor)[2] =
+    gWmLevelControlBlendedLightColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
     skyFn_800895e0Legacy(1, *(volatile u8*)&gWmLevelControlBlendedLightColor,
                    ((volatile u8*)&gWmLevelControlBlendedLightColor)[1],
@@ -206,22 +206,22 @@ void fn_801F3F18(GameObject* obj)
 
     fromColor = gWmLevelControlSkyColorFrom;
     toColor = gWmLevelControlSkyColorTo;
-    (&gWmLevelControlBlendedSkyColor)[0] =
+    gWmLevelControlBlendedSkyColor[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedSkyColor)[1] =
+    gWmLevelControlBlendedSkyColor[1] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedSkyColor)[2] =
+    gWmLevelControlBlendedSkyColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
     fn_80089510(1, *(volatile u8*)&gWmLevelControlBlendedSkyColor, ((volatile u8*)&gWmLevelControlBlendedSkyColor)[1],
                 ((volatile u8*)&gWmLevelControlBlendedSkyColor)[2]);
 
     fromColor = gWmLevelControlFogColorFrom;
     toColor = gWmLevelControlFogColorTo;
-    (&gWmLevelControlBlendedFogColor)[0] =
+    gWmLevelControlBlendedFogColor[0] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[0] - fromColor[0]) + (f32)(s32)fromColor[0];
-    (&gWmLevelControlBlendedFogColor)[1] =
+    gWmLevelControlBlendedFogColor[1] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[1] - fromColor[1]) + (f32)(s32)fromColor[1];
-    (&gWmLevelControlBlendedFogColor)[2] =
+    gWmLevelControlBlendedFogColor[2] =
         gWmLevelControlBlendFactor * (f32)((s32)toColor[2] - fromColor[2]) + (f32)(s32)fromColor[2];
     fn_80089578(1, *(volatile u8*)&gWmLevelControlBlendedFogColor, ((volatile u8*)&gWmLevelControlBlendedFogColor)[1],
                 ((volatile u8*)&gWmLevelControlBlendedFogColor)[2]);

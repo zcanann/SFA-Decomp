@@ -2910,6 +2910,7 @@ main/dll/WM/dll_0209_wmlevelcontrol.c:
 	.rodata     start:0x802C24B8 end:0x802C24E8
 	.data       start:0x80328B78 end:0x80328C08
 	.sdata      start:0x803DC110 end:0x803DC128
+	.sbss       start:0x803DDC88 end:0x803DDCA0
 	.sdata2     start:0x803E5E70 end:0x803E5E88
 	.sdata2     start:0x803E5E88 end:0x803E5E90
 
