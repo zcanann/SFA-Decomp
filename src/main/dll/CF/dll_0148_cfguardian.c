@@ -20,6 +20,7 @@
 #include "main/pad_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/dll_0015_curves.h"
@@ -158,7 +159,6 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 __declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
 __declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
@@ -1019,7 +1019,7 @@ void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* sub = ((GameObject*)obj)->extra;
     if ((s32)visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4130);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4130);
         dll_2E_func06((GameObject*)obj, (MoveLibState*)sub, 0);
     }
 }
