@@ -34,6 +34,7 @@
 #include "main/objprint_anim_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/dll/dll_00C9_enemy.h"
+#include "main/object_descriptor.h"
 
 /* Per-object extra state for the baby CloudRunner
  * (babycloudrunner_getExtraSize == 0x248). */
@@ -78,7 +79,6 @@ extern f32 lbl_803E4230;
 extern f32 lbl_803E4234;
 extern f32 lbl_803DBE4C;
 extern f32 lbl_803E4248;
-extern int gBabyCloudRunnerAirMeterValues[];
 extern f32 gBabyCloudRunnerTargetNearDist;
 extern f32 gBabyCloudRunnerPlayerFarDist;
 extern f32 lbl_803DBE40;
@@ -352,6 +352,29 @@ int fn_8019E3F4(int* obj)
 }
 #pragma opt_common_subs reset
 #pragma dont_inline reset
+
+int gBabyCloudRunnerAirMeterValues[4] = {0x1770, 0x2EE0, 0x2EE0, 0x3E80};
+
+void babycloudrunner_update(int* obj);
+
+ObjectDescriptor12 gBabyCloudRunnerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)babycloudrunner_initialise,
+    (ObjectDescriptorCallback)babycloudrunner_release,
+    0,
+    (ObjectDescriptorCallback)babycloudrunner_init,
+    (ObjectDescriptorCallback)babycloudrunner_update,
+    (ObjectDescriptorCallback)babycloudrunner_hitDetect,
+    (ObjectDescriptorCallback)babycloudrunner_render,
+    (ObjectDescriptorCallback)babycloudrunner_free,
+    (ObjectDescriptorCallback)babycloudrunner_getObjectTypeId,
+    babycloudrunner_getExtraSize,
+    (ObjectDescriptorCallback)babycloudrunner_setScale,
+    (ObjectDescriptorCallback)babycloudrunner_tryCapture,
+};
 
 /* Range-check the runner against the player and its trigger radii, chirp for
  * queued cues, then steer toward the player (or Tricky) per the current
@@ -698,4 +721,3 @@ void babycloudrunner_update(int* obj)
 }
 #pragma opt_common_subs reset
 
-int gBabyCloudRunnerAirMeterValues[4] = {0x1770, 0x2EE0, 0x2EE0, 0x3E80};
