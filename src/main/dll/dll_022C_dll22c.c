@@ -42,6 +42,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
+#include "main/vecmath_distance_api.h"
 #include "main/dll/dll_022C_dll22c.h"
 #include "main/object_render_legacy.h"
 
@@ -113,10 +114,6 @@ void dll_22C_hitDetect_nop(void)
 
 void dll_22C_update(int obj)
 {
-    /* Block-scope Vec declaration preserves the signed pointer shape this codegen depends on. */
-
-    extern f32 Vec_xzDistance(f32 * a, f32 * b);
-
     GameObject* object = (GameObject*)obj;
     ObjPlacement* placement = object->anim.placement;
     Dll22CState* blob = object->extra;
