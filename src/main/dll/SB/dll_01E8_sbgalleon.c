@@ -51,6 +51,7 @@
 #include "main/dll/DB/DBstealerworm.h"
 #include "main/dll/DB/sbgalleon_state.h"
 #include "main/gamebits.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/texture.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/frame_timing.h"
@@ -110,7 +111,6 @@ extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
 extern void fn_801DFA28(int obj);
 extern void DBprotection_updateShield(int obj);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern int gSbGalleonSkyTexA;
 extern int gSbGalleonSkyTexB;
 extern f32 lbl_803E580C;
@@ -548,7 +548,7 @@ void SB_Galleon_update(GameObject* obj)
             state->cameraState = SBGALLEON_CAM_DONE;
             break;
         }
-        SCGameBitLatch_Update(state->gameBitLatch, 1, -1, -1, 0xa71, 0xa4);
+        SCGameBitLatch_Update((SCGameBitLatchState*)state->gameBitLatch, 1, -1, -1, 0xa71, 0xa4);
     }
 }
 

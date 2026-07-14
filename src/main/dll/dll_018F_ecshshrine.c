@@ -37,6 +37,7 @@
  * introTextLatch (live-verified; it is NOT a torch signal).
  */
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/dll/objfx_api.h"
 #include "main/sky_api.h"
 #include "main/audio/audio_control_api.h"
@@ -157,8 +158,6 @@ extern void gpsh_shrine_release(void);
 extern void gpsh_shrine_initialise(void);
 
 extern int objIsCurModelNotZero(void* obj);
-extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
-extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
 extern int objGetAnimStateFlags(int* player, int flags);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 /*
@@ -506,9 +505,9 @@ void ecsh_shrine_update(s16* obj)
     while (ObjMsg_Pop(obj, (u32*)&msgA, (u32*)&msgB, (u32*)&msgC) != 0)
     {
     }
-    SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
-    SCGameBitLatch_UpdateInverted(sub + 0x34, 1, -1, -1, 0xcbb, 8);
-    SCGameBitLatch_Update(sub + 0x34, 0x10, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(sub + 0x34), 2, -1, -1, 0xb9d, 0xd);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(sub + 0x34), 1, -1, -1, 0xcbb, 8);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(sub + 0x34), 0x10, -1, -1, 0xcbb, 0xc4);
     if (((EcshShrineState*)sub)->cooldownTimer > (zero = *(f32*)&lbl_803E4FCC))
     {
         ((EcshShrineState*)sub)->cooldownTimer = ((EcshShrineState*)sub)->cooldownTimer - timeDelta;

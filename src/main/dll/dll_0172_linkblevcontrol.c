@@ -11,6 +11,7 @@
  * 0x385/0x384) and primes the ambient env fx by save-load status.
  */
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
@@ -89,7 +90,6 @@ __declspec(section ".sdata2") f32 lbl_803E47C8 = 2000.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E47CC = 0.0f;
 #pragma explicit_zero_data off
-extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 
 int linkb_levcontrol_getExtraSize(void)
@@ -130,9 +130,9 @@ void linkb_levcontrol_update(int* obj)
             }
         }
     }
-    SCGameBitLatch_Update(state, 1, -1, -1, 0x3a0, 0x35);
-    SCGameBitLatch_Update(state, 2, -1, -1, 0xb36, 0x96);
-    SCGameBitLatch_Update(state, 8, -1, -1, 0x3a1, state->music);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state, 1, -1, -1, 0x3a0, 0x35);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state, 2, -1, -1, 0xb36, 0x96);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state, 8, -1, -1, 0x3a1, state->music);
     if (state->flags & 4)
     {
         if (mainGetBit(0x1fd) == 0 && mainGetBit(0x256) == 0)

@@ -10,6 +10,7 @@
 #include "main/map_load.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/mapEventTypes.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
@@ -45,8 +46,6 @@ extern void fn_802960E8(void* playerObj, int p2);
 extern int dbstealerworm_stateHandlerB06();
 int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
 extern void fn_80204098(GameObject*);
-extern void SCGameBitLatch_Update(void*, int, int, int, int, int);
-extern void SCGameBitLatch_UpdateInverted(void*, int, int, int, int, int);
 
 void fn_80204098(GameObject* obj)
 {
@@ -260,9 +259,9 @@ void DFP_LevelControl_update(GameObject* obj)
     case 3:
         break;
     }
-    SCGameBitLatch_Update((void*)state->gameBitLatches, 2, -1, -1, 0xdce, 0x95);
-    SCGameBitLatch_UpdateInverted((void*)state->gameBitLatches, 4, -1, -1, 0xdce, 0x37);
-    SCGameBitLatch_UpdateInverted((void*)state->gameBitLatches, 1, -1, -1, 0xdce, 0xe4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->gameBitLatches, 2, -1, -1, 0xdce, 0x95);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)state->gameBitLatches, 4, -1, -1, 0xdce, 0x37);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)state->gameBitLatches, 1, -1, -1, 0xdce, 0xe4);
     mainSetBits(0xdcf, 0);
 }
 

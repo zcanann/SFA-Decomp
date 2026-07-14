@@ -18,6 +18,7 @@
 #include "main/render.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/obj_list.h"
 #include "main/obj_trigger.h"
 #include "main/mapEvent.h"
@@ -75,7 +76,6 @@ enum NwLevControlMode
 };
 
 extern u32 Music_Trigger();
-extern u32 SCGameBitLatch_Update();
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
@@ -143,10 +143,11 @@ void nw_levcontrol_update(int objArg)
             }
         }
     }
-    SCGameBitLatch_Update(&state->flags, 8, -1, -1, 0x3a0, 0x35);
-    SCGameBitLatch_Update(&state->flags, 0x10, -1, -1, 0x3a1, (int*)(int)state->dayNightMusic);
-    SCGameBitLatch_Update(&state->flags, 0x20, -1, -1, 0x393, 0x36);
-    SCGameBitLatch_Update(&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->flags, 8, -1, -1, 0x3a0, 0x35);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->flags, 0x10, -1, -1, 0x3a1,
+                          (int)state->dayNightMusic);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->flags, 0x20, -1, -1, 0x393, 0x36);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->flags, 0x40, -1, -1, 0xcbb, 0xc4);
     timerActive = 0;
     gameBit = mainGetBit(GAMEBIT_SnowHornArtifact19F);
     rescueBit = mainGetBit(GAMEBIT_SnowHornArtifact19D);
@@ -155,7 +156,8 @@ void nw_levcontrol_update(int objArg)
         timerActive = 1;
     }
     mainSetBits(0xf31, timerActive);
-    SCGameBitLatch_Update(&state->flags, 0x80, -1, -1, 0xf31, NWLEVCONTROL_MUSIC_TIMER_END);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&state->flags, 0x80, -1, -1, 0xf31,
+                          NWLEVCONTROL_MUSIC_TIMER_END);
     gameBit = mainGetBit(0x398);
     if ((gameBit != 0) &&
         (status = (*gMapEventInterface)->getObjGroupStatus((int)((GameObject*)obj)->anim.mapEventSlot, 0x1f),

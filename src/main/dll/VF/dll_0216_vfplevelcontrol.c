@@ -23,6 +23,7 @@
 #include "main/map_load.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/obj_group.h"
 #include "main/sky_api.h"
 #include "main/lightmap_api.h"
@@ -62,8 +63,6 @@ enum
 
 extern f32 lbl_803E6060;
 
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
-                                  int musicId);
 /* Advance the ordered spell-tablet puzzle. The four step bits must be
    set in array order; the next-expected bit advances the step, any
    later bit lighting early resets the whole puzzle. */
@@ -204,8 +203,8 @@ void VFP_LevelControl_update(GameObject* obj)
         break;
     }
 
-    SCGameBitLatch_Update(state->latch.raw, 1, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_A);
-    SCGameBitLatch_Update(state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->latch.raw, 1, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_A);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->latch.raw, 2, -1, -1, GAMEBIT_VFP_LATCH, VFP_MUSIC_B);
 }
 
 void VFP_LevelControl_init(GameObject* obj, VfpLevelControlSetup* setup)

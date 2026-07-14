@@ -22,6 +22,7 @@
 #include "main/render.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"

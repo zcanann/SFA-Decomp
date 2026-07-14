@@ -28,7 +28,8 @@
     ((void (*)(int, int, int, int, int, int))skyFn_800895e0)((flags), (red), (green), (blue), (m1), (m2))
 #define skyFn_80089710Legacy(flags, enabled, startComplete)                                                       \
     ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
-#include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
+#include "main/mapEventTypes.h"
 #include "main/obj_group.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"

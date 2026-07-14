@@ -16,6 +16,7 @@
 #include "main/map_load.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_api.h"
 #include "main/dll/SC/dll_01B6_sclevelcontrol.h"
 #include "main/mapEventTypes.h"
@@ -58,7 +59,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define SCLEVELCONTROL_ENVFX_D 0x246
 #define SCLEVELCONTROL_ENVFX_E 0x51
 
-extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern u16 gScLevelControlMusicStepSequence[4];
 
 /* .sdata2 constant pool */
@@ -523,8 +523,8 @@ void sc_levelcontrol_update(GameObject *obj)
             Music_Trigger(MUSICTRIG_fox_arwing, 1);
         }
     }
-    SCGameBitLatch_Update(state + 0x18, 1, -1, -1, 0xe1e, 0x36);
-    SCGameBitLatch_Update(state + 0x18, 2, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 0x18), 1, -1, -1, 0xe1e, 0x36);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 0x18), 2, -1, -1, 0xcbb, 0xc4);
     if ((((ScLevelControlState*)state)->flags1F & 2) != 0)
     {
         mainSetBits(0x60e, 1);

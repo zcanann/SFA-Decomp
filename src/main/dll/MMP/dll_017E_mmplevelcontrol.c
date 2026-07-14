@@ -12,6 +12,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
@@ -47,8 +48,6 @@ extern int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int setBit,
-                                  int textId);
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -198,8 +197,8 @@ void MMP_levelcontrol_update(GameObject* obj)
         (obj)->unkF8 = 1;
     }
 
-    SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
-    SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
 void MMP_levelcontrol_init(GameObject* obj)

@@ -20,6 +20,7 @@
 #include "main/gamebit_ids.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_api.h"
 #include "main/dll/DF/DFlantern.h"
 #include "main/objseq.h"
@@ -150,9 +151,6 @@ extern const f32 lbl_803E4E8C;
 
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
 extern void playerAddRemoveMagic(int obj, int amount);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
-                                          int value);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern int objGetAnimStateFlags(int obj, int flag);
 
 void fn_801C2914(int obj)
@@ -389,8 +387,8 @@ void DFSH_Shrine_update(int objArg)
         mainSetBits(GAMEBIT_ITEM_DeletedSpell1D7, 1);
         gDfShShrinePendingReward = 0;
     }
-    SCGameBitLatch_UpdateInverted(state->musicLatch, 1, -1, -1, 0xcbb, 8);
-    SCGameBitLatch_Update(state->musicLatch, 4, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)state->musicLatch, 1, -1, -1, 0xcbb, 8);
+    SCGameBitLatch_Update((SCGameBitLatchState*)state->musicLatch, 4, -1, -1, 0xcbb, 0xc4);
     if ((f32)(s32)state->transitionTimer > lbl_803E4E8C)
     {
         state->transitionTimer = (f32)(s32)state->transitionTimer - timeDelta;
@@ -577,4 +575,3 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     mainSetBits(GAMEBIT_MMP_EnteredKrazoaShrine, 1);
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
-

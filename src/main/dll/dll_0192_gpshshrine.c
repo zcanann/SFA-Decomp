@@ -10,6 +10,7 @@
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object.h"
 #include "main/obj_group.h"
 #include "main/frame_timing.h"
@@ -285,8 +286,6 @@ void fn_801C70F0(s16* obj)
 void gpsh_shrine_update(GameObject *obj)
 {
     extern int objGetAnimStateFlags(int obj, int flag);
-    extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
-    extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
     extern void fn_801C70F0(int obj);
     int count;
     int data = *(int*)&(obj)->extra;
@@ -356,9 +355,9 @@ void gpsh_shrine_update(GameObject *obj)
         }
         fn_801C70F0((int)obj);
         unlockLevel(mapGetDirIdx(0x22), 1, 0);
-        SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
-        SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
-        SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
+        SCGameBitLatch_Update((SCGameBitLatchState*)(data + 0x13), 2, -1, -1, 0xdd2, 0xb);
+        SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(data + 0x13), 1, -1, -1, 0xcbb, 8);
+        SCGameBitLatch_Update((SCGameBitLatchState*)(data + 0x13), 4, -1, -1, 0xcbb, 0xc4);
         if (((GpshShrineState*)data)->timer > (k = lbl_803E503C))
         {
             ((GpshShrineState*)data)->timer -= timeDelta;

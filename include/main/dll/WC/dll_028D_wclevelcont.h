@@ -2,7 +2,7 @@
 #define MAIN_DLL_WC_DLL_028D_WCLEVELCONT_H_
 
 #include "global.h"
-#include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 

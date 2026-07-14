@@ -17,6 +17,7 @@
 #include "main/dll/dll_0112_seqobject.h"
 #include "main/mapEvent.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
@@ -71,10 +72,6 @@ __declspec(section ".rodata") int lbl_802C22E8[4] = {0x443AB458, 0x44A3A000, 0xC
 extern f32 lbl_803E43EC;
 
 extern int playerIsDisguised(int obj);
-extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
-                                  int musicId);
-extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int clearIfClearBit, int latchBit,
-                                          int musicId);
 
 int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -242,30 +239,30 @@ void cflevelcontrol_update(GameObject* obj)
     }
     *(s8*)&state[0xd] = (s8)(*gCameraInterface)->getMode();
 
-    SCGameBitLatch_Update(state + 8, 4, -1, -1, 0x983, 0xb0);
-    SCGameBitLatch_Update(state + 8, 8, -1, -1, 0x983, 0x38);
-    SCGameBitLatch_UpdateInverted(state + 8, 0x100, -1, -1, 0x983, 0x16);
-    SCGameBitLatch_UpdateInverted(state + 8, 0x80, -1, -1, 0x983, 0x39);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 4, -1, -1, 0x983, 0xb0);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 8, -1, -1, 0x983, 0x38);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 8), 0x100, -1, -1, 0x983, 0x16);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 8), 0x80, -1, -1, 0x983, 0x39);
 
     if (mainGetBit(GAMEBIT_CFRelated0983) == 0)
     {
         if (mainGetBit(GAMEBIT_CFRelated0E23) == 0)
         {
-            SCGameBitLatch_UpdateInverted(state + 8, 0x200, -1, -1, 0x984, 0xad);
-            SCGameBitLatch_Update(state + 8, 0x40, -1, -1, 0x984, 0x16);
+            SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 8), 0x200, -1, -1, 0x984, 0xad);
+            SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 0x40, -1, -1, 0x984, 0x16);
         }
         if (mainGetBit(GAMEBIT_CFRelated0984) != 0)
         {
-            SCGameBitLatch_Update(state + 8, 0x20, -1, -1, 0xe23, 0x17);
-            SCGameBitLatch_UpdateInverted(state + 8, 0x400, -1, -1, 0xe23, 0x16);
+            SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 0x20, -1, -1, 0xe23, 0x17);
+            SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)(state + 8), 0x400, -1, -1, 0xe23, 0x16);
         }
     }
 
-    SCGameBitLatch_Update(state + 8, 1, 0x1a8, 0xc0, 0xdb8, 0xae);
-    SCGameBitLatch_Update(state + 8, 0x10, -1, -1, 0xe1d, 0x36);
-    SCGameBitLatch_Update(state + 8, 0x1000, -1, -1, 0xe1d, 0xf1);
-    SCGameBitLatch_Update(state + 8, 2, -1, -1, 0xb46, 0xaf);
-    SCGameBitLatch_Update(state + 8, 0x800, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 1, 0x1a8, 0xc0, 0xdb8, 0xae);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 0x10, -1, -1, 0xe1d, 0x36);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 0x1000, -1, -1, 0xe1d, 0xf1);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 2, -1, -1, 0xb46, 0xaf);
+    SCGameBitLatch_Update((SCGameBitLatchState*)(state + 8), 0x800, -1, -1, 0xcbb, 0xc4);
 }
 
 void cflevelcontrol_init(u8* obj, u8* params)

@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/mapEvent.h"
 #include "main/sky_interface.h"
@@ -66,7 +67,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define DIMLEVELCONTROL_MUSIC_DAY   0xc5
 #define DIMLEVELCONTROL_MUSIC_NIGHT 0xe2
 
-extern void SCGameBitLatch_Update(int* state, int mask, int a, int b, int bit, int value);
 extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;
 extern void gameBitFn_800ea2e0(u8 id);
@@ -237,14 +237,14 @@ void dim_levelcontrol_update(GameObject *obj)
             }
         }
     }
-    SCGameBitLatch_Update(&st->latch, 1, 0x1a7, 0x64b, 0xc1e, 0xa1);
-    SCGameBitLatch_Update(&st->latch, 2, 0x1a8, 0xc0, 0xc1f, 0xcf);
-    SCGameBitLatch_Update(&st->latch, 4, 0x1ba, 0x1b9, 0xc20, st->musicTrack);
-    SCGameBitLatch_Update(&st->latch, 8, -1, -1, 0xd8f, 0xdc);
-    SCGameBitLatch_Update(&st->latch, 0x10, 0x1a7, 0x64b, 0xc1e, 0xed);
-    SCGameBitLatch_Update(&st->latch, 0x20, 0x1a8, 0xc0, 0xc1f, 0x36);
-    SCGameBitLatch_Update(&st->latch, 0x40, 0x1ba, 0x1b9, 0xc20, 0x35);
-    SCGameBitLatch_Update(&st->latch, 0x100, -1, -1, 0x3e2, 0x2b);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 1, 0x1a7, 0x64b, 0xc1e, 0xa1);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 2, 0x1a8, 0xc0, 0xc1f, 0xcf);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 4, 0x1ba, 0x1b9, 0xc20, st->musicTrack);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 8, -1, -1, 0xd8f, 0xdc);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 0x10, 0x1a7, 0x64b, 0xc1e, 0xed);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 0x20, 0x1a8, 0xc0, 0xc1f, 0x36);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 0x40, 0x1ba, 0x1b9, 0xc20, 0x35);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&st->latch, 0x100, -1, -1, 0x3e2, 0x2b);
 }
 
 

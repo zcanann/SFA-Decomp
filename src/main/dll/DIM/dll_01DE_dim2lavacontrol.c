@@ -11,6 +11,7 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/dll/player_objects.h"
@@ -76,7 +77,6 @@ typedef enum Dim2lavacontrolPhase
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
 extern u8 lbl_803DBF28[8];
-extern void SCGameBitLatch_UpdateInverted(void* p, int mask, int a, int b, int e1, int e2);
 
 void dim2lavacontrol_setScale(GameObject *obj)
 {
@@ -114,7 +114,6 @@ void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 
 #pragma opt_common_subs off
 void dim2lavacontrol_update(int obj)
 {
-    extern void SCGameBitLatch_Update(void* p, int mask, int a, int b, int e1, int e2);
     int diff;
     int heldObj;
     if (((GameObject*)obj)->unkF4 != 0)
@@ -181,11 +180,12 @@ void dim2lavacontrol_update(int obj)
             Music_Trigger(MUSICTRIG_WLC_Chambers, 1);
         }
     }
-    SCGameBitLatch_Update((char*)obj + 8, 1, -1, -1, 0xd99, 0xde);
-    SCGameBitLatch_Update((char*)obj + 8, 2, -1, -1, 0xda5, *(int*)&((GameObject*)obj)->anim.localPosX);
-    SCGameBitLatch_Update((char*)obj + 8, 8, -1, -1, 0xf04, 0x96);
-    SCGameBitLatch_UpdateInverted((char*)obj + 8, 0x10, -1, -1, 0xf04, 0x2c);
-    SCGameBitLatch_Update((char*)obj + 8, 4, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((SCGameBitLatchState*)((char*)obj + 8), 1, -1, -1, 0xd99, 0xde);
+    SCGameBitLatch_Update((SCGameBitLatchState*)((char*)obj + 8), 2, -1, -1, 0xda5,
+                          *(int*)&((GameObject*)obj)->anim.localPosX);
+    SCGameBitLatch_Update((SCGameBitLatchState*)((char*)obj + 8), 8, -1, -1, 0xf04, 0x96);
+    SCGameBitLatch_UpdateInverted((SCGameBitLatchState*)((char*)obj + 8), 0x10, -1, -1, 0xf04, 0x2c);
+    SCGameBitLatch_Update((SCGameBitLatchState*)((char*)obj + 8), 4, -1, -1, 0xcbb, 0xc4);
 }
 #pragma opt_common_subs reset
 

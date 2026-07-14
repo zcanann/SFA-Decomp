@@ -21,6 +21,7 @@
 #include "main/audio/music_api.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_descriptor.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
@@ -71,7 +72,6 @@ u8 lbl_803239F0[224] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 };
 
-extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 
 #pragma dont_inline on
@@ -126,7 +126,7 @@ void link_levcontrol_updateAreaMusic(int* obj)
                 }
             }
         }
-        SCGameBitLatch_Update(&state->latch, 1, -1, -1, 0xe1e, 0x36);
+        SCGameBitLatch_Update((SCGameBitLatchState*)&state->latch, 1, -1, -1, 0xe1e, 0x36);
         break;
     }
 }

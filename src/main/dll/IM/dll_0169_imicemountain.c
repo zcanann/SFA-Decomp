@@ -20,6 +20,7 @@
 #include "main/object_render_legacy.h"
 #include "main/render.h"
 #include "main/game_object.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
 #include "main/sky_interface.h"
@@ -63,7 +64,6 @@ extern f32 lbl_803E46DC;
 extern void gameBitFn_800ea2e0(int idx);
 extern void fn_801AC108(GameObject* obj, int* extra);
 extern void fn_801AC01C(GameObject* obj);
-extern void SCGameBitLatch_Update(void* state, int mask, int a, int b, int c, int d);
 
 int IMIceMountain_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 
@@ -385,8 +385,8 @@ void IMIceMountain_update(int* obj)
             }
         }
     }
-    SCGameBitLatch_Update(&extra->latchFlags, 2, 705, 568, 493, 178);
-    SCGameBitLatch_Update(&extra->latchFlags, 16, 442, 441, 470, 180);
-    SCGameBitLatch_Update(&extra->latchFlags, 4, -1, -1, 928, 233);
-    SCGameBitLatch_Update(&extra->latchFlags, 8, -1, -1, 929, extra->musicTrack);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&extra->latchFlags, 2, 705, 568, 493, 178);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&extra->latchFlags, 16, 442, 441, 470, 180);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&extra->latchFlags, 4, -1, -1, 928, 233);
+    SCGameBitLatch_Update((SCGameBitLatchState*)&extra->latchFlags, 8, -1, -1, 929, extra->musicTrack);
 }

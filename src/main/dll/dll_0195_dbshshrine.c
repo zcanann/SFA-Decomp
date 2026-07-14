@@ -21,6 +21,7 @@
 #include "main/render.h"
 #include "main/objseq.h"
 #include "main/game_object.h"
+#include "main/mapEventTypes.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
