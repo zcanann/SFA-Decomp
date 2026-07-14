@@ -499,7 +499,7 @@ u32 fn_801659B8(s16* obj, u32* params)
     *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
     *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
     ObjHits_RegisterActiveHitVolumeObject((int)o);
-    (*gPathControlInterface)->advance((s16*)o, params + 1, timeDelta);
+    (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
     if (*(s8*)((int)params + 0x27a) != 0)
     {
         if (state->surfaceMode == 6)
@@ -515,7 +515,7 @@ u32 fn_801659B8(s16* obj, u32* params)
         }
         else
         {
-            landedarwing_moveSurfaceCrawler((s16*)o, state);
+            landedarwing_moveSurfaceCrawler(obj, state);
         }
     }
     return 0;
