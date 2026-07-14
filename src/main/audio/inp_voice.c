@@ -1,10 +1,12 @@
-#include "main/audio/inp_ctrl.h"
+#include "ghidra_import.h"
+#include "main/audio/mcmd.h"
+
+extern int _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
 
 #pragma exceptions on
 
 int inpGetSurPanning(McmdVoiceState* state)
 {
-    extern int _GetInputValue(McmdVoiceState * state, McmdInputSlot * slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;
@@ -18,7 +20,6 @@ int inpGetSurPanning(McmdVoiceState* state)
 
 int inpGetPitchBend(McmdVoiceState* state)
 {
-    extern int _GetInputValue(McmdVoiceState * state, McmdInputSlot * slot, u8 midiSlot, u8 midiEvent);
     int flags;
 
     flags = state->inputDirtyFlags;
