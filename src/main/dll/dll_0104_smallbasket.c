@@ -113,7 +113,6 @@ void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
 extern void* gSmallBasketResource;
 extern const f32 lbl_803E3974;
-extern u32 playerGetStateFlag310(int obj);
 
 extern int isTrickyNear(int obj);
 extern int fn_8029669C(int obj);
@@ -897,7 +896,7 @@ void SmallBasket_update(GameObject* obj)
             {
                 ObjHits_DisableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                if ((playerGetStateFlag310(player) & 0x4000) != 0)
+                if ((playerGetStateFlag310((GameObject*)player) & 0x4000) != 0)
                 {
                     setAButtonIcon(5);
                 }

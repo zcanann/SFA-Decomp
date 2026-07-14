@@ -35,6 +35,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object_api.h"
+#include "main/dll/player_api.h"
 #include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -99,7 +100,6 @@ extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
 extern int EmissionController_IsLingering(GameObject* player);
-extern int playerGetFlags3F0Bit5(GameObject* player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 #pragma dont_inline on

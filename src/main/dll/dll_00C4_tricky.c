@@ -36,6 +36,7 @@
 #include "main/dll/skeetla_route_api.h"
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/flameblast_api.h"
+#include "main/dll/player_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objfx.h"
@@ -215,7 +216,6 @@ extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
 extern int fn_80296240(GameObject* obj);
-extern int playerGetFlags3F0Bit5(GameObject* obj);
 __declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];

@@ -107,7 +107,6 @@ extern f32 lbl_803E432C;
 extern f32 lbl_803E4330;
 extern f32 lbl_803E4334;
 extern void memset(void* p, int c, int n);
-extern u32 playerGetStateFlag310(u8 * player);
 extern int fn_802966B4(u8 * player);
 extern int fn_8029669C(u8 * player);
 extern f32 lbl_803E4338;
@@ -839,7 +838,7 @@ void gunpowderbarrel_update(GameObject *obj)
     }
     if (state->heldByCarryInterface != 0)
     {
-        if ((playerGetStateFlag310(player) & 0x4000) != 0)
+        if ((playerGetStateFlag310((GameObject*)player) & 0x4000) != 0)
         {
             setAButtonIcon(5);
         }

@@ -24,6 +24,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/carryable_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_list.h"
 #include "main/obj_group.h"
@@ -517,7 +518,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-extern u32 playerGetStateFlag310(int obj);
 char gMoonRockSpawnParams[0x18];
 extern f32 gMoonRockAlphaMax;
 extern f32 lbl_803E4588;
@@ -605,7 +605,7 @@ void mmp_moonrock_update(GameObject* obj)
         int i;
         int* list;
         u8 found;
-        if ((playerGetStateFlag310((int)Obj_GetPlayerObject()) & 0x4000) != 0)
+        if ((playerGetStateFlag310(Obj_GetPlayerObject()) & 0x4000) != 0)
         {
             setAButtonIcon(5);
             state->flags |= MOONROCK_FLAG_GRAB_FRAME | MOONROCK_FLAG_ICON_PLACE;

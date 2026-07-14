@@ -15,6 +15,7 @@
 #include "main/carryable_interface.h"
 #include "main/object_render_legacy.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/vecmath.h"
@@ -46,8 +47,6 @@ __declspec(section ".sdata2") f32 lbl_803E37B8 = 1.0f;        /* render scale */
 __declspec(section ".sdata2") f32 lbl_803E37BC = 10000.0f;    /* nearest-object sentinel */
 __declspec(section ".sdata2") f32 lbl_803E37C0 = 35.0f;       /* scene-spot snap radius */
 __declspec(section ".sdata2") f32 lbl_803E37C4 = 60.0f;       /* pickup prompt distance */
-
-extern u32 playerGetStateFlag310(int obj);
 
 int WM_Column_getExtraSize(void)
 {
@@ -110,7 +109,7 @@ void WM_Column_update(int obj)
         }
         playerFlags = (int)Obj_GetPlayerObject();
         ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, obj, &nearest);
-        playerFlags = playerGetStateFlag310(playerFlags);
+        playerFlags = playerGetStateFlag310((GameObject*)playerFlags);
         if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4))
         {
             (*gCarryableInterface)->setVisible(state, 0);
@@ -154,7 +153,7 @@ void WM_Column_update(int obj)
                 }
             }
         }
-        playerFlags = playerGetStateFlag310((int)Obj_GetPlayerObject());
+        playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
         if ((playerFlags & 0x4000) != 0)
         {
             (*gCarryableInterface)->setVisible(state, 0);

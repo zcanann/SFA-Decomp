@@ -16,6 +16,7 @@
  * (callers: dll_00C9_enemy, duster.)
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
@@ -33,7 +34,6 @@
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
-extern int playerGetFlags3F0Bit5(GameObject* obj);
 extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
 extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
 extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
