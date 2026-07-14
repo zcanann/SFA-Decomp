@@ -1,5 +1,6 @@
 #include "main/dll/dll199state_struct.h"
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/resource.h"
@@ -176,3 +177,20 @@ void dll_19A_release(void)
 void dll_19A_initialise(void)
 {
 }
+
+ObjectDescriptor dll_19A = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_19A_initialise,
+    (ObjectDescriptorCallback)dll_19A_release,
+    0,
+    (ObjectDescriptorCallback)dll_19A_init,
+    (ObjectDescriptorCallback)dll_19A_update,
+    (ObjectDescriptorCallback)dll_19A_hitDetect,
+    (ObjectDescriptorCallback)dll_19A_render,
+    (ObjectDescriptorCallback)dll_19A_free,
+    (ObjectDescriptorCallback)dll_19A_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_19A_getExtraSize,
+};
