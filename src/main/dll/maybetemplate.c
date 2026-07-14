@@ -200,7 +200,7 @@ extern s16 lbl_803DD79C;
 extern s16 lbl_803DD79E;
 extern u16 lbl_803DBA30;
 extern int lbl_803DD7E0;
-extern u8 lbl_803DD8B7;
+extern s8 lbl_803DD8B7;
 extern f32 lbl_803DBAA4;
 extern f32 lbl_803DBAC4;
 extern f32 lbl_803DBAC8;
