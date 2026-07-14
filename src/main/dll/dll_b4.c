@@ -10,6 +10,7 @@
 #include "main/object_api.h"
 #include "main/dll/dll_B3.h"
 #include "main/dll/dll_B2.h"
+#include "main/model.h"
 #include "main/model_light.h"
 #include "main/object.h"
 
@@ -19,7 +20,6 @@
 extern ModelLightStruct* lbl_803DD4C4;
 extern f32 lbl_803E1640;
 
-extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern void lightSetColor(int a, int b, int c, int d);
 
 void lockIconInit(void)

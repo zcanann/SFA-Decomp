@@ -230,7 +230,6 @@ extern void intersectModLineBuild(u8* buf);
 u16 modelFileHeaderGetCullDistance(u8* modelFile);
 void ObjModel_ClearRenderAttachment(u8* model);
 void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale);
-void ObjModel_SetRenderCallback(u8* model, void* callback);
 int roundUpTo32(int x);
 void ObjModel_LoadRenderOpTextures(u8* model, int arg);
 void setMatrixFromObjectTransposed(void* obj, f32* out);

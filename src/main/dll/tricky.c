@@ -268,7 +268,6 @@ extern u16 gViewFinderCamAngle;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 
-extern void ObjModel_SetRenderCallback(u8* model, void* callback);
 extern int fn_8011E0D8();
 extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);

@@ -17,6 +17,7 @@
 #include "main/fileio.h"
 #include "main/camera.h"
 #include "main/mm.h"
+#include "main/model.h"
 #include "main/pi_frame_api.h"
 #include "main/texture.h"
 #include "main/textrender_api.h"
@@ -226,7 +227,6 @@ extern f32 lbl_803DF194;
 
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void renderSunAndMoon();
-extern void ObjModel_SetRenderCallback(void* model, void* callback);
 extern int moonFxCb_80074110(int obj, int* model, int param);
 extern void modelLightStruct_setDirection(void* model, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, int blue, int alpha);
@@ -392,7 +392,7 @@ void loadSunAndMoon(void)
         moonObj = Obj_SetupObject(Obj_AllocObjectSetup(0x20, SKY_CHILD_OBJ_MOON), 4, -1, -1, NULL);
         gSkyMoonObject = moonObj;
         gSkyObjectsInitialized = 1;
-        ObjModel_SetRenderCallback(Obj_GetActiveModel(moonObj), moonFxCb_80074110);
+        ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel(moonObj), moonFxCb_80074110);
     }
 }
 

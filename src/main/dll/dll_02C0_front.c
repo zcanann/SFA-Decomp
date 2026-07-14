@@ -258,7 +258,6 @@ typedef struct TitleAnimMoves
 } TitleAnimMoves;
 
 extern TitleAnimMoves gTitleScreenAnimMoves[];
-extern void ObjModel_SetRenderCallback(int* model, void* cb);
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 /* Seed the object's state from its seqId, pick the anim move and blend
@@ -290,7 +289,7 @@ void TitleScreen_init(u8* obj, u8* def)
         else if (seqId == 0x781)
         {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
-            ObjModel_SetRenderCallback((int*)((GameObject*)obj)->anim.banks[0], AttractMovie_DrawTextureCallback);
+            ObjModel_SetRenderCallback((u8*)((GameObject*)obj)->anim.banks[0], AttractMovie_DrawTextureCallback);
         }
     }
 }
