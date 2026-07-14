@@ -1018,16 +1018,16 @@ void sceneDraw(void)
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = 0x78000000;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 8;
+    *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x78000000;
+    *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 8;
     lbl_803DCE30++;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
         lbl_803DCE30 = 0;
     }
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = 0x50000000;
-    lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 9;
+    *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x50000000;
+    *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 9;
     lbl_803DCE30++;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
