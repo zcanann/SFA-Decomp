@@ -490,3 +490,19 @@ NEXT (tiny-probe fold survey): enumerate 2-line probes of every pointer/int node
 combination checking which prevents (idx*stride + const) folding - the survivor is the
 original's expression form and closes walkgroup site-1/tail AND probably func1C's
 materialization direction in one stroke.
+
+## ASSOCIATION RULE CRACKED (fold survey)
+`base + (idx * 40 + 0x3000)` — WITH the inner parentheses — emits the target accumulate
+[mulli][add rD,idx,base][addi rD,rD,12288] (fold survey fH/fJ/fK; fK matches the exact
+walkgroup site-1 shape including the u8 curve load). The flat form folds const-first; outer
+parens fold back under prop-off. Applied to all three wg-address sites: they become
+BYTE-IDENTICAL to target except one commutative-operand order at site-1 (add rD,idx,base
+vs target add rD,base,idx - base evaluated first there; probably base-subtree depth in the
+real context; minor 1-line cost).
+Scores measured: baseline 97.83; accumulate-only 97.57 (removing the wgB staging shifts
+the web census negatively); hybrid (accumulate + fresh-tail + decl moves, no K3) 97.81;
+hybrid + K3 staging 97.61 (K3 costs more than curve gains due to an fdivs-order break in
+the manual expansion - fix that expansion bug first). FINAL MILE: fix the K3 expansion
+ordering, re-add it, then rebalance the decl tuning for the new census - the 8/8+curve
+register file with matched accumulates nets past baseline once the K3 expansion is
+byte-clean. All probes in scratchpad; forms recorded here.
