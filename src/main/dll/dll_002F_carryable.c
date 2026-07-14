@@ -59,8 +59,6 @@ typedef struct CarryableUpdateHeldState
     u8 pad9[0x10 - 0x9];
 } CarryableUpdateHeldState;
 
-extern void playerSetHeldObject(void* player, int held);
-
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
 void objSaveFn_800ea774(GameObject* obj)
@@ -78,13 +76,13 @@ void objSaveFn_800ea774(GameObject* obj)
 
 void Carryable_stopCarrying(int* obj, u8* param2)
 {
-    void* player = Obj_GetPlayerObject();
-    int held;
+    GameObject* player = Obj_GetPlayerObject();
+    GameObject* held;
     ((CarryableUpdateHeldState*)param2)->carryState = CARRY_STATE_RESTING;
-    Player_GetHeldObject((int)player, &held);
-    if ((int*)held == obj)
+    Player_GetHeldObject(player, &held);
+    if (held == (GameObject*)obj)
     {
-        playerSetHeldObject(player, 0);
+        playerSetHeldObject(player, NULL);
     }
 }
 

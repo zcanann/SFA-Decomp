@@ -128,7 +128,6 @@ int fn_80296240(GameObject* obj);
 int fn_8029630C(GameObject* obj);
 int objAnimFn_80296328(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
-int playerSetHeldObject(int obj, int held);
 f32 fn_802966F4(GameObject* obj);
 void saveSetOverrideHealth(int v);
 void fn_80296BBC(GameObject* obj);
@@ -574,11 +573,11 @@ void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z)
     *z = *(f32*)((char*)inner + 0x2c);
 }
 
-int playerGetHeldObject(GameObject* obj, int* out)
+int playerGetHeldObject(GameObject* obj, GameObject** outHeldObj)
 {
     PlayerState* inner = obj->extra;
-    *out = inner->heldObj;
-    return inner->heldObj != 0;
+    *outHeldObj = inner->heldObj;
+    return inner->heldObj != NULL;
 }
 
 int playerStatusIsPositive(GameObject* obj)
@@ -2707,9 +2706,9 @@ int playerStateOnLadder(int obj, int state)
                                 {
                                     objSaveFn_800ea774((GameObject*)((PlayerState*)inner)->heldObj);
                                 }
-                                *(s16*)(((PlayerState*)inner)->heldObj + 6) =
-                                    *(s16*)(((PlayerState*)inner)->heldObj + 6) & ~0x4000;
-                                *(int*)(((PlayerState*)inner)->heldObj + 0xf8) = 0;
+                                *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) =
+                                    *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) & ~0x4000;
+                                *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
                                 ((PlayerState*)inner)->heldObj = 0;
                             }
                             fn_802AB5A4((GameObject*)obj, inner, 5);
@@ -3373,20 +3372,20 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             }
             ((PlayerState*)inner)->isHoldingObject = 0;
             {
-                int p = ((PlayerState*)inner)->heldObj;
-                if ((u32)p != 0)
+                GameObject* p = ((PlayerState*)inner)->heldObj;
+                if (p != NULL)
                 {
-                    s16 sp = *(s16*)(p + 0x46);
+                    s16 sp = p->anim.seqId;
                     if (sp == 0x3cf || sp == 0x662)
                     {
-                        objThrowFn_80182504((GameObject*)(p));
+                        objThrowFn_80182504(p);
                     }
                     else
                     {
-                        objSaveFn_800ea774((GameObject*)p);
+                        objSaveFn_800ea774(p);
                     }
-                    *(s16*)(((PlayerState*)inner)->heldObj + 6) &= ~0x4000;
-                    *(int*)(((PlayerState*)inner)->heldObj + 0xf8) = 0;
+                    *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) &= ~0x4000;
+                    *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
                     ((PlayerState*)inner)->heldObj = 0;
                 }
             }
@@ -8804,8 +8803,9 @@ void fn_802AFB0C(int obj, int inner, int state)
                 {
                     objSaveFn_800ea774((GameObject*)((PlayerState*)inner)->heldObj);
                 }
-                *(s16*)(((PlayerState*)inner)->heldObj + 6) = *(s16*)(((PlayerState*)inner)->heldObj + 6) & ~0x4000;
-                *(int*)(((PlayerState*)inner)->heldObj + 0xf8) = 0;
+                *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) =
+                    *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) & ~0x4000;
+                *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
                 ((PlayerState*)inner)->heldObj = 0;
             }
             if (newAnim != -1 && ((PlayerState*)state)->baddie.controlMode != newAnim &&
@@ -9062,11 +9062,11 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
-                ((PlayerState*)inner)->heldObj = p;
-                mdl = (int*)Obj_GetActiveModel((GameObject*)((PlayerState*)inner)->heldObj);
+                ((PlayerState*)inner)->heldObj = (GameObject*)p;
+                mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
-                    *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
+                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10) / 10.0f;
                 (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
@@ -9083,11 +9083,11 @@ void playerItemGetAnimFn(int obj, int inner, int state)
             if ((void*)((PlayerState*)inner)->heldObj == NULL)
             {
                 int* mdl;
-                ((PlayerState*)inner)->heldObj = p;
-                mdl = (int*)Obj_GetActiveModel((GameObject*)((PlayerState*)inner)->heldObj);
+                ((PlayerState*)inner)->heldObj = (GameObject*)p;
+                mdl = (int*)Obj_GetActiveModel(((PlayerState*)inner)->heldObj);
                 if (mdl != NULL && (void*)*mdl != NULL && (*(u16*)(*mdl + 2) & 0x8000) == 0)
                 {
-                    *(u8*)(((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
+                    *(u8*)((char*)((PlayerState*)inner)->heldObj + 0xf2) = *(u8*)((char*)obj + 0xf2);
                 }
                 ((PlayerState*)inner)->unk7FC = (f32)(param >> 0x10);
                 (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 5);
@@ -11473,15 +11473,15 @@ int playerStateThrowing(GameObject* obj, int state)
         inner->isHoldingObject = 0;
         if (*(void**)((char*)inner + 0x7f8) != NULL)
         {
-            int s2 = inner->heldObj;
-            s16 id = *(s16*)((char*)s2 + 0x46);
+            GameObject* s2 = inner->heldObj;
+            s16 id = s2->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((GameObject*)(s2));
+                objThrowFn_80182504(s2);
             }
             else
             {
-                objSaveFn_800ea774((GameObject*)s2);
+                objSaveFn_800ea774(s2);
             }
             *(s16*)((char*)inner->heldObj + 6) &= ~0x4000;
             *(int*)((char*)inner->heldObj + 0xf8) = 0;
@@ -11601,7 +11601,7 @@ void staffToggle(GameObject* obj, int a)
 
 void fn_802AE83C(int obj, int inner)
 {
-    int sub;
+    GameObject* sub;
     f32 z;
 
     ((ByteFlags*)((char*)inner + 0x3f1))->b40 = 0;
@@ -11625,16 +11625,16 @@ void fn_802AE83C(int obj, int inner)
     }
     ((PlayerState*)inner)->isHoldingObject = 0;
     sub = ((PlayerState*)inner)->heldObj;
-    if ((void*)sub != NULL)
+    if (sub != NULL)
     {
-        s16 id = *(s16*)((char*)sub + 0x46);
+        s16 id = sub->anim.seqId;
         if (id == 0x3cf || id == 0x662)
         {
-            objThrowFn_80182504((GameObject*)(sub));
+            objThrowFn_80182504(sub);
         }
         else
         {
-            objSaveFn_800ea774((GameObject*)sub);
+            objSaveFn_800ea774(sub);
         }
         *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) &= ~0x4000;
         *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
@@ -11707,7 +11707,7 @@ int playerState38(GameObject* obj, int state, f32 fv)
 int playerState06(GameObject* obj, int state)
 {
     PlayerState* inner = obj->extra;
-    int sub;
+    GameObject* sub;
 
     if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
     {
@@ -11715,9 +11715,9 @@ int playerState06(GameObject* obj, int state)
         *(s16*)((char*)state + 0x278) = 1;
         inner->stateHandler = (int)fn_802A514C;
     }
-    if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) && (void*)(sub = inner->heldObj) != NULL)
+    if ((*(int*)&((PlayerState*)state)->baddie.eventFlags & 1) && (sub = inner->heldObj) != NULL)
     {
-        switch (*(s16*)((char*)sub + 0x46))
+        switch (sub->anim.seqId)
         {
         case 0x6d:
         case 0x754:
@@ -11741,26 +11741,26 @@ int playerState06(GameObject* obj, int state)
     ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F40;
 
     sub = inner->heldObj;
-    if ((void*)sub == NULL && *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
+    if (sub == NULL && *(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
     {
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
         *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
         return 2;
     }
-    if ((void*)sub != NULL && obj->anim.currentMoveProgress > lbl_803E7F48)
+    if (sub != NULL && obj->anim.currentMoveProgress > lbl_803E7F48)
     {
         inner->isHoldingObject = 0;
         if (*(void**)((char*)inner + 0x7f8) != NULL)
         {
-            int s2 = inner->heldObj;
-            s16 id = *(s16*)((char*)s2 + 0x46);
+            GameObject* s2 = inner->heldObj;
+            s16 id = s2->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((GameObject*)(s2));
+                objThrowFn_80182504(s2);
             }
             else
             {
-                objSaveFn_800ea774((GameObject*)s2);
+                objSaveFn_800ea774(s2);
             }
             *(s16*)((char*)inner->heldObj + 6) &= ~0x4000;
             *(int*)((char*)inner->heldObj + 0xf8) = 0;
@@ -11770,41 +11770,41 @@ int playerState06(GameObject* obj, int state)
     return 0;
 }
 
-int playerSetHeldObject(int obj, int held)
+int playerSetHeldObject(GameObject* obj, GameObject* heldObj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
-    int sub;
+    PlayerState* inner = obj->extra;
+    GameObject* sub;
 
-    if ((void*)held != NULL)
+    if (heldObj != NULL)
     {
-        inner->heldObj = held;
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, (int)inner, 5);
+        inner->heldObj = heldObj;
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 5);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A4B4C;
     }
-    else if ((void*)inner->heldObj != NULL)
+    else if (inner->heldObj != NULL)
     {
         inner->isHoldingObject = 0;
         sub = inner->heldObj;
-        if ((void*)sub != NULL)
+        if (sub != NULL)
         {
-            s16 id = ((GameObject*)sub)->anim.seqId;
+            s16 id = sub->anim.seqId;
             if (id == 0x3cf || id == 0x662)
             {
-                objThrowFn_80182504((GameObject*)(sub));
+                objThrowFn_80182504(sub);
             }
             else
             {
-                objSaveFn_800ea774((GameObject*)sub);
+                objSaveFn_800ea774(sub);
             }
             *(s16*)((char*)inner->heldObj + 6) &= ~0x4000;
             *(int*)((char*)inner->heldObj + 0xf8) = 0;
-            inner->heldObj = 0;
+            inner->heldObj = NULL;
         }
         *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, (int)inner, 1);
         *(int*)&((PlayerState*)inner)->baddie.unk304 = (int)fn_802A514C;
     }
-    return (void*)inner->heldObj != NULL;
+    return inner->heldObj != NULL;
 }
 
 int playerState39(GameObject* obj, int state, f32 fv)

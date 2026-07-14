@@ -11,6 +11,7 @@
 #include "main/dll/dim2conveyorstate_struct.h"
 #include "main/dll/dll1d6state_struct.h"
 #include "main/game_object.h"
+#include "main/object_api.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/object_render_legacy.h"
 #include "main/rcp_dolphin_api.h"
@@ -115,7 +116,7 @@ void dim2lavacontrol_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 
 void dim2lavacontrol_update(int obj)
 {
     int diff;
-    int heldObj;
+    GameObject* heldObj;
     if (((GameObject*)obj)->unkF4 != 0)
     {
         if (((GameObject*)obj)->unkF4 == 2)
@@ -160,7 +161,7 @@ void dim2lavacontrol_update(int obj)
         }
         fn_8004C1E4(((Dim2lavacontrolState*)obj)->sfxLevel, lbl_803E4B90);
     }
-    if (Player_GetHeldObject((int)Obj_GetPlayerObject(), &heldObj) != 0)
+    if (Player_GetHeldObject(Obj_GetPlayerObject(), &heldObj) != 0)
     {
         if ((*(int*)&((GameObject*)obj)->anim.rootMotionScale & 2) && *(int*)&((GameObject*)obj)->anim.localPosX !=
             0xe0)

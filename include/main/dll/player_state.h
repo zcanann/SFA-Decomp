@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 
 typedef struct PlayerStatus {
@@ -315,7 +316,7 @@ typedef struct PlayerState {
     int unk7EC;
     GameObject* focusObject; /* camera focus / sequence-trigger interaction object */
     u8 pad7F4[0x7F8 - 0x7F4];
-    int heldObj; /* carried object (playerSetHeldObject) */
+    GameObject* heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
     u8 isHoldingObject; /* 1 while carrying a held object (set with heldObj on pickup msgs 0x100008/0x100010); cleared to 0 on release/state resets */
     u8 pad801[0x806 - 0x801];

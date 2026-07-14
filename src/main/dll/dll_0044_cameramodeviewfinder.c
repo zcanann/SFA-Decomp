@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
+#include "main/object_api.h"
 #include "main/objhits.h"
 #include "main/pad.h"
 #include "main/dll/player_motion.h"
@@ -184,10 +185,10 @@ int firstPersonEnter(u8* cam, s16* p2)
     f32 f2;
     f32 start;
     f32 end;
-    u8* state;
+    GameObject* state;
     int conv;
     int flag;
-    int other;
+    GameObject* other;
 
     ((CameraObject*)cam)->anim.worldPosX = lbl_803DD548->camPosX;
     ((CameraObject*)cam)->anim.worldPosY = lbl_803DD548->camPosY;
@@ -199,23 +200,23 @@ int firstPersonEnter(u8* cam, s16* p2)
         flag = 1;
     }
     conv = (int)(gCamViewfinderBrightnessScale * ((CameraObject*)cam)->blendProgress);
-    state = ((CameraObject*)cam)->anim.targetObj;
+    state = (GameObject*)((CameraObject*)cam)->anim.targetObj;
     if (conv < 1)
     {
         conv = 1;
     }
     if (state != NULL)
     {
-        ((GameObject*)state)->anim.alpha = conv;
-        if ((u8*)Obj_GetPlayerObject() == state)
+        state->anim.alpha = conv;
+        if (Obj_GetPlayerObject() == state)
         {
-            Player_GetHeldObject((int)state, &other);
-            if ((u32)other != 0)
+            Player_GetHeldObject(state, &other);
+            if (other != NULL)
             {
-                ((GameObject*)other)->anim.alpha = conv;
-                if (((GameObject*)other)->anim.alpha == 1)
+                other->anim.alpha = conv;
+                if (other->anim.alpha == 1)
                 {
-                    ((GameObject*)other)->anim.alpha = 0;
+                    other->anim.alpha = 0;
                 }
             }
         }
@@ -283,26 +284,26 @@ void CameraModeViewfinder_copyToCurrent(s16* camObj)
 
 void CameraModeViewfinder_free(int camObj)
 {
-    int player;
-    int viewObj;
-    int outBuf[3];
+    GameObject* player;
+    GameObject* viewObj;
+    GameObject* outBuf[3];
 
     *(s16*)(*(int*)(camObj + 0xa4) + 6) &= ~0x4000;
     Rcp_SetViewFinderHudEnabled(0);
-    viewObj = (int)((CameraObject*)camObj)->anim.targetObj;
-    if ((u32)viewObj != 0)
+    viewObj = (GameObject*)((CameraObject*)camObj)->anim.targetObj;
+    if (viewObj != NULL)
     {
-        ((GameObject*)viewObj)->anim.alpha = 0xff;
+        viewObj->anim.alpha = 0xff;
         player = Obj_GetPlayerObject();
-        if ((u32)player == viewObj)
+        if (player == viewObj)
         {
             Player_GetHeldObject(viewObj, outBuf);
-            if ((u32)outBuf[0] != 0)
+            if (outBuf[0] != NULL)
             {
-                ((GameObject*)outBuf[0])->anim.alpha = 0xff;
-                if (((GameObject*)outBuf[0])->anim.alpha == 1)
+                outBuf[0]->anim.alpha = 0xff;
+                if (outBuf[0]->anim.alpha == 1)
                 {
-                    ((GameObject*)outBuf[0])->anim.alpha = 0;
+                    outBuf[0]->anim.alpha = 0;
                 }
             }
         }
@@ -315,7 +316,7 @@ void CameraModeViewfinder_free(int camObj)
 
 void CameraModeViewfinder_update(s16* obj)
 {
-    u8* targetObj;
+    GameObject* targetObj;
     int brightness;
     int camObj;
     int angleDiff;
@@ -323,8 +324,8 @@ void CameraModeViewfinder_update(s16* obj)
     f32 hitY;
     f32 outB;
     f32 hitDist;
-    u8* shadow2;
-    u8* shadow;
+    GameObject* shadow2;
+    GameObject* shadow;
 
     camObj = *(int*)&((GameObject*)obj)->anim.targetObj;
     getButtonsJustPressed(0);
@@ -404,23 +405,23 @@ void CameraModeViewfinder_update(s16* obj)
             }
             brightness = (int)(gCamViewfinderBrightnessScale * fade);
         }
-        targetObj = (u8*)((GameObject*)obj)->anim.targetObj;
+        targetObj = (GameObject*)((GameObject*)obj)->anim.targetObj;
         if (brightness < 1)
         {
             brightness = 1;
         }
         if (targetObj != NULL)
         {
-            ((GameObject*)targetObj)->anim.alpha = brightness;
-            if ((u8*)Obj_GetPlayerObject() == targetObj)
+            targetObj->anim.alpha = brightness;
+            if (Obj_GetPlayerObject() == targetObj)
             {
-                Player_GetHeldObject((int)targetObj, (int*)&shadow2);
+                Player_GetHeldObject(targetObj, &shadow2);
                 if (shadow2 != NULL)
                 {
-                    ((GameObject*)shadow2)->anim.alpha = brightness;
-                    if (((GameObject*)shadow2)->anim.alpha == 1)
+                    shadow2->anim.alpha = brightness;
+                    if (shadow2->anim.alpha == 1)
                     {
-                        ((GameObject*)shadow2)->anim.alpha = 0;
+                        shadow2->anim.alpha = 0;
                     }
                 }
             }
@@ -452,19 +453,19 @@ void CameraModeViewfinder_update(s16* obj)
         if (brightness != 0)
         {
             (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
-            targetObj = (u8*)((GameObject*)obj)->anim.targetObj;
+            targetObj = (GameObject*)((GameObject*)obj)->anim.targetObj;
             if (targetObj != NULL)
             {
-                ((GameObject*)targetObj)->anim.alpha = 0xff;
-                if ((u8*)Obj_GetPlayerObject() == targetObj)
+                targetObj->anim.alpha = 0xff;
+                if (Obj_GetPlayerObject() == targetObj)
                 {
-                    Player_GetHeldObject((int)targetObj, (int*)&shadow);
+                    Player_GetHeldObject(targetObj, &shadow);
                     if (shadow != NULL)
                     {
-                        ((GameObject*)shadow)->anim.alpha = 0xff;
-                        if (((GameObject*)shadow)->anim.alpha == 1)
+                        shadow->anim.alpha = 0xff;
+                        if (shadow->anim.alpha == 1)
                         {
-                            ((GameObject*)shadow)->anim.alpha = 0;
+                            shadow->anim.alpha = 0;
                         }
                     }
                 }
