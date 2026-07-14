@@ -1447,7 +1447,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_01AA_bombplantspore.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_01AB_bombplantingspot.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801d4198.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/SH/dll_01AC_shqueenearthwalker.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/SH/dll_01AC_shqueenearthwalker.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/SH/shthorntail_ai.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/lily.c"),
             Object(NonMatching, "main/dll/dll_1e8.c"),

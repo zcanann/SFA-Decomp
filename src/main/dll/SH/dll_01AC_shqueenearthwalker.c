@@ -82,6 +82,133 @@ ObjectDescriptor gSH_queenearthwalkerObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)sh_queenearthwalker_getExtraSize,
 };
 
+#pragma dont_inline on
+void openPortalFn_801d4364(GameObject* obj, void* state)
+{
+    void* player;
+
+    player = Obj_GetPlayerObject();
+    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+    if (mainGetBit(0xc48) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
+    }
+    else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalReady;
+    }
+    else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
+    {
+        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+        if (playerHasSpell((GameObject*)(player), 3) != 0 &&
+            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
+                gQueenEarthWalkerPortalSpellDistance)
+        {
+            mainSetBits(0x23b, 1);
+        }
+    }
+    else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
+    }
+    else
+    {
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalDefault;
+    }
+
+    player = Obj_GetPlayerObject();
+    ((u8*)state)[8] = 1;
+    ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
+    ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
+    ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+    fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
+}
+#pragma dont_inline reset
+
+void queenFeedFn_801d44a4(GameObject* obj, void* state)
+{
+    s16 triggerId;
+    s32 total;
+    void* tricky;
+    void* player;
+
+    switch (((QueenEarthWalkerState*)state)->stateIndex)
+    {
+    case 0:
+        if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
+            ((QueenEarthWalkerState*)state)->stateIndex = 1;
+        }
+        break;
+    case 1:
+        (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
+        if (cMenuGetSelectedItemInt() == -1)
+        {
+            if (getYButtonItemLegacy(&triggerId) == 0 || triggerId != 0x66d)
+            {
+                tricky = getTrickyObject();
+                if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &(obj)->anim.worldPosX) <
+                                          gQueenEarthWalkerTrickyFeedDistance)
+                {
+                    Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
+                }
+                else
+                {
+                    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
+                }
+                break;
+            }
+        }
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
+        if (ObjTrigger_IsSetById((int)obj, 0x66d) != 0)
+        {
+            ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
+            total = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
+            total += mainGetBit(GAMEBIT_ITEM_WhiteGrubTub_Used);
+            mainSetBits(GAMEBIT_ITEM_WhiteShroom_Count, 0);
+            mainSetBits(GAMEBIT_ITEM_WhiteGrubTub_Used, total);
+            if (total != 6)
+            {
+                ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
+                if (randomGetRange(0, 1) != 0)
+                {
+                    (*gObjectTriggerInterface)->runSequence(3, obj, -1);
+                }
+                else
+                {
+                    (*gObjectTriggerInterface)->runSequence(4, obj, -1);
+                }
+            }
+            else
+            {
+                (*gObjectTriggerInterface)->runSequence(5, obj, -1);
+                ((QueenEarthWalkerState*)state)->stateIndex = 2;
+            }
+        }
+        break;
+    case 2:
+        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
+        mainSetBits(0x9e, 1);
+        ((QueenEarthWalkerState*)state)->stateIndex = 3;
+        break;
+    case 3:
+        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
+        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_LATCHED;
+        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_EYE_ANIMS;
+        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableFed;
+        player = Obj_GetPlayerObject();
+        ((u8*)state)[0x8] = 1;
+        ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
+        ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
+        ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
+        fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
+        break;
+    default:
+        break;
+    }
+}
+
 int sh_queenearthwalker_getExtraSize(void)
 {
     return 0x40;
@@ -266,134 +393,11 @@ void sh_queenearthwalker_update(GameObject* obj)
     }
 }
 
-void queenFeedFn_801d44a4(GameObject* obj, void* state)
-{
-    s16 triggerId;
-    s32 total;
-    void* tricky;
-    void* player;
-
-    switch (((QueenEarthWalkerState*)state)->stateIndex)
-    {
-    case 0:
-        if (mainGetBit(GAMEBIT_SH_ReturnedToQueen) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-            ((QueenEarthWalkerState*)state)->stateIndex = 1;
-        }
-        break;
-    case 1:
-        (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-        if (cMenuGetSelectedItemInt() == -1)
-        {
-            if (getYButtonItemLegacy(&triggerId) == 0 || triggerId != 0x66d)
-            {
-                tricky = getTrickyObject();
-                if (tricky != NULL && getXZDistance((f32*)((u8*)tricky + 0x18), &(obj)->anim.worldPosX) <
-                                          gQueenEarthWalkerTrickyFeedDistance)
-                {
-                    Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
-                }
-                else
-                {
-                    (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-                }
-                break;
-            }
-        }
-        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 4);
-        if (ObjTrigger_IsSetById((int)obj, 0x66d) != 0)
-        {
-            ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_ACTIVE;
-            total = mainGetBit(GAMEBIT_ITEM_WhiteShroom_Count);
-            total += mainGetBit(GAMEBIT_ITEM_WhiteGrubTub_Used);
-            mainSetBits(GAMEBIT_ITEM_WhiteShroom_Count, 0);
-            mainSetBits(GAMEBIT_ITEM_WhiteGrubTub_Used, total);
-            if (total != 6)
-            {
-                ((QueenEarthWalkerState*)state)->flags |= QEW_FLAG_TARGETING;
-                if (randomGetRange(0, 1) != 0)
-                {
-                    (*gObjectTriggerInterface)->runSequence(3, obj, -1);
-                }
-                else
-                {
-                    (*gObjectTriggerInterface)->runSequence(4, obj, -1);
-                }
-            }
-            else
-            {
-                (*gObjectTriggerInterface)->runSequence(5, obj, -1);
-                ((QueenEarthWalkerState*)state)->stateIndex = 2;
-            }
-        }
-        break;
-    case 2:
-        (*gObjectTriggerInterface)->runSequence(6, obj, -1);
-        mainSetBits(0x9e, 1);
-        ((QueenEarthWalkerState*)state)->stateIndex = 3;
-        break;
-    case 3:
-        Obj_SetActiveHitVolumeBounds(obj, 0, 0, 0, 0, 2);
-        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_LATCHED;
-        ((QueenEarthWalkerState*)state)->flags &= ~QEW_FLAG_EYE_ANIMS;
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableFed;
-        player = Obj_GetPlayerObject();
-        ((u8*)state)[0x8] = 1;
-        ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-        ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-        ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
-        fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
-        break;
-    default:
-        break;
-    }
-}
-
-void openPortalFn_801d4364(GameObject* obj, void* state)
-{
-    void* player;
-
-    player = Obj_GetPlayerObject();
-    (obj)->anim.resetHitboxFlags &= ~INTERACT_FLAG_DISABLED;
-    if (mainGetBit(0xc48) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
-    }
-    else if (mainGetBit(GAMEBIT_SH_Related023C) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalReady;
-    }
-    else if (mainGetBit(GAMEBIT_STAFF_ABILITY_OPEN_PORTAL) != 0)
-    {
-        (obj)->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
-        if (playerHasSpell((GameObject*)(player), 3) != 0 &&
-            getXZDistance(&((GameObject*)player)->anim.worldPosX, &(obj)->anim.worldPosX) <
-                gQueenEarthWalkerPortalSpellDistance)
-        {
-            mainSetBits(0x23b, 1);
-        }
-    }
-    else if (mainGetBit(GAMEBIT_SH_RescuedEggs) != 0)
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTableComplete;
-    }
-    else
-    {
-        ((QueenEarthWalkerState*)state)->eventTable = gQueenEarthWalkerEventTablePortalDefault;
-    }
-
-    player = Obj_GetPlayerObject();
-    ((u8*)state)[8] = 1;
-    ((QueenEarthWalkerState*)state)->targetX = ((GameObject*)player)->anim.localPosX;
-    ((QueenEarthWalkerState*)state)->targetY = ((GameObject*)player)->anim.localPosY;
-    ((QueenEarthWalkerState*)state)->targetZ = ((GameObject*)player)->anim.localPosZ;
-    fn_8003B500FloatLegacy(obj, (s16*)((int)state + 0x8), lbl_803E53F8);
-}
-
 void sh_queenearthwalker_init(GameObject* obj, QueenEarthWalkerMapData* mapData)
 {
     obj->anim.rotX = (s16)(mapData->yawByte << 8);
     obj->animEventCallback = sh_queenearthwalker_processAnimEvents;
     obj->objectFlags |= SHQUEENEARTHWALKER_OBJFLAG_HIDDEN;
 }
+
+
