@@ -25,6 +25,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/obj_group.h"
 #include "main/objprint_render_api.h"
@@ -161,7 +162,6 @@ extern const f32 lbl_803E5CC0;
 
 extern void WCPushBlock_SpawnFromPath(s16* path, u8* state);
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32* mtx);
-extern void fn_80295918(int obj, int sel, f32 fval);
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
 
@@ -489,7 +489,7 @@ int SB_CloudRunner_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUp
         if (animUpdate->eventIds[i] == 1)
         {
             objHitDetectFn_80062e84((GameObject*)player, state->targetObj, 0);
-            fn_80295918(player, 5, lbl_803E5C70);
+            fn_80295918((GameObject*)player, 5, lbl_803E5C70);
             state->done = 1;
         }
     }

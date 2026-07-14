@@ -111,7 +111,6 @@ void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
 void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
-void fn_80295918(int obj, int sel, f32 fval);
 void fn_802960E4(void);
 void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
@@ -18297,9 +18296,9 @@ void playerDoTailAnims(int obj, void* statep)
     }
 }
 
-void fn_80295918(int obj, int sel, f32 fval)
+void fn_80295918(GameObject* obj, int sel, f32 fval)
 {
-    int state = *(int*)&((GameObject*)obj)->extra;
+    int state = *(int*)&obj->extra;
     int iv = (int)fval;
     switch (sel)
     {
@@ -18310,10 +18309,10 @@ void fn_80295918(int obj, int sel, f32 fval)
         break;
     }
     case 6:
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 0x3f);
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 0x3f);
         break;
     case 5:
-        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))(obj, state, 1);
+        (*(void (*)(int, int, int))(*(int*)((char*)*gPlayerInterface + 0x14)))((int)obj, state, 1);
         *(int*)&((PlayerState*)state)->baddie.unk304 = (int)fn_802A514C;
         break;
     case 10:

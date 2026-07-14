@@ -7,6 +7,7 @@
 
 int fn_80296240(GameObject* player);
 int objFn_802962b4(GameObject* obj);
+void fn_80295918(GameObject* player, int selector, f32 value);
 int fn_80295A04(GameObject* obj, int selector);
 int fn_80295C0C(GameObject* obj);
 int fn_80295C24(GameObject* player);

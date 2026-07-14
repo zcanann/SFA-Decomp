@@ -11,6 +11,7 @@
  * box: it only runs while the bit's value differs from gameBitValue.
  */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/object.h"
 #include "main/gamebits.h"
@@ -36,7 +37,6 @@ extern f32 lbl_803E3510;
 extern f32 lbl_803E3514;
 extern void fn_8002B758(void);
 extern void fn_8002B860(int obj);
-extern void fn_80295918(int obj, int sel, f32 fval);
 
 int EffectBox_getExtraSize(void)
 {
@@ -151,7 +151,7 @@ void EffectBox_update(GameObject* obj)
                         case EFFECTBOX_TARGET_TRICKY:
                             break;
                         case EFFECTBOX_TARGET_PLAYER:
-                            fn_80295918(other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
+                            fn_80295918((GameObject*)other, 1, (f32)((EffectboxPlacement*)def)->actionArg);
                             break;
                         case EFFECTBOX_TARGET_GROUP:
                             (*(VtableFn*)(*(int*)(*(int*)&((GameObject*)other)->anim.dll) + 0x28))(

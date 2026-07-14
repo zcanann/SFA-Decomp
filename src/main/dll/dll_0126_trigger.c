@@ -101,7 +101,6 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 
 extern int getLActions();
 extern int mainGetBit(int eventId);
-extern void fn_80295918(int obj, int sel, f32 fval);
 extern void fn_8006FC00(int v);
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
@@ -298,28 +297,28 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(t, 1, lbl_803E40D8);
+                            fn_80295918((GameObject*)t, 1, lbl_803E40D8);
                         }
                         break;
                     case 9:
                         t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(t, 10, lbl_803E40D8);
+                            fn_80295918((GameObject*)t, 10, lbl_803E40D8);
                         }
                         break;
                     case 10:
                         t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(t, 0xb, lbl_803E40D8);
+                            fn_80295918((GameObject*)t, 0xb, lbl_803E40D8);
                         }
                         break;
                     case 0xb:
                         t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918(t, 1, lbl_803E40FC);
+                            fn_80295918((GameObject*)t, 1, lbl_803E40FC);
                         }
                         break;
                     }
