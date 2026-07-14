@@ -264,7 +264,7 @@ extern const f32 lbl_803E2068;
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern float fsin16Approx(int angle);
 extern PauseTbl lbl_8031AE20;
-extern HintCell lbl_8031BB90[];
+extern GridEntry lbl_8031BB90[];
 extern u32 lbl_8031BD90[];
 extern f32 lbl_803DD748;
 extern f32 lbl_803DD74C;
@@ -3053,6 +3053,16 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     }
 }
 
+static inline void pauseMenuSetSpellStoneIcons(GridEntry* entries, u8 count)
+{
+    s8 i;
+
+    for (i = 0; i < 4; i++)
+    {
+        entries[i + 6].id = i < count ? (u8)(0x22 + (i & 1)) : (u8)0x24;
+    }
+}
+
 void pauseMenuDrawStatus_801274A0(GameObject* arg1)
 {
     s8 i8;
@@ -3066,14 +3076,14 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
     f32 timer;
 
     pauseMenuDoSave();
-    alpha = (s32)(hudElementOpacity * lbl_803DD760);
+    alpha = hudElementOpacity * lbl_803DD760;
     lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
-    lbl_803DD748 = lbl_803DD748 + timeDelta;
+    lbl_803DD748 += timeDelta;
     lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
     lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
     lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
-    lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
-    lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
+    lbl_803DBA3C = lbl_803E2070 * lbl_803DD760;
+    lbl_803DBA34 = lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760);
     fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
                 *(u16*)&lbl_803DD754);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
@@ -3141,21 +3151,13 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
         i += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
         gbCount = i + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
         gbCount = j + gbCount;
-        {
-            s8 k;
-            u8* p;
-            for (k = 0, p = (u8*)lbl_8031BB90; k < 4; k++)
-            {
-                *(s16*)(p + 0xc0) = k < (u8)gbCount ? (u8)(0x22 + (k & 1)) : (u8)0x24;
-                p += 0x20;
-            }
-        }
+        pauseMenuSetSpellStoneIcons(lbl_8031BB90, (u8)gbCount);
         magicVal = mainGetBit(GAMEBIT_ITEM_200ScarabBag_Got) != 0   ? 0xc8
                    : mainGetBit(GAMEBIT_ITEM_100ScarabBag_Got) != 0 ? 0x64
                    : mainGetBit(GAMEBIT_ITEM_50ScarabBag_Got) != 0  ? 0x32
                                                                     : 0xa;
         lbl_803DD734 = magicVal;
-        *(s16*)((u8*)lbl_8031BB90 + 0x160) = magicVal != 0 ? (u8)0x4e : (u8)0x25;
+        lbl_8031BB90[11].id = magicVal != 0 ? (u8)0x4e : (u8)0x25;
         gameTextSetDrawFunc(pauseMenuTextDrawFn);
         gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
@@ -3230,7 +3232,7 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
         pauseMenuDrawElement(*(int**)&((HudTextures*)hudTextures)->texC0, (f32)(lbl_803DBAD0 + 0x7e), lbl_803DBAD4,
                              0x100 - lbl_803DD75C, ty, 0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
-        lbl_803DD824 = (GridEntry*)lbl_8031BB90;
+        lbl_803DD824 = lbl_8031BB90;
         fn_80128470(ty1);
     }
 
@@ -3377,7 +3379,7 @@ void fn_80128120(void* unused, u8 alpha)
         int t = 0x11;
         if (i >= litSegments)
             t = -1;
-        lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
+        lbl_8031BB90[lbl_803DBA9C[i]].id = (s16)t;
     }
 }
 

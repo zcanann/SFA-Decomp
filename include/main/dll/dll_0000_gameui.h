@@ -43,12 +43,6 @@ typedef struct
 
 typedef struct
 {
-    s16 f0;
-    u8 _2[0x1e];
-} HintCell; /* 0x20 */
-
-typedef struct
-{
     u16 unk0;
     u16 titleId;
 } HighScoreTitleIdEntry;

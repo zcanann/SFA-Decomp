@@ -194,7 +194,7 @@ extern f32 lbl_803E20F4;
 extern f32 lbl_803E20F8;
 extern f32 lbl_803E20FC;
 extern f32 lbl_803E2100;
-extern HintCell lbl_8031BB90[13];
+extern GridEntry lbl_8031BB90[13];
 extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
 extern float fsin16Precise(int angle);
