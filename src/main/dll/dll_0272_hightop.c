@@ -16,14 +16,28 @@
  * and a set of GameBits (e.g. 0x631/0x632/0x634, the 0x9C7.. progress
  * quartet, and the 0x3F0.. counters).
  */
-#include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0272_hightop.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/pad.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/path_control_interface.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/objfx_api.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
+#include "main/game_ui_interface.h"
+#include "main/object.h"
+#include "main/object_render.h"
+#include "main/obj_group.h"
+#include "main/obj_path.h"
+#include "main/obj_trigger.h"
+#include "main/objanim.h"
+#include "main/objseq.h"
 #include "main/objprint_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
@@ -35,9 +49,9 @@
 #include "main/dll/baddie_state.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/gamebit_ids.h"
 #include "main/player_control_interface.h"
-#include "main/dll/dll_0272_hightop.h"
 
 __declspec(section ".rodata") HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
 __declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
@@ -56,15 +70,6 @@ __declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 
 #define HIGHTOP_OBJECT_TYPE_ID 0x43
 #define HIGHTOP_OBJGROUP       0xa
 #define ARWARWING_OBJGROUP     0x26
-
-typedef struct HighTopPlacement
-{
-    u8 pad00[0x18];
-    s8 rotByte;          /* 0x18: yaw seed (<<8 -> anim.rotX) */
-    u8 unk19;            /* 0x19 -> runtime.unkC45 */
-    s16 airMeterParam;   /* 0x1a */
-    s16 curveScaleParam; /* 0x1c */
-} HighTopPlacement;
 
 int hightop_defaultStateHandler(void)
 {
@@ -155,8 +160,8 @@ void HighTop_free(int obj)
 
 int hightop_stateHandler00(GameObject* obj)
 {
-    int placement = *(int*)&obj->anim.placementData;
-    if (((HightopPlacement*)placement)->spawnVariant != 0)
+    HighTopPlacement* placement = (HighTopPlacement*)obj->anim.placementData;
+    if (placement->spawnVariant != 0)
     {
         return 0xa;
     }
@@ -353,7 +358,7 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
         int count;
         int** list;
         int i;
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
         ObjPath_GetPointWorldPosition((GameObject*)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z,
                                       0);
         ObjPath_GetPointWorldPositionArray((GameObject*)obj, 3, 4, runtime->pathPointWorldPositions);
@@ -380,11 +385,10 @@ void HighTop_render(void* obj, int p2, int p3, int p4, int p5, char visible)
     }
 }
 
-void HighTop_init(GameObject* obj, u8* arg)
+void HighTop_init(GameObject* obj, HighTopPlacement* placement)
 {
     u8* base = lbl_8032AAB0;
     HighTopRuntime* runtime = (obj)->extra;
-    HighTopPlacement* p = (HighTopPlacement*)arg;
     u8* pathState;
     int* node;
     HtInitData local1;
@@ -393,9 +397,9 @@ void HighTop_init(GameObject* obj, u8* arg)
     local8 = lbl_803E6AA0;
     local1 = gHighTopLookInitData1;
     local2 = gHighTopLookInitData2;
-    (obj)->anim.rotX = (s16)(p->rotByte << 8);
+    (obj)->anim.rotX = (s16)(placement->rotByte << 8);
     (obj)->animEventCallback = HighTop_seqFn;
-    runtime->unkC45 = p->unk19;
+    runtime->unkC45 = placement->spawnVariant;
     runtime->turnRateThreshold = 5;
     *(s8*)&runtime->substate = -1;
     node = *(int**)&(obj)->anim.modelState;
@@ -418,19 +422,19 @@ void HighTop_init(GameObject* obj, u8* arg)
     dll_2E_func09((MoveLibState*)runtime->lookController, &local2, &local1, 6);
     runtime->flags |= 2;
     runtime->flags |= 8;
-    runtime->airMeterRemaining = p->airMeterParam;
+    runtime->airMeterRemaining = placement->airMeterParam;
     runtime->flags |= 1;
     (obj)->anim.modelInstance->runtimeSourceHitMask = 127;
     runtime->flagsC49.b4 = 0;
     runtime->flagsC49.b7 = 0;
-    gHighTopAirMeterInitValue = p->airMeterParam;
-    if (p->curveScaleParam == 0)
+    gHighTopAirMeterInitValue = placement->airMeterParam;
+    if (placement->curveScaleParam == 0)
     {
         runtime->curveFollowSpeedScale = lbl_803E6B50;
     }
     else
     {
-        runtime->curveFollowSpeedScale = (f32)p->curveScaleParam / lbl_803E6B54;
+        runtime->curveFollowSpeedScale = (f32)placement->curveScaleParam / lbl_803E6B54;
     }
     runtime->flagsC49.b6 = 0;
     runtime->flagsC4A.b0 = 0;
@@ -1015,7 +1019,7 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt)
 int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
 {
     HighTopRuntime* state = (obj)->extra;
-    int* placement = *(int**)&(obj)->anim.placementData;
+    HighTopPlacement* placement = (HighTopPlacement*)obj->anim.placementData;
     int i;
     int prevCount;
     int* weight;
@@ -1057,7 +1061,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
             return 0xb;
         }
     }
-    if (mainGetBit(((HightopPlacement*)placement)->gameBitId) == 0)
+    if (mainGetBit(placement->gameBitId) == 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         if (randFn_80080100(0x64) != 0)
