@@ -2106,6 +2106,7 @@ void gxTextureFn_80052efc(void)
     int k;
     int model;
     u8* tex;
+    u8 group;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2150,9 +2151,10 @@ void gxTextureFn_80052efc(void)
     clearSlot = 5;
     k = 5;
     e = gRcpDistortSlots + 0x8c; /* &slots[5]; +0 texture, +0xe tex refCount, +0x1a group, +0x1b mode */
+    group = gRcpDistortGroup;
     for (; k >= 0; k--)
     {
-        if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && gRcpDistortGroup == e[0x1a])
+        if (*(u16*)(*(u8**)e + 0xe) != 0 && e[0x1b] == 0 && group == e[0x1a])
         {
             clearSlot = k;
             break;
@@ -2389,7 +2391,7 @@ void* textureLoad(int texId, u8 flagIn)
             slot = n & 0x7fff;
             if (slot == 0x82e)
             {
-                OSReport(sDebugIntLineFormat);
+                OSReport(sDebugIntLineFormat, slot);
             }
         }
     }
