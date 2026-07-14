@@ -90,7 +90,6 @@ extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, voi
 extern void fn_80063368(short* obj);
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
                                 int arg6);
-extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
 extern void setRumbleEnabled(u8 enabled);
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
@@ -1604,12 +1603,12 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
             ptsRead = ptsRead + 3;
             radWrite = radWrite + 1;
         }
-        state->hitBounds[0] = minX;
-        state->hitBounds[3] = maxX;
-        state->hitBounds[1] = (int)(minY - state->heightPadding);
-        state->hitBounds[4] = (int)(maxY + state->heightPadding);
-        state->hitBounds[2] = minZ;
-        state->hitBounds[5] = maxZ;
+        state->hitBounds.minX = minX;
+        state->hitBounds.maxX = maxX;
+        state->hitBounds.minY = (int)(minY - state->heightPadding);
+        state->hitBounds.maxY = (int)(maxY + state->heightPadding);
+        state->hitBounds.minZ = minZ;
+        state->hitBounds.maxZ = maxZ;
     }
 }
 
@@ -1649,7 +1648,7 @@ void dll_15_func07(void* obj, CurvesCollisionState* state)
             mask |= 0x1;
         if ((s32)(flags & 0x01000000) != 0)
             mask |= 0x20;
-        hitDetectFn_800691c0(obj, state->hitBounds, mask, 1);
+        hitDetectFn_800691c0((GameObject*)obj, &state->hitBounds, mask, 1);
     }
 }
 

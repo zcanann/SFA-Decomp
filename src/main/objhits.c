@@ -11,11 +11,9 @@
 #include "main/objhits.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
+#include "main/track_dolphin_api.h"
 
 extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outHits, int flags);
-extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
-                                            int pointCount);
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
@@ -2179,7 +2177,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
     ObjHitsPriorityState* stateB;
     int pointCount;
     ObjHitsModelHitVolume* hitVolume;
-    u32 bounds[6];
+    TrackQueryBounds bounds;
     struct
     {
         u8 out[64];
@@ -2277,8 +2275,8 @@ void ObjHits_CheckTrackContact(int objA, int objB)
         }
         if (pointCount != 0)
         {
-            hitDetect_calcSweptSphereBounds(bounds, startPoints, endPoints, hb.radii, pointCount);
-            hitDetectFn_800691c0(objB, bounds, stateB->trackContactMask, 1);
+            hitDetect_calcSweptSphereBounds(&bounds, startPoints, endPoints, hb.radii, pointCount);
+            hitDetectFn_800691c0((GameObject*)objB, &bounds, stateB->trackContactMask, 1);
             contact = hitDetectFn_80067958(objB, startPoints, endPoints, pointCount, hb.out, 0);
             if (contact != 0)
             {

@@ -51,6 +51,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 #define SMALLBASKET_HIT_VOLUME_SLOT 0xe
 
 #define SMALLBASKET_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -105,9 +106,6 @@ extern const f32 lbl_803E3958;
 extern const f32 lbl_803E395C;
 extern const f32 lbl_803E3960;
 extern const f32 lbl_803E3964;
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
-                                            int pointCount);
-extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
 extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
 extern const f32 lbl_803E3970;
 void SmallBasket_init(GameObject* obj, int def);
@@ -482,7 +480,7 @@ int smallbasket_resolveCollision(u8* obj)
     HitDetectResults hitResults;
     f32 endPoints[12];
     f32 startPoints[12];
-    u32 sweptBounds[6];
+    TrackQueryBounds sweptBounds;
 
     st = *(u8**)&((GameObject*)obj)->anim.hitReactState;
     if (objBboxFnIntLegacy(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, (int)obj, 1, -1, 0xff, 0) != 0)
@@ -515,8 +513,8 @@ int smallbasket_resolveCollision(u8* obj)
         return 0;
     }
 
-    hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, hitResults.radii, 1);
-    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState*)st)->trackContactMask, 1);
+    hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, hitResults.radii, 1);
+    hitDetectFn_800691c0((GameObject*)obj, &sweptBounds, ((ObjHitsPriorityState*)st)->trackContactMask, 1);
     hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
     if (hit != 0)
     {

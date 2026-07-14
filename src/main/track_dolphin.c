@@ -404,7 +404,6 @@ extern void PSVECSubtract(f32* a, f32* b, f32* out);
 extern f32 PSVECMag(f32* v);
 extern u8* mapGetBlockIdx(int layer);
 
-extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
 extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1,
@@ -1944,42 +1943,43 @@ fail:
     *(u8*)((char*)out + 0x18) = 0xff;
 }
 
-void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, f32* radii, int pointCount)
+void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
+                                     int pointCount)
 {
     int i;
 
-    boundsOut[0] = 1000000;
-    boundsOut[3] = -1000000;
-    boundsOut[1] = 1000000;
-    boundsOut[4] = -1000000;
-    boundsOut[2] = 1000000;
-    boundsOut[5] = -1000000;
+    boundsOut->minX = 1000000;
+    boundsOut->maxX = -1000000;
+    boundsOut->minY = 1000000;
+    boundsOut->maxY = -1000000;
+    boundsOut->minZ = 1000000;
+    boundsOut->maxZ = -1000000;
     for (i = pointCount; i != 0; i--)
     {
-        if (startPoints[0] - radii[0] < boundsOut[0])
-            boundsOut[0] = (int)(startPoints[0] - radii[0]);
-        if (startPoints[0] + radii[0] > boundsOut[3])
-            boundsOut[3] = (int)(startPoints[0] + radii[0]);
-        if (startPoints[1] - radii[0] < boundsOut[1])
-            boundsOut[1] = (int)(startPoints[1] - radii[0]);
-        if (startPoints[1] + radii[0] > boundsOut[4])
-            boundsOut[4] = (int)(startPoints[1] + radii[0]);
-        if (startPoints[2] - radii[0] < boundsOut[2])
-            boundsOut[2] = (int)(startPoints[2] - radii[0]);
-        if (startPoints[2] + radii[0] > boundsOut[5])
-            boundsOut[5] = (int)(startPoints[2] + radii[0]);
-        if (endPoints[0] - radii[0] < boundsOut[0])
-            boundsOut[0] = (int)(endPoints[0] - radii[0]);
-        if (endPoints[0] + radii[0] > boundsOut[3])
-            boundsOut[3] = (int)(endPoints[0] + radii[0]);
-        if (endPoints[1] - radii[0] < boundsOut[1])
-            boundsOut[1] = (int)(endPoints[1] - radii[0]);
-        if (endPoints[1] + radii[0] > boundsOut[4])
-            boundsOut[4] = (int)(endPoints[1] + radii[0]);
-        if (endPoints[2] - radii[0] < boundsOut[2])
-            boundsOut[2] = (int)(endPoints[2] - radii[0]);
-        if (endPoints[2] + radii[0] > boundsOut[5])
-            boundsOut[5] = (int)(endPoints[2] + radii[0]);
+        if (startPoints[0] - radii[0] < boundsOut->minX)
+            boundsOut->minX = (int)(startPoints[0] - radii[0]);
+        if (startPoints[0] + radii[0] > boundsOut->maxX)
+            boundsOut->maxX = (int)(startPoints[0] + radii[0]);
+        if (startPoints[1] - radii[0] < boundsOut->minY)
+            boundsOut->minY = (int)(startPoints[1] - radii[0]);
+        if (startPoints[1] + radii[0] > boundsOut->maxY)
+            boundsOut->maxY = (int)(startPoints[1] + radii[0]);
+        if (startPoints[2] - radii[0] < boundsOut->minZ)
+            boundsOut->minZ = (int)(startPoints[2] - radii[0]);
+        if (startPoints[2] + radii[0] > boundsOut->maxZ)
+            boundsOut->maxZ = (int)(startPoints[2] + radii[0]);
+        if (endPoints[0] - radii[0] < boundsOut->minX)
+            boundsOut->minX = (int)(endPoints[0] - radii[0]);
+        if (endPoints[0] + radii[0] > boundsOut->maxX)
+            boundsOut->maxX = (int)(endPoints[0] + radii[0]);
+        if (endPoints[1] - radii[0] < boundsOut->minY)
+            boundsOut->minY = (int)(endPoints[1] - radii[0]);
+        if (endPoints[1] + radii[0] > boundsOut->maxY)
+            boundsOut->maxY = (int)(endPoints[1] + radii[0]);
+        if (endPoints[2] - radii[0] < boundsOut->minZ)
+            boundsOut->minZ = (int)(endPoints[2] - radii[0]);
+        if (endPoints[2] + radii[0] > boundsOut->maxZ)
+            boundsOut->maxZ = (int)(endPoints[2] + radii[0]);
         startPoints += 3;
         endPoints += 3;
         radii += 1;
@@ -2001,7 +2001,7 @@ int objShadowFn_80062498(int* obj, int param2)
     u32 handle;
     f32 vec[3];
     f32 base[3];
-    int ranges[6];
+    TrackQueryBounds ranges;
     u8 buf48[96];
     u8 bufA8[304];
 
@@ -2036,9 +2036,9 @@ int objShadowFn_80062498(int* obj, int param2)
         base[0] = ((GameObject*)obj)->anim.worldPosX;
         base[1] = ((GameObject*)obj)->anim.worldPosY + yOff;
         base[2] = ((GameObject*)obj)->anim.worldPosZ;
-        vecGetRanges((f32*)buf48, base, modelState->shadowScale, ranges);
+        vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
 
-        hitDetectFn_800691c0(obj, ranges, 0x81, 0);
+        hitDetectFn_800691c0((GameObject*)obj, &ranges, 0x81, 0);
         fn_80069958((void**)&vtx);
         fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
 
@@ -2055,14 +2055,14 @@ int objShadowFn_80062498(int* obj, int param2)
     return 0;
 }
 
-void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b)
+void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int b)
 {
-    f32 f31 = (f32)(ranges[0] - 5);
-    f32 f30 = (f32)(ranges[3] + 5);
-    f32 f29 = (f32)(ranges[1] - 5);
-    f32 f28 = (f32)(ranges[4] + 5);
-    f32 f27 = (f32)(ranges[2] - 5);
-    f32 f26 = (f32)(ranges[5] + 5);
+    f32 f31 = (f32)(ranges->minX - 5);
+    f32 f30 = (f32)(ranges->maxX + 5);
+    f32 f29 = (f32)(ranges->minY - 5);
+    f32 f28 = (f32)(ranges->maxY + 5);
+    f32 f27 = (f32)(ranges->minZ - 5);
+    f32 f26 = (f32)(ranges->maxZ + 5);
     s16 i;
     int flag80;
     ObjAnimComponent** resetObjects;
@@ -2614,7 +2614,7 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
         conv[4] = (int)(lbl_803DECE8 + y);
         conv[2] = z;
         conv[5] = z;
-        hitDetectFn_800691c0((int*)obj, conv, submode, 1);
+        hitDetectFn_800691c0(obj, (TrackQueryBounds*)conv, submode, 1);
     }
     else
     {

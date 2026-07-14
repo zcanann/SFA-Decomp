@@ -153,8 +153,6 @@ extern f32 lbl_803E3540;
 __declspec(section ".rodata") int gPushableDefaultBox[4] = {0, 0, 0, 0};
 extern int fn_802969F0(void);
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
-extern void hitDetect_calcSweptSphereBounds(int* boundsOut, f32* startPoints, f32* endPoints, int* box, int count);
-extern void hitDetectFn_800691c0(int* obj, int* ranges, int a, int b);
 extern f32 lbl_803E35A8;
 extern f32 lbl_803E35AC;
 extern f32 lbl_803E35B0;
@@ -896,7 +894,7 @@ void pushable_hitDetect(GameObject* obj)
     f32 acc;
     f32 wpos[12];
     f32 mtx[16];
-    int sweep[6];
+    TrackQueryBounds sweep;
     MatrixTransform vec;
     f32 hp4[4];
     PushableBox16 box;
@@ -998,10 +996,10 @@ void pushable_hitDetect(GameObject* obj)
             w += 3;
             e += 0xc;
         }
-        hitDetect_calcSweptSphereBounds(sweep, (f32*)state->cornerWorld, wpos, (int*)&box, 4);
-        sweep[1] = (int)((f32)sweep[1] - lbl_803E35BC);
-        sweep[4] = (int)((f32)sweep[4] + lbl_803E35BC);
-        hitDetectFn_800691c0((int*)obj, sweep, 1, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, wpos, (f32*)&box, 4);
+        sweep.minY = (int)((f32)sweep.minY - lbl_803E35BC);
+        sweep.maxY = (int)((f32)sweep.maxY + lbl_803E35BC);
+        hitDetectFn_800691c0(obj, &sweep, 1, 1);
         tmpY = lbl_803E3528;
         cnt2 = 0;
         cntE = 0;
@@ -1113,7 +1111,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
     f32 wpos[12];
     f32 deltas[12];
     MatrixTransform vec;
-    int sweep[6];
+    TrackQueryBounds sweep;
     f32 start[3];
     f32 end[3];
     f32 tmpY;
@@ -1143,8 +1141,8 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[0] = lbl_803E35A0 * mathSinf(gPushablePi * state->yaw / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
         end[2] = lbl_803E35A0 * mathCosf(gPushablePi * state->yaw / gPushableYawHalfCircle) + start[2];
-        hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
-        hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
+        hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
@@ -1164,8 +1162,8 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[0] = lbl_803E35A4 * mathSinf(gPushablePi * (f32)(state->yaw + 0x4000) / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
         end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw + 0x4000) / gPushableYawHalfCircle) + start[2];
-        hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
-        hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
+        hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
@@ -1185,8 +1183,8 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[0] = lbl_803E35A4 * mathSinf(gPushablePi * (f32)(state->yaw - 0x4000) / gPushableYawHalfCircle) + start[0];
         end[1] = start[1];
         end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw - 0x4000) / gPushableYawHalfCircle) + start[2];
-        hitDetect_calcSweptSphereBounds(sweep, start, end, (int*)pp, 1);
-        hitDetectFn_800691c0(NULL, sweep, 0x208, 1);
+        hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
+        hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
         hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {

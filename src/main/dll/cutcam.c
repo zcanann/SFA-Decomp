@@ -33,6 +33,7 @@
 #include "main/dll/player_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
+#include "main/track_dolphin_api.h"
 
 #define PAD_TRIGGER_Z 0x10
 #define PAD_TRIGGER_L 0x40
@@ -43,9 +44,6 @@
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
 extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
-extern void hitDetectFn_800691c0(int a, void* b, int c, int d);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
-                                            int pointCount);
 extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
@@ -76,7 +74,7 @@ int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceW
     u8 blocked;
     int clear;
     float endTmp[3];
-    u32 sweptBounds[9];
+    TrackQueryBounds sweptBounds;
 
     if (outPos == NULL)
     {
@@ -101,9 +99,9 @@ int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceW
     gCutCamBboxBlocked = blocked;
     if (runTrace != 0)
     {
-        hitDetect_calcSweptSphereBounds(sweptBounds, fromPos, outPos,
+        hitDetect_calcSweptSphereBounds(&sweptBounds, fromPos, outPos,
                                         (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
-        hitDetectFn_800691c0(0, sweptBounds, 0x240, 1);
+        hitDetectFn_800691c0(NULL, &sweptBounds, 0x240, 1);
     }
     hitDetectFn_80067958(0, fromPos, outPos, 1, (int)traceWork, 0);
     clear = 0;
@@ -478,7 +476,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     float endPts[13][3];
     u8 box[112];
     float radii[13];
-    u32 bounds[6];
+    TrackQueryBounds bounds;
     float prev[3];
     f32 outB[2];
     f32 outA[2];
@@ -554,8 +552,8 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         endPts[j][2] = prev[2];
         radii[j] = *(f32*)&lbl_803E16A0;
     }
-    hitDetect_calcSweptSphereBounds(bounds, (float*)path, (float*)endPts, radii, 0xd);
-    hitDetectFn_800691c0(0, bounds, 0x248, 1);
+    hitDetect_calcSweptSphereBounds(&bounds, (float*)path, (float*)endPts, radii, 0xd);
+    hitDetectFn_800691c0(NULL, &bounds, 0x248, 1);
     trace = camcontrol_traceMove(prev, &camera->anim.worldPosX, NULL, box, 7, '\0', '\0', lbl_803E16A0);
     blocked = 0;
     if (trace == 0)

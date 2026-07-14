@@ -72,8 +72,6 @@ __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
-extern int hitDetect_calcSweptSphereBounds(void* bounds, void* start, void* end, void* sphere, int n);
-extern int hitDetectFn_800691c0(void* obj, void* p2, int p3, int p4);
 extern int hitDetectFn_80067958(void* obj, void* p2, void* p3, int p4, void* p5, int p6);
 void Scarab_update(GameObject* obj)
 {
@@ -109,7 +107,7 @@ void Scarab_update(GameObject* obj)
         ScarabSphere sph;
     } bufs;
     ScarabRot rot;
-    u8 bounds[24];
+    TrackQueryBounds bounds;
     ScarabVec3 start;
     ScarabVec3 end;
     f32 vsub[3];
@@ -262,9 +260,9 @@ void Scarab_update(GameObject* obj)
                     *(f32*)(sp = &bufs.sph) = lbl_803E39F8;
                     sp->a = -1;
                     sp->b = 0;
-                    hitDetect_calcSweptSphereBounds(bounds, &start, &end, sp, 1);
+                    hitDetect_calcSweptSphereBounds(&bounds, (f32*)&start, (f32*)&end, (f32*)sp, 1);
                 }
-                hitDetectFn_800691c0(obj, bounds, 0, 1);
+                hitDetectFn_800691c0(obj, &bounds, 0, 1);
                 count = hitDetectFn_80067958(obj, &start, &end, 1, bufs.hitBuf, 0);
                 obj->anim.localPosX = end.x;
                 obj->anim.localPosY = end.y;
@@ -419,9 +417,10 @@ void Scarab_update(GameObject* obj)
                     *(f32*)(sp = &bufs.sph) = lbl_803E3A00;
                     sp->a = -1;
                     sp->b = 10;
-                    hitDetect_calcSweptSphereBounds(bounds, &obj->anim.previousLocalPosX, &obj->anim.localPosX, sp, 1);
+                    hitDetect_calcSweptSphereBounds(&bounds, &obj->anim.previousLocalPosX, &obj->anim.localPosX,
+                                                     (f32*)sp, 1);
                 }
-                hitDetectFn_800691c0(obj, bounds, 0, 1);
+                hitDetectFn_800691c0(obj, &bounds, 0, 1);
                 hits = hitDetectFn_80067958(obj, &obj->anim.previousLocalPosX, &obj->anim.localPosX, 1, bufs.hitBuf, 0);
                 if (flag != 0 ||
                     Vec_distance(&obj->anim.worldPosX, &((ObjPlacement*)obj->anim.placementData)->posX) > lbl_803E3A30 ||
@@ -724,9 +723,6 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int scarab_sweptCollide(GameObject* obj)
 {
-    extern void hitDetect_calcSweptSphereBounds(u32 * boundsOut, f32 * startPoints, f32 * endPoints, f32 * radii,
-                                                int pointCount);
-    extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
     extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
     extern f32 gScarabSweptHitInfo[4];
 
@@ -739,7 +735,7 @@ int scarab_sweptCollide(GameObject* obj)
     } HitDetectResults;
 
     u8* state;
-    u32 sweptBounds[6];
+    TrackQueryBounds sweptBounds;
     f32 endPoints[12];
     f32 startPoints[12];
     HitDetectResults results;
@@ -764,8 +760,8 @@ int scarab_sweptCollide(GameObject* obj)
         return 0;
     }
 
-    hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
-    hitDetectFn_800691c0((int)obj, sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
+    hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, results.radii, 1);
+    hitDetectFn_800691c0(obj, &sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
     hit = hitDetectFn_80067958((int)obj, startPoints, endPoints, 1, &results, 0);
     if (hit != 0)
     {

@@ -37,6 +37,7 @@
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
 #include "main/vecmath.h"
+#include "main/track_dolphin_api.h"
 #define STAFFACTION_HIT_VOLUME_SLOT 9
 
 /* object group this object belongs to */
@@ -52,9 +53,6 @@
 
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
-extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);
-extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
-                                            int pointCount);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
@@ -529,7 +527,7 @@ void fn_80165B3C(GameObject* obj, int state)
     f32 dz;
     f32 start[3];
     f32 end[3];
-    u32 bounds[6];
+    TrackQueryBounds bounds;
     struct
     {
         f32 hit[16];
@@ -554,8 +552,8 @@ void fn_80165B3C(GameObject* obj, int state)
     end[2] = start[2] + (obj)->anim.velocityZ;
     hitScratch.hitRadius = lbl_803E2FDC;
     hitScratch.hitType = 3;
-    hitDetect_calcSweptSphereBounds(bounds, start, end, &radius, 1);
-    hitDetectFn_800691c0((int)obj, bounds, 0, 1);
+    hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
+    hitDetectFn_800691c0(obj, &bounds, 0, 1);
     hitFound = hitDetectFn_80067958((int)obj, start, end, 1, hitScratch.hit, 0x20);
     if (hitFound != 0)
     {
@@ -732,7 +730,7 @@ void fn_80166444(int obj, int state)
     f32 dz;
     f32 start[3];
     f32 end[3];
-    u32 bounds[6];
+    TrackQueryBounds bounds;
     struct
     {
         f32 hit[16];
@@ -757,8 +755,8 @@ void fn_80166444(int obj, int state)
     end[1] = start[1] + ((GameObject*)obj)->anim.velocityY;
     end[2] = start[2] + ((GameObject*)obj)->anim.velocityZ;
     radius = lbl_803E3020;
-    hitDetect_calcSweptSphereBounds(bounds, start, end, &radius, 1);
-    hitDetectFn_800691c0(obj, bounds, 0, 1);
+    hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
+    hitDetectFn_800691c0((GameObject*)obj, &bounds, 0, 1);
     one = lbl_803E2FF4;
     while ((traveled < distanceRemaining) && (++stepCount < 10))
     {

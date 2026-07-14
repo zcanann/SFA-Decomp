@@ -17,6 +17,7 @@
 #include "main/camera.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_000D_playershadow.h"
+#include "main/track_dolphin_api.h"
 
 /* foot/bone particle ids scattered per struck-triangle surface type
    (index-style; roles opaque). A on surfaces 0x10/0x12; B on 0x11/0x14/0x15;
@@ -29,8 +30,6 @@ extern u8 gPlayerShadowMode;
 __declspec(section ".rodata") u32 gPlayerShadowDefaultParams[4] = {0, 0, 0, 0};
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
-extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
-extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
 extern void fn_80069958(int** out);
 
@@ -243,7 +242,7 @@ void playerShadow_renderObject(GameObject* obj)
     int hitCount;
     int hitTableValue;
     u32 mode;
-    f32 hitData[6];
+    TrackQueryBounds hitData;
     f32 verts[8][3];
     f32 height;
     f32 radius;
@@ -319,8 +318,8 @@ void playerShadow_renderObject(GameObject* obj)
     verts[7][1] = (obj)->anim.localPosY - height;
     verts[7][2] = (obj)->anim.localPosZ - radius;
 
-    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
-    hitDetectFn_800691c0(obj, hitData, 0x84, 0);
+    hitDetect_calcSweptSphereBounds(&hitData, &verts[0][0], &verts[4][0], (f32*)params, 4);
+    hitDetectFn_800691c0(obj, &hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;
     fn_80069958(&tileInfo);

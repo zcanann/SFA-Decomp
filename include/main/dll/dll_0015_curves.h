@@ -2,6 +2,7 @@
 #define MAIN_DLL_CURVES_H_
 
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/curve_walker.h"
@@ -151,7 +152,7 @@ typedef struct CurvesCollisionState
     f32 waterNormalX[4];  /* 0x210 */
     f32 waterNormalY[4];  /* 0x220 init 1.0 */
     f32 waterNormalZ[4];  /* 0x230 */
-    s32 hitBounds[6];     /* 0x240 swept-sphere bounds (minX..maxZ ints) */
+    TrackQueryBounds hitBounds; /* 0x240 swept-sphere bounds */
     u8 heightPadding;
     u8 pad259[2];
     s8 subtype;
