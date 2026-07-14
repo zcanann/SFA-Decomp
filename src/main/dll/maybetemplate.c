@@ -618,7 +618,6 @@ typedef struct CounterText
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
 
 #pragma opt_strength_reduction on
-#pragma opt_propagation off
 #pragma peephole off
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
 {
@@ -832,7 +831,6 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     }
 }
 #pragma opt_strength_reduction reset
-#pragma opt_propagation reset
 #pragma peephole reset
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
@@ -1978,58 +1976,6 @@ int cMenuRingModelRenderFn(int obj, int block, int idx)
     return 1;
 }
 
-void drawTrickyHudOverlay(int obj, int unused1, int unused2)
-{
-    int player;
-    int tricky;
-    int iconIndex;
-    player = (int)Obj_GetPlayerObject();
-    tricky = (int)getTrickyObject();
-    GXSetScissor(0, 0, 0x280, 0x1e0);
-    hudDrawTimedElement(obj, lbl_803A9398);
-    if ((void*)tricky != 0)
-    {
-        gTrickyHudItemMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x24))(tricky);
-        gTrickyHudActionMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x20))(tricky);
-    }
-    else
-    {
-        gTrickyHudItemMask = 0;
-        gTrickyHudActionMask = 0;
-    }
-    drawViewFinderHud();
-    if ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER &&
-        (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
-        (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
-    {
-        (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &iconIndex);
-        if (gTrickyHudCachedIconTexture != 0)
-        {
-            if (gTrickyHudCachedIconIndex != iconIndex)
-            {
-                ((void (*)(void*))textureFree)(gTrickyHudCachedIconTexture);
-                gTrickyHudCachedIconIndex = -1;
-                gTrickyHudCachedIconTexture = 0;
-            }
-        }
-        if (gTrickyHudCachedIconTexture == 0)
-        {
-            if (iconIndex > -1)
-            {
-                if (gTrickyHudIconTextureIds[iconIndex] != -1)
-                {
-                    gTrickyHudCachedIconTexture = textureLoadAsset(gTrickyHudIconTextureIds[iconIndex]);
-                }
-            }
-        }
-        gTrickyHudCachedIconIndex = iconIndex;
-        if (gTrickyHudCachedIconTexture != 0)
-        {
-            drawTexture((void*)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
-            drawTexture(gTrickyHudCachedIconTexture, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
-        }
-    }
-}
 int cMenuRingIconRenderFn(int obj, int block, int idx)
 {
     int slotIdx;
@@ -2294,6 +2240,59 @@ void cMenuRotateFn_80124d80(void)
     lbl_803DD8D4 = (r > 0) ? r : 0;
 }
 
+void drawTrickyHudOverlay(int obj, int unused1, int unused2)
+{
+    int player;
+    int tricky;
+    int iconIndex;
+    player = (int)Obj_GetPlayerObject();
+    tricky = (int)getTrickyObject();
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    hudDrawTimedElement(obj, lbl_803A9398);
+    if ((void*)tricky != 0)
+    {
+        gTrickyHudItemMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x24))(tricky);
+        gTrickyHudActionMask = (*(int (**)(int))(*(int*)(*(int*)(tricky + 0x68)) + 0x20))(tricky);
+    }
+    else
+    {
+        gTrickyHudItemMask = 0;
+        gTrickyHudActionMask = 0;
+    }
+    drawViewFinderHud();
+    if ((*gCameraInterface)->getMode() != CAMMODE_VIEWFINDER &&
+        (((GameObject*)player)->objectFlags & CMENU_OBJFLAG_PARENT_SLACK) == 0 && pauseMenuState == 0 &&
+        (void*)tricky != 0 && getHudHiddenFrameCount() == 0)
+    {
+        (*(int (**)(int, int*))(*(int*)(*(int*)(tricky + 0x68)) + 0x48))(tricky, &iconIndex);
+        if (gTrickyHudCachedIconTexture != 0)
+        {
+            if (gTrickyHudCachedIconIndex != iconIndex)
+            {
+                ((void (*)(void*))textureFree)(gTrickyHudCachedIconTexture);
+                gTrickyHudCachedIconIndex = -1;
+                gTrickyHudCachedIconTexture = 0;
+            }
+        }
+        if (gTrickyHudCachedIconTexture == 0)
+        {
+            if (iconIndex > -1)
+            {
+                if (gTrickyHudIconTextureIds[iconIndex] != -1)
+                {
+                    gTrickyHudCachedIconTexture = textureLoadAsset(gTrickyHudIconTextureIds[iconIndex]);
+                }
+            }
+        }
+        gTrickyHudCachedIconIndex = iconIndex;
+        if (gTrickyHudCachedIconTexture != 0)
+        {
+            drawTexture((void*)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
+            drawTexture(gTrickyHudCachedIconTexture, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
+        }
+    }
+}
+
 
 /*
  * headdisplay - HUD / overlay drawing for the in-cockpit pause-menu head
@@ -2485,23 +2484,6 @@ void drawFn_80125424(void)
     }
 }
 
-void fn_80125D04(void)
-{
-    int i;
-    for (i = 0; i < 6; i++)
-    {
-        int* obj = (int*)gHeadDisplayModelObjs[i];
-        if (obj != NULL)
-        {
-            if ((u32) * &((GameObject*)obj)->anim.placementData > 0x90000000u)
-            {
-                *(int*)&((GameObject*)obj)->anim.placementData = 0;
-            }
-            Obj_FreeObject((GameObject*)gHeadDisplayModelObjs[i]);
-            gHeadDisplayModelObjs[i] = 0;
-        }
-    }
-}
 void gameTextFn_80125ba4(int idx)
 {
     int boxId;
@@ -2551,6 +2533,25 @@ void gameTextFn_80125ba4(int idx)
         gHeadDisplayFadeAlpha = 0;
     }
 }
+
+void fn_80125D04(void)
+{
+    int i;
+    for (i = 0; i < 6; i++)
+    {
+        int* obj = (int*)gHeadDisplayModelObjs[i];
+        if (obj != NULL)
+        {
+            if ((u32) * &((GameObject*)obj)->anim.placementData > 0x90000000u)
+            {
+                *(int*)&((GameObject*)obj)->anim.placementData = 0;
+            }
+            Obj_FreeObject((GameObject*)gHeadDisplayModelObjs[i]);
+            gHeadDisplayModelObjs[i] = 0;
+        }
+    }
+}
+
 void pauseMenuCreateHeads(void)
 {
     int i;
@@ -5784,7 +5785,6 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3)
 
 /* World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
-#pragma opt_propagation off
 void drawWorldMapHud(void)
 {
     u16 raw = gWorldMapVoiceoverTimer;
@@ -5806,7 +5806,6 @@ void drawWorldMapHud(void)
         s8 li_;
         u8 lv;
         int n;
-        int t;
         int hint;
         int hv;
 
@@ -5827,11 +5826,8 @@ void drawWorldMapHud(void)
             }
             fi = -1;
         haveIdx:
-            n = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
-            t = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
-            n += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
-            n += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-            n += t;
+            n = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone3_Got) +
+                mainGetBit(GAMEBIT_ITEM_SpellStone2_Used) + mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
             if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
             {
                 n++;
@@ -5929,8 +5925,6 @@ void drawWorldMapHud(void)
         gWorldMapVoiceoverTimer = 0;
     }
 }
-#pragma opt_propagation reset
-
 /* Tween advance: when the active counter
  * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
  * direction toggle in lbl_803DD77F gates the "approaching peak" half of

@@ -534,7 +534,6 @@ void GameUI_airMeterSetShutdown(void)
     p->bit7 = 1;
 }
 
-#pragma dont_inline on
 void GameUI_airMeterShutdown(void)
 {
     int* m = airMeter;
@@ -557,7 +556,6 @@ void GameUI_airMeterShutdown(void)
     mm_free(airMeter);
     airMeter = NULL;
 }
-#pragma dont_inline reset
 
 void GameUI_initAirMeter(int a, int b)
 {

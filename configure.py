@@ -1137,7 +1137,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_0039_dummy39.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_003A_dummy3a.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_8011d918.c"),
-            Object(NonMatching, "main/dll/tricky.c", cflags=cflags_dll_noopt),
+            Object(NonMatching, "main/dll/tricky.c", cflags=cflags_dll_noopt, extra_cflags=["-inline", "off"]),
             Object(NonMatching, "main/dll/maybetemplate.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0000_gameui.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_003B_menu.c"),
