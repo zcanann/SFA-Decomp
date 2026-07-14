@@ -42,6 +42,12 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/os/OSRtc.h"
 
+typedef u32 (*SndIsInstalledU32Fn)(void);
+typedef u8 (*MusicInitMidiWadU8Fn)(void);
+
+#define sndIsInstalledU32 ((SndIsInstalledU32Fn)sndIsInstalled)
+#define musicInitMidiWadU8 ((MusicInitMidiWadU8Fn)musicInitMidiWad)
+
 __declspec(section ".rodata") MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
 
@@ -3059,8 +3065,7 @@ int audioInit(void)
         sndSetAuxProcessingCallbacks(0, sndAuxCallbackReverbSTD, gAudioReverbSettings, 0xff, 0, 0, 0, 0xff,
                                      (void*)reverbWork);
         {
-            extern u32 sndIsInstalled(void);
-            if (!sndIsInstalled())
+            if (!sndIsInstalledU32())
             {
                 OSReport(base + 0x1f8);
                 return 0xff;
@@ -3141,8 +3146,7 @@ int audioInit(void)
     }
     if (!gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady)
     {
-        extern u8 musicInitMidiWad(void);
-        gAudioReady = musicInitMidiWad();
+        gAudioReady = musicInitMidiWadU8();
     }
     if (gAudioReady && gAudioMusicGroupReady && gAudioSfxGroupsReady &&
 
