@@ -356,3 +356,14 @@ value from the original (live-set delta says a GPR crosses the K=1 sqrtf in targ
 ours - candidates: pairId/r6-band value or an np-lifetime extension), (c) decode nadj
 computation (InterferenceGraph 0x57bad0 setter) and trace which edges the target-shaped
 code adds. gi (u32) in the committed decls is DEAD - vestigial, remove in final cleanup.
+
+## pl-chain index: structure-fixed, decl-immovable; SET_PLANE staging moves it at a cost
+- pl decl position (early/late): NO effect on the K1 chain slot (du-split chains renumber
+  independent of decl; K0 folds so even the "first" chain is a split).
+- pl/po staging in SET_PLANE (all 4 wg sites): curve=r22 ACHIEVED (chain-count theory
+  confirmed) but wg-block staging materializes +7 instructions (prop-off keeps named
+  pointer addis; target folds them into wg-reg displacements).
+- Next narrowing: try staging at exactly ONE wg site (K=3, nearest the NEWPATCH code) =
+  +1 pl chain, +~2 instructions; note baseline is ALREADY +2 instructions vs target
+  (the site-1 duplicate add r3,r30,r3) - the true original may trade these (the staging
+  form could REPLACE the +2 with its own materializations, netting byte-equal).
