@@ -2048,8 +2048,7 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
         }
         else
         {
-            int v = (int)(lbl_803E2010 * (f32)(u32) * (u8*)(obj + 0x37));
-            cfg[3] = v;
+            cfg[3] = lbl_803E2010 * (f32)(u32) * (u8*)(obj + 0x37);
         }
         gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
     }
