@@ -101,6 +101,8 @@ extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
+void SH_LevelControl_setMusic(short* state);
+
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 
 int SH_LevelControl_getExtraSize(void)
@@ -124,7 +126,6 @@ void SH_LevelControl_free(void)
 
 int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* updateState)
 {
-    extern void SH_LevelControl_setMusic(void* p);
     SCTotemLogPuzzleObject* puzzleObj;
     int i;
     puzzleObj = (SCTotemLogPuzzleObject*)obj;
@@ -134,7 +135,7 @@ int SH_LevelControl_SeqFn(void* obj, void* unused, SCTotemLogPuzzleUpdateState* 
         switch (*(u8*)&updateState->eventHandled[i])
         {
         case 0:
-            SH_LevelControl_setMusic(puzzleObj->runtime);
+            SH_LevelControl_setMusic((short*)puzzleObj->runtime);
             break;
         }
         i++;
@@ -640,10 +641,6 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 void SH_LevelControl_update(GameObject* obj)
 {
     extern u8 lbl_80327618[0x104];
-    extern void SH_LevelControl_doEarlyScenes(int obj, u32* state);
-    extern void SH_LevelControl_doThornTailEvents(int obj, u32* state);
-    extern void SH_LevelControl_runBloopEvent(GameObject * obj, u32 * state);
-    extern void SH_LevelControl_setMusic(u32 * state);
 
     u32* state;
     u32 val;
@@ -663,7 +660,7 @@ void SH_LevelControl_update(GameObject* obj)
             ((ShLevelcontrolState*)state)->hudTextTimer = lbl_803E54B4;
         }
     }
-    SH_LevelControl_setMusic(state);
+    SH_LevelControl_setMusic((short*)state);
     val = mainGetBit(GAMEBIT_SH_Related03AA);
     if (val != 0)
     {
@@ -727,7 +724,7 @@ void SH_LevelControl_update(GameObject* obj)
     switch (((ShLevelcontrolState*)state)->mapAct)
     {
     case 1:
-        SH_LevelControl_doEarlyScenes((int)obj, state);
+        SH_LevelControl_doEarlyScenes((int)obj, (ShopkeeperLevelControlState*)state);
         break;
     case 2:
         val = mainGetBit(GAMEBIT_SH_ReturnedToQueen);
@@ -759,7 +756,7 @@ void SH_LevelControl_update(GameObject* obj)
         }
         break;
     case 3:
-        SH_LevelControl_doThornTailEvents((int)obj, state);
+        SH_LevelControl_doThornTailEvents((int)obj, (ShopkeeperLevelControlState*)state);
         break;
     case 4:
         if (((ShLevelcontrolState*)state)->musicLatch != 0xcc)
@@ -823,7 +820,7 @@ void SH_LevelControl_update(GameObject* obj)
         }
         break;
     case 6:
-        SH_LevelControl_runBloopEvent(obj, state);
+        SH_LevelControl_runBloopEvent(obj, (int)state);
         break;
     case 7:
         val = mainGetBit(GAMEBIT_SH_ThornTailRelated01A0);
