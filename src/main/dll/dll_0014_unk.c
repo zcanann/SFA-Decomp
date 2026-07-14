@@ -457,13 +457,15 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     int link;
     int count;
     u32 mask;
+    s32* lp;
     int i;
 
     count = 0;
     mask = 1;
+    lp = curve->linkIds;
     for (i = 0; i < ROMCURVE_LINK_COUNT; i++)
     {
-        link = curve->linkIds[i];
+        link = *lp++;
         if ((-1 < link) && ((curve->blockedLinkMask & mask) != 0) && (link != 0))
         {
             ids[count++] = link;
