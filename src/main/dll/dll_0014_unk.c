@@ -3073,7 +3073,8 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
 
 int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
 {
-    RomCurveDef* node;
+    f32* distWrite;
+    RomCurveDef* linkNode;
     RomCurveDef* cand;
     u32* idWrite;
     u32 candWalk;
@@ -3081,7 +3082,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     f32* probe;
     u32* idRead;
     f32* qscan;
-    f32* distWrite;
+    RomCurveDef* node;
     int li;
     int found;
     int count;
@@ -3129,12 +3130,12 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
             visited[off] = 0;
         }
         visited[startIdx] = 1;
-        node = RomCurve_findByIdWithIndex(*(s32*)(cur + 0x1c), &idx);
-        if (node == NULL)
+        linkNode = RomCurve_findByIdWithIndex(*(s32*)(cur + 0x1c), &idx);
+        if (linkNode == NULL)
         {
             continue;
         }
-        queueDist[0] = SQ(node->z - start->z) + (SQ(node->x - start->x) + SQ(node->y - start->y));
+        queueDist[0] = SQ(linkNode->z - start->z) + (SQ(linkNode->x - start->x) + SQ(linkNode->y - start->y));
         count = 0;
         queueIds[count++] = idx;
         visited[idx] = 1;
@@ -3226,18 +3227,20 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
 #pragma fp_contract off
 int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* outCurveId)
 {
+    f32* distWrite;
+    u32 candWalk;
     u32 cur;
     f32* probe;
     f32* qscan;
     f32* distRead;
-    f32* distWrite;
+    RomCurveDef* cand;
     RomCurveDef* node;
+    RomCurveDef* linkNode;
     int li;
     int found;
     int count;
     int done;
     int k;
-    RomCurveDef* cand;
     f32 newDist;
     f32* pq;
     int pos;
@@ -3287,12 +3290,12 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
             visited[off] = 0;
         }
         visited[startIdx] = 1;
-        node = RomCurve_findByIdWithIndex(*(s32*)(cur + 0x1c), &idx);
-        if (node == NULL)
+        linkNode = RomCurve_findByIdWithIndex(*(s32*)(cur + 0x1c), &idx);
+        if (linkNode == NULL)
         {
             continue;
         }
-        queueDist[0] = SQ(node->z - curve->z) + (SQ(node->x - curve->x) + SQ(node->y - curve->y));
+        queueDist[0] = SQ(linkNode->z - curve->z) + (SQ(linkNode->x - curve->x) + SQ(linkNode->y - curve->y));
         count = 0;
         queueIds[count++] = idx;
         visited[idx] = 1;
@@ -3317,10 +3320,10 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
                 }
                 else
                 {
-                    for (k = 0; k < 4; k++)
+                    for (k = 0, candWalk = (u32)node; k < 4; candWalk += 4, k++)
                     {
-                        if (((-1 < (int)node->linkIds[k]) &&
-                             ((cand = RomCurve_findByIdWithIndex(node->linkIds[k], &idx)) != NULL)) &&
+                        if (((-1 < *(s32*)(candWalk + 0x1c)) &&
+                             ((cand = RomCurve_findByIdWithIndex(*(s32*)(candWalk + 0x1c), &idx)) != NULL)) &&
                             (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY))
                         {
                             newDist =
