@@ -28,6 +28,9 @@
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_0000_gameui_api.h"
+#define PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
+#include "main/pause_menu_api.h"
+#undef PAUSE_MENU_DIRECT_INT_SETUP_TITLE_CALL
 
 u8 gWorldPlanetHintFlagTable[8] = {1, 1, 0, 1, 1, 0, 0, 0};
 u8 gWorldPlanetDefaultSelectOrder[8] = {2, 4, 1, 0, 3, 0, 0, 0};
@@ -66,7 +69,6 @@ extern u16 getNextTaskHintText(void);
 extern void worldplanet_updateMapLighting(int obj);
 extern void setFrameCountdown_800202c4(int frames);
 
-extern void pauseMenuSetupTitle(int strId, int p2, int p3, int p4);
 extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;
 extern int lbl_803DDD10;
