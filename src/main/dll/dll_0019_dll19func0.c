@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -56,7 +57,6 @@ typedef struct Dll19Placement
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern void Sfx_StopObjectChannel(int* p1, int channel);
 extern const f32 lbl_803E1C2C;
 __declspec(section ".rodata") u8 lbl_802C2190[16] = {
     0x00, 0x23, 0x00, 0x69, 0x00, 0x33, 0x00, 0x64, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -123,7 +123,7 @@ int dll_19_func1B(GameObject *obj)
 
 void dll_19_func12(int* obj, int* state, u8 flag)
 {
-    Sfx_StopObjectChannel(obj, 127);
+    Sfx_StopObjectChannelPtrLegacy(obj, 127);
     if ((((GroundBaddieState*)state)->configFlags & flag) == 0)
     {
         s16 soundId;
@@ -654,7 +654,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 *(s8*)(baddieState + 847) = hit;
             }
         }
-        Sfx_StopObjectChannel((int*)obj, 16);
+        Sfx_StopObjectChannelPtrLegacy(obj, 16);
         ObjMsg_SendToObject((void*)hitId, DLL19_ADVANCE_MSG, obj, 0);
     }
     return hit;
