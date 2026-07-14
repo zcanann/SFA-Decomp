@@ -1206,6 +1206,7 @@ main/dll/dll_0000_gameui.c:
 	.data       start:0x8031AF34 end:0x8031B6F0
 	.bss        start:0x803A87F0 end:0x803A9364
 	.sdata      start:0x803DBA30 end:0x803DBBB0
+	.sbss       start:0x803DD728 end:0x803DD8E0
 
 main/dll/dll_003B_menu.c:
 	.text       start:0x8012FECC end:0x80130124
