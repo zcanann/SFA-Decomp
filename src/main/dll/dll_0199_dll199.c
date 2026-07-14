@@ -5,7 +5,9 @@
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
+#define RENDER_ENVFX_DIRECT_INT_CALL
+#include "main/render_envfx_api.h"
+#undef RENDER_ENVFX_DIRECT_INT_CALL
 #include "main/dll/dll199state_struct.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"

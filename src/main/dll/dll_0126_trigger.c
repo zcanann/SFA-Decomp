@@ -48,6 +48,7 @@
 #include "dolphin/os/OSReport.h"
 #include "main/model.h"
 #include "main/sky_api.h"
+#include "main/render_envfx_api.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/dll_02B5_timer.h"
@@ -102,7 +103,6 @@ extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (h
 extern int getLActions();
 extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
-extern int getEnvfxAct(int a, int b, u16 idx, int d);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
 extern void gameTextFn_80125ba4(int id);
@@ -421,7 +421,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 10:
-                    getEnvfxAct(obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
+                    getEnvfxActInt(obj, seqArg, (u16)((p[2] << 8) | p[3]), distSq);
                     OSReport(desc + 0x68, (int)((GameObject*)obj)->anim.classId, (p[2] << 8) | p[3], distSq);
                     break;
                 case 0xd:
@@ -695,22 +695,22 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         {
                         case 0:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             break;
                         case 1:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A0, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A1, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_A2, 0);
                             envFxFn_800887cc();
                             break;
                         case 2:
                             mainSetBits(GAMEBIT_ENV_isOutdoor, 1);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
-                            getEnvfxAct((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B0, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B1, 0);
+                            getEnvfxActInt((int)Obj_GetPlayerObject(), (int)Obj_GetPlayerObject(), TRIGGER_ENVFX_B2, 0);
                             break;
                         }
                         break;
