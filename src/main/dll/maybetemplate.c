@@ -191,6 +191,8 @@ extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int arg, int 
 extern void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
 extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int arg);
+extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
+extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern void hudDrawCMenu(int a, int b, int c);
 extern s16 gCMenuForcedSelIndex;
 extern s8 gCMenuPreselectOwnedBit;
@@ -599,6 +601,12 @@ typedef struct CounterText
     u32 raw[2];
 } CounterText;
 
+typedef void (*HudMagicDrawElementFn)(void* tex, f32 x, f32 y, int a, int b, int c, int d);
+typedef void (*HudMagicDrawSegmentFn)(void* tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
+
+#define HUD_MAGIC_DRAW_ELEMENT ((HudMagicDrawElementFn)pauseMenuDrawElement)
+#define HUD_MAGIC_DRAW_SEGMENT ((HudMagicDrawSegmentFn)drawFn_8011eb3c)
+
 #define GCMENU_ITEM_ICON_COUNT    7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
 
@@ -616,9 +624,6 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     int w8;
     int seg4Raw;
     void* tex;
-    extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, int b, int c, int d);
-    extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
-
     total = lbl_803A9364[8];
     t13 = total - 0xd;
     current = lbl_803A9364[2];
@@ -652,7 +657,7 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     tex = hudTextures[0x27];
     if ((u8)flags)
     {
-        pauseMenuDrawElement(tex, lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, 0);
+        HUD_MAGIC_DRAW_ELEMENT(tex, lbl_803DBAD0, lbl_803DBAD4, elemAlpha, alpha, 0x100, 0);
     }
     else
     {
@@ -663,7 +668,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x28];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1, 0x12, 0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(lbl_803DBAD0 + 0x1c), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg1,
+                                   0x12, 0);
         }
         else
         {
@@ -689,7 +695,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x2A];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12, 0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(lbl_803DBAD0 + 0x24), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2,
+                                   0x12, 0);
         }
         else
         {
@@ -701,8 +708,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x2B];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg3, 0x12,
-                            0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(seg2 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100,
+                                   seg3, 0x12, 0);
         }
         else
         {
@@ -714,8 +721,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x2C];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg4, 0x12,
-                            0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(t13 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100,
+                                   seg4, 0x12, 0);
         }
         else
         {
@@ -782,8 +789,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x32];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100, seg2, 0x12,
-                            0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(rem1 + 0x24 + lbl_803DBAD0), lbl_803DBAD4, elemAlpha, alpha, 0x100,
+                                   seg2, 0x12, 0);
         }
         else
         {
@@ -795,8 +802,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         tex = hudTextures[0x33];
         if ((u8)flags)
         {
-            drawFn_8011eb3c(tex, (f32)(t13 + lbl_803DBAD0 + (current + 0x24)), lbl_803DBAD4, elemAlpha, alpha, 0x100,
-                            seg4, 0x12, 0);
+            HUD_MAGIC_DRAW_SEGMENT(tex, (f32)(t13 + lbl_803DBAD0 + (current + 0x24)), lbl_803DBAD4, elemAlpha,
+                                   alpha, 0x100, seg4, 0x12, 0);
         }
         else
         {
@@ -806,8 +813,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     }
 }
 
-extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
-extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
+#undef HUD_MAGIC_DRAW_SEGMENT
+#undef HUD_MAGIC_DRAW_ELEMENT
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
 {
@@ -2316,6 +2323,12 @@ typedef struct HeadDisplayEntry
     u16 unkA;
 } HeadDisplayEntry;
 
+typedef void (*HeadDisplayDrawTextureFn)(void* tex, f32 x, f32 y, u8 alpha, int arg);
+typedef void (*HeadDisplayDrawScaledTextureFn)(void* tex, f32 x, f32 y, u8 alpha, int arg, int w, int h, int mode);
+
+#define HEAD_DISPLAY_DRAW_TEXTURE        ((HeadDisplayDrawTextureFn)drawTexture)
+#define HEAD_DISPLAY_DRAW_SCALED_TEXTURE ((HeadDisplayDrawScaledTextureFn)drawScaledTexture)
+
 void drawFn_80125424(void)
 {
     int i;
@@ -2331,9 +2344,6 @@ void drawFn_80125424(void)
     u32 h;
     f32 wave;
     f32 camPos;
-    extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
-    extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
-
     if (gHeadDisplayActive != 0)
     {
         if ((s8)lbl_803DD7A8 == 0)
@@ -2451,16 +2461,24 @@ void drawFn_80125424(void)
             drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + i + 2),
                                (alphaI > 0xff ? 0xff : alphaI) & 0xff, 0x100, 0x78, 2, randY, randX);
         }
-        drawTexture(hudTextures[10], lbl_803E2054, (s16)width - 5, alpha, 0x100);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
-        drawScaledTexture(hudTextures[11], lbl_803E2054, (s16)width, alpha, 0x100, 5, (s16)height, 0);
-        drawScaledTexture(hudTextures[13], lbl_803E2040, (s16)width + (s16)height, alpha, 0x100, 0x78, 5, 2);
-        drawScaledTexture(hudTextures[11], lbl_803E2058, (s16)width, alpha, 0x100, 5, (s16)height, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width + (s16)height, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(hudTextures[10], lbl_803E2058, (s16)width - 5, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(hudTextures[10], lbl_803E2054, (s16)width + (s16)height, alpha, 0x100, 5, 5, 2);
+        HEAD_DISPLAY_DRAW_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width - 5, alpha, 0x100);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2054, (s16)width, alpha, 0x100, 5,
+                                         (s16)height, 0);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width + (s16)height, alpha, 0x100,
+                                         0x78, 5, 2);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2058, (s16)width, alpha, 0x100, 5,
+                                         (s16)height, 1);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width + (s16)height, alpha, 0x100, 5,
+                                         5, 3);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width - 5, alpha, 0x100, 5, 5, 1);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width + (s16)height, alpha, 0x100, 5,
+                                         5, 2);
     }
 }
+
+#undef HEAD_DISPLAY_DRAW_SCALED_TEXTURE
+#undef HEAD_DISPLAY_DRAW_TEXTURE
 
 void gameTextFn_80125ba4(int idx)
 {
