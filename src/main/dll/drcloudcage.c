@@ -24,6 +24,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -36,7 +37,6 @@
 /* lbl_803DC0BC/gDrCloudCageRouteDistGate/lbl_803AD088 are shared route-rank state owned by
    drhightop; the lbl_803E5* pool and gDrCloudCagePointTemplate point template live in this
    DLL's data; timeDelta is the global frame delta. */
-extern int Sfx_PlayFromObject(void* obj, int sfxId);
 extern int hitDetectFn_80065e50(void* a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
