@@ -1122,7 +1122,7 @@ void sceneDrawTransparentPolys(void)
             break;
         case 2:
             fn_8000F9B4();
-            objShadowFn_80062498((int*)e[i][0], 0, 0, framesThisStep);
+            objShadowFn_80062498((GameObject*)e[i][0], 0, 0, framesThisStep);
             Camera_ApplyFullViewport();
             break;
         case 3:
@@ -1569,7 +1569,7 @@ void objDrawFn_8005da48(int* obj)
         shadow = ((GameObject*)obj)->anim.modelState;
         if (shadow != NULL && ((ObjModelState*)shadow)->shadowCastSlot != NULL)
         {
-            objShadowFn_80062498(obj, 0, 0, framesThisStep);
+            objShadowFn_80062498((GameObject*)obj, 0, 0, framesThisStep);
         }
         else if (((ObjAnimComponent*)obj)->modelInstance->shadowType == OBJ_SHADOW_TYPE_CRASH)
         {

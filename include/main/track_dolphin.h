@@ -128,6 +128,4 @@ void fn_80062894(void);
 void fn_80062808(void);
 void renderGlows(void);
 
-int objShadowFn_80062498();
-
 #endif /* MAIN_TRACK_DOLPHIN_H_ */

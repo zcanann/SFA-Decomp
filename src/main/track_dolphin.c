@@ -1988,7 +1988,7 @@ void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoin
 
 u8 gShadowDrawScratch[0x5DC0];
 
-int objShadowFn_80062498(int* obj, int param2)
+int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameCount)
 {
     ObjModelState* modelState;
     u8* cache;
@@ -2006,10 +2006,10 @@ int objShadowFn_80062498(int* obj, int param2)
     u8 bufA8[304];
 
     cache = getCache();
-    modelState = ((ObjAnimComponent*)obj)->modelState;
+    modelState = obj->anim.modelState;
     if (shouldDrawShadows() == 0)
     {
-        ((ObjAnimComponent*)obj)->modelState->shadowCastSlot = NULL;
+        obj->anim.modelState->shadowCastSlot = NULL;
         return 0;
     }
 
@@ -2022,7 +2022,7 @@ int objShadowFn_80062498(int* obj, int param2)
         fn_80061094(vec, (f32*)buf48, modelState->shadowModelScale);
 
         {
-            void* p54 = ((GameObject*)obj)->anim.hitReactState;
+            void* p54 = obj->anim.hitReactState;
             if (p54 != NULL)
             {
                 yOff = (f32)((int)((ObjHitsPriorityState*)p54)->primaryCapsuleOffsetB / 2);
@@ -2033,25 +2033,26 @@ int objShadowFn_80062498(int* obj, int param2)
             }
         }
 
-        base[0] = ((GameObject*)obj)->anim.worldPosX;
-        base[1] = ((GameObject*)obj)->anim.worldPosY + yOff;
-        base[2] = ((GameObject*)obj)->anim.worldPosZ;
+        base[0] = obj->anim.worldPosX;
+        base[1] = obj->anim.worldPosY + yOff;
+        base[2] = obj->anim.worldPosZ;
         vecGetRanges((f32*)buf48, base, modelState->shadowScale, (int*)&ranges);
 
-        hitDetectFn_800691c0((GameObject*)obj, &ranges, 0x81, 0);
+        hitDetectFn_800691c0(obj, &ranges, 0x81, 0);
         fn_80069958((void**)&vtx);
         fn_80069968((s32*)&idxOut, (u32*)&alphaOut);
 
         alpha = alphaOut;
-        idxOut = fn_80060C14(obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
-                             (f32)(int)vtx[2], param2, modelState->flags & 0x40000);
+        idxOut = fn_80060C14((int*)obj, alpha, gShadowDrawScratch, gShadowVolumeBuffer, idxOut, (f32)(int)vtx[0],
+                             (f32)(int)vtx[2], renderMode, modelState->flags & 0x40000);
         lbl_803DCEE0 = alpha;
         lbl_803DCEF0 = idxOut;
         lbl_803DCEE4 = (int)vtx;
-        trackDolphin_buildShadowVolumePlanes(obj, buf48, bufA8);
-        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache, (f32*)gShadowDrawScratch, 0x555);
+        trackDolphin_buildShadowVolumePlanes((int*)obj, buf48, bufA8);
+        fn_80061DD8((int*)obj, buf48, bufA8, idxOut, (f32*)gShadowVolumeBuffer, (f32*)cache,
+                    (f32*)gShadowDrawScratch, 0x555);
     }
-    objDrawFn_80061f0c(cache, modelState, obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
+    objDrawFn_80061f0c(cache, modelState, (int*)obj, gShadowVisibleCount, &drawScratch, buf48, yOff);
     return 0;
 }
 
