@@ -22,6 +22,7 @@
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 #include "main/render.h"
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
@@ -138,8 +139,6 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern void Sfx_StopFromObject(int obj, int sfxId);
-
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
 
@@ -213,7 +212,7 @@ void fn_801DFA28(u8* obj)
     }
     else
     {
-        Sfx_StopFromObject((int)obj, SFXTRIG_tr_gal_lightning);
+        Sfx_StopFromObjectIntLegacy((int)obj, SFXTRIG_tr_gal_lightning);
     }
     tricky = ((SBGalleonState*)state)->targetObj;
     if (tricky == NULL)
@@ -564,7 +563,7 @@ void fn_801DFA28(u8* obj)
             ((SBGalleonState*)state)->phaseCounter = 5;
             ((SBGalleonState*)state)->headingLatch = 200;
             sfxObj = sbGetPropeller();
-            Sfx_StopFromObject(sfxObj, SFXTRIG_swtst1_c);
+            Sfx_StopFromObjectIntLegacy(sfxObj, SFXTRIG_swtst1_c);
             Sfx_PlayFromObject(sfxObj, SFXTRIG_mv_curtainloop16);
             mainSetBits(DBPROTECTION_GAMEBIT_DIVE_ACTIVE, 0);
         }
