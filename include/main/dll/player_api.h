@@ -19,6 +19,7 @@ void playerLock(GameObject* player, int lock);
 int fn_8029605C(GameObject* player, f32* outX, f32* outY);
 void fn_802960E8(GameObject* player, s16 effectId);
 void fn_802960F4(GameObject* player, f32** outFxOffsets);
+void objSetPos(GameObject* player, f32 x, f32 y, f32 z);
 f32 fn_8029610C(GameObject* obj);
 void fn_80296124(GameObject* player, const Vec3f* position, const Vec3s* rotation, int unused);
 void fn_802961A4(GameObject* obj, int* outMove, f32* outChargeLevel);

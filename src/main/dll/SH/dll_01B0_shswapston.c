@@ -72,7 +72,6 @@ extern f32 lbl_803E549C;
 
 extern u32 getButtonsJustPressed(int port);
 extern int playerHasKrazoaSpirit();
-extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
@@ -146,7 +145,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
             ObjPath_GetPointWorldPosition((GameObject*)obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex,
                                           &x, &y, &z, 0);
-            objSetPos((int)player, x, y, z);
+            objSetPos(player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
     }
