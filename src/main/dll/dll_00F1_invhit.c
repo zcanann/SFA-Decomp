@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/pushable.h"
 #include "main/dll/player_target.h"
 #include "main/vecmath.h"
@@ -65,7 +66,6 @@ __declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 extern f32 lbl_803AC780[];
 
 extern int ObjList_ContainsObject(int obj);
-extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 scale);
 extern s8 hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, f32*** list, int a, int b);
 
 void InvHit_hitDetect(void)
@@ -91,7 +91,7 @@ int InvHit_getObjectTypeId(void)
 
 void InvHit_render(int* obj, int a, int b, int c, int d)
 {
-    objRenderModelAndHitVolumes(obj, a, b, c, d, lbl_803E35E8);
+    objRenderModelAndHitVolumes((int)obj, a, b, c, d, lbl_803E35E8);
 }
 
 #pragma scheduling off
