@@ -5,11 +5,11 @@
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_object_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 
-s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_SetObjectSoundsPaused(s32 paused);
