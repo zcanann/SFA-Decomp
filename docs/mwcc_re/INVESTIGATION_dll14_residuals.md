@@ -171,3 +171,26 @@ traversal (def-time vs first-operand-use, entry-block enumeration) is one objdum
 away: disassemble 0x4c28xx-0x4c2Axx in docs/mwcc_re/disasm style and match against the
 pri_trace ra=0x4c2932 commit sequence for probe_4regions.c. That yields the steering rule
 for the last 4 func1C lines and the walkgroup F40 slot.
+
+## DECODED: lazy first-touch web numbering (CMachine emission)
+Disassembly of 0x4c2920: per-operand RegInfo query (call 0x4e77e0, ret 0x4c2932) tail-chains
+into the numbering commit (0x4fe550/0x4fe563) - a value is numbered the FIRST time the
+machine emitter touches it as an operand. Combined with observations:
+- Named locals are all touched during prologue/home enumeration (reverse declaration order,
+  hence first-declared = highest idx among named) BEFORE any body code.
+- Optimizer temps (SR bases/clones, split webs) number at their first emitted occurrence -
+  always AFTER every named local. This is the mechanism behind "temps append above the named
+  band" and is now PROVEN, not just observed.
+Consequences for the residuals:
+- func1C: an SR cd-base can never index below named scanBase (третья proof). Target r23-web
+  must be a named distRead merged over the base. The cur-walker (pops r27, 3rd) must be a
+  TEMP (idx ~59) - so target's preheader [mr r27,r30] is clone-init, and the addi r23 after
+  it is ALSO preheader material => distRead's init must be hoisted-from-loop (V-J), and the
+  remaining question narrows to the ADDI-vs-COPY direction between the merged distRead web
+  and the cd-outer clone at preheader materialization (V-J emitted outer-primary; target is
+  distRead-primary). Direction = which web the emitter materializes the value into first =
+  likely first-touch order between the two webs; steer by making distRead's first emitted
+  touch precede the outer clone's (e.g., position of the hoisted init among the loop's
+  leading statements, or an earlier harmless read).
+- walkgroup: F40's identity falls out of the same rule - it is the ~7th-from-last named
+  GPR-webbed declaration; enumerate decls against the trace to name it.
