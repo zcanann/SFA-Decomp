@@ -3405,7 +3405,6 @@ void fn_80128A7C(u8 i, int alpha, int flag);
  * flashing corner cursor. */
 void fn_80128470(int alpha)
 {
-    int alpha16;
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
     lbl_803DBA8C = lbl_803E20A0;
 
@@ -3447,8 +3446,7 @@ void fn_80128470(int alpha)
         f32 base = lbl_803DBAC0;
         f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
         f32 amp = base * s + base;
-        alpha16 = amp * (s16)alpha;
-        fn_80128A7C((u8)lbl_803DD7D8, alpha16, 4);
+        fn_80128A7C((u8)lbl_803DD7D8, amp * (s16)alpha, 4);
     }
     {
         int n = (s16)alpha * (0x200 - lbl_803DD75C);
@@ -3469,7 +3467,7 @@ void fn_80128470(int alpha)
     if (lbl_803DD75C != 0)
     {
         s16 tx;
-        int n = alpha16 * lbl_803DD75C;
+        int n = (s16)alpha * lbl_803DD75C;
         gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
         if (lbl_803DD824 == lbl_8031B818)
@@ -3495,7 +3493,7 @@ void fn_80128470(int alpha)
         int ch = (int)(scale * (f32)e->trailY);
         int vx = e->x + *(s8*)((char*)e + 0xb);
         u16 w16;
-        s16 alpha;
+        s16 cursorAlpha;
         int x1 = (int)((f32)vx - lbl_803E2110 - (f32)(u8)cw);
         s16 x2 = (s16)((u8)cw + vx);
         int vy = e->y;
@@ -3506,12 +3504,12 @@ void fn_80128470(int alpha)
         {
             ph = (s16)(ph ^ 0x3f);
         }
-        alpha = (s16)(ph * (alpha16 * 0xc0 / 0x100 + 0x40) / 31);
+        cursorAlpha = (s16)(ph * ((s16)alpha * 0xc0 / 0x100 + 0x40) / 31);
         tex = (HudTextures*)hudTextures;
-        pauseMenuDrawElement(tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)alpha, (w16 = w), 0);
-        drawFn_8011eb3c(tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)alpha, w16, 0x12, 0xa, 1);
-        drawFn_8011eb3c(tex->tex80, (f32)(s16)x1, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 2);
-        drawFn_8011eb3c(tex->tex80, x2, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 3);
+        pauseMenuDrawElement(tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)cursorAlpha, (w16 = w), 0);
+        drawFn_8011eb3c(tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 1);
+        drawFn_8011eb3c(tex->tex80, (f32)(s16)x1, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 2);
+        drawFn_8011eb3c(tex->tex80, x2, y2, 0x100, (u8)cursorAlpha, w16, 0x12, 0xa, 3);
     }
     gameTextSetDrawFunc(0);
 }
@@ -4919,40 +4917,64 @@ int pauseMenuGridFn_8012b4c4(void)
  * table lookup with the same shape as the previously-matched
  * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
  * 0 if any of the table entries match the slot's lookup byte. */
-#pragma dont_inline on
 int pauseMenuIsFox(void)
 {
-    void* s;
+    GameObject* s;
     void* inner;
+    u8* innerBytes;
     u8 lookup;
+    u8 blockedCell;
+    u8 cellCount;
     u8 i;
     u8 is_zero;
+    int cell;
+    int cellMatches;
+    int result;
+    f32 x;
+    f32 z;
 
     s = Obj_GetPlayerObject();
     if (s == NULL)
-        return 0;
+    {
+        result = 0;
+        goto done;
+    }
     is_zero = objIsCurModelNotZero(s) == 0;
     if (is_zero)
-        return 0;
-    inner = ((GameObject*)s)->anim.parent;
+    {
+        result = 0;
+        goto done;
+    }
+    inner = s->anim.parent;
     if (inner != NULL)
     {
-        lookup = *((u8*)inner + 0xac);
+        innerBytes = inner;
+        innerBytes += 0xac;
+        cell = *innerBytes;
+        lookup = cell;
     }
     else
     {
-        lookup = coordsToMapCell(((GameObject*)s)->anim.localPosX, ((GameObject*)s)->anim.localPosZ);
+        x = s->anim.localPosX;
+        z = s->anim.localPosZ;
+        cell = coordsToMapCell(x, z);
+        lookup = cell;
     }
-    for (i = 0; i < 9; i++)
+    cellCount = 9;
+    for (i = 0; i < cellCount; i++)
     {
-        if (lookup == lbl_8031B050[i])
+        blockedCell = lbl_8031B050[i];
+        cellMatches = lookup == blockedCell;
+        if (cellMatches)
         {
-            return 0;
+            result = 0;
+            goto done;
         }
     }
-    return 1;
+    result = 1;
+done:
+    return result;
 }
-#pragma dont_inline reset
 
 /* Pause-menu open/close animator. Advances
  * the open tween, clamps it, then on the close button fires the per-state
