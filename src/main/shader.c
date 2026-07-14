@@ -2510,11 +2510,11 @@ typedef struct MapCellEnt
 void doPendingMapLoads(void)
 {
     int col;
-    u8 waited;
+    char* g2;
     int slot;
     s16* rowCursor;
-    int gx, gz;
-    int row;
+    int* eBase;
+    u8 waited;
     int layer;
     int zb[2];
     int i;
@@ -2525,10 +2525,10 @@ void doPendingMapLoads(void)
     int cnt;
     s16* o1;
     f32 dz;
-    int* eBase;
+    int gx, gz;
     int* aBase;
     int* cBase;
-    char* g2;
+    int row;
     int t2;
     int k2;
     s16 recs[1200];
