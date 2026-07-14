@@ -24,10 +24,8 @@ typedef struct SynthSampleInfo
 #define DATA_KEYMAP_TAB ((DataRefEntry*)(base + 0x4600))
 
 extern u8 lbl_803BD150[];
-extern u8 dataSmpSDirTable[];
 extern SynthJob synthJobTable[];
 extern u32 synthFlags;
-extern u16 dataKeymapNum;
 extern f32 lbl_803E77D8;
 extern u8 synthJobTableCountdown;
 extern u8 synthJobTablePeriod;
