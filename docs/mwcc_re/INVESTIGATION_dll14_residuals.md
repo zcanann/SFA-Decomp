@@ -344,3 +344,15 @@ to making that ONE chain park: +1 real interference edge at its live range. Fold
 lever forms to try next: a substantive inline helper (angleDelta-style real computation)
 in the K=1 dataflow, or restructuring which corner value stays live across the K=1 sqrtf.
 Volatile/f-perm shuffles downstream will settle with the rotation.
+
+## Target-side structure pinned: pl block-1 chain PARKS there (pop consumer)
+Pop-count comparison: our curve pops 9th (r23), target's 10th (r22) => target has one more
+parked web in the r24 band = the pl block-1 chain (target pl=r24 via POP, ours=r22 via
+grant). Levers tried that FOLD (no new web): identity inline helper at single site, dead
+pre-assignment, named s16 readback staging (nx1/nz1). The mass helper (all 4 chains) moves
+curve correctly but over-rotates. Remaining lever candidates for +1 edge on that chain:
+(a) merge pl K1+K2 chains via source restructure that keeps bytes, (b) find the real live
+value from the original (live-set delta says a GPR crosses the K=1 sqrtf in target beyond
+ours - candidates: pairId/r6-band value or an np-lifetime extension), (c) decode nadj
+computation (InterferenceGraph 0x57bad0 setter) and trace which edges the target-shaped
+code adds. gi (u32) in the committed decls is DEAD - vestigial, remove in final cleanup.
