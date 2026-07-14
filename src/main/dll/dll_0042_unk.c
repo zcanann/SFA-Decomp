@@ -27,6 +27,7 @@
 #include "main/game_object.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
+#include "main/track_dolphin_api.h"
 #include "main/camera_interface.h"
 #include "main/mm.h"
 #include "string.h"
@@ -97,7 +98,6 @@ extern f32 lbl_803E1738;
 
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outPos, int mode);
 extern void hitDetectFn_800691c0(int obj, u32* bounds, int mask, int flags);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, float* startPoints, float* endPoints, float* radii,
