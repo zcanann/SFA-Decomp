@@ -267,6 +267,7 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 }
 
 #pragma dont_inline on
+#pragma opt_propagation off
 void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
@@ -285,11 +286,10 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     }
     else
     {
+        f32 t = sourceState->hitCharge / lbl_803E7378;
+        f32 radiusScaled = setup->radius * lbl_803E737C;
         f32 fullRadius = lbl_803E7374 * setup->radius;
-        f32 radiusScaled;
-        sourceState->radius += interpolate(sourceState->hitCharge / lbl_803E7378 *
-                                                   (fullRadius - (radiusScaled = lbl_803E737C * setup->radius)) +
-                                               radiusScaled - sourceState->radius,
+        sourceState->radius += interpolate(t * (fullRadius - radiusScaled) + radiusScaled - sourceState->radius,
                                            lbl_803E7380, timeDelta);
     }
         dist = Vec_distance(&viewSlot->worldX, &cmbsrc->objAnim.worldPosX);
@@ -416,6 +416,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         }
     }
 }
+#pragma opt_propagation reset
 
 int cmbsrc_update(CmbSrcObject* cmbsrc)
 {
