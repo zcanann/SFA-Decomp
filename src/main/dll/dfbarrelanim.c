@@ -36,10 +36,15 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     DFRope* rope;
     DFRopeNode* nodes;
     DFRopeNode* node;
+    s32 linkCount;
     DFRopeLink* link;
     DFRopeNode* nextNode;
-    s32 linkCount;
+    DFRopeNode* linkNode;
+    s32 nodesSize;
+    s32 allocSize;
+    u8* base;
     s32 i;
+    s32 linkIndex;
     f32 dx;
     f32 dy;
     f32 dz;
@@ -54,14 +59,12 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     dy = dy / (f32)(count - 1);
     dz = dz / (f32)(count - 1);
 
-    {
-        s32 nodesSize = count * sizeof(DFRopeNode);
-        s32 allocSize = sizeof(DFRope) + nodesSize + (count - 1) * sizeof(DFRopeLink);
-        u8* base = (u8*)mmAlloc(allocSize, 0xFF, 0);
-        rope = (DFRope*)base;
-        rope->nodes = (DFRopeNode*)(base + sizeof(DFRope));
-        rope->links = (DFRopeLink*)(base + nodesSize + sizeof(DFRope));
-    }
+    nodesSize = count * sizeof(DFRopeNode);
+    allocSize = sizeof(DFRope) + nodesSize + (count - 1) * sizeof(DFRopeLink);
+    base = (u8*)mmAlloc(allocSize, 0xFF, 0);
+    rope = (DFRope*)base;
+    rope->nodes = (DFRopeNode*)(base + sizeof(DFRope));
+    rope->links = (DFRopeLink*)(base + nodesSize + sizeof(DFRope));
     rope->count = count;
     rope->totalLength = length;
     rope->start[0] = startX;
@@ -120,11 +123,11 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
     nodes[count - 1].locked = 1;
     nodes[0].locked = 1;
 
-    i = 0;
+    linkIndex = 0;
     link = rope->links;
-    node = nodes;
+    linkNode = nodes;
     linkCount = count - 1;
-    for (; i < linkCount; i++)
+    for (; linkIndex < linkCount; linkIndex++)
     {
         link->restLength = rope->totalLength / linkCount;
         link->stiffness = lbl_803E4E10;
@@ -132,10 +135,10 @@ DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f3
         link->force[1] = lbl_803E4DFC;
         link->force[0] = lbl_803E4DFC;
         link->maxLength = lbl_803E4E14 * link->restLength;
-        nextNode = (DFRopeNode*)((u8*)nodes + (i + 1) * sizeof(DFRopeNode));
-        DFRopeLink_AttachNodes(link, node, nextNode);
+        nextNode = (DFRopeNode*)((u8*)nodes + (linkIndex + 1) * sizeof(DFRopeNode));
+        DFRopeLink_AttachNodes(link, linkNode, nextNode);
         link++;
-        node++;
+        linkNode++;
     }
     return rope;
 }
