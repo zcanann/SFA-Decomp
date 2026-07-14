@@ -13,7 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
@@ -34,8 +34,6 @@
 #define KALDACHOMPSPIT_PARTFX_POISON_TRAIL 0x714
 #define KALDACHOMPSPIT_PARTFX_POISON_BURST 0x715
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 extern f32 lbl_803E30E0;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;
@@ -44,27 +42,22 @@ extern f32 lbl_803E30FC;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-extern void queueGlowRender(void* light);
-extern void ModelLightStruct_free(void* p);
-extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+
+typedef struct KaldaChompSpitState
+{
+    ModelLightStruct* light;
+} KaldaChompSpitState;
+
+STATIC_ASSERT(sizeof(KaldaChompSpitState) == 0x4);
 
 #pragma dont_inline on
 void kaldachompspit_burst(GameObject* obj)
 {
     int i;
-    u32* state;
+    KaldaChompSpitState* state;
     ObjHitsPriorityState* hitState;
     u8 rnd;
 
@@ -73,9 +66,9 @@ void kaldachompspit_burst(GameObject* obj)
     (obj)->unkF4 = 0xdc;
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->flags &= ~1;
-    if (*state != 0)
+    if (state->light != NULL)
     {
-        modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
+        modelLightStruct_setEnabled(state->light, 0, lbl_803E30E0);
     }
     if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
     {
@@ -104,7 +97,8 @@ int KaldaChompSpit_getObjectTypeId(void)
 
 void KaldaChompSpit_free(int* obj)
 {
-    void* light = *(void**)((GameObject*)obj)->extra;
+    KaldaChompSpitState* state = ((GameObject*)obj)->extra;
+    ModelLightStruct* light = state->light;
     if (light != NULL)
     {
         ModelLightStruct_free(light);
@@ -113,8 +107,9 @@ void KaldaChompSpit_free(int* obj)
 
 void KaldaChompSpit_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8* light = **(u8***)&obj->extra;
-    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
+    KaldaChompSpitState* state = obj->extra;
+    ModelLightStruct* light = state->light;
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
         queueGlowRender(light);
     }
@@ -131,9 +126,9 @@ void KaldaChompSpit_hitDetect(void)
 void KaldaChompSpit_update(int obj)
 {
     ObjAnimComponent* objAnim;
-    u32* state;
+    KaldaChompSpitState* state;
     f32 vx;
-    u32 ptr;
+    ModelLightStruct* light;
     int rnd;
     f32 vy;
     f32 vz;
@@ -214,23 +209,23 @@ void KaldaChompSpit_update(int obj)
                 (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void*)obj, KALDACHOMPSPIT_PARTFX_POISON_BURST, NULL, 1, -1, NULL);
             }
-            ptr = *state;
-            if ((ptr != 0) && (*(u8*)(ptr + 0x2f8) != 0) && (*(u8*)(ptr + 0x4c) != 0))
+            light = state->light;
+            if ((light != NULL) && (light->glowType != 0) && (light->enabled != 0))
             {
                 rnd = randomGetRange(-0x19, 0x19);
-                ptr = *state;
-                color = *(u8*)(ptr + 0x2f9) + *(s8*)(ptr + 0x2fa) + rnd;
+                light = state->light;
+                color = light->glowAlpha + light->glowAlphaStep + rnd;
                 if (color < 0)
                 {
                     color = 0;
-                    *(u8*)(ptr + 0x2fa) = 0;
+                    light->glowAlphaStep = 0;
                 }
                 else if (color > 0xff)
                 {
                     color = 0xff;
-                    *(u8*)(ptr + 0x2fa) = 0;
+                    light->glowAlphaStep = 0;
                 }
-                *(u8*)(*state + 0x2f9) = color;
+                state->light->glowAlpha = color;
             }
         }
     }
@@ -238,48 +233,49 @@ void KaldaChompSpit_update(int obj)
 
 void KaldaChompSpit_init(GameObject* obj)
 {
-    int* extra;
+    KaldaChompSpitState* state;
 
-    extra = *(int**)&(obj)->extra;
+    state = obj->extra;
     (obj)->unkF4 = 400;
     ObjHits_DisableObject((u32)obj);
     (obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);
     (obj)->objectFlags |= KALDACHOMPSPIT_OBJFLAG_HITDETECT_DISABLED;
-    if (*(void**)extra == NULL)
+    if (state->light == NULL)
     {
-        *extra = (int)objCreateLight((int)obj, 1);
-        if (*(void**)extra != NULL)
+        state->light = objCreateLight(obj, 1);
+        if (state->light != NULL)
         {
-            modelLightStruct_setLightKind(*extra, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         }
     }
-    if (*(void**)extra != NULL)
+    if (state->light != NULL)
     {
         f32 lightPos = lbl_803E30F8;
-        modelLightStruct_setPosition(*extra, lightPos, lightPos, lightPos);
+        modelLightStruct_setPosition(state->light, lightPos, lightPos, lightPos);
         if ((obj)->anim.seqId == KALDACHOMPSPIT_SEQID_EXPLOSIVE)
         {
-            modelLightStruct_setDiffuseColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0xff, 0xc0, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f,
+            modelLightStruct_setDiffuseColor(state->light, 0xff, 0xc0, 0, 0xff);
+            modelLightStruct_setSpecularColor(state->light, 0xff, 0xc0, 0, 0xff);
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0xc0, 0, 0x7f,
                                        lbl_803E3108 * (lbl_803E310C * (obj)->anim.rootMotionScale));
-            modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0xd2, 0, 0xff);
         }
         else
         {
-            modelLightStruct_setDiffuseColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setSpecularColor(*extra, 0, 0xff, 0, 0xff);
-            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * (obj)->anim.rootMotionScale);
-            modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0xff);
+            modelLightStruct_setSpecularColor(state->light, 0, 0xff, 0, 0xff);
+            modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x28,
+                                       lbl_803E310C * (obj)->anim.rootMotionScale);
+            modelLightStruct_setDiffuseTargetColor(state->light, 0, 0xff, 0, 0xff);
         }
         {
             int nearDist = (int)(lbl_803E310C * (obj)->anim.rootMotionScale);
-            modelLightStruct_setDistanceAttenuation(*extra, nearDist, (f32)(nearDist + 0x28));
+            modelLightStruct_setDistanceAttenuation(state->light, nearDist, (f32)(nearDist + 0x28));
         }
-        lightSetField4D((ModelLightStruct*)*extra, 1);
-        modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
-        modelLightStruct_startColorFade(*extra, 1, 3);
+        lightSetField4D(state->light, 1);
+        modelLightStruct_setEnabled(state->light, 1, lbl_803E30E0);
+        modelLightStruct_startColorFade(state->light, 1, 3);
     }
 }
 
