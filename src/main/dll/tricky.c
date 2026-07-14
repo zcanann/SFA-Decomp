@@ -165,10 +165,10 @@ extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
 extern GameObject* lbl_803DD860[2];
-extern GameObject* volatile lbl_803DD868[2];
+extern GameObject* lbl_803DD868[2];
 extern const f32 lbl_803E1E3C;
-extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
-extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
+extern const f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
+extern const f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
 extern u8 gTrickyHudShowNearestInfo;
@@ -296,14 +296,13 @@ void gameUiLoadResources(void)
         char** arrB;
         int i;
         int val;
+        u32* ids;
         char** arrC;
         u32 limit;
-        u32* ids;
         char* p;
         u32* cnt;
-        GameObject* volatile* q;
-        f32 fb, fc, fa;
-        f32 gb, ga;
+        int j;
+        f32 fc, fb, fa;
 
         val = 0;
         i = 0;
@@ -332,42 +331,54 @@ void gameUiLoadResources(void)
             arrB++;
         }
 
-        q = lbl_803DD868;
-        q[0] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
-        q[0]->anim.localPosX = lbl_803E1E3C;
-        q[0]->anim.localPosY = lbl_803E1E48;
-        q[0]->anim.localPosZ = lbl_803E1E4C;
-        q[0]->anim.rotX = 0x7447;
-        *(f32*)((u8*)q[0] + 0x8) = lbl_803E1E50;
+        {
+            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
+            GameObject* volatile* objects = lbl_803DD868;
+            objects[0] = object;
+            objects[0]->anim.localPosX = lbl_803E1E3C;
+            objects[0]->anim.localPosY = lbl_803E1E48;
+            objects[0]->anim.localPosZ = lbl_803E1E4C;
+            objects[0]->anim.rotX = 0x7447;
+            *(f32*)((u8*)objects[0] + 0x8) = lbl_803E1E50;
+        }
 
-        q[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
-        q[1]->anim.localPosX = lbl_803E1E3C;
-        q[1]->anim.localPosY = lbl_803E1E54;
-        q[1]->anim.localPosZ = lbl_803E1E4C;
-        q[1]->anim.rotX = 0x7447;
-        *(f32*)((u8*)q[1] + 0x8) = lbl_803E1E58;
+        {
+            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
+            GameObject* volatile* objects = lbl_803DD868;
+            objects[1] = object;
+            objects[1]->anim.localPosX = lbl_803E1E3C;
+            objects[1]->anim.localPosY = lbl_803E1E54;
+            objects[1]->anim.localPosZ = lbl_803E1E4C;
+            objects[1]->anim.rotX = 0x7447;
+            *(f32*)((u8*)objects[1] + 0x8) = lbl_803E1E58;
+        }
 
         p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, NULL);
         lbl_803DD860[0] = (GameObject*)p;
         ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
 
-        lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
-        ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), fn_8011E0D8);
+        {
+            GameObject* object = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
+            GameObject* volatile* objects = lbl_803DD860;
+            objects[1] = object;
+            p = (char*)objects[1];
+            ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
+        }
 
-        i = 4;
+        j = 4;
         ids = &lbl_8031BF90[4];
         arrC = (char**)(base + 0xc30);
-        ga = lbl_803E1E3C;
-        gb = lbl_803E1E5C;
+        fc = lbl_803E1E3C;
+        fb = lbl_803E1E5C;
         limit = 0x90000000;
-        for (; i < 6; i++)
+        for (; j < 6; j++)
         {
             *arrC = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, *ids), 4, -1, -1, NULL);
-            ((GameObject*)(*arrC))->anim.localPosX = ga;
-            ((GameObject*)(*arrC))->anim.localPosY = gb;
-            ((GameObject*)(*arrC))->anim.localPosZ = gb;
+            ((GameObject*)(*arrC))->anim.localPosX = fc;
+            ((GameObject*)(*arrC))->anim.localPosY = fb;
+            ((GameObject*)(*arrC))->anim.localPosZ = fb;
             ((GameObject*)(*arrC))->anim.rotX = 0x7447;
-            *(f32*)(*arrC + 0x8) = ga;
+            *(f32*)(*arrC + 0x8) = fc;
             cnt = (u32*)(*arrC + 0x4c);
             if (*cnt > limit)
             {
