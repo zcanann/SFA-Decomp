@@ -5789,6 +5789,7 @@ void pauseMenuDrawText(int unused1, int unused2, int unused3)
 
 /* World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
+#pragma opt_propagation off
 void drawWorldMapHud(void)
 {
     u16 raw = gWorldMapVoiceoverTimer;
@@ -5856,7 +5857,10 @@ void drawWorldMapHud(void)
             {
                 TaskHintEntry* he = gTaskHintTable;
                 if (n >= he[base[0]].thresh)
-                    li_ = gGameUiTaskHintCandidates[0];
+                {
+                    u8* q = gGameUiTaskHintCandidates;
+                    li_ = q[0];
+                }
                 else if (n >= he[base[1]].thresh)
                     li_ = gGameUiTaskHintCandidates[1];
                 else if (n >= he[base[2]].thresh)
@@ -5930,6 +5934,7 @@ void drawWorldMapHud(void)
         gWorldMapVoiceoverTimer = 0;
     }
 }
+#pragma opt_propagation reset
 
 /* Tween advance: when the active counter
  * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
