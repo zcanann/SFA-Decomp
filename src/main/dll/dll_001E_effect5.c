@@ -407,3 +407,6 @@ void Effect5_release(void)
 void Effect5_initialise(void)
 {
 }
+
+__declspec(section ".sdata2") f32 gEffect5Pi = 3.14159274f;
+__declspec(section ".sdata2") f32 gEffect5SinPhaseScale = 32768.0f;
