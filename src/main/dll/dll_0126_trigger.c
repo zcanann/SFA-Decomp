@@ -49,6 +49,9 @@
 #include "main/model.h"
 #include "main/sky_api.h"
 #include "main/render_envfx_api.h"
+#define RENDER_LACTIONS_DIRECT_UNPROTOTYPED_CALL
+#include "main/render_lactions_api.h"
+#undef RENDER_LACTIONS_DIRECT_UNPROTOTYPED_CALL
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0126_trigger.h"
 #include "main/dll/dll_02B5_timer.h"
@@ -100,7 +103,6 @@ extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
 extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
 
-extern int getLActions();
 extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);

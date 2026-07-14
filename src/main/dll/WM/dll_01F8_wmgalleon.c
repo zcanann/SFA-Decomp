@@ -1,7 +1,9 @@
 /* DLL 0x01F8 (wmgalleon) - WM galleon and object creator [0x801EFF7C-0x801F06D8). */
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/object_descriptor.h"
-extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
+#define RENDER_LACTIONS_DIRECT_VOID6_CALL
+#include "main/render_lactions_api.h"
+#undef RENDER_LACTIONS_DIRECT_VOID6_CALL
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
