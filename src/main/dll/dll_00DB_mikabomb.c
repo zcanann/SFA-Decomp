@@ -10,6 +10,7 @@
  */
 #include "main/dll/dll_00DB_mikabomb_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object.h"
@@ -30,7 +31,6 @@
 #define MIKABOMB_CHILD_OBJ_SHADOW 0xc
 
 extern f32 lbl_803E31C0;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern u32 lbl_803E31A0;
 extern f32 gMikaBombHitSphereRadiusScale;
@@ -112,7 +112,7 @@ void MikaBomb_update(int* obj)
         }
         else
         {
-            Sfx_StopObjectChannel(obj, 0x7f);
+            Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
             ((GameObject*)obj)->anim.alpha = 0;
             Obj_FreeObject((GameObject*)obj);
             return;
