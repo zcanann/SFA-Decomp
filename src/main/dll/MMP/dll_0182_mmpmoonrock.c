@@ -378,8 +378,6 @@ extern f32 gMoonRockPickupRange;
 
 void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
 {
-    extern f32 Vec_distance(f32 * a, f32 * b);
-
     int i;
     int count;
     int* list;
