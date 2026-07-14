@@ -1660,8 +1660,6 @@ static inline f32 distortSqrtf(f32 x)
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern void fn_8006C540(int* out);
-    extern void fn_8006C534(int* out);
     Mtx mtx_d0;
     Mtx mtx_a0;
     Mtx mtx_70;
@@ -1708,7 +1706,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     selectReflectionTexture(0);
     getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
-    fn_8006C540(&handle2);
+    fn_8006C540((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_ALPHA);
@@ -1753,7 +1751,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     GXSetTevKColor(2, c2);
     GXSetTevColor(1, c3);
 
-    fn_8006C534(&handle3);
+    fn_8006C534((u32*)&handle3);
     selectTexture((Texture*)handle3, 3);
 
     {
@@ -1900,8 +1898,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern void* getTextureFn_8006c744(void);
-    extern void fn_8006C6A4(int);
     Mtx mtx_54;
     Mtx mtx_24;
     void* renderOp;
@@ -1914,7 +1910,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    tex = getTextureFn_8006c744();
+    tex = (void*)getTextureFn_8006c744();
     selectReflectionTexture(0);
     selectTexture((Texture*)tex, 1);
     fn_8006C6A4(2);
@@ -3695,7 +3691,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern void fn_8006C5B8(int* out);
     Mtx m58;
     Mtx m28;
     Vec v;
@@ -3731,7 +3726,7 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
     v.z = m[11];
     PSMTXMultVec((MtxP)(st + 0x30), &v, &v);
     z = -v.z;
-    fn_8006C5B8(&handle);
+    fn_8006C5B8((u32*)&handle);
     selectTexture((Texture*)handle, 1);
     m58[0][0] = lbl_803DEEDC;
     m58[0][1] = lbl_803DEEDC;
@@ -3782,7 +3777,6 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern u8 lbl_802C1EA8[0xC0];
-    extern void fn_8006C5B8(int* out);
     typedef struct
     {
         u32 w[7];
@@ -3908,7 +3902,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     PSMTXMultVec((f32(*)[4])((u8*)(int)obj + 0x30), (Vec*)vec3, (Vec*)vec3);
     f31_val = -vec3[2];
 
-    fn_8006C5B8(&handle);
+    fn_8006C5B8((u32*)&handle);
     selectTexture((Texture*)handle, 1);
 
     {
@@ -4372,7 +4366,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 {
     extern f32 lbl_803DEEDC;
     extern f32 lbl_803DEEE4;
-    extern void fn_8006C540(int*);
     int handle;
     GXColor c0, c1, c2;
     Mtx mtx;
@@ -4380,7 +4373,7 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     *(u32*)&c0 = lbl_803DEEA0;
     *(u32*)&c1 = lbl_803DEEA4;
     *(u32*)&c2 = lbl_803DEEA8;
-    fn_8006C540(&handle);
+    fn_8006C540((u32*)&handle);
     selectTexture((Texture*)handle, 0);
     {
         f32 dec = *(f32*)&gSynthDelayedActionWord0;
@@ -4481,7 +4474,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern u16 fn_8000FA70(void);
     extern f32 fn_80292194(f32 v);
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    extern void fn_8006C4F8(int* out);
     Mtx mtx_58;
     Mtx mtx_28;
     int handle1;
@@ -4513,7 +4505,7 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 
     getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 0);
-    fn_8006C4F8(&handle2);
+    fn_8006C4F8((u32*)&handle2);
     selectTexture((Texture*)handle2, 1);
 
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
@@ -5451,7 +5443,6 @@ void fn_8007CAF4(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
 
-    extern void fn_8006C678(int);
     u8 ignoredLightColor;
     f32 sOff;
     f32 tOff;
