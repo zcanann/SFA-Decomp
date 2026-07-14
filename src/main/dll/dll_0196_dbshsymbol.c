@@ -13,6 +13,7 @@
  */
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_object_volume_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
@@ -46,7 +47,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 extern u8 gDbShSymbolScuffPlayed;
 
-extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern int getButtonsJustPressedIfNotBusy(int p);
 
 /* .sdata2 constant pool */
@@ -76,7 +76,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
 
     state = ((GameObject*)obj)->extra;
     player = (int)Obj_GetPlayerObject();
-    Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, 10, lbl_803E50E0);
+    Sfx_SetObjectSfxVolumeIntLegacy(obj, SFXTRIG_blockscrape_lp, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_blockscrape_lp);
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++)
@@ -216,7 +216,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
         {
             volume = 100;
         }
-        Sfx_SetObjectSfxVolume(obj, SFXTRIG_blockscrape_lp, (u8)volume, lbl_803E50E0);
+        Sfx_SetObjectSfxVolumeIntLegacy(obj, SFXTRIG_blockscrape_lp, (u8)volume, lbl_803E50E0);
     }
     return 0;
 }
