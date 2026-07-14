@@ -26,6 +26,7 @@
  * point-light that tracks the emitter.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_limited_object_api.h"
 #include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -52,8 +53,6 @@
 extern void Obj_InsertIntoUpdateList(int obj);
 
 extern int objIsFrozen(FirePipeObject* obj);
-extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
-extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
 extern f32 lbl_803DC340;
 extern f32 lbl_803DC344;
 extern s16 lbl_803DC348;
@@ -402,9 +401,9 @@ sound_update:
     {
         if (flags->wasEmitting == 0)
         {
-            Sfx_PlayFromObjectLimited(obj, SFXTRIG_en_cvdrip1c_32c, 3);
+            Sfx_PlayFromObjectLimitedPtrVoidLegacy(obj, SFXTRIG_en_cvdrip1c_32c, 3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimited(obj, SFXTRIG_en_trpopn_c_32d, 2);
+        Sfx_KeepAliveLoopedObjectSoundLimitedPtrIntLegacy(obj, SFXTRIG_en_trpopn_c_32d, 2);
     }
     flags->wasEmitting = flags->emitting;
 
