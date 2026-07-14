@@ -25,7 +25,6 @@
 #include "main/sky_interface.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
@@ -218,7 +217,6 @@ void cmbsrc_hitDetect(CmbSrcObject* cmbsrc)
 
 u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
 {
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
     CmbSrcMapData* setup = (CmbSrcMapData*)cmbsrc->objAnim.placementData;
     u8 idx;
 
@@ -240,10 +238,10 @@ u8 cmbsrc_cycleColor(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
             modelLightStruct_setSpecularColor(sourceState->light, gCmbsrcColorRgbTable[idx * 3],
                                               gCmbsrcColorRgbTable[idx * 3 + 1], gCmbsrcColorRgbTable[idx * 3 + 2],
                                               0xff);
-            modelLightStruct_setDiffuseTargetColor(sourceState->light,
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
-                                                   (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]), 0xff);
+            ((void (*)(ModelLight*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
+                sourceState->light, (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3]),
+                (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 1]),
+                (int)(0.8f * (f32)(u32)gCmbsrcColorRgbTable[idx * 3 + 2]), 0xff);
             if (setup->flags & CMBSRC_MAP_GLOW)
             {
                 if (setup->flags & CMBSRC_MAP_GLOW_LARGE)
@@ -506,7 +504,6 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
     u8* c0;
     CmbSrcState* state = cmbsrc->state;
     int lightVariant;
-    extern void modelLightStruct_setDiffuseTargetColor(ModelLight * light, int r, int g, int b, int a);
 
     switch (cmbsrc->objAnim.seqId)
     {
@@ -586,9 +583,10 @@ void cmbsrc_init(CmbSrcObject* cmbsrc, CmbSrcMapData* mapData)
                 }
             }
             modelLightStruct_startColorFade(state->light, 1, 3);
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
-                                                   (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
-                                                   (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);
+            ((void (*)(ModelLight*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
+                state->light, (int)(0.8f * (f32)(u32)c0[mapData->colorIndex * 3]),
+                (int)(0.8f * (f32)(u32)c1[mapData->colorIndex * 3]),
+                (int)(0.8f * (f32)(u32)c2[mapData->colorIndex * 3]), 0xff);
             if (mapData->flags & CMBSRC_MAP_AFFECTS_AABB_LIGHT)
             {
                 modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
@@ -707,4 +705,3 @@ ObjectDescriptor gCmbSrcObjDescriptor = {
     (ObjectDescriptorCallback)cmbsrc_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)cmbsrc_getExtraSize,
 };
-
