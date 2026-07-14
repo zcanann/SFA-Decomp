@@ -702,9 +702,11 @@ s32 layercmp(void* p1, void* p2)
 
 void* dataGetLayer(u16 cid, u16* count)
 {
-    dataGetLayerSearchKey.id = cid;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+
+    t->getLayerKey.id = cid;
     if ((dataGetLayer_result =
-             (LAYER_TAB*)sndBSearch(&dataGetLayerSearchKey, dataLayerTab, dataLayerNum, sizeof(LAYER_TAB), layercmp)))
+             (LAYER_TAB*)sndBSearch(&t->getLayerKey, dataLayerTab, dataLayerNum, sizeof(LAYER_TAB), layercmp)))
     {
         *count = dataGetLayer_result->num;
         return dataGetLayer_result->data;
