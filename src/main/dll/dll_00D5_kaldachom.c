@@ -36,6 +36,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
+#include "main/dll/player_api.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3
@@ -52,8 +53,6 @@
 #define KALDACHOM_CHILD_OBJ_MOUTH_PROJECTILE 0x51b
 #define KALDACHOM_EFFECT_RESOURCE_ID         0x5a /* shared effect resource -> gKaldachomEffectResource */
 
-
-extern void fn_802961FC(int a, u8 type);
 
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants; the
    gKaldachom*SpawnScratch globals are mutable scratch (fx spawn position / radius). */
@@ -303,7 +302,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
                     *(u16*)(gKaldachomHitLightWork + 0) = 0;
                     (*(void (**)(int, int, void*, int, int, void*))(*(int*)gKaldachomEffectResource + 4))(
                         0, 1, gKaldachomHitLightWork, 0x401, -1, (KaldaCombatParams*)((u8*)&st + 0xc));
-                    fn_802961FC(playerObj, 2);
+                    fn_802961FC((GameObject*)playerObj, 2);
                     (*(void (**)(void*, int, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 5);
                     objLightFn_8009a1dc((void*)obj, lbl_803E30BC, gKaldachomHitLightWork, 4, 0);
                     Sfx_PlayFromObject((int)obj, SFXTRIG_swdout1);
