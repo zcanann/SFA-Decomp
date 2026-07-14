@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/track_dolphin_api.h"
+#include "main/object_descriptor.h"
 
 /* Map-block poly-group record (blk+0x50 table, 0x14 stride, returned by
  * mapBlockFn_800606ec) - layout matches MapTriGroup in track_dolphin.c.
@@ -207,3 +208,20 @@ void HitAnimator_init(HitAnimatorObject* obj, HitAnimatorPlacement* desc)
     state->previousGameBitValue = gameBitValue;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
+
+ObjectDescriptor gHitAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)HitAnimator_init,
+    (ObjectDescriptorCallback)HitAnimator_update,
+    0,
+    0,
+    0,
+    0,
+    HitAnimator_getExtraSize,
+};

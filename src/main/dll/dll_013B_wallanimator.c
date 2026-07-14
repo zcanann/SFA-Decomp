@@ -27,6 +27,7 @@
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/audio/sfx.h"
+#include "main/object_descriptor.h"
 
 /* placement record: only the +0x1C short (debris spawn roll) is read here */
 typedef struct WallanimatorPlacement
@@ -223,3 +224,24 @@ void wallanimator_init(s16* obj, s16* placement)
         state->timer = WALLANIMATOR_DONE_TIMER;
     }
 }
+
+ObjectDescriptor14 gWallAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)wallanimator_init,
+    (ObjectDescriptorCallback)wallanimator_update,
+    0,
+    (ObjectDescriptorCallback)wallanimator_render,
+    (ObjectDescriptorCallback)wallanimator_free,
+    0,
+    (ObjectDescriptorCallback)wallanimator_getExtraSize,
+    (ObjectDescriptorCallback)wallanimator_setScale,
+    (ObjectDescriptorCallback)wallanimator_func0B,
+    (ObjectDescriptorCallback)wallanimator_modelMtxFn,
+    0,
+};

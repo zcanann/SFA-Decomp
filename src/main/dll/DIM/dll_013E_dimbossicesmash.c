@@ -14,6 +14,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 /* ice-debris particle spawned along the smash sweep between the previous and current position */
 #define DIMBOSSICESMASH_PARTFX 1000
@@ -48,8 +49,11 @@ typedef struct DimbossicesmashPlacement
 } DimbossicesmashPlacement;
 
 extern u8 lbl_803DDB00;
-extern u8 lbl_80322368[0xC];
 extern u8 lbl_803DBDF8[8];
+
+#pragma explicit_zero_data on
+u8 lbl_80322368[0xC] = {0};
+#pragma explicit_zero_data off
 
 /* seed the icesmash launch state from the setup record: spawn position/rotation,
  * launch velocity (optionally homing on the target point), rotation velocities
@@ -392,3 +396,23 @@ void DIMBossIceSmash_release(void)
 void DIMBossIceSmash_initialise(void)
 {
 }
+
+ObjectDescriptor10WithPadding gDIMBossIceSmashObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)DIMBossIceSmash_initialise,
+        (ObjectDescriptorCallback)DIMBossIceSmash_release,
+        0,
+        (ObjectDescriptorCallback)DIMBossIceSmash_init,
+        (ObjectDescriptorCallback)DIMBossIceSmash_update,
+        (ObjectDescriptorCallback)DIMBossIceSmash_hitDetect,
+        (ObjectDescriptorCallback)DIMBossIceSmash_render,
+        (ObjectDescriptorCallback)DIMBossIceSmash_free,
+        (ObjectDescriptorCallback)DIMBossIceSmash_getObjectTypeId,
+        DIMBossIceSmash_getExtraSize,
+    },
+    0,
+};

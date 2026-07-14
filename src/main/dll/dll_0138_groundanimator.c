@@ -19,6 +19,7 @@
 #include "main/track_dolphin.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
+#include "main/object_descriptor.h"
 
 typedef struct GroundanimatorPlacement
 {
@@ -530,3 +531,24 @@ void groundanimator_update(int* obj)
     }
     objRenderFn_80041018((GameObject*)obj);
 }
+
+ObjectDescriptor14 gGroundAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)groundanimator_init,
+    (ObjectDescriptorCallback)groundanimator_update,
+    0,
+    (ObjectDescriptorCallback)groundanimator_render,
+    (ObjectDescriptorCallback)groundanimator_free,
+    0,
+    (ObjectDescriptorCallback)groundanimator_getExtraSize,
+    (ObjectDescriptorCallback)groundanimator_setScale,
+    (ObjectDescriptorCallback)groundanimator_isFullySunk,
+    (ObjectDescriptorCallback)groundanimator_modelMtxFn,
+    0,
+};

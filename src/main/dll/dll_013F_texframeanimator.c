@@ -6,6 +6,7 @@
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/dll_0140_fogcontrol.h"
+#include "main/object_descriptor.h"
 
 typedef struct TexframeanimatorPlacement
 {
@@ -69,6 +70,33 @@ extern u8 sfxplayerObj_update[];
 
 extern int* return0_80056694(int* block, int textureSlot);
 extern int* mapTextureOverrideGetEntry(int idx);
+
+int TexFrameAnimator_getExtraSize(void);
+int TexFrameAnimator_getObjectTypeId(void);
+void TexFrameAnimator_free(void);
+void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void TexFrameAnimator_hitDetect(void);
+void TexFrameAnimator_update(int* obj);
+void TexFrameAnimator_init(int* obj, u8* params);
+void TexFrameAnimator_release(void);
+void TexFrameAnimator_initialise(void);
+
+ObjectDescriptor gTexFrameAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)TexFrameAnimator_initialise,
+    (ObjectDescriptorCallback)TexFrameAnimator_release,
+    0,
+    (ObjectDescriptorCallback)TexFrameAnimator_init,
+    (ObjectDescriptorCallback)TexFrameAnimator_update,
+    (ObjectDescriptorCallback)TexFrameAnimator_hitDetect,
+    (ObjectDescriptorCallback)TexFrameAnimator_render,
+    (ObjectDescriptorCallback)TexFrameAnimator_free,
+    (ObjectDescriptorCallback)TexFrameAnimator_getObjectTypeId,
+    TexFrameAnimator_getExtraSize,
+};
 
 char sTexFrameAnimDebugFormat[] = " TEXFRAMEANIM %i ";
 

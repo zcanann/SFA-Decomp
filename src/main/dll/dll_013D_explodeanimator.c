@@ -15,6 +15,7 @@
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/dll/dll_013D_explodeanimator.h"
+#include "main/object_descriptor.h"
 
 #define EXPLODEANIMATOR_OBJGROUP 0x1a
 
@@ -97,3 +98,20 @@ void ExplodeAnimator_release(void)
 void ExplodeAnimator_initialise(void)
 {
 }
+
+ObjectDescriptor gExplodeAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ExplodeAnimator_initialise,
+    (ObjectDescriptorCallback)ExplodeAnimator_release,
+    0,
+    (ObjectDescriptorCallback)ExplodeAnimator_init,
+    (ObjectDescriptorCallback)ExplodeAnimator_update,
+    (ObjectDescriptorCallback)ExplodeAnimator_hitDetect,
+    (ObjectDescriptorCallback)ExplodeAnimator_render,
+    (ObjectDescriptorCallback)ExplodeAnimator_free,
+    (ObjectDescriptorCallback)ExplodeAnimator_getObjectTypeId,
+    ExplodeAnimator_getExtraSize,
+};

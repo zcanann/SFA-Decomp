@@ -16,6 +16,7 @@
 #include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/mm.h"
+#include "main/object_descriptor.h"
 
 /*
  * Field overlay used by waveanimator_modelMtxFn: 0x34 is WaveAnimatorState.flags,
@@ -283,3 +284,24 @@ void waveanimator_release(void)
 void waveanimator_initialise(void)
 {
 }
+
+ObjectDescriptor14 gWaveAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    (ObjectDescriptorCallback)waveanimator_initialise,
+    (ObjectDescriptorCallback)waveanimator_release,
+    0,
+    (ObjectDescriptorCallback)waveanimator_init,
+    (ObjectDescriptorCallback)waveanimator_update,
+    (ObjectDescriptorCallback)waveanimator_hitDetect,
+    (ObjectDescriptorCallback)waveanimator_render,
+    (ObjectDescriptorCallback)waveanimator_free,
+    (ObjectDescriptorCallback)waveanimator_getObjectTypeId,
+    (ObjectDescriptorCallback)waveanimator_getExtraSize,
+    (ObjectDescriptorCallback)waveanimator_setScale,
+    (ObjectDescriptorCallback)waveanimator_func0B,
+    (ObjectDescriptorCallback)waveanimator_modelMtxFn,
+    0,
+};

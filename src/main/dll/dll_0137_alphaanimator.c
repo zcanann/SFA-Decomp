@@ -29,6 +29,7 @@
 #include "main/dll/groundanimator_state.h"
 #include "main/mm.h"
 #include "main/lightmap_api.h"
+#include "main/object_descriptor.h"
 
 typedef struct AlphaanimatorPlacement
 {
@@ -338,3 +339,20 @@ void AlphaAnimator_release(void)
 void AlphaAnimator_initialise(void)
 {
 }
+
+ObjectDescriptor gAlphaAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)AlphaAnimator_initialise,
+    (ObjectDescriptorCallback)AlphaAnimator_release,
+    0,
+    (ObjectDescriptorCallback)AlphaAnimator_init,
+    (ObjectDescriptorCallback)AlphaAnimator_update,
+    (ObjectDescriptorCallback)AlphaAnimator_hitDetect,
+    (ObjectDescriptorCallback)AlphaAnimator_render,
+    (ObjectDescriptorCallback)AlphaAnimator_free,
+    (ObjectDescriptorCallback)AlphaAnimator_getObjectTypeId,
+    AlphaAnimator_getExtraSize,
+};

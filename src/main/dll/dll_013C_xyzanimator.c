@@ -20,6 +20,7 @@
 #include "main/dll/VF/vf_shared.h"
 #include "main/map_block.h"
 #include "dolphin/os/OSCache.h"
+#include "main/object_descriptor.h"
 
 typedef struct MapBlockHdr
 {
@@ -764,3 +765,20 @@ void XyzAnimator_init(GameObject* obj)
         break;
     }
 }
+
+ObjectDescriptor gXYZAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)XyzAnimator_init,
+    (ObjectDescriptorCallback)XyzAnimator_update,
+    0,
+    (ObjectDescriptorCallback)XyzAnimator_render,
+    (ObjectDescriptorCallback)XyzAnimator_free,
+    0,
+    XyzAnimator_getExtraSize,
+};

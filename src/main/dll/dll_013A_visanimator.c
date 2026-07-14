@@ -18,6 +18,7 @@
 #include "main/gamebits.h"
 #include "main/voxmaps.h"
 #include "main/dll/dll_013A_visanimator.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
@@ -107,3 +108,20 @@ void VisAnimator_release(void)
 void VisAnimator_initialise(void)
 {
 }
+
+ObjectDescriptor gVisAnimatorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)VisAnimator_initialise,
+    (ObjectDescriptorCallback)VisAnimator_release,
+    0,
+    (ObjectDescriptorCallback)VisAnimator_init,
+    (ObjectDescriptorCallback)VisAnimator_update,
+    (ObjectDescriptorCallback)VisAnimator_hitDetect,
+    (ObjectDescriptorCallback)VisAnimator_render,
+    (ObjectDescriptorCallback)VisAnimator_free,
+    (ObjectDescriptorCallback)VisAnimator_getObjectTypeId,
+    VisAnimator_getExtraSize,
+};
