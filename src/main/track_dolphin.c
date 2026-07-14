@@ -466,6 +466,11 @@ extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int
                              int flagsArg);
 extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
 
+typedef int (*HitDetectIntFn)(int mode, void* tri1, void* tri2, f32* startPos, f32* endPos, int count, void* slots,
+                              int flagsArg);
+
+#define hitDetectInt ((HitDetectIntFn)hitDetect_800667ec)
+
 #pragma peephole off
 #pragma scheduling off
 f32 lbl_8038D7DC[0x19];
@@ -3138,12 +3143,9 @@ int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int
         }
     }
 
-    {
-        extern int hitDetect_800667ec();
-        hitCount = hitDetect_800667ec(0, (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
-                                      (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c), startPos, endPos,
-                                      count, results, 0);
-    }
+    hitCount = hitDetectInt(0, (void*)(gTrackTriangleBuffer + tbl->firstTriangle * 0x4c),
+                            (void*)(gTrackTriangleBuffer + tbl[1].firstTriangle * 0x4c), startPos, endPos, count,
+                            results, 0);
 
     fp = results;
     pp = results;
