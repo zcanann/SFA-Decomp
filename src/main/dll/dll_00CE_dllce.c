@@ -247,6 +247,26 @@ int fn_8015DC04(int obj, GroundBaddieState* state)
     return 0;
 }
 
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2DC8 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2DCC = 0.008f;
+__declspec(section ".sdata2") f32 lbl_803E2DD0 = 0.3f;
+__declspec(section ".sdata2") f32 lbl_803E2DD4 = 0.015f;
+__declspec(section ".sdata2") f32 lbl_803E2DD8 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E2DDC = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2DE0 = 20000.0f;
+__declspec(section ".sdata2") f32 lbl_803E2DE4 = 0.25f;
+__declspec(section ".sdata2") f32 lbl_803E2DE8 = 0.012f;
+__declspec(section ".sdata2") f32 lbl_803E2DEC = 10000.0f;
+__declspec(section ".sdata2") f32 lbl_803E2DF0 = 0.7f;
+__declspec(section ".sdata2") f32 lbl_803E2DF4 = 15.0f;
+__declspec(section ".sdata2") f32 lbl_803E2DF8 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E2DFC = 90.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E00 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E04 = 0.0f;
+#pragma explicit_zero_data off
+
+
 #pragma dont_inline on
 void fn_8015DAE8(void)
 {
@@ -617,6 +637,14 @@ void fn_8015EB6C(GameObject* obj, int state, int target)
         *(f32*)(sub + 0) += timeDelta;
     }
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2E10 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E14 = 20.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E18 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E2E1C = 0.0f;
+#pragma explicit_zero_data off
+
 
 void fn_8015ED1C(int obj, int state, int target)
 {
