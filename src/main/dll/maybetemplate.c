@@ -2266,7 +2266,7 @@ void cMenuRotateFn_80124d80(void)
         }
         if (t1 <= 0x2aaa)
         {
-            gCMenuCurSection = lbl_803DD8B7;
+            *(u8*)&gCMenuCurSection = lbl_803DD8B7;
         }
         rot = cur;
         *(s16*)gCMenuRingObjs[0] = rot;
