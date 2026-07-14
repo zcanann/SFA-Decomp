@@ -3992,6 +3992,7 @@ main/audio/synth_channel_scale.c:
 	extab       start:0x80005680 end:0x80005690
 	extabindex  start:0x80005D50 end:0x80005D68
 	.text       start:0x8026EC44 end:0x8026F8B8
+	.bss        start:0x803BCD90 end:0x803BD150
 
 main/audio/synth_init.c:
 	extab       start:0x80005690 end:0x80005698

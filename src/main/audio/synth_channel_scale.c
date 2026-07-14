@@ -59,7 +59,7 @@ typedef struct
 
 #define fabs __fabs
 
-extern u8 lbl_803BCD90[];
+u8 lbl_803BCD90[0x3C0];
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;
