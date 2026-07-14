@@ -7,6 +7,18 @@
 #include "main/lightningeffect.h"
 #include "main/model_light.h"
 
+typedef struct
+{
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} ThornBushFlags;
+
 typedef struct DrakordThornbushPlacement
 {
     u8 pad0[0x19 - 0x0];
@@ -30,7 +42,7 @@ typedef struct DrakordThornbushState
     void* hitTable;                   /* 0x6C: hit-reaction table pointer */
     f32 baseScale;                    /* 0x70: per-variant init scale constant */
     s32 radius;                       /* 0x74 */
-    u8 tail78[0x7c - 0x78];           /* 0x78: holds DrakorFlags byte at 0x79 */
+    u8 tail78[0x7c - 0x78];           /* 0x78: holds ThornBushFlags byte at 0x79 */
 } DrakordThornbushState;
 
 STATIC_ASSERT(offsetof(DrakordThornbushPlacement, spawnHealth) == 0x19);
@@ -44,6 +56,21 @@ STATIC_ASSERT(offsetof(DrakordThornbushState, hitTable) == 0x6C);
 STATIC_ASSERT(offsetof(DrakordThornbushState, baseScale) == 0x70);
 STATIC_ASSERT(offsetof(DrakordThornbushState, radius) == 0x74);
 STATIC_ASSERT(sizeof(DrakordThornbushState) == 0x7c);
+
+extern f32 lbl_803E6588;
+extern f32 gThornBushLightScaleMax;
+extern f32 lbl_803E6590;
+extern f32 lbl_803E6594;
+extern f32 lbl_803E6598;
+extern f32 lbl_803E65A8;
+extern f32 gThornBushLightScaleRate;
+extern f32 lbl_803E65B0;
+extern f32 lbl_803E65C0;
+extern f32 lbl_803E65C4;
+extern f32 lbl_803E65C8;
+extern int gThornBushLightningHitTable;
+extern int gThornBushThornHitTable;
+extern f32 gThornBushLightningTimerInit;
 
 int drakord_thornbush_getExtraSize(void);
 int drakord_thornbush_getObjectTypeId(void);

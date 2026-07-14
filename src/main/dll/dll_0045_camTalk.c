@@ -8,7 +8,8 @@
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/object_transform.h"
 #include "string.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 extern CameraModeBikeState* gCamTalkBikeState;
 extern ViewfinderState* lbl_803DD548;

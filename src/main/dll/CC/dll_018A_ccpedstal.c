@@ -12,7 +12,6 @@
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
 #include "main/dll/CC/dll_018A_ccpedstal.h"
 
 #define CCPEDSTAL_OBJFLAG_HIDDEN 0x4000

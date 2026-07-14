@@ -16,7 +16,11 @@
  * This TU has no .data section; the ObjectDescriptor wiring these handlers is
  * defined in another DR DLL translation unit.
  */
-#include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
+#include "main/audio/sfx.h"
+#include "main/objhits.h"
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/maketex_api.h"
@@ -175,7 +179,7 @@ void drakord_thornbush_update(GameObject* obj)
         if (timerCountDown(&((DrakordThornbushState*)inner)->growth) != 0)
         {
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-            ((DrakorFlags*)((char*)inner + 0x79))->b80 = 1;
+            ((ThornBushFlags*)((char*)inner + 0x79))->b80 = 1;
             if (*(u32*)&((ObjPlacement*)setup)->mapId == 0xffffffff)
             {
                 Obj_FreeObject((GameObject*)obj);
@@ -185,9 +189,9 @@ void drakord_thornbush_update(GameObject* obj)
     else
     {
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_drak_pain2);
-        if (((DrakorFlags*)((char*)inner + 0x79))->b80)
+        if (((ThornBushFlags*)((char*)inner + 0x79))->b80)
         {
-            ((DrakorFlags*)((char*)inner + 0x79))->b80 = 0;
+            ((ThornBushFlags*)((char*)inner + 0x79))->b80 = 0;
         }
         switch ((obj)->anim.seqId)
         {
@@ -240,7 +244,7 @@ void drakord_thornbush_init(GameObject* obj, u8* init)
     (obj)->anim.rotY = (s16)((s8)init[0x18] << 8);
     if (*(u32*)&((ObjPlacement*)init)->mapId == 0xffffffff)
     {
-        ((DrakorFlags*)((char*)inner + 0x79))->b80 = 1;
+        ((ThornBushFlags*)((char*)inner + 0x79))->b80 = 1;
     }
     storeZeroToFloatParam(&((DrakordThornbushState*)inner)->growth);
     storeZeroToFloatParam((f32*)((char*)inner + 0x10));

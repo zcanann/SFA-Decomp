@@ -21,6 +21,7 @@
  *     cheat/debug option bits.
  */
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/model_engine.h"
@@ -37,7 +38,6 @@
 #include "main/textrender_api.h"
 #include "main/gameloop_api.h"
 #include "main/dll/dll_0016_screentransition.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
 
 s8 gSaveGameCurrentSlot = -1;
 char sGameplayFoxName[] = "FOX";

@@ -32,7 +32,8 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/vecmath.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0042_unk.h"
 
 #define gCamcontrolModeSettings cameraMtxVar57

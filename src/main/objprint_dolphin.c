@@ -27,7 +27,8 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXDispList.h"
 #include "main/dll/FRONT/n_options.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80136a40.h"
 
 u32 lbl_803DB468 = 0xFFFFFFFF;

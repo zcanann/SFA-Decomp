@@ -12,9 +12,9 @@
 #include "dolphin/gx/GXManage.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/camera.h"
+#include "main/frame_timing.h"
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin.h"
-#include "main/dll/DR/dll_80209FE0_shared.h"
 
 u8 lbl_803DB668[8] = {0xFF, 7, 6, 5, 4, 3, 2, 1};
 f32 lbl_803DB670 = 1.3333334f;
