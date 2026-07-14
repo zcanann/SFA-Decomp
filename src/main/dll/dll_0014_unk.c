@@ -3307,7 +3307,6 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     int low;
     int high;
     int mid;
-    int j;
     int candidates[4];
 
     if (curve == NULL)
@@ -3343,13 +3342,13 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     }
     if (candidateCount > 1)
     {
-        for (j = 0; j < candidateCount; j++)
+        for (typeIndex = 0; typeIndex < candidateCount; typeIndex++)
         {
-            if (*previousLinkId == candidates[j])
+            if (*previousLinkId == candidates[typeIndex])
             {
-                for (; j < candidateCount - 1; j++)
+                for (; typeIndex < candidateCount - 1; typeIndex++)
                 {
-                    candidates[j] = candidates[j + 1];
+                    candidates[typeIndex] = candidates[typeIndex + 1];
                 }
                 candidateCount--;
             }
