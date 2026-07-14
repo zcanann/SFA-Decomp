@@ -19,6 +19,7 @@
 #include "main/dll/bonespawndata_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_text_color_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -354,7 +355,6 @@ void fn_800A1040(s16 sequenceId, int forceAll)
 #pragma dont_inline reset
 
 extern void GXSetCullMode(int mode);
-extern void setTextColor(void* ctx, int r, int g, int b, int a);
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
@@ -1264,16 +1264,17 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x10000000)
         {
-            setTextColor(a0, ar, ag, ab, 0xff);
+            setTextColorContextLegacy(a0, ar, ag, ab, 0xff);
         }
         else if (((PartfxEffectState*)p[slot])->sourceObject != NULL &&
                  ((int)((PartfxEffectState*)p[slot])->flags & 0x4000))
         {
-            setTextColor(a0, 0xff, 0xff, 0xff, *(u8*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x37));
+            setTextColorContextLegacy(a0, 0xff, 0xff, 0xff,
+                                      *(u8*)((char*)((PartfxEffectState*)p[slot])->sourceObject + 0x37));
         }
         else
         {
-            setTextColor(a0, 0xff, 0xff, 0xff, 0xff);
+            setTextColorContextLegacy(a0, 0xff, 0xff, 0xff, 0xff);
         }
         tex = ((PartfxEffectState*)p[slot])->textureResource;
         if (tex != NULL)

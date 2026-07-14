@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_text_color_api.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
@@ -64,7 +65,6 @@ __declspec(section ".sdata2") f32 lbl_803DF4C0 = 8.0f;
 __declspec(section ".sdata2") f32 lbl_803DF4C4 = 0.0495f;
 
 extern void GXSetCullMode(int mode);
-extern void setTextColor(void* ctx, int r, int g, int b, int a);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
 extern void drawFn_8005cf8c(void* a, void* b, int count);
@@ -285,7 +285,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     vtx.vy = ((GameObject*)obj)->anim.localPosY;
     vtx.vz = ((GameObject*)obj)->anim.localPosZ;
     vtx.w = lbl_803DF4C4;
-    setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
+    setTextColorContextLegacy(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {
         (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);

@@ -17,6 +17,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_text_color_api.h"
 #include "main/camera.h"
 #include "track/intersect_api.h"
 
@@ -38,7 +39,6 @@ extern const f32 gRopeNodeBoundsMargin;
 
 extern void textRenderSetupFn_800795e8(void);
 extern void gxBlendFn_80078b4c(void);
-extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
@@ -470,7 +470,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
             selectTexture((Texture*)((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex]), 0);
-            setTextColor((u32*)&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
+            setTextColorByteLegacy((u32*)&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
         }
         node = extra->rope->nodes;
         for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
@@ -487,7 +487,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 int alpha;
 
                 alpha = (u8)(objAnim->alpha + randomGetRange(0, objAnim->alpha));
-                setTextColor((u32*)&p2, renderState.blue, renderState.green, renderState.red, alpha);
+                setTextColorByteLegacy((u32*)&p2, renderState.blue, renderState.green, renderState.red, alpha);
             }
             node = extra->rope->nodes;
             for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
