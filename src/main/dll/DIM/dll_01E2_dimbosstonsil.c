@@ -15,6 +15,7 @@
 #include "main/object_api.h"
 #include "main/object_render.h"
 #include "main/objseq.h"
+#include "main/dll/DIM/DIMbossspit.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/baddie_state.h"
 #include "main/player_control_interface.h"
@@ -51,8 +52,6 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
     extern u8 lbl_803DDBB0;
-    extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
-                                                   DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red;
@@ -161,7 +160,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             goto updateHitReaction;
         case 2:
             animUpdate->hitVolumePair = 0;
-            dimBossTonsil_newState_hitFightMain(obj, animUpdate, state, state);
+            dimBossTonsil_newState_hitFightMain((u8*)obj, animUpdate, state, state);
             if (state->hitReactMode == 1)
             {
                 state->field270 = 0;
@@ -277,8 +276,6 @@ void DIMbosstonsil_hitDetect(GameObject* obj)
 void DIMbosstonsil_update(GameObject* obj)
 {
     extern void* gBaddieControlInterface;
-    extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
-                                                   DIMbosstonsilState* updateState);
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red, green, blue, alpha;
@@ -311,7 +308,7 @@ void DIMbosstonsil_update(GameObject* obj)
         return;
 
     state->targetObject = Obj_GetPlayerObject();
-    dimBossTonsil_newState_hitFightMain(obj, NULL, state, state);
+    dimBossTonsil_newState_hitFightMain((u8*)obj, NULL, state, state);
 
     if (gDIMbosstonsilLight == 0)
         return;
