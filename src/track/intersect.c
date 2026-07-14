@@ -5870,10 +5870,6 @@ extern u8 gSaveCardRetry;
 
 int cardDeleteFn_8007d99c(void)
 {
-
-    extern s32 CARDMount();
-    extern s32 CARDCheck();
-    extern s32 CARDDelete();
     int res;
     int ok;
 
@@ -5903,7 +5899,7 @@ int cardDeleteFn_8007d99c(void)
             return 0;
         }
         lbl_803DB700 = 0;
-        res = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
+        res = CARDMount(0, lbl_803DD040, (CARDCallback)cardSetStatusNoCard2);
         if (res == 0 || res == -6)
         {
             res = CARDCheck(0);
