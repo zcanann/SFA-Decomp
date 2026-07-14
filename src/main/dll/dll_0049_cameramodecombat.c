@@ -65,6 +65,7 @@ void CameraModeCombat_copyToCurrent(void)
 {
 }
 
+#pragma dont_inline on
 void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f32* targetY)
 {
     GameObject* focus;
@@ -120,6 +121,7 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     }
     gCamCombatState->pathBlendTargetIndex = target->hitVolumeIndex;
 }
+#pragma dont_inline reset
 
 typedef struct {
     u8 b0 : 1;
@@ -147,7 +149,6 @@ void CameraModeCombat_free(CameraObject* camera)
 #pragma opt_common_subs off
 void CameraModeCombat_update(short* cam)
 {
-    extern void fn_8010BF08(CameraObject* camera, f32* dx, f32* dy, f32* dz, f32* ty);
     f32 vec[3];
     f32 prevZ;
     f32 prevY;
