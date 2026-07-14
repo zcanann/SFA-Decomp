@@ -43,11 +43,14 @@
 #include "main/maketex_sequence_api.h"
 #include "main/textrender_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/SC/SClantern.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
 
 #define PAD_BUTTON_B 0x200
+
+typedef u32 (*WarpstoneAdvanceAnimEventsFn)(int obj, f32 moveStepScale);
 
 typedef struct WarpstoneUpdateMenuAnimObjState
 {
@@ -249,7 +252,6 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
 
 int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
 {
-    extern int playerFn_801d6d58(void);
     int state = *(int*)&(obj)->extra;
     int i;
     int child;
@@ -278,7 +280,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
     if ((s8)animUpdate->sequenceEventActive != 0)
     {
         ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA & ~3;
-        if (playerFn_801d6d58() != 0)
+        if ((s32)playerFn_801d6d58() != 0)
         {
             ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA = ((WarpstoneUpdateMenuAnimObjState*)state)->flagsA | 1;
         }
@@ -467,10 +469,7 @@ void warpstone_update(int obj)
         *(int*)state = 0;
     }
 
-    {
-        extern u32 SClantern_advanceAnimEvents(int obj, f32 moveStepScale);
-        advanceResult = SClantern_advanceAnimEvents(obj, lbl_803E54A4);
-    }
+    advanceResult = ((WarpstoneAdvanceAnimEventsFn)SClantern_advanceAnimEvents)(obj, lbl_803E54A4);
     if (((GameObject*)obj)->anim.currentMove == 0)
     {
         if (randFn_80080100(100) != 0)
