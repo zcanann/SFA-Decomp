@@ -17,6 +17,7 @@
 #include "main/dll/SB/dll_01EE_sbcannonball.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
+#include "main/audio/sfx_play_int_return_legacy_api.h"
 
 #define SB_CANNONBALL_EXTRA_SIZE 0x24
 
@@ -108,7 +109,6 @@ void SB_CannonBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_CannonBall_hitDetect(GameObject* obj)
 {
-    extern int Sfx_PlayFromObject();
     SBCannonBallState* state = obj->extra;
     f32 t = state->impactCooldown;
     f32 zero = 0.0f;
@@ -139,7 +139,7 @@ void SB_CannonBall_hitDetect(GameObject* obj)
     if (zero != t)
         return;
 
-    Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
+    Sfx_PlayFromObjectPtrIntReturnLegacy(obj, SB_CANNONBALL_IMPACT_SFX);
     {
         ObjHitsPriorityState* hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
         hitState->flags = (s16)(hitState->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
@@ -225,7 +225,6 @@ void SB_CannonBall_update(GameObject* obj)
 
 void SB_CannonBall_init(GameObject* obj)
 {
-    extern int Sfx_PlayFromObject();
     SBCannonBallState* state = obj->extra;
     if (state->modelLight == NULL)
     {
@@ -245,8 +244,8 @@ void SB_CannonBall_init(GameObject* obj)
     }
     obj->anim.rootMotionScale *= 0.0125f;
     state->flags = (s8)(state->flags | SB_CANNONBALL_INITIAL_BURST_FLAG);
-    Sfx_PlayFromObject(obj, SB_CANNONBALL_LAUNCH_SFX);
-    Sfx_PlayFromObject(obj, SB_CANNONBALL_LOOP_SFX);
+    Sfx_PlayFromObjectPtrIntReturnLegacy(obj, SB_CANNONBALL_LAUNCH_SFX);
+    Sfx_PlayFromObjectPtrIntReturnLegacy(obj, SB_CANNONBALL_LOOP_SFX);
 }
 
 void SB_CannonBall_release(void)
