@@ -3314,8 +3314,6 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     int high;
     int mid;
     int j;
-    int linkId;
-    RomCurveDef* linkedCurve;
     int candidates[4];
 
     if (curve == NULL)
@@ -3325,10 +3323,10 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     candidateCount = 0;
     for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++)
     {
-        linkId = curve->linkIds[linkIndex];
+        int linkId = curve->linkIds[linkIndex];
         if (linkId > -1)
         {
-            linkedCurve = RomCurve_FindByIdInline(linkId);
+            RomCurveDef* linkedCurve = RomCurve_FindByIdInline(curve->linkIds[linkIndex]);
 
             for (typeIndex = 0; typeIndex < typeCount; typeIndex++)
             {
@@ -3700,44 +3698,26 @@ int RomCurve_countRandomPoints(RomCurveDef* curve)
 
 int RomCurve_func1E(u32* curveIds, float* outX, float* outY, float* outZ)
 {
-    RomCurveDef** windowCursor;
-    float* outXStart;
-    float* outXCursor;
-    float* outYCursor;
-    float* outZCursor;
-    u32 curveId;
-    RomCurveDef* resolvedCurve;
     RomCurveDef** resolveCursor;
-    RomCurveDef* reloaded;
+    float* outXStart;
     int foundCount;
     int remaining;
+    int i;
     RomCurveDef* windowCurves[4];
 
     foundCount = 0;
     resolveCursor = windowCurves;
-    windowCursor = resolveCursor;
     outXStart = outX;
-    outXCursor = outX;
-    outYCursor = outY;
-    outZCursor = outZ;
-    for (remaining = 4; remaining != 0; remaining--)
+    for (i = 0; i < 4; i++)
     {
-        curveId = *curveIds;
-        resolvedCurve = RomCurve_FindByIdInline(curveId);
-        *windowCursor = resolvedCurve;
-        reloaded = *windowCursor;
-        if (reloaded != NULL)
+        windowCurves[i] = RomCurve_FindByIdInline(curveIds[i]);
+        if (windowCurves[i] != NULL)
         {
-            *outXCursor = reloaded->x;
-            *outYCursor = reloaded->y;
-            *outZCursor = reloaded->z;
+            outX[i] = windowCurves[i]->x;
+            outY[i] = windowCurves[i]->y;
+            outZ[i] = windowCurves[i]->z;
             foundCount = foundCount + 1;
         }
-        curveIds++;
-        windowCursor = windowCursor + 1;
-        outXCursor++;
-        outYCursor = outYCursor + 1;
-        outZCursor = outZCursor + 1;
     }
 
     if (((foundCount < 2) || (windowCurves[1] == NULL)) || (windowCurves[2] == NULL))
