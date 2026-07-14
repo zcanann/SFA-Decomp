@@ -161,3 +161,13 @@ deterministic value-graph walk. Decoding the walk order at 0x4c2932 (which value
 traversal, and where SR-created values slot into it) is now THE single decode that explains
 - and allows steering - the cd-base(48)/scanBase(46-47) order in func1C AND the F40
 interloper slot in the walkgroup function. Priorities logged are metadata, not the order key.
+
+## 0x4c2932 attributed: CMachine.c (94 funcs, 0x4bf320-0x4c9590 per assert map)
+Web numbering fires from the MACHINE EMISSION walk, i.e. webIndex = order the code
+generator first touches each value while emitting PCode. Observed named-local indices
+(first-declared highest) imply locals' value nodes are enumerated reverse-decl at entry
+emission; SR/clone values number at their preheader/body emission positions. The exact
+traversal (def-time vs first-operand-use, entry-block enumeration) is one objdump session
+away: disassemble 0x4c28xx-0x4c2Axx in docs/mwcc_re/disasm style and match against the
+pri_trace ra=0x4c2932 commit sequence for probe_4regions.c. That yields the steering rule
+for the last 4 func1C lines and the walkgroup F40 slot.
