@@ -16,6 +16,7 @@ Sections:
 main/render.c:
 	.text       start:0x800066E0 end:0x80008DF4
 	.rodata     start:0x802C18C0 end:0x802C1A68
+	.data       start:0x802C2D60 end:0x802C4F08
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
@@ -152,7 +153,7 @@ main/objprint_dolphin.c:
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
 	.rodata     start:0x802C1C50 end:0x802C1E58
-	.data       start:0x802CAF48 end:0x802CBE94
+	.data       start:0x802CAF48 end:0x802CC6A0
 	.bss        start:0x8035EF48 end:0x803779C0
 	.sdata      start:0x803DB4A0 end:0x803DB600
 	.sbss       start:0x803DCC98 end:0x803DCD48
