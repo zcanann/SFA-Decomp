@@ -23,6 +23,7 @@
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_text_color_api.h"
 #include "main/vecmath.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
@@ -198,7 +199,6 @@ extern int dll_19_func1B(GameObject* p);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
 extern void GXSetTevColor(int id, int* color);
-extern void setTextColor(int p);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void VISetPreRetraceCallback(void* cb);
@@ -1033,7 +1033,7 @@ int debugPrintDrawRecord(int color, u8* p)
                 gDebugTextColorG = c1;
                 gDebugTextColorB = c2;
                 gDebugTextColorA = c3;
-                setTextColor(color);
+                setTextColorContextOnlyLegacy(color);
             }
             break;
         case 0x82:

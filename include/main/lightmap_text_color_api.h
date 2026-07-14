@@ -8,5 +8,6 @@ void setTextColor(int unused, int red, int green, int blue, int alpha);
 #define setTextColorByteLegacy(context, color0, color1, color2, alpha)                                                  \
     ((void (*)(void*, unsigned char, unsigned char, unsigned char, int))setTextColor)(                                  \
         (context), (color0), (color1), (color2), (alpha))
+#define setTextColorContextOnlyLegacy(context) ((void (*)(int))setTextColor)((context))
 
 #endif /* MAIN_LIGHTMAP_TEXT_COLOR_API_H_ */
