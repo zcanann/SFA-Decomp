@@ -6,6 +6,7 @@
 #include "main/debug.h"
 #include "main/model.h"
 #include "main/model_engine.h"
+#include "main/model_runtime_api.h"
 #include "main/mm.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"

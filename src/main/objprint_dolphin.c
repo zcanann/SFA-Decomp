@@ -18,6 +18,7 @@
 #include "main/mldf_fileid.h"
 #include "main/model.h"
 #include "main/model_render_instrs_api.h"
+#include "main/model_runtime_api.h"
 #include "main/object_transform.h"
 #include "main/loaded_file_flags.h"
 #include "main/map_load.h"
@@ -1795,7 +1796,6 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
 extern f32 gObjJointMtxTemp[];
 extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
-extern void ObjModel_ToggleMatrixBuffer(int* am);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
@@ -1837,7 +1837,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         }
         else
         {
-            ObjModel_ToggleMatrixBuffer(am);
+            ObjModel_ToggleMatrixBufferIntLegacy(am);
             PSMTXCopy(gObjJointMtxTemp, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
             lbl_803DCC48 = 3;
         }
@@ -1948,10 +1948,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-extern void ObjModel_ToggleVertexBuffer(int* am);
 extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
 f32 gObjBoneMtxBuffer[0xC00];
-extern void ObjModel_ApplyBlendChannels(int* am);
 extern void ObjModel_BlendVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void ObjModel_BlendNormalStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void objUpdateHitSpheres(int* am, u8* m, int* obj, int p4, int* p5);
@@ -2000,7 +1998,7 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     {
         did = 0;
         *(u8*)((char*)am + 0x60) = 0;
-        ObjModel_ToggleVertexBuffer(am);
+        ObjModel_ToggleVertexBufferIntLegacy(am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
@@ -2025,12 +2023,12 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
         else
         {
-            ObjModel_ToggleMatrixBuffer(am);
+            ObjModel_ToggleMatrixBufferIntLegacy(am);
             PSMTXCopy(wm, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
         }
         if (((ModelFileHeader*)m)->morphTargetCount != 0)
         {
-            ObjModel_ApplyBlendChannels(am);
+            ObjModel_ApplyBlendChannelsIntLegacy(am);
         }
         if (did != 0)
         {
@@ -2325,7 +2323,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
     if (!(*(u16*)((char*)am + 0x18) & 8))
     {
         *(u8*)((char*)am + 0x60) = 0;
-        ObjModel_ToggleVertexBuffer(am);
+        ObjModel_ToggleVertexBufferIntLegacy(am);
         if (((ModelFileHeader*)m)->animationCount != 0 && !(((ModelFileHeader*)m)->flags & 2) &&
             ((ModelFileHeader*)m)->jointCount != 0)
         {
@@ -2357,14 +2355,14 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
         else
         {
-            ObjModel_ToggleMatrixBuffer(am);
+            ObjModel_ToggleMatrixBufferIntLegacy(am);
             PSMTXCopy(wm, (f32*)ObjModel_GetJointMatrix((u8*)am, 0));
         }
         if ((m4 == 0 && (mode8 & 8) == 0) || lbl_803DCC44 == 0)
         {
             if (((ModelFileHeader*)m)->morphTargetCount != 0)
             {
-                ObjModel_ApplyBlendChannels(am);
+                ObjModel_ApplyBlendChannelsIntLegacy(am);
             }
             if (did != 0)
             {
