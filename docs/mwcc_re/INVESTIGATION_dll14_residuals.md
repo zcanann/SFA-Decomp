@@ -466,3 +466,13 @@ what makes it emit (base+idx) before +const when the const cannot be an element 
 Note the target may simply canonicalize the same way ONLY when the addressing node comes
 from a specific IR shape (e.g. pointer-arith on a typed pointer vs int) - enumerate the
 IR-node kinds at the emitter dispatch (0x4c2934's 0x1e000000 kind-bits switch is nearby).
+
+## Emitter decode reading list
+Kind-classifier (0x4c2920, dispatches on RegInfo 0x1e000000 bits) callers = the CMachine
+operand/addressing emission functions: 0x4c06ee, 0x4c0982, 0x4c0f4f, 0x4c0fcf, 0x4c1068,
+0x4c10d1, 0x4c11d8, 0x4c122f, 0x4c1288, 0x4c12e7 (one dense band = the per-operand-kind
+emitters), plus 0x4c27c0. The ADD-node addressing emitter among these carries the
+association/dest-targeting condition. Disassemble the band (capstone one-shot as done for
+0x4d0ea0/0x435f14), identify the (base+idx)+const vs (idx+const)+base branch, and map its
+guard to an IR/type property expressible in source. Signed-int cast eliminated (same
+reassociation) - the cast-kind space is fully exhausted.
