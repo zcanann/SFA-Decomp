@@ -516,3 +516,11 @@ AFTER listWalk so interference pushes it to r27 - single moves cascade; needs a 
 permutation sweep over decls {slotPtr, pp, listIndex, listWalk, slot} (~15 targeted orders)
 plus the site-1 commutative-operand line. Then score - expected to cross 97.83 given the
 accumulate sites are byte-matched and the instruction excess is down to +3.
+
+## Decl sweep complete (24 orders of pp/listIndex/listWalk/slot)
+Best remains the 113-state order [pp, listIndex, listWalk, slot] (score 4/7 target regs).
+listWalk=r26 is UNREACHABLE within this cluster: slotPtr (currently granted r26, declared
+above the cluster) interferes with listWalk in every order. Next sweep must include
+slotPtr positions AFTER listWalk (so listWalk colors first, pushing slotPtr to r27 by
+interference); expect the back(r24)/slot36(r28) pair to settle with it. ~8 targeted
+configs: slotPtr inserted at each position after lw in the two score-4 orders.
