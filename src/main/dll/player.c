@@ -116,9 +116,7 @@ void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
 int fn_80295C24(GameObject* obj);
 int fn_80295C40(GameObject* obj);
 int fn_80295C5C(GameObject* obj);
-int fn_80295C88(int obj);
 int fn_80295CBC(GameObject* obj);
-void playerSetDisguised(GameObject* obj, int mode);
 int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 void fn_802960E4(void);
 void fn_802960F4(GameObject* obj, int* out);
@@ -804,10 +802,10 @@ u8 fn_80296414(GameObject* obj, GameObject* otherObj, u8* out)
     return inner->baddie.controlMode == 0x1c && *(u32*)&inner->contactObject == (u32)otherObj;
 }
 
-int fn_80295C88(int obj)
+int fn_80295C88(GameObject* player)
 {
     f32 dist = lbl_803E7EDC;
-    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)obj, &dist);
+    return ObjGroup_FindNearestObject(LANTERNFIREFLY_OBJGROUP, (int)player, &dist);
 }
 
 void fn_8029697C(GameObject* obj, s16* out1, s16* out2)

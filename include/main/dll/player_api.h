@@ -8,6 +8,7 @@
 int objFn_802962b4(GameObject* obj);
 int fn_80295A04(GameObject* obj, int selector);
 int fn_80295C0C(GameObject* obj);
+int fn_80295C88(GameObject* player);
 int playerIsPathFollowing(GameObject* player);
 void fn_802960E8(GameObject* player, s16 effectId);
 f32 fn_8029610C(GameObject* obj);
@@ -27,6 +28,7 @@ GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(GameObject* player);
 int playerHasSpell(GameObject* obj, int spell);
 int playerIsDisguised(GameObject* obj);
+void playerSetDisguised(GameObject* obj, int mode);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
 void playerAddRemoveMagic(GameObject* obj, int amount);

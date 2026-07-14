@@ -52,6 +52,7 @@
 #include "main/objhits.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/firecrawler.h"
+#include "main/dll/player_api.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
@@ -191,7 +192,6 @@ extern f32 lbl_803E2C54;
 extern f32 lbl_803E2C38;
 extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
-extern int fn_80295C88(void* player);
 extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
 extern f32 lbl_803E2B50;
