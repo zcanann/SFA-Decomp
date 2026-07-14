@@ -591,3 +591,18 @@ a composition shift larger than one edge (78 vs 62), meaning the sweep-timing ca
 (how many neighbors push per sweep round) decides; the simulation now has REAL inputs:
 run Simplify on this exact census to find which single web's removal/addition flips the
 crossing order. All tooling committed; this is the final computation before the source fix.
+
+## SIMULATOR VALIDATED + first search results
+A ~30-line Python Simplify simulation on the real adjacency census reproduces the traced
+func1C pop order EXACTLY ([66,61,60,59,54,48,46]). Searches: no single edge add/remove,
+no single web deletion, and NOT EVEN an index swap of 46/48 flips the pair - the order is
+pure degree-evolution (48 has 78 parked-class neighbors vs 46's 62; it stays parked longest
+and pops first). The TARGET therefore has REVERSED compositions on this pair (~16-edge
+structural difference), i.e. the original's scanBase-role web lived meaningfully longer
+(or base-role shorter) than ours - a source-structure difference, not a tuning knob.
+Next search classes for the simulator: multi-edit neighborhoods and web-insertion with
+full neighborhoods; and check whether the end-loop coalesce direction (base absorbing the
+end-walker vs staying separate) accounts for the base web's +16 edges - if the base did
+NOT absorb the end-loop walker in the target (separate short web!), base's neighborhood
+shrinks by exactly the end-loop span. TEST: force a separate end-walker web (fresh pointer
+var for the end loop initialized from candidateDistances) - plausible C, directly testable.
