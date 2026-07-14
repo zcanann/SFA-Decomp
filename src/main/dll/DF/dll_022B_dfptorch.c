@@ -14,7 +14,8 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/camera.h"
-#include "main/audio/sfx.h"
+#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/shader_api.h"
@@ -145,8 +146,6 @@ void DFP_Torch_hitDetect(void)
 
 void DFP_Torch_update(int obj)
 {
-    extern void Sfx_PlayFromObject(int, int);
-
     typedef struct
     {
         int m0;
