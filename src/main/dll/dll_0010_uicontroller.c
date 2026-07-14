@@ -40,3 +40,9 @@ void UIController_release(void)
 void UIController_initialise(void)
 {
 }
+
+u32 lbl_803114B0[10] = {
+    0, 0, 0, 0x00050000,
+    (u32)UIController_initialise, (u32)UIController_release, 0, (u32)UIController_frameStart,
+    (u32)UIController_frameEnd, (u32)UIController_render,
+};
