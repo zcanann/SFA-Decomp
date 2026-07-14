@@ -3867,6 +3867,7 @@ void pauseMenuDoSave(void)
     {
         u8 r, g, b, a;
     } colorB, colorA;
+    GameObject* volatile* objects;
     u8 i;
     u8 j;
 
@@ -3908,11 +3909,14 @@ void pauseMenuDoSave(void)
             }
         }
     }
-    for (j = 0; j < 2; j++)
+    j = 0;
+    objects = lbl_803DD868;
+    while (j < 2)
     {
-        objRender(0, 0, 0, 0, lbl_803DD868[j], 1);
-        *(u16*)((u8*)Obj_GetActiveModel(lbl_803DD868[j]) + 0x18) &= ~0x8;
-        *((u8*)lbl_803DD868[j] + 0x37) = 0xff;
+        objRender(0, 0, 0, 0, objects[j], 1);
+        *(u16*)((u8*)Obj_GetActiveModel(objects[j]) + 0x18) &= ~0x8;
+        *((u8*)objects[j] + 0x37) = 0xff;
+        j++;
     }
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0)
