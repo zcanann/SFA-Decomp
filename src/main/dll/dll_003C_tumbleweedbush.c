@@ -174,6 +174,7 @@ u16 fn_80130124(void)
 }
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -209,6 +210,7 @@ void linkInitTextures(LinkMenuItemDB* item)
         OSReport(sTumbleweedBushSlotOverflowErr);
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
@@ -702,7 +704,6 @@ void Link_initialise(void)
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
 {
-    extern void linkInitTextures(LinkMenuItemDB * item);
     extern LinkMenuItem gTumbleweedBushItems[40];
     extern s8 gTumbleweedBushItemCount;
     int i;
