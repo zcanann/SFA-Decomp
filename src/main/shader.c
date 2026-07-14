@@ -1094,9 +1094,7 @@ void playerUpdateFn_8005649c(void)
         }
         else
         {
-            ((void (*)(f32, f32, f32, f32*, f32*, f32*))Obj_TransformWorldPointToLocal)(
-                cam->worldX, cam->worldY, cam->worldZ,
-                &lx, &ly, &lz);
+            Obj_TransformWorldPointToLocal(cam->worldX, cam->worldY, cam->worldZ, &lx, &ly, &lz, (u32)obj);
             *(f32*)(lbl_80386648 + slot * 0x10 + 0) = lx;
             *(f32*)(lbl_80386648 + slot * 0x10 + 4) = ly;
             *(f32*)(lbl_80386648 + slot * 0x10 + 8) = lz;
