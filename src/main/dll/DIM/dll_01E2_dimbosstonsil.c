@@ -13,6 +13,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/baddie_state.h"
@@ -34,7 +35,6 @@ extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
-extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void DIMbosstonsil_updateHitReaction(void);
@@ -249,7 +249,7 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
         {
         case 0:
         {
-            objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
             ObjPath_GetPointWorldPosition(obj, 1, (pp = &pathPoint.x), &pathPoint.y, &pathPoint.z, 0);
             (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);
