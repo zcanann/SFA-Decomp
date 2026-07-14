@@ -18,6 +18,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
@@ -80,7 +81,6 @@ void SB_CageKyte_hitDetect(void)
 
 void SB_CageKyte_update(GameObject* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     s16* timer;
     GameObject* player;
 
