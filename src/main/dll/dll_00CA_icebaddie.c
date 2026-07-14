@@ -1443,12 +1443,9 @@ return0:
     return 0;
 }
 
+#pragma dont_inline on
 void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 {
-    extern int iceBaddie_updateTargetCollision(int obj, int sub, int sub2);
-    extern void iceBaddie_updateControlEffects(GameObject * obj, int sub);
-    extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
-    extern void iceBaddie_updateTargetMotion(GameObject * obj, int sub, int sub2);
     GroundBaddieState* sub;
     int setup;
 
@@ -1502,6 +1499,7 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
         }
     }
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 void fn_8015DAE8(void);
