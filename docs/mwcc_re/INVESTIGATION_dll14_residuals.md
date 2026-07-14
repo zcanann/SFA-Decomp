@@ -573,3 +573,11 @@ additional parked-class edge on scanBase (real-computation inline helper on its 
 an overlapping parked web) delays its push one sweep and flips the pair. This unifies with
 the walkgroup pl-chain park finding - both are single-edge degree-evolution adjustments,
 and the simulation search space is exactly these compositions.
+
+## Adjacency logger v1 (tools/mwcc_re/adj_lldb.py): catches precolor init only
+Breakpoints at 0x57bb43/0x57bb60 log the physical-register mutual-interference init
+(hi 1..31, 4 classes) - the liveness walk's per-pair edge adds use a different site inside
+0x57b7xx-0x57ba00 (the 342-line walk body). Next: scan that range for the OR-into-matrix
+instruction(s) (pattern 09 xx b7-style or a helper call) and add them to the logger; then
+the neighbor-composition diff of webs 46/47/48 (func1C) and the walkgroup contested set
+directly names the single-edge source adjustments.
