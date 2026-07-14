@@ -25,6 +25,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_pointer_u16_legacy_api.h"
+#include "main/audio/sfx_stop_object_api.h"
 
 /*
  * Per-instance runtime state stored in GameObject::extra
@@ -80,7 +81,6 @@ typedef struct SfxplayerPlacement
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
-extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
 
@@ -112,11 +112,11 @@ void sfxplayerObj_free(u8* obj)
     {
         u16 sfx1 = data->sfx1;
         if (sfx1 != 0)
-            Sfx_StopFromObject(obj, sfx1);
+            Sfx_StopFromObjectPtrU16Legacy(obj, sfx1);
         {
             u16 sfx2 = data->sfx2;
             if (sfx2 != 0)
-                Sfx_StopFromObject(obj, sfx2);
+                Sfx_StopFromObjectPtrU16Legacy(obj, sfx2);
         }
     }
 }
@@ -175,12 +175,12 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
             soundId = data->sfx1;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_StopFromObject(obj, soundId);                                                                      \
+                Sfx_StopFromObjectPtrU16Legacy(obj, soundId);                                                          \
             }                                                                                                          \
             soundId = data->sfx2;                                                                            \
             if (soundId != 0)                                                                                          \
             {                                                                                                          \
-                Sfx_StopFromObject(obj, soundId);                                                                      \
+                Sfx_StopFromObjectPtrU16Legacy(obj, soundId);                                                          \
             }                                                                                                          \
         }                                                                                                              \
     } while (0)
