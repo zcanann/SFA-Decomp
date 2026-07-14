@@ -426,6 +426,7 @@ main/dll/dll_0016_screentransition.c:
 
 main/dll/dll_0004_dummy04.c:
 	.text       start:0x800D7F5C end:0x800D8020
+	.data       start:0x80311378 end:0x80311438
 
 main/dll/dll_000F_unk.c:
 	.text       start:0x800D8020 end:0x800D9DCC

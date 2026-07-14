@@ -9,6 +9,7 @@
  * return a fixed constant (0, 0x7f, or -1). Used to fill a DLL slot
  * with a known no-op so the dispatch tables stay valid.
  */
+#include "dolphin/types.h"
 #include "main/dll/dll_0004_dummy04.h"
 
 void Dummy04_func14_nop(void)
@@ -136,3 +137,18 @@ void Dummy04_release(void)
 void Dummy04_initialise(void)
 {
 }
+
+u32 lbl_80311378[48] = {
+    0, 0, 0, 0x002b0000,
+    (u32)Dummy04_initialise, (u32)Dummy04_release, 0, (u32)Dummy04_func03_ret_m1,
+    (u32)Dummy04_func04_nop, (u32)Dummy04_func05_ret_0, (u32)Dummy04_onSetupPlayer, (u32)Dummy04_func07_nop,
+    (u32)Dummy04_func08_nop, (u32)Dummy04_onSelectSave, (u32)Dummy04_func0A_ret_0, (u32)Dummy04_func0B_ret_0,
+    (u32)Dummy04_func0C_nop, (u32)Dummy04_func0D_ret_0, (u32)Dummy04_func0E_nop, (u32)Dummy04_func0F_ret_0,
+    (u32)Dummy04_func10_nop, (u32)Dummy04_func11_ret_0, (u32)Dummy04_func12_nop, (u32)Dummy04_func13_nop,
+    (u32)Dummy04_func14_nop, (u32)Dummy04_func15_nop, (u32)Dummy04_func16_nop, (u32)Dummy04_func17_nop,
+    (u32)Dummy04_func18_nop, (u32)Dummy04_func19_nop, (u32)Dummy04_func1A_nop, (u32)Dummy04_func1B_nop,
+    (u32)Dummy04_func1C_nop, (u32)Dummy04_func1D_ret_0, (u32)Dummy04_func1E_nop, (u32)Dummy04_func1F_nop,
+    (u32)Dummy04_func20_nop, (u32)Dummy04_func21_ret_0, (u32)Dummy04_func22_ret_127, (u32)Dummy04_func23_nop,
+    (u32)Dummy04_func24_ret_0, (u32)Dummy04_func25_nop, (u32)Dummy04_func26_nop, 0,
+    0, 0, 0, 0,
+};
