@@ -59,6 +59,30 @@
 #define DLLCE_HIT_VOLUME_SLOT 10
 extern void ObjHits_RegisterActiveHitVolumeObject();
 
+/* State handlers implemented by dll_00CA_icebaddie.c. */
+int iceBaddie_updateOpenHitState(GameObject* obj, int state);
+int iceBaddie_updateOpenState(GameObject* obj, int state);
+int iceBaddie_updateHideResetState(GameObject* obj, int state);
+int iceBaddie_updateImpactHitState(GameObject* obj, int state);
+int iceBaddie_updateSpinState(GameObject* obj, int state);
+int iceBaddie_stateHandlerA05(GameObject* obj, int state);
+int iceBaddie_stateHandlerA06(GameObject* obj, int state);
+int iceBaddie_updateHeightBlendState(GameObject* obj, int state);
+int iceBaddie_updateControlMove5State(int* obj, GroundBaddieState* state);
+int iceBaddie_updateCommDownState(GameObject* obj, int state);
+int iceBaddie_updateDropState(GameObject* obj, int state);
+int iceBaddie_stateHandlerA0B(GameObject* obj, int state);
+int iceBaddie_updateContactHitState(GameObject* obj, int state);
+int iceBaddie_updateLandingState(GameObject* obj, int state);
+int iceBaddie_checkTargetState(int obj, int state);
+int iceBaddie_stateHandlerB01(int* obj, GroundBaddieState* state);
+int iceBaddie_stateHandlerB02(GameObject* obj, int state);
+int iceBaddie_stateHandlerB03(GameObject* obj, int state);
+int iceBaddie_stateHandlerB04(int obj, int state);
+int iceBaddie_stateHandlerB05(int* obj, GroundBaddieState* state);
+int iceBaddie_stateHandlerB06(int obj, int state);
+int iceBaddie_stateHandlerB07(int obj, int state);
+
 int fn_8015E3A0(GameObject* obj, int state)
 {
 
@@ -273,28 +297,6 @@ void fn_8015DAE8(void)
 {
     extern void* gIceBaddieStateHandlersB[];
     extern void* gIceBaddieStateHandlersA[];
-    extern int iceBaddie_updateOpenHitState();
-    extern int iceBaddie_updateOpenState();
-    extern int iceBaddie_updateHideResetState();
-    extern int iceBaddie_updateImpactHitState();
-    extern int iceBaddie_updateSpinState();
-    extern int iceBaddie_stateHandlerA05();
-    extern int iceBaddie_stateHandlerA06();
-    extern int iceBaddie_updateHeightBlendState();
-    extern int iceBaddie_updateControlMove5State();
-    extern int iceBaddie_updateCommDownState();
-    extern int iceBaddie_updateDropState();
-    extern int iceBaddie_stateHandlerA0B();
-    extern int iceBaddie_updateContactHitState();
-    extern int iceBaddie_updateLandingState();
-    extern int iceBaddie_checkTargetState();
-    extern int iceBaddie_stateHandlerB01();
-    extern int iceBaddie_stateHandlerB02();
-    extern int iceBaddie_stateHandlerB03();
-    extern int iceBaddie_stateHandlerB04();
-    extern int iceBaddie_stateHandlerB05();
-    extern int iceBaddie_stateHandlerB06();
-    extern int iceBaddie_stateHandlerB07();
 
     gIceBaddieStateHandlersA[0] = iceBaddie_updateOpenHitState;
     gIceBaddieStateHandlersA[1] = iceBaddie_updateOpenState;
@@ -548,9 +550,6 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 
 void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 {
-    extern u8 Obj_IsLoadingLocked(void);
-    extern int Obj_AllocObjectSetup(int size, int id);
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     extern f64 lbl_803E2DC0;
     extern f32 lbl_803E2DF4;
     extern f32 lbl_803E2DF8;
@@ -562,7 +561,7 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 
     if (Obj_IsLoadingLocked() == 0)
     {
-        setup = Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
+        setup = (int)Obj_AllocObjectSetup(36, DLLCE_CHILD_OBJ);
         ((ObjPlacement*)setup)->posX = (obj)->anim.localPosX;
         ((ObjPlacement*)setup)->posY = lbl_803E2DF4 + (obj)->anim.localPosY;
         ((ObjPlacement*)setup)->posZ = (obj)->anim.localPosZ;
@@ -570,7 +569,7 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
         ((ObjPlacement*)setup)->color[1] = 1;
         ((ObjPlacement*)setup)->color[2] = 0xff;
         ((ObjPlacement*)setup)->color[3] = 0xff;
-        o = Obj_SetupObject(setup, 5, -1, -1, 0);
+        o = (u8*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
         if (o != NULL)
         {
             t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
@@ -764,11 +763,9 @@ void dll_CE_init(GameObject* obj, u8* def, int flags)
     ObjHits_DisableObject((int)obj);
 }
 
+#pragma dont_inline on
 void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
 {
-    extern void fn_8015ED1C(int p1, int p2, int p3);
-    extern void fn_8015EB6C(GameObject* obj, int p2, int p3);
-    extern void fn_8015EA48(GameObject * obj, u8 * p);
     extern void* gChukChukMoveHandlers[];
     extern void* gChukChukCheckHandlers[];
     extern f32 timeDelta;
@@ -828,7 +825,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
                 hit = *(u8**)&sub->control;
                 if ((hit[8] & 1) != 0)
                 {
-                    fn_8015EA48(obj, (u8*)sub);
+                    fn_8015EA48(obj, sub);
                 }
                 if ((hit[8] & 2) != 0)
                 {
@@ -857,6 +854,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
         }
     }
 }
+#pragma dont_inline reset
 
 
 void dll_CE_hitDetect_nop(void)
