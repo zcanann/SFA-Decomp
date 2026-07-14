@@ -35,6 +35,7 @@ extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int* window);
 
 extern f32 lbl_803E18BC;
 
+#pragma dont_inline on
 u32 fn_8010AEA8(CameraObject* camera, u32 flagsIn)
 {
     u8 flags;
@@ -166,6 +167,7 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject* camera, f32* po
         ->initialise(lbl_803DD560->duration, lbl_803DD560->speedCurve, lbl_803E18B0, (f64)lbl_803E18B4,
                      (f64) * (f32*)&lbl_803E18B4, lbl_803E18B8);
 }
+#pragma dont_inline reset
 
 void CameraModeTestStrength_copyToCurrent(void)
 {
@@ -179,7 +181,6 @@ void CameraModeTestStrength_free(void)
 
 void CameraModeTestStrength_update(short* cam)
 {
-    extern int fn_8010AEA8(short* cam, int flags);
     int lockRoll;
     int obj;
     int lockPitch;
@@ -295,7 +296,7 @@ void CameraModeTestStrength_update(short* cam)
             cam[2] = Curve_EvalCatmullRomValuesFirst(rollS, t, 0);
         }
         ((CameraObject*)cam)->fov = Curve_EvalBSplineValuesFirst(fov, t, 0);
-        if (lbl_803DD560->transitionComplete == 0 && fn_8010AEA8(cam, flags) != 0)
+        if (lbl_803DD560->transitionComplete == 0 && (s32)fn_8010AEA8((CameraObject*)cam, (u32)flags) != 0)
         {
             lbl_803DD560->transitionComplete = 1;
         }
@@ -355,7 +356,6 @@ void CameraModeTestStrength_update(short* cam)
 
 void CameraModeTestStrength_init(short* cam, int param2, int* param3)
 {
-    extern void cameraModeTestStrengthFn_8010b238(int camera, f32* pos, int pitch, int yaw, int roll);
     int romNode;
     int obj;
     int curveNode2;
@@ -454,7 +454,7 @@ void CameraModeTestStrength_init(short* cam, int param2, int* param3)
     pos[2] = pz;
     if (*((u8*)param3 + 4) == 0 && param2 != 3)
     {
-        cameraModeTestStrengthFn_8010b238((int)cam, pos, pitch, yaw, roll);
+        cameraModeTestStrengthFn_8010b238(fov, (CameraObject*)cam, pos, pitch, yaw, roll);
     }
     else
     {
