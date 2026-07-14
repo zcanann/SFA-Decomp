@@ -22,6 +22,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -63,7 +64,6 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
 
