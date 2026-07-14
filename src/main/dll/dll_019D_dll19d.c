@@ -7,7 +7,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx.h"
 #define DLL19D_HIT_VOLUME_SLOT 0xe
 

@@ -11,7 +11,6 @@
 #include "main/objhits.h"
 #include "main/object_transform.h"
 #include "main/vecmath.h"
-#include "main/dll/VF/vf_shared.h"
 
 extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outHits, int flags);
 extern void hitDetectFn_800691c0(int obj, void* bounds, u32 mask, int flags);

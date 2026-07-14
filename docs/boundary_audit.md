@@ -240,7 +240,7 @@ The prep recipes that cracked the historical blockers, for reuse:
   LinkMenuItem; linkTextures u8[0x30] vs LinkTexture[6]) → block-scope the
   donor's view into its fns and drop the file-scope decl (or cast the
   struct-view accesses through a u8[] base); byte-verify.
-- **dead/used objlib drift decls in a shared header** (vf_shared.h's
+- **dead/used objlib drift decls in a shared header** (the former vf_shared.h's
   undefined4()/undefined8() forms colliding with objlib.h in a merged TU) →
   drop the dead ones; #57-block-scope the used ones into their consumers,
   then drop from the header. Full-project .o-hash A/B gates it.

@@ -11,7 +11,11 @@
  * itself once it falls past the floor.
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
+#include "main/audio/sfx.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"
@@ -65,8 +69,8 @@ void VFP_MiniFire_hitDetect(void)
 
 void VFP_MiniFire_update(GameObject* obj)
 {
-    /* local override: this TU treats randomGetRange's result as signed
-       (vf_shared declares it u32); the int return is load-bearing. */
+    /* randomGetRange's canonical int return is load-bearing here: the
+       sampled offsets are intentionally signed. */
     VfpMinifireState* state = (obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;

@@ -28,7 +28,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/camera.h"
 #include "main/dll/tricky_api.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/vecmath.h"
 #include "dolphin/gx/GXTransform.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/cmenu.h"

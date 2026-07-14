@@ -383,17 +383,10 @@ simply **redundant**. Find the real home:
 grep -rn "void MySym(" include/ | grep -v "_shared.h"
 ```
 
-**Keep the local extern** when the symbol only appears in:
-
-- a per-subsystem `*_shared.h` **extern-dump** (`player_80295318_shared.h`, `vf_shared.h`,
-  …) — those are per-DLL scratch collections, not APIs; including one in an unrelated unit
-  is wrong, and they frequently disagree on the signature (some declare
-  `Obj_FreeObject` returning `int`, others `void`);
-- the catch-all `engine_shared.h` (1298 lines; pulls in audio/sky/effects) — too heavy to
-  include for one global. `timeDelta` lives here, and **137 units keep it local — that IS
-  the house style**;
-- an unnamed `fn_XXXXXXXX`, or a symbol with **conflicting signatures** tree-wide and no
-  single canonical header (e.g. `vecRotateZXY`).
+**Keep the local extern** when no canonical owner/API header exists, especially for an
+unnamed `fn_XXXXXXXX` or a symbol with conflicting signatures tree-wide. Do not recreate
+the deleted per-subsystem `*_shared.h` extern dumps merely to centralize unverified guesses;
+recover an owner and signature first.
 
 Two traps that make this deceptive:
 

@@ -14,7 +14,10 @@
  *    "sequence done" bit when all four are set;
  *  - two music latches driven through SCGameBitLatch_Update.
  */
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/gamebits.h"
+#include "main/mapEventTypes.h"
 #include "main/audio/music_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"

@@ -33,7 +33,9 @@
 #include "main/object_transform.h"
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 
 typedef struct
