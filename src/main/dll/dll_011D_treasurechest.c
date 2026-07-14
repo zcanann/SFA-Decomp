@@ -4,6 +4,7 @@
 #include "main/dll/staffflags_struct.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #define OBJFX_HIT_DETECT_SCALE_FIRST_LEGACY
 #include "main/objfx.h"
 #include "main/objhits.h"
@@ -239,3 +240,20 @@ void TreasureChest_init(int* obj)
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;
 }
+
+ObjectDescriptor gTreasureChestObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)TreasureChest_initialise,
+    (ObjectDescriptorCallback)TreasureChest_release,
+    0,
+    (ObjectDescriptorCallback)TreasureChest_init,
+    (ObjectDescriptorCallback)TreasureChest_update,
+    (ObjectDescriptorCallback)TreasureChest_hitDetect,
+    (ObjectDescriptorCallback)TreasureChest_render,
+    (ObjectDescriptorCallback)TreasureChest_free,
+    (ObjectDescriptorCallback)TreasureChest_getObjectTypeId,
+    TreasureChest_getExtraSize,
+};

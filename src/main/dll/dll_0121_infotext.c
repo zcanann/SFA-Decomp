@@ -5,6 +5,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/object_descriptor.h"
 
 #define INFOTEXT_OBJFLAG_HIDDEN 0x4000
 #define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -54,3 +55,20 @@ void infotext_init(GameObject *obj, s8* def)
     (obj)->anim.rotX = (s16)((s32)(u8)p->rotByte << 8);
     objSetHintTextIdx(obj, (u8)p->hintTextIdx);
 }
+
+ObjectDescriptor gInfoTextObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)infotext_init,
+    (ObjectDescriptorCallback)infotext_update,
+    0,
+    0,
+    0,
+    0,
+    infotext_getExtraSize,
+};

@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/dll/tricky_api.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 
 #define MAGICCAVEBOTTOM_GAMEBIT_ACTIVE 0xefb /* bottom-area loaded/active latch */
@@ -98,3 +99,20 @@ void MagicCaveBottom_update(int* obj)
         break;
     }
 }
+
+ObjectDescriptor gMagicCaveBottomObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)MagicCaveBottom_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)MagicCaveBottom_free,
+    0,
+    MagicCaveBottom_getExtraSize,
+};

@@ -8,6 +8,7 @@
 #include "main/object.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
+#include "main/object_descriptor.h"
 
 int TrickyGuardSpot_getExtraSize(void) { return 0x8; }
 
@@ -77,3 +78,20 @@ void TrickyGuardSpot_init(TrickyGuardSpotObject* obj, TrickyGuardSpotPlacement* 
     obj->objAnim.rotX = (s16)(s32)
     def->initialYaw;
 }
+
+ObjectDescriptor gTrickyGuardSpotObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)TrickyGuardSpot_init,
+    (ObjectDescriptorCallback)TrickyGuardSpot_update,
+    0,
+    (ObjectDescriptorCallback)TrickyGuardSpot_render,
+    (ObjectDescriptorCallback)TrickyGuardSpot_free,
+    0,
+    TrickyGuardSpot_getExtraSize,
+};

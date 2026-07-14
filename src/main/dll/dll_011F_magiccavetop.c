@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
+#include "main/object_descriptor.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define MAGICCAVETOP_CAMMODE_DEFAULT 0x42
@@ -362,3 +363,20 @@ void MagicCaveTop_init(int* obj, s8* def)
         }
     }
 }
+
+ObjectDescriptor gMagicCaveTopObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)MagicCaveTop_init,
+    (ObjectDescriptorCallback)MagicCaveTop_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)MagicCaveTop_free,
+    0,
+    MagicCaveTop_getExtraSize,
+};

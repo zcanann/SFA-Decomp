@@ -20,6 +20,7 @@
 #include "main/obj_group.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/gamebits.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
 STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
@@ -366,3 +367,20 @@ void staffactivated_init(GameObject* obj, StaffActivatedSetup* setupData)
         }
     }
 }
+
+ObjectDescriptor gStaffActivatedObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)staffactivated_init,
+    (ObjectDescriptorCallback)staffactivated_update,
+    0,
+    (ObjectDescriptorCallback)staffactivated_render,
+    (ObjectDescriptorCallback)staffactivated_free,
+    (ObjectDescriptorCallback)staffactivated_getObjectTypeId,
+    staffactivated_getExtraSize,
+};
