@@ -22,8 +22,8 @@
 #include "main/object.h"
 #include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
@@ -111,7 +111,6 @@ void SB_CloudBall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void SB_CloudBall_hitDetect(GameObject* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     SBCloudBallState* state = obj->extra;
     int* target = (int*)ObjAnim_GetPriorityHitState(&obj->anim)->lastHitObject;
 
