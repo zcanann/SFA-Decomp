@@ -14,7 +14,7 @@
 #include "main/gameloop_api.h"
 #include "main/object.h"
 #include "main/mapEvent.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/newclouds.h"
 #include "main/rcp_dolphin.h"
 #include "main/camera.h"
@@ -1690,9 +1690,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
 #pragma opt_propagation reset
 #pragma opt_loop_invariants reset
 
-extern void* fn_80089A58(void);
-extern void* fn_80089A50(void);
-extern void modelLightStruct_setSpecularColor(void* light, int r, int g, int b, int a);
 extern void modelLightStruct_loadChannelLight(int idx, void* light, int model);
 extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;

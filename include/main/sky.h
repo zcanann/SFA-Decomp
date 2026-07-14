@@ -106,8 +106,6 @@ void getTimeOfDay(f32* time);
 void renderSky(void);
 void getAmbientColor(int slot, u8* red, u8* green, u8* blue);
 void textureColorFn_8008991c(int slot, u8* red, u8* green, u8* blue);
-void* fn_80089A50(void);
-void* fn_80089A58(void);
 int getSunPos(f32* outTime);
 void fn_8008B88C(int* outTimer);
 void fn_800897D4(int slot, f32* x, f32* y, f32* z);

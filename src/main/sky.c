@@ -18,6 +18,7 @@
 #include "main/camera.h"
 #include "main/mm.h"
 #include "main/model.h"
+#include "main/model_light.h"
 #include "main/pi_frame_api.h"
 #include "main/texture.h"
 #include "main/textrender_api.h"
@@ -45,7 +46,7 @@ static u8 sSkyUnusedA2;
 static u8 sSkyUnusedA1;
 static u8 sSkyUnusedA0;
 u8 gSkySunPositionPrev;
-void* gSkyMoonLight;
+ModelLightStruct* gSkyMoonLight;
 u8 gSkyOverrideLightDirectionEnabled;
 f32 gSkyOverrideLightIntensity;
 u8 gSkyOverrideLightColorEnabled;
@@ -57,7 +58,7 @@ int gSkyObjectsInitialized;
 void* gSkySkyTexture;
 void* gSkyMoonObject;
 u8* gSkySunObject;
-void* gSkySunLight;
+ModelLightStruct* gSkySunLight;
 u8 gSkyEnvFxFlags;
 int lbl_803DD13C;
 int lbl_803DD138;
@@ -87,7 +88,6 @@ u8 lbl_803DB758 = 1;
 #define SKY_CHILD_OBJ_SUN            0x62b /* spawned into gSkySunObject */
 #define SKY_CHILD_OBJ_MOON           0x62c /* spawned into gSkyMoonObject */
 #define SKY_TEXTURE_SKY              0x5fa /* gSkySkyTexture */
-#define MODEL_LIGHT_KIND_DIRECTIONAL 4
 #define GX_FALSE                     0
 #define GX_TEV_SWAP0                 0
 #define GX_TG_MTX2x4                 1
@@ -126,11 +126,9 @@ extern u8 gSkyOverrideLightColor;
 extern u8 gSkyOverrideLightColorEnabled;
 extern f32 gSkyOverrideLightIntensity;
 extern u8 gSkyOverrideLightDirectionEnabled;
-extern void* gSkyMoonLight;
 extern u8 gSkyCurrentLightColor;
 extern u8 gSkyCurrentAmbientColor;
 extern u8 gSkyCurrentTextureColor;
-extern void* gSkySunLight;
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 pEXIInputFlag;
 extern const f32 EXIInputFlag;
@@ -228,8 +226,6 @@ extern f32 lbl_803DF194;
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern void renderSunAndMoon();
 extern int moonFxCb_80074110(int obj, int* model, int param);
-extern void modelLightStruct_setDirection(void* model, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDiffuseColor(void* model, int red, int green, int blue, int alpha);
 extern void lightSetColor(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
@@ -242,9 +238,6 @@ extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void loadDataFiles(void);
 extern void GXFlush_(int, int);
-extern void* objCreateLight(int, int);
-extern void modelLightStruct_setLightKind(void*, int);
-extern void modelLightStruct_setSpecularColor(void*, int, int, int, int);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
@@ -740,12 +733,12 @@ void modelTextureFn_80089970(int slot)
     lightSetColor(0, gSkyState[slot * 0xa4 + 0x88], gSkyState[slot * 0xa4 + 0x89], gSkyState[slot * 0xa4 + 0x8a]);
 }
 
-void* fn_80089A50(void)
+ModelLightStruct* fn_80089A50(void)
 {
     return gSkyMoonLight;
 }
 
-void* fn_80089A58(void)
+ModelLightStruct* fn_80089A58(void)
 {
     return gSkySunLight;
 }
