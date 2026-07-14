@@ -9,6 +9,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_001A_effect1.h"
 
+f32 gEffect1AnimRampC = 0.1f;
+f32 gEffect1AnimRampD = 0.3f;
+f32 gEffect1AnimRampA = 0.1f;
+f32 gEffect1AnimRampB = 0.3f;
+
 extern f32 lbl_803DF720;
 extern f32 lbl_803DF724;
 extern f32 lbl_803DF730;

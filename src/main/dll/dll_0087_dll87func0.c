@@ -2,7 +2,7 @@
  * dll87func0 (DLL 0x87) - one of the foodbag/modgfx particle-effect DLLs
  * (the dll_NN_func03 family in foodbag.h). dll_87_func03 builds a ten-layer
  * FbBuf command list, points the FbCmd textures at the shared resource at
- * lbl_80316050 (+0x1ac / +0x198 / &lbl_803DB900), copies the seven shared hw
+ * lbl_80316050 (+0x1ac / +0x198 / lbl_803DB900), copies the seven shared hw
  * words, and submits it via gModgfxInterface->spawnEffect (texture asset
  * 0x1fd, resource base+0x168).
  *
@@ -17,11 +17,14 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+#pragma explicit_zero_data on
+u8 lbl_803DB900[8] = {0};
+#pragma explicit_zero_data off
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL87_EFFECT_ID 0x1fd
 
 extern u8 lbl_80316050[];
-extern u8 lbl_803DB900;
 __declspec(section ".sdata2") f32 lbl_803E0FE8 = 1.1f;
 __declspec(section ".sdata2") f32 lbl_803E0FEC = 1.2f;
 #pragma explicit_zero_data on
@@ -80,7 +83,7 @@ void dll_87_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[4].z = lbl_803E1004;
     e[5].layer = 2;
     e[5].flags = 1;
-    e[5].tex = &lbl_803DB900;
+    e[5].tex = lbl_803DB900;
     e[5].mode = 4;
     e[5].x = lbl_803E1008;
     e[5].y = lbl_803E0FF0;

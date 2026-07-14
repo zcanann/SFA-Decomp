@@ -39,6 +39,9 @@
 #include "main/dll/dll_0016_screentransition.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
+s8 gSaveGameCurrentSlot = -1;
+char sGameplayFoxName[] = "FOX";
+
 typedef struct SaveGameTimeEntry
 {
     int objId;
@@ -171,7 +174,6 @@ typedef struct MapBitTransient
 extern u8 saveGameLoadStatus;
 extern s8 gSaveGameCurrentSlot;
 extern u8* lbl_803DD498;
-extern char sGameplayFoxName;
 extern f32 lbl_803E06C8;
 extern f32 lbl_803E06CC;
 extern u16 gSaveGameMapActBits[];
@@ -289,7 +291,7 @@ int trySaveGame(int slot)
     {
         if (lbl_803DD498[0x21] == 0)
         {
-            loaded = gplayNewGame(&sGameplayFoxName, (u8)gSaveGameCurrentSlot);
+            loaded = gplayNewGame(sGameplayFoxName, (u8)gSaveGameCurrentSlot);
         }
         else
         {
@@ -298,7 +300,7 @@ int trySaveGame(int slot)
     }
     else
     {
-        gplayNewGame(&sGameplayFoxName, -1);
+        gplayNewGame(sGameplayFoxName, -1);
     }
     return loaded;
 }

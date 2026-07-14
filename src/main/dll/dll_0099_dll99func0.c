@@ -17,6 +17,8 @@
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0099_dll99func0.h"
 
+u8 lbl_803DB950[8] = {0, 1, 0, 0, 0, 0, 0, 0};
+
 /* one modgfx command entry; mirrors ScreenFxPart's layout */
 typedef struct
 {

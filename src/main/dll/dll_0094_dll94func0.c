@@ -15,6 +15,8 @@
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0094_dll94func0.h"
 
+u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
+
 /* GfxCmd/GfxBuf are duplicated from dll_0093; should be unified in a shared header. */
 typedef struct
 {

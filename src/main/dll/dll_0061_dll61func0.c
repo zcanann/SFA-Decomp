@@ -19,6 +19,8 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0061_dll61func0.h"
 
+u8 lbl_803DB8C0[8] = {0, 8, 0, 0, 0, 0, 0, 0};
+
 enum
 {
     SAVEGAME_EMPTY_TASK_HINT = -1,
@@ -29,7 +31,6 @@ enum
 #define DLL61_EFFECT_ID 0x90
 
 extern u8 lbl_803128E8[];
-extern int lbl_803DB8C0;
 extern f32 lbl_803E0858;
 
 #pragma fp_contract off
@@ -152,7 +153,7 @@ void dll_61_func03(int sourceObj, int variant, int posSource, u32 flags)
     entry[12].z = lbl_803E0858;
     entry[13].layer = 2;
     entry[13].flags = 1;
-    entry[13].tex = &lbl_803DB8C0;
+    entry[13].tex = lbl_803DB8C0;
     entry[13].mode = 4;
     entry[13].x = lbl_803E0858;
     entry[13].y = lbl_803E0858;

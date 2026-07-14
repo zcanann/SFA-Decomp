@@ -3,7 +3,7 @@
  * (dll_NN_func03 family, see foodbag.h). func03 builds a multi-command
  * FbBuf and hands it to the modgfx interface to spawn a randomized
  * particle burst (a flame/spark fan: textured layer-0/1/2 commands plus
- * mode-0x80 emitter markers, the lone &gDll8EEffectTexture texture). variant 0
+ * mode-0x80 emitter markers, the lone gDll8EEffectTexture texture). variant 0
  * vs 1 selects two different random spawn-box ranges for the lead
  * command; flag bit 0 offsets the burst position from sourceObj
  * (offsets 0x18/0x1c/0x20) and/or posSource (offsets 0xc/0x10/0x14).
@@ -11,7 +11,7 @@
  * resource tables gDll8EEffectHwParams (the halfword parameter block copied
  * into buf.hw[]) and gDll8EEffectVtxColorTable (the vertex/color table passed to
  * spawnEffect). gDll8EEffectSpawnResource is the lone extra resource handed to
- * spawnEffect alongside the &gDll8EEffectTexture texture.
+ * spawnEffect alongside the gDll8EEffectTexture texture.
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
@@ -25,7 +25,6 @@
 
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
-extern u8 gDll8EEffectTexture;
 extern u8 gDll8EEffectSpawnResource[8];
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E1138 = 0.0f;
@@ -45,6 +44,9 @@ __declspec(section ".sdata2") f32 lbl_803E1168 = 0.05f;
 __declspec(section ".sdata2") f32 lbl_803E116C = 200.0f;
 #include "main/dll/dll_008F_dll8ffunc0.h"
 
+u8 gDll8EEffectSpawnResource[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+u8 gDll8EEffectTexture[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+
 #pragma opt_propagation off
 void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -60,7 +62,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         p->layer = 0;
         p->flags = 3;
-        p->tex = &gDll8EEffectTexture;
+        p->tex = gDll8EEffectTexture;
         p->mode = 8;
         p->x = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
         p->y = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
@@ -71,7 +73,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         p->layer = 0;
         p->flags = 3;
-        p->tex = &gDll8EEffectTexture;
+        p->tex = gDll8EEffectTexture;
         p->mode = 8;
         p->x = (f32)(int)(randomGetRange(0, 0x1e) + 0xe1);
         p->y = (f32)(int)(randomGetRange(0, 0x69) + 0x8c);
@@ -89,21 +91,21 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[0].z = rz;
     p[1].layer = 0;
     p[1].flags = 3;
-    p[1].tex = &gDll8EEffectTexture;
+    p[1].tex = gDll8EEffectTexture;
     p[1].mode = 4;
     p[1].x = lbl_803E1138;
     p[1].y = lbl_803E1138;
     p[1].z = lbl_803E1138;
     p[2].layer = 0;
     p[2].flags = 3;
-    p[2].tex = &gDll8EEffectTexture;
+    p[2].tex = gDll8EEffectTexture;
     p[2].mode = 2;
     p[2].x = lbl_803E113C;
     p[2].y = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x32) + lbl_803E1140;
     p[2].z = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x14) + lbl_803E1148;
     p[3].layer = 1;
     p[3].flags = 3;
-    p[3].tex = &gDll8EEffectTexture;
+    p[3].tex = gDll8EEffectTexture;
     p[3].mode = 4;
     if ((int)randomGetRange(0, 0xa) == 0)
     {
@@ -124,7 +126,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[4].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[5].layer = 1;
     p[5].flags = 3;
-    p[5].tex = &gDll8EEffectTexture;
+    p[5].tex = gDll8EEffectTexture;
     p[5].mode = 2;
     p[5].x = lbl_803E1154;
     p[5].y = lbl_803E1158;
@@ -138,14 +140,14 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[6].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[7].layer = 2;
     p[7].flags = 3;
-    p[7].tex = &gDll8EEffectTexture;
+    p[7].tex = gDll8EEffectTexture;
     p[7].mode = 4;
     p[7].x = lbl_803E1138;
     p[7].y = lbl_803E1138;
     p[7].z = lbl_803E1138;
     p[8].layer = 2;
     p[8].flags = 3;
-    p[8].tex = &gDll8EEffectTexture;
+    p[8].tex = gDll8EEffectTexture;
     p[8].mode = 2;
     p[8].x = lbl_803E1160;
     p[8].y = lbl_803E1164;

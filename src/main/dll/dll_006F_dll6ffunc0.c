@@ -13,12 +13,13 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_006F_dll6ffunc0.h"
 
+u8 gDll6FGfxCmdTexture[8] = {0, 0, 0, 6, 0, 0x0C, 0, 0x12};
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL6F_EFFECT_ID 0x48
 
 
 extern u8 gDll6FGfxCmdResourceTable[];
-extern u8 gDll6FGfxCmdTexture;
 __declspec(section ".sdata2") f32 lbl_803E0AB8 = 3.0f;
 __declspec(section ".sdata2") f32 lbl_803E0ABC = 16.0f;
 #pragma explicit_zero_data on
@@ -148,7 +149,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[11].z = (*(f32*)&lbl_803E0ADC);
     buf.entries[12].layer = 1;
     buf.entries[12].flags = 4;
-    buf.entries[12].tex = &gDll6FGfxCmdTexture;
+    buf.entries[12].tex = gDll6FGfxCmdTexture;
     buf.entries[12].mode = 4;
     buf.entries[12].x = lbl_803E0AE0;
     buf.entries[12].y = lbl_803E0AC0;
@@ -183,7 +184,7 @@ void dll_6F_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.entries[16].z = (*(f32*)&lbl_803E0ADC);
     buf.entries[17].layer = 2;
     buf.entries[17].flags = 4;
-    buf.entries[17].tex = &gDll6FGfxCmdTexture;
+    buf.entries[17].tex = gDll6FGfxCmdTexture;
     buf.entries[17].mode = 4;
     buf.entries[17].x = lbl_803E0AC0;
     buf.entries[17].y = lbl_803E0AC0;

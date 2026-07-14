@@ -18,6 +18,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_0092_dll92func0.h"
 
+u8 lbl_803DB930[8] = {0, 1, 0, 0, 0, 0, 0, 0};
+
 typedef struct
 {
     u32 mode;    /* +0x00 */

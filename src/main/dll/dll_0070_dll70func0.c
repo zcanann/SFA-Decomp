@@ -20,12 +20,13 @@
 #include "main/dll/dll_0073_dll73func0.h"
 #include "main/dll/dll_0074_dll74func0.h"
 
+u8 lbl_803DB8D0[8] = {0, 0x0A, 0, 0x0C, 0, 0x0E, 0, 0x10};
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL70_EFFECT_ID 0x45
 
 
 extern u8 gDll70Func03GfxLayoutTable[];
-extern int lbl_803DB8D0; /* symbols.txt size:0x8; only &lbl is taken so width is inert */
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E0AF8 = 0.0f;
 #pragma explicit_zero_data off
@@ -176,7 +177,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[14].z = lbl_803E0B24;
     e[15].layer = 3;
     e[15].flags = 4;
-    e[15].tex = &lbl_803DB8D0;
+    e[15].tex = lbl_803DB8D0;
     e[15].mode = 2;
     e[15].x = lbl_803E0B28;
     e[15].y = lbl_803E0B00;
@@ -211,7 +212,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[19].z = lbl_803E0B28;
     e[20].layer = 4;
     e[20].flags = 4;
-    e[20].tex = &lbl_803DB8D0;
+    e[20].tex = lbl_803DB8D0;
     e[20].mode = 2;
     e[20].x = lbl_803E0B24;
     e[20].y = lbl_803E0B00;

@@ -28,6 +28,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0023_effect10.h"
 
+f32 gEffect10ScrollPhaseA = 0.1f;
+f32 gEffect10ScrollPhaseB = 0.3f;
+f32 gEffect10TickScrollPhaseA = 0.1f;
+f32 gEffect10TickScrollPhaseB = 0.3f;
+
 /* flags arg bits */
 #define EFFECT10_FLAG_USE_SRC 0x200000 /* copy caller's EffectSrcParams into the spawn */
 /* flagsA template bits */

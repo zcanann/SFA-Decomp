@@ -20,13 +20,14 @@
 #include "main/dll/dll_0079_dll79func0.h"
 #include "main/dll/dll_007A_dll7afunc0.h"
 
+u8 lbl_803DB8D8[8] = {0, 0, 0, 2, 0, 4, 0, 6};
+
 /* spawnEffect effect ids per variant (docblock: "effect id 0x156/0x89/0x23b for variant 0/1/2"). */
 #define DLL79_EFFECT_ID_VARIANT0 0x156
 #define DLL79_EFFECT_ID_VARIANT1 0x89
 #define DLL79_EFFECT_ID_VARIANT2 0x23b
 
 extern u8 gDll79EffectModelBlock[];
-extern u8 lbl_803DB8D8;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E0CB0 = 0.0f;
 #pragma explicit_zero_data off
@@ -204,7 +205,7 @@ int dll_79_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[1].z = lbl_803E0CB0;
         e[2].layer = 0;
         e[2].flags = 4;
-        e[2].tex = &lbl_803DB8D8;
+        e[2].tex = lbl_803DB8D8;
         e[2].mode = 2;
         e[2].x = lbl_803E0CC0;
         e[2].y = lbl_803E0CC0;

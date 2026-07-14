@@ -17,12 +17,13 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+u8 lbl_803DB8F0[4] = {0, 0, 0, 1};
+u8 lbl_803DB8F4[8] = {0, 0, 0, 1, 0, 2, 0, 3};
+u8 lbl_803DB8FC[4] = {0, 2, 0, 3};
+
 #define FX_VARIANT_BURST 4
 
 extern u8 gFoodbagEffectTemplate[];
-extern u8 lbl_803DB8F0;
-extern u8 lbl_803DB8F4;
-extern u8 lbl_803DB8FC;
 __declspec(section ".sdata2") f32 lbl_803E0F70 = 10.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E0F74 = 0.0f;
@@ -62,14 +63,14 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
         e[0].z = lbl_803E0F74;
         e[1].layer = 0;
         e[1].flags = 2;
-        e[1].tex = &lbl_803DB8FC;
+        e[1].tex = lbl_803DB8FC;
         e[1].mode = 2;
         e[1].x = lbl_803E0F78;
         e[1].y = lbl_803E0F7C;
         e[1].z = lbl_803E0F78;
         e[2].layer = 0;
         e[2].flags = 4;
-        e[2].tex = &lbl_803DB8FC;
+        e[2].tex = lbl_803DB8FC;
         e[2].mode = 0x80;
         e[2].x = (f32)(int)randomGetRange(-0x7ff8, 0x7ff8);
         e[2].y = lbl_803E0F74;
@@ -80,14 +81,14 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         e[0].layer = 0;
         e[0].flags = 2;
-        e[0].tex = &lbl_803DB8F0;
+        e[0].tex = lbl_803DB8F0;
         e[0].mode = 2;
         e[0].x = lbl_803E0F84 * *(f32*)(sourceObj + 8);
         e[0].y = lbl_803E0F88 * *(f32*)(sourceObj + 8);
         e[0].z = lbl_803E0F8C;
         e[1].layer = 0;
         e[1].flags = 2;
-        e[1].tex = &lbl_803DB8FC;
+        e[1].tex = lbl_803DB8FC;
         e[1].mode = 2;
         e[1].x = lbl_803E0F90 * (*(f32*)(sourceObj + 8) / *(f32*)(*(int*)(sourceObj + 0x50) + 4));
         e[1].y = lbl_803E0F88 * (*(f32*)(sourceObj + 8) / *(f32*)(*(int*)(sourceObj + 0x50) + 4));
@@ -104,7 +105,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     p[0].layer = 0;
     p[0].flags = 4;
-    p[0].tex = &lbl_803DB8F4;
+    p[0].tex = lbl_803DB8F4;
     p[0].mode = 4;
     p[0].x = lbl_803E0F74;
     p[0].y = lbl_803E0F74;
@@ -112,7 +113,7 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
     rv = (f32)(int)randomGetRange(0, 0xfffe);
     p[1].layer = 1;
     p[1].flags = 2;
-    p[1].tex = &lbl_803DB8F0;
+    p[1].tex = lbl_803DB8F0;
     p[1].mode = 4;
     p[1].x = lbl_803E0F98;
     p[1].y = lbl_803E0F74;
@@ -186,14 +187,14 @@ void dll_85_func03(int sourceObj, int variant, int posSource, u32 flags)
     }
     p[0].layer = 3;
     p[0].flags = 2;
-    p[0].tex = &lbl_803DB8F0;
+    p[0].tex = lbl_803DB8F0;
     p[0].mode = 4;
     p[0].x = lbl_803E0F9C;
     p[0].y = lbl_803E0F74;
     p[0].z = lbl_803E0F74;
     p[1].layer = 3;
     p[1].flags = 4;
-    p[1].tex = &lbl_803DB8F4;
+    p[1].tex = lbl_803DB8F4;
     p[1].mode = 2;
     p[1].x = lbl_803E0F7C;
     p[1].y = lbl_803E0FA0;

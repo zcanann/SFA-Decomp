@@ -19,6 +19,8 @@
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0095_dll95func0.h"
 
+u8 lbl_803DB940[8] = {0, 4, 0, 5, 0, 6, 0, 7};
+
 /* one per-part draw command (matches ScreenFxPart, 0x18 bytes) */
 typedef struct GfxCmd
 {

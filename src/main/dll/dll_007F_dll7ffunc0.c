@@ -15,12 +15,13 @@
 #include "main/dll/foodbag.h"
 #include "main/dll/dll_007F_dll7ffunc0.h"
 
+u8 lbl_803DB8E8[8] = {0, 8, 0, 0, 0, 0, 0, 0};
+
 /* spawnEffect effect ids per variant (textureAssetId arg). */
 #define DLL7F_EFFECT_ID_VARIANT0 0x156
 #define DLL7F_EFFECT_ID_DEFAULT  0x8a
 
 extern u8 lbl_80315328[];
-extern u8 lbl_803DB8E8;
 __declspec(section ".sdata2") f32 lbl_803E0E20 = 999.0f;
 __declspec(section ".sdata2") f32 lbl_803E0E24 = 94.0f;
 __declspec(section ".sdata2") f32 lbl_803E0E28 = 95.0f;
@@ -120,7 +121,7 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p++;
         p->layer = 1;
         p->flags = 1;
-        p->tex = &lbl_803DB8E8;
+        p->tex = lbl_803DB8E8;
         p->mode = 0x4000;
         p->x = lbl_803E0E4C;
         p->y = lbl_803E0E4C;
@@ -149,7 +150,7 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p++;
         p->layer = 2;
         p->flags = 1;
-        p->tex = &lbl_803DB8E8;
+        p->tex = lbl_803DB8E8;
         p->mode = 0x4000;
         p->x = lbl_803E0E4C;
         p->y = lbl_803E0E4C;

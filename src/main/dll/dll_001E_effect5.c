@@ -21,6 +21,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_001E_effect5.h"
 
+f32 gEffect5AnimProgressA = 0.1f;
+f32 gEffect5AnimProgressB = 0.3f;
+f32 gEffect5AnimProgressC = 0.1f;
+f32 gEffect5AnimProgressD = 0.3f;
+
 STATIC_ASSERT(sizeof(PartfxEffectState) == 0x140);
 STATIC_ASSERT(offsetof(PartfxEffectState, vertexBuffers) == 0x78);
 STATIC_ASSERT(offsetof(PartfxEffectState, textureResource) == 0x98);

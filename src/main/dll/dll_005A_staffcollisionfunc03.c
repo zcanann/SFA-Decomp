@@ -19,8 +19,11 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
 
+u8 lbl_803DB898[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+u8 lbl_803DB8A0[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+u8 lbl_803DB8A8[8] = {0, 0, 0, 1, 0, 2, 0, 3};
+
 extern StaffFxDesc lbl_80311DA8;
-extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
 void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnParams, u32 spawnFlags, int modelId,
@@ -101,7 +104,7 @@ void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnP
         }
         e[0].layer = 0;
         e[0].flags = variant != 0 ? 4 : 3;
-        e[0].tex = variant != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
+        e[0].tex = variant != 0 ? lbl_803DB8A8 : lbl_803DB8A0;
         e[0].mode = 8;
         e[0].x = r;
         e[0].y = g;
@@ -117,7 +120,7 @@ void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnP
         e[1].z = ra;
         e[2].layer = 0;
         e[2].flags = variant != 0 ? 4 : 3;
-        e[2].tex = variant != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
+        e[2].tex = variant != 0 ? lbl_803DB8A8 : lbl_803DB8A0;
         e[2].mode = 2;
         e[2].x = lbl_803E0714;
         e[2].y = lbl_803E0718;
@@ -186,6 +189,6 @@ void StaffCollision_func03(u8* sourceObj, int variant, PartFxSpawnParams* spawnP
         }
         (*gModgfxInterface)
             ->spawnEffect(&buf, 0, variant != 0 ? 4 : 3, variant != 0 ? (void*)base->vtx1 : (void*)base->vtx0,
-                          variant != 0 ? 2 : 1, variant != 0 ? (void*)base->col : (void*)&lbl_803DB898, 0, 0);
+                          variant != 0 ? 2 : 1, variant != 0 ? (void*)base->col : (void*)lbl_803DB898, 0, 0);
     }
 }

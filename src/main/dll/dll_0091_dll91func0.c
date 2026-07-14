@@ -68,6 +68,8 @@ extern f32 lbl_803E1208;
 #include "main/dll/dll_0097_dll97func0.h"
 #include "main/dll/dll_0098_dll98func0.h"
 #include "main/dll/dll_0099_dll99func0.h"
+
+u8 gDll91Func0Tex[8] = {0, 0x0A, 0, 0x0C, 0, 0x0E, 0, 0x10};
 extern void dll_9A_func03(void);
 extern void dll_9B_func03(void);
 extern void dll_9C_func03(void);

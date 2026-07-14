@@ -270,38 +270,47 @@ main/dll/dll_000E_partfx.c:
 
 main/dll/dll_001A_effect1.c:
 	.text       start:0x800AF688 end:0x800B319C
+	.sdata      start:0x803DB7B0 end:0x803DB7C0
 
 main/dll/dll_001B_effect2.c:
 	.text       start:0x800B319C end:0x800B6EF8
 	.data       start:0x80310560 end:0x80310670
+	.sdata      start:0x803DB7C0 end:0x803DB7D0
 
 main/dll/dll_001C_effect3.c:
 	.text       start:0x800B6EF8 end:0x800B8D7C
 
 main/dll/dll_001D_effect4.c:
 	.text       start:0x800B8D7C end:0x800BC244
+	.sdata      start:0x803DB7D0 end:0x803DB7E0
 
 main/dll/dll_001E_effect5.c:
 	.text       start:0x800BC244 end:0x800BD43C
 	.data       start:0x803109B8 end:0x80310A20
+	.sdata      start:0x803DB7E0 end:0x803DB7F0
 	.sdata2     start:0x803DFBE0 end:0x803DFC78
 
 main/dll/dll_001F_effect6.c:
 	.text       start:0x800BD43C end:0x800BE034
+	.sdata      start:0x803DB7F0 end:0x803DB800
 
 main/dll/dll_0020_effect7.c:
 	.text       start:0x800BE034 end:0x800BF978
+	.sdata      start:0x803DB800 end:0x803DB810
 
 main/dll/dll_0021_effect8.c:
 	.text       start:0x800BF978 end:0x800C11CC
+	.sdata      start:0x803DB810 end:0x803DB820
 
 main/dll/dll_0022_effect9.c:
 	.text       start:0x800C11CC end:0x800C291C
+	.sdata      start:0x803DB820 end:0x803DB830
 
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
 	.data       start:0x80310C88 end:0x80310D1C
 	.bss        start:0x8039C3B0 end:0x8039C3C8
+	.sdata      start:0x803DB830 end:0x803DB840
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
@@ -324,6 +333,7 @@ main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
 	.data       start:0x80310E88 end:0x80310F38
 	.bss        start:0x8039C410 end:0x8039C428
+	.sdata      start:0x803DB840 end:0x803DB850
 
 main/dll/dll_0028_effect15.c:
 	.text       start:0x800C9140 end:0x800CA3CC
@@ -340,21 +350,25 @@ main/dll/dll_0026_effect13.c:
 main/dll/dll_002A_effect17.c:
 	.text       start:0x800CA930 end:0x800CB690
 	.data       start:0x80310FE0 end:0x80311034
+	.sdata      start:0x803DB850 end:0x803DB860
 	.sdata2     start:0x803E01B8 end:0x803E0220
 
 main/dll/dll_002B_effect18.c:
 	.text       start:0x800CB690 end:0x800CCF5C
 	.data       start:0x80311038 end:0x803110D4
+	.sdata      start:0x803DB860 end:0x803DB870
 	.sdata2     start:0x803E0220 end:0x803E02D8
 
 main/dll/dll_002C_effect19.c:
 	.text       start:0x800CCF5C end:0x800CD430
 	.data       start:0x803110D8 end:0x80311100
+	.sdata      start:0x803DB870 end:0x803DB880
 	.sdata2     start:0x803E02D8 end:0x803E0310
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
 	.data       start:0x80311100 end:0x803112E4
+	.sdata      start:0x803DB880 end:0x803DB890
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
@@ -391,6 +405,7 @@ main/dll/dll_0017_savegame.c:
 	.rodata     start:0x802C2170 end:0x802C217C
 	.data       start:0x80311720 end:0x80312340
 	.bss        start:0x803A2F80 end:0x803A4218
+	.sdata      start:0x803DB890 end:0x803DB898
 
 main/dll/dll_0011_screens.c:
 	.text       start:0x800EA174 end:0x800EA774
@@ -403,9 +418,11 @@ main/dll/dll_0059_dll59func0.c:
 
 main/dll/dll_005A_staffcollisionfunc03.c:
 	.text       start:0x800EB098 end:0x800EB618
+	.sdata      start:0x803DB898 end:0x803DB8B0
 
 main/dll/dll_005B_modgfxfunc03.c:
 	.text       start:0x800EB618 end:0x800EC7BC
+	.sdata      start:0x803DB8B0 end:0x803DB8C0
 
 main/dll/dll_005C_dll5cfunc0.c:
 	.text       start:0x800EC7BC end:0x800ECAE0
@@ -427,6 +444,7 @@ main/dll/dll_0060_dll60func0.c:
 
 main/dll/dll_0061_dll61func0.c:
 	.text       start:0x800EDA28 end:0x800EDE74
+	.sdata      start:0x803DB8C0 end:0x803DB8C8
 
 main/dll/dll_0062_dll62func0.c:
 	.text       start:0x800EDE74 end:0x800EE25C
@@ -489,11 +507,13 @@ main/dll/dll_006E_dll6efunc0.c:
 main/dll/dll_006F_dll6ffunc0.c:
 	.text       start:0x800F0C9C end:0x800F11E4
 	.data       start:0x80313CC0 end:0x80313E98
+	.sdata      start:0x803DB8C8 end:0x803DB8D0
 	.sdata2     start:0x803E0AB8 end:0x803E0AF8
 
 main/dll/dll_0070_dll70func0.c:
 	.text       start:0x800F11E4 end:0x800F16E4
 	.data       start:0x80313E98 end:0x80314920
+	.sdata      start:0x803DB8D0 end:0x803DB8D8
 	.sdata2     start:0x803E0AF8 end:0x803E0B38
 
 main/dll/dll_0071_dll71func0.c:
@@ -534,6 +554,7 @@ main/dll/dll_0078_dll78func0.c:
 main/dll/dll_0079_dll79func0.c:
 	.text       start:0x800F3400 end:0x800F3CD0
 	.data       start:0x80314AF0 end:0x80314CB0
+	.sdata      start:0x803DB8D8 end:0x803DB8E0
 	.sdata2     start:0x803E0CB0 end:0x803E0D00
 	.sdata2     start:0x803E0D00 end:0x803E0D08
 
@@ -559,10 +580,12 @@ main/dll/dll_007D_dll7dfunc0.c:
 
 main/dll/dll_007E_dll7efunc0.c:
 	.text       start:0x800F4FA4 end:0x800F52E0
+	.sdata      start:0x803DB8E0 end:0x803DB8E8
 	.sdata2     start:0x803E0E00 end:0x803E0E20
 
 main/dll/dll_007F_dll7ffunc0.c:
 	.text       start:0x800F52E0 end:0x800F57D8
+	.sdata      start:0x803DB8E8 end:0x803DB8F0
 	.sdata2     start:0x803E0E20 end:0x803E0E58
 
 main/dll/dll_0080_dll80func0.c:
@@ -590,6 +613,7 @@ main/dll/dll_0084_dll84func0.c:
 main/dll/dll_0085_dll85func0.c:
 	.text       start:0x800F6DDC end:0x800F7434
 	.data       start:0x80315FA8 end:0x80316B60
+	.sdata      start:0x803DB8F0 end:0x803DB900
 	.sdata2     start:0x803E0F70 end:0x803E0FA8
 	.sdata2     start:0x803E0FA8 end:0x803E0FE0
 
@@ -599,6 +623,7 @@ main/dll/dll_0086_dll86func0.c:
 
 main/dll/dll_0087_dll87func0.c:
 	.text       start:0x800F77BC end:0x800F7AC0
+	.sdata      start:0x803DB900 end:0x803DB908
 	.sdata2     start:0x803E0FE8 end:0x803E1010
 
 main/dll/dll_0088_dll88func0.c:
@@ -607,6 +632,7 @@ main/dll/dll_0088_dll88func0.c:
 
 main/dll/dll_0089_dll89func0.c:
 	.text       start:0x800F7D90 end:0x800F8094
+	.sdata      start:0x803DB908 end:0x803DB910
 	.sdata2     start:0x803E1028 end:0x803E1050
 
 main/dll/dll_008A_dll8afunc0.c:
@@ -629,6 +655,7 @@ main/dll/dll_008D_dll8dfunc0.c:
 main/dll/dll_008E_dll8efunc0.c:
 	.text       start:0x800F977C end:0x800F9E78
 	.data       start:0x80316C40 end:0x80316E30
+	.sdata      start:0x803DB910 end:0x803DB920
 	.sdata2     start:0x803E1138 end:0x803E1170
 	.sdata2     start:0x803E1170 end:0x803E1398
 
@@ -638,38 +665,46 @@ main/dll/dll_008F_dll8ffunc0.c:
 main/dll/dll_0090_dll90func0.c:
 	.text       start:0x800FA16C end:0x800FA5D8
 	.data       start:0x80316E30 end:0x80316FF8
+	.sdata      start:0x803DB920 end:0x803DB928
 
 main/dll/dll_0091_dll91func0.c:
 	.text       start:0x800FA5D8 end:0x800FA9F8
 	.data       start:0x80316FF8 end:0x80318488
+	.sdata      start:0x803DB928 end:0x803DB930
 
 main/dll/dll_0092_dll92func0.c:
 	.text       start:0x800FA9F8 end:0x800FADA8
+	.sdata      start:0x803DB930 end:0x803DB938
 
 main/dll/dll_0093_dll93func0.c:
 	.text       start:0x800FADA8 end:0x800FB078
 
 main/dll/dll_0094_dll94func0.c:
 	.text       start:0x800FB078 end:0x800FB428
+	.sdata      start:0x803DB938 end:0x803DB940
 
 main/dll/dll_0095_dll95func0.c:
 	.text       start:0x800FB428 end:0x800FB720
+	.sdata      start:0x803DB940 end:0x803DB948
 
 main/dll/dll_0096_dll96func0.c:
 	.text       start:0x800FB720 end:0x800FBA40
 
 main/dll/dll_0097_dll97func0.c:
 	.text       start:0x800FBA40 end:0x800FBDF0
+	.sdata      start:0x803DB948 end:0x803DB950
 
 main/dll/dll_0098_dll98func0.c:
 	.text       start:0x800FBDF0 end:0x800FC208
 
 main/dll/dll_0099_dll99func0.c:
 	.text       start:0x800FC208 end:0x800FC5B8
+	.sdata      start:0x803DB950 end:0x803DB958
 
 main/dll/dll_009A_dll9afunc0.c:
 	.text       start:0x800FC5B8 end:0x800FCF3C
 	.rodata     start:0x802C2180 end:0x802C2190
+	.sdata      start:0x803DB958 end:0x803DB970
 	.sdata2     start:0x803E1398 end:0x803E13F0
 
 main/dll/dll_009B_dll9bfunc0.c:
@@ -707,11 +742,13 @@ main/dll/dll_00A4_dummya4.c:
 
 main/dll/dll_00A5_dlla5func0.c:
 	.text       start:0x800FEC84 end:0x800FF004
+	.sdata      start:0x803DB970 end:0x803DB980
 	.sdata2     start:0x803E1528 end:0x803E1568
 
 main/dll/dll_00A6_dlla6func0.c:
 	.text       start:0x800FF004 end:0x800FF6A0
 	.data       start:0x80318E10 end:0x80319398
+	.sdata      start:0x803DB980 end:0x803DB990
 	.sdata2     start:0x803E1568 end:0x803E1590
 
 main/dll/dll_00A7_dlla7func0.c:

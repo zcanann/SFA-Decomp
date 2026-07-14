@@ -9,6 +9,11 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_0021_effect8.h"
 
+f32 lbl_803DB810 = 0.1f;
+f32 lbl_803DB814 = 0.3f;
+f32 lbl_803DB818 = 0.1f;
+f32 lbl_803DB81C = 0.3f;
+
 extern f32 lbl_803DB818;
 extern f32 lbl_803DB81C;
 extern int gModgfxSinePhaseA;

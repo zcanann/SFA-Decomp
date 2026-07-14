@@ -18,11 +18,12 @@
 #include "main/dll/foodbag.h"
 #include "main/dll/dll_0090_dll90func0.h"
 
+u8 lbl_803DB920[8] = {0, 0x0A, 0, 0x0C, 0, 0x0E, 0, 0x10};
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL90_EFFECT_ID 0x45
 
 extern u8 gDll90EffectResourceBlock[];
-extern u8 lbl_803DB920;
 extern f32 lbl_803E11A0;
 extern f32 lbl_803E11A4;
 extern f32 lbl_803E11A8;
@@ -137,7 +138,7 @@ void dll_90_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[12].z = lbl_803E11CC;
     e[13].layer = 3;
     e[13].flags = 0x4;
-    e[13].tex = &lbl_803DB920;
+    e[13].tex = lbl_803DB920;
     e[13].mode = 0x2;
     e[13].x = lbl_803E11D0;
     e[13].y = lbl_803E11A8;
@@ -165,7 +166,7 @@ void dll_90_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[16].z = lbl_803E11D0;
     e[17].layer = 4;
     e[17].flags = 0x4;
-    e[17].tex = &lbl_803DB920;
+    e[17].tex = lbl_803DB920;
     e[17].mode = 0x2;
     e[17].x = lbl_803E11CC;
     e[17].y = lbl_803E11A8;

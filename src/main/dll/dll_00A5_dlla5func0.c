@@ -15,6 +15,9 @@
 #include "main/game_object.h"
 #include "main/dll/dll_00A5_dlla5func0.h"
 
+u8 lbl_803DB970[8] = {0, 0, 0, 1, 0, 2, 0, 3};
+u8 lbl_803DB978[8] = {0, 4, 0, 5, 0, 6, 0, 7};
+
 typedef struct
 {
     u32 mode;    /* +0x00 */
@@ -36,8 +39,6 @@ extern f32 lbl_803E1518;
 extern f32 lbl_803E151C;
 extern f32 lbl_803E1520;
 extern f32 lbl_803E1524;
-extern u8 lbl_803DB970;
-extern u8 lbl_803DB978;
 
 void dll_A5_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -72,14 +73,14 @@ void dll_A5_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
     e[0].z = lbl_803E1508;
     e[1].layer = 0;
     e[1].flags = 4;
-    e[1].tex = &lbl_803DB970;
+    e[1].tex = lbl_803DB970;
     e[1].mode = 2;
     e[1].x = lbl_803E150C;
     e[1].y = lbl_803E150C;
     e[1].z = lbl_803E1510;
     e[2].layer = 0;
     e[2].flags = 4;
-    e[2].tex = &lbl_803DB978;
+    e[2].tex = lbl_803DB978;
     e[2].mode = 2;
     e[2].x = lbl_803E1514;
     e[2].y = lbl_803E1514;

@@ -24,6 +24,11 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_001F_effect6.h"
 
+f32 gEffect6ScrollPhase0 = 0.1f;
+f32 gEffect6ScrollPhase1 = 0.3f;
+f32 gEffect6ScrollPhase2 = 0.1f;
+f32 gEffect6ScrollPhase3 = 0.3f;
+
 extern f32 gEffect6ScrollPhase2;
 extern f32 gEffect6ScrollPhase3;
 extern int gEffect6Osc0Angle;

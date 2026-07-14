@@ -14,11 +14,14 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
+#pragma explicit_zero_data on
+u8 lbl_803DB908[8] = {0};
+#pragma explicit_zero_data off
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL89_EFFECT_ID 0x1fd
 
 extern u8 lbl_80316460[];
-extern u8 lbl_803DB908;
 __declspec(section ".sdata2") f32 lbl_803E1028 = 1.1f;
 __declspec(section ".sdata2") f32 lbl_803E102C = 1.2f;
 #pragma explicit_zero_data on
@@ -77,7 +80,7 @@ void dll_89_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[4].z = lbl_803E1044;
     e[5].layer = 2;
     e[5].flags = 1;
-    e[5].tex = &lbl_803DB908;
+    e[5].tex = lbl_803DB908;
     e[5].mode = 4;
     e[5].x = lbl_803E1048;
     e[5].y = lbl_803E1030;

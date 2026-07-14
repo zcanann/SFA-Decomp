@@ -15,11 +15,12 @@
 #include "main/dll/foodbag.h"
 #include "main/dll/dll_007E_dll7efunc0.h"
 
+u8 lbl_803DB8E0[8] = {0, 0, 0, 1, 0, 2, 0, 0};
+
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL7E_EFFECT_ID 0x3c
 
 extern u8 lbl_80315258[];
-extern u8 lbl_803DB8E0;
 __declspec(section ".sdata2") f32 lbl_803E0E00 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E0E04 = 0.0f;
@@ -86,7 +87,7 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     }
     p[0].layer = 1;
     p[0].flags = 3;
-    p[0].tex = &lbl_803DB8E0;
+    p[0].tex = lbl_803DB8E0;
     p[0].mode = 4;
     p[0].x = lbl_803E0E18;
     p[0].y = lbl_803E0E04;
@@ -107,7 +108,7 @@ void dll_7E_func03(int sourceObj, int variant, int posSource, u32 flags, u32 arg
     p[2].z = lbl_803E0E04;
     p[3].layer = 2;
     p[3].flags = 3;
-    p[3].tex = &lbl_803DB8E0;
+    p[3].tex = lbl_803DB8E0;
     p[3].mode = 4;
     p[3].x = lbl_803E0E04;
     p[3].y = lbl_803E0E04;

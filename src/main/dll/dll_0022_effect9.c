@@ -27,6 +27,11 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/dll/dll_0022_effect9.h"
 
+f32 gEffect9PhaseA = 0.1f;
+f32 gEffect9PhaseB = 0.3f;
+f32 gEffect9PhaseC = 0.1f;
+f32 gEffect9PhaseD = 0.3f;
+
 extern f32 gEffect9PhaseC;
 extern f32 gEffect9PhaseD;
 extern int gEffect9SineAngleFast;
