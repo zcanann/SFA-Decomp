@@ -20,6 +20,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/object_render.h"
 #include "main/object.h"
+#include "main/track_dolphin_api.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_timer_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -116,7 +117,6 @@ enum
     WMWALLCRAWLER_MODE_DIE = 6      /* death anim, then free/hide */
 };
 
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern f32 gWallCrawlerSpeedCap;
 extern u8 gWallCrawlerHitCount;
 #pragma explicit_zero_data on
