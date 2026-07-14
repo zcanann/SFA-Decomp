@@ -557,3 +557,8 @@ Implement in Python against the captured select_trace event streams:
    source construct using the catalogued form->web effects in this document.
 This replaces positional surgery (proven non-neutral) and closes walkgroup slotPtr/back/
 slot36 and func1C base/scanBase - the last register lines before 100%.
+
+## func1C scanBase-at-fn-top retested in committed config: 5 regions (emission splits)
+The nadj-raise route via fn-top init costs the addi's preheader position (source-slot
+emission) without flipping the pop - the round-anomaly threshold (observed at FPR nadj 268)
+is far above scanBase's reachable range. func1C's swap is confirmed simulation-territory.
