@@ -6,6 +6,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_channel_volume_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -151,7 +152,6 @@ extern const f32 lbl_803E4F4C;
 extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 extern u8 padGetStickX(int port);
-extern int Sfx_PlayFromObject(void* obj, int sfxId);
 
 void DFSH_LaserBeam_free(int* obj)
 {
