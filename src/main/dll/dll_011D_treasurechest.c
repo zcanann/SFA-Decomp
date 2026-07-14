@@ -104,6 +104,7 @@ int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
 }
 
 #pragma opt_loop_invariants reset
+
 int TreasureChest_getExtraSize(void)
 {
     return 1;
@@ -114,14 +115,14 @@ int TreasureChest_getObjectTypeId(void)
     return 0;
 }
 
-void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20);
-}
-
 void TreasureChest_free(void)
 {
     Resource_Release(lbl_803DDAE0);
+}
+
+void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3C20);
 }
 
 void TreasureChest_hitDetect(GameObject* obj)
@@ -209,14 +210,6 @@ void TreasureChest_update(GameObject* obj)
     return;
 }
 
-void TreasureChest_release(void)
-{
-}
-
-void TreasureChest_initialise(void)
-{
-}
-
 void TreasureChest_init(int* obj)
 {
     register ChestFlags* state = ((GameObject*)obj)->extra;
@@ -240,6 +233,14 @@ void TreasureChest_init(int* obj)
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;
+}
+
+void TreasureChest_release(void)
+{
+}
+
+void TreasureChest_initialise(void)
+{
 }
 
 ObjectDescriptor gTreasureChestObjDescriptor = {
