@@ -187,7 +187,6 @@ extern void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h,
 extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int arg);
 extern void hudDrawCMenu(int a, int b, int c);
-extern void setTextColor(int unused, int a, int b, int c, int d);
 extern s16 gCMenuForcedSelIndex;
 extern s8 gCMenuPreselectOwnedBit;
 extern u16 yButtonState;

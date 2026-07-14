@@ -254,7 +254,6 @@ void newclouds_onMapSetup(void)
     Music_Trigger(MUSICTRIG_crun_dungeon, 0);
 }
 
-extern void setTextColor(int unused, int a, int b, int c, int d);
 
 #pragma dont_inline on
 LightningEffect* lightningCreate(const Vec3f* start, const Vec3f* end, f32 radiusX, f32 radiusY, s16 lifetime,

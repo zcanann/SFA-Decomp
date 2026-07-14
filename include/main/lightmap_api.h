@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "main/map_block.h"
+#include "main/lightmap_text_color_api.h"
 
 void* mapGetBlockAtPos(int x, int y, int layer);
 void* RomList_GetLoadedPages(void);
@@ -15,7 +16,6 @@ u32 isOvercast(void);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 void setPendingMapLoad(int pending);
-void setTextColor(int unused, int red, int green, int blue, int alpha);
 void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount);
 void doNothing_8005D148(void);
 void doNothing_8005D14C(void);
