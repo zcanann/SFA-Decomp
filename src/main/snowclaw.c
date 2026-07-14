@@ -107,6 +107,10 @@ extern f32 lbl_803E670C;
 extern f32 lbl_803E6710;
 extern f32 lbl_803E66E0;
 
+typedef s8 (*ObjUpdateOpacityS8Fn)(int obj);
+
+#define objUpdateOpacityS8 ((ObjUpdateOpacityS8Fn)objUpdateOpacity)
+
 u8 gSnowClawMoveTable[] = {
     0x00, 0x00, 0x03, 0x89, 0x00, 0x00, 0x03, 0x8D, 0x00, 0x00, 0x03, 0x8A, 0x00, 0x00, 0x03, 0x8E,
     0x00, 0x00, 0x04, 0xD3, 0x00, 0x00, 0x04, 0xD4, 0x00, 0x00, 0x01, 0x6D, 0x00, 0x00, 0x01, 0x6C,
@@ -439,10 +443,7 @@ void snowclaw_render(GameObject* obj, int p2, int p3, int p4, int p5, int vis)
     if (found != 0)
     {
         (obj)->anim.flags |= 8;
-        {
-            extern s8 objUpdateOpacity(int);
-            vis = objUpdateOpacity(sub);
-        }
+        vis = objUpdateOpacityS8(sub);
         snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, ((SnowclawState*)inner)->mountAlpha, 1);
     }
     else
