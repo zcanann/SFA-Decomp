@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "global.h"
 #include "main/objanim_update.h"
 #include "main/obj_placement.h"
@@ -30,7 +31,7 @@ typedef struct DimlogfireObjectDef
  */
 typedef struct DimLogFireState
 {
-    int light;  /* ModelLightStruct handle or 0 */
+    ModelLightStruct* light;
     int subObj; /* child object rendered/freed with the log */
     u8 pad08[8];
     f32 flickerTimerA; /* light flicker cadence pair */

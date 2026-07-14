@@ -18,7 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/objfx.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/gamebits.h"
@@ -39,7 +39,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMLOGFIRE_HIT_VOLUME_SLOT            0x1f
 /* smoke particle emitted while the smoke-toggle phase is active */
 #define DIMLOGFIRE_PARTFX_SMOKE 215
-#define MODEL_LIGHT_KIND_POINT  2
 
 /* DimLogFireState.mode flame state machine */
 #define DIMLOGFIRE_MODE_LIT       1 /* burning: point light on, flicker + smoke particles */
@@ -49,13 +48,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMLOGFIRE_GROUP 0x31
 
 
-extern void ModelLightStruct_free(void* light);
-extern void queueGlowRender(int* obj);
-extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E4820 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E4824 = 2.0f;
@@ -128,9 +120,9 @@ void DIMLogFire_free(GameObject* obj, int mode)
         Obj_FreeObject((GameObject*)inner->subObj);
     }
     ObjGroup_RemoveObject((int)obj, DIMLOGFIRE_GROUP);
-    if ((void*)inner->light != NULL)
+    if (inner->light != NULL)
     {
-        ModelLightStruct_free((void*)inner->light);
+        ModelLightStruct_free(inner->light);
     }
 }
 
@@ -152,13 +144,13 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         }
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
                                                                                      lbl_803E4820);
-        if (*(void**)&state->light != NULL)
+        if (state->light != NULL)
         {
-            if (*(u8*)((char*)*(void**)&state->light + 0x2f8) != 0)
+            if (state->light->glowType != 0)
             {
-                if (*(u8*)((char*)*(void**)&state->light + 0x4c) != 0)
+                if (state->light->enabled != 0)
                 {
-                    queueGlowRender(*(int**)&state->light);
+                    queueGlowRender(state->light);
                 }
             }
         }
@@ -171,7 +163,7 @@ void DIMLogFire_update(GameObject* obj)
     int flickerFlagB;
     int rand;
     s16 alpha;
-    u32 light;
+    ModelLightStruct* light;
     GameObject* tricky;
     DimlogfirePlacement* placement;
     DimLogFireState* state;
@@ -186,7 +178,7 @@ void DIMLogFire_update(GameObject* obj)
     switch (state->mode)
     {
     case DIMLOGFIRE_MODE_LIT:
-        if (*(int**)&state->light != NULL)
+        if (state->light != NULL)
         {
             modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
         }
@@ -218,7 +210,7 @@ void DIMLogFire_update(GameObject* obj)
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
-        if (*(int**)&state->light != NULL)
+        if (state->light != NULL)
         {
             modelLightStruct_setEnabled(state->light, 0, lbl_803E4824);
         }
@@ -259,32 +251,27 @@ void DIMLogFire_update(GameObject* obj)
         state->dousedLatch = 0;
     }
     light = state->light;
-    if (light != 0 && *(u8*)(light + 0x2f8) != 0 && *(u8*)(light + 0x4c) != 0)
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
         rand = randomGetRange(-0x19, 0x19);
         light = state->light;
-        alpha = *(u8*)(light + 0x2f9) + *(s8*)(light + 0x2fa) + rand;
+        alpha = light->glowAlpha + light->glowAlphaStep + rand;
         if (alpha < 0)
         {
             alpha = 0;
-            *(u8*)(light + 0x2fa) = 0;
+            light->glowAlphaStep = 0;
         }
         else if (alpha > 0xff)
         {
             alpha = 0xff;
-            *(u8*)(light + 0x2fa) = 0;
+            light->glowAlphaStep = 0;
         }
-        *(u8*)(state->light + 0x2f9) = alpha;
+        state->light->glowAlpha = alpha;
     }
 }
 
 void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
 {
-    extern void modelLightStruct_setupGlow(int light, int mode, int r, int g, int b, int a, f32 radius);
-    extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-    extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-    extern void modelLightStruct_setLightKind(int light, int value);
-    extern int objCreateLight(int obj, int mode);
     int radius;
     DimLogFireState* state;
 
@@ -303,11 +290,11 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
     ((GameObject*)obj)->objectFlags |= DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED;
     state->flickerTimerA = lbl_803E482C;
     state->flickerTimerB = lbl_803E4820;
-    if (*(int**)&state->light == NULL)
+    if (state->light == NULL)
     {
-        state->light = objCreateLight(obj, 1);
+        state->light = objCreateLight((GameObject*)obj, 1);
     }
-    if (*(int**)&state->light != NULL)
+    if (state->light != NULL)
     {
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
@@ -320,6 +307,6 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
         modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87,
                                    lbl_803E483C * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, lbl_803E4834);
+        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
