@@ -12,6 +12,7 @@
  * a one-shot init guard that stops the looping SFX on channel 0x7f.
  */
 #include "main/game_object.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/object_api.h"
@@ -28,7 +29,6 @@
 
 extern f32 lbl_803E53F8; /* .sdata2 const, shared with SH/dll_01AC_shqueenearthwalker.c */
 
-extern void Sfx_StopObjectChannel(void* obj, int channel);
 extern int fn_8003B228(GameObject* obj, void* p2);
 
 int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnimUpdateState* animUpdate)
@@ -39,7 +39,7 @@ int sh_queenearthwalker_processAnimEvents(GameObject* obj, void* unused, ObjAnim
 
     if ((state->flags & QEW_FLAG_INIT_DONE) == 0)
     {
-        Sfx_StopObjectChannel(obj, 0x7f);
+        Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
         state->flags &= ~QEW_FLAG_ACTIVE;
         state->flags |= QEW_FLAG_INIT_DONE;
     }
