@@ -2161,10 +2161,8 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || forceBlendChannels != 0)
     {
         sizes[4] = sizes[4] + 0x30;
-        total = sizes[4] + 100;
-        total = sizes[3] + total;
-        total = (sizes[1] + 8) + total;
-        total = sizes[6] + total;
+        total = sizes[3] + sizes[4] + 100;
+        total = (sizes[6] + sizes[1] + 8) + total;
     }
     else
     {
@@ -2616,6 +2614,7 @@ void modelInitBoneMtxs(u8* m, u8* out)
     }
 }
 
+#pragma opt_propagation off
 void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
 {
     u8* dst;
@@ -2629,7 +2628,28 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
     hdr = *(u8**)m;
     if (((ModelFileHeader*)hdr)->jointCount == 0)
     {
-        mtx = modelGetBoneMtx(m, 0);
+        u32 cnt;
+        int lim;
+        int idx;
+
+        idx = 0;
+        cnt = *(u8*)(*(u8**)m + 0xf3);
+        if (cnt != 0)
+        {
+            lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+        }
+        else
+        {
+            lim = 1;
+        }
+        if (lim <= 0)
+        {
+            idx = 0;
+        }
+        {
+            u8* base = m + ((*(u16*)(m + 0x18) & 1) << 2);
+            mtx = *(u8**)(base + 0xc) + idx * 0x40;
+        }
         PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
     }
     else
@@ -2650,6 +2670,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         }
     }
 }
+#pragma opt_propagation reset
 
 /* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
    two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
