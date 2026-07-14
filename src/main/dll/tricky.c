@@ -35,6 +35,7 @@
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
 #include "main/mm.h"
+#include "main/newshadows.h"
 #include "main/dll/tricky.h"
 #include "main/dll/cmenu.h"
 #include "main/dll/maybeTemplate.h"
@@ -353,7 +354,6 @@ extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
-extern void fn_8006C5CC(int* out);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
@@ -1353,7 +1353,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     mtex[11] = 1.0f;
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, 1);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    fn_8006C5CC(&tex2);
+    fn_8006C5CC((u32*)&tex2);
     selectTexture((Texture*)((void*)tex2), 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(0, *(GXColor*)&gTrickyHudIconKColor);

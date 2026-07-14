@@ -60,6 +60,9 @@ void fn_8006CB24(void);
 void fn_8006CB50(void);
 
 int getReflectionTexture1(void);
-void getReflectionTexture2(int* out);
+void getReflectionTexture2(u32* out);
+void getTextureFn_8006c5e4(u32* out);
+void fn_8006C5CC(u32* out);
+void newshadows_getReflectionScrollOffsets(f32* outScrollX, f32* outScrollY);
 
 #endif /* MAIN_NEWSHADOWS_H_ */

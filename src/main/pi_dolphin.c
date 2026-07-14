@@ -4403,7 +4403,6 @@ extern int lbl_803DB5F4;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
-extern void newshadows_getReflectionScrollOffsets(f32* x, f32* y);
 extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
 extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format,
@@ -4631,7 +4630,6 @@ extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0[];
 extern void fn_80293C64(f32 angle, f32* s, f32* c);
 extern void fn_8006C504(void* out);
-extern void getTextureFn_8006c5e4(void* out);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);
 extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
@@ -4733,7 +4731,7 @@ void fn_8004DA54(char* p1)
     }
     GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
-    getTextureFn_8006c5e4(&tex30);
+    getTextureFn_8006c5e4((u32*)&tex30);
     if (tex30 != 0)
     {
         void* obj = tex30 + 0x20;
@@ -4973,7 +4971,7 @@ void fn_8004E0FC(void)
     GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getTextureFn_8006c5e4(&tex18);
+    getTextureFn_8006c5e4((u32*)&tex18);
     {
         int id2 = lbl_803DCD8C + 1;
         if (tex18 != 0)
@@ -5112,7 +5110,7 @@ void renderHeavyFog(int* fogColorPtr)
         GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        getTextureFn_8006c5e4(&tex1c);
+        getTextureFn_8006c5e4((u32*)&tex1c);
         {
             int id2 = lbl_803DCD8C + 1;
             if (tex1c != 0)
@@ -5460,7 +5458,7 @@ void fn_8004D6D8(void)
     GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
     GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
     GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
-    getTextureFn_8006c5e4(&tex);
+    getTextureFn_8006c5e4((u32*)&tex);
     id = lbl_803DCD8C + 1;
     if (tex != NULL)
     {
@@ -6125,7 +6123,7 @@ void fn_8004CE0C(void* viewMtx)
     mtx40[1][3] = lbl_803DEACC;
     GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getTextureFn_8006c5e4(&obj7c);
+    getTextureFn_8006c5e4((u32*)&obj7c);
     if (obj7c != NULL)
     {
         void* obj = obj7c + 0x20;

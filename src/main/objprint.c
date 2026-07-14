@@ -15,6 +15,7 @@
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
+#include "main/newshadows.h"
 #include "main/objtexture.h"
 #include "main/object_render.h"
 #include "main/dll/modgfx.h"
@@ -1886,8 +1887,6 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-    extern void getTextureFn_8006c5e4(int* out);
-    extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
 
@@ -1987,7 +1986,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getTextureFn_8006c5e4(&t164);
+    getTextureFn_8006c5e4((u32*)&t164);
     selectTexture((Texture*)((void*)t164), 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);
@@ -2120,8 +2119,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     extern void PSMTXScale(f32 * m, f32 x, f32 y, f32 z);
     extern void PSMTXTrans(f32 * m, f32 x, f32 y, f32 z);
     extern void GXLoadTexMtxImm(f32 * m, int id, int type);
-    extern void getTextureFn_8006c5e4(int* out);
-    extern void newshadows_getReflectionScrollOffsets(f32 * x, f32 * y);
 
     extern void GXSetIndTexMtx(int id, IndTexMtx23* m, int scale);
 
@@ -2311,7 +2308,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         stage = 2;
         coord = 1;
     }
-    getTextureFn_8006c5e4(&texRef4);
+    getTextureFn_8006c5e4((u32*)&texRef4);
     selectTexture((Texture*)((void*)texRef4), 4);
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtxR, lbl_803DEA28 * sx, *(f32*)&lbl_803DEA28 * sy, lbl_803DEA04);

@@ -1048,7 +1048,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern int* Shader_getLayer(void* op, int slot);
 
     extern void GXInitTexObj();
-    extern void newshadows_getReflectionScrollOffsets(void* a, void* b);
 
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
@@ -1289,8 +1288,6 @@ void screenImageDraw(u8 alpha)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void getTextureFn_8006c5e4(int* out);
 
     Mtx mtx_60;
     Mtx mtx_30;
@@ -1299,7 +1296,7 @@ void screenImageDraw(u8 alpha)
     f32 fB;
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
-    getTextureFn_8006c5e4(&handle);
+    getTextureFn_8006c5e4((u32*)&handle);
     updateReflectionTextures();
     selectReflectionTexture(0);
     selectTexture((Texture*)handle, 1);
@@ -1734,7 +1731,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void getReflectionTexture2(int* out);
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
     Mtx mtx_d0;
@@ -1781,7 +1777,7 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     c0.a = (u8)(((u32)(lbl_803DEF08 * proj3) & 0x00FF0000) >> 16);
 
     selectReflectionTexture(0);
-    getReflectionTexture2(&handle1);
+    getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
     fn_8006C540(&handle2);
     selectTexture((Texture*)handle2, 2);
@@ -2225,9 +2221,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void getTextureFn_8006c5e4(int* out);
-    extern void fn_8006C5CC(int* out);
     int handle1;
     int handle2;
     f32 a;
@@ -2243,7 +2236,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
     newshadows_getReflectionScrollOffsets(&a, &b);
     a = a * lbl_803DEF28;
-    getTextureFn_8006c5e4(&handle1);
+    getTextureFn_8006c5e4((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
     PSMTXScale((f32(*)[4])tex_mtx, 4.0f, 4.0f, 4.0f);
     tex_mtx[0][3] = a;
@@ -2273,7 +2266,7 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     mtx[2][3] = lbl_803DEEE4;
     GXLoadTexMtxImm(mtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    fn_8006C5CC(&handle2);
+    fn_8006C5CC((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
     c.a = alpha;
     GXSetTevKColor(0, c);
@@ -2369,7 +2362,6 @@ int modelCb_80073d04(u8* obj, int* objB)
     extern int gGxZModeCompareFunc;
     extern int* Shader_getLayer(int op, int slot);
     extern int textureIdxToPtr(int idx);
-    extern void fn_8006C5CC(int* out);
     int handle;
     GXColor colorK;
     GXColor colorB;
@@ -2394,7 +2386,7 @@ int modelCb_80073d04(u8* obj, int* objB)
     texMtx[2][3] = lbl_803DEEE4;
     GXLoadTexMtxImm(texMtx, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_TRUE, GX_PTTEXMTX7);
-    fn_8006C5CC(&handle);
+    fn_8006C5CC((u32*)&handle);
     selectTexture((Texture*)handle, 0);
     colorK.a = obj[0x37];
     GXSetTevKColor(0, colorK);
@@ -2760,9 +2752,6 @@ u32 objCallback_80074d04(int handle, void* model)
     extern int gGxZModeCompareFunc;
 
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void getTextureFn_8006c5e4(int* out);
-    extern void fn_8006C5CC(int* out);
     Mtx mtx_ec;
     Mtx mtx_bc;
     Mtx mtx_8c;
@@ -2810,7 +2799,7 @@ u32 objCallback_80074d04(int handle, void* model)
     newshadows_getReflectionScrollOffsets(&f1, &f2);
     f1 *= hudScale;
     f2 *= hudScale;
-    getTextureFn_8006c5e4(&handle1);
+    getTextureFn_8006c5e4((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
     PSMTXScale(mtx_ec, 4.0f, 4.0f, 4.0f);
@@ -2870,7 +2859,7 @@ u32 objCallback_80074d04(int handle, void* model)
     GXLoadTexMtxImm((f32(*)[4])mtx_8c, GX_PTTEXMTX7, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX3x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX7);
 
-    fn_8006C5CC(&handle2);
+    fn_8006C5CC((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
     GXSetNumIndStages(2);
@@ -4720,7 +4709,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern u16 fn_8000FA70(void);
     extern f32 fn_80292194(f32 v);
     extern f32 interpolate(f32 a, f32 t, f32 exp);
-    extern void getReflectionTexture2(int* out);
     extern void fn_8006C4F8(int* out);
     Mtx mtx_58;
     Mtx mtx_28;
@@ -4751,7 +4739,7 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     }
     c_K2.a = mtxIdx;
 
-    getReflectionTexture2(&handle1);
+    getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 0);
     fn_8006C4F8(&handle2);
     selectTexture((Texture*)handle2, 1);
@@ -4905,9 +4893,6 @@ void doHeatEffect(u8 alpha)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern s16 fn_8000FA70(void);
-    extern void getReflectionTexture2(int* out);
-    extern void getTextureFn_8006c5e4(int* out);
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
     extern f32 hudMatrix[4][4];
     Mtx mtx_44;
@@ -4937,14 +4922,14 @@ void doHeatEffect(u8 alpha)
     a2 = (k * alpha) >> 8;
 
     selectReflectionTexture(0);
-    getReflectionTexture2(&handle1);
+    getReflectionTexture2((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
 
     newshadows_getReflectionScrollOffsets(&fA, &fB);
     fA *= lbl_803DEF6C;
     fB *= lbl_803DEF6C;
-    getTextureFn_8006c5e4(&handle2);
+    getTextureFn_8006c5e4((u32*)&handle2);
     selectTexture((Texture*)handle2, 2);
 
     fn_80293C64(lbl_803DEF70 * fA, &mulX, &mulY);
@@ -5165,7 +5150,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void getReflectionTexture2(int* out);
     Mtx mtx_27;
     Mtx mtx_24;
     Mtx mtx_2A;
@@ -5183,7 +5167,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     pz = pz + lbl_803DEEE4;
     c0.a = (u8)(((u32)(lbl_803DEF08 * pz) & 0x00FF0000) >> 16);
     selectReflectionTexture(0);
-    getReflectionTexture2(&handle);
+    getReflectionTexture2((u32*)&handle);
     selectTexture((Texture*)handle, 1);
     GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
 
@@ -5640,7 +5624,6 @@ void fn_8007C664(int texHandle)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -5738,7 +5721,6 @@ void fn_8007CAF4(void)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
 
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
@@ -5841,8 +5823,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void getTextureFn_8006c5e4(int* out);
 
     Mtx mtx_cc;
     Mtx mtx_9c;
@@ -5857,7 +5837,7 @@ void gxTextureSetupFn_8007cf7c(void)
     newshadows_getReflectionScrollOffsets(&fA, &fB);
     selectReflectionTexture(0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getTextureFn_8006c5e4(&handle1);
+    getTextureFn_8006c5e4((u32*)&handle1);
     selectTexture((Texture*)handle1, 1);
 
     PSMTXScale(mtx_cc, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
