@@ -13,24 +13,29 @@
 #include "main/dll/dll_002E_moveLib.h"
 
 typedef struct CfGuardianState {
-    u8 pad0[0x2 - 0x0];
-    u16 sfxId;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-    s32 unk10;
-    s32 unk14;
-    s32 unk18;
-    s32 unk1C;
-    s32 unk20;
-    s32 unk24;
-    s32 unk28;
-    u8 pad2C[0x7C - 0x2C];
-    f32 targetPosY;
-    f32 velocityY;
-    u8 pad84[0x611 - 0x84];
-    u8 flags611;
-    u8 pad612[0x12];
+    union {
+        MoveLibState moveLib;
+        struct {
+            u8 pad0[0x2 - 0x0];
+            u16 sfxId;
+            s32 unk4;
+            s32 unk8;
+            s32 unkC;
+            s32 unk10;
+            s32 unk14;
+            s32 unk18;
+            s32 unk1C;
+            s32 unk20;
+            s32 unk24;
+            s32 unk28;
+            u8 pad2C[0x7C - 0x2C];
+            f32 targetPosY;
+            f32 velocityY;
+            u8 pad84[0x611 - 0x84];
+            u8 flags611;
+            u8 pad612[0x12];
+        };
+    };
     u8 audioBlock[0x30];  /* 0x624: objAudioFn block */
     u8 eyeBlock[0x38];    /* 0x654: characterDoEyeAnims block */
     int linkedObjs[6];    /* 0x68c: freed with the guardian */
@@ -40,11 +45,7 @@ typedef struct CfGuardianState {
     u8 pad800[0x25e];
     u8 bounceLatch;            /* bounce-velocity latch while landing */
     u8 padA5F[9];
-    s16 homeYaw;          /* 0xa68: embedded steer-target header (cfguardianSteerToward) */
-    u8 padA6A[0xa];
-    f32 homeX;            /* 0xa74: nearest rom-curve point after landing */
-    f32 homeY;
-    f32 homeZ;
+    MoveLibTarget home;   /* 0xa68: steer target filled from a rom-curve point */
     u8 questState;        /* 0xa80: 16-state quest progression */
     u8 padA81[0xf];
     int unkA90;
@@ -60,8 +61,8 @@ STATIC_ASSERT(offsetof(CfGuardianState, eyeBlock) == 0x654);
 STATIC_ASSERT(offsetof(CfGuardianState, linkedObjs) == 0x68c);
 STATIC_ASSERT(offsetof(CfGuardianState, pathBlock) == 0x6bc);
 STATIC_ASSERT(offsetof(CfGuardianState, moveSpeed) == 0x7fc);
-STATIC_ASSERT(offsetof(CfGuardianState, homeYaw) == 0xa68);
-STATIC_ASSERT(offsetof(CfGuardianState, homeX) == 0xa74);
+STATIC_ASSERT(offsetof(CfGuardianState, home) == 0xa68);
+STATIC_ASSERT(offsetof(CfGuardianState, home.x) == 0xa74);
 STATIC_ASSERT(offsetof(CfGuardianState, questState) == 0xa80);
 STATIC_ASSERT(offsetof(CfGuardianState, landingPhase) == 0xa94);
 STATIC_ASSERT(offsetof(CfGuardianState, flagsA9B) == 0xa9b);

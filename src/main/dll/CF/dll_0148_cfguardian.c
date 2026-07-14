@@ -32,7 +32,6 @@
 #include "main/obj_message.h"
 #include "main/obj_trigger.h"
 #include "main/object_descriptor.h"
-#include "main/dll/moveLib.h"
 #include "main/dll/CF/dll_0148_cfguardian.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
@@ -45,16 +44,6 @@
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
 
 #define PAD_BUTTON_A 0x100
-
-/* steer-target header passed to cfguardianSteerToward: a yaw plus a world point */
-typedef struct
-{
-    s16 angle;
-    s16 pad[5];
-    f32 x;
-    f32 y;
-    f32 z;
-} RomCurveTarget;
 
 /* the rom-curve walker block the guardian flies along (sub->pathBlock);
    only the fields this DLL touches are mapped. */
@@ -181,8 +170,6 @@ extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
-extern void dll_2E_func04(void* sub, void* target);
-extern void dll_2E_func0C(int a, void* p);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */
 extern u8 lbl_803DBE20;                /* per-event sfx-id table passed to cfguardianPlayEventSfx */
 
@@ -329,7 +316,7 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
     int pt;
     s16 yawDelta;
     int curveArgs[2];
-    RomCurveTarget tgt;
+    MoveLibTarget tgt;
     f32 ground;
 
     moved = 1;
@@ -620,11 +607,11 @@ int cfguardian_updateMain(GameObject* obj)
                         RomCurvePlacementDef* pt =
                             (RomCurvePlacementDef*)findRomCurvePointNearObject((int*)obj, 0, 0, 2);
                         f32 homeDistY;
-                        sub->homeX = pt->base.x;
-                        sub->homeY = pt->base.y;
-                        sub->homeZ = pt->base.z;
-                        sub->homeYaw = (s16)(pt->rotZ << 8);
-                        homeDistY = sub->homeY - obj->anim.localPosY;
+                        sub->home.x = pt->base.x;
+                        sub->home.y = pt->base.y;
+                        sub->home.z = pt->base.z;
+                        sub->home.angle = (s16)(pt->rotZ << 8);
+                        homeDistY = sub->home.y - obj->anim.localPosY;
                         homeDistY = (homeDistY >= lbl_803E4110) ? homeDistY : -homeDistY;
                         if (homeDistY < lbl_803E413C)
                         {
@@ -733,7 +720,7 @@ int cfguardian_updateMain(GameObject* obj)
         void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
         if (found != NULL && nearDist < lbl_803E4158)
         {
-            dll_2E_func04(sub, found);
+            dll_2E_func04(&sub->moveLib, found);
             obj->anim.resetHitboxFlags |= INTERACT_FLAG_PROMPT_SUPPRESSED;
         }
     }
@@ -743,7 +730,7 @@ int cfguardian_updateMain(GameObject* obj)
             obj->anim.resetHitboxFlags &= ~INTERACT_FLAG_PROMPT_SUPPRESSED;
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
-                dll_2E_func0C(0xf, &sub->homeYaw);
+                dll_2E_func0C(0xf, &sub->home);
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 gCfGuardianIdleMoveTable[sub->questState] = 0;
             }
@@ -759,12 +746,12 @@ int cfguardian_updateMain(GameObject* obj)
             {
                 sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
-                dll_2E_func0A(0xe, (int*)&sub->homeYaw);
+                dll_2E_func0A(0xe, &sub->home);
                 gCfGuardianIdleMoveTable[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
-            cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
+            cfguardianSteerToward((int*)obj, (int*)&sub->home, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);
@@ -780,7 +767,7 @@ int cfguardian_updateMain(GameObject* obj)
         void* found = (void*)ObjGroup_FindNearestObject(CFGUARDIAN_TARGET_OBJGROUP, (u32)obj, &nearDist);
         if (found != NULL && nearDist < lbl_803E4158)
         {
-            dll_2E_func04(sub, found);
+            dll_2E_func04(&sub->moveLib, found);
         }
     }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + offsetof(GameObject, anim.worldPosX),
@@ -788,7 +775,7 @@ int cfguardian_updateMain(GameObject* obj)
         {
             if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) == 0 && gCfGuardianIdleMoveTable[sub->questState] != 0)
             {
-                dll_2E_func0C(0xf, &sub->homeYaw);
+                dll_2E_func0C(0xf, &sub->home);
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
                 gCfGuardianIdleMoveTable[sub->questState] = 0;
             }
@@ -804,12 +791,12 @@ int cfguardian_updateMain(GameObject* obj)
             {
                 sub->chatterState = GUARDIAN_CHATTER_PLAYING;
                 sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING;
-                dll_2E_func0A(0xe, (int*)&sub->homeYaw);
+                dll_2E_func0A(0xe, &sub->home);
                 gCfGuardianIdleMoveTable[sub->questState] = 0xe;
             }
         }
         if ((sub->flagsA9B & GUARDIAN_FLAG_HOMING) != 0 &&
-            cfguardianSteerToward((int*)obj, (int*)&sub->homeYaw, lbl_803E4128, (int)&sub->moveSpeed) != 0)
+            cfguardianSteerToward((int*)obj, (int*)&sub->home, lbl_803E4128, (int)&sub->moveSpeed) != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
             sub->flagsA9B &= ~(GUARDIAN_FLAG_MOVE_LATCHED | GUARDIAN_FLAG_HOMING);

@@ -24,7 +24,7 @@
 #include "main/dll/savegame_object_api.h"
 #include "main/dll/player_api.h"
 #include "main/debug.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/game_object.h"
 #include "main/objprint_character_api.h"
 #include "main/obj_placement.h"

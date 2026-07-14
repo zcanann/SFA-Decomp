@@ -26,7 +26,7 @@
 #include "main/objanim.h"
 #include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"

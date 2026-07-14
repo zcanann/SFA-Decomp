@@ -10,7 +10,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/objprint_character_api.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/gamebits.h"
 #include "main/dll/VF/vf_shared.h"
 #include "main/dll/CC/dll_0187_ccqueen.h"

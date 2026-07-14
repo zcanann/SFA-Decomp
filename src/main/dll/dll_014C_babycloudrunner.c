@@ -23,6 +23,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_014C_babycloudrunner.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objseq.h"
 #include "main/audio/sfx.h"
@@ -59,13 +60,6 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, initialYaw) == 0x1d);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, enableBit) == 0x1e);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, runnerGameBit) == 0x22);
 
-typedef struct
-{
-    s16 a, b, c;
-    u8 pad[6];
-    f32 x, y, z;
-} RunnerTarget;
-
 #define BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK 0x1000
 #define BABYCLOUDRUNNER_OBJGROUP             3
 #define BABYCLOUDRUNNER_OBJGROUP_SECONDARY   0x20
@@ -89,14 +83,13 @@ extern f32 gBabyCloudRunnerTargetNearDist;
 extern f32 gBabyCloudRunnerPlayerFarDist;
 extern f32 lbl_803DBE40;
 extern f32 lbl_803DBE44;
-extern f32 lbl_803DBE48;
+extern u8 lbl_803DBE48;
 extern f32 lbl_803E4238;
 extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
-extern int dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
 
 #pragma scheduling off
 #pragma peephole off
@@ -485,7 +478,7 @@ void babycloudrunner_update(int* obj)
     BabyCloudRunnerState* sub2;
     int* near;
     int inRange;
-    RunnerTarget tgt;
+    MoveLibTarget tgt;
     int mode;
     f32 radius;
     def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
@@ -665,12 +658,13 @@ void babycloudrunner_update(int* obj)
                     tgt.x = def->base.posX;
                     tgt.y = def->base.posY;
                     tgt.z = def->base.posZ;
-                    tgt.a = sub->roostYaw;
-                    tgt.b = 0;
-                    tgt.c = 0;
+                    tgt.angle = sub->roostYaw;
+                    tgt.angleY = 0;
+                    tgt.angleZ = 0;
                     ((GameObject*)obj)->anim.rotY = 0;
                     ((GameObject*)obj)->anim.rotZ = 0;
-                    if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0)
+                    if (dll_2E_func0D((GameObject*)obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44,
+                                     &lbl_803DBE48) != 0)
                     {
                         ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
                         mainSetBits(0x66, 0);

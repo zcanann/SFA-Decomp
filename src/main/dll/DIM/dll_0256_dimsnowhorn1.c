@@ -31,7 +31,7 @@
 #include "main/rcp_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/object_api.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/tricky_api.h"
 #include "main/gamebit_ids.h"

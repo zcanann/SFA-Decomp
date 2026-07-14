@@ -15,7 +15,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/SH/shthorntail_ai.h"
 
 typedef struct SHthorntailTailSwingEffectScratch

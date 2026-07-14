@@ -218,9 +218,9 @@ void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value)
 {
     state->lookAtMaxDistance = value;
 }
-void dll_2E_func04(int* state, int target)
+void dll_2E_func04(MoveLibState* state, GameObject* target)
 {
-    ((MoveLibState*)state)->lockTarget = (GameObject*)target;
+    state->lockTarget = target;
 }
 
 void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelayMin)
@@ -269,22 +269,11 @@ void fn_80114B1C(int* obj)
     fn_8003A9C0((char*)state->animChannels, state->pointCount, 0, 0);
 }
 
-/* Caller record filled by func0A/func0C: a packed facing angle plus the
- * resolved curve-point world position. */
-typedef struct CurvePointResult
-{
-    s16 angle; /* 0x00 */
-    u8 pad02[0xa];
-    f32 x; /* 0x0c */
-    f32 y; /* 0x10 */
-    f32 z; /* 0x14 */
-} CurvePointResult;
-
 /* Copies a curve point's position and packed angle into the caller's
  * record. */
 int dll_2E_func0A(int idx, void* outArg)
 {
-    CurvePointResult* out = (CurvePointResult*)outArg;
+    MoveLibTarget* out = (MoveLibTarget*)outArg;
     int curveId;
 
     if (idx >= 0x1c)
@@ -307,9 +296,8 @@ int dll_2E_func0A(int idx, void* outArg)
 /* Copies a curve point's position into the caller's record and aims its
  * angle at the nearest group-8 object (falling back to the point's packed
  * angle). */
-int dll_2E_func0C(int idx, char* outArg)
+int dll_2E_func0C(int idx, MoveLibTarget* out)
 {
-    CurvePointResult* out = (CurvePointResult*)outArg;
     f32 range;
     int curveId;
 
@@ -318,15 +306,14 @@ int dll_2E_func0C(int idx, char* outArg)
     if (curveId > -1)
     {
         RomCurvePlacementDef* p = (RomCurvePlacementDef*)(*gRomCurveInterface)->getById(curveId);
-        char* q;
+        GameObject* q;
         out->x = p->base.x;
         out->y = p->base.y;
         out->z = p->base.z;
-        q = (char*)ObjGroup_FindNearestObjectToPoint(MOVELIB_TARGET_OBJGROUP, &out->x, &range);
+        q = (GameObject*)ObjGroup_FindNearestObjectToPoint(MOVELIB_TARGET_OBJGROUP, &out->x, &range);
         if (q != NULL)
         {
-            out->angle = (s16)atan2i((int)(((GameObject*)q)->anim.localPosX - out->x),
-                                     (int)(((GameObject*)q)->anim.localPosZ - out->z));
+            out->angle = (s16)atan2i((int)(q->anim.localPosX - out->x), (int)(q->anim.localPosZ - out->z));
         }
         else
         {
@@ -555,7 +542,7 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
 
 /* Homes the object toward its target at the given speed, snapping when
  * close, easing yaw and pacing the walk anim. */
-int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
+int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int move, f32* out, u8* flags)
 {
     f32 dz;
     f32 dy;
@@ -564,44 +551,44 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
     f32 dist;
     s16 delta;
 
-    if ((void*)target == NULL)
+    if (target == NULL)
     {
         return 0;
     }
-    dx = ((GameObject*)target)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
-    dy = ((GameObject*)target)->anim.localPosY - ((GameObject*)obj)->anim.localPosY;
-    dz = ((GameObject*)target)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
+    dx = target->x - obj->anim.localPosX;
+    dy = target->y - obj->anim.localPosY;
+    dz = target->z - obj->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < lbl_803E1CB4 * speed)
     {
-        ((GameObject*)obj)->anim.localPosX = ((GameObject*)target)->anim.localPosX;
-        ((GameObject*)obj)->anim.localPosY = ((GameObject*)target)->anim.localPosY;
-        ((GameObject*)obj)->anim.localPosZ = ((GameObject*)target)->anim.localPosZ;
+        obj->anim.localPosX = target->x;
+        obj->anim.localPosY = target->y;
+        obj->anim.localPosZ = target->z;
         if (*flags & 1)
         {
-            if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                     ((GameObject*)obj)->anim.localPosZ, &ground, 0) == 0)
+            if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+                                     obj->anim.localPosZ, &ground, 0) == 0)
             {
-                ((GameObject*)obj)->anim.localPosY -= ground;
+                obj->anim.localPosY -= ground;
             }
         }
         return 1;
     }
     normalize(&dx, &dy, &dz);
-    ((GameObject*)obj)->anim.velocityX = dx * (speed * timeDelta);
-    ((GameObject*)obj)->anim.velocityY = dy * (speed * timeDelta);
-    ((GameObject*)obj)->anim.velocityZ = dz * (speed * timeDelta);
+    obj->anim.velocityX = dx * (speed * timeDelta);
+    obj->anim.velocityY = dy * (speed * timeDelta);
+    obj->anim.velocityZ = dz * (speed * timeDelta);
     if (*flags & 1)
     {
-        if (hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                                 ((GameObject*)obj)->anim.localPosZ, &ground, 0) == 0)
+        if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+                                 obj->anim.localPosZ, &ground, 0) == 0)
         {
-            ((GameObject*)obj)->anim.localPosY -= ground;
+            obj->anim.localPosY -= ground;
         }
     }
     if (*flags & 2)
     {
-        delta = ((GameObject*)target)->anim.rotX - (u16)((GameObject*)obj)->anim.rotX;
+        delta = target->angle - (u16)obj->anim.rotX;
         if (delta > 0x8000)
         {
             delta = delta - 0xffff;
@@ -610,18 +597,16 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
         {
             delta = delta + 0xffff;
         }
-        ((GameObject*)obj)->anim.rotX =
-            (f32) * (s16*)(int)(GameObject*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
+        obj->anim.rotX = (f32)*(s16*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
-    objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX, ((GameObject*)obj)->anim.velocityY,
-            ((GameObject*)obj)->anim.velocityZ);
+    objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
     if (move != -1)
     {
-        if (((GameObject*)obj)->anim.currentMove != move)
+        if (obj->anim.currentMove != move)
         {
-            ObjAnim_SetCurrentMove(obj, move, lbl_803E1C90, 0);
+            ObjAnim_SetCurrentMove((int)obj, move, lbl_803E1C90, 0);
         }
-        delta = ((GameObject*)obj)->anim.rotX - (u16)(s16)getAngle(dx, dz);
+        delta = obj->anim.rotX - (u16)(s16)getAngle(dx, dz);
         if (delta > 0x8000)
         {
             delta = delta - 0xffff;
@@ -631,7 +616,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32* out, u8* flags)
             delta = delta + 0xffff;
         }
         speed = speed * -mathCosf(gMoveLibPi * delta / gMoveLibAngleHalfScale);
-        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, speed, out);
+        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, speed, out);
     }
     return 0;
 }

@@ -21,7 +21,7 @@
 #include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
 #include "main/pad.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/objprint_api.h"

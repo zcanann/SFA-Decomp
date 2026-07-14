@@ -24,7 +24,7 @@
 #include "main/byte_flags.h"
 #include "main/object_api.h"
 #include "main/dll/DR/dr_802bbc10_shared.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_descriptor.h"
 #include "main/object_render.h"

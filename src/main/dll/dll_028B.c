@@ -19,7 +19,7 @@
 #include "main/obj_group.h"
 #include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/objprint_character_api.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"

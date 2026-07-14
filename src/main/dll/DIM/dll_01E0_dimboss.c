@@ -7,7 +7,6 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/audio/music_api.h"
 #include "main/map_load.h"
-#include "main/dll/moveLib.h"
 #include "main/render.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -16,7 +15,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/boneparticleeffect_interface.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
@@ -41,7 +40,7 @@
 
 void (*gDIMbossHitDetectAnimTable[12])(void);
 void (*gDIMbossAnimTable[6])(void);
-u32 gDIMbossAnimController[0x189];
+MoveLibState gDIMbossAnimController;
 u32 gDIMbossRenderMtx[12];
 
 
@@ -67,9 +66,6 @@ extern void loadDataFiles(void);
 
 
 extern void fn_801B9ECC(void);
-extern u32 dll_2E_func04();
-
-
 extern u32 ModelLightStruct_free();
 
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
@@ -501,7 +497,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
 
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
-    dll_2E_func06((GameObject*)obj, (MoveLibState*)gDIMbossAnimController, 0);
+    dll_2E_func06((GameObject*)obj, &gDIMbossAnimController, 0);
 
     effect = runtime->topState->effect;
     if (effect != NULL && effect->glowType != 0 && effect->enabled != 0)
@@ -617,8 +613,8 @@ void DIMboss_update(DIMbossObject* obj)
                     ((ObjAnimComponent*)childObject)->parent = obj->anim.parent;
                 }
                 DIM2icicle_updateCombatState(obj, NULL, runtime, runtime);
-                dll_2E_func04(gDIMbossAnimController, runtime->targetModel);
-                dll_2E_func03((GameObject*)obj, (MoveLibState*)gDIMbossAnimController);
+                dll_2E_func04(&gDIMbossAnimController, (GameObject*)runtime->targetModel);
+                dll_2E_func03((GameObject*)obj, &gDIMbossAnimController);
                 DIM2icicle_updateDarkIceMinesWarpAndEffects(obj, runtime);
             }
         }
@@ -672,9 +668,9 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     lbl_803DDB84 = 0;
     gDIMbossSequenceFlags = 0;
     mainSetBits(DIMBOSS_GAMEBIT_TRICKY_BOSS_MODE, 1);
-    dll_2E_func05((GameObject*)obj, (MoveLibState*)gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
-    dll_2E_func09((MoveLibState*)gDIMbossAnimController, &localVec, &localVec, 6);
-    animFlagsByte = (u8*)((int)gDIMbossAnimController + DIMBOSS_ANIM_CONTROLLER_FLAGS_OFFSET);
+    dll_2E_func05((GameObject*)obj, &gDIMbossAnimController, 0xffffd8e4, 0x1c71, 6);
+    dll_2E_func09(&gDIMbossAnimController, &localVec, &localVec, 6);
+    animFlagsByte = &gDIMbossAnimController.modeBits;
     *animFlagsByte |= 8;
     *animFlagsByte &= ~1;
     topState->steamFlags.bits.sfxPending = 1;

@@ -10,7 +10,7 @@
  * lightningCreate handle at offset 0 and the active/free bit flags at
  * offset 4.
  */
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"

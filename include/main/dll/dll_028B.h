@@ -3,7 +3,7 @@
 
 #include "global.h"
 #include "main/dll/curve_walker.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/dll_002E_moveLib.h"
 #include "main/game_object.h"
 
 typedef struct Dll28BState

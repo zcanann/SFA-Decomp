@@ -1,35 +1,92 @@
-#ifndef MAIN_DLL_MOVELIB_H_
-#define MAIN_DLL_MOVELIB_H_
+#ifndef MAIN_DLL_DLL_002E_MOVELIB_H_
+#define MAIN_DLL_DLL_002E_MOVELIB_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "main/dll/moveLib.h"
+#include "main/dll/curve_walker.h"
 
-int dll_19_func0F(GameObject* obj, ObjSeqState* seq, char* st, int p4, int p5, s16 p6);
-void FUN_801135c0(u32 param_1, u32 param_2, u32 param_3, u32 param_4, u16 param_5, float* param_6, float* param_7,
-                  int* param_8);
-void FUN_80113758(u32 param_1, u32 param_2, int param_3, u32 param_4, u32 param_5, u16 param_6);
-void FUN_80113a9c(double param_1, double param_2, short* param_3, int param_4);
-double FUN_80113c0c(double param_1, double param_2, double param_3, int param_4, int param_5);
-void FUN_80113e58(u32 param_1, u32 param_2, u32 param_3, u16* param_4, u16* param_5, u16* param_6);
-void FUN_80113fdc(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8);
-void FUN_801141dc(double param_1, int param_2);
-void FUN_801141e8(int param_1, wchar_t* param_2, wchar_t* param_3);
-double FUN_801141ec(u32 param_1, u32 param_2);
-u32 FUN_80114274(u32 param_1, u16* param_2);
-u32 FUN_80114340(int param_1, u16* param_2);
-void FUN_801143e8(u32 param_1, u32 param_2, u32* param_3, u32* param_4, u32 param_5);
-void FUN_801145a8(u32 param_1, u32 param_2, float* param_3, float* param_4);
-void FUN_801145ac(u32 param_1, u32 param_2, float* param_3, u32 param_4, float* param_5, u32* param_6);
-void FUN_801145b0(u32 param_1, u32 param_2, int param_3, float* param_4, u8* param_5, u32 param_6, u32 param_7,
-                  u32 param_8);
-void FUN_80114920(int param_1);
-void FUN_801149b8(u64 param_1, double param_2, double param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
-                  u64 param_8, u32 param_9, u32 param_10, float* param_11, short param_12, u16 param_13, u32 param_14,
-                  u32 param_15, u32 param_16);
-void FUN_801149bc(short* param_1, int param_2, int param_3);
-void FUN_80114b10(int param_1, u32* param_2, u16 param_3, u16 param_4, int param_5);
+typedef enum MoveLibPhase
+{
+    MOVELIB_PHASE_IDLE = 0,
+    MOVELIB_PHASE_TURN = 1,
+    MOVELIB_PHASE_RUN = 2,
+    MOVELIB_PHASE_SETUP = 3,
+    MOVELIB_PHASE_DONE = 6,
+    MOVELIB_PHASE_FINISH = 7,
+    MOVELIB_PHASE_HELD = 8
+} MoveLibPhase;
 
-#endif /* MAIN_DLL_MOVELIB_H_ */
+typedef struct MoveLibTarget
+{
+    s16 angle;
+    s16 angleY;
+    s16 angleZ;
+    u8 pad06[6];
+    f32 x;
+    f32 y;
+    f32 z;
+} MoveLibTarget;
+
+STATIC_ASSERT(offsetof(MoveLibTarget, x) == 0xc);
+STATIC_ASSERT(sizeof(MoveLibTarget) == 0x18);
+
+typedef struct MoveLibState
+{
+    f32 animPhase;
+    f32 startOffsetX;
+    f32 startOffsetY;
+    f32 startOffsetZ;
+    f32 targetX;
+    f32 targetY;
+    f32 targetZ;
+    u8 animChannels[0x5a0];
+    s16 turnTable[15];
+    s16 eventTable[15];
+    int setupFlag;
+    int turnState;
+    u8 phase;
+    u8 needsReinit;
+    u8 pad602[2];
+    GameObject* lastTarget;
+    GameObject* lockTarget;
+    s16 yawLimitA;
+    s16 yawLimitB;
+    u8 pointCount;
+    u8 modeBits;
+    u8 pad612[2];
+    f32 lookAtMaxDistance;
+    int reattackDelayBase;
+    int reattackDelayMin;
+    int reattackTimer;
+} MoveLibState;
+
+STATIC_ASSERT(offsetof(MoveLibState, targetX) == 0x10);
+STATIC_ASSERT(offsetof(MoveLibState, turnTable) == 0x5bc);
+STATIC_ASSERT(offsetof(MoveLibState, eventTable) == 0x5da);
+STATIC_ASSERT(offsetof(MoveLibState, setupFlag) == 0x5f8);
+STATIC_ASSERT(offsetof(MoveLibState, phase) == 0x600);
+STATIC_ASSERT(offsetof(MoveLibState, pointCount) == 0x610);
+STATIC_ASSERT(offsetof(MoveLibState, lookAtMaxDistance) == 0x614);
+STATIC_ASSERT(offsetof(MoveLibState, reattackTimer) == 0x620);
+STATIC_ASSERT(sizeof(MoveLibState) == 0x624);
+
+void dll_2E_func03(GameObject* obj, MoveLibState* state);
+void dll_2E_func04(MoveLibState* state, GameObject* target);
+void dll_2E_func05(GameObject* obj, MoveLibState* state, s16 minYaw, s16 maxYaw, int count);
+void dll_2E_func06(GameObject* obj, MoveLibState* state, int point);
+int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* state, s16 minYaw, s16 maxYaw);
+void dll_2E_func08(MoveLibState* state, int reattackDelayBase, int reattackDelayMin);
+void dll_2E_func09(MoveLibState* state, const void* turnTable, const void* eventTable, int count);
+int dll_2E_func0A(int curvePointIndex, void* out);
+f32 dll_2E_func0B(int obj, int curvePointIndex);
+int dll_2E_func0C(int curvePointIndex, MoveLibTarget* out);
+int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int move, f32* out, u8* flags);
+int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, int state, int curveVariant, f32* rootOut,
+                  int* flags);
+int dll_2E_func0F_ret_0(void);
+void dll_2E_setLookAtMaxDistance(MoveLibState* state, f32 value);
+void dll_2E_release_nop(void);
+void dll_2E_initialise_nop(void);
+
+#endif /* MAIN_DLL_DLL_002E_MOVELIB_H_ */
