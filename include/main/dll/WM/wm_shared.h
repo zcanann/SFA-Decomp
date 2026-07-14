@@ -20,17 +20,6 @@
 #include "main/objhits.h"
 #include "main/render.h"
 
-extern s16 lbl_803DC128;
-extern f32 lbl_803E5EA8;
-extern f32 lbl_803E5EB4;
-extern f32 lbl_803E5EC4;
-extern f32 lbl_803E5ED8;
-extern f32 lbl_803E5EDC;
-extern f32 lbl_803E5EE0;
-extern f32 lbl_803E5EE4;
-extern f32 lbl_803E5EE8;
-extern f32 lbl_803E5EEC;
-extern f32 lbl_803E5EF0;
 extern f32 lbl_803E5F10;
 extern f32 lbl_803E5F24;
 extern f32 lbl_803E5F90;

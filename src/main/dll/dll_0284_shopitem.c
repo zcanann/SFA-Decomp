@@ -33,6 +33,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_0284_shopitem.h"
 #include "main/dll/LGT/LGTcontrollight.h"
+#include "main/dll/boulder.h"
 #include "main/dll/tricky_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/gameloop_api.h"
@@ -106,8 +107,6 @@ extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 #define GX_AOP_AND     0
 
 extern void forceAButtonIcon(int icon);
-
-extern void fn_801F4ECC(int obj, int sub);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E5A30 = 1.0f;
@@ -261,9 +260,9 @@ int shopitem_SeqFn(GameObject* obj, int unused, ObjSeqState* seq)
             }
             else
             {
-                fn_801F4D54((int)obj, (u8*)sub);
+                fn_801F4D54(obj, (LgtFireFlyRec*)sub);
             }
-            fn_801F4ECC((int)obj, sub);
+            fn_801F4ECC(obj, (BoulderShakeRec*)sub);
         }
     }
         {
@@ -416,9 +415,9 @@ void shopitem_update(GameObject* obj)
                     }
                     else
                     {
-                        fn_801F4D54((int)obj, (u8*)state);
+                        fn_801F4D54(obj, (LgtFireFlyRec*)state);
                     }
-                    fn_801F4ECC((int)obj, state);
+                    fn_801F4ECC(obj, (BoulderShakeRec*)state);
                 }
                 (obj)->anim.localPosX = Curve_EvalBSplineValuesFirst(state + 4, ((ShopItemState*)state)->splineT, 0);
                 (obj)->anim.localPosY = Curve_EvalBSplineValuesFirst(state + 0x14, ((ShopItemState*)state)->splineT, 0);
@@ -462,7 +461,7 @@ void shopitem_init(GameObject* obj, int data)
     switch ((obj)->anim.seqId)
     {
     case SHOPITEM_SEQ_BSPLINE:
-        fn_801F4C28((u8*)obj, (u8*)state);
+        fn_801F4C28(obj, (LgtFireFlyRec*)state);
         break;
     case SHOPITEM_SEQ_AMBIENT:
         (*gPartfxInterface)->spawnObject((void*)obj, SHOPITEM_PARTFX_AMBIENT, NULL, 4, -1, NULL);

@@ -4,8 +4,8 @@
 #include "global.h"
 
 /* Per-firefly control record managed by lgtcontrollight (fn_801F4C28 init,
- * fn_801F4D54 update). File-local layout recovered from constant-offset
- * derefs off the u8* record base. */
+ * fn_801F4D54 update). Layout recovered from the former constant-offset
+ * dereferences off the raw record base. */
 typedef struct LgtFireFlyRec {
     u8 unk00[4];     /* 0x00 */
     f32 src0X;       /* 0x04 */
