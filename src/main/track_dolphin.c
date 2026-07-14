@@ -1018,7 +1018,7 @@ void intersectModLineBuild(int* obj)
     {
         int k;
         for (k = 0; k < 40; k++)
-            ((u8*)*(int*)((char*)obj + 0x38))[k] = 0xff;
+            (*(u8**)((char*)obj + 0x38))[k] = 0xff;
     }
     prev = -1;
     for (li = 0; li < gIntersectLineCount; li++)
