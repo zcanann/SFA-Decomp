@@ -10,6 +10,7 @@
 #include "main/lightmap_api.h"
 #include "main/shader_api.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/obj_path.h"
 #include "main/objtexture.h"
@@ -39,7 +40,6 @@ extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;
 
 extern void modelLightStruct_freeSlot(void* handle);
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_updateGlowAlpha(void* light);
 extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
@@ -91,7 +91,7 @@ void ProximityMine_render(ProximityMineObject* obj, u32 p2, u32 p3, u32 p4, u32 
     {
         queueGlowRender(effect);
     }
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6778);
+    objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6778);
     return;
 }
 
