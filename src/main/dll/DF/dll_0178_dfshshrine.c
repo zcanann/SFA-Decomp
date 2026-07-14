@@ -13,6 +13,7 @@
 #include "main/object_render_legacy.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
+#include "main/model_light.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/gamebit_ids.h"
@@ -33,7 +34,7 @@
 
 typedef struct DFlanternShrineState
 {
-    void* light;
+    ModelLightStruct* light;
     u8 pad04[0x14 - 0x04];
     s16 orbitA;
     s16 orbitB;
@@ -50,7 +51,7 @@ typedef struct LanternFlagBits
 
 typedef struct DfshShrineState
 {
-    void* light;
+    ModelLightStruct* light;
     f32 rewardTimer;
     f32 idleChimeTimer;
     u8 musicLatch[4];
@@ -139,16 +140,13 @@ extern u8 gDfShShrinePendingReward;
 extern u16 gDfShShrineRewardTable[];
 extern const f32 lbl_803E4E8C;
 
-extern void ModelLightStruct_free(void* light);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void objParticleFn_80099d84(int* obj, f32 scale1, int kind, f32 scale2, int light);
 extern void playerAddRemoveMagic(int obj, int amount);
 extern void SCGameBitLatch_UpdateInverted(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit,
                                           int value);
 extern void SCGameBitLatch_Update(void* latch, int mask, int clearIfSetBit, int setIfClearBit, int gateBit, int value);
 extern int objGetAnimStateFlags(int obj, int flag);
-extern void* objCreateLight(int* obj, int v);
 
 void fn_801C2914(int obj)
 {
@@ -251,14 +249,14 @@ int DFSH_Shrine_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)state->light, 0, lbl_803E4E88);
+                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4E88);
                 }
                 break;
             case 0xf:
                 ((GameObject*)objLocal)->anim.flags = (s16)(((GameObject*)objLocal)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
                 if (state->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)state->light, 0, lbl_803E4E88);
+                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4E88);
                 }
                 break;
             }
@@ -280,7 +278,7 @@ int DFSH_Shrine_getObjectTypeId(void)
 
 void DFSH_Shrine_free(GameObject* obj)
 {
-    void** state;
+    ModelLightStruct** state;
 
     state = obj->extra;
     if (*state != NULL)
@@ -300,7 +298,7 @@ void DFSH_Shrine_free(GameObject* obj)
 void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DfshShrineState* state;
-    void* light;
+    ModelLightStruct* light;
     s32 isVisible;
 
     state = ((GameObject*)obj)->extra;
@@ -310,7 +308,7 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         light = state->light;
         if (light != NULL)
         {
-            modelLightStruct_setEnabled((int)light, 0, lbl_803E4E88);
+            modelLightStruct_setEnabled(light, 0, lbl_803E4E88);
         }
     }
     else
@@ -318,7 +316,7 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         light = state->light;
         if (light != NULL)
         {
-            modelLightStruct_setEnabled((int)light, 1, lbl_803E4E88);
+            modelLightStruct_setEnabled(light, 1, lbl_803E4E88);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4E88);
         objParticleFn_80099d84((int*)obj, lbl_803E4E88, 7, *(f32*)&lbl_803E4E88, (int)state->light);
