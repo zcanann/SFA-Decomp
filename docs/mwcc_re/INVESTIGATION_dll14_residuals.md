@@ -541,3 +541,19 @@ indices are FIXED, so named-band shifts change the pop/grant interleave position
 "uniform shift" of named webs is NOT neutral). The slotPtr/back/slot36 finish therefore
 needs the exact-simulation (replay decoded rules on the traced census) rather than
 positional surgery. All other pieces are landed.
+
+## Simulation spec (the finishing tool for both functions)
+Implement in Python against the captured select_trace event streams:
+1. Inputs: per-class web list (idx, nadj) from the trace + interference approximated by
+   phase overlap (first-loop/tail/function-wide, derivable from the anchors and asm ranges).
+2. Simplify: repeated ascending-idx sweeps; degree<k pushes (LIFO), stuck -> spill
+   highest-idx parked; k = allocatable regs (GPR ~29).
+3. Select: walk stack head-first; volatile pool lowest-free; else lowest ALREADY-RESERVED
+   saved free of interference; else reserve next saved descending (F-event).
+4. Validate: reproduce the observed baseline assignment exactly (traces committed for
+   baseline, Exp1/Exp2/V-D/V-K, per-block, config-G states).
+5. Search: enumerate census edits (move one named web slot / insert one chain / unpark one
+   web) until the TARGET assignment (from anchors) is produced; map the winning edit to its
+   source construct using the catalogued form->web effects in this document.
+This replaces positional surgery (proven non-neutral) and closes walkgroup slotPtr/back/
+slot36 and func1C base/scanBase - the last register lines before 100%.
