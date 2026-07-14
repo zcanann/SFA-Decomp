@@ -16,6 +16,7 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
@@ -52,8 +53,6 @@ extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
 
 extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
-extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int* out, int a, int b);
-
 int dll_1DA_getExtraSize(void)
 {
     return 0x8;
