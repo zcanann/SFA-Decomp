@@ -10,6 +10,7 @@
  * Tricky is gone or its free flag (state.freeRequested) is set.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/objhits.h"
@@ -145,3 +146,20 @@ void flameblast_init(GameObject* obj, FlameblastPlacement* def)
     state->timer = 3.4285715f * (f32)def->initialTimer;
     state->hitVolumeDelay = 2;
 }
+
+ObjectDescriptor gFlameblastObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)flameblast_init,
+    (ObjectDescriptorCallback)flameblast_update,
+    0,
+    (ObjectDescriptorCallback)flameblast_render,
+    0,
+    0,
+    flameblast_getExtraSize,
+};

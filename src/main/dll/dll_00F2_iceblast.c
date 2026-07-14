@@ -14,6 +14,7 @@
 #include "main/dll/dll_00F2_iceblast.h"
 #include "main/object_api.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/objhits.h"
 #include "main/obj_path.h"
 #include "main/frame_timing.h"
@@ -109,3 +110,20 @@ void iceblast_release(void)
 void iceblast_initialise(void)
 {
 }
+
+ObjectDescriptor gIceblastObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)iceblast_initialise,
+    (ObjectDescriptorCallback)iceblast_release,
+    0,
+    (ObjectDescriptorCallback)iceblast_init,
+    (ObjectDescriptorCallback)iceblast_update,
+    (ObjectDescriptorCallback)iceblast_hitDetect,
+    (ObjectDescriptorCallback)iceblast_render,
+    (ObjectDescriptorCallback)iceblast_free,
+    (ObjectDescriptorCallback)iceblast_getObjectTypeId,
+    iceblast_getExtraSize,
+};

@@ -21,6 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/object_descriptor.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/pushable.h"
@@ -107,98 +108,26 @@ void InvHit_free(GameObject* obj)
     }
 }
 
-#pragma opt_common_subs off
-void InvHit_init(int* obj, u8* def)
-{
-    InvHitState* state = ((GameObject*)obj)->extra;
-    char* sub;
 
-    state->mode = ((InvhitObjectDef*)def)->mode;
-    sub = *(char**)&((GameObject*)obj)->anim.hitReactState;
-    ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags & ~1;
-    switch (state->mode)
-    {
-    case INVHIT_MODE_PROXIMITY_DAMAGE:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
-        break;
-    case INVHIT_MODE_FIXED_RADIUS:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = 0x23;
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0x6e] = 0xb;
-        sub[0x6f] = 1;
-        sub[0xae] = 0;
-        sub[0xaf] = 0;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case INVHIT_MODE_PUBLISH_POS:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
-        ((GameObject*)obj)->unkF4 = 0;
-        break;
-    case INVHIT_MODE_LOCKON_GATE:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
-        ((GameObject*)obj)->unkF4 = 0;
-        break;
-    case INVHIT_MODE_SELF_FREE:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0xae] = 0;
-        sub[0x6e] = 0xa;
-        sub[0x6f] = 0;
-        sub[0xaf] = 0;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case INVHIT_MODE_ATTACH:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
-        sub[0xae] = 0;
-        sub[0x6e] = 0xb;
-        sub[0x6f] = 1;
-        sub[0xaf] = 0;
-        sub[0x6e] = 0x11;
-        sub[0x6f] = 1;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case INVHIT_MODE_PASSIVE_VOLUME:
-        ((ObjHitsPriorityState*)sub)->shapeFlags = ((InvhitObjectDef*)def)->shapeFlags;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
-        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 1;
-        sub[0xae] = 0;
-        sub[0xaf] = 0;
-        sub[0x6a] = 0;
-        sub[0x6b] = 0;
-        break;
-    case INVHIT_MODE_HOMING_PROJECTILE:
-        sub[0x62] = 1;
-        ((ObjHitsPriorityState*)sub)->primaryRadius = 0xa;
-        ((ObjHitsPriorityState*)sub)->flags = 3;
-        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        ((GameObject*)obj)->unkF8 = 0x78;
-        {
-            char* anchorObj = *(char**)&((InvhitObjectDef*)def)->anchorObj;
-            if (anchorObj != NULL)
-            {
-                state->anchorX = ((GameObject*)anchorObj)->anim.localPosX;
-                state->anchorZ = ((GameObject*)(*(char**)&((InvhitObjectDef*)def)->anchorObj))->anim.localPosZ;
-            }
-        }
-        break;
-    }
-    ((GameObject*)obj)->objectFlags =
-        ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
-}
-#pragma opt_common_subs reset
+void InvHit_init(int* obj, u8* def);
+void InvHit_update(int* obj);
+
+ObjectDescriptor gInvHitObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)InvHit_initialise,
+    (ObjectDescriptorCallback)InvHit_release,
+    0,
+    (ObjectDescriptorCallback)InvHit_init,
+    (ObjectDescriptorCallback)InvHit_update,
+    (ObjectDescriptorCallback)InvHit_hitDetect,
+    (ObjectDescriptorCallback)InvHit_render,
+    (ObjectDescriptorCallback)InvHit_free,
+    (ObjectDescriptorCallback)InvHit_getObjectTypeId,
+    InvHit_getExtraSize,
+};
 
 void InvHit_update(int* obj)
 {
@@ -354,3 +283,96 @@ void InvHit_update(int* obj)
     }
     }
 }
+
+#pragma opt_common_subs off
+void InvHit_init(int* obj, u8* def)
+{
+    InvHitState* state = ((GameObject*)obj)->extra;
+    char* sub;
+
+    state->mode = ((InvhitObjectDef*)def)->mode;
+    sub = *(char**)&((GameObject*)obj)->anim.hitReactState;
+    ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags & ~1;
+    switch (state->mode)
+    {
+    case INVHIT_MODE_PROXIMITY_DAMAGE:
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
+        break;
+    case INVHIT_MODE_FIXED_RADIUS:
+        sub[0x62] = 1;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = 0x23;
+        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
+        sub[0x6e] = 0xb;
+        sub[0x6f] = 1;
+        sub[0xae] = 0;
+        sub[0xaf] = 0;
+        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
+        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case INVHIT_MODE_PUBLISH_POS:
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
+        ((GameObject*)obj)->unkF4 = 0;
+        break;
+    case INVHIT_MODE_LOCKON_GATE:
+        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
+        ((GameObject*)obj)->unkF4 = 0;
+        break;
+    case INVHIT_MODE_SELF_FREE:
+        sub[0x62] = 1;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
+        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
+        sub[0xae] = 0;
+        sub[0x6e] = 0xa;
+        sub[0x6f] = 0;
+        sub[0xaf] = 0;
+        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
+        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case INVHIT_MODE_ATTACH:
+        sub[0x62] = 1;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
+        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 0x45;
+        sub[0xae] = 0;
+        sub[0x6e] = 0xb;
+        sub[0x6f] = 1;
+        sub[0xaf] = 0;
+        sub[0x6e] = 0x11;
+        sub[0x6f] = 1;
+        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
+        *(int*)&((ObjHitsPriorityState*)sub)->skeletonHitMask = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case INVHIT_MODE_PASSIVE_VOLUME:
+        ((ObjHitsPriorityState*)sub)->shapeFlags = ((InvhitObjectDef*)def)->shapeFlags;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = ((InvhitObjectDef*)def)->radius;
+        ((ObjHitsPriorityState*)sub)->flags = ((ObjHitsPriorityState*)sub)->flags | 1;
+        sub[0xae] = 0;
+        sub[0xaf] = 0;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case INVHIT_MODE_HOMING_PROJECTILE:
+        sub[0x62] = 1;
+        ((ObjHitsPriorityState*)sub)->primaryRadius = 0xa;
+        ((ObjHitsPriorityState*)sub)->flags = 3;
+        *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
+        ((GameObject*)obj)->unkF8 = 0x78;
+        {
+            char* anchorObj = *(char**)&((InvhitObjectDef*)def)->anchorObj;
+            if (anchorObj != NULL)
+            {
+                state->anchorX = ((GameObject*)anchorObj)->anim.localPosX;
+                state->anchorZ = ((GameObject*)(*(char**)&((InvhitObjectDef*)def)->anchorObj))->anim.localPosZ;
+            }
+        }
+        break;
+    }
+    ((GameObject*)obj)->objectFlags =
+        ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
+}
+#pragma opt_common_subs reset

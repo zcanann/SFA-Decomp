@@ -16,6 +16,7 @@
  * leaves object group 14.
  */
 #include "main/dll/dll_00F4_doorf4.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/render.h"
 #include "main/obj_placement.h"
@@ -240,6 +241,23 @@ void DoorF4_init(int* obj, int* params)
     state->planeD =
         -(state->cosYaw * ((GameObject*)obj)->anim.localPosX + state->sinYaw * ((GameObject*)obj)->anim.localPosZ);
 }
+
+ObjectDescriptor gDoorF4ObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DoorF4_initialise,
+    (ObjectDescriptorCallback)DoorF4_release,
+    0,
+    (ObjectDescriptorCallback)DoorF4_init,
+    (ObjectDescriptorCallback)DoorF4_update,
+    (ObjectDescriptorCallback)DoorF4_hitDetect,
+    (ObjectDescriptorCallback)DoorF4_render,
+    (ObjectDescriptorCallback)DoorF4_free,
+    (ObjectDescriptorCallback)DoorF4_getObjectTypeId,
+    DoorF4_getExtraSize,
+};
 
 int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {

@@ -20,6 +20,7 @@
  * pushable TU in the same binary; they are not called from this object.
  */
 #include "main/obj_placement.h"
+#include "main/object_descriptor.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/dll/pushable.h"
@@ -293,3 +294,20 @@ void WarpPoint_init(GameObject* obj, WarpPointObjectDef* def)
         def->savePointArmed = 0;
     }
 }
+
+ObjectDescriptor gWarpPointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)WarpPoint_init,
+    (ObjectDescriptorCallback)WarpPoint_update,
+    0,
+    (ObjectDescriptorCallback)WarpPoint_render,
+    0,
+    (ObjectDescriptorCallback)WarpPoint_getObjectTypeId,
+    WarpPoint_getExtraSize,
+};

@@ -1390,22 +1390,27 @@ main/dll/dll_00EF_pushable.c:
 
 main/dll/dll_00F0_warppoint.c:
 	.text       start:0x80176FC4 end:0x8017779C
+	.data       start:0x80320DB8 end:0x80320DF0
 	.sdata2     start:0x803E35D8 end:0x803E35E8
 
 main/dll/dll_00F1_invhit.c:
 	.text       start:0x8017779C end:0x80177E28
+	.data       start:0x80320DF0 end:0x80320E68
 	.sdata2     start:0x803E35E8 end:0x803E3600
 
 main/dll/dll_00F2_iceblast.c:
 	.text       start:0x80177E28 end:0x8017804C
+	.data       start:0x80320E68 end:0x80320EA0
 	.sdata2     start:0x803E3600 end:0x803E3618
 
 main/dll/dll_00F3_flameblast.c:
 	.text       start:0x8017804C end:0x80178338
+	.data       start:0x80320EA0 end:0x80320ED8
 	.sdata2     start:0x803E3618 end:0x803E3648
 
 main/dll/dll_00F4_doorf4.c:
 	.text       start:0x80178338 end:0x801793A4
+	.data       start:0x80320ED8 end:0x80320F30
 	.sdata2     start:0x803E3648 end:0x803E3678
 	.sdata2     start:0x803E3678 end:0x803E3680
 
