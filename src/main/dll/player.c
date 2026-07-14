@@ -125,7 +125,6 @@ void fn_802960E4(void);
 void fn_802960E8(void* playerObj, s16 effectId);
 void fn_802960F4(GameObject* obj, int* out);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
-void fn_802961A4(int obj, int* out1, f32* out2);
 void fn_802961FC(int a, u8 type);
 int fn_80296240(GameObject* obj);
 int fn_8029630C(GameObject* obj);
@@ -751,17 +750,17 @@ int objFn_80296700(GameObject* obj)
     return 0;
 }
 
-void fn_802961A4(int obj, int* out1, f32* out2)
+void fn_802961A4(GameObject* obj, int* outMove, f32* outChargeLevel)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
-    *out1 = ((GameObject*)obj)->anim.currentMove;
+    PlayerState* inner = obj->extra;
+    *outMove = obj->anim.currentMove;
     if (inner->baddie.controlMode == 0x26)
     {
-        *out2 = inner->boulderChargeLevel;
+        *outChargeLevel = inner->boulderChargeLevel;
     }
     else
     {
-        *out2 = inner->chargeLevel;
+        *outChargeLevel = inner->chargeLevel;
     }
 }
 

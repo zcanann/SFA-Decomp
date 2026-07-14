@@ -1155,7 +1155,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 }
 #pragma opt_propagation reset
 
-extern void fn_802961A4(int* obj, int* type, f32* power);
 extern void fn_802960F4(GameObject* objc4, u8** out);
 extern f32 lbl_803E328C;
 extern f32 lbl_803E3298;
@@ -1224,7 +1223,7 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
                                       lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
-        fn_802961A4((int*)player, &type, &power);
+        fn_802961A4(player, &type, &power);
         fxB.id = 0;
         fxB.a = 0;
         fxB.b = 0;
