@@ -49,7 +49,6 @@
 #include "main/obj_list.h"
 #include "main/track_dolphin_api.h"
 #include "dolphin/os/OSCache.h"
-extern u32 mapLoadDataFile(int mapId, int fileId);
 extern u32 piRomLoadSection();
 extern char sShaderDebugStrings[];
 #define MAP_BLOCK_LAYER_COUNT 5
