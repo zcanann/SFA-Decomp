@@ -44,6 +44,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"
+#include "main/model_light.h"
 #include "main/render.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/obj_placement.h"
@@ -68,7 +69,7 @@ typedef struct EcshIntPair
 
 typedef struct MmShrineAnimState
 {
-    int light;
+    ModelLightStruct* light;
     u8 pad04[0x24];
     s16 orbitA;
     s16 orbitB;
@@ -149,8 +150,6 @@ extern void gpsh_shrine_init(void);
 extern void gpsh_shrine_release(void);
 extern void gpsh_shrine_initialise(void);
 
-extern void ModelLightStruct_free(void* p);
-extern int objCreateLight(int a, int b);
 extern int objIsCurModelNotZero(void* obj);
 extern void SCGameBitLatch_Update(u8* latch, int mask, int a, int b, int bit, int c);
 extern void SCGameBitLatch_UpdateInverted(u8* latch, int mask, int a, int b, int bit, int c);
@@ -263,7 +262,6 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 
 int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
 {
-    extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
     MmShrineAnimObj* obj;
     MmShrineAnimState* state;
     MmShrineAnimEvents* eventList;
@@ -299,14 +297,14 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
                 break;
             case 14:
                 obj->flags |= MMSHRINE_FLAG_POSE_LOCKED;
-                if ((void*)state->light != NULL)
+                if (state->light != NULL)
                 {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
             case 15:
                 obj->flags &= ~MMSHRINE_FLAG_POSE_LOCKED;
-                if ((void*)state->light != NULL)
+                if (state->light != NULL)
                 {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
@@ -400,19 +398,18 @@ void ecsh_shrine_hitDetect(void)
 void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
-    extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
     void** inner = (obj)->extra;
     if (visible == 0)
     {
         if (*inner != NULL)
         {
-            modelLightStruct_setEnabled((int)*inner, 0, lbl_803E4FC8);
+            modelLightStruct_setEnabled((ModelLightStruct*)*inner, 0, lbl_803E4FC8);
         }
         return;
     }
     if (*inner != NULL)
     {
-        modelLightStruct_setEnabled((int)*inner, 1, lbl_803E4FC8);
+        modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, lbl_803E4FC8);
     }
     objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4FC8);
     objParticleFn_80099d84((int)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (int)*inner);
@@ -427,7 +424,7 @@ void ecsh_shrine_free(int* obj)
     Music_Trigger(MUSICTRIG_krazoa_doors_open, 0);
     if (*(void**)inner != NULL)
     {
-        ModelLightStruct_free(*(void**)inner);
+        ModelLightStruct_free(*(ModelLightStruct**)inner);
         *(void**)inner = NULL;
     }
     ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
@@ -919,7 +916,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((GameObject*)obj)->unkF4 = 1;
     if (*(void**)sub == NULL)
     {
-        *(int*)sub = objCreateLight(0, 1);
+        *(ModelLightStruct**)sub = objCreateLight(NULL, 1);
     }
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
