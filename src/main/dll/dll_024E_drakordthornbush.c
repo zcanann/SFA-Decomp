@@ -17,6 +17,7 @@
  * defined in another DR DLL translation unit.
  */
 #include "main/dll/DR/dll_80209FE0_shared.h"
+#include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 #include "main/maketex_api.h"
 #include "main/maketex_timer_api.h"
@@ -277,3 +278,22 @@ void drakord_thornbush_release(void)
 void drakord_thornbush_initialise(void)
 {
 }
+
+ObjectDescriptor gDrakorDThornBushObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)drakord_thornbush_initialise,
+    (ObjectDescriptorCallback)drakord_thornbush_release,
+    0,
+    (ObjectDescriptorCallback)drakord_thornbush_init,
+    (ObjectDescriptorCallback)drakord_thornbush_update,
+    (ObjectDescriptorCallback)drakord_thornbush_hitDetect,
+    (ObjectDescriptorCallback)drakord_thornbush_render,
+    (ObjectDescriptorCallback)drakord_thornbush_free,
+    (ObjectDescriptorCallback)drakord_thornbush_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drakord_thornbush_getExtraSize,
+};
+
+u32 lbl_8032A110[12] = {0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

@@ -49,6 +49,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_024D_bossdrakor.h"
+#include "main/object_descriptor.h"
 
 #define ObjGroup_FindNearestObjectLegacy(group, obj, distance) \
     ((int (*)())ObjGroup_FindNearestObject)((group), (obj), (distance))
@@ -618,6 +619,34 @@ void bossdrakor_free(GameObject* obj)
     Music_Trigger(MUSICTRIG_citytombs, 0);
 }
 
+
+int gBossDrakorMoveStateTable[5] = {1, 2, 3, 4, 5};
+int gBossDrakorMoveSpeedTable[5] = {400, 400, 400, 600, 600};
+
+int gBossDrakorTurnMoveStates[32] = {
+    18,         18,         19,         20,         21,         1000593162, 1000593162, 1000593162,
+    1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1,          7,
+    6,          7,          7,          1,          1,          3,          11,         1045220557,
+    1045220557, 1045220557, 1034147594, 1031127695, 1031127695, 50,         100,        200,
+};
+
+ObjectDescriptor gBossDrakorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)bossdrakor_initialise,
+    (ObjectDescriptorCallback)bossdrakor_release,
+    0,
+    (ObjectDescriptorCallback)bossdrakor_init,
+    (ObjectDescriptorCallback)bossdrakor_update,
+    (ObjectDescriptorCallback)bossdrakor_hitDetect,
+    (ObjectDescriptorCallback)bossdrakor_render,
+    (ObjectDescriptorCallback)bossdrakor_free,
+    0,
+    (ObjectDescriptorExtraSizeCallback)bossdrakor_getExtraSize,
+};
+
 void bossdrakor_handleActionEvent(int obj, int state, int action)
 {
     int* tbl = gBossDrakorMoveStateTable;
@@ -931,12 +960,3 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 
 #pragma opt_common_subs reset
 
-int gBossDrakorTurnMoveStates[32] = {
-    18,         18,         19,         20,         21,         1000593162, 1000593162, 1000593162,
-    1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1000593162, 1,          7,
-    6,          7,          7,          1,          1,          3,          11,         1045220557,
-    1045220557, 1045220557, 1034147594, 1031127695, 1031127695, 50,         100,        200,
-};
-
-int gBossDrakorMoveStateTable[5] = {1, 2, 3, 4, 5};
-int gBossDrakorMoveSpeedTable[5] = {400, 400, 400, 600, 600};
