@@ -1,8 +1,8 @@
 #include "main/audio/inp_ctrl.h"
-#include "main/audio/inp_midi.h"
 
 extern u32 synthRealTimeHi;
 extern s16 varGet(int state, int useExCtrl, u8 index);
+extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
 /*
  * Evaluate a controller expression list and cache its 14-bit result.
@@ -15,7 +15,6 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
     u8 ctrl;
     s32 tmp;
     s32 vtmp;
-    extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
     for (value = 0, i = 0; i < slotPtr->entryCount; ++i)
     {
