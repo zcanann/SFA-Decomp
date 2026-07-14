@@ -166,7 +166,7 @@ extern f32 gHudAButtonIconX;
 extern f32 gHudBButtonY;
 extern f32 gHudBButtonGlyphY;
 extern f32 gHudBButtonIconX;
-extern f32 lbl_803E2010;
+extern const f32 lbl_803E2010;
 extern f32 gHudYButtonIconX;
 extern f32 lbl_803E2018;
 extern int objIsCurModelNotZero(void* obj);
@@ -302,7 +302,7 @@ extern char lbl_803DBB88;
 extern char lbl_803DBB90;
 extern char lbl_803DBB98;
 extern int lbl_803E1E04;
-extern f32 lbl_803E1E64;
+extern const f32 lbl_803E1E64;
 extern f32 lbl_803E1E80;
 extern f32 lbl_803E1ECC;
 extern const f32 lbl_803E1F30;
@@ -474,7 +474,7 @@ extern u8 lbl_803DBAA2;
 extern f32 lbl_803E1E60;
 extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
 extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
-extern GameObject* volatile lbl_803DD868[2];
+extern GameObject* lbl_803DD868[2];
 extern u32 lbl_803E1E00;
 extern f64 lbl_803E2118;
 extern f32 lbl_803E2120;
@@ -5326,7 +5326,8 @@ void pauseMenuAnimateCarousel(void)
               lbl_803E217C);
     {
         int d = 0x400 - lbl_803DD78C;
-        *(f32*)((u8*)lbl_803DD868[0] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
+        GameObject* podium = lbl_803DD868[0];
+        *(f32*)((u8*)podium + 0x10) = *(f32*)((u8*)podium + 0x10) - (f32)(d * d) / lbl_803E2188;
     }
     *(f32*)((u8*)lbl_803DD868[1] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10);
     {
@@ -5334,7 +5335,7 @@ void pauseMenuAnimateCarousel(void)
         *(f32*)((u8*)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
     }
     ObjAnim_AdvanceCurrentMove((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
-                                                                 &animEvents);
+                               &animEvents);
     watermark = 0x90000000;
     for (; k <= last; k++)
     {
