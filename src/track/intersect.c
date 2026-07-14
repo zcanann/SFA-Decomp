@@ -5223,8 +5223,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void getReflectionTexture2(int* out);
-    extern void Camera_ProjectWorldPoint(f32 * out_x, f32 * out_y, f32 * out_z, f32 * out_w, double x, double y,
-                                         double z);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
     Mtx mtx_27;
@@ -5240,7 +5238,7 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
 
     wx = wx - playerMapOffsetX;
     wz = wz - playerMapOffsetZ;
-    Camera_ProjectWorldPoint(&px, &py, &pz, &pw, wx, wy, wz);
+    Camera_ProjectWorldPoint(wx, wy, wz, &px, &py, &pz, &pw);
     pz = pz + lbl_803DEEE4;
     c0.a = (u8)(((u32)(lbl_803DEF08 * pz) & 0x00FF0000) >> 16);
     selectReflectionTexture(0);
