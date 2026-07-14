@@ -15,6 +15,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll197state_struct.h"
 #include "main/frame_timing.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -73,7 +74,6 @@ __declspec(section ".sdata2") f32 lbl_803E513C = -2.0f;
 __declspec(section ".sdata2") f32 lbl_803E5140 = 8192.0f;
 __declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
 
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
 extern void nwsh_levcon_free();
@@ -103,7 +103,7 @@ void dll_197_update(int obj)
 
     player = (int)Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0)
+    if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x40) != 0)
     {
         if (distance >= lbl_803E5138 && state->active != 0)
         {
