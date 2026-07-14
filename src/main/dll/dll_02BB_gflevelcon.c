@@ -36,6 +36,27 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E7450 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E7454 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E7458 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E745C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E7460 = -0.1f;
+__declspec(section ".sdata2") f32 lbl_803E7464 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E7468 = -0.2f;
+__declspec(section ".sdata2") f32 lbl_803E746C = 476.0f;
+__declspec(section ".sdata2") f32 lbl_803E7470 = 112.5f;
+__declspec(section ".sdata2") f32 lbl_803E7474 = 150.0f;
+__declspec(section ".sdata2") f32 lbl_803E7478 = 180.0f;
+__declspec(section ".sdata2") f32 lbl_803E747C = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E7480 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E7484 = 0.5f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E7488 = 0.0f;
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 lbl_803E748C = 256.0f;
+
 /* sequence event opcodes consumed by gf_levelcon_SeqFn */
 #define GFLEVELCON_SEQEV_NONE          0
 #define GFLEVELCON_SEQEV_SKY_PRESET_A  1
