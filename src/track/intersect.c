@@ -38,6 +38,10 @@
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+typedef void (*GXSetZCompLocLegacyFn)(u32 beforeTex);
+typedef void (*GXSetZModeLegacyFn)(u32 compareEnable, int compareFunc, u32 updateEnable);
+typedef void (*GXInitTexObjLegacyFn)();
+
 int lbl_803DD03C;
 f32 gFogNearZ;
 f32 gFogFarZ;
@@ -934,9 +938,9 @@ void fn_80070234(f32* mat)
 }
 
 #pragma peephole on
+#define GXSetZCompLoc ((GXSetZCompLocLegacyFn)GXSetZCompLoc)
 void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
 {
-    extern void GXSetZCompLoc();
     if ((u32)gGxZCompLocCached != (zCompLoc & 0xff) || gGxZCompLocValid == 0)
     {
         GXSetZCompLoc(zCompLoc);
@@ -944,11 +948,11 @@ void gxSetPeControl_ZCompLoc_(u32 zCompLoc)
         gGxZCompLocValid = 1;
     }
 }
+#undef GXSetZCompLoc
 
+#define GXSetZMode ((GXSetZModeLegacyFn)GXSetZMode)
 void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
 {
-    extern void GXSetZMode();
-
     if ((u32)gGxZModeCompareEnable != (compareEnable & 0xff) || gGxZModeCompareFunc != compareFunc ||
         gGxZModeUpdateEnable != (updateEnable & 0xff) || gGxZModeValid == 0)
     {
@@ -959,6 +963,7 @@ void gxSetZMode_(u32 compareEnable, int compareFunc, u32 updateEnable)
         gGxZModeValid = 1;
     }
 }
+#undef GXSetZMode
 
 #pragma peephole off
 void resetSomeGxFlags(void)
@@ -1016,7 +1021,6 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
 int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
-    extern void GXInitTexObj();
 
     void* renderOp;
     void* tex2;
@@ -1035,8 +1039,10 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TextureId);
     wrapBit = (((Texture*)tex2)->maxLod - ((Texture*)tex2)->minLod > 0) ? 1 : 0;
+#define GXInitTexObj ((GXInitTexObjLegacyFn)GXInitTexObj)
     GXInitTexObj((void*)((u8*)tex2 + 0x20), (u8*)tex2 + 0x60, ((Texture*)tex2)->width, ((Texture*)tex2)->height,
                  ((Texture*)tex2)->format, GX_REPEAT, GX_REPEAT, wrapBit);
+#undef GXInitTexObj
     selectTexture((Texture*)tex2, 2);
     GXLoadTexMtxImm(lbl_80396850, GX_PTTEXMTX6, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, 0, GX_FALSE, GX_PTTEXMTX6);
