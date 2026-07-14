@@ -10,7 +10,7 @@
  * vecRotateZXY, then re-bases the resulting offset onto pos. firefly_animEventCallback is the
  * object think callback, forwarding to the firefly update in dll_020B_firefly.
  */
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/LGT/LGTcontrollight.h"
 #include "main/dll/dll_020B_firefly.h"
 

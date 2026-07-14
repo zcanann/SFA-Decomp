@@ -3,7 +3,9 @@
 #include "main/dll/dll_0141_lightning.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
+#include "main/obj_group.h"
 #include "main/newclouds.h"
 #define OBJFX_HIT_DETECT_DOUBLE_SCALE_LEGACY
 #include "main/objfx.h"

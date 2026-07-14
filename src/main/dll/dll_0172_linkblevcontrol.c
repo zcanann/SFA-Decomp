@@ -23,7 +23,7 @@
 #include "main/objseq.h"
 #include "main/sky_interface.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
 
 typedef struct LinkbLevState
 {

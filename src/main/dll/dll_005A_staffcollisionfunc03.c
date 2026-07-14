@@ -15,7 +15,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_005A_staffcollisionfunc03.h"
 

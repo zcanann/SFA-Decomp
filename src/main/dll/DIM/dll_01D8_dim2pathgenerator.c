@@ -39,7 +39,10 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/object_api.h"
+#include "main/object.h"
+#include "main/frame_timing.h"
+#include "main/obj_group.h"
 
 #define DIM2PATHGENERATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 

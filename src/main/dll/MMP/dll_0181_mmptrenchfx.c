@@ -16,7 +16,8 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/dll/MMP/dll_0181_mmptrenchfx.h"
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);

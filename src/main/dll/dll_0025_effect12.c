@@ -17,7 +17,7 @@
 #include "main/dll/effectsrcparams_struct.h"
 #include "main/dll/effectspawnparams_struct.h"
 #include "main/dll_000A_expgfx.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_0025_effect12.h"
 
 #define EFFECT_FLAG_HAS_SRC 0x200000

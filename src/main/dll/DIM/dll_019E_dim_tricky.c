@@ -11,7 +11,12 @@
 #include "main/shader_api.h"
 #include "main/camera.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/vecmath.h"
+#include "main/voxmaps.h"
+#include "main/audio/sfx.h"
+#include "main/objhits.h"
 
 
 

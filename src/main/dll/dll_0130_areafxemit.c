@@ -23,7 +23,9 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/vecmath.h"
 #include "main/object_descriptor.h"
 
 typedef struct CFEmitterFxArgs

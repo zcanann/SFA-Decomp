@@ -38,7 +38,9 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/DR/dr_802bbc10_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
+#include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
