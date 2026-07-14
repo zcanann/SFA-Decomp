@@ -6,6 +6,7 @@
 #include "main/game_object.h"
 #include "main/objprint_character_api.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/obj_trigger.h"
@@ -93,7 +94,6 @@ extern void warpstone_initialise(void);
 
 extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoints, int scratch, f32 scaleX,
                                 f32 scaleY);
-extern void objRenderModelAndHitVolumes(SHthorntailObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 extern u32 modelInitBones();
 extern void fn_8003B228(GameObject* obj, int p2);
 
@@ -348,7 +348,7 @@ void SHthorntail_render(SHthorntailObject* obj, int p2, int p3, int p4, int p5, 
     int pointIndex;
 
     runtime = obj->runtime;
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5448);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5448);
     dll_2E_func06((GameObject*)obj, (MoveLibState*)runtime, 0);
     pointIndex = 0;
     do
