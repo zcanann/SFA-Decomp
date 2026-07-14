@@ -23,6 +23,7 @@
 #include "main/object_api.h"
 #include "main/obj_list.h"
 #include "main/voxmaps.h"
+#include "main/dll/player_api.h"
 
 #define DLLB6_OBJFLAG_RENDERED 0x800
 #define DLLB6_OBJFLAG_FREED    0x40
@@ -30,9 +31,6 @@
 extern f32 lbl_803E1644; /* vertical band lower bound */
 extern f32 lbl_803E1648; /* vertical band upper bound; also reused as the camera height offset for the LOS ray origin */
 extern f32 lbl_803E1658; /* 1/5 move-average weight */
-
-extern int objAnimFn_80296328(void);
-extern int fn_80295C24(GameObject* player);
 
 static inline int camcontrol_isTargetCandidate(GameObject* obj, ObjHitVolumeRuntimeBounds* data)
 {
@@ -82,7 +80,7 @@ CamcontrolTargetObject* camcontrol_findBestTarget(CamcontrolCameraState* cameraS
     bestPri = -1;
     count = 0;
     player = Obj_GetPlayerObject();
-    if (player == NULL || focus == NULL || gCamcontrolActiveActionId == 0x44 || objAnimFn_80296328() == 0)
+    if (player == NULL || focus == NULL || gCamcontrolActiveActionId == 0x44 || objAnimFn_80296328(player) == 0)
     {
         return NULL;
     }

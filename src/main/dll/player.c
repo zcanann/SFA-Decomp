@@ -113,7 +113,6 @@ void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
-int fn_80295C24(GameObject* obj);
 int fn_80295C40(GameObject* obj);
 int fn_80295C5C(GameObject* obj);
 int fn_80295CBC(GameObject* obj);
@@ -123,13 +122,9 @@ void fn_802960F4(GameObject* obj, int* out);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961FC(int a, u8 type);
 int fn_80296240(GameObject* obj);
-int fn_8029630C(GameObject* obj);
-int objAnimFn_80296328(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
-f32 fn_802966F4(GameObject* obj);
 void saveSetOverrideHealth(int v);
 void fn_80296BBC(GameObject* obj);
-void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
 void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);
@@ -10224,7 +10219,7 @@ int playerStateClimbUpFromWall(GameObject* obj, int state)
     return 0;
 }
 
-int objAnimFn_80296328(int obj)
+int objAnimFn_80296328(GameObject* obj)
 {
     PlayerState* inner = ((GameObject*)obj)->extra;
     if (((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0 &&

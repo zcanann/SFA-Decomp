@@ -10,6 +10,7 @@
 #include "string.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/dll/player_api.h"
 
 extern CameraModeBikeState* gCamTalkBikeState;
 extern ViewfinderState* lbl_803DD548;
@@ -34,8 +35,6 @@ extern f32 lbl_803E17CC;
 extern f32 lbl_803E17D0;
 extern GameObject* getSbGalleon(void);
 extern int DBprotection_getCameraState(GameObject* obj);
-extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-
 void CameraModeBike_copyToCurrent(f32* inputs)
 {
     gCamTalkBikeState->turnInput = inputs[0];
@@ -170,7 +169,7 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
 
     if (self->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)self, &prevPosX, &prevPosY, &prevPosZ);
+        cameraGetPrevPos2(self, &prevPosX, &prevPosY, &prevPosZ);
         if (((resetClamp != 0) || (lbl_803DD548->camPosX != prevPosX)) || (lbl_803DD548->camPosZ != prevPosZ))
         {
             lbl_803DD548->clampedPosY = prevPosY;

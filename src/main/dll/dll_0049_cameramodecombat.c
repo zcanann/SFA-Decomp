@@ -11,6 +11,7 @@
 #include "main/pad.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
+#include "main/dll/player_api.h"
 
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 #define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42
@@ -22,9 +23,6 @@ extern f32 lbl_803E18C8;
 
 
 
-extern u32 fn_8029630C(int obj);
-extern int objAnimFn_80296328(int obj);
-extern u32 cameraGetPrevPos2();
 extern s32 gCamCombatPrevYawDiff;
 extern f64 lbl_803E1918;
 extern f32 lbl_803E18CC;
@@ -194,7 +192,7 @@ void CameraModeCombat_update(short* cam)
     else
     {
         focus = (GameObject*)((CameraObject*)cam)->anim.targetObj;
-        if (focus->anim.classId == 1 && objAnimFn_80296328((int)focus) == 0)
+        if (focus->anim.classId == 1 && objAnimFn_80296328(focus) == 0)
         {
             if (((CameraObject*)cam)->targetObj != NULL)
             {
@@ -235,7 +233,7 @@ void CameraModeCombat_update(short* cam)
                 if (hitVolumes != NULL)
                 {
                     range = (f32)(s32)((u32)tgt->anim.modelInstance->hitVolumes[0].bounds[1] << 2);
-                    if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_B) && (int)fn_8029630C((int)focus) != 0)
+                    if (((u16)getButtonsJustPressed(0) & PAD_BUTTON_B) && fn_8029630C(focus) != 0)
                     {
                         if (((CameraObject*)cam)->targetObj != NULL)
                         {

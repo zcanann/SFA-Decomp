@@ -8,6 +8,7 @@
 int objFn_802962b4(GameObject* obj);
 int fn_80295A04(GameObject* obj, int selector);
 int fn_80295C0C(GameObject* obj);
+int fn_80295C24(GameObject* player);
 int fn_80295C88(GameObject* player);
 int playerIsPathFollowing(GameObject* player);
 void playerLock(GameObject* player, int lock);
@@ -40,11 +41,15 @@ int isTrickyNear(GameObject* obj);
 int fn_8029669C(GameObject* obj);
 int fn_802966B4(GameObject* obj);
 int objFn_80296700(GameObject* obj);
+int fn_8029630C(GameObject* player);
+int objAnimFn_80296328(GameObject* player);
+f32 fn_802966F4(GameObject* player);
 int fn_80296C4C(GameObject* obj);
 void fn_80296D20(GameObject* player, GameObject* parentObj);
 void playerSetInCutscene(GameObject* player);
 void playerSetCutsceneCameraFlag(GameObject* player);
 void playerSetOverrideParentSlack(GameObject* player);
+void cameraGetPrevPos2(GameObject* player, f32* outX, f32* outY, f32* outZ);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);

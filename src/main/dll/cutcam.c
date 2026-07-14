@@ -115,7 +115,7 @@ u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
 
     if (target->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)target, &targetPos[0], &targetPos[1], &targetPos[2]);
+        cameraGetPrevPos2(target, &targetPos[0], &targetPos[1], &targetPos[2]);
     }
     else
     {
@@ -155,7 +155,7 @@ u8 camcontrol_getTargetPosition(CameraObject* camera, ObjAnimComponent* targetAn
     pos[2] = sinv * d2 + targetAnim->worldPosZ;
     if (targetAnim->classId == 1)
     {
-        cameraGetPrevPos2((int)targetAnim, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2((GameObject*)targetAnim, &prev[0], &prev[1], &prev[2]);
     }
     else
     {
@@ -287,7 +287,7 @@ int cameraFn_80103b40(short* cam, f32* outA, f32* outB, int angle)
     pathB[2] = pathA[2];
     if (((GameObject*)tgt0)->anim.classId == 1)
     {
-        cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2((GameObject*)tgt0, &prev[0], &prev[1], &prev[2]);
     }
     else
     {
@@ -498,7 +498,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     gCutCamBboxBlocked = 0;
     if (target->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)target, &prev[0], &prev[1], &prev[2]);
+        cameraGetPrevPos2(target, &prev[0], &prev[1], &prev[2]);
     }
     else
     {

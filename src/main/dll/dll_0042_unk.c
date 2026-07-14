@@ -99,9 +99,6 @@ extern f32 lbl_803E1730;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 
-extern f32 fn_802966F4(GameObject* obj);                     /* returns a target proximity/distance scalar */
-extern void cameraGetPrevPos2(int obj, f32* x, f32* y, f32* z);
-
 void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collisionFlag, float* upperBound,
                                      float* lowerBound)
 {
@@ -779,7 +776,7 @@ void CameraModeNormal_update(u8* obj)
         {
             if (target[0]->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target[0], &aimX2, &aimY2, &aimZ2);
+                cameraGetPrevPos2(target[0], &aimX2, &aimY2, &aimZ2);
             }
             else
             {
@@ -809,7 +806,7 @@ void CameraModeNormal_update(u8* obj)
         {
             if (target[0]->anim.classId == 1)
             {
-                cameraGetPrevPos2((int)target[0], &aimX, &aimY, &aimZ);
+                cameraGetPrevPos2(target[0], &aimX, &aimY, &aimZ);
             }
             else
             {
