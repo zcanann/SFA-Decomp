@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/track_bbox_api.h"
 #include "main/objfx.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -68,8 +69,6 @@ extern f32 gSpScarabDustBurstScale;      /* dust-burst scale */
 extern f32 gSpScarabPi;
 extern f32 gSpScarabAngleToRadiansDivisor;
 extern f32 gSpScarabBaseSpeedScale; /* base horizontal speed scale */
-
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 
 int SPScarab_getExtraSize(void)
 {
@@ -127,8 +126,8 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.velocityY = gSpScarabBounceVelocityY;
     }
 
-    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, gSpScarabCollisionRadius, 0, (int)&hit_buf[0], obj, 8, -1, 0xff,
-                           0xa) != 0)
+    if (objBboxFnIntLegacy((void*)(obj + 0x80), (void*)(obj + 0xc), gSpScarabCollisionRadius, 0, &hit_buf[0], obj, 8,
+                           -1, 0xff, 0xa) != 0)
     {
         Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], (f32*)(obj + 0x24), outV);
         ((GameObject*)obj)->anim.velocityX = outV[0];
