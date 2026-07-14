@@ -35,6 +35,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/gamebits.h"
@@ -102,8 +103,6 @@ extern int playerGetFlags3F0Bit5(GameObject* player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 extern int Sfx_PlayFromObject(int* obj, int id);
-extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-
 #pragma dont_inline on
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
 f32 gKillerMushroomStateAnimRates[11] = {
@@ -165,7 +164,7 @@ void enemymushroom_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
     void* state = (obj)->extra;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E5310);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E5310);
         ObjPath_GetPointWorldPosition(obj, 0, (f32*)((char*)state + 0x20), (f32*)((char*)state + 0x24),
                                       (f32*)((char*)state + 0x28), 0);
     }
