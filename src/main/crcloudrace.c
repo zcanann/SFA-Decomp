@@ -7,7 +7,7 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/mapEventTypes.h"
 #include "main/gamebits.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/maketex_timer_api.h"

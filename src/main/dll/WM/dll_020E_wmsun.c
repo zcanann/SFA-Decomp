@@ -30,7 +30,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/WM/dll_020E_wmsun.h"

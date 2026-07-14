@@ -5,7 +5,7 @@
 #include "main/sky_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/obj_trigger.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/tricky_api.h"

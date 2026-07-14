@@ -11,7 +11,7 @@
  * detaches the attached Kyte child.
  */
 #include "main/dll/sbkytecagestate_struct.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/game_object.h"
 #include "main/obj_list.h"
 #include "main/obj_link.h"

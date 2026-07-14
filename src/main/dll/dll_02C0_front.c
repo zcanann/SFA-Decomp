@@ -33,7 +33,7 @@
 #include "main/model_engine_ui_api.h"
 #include "main/sky_api.h"
 #include "main/vecmath.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/camera_interface.h"
 #include "main/camera.h"

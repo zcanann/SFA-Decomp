@@ -9,7 +9,7 @@
 #include "main/textrender_api.h"
 #include "main/audio/music_api.h"
 #include "main/map_load.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
 #include "main/dll/fbwgpipe_struct.h"
 #include "main/dll/dll1cestate_struct.h"

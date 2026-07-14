@@ -50,7 +50,7 @@
 #include "main/objprint_character_api.h"
 #include "main/dll/WC/dll_028A_wcearthwalker.h"
 #include "main/dll/dll_028B.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"

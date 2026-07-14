@@ -7,7 +7,7 @@
  */
 
 #include "main/dll/partfx_interface.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"

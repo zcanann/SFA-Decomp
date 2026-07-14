@@ -48,7 +48,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/dll/dll_0262_drakormissile.h"
 #include "main/dll/dll_0271_drakorhoverpad.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/object.h"
 #include "main/object_update_list.h"
 #include "main/obj_placement.h"

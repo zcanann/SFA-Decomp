@@ -14,7 +14,7 @@
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/object.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/objfx.h"

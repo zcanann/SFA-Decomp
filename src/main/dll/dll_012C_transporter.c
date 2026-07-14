@@ -20,7 +20,7 @@
  */
 #include "main/dll/dll_012C_transporter.h"
 #include "main/dll/CF/CFchuckobj.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/CF/warp_pad.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"

@@ -1,7 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/audio/music_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/camera_interface.h"
 #include "main/gamebits.h"
 #include "main/obj_placement.h"

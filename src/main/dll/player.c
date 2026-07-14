@@ -6,7 +6,7 @@
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/debug.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/maketex_api.h"

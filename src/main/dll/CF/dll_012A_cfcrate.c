@@ -9,7 +9,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"

@@ -21,7 +21,7 @@
 #include "main/audio/music_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/map_load.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/obj_group.h"

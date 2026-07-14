@@ -18,7 +18,7 @@
 #include "main/sky_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/mapEvent.h"
 #include "main/object_descriptor.h"
 #include "main/objseq.h"

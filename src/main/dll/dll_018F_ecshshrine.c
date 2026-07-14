@@ -50,7 +50,7 @@
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/model_light.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/mmshrineanimobj_struct.h"
 #include "main/obj_placement.h"
 #include "main/objseq.h"

@@ -3,7 +3,6 @@
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/gamebits.h"
-#include "main/render.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objhits.h"

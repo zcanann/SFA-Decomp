@@ -20,7 +20,7 @@
 #include "main/objprint_render_api.h"
 #include "main/map_load.h"
 #include "main/dll/tricky_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"

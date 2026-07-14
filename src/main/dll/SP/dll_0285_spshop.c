@@ -3,7 +3,7 @@
 #include "main/audio/music_api.h"
 #include "main/object_render_legacy.h"
 #include "main/sky_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/sbkytecagestate_struct.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"

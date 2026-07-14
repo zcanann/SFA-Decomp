@@ -25,7 +25,7 @@
  */
 #include "main/dll/dll22cstate_struct.h"
 #include "main/object_api.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/dll/dfpobjcreatorstate_struct.h"
 #include "main/dll/dbholecontrol1state_struct.h"
 #include "main/dll/dfptorchstate_struct.h"

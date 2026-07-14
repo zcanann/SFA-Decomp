@@ -5,7 +5,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/dim2snowballstate_struct.h"
 #include "main/dll/truthhornicestate_struct.h"
 #include "main/dll/dim2conveyorstate_struct.h"

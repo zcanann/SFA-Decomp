@@ -8,7 +8,7 @@
 
 #include "main/dll/bit80_struct.h"
 #include "main/dll/objfx_api.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/dll/CF/dll_014E_cfprisonguard.h"
 #include "main/game_object.h"
 #include "main/object_update_list.h"

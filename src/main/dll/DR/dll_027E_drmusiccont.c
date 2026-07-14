@@ -16,7 +16,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/mapEventTypes.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
 #include "main/newclouds.h"

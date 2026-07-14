@@ -20,7 +20,7 @@
 #include "main/audio/sfx_object_query_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_stop_object_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"

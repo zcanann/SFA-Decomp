@@ -15,7 +15,7 @@
 #include "main/gametext_show_api.h"
 #include "main/sky_api.h"
 #include "main/object_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"

@@ -7,7 +7,7 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/audio/music_api.h"
 #include "main/map_load.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/object.h"

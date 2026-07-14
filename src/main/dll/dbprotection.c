@@ -23,7 +23,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/audio/sfx_stop_object_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/game_object.h"

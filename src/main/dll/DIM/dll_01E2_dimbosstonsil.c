@@ -9,7 +9,7 @@
 #include "main/mapEvent.h"
 #include "main/audio/music_api.h"
 #include "main/vecmath.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"

@@ -20,7 +20,7 @@
 #include "main/debug.h"
 #include "main/object_api.h"
 #include "main/dll/player_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"

@@ -11,7 +11,7 @@
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
 #include "main/object_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera_interface.h"
 #include "main/dll/dll_0112_seqobject.h"

@@ -2,7 +2,7 @@
 #include "main/dll/savegame_env_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
 #include "main/sky_interface.h"

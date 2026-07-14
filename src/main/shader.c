@@ -12,7 +12,7 @@
 #include "main/textrender_api.h"
 #include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/model_render_instrs_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx.h"

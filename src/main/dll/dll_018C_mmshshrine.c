@@ -17,7 +17,7 @@
 #include "main/frame_timing.h"
 #include "main/audio/music_api.h"
 #include "main/vecmath.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"

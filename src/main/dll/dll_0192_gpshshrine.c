@@ -6,7 +6,7 @@
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/dll/gpshshrineflags_struct.h"
 #include "main/dll/dll_0195_dbshshrine.h"
 #include "main/dll/player_api.h"

@@ -22,7 +22,7 @@
 #include "main/dll/ARW/dll_02A1_arwlevelcon.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/dll/headdisplay.h"
-#include "main/render.h"
+#include "main/render_envfx_api.h"
 #include "main/shader_api.h"
 #include "main/game_object.h"
 #include "main/gamebit_ids.h"

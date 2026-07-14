@@ -40,7 +40,7 @@
     ((void (*)(int, int, int))skyFn_80089710)((flags), (enabled), (startComplete))
 #include "main/object_api.h"
 #include "main/model.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"

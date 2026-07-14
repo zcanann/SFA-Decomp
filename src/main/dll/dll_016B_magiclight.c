@@ -12,7 +12,7 @@
  */
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
-#include "main/render.h"
+#include "main/render_lactions_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
