@@ -116,6 +116,10 @@ extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
 extern f32 hudMatrix[4][4];
 extern f32 hudScale;
+extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
+extern f32 playerMapOffsetX, playerMapOffsetZ;
+extern f32 lbl_803DEF08, lbl_803DEF20;
+extern double lbl_803DEF10, lbl_803DEF18;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -397,7 +401,6 @@ void timeFn_8006f400(f32 step)
 
 void drawFn_8006f500(void)
 {
-    extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 Gbase;
     extern f32 lbl_803DEE38;
     extern f32 lbl_803DEE3C;
@@ -964,7 +967,6 @@ void fogFn_80070404(f32 a, f32 b)
 {
     extern f32 lbl_803DEED8;
     extern f32 lbl_803DEEDC;
-    extern f32 gSynthFadeMask;
     f32 xc, yc, x, y;
     GXColor c;
 
@@ -1646,7 +1648,6 @@ void doColorFilter(u8* mod)
 
 static inline f32 distortSqrtf(f32 x)
 {
-    extern double lbl_803DEF10, lbl_803DEF18;
     volatile float y;
     double guess = __frsqrte((double)x);
     guess = lbl_803DEF10 * guess * (lbl_803DEF18 - guess * guess * x);
@@ -1659,12 +1660,8 @@ static inline f32 distortSqrtf(f32 x)
 #pragma opt_common_subs off
 void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 {
-    extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF24;
-    extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
-    extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
@@ -1906,7 +1903,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_8030EA58[3][3];
     extern void* getTextureFn_8006c744(void);
     extern void fn_8006C6A4(int);
@@ -2142,7 +2138,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEEEC;
     extern f32 lbl_803DEF30;
-    extern f32 gSynthDelayedActionWord0;
 
     int handle1;
     int handle2;
@@ -2275,7 +2270,6 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 int modelCb_80073d04(u8* obj, int* objB)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEF34;
-    extern f32 gSynthDelayedActionWord0;
     extern GXColor lbl_803DEEB4;
     int handle;
     GXColor colorK;
@@ -2433,7 +2427,6 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
 int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_802C1F68[6];
     Mtx mtx_90;
     Mtx mtx_60;
@@ -2644,7 +2637,6 @@ u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
     extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
-    extern f32 gSynthDelayedActionWord0;
 
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
     Mtx mtx_ec;
@@ -2671,7 +2663,6 @@ u32 objCallback_80074d04(int handle, void* model)
         dist = px * px + py * py + pz * pz;
         if (dist > lbl_803DEEDC)
         {
-            extern double lbl_803DEF10, lbl_803DEF18;
             double g = __frsqrte((double)dist);
             g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
             g = lbl_803DEF10 * g * (lbl_803DEF18 - g * g * dist);
@@ -4398,7 +4389,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern u32 lbl_803DEEA4;
     extern u32 lbl_803DEEA8;
     extern f32 lbl_803DEEDC;
-    extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF4C;
     extern f32 lbl_803DEF50;
@@ -4508,7 +4498,7 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
-    extern f32 gSynthFadeMask, gSynthDelayedActionWord0, timeDelta;
+    extern f32 timeDelta;
     extern u16 fn_8000FA90(void);
     extern u16 fn_8000FA70(void);
     extern f32 fn_80292194(f32 v);
@@ -4690,7 +4680,6 @@ void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
-    extern f32 gSynthDelayedActionWord0;
     extern u8 lbl_802C1EA8[];
     extern s16 fn_8000FA70(void);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
@@ -4855,7 +4844,6 @@ void doHeatEffect(u8 alpha)
  */
 void renderMotionBlur(f32 alpha)
 {
-    extern f32 lbl_803DEF20;
     Mtx mtx;
 
     lbl_803DB6A0.a = lbl_803DEF20 * alpha;
@@ -4935,9 +4923,7 @@ void renderMotionBlur(f32 alpha)
 
 void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
 {
-    extern f32 playerMapOffsetX, playerMapOffsetZ;
     extern f32 lbl_803DEEE4;
-    extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80;
     Mtx mtx_27;
     Mtx mtx_24;
@@ -5354,7 +5340,6 @@ void fn_8007BD8C(int handle1, int handle2)
 void setupReflectionIndirectTev(u8 flag)
 {
     extern f32 lbl_803DEEDC;
-    extern f32 gSynthDelayedActionWord0;
     f32 mtx[6];
 
     selectReflectionTexture(1);
@@ -5401,7 +5386,6 @@ void setupReflectionIndirectTev(u8 flag)
 void fn_8007C664(int texHandle)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 gSynthDelayedActionWord0;
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -5588,7 +5572,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
     extern f32 lbl_803DEF40, lbl_803DEF88;
     extern f32 lbl_803DEF84;
-    extern f32 gSynthDelayedActionWord0;
 
     Mtx mtx_cc;
     Mtx mtx_9c;
