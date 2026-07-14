@@ -13,6 +13,7 @@
  * is acquired/freed through the pi_dolphin helpers.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -69,7 +70,6 @@ extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
 extern int lbl_803DBC78;
 extern int gSwarmBaddieLastCurvePoint;
-extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {
@@ -207,11 +207,12 @@ void SwarmBaddie_update(GameObject* obj)
         state->hitVolumeEnvelope = state->hitVolumeEnvelope - lbl_803E26B8;
     }
     volume = state->hitVolumeEnvelope;
-    Sfx_SetObjectChannelVolume(lbl_803E26C0 *
-                                       mathSinf((gSwarmBaddiePi * (f32)(state->yawWavePhase + state->rollWavePhase)) /
-                                                gSwarmBaddieS16AngleScale) +
-                                   volume,
-                               (int)obj, 0x40, (int)(lbl_803E26BC * volume));
+    Sfx_SetObjectChannelVolumeScaleFirstLegacy(
+        lbl_803E26C0 *
+                mathSinf((gSwarmBaddiePi * (f32)(state->yawWavePhase + state->rollWavePhase)) /
+                         gSwarmBaddieS16AngleScale) +
+            volume,
+        (int)obj, 0x40, (int)(lbl_803E26BC * volume));
     (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
     state->player = Obj_GetPlayerObject();
     if (state->player != NULL)
