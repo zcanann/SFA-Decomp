@@ -614,3 +614,12 @@ from elsewhere; next: multi-edit simulator search (pairs/triples of edge edits a
 insertions with generated neighborhoods) over the validated census to characterize the
 minimal flip, then map to source. Pipeline: adj_lldb.py -> census -> simulate() (in this
 doc) -> order check [66,61,60,59,54,46,48].
+
+## Multi-edit search: no add-set up to 7 edges flips the func1C pair
+The base(48)/scanBase(46) pop order is robust to: single/multi edge adds, deletions,
+web removals, and index swaps. Conclusion: in the target the pair differs at census
+STRUCTURE level - most plausibly the base web is NOT parked there (takes r23 as a grant
+after 9 reservations) or the sweep landscape (K-crossing pattern of the whole graph)
+differs. Next: capture the census for a V-K-form build (where the merged web DID pop r23)
+and diff the two censuses web-by-web - the delta names the structure. All search tooling
+in this doc + adj_lldb.py; each run ~2min.
