@@ -12,6 +12,7 @@
 #include "main/newshadows.h"
 #include "main/objseq_api.h"
 #include "main/dll/FRONT/n_options.h"
+#include "main/lightmap_render_queue_api.h"
 
 u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
 int gTexShaderAmbColor = -1;
@@ -48,8 +49,6 @@ extern int lbl_80382008[5];
 extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
 extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
-
-extern void fn_8005D3B4();
 
 typedef struct TexOverride
 {
@@ -598,7 +597,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             flags = SHADER_FLAGS(shader);
             if ((flags & 0x80000000) != 0)
             {
-                fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
+                fn_8005D3B4IntLegacy(rec, block, ((MapBlockBoundsRec*)rec)->selector);
                 {
                     int shadowType = 5;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -607,7 +606,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             }
             else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
             {
-                fn_8005D3B4(rec, block, ((MapBlockBoundsRec*)rec)->selector);
+                fn_8005D3B4IntLegacy(rec, block, ((MapBlockBoundsRec*)rec)->selector);
                 {
                     int shadowType = 4;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -731,7 +730,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
                 (mapBlockBounds_HasCornerPastDepthThreshold(rec, mtx) != 0))
             {
-                fn_8005D3B4(rec, block, 0x17);
+                fn_8005D3B4IntLegacy(rec, block, 0x17);
                 {
                     int shadowType = 6;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
