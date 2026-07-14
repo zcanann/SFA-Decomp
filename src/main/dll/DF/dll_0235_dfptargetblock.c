@@ -5,6 +5,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_pointer_u16_legacy_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/object_render_legacy.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -65,7 +66,6 @@ extern const f32 lbl_803E64D4;
 
 extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
                               int mask, int arg9, int arg10);
-extern void Sfx_PlayFromObject(DfpTargetBlockObject* obj, u16 sfxId);
 
 int dfptargetblock_getExtraSize(void)
 {
