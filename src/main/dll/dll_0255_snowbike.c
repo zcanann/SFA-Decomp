@@ -281,6 +281,7 @@ typedef struct DRcradleSnowBikeFlags
     u8 flags : 4;
 } DRcradleSnowBikeFlags;
 
+#pragma dont_inline on
 void fn_801EC7A0(int obj, int state)
 {
     MatrixTransform v;
@@ -311,7 +312,6 @@ void fn_801EC7A0(int obj, int state)
     mtxRotateByVec3s((f32*)(state + 0x12c), &v);
 }
 
-#pragma dont_inline on
 void fn_801EC870(int obj, register int state)
 {
     f32 fz, fa, fb, fc;
@@ -346,7 +346,6 @@ void fn_801EC870(int obj, register int state)
     ((SnowBikeState*)state)->collisionFxTimer = fz;
     ((SnowBikeState*)state)->collisionFxDamping = lbl_803E5AEC;
 }
-#pragma dont_inline reset
 
 void fn_801EC928(int obj, int state)
 {
@@ -373,6 +372,7 @@ void fn_801EC928(int obj, int state)
     ((SnowBikeState*)state)->unk56C = lbl_803E5C00;
     ((SnowBikeState*)state)->collisionBounceScale = fz;
 }
+#pragma dont_inline reset
 
 void SnowBike_setRiderMode(GameObject* obj, int type)
 {
@@ -745,7 +745,6 @@ typedef struct SnowBikePlacement
 #pragma inline_max_size(4000)
 static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int flag)
 {
-    extern void fn_801EC928(int obj, u8* state);
     f32 fv;
     f32 fz;
     s16 rot;
@@ -771,7 +770,7 @@ static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int fla
     ((SnowBikeState*)state)->yawCurrent = rot;
     ((SnowBikeState*)state)->yaw = rot;
     ((GameObject*)obj)->anim.rotX = rot;
-    fn_801EC928(obj, state);
+    fn_801EC928(obj, (int)state);
     if (flag == 0)
     {
         if (((SnowBikeFlags*)(state + 0x428))->b20)
@@ -938,7 +937,6 @@ typedef struct
 #pragma opt_common_subs off
 void SnowBike_update(GameObject* obj)
 {
-    extern void fn_801EC7A0(int obj, u8* state);
     u8* state = obj->extra;
     f32 mtx1[16];
     f32 mtx2[16];
@@ -1001,7 +999,7 @@ void SnowBike_update(GameObject* obj)
             if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
             {
                 fn_801EBD60((int)obj, state);
-                fn_801EC7A0((int)obj, state);
+                fn_801EC7A0((int)obj, (int)state);
                 if (((SnowBikeState*)state)->collisionFxTimer != lbl_803E5AE8)
                 {
                     PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c),
@@ -1082,7 +1080,7 @@ void SnowBike_update(GameObject* obj)
             }
             ((SnowBikeState*)state)->stickX = clamped;
             fn_801EBD60((int)obj, state);
-            fn_801EC7A0((int)obj, state);
+            fn_801EC7A0((int)obj, (int)state);
             if (((SnowBikeState*)state)->collisionFxTimer != lbl_803E5AE8)
             {
                 PSVECScale((f32*)(state + 0x464), (f32*)(state + 0x47c), ((SnowBikeState*)state)->collisionFxDamping);
