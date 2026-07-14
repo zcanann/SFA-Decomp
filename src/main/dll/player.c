@@ -9407,6 +9407,8 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
     int uf;
     u8 mf;
     int sel;
+    int off;
+    f32* q;
     int blend;
     f32 v1, v2, t;
     f32 buf1[3];
@@ -9443,7 +9445,9 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
         ((int (*)(int, f32, f32, int))Object_ObjAnimAdvanceMove)(obj, f, lbl_803E7EA4, 0);
         ObjModel_SampleJointTransform(model, 1, 0, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
-    v1 = *(f32*)((char*)buf1 + ((u8)n << 2));
+    off = (u8)n << 2;
+    q = buf1;
+    v1 = *(f32*)((char*)q + off);
     if (v1 < lbl_803E7EA4)
     {
         v1 = -v1;
@@ -9458,7 +9462,7 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
         Object_ObjAnimSetPrimaryBlendMove((ObjAnimComponent*)obj, b, 0);
         ObjModel_SampleJointTransform(model, 1, 2, e, ((GameObject*)obj)->anim.rootMotionScale, buf1, buf2);
     }
-    v2 = *(f32*)((char*)buf1 + ((u8)n << 2));
+    v2 = *(f32*)((char*)q + off);
     if (v2 < 0.0f)
     {
         v2 = -v2;
