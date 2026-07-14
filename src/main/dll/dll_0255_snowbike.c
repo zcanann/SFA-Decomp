@@ -14,6 +14,7 @@
 #include "main/checkpoint_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/dll_0255_snowbike.h"
+#include "main/object_descriptor.h"
 #include "main/dll/dll_0015_curves.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
@@ -1154,3 +1155,34 @@ s16 gSnowBikeHitObjectIdTable[26] = {
 };
 
 int gSnowBikeMountRomListTable[6] = {0x30C60, 0x30C60, 0x30C60, 0xC9E, 0xC9F, 0xCB3};
+
+ObjectDescriptor24 gSnowBikeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)SnowBike_initialise,
+    (ObjectDescriptorCallback)SnowBike_release,
+    0,
+    (ObjectDescriptorCallback)SnowBike_init,
+    (ObjectDescriptorCallback)SnowBike_update,
+    (ObjectDescriptorCallback)SnowBike_hitDetect,
+    (ObjectDescriptorCallback)SnowBike_render,
+    (ObjectDescriptorCallback)SnowBike_free,
+    (ObjectDescriptorCallback)SnowBike_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SnowBike_getExtraSize,
+    (ObjectDescriptorCallback)SnowBike_setScale,
+    (ObjectDescriptorCallback)SnowBike_func0B,
+    (ObjectDescriptorCallback)SnowBike_modelMtxFn,
+    (ObjectDescriptorCallback)SnowBike_render2,
+    (ObjectDescriptorCallback)SnowBike_func0E,
+    (ObjectDescriptorCallback)SnowBike_mount,
+    (ObjectDescriptorCallback)SnowBike_getRiderMode,
+    (ObjectDescriptorCallback)SnowBike_setRiderMode,
+    (ObjectDescriptorCallback)SnowBike_func12,
+    (ObjectDescriptorCallback)SnowBike_func13,
+    (ObjectDescriptorCallback)SnowBike_func14,
+    (ObjectDescriptorCallback)SnowBike_resetToRomListPosition,
+    (ObjectDescriptorCallback)SnowBike_func16,
+    (ObjectDescriptorCallback)SnowBike_func17,
+};
