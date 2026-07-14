@@ -22,6 +22,7 @@
 #include "main/objseq.h"
 #include "main/dll/dll_0111_doorlock.h"
 #include "main/gamebits.h"
+#include "main/object_render_legacy.h"
 #include "main/pad.h"
 
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
@@ -47,8 +48,6 @@ typedef struct DoorlockPlacement
 #define DOORLOCK_OBJGROUP         0xf
 
 extern f32 lbl_803E3798;
-
-extern void objRenderModelAndHitVolumes(int* obj, int p2, int p3, int p4, int p5, f32 scale);
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -98,7 +97,7 @@ void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
 
 render_basic:
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3798);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3798);
 }
 
 void Lock_DoorLock_update(GameObject* obj)
