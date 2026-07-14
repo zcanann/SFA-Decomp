@@ -13,8 +13,6 @@
 #include "main/model_light.h"
 #include "main/object.h"
 
-#define MODEL_LIGHT_KIND_DIRECTIONAL 4
-
 /* Lock-on / A-button reticle object, cached into gCamcontrolTargetReticle. */
 #define DLLB4_CHILD_OBJ_RETICLE 0x1FE
 
