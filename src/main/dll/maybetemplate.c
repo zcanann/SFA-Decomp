@@ -243,7 +243,7 @@ extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;
 extern s16 lbl_803DD8CA;
 extern f32 lbl_803DD8CC;
-extern u16 lbl_803DD8D0;
+extern s16 lbl_803DD8D0;
 extern u16 curGameText;
 extern u8 lbl_803A9440[];
 extern f32 lbl_803E1E5C;
