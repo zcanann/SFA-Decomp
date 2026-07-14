@@ -36,6 +36,7 @@
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_setmove.h"
 #include "main/objtexture.h"
 #include "main/dll/seqObj11E.h"
 #include "main/dll/objfsa.h"
@@ -49,6 +50,9 @@ f32 lbl_803DBCB4 = 240.0f;
 /* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
+
+typedef void (*SeqObj11ESetMovePointerStateFn)(GameObject* obj, void* state, int moveId, f32 speed, int p5,
+                                               int flags);
 
 #pragma scheduling off
 #pragma peephole off
@@ -66,7 +70,6 @@ __declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
 
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
-    extern void fn_8014D08C(GameObject * obj, int p, int type, f32 t, int a, int b);
     extern f32 lbl_803E2810;
     extern f32 lbl_803E2814;
     int sub;
@@ -120,7 +123,6 @@ __declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
 
 extern int fn_801A0174(int* obj);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
-extern void fn_8014D08C(GameObject* p1, void* p2, int p3, f32 f1, int p5, int p6);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
@@ -174,7 +176,7 @@ void fn_80152514(int* obj, u8* state)
             *(f32*)(state + 0x32c) = lbl_803E2814;
             *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
             Sfx_StopObjectChannel((u32)obj, 4);
-            fn_8014D08C((GameObject*)(obj), state, 0, lbl_803E2820, 0, 0);
+            ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)((GameObject*)obj, state, 0, lbl_803E2820, 0, 0);
         }
         else if (!(*(u32*)&((BaddieState*)state)->unk2E4 & 0x20))
         {
@@ -646,8 +648,9 @@ void fn_80152040(int* obj, u8* state)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
-            fn_8014D08C((GameObject*)(obj), state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
-                        *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
+            ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)(
+                (GameObject*)obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
+                *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
         }
     }
     if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].flagB != 0)
