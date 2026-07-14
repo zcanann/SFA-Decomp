@@ -2682,6 +2682,7 @@ main/dll/SB/dll_01E8_sbgalleon.c:
 	.rodata     start:0x802C23F8 end:0x802C2428
 	.data       start:0x80327C50 end:0x80327C88
 	.sdata      start:0x803DC078 end:0x803DC090
+	.sbss       start:0x803DDC18 end:0x803DDC40
 
 main/dll/SB/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
