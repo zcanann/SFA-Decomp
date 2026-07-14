@@ -1797,7 +1797,6 @@ extern void ObjModel_ToggleMatrixBuffer(int* am);
 extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int len2);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void _gxSetFogParams(void);
-extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32* c);
 extern void GXSetTevKColor(int id, u32* color);
@@ -1887,7 +1886,8 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         {
             _gxSetFogParams();
             resetLotsOfRenderVars();
-            gxFn_80051fb8(textureIdxToPtr(*(int*)(*(int*)&((ModelFileHeader*)m)->renderOps + 0x24)), 0, 0, color, 0, 0);
+            gxFn_80051fb8IntLegacy(textureIdxToPtr(*(int*)(*(int*)&((ModelFileHeader*)m)->renderOps + 0x24)), 0,
+                                   0, color, 0, 0);
             if (isHeavyFogEnabled() != 0)
             {
                 f32 c;
@@ -2642,9 +2642,6 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
 }
 #pragma opt_dead_assignments reset
 
-extern void gxTextureFn_80050e28(int flag);
-extern void fn_80051D5C(void* tex, int mtx, int fl, u8* color);
-extern void gxColorFn_80052764(u8* color);
 extern f32 lbl_803DEA48;
 
 #pragma opt_propagation off
@@ -2689,7 +2686,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
             {
                 if ((*(u32*)(shader + 0x3c) & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
                 {
-                    gxTextureFn_80050e28(p3[0] != 0 ? 1 : 0);
+                    gxTextureFn_80050e28IntLegacy(p3[0] != 0 ? 1 : 0);
                     return 1;
                 }
                 alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
@@ -2768,7 +2765,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     color[2] = 0xff;
                     if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
                     {
-                        gxFn_80051fb8(tex, (int)mtxp, (u8)fl, color, *((u8*)p3 + 8), 1);
+                        gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, color, *((u8*)p3 + 8), 1);
                     }
                     else if (p5 != 0)
                     {
@@ -2779,7 +2776,8 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                         }
                         else
                         {
-                            gxFn_80051fb8(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor, *((u8*)p3 + 8), 1);
+                            gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor,
+                                                  *((u8*)p3 + 8), 1);
                         }
                     }
                     else
@@ -2789,12 +2787,12 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             fn_80051868Legacy(tex, (int)mtxp, (u8)fl);
                             if (color[3] < 0xff)
                             {
-                                gxColorFn_80052764(color);
+                                gxColorFn_80052764PtrLegacy(color);
                             }
                         }
                         else
                         {
-                            fn_80051D5C(tex, (int)mtxp, (u8)fl, color);
+                            fn_80051D5CIntMtxLegacy(tex, (int)mtxp, (u8)fl, color);
                         }
                     }
                 }
@@ -2806,12 +2804,12 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     color[3] = alpha;
                     if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
                     {
-                        gxColorFn_80052764(color);
+                        gxColorFn_80052764PtrLegacy(color);
                     }
                     else if (p5 != 0)
                     {
                         colp[3] = alpha;
-                        gxColorFn_80052764((u8*)&gObjCurChanColor);
+                        gxColorFn_80052764PtrLegacy((u8*)&gObjCurChanColor);
                     }
                     else
                     {
@@ -2820,7 +2818,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             gxColorFn_800523d0();
                             if (color[3] < 0xff)
                             {
-                                gxColorFn_80052764(color);
+                                gxColorFn_80052764PtrLegacy(color);
                             }
                         }
                         else
@@ -3006,7 +3004,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((*(u16*)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)),
                                    nlay) == 0)
         {
-            gxTextureFn_80050e28(refs[0] != 0 ? 1 : 0);
+            gxTextureFn_80050e28IntLegacy(refs[0] != 0 ? 1 : 0);
         }
         if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_DECAL_LAYER)
         {

@@ -35,7 +35,6 @@ typedef struct CamcontrolIconColor
     u8 a;
 } CamcontrolIconColor;
 
-extern void fn_80051D5C(void* tex, void* a, u32 b, CamcontrolIconColor* color);
 #define GX_BM_NONE        0
 #define GX_BM_BLEND       1
 #define GX_BL_ZERO        0
@@ -76,7 +75,7 @@ int aButtonIconTexCb(GameObject* obj, void** objPtr, u32 renderOpIdx)
     {
         color.a = 0;
     }
-    fn_80051D5C(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
+    fn_80051D5CPtrMtxLegacy(textureIdxToPtr(renderOp->textureId), 0, 0, &color);
     textureFn_800528bc();
     if (color.a < 0xff)
     {

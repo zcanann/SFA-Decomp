@@ -223,11 +223,9 @@ extern const f32 lbl_803E2020;
 extern const f32 lbl_803E2024;
 extern const f64 lbl_803E2028;
 extern const f64 lbl_803E2030;
-extern void gxFn_80051fb8(void* a, int b, int c, void* d, int e, int f);
 extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
 extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
 extern void hudDrawTimedElement(int obj, void* p);
-extern void gxColorFn_80052764(void* p);
 extern void objRender(int a, int b, int c, int d, void* obj, int flag);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
@@ -1952,7 +1950,7 @@ int cMenuRingModelRenderFn(int obj, int block, int idx)
     renderOp = (int)ObjModel_GetRenderOp((ModelFileHeader*)*(int*)block, idx);
     resetLotsOfRenderVars();
     cfg[3] = *(u8*)(obj + 0x37);
-    gxFn_80051fb8(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
+    gxFn_80051fb8IntLegacy(textureIdxToPtr(*(int*)(renderOp + 0x24)), 0, 0, cfg, 0, 1);
     textureFn_800528bc();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     gxSetZMode_(0, GX_ALWAYS, 0);
@@ -1979,12 +1977,12 @@ int cMenuRingIconRenderFn(int obj, int block, int idx)
         {
             cfg[3] = lbl_803E2010 * (f32)(u32) * (u8*)(obj + 0x37);
         }
-        gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
+        gxFn_80051fb8IntLegacy(tex, 0, 0, cfg, 0, 1);
     }
     else
     {
         cfg[3] = 0;
-        gxColorFn_80052764(cfg);
+        gxColorFn_80052764PtrLegacy(cfg);
     }
     textureFn_800528bc();
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);

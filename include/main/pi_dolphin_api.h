@@ -33,6 +33,7 @@ void fn_8004F6D8(f32 scale, int* color, f32* position);
 void fn_8004FA30(f32 scale, int* color, f32* position);
 void fn_8004FDA0(u8* texture, void* texMtx);
 void fn_80051528(void* texture, void* texMtx);
+void gxTextureFn_80050e28(u8 mode);
 
 #define fn_8004EECCColorLegacy(color) \
     (((void (*)(u8*))fn_8004EECC)((color)))
@@ -46,5 +47,7 @@ void fn_80051528(void* texture, void* texMtx);
     (((void (*)(u8*, int*))fn_8004FA30)((color), (position)))
 #define fn_8004FDA0ColorLegacy(texture, texMtx, color) \
     (((void (*)(int*, void*, u8*))fn_8004FDA0)((texture), (texMtx), (color)))
+#define gxTextureFn_80050e28IntLegacy(mode) \
+    (((void (*)(int))gxTextureFn_80050e28)((mode)))
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */
