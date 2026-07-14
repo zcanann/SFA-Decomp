@@ -78,6 +78,8 @@ extern u8 gAttractMovieRetraceCountdown;
 extern u8 gAttractMoviePlaybackEnabled;
 extern s32 gAttractMovieIdleFrameCount;
 extern u16* gRenderModeObj;
+
+typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
 extern f32 lbl_803E1D18;
@@ -313,10 +315,9 @@ void n_attractmode_prepareMovie(void)
 
 void TitleMenu_render(u8* obj)
 {
-    extern u8 shouldShowCredits(u8 * obj);
     int menuAction;
 
-    if (shouldShowCredits(obj) != 0)
+    if (((TitleMenuShouldShowCreditsRenderFn)shouldShowCredits)(obj) != 0)
     {
         creditsStart_();
         return;
@@ -373,7 +374,6 @@ void TitleMenu_frameEnd(void)
 
 int TitleMenu_run(void)
 {
-    extern u8 shouldShowCredits(void);
     int menuId;
     int buttons;
     int sum;
