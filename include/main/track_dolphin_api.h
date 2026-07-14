@@ -33,6 +33,8 @@ int objShadowFn_80062498(GameObject* obj, int renderMode, int unused, int frameC
 int fn_80065640(void);
 int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag);
 int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit*** hitsOut, int mode, int submode);
+int hitDetectFn_80067958(GameObject* contactSource, f32* startPoints, f32* endPoints, int pointCount, void* results,
+                        int flags);
 void hitDetect_calcSweptSphereBounds(TrackQueryBounds* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
                                      int pointCount);
 void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* bounds, u32 mask, int flags);

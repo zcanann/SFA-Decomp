@@ -52,7 +52,6 @@
 #define BOUNCE_WALL_MINY 0x20 /* boundsMinY -> surfaceMode 5 */
 
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
-extern int hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* hits, int hitCount);
 extern float fsin16Precise(int angle);
 extern float fcos16Precise(int angle);
 extern const f32 lbl_803E2FDC;
@@ -554,7 +553,7 @@ void fn_80165B3C(GameObject* obj, int state)
     hitScratch.hitType = 3;
     hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
     hitDetectFn_800691c0(obj, &bounds, 0, 1);
-    hitFound = hitDetectFn_80067958((int)obj, start, end, 1, hitScratch.hit, 0x20);
+    hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
     if (hitFound != 0)
     {
         {
@@ -767,7 +766,7 @@ void fn_80166444(int obj, int state)
         end[0] = ((GameObject*)obj)->anim.velocityX * stepScale + start[0];
         end[1] = ((GameObject*)obj)->anim.velocityY * stepScale + start[1];
         end[2] = ((GameObject*)obj)->anim.velocityZ * stepScale + start[2];
-        hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);
+        hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
         if (hitFound != 0)
         {
             dx = end[0] - start[0];
@@ -793,7 +792,7 @@ void fn_80166444(int obj, int state)
     end[2] = -(lbl_803E3028 * ((LandedArwingState*)state)->surfaceNormalZ - start[2]);
     hitScratch.hitRadius = lbl_803E2FDC;
     hitScratch.hitType = 3;
-    hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);
+    hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
     if (hitFound != 0)
     {
         if ((((hitScratch.hit[0] != ((LandedArwingState*)state)->surfaceNormalX) ||
@@ -824,7 +823,7 @@ void fn_80166444(int obj, int state)
         end[2] = lbl_803E302C * end[2] + start[2];
         hitScratch.hitRadius = lbl_803E2FDC;
         hitScratch.hitType = 3;
-        hitFound = hitDetectFn_80067958(obj, start, end, 1, hitScratch.hit, 0x20);
+        hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
         if (hitFound != 0)
         {
             fn_80166840((GameObject*)(obj), state, hitScratch.hit, end);

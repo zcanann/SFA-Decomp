@@ -43,7 +43,6 @@
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern void hitDetectFn_80067958(int a, float* b, float* c, int d, int e, int f);
 extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
 extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
 extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
@@ -103,7 +102,7 @@ int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceW
                                         (float*)(traceWork + CAMCONTROL_TRACE_RADIUS_OFFSET), 1);
         hitDetectFn_800691c0(NULL, &sweptBounds, 0x240, 1);
     }
-    hitDetectFn_80067958(0, fromPos, outPos, 1, (int)traceWork, 0);
+    hitDetectFn_80067958(NULL, fromPos, outPos, 1, traceWork, 0);
     clear = 0;
     if ((gCutCamBboxBlocked == 0) && (*(short*)(traceWork + CAMCONTROL_TRACE_HIT_COUNT_OFFSET) == 0))
     {

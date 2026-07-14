@@ -106,7 +106,6 @@ extern const f32 lbl_803E3958;
 extern const f32 lbl_803E395C;
 extern const f32 lbl_803E3960;
 extern const f32 lbl_803E3964;
-extern u8 hitDetectFn_80067958(u8* obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
 extern const f32 lbl_803E3970;
 void SmallBasket_init(GameObject* obj, int def);
 void SmallBasket_update(GameObject* obj);
@@ -515,7 +514,7 @@ int smallbasket_resolveCollision(u8* obj)
 
     hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, hitResults.radii, 1);
     hitDetectFn_800691c0((GameObject*)obj, &sweptBounds, ((ObjHitsPriorityState*)st)->trackContactMask, 1);
-    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
+    hit = hitDetectFn_80067958((GameObject*)obj, startPoints, endPoints, 1, &hitResults, 0);
     if (hit != 0)
     {
         if (hit & 1)

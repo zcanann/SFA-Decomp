@@ -72,7 +72,6 @@ __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 extern void playerAddMoney(int obj, int amount);
 
 extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
-extern int hitDetectFn_80067958(void* obj, void* p2, void* p3, int p4, void* p5, int p6);
 void Scarab_update(GameObject* obj)
 {
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -263,7 +262,7 @@ void Scarab_update(GameObject* obj)
                     hitDetect_calcSweptSphereBounds(&bounds, (f32*)&start, (f32*)&end, (f32*)sp, 1);
                 }
                 hitDetectFn_800691c0(obj, &bounds, 0, 1);
-                count = hitDetectFn_80067958(obj, &start, &end, 1, bufs.hitBuf, 0);
+                count = hitDetectFn_80067958(obj, (f32*)&start, (f32*)&end, 1, bufs.hitBuf, 0);
                 obj->anim.localPosX = end.x;
                 obj->anim.localPosY = end.y;
                 obj->anim.localPosZ = end.z;
@@ -723,7 +722,6 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int scarab_sweptCollide(GameObject* obj)
 {
-    extern u8 hitDetectFn_80067958(int obj, f32* startPoints, f32* endPoints, int pointCount, void* outHits, int flags);
     extern f32 gScarabSweptHitInfo[4];
 
     typedef struct HitDetectResults
@@ -762,7 +760,7 @@ int scarab_sweptCollide(GameObject* obj)
 
     hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, results.radii, 1);
     hitDetectFn_800691c0(obj, &sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
-    hit = hitDetectFn_80067958((int)obj, startPoints, endPoints, 1, &results, 0);
+    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
     if (hit != 0)
     {
         if ((hit & 1) != 0)

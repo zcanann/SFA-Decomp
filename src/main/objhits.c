@@ -13,7 +13,6 @@
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
 
-extern u8 hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outHits, int flags);
 ObjHitsSweepEntry* gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
 f32 gObjHitsContactScratch[OBJHITS_CONTACT_SCRATCH_COUNT * OBJHITS_CONTACT_SCRATCH_WORDS];
@@ -2277,7 +2276,7 @@ void ObjHits_CheckTrackContact(int objA, int objB)
         {
             hitDetect_calcSweptSphereBounds(&bounds, startPoints, endPoints, hb.radii, pointCount);
             hitDetectFn_800691c0((GameObject*)objB, &bounds, stateB->trackContactMask, 1);
-            contact = hitDetectFn_80067958(objB, startPoints, endPoints, pointCount, hb.out, 0);
+            contact = hitDetectFn_80067958((GameObject*)objB, startPoints, endPoints, pointCount, hb.out, 0);
             if (contact != 0)
             {
                 if ((contact & 1) != 0)

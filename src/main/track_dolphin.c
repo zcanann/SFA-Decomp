@@ -2993,7 +2993,7 @@ int hitDetectFn_800664fc(void* tri, f32* rayOrig, f32* rayDir, f32 maxd, f32 max
     return 0;
 }
 
-u8 hitDetectFn_80067958(void* contactSrc, int startPos, int endPos, int count, void* results)
+int hitDetectFn_80067958(GameObject* contactSrc, f32* startPos, f32* endPos, int count, void* results, int flags)
 {
     int lim;
     f32* fp;

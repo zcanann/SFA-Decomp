@@ -88,8 +88,6 @@ extern const f32 lbl_803E06C0;
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
                               int p10);
 extern void fn_80063368(short* obj);
-extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
-                                int arg6);
 extern void setRumbleEnabled(u8 enabled);
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
@@ -290,7 +288,7 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
             collision->points[0][0] = collision->points[1][0];
             collision->points[0][1] = points[pointIndex].x;
             collision->points[0][2] = collision->points[1][2];
-            hitDetectFn_80067958((int)obj, collision->traceStart[0], collision->points[0], 1,
+            hitDetectFn_80067958((GameObject*)obj, collision->traceStart[0], collision->points[0], 1,
                                  collision->segmentHitPlanes, 0);
             break;
         }
@@ -308,7 +306,7 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
         collision->points[2][2] = collision->points[1][2];
         hitScratch.scale = lbl_803E0680;
         hitScratch.type = 3;
-        hitDetectFn_80067958((int)obj, collision->traceStart[2], collision->points[2], 1, &hitScratch, 0);
+        hitDetectFn_80067958((GameObject*)obj, collision->traceStart[2], collision->points[2], 1, &hitScratch, 0);
     }
 
     PSVECSubtract(collision->points[0], collision->points[1], delta);
@@ -320,7 +318,8 @@ void fn_800E56A4(GameObject* obj, CurvesCollisionState* collision)
         collision->points[0][0] = collision->points[1][0];
         collision->points[0][1] = collision->points[1][1] - lbl_803E0688;
         collision->points[0][2] = collision->points[1][2];
-        hitDetectFn_80067958((int)obj, collision->traceStart[0], collision->points[0], 1, collision->segmentHitPlanes,
+        hitDetectFn_80067958((GameObject*)obj, collision->traceStart[0], collision->points[0], 1,
+                            collision->segmentHitPlanes,
                              0);
     }
 
@@ -1195,7 +1194,8 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             if ((s32)(state->flags & 2) != 0)
             {
                 *(char*)&collision->surfaceFlags =
-                    hitDetectFn_80067958((int)curveObj, collision->traceStart, collision->points,
+                    hitDetectFn_80067958((GameObject*)curveObj, (f32*)collision->traceStart,
+                                         (f32*)collision->points,
                                          (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT,
                                          collision->segmentHitPlanes, 0);
                 *(s8*)&collision->surfaceCounter = collision->traceHitCount;

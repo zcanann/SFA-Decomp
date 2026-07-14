@@ -99,7 +99,6 @@ extern f32 lbl_803E1738;
 
 extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
                               int pointCount, int mask, int flags, int mode);
-extern void hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount, void* outPos, int mode);
 extern f32 fn_802966F4(GameObject* obj);                     /* returns a target proximity/distance scalar */
 extern void playerGetTimeScale(GameObject* obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(GameObject* obj);
@@ -141,7 +140,7 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
         pos[2] = camera->anim.worldPosZ;
         hitDetect_calcSweptSphereBounds(&bounds, &camera->probePosX, pos, (float*)(cameraAddr + 0x74), 1);
         hitDetectFn_800691c0((GameObject*)camObj, &bounds, 0x240, 1);
-        hitDetectFn_80067958(camObj, &camera->probePosX, pos, 1, &camera->anim.pad34, 0);
+        hitDetectFn_80067958((GameObject*)camObj, &camera->probePosX, pos, 1, &camera->anim.pad34, 0);
         camera->anim.worldPosX = pos[0];
         camera->anim.worldPosY = pos[1];
         camera->anim.worldPosZ = pos[2];

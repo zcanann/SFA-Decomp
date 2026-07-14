@@ -162,7 +162,6 @@ extern f32 lbl_803E35BC;
 extern f32 lbl_803E35C0;
 extern f32 lbl_803E35C4;
 extern f32 lbl_803E35C8;
-extern int hitDetectFn_80067958(int a, f32* start, f32* end, int b, void* buf, int c);
 extern f32 lbl_803E359C;
 extern f32 lbl_803E35A0;
 extern f32 lbl_803E35A4;
@@ -1143,7 +1142,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[2] = lbl_803E35A0 * mathCosf(gPushablePi * state->yaw / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
         hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
-        hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
+        hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
             hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
@@ -1164,7 +1163,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw + 0x4000) / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
         hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
-        hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
+        hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
             hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
@@ -1185,7 +1184,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         end[2] = lbl_803E35A4 * mathCosf(gPushablePi * (f32)(state->yaw - 0x4000) / gPushableYawHalfCircle) + start[2];
         hitDetect_calcSweptSphereBounds(&sweep, start, end, pp->r, 1);
         hitDetectFn_800691c0(NULL, &sweep, 0x208, 1);
-        hit = hitDetectFn_80067958(0, start, end, 1, hitbuf, 8);
+        hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
             hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
