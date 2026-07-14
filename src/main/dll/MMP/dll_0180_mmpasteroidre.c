@@ -60,42 +60,14 @@ extern f32 lbl_803E4534;
 extern f32 lbl_803E4538;
 extern f32 lbl_803E453C;
 
-void mmp_asteroid_re_free(void)
-{
-}
-
-void mmp_asteroid_re_hitDetect(void)
-{
-}
-
-void mmp_asteroid_re_release(void)
-{
-}
-
-void mmp_asteroid_re_initialise(void)
-{
-}
-
-int mmp_asteroid_re_getExtraSize(void)
-{
-    return 0x1c;
-}
-int mmp_asteroid_re_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
 #pragma peephole off
-void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E44F8);
-}
 
 #pragma scheduling off
+
 #pragma force_active on
+
 __declspec(section ".sdata2") f32 lbl_803E44E8 = 3600.0f;
+
 #pragma force_active reset
 
 int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -145,44 +117,6 @@ int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animU
     return 0;
 }
 
-void mmp_asteroid_re_init(GameObject* obj)
-{
-    MmpAsteroidReState* state = obj->extra;
-    obj->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
-    obj->animEventCallback = mmp_asteroid_re_SeqFn;
-    state->eventFlags = 0;
-    state->intensity = mainGetBit(0x88C);
-    state->phase = mainGetBit(GAMEBIT_MMPAsteroidRelated087B);
-    switch ((s32)state->phase)
-    {
-    case MMP_ASTEROID_PHASE_HIDDEN:
-        obj->anim.alpha = 0;
-        *(u8*)&obj->anim.bankIndex = 0;
-        break;
-    case MMP_ASTEROID_PHASE_RISING:
-        obj->anim.alpha = 0xFF;
-        state->eventFlags = 4;
-        *(u8*)&obj->anim.bankIndex = 1;
-        state->eventFlags |= ASTEROIDRE_FX_PERIODIC;
-        break;
-    case MMP_ASTEROID_PHASE_RISEN:
-        obj->anim.alpha = 0xFF;
-        state->eventFlags = 4;
-        *(u8*)&obj->anim.bankIndex = 1;
-        break;
-    case MMP_ASTEROID_PHASE_RISEN_SAVED:
-        obj->anim.alpha = 0xFF;
-        state->eventFlags = 4;
-        *(u8*)&obj->anim.bankIndex = 1;
-        break;
-    }
-    {
-        f32 v = obj->anim.localPosY;
-        state->baseY = v;
-        state->baseY2 = v;
-    }
-}
-
 #pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E44F8 = 1.0f;
@@ -205,6 +139,43 @@ __declspec(section ".sdata2") f32 lbl_803E4538 = 4.0f;
 __declspec(section ".sdata2") f32 lbl_803E453C = 22.0f;
 #pragma explicit_zero_data off
 #pragma force_active reset
+
+#pragma peephole on
+
+#pragma scheduling on
+
+int mmp_asteroid_re_getExtraSize(void)
+{
+    return 0x1c;
+}
+
+int mmp_asteroid_re_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+void mmp_asteroid_re_free(void)
+{
+}
+
+#pragma peephole off
+
+void mmp_asteroid_re_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E44F8);
+}
+
+#pragma peephole on
+
+void mmp_asteroid_re_hitDetect(void)
+{
+}
+
+#pragma peephole off
+
+#pragma scheduling off
 
 void mmp_asteroid_re_update(int obj)
 {
@@ -330,6 +301,56 @@ void mmp_asteroid_re_update(int obj)
         }
     }
     state->eventFlags &= ~ASTEROIDRE_SEQ_TICK;
+}
+
+void mmp_asteroid_re_init(GameObject* obj)
+{
+    MmpAsteroidReState* state = obj->extra;
+    obj->objectFlags |= (MMPASTEROIDRE_OBJFLAG_HIDDEN | MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED);
+    obj->animEventCallback = mmp_asteroid_re_SeqFn;
+    state->eventFlags = 0;
+    state->intensity = mainGetBit(0x88C);
+    state->phase = mainGetBit(GAMEBIT_MMPAsteroidRelated087B);
+    switch ((s32)state->phase)
+    {
+    case MMP_ASTEROID_PHASE_HIDDEN:
+        obj->anim.alpha = 0;
+        *(u8*)&obj->anim.bankIndex = 0;
+        break;
+    case MMP_ASTEROID_PHASE_RISING:
+        obj->anim.alpha = 0xFF;
+        state->eventFlags = 4;
+        *(u8*)&obj->anim.bankIndex = 1;
+        state->eventFlags |= ASTEROIDRE_FX_PERIODIC;
+        break;
+    case MMP_ASTEROID_PHASE_RISEN:
+        obj->anim.alpha = 0xFF;
+        state->eventFlags = 4;
+        *(u8*)&obj->anim.bankIndex = 1;
+        break;
+    case MMP_ASTEROID_PHASE_RISEN_SAVED:
+        obj->anim.alpha = 0xFF;
+        state->eventFlags = 4;
+        *(u8*)&obj->anim.bankIndex = 1;
+        break;
+    }
+    {
+        f32 v = obj->anim.localPosY;
+        state->baseY = v;
+        state->baseY2 = v;
+    }
+}
+
+#pragma peephole on
+
+#pragma scheduling on
+
+void mmp_asteroid_re_release(void)
+{
+}
+
+void mmp_asteroid_re_initialise(void)
+{
 }
 
 ObjectDescriptor gMMP_asteroid_reObjDescriptor = {
