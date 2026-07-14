@@ -5,7 +5,6 @@
 #include "util/carry.h"
 #include "main/audio/synth_channel.h"
 #include "main/audio/hw_samplemem.h"
-#include "main/audio/synth_channel_scale.h"
 #include "main/audio/voice_id.h"
 #include "main/audio/synth_queue.h"
 #include "main/audio/hw_init.h"
@@ -85,7 +84,8 @@ typedef void (*SynthAuxCallback)(int active, SynthAuxInfo* info, u32 user);
 extern u16 inpGetVolume(McmdVoiceState* state);
 extern u16 inpGetPanning(McmdVoiceState* state);
 extern int inpGetSurPanning(McmdVoiceState* state);
-extern int inpGetPitchBend(McmdVoiceState* state);
+extern u16 inpGetPitchBend(McmdVoiceState* state);
+extern int inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 extern u16 inpGetDoppler(McmdVoiceState* state);
 extern u16 inpGetModulation(McmdVoiceState* state);
 extern u16 inpGetPedal(McmdVoiceState* state);
@@ -99,10 +99,11 @@ extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern s16 sndSin(u32 packed);
 
 extern u8* dataGetKeymap(u32 sampleId);
-extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol, u8 pan, u8 midi,
+extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
                                  u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
                                  u32 itd);
-extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                     u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
 typedef struct SynthVoiceLfo
@@ -253,10 +254,8 @@ typedef struct KeymapEntry
 static inline u32 check_portamento(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* vid)
 {
     u32 rejected;
-    extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
-    extern u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 
-    if (inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
+    if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 0x1F80)
     {
         *vid = audioFn_8026f630(key & 0x7F, midi, midiSet, newVID, &rejected);
         return !rejected;
@@ -354,12 +353,6 @@ static inline void unblockAllAllocatedVoices(u32 vid)
 int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
                     u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
-    extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
-                        u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-    extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
-                                     u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
-                                     u32 itd);
-
     prio += prioOffset;
     prio = prio > 0xFF ? 0xFF : prio;
 
@@ -468,8 +461,6 @@ void LowPrecisionHandler(int voice)
     u16 adsr_delta;
     s32 vrange;
     s32 voff;
-    extern u16 inpGetPitchBend(McmdVoiceState* state);
-
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
     {
