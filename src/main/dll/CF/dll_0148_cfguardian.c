@@ -40,6 +40,7 @@
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 
 #define CFGUARDIAN_OBJGROUP        0x16
 #define CFGUARDIAN_TARGET_OBJGROUP 0x3
@@ -138,7 +139,6 @@ enum
 #define GUARDIAN_SFX_FLAP    0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E4110;
 extern f32 lbl_803E4120;
