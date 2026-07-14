@@ -2412,6 +2412,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 z3;
     f32 fy0;
     f32 fy1;
+    s16 fyv;
     f32 zero;
     patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
@@ -2610,21 +2611,29 @@ void walkgroupFindExitPointFn_800dc398(void)
                             fy1 = lbl_803E05D0 * (f32) * (s8*)(linked + 0x18) + *(f32*)(linked + 0xc);
                             if (fy0 > fy1)
                             {
-                                OBJFSA_NEWPATCH.maxY = fy0;
+                                fyv = fy0;
+                                lp = (char*)&OBJFSA_NEWPATCH;
+                                ((ObjfsaPatch*)lp)->maxY = fyv;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.maxY = fy1;
+                                fyv = fy1;
+                                lp = (char*)&OBJFSA_NEWPATCH;
+                                ((ObjfsaPatch*)lp)->maxY = fyv;
                             }
                             fy0 = -(lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) - *(f32*)(curve + 0xc));
                             fy1 = -(lbl_803E05D0 * (f32) * (s8*)(linked + 0x1a) - *(f32*)(linked + 0xc));
                             if (fy0 < fy1)
                             {
-                                OBJFSA_NEWPATCH.minY = fy0;
+                                fyv = fy0;
+                                lp = (char*)&OBJFSA_NEWPATCH;
+                                ((ObjfsaPatch*)lp)->minY = fyv;
                             }
                             else
                             {
-                                OBJFSA_NEWPATCH.minY = fy1;
+                                fyv = fy1;
+                                lp = (char*)&OBJFSA_NEWPATCH;
+                                ((ObjfsaPatch*)lp)->minY = fyv;
                             }
                             gObjfsaPatchCount++;
                         }
