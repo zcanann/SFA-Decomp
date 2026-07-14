@@ -2781,7 +2781,7 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
 }
 
 #pragma opt_common_subs off
-int fn_800660C8(f32* a, f32* b, f32* c, f32* p, int type, f32 f1p, f32 y)
+int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
 {
     f32 d0[3];
     f32 d1[3];
@@ -5378,7 +5378,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     u8 typeb;
     u8 typeb2;
     TrackBlockDescriptor* descSave;
-    int type;
+    u8 type;
     f32 edge2[4];
     f32 edge1[4];
     f32 edge0[4];
