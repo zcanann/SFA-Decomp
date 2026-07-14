@@ -2397,6 +2397,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 exitFz;
     f32 x0;
     f32 z0;
+    ObjfsaPatch* pB;
     f32 x2;
     f32 z2;
     f32 x3;
@@ -2651,6 +2652,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             }
         scan0:
             OBJFSA_EXIT_INSIDE(wg, p->exit0X, p->exit0Z);
+            pB = p;
             if (edge != 4)
             {
                 OBJFSA_EXIT_INSIDE(wgB, p->exit0X, p->exit0Z);
@@ -2662,7 +2664,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             iter = 0;
             goto scan1;
         update1:
-            p->exit1X = (s16)((f32)p->exit1X - fdx / div);
+            p->exit1X = (s16)((f32)pB->exit1X - fdx / div);
             p->exit1Z = (s16)((f32)p->exit1Z - fdz / div);
             if (iter++ == 100)
             {
