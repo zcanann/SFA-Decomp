@@ -31,6 +31,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_render.h"
+#include "main/track_bbox_api.h"
 #include "main/dll/dll_0105_largecrate.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
@@ -104,8 +105,6 @@ extern const f32 lbl_803E3958;
 extern const f32 lbl_803E395C;
 extern const f32 lbl_803E3960;
 extern const f32 lbl_803E3964;
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
-                              int p10);
 extern void hitDetect_calcSweptSphereBounds(u32* boundsOut, f32* startPoints, f32* endPoints, f32* radii,
                                             int pointCount);
 extern void hitDetectFn_800691c0(u8* obj, void* bounds, u32 mask, int flags);
@@ -486,7 +485,7 @@ int smallbasket_resolveCollision(u8* obj)
     u32 sweptBounds[6];
 
     st = *(u8**)&((GameObject*)obj)->anim.hitReactState;
-    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0)
+    if (objBboxFnIntLegacy(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, (int)obj, 1, -1, 0xff, 0) != 0)
     {
         ((ObjHitsPriorityState*)st)->contactFlags |= OBJHITS_CONTACT_FLAG_KIND0;
         ((ObjHitsPriorityState*)st)->localPosX = ((GameObject*)obj)->anim.previousLocalPosX;
