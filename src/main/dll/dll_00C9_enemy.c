@@ -163,6 +163,10 @@ extern f32 lbl_803E25FC;
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
 extern void baddie_updateWhileFrozen(GameObject* obj, u8* state, int flag);
+extern void baddieInstantiateWeapon(GameObject* obj, int state);
+
+void fn_8014B878(int* obj, int* sub);
+void baddieTurnTowardTarget(int* node, int* sub);
 
 extern f32 enemyRespawnDistanceSq;
 extern void sharpClawInit(int obj, u8* state);
@@ -1060,9 +1064,6 @@ void* gBaddieObjDescriptor[14] = {(void*)0x00000000,
 
 int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void fn_8014B878(int* node, int* sub);
-    extern void baddieTurnTowardTarget(int* node, int* sub);
-    extern void baddieInstantiateWeapon(GameObject * node, int* sub);
     char* sub = *(char**)&((GameObject*)node)->extra;
     s8* n29 = *(s8**)&((GameObject*)node)->anim.placementData;
     int i;
@@ -1114,7 +1115,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
             break;
         }
     }
-    baddieInstantiateWeapon((GameObject*)(node), (int*)sub);
+    baddieInstantiateWeapon((GameObject*)(node), (int)sub);
     if (((GameObject*)node)->seqIndex == -1)
     {
         ((TrickyState*)sub)->flags2E8 &= ~3LL;
@@ -1689,10 +1690,6 @@ void enemy_free(GameObject* obj, int flag)
 
 void enemy_update(int obj)
 {
-    extern void objAnimFn_8014a9f0(int obj, u8* state);
-    extern void fn_8014B878(int obj, u8* state);
-    extern void baddieTurnTowardTarget(int obj, u8* state);
-    extern void baddieInstantiateWeapon(GameObject * obj, u8 * state);
     u8* player;
     u8* state;
     u8* setup;
@@ -1737,7 +1734,7 @@ void enemy_update(int obj)
         ((EnemyState*)state)->trackedObj = Obj_GetPlayerObject();
     }
     ((EnemyState*)state)->initialFlags = *(int*)&((EnemyState*)state)->controlFlags;
-    baddieInstantiateWeapon((GameObject*)(obj), state);
+    baddieInstantiateWeapon((GameObject*)(obj), (int)state);
     flags = ((EnemyState*)state)->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0)
     {
@@ -1912,10 +1909,10 @@ void enemy_update(int obj)
     baddie_updateWhileFrozen((GameObject*)(obj), state, 0);
     if ((((EnemyState*)state)->controlFlags & 0x1800) == 0)
     {
-        baddieTurnTowardTarget(obj, state);
-        fn_8014B878(obj, state);
+        baddieTurnTowardTarget((int*)obj, (int*)state);
+        fn_8014B878((int*)obj, (int*)state);
     }
-    objAnimFn_8014a9f0(obj, state);
+    objAnimFn_8014a9f0((short*)obj, (int)state);
 }
 
 void enemy_init(GameObject* obj, u8* setup, int flag)
