@@ -3029,9 +3029,9 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     distRead = bestDists;
     probe = distRead;
     idRead = resultIds;
-    qscan = queueDist;
     for (; li < 4; cur += 4, li++)
     {
+        qscan = queueDist;
         if (*(s32*)(cur + 0x1c) <= -1)
         {
             continue;
@@ -3186,9 +3186,9 @@ int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* o
     cur = (u32)curve;
     distRead = bestDists;
     probe = distRead;
-    qscan = queueDist;
     for (; li < 4; cur += 4, li++)
     {
+        qscan = queueDist;
         if (*(s32*)(cur + 0x1c) <= -1)
         {
             continue;
