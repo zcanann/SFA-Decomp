@@ -111,3 +111,20 @@ unexplored mechanism: park-round reordering (observed once in FPRs: idx48/nadj26
 before idx87/nadj23 - low-nadj webs sink to the last pops). If the merged distRead web can be
 made to park in the sinking class, V-K completes. Next tool: extend select_trace to log the
 park/simplify events (round numbers), breakpoint band 0x508~ Simplify loop.
+
+## Simplify algorithm decoded (docs/mwcc_re/recovered/Coloring.c) - closes several questions
+- Push order: repeated ASCENDING-INDEX sweeps push webs whose current degree < k (degree
+  relaxes as neighbors leave); stuck -> optimistic-spill the HIGHEST-index parked web; repeat.
+  Select pops LIFO => saved regs r31-descending in reverse push order. This exactly reproduces
+  every observed pop sequence including the FPR "anomaly" (idx48/nadj268 = spilled late,
+  pops before low-degree idx80/87 which pushed in round 1).
+- Consequence for func1C's last 4 lines: in the no-distRead config, cd-base (SR temp,
+  always webEnd = named-band-top + 1) and scanBase (named band top) push in the same sweep
+  in index order -> base always pops one register above scanBase. PROVEN unreachable by decl
+  order, dummy decls, inline-helper interference, or hoist position. The target therefore has
+  the V-K structure (named distRead absorbs the base at named idx, popping r23) and the one
+  remaining unknown is why the target emits distRead's addi INSIDE the preheader group
+  ([mr cur-clone][addi distRead][mr outer][addi scanBase]) while every tested source position
+  emits it at the source slot. Candidate: decl-initializer emission order or a coalesce-kept
+  copy (see Color_Coalesce identity-sharing in recovered/Coloring.c - eligibility flags are
+  set upstream during web/move building, 'the next thing to read').
