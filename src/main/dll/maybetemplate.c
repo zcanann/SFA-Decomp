@@ -224,7 +224,7 @@ extern void gxColorFn_80052764(void* p);
 extern void objRender(int a, int b, int c, int d, void* obj, int flag);
 extern u8 gHeadDisplayActive;
 extern u8 gHeadDisplayEntryIdx;
-extern u8 lbl_803DD7A8;
+extern s8 lbl_803DD7A8;
 extern u16 gHeadDisplayPanelWidth;
 extern u16 gHeadDisplayPanelHeight;
 extern s16 gHeadDisplayFadeAlpha;
