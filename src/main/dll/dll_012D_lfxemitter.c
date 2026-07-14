@@ -12,7 +12,7 @@
 #include "main/object_descriptor.h"
 
 #include "main/object.h"
-extern LfxEmitterConfig lbl_803AC7B0;
+LfxEmitterConfig lbl_803AC7B0;
 
 
 /* reports whether the emitter's config record has been loaded yet */

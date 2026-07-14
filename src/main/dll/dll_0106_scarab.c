@@ -38,6 +38,8 @@ f32 lbl_803DBDC8 = 10.0f;
 f32 lbl_803DBDCC = 1.0f;
 f32 lbl_803DBDD0 = 1.0f;
 
+f32 gScarabSweptHitInfo[4];
+
 typedef struct ScarabPlacement
 {
     ObjPlacement head;
@@ -726,8 +728,6 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 int scarab_sweptCollide(GameObject* obj)
 {
-    extern f32 gScarabSweptHitInfo[4];
-
     typedef struct HitDetectResults
     {
         f32 hitInfo[4][4];

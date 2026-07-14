@@ -1331,6 +1331,7 @@ main/dll/newseqobj.c:
 
 main/dll/seqobj11d.c:
 	.text       start:0x801511E8 end:0x80152040
+	.bss        start:0x803AC428 end:0x803AC4A8
 	.sdata      start:0x803DBC88 end:0x803DBCA8
 
 main/dll/seqobj11e.c:
@@ -1360,6 +1361,7 @@ main/dll/duster.c:
 main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
 	.data       start:0x8031FAE8 end:0x8031FD80
+	.bss        start:0x803AC4A8 end:0x803AC528
 	.sdata      start:0x803DBCE0 end:0x803DBD40
 	.sbss       start:0x803DDA70 end:0x803DDA78
 
@@ -1499,6 +1501,7 @@ main/dll/dll_00E2_staff.c:
 	.text       start:0x8016CEE8 end:0x8016F16C
 	.rodata     start:0x802C2220 end:0x802C2260
 	.data       start:0x8032090C end:0x80320984
+	.bss        start:0x803AC6B8 end:0x803AC6E0
 	.sdata      start:0x803DBD50 end:0x803DBD58
 	.sbss       start:0x803DDAA0 end:0x803DDAB0
 
@@ -1569,6 +1572,7 @@ main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
 	.rodata     start:0x802C2270 end:0x802C2280
 	.data       start:0x80320D48 end:0x80320DB8
+	.bss        start:0x803AC6E0 end:0x803AC780
 	.sbss       start:0x803DDAB8 end:0x803DDAC0
 
 main/dll/dll_00F0_warppoint.c:
@@ -1579,6 +1583,7 @@ main/dll/dll_00F0_warppoint.c:
 main/dll/dll_00F1_invhit.c:
 	.text       start:0x8017779C end:0x80177E28
 	.data       start:0x80320DF0 end:0x80320E68
+	.bss        start:0x803AC780 end:0x803AC790
 	.sdata2     start:0x803E35E8 end:0x803E3600
 
 main/dll/dll_00F2_iceblast.c:
@@ -1694,6 +1699,7 @@ main/dll/dll_801814d0.c:
 main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
 	.data       start:0x803216B8 end:0x80321728
+	.bss        start:0x803AC790 end:0x803AC7A0
 	.sbss       start:0x803DDAC0 end:0x803DDAC8
 
 main/dll/dll_0105_largecrate.c:
@@ -1705,6 +1711,7 @@ main/dll/dll_0105_largecrate.c:
 main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868
 	.rodata     start:0x802C2298 end:0x802C22B0
+	.bss        start:0x803AC7A0 end:0x803AC7B0
 	.sdata      start:0x803DBDB0 end:0x803DBDD8
 
 main/dll/dll_0107_unused.c:
@@ -1836,6 +1843,7 @@ main/dll/dll_0130_areafxemit.c:
 main/dll/dll_012D_lfxemitter.c:
 	.text       start:0x8018FF28 end:0x8019042C
 	.data       start:0x80321FB8 end:0x80321FF8
+	.bss        start:0x803AC7B0 end:0x803AC7D8
 	.sdata2     start:0x803E3E78 end:0x803E3E98
 
 main/dll/warppad.c:

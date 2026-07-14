@@ -100,7 +100,7 @@ extern f32 lbl_803E358C;
 extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
 int gPushableSavedMapIdCount;
-extern int gPushableSavedMapIds[];
+int gPushableSavedMapIds[0x28];
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);

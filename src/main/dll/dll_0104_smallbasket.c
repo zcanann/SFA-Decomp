@@ -94,7 +94,7 @@ typedef struct SmallBasketThrowSetup
    player query) and this object's tuning floats (lbl_803Exxxx) - no home
    header in the import skeleton; declared locally. */
 
-extern f32 gSmallBasketHitVelocity[];
+f32 gSmallBasketHitVelocity[4];
 extern const f32 lbl_803E3930;
 extern f32 lbl_803E3938;
 extern const f32 lbl_803E393C;

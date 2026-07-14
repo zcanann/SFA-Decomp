@@ -65,7 +65,7 @@ __declspec(section ".sdata2") f32 lbl_803E35EC = 48.0f;
 __declspec(section ".sdata2") f32 lbl_803E35F0 = 10.0f;
 __declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 /* single-precision override for codegen */
-extern f32 lbl_803AC780[];
+f32 lbl_803AC780[4];
 
 extern int ObjList_ContainsObject(int obj);
 

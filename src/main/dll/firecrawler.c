@@ -156,7 +156,7 @@ extern f32 lbl_803E2C04;
 extern f32 lbl_803E2C08;
 extern f32 gCrawlerS8Norm127;
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-extern int gCrawlerNearbyObjectBuffer[];
+int gCrawlerNearbyObjectBuffer[0x20];
 extern f32 lbl_803E2B80;
 extern f32 lbl_803E2C98;
 extern f32 lbl_803E2C9C;

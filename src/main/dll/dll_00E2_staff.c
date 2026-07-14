@@ -367,7 +367,7 @@ typedef struct StaffQuakeSpellState
     u8 active;       /* 0x20: spell active flag */
 } StaffQuakeSpellState;
 
-extern u8 gStaffQuakeSpellState[];
+u8 gStaffQuakeSpellState[0x28];
 
 void staff_init(int* obj)
 {

@@ -78,7 +78,7 @@ extern u8 fn_8014FFB4(GameObject* obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
-extern u8 gGroundBaddieTargetSearchResult[];
+u8 gGroundBaddieTargetSearchResult[0x80];
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
