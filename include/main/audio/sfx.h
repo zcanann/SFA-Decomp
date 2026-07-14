@@ -5,6 +5,7 @@
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_limited_object_api.h"
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_object_query_api.h"
 #include "main/audio/sfx_object_volume_api.h"
@@ -17,10 +18,8 @@ void Sfx_ClearLoopedObjectSounds(void);
 void Sfx_UpdateLoopedObjectSounds(void);
 void Sfx_SetObjectSoundsPaused(s32 paused);
 void Sfx_PlayFromObjectEx(u32 obj, f32* pos, u32 channel, u16 sfxId);
-u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
-void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_InitObjectChannels(void);
 
 #endif /* MAIN_AUDIO_SFX_H_ */
