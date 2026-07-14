@@ -843,20 +843,19 @@ void GameUI_update(void)
                 }
                 {
                     int dir = 1;
-                    int st = cMenuState;
-                    u8 next;
+                    u8 next = cMenuState;
                     lbl_803DD79A = -1;
                     if (cx < 0)
                     {
                         dir = -1;
                         lbl_803DD79A = 1;
                     }
-                    next = (u8)(dir + st);
+                    next += dir;
                     if (next > 4)
                         next = 2;
                     if (next < 2)
                         next = 4;
-                    switch ((u8)next)
+                    switch (next)
                     {
                     case 4:
                         lbl_803DD79E = 0x5555;
@@ -871,7 +870,7 @@ void GameUI_update(void)
                         sectionTarget = 2;
                         break;
                     }
-                    if ((u8)next != (s8)st)
+                    if (next != (s8)cMenuState)
                     {
                         *(s8*)&shouldOpenCMenu = (s8)next;
                         lbl_803DD8B7 = sectionTarget;
