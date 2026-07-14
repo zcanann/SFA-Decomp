@@ -2683,12 +2683,14 @@ main/dll/SB/dll_01E8_sbgalleon.c:
 main/dll/SB/dll_01E9_sbpropeller.c:
 	.text       start:0x801E2570 end:0x801E2B28
 	.data       start:0x80327C88 end:0x80327CC0
+	.sbss       start:0x803DDC40 end:0x803DDC48
 	.sdata2     start:0x803E5828 end:0x803E5830
 
 main/dll/SB/dll_01EA_sbshiphead.c:
 	.text       start:0x801E2B28 end:0x801E32BC
 	.data       start:0x80327CC0 end:0x80327CF8
 	.sdata      start:0x803DC090 end:0x803DC098
+	.sbss       start:0x803DDC48 end:0x803DDC50
 	.sdata2     start:0x803E5830 end:0x803E5868
 
 main/dll/SB/dll_01EB_sbshipmast.c:
@@ -2740,6 +2742,7 @@ main/dll/SB/dll_01F3_sbminifire.c:
 main/dll/dll_01F5_shipbattle.c:
 	.text       start:0x801E55B8 end:0x801E59AC
 	.data       start:0x80327EF0 end:0x80327F28
+	.sbss       start:0x803DDC50 end:0x803DDC58
 	.sdata2     start:0x803E5958 end:0x803E5978
 
 main/dll/dll_01F4_lamp.c:
@@ -2799,6 +2802,7 @@ main/dll/dll_801e991c.c:
 main/dll/drcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854
 	.rodata     start:0x802C2428 end:0x802C2470
+	.sbss       start:0x803DDC64 end:0x803DDC68
 
 main/dll/DR/drshackle.c:
 	.text       start:0x801EA854 end:0x801EAE4C
@@ -2828,16 +2832,19 @@ main/dll/SB/dll_0259_sbcloudrunner.c:
 main/dll/WM/dll_01F9_wmobjcreator.c:
 	.text       start:0x801EF360 end:0x801EFF7C
 	.data       start:0x80328688 end:0x803286E4
+	.sbss       start:0x803DDC68 end:0x803DDC70
 	.sdata2     start:0x803E5CE0 end:0x803E5CE8
 
 main/dll/WM/dll_01F8_wmgalleon.c:
 	.text       start:0x801EFF7C end:0x801F06D8
 	.data       start:0x803286E8 end:0x80328898
 	.sdata      start:0x803DC0F0 end:0x803DC0F8
+	.sbss       start:0x803DDC70 end:0x803DDC78
 	.sdata2     start:0x803E5CE8 end:0x803E5CF8
 
 main/dll/WM/dll_01FA_wmseqobject.c:
 	.text       start:0x801F06D8 end:0x801F0900
+	.sbss       start:0x803DDC78 end:0x803DDC80
 	.sdata2     start:0x803E5CF8 end:0x803E5D00
 
 main/dll/dll_01FB_dll1fb.c:
@@ -2942,6 +2949,7 @@ main/dll/WM/dll_0211_wmwallcrawler.c:
 	.text       start:0x801F7FF4 end:0x801F943C
 	.data       start:0x80328DD0 end:0x80328E58
 	.sdata      start:0x803DC130 end:0x803DC138
+	.sbss       start:0x803DDCB8 end:0x803DDCC0
 	.sdata2     start:0x803E5FB0 end:0x803E6020
 	.sdata2     start:0x803E6020 end:0x803E6038
 

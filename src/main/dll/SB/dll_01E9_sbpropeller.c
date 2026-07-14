@@ -50,7 +50,7 @@ extern f32 lbl_803E5818;
 extern f32 lbl_803E581C;
 extern f32 lbl_803E5820;
 extern f32 lbl_803E5824;
-extern u32 lbl_803DDC40;
+u32 lbl_803DDC40;
 
 u32 sbGetPropeller(void)
 {

@@ -51,7 +51,7 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
 
-extern u8 lbl_803DDC78;
+u8 lbl_803DDC78;
 __declspec(section ".sdata2") f32 lbl_803E5CF8 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5CFC = 0.0f;

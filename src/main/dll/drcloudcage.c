@@ -40,7 +40,7 @@
    DLL's data; timeDelta is the global frame delta. */
 extern s32 lbl_803DC0BC;
 extern f32 gDrCloudCageRouteDistGate;
-extern f32 gDrCloudCageWindVolume;
+f32 gDrCloudCageWindVolume;
 extern u8 lbl_803AD088[];
 extern struct DRCloudCagePoints gDrCloudCagePointTemplate;
 extern f32 lbl_803E5AE8;

@@ -85,7 +85,7 @@ enum
 
 #define WMOBJCREATOR_PARTFX_DEBRIS 0x1a6 /* debris-particle burst under the falling WM_rock (case 6) */
 
-extern int lbl_803DDC68;       /* live WM_WallCraw population counter */
+int lbl_803DDC68;       /* live WM_WallCraw population counter */
 extern const f32 lbl_803E5CC8; /* 1.0 */
 extern f32 lbl_803E5CCC;       /* 10.0: eastward drift base velocity */
 extern f32 lbl_803E5CD0;       /* -30.0: westward drift base velocity */

@@ -72,7 +72,7 @@ enum
 };
 
 extern f32 gWallCrawlerSpeedCap;
-extern u8 gWallCrawlerHitCount;
+u8 gWallCrawlerHitCount;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5FB0 = 0.0f;
 #pragma explicit_zero_data off

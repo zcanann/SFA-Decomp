@@ -48,7 +48,7 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern f32 lbl_803E595C;
 extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
-extern f32 lbl_803DDC50[2];
+f32 lbl_803DDC50[2];
 
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 

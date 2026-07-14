@@ -87,10 +87,10 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 
 extern u32 lbl_803DC0F0;
-extern s8 lbl_803DDC70;
+void* lbl_803DDC74;
 extern int* gScreensInterface;
 extern u32* lbl_803DCA94;
-extern void* lbl_803DDC74;
+s8 lbl_803DDC70;
 __declspec(section ".sdata2") f32 lbl_803E5CE8 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E5CEC = -121.0f;
 __declspec(section ".sdata2") f32 lbl_803E5CF0 = 116.0f;
