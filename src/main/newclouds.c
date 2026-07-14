@@ -2413,6 +2413,12 @@ extern const f32 lbl_803DF204;
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
 #pragma opt_dead_assignments off
+static inline void snowFifoTexCoord2s16(s16 s, s16 t)
+{
+    GXWGFifo.s16 = s;
+    GXWGFifo.s16 = t;
+}
+
 int snowPrintSnowCloud(int arg, int cloudId)
 {
     u8* p;
@@ -2614,18 +2620,15 @@ int snowPrintSnowCloud(int arg, int cloudId)
         GXWGFifo.f32 = (f64)qx[0];
         GXWGFifo.f32 = (f64)qy[0];
         GXWGFifo.f32 = (f64)qz[0];
-        GXWGFifo.s16 = uvs.uv[0];
-        GXWGFifo.s16 = uvs.uv[1];
+        snowFifoTexCoord2s16(uvs.uv[0], uvs.uv[1]);
         GXWGFifo.f32 = (f64)qx[1];
         GXWGFifo.f32 = (f64)qy[1];
         GXWGFifo.f32 = (f64)qz[1];
-        GXWGFifo.s16 = uvs.uv[2];
-        GXWGFifo.s16 = uvs.uv[3];
+        snowFifoTexCoord2s16(uvs.uv[2], uvs.uv[3]);
         GXWGFifo.f32 = (f64)qx[2];
         GXWGFifo.f32 = (f64)qy[2];
         GXWGFifo.f32 = (f64)qz[2];
-        GXWGFifo.s16 = uvs.uv[4];
-        GXWGFifo.s16 = uvs.uv[5];
+        snowFifoTexCoord2s16(uvs.uv[4], uvs.uv[5]);
         part += 1;
     }
     return 0;
