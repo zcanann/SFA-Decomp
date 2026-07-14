@@ -28,6 +28,7 @@
 #include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/object.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
 #include "main/objtexture.h"
@@ -92,9 +93,6 @@ extern f32 lbl_803E5A24;
 
 void fn_801E7DC8(GameObject* obj, int state, int count)
 {
-    extern u8 Obj_IsLoadingLocked(void);
-    extern int Obj_AllocObjectSetup(int, int);
-    extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     int i;
     f32 groundHeight;
     int setup;
@@ -109,7 +107,7 @@ void fn_801E7DC8(GameObject* obj, int state, int count)
 
     for (i = 0; i < count; i++)
     {
-        setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
         ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
@@ -120,12 +118,12 @@ void fn_801E7DC8(GameObject* obj, int state, int count)
         ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
         ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
     }
 
     for (i = 0; i < count; i++)
     {
-        setup = Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
         ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
         ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
         ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
@@ -137,7 +135,7 @@ void fn_801E7DC8(GameObject* obj, int state, int count)
         ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
         ((ShopkeeperSpawnSetup*)setup)->kind = 1;
         ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject(setup, 5, (obj)->anim.mapEventSlot, -1, *(int*)&(obj)->anim.parent);
+        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
     }
 }
 
