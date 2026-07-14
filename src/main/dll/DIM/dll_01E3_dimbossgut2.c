@@ -16,6 +16,7 @@
 #include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/track_dolphin_api.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/mmsh_waterspike.h"
 #include "main/objhits.h"
@@ -47,8 +48,6 @@ extern f32 lbl_803E4D28;
 extern f32 lbl_803E4D2C;
 extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
-
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
 {
