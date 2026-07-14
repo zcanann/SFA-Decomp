@@ -242,11 +242,13 @@ main/dll/dll_0013_waterfx.c:
 
 main/dll/viewfinder.c:
 	.text       start:0x80096994 end:0x800969B0
+	.sdata2     start:0x803DF348 end:0x803DF350
 
 main/dll/objfx.c:
 	.text       start:0x800969B0 end:0x8009AD44
 	.rodata     start:0x802C1FD8 end:0x802C2160
 	.sdata      start:0x803DB788 end:0x803DB790
+	.sdata2     start:0x803DF350 end:0x803DF3B4
 
 main/dll/expgfxresource.c:
 	.text       start:0x8009AD44 end:0x8009B0E0

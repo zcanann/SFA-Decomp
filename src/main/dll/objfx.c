@@ -365,6 +365,9 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
     }
 }
 
+__declspec(section ".sdata2") f32 gObjFxPi = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803DF370 = 32768.0f;
+
 void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 angBase, f32 lo, f32 hi,
                            void* origin, int flags)
 {
@@ -447,6 +450,20 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
         (*gPartfxInterface)->spawnObject(obj, tB.values[idx], &params, flags | 2, -1, NULL);
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803DF380 = 0.001f;
+__declspec(section ".sdata2") f32 lbl_803DF384 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803DF388 = 2.25f;
+__declspec(section ".sdata2") f32 lbl_803DF38C = 0.25f;
+__declspec(section ".sdata2") f32 lbl_803DF390 = 0.3f;
+__declspec(section ".sdata2") f32 lbl_803DF394 = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803DF398 = 75.0f;
+__declspec(section ".sdata2") f32 lbl_803DF39C = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803DF3A0 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803DF3A4 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803DF3A8 = 22.0f;
+__declspec(section ".sdata2") f32 lbl_803DF3AC = 256.0f;
+__declspec(section ".sdata2") f32 lbl_803DF3B0 = 300.0f;
 
 void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
                          void* origin, int flags)

@@ -12,6 +12,9 @@
  */
 #include "main/dll/viewfinder.h"
 
+__declspec(section ".sdata2") f32 lbl_803DF348 = -3000.0f;
+__declspec(section ".sdata2") f32 lbl_803DF34C = 50.0f;
+
 void viewFinderSetZoom(f32 zoom)
 {
     lbl_803DB790 = lbl_803DF348 / zoom;
