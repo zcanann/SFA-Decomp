@@ -750,11 +750,6 @@ typedef struct
 
 void SmallBasket_update(GameObject* obj)
 {
-    /* int-param redecls override the u8* definitions for these call sites only
-       (caller passes int locals); can't live at file scope - conflicts with the
-       earlier definitions. #57 */
-    extern void smallbasket_resolveCollision(int obj);
-    extern void fn_801816F8(int obj, int player, int state);
     GameObject* player;
     int def;
     CfperchState* state;
@@ -783,7 +778,7 @@ void SmallBasket_update(GameObject* obj)
         state->disableTimer = 1;
         state->throwState = 0;
         *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        fn_801816F8((int)obj, (int)player, (int)state);
+        fn_801816F8((u8*)obj, (u8*)player, (u8*)state);
         zf = lbl_803E3938;
         (obj)->anim.velocityX = zf;
         (obj)->anim.velocityZ = zf;
@@ -998,7 +993,7 @@ void SmallBasket_update(GameObject* obj)
             (obj)->anim.localPosX = (obj)->anim.velocityX * timeDelta + (obj)->anim.localPosX;
             (obj)->anim.localPosY = (obj)->anim.velocityY * timeDelta + (obj)->anim.localPosY;
             (obj)->anim.localPosZ = (obj)->anim.velocityZ * timeDelta + (obj)->anim.localPosZ;
-            smallbasket_resolveCollision((int)obj);
+            smallbasket_resolveCollision((u8*)obj);
             contactFlags = (*(ObjHitsPriorityState**)&(obj)->anim.hitReactState)->contactFlags;
             if ((contactFlags != 0) && (*(s8*)&state->throwState == 1))
             {
@@ -1012,7 +1007,7 @@ void SmallBasket_update(GameObject* obj)
                 state->disableTimer = 0x32;
                 state->throwState = 0;
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-                fn_801816F8((int)obj, (int)player, (int)state);
+                fn_801816F8((u8*)obj, (u8*)player, (u8*)state);
                 zf = lbl_803E3938;
                 (obj)->anim.velocityX = zf;
                 (obj)->anim.velocityZ = zf;
