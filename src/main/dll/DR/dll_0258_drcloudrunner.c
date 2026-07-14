@@ -410,11 +410,7 @@ void DR_CloudRunner_func15(int obj, f32* a, f32* b, f32* c)
 
 void DR_CloudRunner_init(GameObject* obj, int def)
 {
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } stk;
+    MoveLibTarget target;
     int inner;
     int savedSlot;
     (obj)->anim.rotX = (s16)((s8) * (s8*)((char*)def + 0x18) << 8);
@@ -433,11 +429,11 @@ void DR_CloudRunner_init(GameObject* obj, int def)
     savedSlot = mainGetBit(0x7a9);
     if (savedSlot != 0)
     {
-        dll_2E_func0A(savedSlot + 0x13, &stk);
-        (obj)->anim.localPosX = stk.mat[1];
-        (obj)->anim.localPosY = stk.mat[2];
-        (obj)->anim.localPosZ = stk.mat[3];
-        (obj)->anim.rotX = stk.angles[0];
+        dll_2E_func0A(savedSlot + 0x13, &target);
+        (obj)->anim.localPosX = target.x;
+        (obj)->anim.localPosY = target.y;
+        (obj)->anim.localPosZ = target.z;
+        (obj)->anim.rotX = target.angle;
     }
     (*(void (*)(int, int, int, int))(*(int*)((char*)*gPlayerInterface + 0x4)))((int)obj, inner, 8, 1);
     ((CloudRunnerState*)inner)->baddie.gravity = lbl_803E8424;
@@ -842,11 +838,7 @@ void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
     {
         int a[4];
     } curve;
-    struct
-    {
-        s16 angles[4];
-        f32 mat[4];
-    } stk;
+    MoveLibTarget target;
     CloudRunnerState* inner;
     Obj_GetPlayerObject();
     curve = *(struct curveids*)gDRCloudRunnerCurveIds;
@@ -880,9 +872,9 @@ void DR_CloudRunner_func23(GameObject* obj, int mode, int* out)
                 p += 1;
                 i += 1;
             } while (i < 4);
-            if (i != 4 && dll_2E_func0A(curve.a[i], &stk) != 0)
+            if (i != 4 && dll_2E_func0A(curve.a[i], &target) != 0)
             {
-                s16 tmp = getAngle(stk.mat[1] - obj->anim.localPosX, stk.mat[3] - obj->anim.localPosZ);
+                s16 tmp = getAngle(target.x - obj->anim.localPosX, target.z - obj->anim.localPosZ);
                 ang = tmp + gDRCloudRunnerHeadingAngleOffset;
             }
             diff = ang - (u16)gDRCloudRunnerSmoothedRotX;

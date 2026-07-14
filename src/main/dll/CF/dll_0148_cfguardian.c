@@ -1072,12 +1072,12 @@ void cfguardian_init(int* obj, u8* params)
     else if (mainGetBit(GAMEBIT_GUARDIAN_RELEASED) != 0 && ((CfGuardianMapData*)params)->variant == 0)
     {
         sub->questState = CFGUARDIAN_ROOST;
-        dll_2E_func0A(8, obj);
+        dll_2E_func0A(8, (MoveLibTarget*)obj);
     }
     ObjHits_EnableObject(obj);
-    dll_2E_func05((GameObject*)obj, (MoveLibState*)sub, -0x2000, 0x2800, 4);
-    dll_2E_func08((MoveLibState*)sub, 0x12c, 0x64);
-    dll_2E_func09((MoveLibState*)sub, &stk2, &stk1, 4);
+    dll_2E_func05((GameObject*)obj, &sub->moveLib, -0x2000, 0x2800, 4);
+    dll_2E_func08(&sub->moveLib, 0x12c, 0x64);
+    dll_2E_func09(&sub->moveLib, &stk2, &stk1, 4);
     objSeqInitFn_80080078(gCfGuardianSeqStreamTable, 0xf);
     sub->flags611 = (u8)(sub->flags611 | 0x2);
 }

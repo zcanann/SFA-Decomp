@@ -232,17 +232,17 @@ void dll_2E_func09(MoveLibState* s, const void* src1, const void* src2, int coun
     memcpy(s->eventTable, src2, (u32)s->pointCount * 2);
 }
 
-f32 dll_2E_func0B(int obj, int arg)
+f32 dll_2E_func0B(GameObject* obj, int arg)
 {
     int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
     if (r > -1)
     {
-        return ((f32 (*)(int, int))(*gRomCurveInterface)->slot24)(obj, r);
+        return ((f32 (*)(int, int))(*gRomCurveInterface)->slot24)((int)obj, r);
     }
     return lbl_803E1C88;
 }
 
-void fn_80114B1C(int* obj)
+void fn_80114B1C(GameObject* obj)
 {
     extern void objFn_8003acfc(GameObject * obj, int* types, int count, char* out);
     extern void fn_8003A9C0(char* p, int count, s16 a, s16 b);
@@ -250,21 +250,20 @@ void fn_80114B1C(int* obj)
     int* types;
 
     types = seqFn_800394a0();
-    state = ((GameObject*)obj)->extra;
+    state = obj->extra;
 
     (*gCameraInterface)->setTarget(0);
 
     state->phase = MOVELIB_PHASE_IDLE;
-    objFn_8003acfc((GameObject*)(obj), types, state->pointCount, (char*)state->animChannels);
+    objFn_8003acfc(obj, types, state->pointCount, (char*)state->animChannels);
     state->setupFlag = 0x50;
     fn_8003A9C0((char*)state->animChannels, state->pointCount, 0, 0);
 }
 
 /* Copies a curve point's position and packed angle into the caller's
  * record. */
-int dll_2E_func0A(int idx, void* outArg)
+int dll_2E_func0A(int idx, MoveLibTarget* out)
 {
-    MoveLibTarget* out = (MoveLibTarget*)outArg;
     int curveId;
 
     if (idx >= 0x1c)

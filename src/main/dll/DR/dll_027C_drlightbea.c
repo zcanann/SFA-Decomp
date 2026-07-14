@@ -60,7 +60,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
     DrLightBeaState* state = obj->extra;
     DrlightbeaPlacement* setup = (DrlightbeaPlacement*)obj->anim.placementData;
     GameObject* player;
-    f32 targetXform[6];
+    MoveLibTarget target;
     f32 sourcePos[3];
     f32 targetPos[3];
 
@@ -103,11 +103,11 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             sourcePos[0] = (obj)->anim.localPosX;
             sourcePos[1] = (obj)->anim.localPosY;
             sourcePos[2] = (obj)->anim.localPosZ;
-            if (setup->targetId != 0 && dll_2E_func0A(setup->targetId, targetXform) != 0)
+            if (setup->targetId != 0 && dll_2E_func0A(setup->targetId, &target) != 0)
             {
-                targetPos[0] = targetXform[3];
-                targetPos[1] = targetXform[4];
-                targetPos[2] = targetXform[5];
+                targetPos[0] = target.x;
+                targetPos[1] = target.y;
+                targetPos[2] = target.z;
             }
             else
             {

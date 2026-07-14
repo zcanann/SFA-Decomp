@@ -294,20 +294,20 @@ void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRun
 
 void HighTop_getLookTargetYaw(GameObject* obj, int mode, int* out)
 {
-    f32 buf[6];
+    MoveLibTarget target;
     HighTopRuntime* runtime;
     int yaw;
     switch (mode)
     {
     case 2:
-        if (dll_2E_func0A(0x11, buf) != 0)
+        if (dll_2E_func0A(0x11, &target) != 0)
         {
-            yaw = (s16)getAngle(buf[3] - obj->anim.localPosX, buf[5] - obj->anim.localPosZ);
+            yaw = (s16)getAngle(target.x - obj->anim.localPosX, target.z - obj->anim.localPosZ);
             *out = yaw + gHighTopLookYawOffset;
             runtime = obj->extra;
-            runtime->lookTargetX = buf[3];
-            runtime->lookTargetY = buf[4];
-            runtime->lookTargetZ = buf[5];
+            runtime->lookTargetX = target.x;
+            runtime->lookTargetY = target.y;
+            runtime->lookTargetZ = target.z;
         }
         else
         {
