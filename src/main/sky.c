@@ -231,7 +231,6 @@ extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern f32 PSVECMag(f32* vec);
 extern void PSVECScale(f32 scale, f32* src, f32* dst);
-extern void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
@@ -2004,7 +2003,7 @@ void fn_8008923C(u8* obj, f32* x, f32* y, f32* z)
         }
         if (flag != 0)
         {
-            modelLightStruct_selectObjectLights(obj, lights, 4, &count, 2);
+            modelLightStruct_selectObjectLights((GameObject*)obj, (ModelLightStruct**)lights, 4, (s32*)&count, 2);
             if (count > 0)
             {
                 if (*(u8**)&((GameObject*)obj)->anim.modelState != NULL)

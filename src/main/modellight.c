@@ -469,10 +469,10 @@ void modelLightStruct_setGlowColor(ModelLightStruct* light, u8 red, u8 green, u8
     light->glowColor[3] = alpha;
 }
 
-void modelLightStruct_getProjectionTevModes(ModelLightStruct* p, void** a, void** b)
+void modelLightStruct_getProjectionTevModes(ModelLightStruct* p, int* a, int* b)
 {
-    *a = (void*)p->projectionTevColorMode;
-    *b = (void*)p->projectionTevAlphaMode;
+    *a = p->projectionTevColorMode;
+    *b = p->projectionTevAlphaMode;
 }
 
 void modelLightStruct_setSpecularTargetColor(ModelLightStruct* p, u8 r, u8 g, u8 b, u8 a)
@@ -1412,12 +1412,13 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
     }
 }
 
-void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights, int* outCount, int typeMask)
+void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** outLights, int maxLights, s32* outCount,
+                                         int typeMask)
 {
     f32 delta[3];
-    u8* candidates[20];
+    ModelLightStruct* candidates[20];
     int i;
-    u8* light;
+    ModelLightStruct* light;
     f32 intensity;
     f32 dist;
     f32 red;
@@ -1430,7 +1431,7 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
 
     if (obj != NULL)
     {
-        objectLightMask = 1 << ((GameObject*)obj)->anim.modelInstance->modelLightMaskIndex;
+        objectLightMask = 1 << obj->anim.modelInstance->modelLightMaskIndex;
     }
     else
     {
@@ -1440,51 +1441,50 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
     candidateCount = 0;
     for (i = 0; i < gModelLightCount; i++)
     {
-        light = gModelLightList[i];
-        if (light[0x4c] != 0 && (((ModelLightStruct*)light)->lightKind & typeMask) != 0 &&
-            (light[0x64] & objectLightMask) != 0)
+        light = (ModelLightStruct*)gModelLightList[i];
+        if (light->enabled != 0 && (light->lightKind & typeMask) != 0 &&
+            (light->objectLightMask & objectLightMask) != 0)
         {
-            lightType = ((ModelLightStruct*)light)->lightKind;
+            lightType = light->lightKind;
             if (lightType == 4)
             {
-                ((ModelLightStruct*)light)->selectionScore = lbl_803DE768;
+                light->selectionScore = lbl_803DE768;
             }
             else if (lightType == 8)
             {
-                if (*(void**)(light + 0x16c) != NULL &&
-                    modelLightStruct_projectedLightIntersectsObject(light, obj) != 0)
+                if (light->projectionTexture != NULL &&
+                    modelLightStruct_projectedLightIntersectsObject((u8*)light, (u8*)obj) != 0)
                 {
-                    PSVECSubtract((f32*)(obj + 0x18), &((ModelLightStruct*)light)->worldX, delta);
+                    PSVECSubtract(&obj->anim.worldPosX, &light->worldX, delta);
                     dist = PSVECMag(delta);
                     intensity = lbl_803DE764;
-                    ((ModelLightStruct*)light)->selectionScore = intensity + intensity / dist;
-                    ((ModelLightStruct*)light)->lightAmount = modelLightStruct_getObjectIntensity(light, obj);
+                    light->selectionScore = intensity + intensity / dist;
+                    light->lightAmount = modelLightStruct_getObjectIntensity((u8*)light, (u8*)obj);
                 }
                 else
                 {
-                    ((ModelLightStruct*)light)->selectionScore = lbl_803DE75C;
+                    light->selectionScore = lbl_803DE75C;
                 }
             }
             else
             {
-                intensity = modelLightStruct_getObjectIntensity(light, obj);
-                ((ModelLightStruct*)light)->lightAmount = intensity;
-                red = ((ModelLightStruct*)light)->lightAmount * light[0xa8];
+                intensity = modelLightStruct_getObjectIntensity((u8*)light, (u8*)obj);
+                light->lightAmount = intensity;
+                red = light->lightAmount * light->diffuseColor[0];
                 red = (red < 0.0f) ? 0.0f : ((red > 255.0f) ? 255.0f : red);
-                green = ((ModelLightStruct*)light)->lightAmount * light[0xa9];
+                green = light->lightAmount * light->diffuseColor[1];
                 green = (green < 0.0f) ? 0.0f : ((green > 255.0f) ? 255.0f : green);
-                blue = ((ModelLightStruct*)light)->lightAmount * light[0xaa];
+                blue = light->lightAmount * light->diffuseColor[2];
                 blue = (blue < 0.0f) ? 0.0f : ((blue > 255.0f) ? 255.0f : blue);
                 green = (red < green) ? green : red;
-                ((ModelLightStruct*)light)->selectionScore = green;
-                blue = (((ModelLightStruct*)light)->selectionScore > blue) ? ((ModelLightStruct*)light)->selectionScore
-                                                                           : blue;
-                ((ModelLightStruct*)light)->selectionScore = blue;
+                light->selectionScore = green;
+                blue = (light->selectionScore > blue) ? light->selectionScore : blue;
+                light->selectionScore = blue;
             }
 
-            if (((ModelLightStruct*)light)->selectionScore > lbl_803DE75C)
+            if (light->selectionScore > lbl_803DE75C)
             {
-                ((ModelLightStruct*)light)->selectionScore += (f32)((int)light[0x2fc] << 8);
+                light->selectionScore += (f32)((int)light->selectionPriority << 8);
                 selectedCount = candidateCount;
                 candidateCount++;
                 candidates[selectedCount] = light;
@@ -1507,14 +1507,14 @@ void modelLightStruct_selectObjectLights(u8* obj, u8** outLights, int maxLights,
         intensity = lbl_803DE75C;
         for (i = 0; i < candidateCount; i++)
         {
-            if (((ModelLightStruct*)candidates[i])->selectionScore > intensity)
+            if (candidates[i]->selectionScore > intensity)
             {
-                intensity = ((ModelLightStruct*)candidates[i])->selectionScore;
+                intensity = candidates[i]->selectionScore;
                 light = candidates[i];
             }
         }
         outLights[(*outCount)++] = light;
-        ((ModelLightStruct*)light)->selectionScore = -((ModelLightStruct*)light)->selectionScore;
+        light->selectionScore = -light->selectionScore;
     }
 }
 

@@ -2101,7 +2101,6 @@ extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
 extern void textureFn_8004ff20(void* asset, f32* mtx, void* out, int p4);
 extern void GXCopyTex(void* dst, int clear);
 extern void GXPreLoadEntireTexture(void* obj, u32* region);
-extern void modelLightStruct_selectObjectLights(int model, int* lights, int max, int* count, int p5);
 extern u32 gRcpDistortAmbColor;
 extern int gRcpDistortMatColor;
 extern u8 gRcpDistortGroup;
@@ -2110,16 +2109,16 @@ extern f32 gRcpScreenWidth;
 extern f32 gRcpScreenHeight;
 
 #pragma opt_common_subs off
-static void gxLoadObjectLights(int model, int* lights)
+static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights)
 {
-    int count;
+    s32 count;
     int n;
     modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
     modelLightChannels_reset(1);
     modelLightChannel_configure(0, 0, 0);
     for (n = 0; n < count; n++)
     {
-        modelLightStruct_loadChannelLight(0, (void*)lights[n], model);
+        modelLightStruct_loadChannelLight(0, lights[n], (int)model);
     }
     modelLightChannels_applyGXControls();
 }
@@ -2132,7 +2131,7 @@ void gxTextureFn_80052efc(void)
         f64 a8;
     } mtxu;
 #define mtx mtxu.m
-    int lights[8];
+    ModelLightStruct* lights[8];
     GXColor8 outColor;
     GXColor8 texColor;
     GXColor8 matColor;
@@ -2206,7 +2205,7 @@ void gxTextureFn_80052efc(void)
         {
             model = ((RcpDistortSlot*)slots[0])[i].model;
             modelTextureFn_80089970(2 - (i - 3));
-            gxLoadObjectLights(model, lights);
+            gxLoadObjectLights((GameObject*)model, lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);

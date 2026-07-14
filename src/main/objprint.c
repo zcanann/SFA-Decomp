@@ -2092,12 +2092,11 @@ typedef struct ObjPrintS10Color
     s16 r, g, b, a;
 } ObjPrintS10Color;
 
-static inline int shaderProjDisabled(int p)
+static inline int shaderProjDisabled(ModelLightStruct* light)
 {
     int flag;
     int mode;
-    extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
-    modelLightStruct_getProjectionTevModes(p, &flag, &mode);
+    modelLightStruct_getProjectionTevModes(light, &flag, &mode);
     return flag;
 }
 
@@ -2132,10 +2131,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(GXBlendMode type, GXBlendFactor src_factor, GXBlendFactor dst_factor, GXLogicOp op);
-    extern void modelLightStruct_getProjectionTevModes(int p, int* a, int* b);
-    extern f32* modelLightStruct_getProjectionTexMtx(int p);
-    extern void* modelLightStruct_getProjectionTexture(int p);
-
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;
     extern ObjPrintS10Color lbl_803DE9F4;
@@ -2146,7 +2141,6 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     extern u8 lbl_803DCC36;
     extern int lbl_803DCC5C;
     extern u8 lbl_803DCC60;
-    extern int lbl_803DCC64;
     extern u32 lbl_803DB468;
     extern int lbl_803DB48C;
     extern int lbl_803DB490;

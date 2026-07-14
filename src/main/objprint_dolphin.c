@@ -3,7 +3,7 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/gameloop_api.h"
 #include "main/object_api.h"
@@ -33,7 +33,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80136a40.h"
 
-int lbl_803DCC64;
+ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
 s32 lbl_803DCC5C;
 u8 gObjOverrideColor;
@@ -1442,8 +1442,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
 #pragma opt_propagation reset
 
 extern s32 lbl_803DCC5C;
-extern int lbl_803DCC64;
-extern void modelLightStruct_getProjectionTevModes(int p1, int* a, int* b);
 
 typedef struct
 {
@@ -1451,9 +1449,7 @@ typedef struct
 } ObjGXColor;
 
 extern void textureColorFn_8008991c(int idx, u8* r, u8* g, u8* b);
-extern void modelLightStruct_selectObjectLights(u8* model, int* arr, u32 n, s32* cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8* model);
-extern int modelLightStruct_getProjectedLightChannelPreference(int light);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
@@ -1474,7 +1470,7 @@ void objFn_8003dc50(u8* obj, u8* model)
     u8 ch;
     u16 f;
     u8 b;
-    int larr[6];
+    ModelLightStruct* larr[6];
     s32 count;
     ObjGXColor c;
 
@@ -1544,7 +1540,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                 u32 nl = (*(u8**)(model + 0x50))[0x8c];
                 if (nl != 0)
                 {
-                    modelLightStruct_selectObjectLights(model, larr, nl, &count, mode);
+                    modelLightStruct_selectObjectLights((GameObject*)model, larr, nl, &count, mode);
                 }
             }
             if (count == 0)
@@ -1557,12 +1553,12 @@ void objFn_8003dc50(u8* obj, u8* model)
             }
             {
                 int i;
-                int* p;
+                ModelLightStruct** p;
                 i = 0;
                 p = larr;
                 for (; i < count; i++)
                 {
-                    modelLightStruct_loadChannelLight(ch, *p, model);
+                    modelLightStruct_loadChannelLight(ch, (int)*p, model);
                     p++;
                 }
             }
@@ -1582,14 +1578,14 @@ void objFn_8003dc50(u8* obj, u8* model)
             u32 nf = obj[0xfa];
             if (nf != 0)
             {
-                modelLightStruct_selectObjectLights(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
+                modelLightStruct_selectObjectLights((GameObject*)model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
                 if ((OBJPRINT_MODEL_DEF(model)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) || gObjShadowNear)
                 {
                     lbl_803DCC5C = 0;
                 }
                 {
                     u8 got;
-                    int* lp;
+                    ModelLightStruct** lp;
                     u8* sp;
                     int k;
                     got = 0;
@@ -1613,7 +1609,7 @@ void objFn_8003dc50(u8* obj, u8* model)
                             *sp = 3;
                         }
                         modelLightChannel_configure(*sp, 2, 0);
-                        modelLightStruct_loadChannelLight(*sp, *lp, model);
+                        modelLightStruct_loadChannelLight(*sp, (int)*lp, model);
                         GXSetChanAmbColor(*sp, *(ObjGXColor*)&lbl_803DB470);
                         GXSetChanMatColor(*sp, *(ObjGXColor*)&lbl_803DB468);
                         lp++;
@@ -2855,7 +2851,6 @@ extern void fn_800510F0(u32 ref, int p2, int p3);
 extern void fn_80050FF4(int p1);
 extern void fn_8005011C(f32* m);
 
-extern u32 modelLightStruct_getProjectionTexture(int light);
 extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
 extern void fn_80050A28(int t);
 
@@ -2976,7 +2971,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         }
         else if (b4 == 0)
         {
-            int* lp;
+            ModelLightStruct** lp;
             u8* sp;
             int i;
             i = 0;
@@ -2984,7 +2979,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             sp = &lbl_803DCC60;
             for (; i < lbl_803DCC5C; i++)
             {
-                u32 t = modelLightStruct_getProjectionTexture(*lp);
+                u32 t = (u32)modelLightStruct_getProjectionTexture(*lp);
                 if (t != 0)
                 {
                     modelLightStruct_getProjectionTevModes(*lp, &a, &b);
@@ -2993,7 +2988,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                         shad = 1;
                     }
                     {
-                        int mtx = modelLightStruct_getProjectionTexMtx(*lp);
+                        int mtx = (int)modelLightStruct_getProjectionTexMtx(*lp);
                         fn_80050558(t, mtx, a, b, *sp);
                     }
                 }

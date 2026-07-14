@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "main/modellight_api.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct ModelLightStruct {
     void *owner;
     f32 localX;
@@ -124,13 +126,15 @@ void modelLightStruct_getPosition(ModelLightStruct* light, f32* x, f32* y, f32* 
 void modelLightStruct_getWorldPosition(ModelLightStruct* light, f32* x, f32* y, f32* z);
 void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
                                                 ModelLightStruct** outLights, int maxLights, int* outCount);
+void modelLightStruct_selectObjectLights(GameObject* object, ModelLightStruct** outLights, int maxLights,
+                                         s32* outCount, int typeMask);
 int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
 void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);
 f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *light);
 void *modelLightStruct_getProjectionTexture(ModelLightStruct *light);
 void modelLightStruct_setProjectionTexture(ModelLightStruct *light, void *texture);
-void modelLightStruct_getProjectionTevModes(ModelLightStruct *light, void **colorMode, void **alphaMode);
+void modelLightStruct_getProjectionTevModes(ModelLightStruct* light, int* colorMode, int* alphaMode);
 void modelLightStruct_setProjectionTevModes(ModelLightStruct* light, int colorMode, int alphaMode);
 void modelLightStruct_setProjectionNearZ(ModelLightStruct *light, f32 nearZ);
 void modelLightStruct_setProjectionFarZ(ModelLightStruct *light, f32 farZ);

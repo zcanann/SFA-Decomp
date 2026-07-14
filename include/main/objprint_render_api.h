@@ -4,6 +4,9 @@
 #include "types.h"
 
 typedef struct GameObject GameObject;
+typedef struct ModelLightStruct ModelLightStruct;
+
+extern ModelLightStruct* lbl_803DCC64;
 
 void objRenderFuzz(int* obj);
 void objRenderFn_800413d4(int* obj);
