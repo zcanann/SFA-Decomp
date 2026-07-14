@@ -631,7 +631,7 @@ extern const f32 lbl_803E2064;
 extern const f32 lbl_803E2068;
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern float fsin16Approx(int angle);
-extern PauseTbl lbl_8031AE20;
+extern u32 lbl_8031AE20[56];
 extern GridEntry lbl_8031BB90[];
 extern u32 lbl_8031BD90[];
 extern f32 lbl_803DD748;
@@ -4661,7 +4661,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     s32 b14, b10, bc, b8;
     char buf2[12];
 
-    statusTable = &lbl_8031AE20;
+    statusTable = (PauseTbl*)lbl_8031AE20;
     player = Obj_GetPlayerObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (pauseMenuState != 0)
@@ -5979,7 +5979,7 @@ void perspectiveFn_80129db4(void)
 #pragma scheduling off
 void pauseMenuFn_80129ee0(void)
 {
-    PauseTbl* tbl = &lbl_8031AE20;
+    PauseTbl* tbl = (PauseTbl*)lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
     u8* player;
     u16 btn;
@@ -6902,6 +6902,23 @@ int pauseMenuIsFox(void)
     }
     return 1;
 }
+
+u32 lbl_8031AE20[56] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0x002D0040, 0x01D705BD, 0x05CE05FC, 0x07770957, 0x09580107, 0x0C550000,
+};
+
+HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
+    {0x0A9F, 0x046F}, {0x0AA4, 0x0470}, {0x0AA9, 0x0471}, {0x0AAE, 0x0472}, {0x0AB3, 0x0473},
+};
+
+__declspec(section ".data") u32 lbl_8031AF14[2] = {0x22B, 0x50};
+
+u32 lbl_8031AF1C[6] = {0x219, 0x66, 0x100, (u32)&lbl_8031AF14, 0x200, (u32)&lbl_8031AF1C};
 
 u8 gHeadDisplayEntryTable[] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1A, 0x01, 0x00, 0x00, 0xF0, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x1C, 0x01,
