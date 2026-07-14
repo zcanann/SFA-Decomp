@@ -561,6 +561,11 @@ extern const f32 lbl_803DF1D4;
 
 void lightningDrawBolt(f32* start, f32* end, int width, f32 c, f32 d, int* seed, int e, int f);
 
+typedef void (*LightningDrawBoltU8WidthFn)(f32* start, f32* end, u8 width, f32 segScale, f32 d, int* seed, int depth,
+                                           int flags);
+
+#define lightningDrawBoltU8Width ((LightningDrawBoltU8WidthFn)lightningDrawBolt)
+
 void lightningRender(LightningEffect* p)
 {
     f32 start[3];
@@ -1093,8 +1098,6 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     f32 cur[3];
     f32 next[3];
     f32 branchEnd[3];
-    extern void lightningDrawBolt(f32* start, f32* end, u8 width, f32 segScale, f32 d, int* seed, int depth,
-                                  int flags);
 
     if ((u32)depth > 2)
     {
@@ -1191,8 +1194,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
                 PSVECScale(scaled, branchEnd, bfrac * len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
-                lightningDrawBolt(next, branchEnd, halfWidth, segScale, d, seed, depth + 1,
-                                  flags);
+                lightningDrawBoltU8Width(next, branchEnd, halfWidth, segScale, d, seed, depth + 1, flags);
             }
         }
         else
