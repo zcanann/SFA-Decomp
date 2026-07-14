@@ -316,7 +316,9 @@ void ObjHits_SyncObjectPosition(u32 obj);
 void ObjHits_RefreshObjectState(int obj);
 void ObjHits_AddContactObject(int obj, int contactObj);
 #ifndef OBJHITS_IMPLEMENTATION
+#ifndef OBJHITS_RECORD_OBJECT_HIT_DECLARED
 int ObjHits_RecordObjectHit();
+#endif
 int ObjHits_RecordPositionHit();
 #endif
 int ObjHits_GetPriorityHitWithPosition(GameObject* obj, int* outHitObject, int* outSphereIndex, u32* outHitVolume,

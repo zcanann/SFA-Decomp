@@ -8,7 +8,9 @@
 #include "main/objHitReact.h"
 #include "main/obj_contact.h"
 #include "main/obj_list.h"
+#define OBJHITS_RECORD_OBJECT_HIT_DECLARED
 #include "main/objhits.h"
+#undef OBJHITS_RECORD_OBJECT_HIT_DECLARED
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "main/track_dolphin_api.h"
@@ -37,7 +39,11 @@ typedef struct ObjHitsVec3
     f32 z;
 } ObjHitsVec3;
 
+typedef int (*ObjHitsCheckHitVolumesLegacyFn)(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask,
+                                               int skelMask);
+
 extern f32 gObjHitsPriorityHitTickDelta;
+extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume, s8 sphereIndex);
 
 static inline ObjHitsModelBank* ObjHits_GetActiveModel(int obj)
 {
@@ -1485,7 +1491,6 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
         {
             if ((u32)objA == srcObj)
             {
-                extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume, s8 sphereIndex);
                 ObjHits_RecordObjectHit(objB, objA, stateSrc->objectPairPriority, stateSrc->objectPairHitVolume, hit);
                 ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority, stateB->objectPairHitVolume, idxA);
                 ObjHits_ApplyPairResponse(objA, objB, -bestX, gObjHitsScalarZero, -bestZ, 0);
@@ -1502,6 +1507,7 @@ void doNothing_800333C8(int objA, int objB, int att, void* state, void* attState
 }
 #pragma dont_inline reset
 
+#define ObjHits_CheckHitVolumes ((ObjHitsCheckHitVolumesLegacyFn)ObjHits_CheckHitVolumes)
 void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 dt)
 {
     ObjHitsPriorityState* attStateB;
@@ -1512,9 +1518,6 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
     u32 bufIndex;
     u32 mask;
     u8 result;
-    extern int ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char checkB, u32 mask,
-                                       int skelMask);
-
     stateB = (ObjHitsPriorityState*)((GameObject*)objB)->anim.hitReactState;
     stateA = (ObjHitsPriorityState*)((GameObject*)objA)->anim.hitReactState;
     if ((u32)attA != 0)
@@ -1646,6 +1649,7 @@ void ObjHits_CheckObjectHitVolumes(int objA, int objB, int attA, int attB, f32 d
         }
     }
 }
+#undef ObjHits_CheckHitVolumes
 
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
@@ -1996,7 +2000,6 @@ void ObjHits_DetectObjectPair(int objA, int objB)
         }
         if ((dist < sumRadius) && (dist > gObjHitsScalarZero))
         {
-            extern int ObjHits_RecordObjectHit(int obj, int hitObj, u8 priority, u8 hitVolume, u8 sphereIndex);
             ObjHits_RecordObjectHit(objB, objA, *(u8*)&stateA->objectPairPriority, stateA->objectPairHitVolume, 0);
             ObjHits_RecordObjectHit(objA, objB, *(u8*)&stateB->objectPairPriority, stateB->objectPairHitVolume, 0);
             if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
