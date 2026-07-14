@@ -7116,6 +7116,7 @@ void videoInit(void)
 #pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma use_lmw_stmw on
+#pragma peephole on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
 extern u16 lbl_8030C9A0[];
@@ -7626,6 +7627,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
     } while (final == 0);
     return 0;
 }
+#pragma peephole reset
 #pragma optimize_for_size reset
 #pragma optimization_level reset
 #pragma opt_common_subs reset
