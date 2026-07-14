@@ -29,6 +29,7 @@
 #include "main/obj_message.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll1fbsetup_struct.h"
 #include "main/dll/wmgalleonsetup_struct.h"
@@ -155,7 +156,6 @@ static const f32 lbl_803E5D48 = 0.04f;
 void LaserBeam_update(int obj2)
 {
 
-    extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
     extern int* gLaserBeamObjModgfxResource;
     extern u8 framesThisStep;
     extern f32 timeDelta;
@@ -393,9 +393,9 @@ void LaserBeam_update(int obj2)
                         {
                             spread = lbl_803E5D44;
                         }
-                        Sfx_PlayAtPositionFromObject(obj2, ((GameObject*)player)->anim.localPosX,
-                                                     ((GameObject*)obj2)->anim.localPosY,
-                                                     ((GameObject*)player)->anim.localPosZ, SFXTRIG_wp_fball2_c_1c9);
+                        Sfx_PlayAtPositionFromObjectIntFirstLegacy(
+                            obj2, ((GameObject*)player)->anim.localPosX, ((GameObject*)obj2)->anim.localPosY,
+                            ((GameObject*)player)->anim.localPosZ, SFXTRIG_wp_fball2_c_1c9);
                         if (*(s16*)(*(char**)&((GameObject*)player)->extra + 0x81a) == 0)
                         {
                             sfx = 31;
