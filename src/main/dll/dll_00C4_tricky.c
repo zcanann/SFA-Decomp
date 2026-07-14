@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
@@ -189,7 +190,6 @@ struct VisBits16
 #define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
-extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 extern u64 ObjLink_DetachChild();
@@ -404,7 +404,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             slot = *(int*)&((GameObject*)obj)->extra;
             if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                 (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                  (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
+                  (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x10) == 0))))
             {
                 objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
             }
@@ -438,7 +438,7 @@ int tricky_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 slot = *(int*)&((GameObject*)obj)->extra;
                 if ((((TrickyByteFlags*)(slot + 0x58))->bit6 == 0) &&
                     (((((GameObject*)obj)->anim.currentMove >= 0x30 || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-                      (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))))
+                      (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x10) == 0))))
                 {
                     objAudioFn_800393f8Legacy(obj, (void*)(slot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
                 }
@@ -650,7 +650,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                 ref = *(int*)&((GameObject*)objVal)->extra;
                 if (((*(u8*)(ref + 0x58) >> 6 & 1) == 0u) && (((((GameObject*)objVal)->anim.currentMove >= 0x30 ||
                                                                 (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
-                                                               !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
+                                                               !Sfx_IsPlayingFromObjectChannelIntLegacy(objVal, 0x10))))
                 {
                     objAudioFn_800393f8Legacy(objVal, (void*)(ref + 0x3a8), promptId, 0x500, 0xffffffff, 0);
                 }
@@ -717,7 +717,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                         if (((*(u8*)(refB + 0x58) >> 6 & 1) == 0u) &&
                             (((((GameObject*)objVal)->anim.currentMove >= 0x30 ||
                                (((GameObject*)objVal)->anim.currentMove < 0x29)) &&
-                              !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))))
+                              !Sfx_IsPlayingFromObjectChannelIntLegacy(objVal, 0x10))))
                         {
                             objAudioFn_800393f8Legacy(objVal, (void*)(refB + 0x3a8), 0x359, 0x500, 0xffffffff, 0);
                         }
@@ -726,7 +726,7 @@ int Tricky_updateSideCommandPrompts(int obj)
                                (refC = *(int*)&((GameObject*)objVal)->extra, (*(u8*)(refC + 0x58) >> 6 & 1) == 0u)) &&
                               ((((GameObject*)objVal)->anim.currentMove >= 0x30 ||
                                 (((GameObject*)objVal)->anim.currentMove < 0x29)))) &&
-                             !Sfx_IsPlayingFromObjectChannel(objVal, 0x10))
+                             !Sfx_IsPlayingFromObjectChannelIntLegacy(objVal, 0x10))
                     {
                         objAudioFn_800393f8Legacy(objVal, (void*)(refC + 0x3a8), 0x358, 0x500, 0xffffffff, 0);
                     }
@@ -824,7 +824,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         childSlot = *(int*)&obj->extra;
         if (((*(u8*)(childSlot + 0x58) >> 6 & 1) == 0u) &&
             (((obj->anim.currentMove >= 0x30 || (obj->anim.currentMove < 0x29)) &&
-              (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))))
+              (Sfx_IsPlayingFromObjectChannelIntLegacy((int)obj, 0x10) == 0))))
         {
             objAudioFn_800393f8Legacy(obj, (void*)(childSlot + 0x3a8), 0x29d, 0, 0xffffffff, 0);
         }
@@ -867,7 +867,7 @@ void Tricky_free(GameObject* obj, int shouldKeepFlameChildren)
         {                                                                                                              \
             if (((GameObject*)obj)->anim.currentMove >= 0x30 || ((GameObject*)obj)->anim.currentMove < 0x29)           \
             {                                                                                                          \
-                if (Sfx_IsPlayingFromObjectChannel((obj), 0x10) == 0)                                                  \
+                if (Sfx_IsPlayingFromObjectChannelIntLegacy((obj), 0x10) == 0)                                         \
                 {                                                                                                      \
                     objAudioFn_800393f8Legacy((obj), (u8*)st + 0x3a8, (sfx), (vol), 0xffffffff, 0);                    \
                 }                                                                                                      \
@@ -1599,7 +1599,7 @@ void Tricky_update(int obj)
                 played = 0;
                 break;
             default:
-                if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0)
+                if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x10) != 0)
                 {
                     played = 0;
                 }
@@ -3089,7 +3089,7 @@ void trickyFn_80144f50(GameObject* obj, int state)
                 sfxState = *(int*)&(obj)->extra;
                 sfxDisabled = (*(u8*)(sfxState + 0x58) >> 6) & 1;
                 if ((sfxDisabled == 0) && (((obj)->anim.currentMove >= 0x30) || ((obj)->anim.currentMove < 0x29)) &&
-                    (Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0))
+                    (Sfx_IsPlayingFromObjectChannelIntLegacy((int)obj, 0x10) == 0))
                 {
                     objAudioFn_800393f8Legacy(obj, (void*)(sfxState + 0x3a8), 0x360, 0x500, -1, 0);
                 }
