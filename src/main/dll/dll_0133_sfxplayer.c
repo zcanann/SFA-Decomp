@@ -26,6 +26,7 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_pointer_u16_legacy_api.h"
+#include "main/audio/sfx_position_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 
 /*
@@ -81,8 +82,6 @@ typedef struct SfxplayerPlacement
 
 extern f32 lbl_803E40B8;
 extern f32 lbl_803E40BC;
-extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
-
 int sfxplayerObj_getExtraSize(void)
 {
     return 0x8;
@@ -144,9 +143,9 @@ static inline void sfxplayerStartSound(u8* obj, SfxplayerPlacement* data, Sfxpla
         }
         else
         {
-            Sfx_PlayAtPositionFromObject(((GameObject*)soundObj)->anim.localPosX,
-                                         ((GameObject*)soundObj)->anim.localPosY,
-                                         ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId);
+            Sfx_PlayAtPositionFromObjectPtrCanonicalLegacy(
+                ((GameObject*)soundObj)->anim.localPosX, ((GameObject*)soundObj)->anim.localPosY,
+                ((GameObject*)soundObj)->anim.localPosZ, soundObj, soundId);
         }
     }
 }
