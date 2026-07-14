@@ -20,6 +20,7 @@
 #include "main/dll/dll_00D7_kaldachompspit_api.h"
 #include "main/objhits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
@@ -42,7 +43,6 @@ extern f32 lbl_803E30FC;
 extern f32 lbl_803E3108;
 extern f32 lbl_803E310C;
 
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
