@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_channel_volume_api.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 
@@ -18,7 +19,6 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
-void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit);
 void Sfx_AddLoopedObjectSound(u32 obj, u16 sfxId);
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId);
