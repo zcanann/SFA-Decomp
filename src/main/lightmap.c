@@ -1212,7 +1212,7 @@ void renderSceneGeometry(int* p1, s8* order)
     int* layerFlagPtr;
     int idx;
     int y, x0;
-    int k;
+    int k[1];
     int row, col;
     int oi, ii;
     int layer;
@@ -1234,7 +1234,7 @@ void renderSceneGeometry(int* p1, s8* order)
         mapFn_80057d24(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, box0, box1, box2, box3, layer, 1,
                        gMapCurRomListSlot);
         p = map;
-        for (k = 0; k < 256; k++)
+        for (k[0] = 0; k[0] < 256; k[0]++)
         {
             *p = 0;
             p++;
