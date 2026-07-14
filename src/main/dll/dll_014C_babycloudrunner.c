@@ -417,10 +417,11 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
     {
+        int found;
         BabyCloudRunnerState* sub2 = ((GameObject*)obj)->extra;
         char* pp = (char*)Obj_GetPlayerObject();
         BabyCloudRunnerPlacement* def2 = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
-        int found = 0;
+        found = 0;
         if (Vec_distance((f32*)(pp + 0x18), (f32*)((char*)((int)obj + 0x18))) < (f32)def2->innerRadius &&
             sub2->runnerState == 3 &&
             (((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
