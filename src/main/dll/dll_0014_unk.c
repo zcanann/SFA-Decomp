@@ -118,6 +118,18 @@ extern f32 lbl_803E0600;
 extern f32 lbl_803E0604;
 extern f32 gObjfsaPlaneNormalScale;
 extern f32 lbl_803E0608;
+
+typedef void (*RomCurveGetAdjacentWindowIntFn)(int curve, int* outIds);
+typedef int (*RomCurveProjectAdjacentLegacyFn)(int* curveIds, double x, double y, double z,
+                                                float* outLateralOffset, float* outVerticalOffset, float* outPhase);
+typedef int (*CurvesPointInsideLoopLegacyFn)(u32 curveId, double x, double y, double z, int* outDistance);
+
+#define RomCurve_getAdjacentWindowInt \
+    ((RomCurveGetAdjacentWindowIntFn)RomCurve_getAdjacentWindow)
+#define RomCurve_projectPointToAdjacentWindowLegacy \
+    ((RomCurveProjectAdjacentLegacyFn)RomCurve_projectPointToAdjacentWindow)
+#define curves_isPointInsideLoopLegacy \
+    ((CurvesPointInsideLoopLegacyFn)curves_isPointInsideLoop)
 extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
@@ -1592,8 +1604,6 @@ int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
 
 int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* outPhase)
 {
-    extern u32 RomCurve_getAdjacentWindow();
-    extern int RomCurve_projectPointToAdjacentWindow();
     int projected;
     int linkId;
     float lateralOffset;
@@ -1609,9 +1619,10 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
     goto loopTest;
     do
     {
-        RomCurve_getAdjacentWindow(curve, adjacentWindow);
+        RomCurve_getAdjacentWindowInt(curve, adjacentWindow);
         projected =
-            RomCurve_projectPointToAdjacentWindow(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset, &phase);
+            RomCurve_projectPointToAdjacentWindowLegacy(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset,
+                                                        &phase);
         if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
             verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654)
         {
@@ -1884,11 +1895,8 @@ fail:
 
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
-    u32 cur;
-    f32* probe;
-    f32* distWrite;
     f32* scanBase;
-    f32* distRead;
+    int top;
     int queueCurve;
     int directIndex;
     int directSlot;
@@ -1924,13 +1932,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
 
     candidateCount = 0;
     directSlot = 0;
-    cur = startCurve;
-    distRead = candidateDistances;
-    probe = distRead;
-    scanBase = queueDistances;
-    for (; directSlot < 4; cur += 4, directSlot++)
+    for (; directSlot < 4; directSlot++)
     {
-        directLinkId = *(s32*)(cur + 0x1c);
+        scanBase = queueDistances;
+        directLinkId = ((RomCurveDef*)startCurve)->linkIds[directSlot];
         if (directLinkId <= -1)
         {
             continue;
@@ -1942,7 +1947,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         }
         visited[startIndex] = 1;
 
-        directCurve = (u32)RomCurve_findByIdWithIndex(*(s32*)(cur + 0x1c), &directIndex);
+        directCurve = (u32)RomCurve_findByIdWithIndex(((RomCurveDef*)startCurve)->linkIds[directSlot], &directIndex);
         if (directCurve == 0)
         {
             continue;
@@ -1960,24 +1965,22 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         visited[directIndex] = 1;
 
         found = 0;
-        distWrite = probe;
         do
         {
             if (queueCount > 0)
             {
                 queueCount--;
-                directIndex = queueIndices[queueCount & 0xFFFFFFFF];
+                top = queueCount;
+                directIndex = queueIndices[top];
                 queueCurve = (int)romCurves[directIndex];
-                distance = queueDistances[queueCount];
+                distance = queueDistances[top];
                 sel[0] = 0;
 
                 if (*(u8*)(queueCurve + 0x34) == 1)
                 {
                     found = 1;
-                    *distWrite = distance;
-                    probe++;
-                    distWrite++;
-                    candidateIds[candidateCount++] = *(s32*)(cur + 0x1c);
+                    candidateDistances[candidateCount] = distance;
+                    candidateIds[candidateCount++] = ((RomCurveDef*)startCurve)->linkIds[directSlot];
                     continue;
                 }
 
@@ -2015,6 +2018,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                         queueDistances[j] = queueDistances[j - 1];
                     }
                     queueCount++;
+                    top++;
                     queueDistances[insertIndex] = linkDistance;
                     queueIndices[insertIndex] = directIndex;
                     visited[directIndex] = 1;
@@ -2056,11 +2060,10 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
         sel[0] = sel[1];
         for (; sel[0] < candidateCount; sel[0]++)
         {
-            if (*distRead < candidateDistances[sel[1]])
+            if (candidateDistances[sel[0]] < candidateDistances[sel[1]])
             {
                 sel[1] = sel[0];
             }
-            distRead++;
         }
         return candidateIds[sel[1]];
     }
@@ -2770,7 +2773,6 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 
 int RomCurve_func16(double x, double y, double z)
 {
-    extern int curves_isPointInsideLoop();
     u32 candidateIds[20];
     u32* top;
     int candidateCount;
@@ -2794,7 +2796,7 @@ int RomCurve_func16(double x, double y, double z)
     top = &candidateIds[candidateCount];
     while (candidateCount != 0)
     {
-        if (curves_isPointInsideLoop(candidateIds[0], x, y, z, &out) != 0)
+        if (curves_isPointInsideLoopLegacy(candidateIds[0], x, y, z, &out) != 0)
         {
             return candidateIds[0];
         }
