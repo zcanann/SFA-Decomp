@@ -13,6 +13,7 @@
  */
 
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebit_ids.h"
@@ -32,7 +33,6 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 #define MMPASTEROIDRE_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
-extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
 PartFxSpawnParams gMmpAsteroidDustSpawnParams;
@@ -199,7 +199,7 @@ void mmp_asteroid_re_update(int obj)
             {
                 vol = 0x7F;
             }
-            Sfx_SetObjectChannelVolume(obj, 0x40, vol, lbl_803E44FC);
+            Sfx_SetObjectChannelVolumeIntU8Legacy(obj, 0x40, vol, lbl_803E44FC);
         }
         if (state->intensity != 0)
         {
