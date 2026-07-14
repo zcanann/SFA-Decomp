@@ -58,7 +58,8 @@
 #include "main/gameloop_gamebit_api.h"
 #include "main/pad.h"
 #include "main/objhits.h"
-#include "main/audio/sfx.h"
+#include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 #define DBEGG_OBJGROUP         0x24
@@ -629,7 +630,6 @@ void dbegg_update(GameObject* obj)
     extern void dbegg_processMessages(GameObject*);
     extern void fn_801FE774(int, f32*);
 
-    extern void Sfx_KeepAliveLoopedObjectSound(int, int);
     extern f32 Vec_xzDistance(int, int);
     extern f32 PSVECMag(int);
     extern f32 oneOverTimeDelta;
@@ -949,7 +949,7 @@ void dbegg_update(GameObject* obj)
             d[0] = (obj)->anim.localPosX - ((DbeggPlacement*)data)->targetPosX;
             d[1] = (obj)->anim.localPosY - ((DbeggPlacement*)data)->targetPosY;
             d[2] = (obj)->anim.localPosZ - ((DbeggPlacement*)data)->targetPosZ;
-            Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_baddie_eba_smallswipe1);
+            Sfx_KeepAliveLoopedObjectSoundIntLegacy((int)obj, SFXTRIG_baddie_eba_smallswipe1);
             fz = *(f32*)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
             fx = *(f32*)((int)d + 0);
