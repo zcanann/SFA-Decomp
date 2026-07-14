@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId);
 s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
@@ -15,7 +16,6 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId);
 void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId);
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
-void Sfx_StopObjectChannel(u32 obj, u32 channel);
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale);
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale);
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);

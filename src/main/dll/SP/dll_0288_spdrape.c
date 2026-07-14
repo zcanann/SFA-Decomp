@@ -12,6 +12,7 @@
  */
 #include "main/dll/SP/dll_0287_spscarab.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -48,8 +49,6 @@ __declspec(section ".sdata2") f32 lbl_803E5AC4 = 32767.0f;
 __declspec(section ".sdata2") f32 gSpDrapePi = 3.1415927f;
 __declspec(section ".sdata2") f32 lbl_803E5ACC = 32768.0f;
 #pragma explicit_zero_data off
-
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 
 ObjectDescriptor gSPDrapeObjDescriptor = {
     0,
