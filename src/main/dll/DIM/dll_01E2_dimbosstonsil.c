@@ -29,29 +29,32 @@
 #define DIMBOSSTONSIL_OBJGROUP 3
 #define DIMBOSSTONSIL_PARTFX   0x4bd
 
-extern f32 lbl_803DDB9C;
-extern f32 lbl_803DDBA0;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4CB8;
 extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
-extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
 extern void DIMbosstonsil_startIdleHitReaction(void);
-extern f32 lbl_803DDB98;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CA0;
 extern f32 lbl_803E4CCC;
 
+u8 lbl_803DDBB0[8];
+u8 lbl_803DDBA8[8];
+f32 lbl_803DDBA4;
+f32 lbl_803DDBA0;
+f32 lbl_803DDB9C;
+f32 lbl_803DDB98;
+s8 gDIMbosstonsilRoutePhase;
+ModelLightStruct* gDIMbosstonsilLight;
+
 int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
-    extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
-    extern u8 lbl_803DDBB0;
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red;
@@ -165,7 +168,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
             {
                 state->field270 = 0;
                 (*gPlayerInterface)
-                    ->update(obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8, &lbl_803DDBB0, &lbl_803DDBA8);
+                    ->update(obj, state, lbl_803E4CB8, *(f32*)&lbl_803E4CB8, lbl_803DDBB0, lbl_803DDBA8);
                 animUpdate->sequenceEventActive = 0;
             }
             goto updateDone;
@@ -174,7 +177,7 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 
     updateHitReaction:
         animOk = (*(int (**)(void*, ObjAnimUpdateState*, DIMbosstonsilState*, u8*, u8*, int))(
-            *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, &lbl_803DDBB0, &lbl_803DDBA8, 0);
+            *(int*)gBaddieControlInterface + 0x34))(obj, animUpdate, state, lbl_803DDBB0, lbl_803DDBA8, 0);
         if (animOk != 0)
         {
             (*(void (**)(void*, DIMbosstonsilState*, f32, int))(*(int*)gBaddieControlInterface + 0x2c))(
@@ -269,8 +272,7 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
 
 void DIMbosstonsil_hitDetect(GameObject* obj)
 {
-    extern int lbl_803DDBB0;
-    (*gPlayerInterface)->updateVelocityState(obj, (obj)->extra, &lbl_803DDBB0);
+    (*gPlayerInterface)->updateVelocityState(obj, (obj)->extra, lbl_803DDBB0);
 }
 
 void DIMbosstonsil_update(GameObject* obj)
@@ -402,10 +404,8 @@ void DIMbosstonsil_release(void)
 #pragma opt_propagation reset
 void DIMbosstonsil_initialise(void)
 {
-    extern void (*lbl_803DDBA8[2])(void);
-    extern void (*lbl_803DDBB0[2])(void);
-    lbl_803DDBB0[0] = DIMbosstonsil_startIdleHitReaction;
-    lbl_803DDBB0[1] = DIMbosstonsil_chooseHitReaction;
-    lbl_803DDBA8[0] = DIMbosstonsil_enableHitReaction;
-    lbl_803DDBA8[1] = DIMbosstonsil_updateHitReaction;
+    ((void (**)(void))lbl_803DDBB0)[0] = DIMbosstonsil_startIdleHitReaction;
+    ((void (**)(void))lbl_803DDBB0)[1] = DIMbosstonsil_chooseHitReaction;
+    ((void (**)(void))lbl_803DDBA8)[0] = DIMbosstonsil_enableHitReaction;
+    ((void (**)(void))lbl_803DDBA8)[1] = DIMbosstonsil_updateHitReaction;
 }

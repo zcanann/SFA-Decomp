@@ -27,12 +27,12 @@
 #define PAD_BUTTON_START 0x1000
 #define PAD_ACCEPT_MASK  (PAD_BUTTON_A | PAD_BUTTON_START)
 
-extern s8 lbl_803DD8F0;  /* item count */
-extern s16 lbl_803DD8F2; /* accumulated item width */
-extern s8 lbl_803DD8F4;  /* cancel result id */
-extern s8 lbl_803DD8F5;  /* selected result id */
-extern s8 lbl_803DD8E8;  /* armed flag (ignore input for one frame after build) */
-extern f32 lbl_803DD8EC; /* scroll timer */
+s8 lbl_803DD8F5;  /* selected result id */
+s8 lbl_803DD8F4;  /* cancel result id */
+s16 lbl_803DD8F2; /* accumulated item width */
+s8 lbl_803DD8F0;  /* item count */
+f32 lbl_803DD8EC; /* scroll timer */
+s8 lbl_803DD8E8;  /* armed flag (ignore input for one frame after build) */
 extern f32 lbl_803E21D8; /* scroll timer wrap period */
 
 

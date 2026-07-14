@@ -1211,6 +1211,7 @@ main/dll/dll_0000_gameui.c:
 main/dll/dll_003B_menu.c:
 	.text       start:0x8012FECC end:0x80130124
 	.data       start:0x8031B6F0 end:0x8031C1A8
+	.sbss       start:0x803DD8E8 end:0x803DD8F8
 
 main/dll/dll_003C_tumbleweedbush.c:
 	.text       start:0x80130124 end:0x80131540
@@ -2364,6 +2365,7 @@ main/dll/DIM/dimbossspit.c:
 
 main/dll/DIM/dll_01E2_dimbosstonsil.c:
 	.text       start:0x801BE44C end:0x801BEEA0
+	.sbss       start:0x803DDB90 end:0x803DDBB8
 
 main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
