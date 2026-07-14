@@ -68,6 +68,8 @@ __declspec(section ".rodata") ObjFxRandomBurstTable gObjFxRandomBurstTbl = {
 
 #define OBJFX_OBJFLAG_PARENT_SLACK 0x1000
 
+typedef void (*ObjFxNdcToScreenFn)(f32 x, f32 y, f32 z, int* screenX, int* screenY, int* screenZ);
+
 /* Shared explosion object spawned by spawnExplosion / DIMexplosionFn_8009a96c
  * (type 0x24, id 0x253; buffer cast to ExplosionSetup). */
 #define OBJFX_CHILD_OBJ_EXPLOSION 0x253
@@ -636,8 +638,6 @@ void objfx_spawnFrameTimedHitPulse(GameObject* obj, f32 c, u8 a, u8 b, f32 d)
 
 void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* light, f32 fa, f32 fb)
 {
-    extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 * ox, f32 * oy, f32 * oz);
-    extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int* sx, int* sy, int* sz);
     ObjFxParticleParams params;
     f32 lvec[6];
     f32 proj[3];
@@ -723,7 +723,7 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
                                                (obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384, &proj[2],
                                                &proj[1], &proj[0]);
         }
-        Camera_NdcToScreen(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
+        ((ObjFxNdcToScreenFn)Camera_NdcToScreen)(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
         depth = depthReadRequestPoll(screen[2], screen[1], (int)obj);
         if (screen[0] > depth)
         {
