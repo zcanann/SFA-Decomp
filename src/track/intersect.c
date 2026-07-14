@@ -1045,8 +1045,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern f32 lbl_8030EAA0[3][3];
-    extern int* Shader_getLayer(void* op, int slot);
-
     extern void GXInitTexObj();
 
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
@@ -1064,7 +1062,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    handle1 = *Shader_getLayer(renderOp, 0);
+    handle1 = *(int*)Shader_getLayer(renderOp, 0);
     selectTexture((Texture*)textureIdxToPtr(handle1), 0);
     selectReflectionTexture(1);
     tex2 = textureIdxToPtr(((ModelRenderOp*)renderOp)->layer0TextureId);
@@ -2360,8 +2358,6 @@ int modelCb_80073d04(u8* obj, int* objB)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int* Shader_getLayer(int op, int slot);
-    extern int textureIdxToPtr(int idx);
     int handle;
     GXColor colorK;
     GXColor colorB;
@@ -2371,7 +2367,7 @@ int modelCb_80073d04(u8* obj, int* objB)
 
     colorB = lbl_803DEEB4;
     model = objB[0];
-    tex = textureIdxToPtr(*Shader_getLayer((int)ObjModel_GetRenderOp((ModelFileHeader*)model, 0), 0));
+    tex = (int)textureIdxToPtr(*(int*)Shader_getLayer(ObjModel_GetRenderOp((ModelFileHeader*)model, 0), 0));
     texMtx[0][0] = lbl_803DEF34;
     texMtx[0][1] = lbl_803DEEDC;
     texMtx[0][2] = lbl_803DEEDC;
@@ -2452,8 +2448,6 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int* Shader_getLayer(int op, int slot);
-    extern int textureIdxToPtr(int idx);
     GXColor colorK;
     GXColor colorFog;
     Mtx mtx;
@@ -2462,7 +2456,7 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
     f32 tx;
 
     op = (int)ObjModel_GetRenderOp((ModelFileHeader*)objB[0], slot);
-    tex = textureIdxToPtr(*Shader_getLayer(op, 0));
+    tex = (int)textureIdxToPtr(*(int*)Shader_getLayer((void*)op, 0));
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     lbl_803DD010 = mainGetBit(0x2ba);
     tx = lbl_803DD010 / lbl_803DEF38;
@@ -2530,8 +2524,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern int* Shader_getLayer(void* op, int slot);
-    extern void* textureIdxToPtr(int idx);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern int fn_8003BB74(void);
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
@@ -2550,7 +2542,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
-    tex = textureIdxToPtr(*Shader_getLayer(renderOp, 0));
+    tex = textureIdxToPtr(*(int*)Shader_getLayer(renderOp, 0));
 
     PSMTXScale(mtx_60, lbl_803DB6B4, lbl_803DB6B4, lbl_803DEEDC);
     mtx_60[2][3] = lbl_803DEEE4;
