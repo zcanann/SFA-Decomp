@@ -12,6 +12,7 @@
  * unused entry-point stubs.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00A6_dlla6func0.h"
@@ -23,15 +24,6 @@
 
 u8 lbl_803DB980[8] = {0, 0, 0, 1, 0, 2, 0, 0};
 u8 gDllA6EffectTex[8] = {0, 0, 0, 1, 0, 2, 0, 0};
-
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLLA6_EFFECT_ID 0x26a

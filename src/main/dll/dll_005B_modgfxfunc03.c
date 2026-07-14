@@ -25,11 +25,6 @@ u8 lbl_803DB8B0[4] = {0};
 #pragma explicit_zero_data off
 u8 lbl_803DB8B4[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 
-STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
-STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);
-STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
-STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
-
 extern u8 lbl_80311E30[];
 extern u32 lbl_803E0730;
 extern const f32 lbl_803E0734, lbl_803E0738, lbl_803E073C, lbl_803E0740, lbl_803E0744;

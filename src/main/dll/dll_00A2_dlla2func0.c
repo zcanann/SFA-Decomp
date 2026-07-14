@@ -12,19 +12,11 @@
  *     world position, a null one uses posSource as a position packet.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A2_dlla2func0.h"
-
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLLA2_EFFECT_ID 0x24

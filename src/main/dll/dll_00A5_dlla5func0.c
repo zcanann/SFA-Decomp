@@ -11,21 +11,13 @@
  * (posSource + 0xc..0x14). func00/func01 are the DLL's unused entry stubs.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00A5_dlla5func0.h"
 
 u8 lbl_803DB970[8] = {0, 0, 0, 1, 0, 2, 0, 3};
 u8 lbl_803DB978[8] = {0, 4, 0, 5, 0, 6, 0, 7};
-
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLLA5_EFFECT_ID 0x5e0

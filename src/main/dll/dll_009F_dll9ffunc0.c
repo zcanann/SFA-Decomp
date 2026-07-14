@@ -15,6 +15,7 @@
  * different table/effect id.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_009F_dll9ffunc0.h"
@@ -23,15 +24,6 @@
 #include "main/dll/dll_00A2_dlla2func0.h"
 #include "main/dll/dll_00A4_dummya4.h"
 #include "main/dll/dll_00A5_dlla5func0.h"
-
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 /* base draw flags before OR'ing the caller's flags */
 #define DLL9F_EFFECT_BASE_FLAGS 0xc0104c0

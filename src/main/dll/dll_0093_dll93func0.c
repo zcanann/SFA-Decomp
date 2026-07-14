@@ -10,18 +10,10 @@
  * buffer to the mod-gfx interface's spawnEffect.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0093_dll93func0.h"
-
-typedef struct GfxCmd
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 typedef struct GfxBuf
 {

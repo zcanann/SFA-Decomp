@@ -9,29 +9,16 @@
  * is set the world-space position is offset by the source object's
  * position (sourceObj+0x18) and/or the posSource transform (posSource+0xc).
  *
- * Similar layout to the dll_009B screenfx types (ScreenFxHdr/ScreenFxPart);
- * the types are redefined locally here because the part command array is
- * inline in the header rather than a separate buffer.
+ * Similar layout to the dll_009B screenfx types (ScreenFxHdr/ScreenFxPart).
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0095_dll95func0.h"
 
 u8 lbl_803DB940[8] = {0, 4, 0, 5, 0, 6, 0, 7};
-
-/* one per-part draw command (matches ScreenFxPart, 0x18 bytes) */
-typedef struct GfxCmd
-{
-    u32 mode;  /* 0x00 */
-    f32 x;     /* 0x04 */
-    f32 y;     /* 0x08 */
-    f32 z;     /* 0x0c */
-    void* tex; /* 0x10 */
-    u16 flags; /* 0x14 */
-    u8 layer;  /* 0x16 */
-} GfxCmd;
 
 /* effect header passed to spawnEffect (matches ScreenFxHdr); the part
    command array is inline here rather than a separate buffer */
@@ -58,7 +45,6 @@ typedef struct GfxBuf
     GfxCmd entries[32]; /* 0x60 */
 } GfxBuf;
 
-STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
 STATIC_ASSERT(offsetof(GfxBuf, col) == 0x20);
 STATIC_ASSERT(offsetof(GfxBuf, spawnFlags) == 0x54);
 STATIC_ASSERT(offsetof(GfxBuf, count) == 0x5d);

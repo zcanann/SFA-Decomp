@@ -13,19 +13,11 @@
  * sprite asset table lbl_803188D8 (.data); both are owned elsewhere.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A1_dlla1func0.h"
-
-typedef struct
-{
-    u32 mode;    /* 0x00 */
-    f32 x, y, z; /* 0x04 0x08 0x0c */
-    void* tex;   /* 0x10 */
-    u16 flags;   /* 0x14 */
-    u8 layer;    /* 0x16 */
-} GfxCmd;
 
 /* base spawn flags; low bit positions the effect at the source object */
 #define SPAWN_FLAGS_BASE        0xc0104c0

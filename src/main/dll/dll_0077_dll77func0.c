@@ -12,8 +12,6 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_0077_dll77func0.h"
 
-STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
-
 extern u8 lbl_80314980[];
 
 /* referenced via *(f32*)& so the 0.0 base keeps its additive fadds (a literal

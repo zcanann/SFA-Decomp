@@ -10,16 +10,8 @@
  * the DLL's nop lifecycle slots.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/game_object.h"
-
-typedef struct GfxCmd
-{
-    u32 mode;    /* 0x00 */
-    f32 x, y, z; /* 0x04 */
-    void* tex;   /* 0x10 */
-    u16 flags;   /* 0x14 */
-    u8 layer;    /* 0x16 */
-} GfxCmd;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9B_EFFECT_ID 0x156

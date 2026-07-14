@@ -12,8 +12,6 @@
 #include "main/dll/modgfx_types.h"
 #include "main/dll/dll_007B_dll7bfunc0.h"
 
-STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
-
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL7B_EFFECT_ID 0x8e
 

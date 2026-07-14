@@ -11,22 +11,13 @@
  * The sibling DLL 0x98 (dll_0098_dll98func0.c) follows the same shape.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0097_dll97func0.h"
 
 u8 lbl_803DB948[8] = {0, 1, 0, 0, 0, 0, 0, 0};
-
-/* GfxCmd/GfxBuf are intentionally TU-local; the sibling DLL 0x98 keeps its own. */
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 typedef struct
 {

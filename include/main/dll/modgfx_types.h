@@ -12,6 +12,11 @@ typedef struct
     u8 layer;
 } GfxCmd;
 
+STATIC_ASSERT(sizeof(GfxCmd) == 0x18);
+STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);
+STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
+STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
+
 typedef struct ModgfxVertexData
 {
     s16 posX;

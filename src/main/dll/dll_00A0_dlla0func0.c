@@ -15,19 +15,11 @@
  * func00/func01 are exported no-ops (other DLL entry slots).
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
 #include "main/dll/dll_00A0_dlla0func0.h"
-
-typedef struct
-{
-    u32 mode;    /* 0x00: blend/draw mode */
-    f32 x, y, z; /* 0x04 0x08 0x0c: per-axis scale/offset */
-    void* tex;   /* 0x10: texture sub-asset pointer */
-    u16 flags;   /* 0x14 */
-    u8 layer;    /* 0x16: draw layer */
-} GfxCmd;
 
 /* base spawn flags; low bit positions the effect at the source object */
 #define SPAWN_FLAGS_BASE        0xc010480

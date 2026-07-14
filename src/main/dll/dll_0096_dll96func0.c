@@ -11,19 +11,11 @@
  * float pool.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/savegame.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0096_dll96func0.h"
-
-typedef struct GfxCmd
-{
-    u32 mode;    /* 0x00: blend/draw mode */
-    f32 x, y, z; /* 0x04: size/scale per axis */
-    void* tex;   /* 0x10: texture descriptor */
-    u16 flags;   /* 0x14: per-entry render flags */
-    u8 layer;    /* 0x16: draw layer */
-} GfxCmd;
 
 typedef struct GfxBuf
 {

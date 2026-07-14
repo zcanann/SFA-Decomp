@@ -12,20 +12,11 @@
  * world position (ctx+0x18) or the posSource frame (posSource+0xc).
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/dll/modgfx_types.h"
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0098_dll98func0.h"
-
-/* one modgfx command entry; mirrors ScreenFxPart's layout */
-typedef struct
-{
-    u32 mode;    /* +0x00 */
-    f32 x, y, z; /* +0x04 +0x08 +0x0c */
-    void* tex;   /* +0x10 */
-    u16 flags;   /* +0x14 */
-    u8 layer;    /* +0x16 */
-} GfxCmd;
 
 /* command buffer handed to spawnEffect; mirrors ScreenFxHdr + inline entries */
 typedef struct
