@@ -23,7 +23,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/objfx.h"
-#include "main/audio/sfx.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/frame_timing.h"
 #include "main/model_light.h"
 #include "main/vecmath.h"
@@ -215,7 +215,6 @@ void lavaball1be_init(s16* obj, u8* p)
 
 void lavaball1be_update(s16* obj)
 {
-    extern int Sfx_PlayFromObject(int* obj, int sfxId);
     Lavaball1beState* state;
     ObjHitsPriorityState* sub;
 
