@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object.h"
+#include "main/object_render.h"
 #include "main/obj_group.h"
 #include "main/obj_trigger.h"
 #include "main/vecmath.h"
@@ -123,7 +124,6 @@ extern void SH_EmptyTumbleW_init(void);
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
 extern void objRenderModel(int obj);
-extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void playerPutAwayStaff(GameObject* obj, int mode);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
@@ -177,7 +177,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         }
         else
         {
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
         }
         ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
         ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
