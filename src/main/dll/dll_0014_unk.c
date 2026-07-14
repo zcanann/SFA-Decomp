@@ -2319,7 +2319,7 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 #define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
     exitFz = (f32)(ZF);                                                                                                \
     exitFx = (f32)(XF);                                                                                                \
-    for (normalIdx = 0, edge = 0; edge < 4; edge++, normalIdx += 2)                                                    \
+    for (normalIdx = 0, edge = normalIdx; edge < 4; edge++, normalIdx += 2)                                                    \
     {                                                                                                                  \
         if ((WGP)->planeOffsets[edge] +                                                                                \
                 (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
@@ -2375,6 +2375,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     u8 edge;
     u8 normalIdx;
     int pairId;
+    u16 pairGid;
     int zid;
     int checksum;
     int searchCount;
@@ -2558,8 +2559,9 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 back = 4;
                             }
                             wg->patchIndices[slot] = gObjfsaPatchCount;
+                            pairGid = pairId;
                             np = &patchBase[0][gObjfsaPatchCount];
-                            np->groupId = pairId;
+                            np->groupId = pairGid;
                             pairs[gObjfsaPatchCount * 2] = *(u8*)(curve + 3);
                             pairs[gObjfsaPatchCount * 2 + 1] = *(u8*)(linked + 3);
 
