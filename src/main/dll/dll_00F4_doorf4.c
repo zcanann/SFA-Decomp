@@ -17,6 +17,7 @@
  */
 #include "main/dll/dll_00F4_doorf4.h"
 #include "main/object_descriptor.h"
+#include "main/audio/sfx_object_query_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/render.h"
@@ -113,8 +114,6 @@ __declspec(section ".sdata2") f32 lbl_803E3670 = -60.0f;
 __declspec(section ".sdata2") f32 lbl_803E3674 = 1000.0f;
 #pragma explicit_zero_data off
 
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
-
 void DoorF4_hitDetect(void)
 {
 }
@@ -148,7 +147,7 @@ void DoorF4_free(int obj)
     DoorF4State* state = ((GameObject*)obj)->extra;
     if (state->sfxOpen != 0)
     {
-        if (Sfx_IsPlayingFromObject(obj, state->sfxOpen) != 0)
+        if (Sfx_IsPlayingFromObjectIntLegacy(obj, state->sfxOpen) != 0)
         {
             Sfx_StopFromObjectIntLegacy(obj, state->sfxOpen);
         }
@@ -564,7 +563,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 }
                 break;
             case 4:
-                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObject(obj, sub->sfxOpen) != 0)
+                if (sub->sfxOpen != 0 && Sfx_IsPlayingFromObjectIntLegacy(obj, sub->sfxOpen) != 0)
                 {
                     Sfx_StopFromObjectIntLegacy(obj, sub->sfxOpen);
                 }
