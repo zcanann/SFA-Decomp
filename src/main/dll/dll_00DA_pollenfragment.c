@@ -10,6 +10,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_limited_object_api.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "dolphin/mtx/vec.h"
 #include "main/frame_timing.h"
@@ -87,8 +88,6 @@ extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 
-extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-
 void pollenfragment_init(GameObject* obj, int config)
 {
     s8 pollenType;
@@ -112,7 +111,7 @@ void pollenfragment_init(GameObject* obj, int config)
     state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
     if ((int)*(short*)state[7] != 0)
     {
-        Sfx_PlayFromObjectLimited((int)obj, (int)*(short*)state[7] & 0xffff, 3);
+        Sfx_PlayFromObjectLimitedIntReturnLegacy((int)obj, (int)*(short*)state[7] & 0xffff, 3);
     }
     spawnCount = 4;
     do
@@ -182,7 +181,8 @@ void pollenfragment_hitDetect(GameObject* obj)
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
                 spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+                Sfx_PlayFromObjectLimitedIntReturnLegacy(
+                    (int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             ObjHits_DisableObject((u32)obj);
             s16toFloatLegacy(extra + 0x20, 0x78);
@@ -194,7 +194,8 @@ void pollenfragment_hitDetect(GameObject* obj)
             if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
             {
                 spawnExplosionLegacy((int)obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-                Sfx_PlayFromObjectLimited((int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+                Sfx_PlayFromObjectLimitedIntReturnLegacy(
+                    (int)obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
             }
             s16toFloatLegacy(extra + 0x20, 0x78);
         }
@@ -349,7 +350,8 @@ void pollenfragment_update(int obj)
         if ((((PollenFragmentExtra*)extra)->def)->explodeSfx != -1)
         {
             spawnExplosionLegacy(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
-            Sfx_PlayFromObjectLimited(obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
+            Sfx_PlayFromObjectLimitedIntReturnLegacy(
+                obj, (u16)(((PollenFragmentExtra*)extra)->def)->explodeSfx, 3);
         }
         s16toFloatLegacy(extra + 0x20, 0x78);
     }
