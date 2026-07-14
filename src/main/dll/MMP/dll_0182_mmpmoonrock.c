@@ -15,6 +15,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/vecmath_distance_api.h"
+#include "main/audio/sfx_channel_volume_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/savegame_object_api.h"
@@ -516,8 +517,6 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-extern void Sfx_SetObjectChannelVolume(void* obj, int channel, u8 volume, f32 scale);
-
 extern void objParticleFn_80099d84(void* obj, f32 a, int c, f32 b, int d);
 extern u32 playerGetStateFlag310(int obj);
 char gMoonRockSpawnParams[0x18];
@@ -682,7 +681,7 @@ void mmp_moonrock_update(GameObject* obj)
         state->raised = 0;
     }
     Sfx_PlayFromObject((u32)obj, SFXTRIG_en_diallp_c);
-    Sfx_SetObjectChannelVolume(obj, 0x40, state->raised * 0x20 + 0x20, lbl_803E4588);
+    Sfx_SetObjectChannelVolumePtrU8Legacy(obj, 0x40, state->raised * 0x20 + 0x20, lbl_803E4588);
     {
         f32 speed = obj->anim.velocityY;
         if (speed < lbl_803E458C * ((lbl_803E4568 * state->raised + state->baseY) - obj->anim.localPosY))
