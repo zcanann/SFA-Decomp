@@ -29,7 +29,7 @@
 #include "main/gameloop_api.h"
 #include "main/lightmap_api.h"
 #include "main/mm.h"
-#include "main/render.h"
+#include "main/render_mode_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "stdlib.h"

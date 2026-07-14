@@ -26,6 +26,7 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/render_mode_api.h"
 
 int lbl_803DD278;
 int lbl_803DD274;

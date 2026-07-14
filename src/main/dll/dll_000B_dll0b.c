@@ -37,6 +37,7 @@
 #include "main/dll/dll_000B_dll0b.h"
 #include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
+#include "main/render_mode_api.h"
 
 ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
@@ -1038,7 +1039,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 }
 #pragma opt_propagation reset
 
-extern s16 renderModeSetOrGet(int mode);
 extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void gxTevAddTextureFrameBlendStages(void);

@@ -1,0 +1,6 @@
+#ifndef MAIN_RENDER_SEQUENCE_API_H_
+#define MAIN_RENDER_SEQUENCE_API_H_
+
+int return0xFFFF_80008B6C(void);
+
+#endif /* MAIN_RENDER_SEQUENCE_API_H_ */
