@@ -2,17 +2,17 @@
 #define MAIN_AUDIO_SND_SYNTH_API_H_
 
 #include "ghidra_import.h"
+#include "main/audio/synth_control.h"
 
 typedef int (*SndFXCtrlWideFn)(u32 handle, u32 controller, u32 value);
 typedef int (*SndFXCtrl14WideFn)(u32 handle, u32 controller, u32 value);
 typedef int (*SndFXStartExWideFn)(s16 fxId, int volume, int pan, int studio);
 typedef void (*SndSeqVolumeNarrowFn)(u8 volume, u16 time, u32 handle, u8 mode);
 
+#define sndSeqVolumeNarrowLegacy(volume, time, handle, mode)                                                            \
+    ((SndSeqVolumeNarrowFn)sndSeqVolume)((volume), (time), (handle), (mode))
+
 void sndSeqVolume(int seqId, int volume, int time, int mode);
-void sndSeqStop(u32 handle);
-void sndSeqSpeed(u32 handle, u32 speed);
-void sndSeqContinue(u32 handle);
-void sndSeqMute(u32 handle, u32 mute, u32 time);
 u16 seqGetMIDIPriority(u8 slot, u8 event);
 int sndFXCtrl(int handle, u8 controller, u8 value);
 int sndFXCtrl14(int handle, u8 controller, u16 value);

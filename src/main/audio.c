@@ -2770,7 +2770,7 @@ void Music_Update(void)
                         }
                         else
                         {
-                            ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            sndSeqVolumeNarrowLegacy(
                                 0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
@@ -2780,7 +2780,7 @@ void Music_Update(void)
                 {
                     if (ch->status != 3)
                     {
-                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                        sndSeqVolumeNarrowLegacy(
                             0, (u16)(activeVol < 0x1f4 ? 0x1f4 : activeVol), ch->seqHandle,
                             (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
@@ -2792,7 +2792,7 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                        sndSeqVolumeNarrowLegacy(
                             (u8) * (u16*)&ch->pad14[0], (u16)(s2VolA < 0x1f4 ? 0x1f4 : s2VolA),
                             ch->seqHandle, 0);
                         ch->status = 1;
@@ -2811,7 +2811,7 @@ void Music_Update(void)
                         }
                         else
                         {
-                            ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                            sndSeqVolumeNarrowLegacy(
                                 0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle, 1);
                             ch->status = 2;
                         }
@@ -2821,7 +2821,7 @@ void Music_Update(void)
                 {
                     if (ch->status != 3)
                     {
-                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                        sndSeqVolumeNarrowLegacy(
                             0, (u16)(lowVol < 0x1f4 ? 0x1f4 : lowVol), ch->seqHandle,
                             (u8)(ch->pad11 != 0 ? 0 : 2));
                         ch->status = 3;
@@ -2833,7 +2833,7 @@ void Music_Update(void)
                     {
                         sndSeqMute(ch->seqHandle, -1, -1);
                         sndSeqContinue(ch->seqHandle);
-                        ((SndSeqVolumeNarrowFn)sndSeqVolume)(
+                        sndSeqVolumeNarrowLegacy(
                             (u8) * (u16*)&ch->pad14[0], (u16)(s2VolB < 0x1f4 ? 0x1f4 : s2VolB),
                             ch->seqHandle, 0);
                         ch->status = 1;
