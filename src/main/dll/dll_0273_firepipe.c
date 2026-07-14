@@ -36,6 +36,7 @@
 #include "main/objfx.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/dll/dll_0273_firepipe.h"
 #include "main/obj_placement.h"
 #include "string.h"
@@ -50,7 +51,6 @@
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void Obj_InsertIntoUpdateList(int obj);
 
-extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
 extern int objIsFrozen(FirePipeObject* obj);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
@@ -465,7 +465,7 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
     }
     if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, (double)lbl_803E6B78);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p1, p2, p3, p4, (double)lbl_803E6B78);
     }
 }
 
