@@ -9,6 +9,7 @@
 #include "main/object_api.h"
 #include "main/pad.h"
 #include "main/pi_frame_api.h"
+#include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
@@ -3874,7 +3875,6 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
 }
 
-extern void loadDataFiles(int);
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
 #define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx) * 4 + 0x20000) + (disp)))

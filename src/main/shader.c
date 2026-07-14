@@ -3,6 +3,7 @@
 #include "dolphin/mtx/vec.h"
 #include "main/asset_load.h"
 #include "main/gameloop_api.h"
+#include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/debug.h"
 #include "main/frustum.h"
@@ -889,7 +890,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 }
 
 extern int isRomListLoading(void);
-extern void loadDataFiles(void);
 extern int GXFlush_(u8 visible, int unused);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];
@@ -928,7 +928,7 @@ int mapProcessRomList(int slot)
         checkReset();
         if (flag)
             waitNextFrame();
-        loadDataFiles();
+        loadDataFilesNoArgLegacy();
         dvdCheckError();
         if (flag)
         {
@@ -2729,7 +2729,7 @@ void doPendingMapLoads(void)
                         checkReset();
                         if (waited)
                             waitNextFrame();
-                        loadDataFiles();
+                        loadDataFilesNoArgLegacy();
                         dvdCheckError();
                         if (waited)
                         {

@@ -20,6 +20,7 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
+#include "main/pi_data_file_api.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSReport.h"
 #include "main/camera.h"
@@ -60,7 +61,6 @@ extern void ObjModel_EnableDefaultRenderCallback(DIMbossObject* obj, u32 model, 
 
 
 
-extern void loadDataFiles(void);
 
 
 
@@ -347,7 +347,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
                 {
                     waitNextFrame();
                 }
-                loadDataFiles();
+                loadDataFilesNoArgLegacy();
                 dvdCheckError();
                 if (loadWaitStarted)
                 {

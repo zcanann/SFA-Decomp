@@ -7,6 +7,7 @@
 #include "main/audio/audio_control_api.h"
 #include "main/audio/stream_api.h"
 #include "main/map_load.h"
+#include "main/pi_data_file_api.h"
 #include "main/objprint_render_api.h"
 #include "track/intersect_card_api.h"
 #include "dolphin/pad.h"
@@ -1029,7 +1030,6 @@ void gameUpdate(void)
 
 extern void voxmaps_updateTimers(void);
 extern void viewportEffectFn_8000e380(void);
-extern void loadDataFiles(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 extern void doNothing_endOfFrame(void);
@@ -1045,7 +1045,7 @@ void gameLoop(void)
         gameUpdate();
         viewportEffectFn_8000e380();
         doNothing_startOfFrame();
-        loadDataFiles();
+        loadDataFilesNoArgLegacy();
         audioUpdate();
         Sfx_UpdateLoopedObjectSounds();
     }
