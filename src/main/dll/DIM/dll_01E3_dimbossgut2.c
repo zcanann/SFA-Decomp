@@ -13,7 +13,7 @@
 #include "main/object_render_legacy.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/dll/rom_curve_interface.h"
@@ -26,8 +26,6 @@
 
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 extern u32* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
@@ -50,14 +48,7 @@ extern f32 lbl_803E4D2C;
 extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
 
-extern void ModelLightStruct_free(void* light);
-extern void queueGlowRender(void* light);
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
-extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
 {
@@ -154,7 +145,7 @@ int DIM_BossGut2_getObjectTypeId(void)
 void DIM_BossGut2_free(int objArg)
 {
     int obj = objArg;
-    u32 handle;
+    ModelLightStruct* handle;
     int state;
     GameObject* childObj;
 
@@ -162,7 +153,7 @@ void DIM_BossGut2_free(int objArg)
     handle = ((Dimbossgut2Curve*)((Dimbossgut2State*)state)->curveData)->light;
     if (handle != 0)
     {
-        ModelLightStruct_free((void*)handle);
+        ModelLightStruct_free(handle);
     }
     ObjGroup_RemoveObject((int)obj, DIMBOSSGUT2_OBJGROUP);
     childObj = ((GameObject*)obj)->childObjs[0];
@@ -186,7 +177,7 @@ void DIM_BossGut2_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         light = (u8*)((Dimbossgut2Curve*)((Dimbossgut2State*)light)->curveData)->light;
         if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0))
         {
-            queueGlowRender(light);
+            queueGlowRender((ModelLightStruct*)light);
         }
     }
     return;
@@ -269,10 +260,10 @@ void DIM_BossGut2_update(GameObject* obj)
                 if (0xff < brightness)
                 {
                     brightness = 0xff;
-                    *(u8*)(val->light + 0x2fa) = 0;
+                    *(u8*)((u8*)val->light + 0x2fa) = 0;
                 }
             }
-            *(u8*)(val->light + 0x2f9) = brightness;
+            *(u8*)((u8*)val->light + 0x2f9) = brightness;
         }
     }
     return;
@@ -327,15 +318,15 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     curve->fC += (obj)->anim.localPosY;
     ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
     ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4D20, timeDelta, NULL);
-    curve->light = (int)objCreateLight((int)obj, 1);
-    if ((void*)curve->light != NULL)
+    curve->light = objCreateLight(obj, 1);
+    if (curve->light != NULL)
     {
         modelLightStruct_setLightKind(curve->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(curve->light, 0, 255, 0, 0);
-        lightSetFieldBC_8001db14((ModelLightStruct*)curve->light, 1);
+        lightSetFieldBC_8001db14(curve->light, 1);
         modelLightStruct_setDistanceAttenuation(curve->light, lbl_803E4D2C, lbl_803E4CE0);
         modelLightStruct_setupGlow(curve->light, 0, 0, 255, 0, 127, lbl_803E4D30);
-        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)curve->light, lbl_803E4D04);
+        modelLightStruct_setGlowProjectionRadius(curve->light, lbl_803E4D04);
     }
 }
 

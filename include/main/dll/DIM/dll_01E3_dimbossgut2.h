@@ -4,6 +4,7 @@
 #include "global.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
+#include "main/modellight_api.h"
 #include "ghidra_import.h"
 
 typedef struct Dimbossgut2Curve Dimbossgut2Curve;
@@ -30,7 +31,7 @@ struct Dimbossgut2Curve
     f32 f10;
     s16 s14;
     u16 timer16;
-    s32 light;
+    ModelLightStruct* light;
 };
 
 STATIC_ASSERT(offsetof(Dimbossgut2Curve, f0) == 0x0);
