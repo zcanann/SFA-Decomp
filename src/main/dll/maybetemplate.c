@@ -78,7 +78,7 @@ extern short lbl_803DD7A2;
 extern short lbl_803DD8D2;
 extern short gMinimapRevealMax;
 extern short lbl_803DBA6E;
-extern u8 lbl_803DBA65;
+extern s8 lbl_803DBA65;
 extern short gCMenuScrollTimer;
 extern short lbl_803DD78E;
 extern u8 cMenuOpen;
@@ -6063,7 +6063,7 @@ void cMenuRun(void)
     s16* cursor;
     GameObject* player;
     int flags;
-    int isTricky;
+    char isTricky;
     u16 btn16;
     u32 btn;
 
