@@ -72,7 +72,7 @@ extern f32 lbl_803E2F50;
 extern f32 lbl_803E2F54;
 extern u8 gTumbleweedBushPieceOffsetTable[];
 extern void* memcpy(void* dst, const void* src, int n);
-extern u8 gTumbleweedBushHitCooldownState;
+u8 gTumbleweedBushHitCooldownState;
 
 extern f32 lbl_803E2F44;
 extern f32 gTumbleweedBushNearestInitDist;

@@ -112,7 +112,7 @@ extern const f32 lbl_803E3970;
 void SmallBasket_init(GameObject* obj, int def);
 void SmallBasket_update(GameObject* obj);
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible);
-extern void* gSmallBasketResource;
+void* gSmallBasketResource;
 extern const f32 lbl_803E3974;
 
 extern void fn_801814D0(int obj, int player, int state);

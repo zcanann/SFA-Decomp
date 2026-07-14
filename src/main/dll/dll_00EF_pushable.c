@@ -99,7 +99,7 @@ extern void memcpy(void* dst, void* src, int n);
 extern f32 lbl_803E358C;
 extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
-extern int gPushableSavedMapIdCount;
+int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);

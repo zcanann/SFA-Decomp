@@ -119,8 +119,8 @@ extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
 extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
-extern void* gDllF7Resource5B;
-extern void* gDllF7Resource5A;
+void* gDllF7Resource5A;
+void* gDllF7Resource5B;
 
 int dll_F7_getExtraSize(void)
 {

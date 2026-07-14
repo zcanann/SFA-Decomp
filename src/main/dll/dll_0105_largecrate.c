@@ -49,7 +49,7 @@
 #define LARGECRATE_ROB_WAVE_ID_65D7     0x65d7
 #define GAMEBIT_SFX_MUTE                0xa71
 
-extern int* lbl_803DDAC8;
+int* lbl_803DDAC8;
 extern f32 lbl_803E39A8;
 extern const f32 lbl_803E39AC;
 extern f32 lbl_803E39B8;

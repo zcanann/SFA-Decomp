@@ -862,7 +862,7 @@ extern int lbl_803202E8[];
 extern int lbl_80320360[];
 extern int gStaffActionHitLightParams[];
 extern void* gLandedArwingStateHandlers[];
-extern void* gLandedArwingDefaultStateHandler;
+void* gLandedArwingDefaultStateHandler;
 extern f32 gStaffActionBoundsSearchRadius;
 extern f32 lbl_803E3038;
 extern f32 lbl_803E3048;

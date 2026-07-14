@@ -118,8 +118,8 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #define ICEBADDIE_PARTICLE_DEBRIS  0x58 /* landing debris particle */
 
 
-extern u8 lbl_803DDA78;
-extern u8 lbl_803DDA79;
+u8 lbl_803DDA79;
+u8 lbl_803DDA78;
 
 extern f32 lbl_803E2CD8;
 extern f32 lbl_803E2D00;

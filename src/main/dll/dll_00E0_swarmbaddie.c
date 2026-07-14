@@ -70,7 +70,7 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
-extern int gSwarmBaddieLastCurvePoint;
+int gSwarmBaddieLastCurvePoint;
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
 {

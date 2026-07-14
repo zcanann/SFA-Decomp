@@ -1302,12 +1302,14 @@ main/dll/dll_00E0_swarmbaddie.c:
 	.text       start:0x8014EE8C end:0x8014F620
 	.data       start:0x8031DCC0 end:0x8031DCF8
 	.sdata      start:0x803DBC78 end:0x803DBC80
+	.sbss       start:0x803DDA60 end:0x803DDA68
 	.sdata2     start:0x803E2678 end:0x803E26D0
 
 main/dll/dll_00E1_wispbaddie.c:
 	.text       start:0x8014F620 end:0x801504F8
 	.data       start:0x8031DCF8 end:0x8031F290
 	.sdata      start:0x803DBC80 end:0x803DBC88
+	.sbss       start:0x803DDA68 end:0x803DDA70
 	.sdata2     start:0x803E26D0 end:0x803E2758
 
 main/dll/newseqobj.c:
@@ -1345,10 +1347,12 @@ main/dll/firecrawler.c:
 	.text       start:0x80157004 end:0x8015AD60
 	.data       start:0x8031FAE8 end:0x8031FD80
 	.sdata      start:0x803DBCE0 end:0x803DBD40
+	.sbss       start:0x803DDA70 end:0x803DDA78
 
 main/dll/dll_00CA_icebaddie.c:
 	.text       start:0x8015AD60 end:0x8015DAE8
 	.data       start:0x8031FD80 end:0x8031FEA8
+	.sbss       start:0x803DDA78 end:0x803DDA80
 
 main/dll/dll_00CE_dllce.c:
 	.text       start:0x8015DAE8 end:0x8015F5B0
@@ -1381,6 +1385,7 @@ main/dll/dll_00CF_cannonclaw.c:
 main/dll/dll_00D1_tumbleweedbush.c:
 	.text       start:0x801631C8 end:0x80163BBC
 	.data       start:0x803201E8 end:0x80320288
+	.sbss       start:0x803DDA80 end:0x803DDA88
 
 main/dll/dll_00D2_tumbleweed.c:
 	.text       start:0x80163BBC end:0x801650D0
@@ -1397,6 +1402,7 @@ main/dll/landedarwing.c:
 
 main/dll/dll_00D3_staffAction.c:
 	.text       start:0x801659B8 end:0x801675E0
+	.sbss       start:0x803DDA88 end:0x803DDA90
 
 main/dll/dll_00D4_skeetlawall.c:
 	.text       start:0x801675E0 end:0x80167764
@@ -1413,6 +1419,7 @@ main/dll/dll_00D5_kaldachom.c:
 	.text       start:0x8016821C end:0x80169360
 	.rodata     start:0x802C2210 end:0x802C2220
 	.data       start:0x80320418 end:0x80320458
+	.sbss       start:0x803DDA90 end:0x803DDAA0
 
 main/dll/dll_00D6_kaldachomme.c:
 	.text       start:0x80169360 end:0x801696D4
@@ -1510,6 +1517,7 @@ main/dll/dll_00F7_dllf7.c:
 	.text       start:0x801713FC end:0x801719E0
 	.rodata     start:0x802C2260 end:0x802C2270
 	.data       start:0x80320B38 end:0x80320B70
+	.sbss       start:0x803DDAB0 end:0x803DDAB8
 	.sdata2     start:0x803E3400 end:0x803E3420
 
 main/dll/dll_00E8_checkpoint4.c:
@@ -1546,6 +1554,7 @@ main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
 	.rodata     start:0x802C2270 end:0x802C2280
 	.data       start:0x80320D48 end:0x80320DB8
+	.sbss       start:0x803DDAB8 end:0x803DDAC0
 
 main/dll/dll_00F0_warppoint.c:
 	.text       start:0x80176FC4 end:0x8017779C
@@ -1670,11 +1679,13 @@ main/dll/dll_801814d0.c:
 main/dll/dll_0104_smallbasket.c:
 	.text       start:0x801816F8 end:0x80183204
 	.data       start:0x803216B8 end:0x80321728
+	.sbss       start:0x803DDAC0 end:0x803DDAC8
 
 main/dll/dll_0105_largecrate.c:
 	.text       start:0x80183204 end:0x801843C0
 	.rodata     start:0x802C2280 end:0x802C2298
 	.data       start:0x80321728 end:0x803217C0
+	.sbss       start:0x803DDAC8 end:0x803DDAD0
 
 main/dll/dll_0106_scarab.c:
 	.text       start:0x801843C0 end:0x80185868

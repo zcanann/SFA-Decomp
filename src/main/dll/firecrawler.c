@@ -199,7 +199,7 @@ extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
 extern f32 lbl_803E2B50;
 extern f32 lbl_803DBCE8;
-extern f32 gCrawlerHitSfxTimer;
+f32 gCrawlerHitSfxTimer;
 extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;

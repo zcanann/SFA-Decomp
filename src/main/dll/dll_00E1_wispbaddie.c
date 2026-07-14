@@ -54,7 +54,7 @@ __declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F4 = 0.9f;
 __declspec(section ".sdata2") f32 lbl_803E26F8 = 2.1f;
 __declspec(section ".sdata2") f32 lbl_803E26FC = -2.1f;
-extern int gWispBaddieLastSegmentEnd;
+int gWispBaddieLastSegmentEnd;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
