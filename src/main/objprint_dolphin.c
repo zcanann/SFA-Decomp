@@ -1948,9 +1948,6 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
 }
 
 f32 gObjBoneMtxBuffer[0xC00];
-extern void ObjModel_BlendVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
-extern void ObjModel_BlendNormalStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
-extern void objUpdateHitSpheres(int* am, u8* m, int* obj, int p4, int* p5);
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
@@ -2039,14 +2036,17 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             {
                 vtx = *(int*)&((ModelFileHeader*)m)->vertices;
             }
-            ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                                       ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-            ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
-                                       *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
+            ObjModel_BlendVertexStreamIntLegacy(
+                gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
+                ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+            ObjModel_BlendNormalStreamIntLegacy(gObjBoneMtxBuffer, m + 0xac,
+                                                *(int*)&((ModelFileHeader*)m)->normals,
+                                                *(int*)((char*)am + 0x44),
+                                                ((ModelFileHeader*)m)->flags24 & 8);
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
-            objUpdateHitSpheres(am, m, obj, 0, obj2);
+            objUpdateHitSpheresIntLegacy(am, m, obj, 0, obj2);
         }
         else
         {
@@ -2371,16 +2371,18 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
                 {
                     vtx = *(int*)&((ModelFileHeader*)m)->vertices;
                 }
-                ObjModel_BlendVertexStream(gObjBoneMtxBuffer, m + 0x88, vtx,
-                                           *(int*)&((ModelFileHeader*)am)->jointBlendData,
-                                           ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
-                ObjModel_BlendNormalStream(gObjBoneMtxBuffer, m + 0xac, *(int*)&((ModelFileHeader*)m)->normals,
-                                           *(int*)((char*)am + 0x44), ((ModelFileHeader*)m)->flags24 & 8);
+                ObjModel_BlendVertexStreamIntLegacy(
+                    gObjBoneMtxBuffer, m + 0x88, vtx, *(int*)&((ModelFileHeader*)am)->jointBlendData,
+                    ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1]);
+                ObjModel_BlendNormalStreamIntLegacy(gObjBoneMtxBuffer, m + 0xac,
+                                                    *(int*)&((ModelFileHeader*)m)->normals,
+                                                    *(int*)((char*)am + 0x44),
+                                                    ((ModelFileHeader*)m)->flags24 & 8);
             }
         }
         if (((ModelFileHeader*)m)->hitSphereCount != 0)
         {
-            objUpdateHitSpheres(am, m, obj, 0, obj2);
+            objUpdateHitSpheresIntLegacy(am, m, obj, 0, obj2);
         }
         else
         {
