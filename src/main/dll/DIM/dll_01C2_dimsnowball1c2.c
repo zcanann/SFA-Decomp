@@ -9,7 +9,9 @@
 #include "main/dll/player_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#define OBJECT_RENDER_LEGACY_DIRECT_CALL
 #include "main/object_render_legacy.h"
+#undef OBJECT_RENDER_LEGACY_DIRECT_CALL
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/object_descriptor.h"

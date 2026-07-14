@@ -7,7 +7,9 @@
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
+#define OBJECT_RENDER_LEGACY_DIRECT_CALL
 #include "main/object_render_legacy.h"
+#undef OBJECT_RENDER_LEGACY_DIRECT_CALL
 
 #define DIMGATE_TRIGGER_OBJ_TYPE 399
 #define DIMGATE_OBJFLAG_HITDETECT_DISABLED 0x2000

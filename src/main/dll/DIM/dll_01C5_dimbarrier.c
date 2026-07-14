@@ -9,7 +9,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
+#define OBJECT_RENDER_LEGACY_DIRECT_CALL
 #include "main/object_render_legacy.h"
+#undef OBJECT_RENDER_LEGACY_DIRECT_CALL
 #include "main/audio/sfx.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470
