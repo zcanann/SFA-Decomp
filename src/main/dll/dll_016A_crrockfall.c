@@ -14,6 +14,7 @@
  * rock by height fraction and player distance and hides it once shattered.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/object_render_legacy.h"
@@ -59,7 +60,6 @@ extern f32 lbl_803E4718;
 extern f32 lbl_803E471C;
 extern f32 gRockfallGravity;
 extern void fn_800628CC(int* obj);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 void crrockfall_free(void)
 {
@@ -335,7 +335,7 @@ void crrockfall_update(int* obj)
         {
             hitState->flags &= ~1;
             state->mode = zcEn3_ROCKFALL_MODE_SHATTERED;
-            Sfx_StopObjectChannel(obj, 8);
+            Sfx_StopObjectChannelPtrLegacy(obj, 8);
             if (((GameObject*)obj)->anim.seqId == CRROCKFALL_SEQ_QUARRY)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_dinostomp1);
