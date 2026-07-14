@@ -12,6 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/obj_message.h"
 #include "main/object.h"
@@ -79,8 +80,6 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 __declspec(section ".rodata") u32 lbl_802C2298[3] = {0, 0, 0};
 __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
-extern void playerAddMoney(int obj, int amount);
-
 void Scarab_update(GameObject* obj)
 {
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -157,7 +156,7 @@ void Scarab_update(GameObject* obj)
             {
             case SCARAB_MSG_PICKUP:
                 money1 = gScarabMoneyValues;
-                playerAddMoney(player, *((u8*)&money1 + ((ScarabState*)state)->moneyKind));
+                playerAddMoney((GameObject*)player, *((u8*)&money1 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;
                 ((ScarabState*)state)->mode = 0;
                 ((ScarabState*)state)->flags28 &= ~1;
@@ -493,7 +492,7 @@ void Scarab_update(GameObject* obj)
                     else
                     {
                         money2 = gScarabMoneyValues;
-                        playerAddMoney(player, *((u8*)&money2 + ((ScarabState*)state)->moneyKind));
+                        playerAddMoney((GameObject*)player, *((u8*)&money2 + ((ScarabState*)state)->moneyKind));
                         ((ScarabState*)state)->despawnTimer = 0x50;
                         ((ScarabState*)state)->mode = 0;
                     }
@@ -536,7 +535,7 @@ void Scarab_update(GameObject* obj)
             {
                 Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_46);
                 money3 = gScarabMoneyValues;
-                playerAddMoney(player, *((u8*)&money3 + ((ScarabState*)state)->moneyKind));
+                playerAddMoney((GameObject*)player, *((u8*)&money3 + ((ScarabState*)state)->moneyKind));
                 ((ScarabState*)state)->despawnTimer = 0x50;
                 ((ScarabState*)state)->mode = 0;
             }

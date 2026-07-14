@@ -8,6 +8,7 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/dll/player_objects.h"
+#include "main/dll/player_api.h"
 #include "main/dll/player_staff_api.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -102,9 +103,6 @@ enum ShopItemIndex
 extern u8 lbl_80327FD0[];
 extern f32 lbl_803E59C8;
 
-extern void playerAddMoney(int obj, int amount);
-extern void playerAddHealth(int obj, int amount);
-
 /* Triple s8 fan-out: write obj->_b8[2/3/4]
  * (sign-extended) into *out_b3, *out_b2, *out_b4. */
 void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
@@ -146,24 +144,24 @@ void shop_buyItem(GameObject* obj, int price)
     player = (int)Obj_GetPlayerObject();
     state = *(int*)&obj->extra;
     mapEventState = (int)(*gMapEventInterface)->getCurCharacterState();
-    playerAddMoney(player, -price);
+    playerAddMoney((GameObject*)player, -price);
 
     switch (((ShopBuyItemState*)state)->itemIndex)
     {
     case SHOP_ITEM_DUMBLEDANG_POD:
-        playerAddHealth(player, 2);
+        playerAddHealth((GameObject*)player, 2);
         break;
     case SHOP_ITEM_BAFOMDAD_HOLDER:
         *(u8*)(mapEventState + 0xa) = 10;
         break;
     case SHOP_ITEM_DUMBLEDANG_POD_4X:
-        playerAddHealth(player, 8);
+        playerAddHealth((GameObject*)player, 8);
         break;
     case SHOP_ITEM_PUKPUK_EGG:
-        playerAddHealth(player, 4);
+        playerAddHealth((GameObject*)player, 4);
         break;
     case SHOP_ITEM_PUKPUK_EGGS_7X:
-        playerAddHealth(player, 0x1c);
+        playerAddHealth((GameObject*)player, 0x1c);
         break;
     case SHOP_ITEM_BOMB_SPORE:
         gameBitIncrement(GAMEBIT_ITEM_BombSpore_Count);

@@ -16,6 +16,7 @@
  * commands the linked target object to begin the challenge.
  */
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
 #include "main/game_object.h"
@@ -36,7 +37,6 @@
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
 __declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
 extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
-extern int playerGetMoney(void* player);
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 

@@ -33,6 +33,7 @@
 #include "main/object_transform.h"
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -75,8 +76,6 @@ extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 extern void fn_8015039C(GameObject* obj, u8* state);
 extern u8 fn_8014FFB4(GameObject* obj, u8* state, int a);
 extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern int playerGetMoney(void* player);
-extern void playerAddMoney(u8* player, int amount);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];
@@ -429,7 +428,7 @@ void fn_80151C68(int obj, u8* state)
     {
         if (player != NULL && playerGetMoney(player) >= 25)
         {
-        playerAddMoney((u8*)player, -25);
+            playerAddMoney(player, -25);
             mainSetBits(*(s16*)(setup + 0x1c), 1);
             *(u16*)(state + 0x338) = gGroundBaddieTriggerResponseSeq[2];
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;

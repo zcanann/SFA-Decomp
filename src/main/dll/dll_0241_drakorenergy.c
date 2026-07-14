@@ -19,6 +19,7 @@
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
 #include "main/dll_000A_expgfx.h"
@@ -64,8 +65,6 @@ extern f32 gDrakorEnergyChaseSpeed;
 extern int gDrakorEnergyHealAmount;
 extern f32 lbl_803DC174;
 extern s16 lbl_803DC178;
-
-extern void playerAddHealth(int obj, int amount);
 
 extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
 
@@ -167,7 +166,7 @@ void drakorenergy_update(int obj)
         dist = Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX);
         if (dist < lbl_803DC168)
         {
-            playerAddHealth((int)player, gDrakorEnergyHealAmount);
+            playerAddHealth(player, gDrakorEnergyHealAmount);
             Sfx_PlayFromObject(obj, SFXTRIG_lockoff22);
             ((DrakorEnergyState*)state)->mode = DRAKORENERGY_MODE_COLLECTED;
         }

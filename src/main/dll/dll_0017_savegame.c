@@ -24,8 +24,10 @@
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
 #include "main/dll/savegame_object_api.h"
+#include "main/dll/player_api.h"
 #include "main/model_engine.h"
 #include "main/model_engine_ui_api.h"
+#include "main/object_api.h"
 #include "main/map_load.h"
 #include "main/mm.h"
 #include "main/dll/savegame.h"
@@ -191,8 +193,6 @@ extern int _saveGame(int slot, int save, int data);
 extern int maybeTryLoadSave(int a);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
-extern void playerAddHealth(u8* player, int v);
-
 void loadMapForCurrentSaveGame(void);
 
 u8 gSaveGameData[0xF70];
@@ -1221,7 +1221,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
         mainSetBits(GAMEBIT_CF_DoStandUpAnim, 1);
         if (Player_GetCurrentHealth((int)Obj_GetPlayerObject()) > 1)
         {
-            playerAddHealth((u8*)Obj_GetPlayerObject(), -1);
+            playerAddHealth(Obj_GetPlayerObject(), -1);
             healed = 1;
         }
     }
@@ -1236,7 +1236,7 @@ void SaveGame_gplayRestartPoint(f32* pos, s16 angle, int b691, int flag)
     mainSetBits(GAMEBIT_CF_DoStandUpAnim, 0);
     if (flag != 0 && healed != 0)
     {
-        playerAddHealth((u8*)Obj_GetPlayerObject(), 1);
+        playerAddHealth(Obj_GetPlayerObject(), 1);
     }
 }
 
