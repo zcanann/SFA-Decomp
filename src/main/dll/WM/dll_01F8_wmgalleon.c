@@ -5,6 +5,7 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/objseq.h"
@@ -91,8 +92,6 @@ __declspec(section ".sdata2") f32 lbl_803E5CF0 = 116.0f;
 __declspec(section ".sdata2") f32 lbl_803E5CF4 = 5.0f;
 
 extern void fn_80296BBC(GameObject* player);
-extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
-
 void WM_Galleon_initialise(void);
 void WM_Galleon_release(void);
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
@@ -218,7 +217,7 @@ void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         return;
     }
 
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5CE8);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5CE8);
 
     if (lbl_803DDC70 != 0)
     {
