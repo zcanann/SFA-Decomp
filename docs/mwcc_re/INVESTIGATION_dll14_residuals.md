@@ -647,3 +647,9 @@ when the hint survives this compare. Remaining reading: the kind handlers at 0x5
 (ADD-node case) to see how the hint + operand order produce [add dest][addi dest,dest] vs
 temp materialization - one jump-table entry from the finish. Also note 0x4c0690-region has
 a second table 0x5b08fc (checked dl==4, class range [4,0xe]) - the class filter.
+
+## Correction: 0x4c06d0 = operand size/alignment calculator (widths 1/2/4/8 via table
+0x5b0930; secondary width dispatch 0x5b0918; global 0x5e48f1 = a mode byte). Not the
+accumulate gate. The ADD-expression emitter is among the remaining classifier callers:
+0x4c0982, 0x4c11d8/0x4c122f/0x4c1288/0x4c12e7 cluster (likely the two-operand arithmetic
+emitters) - continue the band reading there.
