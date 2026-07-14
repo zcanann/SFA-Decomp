@@ -25,6 +25,7 @@
 #include "main/dll/genpropswgpipe_struct.h"
 #include "main/dll/path_control_interface.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
@@ -176,7 +177,6 @@ GenPropsWGPipe GXWGFifo : (0xCC008000);
 
 void collectible_applyPickup(int* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfx);
     u8* state = ((GameObject*)obj)->extra;
     u8* params = *(u8**)&((GameObject*)obj)->anim.placementData;
     u8* setup2 = ((GameObject*)obj)->anim.modelInstance->extraSetupData;
@@ -674,7 +674,7 @@ void collectible_updateIdleMotion(GameObject *obj)
             ((CollectibleState*)state)->spinSpeed = (f32)(int)
             randomGetRange(600, 800);
             ((CollectibleState*)state)->spinTimer = randomGetRange(180, 240);
-            Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_169);
+            Sfx_PlayFromObject((int*)obj, SFXTRIG_dn_boar1_c_169);
         }
         (obj)->anim.rotY = ((CollectibleState*)state)->spinSpeed;
         ((CollectibleState*)state)->spinSpeed *= gCollectibleSpinDamping;
