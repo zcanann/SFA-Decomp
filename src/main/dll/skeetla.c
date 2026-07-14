@@ -13,6 +13,7 @@
  * emits the contact-spark particles for the object Tricky is linked to.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
@@ -89,7 +90,6 @@ extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern void Sfx_PlayFromObject(u8* obj, int sfxId);
-extern int Sfx_IsPlayingFromObjectChannel(u8* obj, int channel);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
@@ -439,7 +439,7 @@ static void skeetla_playFootstepSfx(u8* obj, u16 sfxId)
     u8* state = ((GameObject*)obj)->extra;
     if (((((TrickyState*)((GameObject*)obj)->extra)->statusFlags >> 6) & 1) == 0u &&
         ((((GameObject*)obj)->anim.currentMove >= 0x30) || (((GameObject*)obj)->anim.currentMove < 0x29)) &&
-        (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0))
+        (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0))
     {
         objAudioFn_800393f8Legacy(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
     }
@@ -533,7 +533,7 @@ int trickyMove(u8* obj, f32* targetPos)
                 if (((TrickyState*)state)->sfxIntervalTimer <= lbl_803E23DC)
                 {
                     ((TrickyState*)state)->sfxIntervalTimer = (f32)(int)randomGetRange(600, 1200);
-                    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
+                    if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0)
                     {
                         if (moveSpeed > lbl_803E23E8)
                         {
