@@ -504,12 +504,12 @@ void SB_CloudRunner_free(GameObject* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
     if (state->texture0 != NULL)
     {
-        textureFree(state->texture0);
+        textureFree((Texture*)(state->texture0));
         state->texture0 = NULL;
     }
     if (state->texture1 != NULL)
     {
-        textureFree(state->texture1);
+        textureFree((Texture*)(state->texture1));
         state->texture1 = NULL;
     }
     Resource_Release(*(void**)&state->resource);

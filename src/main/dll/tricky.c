@@ -544,14 +544,14 @@ void GameUI_airMeterShutdown(void)
     switch (m[0x10])
     {
     case 0:
-        textureFree((u8*)m[0xb]);
-        textureFree((u8*)m[0xc]);
+        textureFree((Texture*)((u8*)m[0xb]));
+        textureFree((Texture*)((u8*)m[0xc]));
         break;
     case 1:
-        textureFree((u8*)m[0xc]);
-        textureFree((u8*)m[0xd]);
-        textureFree((u8*)m[0xe]);
-        textureFree((u8*)m[0xf]);
+        textureFree((Texture*)((u8*)m[0xc]));
+        textureFree((Texture*)((u8*)m[0xd]));
+        textureFree((Texture*)((u8*)m[0xe]));
+        textureFree((Texture*)((u8*)m[0xf]));
         break;
     }
     mm_free(airMeter);
@@ -727,7 +727,7 @@ void hudDrawTimedElement(int unused, void* element)
     e[1] = e[1] - framesThisStep;
     if (e[1] < 0)
     {
-        textureFree((u8*)e[0]);
+        textureFree((Texture*)((u8*)e[0]));
         e[0] = 0;
         return;
     }

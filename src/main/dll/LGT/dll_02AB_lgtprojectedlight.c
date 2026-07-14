@@ -44,7 +44,7 @@ void ProjectedLight_free(GameObject* obj)
     }
     if (state->texture != NULL)
     {
-        textureFree((u8*)state->texture);
+        textureFree((Texture*)((u8*)state->texture));
     }
 }
 

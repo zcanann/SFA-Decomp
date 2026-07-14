@@ -161,7 +161,7 @@ void DFSH_LaserBeam_free(int* obj)
     gLaserBeamEffectResource = NULL;
     if (*(void**)state != NULL)
     {
-        textureFree(*(void**)state);
+        textureFree((Texture*)(*(void**)state));
     }
     *(void**)state = NULL;
 }

@@ -59,7 +59,7 @@ int Dummy39_run(void)
 
 void Dummy39_release(void)
 {
-    textureFree(lbl_803DD72C);
+    textureFree((Texture*)(lbl_803DD72C));
 }
 
 void Dummy39_initialise(void)

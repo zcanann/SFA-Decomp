@@ -1,11 +1,11 @@
 #ifndef MAIN_DLL_LASERBEAMSTATE_STRUCT_H_
 #define MAIN_DLL_LASERBEAMSTATE_STRUCT_H_
 
-#include "types.h"
+#include "main/texture.h"
 
 typedef struct LaserBeamState
 {
-    int texture;
+    Texture *texture;
     f32 beamY; /* 0x04: beam base Y (paired with beamX/beamZ), reset each update */
     f32 beamY2; /* 0x08: beam endpoint Y (paired with beamX2/beamZ2) */
 

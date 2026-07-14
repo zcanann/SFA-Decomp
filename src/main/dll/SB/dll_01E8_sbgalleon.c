@@ -591,12 +591,12 @@ void SB_Galleon_free(GameObject* obj, int leavingMap)
     SBGalleonState* state = (SBGalleonState*)obj->extra;
     if ((void*)gSbGalleonSkyTexA != NULL)
     {
-        textureFree((void*)gSbGalleonSkyTexA);
+        textureFree((Texture*)((void*)gSbGalleonSkyTexA));
         gSbGalleonSkyTexA = 0;
     }
     if ((void*)gSbGalleonSkyTexB != NULL)
     {
-        textureFree((void*)gSbGalleonSkyTexB);
+        textureFree((Texture*)((void*)gSbGalleonSkyTexB));
         gSbGalleonSkyTexB = 0;
     }
     ObjGroup_RemoveObject((u32)obj, SBGALLEON_OBJGROUP);

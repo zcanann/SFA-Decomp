@@ -1595,7 +1595,7 @@ void objFreeObjDef(u8* obj, int flag)
                 }
                 else
                 {
-                    textureFree(tex);
+                    textureFree((Texture*)(tex));
                 }
             }
         }

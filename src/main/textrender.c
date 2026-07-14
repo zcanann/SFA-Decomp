@@ -1890,9 +1890,9 @@ void fn_8001BDD4(int mode)
     switch (mode)
     {
     case 3:
-        textureFree(gSubtitleBoxTextures[0]);
-        textureFree(gSubtitleBoxTextures[1]);
-        textureFree(gSubtitleBoxTextures[2]);
+        textureFree((Texture*)(gSubtitleBoxTextures[0]));
+        textureFree((Texture*)(gSubtitleBoxTextures[1]));
+        textureFree((Texture*)(gSubtitleBoxTextures[2]));
         break;
     }
 }

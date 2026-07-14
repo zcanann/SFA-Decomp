@@ -1134,7 +1134,7 @@ void ObjModel_Release(u8* model)
         z[0] = 0;
         for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
         {
-            textureFree(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1])));
+            textureFree((Texture*)(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1]))));
         }
         if (((ModelFileHeader*)header)->animationModelPtrs != NULL && ((ModelFileHeader*)header)->animationCount != 0)
         {

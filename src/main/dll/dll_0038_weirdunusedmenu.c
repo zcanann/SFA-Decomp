@@ -20,6 +20,7 @@
  * list with the interface; release frees the textures and warps home.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/texture.h"
 #include "main/pad_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/model_engine.h"
@@ -160,9 +161,9 @@ int WeirdUnusedMenu_run(void)
 
 void WeirdUnusedMenu_release(void)
 {
-    textureFree((u8*)gWeirdMenuTextureA);
-    textureFree((u8*)gWeirdMenuTextureB);
-    textureFree((u8*)gWeirdMenuTextureC);
+    textureFree((Texture*)((u8*)gWeirdMenuTextureA));
+    textureFree((Texture*)((u8*)gWeirdMenuTextureB));
+    textureFree((Texture*)((u8*)gWeirdMenuTextureC));
     warpToMap(0, 1);
     (*(void (*)(void))(*(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_RELEASE)))();
 }

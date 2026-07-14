@@ -16,6 +16,7 @@
  * the layouts of related objects shipped in the same DLL.
  */
 #include "main/dll/modgfx_interface.h"
+#include "main/texture.h"
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/object_api.h"
@@ -37,7 +38,6 @@
 #include "main/dll/wmseqobjectsetup_struct.h"
 #include "main/dll/wmgalleonstate_struct.h"
 #include "main/gamebit_ids.h"
-extern void textureFree(u8* tex);
 
 #define OBJ_PTR(obj, offset) (*(void**)((u8*)(obj) + (offset)))
 
@@ -84,7 +84,7 @@ void LaserBeam_free(int* obj)
     (*gModgfxInterface)->detachSource(obj);
     if (state[0] != 0)
     {
-        textureFree(state[0]);
+        textureFree((Texture*)(state[0]));
         state[0] = 0;
     }
 }
@@ -437,8 +437,6 @@ void LaserBeam_update(int obj2)
 }
 
 #pragma opt_strength_reduction off
-
-extern int textureLoadAsset(int id);
 
 void LaserBeam_init(s16* obj, char* arg)
 {

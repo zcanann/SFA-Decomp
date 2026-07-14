@@ -76,7 +76,7 @@ typedef struct GameUiClearState
             index = _state.slot;                                                                                         \
             if (*(void**)((u8*)&(g)->itemTextures + index * 4) != NULL)                                                  \
             {                                                                                                            \
-                textureFree(*(void**)((u8*)&(g)->itemTextures + index * 4));                                              \
+                textureFree((Texture*)(*(void**)((u8*)&(g)->itemTextures + index * 4)));                                              \
                 *(void**)((u8*)&(g)->itemTextures + index * 4) = (void*)_state.zero;                                     \
             }                                                                                                            \
             _itemSlot = (s16*)((u8*)&(g)->itemSlots + index * 2);                                                        \
@@ -93,12 +93,12 @@ typedef struct GameUiClearState
         GAMEUI_CLEAR_ITEM_SLOTS(g, index);                                                                               \
         if (lbl_803DD7C8 != NULL)                                                                                        \
         {                                                                                                                \
-            textureFree(lbl_803DD7C8);                                                                                   \
+            textureFree((Texture*)(lbl_803DD7C8));                                                                                   \
             lbl_803DD7C8 = NULL;                                                                                         \
         }                                                                                                                \
         if (gTrickyHudCachedIconTexture != NULL)                                                                         \
         {                                                                                                                \
-            textureFree(gTrickyHudCachedIconTexture);                                                                    \
+            textureFree((Texture*)(gTrickyHudCachedIconTexture));                                                                    \
         }                                                                                                                \
         gTrickyHudCachedIconIndex = -1;                                                                                  \
         gTrickyHudCachedIconTexture = NULL;                                                                              \
@@ -1066,7 +1066,7 @@ void GameUI_release(void)
     {
         if (textures[i] != NULL)
         {
-            textureFree(textures[i]);
+            textureFree((Texture*)(textures[i]));
         }
     }
     GAMEUI_RELEASE_MENU_RESOURCES(gameUi, i);
@@ -1083,7 +1083,7 @@ void GameUI_release(void)
             clearTexture = (void**)((u8*)&gameUi->itemTextures + clearIndex * 4);
             if (*clearTexture != NULL)
             {
-                textureFree(*clearTexture);
+                textureFree((Texture*)(*clearTexture));
                 *clearTexture = (void*)clearState.zero;
             }
             *(s16*)((u8*)&gameUi->itemSlots + clearIndex * 2) = -1;
@@ -1091,7 +1091,7 @@ void GameUI_release(void)
         }
     }
 
-    textureFree((u8*)gGameUiBlinkTexture);
+    textureFree((Texture*)((u8*)gGameUiBlinkTexture));
 }
 
 

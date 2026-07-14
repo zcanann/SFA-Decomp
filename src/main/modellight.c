@@ -226,7 +226,7 @@ void modelLightStruct_freeSlot(ModelLightStruct** lightSlot)
 
         if (light->glowType == 2 && light->glowTexture != NULL)
         {
-            textureFree(light->glowTexture);
+            textureFree((Texture*)(light->glowTexture));
         }
         mm_free(light);
         *lightSlot = NULL;
@@ -259,7 +259,7 @@ void ModelLightStruct_free(ModelLightStruct* light)
 
     if (light->glowType == 2 && light->glowTexture != NULL)
     {
-        textureFree(light->glowTexture);
+        textureFree((Texture*)(light->glowTexture));
     }
     mm_free(light);
 }

@@ -78,7 +78,7 @@ int dll_3F_frameStart_ret_0(void)
 
 void dll_3F_release(void)
 {
-    textureFree(lbl_803DD960);
+    textureFree((Texture*)(lbl_803DD960));
 }
 
 #pragma scheduling off /* intentional: last fn in TU */

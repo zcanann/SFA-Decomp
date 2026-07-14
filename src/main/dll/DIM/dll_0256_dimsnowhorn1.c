@@ -7,6 +7,7 @@
  * the full per-frame tick.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/texture.h"
 #include "main/game_object.h"
 #include "main/camera.h"
 #include "ghidra_import.h"
@@ -1441,7 +1442,7 @@ void DIMSnowHorn1_release(void)
     v = *p;
     if (v != NULL)
     {
-        textureFree((u8*)v);
+        textureFree((Texture*)((u8*)v));
     }
     *p = zero;
 }

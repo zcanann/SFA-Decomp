@@ -101,9 +101,9 @@ void boneParticleEffect_release(void)
         i++;
     } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
     if (gBoneParticleTextureA != NULL)
-        textureFree(gBoneParticleTextureA);
+        textureFree((Texture*)(gBoneParticleTextureA));
     if (gBoneParticleTextureB != NULL)
-        textureFree(gBoneParticleTextureB);
+        textureFree((Texture*)(gBoneParticleTextureB));
 }
 
 f32 gBoneParticleConfigTable[108] = {

@@ -33,7 +33,7 @@ void expgfx_updateResourceEntries(int unused)
                 entry->evictionScore = 0;
                 entry->reserved = 0;
                 gExpgfxTextureFreeInProgress = 1;
-                textureFree((u8*)entry->resource);
+                textureFree((Texture*)((u8*)entry->resource));
                 gExpgfxTextureFreeInProgress = 0;
                 entry->resource = NULL;
             }
@@ -79,7 +79,7 @@ int expgfx_acquireResourceEntry(int resourceId)
                 gExpgfxTextureFreeInProgress = 1;
                 if (resourceHandle != NULL)
                 {
-                    textureFree((u8*)resourceHandle);
+                    textureFree((Texture*)((u8*)resourceHandle));
                 }
                 gExpgfxTextureFreeInProgress = 0;
                 ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[i].resource = NULL;
@@ -114,7 +114,7 @@ int expgfx_acquireResourceEntry(int resourceId)
         (ExpgfxResourceHandle*)((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource;
     if (resourceHandle != NULL)
     {
-        textureFree((u8*)resourceHandle);
+        textureFree((Texture*)((u8*)resourceHandle));
     }
     gExpgfxTextureFreeInProgress = 0;
     ((ExpgfxRuntimeDataLayout*)(int)gExpgfxRuntimeData)->resourceTable[minIndex].resource = NULL;

@@ -151,14 +151,14 @@ extern u8 gTitleScreenSetupDone;
 void TitleScreen_release(void)
 {
     int i;
-    textureFree(gTitleScreenMainTex);
+    textureFree((Texture*)(gTitleScreenMainTex));
     gTitleScreenMainTex = NULL;
     i = 0;
     do
     {
         if (gTitleScreenTextures[i] != NULL)
         {
-            textureFree(gTitleScreenTextures[i]);
+            textureFree((Texture*)(gTitleScreenTextures[i]));
             gTitleScreenTextures[i] = NULL;
         }
         i++;

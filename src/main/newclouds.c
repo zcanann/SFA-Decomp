@@ -178,20 +178,20 @@ void newclouds_release(void)
 
     if (lbl_803DD1C8 != NULL)
     {
-        textureFree(lbl_803DD1C8);
+        textureFree((Texture*)(lbl_803DD1C8));
         lbl_803DD1C8 = NULL;
     }
     for (i = 0; i < 4; i++)
     {
         if (gNewCloudLayerTextures[i] != NULL)
         {
-            textureFree(gNewCloudLayerTextures[i]);
+            textureFree((Texture*)(gNewCloudLayerTextures[i]));
             gNewCloudLayerTextures[i] = NULL;
         }
     }
     if (lbl_803DD1C4 != NULL)
     {
-        textureFree(lbl_803DD1C4);
+        textureFree((Texture*)(lbl_803DD1C4));
         lbl_803DD1C4 = NULL;
     }
     if (gNewCloudModelLight != NULL)

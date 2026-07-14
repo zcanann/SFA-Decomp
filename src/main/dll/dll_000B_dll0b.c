@@ -300,7 +300,7 @@ void dll_0B_func07(void* source)
         arr[i]->inlineData = NULL;
         if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
         {
-            textureFree(arr[i]->textureResource);
+            textureFree((Texture*)(arr[i]->textureResource));
         }
         if (arr[i]->textureIsBorrowed == 0)
         {
@@ -333,7 +333,7 @@ void fn_800A1040(s16 sequenceId, int forceAll)
         arr[i]->inlineData = NULL;
         if (arr[i]->textureIsBorrowed == 0 && arr[i]->textureResource != NULL)
         {
-            textureFree(arr[i]->textureResource);
+            textureFree((Texture*)(arr[i]->textureResource));
         }
         if (arr[i]->textureIsBorrowed == 0)
         {

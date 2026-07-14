@@ -650,7 +650,7 @@ void dfropenode_release(void)
 
     for (i = 0; i < 2; i++)
     {
-        textureFree((&gRopeNodeTextures)[i]);
+        textureFree((Texture*)((&gRopeNodeTextures)[i]));
     }
 }
 

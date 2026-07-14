@@ -416,7 +416,7 @@ void TitleMenuItem_release(void)
 
     for (i = 0; i < TITLE_MENU_ITEM_TEXTURE_COUNT; i++)
     {
-        textureFree(lbl_803A9DB8[i]);
+        textureFree((Texture*)(lbl_803A9DB8[i]));
         lbl_803A9DB8[i] = NULL;
     }
 }

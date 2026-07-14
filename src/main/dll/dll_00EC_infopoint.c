@@ -16,6 +16,7 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_00EC_infopoint.h"
 #include "main/textrender_api.h"
+#include "main/texture.h"
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -27,7 +28,6 @@
 extern f32 lbl_803E3B70;
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
-extern int textureLoadAsset(int id);
 
 #pragma scheduling off
 #pragma peephole off
@@ -102,7 +102,7 @@ void InfoPoint_init(int* obj, u8* def)
     ((GameObject*)obj)->animEventCallback = InfoPoint_SeqFn;
     if (*(void**)lbl_803219A0 == NULL)
     {
-        *(int*)lbl_803219A0 = textureLoadAsset(INFOPOINT_TEXTURE_FONT);
+        *(int*)lbl_803219A0 = (int)textureLoadAsset(INFOPOINT_TEXTURE_FONT);
     }
     state->unk08 = (int)lbl_80321990;
     txt = gameTextGet(((InfopointObjectDef*)def)->textId);

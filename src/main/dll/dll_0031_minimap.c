@@ -402,7 +402,7 @@ int Minimap_update(void)
                 gMinimapContentAlpha = 0;
                 if (minimapTexture != NULL)
                 {
-                    textureFree(minimapTexture);
+                    textureFree((Texture*)(minimapTexture));
                     minimapTexture = NULL;
                     lbl_803DD92C = NULL;
                 }
@@ -747,8 +747,8 @@ static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
 void Minimap_release(void)
 {
     if (minimapTexture != NULL)
-        textureFree(minimapTexture);
-    textureFree(lbl_803DD940);
+        textureFree((Texture*)(minimapTexture));
+    textureFree((Texture*)(lbl_803DD940));
     Minimap_freeObjectSlots(lbl_803DBBC8, 2);
     minimapTexture = NULL;
     lbl_803DD940 = NULL;
@@ -764,7 +764,7 @@ void fn_80133934(void)
 {
     if (minimapTexture != NULL)
     {
-        textureFree(minimapTexture);
+        textureFree((Texture*)(minimapTexture));
         minimapTexture = NULL;
         lbl_803DD92C = NULL;
     }

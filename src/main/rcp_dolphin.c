@@ -714,11 +714,11 @@ void textureFn_80053d58(void* vobj)
 extern void findSomething(int);
 
 #pragma peephole on
-void textureFree(u8* tex)
+void textureFree(Texture* tex)
 {
     u8* iter;
     u8* next;
-    if (tex == gLoadedTextures[0].texture)
+    if ((u8*)tex == gLoadedTextures[0].texture)
         return;
     if (tex == NULL)
     {
@@ -741,7 +741,7 @@ void textureFree(u8* tex)
         int i;
         for (i = 0; i < gLoadedTextureCount; i++)
         {
-            if (gLoadedTextures[i].texture == tex)
+            if (gLoadedTextures[i].texture == (u8*)tex)
             {
                 iter = *(u8**)tex;
                 while (iter != NULL)

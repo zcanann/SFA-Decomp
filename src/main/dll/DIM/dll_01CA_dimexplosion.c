@@ -15,6 +15,7 @@
  *   explosion_initialise   - precompute the expf falloff scales
  */
 #include "main/dll/partfx_interface.h"
+#include "main/texture.h"
 #include "main/dll/explosiondebris_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/shader_api.h"
@@ -114,11 +115,9 @@ extern f32 gExplosionDebrisSpeedScale;
 extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 
-extern void textureFree(int tex);
 extern f32 expf(f32 x);
 extern void GXSetCurrentMtx(u32 id);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern int textureLoadAsset(int id);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
@@ -810,7 +809,7 @@ void explosion_release(u32 obj)
     {
         if (((int**)gExplosionTextures)[i] != NULL)
         {
-            textureFree((int)((int**)gExplosionTextures)[i]);
+            textureFree((Texture*)((int)((int**)gExplosionTextures)[i]));
             ((int**)gExplosionTextures)[i] = NULL;
         }
     }
@@ -829,7 +828,7 @@ void explosion_initialise(void)
     gExplosionFalloffScaleBlue = lbl_803E492C / expf(lbl_803E492C);
     for (i = 0; i < GEXPLOSION_TEXTURE_COUNT; i++)
     {
-        gExplosionTextures[i] = textureLoadAsset(t.v[i]);
+        gExplosionTextures[i] = (int)textureLoadAsset(t.v[i]);
     }
 }
 

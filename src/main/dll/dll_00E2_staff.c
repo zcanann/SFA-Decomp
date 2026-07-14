@@ -337,7 +337,7 @@ void staff_release(void)
     {
         for (i = 0, p = gStaffSwipeTextures; i < 2; i++)
         {
-            textureFree((u8*)((int)*p));
+            textureFree((Texture*)((u8*)((int)*p)));
             *p = NULL;
             p++;
         }

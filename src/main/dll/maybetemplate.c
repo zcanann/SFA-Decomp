@@ -1396,7 +1396,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
     }
     if (hudYButtonItemIconTexture != NULL && gHudYButtonItemTextureCache != yButtonItemTextureId)
     {
-        textureFree(hudYButtonItemIconTexture);
+        textureFree((Texture*)(hudYButtonItemIconTexture));
         gHudYButtonItemTextureCache = -1;
         hudYButtonItemIconTexture = 0;
     }
@@ -1937,7 +1937,7 @@ int cMenuSetItems(s16* items, char useTricky)
     {
         if (*dst > -1 && *dst != *idsW2 && *texW != 0)
         {
-            textureFree(*texW);
+            textureFree((Texture*)(*texW));
             *texW = 0;
         }
         dst++;
@@ -4537,7 +4537,7 @@ void pauseMenuFn_80129ee0(void)
             {
                 if (lbl_803DD7C8 != 0)
                 {
-                    textureFree(lbl_803DD7C8);
+                    textureFree((Texture*)(lbl_803DD7C8));
                     lbl_803DD7C8 = 0;
                 }
                 pauseMenuSetupTitle(0x3a9, 0, 2, 0);
@@ -4642,7 +4642,7 @@ void pauseMenuFn_80129ee0(void)
                     p = (void**)((u8*)&hud->textures3A8[0] + idx * 4);
                     if (*p != NULL)
                     {
-                        textureFree(*p);
+                        textureFree((Texture*)(*p));
                         *p = clear.nullTexture;
                         *(s16*)((u8*)&hud->texIds358[0] + idx * 2) = clear.nullId;
                     }

@@ -670,22 +670,22 @@ void waterfx_release(void)
     }
     if (gWaterfxRippleTexture != NULL)
     {
-        textureFree((u8*)gWaterfxRippleTexture);
+        textureFree((Texture*)((u8*)gWaterfxRippleTexture));
         gWaterfxRippleTexture = NULL;
     }
     if (gWaterfxSplashTexture0 != NULL)
     {
-        textureFree((u8*)gWaterfxSplashTexture0);
+        textureFree((Texture*)((u8*)gWaterfxSplashTexture0));
         gWaterfxSplashTexture0 = NULL;
     }
     if (gWaterfxSplashTexture1 != NULL)
     {
-        textureFree((u8*)gWaterfxSplashTexture1);
+        textureFree((Texture*)((u8*)gWaterfxSplashTexture1));
         gWaterfxSplashTexture1 = NULL;
     }
     if (gWaterfxWakeTexture != NULL)
     {
-        textureFree((u8*)gWaterfxWakeTexture);
+        textureFree((Texture*)((u8*)gWaterfxWakeTexture));
         gWaterfxWakeTexture = NULL;
     }
     if (gWaterfxSplashDisplayList != NULL)

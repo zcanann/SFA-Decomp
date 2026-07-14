@@ -3,6 +3,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/dll/path_control_interface.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
@@ -706,7 +707,7 @@ void SnowBike_release(void)
 {
     if (lbl_803DDC60 != 0)
     {
-        textureFree((u8*)lbl_803DDC60);
+        textureFree((Texture*)((u8*)lbl_803DDC60));
         lbl_803DDC60 = 0;
     }
 }

@@ -8,6 +8,7 @@
 #include "main/frustum.h"
 #include "main/shader_api.h"
 #include "main/textrender_api.h"
+#include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
 #include "main/audio/audio_control_api.h"
@@ -1151,7 +1152,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 }
 
 extern void doNothing_8001F678(int a, int b);
-extern void textureFree(int id);
 void unloadMap(void)
 {
     int blk;
@@ -1204,7 +1204,7 @@ void unloadMap(void)
                     z[0] = 0;
                     z[1] = z[0];
                     for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
-                        textureFree(*(int*)(*(int*)(blk + 0x54) + z[1]));
+                        textureFree((Texture*)(*(int*)(*(int*)(blk + 0x54) + z[1])));
                     if (*(void**)(blk + 0x74) != 0)
                         mm_free(*(void**)(blk + 0x74));
                     if (*(void**)(blk + 0x70) != 0)
@@ -2958,7 +2958,7 @@ void doPendingMapLoads(void)
                                 }
                                 z[1] = z[0] = 0;
                                 for (; z[0] < *(u8*)(blk + 0xa0); z[1] += 4, z[0]++)
-                                    textureFree(*(int*)(*(int*)(blk + 0x54) + z[1]));
+                                    textureFree((Texture*)(*(int*)(*(int*)(blk + 0x54) + z[1])));
                                 if (*(void**)(blk + 0x74) != NULL)
                                     mm_free(*(void**)(blk + 0x74));
                                 if (*(void**)(blk + 0x70) != NULL)

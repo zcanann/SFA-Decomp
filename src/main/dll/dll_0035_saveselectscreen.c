@@ -441,12 +441,12 @@ void saveSelectScreenFree(int runExitCallback)
     {
         if (p[i] != NULL)
         {
-            textureFree(p[i]);
+            textureFree((Texture*)(p[i]));
             p[i] = zero;
         }
     }
 
-    textureFree(gSaveSelectTexture);
+    textureFree((Texture*)(gSaveSelectTexture));
     if (runExitCallback != 0)
     {
         doNothing_onSaveSelectScreenExit();

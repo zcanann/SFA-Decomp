@@ -2427,11 +2427,11 @@ void fn_8008BDA8(void)
         {
             if (*(u8**)gSkyState != NULL)
             {
-                textureFree(*(u8**)gSkyState);
+                textureFree((Texture*)(*(u8**)gSkyState));
             }
             if (((SkyState*)gSkyState)->handle != NULL)
             {
-                textureFree(((SkyState*)gSkyState)->handle);
+                textureFree((Texture*)(((SkyState*)gSkyState)->handle));
             }
             mm_free(((SkyState*)gSkyState)->texture0);
             mm_free(((SkyState*)gSkyState)->texture1);
@@ -3112,14 +3112,14 @@ void skyFn_8008aee8(void)
             texB = sky[(((SkyTimeBlend*)sky)->phase + 1) % 8 + 0x87];
             if (((SkyTimeBlend*)sky)->texAId != texA)
             {
-                textureFree((void*)sky[0]);
+                textureFree((Texture*)((void*)sky[0]));
                 *(void**)gSkyState = textureLoadAsset(texA);
                 ((SkyTimeBlend*)gSkyState)->texAId = texA;
             }
             sky = *(int**)&gSkyState;
             if (((SkyTimeBlend*)sky)->texBId != texB)
             {
-                textureFree((void*)sky[1]);
+                textureFree((Texture*)((void*)sky[1]));
                 ((SkyTimeBlend*)gSkyState)->texB = textureLoadAsset(texB);
                 ((SkyTimeBlend*)gSkyState)->texBId = texB;
             }

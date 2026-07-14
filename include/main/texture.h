@@ -61,7 +61,7 @@ STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
 void *textureLoadAsset(int asset);
-void textureFree(u8 *tex);
+void textureFree(Texture *texture);
 void textureFn_8004c264(Texture *texture, int mapId);
 void selectTexture(Texture *texture, int mapId);
 

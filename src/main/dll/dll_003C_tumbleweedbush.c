@@ -254,7 +254,7 @@ void Link_copy(u8* srcArg)
         {
             if (dst->texture != NULL)
             {
-                textureFree(dst->texture);
+                textureFree((Texture*)(dst->texture));
             }
             dst->texture = NULL;
         }
@@ -674,7 +674,7 @@ void Link_release(void)
 
     for (i = 0; i < 6; i++)
     {
-        textureFree(((LinkTextureSlot*)linkTextures)[i].texture);
+        textureFree((Texture*)(((LinkTextureSlot*)linkTextures)[i].texture));
     }
     fn_8001BDD4(3);
 }
@@ -806,7 +806,7 @@ void Link_free(void)
     {
         if (gTumbleweedBushItems[i].texture != NULL)
         {
-            textureFree(gTumbleweedBushItems[i].texture);
+            textureFree((Texture*)(gTumbleweedBushItems[i].texture));
         }
     }
     gTumbleweedBushItemCount = 0;

@@ -212,8 +212,8 @@ int WarpstoneUI_frameStart(void)
 
 void WarpstoneUI_release(void)
 {
-    textureFree(lbl_803DD984);
-    textureFree(lbl_803DD980);
+    textureFree((Texture*)(lbl_803DD984));
+    textureFree((Texture*)(lbl_803DD980));
 }
 
 #pragma scheduling off

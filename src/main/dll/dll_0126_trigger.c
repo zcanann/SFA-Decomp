@@ -25,6 +25,7 @@
  * any sfx the trigger started.
  */
 #include "main/frame_timing.h"
+#include "main/texture.h"
 #include "main/gameloop_api.h"
 #include "main/map_load.h"
 #include "main/object.h"
@@ -566,7 +567,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                             t2 = (int)getLoadedTexture(*tbl);
                             if ((void*)t2 != NULL)
                             {
-                                textureFree((u8*)t2);
+                                textureFree((Texture*)((u8*)t2));
                             }
                         }
                     }

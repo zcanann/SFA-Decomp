@@ -291,8 +291,8 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
         if (*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree(
-                (void*)*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16));
+            textureFree((Texture*)(
+                (void*)*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16)));
             gExpgfxTextureFreeInProgress = 0;
         }
 
@@ -370,8 +370,8 @@ static inline void expgfxRemoveAllBody(void)
                     ((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
-                                    ->resource);
+                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)runtime->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
+                                    ->resource));
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
@@ -2504,7 +2504,7 @@ static inline void expgfx_clearResourceTable(ExpgfxResourceEntry* resourceEntry,
         gExpgfxTextureFreeInProgress = 1;
         if (resourceEntry->resource != NULL)
         {
-            textureFree(resourceEntry->resource);
+            textureFree((Texture*)(resourceEntry->resource));
         }
         gExpgfxTextureFreeInProgress = zeroFlag;
         resourceEntry->resource = (void*)zeroResource;
@@ -2556,8 +2556,8 @@ void expgfx_resetAllPools(void)
                 if (((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))->resource != 0)
                 {
                     gExpgfxTextureFreeInProgress = 1;
-                    textureFree((void*)((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
-                                    ->resource);
+                    textureFree((Texture*)((void*)((ExpgfxTableEntry*)((u8*)runtime[0]->expTab + Expgfx_GetSlotTableIndex(slot) * 16))
+                                    ->resource));
                     gExpgfxTextureFreeInProgress = 0;
                 }
 
@@ -3044,7 +3044,7 @@ void expgfx_onMapSetup(void)
     {
         if (resourceEntry->resource != NULL)
         {
-            textureFree(resourceEntry->resource);
+            textureFree((Texture*)(resourceEntry->resource));
         }
         resourceEntry->resource = NULL;
         resourceEntry->resourceId = 0;

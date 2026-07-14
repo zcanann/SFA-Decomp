@@ -236,7 +236,7 @@ int Credits_frameStart(void)
 
 void Credits_release(void)
 {
-    textureFree(lbl_803DD974);
+    textureFree((Texture*)(lbl_803DD974));
 }
 
 #pragma scheduling off
