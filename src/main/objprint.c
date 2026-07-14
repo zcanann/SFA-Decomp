@@ -29,6 +29,7 @@
 #include "dolphin/gx/GXTev.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "track/intersect_api.h"
+#include "track/intersect_fog_api.h"
 
 s16 lbl_803DCC18;
 s16 lbl_803DCC16;

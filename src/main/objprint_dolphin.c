@@ -32,6 +32,7 @@
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_80136a40.h"
+#include "track/intersect_fog_api.h"
 
 ModelLightStruct* lbl_803DCC64;
 u8 lbl_803DCC60;
@@ -1796,9 +1797,6 @@ extern void modelInitMtxs(u8* m, int* am);
 extern void ObjModel_ToggleMatrixBuffer(int* am);
 extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int len2);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
-extern void _gxSetFogParams(void);
-extern u8 isHeavyFogEnabled(void);
-extern void getColor803dd01c(f32* c);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
@@ -1891,7 +1889,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
             if (isHeavyFogEnabled() != 0)
             {
                 f32 c;
-                getColor803dd01c(&c);
+                getColor803dd01cFloatLegacy(&c);
                 renderHeavyFog(&c);
             }
             textureFn_800528bc();
@@ -3038,7 +3036,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     if (isHeavyFogEnabled() && !(*(u16*)(p2 + 2) & 0x100))
     {
-        getColor803dd01c(&fogc);
+        getColor803dd01cFloatLegacy(&fogc);
         renderHeavyFog(&fogc);
     }
     if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_PROJECTED_TEX_PASS)

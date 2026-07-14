@@ -1,6 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "dolphin/mtx.h"
 #include "track/intersect_depth_state_api.h"
+#include "track/intersect_fog_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
@@ -215,7 +216,6 @@ extern void fn_8000F83C(void);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void setupReflectionIndirectTev(u32 flag);
-extern void _gxSetFogParams(void);
 extern void fn_80079180(void);
 extern void geomDrawFn_800796f0(void);
 extern void fn_8007D670(void);
