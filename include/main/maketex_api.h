@@ -6,5 +6,6 @@
 void cameraFocusNpc(int param1, GameObject* obj);
 GameObject* getFocusedNpc(void);
 int arrayIndexOf(int* array, int count, int value);
+void cardSetStatusNoCard2(void);
 
 #endif /* MAIN_MAKETEX_API_H_ */

@@ -17,12 +17,15 @@
 #include "main/dll/player_state.h"
 #include "main/sky_interface.h"
 #include "main/textrender_api.h"
+#include "main/gametext_command_api.h"
+#include "main/gametext_show_str_api.h"
 #include "main/gameloop_api.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
 #include "main/newshadows.h"
 #include "main/objprint_api.h"
+#include "main/maketex_api.h"
 #include "main/pad.h"
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -5750,7 +5753,6 @@ int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
 
-    extern void cardSetStatusNoCard2(void);
     extern void* lbl_803DD040;
     int need_format;
     int res;
@@ -5880,7 +5882,6 @@ int cardDeleteFn_8007d99c(void)
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
-    extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
     int res;
@@ -6006,11 +6007,6 @@ void showMemCardError(u8 err)
     extern u8 lbl_803DB424;
     extern int lbl_803DB708;
     extern void checkReset(void);
-    extern int getReflectionTexture1(void);
-    extern void hudDrawColored(int, int, int, void*, int, int);
-    extern void gameTextSetColor(int, int, int, int);
-    extern void* gameTextGet(int textId);
-    extern void gameTextShowStr(int str, int x, int y, int yPos);
     extern f32 fn_80293AC4(int v);
 
     int opts[8];
@@ -6046,7 +6042,7 @@ void showMemCardError(u8 err)
         timer += 0x3e8;
         waitNextFrame();
         saved = lbl_803DB708;
-        hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
+        hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         if (submenu != 0)
         {
             opts[0] = 6;
@@ -6060,24 +6056,24 @@ void showMemCardError(u8 err)
         {
             cardGetMessage((u32*)opts, (u32*)msgs, (u32*)&count);
         }
-        gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
+        gameTextSetColorInt(0xff, 0xc0, 0x40, 0xff);
         for (i = 0, m = msgs, y = 0x64; i < count + 1; m++, y += 0x14, i++)
         {
             t = (char*)gameTextGet(*m);
             yy = y + ((i > 0) ? 0x64 : 0);
             for (j = 0; j < *(u16*)(t + 2); j++)
             {
-                gameTextShowStr((*(int**)(t + 8))[j], 0, 0, yy);
+                gameTextShowStrLegacy((*(int**)(t + 8))[j], 0, 0, yy);
                 yy += 0x18;
             }
             if (i == sel)
             {
                 v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
-                gameTextSetColor(v, v, v, 0xff);
+                gameTextSetColorInt(v, v, v, 0xff);
             }
             else
             {
-                gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
+                gameTextSetColorInt(0xa0, 0xa0, 0xa0, 0xff);
             }
         }
         gameTextRun();
@@ -6385,10 +6381,6 @@ void cardShowLoadingMsg(u8 kind)
 
     extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     extern int lbl_803DB708;
-    extern int getReflectionTexture1(void);
-    extern void hudDrawColored(int, int, int, void*, int, int);
-    extern void gameTextSetColor(int, int, int, int);
-    extern void gameTextFn_80016810(int a, int b, int c);
     int* buttons;
     int saved;
     int frame;
@@ -6420,9 +6412,9 @@ void cardShowLoadingMsg(u8 kind)
         else
         {
             saved = lbl_803DB708;
-            hudDrawColored(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
+            hudDrawColoredLegacy(getReflectionTexture1(), 0, 0, &saved, 0x200, 0);
         }
-        gameTextSetColor(0xFF, 0xFF, 0xFF, 0xFF);
+        gameTextSetColorInt(0xFF, 0xFF, 0xFF, 0xFF);
         if (mode == 1)
         {
             gameTextFn_80016810(0x323, 0, 0xC8);

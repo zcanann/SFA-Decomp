@@ -49,6 +49,8 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 void drawRect(f32 sx, f32 sy, int x, int y);
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags);
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag);
+#define hudDrawColoredLegacy(texture, x, y, color, scale, flag) \
+    ((void (*)(int, int, int, void*, int, int))hudDrawColored)((texture), (x), (y), (color), (scale), (flag))
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale);
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx);
