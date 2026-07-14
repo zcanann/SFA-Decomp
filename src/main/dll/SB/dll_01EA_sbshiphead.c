@@ -11,6 +11,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
@@ -47,7 +48,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern int DBprotection_getCameraState(u32 g);
 extern u32 getSbGalleon(void);
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
