@@ -12,6 +12,8 @@ void cacheQueueWait(int sync);
 void copyToCache(void* dst, void* src, u32 count);
 void memcpyToCache(void* dst, void* src, u32 count);
 void texFlagFn_80023cbc(int value);
+void AtomicSList_Push(void** list, void* node);
+void* AtomicSList_Pop(void** list);
 
 
 /* extern-cleanup: defining-file public prototypes */
@@ -34,5 +36,9 @@ void* mmAllocateFromFBMemoryStore(int handle, int size);
 #define testAndSetOnlyUseHeap3_u8(value) \
     ((u8 (*)(int))testAndSet_onlyUseHeap3)(value)
 #define mmFreeLegacyNoArg() ((void (*)(void))mm_free)()
+#define AtomicSList_PushIntLegacy(list, node) \
+    (((void (*)(int, int))AtomicSList_Push)((list), (node)))
+#define AtomicSList_PopIntLegacy(list) \
+    (((int (*)(int))AtomicSList_Pop)((list)))
 
 #endif /* MAIN_MM_H_ */

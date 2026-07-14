@@ -3380,7 +3380,6 @@ extern u32 lbl_803DCC84;
 extern void* lbl_803DCC8C;
 extern u32 lbl_8035F3E8[];
 u32 gObjBlockStatus[0x63F6];
-extern void AtomicSList_Push(void** list, void* node);
 void tex0tab1readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)

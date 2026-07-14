@@ -177,8 +177,6 @@ extern int lbl_803DCC7C;
 extern volatile int lbl_803DCC80;
 extern int lbl_803DCC8C;
 
-extern int AtomicSList_Pop(int list);
-extern void AtomicSList_Push(int list, int e);
 extern void mergeTableFiles(void* buf, int a, int b, int n);
 extern void animCurvReadCb(s32 result, DVDFileInfo* fileInfo);
 extern void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo);
@@ -394,7 +392,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -419,7 +417,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                             texRestructRefs(1);
                         }
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         MLDF_SP_SIZE(x) = 0;
                         MLDF_SP_ID(x) = mapId;
                         return 0;
@@ -430,7 +428,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         {
                             DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                             DVDClose((DVDFileInfo*)fi);
-                            AtomicSList_Push(lbl_803DCC8C, fi);
+                            AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                             if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
                             {
                                 mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
@@ -488,7 +486,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -509,7 +507,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0))
                         {
                             mergeTableFiles(tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
@@ -566,7 +564,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -596,7 +594,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
             {
                 DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                 DVDClose((DVDFileInfo*)fi);
-                AtomicSList_Push(lbl_803DCC8C, fi);
+                AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                 if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
                 {
                     mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
@@ -651,7 +649,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(mapId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -662,7 +660,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_SIZE_INIT(x) = DVD_FI_LENGTH(fi);
                 if (MLDF_SP_SIZE(x) == 0)
                 {
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     return 0;
                 }
                 else
@@ -673,7 +671,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0))
                         {
                             mergeTableFiles(tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
@@ -747,7 +745,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
             {
                 sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(mapId), mapId);
             }
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -766,7 +764,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         texRestructRefs(1);
                     }
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
                     MLDF_SP_ID(x) = mapId;
                     return 0;
@@ -777,7 +775,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
                         {
                             mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
@@ -868,7 +866,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
             {
                 sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(mapId), mapId);
             }
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -883,7 +881,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 {
                     DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0))
                     {
                         mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
@@ -950,7 +948,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -969,7 +967,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         texRestructRefs(1);
                     }
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
                     MLDF_SP_ID(x) = mapId;
                     return 0;
@@ -980,7 +978,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
                         {
                             mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
@@ -1039,7 +1037,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1054,7 +1052,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 {
                     DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0))
                     {
                         mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
@@ -1120,7 +1118,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1139,7 +1137,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         texRestructRefs(1);
                     }
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
                     MLDF_SP_ID(x) = mapId;
                     return 0;
@@ -1150,7 +1148,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
                         {
                             mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
@@ -1207,7 +1205,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1222,7 +1220,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 {
                     DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0))
                     {
                         mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
@@ -1288,7 +1286,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1307,7 +1305,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         texRestructRefs(1);
                     }
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
                     MLDF_SP_ID(x) = mapId;
                     return 0;
@@ -1318,7 +1316,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
                         {
                             mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
@@ -1375,7 +1373,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1390,7 +1388,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 {
                     DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0))
                     {
                         mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
@@ -1458,7 +1456,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1477,7 +1475,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                         texRestructRefs(1);
                     }
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     MLDF_SP_SIZE(x) = 0;
                     MLDF_SP_ID(x) = mapId;
                     return 0;
@@ -1488,7 +1486,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                     {
                         DVDRead((DVDFileInfo*)fi, (void*)tmp, MLDF_SP_SIZE(x), 0);
                         DVDClose((DVDFileInfo*)fi);
-                        AtomicSList_Push(lbl_803DCC8C, fi);
+                        AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                         if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
                         {
                             mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
@@ -1545,7 +1543,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 MLDF_SP_PTR(x) = 0;
             }
             sprintf(buf, sArchivePathFormat, MLDF_MAP_NAME(mapId), MLDF_FILE_NAME(fileId));
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -1560,7 +1558,7 @@ u32 mapLoadDataFile(int mapId, int fileId)
                 {
                     DVDRead((DVDFileInfo*)fi, (void*)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
                     DVDClose((DVDFileInfo*)fi);
-                    AtomicSList_Push(lbl_803DCC8C, fi);
+                    AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
                     if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0))
                     {
                         mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
@@ -2806,7 +2804,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
     if (((void*)destBuf == NULL) && ((void*)lbl_8035F208[mapIndex] == NULL))
     {
         sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
-        fi = AtomicSList_Pop(lbl_803DCC8C);
+        fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
         ok = DVDOpen(buf, (DVDFileInfo*)fi);
         if (ok != 0)
         {
@@ -2820,7 +2818,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
         if ((void*)lbl_8035F208[mapIndex] == NULL)
         {
             sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
-            fi = AtomicSList_Pop(lbl_803DCC8C);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
             ok = DVDOpen(buf, (DVDFileInfo*)fi);
             if (ok == 0)
             {
@@ -2829,7 +2827,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
             lbl_8035F208[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
             DVDRead((DVDFileInfo*)fi, (void*)lbl_8035F208[mapIndex], DVD_FI_LENGTH(fi), 0);
             DVDClose((DVDFileInfo*)fi);
-            AtomicSList_Push(lbl_803DCC8C, fi);
+            AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
         }
         hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
         if (hdr->magic == 0xfacefeed)
@@ -6630,7 +6628,7 @@ int initLoadFiles(void)
             default:
                 if (*ptrs == 0)
                 {
-                    int fi = AtomicSList_Pop(lbl_803DCC8C);
+                    int fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
                     DVDOpen(*names[0], (DVDFileInfo*)fi);
                     *sizes = DVD_FI_LENGTH(fi);
                     *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
