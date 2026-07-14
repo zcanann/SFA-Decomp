@@ -24,6 +24,7 @@
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
+#include "main/audio/sfx_play_pointer_u16_legacy_api.h"
 
 /*
  * Per-instance runtime state stored in GameObject::extra
@@ -81,7 +82,6 @@ extern f32 lbl_803E40BC;
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8* obj, u16 sfx);
-extern void Sfx_PlayFromObject(u8* obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8* obj, u16 sfx);
 
 int sfxplayerObj_getExtraSize(void)
