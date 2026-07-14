@@ -83,7 +83,7 @@ enum
 
 extern f32 lbl_803E59D8;
 extern void* lbl_803AD068[8];
-extern void* lbl_803DDC58;
+void* lbl_803DDC58;
 extern f32 lbl_803E5A20;
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59F0;

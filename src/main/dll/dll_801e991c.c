@@ -27,7 +27,7 @@
 #define GX_QUADS          0x80
 #define GX_VTXFMT2        2
 
-extern int lbl_803DDC60;
+int lbl_803DDC60;
 extern ShColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;

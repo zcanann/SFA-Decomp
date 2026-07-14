@@ -40,11 +40,11 @@ int lbl_803DBC04 = 0x140;
    issues the selected destination's act on it). */
 #define WARPSTONEUI_MAPEVENT_KRAZOA 0x42
 
-extern u8 warpstoneUIState;
-extern void* lbl_803DD984;
-extern void* lbl_803DD980;
-extern f32 lbl_803DD97C;
-extern int gWarpStoneUiMenuActive;
+u8 warpstoneUIState[8];
+void* lbl_803DD984;
+void* lbl_803DD980;
+f32 lbl_803DD97C;
+int gWarpStoneUiMenuActive;
 extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
@@ -127,7 +127,7 @@ int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
 #pragma peephole off
 void WarpstoneUI_setState(int val)
 {
-    warpstoneUIState = val;
+    warpstoneUIState[0] = val;
 }
 #pragma peephole reset
 
@@ -139,7 +139,7 @@ void WarpstoneUI_showUI(int arg)
     int itemCount;
 
     CMenu_SetFadeCounter(0);
-    switch (warpstoneUIState)
+    switch (warpstoneUIState[0])
     {
     case 2:
     case 3:
@@ -178,7 +178,7 @@ void WarpstoneUI_showUI(int arg)
         (**(void (**)(int))((char*)(*gTitleMenuLinkInterface) + 0x10))(arg);
         break;
     }
-    if (gWarpStoneUiMenuActive != 0 && warpstoneUIState != 4)
+    if (gWarpStoneUiMenuActive != 0 && warpstoneUIState[0] != 4)
     {
         (**(void (**)(void))((char*)(*gTitleMenuLinkInterface) + 8))();
         gWarpStoneUiMenuActive = 0;
@@ -194,7 +194,7 @@ void WarpstoneUI_frameEnd(void)
 int WarpstoneUI_frameStart(void)
 {
     f32 alpha;
-    if (warpstoneUIState == 0)
+    if (warpstoneUIState[0] == 0)
     {
         lbl_803DD97C = lbl_803DD97C - (lbl_803E22D8 * timeDelta);
     }

@@ -1186,8 +1186,8 @@ main/dll/dll_0037_optionsscreen.c:
 main/dll/dll_0038_weirdunusedmenu.c:
 	.text       start:0x8011D51C end:0x8011D854
 	.data       start:0x8031AD20 end:0x8031ADD0
-	.sdata2     start:0x803E1DF8 end:0x803E1E00
 	.sbss       start:0x803DD710 end:0x803DD728
+	.sdata2     start:0x803E1DF8 end:0x803E1E00
 
 main/dll/dll_0039_dummy39.c:
 	.text       start:0x8011D854 end:0x8011D900
@@ -1241,6 +1241,7 @@ main/dll/dll_0041_warpstoneui.c:
 	.data       start:0x8031CC38 end:0x8031CDE8
 	.bss        start:0x803A9DD0 end:0x803A9F50
 	.sdata      start:0x803DBBF8 end:0x803DBC08
+	.sbss       start:0x803DD978 end:0x803DD990
 
 main/dll/dll_02C0_front.c:
 	.text       start:0x80134870 end:0x80136A40
@@ -1292,8 +1293,8 @@ main/dll/dll_00C4_tricky.c:
 	.text       start:0x80144E40 end:0x8014A9F0
 	.rodata     start:0x802C21F0 end:0x802C2210
 	.data       start:0x8031DB3C end:0x8031DBF0
-	.sdata2     start:0x803E23D8 end:0x803E2468
 	.sbss       start:0x803DDA48 end:0x803DDA58
+	.sdata2     start:0x803E23D8 end:0x803E2468
 
 main/dll/dll_00C9_enemy.c:
 	.text       start:0x8014A9F0 end:0x8014E1DC
@@ -2781,6 +2782,7 @@ main/dll/drlaserturret.c:
 main/dll/SP/dll_0286_spshopkeeper.c:
 	.text       start:0x801E76A0 end:0x801E832C
 	.data       start:0x80328370 end:0x803283E0
+	.sbss       start:0x803DDC58 end:0x803DDC5C
 
 main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
@@ -2804,6 +2806,7 @@ main/dll/SP/dll_0289_spitembeam.c:
 
 main/dll/dll_801e991c.c:
 	.text       start:0x801E991C end:0x801E9C00
+	.sbss       start:0x803DDC60 end:0x803DDC64
 
 main/dll/drcloudcage.c:
 	.text       start:0x801E9C00 end:0x801EA854
