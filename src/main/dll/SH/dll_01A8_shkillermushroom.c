@@ -43,6 +43,7 @@
 #include "main/shader_api.h"
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct EnemymushroomPlacement
@@ -96,7 +97,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern int objIsFrozen(int* obj);
 extern int EmissionController_IsLingering(GameObject* player);
 extern int playerGetFlags3F0Bit5(GameObject* player);
@@ -273,7 +273,7 @@ void enemymushroom_update(int* obj)
     switch (((EnemyMushroomState*)state)->stateId)
     {
     case 6:
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_diallp_c);
         ((EnemyMushroomState*)state)->stateFlags =
             (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_ACTIVE);
         ((EnemyMushroomState*)state)->hitRadius =
@@ -334,7 +334,7 @@ void enemymushroom_update(int* obj)
     case 3:
         ((GameObject*)obj)->anim.resetHitboxFlags =
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_id_9c);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_id_9c);
         if (((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_ANIM_DONE)
         {
             ((EnemyMushroomState*)state)->stateId = 4;
@@ -345,7 +345,7 @@ void enemymushroom_update(int* obj)
             (u8)(((GameObject*)obj)->anim.resetHitboxFlags & ~INTERACT_FLAG_DISABLED);
         ((EnemyMushroomState*)state)->hitRadius =
             gKillerMushroomPoisonRadiusRate * timeDelta + ((EnemyMushroomState*)state)->hitRadius;
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_diallp_c);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_diallp_c);
         if (!(((EnemyMushroomState*)state)->stateFlags & MUSHROOM_STATEFLAG_HIT_PLAYER))
         {
             if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) <=
@@ -425,7 +425,7 @@ void enemymushroom_update(int* obj)
         {
             ((EnemyMushroomState*)state)->timer = lbl_803E52FC;
         }
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_cagelp_c);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_cagelp_c);
         {
             f32 nv = ((EnemyMushroomState*)state)->timer - timeDelta;
             ((EnemyMushroomState*)state)->timer = nv;
