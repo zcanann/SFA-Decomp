@@ -65,13 +65,13 @@
         u8 _slot;                                                                                                        \
         for (_slot = 0; _slot < 64; _slot++)                                                                            \
         {                                                                                                                \
-            if ((g)->itemTextures[_slot] != NULL)                                                                        \
+            if ((g).itemTextures[_slot] != NULL)                                                                         \
             {                                                                                                            \
-                textureFree((g)->itemTextures[_slot]);                                                                   \
-                (g)->itemTextures[_slot] = NULL;                                                                         \
+                textureFree((g).itemTextures[_slot]);                                                                    \
+                (g).itemTextures[_slot] = NULL;                                                                          \
             }                                                                                                            \
-            (g)->itemSlots[_slot] = -1;                                                                                  \
-            (g)->itemFlags[_slot] = 1;                                                                                   \
+            (g).itemSlots[_slot] = -1;                                                                                   \
+            (g).itemFlags[_slot] = 1;                                                                                    \
         }                                                                                                                \
     } while (0)
 
@@ -218,7 +218,7 @@ extern s16 lbl_803A8B48[0x98];
 extern u32 lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlayTrickyCommandSfx(u8* player);
-extern char lbl_803A87F0[];
+extern GameUiHud lbl_803A87F0;
 extern u8 cMenuEnabled;
 extern s8 shouldCloseCMenu;
 extern int gCMenuScriptedButtons;
@@ -1050,9 +1050,8 @@ void CMenu_SetShouldClose(int val)
 
 void GameUI_release(void)
 {
-    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
     int i = 0;
-    void** textures = g->hudTextures;
+    void** textures = lbl_803A87F0.hudTextures;
 
     while (i < 102)
     {
@@ -1063,9 +1062,9 @@ void GameUI_release(void)
         textures++;
         i++;
     }
-    GAMEUI_RELEASE_MENU_RESOURCES(g);
+    GAMEUI_RELEASE_MENU_RESOURCES(lbl_803A87F0);
 
-    GAMEUI_CLEAR_ITEM_SLOTS(g);
+    GAMEUI_CLEAR_ITEM_SLOTS(lbl_803A87F0);
 
     textureFree((u8*)gGameUiBlinkTexture);
 }
@@ -1083,9 +1082,7 @@ void GameUI_initialise(void);
 
 void textureFreeFn_8012fcec(void)
 {
-    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
-
-    GAMEUI_RELEASE_MENU_RESOURCES(g);
+    GAMEUI_RELEASE_MENU_RESOURCES(lbl_803A87F0);
 }
 
 void Pause_SetDisabled(u8 v)
