@@ -183,6 +183,7 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 #pragma opt_common_subs off
+#pragma opt_lifetimes off
 void staffFn_80170380(GameObject* obj, int cmd)
 {
     f32* tbl[1];
@@ -468,6 +469,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
     }
     }
 }
+#pragma opt_lifetimes reset
 #pragma opt_common_subs reset
 
 int Shield_getExtraSize(void)
