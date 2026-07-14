@@ -63,20 +63,21 @@ typedef struct HagabonPlacement
 
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
-extern f32 lbl_803E2608;
-extern f32 lbl_803E260C;
-extern f32 lbl_803E2610;
-extern f32 lbl_803E2614;
-extern f32 lbl_803E2618;
-extern f32 gHagabonPi;
-extern f32 lbl_803E2620;
-extern const f32 lbl_803E2624;
-extern f32 lbl_803E2628;
-extern f32 lbl_803E262C;
-extern f32 lbl_803E2630;
-extern f32 lbl_803E2634;
-extern f32 lbl_803E2638;
-extern f32 lbl_803E263C;
+__declspec(section ".sdata2") f32 lbl_803E2608 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E260C = 128.0f;
+__declspec(section ".sdata2") f32 lbl_803E2610 = 256.0f;
+__declspec(section ".sdata2") f32 lbl_803E2614 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E2618 = 1000.0f;
+__declspec(section ".sdata2") f32 gHagabonPi = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E2620 = 32768.0f;
+union HagabonConstF32 { f32 f; };
+__declspec(section ".sdata2") const union HagabonConstF32 lbl_803E2624 = { 0.001f };
+__declspec(section ".sdata2") f32 lbl_803E2628 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E262C = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E2630 = 0.9f;
+__declspec(section ".sdata2") f32 lbl_803E2634 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E2638 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E263C = 12.0f;
 extern f32 lbl_803E2650;
 extern f32 gHagabonAlphaMax;
 extern f32 lbl_803E2658;
@@ -144,32 +145,32 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
     if ((*flags & HAGABON_FLAG_CHASE) != 0)
     {
         obj->anim.velocityX +=
-            lbl_803E2624 * (state->player->anim.localPosX - obj->anim.localPosX);
+            lbl_803E2624.f * (state->player->anim.localPosX - obj->anim.localPosX);
         obj->anim.velocityY +=
-            lbl_803E2624 * ((lbl_803E2628 + state->player->anim.localPosY) - obj->anim.localPosY);
+            lbl_803E2624.f * ((lbl_803E2628 + state->player->anim.localPosY) - obj->anim.localPosY);
         obj->anim.velocityZ +=
-            lbl_803E2624 * (state->player->anim.localPosZ - obj->anim.localPosZ);
+            lbl_803E2624.f * (state->player->anim.localPosZ - obj->anim.localPosZ);
     }
     else if ((*flags & HAGABON_FLAG_PATH_RETURN) != 0)
     {
         obj->anim.velocityX +=
-            lbl_803E2624 * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+            lbl_803E2624.f * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
         obj->anim.velocityY +=
-            lbl_803E2624 * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
+            lbl_803E2624.f * (*(f32*)(curve + 0x6c) - obj->anim.localPosY);
         obj->anim.velocityZ +=
-            lbl_803E2624 * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            lbl_803E2624.f * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
     else
     {
         obj->anim.velocityX +=
-            lbl_803E2624 * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
+            lbl_803E2624.f * (*(f32*)(curve + 0x68) - obj->anim.localPosX);
         waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
         waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
         waveA = waveB + waveA;
         waveA = ((lbl_803E262C * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
-        obj->anim.velocityY += lbl_803E2624 * waveA;
+        obj->anim.velocityY += lbl_803E2624.f * waveA;
         obj->anim.velocityZ +=
-            lbl_803E2624 * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
+            lbl_803E2624.f * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
 
     obj->anim.velocityX *= (damp = lbl_803E2630);
@@ -465,3 +466,14 @@ ObjectDescriptor gHagabonObjDescriptor = {
     (ObjectDescriptorCallback)Hagabon_getObjectTypeId,
     Hagabon_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 lbl_803E2650 = 1.0f;
+__declspec(section ".sdata2") f32 gHagabonAlphaMax = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E2658 = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E265C = 350.0f;
+__declspec(section ".sdata2") f32 lbl_803E2660 = 0.014f;
+__declspec(section ".sdata2") f32 lbl_803E2664 = 250.0f;
+__declspec(section ".sdata2") f32 lbl_803E2668 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E266C = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E2670 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2674 = 4.0f;

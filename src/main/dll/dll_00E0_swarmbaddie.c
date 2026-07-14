@@ -47,18 +47,18 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define SWARMBADDIE_FLAG_CHASE_MASK      0x06
 
-extern f32 lbl_803E2678;
-extern f32 lbl_803E267C;
-extern f32 lbl_803E2680;
-extern f32 lbl_803E2684;
-extern f32 lbl_803E2688;
-extern f32 lbl_803E268C;
-extern f32 lbl_803E2690;
-extern f32 lbl_803E2694;
-extern f32 lbl_803E2698;
-extern f32 gSwarmBaddieDegToAngle;
-extern f32 gSwarmBaddiePi;
-extern f32 gSwarmBaddieS16AngleScale;
+__declspec(section ".sdata2") f32 lbl_803E2678 = 400.0f;
+__declspec(section ".sdata2") f32 lbl_803E267C = 0.003f;
+__declspec(section ".sdata2") f32 lbl_803E2680 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E2684 = 0.9f;
+__declspec(section ".sdata2") f32 lbl_803E2688 = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803E268C = -0.8f;
+__declspec(section ".sdata2") f32 lbl_803E2690 = 32.0f;
+__declspec(section ".sdata2") f32 lbl_803E2694 = 23.0f;
+__declspec(section ".sdata2") f32 lbl_803E2698 = 4.0f;
+__declspec(section ".sdata2") f32 gSwarmBaddieDegToAngle = 182.0f;
+__declspec(section ".sdata2") f32 gSwarmBaddiePi = 3.1415927f;
+__declspec(section ".sdata2") f32 gSwarmBaddieS16AngleScale = 32768.0f;
 extern f32 lbl_803E26B0;
 extern f32 lbl_803E26B4;
 extern f32 lbl_803E26B8;
@@ -292,3 +292,12 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     (ObjectDescriptorCallback)SwarmBaddie_getObjectTypeId,
     SwarmBaddie_getExtraSize,
 };
+
+__declspec(section ".sdata2") f32 lbl_803E26B0 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E26B4 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E26B8 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E26BC = 63.0f;
+__declspec(section ".sdata2") f32 lbl_803E26C0 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E26C4 = 250.0f;
+__declspec(section ".sdata2") f32 lbl_803E26C8 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E26CC = 50.0f;

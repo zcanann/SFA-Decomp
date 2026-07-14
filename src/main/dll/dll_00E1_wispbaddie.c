@@ -38,18 +38,19 @@
 #define WISPBADDIE_FLAG_CHASE_PLAYER    0x02
 #define WISPBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define WISPBADDIE_FLAG_CHASE_MASK      0x06
-extern f32 lbl_803E26D0;
-extern f32 lbl_803E26D4;
-extern f32 lbl_803E26D8;
-extern f32 gWispBaddiePi;
-extern f32 lbl_803E26E0;
-extern f32 lbl_803E26E4;
-extern const f32 lbl_803E26E8;
-extern f32 lbl_803E26EC;
-extern f32 lbl_803E26F0;
-extern f32 lbl_803E26F4;
-extern f32 lbl_803E26F8;
-extern f32 lbl_803E26FC;
+__declspec(section ".sdata2") f32 lbl_803E26D0 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E26D4 = 2048.0f;
+__declspec(section ".sdata2") f32 lbl_803E26D8 = 1.0f;
+__declspec(section ".sdata2") f32 gWispBaddiePi = 3.1415927f;
+__declspec(section ".sdata2") f32 lbl_803E26E0 = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E26E4 = 400.0f;
+union WispBaddieConstF32 { f32 f; };
+__declspec(section ".sdata2") const union WispBaddieConstF32 lbl_803E26E8 = { 0.006f };
+__declspec(section ".sdata2") f32 lbl_803E26EC = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
+__declspec(section ".sdata2") f32 lbl_803E26F4 = 0.9f;
+__declspec(section ".sdata2") f32 lbl_803E26F8 = 2.1f;
+__declspec(section ".sdata2") f32 lbl_803E26FC = -2.1f;
 extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
 
@@ -160,24 +161,24 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     if ((state->flags & WISPBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
         (obj)->anim.velocityX =
-            lbl_803E26E8 * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+            lbl_803E26E8.f * (state->playerObj->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
         wave = (lbl_803E26F0 * wave + (lbl_803E26EC + state->playerObj->anim.localPosY)) - (obj)->anim.localPosY;
-        (obj)->anim.velocityY = lbl_803E26E8 * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
-            lbl_803E26E8 * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
+            lbl_803E26E8.f * (state->playerObj->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
     else
     {
         (obj)->anim.velocityX =
-            lbl_803E26E8 * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
+            lbl_803E26E8.f * (((RomCurveWalker*)curve)->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
 
         wave = mathSinf((gWispBaddiePi * (f32)state->hoverWavePhase) / lbl_803E26E0);
         wave = (lbl_803E26F0 * wave + ((RomCurveWalker*)curve)->posY) - (obj)->anim.localPosY;
-        (obj)->anim.velocityY = lbl_803E26E8 * wave + (obj)->anim.velocityY;
+        (obj)->anim.velocityY = lbl_803E26E8.f * wave + (obj)->anim.velocityY;
         (obj)->anim.velocityZ =
-            lbl_803E26E8 * (((RomCurveWalker*)curve)->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
+            lbl_803E26E8.f * (((RomCurveWalker*)curve)->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
     (obj)->anim.velocityX = (obj)->anim.velocityX * (step = lbl_803E26F4);
@@ -830,3 +831,26 @@ void* lbl_8031F16C[69] = {
     (void*)0x0F3C0A32, (void*)0x07140514, (void*)0x030F030F, (void*)0x3F000000, (void*)0x3F000000, (void*)0x3F333333,
     (void*)0x3F19999A, (void*)0x3FC00000, (void*)0x3FC00000};
 u8 lbl_8031F280[16] = {0, 0, 0, 6, 0, 0, 0, 7, 0, 0, 0, 8, 0, 0, 0, 9};
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2708 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E270C = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2710 = 250.0f;
+__declspec(section ".sdata2") f32 lbl_803E2714 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2718 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E271C = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E2720 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E2724 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2728 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E272C = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2730 = 0.17f;
+__declspec(section ".sdata2") f32 lbl_803E2734 = 0.97f;
+__declspec(section ".sdata2") f32 lbl_803E2738 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E273C = 1.25f;
+__declspec(section ".sdata2") const f32 lbl_803E2740 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2744 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E2748 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E274C = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E2750 = 0.0166f;
+__declspec(section ".sdata2") f32 lbl_803E2754 = 0.005f;
+#pragma explicit_zero_data off

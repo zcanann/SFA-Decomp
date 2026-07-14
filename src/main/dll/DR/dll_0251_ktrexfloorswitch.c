@@ -15,6 +15,9 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dr_shared.h"
+
+__declspec(section ".rodata") f32 lbl_802C2560[3] = {0.0f, 0.0f, 55.0f};
+__declspec(section ".rodata") f32 lbl_802C256C[3] = {55.0f, 0.0f, 0.0f};
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"

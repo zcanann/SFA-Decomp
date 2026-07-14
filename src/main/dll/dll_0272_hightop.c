@@ -39,6 +39,9 @@
 #include "main/player_control_interface.h"
 #include "main/dll/dll_0272_hightop.h"
 
+__declspec(section ".rodata") HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
+__declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
+
 #define PAD_BUTTON_A 0x100
 
 /* Death follow-up spawn (docblock: "Obj_AllocObjectSetup(0x2C, 0xD4)"): object id and effect id. */

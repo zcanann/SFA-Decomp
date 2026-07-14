@@ -49,6 +49,17 @@
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E27F8 = 200.0f;
+__declspec(section ".sdata2") f32 lbl_803E27FC = 300.0f;
+__declspec(section ".sdata2") f32 lbl_803E2800 = 0.0055555557f;
+__declspec(section ".sdata2") f32 lbl_803E2804 = 0.17f;
+__declspec(section ".sdata2") f32 lbl_803E2808 = 0.97f;
+__declspec(section ".sdata2") f32 lbl_803E280C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2810 = 2.5f;
+__declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
+#pragma explicit_zero_data off
+
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
     extern void fn_8014D08C(GameObject * obj, int p, int type, f32 t, int a, int b);
@@ -73,6 +84,30 @@ void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int
     obj->anim.velocityY = fz;
     obj->anim.velocityX = fz;
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2820 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2824 = 700.0f;
+__declspec(section ".sdata2") f32 lbl_803E2828 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E282C = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2830 = -0.4f;
+__declspec(section ".sdata2") f32 lbl_803E2834 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E2838 = 0.25f;
+__declspec(section ".sdata2") f32 lbl_803E283C = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E2840 = 0.4f;
+__declspec(section ".sdata2") f32 lbl_803E2844 = -30.0f;
+__declspec(section ".sdata2") f32 lbl_803E2848 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E284C = 1000.0f;
+__declspec(section ".sdata2") f32 lbl_803E2850 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E2854 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2858 = 0.006f;
+__declspec(section ".sdata2") f32 lbl_803E285C = 0.99f;
+__declspec(section ".sdata2") f32 lbl_803E2860 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
+#pragma explicit_zero_data off
+
 #pragma opt_common_subs reset
 
 /* fn_80152514: main update: child-zap timer, curve follow, heading steps,
@@ -405,6 +440,16 @@ void fn_80152B90(int* obj, u8* state)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_id_24a);
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E2878 = 5.0f;
+__declspec(section ".sdata2") f32 lbl_803E287C = 75.0f;
+__declspec(section ".sdata2") f32 lbl_803E2880 = 1.3f;
+__declspec(section ".sdata2") f32 lbl_803E2884 = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E2888 = 500.0f;
+__declspec(section ".sdata2") f32 lbl_803E288C = 1.5f;
+__declspec(section ".sdata2") f32 lbl_803E2890 = 7.5f;
+__declspec(section ".sdata2") f32 lbl_803E2894 = 1.0f;
+
 
 int gcRobotLight_init(GameObject* obj, int childId)
 {

@@ -86,28 +86,33 @@ extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
-extern const f32 lbl_803E2A20;
-extern const f32 lbl_803E2A24;
-extern const f32 lbl_803E2A28;
-extern const f32 lbl_803E2A2C;
-extern const f32 lbl_803E2A30;
-extern const f32 lbl_803E2A34;
-extern const f32 lbl_803E2A38;
-extern const f32 lbl_803E2A3C;
-extern const f32 lbl_803E2A40;
-extern const f32 lbl_803E2A48;
-extern const f32 lbl_803E2A4C;
-extern const f32 lbl_803E2A50;
-extern const f32 lbl_803E2A54;
-extern const f32 lbl_803E2A58;
-extern const f32 lbl_803E2A60;
+union DusterConstF32 { f32 f; };
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A20 = { 15.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A24 = { 50.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A28 = { -15.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A2C = { 2.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A30 = { 0.5f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A34 = { 25.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A38 = { 0.1f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A3C = { 0.97f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A40 = { 1.5f };
+__declspec(section ".sdata2") f32 lbl_803E2A44 = 0.0f;
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A48 = { 15.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A4C = { 30.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A50 = { 3.25f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A54 = { 1.0f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A58 = { 0.02f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A5C = { 0.045f };
+__declspec(section ".sdata2") const union DusterConstF32 lbl_803E2A60 = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803E2A64 = 0.0f;
+#pragma explicit_zero_data off
 extern const f32 gDusterDayStartSeconds;
 extern const f32 gDusterDayEndSeconds;
 extern const f32 lbl_803E2A78;
 extern const f32 lbl_803E2A7C;
 extern const f32 lbl_803E2A80;
 extern f32 lbl_803E2B18;
-extern const f32 lbl_803E2A5C;
 extern const f32 lbl_803E2A84;
 extern const f32 lbl_803E2A88;
 extern const f32 lbl_803E2A8C;
@@ -160,14 +165,14 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     float upConst;
     float scale;
 
-    hi = anchor[6] - lbl_803E2A20;
+    hi = anchor[6] - lbl_803E2A20.f;
     if (height > hi)
     {
         height = hi;
     }
     else
     {
-        lo = lbl_803E2A24 + anchor[5];
+        lo = lbl_803E2A24.f + anchor[5];
         if (height < lo)
         {
             height = lo;
@@ -175,13 +180,13 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     }
     if (anchor[4] > lbl_803E2A00)
     {
-        hi = anchor[4] - lbl_803E2A20;
-        lo = lbl_803E2A20;
+        hi = anchor[4] - lbl_803E2A20.f;
+        lo = lbl_803E2A20.f;
     }
     else
     {
-        hi = lbl_803E2A28;
-        lo = lbl_803E2A20 + anchor[4];
+        hi = lbl_803E2A28.f;
+        lo = lbl_803E2A20.f + anchor[4];
     }
     if (lateral > hi)
     {
@@ -203,7 +208,7 @@ void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
     PSVECNormalize(sideAxis, sideAxis);
     *outPos = lateral * sideAxis[0] + anchor[7];
     outPos[2] = lateral * sideAxis[2] + anchor[8];
-    scale = lbl_803E2A2C;
+    scale = lbl_803E2A2C.f;
     *outPos = scale * *anchor + *outPos;
     outPos[1] = scale * anchor[1] + outPos[1];
     outPos[2] = scale * anchor[2] + outPos[2];
@@ -241,8 +246,8 @@ void fn_801554B4(int* obj, int state)
     }
     if (didHit != 0)
     {
-        ((GameObject*)obj)->anim.localPosX = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
-        ((GameObject*)obj)->anim.localPosZ = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
+        ((GameObject*)obj)->anim.localPosX = (hit[17] - lbl_803E2A20.f) * ((minv[0] - maxv[0]) / lbl_803E2A24.f) + maxv[0];
+        ((GameObject*)obj)->anim.localPosZ = (hit[17] - lbl_803E2A20.f) * ((minv[2] - maxv[2]) / lbl_803E2A24.f) + maxv[2];
         *(float*)(state + 0x344) = hit[7];
         *(float*)(state + 0x348) = hit[8];
         *(float*)(state + 0x34c) = hit[9];
@@ -333,10 +338,10 @@ void fn_80155884(int* obj, int state)
     else if ((((GameObject*)((BaddieState*)state)->trackedObj)->anim.classId == 1) &&
              (cond = fn_80295CBC((GameObject*)(*(int*)&((BaddieState*)state)->trackedObj)), cond != 0))
     {
-        fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
+        fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30.f);
         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
-            Baddie_SetMove((int)obj, state, 0, lbl_803E2A30, 0, 0);
+            Baddie_SetMove((int)obj, state, 0, lbl_803E2A30.f, 0, 0);
             Sfx_PlayFromObject((u32)obj, SFXTRIG_id_252);
         }
     }
@@ -370,7 +375,7 @@ void fn_80155948(int* obj, int state)
         }
         else if ((move == 0) || (move == 1))
         {
-            fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30);
+            fn_80154FB4((short*)obj, state, 0x19, (double)lbl_803E2A30.f);
         }
         fn_80154D0C((int)obj, state, outIds, outVec);
         if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0) ||
@@ -379,11 +384,11 @@ void fn_80155948(int* obj, int state)
             if (outIds[0] < 0x5dc)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_251);
-                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30, 0, 0);
+                Baddie_SetMove((int)obj, state, 1, lbl_803E2A30.f, 0, 0);
             }
             else
             {
-                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30, 0, 0);
+                Baddie_SetMove((int)obj, state, 3, lbl_803E2A30.f, 0, 0);
             }
         }
     }
@@ -400,15 +405,15 @@ void rachnopInit(u32 unused, int state)
     float fa;
     float fb;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2A34;
+    ((BaddieState*)state)->speedScale = lbl_803E2A34.f;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
-    fa = lbl_803E2A38;
-    ((BaddieState*)state)->unk308 = lbl_803E2A38;
+    fa = lbl_803E2A38.f;
+    ((BaddieState*)state)->unk308 = lbl_803E2A38.f;
     ((BaddieState*)state)->animDeltaScale = fa;
-    ((BaddieState*)state)->unk304 = lbl_803E2A3C;
+    ((BaddieState*)state)->unk304 = lbl_803E2A3C.f;
     ((BaddieState*)state)->unk320 = 0;
-    fb = lbl_803E2A40;
-    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A40;
+    fb = lbl_803E2A40.f;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A40.f;
     ((BaddieState*)state)->unk321 = 4;
     fa = lbl_803E2A04;
     ((BaddieState*)state)->unk318 = lbl_803E2A04;
@@ -441,20 +446,20 @@ void pollenFn_80155b10(u32 obj, int state)
     if ((loadLocked & 0xff) != 0)
     {
         a[0] = ((GameObject*)obj)->anim.localPosX;
-        a[1] = lbl_803E2A48 + ((GameObject*)obj)->anim.localPosY;
+        a[1] = lbl_803E2A48.f + ((GameObject*)obj)->anim.localPosY;
         a[2] = ((GameObject*)obj)->anim.localPosZ;
         ref = *(int*)&((BaddieState*)state)->trackedObj;
         b[0] = ((GameObject*)ref)->anim.localPosX;
-        b[1] = lbl_803E2A4C + ((GameObject*)ref)->anim.localPosY;
+        b[1] = lbl_803E2A4C.f + ((GameObject*)ref)->anim.localPosY;
         b[2] = ((GameObject*)ref)->anim.localPosZ;
-        spd = lbl_803E2A50 * (lbl_803E2A58 * (f32)(int)randomGetRange(-10, 10) + lbl_803E2A54);
-        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C);
+        spd = lbl_803E2A50.f * (lbl_803E2A58.f * (f32)(int)randomGetRange(-10, 10) + lbl_803E2A54.f);
+        ref = fn_80169EF4(a, b, spd, 1, lbl_803E2A5C.f);
         fn_80293018(ref, &cosVal, &velXZ);
         velXZ = velXZ * spd;
         cosVal = cosVal * spd;
         dx = b[0] - ((GameObject*)obj)->anim.localPosX;
         dz = b[2] - ((GameObject*)obj)->anim.localPosZ;
-        if (lbl_803E2A60 != dz)
+        if (lbl_803E2A60.f != dz)
         {
             ref = getAngle(dx, dz);
             fn_80293018(ref, &cosPitch, &velY);
@@ -464,7 +469,7 @@ void pollenFn_80155b10(u32 obj, int state)
         }
         else
         {
-            velY = lbl_803E2A60;
+            velY = lbl_803E2A60.f;
         }
         setup = (u16*)Obj_AllocObjectSetup(0x24, DUSTER_CHILD_OBJ_POLLEN_SPIT);
         ((ObjPlacement*)setup)->posX = a[0];
@@ -555,7 +560,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
 
 void fn_80155F20(GameObject* obj, int state)
 {
-    ((DusterState*)state)->phaseTimer = lbl_803E2A60;
+    ((DusterState*)state)->phaseTimer = lbl_803E2A60.f;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         if (((BaddieState*)state)->seqEntryIndex == 1)
@@ -569,12 +574,12 @@ void fn_80155F20(GameObject* obj, int state)
             {
                 ((BaddieState*)state)->seqEntryIndex = 0;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-                Baddie_SetMove(obj, state, 0, lbl_803E2A54, 0, 0);
+                Baddie_SetMove(obj, state, 0, lbl_803E2A54.f, 0, 0);
             }
         }
         else if ((((BaddieState*)state)->seqEntryIndex == 2) && ((obj)->anim.currentMove != 2))
         {
-            Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 2, lbl_803E2A54.f, 0, 0);
         }
     }
     timeOfDayFn_80155cf8((int)obj, state);
@@ -587,10 +592,10 @@ void fn_80156010(u32 obj, int state)
 
     timerExpired = 0;
     ((DusterState*)state)->phaseTimer = ((DusterState*)state)->phaseTimer - timeDelta;
-    if (((DusterState*)state)->phaseTimer <= lbl_803E2A60)
+    if (((DusterState*)state)->phaseTimer <= lbl_803E2A60.f)
     {
         timerExpired = 1;
-        ((DusterState*)state)->phaseTimer = *(f32*)&lbl_803E2A60;
+        ((DusterState*)state)->phaseTimer = *(f32*)&lbl_803E2A60.f;
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
@@ -598,22 +603,22 @@ void fn_80156010(u32 obj, int state)
         {
             pollenFn_80155b10(obj, state);
             ((DusterState*)state)->phaseTimer = lbl_803E2A80;
-            Baddie_SetMove(obj, state, 5, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 5, lbl_803E2A54.f, 0, 0);
         }
         else if ((((GameObject*)obj)->anim.currentMove == 5) && (timerExpired))
         {
-            Baddie_SetMove(obj, state, 6, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 6, lbl_803E2A54.f, 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_death);
         }
         else if (((GameObject*)obj)->anim.currentMove == 6)
         {
-            Baddie_SetMove(obj, state, 2, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 2, lbl_803E2A54.f, 0, 0);
             ((DusterState*)state)->phaseTimer = lbl_803E2A80;
         }
         else if ((((GameObject*)obj)->anim.currentMove == 2) && (timerExpired) &&
                  ((((BaddieState*)state)->controlFlags & 0x4000000) != 0))
         {
-            Baddie_SetMove(obj, state, 4, lbl_803E2A54, 0, 0);
+            Baddie_SetMove(obj, state, 4, lbl_803E2A54.f, 0, 0);
             Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_hit);
         }
     }
@@ -628,19 +633,19 @@ void baddieInit_80156188(u32 unused, int state)
 
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 1;
-    ((BaddieState*)state)->unk308 = lbl_803E2A58;
+    ((BaddieState*)state)->unk308 = lbl_803E2A58.f;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
     ((BaddieState*)state)->unk320 = 0;
     fb = lbl_803E2A90;
     *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A90;
     ((BaddieState*)state)->unk321 = 7;
-    fa = lbl_803E2A54;
-    ((BaddieState*)state)->unk318 = lbl_803E2A54;
+    fa = lbl_803E2A54.f;
+    ((BaddieState*)state)->unk318 = lbl_803E2A54.f;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
     ((BaddieState*)state)->seqEntryIndex = 0;
-    ((DusterState*)state)->phaseTimer = lbl_803E2A60;
+    ((DusterState*)state)->phaseTimer = lbl_803E2A60.f;
     ((BaddieState*)state)->pathStep = fa;
     return;
 }
@@ -1032,12 +1037,12 @@ void mutatedEbaInit(u32 unused, int state)
 
     ((BaddieState*)state)->speedScale = lbl_803E2A84;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
-    ((BaddieState*)state)->unk308 = lbl_803E2A58;
+    ((BaddieState*)state)->unk308 = lbl_803E2A58.f;
     ((BaddieState*)state)->animDeltaScale = lbl_803E2A88;
     ((BaddieState*)state)->unk304 = lbl_803E2A8C;
     ((BaddieState*)state)->unk320 = 0;
-    fa = lbl_803E2A54;
-    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A54;
+    fa = lbl_803E2A54.f;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A54.f;
     ((BaddieState*)state)->unk321 = 4;
     ((BaddieState*)state)->unk318 = fa;
     ((BaddieState*)state)->unk322 = 3;

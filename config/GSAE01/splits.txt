@@ -19,10 +19,10 @@ main/render.c:
 
 main/audio.c:
 	.text       start:0x80008DF4 end:0x8000DD74
+	.rodata     start:0x802C1A68 end:0x802C1A88
 	.data       start:0x802C4F08 end:0x802C5E00
 	.bss        start:0x80335940 end:0x80337090
 	.sdata      start:0x803DB1E8 end:0x803DB260
-	.rodata     start:0x802C1A68 end:0x802C1A88
 
 main/camera.c:
 	.text       start:0x8000DD74 end:0x8000FE8C
@@ -72,8 +72,8 @@ main/textrender.c:
 
 main/modellight.c:
 	.text       start:0x8001CB3C end:0x8001F54C
-	.bss        start:0x8033BE60 end:0x8033BF88
 	.rodata     start:0x802C1A88 end:0x802C1AE8
+	.bss        start:0x8033BE60 end:0x8033BF88
 
 main/gameloop.c:
 	.text       start:0x8001F54C end:0x80021370
@@ -109,8 +109,8 @@ main/objhits.c:
 
 main/objHitReact.c:
 	.text       start:0x800353A4 end:0x800358D4
-	.data       start:0x802CADE8 end:0x802CAE20
 	.rodata     start:0x802C1B00 end:0x802C1B10
+	.data       start:0x802CADE8 end:0x802CAE20
 
 main/objlib.c:
 	.text       start:0x800358D4 end:0x80038F38
@@ -129,9 +129,9 @@ main/objprint_dolphin.c:
 
 main/pi_dolphin.c:
 	.text       start:0x800443CC end:0x80051868
+	.rodata     start:0x802C1C50 end:0x802C1E58
 	.data       start:0x802CAF48 end:0x802CBE94
 	.bss        start:0x8035EF48 end:0x803779C0
-	.rodata     start:0x802C1C50 end:0x802C1E58
 
 main/boot_logo.c:
 	.data       start:0x802CC6A0 end:0x8030C6A0
@@ -906,43 +906,43 @@ main/dll/dll_004E_cameramodeworldmap.c:
 
 main/dll/dll_004F_dll4f.c:
 	.text       start:0x8010F2F8 end:0x8010F540
-	.sdata2     start:0x803E1A88 end:0x803E1AC0
 	.data       start:0x80319E38 end:0x80319E68
+	.sdata2     start:0x803E1A88 end:0x803E1AC0
 
 main/dll/dll_0050_cameramodecrawl.c:
 	.text       start:0x8010F540 end:0x8010FA54
-	.sdata2     start:0x803E1AC0 end:0x803E1AE0
 	.data       start:0x80319E68 end:0x80319E98
+	.sdata2     start:0x803E1AC0 end:0x803E1AE0
 
 main/dll/dll_0051_cameramodecannon.c:
 	.text       start:0x8010FA54 end:0x8010FC74
-	.sdata2     start:0x803E1AE0 end:0x803E1B00
 	.data       start:0x80319E98 end:0x80319EC8
+	.sdata2     start:0x803E1AE0 end:0x803E1B00
 
 main/dll/dll_0052_cameramodeforcebehind.c:
 	.text       start:0x8010FC74 end:0x801101E4
-	.sdata2     start:0x803E1B10 end:0x803E1B18
 	.data       start:0x80319EC8 end:0x80319EF8
+	.sdata2     start:0x803E1B10 end:0x803E1B18
 
 main/dll/dll_0053_cameramodecloudrunner.c:
 	.text       start:0x801101E4 end:0x801106B4
-	.sdata2     start:0x803E1B20 end:0x803E1B40
 	.data       start:0x80319EF8 end:0x80319F28
+	.sdata2     start:0x803E1B20 end:0x803E1B40
 
 main/dll/dll_0054_dll54.c:
 	.text       start:0x801106B4 end:0x80110C80
-	.sdata2     start:0x803E1B40 end:0x803E1B78
 	.data       start:0x80319F28 end:0x80319F58
+	.sdata2     start:0x803E1B40 end:0x803E1B78
 
 main/dll/dll_0055_cameramodeperv.c:
 	.text       start:0x80110C80 end:0x80110E30
-	.sdata2     start:0x803E1B78 end:0x803E1B98
 	.data       start:0x80319F58 end:0x80319F88
+	.sdata2     start:0x803E1B78 end:0x803E1B98
 
 main/dll/dll_0056_cameramodearwing.c:
 	.text       start:0x80110E30 end:0x801115E4
-	.bss        start:0x803A43C0 end:0x803A4420
 	.data       start:0x80319F88 end:0x80319FB8
+	.bss        start:0x803A43C0 end:0x803A4420
 
 main/dll/dll_0057_cameramodetitle.c:
 	.text       start:0x801115E4 end:0x80111D14
