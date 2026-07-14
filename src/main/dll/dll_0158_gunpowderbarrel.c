@@ -1039,6 +1039,12 @@ int gunpowderbarrel_canBeGrabbed(GameObject* obj)
  * restores. */
 void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
 {
+    int i;
+    u32* barrels;
+    int target;
+    GunpowderbarrelPlacement* params;
+    u32* p;
+    int count;
     GunpowderBarrelState* state = (obj)->extra;
     u8* playerState;
     s16 stk[8];
@@ -1071,12 +1077,7 @@ void gunpowderbarrel_launchAtTarget(GameObject *obj, u8 flag)
     state->motionFlags = (u8)(state->motionFlags | 2);
     if (((GpbConfigFlags*)&state->configFlags)->returnHome != 0)
     {
-        int i;
-        u32* barrels;
-        int target;
-        GunpowderbarrelPlacement* params = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
-        u32* p;
-        int count;
+        params = *(GunpowderbarrelPlacement**)&(obj)->anim.placementData;
         target = 0;
         if (params->generatorLinkId != 0)
         {
