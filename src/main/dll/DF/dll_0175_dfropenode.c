@@ -31,7 +31,6 @@ extern const f32 gRopeNodeBoundsMargin;
 
 extern void textRenderSetupFn_800795e8(void);
 extern void gxBlendFn_80078b4c(void);
-extern void selectTexture(u8* tex, int mapId);
 extern void setTextColor(u32* objAndParam, u8 blue, u8 green, u8 red, int alpha);
 extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern void* gRopeNodeTextures;
@@ -467,7 +466,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 gxBlendFn_80078b4c();
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
-            selectTexture((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex], 0);
+            selectTexture((Texture*)((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex]), 0);
             setTextColor((u32*)&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
         }
         node = extra->rope->nodes;

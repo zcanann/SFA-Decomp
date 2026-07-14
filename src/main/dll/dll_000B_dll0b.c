@@ -1032,7 +1032,6 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
 
 extern s16 renderModeSetOrGet(int mode);
 extern void GXLoadPosMtxImm(void* mtx, int id);
-extern void selectTexture(u8* tex, int mapId);
 extern void Obj_RotateLocalOffsetByYaw(f32* local, f32* out, s8 yawIndex);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
@@ -1294,7 +1293,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 gxTevAddTextureFrameBlendStages();
                 fn_80078DFC();
                 textRenderSetupFn_80079804();
-                selectTexture(tex, 1);
+                selectTexture((Texture*)tex, 1);
             }
         }
         else if ((int)((PartfxEffectState*)p[slot])->flags & 0x2000000)
@@ -1320,7 +1319,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 {
                     tex = *(void**)tex;
                 }
-                selectTexture(tex, 0);
+                selectTexture((Texture*)tex, 0);
             }
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x100)

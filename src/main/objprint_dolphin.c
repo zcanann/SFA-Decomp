@@ -1,4 +1,5 @@
 #include "main/dll/partfx_interface.h"
+#include "main/texture.h"
 #include "dolphin/os/OSReport.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
@@ -1782,7 +1783,6 @@ extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32* c);
 extern void renderHeavyFog(f32* c);
-extern void selectTexture(u8* tex, int mapId);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
@@ -1891,7 +1891,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         if (gObjCachedTexture != (u32)tex)
         {
             gObjCachedTexture = (u32)tex;
-            selectTexture(tex, 0);
+            selectTexture((Texture*)tex, 0);
         }
         if (gObjGxKColorCache[0] != color[0] || gObjGxKColorCache[1] != color[1] || gObjGxKColorCache[2] != color[2] ||
             gObjGxKColorCache[3] != color[3])

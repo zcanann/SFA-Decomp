@@ -1,5 +1,6 @@
 /* DLL 0x801E991C - SPScarab [801E991C-...) */
 #include "main/dll/SP/dll_0287_spscarab.h"
+#include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/shader_api.h"
@@ -30,7 +31,6 @@ extern ShColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
 
-extern void selectTexture(int tex, int p);
 extern void geomDrawFn_800796f0(void);
 extern void GXSetTevColor(int reg, ShColor color);
 extern void GXSetBlendMode(int a, int b, int c, int d);
@@ -79,7 +79,7 @@ void fn_801E991C(int p1, char* table)
     int j;
 
     color = lbl_803E5AE4;
-    selectTexture(lbl_803DDC60, 0);
+    selectTexture((Texture*)lbl_803DDC60, 0);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();

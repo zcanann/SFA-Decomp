@@ -13,6 +13,7 @@
 #include "main/newshadows.h"
 #include "main/mm.h"
 #include "main/model.h"
+#include "main/texture.h"
 #include "dolphin/os/OSCache.h"
 #include "string.h"
 #include "main/pad.h"
@@ -3930,15 +3931,15 @@ void textureFn_8004c264(u8* tex, int mapId)
     }
 }
 
-void selectTexture(u8* tex, int mapId)
+void selectTexture(Texture* texture, int mapId)
 {
     void* base;
-    if (tex == NULL)
+    if (texture == NULL)
         return;
-    base = &tex[0x20];
-    if (tex[0x48] != 0)
+    base = &((u8*)texture)[0x20];
+    if (((u8*)texture)[0x48] != 0)
     {
-        GXLoadTexObjPreLoaded(base, *(void**)(tex + 0x40), mapId);
+        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 0x40), mapId);
     }
     else
     {

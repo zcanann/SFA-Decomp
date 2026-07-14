@@ -198,7 +198,6 @@ extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void fn_8000F83C(void);
 extern float __fabsf(float);
 extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
-extern void selectTexture(int handle, int slot);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void _gxSetFogParams(void);
 extern void fn_80079180(void);
@@ -2194,7 +2193,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
         if (currentTexture != texture)
         {
-            selectTexture(texture, 0);
+            selectTexture((Texture*)texture, 0);
             currentTexture = texture;
         }
 

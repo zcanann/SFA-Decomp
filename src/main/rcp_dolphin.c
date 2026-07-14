@@ -817,7 +817,6 @@ void shaderInit(u8* def, void** out, u8* obj)
     out[1] = *slot;
 }
 
-extern void selectTexture(int handle, int slot);
 
 void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, void* forceTex, int flags, int packed)
 {
@@ -883,8 +882,8 @@ void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, vo
     }
     if (forceTex != NULL)
         result = forceTex;
-    selectTexture((int)cur, 0);
-    selectTexture((int)result, 1);
+    selectTexture((Texture*)((int)cur), 0);
+    selectTexture((Texture*)((int)result), 1);
 }
 
 

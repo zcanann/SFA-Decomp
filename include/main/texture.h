@@ -38,7 +38,8 @@ typedef struct Texture {
     u8 unk1B;
     u8 minLod;
     u8 maxLod;
-    u8 unk1E[0x22];
+    u8 unk1E[2];
+    u32 gxTexObj[8];
     u32 *tmemAddr;
     u8 unk44[4];
     u8 preloaded;
@@ -53,11 +54,14 @@ typedef struct Texture {
 STATIC_ASSERT(offsetof(Texture, width) == 0xA);
 STATIC_ASSERT(offsetof(Texture, animationFrameCount) == 0x10);
 STATIC_ASSERT(offsetof(Texture, animationFrameStep) == 0x14);
+STATIC_ASSERT(offsetof(Texture, gxTexObj) == 0x20);
+STATIC_ASSERT(offsetof(Texture, tmemAddr) == 0x40);
 STATIC_ASSERT(offsetof(Texture, preloaded) == 0x48);
 STATIC_ASSERT(offsetof(Texture, imageOffset) == 0x50);
 STATIC_ASSERT(sizeof(Texture) == 0x60);
 
 void *textureLoadAsset(int asset);
 void textureFree(u8 *tex);
+void selectTexture(Texture *texture, int mapId);
 
 #endif

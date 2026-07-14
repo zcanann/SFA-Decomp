@@ -1,4 +1,5 @@
 #include "main/map_block.h"
+#include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "main/hud_visibility_api.h"
@@ -382,7 +383,6 @@ extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
 extern void GXSetCullMode(int mode);
 extern void GXSetCurrentMtx(u32 id);
 extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void selectTexture(int tex, int slot);
 extern void GXBegin(int type, int fmt, int count);
 extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* mtx);
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
@@ -3196,7 +3196,7 @@ void objDrawFn_80061654(int obj, int placementObj)
             GXSetCullMode(GX_CULL_NONE);
             GXSetCurrentMtx(GX_PNMTX9);
             GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-            selectTexture((int)((ObjAnimComponent*)obj)->modelState->shadowTexture, 0);
+            selectTexture((Texture*)((int)((ObjAnimComponent*)obj)->modelState->shadowTexture), 0);
             GXBegin(GX_QUADS, GX_VTXFMT6, 4);
             GXPosition3s16(shadowVerts[0], shadowVerts[1], shadowVerts[2]);
             GXTexCoord2s16(0, 0);
@@ -3571,7 +3571,7 @@ void renderGlows(void)
                 PSMTXConcat(viewMtx, sunMtx, sunMtx);
                 GXLoadPosMtxImm(sunMtx, GX_PNMTX0);
                 GXSetCurrentMtx(GX_PNMTX0);
-                selectTexture((int)fn_8008912C(), 0);
+                selectTexture((Texture*)((int)fn_8008912C()), 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)sky * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
@@ -3628,7 +3628,7 @@ void renderGlows(void)
             if (e->glowAlpha != 0)
             {
                 f32 f = e->activeIntensity;
-                selectTexture((int)e->glowTexture, 0);
+                selectTexture((Texture*)((int)e->glowTexture), 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * e->activeIntensity),
                                 (int)((f32)(u32)e->glowColor[1] * e->activeIntensity),
                                 (int)((f32)(u32)e->glowColor[2] * e->activeIntensity),

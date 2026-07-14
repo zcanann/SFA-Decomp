@@ -17,6 +17,7 @@
  * texture each frame.
  */
 #include "main/dll/cloudaction.h"
+#include "main/texture.h"
 #include "main/dll/waterfx.h"
 #include "main/dll/ppcwgpipe_struct.h"
 #include "main/cloud_action_runtime.h"
@@ -58,7 +59,6 @@ extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
 extern void fn_8008EDE8(f32* pos);
 extern int fn_8008912C(void);
-extern void selectTexture(int tex, int a);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
@@ -239,7 +239,7 @@ void renderClouds(int a, int b, int c, int d)
         PSMTXTrans(mtx, pos[0], pos[1], pos[2]);
         GXLoadPosMtxImm(mtx, GX_PNMTX0);
         GXSetCurrentMtx(GX_PNMTX0);
-        selectTexture(fn_8008912C(), 0);
+        selectTexture((Texture*)fn_8008912C(), 0);
         if (cloudT >= lbl_803DF2C8.f)
         {
             _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);

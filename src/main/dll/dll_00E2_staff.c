@@ -13,6 +13,7 @@
  *
  */
 #include "main/dll/partfx_interface.h"
+#include "main/texture.h"
 #include "track/intersect_depth_state_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_render_setup_api.h"
@@ -325,7 +326,6 @@ void staff_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-extern int textureFree(int tex);
 extern void* gStaffSwipeResource;
 extern void* gStaffSwipeTextures[2];
 
@@ -337,7 +337,7 @@ void staff_release(void)
     {
         for (i = 0, p = gStaffSwipeTextures; i < 2; i++)
         {
-            textureFree((int)*p);
+            textureFree((u8*)((int)*p));
             *p = NULL;
             p++;
         }
@@ -684,7 +684,6 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = t;
 }
 
-extern void selectTexture(u8* tex, int mapId);
 extern void geomDrawFn_800796f0(void);
 extern void GXSetBlendMode(int a, int b, int c, int d);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
@@ -717,7 +716,7 @@ void staffDrawSwipe(int* obj, int* swipe)
     SwipeRecord* swp;
     int i;
 
-    selectTexture(gStaffSwipeTextures[((StaffState*)swipe)->swipeTextureIndex], 0);
+    selectTexture((Texture*)gStaffSwipeTextures[((StaffState*)swipe)->swipeTextureIndex], 0);
     textureSetupFn_800799c0();
     geomDrawFn_800796f0();
     textRenderSetupFn_80079804();

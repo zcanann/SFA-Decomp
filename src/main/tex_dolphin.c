@@ -1,4 +1,5 @@
 #include "main/tex_dolphin.h"
+#include "main/texture.h"
 #include "main/shader_api.h"
 #include "main/sky_api.h"
 #include "main/game_object.h"
@@ -49,7 +50,6 @@ extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c)
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
                                                        int count, int* out);
 extern int Shader_getLayer();
-extern void selectTexture();
 extern void fn_8004CE0C();
 extern void fn_8004DA54();
 extern void fn_8004E0FC();
@@ -289,7 +289,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         mtxSrc = (u8*)gTexIndMtxTable;
         *(IndMtxCopy*)indMtx = *(IndMtxCopy*)mtxSrc;
         textureFn_8006c4e0(&texTable, &texTableB);
-        selectTexture(*(int*)(texTable + (u8)i * 4), 1);
+        selectTexture((Texture*)(*(int*)(texTable + (u8)i * 4)), 1);
         {
             f32 s = (f32)((i & 0xff) + 1) * gTexIndMtxScale;
             indMtx[0][0] = s * displayOffsetH_803DEBFC;
@@ -325,7 +325,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         shader = (int)((MapShader*)*(int*)(blockData + 0x64) + shaderIdx);
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
-    selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
+    selectTexture((Texture*)(*(int*)Shader_getLayer(shader, 0)), 0);
     if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();

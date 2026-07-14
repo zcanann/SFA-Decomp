@@ -224,7 +224,6 @@ extern void GXSetNumIndStages(int n);
 extern void GXSetNumChans(int n);
 extern void GXSetNumTexGens(int n);
 extern void GXSetNumTevStages(int n);
-extern void selectTexture(void* tex, int slot);
 extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
@@ -3178,7 +3177,7 @@ void skyFn_8008aee8(void)
         angle *= lbl_803DF0EC;
         (*gSky2Interface)->applyTextColor(0);
         GXSetFog(GX_FOG_NONE, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
-        selectTexture(texC, 0);
+        selectTexture((Texture*)texC, 0);
         fn_8007880C();
         GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
         GXSetTevDirect(GX_TEVSTAGE0);

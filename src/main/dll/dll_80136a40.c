@@ -190,7 +190,6 @@ extern int dll_19_func1B(GameObject* p);
 #define Obj_SetModelColorOverrideRecursivePromoted(obj, red, green, blue, alpha, enabled)                         \
     ((void (*)(GameObject*, int, int, int, int, int))Obj_SetModelColorOverrideRecursive)(                        \
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
-extern void selectTexture(char* tex, int slot);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
 extern void GXSetTevColor(int id, int* color);
@@ -902,7 +901,7 @@ int fn_80136A40(int unused, int c)
         {
             if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)gDebugFontTex0, 0);
+                selectTexture((Texture*)((char*)gDebugFontTex0), 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 10));
                 gDebugGlyphVScale =
                     lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex0 + 0xc));
@@ -917,7 +916,7 @@ int fn_80136A40(int unused, int c)
         {
             if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)gDebugFontTex1, 0);
+                selectTexture((Texture*)((char*)gDebugFontTex1), 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 10));
                 gDebugGlyphVScale =
                     lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex1 + 0xc));
@@ -932,7 +931,7 @@ int fn_80136A40(int unused, int c)
         {
             if (gDebugDrawPass != 0)
             {
-                selectTexture((char*)gDebugFontTex2, 0);
+                selectTexture((Texture*)((char*)gDebugFontTex2), 0);
                 gDebugGlyphUScale = lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 10));
                 gDebugGlyphVScale =
                     lbl_803E2390 / (gDebugGlyphCellTexels * (f32) * (u16*)((char*)gDebugFontTex2 + 0xc));

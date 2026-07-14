@@ -344,7 +344,6 @@ extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void textRenderSetup(void);
 extern void textRenderSetupFn_800795e8(void);
 extern void textBlendSetupFn_80078a7c(void);
-extern void selectTexture(u8* tex, int mapId);
 extern void GXGetScissor(u32* left, u32* top, u32* wd, u32* ht);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 int getGameState(void);
@@ -1023,7 +1022,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 {
                     curTexPage = g->page;
                     tex = gameTextFonts->textures[g->page];
-                    selectTexture(tex, 0);
+                    selectTexture((Texture*)tex, 0);
                     if (lbl_802C8680[g->lang * 16 + 6] == 1)
                     {
                         if (mode != 0)

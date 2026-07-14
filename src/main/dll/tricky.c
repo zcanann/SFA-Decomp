@@ -277,7 +277,6 @@ extern void textureFn_8004c264(void* this, int x);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void* Shader_getLayer(char* base, int idx);
-extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int objIsCurModelNotZero(void* obj);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
@@ -1242,7 +1241,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     GXSetIndTexCoordScale(0, 0, 0);
     GXSetIndTexMtx(1, (const f32(*)[3])&indmtx, 0);
     GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
-    selectTexture(tex0, 0);
+    selectTexture((Texture*)tex0, 0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_RASC);
@@ -1284,7 +1283,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     GXLoadTexMtxImm((const f32(*)[4])mtex, 0x24, 1);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
     fn_8006C5CC(&tex2);
-    selectTexture((void*)tex2, 1);
+    selectTexture((Texture*)((void*)tex2), 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
     GXSetTevKColor(0, *(GXColor*)&gTrickyHudIconKColor);
     GXSetTevDirect(2);

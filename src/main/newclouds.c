@@ -532,7 +532,6 @@ void snowCloudComputeDrift(f32* out, f32* pos, f32 scale)
 
 extern void fn_800788DC(void);
 extern void fn_8006C51C(void* out);
-extern void selectTexture(char* tex, int slot);
 
 extern void GXSetCurrentMtx(u32 id);
 
@@ -583,7 +582,7 @@ void lightningRender(LightningEffect* p)
     textRenderSetupFn_80079804();
     fn_800788DC();
     fn_8006C51C(&tex);
-    selectTexture(tex, 0);
+    selectTexture((Texture*)tex, 0);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
     Camera_UpdateViewMatrices();
     GXLoadPosMtxImm(Camera_GetViewMatrix(), GX_PNMTX0);
@@ -809,14 +808,14 @@ void drawSkyStars(void)
         _gxSetTevColor2((u8)red, (u8)green, (u8)blue, (u8)a);
         if (i == 0x4c)
         {
-            selectTexture(gNewCloudStarTextureA, 0);
+            selectTexture((Texture*)gNewCloudStarTextureA, 0);
             textureSetupFn_800799c0();
             textRenderSetupFn_800795e8();
             textRenderSetupFn_80079804();
         }
         else if (i == 0x54)
         {
-            selectTexture(gNewCloudStarTextureB, 0);
+            selectTexture((Texture*)gNewCloudStarTextureB, 0);
         }
         if (i < 0x4c)
         {
@@ -2525,7 +2524,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
     PSMTXConcat((void*)Camera_GetViewMatrix(), (void*)mtxT, (void*)mtxT);
     GXLoadPosMtxImm(mtxT, GX_PNMTX0);
     texIdx = 0;
-    selectTexture(((NewCloud*)p)->cloudType == 0 ? gNewCloudLayerTextures[0] : lbl_803DD1C4, 0);
+    selectTexture((Texture*)(((NewCloud*)p)->cloudType == 0 ? gNewCloudLayerTextures[0] : lbl_803DD1C4), 0);
     GXSetCullMode(GX_CULL_NONE);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
@@ -2575,7 +2574,7 @@ int snowPrintSnowCloud(int arg, int cloudId)
         if (part->texLayer != (u8)texIdx)
         {
             texIdx = part->texLayer;
-            selectTexture(gNewCloudLayerTextures[texIdx], 0);
+            selectTexture((Texture*)gNewCloudLayerTextures[texIdx], 0);
             GXBegin(GX_TRIANGLES, GX_VTXFMT4, (((NewCloud*)p)->flakeCount * 3 / 4));
         }
         if (hudHidden == 0)
