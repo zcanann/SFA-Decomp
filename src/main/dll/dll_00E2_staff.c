@@ -329,8 +329,9 @@ void staff_free(int* obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-extern void* gStaffSwipeResource;
-extern void* gStaffSwipeTextures[2];
+void* gStaffSwipeTextures[2];
+s16* gStaffSwipeTextureIds;
+void* gStaffSwipeResource;
 
 void staff_release(void)
 {
@@ -437,7 +438,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 
 
 extern s16 sStaffSwipeTextureIdTable[4];
-extern s16* gStaffSwipeTextureIds;
 extern void* textureLoad(int texId, u8 flag);
 
 static inline void staff_initialiseBody(s16* p, int i)

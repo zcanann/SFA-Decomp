@@ -56,7 +56,7 @@ f32 lbl_803DBF14 = -300.0f;
 
 extern f32 lbl_803E48E8;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-extern void* lbl_803DDB50;
+void* lbl_803DDB50;
 
 extern f32 lbl_803E48B8;
 

@@ -1492,6 +1492,7 @@ main/dll/dll_00E2_staff.c:
 	.rodata     start:0x802C2220 end:0x802C2260
 	.data       start:0x8032090C end:0x80320984
 	.sdata      start:0x803DBD50 end:0x803DBD58
+	.sbss       start:0x803DDAA0 end:0x803DDAB0
 
 main/dll/dll_00E3_fireball.c:
 	.text       start:0x8016F16C end:0x80170004
@@ -2236,6 +2237,7 @@ main/dll/DIM/dll_01C6_dimcannon.c:
 	.text       start:0x801B2550 end:0x801B3344
 	.data       start:0x80325440 end:0x80325478
 	.sdata      start:0x803DBEF0 end:0x803DBF18
+	.sbss       start:0x803DDB50 end:0x803DDB58
 
 main/dll/DIM/dll_01C7_dimlavasmash.c:
 	.text       start:0x801B3344 end:0x801B3768
@@ -2254,6 +2256,7 @@ main/dll/DIM/dll_01CA_dimexplosion.c:
 	.rodata     start:0x802C2328 end:0x802C2338
 	.data       start:0x80325528 end:0x803255C8
 	.bss        start:0x803AC960 end:0x803AC970
+	.sbss       start:0x803DDB58 end:0x803DDB78
 
 main/dll/DIM/dll_01CB_dimwooddoor2.c:
 	.text       start:0x801B57BC end:0x801B5A28
