@@ -3,17 +3,11 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/modellight_api.h"
 
-/* LanternFireFly per-object extra state (LanternFireFly_getExtraSize ==
- * 0x74). The family spans two TUs: CFcrystal.c (update/init, the B-spline
- * follower) and windlift.c (func0B/setScale/free/modelMtxFn + the
- * fn_801868D0/fn_801869DC spline-segment helpers). Converged from the two
- * drifted copies (task #4): CFcrystal.h's layout wins as published; the
- * 0x34 offset triple comes from the windlift census (vecRotateZXY target,
- * copied into the control-point ring each segment). light is int as
- * spelled in CFcrystal.c; windlift's pointer-spelled sites launder. */
+/* LanternFireFly per-object extra state. */
 typedef struct LanternFireFlyState {
-  int light;        /* 0x00 */
+  ModelLightStruct* light; /* 0x00 */
   f32 controlX[4];  /* 0x04: B-spline control ring (shifted per segment) */
   f32 controlY[4];  /* 0x14 */
   f32 controlZ[4];  /* 0x24 */

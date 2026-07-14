@@ -11,7 +11,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/track_dolphin_api.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/obj_group.h"
@@ -48,8 +48,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 /* object group this object joins while active */
 #define LANTERNFIREFLY_OBJGROUP 0x30
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 extern f32 lbl_803E3AA0;
 extern f32 lbl_803E3AA4;
 extern f32 lbl_803E3AA8;
@@ -68,12 +66,6 @@ extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
 extern f32 lbl_803DBDD8;
-
-extern void ModelLightStruct_free(void* p);
-extern int objCreateLight(int obj, int type);
-extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 
 int LanternFireFly_getExtraSize(void)
 {
@@ -170,12 +162,12 @@ void LanternFireFly_setScale(u8* obj, f32* vec)
 void LanternFireFly_free(u8* obj, int flag)
 {
     LanternFireFlyState* sub = ((GameObject*)obj)->extra;
-    if (*(void**)&sub->light != NULL)
+    if (sub->light != NULL)
     {
-        ModelLightStruct_free(*(void**)&sub->light);
-        *(void**)&sub->light = NULL;
+        ModelLightStruct_free(sub->light);
+        sub->light = NULL;
     }
-    if (flag == 0 && *(void**)&sub->light != NULL && ((sub->modeFlags >> 6) & 3) != 1u)
+    if (flag == 0 && sub->light != NULL && ((sub->modeFlags >> 6) & 3) != 1u)
     {
         lbl_803DDAD8 = 0;
     }
@@ -252,11 +244,11 @@ void LanternFireFly_update(GameObject* obj)
 
     if ((state->stateId == 1 || state->stateId == 4) && LANTERN_FIREFLY_IS_ACTIVE(state) && state->lightSpawned == 0)
     {
-        int light;
+        ModelLightStruct* light;
 
         state->lightSpawned = 1;
-        light = objCreateLight((int)obj, 1);
-        if ((void*)light == NULL)
+        light = objCreateLight(obj, 1);
+        if (light == NULL)
         {
             light = 0;
         }
@@ -264,9 +256,9 @@ void LanternFireFly_update(GameObject* obj)
         {
             modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
             modelLightStruct_setDiffuseColor(light, 100, 0xff, 100, 0);
-            lightSetFieldBC_8001db14((ModelLightStruct*)light, 1);
+            lightSetFieldBC_8001db14(light, 1);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E3A98, lbl_803E3A9C);
-            modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)light, 1);
+            modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }
         state->light = light;
         if (!LANTERN_FIREFLY_IS_ACTIVE(state))
@@ -321,7 +313,7 @@ void LanternFireFly_update(GameObject* obj)
             st->anchorY = worldY;
             st->anchorZ = worldZ;
         }
-        if ((void*)state->light != NULL && state->timer < 0xb4)
+        if (state->light != NULL && state->timer < 0xb4)
         {
             f32 atten;
 
@@ -367,7 +359,7 @@ void LanternFireFly_init(GameObject* obj, int def)
     state->controlY[3] = zero;
     state->controlZ[3] = zero;
 
-    state->light = 0;
+    state->light = NULL;
     state->lightSpawned = 0;
     state->speed = lbl_803E3AD8;
     state->field48 = lbl_803E3ADC;
