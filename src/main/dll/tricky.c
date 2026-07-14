@@ -759,9 +759,10 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteIndex, int scalePercent, int flags)
 {
+    u8 drawFlags = flags & 4;
     int dx, dy;
     f32 c0, c1;
-    pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, flags & 4);
+    pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, drawFlags);
     dx = (*(u16*)((char*)element + 0xa) << 2) * (u16)scalePercent / 256;
     dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
     fx = lbl_803E1E80 * fx;
