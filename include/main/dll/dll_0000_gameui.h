@@ -78,7 +78,8 @@ typedef struct
         s16 bitA;
         s16 bitB;
         u8 thresh;
-        u8 _5[3];
+        u8 _5;
+        s16 alt;
     } tokens[4]; /* 0x210 */
     u8 _pad230[0x490]; /* 0x230 */
     struct

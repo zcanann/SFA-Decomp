@@ -2674,6 +2674,7 @@ void drawArwingHud(int unused1, int unused2, int unused3)
 
 void pauseMenuDraw(int arg1, int arg2, int arg3)
 {
+    PauseTbl* statusTable;
     GameObject* player;
     ObjModel* model;
     s32 alpha;
@@ -2687,14 +2688,13 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     f32 timer;
     s32 val;
     s32 h;
-    u8* statusTable;
     s32 b38, b34, b30, b2c;
     s32 sp28, sp24, sp20, sp1c;
     char buf1[4];
     s32 b14, b10, bc, b8;
     char buf2[12];
 
-    statusTable = (u8*)&lbl_8031AE20;
+    statusTable = &lbl_8031AE20;
     player = Obj_GetPlayerObject();
     GXSetScissor(0, 0, 0x280, 0x1e0);
     if (pauseMenuState != 0)
@@ -2765,7 +2765,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
                 }
             }
             fn_80127F24(x);
-            lbl_803DD824 = lbl_803DD7C4 ? (GridEntry*)(statusTable + 0xbd0) : (GridEntry*)(statusTable + 0x9f8);
+            lbl_803DD824 = lbl_803DD7C4 ? statusTable->gridBD0 : statusTable->grid9F8;
             fn_80128470(y);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
@@ -2896,7 +2896,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         }
         else
         {
-            lbl_803DD824 = (GridEntry*)(statusTable + 0xf10);
+            lbl_803DD824 = statusTable->gridF10;
             fn_80128470(alpha);
             gameTextSetDrawFunc(pauseMenuTextDrawFn);
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
@@ -3000,43 +3000,45 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             break;
         case 1:
         {
-            u8* tbl216;
+            s32 textX;
+            s16* taskTextIds;
             gameTextFn_80016810(0x440, 0, 0x78);
             gameTextBoundsS32(0x440, 0, 0, &b14, &b10, &bc, &b8);
-            acc = (b8 - bc) + 5;
+            textX = (b8 - bc) + 5;
             {
-                u8* p214 = statusTable + 0x214;
-                sprintf(buf2, lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
+                u8* thresholds = &statusTable->tokens[0].thresh;
+                sprintf(buf2, lbl_803DBB58, thresholds[lbl_803DD756 * 8]);
             }
-            gameTextShowStr(buf2, 0x79, 0, acc + 0x78);
+            gameTextShowStr(buf2, 0x79, 0, textX + 0x78);
             gameTextMeasureS32(buf2, 0x79, 0, 0, &b14, &b10, &bc, &b8);
-            acc = (b8 - bc) + acc;
-            acc += 5;
-            gameTextFn_80016810(0x441, 0, acc + 0x78);
+            textX = (b8 - bc) + textX;
+            textX += 5;
+            gameTextFn_80016810(0x441, 0, textX + 0x78);
             gameTextBoundsS32(0x441, 0, 0, &b14, &b10, &bc, &b8);
-            acc = (b8 - bc) + acc;
-            tbl216 = statusTable + 0x216;
-            gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, acc + 0x78);
-            gameTextBoundsS32(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
-            acc = (b8 - bc) + acc;
-            acc += 0xa;
-            gameTextFn_80016810(0x442, 0, acc + 0x78);
+            textX = (b8 - bc) + textX;
+            taskTextIds = &statusTable->tokens[0].alt;
+            gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
+            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
+            textX = (b8 - bc) + textX;
+            textX += 0xa;
+            gameTextFn_80016810(0x442, 0, textX + 0x78);
             gameTextBoundsS32(0x442, 0, 0, &b14, &b10, &bc, &b8);
-            acc = (b8 - bc) + acc;
-            gameTextFn_80016810(0x43a, 0, acc + 0x82);
+            textX = (b8 - bc) + textX;
+            gameTextFn_80016810(0x43a, 0, textX + 0x82);
             break;
         }
         case 2:
         {
-            u8* tbl216;
+            s16* taskTextIds;
+            s32 textX;
             gameTextFn_80016810(0x443, 0, 0xa0);
             gameTextBoundsS32(0x443, 0, 0, &b14, &b10, &bc, &b8);
-            x = (b8 - bc) + 5;
-            tbl216 = statusTable + 0x216;
-            gameTextFn_80016810(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, x + 0xa0);
-            gameTextBoundsS32(*(s16*)(tbl216 + lbl_803DD756 * 8), 0, 0, &b14, &b10, &bc, &b8);
-            x += b8 - bc;
-            gameTextFn_80016810(0x444, 0, x + 0xaa);
+            textX = (b8 - bc) + 5;
+            taskTextIds = &statusTable->tokens[0].alt;
+            gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0xa0);
+            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
+            textX += b8 - bc;
+            gameTextFn_80016810(0x444, 0, textX + 0xaa);
             break;
         }
         }
