@@ -32,6 +32,7 @@
 #include "main/game_object.h"
 #include "main/object_update_list.h"
 #include "main/track_dolphin_api.h"
+#include "main/track_bbox_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
@@ -93,7 +94,6 @@ extern f32 lbl_803E4318;
 extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern f32 lbl_803DBE84;
 extern f32 lbl_803E4324;
 extern const f32 lbl_803E4328;
@@ -539,8 +539,8 @@ void gunpowderbarrel_hitDetect(int obj)
         goto copy_end;
     }
 
-    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E432C, 1,
-                           (int)&collision_buf[0], obj, 8, -1, 0xff, 0) == 0)
+    if (objBboxFnIntLegacy((void*)(obj + 0x80), (void*)(obj + 0xc), lbl_803E432C, 1,
+                           &collision_buf[0], obj, 8, -1, 0xff, 0) == 0)
     {
         goto copy_end;
     }
