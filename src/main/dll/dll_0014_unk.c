@@ -1402,7 +1402,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     *(s32*)&state->nodeA4 = nextCurve;
     if (state->nodeA4 == NULL)
     {
-        goto clearAndReturn;
+        goto returnOne;
     }
 
     if (state->reverse != 0)
@@ -1429,6 +1429,7 @@ u8 RomCurve_goNextPoint(RomCurveWalker* state)
     return 0;
 clearAndReturn:
     state->nodeA4 = NULL;
+returnOne:
     return 1;
 }
 
