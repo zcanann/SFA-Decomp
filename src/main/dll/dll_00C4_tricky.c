@@ -215,7 +215,6 @@ extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
-extern int fn_80296240(GameObject* obj);
 __declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];

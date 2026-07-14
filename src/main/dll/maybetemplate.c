@@ -490,7 +490,6 @@ extern int gCMenuItemTargetTable[0xBA];
 extern Texture* gGameUiBlinkTexture;
 extern int getScreenBlankFrameCount(void);
 extern void drawArwingHud(int a, int b, int c);
-extern int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
 extern s32 lbl_803DD828;
