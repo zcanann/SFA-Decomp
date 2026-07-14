@@ -1085,9 +1085,9 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     f32 progress;
     f32 step;
     f32 bfrac;
-    int i;
-    int halfWidth;
     int oddFlag;
+    int halfWidth;
+    int i;
     int segs;
     f32 mtx[12];
     f32 dir[3];
@@ -1165,8 +1165,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
             ;
             PSMTXMultVecSR(mtx, offset, offset);
             progress += weight * (segs - i);
-            step = weight * (len * (segs - i));
-            nx = px + scaled[0] * step;
+            nx = px + scaled[0] * (step = weight * (len * (segs - i)));
             ny = py + scaled[1] * step;
             nz = pz + scaled[2] * step;
             next[0] = nx + offset[0];
