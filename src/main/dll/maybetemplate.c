@@ -114,7 +114,7 @@ extern f32 lbl_803DD844;
 extern u8 cMenuEnabled;
 extern int airMeter;
 extern f32 hudElementOpacity;
-extern f32 lbl_803E1E3C;
+extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1FA0;
 extern f32 gHudElemOpacityFloor;
 extern f32 lbl_803E1FC0;
