@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 #define __GXData gx
 
 void GXSetGPMetric(GXPerf0 perf0, GXPerf1 perf1) {

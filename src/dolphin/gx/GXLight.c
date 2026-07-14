@@ -3,7 +3,6 @@
 
 #pragma fp_contract off
 
-extern GXData* gx;
 #define __GXData gx
 
 extern f32 cosf(f32);

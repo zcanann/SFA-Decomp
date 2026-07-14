@@ -2,7 +2,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 
 typedef struct {
     __GXFifoObj DisplayListFifo;

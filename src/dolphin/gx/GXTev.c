@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 static int c2r[] = { 0, 1, 0, 1, 0, 1, 7, 5, 6 };
 #define __GXData gx
 

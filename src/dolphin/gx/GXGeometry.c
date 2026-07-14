@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 
 #define GX_WRITE_BP_REG(val) \
 do { \

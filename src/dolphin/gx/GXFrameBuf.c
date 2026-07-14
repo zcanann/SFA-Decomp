@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 #define __GXData gx
 
 extern const f32 lbl_803E7678;

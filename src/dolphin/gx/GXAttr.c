@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 #define __GXData gx
 
 #define CHECK_ATTRPTR(line, attrPtr) ASSERTMSGLINE(line, (attrPtr) != NULL, "GXSetVtxDescv: attrPtr is NULL")
@@ -598,4 +597,3 @@ void GXSetNumTexGens(u8 nTexGens)
     GX_WRITE_XF_REG(0x3F, nTexGens);
     gx->dirtyState |= 4;
 }
-

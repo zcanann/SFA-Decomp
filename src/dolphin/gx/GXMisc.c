@@ -2,7 +2,6 @@
 #include "dolphin/gx/__gx.h"
 #include "dolphin/gx/GXMisc.h"
 
-extern GXData* gx;
 #define __GXData gx
 
 extern GXDrawSyncCallback __CARDEncode;

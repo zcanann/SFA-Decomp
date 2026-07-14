@@ -1,7 +1,6 @@
 
 #include "dolphin/gx/__gx.h"
 
-extern GXData* gx;
 
 typedef struct __GXTexObjInt_struct {
     u32 mode0;
