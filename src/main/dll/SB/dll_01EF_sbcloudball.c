@@ -33,6 +33,8 @@
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SBCLOUDBALL_PARTFX               0xa8
 
+typedef void (*SBCloudBallTrailBurstFn)(int* obj, f32 scale, int mode, int effectId, int origin, void* velocity);
+
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
@@ -78,6 +80,7 @@ __declspec(section ".sdata2") f32 gSbCloudBallTrailVelScale = 0.1f;
 __declspec(section ".sdata2") f32 gSbCloudBallTrailParticleScale = 0.22f;
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
+extern void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int effectParam, int f4, int origin, f32 scale);
 
 int SB_CloudBall_getExtraSize(void)
 {
@@ -133,8 +136,6 @@ void SB_CloudBall_hitDetect(GameObject* obj)
 
 void SB_CloudBall_update(GameObject* obj)
 {
-    extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
-
     SBCloudBallState* state = obj->extra;
     void* player = Obj_GetPlayerObject();
     f32 timer = state->fadeTimer;
@@ -199,9 +200,12 @@ void SB_CloudBall_update(GameObject* obj)
         particleVelocity[0] = gSbCloudBallTrailVelScale * -state->velX;
         particleVelocity[1] = gSbCloudBallTrailVelScale * -state->velY;
         particleVelocity[2] = gSbCloudBallTrailVelScale * -state->velZ;
-        objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
-        objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
-        objfx_spawnFlaggedTrailBurst((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156, 0xf, particleVelocity);
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+                                                                0xf, particleVelocity);
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+                                                                0xf, particleVelocity);
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+                                                                0xf, particleVelocity);
         (*gPartfxInterface)->spawnObject((void*)obj, SBCLOUDBALL_PARTFX, NULL, 2, -1, NULL);
     }
 }
