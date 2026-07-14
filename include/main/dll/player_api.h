@@ -26,6 +26,9 @@ void playerAddRemoveMagic(GameObject* obj, int amount);
 void playerCancelSpell(GameObject* obj, int spell);
 void playerHeal(GameObject* obj);
 int playerGetTimeScale(GameObject* obj, f32* out);
+int isTrickyNear(GameObject* obj);
+int fn_8029669C(GameObject* obj);
+int fn_802966B4(GameObject* obj);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);

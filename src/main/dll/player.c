@@ -114,7 +114,6 @@ int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
 int fn_80295A04(GameObject* obj, int sel);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
-int isTrickyNear(int obj);
 int fn_80295C0C(GameObject* obj);
 int fn_80295C24(GameObject* obj);
 int fn_80295C40(GameObject* obj);
@@ -137,8 +136,6 @@ int objAnimFn_80296328(int obj);
 int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerSetHeldObject(int obj, int held);
-int fn_8029669C(int obj);
-int fn_802966B4(GameObject* obj);
 f32 fn_802966F4(GameObject* obj);
 int objFn_80296700(int obj);
 void playerPutAwayStaff(GameObject* obj, int mode);
@@ -389,9 +386,9 @@ int fn_80296464(int obj)
     return inner->flags360 & 1;
 }
 
-int isTrickyNear(int obj)
+int isTrickyNear(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     return inner->curAnimId != 0x44;
 }
 
@@ -435,9 +432,9 @@ int fn_8029630C(GameObject* obj)
     return inner->baddie.controlMode != 0x26;
 }
 
-int fn_8029669C(int obj)
+int fn_8029669C(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     return inner->baddie.controlMode == 7;
 }
 

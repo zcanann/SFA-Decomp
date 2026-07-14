@@ -22,6 +22,7 @@
 #include "main/debug.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -49,8 +50,6 @@ extern const f32 lbl_803E36A0;
 extern f32 gSidekickBallFadeDuration;
 extern const f32 gSidekickBallActiveTimeout;
 extern const f32 gSidekickBallMaxAlpha;
-extern int isTrickyNear(int* player);
-extern int fn_8029669C(int* player);
 extern const f32 lbl_803E3688;
 extern const f32 lbl_803E368C;
 extern const f32 lbl_803E3690;
@@ -177,7 +176,7 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     btns = getButtonsJustPressed(0);
     if ((btns & PAD_BUTTON_A) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & PAD_BUTTON_Y) != 0))
     {
-        if (isTrickyNear((int*)player) != 0)
+        if (isTrickyNear(player) != 0)
         {
             params->sendHoldMessage[0] = 0;
         }
@@ -196,7 +195,7 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     if (((GameObject*)obj)->unkF8 != 0)
         goto end;
 
-    if (fn_8029669C((int*)player) == 0)
+    if (fn_8029669C(player) == 0)
         goto fading;
 
     params->triggerHit = 0;

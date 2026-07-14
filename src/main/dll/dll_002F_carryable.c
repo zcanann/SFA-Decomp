@@ -19,6 +19,7 @@
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/dll/player_api.h"
 #include "main/dll/dll_002F_carryable.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/objhits.h"
@@ -59,7 +60,6 @@ typedef struct CarryableUpdateHeldState
 } CarryableUpdateHeldState;
 
 extern void playerSetHeldObject(void* player, int held);
-extern int isTrickyNear(void* player);
 
 extern const f32 lbl_803E06D8, lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
 
@@ -179,7 +179,7 @@ int Carryable_updateRenderState(int* obj, int flag)
 int Carryable_updateHeld(u8* obj)
 {
     TrackGroundHit** list;
-    void* player;
+    GameObject* player;
     u8* held;
     held = ((GameObject*)obj)->extra;
     ((CarryableUpdateHeldState*)held)->surfaceType = 0;
