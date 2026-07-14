@@ -21,6 +21,7 @@
 #include "main/object.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_list.h"
+#include "main/model_light.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 
 #pragma force_active on
@@ -35,8 +36,6 @@ STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
 STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 #define SHIPBATTLE_OBJECT_TYPE_ID 0xb
 #define SHIPBATTLE_FIRE_SEQ_ID    0x171
 #define SEQINDEX_PENDING          -2
@@ -50,11 +49,6 @@ extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
 extern f32 lbl_803DDC50[2];
 
-extern void ModelLightStruct_free(int* p);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
-extern void modelLightStruct_setLightKind(int light, int v);
-extern int objCreateLight(int* obj, int mode);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
 
 int ShipBattle_getExtraSize(void)
@@ -75,7 +69,7 @@ void ShipBattle_free(int* obj)
     light = ((GameObject*)obj)->unkF8;
     if (light != 0)
     {
-        ModelLightStruct_free((int*)light);
+        ModelLightStruct_free((ModelLightStruct*)light);
     }
 }
 
@@ -193,12 +187,12 @@ void ShipBattle_init(GameObject* obj, int def)
 light_setup:
     if (obj->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
-        light = objCreateLight((int*)obj, 1);
+        light = (int)objCreateLight(obj, 1);
         if ((u32)light != 0)
         {
-            modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
-            modelLightStruct_setDistanceAttenuation(light, 30.0f, 80.0f);
+            modelLightStruct_setLightKind((ModelLightStruct*)light, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor((ModelLightStruct*)light, 200, 60, 0, 0);
+            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)light, 30.0f, 80.0f);
         }
         obj->unkF8 = light;
     }
