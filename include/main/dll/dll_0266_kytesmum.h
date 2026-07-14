@@ -110,7 +110,7 @@ extern f32 gKytesMumFleeDistance;
 extern f32 lbl_803E698C;
 extern f32 lbl_803E6990;
 extern u8 gKytesMumMoveSets[];
-extern int gKytesMumRoamEventSfxTable;
+extern s16 gKytesMumRoamEventSfxTable[4];
 extern int lbl_803DC2D0;
 extern f32 lbl_803E699C;
 

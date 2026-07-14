@@ -68,8 +68,8 @@ extern f32 lbl_803E65B0;
 extern f32 lbl_803E65C0;
 extern f32 lbl_803E65C4;
 extern f32 lbl_803E65C8;
-extern int gThornBushLightningHitTable;
-extern int gThornBushThornHitTable;
+extern int gThornBushLightningHitTable[2];
+extern int gThornBushThornHitTable[2];
 extern f32 gThornBushLightningTimerInit;
 
 int drakord_thornbush_getExtraSize(void);
