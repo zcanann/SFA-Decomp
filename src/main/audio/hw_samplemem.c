@@ -1,9 +1,9 @@
 #include "main/audio/hw_samplemem.h"
+#include "main/audio/dsp_voice_state.h"
 
 #pragma exceptions on
 
 extern u32 dspHRTFOn;
-extern u8* dspVoice;
 extern void* (*gSalMallocHook)(u32 size);
 
 void hwSaveSample(u32** sample, void** ptr)
@@ -97,16 +97,14 @@ void hwDisableHRTF(void)
 
 int hwGetVirtualSampleID(int slot)
 {
-    u8* entry;
+    DSPvoice* entry;
 
-    slot *= 0xf4;
-    entry = dspVoice;
-    entry += slot;
-    if (entry[0xec] == 0)
+    entry = &dspVoice[slot];
+    if (entry->state == 0)
     {
         return -1;
     }
-    return *(int*)(entry + 0xe8);
+    return entry->virtualSampleID;
 }
 
 int hwVoiceInStartup(int slot)
@@ -114,7 +112,7 @@ int hwVoiceInStartup(int slot)
     u8* entry;
 
     slot *= 0xf4;
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     entry += slot;
     return entry[0xec] == 1;
 }

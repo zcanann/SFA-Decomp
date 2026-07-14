@@ -1,11 +1,10 @@
 #include "main/audio/hw_stream.h"
 
 #pragma exceptions on
-#include "main/audio/dsp_voice.h"
+#include "main/audio/dsp_voice_state.h"
 #include "dolphin/os/OSCache.h"
 
 extern u8 lbl_803CC1E0[];
-extern u8* dspVoice;
 extern void salRemoveStudioInput(void* p, void* input);
 extern int aramGetStreamBufferAddress(int stream, void* out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback, u32 callbackArg);
@@ -29,7 +28,7 @@ int hwChangeStudio(int slot)
     u8* base;
 
     offset = slot * 0xf4;
-    base = dspVoice;
+    base = (u8*)dspVoice;
     voice = (DSPvoice*)(base + offset);
     if (voice->state != 2)
     {

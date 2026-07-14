@@ -1,9 +1,8 @@
-#include "main/audio/dsp_voice.h"
+#include "main/audio/dsp_voice_state.h"
 
 #pragma exceptions on
 #include "main/audio/voice_conv.h"
 extern u8 voiceAdsrDecayTable[];
-extern DSPvoice* dspVoice;
 
 typedef struct HwAdsrEnvelope
 {

@@ -2,7 +2,7 @@
 #include "main/audio/hw_dspctrl.h"
 
 #pragma exceptions on
-#include "main/audio/dsp_voice.h"
+#include "main/audio/dsp_voice_state.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_jobs.h"
 #include "main/audio/synth_virtual_sample.h"
@@ -13,7 +13,6 @@ extern u8 salNumVoices;
 extern u8 salAuxFrame;
 extern u8 salFrame;
 extern u32 salMessageCallback;
-extern DSPvoice* dspVoice;
 extern void salExitDspCtrl(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 extern void fn_8026EC44(u32 value);

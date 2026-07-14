@@ -1,9 +1,8 @@
 #include "main/audio/hw_volume.h"
-#include "main/audio/dsp_voice.h"
+#include "main/audio/dsp_voice_state.h"
 
 #pragma exceptions on
 
-extern u8* dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
 extern f32 lbl_803E78E4;
@@ -25,7 +24,7 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
     u16 il;
     u16 ir;
     u16 is;
-    DSPvoice* voice = (DSPvoice*)(dspVoice + slot * 0xf4);
+    DSPvoice* voice = (DSPvoice*)((u8*)dspVoice + slot * 0xf4);
 
     if (vol >= 1.0f)
         vol = 1.0f;
@@ -91,7 +90,7 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
  */
 void hwOff(int slot)
 {
-    salDeactivateVoice(dspVoice + slot * 0xf4);
+    salDeactivateVoice((u8*)dspVoice + slot * 0xf4);
 }
 
 /*

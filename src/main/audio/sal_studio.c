@@ -5,11 +5,11 @@
 #include "dolphin/os/OSCache.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/aram.h"
+#include "main/audio/dsp_voice_state.h"
 
 #pragma exceptions on
 
 extern void* dspCmdBuffer;
-extern DSPvoice* dspVoice;
 extern void* dspITDBuffer;
 extern s32* dspSurround;
 extern void* dspCmdList;

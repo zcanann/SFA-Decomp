@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_break.h"
+#include "main/audio/dsp_voice_state.h"
 
-extern u8* dspVoice;
 extern u8 salTimeOffset;
 
 void hwBreak(int slot)
@@ -11,12 +11,12 @@ void hwBreak(int slot)
     u32 channel;
 
     offset = slot * 0xf4;
-    entry = dspVoice + offset;
+    entry = (u8*)dspVoice + offset;
     if ((entry[0xec] == 1) && (salTimeOffset == 0))
     {
         entry[0xee] = 1;
     }
-    entry = dspVoice;
+    entry = (u8*)dspVoice;
     channel = salTimeOffset;
     channel <<= 2;
     entry += offset;
