@@ -25,6 +25,7 @@
  *                                   drives the shared TRICKY_* state macros.
  */
 #include "main/dll/tricky_state.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
@@ -74,13 +75,11 @@ extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
-/* Sfx_* use int* obj / int sfx (not engine_shared.h's u32/u16) so the int* obj
-   passed at the call sites needs no cast; including the header would conflict. */
+/* These legacy sound mutators use int* obj / int sfx so their call sites need no cast. */
 extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
-extern int Sfx_IsPlayingFromObjectChannel(int* obj, int ch);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
 extern f32 lbl_803E23DC;
@@ -163,7 +162,7 @@ typedef struct
             s16 a0 = ((GameObject*)(obj))->anim.currentMove;                                                           \
             if (a0 >= 0x30 || a0 < 0x29)                                                                               \
             {                                                                                                          \
-                if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)                                                    \
+                if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 0x10) == 0)                                           \
                 {                                                                                                      \
                     objAudioFn_800393f8Legacy(obj, cfg + 0x3a8, snd, p4, -1, 0);                                       \
                 }                                                                                                      \
