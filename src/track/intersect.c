@@ -998,7 +998,6 @@ void fn_800704FC(u8 red, u8 green, u8 blue)
 int renderWhirlpool(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEE4;
-    extern u32 lbl_803DB6F4, lbl_803DB6F8;
     extern f32 lbl_8030EAA0[3][3];
     extern void GXInitTexObj();
 
@@ -1665,7 +1664,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF24;
-    extern f32 lbl_803DB6C4, lbl_803DB6C8, lbl_803DB6CC;
     extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
     extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
@@ -1910,8 +1908,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DB6B8, lbl_803DB6C0;
-    extern GXColor lbl_803DB6BC;
     extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_8030EA58[3][3];
     extern void* getTextureFn_8006c744(void);
@@ -2439,7 +2435,6 @@ int moonFxCb_80074110(u8* obj, int* objB, int slot)
 int modelCb_80074518(void* obj_a, void** obj_b, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern f32 lbl_803DB6B0, lbl_803DB6B4;
     extern f32 gSynthDelayedActionWord0;
     extern f32 lbl_802C1F68[6];
     Mtx mtx_90;
@@ -2651,7 +2646,6 @@ u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
     extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
-    extern f32 lbl_803DB6AC;
     extern f32 hudScale;
     extern f32 gSynthDelayedActionWord0;
 
@@ -4719,7 +4713,6 @@ void doHeatEffect(u8 alpha)
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
     extern f32 gSynthDelayedActionWord0;
-    extern GXColor lbl_803DB6A4;
     extern u8 lbl_802C1EA8[];
     extern s16 fn_8000FA70(void);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
@@ -4886,7 +4879,6 @@ void doHeatEffect(u8 alpha)
 void renderMotionBlur(f32 alpha)
 {
     extern f32 lbl_803DEF20;
-    extern GXColor lbl_803DB6A0;
     extern f32 hudMatrix[4][4];
     Mtx mtx;
 
@@ -4971,7 +4963,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80;
-    extern u32 lbl_803DB69C;
     extern f32 hudMatrix[4][4];
     Mtx mtx_27;
     Mtx mtx_24;
@@ -5258,7 +5249,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF64;
-    extern u32 lbl_803DB690, lbl_803DB694, lbl_803DB698;
     extern f32 lbl_8030EA10[3][3];
 
     u8* indBase = (u8*)lbl_8030EA10;
@@ -5437,8 +5427,6 @@ void fn_8007C664(int texHandle)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 gSynthDelayedActionWord0;
-    extern GXColor lbl_803DB688;
-    extern GXColor lbl_803DB68C;
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -5530,8 +5518,6 @@ void fn_8007C664(int texHandle)
 void fn_8007CAF4(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
-    extern GXColor lbl_803DB680;
-    extern GXColor lbl_803DB684;
 
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
@@ -5627,7 +5613,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
     extern f32 lbl_803DEF40, lbl_803DEF88;
     extern f32 lbl_803DEF84;
-    extern u32 lbl_803DB67C;
     extern f32 gSynthDelayedActionWord0;
 
     Mtx mtx_cc;
