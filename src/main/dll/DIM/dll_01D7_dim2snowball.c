@@ -8,6 +8,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/object_api.h"
 #include "main/dll/dimwooddoor2state_struct.h"
@@ -80,7 +81,6 @@ extern f32 lbl_803E4AA0;
 
 extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
 extern int hitDetectFn_80065e50(int* obj, f32 x, f32 y, f32 z, int*** listOut, int p3, int p4);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int sfx);
 extern f32 lbl_803E4AA4;
 extern f32 lbl_803E4AA8;
 extern f32 lbl_803E4AAC;
@@ -285,7 +285,7 @@ void dim2snowball_update(int* obj)
             *(int*)&((ObjHitsPriorityState*)m)->skeletonHitMask = 16;
         }
     }
-    Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_firlp6);
+    Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_firlp6);
 }
 
 void dim2snowball_init(int* obj, int* def)
