@@ -57,29 +57,40 @@
 #define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
 #define GCMENU_ITEM_ICON_COUNT 7
 
-/* Both teardown paths expand the same slot walk; GameUI_release expands it
- * twice, matching the two walks present in the retail function. */
-#define GAMEUI_CLEAR_ITEM_SLOTS(g)                                                                                       \
+typedef struct GameUiClearState
+{
+    u8 slot;
+    u8 zero;
+} GameUiClearState;
+
+#define GAMEUI_CLEAR_ITEM_SLOTS(g, index)                                                                                \
     do                                                                                                                   \
     {                                                                                                                    \
-        u8 _slot;                                                                                                        \
-        for (_slot = 0; _slot < 64; _slot++)                                                                            \
+        GameUiClearState _state;                                                                                         \
+        s16* _itemSlot;                                                                                                  \
+        u8* _itemFlag;                                                                                                   \
+        _state.slot = 0;                                                                                                 \
+        _state.zero = _state.slot;                                                                                       \
+        for (; _state.slot < 64; _state.slot++)                                                                         \
         {                                                                                                                \
-            if ((g).itemTextures[_slot] != NULL)                                                                         \
+            index = _state.slot;                                                                                         \
+            if (*(void**)((u8*)&(g)->itemTextures + index * 4) != NULL)                                                  \
             {                                                                                                            \
-                textureFree((g).itemTextures[_slot]);                                                                    \
-                (g).itemTextures[_slot] = NULL;                                                                          \
+                textureFree(*(void**)((u8*)&(g)->itemTextures + index * 4));                                              \
+                *(void**)((u8*)&(g)->itemTextures + index * 4) = (void*)_state.zero;                                     \
             }                                                                                                            \
-            (g).itemSlots[_slot] = -1;                                                                                   \
-            (g).itemFlags[_slot] = 1;                                                                                    \
+            _itemSlot = (s16*)((u8*)&(g)->itemSlots + index * 2);                                                        \
+            *_itemSlot = -1;                                                                                             \
+            _itemFlag = (u8*)&(g)->itemFlags + index;                                                                    \
+            *_itemFlag = 1;                                                                                              \
         }                                                                                                                \
     } while (0)
 
-#define GAMEUI_RELEASE_MENU_RESOURCES(g)                                                                                 \
+#define GAMEUI_RELEASE_MENU_RESOURCES(g, index)                                                                          \
     do                                                                                                                   \
     {                                                                                                                    \
         gameUiResetMenuState();                                                                                          \
-        GAMEUI_CLEAR_ITEM_SLOTS(g);                                                                                      \
+        GAMEUI_CLEAR_ITEM_SLOTS(g, index);                                                                               \
         if (lbl_803DD7C8 != NULL)                                                                                        \
         {                                                                                                                \
             textureFree(lbl_803DD7C8);                                                                                   \
@@ -92,8 +103,6 @@
         gTrickyHudCachedIconIndex = -1;                                                                                  \
         gTrickyHudCachedIconTexture = NULL;                                                                              \
     } while (0)
-
-
 
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
@@ -1050,21 +1059,38 @@ void CMenu_SetShouldClose(int val)
 
 void GameUI_release(void)
 {
-    int i = 0;
-    void** textures = lbl_803A87F0.hudTextures;
+    GameUiHud* gameUi = &lbl_803A87F0;
+    void** textures = gameUi->hudTextures;
+    int i;
 
-    while (i < 102)
+    for (i = 0; i < 102; i++)
     {
-        if (*textures != NULL)
+        if (textures[i] != NULL)
         {
-            textureFree(*textures);
+            textureFree(textures[i]);
         }
-        textures++;
-        i++;
     }
-    GAMEUI_RELEASE_MENU_RESOURCES(lbl_803A87F0);
+    GAMEUI_RELEASE_MENU_RESOURCES(gameUi, i);
+    {
+        GameUiClearState clearState;
+        void** clearTexture;
+        int clearIndex;
 
-    GAMEUI_CLEAR_ITEM_SLOTS(lbl_803A87F0);
+        clearState.slot = 0;
+        clearState.zero = clearState.slot;
+        for (; clearState.slot < 64; clearState.slot++)
+        {
+            clearIndex = clearState.slot;
+            clearTexture = (void**)((u8*)&gameUi->itemTextures + clearIndex * 4);
+            if (*clearTexture != NULL)
+            {
+                textureFree(*clearTexture);
+                *clearTexture = (void*)clearState.zero;
+            }
+            *(s16*)((u8*)&gameUi->itemSlots + clearIndex * 2) = -1;
+            *((u8*)&gameUi->itemFlags + clearIndex) = 1;
+        }
+    }
 
     textureFree((u8*)gGameUiBlinkTexture);
 }
@@ -1082,7 +1108,10 @@ void GameUI_initialise(void);
 
 void textureFreeFn_8012fcec(void)
 {
-    GAMEUI_RELEASE_MENU_RESOURCES(lbl_803A87F0);
+    GameUiHud* gameUi = &lbl_803A87F0;
+    int i;
+
+    GAMEUI_RELEASE_MENU_RESOURCES(gameUi, i);
 }
 
 void Pause_SetDisabled(u8 v)
