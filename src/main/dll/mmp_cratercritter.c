@@ -1,8 +1,8 @@
 #include "main/dll/tricky_state.h"
 #include "main/dll/baddie/MMP_critterspit.h"
-#include "main/dll/VF/vf_shared.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
+#include "main/vecmath.h"
 #include "main/dll/mmp_cratercritter.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 

@@ -13,7 +13,7 @@
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_025A_staticcamera.h"
 
 #define STATICCAMERA_OBJGROUP 7

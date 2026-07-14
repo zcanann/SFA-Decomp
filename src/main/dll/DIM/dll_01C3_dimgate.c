@@ -7,7 +7,7 @@
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 #define DIMGATE_TRIGGER_OBJ_TYPE 399
 #define DIMGATE_OBJFLAG_HITDETECT_DISABLED 0x2000

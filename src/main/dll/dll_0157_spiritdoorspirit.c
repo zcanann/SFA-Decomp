@@ -11,7 +11,7 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0157_spiritdoorspirit.h"
 

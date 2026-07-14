@@ -2,7 +2,7 @@
 #include "main/screen_transition.h"
 
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 extern f32 lbl_803E5058;
 
 typedef struct GpshScenePlacement
@@ -49,4 +49,3 @@ void gpsh_scene_release(void)
 void gpsh_scene_initialise(void)
 {
 }
-

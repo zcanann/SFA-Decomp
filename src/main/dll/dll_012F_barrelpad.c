@@ -7,7 +7,7 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_012F_barrelpad.h"
 #include "main/object_descriptor.h"
 

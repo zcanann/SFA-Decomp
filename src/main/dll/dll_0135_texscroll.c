@@ -8,7 +8,7 @@
  * init guards on state == NULL before writing (absent in texscroll2).
  */
 #include "main/dll/dll_0135_texscroll.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 int texscroll_getExtraSize(void)
 {

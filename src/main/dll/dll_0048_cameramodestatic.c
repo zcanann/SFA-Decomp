@@ -5,7 +5,8 @@
 #include "main/mm.h"
 #include "main/object_transform.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_0048_cameramodestatic.h"
 
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */

@@ -13,7 +13,7 @@
 #include "main/obj_trigger.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/dll/tricky_api.h"

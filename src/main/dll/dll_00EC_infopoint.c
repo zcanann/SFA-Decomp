@@ -13,7 +13,7 @@
 #include "main/pad_api.h"
 #include "main/objseq.h"
 #include "main/objanim_update.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_00EC_infopoint.h"
 #include "main/textrender_api.h"
 

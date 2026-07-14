@@ -12,7 +12,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 typedef struct Dll127Placement
 {

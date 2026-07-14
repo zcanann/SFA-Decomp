@@ -26,7 +26,7 @@
 #include "main/screen_transition.h"
 #include "main/pad.h"
 #include "main/object_transform.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/vecmath.h"
 
 
 /* CameraModeWorldMapState.mode: which world-map camera _update runs */

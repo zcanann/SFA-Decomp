@@ -10,7 +10,7 @@
  */
 #include "main/dll/DB/DBrockfall.h"
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 extern f32 lbl_803E56B8;
 

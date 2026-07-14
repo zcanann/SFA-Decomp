@@ -6,7 +6,8 @@
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 
 extern CameraMode4FState* gCameraMode4FState;
 

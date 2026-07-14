@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
 enum

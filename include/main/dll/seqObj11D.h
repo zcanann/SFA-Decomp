@@ -12,7 +12,6 @@
 #include "main/object_transform.h"
 #include "main/objseq.h"
 #include "main/dll/player_target.h"
-#include "main/dll/VF/vf_shared.h"
 
 void sharpClawInit(int obj, u8* state);
 

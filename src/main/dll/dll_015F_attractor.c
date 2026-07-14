@@ -18,7 +18,8 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_015F_attractor.h"
 #include "main/vecmath.h"
 

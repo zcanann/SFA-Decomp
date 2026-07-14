@@ -15,7 +15,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 STATIC_ASSERT(sizeof(IMMultiSeqPlacement) == 0x34);

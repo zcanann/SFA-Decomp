@@ -14,7 +14,7 @@
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_0144_dll144.h"
 
 extern f32 lbl_803E56C0;

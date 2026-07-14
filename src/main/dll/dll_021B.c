@@ -14,7 +14,7 @@
  * Init reads rotX and the drive game bit from the placement; free releases
  * the object's expgfx source.
  */
-#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

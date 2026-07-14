@@ -11,7 +11,8 @@
  */
 #include "main/game_object.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/DR/dll_0128_kttorch.h"
 
 int KT_Torch_getExtraSize(void)

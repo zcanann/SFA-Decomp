@@ -4,7 +4,7 @@
  * scale from the placement; render just draws the model.
  */
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000

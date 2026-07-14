@@ -17,7 +17,7 @@
 #include "main/game_object.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/dll/SB/dll_01F1_sbseqdoor.h"
 

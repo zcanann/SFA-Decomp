@@ -9,7 +9,8 @@
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/dll/DB/DBstealerworm.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/SB/dll_01EB_sbshipmast.h"
 
 STATIC_ASSERT(sizeof(SBPropellerState) == 0x10);

@@ -9,7 +9,7 @@
  * clamping at each end. init seeds the object's rotX and the state's
  * game bit from the placement record; free releases its expgfx source.
  */
-#include "main/dll/VF/vf_shared.h"
+#include "main/gamebits.h"
 #include "main/dll/expgfx_interface.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"

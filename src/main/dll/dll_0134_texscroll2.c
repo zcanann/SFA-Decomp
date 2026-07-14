@@ -17,7 +17,7 @@
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
 #include "main/dll/dll_0134_texscroll2.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
 extern f32 lbl_803E3F30;

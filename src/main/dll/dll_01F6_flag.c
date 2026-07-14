@@ -14,7 +14,9 @@
  * visible.
  */
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_01F6_flag.h"
 
 enum

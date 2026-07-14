@@ -5,7 +5,7 @@
  * object render helper. A 4-byte extra block is reserved but unused.
  */
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/IM/dll_016D_imicepillar.h"
 
 __declspec(section ".sdata2") f32 lbl_803E4768 = 1.0f;
