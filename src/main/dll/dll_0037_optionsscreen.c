@@ -18,6 +18,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_4E.h"
 #include "main/dll/dll_02C0_front_api.h"
+#include "main/dll/front_game_text_box_api.h"
 #include "main/frame_timing.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_show_api.h"
@@ -62,7 +63,6 @@ extern s8 lbl_803DD704;  /* exit fade countdown */
 extern int lbl_803DD700; /* last highlighted item (for select sfx) */
 extern void saveFileStruct_setCheatActive(u32 cheatId, u8 enabled);
 extern u8 shouldShowCredits(void);
-extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 
 u16 lbl_8031A8F8[90] = {
     0x035a, 0x0012, 0x0140, 0x00a4, 0x0000, 0x0140, 0x0034, 0x0000, 0xffff, 0xffff, 0x00c8, 0x0200, 0x0000, 0xff01, 0xffff, 0xff00,

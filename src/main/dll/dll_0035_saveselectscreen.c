@@ -29,6 +29,9 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"
+#define FRONT_GAME_TEXT_BOX_DIRECT_U8_CALL
+#include "main/dll/front_game_text_box_api.h"
+#undef FRONT_GAME_TEXT_BOX_DIRECT_U8_CALL
 #include "main/gametext_api.h"
 #include "main/gametext_show_api.h"
 #include "main/mm.h"
@@ -121,7 +124,6 @@ void saveSelectGoToChapterSelect(void);
 void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
-extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
 extern f32 lbl_803E1D64;
 extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;

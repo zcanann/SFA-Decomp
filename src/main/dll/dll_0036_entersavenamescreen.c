@@ -6,6 +6,7 @@
 #include "main/audio/sfx.h"
 #include "main/dll/dll_02C0_front.h"
 #include "main/dll/dll_02C0_front_api.h"
+#include "main/dll/front_game_text_box_api.h"
 #include "main/gametext_show_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
@@ -14,7 +15,6 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 extern void fn_80135814(int p1, int p2);
-extern void gameTextBoxFn_80134d40(int p1, int p2, u32 p3);
 extern void nameEntryTextDrawFunc(void);
 
 extern u16 gEnterSaveNameColorAnimTime;
