@@ -114,7 +114,6 @@ int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
 void fn_802960E4(void);
-void fn_802960F4(GameObject* obj, int* out);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
@@ -303,14 +302,14 @@ void fn_802960E8(GameObject* player, s16 effectId)
     inner->pendingBoneEffectId = effectId;
 }
 
-void fn_802960F4(GameObject* obj, int* out)
+void fn_802960F4(GameObject* obj, f32** outFxOffsets)
 {
-    int inner = *(int*)&obj->extra;
-    if (out == NULL)
+    PlayerState* inner = obj->extra;
+    if (outFxOffsets == NULL)
     {
         return;
     }
-    *out = (int)((char*)inner + 0x3c4);
+    *outFxOffsets = &inner->fxOffsetX;
 }
 
 f32 fn_8029610C(GameObject* obj)

@@ -1155,7 +1155,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 }
 #pragma opt_propagation reset
 
-extern void fn_802960F4(GameObject* objc4, u8** out);
 extern f32 lbl_803E328C;
 extern f32 lbl_803E3298;
 extern f32 lbl_803E329C;
@@ -1190,7 +1189,7 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
     int type;
     f32 power;
     f32 dv;
-    u8* pos2;
+    f32* pos2;
     u8* state = ((GameObject*)obj)->extra;
     if (obj == NULL || player == NULL)
     {
@@ -1335,9 +1334,9 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
                 fxA.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
                 fxA.id = 0xc95;
                 fn_802960F4((GameObject*)(*(int*)&((GameObject*)obj)->ownerObj), &pos2);
-                fxB.f1 = *(f32*)(pos2 + 0xc);
-                fxB.f2 = *(f32*)(pos2 + 0x10);
-                fxB.f3 = *(f32*)(pos2 + 0x14);
+                fxB.f1 = pos2[3];
+                fxB.f2 = pos2[4];
+                fxB.f3 = pos2[5];
                 (*gPartfxInterface)
                     ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7b9, &fxB, 0x200001, -1, &fxA);
                 (*gPartfxInterface)
@@ -1349,9 +1348,9 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
                 fxA.count = 9;
                 fxA.id = 0xc95;
                 fxA.f0 = lbl_803E32CC * (power / lbl_803E32C8) + lbl_803E32AC;
-                fxB.f1 = *(f32*)(pos2 + 0xc);
-                fxB.f2 = *(f32*)(pos2 + 0x10);
-                fxB.f3 = *(f32*)(pos2 + 0x14);
+                fxB.f1 = pos2[3];
+                fxB.f2 = pos2[4];
+                fxB.f3 = pos2[5];
                 (*gPartfxInterface)
                     ->spawnObject((void*)*(int*)&((GameObject*)obj)->ownerObj, 0x7ba, &fxB, 0x200001, -1, &fxA);
             }
