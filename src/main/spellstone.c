@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/object_update_list.h"
+#include "main/object_render.h"
 #include "main/dll/fx_800944A0_shared.h"
 
 /* object group this object joins while active */
@@ -18,8 +19,6 @@ extern s16 lbl_803DC228;
 extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
-
-extern void objRenderModelAndHitVolumes(void* obj, u32 fwdArg2, u32 fwdArg3, u32 fwdArg4, u32 fwdArg5, double scale);
 
 int spellstone_getState(SpellStoneObject* obj)
 {
@@ -64,7 +63,7 @@ void spellstone_render(SpellStoneObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, ch
     state = obj->state;
     if ((visible != 0) && (state->state != SPELLSTONE_STATE_HIDDEN))
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6754);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6754);
     }
     return;
 }
