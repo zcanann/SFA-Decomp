@@ -65,7 +65,9 @@ void NW_tricky_update(int* obj)
     int* player;
     int** objects;
     int** scan;
+    int** scan2;
     int* ip;
+    int i2;
     int* found;
     f32 dPlayer;
     f32 timer;
@@ -108,7 +110,7 @@ void NW_tricky_update(int* obj)
                     ((NwTrickyState*)state)->timer = lbl_803E5260;
                 }
 
-                for (i = 0, ip = ids.ids, healthMin = lbl_803E5260; i < 3; i++, ip++)
+                for (i2 = 0, ip = ids.ids, healthMin = lbl_803E5260; i2 < 3; ip++, i2++)
                 {
                     found = (int*)ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction((GameObject*)found) > healthMin)
@@ -129,18 +131,18 @@ void NW_tricky_update(int* obj)
             }
 
             objects = (int**)ObjGroup_GetObjects(3, &count);
-            for (i = 0, scan = objects; i < count; scan++, i++)
+            for (i = 0, scan2 = objects; i < count; scan2++, i++)
             {
-                if (((GameObject*)*scan)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
+                if (((GameObject*)*scan2)->anim.seqId == NWTRICKY_SNOWHORN_HERD_SEQID)
                 {
-                    dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)player)->worldPos);
-                    if (vec3f_distanceSquared(((NwObjPos*)*scan)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
+                    dPlayer = vec3f_distanceSquared(((NwObjPos*)*scan2)->worldPos, ((NwObjPos*)player)->worldPos);
+                    if (vec3f_distanceSquared(((NwObjPos*)*scan2)->worldPos, ((NwObjPos*)tricky)->worldPos) < dPlayer)
                     {
-                        fn_8014C66C((GameObject*)*scan, (GameObject*)tricky);
+                        fn_8014C66C((GameObject*)*scan2, (GameObject*)tricky);
                     }
                     else
                     {
-                        fn_8014C66C((GameObject*)*scan, (GameObject*)player);
+                        fn_8014C66C((GameObject*)*scan2, (GameObject*)player);
                     }
                 }
             }
