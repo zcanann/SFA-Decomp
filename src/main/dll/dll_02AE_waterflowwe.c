@@ -25,6 +25,7 @@
 #include "main/obj_group.h"
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WATERFLOWWE_FOLIAGE_GROUP               0x14
 #define WATERFLOWWE_OBJECT_CURRENT_GROUP        0x50
@@ -245,3 +246,20 @@ void waterflowwe_initialise(void)
     gWaterFlowIdlePhase = lbl_803E72B0;
     gWaterFlowFlowPhase = lbl_803E72B0;
 }
+
+ObjectDescriptor gWaterFlowWeObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)waterflowwe_initialise,
+    (ObjectDescriptorCallback)waterflowwe_release,
+    0,
+    (ObjectDescriptorCallback)waterflowwe_init,
+    (ObjectDescriptorCallback)waterflowwe_update,
+    (ObjectDescriptorCallback)waterflowwe_hitDetect,
+    (ObjectDescriptorCallback)waterflowwe_render,
+    (ObjectDescriptorCallback)waterflowwe_free,
+    (ObjectDescriptorCallback)waterflowwe_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)waterflowwe_getExtraSize,
+};

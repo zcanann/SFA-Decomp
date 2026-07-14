@@ -19,6 +19,7 @@
 #include "main/objanim.h"
 #include "main/objhits.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E7288 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E728C = 0.001f;
@@ -145,3 +146,20 @@ void SoftBody_initialise(void)
     lbl_803DDDA0 = lbl_803E7298;
     lbl_803DDD9C = lbl_803E7298;
 }
+
+ObjectDescriptor gSoftBodyObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SoftBody_initialise,
+    (ObjectDescriptorCallback)SoftBody_release,
+    0,
+    (ObjectDescriptorCallback)SoftBody_init,
+    (ObjectDescriptorCallback)SoftBody_update,
+    (ObjectDescriptorCallback)SoftBody_hitDetect,
+    (ObjectDescriptorCallback)SoftBody_render,
+    (ObjectDescriptorCallback)SoftBody_free,
+    (ObjectDescriptorCallback)SoftBody_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)SoftBody_getExtraSize,
+};

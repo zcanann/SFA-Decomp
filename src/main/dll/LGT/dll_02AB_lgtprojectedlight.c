@@ -16,6 +16,7 @@
 #include "main/model_light.h"
 #include "main/texture.h"
 #include "main/dll/LGT/dll_02AB_lgtprojectedlight.h"
+#include "main/object_descriptor.h"
 
 #define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
 #define PROJECTEDLIGHT_PROJECTION_ORTHO      0
@@ -166,3 +167,20 @@ void ProjectedLight_release(void)
 void ProjectedLight_initialise(void)
 {
 }
+
+ObjectDescriptor gProjectedLightObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ProjectedLight_initialise,
+    (ObjectDescriptorCallback)ProjectedLight_release,
+    0,
+    (ObjectDescriptorCallback)ProjectedLight_init,
+    (ObjectDescriptorCallback)ProjectedLight_update,
+    (ObjectDescriptorCallback)ProjectedLight_hitDetect,
+    (ObjectDescriptorCallback)ProjectedLight_render,
+    (ObjectDescriptorCallback)ProjectedLight_free,
+    (ObjectDescriptorCallback)ProjectedLight_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)ProjectedLight_getExtraSize,
+};

@@ -15,6 +15,7 @@
 #include "main/vecmath.h"
 #include "main/dll/LGT/dll_02AC_lgtcontrollight.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
+#include "main/object_descriptor.h"
 
 #define CONTROLLIGHT_MODE_DIRECT      0
 #define CONTROLLIGHT_MODE_INVERTED    1
@@ -125,3 +126,20 @@ void ControlLight_release(void)
 void ControlLight_initialise(void)
 {
 }
+
+ObjectDescriptor gControlLightObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ControlLight_initialise,
+    (ObjectDescriptorCallback)ControlLight_release,
+    0,
+    (ObjectDescriptorCallback)ControlLight_init,
+    (ObjectDescriptorCallback)ControlLight_update,
+    (ObjectDescriptorCallback)ControlLight_hitDetect,
+    (ObjectDescriptorCallback)ControlLight_render,
+    (ObjectDescriptorCallback)ControlLight_free,
+    (ObjectDescriptorCallback)ControlLight_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)ControlLight_getExtraSize,
+};

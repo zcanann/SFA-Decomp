@@ -2996,18 +2996,22 @@ main/dll/LGT/dll_02AA_lgtdirectionallight.c:
 
 main/dll/LGT/dll_02AB_lgtprojectedlight.c:
 	.text       start:0x80234748 end:0x80234C10
+	.data       start:0x8032BB00 end:0x8032BB38
 	.sdata2     start:0x803E7260 end:0x803E7280
 
 main/dll/LGT/dll_02AC_lgtcontrollight.c:
 	.text       start:0x80234C10 end:0x80234DC8
+	.data       start:0x8032BB38 end:0x8032BB70
 
 main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
+	.data       start:0x8032BB70 end:0x8032BBA8
 	.sdata2     start:0x803E7288 end:0x803E72A0
 	.sdata2     start:0x803E72A0 end:0x803E72B0
 
 main/dll/dll_02AE_waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
+	.data       start:0x8032BBA8 end:0x8032BBE0
 
 main/dll/dll_02AF_tree.c:
 	.text       start:0x802356CC end:0x80236154
