@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/obj_placement.h"
 
 typedef struct LightSourceSetup {
@@ -17,7 +18,7 @@ typedef struct LightSourceSetup {
 } LightSourceSetup;
 
 typedef struct LightSourceState {
-    void *light;
+    ModelLightStruct *light;
     f32 fxTimer;
     f32 sparkTimer;
     f32 sparkSpawnTimer;

@@ -17,7 +17,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #define OBJFX_FN_80098B18_BYTE_ARGS_LEGACY
 #include "main/objfx.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
@@ -26,8 +26,6 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
-
-#define MODEL_LIGHT_KIND_POINT 2
 
 #define LIGHTSOURCE_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define LIGHTSOURCE_OBJFLAG_RENDERED           0x800
@@ -41,33 +39,6 @@
 
 #define LIGHTSOURCE_PARTFX_SPARK 0x7cb
 
-/* The glow-light object referenced by LightSourceState.light is a shared
-   ModelLightStruct (see main/model_light.h).  Only the glow byte-fields used
-   in render/update are declared here, to keep the rest of this DLL's call
-   externs (void*-typed) intact for byte-matching. */
-typedef struct LightGlow
-{
-    u8 pad0[0x4C - 0x0];
-    u8 enabled;
-    u8 pad4D[0x2F8 - 0x4D];
-    u8 glowType;
-    u8 glowAlpha;
-    s8 glowAlphaStep;
-    u8 pad2FB[0x300 - 0x2FB];
-} LightGlow;
-
-extern void queueGlowRender(void* light);
-extern void ModelLightStruct_free(void* light);
-extern void* objCreateLight(void* obj, int);
-extern void modelLightStruct_setLightKind(void*, int);
-extern void modelLightStruct_setPosition(void*, f32, f32, f32);
-extern void modelLightStruct_setDiffuseColor(void*, u8, u8, u8, int);
-extern void modelLightStruct_setSpecularColor(void*, u8, u8, u8, int);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
-extern void modelLightStruct_setEnabled(void*, int, f32);
-extern void modelLightStruct_startColorFade(void*, int, int);
-extern void modelLightStruct_setDiffuseTargetColor(void*, int, int, int, int);
-extern void modelLightStruct_setupGlow(void*, int, u8, u8, u8, int, f32);
 __declspec(section ".rodata") u8 gLightSourceColorTable[48] = {
     0xFF, 0xC0, 0x00, 0xFF, 0x7F, 0x00, 0xFF, 0xC0, 0x00, 0xFF, 0xC0, 0x00,
     0x00, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0xFF, 0xFF, 0x00,
@@ -96,8 +67,8 @@ void lightsource_free(GameObject* obj)
 void lightsource_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderModelAndHitVolumes(void* obj, int p1, int p2, int p3, int p4, f32 alpha);
-    void* light = (*(LightSourceState**)&(obj)->extra)->light;
-    if (light != NULL && ((LightGlow*)light)->glowType != 0 && ((LightGlow*)light)->enabled != 0)
+    ModelLightStruct* light = (*(LightSourceState**)&(obj)->extra)->light;
+    if (light != NULL && light->glowType != 0 && light->enabled != 0)
     {
         queueGlowRender(light);
     }
@@ -122,7 +93,7 @@ void lightsource_update(GameObject* obj)
 {
 
     LightSourceState* b;
-    LightGlow* t;
+    ModelLightStruct* t;
     s16 sum;
     u8 sfxFlag;
     f32 vec[3];
@@ -216,7 +187,7 @@ void lightsource_update(GameObject* obj)
             sum = 255;
             t->glowAlphaStep = 0;
         }
-        ((LightGlow*)b->light)->glowAlpha = sum;
+        b->light->glowAlpha = sum;
     }
     if ((obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_A && (obj)->anim.seqId != LIGHTSOURCE_SEQID_ARWING_B)
     {
@@ -343,9 +314,10 @@ void lightsource_init(GameObject* obj, LightSourceSetup* setup)
             modelLightStruct_startColorFade(state->light, 1, 3);
 
             colorBase = state->fxType * 3;
-            modelLightStruct_setDiffuseTargetColor(state->light, (int)(0.8f * (f32)(u32)colors.c[colorBase]),
-                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
-                                                   (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]), 0xff);
+            ((void (*)(ModelLightStruct*, int, int, int, int))modelLightStruct_setDiffuseTargetColor)(
+                state->light, (int)(0.8f * (f32)(u32)colors.c[colorBase]),
+                (int)(0.8f * (f32)(u32)colors.c[colorBase + 1]),
+                (int)(0.8f * (f32)(u32)colors.c[colorBase + 2]), 0xff);
             lightSetField4D(state->light, 1);
 
             if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW)
