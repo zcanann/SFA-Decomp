@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gameloop_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/newclouds.h"
@@ -36,7 +37,6 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
 extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
-extern void Sfx_PlayFromObject(GameObject* obj, int soundId);
 typedef struct
 {
     u16 msg; // 0x0
