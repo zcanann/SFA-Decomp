@@ -376,3 +376,13 @@ curve=r22, wg/wg1=r21, wgB=r22 ALL CORRECT, regions 140 -> 117 (best). Remaining
 original may express K=3 differently to net zero), and the p/pp/listWalk/listIndex grant
 cluster rotated down one slot (p=r26, pp=r25, listWalk=r25, listIndex=r24, back=r27,
 slot36=r29) - retune their decl positions against the new census next.
+
+## Register-complete config scored: 97.40 < baseline 97.83 (kept baseline in tree)
+The 113-115-region configs (wg=r21 wgB=r22 curve=r22 p=r27 pp=r26 listIndex=r25 + K=3
+staging) score BELOW baseline due to +4 structural instructions (objdiff weighting).
+To land the win, eliminate the instruction excess: (1) the baseline site-1 +2 (duplicate
+add r3,r30,r3 - the wgB/lp staging shape), (2) the K=3 staging +2 addis (target's wg-K3
+block presumably folds them - VERIFY by comparing that exact block; if target K3 lacks
+the addis, find the alternative +1-chain source). When instruction-neutral, the register
+alignment (~60 lines) flips the score decisively past baseline. Probe: wgfep_117.c + the
+decl retunes (p before slotPtr, pp/listIndex/listWalk order per anchors above).
