@@ -23,7 +23,7 @@ typedef struct
 
 #define ROLLINGBARREL_OBJFLAG_PARENT_SLACK 0x1000
 
-extern s16 gRollingBarrelExplodingCount;
+s16 gRollingBarrelExplodingCount;
 extern int gRollingBarrelCurveInitPair;
 extern const f32 lbl_803E4468;
 extern const f32 lbl_803E446C;

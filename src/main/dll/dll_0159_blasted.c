@@ -14,7 +14,7 @@
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 
 extern f32 lbl_803E4348;
-extern int lbl_803DDB18;
+int lbl_803DDB18;
 
 extern u8* mapBlockFn_800606ec(void* block, int idx);
 extern int mapBlockFn_80060678(void* entry);

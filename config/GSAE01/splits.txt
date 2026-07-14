@@ -1695,6 +1695,7 @@ main/dll/dll_0106_scarab.c:
 
 main/dll/dll_0107_unused.c:
 	.text       start:0x80185868 end:0x8018646C
+	.sbss       start:0x803DDAD0 end:0x803DDAD8
 	.sdata2     start:0x803E3A58 end:0x803E3A88
 
 main/dll/dll_0108_endobject.c:
@@ -1708,6 +1709,7 @@ main/dll/dll_010D_portalspelldoor.c:
 main/dll/dll_010C_lanternfirefly.c:
 	.text       start:0x80186704 end:0x801871C8
 	.sdata      start:0x803DBDD8 end:0x803DBDE0
+	.sbss       start:0x803DDAD8 end:0x803DDAE0
 
 main/dll/dll_010B_fireflylantern.c:
 	.text       start:0x801871C8 end:0x80187640
@@ -1752,6 +1754,7 @@ main/dll/dll_011D_treasurechest.c:
 	.text       start:0x8018A8BC end:0x8018ADB4
 	.rodata     start:0x802C22B0 end:0x802C22C0
 	.data       start:0x80321C60 end:0x80321C98
+	.sbss       start:0x803DDAE0 end:0x803DDAE8
 
 main/dll/dll_011E_magiccavebottom.c:
 	.text       start:0x8018ADB4 end:0x8018AFC8
@@ -1857,6 +1860,7 @@ main/dll/dll_0135_texscroll.c:
 main/dll/dll_0136_waveanimator.c:
 	.text       start:0x80192394 end:0x80192A68
 	.data       start:0x80322178 end:0x803221C0
+	.sbss       start:0x803DDAE8 end:0x803DDB00
 
 main/dll/dll_0137_alphaanimator.c:
 	.text       start:0x80192A68 end:0x80193100
@@ -1894,6 +1898,7 @@ main/dll/DIM/dll_013E_dimbossicesmash.c:
 	.text       start:0x80196520 end:0x8019718C
 	.data       start:0x80322368 end:0x803223B0
 	.sdata      start:0x803DBDF8 end:0x803DBE00
+	.sbss       start:0x803DDB00 end:0x803DDB08
 	.sdata2     start:0x803E4030 end:0x803E4060
 
 main/dll/dll_013F_texframeanimator.c:
@@ -1932,6 +1937,7 @@ main/dll/dll_0145_cloudprisoncontrol.c:
 	.data       start:0x80322720 end:0x8032284C
 	.bss        start:0x803AC7D8 end:0x803AC900
 	.sdata      start:0x803DBE08 end:0x803DBE10
+	.sbss       start:0x803DDB08 end:0x803DDB10
 
 main/dll/CF/dll_0148_cfguardian.c:
 	.text       start:0x8019AE3C end:0x8019C784
@@ -1949,6 +1955,7 @@ main/dll/CF/dll_014A_cfpowerbase.c:
 
 main/dll/CF/dll_014B_cfmaincrystal.c:
 	.text       start:0x8019D9F0 end:0x8019E3F4
+	.sbss       start:0x803DDB10 end:0x803DDB18
 	.sdata2     start:0x803E41D8 end:0x803E4210
 
 main/dll/dll_014C_babycloudrunner.c:
@@ -1996,6 +2003,7 @@ main/dll/dll_0158_gunpowderbarrel.c:
 main/dll/dll_0159_blasted.c:
 	.text       start:0x801A27B8 end:0x801A2BDC
 	.data       start:0x80322D68 end:0x80322DA0
+	.sbss       start:0x803DDB18 end:0x803DDB20
 
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4
@@ -2034,9 +2042,11 @@ main/dll/dll_0167_spiritdoorlock.c:
 
 main/dll/dll_017D_rollingbarrel.c:
 	.text       start:0x801A5D88 end:0x801A6638
+	.sbss       start:0x803DDB20 end:0x803DDB28
 
 main/dll/MMP/dll_017E_mmplevelcontrol.c:
 	.text       start:0x801A6638 end:0x801A6C28
+	.sbss       start:0x803DDB28 end:0x803DDB30
 	.sdata2     start:0x803E44C0 end:0x803E44CC
 
 main/dll/dll_017F_moonseedbush.c:
@@ -2049,6 +2059,7 @@ main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
 	.data       start:0x803231D0 end:0x80323218
 	.bss        start:0x803AC900 end:0x803AC918
+	.sbss       start:0x803DDB30 end:0x803DDB38
 	.sdata2     start:0x803E44E8 end:0x803E4548
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
@@ -2096,6 +2107,7 @@ main/dll/CC/dll_0187_ccqueen.c:
 main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
 	.data       start:0x80323408 end:0x803234D8
+	.sbss       start:0x803DDB38 end:0x803DDB40
 	.sdata2     start:0x803E4670 end:0x803E46A8
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
@@ -2122,6 +2134,7 @@ main/dll/IM/dll_0169_imicemountain.c:
 main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440
 	.data       start:0x803236B8 end:0x80323708
+	.sbss       start:0x803DDB40 end:0x803DDB48
 
 main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4
@@ -2243,6 +2256,7 @@ main/dll/DIM/dll_01CB_dimwooddoor2.c:
 main/dll/dll_01CE_dll1ce.c:
 	.text       start:0x801B5A28 end:0x801B5D48
 	.data       start:0x803255C8 end:0x80325670
+	.sbss       start:0x803DDB78 end:0x803DDB80
 
 main/dll/DIM/dll_01CC_dimmagicbridge.c:
 	.text       start:0x801B5D48 end:0x801B63F4

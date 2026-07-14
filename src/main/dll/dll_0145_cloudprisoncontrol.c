@@ -52,9 +52,9 @@ enum
 
 extern s8 lbl_803DBE08;  /* curve-system one-shot init flag */
 extern f32 lbl_803E4108; /* render scale */
-extern s8 lbl_803DDB08;  /* deferred-message queue count */
-extern s8 lbl_803DDB09;  /* registered-target list count */
-extern int lbl_803DDB0C; /* cached rom-curve handle */
+int lbl_803DDB0C; /* cached rom-curve handle */
+s8 lbl_803DDB09;  /* registered-target list count */
+s8 lbl_803DDB08;  /* deferred-message queue count */
 
 
 CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */

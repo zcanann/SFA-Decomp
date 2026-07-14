@@ -69,7 +69,7 @@ STATIC_ASSERT(sizeof(CfMainCrystalState) == 0x160);
 
 extern f32 lbl_803E4210;
 
-extern int* gCfMainCrystalObj;
+int* gCfMainCrystalObj;
 
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 gCfMainCrystalPylonBeamY = 1945.0f;

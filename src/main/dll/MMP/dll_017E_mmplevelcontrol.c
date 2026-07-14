@@ -46,8 +46,8 @@
 #define MMPLEVELCONTROL_ENVFX_G 0x10d
 #define MMPLEVELCONTROL_ENVFX_H 0x139
 
-extern f32 lbl_803DDB28;
-extern int lbl_803DDB2C;
+int lbl_803DDB2C;
+f32 lbl_803DDB28;
 
 
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)

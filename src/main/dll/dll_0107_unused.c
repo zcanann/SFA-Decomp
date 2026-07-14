@@ -56,8 +56,8 @@ static const f32 gWindLift107RadiusScale = 10.0f;
 static const f32 gWindLift107DefaultRadius = 50.0f;
 
 #pragma dont_inline on
-extern void* lbl_803DDAD0;
-extern void* lbl_803DDAD4;
+void* lbl_803DDAD4;
+void* lbl_803DDAD0;
 
 #pragma opt_common_subs off
 void fn_80185868(GameObject* obj, f32 arg)

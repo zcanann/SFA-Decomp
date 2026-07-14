@@ -58,10 +58,10 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 #define TREASURECHEST_SEQEV_OPENED       4 /* hide + disable the chest */
 
 extern f32 lbl_803E3C20;
-extern void* lbl_803DDAE0;
+int lbl_803DDAE4;
 extern f32 lbl_803E3C24;
 __declspec(section ".rodata") ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
-extern int lbl_803DDAE4;
+void* lbl_803DDAE0;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
 

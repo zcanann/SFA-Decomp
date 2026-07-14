@@ -39,7 +39,7 @@ STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
 f32 gMmpAsteroidIntensityHeightTable[4] = {0.0f, 0.0f, 10.0f, 50.0f};
 PartFxSpawnParams gMmpAsteroidDustSpawnParams;
-extern int gMmpAsteroidDustHeightParam;
+int gMmpAsteroidDustHeightParam;
 extern f32 lbl_803E44E8;
 extern f32 lbl_803E44F8;
 extern f32 lbl_803E44FC;

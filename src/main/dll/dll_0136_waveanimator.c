@@ -40,11 +40,11 @@ STATIC_ASSERT(sizeof(WaveAnimatorState) == 0x3C);
 
 #define WAVEANIMATOR_OBJGROUP 27
 
-extern u8 lbl_803DDAE8;    /* live-instance refcount */
-extern void* lbl_803DDAEC; /* per-cell RGB color field */
-extern void* lbl_803DDAF0; /* per-grid phase table */
-extern void* lbl_803DDAF4; /* per-cell height field */
-extern u8 lbl_803DDAF8;    /* phases-advanced-this-frame latch */
+u8 lbl_803DDAF8;    /* phases-advanced-this-frame latch */
+void* lbl_803DDAF4; /* per-cell height field */
+void* lbl_803DDAF0; /* per-grid phase table */
+void* lbl_803DDAEC; /* per-cell RGB color field */
+u8 lbl_803DDAE8;    /* live-instance refcount */
 extern f32 lbl_803E3F40;   /* grid step scale */
 extern f32 lbl_803E3F44;   /* 0.0f sentinel / color-split zero */
 extern f32 lbl_803E3F48;   /* wave scale */

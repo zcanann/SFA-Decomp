@@ -45,7 +45,7 @@ STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 #define zcEn3_ROCKFALL_MODE_SHATTERED 3 /* hit: stop scrape sfx, play impact, maybe explode */
 #define zcEn3_ROCKFALL_MODE_4         4
 
-extern void* gRockfallResource;
+void* gRockfallResource;
 extern f32 lbl_803E4708;
 extern f32 lbl_803E4700;
 extern f32 lbl_803E4704;

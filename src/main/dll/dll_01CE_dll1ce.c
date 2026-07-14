@@ -94,7 +94,7 @@ STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
 #define DLL1CE_CONTENTS_SUBTYPE 0x246
 
 extern f32 lbl_803E49E8;
-extern void* lbl_803DDB78;
+void* lbl_803DDB78;
 extern f32 lbl_803E49F0;
 extern f32 lbl_803E49EC;
 extern f32 lbl_803E49F4;

@@ -189,7 +189,7 @@ extern f32 lbl_803E4690;
 extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
 extern u8 gCcLightfootAnimTable[];
-extern u8 gCcLightfootHitCooldown[8];
+u8 gCcLightfootHitCooldown[8];
 extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 typedef struct LightfootAnimTable

@@ -50,7 +50,7 @@ typedef struct DimbossicesmashPlacement
     s16 homingTargetZ;  /* homing target Z */
 } DimbossicesmashPlacement;
 
-extern u8 lbl_803DDB00;
+u8 lbl_803DDB00;
 extern u8 lbl_803DBDF8[8];
 
 #pragma explicit_zero_data on
