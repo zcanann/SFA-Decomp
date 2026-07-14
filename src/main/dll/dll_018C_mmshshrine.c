@@ -25,6 +25,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/audio_control_api.h"
 #include "main/map_load.h"
+#include "main/model_light.h"
 #include "main/pi_dolphin_api.h"
 #include "main/sky_api.h"
 #include "main/dll/dll_018D_mmshscales.h"
@@ -86,9 +87,6 @@ extern f32 lbl_803E4F58;
 extern f32 lbl_803E4F5C;
 extern f32 lbl_803E4F60;
 
-extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
-extern void ModelLightStruct_free(void* p);
-extern int objCreateLight(int arg, int addToList);
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
@@ -99,7 +97,7 @@ extern void objRenderModelAndHitVolumes(int p1, u32 p2, u32 p3, u32 p4, u32 p5, 
 
 typedef struct MMSHShrineRuntime
 {
-    void* light;
+    ModelLightStruct* light;
     f32 swayBase;
     f32 swayAccel;
     f32 swayVelocity;
@@ -169,14 +167,14 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
                 ((MMSHShrineObject*)objArg)->flags06 |= MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50);
                 }
                 break;
             case 0xf:
                 ((MMSHShrineObject*)objArg)->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50);
                 }
                 break;
             case 1:
@@ -271,14 +269,14 @@ void MMSH_Shrine_render(GameObject* obj, u32 a2, u32 a3, u32 a4, u32 a5, char vi
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
+            modelLightStruct_setEnabled(runtime->light, 0, lbl_803E4F50);
         }
     }
     else
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled((int)runtime->light, 1, lbl_803E4F50);
+            modelLightStruct_setEnabled(runtime->light, 1, lbl_803E4F50);
         }
         objRenderModelAndHitVolumes((int)obj, a2, a3, a4, a5, lbl_803E4F50);
         objParticleFn_80099d84((int)obj, lbl_803E4F50, 7, *(f32*)&lbl_803E4F50, (int)runtime->light);
@@ -387,7 +385,7 @@ void MMSH_Shrine_update(int objArg)
 
 void MMSH_Shrine_init(GameObject* obj, int def)
 {
-    int light;
+    ModelLightStruct* light;
     MMSHShrineRuntime* state;
     MMSHShrinePlacement* p = (MMSHShrinePlacement*)def;
 
@@ -406,7 +404,7 @@ void MMSH_Shrine_init(GameObject* obj, int def)
     if (state->light == NULL)
     {
         light = objCreateLight(0, 1);
-        state->light = (void*)light;
+        state->light = light;
     }
     mainSetBits(MMSH_SHRINE_GB_F07, 1);
     mainSetBits(MMSH_SHRINE_GB_EFA, 1);
