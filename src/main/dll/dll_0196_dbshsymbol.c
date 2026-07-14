@@ -14,6 +14,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/game_timer_control_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/object_render_legacy.h"
 #include "main/vecmath.h"
 #include "main/dll/dbshsymbol_types.h"
@@ -44,7 +45,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
 extern u8 gDbShSymbolScuffPlayed;
 
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern int getButtonsJustPressedIfNotBusy(int p);
