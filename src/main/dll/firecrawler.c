@@ -31,6 +31,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_group.h"
 #include "main/obj_link.h"
 #include "main/obj_path.h"
@@ -190,7 +191,6 @@ extern f32 lbl_803E2C54;
 extern f32 lbl_803E2C38;
 extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
 extern int fn_80295C88(void* player);
 extern f32 lbl_803E2B3C;
 extern f32 lbl_803E2B48;
@@ -1455,7 +1455,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
         /* 0x261 = BaddieState.contactSfxFlags; kept raw - typed member as a
          * call arg shifts arg emission bytes here. */
-        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
+        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, (TrackBBoxHit*)bufA,
+                                        (GameObject*)obj, *(u8*)(state + 0x261), -1, 0xff, 0);
         ang =
             getAngle(
                 ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
@@ -1504,8 +1505,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                     tgtB[0] = -(lbl_803E2B38 * sinB - ((GameObject*)obj)->anim.localPosX);
                     tgtB[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
                     tgtB[2] = -(lbl_803E2B38 * cosB - ((GameObject*)obj)->anim.localPosZ);
-                    if ((u8)objBboxFn_800640cc(posB, tgtB, lbl_803E2B18, 3, bufB, obj, *(u8*)(state + 0x261), -1, 0xff,
-                                               0) == 0)
+                    if ((u8)objBboxFn_800640cc(posB, tgtB, lbl_803E2B18, 3, (TrackBBoxHit*)bufB,
+                                              (GameObject*)obj, *(u8*)(state + 0x261), -1, 0xff, 0) == 0)
                     {
                         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
                         {

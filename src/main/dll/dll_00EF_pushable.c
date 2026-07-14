@@ -4,6 +4,7 @@
 #include "main/object_api.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
 #include "main/object_update_list.h"
@@ -54,17 +55,6 @@ typedef struct PushableObjectDef
     u8 requiredHitId; /* 0x23 hit-region id that triggers this pushable (-1 = none) */
     u8 pad24[0x28 - 0x24];
 } PushableObjectDef;
-
-typedef struct Dll138HitInfo
-{
-    u8 pad0[0x1c];
-    f32 angleX;
-    u8 pad1[4];
-    f32 angleZ;
-    u8 pad2[0x29];
-    s8 id;
-    u8 pad3[2];
-} Dll138HitInfo;
 
 typedef struct
 {
@@ -221,8 +211,6 @@ void fn_80174A80(GameObject* obj, PushableState* ext)
 
 void fn_80174BFC(GameObject* obj, int ext)
 {
-    extern int objBboxFn_800640cc(f32 * from, f32 * to, f32 radius, int mode, void* hit, void* obj, int p7, int p8,
-                                  u8 p9, int p10);
     int def;
     int i;
     s8 bits;
@@ -235,7 +223,7 @@ void fn_80174BFC(GameObject* obj, int ext)
     MatrixTransform pose;
     f32 mtx[16];
     f32 points[21];
-    Dll138HitInfo hit;
+    TrackBBoxHit hit;
 
     def = *(int*)&obj->anim.placementData;
     velBase = (f32*)((PushableState*)ext)->probeLocal;
@@ -281,7 +269,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                 {
                     int angle;
                     int delta;
-                    if (hit.id != -1 && (((PushableState*)ext)->flags & 1) == 0)
+                    if (hit.kind != -1 && (((PushableState*)ext)->flags & 1) == 0)
                     {
                         int gamebit;
                         ((PushableState*)ext)->flags |= 1;
@@ -295,7 +283,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                                 break;
                             case 0x7df:
                                 ((PushableState*)ext)->flags &= ~1;
-                                if (hit.id == ((PushableState*)ext)->requiredHitId)
+                                if (hit.kind == ((PushableState*)ext)->requiredHitId)
                                 {
                                     ObjTextureRuntimeSlot* tex = objFindTexture(obj, 0, 0);
                                     if (tex != NULL)
@@ -308,7 +296,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                                 }
                                 break;
                             case 0x1cb:
-                                if (hit.id == 1)
+                                if (hit.kind == 1)
                                 {
                                     mainSetBits(gamebit, 1);
                                     Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
@@ -320,7 +308,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                             default:
                             {
                                 s8 t = ((PushablePlacement*)def)->requiredHitId;
-                                if (t > -1 && t == hit.id)
+                                if (t > -1 && t == hit.kind)
                                 {
                                     mainSetBits(gamebit, 1);
                                     Sfx_PlayFromObjectIntReturnLegacy(0, SFXTRIG_menuups16k);
@@ -332,7 +320,7 @@ void fn_80174BFC(GameObject* obj, int ext)
                     }
                     mathSinf(gPushablePi * (f32)((PushableState*)ext)->yaw / gPushableYawHalfCircle);
                     mathCosf(gPushablePi * (f32)((PushableState*)ext)->yaw / gPushableYawHalfCircle);
-                    angle = getAngle(hit.angleX, hit.angleZ);
+                    angle = getAngle(hit.normalX, hit.normalZ);
                     delta = ((PushableState*)ext)->yaw - (angle & 0xffff);
                     if (delta > 0x8000)
                     {
@@ -1091,8 +1079,6 @@ void pushable_hitDetect(GameObject* obj)
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
-    extern int objBboxFn_800640cc(f32 * start, f32 * end, f32 radius, int a, int b, int* obj, int c, int d, int e,
-                                  int f);
     extern u32 fn_80174BFC();
     SetScaleParams* pp;
     PushableState* state;
@@ -1145,7 +1131,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
-            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
+            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, NULL, (GameObject*)obj, 1, -1, 0xff, 0);
         }
         if (hit != 0)
         {
@@ -1166,7 +1152,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
-            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
+            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, NULL, (GameObject*)obj, 1, -1, 0xff, 0);
         }
         if (hit != 0)
         {
@@ -1187,7 +1173,7 @@ int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
         hit = hitDetectFn_80067958(NULL, start, end, 1, hitbuf, 8);
         if (hit == 0)
         {
-            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, 0, obj, 1, -1, 0xff, 0);
+            hit = objBboxFn_800640cc(start, end, pp->r[0], 0, NULL, (GameObject*)obj, 1, -1, 0xff, 0);
         }
         if (hit != 0)
         {

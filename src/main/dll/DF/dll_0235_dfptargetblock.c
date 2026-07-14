@@ -11,6 +11,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/dll/fruit.h"
@@ -63,9 +64,6 @@ extern const f32 lbl_803E64C8;
 extern const f32 gTargetBlockMinVertexYSeed;
 extern const f32 lbl_803E64D0;
 extern const f32 lbl_803E64D4;
-
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, DfpTargetBlockObject* obj, int flags,
-                              int mask, int arg9, int arg10);
 
 int dfptargetblock_getExtraSize(void)
 {
@@ -451,7 +449,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
 {
     u8* point;
     f32 probe[3];
-    u8 hit[0x54];
+    TrackBBoxHit hit;
     f32 originalX;
     f32 originalZ;
     f32 deltaX;
@@ -467,7 +465,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject* obj, DfpTargetB
         probe[1] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Y) + obj->y;
         probe[2] = *(f32*)(point + DFPTARGETBLOCK_POINT_OFFSET_Z) + obj->z;
         originalZ = probe[2];
-        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488, 1, hit, obj, 8, -1, 0, 0) != 0)
+        if (objBboxFn_800640cc(&obj->x, probe, lbl_803E6488, 1, &hit, (GameObject*)obj, 8, -1, 0, 0) != 0)
         {
             deltaX = probe[0] - originalX;
             deltaZ = probe[2] - originalZ;

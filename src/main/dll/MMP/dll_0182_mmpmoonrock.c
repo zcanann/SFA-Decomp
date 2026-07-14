@@ -24,6 +24,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/carryable_interface.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_list.h"
 #include "main/obj_group.h"
 #include "main/objhits.h"
@@ -196,8 +197,6 @@ void fn_801A7B10(GameObject* obj)
     }
 }
 
-extern int objBboxFn_800640cc(int* from, int* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
 extern f32 lbl_803E454C;
 extern f32 lbl_803E4550;
 extern const f32 gMoonRockRespawnTime;
@@ -205,7 +204,7 @@ extern const f32 gMoonRockRespawnTime;
 #pragma dont_inline on
 void fn_801A79E0(GameObject* obj)
 {
-    int hitScratch[21];
+    TrackBBoxHit hitScratch;
     int hitObjOut;
     MmpMoonrockState* state;
     int hit;
@@ -213,8 +212,8 @@ void fn_801A79E0(GameObject* obj)
     hit = ObjHits_GetPriorityHit(obj, &hitObjOut, 0, 0);
     if (hit == 0)
     {
-        hit = objBboxFn_800640cc((int*)&(obj)->anim.previousLocalPosX, (int*)&(obj)->anim.localPosX, lbl_803E454C, 1,
-                                 hitScratch, (int)obj, 1, -1, 0xff, 0);
+        hit = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E454C, 1, &hitScratch,
+                                 obj, 1, -1, 0xff, 0);
     }
     if ((hit != 0) || ((((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0 &&
                         (state->flags & MOONROCK_FLAG_THROWN) != 0) ||

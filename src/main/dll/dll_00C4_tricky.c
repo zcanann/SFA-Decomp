@@ -19,6 +19,7 @@
 #include "main/frustum.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/object.h"
@@ -215,8 +216,6 @@ extern void objSetAnimSpeedTo1(int obj);
 extern f32 objFn_801948c0(int obj, int coord);
 extern int fn_80296240(GameObject* obj);
 extern int playerGetFlags3F0Bit5(GameObject* obj);
-extern int objBboxFn_800640cc(Vec* from, Vec* to, f32 radius, int mode, void* hit, int obj, int arg7, int arg8,
-                              int arg9, int arg10);
 __declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
@@ -2422,7 +2421,7 @@ u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
     s16 fromGrid[4];
     Vec probe;
     Vec delta;
-    u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
+    TrackBBoxHit bboxHit;
     s16 setupId;
     u8 visible;
     int keepGroundOffset;
@@ -2463,8 +2462,8 @@ u8 baddieTargetFn_8014a150(GameObject* obj, int state, void* from, void* to)
     }
     if ((visible != 0) && ((((TrickyState*)state)->controlFlags & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0))
     {
-        if (objBboxFn_800640cc((Vec*)from, &probe, lbl_803E256C, 0, bboxHit, (int)obj, ((TrickyState*)state)->unk261,
-                               -1, 0, 0) != 0)
+        if (objBboxFn_800640cc((f32*)from, (f32*)&probe, lbl_803E256C, 0, &bboxHit, obj,
+                               ((TrickyState*)state)->unk261, -1, 0, 0) != 0)
         {
             visible = 0;
         }
@@ -2480,7 +2479,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     Vec probe;
     u32 visibilityBits[4];
     Vec delta;
-    u8 bboxHit[TRICKY_BBOX_HIT_SCRATCH_SIZE];
+    TrackBBoxHit bboxHit;
     s16 baseAngle;
     u16 i;
     u8 visible;
@@ -2536,7 +2535,8 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
         }
         if ((visible != 0) && ((((TrickyState*)state)->controlFlags & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) != 0))
         {
-            if (objBboxFn_800640cc((Vec*)(obj + 0x18), &probe, lbl_803E256C, 0, bboxHit, obj,
+            if (objBboxFn_800640cc((f32*)(obj + 0x18), (f32*)&probe, lbl_803E256C, 0, &bboxHit,
+                                   (GameObject*)obj,
                                    ((TrickyState*)state)->unk261, -1, 0, 0) != 0)
             {
                 visible = 0;

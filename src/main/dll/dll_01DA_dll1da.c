@@ -13,6 +13,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
@@ -53,7 +54,6 @@ extern f32 lbl_803E4AFC;
 extern f32 lbl_803E4B00;
 extern const f32 lbl_803E4B04;
 
-extern int objBboxFn_800640cc(int a, int b, f32 r, int c, int* out, int obj, int d, int e, int f, int g);
 int dll_1DA_getExtraSize(void)
 {
     return 0x8;
@@ -128,7 +128,8 @@ void dll_1DA_update(int obj)
     }
     objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, lbl_803E4AF0,
             ((GameObject*)obj)->anim.velocityZ * timeDelta);
-    hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E4AF4, 1, out.hit, obj, 8, -1, 0xff, 0);
+    hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E4AF4, 1,
+                                  (TrackBBoxHit*)out.hit, (GameObject*)obj, 8, -1, 0xff, 0);
     if (hitCount != 0)
     {
         vx = -((GameObject*)obj)->anim.velocityX;

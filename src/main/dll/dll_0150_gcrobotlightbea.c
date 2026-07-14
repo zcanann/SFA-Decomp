@@ -19,6 +19,7 @@
  */
 #include "main/dll/bit80_struct.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_link.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -42,7 +43,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
-extern void objBboxFn_800640cc(f32* p0, f32* p1, int p5, int* out, int* self, int p8, int p9, int slot, f32 f, u8 arg8);
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);
 extern f32 PSVECDistance(void* a, void* b);

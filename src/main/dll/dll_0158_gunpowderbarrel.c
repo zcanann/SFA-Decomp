@@ -544,8 +544,8 @@ void gunpowderbarrel_hitDetect(int obj)
         goto copy_end;
     }
 
-    if (objBboxFnIntLegacy((void*)(obj + 0x80), (void*)(obj + 0xc), lbl_803E432C, 1,
-                           &collision_buf[0], obj, 8, -1, 0xff, 0) == 0)
+    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), lbl_803E432C, 1,
+                           (TrackBBoxHit*)&collision_buf[0], (GameObject*)obj, 8, -1, 0xff, 0) == 0)
     {
         goto copy_end;
     }

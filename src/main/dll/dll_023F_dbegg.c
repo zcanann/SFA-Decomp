@@ -356,7 +356,7 @@ void dbegg_hitDetect(GameObject* obj)
         void* hitFrom = &(obj)->anim.previousLocalPosX;
         void* hitTo = &(obj)->anim.localPosX;
         f32 hitRadius = lbl_803E6218;
-        if (objBboxFnIntLegacy(hitFrom, hitTo, hitRadius, 1, NULL, (int)obj, 8, -1, 0xff, 0) != 0)
+        if (objBboxFn_800640cc(hitFrom, hitTo, hitRadius, 1, NULL, obj, 8, -1, 0xff, 0) != 0)
         {
             f32 damping = lbl_803E621C;
             f32 velocityX = (obj)->anim.velocityX;

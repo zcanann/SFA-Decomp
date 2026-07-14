@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
 #include "main/obj_group.h"
@@ -293,7 +294,6 @@ void dll_19_func0C(GameObject *obj, u8* state, u8* hitbox, s16 gameBit, u8* flag
 int dll_19_func13(GameObject *obj, u8* state, f32 distThreshold, int requireFar)
 {
     extern f32 lbl_803E1C68;
-    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
     int player = (int)Obj_GetPlayerObject();
     int result = 0;
 
@@ -320,7 +320,8 @@ int dll_19_func13(GameObject *obj, u8* state, f32 distThreshold, int requireFar)
                 pos[0] = ((GameObject*)player)->anim.localPosX;
                 pos[1] = lbl_803E1C68 + ((GameObject*)player)->anim.localPosY;
                 pos[2] = ((GameObject*)player)->anim.localPosZ;
-                if (objBboxFn_800640cc((int)obj + 0xc, pos, lbl_803E1C48, 0, out, (int)obj, 4, -1, 0, 0) != 0)
+                if (objBboxFn_800640cc((f32*)((int)obj + 0xc), pos, lbl_803E1C48, 0,
+                                       (TrackBBoxHit*)out, (GameObject*)obj, 4, -1, 0, 0) != 0)
                 {
                     result = 1;
                 }
@@ -436,7 +437,6 @@ int dll_19_func17(GameObject *obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
 int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 {
     extern f32 lbl_803E1C68;
-    extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, f32* out, int d, int e, int g, int h, int i);
     extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
     f32 bboxOut[20];
     int objs[3];
@@ -522,8 +522,8 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
-                        if (objBboxFn_800640cc((int)self + 12, gridIn, lbl_803E1C48, 0, bboxOut,
-                                               (int)self, 4, -1, 0, 0) != 0)
+                        if (objBboxFn_800640cc((f32*)((int)self + 12), gridIn, lbl_803E1C48, 0,
+                                               (TrackBBoxHit*)bboxOut, (GameObject*)self, 4, -1, 0, 0) != 0)
                         {
                             found = 0;
                         }
@@ -1168,7 +1168,6 @@ void dll_19_func07(GameObject *obj, int target, int div, u16* outYaw, u16* outDe
 u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
 {
     extern const f32 lbl_803E1C68;
-    extern int objBboxFn_800640cc(void* pos, f32* world, f32 rad, int a, void* out, int obj, int b, int c, int d, int e);
     extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b);
     u16 i;
     u8 mask;
@@ -1217,7 +1216,8 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         }
         if (ok != 0)
         {
-            if (objBboxFn_800640cc(&obj->anim.localPosX, world, lbl_803E1C48, 0, bboxOut, (int)obj,
+            if (objBboxFn_800640cc(&obj->anim.localPosX, world, lbl_803E1C48, 0,
+                                   (TrackBBoxHit*)bboxOut, (GameObject*)obj,
                                    *(u8*)(st + 0x261), -1, 0, 0) != 0)
             {
                 ok = 0;

@@ -33,6 +33,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/obj_placement.h"
 #include "main/dll/baddie_state.h"
@@ -149,7 +150,6 @@ extern const f32 lbl_803E2B40;
 extern const f32 lbl_803E2B44;
 extern f32 lbl_803DBCEC;
 
-extern int objBboxFn_800640cc();
 extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern void fn_80154D0C(int, int, u16*, float*);
 extern u32 fn_80154FB4(short*, int, u32, double);
@@ -243,7 +243,8 @@ void fn_801554B4(int* obj, int state)
         minv[0] = ((GameObject*)obj)->anim.localPosX - probeOffsets[i * 2 + 0];
         minv[1] = ((GameObject*)obj)->anim.localPosY;
         minv[2] = ((GameObject*)obj)->anim.localPosZ - probeOffsets[i * 2 + 1];
-        didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, hit, obj, 5, 3, 0xff, 0);
+        didHit = objBboxFn_800640cc(maxv, minv, lbl_803E2A00, 3, (TrackBBoxHit*)hit,
+                                    (GameObject*)obj, 5, 3, 0xff, 0);
     }
     if (didHit != 0)
     {
@@ -1114,7 +1115,9 @@ void fn_80156DA0(GameObject* obj, int state)
         toPos[0] = (obj)->anim.localPosX - lbl_803E2B38 * sinYaw;
         toPos[1] = lbl_803E2B3C + (obj)->anim.localPosY;
         toPos[2] = (obj)->anim.localPosZ - lbl_803E2B38 * cosYaw;
-        groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, hitOut, obj, (u32) * (u8*)(state + 0x261),
+        groundHit = objBboxFn_800640cc(fromPos, toPos, lbl_803E2B18, 3, (TrackBBoxHit*)hitOut,
+                                       (GameObject*)obj,
+                                       (u32) * (u8*)(state + 0x261),
                                        0xffffffff, 0xff, 0);
         noHit = !(groundHit & 0xff);
         if (!noHit || ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0))

@@ -2981,7 +2981,8 @@ int playerStateClimbWall(GameObject* obj, int state)
             pnt[1] = ((PlayerState*)inner)->savedPosY;
             pnt[2] = -(30.0f * ((PlayerState*)inner)->groundNormalZ - ((PlayerState*)inner)->savedPosZ);
             {
-                int r = objBboxFnIntLegacy((void*)((char*)inner + 0x768), pnt, 0.0f, 3, &hit, (int)obj, 1, 3, 0xff, 0);
+                int r = objBboxFn_800640cc((f32*)((char*)inner + 0x768), pnt, 0.0f, 3,
+                                           (TrackBBoxHit*)&hit, obj, 1, 3, 0xff, 0);
                 if (r != 0)
                 {
                     obj->anim.localPosX = pnt[0];
@@ -3189,7 +3190,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                         dst[0] = -(ph * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
                         dst[2] = -(ph * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
-                        if (objBboxFnIntLegacy(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
+                        if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, NULL, obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << i;
                         }
@@ -3216,7 +3217,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                         dst[0] = -(dy * ((PlayerState*)inner)->groundNormalX - pnt[0]);
                         dst[1] = pnt[1];
                         dst[2] = -(dy * ((PlayerState*)inner)->groundNormalZ - pnt[2]);
-                        if (objBboxFnIntLegacy(pnt, dst, 0.0f, 3, 0, (int)obj, 1, 3, 0xff, 0) != 0)
+                        if (objBboxFn_800640cc(pnt, dst, 0.0f, 3, NULL, obj, 1, 3, 0xff, 0) != 0)
                         {
                             mask = mask | 1 << (i + 2);
                         }
@@ -4486,7 +4487,8 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             end[1] = ((GameObject*)obj)->anim.localPosY;
             end[2] = ((GameObject*)obj)->anim.localPosZ;
         }
-        hit = objBboxFnIntLegacy(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+        hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, (TrackBBoxHit*)&buf, (GameObject*)obj, 1, dirs[i],
+                                0xff, 10);
         if (flagA != 0 && hit != 0)
         {
             ((PlayerState*)state)->probeHitDist = buf.dist;
@@ -4553,7 +4555,8 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 end[1] = ((GameObject*)obj)->anim.localPosY;
                 end[2] = ((GameObject*)obj)->anim.localPosZ;
             }
-            hit = objBboxFnIntLegacy(start, end, lbl_803E7EA4, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+            hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, (TrackBBoxHit*)&buf, (GameObject*)obj, 1,
+                                    dirs[i], 0xff, 10);
         }
         if (hit == 0)
         {
@@ -17257,7 +17260,7 @@ int playerStateStaffBoost(GameObject* obj, int state, f32 fv)
         toVec[0] = fromVec[0] - lbl_803E7F5C * mathSinf(gPlayerPi * (f32)(int)inner->targetYaw / lbl_803E7F98);
         toVec[1] = fromVec[1];
         toVec[2] = fromVec[2] - lbl_803E7F5C * mathCosf(gPlayerPi * (f32)(int)inner->targetYaw / lbl_803E7F98);
-        if (objBboxFnIntLegacy(fromVec, toVec, lbl_803E7EA4, 3, hitBuf, (int)obj, 1, 1, 0xff, 0) != 0)
+        if (objBboxFn_800640cc(fromVec, toVec, lbl_803E7EA4, 3, (TrackBBoxHit*)hitBuf, obj, 1, 1, 0xff, 0) != 0)
         {
             lbl_803DE490 = *(f32*)(hitBuf + 0x3c) - lbl_803E7F30;
         }

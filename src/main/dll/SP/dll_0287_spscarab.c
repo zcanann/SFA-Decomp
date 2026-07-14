@@ -126,8 +126,8 @@ void SPScarab_update(int obj)
         ((GameObject*)obj)->anim.velocityY = gSpScarabBounceVelocityY;
     }
 
-    if (objBboxFnIntLegacy((void*)(obj + 0x80), (void*)(obj + 0xc), gSpScarabCollisionRadius, 0, &hit_buf[0], obj, 8,
-                           -1, 0xff, 0xa) != 0)
+    if (objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), gSpScarabCollisionRadius, 0,
+                           (TrackBBoxHit*)&hit_buf[0], (GameObject*)obj, 8, -1, 0xff, 0xa) != 0)
     {
         Vec3_ReflectAgainstNormal((f32*)&hit_buf[7], (f32*)(obj + 0x24), outV);
         ((GameObject*)obj)->anim.velocityX = outV[0];

@@ -25,6 +25,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/object_transform.h"
 #include "main/track_dolphin_api.h"
@@ -97,8 +98,6 @@ extern f32 lbl_803E1730;
 extern f32 lbl_803E1734;
 extern f32 lbl_803E1738;
 
-extern int objBboxFn_800640cc(f32* startPoints, f32* endPoints, f32 range, int radii, int hitOut, int objOut,
-                              int pointCount, int mask, int flags, int mode);
 extern f32 fn_802966F4(GameObject* obj);                     /* returns a target proximity/distance scalar */
 extern void playerGetTimeScale(GameObject* obj, float* out); /* fills out[] with a target motion scalar */
 extern int EmissionController_IsLingering(GameObject* obj);
@@ -133,7 +132,8 @@ void camcontrol_updateVerticalBounds(CameraObject* camera, int flags, int collis
         *(s8*)(cameraAddr + 0x84) = -1;
         *(s8*)(cameraAddr + 0x88) = collisionFlag;
         res =
-            objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, range, 1, 0, 0, 0x10, 0xffffffff, 0xff, 0);
+            objBboxFn_800640cc(&camera->probePosX, &camera->anim.worldPosX, range, 1, NULL, NULL, 0x10,
+                               0xffffffff, 0xff, 0);
         camera->cameraCollisionActive = res;
         pos[0] = camera->anim.worldPosX;
         pos[1] = camera->anim.worldPosY;

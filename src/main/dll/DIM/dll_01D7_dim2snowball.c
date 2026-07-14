@@ -46,6 +46,7 @@ FbWGPipe GXWGFifo : (0xCC008000);
 
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
@@ -81,7 +82,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4AA0;
 
-extern int objBboxFn_800640cc(void* a, void* b, f32 c, int d, int e, int* f, int g, int h, int i, int j);
 extern f32 lbl_803E4AA4;
 extern f32 lbl_803E4AA8;
 extern f32 lbl_803E4AAC;
@@ -213,8 +213,8 @@ void dim2snowball_update(int* obj)
             objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
                     ((GameObject*)obj)->anim.velocityY * timeDelta,
                     ((GameObject*)obj)->anim.velocityZ * timeDelta);
-            bbox = objBboxFn_800640cc((char*)obj + 0x80, (char*)obj + 0xc, lbl_803E4AB8, 0, 0,
-                                      obj, 8, -1, 0, 0);
+            bbox = objBboxFn_800640cc((f32*)((char*)obj + 0x80), (f32*)((char*)obj + 0xc), lbl_803E4AB8, 0,
+                                                   NULL, (GameObject*)obj, 8, -1, 0, 0);
             if (bbox != 0)
             {
                 ((GameObject*)obj)->anim.velocityX = -((GameObject*)obj)->anim.velocityX;

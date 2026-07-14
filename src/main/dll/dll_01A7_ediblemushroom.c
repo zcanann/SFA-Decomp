@@ -3,6 +3,7 @@
 #include "main/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/object.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -43,8 +44,6 @@
 #define EDIBLEMUSHROOM_PARTFX_SPORE_PUFF 0x51d
 
 
-extern int objBboxFn_800640cc(void* from, void* to, f32 radius, int mode, void* hit, void* obj, int p7, int p8, int p9,
-                              int p10);
 extern int objIsFrozen(u8* obj);
 void EdibleMushroom_init(GameObject* obj, int aux);
 void EdibleMushroom_update(u8* self);
@@ -493,7 +492,7 @@ s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
     vec[0] = ((GameObject*)obj)->anim.localPosX - dist * cos0;
     vec[1] = ((GameObject*)obj)->anim.localPosY;
     vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sin0;
-    if (objBboxFn_800640cc(obj + 0xc, vec, 0.1f, 3, 0, obj, 8, -1, 0xff, 0) != 0)
+    if (objBboxFn_800640cc((f32*)(obj + 0xc), vec, 0.1f, 3, NULL, (GameObject*)obj, 8, -1, 0xff, 0) != 0)
     {
         anglePlus = angle;
         angleMinus = angle;
@@ -515,7 +514,7 @@ s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
             cosP = t;
             vec[0] = ((GameObject*)obj)->anim.localPosX - dist * t;
             vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sinP;
-            if (objBboxFn_800640cc(obj + 0xc, vec, 0.1f, 1, 0, obj, 8, -1, 0xff, 0) == 0)
+            if (objBboxFn_800640cc((f32*)(obj + 0xc), vec, 0.1f, 1, NULL, (GameObject*)obj, 8, -1, 0xff, 0) == 0)
             {
                 return anglePlus;
             }
@@ -525,7 +524,7 @@ s16 fn_801D129C(u8* obj, GameObject* player, u8* state, f32 dist)
             cosM = t;
             vec[0] = ((GameObject*)obj)->anim.localPosX - dist * t;
             vec[2] = ((GameObject*)obj)->anim.localPosZ - dist * sinM;
-            if (objBboxFn_800640cc(obj + 0xc, vec, 0.1f, 1, 0, obj, 8, -1, 0xff, 0) == 0)
+            if (objBboxFn_800640cc((f32*)(obj + 0xc), vec, 0.1f, 1, NULL, (GameObject*)obj, 8, -1, 0xff, 0) == 0)
             {
                 return angleMinus;
             }
@@ -552,7 +551,7 @@ void EdibleMushroom_hitDetect(u8* obj)
     int hitCount;
     TrackGroundHit** hits;
     int i;
-    u8 bboxHit[0x54];
+    TrackBBoxHit bboxHit;
 
     state = ((GameObject*)obj)->extra;
     mapObj = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -572,8 +571,9 @@ void EdibleMushroom_hitDetect(u8* obj)
             }
         }
 
-        hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, 6.0f, 2, bboxHit, obj, 8, -1, 0xff, 0x14);
-        if ((mapObj[0x18] == 4) && (hitCount != 0) && ((s8)bboxHit[0x50] == 13))
+        hitCount = objBboxFn_800640cc((f32*)(obj + 0x80), (f32*)(obj + 0xc), 6.0f, 2, &bboxHit,
+                                      (GameObject*)obj, 8, -1, 0xff, 0x14);
+        if ((mapObj[0x18] == 4) && (hitCount != 0) && (bboxHit.surfaceType == 13))
         {
             ((EdibleMushroomState*)state)->flags |= EDIBLEMUSHROOM_FLAG_GROUNDED;
         }

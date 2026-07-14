@@ -28,6 +28,7 @@
 #include "main/dll/objfsa.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/curve_eval.h"
 #include "main/voxmaps.h"
 #include "main/dll/dll_0015_curves.h"
@@ -118,8 +119,6 @@ extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
 extern const f32 gRomCurveFindDistInit;
 
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, int obj, int p7, int p8, int p9,
-                              int p10);
 extern u32 countLeadingZeros();
 extern void curvesMove(float* state);
 extern void curvesSetupMoveNetworkCurve(float* state);
@@ -261,8 +260,8 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj, bboxMode, -1, 0,
-                                            0) == 0))
+                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
+                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
                     {
                         bestDistance = distance;
                         bestCurve = curve;
@@ -276,8 +275,8 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
                     voxmaps_worldToGrid(curvePos, curveGrid);
                     traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
                     if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0, bboxHit, obj, bboxMode, -1, 0,
-                                            0) == 0))
+                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
+                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
                     {
                         bestActionDistance = distance;
                         bestActionCurve = curve;

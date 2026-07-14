@@ -27,6 +27,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/objprint_api.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/dll_00D3_staffAction.h"
@@ -857,7 +858,6 @@ typedef struct DllD3Placement
     u8 pad2F[0x30 - 0x2F];
 } DllD3Placement;
 
-extern int objBboxFn_800640cc(int a, f32* pos, f32 b, int c, int* out, int* obj, int e, int g, int h, int i);
 extern int lbl_803202E8[];
 extern int lbl_80320360[];
 extern int gStaffActionHitLightParams[];
@@ -1005,8 +1005,9 @@ void dll_D3_update(int* obj)
 
     if (((StaffBits*)&extra->flags92)->b0 == 0u && extra->surfaceMode == 6)
     {
-        hitCount = objBboxFn_800640cc((int)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX, lbl_803E3030, 0,
-                                      hitResult, obj, -0x7c, -1, 0xff, 0);
+        hitCount = objBboxFn_800640cc((f32*)((char*)obj + 0x80), &((GameObject*)obj)->anim.localPosX,
+                                      lbl_803E3030, 0, (TrackBBoxHit*)hitResult, (GameObject*)obj, -0x7c, -1, 0xff,
+                                      0);
         if (hitCount != 0 && *(s8*)((char*)hitResult + 0x50) == 13)
         {
             ((StaffBits*)&extra->flags92)->b0 = 1;

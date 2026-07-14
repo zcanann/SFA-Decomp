@@ -12,6 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/frustum.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
@@ -80,7 +81,6 @@ __declspec(section ".rodata") u32 lbl_802C2298[3] = {0, 0, 0};
 __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 extern void playerAddMoney(int obj, int amount);
 
-extern int objBboxFn_800640cc(f32* p1, f32* p2, f32 r, int p4, void* p5, void* obj, int p7, int p8, int p9, int p10);
 void Scarab_update(GameObject* obj)
 {
     extern f32 Vec_xzDistance(f32 * a, f32 * b);
@@ -204,7 +204,7 @@ void Scarab_update(GameObject* obj)
             if (flag == 0)
             {
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
-                                          bufs.hitResults, obj, 8, -1, 0, 0);
+                                          (TrackBBoxHit*)bufs.hitResults, obj, 8, -1, 0, 0);
             }
             if (flag != 0)
             {
@@ -419,7 +419,7 @@ void Scarab_update(GameObject* obj)
                     ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
-                                          bufs.hitResults, obj, 8, -1, 0, 0);
+                                          (TrackBBoxHit*)bufs.hitResults, obj, 8, -1, 0, 0);
                 {
                     ScarabSphere* sp;
                     *(f32*)(sp = &bufs.sph) = lbl_803E3A00;

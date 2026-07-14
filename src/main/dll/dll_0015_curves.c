@@ -35,6 +35,7 @@
 #include "main/objhits.h"
 #include <string.h>
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
 #include "main/track_dolphin_api.h"
@@ -85,8 +86,6 @@ extern const f32 lbl_803E06B8;
 extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
-extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
-                              int p10);
 extern void fn_80063368(short* obj);
 extern void setRumbleEnabled(u8 enabled);
 
@@ -673,8 +672,10 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
         }
         collision->localPointHitMask |=
             objBboxFn_800640cc(collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
-                               *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode, collision->localHitPlanes, obj,
-                               collision->primaryHitType, -1, 0, (s8)collision->activeTimer)
+                               *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode,
+                               (TrackBBoxHit*)collision->localHitPlanes, (GameObject*)obj,
+                               (u8)collision->primaryHitType,
+                               -1, 0, (s8)collision->activeTimer)
             << pointIndex;
         flags = collision->flags;
         if ((s32)(flags & 0x2000000) != 0)
@@ -688,8 +689,9 @@ void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
                 mode = 4;
             }
             objBboxFn_800640cc(collision->localPointTarget[pointIndex], collision->localPointWorld[pointIndex],
-                               *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode, collision->localHitPlanes, obj,
-                               collision->secondaryHitType, -1, 0, (s8)collision->activeTimer);
+                               *(f32*)((u8*)collision->localPointRadii + zoff[0]), mode,
+                               (TrackBBoxHit*)collision->localHitPlanes, (GameObject*)obj,
+                               (u8)collision->secondaryHitType, -1, 0, (s8)collision->activeTimer);
         }
         zoff[0] += sizeof(f32);
         pointIndex++;

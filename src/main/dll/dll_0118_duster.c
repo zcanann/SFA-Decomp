@@ -26,6 +26,7 @@
 #include "main/vecmath.h"
 #include "main/dll/dusterstate_types.h"
 #include "main/game_object.h"
+#include "main/track_bbox_api.h"
 #include "main/obj_message.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
@@ -102,8 +103,6 @@ extern f32 gDusterObjPickupRangeXZ;
 extern f32 gDusterObjMoveStepScale;
 
 extern int Obj_IsParentSlackClear(int obj);
-extern int objBboxFn_800640cc(f32* from, f32* to, f32 radius, int mode, void* hit, void* obj, int flags, int mask,
-                              int arg9, int arg10);
 
 int duster_SeqFn(u8* obj)
 {
@@ -130,11 +129,11 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void duster_hitDetect(GameObject* obj)
 {
     DusterState* state;
-    u8 hit[0x54];
+    TrackBBoxHit hit;
     int hitResult;
     state = obj->extra;
     hitResult = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, gDusterObjHitDetectRadius, 2,
-                                   hit, (void*)obj, 8, -1, 255, 0);
+                                   &hit, obj, 8, -1, 255, 0);
     if (hitResult != 0)
     {
         state->priorityHit = 1;
