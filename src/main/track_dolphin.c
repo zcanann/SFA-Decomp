@@ -3916,21 +3916,19 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
             Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], (u32)o);
         if (slot != 0xff)
         {
-            char* fl;
             k = 0;
-            fl = (char*)gMapDynamicSlots;
+            e = (int*)gMapDynamicSlots;
             do
             {
-                if (*(u8*)(fl + 0x14) == 0)
+                if (*(u8*)((char*)e + 0x14) == 0)
                 {
-                    *(int*)fl = (int)self;
-                    *(int*)(fl + 4) = (int)o;
-                    *(u8*)(fl + 0x15) = slot;
-                    *(u8*)(fl + 0x14) = 2;
-                    e = (int*)fl;
+                    *(int*)e = (int)self;
+                    *(int*)((char*)e + 4) = (int)o;
+                    *(u8*)((char*)e + 0x15) = slot;
+                    *(u8*)((char*)e + 0x14) = 2;
                     goto stored;
                 }
-                fl += 0x18;
+                e = (int*)((char*)e + 0x18);
                 k++;
             } while (k < 0x40);
             debugPrintf(sTrackNoFreeLastLineError);
