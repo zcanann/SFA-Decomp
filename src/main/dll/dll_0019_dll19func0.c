@@ -441,7 +441,6 @@ int dll_19_func17(GameObject *obj, u8* state, u8* hitbox, s16 gameBit, u8* flagO
 int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
 {
     extern f32 lbl_803E1C68;
-    extern int voxmaps_traceLine(int* a, int* b, int c, u8* out, int e);
     f32 bboxOut[20];
     int objs[3];
     f32 diff[3];
@@ -523,7 +522,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                     gridIn[1] = lbl_803E1C68 + ((GameObject*)obj)->anim.localPosY;
                     gridIn[2] = ((GameObject*)obj)->anim.localPosZ;
                     voxmaps_worldToIntGrid(gridIn, gridB);
-                    traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
+                    traced = voxmaps_traceIntGrid(gridB, gridA, NULL, &losOut, 0);
                     if (losOut == 1 || traced != 0)
                     {
                         if (objBboxFn_800640cc((f32*)((int)self + 12), gridIn, lbl_803E1C48, 0,
@@ -1172,7 +1171,6 @@ void dll_19_func07(GameObject *obj, int target, int div, u16* outYaw, u16* outDe
 u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
 {
     extern const f32 lbl_803E1C68;
-    extern u8 voxmaps_traceLine(int* from, int* to, int a, u8* outFlag, int b);
     u16 i;
     u8 mask;
     u8 hitFlag;
@@ -1212,7 +1210,7 @@ u8 dll_19_func08(GameObject* obj, char* st, f32 dist)
         }
         else
         {
-            ok = (u8)voxmaps_traceLine(grid1, grid0, 0, &hitFlag, 0);
+            ok = (u8)voxmaps_traceIntGridU8(grid1, grid0, NULL, &hitFlag, 0);
             if (hitFlag == 1)
             {
                 ok = 1;
