@@ -26,6 +26,7 @@
  */
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_channel_query_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
 #include "main/dll/player_target.h"
@@ -76,7 +77,6 @@ extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
 /* These legacy sound mutators use int* obj / int sfx so their call sites need no cast. */
-extern void Sfx_PlayFromObject(int* obj, int sfx);
 extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
 extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
