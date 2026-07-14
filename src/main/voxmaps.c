@@ -1053,7 +1053,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
     ret = 0;
     if (navState == 0)
     {
-        int pathDirect;
+        int pathDirect[1];
 
         state->queueCount = 0;
         state->nodeCount = 0;
@@ -1070,7 +1070,7 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
         state->tgtY &= ~1;
         if (fn_800119FC(&state->startX, &state->tgtX, out) != 0)
         {
-            pathDirect = 1;
+            pathDirect[0] = 1;
         }
         else
         {
@@ -1105,9 +1105,9 @@ int voxmaps_updateRoutePath(RouteNav* nav, RouteState* state)
                 heapSiftUp(queue, state->queueCount);
                 state->pathCount = 0;
             }
-            pathDirect = 0;
+            pathDirect[0] = 0;
         }
-        if (pathDirect != 0)
+        if (pathDirect[0] != 0)
         {
             nav->tgtPos[0] = nav->curPos[0];
             nav->tgtPos[1] = nav->curPos[1];
