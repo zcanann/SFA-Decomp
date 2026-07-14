@@ -2,6 +2,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/object_api.h"
+#include "main/audio/sfx_keep_alive_api.h"
 
 #include "main/dll/dll_0132_waterfallspray.h"
 #include "main/dll_000A_expgfx.h"
@@ -58,7 +59,6 @@ typedef struct WaterFallSprayPartfxArgs
 
 void WaterFallSpray_update(int* objParam)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(u8 * obj, int sfxId);
     WaterFallSprayState* state;
     WaterFallSprayPlacement* data[1];
     u8* obj;
@@ -89,8 +89,8 @@ void WaterFallSpray_update(int* objParam)
         {
             if ((data[0]->flags & 0x10) == 0)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdA & 0xffff);
-                Sfx_KeepAliveLoopedObjectSound(obj, state->sfxIdB & 0xffff);
+                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, state->sfxIdA & 0xffff);
+                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, state->sfxIdB & 0xffff);
             }
 
             cooldown = ((GameObject*)obj)->unkF4;
