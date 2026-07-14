@@ -15,6 +15,7 @@
 #include "main/audio/music_api.h"
 #include "main/pi_dolphin_api.h"
 #include "main/map_load.h"
+#include "main/model_light.h"
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/objseq.h"
@@ -62,12 +63,9 @@ extern f32 lbl_803E50DC;
 extern f32 lbl_803E50D8;
 
 extern void fn_801C8B68(DbshShrineObject* obj);
-extern void ModelLightStruct_free(int light);
-extern void modelLightStruct_setEnabled(int light, int enabled, double scale);
 extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, f32 scale);
 extern void objParticleFn_80099d84(int obj, f32 scale, int kind, f32 fextra, int light);
 extern void objSetAnimStateFlags(int obj, int flag, int set);
-extern void* objCreateLight(int arg, u8 addToList);
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
@@ -103,14 +101,14 @@ int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
                 }
                 break;
             case 0xf:
                 ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
                 if (runtime->light != NULL)
                 {
-                    modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+                    modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
                 }
                 break;
             }
@@ -138,7 +136,7 @@ void dbsh_shrine_free(GameObject* obj)
     runtime = (obj)->extra;
     if (runtime->light != NULL)
     {
-        ModelLightStruct_free((int)runtime->light);
+        ModelLightStruct_free(runtime->light);
         runtime->light = NULL;
     }
     gameTimerStop();
@@ -160,14 +158,14 @@ void dbsh_shrine_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visi
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled((int)runtime->light, 0, (double)lbl_803E50D8);
+            modelLightStruct_setEnabled(runtime->light, 0, lbl_803E50D8);
         }
     }
     else
     {
         if (runtime->light != NULL)
         {
-            modelLightStruct_setEnabled((int)runtime->light, 1, (double)lbl_803E50D8);
+            modelLightStruct_setEnabled(runtime->light, 1, lbl_803E50D8);
         }
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E50D8);
         objParticleFn_80099d84((int)obj, lbl_803E50D8, 7, *(f32*)&lbl_803E50D8, (int)runtime->light);

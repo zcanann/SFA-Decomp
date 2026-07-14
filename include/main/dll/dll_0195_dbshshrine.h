@@ -5,6 +5,7 @@
 #include "global.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/game_object.h"
+#include "main/modellight_api.h"
 #include "main/objanim_update.h"
 
 /* Dbsh shrine carve twins converged (flybaddie.c + scene1C7.c censuses,
@@ -27,7 +28,7 @@ typedef struct DbshShrineFlags {
 } DbshShrineFlags;
 
 typedef struct DbshShrineRuntime {
-    void *light;
+    ModelLightStruct *light;
     SCGameBitLatchState latch;
     f32 idleSfxTimer;
     s16 resetTimer;
