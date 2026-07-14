@@ -86,10 +86,30 @@ typedef struct TitlescreenState
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
-extern u32 lbl_803DD9B8;
-extern u32 lbl_803DD9BC;
-extern u8 lbl_803DD9AB;
-extern u8 showCredits;
+void* gTitleScreenMainTex;
+f32 lbl_803DD9D0;
+f32 lbl_803DD9CC;
+f32 gTitleScreenCursorY;
+f32 lbl_803DD9C4;
+u8 lbl_803DD9C0;
+u32 lbl_803DD9BC;
+u32 lbl_803DD9B8;
+f32 lbl_803DD9B4;
+f32 gTitleScreenCursorX;
+int gTitleScreenCopyrightBaseY;
+u8 lbl_803DD9AB;
+u8 gTitleScreenCreditsStarted;
+s16 gTitleScreenCreditDelay;
+int gTitleScreenCreditsEndTriggered;
+u8 gTitleScreenCopyrightLatch;
+f32 gTitleScreenCopyrightFade;
+u16 gTitleScreenCreditIndex;
+u16 gTitleScreenCreditTimer;
+u16 lbl_803DD994;
+u8 showCredits;
+u8 gTitleScreenSetupDone;
+s8 lbl_803DD991;
+s8 lbl_803DD990;
 
 u8 shouldShowCredits(void)
 {
@@ -146,9 +166,7 @@ ObjectDescriptor10WithPadding gTitleScreenObjDescriptor = {
     0,
 };
 
-extern void* gTitleScreenMainTex;
 void* gTitleScreenTextures[TITLE_SCREEN_TEXTURE_COUNT];
-extern u8 gTitleScreenSetupDone;
 
 /* Free the main buffer at gTitleScreenMainTex and walk the 19-slot table at
  * gTitleScreenTextures releasing each non-null entry, then clear the busy
@@ -175,14 +193,6 @@ void TitleScreen_release(void)
 
 extern s8 lbl_803DBC08;
 extern s8 lbl_803DBC09;
-extern s8 lbl_803DD990;
-extern s8 lbl_803DD991;
-extern f32 lbl_803DD9D0;
-extern f32 lbl_803DD9CC;
-extern f32 lbl_803DD9C4;
-extern f32 lbl_803DD9B4;
-extern f32 gTitleScreenCursorX;
-extern int gTitleScreenCopyrightBaseY;
 extern f32 lbl_803E2318;
 extern f32 lbl_803E22F8;
 u8 gTitleScreenMtx[0x34];
@@ -229,8 +239,6 @@ void TitleScreen_initialise(void)
     lbl_803DD9AB = 1;
 }
 
-extern u8 gTitleScreenCreditsStarted;
-extern int gTitleScreenCreditsEndTriggered;
 
 /* When visible and ready, render via objRenderFn; once the credits flag
  * fires, set the one-shot trigger 0x57 and release the attract-mode movie
@@ -299,7 +307,6 @@ extern f32 lbl_803E2344;
 extern f32 lbl_803E2348;
 extern f32 lbl_803E234C;
 extern f32 lbl_803E2350;
-extern f32 gTitleScreenCursorY;
 extern void PSMTXTrans(void*, f32, f32, f32);
 
 
@@ -333,10 +340,6 @@ void titleScreenFn_801368c4(u8 arg)
     lbl_803DD990 = arg;
 }
 
-extern u16 lbl_803DD994;
-extern u16 gTitleScreenCreditTimer;
-extern u16 gTitleScreenCreditIndex;
-extern s16 gTitleScreenCreditDelay;
 
 /* Reset the per-frame state group: latch showCredits = 1 and zero five
  * halfword/byte counters. */
@@ -374,8 +377,6 @@ void TitleScreen_free(u8* obj)
     }
 }
 
-extern f32 gTitleScreenCopyrightFade;
-extern u8 gTitleScreenCopyrightLatch;
 extern f32 lbl_803E231C;
 extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
@@ -966,7 +967,6 @@ void creditsStart_(void)
 }
 
 extern void drawScaledTexture(char* tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
-extern u8 lbl_803DD9C0;
 extern f32 lbl_803E22F0;
 extern f32 lbl_803E22F4;
 extern f32 lbl_803E22FC;
