@@ -15,6 +15,7 @@
 #include "main/obj_message.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -585,8 +586,6 @@ void Scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern void objRenderModelAndHitVolumes(void* obj, int p2, int p3, int p4, int p5, f32 scale);
-
 extern u8 gScarabColorVariantsD;
 extern f32 lbl_803E3A04;
 
@@ -714,7 +713,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             return;
         }
 
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E3A00);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A00);
         if ((visible != 0) && (obj->anim.alpha != 0))
         {
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,
