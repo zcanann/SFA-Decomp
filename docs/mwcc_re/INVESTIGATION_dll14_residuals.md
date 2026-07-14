@@ -246,3 +246,12 @@ descriptor survives coloring). The latter is a two-line tracer edit: follow o[4:
 RegInfo_Desc -> +0x26, logging web indices alongside physical regs = full web<->instruction
 <->register correlation in one pass. That identifies F39 (and any future interloper)
 directly from its def/use instructions.
+
+## webmap desc-deref attempt (not yet firing)
+RegInfo_Desc (0x4d0150) dispatches on value+2 via jump table 0x5b8acc; two decoded cases
+lazily allocate the 0x2a-byte desc at [value+0x32] (case with cmp [ebx+0x32]) or [value+0x2a].
+Tracer edit following kind-3 operand ptr -> value -> desc -> webIndex(+0x26) produced no
+w-tags on the walkgroup probe: either kind-3 operands at Apply time do not carry these value
+nodes, the third jump-table case applies, or the desc is unallocated by Apply. Next: at the
+Apply breakpoint, inspect one kind-3 operand's value node live (x/16wx) to fix the layout,
+then rerun. Tool state: scratchpad/webmap_lldb.py (repo copy needs this update once firing).
