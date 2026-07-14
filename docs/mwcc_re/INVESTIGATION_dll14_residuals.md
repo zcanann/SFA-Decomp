@@ -430,3 +430,15 @@ webIndex pair at +0x26/+0x28); |=2-only at 0x4d0bd3/0x4d10d6/0x4fe5ef; loop-pin 
 0x5268a6/0x52690a. Disassembling the guard conditions before the 0x435f9e/0x435fb8 calls
 yields the eligibility rule - the single shared decode expected to explain BOTH residuals
 (walkgroup accumulate register sharing + func1C preheader materialization direction).
+
+## Coalesce eligibility DECODED (guard at 0x435f14-0x435fb8)
+Full |=6 identity-coalesce fires ONLY when: src web numbered, eligibility bytes ok,
+instr-kind in a small set, AND src web index < 10 (cmp ecx,0xa; jge skip) - i.e. only
+copies involving PRECOLORED/first-ten webs (parameter/return homing, and reg-pair marking
+with dst=src+1 under global 0x5e4820). GENERAL variable copies never get identity-coalesce
+under this compiler. Consequence: the target's same-register accumulate at walkgroup site-1
+is NOT coalesce-driven; with source forms and coalesce both eliminated, the remaining
+explanations are the CMachine addressing emitter's dest-targeting path (0x4c2xxx) or a
+coloring coincidence reachable by web-order steering (the func1C-style levers). The
+kind-2/[ecx+6]==0x13 skip under global 0x5e4843 is a mode flag worth checking against
+compiler options.
