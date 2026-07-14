@@ -1048,7 +1048,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_8030EAA0[3][3];
     extern void GXInitTexObj();
 
-    extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     void* renderOp;
     void* tex2;
     void* model;
@@ -1162,7 +1161,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
             else if ((((ModelFileHeader*)model)->flags & 0x2000) != 0)
             {
@@ -1176,8 +1175,8 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 1;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_GREATER, fn_8003BB74IntLegacy(), GX_AOP_AND, GX_GREATER,
-                                  fn_8003BB74IntLegacy());
+                GXSetAlphaCompareLegacy(GX_GREATER, fn_8003BB74IntLegacy(), GX_AOP_AND, GX_GREATER,
+                                        fn_8003BB74IntLegacy());
             }
             else
             {
@@ -1190,7 +1189,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         else
@@ -1222,7 +1221,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
+                GXSetAlphaCompareLegacy(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
             }
             else
             {
@@ -1251,7 +1250,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         if ((((ModelRenderOp*)renderOp)->flags & 0x400) != 0)
@@ -2060,7 +2059,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     }
     else
     {
-        extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
         u8 zCompLoc = 1;
         int ref1;
         if (((u8*)obj_a)[0x37] < 0xff || (((ModelRenderOp*)renderOp)->flags & 0x40000000) != 0 ||
@@ -2078,7 +2076,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
             else if ((((ModelFileHeader*)model)->flags & 0x2000) != 0)
             {
@@ -2094,7 +2092,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                 }
                 obj_a = (void*)fn_8003BB74IntLegacy();
                 ref1 = fn_8003BB74IntLegacy();
-                GXSetAlphaCompare(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
+                GXSetAlphaCompareLegacy(GX_GREATER, ref1, GX_AOP_AND, GX_GREATER, (int)obj_a);
             }
             else
             {
@@ -2107,7 +2105,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         else
@@ -2139,7 +2137,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_GREATER, 192, GX_AOP_AND, GX_GREATER, 192);
+                GXSetAlphaCompareLegacy(GX_GREATER, 192, GX_AOP_AND, GX_GREATER, 192);
             }
             else
             {
@@ -2168,7 +2166,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         if ((((ModelRenderOp*)renderOp)->flags & 0x400) != 0)
@@ -2521,7 +2519,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     Mtx mtx_90;
     Mtx mtx_60;
     Mtx mtx_30;
@@ -2603,7 +2600,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
             else if ((((ModelFileHeader*)model)->flags & 0x2000) != 0)
             {
@@ -2621,7 +2618,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     int b;
                     alpha_byte = fn_8003BB74IntLegacy();
                     b = fn_8003BB74IntLegacy();
-                    GXSetAlphaCompare(GX_GREATER, b, GX_AOP_AND, GX_GREATER, alpha_byte);
+                    GXSetAlphaCompareLegacy(GX_GREATER, b, GX_AOP_AND, GX_GREATER, alpha_byte);
                 }
             }
             else
@@ -2635,7 +2632,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                     gGxZModeUpdateEnable = 0;
                     gGxZModeValid = 1;
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         else
@@ -2667,7 +2664,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
+                GXSetAlphaCompareLegacy(GX_GREATER, 0xC0, GX_AOP_AND, GX_GREATER, 0xC0);
             }
             else
             {
@@ -2696,7 +2693,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
                         gGxZModeValid = 1;
                     }
                 }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                GXSetAlphaCompareLegacy(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
         }
         if ((((ModelRenderOp*)renderOp)->flags & 0x400) != 0)

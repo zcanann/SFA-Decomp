@@ -25,6 +25,8 @@ void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex
 void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue, GXTevColorChan alpha);
 void GXSetTevClampMode(void);
 void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare comp1, u8 ref1);
+#define GXSetAlphaCompareLegacy(comp0, ref0, op, comp1, ref1) \
+    ((void (*)(int, int, int, int, int))GXSetAlphaCompare)((comp0), (ref0), (op), (comp1), (ref1))
 void GXSetZTexture(GXZTexOp op, GXTexFmt fmt, u32 bias);
 void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
 void GXSetNumTevStages(u8 nStages);
