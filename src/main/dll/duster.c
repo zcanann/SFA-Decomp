@@ -45,6 +45,7 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
+#include "main/dll/player_api.h"
 
 int lbl_803DBCD8[2] = {2, 3};
 
@@ -154,8 +155,6 @@ extern void fn_8014CD1C(int obj, int state, int moveId, f32 a, f32 b, int c);
 extern void fn_80154D0C(int, int, u16*, float*);
 extern u32 fn_80154FB4(short*, int, u32, double);
 extern int fn_80169EF4(float* src, float* dst, f32 speed, char flag, f32 arc);
-extern u32 fn_80295CBC();
-
 #pragma opt_common_subs off
 void fn_8015536C(float* outPos, float* anchor, float lateral, float height)
 {

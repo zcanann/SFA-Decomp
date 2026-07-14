@@ -27,6 +27,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_00FB_pressureswitchfb.h"
+#include "main/dll/player_api.h"
 
 #define PRESSURESWITCHFB_PARTFX                  0x7c3
 #define PRESSURESWITCHFB_STATE_IDLE              0
@@ -65,7 +66,6 @@
 #define PRESSURESWITCHFB_OBJ_CC_PRESSURE 0x0545
 #define PRESSURESWITCHFB_OBJ_WM_PRESSURE 0x077b
 
-extern int fn_80295C5C(GameObject* player);
 extern f32 lbl_803E3758;
 extern f32 lbl_803E375C;
 extern f32 lbl_803E3760;
@@ -282,7 +282,7 @@ void PressureSwitchFB_update(GameObject* obj)
         {
             if (state->flags.update.active != 0)
             {
-                if (fn_80295C5C((GameObject*)(Obj_GetPlayerObject())) != 0)
+                if (fn_80295C5C(Obj_GetPlayerObject()) != 0)
                 {
                     state->flags.update.released = 0;
                 }

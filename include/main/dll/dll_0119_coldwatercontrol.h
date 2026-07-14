@@ -6,8 +6,8 @@
 
 typedef struct ColdwaterControlState
 {
-    f32 timer;       /* 0x00 immersion timer */
-    void* playerObj; /* 0x04 cached player object */
+    f32 timer;             /* 0x00 immersion timer */
+    GameObject* playerObj; /* 0x04 cached player object */
 } ColdwaterControlState;
 
 STATIC_ASSERT(sizeof(ColdwaterControlState) == 0x8);

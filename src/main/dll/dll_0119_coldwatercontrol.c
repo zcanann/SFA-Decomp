@@ -20,6 +20,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0119_coldwatercontrol.h"
+#include "main/dll/player_api.h"
 
 #define GAMEBIT_COLDWATER_ARM  0x1bf
 #define GAMEBIT_COLDWATER_DONE 0x1bd
@@ -31,8 +32,6 @@
 
 extern f32 lbl_803E3B68; /* timer reset / initial value */
 extern f32 lbl_803E3B6C; /* repeat-hit period */
-extern int fn_80295C40(GameObject* obj);
-
 int ColdWaterControl_getExtraSize(void)
 {
     return 0x8;
@@ -54,7 +53,7 @@ void ColdWaterControl_update(GameObject* obj)
 
     if (state->playerObj != NULL)
     {
-        if (fn_80295C40((GameObject*)state->playerObj) != 0)
+        if (fn_80295C40(state->playerObj) != 0)
         {
             if (lbl_803E3B68 == state->timer)
             {
