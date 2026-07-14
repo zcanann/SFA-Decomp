@@ -21,6 +21,7 @@
 #include "main/pad.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
+#include "main/object_descriptor.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -35,7 +36,10 @@ typedef struct KioskTextPair
     int poorText;
 } KioskTextPair;
 
-extern KioskTextPair lbl_80327AF0[];
+KioskTextPair lbl_80327AF0[2] = {
+    {0x312, 0x34A},
+    {0x527, -1},
+};
 
 /* condition-event opcodes resolved by PaymentKiosk_testEvent */
 enum
@@ -215,3 +219,20 @@ void PaymentKiosk_release(void)
 void PaymentKiosk_initialise(void)
 {
 }
+
+ObjectDescriptor gPaymentKioskObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)PaymentKiosk_initialise,
+    (ObjectDescriptorCallback)PaymentKiosk_release,
+    0,
+    (ObjectDescriptorCallback)PaymentKiosk_init,
+    (ObjectDescriptorCallback)PaymentKiosk_update,
+    (ObjectDescriptorCallback)PaymentKiosk_hitDetect,
+    (ObjectDescriptorCallback)PaymentKiosk_render,
+    (ObjectDescriptorCallback)PaymentKiosk_free,
+    (ObjectDescriptorCallback)PaymentKiosk_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)PaymentKiosk_getExtraSize,
+};

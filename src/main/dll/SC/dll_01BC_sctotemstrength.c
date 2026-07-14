@@ -24,6 +24,7 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 u16 lbl_803DC070[4] = {0x2B6, 0x2D7, 0x2D8, 0};
 
@@ -477,3 +478,20 @@ void sc_totemstrength_update(u8* obj)
         }
     }
 }
+
+ObjectDescriptor gSC_totemstrengthObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)sc_totemstrength_initialise,
+    (ObjectDescriptorCallback)sc_totemstrength_release,
+    0,
+    (ObjectDescriptorCallback)sc_totemstrength_init,
+    (ObjectDescriptorCallback)sc_totemstrength_update,
+    (ObjectDescriptorCallback)sc_totemstrength_hitDetect,
+    (ObjectDescriptorCallback)sc_totemstrength_render,
+    (ObjectDescriptorCallback)sc_totemstrength_free,
+    (ObjectDescriptorCallback)sc_totemstrength_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)sc_totemstrength_getExtraSize,
+};

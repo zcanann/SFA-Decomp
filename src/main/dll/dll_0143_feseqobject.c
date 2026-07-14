@@ -18,6 +18,8 @@
 #include "main/gamebits.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
+#include "main/dll/VF/vf_shared.h"
+#include "main/object_descriptor.h"
 
 /* anim-event opcodes consumed by FEseqobject_SeqFn */
 enum
@@ -224,3 +226,20 @@ void FEseqobject_release(void)
 void FEseqobject_initialise(void)
 {
 }
+
+ObjectDescriptor gFEseqobjectObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)FEseqobject_initialise,
+    (ObjectDescriptorCallback)FEseqobject_release,
+    0,
+    (ObjectDescriptorCallback)FEseqobject_init,
+    (ObjectDescriptorCallback)FEseqobject_update,
+    (ObjectDescriptorCallback)FEseqobject_hitDetect,
+    (ObjectDescriptorCallback)FEseqobject_render,
+    (ObjectDescriptorCallback)FEseqobject_free,
+    (ObjectDescriptorCallback)FEseqobject_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)FEseqobject_getExtraSize,
+};

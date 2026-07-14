@@ -37,6 +37,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 /*
  * Placement record written for each spawned villager/"orb" object
@@ -415,4 +416,21 @@ u16 gTotemBondRingGameBits[] = {
 
 u16 gTotemBondOrbGameBits[] = {
     0x0768, 0x0769, 0x076A, 0x076B, 0x0A50, 0x0A51, 0x0A52, 0x0A53,
+};
+
+ObjectDescriptor gSC_totembondObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)sc_totembond_initialise,
+    (ObjectDescriptorCallback)sc_totembond_release,
+    0,
+    (ObjectDescriptorCallback)sc_totembond_init,
+    (ObjectDescriptorCallback)sc_totembond_update,
+    (ObjectDescriptorCallback)sc_totembond_hitDetect,
+    (ObjectDescriptorCallback)sc_totembond_render,
+    (ObjectDescriptorCallback)sc_totembond_free,
+    (ObjectDescriptorCallback)sc_totembond_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)sc_totembond_getExtraSize,
 };

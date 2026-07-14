@@ -2532,17 +2532,20 @@ main/dll/SC/dll_01BA_sctotempuzzle.c:
 
 main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DDA28 end:0x801DE430
-	.data       start:0x80327A60 end:0x80327A80
+	.data       start:0x80327A60 end:0x80327AB8
 
 main/dll/SC/dll_01BC_sctotemstrength.c:
 	.text       start:0x801DE430 end:0x801DF110
 	.sdata      start:0x803DC070 end:0x803DC078
+	.data       start:0x80327AB8 end:0x80327AF0
 
 main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC
+	.data       start:0x80327AF0 end:0x80327B38
 
 main/dll/dll_0143_feseqobject.c:
 	.text       start:0x801DF4AC end:0x801DF934
+	.data       start:0x80327B38 end:0x80327B70
 
 main/dll/dll_0142_felevcontrol.c:
 	.text       start:0x801DF934 end:0x801DF9AC
