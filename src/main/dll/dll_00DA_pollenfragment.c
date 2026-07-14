@@ -293,9 +293,9 @@ void pollenfragment_update(int obj)
         PSVECMag(&dir);
         PSVECNormalize(&dir, &dir);
         PSVECSubtract(&dir, &((PollenFragmentExtra*)extra)->velocity, &sc);
-        ((PollenFragmentExtra*)extra)->velX = dir.x;
-        ((PollenFragmentExtra*)extra)->velY = dir.y;
-        ((PollenFragmentExtra*)extra)->velZ = dir.z;
+        *(f32*)((int)extra + 0xC) = dir.x;
+        *(f32*)((int)extra + 0x10) = dir.y;
+        *(f32*)((int)extra + 0x14) = dir.z;
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
         ((GameObject*)obj)->anim.velocityX =
