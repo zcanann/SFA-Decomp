@@ -255,3 +255,10 @@ w-tags on the walkgroup probe: either kind-3 operands at Apply time do not carry
 nodes, the third jump-table case applies, or the desc is unallocated by Apply. Next: at the
 Apply breakpoint, inspect one kind-3 operand's value node live (x/16wx) to fix the layout,
 then rerun. Tool state: scratchpad/webmap_lldb.py (repo copy needs this update once firing).
+
+## webmap conclusion: Apply-time web correlation impossible
+kind-3 operands carry IMMEDIATE/CONSTANT payloads in bytes [4:8] (observed 0xbde80000 =
+-0.113f), not value-node pointers; kind-0 operands are post-color physical regs. So the
+instruction->web correlator must hook PRE-color: the InterferenceGraph build pass (disasm
+in docs/mwcc_re/disasm/InterferenceGraph.c.objdump.txt) where webs and their def/use lists
+are constructed. That hook plus the select trace closes both residuals' register questions.
