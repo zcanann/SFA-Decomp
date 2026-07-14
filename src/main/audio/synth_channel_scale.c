@@ -295,7 +295,6 @@ void fn_8026F30C(void)
     SynthPool* pool;
     u32 i;
     int j;
-    int cbIndex;
     u32 prev[1];
 
     pool = (SynthPool*)(u8*)&lbl_803AF550;
@@ -327,7 +326,7 @@ void fn_8026F30C(void)
     prev[0] = 0;
     pool->songs[i - 1].next = (SynthSong*)prev[0];
     gSynthFreeCallbacks = (u32*)pool;
-    for (cbIndex = prev[0]; cbIndex < 0x100; cbIndex++)
+    for (i = prev[0]; i < 0x100; i++)
     {
         ((u32*)pool)[1] = prev[0];
         if (prev[0] != 0)
