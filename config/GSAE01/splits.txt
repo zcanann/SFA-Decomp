@@ -1197,9 +1197,12 @@ main/dll/tricky.c:
 	.sdata      start:0x803DBA30 end:0x803DBB48
 
 main/dll/maybetemplate.c:
-	.text       start:0x80121C4C end:0x8012EB7C
+	.text       start:0x80121C4C end:0x8012B77C
 	.data       start:0x8031AF34 end:0x8031B074
 	.sdata      start:0x803DBB48 end:0x803DBBB0
+
+main/dll/dll_8012b77c.c:
+	.text       start:0x8012B77C end:0x8012EB7C
 
 main/dll/dll_0000_gameui.c:
 	.text       start:0x8012EB7C end:0x8012FECC
