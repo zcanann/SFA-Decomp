@@ -162,6 +162,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     }
 }
 
+#pragma opt_propagation off
 void TitleMenuItem_update(TitleMenuItem* item)
 {
     s16 oldValue;
@@ -170,6 +171,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
     s16 gatedMove;
     int sliderDelta;
     s16 previewVolume;
+    int clampedVolume;
 
     if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0)
     {
@@ -238,16 +240,11 @@ void TitleMenuItem_update(TitleMenuItem* item)
 
         if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
         {
+            clampedVolume = item->value > 0x7f ? 0x7f : item->value;
             previewVolume = item->value;
-            if ((previewVolume > 0x7f ? 0x7f : previewVolume) < 0)
-            {
-                previewVolume = 0;
-            }
-            else if (previewVolume > 0x7f)
-            {
-                previewVolume = 0x7f;
-            }
-            Sfx_SetObjectSfxVolume(0, SFXTRIG_pda_compassbeep, previewVolume, lbl_803E21F8);
+            Sfx_SetObjectSfxVolume(0, SFXTRIG_pda_compassbeep,
+                                   clampedVolume < 0 ? 0 : (previewVolume > 0x7f ? 0x7f : previewVolume),
+                                   lbl_803E21F8);
         }
         break;
     default:
@@ -292,6 +289,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         Music_PlayTrackByIndex(item->value);
     }
 }
+#pragma opt_propagation reset
 
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
