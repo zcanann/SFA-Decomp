@@ -13,6 +13,7 @@
  */
 #include "main/audio/sfx.h"
 #include "main/lightmap_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/gamebits.h"
@@ -62,7 +63,6 @@ extern f32 lbl_803E4008;
 extern const f32 lbl_803E4018;
 
 extern int return0_80060B90(void* blk);
-extern void* Shader_getLayer(char* base, int idx);
 
 f32 objFn_801948c0(u8* obj, u8 coord)
 {

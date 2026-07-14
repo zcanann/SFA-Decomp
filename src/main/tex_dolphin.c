@@ -49,7 +49,6 @@ extern f32 modelLightStruct_getRadius(void* light);
 extern void modelLightStruct_getPosition(void* light, void* a, void* b, void* c);
 extern void modelLightStruct_selectBrightestAabbLights(f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2, u8* dest,
                                                        int count, int* out);
-extern int Shader_getLayer();
 extern void fn_8004CE0C();
 extern void fn_8004DA54();
 extern void fn_8004E0FC();
@@ -325,7 +324,7 @@ int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
         shader = (int)((MapShader*)*(int*)(blockData + 0x64) + shaderIdx);
     }
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
-    selectTexture((Texture*)(*(int*)Shader_getLayer(shader, 0)), 0);
+    selectTexture((Texture*)(*(int*)Shader_getLayer((void*)shader, 0)), 0);
     if ((SHADER_FLAGS(shader) & 4) != 0)
     {
         _gxSetFogParams();
@@ -781,9 +780,9 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
 
     kColor = lbl_803DEBB0;
     if ((((MapShader*)shader)->layerCount == 2) &&
-        (texId = Shader_getLayer(shader, 1), (((TexLayer*)texId)->typeBits & 0x7f) == 9u))
+        (texId = (int)Shader_getLayer((void*)shader, 1), (((TexLayer*)texId)->typeBits & 0x7f) == 9u))
     {
-        layer = (int*)Shader_getLayer(shader, 0);
+        layer = (int*)Shader_getLayer((void*)shader, 0);
         {
             u8 ovrByte;
             if ((ovrByte = ((TexLayer*)layer)->overrideByte) != '\0')
@@ -827,7 +826,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             fn_8004D928();
         }
-        layer = (int*)Shader_getLayer(shader, 1);
+        layer = (int*)Shader_getLayer((void*)shader, 1);
         {
             u8 ovrByte;
             if ((ovrByte = ((TexLayer*)layer)->overrideByte) != '\0')
@@ -874,7 +873,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         for (layerIdx = 0; layerIdx < (int)(u32)((MapShader*)shader)->layerCount; layerIdx = layerIdx + 1)
         {
             int layerTexId;
-            layer = (int*)Shader_getLayer(shader, layerIdx);
+            layer = (int*)Shader_getLayer((void*)shader, layerIdx);
             layerTexId = *layer;
             if ((u32)layerTexId != 0)
             {

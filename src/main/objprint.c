@@ -8,6 +8,7 @@
 #include "main/model.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/curve_eval.h"
 #include "main/audio/sfx.h"
 #include "main/objprint_anim_api.h"
@@ -1868,7 +1869,6 @@ __declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
-    extern u32* Shader_getLayer(u8 * shader, int idx);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                                   GXBool normalize, u32 pt_texmtx);
 
@@ -1964,7 +1964,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
     fz = fz * fz;
     fz = fz * lbl_803DEA28;
-    selectTexture((Texture*)(textureIdxToPtr(*Shader_getLayer(rop, 0))), 0);
+    selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD2, GX_TEXMAP0, GX_COLOR_NULL);
@@ -2109,7 +2109,6 @@ static inline int shaderProjDisabled(int p)
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
     extern void textureFn_8006c4e0(int* tbl, int* cnt);
-    extern u32* Shader_getLayer(u8 * shader, int idx);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                                   GXBool normalize, u32 pt_texmtx);
 
@@ -2201,7 +2200,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
         fz = (f32)(s32)lbl_803DCC44 / (f32)(s32)texCnt;
         fz = fz * lbl_803DEA28;
     }
-    selectTexture((Texture*)(textureIdxToPtr(*Shader_getLayer(rop, 0))), 0);
+    selectTexture((Texture*)(textureIdxToPtr(*(u32*)Shader_getLayer(rop, 0))), 0);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     if (lbl_803DCC36 == 0)
     {

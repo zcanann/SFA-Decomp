@@ -3378,9 +3378,9 @@ void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
     lbl_803DCD31 = mode;
 }
 
-void* Shader_getLayer(char* base, int idx)
+void* Shader_getLayer(void* base, int idx)
 {
-    return base + idx * 8 + 0x24;
+    return (u8*)base + idx * 8 + 0x24;
 }
 
 extern u8 lbl_803DCCB0;

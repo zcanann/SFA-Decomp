@@ -22,6 +22,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "track/intersect_depth_state_api.h"
 #include "main/frame_timing.h"
+#include "main/pi_dolphin_api.h"
 #include "main/dll/player_api.h"
 #include "main/dll/dll_003B_menu.h"
 #include "main/game_object.h"
@@ -275,7 +276,6 @@ extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
-extern void* Shader_getLayer(char* base, int idx);
 extern void fn_8006C5CC(int* out);
 extern int objIsCurModelNotZero(void* obj);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);

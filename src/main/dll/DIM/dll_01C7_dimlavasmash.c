@@ -6,6 +6,7 @@
  */
 #include "main/dll/DIM/dimcannon_state.h"
 #include "main/lightmap_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 #include "main/audio/sfx_ids.h"
@@ -29,7 +30,6 @@ extern f32 lbl_803E48F8;
 
 extern int mapBlockFn_800606ec(int map, int idx);
 extern int mapBlockFn_80060678(void);
-extern int Shader_getLayer(int layer, int idx);
 
 void dimlavasmash_free(void)
 {
@@ -107,7 +107,7 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
     for (i = 0, clearMask = ~2; i < (int)*(u8*)((char*)map + 0xa2); i++)
     {
         block = (int*)fn_8006070C((MapBlockData*)map, i);
-        if (surfaceType == (int)*(u8*)((char*)Shader_getLayer((int)block, 0) + 5))
+        if (surfaceType == (int)*((u8*)Shader_getLayer(block, 0) + 5))
         {
             if (disable != 0)
             {

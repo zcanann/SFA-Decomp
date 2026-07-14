@@ -54,6 +54,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/objseq_api.h"
 #include "main/shader_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/dll/player_state.h"
 #include "main/dll/baddie_control_interface.h"
 #include "main/dll/boneparticleeffect_interface.h"
@@ -14081,7 +14082,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
                     ModelRenderOp* op = ObjModel_GetRenderOp(m, i);
                     if (op->mode == 2)
                     {
-                        Shader_getLayer((int)op, 1);
+                        Shader_getLayer(op, 1);
                         gPlayerHeldObject = (int)op;
                         op->flags |= 0x100000LL;
                         break;

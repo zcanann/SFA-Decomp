@@ -20,6 +20,7 @@
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_descriptor.h"
 
@@ -51,7 +52,6 @@ STATIC_ASSERT(sizeof(VisAnimatorState) == 0x5);
 
 extern void* mapBlockFn_800606ec(MapBlockData* block, int idx);
 extern int mapBlockFn_80060678(void* entry);
-extern void* Shader_getLayer(void* shader, int idx);
 
 #pragma dont_inline on
 void hitAnimatorFn_80193dbc(MapBlockData* block, HitAnimatorObject* obj, HitAnimatorState* state,

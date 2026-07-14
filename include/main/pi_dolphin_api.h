@@ -19,5 +19,6 @@ void fn_8004D928(void);
 int fn_8004B218(void* search, u32 timeout);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
+void* Shader_getLayer(void* shader, int layerIdx);
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

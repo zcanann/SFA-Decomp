@@ -4,6 +4,7 @@
 #include "main/newclouds.h"
 #include "main/model.h"
 #include "main/shader_api.h"
+#include "main/pi_dolphin_api.h"
 #include "main/audio/sfx.h"
 #include "main/cloud_action_runtime.h"
 #include "main/cloud_layer_state.h"
@@ -372,7 +373,6 @@ void newclouds_killSnowCloud(int cloudId, int flag)
         -((f32)flag / (f32)((NewCloud*)gNewClouds[i])->flakeCount);
 }
 
-extern int Shader_getLayer(int renderOp, int x);
 extern const f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 
@@ -384,8 +384,7 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
 
     if (lbl_8039AB28.mainCloudObj != NULL)
     {
-        layer = (int*)Shader_getLayer(
-            (int)ObjModel_GetRenderOp(Obj_GetActiveModel(lbl_8039AB28.mainCloudObj)->file, 0), 0);
+        layer = (int*)Shader_getLayer(ObjModel_GetRenderOp(Obj_GetActiveModel(lbl_8039AB28.mainCloudObj)->file, 0), 0);
         tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
         if (tex != NULL)
         {

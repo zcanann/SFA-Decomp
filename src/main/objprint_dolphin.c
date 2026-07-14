@@ -2650,7 +2650,6 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
 }
 #pragma opt_dead_assignments reset
 
-extern u8* Shader_getLayer(u8* shader, int idx);
 extern void gxTextureFn_80050e28(int flag);
 extern void* textureCrazyPointerFollowFn_80054c30(void* tex, int p2);
 extern void fn_80051B00(void* tex, int mtx, int fl, u8* color);
