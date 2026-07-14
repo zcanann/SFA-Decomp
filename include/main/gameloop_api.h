@@ -18,5 +18,8 @@ void cutsceneFadeInOut(int mode);
 void setTimeStop(int frames);
 void doNothing_onSaveSelectScreenExit(void);
 void fn_8001FEA8(void);
+u8 getButtonObjects(void** objectsOut);
+
+#define getButtonObjectsLegacy(objectsOut) ((int (*)(int**))getButtonObjects)(objectsOut)
 
 #endif /* MAIN_GAMELOOP_API_H_ */

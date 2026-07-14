@@ -1,7 +1,7 @@
 #include "main/dll/partfx_interface.h"
 #include "dolphin/card.h"
 #include "main/hud_visibility_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/waterfx_interface.h"
 #include "main/audio/sfx.h"
 #include "main/gamebits.h"
@@ -23,6 +23,10 @@
 #include "main/gameloop_api.h"
 #include "main/frame_timing.h"
 #include "main/camera.h"
+#include "main/track_dolphin_api.h"
+#include "main/vecmath.h"
+#include "main/object_render.h"
+#include "main/screen_transition.h"
 #include "dolphin/gx/GXPixel.h"
 #include "main/mm.h"
 #include "main/newshadows.h"
@@ -115,7 +119,6 @@ typedef struct DepthReadRequest
 } DepthReadRequest;
 
 extern f32 lbl_803DFB10;
-extern f32 sqrtf(f32 x);
 
 extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
@@ -424,8 +427,6 @@ void timeFn_8006f400(f32 step)
 
 void drawFn_8006f500(void)
 {
-    extern void fn_8000F9B4(void);
-
     GXColor color;
     Mtx camTrans;
     Mtx posMtx;
@@ -585,8 +586,6 @@ typedef struct
 #pragma opt_common_subs off
 void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
 {
-    extern int fn_80065768(u8 * obj, f32 x, f32 y, f32 z, f32 * outY, Vec * outNorm, int flag);
-
     WaterFxState* base;
     f32 x, y, z;
     f32 ax, px;
@@ -607,8 +606,8 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
     {
         gWaterFxBank = 3;
     }
-    if (fn_80065768(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, &groundY, &norm, 0) == 0)
+    if (fn_80065768((int)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                    ((GameObject*)obj)->anim.localPosZ, &groundY, (f32*)&norm, 0) == 0)
     {
         if (type == 1)
         {
@@ -4470,10 +4469,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1, f32 s3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern u16 fn_8000FA90(void);
-    extern u16 fn_8000FA70(void);
-    extern f32 fn_80292194(f32 v);
-    extern f32 interpolate(f32 a, f32 t, f32 exp);
     Mtx mtx_58;
     Mtx mtx_28;
     int handle1;
@@ -4650,8 +4645,6 @@ void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern u8 lbl_802C1EA8[];
-    extern s16 fn_8000FA70(void);
-    extern void fn_80293C64(f32 c, f32 * a, f32 * b);
     Mtx mtx_44;
     f32 indMtx[6];
     int handle2;
@@ -4666,7 +4659,7 @@ void doHeatEffect(u8 alpha)
     u8 a1;
 
     *(IndMtxInit*)indMtx = *(IndMtxInit*)lbl_802C1EA8;
-    v = fn_8000FA70();
+    v = fn_8000FA70Signed();
     if (v < 0)
     {
         k = (((u16)(int)v >> 8) - 0xc0) << 2;
@@ -5956,8 +5949,6 @@ int loadSaveGame(int a, int b)
 void showMemCardError(u8 err)
 {
     extern u8 lbl_803DB424;
-    extern void checkReset(void);
-    extern f32 fn_80293AC4(int v);
 
     int opts[8];
     int msgs[8];
@@ -6318,10 +6309,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
  */
 void cardShowLoadingMsg(u8 kind)
 {
-    extern void gameTextSetWindow(int);
-    extern int getButtonObjects(int**);
-    extern void** gScreenTransitionInterface;
-    extern void objRenderModelAndHitVolumes(int, int, int, int, int, f32);
     int* buttons;
     int saved;
     int frame;
@@ -6331,22 +6318,22 @@ void cardShowLoadingMsg(u8 kind)
     void (*draw)(int, int, int);
     u8 mode = kind;
 
-    gameTextSetWindow(0);
+    gameTextSetWindowLegacy(0);
     for (frame = 0; frame < 0x3C; frame++)
     {
         padUpdate();
         mmFreeTick(0);
         waitNextFrame();
-        count = getButtonObjects(&buttons) & 0xFF;
+        count = getButtonObjectsLegacy(&buttons) & 0xFF;
         if ((u32)count != 0)
         {
-            draw = (void (*)(int, int, int))((void**)*gScreenTransitionInterface)[1];
+            draw = (*gScreenTransitionInterface)->init;
             draw(0, 0, 0);
             rectAlpha = lbl_803DEF98;
             drawRect(rectAlpha, rectAlpha, 0x280, 0x1E0);
             for (j = 0; j < count; j++)
             {
-                objRenderModelAndHitVolumes(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
+                objRenderModelAndHitVolumesFwdLegacy(buttons[j], 0, 0, 0, 0, lbl_803DEF9C);
             }
             curUiDllDraw(0, 0, 0, 0);
         }

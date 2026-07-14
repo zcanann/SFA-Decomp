@@ -162,5 +162,7 @@ void fn_8000F9B4(void);
 u16 fn_8000FA70(void);
 u16 fn_8000FA90(void);
 
+#define fn_8000FA70Signed() ((s16 (*)(void))fn_8000FA70)()
+
 
 #endif /* MAIN_CAMERA_H_ */

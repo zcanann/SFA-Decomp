@@ -4628,7 +4628,6 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
 
 extern IndTexMtx23 lbl_802C1DC8;
 extern IndTexMtx23 lbl_802C1DE0[];
-extern void fn_80293C64(f32 angle, f32* s, f32* c);
 extern void fn_8006C504(void* out);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);

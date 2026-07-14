@@ -29,6 +29,7 @@ int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);
 void gameTextResetCursor(int flags);
 void gameTextSetDrawFunc(void* drawFunc);
+void gameTextSetWindow(u8* textBox);
 f32 gameTextFn_80019c00(void);
 void gameTextRun(void);
 void* gameTextGet(int textId);
@@ -47,6 +48,7 @@ void fn_8001BDD4(int mode);
 void fn_8001BE2C(int mode);
 
 #define gameTextSetColorInt ((GameTextSetColorIntFn)gameTextSetColor)
+#define gameTextSetWindowLegacy(textBox) ((void (*)(int))gameTextSetWindow)(textBox)
 #define gameTextSetColorU8 gameTextSetColor
 #define gameTextGetLegacy ((GameTextGetLegacyFn)gameTextGet)
 
