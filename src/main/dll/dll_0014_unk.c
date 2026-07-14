@@ -2381,6 +2381,7 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wg;
     ObjfsaWalkGroup* wgB;
     ObjfsaPatchPlane* pl;
+    ObjfsaPatch* pC;
     f32* po;
     int** curveList;
     ObjfsaPatch* sp;
@@ -2651,11 +2652,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                 goto exit0Done;
             }
         scan0:
-            OBJFSA_EXIT_INSIDE(wg, p->exit0X, p->exit0Z);
-            pB = p;
+            OBJFSA_EXIT_INSIDE(wg, (pC = p)->exit0X, p->exit0Z);
+            pB = pC;
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgB, p->exit0X, p->exit0Z);
+                OBJFSA_EXIT_INSIDE(wgB, pC->exit0X, pC->exit0Z);
                 if (edge != 4)
                     goto update0;
             }
@@ -2664,18 +2665,18 @@ void walkgroupFindExitPointFn_800dc398(void)
             iter = 0;
             goto scan1;
         update1:
-            p->exit1X = (s16)((f32)pB->exit1X - fdx / div);
-            p->exit1Z = (s16)((f32)p->exit1Z - fdz / div);
+            pC->exit1X = (s16)((f32)pB->exit1X - fdx / div);
+            pC->exit1Z = (s16)((f32)pC->exit1Z - fdz / div);
             if (iter++ == 100)
             {
-                OSReport(sObjfsaMissingPatchExitPoint1, p->groupId & 0xff, (int)(u32)p->groupId >> 8);
+                OSReport(sObjfsaMissingPatchExitPoint1, pC->groupId & 0xff, (int)(u32)pC->groupId >> 8);
                 goto exit1Done;
             }
         scan1:
-            OBJFSA_EXIT_INSIDE(wg, p->exit1X, p->exit1Z);
+            OBJFSA_EXIT_INSIDE(wg, pC->exit1X, pC->exit1Z);
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgB, p->exit1X, p->exit1Z);
+                OBJFSA_EXIT_INSIDE(wgB, pC->exit1X, pC->exit1Z);
                 if (edge != 4)
                     goto update1;
             }
