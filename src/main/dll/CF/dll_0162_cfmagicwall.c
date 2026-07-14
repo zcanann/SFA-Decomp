@@ -10,7 +10,9 @@
 #include "main/obj_placement.h"
 #include "main/obj_query.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/camera.h"
+#include "main/vecmath.h"
 
 typedef struct CfMagicWallMapData
 {

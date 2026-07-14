@@ -24,7 +24,9 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/gamebits.h"
 #include "main/dll/objfsa.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/vecmath.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 extern u8 lbl_8031DD30[]; /* per-anim move-progress floats, indexed anim*4 */

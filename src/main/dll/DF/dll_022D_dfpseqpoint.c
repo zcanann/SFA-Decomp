@@ -14,7 +14,8 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/DF/dll_022D_dfpseqpoint.h"
 #include "main/objseq.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 
 #define DFPSEQPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 

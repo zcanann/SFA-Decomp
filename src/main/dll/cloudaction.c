@@ -1,7 +1,7 @@
 /*
  * cloudaction - the sky-cloud layer renderer/updater for the env-fx DLL
- * (shares its TU/runtime with the water and explosion fx via
- * fx_800944A0_shared.h). It owns up to three cloud-layer objects in
+ * (shares its TU/runtime with the water and explosion fx). It owns up to
+ * three cloud-layer objects in
  * CloudActionRuntime (lbl_8039AB28): a main layer, an upper layer and a
  * lower layer, each spawned from an asset id picked out of the per-env
  * CloudEnvTbl (gCloudActionEnvTbl) by the current environment's layer-state

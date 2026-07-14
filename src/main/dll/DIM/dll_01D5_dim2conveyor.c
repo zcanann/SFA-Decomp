@@ -42,7 +42,11 @@ FbWGPipe GXWGFifo : (0xCC008000);
 #include "main/object_render_legacy.h"
 #include "main/obj_group.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/texture.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/dll/ppcwgpipe_struct.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 #include "main/audio/sfx.h"
 
 #define DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED 0x2000

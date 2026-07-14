@@ -19,7 +19,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/obj_message.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
 #include "main/dll/dll_0242_dbstealerworm.h"
 #include "main/dll/dll_0243_dbholecontrol1.h"
 

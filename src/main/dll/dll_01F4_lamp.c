@@ -21,7 +21,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/obj_path.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/vecmath.h"
 #include "main/dll/dll_01F4_lamp.h"
 
 #define LAMP_OBJFLAG_RENDERED 0x800

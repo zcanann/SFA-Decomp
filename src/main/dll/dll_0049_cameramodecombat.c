@@ -9,7 +9,8 @@
 #include "main/object_transform.h"
 #include "main/vecmath.h"
 #include "main/pad.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/frame_timing.h"
 
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 #define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42

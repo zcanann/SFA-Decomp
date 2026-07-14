@@ -6,7 +6,8 @@
 #include "main/obj_group.h"
 #include "main/object_update_list.h"
 #include "main/object_render.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath.h"
 
 /* object group this object joins while active */
 #define SPELLSTONE_OBJGROUP 0x1e

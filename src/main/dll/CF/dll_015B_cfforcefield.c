@@ -14,7 +14,9 @@
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/gamebits.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/frame_timing.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/vecmath.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 

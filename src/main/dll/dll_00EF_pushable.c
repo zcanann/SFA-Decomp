@@ -21,7 +21,11 @@
 #include "main/model.h"
 #include "main/maketex_api.h"
 #include "main/vecmath.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "ghidra_import.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/debug.h"
+#include "main/texture.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct PushablePlacement

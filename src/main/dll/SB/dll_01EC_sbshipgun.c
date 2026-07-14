@@ -32,7 +32,11 @@
 #include "main/objhits.h"
 #include "main/objfx.h"
 #include "main/audio/sfx.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/vecmath.h"
+#include "main/object.h"
+#include "main/camera.h"
+#include "main/frame_timing.h"
 
 #define SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE 0x008C
 #define SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE     0x008E

@@ -13,7 +13,10 @@
 #include "main/objtexture.h"
 #include "main/obj_group.h"
 #include "main/resource.h"
-#include "main/dll/fx_800944A0_shared.h"
+#include "main/vecmath.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "main/texture.h"
+#include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 
