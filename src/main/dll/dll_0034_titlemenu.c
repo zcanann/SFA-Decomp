@@ -26,6 +26,7 @@
 #include "main/textrender_api.h"
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame.h"
+#include "track/intersect_card_api.h"
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;
@@ -93,13 +94,11 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 
-extern void memCardFn_8007dd04(u8 retry);
 extern float titleScreenGetCamProgress(void);
 extern void titleScreenFn_80130464(u8 v);
 
 extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
-extern void saveFn_8007d960(int);
 extern u8 lbl_803DB424;
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gTitleMenuPreviousSelection;

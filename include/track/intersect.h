@@ -88,21 +88,5 @@ void fn_8007CAF4(void);
 void gxTextureSetupFn_8007cf7c(void);
 void fn_8007D670(void);
 void FUN_800723a0(void);
-int cardLoadFn_8007d72c(void);
-void saveFn_8007d960(u32 param_1);
-void cardSetStatusNeedInit(void);
-s32 saveGameGetStatus(void);
-int cardDeleteFn_8007d99c(void);
-int _saveGame(int a, int b, int c);
-int maybeTryLoadSave(int a);
-int loadSaveGame(int a, int b);
-int memCardFn_8007dd04(u8 retry);
-int cardProbe(u8 retry);
-void _initCardAndDsp(void);
-void cardGetMessage(u32* buttons, u32* texts, u32* count);
-void showMemCardError(u8 err);
-void cardShowLoadingMsg(u8 kind);
-int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2);
-int saveCb_8007e748(int param_1, int param_2, void* dst);
 
 #endif /* TRACK_INTERSECT_H_ */

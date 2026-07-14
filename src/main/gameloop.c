@@ -8,6 +8,7 @@
 #include "main/audio/stream_api.h"
 #include "main/map_load.h"
 #include "main/objprint_render_api.h"
+#include "track/intersect_card_api.h"
 #include "dolphin/pad.h"
 
 u8 framesThisStep = 1;
@@ -698,7 +699,6 @@ extern void viFn_8004a56c(int arg);
 
 extern void mapInitFn_8006fccc(void);
 
-extern void _initCardAndDsp(void);
 extern void playerInitFuncPtrsEntry(void);
 extern void loadTaskTexts(void);
 
@@ -1147,9 +1147,6 @@ void doQueuedLoads(void)
 }
 
 extern void gameTextShowStr(int str, int a, int b, int c);
-extern int saveGameGetStatus(void);
-extern void cardSetStatusNeedInit(void);
-extern void cardDeleteFn_8007d99c(void);
 extern int lbl_803DCACC;
 extern u8 lbl_803DB424;
 

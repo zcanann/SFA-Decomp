@@ -40,6 +40,7 @@
 #include "main/textrender_api.h"
 #include "main/gameloop_api.h"
 #include "main/dll/dll_0016_screentransition.h"
+#include "track/intersect_card_api.h"
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
@@ -195,9 +196,6 @@ extern f32 lbl_803E06D4;
 __declspec(section ".rodata") SaveGameDefaultPosition gSaveGameDefaultPosition = {
     570.6483764648438f, -82.0f, 15790.8203125f};
 
-extern int loadSaveGame(int slot, void* save);
-extern int _saveGame(int slot, int save, int data);
-extern int maybeTryLoadSave(int a);
 extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 void loadMapForCurrentSaveGame(void);
@@ -293,7 +291,7 @@ int trySaveGame(int slot)
         memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
     }
 
-    loaded = loadSaveGame((u8)gSaveGameCurrentSlot, lbl_803DD498);
+    loaded = loadSaveGameBuffer((u8)gSaveGameCurrentSlot, lbl_803DD498);
     if (loaded != 0)
     {
         if (lbl_803DD498[0x21] == 0)
@@ -454,7 +452,7 @@ s8 slot;
         gSaveGameCurrentSlot = slot;
         if (name != NULL)
         {
-            return _saveGame((u8)slot, (int)lbl_803DD498, (int)saveData);
+            return saveGameBuffers((u8)slot, lbl_803DD498, saveData);
         }
     }
     return 0;
@@ -580,7 +578,7 @@ int saveSelect_getInfo(void* outPtr)
     do
     {
         info = (SaveSelectInfo*)outPtr + slot;
-        if (loadSaveGame((u8)slot, save) != 0)
+        if (loadSaveGameBuffer((u8)slot, save) != 0)
         {
             newFileFlag = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
             info->valid = newFileFlag;
@@ -679,7 +677,7 @@ int saveFn_800e8508(void)
 {
     int loadResult;
 
-    loadResult = maybeTryLoadSave((int)saveData);
+    loadResult = maybeTryLoadSaveBuffer(saveData);
     if ((loadResult == 0) || (saveData[0] == '\0'))
     {
         memset(saveData, 0, 0xE4);
@@ -718,7 +716,7 @@ void gplaySaveGame(int param)
     {
         lbl_803DD498[0xc] = 1;
     }
-    _saveGame((u8)gSaveGameCurrentSlot, (int)lbl_803DD498, (int)saveData);
+    saveGameBuffers((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
 }
 
 void titleDoLoadSave(void)
@@ -751,7 +749,7 @@ void saveGame_save(void)
     {
         lbl_803DD498[0xc] = 1;
     }
-    _saveGame((u8)gSaveGameCurrentSlot, (int)lbl_803DD498, (int)saveData);
+    saveGameBuffers((u8)gSaveGameCurrentSlot, lbl_803DD498, saveData);
 }
 
 void SaveGame_func08_nop(void)

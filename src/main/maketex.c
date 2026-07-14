@@ -20,6 +20,7 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_sequence_api.h"
 #include "main/maketex_timer_api.h"
+#include "track/intersect_card_api.h"
 #include "main/textrender_api.h"
 #include "main/objseq_api.h"
 #include "main/fileio.h"
@@ -145,7 +146,6 @@ extern void subtitleStart(int);
 extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char* fileName);
-extern int cardProbe(int chan);
 extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
 extern s32 CARDCheck(s32 chan);
 extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);
@@ -155,9 +155,6 @@ extern s32 CARDUnmount(s32 chan);
 extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
 extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern void showMemCardError();
-extern void cardGetMessage();
-extern void cardDeleteFn_8007d99c();
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {

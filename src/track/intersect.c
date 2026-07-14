@@ -11,6 +11,7 @@
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
+#include "track/intersect_card_api.h"
 #include "main/model.h"
 #include "main/model_engine.h"
 #include "main/texture.h"
@@ -5747,8 +5748,6 @@ void OSReport(const char* msg, ...)
  */
 int cardLoadFn_8007d72c(void)
 {
-    extern int cardProbe(int);
-
     int need_format;
     int res;
     u64 serial;
