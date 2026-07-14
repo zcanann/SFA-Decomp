@@ -37,6 +37,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/object_transform.h"
+#include "main/track_dolphin_api.h"
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
@@ -87,7 +88,6 @@ extern const f32 lbl_803E06C0;
 extern int objBboxFn_800640cc(void* hitOut, void* pos, f32 radius, int mode, void* bbox, int obj, s8 p7, int p8, int p9,
                               int p10);
 extern void fn_80063368(short* obj);
-extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void* out, int e, int f);
 extern int hitDetectFn_80067958(int obj, void* startPoints, void* endPoints, int pointCount, void* hitResults,
                                 int arg6);
 extern void hitDetectFn_800691c0(void* a, void* b, int mask, int e);
