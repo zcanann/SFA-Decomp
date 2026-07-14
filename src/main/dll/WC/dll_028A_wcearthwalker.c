@@ -59,6 +59,9 @@
 
 #define PAD_BUTTON_A 0x100
 
+typedef u8 (*EarthWalkerHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
+                                          u32 reactionState, float* reactionStepScale);
+
 int earthwalker_getExtraSize(void)
 {
     return 0x660;
@@ -128,14 +131,12 @@ ObjectDescriptor gEarthWalkerObjDescriptor = {
 
 void earthwalker_update(int obj)
 {
-    extern int mainGetBit(int eventId);
-    extern u8 ObjHitReact_Update();
     EarthWalkerObject* ewObj = (EarthWalkerObject*)obj;
     EarthWalkerState* ewState = ewObj->state;
     int prevAnim;
 
-    if ((ewState->hitReactState = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
-                                                     &ewState->hitReactStepScale)) != 0)
+    if ((ewState->hitReactState = ((EarthWalkerHitReactUpdateFn)ObjHitReact_Update)(
+             obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState, &ewState->hitReactStepScale)) != 0)
     {
         return;
     }
@@ -199,19 +200,19 @@ void earthwalker_update(int obj)
                         newState = 0x14;
                     }
                 }
-                else if (mainGetBit(0xc90) != 0)
+                else if ((s32)mainGetBit(0xc90) != 0)
                 {
                     newState = 5;
                 }
-                else if (mainGetBit(0xc36) != 0)
+                else if ((s32)mainGetBit(0xc36) != 0)
                 {
                     newState = 4;
                 }
-                else if (mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(0xc55) != 0)
                 {
                     newState = 3;
                 }
-                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 3;
                 }
@@ -240,19 +241,19 @@ void earthwalker_update(int obj)
                         newState = 0x16;
                     }
                 }
-                else if (mainGetBit(0xc90) != 0)
+                else if ((s32)mainGetBit(0xc90) != 0)
                 {
                     newState = 0xa;
                 }
-                else if (mainGetBit(0xc36) != 0)
+                else if ((s32)mainGetBit(0xc36) != 0)
                 {
                     newState = 9;
                 }
-                else if (mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(0xc55) != 0)
                 {
                     newState = 8;
                 }
-                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 8;
                 }
@@ -285,19 +286,19 @@ void earthwalker_update(int obj)
                         newState = 0x18;
                     }
                 }
-                else if (mainGetBit(0xc90) != 0)
+                else if ((s32)mainGetBit(0xc90) != 0)
                 {
                     newState = 0xf;
                 }
-                else if (mainGetBit(0xc36) != 0)
+                else if ((s32)mainGetBit(0xc36) != 0)
                 {
                     newState = 0xe;
                 }
-                else if (mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(0xc55) != 0)
                 {
                     newState = 0xd;
                 }
-                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     if (ewState->lastTriggeredState == 0xb)
                     {
@@ -329,11 +330,11 @@ void earthwalker_update(int obj)
                         newState = 0x1c;
                     }
                 }
-                else if (mainGetBit(0xc90) != 0)
+                else if ((s32)mainGetBit(0xc90) != 0)
                 {
                     newState = 0x13;
                 }
-                else if (mainGetBit(0xc36) != 0)
+                else if ((s32)mainGetBit(0xc36) != 0)
                 {
                     if (ewState->lastTriggeredState == 0x11)
                     {
@@ -344,11 +345,11 @@ void earthwalker_update(int obj)
                         newState = 0x11;
                     }
                 }
-                else if (mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(0xc55) != 0)
                 {
                     newState = 0x10;
                 }
-                else if (mainGetBit(GAMEBIT_WC_FoundKing) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_WC_FoundKing) != 0)
                 {
                     newState = 0x10;
                 }
@@ -356,12 +357,12 @@ void earthwalker_update(int obj)
             case 1:
                 if ((*gMapEventInterface)->getMapAct(ewObj->mapEventId) == 2)
                 {
-                    if (mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
+                    if ((s32)mainGetBit(GAMEBIT_Tricky_SaidGoodBye) != 0)
                     {
                         ewObj->statusFlags |= 8;
                         newState = -1;
                     }
-                    else if (mainGetBit(GAMEBIT_WC_PlacedSunMoonStones) != 0)
+                    else if ((s32)mainGetBit(GAMEBIT_WC_PlacedSunMoonStones) != 0)
                     {
                         newState = 9;
                     }
@@ -370,15 +371,15 @@ void earthwalker_update(int obj)
                         newState = 8;
                     }
                 }
-                else if (mainGetBit(0xc90) != 0)
+                else if ((s32)mainGetBit(0xc90) != 0)
                 {
                     newState = 7;
                 }
-                else if (mainGetBit(0xc36) != 0)
+                else if ((s32)mainGetBit(0xc36) != 0)
                 {
                     newState = 6;
                 }
-                else if (mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(0xc55) != 0)
                 {
                     newState = 5;
                 }
