@@ -4,8 +4,9 @@
 #include "main/sky_api.h"
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"
+#include "dolphin/gx.h"
 #include "dolphin/mtx.h"
-#include "track/intersect.h"
+#include "track/intersect_fog_api.h"
 #include "main/model_light.h"
 #include "main/pi_dolphin.h"
 

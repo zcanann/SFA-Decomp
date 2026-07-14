@@ -12,6 +12,7 @@
 #include "dolphin/mtx.h"
 #include "track/intersect.h"
 #include "track/intersect_card_api.h"
+#include "track/intersect_fog_api.h"
 #include "main/model.h"
 #include "main/model_engine.h"
 #include "main/texture.h"
