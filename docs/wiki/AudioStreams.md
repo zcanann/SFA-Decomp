@@ -1215,7 +1215,7 @@ the same area abbreviations as this wiki's stream directories (KP, TTH, DIM, CRF
   at `objseq.c:1417` and `objseq.c:4048`, keyed by `trackId` derived from the current sequence slot.
   This is the general "area cutscene voice line" path that most of the wiki's per-level directories
   (CC, CRF, DIM, DR, LV, MMP, TTH, WC, ...) are driven through.
-- **`src/main/dll/headdisplay.c`** (`gameTextFn_80125ba4`) — the pause-menu "comms" head-display
+- **`src/main/dll/maybetemplate.c`** (`gameTextFn_80125ba4`) — the pause-menu "comms" head-display
   popup. `gHeadDisplayEntryTable` is a table of `HEADREC_STRIDE`(0xC)-byte records
   (`HEADREC_STREAM_ID`@0, `HEADREC_TEXT_ID`@4, `HEADREC_PANEL_TYPE`@6, `HEADREC_NPC_DIALOGUE`@7,
   `HEADREC_BOX`@8); entry `idx`'s stream id is passed to `AudioStream_Play`.

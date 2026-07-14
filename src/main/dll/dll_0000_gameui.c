@@ -1,27 +1,5 @@
-/*
- * dll_0000_gameui - the in-game UI / overlay layer (the "GameUI" object,
- * DLL id 0). Identity verified live via gResourceDescriptors[0], whose
- * init/update slots are GameUI_initialise / GameUI_run / GameUI_update.
- * DLL 0 has no retail OBJECTS.bin name - it is engine infrastructure, not
- * an object handler.
- * It drives:
- *   - the pause menu: open/close tween animator, grid-cursor stepper,
- *     submenu runner, title-card overlay, item save/use state, and the
- *     per-frame render/viewport setup (43-degree FOV, 320x240).
- *   - the world-map HUD: task-progress hint panel with six pips lit by
- *     hint-text level, voiceover scheduler, and a fade-in/out tween.
- *   - NPC dialogue / death-FX state machines (curGameText queue) and a
- *     letterbox/spirit cutscene trigger.
- *   - the cMenu (item ring) and a high-score screen.
- *   - HUD primitives: 9-patch box draw, help-text frame, texture cache
- *     load/free.
- * Player input is polled via the digital pad (confirm 0x100 / cancel
- * 0x200) and analog/C-stick axes; selections commit through GameBits.
- *
- * Being hand-decompiled function-by-function.
- * Text span (EN v1.0): 0x80128120-0x8012EB7C.
- */
-
+/* DLL 0 GameUI interface, lifecycle, and shared data. */
+#include "main/gametext_show_str_api.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/frame_timing.h"
 #include "main/dll/savegame.h"
@@ -31,7 +9,6 @@
 #include "main/gametext_charset_api.h"
 #include "main/gametext_command_api.h"
 #include "main/gametext_show_api.h"
-#include "main/gametext_show_str_api.h"
 #include "main/textrender_api.h"
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
@@ -68,21 +45,55 @@
 #include "main/audio/stream_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
-
-#define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
-#define CAMMODE_WORLDMAP   0x4e /* dll_004E_cameramodeworldmap */
-
+#define CAMMODE_VIEWFINDER 0x44
+#define CAMMODE_WORLDMAP 0x4e
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
-
-/* blink texture asset (cached into gGameUiBlinkTexture). */
 #define GAMEUI_TEXTURE_BLINK 1280
-
-/* GameCube controller button masks (confirm=A, cancel=B, pause=Start/menu) */
-#define PAD_BUTTON_A    0x100
-#define PAD_BUTTON_B    0x200
+#define PAD_BUTTON_A 0x100
+#define PAD_BUTTON_B 0x200
 #define PAD_BUTTON_MENU 0x1000
-
 #define GAMEUI_MIN(a, b) ((a) < (b) ? (a) : (b))
+#define GAMEUI_TASK_HINT_COUNT 5
+#define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
+#define GCMENU_ITEM_ICON_COUNT 7
+
+/* Both teardown paths expand the same slot walk; GameUI_release expands it
+ * twice, matching the two walks present in the retail function. */
+#define GAMEUI_CLEAR_ITEM_SLOTS(g)                                                                                       \
+    do                                                                                                                   \
+    {                                                                                                                    \
+        u8 _slot;                                                                                                        \
+        for (_slot = 0; _slot < 64; _slot++)                                                                            \
+        {                                                                                                                \
+            if ((g)->itemTextures[_slot] != NULL)                                                                        \
+            {                                                                                                            \
+                textureFree((g)->itemTextures[_slot]);                                                                   \
+                (g)->itemTextures[_slot] = NULL;                                                                         \
+            }                                                                                                            \
+            (g)->itemSlots[_slot] = -1;                                                                                  \
+            (g)->itemFlags[_slot] = 1;                                                                                   \
+        }                                                                                                                \
+    } while (0)
+
+#define GAMEUI_RELEASE_MENU_RESOURCES(g)                                                                                 \
+    do                                                                                                                   \
+    {                                                                                                                    \
+        gameUiResetMenuState();                                                                                          \
+        GAMEUI_CLEAR_ITEM_SLOTS(g);                                                                                      \
+        if (lbl_803DD7C8 != NULL)                                                                                        \
+        {                                                                                                                \
+            textureFree(lbl_803DD7C8);                                                                                   \
+            lbl_803DD7C8 = NULL;                                                                                         \
+        }                                                                                                                \
+        if (gTrickyHudCachedIconTexture != NULL)                                                                         \
+        {                                                                                                                \
+            textureFree(gTrickyHudCachedIconTexture);                                                                    \
+        }                                                                                                                \
+        gTrickyHudCachedIconIndex = -1;                                                                                  \
+        gTrickyHudCachedIconTexture = NULL;                                                                              \
+    } while (0)
+
+
 
 extern u8 gPauseMenuTokenConfirmFlag;
 extern u16 lbl_803DD774;
@@ -110,29 +121,26 @@ extern s16 lbl_803DD8D0;
 extern s8 gHighScoreActiveTableId;
 extern u8 gHighScoreHighlightRow;
 extern u8 lbl_803A9440[0x18];
-extern u8 hudTextures[0x198];
+extern void* hudTextures[102];
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int u);
-extern u8 lbl_8031B050[9];
+extern u8 lbl_8031B050[36];
 extern u8 gPauseMenuHintIndex;
 extern u8 gPauseMenuTextCharset;
 extern s32 lbl_803DBA60;
 extern f32 lbl_803DD8CC;
-extern void* lbl_803A9410[6];
+extern GameObject* lbl_803A9410[6];
 extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
-
-extern f32 lbl_803E1E3C; /*  0.0f */
-extern f32 lbl_803E1E68; /*  1.0f */
-extern f32 lbl_803E1F34; /*  320.0f */
-extern f32 lbl_803E2024; /*  240.0f */
-extern f32 lbl_803E2044; /*  43.0f  (FOV value) */
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1E68;
+extern f32 lbl_803E1F34;
+extern f32 lbl_803E2024;
+extern f32 lbl_803E2044;
 extern s8 lbl_803DBA64;
 extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
 extern void gameTextSetCursor(u16, u16, s32);
-/* Number of pause-menu task hints (gTaskHintTable[5], size 0x8C / 0x1c stride). */
-#define GAMEUI_TASK_HINT_COUNT 5
 extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
 extern s8 pauseMenuFrameCounter;
 extern s16 lbl_803DD75C;
@@ -152,7 +160,6 @@ extern f32 lbl_803E2168;
 extern int lbl_803DD81C;
 extern u8 lbl_803DD781;
 extern GridEntry lbl_8031BD30[];
-
 extern s16 lbl_803DD770;
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
 extern f32 lbl_803E213C;
@@ -160,11 +167,9 @@ extern f32 lbl_803E2140;
 extern const f64 lbl_803E2148;
 extern const f64 lbl_803E2150;
 extern const f64 lbl_803E2158;
-extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
-extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
+extern void pauseMenuDrawElement(void* handle, f32 x, f32 y, int n, u8 p2, int w, int flag);
+extern void drawFn_8011eb3c(void* handle, f32 x, f32 y, int n, u8 p2, int w, int a, int b, int c);
 extern int getNextTaskHintText(void);
-/* Segments in the task-hint progress bar (lbl_803DBA9C[6], size 0x6). */
-#define GAMEUI_HINT_BAR_SEGMENT_COUNT 6
 extern u8 lbl_803DBA9C[GAMEUI_HINT_BAR_SEGMENT_COUNT];
 extern f32 lbl_803E1FA8;
 extern f32 lbl_803E1FD0;
@@ -183,7 +188,6 @@ extern f32 lbl_803E2100;
 extern HintCell lbl_8031BB90[13];
 extern u8 gGameUiTaskHintCandidates[8];
 extern void MWTRACE(int boxId);
-
 extern float fsin16Precise(int angle);
 extern char sBabySnowwormTimerFormat[];
 extern s16 gTimeListPulseAngle;
@@ -197,11 +201,7 @@ extern f32 lbl_803E2130;
 extern f32 lbl_803E2134;
 extern f32 lbl_803E2138;
 extern char* getHighScoreEntry(u8 track, u8 row);
-extern struct
-{
-    u16 unk0;
-    u16 titleId;
-} gHighScoreTitleIdTable[];
+extern HighScoreTitleIdEntry gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;
 extern f32 gHighScorePulseBias;
@@ -214,11 +214,11 @@ extern f32 lbl_803E2068;
 extern f32 lbl_803E2174;
 extern u8 lbl_803DD7D6;
 extern int lbl_803DD8E0;
-s16 lbl_803A8B48[0x98];
-extern GridEntry lbl_8031BD90[];
+extern s16 lbl_803A8B48[0x98];
+extern u32 lbl_8031BD90[];
 extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlayTrickyCommandSfx(u8* player);
-extern u8 lbl_803A87F0[];
+extern char lbl_803A87F0[];
 extern u8 cMenuEnabled;
 extern s8 shouldCloseCMenu;
 extern int gCMenuScriptedButtons;
@@ -250,7 +250,6 @@ extern s16 gYButtonUsedBit;
 extern s16 gYButtonActiveBit;
 extern f32 gYButtonIconAnim;
 extern f32 lbl_803DBA84;
-
 extern GridEntry lbl_8031B818[];
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
@@ -320,9 +319,9 @@ extern PauseTbl lbl_8031AE20;
 extern void objRender(int a, int b, int c, int d, void* obj, int e);
 extern void objShadowFn_8006c5f0(void* obj, u32* outTexture, f32* outScale, int* outX, int* outY);
 extern void hudDrawColored(u32 texture, int x, int y, u32* color, int scale, int flags);
-extern void* lbl_803DD868[2];
-extern u32 lbl_803E1E00; /* default HUD colour */
-extern f32 lbl_803E20B8; /* 0.25f */
+extern GameObject* volatile lbl_803DD868[2];
+extern u32 lbl_803E1E00;
+extern f32 lbl_803E20B8;
 extern f64 lbl_803E2080;
 extern f64 lbl_803E2118;
 extern f32 lbl_803E2120;
@@ -344,8 +343,8 @@ extern u8 gGameUiHelpTextPending;
 extern s16 gGameUiHelpTextId;
 extern u8 gGameUiUnusedHudSetting;
 extern u8 gameUiResourcesLoaded;
-u8 gCMenuItemEnabledTable[0x3C0];
-int gCMenuItemTargetTable[0xBA];
+extern u8 gCMenuItemEnabledTable[0x3C0];
+extern int gCMenuItemTargetTable[0xBA];
 extern void* gTrickyHudCachedIconTexture;
 extern s16 gTrickyHudCachedIconIndex;
 extern Texture* gGameUiBlinkTexture;
@@ -354,16 +353,13 @@ extern void drawArwingHud(int a, int b, int c);
 extern int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 extern void hudDrawFn_80121440(int a, int b, int c);
 extern void drawTrickyHudOverlay(int a, int b, int c);
-
 extern s32 lbl_803DD828;
 extern u32 lbl_803DD82C;
 extern f32 lbl_803E1E70;
-
 extern int cameraGetTargetType(void);
-extern int cMenuCountAvailableEntries(int bit, int x);
-
+extern int cMenuCountAvailableEntries(s16* items, s8 useTricky);
 extern u8 shouldOpenCMenu;
-int lbl_803A9320[0x11];
+extern int lbl_803A9320[0x11];
 extern s16 gMinimapInfoTextXCommitted;
 extern s16 gMinimapInfoTextYCommitted;
 extern s16 lbl_803DBA6E;
@@ -384,3337 +380,64 @@ extern u8 lbl_803A9398[];
 extern s8 gCMenuPreselectOwnedBit;
 extern int gGameUiScreenWidthOffset;
 extern int lbl_803DD740;
-extern int airMeter;
-
-/* Hoisted from per-function bodies so each
- * symbol is declared exactly once with a single consistent type. */
-
+extern void* airMeter;
+extern void gameTextFadeOut(void);
+extern void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q);
+extern void npcTalkFn_8012e880(void);
+extern void pauseMenuDrawText(int a, int b, int c);
+extern int pauseMenuGridFn_8012b4c4(void);
+extern void pauseMenuFn_8012b77c(void);
+extern void drawWorldMapHud(void);
+extern void timeListDraw(int a, int b, int c);
+extern void pauseMenuRunSubmenu(int p1);
+extern void cMenuRun(void);
 extern void cutsceneFadeInOut(int a);
-extern int objIsCurModelNotZero();
+extern int objIsCurModelNotZero(void* obj);
 extern u8 cMenuState;
 extern u8 cMenuOpen;
 extern s8 gCMenuScriptedInput;
 extern u16 yButtonState;
 extern u32 gCMenuButtons;
 extern s8 gCMenuCloseSfx;
-extern int cMenuSetItems(int handle, int flag);
+extern int cMenuSetItems(s16* items, char useTricky);
 
-/* ===== EN v1.0 retargeted leaves ========================================== */
-/* Getter for the u8 at gPauseMenuTokenConfirmFlag. */
-u8 fn_8012DDA4(void)
-{
-    return gPauseMenuTokenConfirmFlag;
-}
 
-/* Read gWorldMapVoiceoverTimer (u16) narrowed to
- * its low byte. Nonzero = a world-map briefing/hint voiceover is playing (the
- * drawWorldMapHud scheduler's rate-limit timer); worldplanet/worldobj poll this
- * to hide the Great Fox galleon and skip effect rendering while it talks. */
-u8 getWorldMapVoiceoverTimer(void)
-{
-    return gWorldMapVoiceoverTimer;
-}
 
-/* Signed-byte getter for lbl_803DD7A8. */
-s32 isTalkingToNpc(void)
-{
-    return lbl_803DD7A8;
-}
+/* DLL 0 interface callbacks. */
 
-/* Companion setter; clears lbl_803DD7A8. */
-void GameUI_finishNpcDialogue(void)
-{
-    lbl_803DD7A8 = 0;
-}
 
-/* Latch the u8 flag at lbl_803DD840 to 1. */
-void GameUI_func07(void)
-{
-    lbl_803DD840 = 1;
-}
+/* Forward declarations. */
+s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count);
+s16 cMenuGetSelectedItem(void);
+int GameUI_isItemBeingUsed(s32 id);
+int GameUI_isAnyItemBeingUsed(void);
+void GameUI_hudDraw(int a, int b, int c);
+void showHelpText(s16 val);
+void GameUI_update(void);
+void cMenuSelectItemByTarget(int idx, s16 target, s8 flag);
+void cMenuSelectFirstEnabledItem(int idx, s8 flag);
+int GameUI_run(void);
+void GameUI_setUnusedHudSetting(u8 val);
+void CMenu_SetShouldClose(int val);
+void GameUI_release(void);
 
-/* Signed-halfword getter for lbl_803DD8BA. */
-s16 GameUI_func0D(void)
+/* Linear search through a 4-byte array
+ * for the active id at gCMenuActivatedId. On hit, clears the busy flag at
+ * gCMenuCloseSfx and returns the matched value; on miss returns -1. */
+s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
-    return lbl_803DD8BA;
-}
-
-/* Signed-byte getter for cMenuState. */
-s32 CMenu_GetState(void)
-{
-    return *(s8*)&cMenuState;
-}
-
-/* Three s16 UI setters. */
-void GameUI_func0F(s32 a, s32 b, s32 c)
-{
-    gMinimapInfoTextId = a;
-    gMinimapInfoTextY = b;
-    gMinimapInfoTextX = c;
-}
-
-/* Iterate a 0x10-stride struct array at
- * gCMenuSections clearing the s16 at +0x4 until the u32 key at +0x0 is
- * zero, then reset gCMenuActivatedId to -1 and gCMenuCloseSfx to 0. */
-typedef struct CMenuSectionEntry
-{
-    void* key;
-    s16 selectedItem;
-    u8 pad[0x10 - 0x6];
-} CMenuSectionEntry;
-
-void GameUI_unselectAllItems(void)
-{
-    CMenuSectionEntry* sections = (CMenuSectionEntry*)gCMenuSections;
     int i;
-    for (i = 0; sections[i].key != NULL; i++)
+    for (i = 0; i < count; i++)
     {
-        sections[i].selectedItem = 0;
+        if (gCMenuActivatedId == arr[i])
+        {
+            gCMenuCloseSfx = 0;
+            return arr[i];
+        }
     }
-    gCMenuActivatedId = -1;
-    gCMenuCloseSfx = 0;
+    return -1;
 }
 
-/* Set gWorldMapVoiceoverTimer to 1 if param is
- * nonzero else 0. */
-void fn_8012DDB8(u32 val)
-{
-    if ((u8)val != 0)
-        gWorldMapVoiceoverTimer = 1;
-    else
-        gWorldMapVoiceoverTimer = 0;
-}
-
-/* Cancel/clear helper. Stores the new u8
- * state byte and, when the caller resets it to 0, also clears the active
- * tween halfwords and drops the active-id sentinel to -1. */
-void setShowWorldMapHud(u8 param)
-{
-    mapScreenVisible = param;
-    if (param != 0)
-        return;
-    lbl_803DD774 = 0;
-    gWorldMapVoiceoverTimer = 0;
-    lbl_803DBA5C = -1;
-}
-
-/* Tween advance: when the active counter
- * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
- * direction toggle in lbl_803DD77F gates the "approaching peak" half of
- * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
- * the active-id sentinel lbl_803DBA5C is dropped to -1. */
-#pragma dont_inline on
-void gameTextFadeOut(void)
-{
-    if (lbl_803DD774 == 0)
-        return;
-    if (lbl_803DD77F != 0 && lbl_803DD774 < 0x7f)
-    {
-        lbl_803DD774 += framesThisStep;
-    }
-    else if (lbl_803DD77F == 0)
-    {
-        lbl_803DD774 += framesThisStep;
-    }
-    if (lbl_803DD774 > 0xff)
-    {
-        lbl_803DD774 = 0;
-        lbl_803DBA5C = -1;
-    }
-}
-#pragma dont_inline reset
-
-/* Render-block teardown for the snowworm
- * scene: drops to layer 0, optionally tears the cached effect down, and
- * issues the close/restore pair before returning to the parent renderer. */
-void viewFn_80129c74(void)
-{
-    Camera_SetCurrentViewIndex(0);
-    if (lbl_803DD7E0 != 0)
-    {
-        Camera_EnableViewYOffset();
-    }
-    Camera_UpdateViewMatrices();
-    Camera_SetFovY(lbl_803DBAA4);
-    Camera_RebuildProjectionMatrix();
-    Camera_ApplyFullViewport();
-}
-
-/* Death sequence trigger: latches the
- * "dead/cleanup" byte at lbl_803DD75B and dispatches vtable slot +0x24
- * on the singleton at gCameraInterface with the worm-death event id 0x94,
- * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
-void timeListFn_8012df14(void)
-{
-    lbl_803DD75B = 1;
-    (*gCameraInterface)->loadTriggeredCamAction(1, 0x94, 1);
-    cutsceneFadeInOut(1);
-    setTimeStop(0xff);
-}
-
-/* Spawn/queue helper for the snowworm
- * death FX. If `id == -1` or the active game-text id at curGameText is
- * already occupied, do nothing. Otherwise: ping the death sound, latch
- * the dying-state bytes (lbl_803DD7A8 / lbl_803DD8C8), publish the new
- * id into curGameText (u16-narrowed), drop the lookahead halfword
- * (lbl_803DD8CA = -1) and the FX progress halfword (lbl_803DD8D0 = 0),
- * then post the work item at lbl_803A9440 to the global handler queue.
- * When `do_input_disable` is non-zero, also disable player input and
- * fade alpha to 0xFF, marking lbl_803DD7A9 = 1 to remember the input
- * was suppressed. */
-void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
-{
-    if (id == -1)
-        return;
-    if (curGameText != 0xFFFF)
-        return;
-    gameTextGetBox(0x7c);
-    lbl_803DD7A8 = 1;
-    lbl_803DD8D0 = 0;
-    curGameText = id;
-    lbl_803DD8CA = -1;
-    lbl_803DD8C8 = 1;
-    gameTextFreePhrase((int*)lbl_803A9440);
-    if (do_input_disable != 0)
-    {
-        cutsceneFadeInOut(1);
-        setTimeStop(0xff);
-        lbl_803DD7A9 = 1;
-    }
-    else
-    {
-        lbl_803DD7A9 = 0;
-    }
-}
-
-/* pauseMenuSetupTitle `flags` dispatch bits (see comment below). */
-#define PAUSEMENU_TITLE_FLAG_SET_HINT 0x08 /* commit idx to hint index, consult GameBit table */
-#define PAUSEMENU_TITLE_FLAG_RESET    0x04 /* full reset: clear counter and return */
-#define PAUSEMENU_TITLE_FLAG_MIRROR   0x02 /* mirror active counter past peak, clear dir */
-#define PAUSEMENU_TITLE_FLAG_SET_DIR  0x01 /* set direction byte to 1 */
-
-/* State setter with bit-flag dispatch.
- * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
- *   flags & 0x08 : commit `idx` to gPauseMenuHintIndex and consult the bit
- *                  table at gTaskHintTable (stride 0x1c, halfword field
- *                  at +0x16) -- if the GameBit reads 0, override idx
- *                  to 5 before the rest of the work runs.
- *   flags & 0x04 : full reset path -- clear lbl_803DD774 and return.
- *   flags & 0x02 : "mirror past peak" path -- flip the active counter
- *                  back to the [0xd9, 0xff] range and clear the
- *                  direction byte at lbl_803DD77F.
- *   flags & 0x01 : set the direction byte at lbl_803DD77F to 1.
- * Default tail: store the (clamped) idx into the active-id slot
- * lbl_803DBA5C, ensure the active counter starts at >=1, and
- * latch the s32 fade_target at lbl_803DBA60. */
-#pragma dont_inline on
-void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
-{
-    if (flags & PAUSEMENU_TITLE_FLAG_SET_HINT)
-    {
-        gPauseMenuHintIndex = idx;
-        if (mainGetBit(gTaskHintTable[idx].bit_id) == 0)
-        {
-            idx = 5;
-        }
-    }
-    gPauseMenuTextCharset = q;
-    if (flags & PAUSEMENU_TITLE_FLAG_RESET)
-    {
-        lbl_803DD774 = 0;
-        return;
-    }
-    if (flags & PAUSEMENU_TITLE_FLAG_MIRROR)
-    {
-        u16 cur = lbl_803DD774;
-        if (cur == 0)
-            return;
-        if (cur < 0x7f)
-        {
-            lbl_803DD774 = (u16)(0xff - cur);
-        }
-        {
-            u32 clamped = lbl_803DD774;
-            if (clamped < 0xd9)
-                clamped = 0xd9;
-            lbl_803DD774 = (u16)clamped;
-        }
-        lbl_803DD77F = 0;
-        return;
-    }
-    if (flags & PAUSEMENU_TITLE_FLAG_SET_DIR)
-    {
-        lbl_803DD77F = 1;
-    }
-    lbl_803DBA5C = idx;
-    if (lbl_803DD774 != 0)
-    {
-        if (lbl_803DD774 > 0x7f)
-        {
-            lbl_803DD774 = (u16)(0xff - lbl_803DD774);
-        }
-    }
-    else
-    {
-        lbl_803DD774 = 1;
-    }
-    lbl_803DBA60 = fade_target;
-}
-#pragma dont_inline reset
-
-/* Pause-menu input poll. While the
- * pauseMenuState byte is clear, polls the digital pad via
- * getButtonsJustPressed / padGetAnalogInput. The byte read into buf[0] is the d-pad
- * direction (1 = right, -1 = left, 0 = neutral) and lbl_803DD75B
- * tracks the current selection (1 = right entry, 2 = left entry). On
- * confirm (button mask 0x100), commits the selection by setting the
- * GameBit (0x2b3 for right, 0x781 for left) and starts the unpause
- * sequence; on cancel (0x200), aborts the menu. Both commit paths
- * share the same teardown: clear lbl_803DD75B, drop input gate, run
- * vtable+0x24(3, 0x80, 1) on the singleton, kick the 0x3c countdown,
- * and play the matching SFX (0x418 / 0x419). */
-#pragma dont_inline on
-void timeListFn_8012be84(void)
-{
-    s32 buttons;
-    u8 prev_state;
-    u8 buf[16];
-
-    prev_state = lbl_803DD75B;
-    if (pauseMenuState != 0)
-        return;
-
-    {
-        u16 b = getButtonsJustPressed(0);
-        buttons = b;
-    }
-    padGetAnalogInput(0, &buf[1], &buf[0]);
-    {
-        int analog = buf[0];
-        if ((s8)analog == 1)
-        {
-            lbl_803DD75B = 1;
-        }
-        if ((s8)analog == -1)
-        {
-            lbl_803DD75B = 2;
-        }
-    }
-    if (lbl_803DD75B != prev_state)
-    {
-        Sfx_PlayFromObject(0, SFXTRIG_sc_lockedon22);
-    }
-    if ((buttons & PAD_BUTTON_A) != 0)
-    {
-        buttonDisable(0, PAD_BUTTON_A);
-        if (lbl_803DD75B == 1)
-        {
-            mainSetBits(0x2b3, 1);
-        }
-        else
-        {
-            mainSetBits(0x781, 1);
-        }
-        lbl_803DD75B = 0;
-        cutsceneFadeInOut(0);
-        (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-        pauseMenuFrameCounter = 0x3c;
-        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
-    }
-    if ((buttons & PAD_BUTTON_B) != 0)
-    {
-        buttonDisable(0, PAD_BUTTON_B);
-        lbl_803DD75B = 0;
-        cutsceneFadeInOut(0);
-        (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-        pauseMenuFrameCounter = 0x3c;
-        Sfx_PlayFromObject(0, SFXTRIG_menu_pause_down);
-    }
-}
-#pragma dont_inline reset
-
-/* Snowworm "should-spawn" gate: 9-entry
- * table lookup with the same shape as the previously-matched
- * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
- * 0 if any of the table entries match the slot's lookup byte. */
-#pragma dont_inline on
-int pauseMenuIsFox(void)
-{
-    void* s;
-    void* inner;
-    u8 lookup;
-    u8 i;
-    u8 is_zero;
-
-    s = Obj_GetPlayerObject();
-    if (s == NULL)
-        return 0;
-    is_zero = objIsCurModelNotZero() == 0;
-    if (is_zero)
-        return 0;
-    inner = ((GameObject*)s)->anim.parent;
-    if (inner != NULL)
-    {
-        lookup = *((u8*)inner + 0xac);
-    }
-    else
-    {
-        lookup = coordsToMapCell(((GameObject*)s)->anim.localPosX, ((GameObject*)s)->anim.localPosZ);
-    }
-    for (i = 0; i < 9; i++)
-    {
-        if (lookup == lbl_8031B050[i])
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-#pragma dont_inline reset
-
-/* Pickup-pickup state hook: latches the
- * resulting object id from insertHighScore into gHighScoreHighlightRow, and on the
- * "post-collect" mode codes (1 or 2) optionally fires off the cleanup
- * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
- * yet, then commits the new u8 active-id to gHighScoreActiveTableId. The third arg
- * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
-int registerNewScore(s8 tableId, int score, u8 kind, int mode)
-{
-    gHighScoreHighlightRow = insertHighScore(tableId, kind == 0xa, score, (u8*)getSaveFileName());
-    if ((u8)mode == 2 || (u8)mode == 1)
-    {
-        if (gHighScoreActiveTableId == -1)
-        {
-            Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
-            cutsceneFadeInOut(1);
-            setTimeStop(0xff);
-        }
-        gHighScoreActiveTableId = tableId;
-    }
-    return 1;
-}
-
-/* Render block setup with explicit
- * viewport sized to (320 x 240) centered on the supplied (x, y).
- * Caches FOV via Camera_GetFovY, replaces it with arg0, activates render
- * layer 1, captures depth bias, snaps clip planes (0,0,0), restores
- * ZBuf window 0x8000, then calls GXSetViewport with width/height
- * from the global render obj at gRenderModeObj (offsets 0x4, 0x8). */
-void viewFn_80129cbc(f32 fov, f32 x, f32 y)
-{
-    lbl_803DBAA4 = Camera_GetFovY();
-    Camera_SetFovY(fov);
-    Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
-    Camera_DisableViewYOffset();
-    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
-    Camera_SetCurrentViewRotation(0x8000, 0, 0);
-    Camera_UpdateViewMatrices();
-    Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4],
-                      lbl_803E1E3C, lbl_803E1E68);
-    }
-}
-
-/* Snowworm scene shutdown / setup.
- * Walks 6 candidate slots (lbl_803A9410[i]) but only acts on the first
- * 4. For each empty slot, allocates a 0x20-byte block via
- * Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]) and chains it through Obj_SetupObject
- * to install the 0x7447 magic header + zero out the float fields. The
- * one-shot guard at +0x4c (sentinel > 0x90000000) gets cleared.
- *
- * After the slot pass, clears the three halfword counters at
- * lbl_803DD784/_786/_78C, asks the global tag system to register tag
- * id 0xf via padFn_80014b18, runs Obj_SetModelColorFadeRecursive(obj2, 0, 0, 0, 0, 0) when
- * the object handle from Obj_GetPlayerObject was non-null, then plays the
- * scene-down trio: Music_Trigger(MUSICTRIG_cldrnr_tune1, 1) plus two SFX kicks (0x3e5 and
- * 0xff) on object 0.
- */
-#pragma dont_inline on
-void pauseMenuInit(void)
-{
-    void* obj = Obj_GetPlayerObject();
-    int i = 0;
-
-    for (; i < 6; i++)
-    {
-        if (i < 4 && lbl_803A9410[i] == NULL)
-        {
-            lbl_803A9410[i] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, lbl_8031BF90[i]), 4, -1, -1, NULL);
-            ((f32*)lbl_803A9410[i])[3] = 0.0f;
-            ((f32*)lbl_803A9410[i])[4] = -5.0f;
-            ((f32*)lbl_803A9410[i])[5] = -5.0f;
-            *(s16*)lbl_803A9410[i] = 0x7447;
-            ((f32*)lbl_803A9410[i])[2] = 0.0f;
-            {
-                void* p = lbl_803A9410[i];
-                if (((u32*)p)[0x13] > 0x90000000U)
-                    ((u32*)p)[0x13] = 0;
-            }
-        }
-    }
-    lbl_803DD786 = 0;
-    lbl_803DD784 = 0;
-    lbl_803DD78C = 0;
-    padFn_80014b18(0xf);
-    if (obj != NULL)
-    {
-    Obj_SetModelColorFadeRecursive(Obj_GetPlayerObject(), 0, 0, 0, 0, 0);
-    }
-    Music_Trigger(MUSICTRIG_cldrnr_tune1, 1);
-    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_sidekick_up);
-    Sfx_PlayFromObject(0, SFXTRIG_crf_babyflute);
-}
-#pragma dont_inline reset
-
-/* Per-frame death-FX state machine.
- *
- * 1. While the dying byte at lbl_803DD7A8 is non-zero, hold the FX
- *    progress halfword at 0xff and (when lbl_803DD8C8 is also set)
- *    dispatch vtable+0x5c on the singleton with (0x41, 1) to fire
- *    the worm-death emitter.
- *    Otherwise, decrement the progress by 8 * framesThisStep per frame
- *    and clamp to >= 0.
- *
- * 2. When the progress halfword bottoms out, drop the active u16 slot
- *    at curGameText to 0xFFFF and return.
- *
- * 3. If no anim id is queued (lbl_803DD8CA == -1), poll the digital
- *    pad's confirm bit (mask 0x100) and stash the result in
- *    lbl_803A9440[3]. When lbl_803A9440[2] == 1, run the same teardown
- *    as timeListFn_8012be84's commit path: clear input gate flag, drop bit 9
- *    from gCMenuButtons, clear the dying byte, and (if lbl_803DD7A9 is
- *    set) call cutsceneFadeInOut(0) + clear the input-disable flag. If after
- *    all that the dying byte is still non-zero, run setJoypadDisabled to do
- *    the late frame-side flush.
- *
- * 4. Otherwise, advance the float counter at lbl_803DD8CC. When it
- *    falls to zero or below, wrap around to lbl_803DD8CA, bump
- *    the index counter at lbl_803A9440[1], and (if it overshoots the
- *    queue length from gameTextGet(slot_id)->_2) clamp it back one
- *    step and clear the dying byte.
- */
-#pragma dont_inline on
-void npcTalkFn_8012e880(void)
-{
-    Obj_GetPlayerObject();
-    if ((s8)lbl_803DD7A8 != 0)
-    {
-        if (lbl_803DD8C8 != 0)
-        {
-            (*gCameraInterface)->setLetterbox(0x41, 1);
-        }
-        lbl_803DD8D0 = 0xff;
-    }
-    else
-    {
-        s32 step = framesThisStep << 3;
-        lbl_803DD8D0 = (s16)(lbl_803DD8D0 - step);
-        if (lbl_803DD8D0 < 0)
-            lbl_803DD8D0 = 0;
-    }
-
-    if (lbl_803DD8D0 == 0)
-    {
-        curGameText = 0xFFFF;
-        return;
-    }
-
-    if (lbl_803DD8CA == -1)
-    {
-        s8 dd = 0;
-        if ((getButtonsJustPressed(0) & PAD_BUTTON_A) != 0)
-        {
-            dd = 1;
-        }
-        ((s32*)lbl_803A9440)[3] = dd;
-        if (((s32*)lbl_803A9440)[2] == 1)
-        {
-            buttonDisable(0, PAD_BUTTON_A);
-            gCMenuButtons &= ~0x100u;
-            lbl_803DD7A8 = 0;
-            if (lbl_803DD7A9 != 0)
-            {
-                cutsceneFadeInOut(0);
-                lbl_803DD7A9 = 0;
-            }
-        }
-        if ((s8)lbl_803DD7A8 != 0)
-        {
-            setJoypadDisabled();
-        }
-        return;
-    }
-
-    {
-        f32 cur = lbl_803DD8CC - timeDelta;
-        lbl_803DD8CC = cur;
-        if (cur <= 0.0f)
-        {
-            lbl_803DD8CC = (f32)(s32)(s16)lbl_803DD8CA;
-            ((s32*)lbl_803A9440)[1]++;
-            {
-                u16* end = gameTextGet(curGameText);
-                if (((s32*)lbl_803A9440)[1] >= end[1])
-                {
-                    ((s32*)lbl_803A9440)[1] = end[1] - 1;
-                    lbl_803DD7A8 = 0;
-                }
-            }
-        }
-    }
-}
-#pragma dont_inline reset
-
-/* Conditional render setup gated on
- * pauseMenuState. While a pause-menu state is active, runs the layer-1
- * render block: snaps clip planes (0,0,0), restores ZBuf window
- * 0x8000, saves current FOV before swapping in 43.0f, then
- * issues GXSetViewport with width/height from the global render obj
- * at gRenderModeObj. Then walks to slot lbl_803A9410[lbl_803DBA64],
- * dispatches shadowRenderFn_8006b558(slot) to do the actual draw, re-reads the
- * slot pointer and clears the +0x4c sentinel
- * if it overflowed the 0x90000000 watermark. Tail restores FOV
- * and runs the standard close-block trio. */
-void perspectiveFn_80129db4(void)
-{
-    f32 saved_fov;
-
-    if (pauseMenuState == 0)
-        return;
-    Camera_SetCurrentViewIndex(1);
-    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
-    Camera_SetCurrentViewRotation(0x8000, 0, 0);
-    saved_fov = Camera_GetFovY();
-    Camera_SetFovY(lbl_803E2044);
-    Camera_RebuildProjectionMatrix();
-    Camera_UpdateViewMatrices();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
-    shadowRenderFn_8006b558(((void**)lbl_803A9410)[lbl_803DBA64]);
-    {
-        void* slot = ((void**)lbl_803A9410)[lbl_803DBA64];
-        if (((u32*)slot)[0x13] > 0x90000000U)
-        {
-            ((u32*)slot)[0x13] = 0;
-        }
-    }
-    Camera_SetCurrentViewIndex(0);
-    Camera_SetFovY(saved_fov);
-    Camera_RebuildProjectionMatrix();
-    Camera_UpdateViewMatrices();
-    Camera_ApplyFullViewport();
-}
-
-/* Title-card overlay draw routine.
- * Gated on (lbl_803DD774 != 0) && (gWorldMapVoiceoverTimer == 0). Saves the
- * current sprite-batch state via gameTextGetCharset, sets sub-batch via
- * gameTextSetCharset(gPauseMenuTextCharset, 3), grabs a slot handle from
- * gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C), and looks up sprite 0x49.
- *
- * Copies the 5-u32 transform block from the singleton at
- * hudTextures+0x13c..+0x14c into the global mtx scratch at
- * lbl_8033BE40 (offsets 0x0..0x10).
- *
- * Computes the per-frame fade alpha and target_y from the
- * counter at lbl_803DD774 by mirroring around 0x7f, then scales:
- *   alpha  = clamp((mirror) * 0xf, 0, 0xff)
- *   target = clamp(((mirror) - 0x14) << 4, 0, 0x10e)
- *
- * Issues gameTextSetCursor(sprite->_2, sprite->_a, 1) to enable, then
- * gameTextMeasureFn_800163c4(handle, 0x49, 0, 0, &v[3..0]) to read the sprite's
- * current bbox into stack slots 0x14..0x8. Calls gameTextResetCursor(1).
- *
- * Computes blit_x = clamp((v[0x10] - v[0x14] + 0x28), 0, target_y);
- * stores blit_x & ~1 at sprite+0x8, and 0x140 - (blit_x>>1) at
- * sprite+0x14. Re-issues gameTextSetCursor with subbatch 2 and runs
- * gameTextSetColor(0xff, 0xff, 0xff, alpha) to commit the colour, also
- * latches alpha into sprite+0x1e.
- *
- * Tail: gameTextAppendStr(handle, 0x49); gameTextResetCursor(2); gameTextSetCharset with
- * the saved state to restore the batch.
- */
-void pauseMenuDrawText(void)
-{
-    void* sprite;
-    s16 alpha;
-    void* handle;
-    int saved;
-    s16 cur;
-    s16 mirrored;
-    s32 v[4];
-
-    if (lbl_803DD774 == 0)
-        return;
-    if (gWorldMapVoiceoverTimer != 0)
-        return;
-
-    saved = gameTextGetCharset();
-    gameTextSetCharset(gPauseMenuTextCharset, 3);
-    handle = gameTextGetPhrase(lbl_803DBA60, lbl_803DBA5C);
-    sprite = gameTextGetBox(0x49);
-
-    lbl_8033BE40[0] = *(u32*)&((HudTextures*)hudTextures)->unk13C;
-    lbl_8033BE40[1] = *(u32*)&((HudTextures*)hudTextures)->unk140;
-    lbl_8033BE40[2] = *(u32*)&((HudTextures*)hudTextures)->unk144;
-    lbl_8033BE40[3] = *(u32*)&((HudTextures*)hudTextures)->unk148;
-    lbl_8033BE40[4] = *(u32*)&((HudTextures*)hudTextures)->unk14C;
-
-    cur = lbl_803DD774;
-    mirrored = cur;
-    if (lbl_803DD774 > 0x7f)
-    {
-        mirrored = (s16)(0xff - lbl_803DD774);
-    }
-    alpha = (s16)(mirrored * 0xf);
-    if (alpha > 0xff)
-        alpha = 0xff;
-
-    if (lbl_803DD774 > 0x7f)
-    {
-        cur = (s16)(0xff - lbl_803DD774);
-    }
-    cur -= 0x14;
-    if (cur < 0)
-        cur = 0;
-    cur *= 0x10;
-    if (cur > 0x10e)
-        cur = 0x10e;
-
-    gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 1);
-    gameTextMeasureS32(handle, 0x49, 0, 0, &v[3], &v[2], &v[1], &v[0]);
-    gameTextResetCursor(1);
-
-    {
-        s16 clamped;
-        clamped = (s16)GAMEUI_MIN((s16)(v[2] - v[3]) + 0x28, cur);
-        if (clamped < 0)
-            clamped = 0;
-        *(u16*)((u8*)sprite + 0x8) = clamped & 0xFFFE;
-        *(s16*)((u8*)sprite + 0x14) = (s16)(0x140 - (clamped >> 1));
-    }
-
-    gameTextSetCursor(*(u16*)((u8*)sprite + 0x2), *(u16*)((u8*)sprite + 0xa), 2);
-    gameTextSetColorInt(0xff, 0xff, 0xff, (u8)alpha);
-    *(u8*)((u8*)sprite + 0x1e) = alpha;
-    gameTextAppendStr(handle, 0x49);
-    gameTextResetCursor(2);
-    gameTextSetCharset(saved, 3);
-}
-
-/* Pause-menu grid cursor stepper. Reads the
- * C-stick X axis, derives a one-step direction, and tweens the grid cursor
- * offsets toward the next cell, clamping when the tween crosses zero. */
-#pragma dont_inline on
-int pauseMenuGridFn_8012b4c4(void)
-{
-    int ret = 0;
-    s8 cx = padGetCXS8(0);
-    s8 dir;
-    int mag = cx;
-
-    if (mag < 0)
-        mag = -mag;
-    if (mag >= 0xf)
-    {
-        dir = (cx < 0) ? -1 : ((cx > 0) ? 1 : 0);
-    }
-    else
-    {
-        dir = 0;
-    }
-
-    if (lbl_803DD75C == 0 && dir != 0 && lbl_803DD7BC == 0.0f)
-    {
-        int idx = lbl_803DD7D8;
-        pauseMenuSetupTitle(lbl_803DD824[idx].f18, lbl_803DD824[idx].f1c, 2, 0);
-        lbl_803DD7BC = dir;
-        lbl_803DD7C0 = (f32)(dir * 0x320);
-        lbl_803DD7D8 = 0;
-        Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
-    }
-
-    if (lbl_803DD7C0 > 0.0f)
-    {
-        f32 prev = lbl_803DD7BC;
-        lbl_803DD7BC = prev + lbl_803DD7C0;
-        if (lbl_803DD7BC >= gPauseMenuSwivelWrapMax)
-        {
-            lbl_803DD7C4 ^= 1;
-            lbl_803DD7BC -= lbl_803E1E94;
-        }
-        if (lbl_803DD7BC > 0.0f && prev < 0.0f)
-        {
-            lbl_803DD7BC = 0.0f;
-            lbl_803DD7C0 = 0.0f;
-            ret = 1;
-        }
-    }
-
-    if (lbl_803DD7C0 < 0.0f)
-    {
-        f32 prev = lbl_803DD7BC;
-        lbl_803DD7BC = prev + lbl_803DD7C0;
-        if (lbl_803DD7BC < gPauseMenuSwivelWrapMin)
-        {
-            lbl_803DD7C4 ^= 1;
-            lbl_803DD7BC += lbl_803E1E94;
-        }
-        if (lbl_803DD7BC < 0.0f && prev > 0.0f)
-        {
-            lbl_803DD7BC = 0.0f;
-            lbl_803DD7C0 = 0.0f;
-            ret = 1;
-        }
-    }
-
-    return ret;
-}
-#pragma dont_inline reset
-
-/* Pause-menu open/close animator. Advances
- * the open tween, clamps it, then on the close button fires the per-state
- * close SFX and kicks the menu-item exit animations. */
-void pauseMenuFn_8012b77c(void)
-{
-    u32 btn = getButtonsJustPressed(0) & 0xffff;
-    f32 speed = lbl_803DD764;
-
-    lbl_803DD760 += speed * timeDelta;
-    lbl_803DD760 = (lbl_803DD760 > 0.0) ? lbl_803DD760 : 0.0;
-    lbl_803DD760 = (lbl_803DD760 < 1.0) ? lbl_803DD760 : 1.0;
-
-    if (((int)pauseMenuState >= 0xc || (int)pauseMenuState < 8) && ((int)btn & PAD_BUTTON_B) && speed > lbl_803E2160)
-    {
-        u8 i;
-        buttonDisable(0, PAD_BUTTON_B);
-        lbl_803DD764 = lbl_803E2168;
-        if (lbl_803DD824 == lbl_8031BD30)
-        {
-            lbl_803DD7D8 = 1;
-        }
-        lbl_803DD81C = 0;
-        switch (pauseMenuState)
-        {
-        case 3:
-            AudioStream_Play(randomGetRange(0, 1) + 0x271b, AudioStream_StartPrepared);
-            lbl_803DD781 = 2;
-            break;
-        case 4:
-            AudioStream_Play(randomGetRange(0, 1) + 0x2727, AudioStream_StartPrepared);
-            lbl_803DD781 = 3;
-            break;
-        case 5:
-            AudioStream_Play(randomGetRange(0, 1) + 0x2739, AudioStream_StartPrepared);
-            lbl_803DD781 = 1;
-            break;
-        }
-        for (i = 1; i < 4; i++)
-        {
-            ObjAnim_SetCurrentMove((int)lbl_803A9410[i], i == (s8)lbl_803DD781, lbl_803E1E3C, 0);
-        }
-    }
-
-    lbl_803DD784 -= framesThisStep * 0x50;
-    if (lbl_803DD784 < 0)
-        lbl_803DD784 = 0;
-    pauseMenuAnimateCarousel();
-}
-
-/* Draws the help-text frame: a base panel
- * then a row of edge/corner segments tweened in from both directions. */
-void boxDrawFn_8012975c(void)
-{
-    struct
-    {
-        int ty;
-        int av;
-        int uv;
-        int i;
-    } args;
-    s8 idx;
-    int alpha;
-    s8 j;
-    f64 scaled;
-
-    if (lbl_803DD770 == 0)
-    {
-        return;
-    }
-    idx = lbl_803DD770 & 0x1f;
-    drawTexture(((HudTextures*)hudTextures)->tex110, lbl_803E213C, lbl_803E2140, 0xff, 0x100);
-    for (j = 2, alpha = 0xaa; j >= 0; j--)
-    {
-        args.i = idx;
-        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * args.i)),
-                    (f32)(args.ty = 0x5f - args.i / 4), (u8)(args.av = 0xff - alpha),
-                    (u16)(args.uv = args.i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), args.ty, (u8)args.av,
-                          (u16)args.uv, 0x18, 0x34, 1);
-        idx = (args.i + 3) & 0x1f;
-        alpha -= 0x55;
-    }
-    idx = (lbl_803DD770 & 0x1f) ^ 0x10;
-    for (j = 2, alpha = 0xaa; j >= 0; j--)
-    {
-        args.i = idx;
-        drawTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2148 + (scaled = lbl_803E2150 * args.i)),
-                    (f32)(args.ty = 0x5f - args.i / 4), (u8)(args.av = 0xff - alpha),
-                    (u16)(args.uv = args.i * 2 + 0xbb));
-        drawScaledTexture(((HudTextures*)hudTextures)->tex114, (f32)(lbl_803E2158 - scaled), args.ty, (u8)args.av,
-                          (u16)args.uv, 0x18, 0x34, 1);
-        idx = (args.i + 3) & 0x1f;
-        alpha -= 0x55;
-    }
-}
-
-/* Draws the pause-menu task-hint panel: the framed backing (corners/edges via
- * pauseMenuDrawElement/drawFn_8011eb3c) plus a six-segment progress bar whose
- * lit-segment count scales with the current task-hint text level. `alpha` is
- * the fade level threaded through every draw call. */
-void fn_80128120(int unused, int alpha)
-{
-    s16 yPos = 0xc8 - lbl_803DD75C;
-    int hintText;
-    u8 litSegments;
-    s8 i;
-
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20D8, yPos, alpha, lbl_803E1F34,
-                         0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20D8, yPos, alpha, lbl_803E1F34,
-                    0x1c, 0x1e, 1);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E20D4, lbl_803E20DC, yPos, alpha, lbl_803E1F34,
-                    0x1c, 0x1e, 2);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex38, lbl_803E1FA8, lbl_803E20DC, yPos, alpha, lbl_803E1F34,
-                    0x1c, 0x1e, 3);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E4, yPos, alpha, lbl_803E1F34, 0x8,
-                    0x20, 0);
-    drawFn_8011eb3c((int)((HudTextures*)hudTextures)->tex3C, lbl_803E20E0, lbl_803E20E8, yPos, alpha, lbl_803E1F34, 0x8,
-                    0x20, 0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E1FD0, yPos, alpha, lbl_803E1F34,
-                         0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20F4, yPos, alpha, lbl_803E1F34,
-                         0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20F4, yPos, alpha, lbl_803E1F34,
-                         0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F0, lbl_803E20FC, yPos, alpha, lbl_803E1F34,
-                         0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20F8, lbl_803E20FC, yPos, alpha, lbl_803E1F34,
-                         0);
-    pauseMenuDrawElement((int)((HudTextures*)hudTextures)->tex40, lbl_803E20EC, lbl_803E2100, yPos, alpha, lbl_803E1F34,
-                         0);
-
-    hintText = (u16)getNextTaskHintText();
-    if (hintText > 0xb3)
-        litSegments = 6;
-    else if (hintText > 0xb0)
-        litSegments = 5;
-    else if (hintText > 0x8a)
-        litSegments = 4;
-    else if (hintText > 0x71)
-        litSegments = 3;
-    else if (hintText > 0x48)
-        litSegments = 2;
-    else if (hintText > 0x8)
-        litSegments = 1;
-    else
-        litSegments = 0;
-
-    for (i = 0; i < GAMEUI_HINT_BAR_SEGMENT_COUNT; i++)
-    {
-        int t = 0x11;
-        if (i >= litSegments)
-            t = -1;
-        lbl_8031BB90[lbl_803DBA9C[i]].f0 = (s16)t;
-    }
-}
-
-/* Draws a 9-patch HUD box: center fill, the
- * four edges (stretched), and the four 5x5 corners, from hudTextures. */
-void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
-{
-    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
-    if (flag != 0)
-    {
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
-    }
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + (s16)h), alpha, 0x100, w, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + (s16)w), y, alpha, 0x100, 5, h, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
-}
-
-/* World-map HUD voiceover scheduler: rate
- * limits, picks the quest-progress hint stream and starts it. */
-#pragma dont_inline on
-void drawWorldMapHud(void)
-{
-    u16 raw = gWorldMapVoiceoverTimer;
-    s16 sv = raw;
-
-    if (raw == 0)
-    {
-        return;
-    }
-    if (raw >= 0x78 && raw <= 0x82)
-    {
-        return;
-    }
-    gWorldMapVoiceoverTimer = 0x78;
-    if (sv < 0x1e)
-    {
-        s8 fi;
-        u8* base;
-        s8 li_;
-        u8 lv;
-        int n;
-        int t;
-        int hint;
-        int hv;
-
-        {
-            int i;
-            u8* p;
-            i = 0;
-            base = (u8*)(int)gGameUiTaskHintCandidates;
-            p = base;
-            for (; i < GAMEUI_TASK_HINT_COUNT; i++)
-            {
-                if (mainGetBit(gTaskHintTable[*p].bit_id))
-                {
-                    fi = gGameUiTaskHintCandidates[i];
-                    goto haveIdx;
-                }
-                p++;
-            }
-            fi = -1;
-        haveIdx:
-            n = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
-            t = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
-            n += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
-            n += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-            n += t;
-            if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
-            {
-                n++;
-            }
-            if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got))
-            {
-                n++;
-            }
-            if (mainGetBit(GAMEBIT_ITEM_FireSpellStone2_Got))
-            {
-                n++;
-            }
-            if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone2_Got))
-            {
-                n++;
-            }
-
-            {
-                TaskHintEntry* he = gTaskHintTable;
-                if (n >= he[base[0]].thresh)
-                    li_ = gGameUiTaskHintCandidates[0];
-                else if (n >= he[base[1]].thresh)
-                    li_ = gGameUiTaskHintCandidates[1];
-                else if (n >= he[base[2]].thresh)
-                    li_ = gGameUiTaskHintCandidates[2];
-                else if (n >= he[base[3]].thresh)
-                    li_ = gGameUiTaskHintCandidates[3];
-                else if (n >= he[base[4]].thresh)
-                    li_ = gGameUiTaskHintCandidates[4];
-                else
-                    li_ = -1;
-            }
-        }
-
-        hv = (u16)getNextTaskHintText();
-        lv = 0;
-        if (hv > 0xad)
-        {
-            lv = 1;
-        }
-        {
-            u8 cur = gPauseMenuHintIndex;
-            if (cur == 2 && lv != 0)
-            {
-                hint = 0x51e4;
-            }
-            else if (fi == cur && li_ != cur)
-            {
-                hint = gTaskHintTable[cur].hint8;
-            }
-            else if (cur == 2)
-            {
-                if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
-                {
-                    hint = 0x51e5;
-                }
-                else if (fi == li_)
-                {
-                    if (mainGetBit(gTaskHintTable[li_].bit1a))
-                    {
-                        hint = 0x51e6;
-                    }
-                    else
-                    {
-                        hint = gTaskHintTable[li_].hint10;
-                    }
-                }
-                else
-                {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
-                }
-            }
-            else
-            {
-                if (cur == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
-                {
-                    hint = 0x51e2;
-                }
-                else
-                {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hintC;
-                }
-            }
-        }
-        if (hint != 0)
-        {
-            AudioStream_Play(hint, AudioStream_StartPrepared);
-        }
-    }
-    if ((u16)gWorldMapVoiceoverTimer > 0xff)
-    {
-        gWorldMapVoiceoverTimer = 0;
-    }
-}
-#pragma dont_inline reset
-
-/* Number of best-time entries in the race-times list (bits[6]). */
-#define GAMEUI_TIME_LIST_COUNT 6
-
-extern u16 lbl_802C21A0[GAMEUI_TIME_LIST_COUNT];
-
-/* Draws the race-times list panel and the six
- * best-time entries with a pulsing header. */
-void timeListDraw(void)
-{
-    struct TimeIdList
-    {
-        u16 ids[GAMEUI_TIME_LIST_COUNT];
-    };
-    u16 bits[GAMEUI_TIME_LIST_COUNT];
-    char buf[0x24];
-
-    *(struct TimeIdList*)bits = *(struct TimeIdList*)lbl_802C21A0;
-    if (pauseMenuState != 0)
-    {
-        return;
-    }
-    drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
-
-    {
-        s16 ang;
-        int pulse;
-        int a, b;
-        gTimeListPulseAngle += gTimeListPulseAngleStep;
-        ang = gTimeListPulseAngle;
-        pulse = (int)(gTimeListPulseAmplitude * fsin16Precise((u16)ang) + gTimeListPulseBias);
-        if (lbl_803DD75B == 1)
-        {
-            a = pulse;
-            b = 0xff;
-        }
-        else
-        {
-            a = 0xff;
-            b = pulse;
-        }
-        gameTextFn_80016810(0x2f7, 0, 5);
-        gameTextSetColorInt(a, a, a, 0xff);
-        gameTextShow(0x2f8);
-        gameTextSetColorInt(b, b, b, 0xff);
-        gameTextShow(0x2fb);
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
-    }
-    {
-        u16* p;
-        int k = 0;
-        p = bits;
-        for (; k < GAMEUI_TIME_LIST_COUNT; k++)
-        {
-            int v = mainGetBit(*p);
-            int mins;
-            if (k == 0)
-            {
-                MWTRACE(6);
-                gameTextShow(0x2fa);
-            }
-            else if (k == 3)
-            {
-                MWTRACE(7);
-                gameTextShow(0x2fa);
-            }
-            mins = v / 6000;
-            sprintf(buf, sBabySnowwormTimerFormat, mins, v / 100 - mins * 60, v - (int)((long)v / 100) * 100);
-            gameTextShowTimeStr(buf);
-            p++;
-        }
-    }
-    MWTRACE(0xff);
-}
-
-/* High-score screen: draws the 9-patch box
- * around the text area, the track title, and five score rows with the
- * selection pulse highlight. */
-void highScoreScreenDraw(int p1, int p2, int p3)
-{
-    s16 x;
-    s16 y;
-    TextSlot* box = gameTextGetBox(0x36);
-    s16 w;
-    s16 h;
-    int top;
-    int left;
-    int pulse;
-    char buf[0x20];
-
-    gHighScorePulseAngle += gHighScorePulseAngleStep;
-    pulse = (int)(gHighScorePulseAmplitude * fsin16Precise((u16)gHighScorePulseAngle) + gHighScorePulseBias);
-    h = (s16)box->f0a;
-    w = (s16)box->f08;
-    y = box->f16;
-    x = box->f14;
-
-    drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(left = x - 5), (f32)(top = y - 5), 0xff, 0x100);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)top, 0xff, 0x100, w, 5, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)left, y, 0xff, 0x100, 5, h, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, 0xff, 0x100, w, h, 0);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, 0xff, 0x100, 5, h, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)top, 0xff, 0x100, 5, 5, 1);
-    drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)left, (f32)(y + h), 0xff, 0x100, 5, 5, 2);
-
-    gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
-    gameTextFn_80016810(0x345, 0, 0xa);
-    gameTextFn_80016810(gHighScoreTitleIdTable[gHighScoreActiveTableId].titleId, 0, 0x28);
-
-    {
-        u8 k;
-        for (k = 0; k < 5; k++)
-        {
-            char* e = getHighScoreEntry(gHighScoreActiveTableId, k);
-            char* name = e + 4;
-            u32 starred = *(u8*)(e + 3) & 1;
-            sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
-            if (k == gHighScoreHighlightRow)
-            {
-                gameTextSetColorInt(pulse, pulse, pulse, 0xff);
-            }
-            else if (k == gHighScoreHighlightRow + 1)
-            {
-                gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
-            }
-            gameTextShowStr(name, 0x86, 0, k * 0x1e + 0x5a);
-            gameTextShowStr(buf, 0x87, 0, k * 0x1e + 0x5a);
-            if (starred != 0)
-            {
-                TextSlot* box2 = gameTextGetBox(0x87);
-                s16 starY = box2->f16 + k * 0x1e;
-                drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(box2->f14 + 0x64),
-                            (f32)(starY + 0x57), 0xff, 0x100);
-                gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
-            }
-        }
-    }
-    gameTextFn_80016810(0x346, 0, 0x104);
-}
-
-/* Pause-menu submenu driver: input nav,
- * voiceover scheduling, selection SFX, and title refresh. */
-void pauseMenuRunSubmenu(int p1)
-{
-    int sel = -1;
-    u8 valid = 0;
-    int btn = getButtonsJustPressed(0);
-
-    gCMenuButtons = btn;
-    if (lbl_803DD75C != 0)
-    {
-        if (btn & 0x300)
-        {
-            Sfx_PlayFromObject(0, SFXTRIG_menu_fend_back);
-            buttonDisable(0, 0x300);
-            lbl_803DD75E = -0x28;
-        }
-        lbl_803DD75C += lbl_803DD75E;
-        lbl_803DD75C = (lbl_803DD75C > 0x200) ? 0x200 : lbl_803DD75C;
-        lbl_803DD75C = (lbl_803DD75C < 0) ? 0 : lbl_803DD75C;
-    }
-    else
-    {
-        f32 old = lbl_803DD768;
-        GridEntry* tbl;
-        lbl_803DD768 += timeDelta;
-        switch (pauseMenuState)
-        {
-        case 3:
-            if (lbl_803DD768 >= 600.0f && old < 600.0f)
-            {
-                if (lbl_803DD7D6 == lbl_803DD8E0)
-                {
-                    AudioStream_Play(0x271a, AudioStream_StartPrepared);
-                }
-                else
-                {
-                    AudioStream_Play(0x2715, AudioStream_StartPrepared);
-                }
-            }
-            if (lbl_803DD768 > lbl_803E2174)
-            {
-                AudioStream_Play(randomGetRange(0, 3) + 0x2716, AudioStream_StartPrepared);
-                lbl_803DD768 = lbl_803E1E3C;
-            }
-            break;
-        case 5:
-            if (lbl_803DD768 >= 600.0f && old < 600.0f)
-            {
-                int id = randomGetRange(0, 3) + 0x2730;
-                int skip = 0x2731;
-                if (lbl_803DD824 == lbl_8031BD90)
-                {
-                    skip = 0x2732;
-                }
-                if (id >= skip)
-                {
-                    id++;
-                }
-                AudioStream_Play(id, AudioStream_StartPrepared);
-                lbl_803DD768 = lbl_803E1E3C;
-            }
-            break;
-        }
-        if (lbl_803DD764 > lbl_803E1E3C)
-        {
-            u8 analogX;
-            u8 analogY;
-            int navX;
-            int navY;
-            padGetAnalogInput(0, &analogX, &analogY);
-            navY = analogY;
-            if ((s8)navY == 1)
-            {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[0];
-            }
-            if ((s8)navY == -1)
-            {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[1];
-            }
-            navX = analogX;
-            if ((s8)navX == -1 && sel == -1)
-            {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[2];
-            }
-            if ((s8)navX == 1 && sel == -1)
-            {
-                sel = lbl_803DD824[lbl_803DD7D8].nav[3];
-            }
-        }
-        if (sel >= 0)
-        {
-            s16 id;
-            Sfx_PlayFromObject(0, SFXTRIG_pda_fper_move);
-            lbl_803DD7D8 = sel;
-            id = lbl_803DD824[sel].id;
-            switch (id)
-            {
-            case 0x4b:
-            case 0x4c:
-                AudioStream_Play(0x2714, AudioStream_StartPrepared);
-                break;
-            }
-        }
-        tbl = lbl_803DD824;
-        if (tbl == lbl_8031BD90)
-        {
-            if (lbl_803A8B48[tbl[lbl_803DD7D8].id] != 0xbf0)
-            {
-                valid = 1;
-            }
-        }
-        else
-        {
-            s16 id2 = tbl[lbl_803DD7D8].id;
-            if (id2 >= 0 && id2 != 0x25 && id2 != 0x24 && id2 != 0x49)
-            {
-                valid = 1;
-            }
-        }
-        if (((int)gCMenuButtons & PAD_BUTTON_A) && tbl != lbl_8031BD30 && lbl_803E1E3C == lbl_803DD7C0)
-        {
-            if (valid != 0)
-            {
-                Sfx_PlayFromObject(0, SFXTRIG_menu_fend_forward);
-                switch (pauseMenuState)
-                {
-                case 3:
-                    AudioStream_Play(randomGetRange(0, 1) + 0x2712, AudioStream_StartPrepared);
-                    lbl_803DD768 = lbl_803E1E3C;
-                    break;
-                case 5:
-                    AudioStream_Play(randomGetRange(0, 1) + 0x2735, AudioStream_StartPrepared);
-                    lbl_803DD768 = lbl_803E1E3C;
-                    break;
-                }
-                buttonDisable(0, PAD_BUTTON_A);
-                lbl_803DD75C = 1;
-                lbl_803DD75E = 0x1e;
-                return;
-            }
-            switch (pauseMenuState)
-            {
-            case 5:
-                AudioStream_Play(randomGetRange(0, 1) + 0x2737, AudioStream_StartPrepared);
-                lbl_803DD768 = lbl_803E1E3C;
-                break;
-            }
-        }
-        if (valid == 0)
-        {
-            pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 2, 0);
-            return;
-        }
-        if (sel >= 0 || (u8)p1 != 0 || (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
-        {
-            if (lbl_803DD824[lbl_803DD7D8].f18 != 0)
-            {
-                pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 1, 0);
-            }
-        }
-    }
-}
-
-/* C-menu per-frame driver: input gating,
- * item set selection, Y-button assignment, scroll, select/close handling. */
-#pragma dont_inline on
-void cMenuRun(void)
-{
-    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    s16* cursor;
-    GameObject* player;
-    int flags;
-    int isTricky;
-    u16 btn16;
-    u32 btn;
-
-    player = Obj_GetPlayerObject();
-    isTricky = 0;
-    cMenuSelectedItem = -1;
-    if (player == 0)
-    {
-        return;
-    }
-
-    if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
-        (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0)
-    {
-        buttonDisable(0, 0xe0800);
-    }
-    else
-    {
-        if ((s8)shouldCloseCMenu != 0)
-        {
-            buttonDisable(0, shouldCloseCMenu);
-        }
-    }
-
-    btn = getButtonsJustPressed(0);
-    gCMenuButtons = btn;
-    btn16 = btn;
-
-    if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
-        (((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) != 0 || pauseMenuState != 0 ||
-        shouldCloseCMenu != 0 || lbl_803DD75B != 0)
-    {
-        gCMenuButtons |= PAD_BUTTON_B;
-    }
-    else
-    {
-        if ((s8)gCMenuScriptedInput != 0)
-        {
-            gCMenuButtons = gCMenuScriptedButtons;
-            btn16 = gCMenuScriptedButtons;
-        }
-    }
-
-    switch ((s8)gCMenuCloseSfx)
-    {
-    case 0:
-        break;
-    case 1:
-        Sfx_PlayFromObject(0, SFXTRIG_noboost);
-        break;
-    case 2:
-        Sfx_PlayFromObject(0, SFXTRIG_npu_116);
-        break;
-    }
-    gCMenuActivatedId = -1;
-    gCMenuCloseSfx = 0;
-
-    {
-        int handle = (int)gCMenuSections[gCMenuCurSection].items;
-        cursor = &gCMenuSections[gCMenuCurSection].cursor;
-        flags = gCMenuSections[gCMenuCurSection].flags;
-        if (gCMenuCurSection == 2)
-        {
-            isTricky = 1;
-        }
-        gCMenuSelIndex = *cursor;
-        gCMenuItemCount = cMenuSetItems(handle, isTricky);
-    }
-
-    switch (yButtonState)
-    {
-    case 2:
-        if (!mainGetBit(GAMEBIT_Tricky_Usable))
-        {
-            yButtonState = 0;
-            yButtonItemTextureId = -1;
-        }
-        if (gTrickyHudItemMask & (1 << yButtonItem))
-        {
-            gYButtonInUse = 0;
-        }
-        else
-        {
-            gYButtonInUse = 1;
-        }
-        break;
-    case 1:
-    case 3:
-        if (mainGetBit(yButtonItem) == 0 || (gYButtonUsedBit > -1 && mainGetBit(gYButtonUsedBit) != 0))
-        {
-            yButtonState = 0;
-            yButtonItemTextureId = -1;
-        }
-        else if (gYButtonActiveBit > -1 && mainGetBit(gYButtonActiveBit) != 0)
-        {
-            gYButtonInUse = 1;
-        }
-        else
-        {
-            gYButtonInUse = 0;
-        }
-        break;
-    }
-
-    if (gCMenuSelIndex >= gCMenuItemCount)
-    {
-        gCMenuSelIndex = 0;
-    }
-
-    {
-        int open;
-        if ((s8)cMenuOpen == 0)
-            open = 0;
-        else
-            open = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-        if (open)
-        {
-            s16 cur = gCMenuSelIndex;
-            s16 cy;
-            cMenuSelectedItem = hud->ids848[cur];
-            gCMenuSelUsedBit = hud->ids648[cur];
-            gCMenuSelActiveBit = hud->ids748[cur];
-            {
-                s16 icon = hud->icons[cur];
-                if (aButtonIcon == 0)
-                {
-                    aButtonIcon = icon;
-                }
-            }
-            if (bButtonIcon == 0)
-            {
-                bButtonIcon = 0xa;
-            }
-            if ((s8)gCMenuScriptedInput != 0)
-            {
-                cy = gCMenuScriptedStickY;
-            }
-            else
-            {
-                cy = padGetCYS8(0);
-            }
-            if ((cy <= -0xa && gCMenuPrevStickY > -0xa) || cy < -0x3c)
-            {
-                int m = gCMenuScrollTimer;
-                if (m < 0)
-                    m = -m;
-                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
-                {
-                    if ((s8)lbl_803DBA65 == 0)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
-                    }
-                    gCMenuScrollVel = 1;
-                    goto scrolled;
-                }
-            }
-            if ((cy >= 0xa && gCMenuPrevStickY < 0xa) || cy > 0x3c)
-            {
-                int m = gCMenuScrollTimer;
-                if (m < 0)
-                    m = -m;
-                if (m < 8 && gCMenuScrollLock == 0 && lbl_803DD79A == 0)
-                {
-                    if ((s8)lbl_803DBA65 == 0)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_warningloop);
-                    }
-                    gCMenuScrollVel = -1;
-                }
-            }
-        scrolled:
-            gCMenuPrevStickY = cy;
-            if (gCMenuScrollVel > 0xff)
-            {
-                gCMenuScrollVel = 0xff;
-            }
-            if (gCMenuScrollVel < -0xff)
-            {
-                gCMenuScrollVel = -0xff;
-            }
-            if (gCMenuForcedSelIndex != -1)
-            {
-                gCMenuSelIndex = gCMenuForcedSelIndex;
-            }
-            {
-                s16 vel = gCMenuScrollVel;
-                if (vel != 0 && gCMenuScrollTimer == 0)
-                {
-                    if (vel > 0)
-                    {
-                        int count;
-                        gCMenuScrollVel -= 1;
-                        count = gCMenuItemCount;
-                        if (count > 1)
-                        {
-                            if (count == 2 && gCMenuSelIndex == 1)
-                            {
-                                gCMenuScrollTimer = 0x64;
-                            }
-                            else
-                            {
-                                gCMenuScrollTimer = 0x32;
-                            }
-                            lbl_803DBA65 = 3;
-                            gCMenuScrollLock = 0;
-                            gCMenuSelIndex++;
-                            if (gCMenuSelIndex >= count)
-                            {
-                                gCMenuSelIndex = 0;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int count;
-                        gCMenuScrollVel += 1;
-                        count = gCMenuItemCount;
-                        if (count > 1)
-                        {
-                            if (count == 2 && gCMenuSelIndex == 0)
-                            {
-                                gCMenuScrollTimer = -0x64;
-                            }
-                            else
-                            {
-                                gCMenuScrollTimer = -0x32;
-                            }
-                            lbl_803DBA65 = -3;
-                            gCMenuScrollLock = 0;
-                            gCMenuSelIndex--;
-                            if (gCMenuSelIndex < 0)
-                            {
-                                gCMenuSelIndex = (s16)(count - 1);
-                            }
-                        }
-                    }
-                }
-                else if ((int)gCMenuButtons & PAD_BUTTON_B)
-                {
-                    Sfx_PlayFromObject(0, SFXTRIG_laser_pickup);
-                    cMenuOpen = 0;
-                }
-                else
-                {
-                    u16 b2 = btn16;
-                    if (b2 & 0x900)
-                    {
-                        int open2;
-                        if ((s8)cMenuOpen == 0)
-                            open2 = 0;
-                        else
-                            open2 = (gCMenuOpenAnim != gCMenuOpenAnimMax) ? 0 : 1;
-                        if (open2)
-                        {
-                            u8 matched = 0;
-                            if (b2 & 0x800)
-                            {
-                                if (yButtonState != 0 && yButtonItem == cMenuSelectedItem)
-                                {
-                                    matched = 1;
-                                }
-                                else
-                                {
-                                    Sfx_PlayFromObject(0, SFXTRIG_menu_spin);
-                                    yButtonItemTextureId = hud->texIds[gCMenuSelIndex];
-                                    yButtonItem = cMenuSelectedItem;
-                                    gYButtonActiveBit = gCMenuSelActiveBit;
-                                    gYButtonUsedBit = gCMenuSelUsedBit;
-                                    gYButtonIconAnim = lbl_803DBA84;
-                                    if ((s8)isTricky == 0)
-                                    {
-                                        if ((s8)cMenuState == 4)
-                                        {
-                                            yButtonState = 1;
-                                        }
-                                        else
-                                        {
-                                            yButtonState = 3;
-                                        }
-                                        yButtonItemFlags = flags;
-                                    }
-                                    else
-                                    {
-                                        yButtonState = 2;
-                                    }
-                                }
-                            }
-                            buttonDisable(0, 0x900);
-                            if ((s8)isTricky == 0)
-                            {
-                                if (hud->enabled[gCMenuSelIndex] != 0)
-                                {
-                                    if ((b2 & PAD_BUTTON_A) || matched != 0)
-                                    {
-                                        ObjMsg_SendToObject(player, flags, 0, cMenuSelectedItem);
-                                        gCMenuActivatedId = cMenuSelectedItem;
-                                        gCMenuCloseSfx = hud->closeMode[gCMenuSelIndex];
-                                        cMenuOpen = 0;
-                                    }
-                                    Sfx_PlayFromObject(0, SFXTRIG_menu_fox_inventory_up);
-                                }
-                                else
-                                {
-                                    gCMenuActivatedId = -1;
-                                    gCMenuCloseSfx = 0;
-                                    Sfx_PlayFromObject(0, SFXTRIG_noboost);
-                                }
-                            }
-                            else
-                            {
-                                if (hud->enabled[gCMenuSelIndex] != 0)
-                                {
-                                    if ((b2 & PAD_BUTTON_A) || matched != 0)
-                                    {
-                                        cMenuOpen = 0;
-                                        gCMenuActivatedId = cMenuSelectedItem;
-                                        cMenuPlayTrickyCommandSfx((u8*)player);
-                                        gCMenuCloseSfx = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    gCMenuActivatedId = -1;
-                                    gCMenuCloseSfx = 0;
-                                    Sfx_PlayFromObject(0, SFXTRIG_noboost);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (btn16 & 0x800)
-            {
-                u16 ys = yButtonState;
-                if (ys == 3 && gYButtonInUse == 0)
-                {
-                    ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
-                    gCMenuActivatedId = yButtonItem;
-                    buttonDisable(0, 0x900);
-                }
-                else if (ys == 2)
-                {
-                    if (gTrickyHudItemMask & (1 << yButtonItem))
-                    {
-                        gCMenuActivatedId = yButtonItem;
-                        cMenuPlayTrickyCommandSfx((u8*)player);
-                        buttonDisable(0, 0x900);
-                    }
-                }
-            }
-        }
-    }
-
-    if (cMenuEnabled != 0)
-    {
-        cMenuRotateFn_80124d80();
-    }
-    {
-        u8 isOpen = cMenuOpen;
-        int notOpen;
-        if ((s8)isOpen != 0)
-            notOpen = 0;
-        else if (gCMenuOpenAnim != 0)
-            notOpen = 0;
-        else
-            notOpen = 1;
-        if (notOpen)
-        {
-            cMenuState = 0;
-            lbl_803DD8A8 = 0;
-            gCMenuScrollVel = 0;
-        }
-        if ((s8)isOpen != 0)
-        {
-            buttonDisable(0, 0x300);
-        }
-    }
-    *cursor = gCMenuSelIndex;
-}
-#pragma dont_inline reset
-
-void fn_80128A7C(u8 i, int alpha, int flag);
-
-/* Pause-menu grid renderer: draws all cells
- * (selection last), the breathing selected cell, header/footer text, and the
- * flashing corner cursor. */
-#pragma opt_common_subs off
-void fn_80128470(int alpha)
-{
-    int alpha16;
-    gameTextSetDrawFunc(pauseMenuTextDrawFn);
-    lbl_803DBA8C = lbl_803E20A0;
-
-    if (lbl_803DD7BC <= lbl_803E1E3C)
-    {
-        int off;
-        s8 i = 0;
-        off = 0;
-        while (((GridEntry*)((char*)lbl_803DD824 + off))->f18 > -1)
-        {
-            if (i != lbl_803DD7D8)
-            {
-                fn_80128A7C((u8)i, alpha, 0);
-            }
-            off += 0x20;
-            i++;
-        }
-    }
-    else
-    {
-        s8 j = 0;
-        GridEntry* e = lbl_803DD824;
-        while (e->f18 > -1)
-        {
-            e++;
-            j++;
-        }
-        j--;
-        for (; j >= 0; j--)
-        {
-            if (j != lbl_803DD7D8)
-            {
-                fn_80128A7C((u8)j, alpha, 0);
-            }
-        }
-    }
-    fn_80128A7C((u8)lbl_803DD7D8, alpha, 0);
-    {
-        f32 base = lbl_803DBAC0;
-        f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
-        f32 amp = base * s + base;
-        alpha16 = amp * (s16)alpha;
-        fn_80128A7C((u8)lbl_803DD7D8, alpha16, 4);
-    }
-    {
-        int n = (s16)alpha * (0x200 - lbl_803DD75C);
-        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
-    }
-    lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
-    switch ((int)pauseMenuState)
-    {
-    case 8:
-    case 9:
-    case 10:
-        gameTextFn_80016810(0x3e8, 0xc8, 0x154);
-        break;
-    default:
-        gameTextFn_80016810(0x3dd, 0xc8, 0x154);
-        break;
-    }
-    if (lbl_803DD75C != 0)
-    {
-        s16 tx;
-        int n = alpha16 * lbl_803DD75C;
-        gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
-        lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
-        if (lbl_803DD824 == lbl_8031B818)
-        {
-            int o1, o2, o3, o4;
-            gameTextFn_8001628c(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
-            tx = (s16)(0xdc - (o4 - o3) / 2);
-        }
-        else
-        {
-            tx = 0xdc;
-        }
-        gameTextFn_80016810(lbl_803DD824[lbl_803DD7D8].f14, 0xc8, tx);
-        gameTextFn_80016810(0x3de, 0xc8, 0x154);
-    }
-    if (lbl_803DD75C == 0)
-    {
-        HudTextures* tex;
-        GridEntry* e;
-        f32 scale = (f32)(lbl_803E2108 * (e = &lbl_803DD824[lbl_803DD7D8])->f10);
-        int w = lbl_803E1F34;
-        int cw = (int)(scale * (f32)e->trailX);
-        int ch = (int)(scale * (f32)e->trailY);
-        int vx = e->x + *(s8*)((char*)e + 0xb);
-        u16 w16;
-        s16 alpha;
-        int x1 = (int)((f32)vx - lbl_803E2110 - (f32)(u8)cw);
-        s16 x2 = (s16)((u8)cw + vx);
-        int vy = e->y;
-        int y1 = (int)((f32)(u32)vy - lbl_803E2114 - (f32)(u8)ch);
-        s16 y2 = (s16)((u8)ch + vy);
-        s16 ph = (s16)((int)lbl_803DD748 & 0x3f);
-        if (ph & 0x20)
-        {
-            ph = (s16)(ph ^ 0x3f);
-        }
-        alpha = (s16)(ph * (alpha16 * 0xc0 / 0x100 + 0x40) / 31);
-        tex = (HudTextures*)hudTextures;
-        pauseMenuDrawElement((int)tex->tex80, (f32)(s16)x1, (f32)(s16)y1, 0x100, (u8)alpha, (w16 = w), 0);
-        drawFn_8011eb3c((int)tex->tex80, x2, (f32)(s16)y1, 0x100, (u8)alpha, w16, 0x12, 0xa, 1);
-        drawFn_8011eb3c((int)tex->tex80, (f32)(s16)x1, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 2);
-        drawFn_8011eb3c((int)tex->tex80, x2, y2, 0x100, (u8)alpha, w16, 0x12, 0xa, 3);
-    }
-    gameTextSetDrawFunc(0);
-}
-#pragma opt_common_subs reset
-
-/* Map screen HUD: rising panel with quest
- * hint voice line and dust shimmer while opening, then the full two-panel
- * map layout with location labels. */
-void mapScreenDrawHud(int p1, int p2, int p3)
-{
-    u8* candidates;
-    s16 h0;
-    if (pauseMenuState != 0)
-    {
-        return;
-    }
-    if (gWorldMapVoiceoverTimer != 0)
-    {
-        extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
-        extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
-        s16 v, alpha, w, x, y;
-        int h;
-        v = gWorldMapVoiceoverTimer;
-        alpha = v;
-        alpha *= 0xf;
-        if (alpha > 0xff)
-        {
-            alpha = 0xff;
-        }
-        h0 = v;
-        h0 -= 0x14;
-        if (h0 < 0)
-        {
-            h0 = 0;
-        }
-        h0 *= 0x10;
-        if (h0 > *(u16*)(gTextBoxes + 0x186))
-        {
-            h0 = (s16) * (u16*)(gTextBoxes + 0x186);
-        }
-        x = *(s16*)(gTextBoxes + 0x194);
-        y = *(s16*)(gTextBoxes + 0x196);
-        h = h0;
-        w = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
-        *(u16*)(gTextBoxes + 0x18a) = h0;
-        {
-            s8 fi;
-            s8 li_;
-            u8 lv;
-            int taskCount, taskPartial;
-            int hint;
-            {
-                int i;
-                int tmp;
-                u8* p;
-                i = 0;
-                candidates = (u8*)(int)gGameUiTaskHintCandidates;
-                p = candidates;
-                for (; i < GAMEUI_TASK_HINT_COUNT; i++)
-                {
-                    if (mainGetBit(gTaskHintTable[*p].bit_id))
-                    {
-                        tmp = (s8)gGameUiTaskHintCandidates[i];
-                        goto haveIdx2;
-                    }
-                    p++;
-                }
-                tmp = -1;
-            haveIdx2:
-                fi = (s8)tmp;
-                taskCount = mainGetBit(GAMEBIT_ITEM_SpellStone3_Got);
-                taskPartial = mainGetBit(GAMEBIT_ITEM_SpellStone1_Used);
-                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone2_Used);
-                taskCount += mainGetBit(GAMEBIT_ITEM_SpellStone4_Used);
-                taskCount = taskCount + taskPartial;
-                if (mainGetBit(GAMEBIT_ITEM_FireSpellStone1_Got))
-                {
-                    taskCount++;
-                }
-                if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone1_Got))
-                {
-                    taskCount++;
-                }
-                if (mainGetBit(GAMEBIT_ITEM_FireSpellStone2_Got))
-                {
-                    taskCount++;
-                }
-                if (mainGetBit(GAMEBIT_ITEM_WaterSpellStone2_Got))
-                {
-                    taskCount++;
-                }
-                {
-                    TaskHintEntry* entry = gTaskHintTable;
-                    if (taskCount >= entry[candidates[0]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[0];
-                    else if (taskCount >= entry[candidates[1]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[1];
-                    else if (taskCount >= entry[candidates[2]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[2];
-                    else if (taskCount >= entry[candidates[3]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[3];
-                    else if (taskCount >= entry[candidates[4]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[4];
-                    else
-                        tmp = -1;
-                }
-                li_ = (s8)tmp;
-            }
-            {
-                int hv = (u16)getNextTaskHintText();
-                lv = 0;
-                if (hv > 0xad)
-                {
-                    lv = 1;
-                }
-            }
-            {
-                if (gPauseMenuHintIndex == 2 && lv != 0)
-                {
-                    hint = 0x574;
-                }
-                else if (fi == gPauseMenuHintIndex && li_ != gPauseMenuHintIndex)
-                {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hint0;
-                }
-                else if (gPauseMenuHintIndex == 2)
-                {
-                    if ((*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
-                    {
-                        hint = 0x577;
-                    }
-                    else if (fi == li_)
-                    {
-                        if (mainGetBit(gTaskHintTable[li_].bit1a))
-                        {
-                            hint = 0x578;
-                        }
-                        else
-                        {
-                            hint = gTaskHintTable[li_].hint4;
-                        }
-                    }
-                    else
-                    {
-                        hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
-                    }
-                }
-                else if (gPauseMenuHintIndex == 0 && (*gMapEventInterface)->getMapAct(0xd) == 2 && lv == 0)
-                {
-                    hint = 0x568;
-                }
-                else
-                {
-                    hint = gTaskHintTable[gPauseMenuHintIndex].hint2;
-                }
-                gameTextShow(hint);
-            }
-        }
-        lbl_803DD77C++;
-        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, alpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
-        {
-            int row;
-            int iv[2];
-            f32 s;
-            f32 k;
-            HudTextures* textures;
-            row = 0;
-            iv[0] = 0;
-            iv[1] = iv[0];
-            textures = (HudTextures*)hudTextures;
-            k = lbl_803E204C;
-            for (; row < 0x96; row += 4)
-            {
-                int alpha0, alpha1, jitter1, jitter0, rawAlpha;
-                s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + iv[0]));
-                s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + iv[1])) + s;
-                rawAlpha = (int)((f32)alpha * (lbl_803E2050 + s));
-                alpha0 = rawAlpha < 0 ? 0 : rawAlpha;
-                jitter1 = randomGetRange(0, 0x1e) << 1;
-                jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x32),
-                                   (u8)(alpha0 > 0xff ? 0xff : alpha0), 0x100, 0x82, 2, jitter0, jitter1);
-                rawAlpha = (int)((f32)alpha * (lbl_803E2010 + s));
-                alpha1 = rawAlpha < 0 ? 0 : rawAlpha;
-                jitter1 = randomGetRange(0, 0x1e) << 1;
-                jitter0 = randomGetRange(0, 0x1e) << 1;
-                drawPartialTexture(textures->tex150, lbl_803E1F48, (f32)(row + 0x34),
-                                   (u8)(alpha1 > 0xff ? 0xff : alpha1), 0x100, 0x82, 2, jitter0, jitter1);
-                iv[0] += 0x3520;
-                iv[1] += 0x1f40;
-            }
-        }
-        gameTextFn_80016810(0x3dd, 0x64, 0x15e);
-    }
-    else
-    {
-        char* gt;
-        gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
-        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E1F9C, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F9C, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21AC, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
-        drawTexture(((HudTextures*)hudTextures)->texFC, lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
-        gt = gameTextGet(0x2ac);
-        if (*(u16*)(gt + 2) > 1)
-        {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 4), 0x93, 0x69, 0x17f);
-        }
-        drawTexture(((HudTextures*)hudTextures)->tex10C, lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 2)
-        {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 8), 0x93, 0x51, 0x194);
-        }
-        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21B8, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, lbl_803E21BC, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E21BC, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E21C0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21C0, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
-        drawTexture(((HudTextures*)hudTextures)->tex100, lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 4)
-        {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x10), 0x93, 0x20c, 0x17f);
-        }
-        drawTexture(((HudTextures*)hudTextures)->tex104, lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
-        if (*(u16*)(gt + 2) > 5)
-        {
-            gameTextShowStr(*(char**)(*(char**)(gt + 8) + 0x14), 0x93, 0x1f6, 0x195);
-        }
-    }
-}
-
-/* Pause menu master state machine. */
-#pragma dont_inline on
-#pragma opt_propagation off
-void pauseMenuFn_80129ee0(void)
-{
-    PauseTbl* tbl = &lbl_8031AE20;
-    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    u8* player;
-    u16 btn;
-    u8 isArwing;
-    u8 menuMin;
-    u8 menuMax;
-    u8* charState;
-    u8 hintBuf[13];
-    u8 analogX;
-    u8 analogY;
-
-    player = (u8*)Obj_GetPlayerObject();
-    btn = 0;
-    isArwing = 0;
-    objIsCurModelNotZero();
-    menuMin = 1;
-    menuMax = 5;
-    charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
-    if (!gameTextFn_80019c00())
-    {
-        btn = getButtonsJustPressed(0);
-        getButtonsHeld(0);
-    }
-    lbl_803DD778 -= framesThisStep;
-    if (lbl_803DD778 < 0)
-    {
-        lbl_803DD778 = 0;
-    }
-    if (player == 0)
-    {
-        player = (void*)getArwing();
-        if (player != 0)
-        {
-            isArwing = 1;
-        }
-    }
-    if ((u8)pauseMenuIsFox() == 0)
-    {
-        menuMin = 4;
-    }
-    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
-        (player != 0 &&
-         coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
-         playerGetFocusObject((GameObject*)player) != NULL))
-    {
-        menuMax = 4;
-    }
-    lbl_803DD7D6 = getCurTaskHintTextMap();
-    if (player != 0)
-    {
-        int cell;
-        if (*(void**)(player + 0x30) != NULL)
-        {
-            cell = ((GameObject*)*(char**)(player + 0x30))->anim.mapEventSlot;
-        }
-        else
-        {
-            cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-        }
-        lbl_803DD8E0 = cell;
-        if (cell == 0x36)
-        {
-            if ((*gMapEventInterface)->getMapAct(cell) == 1)
-            {
-                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
-                {
-                    lbl_803DD8E0 = 5;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
-                {
-                    lbl_803DD8E0 = 6;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
-                {
-                    lbl_803DD8E0 = 0xc;
-                }
-            }
-            else if ((*gMapEventInterface)->getMapAct(lbl_803DD8E0) == 2)
-            {
-                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
-                {
-                    lbl_803DD8E0 = 6;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
-                {
-                    lbl_803DD8E0 = 6;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
-                {
-                    lbl_803DD8E0 = 6;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
-                {
-                    lbl_803DD8E0 = 0xa;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
-                {
-                    lbl_803DD8E0 = 9;
-                }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
-                {
-                    lbl_803DD8E0 = 3;
-                }
-            }
-        }
-        else
-        {
-            u8 i;
-            for (i = 0; i < 0x2d; i++)
-            {
-                if (cell == *(u16*)((u8*)&tbl->cellMap[0].cell + i * 4))
-                {
-                    break;
-                }
-            }
-            if (i != 0x2d)
-            {
-                int code = *(u16*)((u8*)&tbl->cellMap[0].code + i * 4);
-                lbl_803DD8E0 = code;
-                mainSetBits(code + 0xf10, 1);
-            }
-        }
-    }
-    if ((*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C)
-    {
-        int c = pauseMenuFrameCounter - framesThisStep;
-        if (c < 0)
-        {
-            c = 0;
-        }
-        pauseMenuFrameCounter = c;
-    }
-    {
-        int state = pauseMenuState;
-        switch (state)
-        {
-        case 0:
-        case 2:
-            break;
-        default:
-        {
-            int t = lbl_803DD78C + framesThisStep * 0x32;
-            if (t > 0x400)
-            {
-                t = 0x400;
-            }
-            lbl_803DD78C = t;
-        }
-        break;
-        }
-        switch (state)
-        {
-        case 0:
-        {
-            int audioFree;
-            int camMode;
-            int canOpen;
-            camMode = (*gCameraInterface)->getMode();
-            canOpen = 1;
-            audioFree = 0;
-            if ((player == 0 || !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
-                getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0)
-            {
-                audioFree = 1;
-            }
-            if (audioFree == 0 && camMode != 0x51)
-            {
-                canOpen = 0;
-            }
-            if ((btn & PAD_BUTTON_MENU) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
-                (*gScreenTransitionInterface)->getProgress() == lbl_803E1E3C && canOpen != 0 && lbl_803DD75B == 0 &&
-                getHudHiddenFrameCount() == 0)
-            {
-                pauseMenuFrameCounter = 0x3c;
-                cutsceneFadeInOut(1);
-                setTimeStop(0xff);
-                buttonDisable(0, PAD_BUTTON_MENU);
-                pauseMenuInit();
-                lbl_803DBA64 = 5;
-                if (isArwing != 0)
-                {
-                    arwingHudVisible = 0;
-                }
-                if (lbl_803DD772 != 0 || lbl_803DD770 != 0)
-                {
-                    lbl_803DD8DC = (int)getCurGameText();
-                    if (lbl_803DD8E0 == lbl_803DD7D6)
-                    {
-                        hintTextMapFn_800ea264();
-                    }
-                    pauseMenuState = 4;
-                    if (lbl_803DD8E0 == lbl_803DD7D6)
-                    {
-                        hintTextMapFn_800ea264();
-                    }
-                    else
-                    {
-                        gameTextLoadDir(0xb);
-                    }
-                    gGameUiCurHintTextMap = 0xb;
-                    lbl_803DD764 = lbl_803E1E60;
-                }
-                else
-                {
-                    pauseMenuState = 1;
-                    lbl_803DD8DC = (int)getCurGameText();
-                    gameTextLoadDir(0xb);
-                }
-            }
-            {
-                s16 tm = lbl_803DD772;
-                if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) &&
-                    (u8)pauseMenuIsFox() != 0)
-                {
-                    s16 nv;
-                    lbl_803DD772 += framesThisStep;
-                    nv = lbl_803DD772;
-                    if (nv >= 0x1518)
-                    {
-                        lbl_803DD772 = 0;
-                        lbl_803DD770 = 1;
-                        Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
-                    }
-                    else if ((nv >= 0xa && tm < 0xa) || (nv >= 0x708 && tm < 0x708))
-                    {
-                        lbl_803DD770 = 1;
-                    }
-                }
-            }
-            if (lbl_803DD770 != 0)
-            {
-                f32 dt = lbl_803DD7DC;
-                f32 nt = dt + timeDelta;
-                lbl_803DD7DC = nt;
-                if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
-                {
-                    lbl_803DD7DC = 0.0f;
-                    Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
-                }
-                lbl_803DD770 += framesThisStep;
-                if (lbl_803DD770 > 0xff)
-                {
-                    lbl_803DD770 = 0;
-                }
-            }
-            break;
-        }
-        case 1:
-        {
-            u16 b2;
-            padGetAnalogInput(0, &analogX, &analogY);
-            pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentIdLegacy() == 0 && AudioStream_IsPreparing() == 0)
-            {
-                ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
-                lbl_803DD781 = 0;
-            }
-            if ((s8)analogX != 0 || lbl_803DD78C == 0 || lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
-            {
-                switch ((s8)lbl_803DBA64)
-                {
-                case 1:
-                case 2:
-                case 3:
-                {
-                    char* anim = hud->anims[lbl_803DBA64];
-                    if (*(u32*)(anim + 0x4c) > 0x90000000)
-                    {
-                        *(u32*)(anim + 0x4c) = 0;
-                    }
-                }
-                }
-                {
-                    u8 prev = lbl_803DBA64;
-                    *(u8*)&lbl_803DBA64 += analogX;
-                    if ((s8)lbl_803DBA64 < menuMin)
-                    {
-                        lbl_803DBA64 = menuMax;
-                    }
-                    if ((s8)lbl_803DBA64 > menuMax)
-                    {
-                        lbl_803DBA64 = menuMin;
-                    }
-                    if ((s8)lbl_803DBA64 != (u8)prev)
-                    {
-                        Sfx_PlayFromObject(0, SFXTRIG_menu_fox_select);
-                    }
-                }
-                switch ((s8)lbl_803DBA64)
-                {
-                case 1:
-                case 2:
-                case 3:
-                {
-                    char* anim = hud->anims[lbl_803DBA64];
-                    if (*(u32*)(anim + 0x4c) > 0x90000000)
-                    {
-                        *(u32*)(anim + 0x4c) = 0;
-                    }
-                }
-                }
-            }
-            if (lbl_803DD786 < lbl_803DBAA2)
-            {
-                lbl_803DD786 += framesThisStep;
-                if (lbl_803DD786 >= lbl_803DBAA2)
-                {
-                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
-                }
-            }
-            else
-            {
-                lbl_803DD784 += framesThisStep * 0x28;
-                if (lbl_803DD784 > 0x400)
-                {
-                    lbl_803DD784 = 0x400;
-                }
-            }
-            b2 = btn;
-            if (b2 & PAD_BUTTON_A)
-            {
-                u8 prev;
-                Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
-                buttonDisable(0, PAD_BUTTON_A);
-                lbl_803DD7BC = 0.0f;
-                lbl_803DD7C0 = 0.0f;
-                lbl_803DD764 = lbl_803E1E60;
-                lbl_803DD7D8 = 0;
-                lbl_803DD768 = 0.0f;
-                prev = lbl_803DBA64;
-                switch ((s8)prev)
-                {
-                case 0:
-                    break;
-                case 1:
-                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
-                    pauseMenuState = 5;
-                    lbl_803DD7C4 = 0;
-                    lbl_803DD7D8 = 2;
-                    AudioStream_Play(0x272f, AudioStream_StartPrepared);
-                    break;
-                case 2:
-                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
-                    pauseMenuState = 3;
-                    lbl_803DD7C4 = 0;
-                    AudioStream_Play(randomGetRange(0, 1) + 0x2710, AudioStream_StartPrepared);
-                    break;
-                case 3:
-                    pauseMenuSetupTitle(0x2b1, prev, 4, 3);
-                    pauseMenuState = 4;
-                    if (lbl_803DD8E0 == lbl_803DD7D6)
-                    {
-                        gGameUiCurHintTextMap = hintTextMapFn_800ea264();
-                    }
-                    else
-                    {
-                        gGameUiCurHintTextMap = (int)getCurGameText();
-                    }
-                    AudioStream_Play(randomGetRange(0, 1) + 0x271d, AudioStream_StartPrepared);
-                    break;
-                case 4:
-                    pauseMenuState = 6;
-                    lbl_803DD7D8 = 1;
-                    break;
-                case 5:
-                    pauseMenuState = 7;
-                    lbl_803DD7D8 = 1;
-                    break;
-                }
-                if (tbl->flags11D0[pauseMenuState] != 0)
-                {
-                    lbl_803DD820 = (f32)(u32)(hud->times190[pauseMenuState] * 0x3c);
-                    lbl_803DD81C = 1;
-                }
-            }
-            pauseMenuAnimateCarousel();
-            if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0)
-            {
-                Sfx_PlayFromObject(0, SFXTRIG_wmap_name);
-                Sfx_PlayFromObject(0, SFXTRIG_menu_fox_weapons_up);
-                pauseMenuFrameCounter = 0x3c;
-                gameTextLoadForMap_800571f0(1);
-                cutsceneFadeInOut(0);
-                buttonDisable(0, 0x1200);
-                pauseMenuState = 2;
-                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
-            }
-            break;
-        }
-        case 2:
-        {
-            s16 t = (s16)(lbl_803DD78C - framesThisStep * 0x32);
-            lbl_803DD78C = t;
-            if (t < 0)
-            {
-                lbl_803DD78C = 0;
-                if (isArwing != 0)
-                {
-                    arwingHudVisible = 1;
-                }
-                pauseMenuState = 0;
-                if (player == 0 || fn_80296C4C(player) == 0)
-                {
-                    AudioStream_StopCurrent();
-                }
-                {
-                    struct
-                    {
-                        int index;
-                    } cleanup;
-                    GameObject** p;
-                    cleanup.index = 0;
-                    p = (GameObject**)&hud->anims[0];
-                    for (; cleanup.index < 4; p++, cleanup.index++)
-                    {
-                        if (*p != 0)
-                        {
-                            (*p)->anim.modelState->shadowTexture = NULL;
-                            (*p)->anim.modelState->shadowWorkBuffer = NULL;
-                            if ((u32)(*p)->anim.placementData > 0x90000000)
-                            {
-                                (*p)->anim.placementData = NULL;
-                            }
-                            Obj_FreeObject(*p);
-                            *p = NULL;
-                        }
-                    }
-                }
-                Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
-                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
-            }
-            else
-            {
-                pauseMenuAnimateCarousel();
-            }
-            {
-                s16 v = (s16)(lbl_803DD784 - framesThisStep * 0x50);
-                lbl_803DD784 = v;
-                if (v < 0)
-                {
-                    lbl_803DD784 = 0;
-                }
-            }
-            break;
-        }
-        case 3:
-            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
-            {
-                int r = pauseMenuGridFn_8012b4c4();
-                if (lbl_803DD7C4 != 0)
-                {
-                    lbl_803DD824 = tbl->gridBD0;
-                }
-                else
-                {
-                    lbl_803DD824 = tbl->grid9F8;
-                }
-                if (lbl_803DD7C4 == 0)
-                {
-                    hintTextFn_800ea174(hintBuf);
-                    if ((u8)r != 0 || (lbl_803E2160 == lbl_803DD760 && lbl_803DD764 > lbl_803E2160))
-                    {
-                        lbl_803DD7D8 = lbl_803DD8E0;
-                    }
-                    {
-                        u8 k;
-                        for (k = 0; k < 0xd; k++)
-                        {
-                            if (hintBuf[k] != 0)
-                            {
-                                lbl_803DD824[k].id = 0x48;
-                            }
-                            else
-                            {
-                                lbl_803DD824[k].id = 0x49;
-                            }
-                            *(u8*)((char*)&lbl_803DD824[k] + 0x8) = 0x10;
-                            *(u8*)((char*)&lbl_803DD824[k] + 0x9) = 0xc;
-                        }
-                    }
-                    if (lbl_803DD7D6 == lbl_803DD8E0)
-                    {
-                        lbl_803DD824[lbl_803DD8E0].id = 0x4c;
-                    }
-                    else
-                    {
-                        lbl_803DD824[lbl_803DD8E0].id = 0x4b;
-                        lbl_803DD824[lbl_803DD7D6].id = 0x4a;
-                        lbl_803DD824[lbl_803DD7D6].trailX = 0x14;
-                        lbl_803DD824[lbl_803DD7D6].trailY = 0x10;
-                    }
-                    lbl_803DD824[lbl_803DD8E0].trailX = 0x1a;
-                    lbl_803DD824[lbl_803DD8E0].trailY = 0x18;
-                }
-                else
-                {
-                    int gi;
-                    u8 k;
-                    for (k = 0; k < 0xc; k++)
-                    {
-                        gi = k;
-                        if (mainGetBit(*(s16*)((u8*)&tbl->gbids[0] + gi * 2)))
-                        {
-                            lbl_803DD824[gi].id = 0x26;
-                        }
-                        else
-                        {
-                            lbl_803DD824[gi].id = 0x25;
-                        }
-                    }
-                }
-                pauseMenuRunSubmenu(r);
-                pauseMenuFn_8012b77c();
-            }
-            else
-            {
-                if (lbl_803DD7C8 != 0)
-                {
-                    textureFree(lbl_803DD7C8);
-                    lbl_803DD7C8 = 0;
-                }
-                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
-                pauseMenuState = 1;
-                lbl_803DD784 = 0;
-            }
-            break;
-        case 5:
-            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
-            {
-                int r = pauseMenuGridFn_8012b4c4();
-                if (lbl_803DD7C4 != 0)
-                {
-                    lbl_803DD824 = tbl->gridF70;
-                }
-                else
-                {
-                    lbl_803DD824 = tbl->gridD70;
-                }
-                pauseMenuRunSubmenu(r);
-                {
-                    u8 idx;
-                    int k;
-                    u8 i;
-                    int bit;
-                    i = 0;
-                    k = 0;
-                    while ((bit = *(int*)((u8*)&tbl->list740[0] + (idx = k) * 4)) > -1)
-                    {
-                        s16 texId = 0xbf0;
-                        if (mainGetBit(bit))
-                        {
-                            texId = *(s16*)((u8*)&tbl->alts[0].alt + idx * 16);
-                        }
-                        *(int*)((u8*)&hud->textures3A8[0] + i * 4) = (int)textureLoadAsset(texId);
-                        *(s16*)((u8*)&hud->texIds358[0] + i * 2) = texId;
-                        i++;
-                        k++;
-                    }
-                }
-                {
-                    s16* it;
-                    int k;
-                    s16 texId;
-                    int i;
-                    int id;
-                    i = 0xa;
-                    k = 0;
-                    while ((id = *(it = (s16*)((u8*)&tbl->items[0] + (u8)k * 16))) > -1)
-                    {
-                        texId = 0xbf0;
-                        if (mainGetBit(id))
-                        {
-                            texId = it[3];
-                        }
-                        *(int*)((u8*)&hud->textures3A8[0] + (u8)i * 4) = (int)textureLoadAsset(texId);
-                        *(s16*)((u8*)&hud->texIds358[0] + (u8)i * 2) = texId;
-                        i++;
-                        k++;
-                    }
-                }
-                {
-                    s16 texId = 0xbf0;
-                    if (mainGetBit(GAMEBIT_ITEM_DinoHorn_Got))
-                    {
-                        texId = 0xc8a;
-                    }
-                    hud->textures3A8[0x14] = (int)textureLoadAsset(texId);
-                    hud->texIds358[0x14] = texId;
-                    texId = 0xbf0;
-                    if (mainGetBit(GAMEBIT_ITEM_FireflyLantern_Got))
-                    {
-                        texId = 0xc06;
-                    }
-                    hud->textures3A8[0x15] = (int)textureLoadAsset(texId);
-                    hud->texIds358[0x15] = texId;
-                    texId = 0xbf0;
-                    if (mainGetBit(GAMEBIT_ITEM_Viewfinder_Got))
-                    {
-                        texId = 0xc05;
-                    }
-                    hud->textures3A8[0x16] = (int)textureLoadAsset(texId);
-                    hud->texIds358[0x16] = texId;
-                }
-                pauseMenuFn_8012b77c();
-            }
-            else
-            {
-                struct {
-                    u8 k;
-                    void* nullTexture;
-                    s16 nullId;
-                } clear;
-                int idx;
-                void** p;
-                clear.k = 0;
-                clear.nullTexture = NULL;
-                clear.nullId = 0;
-                for (; clear.k < 0x28; clear.k++)
-                {
-                    idx = clear.k;
-                    p = (void**)((u8*)&hud->textures3A8[0] + idx * 4);
-                    if (*p != NULL)
-                    {
-                        textureFree(*p);
-                        *p = clear.nullTexture;
-                        *(s16*)((u8*)&hud->texIds358[0] + idx * 2) = clear.nullId;
-                    }
-                }
-                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
-                pauseMenuState = 1;
-                lbl_803DD784 = 0;
-            }
-            break;
-        case 4:
-            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
-            {
-                lbl_803DD730 = (u16)getNextTaskHintText();
-                lbl_803DD770 = 0;
-                lbl_803DD772 = 0;
-                pauseMenuFn_8012b77c();
-                if (lbl_803DD7A4 == 0 || *lbl_803DD7A4 == 0xffff)
-                {
-                    lbl_803DD7A4 = saveGameGetCurHint();
-                }
-            }
-            else
-            {
-                gameTextLoadDir(gGameUiCurHintTextMap);
-                pauseMenuState = 1;
-                lbl_803DD784 = 0;
-                if (lbl_803DD7A4 != 0)
-                {
-                    lbl_803DD7A4 = 0;
-                }
-            }
-            break;
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 0xa:
-            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
-            {
-                lbl_803DD824 = tbl->gridF10;
-                pauseMenuRunSubmenu(0);
-                pauseMenuFn_8012b77c();
-                if ((btn & PAD_BUTTON_A) && lbl_803DD764 > lbl_803E2160)
-                {
-                    Sfx_PlayFromObject(0, SFXTRIG_menu_pause_up);
-                    buttonDisable(0, PAD_BUTTON_A);
-                    lbl_803DD764 = lbl_803E2168;
-                }
-            }
-            else if (lbl_803DD7D8 == 1)
-            {
-                switch (state)
-                {
-                case 8:
-                    if (lbl_803DB424 != 0)
-                    {
-                        pauseMenuState = 9;
-                    }
-                    else
-                    {
-                        pauseMenuState = 0xa;
-                    }
-                    lbl_803DD764 = lbl_803E1E60;
-                    break;
-                case 9:
-                    pauseMenuState = 0xa;
-                    lbl_803DD764 = lbl_803E1E60;
-                    break;
-                case 0xa:
-                    Music_Trigger(MUSICTRIG_cldrnr_tune1, 0);
-                    if ((*gMapEventInterface)->getRestartGameNotCleared() != 0)
-                    {
-                        (*gMapEventInterface)->gotoRestartPoint();
-                    }
-                    else
-                    {
-                        (*gMapEventInterface)->gotoSavegame();
-                    }
-                    break;
-                default:
-                    pauseMenuState = 1;
-                    lbl_803DD784 = 0;
-                    break;
-                }
-            }
-            else
-            {
-                switch (state)
-                {
-                case 7:
-                    saveGame_save();
-                    lbl_803DD778 = 0x80;
-                    pauseMenuState = 1;
-                    lbl_803DD784 = 0;
-                    break;
-                case 8:
-                    charState[9] -= 1;
-                    playerHeal(player);
-                    gameTextLoadDir(lbl_803DD8DC);
-                    pauseMenuState = 2;
-                    pauseMenuFrameCounter = 0x3c;
-                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
-                    break;
-                case 9:
-                    updateSavedHealth();
-                    saveGame_save();
-                    lbl_803DD778 = 0x80;
-                    pauseMenuState = 0xa;
-                    lbl_803DD7D8 = 1;
-                    lbl_803DD764 = lbl_803E1E60;
-                    lbl_803DD784 = 0;
-                    break;
-                case 6:
-                case 0xa:
-                    lbl_803DD8DC = 0x15;
-                    gameTextLoadDir(0x15);
-                    mapScreenVisible = 0;
-                    lbl_803DD774 = 0;
-                    gWorldMapVoiceoverTimer = 0;
-                    lbl_803DBA5C = -1;
-                    pauseMenuSetupTitle(0x2b1, 1, 4, 3);
-                    pauseMenuState = 2;
-                    pauseMenuFrameCounter = 0x3c;
-                    (*gScreenTransitionInterface)->start(0x14, 1);
-                    gPauseMenuTransitionStarted = 1;
-                    break;
-                }
-            }
-            break;
-        case 0xb:
-            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
-            {
-                int have = mainGetBit(GAMEBIT_ITEM_FuelCell_Count);
-                lbl_803DD758 = 0;
-                if (player != 0)
-                {
-                    lbl_803DD8E0 =
-                        coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
-                    if (lbl_803DD8E0 == 7)
-                    {
-                        for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
-                        {
-                            if (!mainGetBit(*(s16*)((u8*)&tbl->tokens[0].bitA + lbl_803DD756 * 8)))
-                            {
-                                break;
-                            }
-                            if (mainGetBit(*(s16*)((u8*)&tbl->tokens[0].bitB + lbl_803DD756 * 8)) == 0)
-                            {
-                                if (have >= tbl->tokens[lbl_803DD756].thresh)
-                                {
-                                    lbl_803DD758 = 2;
-                                }
-                                else
-                                {
-                                    lbl_803DD758 = 1;
-                                }
-                                break;
-                            }
-                            lbl_803DD756++;
-                        }
-                    }
-                }
-                if ((btn & PAD_BUTTON_A) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60)
-                {
-                    if (lbl_803DD758 == 2)
-                    {
-                        int rem = have - tbl->tokens[lbl_803DD756].thresh;
-                        mainSetBits(GAMEBIT_ITEM_FuelCell_Count, rem);
-                        mainSetBits(tbl->tokens[lbl_803DD756].bitB, 1);
-                    }
-                    gPauseMenuTokenConfirmFlag = 1;
-                    buttonDisable(0, PAD_BUTTON_A);
-                    lbl_803DD764 = lbl_803E2168;
-                }
-                else if ((btn & PAD_BUTTON_B) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60)
-                {
-                    buttonDisable(0, PAD_BUTTON_B);
-                    lbl_803DD764 = lbl_803E2168;
-                    gPauseMenuTokenConfirmFlag = 0;
-                }
-                pauseMenuFn_8012b77c();
-            }
-            else
-            {
-                cutsceneFadeInOut(0);
-                gameTextLoadForMap_800571f0(1);
-                pauseMenuState = 2;
-                pauseMenuFrameCounter = 0x3c;
-            }
-            break;
-        }
-    }
-}
-#pragma opt_propagation reset
-#pragma dont_inline reset
-
-/* Pause-menu save-screen render pass.
- * Saves the live FOV, swaps to view 1 at the origin facing 0x8000,
- * sets the viewport from the global render obj, then renders slots
- * 1..5 of lbl_803A9410 (clearing the model dirty bit and forcing the
- * alpha byte), drawing the selected slot's shadow blob via
- * hudDrawColored when lbl_803DD78C is past its threshold. A second
- * pass renders both lbl_803DD868 slots the same way. Tail restores
- * the camera state and pops the save-confirm text when flagged. */
-void pauseMenuDoSave(void)
-{
-    u32 texture;
-    f32 scale;
-    int x;
-    int y;
-    struct PmColor
-    {
-        u8 r, g, b, a;
-    } colorB, colorA;
-    u8 i;
-    u8 j;
-
-    colorB = *(struct PmColor*)&lbl_803E1E00;
-    lbl_803DBAA4 = Camera_GetFovY();
-    Camera_SetFovY(lbl_803E2044);
-    Camera_SetCurrentViewIndex(1);
-    lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
-    Camera_DisableViewYOffset();
-    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
-    Camera_SetCurrentViewRotation(0x8000, 0, 0);
-    Camera_UpdateViewMatrices();
-    Camera_RebuildProjectionMatrix();
-    {
-        u16* obj = (u16*)gRenderModeObj;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
-                      lbl_803E1E68);
-    }
-    for (i = 1; i < 6; i++)
-    {
-        if (lbl_803A9410[i] == NULL)
-        {
-            continue;
-        }
-        if (*(u32*)((u8*)lbl_803A9410[i] + 0x4c) > 0x90000000U)
-        {
-            *(u32*)((u8*)lbl_803A9410[i] + 0x4c) = 0;
-        }
-        objRender(0, 0, 0, 0, lbl_803A9410[i], 1);
-        *(u16*)((u8*)Obj_GetActiveModel(lbl_803A9410[i]) + 0x18) &= ~0x8;
-        *((u8*)lbl_803A9410[i] + 0x37) = 0xff;
-        if (i == lbl_803DBA64)
-        {
-            if (lbl_803DD78C > 0x1f4)
-            {
-                objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
-                colorA = colorB;
-                hudDrawColored(texture, x, y, (u32*)&colorA, (s32)(lbl_803E20B8 * scale), 1);
-            }
-        }
-    }
-    for (j = 0; j < 2; j++)
-    {
-        objRender(0, 0, 0, 0, lbl_803DD868[j], 1);
-        *(u16*)((u8*)Obj_GetActiveModel(lbl_803DD868[j]) + 0x18) &= ~0x8;
-        *((u8*)lbl_803DD868[j] + 0x37) = 0xff;
-    }
-    Camera_SetCurrentViewIndex(0);
-    if (lbl_803DD7E0 != 0)
-    {
-        Camera_EnableViewYOffset();
-    }
-    Camera_UpdateViewMatrices();
-    Camera_SetFovY(lbl_803DBAA4);
-    Camera_RebuildProjectionMatrix();
-    Camera_ApplyFullViewport();
-    if (lbl_803DD778 & 0x10)
-    {
-        if (lbl_803DB424 != 0)
-        {
-            gameTextSetColorInt(0xff, 0xff, 0xff, 0xff);
-            gameTextShow(0x46e);
-        }
-    }
-}
-
-/* Draws one pause-menu grid cell with its
- * motion trail: each trail step (count, stepping by 4) redraws the cell's
- * texture offset along the entry's trail vector, fading via the scaled
- * alpha. The selected cell on the main grid breathes (sin pulse) and slides
- * toward the panel edge while lbl_803DD75C runs. */
-void fn_80128A7C(u8 i, int alpha, int flag)
-{
-    s8 cnt;
-    int div15;
-    CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    int v;
-    int scaled;
-    s16 ofs;
-    f32 quarter;
-    f32 spd;
-    f32 x;
-    f32 y;
-    f64 k2128;
-    f64 k2108;
-    f64 t;
-
-    t = (f64)(s16)alpha * (lbl_803E2080 - lbl_803DD75C);
-    scaled = (s32)(t * lbl_803E2088);
-    if (lbl_803DD824[i].id < 0)
-    {
-        return;
-    }
-    cnt = lbl_803DD824[i].count;
-    div15 = (s16)scaled / 15;
-    quarter = lbl_803E20B8;
-    k2108 = lbl_803E2108;
-    k2128 = lbl_803E2128;
-    for (; cnt >= 0; cnt -= 4)
-    {
-        spd = quarter * lbl_803DD824[i].f10;
-        x = lbl_803DD824[i].x;
-        y = lbl_803DD824[i].y;
-        ofs = lbl_803DD824[i].ofs6 - cnt;
-        if (i != lbl_803DD7D8 || lbl_803DD824 == lbl_8031B818)
-        {
-            s16 idv = lbl_803DD824[i].id;
-            if (idv == 0x4a || idv == 0x4c)
-            {
-                v = (s16)((s32)lbl_803DD748 & 0x1f);
-                if (v & 0x10)
-                {
-                    v ^= 0x1f;
-                }
-                v = (s16)((s16)v * div15);
-            }
-            else
-            {
-                v = scaled;
-            }
-            ofs -= lbl_803DD75C;
-        }
-        else
-        {
-            f32 dx;
-            f32 dy;
-            f32 pr;
-            v = alpha;
-            spd = (f32)(spd * (lbl_803E1F60 + lbl_803DD75C / lbl_803E2118));
-            spd += lbl_803E20BC * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94) + lbl_803E2090;
-            dx = lbl_803E1F34 - x;
-            pr = dx * lbl_803DD75C;
-            x = (f32)(pr * lbl_803E2088 + x);
-            dy = lbl_803E2120 - y;
-            pr = dy * lbl_803DD75C;
-            y = (f32)(pr * lbl_803E2088 + y);
-        }
-        {
-            f32 prod = spd * lbl_803DD824[i].trailX;
-            x -= k2108 * (prod * k2128);
-            prod = spd * lbl_803DD824[i].trailY;
-            y -= k2108 * (prod * k2128);
-        }
-        if (lbl_803DD824 == lbl_8031BD90)
-        {
-            int idv = lbl_803DD824[i].id;
-            u32 tex;
-            int* t3a8;
-            s16* t358;
-            t358 = (s16*)((u8*)&hud->texIds358[0] + idv * 2);
-            if (*t358 == 0xbf0)
-            {
-                ofs -= 0x14;
-            }
-            t3a8 = (int*)((u8*)&hud->textures3A8[0] + idv * 4);
-            tex = *t3a8;
-            if (tex == 0)
-            {
-                continue;
-            }
-            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, spd, flag);
-        }
-        else
-        {
-            int idv = lbl_803DD824[i].id;
-            int* t1c0;
-            if (idv == 0)
-            {
-                continue;
-            }
-            if (idv == 0x25)
-            {
-                ofs -= 0x14;
-            }
-            t1c0 = (int*)((u8*)&hud->textures1C0[0] + idv * 4);
-            pauseMenuDrawElement(*t1c0, x, y, ofs, (u8)v, spd, flag);
-        }
-    }
-}
-
-/* Pause-menu character carousel driver:
- * eases the swivel angle gPauseMenuSwivelAngle toward the selected slot, spins the
- * podium objects (lbl_803DD868), then bobs/sways each character model in
- * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
-void pauseMenuAnimateCarousel(void)
-{
-    u8 flag;
-    u8 k;
-    u8 last;
-    u8* player;
-    u8 count;
-    s16 step;
-    int kk;
-    s16 delta;
-    u32 watermark;
-    f32 base;
-    ObjAnimEventList animEvents;
-
-    player = (u8*)Obj_GetPlayerObject();
-    count = 5;
-    objIsCurModelNotZero();
-    last = 5;
-    k = 1;
-    if ((u8)pauseMenuIsFox() == 0)
-    {
-        k = 4;
-        count = 2;
-    }
-    if (player != NULL)
-    {
-        flag = (coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) != 0 ||
-                playerGetFocusObject((GameObject*)player) == NULL);
-    }
-    else
-    {
-        flag = 1;
-    }
-    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 || flag == 0)
-    {
-        count -= 1;
-        last = 4;
-    }
-    {
-        u16 cur;
-        int neg;
-        cur = gPauseMenuSwivelAngle;
-        neg = -lbl_803DBA64;
-        step = 0x10000 / count;
-        delta = neg * step - cur;
-    }
-    if (delta > 0x8000)
-    {
-        delta = (delta - 0x10000) + 1;
-    }
-    if (delta < -0x8000)
-    {
-        delta = (delta + 0x10000) - 1;
-    }
-    gPauseMenuSwivelAngle += delta / 7;
-    gPauseMenuPodiumSpinFrame += framesThisStep;
-    *(s16*)lbl_803DD868[0] = (s16)(gPauseMenuPodiumSpinFrame << 9);
-    *(s16*)((u8*)lbl_803DD868[0] + 0x4) =
-        lbl_803E2178 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 1000) / lbl_803E1E94);
-    *(f32*)((u8*)lbl_803DD868[0] + 0x10) =
-        (f32)(lbl_803E2180 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuPodiumSpinFrame * 400) / lbl_803E1E94) +
-              lbl_803E217C);
-    {
-        int d = 0x400 - lbl_803DD78C;
-        *(f32*)((u8*)lbl_803DD868[0] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
-    }
-    *(f32*)((u8*)lbl_803DD868[1] + 0x10) = *(f32*)((u8*)lbl_803DD868[0] + 0x10);
-    {
-        f32 spin = lbl_803E218C * lbl_803DD78C;
-        *(f32*)((u8*)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
-    }
-    ObjAnim_AdvanceCurrentMove((int)lbl_803DD868[1], lbl_803E1E58, timeDelta,
-                                                                 &animEvents);
-    watermark = 0x90000000;
-    for (; k <= last; k++)
-    {
-        f32 sel;
-        f32 a;
-        if (*(u32*)((u8*)lbl_803A9410[k] + 0x4c) > watermark)
-        {
-            *(u32*)((u8*)lbl_803A9410[k] + 0x4c) = 0;
-        }
-        kk = k;
-        if (kk == lbl_803DBA64)
-        {
-            sel = lbl_803E1FC0;
-        }
-        else
-        {
-            sel = lbl_803E2194;
-        }
-        sel = lbl_803DD784 * sel;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * lbl_803E2190;
-        *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
-        ObjAnim_AdvanceCurrentMove((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
-                                                                     &animEvents);
-        a = lbl_803E1E64 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
-        a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0xc) = a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0xc);
-        base = lbl_803E2050 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94) +
-               (*(f32*)((u8*)lbl_803DD868[0] + 0x10) + lbl_803E2010);
-        a = lbl_803E1E64 - mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
-        a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x10) = a * lbl_803E2190 + base;
-        a = lbl_803E1E64 * mathCosf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
-        a = lbl_803DD784 * a;
-        *(f32*)((u8*)lbl_803A9410[k] + 0x14) = a * lbl_803E2190 + *(f32*)((u8*)lbl_803DD868[0] + 0x14);
-    }
-}
-
-/* ===== EN v1.0 retargeted leaves ========================================== */
 /* s16 getter for cMenuSelectedItem. */
 s16 cMenuGetSelectedItem(void)
 {
@@ -3740,178 +463,6 @@ int GameUI_isAnyItemBeingUsed(void)
 {
     return gCMenuActivatedId > -1;
 }
-
-/* Linear search through a 4-byte array
- * for the active id at gCMenuActivatedId. On hit, clears the busy flag at
- * gCMenuCloseSfx and returns the matched value; on miss returns -1. */
-s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
-{
-    int i;
-    for (i = 0; i < count; i++)
-    {
-        if (gCMenuActivatedId == arr[i])
-        {
-            gCMenuCloseSfx = 0;
-            return arr[i];
-        }
-    }
-    return -1;
-}
-
-/* Latch helper: set busy byte
- * gGameUiHelpTextPending and stash s16 arg in gGameUiHelpTextId. */
-void showHelpText(s16 val)
-{
-    gGameUiHelpTextPending = 1;
-    gGameUiHelpTextId = val;
-}
-
-/* u8 setter for gGameUiUnusedHudSetting. */
-void GameUI_setUnusedHudSetting(u8 val)
-{
-    gGameUiUnusedHudSetting = val;
-}
-
-/* s8 setter for shouldCloseCMenu. */
-void CMenu_SetShouldClose(int val)
-{
-    shouldCloseCMenu = val;
-}
-
-/* Per-frame state advance dispatcher.
- * Gated on the gameUiResourcesLoaded enable flag; when zero, fast-returns 0.
- * Otherwise: optionally runs drawWorldMapHud (if mapScreenVisible set), runs
- * gameTextFadeOut, optionally runs cMenuRun (if cMenuEnabled set),
- * runs npcTalkFn_8012e880, returns 0. */
-int GameUI_run(void)
-{
-    if (gameUiResourcesLoaded == 0)
-        return 0;
-    if (mapScreenVisible != 0)
-        drawWorldMapHud();
-    gameTextFadeOut();
-    if (cMenuEnabled != 0)
-        cMenuRun();
-    npcTalkFn_8012e880();
-    return 0;
-}
-
-#pragma dont_inline on
-void cMenuSelectItemByTarget(int idx, s16 target, s8 flag)
-{
-    void* entry = (u8*)gCMenuSections + idx * 16;
-    int count = cMenuSetItems(*(int*)entry, flag);
-    s16 pos = *(s16*)((char*)entry + 4);
-    u8 i;
-
-    for (i = 0; i < count; i++)
-    {
-        s16 lookup = pos;
-        if (gCMenuItemEnabledTable[lookup] != 0 && gCMenuItemTargetTable[lookup] == target)
-        {
-            *(s16*)((char*)entry + 4) = pos;
-            return;
-        }
-        pos++;
-        if (pos >= count)
-        {
-            pos = 0;
-        }
-    }
-}
-
-void cMenuSelectFirstEnabledItem(int idx, s8 flag)
-{
-    void* entry;
-    s16* posPtr;
-    u8 prev = 1;
-    int count;
-    s16 pos;
-    u8 i;
-
-    entry = (u8*)gCMenuSections + idx * 16;
-    count = cMenuSetItems(*(int*)entry, flag);
-    posPtr = (s16*)((char*)entry + 4);
-    pos = *posPtr;
-
-    for (i = 0; i < count * 2; i++)
-    {
-        if (gCMenuItemEnabledTable[pos] != 0 && (prev != 0 || i >= count))
-        {
-            *posPtr = pos;
-            return;
-        }
-        prev = gCMenuItemEnabledTable[pos];
-        pos++;
-        if (pos >= count)
-        {
-            pos = 0;
-        }
-    }
-}
-#pragma dont_inline reset
-
-/* Frees all cached HUD/item textures and
- * resets the item slot tables. */
-static void gameUiClearItemSlots(GameUiHud* g)
-{
-    int k;
-    void** tex;
-    u8 j;
-    s16* rowS16;
-    u8* rowU8;
-    for (j = 0; j < 64; j++)
-    {
-        k = j;
-        tex = (void**)((u8*)&g->itemTextures + k * 4);
-        if (*tex != NULL)
-        {
-            textureFree(*tex);
-            *tex = NULL;
-        }
-        rowS16 = (s16*)((u8*)g + k * 2);
-        rowS16[1188] = -1;
-        rowU8 = (u8*)g + k;
-        rowU8[1096] = 1;
-    }
-}
-
-#pragma opt_propagation off
-void GameUI_release(void)
-{
-    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
-    int i;
-    void** p;
-
-    for (i = 0, p = g->hudTextures; i < 102; p++, i++)
-    {
-        if (*p != 0)
-            textureFree(*p);
-    }
-
-    gameUiResetMenuState();
-
-    /* Retail clears the 64-slot item table twice: once around gameUiResetMenuState
-     * and again after the icon-cache teardown below (both loops are in the asm). */
-    gameUiClearItemSlots(g);
-
-    if (lbl_803DD7C8 != 0)
-    {
-        textureFree(lbl_803DD7C8);
-        lbl_803DD7C8 = 0;
-    }
-    if (gTrickyHudCachedIconTexture != 0)
-    {
-        textureFree(gTrickyHudCachedIconTexture);
-    }
-    gTrickyHudCachedIconIndex = -1;
-    gTrickyHudCachedIconTexture = 0;
-
-    gameUiClearItemSlots(g);
-
-    textureFree((u8*)gGameUiBlinkTexture);
-}
-#pragma opt_propagation reset
 
 /* Top-level per-frame HUD draw dispatcher. */
 void GameUI_hudDraw(int a, int b, int c)
@@ -3943,12 +494,12 @@ void GameUI_hudDraw(int a, int b, int c)
                 gameTextFn_80016c18(curGameText, (int)lbl_803A9440);
             }
         }
-        ((void (*)(int, int, int))pauseMenuDrawText)(a, b, c);
+        pauseMenuDrawText(a, b, c);
     }
     else
     {
         pauseMenuDraw(a, b, c);
-        ((void (*)(int, int, int))pauseMenuDrawText)(a, b, c);
+        pauseMenuDrawText(a, b, c);
         if (mapScreenVisible != 0)
         {
             mapScreenDrawHud(a, b, c);
@@ -3993,7 +544,7 @@ void GameUI_hudDraw(int a, int b, int c)
         }
         if (lbl_803DD75B != 0)
         {
-            ((void (*)(int, int, int))timeListDraw)(a, b, c);
+            timeListDraw(a, b, c);
         }
         Camera_ApplyCurrentViewport((void*)a);
     }
@@ -4006,6 +557,14 @@ void GameUI_hudDraw(int a, int b, int c)
     }
     aButtonIcon = 0;
     bButtonIcon = 0;
+}
+
+/* Latch helper: set busy byte
+ * gGameUiHelpTextPending and stash s16 arg in gGameUiHelpTextId. */
+void showHelpText(s16 val)
+{
+    gGameUiHelpTextPending = 1;
+    gGameUiHelpTextId = val;
 }
 
 /* Per-frame UI/pause-menu update + dispatch. */
@@ -4161,15 +720,15 @@ void GameUI_update(void)
                                 break;
                             }
                         case 0:
-                            if (cMenuCountAvailableEntries(*(int*)&gCMenuSections[0], 0) != 0 ||
-                                cMenuCountAvailableEntries(*(int*)&gCMenuSections[1], 0) == 0)
+                            if (cMenuCountAvailableEntries((s16*)gCMenuSections[0].items, 0) != 0 ||
+                                cMenuCountAvailableEntries((s16*)gCMenuSections[1].items, 0) == 0)
                             {
                                 gCMenuButtons |= 0x80000;
                                 break;
                             }
                         case 1:
-                            if (cMenuCountAvailableEntries(*(int*)&gCMenuSections[1], 0) != 0 ||
-                                cMenuCountAvailableEntries(*(int*)&gCMenuSections[0], 0) == 0)
+                            if (cMenuCountAvailableEntries((s16*)gCMenuSections[1].items, 0) != 0 ||
+                                cMenuCountAvailableEntries((s16*)gCMenuSections[0].items, 0) == 0)
                             {
                                 gCMenuButtons |= 0x40000;
                             }
@@ -4400,58 +959,145 @@ void GameUI_update(void)
     }
 }
 
-#pragma opt_propagation off
-#pragma opt_loop_invariants off
+void cMenuSelectItemByTarget(int idx, s16 target, s8 flag)
+{
+    void* entry = (u8*)gCMenuSections + idx * 16;
+    int count = cMenuSetItems((s16*)*(int*)entry, flag);
+    s16 pos = *(s16*)((char*)entry + 4);
+    u8 i;
+
+    for (i = 0; i < count; i++)
+    {
+        s16 lookup = pos;
+        if (gCMenuItemEnabledTable[lookup] != 0 && gCMenuItemTargetTable[lookup] == target)
+        {
+            *(s16*)((char*)entry + 4) = pos;
+            return;
+        }
+        pos++;
+        if (pos >= count)
+        {
+            pos = 0;
+        }
+    }
+}
+
+void cMenuSelectFirstEnabledItem(int idx, s8 flag)
+{
+    void* entry;
+    s16* posPtr;
+    u8 prev = 1;
+    int count;
+    s16 pos;
+    u8 i;
+
+    entry = (u8*)gCMenuSections + idx * 16;
+    count = cMenuSetItems((s16*)*(int*)entry, flag);
+    posPtr = (s16*)((char*)entry + 4);
+    pos = *posPtr;
+
+    for (i = 0; i < count * 2; i++)
+    {
+        if (gCMenuItemEnabledTable[pos] != 0 && (prev != 0 || i >= count))
+        {
+            *posPtr = pos;
+            return;
+        }
+        prev = gCMenuItemEnabledTable[pos];
+        pos++;
+        if (pos >= count)
+        {
+            pos = 0;
+        }
+    }
+}
+
+/* Per-frame state advance dispatcher.
+ * Gated on the gameUiResourcesLoaded enable flag; when zero, fast-returns 0.
+ * Otherwise: optionally runs drawWorldMapHud (if mapScreenVisible set), runs
+ * gameTextFadeOut, optionally runs cMenuRun (if cMenuEnabled set),
+ * runs npcTalkFn_8012e880, returns 0. */
+int GameUI_run(void)
+{
+    if (gameUiResourcesLoaded == 0)
+    {
+        return 0;
+    }
+    if (mapScreenVisible != 0)
+    {
+        drawWorldMapHud();
+    }
+    gameTextFadeOut();
+    if (cMenuEnabled != 0)
+    {
+        cMenuRun();
+    }
+    npcTalkFn_8012e880();
+    return 0;
+}
+
+/* u8 setter for gGameUiUnusedHudSetting. */
+void GameUI_setUnusedHudSetting(u8 val)
+{
+    gGameUiUnusedHudSetting = val;
+}
+
+/* s8 setter for shouldCloseCMenu. */
+void CMenu_SetShouldClose(int val)
+{
+    shouldCloseCMenu = val;
+}
+
+void GameUI_release(void)
+{
+    GameUiHud* g = (GameUiHud*)lbl_803A87F0;
+    int i = 0;
+    void** textures = g->hudTextures;
+
+    while (i < 102)
+    {
+        if (*textures != NULL)
+        {
+            textureFree(*textures);
+        }
+        textures++;
+        i++;
+    }
+    GAMEUI_RELEASE_MENU_RESOURCES(g);
+
+    GAMEUI_CLEAR_ITEM_SLOTS(g);
+
+    textureFree((u8*)gGameUiBlinkTexture);
+}
+
+
+/* Lifecycle setters and initialization. */
+
+
+/* Forward declarations. */
+void textureFreeFn_8012fcec(void);
+void Pause_SetDisabled(u8 v);
+void Pause_ResetMenuFrameCounter(void);
+void CMenu_SetFadeCounter(s16 v);
+void GameUI_initialise(void);
+
 void textureFreeFn_8012fcec(void)
 {
-    u8 z[2];
     GameUiHud* g = (GameUiHud*)lbl_803A87F0;
-    s16* rowS16;
-    u8* rowU8;
 
-    gameUiResetMenuState();
-    z[0] = 0;
-    z[1] = z[0];
-    for (; z[0] < 64; z[0]++)
-    {
-        void** tex;
-        int k = z[0];
-        tex = (void**)((u8*)&g->itemTextures + k * 4);
-        if (*tex != NULL)
-        {
-            textureFree(*tex);
-            *tex = (void*)z[1];
-        }
-        rowS16 = (s16*)((u8*)g + k * 2);
-        rowS16[1188] = -1;
-        rowU8 = (u8*)g + k;
-        rowU8[1096] = 1;
-    }
-    if (lbl_803DD7C8 != NULL)
-    {
-        textureFree(lbl_803DD7C8);
-        lbl_803DD7C8 = NULL;
-    }
-    if (gTrickyHudCachedIconTexture != NULL)
-    {
-        textureFree(gTrickyHudCachedIconTexture);
-    }
-    gTrickyHudCachedIconIndex = -1;
-    gTrickyHudCachedIconTexture = NULL;
+    GAMEUI_RELEASE_MENU_RESOURCES(g);
 }
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
-
-/* ===== EN v1.0 retargeted leaves ========================================= */
 
 void Pause_SetDisabled(u8 v)
 {
     pauseDisabled = v;
 }
+
 void Pause_ResetMenuFrameCounter(void)
 {
     pauseMenuFrameCounter = 60;
 }
+
 void CMenu_SetFadeCounter(s16 v)
 {
     cMenuFadeCounter = v;
@@ -4495,7 +1141,11 @@ void GameUI_initialise(void)
     airMeter = 0;
 }
 
-u8 hudTextures[0x198];
+void* hudTextures[102];
+s16 lbl_803A8B48[0x98];
+u8 gCMenuItemEnabledTable[0x3C0];
+int gCMenuItemTargetTable[0xBA];
+int lbl_803A9320[0x11];
 
 TaskHintEntry gTaskHintTable[] = {
     {0x02AA, 0x0487, 0x047A, {0x00, 0x00}, 0x28EA, 0x51CD, 0x51CA, {0x00, 0x9C}, 0x0A66, 0x03, 0x00, 0x063C},

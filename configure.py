@@ -13,6 +13,7 @@
 ###
 
 import argparse
+import shutil
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -157,6 +158,10 @@ config.generate_map = args.map
 config.non_matching = args.non_matching
 config.sjiswrap_path = args.sjiswrap
 config.ninja_path = args.ninja
+if config.ninja_path is None:
+    ninja_path = shutil.which("ninja")
+    if ninja_path is not None:
+        config.ninja_path = Path(ninja_path)
 config.progress = args.progress
 if not is_windows():
     config.wrapper = args.wrapper
@@ -1134,9 +1139,6 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_8011d918.c"),
             Object(NonMatching, "main/dll/tricky.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/maybetemplate.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/cmenu.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/headdisplay.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/pausemenu.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0000_gameui.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_003B_menu.c"),
             Object(NonMatching, "main/dll/dll_003C_tumbleweedbush.c", cflags=cflags_dll_noopt),

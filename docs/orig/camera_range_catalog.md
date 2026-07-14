@@ -229,7 +229,7 @@ These are all direct calls to the recovered distance, frustum, and current-view-
 | `src/main/dll/CF/dll_0162_cfmagicwall.c` | 84 | `fadeDistance = Camera_DistanceToCurrentViewPosition((obj)->anim.localPosX, (obj)->anim.localPosY,` |
 | `src/main/dll/CF/dll_0162_cfmagicwall.c` | 89 | `fadeDistance = Camera_DistanceToCurrentViewPosition((obj)->anim.localPosX, (obj)->anim.localPosY,` |
 | `src/main/dll/cloudaction.c` | 133 | `view = Camera_GetCurrentViewSlot();` |
-| `src/main/dll/cmenu.c` | 440 | `Camera_GetCurrentViewSlot();` |
+| `src/main/dll/maybetemplate.c` | 2086 | `Camera_GetCurrentViewSlot();` |
 | `src/main/dll/DF/dll_022B_dfptorch.c` | 87 | `cam = Camera_GetCurrentViewSlot();` |
 | `src/main/dll/DIM/dll_019E_dim_tricky.c` | 102 | `camera = Camera_GetCurrentViewSlot();` |
 | `src/main/dll/DIM/dll_0256_dimsnowhorn1.c` | 1144 | `viewSlot = (int*)Camera_GetCurrentViewSlot();` |

@@ -282,7 +282,7 @@ is unconfirmed.
 base `0x02|0x08` once `GAMEBIT_Tricky_Usable (0x4E4)` is set, `|= 0x01` if
 `GAMEBIT_ITEM_TrickyCall_Got (0xDD)`, `|= 0x20` if `GAMEBIT_ITEM_TrickyBall_Bought (0x25)`, `|= 0x10`
 if `GAMEBIT_ITEM_TrickyFlame_Got (0x245)` — all four GameBits already named in
-`include/main/gamebits.h`. `src/main/dll/cmenu.c` reads this same mask back out of Tricky's vtable
+`include/main/gamebits.h`. `src/main/dll/maybetemplate.c` reads this same mask back out of Tricky's vtable
 (`+0x24`/`+0x20`) into `gTrickyHudActionMask`/`gTrickyHudItemMask`.
 
 ## Ready-to-adopt code

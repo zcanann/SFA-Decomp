@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_0000_gameui_api.h"
 
-/* Shared struct layouts for dll_0000_gameui (the in-game GameUI / HUD /
- * C-menu unit, DLL 0). Field offsets are recovered from the EN v1.0 asm. */
+/* Shared struct layouts for the in-game GameUI / HUD / C-menu subsystem
+ * exposed through DLL 0. Field offsets are recovered from the EN v1.0 asm. */
 
 typedef struct TaskHintEntry
 {
@@ -46,6 +46,12 @@ typedef struct
     s16 f0;
     u8 _2[0x1e];
 } HintCell; /* 0x20 */
+
+typedef struct
+{
+    u16 unk0;
+    u16 titleId;
+} HighScoreTitleIdEntry;
 
 typedef struct
 {

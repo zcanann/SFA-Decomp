@@ -35,8 +35,10 @@
 #include "main/texture.h"
 #include "main/mm.h"
 #include "main/dll/tricky.h"
+#include "main/dll/cmenu.h"
 #include "main/dll/maybeTemplate.h"
 #include "main/dll/dll_0000_gameui.h"
+#include "main/dll/cmenu_item_table.h"
 #include "main/pause_menu_api.h"
 #include "main/rcp_dolphin.h"
 #include "dolphin/gx/GXEnum.h"
@@ -162,13 +164,11 @@ extern f32 gViewFinderFadeLevel;
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char* lbl_803DD85C;
-extern char* lbl_803DD860[2];
-extern char* volatile lbl_803DD868[2];
+extern GameObject* lbl_803DD860[2];
+extern GameObject* volatile lbl_803DD868[2];
 extern const f32 lbl_803E1E3C;
 extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
-extern u8 cMenuRingModelRenderFn[];
-extern u8 cMenuRingIconRenderFn[];
 extern u8 lbl_803DD7B3;
 extern u8 lbl_803DD792;
 extern u8 gTrickyHudShowNearestInfo;
@@ -204,11 +204,11 @@ extern s16 lbl_803DD778;
 extern int lbl_803DD730;
 extern s16 lbl_803DD770;
 extern f32 lbl_803DD760;
-extern int lbl_803A9410[];
+extern GameObject* lbl_803A9410[6];
 extern u8 lbl_803DD75B;
 extern s16 lbl_803DD772;
 extern u8 pauseMenuFrameCounter;
-extern int gCMenuSections[];
+extern CMenuSection gCMenuSections[];
 extern const f32 hudElementOpacity;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FA0;
@@ -226,7 +226,7 @@ extern const f32 lbl_803E1E94;
 extern f32 gTrickyHudPi, lbl_803E1E98;
 extern f32 gTrickyHudTexScaleX, gTrickyHudTexScaleY, gTrickyHudTexScaleZ;
 extern f32 gTrickyHudIconFovY, gTrickyHudIconAspect, gTrickyHudIconNearPlane, gTrickyHudIconFarPlane;
-extern char hudTextures[];
+extern void* hudTextures[102];
 extern s16 gFearTestMeterAlpha;
 extern u8 gFearTestMeterFadeSpeed;
 extern f32 lbl_803E1E9C;
@@ -281,7 +281,7 @@ extern void selectTexture(u8* tex, int mapId);
 extern void fn_8006C5CC(int* out);
 extern int objIsCurModelNotZero(void* obj);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
-extern void hudDrawCounter(int id, int a, int b, int c, int d, int* e, int f);
+extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
 extern void drawViewFinderLine(f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4, u8* color);
 extern f32 fn_8029454C(f32);
 extern int depthReadRequestPoll(int x, int y, void* fn);
@@ -301,7 +301,7 @@ void gameUiLoadResources(void)
         u32* ids;
         char* p;
         u32* cnt;
-        char* volatile* q;
+        GameObject* volatile* q;
         f32 fb, fc, fa;
         f32 gb, ga;
 
@@ -333,26 +333,26 @@ void gameUiLoadResources(void)
         }
 
         q = lbl_803DD868;
-        q[0] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
-        ((GameObject*)q[0])->anim.localPosX = lbl_803E1E3C;
-        ((GameObject*)q[0])->anim.localPosY = lbl_803E1E48;
-        ((GameObject*)q[0])->anim.localPosZ = lbl_803E1E4C;
-        ((GameObject*)q[0])->anim.rotX = 0x7447;
-        *(f32*)(q[0] + 0x8) = lbl_803E1E50;
+        q[0] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, NULL);
+        q[0]->anim.localPosX = lbl_803E1E3C;
+        q[0]->anim.localPosY = lbl_803E1E48;
+        q[0]->anim.localPosZ = lbl_803E1E4C;
+        q[0]->anim.rotX = 0x7447;
+        *(f32*)((u8*)q[0] + 0x8) = lbl_803E1E50;
 
-        q[1] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
-        ((GameObject*)q[1])->anim.localPosX = lbl_803E1E3C;
-        ((GameObject*)q[1])->anim.localPosY = lbl_803E1E54;
-        ((GameObject*)q[1])->anim.localPosZ = lbl_803E1E4C;
-        ((GameObject*)q[1])->anim.rotX = 0x7447;
-        *(f32*)(q[1] + 0x8) = lbl_803E1E58;
+        q[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, NULL);
+        q[1]->anim.localPosX = lbl_803E1E3C;
+        q[1]->anim.localPosY = lbl_803E1E54;
+        q[1]->anim.localPosZ = lbl_803E1E4C;
+        q[1]->anim.rotX = 0x7447;
+        *(f32*)((u8*)q[1] + 0x8) = lbl_803E1E58;
 
         p = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, NULL);
-        lbl_803DD860[0] = p;
+        lbl_803DD860[0] = (GameObject*)p;
         ObjModel_SetRenderCallback(*(void**)*(int*)(p + 0x7c), fn_8011E0D8);
 
-        lbl_803DD860[1] = (char*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
-        ObjModel_SetRenderCallback(*(void**)*(int*)(lbl_803DD860[1] + 0x7c), fn_8011E0D8);
+        lbl_803DD860[1] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, NULL);
+        ObjModel_SetRenderCallback(*(void**)*(int*)((u8*)lbl_803DD860[1] + 0x7c), fn_8011E0D8);
 
         i = 4;
         ids = &lbl_8031BF90[4];
@@ -686,7 +686,7 @@ void GameUI_airMeterInitType0(int a, int b, int c)
 
 void GameUI_func14(s16 a, int b, int c)
 {
-    int* entry = gCMenuSections;
+    int* entry = (int*)gCMenuSections;
     lbl_803A9398[0] = 0;
     while ((void*)*entry != NULL)
     {
@@ -710,8 +710,9 @@ void GameUI_func14(s16 a, int b, int c)
     }
 }
 
-void hudDrawTimedElement(int unused, int* e)
+void hudDrawTimedElement(int unused, void* element)
 {
+    int* e = element;
     if (e[1] < 0)
         return;
     e[1] = e[1] - framesThisStep;
@@ -976,7 +977,7 @@ void drawFn_8011eb3c(void* this, f32 f1, f32 f2, int p4, u8 p5, int p6, int p7, 
 void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
 {
     char* base[1];
-    char** objs;
+    GameObject** objs;
     s16 sa, sb, sc;
     f32 mA[12];
     f32 mB[12];
@@ -1020,7 +1021,7 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     ((GameObject*)objs[0])->anim.worldPosX = gTrickyHudIconPosX;
     ((GameObject*)objs[0])->anim.worldPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[0])->anim.worldPosZ = gTrickyHudIconPosZ;
-    *(f32*)(objs[0] + 0x8) = f4;
+    *(f32*)((u8*)objs[0] + 0x8) = f4;
     ((GameObject*)objs[0])->anim.rotZ = sa;
     ((GameObject*)objs[0])->anim.rotY = sb;
     ((GameObject*)objs[0])->anim.rotX = sc;
@@ -1030,7 +1031,7 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     ((GameObject*)objs[1])->anim.worldPosX = gTrickyHudIconPosX;
     ((GameObject*)objs[1])->anim.worldPosY = gTrickyHudIconPosY;
     ((GameObject*)objs[1])->anim.worldPosZ = gTrickyHudIconPosZ;
-    *(f32*)(objs[1] + 0x8) = f4;
+    *(f32*)((u8*)objs[1] + 0x8) = f4;
     ((GameObject*)objs[1])->anim.rotZ = sa;
     ((GameObject*)objs[1])->anim.rotY = sb;
     ((GameObject*)objs[1])->anim.rotX = sc;
@@ -1043,10 +1044,10 @@ void fearTestMeterDraw(void)
     GXColor col;
     int sc0, sc1, sc2, sc3;
     int a;
-    void* texB = *(void**)(hudTextures + 0x180);
+    void* texB = *(void**)((u8*)hudTextures + 0x180);
     u16 hgt = ((Texture*)texB)->height;
     int gap = fearTestMeterOuterHalfWidth - fearTestMeterInnerHalfWidth;
-    void* texA = *(void**)(hudTextures + 0x17c);
+    void* texA = *(void**)((u8*)hudTextures + 0x17c);
     int wid = *(u16*)((char*)texA + 0xa) & 0xff;
     if (gFearTestMeterFadeIn != 0)
     {
@@ -1070,15 +1071,15 @@ void fearTestMeterDraw(void)
         return;
     GXGetScissor(&sc0, &sc1, &sc2, &sc3);
     GXSetScissor(0, 0, 0x280, 0x1e0);
-    drawScaledTexture(*(void**)(hudTextures + 0x17c), (f32)(int)(0x140 - fearTestMeterOuterHalfWidth - wid),
+    drawScaledTexture(*(void**)((u8*)hudTextures + 0x17c), (f32)(int)(0x140 - fearTestMeterOuterHalfWidth - wid),
                       lbl_803E1E9C, (u8)gFearTestMeterAlpha, 0x100, wid, hgt, 1);
-    drawScaledTexture(*(void**)(hudTextures + 0x180), (f32)(int)(0x140 - fearTestMeterInnerHalfWidth), lbl_803E1E9C,
+    drawScaledTexture(*(void**)((u8*)hudTextures + 0x180), (f32)(int)(0x140 - fearTestMeterInnerHalfWidth), lbl_803E1E9C,
                       (u8)gFearTestMeterAlpha, 0x100, fearTestMeterInnerHalfWidth << 1, hgt, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x184), (f32)(int)(0x140 - fearTestMeterOuterHalfWidth), lbl_803E1E9C,
+    drawScaledTexture(*(void**)((u8*)hudTextures + 0x184), (f32)(int)(0x140 - fearTestMeterOuterHalfWidth), lbl_803E1E9C,
                       (u8)gFearTestMeterAlpha, 0x100, gap, hgt, 0);
-    drawScaledTexture(*(void**)(hudTextures + 0x184), (f32)(int)((u8)fearTestMeterInnerHalfWidth + 0x140), lbl_803E1E9C,
+    drawScaledTexture(*(void**)((u8*)hudTextures + 0x184), (f32)(int)((u8)fearTestMeterInnerHalfWidth + 0x140), lbl_803E1E9C,
                       (u8)gFearTestMeterAlpha, 0x100, gap, hgt, 0);
-    drawTexture(*(void**)(hudTextures + 0x17c), (f32)(int)((u8)fearTestMeterOuterHalfWidth + 0x140), lbl_803E1E9C,
+    drawTexture(*(void**)((u8*)hudTextures + 0x17c), (f32)(int)((u8)fearTestMeterOuterHalfWidth + 0x140), lbl_803E1E9C,
                 (u8)gFearTestMeterAlpha, 0x100);
     col.r = 0xff;
     col.g = 0;
@@ -1297,7 +1298,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     return 1;
 }
 
-void hudDrawFn_80121440(void)
+void hudDrawFn_80121440(int unused1, int unused2, int unused3)
 {
     TrickyHud* base = (TrickyHud*)lbl_803A87F0;
     int i;
