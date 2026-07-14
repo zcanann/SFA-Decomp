@@ -24,6 +24,7 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -310,3 +311,20 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
+
+ObjectDescriptor gDIMLogFireObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)DIMLogFire_init,
+    (ObjectDescriptorCallback)DIMLogFire_update,
+    0,
+    (ObjectDescriptorCallback)DIMLogFire_render,
+    (ObjectDescriptorCallback)DIMLogFire_free,
+    (ObjectDescriptorCallback)DIMLogFire_getObjectTypeId,
+    DIMLogFire_getExtraSize,
+};

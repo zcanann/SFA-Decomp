@@ -18,6 +18,7 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/dll/IM/dll_016E_imanimspacecraft.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 
@@ -62,6 +63,36 @@ int imanimspacecraft_setScale(int* obj, int bitIdx)
         return FALSE;
     }
 }
+
+int imanimspacecraft_getExtraSize(void);
+int imanimspacecraft_getObjectTypeId(void);
+void imanimspacecraft_free(GameObject* obj);
+void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void imanimspacecraft_hitDetect(void);
+void imanimspacecraft_update(GameObject* obj);
+void imanimspacecraft_init(GameObject* obj);
+void imanimspacecraft_release(void);
+void imanimspacecraft_initialise(void);
+
+ObjectDescriptor13 gIMAnimSpaceCraftObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_13_SLOTS,
+    (ObjectDescriptorCallback)imanimspacecraft_initialise,
+    (ObjectDescriptorCallback)imanimspacecraft_release,
+    0,
+    (ObjectDescriptorCallback)imanimspacecraft_init,
+    (ObjectDescriptorCallback)imanimspacecraft_update,
+    (ObjectDescriptorCallback)imanimspacecraft_hitDetect,
+    (ObjectDescriptorCallback)imanimspacecraft_render,
+    (ObjectDescriptorCallback)imanimspacecraft_free,
+    (ObjectDescriptorCallback)imanimspacecraft_getObjectTypeId,
+    imanimspacecraft_getExtraSize,
+    (ObjectDescriptorCallback)imanimspacecraft_setScale,
+    (ObjectDescriptorCallback)imanimspacecraft_func0B,
+    (ObjectDescriptorCallback)imanimspacecraft_modelMtxFn,
+};
 
 int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

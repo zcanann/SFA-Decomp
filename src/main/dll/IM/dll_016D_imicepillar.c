@@ -7,6 +7,7 @@
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/IM/dll_016D_imicepillar.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E4768 = 1.0f;
 #pragma explicit_zero_data on
@@ -52,3 +53,19 @@ void imicepillar_release(void)
 void imicepillar_initialise(void)
 {
 }
+ObjectDescriptor gIMIcePillarObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)imicepillar_initialise,
+    (ObjectDescriptorCallback)imicepillar_release,
+    0,
+    (ObjectDescriptorCallback)imicepillar_init,
+    (ObjectDescriptorCallback)imicepillar_update,
+    (ObjectDescriptorCallback)imicepillar_hitDetect,
+    (ObjectDescriptorCallback)imicepillar_render,
+    (ObjectDescriptorCallback)imicepillar_free,
+    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
+    imicepillar_getExtraSize,
+};

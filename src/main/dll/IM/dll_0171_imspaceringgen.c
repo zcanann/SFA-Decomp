@@ -20,6 +20,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/IM/dll_0171_imspaceringgen.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 /* anim.seqId of the two reference ring objects the generator tracks */
 #define SEQID_RING_A 0x164
@@ -158,3 +159,20 @@ void IMSpaceRingGen_release(void)
 void IMSpaceRingGen_initialise(void)
 {
 }
+
+ObjectDescriptor gIMSpaceRingGenObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)IMSpaceRingGen_initialise,
+    (ObjectDescriptorCallback)IMSpaceRingGen_release,
+    0,
+    (ObjectDescriptorCallback)IMSpaceRingGen_init,
+    (ObjectDescriptorCallback)IMSpaceRingGen_update,
+    (ObjectDescriptorCallback)IMSpaceRingGen_hitDetect,
+    (ObjectDescriptorCallback)IMSpaceRingGen_render,
+    (ObjectDescriptorCallback)IMSpaceRingGen_free,
+    (ObjectDescriptorCallback)IMSpaceRingGen_getObjectTypeId,
+    IMSpaceRingGen_getExtraSize,
+};

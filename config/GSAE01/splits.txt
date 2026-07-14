@@ -2039,55 +2039,67 @@ main/dll/IM/dll_0169_imicemountain.c:
 
 main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440
-	.data       start:0x803236B8 end:0x803236D0
+	.data       start:0x803236B8 end:0x80323708
 
 main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4
 	.sdata2     start:0x803E4738 end:0x803E4748
+	.data       start:0x80323708 end:0x80323740
 
 main/dll/dll_016C_dll16c.c:
 	.text       start:0x801AD7E4 end:0x801AE0EC
 	.rodata     start:0x802C2308 end:0x802C2318
+	.data       start:0x80323740 end:0x80323778
 
 main/dll/IM/dll_016D_imicepillar.c:
 	.text       start:0x801AE0EC end:0x801AE144
 	.sdata2     start:0x803E4768 end:0x803E4770
+	.data       start:0x80323778 end:0x803237B0
 
 main/dll/IM/dll_016E_imanimspacecraft.c:
 	.text       start:0x801AE144 end:0x801AE508
 	.bss        start:0x803AC948 end:0x803AC960
 	.sdata2     start:0x803E4770 end:0x803E4788
+	.data       start:0x803237B0 end:0x80323818
 
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
 	.sdata2     start:0x803E47A0 end:0x803E47A8
+	.data       start:0x80323818 end:0x80323868
 
 main/dll/IM/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
 	.sdata2     start:0x803E47B8 end:0x803E47C0
+	.data       start:0x80323868 end:0x803238A0
 
 main/dll/IM/dll_0171_imspaceringgen.c:
 	.text       start:0x801AEAE4 end:0x801AEE2C
 	.sdata2     start:0x803E47C0 end:0x803E47C8
+	.data       start:0x803238A0 end:0x803238D8
 
 main/dll/dll_0172_linkblevcontrol.c:
 	.text       start:0x801AEE2C end:0x801AF568
 	.sdata2     start:0x803E47C8 end:0x803E47D0
+	.data       start:0x803238D8 end:0x803239F0
 
 main/dll/dll_0173_linklevcontrol.c:
 	.text       start:0x801AF568 end:0x801AF9E4
+	.data       start:0x803239F0 end:0x80323B08
 
 main/dll/DIM/dll_01BE_dimlava.c:
 	.text       start:0x801AF9E4 end:0x801B02BC
 	.rodata     start:0x802C2318 end:0x802C2328
+	.data       start:0x80323B08 end:0x80323B48
 
 main/dll/DIM/dll_01BF_dimlavaball.c:
 	.text       start:0x801B02BC end:0x801B0670
 	.sdata2     start:0x803E4818 end:0x803E4820
+	.data       start:0x80323B48 end:0x80323B88
 
 main/dll/DIM/dll_01C0_dimlogfire.c:
 	.text       start:0x801B0670 end:0x801B0DD4
 	.sdata2     start:0x803E4820 end:0x803E4848
+	.data       start:0x80323B88 end:0x80323BC0
 
 main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8

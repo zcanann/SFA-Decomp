@@ -9,6 +9,7 @@
 #include "main/objseq.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define DIMLAVABALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 #define DIMLAVABALL_OBJFLAG_HIDDEN             0x4000
@@ -204,3 +205,22 @@ void lavaball1bf_release(void)
 void lavaball1bf_initialise(void)
 {
 }
+
+ObjectDescriptor12 gLavaBall1BFObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)lavaball1bf_initialise,
+    (ObjectDescriptorCallback)lavaball1bf_release,
+    0,
+    (ObjectDescriptorCallback)lavaball1bf_init,
+    (ObjectDescriptorCallback)lavaball1bf_update,
+    (ObjectDescriptorCallback)lavaball1bf_hitDetect,
+    (ObjectDescriptorCallback)lavaball1bf_render,
+    (ObjectDescriptorCallback)lavaball1bf_free,
+    (ObjectDescriptorCallback)lavaball1bf_getObjectTypeId,
+    lavaball1bf_getExtraSize,
+    (ObjectDescriptorCallback)lavaball1bf_trySetPending,
+    (ObjectDescriptorCallback)lavaball1bf_clearPending,
+};

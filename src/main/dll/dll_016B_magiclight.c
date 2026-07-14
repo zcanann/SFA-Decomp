@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/dll/dll_016B_magiclight.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(MagicLightState) == 0x14);
 
@@ -174,3 +175,20 @@ void MagicLight_release(void)
 void MagicLight_initialise(void)
 {
 }
+
+ObjectDescriptor gMagicLightObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)MagicLight_initialise,
+    (ObjectDescriptorCallback)MagicLight_release,
+    0,
+    (ObjectDescriptorCallback)MagicLight_init,
+    (ObjectDescriptorCallback)MagicLight_update,
+    (ObjectDescriptorCallback)MagicLight_hitDetect,
+    (ObjectDescriptorCallback)MagicLight_render,
+    (ObjectDescriptorCallback)MagicLight_free,
+    (ObjectDescriptorCallback)MagicLight_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)MagicLight_getExtraSize,
+};

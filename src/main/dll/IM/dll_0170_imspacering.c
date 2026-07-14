@@ -14,6 +14,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/dll/IM/dll_0170_imspacering.h"
+#include "main/object_descriptor.h"
 
 extern GameObject* lbl_803DDB48;
 __declspec(section ".sdata2") f32 lbl_803E47B8 = 1.0f;
@@ -78,3 +79,20 @@ void IMSpaceRing_release(void)
 void IMSpaceRing_initialise(void)
 {
 }
+
+ObjectDescriptor gIMSpaceRingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)IMSpaceRing_initialise,
+    (ObjectDescriptorCallback)IMSpaceRing_release,
+    0,
+    (ObjectDescriptorCallback)IMSpaceRing_init,
+    (ObjectDescriptorCallback)IMSpaceRing_update,
+    (ObjectDescriptorCallback)IMSpaceRing_hitDetect,
+    (ObjectDescriptorCallback)IMSpaceRing_render,
+    (ObjectDescriptorCallback)IMSpaceRing_free,
+    (ObjectDescriptorCallback)IMSpaceRing_getObjectTypeId,
+    IMSpaceRing_getExtraSize,
+};

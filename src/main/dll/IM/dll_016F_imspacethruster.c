@@ -19,8 +19,10 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/IM/dll_016F_imspacethruster.h"
+#include "main/object_descriptor.h"
 
-extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];
+s16 gImSpaceThrusterKeyframeIndexA[6] = {0x160, 0x161, 0x162, 0x163, 0x165, 0};
+s16 gImSpaceThrusterKeyframeIndexB[6] = {3, 4, 5, 6, 7, 0};
 extern f32 gImSpaceThrusterWeightMax;
 extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23,
     gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
@@ -199,3 +201,20 @@ void imspacethruster_release(void)
 void imspacethruster_initialise(void)
 {
 }
+
+ObjectDescriptor gIMSpaceThrusterObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)imspacethruster_initialise,
+    (ObjectDescriptorCallback)imspacethruster_release,
+    0,
+    (ObjectDescriptorCallback)imspacethruster_init,
+    (ObjectDescriptorCallback)imspacethruster_update,
+    (ObjectDescriptorCallback)imspacethruster_hitDetect,
+    (ObjectDescriptorCallback)imspacethruster_render,
+    (ObjectDescriptorCallback)imspacethruster_free,
+    (ObjectDescriptorCallback)imspacethruster_getObjectTypeId,
+    imspacethruster_getExtraSize,
+};

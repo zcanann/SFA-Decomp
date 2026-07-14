@@ -25,6 +25,7 @@
 #include "main/dll/dll_016C_dll16c.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
+#include "main/object_descriptor.h"
 
 typedef struct Dll16CPlacement
 {
@@ -375,3 +376,20 @@ void dll_16C_update(GameObject* obj)
         }
     }
 }
+
+ObjectDescriptor lbl_80323740 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_16C_initialise,
+    (ObjectDescriptorCallback)dll_16C_release,
+    0,
+    (ObjectDescriptorCallback)dll_16C_init,
+    (ObjectDescriptorCallback)dll_16C_update,
+    (ObjectDescriptorCallback)dll_16C_hitDetect,
+    (ObjectDescriptorCallback)dll_16C_render,
+    (ObjectDescriptorCallback)dll_16C_free,
+    (ObjectDescriptorCallback)dll_16C_getObjectTypeId,
+    dll_16C_getExtraSize,
+};

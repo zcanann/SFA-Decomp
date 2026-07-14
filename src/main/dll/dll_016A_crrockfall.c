@@ -29,6 +29,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/objhits.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(CrRockfallState) == 0x14);
 
@@ -360,4 +361,21 @@ void crrockfall_update(int* obj)
 u8 gRockfallCfgTable[] = {
     0x00, 0x00, 0x00, 0x67, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
     0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x03, 0xE3, 0x41, 0xF0, 0x00, 0x00,
+};
+
+ObjectDescriptor gCRrockfallObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)crrockfall_initialise,
+    (ObjectDescriptorCallback)crrockfall_release,
+    0,
+    (ObjectDescriptorCallback)crrockfall_init,
+    (ObjectDescriptorCallback)crrockfall_update,
+    (ObjectDescriptorCallback)crrockfall_hitDetect,
+    (ObjectDescriptorCallback)crrockfall_render,
+    (ObjectDescriptorCallback)crrockfall_free,
+    (ObjectDescriptorCallback)crrockfall_getObjectTypeId,
+    crrockfall_getExtraSize,
 };

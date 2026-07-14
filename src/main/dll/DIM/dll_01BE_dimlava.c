@@ -18,6 +18,7 @@
 #include "main/object_render_legacy.h"
 #include "main/objhits.h"
 #include "main/dll/IM/dll_016D_imicepillar.h"
+#include "main/object_descriptor.h"
 
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -71,22 +72,6 @@ static inline int* DIMcannon_GetActiveModel(void* obj)
     return (int*)objAnim->banks[objAnim->bankIndex];
 }
 
-ObjectDescriptor gIMIcePillarObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)imicepillar_initialise,
-    (ObjectDescriptorCallback)imicepillar_release,
-    0,
-    (ObjectDescriptorCallback)imicepillar_init,
-    (ObjectDescriptorCallback)imicepillar_update,
-    (ObjectDescriptorCallback)imicepillar_hitDetect,
-    (ObjectDescriptorCallback)imicepillar_render,
-    (ObjectDescriptorCallback)imicepillar_free,
-    (ObjectDescriptorCallback)imicepillar_getObjectTypeId,
-    imicepillar_getExtraSize,
-};
 
 void lavaball1be_hitDetect(void)
 {
@@ -351,3 +336,22 @@ void lavaball1be_relaunch(s16* obj, int vertSpeed, int horizSpeed)
     ObjHits_EnableObject(obj);
     state->flags &= ~LAVA1BE_FLAG_INACTIVE;
 }
+
+ObjectDescriptor12 gLavaBall1BEObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)lavaball1be_initialise,
+    (ObjectDescriptorCallback)lavaball1be_release,
+    0,
+    (ObjectDescriptorCallback)lavaball1be_init,
+    (ObjectDescriptorCallback)lavaball1be_update,
+    (ObjectDescriptorCallback)lavaball1be_hitDetect,
+    (ObjectDescriptorCallback)lavaball1be_render,
+    (ObjectDescriptorCallback)lavaball1be_free,
+    (ObjectDescriptorCallback)lavaball1be_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)lavaball1be_getExtraSize,
+    (ObjectDescriptorCallback)lavaball1be_relaunch,
+    (ObjectDescriptorCallback)lavaball1be_isInactive,
+};
