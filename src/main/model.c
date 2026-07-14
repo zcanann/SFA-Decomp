@@ -1951,7 +1951,7 @@ int modelLoadAnimations(void* model, int id, void* animBase)
     int* tbl;
     u8* hdr = model;
     int sz;
-    int hdrOff;
+    int hdrOff[1];
     int groupSlot;
     int i;
     int animIdx;
@@ -1999,20 +1999,20 @@ int modelLoadAnimations(void* model, int id, void* animBase)
         fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, gModelResourceBuffer, tabBase, sz);
         ((ModelFileHeader*)hdr)->animationHeaderBuffer = (u8*)gModelResourceBuffer;
     }
-    hdrOff = 0;
+    hdrOff[0] = 0;
     groupSlot = 0;
     {
         u8* slot = hdr + groupSlot++ * 2;
-        *(s16*)(slot + 0x70) = (s16)hdrOff;
+        *(s16*)(slot + 0x70) = (s16)hdrOff[0];
     }
     i = 0;
     for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++)
     {
-        if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff) == -1)
+        if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff[0]) == -1)
         {
             *(s16*)(hdr + groupSlot++ * 2 + 0x70) = (s16)(i + 1);
         }
-        hdrOff += 2;
+        hdrOff[0] += 2;
     }
     if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0)
     {
