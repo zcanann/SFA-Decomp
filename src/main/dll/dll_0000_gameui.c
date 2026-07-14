@@ -423,6 +423,10 @@ extern int fn_8011E0D8();
 extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
+typedef void (*DrawTextureU8Fn)(void* tex, f32 x, f32 y, u8 alpha, int scale);
+typedef void (*DrawScaledTextureU8Fn)(void* tex, f32 x, f32 y, u8 alpha, int scale, int w, int h, int mode);
+#define drawTextureU8       ((DrawTextureU8Fn)drawTexture)
+#define drawScaledTextureU8 ((DrawScaledTextureU8Fn)drawScaledTexture)
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget);
@@ -549,8 +553,6 @@ extern f32 gHudYButtonIconX;
 extern const f32 lbl_803E2018;
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
 extern void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, u8 b, int w, int h, int off, int m);
-extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
-extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int arg);
 extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
 extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern void hudDrawCMenu(int a, int b, int c);
@@ -7397,8 +7399,6 @@ void mapScreenDrawHud(int p1, int p2, int p3)
     }
     if (gWorldMapVoiceoverTimer != 0)
     {
-        extern void drawTexture(void* tex, f32 x, f32 y, u8 alpha, int u);
-        extern void drawScaledTexture(void* tex, f32 x, f32 y, u8 alpha, int u, int w, int h, int q);
         s16 v, alpha, w, x, y;
         int h;
         v = gWorldMapVoiceoverTimer;
@@ -7423,15 +7423,15 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         y = *(s16*)(gTextBoxes + 0x196);
         h = h0;
         w = (s16) * (u16*)(gTextBoxes + 0x182);
-        drawTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+        drawTextureU8(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex34, x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex2C, (f32)(x - 5), y, alpha, 0x100, 5, h, 0);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex30, x, y, alpha, 0x100, w, h, 0);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex34, x, (f32)(y + h), alpha, 0x100, w, 5, 2);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex2C, (f32)(x + w), y, alpha, 0x100, 5, h, 1);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
         *(u16*)(gTextBoxes + 0x18a) = h0;
         {
             s8 fi;
@@ -7550,14 +7550,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             }
         }
         lbl_803DD77C++;
-        drawTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, alpha, 0x100);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
-        drawScaledTexture(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
+        drawTextureU8(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E219C, alpha, 0x100);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E219C, alpha, 0x100, 0x82, 5, 0);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex2C, lbl_803E2198, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 0);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex34, lbl_803E1F48, lbl_803E1ECC, alpha, 0x100, 0x82, 5, 2);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex2C, lbl_803E2058, lbl_803E1E9C, alpha, 0x100, 5, 0x96, 1);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E1ECC, alpha, 0x100, 5, 5, 3);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, lbl_803E2058, lbl_803E219C, alpha, 0x100, 5, 5, 1);
+        drawScaledTextureU8(((HudTextures*)hudTextures)->tex28, lbl_803E2198, lbl_803E1ECC, alpha, 0x100, 5, 5, 2);
         {
             int row;
             int iv[2];
