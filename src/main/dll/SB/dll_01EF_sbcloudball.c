@@ -18,11 +18,9 @@
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/dll/sbcloudballstate_struct.h"
 
-#define MODEL_LIGHT_KIND_POINT 2
-
 #include "main/game_object.h"
 #include "main/object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx.h"
@@ -92,14 +90,13 @@ int SB_CloudBall_getObjectTypeId(void)
 
 void SB_CloudBall_free(GameObject* obj)
 {
-    extern void ModelLightStruct_free(int* p);
     SBCloudBallState* state = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
     {
         int* child = (int*)state->light;
         if (child != NULL)
         {
-            ModelLightStruct_free(child);
+            ModelLightStruct_free((ModelLightStruct*)child);
             state->light = 0;
         }
     }
@@ -212,10 +209,6 @@ void SB_CloudBall_update(GameObject* obj)
 
 void SB_CloudBall_init(GameObject* obj)
 {
-    extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
-    extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
-    extern void modelLightStruct_setLightKind(int light, int v);
-    extern int objCreateLight(int* obj, int mode);
     SBCloudBallState* state = obj->extra;
 
     ObjAnim_GetPriorityHitState(&obj->anim)->flags = (s16)(ObjAnim_GetPriorityHitState(&obj->anim)->flags & ~1);
@@ -223,13 +216,13 @@ void SB_CloudBall_init(GameObject* obj)
         (u16)(ObjAnim_GetPriorityHitState(&obj->anim)->trackContactMask | 1);
     if ((void*)state->light == NULL)
     {
-        state->light = objCreateLight((int*)obj, 1);
+        state->light = (int)objCreateLight(obj, 1);
         if ((void*)state->light != NULL)
         {
-            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(state->light, 0, 90, 150, 0);
+            modelLightStruct_setLightKind((ModelLightStruct*)state->light, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor((ModelLightStruct*)state->light, 0, 90, 150, 0);
             lightSetFieldBC_8001db14((ModelLightStruct*)state->light, 1);
-            modelLightStruct_setDistanceAttenuation(state->light, gSbCloudBallLightAttenNear,
+            modelLightStruct_setDistanceAttenuation((ModelLightStruct*)state->light, gSbCloudBallLightAttenNear,
                                                     gSbCloudBallLightAttenFar);
         }
     }
