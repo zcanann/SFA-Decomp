@@ -33,6 +33,7 @@ extern f32 lbl_803E1D9C;
 
 extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
                                   f32* outMaxH, int glyphLang);
+extern void* gameTextGetStr(int textId);
 
 s32 gEnterSaveNameCharWidths[40];
 s32 gEnterSaveNameCharOffsets[40];
@@ -49,7 +50,6 @@ void EnterSaveNameScreen_render(void)
 {
     extern u8 gEnterSaveNameBuffer;
     extern int gEnterSaveNameSelectedIndex;
-    extern void* gameTextGetStr(int id);
     u8 buf[2];
     int i;
 
@@ -107,7 +107,6 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
 {
     extern char gEnterSaveNameBuffer;
     extern s32 gEnterSaveNameSelectedIndex;
-    extern char* gameTextGetStr(u16 textId);
     s8 stickX;
     int buttons;
     u8 moved;
@@ -237,7 +236,8 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
         {
             if ((gEnterSaveNameSelectedIndex <= 0x25) && (gEnterSaveNameLength < ENTER_SAVE_NAME_MAX_LENGTH))
             {
-                (&gEnterSaveNameBuffer)[gEnterSaveNameLength++] = *gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
+                (&gEnterSaveNameBuffer)[gEnterSaveNameLength++] =
+                    *(char*)gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
                 (&gEnterSaveNameBuffer)[*(volatile u8*)&gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
                 Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_TYPE);
@@ -298,7 +298,6 @@ void EnterSaveNameScreen_initialise(void)
 {
     extern char gEnterSaveNameBuffer;
     extern s32 gEnterSaveNameSelectedIndex;
-    extern char* gameTextGetStr(u16 textId);
     int i;
     f32 width;
 
