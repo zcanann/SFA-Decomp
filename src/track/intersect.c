@@ -1020,7 +1020,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_8030EAA0[3][3];
     extern int* Shader_getLayer(void* op, int slot);
 
-    extern void selectReflectionTexture(int);
     extern void GXInitTexObj();
     extern void newshadows_getReflectionScrollOffsets(void* a, void* b);
 
@@ -1268,7 +1267,6 @@ void screenImageDraw(u8 alpha)
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
 
-    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -1451,7 +1449,6 @@ void doSpiritVisionFilter(void)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -1573,7 +1570,6 @@ void doColorFilter(u8* mod)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -1722,7 +1718,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void selectReflectionTexture(int);
     extern void getReflectionTexture2(int* out);
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
@@ -1977,7 +1972,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern int gGxZModeCompareFunc;
     extern f32 lbl_8030EA58[3][3];
     extern void* getTextureFn_8006c744(void);
-    extern void selectReflectionTexture(int);
     extern void fn_8006C6A4(int);
     extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetZMode();
@@ -2222,7 +2216,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
 
-    extern void selectReflectionTexture(int);
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
@@ -2764,7 +2757,6 @@ u32 objCallback_80074d04(int handle, void* model)
     extern int gGxZModeCompareFunc;
 
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
-    extern void selectReflectionTexture(int);
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
     extern void fn_8006C5CC(int* out);
@@ -4961,7 +4953,6 @@ void doHeatEffect(u8 alpha)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern s16 fn_8000FA70(void);
-    extern void selectReflectionTexture(int);
     extern void getReflectionTexture2(int* out);
     extern void getTextureFn_8006c5e4(int* out);
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
@@ -5137,7 +5128,6 @@ void renderMotionBlur(f32 alpha)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void selectReflectionTexture(int);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -5229,7 +5219,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void selectReflectionTexture(int);
     extern void getReflectionTexture2(int* out);
     extern void Camera_ProjectWorldPoint(f32 * out_x, f32 * out_y, f32 * out_z, f32 * out_w, double x, double y,
                                          double z);
@@ -5527,7 +5516,6 @@ static inline void fn_8007BD8C_body(int handle1, int handle2, Mtx mtx_30, GXColo
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void selectReflectionTexture(int);
 
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
@@ -5660,7 +5648,6 @@ void setupReflectionIndirectTev(u8 flag)
 {
     extern f32 lbl_803DEEDC;
     extern f32 gSynthDelayedActionWord0;
-    extern void selectReflectionTexture(int);
     f32 mtx[6];
 
     selectReflectionTexture(1);
@@ -5715,7 +5702,6 @@ void fn_8007C664(int texHandle)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void selectReflectionTexture(int);
 
     u8 ignoredLightColor;
     f32 sOff;
@@ -5814,7 +5800,6 @@ void fn_8007CAF4(void)
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
-    extern void selectReflectionTexture(int);
 
     extern void fn_8006C678(int);
     u8 ignoredLightColor;
@@ -5919,7 +5904,6 @@ void gxTextureSetupFn_8007cf7c(void)
     extern int gGxZModeCompareFunc;
     extern void newshadows_getReflectionScrollOffsets(f32 * a, f32 * b);
     extern void getTextureFn_8006c5e4(int* out);
-    extern void selectReflectionTexture(int);
 
     Mtx mtx_cc;
     Mtx mtx_9c;
