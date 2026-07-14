@@ -125,9 +125,9 @@ s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex)
     return (s16*)(((ObjModel*)modelBytes)->vtxBuf0 + vertexIndex * 6);
 }
 
-void* ObjModel_GetPostRenderCallback(u8* model)
+void* ObjModel_GetPostRenderCallback(ObjModel* model)
 {
-    return ((ObjModel*)model)->postRenderCallback;
+    return model->postRenderCallback;
 }
 
 void postRenderSetAlphaBlendState(void)
@@ -143,9 +143,9 @@ void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback)
     model->postRenderCallback = callback;
 }
 
-void* ObjModel_GetRenderCallback(u8* model)
+void* ObjModel_GetRenderCallback(ObjModel* model)
 {
-    return ((ObjModel*)model)->renderCallback;
+    return model->renderCallback;
 }
 
 void ObjModel_SetRenderCallback(u8* model, void* callback)

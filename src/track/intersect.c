@@ -1048,7 +1048,6 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_8030EAA0[3][3];
     extern void GXInitTexObj();
 
-    extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     void* renderOp;
     void* tex2;
@@ -1140,7 +1139,7 @@ int renderWhirlpool(void* obj_a, void** obj_b, int slot)
     GXSetNumTexGens(4);
     GXSetNumTevStages(3);
 
-    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
+    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback((ObjModel*)obj_b);
     if (pcb != 0)
     {
         pcb(obj_a, obj_b, slot);
@@ -1979,7 +1978,6 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     extern f32 lbl_8030EA58[3][3];
     extern void* getTextureFn_8006c744(void);
     extern void fn_8006C6A4(int);
-    extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     Mtx mtx_54;
     Mtx mtx_24;
     void* renderOp;
@@ -2055,7 +2053,7 @@ int gxTextureFn_80072dfc(void* obj_a, void** obj_b, int slot)
     GXSetTevKColor(1, lbl_803DB6BC);
     GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_K1);
 
-    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
+    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback((ObjModel*)obj_b);
     if (pcb != 0)
     {
         pcb(obj_a, obj_b, slot);
@@ -2523,7 +2521,6 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern u8 gGxZCompLocCached, gGxZCompLocValid;
     extern int gGxZModeCompareFunc;
-    extern void* (*ObjModel_GetPostRenderCallback(void* obj_b))();
     extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
     Mtx mtx_90;
     Mtx mtx_60;
@@ -2583,7 +2580,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
 
-    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback(obj_b);
+    pcb = (void (*)(void*, void**, int))ObjModel_GetPostRenderCallback((ObjModel*)obj_b);
     if (pcb != 0)
     {
         pcb(obj_a, obj_b, slot);

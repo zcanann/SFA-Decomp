@@ -1796,7 +1796,6 @@ extern void modelInitMtxs(u8* m, int* am);
 extern void ObjModel_ToggleMatrixBuffer(int* am);
 extern void modelRenderInstrsState_init(MtxBitStream* bs, u8* data, int len, int len2);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
-extern ObjModelRenderCb ObjModel_GetRenderCallback(int* am);
 extern void _gxSetFogParams(void);
 extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
@@ -1881,7 +1880,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         color[0] = 0xff;
     }
     color[3] = *(u8*)((char*)obj + 0x37);
-    cb = ObjModel_GetRenderCallback(am);
+    cb = (ObjModelRenderCb)ObjModel_GetRenderCallback((ObjModel*)am);
     if (gObjRenderSetupDone == 0 || cb != NULL)
     {
         Camera_RebuildProjectionMatrix();
@@ -2843,7 +2842,6 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
 }
 #pragma opt_propagation reset
 
-extern ObjModelRenderCb ObjModel_GetPostRenderCallback(int* am);
 extern u8 textureFn_80050ad8(void* tex, int n, int p3, u32 p4);
 extern void textureFn_80051348(u32 ref, int p2);
 extern void fn_800510F0(u32 ref, int p2, int p3);
@@ -2892,7 +2890,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         bs->pos = pos + 6;
         idx = (w >> (pos & 7)) & 0x3f;
     }
-    cb = ObjModel_GetRenderCallback(am);
+    cb = (ObjModelRenderCb)ObjModel_GetRenderCallback((ObjModel*)am);
     if (cb != NULL && cb((int*)obj, am, idx) != 0)
     {
         return idx;
@@ -3080,7 +3078,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
     }
     textureFn_800528bc();
     {
-        ObjModelRenderCb pcb = ObjModel_GetPostRenderCallback(am);
+        ObjModelRenderCb pcb = (ObjModelRenderCb)ObjModel_GetPostRenderCallback((ObjModel*)am);
         if (pcb != NULL)
         {
             pcb((int*)obj, am, idx);
