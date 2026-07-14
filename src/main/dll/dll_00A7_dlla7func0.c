@@ -35,28 +35,7 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
                    u32 modelId, /* unused -- passed in r8 by caller */
                    u32* extraArgs)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;      /* 0x3c */
-        u32 v40;      /* 0x40 */
-        s16 variantB; /* 0x44 */
-        s16 hw[7];
-        u32 flags;
-        u8 variantA; /* 0x58 */
-        u8 v59;      /* 0x59 */
-        u8 v5a;      /* 0x5a */
-        u8 v5b;      /* 0x5b */
-        u8 v5c;      /* 0x5c: reserved (preserves count at 0x5d) */
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* tab = (u8*)(int)lbl_80318E40;
     GfxCmd* p;
     GfxCmd* e;
@@ -168,9 +147,9 @@ void dll_A7_func03(short* sourceObj, int variant, u8* posSource, u32 flags,
     p[3].y = (f32)(int)argY;
     p[3].z = (f32)(int)argZ;
 
-    buf.variantA = variant;
+    buf.v58 = variant;
     buf.ctx = (int)sourceObj;
-    buf.variantB = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1570;
     if (posSource != 0)
     {

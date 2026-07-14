@@ -34,24 +34,7 @@ extern f32 lbl_803E1524;
 
 void dll_A5_func03(short* sourceObj, int variant, u8* posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c; /* v5c never written here; required for layout */
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* tab = (u8*)(int)lbl_80318D48;
     GfxCmd* e = buf.entries;
     u32 fl;

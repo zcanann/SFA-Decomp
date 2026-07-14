@@ -50,24 +50,7 @@ __declspec(section ".sdata2") f32 lbl_803E0B34 = 0.0f;
 
 void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 effectType;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)gDll70Func03GfxLayoutTable;
     GfxCmd* e = buf.entries;
     e[0].layer = 0;
@@ -261,7 +244,7 @@ void dll_70_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[26].z = lbl_803E0AF8;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.effectType = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E0AF8;
     buf.pos[1] = lbl_803E0AF8;
     buf.pos[2] = lbl_803E0AF8;

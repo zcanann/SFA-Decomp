@@ -2,7 +2,7 @@
  * dll92func0 (DLL 0x92) - entry-point table for DLL 0x92.
  *
  * func00/func01 are no-op slots. func03 builds a modgfx effect: a stack
- * GfxBuf holding a fixed list of GfxCmd entries (textures from
+ * ModgfxSpawnPacket holding a fixed list of GfxCmd entries (textures from
  * lbl_803171C0 / lbl_803DB930, modes, per-entry positions and a shared
  * scale), then hands it to gModgfxInterface->spawnEffect.
  *
@@ -20,26 +20,6 @@
 #include "main/dll/dll_0092_dll92func0.h"
 
 u8 lbl_803DB930[8] = {0, 1, 0, 0, 0, 0, 0, 0};
-
-typedef struct
-{
-    GfxCmd* cmds;                      /* +0x00 */
-    int ctx;                           /* +0x04 */
-    u8 pad0[0x18];                     /* +0x08 */
-    f32 col[3];                        /* +0x20 */
-    f32 pos[3];                        /* +0x2c */
-    f32 scale;                         /* +0x38 */
-    u32 unk_3c;                        /* +0x3c */
-    u32 unk_40;                        /* +0x40 */
-    s16 unk_44;                        /* +0x44 */
-    s16 hw[7];                         /* +0x46 */
-    u32 flags;                         /* +0x54 */
-    u8 unk_58, unk_59, unk_5a, unk_5b; /* +0x58..+0x5b */
-    u8 unk_5c;                         /* +0x5c - not written */
-    s8 count;                          /* +0x5d */
-    u8 pad1[2];                        /* +0x5e */
-    GfxCmd entries[32];                /* +0x60 */
-} GfxBuf;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL92_EFFECT_ID 0x3c
@@ -62,7 +42,7 @@ extern f32 lbl_803E1238;
 static inline void dll_92_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 arg5,
                                      f32* extraArgs)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     GfxCmd* e;
     f32 s = lbl_803E1210;
     if (extraArgs != NULL)
@@ -145,9 +125,9 @@ static inline void dll_92_func03Body(u8* base, int sourceObj, int variant, int p
     e[8].x = lbl_803E1214;
     e[8].y = lbl_803E1214;
     e[8].z = lbl_803E1214;
-    buf.unk_58 = 0;
+    buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.unk_44 = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1214;
     buf.pos[1] = lbl_803E1214;
     buf.pos[2] = lbl_803E1214;
@@ -155,11 +135,11 @@ static inline void dll_92_func03Body(u8* base, int sourceObj, int variant, int p
     buf.col[1] = lbl_803E1214;
     buf.col[2] = lbl_803E1214;
     buf.scale = lbl_803E1238;
-    buf.unk_40 = 1;
-    buf.unk_3c = 0;
-    buf.unk_59 = 6;
-    buf.unk_5a = 0;
-    buf.unk_5b = 0;
+    buf.v40 = 1;
+    buf.v3c = 0;
+    buf.v59 = 6;
+    buf.v5a = 0;
+    buf.v5b = 0;
     buf.count = (GfxCmd*)((u8*)e + 0xd8) - e;
     buf.hw[0] = *(s16*)(base + 0x6c);
     buf.hw[1] = *(s16*)(base + 0x6e);

@@ -1,7 +1,7 @@
 /*
  * dll9bfunc0 (DLL 0x9B) - one of the screenfx scene builders (sibling of
  * DLL 0x9A/0x9C). dll_9B_func03 fills a fixed 14-entry GfxCmd list plus the
- * surrounding GfxBuf header describing a multi-state screen effect (texture/
+ * surrounding ModgfxSpawnPacket describing a multi-state screen effect (texture/
  * model ids, per-part placement offsets and a 7-entry anim table read out of
  * the lbl_80317BD8 resource blob), then hands it to ModgfxInterface
  * spawnEffect (effect 0x15, asset 0x156). When header flag bit 0 is set the
@@ -32,24 +32,7 @@ extern f32 lbl_803E13C4;
 
 void dll_9B_func03(int target, int variant, int parent, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 c7;
-        u32 c2;
-        s16 variant;
-        s16 anim[7];
-        u32 flags;
-        u8 v0, v1, v2, v3, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80317BD8;
     GfxCmd* entry = buf.entries;
 
@@ -152,9 +135,9 @@ void dll_9B_func03(int target, int variant, int parent, u32 flags)
     entry[13].y = lbl_803E13AC;
     entry[13].z = lbl_803E13A0;
 
-    buf.v0 = 0;
+    buf.v58 = 0;
     buf.ctx = target;
-    buf.variant = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E13A0;
     buf.pos[1] = lbl_803E13A0;
     buf.pos[2] = lbl_803E13A0;
@@ -162,19 +145,19 @@ void dll_9B_func03(int target, int variant, int parent, u32 flags)
     buf.col[1] = lbl_803E13A0;
     buf.col[2] = lbl_803E13A0;
     buf.scale = lbl_803E13C4;
-    buf.c2 = 2;
-    buf.c7 = 7;
-    buf.v1 = 0xe;
-    buf.v2 = 0;
-    buf.v3 = 0x1e;
+    buf.v40 = 2;
+    buf.v3c = 7;
+    buf.v59 = 0xe;
+    buf.v5a = 0;
+    buf.v5b = 0x1e;
     buf.count = (GfxCmd*)((u8*)entry + 0x150) - entry;
-    buf.anim[0] = *(s16*)(base + 0x1f8);
-    buf.anim[1] = *(s16*)(base + 0x1fa);
-    buf.anim[2] = *(s16*)(base + 0x1fc);
-    buf.anim[3] = *(s16*)(base + 0x1fe);
-    buf.anim[4] = *(s16*)(base + 0x200);
-    buf.anim[5] = *(s16*)(base + 0x202);
-    buf.anim[6] = *(s16*)(base + 0x204);
+    buf.hw[0] = *(s16*)(base + 0x1f8);
+    buf.hw[1] = *(s16*)(base + 0x1fa);
+    buf.hw[2] = *(s16*)(base + 0x1fc);
+    buf.hw[3] = *(s16*)(base + 0x1fe);
+    buf.hw[4] = *(s16*)(base + 0x200);
+    buf.hw[5] = *(s16*)(base + 0x202);
+    buf.hw[6] = *(s16*)(base + 0x204);
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0xc010480;
     buf.flags |= flags;

@@ -48,24 +48,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
         f32 scale;
         f32 pos[3];
     } m;
-    struct
-    {
-        GfxCmd* cmds;
-        u8* ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 typeId, v59, v5a, v5b, v5c; /* v5c is never written before spawnEffect */
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxPointerSpawnPacket buf;
     u8* base[1];
     GfxCmd* cmd;
     u8* model;
@@ -99,7 +82,7 @@ int modgfx_func03(u8* sourceObj, int effectId, u8* spawnParams, u32 spawnFlags, 
     {
         return -1;
     }
-    buf.typeId = effectId;
+    buf.v58 = effectId;
     buf.ctx = sourceObj;
     buf.v44 = effectId;
     buf.pos[0] = lbl_803E0734;

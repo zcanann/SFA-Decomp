@@ -1,13 +1,13 @@
 /*
  * dll94func0 (DLL 0x94) - a one-shot modgfx effect spawner.
  *
- * dll_94_func03 builds a fixed nine-command GfxBuf on the stack (a small
+ * dll_94_func03 builds a fixed nine-command ModgfxSpawnPacket on the stack (a small
  * layered effect that varies between two presets selected by `variant`),
  * derives its world position from the source/position objects when the
  * positioning flag is set, then hands the whole buffer to the modgfx
  * interface's spawnEffect. The four *_nop entry points and the dll_95
  * forward decl exist to align this object's function set with the v1.0
- * asm. Sibling of dll_0093 (same GfxCmd/GfxBuf layout and func03 shape).
+ * asm. Sibling of dll_0093 (same GfxCmd/ModgfxSpawnPacket layout and func03 shape).
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/modgfx_types.h"
@@ -17,26 +17,6 @@
 #include "main/dll/dll_0094_dll94func0.h"
 
 u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
-
-typedef struct
-{
-    GfxCmd* cmds;          /* +0x00 */
-    int ctx;               /* +0x04 */
-    u8 pad0[0x18];         /* +0x08 */
-    f32 col[3];            /* +0x20 */
-    f32 pos[3];            /* +0x2c */
-    f32 scale;             /* +0x38 */
-    u32 v3c;               /* +0x3c */
-    u32 v40;               /* +0x40 */
-    s16 v44;               /* +0x44 */
-    s16 hw[7];             /* +0x46 */
-    u32 flags;             /* +0x54 */
-    u8 v58, v59, v5a, v5b; /* +0x58..+0x5b */
-    u8 pad5c[1];           /* +0x5c layout-only; never written by dll_93/94 */
-    s8 count;              /* +0x5d */
-    u8 pad1[2];            /* +0x5e */
-    GfxCmd entries[32];    /* +0x60 */
-} GfxBuf;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL94_EFFECT_ID 0x3c
@@ -62,7 +42,7 @@ void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 as
 static inline void dll_94_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, int arg5,
                                      f32* extraArgs)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     GfxCmd* e;
     f32 s = lbl_803E1268;
     if (extraArgs != NULL)

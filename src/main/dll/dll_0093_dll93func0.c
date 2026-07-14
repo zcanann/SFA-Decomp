@@ -4,7 +4,7 @@
  * func00/func01 are empty stub entry points (kept to align this DLL's
  * exported function set with the v1.0 asm). func03 builds a six-entry
  * GfxCmd display list on the stack from the resource blob at
- * lbl_80317260, fills out the surrounding GfxBuf parameters, optionally
+ * lbl_80317260, fills out the surrounding ModgfxSpawnPacket parameters, optionally
  * offsets the effect position by the source/posSource object's world
  * position (when the caller-supplied flag bit 0 is set), then hands the
  * buffer to the mod-gfx interface's spawnEffect.
@@ -14,29 +14,6 @@
 #include "main/dll/partfx_interface.h"
 #include "ghidra_import.h"
 #include "main/dll/dll_0093_dll93func0.h"
-
-typedef struct GfxBuf
-{
-    GfxCmd* cmds;       /* +0x00 */
-    int ctx;            /* +0x04 */
-    u8 pad0[0x18];      /* +0x08 */
-    f32 col[3];         /* +0x20 */
-    f32 pos[3];         /* +0x2c */
-    f32 scale;          /* +0x38 */
-    u32 v3c;            /* +0x3c */
-    u32 v40;            /* +0x40 */
-    s16 variant;        /* +0x44 */
-    s16 hw[7];          /* +0x46 */
-    u32 flags;          /* +0x54 */
-    u8 v58;             /* +0x58 */
-    u8 v59;             /* +0x59 */
-    u8 v5a;             /* +0x5a */
-    u8 priority;        /* +0x5b */
-    u8 v5c;             /* +0x5c */
-    s8 count;           /* +0x5d */
-    u8 pad1[2];         /* +0x5e */
-    GfxCmd entries[32]; /* +0x60 */
-} GfxBuf;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL93_EFFECT_ID 0x89
@@ -52,7 +29,7 @@ extern f32 lbl_803E1258;
 
 void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80317260;
     GfxCmd* e = buf.entries;
     f32 rval;
@@ -102,7 +79,7 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[5].z = lbl_803E1240;
     buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.variant = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1240;
     buf.pos[1] = lbl_803E1240;
     buf.pos[2] = lbl_803E1240;
@@ -114,7 +91,7 @@ void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v3c = 7;
     buf.v59 = 0xe;
     buf.v5a = 0;
-    buf.priority = 0x1e;
+    buf.v5b = 0x1e;
     buf.count = (GfxCmd*)((u8*)e + 0x90) - e;
     buf.hw[0] = *(s16*)(base + 0x1f8);
     buf.hw[1] = *(s16*)(base + 0x1fa);

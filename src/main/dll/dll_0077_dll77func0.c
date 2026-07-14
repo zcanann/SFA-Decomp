@@ -25,24 +25,7 @@ static const f32 gDll77Scale = 1.0f;
 
 void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 variantId;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     GfxCmd* e = buf.entries;
     int ctx;
     e[0].layer = 0;
@@ -90,7 +73,7 @@ void dll_77_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
-    buf.variantId = variant;
+    buf.v44 = variant;
     buf.pos[0] = *(f32*)&gDll77Zero;
     buf.pos[1] = *(f32*)&gDll77Zero;
     buf.pos[2] = *(f32*)&gDll77Zero;

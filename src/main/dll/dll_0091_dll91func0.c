@@ -2,7 +2,7 @@
  * DLL 0x91 - func0 object. Holds the "func00"/"func01" no-op slots plus
  * dll_91_func03, which assembles a fixed 19-entry modgfx command list (one
  * GfxCmd per sub-effect: per-layer texture, draw mode, and a position scale
- * triple) into a stack GfxBuf, optionally biases the spawn position by the
+ * triple) into a stack ModgfxSpawnPacket, optionally biases the spawn position by the
  * source object's world position (flags bit 0), then hands the buffer to
  * (*gModgfxInterface)->spawnEffect. The texture pointers index a shared
  * resource blob (gDll91Func0ResourceBlob); the position/scale constants live in a
@@ -13,26 +13,6 @@
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/dll_0091_dll91func0.h"
-
-typedef struct
-{
-    GfxCmd* cmds;          /* +0x00 */
-    int ctx;               /* +0x04 */
-    u8 pad0[0x18];         /* +0x08 */
-    f32 col[3];            /* +0x20 */
-    f32 pos[3];            /* +0x2c */
-    f32 scale;             /* +0x38 */
-    u32 v3c;               /* +0x3c */
-    u32 v40;               /* +0x40 */
-    s16 v44;               /* +0x44 */
-    s16 params[7];         /* +0x46: 7 consecutive s16s read from base+0x194..0x1a0 */
-    u32 flags;             /* +0x54 */
-    u8 v58, v59, v5a, v5b; /* +0x58..+0x5b */
-    u8 pad2;               /* +0x5c: never written by dll_91_func03 */
-    s8 count;              /* +0x5d */
-    u8 pad1[2];            /* +0x5e */
-    GfxCmd entries[32];    /* +0x60 */
-} GfxBuf;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL91_EFFECT_ID 0x45
@@ -80,7 +60,7 @@ extern void dll_9E_func00_nop(void);
 
 void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)gDll91Func0ResourceBlob;
     GfxCmd* entry = buf.entries;
 
@@ -234,13 +214,13 @@ void dll_91_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5b = 0xc;
     buf.flags = 0x1000082;
     buf.count = (GfxCmd*)((u8*)entry + 0x1c8) - entry;
-    buf.params[0] = *(s16*)(base + 0x194);
-    buf.params[1] = *(s16*)(base + 0x196);
-    buf.params[2] = *(s16*)(base + 0x198);
-    buf.params[3] = *(s16*)(base + 0x19a);
-    buf.params[4] = *(s16*)(base + 0x19c);
-    buf.params[5] = *(s16*)(base + 0x19e);
-    buf.params[6] = *(s16*)(base + 0x1a0);
+    buf.hw[0] = *(s16*)(base + 0x194);
+    buf.hw[1] = *(s16*)(base + 0x196);
+    buf.hw[2] = *(s16*)(base + 0x198);
+    buf.hw[3] = *(s16*)(base + 0x19a);
+    buf.hw[4] = *(s16*)(base + 0x19c);
+    buf.hw[5] = *(s16*)(base + 0x19e);
+    buf.hw[6] = *(s16*)(base + 0x1a0);
     buf.cmds = entry;
     buf.flags |= flags;
     if ((buf.flags & 1) != 0)

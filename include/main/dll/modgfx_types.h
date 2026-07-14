@@ -17,6 +17,63 @@ STATIC_ASSERT(offsetof(GfxCmd, tex) == 0x10);
 STATIC_ASSERT(offsetof(GfxCmd, flags) == 0x14);
 STATIC_ASSERT(offsetof(GfxCmd, layer) == 0x16);
 
+typedef struct ModgfxSpawnPacket
+{
+    GfxCmd* cmds;
+    int ctx;
+    u8 pad08[0x18];
+    f32 col[3];
+    f32 pos[3];
+    f32 scale;
+    u32 v3c;
+    u32 v40;
+    s16 v44;
+    s16 hw[7];
+    u32 flags;
+    u8 v58;
+    u8 v59;
+    u8 v5a;
+    u8 v5b;
+    u8 v5c;
+    s8 count;
+    u8 pad5E[2];
+    GfxCmd entries[32];
+} ModgfxSpawnPacket;
+
+STATIC_ASSERT(offsetof(ModgfxSpawnPacket, col) == 0x20);
+STATIC_ASSERT(offsetof(ModgfxSpawnPacket, pos) == 0x2C);
+STATIC_ASSERT(offsetof(ModgfxSpawnPacket, flags) == 0x54);
+STATIC_ASSERT(offsetof(ModgfxSpawnPacket, count) == 0x5D);
+STATIC_ASSERT(offsetof(ModgfxSpawnPacket, entries) == 0x60);
+STATIC_ASSERT(sizeof(ModgfxSpawnPacket) == 0x360);
+
+typedef struct ModgfxPointerSpawnPacket
+{
+    GfxCmd* cmds;
+    u8* ctx;
+    u8 pad08[0x18];
+    f32 col[3];
+    f32 pos[3];
+    f32 scale;
+    u32 v3c;
+    u32 v40;
+    s16 v44;
+    s16 hw[7];
+    u32 flags;
+    u8 v58;
+    u8 v59;
+    u8 v5a;
+    u8 v5b;
+    u8 v5c;
+    s8 count;
+    u8 pad5E[2];
+    GfxCmd entries[32];
+} ModgfxPointerSpawnPacket;
+
+STATIC_ASSERT(offsetof(ModgfxPointerSpawnPacket, ctx) == 0x04);
+STATIC_ASSERT(offsetof(ModgfxPointerSpawnPacket, entries) == 0x60);
+STATIC_ASSERT(sizeof(ModgfxPointerSpawnPacket) == 0x360);
+
 typedef struct ModgfxVertexData
 {
     s16 posX;

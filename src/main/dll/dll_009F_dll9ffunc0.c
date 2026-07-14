@@ -52,28 +52,7 @@ __declspec(section ".sdata2") f32 lbl_803E147C = 2.2f;
 
 void dll_9F_func03(short* sourceObj, int variant, int posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;          /* +0x38 */
-        u32 v3c;            /* +0x3c: unknown */
-        u32 v40;            /* +0x40: unknown */
-        s16 v44;            /* +0x44: variant */
-        s16 hw[7];          /* +0x46 */
-        u32 flags;          /* +0x54 */
-        u8 v58;             /* +0x58: unknown */
-        u8 v59;             /* +0x59: unknown */
-        u8 v5a;             /* +0x5a: unknown */
-        u8 v5b;             /* +0x5b: unknown */
-        u8 v5c;             /* +0x5c: unwritten */
-        s8 count;           /* +0x5d */
-        u8 pad1[2];         /* +0x5e */
-        GfxCmd entries[32]; /* +0x60 */
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* tab = gDll9fEffectDataTable;
     GfxCmd* base = buf.entries;
     GfxCmd* e = base;

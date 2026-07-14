@@ -45,24 +45,7 @@ static inline u8* Gameplay_GetActiveModel(void* obj)
 
 void dll_68_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_803135C8;
     int ctx;
     buf.entries[0].layer = 0;

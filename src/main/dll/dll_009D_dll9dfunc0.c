@@ -2,7 +2,7 @@
  * dll_009D (dll9dfunc0) - pickup/effect glow spawner.
  *
  * dll_9D_func03 builds a 13-entry gfx command list on the stack (a
- * GfxBuf), seeds each layer's blend mode / texture-table offset / scale
+ * ModgfxSpawnPacket), seeds each layer's blend mode / texture-table offset / scale
  * triple from the f32 constant pool (lbl_803E13F8..lbl_803E1414) and a
  * shared texture/halfword table (lbl_80318038), then hands the buffer to
  * gModgfxInterface->spawnEffect to render the effect. When the caller
@@ -17,25 +17,6 @@
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/dll/pickup.h"
-
-typedef struct
-{
-    GfxCmd* cmds;               /* +0x00 */
-    int ctx;                    /* +0x04 */
-    u8 pad0[0x18];              /* +0x08 */
-    f32 col[3];                 /* +0x20 */
-    f32 pos[3];                 /* +0x2c */
-    f32 scale;                  /* +0x38 */
-    u32 v3c;                    /* +0x3c */
-    u32 v40;                    /* +0x40 */
-    s16 v44;                    /* +0x44 */
-    s16 hw[7];                  /* +0x46 */
-    u32 flags;                  /* +0x54 */
-    u8 v58, v59, v5a, v5b, v5c; /* +0x58..+0x5c */
-    s8 count;                   /* +0x5d */
-    u8 pad1[2];                 /* +0x5e */
-    GfxCmd entries[32];         /* +0x60 */
-} GfxBuf;
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9D_EFFECT_ID 0x46c
@@ -56,7 +37,7 @@ __declspec(section ".sdata2") f32 lbl_803E1414 = 1.0f;
 
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     u8* tab = (u8*)(int)lbl_80318038;
     GfxCmd* e = buf.entries;
     u32 effectFlags;

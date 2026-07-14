@@ -40,24 +40,7 @@ extern f32 lbl_803E14DC;
 
 void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 unk_3c;
-        u32 unk_40;
-        s16 variant; /* 0x44 */
-        s16 hw[7];
-        u32 flags;
-        u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* assets = (u8*)(int)lbl_803188D8;
     GfxCmd* cmd = buf.entries;
 
@@ -160,9 +143,9 @@ void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     cmd[13].y = lbl_803E14B8;
     cmd[13].z = lbl_803E14B8;
 
-    buf.unk_58 = 0;
+    buf.v58 = 0;
     buf.ctx = (int)sourceObj;
-    buf.variant = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E14B8;
     buf.pos[1] = lbl_803E14B8;
     buf.pos[2] = lbl_803E14B8;
@@ -170,11 +153,11 @@ void dll_A1_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.col[1] = lbl_803E14B8;
     buf.col[2] = lbl_803E14B8;
     buf.scale = lbl_803E14DC;
-    buf.unk_40 = 2;
-    buf.unk_3c = 7;
-    buf.unk_59 = 0xe;
-    buf.unk_5a = 0;
-    buf.unk_5b = 0x1e;
+    buf.v40 = 2;
+    buf.v3c = 7;
+    buf.v59 = 0xe;
+    buf.v5a = 0;
+    buf.v5b = 0x1e;
     buf.count = (GfxCmd*)((u8*)cmd + 0x150) - cmd;
     buf.hw[0] = *(s16*)&assets[0x1f8];
     buf.hw[1] = *(s16*)&assets[0x1fa];

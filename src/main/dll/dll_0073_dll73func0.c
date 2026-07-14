@@ -37,24 +37,7 @@ __declspec(section ".sdata2") f32 lbl_803E0BAC = 400.0f;
 
 void dll_73_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        u8* ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, pad2;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxPointerSpawnPacket buf;
     u8* base = (u8*)(int)lbl_803144B0;
     GfxCmd* e;
     GfxCmd* entries;

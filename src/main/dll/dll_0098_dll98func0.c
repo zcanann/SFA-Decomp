@@ -2,7 +2,7 @@
  * dll98func0 (DLL 0x98) - a model/screen effect emitter sharing foodbag's
  * modgfx command-list pattern (cf. dll_0099_dll99func0.c). func00/func01 are
  * empty entry stubs (defined below in reverse address order: func01 then
- * func00); func03 fills a GfxBuf of nine command entries from the .sdata2
+ * func00); func03 fills a ModgfxSpawnPacket of nine command entries from the .sdata2
  * float table at lbl_803E1318.. and the per-entry flag/texture/anim table at
  * lbl_803178B0, then dispatches it through gModgfxInterface->spawnEffect.
  *
@@ -17,26 +17,6 @@
 #include "main/game_object.h"
 #include "main/dll/savegame.h"
 #include "main/dll/dll_0098_dll98func0.h"
-
-/* command buffer handed to spawnEffect; mirrors ScreenFxHdr + inline entries */
-typedef struct
-{
-    GfxCmd* cmds;                              /* +0x00 */
-    int ctx;                                   /* +0x04: source object */
-    u8 pad0[0x18];                             /* +0x08..+0x1f */
-    f32 col[3];                                /* +0x20 */
-    f32 pos[3];                                /* +0x2c */
-    f32 scale;                                 /* +0x38 */
-    u32 unk_3c;                                /* +0x3c */
-    u32 unk_40;                                /* +0x40 */
-    s16 unk_44;                                /* +0x44 */
-    s16 hw[7];                                 /* +0x46: anim params from the table */
-    u32 flags;                                 /* +0x54 */
-    u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
-    s8 count;                                  /* +0x5d: entry count */
-    u8 pad1[2];                                /* +0x5e */
-    GfxCmd entries[32];                        /* +0x60 */
-} GfxBuf;
 
 /* spawnEffect effect ids per variant (textureAssetId arg). */
 #define DLL98_EFFECT_ID_VARIANT0 0x3e9
@@ -57,7 +37,7 @@ extern f32 lbl_803E133C;
 
 void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg5, int extraArgs)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     u8* table = (u8*)(int)lbl_803178B0;
     GfxCmd* entry;
     int anim;
@@ -154,9 +134,9 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     entry[8].x = lbl_803E1330;
     entry[8].y = lbl_803E1330;
     entry[8].z = lbl_803E1330;
-    buf.unk_58 = 0;
+    buf.v58 = 0;
     buf.ctx = sourceObj;
-    buf.unk_44 = variant;
+    buf.v44 = variant;
     buf.pos[0] = *(f32*)&lbl_803E1318;
     if ((u32)extraArgs != 0)
     {
@@ -171,11 +151,11 @@ void dll_98_func03(int sourceObj, int variant, int posSource, u32 flags, int arg
     buf.col[1] = *(f32*)&lbl_803E1318;
     buf.col[2] = *(f32*)&lbl_803E1318;
     buf.scale = lbl_803E1330;
-    buf.unk_40 = 1;
-    buf.unk_3c = 0;
-    buf.unk_59 = 0x12;
-    buf.unk_5a = 0;
-    buf.unk_5b = 0x10;
+    buf.v40 = 1;
+    buf.v3c = 0;
+    buf.v59 = 0x12;
+    buf.v5a = 0;
+    buf.v5b = 0x10;
     buf.flags = 0x4080400; /* bit 0 enables position offset below */
     buf.count = (GfxCmd*)((u8*)entry + 0xd8) - entry;
     buf.hw[0] = *(s16*)(table + 0x214);

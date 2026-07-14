@@ -28,24 +28,7 @@ extern f32 lbl_803E09DC;
 
 void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        int ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 variant;
-        s16 modelData[7];
-        u32 flags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_803133B8;
     int ctx;
     buf.entries[0].layer = 0;
@@ -100,7 +83,7 @@ void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
-    buf.variant = variant;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E09C8;
     buf.pos[1] = lbl_803E09C8;
     buf.pos[2] = lbl_803E09C8;
@@ -114,13 +97,13 @@ void dll_67_func03(int sourceObj, int variant, int posSource, u32 flags)
     buf.v5a = 0;
     buf.v5b = 0x1e;
     buf.count = 7;
-    buf.modelData[0] = *(s16*)&base[476];
-    buf.modelData[1] = *(s16*)&base[478];
-    buf.modelData[2] = *(s16*)&base[480];
-    buf.modelData[3] = *(s16*)&base[482];
-    buf.modelData[4] = *(s16*)&base[484];
-    buf.modelData[5] = *(s16*)&base[486];
-    buf.modelData[6] = *(s16*)&base[488];
+    buf.hw[0] = *(s16*)&base[476];
+    buf.hw[1] = *(s16*)&base[478];
+    buf.hw[2] = *(s16*)&base[480];
+    buf.hw[3] = *(s16*)&base[482];
+    buf.hw[4] = *(s16*)&base[484];
+    buf.hw[5] = *(s16*)&base[486];
+    buf.hw[6] = *(s16*)&base[488];
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
     buf.flags = 0xc010040;
     buf.flags |= flags;

@@ -45,24 +45,7 @@ __declspec(section ".sdata2") f32 lbl_803E1444 = 0.0f;
 
 void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;                              /* +0x00 */
-        int sourceObj;                             /* +0x04 */
-        u8 pad0[0x18];                             /* +0x08 */
-        f32 col[3];                                /* +0x20 */
-        f32 pos[3];                                /* +0x2c */
-        f32 scale;                                 /* +0x38 */
-        u32 unk_3c;                                /* +0x3c */
-        u32 unk_40;                                /* +0x40 */
-        s16 variant;                               /* +0x44 */
-        s16 unk_46[7];                             /* +0x46 */
-        u32 spawnFlags;                            /* +0x54 */
-        u8 unk_58, unk_59, unk_5a, unk_5b, unk_5c; /* +0x58..+0x5c */
-        s8 count;                                  /* +0x5d */
-        u8 pad1[2];                                /* +0x5e */
-        GfxCmd entries[32];                        /* +0x60 */
-    } buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80318260;
     GfxCmd* e = buf.entries;
     u32 spawnFlags;
@@ -166,9 +149,9 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[13].y = lbl_803E1418;
     e[13].z = lbl_803E1418;
 
-    buf.unk_58 = 0;
-    buf.sourceObj = (int)sourceObj;
-    buf.variant = variant;
+    buf.v58 = 0;
+    buf.ctx = (int)sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E1418;
     buf.pos[1] = lbl_803E1418;
     buf.pos[2] = lbl_803E1418;
@@ -176,24 +159,24 @@ void dll_9E_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.col[1] = lbl_803E1418;
     buf.col[2] = lbl_803E1418;
     buf.scale = lbl_803E1440;
-    buf.unk_40 = 2;
-    buf.unk_3c = 7;
-    buf.unk_59 = 0xe;
-    buf.unk_5a = 0;
-    buf.unk_5b = 0x1e;
+    buf.v40 = 2;
+    buf.v3c = 7;
+    buf.v59 = 0xe;
+    buf.v5a = 0;
+    buf.v5b = 0x1e;
     buf.count = (GfxCmd*)((u8*)e + 336) - e;
-    buf.unk_46[0] = *(s16*)&base[0x1f8];
-    buf.unk_46[1] = *(s16*)&base[0x1fa];
-    buf.unk_46[2] = *(s16*)&base[0x1fc];
-    buf.unk_46[3] = *(s16*)&base[0x1fe];
-    buf.unk_46[4] = *(s16*)&base[0x200];
-    buf.unk_46[5] = *(s16*)&base[0x202];
-    buf.unk_46[6] = *(s16*)&base[0x204];
+    buf.hw[0] = *(s16*)&base[0x1f8];
+    buf.hw[1] = *(s16*)&base[0x1fa];
+    buf.hw[2] = *(s16*)&base[0x1fc];
+    buf.hw[3] = *(s16*)&base[0x1fe];
+    buf.hw[4] = *(s16*)&base[0x200];
+    buf.hw[5] = *(s16*)&base[0x202];
+    buf.hw[6] = *(s16*)&base[0x204];
     buf.cmds = e;
     spawnFlags = 0xc0100c0;
-    buf.spawnFlags = spawnFlags;
+    buf.flags = spawnFlags;
     spawnFlags |= flags;
-    buf.spawnFlags = spawnFlags;
+    buf.flags = spawnFlags;
     if (spawnFlags & 1)
     {
         if (sourceObj != NULL)

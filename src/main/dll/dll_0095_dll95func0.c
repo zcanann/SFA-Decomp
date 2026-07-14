@@ -2,7 +2,7 @@
  * dll95func0 (DLL 0x95) - func00/func01 are empty no-op slots; func03
  * spawns a 7-part modgfx effect via gModgfxInterface->spawnEffect.
  *
- * The effect is described as a header (GfxBuf) plus an inline array of
+ * The effect is described by a ModgfxSpawnPacket with an inline array of
  * per-part draw commands (GfxCmd, 0x18 bytes each). The seven parts use
  * the texture at base+0x80 (base = lbl_80317528) and a table of constant
  * float values (lbl_803E1298..lbl_803E12B8). When the effect flags bit 0
@@ -19,37 +19,6 @@
 #include "main/dll/dll_0095_dll95func0.h"
 
 u8 lbl_803DB940[8] = {0, 4, 0, 5, 0, 6, 0, 7};
-
-/* effect header passed to spawnEffect (matches ScreenFxHdr); the part
-   command array is inline here rather than a separate buffer */
-typedef struct GfxBuf
-{
-    GfxCmd* cmds;       /* 0x00 */
-    int sourceObj;      /* 0x04: source object handle (int, not pointer) */
-    u8 pad0[0x18];      /* 0x08: never read */
-    f32 col[3];         /* 0x20 */
-    f32 pos[3];         /* 0x2c: world position */
-    f32 scale;          /* 0x38 */
-    u32 unk_3c;         /* 0x3c: always 0 */
-    u32 unk_40;         /* 0x40: always 1 */
-    s16 variant;        /* 0x44 */
-    s16 unk_46[7];      /* 0x46: copied from texture header base+0x90.. */
-    u32 spawnFlags;     /* 0x54: bitfield mode word for spawnEffect */
-    u8 unk_58;          /* 0x58 */
-    u8 unk_59;          /* 0x59 */
-    u8 unk_5a;          /* 0x5a */
-    u8 unk_5b;          /* 0x5b */
-    u8 unk_5c;          /* 0x5c */
-    s8 count;           /* 0x5d: part count */
-    u8 pad1[2];         /* 0x5e */
-    GfxCmd entries[32]; /* 0x60 */
-} GfxBuf;
-
-STATIC_ASSERT(offsetof(GfxBuf, col) == 0x20);
-STATIC_ASSERT(offsetof(GfxBuf, spawnFlags) == 0x54);
-STATIC_ASSERT(offsetof(GfxBuf, count) == 0x5d);
-STATIC_ASSERT(offsetof(GfxBuf, entries) == 0x60);
-STATIC_ASSERT(sizeof(GfxBuf) == 0x360);
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL95_EFFECT_ID 0x46
@@ -71,7 +40,7 @@ extern f32 lbl_803E12B8;
 
 void dll_95_func03(int sourceObj, int variant, int posSource)
 {
-    GfxBuf buf;
+    ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80317528;
     GfxCmd* entry = buf.entries;
 
@@ -124,9 +93,9 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
     entry[6].x = lbl_803E12A4;
     entry[6].y = lbl_803E12A4;
     entry[6].z = lbl_803E12A4;
-    buf.unk_58 = 0;
-    buf.sourceObj = sourceObj;
-    buf.variant = variant;
+    buf.v58 = 0;
+    buf.ctx = sourceObj;
+    buf.v44 = variant;
     buf.pos[0] = lbl_803E12A4;
     buf.pos[1] = lbl_803E12A4;
     buf.pos[2] = lbl_803E12A4;
@@ -134,22 +103,22 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
     buf.col[1] = lbl_803E12A4;
     buf.col[2] = lbl_803E12A4;
     buf.scale = lbl_803E12B8;
-    buf.unk_40 = 1;
-    buf.unk_3c = 0;
-    buf.unk_59 = 8;
-    buf.unk_5a = 0;
-    buf.unk_5b = 0x3c;
+    buf.v40 = 1;
+    buf.v3c = 0;
+    buf.v59 = 8;
+    buf.v5a = 0;
+    buf.v5b = 0x3c;
     buf.count = (GfxCmd*)((u8*)entry + 0xa8) - entry;
-    buf.unk_46[0] = *(s16*)(base + 0x90);
-    buf.unk_46[1] = *(s16*)(base + 0x92);
-    buf.unk_46[2] = *(s16*)(base + 0x94);
-    buf.unk_46[3] = *(s16*)(base + 0x96);
-    buf.unk_46[4] = *(s16*)(base + 0x98);
-    buf.unk_46[5] = *(s16*)(base + 0x9a);
-    buf.unk_46[6] = *(s16*)(base + 0x9c);
+    buf.hw[0] = *(s16*)(base + 0x90);
+    buf.hw[1] = *(s16*)(base + 0x92);
+    buf.hw[2] = *(s16*)(base + 0x94);
+    buf.hw[3] = *(s16*)(base + 0x96);
+    buf.hw[4] = *(s16*)(base + 0x98);
+    buf.hw[5] = *(s16*)(base + 0x9a);
+    buf.hw[6] = *(s16*)(base + 0x9c);
     buf.cmds = (GfxCmd*)((u8*)&buf + 0x60);
-    buf.spawnFlags = 0x4002400;
-    if ((buf.spawnFlags & 1) != 0)
+    buf.flags = 0x4002400;
+    if ((buf.flags & 1) != 0)
     {
         if ((u32)sourceObj != 0 && (u32)posSource != 0)
         {
@@ -163,8 +132,8 @@ void dll_95_func03(int sourceObj, int variant, int posSource)
         else if ((u32)sourceObj != 0)
         {
             buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] += ((GameObject*)(buf.sourceObj))->anim.worldPosY;
-            buf.pos[2] += ((GameObject*)(buf.sourceObj))->anim.worldPosZ;
+            buf.pos[1] += ((GameObject*)(buf.ctx))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(buf.ctx))->anim.worldPosZ;
         }
         else if ((u32)posSource != 0)
         {

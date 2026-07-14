@@ -6,7 +6,7 @@
  *   dll_6A_func03 - builds a 10-command graphics command list (GfxCmd[])
  *     on the stack from a layout table (lbl_803138A0) and a set of shared
  *     float constants, then submits it via gModgfxInterface->spawnEffect.
- *     Bit 0 of the spawn-context flags word (buf.spawnFlags) enables
+ *     Bit 0 of the spawn-context flags word enables
  *     world-position override: non-null sourceObj uses the GameObject
  *     world position, null uses posSource as a PartFxSpawnParams packet.
  */
@@ -34,24 +34,7 @@ extern f32 lbl_803E0A4C;
 
 void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32 flags)
 {
-    struct
-    {
-        GfxCmd* cmds;
-        u8* ctx;
-        u8 pad0[0x18];
-        f32 col[3];
-        f32 pos[3];
-        f32 scale;
-        u32 v3c;
-        u32 v40;
-        s16 v44;
-        s16 hw[7];
-        u32 spawnFlags;
-        u8 v58, v59, v5a, v5b, v5c;
-        s8 count;
-        u8 pad1[2];
-        GfxCmd entries[32];
-    } buf;
+    ModgfxPointerSpawnPacket buf;
     u8* tab = (u8*)(int)lbl_803138A0;
     GfxCmd* e = buf.entries;
     e[0].layer = 0;
@@ -139,7 +122,7 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     buf.v59 = 0x12;
     buf.v5a = 0;
     buf.v5b = 0x10;
-    buf.spawnFlags = 0x5000004;
+    buf.flags = 0x5000004;
     buf.count = (e + 10) - buf.entries;
     buf.hw[0] = *(s16*)&tab[352];
     buf.hw[1] = *(s16*)&tab[354];
@@ -149,8 +132,8 @@ void dll_6A_func03(u8* sourceObj, int variant, PartFxSpawnParams* posSource, u32
     buf.hw[5] = *(s16*)&tab[362];
     buf.hw[6] = *(s16*)&tab[364];
     buf.cmds = buf.entries;
-    buf.spawnFlags |= flags;
-    if ((buf.spawnFlags & 1) != 0)
+    buf.flags |= flags;
+    if ((buf.flags & 1) != 0)
     {
         if (sourceObj != 0)
         {
