@@ -524,3 +524,13 @@ above the cluster) interferes with listWalk in every order. Next sweep must incl
 slotPtr positions AFTER listWalk (so listWalk colors first, pushing slotPtr to r27 by
 interference); expect the back(r24)/slot36(r28) pair to settle with it. ~8 targeted
 configs: slotPtr inserted at each position after lw in the two score-4 orders.
+
+## Config G banked (probe wgfep_G.c): 7 anchors correct
+Decl cluster [listWalk, pp, listIndex, slotPtr, slot] (back stays in its original early
+slot): wg/wg1=r21 wgB=r22 curve=r22 listWalk=r26 pp=r26 listIndex=r25 p=r27 ALL CORRECT.
+Remaining: slotPtr=r24 (want r27) <-> back=r27 (want r24) swap + slot36 r29->r28.
+Moving back below slotPtr fixes back=r24 but cascades the earlier grants (back's early slot
+is load-bearing) - the swap must instead come from slotPtr coloring LATER without moving
+back: insert a decl between slotPtr and slot, or shift slotPtr below slot (config B gave
+r23 - overshoot; the r27 window is between). Also remember: score gate needs the site-1
+operand-order line + verifying the fdivs order at the po-staged K3 site.
