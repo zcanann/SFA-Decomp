@@ -581,3 +581,13 @@ Breakpoints at 0x57bb43/0x57bb60 log the physical-register mutual-interference i
 instruction(s) (pattern 09 xx b7-style or a helper call) and add them to the logger; then
 the neighbor-composition diff of webs 46/47/48 (func1C) and the walkgroup contested set
 directly names the single-edge source adjustments.
+
+## ADJACENCY CENSUS PIPELINE COMPLETE (adj_lldb.py v2: walk setters 0x57b9ee/0x57ba0d
++ 0x57bccc/0x57bced). func1C committed config: 2162 edges. Contested webs:
+scanBase(46): 62 parked-class neighbors; base(48): 78; web47 (unparked): 17.
+Model confirmed with data: fewer stubborn neighbors => relaxes earlier => pushes earlier
+=> pops later => lower register. The target ordering needs base pushing before scanBase -
+a composition shift larger than one edge (78 vs 62), meaning the sweep-timing calculus
+(how many neighbors push per sweep round) decides; the simulation now has REAL inputs:
+run Simplify on this exact census to find which single web's removal/addition flips the
+crossing order. All tooling committed; this is the final computation before the source fix.

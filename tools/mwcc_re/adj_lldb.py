@@ -18,7 +18,7 @@ def on_bootstrap(frame, bp_loc, extra_args, internal_dict):
     if _armed[0]: return False
     _armed[0] = True
     target = frame.GetThread().GetProcess().GetTarget()
-    for addr in (0x57bb43, 0x57bb60):
+    for addr in (0x57b9ee, 0x57ba0d, 0x57bccc, 0x57bced):
         bp = target.BreakpointCreateByAddress(addr)
         bp.SetScriptCallbackFunction('adj_lldb.on_bit')
         bp.SetAutoContinue(True)
