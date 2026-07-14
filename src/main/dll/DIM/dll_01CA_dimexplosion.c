@@ -25,7 +25,7 @@
 #include "main/dll/explosion_state.h"
 #include "main/game_object.h"
 #include "main/objprint_render_api.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
@@ -62,7 +62,6 @@ STATIC_ASSERT(offsetof(ExplosionState, debris) == 0x964);
 STATIC_ASSERT(offsetof(GravityDebris, active) == 0x20);
 
 #define DIMEXPLOSION_OBJFLAG_HITDETECT_DISABLED 0x2000
-#define MODEL_LIGHT_KIND_POINT                  2
 #define DIMEXPLOSION_PARTFX                     0x5e
 
 #define GEXPLOSION_TEXTURE_COUNT 4
@@ -116,19 +115,11 @@ extern f32 gExplosionSpreadDirs[];
 extern FbTexTbl gExplosionTexTable;
 
 extern void textureFree(int tex);
-extern void ModelLightStruct_free(void*);
 extern f32 expf(f32 x);
 extern void GXSetCurrentMtx(u32 id);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
 extern int textureLoadAsset(int id);
 extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setEnabled(int h, int n, f32 v);
-extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);
@@ -283,7 +274,7 @@ int explosion_getObjectTypeId(GameObject* obj)
 #pragma scheduling on
 void explosion_free(GameObject* obj)
 {
-    void* light = *(void**)(*(int*)&obj->extra + 0xa40);
+    ModelLightStruct* light = *(ModelLightStruct**)(*(int*)&obj->extra + 0xa40);
     if (light != NULL)
     {
         ModelLightStruct_free(light);

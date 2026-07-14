@@ -2,6 +2,7 @@
 #define MAIN_DLL_EXPLOSION_STATE_H_
 
 #include "global.h"
+#include "main/modellight_api.h"
 
 /* Gravity debris record: a launched chunk integrated under driftYSpeed gravity,
  * spawns a particle fx each odd tick, deactivated once age >= lifetime. */
@@ -23,7 +24,7 @@ typedef struct ExplosionState {
     f32 groundY;
     GravityDebris debris[6];
     f32 driftYSpeed; /* upward drift while flag 4 variant */
-    int light; /* objCreateLight handle or 0 */
+    ModelLightStruct* light;
     s16 rayYawA; /* light-ray pair angles */
     s16 rayPitchA;
     s16 rayYawB;
