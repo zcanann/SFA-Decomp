@@ -251,8 +251,6 @@ extern const f32 lbl_803E205C;
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
 extern char sHeadDisplayScoreFmt;
-extern int lbl_803E1E08;
-extern u8 lbl_803E1E0C;
 extern const f32 lbl_803E1FAC;
 extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
@@ -2589,10 +2587,10 @@ void pauseMenuCreateHeads(void)
 void drawArwingHud(int unused1, int unused2, int unused3)
 {
     u8 bombSlot;
-    GameObject* arwing;
+    GameObject* arwing = getArwing();
     int fullPips;
     int bombs;
-    u8 buf[8];
+    char score[5] = "   ";
     int req;
     int rings;
     u32 i;
@@ -2603,9 +2601,6 @@ void drawArwingHud(int unused1, int unused2, int unused3)
     u32 pip;
     u8 texIdx;
 
-    arwing = getArwing();
-    *(int*)buf = lbl_803E1E08;
-    buf[4] = lbl_803E1E0C;
     if (arwing != NULL)
     {
         if (arwingHudVisible != 0)
@@ -2674,10 +2669,10 @@ void drawArwingHud(int unused1, int unused2, int unused3)
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), lbl_803E1F9C, (u8)arwingHudAlpha, 0x100);
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC, (u8)arwingHudAlpha, 0x100);
-            sprintf((char*)buf, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
+            sprintf(score, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
         gameTextSetColorU8(0xff, 0xff, 0xff, arwingHudAlpha);
-        gameTextShowStr((char*)buf, 0x93, 0x23a, 0x41);
+        gameTextShowStr(score, 0x93, 0x23a, 0x41);
         drawFn_80125424();
     }
 }
