@@ -167,7 +167,7 @@ void renderClouds(int a, int b, int c, int d)
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.upperCloudObj->anim.localPosX = gCloudOverridePositionX;
-            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0 + gCloudOverridePositionY;
+            lbl_8039AB28.upperCloudObj->anim.localPosY = lbl_803DF2C0.f + gCloudOverridePositionY;
             lbl_8039AB28.upperCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
@@ -193,7 +193,7 @@ void renderClouds(int a, int b, int c, int d)
         v = view->x;
         lbl_8039AB28.mainCloudObj->anim.worldPosX = v;
         lbl_8039AB28.mainCloudObj->anim.localPosX = v;
-        v = lbl_803DF2C4 + view->y;
+        v = lbl_803DF2C4.f + view->y;
         lbl_8039AB28.mainCloudObj->anim.worldPosY = v;
         lbl_8039AB28.mainCloudObj->anim.localPosY = v;
         v = view->z;
@@ -240,13 +240,13 @@ void renderClouds(int a, int b, int c, int d)
         GXLoadPosMtxImm(mtx, GX_PNMTX0);
         GXSetCurrentMtx(GX_PNMTX0);
         selectTexture(fn_8008912C(), 0);
-        if (cloudT >= lbl_803DF2C8)
+        if (cloudT >= lbl_803DF2C8.f)
         {
             _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);
         }
         else
         {
-            _gxSetTevColor2(0x80, 0x80, 0xff, (int)(lbl_803DF2CC * (lbl_803DF2D0 * cloudT)));
+            _gxSetTevColor2(0x80, 0x80, 0xff, (int)(lbl_803DF2CC.f * (lbl_803DF2D0.f * cloudT)));
         }
         if (getHudHiddenFrameCount() == 0)
         {
@@ -257,13 +257,13 @@ void renderClouds(int a, int b, int c, int d)
         GXPos3f32(v, v, lbl_803DF2B4);
         GXTex2f32(lbl_803DF2B4, lbl_803DF2B4);
         GXPos3f32(gCloudActionGlareQuadSize, -gCloudActionGlareQuadSize, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2D4, lbl_803DF2B4);
+        GXTex2f32(lbl_803DF2D4.f, lbl_803DF2B4);
         v = gCloudActionGlareQuadSize;
         GXPos3f32(gCloudActionGlareQuadSize, v, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2D4, lbl_803DF2D4);
+        GXTex2f32(lbl_803DF2D4.f, lbl_803DF2D4.f);
         v = gCloudActionGlareQuadSize;
         GXPos3f32(-v, v, lbl_803DF2B4);
-        GXTex2f32(lbl_803DF2B4, lbl_803DF2D4);
+        GXTex2f32(lbl_803DF2B4, lbl_803DF2D4.f);
     }
 
     if (lbl_8039AB28.lowerCloudObj != NULL)
@@ -274,7 +274,7 @@ void renderClouds(int a, int b, int c, int d)
         if ((u32)gCloudOverridePositionValid != 0)
         {
             lbl_8039AB28.lowerCloudObj->anim.localPosX = gCloudOverridePositionX;
-            lbl_8039AB28.lowerCloudObj->anim.localPosY = gCloudOverridePositionY - lbl_803DF2D8;
+            lbl_8039AB28.lowerCloudObj->anim.localPosY = gCloudOverridePositionY - lbl_803DF2D8.f;
             lbl_8039AB28.lowerCloudObj->anim.localPosZ = gCloudOverridePositionZ;
         }
         else
@@ -287,6 +287,16 @@ void renderClouds(int a, int b, int c, int d)
         objRender(a, b, c, d, (int)lbl_8039AB28.lowerCloudObj, 1);
     }
 }
+
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C0 = { 300.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C4 = { 40.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C8 = { 0.5f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2CC = { 2.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D0 = { 255.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D4 = { 1.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D8 = { 50.0f };
+__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2DC = { 3.0f };
+
 
 void cloudaction_func05(void)
 {
@@ -331,7 +341,7 @@ void cloudaction_update(int p1, int p2, u8* state, int p4, int val)
     }
     lbl_803DB618[0] = lbl_803DB618[1];
     lbl_803DB618[1] = (u16)val;
-    lbl_8039AB28.textureScrollStep = *(f32*)(state + 8) / lbl_803DF2DC;
+    lbl_8039AB28.textureScrollStep = *(f32*)(state + 8) / lbl_803DF2DC.f;
     lbl_8039AB28.pad19 = 0;
     if ((*(volatile u8*)(state + 0x59) & 4) != 0)
     {

@@ -27,21 +27,8 @@
 
 extern u8 gPlayerShadowMode;
 __declspec(section ".rodata") u32 gPlayerShadowDefaultParams[4] = {0, 0, 0, 0};
-extern const f32 lbl_803DF46C; /* 0.0f */
-extern const f32 lbl_803DF488;
-extern const f32 lbl_803DF48C;
-extern const f32 lbl_803DF490;
-extern const f32 lbl_803DF494;
-extern const f32 lbl_803DF498;
-extern const f32 lbl_803DF49C;
-extern const f32 lbl_803DF4A0;
-extern const f32 lbl_803DF4A4;
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
-extern const f32 lbl_803DF468;
-extern const f32 lbl_803DF470;
-extern const f32 lbl_803DF474;
-extern const f32 lbl_803DF478;
 extern void hitDetect_calcSweptSphereBounds(void* out, void* top, void* bottom, void* params, int count);
 extern void hitDetectFn_800691c0(void* obj, void* hitData, int flags, int arg3);
 extern void fn_80069968(int* outA, int* outB);
@@ -55,6 +42,23 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
  * 0x10-0x17, spawns footfall particle effects at a random barycentric point
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
  * so (vert - offs) + objPos recovers the world-space triangle corners. */
+union PlayerShadowConstF32 { f32 f; };
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF468 = { 0.1f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF46C = { 0.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF470 = { 1.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF474 = { 1000.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF478 = { 0.35f };
+#pragma explicit_zero_data off
+extern const union PlayerShadowConstF32 lbl_803DF488;
+extern const union PlayerShadowConstF32 lbl_803DF48C;
+extern const union PlayerShadowConstF32 lbl_803DF490;
+extern const union PlayerShadowConstF32 lbl_803DF494;
+extern const union PlayerShadowConstF32 lbl_803DF498;
+extern const union PlayerShadowConstF32 lbl_803DF49C;
+extern const union PlayerShadowConstF32 lbl_803DF4A0;
+extern const union PlayerShadowConstF32 lbl_803DF4A4;
+
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj)
 {
     BoneSpawnData data;
@@ -105,8 +109,8 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
                 f32 dydy = dy * dy;
                 len = sqrtf(dydy + dx * dx + dz * dz);
             }
-            sc = lbl_803DF468 * len;
-            if (lbl_803DF46C != len)
+            sc = lbl_803DF468.f * len;
+            if (lbl_803DF46C.f != len)
             {
                 dx = dx / len;
                 dy = dy / len;
@@ -115,10 +119,10 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
             dx = dx * sc;
             dy = dy * sc;
             dz = dz * sc;
-            data.x = *(f32*)&lbl_803DF46C;
-            data.y = *(f32*)&lbl_803DF46C;
-            data.z = *(f32*)&lbl_803DF46C;
-            data.scale = lbl_803DF470;
+            data.x = *(f32*)&lbl_803DF46C.f;
+            data.y = *(f32*)&lbl_803DF46C.f;
+            data.z = *(f32*)&lbl_803DF46C.f;
+            data.scale = lbl_803DF470.f;
             data.unk4 = 0;
             data.unk2 = 0;
             data.unk0 = 0;
@@ -146,19 +150,19 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
                 p2x = obj->anim.localPosX + ((f32)hit->vertX[2] - offsX);
                 p2y = (f32)hit->vertY[2];
                 p2z = obj->anim.localPosZ + ((f32)hit->vertZ[2] - offsZ);
-                r1 = randomGetRange(1, 1000) / lbl_803DF474;
-                r2 = randomGetRange(1, 1000) / lbl_803DF474;
+                r1 = randomGetRange(1, 1000) / lbl_803DF474.f;
+                r2 = randomGetRange(1, 1000) / lbl_803DF474.f;
                 sqrtR2 = sqrtf(r2);
-                w0 = lbl_803DF470 - sqrtR2;
+                w0 = lbl_803DF470.f - sqrtR2;
                 {
-                    f32 omr = lbl_803DF470 - r1;
+                    f32 omr = lbl_803DF470.f - r1;
                     w1 = omr * sqrtR2;
                 }
                 w2 = r1 * sqrtR2;
                 data.x = w0 * p0x + w1 * p1x + w2 * p2x;
                 data.y = w0 * p0y + w1 * p1y + w2 * p2y;
                 data.z = w0 * p0z + w1 * p1z + w2 * p2z;
-                data.y = data.y + lbl_803DF478;
+                data.y = data.y + lbl_803DF478.f;
                 rt = (s8)hit->surfaceType;
                 if (rt == 0x12 || rt == 0x10)
                 {
@@ -198,6 +202,16 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
         }
     }
 }
+
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF488 = { 10.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF48C = { 400.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF490 = { 130.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF494 = { 20.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF498 = { 100.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF49C = { 75.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF4A0 = { 230.0f };
+__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF4A4 = { 125.0f };
+
 
 #pragma scheduling reset
 void playerShadow_setMode(u8 v)
@@ -247,35 +261,35 @@ void playerShadow_renderObject(GameObject* obj)
     switch (mode)
     {
     case 0:
-        radius = lbl_803DF488;
+        radius = lbl_803DF488.f;
         height = radius;
         break;
     case 1:
-        radius = lbl_803DF48C;
-        height = lbl_803DF490;
+        radius = lbl_803DF48C.f;
+        height = lbl_803DF490.f;
         break;
     case 2:
-        radius = lbl_803DF494;
-        height = lbl_803DF488;
+        radius = lbl_803DF494.f;
+        height = lbl_803DF488.f;
         break;
     case 3:
-        radius = lbl_803DF494;
-        height = lbl_803DF488;
+        radius = lbl_803DF494.f;
+        height = lbl_803DF488.f;
         break;
     case 4:
-        radius = lbl_803DF498;
-        height = lbl_803DF490;
+        radius = lbl_803DF498.f;
+        height = lbl_803DF490.f;
         break;
     case 5:
-        radius = lbl_803DF49C;
-        height = lbl_803DF4A0;
+        radius = lbl_803DF49C.f;
+        height = lbl_803DF4A0.f;
         break;
     case 6:
-        radius = lbl_803DF4A4;
+        radius = lbl_803DF4A4.f;
         height = radius;
         break;
     default:
-        radius = lbl_803DF46C;
+        radius = lbl_803DF46C.f;
         height = radius;
         break;
     }

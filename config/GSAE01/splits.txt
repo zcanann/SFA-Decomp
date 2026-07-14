@@ -218,6 +218,7 @@ main/dll/cloudaction.c:
 	.text       start:0x800944A0 end:0x80094F7C
 	.data       start:0x8030F7B0 end:0x8030F86C
 	.bss        start:0x8039AB28 end:0x8039AB48
+	.sdata2     start:0x803DF2B8 end:0x803DF2E0
 
 main/dll/dll_0013_waterfx.c:
 	.text       start:0x80094F7C end:0x80096994
@@ -253,10 +254,12 @@ main/dll/dll_000D_playershadow.c:
 	.text       start:0x800A3AF0 end:0x800A4338
 	.rodata     start:0x802C2160 end:0x802C2170
 	.data       start:0x8030FDE8 end:0x8030FE38
+	.sdata2     start:0x803DF468 end:0x803DF4A8
 
 main/dll/dll_0018_boneparticleeffect.c:
 	.text       start:0x800A4338 end:0x800A4DF4
 	.data       start:0x8030FE38 end:0x80310560
+	.sdata2     start:0x803DF4A8 end:0x803DF4C8
 
 main/dll/dll_000E_partfx.c:
 	.text       start:0x800A4DF4 end:0x800AF688

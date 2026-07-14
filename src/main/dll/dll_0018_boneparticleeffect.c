@@ -42,14 +42,17 @@ extern s32 gBoneParticleScrollOffset;
 extern f32 gBoneParticleDrift;
 extern f32 gBoneParticleDriftVelocity;
 extern s32 gBoneParticleBufferFlip;
-extern const f32 lbl_803DF4A8;
-extern f32 gBoneParticleDriftMax;
-extern f32 lbl_803DF4B0;
-extern f32 gBoneParticleDriftMin;
-extern const f32 lbl_803DF4B8;
-extern const f32 lbl_803DF4BC;
-extern f32 lbl_803DF4C0;
-extern f32 lbl_803DF4C4;
+union BoneParticleConstF32 { f32 f; };
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
+#pragma explicit_zero_data off
+__declspec(section ".sdata2") f32 gBoneParticleDriftMax = 500.0f;
+__declspec(section ".sdata2") f32 lbl_803DF4B0 = -1.0f;
+__declspec(section ".sdata2") f32 gBoneParticleDriftMin = -500.0f;
+__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
+__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
+__declspec(section ".sdata2") f32 lbl_803DF4C0 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803DF4C4 = 0.0495f;
 
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
@@ -188,10 +191,10 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
             idp = base + 0x5b4;
             while (j < 5)
             {
-                vtx.vx = lbl_803DF4A8;
-                vtx.vy = lbl_803DF4A8;
-                vtx.vz = lbl_803DF4A8;
-                vtx.w = lbl_803DF4B8;
+                vtx.vx = lbl_803DF4A8.f;
+                vtx.vy = lbl_803DF4A8.f;
+                vtx.vz = lbl_803DF4A8.f;
+                vtx.w = lbl_803DF4B8.f;
                 vtx.sz = 0;
                 vtx.sy = 0;
                 vtx.sx = 0;
@@ -208,16 +211,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 dx = dx - ((GameObject*)obj)->anim.localPosX;
                 dy = dy - ((GameObject*)obj)->anim.localPosY;
                 dz = dz - ((GameObject*)obj)->anim.localPosZ;
-                dx = dx * lbl_803DF4BC;
+                dx = dx * lbl_803DF4BC.f;
                 if (id == 0x1d || id == 0x1d)
                 {
-                    dy = *(f32*)&lbl_803DF4BC * (lbl_803DF4C0 + dy);
+                    dy = *(f32*)&lbl_803DF4BC.f * (lbl_803DF4C0 + dy);
                 }
                 else
                 {
-                    dy = dy * lbl_803DF4BC;
+                    dy = dy * lbl_803DF4BC.f;
                 }
-                dz = dz * lbl_803DF4BC;
+                dz = dz * lbl_803DF4BC.f;
                 Matrix_TransformPoint((f32*)mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                 k = 0;
                 scaleA = (f32*)(base + 0x90);
@@ -298,7 +301,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
     }
     ((void (*)(void*, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
-        ctx, renderParam, &vtx, lbl_803DF4B8, lbl_803DF4A8, 0);
+        ctx, renderParam, &vtx, lbl_803DF4B8.f, lbl_803DF4A8.f, 0);
     GXSetCullMode(GX_CULL_NONE);
     _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
     textureSetupFn_800799c0();
@@ -450,10 +453,10 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
         if ((int)randomGetRange(1, 0x64) <= prob)
         {
             void* mtx;
-            data.x = lbl_803DF4A8;
-            data.y = lbl_803DF4A8;
-            data.z = lbl_803DF4A8;
-            data.scale = lbl_803DF4B8;
+            data.x = lbl_803DF4A8.f;
+            data.y = lbl_803DF4A8.f;
+            data.z = lbl_803DF4A8.f;
+            data.scale = lbl_803DF4B8.f;
             data.unk4 = 0;
             data.unk2 = 0;
             data.unk0 = 0;
@@ -474,7 +477,7 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
             }
             else
             {
-                data.scale = lbl_803DF4B8;
+                data.scale = lbl_803DF4B8.f;
                 data.unk0 = 0;
                 data.unk4 = 0;
                 data.unk2 = 0;
