@@ -11,6 +11,7 @@
 #include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/render.h"
+#include "main/model_render_instrs_api.h"
 #include "main/audio/audio_control_api.h"
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
@@ -3065,7 +3066,6 @@ extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
 extern char sTrackCellCoordFormat[];
-extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
 #pragma optimization_level 2
 void mapDebugRender(int* state)
@@ -3147,7 +3147,7 @@ void mapDebugRender(int* state)
             n = v >> 3;
             if (v & 7)
                 n = n + 1;
-            modelRenderInstrsState_init(state, lbl_803DCE74 + n * cell, v, v);
+            modelRenderInstrsState_initIntLegacy(state, lbl_803DCE74 + n * cell, v, v);
         }
     }
 }

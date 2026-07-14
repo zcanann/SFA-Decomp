@@ -18,6 +18,7 @@
 #include "main/lightmap_lifecycle_api.h"
 #include "main/lightmap_render_control_api.h"
 #include "main/lightmap_render_queue_api.h"
+#include "main/model_render_instrs_api.h"
 #include "main/modellight_api.h"
 #include "main/newclouds.h"
 #include "main/obj_list.h"
@@ -649,8 +650,6 @@ void setDrawCloudsAndLights(int v)
     }
 }
 
-extern void modelRenderInstrsState_init(int* state, void* buf, int s1, int s2);
-extern void modelRenderInstrsState_setBit(int* state, int bit);
 extern void mapBlockRender_drawDimmedAabbLights(int* p1, int* obj, float* p3);
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
 extern void mapBlockRender_drawLightmapIndirectPasses(int* obj, int v, int* state, float* p3);
@@ -669,8 +668,8 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     u8* s0;
 
     countShifted = (int)*(u16*)((char*)obj + 0x84) << 3;
-    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
-    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_initPtrLegacy(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
+    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     mapBlockRender_drawDimmedAabbLights(p1, obj, p3);
     newR = mapBlockRender_setLightmapShader(obj, state);
@@ -714,8 +713,8 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 
     fn_8000F8F8();
     countShifted = (int)*(u16*)((char*)obj + 0x86) << 3;
-    modelRenderInstrsState_init(state, *(void**)&((GameObject *)obj)->anim.banks, countShifted, countShifted);
-    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_initPtrLegacy(state, *(void**)&((GameObject *)obj)->anim.banks, countShifted, countShifted);
+    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
@@ -764,8 +763,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     GXLoadTexMtxImm(m, GX_TEXMTX1, GX_MTX3x4);
     gxTextureSetupFn_8007cf7c();
     countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
-    modelRenderInstrsState_init(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted, countShifted);
-    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    modelRenderInstrsState_initPtrLegacy(state, *(void**)&((GameObject *)obj)->anim.previousLocalPosX, countShifted,
+                                         countShifted);
+    modelRenderInstrsState_setBitIntLegacy(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;

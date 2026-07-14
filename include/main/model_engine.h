@@ -4,14 +4,7 @@
 #include "global.h"
 #include "main/game_timer.h"
 #include "main/model_engine_ui_api.h"
-
-typedef struct ModelRenderInstrsState {
-    void* instrs;
-    s32 byteCount;
-    s32 bitCount;
-    s32 fieldC;
-    s32 bit;
-} ModelRenderInstrsState;
+#include "main/model_render_instrs_api.h"
 
 typedef struct RingBufferQueue {
     s16 count;
@@ -81,9 +74,6 @@ extern int lbl_803DB280;
 extern int lbl_803DB284;
 extern int lbl_803DB288;
 
-s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state);
-void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit);
-void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC);
 u8* modelRenderFn_80006744(u8* src, int count, ModelRenderInstrsState* state, int gap, u8 bitWidth);
 int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth);
 

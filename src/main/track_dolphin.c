@@ -15,6 +15,7 @@
 #include "main/mm.h"
 #include "main/model_light.h"
 #include "main/model.h"
+#include "main/model_render_instrs_api.h"
 #include "main/objHitReact.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
@@ -406,7 +407,6 @@ extern void GXLoadNrmMtxImm(void* mtx, int slot);
 extern void PSMTXConcat(void* a, void* b, void* out);
 extern void GXLoadTexMtxImm(void* mtx, int slot, int type);
 extern void GXSetArray(int attr, void* base, int stride);
-extern void modelRenderInstrsState_init(int* state, int ptr, int a, int b);
 extern int mapBlockRender_setShader(int a, int* obj, int* state);
 extern void mapBlockRender_callList(int a, int b, int* obj, int shader, int* state, f32* m);
 extern void memcpy(void* dst, void* src, int n);
@@ -604,7 +604,7 @@ void renderMapBlock(int* o, u8 type)
     PSMTXConcat(viewMtx, (char*)o + 0xc, m);
     if ((u32)(u8)flag != 0)
         setupToRenderMapBlock(o, m);
-    modelRenderInstrsState_init(state, ptr, (u16)count << 3, (u16)count << 3);
+    modelRenderInstrsState_initIntLegacy(state, ptr, (u16)count << 3, (u16)count << 3);
     ptr = 0;
     while (!ptr)
     {
