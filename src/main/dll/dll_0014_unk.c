@@ -1881,10 +1881,10 @@ fail:
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
 {
     u32 cur;
-    f32* scanBase;
     f32* probe;
-    f32* distRead;
     f32* distWrite;
+    f32* scanBase;
+    f32* distRead;
     int queueCurve;
     int directIndex;
     int directSlot;
@@ -1965,6 +1965,7 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurve
                 directIndex = queueIndices[queueCount];
                 queueCurve = (int)romCurves[directIndex];
                 distance = queueDistances[queueCount];
+                sel[0] = 0;
 
                 if (*(u8*)(queueCurve + 0x34) == 1)
                 {
