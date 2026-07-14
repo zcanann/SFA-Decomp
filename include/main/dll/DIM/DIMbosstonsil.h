@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DIMBOSSTONSIL_H_
 
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
@@ -37,16 +38,6 @@
 #define DIMBOSSTONSIL_STEAM_MUSIC           0xee
 #define DIMBOSSTONSIL_RUMBLE_SFX            0x189
 #define DIMBOSSTONSIL_STATE_FLAG_START_MOVE 2
-
-typedef struct DIMbosstonsilLight
-{
-    u8 pad00[0x4C];
-    u8 visible;
-    u8 pad4D[0x2F8 - 0x4D];
-    u8 active;
-    u8 glowIntensity;
-    s8 glowIntensityStep;
-} DIMbosstonsilLight;
 
 typedef struct DIMbosstonsilConfig
 {
@@ -95,11 +86,6 @@ typedef struct DIMbosstonsilState
     u8 pad406[DIMBOSSTONSIL_STATE_SIZE - 0x406];
 } DIMbosstonsilState;
 
-STATIC_ASSERT(offsetof(DIMbosstonsilLight, visible) == 0x4C);
-STATIC_ASSERT(offsetof(DIMbosstonsilLight, active) == 0x2F8);
-STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensity) == 0x2F9);
-STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensityStep) == 0x2FA);
-
 STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnX) == 0x08);
 STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnY) == 0x0C);
 STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnZ) == 0x10);
@@ -125,7 +111,7 @@ STATIC_ASSERT(offsetof(DIMbosstonsilState, eventGameBit) == DIMBOSSTONSIL_EVENT_
 STATIC_ASSERT(offsetof(DIMbosstonsilState, stateFlags) == DIMBOSSTONSIL_STATE_FLAGS_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) == DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
 
-extern DIMbosstonsilLight* gDIMbosstonsilLight;
+extern ModelLightStruct* gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;
 
 int DIMbosstonsil_SeqFn(GameObject* obj, u32 param_2, ObjAnimUpdateState* animUpdate);

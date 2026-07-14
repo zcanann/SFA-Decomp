@@ -1,7 +1,7 @@
 /*
  * dimbosstonsil (DLL 0x1E2) - the DIM boss tonsil/uvula combat object.
  * Handles the tonsil's state machine (idle, hit-react, defeat), steam-effect
- * anim events, a dynamic point light that flickers in sync with the glowIntensity,
+ * anim events, a dynamic point light that flickers in sync with the glow alpha,
  * and the hit-count route-phase tracking (gDIMbosstonsilRoutePhase) that controls
  * which health phase the tonsil starts in across attempts.
  */
@@ -11,7 +11,6 @@
 #include "main/vecmath.h"
 #include "main/render.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
@@ -28,11 +27,6 @@
 #define DIMBOSSTONSIL_OBJGROUP 3
 #define DIMBOSSTONSIL_PARTFX   0x4bd
 
-#define MODEL_LIGHT_KIND_POINT 2
-
-
-
-extern void ModelLightStruct_free(void* light);
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
 extern f32 lbl_803E4C90;
@@ -41,18 +35,8 @@ extern f32 lbl_803E4CBC;
 extern f32 lbl_803E4CC0;
 extern f32 lbl_803E4CC4;
 extern void objRenderModelAndHitVolumes(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
-extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
-extern void queueGlowRender(void* p);
 extern f32 lbl_803DDBA4;
 extern f32 lbl_803E4CC8;
-extern void* objCreateLight(int arg, u8 addToList);
-extern void modelLightStruct_setLightKind(void* handle, int kind);
-extern void modelLightStruct_setDiffuseColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(void* handle, f32 min, f32 max);
-extern void modelLightStruct_setDiffuseTargetColor(void* handle, int r, int g, int b, int a);
-extern void modelLightStruct_startColorFade(void* handle, int from, int to);
-extern void modelLightStruct_setupGlow(void* handle, int slot, int r, int g, int b, int a, f32 radius);
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
@@ -66,7 +50,6 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
 {
     extern u8 lbl_803DDBA8;
     extern void* gBaddieControlInterface;
-    extern void modelLightStruct_setEnabled(void* light, int enabled, f32 value);
     extern u8 lbl_803DDBB0;
     extern int dimBossTonsil_newState_hitFightMain(void* obj, ObjAnimUpdateState* animUpdate, DIMbosstonsilState* state,
                                                    DIMbosstonsilState* updateState);
@@ -89,13 +72,13 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
     {
         modelLightStruct_getSpecularColor((ModelLightStruct*)gDIMbosstonsilLight, &red, &green, &blue, &alpha);
         modelLightStruct_setGlowColor((ModelLightStruct*)gDIMbosstonsilLight, red, green, blue, 0xc0);
-        if (gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
+        if (gDIMbosstonsilLight->glowType != 0 && gDIMbosstonsilLight->enabled != 0)
         {
-            lightValue = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
+            lightValue = gDIMbosstonsilLight->glowAlpha + gDIMbosstonsilLight->glowAlphaStep;
             if (lightValue < 0)
             {
                 lightValue = 0;
-                gDIMbosstonsilLight->glowIntensityStep = 0;
+                gDIMbosstonsilLight->glowAlphaStep = 0;
             }
             else if (lightValue > 0xc)
             {
@@ -103,10 +86,10 @@ int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpd
                 if (lightValue > 0xff)
                 {
                     lightValue = 0xff;
-                    gDIMbosstonsilLight->glowIntensityStep = 0;
+                    gDIMbosstonsilLight->glowAlphaStep = 0;
                 }
             }
-            gDIMbosstonsilLight->glowIntensity = lightValue;
+            gDIMbosstonsilLight->glowAlpha = lightValue;
         }
     }
 
@@ -274,9 +257,9 @@ void DIMbosstonsil_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char 
             ObjPath_GetPointWorldPosition(obj, 0, pp, &pathPoint.y, &pathPoint.z, 0);
             (*gPartfxInterface)->spawnObject(obj, DIMBOSSTONSIL_PARTFX, partfxArgs, 0x200001, -1, NULL);
 
-            if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0)
+            if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->glowType != 0 && gDIMbosstonsilLight->enabled != 0)
             {
-                modelLightStruct_setPosition(pathPoint.x, pathPoint.y, pathPoint.z);
+                ((void (*)(f32, f32, f32))modelLightStruct_setPosition)(pathPoint.x, pathPoint.y, pathPoint.z);
                 queueGlowRender(gDIMbosstonsilLight);
             }
             break;
@@ -336,20 +319,20 @@ void DIMbosstonsil_update(GameObject* obj)
     modelLightStruct_getSpecularColor((ModelLightStruct*)gDIMbosstonsilLight, &red, &green, &blue, &alpha);
     modelLightStruct_setGlowColor((ModelLightStruct*)gDIMbosstonsilLight, red, green, blue, 0xc0);
 
-    if (gDIMbosstonsilLight->active == 0)
+    if (gDIMbosstonsilLight->glowType == 0)
         return;
-    if (gDIMbosstonsilLight->visible == 0)
+    if (gDIMbosstonsilLight->enabled == 0)
         return;
 
     {
         s16 r30_local;
         int sum;
-        sum = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
+        sum = gDIMbosstonsilLight->glowAlpha + gDIMbosstonsilLight->glowAlphaStep;
         r30_local = sum;
         if (r30_local < 0)
         {
             r30_local = 0;
-            gDIMbosstonsilLight->glowIntensityStep = 0;
+            gDIMbosstonsilLight->glowAlphaStep = 0;
         }
         else if (r30_local > 0xc)
         {
@@ -358,10 +341,10 @@ void DIMbosstonsil_update(GameObject* obj)
             if (r30_local > 0xff)
             {
                 r30_local = 0xff;
-                gDIMbosstonsilLight->glowIntensityStep = 0;
+                gDIMbosstonsilLight->glowAlphaStep = 0;
             }
         }
-        gDIMbosstonsilLight->glowIntensity = r30_local;
+        gDIMbosstonsilLight->glowAlpha = r30_local;
     }
 }
 
@@ -369,8 +352,6 @@ void DIMbosstonsil_update(GameObject* obj)
 void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
 {
     extern u32* gBaddieControlInterface;
-    extern void modelLightStruct_setEnabled(void* handle, int enable, f32 fade);
-
     u8 variant;
     int state;
 
