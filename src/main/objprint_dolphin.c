@@ -508,8 +508,6 @@ extern f32 lbl_803DEA68;
 extern const f32 lbl_803DEA1C;
 extern f32 lbl_803DEA6C;
 extern u8 gObjShadowColor[4];
-extern void modelRenderCb_8003c268();
-extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
 extern int depthReadRequestPoll(int x, int y, int* obj);
@@ -547,7 +545,7 @@ void fuzzRenderFn_800412dc(int* obj)
     model = (int*)Obj_GetActiveModel((GameObject*)obj);
     savedMtx = curObjMtx;
     lbl_803DCC3D = gObjFuzzPhase;
-    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268);
+    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268Legacy);
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
     {
         modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 8);
@@ -629,7 +627,7 @@ void objRenderFuzz(int* obj)
         }
         model = (int*)Obj_GetActiveModel((GameObject*)obj);
         savedMtx = curObjMtx;
-        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1c);
+        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1cLegacy);
         for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++)
         {
             modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 4);

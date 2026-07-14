@@ -17,6 +17,8 @@ void objSetMtxFn_800412d4(u32 mtx);
 void modelInitMtxs(int modelFile, int model);
 void modelMtxFn_8003be38(int modelFile, int model, int matrix, int matrix2);
 int objRotateFn_8003bce8(f32* matrix, s16* outX, s16* outY, s16* outZ);
+int modelRenderCb_8003c268(int obj, int* model, int renderOpIndex);
+int shaderFuzzFn_8003cc1c(int obj, int* model, int renderOpIndex);
 
 #define modelInitMtxsPtrLegacy(modelFile, model) \
     (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))
@@ -26,5 +28,9 @@ int objRotateFn_8003bce8(f32* matrix, s16* outX, s16* outY, s16* outZ);
 #define objRotateFn_8003bce8VoidLegacy(matrix, outX, outY, outZ) \
     (((void (*)(f32*, s16*, s16*, s16*))objRotateFn_8003bce8)( \
         (matrix), (outX), (outY), (outZ)))
+#define modelRenderCb_8003c268Legacy \
+    ((void (*)(void))modelRenderCb_8003c268)
+#define shaderFuzzFn_8003cc1cLegacy \
+    ((void (*)(void))shaderFuzzFn_8003cc1c)
 
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */
