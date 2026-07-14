@@ -416,6 +416,7 @@ main/dll/dll_002D_effect20.c:
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
+	.data       start:0x803112E8 end:0x80311340
 	.bss        start:0x8039C458 end:0x8039CAE8
 
 main/dll/dll_0016_screentransition.c:

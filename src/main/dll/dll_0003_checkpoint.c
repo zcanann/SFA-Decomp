@@ -922,3 +922,12 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     }
 }
 #pragma opt_propagation reset
+
+u32 lbl_803112E8[22] = {
+    0, 0, 0, 0x00110000,
+    (u32)Checkpoint_initialise, (u32)Checkpoint_release, 0, (u32)Checkpoint_reset,
+    (u32)Checkpoint_Add, (u32)Checkpoint_Remove, (u32)Checkpoint_func06, (u32)Checkpoint_func07,
+    (u32)Checkpoint_func08, (u32)Checkpoint_func09_ret_1, (u32)Checkpoint_func0A, (u32)Checkpoint_find,
+    (u32)Checkpoint_func0C, (u32)Checkpoint_func0D, (u32)Checkpoint_func0E, (u32)Checkpoint_func0F,
+    (u32)Checkpoint_func10, (u32)Checkpoint_onGameLoop,
+};
