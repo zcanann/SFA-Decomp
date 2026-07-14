@@ -761,19 +761,19 @@ void pauseMenuDrawElement(void* element, f32 fx, f32 fy, int depthZ, u8 paletteI
     pauseMenuMapFn_8011de20(element, paletteIndex, depthZ, drawFlags);
     dx = (*(u16*)((char*)element + 0xa) << 2) * (u16)scalePercent / 256;
     dy = (*(u16*)((char*)element + 0xc) << 2) * (u16)scalePercent / 256;
-    fx = lbl_803E1E80 * fx;
-    fy = lbl_803E1E80 * fy;
+    fx = 4.0f * fx;
+    fy = 4.0f * fy;
     GXBegin(GX_QUADS, GX_VTXFMT1, 4);
     GXWGFifo.s16 = fx;
     GXWGFifo.s16 = fy;
     GXWGFifo.s16 = (s16)(depthZ << 2);
-    c0 = lbl_803E1E3C;
+    c0 = 0.0f;
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
     GXWGFifo.s16 = fy;
     GXWGFifo.s16 = (s16)(depthZ << 2);
-    c1 = lbl_803E1E68;
+    c1 = 1.0f;
     GXWGFifo.f32 = c1;
     GXWGFifo.f32 = c0;
     GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
@@ -996,9 +996,9 @@ void fn_8011EF50(f32 f1, f32 f2, f32 f3, f32 f4, u16 a, u16 b, u16 c)
     gTrickyHudIconPosZ = f3;
     gTrickyHudIconScale = f4;
     pi = gTrickyHudPi;
-    gTrickyHudIconRotZ = pi * (f32)a / lbl_803E1E94;
-    gTrickyHudIconRotX = pi * (f32)b / lbl_803E1E94;
-    gTrickyHudIconRotY = pi * (f32)c / lbl_803E1E94;
+    gTrickyHudIconRotZ = pi * (f32)a / 32768.0f;
+    gTrickyHudIconRotX = pi * (f32)b / 32768.0f;
+    gTrickyHudIconRotY = pi * (f32)c / 32768.0f;
     PSMTXRotRad(mA, 0x79, gTrickyHudIconRotY);
     PSMTXRotRad(mB, 0x78, gTrickyHudIconRotX);
     PSMTXConcat(mB, mA, mA);
@@ -1155,6 +1155,7 @@ void hudDrawAirMeter(void)
     case 1:
     {
         int base;
+        int drawY;
         int off;
         int by;
         int cy;
@@ -1174,9 +1175,9 @@ void hudDrawAirMeter(void)
         }
         {
             base = 0x1a4 - ((u32) * (u16*)((char*)m[0xc] + 0xc) >> 1);
-            base += lbl_803DBAEC;
-            drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5), (f32)(int)(base + (lbl_803DD7F8 + (s8)off)),
-                        ((TrickyAirMeter*)m)->alpha, 0x100);
+            drawY = base + lbl_803DBAEC;
+            drawTexture((void*)m[0xc], (f32)(int)(lbl_803DD7F9 + 0xb5),
+                        (f32)(int)(drawY + (lbl_803DD7F8 + (s8)off)), ((TrickyAirMeter*)m)->alpha, 0x100);
         }
         by = *(u16*)((char*)m[0xc] + 0xa) + 0xb4;
         cy = 0x1a4 - ((u32) * (u16*)((char*)m[0xd] + 0xc) >> 1);
