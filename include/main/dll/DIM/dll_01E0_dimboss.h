@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
 #include "main/objanim_update.h"
@@ -142,15 +143,6 @@
 #define DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET 0x6A8
 #define DIMBOSS_HITDETECT_ANIM_TABLE_COUNT 12
 
-typedef struct DIMbossEffect {
-  u8 pad00[0x4C];
-  u8 enabled;
-  u8 pad4D[0x2F8 - 0x4D];
-  u8 glowType;
-  u8 glowAlpha;
-  s8 glowAlphaStep;
-} DIMbossEffect;
-
 typedef union DIMbossSteamFlags {
   u8 raw;
   struct {
@@ -171,7 +163,7 @@ typedef struct DIMbossEffectMarker {
 } DIMbossEffectMarker;
 
 typedef struct DIMbossTopState {
-  DIMbossEffect *effect;
+  ModelLightStruct *effect;
   DIMbossEffectMarker blueWhiteEffectSource;
   DIMbossEffectMarker breathBurstSource;
   DIMbossEffectMarker tonsilDustSource;
@@ -278,12 +270,6 @@ typedef struct DIMbossObject {
   int renderPause;
   int updateInitialized;
 } DIMbossObject;
-
-STATIC_ASSERT(sizeof(DIMbossEffect) == 0x2FB);
-STATIC_ASSERT(offsetof(DIMbossEffect, enabled) == 0x4C);
-STATIC_ASSERT(offsetof(DIMbossEffect, glowType) == 0x2F8);
-STATIC_ASSERT(offsetof(DIMbossEffect, glowAlpha) == 0x2F9);
-STATIC_ASSERT(offsetof(DIMbossEffect, glowAlphaStep) == 0x2FA);
 
 STATIC_ASSERT(sizeof(DIMbossEffectMarker) == 0x18);
 STATIC_ASSERT(offsetof(DIMbossEffectMarker, scale) == 0x08);
