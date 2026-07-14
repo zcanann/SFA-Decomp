@@ -21,6 +21,7 @@
 #include "main/model_light.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_frame_api.h"
+#include "main/pi_flush_api.h"
 #include "main/texture.h"
 #include "main/textrender_api.h"
 #include "main/rcp_dolphin_api.h"
@@ -235,7 +236,6 @@ extern void PSVECScale(f32 scale, f32* src, f32* dst);
 extern void objRender(int a, int b, int c, int d, void* obj, int mode);
 extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
-extern void GXFlush_(int, int);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
 extern void setTextColor(int unused, int a, int b, int c, int d);
@@ -1106,7 +1106,7 @@ void loadLightFn_8008bbc4(void)
         {
             mmFreeTick(0);
             gameTextRun();
-            GXFlush_(1, 0);
+            GXFlush_VoidIntLegacy(1, 0);
         }
         if (gDvdErrorPauseActive != 0)
         {

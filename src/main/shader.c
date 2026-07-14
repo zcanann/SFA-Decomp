@@ -5,6 +5,7 @@
 #include "main/gameloop_api.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_flush_api.h"
 #include "main/debug.h"
 #include "main/frustum.h"
 #include "main/shader_api.h"
@@ -889,7 +890,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 }
 
 extern int isRomListLoading(void);
-extern int GXFlush_(u8 visible, int unused);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];
 extern int lbl_803DB620;

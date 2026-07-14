@@ -5,7 +5,6 @@
 #include "main/pi_frame_api.h"
 
 double SeekTwiceBeforeRead(void);
-int GXFlush_(u8 visible, int unused);
 int loadAndDecompressDataFile();
 int mapGetDirIdx(int idx);
 u8 isHeavyFogEnabled(void);

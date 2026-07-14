@@ -18,6 +18,7 @@
 #include "string.h"
 #include "main/pad.h"
 #include "main/pi_data_file_api.h"
+#include "main/pi_flush_api.h"
 #include "main/dll/FRONT/n_options.h"
 #include "dolphin/os/OSResetSW.h"
 #include "dolphin/gx/GXCull.h"
@@ -1593,7 +1594,6 @@ extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(void* dst, int size, int out, void* src);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
-int GXFlush_(u8 visible, int unused);
 
 #pragma optimize_for_size reset
 #pragma dont_inline on

@@ -8,6 +8,7 @@
 #include "main/audio/stream_api.h"
 #include "main/map_load.h"
 #include "main/pi_data_file_api.h"
+#include "main/pi_flush_api.h"
 #include "main/objprint_render_api.h"
 #include "track/intersect_card_api.h"
 #include "dolphin/pad.h"
@@ -406,7 +407,6 @@ int gameBitDecrement(int bit)
     return 0;
 }
 
-extern int GXFlush_(u8 visible, int unused);
 
 
 extern void* lbl_803DCAFC;

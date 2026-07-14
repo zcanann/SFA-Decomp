@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/pi_data_file_api.h"
 #include "main/pi_dolphin.h"
+#include "main/pi_flush_api.h"
 #include "dolphin/os/OSReport.h"
 #include "main/camera.h"
 #include "main/fileio.h"

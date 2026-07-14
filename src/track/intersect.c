@@ -7,6 +7,7 @@
 #include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/pi_flush_api.h"
 #include "main/rcp_dolphin_api.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"

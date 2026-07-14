@@ -9,6 +9,7 @@
 #include "main/mm.h"
 #include "main/pad.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_flush_api.h"
 #include "dolphin/dvd.h"
 #include "dolphin/gx/GXLegacy.h"
 #include "dolphin/os/OSCache.h"

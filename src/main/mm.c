@@ -7,6 +7,7 @@
 #include "dolphin/os/OSTime.h"
 #include "main/mm.h"
 #include "main/pi_dolphin_api.h"
+#include "main/pi_flush_api.h"
 
 u8 gMmRegionCount;
 s16 gMmDeferredFreeCount;
@@ -112,7 +113,6 @@ extern char sMmFreeMemoryUsageCorruptedError[];
 extern void LCQueueWait();
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void heapFree(int region, int slotIdx);
-extern int GXFlush_(u8 visible, int unused);
 extern void* OSAllocFromHeap(int heap, int size);
 extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 extern void* memcpy(void* dst, const void* src, int n);
