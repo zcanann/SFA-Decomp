@@ -172,8 +172,7 @@ void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* a
                         dz = (emitter->posZ + emitter->refZ * half) - (listener->posZ + listener->refZ * half);
                         dx = (emitter->posX + emitter->refX * half) - (listener->posX + listener->refX * half);
                         dy = (emitter->posY + emitter->refY * half) - (listener->posY + listener->refY * half);
-                        projectedDistance = dz * dz;
-                        projectedDistance += dx * dx + dy * dy;
+                        projectedDistance = dz * dz + (dx * dx + dy * dy);
                         if (projectedDistance > zero)
                         {
                             invSqrt = __frsqrte((f64)projectedDistance);
