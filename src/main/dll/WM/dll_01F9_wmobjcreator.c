@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/obj_group.h"
+#include "main/dll/WM/dll_0211_wmwallcrawler.h"
 #include "main/dll/WC/dll_01F9_wmobjcreator.h"
 #include "main/object_render_legacy.h"
 
@@ -66,18 +67,6 @@ typedef struct HoodedZyckSpawnSetup
 } HoodedZyckSpawnSetup;
 
 STATIC_ASSERT(offsetof(HoodedZyckSpawnSetup, yawByte) == 0x2A);
-
-/* mirror of WmwallcrawlerMapData (dll_0211_wmwallcrawler.c) */
-typedef struct WmWallcrawlerSpawnSetup
-{
-    ObjPlacement base;
-    s8 rotXByte;       /* 0x18 */
-    u8 variant;        /* 0x19 */
-    s16 triggerRadius; /* 0x1A */
-    s16 heightOffset;  /* 0x1C */
-} WmWallcrawlerSpawnSetup;
-
-STATIC_ASSERT(offsetof(WmWallcrawlerSpawnSetup, heightOffset) == 0x1C);
 
 /* romlist object types this creator spawns (names from the retail
    OBJECTS.bin; the handling DLL ids confirm the targets). */
@@ -230,12 +219,12 @@ void WM_ObjCreator_update(GameObject* obj)
                 (state->spawnTimer -= framesThisStep, state->spawnTimer <= 0))
             {
                 setup = Obj_AllocObjectSetup(0x24, WMOBJCREATOR_SPAWN_WM_WALLCRAWLER);
-                ((WmWallcrawlerSpawnSetup*)setup)->rotXByte = randomGetRange(-0x7f, 0x7e);
+                ((WmwallcrawlerMapData*)setup)->rotXByte = randomGetRange(-0x7f, 0x7e);
                 ((ObjPlacement*)setup)->posX = obj->anim.localPosX + (f32)(int)randomGetRange(-100, 100);
                 ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
                 ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ + (f32)(int)randomGetRange(-100, 100);
-                ((WmWallcrawlerSpawnSetup*)setup)->triggerRadius = 0x31;
-                ((WmWallcrawlerSpawnSetup*)setup)->heightOffset = 200;
+                ((WmwallcrawlerMapData*)setup)->triggerRadius = 0x31;
+                ((WmwallcrawlerMapData*)setup)->heightOffset = 200;
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
