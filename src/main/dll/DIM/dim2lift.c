@@ -12,7 +12,7 @@
 #include "main/gamebits.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objhits.h"
@@ -25,7 +25,6 @@
 #include "main/player_control_interface.h"
 #include "main/obj_message.h"
 
-#define MODEL_LIGHT_KIND_POINT      2
 #define DIM2LIFT_HIT_VOLUME_SLOT_10 10
 #define DIM2LIFT_HIT_VOLUME_SLOT_9  9
 
@@ -76,25 +75,15 @@ STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
 
 void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
 {
-    extern int objCreateLight(int, int);
-    extern void modelLightStruct_setLightKind(int, int);
-    extern void modelLightStruct_setPosition(int, f32, f32, f32);
-    extern void modelLightStruct_setDiffuseColor(int, int, int, int, int);
-    extern void modelLightStruct_setSpecularColor(int, int, int, int, int);
-    extern void modelLightStruct_setupGlow(int, int, int, int, int, int, f32);
-    extern void modelLightStruct_setDistanceAttenuation(int, f32, f32);
-    extern void modelLightStruct_setEnabled(int, int, f32);
-    extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
-    extern void modelLightStruct_startColorFade(int, int, int);
     extern f32 lbl_803E4C28;
     extern f32 lbl_803E4C2C;
     extern f32 lbl_803E4C30;
-    int* lightSlot = (int*)*(int*)&((GroundBaddieState*)*(int*)&obj->extra)->control;
+    ModelLightStruct** lightSlot = (ModelLightStruct**)*(int*)&((GroundBaddieState*)*(int*)&obj->extra)->control;
 
     if (*(void**)lightSlot != NULL)
         return;
 
-    lightSlot[0] = objCreateLight(0, 1);
+    lightSlot[0] = objCreateLight(NULL, 1);
     if (*(void**)lightSlot == NULL)
         return;
 
@@ -116,13 +105,13 @@ void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
     }
 
     modelLightStruct_setDistanceAttenuation(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
-    lightSetField4D((ModelLightStruct*)lightSlot[0], 1);
+    lightSetField4D(lightSlot[0], 1);
     modelLightStruct_setEnabled(lightSlot[0], 1, lbl_803E4BD8);
     modelLightStruct_setDiffuseTargetColor(lightSlot[0], 64, 0, 0, 64);
-    modelLightStruct_setSpecularTargetColor((ModelLightStruct*)lightSlot[0], 64, 0, 0, 64);
+    modelLightStruct_setSpecularTargetColor(lightSlot[0], 64, 0, 0, 64);
     modelLightStruct_startColorFade(lightSlot[0], 2, 40);
-    modelLightStruct_setAffectsAabbLightSelection((ModelLightStruct*)lightSlot[0], 1);
-    modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)lightSlot[0], lbl_803E4BBC);
+    modelLightStruct_setAffectsAabbLightSelection(lightSlot[0], 1);
+    modelLightStruct_setGlowProjectionRadius(lightSlot[0], lbl_803E4BBC);
 }
 
 #pragma scheduling on
