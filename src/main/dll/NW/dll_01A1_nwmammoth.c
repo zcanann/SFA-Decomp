@@ -111,21 +111,24 @@ extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 gNwMammothDefaultAnimStepScale;
 
+int fn_801CE078(int* obj, u8* state);
+
 int NW_mammoth_getExtraSize(void)
 {
     return 0x48c;
 }
 
-void fn_801CEE0C(int obj, int baddie)
+#pragma dont_inline on
+void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
 {
-    extern int fn_801CE078(int, int);
     extern u8 lbl_803DBF70[4];
     extern u8 lbl_803DBF74[4];
     extern u8 lbl_803DBF78[4];
     extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)baddie;
 
-    if (fn_801CE078(obj, baddie) != 0)
+    (void)mapData;
+    if (fn_801CE078((int*)obj, (u8*)baddie) != 0)
         return;
 
     switch (state->stateIndex)
@@ -176,13 +179,14 @@ void fn_801CEE0C(int obj, int baddie)
     }
 }
 
-void fn_801CED2C(int obj, int baddie)
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
 {
     extern u8 lbl_803DBFB4[4];
     extern u8 lbl_803DBFB8[4];
     extern u8 lbl_803DBFBC[4];
     NwMammothState* state = (NwMammothState*)baddie;
 
+    (void)mapData;
     switch (state->stateIndex)
     {
     case 4:
@@ -645,6 +649,8 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
     }
 }
+#pragma dont_inline reset
+
 void NW_mammoth_free(GameObject* obj)
 {
     void* node;
@@ -684,15 +690,12 @@ enum NwMammothStateFlag
     NW_MAMMOTH_STATE_FLAG_SOLID = 0x20,
 };
 
+typedef u8 (*NwMammothHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
+                                        u32 reactionState, float* reactionStepScale);
+
 #pragma inline_max_size(4000)
 static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
 {
-    extern void fn_801CE2BC(int obj, void* state, void* objDef);
-    extern void fn_801CEA14(int obj, void* state, void* objDef);
-    extern void fn_801CED2C(int obj, void* state, void* objDef);
-    extern void fn_801CEE0C(int obj, void* state, void* objDef);
-    extern u8 ObjHitReact_Update(int obj, ObjHitReactEntry* reactionEntryTable, u32 reactionEntryCount,
-                                 u32 reactionState, float* reactionStepScale);
     int triggerIndex;
     f32 stepScale;
     int currentMove;
@@ -738,8 +741,8 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
         {
             hitReactEntries = &table->normalHitReactEntry;
         }
-        state->hitReactState =
-            ObjHitReact_Update((int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
+        state->hitReactState = ((NwMammothHitReactUpdateFn)ObjHitReact_Update)(
+            (int)obj, hitReactEntries, 1, state->hitReactState, &state->hitReactStepScale);
         if (state->hitReactState != 0)
         {
             fn_8003A168((GameObject*)obj, state->eyeAnimState);
@@ -752,17 +755,17 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     switch (mapData->behaviorMode)
     {
     case 0:
-        fn_801CEE0C((int)obj, state, mapData);
+        fn_801CEE0C((int)obj, (int)state, mapData);
         break;
     case 2:
-        fn_801CED2C((int)obj, state, mapData);
+        fn_801CED2C((int)obj, (int)state, mapData);
         break;
     case 1:
     case 3:
-        fn_801CEA14((int)obj, state, mapData);
+        fn_801CEA14((short*)obj, (u8*)state, (u8*)mapData);
         break;
     case 4:
-        fn_801CE2BC((int)obj, state, mapData);
+        fn_801CE2BC((int*)obj, (u8*)state, (short*)mapData);
         break;
     }
     if ((table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_PATH_CONTROL) != 0)
