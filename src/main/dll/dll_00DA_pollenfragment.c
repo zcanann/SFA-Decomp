@@ -9,6 +9,7 @@
  * non-owner object. Timed variants fade their alpha out and self-free.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "dolphin/mtx/vec.h"
 #include "main/frame_timing.h"
@@ -87,7 +88,6 @@ extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 
 extern int Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 
 void pollenfragment_init(GameObject* obj, int config)
 {
