@@ -6137,8 +6137,6 @@ int cardDeleteFn_8007d99c(void)
     extern s32 CARDMount();
     extern s32 CARDCheck();
     extern s32 CARDDelete();
-    extern void CARDUnmount();
-
     extern void cardSetStatusNoCard2();
     extern void* lbl_803DD040;
     extern const char* sMemoryCardFileName;
@@ -6267,15 +6265,11 @@ void showMemCardError(u8 err)
     extern u8 gSaveCardRetry;
     extern int lbl_803DB708;
     extern void checkReset(void);
-    extern void mmFreeTick(int arg);
-    extern void waitNextFrame(void);
     extern int getReflectionTexture1(void);
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void* gameTextGet(int textId);
     extern void gameTextShowStr(int str, int x, int y, int yPos);
-    extern int GXFlush_(u8 visible, int unused);
-
     extern f32 fn_80293AC4(int v);
 
     int opts[8];
@@ -6429,8 +6423,6 @@ int memCardFn_8007dd04(u8 retry)
 {
     extern int saveGame(int);
     extern void CARDClose(void*);
-    extern void CARDUnmount(s32);
-
     extern u8 lbl_80396900[];
     extern void* lbl_803DD040;
     extern u8 lbl_803DD05A;
@@ -6648,8 +6640,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
 void cardShowLoadingMsg(u8 kind)
 {
     extern void gameTextSetWindow(int);
-    extern void mmFreeTick(int arg);
-    extern void waitNextFrame(void);
     extern int getButtonObjects(int**);
     extern void** gScreenTransitionInterface;
     extern f32 lbl_803DEF98;
@@ -6661,8 +6651,6 @@ void cardShowLoadingMsg(u8 kind)
     extern void hudDrawColored(int, int, int, void*, int, int);
     extern void gameTextSetColor(int, int, int, int);
     extern void gameTextFn_80016810(int a, int b, int c);
-    extern int GXFlush_(u8 visible, int unused);
-
     int* buttons;
     int saved;
     int frame;
