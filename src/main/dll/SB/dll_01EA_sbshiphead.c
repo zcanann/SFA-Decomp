@@ -16,6 +16,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/audio/sfx_ids.h"
@@ -50,7 +51,6 @@ extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern u8 gSbShipHeadHasFiredFireball;
 extern int gSbShipHeadPrevGalleonPhase;
-extern void objRenderModelAndHitVolumes(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale);
 u32 getSbGalleon(void);
 
 /* .sdata2 constant pool */
@@ -103,7 +103,7 @@ void SB_ShipHead_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     if (visible != 0)
     {
         state = object->extra;
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5830);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5830);
         parent = *(int*)&object->anim.parent;
         if ((((void*)parent != NULL && (((GameObject*)parent)->anim.seqId == SB_GALLEON_SEQID_FIRING)) &&
              (phase = SB_GALLEON_VTBL(parent)->getDamagePhase(parent), phase != 0)) &&
