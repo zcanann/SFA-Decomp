@@ -5,7 +5,9 @@
 #include "main/dll/CF/CFguardian.h"
 #include "main/frame_timing.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 #include "main/vecmath.h"
+#include "main/vecmath_distance_api.h"
 #include "main/dll/windlift107state_struct.h"
 #include "main/dll/portalspelldoorstate_struct.h"
 #include "main/dll/scarabstate_struct.h"
@@ -82,8 +84,6 @@ __declspec(section ".rodata") u32 lbl_802C2298[3] = {0, 0, 0};
 __declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
 void Scarab_update(GameObject* obj)
 {
-    extern f32 Vec_xzDistance(f32 * a, f32 * b);
-    extern void PSVECSubtract(void* a, void* b, void* out);
     typedef struct
     {
         f32 x, y, z;
