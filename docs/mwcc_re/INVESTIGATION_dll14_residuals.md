@@ -69,3 +69,28 @@
 - objdiff scoring: register-field mismatches score HIGHER than displaced/different instructions.
   Baseline (100 regions, all-reg-perm) = 97.83%; "better-shaped" variants scored lower.
   Verify candidate improvements against report.json before committing.
+
+## Register-topology breakthrough (validated live, not yet landed)
+A probe configuration achieved ALL EIGHT target register anchors for
+walkgroupFindExitPointFn_800dc398 (wg1=r21 wg=r21 wgB=r22 p=r27 pp=r26 listWalk=r26
+listIndex=r25 slotPtr=r27), reproducible in-tree. Recipe:
+- Tail wg/wgB as FRESH variables (wgT/wgBT) declared at the very END of the decl list,
+  initialized with a SINGLE expression (no self-reassign; self-reassign splits the web and
+  the value chain renumbers into the appended band ~idx 88-90 = wrong pops).
+  Single-expr form used: `(ObjfsaWalkGroup*)((u32)&((ObjfsaWalkGroup*)patchBase[0])[pp[i]] + 0x3000)`
+  (association still wrong: emits mulli/addi/add vs target mulli/add/addi - 2 operand-order
+  lines lost per site x3 sites).
+- `p` declared early (right after slotPtr), `pp` declared between listWalk and listIndex,
+  listWalk declared before listIndex.
+- Site-1 wg keeps the two-statement wgB staging; wg declared late (just before wgT/wgBT).
+Result in-tree: 104 ndiff regions but objdiff 97.47% < baseline 97.83% because:
+(a) the curve/slot F-band shifted (an nadj=29 web now parks and steals r22; curve lands r23),
+(b) the 3 single-expr init sites lose shape credit,
+(c) np/back/pl/po/slot36/FPR webs still permuted.
+Next session: fix (a) via decl adjustment around the idx-40 interloper (trace segment shows
+F idx=40 nadj=29 -> r22), and find the association-correct single-expr form for (b) - the
+target shape add-then-addi with ONE web remains unproduced by any tried expression; candidate
+mechanism: biased coloring of a def1-chain into the dest web (see mp4 charDirTbl[i][2] corpus
+hit - global-array base differs from register-base case).
+objdiff weighting note: ~90 register-field lines are worth LESS than ~9 shape lines; always
+score via report.json before judging a topology win.
