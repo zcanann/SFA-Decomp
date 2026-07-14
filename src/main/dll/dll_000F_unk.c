@@ -1081,3 +1081,14 @@ void player_release(void)
 void player_initialise(void)
 {
 }
+
+u32 lbl_80311438[30] = {
+    0, 0, 0, 0x00190000,
+    (u32)player_initialise, (u32)player_release, 0, (u32)player_init,
+    (u32)player_update, (u32)player_updateVel, (u32)player_setOverride, (u32)player_setState,
+    (u32)player_followCurve, (u32)player_moveTowardPoint, (u32)player_advanceMove, (u32)dll_0F_func0B,
+    (u32)player_modelMtxFn, (u32)player_render2, (u32)player_rotateTowardEnemy, (u32)player_playSoundFn0F,
+    (u32)player_playSoundFn10, (u32)player_findCurve, (u32)player_updateCurve, (u32)dll_0F_func13,
+    (u32)player_clearXZvel, (u32)player_setAnimIds, (u32)player_updateSecondaryBlend, (u32)player_doProjGfx,
+    (u32)player_updateParticles, (u32)dll_0F_func19_nop,
+};
