@@ -14,6 +14,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_channel_query_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/dll/objfsa_romcurve.h"
 #include "main/vecmath.h"
 #include "main/lightmap_api.h"
@@ -89,7 +90,6 @@ extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
 extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
-extern void Sfx_PlayFromObject(u8* obj, int sfxId);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
