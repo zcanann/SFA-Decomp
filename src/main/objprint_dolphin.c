@@ -510,7 +510,6 @@ extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-extern void setMatrixFromObjectTransposed(void* obj, f32* out);
 extern void objRotateFn_8003bce8(f32* m, s16* a, s16* b, s16* c);
 extern int depthReadRequestPoll(int x, int y, int* obj);
 extern void objShadowFn_8006c5f0(int* obj, int* a, f32* b, int* c, int* d);
@@ -3855,8 +3854,6 @@ int loadMapAndParent(int mapId)
     return idx;
 }
 
-extern u32 mapLoadDataFile(int mapId, int fileId);
-
 void mapLoadDataFiles(int mapIdx)
 {
     if (sMapFileNameAdjacencyTable[mapIdx] != -1)
@@ -3881,7 +3878,6 @@ void mapLoadDataFiles(int mapIdx)
 }
 
 extern void loadDataFiles(int);
-extern int GXFlush_(u8 visible, int unused);
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
 #define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
