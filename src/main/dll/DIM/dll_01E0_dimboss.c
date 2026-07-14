@@ -12,6 +12,7 @@
 #include "main/objhits.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/dll/DIM/DIM2lift.h"
 #include "main/dll/boneparticleeffect_interface.h"
@@ -70,9 +71,6 @@ extern void fn_801B9ECC(void);
 /* Env-fx ids co-activated on the steam/warp transition (getEnvfxAct 3rd arg) */
 #define DIMBOSS_ENVFX_A 0xdb
 #define DIMBOSS_ENVFX_B 0xdc
-extern void objRenderModelAndHitVolumes(DIMbossObject* obj, u32 p2, u32 p3,
-                                        u32 p4, u32 p5, f32 scale);
-
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern DIMbossAnimScratch gDIMbossAnimScratchBase;
@@ -493,7 +491,7 @@ void DIMboss_render(DIMbossObject* obj, u32 p2, u32 p3, u32 p4,
         return;
     }
 
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4C44);
+    objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E4C44);
     DIM2icicle_updateBossSequenceEffects(obj, runtime);
     dll_2E_func06((GameObject*)obj, &gDIMbossAnimController, 0);
 
