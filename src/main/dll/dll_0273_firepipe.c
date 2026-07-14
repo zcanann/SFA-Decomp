@@ -41,25 +41,17 @@
 #include "string.h"
 #include "main/gamebits.h"
 #include "main/mm.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 
 #define FIREPIPE_OBJGROUP 0x4a
 
 #define FIREPIPE_OBJFLAG_ACTIVE          0x200
 #define FIREPIPE_OBJFLAG_RENDERED        0x800
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
-extern void modelLightStruct_freeSlot(int p);
 extern void Obj_InsertIntoUpdateList(int obj);
 
 extern void objRenderModelAndHitVolumes(int obj, int p2, int p3, int p4, int p5, double scale);
-extern void queueGlowRender(void);
 extern int objIsFrozen(FirePipeObject* obj);
-extern int modelLightStruct_createPointLight(FirePipeObject* obj, int r, int g, int b, int a);
-extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
-extern void modelLightStruct_updateGlowAlpha(int light);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject* obj, int sfxId, int limit);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject* obj, int sfxId, int limit);
 extern f32 lbl_803DC340;
@@ -342,9 +334,9 @@ void firepipe_updateState(FirePipeObject* obj)
                                     : ((radius > gFirePipeNearAttenMax) ? gFirePipeNearAttenMax : radius);
                     farAtten = lbl_803E6B8C + radius;
                     { /* separate local to reproduce reg assignment */
-                        int light = extra->glowLight;
+                        int light = (int)extra->glowLight;
                         modelLightStruct_setDistanceAttenuation(
-                            light, nearAtten,
+                            (ModelLightStruct*)light, nearAtten,
                             (farAtten < gFirePipeFarAttenMin)
                                 ? gFirePipeFarAttenMin
                                 : ((farAtten > gFirePipeFarAttenMax) ? gFirePipeFarAttenMax : farAtten));
@@ -357,7 +349,7 @@ void firepipe_updateState(FirePipeObject* obj)
             modelLightStruct_setEnabled(extra->glowLight, 0, lbl_803E6B98);
             if (modelLightStruct_getActiveState((ModelLightStruct*)extra->glowLight) == 0)
             {
-                modelLightStruct_freeSlot((int)&extra->glowLight);
+                modelLightStruct_freeSlot(&extra->glowLight);
             }
         }
     }
@@ -456,7 +448,7 @@ void firepipe_free(FirePipeObject* obj)
     }
     if ((u32)extra->glowLight != 0)
     {
-        modelLightStruct_freeSlot((int)&extra->glowLight);
+        modelLightStruct_freeSlot(&extra->glowLight);
     }
 }
 
@@ -466,10 +458,10 @@ void firepipe_render(FirePipeObject* obj, int p1, int p2, int p3, int p4, char v
     int glowLight;
 
     extra = obj->extra;
-    glowLight = extra->glowLight;
+    glowLight = (int)extra->glowLight;
     if ((u32)glowLight != 0 && *(u8*)(glowLight + 0x2f8) != 0 && *(u8*)(glowLight + 0x4c) != 0)
     {
-        queueGlowRender();
+        ((void (*)(void))queueGlowRender)();
     }
     if (visible != 0 && (u32)((extra->flags >> 1) & 1) != 0)
     {
@@ -614,7 +606,7 @@ void firepipe_init(FirePipeObject* obj, FirePipeMapData* mapData)
         s16toFloat(&extra->emitTimer, 0x14);
         ObjGroup_AddObject((int)obj, FIREPIPE_OBJGROUP);
         ((FirePipeBitFlags*)&extra->flags)->childEmitEnabled = 0;
-        extra->glowLight = 0;
+        extra->glowLight = NULL;
     }
 }
 

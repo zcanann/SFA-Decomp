@@ -6,6 +6,7 @@
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
+#include "main/modellight_api.h"
 
 typedef struct FirePipeExtra {
     GameObject* effectObjs[8];
@@ -13,7 +14,7 @@ typedef struct FirePipeExtra {
     u8 pad21[0x24 - 0x21];
     f32 cycleTimer;
     f32 emitTimer;
-    u32 glowLight;
+    ModelLightStruct* glowLight;
     int activeSpawn;
     int effectType;
     f32 effectScale;
