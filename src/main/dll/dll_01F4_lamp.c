@@ -12,6 +12,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/object_render.h"
@@ -32,7 +33,6 @@
 
 #define LAMP_SEQ_STATIC 0x3e4 /* seqId using the static rotX byte (no swing) */
 
-extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 int Lamp_getExtraSize(void)
 {
     return 0x1;
