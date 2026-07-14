@@ -16,6 +16,7 @@
 #include "main/dll/dll197state_struct.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/dll_000A_expgfx.h"
@@ -72,7 +73,6 @@ __declspec(section ".sdata2") f32 lbl_803E513C = -2.0f;
 __declspec(section ".sdata2") f32 lbl_803E5140 = 8192.0f;
 __declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
 
-extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern void nwsh_levcon_getExtraSize();
 extern void nwsh_levcon_getObjectTypeId();
