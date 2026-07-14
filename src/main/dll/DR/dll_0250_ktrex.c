@@ -4,19 +4,37 @@
 #include "main/model.h"
 #include "main/audio/music_api.h"
 #include "main/audio/stream_api.h"
+#include "main/audio/sfx_play_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
+#include "string.h"
 #include "main/camera.h"
+#include "main/camera_interface.h"
+#include "main/camera_shake_api.h"
 #include "main/pad.h"
 #include "main/vecmath.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
 #include "main/map_load.h"
+#include "main/mapEventTypes.h"
+#include "main/mm.h"
+#include "main/obj_group.h"
+#include "main/obj_message.h"
+#include "main/obj_path.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
 #include "main/objprint_api.h"
 #include "main/objprint_character_api.h"
-#include "main/dll/DR/dr_shared.h"
 #include "main/dll/DR/dll_0250_ktrex.h"
+#include "main/dll/baddie_control_interface.h"
+#include "main/dll/dll_0262_drakormissile.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/newclouds.h"
 #include "main/game_object.h"
 #include "main/object_render.h"
 #include "main/object_api.h"
+#include "main/resource.h"
+#include "main/screen_transition.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
@@ -34,20 +52,6 @@
 #define KTREX_OBJGROUP         0x3
 #define KTREX_ADVANCE_MSG      0xe0001 /* notify the struck object to advance its hit reaction */
 #define KTREX_PARTFX_HIT       0x328   /* hit-response effect spawned at the player contact point */
-
-extern void drakormissile_abortStraightFlight(GameObject*);
-extern void drakormissile_modelMtxFn(GameObject*);
-extern void drakormissile_startStraightLaunch(GameObject*);
-extern void drakormissile_setScale(GameObject*);
-extern void drakormissile_getExtraSize(void);
-extern void drakormissile_getObjectTypeId(void);
-extern void drakormissile_free(GameObject*);
-extern void drakormissile_render(GameObject*);
-extern void drakormissile_hitDetect(void);
-extern void drakormissile_update(void);
-extern void drakormissile_init(GameObject*);
-extern void drakormissile_release(void);
-extern void drakormissile_initialise(void);
 
 __declspec(section ".rodata") KtrexMsgBlob gKTRexMsgTemplate = {{6, 0x69, 0x69, 0xFF}};
 
