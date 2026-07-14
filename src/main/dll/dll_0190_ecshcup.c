@@ -62,7 +62,7 @@ extern const f32 lbl_803E507C;
 extern const f32 lbl_803E5080;
 extern const f32 lbl_803E5084;
 extern const f32 lbl_803E5088;
-extern u32 gEcShCupNearestObject;
+u32 gEcShCupNearestObject;
 __declspec(section ".rodata") f32 lbl_802C23B8[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 extern const f32 lbl_803E50A0;
 extern const f32 lbl_803E50A4;

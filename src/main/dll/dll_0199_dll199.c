@@ -45,7 +45,7 @@ extern f32 lbl_803E5158;
 
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
-extern u32 lbl_803DDBD8;
+u32 lbl_803DDBD8;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;
 extern f32 lbl_803E5164;

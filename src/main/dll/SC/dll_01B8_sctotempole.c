@@ -26,7 +26,7 @@ __declspec(section ".sdata2") f32 lbl_803E55DC = -0.01f;
 
 u16 lbl_803DC068[4] = {0x2B7, 0x2CB, 0x2CC, 0};
 
-extern int lbl_803DDC08;
+int lbl_803DDC08;
 extern f32 lbl_803E55D0;    /* render fade alpha */
 extern f32 lbl_803E55D4;    /* anim speed when a pole lights */
 extern f32 lbl_803E55D8;    /* completion-time score divisor */

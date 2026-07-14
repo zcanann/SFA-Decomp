@@ -12,7 +12,7 @@
 
 #define SHEMPTYTUMBLEW_OBJFLAG_HIDDEN 0x4000
 
-extern f32 lbl_803DDC00;
+f32 lbl_803DDC00;
 extern f32 lbl_803E5540;
 extern f32 lbl_803E5544;
 extern f32 lbl_803E5548;

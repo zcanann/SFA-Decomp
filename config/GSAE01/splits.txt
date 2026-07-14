@@ -2414,6 +2414,7 @@ main/dll/DF/dll_0179_dfshobjcreator.c:
 main/dll/DF/dll_017B_dfshlaserbeam.c:
 	.text       start:0x801C3E3C end:0x801C4B10
 	.data       start:0x803260B8 end:0x803260F0
+	.sbss       start:0x803DDBB8 end:0x803DDBC0
 
 main/dll/dll_018C_mmshshrine.c:
 	.text       start:0x801C4B10 end:0x801C53A0
@@ -2449,6 +2450,7 @@ main/dll/dll_0194_gpshscene.c:
 main/dll/dll_0190_ecshcup.c:
 	.text       start:0x801C835C end:0x801C8EBC
 	.rodata     start:0x802C23B8 end:0x802C23C8
+	.sbss       start:0x803DDBC8 end:0x803DDBD0
 
 main/dll/dll_0195_dbshshrine.c:
 	.text       start:0x801C8EBC end:0x801C9660
@@ -2462,6 +2464,7 @@ main/dll/dll_0197_dll197.c:
 	.text       start:0x801C9E54 end:0x801CA718
 	.rodata     start:0x802C23C8 end:0x802C23D8
 	.data       start:0x803264E0 end:0x80326550
+	.sbss       start:0x803DDBD0 end:0x803DDBD8
 	.sdata2     start:0x803E5120 end:0x803E5150
 
 main/dll/NW/dll_0198_nwshlevcon.c:
@@ -2470,6 +2473,7 @@ main/dll/NW/dll_0198_nwshlevcon.c:
 main/dll/dll_0199_dll199.c:
 	.text       start:0x801CA9C0 end:0x801CB7A8
 	.data       start:0x80326550 end:0x803265DC
+	.sbss       start:0x803DDBD8 end:0x803DDBE0
 
 main/dll/dll_019A_dll19a.c:
 	.text       start:0x801CB7A8 end:0x801CBA98
@@ -2478,6 +2482,7 @@ main/dll/dll_019A_dll19a.c:
 main/dll/dll_019B_dll19b.c:
 	.text       start:0x801CBA98 end:0x801CC72C
 	.data       start:0x80326680 end:0x803267C0
+	.sbss       start:0x803DDBE0 end:0x803DDBE8
 
 main/dll/dll_019C_dll19c.c:
 	.text       start:0x801CC72C end:0x801CC998
@@ -2491,6 +2496,7 @@ main/dll/dll_019D_dll19d.c:
 main/dll/DIM/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 	.rodata     start:0x802C23D8 end:0x802C23E8
+	.sbss       start:0x803DDBE8 end:0x803DDBF0
 	.sdata2     start:0x803E51C8 end:0x803E51F0
 	.sdata2     start:0x803E51F0 end:0x803E51F8
 
@@ -2583,6 +2589,7 @@ main/dll/sclantern.c:
 main/dll/SH/dll_01B0_shswapston.c:
 	.text       start:0x801D6D98 end:0x801D7BA8
 	.sdata      start:0x803DC038 end:0x803DC058
+	.sbss       start:0x803DDBF0 end:0x803DDBF8
 
 main/dll/SH/dll_01AE_shlevelcontrol.c:
 	.text       start:0x801D7BA8 end:0x801D981C
@@ -2601,10 +2608,12 @@ main/dll/SH/dll_01B2_shstaffhaze.c:
 
 main/dll/SH/dll_01B3_shbeacon.c:
 	.text       start:0x801DA954 end:0x801DAFA4
+	.sbss       start:0x803DDBF8 end:0x803DDC00
 	.sdata2     start:0x803E5528 end:0x803E5540
 
 main/dll/SH/dll_01B4_shemptytumblew.c:
 	.text       start:0x801DAFA4 end:0x801DB098
+	.sbss       start:0x803DDC00 end:0x803DDC08
 	.sdata2     start:0x803E5540 end:0x803E5550
 
 main/dll/SC/dll_01B6_sclevelcontrol.c:
@@ -2620,6 +2629,7 @@ main/dll/SC/dll_01B8_sctotempole.c:
 	.text       start:0x801DC8D4 end:0x801DCC70
 	.data       start:0x803279A8 end:0x80327A18
 	.sdata      start:0x803DC068 end:0x803DC070
+	.sbss       start:0x803DDC08 end:0x803DDC10
 	.sdata2     start:0x803E55D0 end:0x803E55E0
 
 main/dll/SC/dll_01B9_sccloudrunnera.c:
@@ -2643,6 +2653,7 @@ main/dll/SC/dll_01BC_sctotemstrength.c:
 	.text       start:0x801DE430 end:0x801DF110
 	.data       start:0x80327AB8 end:0x80327AF0
 	.sdata      start:0x803DC070 end:0x803DC078
+	.sbss       start:0x803DDC10 end:0x803DDC18
 
 main/dll/dll_01BD_paymentkiosk.c:
 	.text       start:0x801DF110 end:0x801DF4AC

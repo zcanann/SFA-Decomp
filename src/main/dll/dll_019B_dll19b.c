@@ -35,7 +35,7 @@
 
 extern void* return0_8005669C(int);
 extern int lbl_803DB610;
-extern void* lbl_803DDBE0;
+void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 char sShrineTimeFormat[] = "time %d\n";
 extern f32 lbl_803E518C;

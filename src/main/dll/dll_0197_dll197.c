@@ -60,7 +60,7 @@ typedef struct Cup197State
 #define CUP_STAGE_COMPLETE_BIT 0x472
 
 __declspec(section ".rodata") int gDll197ResourceParamTemplate[4] = {0x3E7, 0x8C, 0x8D, 0x28};
-extern s8 lbl_803DDBD0; /* shared 0..3 progression latch */
+s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 __declspec(section ".sdata2") f32 lbl_803E5120 = 50.0f;
 __declspec(section ".sdata2") f32 lbl_803E5124 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E5128 = 32.0f;

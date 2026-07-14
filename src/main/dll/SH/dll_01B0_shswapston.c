@@ -69,7 +69,7 @@ typedef struct WarpstoneUpdateMenuAnimObjState
     (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
 extern int lbl_803DC050;
-extern int lbl_803DDBF4;
+int lbl_803DDBF4;
 extern f32 lbl_803E54A0;
 extern f32 lbl_803E549C;
 
@@ -435,8 +435,8 @@ typedef struct WarpstoneFlags
 #define SHSWAPSTON_TARGET_OBJGROUP 8
 
 extern s16 lbl_803DC044;
-extern s16 lbl_803DDBF0;
-extern s16 lbl_803DDBF2;
+s16 lbl_803DDBF2;
+s16 lbl_803DDBF0;
 extern int lbl_803DC038;
 extern int lbl_803DC03C;
 extern int lbl_803DC040;

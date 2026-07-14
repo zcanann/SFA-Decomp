@@ -118,7 +118,7 @@ typedef struct DFSHLaserBeamObject
     ((void (*)(void*, int, int, int, int, int))(*(int*)((u8*)*(int*)gLaserBeamEffectResource + 0x4)))(                 \
         obj, id, a, flags, owner, unk)
 
-extern void* gLaserBeamEffectResource;
+void* gLaserBeamEffectResource;
 extern f32 lbl_803E4EC0;
 extern f32 lbl_803E4EC4;
 extern f32 lbl_803E4EC8;

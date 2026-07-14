@@ -49,7 +49,7 @@ typedef enum ShBeaconMode
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
-extern f32 lbl_803DDBF8;
+f32 lbl_803DDBF8;
 
 int sh_beacon_SeqFn(GameObject* obj)
 {
