@@ -8,6 +8,7 @@
 int objFn_802962b4(GameObject* obj);
 int fn_80295A04(GameObject* obj, int selector);
 int fn_80295C0C(GameObject* obj);
+void fn_802960E8(GameObject* player, s16 effectId);
 f32 fn_8029610C(GameObject* obj);
 void fn_802961A4(GameObject* obj, int* outMove, f32* outChargeLevel);
 int objGetAnimState80A(GameObject* obj);

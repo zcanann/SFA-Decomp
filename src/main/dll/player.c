@@ -122,7 +122,6 @@ int playerIsPathFollowing(int obj);
 void playerSetDisguised(GameObject* obj, int mode);
 int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 void fn_802960E4(void);
-void fn_802960E8(void* playerObj, s16 effectId);
 void fn_802960F4(GameObject* obj, int* out);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961FC(int a, u8 type);
@@ -323,9 +322,9 @@ int playerIsPathFollowing(int obj)
     return (inner->flags3F4 >> 6) & 1;
 }
 
-void fn_802960E8(void* playerObj, s16 effectId)
+void fn_802960E8(GameObject* player, s16 effectId)
 {
-    PlayerState* inner = ((GameObject*)playerObj)->extra;
+    PlayerState* inner = player->extra;
     inner->pendingBoneEffectId = effectId;
 }
 

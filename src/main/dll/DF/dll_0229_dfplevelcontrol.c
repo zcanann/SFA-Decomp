@@ -11,6 +11,7 @@
 #include "main/object_api.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
+#include "main/dll/player_api.h"
 #include "main/mapEventTypes.h"
 #include "main/audio/sfx_ids.h"
 #include "main/gamebits.h"
@@ -42,7 +43,6 @@ extern s16 lbl_80329848[];
 extern u8 lbl_803DC183;
 extern u8 lbl_803DC182;
 extern s16 lbl_803DC180;
-extern void fn_802960E8(void* playerObj, int p2);
 extern int dbstealerworm_stateHandlerB06();
 int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
 extern void fn_80204098(GameObject*);
