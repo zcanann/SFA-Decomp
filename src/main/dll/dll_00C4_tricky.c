@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_channel_query_api.h"
+#include "main/audio/sfx_limited_object_api.h"
 #include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_int_return_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
@@ -191,7 +192,6 @@ struct VisBits16
 #define BADDIE_PLACEMENT_DEATH_GAMEBIT          0x18 /* s16: gamebit incremented on defeat */
 #define BADDIE_PLACEMENT_CLEAR_ON_DEATH_GAMEBIT 0x1a /* s16: gamebit cleared on defeat */
 
-extern u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit);
 extern u64 ObjLink_DetachChild();
 extern u64 ObjLink_AttachChild();
 extern void freeAndNull(void* p);
