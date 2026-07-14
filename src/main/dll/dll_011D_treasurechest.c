@@ -66,16 +66,16 @@ extern f32 lbl_803E3C2C;
 
 extern void playerPullOutStaff(GameObject* obj, int enabled);
 
-int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
+#pragma opt_loop_invariants off
+int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    GameObject* o = (GameObject*)obj;
     int i;
     TreasureChestSetup* setup;
     u8* state;
     u8 eventId;
 
-    setup = (TreasureChestSetup*)o->anim.placementData;
-    state = o->extra;
+    setup = (TreasureChestSetup*)obj->anim.placementData;
+    state = obj->extra;
     i = 0;
     while (i < animUpdate->eventCount)
     {
@@ -95,8 +95,8 @@ int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             ((StaffFlags*)state)->b5 = 0;
             break;
         case TREASURECHEST_SEQEV_OPENED:
-            o->anim.flags = o->anim.flags | OBJANIM_FLAG_HIDDEN;
-            ObjHits_DisableObject((u32)o);
+            obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
+            ObjHits_DisableObject((u32)obj);
             break;
         }
         i++;
@@ -104,6 +104,7 @@ int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
+#pragma opt_loop_invariants reset
 int TreasureChest_getExtraSize(void)
 {
     return 1;

@@ -17,7 +17,7 @@ typedef struct TreasureChestSetup
     u8 pad20[0x24 - 0x20];
 } TreasureChestSetup;
 
-int TreasureChest_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate);
+int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int TreasureChest_getExtraSize(void);
 int TreasureChest_getObjectTypeId(void);
 void TreasureChest_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
