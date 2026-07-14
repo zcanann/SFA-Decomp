@@ -11,13 +11,13 @@
 #include "main/dll/dfbarrelanim.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/frame_timing.h"
 
 extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
-extern void objRenderModelAndHitVolumes(int obj, u32 p2, u32 p3, u32 p4, u32 p5, double scale);
 extern void DIMbosstonsil_free(GameObject*);
 extern void DIMbosstonsil_func0B(void);
 extern void DIMbosstonsil_getExtraSize(void);
@@ -83,7 +83,7 @@ void DIM_BossGut_render(int obj, u32 p2, u32 p3, u32 p4, u32 p5, char shouldRend
     if (visible != 0)
     {
         ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4C80, timeDelta, NULL);
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E4C84);
     }
 }
 
