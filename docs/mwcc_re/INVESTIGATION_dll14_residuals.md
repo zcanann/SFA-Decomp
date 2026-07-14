@@ -208,3 +208,14 @@ asm (np register per block: r28/r3/r4 sequence in target = np also re-derived pe
 to pick the exact staging form per site; then re-run the anchor set. The target's po/pl are
 SHORT per-block webs (grants r24/r29/r28 shuffle), NOT one function-wide pair - the current
 committed macro's shared pl/po is confirmed decomp-artifact ("false set" class).
+
+## Per-block staging form found (probe wgfep_perblock.c)
+SET_NEWPATCH_PLANE with BLOCK-SCOPED po2/pl2 initialized BEFORE the sqrtf call (target
+computes the addresses pre-call; they live across it as short saved-grant webs r24/r28/r29)
+gives the correct instruction count (1270, the baseline +2) and holds listIndex=r25,
+listWalk=r26, p=r27, pp=r26, slotPtr=r27. Removing the shared pl/po eliminated the F40
+parked web; the wg cluster then shifts one slot (wg/wg1=r22, wgB=r23, curve=r23 - each one
+above target). Remaining: one web in the pop set moved into the r21-last-pop slot; identify
+it via the select trace on this config and adjust (likely the same reverse-decl enumeration
+- candidates: lp(F35-neighbor), fyv, sp). The macro's shared pl/po = confirmed false-set
+artifact; the block-scoped form is the plausible original (macro-local temps).
