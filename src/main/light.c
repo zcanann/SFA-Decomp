@@ -30,6 +30,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/camera.h"
 
+typedef void (*SpellStoneUseFn)(GameObject* obj);
+
+#define spellStoneUse ((SpellStoneUseFn)spellStoneUseFn_801fd270)
+
 #define LIGHT_OBJFLAG_HIDDEN             0x4000
 #define LIGHT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -1073,7 +1077,6 @@ void dll_224_hitDetect(void* obj)
 #pragma peephole off
 void dll_224_update(GameObject* obj)
 {
-    extern void spellStoneUseFn_801fd270(GameObject * obj);
     extern int gSpellStoneEventId;
     int mapAct;
     mapAct = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
@@ -1092,7 +1095,7 @@ void dll_224_update(GameObject* obj)
         gSpellStoneEventId = 0x123;
         break;
     }
-    spellStoneUseFn_801fd270(obj);
+    spellStoneUse(obj);
 }
 
 void dll_224_init(void* obj, void* other)
