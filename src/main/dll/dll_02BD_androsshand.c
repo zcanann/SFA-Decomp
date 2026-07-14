@@ -32,6 +32,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02BD_androsshand.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 /* Andross body object id, located once and cached in androssObj. */
 #define ANDROSS_OBJ_ID              0x47b77
@@ -66,6 +67,28 @@ void AndrossHand_render(int obj, int p2, int p3, int p4, int p5)
 }
 
 #pragma opt_common_subs off
+f32 gAndrossHandMoveAnimSpeeds[7] = {0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f};
+
+void AndrossHand_hitDetect(void);
+void AndrossHand_init(int obj, AndrossHandSetup* setup);
+
+ObjectDescriptor gAndrossHandObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)AndrossHand_init,
+    (ObjectDescriptorCallback)AndrossHand_update,
+    (ObjectDescriptorCallback)AndrossHand_hitDetect,
+    (ObjectDescriptorCallback)AndrossHand_render,
+    (ObjectDescriptorCallback)AndrossHand_free,
+    (ObjectDescriptorCallback)AndrossHand_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)AndrossHand_getExtraSize,
+};
+
 void AndrossHand_update(int obj)
 {
     f32 fScale = lbl_803DC4F8;
@@ -461,7 +484,6 @@ void androsshand_spawnShot(GameObject* obj, AndrossHandState* state, int p3)
     }
 }
 
-f32 gAndrossHandMoveAnimSpeeds[7] = {0.02f, 0.007f, 0.007f, 0.003f, 0.02f, 0.013f, 0.007f};
 
 f32 lbl_803DC4F0 = 400.0f;
 f32 lbl_803DC4F4 = -100.0f;

@@ -18,6 +18,7 @@
 #include "main/object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 static const f32 gAndrossBrainRenderScale[2] = {1.0f, 0.0f};
 
@@ -182,3 +183,20 @@ void AndrossBrain_init(GameObject* obj)
     state->health = BRAIN_MAX_HEALTH;
     ObjHits_SetTargetMask((int)obj, 4);
 }
+
+ObjectDescriptor gAndrossBrainObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)AndrossBrain_init,
+    (ObjectDescriptorCallback)AndrossBrain_update,
+    (ObjectDescriptorCallback)AndrossBrain_hitDetect,
+    (ObjectDescriptorCallback)AndrossBrain_render,
+    (ObjectDescriptorCallback)AndrossBrain_free,
+    (ObjectDescriptorCallback)AndrossBrain_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)AndrossBrain_getExtraSize,
+};

@@ -20,6 +20,7 @@
 #include "main/shader_api.h"
 #include "main/dll/dll_02BF_androssligh.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 enum
 {
@@ -153,3 +154,20 @@ void androssligh_update(GameObject* obj)
 void androssligh_init(void)
 {
 }
+
+ObjectDescriptor gAndrossLighObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)androssligh_init,
+    (ObjectDescriptorCallback)androssligh_update,
+    (ObjectDescriptorCallback)androssligh_hitDetect,
+    (ObjectDescriptorCallback)androssligh_render,
+    (ObjectDescriptorCallback)androssligh_free,
+    (ObjectDescriptorCallback)androssligh_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)androssligh_getExtraSize,
+};
