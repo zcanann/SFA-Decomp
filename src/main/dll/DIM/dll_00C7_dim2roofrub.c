@@ -4,6 +4,7 @@
  * animation sequences and particle effects when the player walks over it.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/shader_api.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/objfx.h"
@@ -75,7 +76,6 @@ typedef struct Dim2roofrubState
 } Dim2roofrubState;
 
 extern void** gTitleMenuControlInterfaceCopy;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 extern void objRenderModel(int* obj);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
@@ -108,7 +108,7 @@ void dim2roofrub_free(int* obj)
 {
     (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
-    Sfx_StopObjectChannel(obj, 0x7f);
+    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
 }
 
 
