@@ -1,6 +1,9 @@
-#include "main/audio/inp_ctrl.h"
+#include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/synth_scale.h"
+
+extern u16 _GetInputValue(McmdVoiceState* state, McmdInputSlot* slot, u8 midiSlot, u8 midiEvent);
 
 #pragma exceptions on
 
@@ -62,8 +65,6 @@ static inline u32 inpResetGlobalMIDIDirtyFlag(u8 chan, u8 midiSet, u32 flag)
  */
 u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
-    extern u16 _GetInputValue(McmdVoiceState*, McmdInputSlot*, u8, u8);
-
     if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFE0[index]))
     {
         return lbl_803BDEF4.slots[studio][index].cachedValue;
@@ -76,8 +77,6 @@ u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet)
  */
 u16 inpGetAuxB(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
-    extern u16 _GetInputValue(McmdVoiceState*, McmdInputSlot*, u8, u8);
-
     if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFF0[index]))
     {
         return lbl_803BDA74.slots[studio][index].cachedValue;
