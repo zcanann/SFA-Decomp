@@ -26,6 +26,7 @@
  */
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_channel_query_api.h"
+#include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/vecmath_distance_api.h"
 #include "main/vecmath.h"
@@ -76,9 +77,6 @@ extern float fcos16Precise(int angle);
 extern int trickyFn_8013b368(void* p1, f32 radius, void* p2);
 extern void* trickyFindNearestUsableBaddie(void* p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int* obj, int anim, f32 p3, int p4);
-/* These legacy sound mutators use int* obj / int sfx so their call sites need no cast. */
-extern void Sfx_AddLoopedObjectSound(int* obj, int sfx);
-extern void Sfx_RemoveLoopedObjectSound(int* obj, int sfx);
 extern void objSetAnimSpeedTo1(int o);
 extern char lbl_8031D2E8[]; /* tricky debug format-string table */
 extern const char sTrickyShouldNeverStopCirclingError[];
@@ -438,7 +436,7 @@ void fn_8013E0D0(int* obj, u8* st)
                     }
                 }
                 Sfx_PlayFromObject((int*)gobj, SFXTRIG_en_cvdrip1c_3db);
-                Sfx_AddLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
+                Sfx_AddLoopedObjectSoundPtrIntLegacy((int*)gobj, SFXTRIG_trpopn_c);
             }
             **(u8**)&t->progressPtr -= 2;
             t->substate = ANIMOBJD2_SUBSTATE_FINISH;
@@ -463,7 +461,7 @@ void fn_8013E0D0(int* obj, u8* st)
                     p += 4;
                 }
             }
-            Sfx_RemoveLoopedObjectSound((int*)gobj, SFXTRIG_trpopn_c);
+            Sfx_RemoveLoopedObjectSoundPtrIntLegacy((int*)gobj, SFXTRIG_trpopn_c);
             TRICKY_BARK((int*)gobj, 0x29d, 0);
             t->stateFlags &= ~TRICKY_STATE_RESET_FLAG_10;
             t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
