@@ -955,8 +955,8 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
             u8 j[1];
             z = point[2];
             x = point[0];
-            i[0] = 0;
-            j[0] = i[0];
+            i[0] = (j[0] = 0);
+            j[0] = 0;
             for (; i[0] < 4; i[0]++, j[0] += 2)
             {
                 if (patch->planeOffsets[i[0]] + (x * (f32)((s16*)patch)[j[0]] + z * (f32)((s16*)patch)[j[0] + 1]) >
@@ -981,10 +981,10 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
         y = point[1];                                                                                                  \
         if (y < g->maxY && y > g->minY)                                                                                \
         {                                                                                                              \
-            x = point[0];                                                                                              \
             z = point[2];                                                                                              \
-            i[0] = 0;                                                                                                  \
-            j[0] = i[0];                                                                                               \
+            x = point[0];                                                                                              \
+            i[0] = (j[0] = 0);                                                                                         \
+            j[0] = 0;                                                                                                  \
             for (; i[0] < 4; i[0]++, j[0] += 2)                                                                        \
             {                                                                                                          \
                 if (g->planeOffsets[i[0]] + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)          \
@@ -2994,6 +2994,7 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     u32* idRead;
     f32* qscan;
     f32* distWrite;
+    f32* dw;
     int li;
     int found;
     int count;
@@ -3066,13 +3067,14 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
                       ((*(u8*)((u8*)node + 0x32) == (int)maxDist || (*(u8*)((u8*)node + 0x33) == (int)maxDist))))))
                 {
                     done = 1;
-                    *distWrite = curDist;
+                    dw = distWrite;
+                    *dw = curDist;
                     if (found < 4)
                     {
                         *idWrite = node->id;
                         probe++;
                         idRead++;
-                        distWrite++;
+                        distWrite = dw + 1;
                         idWrite++;
                         resultLinks[found++] = li;
                     }
