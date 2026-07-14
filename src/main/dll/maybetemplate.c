@@ -4895,67 +4895,38 @@ int pauseMenuGridFn_8012b4c4(void)
     return ret;
 }
 
-/* Snowworm "should-spawn" gate: 9-entry
- * table lookup with the same shape as the previously-matched
- * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
- * 0 if any of the table entries match the slot's lookup byte. */
+/* Returns whether the current player can appear in the pause-menu carousel. */
 int pauseMenuIsFox(void)
 {
-    GameObject* s;
+    void* s;
     void* inner;
-    u8* innerBytes;
     u8 lookup;
-    u8 blockedCell;
-    u8 cellCount;
     u8 i;
     u8 is_zero;
-    int cell;
-    int cellMatches;
-    int result;
-    f32 x;
-    f32 z;
 
     s = Obj_GetPlayerObject();
     if (s == NULL)
-    {
-        result = 0;
-        goto done;
-    }
+        return 0;
     is_zero = objIsCurModelNotZero(s) == 0;
     if (is_zero)
-    {
-        result = 0;
-        goto done;
-    }
-    inner = s->anim.parent;
+        return 0;
+    inner = ((GameObject*)s)->anim.parent;
     if (inner != NULL)
     {
-        innerBytes = inner;
-        innerBytes += 0xac;
-        cell = *innerBytes;
-        lookup = cell;
+        lookup = *((u8*)inner + 0xac);
     }
     else
     {
-        x = s->anim.localPosX;
-        z = s->anim.localPosZ;
-        cell = coordsToMapCell(x, z);
-        lookup = cell;
+        lookup = coordsToMapCell(((GameObject*)s)->anim.localPosX, ((GameObject*)s)->anim.localPosZ);
     }
-    cellCount = 9;
-    for (i = 0; i < cellCount; i++)
+    for (i = 0; i < 9; i++)
     {
-        blockedCell = lbl_8031B050[i];
-        cellMatches = lookup == blockedCell;
-        if (cellMatches)
+        if (lookup == lbl_8031B050[i])
         {
-            result = 0;
-            goto done;
+            return 0;
         }
     }
-    result = 1;
-done:
-    return result;
+    return 1;
 }
 
 /* Pause-menu open/close animator. Advances
