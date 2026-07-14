@@ -6147,8 +6147,6 @@ void showMemCardError(u8 err)
 
 int memCardFn_8007dd04(u8 retry)
 {
-    extern void CARDClose(void*);
-    extern u8 lbl_80396900[];
     extern u8 lbl_803DD05A;
     int ret;
 
@@ -6165,7 +6163,7 @@ int memCardFn_8007dd04(u8 retry)
             if (lbl_803DD05A != 0)
             {
                 lbl_803DD05A = 0;
-                CARDClose(lbl_80396900);
+                CARDClose(&lbl_80396900.fileInfo);
             }
             CARDUnmount(0);
             mm_free(lbl_803DD040);
@@ -6477,4 +6475,4 @@ f32 lbl_80396820[3][4];
 f32 lbl_80396850[3][4];
 f32 hudMatrix[4][4];
 int lbl_803968C0[0x10];
-u8 lbl_80396900[0x18];
+SaveCardFileInfo lbl_80396900;

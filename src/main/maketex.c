@@ -45,22 +45,6 @@ typedef struct
     int val;
 } SeqSortPair;
 
-typedef struct
-{
-    char fileName[32];
-    u32 length;
-    u32 time;
-    u8 gameName[4];
-    u8 company[2];
-    u8 bannerFormat;
-    u8 pad;
-    u32 iconAddr;
-    u16 iconFormat;
-    u16 iconSpeed;
-    u32 commentAddr;
-    u8 pad2[0x30];
-} CARDStatStub;
-
 /*
  * Per-object turn-to-face scratch state (carried in GameObject::extra for
  * class-0x10 sequence objects). Only the fields touched by the turn step and
@@ -127,7 +111,6 @@ extern char sEndObjSequenceMaxFreesError[];
 extern void* lbl_803DD0B8;
 extern int lbl_803DB720;
 extern int lbl_803DD064;
-extern int lbl_80396900[];
 extern u64 lbl_803DD050;
 extern u32 lbl_803DD054;
 extern int gSaveCardImageBuffer;
@@ -143,18 +126,6 @@ extern int lbl_803DB724;
 extern f32 gObjSeqSlotStreamTimeTable[];
 
 extern void subtitleStart(int);
-extern s32 CARDWrite(int* fileInfo, void* buf, s32 length, s32 offset);
-extern s32 CARDRead(int* fileInfo, void* buf, s32 length, s32 offset);
-extern s32 CARDDelete(s32 chan, char* fileName);
-extern s32 CARDMount(s32 chan, void* workArea, void (*detachCb)(void));
-extern s32 CARDCheck(s32 chan);
-extern s32 CARDGetSerialNo(s32 chan, u64* serialNo);
-extern s32 CARDOpen(s32 chan, char* fileName, int* fileInfo);
-extern s32 CARDClose(int* fileInfo);
-extern s32 CARDUnmount(s32 chan);
-extern s32 CARDCreate(s32 chan, char* fileName, u32 size, int* fileInfo);
-extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
-extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub* stat);
 
 int saveCb_8007e77c(u8 idx, int unused, void* dst)
 {
@@ -536,7 +507,7 @@ int saveGame_doWrite(int slot)
     ((u32*)p)[0x7ff] = (u32)chk;
     ((u32*)p)[0x7fe] = (u32)(chk >> 32);
     DCFlushRange((void*)lbl_803DD044, 0x2000);
-    result = CARDWrite(lbl_80396900, (void*)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
+    result = CARDWrite(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
     if (result == -5)
     {
         CARDDelete(0, sMemoryCardFileName);
@@ -544,7 +515,7 @@ int saveGame_doWrite(int slot)
     if (result == 0)
     {
         DCInvalidateRange((void*)lbl_803DD044, 0x2000);
-        result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, offset);
+        result = CARDRead(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, offset);
         if (result == 0)
         {
             u64 x2[1];
@@ -706,7 +677,7 @@ int saveGame(int writeImages)
     int ok;
     int ret;
     u64 serial;
-    CARDStatStub stat;
+    CARDStat stat;
     void* m;
 
     created = 0;
@@ -732,7 +703,7 @@ int saveGame(int writeImages)
         return 0;
     }
     lbl_803DB700 = 0;
-    result = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
+    result = CARDMount(0, lbl_803DD040, (CARDCallback)cardSetStatusNoCard2);
     if (result == CARD_RESULT_BROKEN)
     {
         result = CARDCheck(0);
@@ -771,7 +742,7 @@ int saveGame(int writeImages)
     }
     if (result == CARD_RESULT_READY)
     {
-        result = CARDOpen(0, sMemoryCardFileName, lbl_80396900);
+        result = CARDOpen(0, sMemoryCardFileName, &lbl_80396900.fileInfo);
         if (result == CARD_RESULT_NOFILE && (u8)writeImages == 0)
         {
             created = 1;
@@ -784,7 +755,7 @@ int saveGame(int writeImages)
     }
     if (result == CARD_RESULT_READY)
     {
-        result = CARDGetStatus(0, lbl_80396900[1], &stat);
+        result = CARDGetStatus(0, lbl_80396900.fileInfo.fileNo, &stat);
         if (result == CARD_RESULT_READY)
         {
             if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff)
@@ -820,16 +791,16 @@ int saveGame(int writeImages)
     }
     if (created != 0)
     {
-        result = CARDCreate(0, sMemoryCardFileName, 0x6000, lbl_80396900);
+        result = CARDCreate(0, sMemoryCardFileName, 0x6000, &lbl_80396900.fileInfo);
     }
     if (fresh != 0)
     {
         if (result == CARD_RESULT_READY)
         {
-            result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x4000, 0);
+            result = CARDWrite(&lbl_80396900.fileInfo, (void*)gSaveCardImageBuffer, 0x4000, 0);
             if (result == CARD_RESULT_READY)
             {
-                result = CARDWrite(lbl_80396900, (void*)(gSaveCardImageBuffer + 0x2000), 0x2000, 0x4000);
+                result = CARDWrite(&lbl_80396900.fileInfo, (void*)(gSaveCardImageBuffer + 0x2000), 0x2000, 0x4000);
             }
             if (result == CARD_RESULT_IOERROR)
             {
@@ -837,7 +808,7 @@ int saveGame(int writeImages)
             }
             if (created != 0 && result == CARD_RESULT_READY)
             {
-                result = CARDGetStatus(0, lbl_80396900[1], &stat);
+                result = CARDGetStatus(0, lbl_80396900.fileInfo.fileNo, &stat);
             }
             if (result == CARD_RESULT_READY)
             {
@@ -854,7 +825,7 @@ int saveGame(int writeImages)
                 stat.iconFormat = (stat.iconFormat & ~0xc0) | 0x40;
                 stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
                 stat.iconSpeed = stat.iconSpeed & ~0x300;
-                result = CARDSetStatus(0, lbl_80396900[1], &stat);
+                result = CARDSetStatus(0, lbl_80396900.fileInfo.fileNo, &stat);
                 if (result == CARD_RESULT_READY)
                 {
                     lbl_803DD050 = *(u64*)(gSaveCardImageBuffer + 0x3ff8);
@@ -913,7 +884,7 @@ int saveGame(int writeImages)
     if (lbl_803DD05A != 0)
     {
         lbl_803DD05A = 0;
-        CARDClose(lbl_80396900);
+        CARDClose(&lbl_80396900.fileInfo);
     }
     CARDUnmount(0);
     mm_free(lbl_803DD040);
@@ -953,7 +924,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         return 0;
     }
     DCInvalidateRange((void*)lbl_803DD044, 0x2000);
-    result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x2000);
+    result = CARDRead(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, 0x2000);
     if (result == CARD_RESULT_READY)
     {
         p = (u64*)lbl_803DD044;
@@ -970,7 +941,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         if (c != *(u64*)(lbl_803DD044 + 0x1ff8))
         {
             DCInvalidateRange((void*)lbl_803DD044, 0x2000);
-            result = CARDRead(lbl_80396900, (void*)lbl_803DD044, 0x2000, 0x4000);
+            result = CARDRead(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, 0x4000);
             if (result == CARD_RESULT_READY)
             {
                 p = (u64*)lbl_803DD044;
@@ -1028,7 +999,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             if (lbl_803DD05A != 0)
             {
                 lbl_803DD05A = 0;
-                CARDClose(lbl_80396900);
+                CARDClose(&lbl_80396900.fileInfo);
             }
             CARDUnmount(0);
             mm_free(lbl_803DD040);
@@ -1038,7 +1009,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             lbl_803DB700 = 8;
             return 0;
         }
-        result = CARDRead(lbl_80396900, m, 0x2000, 0);
+        result = CARDRead(&lbl_80396900.fileInfo, m, 0x2000, 0);
         if (result == CARD_RESULT_READY)
         {
             p = (u64*)gSaveCardImageBuffer;
@@ -1062,7 +1033,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
                 {
                     memset((void*)gSaveCardImageBuffer, 0, 0x4000);
                     loadMemCardImages();
-                    result = CARDWrite(lbl_80396900, (void*)gSaveCardImageBuffer, 0x2000, 0);
+                    result = CARDWrite(&lbl_80396900.fileInfo, (void*)gSaveCardImageBuffer, 0x2000, 0);
                     if (result == CARD_RESULT_IOERROR)
                     {
                         CARDDelete(0, sMemoryCardFileName);
@@ -1094,7 +1065,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     if (lbl_803DD05A != 0)
     {
         lbl_803DD05A = 0;
-        CARDClose(lbl_80396900);
+        CARDClose(&lbl_80396900.fileInfo);
     }
     CARDUnmount(0);
     mm_free(lbl_803DD040);

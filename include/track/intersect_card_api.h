@@ -1,7 +1,16 @@
 #ifndef TRACK_INTERSECT_CARD_API_H_
 #define TRACK_INTERSECT_CARD_API_H_
 
+#include "dolphin/card.h"
 #include "types.h"
+
+typedef union SaveCardFileInfo
+{
+    CARDFileInfo fileInfo;
+    u8 raw[0x18];
+} SaveCardFileInfo;
+
+extern SaveCardFileInfo lbl_80396900;
 
 int cardLoadFn_8007d72c(void);
 void saveFn_8007d960(u32 enable);
