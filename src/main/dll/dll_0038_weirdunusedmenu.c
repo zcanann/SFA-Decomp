@@ -58,14 +58,15 @@
 #define PAD_CONFIRM_MASK (PAD_BUTTON_A | PAD_BUTTON_B)
 
 extern int* gTitleMenuLinkInterface;
-extern Texture* gWeirdMenuTextureC;
-extern Texture* gWeirdMenuTextureB;
-extern Texture* gWeirdMenuTextureA;
 extern f32 gWeirdMenuSaveTimerLimit;       /* save-phase timer limit */
-extern s8 gWeirdMenuSaveTimer;             /* save-phase frame timer */
-extern s16 gWeirdMenuScrollOffset;         /* scroll offset, clamped to 0x8C */
-extern u8 gWeirdMenuPhase;                 /* phase: 0 idle, 1 saving */
-extern u32 gWeirdMenuTextHandle;           /* cached menu text handle; written at init, not read in this TU */
+
+u32 gWeirdMenuTextHandle[2];
+Texture* gWeirdMenuTextureA;
+Texture* gWeirdMenuTextureB;
+Texture* gWeirdMenuTextureC;
+u8 gWeirdMenuPhase;
+s8 gWeirdMenuSaveTimer;
+s16 gWeirdMenuScrollOffset;
 
 WeirdMenuWork gWeirdMenuWidgetWork = {
     {0x00, 0x00, 0x00, 0xa1, 0x00, 0x56, 0x00, 0x00, 0x00, 0xa1, 0x00, 0x56,
@@ -173,7 +174,7 @@ void WeirdUnusedMenu_initialise(void)
     gWeirdMenuTextureA = textureLoadAsset(WEIRDMENU_TEXTURE_A_ID);
     gWeirdMenuTextureB = textureLoadAsset(WEIRDMENU_TEXTURE_B_ID);
     gWeirdMenuTextureC = textureLoadAsset(WEIRDMENU_TEXTURE_C_ID);
-    gWeirdMenuTextHandle = gameTextGetLegacy(0);
+    gWeirdMenuTextHandle[0] = gameTextGetLegacy(0);
     (*(void (*)(u32*, int, int, u32*, int, int, int, int, int, int, int, int))(
         *(int*)(*gTitleMenuLinkInterface + TITLEMENULINK_SETUP_WIDGETS)))(
         (u32*)&gWeirdMenuWidgetWork, 2, 0, gWeirdMenuWidgetLayout, 0, 0, 0x5b, 0x45, 0x30, 0xff, 0xd7, 0x3d);

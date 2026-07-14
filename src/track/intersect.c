@@ -158,9 +158,33 @@ extern f32 lbl_803DEF4C, lbl_803DEF50, lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C;
 extern f32 lbl_803DEF60, lbl_803DEF64, lbl_803DEF68, lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
 extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80, lbl_803DEF84, lbl_803DEF88;
 extern f32 lbl_803DEF90, lbl_803DEF94, lbl_803DEF98, lbl_803DEF9C;
-extern f32 lbl_8030EA10[3][3], lbl_8030EA58[3][3], lbl_8030EA70[3][3];
-extern f32 lbl_8030EA88[3][3], lbl_8030EAA0[3][3];
 extern GXColor lbl_803DEEB4, lbl_803E8454;
+
+void* fn_8006F388(u32 i);
+void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unused, f32 scale);
+
+void* jumptable_8030E9B4[11] = {
+    (void*)((u8*)objAudioFn_8006ef38 + 0x9C), (void*)((u8*)objAudioFn_8006ef38 + 0x54),
+    (void*)((u8*)objAudioFn_8006ef38 + 0x9C), (void*)((u8*)objAudioFn_8006ef38 + 0x5C),
+    (void*)((u8*)objAudioFn_8006ef38 + 0x64), (void*)((u8*)objAudioFn_8006ef38 + 0x6C),
+    (void*)((u8*)objAudioFn_8006ef38 + 0x74), (void*)((u8*)objAudioFn_8006ef38 + 0x94),
+    (void*)((u8*)objAudioFn_8006ef38 + 0x7C), (void*)((u8*)objAudioFn_8006ef38 + 0x8C),
+    (void*)((u8*)objAudioFn_8006ef38 + 0x84)};
+void* jumptable_8030E9E0[11] = {
+    (void*)((u8*)fn_8006F388 + 0x70), (void*)((u8*)fn_8006F388 + 0x28),
+    (void*)((u8*)fn_8006F388 + 0x70), (void*)((u8*)fn_8006F388 + 0x30),
+    (void*)((u8*)fn_8006F388 + 0x38), (void*)((u8*)fn_8006F388 + 0x40),
+    (void*)((u8*)fn_8006F388 + 0x48), (void*)((u8*)fn_8006F388 + 0x68),
+    (void*)((u8*)fn_8006F388 + 0x50), (void*)((u8*)fn_8006F388 + 0x60),
+    (void*)((u8*)fn_8006F388 + 0x58)};
+f32 lbl_8030EA10[3][2][3] = {
+    {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, -0.5f}},
+    {{0.0f, 0.8f, 0.0f}, {0.0f, 0.0f, 0.8f}},
+    {{0.0f, -0.2f, 0.0f}, {0.0f, 0.0f, 0.2f}}};
+f32 lbl_8030EA58[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
+f32 lbl_8030EA70[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
+f32 lbl_8030EA88[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
+f32 lbl_8030EAA0[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8, lbl_803DEEAC;
 extern u8 lbl_803DEEB0, lbl_803DEEB2;
 extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
