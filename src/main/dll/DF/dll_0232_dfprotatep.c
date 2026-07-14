@@ -1,4 +1,5 @@
 #include "main/obj_placement.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -80,8 +81,6 @@ STATIC_ASSERT(sizeof(SfxplayerRingVisualSetup) == 0x2C);
 #define SFXPLAYER_SFX_RING_HIT            0x409
 #define SFXPLAYER_HIT_TYPE_RING_TARGET    0x13
 #define SFXPLAYER_OBJECT_FLAGS            0x6000
-
-extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 
 /* .sdata2 constant pool */
 static const RingIdPair lbl_803E6450 = {0x00040005, 0x0006000B};
