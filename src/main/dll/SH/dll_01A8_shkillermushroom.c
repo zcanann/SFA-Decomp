@@ -44,6 +44,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_keep_alive_api.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
 typedef struct EnemymushroomPlacement
@@ -102,7 +103,6 @@ extern int EmissionController_IsLingering(GameObject* player);
 extern int playerGetFlags3F0Bit5(GameObject* player);
 extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
-extern int Sfx_PlayFromObject(int* obj, int id);
 #pragma dont_inline on
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
 f32 gKillerMushroomStateAnimRates[11] = {
