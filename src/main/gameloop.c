@@ -1563,3 +1563,17 @@ void checkReset(void)
 
 char sGameLoopResetMessages[0x50] =
     "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
+
+void* jumptable_802CA4B0[12] = {
+    (void*)((u8*)cardShowMessage + 0xE4), (void*)((u8*)cardShowMessage + 0x80), (void*)((u8*)cardShowMessage + 0x8C),
+    (void*)((u8*)cardShowMessage + 0x98), (void*)((u8*)cardShowMessage + 0xA4), (void*)((u8*)cardShowMessage + 0xB0),
+    (void*)((u8*)cardShowMessage + 0xB0), (void*)((u8*)cardShowMessage + 0xE4), (void*)((u8*)cardShowMessage + 0xE4),
+    (void*)((u8*)cardShowMessage + 0xC0), (void*)((u8*)cardShowMessage + 0xCC), (void*)((u8*)cardShowMessage + 0xDC),
+};
+void* jumptable_802CA5AC[13] = {
+    (void*)((u8*)checkReset + 0x214), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C),
+    (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x220),
+    (void*)((u8*)checkReset + 0x22C), (void*)((u8*)checkReset + 0x238), (void*)((u8*)checkReset + 0x24C),
+    (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C),
+    (void*)((u8*)checkReset + 0x244),
+};
