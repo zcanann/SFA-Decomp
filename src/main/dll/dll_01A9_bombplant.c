@@ -37,6 +37,9 @@
 #define BOMBPLANT_FLAG_STATE_ENTERED 0x2
 #define BOMBPLANT_GAMEBIT_INTRO_SEEN 0x189 /* one-shot: run intro sequence on first approach */
 #define BOMBPLANT_CHILD_OBJ_SPORE 0x198 /* spore object spawned by bombplant_throwSpore */
+
+typedef void (*BombPlantExplodeUpdateFn)(void* obj, void* stateEntry, void* state);
+
 extern f32 lbl_803E5370;
 
 extern f32 gBombPlantExplosionScale;
@@ -255,7 +258,6 @@ void bombplant_init(GameObject *obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void bombplant_explode(void* obj, void* stateEntry, void* state);
     void* state;
     u8* entry;
     void* param;
@@ -367,7 +369,7 @@ void bombplant_update(void* obj)
         break;
 
     case 4:
-        bombplant_explode(obj, entry, state);
+        ((BombPlantExplodeUpdateFn)bombplant_explode)(obj, entry, state);
         break;
 
     case 0:
