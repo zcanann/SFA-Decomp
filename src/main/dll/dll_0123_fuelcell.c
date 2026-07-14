@@ -12,6 +12,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/gameloop_api.h"
+#include "main/audio/sfx_looped_object_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -35,8 +36,6 @@ extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 #define FUELCELL_MSG_IN_RANGE 0x7000a  /* sent to player when grab is offered */
 #define FUELCELL_MSG_RELEASE 0x7000b   /* player dropped/deposited the cell */
 #define FUELCELL_GAMEBIT_CARRIED 0xe97 /* global: a fuel cell is currently held */
-extern void Sfx_AddLoopedObjectSound(GameObject* obj, int soundId);
-extern void Sfx_RemoveLoopedObjectSound(GameObject* obj, int soundId);
 typedef struct
 {
     u16 msg; // 0x0
@@ -271,7 +270,7 @@ void FuelCell_update(GameObject* obj)
                 f32 dy;
                 if (!state->lit)
                 {
-                    Sfx_AddLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
+                    Sfx_AddLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_pk_fuelcell_fizz);
                     state->lit = 1;
                     ObjGroup_AddObject((int)obj, FUELCELL_OBJGROUP);
                 }
@@ -300,7 +299,7 @@ void FuelCell_update(GameObject* obj)
         else if (state->lit)
         {
             state->lit = 0;
-            Sfx_RemoveLoopedObjectSound(obj, SFXTRIG_pk_fuelcell_fizz);
+            Sfx_RemoveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_pk_fuelcell_fizz);
             ObjGroup_RemoveObject((int)obj, FUELCELL_OBJGROUP);
         }
     }
