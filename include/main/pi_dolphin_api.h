@@ -20,5 +20,13 @@ int fn_8004B218(void* search, u32 timeout);
 void gxTextureFn_8004bf88(void* params, u8 colorEnabled, u8 alphaEnabled, int* colorSelection,
                           int* alphaSelection);
 void* Shader_getLayer(void* shader, int layerIdx);
+void fn_8004CE0C(void* viewMtx);
+void fn_8004DA54(char* shader);
+void fn_8004E0FC(void);
+void renderHeavyFog(void* fogColor);
+void fn_8004EF9C(int* color);
+void fn_8004F080(void);
+void fn_8004F2B0(void);
+void fn_80051528(void* texture, void* texMtx);
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

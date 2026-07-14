@@ -9,6 +9,8 @@
 #include "track/intersect_fog_api.h"
 #include "main/model_light.h"
 #include "main/pi_dolphin.h"
+#include "main/newshadows.h"
+#include "main/objseq_api.h"
 
 u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
 int gTexShaderAmbColor = -1;
@@ -46,26 +48,12 @@ extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];
 extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
 
-extern void fn_8004CE0C();
-extern void fn_8004DA54();
-extern void fn_8004E0FC();
-extern void renderHeavyFog();
 extern void fn_8004EECC();
-extern void fn_8004EF9C();
-extern void fn_8004F080();
-extern void fn_8004F2B0();
 extern void fn_8004F380();
 extern void fn_8004F6D8();
 extern void fn_8004FA30();
 extern void fn_8004FDA0();
-extern void fn_80051528();
-extern void fn_80051868();
-extern void fn_80051B00();
-extern void textureFn_800524ec();
-extern int textureCrazyPointerFollowFn_80054c30();
 extern void fn_8005D3B4();
-extern void textureFn_8006c4e0();
-extern void fn_80088730();
 extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 typedef struct TexOverride
@@ -415,7 +403,7 @@ void mapBlockRender_drawDimmedAabbLights(u32 bounds, u32 blockXform, int i)
                                                    &lightCount);
     }
     resetLotsOfRenderVars();
-    fn_8004CE0C(i);
+    fn_8004CE0C((void*)i);
     i = 0;
     lightPtr = gTexDimmedLightList;
     {
@@ -661,7 +649,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         {
                             if ((shader != NULL) && ((SHADER_FLAGS(shader) & 0x800) != 0))
                             {
-                                fn_8004EF9C(chanColor);
+                                fn_8004EF9C((int*)chanColor);
                             }
                             else
                             {
@@ -793,7 +781,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
-                        texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                        texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
                         goto layer0_done;
                     }
                     ovr = ovr + 1;
@@ -818,7 +806,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             texMtx = (float*)0x0;
         }
-        fn_80051B00(texId, texMtx, 0, &kColor);
+        fn_80051B00((u8*)texId, texMtx, 0, (int*)&kColor);
         if ((SHADER_FLAGS(shader) & 0x100) != 0)
         {
             fn_8004D928();
@@ -837,7 +825,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                 {
                     if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) && ((int)ovrByte == ovr->layerByte))
                     {
-                        texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                        texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
                         goto layer1_done;
                     }
                     ovr = ovr + 1;
@@ -862,8 +850,8 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
         {
             texMtx = (float*)0x0;
         }
-        fn_80051868(texId, texMtx, 9);
-        textureFn_800524ec((char*)&kColor);
+        fn_80051868((u8*)texId, texMtx, 9);
+        textureFn_800524ec((int*)&kColor);
     }
     else
     {
@@ -887,7 +875,7 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                             if (((0 < ovr->count) && ((u32)ovr->id == layerTexId)) &&
                                 ((int)ovrLayerByte == ovr->layerByte))
                             {
-                                texId = textureCrazyPointerFollowFn_80054c30(layerTexId, base[overrideIdx].ptr);
+                                texId = textureCrazyPointerFollowFn_80054c30((int*)layerTexId, base[overrideIdx].ptr);
                                 goto layerN_done;
                             }
                             ovr = ovr + 1;
@@ -916,11 +904,11 @@ void mapBlockRender_setupShaderTextures(int shader, int mode)
                     layerByte = ((TexLayer*)layer)->typeBits & 0x7f;
                     if ((SHADER_FLAGS(shader) & 0x40000) != 0)
                     {
-                        fn_80051528(texId, texMtx);
+                        fn_80051528((void*)texId, texMtx);
                     }
                     else
                     {
-                        fn_80051868(texId, texMtx, layerByte);
+                        fn_80051868((u8*)texId, texMtx, layerByte);
                     }
                 }
             }
@@ -991,7 +979,7 @@ LAB_8005F608:
     resetLotsOfRenderVars();
     if ((SHADER_FLAGS(shader) & 0x80) != 0)
     {
-        fn_8004DA54(shader);
+        fn_8004DA54((char*)shader);
         goto LAB_8005F690;
     }
     mapBlockRender_setupShaderTextures(shader, 0x80);

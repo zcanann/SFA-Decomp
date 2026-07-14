@@ -1800,7 +1800,6 @@ extern void _gxSetFogParams(void);
 extern void gxFn_80051fb8(void* tex, int p2, int p3, u8* color, int p5, int p6);
 extern u8 isHeavyFogEnabled(void);
 extern void getColor803dd01c(f32* c);
-extern void renderHeavyFog(f32* c);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 extern u8* modelFileGetDisplayList(u8* m, int idx);
@@ -2644,12 +2643,8 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
 #pragma opt_dead_assignments reset
 
 extern void gxTextureFn_80050e28(int flag);
-extern void* textureCrazyPointerFollowFn_80054c30(void* tex, int p2);
-extern void fn_80051B00(void* tex, int mtx, int fl, u8* color);
-extern void fn_80051868(void* tex, int mtx, int fl);
 extern void fn_80051D5C(void* tex, int mtx, int fl, u8* color);
 extern void gxColorFn_80052764(u8* color);
-extern void textureFn_800524ec(u8* color);
 extern f32 lbl_803DEA48;
 
 #pragma opt_propagation off
@@ -2716,7 +2711,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                             {
                                 if ((int)jid == q->materialIndex)
                                 {
-                                    tex = textureCrazyPointerFollowFn_80054c30(tex, slots[k].textureId);
+                                    tex = textureCrazyPointerFollowLegacy(tex, slots[k].textureId);
                                     break;
                                 }
                                 q++;
@@ -2780,7 +2775,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                         colp[3] = color[3];
                         if (shader[0x40] & 0x10)
                         {
-                            fn_80051B00(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor);
+                            fn_80051B00Legacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor);
                         }
                         else
                         {
@@ -2791,7 +2786,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                     {
                         if (shader[0x40] & 0x10)
                         {
-                            fn_80051868(tex, (int)mtxp, (u8)fl);
+                            fn_80051868Legacy(tex, (int)mtxp, (u8)fl);
                             if (color[3] < 0xff)
                             {
                                 gxColorFn_80052764(color);
@@ -2830,7 +2825,7 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
                         }
                         else
                         {
-                            textureFn_800524ec(color);
+                            textureFn_800524ecLegacy(color);
                         }
                     }
                 }

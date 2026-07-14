@@ -6,6 +6,7 @@
 typedef int (*GetCurSeqNoIntFn)(void);
 
 u8 getCurSeqNo(void);
+void fn_80088730(u8* colorOut);
 
 #define getCurSeqNoInt() (((GetCurSeqNoIntFn)getCurSeqNo)())
 

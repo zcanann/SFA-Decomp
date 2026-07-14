@@ -25,7 +25,19 @@ void warpToMap(int idx, s8 transType);
 void fn_800541A4(Texture* texture, s16 frameStep);
 void fn_800542F4(void);
 void textureAnimFn_80053f2c(const Texture* texture, u32* flags, s32* frame);
+void fn_80051868(u8* texture, f32* texMtx, int mode);
+void fn_80051B00(u8* texture, f32* texMtx, int mode, int* color);
+void textureFn_800524ec(int* color);
+int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
 
+#define fn_80051868Legacy(texture, texMtx, mode) \
+    (((void (*)(void*, int, int))fn_80051868)((texture), (texMtx), (mode)))
+#define fn_80051B00Legacy(texture, texMtx, mode, color) \
+    (((void (*)(void*, int, int, u8*))fn_80051B00)((texture), (texMtx), (mode), (color)))
+#define textureFn_800524ecLegacy(color) \
+    (((void (*)(u8*))textureFn_800524ec)((color)))
+#define textureCrazyPointerFollowLegacy(texture, frame) \
+    (((void* (*)(void*, int))textureCrazyPointerFollowFn_80054c30)((texture), (frame)))
 #define fn_800541A4Promoted(texture, frameStep) \
     (((void (*)(Texture*, int))fn_800541A4)((texture), (frameStep)))
 #define textureLoadIntLegacy(texId, flag) \

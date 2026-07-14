@@ -71,5 +71,6 @@ void fn_8006C540(u32* out);
 void fn_8006C5B8(u32* out);
 void fn_8006C678(int id);
 void fn_8006C6A4(int id);
+void textureFn_8006c4e0(int* tableOut, int* countOut);
 
 #endif /* MAIN_NEWSHADOWS_H_ */

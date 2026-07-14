@@ -5001,7 +5001,7 @@ extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
 
-void renderHeavyFog(int* fogColorPtr)
+void renderHeavyFog(void* fogColor)
 {
     f32 mcc[3][4];
     f32 m9c[3][4];
@@ -5032,7 +5032,7 @@ void renderHeavyFog(int* fogColorPtr)
     mcc[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
     GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    kc = *fogColorPtr;
+    kc = *(int*)fogColor;
     GXSetTevKColor(lbl_803DCD74, &kc);
     fn_8006C528(&tex20);
     {

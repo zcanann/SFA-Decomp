@@ -1869,7 +1869,6 @@ __declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0
 
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                                   GXBool normalize, u32 pt_texmtx);
 
@@ -2100,7 +2099,6 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
 
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern void textureFn_8006c4e0(int* tbl, int* cnt);
     extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                                   GXBool normalize, u32 pt_texmtx);
 
