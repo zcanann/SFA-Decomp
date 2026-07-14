@@ -314,3 +314,13 @@ The +1-edge lever (inline identity helper on pl) FIXES curve=r22 but applied to 
 macro chains it reshuffles others (157 regions, wg1=r31). Next: apply the helper to the
 K=1 site only (expand that macro invocation inline or add a variant macro), re-anchor;
 then back(r28->r24); then the tail-init association form; then port + score vs 97.83.
+
+## K=1-only lever attempts (both folded)
+Dead pre-assignment: DCE'd. Inline identity helper on the K=1 pl init (expanded macro):
+copy folded, no new web (140 regions, anchors held, curve still r23). The mass version
+(helper on all four chains) DID move curve=r22 - so the needed edge exists in that
+direction, but the surviving-copy form for a SINGLE chain needs the DIMSnowHorn1_angleTo
+pattern specifics (check its source in-tree: what made its return-value copy survive
+inlining). Alternative: find which OTHER web interferes with the pl-chain in target but
+not ours via the igwalk census diff once instruction->web logging lands pre-color.
+Current best probe: wgfep_8anchors.c (8/8 anchors, committed shapes, 140 regions).
