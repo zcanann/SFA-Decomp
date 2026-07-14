@@ -1088,11 +1088,12 @@ void intersectModLineBuild(int* obj)
     prev = -1;
     for (li = 0; li < gIntersectLineCount; li++)
     {
-        u8* base = (u8*)lbl_803DCF34;
         s16 best = 0;
-        int j;
+        u8* base;
+        int j = 0;
         s16 grp;
-        for (j = 0; j < gIntersectLineCount; j++)
+        base = (u8*)lbl_803DCF34;
+        for (; j < gIntersectLineCount; j++)
         {
             if (((s8)base[j * 0x10 + 3] & 0x3f) < ((s8)base[best * 0x10 + 3] & 0x3f))
                 best = j;
@@ -1137,7 +1138,7 @@ void intersectModLineBuild(int* obj)
         *(u8*)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
     }
     if ((s16)prev != -1)
-        *(u8*)(*(int*)((char*)obj + 0x38) + prev * 2 + 1) = gIntersectLineCount;
+        (*(u8(**)[2])((char*)obj + 0x38))[prev][1] = gIntersectLineCount;
     memcpy((void*)*(int*)((char*)obj + 0x3c), lbl_803DCF38, gIntersectPointCount * 0xc);
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
@@ -2440,7 +2441,6 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
     int redA;
     int rf;
     int gf;
-    u8* p;
     u16 outv;
 
     if (src1 == NULL)
@@ -2478,20 +2478,21 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                 h = (i & 3) * 8;
                 for (; j < (int)*(u16*)(src1 + 0xa); j++)
                 {
+                    u8 *pa, *pb, *pc;
                     i6 = (j & 3) * 2;
-                    p = src1 + i6;
+                    pa = src1 + i6;
                     i4 = (j >> 2) * 0x20;
-                    p += i4;
-                    p += h;
+                    pa += i4;
+                    pa += h;
                     i12 = (int)*(u16*)(src1 + 0xa) * w * 2;
-                    p += i12;
-                    texA = *(u16*)(p + 0x60);
+                    pa += i12;
+                    texA = *(u16*)(pa + 0x60);
                     redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
-                    p = src2 + i6;
-                    p += i4;
-                    p += h;
-                    p += i12;
-                    texB = *(u16*)(p + 0x60);
+                    pb = src2 + i6;
+                    pb += i4;
+                    pb += h;
+                    pb += i12;
+                    texB = *(u16*)(pb + 0x60);
                     redB = (u8)(((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13));
                     bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8) +
                                ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) &
@@ -2503,11 +2504,11 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                           0xfc)
                          << 3;
                     outv = bf | (rf | gf);
-                    p = dst + i6;
-                    p += i4;
-                    p += h;
-                    p += i12;
-                    *(u16*)(p + 0x60) = outv;
+                    pc = dst + i6;
+                    pc += i4;
+                    pc += h;
+                    pc += i12;
+                    *(u16*)(pc + 0x60) = outv;
                 }
             }
         }
