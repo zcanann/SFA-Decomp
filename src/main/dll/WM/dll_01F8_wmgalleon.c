@@ -19,6 +19,7 @@ extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 #include "main/dll/dll1fbstate_struct.h"
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
+#include "main/dll/player_api.h"
 
 u32 lbl_803DC0F0 = 3;
 
@@ -93,7 +94,6 @@ __declspec(section ".sdata2") f32 lbl_803E5CEC = -121.0f;
 __declspec(section ".sdata2") f32 lbl_803E5CF0 = 116.0f;
 __declspec(section ".sdata2") f32 lbl_803E5CF4 = 5.0f;
 
-extern void fn_80296BBC(GameObject* player);
 void WM_Galleon_initialise(void);
 void WM_Galleon_release(void);
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup);

@@ -39,6 +39,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/savegame.h"
+#include "main/dll/player_status.h"
 
 u16 gSaveSelectSlotTextIds[4] = {0x23, 0x24, 0x25, 0};
 u8 gSaveSelectInfoTextIds[3] = {0x21, 0x20, 0x1F};
@@ -127,7 +128,6 @@ extern f32 lbl_803E1D6C;
 extern f32 gSaveSelectPositionScale;
 extern f32 lbl_803E1D74;
 extern void* memcpy(void* dst, void* src, int n);
-extern void saveSetOverrideHealth(int arg);
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
 char sSaveGameBinPathFormat[] = "/savegame/save%d.bin";

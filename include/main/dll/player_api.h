@@ -34,6 +34,7 @@ u8 fn_80296414(GameObject* player, GameObject* otherObj, u8* outDirection);
 int fn_80296464(GameObject* player);
 int fn_802969F0(GameObject* player);
 void fn_80296A9C(GameObject* player, int delta);
+void fn_80296BBC(GameObject* player);
 GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(GameObject* player);
 int playerHasSpell(GameObject* obj, int spell);

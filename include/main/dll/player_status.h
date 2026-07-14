@@ -9,6 +9,7 @@ int playerGetCurHealth(GameObject* playerObj);
 int playerStatusIsPositive(GameObject* playerObj);
 int playerIsDead(GameObject* playerObj);
 void playerSetIsDead(GameObject* playerObj, int isDead);
+void saveSetOverrideHealth(int health);
 
 static inline int Player_GetCurrentMagic(int playerObj)
 {

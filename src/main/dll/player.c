@@ -115,8 +115,6 @@ void fn_80295918(int obj, int sel, f32 fval);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
 void fn_802960E4(void);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
-void saveSetOverrideHealth(int v);
-void fn_80296BBC(GameObject* obj);
 void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);
