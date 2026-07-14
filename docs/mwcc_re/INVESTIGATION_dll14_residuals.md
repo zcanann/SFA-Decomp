@@ -398,3 +398,13 @@ makes +0x3000 a legal member/element step, e.g. ObjfsaPatch rows of 0x100 with w
 overlay via union). NEXT: probe an arena UNION type: union { ObjfsaPatch p[0x100];
 struct { u8 pad[0x3000]; ObjfsaWalkGroup w[0xB5]; }; } and access w[grp] - check both the
 association order AND whether its address web census adds the K1-chain slot.
+
+## Site-1 accumulate: all source forms exhausted (union, 2D, move-chain under prop-off)
+Union arena reassociates; wg=wgB move under prop-off does NOT coalesce into the accumulate
+(and costs a region). Full elimination list for [add rW,r30,r0][addi rW,rW,12288]:
+plain expr, char-cast chains, u32-cast, ObjfsaPatch[0x100] two-level, u8(*)[40] 2D,
+union member+subscript, self-reassign (prop-off), wgB+move-chain (prop-off). The construct
+producing target's accumulate remains unidentified - next candidate is decoding the CMachine
+addressing emitter (0x4c2xxx band) for when it targets the dest register for subexpressions,
+or accepting the +2 site-1 cost and hunting the score crossover elsewhere. Best probe state
+remains wgfep_117.c + decl retunes (113 regions).
