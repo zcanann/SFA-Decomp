@@ -9,6 +9,7 @@
 #include "main/debug.h"
 #include "main/frustum.h"
 #include "main/shader_api.h"
+#include "main/shader_map_text_api.h"
 #include "main/textrender_api.h"
 #include "main/texture.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"

@@ -46,6 +46,10 @@
 #include "main/audio/stream_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/dll/hint_text_api.h"
+#define SHADER_MAP_TEXT_DIRECT_INT_CALL
+#include "main/shader_map_text_api.h"
+#undef SHADER_MAP_TEXT_DIRECT_INT_CALL
 #include "track/intersect_screen_api.h"
 #define CAMMODE_VIEWFINDER 0x44
 #define CAMMODE_WORLDMAP 0x4e
@@ -300,9 +304,7 @@ extern f32 lbl_803E21C8;
 extern f32 lbl_803E21CC;
 extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
-extern void hintTextFn_800ea174(u8* buf);
 extern u16* saveGameGetCurHint(void);
-extern void gameTextLoadForMap_800571f0(int v);
 extern u8 pauseDisabled;
 extern u8 arwingHudVisible;
 extern u8 lbl_803DB424;

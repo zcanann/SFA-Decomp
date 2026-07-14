@@ -62,6 +62,10 @@
 #include "main/lightmap_api.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/newshadows_shadow_api.h"
+#include "main/dll/hint_text_api.h"
+#define SHADER_MAP_TEXT_DIRECT_INT_CALL
+#include "main/shader_map_text_api.h"
+#undef SHADER_MAP_TEXT_DIRECT_INT_CALL
 #include "track/intersect_hud_api.h"
 
 char sHudCounterFmt02d[] = "%02d";
@@ -448,9 +452,7 @@ extern const f32 lbl_803E21C8;
 extern const f32 lbl_803E21CC;
 extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
-extern void hintTextFn_800ea174(u8* buf);
 extern u16* saveGameGetCurHint(void);
-extern void gameTextLoadForMap_800571f0(int v);
 extern u8 pauseDisabled;
 extern u8 lbl_803DB424;
 extern s16 lbl_803DD772;
