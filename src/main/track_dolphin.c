@@ -3122,6 +3122,13 @@ static inline void GXTexCoord2s16(const s16 x, const s16 y)
     GXWGFifo.s16 = y;
 }
 
+static inline void GXPosition3f32(const f32 x, const f32 y, const f32 z)
+{
+    GXWGFifo.f32 = x;
+    GXWGFifo.f32 = y;
+    GXWGFifo.f32 = z;
+}
+
 #pragma peephole on
 #pragma optimization_level 2
 typedef struct TrackGXColor
@@ -3449,12 +3456,7 @@ void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* 
         for (i = 0; i < slot; i++)
         {
             f32* v0 = (f32*)((char*)cache + w[1]);
-            f32 a0 = v0[0];
-            f32 a1 = v0[1];
-            f32 a2 = v0[2];
-            GXWGFifo.f32 = a0;
-            GXWGFifo.f32 = a1;
-            GXWGFifo.f32 = a2;
+            GXPosition3f32(v0[0], v0[1], v0[2]);
             {
                 f32* v1 = (f32*)((char*)cache + (w[0] + 1) * 0xc);
                 f32 b2 = v1[2];
