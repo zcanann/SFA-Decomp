@@ -219,3 +219,11 @@ above target). Remaining: one web in the pop set moved into the r21-last-pop slo
 it via the select trace on this config and adjust (likely the same reverse-decl enumeration
 - candidates: lp(F35-neighbor), fyv, sp). The macro's shared pl/po = confirmed false-set
 artifact; the block-scoped form is the plausible original (macro-local temps).
+
+## Per-block config trace: pl2/po2 webs land as grants (r21/r28 band = matches target
+shuffle); new r21-blocker F39 (nadj 29) enumerates to fyv (maxY/minY staging var used
+across the lp=(char*)&OBJFSA_NEWPATCH blocks, lines ~2616-2637 in-tree). Target stores
+maxY/minY from volatiles (sth r4,34(r3) directly after fctiwz) => fyv+lp there are the
+same shared-staging false-set artifact as pl/po; apply the same fix (block-scope or inline
+the staging per site) and re-anchor. lp itself (F43, nadj 233) currently pops r22 - after
+the fyv fix expect lp to need the same treatment for the wg cluster to settle on r21/r22.
