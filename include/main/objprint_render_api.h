@@ -13,6 +13,7 @@ void objRenderFn_800413d4(int* obj);
 void fuzzRenderFn_800412dc(int* obj);
 void renderResetFn_8003fc60(void);
 void objRenderFn_80041018(GameObject* obj);
+void objRenderModel(GameObject* obj);
 void objSetMtxFn_800412d4(u32 mtx);
 void modelInitMtxs(int modelFile, int model);
 void modelMtxFn_8003be38(int modelFile, int model, int matrix, int matrix2);
@@ -32,5 +33,11 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int renderOpIndex);
     ((void (*)(void))modelRenderCb_8003c268)
 #define shaderFuzzFn_8003cc1cLegacy \
     ((void (*)(void))shaderFuzzFn_8003cc1c)
+#define objRenderModelPtrLegacy(obj) \
+    (((void (*)(int*))objRenderModel)((obj)))
+#define objRenderModelIntLegacy(obj) \
+    (((void (*)(int))objRenderModel)((obj)))
+#define objRenderModelWithBankTableLegacy(obj, bankTable) \
+    (((void (*)(int*, int**))objRenderModel)((obj), (bankTable)))
 
 #endif /* MAIN_OBJPRINT_RENDER_API_H_ */

@@ -514,7 +514,6 @@ extern u8 gObjShadowColor[4];
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
-void objRenderModel(int* obj);
 
 void objRenderFn_800413d4(int* obj)
 {
@@ -728,7 +727,7 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
     }
 }
 
-void objRenderModel(int* obj)
+void objRenderModel(GameObject* obj)
 {
     int d1;
     f32 d2;
@@ -741,8 +740,8 @@ void objRenderModel(int* obj)
     s32 sy;
     s32 sz;
     u32 col;
-    int* model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
+    int* model = (int*)Obj_GetActiveModel(obj);
+    if (lbl_803DEA04 == obj->anim.rootMotionScale)
     {
         curObjMtx = 0;
         return;
@@ -751,23 +750,23 @@ void objRenderModel(int* obj)
         int m0 = *model;
         if (*(u16*)(m0 + 2) & 0x8000)
         {
-            modelDoAltRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)m0, 0);
+            modelDoAltRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
         }
         else
         {
-            modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)m0, 0);
+            modelDoRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
         }
     }
     {
         u8* iter;
         int i = 0;
         iter = (u8*)obj;
-        for (; i < ((GameObject*)obj)->childCount; i++)
+        for (; i < obj->childCount; i++)
         {
             int* child = *(int**)&((GameObject*)iter)->childObjs[0];
             if (child != NULL)
             {
-                objRenderChild(child, obj, 0);
+                objRenderChild(child, (int*)obj, 0);
             }
             iter += 4;
         }
@@ -781,7 +780,7 @@ void objRenderModel(int* obj)
         return;
     }
     {
-        s16 t = ((GameObject*)obj)->anim.seqId;
+        s16 t = obj->anim.seqId;
         if (t == 0x6a8)
             return;
         if (t == 0x6a9)
@@ -796,21 +795,20 @@ void objRenderModel(int* obj)
             return;
     }
     Camera_ProjectWorldPointWithOffset(
-        ((GameObject*)obj)->anim.localPosX - playerMapOffsetX, ((GameObject*)obj)->anim.localPosY,
-        ((GameObject*)obj)->anim.localPosZ - playerMapOffsetZ,
-        ((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale, &px, &py, &pz);
+        obj->anim.localPosX - playerMapOffsetX, obj->anim.localPosY, obj->anim.localPosZ - playerMapOffsetZ,
+        obj->anim.hitboxScale * obj->anim.rootMotionScale, &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
     if (sz <= depthReadRequestPollPointerKey(sx, sy, obj))
     {
-        ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0x20;
+        obj->anim.modelState->shadowAlphaStep = 0x20;
     }
     else
     {
-        ((GameObject*)obj)->anim.modelState->shadowAlphaStep = -0x20;
+        obj->anim.modelState->shadowAlphaStep = -0x20;
     }
     {
         int a;
-        ObjModelState* hud = ((GameObject*)obj)->anim.modelState;
+        ObjModelState* hud = obj->anim.modelState;
         a = hud->shadowAlpha + hud->shadowAlphaStep;
         if (a > 0xff)
         {
@@ -825,7 +823,7 @@ void objRenderModel(int* obj)
             hud->shadowAlpha = a;
         }
     }
-    gObjShadowColor[3] = ((GameObject*)obj)->anim.modelState->shadowAlpha;
+    gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
     objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
     col = *(u32*)gObjShadowColor;
     hudDrawColoredLegacy(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
@@ -934,7 +932,7 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
         if (isShadow == 0)
         {
             ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
-            objRenderModel(child);
+            objRenderModelPtrLegacy(child);
         }
         else
         {

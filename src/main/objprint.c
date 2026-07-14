@@ -204,8 +204,6 @@ extern u8 lbl_803DCC0A;
 extern u8 lbl_803DCC0B;
 extern u8 lbl_803DCC0C;
 extern u8 lbl_803DCC0D;
-extern void objRenderModel(int* obj, int** table);
-
 s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
 {
     int vecOffset;
@@ -269,7 +267,7 @@ void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
     (void)scale;
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
     {
-        objRenderModel((int*)obj, table);
+        objRenderModelWithBankTableLegacy((int*)obj, table);
         if (obj->anim.hitVolumeTransforms != NULL)
         {
             objRenderFn_80041018((GameObject*)obj);

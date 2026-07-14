@@ -77,7 +77,6 @@ typedef struct Dim2roofrubState
 
 extern void** gTitleMenuControlInterfaceCopy;
 
-extern void objRenderModel(int* obj);
 #define objfx_spawnMaskedHitEffectLegacy(obj, scale, type, mode, mask, origin)                                    \
     ((void (*)(void*, f32, int, int, int, void*))objfx_spawnMaskedHitEffect)(                                    \
         (void*)(obj), (scale), (type), (mode), (mask), (origin))
@@ -318,7 +317,7 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         PSMTXConcat(mTransPos, mC, mD);
         PSMTXConcat(mD, mWorldCombined, mFinal);
         objSetMtxFn_800412d4((u32)mFinal);
-        objRenderModel(obj);
+        objRenderModelPtrLegacy(obj);
     }
     else
     {

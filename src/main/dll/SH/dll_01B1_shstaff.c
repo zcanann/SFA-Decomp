@@ -123,7 +123,6 @@ extern void SH_EmptyTumbleW_init(void);
 
 extern void PSMTXInverse(int src, f32* dst);
 extern void PSMTXConcat(f32* a, f32* b, f32* dst);
-extern void objRenderModel(int obj);
 extern void sh_staff_deactivate(GameObject* obj, ShStaffState* state, int a);
 
 void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -172,7 +171,7 @@ void sh_staff_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible
         {
             PSMTXConcat((f32*)ObjPath_GetPointModelMtx((GameObject*)player, 0), state->carryMtx, mtxB);
             objSetMtxFn_800412d4((u32)mtxB);
-            objRenderModel((int)obj);
+            objRenderModelIntLegacy((int)obj);
         }
         else
         {

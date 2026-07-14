@@ -92,7 +92,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
-extern void objRenderModel(int* obj);
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E3228 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E322C = 0.0f;
@@ -327,7 +326,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         PSMTXConcat(mTransPos, mC, mD);
         PSMTXConcat(mD, mWorldCombined, mFinal);
         objSetMtxFn_800412d4((u32)mFinal);
-        objRenderModel(obj);
+        objRenderModelPtrLegacy(obj);
     }
     else
     {
