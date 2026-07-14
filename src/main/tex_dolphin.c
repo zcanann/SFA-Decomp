@@ -11,6 +11,7 @@
 #include "main/pi_dolphin.h"
 #include "main/newshadows.h"
 #include "main/objseq_api.h"
+#include "main/dll/FRONT/n_options.h"
 
 u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
 int gTexShaderAmbColor = -1;
@@ -49,7 +50,6 @@ extern int gTexShaderFogColor;
 extern int gTexLightmapFogColor;
 
 extern void fn_8005D3B4();
-extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 typedef struct TexOverride
 {

@@ -13,7 +13,7 @@ bool FUN_80118164(u32 param_1);
 void THPPlayerPostDrawDone(void);
 BOOL THPPlayerGetVideoInfo(void *dst);
 void fn_80118240(void);
-u32 AttractMovie_DrawTextureCallback(u32 param_1,u32 *modelPtr,u32 renderOpIdx);
+BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 int ProperTimingForGettingNextFrame(void);
 
 #endif /* MAIN_DLL_FRONT_N_OPTIONS_H_ */

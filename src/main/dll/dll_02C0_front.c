@@ -16,6 +16,7 @@
  * the credits sequence; getCurUiDll selects the active front-end UI DLL.
  */
 #include "main/dll/dll_02C0_front.h"
+#include "main/dll/FRONT/n_options.h"
 #include "main/texture.h"
 #include "main/frame_timing.h"
 #include "main/gametext_box_api.h"
@@ -258,7 +259,6 @@ typedef struct TitleAnimMoves
 } TitleAnimMoves;
 
 extern TitleAnimMoves gTitleScreenAnimMoves[];
-extern BOOL AttractMovie_DrawTextureCallback(int unused, u32* modelPtr, u32 renderOpIdx);
 
 /* Seed the object's state from its seqId, pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
