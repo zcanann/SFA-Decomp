@@ -1,7 +1,7 @@
 /* DLL 0x0129 - campfire area objects [8018CD64-8018CDAC) */
 #include "main/game_object.h"
 #include "main/object_api.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/objfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/sky_interface.h"
@@ -12,28 +12,12 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
-extern void ModelLightStruct_free(void* effect);
-
-#define MODEL_LIGHT_KIND_POINT 2
-
-extern void queueGlowRender(void* effect);
-extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
-extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setLightKind(int h, int v);
-extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setSpecularColor(int h, int r, int g, int b, int a);
-extern void modelLightStruct_setDistanceAttenuation(int light, f32 min, f32 max);
-extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
-extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
-
 /* CampfireExtra - the per-class extra state block (GameObject.extra) for the
  * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
  * offsets mirror the observed deref widths in this unit. */
 typedef struct CampfireExtra
 {
-    void* light;    /* 0x00 ModelLightStruct handle (objCreateLight result) */
+    ModelLightStruct* light;
     f32 dayTimer;   /* 0x04 flicker/sound timer used in the daytime branch */
     f32 nightTimer; /* 0x08 timer used in the night branch */
     s16 gameBit;    /* 0x0C gamebit index (from spawn descriptor +0x18) */
@@ -59,21 +43,21 @@ int CampFire_getObjectTypeId(void)
 void CampFire_free(GameObject* obj)
 {
     CampfireExtra* state;
-    void* effect;
+    ModelLightStruct* light;
 
     state = obj->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    effect = state->light;
-    if (effect != 0)
+    light = state->light;
+    if (light != NULL)
     {
-        ModelLightStruct_free(effect);
+        ModelLightStruct_free(light);
     }
 }
 
 void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CampfireExtra* state;
-    void* effect;
+    ModelLightStruct* light;
     s32 isVisible;
 
     state = ((GameObject*)obj)->extra;
@@ -81,10 +65,10 @@ void CampFire_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (isVisible != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
-        effect = state->light;
-        if (((effect != 0) && (*(u8*)((int)effect + 0x2f8) != 0)) && (*(u8*)((int)effect + 0x4c) != 0))
+        light = state->light;
+        if (((light != NULL) && (light->glowType != 0)) && (light->enabled != 0))
         {
-            queueGlowRender(effect);
+            queueGlowRender(light);
         }
     }
 }
@@ -106,7 +90,7 @@ void CampFire_update(int obj)
     {
         if (state->light != NULL)
         {
-            modelLightStruct_setEnabled((int)state->light, 1, 1.0f);
+            modelLightStruct_setEnabled(state->light, 1, 1.0f);
         }
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, CAMPFIRE_HIT_VOLUME_SLOT, 1, 0);
         state->nightTimer -= timeDelta;
@@ -131,7 +115,7 @@ void CampFire_update(int obj)
     {
         if (state->light != NULL)
         {
-            modelLightStruct_setEnabled((int)state->light, 0, 1.0f);
+            modelLightStruct_setEnabled(state->light, 0, 1.0f);
         }
         ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
         state->dayTimer -= timeDelta;
@@ -157,26 +141,26 @@ void CampFire_update(int obj)
     params[2] = 0.0f;
     fn_80098B18Legacy(obj, 1.4f * ((GameObject*)obj)->anim.rootMotionScale, type, mode, flag, params);
     {
-        u8* light = state->light;
-        if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0)
+        ModelLightStruct* light = state->light;
+        if (light != NULL && light->glowType != 0 && light->enabled != 0)
         {
             int rnd;
-            u8* l2;
+            ModelLightStruct* l2;
             s16 brightness;
             rnd = randomGetRange(-0x19, 0x19);
             l2 = state->light;
-            brightness = l2[0x2f9] + *(s8*)(l2 + 0x2fa) + rnd;
+            brightness = l2->glowAlpha + l2->glowAlphaStep + rnd;
             if (brightness < 0)
             {
                 brightness = 0;
-                l2[0x2fa] = 0;
+                l2->glowAlphaStep = 0;
             }
             else if (brightness > 0xff)
             {
                 brightness = 0xff;
-                l2[0x2fa] = 0;
+                l2->glowAlphaStep = 0;
             }
-            *(u8*)((int)state->light + 0x2f9) = brightness;
+            state->light->glowAlpha = brightness;
         }
     }
 }
@@ -227,29 +211,29 @@ void CampFire_init(int obj, int defArg)
     state->nightTimer = 1.0f;
     if (state->light == NULL)
     {
-        state->light = (void*)objCreateLight(obj, 1);
+        state->light = objCreateLight((GameObject*)obj, 1);
     }
     if (state->light != NULL)
     {
         int atten;
-        modelLightStruct_setLightKind((int)state->light, MODEL_LIGHT_KIND_POINT);
-        modelLightStruct_setDiffuseColor((int)state->light, 0xff, 0x7f, 0, 0xff);
-        modelLightStruct_setSpecularColor((int)state->light, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+        modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
         atten = (int)(20.0f * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setDistanceAttenuation((int)state->light, atten, 30.0f + atten);
+        modelLightStruct_setDistanceAttenuation(state->light, atten, 30.0f + atten);
         if ((*gSkyInterface)->getSunPosition(&sunTime) != 0)
         {
-            modelLightStruct_setEnabled((int)state->light, 1, 0.0f);
+            modelLightStruct_setEnabled(state->light, 1, 0.0f);
         }
         else
         {
-            modelLightStruct_setEnabled((int)state->light, 0, 0.0f);
+            modelLightStruct_setEnabled(state->light, 0, 0.0f);
         }
-        modelLightStruct_setPosition((int)state->light, 0.0f, 12.0f, 0.0f);
-        modelLightStruct_startColorFade((int)state->light, 1, 3);
-        modelLightStruct_setDiffuseTargetColor((int)state->light, 0xff, 0x5c, 0, 0xff);
-        modelLightStruct_setupGlow((int)state->light, 0, 0xff, 0x7f, 0, 0x87,
+        modelLightStruct_setPosition(state->light, 0.0f, 12.0f, 0.0f);
+        modelLightStruct_startColorFade(state->light, 1, 3);
+        modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
+        modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87,
                                    40.0f * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius((ModelLightStruct*)state->light, 30.0f);
+        modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
     }
 }
