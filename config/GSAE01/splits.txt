@@ -440,6 +440,7 @@ main/dll/dll_0010_uicontroller.c:
 
 main/dll/dll_0012_unk.c:
 	.text       start:0x800D9EB4 end:0x800D9EE8
+	.data       start:0x803114D8 end:0x80311518
 	.sbss       start:0x803DD458 end:0x803DD460
 
 main/dll/dll_0014_unk.c:
