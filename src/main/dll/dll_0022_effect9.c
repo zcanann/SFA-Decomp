@@ -29,6 +29,11 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0022_effect9.h"
 
+f32 gEffect9SineFast;
+f32 gEffect9SineSlow;
+int gEffect9SineAngleSlow;
+int gEffect9SineAngleFast;
+
 f32 gEffect9PhaseA = 0.1f;
 f32 gEffect9PhaseB = 0.3f;
 f32 gEffect9PhaseC = 0.1f;

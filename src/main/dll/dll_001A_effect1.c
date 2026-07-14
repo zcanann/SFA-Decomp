@@ -9,6 +9,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_001A_effect1.h"
 
+f32 gEffect1SineWaveA;
+f32 gEffect1SineWaveB;
+int gEffect1SineWaveBPhase;
+int gEffect1SineWaveAPhase;
+
 f32 gEffect1AnimRampC = 0.1f;
 f32 gEffect1AnimRampD = 0.3f;
 f32 gEffect1AnimRampA = 0.1f;

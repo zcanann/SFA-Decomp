@@ -40,6 +40,13 @@
 #include "main/vecmath_distance_api.h"
 #include "main/shader_api.h"
 
+RomCurveDef* gRomCurveLastFindStart;
+RomCurveDef* gRomCurveLastFindEnd;
+static int sObjfsaUnused0;
+int gObjfsaPatchCount;
+int gObjfsaLastWalkGroupIndex;
+int gObjfsaBlockFlagsChecksum;
+
 #define OBJFSA_PATCHGROUP_PATCH_COUNT   4
 #define OBJFSA_PATCHGROUP_STRIDE        0x28
 #define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48

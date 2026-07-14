@@ -23,6 +23,11 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_0020_effect7.h"
 
+f32 gEffect7SinValueA;
+f32 gEffect7SinValueB;
+int gEffect7SinAngleB;
+int gEffect7SinAngleA;
+
 f32 gEffect7ScrollPhaseA = 0.1f;
 f32 gEffect7ScrollPhaseB = 0.3f;
 f32 gEffect7TexScrollPhaseA = 0.1f;

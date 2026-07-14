@@ -28,6 +28,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0023_effect10.h"
 
+f32 gEffect10SineValueA;
+f32 gEffect10SineValueB;
+s32 gEffect10SineAnglePhaseB;
+s32 gEffect10SineAnglePhaseA;
+
 f32 gEffect10ScrollPhaseA = 0.1f;
 f32 gEffect10ScrollPhaseB = 0.3f;
 f32 gEffect10TickScrollPhaseA = 0.1f;

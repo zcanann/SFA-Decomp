@@ -29,6 +29,12 @@
 #include "main/dll/dll_000E_partfx.h"
 #include "main/dll/dll_001A_effect1.h"
 
+int lbl_803DD348;
+f32 gEffect2SinValueA;
+f32 gEffect2SinValueB;
+int gEffect2SinAngleB;
+int gEffect2SinAngleA;
+
 f32 gEffect2SpawnPhaseA = 0.1f;
 f32 gEffect2SpawnPhaseB = 0.3f;
 f32 gEffect2ScrollPhaseA = 0.1f;

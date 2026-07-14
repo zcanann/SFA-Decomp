@@ -26,6 +26,11 @@
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_001F_effect6.h"
 
+f32 gEffect6Osc0Value;
+f32 gEffect6Osc1Value;
+int gEffect6Osc1Angle;
+int gEffect6Osc0Angle;
+
 f32 gEffect6ScrollPhase0 = 0.1f;
 f32 gEffect6ScrollPhase1 = 0.3f;
 f32 gEffect6ScrollPhase2 = 0.1f;

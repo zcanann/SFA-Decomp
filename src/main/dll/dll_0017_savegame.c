@@ -41,6 +41,13 @@
 #include "main/gameloop_api.h"
 #include "main/dll/dll_0016_screentransition.h"
 
+u32 pRestartPoint;
+u8* lbl_803DD498;
+s8 gSaveGameMapActCacheIdx;
+static int sSaveGameUnused0;
+int gSaveGameObjGroupCacheIdx;
+u8 saveGameLoadStatus;
+
 s8 gSaveGameCurrentSlot = -1;
 char sGameplayFoxName[] = "FOX";
 

@@ -25,6 +25,11 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/textrender_api.h"
 
+u32 lbl_803DD4AC;
+u32 lbl_803DD4A8;
+u32 lbl_803DD4A4;
+u32 lbl_803DD4A0;
+
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
 extern u32 lbl_803DD4A8;

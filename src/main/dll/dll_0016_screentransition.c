@@ -6,6 +6,14 @@
 #include "main/frame_timing.h"
 #include "main/fileio.h"
 
+u8 screenTransitionPause;
+u8 gScreenTransitionDelay;
+u8 gScreenTransitionDone;
+u8 gScreenTransitionType;
+f32 gScreenTransitionHoldTimer;
+f32 gScreenTransitionAlphaStep;
+f32 screenTransitionAlpha;
+
 extern u8 gScreenTransitionDone;
 u8 screenTransition_func07(void)
 {

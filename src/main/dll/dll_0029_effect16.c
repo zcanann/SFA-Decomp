@@ -26,6 +26,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0029_effect16.h"
 
+f32 gEffect16SinValueA;
+f32 gEffect16SinValueB;
+s32 gEffect16SinPhaseCounterB;
+s32 gEffect16SinPhaseCounterA;
+
 f32 gEffect16ScrollPhaseA = 0.1f;
 f32 gEffect16ScrollPhaseB = 0.3f;
 f32 gEffect16TimedScrollPhaseA = 0.1f;

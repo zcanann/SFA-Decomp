@@ -43,6 +43,9 @@
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
 
+u32 sCurvesCachedHitObj;
+s32 sCurvesCachedHitCount;
+
 typedef struct CurvesHitScratch
 {
     u8 unk0[0x40];

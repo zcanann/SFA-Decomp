@@ -9,6 +9,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_002B_effect18.h"
 
+f32 gEffect18SineValueA;
+f32 gEffect18SineValueB;
+s32 gEffect18SinePhaseB;
+s32 gEffect18SinePhaseA;
+
 f32 gEffect18Progress0 = 0.1f;
 f32 gEffect18Progress1 = 0.3f;
 f32 gEffect18Progress2 = 0.1f;

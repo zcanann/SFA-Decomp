@@ -299,11 +299,13 @@ main/dll/dll_000E_partfx.c:
 main/dll/dll_001A_effect1.c:
 	.text       start:0x800AF688 end:0x800B319C
 	.sdata      start:0x803DB7B0 end:0x803DB7C0
+	.sbss       start:0x803DD328 end:0x803DD338
 
 main/dll/dll_001B_effect2.c:
 	.text       start:0x800B319C end:0x800B6EF8
 	.data       start:0x80310560 end:0x80310670
 	.sdata      start:0x803DB7C0 end:0x803DB7D0
+	.sbss       start:0x803DD338 end:0x803DD350
 
 main/dll/dll_001C_effect3.c:
 	.text       start:0x800B6EF8 end:0x800B8D7C
@@ -311,34 +313,41 @@ main/dll/dll_001C_effect3.c:
 main/dll/dll_001D_effect4.c:
 	.text       start:0x800B8D7C end:0x800BC244
 	.sdata      start:0x803DB7D0 end:0x803DB7E0
+	.sbss       start:0x803DD350 end:0x803DD360
 
 main/dll/dll_001E_effect5.c:
 	.text       start:0x800BC244 end:0x800BD43C
 	.data       start:0x803109B8 end:0x80310A20
 	.sdata      start:0x803DB7E0 end:0x803DB7F0
 	.sdata2     start:0x803DFBE0 end:0x803DFC78
+	.sbss       start:0x803DD360 end:0x803DD370
 
 main/dll/dll_001F_effect6.c:
 	.text       start:0x800BD43C end:0x800BE034
 	.sdata      start:0x803DB7F0 end:0x803DB800
+	.sbss       start:0x803DD370 end:0x803DD380
 
 main/dll/dll_0020_effect7.c:
 	.text       start:0x800BE034 end:0x800BF978
 	.sdata      start:0x803DB800 end:0x803DB810
+	.sbss       start:0x803DD380 end:0x803DD390
 
 main/dll/dll_0021_effect8.c:
 	.text       start:0x800BF978 end:0x800C11CC
 	.sdata      start:0x803DB810 end:0x803DB820
+	.sbss       start:0x803DD390 end:0x803DD3A0
 
 main/dll/dll_0022_effect9.c:
 	.text       start:0x800C11CC end:0x800C291C
 	.sdata      start:0x803DB820 end:0x803DB830
+	.sbss       start:0x803DD3A0 end:0x803DD3B0
 
 main/dll/dll_0023_effect10.c:
 	.text       start:0x800C291C end:0x800C4864
 	.data       start:0x80310C88 end:0x80310D1C
 	.bss        start:0x8039C3B0 end:0x8039C3C8
 	.sdata      start:0x803DB830 end:0x803DB840
+	.sbss       start:0x803DD3B0 end:0x803DD3C0
 
 main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
@@ -362,6 +371,7 @@ main/dll/dll_0029_effect16.c:
 	.data       start:0x80310E88 end:0x80310F38
 	.bss        start:0x8039C410 end:0x8039C428
 	.sdata      start:0x803DB840 end:0x803DB850
+	.sbss       start:0x803DD3C0 end:0x803DD3D0
 
 main/dll/dll_0028_effect15.c:
 	.text       start:0x800C9140 end:0x800CA3CC
@@ -380,23 +390,27 @@ main/dll/dll_002A_effect17.c:
 	.data       start:0x80310FE0 end:0x80311034
 	.sdata      start:0x803DB850 end:0x803DB860
 	.sdata2     start:0x803E01B8 end:0x803E0220
+	.sbss       start:0x803DD3D0 end:0x803DD3E0
 
 main/dll/dll_002B_effect18.c:
 	.text       start:0x800CB690 end:0x800CCF5C
 	.data       start:0x80311038 end:0x803110D4
 	.sdata      start:0x803DB860 end:0x803DB870
 	.sdata2     start:0x803E0220 end:0x803E02D8
+	.sbss       start:0x803DD3E0 end:0x803DD3F0
 
 main/dll/dll_002C_effect19.c:
 	.text       start:0x800CCF5C end:0x800CD430
 	.data       start:0x803110D8 end:0x80311100
 	.sdata      start:0x803DB870 end:0x803DB880
 	.sdata2     start:0x803E02D8 end:0x803E0310
+	.sbss       start:0x803DD3F0 end:0x803DD400
 
 main/dll/dll_002D_effect20.c:
 	.text       start:0x800CD430 end:0x800D5530
 	.data       start:0x80311100 end:0x803112E4
 	.sdata      start:0x803DB880 end:0x803DB890
+	.sbss       start:0x803DD400 end:0x803DD410
 
 main/dll/dll_0003_checkpoint.c:
 	.text       start:0x800D5530 end:0x800D7568
@@ -404,6 +418,7 @@ main/dll/dll_0003_checkpoint.c:
 
 main/dll/dll_0016_screentransition.c:
 	.text       start:0x800D7568 end:0x800D7F5C
+	.sbss       start:0x803DD420 end:0x803DD430
 
 main/dll/dll_0004_dummy04.c:
 	.text       start:0x800D7F5C end:0x800D8020
@@ -411,22 +426,26 @@ main/dll/dll_0004_dummy04.c:
 main/dll/dll_000F_unk.c:
 	.text       start:0x800D8020 end:0x800D9DCC
 	.sdata2     start:0x803E0598 end:0x803E05A0
+	.sbss       start:0x803DD430 end:0x803DD458
 
 main/dll/dll_0010_uicontroller.c:
 	.text       start:0x800D9DCC end:0x800D9EB4
 
 main/dll/dll_0012_unk.c:
 	.text       start:0x800D9EB4 end:0x800D9EE8
+	.sbss       start:0x803DD458 end:0x803DD460
 
 main/dll/dll_0014_unk.c:
 	.text       start:0x800D9EE8 end:0x800E5434
 	.data       start:0x80311518 end:0x803116E0
 	.bss        start:0x8039CAE8 end:0x803A2C38
+	.sbss       start:0x803DD460 end:0x803DD478
 
 main/dll/dll_0015_curves.c:
 	.text       start:0x800E5434 end:0x800E8100
 	.data       start:0x803116E0 end:0x80311720
 	.bss        start:0x803A2C38 end:0x803A2F80
+	.sbss       start:0x803DD480 end:0x803DD488
 
 main/dll/dll_0017_savegame.c:
 	.text       start:0x800E8100 end:0x800EA174
@@ -434,9 +453,11 @@ main/dll/dll_0017_savegame.c:
 	.data       start:0x80311720 end:0x80312340
 	.bss        start:0x803A2F80 end:0x803A4218
 	.sdata      start:0x803DB890 end:0x803DB898
+	.sbss       start:0x803DD488 end:0x803DD4A0
 
 main/dll/dll_0011_screens.c:
 	.text       start:0x800EA174 end:0x800EA774
+	.sbss       start:0x803DD4A0 end:0x803DD4B0
 
 main/dll/dll_002F_carryable.c:
 	.text       start:0x800EA774 end:0x800EADCC
@@ -606,6 +627,7 @@ main/dll/dll_007C_dll7cfunc0.c:
 main/dll/dll_007D_dll7dfunc0.c:
 	.text       start:0x800F4C70 end:0x800F4FA4
 	.sdata2     start:0x803E0DD8 end:0x803E0E00
+	.sbss       start:0x803DD4B0 end:0x803DD4B8
 
 main/dll/dll_007E_dll7efunc0.c:
 	.text       start:0x800F4FA4 end:0x800F52E0

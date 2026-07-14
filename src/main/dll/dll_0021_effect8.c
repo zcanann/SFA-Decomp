@@ -11,6 +11,11 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_0021_effect8.h"
 
+f32 gModgfxSineWaveA;
+f32 gModgfxSineWaveB;
+int gModgfxSinePhaseB;
+int gModgfxSinePhaseA;
+
 f32 lbl_803DB810 = 0.1f;
 f32 lbl_803DB814 = 0.3f;
 f32 lbl_803DB818 = 0.1f;

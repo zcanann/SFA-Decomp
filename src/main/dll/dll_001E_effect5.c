@@ -21,6 +21,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_001E_effect5.h"
 
+f32 gEffect5SinValueA;
+f32 gEffect5SinValueB;
+int gEffect5SinPhaseB;
+int gEffect5SinPhaseA;
+
 f32 gEffect5AnimProgressA = 0.1f;
 f32 gEffect5AnimProgressB = 0.3f;
 f32 gEffect5AnimProgressC = 0.1f;

@@ -10,7 +10,7 @@
  */
 #include "main/dll/dll_0012_unk.h"
 
-extern unsigned int lbl_803DD458; /* .sbss status word */
+unsigned int lbl_803DD458;
 
 void dll_12_func0A_nop(void)
 {

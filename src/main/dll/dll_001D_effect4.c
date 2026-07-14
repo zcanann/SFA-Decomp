@@ -9,6 +9,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_001D_effect4.h"
 
+f32 gEffect4SinValueA;
+f32 gEffect4SinValueB;
+int gEffect4SinPhaseCounterB;
+int gEffect4SinPhaseCounterA;
+
 f32 gEffect4SpawnCyclePhaseFast = 0.1f;
 f32 gEffect4SpawnCyclePhaseSlow = 0.3f;
 f32 gEffect4TickCyclePhaseFast = 0.1f;

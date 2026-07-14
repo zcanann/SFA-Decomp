@@ -25,6 +25,11 @@
 #include "main/maketex_random_api.h"
 #include "main/dll/dll_002D_effect20.h"
 
+f32 gEffect20SineValue0;
+f32 gEffect20SineValue1;
+s32 gEffect20SinePhase1;
+s32 gEffect20SinePhase0;
+
 f32 gEffect20SpawnScrollA = 0.1f;
 f32 gEffect20SpawnScrollB = 0.3f;
 f32 gEffect20StepScrollA = 0.1f;

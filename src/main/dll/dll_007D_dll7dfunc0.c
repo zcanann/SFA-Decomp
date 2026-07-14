@@ -20,7 +20,7 @@
 #define DLL7D_EFFECT_ID 0x89
 
 extern u8 lbl_80315030[];
-extern int lbl_803DD4B0;
+int lbl_803DD4B0;
 __declspec(section ".sdata2") f32 lbl_803E0DD8 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E0DDC = 0.0f;

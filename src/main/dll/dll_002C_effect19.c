@@ -22,6 +22,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_002C_effect19.h"
 
+f32 gEffect19Osc0Value;
+f32 gEffect19Osc1Value;
+s32 gEffect19Osc1Angle;
+s32 gEffect19Osc0Angle;
+
 f32 gEffect19ScrollPhase0 = 0.1f;
 f32 gEffect19ScrollPhase1 = 0.3f;
 f32 gEffect19ScrollPhase2 = 0.1f;

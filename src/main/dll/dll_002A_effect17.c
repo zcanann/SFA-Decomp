@@ -7,6 +7,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_002A_effect17.h"
 
+f32 gEffect17SinValueA;
+f32 gEffect17SinValueB;
+s32 gEffect17SinPhaseB;
+s32 gEffect17SinPhaseA;
+
 f32 gEffect17AnimProgressA = 0.1f;
 f32 gEffect17AnimProgressB = 0.3f;
 f32 gEffect17AnimProgressC = 0.1f;

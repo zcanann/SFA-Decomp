@@ -27,6 +27,18 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_000F_unk.h"
 
+u8 lbl_803DD450;
+u8 lbl_803DD44F;
+u8 lbl_803DD44E;
+s16 gPlayerMoveTargetYaw;
+f32 gPlayerMoveOverridePosX;
+f32 gPlayerMoveOverridePosZ;
+u8 gPlayerMoveAdvanced;
+u32 gPlayerMoveFastMoveId;
+u32 gPlayerMoveSlowMoveId;
+u8 gPlayerMoveVelHandled;
+u32 playerOverride;
+
 extern u32 gPlayerMoveSlowMoveId;
 extern u32 gPlayerMoveFastMoveId;
 extern u8 gPlayerMoveVelHandled;
