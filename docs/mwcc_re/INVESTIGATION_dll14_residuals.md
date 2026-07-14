@@ -408,3 +408,15 @@ producing target's accumulate remains unidentified - next candidate is decoding 
 addressing emitter (0x4c2xxx band) for when it targets the dest register for subexpressions,
 or accepting the +2 site-1 cost and hunting the score crossover elsewhere. Best probe state
 remains wgfep_117.c + decl retunes (113 regions).
+
+## Corpus-negative: the accumulate shape does not exist in 10,469 reference functions
+`add rX,rY,r0; addi rX,rX,<const>` (any const >= 1000, and the mulli-40 variant) has ZERO
+occurrences in the entire GC/2.0 refcorpus (both_off profile). The target site-1/tail wg
+shape is not producible by any ordinary expression under this compiler configuration -
+consistent with every source-form elimination. Remaining explanations: (a) the CMachine
+addressing emitter takes a special path under conditions not present in the corpus
+(decode 0x4c2xxx), (b) the original passed a different optimization configuration for this
+TU than the corpus profiles (but pragma experiments bound this), or (c) the two-statement
+form colors coincidentally in the target via a coalesce eligibility our build misses
+(decode the upstream move-descriptor flag setting - the same open item as func1C's
+materialization direction; likely ONE shared answer).
