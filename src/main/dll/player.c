@@ -114,7 +114,6 @@ int playerStopRidingObject(GameObject* obj);
 void fn_802960E4(void);
 void fn_802961FC(int a, u8 type);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
-void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8);
 int fn_80297498(void);
 int playerState41(GameObject* obj, int state, f32 fv);
 int playerState40(int p1, int obj);
@@ -12925,7 +12924,7 @@ int playerState11(GameObject* obj, int state)
     return 0;
 }
 
-void fn_802972B4(GameObject* obj, int* flags, f32* p5, f32* p6, f32* p7, s16* p8)
+void fn_802972B4(GameObject* obj, u32* flags, f32* p5, f32* p6, f32* p7, u16* p8)
 {
     PlayerState* inner = obj->extra;
     s8 idx;

@@ -278,7 +278,6 @@ extern f32 lbl_803E258C;
 extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
-extern void fn_802972B4(GameObject* player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
 extern void fn_802961FC(u8* proj, int result);
 extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector, f32 hDist, f32 vDist);
