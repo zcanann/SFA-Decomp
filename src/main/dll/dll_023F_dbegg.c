@@ -63,6 +63,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
 #include "main/object_descriptor.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 #define DBEGG_OBJGROUP         0x24
 #define DBEGG_SIBLING_OBJGROUP 0x14
@@ -606,9 +607,8 @@ void dbegg_initialise(void)
 
 void dbegg_init(GameObject* obj)
 {
-    extern void dbegg_setupFromDef(GameObject * obj, int* state);
     ObjModelState* modelState;
-    dbegg_setupFromDef(obj, (obj)->extra);
+    dbegg_setupFromDef(obj, (u8*)(obj)->extra);
     ObjMsg_AllocQueue(obj, 8);
     modelState = (obj)->anim.modelState;
     if (modelState != NULL)
@@ -648,12 +648,6 @@ char sAnimGreaterMessage[11] = " GREATER \n\000";
 
 void dbegg_update(GameObject* obj)
 {
-    extern void dbegg_setupFromDef(GameObject * obj, int* state);
-    extern void dbegg_processMessages(GameObject*);
-    extern void fn_801FE774(int, f32*);
-
-    extern f32 Vec_xzDistance(int, int);
-    extern f32 PSVECMag(int);
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[11];
     extern int lbl_803E61C0;
@@ -844,7 +838,8 @@ void dbegg_update(GameObject* obj)
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             break;
         case DBEGG_MODE_PICKUP_PROMPT:
-            if (Vec_xzDistance((int)obj + 0x18, data + 8) > lbl_803E6240 && (egg->flags119 & 2) == 0)
+            if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)(data + 8)) > lbl_803E6240 &&
+                (egg->flags119 & 2) == 0)
             {
                 playerObj = Obj_GetPlayerObject();
                 pickupState = *(int*)&(obj)->extra;
@@ -901,7 +896,7 @@ void dbegg_update(GameObject* obj)
         case DBEGG_MODE_RESPAWN_WAIT:
             if (mainGetBit(0x42a) != 0)
             {
-                dbegg_setupFromDef(obj, (int*)egg);
+                dbegg_setupFromDef(obj, (u8*)egg);
             }
             else if (randomGetRange(0, 10) == 0)
             {
@@ -986,7 +981,7 @@ void dbegg_update(GameObject* obj)
             }
             else
             {
-                int n = (int)(PSVECMag((int)obj + 0x24) / lbl_803E6260);
+                int n = (int)(PSVECMag((f32*)((int)obj + 0x24)) / lbl_803E6260);
                 for (i = 0; i < n; i++)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, DBEGG_PARTFX_HOMING_TRAIL, NULL, 1, -1, NULL);
@@ -1011,7 +1006,7 @@ void dbegg_update(GameObject* obj)
         {
             if (mainGetBit(0x3c4) == 0)
             {
-                if (Vec_xzDistance((int)obj + 0x18, (int)player + 0x18) < lbl_803E6264)
+                if (Vec_xzDistance((f32*)((int)obj + 0x18), (f32*)((int)player + 0x18)) < lbl_803E6264)
                 {
                     if ((egg->flags119 & 1) == 0)
                     {
