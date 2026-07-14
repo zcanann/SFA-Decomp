@@ -47,6 +47,17 @@
 #include "main/gamebits_api.h"
 #include "main/objprint_sound_api.h"
 
+u16 gDebugTabWidth = 0x20;
+#pragma explicit_zero_data on
+void* debugLogEnd = 0;
+#pragma explicit_zero_data off
+char sErrDSI[] = "DSI";
+char sErrISI[] = "ISI";
+char sErrFmtPC[] = "PC\t%x";
+char sErrFmtSP[] = "SP\t%x";
+char lbl_803DBC30[] = "\t%x";
+char lbl_803DBC34[] = "%d - %d";
+
 typedef struct TrickyImpressState
 {
     u8 pad0[0x14 - 0x0];
@@ -171,12 +182,6 @@ extern u8 gDebugTextColorR;
 extern u16 gDebugScreenWidth;
 extern int gDebugFixedWidthMode;
 extern u16* debugFrameBuffer;
-extern char sErrDSI;
-extern char sErrISI;
-extern char sErrFmtPC;
-extern char sErrFmtSP;
-extern char lbl_803DBC30;
-extern char lbl_803DBC34;
 extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
@@ -1246,10 +1251,10 @@ void errDisplayThreadMain(void)
                 debugPrintfxy(0xa0, 0x2a, strs + 0x170);
                 break;
             case 2:
-                debugPrintfxy(0xa0, 0x2a, &sErrDSI);
+                debugPrintfxy(0xa0, 0x2a, sErrDSI);
                 break;
             case 3:
-                debugPrintfxy(0xa0, 0x2a, &sErrISI);
+                debugPrintfxy(0xa0, 0x2a, sErrISI);
                 break;
             case 5:
                 debugPrintfxy(0xa0, 0x2a, strs + 0x180);
@@ -1279,8 +1284,8 @@ void errDisplayThreadMain(void)
                     h2++;
                 }
             }
-            debugPrintfxy(0x10, 0x3f, &sErrFmtPC, *(u32*)(gErrContext + 0x198));
-            debugPrintfxy(0x10, 0x4b, &sErrFmtSP, *(u32*)(gErrContext + 4));
+            debugPrintfxy(0x10, 0x3f, sErrFmtPC, *(u32*)(gErrContext + 0x198));
+            debugPrintfxy(0x10, 0x4b, sErrFmtSP, *(u32*)(gErrContext + 4));
             if (enableDebugText != 0)
             {
                 h = 0xe380;
@@ -1299,7 +1304,7 @@ void errDisplayThreadMain(void)
             n = 0;
             while (p != (u32*)0xffffffff && n++ != 8)
             {
-                debugPrintfxy(0x10, y, &lbl_803DBC30, p[1]);
+                debugPrintfxy(0x10, y, lbl_803DBC30, p[1]);
                 y += 0xc;
                 p = (u32*)*p;
             }
@@ -1378,7 +1383,7 @@ void errDisplayThreadMain(void)
             for (r = 0; (u8)r < 0x20; r += 8)
             {
                 rr = r & 0xff;
-                debugPrintfxy(0xc, y + 0xc, &lbl_803DBC34, rr, rr + 7);
+                debugPrintfxy(0xc, y + 0xc, lbl_803DBC34, rr, rr + 7);
                 rp = gErrContext + rr * 4;
                 debugPrintfxy(0x10, y + 0x18, strs + 0x22c, *(u32*)(gErrContext + (u8)r * 4), *(u32*)(rp + 4),
                               *(u32*)(rp + 8), *(u32*)(rp + 0xc));

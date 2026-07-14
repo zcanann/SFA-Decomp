@@ -38,6 +38,13 @@
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
 
+u8 gGroundBaddieAngleSectorOffsets[8] = {1, 4, 4, 3, 3, 5, 5, 1};
+int lbl_803DBC90[2] = {0, 4};
+#pragma explicit_zero_data on
+f32 gGroundBaddieModelChainDesc[2] = {0};
+#pragma explicit_zero_data off
+u16 gGroundBaddieTriggerResponseSeq[4] = {0x4FD, 0x4FE, 0x4FF, 0};
+
 typedef struct
 {
     f32 speed;
@@ -73,9 +80,6 @@ extern void playerAddMoney(u8* player, int amount);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern u8 gGroundBaddieTargetSearchResult[];
-extern u8 gGroundBaddieAngleSectorOffsets[8];
-extern u16 gGroundBaddieTriggerResponseSeq[4];
-extern f32 gGroundBaddieModelChainDesc;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2748;
 extern f32 lbl_803E2754;
@@ -402,7 +406,7 @@ void sharpClawInit(int obj, u8* state)
         ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
         state[0x322] = z;
         ((GroundBaddieState*)state)->baddie.unk31C = fz2;
-        *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(&gGroundBaddieModelChainDesc, 1);
+        *(int*)(state + 0x36c) = (int)ObjModelChain_Alloc(gGroundBaddieModelChainDesc, 1);
         ObjModelChain_SetOrigin((ObjModelChain*)*(int*)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
         *(int*)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
         ObjModelChain_SetEnabled((ObjModelChain*)*(int*)(state + 0x36c), 1);

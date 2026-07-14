@@ -33,6 +33,8 @@
 #include "main/object_transform.h"
 #include "main/player_control_interface.h"
 
+u32 lbl_803DB9E0 = 0x41C80000;
+
 typedef struct Dll19Placement
 {
     u8 pad0[0x22 - 0x0];

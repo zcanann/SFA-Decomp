@@ -23,6 +23,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_0041_warpstoneui.h"
 
+int lbl_803DBBF8 = 0x140;
+int lbl_803DBBFC = 0x136;
+int lbl_803DBC00 = 0x10E;
+int lbl_803DBC04 = 0x140;
+
 /* texture assets loaded by WarpstoneUI_initialise (A -> lbl_803DD984, B -> lbl_803DD980) */
 #define WARPSTONEUI_TEXTURE_A 0x4FA
 #define WARPSTONEUI_TEXTURE_B 0x5E3

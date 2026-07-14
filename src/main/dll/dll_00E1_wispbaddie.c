@@ -22,6 +22,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/frame_timing.h"
 #include "main/camera_shake_api.h"
+
+int lbl_803DBC80[2] = {2, 3};
 #define WISPBADDIE_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -52,7 +54,6 @@ __declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F4 = 0.9f;
 __declspec(section ".sdata2") f32 lbl_803E26F8 = 2.1f;
 __declspec(section ".sdata2") f32 lbl_803E26FC = -2.1f;
-extern int lbl_803DBC80;
 extern int gWispBaddieLastSegmentEnd;
 
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
@@ -152,7 +153,7 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
     done = Curve_AdvanceAlongPath(curve, state->hitRadius * wave);
     if (((done != 0) || (curve->atSegmentEnd != gWispBaddieLastSegmentEnd)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4, &lbl_803DBC80, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E26E4, lbl_803DBC80, -1) != 0))
     {
         state->flags = state->flags & ~WISPBADDIE_FLAG_PATH_NEEDS_LINK;
     }
@@ -341,7 +342,7 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
             memset((void*)state->curve, 0, 0x108);
         }
         if ((*gRomCurveInterface)
-                ->initCurve((void*)state->curve, (void*)obj, state->triggerDistance, &lbl_803DBC80, -1) == 0)
+                ->initCurve((void*)state->curve, (void*)obj, state->triggerDistance, lbl_803DBC80, -1) == 0)
         {
             state->flags = (u8)(state->flags | WISPBADDIE_FLAG_PATH_NEEDS_LINK);
         }

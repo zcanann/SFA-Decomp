@@ -24,6 +24,9 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_0053_cameramodecloudrunner.h"
 
+f32 lbl_803DB9D0 = 15.0f;
+int lbl_803DB9D4 = -4;
+
 /* curve-node tag selecting the matrix-based base point in update() */
 #define CLOUDRUNNER_CURVE_TAG 1049
 

@@ -28,6 +28,10 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 
+int lbl_803DBCB8[2] = {2, 3};
+u8 gMagicPlantSeqEntryTable[8] = {1, 1, 3, 2, 0, 0, 0, 0};
+int lbl_803DBCC8[2] = {2, 3};
+
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
 /* DLL-id of the object spawned by fn_80153640 (generic spawn; no cache field /
@@ -54,7 +58,6 @@ extern f32 lbl_803E28C0;
 extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
-extern int lbl_803DBCB8;
 extern f32 lbl_803E28A0;
 extern f32 lbl_803E28A4;
 extern f32 lbl_803E28A8;
@@ -81,8 +84,6 @@ extern f32 lbl_803E294C;
 extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
-extern u8 gMagicPlantSeqEntryTable[8];
-extern int lbl_803DBCC8;
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))
@@ -173,7 +174,7 @@ void fn_80153040(GameObject* obj, int state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, &lbl_803DBCB8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
@@ -234,7 +235,7 @@ void fn_80153248(GameObject* obj, int state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, &lbl_803DBCB8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E28B8, lbl_803DBCB8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
@@ -652,7 +653,7 @@ void fn_80153E0C(GameObject* obj, int state)
             if ((*gRomCurveInterface)->goNextPoint(curve) != 0)
             {
                 if ((*gRomCurveInterface)
-                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950, &lbl_803DBCC8, -1) != 0)
+                        ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E2950, lbl_803DBCC8, -1) != 0)
                 {
                     ((BaddieState*)state)->controlFlags =
                         ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;

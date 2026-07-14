@@ -25,6 +25,15 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_004D_cameramodenpcspeak.h"
 
+f32 lbl_803DB9A8 = 30.0f;
+f32 lbl_803DB9AC = 30.0f;
+f32 lbl_803DB9B0 = 0.2f;
+f32 lbl_803DB9B4 = 0.2f;
+f32 lbl_803DB9B8 = 4.0f;
+int lbl_803DB9BC = 10000;
+f32 lbl_803DB9C0 = 2.0f;
+f32 lbl_803DB9C4 = 0.09f;
+
 extern CameraModeNpcSpeakState* gCamNpcSpeakState;
 extern f32 gCamNpcSpeakPi;
 extern f32 gCamNpcSpeakAngleToRadDivisor;

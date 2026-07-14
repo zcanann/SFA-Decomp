@@ -37,6 +37,8 @@
 #include "main/obj_group.h"
 #include "main/mm.h"
 #include "string.h"
+
+int lbl_803DBC70[2] = {2, 3};
 #define HAGABON_HIT_VOLUME_SLOT 10
 
 /* object group this object belongs to */
@@ -88,7 +90,6 @@ extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
-extern int lbl_803DBC70;
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -121,7 +122,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
 
     if (((Curve_AdvanceAlongPath(curve, state->curveStep) != 0) || (*(int*)(curve + 0x10) != *(int*)&lbl_803DDA58)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608, &lbl_803DBC70, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2608, lbl_803DBC70, -1) != 0))
     {
         *flags &= ~HAGABON_FLAG_PATH_NEEDS_LINK;
     }
@@ -263,7 +264,7 @@ void Hagabon_init(GameObject* obj, int data, int skip_alloc)
         {
             memset(*(void**)&state->curve, 0, 0x108);
         }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, &lbl_803DBC70, -1) ==
+        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC70, -1) ==
             0)
         {
             state->flags |= HAGABON_FLAG_PATH_NEEDS_LINK;

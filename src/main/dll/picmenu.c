@@ -27,6 +27,8 @@
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
 
+char sPicMenuThpMagic[] = "THP";
+
 #define THP_VERSION_1_0 0x10000
 
 /* per-frame component kinds in THPHeader::mCompInfoDataOffsets table */
@@ -38,7 +40,6 @@ enum
 
 extern char lbl_803A57C0[0x50C];
 extern char gPicMenuDvdReadBuffer[0x40];
-extern char sPicMenuThpMagic;
 extern f32 gPicMenuMaxVolume;
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
@@ -111,7 +112,7 @@ BOOL movieLoad(const char* fileName, void* onMemory)
     memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->header, gPicMenuDvdReadBuffer,
            sizeof(((AttractMoviePlayer*)&lbl_803A5D60)->header));
 
-    if (strcmp(((AttractMoviePlayer*)&lbl_803A5D60)->header.mMagic, &sPicMenuThpMagic) != 0)
+    if (strcmp(((AttractMoviePlayer*)&lbl_803A5D60)->header.mMagic, sPicMenuThpMagic) != 0)
     {
         DVDClose((DVDFileInfo*)&lbl_803A5D60);
         return 0;

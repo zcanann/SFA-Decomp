@@ -52,6 +52,11 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 
+s8 lbl_803DBC08 = -1;
+s8 lbl_803DBC09 = -1;
+u16 lbl_803DBC0A = 0x35;
+f32 lbl_803DBC0C = 0.01f;
+
 #define TITLE_SCREEN_TEXTURE_COUNT 19
 
 /* Env-fx id activated on title-screen setup (getEnvfxAct 3rd arg) */

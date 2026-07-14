@@ -40,6 +40,23 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/savegame.h"
 
+u16 gSaveSelectSlotTextIds[4] = {0x23, 0x24, 0x25, 0};
+u8 gSaveSelectInfoTextIds[3] = {0x21, 0x20, 0x1F};
+s8 gSaveSelectPanelIndex = -1;
+#pragma explicit_zero_data on
+int gSaveSelectInfoStartSlot = 0;
+int lbl_803DBA00 = 0;
+#pragma explicit_zero_data off
+s16 gSaveSelectTextureIds[4] = {0x31D, 0x31F, 0x31E, 0};
+char sFrontendCompletionPercentFormat[] = "%1d%";
+char sFrontendSingleDigitFormat[] = "%1d";
+char sFrontendFoxName[] = "FOX";
+char sFrontendStringFormat[] = "%s";
+#pragma explicit_zero_data on
+char lbl_803DBA20[4] = "";
+#pragma explicit_zero_data off
+char sFrontendPercentFormat[] = "%d%";
+
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
 
@@ -73,7 +90,6 @@ typedef struct SaveSelectPanel
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
 
-extern s8 gSaveSelectPanelIndex;
 extern u8 lbl_803DB424;
 extern s8 saveFileSelect_currentSlotIndex;
 extern u8 saveFileSelect_saveDirty;
@@ -99,19 +115,12 @@ extern void* lbl_8031A804[4];
 void* lbl_803A8680[4];
 extern SaveSelectPanel gSaveSelectPanels[];
 extern u8 lbl_8031A7F8[];
-extern s16 gSaveSelectTextureIds;
 void saveSelectGoToChapterSelect(void);
 
 void* gSaveSelectTextBuffers[SAVE_SELECT_TEXT_BUFFER_COUNT];
 extern FrontendSaveSlot* saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot* saveFileSelect_saveSlots;
-extern int gSaveSelectInfoStartSlot;
-extern char sFrontendStringFormat;
-extern char lbl_803DBA20;
 extern void gameTextBoxFn_80134d40(u8 a, u8 b, int c);
-extern u8 gSaveSelectInfoTextIds;
-extern u16 gSaveSelectSlotTextIds[4];
-extern char sFrontendPercentFormat;
 extern f32 lbl_803E1D64;
 extern f32 lbl_803E1D68;
 extern f32 lbl_803E1D6C;
@@ -121,7 +130,6 @@ extern void* memcpy(void* dst, void* src, int n);
 extern void saveSetOverrideHealth(int arg);
 extern TitleMenuControl* gMapEventInterface;
 extern void* lbl_803DD498;
-extern char sFrontendFoxName;
 char sSaveGameBinPathFormat[] = "/savegame/save%d.bin";
 
 #pragma dont_inline on
@@ -351,7 +359,7 @@ void saveSelectFn_8011a70c(void)
         };
         for (i = gSaveSelectInfoStartSlot; i < 3; i++)
         {
-            sprintf(((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].name, &sFrontendStringFormat, &lbl_803DBA20);
+            sprintf(((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].name, sFrontendStringFormat, lbl_803DBA20);
             ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f5 = 0;
             ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f6 = 0;
             ((struct SaveSlotRec*)saveFileSelect_saveSlots)[i].f4 = 0;
@@ -500,7 +508,7 @@ void SaveSelectScreen_render(int param)
             slotCount++;
         }
         i = 0;
-        strs = &gSaveSelectInfoTextIds + (u8)(3 - slotCount);
+        strs = gSaveSelectInfoTextIds + (u8)(3 - slotCount);
         off = 0;
         while (i < slotCount)
         {
@@ -529,7 +537,7 @@ void SaveSelectScreen_render(int param)
             ptrs = gSaveSelectSlotTextIds;
             for (i = 0; i < 3; i++)
             {
-                sprintf(arr[i], &sFrontendPercentFormat, saveFileSelect_saveSlots[i].completionPercent);
+                sprintf(arr[i], sFrontendPercentFormat, saveFileSelect_saveSlots[i].completionPercent);
                 gameTextSetColorU8(0xff, 0xff, 0xff, alpha);
                 gameTextAppendStr(arr[i], ptrs[i]);
             }
@@ -617,7 +625,7 @@ int SaveSelectScreen_run(void)
                 Music_Trigger(MUSICTRIG_windydocks, 0);
                 if (lbl_803DD6C4 != 0)
                 {
-                    gplayNewGame(&sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
+                    gplayNewGame(sFrontendFoxName, *(u8*)&saveFileSelect_currentSlotIndex);
                     ((void (**)(int))gMapEventInterface->vtable)[30](1);
                     flagPtr = (s8*)((int (**)(void))gMapEventInterface->vtable)[36]();
                     flagPtr[0xe] = -1;
@@ -748,7 +756,7 @@ void SaveSelectScreen_initialise(void)
 
     for (i = 0; i < 4; i++)
     {
-        lbl_803A8680[i] = textureLoadAsset((&gSaveSelectTextureIds)[i]);
+        lbl_803A8680[i] = textureLoadAsset(gSaveSelectTextureIds[i]);
     }
 
     if (getUiDllFn_80014930() != 6)

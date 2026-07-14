@@ -18,6 +18,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 
+f32 gCamForceBehindOrbitRadius = 40.0f;
+
 extern f32 gCamForceBehindPi;                 /* binary-angle -> radians scale (numerator) */
 extern f32 gCamForceBehindBamsToRadDivisor;   /* binary-angle -> radians divisor (half-circle = 0x8000) */
 extern f32 gCamForceBehindHeightOffset;       /* camera height offset above the target */

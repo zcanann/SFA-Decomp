@@ -39,6 +39,26 @@
 #include "main/minimap_api.h"
 #include "main/textrender_api.h"
 #include "main/pause_menu_api.h"
+
+u8 gMinimapEnabled = 1;
+s8 gMinimapSavedViewMode = -1;
+f32 gMinimapZoom = 1.0f;
+f32 gMinimapMinZoom = 0.3f;
+f32 gMinimapMaxZoom = 2.0f;
+int gMinimapBoxWidth = 120;
+int gMinimapBoxHeight = 100;
+#pragma explicit_zero_data on
+GameObject* lbl_803DBBC8[2] = {0};
+#pragma explicit_zero_data off
+s16 gMinimapRegionMinX = 0x7FFF;
+s16 gMinimapRegionMinZ = 0x7FFF;
+f32 gMinimapZoomInRate = 0.995f;
+f32 gMinimapZoomOutRate = 1.001f;
+f32 gMinimapZoomStepMin = 0.952f;
+f32 gMinimapZoomStepMax = 1.05f;
+f32 gMinimapZoomStep = 1.0f;
+int gMinimapPrevAreaNameId = -1;
+f32 gMinimapWorldToTexScale = 0.08f;
 void Sfx_PlayFromObject(int obj, int id);
 void Sfx_StopFromObject(u32 obj, u32 sfxId);
 

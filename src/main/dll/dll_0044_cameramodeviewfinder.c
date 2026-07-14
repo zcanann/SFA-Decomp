@@ -39,6 +39,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+char sCam5BYDebugFormat[] = "y=%f\n";
+
 #define PAD_BUTTON_B  0x200
 #define PAD_TRIGGER_Z 0x010
 
@@ -63,7 +65,6 @@ typedef struct CameraModeViewfinderInitArgs
 
 
 extern void firstPersonZoomOutOnExit(int a, int b);
-extern char sCam5BYDebugFormat;
 extern void* memset(void* dst, int v, int n);
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E17C0;
@@ -482,7 +483,7 @@ void CameraModeViewfinder_update(s16* obj)
         ((GameObject*)obj)->anim.worldPosZ = lbl_803DD548->posZCurve.end;
         (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0);
     }
-    logPrintf(&sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
+    logPrintf(sCam5BYDebugFormat, ((GameObject*)obj)->anim.worldPosY);
     Obj_TransformWorldPointToLocal(((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                                    ((GameObject*)obj)->anim.worldPosZ, (f32*)(obj + 6), (f32*)(obj + 8),
                                    (f32*)(obj + 10), *(int*)&((GameObject*)obj)->anim.parent);

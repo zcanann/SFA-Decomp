@@ -42,6 +42,10 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+int lbl_803DBCA8[2] = {2, 3};
+f32 lbl_803DBCB0 = 0.018f;
+f32 lbl_803DBCB4 = 240.0f;
+
 /* gcRobotPatrol (fn_80152B90): periodically dropped object; parented back to
  * the dropper via +0xC4 and announced with SFX 0x249. */
 #define SEQOBJ11E_GCROBOT_DROP_OBJ 0x6b5
@@ -114,7 +118,6 @@ __declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
  * landing sfx, light-pulse fx, child spark spawn. */
 
 
-extern u8 lbl_803DBCA8;
 extern int fn_801A0174(int* obj);
 extern void fn_8014CF7C(void* p1, void* p2, f32 f1, f32 f2, int p5, int p6);
 extern void fn_8014D08C(GameObject* p1, void* p2, int p3, f32 f1, int p5, int p6);

@@ -44,6 +44,11 @@
 #include "main/model_light.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+int lbl_803DBC58[2] = {2, 3};
+f32 lbl_803DBC60 = 20.0f;
+f32 lbl_803DBC64 = 20.0f;
+f32 lbl_803DBC68 = 2.3509887e-38f;
+
 typedef struct BaddieAfterUpdateBonesCbState
 {
     u8 pad0[0x2B0 - 0x0];
@@ -860,7 +865,6 @@ f32 sidekickToy_accelerateTowardTarget3D(GameObject* obj, f32 tx, f32 ty, f32 tz
  * the 0x2000 bit based on the u8 result. */
 void sidekickToy_updateCurveTargetLatch(GameObject* obj)
 {
-    extern u8 lbl_803DBC58;
     u8* state = (obj)->extra;
     u8* data = *(u8**)state;
     if ((((EnemyState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
@@ -1917,7 +1921,6 @@ void enemy_update(int obj)
 
 void enemy_init(GameObject* obj, u8* setup, int flag)
 {
-    extern f32 lbl_803DBC58;
     u8* state = (obj)->extra;
     f32 fz;
 

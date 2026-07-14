@@ -56,6 +56,23 @@
 #include "main/gamebit_ids.h"
 #include "main/camera_shake_api.h"
 
+f32 lbl_803DBCE0 = 0.7f;
+f32 lbl_803DBCE4 = 2.0f;
+f32 lbl_803DBCE8 = 110.0f;
+f32 lbl_803DBCEC = 2.0f;
+int lbl_803DBCF0[2] = {2, 3};
+int lbl_803DBCF8[2] = {2, 3};
+u8 lbl_803DBD00[8] = {0, 0, 0, 0, 0, 0, 0, 6};
+u8 lbl_803DBD08[8] = {0, 0, 0, 0, 0, 0, 0, 6};
+u8 lbl_803DBD10[8] = {0, 0, 0, 0, 0, 0, 0, 6};
+u8 lbl_803DBD18[8] = {0, 0, 0, 0, 0, 0, 0, 6};
+u8 lbl_803DBD20[8] = {0, 0, 0, 0, 0, 0, 0, 5};
+u8 gSnowwormSeqIndexReset[4] = {2, 2, 0, 0};
+u8 gSnowwormSeqIndexMax[4] = {0xD, 7, 0, 0};
+u8 lbl_803DBD30[4] = {0x3C, 0xB4, 0, 0};
+u8 lbl_803DBD34[4] = {3, 5, 9, 0xB};
+u8 lbl_803DBD38[8] = {3, 5, 3, 5, 0, 0, 0, 0};
+
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
 #define FIRECRAWLER_OBJFLAG_RENDERED     0x800
@@ -147,9 +164,6 @@ extern f32 lbl_803E2CA8;
 extern f32 lbl_803E2B84;
 extern f32 lbl_803E2B88;
 extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern u8 gSnowwormSeqIndexReset[4];
-extern u8 gSnowwormSeqIndexMax[4];
-extern u8 lbl_803DBD30[4];
 extern f32 lbl_803E2B2C;
 extern f32 lbl_803E2B28;
 extern f32 lbl_803E2B34;
@@ -186,7 +200,6 @@ extern f32 gCrawlerHitSfxTimer;
 extern f32 lbl_803E2BAC;
 extern f32 lbl_803E2BB0;
 extern f32 lbl_803E2BB4;
-extern char lbl_803DBCF0;
 
 extern u8 gCrawlerSpeedThresholds[];
 extern f32 lbl_803E2BA0;
@@ -206,7 +219,6 @@ extern f32 lbl_803E2C5C;
 extern f32 lbl_803E2C60;
 extern f32 lbl_803E2C64;
 extern f32 lbl_803E2C68;
-extern char lbl_803DBCF8;
 extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
 /*
@@ -439,13 +451,6 @@ u8 lbl_8031FC00[0x18] = {0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x19, 0x00, 0
 u8 lbl_8031FC18[0x14] = {0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00,
                          0x00, 0x09, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x0b};
 
-extern u8 lbl_803DBD00[];
-extern u8 lbl_803DBD08[];
-extern u8 lbl_803DBD10[];
-extern u8 lbl_803DBD18[];
-extern u8 lbl_803DBD20[];
-extern u8 lbl_803DBD34[];
-extern u8 lbl_803DBD38[];
 
 void* gCrawlerModelChainIds[] = {
     lbl_803DBD00, lbl_803DBD08, lbl_803DBD10, lbl_803DBD18, lbl_803DBD20,

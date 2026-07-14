@@ -45,6 +45,8 @@
 #include "main/dll/objfsa.h"
 #include "main/frame_timing.h"
 
+int lbl_803DBCD8[2] = {2, 3};
+
 /*
  * DusterState - file-local overlay naming the PER-FAMILY scratch that
  * baddie_state.h leaves raw for the duster creatures. phaseTimer/decoyTimer
@@ -81,7 +83,6 @@ typedef struct DusterState
 
 #pragma dont_inline on
 
-extern char lbl_803DBCD8;
 extern f32 gDusterWallProbeOffsets[];
 extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;

@@ -21,6 +21,8 @@
 #include "main/audio/music_api.h"
 #include "main/dll/dll_0057_cameramodetitle.h"
 
+f32 titleScreenCamProgress = 1.0f;
+
 /* title-screen music tracks crossfaded as pose 4 is entered/left */
 #define MUSIC_TITLE_TRACK_A 0xbe
 #define MUSIC_TITLE_TRACK_B 0xc1

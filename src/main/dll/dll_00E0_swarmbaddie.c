@@ -31,6 +31,8 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00E0_swarmbaddie.h"
 
+int lbl_803DBC78[2] = {2, 3};
+
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
 STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
@@ -68,7 +70,6 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
-extern int lbl_803DBC78;
 extern int gSwarmBaddieLastCurvePoint;
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
@@ -81,7 +82,7 @@ void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
     done = Curve_AdvanceAlongPath(&curve->curve, state->curveStep);
     if (((done != 0) || (curve->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678, &lbl_803DBC78, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678, lbl_803DBC78, -1) != 0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
@@ -259,7 +260,7 @@ void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
         {
             memset(state->curve, 0, 0x108);
         }
-        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, &lbl_803DBC78, -1) ==
+        if ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, state->chaseRadius, lbl_803DBC78, -1) ==
             0)
         {
             *(u8*)&state->flags |= SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
