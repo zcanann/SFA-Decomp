@@ -476,3 +476,17 @@ association/dest-targeting condition. Disassemble the band (capstone one-shot as
 0x4d0ea0/0x435f14), identify the (base+idx)+const vs (idx+const)+base branch, and map its
 guard to an IR/type property expressible in source. Signed-int cast eliminated (same
 reassociation) - the cast-kind space is fully exhausted.
+
+## Emitter band decoded one level: depth-driven subtree order; association set by the FOLDER
+0x4c0f00-region = recursive node-kind-dispatched (jump table 0x5b09f0) MAX-depth walker
+(Sethi-Ullman style) - the emitter evaluates the DEEPER subtree first. Hence:
+- target tree ((base + idx*40) + 12288) emits add-then-addi (deep left first) = accumulate;
+- our trees are pre-folded to ((idx*40 + 12288) + base) by the constant folder, yielding
+  addi-then-add. The association battle is therefore at PARSE/FOLD time, not emission.
+- Also proven: the two-statement wgB form can never color both instructions into r21
+  (a short chain cannot earn a saved register - validated volatile rule), so the target's
+  form IS a single expression whose (int + int) addends were NOT folded.
+NEXT (tiny-probe fold survey): enumerate 2-line probes of every pointer/int node
+combination checking which prevents (idx*stride + const) folding - the survivor is the
+original's expression form and closes walkgroup site-1/tail AND probably func1C's
+materialization direction in one stroke.
