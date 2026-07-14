@@ -4854,28 +4854,29 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode
 
 void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
 {
-    RomCurveNode* node;
     RomCurveNode* prev;
+    RomCurveNode* fromNode;
+    RomCurveNode* toNode;
     int found;
     int i;
     int mask;
     int val;
     f32 thr;
 
-    node = NULL;
+    fromNode = NULL;
     if (t < state->fromTime)
     {
-        node = (RomCurveNode*)(*gRomCurveInterface)->getById(state->fromNodeId);
+        fromNode = (RomCurveNode*)(*gRomCurveInterface)->getById(state->fromNodeId);
     }
-    if (node != NULL)
+    if (fromNode != NULL)
     {
         while (t < (thr = state->fromTime))
         {
             mask = 1;
             for (i = 0; i < 4; i++)
             {
-                val = node->links[i];
-                if (val > -1 && (node->directionMask & mask) != 0)
+                val = fromNode->links[i];
+                if (val > -1 && (fromNode->directionMask & mask) != 0)
                 {
                     found = val;
                     i = 5;
@@ -4891,13 +4892,13 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
             }
             state->toNodeId = state->fromNodeId;
             state->fromNodeId = found;
-            prev = node;
-            node = (RomCurveNode*)(*gRomCurveInterface)->getById(state->fromNodeId);
-            RomCurveInterp_BuildSegmentTimeTable(state, node, prev, state->fromTime, 1);
+            prev = fromNode;
+            fromNode = (RomCurveNode*)(*gRomCurveInterface)->getById(state->fromNodeId);
+            RomCurveInterp_BuildSegmentTimeTable(state, fromNode, prev, state->fromTime, 1);
         }
     }
-    node = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
-    if (node == NULL)
+    toNode = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
+    if (toNode == NULL)
     {
         return;
     }
@@ -4906,8 +4907,8 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
         mask = 1;
         for (i = 0; i < 4; i++)
         {
-            val = node->links[i];
-            if (val > -1 && (node->directionMask & mask) == 0)
+            val = toNode->links[i];
+            if (val > -1 && (toNode->directionMask & mask) == 0)
             {
                 found = val;
                 i = 5;
@@ -4923,9 +4924,9 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState* state, f32 t)
         }
         state->fromNodeId = state->toNodeId;
         state->toNodeId = found;
-        prev = node;
-        node = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
-        RomCurveInterp_BuildSegmentTimeTable(state, prev, node, state->toTime, 0);
+        prev = toNode;
+        toNode = (RomCurveNode*)(*gRomCurveInterface)->getById(state->toNodeId);
+        RomCurveInterp_BuildSegmentTimeTable(state, prev, toNode, state->toTime, 0);
     }
 }
 
