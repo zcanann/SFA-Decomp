@@ -19,6 +19,7 @@
 #include "main/hud_visibility_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_position_api.h"
 #include "main/shader_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/dll/genpropswgpipe_struct.h"
@@ -432,8 +433,6 @@ void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 flag2, int unused)
 
 
 
-extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
-
 extern s16 sStaffSwipeTextureIdTable[4];
 extern s16* gStaffSwipeTextureIds;
 extern void* textureLoad(int texId, u8 flag);
@@ -635,8 +634,8 @@ void staff_hitDetectGeometry(int* obj)
         }
         if (idx == 14)
         {
-            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
-                                         SFXTRIG_foot_water_walk_1);
+            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, hitState->contactPosX, hitState->contactPosY,
+                                                       hitState->contactPosZ, SFXTRIG_foot_water_walk_1);
             (*gWaterfxInterface)
                 ->spawnSplashBurst(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
                                    lbl_803E32B4);
@@ -656,8 +655,8 @@ void staff_hitDetectGeometry(int* obj)
             ((void (*)(int, int, void*, int, int, u8*))(*(int**)gStaffSwipeResource)[1])(
                 OBJHITREACT_HIT_EFFECT_PARENT_NONE, OBJHITREACT_HIT_EFFECT_MODE, &v, OBJHITREACT_HIT_EFFECT_SPAWN_FLAGS,
                 OBJHITREACT_HIT_EFFECT_NO_SOURCE, (u8*)&tbl + (((u8*)lbl_803208E8)[idx] << 4));
-            Sfx_PlayAtPositionFromObject(obj, hitState->contactPosX, hitState->contactPosY, hitState->contactPosZ,
-                                         (u16)((s16*)lbl_803208A0)[idx]);
+            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, hitState->contactPosX, hitState->contactPosY,
+                                                       hitState->contactPosZ, (u16)((s16*)lbl_803208A0)[idx]);
         }
     }
 }
