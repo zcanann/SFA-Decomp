@@ -13,6 +13,7 @@
 #include "main/object.h"
 #include "main/gamebit_ids.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
@@ -60,7 +61,6 @@ extern f32 gQueenEarthWalkerAttackTimerMin;
 extern f32 gQueenEarthWalkerAttackTimerMax;
 
 extern int fn_8003B228(GameObject* obj, void* p2);
-extern int playerHasSpell(GameObject* obj, int param);
 
 s16 gQueenEarthWalkerMoveTable[6] = {34, 34, 34, 5, 28, 0};
 f32 gQueenEarthWalkerMoveSpeedTable[5] = {0.005f, 0.005f, 0.005f, 0.01f, 0.005f};

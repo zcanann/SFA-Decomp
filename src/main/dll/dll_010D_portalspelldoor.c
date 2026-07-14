@@ -88,9 +88,6 @@ extern void FireFlyLantern_init(GameObject*);
 extern void dll_109_initialise_nop(void);
 extern void Fall_Ladders_initialise(void);
 
-extern int playerHasSpell(GameObject* obj, int spell);
-extern void playerCancelSpell(int player, int v);
-
 int PortalSpellDoor_getExtraSize(void)
 {
     return 0x10;
@@ -142,7 +139,7 @@ void PortalSpellDoor_update(GameObject* obj)
         obj->anim.flags |= OBJANIM_FLAG_HIDDEN;
         if (objGetAnimState80A((GameObject*)(player)) == 0x5bd)
         {
-            playerCancelSpell(player, -1);
+            playerCancelSpell((GameObject*)player, -1);
         }
         mainSetBits(((PortalspelldoorPlacement*)p4c)->openedGameBit, 1);
     }

@@ -19,6 +19,7 @@
 #include "main/map_load.h"
 #include "main/debug.h"
 #include "main/object_api.h"
+#include "main/dll/player_api.h"
 #include "main/render.h"
 #include "main/dll/SC/SClantern.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
@@ -98,7 +99,6 @@ extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
-extern int playerHasSpell(GameObject* obj, int spell);
 extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";

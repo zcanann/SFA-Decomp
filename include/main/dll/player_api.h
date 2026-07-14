@@ -16,10 +16,13 @@ int fn_802969F0(GameObject* player);
 void fn_80296A9C(GameObject* player, int delta);
 GameObject* playerGetFocusObject(GameObject* player);
 int playerGetMoney(void* player);
+int playerHasSpell(GameObject* obj, int spell);
 int playerIsDisguised(GameObject* obj);
 void playerAddMoney(GameObject* obj, int amount);
 void playerAddHealth(GameObject* obj, int amount);
 void playerAddRemoveMagic(GameObject* obj, int amount);
+void playerCancelSpell(GameObject* obj, int spell);
+void playerHeal(GameObject* obj);
 int playerGetTimeScale(GameObject* obj, f32* out);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */

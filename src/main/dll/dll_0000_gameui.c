@@ -304,7 +304,6 @@ extern int hintTextMapFn_800ea264(void);
 extern u8 getCurTaskHintTextMap(void);
 extern void hintTextFn_800ea174(u8* buf);
 extern int fn_80296C4C(u8* player);
-extern void playerHeal(u8* player);
 extern u16* saveGameGetCurHint(void);
 extern void gameTextLoadForMap_800571f0(int v);
 extern u8 pauseDisabled;

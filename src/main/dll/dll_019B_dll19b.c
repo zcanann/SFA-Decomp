@@ -9,6 +9,7 @@
 #include "main/debug.h"
 extern int getEnvfxAct(int a, int b, u16 idx, int d);
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"
@@ -34,7 +35,6 @@ extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 extern void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
-extern void playerCancelSpell(int obj, int a);
 char sShrineTimeFormat[] = "time %d\n";
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
@@ -350,7 +350,7 @@ void dll_19B_update(int obj)
             }
             else
             {
-                playerCancelSpell(player, -1);
+                playerCancelSpell((GameObject*)player, -1);
                 mainSetBits(0x126, 0);
                 (*(void (**)(int, int, int, int, int))(*(int*)gTitleMenuControlInterface + 0x18))(
                     3, 0x2a, 0x50, st->brightnessB & 0xff, 0);
