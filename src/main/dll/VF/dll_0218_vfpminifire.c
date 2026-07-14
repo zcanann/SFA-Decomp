@@ -11,6 +11,7 @@
  * itself once it falls past the floor.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/object.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
@@ -35,7 +36,6 @@
 #define VFPMINIFIRE_SPAWN(obj, id, args, flags)                                                                        \
     (*gPartfxInterface)->spawnObject((void*)(obj), (id), (args), (flags), -1, NULL)
 
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int VFP_MiniFire_getExtraSize(void)
 {
@@ -78,7 +78,7 @@ void VFP_MiniFire_update(GameObject* obj)
 
     if (0.0f == state->baseY)
     {
-        hitDetectFn_800658a4((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, (f32*)state,
+        hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, (f32*)state,
                              0);
         state->baseY = (obj)->anim.localPosY - state->baseY;
     }

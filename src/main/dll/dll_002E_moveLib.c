@@ -18,6 +18,7 @@
  * +0x601 (needs-reinit), +0x610 (point count), +0x611 (mode bits).
  */
 #include "main/camera_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
@@ -90,7 +91,6 @@ extern void n_rareware_initialise(void);
 
 extern int objAnimFn_80115650();
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern void normalize(f32* x, f32* y, f32* z);
 
 f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const Vec* endTangent, int steps)
@@ -432,7 +432,7 @@ int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHerm
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, phase, rootOut);
     if (*flags & 1)
     {
-        if (hitDetectFn_800658a4((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &ground,
+        if (hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &ground,
                                  0) == 0)
         {
             (obj)->anim.localPosY -= ground;
@@ -556,7 +556,7 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
         obj->anim.localPosZ = target->z;
         if (*flags & 1)
         {
-            if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+            if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
                                      obj->anim.localPosZ, &ground, 0) == 0)
             {
                 obj->anim.localPosY -= ground;
@@ -570,7 +570,7 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
     obj->anim.velocityZ = dz * (speed * timeDelta);
     if (*flags & 1)
     {
-        if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+        if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
                                  obj->anim.localPosZ, &ground, 0) == 0)
         {
             obj->anim.localPosY -= ground;

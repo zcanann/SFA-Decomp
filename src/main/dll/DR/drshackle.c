@@ -17,6 +17,7 @@
 #define drshackle_updateSwingBlend drshackle_updateSwingBlend_owner_signature
 #define drshackle_updateAttachedPosition drshackle_updateAttachedPosition_owner_signature
 #include "main/dll/DR/DRshackle.h"
+#include "main/track_dolphin_api.h"
 #undef drshackle_updateSwingBlend
 #undef drshackle_updateAttachedPosition
 #include "main/game_object.h"
@@ -67,7 +68,6 @@ extern f32 lbl_803E5B70; /* -1.0f */
 extern f32 lbl_803E5B74; /* -0.05f */
 extern f32 lbl_803E5B78; /* 2.0f */
 extern int fn_801EC870(int p1, int p2);
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int drshackle_updateSwingBlend(GameObject* obj, int state)
 {
@@ -207,7 +207,7 @@ int drshackle_updateAttachedPosition(int obj, int state)
 
             if (s->floorAdjustFlag == 0)
             {
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, &floorOffset, 0);
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - floorOffset;
                 ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY + lbl_803E5B78;

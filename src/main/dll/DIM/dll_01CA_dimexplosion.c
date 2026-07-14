@@ -15,6 +15,7 @@
  *   explosion_initialise   - precompute the expf falloff scales
  */
 #include "main/dll/partfx_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/texture.h"
 #include "main/dll/explosiondebris_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -118,7 +119,6 @@ extern FbTexTbl gExplosionTexTable;
 extern f32 expf(f32 x);
 extern void GXSetCurrentMtx(u32 id);
 extern void fn_80073AAC(void* tex, u32* a, u32* b, int k);
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 volatile FbWGPipe GXWGFifo : (0xCC008000);
 
 void explosion_spawnFlame(GameObject* obj, u8 gen, f32 spd, f32 x, f32 y, f32 z);

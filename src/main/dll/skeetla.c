@@ -13,6 +13,7 @@
  * emits the contact-spark particles for the object Tricky is linked to.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/dll/objfsa_romcurve.h"
@@ -89,7 +90,6 @@ extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
-extern void hitDetectFn_800658a4(u8* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern void* fn_8004B118(void* search);
 extern void fn_8004B148(void* search);
 extern void fn_8004B31C(void* search, u32 route, int objId, int pathId, int routeFlags);
@@ -136,7 +136,7 @@ void trickyUpdateCollisionAndPathState(u8* obj)
 
     if (doGroundSnap != 0)
     {
-        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
+        hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.worldPosX, ((GameObject*)obj)->anim.worldPosY,
                              ((GameObject*)obj)->anim.worldPosZ, &hitOffsetY, 0);
         ((GameObject*)obj)->anim.localPosY -= hitOffsetY;
         state->heightUpdateActive = 0;

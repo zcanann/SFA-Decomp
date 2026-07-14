@@ -10,6 +10,7 @@
  * look-at and eye animation run through the shared dll_2E (moveLib) blocks.
  */
 #include "main/dll_000A_expgfx.h"
+#include "main/track_dolphin_api.h"
 #include "main/dll/DR/DRlaserturret.h"
 #include "main/dll/trex_lazerwall.h"
 #include "main/dll/dll_801e66dc.h"
@@ -91,7 +92,6 @@ extern f32 lbl_803E5A24;
 void fn_801E7DC8(GameObject* obj, int state, int count)
 {
     extern u8 Obj_IsLoadingLocked(void);
-    extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
     extern int Obj_AllocObjectSetup(int, int);
     extern void* Obj_SetupObject(int a, int b, int c, int d, int e);
     int i;
@@ -103,7 +103,7 @@ void fn_801E7DC8(GameObject* obj, int state, int count)
 
     (*gMapEventInterface)->setObjGroupStatus((s32)(obj)->anim.mapEventSlot, 6, 1);
 
-    hitDetectFn_800658a4((int)obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &groundHeight,
+    hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &groundHeight,
                          0);
 
     for (i = 0; i < count; i++)

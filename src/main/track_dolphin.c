@@ -1490,7 +1490,7 @@ int fn_80065684(int obj, f32 x, f32 y, f32 z, f32* outDepth, int kinds)
 }
 
 #pragma dont_inline on
-int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
+int hitDetectFn_800658a4(GameObject* obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag)
 {
     void** arr;
     int n;
@@ -1499,7 +1499,7 @@ int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32* outGroundY, int flag
     f32 best;
     f32 cur;
 
-    n = hitDetectFn_80065e50(obj, x, y, z, &arr, 0, flag);
+    n = hitDetectFn_80065e50((int)obj, x, y, z, &arr, 0, flag);
     if (n != 0)
     {
         cur = y - *(f32*)arr[0];

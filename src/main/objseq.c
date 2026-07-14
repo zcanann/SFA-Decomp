@@ -1,4 +1,5 @@
 #include "main/dll/partfx_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/asset_load.h"
 #include "main/game_timer_control_api.h"
 #include "main/vecmath_distance_api.h"
@@ -117,7 +118,6 @@ extern void Obj_GetWorldPosition(void* obj, f32* x, f32* y, f32* z);
 extern void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode);
 extern void ObjSeq_UpdateCurvePosition(u8* obj, u8* seq);
-extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flags);
 extern void ObjSeq_ApplyLinkedObjectTransform(u8* obj, u8* seqObj, u8* seq);
 extern void animatedObjFreeAndSavePlayerPos(u8* obj, u8* seqObj, u8* seq);
 extern long long OSGetTime(void);
@@ -609,7 +609,7 @@ void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src)
                 ObjSeq_UpdateCurvePosition(obj, seq);
             }
             if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
-                hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+                hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                      ((GameObject*)obj)->anim.localPosZ, groundY, 0) == 0)
             {
                 ((GameObject*)obj)->anim.localPosY =
@@ -3210,7 +3210,7 @@ int ObjSeq_update(u8* obj, f32 t)
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
         if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
-            hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+            hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, scratch, 0) == 0)
         {
             ((GameObject*)obj)->anim.localPosY =
@@ -3339,7 +3339,7 @@ void ObjSeq_SetupInitialPlaybackState(u8* obj, u8** seqObj, u8* seq, u8* sourceO
 
     ObjSeq_UpdateCurvePosition(obj, seq);
     if ((s8)((ObjSeqState*)seq)->groundSnapEnabled == 1 &&
-        hitDetectFn_800658a4(obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
+        hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                              ((GameObject*)obj)->anim.localPosZ, groundY, 0) == 0)
     {
         ((GameObject*)obj)->anim.localPosY =

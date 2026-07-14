@@ -14,6 +14,7 @@
  */
 
 #include "main/game_object.h"
+#include "main/track_dolphin_api.h"
 #include "main/objhits.h"
 #include "main/object_update_list.h"
 #include "main/frame_timing.h"
@@ -139,7 +140,6 @@ enum
 #define GUARDIAN_SFX_FLAP    0xe1
 #define GUARDIAN_SFX_CHATTER 0xdf
 
-extern int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32* out, int e);
 extern f32 lbl_803E4110;
 extern f32 lbl_803E4120;
 extern f32 lbl_803E4124;
@@ -357,7 +357,7 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
         {
             obj->unkF4 = -1;
         }
-        if (hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) ==
+        if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) ==
             0)
         {
             obj->anim.localPosY = obj->anim.localPosY - ground;
@@ -592,7 +592,7 @@ int cfguardian_updateMain(GameObject* obj)
                 }
                 obj->anim.localPosY =
                     obj->anim.velocityY * timeDelta + obj->anim.localPosY;
-                hitDetectFn_800658a4((int)obj, obj->anim.localPosX, obj->anim.localPosY,
+                hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
                                      obj->anim.localPosZ, &ground, 0);
                 obj->anim.rotX = (s16)((0xc0 << (obj->anim.rotX + 8)) >> 1);
                 ObjAnim_GetPriorityHitState(&obj->anim)->flags &= ~0x400;

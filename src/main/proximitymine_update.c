@@ -1,5 +1,6 @@
 /* ProximityMine_update - ProximityMine object update/render handlers [8021122C-802113F8) */
 #include "main/dll/partfx_interface.h"
+#include "main/track_dolphin_api.h"
 #include "main/proximitymine.h"
 #include "main/vecmath_distance_api.h"
 #include "main/maketex_timer_api.h"
@@ -42,7 +43,6 @@ extern f32 lbl_803E679C;
 extern void modelLightStruct_freeSlot(void* handle);
 extern void queueGlowRender(void* effect);
 extern void modelLightStruct_updateGlowAlpha(void* light);
-extern int hitDetectFn_800658a4(void* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 extern ProximityMineEffect* modelLightStruct_createPointLight(void* obj, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(void* light, int a, int b, int c, int d, u8 e, f32 f);
 extern void modelLightStruct_setPosition(void* light, f32 x, f32 y, f32 z);
@@ -172,7 +172,7 @@ void ProximityMine_update(ProximityMineObject* obj)
         {
             if (state->mode == PROXIMITYMINE_MODE_ARMED)
             {
-                hitDetectFn_800658a4(obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
+                hitDetectFn_800658a4((GameObject*)obj, obj->posX, obj->posY, obj->posZ, &groundY, 0);
                 obj->posY -= groundY;
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e6);
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_id_2e8);

@@ -12,6 +12,7 @@
  * bit3 = disabled/no-update, bit4 = affected by gravity+ground snap.
  */
 #include "main/object_render_legacy.h"
+#include "main/track_dolphin_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
@@ -109,7 +110,6 @@ extern const f32 lbl_803E3358;
 extern const f32 lbl_803E3378;
 extern const f32 lbl_803E337C;
 extern const f32 lbl_803E3380;
-extern int hitDetectFn_800658a4(int* obj, f32 x, f32 y, f32 z, f32* out, int flag);
 void fn_8016F260(int* obj, int* state, int* other);
 extern const f32 gFireballSpiralAmplitude;
 extern const f32 gFireballPi;
@@ -507,7 +507,7 @@ void Fireball_update(int* obj)
         {
             f32 ground;
             ((FireballState*)state)->posY -= lbl_803E3364 * timeDelta;
-            if (hitDetectFn_800658a4(obj, ((FireballState*)state)->posX, ((FireballState*)state)->posY,
+            if (hitDetectFn_800658a4((GameObject*)obj, ((FireballState*)state)->posX, ((FireballState*)state)->posY,
                                      ((FireballState*)state)->posZ, &ground, 0) == 0)
             {
                 ground -= lbl_803E3368;
