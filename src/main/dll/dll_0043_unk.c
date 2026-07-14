@@ -20,6 +20,7 @@
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/dll/CAM/pathcam.h"
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/dll/CAM/dll_0043_unk.h"
@@ -131,7 +132,6 @@ void CameraModeStaffAnim_copyToCurrent(void)
 #pragma dont_inline on
 void camclimb_update(CameraObject* cam)
 {
-    extern int camcontrol_samplePathState();
     u8 needsReset;
     u32 angle;
     int defaultHandler;
@@ -175,7 +175,7 @@ void camclimb_update(CameraObject* cam)
         }
         target = (GameObject*)cam->anim.targetObj;
         *(pYaddr = &localPosY) = cam->anim.localPosY;
-        needsReset = camcontrol_samplePathState(&localPosX, pYaddr, localPosZ, target, cam);
+        needsReset = (u8)camcontrol_samplePathState(&localPosX, pYaddr, localPosZ, target, cam);
         cam->anim.localPosX = localPosX;
         cam->anim.localPosZ = localPosZ[0];
         defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
