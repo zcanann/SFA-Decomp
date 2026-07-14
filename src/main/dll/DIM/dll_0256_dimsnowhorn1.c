@@ -1138,8 +1138,6 @@ void DIMSnowHorn1_hitDetect(void)
 
 void fn_802BB4B4(GameObject* obj, int frameStep, int slot)
 {
-    extern u32 getButtonsJustPressed(int port);
-    extern u32 getButtonsHeld(int port);
     DIMSnowHorn1State* state;
     int* viewSlot;
     int matchFrame;
