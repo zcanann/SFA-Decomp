@@ -13,6 +13,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/object_render.h"
 #include "main/objanim_update.h"
 #include "main/audio/sfx_ids.h"
@@ -32,8 +33,6 @@
 #define LAMP_SEQ_STATIC 0x3e4 /* seqId using the static rotX byte (no swing) */
 
 extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
-extern void Sfx_StopObjectChannel(int* obj, int channel);
-
 int Lamp_getExtraSize(void)
 {
     return 0x1;
@@ -41,7 +40,7 @@ int Lamp_getExtraSize(void)
 
 void Lamp_free(int* obj)
 {
-    Sfx_StopObjectChannel(obj, 0x40);
+    Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
@@ -105,7 +104,7 @@ void Lamp_update(int obj)
     }
     else if (distance >= 100.0f)
     {
-        Sfx_StopObjectChannel((int*)obj, 0x40);
+        Sfx_StopObjectChannelPtrLegacy(obj, 0x40);
     }
 
     if (((GameObject*)obj)->anim.seqId != LAMP_SEQ_STATIC)
