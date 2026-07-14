@@ -1068,7 +1068,10 @@ void mapScreenDrawHud(int p1, int p2, int p3)
                 {
                     TaskHintEntry* entry = gTaskHintTable;
                     if (taskCount >= entry[candidates[0]].thresh)
-                        tmp = (s8)gGameUiTaskHintCandidates[0];
+                    {
+                        u8* candidate = gGameUiTaskHintCandidates;
+                        tmp = (s8)*candidate++;
+                    }
                     else if (taskCount >= entry[candidates[1]].thresh)
                         tmp = (s8)gGameUiTaskHintCandidates[1];
                     else if (taskCount >= entry[candidates[2]].thresh)
@@ -1383,8 +1386,8 @@ void drawWorldMapHud(void)
                 TaskHintEntry* he = gTaskHintTable;
                 if (n >= he[base[0]].thresh)
                 {
-                    u8* q = gGameUiTaskHintCandidates;
-                    li_ = q[0];
+                    u8* candidate = gGameUiTaskHintCandidates;
+                    li_ = *candidate++;
                 }
                 else if (n >= he[base[1]].thresh)
                     li_ = gGameUiTaskHintCandidates[1];
