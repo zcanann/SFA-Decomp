@@ -2356,6 +2356,7 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     int best;
     int player;
     int o;
+    int* cursor;
     int i;
     int tmpB;
     int tmpA;
@@ -2432,19 +2433,19 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
     best = 0;
     bestD = lbl_803E62A8;
     objs = (int*)ObjGroup_GetObjects(c30, &cnt);
-    for (i = 0; i < cnt; i++)
+    for (i = 0, cursor = objs; i < cnt; i++)
     {
-        o = *objs;
+        o = *cursor;
         if ((u32)o != player)
         {
             ds = vec3f_distanceSquared((f32*)(player + 0x18), (f32*)(o + 0x18));
             if (ds > bestD)
             {
                 bestD = ds;
-                best = *objs;
+                best = *cursor;
             }
         }
-        objs++;
+        cursor++;
     }
     if ((u32)best != 0)
     {
