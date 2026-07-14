@@ -1794,7 +1794,6 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
 }
 
 extern f32 gObjJointMtxTemp[];
-extern void ObjModel_UpdateAnimMatrices(int* am, u8* m, int* obj, f32* mtx);
 extern void modelInitMtxs(u8* m, int* am);
 typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void GXSetTevKColor(int id, u32* color);
@@ -1827,7 +1826,7 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
         {
             if (gObjCachedModel != (u32)m)
             {
-                ObjModel_UpdateAnimMatrices(am, m, obj, gObjJointMtxTemp);
+                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, gObjJointMtxTemp);
                 modelInitMtxs(m, am);
             }
             else
@@ -1948,7 +1947,6 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-extern void modelInitBoneMtxs2(int* am, f32* wm, f32* out);
 f32 gObjBoneMtxBuffer[0xC00];
 extern void ObjModel_BlendVertexStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
 extern void ObjModel_BlendNormalStream(f32* mtxs, u8* p2, int p3, int p4, int p5);
@@ -2005,13 +2003,13 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
                 PSMTXIdentity(im);
-                ObjModel_UpdateAnimMatrices(am, m, obj, im);
-                modelInitBoneMtxs2(am, wm, gObjBoneMtxBuffer);
+                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, im);
+                modelInitBoneMtxs2IntLegacy(am, wm, gObjBoneMtxBuffer);
                 did = 1;
             }
             else
             {
-                ObjModel_UpdateAnimMatrices(am, m, obj, wm);
+                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, wm);
             }
             {
                 ObjShadowCb cb = *(ObjShadowCb*)((char*)obj + 0x108);
@@ -2221,8 +2219,6 @@ extern u8 lbl_803DCC35;
 extern u8 lbl_803DCC20;
 extern u8 lbl_803DCC3E;
 u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
-extern void modelInitBoneMtxs(int* am, f32* out);
-extern void model_multMtxs(int* am, f32* wm);
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
 
 #pragma opt_dead_assignments off
@@ -2330,20 +2326,20 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries != 0)
             {
                 PSMTXIdentity(im);
-                ObjModel_UpdateAnimMatrices(am, m, obj, im);
+                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, im);
                 if (m4 == 0)
                 {
-                    modelInitBoneMtxs2(am, wm, gObjBoneMtxBuffer);
+                    modelInitBoneMtxs2IntLegacy(am, wm, gObjBoneMtxBuffer);
                 }
                 else
                 {
-                    modelInitBoneMtxs(am, gObjBoneMtxBuffer);
+                    modelInitBoneMtxsIntLegacy(am, gObjBoneMtxBuffer);
                 }
                 did = 1;
             }
             else
             {
-                ObjModel_UpdateAnimMatrices(am, m, obj, wm);
+                ObjModel_UpdateAnimMatricesIntLegacy(am, m, obj, wm);
             }
             {
                 ObjShadowCb cb = *(ObjShadowCb*)((char*)obj + 0x108);
@@ -2431,7 +2427,7 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
         if (did != 0)
         {
-            model_multMtxs(am, wm);
+            model_multMtxsIntLegacy(am, wm);
         }
     }
     modelInitMtxs(m, am);
