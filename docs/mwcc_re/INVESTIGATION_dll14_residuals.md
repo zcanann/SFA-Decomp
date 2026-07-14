@@ -139,3 +139,16 @@ RegInfo operand layout (kind codes k0/k3 seen) to map instructions -> web indice
 identify the F40 interloper web (nadj 29, steals r22 from curve in the 8/8-anchor config)
 by finding its def/use instructions. Candidates eliminated by decl-move probes: curveList,
 pC, pB, iter, checksum (target's checksum is volatile r5).
+
+## Web NUMBERING is priority-driven, not decl-order (CodeGen_NumberWebs @0x435650)
+Per recovered/CodeGenNumbering.c: webIndex = webEnd[class]++ assigned by a MAX-PRIORITY
+worklist (priority = loop-weighted ref weight, desc+0x4; loop-resident pin 0x40 -> 100000).
+Decl order only breaks priority ties. This reframes both residuals: web indices can be
+STEERED by changing reference weights (add/remove a loop-depth-weighted use) without decl
+churn. tools/mwcc_re/pri_trace_lldb.py (lldb port, bootstrap-armed, WORKS on macOS) logs
+every numbering commit as "N cls= idx= pri= flags=".
+Measured on the committed func1C config: the contested cd-base web (idx 48) commits with
+pri=2 (the eligibility MINIMUM) while scanBase-area webs (46/47) commit at pri=68/65.
+Commit order is NOT globally descending in pri (two interleaved worklists / append during
+processing) - decode the worklist interleave next, then steer the base web's priority to
+flip the idx-48/idx-46 order (which fixes func1C's final 4 register lines).
