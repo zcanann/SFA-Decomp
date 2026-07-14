@@ -262,3 +262,17 @@ kind-3 operands carry IMMEDIATE/CONSTANT payloads in bytes [4:8] (observed 0xbde
 instruction->web correlator must hook PRE-color: the InterferenceGraph build pass (disasm
 in docs/mwcc_re/disasm/InterferenceGraph.c.objdump.txt) where webs and their def/use lists
 are constructed. That hook plus the select trace closes both residuals' register questions.
+
+## igwalk tracer working: F39/F40-band webs are r2-sourced copies
+New tool tools/mwcc_re/igwalk_lldb.py hooks the InterferenceGraph descriptor walk
+(0x57b7f3, desc ptr at [esp+0xc]) and logs copy descriptors (n, flags, class, w26->w28).
+On the walkgroup per-block probe: 21 class-4 records, all `w2 -> wXX` with wXX in
+{40, 46, 62, 105, 126, ...} - the contested F39/F40-band webs are DEFINED BY COPIES FROM
+WEB 2 (r2, the sdata2/small-data anchor). I.e. the interloper webs hold ADDRESSES OF
+SDATA2 SYMBOLS (the lbl_803E05xx float constants' addresses held in GPRs across calls!) -
+e.g. the hoisted &zero/&div-style anchors, NOT user variables at all. That reframes the fix:
+which sdata2 constants get their addresses hoisted into saved GPRs depends on the FP-constant
+reference pattern (lfs from sdata2 vs kept-in-FPR) - compare the probe's lbl_803E05F0/060C
+usage against the target's f27/f30 preloads in the tail. Likely fix: load zero/div into
+locals ONCE (like the committed `zero = lbl_803E05F0; div = lbl_803E060C;`) at the RIGHT
+scope so no GPR anchor web is needed where the target has none.
