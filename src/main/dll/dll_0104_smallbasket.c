@@ -127,15 +127,16 @@ extern const f32 lbl_803E3990;
 extern const f32 lbl_803E3994;
 extern f32 lbl_803E3998;
 
-#pragma opt_lifetimes off
 #pragma opt_propagation off
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
 {
     GameObject* playerObj;
-    int mode;
+    s16 mode;
     u8* data;
     f32* vel;
+    f32* hitVel;
     u8 slowMo;
+    int sw;
     u8* setup;
     u8* spawned;
     int bit;
@@ -171,7 +172,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     {
         return 0;
     }
-    if (gSmallBasketHitVelocity[1] < lbl_803E393C)
+    hitVel = gSmallBasketHitVelocity;
+    if (hitVel[1] < lbl_803E393C)
     {
         slowMo = 1;
     }
@@ -214,8 +216,9 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         mode = data[0x1e];
     }
 
+    sw = mode;
     vel = gSmallBasketHitVelocity;
-    switch (mode)
+    switch (sw)
     {
     case 1:
         setup = (u8*)Obj_AllocObjectSetup(0x24, SMALLBASKET_CHILD_OBJ_FRUIT_A);
@@ -229,7 +232,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -283,7 +286,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -337,7 +340,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         else
@@ -410,7 +413,7 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
         {
             sc = lbl_803E3948;
             ((GameObject*)spawned)->anim.velocityX = sc * gSmallBasketHitVelocity[0];
-            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * vel[1];
+            ((GameObject*)spawned)->anim.velocityY = lbl_803E394C * hitVel[1];
             ((GameObject*)spawned)->anim.velocityZ = sc * vel[2];
         }
         mag = ((GameObject*)spawned)->anim.velocityX * ((GameObject*)spawned)->anim.velocityX;
@@ -454,7 +457,6 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     return 1;
 }
 #pragma opt_propagation reset
-#pragma opt_lifetimes reset
 
 int smallbasket_resolveCollision(u8* obj)
 {
