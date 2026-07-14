@@ -14,6 +14,7 @@
  * but is not part of the retail dll0b unit; it was dead here and removed.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/dll/bonespawndata_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
@@ -344,7 +345,6 @@ void fn_800A1040(s16 sequenceId, int forceAll)
 }
 #pragma dont_inline reset
 
-extern void Sfx_PlayFromObject(void* obj, int id);
 extern void GXSetCullMode(int mode);
 extern void setTextColor(void* ctx, int r, int g, int b, int a);
 
