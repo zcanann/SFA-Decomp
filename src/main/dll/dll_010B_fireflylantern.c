@@ -9,7 +9,7 @@
 #include "main/gamebits.h"
 #include "main/gameloop_gamebit_api.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 /* object group this object belongs to */
 #define FIREFLYLANTERN_OBJGROUP 0xf

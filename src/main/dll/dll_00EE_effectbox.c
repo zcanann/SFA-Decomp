@@ -17,7 +17,8 @@
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_00EE_effectbox.h"
 
 /* EffectboxPlacement.targetMode values */

@@ -18,7 +18,8 @@
 #include "main/objseq.h"
 #include "main/objhits.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/object_descriptor.h"
 

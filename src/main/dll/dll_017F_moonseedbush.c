@@ -19,7 +19,7 @@
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 #include "main/dll/dll_017F_moonseedbush.h"
 

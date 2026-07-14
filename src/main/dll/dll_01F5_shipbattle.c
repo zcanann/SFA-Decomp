@@ -18,7 +18,8 @@
 #include "main/dll/sbcloudballstate_struct.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/object_render_legacy.h"
 #include "main/obj_list.h"
 #include "main/dll/dll_01F5_shipbattle.h"
 

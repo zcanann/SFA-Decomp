@@ -26,7 +26,9 @@ STATIC_ASSERT(sizeof(DrExplodableState) == 0x6e8);
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/objseq.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/vecmath_distance_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/dll_015D_slidingdoor.h"
 
 

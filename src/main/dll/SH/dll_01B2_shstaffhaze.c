@@ -8,7 +8,8 @@
  */
 #include "main/game_object.h"
 #include "main/objfx.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/SH/dll_01B2_shstaffhaze.h"
 
 extern f32 lbl_803E5518;

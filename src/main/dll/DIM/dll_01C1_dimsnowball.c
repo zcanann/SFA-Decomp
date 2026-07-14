@@ -55,7 +55,9 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/object_descriptor.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 
 #define DIMSNOWBALL_OBJFLAG_PARENT_SLACK 0x1000

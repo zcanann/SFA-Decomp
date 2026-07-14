@@ -16,7 +16,8 @@
 #include "main/objtexture.h"
 #include "main/mm.h"
 #include "main/pi_dolphin.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/IM/dll_016F_imspacethruster.h"
 
 extern s16 gImSpaceThrusterKeyframeIndexA[], gImSpaceThrusterKeyframeIndexB[];

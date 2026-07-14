@@ -10,7 +10,7 @@
 #include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 /* Cog-puzzle gamebits for DIM2 bridge puzzle */
 #define COGBIT_PANEL_A     0x17a

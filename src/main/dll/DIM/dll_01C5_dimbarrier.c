@@ -8,7 +8,8 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 
 #define DIMBARRIER_TRIGGER_OBJ_TYPE 470

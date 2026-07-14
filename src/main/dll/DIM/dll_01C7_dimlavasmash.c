@@ -14,7 +14,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/map_block.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 #include "main/objhits.h"
 #include "main/audio/sfx.h"
 #include "main/dll/DIM/dll_01C7_dimlavasmash.h"

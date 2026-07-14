@@ -8,7 +8,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 typedef struct DFSHDoor2SpeciPlacement
 {

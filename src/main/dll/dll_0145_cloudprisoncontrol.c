@@ -18,7 +18,7 @@
 #include "main/game_object.h"
 #include "main/obj_message.h"
 #include "main/dll/rom_curve_interface.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_render_legacy.h"
 
 /* Registered prison-member entry (list keyed by the controller's map-event slot). */
 typedef struct CPTargetEntry

@@ -22,7 +22,8 @@
 #include "main/dll/dll_00D9_pollen_api.h"
 #include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/obj_placement.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 
 typedef struct KaldaChompMeState
 {

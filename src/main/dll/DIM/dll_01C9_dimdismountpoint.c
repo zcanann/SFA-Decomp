@@ -12,7 +12,8 @@
 #include "main/obj_group.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/object_render_legacy.h"
 
 #define DIMDISMOUNT_GAMEBIT_DONE  0x3e3
 #define DIMDISMOUNT_GROUP         0x13

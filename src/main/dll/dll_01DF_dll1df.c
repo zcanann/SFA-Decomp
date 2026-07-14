@@ -16,7 +16,9 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objtexture.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object_api.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/vecmath_distance_api.h"
 
 #define DLL1DF_OBJFLAG_HITDETECT_DISABLED 0x2000

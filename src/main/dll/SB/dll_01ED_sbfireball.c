@@ -10,7 +10,9 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/sbfireballstate_struct.h"
 #include "main/game_object.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/dll/SB/dll_01ED_sbfireball.h"
 
 #define SB_FIREBALL_EXTRA_SIZE          0x18

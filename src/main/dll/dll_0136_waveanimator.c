@@ -14,7 +14,8 @@
 #include "main/dll/waveanimatorstate_struct.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/mm.h"
 #include "main/object_descriptor.h"
 

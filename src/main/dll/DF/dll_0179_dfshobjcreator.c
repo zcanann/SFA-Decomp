@@ -10,7 +10,9 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/resource.h"
-#include "main/dll/VF/vf_shared.h"
+#include "main/object.h"
+#include "main/frame_timing.h"
+#include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
 
