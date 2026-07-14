@@ -79,4 +79,21 @@ void KT_RexFloorSwitch_init(GameObject* obj, char* placement);
 void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle);
 void KT_RexFloorSwitch_update(GameObject* obj);
 
+extern int gKTrexFloorSwitchCurveFindResult;
+extern f32 lbl_803E6858;
+extern f32 lbl_803E6898;
+extern f32 lbl_803E689C;
+extern f32 lbl_803E68A0;
+extern f32 lbl_803E68A4;
+extern f32 lbl_802C2560[];
+extern f32 lbl_802C256C[];
+extern f64 gKTrexFloorSwitchPi;
+extern f64 gKTrexFloorSwitchBamHalfCircle;
+extern f32 gKTrexFloorSwitchTriggerBoxInset;
+extern f32 gKTrexFloorSwitchRiseSpeed;
+extern f32 gKTrexFloorSwitchRetractSpeed;
+extern f32 lbl_803E687C;
+extern f32 gKTrexFloorSwitchScrollSpeed;
+extern int gKTrexFloorSwitchPrevMoved;
+
 #endif /* MAIN_DLL_DR_DLL_0251_KTREXFLOORSWITCH_H_ */

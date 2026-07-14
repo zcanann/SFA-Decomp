@@ -10,6 +10,11 @@
 
 typedef int (*KytesMumUpdateCallback)(int obj);
 
+typedef struct KytesMumQuestTriple
+{
+    int values[3];
+} KytesMumQuestTriple;
+
 typedef struct KytesMumMoveSet
 {
     s16 moves[6];
@@ -93,5 +98,20 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup);
 int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg);
 int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg);
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
+
+extern f32 lbl_803E6994;
+extern f32 gKytesMumNearestSearchDist;
+extern f32 lbl_803E69A0;
+extern char sKytesMumYawDiffMessage[];
+extern int gKytesMumQuestBits[];
+extern int gKytesMumTriggerIds[];
+extern int gKytesMumQuestIdleSfxTable[];
+extern f32 gKytesMumFleeDistance;
+extern f32 lbl_803E698C;
+extern f32 lbl_803E6990;
+extern u8 gKytesMumMoveSets[];
+extern int gKytesMumRoamEventSfxTable;
+extern int lbl_803DC2D0;
+extern f32 lbl_803E699C;
 
 #endif /* MAIN_DLL_DLL_0266_KYTESMUM_H_ */

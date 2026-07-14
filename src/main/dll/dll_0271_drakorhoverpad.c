@@ -15,15 +15,28 @@
  *
  * Curve/velocity state lives in the object's extra block
  * (DrakorHoverpadState, 0x17c bytes); the two flag bytes at 0x178/0x179
- * are HoverpadFlags / Flags377.
+ * are DrakorHoverpadFlags / DrakorHoverpadPathFlags.
  */
-#include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0271_drakorhoverpad.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "string.h"
 #include "main/curve.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
+#include "main/camera_shake_api.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
+#include "main/obj_group.h"
+#include "main/obj_path.h"
+#include "main/obj_query.h"
+#include "main/objhits.h"
+#include "main/object_api.h"
+#include "main/object_render.h"
 #include "main/objprint_api.h"
-#include "main/dll/dll_0271_drakorhoverpad.h"
+#include "main/vecmath.h"
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/dll/dll_0282_barrelgener.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -208,8 +221,8 @@ void drakorhoverpad_release(void)
 void drakorhoverpad_initMain(GameObject* obj, void* desc)
 {
     u8* p = (obj)->extra;
-    HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
-    Flags377* g = (Flags377*)(p + 0x179);
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
+    DrakorHoverpadPathFlags* g = (DrakorHoverpadPathFlags*)(p + 0x179);
     DrakorHoverpadUpdateMainPlacement* d = (DrakorHoverpadUpdateMainPlacement*)desc;
     f32 initialSpeed;
 
@@ -244,7 +257,7 @@ void drakorhoverpad_initMain(GameObject* obj, void* desc)
 int drakorhoverpad_init(GameObject* obj)
 {
     u8* p = (obj)->extra;
-    HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
 
     if (f->b40 == 0)
     {
@@ -288,7 +301,7 @@ void drakorhoverpad_render(GameObject* obj, int p2, int p3, int p4, int p5, char
     u8* p = (obj)->extra;
     if (visible)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6A48);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6A48);
         ((DrakorHoverpadRenderState*)p)->frameCounter += framesThisStep;
         if (((DrakorHoverpadRenderState*)p)->frameCounter == 0 || ((DrakorHoverpadRenderState*)p)->frameCounter > 10)
         {
@@ -515,8 +528,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
     u8* p = (obj)->extra;
     RomCurveWalker* curve;
     DrakorHoverpadUpdateMainPlacement* q = (DrakorHoverpadUpdateMainPlacement*)(obj)->anim.placementData;
-    HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
-    Flags377* g = (Flags377*)(p + 0x179);
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
+    DrakorHoverpadPathFlags* g = (DrakorHoverpadPathFlags*)(p + 0x179);
     int evOut;
     f32 diff[3];
     f32 curvePos[3];
@@ -709,8 +722,8 @@ void drakorhoverpad_updateMain(GameObject* obj)
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = (obj)->extra;
-    HoverpadFlags* f = (HoverpadFlags*)(p + 0x178);
-    Flags377* g = (Flags377*)(p + 0x179);
+    DrakorHoverpadFlags* f = (DrakorHoverpadFlags*)(p + 0x178);
+    DrakorHoverpadPathFlags* g = (DrakorHoverpadPathFlags*)(p + 0x179);
     int player;
     f32 shakeMag;
     f32 absP;
@@ -1059,7 +1072,7 @@ void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz)
 void drakorhoverpad_resetPendingMotion(GameObject* obj)
 {
     u8* p = obj->extra;
-    Flags377* g = (Flags377*)(p + 0x179);
+    DrakorHoverpadPathFlags* g = (DrakorHoverpadPathFlags*)(p + 0x179);
     if (g->p6 != 0)
     {
         g->p6 = 0;

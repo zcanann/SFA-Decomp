@@ -18,17 +18,29 @@
  * group 1. Completing the active callback sets the placement's completion
  * game bit.
  */
-#include "main/dll/DR/dr_shared.h"
+#include "main/dll/dll_0266_kytesmum.h"
 #include "main/pad.h"
 #include "main/object.h"
+#include "main/object_api.h"
+#include "main/object_render.h"
+#include "main/object_update_list.h"
 #include "main/dll/savegame_object_api.h"
 #include "main/dll/player_api.h"
 #include "main/debug.h"
 #include "main/dll/dll_002E_moveLib.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/obj_group.h"
+#include "main/obj_trigger.h"
+#include "main/objanim.h"
+#include "main/objhits.h"
+#include "main/objprint_anim_api.h"
 #include "main/objprint_character_api.h"
 #include "main/obj_placement.h"
-#include "main/dll/dll_0266_kytesmum.h"
+#include "main/vecmath_distance_api.h"
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/dll/DR/dll_0265_drcreator.h"
 
 #define KYTESMUM_OBJGROUP        0x3
@@ -153,7 +165,7 @@ void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E6994);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6994);
     }
 }
 
@@ -214,7 +226,7 @@ int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpda
     {
         if (animUpdate->eventIds[i] == 1 && setup->mode != 0)
         {
-            Obj_RemoveFromUpdateList(obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             ObjHits_DisableObject(obj);
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -254,7 +266,7 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
         ObjGroup_AddObject((int)obj, KYTESMUM_OBJGROUP);
         if (runtime->questComplete != 0)
         {
-            Obj_RemoveFromUpdateList((int)obj);
+            Obj_RemoveFromUpdateList((u8*)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         ObjHits_RegisterActiveHitVolumeObject((int)obj);
@@ -328,8 +340,8 @@ int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg)
     int triggerIds[3];
     int count;
     KytesMumRuntime* runtime;
-    *(QuestTriple*)questBits = *(QuestTriple*)gKytesMumQuestBits;
-    *(QuestTriple*)triggerIds = *(QuestTriple*)gKytesMumTriggerIds;
+    *(KytesMumQuestTriple*)questBits = *(KytesMumQuestTriple*)gKytesMumQuestBits;
+    *(KytesMumQuestTriple*)triggerIds = *(KytesMumQuestTriple*)gKytesMumTriggerIds;
     count = 0;
     Obj_GetPlayerObject();
     runtime = (KytesMumRuntime*)(obj)->extra;

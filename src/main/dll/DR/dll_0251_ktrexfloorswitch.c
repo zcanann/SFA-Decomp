@@ -14,19 +14,27 @@
  * pointer - distinct from this object's flags byte at the same offset).
  */
 #include "main/dll/partfx_interface.h"
-#include "main/dll/DR/dr_shared.h"
+#include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
 
 __declspec(section ".rodata") f32 lbl_802C2560[3] = {0.0f, 0.0f, 55.0f};
 __declspec(section ".rodata") f32 lbl_802C256C[3] = {55.0f, 0.0f, 0.0f};
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/newclouds.h"
+#include "main/frame_timing.h"
+#include "main/gamebits_api.h"
 #include "main/game_object.h"
+#include "main/mm.h"
+#include "main/object_api.h"
 #include "main/object_render.h"
+#include "main/objtexture.h"
+#include "main/vecmath.h"
+#include "main/dll/rom_curve_interface.h"
+#include "main/dll/DR/dll_024F_ktrexlevel.h"
 
+#include "main/audio/sfx_play_int_u16_legacy_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
 
 /* KtrexfloorswitchState.flags (offset 0x10) bits */
 #define KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED 0x1 /* charge cycle maxed+reset; suppresses charging until reactivation */
