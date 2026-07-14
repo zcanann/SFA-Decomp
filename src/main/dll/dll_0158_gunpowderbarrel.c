@@ -35,6 +35,7 @@
 #include "main/objfx.h"
 #include "main/dll/dll_0282_barrelgener.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
@@ -79,7 +80,6 @@ typedef struct GunpowderbarrelPlacement
 
 extern u32* gCarryableInterface;
 extern f32 lbl_803E42DC;
-extern void objRenderModelAndHitVolumes(int* obj, int a, int b, int c, int d, f32 e);
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 
@@ -190,7 +190,7 @@ void gunpowderbarrel_render(int* obj, int p2, int p3, int p4, int p5,
     result = (*(int (**)(int*, int))(*(int*)gCarryableInterface + 0xc))(obj, visFlag);
     if (result != 0 || visFlag == -1)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E42DC);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E42DC);
     }
     child = *(int**)&((GunpowderBarrelState*)sub)->linkedTimerObject;
     if (child != 0)
