@@ -27,6 +27,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/objanim.h"
 #include "main/audio/sfx_play_api.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/object_render_legacy.h"
 #include "main/debug.h"
 #include "main/dll/dll22cstate_struct.h"
@@ -1789,7 +1790,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
     extern f32 lbl_803E62C4;
     extern f32 lbl_803E62C8;
     extern f32 lbl_803E62CC;
