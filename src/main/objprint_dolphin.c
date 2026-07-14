@@ -39,6 +39,7 @@
 #include "main/dll/dll_80136a40.h"
 #include "track/intersect_fog_api.h"
 #include "track/intersect_depth_read_api.h"
+#include "track/intersect_depth_state_api.h"
 #include "track/intersect_hud_api.h"
 #include "track/intersect_texture_api.h"
 
@@ -192,8 +193,6 @@ extern u32 FUN_80017608();
 extern u32 FUN_80017620();
 extern void* FUN_80017624();
 
-extern void gxSetPeControl_ZCompLoc_(u8 zcomploc);
-extern void gxSetZMode_(u8 enable, int func, u8 update);
 extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
 extern u32 FUN_80258674();
 extern u32 FUN_80258944();
@@ -279,8 +278,8 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
         FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&DAT_803dc0c8);
     }
-    gxSetZMode_(1, 3, 0);
-    gxSetPeControl_ZCompLoc_(1);
+    gxSetZModeByteLegacy(1, 3, 0);
+    gxSetPeControl_ZCompLocByteLegacy(1);
     FUN_8025cce8(1, 4, 5, 5);
     return;
 }
@@ -1185,13 +1184,13 @@ void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
     }
     if (gObjGxZWriteCache != zwrite || gObjGxZCompareCache != zcmp)
     {
-        gxSetZMode_(zwrite, 3, zcmp);
+        gxSetZModeByteLegacy(zwrite, 3, zcmp);
         gObjGxZWriteCache = zwrite;
         gObjGxZCompareCache = zcmp;
     }
     if (gObjGxZCompLocCache != zcomploc)
     {
-        gxSetPeControl_ZCompLoc_(zcomploc);
+        gxSetPeControl_ZCompLocByteLegacy(zcomploc);
         gObjGxZCompLocCache = zcomploc;
     }
     if (gObjGxAlphaCompareCache != alpha)
@@ -2107,18 +2106,18 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
-    gxSetPeControl_ZCompLoc_(1);
+    gxSetPeControl_ZCompLocByteLegacy(1);
     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
     GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
     if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
     {
-        gxSetZMode_(1, 3, 1);
+        gxSetZModeByteLegacy(1, 3, 1);
         GXSetCullMode(GX_CULL_FRONT);
     }
     else
     {
-        gxSetZMode_(0, 3, 0);
+        gxSetZModeByteLegacy(0, 3, 0);
         GXSetCullMode(GX_CULL_NONE);
     }
     GXSetArray(GX_VA_POS, ((int*)((char*)am + 0x1c))[(*(u16*)((char*)am + 0x18) >> 1) & 1], 6);
@@ -2511,18 +2510,18 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
         GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjGXColor*)&lbl_803DB468);
-        gxSetPeControl_ZCompLoc_(1);
+        gxSetPeControl_ZCompLocByteLegacy(1);
         GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
         GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
         GXSetNumChans(1);
         if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW)
         {
-            gxSetZMode_(1, 3, 1);
+            gxSetZModeByteLegacy(1, 3, 1);
             GXSetCullMode(GX_CULL_FRONT);
         }
         else
         {
-            gxSetZMode_(0, 3, 0);
+            gxSetZModeByteLegacy(0, 3, 0);
             GXSetCullMode(GX_CULL_NONE);
         }
     }
@@ -3064,18 +3063,18 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 f2 = *(u16*)(p2 + 2);
                 if (f2 & 0x400)
                 {
-                    gxSetZMode_(0, 3, 0);
+                    gxSetZModeByteLegacy(0, 3, 0);
                     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
                 else if (f2 & 0x2000)
                 {
                     zon = 0;
-                    gxSetZMode_(1, 3, 1);
+                    gxSetZModeByteLegacy(1, 3, 1);
                     GXSetAlphaCompare(GX_GREATER, lbl_803DCC3C, GX_AOP_AND, GX_GREATER, lbl_803DCC3C);
                 }
                 else
                 {
-                    gxSetZMode_(1, 3, 0);
+                    gxSetZModeByteLegacy(1, 3, 0);
                     GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
                 }
             }
@@ -3084,11 +3083,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (*(u16*)(p2 + 2) & 0x400)
                 {
-                    gxSetZMode_(0, 3, 0);
+                    gxSetZModeByteLegacy(0, 3, 0);
                 }
                 else
                 {
-                    gxSetZMode_(1, 3, 1);
+                    gxSetZModeByteLegacy(1, 3, 1);
                 }
                 GXSetAlphaCompare(GX_GREATER, 0x40, GX_AOP_AND, GX_GREATER, 0x40);
             }
@@ -3097,11 +3096,11 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                 GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
                 if (*(u16*)(p2 + 2) & 0x400)
                 {
-                    gxSetZMode_(0, 3, 0);
+                    gxSetZModeByteLegacy(0, 3, 0);
                 }
                 else
                 {
-                    gxSetZMode_(1, 3, 1);
+                    gxSetZModeByteLegacy(1, 3, 1);
                 }
                 GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
             }
@@ -3109,7 +3108,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             {
                 zon = 0;
             }
-            gxSetPeControl_ZCompLoc_(zon);
+            gxSetPeControl_ZCompLocByteLegacy(zon);
         }
     }
     if (((ObjModelRenderOp*)op)->flags & 8)
