@@ -401,7 +401,6 @@ extern void timeListDraw(int a, int b, int c);
 extern void pauseMenuRunSubmenu(int p1);
 extern void cMenuRun(void);
 extern void cutsceneFadeInOut(int a);
-extern int objIsCurModelNotZero(void* obj);
 extern u8 cMenuState;
 extern u8 cMenuOpen;
 extern s8 gCMenuScriptedInput;

@@ -11,6 +11,7 @@
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/mapEvent.h"
 #include "main/obj_path.h"
@@ -28,7 +29,6 @@
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
 extern f32 lbl_803E5498;
-extern int objGetAnimStateFlags(int obj, int flag);
 
 u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
@@ -97,7 +97,7 @@ u32 playerFn_801d6d58(void)
 
     (*gMapEventInterface)->getCurChar();
     playerObj = (u32)Obj_GetPlayerObject();
-    objGetAnimStateFlags(playerObj, 0xff);
+    objGetAnimStateFlags((GameObject*)playerObj, 0xff);
     return 2;
 }
 

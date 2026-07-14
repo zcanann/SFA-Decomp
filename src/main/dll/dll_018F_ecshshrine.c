@@ -158,8 +158,6 @@ extern void gpsh_shrine_init(void);
 extern void gpsh_shrine_release(void);
 extern void gpsh_shrine_initialise(void);
 
-extern int objIsCurModelNotZero(void* obj);
-extern int objGetAnimStateFlags(int* player, int flags);
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
  * in ecsh_shrine_update - the slot->cup maps that follow it in memory are
@@ -830,7 +828,7 @@ void ecsh_shrine_update(s16* obj)
         case 6:
             mainSetBits(GAMEBIT_ECSH_TestObservRunning, 0);
             audioStopByMask(3);
-            if (objGetAnimStateFlags((int*)player, 8) != 0)
+            if (objGetAnimStateFlags((GameObject*)player, 8) != 0)
             {
                 mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                 sub[0x2f] = 7;

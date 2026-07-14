@@ -285,7 +285,6 @@ void fn_801C70F0(s16* obj)
 
 void gpsh_shrine_update(GameObject *obj)
 {
-    extern int objGetAnimStateFlags(int obj, int flag);
     extern void fn_801C70F0(int obj);
     int count;
     int data = *(int*)&(obj)->extra;
@@ -465,7 +464,7 @@ void gpsh_shrine_update(GameObject *obj)
                 ((GpshShrineState*)data)->puzzleState = 3;
                 break;
             case 3:
-                if (objGetAnimStateFlags((int)player, 0x80))
+                if (objGetAnimStateFlags((GameObject*)player, 0x80))
                 {
                     mainSetBits(GAMEBIT_WM_EnteredKrazoaTest1_0129, 1);
                     ((GpshShrineState*)data)->puzzleState = 4;

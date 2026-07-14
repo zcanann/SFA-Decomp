@@ -94,7 +94,6 @@ extern f32 lbl_803E4F60;
 
 extern void fn_8011F6D4(u32 x);
 extern int fn_801C49B8(int obj);
-extern int objGetAnimStateFlags(int obj, int flag);
 extern void fn_801C4664(int obj);
 typedef struct MMSHShrineRuntime
 {
@@ -392,7 +391,7 @@ void MMSH_Shrine_update(int objArg)
         mainSetBits(MMSH_SHRINE_GB_COMPLETE, 1);
         break;
     case MMSH_SHRINE_PHASE_LIT:
-        if (objGetAnimStateFlags(playerObj, 4) == 0)
+        if (objGetAnimStateFlags((GameObject*)playerObj, 4) == 0)
         {
             audioStopByMask(3);
             (*gObjectTriggerInterface)->runSequence(1, obj, -1);

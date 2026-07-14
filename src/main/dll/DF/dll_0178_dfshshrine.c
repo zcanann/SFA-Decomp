@@ -150,8 +150,6 @@ u16 gDfShShrineRewardTable[50] = {
 };
 extern const f32 lbl_803E4E8C;
 
-extern int objGetAnimStateFlags(int obj, int flag);
-
 void fn_801C2914(int obj)
 {
     int def;
@@ -491,7 +489,7 @@ void DFSH_Shrine_update(int objArg)
         state->mode = DFSHRINE_MODE_POST_FINISH;
         break;
     case DFSHRINE_MODE_POST_FINISH:
-        if (objGetAnimStateFlags(player, 1) != 0 || mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0u)
+        if (objGetAnimStateFlags((GameObject*)player, 1) != 0 || mainGetBit(GAMEBIT_ITEM_TestCombatSpirit_Got) != 0u)
         {
             state->mode = DFSHRINE_MODE_RESET;
         }

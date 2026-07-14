@@ -25,6 +25,7 @@
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/gamebits.h"
@@ -144,7 +145,6 @@ MinimapMapEntry gMinimapCellTable[25] = {
 void Minimap_drawCompassBlip(void);
 void fn_8013351C(void);
 
-extern int objIsCurModelNotZero(int obj);
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32* color);
 extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
@@ -364,7 +364,7 @@ int Minimap_update(void)
         if ((*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER || (gMinimapEnabled == 0 && lbl_803DD7BA == 0) ||
             Camera_GetViewportYOffset() != 0 ||
             (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
-            objIsCurModelNotZero((int)player) == 0 || pauseMenuState != 0 || lbl_803DD75B != 0)
+            objIsCurModelNotZero(player) == 0 || pauseMenuState != 0 || lbl_803DD75B != 0)
         {
             marker = 0;
             gMinimapFadeAlpha -= 0x20;
@@ -858,7 +858,7 @@ void Minimap_frameStart(void)
     player = (int)Obj_GetPlayerObject();
     if ((void*)player == NULL || (*gCameraInterface)->getMode() == CAMMODE_VIEWFINDER ||
         Camera_GetViewportYOffset() != 0 || (((GameObject*)player)->objectFlags & MINIMAP_OBJFLAG_PARENT_SLACK) != 0 ||
-        objIsCurModelNotZero(player) == 0 || pauseMenuState != 0)
+        objIsCurModelNotZero((void*)player) == 0 || pauseMenuState != 0)
     {
         if (gMinimapZoomSfxActive != 0)
         {
