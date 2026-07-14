@@ -2225,8 +2225,7 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, int sfxId, int limit)
     }
     if ((int)gSfxObjectChannelMatchCount < limit)
     {
-        extern void Sfx_PlayFromObjectEx(u32 obj, f32 * pos, u32 channel, int sfxId);
-        Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
+        Sfx_PlayFromObjectExIntSfxLegacy(obj, NULL, 0, sfxId);
     }
     return gSfxObjectChannelMatchCount;
 }
