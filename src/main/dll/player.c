@@ -7080,7 +7080,8 @@ int fn_802AD2F4(GameObject* obj, int inner, int state)
             ObjAnim_SetCurrentMove((int)obj, 0x13, lbl_803E7EA4, 0);
             ((PlayerState*)state)->baddie.moveSpeed = lbl_803E800C;
             Sfx_PlayFromObject((int)obj, sfx);
-            Sfx_StopFromObject((int)obj, (u16)((ps->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02)));
+            Sfx_StopFromObjectIntLegacy((int)obj,
+                                        (u16)((ps->characterId == 0) ? (SFXTRIG_jump2) : (SFXTRIG_sa_climb02)));
             ((ByteFlags*)(((char*)inner) + 0x3f2))->b08 = 1;
             if (ps->waterDepth > lbl_803E7FC4)
             {
@@ -11636,7 +11637,8 @@ void fn_802AE83C(int obj, int inner)
     z = lbl_803E7EA4;
     ((PlayerState*)inner)->waterCurrentVelB = z;
     ((PlayerState*)inner)->waterCurrentVelA = z;
-    Sfx_StopFromObject(obj, (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_jump2 : SFXTRIG_sa_climb02));
+    Sfx_StopFromObjectIntLegacy(
+        obj, (u16)(((PlayerState*)inner)->characterId == 0 ? SFXTRIG_jump2 : SFXTRIG_sa_climb02));
 
     if ((void*)gPlayerPathObject != NULL && ((ByteFlags*)((char*)inner + 0x3f4))->b40)
     {
@@ -13052,7 +13054,7 @@ void fn_802B066C(GameObject* obj, int state)
     {
         if (Sfx_IsPlayingFromObject((int)obj, SFXTRIG_foot_metal_scuff))
         {
-            Sfx_StopFromObject((int)obj, SFXTRIG_foot_metal_scuff);
+            Sfx_StopFromObjectIntLegacy((int)obj, SFXTRIG_foot_metal_scuff);
             Sfx_PlayFromObject((int)obj, SFXTRIG_foot_metal_land);
         }
         ((PlayerState*)state)->knockbackTimer = lbl_803E7EA4;
