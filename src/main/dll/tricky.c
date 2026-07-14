@@ -1750,10 +1750,9 @@ void drawViewFinderHud(void)
         {
             int r30v, r29v, r5v, r28v;
             int t;
-            f64 fx;
-            f32 f15, f16;
-            f32 _r, _cs, _sn, _cx, _sx;
-            f32 f18, f19, num;
+            f32 f15, f16, f19;
+            f32 _cs, _sn, _cx, _sx;
+            f32 f18, _r, num;
             f64 d, q;
             d = xc - lbl_803E1F50;
             t = (int)(d * lbl_803E1F58);
@@ -1843,6 +1842,7 @@ void drawViewFinderHud(void)
                                     (int)(gViewFinderBaseY + (lbl_803E1F90 + sn)));
                 }
                 {
+                    f64 fx;
                     GXColor _c2;
                     GXColor _c;
                     s16 _a;
