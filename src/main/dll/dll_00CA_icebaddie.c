@@ -34,7 +34,7 @@
 #include "main/objprint_api.h"
 #include "main/object.h"
 #include "main/object_render_legacy.h"
-#include "main/audio/sfx.h"
+#include "main/audio/sfx_play_legacy_api.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
 #include "main/objanim.h"
@@ -1446,7 +1446,6 @@ return0:
 
 void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 {
-    extern void Sfx_PlayFromObject(int obj, int sfx);
     extern int iceBaddie_updateTargetCollision(int obj, int sub, int sub2);
     extern void iceBaddie_updateControlEffects(GameObject * obj, int sub);
     extern void iceBaddie_tryAcquireTarget(int obj, int sub, int sub2);
