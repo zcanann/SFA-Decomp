@@ -2,6 +2,7 @@
 #include "main/dll/dll_011D_treasurechest.h"
 #include "main/shader_api.h"
 #include "main/dll/staffflags_struct.h"
+#include "main/dll/player_staff_api.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
@@ -63,8 +64,6 @@ __declspec(section ".rodata") ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78
 extern int lbl_803DDAE4;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;
-
-extern void playerPullOutStaff(GameObject* obj, int enabled);
 
 #pragma opt_loop_invariants off
 int TreasureChest_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)

@@ -28,6 +28,7 @@
 #include "main/shader_api.h"
 #include "main/sky_interface.h"
 #include "main/game_object.h"
+#include "main/dll/player_staff_api.h"
 #include "main/object.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
@@ -246,8 +247,6 @@ extern f32 gObjSeqMsgNearbyRadius;
 extern s8 gObjSeqJumpLatch[];
 int objSeqExecCmd06(u8* obj, u8* sourceObj, u8* seq, int cmd, s8 flag);
 extern void playerSetDisguised(void* obj, int idx);
-extern void playerPullOutStaff(GameObject* obj, int idx);
-extern void playerPutAwayStaff(GameObject* obj, int idx);
 extern void playerLock(GameObject* player, int mode);
 extern void Rcp_SetMonochromeFilterEnabled(int enabled);
 extern int seqStreamFn_8008023c(int slot);

@@ -132,8 +132,6 @@ int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerSetHeldObject(int obj, int held);
 f32 fn_802966F4(GameObject* obj);
-void playerPutAwayStaff(GameObject* obj, int mode);
-void playerPullOutStaff(GameObject* obj, int mode);
 void saveSetOverrideHealth(int v);
 void fn_80296BBC(GameObject* obj);
 void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
