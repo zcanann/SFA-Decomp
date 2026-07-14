@@ -24,6 +24,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/mapEvent.h"
@@ -203,7 +204,6 @@ int landed_arwing_getExtraSize(void)
     return 0x1c;
 }
 
-extern void objRenderModelAndHitVolumes(f32);
 void landed_arwing_free(GameObject* obj)
 {
     LandedArwingState* state = obj->extra;
@@ -221,7 +221,7 @@ void landed_arwing_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
     s32 v = visible;
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(lbl_803E3BA4);
+        ((void (*)(f32))objRenderModelAndHitVolumes)(lbl_803E3BA4);
         landed_arwing_renderPathEffects((GameObject*)obj);
     }
 }
