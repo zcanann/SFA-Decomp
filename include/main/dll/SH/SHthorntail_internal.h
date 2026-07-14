@@ -238,23 +238,23 @@ typedef struct SHthorntailPathControlInterface {
 #define SHTHORNTAIL_PATH_CHANNEL 4
 
 extern s32 gSHthorntailActiveConfigToken;
-extern u8 gSHthorntailLevelControlMode1ImpactSfxTable;
+extern u8 gSHthorntailLevelControlMode1ImpactSfxTable[2];
 extern u8 gSHthorntailLevelControlMode0DefaultImpactSfxTable[];
-extern u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode2DefaultImpactSfxTable;
+extern u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable[4];
+extern u8 gSHthorntailRootControlMode2DefaultImpactSfxTable[2];
 extern u8 gSHthorntailRootControlMode2Locomotion8ImpactSfxTable[];
-extern u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
+extern u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable[5];
+extern u8 gSHthorntailRootControlMode3Locomotion2ImpactSfxTable[2];
 extern u8 gSHthorntailRootControlMode3Locomotion2AltImpactSfxTable[];
-extern u8 gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
-extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
+extern u8 gSHthorntailRootControlMode3Locomotion3ImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion4ImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable[2];
+extern u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable[2];
 STATIC_ASSERT(sizeof(SHthorntailRuntime) == SHTHORNTAIL_EXTRA_STATE_BYTES);
 
 static inline s16 SHthorntail_GetLinkedGameBit(SHthorntailConfig *config) {

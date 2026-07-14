@@ -31,6 +31,18 @@
 #include "main/obj_message.h"
 #include "main/obj_path.h"
 
+f32 lbl_803DBEF0 = 6.0f;
+f32 gDimCannonAnimAdvanceSpeedCur = 0.025f;
+f32 lbl_803DBEF8 = 1.0f;
+f32 lbl_803DBEFC = 0.04f;
+u8 gDimCannonMaxCharge = 100;
+s16 lbl_803DBF02 = 14000;
+s16 lbl_803DBF04 = 1000;
+f32 gDimCannonAimStickScale = 2.5f;
+int lbl_803DBF0C = 164025;
+int lbl_803DBF10 = 152100;
+f32 lbl_803DBF14 = -300.0f;
+
 #define PAD_BUTTON_A                         0x100
 #define PAD_BUTTON_B                         0x200
 #define DIMCANNON_OBJGROUP                   3

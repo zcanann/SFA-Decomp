@@ -23,6 +23,22 @@
 #include "main/obj_group.h"
 #include "main/dll/dll_00C9_enemy.h"
 
+s32 gSHthorntailActiveConfigToken = -1;
+u8 gSHthorntailLevelControlMode1ImpactSfxTable[] = {1, 0x10};
+u8 gSHthorntailRootControlMode2DefaultImpactSfxTable[] = {1, 0x14};
+u8 gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable[] = {3, 0x2D, 0x2E, 0x2F};
+u8 gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable[] = {4, 0x33, 0x34, 0x35, 0x36};
+u8 gSHthorntailRootControlMode3Locomotion1ImpactSfxTable[] = {1, 0x37};
+u8 gSHthorntailRootControlMode3Locomotion2ImpactSfxTable[] = {1, 0x38};
+u8 gSHthorntailRootControlMode3Locomotion3ImpactSfxTable[] = {1, 0x39};
+u8 gSHthorntailRootControlMode3Locomotion4ImpactSfxTable[] = {1, 0x3A};
+u8 gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable[] = {1, 0x3B};
+u8 gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable[] = {1, 0x3C};
+u8 gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable[] = {1, 0x3D};
+u8 gSHthorntailRootControlMode3Locomotion6ImpactSfxTable[] = {1, 0x3E};
+u8 gSHthorntailRootControlMode3Locomotion7ImpactSfxTable[] = {1, 0x3F};
+u8 gSHthorntailRootControlMode3Locomotion8ImpactSfxTable[] = {1, 0x40};
+
 #define SHTHORNTAIL_OBJ_TYPE                0x4d7
 #define SHTHORNTAIL_OBJ_GROUP               3
 #define SHTHORNTAIL_LINKED_CONFIG_ROW_BYTES 0x10

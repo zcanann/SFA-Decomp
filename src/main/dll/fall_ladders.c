@@ -37,11 +37,12 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+int lbl_803DBCD0[2] = {2, 3};
+
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
-extern f64 lbl_803DBCD0;
 extern f32 lbl_803E2940;
 extern f32 lbl_803E2944;
 extern f32 lbl_803E2948;
@@ -152,7 +153,7 @@ void fn_80154584(GameObject* obj, int state)
         if ((Curve_AdvanceAlongPath(curve, ((BaddieState*)state)->pathStep) != 0 || curve->atSegmentEnd != 0) &&
             (*gRomCurveInterface)->goNextPoint((void*)curve) != 0 &&
             (*gRomCurveInterface)
-                    ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) != 0)
+                    ->initCurve(*(RomCurveWalker**)state, (void*)obj, lbl_803E29B0, lbl_803DBCD0, -1) != 0)
         {
             ((BaddieState*)state)->controlFlags &= ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }

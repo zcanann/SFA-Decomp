@@ -45,7 +45,7 @@
 
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
-extern s8 lbl_803DBA28;     /* active panel id (-1 = none) */
+s8 lbl_803DBA28 = -1;      /* active panel id (-1 = none) */
 extern int lbl_803A87D0[8]; /* the 8 menu-item objects of the active panel */
 extern f32 lbl_803E1DD4;
 extern f32 lbl_803E1DD8;

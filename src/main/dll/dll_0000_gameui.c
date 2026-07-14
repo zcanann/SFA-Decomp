@@ -214,8 +214,6 @@ extern HighScoreTitleIdEntry gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;
 extern f32 gHighScorePulseBias;
-extern char sHighScoreRowFormat;
-extern char sHighScoreStarMark;
 extern s16 gHighScorePulseAngle;
 extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;

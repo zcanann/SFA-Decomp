@@ -105,7 +105,7 @@ void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runti
     u32 gameBit;
     int triggerIsSet;
 
-    runtime->impactSfxTable = &gSHthorntailLevelControlMode1ImpactSfxTable;
+    runtime->impactSfxTable = gSHthorntailLevelControlMode1ImpactSfxTable;
     playerObj = (int)Obj_GetPlayerObject();
     {
         int cmp = (double)getXZDistance((f32*)(objectId + 0x18), (f32*)(playerObj + 0x18)) < (double)SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
@@ -275,7 +275,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
         gameBit = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
         if (gameBit == 0)
         {
-            runtime->impactSfxTable = &gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
+            runtime->impactSfxTable = gSHthorntailLevelControlMode0Locomotion6ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_8:

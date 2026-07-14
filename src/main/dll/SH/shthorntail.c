@@ -157,28 +157,28 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
     int randomIdleWait;
     u32 gameBitValue;
 
-    runtime->impactSfxTable = &gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
+    runtime->impactSfxTable = gSHthorntailRootControlMode3LocomotionDefaultImpactSfxTable;
     switch (runtime->locomotionMode)
     {
     case SHTHORNTAIL_LOCOMOTION_1:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion1ImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_2:
         gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION2_GAMEBIT);
         if (gameBitValue != 6)
         {
-            runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
+            runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion2ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_3:
         gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
         if (gameBitValue == 0)
         {
-            runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
+            runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion3ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_4:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion4ImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_5:
         gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_GATE_GAMEBIT);
@@ -189,7 +189,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
             {
                 (*gMapEventInterface)
                     ->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT, SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
-                runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
+                runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
             }
             else
             {
@@ -202,11 +202,11 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
                         randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
                         runtime->idleTimer = (float)randomIdleWait;
                     }
-                    runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
+                    runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion5PlayerImpactSfxTable;
                 }
                 else
                 {
-                    runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
+                    runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion5IdleImpactSfxTable;
                     runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE3_WAIT;
                     return;
                 }
@@ -217,18 +217,18 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
         gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION6_GAMEBIT);
         if (gameBitValue == 0)
         {
-            runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
+            runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion6ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_7:
         gameBitValue = mainGetBit(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT);
         if (gameBitValue == 0)
         {
-            runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
+            runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion7ImpactSfxTable;
         }
         break;
     case SHTHORNTAIL_LOCOMOTION_8:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion8ImpactSfxTable;
     }
     SHthorntail_updateState(obj, runtime);
 }
@@ -245,19 +245,19 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
     switch (runtime->locomotionMode)
     {
     case SHTHORNTAIL_LOCOMOTION_1:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_2:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_3:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_4:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_5:
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_6:
         linkedEventPending = SHthorntail_HasNearbyPendingEventObject(obj);
@@ -273,7 +273,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
             randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
             runtime->idleTimer = (float)randomTime;
         }
-        runtime->impactSfxTable = &gSHthorntailRootControlMode2DefaultImpactSfxTable;
+        runtime->impactSfxTable = gSHthorntailRootControlMode2DefaultImpactSfxTable;
         break;
     case SHTHORNTAIL_LOCOMOTION_7:
         if (runtime->behaviorState == SHTHORNTAIL_STATE_ROOT_MODE2_EVENT)

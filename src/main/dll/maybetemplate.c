@@ -60,6 +60,21 @@
 #include "main/dll/tricky.h"
 #include "main/lightmap_api.h"
 #include "main/audio/music_trigger_ids.h"
+
+char sHudCounterFmt02d[] = "%02d";
+char sHudCounterFmt03d[] = "%03d";
+char lbl_803DBB58[] = "%d";
+char sHudEmptyYSlotMark[] = "?";
+char sHeadDisplayScoreFmt[] = "%04d";
+char lbl_803DBB68[] = "* %d";
+char lbl_803DBB70[] = "x %d/%d";
+char lbl_803DBB78[] = "%d/%d";
+char lbl_803DBB80[] = "%d %\n";
+char lbl_803DBB88[] = "%.2d:";
+char lbl_803DBB90[] = "%s%.2d:";
+char lbl_803DBB98[] = "%s%.2d";
+char sHighScoreRowFormat[] = "%06d\n";
+char sHighScoreStarMark[] = "x10";
 #define CAMMODE_VIEWFINDER 0x44
 #define CAMMODE_WORLDMAP 0x4e
 #define GAMEUI_OBJFLAG_PARENT_SLACK 0x1000
@@ -95,9 +110,6 @@ extern int gHudMagicBarX;
 extern int gHudMagicBarY;
 extern u8 lbl_803DD7B3;
 extern char sTemplateProgressCounterFormat[];
-extern char sHudCounterFmt02d;
-extern char sHudCounterFmt03d;
-extern char lbl_803DBB58;
 extern u32 gHudBlankCounterTextA;
 extern u32 gHudBlankCounterTextB;
 extern const f32 lbl_803E1E68;
@@ -145,7 +157,6 @@ extern f32 lbl_803DBA84;
 extern s16 gCMenuRowFadeInThreshold;
 extern s16 gCMenuRowFadeOutThreshold;
 extern u8 gHudButtonIcons[];
-extern char sHudEmptyYSlotMark;
 extern u32 gHudBlankButtonLabel;
 extern const f64 lbl_803E1EA8;
 extern const f32 lbl_803E1FB4;
@@ -246,7 +257,6 @@ extern const f32 lbl_803E1E5C;
 extern const f32 lbl_803E205C;
 extern u8 arwingHudVisible;
 extern s16 arwingHudAlpha;
-extern char sHeadDisplayScoreFmt;
 extern const f32 lbl_803E1FAC;
 extern const f32 lbl_803E2060;
 extern const f32 lbl_803E2064;
@@ -288,13 +298,6 @@ extern f32 lbl_803DBA50;
 extern f32 lbl_803DBA54;
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
-extern char lbl_803DBB68;
-extern char lbl_803DBB70;
-extern char lbl_803DBB78;
-extern char lbl_803DBB80;
-extern char lbl_803DBB88;
-extern char lbl_803DBB90;
-extern char lbl_803DBB98;
 extern int lbl_803E1E04;
 extern const f32 lbl_803E1E64;
 extern const f32 lbl_803E1E80;
@@ -401,8 +404,6 @@ extern HighScoreTitleIdEntry gHighScoreTitleIdTable[];
 extern s16 gHighScorePulseAngleStep;
 extern f32 gHighScorePulseAmplitude;
 extern f32 gHighScorePulseBias;
-extern char sHighScoreRowFormat;
-extern char sHighScoreStarMark;
 extern s16 gHighScorePulseAngle;
 extern s8 lbl_803DD75E;
 extern f32 lbl_803DD768;
@@ -838,16 +839,16 @@ void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* y
                 if (showTarget != 0)
                 {
                     sprintf((char*)&buf1, sTemplateProgressCounterFormat, value < 0 ? -value : value, target);
-                    sprintf((char*)&buf2, &sHudCounterFmt02d, value < 0 ? -value : value);
+                    sprintf((char*)&buf2, sHudCounterFmt02d, value < 0 ? -value : value);
                 }
                 else
                 {
-                    sprintf((char*)&buf1, &sHudCounterFmt03d, value);
+                    sprintf((char*)&buf1, sHudCounterFmt03d, value);
                 }
             }
             else
             {
-                sprintf((char*)&buf1, &lbl_803DBB58, value);
+                sprintf((char*)&buf1, lbl_803DBB58, value);
             }
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
@@ -1341,7 +1342,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
                 }
                 a16 = alpha * lbl_803DD8D4 / 0xFF;
                 GXSetScissor(0, 0, 0x280, 0x1E0);
-                sprintf((char*)&label, &lbl_803DBB58, gCMenuItemIcons[z[0]]);
+                sprintf((char*)&label, lbl_803DBB58, gCMenuItemIcons[z[0]]);
                 gameTextSetColorInt(0, 0, 0, a16 & 0xFF);
                 gameTextShowStr((char*)&label, 0x93, 0x247, 0x2B + z[1] + gCMenuScrollTimer);
                 gameTextSetColorInt(0xFF, 0xFF, 0xFF, (u8)a16);
@@ -1575,7 +1576,7 @@ void hudDrawButtons(int unk1, int unk2, int unk3)
             gameTextSetColorInt(0xFF, 0xFF, 0xFF, lbl_803DD83C);
             prevCharset = gameTextGetCharset();
             gameTextSetCharset(3, 3);
-            gameTextShowStr(&sHudEmptyYSlotMark, 0x93, 0x216, 0x22);
+            gameTextShowStr(sHudEmptyYSlotMark, 0x93, 0x216, 0x22);
             gameTextSetCharset(prevCharset, 3);
         }
     }
@@ -2656,7 +2657,7 @@ void drawArwingHud(int unused1, int unused2, int unused3)
                 drawTexture(hudTextures[59], (f32)(int)(0x244 - pip * 0x14), lbl_803E1F9C, (u8)arwingHudAlpha, 0x100);
             }
             drawTexture(hudTextures[58], (f32)(int)(0x23c - pip * 0x14), lbl_803E1FAC, (u8)arwingHudAlpha, 0x100);
-            sprintf(score, &sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
+            sprintf(score, sHeadDisplayScoreFmt, arwarwing_getScore(arwing));
         }
         gameTextSetColorU8(0xff, 0xff, 0xff, arwingHudAlpha);
         gameTextShowStr(score, 0x93, 0x23a, 0x41);
@@ -2918,7 +2919,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
                 int* info = mapEvents->getCurCharacterState();
                 *(int*)buf1 = lbl_803E1E04;
                 gameTextFn_80016810(0x3e0, 0xc8, 0x118);
-                sprintf(buf1, &lbl_803DBB68, *(u8*)((u8*)info + 9));
+                sprintf(buf1, lbl_803DBB68, *(u8*)((u8*)info + 9));
                 lbl_803DBA8C = lbl_803E1E64;
                 gameTextShowStr(buf1, 0x93, 0x14a, 0xdc);
                 lbl_803DBA8C = lbl_803E20A0;
@@ -3005,7 +3006,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             acc = (b8 - bc) + 5;
             {
                 u8* p214 = statusTable + 0x214;
-                sprintf(buf2, &lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
+                sprintf(buf2, lbl_803DBB58, (u8) * (u8*)(p214 + lbl_803DD756 * 8));
             }
             gameTextShowStr(buf2, 0x79, 0, acc + 0x78);
             gameTextMeasureS32(buf2, 0x79, 0, 0, &b14, &b10, &bc, &b8);
@@ -3159,27 +3160,27 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
         gameTextSetColor(0xff, 0xff, 0xff, ty);
         lbl_803DBA8A = (s16)(0xff - lbl_803DD75C);
         lbl_803DBA8C = lbl_803E20A0;
-        sprintf(buf, &lbl_803DBB70, *(u8*)((u8*)info + 9), *(u8*)((u8*)info + 0xa));
+        sprintf(buf, lbl_803DBB70, *(u8*)((u8*)info + 9), *(u8*)((u8*)info + 0xa));
         gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
         if (lbl_803DD734 != 0)
         {
-            sprintf(buf, &lbl_803DBB78, lbl_803A9364[3]);
+            sprintf(buf, lbl_803DBB78, lbl_803A9364[3]);
             gameTextShowStr(buf, 0x93, 0x140, 0x10e);
         }
-        sprintf(buf, &lbl_803DBB80, hintCount);
+        sprintf(buf, lbl_803DBB80, hintCount);
         gameTextShowStr(buf, 0x93, 0x130, 0x12c);
         h24 = (s32)(playRatio / gPauseMenuSecsPerHour);
         if (h24 > 0x63)
         {
-            sprintf(buf, &lbl_803DBB88, h24);
+            sprintf(buf, lbl_803DBB88, h24);
         }
         else
         {
-            sprintf(buf, &lbl_803DBB88, h24);
+            sprintf(buf, lbl_803DBB88, h24);
         }
         mins25 = (s32)(playRatio / lbl_803E2020) - h24 * 0x3c;
-        sprintf(buf, &lbl_803DBB90, buf, mins25);
-        sprintf(buf, &lbl_803DBB98, buf, (s32)(playRatio - (f32)(h24 * 0xe10) - (f32)(mins25 * 0x3c)));
+        sprintf(buf, lbl_803DBB90, buf, mins25);
+        sprintf(buf, lbl_803DBB98, buf, (s32)(playRatio - (f32)(h24 * 0xe10) - (f32)(mins25 * 0x3c)));
         gameTextShowStr(buf, 0x93, 0x12c, 0x14a);
         gameTextSetDrawFunc(0);
 
@@ -3735,7 +3736,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
             char* e = getHighScoreEntry(gHighScoreActiveTableId, k);
             char* name = e + 4;
             u32 starred = *(u8*)(e + 3) & 1;
-            sprintf(buf, &sHighScoreRowFormat, *(u32*)e >> 1);
+            sprintf(buf, sHighScoreRowFormat, *(u32*)e >> 1);
             if (k == gHighScoreHighlightRow)
             {
                 gameTextSetColorInt(pulse, pulse, pulse, 0xff);
@@ -3752,7 +3753,7 @@ void highScoreScreenDraw(int p1, int p2, int p3)
                 s16 starY = box2->f16 + k * 0x1e;
                 drawTexture(((HudTextures*)hudTextures)->texF8, (f32)(box2->f14 + 0x64),
                             (f32)(starY + 0x57), 0xff, 0x100);
-                gameTextShowStr(&sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
+                gameTextShowStr(sHighScoreStarMark, 0x87, 0x82, k * 0x1e + 0x5a);
             }
         }
     }

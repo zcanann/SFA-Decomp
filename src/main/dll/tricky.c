@@ -57,6 +57,87 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/gamebit_ids.h"
 
+u16 lbl_803DBA30 = 420;
+f32 lbl_803DBA34 = 0.3f;
+f32 lbl_803DBA38 = -8.0f;
+f32 lbl_803DBA3C = 3.5f;
+f32 lbl_803DBA40 = 0.044885714f;
+f32 lbl_803DBA44 = 0.046205882f;
+f32 lbl_803DBA48 = 0.04425352f;
+f32 lbl_803DBA4C = 256.0f;
+f32 lbl_803DBA50 = 256.0f;
+f32 lbl_803DBA54 = 1024.0f;
+u8 fearTestMeterOuterHalfWidth = 80;
+u8 fearTestMeterInnerHalfWidth = 40;
+s16 fearTestMeterMarkerX = 40;
+s32 lbl_803DBA5C = -1;
+s32 lbl_803DBA60 = -1;
+s8 lbl_803DBA64 = 1;
+s8 lbl_803DBA65 = 1;
+s16 gCMenuOpenAnimMax = 170;
+s16 gMinimapRevealMax = 96;
+s16 gMinimapInfoTextXCommitted = 35;
+s16 gMinimapInfoTextYCommitted = 160;
+s16 lbl_803DBA6E = -1;
+u16 curGameText = 0xFFFF;
+u8 gGameUiUnusedHudSetting = 1;
+f32 gHudYButtonAnimDecayBias = 0.25f;
+f32 gHudYButtonAnimXScale = 1.1f;
+f32 gHudYButtonAnimYScale = 7.0f;
+f32 gHudYButtonAnimRenderScale = 5.0f;
+f32 lbl_803DBA84 = 20.0f;
+u8 lbl_803DBA88 = 1;
+volatile s16 lbl_803DBA8A = 192;
+f32 lbl_803DBA8C = 1.5f;
+s8 gHighScoreActiveTableId = -1;
+u8 gHighScoreHighlightRow = 255;
+u8 gGameUiTaskHintCandidates[8] = {3, 0, 1, 4, 2, 0, 0, 0};
+u8 lbl_803DBA9C[6] = {2, 4, 5, 3, 1, 0};
+u8 lbl_803DBAA2 = 10;
+f32 lbl_803DBAA4 = 43.0f;
+s16 gHighScorePulseAngleStep = 1200;
+f32 gHighScorePulseAmplitude = 55.0f;
+f32 gHighScorePulseBias = 200.0f;
+s16 gTimeListPulseAngleStep = 1200;
+f32 gTimeListPulseAmplitude = 55.0f;
+f32 gTimeListPulseBias = 200.0f;
+f32 lbl_803DBAC0 = 0.03f;
+f32 lbl_803DBAC4 = 564.0f;
+f32 lbl_803DBAC8 = 195.0f;
+s16 gCMenuRowFadeInThreshold = 100;
+s16 gCMenuRowFadeOutThreshold = 200;
+int lbl_803DBAD0 = 400;
+int lbl_803DBAD4 = 435;
+int gHudMagicBarX = 30;
+int gHudMagicBarY = 70;
+f32 lbl_803DBAE0 = 40.0f;
+f32 lbl_803DBAE4 = -50.0f;
+int lbl_803DBAE8 = 22;
+s8 lbl_803DBAEC = -2;
+u8 gTrickyAirMeterFillSpeed = 3;
+u8 lbl_803DBAEE = 4;
+u8 gFearTestMeterMarkerHalfWidth = 2;
+u8 gFearTestMeterFadeSpeed = 8;
+f32 gTrickyHudIconFovY = 60.0f;
+f32 gTrickyHudIconAspect = 1.0f;
+f32 gTrickyHudIconNearPlane = 1.0f;
+f32 gTrickyHudIconFarPlane = 1000.0f;
+f32 gTrickyHudTexScaleX = 0.003125f;
+f32 gTrickyHudTexScaleY = 0.003125f;
+f32 gTrickyHudTexScaleZ = 0.00240625f;
+int gTrickyHudIconKColor = 80;
+f32 gTrickyHudTexMtxScale = 0.4f;
+char sViewFinderDirN[] = "N\n";
+char sViewFinderDirE[] = "E\n";
+char sViewFinderDirS[] = "S\n";
+char sViewFinderDirW[] = "W\n";
+char sViewFinderDirNE[] = "NE\n";
+char sViewFinderDirSE[] = "SE\n";
+char sViewFinderDirSW[] = "SW\n";
+char sViewFinderDirNW[] = "NW\n";
+char lbl_803DBB38[] = "%03d\n";
+char lbl_803DBB40[] = "%.2f\n";
+
 typedef struct GameUIWork10
 {
     u8 pad0[0x8 - 0x0];
@@ -258,12 +339,9 @@ extern const f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C;
 extern f32 lbl_803DBAE0, lbl_803DBAE4;
 extern const double lbl_803E1F38, lbl_803E1F40;
 extern const f32 gViewFinderDepthMax;
-extern char lbl_803DBB40;
 extern const f32 gViewFinderBamToDeg, lbl_803E1F90;
 extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88;
 extern int lbl_803DBAE8;
-extern char sViewFinderDirN, sViewFinderDirE, sViewFinderDirS, sViewFinderDirW, sViewFinderDirNE, sViewFinderDirSE,
-    sViewFinderDirSW, sViewFinderDirNW, lbl_803DBB38;
 extern u16 gViewFinderCamAngle;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
@@ -1724,31 +1802,31 @@ void drawViewFinderHud(void)
                 switch (r28v)
                 {
                 case 0:
-                    sprintf(buf, &sViewFinderDirN, r28v);
+                    sprintf(buf, sViewFinderDirN, r28v);
                     break;
                 case 0x5a:
-                    sprintf(buf, &sViewFinderDirE, r28v);
+                    sprintf(buf, sViewFinderDirE, r28v);
                     break;
                 case 0xb4:
-                    sprintf(buf, &sViewFinderDirS, r28v);
+                    sprintf(buf, sViewFinderDirS, r28v);
                     break;
                 case 0x10e:
-                    sprintf(buf, &sViewFinderDirW, r28v);
+                    sprintf(buf, sViewFinderDirW, r28v);
                     break;
                 case 0x2d:
-                    sprintf(buf, &sViewFinderDirNE, r28v);
+                    sprintf(buf, sViewFinderDirNE, r28v);
                     break;
                 case 0x87:
-                    sprintf(buf, &sViewFinderDirSE, r28v);
+                    sprintf(buf, sViewFinderDirSE, r28v);
                     break;
                 case 0xe1:
-                    sprintf(buf, &sViewFinderDirSW, r28v);
+                    sprintf(buf, sViewFinderDirSW, r28v);
                     break;
                 case 0x13b:
-                    sprintf(buf, &sViewFinderDirNW, r28v);
+                    sprintf(buf, sViewFinderDirNW, r28v);
                     break;
                 default:
-                    sprintf(buf, &lbl_803DBB38, r28v);
+                    sprintf(buf, lbl_803DBB38, r28v);
                     break;
                 }
                 r28v++;
@@ -1797,7 +1875,7 @@ void drawViewFinderHud(void)
                 (-farP * nearP) / (((f32)(u32)depth / gViewFinderDepthMax - lbl_803E1E68) * (farP - nearP) - nearP);
             if (dist > lbl_803E1E3C && dist < gTrickyHudNearestObjMaxDist)
             {
-                sprintf(buf, &lbl_803DBB40, dist / lbl_803E1EC4);
+                sprintf(buf, lbl_803DBB40, dist / lbl_803E1EC4);
                 gameTextSetColorInt(0, 0xff, 0, (int)(hudElementOpacity * gViewFinderFadeLevel));
                 gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }

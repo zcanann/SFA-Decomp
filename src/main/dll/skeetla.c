@@ -41,6 +41,10 @@
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
+f32 lbl_803DBC40[2] = {0.05f, 8.5f};
+f32 lbl_803DBC48 = 8.0f;
+char sSkeetlaVelDebugFmt[] = "Vel %f\n";
+
 /* group owned by another DLL, queried here */
 #define SIDEREPEL_OBJGROUP      0x40 /* DLL 0xEB siderepel */
 #define SKEETLA_TARGET_OBJGROUP 5
@@ -86,7 +90,6 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E2478;
 extern f32 lbl_803E2480;
 extern const f32 lbl_803E2484;
-extern char sSkeetlaVelDebugFmt;
 extern char lbl_8031D2E8[];
 extern u32 gSkeetlaFootstepSfxIds01;
 extern u16 gSkeetlaFootstepSfxId2;
@@ -466,7 +469,7 @@ int trickyMove(u8* obj, f32* targetPos)
     debugStrings = lbl_8031D2E8;
     state = ((GameObject*)obj)->extra;
     moveSpeed = ((TrickyState*)state)->speed;
-    trickyDebugPrint(&sSkeetlaVelDebugFmt, moveSpeed);
+    trickyDebugPrint(sSkeetlaVelDebugFmt, moveSpeed);
 
     ((TrickyState*)state)->dirX = targetPos[0] - ((GameObject*)obj)->anim.worldPosX;
     ((TrickyState*)state)->dirZ = targetPos[2] - ((GameObject*)obj)->anim.worldPosZ;

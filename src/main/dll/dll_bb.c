@@ -23,8 +23,11 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
+s16 gCamcontrolTargetHelpTextId = -1;
+u16 gCamcontrolTargetClassMask = 0xFFFF;
+char sDllBBTimeDebugFormat[] = "t=%f\n";
+
 extern s16 lbl_803DD4C0;
-extern char sDllBBTimeDebugFormat;
 extern f32 lbl_803DD4D0;
 extern f32 lbl_803E1668;
 extern f32 lbl_803E166C;
@@ -103,7 +106,7 @@ void camcontrol_applyState(CamcontrolCameraState* camera)
         {
             view->z = blendFactor * (view->z - camera->blendStartZ) + camera->blendStartZ;
         }
-        OSReport(&sDllBBTimeDebugFormat, blendFactor);
+        OSReport(sDllBBTimeDebugFormat, blendFactor);
         if ((camera->queuedBlendFlags & CAMCONTROL_BLEND_YAW) != 0)
         {
             camera->blendDeltaYaw = camera->blendStartYaw - (u16)view->yaw;
