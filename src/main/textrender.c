@@ -3162,7 +3162,6 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
-#pragma opt_dead_assignments off
 #pragma opt_lifetimes off
 #pragma peephole off
 void gameTextInitFn_8001c794(void)
@@ -3316,7 +3315,6 @@ void gameTextInitFn_8001c794(void)
     DCFlushRange((u8*)gGameTextBoxEdgeTexture + 0x60, 800);
 }
 #pragma opt_lifetimes reset
-#pragma opt_dead_assignments reset
 #pragma opt_common_subs reset
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
