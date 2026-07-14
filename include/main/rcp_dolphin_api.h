@@ -31,6 +31,7 @@ void fn_80051D5C(u8* texture, f32* texMtx, int mode, int* color);
 void gxFn_80051fb8(u8* texture, f32* texMtx, int mode, int* color, u8 swapSelector, u8 useKColor);
 void textureFn_800524ec(int* color);
 void gxColorFn_80052764(int* color);
+void gxTextureFn_80052638(int* color);
 int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
 
 #define fn_80051868Legacy(texture, texMtx, mode) \
@@ -48,6 +49,8 @@ int textureCrazyPointerFollowFn_80054c30(int* texture, int frame);
     (((void (*)(u8*))textureFn_800524ec)((color)))
 #define gxColorFn_80052764PtrLegacy(color) \
     (((void (*)(void*))gxColorFn_80052764)((color)))
+#define gxTextureFn_80052638ByteLegacy(color) \
+    (((void (*)(u8*))gxTextureFn_80052638)((color)))
 #define textureCrazyPointerFollowLegacy(texture, frame) \
     (((void* (*)(void*, int))textureCrazyPointerFollowFn_80054c30)((texture), (frame)))
 #define fn_800541A4Promoted(texture, frameStep) \

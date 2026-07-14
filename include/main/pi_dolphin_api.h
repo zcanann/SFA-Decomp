@@ -34,6 +34,15 @@ void fn_8004FA30(f32 scale, int* color, f32* position);
 void fn_8004FDA0(u8* texture, void* texMtx);
 void fn_80051528(void* texture, void* texMtx);
 void gxTextureFn_80050e28(u8 mode);
+int textureFn_80050ad8(void* texture, int stageCount, u8 mode, u32 indirectTextureId);
+void textureFn_80051348(void* textureRef, u8 objectFlags);
+void fn_800510F0(void* textureRef, u8 hasBaseTexture, u8 mode);
+void fn_80050FF4(u8 mode);
+void fn_8005011C(int objectInstance);
+void fn_80050558(u8* texture, void* texMtx, int stageMode, int componentMode, int variant);
+void fn_80050A28(int scale);
+void textureFn_8004c330(void* texture, void* texMtx);
+void gxTextureFn_8004d5b4(void* renderOp);
 
 #define fn_8004EECCColorLegacy(color) \
     (((void (*)(u8*))fn_8004EECC)((color)))
@@ -49,5 +58,19 @@ void gxTextureFn_80050e28(u8 mode);
     (((void (*)(int*, void*, u8*))fn_8004FDA0)((texture), (texMtx), (color)))
 #define gxTextureFn_80050e28IntLegacy(mode) \
     (((void (*)(int))gxTextureFn_80050e28)((mode)))
+#define textureFn_80050ad8ByteLegacy(texture, stageCount, mode, indirectTextureId) \
+    (((u8 (*)(void*, int, int, u32))textureFn_80050ad8)( \
+        (texture), (stageCount), (mode), (indirectTextureId)))
+#define textureFn_80051348IntLegacy(textureRef, objectFlags) \
+    (((void (*)(u32, int))textureFn_80051348)((textureRef), (objectFlags)))
+#define fn_800510F0IntLegacy(textureRef, hasBaseTexture, mode) \
+    (((void (*)(u32, int, int))fn_800510F0)((textureRef), (hasBaseTexture), (mode)))
+#define fn_80050FF4IntLegacy(mode) \
+    (((void (*)(int))fn_80050FF4)((mode)))
+#define fn_8005011CMatrixLegacy(matrix) \
+    (((void (*)(f32*))fn_8005011C)((matrix)))
+#define fn_80050558IntLegacy(texture, texMtx, stageMode, componentMode, variant) \
+    (((void (*)(u32, int, int, int, int))fn_80050558)( \
+        (texture), (texMtx), (stageMode), (componentMode), (variant)))
 
 #endif /* MAIN_PI_DOLPHIN_API_H_ */

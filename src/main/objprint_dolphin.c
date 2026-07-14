@@ -2833,18 +2833,6 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
 }
 #pragma opt_propagation reset
 
-extern u8 textureFn_80050ad8(void* tex, int n, int p3, u32 p4);
-extern void textureFn_80051348(u32 ref, int p2);
-extern void fn_800510F0(u32 ref, int p2, int p3);
-extern void fn_80050FF4(int p1);
-extern void fn_8005011C(f32* m);
-
-extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
-extern void fn_80050A28(int t);
-
-extern void textureFn_8004c330(void* tex, f32* m);
-extern void gxTextureFn_8004d5b4(int* op);
-extern void gxTextureFn_80052638(u8* color);
 extern u8 lbl_803DCC3C;
 
 #pragma opt_propagation off
@@ -2902,11 +2890,12 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         {
             nl += 1;
         }
-        envtex = textureFn_80050ad8(t, nl, ((u8*)op)[0x42], ((ObjModelRenderOp*)op)->indirectTextureId);
+        envtex = textureFn_80050ad8ByteLegacy(t, nl, ((u8*)op)[0x42],
+                                              ((ObjModelRenderOp*)op)->indirectTextureId);
     }
     if (refs[0] != 0)
     {
-        textureFn_80051348(refs[0], obj[0xf1]);
+        textureFn_80051348IntLegacy(refs[0], obj[0xf1]);
     }
     if (refs[1] != 0)
     {
@@ -2923,10 +2912,10 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         }
         tmp1 = *(u32*)color;
         GXSetTevColor(GX_TEVREG2, &tmp1);
-        fn_800510F0(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
+        fn_800510F0IntLegacy(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
         if (color[3] != 0)
         {
-            fn_80050FF4(refs[0] != 0 ? 1 : 0);
+            fn_80050FF4IntLegacy(refs[0] != 0 ? 1 : 0);
         }
     }
     else
@@ -2949,7 +2938,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
         b4 = b5f & 4;
         if (b4 && (mx = (f32*)((GameObject*)obj)->anim.modelState->shadowCastSlot) != NULL)
         {
-            fn_8005011C(mx);
+            fn_8005011CMatrixLegacy(mx);
             nlay = 0;
         }
         else if (b5f & 0x10)
@@ -2977,7 +2966,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
                     }
                     {
                         int mtx = (int)modelLightStruct_getProjectionTexMtx(*lp);
-                        fn_80050558(t, mtx, a, b, *sp);
+                        fn_80050558IntLegacy(t, mtx, a, b, *sp);
                     }
                 }
                 lp++;
@@ -3060,7 +3049,7 @@ u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
             color[1] = obj[0xed];
             color[2] = obj[0xee];
             color[3] = obj[0xef];
-            gxTextureFn_80052638(color);
+            gxTextureFn_80052638ByteLegacy(color);
         }
     }
     if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_WATER_CAUSTIC)
