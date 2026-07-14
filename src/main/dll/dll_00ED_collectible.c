@@ -422,7 +422,6 @@ int collectible_SeqFn(GameObject *obj, int unused, ObjAnimUpdateState* animUpdat
 
 void collectible_checkProximityPickup(GameObject *obj, u8* state)
 {
-    extern void collectible_applyPickup(int obj);
     GameObject* player;
     s16* attach;
     u8* focus;
@@ -464,12 +463,12 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
             }
             else
             {
-                collectible_applyPickup((int)obj);
+                collectible_applyPickup((int*)obj);
             }
             state[0x37] |= 1;
             break;
         case 0x319:
-            collectible_applyPickup((int)obj);
+            collectible_applyPickup((int*)obj);
             state[0x37] |= 1;
             break;
         case 0x49:
@@ -482,7 +481,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
             }
             else
             {
-                collectible_applyPickup((int)obj);
+                collectible_applyPickup((int*)obj);
             }
             state[0x37] |= 1;
             break;
@@ -494,7 +493,7 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
             }
             else
             {
-                collectible_applyPickup((int)obj);
+                collectible_applyPickup((int*)obj);
             }
             state[0x37] |= 1;
             break;
@@ -518,8 +517,6 @@ void collectible_checkProximityPickup(GameObject *obj, u8* state)
 
 void collectible_update(int obj)
 {
-    extern void collectible_updateLooseMotion(int obj);
-    extern void collectible_applyPickup(int obj);
     u8* state = ((GameObject*)obj)->extra;
     ObjHitsPriorityState* hitState;
     int msgParam;
@@ -584,7 +581,7 @@ void collectible_update(int obj)
         switch (msg)
         {
         case COLLECTIBLE_MSG_PICKUP:
-            collectible_applyPickup(obj);
+            collectible_applyPickup((int*)obj);
             break;
         }
     }
@@ -624,7 +621,7 @@ void collectible_update(int obj)
         collectible_updateIdleMotion((GameObject*)(obj));
         if (((CollectibleState*)state)->bounceTimer != 0)
         {
-            collectible_updateLooseMotion(obj);
+            collectible_updateLooseMotion((int*)obj);
         }
         if (state[0x3e] != 0)
         {
