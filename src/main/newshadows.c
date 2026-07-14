@@ -2008,10 +2008,13 @@ void initFn_8006d020(void)
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void)
 {
-    char* g = (char*)(int)gNewShadowEntries;
+    f32 rc2;
     u8 saved;
-    int i, j, h;
-    f32 rc, rc2;
+    int i;
+    int j;
+    int h;
+    f32 rc;
+    char* g = (char*)(int)gNewShadowEntries;
     f32 cy;
 
     saved = testAndSet_onlyUseHeap3(1);
