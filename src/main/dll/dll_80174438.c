@@ -12,6 +12,7 @@
 #include "main/object_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_stop_channel_api.h"
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 
 extern u32 fn_80174BFC();
@@ -20,7 +21,6 @@ extern u32 fn_80174BFC();
 
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
-extern void Sfx_StopObjectChannel(u32 obj, u32 channel);
 extern int fn_80295A04(void* player, int p2);
 extern void pushable_handleMsgs(int obj, int p2);
 extern f32 lbl_803E352C;
