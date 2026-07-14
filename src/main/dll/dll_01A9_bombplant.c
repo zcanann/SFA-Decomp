@@ -1,6 +1,7 @@
 /* DLL 0x01A9 — bombplant / enemymushroom group. TU: 0x801D286C–0x801D2C54. */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/shader_api.h"
@@ -161,7 +162,6 @@ void bombplant_throwSpore(int* obj, int* p2)
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
 int bombplant_SeqFn(int* obj)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
     float* state = ((GameObject*)obj)->extra;
 
     if (((EnemyMushroomState*)state)->resetToSpawn != 0)
@@ -188,7 +188,7 @@ int bombplant_SeqFn(int* obj)
     {
         int* base;
         u8 flags;
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_baddie_eggsnatch_sniff2);
         base = *(int**)&((GameObject*)obj)->anim.placementData;
         flags = ((EnemyMushroomState*)state)->flags;
         if (flags & BOMBPLANT_FLAG_STATE_ENTERED)
@@ -255,7 +255,6 @@ void bombplant_init(GameObject *obj, void* param, int flag)
 
 void bombplant_update(void* obj)
 {
-    extern void Sfx_KeepAliveLoopedObjectSound(void* obj, int sndId);
     extern void Sfx_PlayFromObject(void* obj, int sndId);
     extern void bombplant_explode(void* obj, void* stateEntry, void* state);
     void* state;
@@ -373,7 +372,7 @@ void bombplant_update(void* obj)
         break;
 
     case 0:
-        Sfx_KeepAliveLoopedObjectSound(obj, SFXTRIG_baddie_eggsnatch_sniff2);
+        Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, SFXTRIG_baddie_eggsnatch_sniff2);
     default:
         param = ((GameObject*)obj)->anim.placementData;
         if ((((BombPlantState*)state)->flags & BOMBPLANT_FLAG_STATE_ENTERED) != 0)
