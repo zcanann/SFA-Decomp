@@ -24,6 +24,7 @@
 #include "main/dll/dll_00CA_icebaddie.h"
 #include "main/dll/tricky_state.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/obj_placement.h"
 #include "main/objhits.h"
@@ -154,7 +155,6 @@ extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
-extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
 extern int objIsFrozen(int obj);
@@ -1588,12 +1588,12 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x40) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound((int*)obj, SFXTRIG_forcecryslp11);
+                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84((int*)obj, lbl_803E256C, 5, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x80) != 0)
             {
-                Sfx_KeepAliveLoopedObjectSound((int*)obj, SFXTRIG_forcecryslp11);
+                Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy((int*)obj, SFXTRIG_forcecryslp11);
                 objParticleFn_80099d84((int*)obj, lbl_803E25F8, 6, ((EnemyState*)state)->particleScale, 0);
             }
             if ((*(u32*)&((EnemyState*)state)->flags2E8 & 0x100) != 0)
