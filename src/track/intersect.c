@@ -114,6 +114,8 @@ extern f32 sqrtf(f32 x);
 
 extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
+extern f32 hudMatrix[4][4];
+extern f32 hudScale;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
 extern volatile s32 lbl_803DB700;
@@ -1234,7 +1236,6 @@ void screenImageDraw(u8 alpha)
     extern f32 lbl_803DEEE8;
     extern f32 lbl_8030EA70[3][3];
     extern f32 lbl_8030EA88[3][3];
-    extern f32 hudMatrix[4][4];
 
     Mtx mtx_60;
     Mtx mtx_30;
@@ -1410,7 +1411,6 @@ void screenImageDraw(u8 alpha)
 
 void doSpiritVisionFilter(void)
 {
-    extern f32 hudMatrix[4][4];
 
 
     updateReflectionTextures();
@@ -1525,7 +1525,6 @@ void doSpiritVisionFilter(void)
 void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
-    extern f32 hudMatrix[4][4];
 
     GXColor c0, c1, c2, c3;
 
@@ -1667,7 +1666,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
     extern f32 gSynthDelayedActionWord0, gSynthFadeMask;
     extern f32 lbl_803DEF20;
     extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
-    extern f32 hudMatrix[4][4];
     extern void fn_8006C540(int* out);
     extern void fn_8006C534(int* out);
     Mtx mtx_d0;
@@ -2646,7 +2644,6 @@ u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
     extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
-    extern f32 hudScale;
     extern f32 gSynthDelayedActionWord0;
 
     extern f32* ObjModel_GetJointMatrix(void* model, int joint);
@@ -2814,7 +2811,6 @@ u32 objCallback_80074d04(int handle, void* model)
 
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
-    extern f32 hudMatrix[4][4];
     extern f32 lbl_803DEEDC;
 
     GXClearVtxDesc();
@@ -2884,8 +2880,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
-    extern f32 hudMatrix[4][4];
-    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     f32 scale = hudScale;
     f32 fy4, fx4, fy3, fx3, fy2, fx2, fy1, fx1;
@@ -2965,8 +2959,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
 
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
-    extern f32 hudMatrix[4][4];
-    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
     f32 scale = hudScale;
     f32 fy3, fx3, fy2, fx2, fy1, fx1;
@@ -3037,7 +3029,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
-    extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3080,7 +3071,6 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
 
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
-    extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3124,8 +3114,6 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset,
                         int v_offset)
 {
-    extern f32 hudScale;
-    extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w;
     f32 u1, u0, v0, v1;
@@ -3232,8 +3220,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  */
 void drawRect(f32 sx, f32 sy, int x, int y)
 {
-    extern f32 hudMatrix[4][4];
-    extern f32 hudScale;
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -3295,9 +3281,7 @@ void drawRect(f32 sx, f32 sy, int x, int y)
 
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags)
 {
-    extern f32 hudScale;
     extern f32 lbl_803DEEDC;
-    extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w, h;
     f32 u0, u1, v0, v1;
@@ -3433,10 +3417,8 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
  */
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
-    extern f32 hudScale;
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
-    extern f32 hudMatrix[4][4];
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
@@ -3548,10 +3530,8 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
  */
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
-    extern f32 hudScale;
     extern const f32 lbl_803DEEDC;
     extern const f32 lbl_803DEEE4;
-    extern f32 hudMatrix[4][4];
     GXColor c;
     s32 w, h;
 
@@ -4422,7 +4402,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF4C;
     extern f32 lbl_803DEF50;
-    extern f32 hudMatrix[4][4];
     extern void fn_8006C540(int*);
     int handle;
     GXColor c0, c1, c2;
@@ -4530,7 +4509,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
     extern f32 lbl_803DEF54, lbl_803DEF58, lbl_803DEF5C, lbl_803DEF60, lbl_803DEF64, lbl_803DEF68;
     extern f32 gSynthFadeMask, gSynthDelayedActionWord0, timeDelta;
-    extern f32 hudMatrix[4][4];
     extern u16 fn_8000FA90(void);
     extern u16 fn_8000FA70(void);
     extern f32 fn_80292194(f32 v);
@@ -4716,7 +4694,6 @@ void doHeatEffect(u8 alpha)
     extern u8 lbl_802C1EA8[];
     extern s16 fn_8000FA70(void);
     extern void fn_80293C64(f32 c, f32 * a, f32 * b);
-    extern f32 hudMatrix[4][4];
     Mtx mtx_44;
     f32 indMtx[6];
     int handle2;
@@ -4879,7 +4856,6 @@ void doHeatEffect(u8 alpha)
 void renderMotionBlur(f32 alpha)
 {
     extern f32 lbl_803DEF20;
-    extern f32 hudMatrix[4][4];
     Mtx mtx;
 
     lbl_803DB6A0.a = lbl_803DEF20 * alpha;
@@ -4963,7 +4939,6 @@ void doBlurFilter(f32 wx, f32 wy, f32 wz, u8 param4, u8 param5)
     extern f32 lbl_803DEEE4;
     extern f32 lbl_803DEF08;
     extern f32 lbl_803DEF78, lbl_803DEF7C, lbl_803DEF80;
-    extern f32 hudMatrix[4][4];
     Mtx mtx_27;
     Mtx mtx_24;
     Mtx mtx_2A;
