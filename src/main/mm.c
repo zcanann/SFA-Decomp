@@ -419,42 +419,12 @@ void mmFreeTick(int arg)
         }
     }
 
+    for (k = 0; k < 0x20; k++)
     {
-        MmStore** sp = (MmStore**)g[0];
-        for (k = 0; k < 0x20; k += 8, sp += 8)
+        MmStore** sp = (MmStore**)g[0]->stores;
+        if (sp[k] != NULL)
         {
-            if (sp[0] != NULL)
-            {
-                sp[0]->bufCur = sp[0]->buf;
-            }
-            if (sp[1] != NULL)
-            {
-                sp[1]->bufCur = sp[1]->buf;
-            }
-            if (sp[2] != NULL)
-            {
-                sp[2]->bufCur = sp[2]->buf;
-            }
-            if (sp[3] != NULL)
-            {
-                sp[3]->bufCur = sp[3]->buf;
-            }
-            if (sp[4] != NULL)
-            {
-                sp[4]->bufCur = sp[4]->buf;
-            }
-            if (sp[5] != NULL)
-            {
-                sp[5]->bufCur = sp[5]->buf;
-            }
-            if (sp[6] != NULL)
-            {
-                sp[6]->bufCur = sp[6]->buf;
-            }
-            if (sp[7] != NULL)
-            {
-                sp[7]->bufCur = sp[7]->buf;
-            }
+            sp[k]->bufCur = sp[k]->buf;
         }
     }
     SaveGame_updateTransientMapBits();
