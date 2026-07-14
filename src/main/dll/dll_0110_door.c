@@ -7,6 +7,7 @@
 #include "main/objtexture.h"
 #include "main/objhits.h"
 #include "main/gamebits.h"
+#include "main/audio/sfx_object_query_api.h"
 #include "main/audio/sfx_play_int_return_legacy_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -51,8 +52,6 @@ typedef struct DoorState
     u8 closeFlags;   /* 0x6: DOOR_CLOSE_FLAG_* */
     u8 pad7[0x8 - 0x7];
 } DoorState;
-
-extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 
 int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -144,7 +143,8 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     mainSetBits(def->closedLatchGameBit, 1);
                 }
-                if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
+                if ((state->movementSfx != 0) &&
+                    (Sfx_IsPlayingFromObjectIntLegacy(obj, state->movementSfx) != 0))
                 {
                     Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
                 }
@@ -167,7 +167,8 @@ int Door_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 {
                     mainSetBits(def->closedLatchGameBit, 0);
                 }
-                if ((state->movementSfx != 0) && (Sfx_IsPlayingFromObject(obj, state->movementSfx) != 0))
+                if ((state->movementSfx != 0) &&
+                    (Sfx_IsPlayingFromObjectIntLegacy(obj, state->movementSfx) != 0))
                 {
                     Sfx_StopFromObjectIntReturnLegacy(obj, state->movementSfx);
                 }
