@@ -227,3 +227,10 @@ maxY/minY from volatiles (sth r4,34(r3) directly after fctiwz) => fyv+lp there a
 same shared-staging false-set artifact as pl/po; apply the same fix (block-scope or inline
 the staging per site) and re-anchor. lp itself (F43, nadj 233) currently pops r22 - after
 the fyv fix expect lp to need the same treatment for the wg cluster to settle on r21/r22.
+
+## fyv eliminated as the r21-blocker
+Direct (s16)fy0/fy1 stores (dropping fyv+lp staging at the four maxY/minY sites) leave the
+wg cluster unchanged (wg=r22, curve=r23) and cost 4 region-lines (144 vs 140) - revert that
+edit; the committed lp/fyv staging at THOSE sites is shape-correct. F39's identity remains
+open - resolve via webmap operand decode (def-site correlation), not enumeration guessing.
+Probe state to build from: wgfep_perblock.c (per-block po2/pl2, 140 regions, 5/8 anchors).
