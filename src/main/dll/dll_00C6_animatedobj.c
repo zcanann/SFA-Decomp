@@ -14,6 +14,7 @@
 #include "main/object_api.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_looped_object_api.h"
+#include "main/audio/sfx_stop_channel_api.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/camera_interface.h"
 #include "main/maketex_sequence_api.h"
@@ -83,7 +84,6 @@ typedef struct AnimatedobjState
 } AnimatedobjState;
 
 extern void** gTitleMenuControlInterfaceCopy;
-extern void Sfx_StopObjectChannel(int* obj, int channel);
 
 
 
@@ -136,7 +136,7 @@ void animatedobj_free(int* obj, int seqFlag)
         ->freeState(((GameObject*)obj)->extra);
     ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObjectPtrLegacy(obj);
-    Sfx_StopObjectChannel(obj, 0x7f);
+    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
     if (((GameObject*)obj)->anim.seqId == 0x774 && ((GameObject*)obj)->childCount != 0)
     {
         Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
