@@ -18,6 +18,7 @@
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/object_api.h"
+#include "main/model_light.h"
 #include "main/objhits.h"
 #include "dolphin/mtx.h"
 #include "main/dll/dll_00C4_tricky.h"
@@ -281,7 +282,6 @@ extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
 extern void fn_802972B4(GameObject* player, u32* outEffects, f32* outA, f32* outB, f32* outC, u16* outSfx);
-extern int objCreateLight(int a, int b);
 extern void fn_802961FC(u8* proj, int result);
 extern int sidekickToy_handleHitMessage(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                         int sector, f32 hDist, f32 vDist);
@@ -2309,7 +2309,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
             params.pos.z = hitPos.z;
             if (*(void**)&((TrickyState*)state)->light == NULL)
             {
-                ((TrickyState*)state)->light = objCreateLight(0, 1);
+                ((TrickyState*)state)->light = (int)objCreateLight(NULL, 1);
             }
             if ((((TrickyState*)state)->flags2E8 & 0x200) != 0)
             {
@@ -2353,7 +2353,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
                 ((TrickyState*)state)->freezeEffectTimer = lbl_803E25A0;
                 if (*(void**)&((TrickyState*)state)->light == NULL)
                 {
-                    ((TrickyState*)state)->light = objCreateLight(0, 1);
+                    ((TrickyState*)state)->light = (int)objCreateLight(NULL, 1);
                 }
                 objLightFn_8009a1dc((void*)obj, lbl_803E259C, &params, 4, (void*)((TrickyState*)state)->light);
             }
