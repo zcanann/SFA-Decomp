@@ -10,6 +10,7 @@
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/dll_00F7_dllf7_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
+#include "main/audio/sfx_position_api.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"
 #include "main/dll/genpropswgpipe_struct.h"
@@ -106,8 +107,6 @@ extern f32 lbl_803E340C;
 extern f32 lbl_803E3410;
 extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
-extern void Sfx_PlayAtPositionFromObject(int* obj, f32 x, f32 y, f32 z, int sfx);
-
 extern void* gDllF7Resource5B;
 extern void* gDllF7Resource5A;
 
@@ -177,7 +176,7 @@ void dll_F7_update(int* obj)
     {
         if ((state->hitsRemaining -= hitVolume) > 0)
         {
-            Sfx_PlayAtPositionFromObject(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
+            Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
             state->bounceOffset = lbl_803E3404;
             state->bounceVelocity = lbl_803E3408;
