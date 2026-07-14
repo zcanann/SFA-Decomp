@@ -169,9 +169,7 @@ extern f32 gHudBButtonIconX;
 extern const f32 lbl_803E2010;
 extern f32 gHudYButtonIconX;
 extern const f32 lbl_803E2018;
-extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int arg, int w, int h, int off, int m);
-extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 extern void drawFn_8011e8d8(void* tex, f32 x, f32 y, int a, int b, int w, int h, int off, int m);
 extern void drawScaledTexture(void* texture, f32 x, f32 y, int alpha, int arg, int w, int h, int mode);
 extern void drawTexture(void* texture, f32 x, f32 y, int alpha, int arg);
@@ -614,8 +612,6 @@ typedef struct CounterText
 #define GCMENU_ITEM_ICON_COUNT    7
 #define PAUSE_MENU_HUD_ITEM_COUNT 13
 
-#pragma opt_strength_reduction on
-#pragma peephole off
 void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
 {
     int t13;
@@ -630,6 +626,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
     int w8;
     int seg4Raw;
     void* tex;
+    extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, int b, int c, int d);
+    extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, int b, int c, int w, int h, int m);
 
     total = lbl_803A9364[8];
     t13 = total - 0xd;
@@ -640,18 +638,8 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         seg1++;
     }
     rem1 = 8 - seg1;
-    seg2 = current - 7;
-    if (t13 < seg2)
-    {
-        seg2 = t13;
-    }
-    if (seg2 > 0)
-    {
-    }
-    else
-    {
-        seg2 = 0;
-    }
+    seg2 = (t13 < current - 7) ? t13 : current - 7;
+    seg2 = (seg2 > 0) ? seg2 : 0;
     seg3 = t13 - seg2;
     seg4Raw = (current - 7) - t13;
     if (seg4Raw > 5)
@@ -827,8 +815,9 @@ void hudDrawMagicBar(int alpha, int elemAlpha, u32 flags)
         }
     }
 }
-#pragma opt_strength_reduction reset
-#pragma peephole reset
+
+extern void pauseMenuDrawElement(void* tex, f32 x, f32 y, int a, u8 b, int c, int d);
+extern void drawFn_8011eb3c(void* tex, f32 x, f32 y, int a, u8 b, int c, int w, int h, int m);
 
 void hudDrawCounter(int idx, s16 value, s16 target, int alpha, int timer, int* yPos, u8 showTarget)
 {
