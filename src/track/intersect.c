@@ -3261,7 +3261,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void textureFn_8004c264(s16 * obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
@@ -3308,7 +3307,7 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264(obj, 0);
+    textureFn_8004c264((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
@@ -3445,7 +3444,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void textureFn_8004c264(s16 * obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
@@ -3493,7 +3491,7 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264(obj, 0);
+    textureFn_8004c264((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
@@ -3590,7 +3588,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void textureFn_8004c264(s16 * obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
 
@@ -3637,7 +3634,7 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264(obj, 0);
+    textureFn_8004c264((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)
@@ -3711,7 +3708,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     extern f32 hudMatrix[4][4];
     extern u8 gGxZModeUpdateEnable, gGxZModeCompareEnable, gGxZModeValid;
     extern int gGxZModeCompareFunc;
-    extern void textureFn_8004c264(s16 * obj, int slot);
     extern void Camera_RebuildProjectionMatrix(void);
     extern void GXSetZMode();
     GXColor c;
@@ -3757,7 +3753,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
     GXSetNumChans(0);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    textureFn_8004c264(obj, 0);
+    textureFn_8004c264((Texture*)obj, 0);
     GXSetCullMode(GX_CULL_NONE);
     GXSetProjection(hudMatrix, GX_ORTHOGRAPHIC);
     if ((u32)gGxZModeCompareEnable != 0 || gGxZModeCompareFunc != 7 || gGxZModeUpdateEnable != 0 || gGxZModeValid == 0)

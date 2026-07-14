@@ -3910,23 +3910,23 @@ void setDisplayCopyFilter(void)
 extern void fn_80053C40(u8* tex, void* out);
 extern u8 lbl_803779A0[];
 #pragma peephole off
-void textureFn_8004c264(u8* tex, int mapId)
+void textureFn_8004c264(Texture* texture, int mapId)
 {
     void* base;
-    if (tex == NULL)
+    if (texture == NULL)
         return;
-    base = &tex[32];
-    if (tex[72] != 0)
+    base = &((u8*)texture)[32];
+    if (((u8*)texture)[72] != 0)
     {
-        GXLoadTexObjPreLoaded(base, *(void**)(tex + 64), mapId);
+        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 64), mapId);
     }
     else
     {
         GXLoadTexObj(base, mapId);
     }
-    if (*(void**)(tex + 80) != NULL)
+    if (*(void**)((u8*)texture + 80) != NULL)
     {
-        fn_80053C40(tex, lbl_803779A0);
+        fn_80053C40((u8*)texture, lbl_803779A0);
         GXLoadTexObj((GXTexObj*)lbl_803779A0, GX_TEXMAP1);
     }
 }

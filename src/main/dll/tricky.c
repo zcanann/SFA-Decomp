@@ -273,7 +273,6 @@ extern void cutsceneFadeInOut(int a);
 extern void setTimeStop(int v);
 extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
-extern void textureFn_8004c264(void* this, int x);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 extern void* Shader_getLayer(char* base, int idx);
@@ -805,7 +804,7 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     GXSetNumTexGens(1);
     GXSetNumIndStages(0);
     GXSetNumChans(0);
-    textureFn_8004c264(this, 0);
+    textureFn_8004c264((Texture*)this, 0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     GXSetTevKColor(0, colB);
