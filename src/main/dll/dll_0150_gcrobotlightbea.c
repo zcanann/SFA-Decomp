@@ -27,6 +27,7 @@
 #include "main/sky_state.h"
 #include "main/model_light.h"
 #include "main/dll/dll_0150_gcrobotlightbea.h"
+#include "main/object_descriptor.h"
 
 /* Per-object extra state for the robot light beacon
  * (gcrobotlightbea_getExtraSize == 0xc). */
@@ -35,7 +36,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 #define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
 
-extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
 
@@ -52,6 +52,8 @@ u32 fn_801A0174(int* obj)
 {
     return (((GcRobotLightBeaState*)(int*)((GameObject*)obj)->extra)->hitFlags >> 7) & 1;
 }
+
+f32 lbl_80322C38[3] = {0.0f, -0.757f, -0.2f};
 
 int gcrobotlightbea_getExtraSize(void)
 {
@@ -161,3 +163,23 @@ void gcrobotlightbea_release(void)
 void gcrobotlightbea_initialise(void)
 {
 }
+
+ObjectDescriptor10WithPadding gGCRobotLightBeaObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+        (ObjectDescriptorCallback)gcrobotlightbea_initialise,
+        (ObjectDescriptorCallback)gcrobotlightbea_release,
+        0,
+        (ObjectDescriptorCallback)gcrobotlightbea_init,
+        (ObjectDescriptorCallback)gcrobotlightbea_update,
+        (ObjectDescriptorCallback)gcrobotlightbea_hitDetect,
+        (ObjectDescriptorCallback)gcrobotlightbea_render,
+        (ObjectDescriptorCallback)gcrobotlightbea_free,
+        (ObjectDescriptorCallback)gcrobotlightbea_getObjectTypeId,
+        gcrobotlightbea_getExtraSize,
+    },
+    0,
+};

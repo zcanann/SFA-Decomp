@@ -51,6 +51,7 @@
 #include "main/dll/dll_02B5_timer.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY 0xe
 
@@ -1203,3 +1204,24 @@ void gunpowderbarrel_homeOnTarget(int* obj, s16 a, s16 b)
         ((GameObject*)obj)->anim.rotZ = (f32)((GameObject*)obj)->anim.rotZ + t;
     }
 }
+
+ObjectDescriptor11WithPadding gGunPowderBarrelObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        0,
+        0,
+        0,
+        (ObjectDescriptorCallback)gunpowderbarrel_init,
+        (ObjectDescriptorCallback)gunpowderbarrel_update,
+        (ObjectDescriptorCallback)gunpowderbarrel_hitDetect,
+        (ObjectDescriptorCallback)gunpowderbarrel_render,
+        (ObjectDescriptorCallback)gunpowderbarrel_free,
+        0,
+        gunpowderbarrel_getExtraSize,
+        (ObjectDescriptorCallback)gunpowderbarrel_addThrowVelocity,
+    },
+    0,
+};

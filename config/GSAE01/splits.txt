@@ -1829,28 +1829,35 @@ main/dll/CF/dll_014E_cfprisonguard.c:
 main/dll/CF/dll_014F_cfprisonuncle.c:
 	.text       start:0x8019FC84 end:0x801A0174
 	.sdata2     start:0x803E4290 end:0x803E4298
+	.data       start:0x80322C00 end:0x80322C38
 
 main/dll/dll_0150_gcrobotlightbea.c:
 	.text       start:0x801A0174 end:0x801A04F4
 	.sdata2     start:0x803E4298 end:0x803E42B0
+	.data       start:0x80322C38 end:0x80322C80
 
 main/dll/CF/dll_0153_cfperch.c:
 	.text       start:0x801A04F4 end:0x801A0614
+	.data       start:0x80322C80 end:0x80322CB8
 
 main/dll/CF/dll_0154_cfprisoncage.c:
 	.text       start:0x801A0614 end:0x801A0994
 	.sdata2     start:0x803E42B0 end:0x803E42B8
+	.data       start:0x80322CB8 end:0x80322CF0
 
 main/dll/dll_0157_spiritdoorspirit.c:
 	.text       start:0x801A0994 end:0x801A0B14
 	.sdata2     start:0x803E42B8 end:0x803E42BC
+	.data       start:0x80322CF0 end:0x80322D28
 
 main/dll/dll_0158_gunpowderbarrel.c:
 	.text       start:0x801A0B14 end:0x801A27B8
 	.sdata2     start:0x803E42C0 end:0x803E4348
+	.data       start:0x80322D28 end:0x80322D68
 
 main/dll/dll_0159_blasted.c:
 	.text       start:0x801A27B8 end:0x801A2BDC
+	.data       start:0x80322D68 end:0x80322DA0
 
 main/dll/dll_015A_explodable.c:
 	.text       start:0x801A2BDC end:0x801A39B4

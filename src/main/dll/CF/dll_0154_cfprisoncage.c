@@ -21,6 +21,7 @@
 #include "main/objseq.h"
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
+#include "main/object_descriptor.h"
 
 typedef struct CfPrisonCageMapData
 {
@@ -208,3 +209,20 @@ __declspec(section ".sdata2") f32 lbl_803E42B0 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E42B4 = 0.0f;
 #pragma explicit_zero_data reset
+
+ObjectDescriptor gCFPrisonCageObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFPrisonCage_initialise,
+    (ObjectDescriptorCallback)CFPrisonCage_release,
+    0,
+    (ObjectDescriptorCallback)CFPrisonCage_init,
+    (ObjectDescriptorCallback)CFPrisonCage_update,
+    (ObjectDescriptorCallback)CFPrisonCage_hitDetect,
+    (ObjectDescriptorCallback)CFPrisonCage_render,
+    (ObjectDescriptorCallback)CFPrisonCage_free,
+    (ObjectDescriptorCallback)CFPrisonCage_getObjectTypeId,
+    CFPrisonCage_getExtraSize,
+};

@@ -25,6 +25,7 @@
 #include "main/gamebit_ids.h"
 #include "main/gamebits_api.h"
 #include "main/dll/CF/dll_014F_cfprisonuncle.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
@@ -213,3 +214,20 @@ void cfprisonuncle_release(void)
 void cfprisonuncle_initialise(void)
 {
 }
+
+ObjectDescriptor gCFPrisonUncleObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cfprisonuncle_initialise,
+    (ObjectDescriptorCallback)cfprisonuncle_release,
+    0,
+    (ObjectDescriptorCallback)cfprisonuncle_init,
+    (ObjectDescriptorCallback)cfprisonuncle_update,
+    (ObjectDescriptorCallback)cfprisonuncle_hitDetect,
+    (ObjectDescriptorCallback)cfprisonuncle_render,
+    (ObjectDescriptorCallback)cfprisonuncle_free,
+    (ObjectDescriptorCallback)cfprisonuncle_getObjectTypeId,
+    cfprisonuncle_getExtraSize,
+};

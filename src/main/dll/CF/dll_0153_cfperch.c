@@ -10,6 +10,7 @@
 #include "main/obj_message.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
+#include "main/object_descriptor.h"
 
 /* perch anim-event callback: stop the sequence once the old
  * CloudRunner has been freed from his cage (0x4D) */
@@ -70,3 +71,20 @@ void cfperch_release(void)
 void cfperch_initialise(void)
 {
 }
+
+ObjectDescriptor gCFPerchObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cfperch_initialise,
+    (ObjectDescriptorCallback)cfperch_release,
+    0,
+    (ObjectDescriptorCallback)cfperch_init,
+    (ObjectDescriptorCallback)cfperch_update,
+    (ObjectDescriptorCallback)cfperch_hitDetect,
+    (ObjectDescriptorCallback)cfperch_render,
+    (ObjectDescriptorCallback)cfperch_free,
+    (ObjectDescriptorCallback)cfperch_getObjectTypeId,
+    cfperch_getExtraSize,
+};

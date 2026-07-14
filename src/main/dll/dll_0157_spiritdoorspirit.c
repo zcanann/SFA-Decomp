@@ -14,6 +14,7 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0157_spiritdoorspirit.h"
+#include "main/object_descriptor.h"
 
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 
@@ -110,3 +111,20 @@ void spiritdoorspirit_release(void)
 void spiritdoorspirit_initialise(void)
 {
 }
+
+ObjectDescriptor gSpiritDoorSpiritObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)spiritdoorspirit_initialise,
+    (ObjectDescriptorCallback)spiritdoorspirit_release,
+    0,
+    (ObjectDescriptorCallback)spiritdoorspirit_init,
+    (ObjectDescriptorCallback)spiritdoorspirit_update,
+    (ObjectDescriptorCallback)spiritdoorspirit_hitDetect,
+    (ObjectDescriptorCallback)spiritdoorspirit_render,
+    (ObjectDescriptorCallback)spiritdoorspirit_free,
+    (ObjectDescriptorCallback)spiritdoorspirit_getObjectTypeId,
+    spiritdoorspirit_getExtraSize,
+};

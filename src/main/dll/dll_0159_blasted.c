@@ -9,6 +9,7 @@
 #include "main/map_block.h"
 #include "main/dll/dll_0159_blasted.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define BLASTED_GAMEBIT_DAMAGE_BASE 0x2de /* base of per-damage-step progress GameBit array */
 
@@ -216,3 +217,20 @@ void blasted_release(void)
 void blasted_initialise(void)
 {
 }
+
+ObjectDescriptor gBlastedObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)blasted_initialise,
+    (ObjectDescriptorCallback)blasted_release,
+    0,
+    (ObjectDescriptorCallback)blasted_init,
+    (ObjectDescriptorCallback)blasted_update,
+    (ObjectDescriptorCallback)blasted_hitDetect,
+    (ObjectDescriptorCallback)blasted_render,
+    (ObjectDescriptorCallback)blasted_free,
+    (ObjectDescriptorCallback)blasted_getObjectTypeId,
+    blasted_getExtraSize,
+};
