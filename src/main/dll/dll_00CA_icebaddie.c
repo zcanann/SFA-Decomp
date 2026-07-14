@@ -33,6 +33,7 @@
 #include "main/frame_timing.h"
 #include "main/objprint_api.h"
 #include "main/object.h"
+#include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
@@ -181,8 +182,6 @@ extern f32 lbl_803E2D78;
 extern f32 lbl_803E2D7C;
 extern f32 lbl_803E2D80;
 extern f32 lbl_803E2DB8;
-extern void objRenderModelAndHitVolumes(int obj, int fwdArg2, int fwdArg3, int fwdArg4, int fwdArg5, f32 scale);
-
 #pragma scheduling off
 #pragma peephole off
 int iceBaddie_updateOpenState(GameObject* obj, int state)
