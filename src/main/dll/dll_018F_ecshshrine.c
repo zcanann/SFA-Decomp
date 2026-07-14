@@ -44,6 +44,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/model_light.h"
 #include "main/render.h"
 #include "main/dll/mmshrineanimobj_struct.h"
@@ -157,8 +158,6 @@ extern int objGetAnimStateFlags(int* player, int flags);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId);
 extern void Sfx_PlayFromObject(s16* obj, int sfxId);
 extern void objSetAnimStateFlags(void* obj, int arg, int enable);
-extern void objRenderModelAndHitVolumes(int p1, int p2, int p3, int p4, int p5, f32 scale);
-
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
  * in ecsh_shrine_update - the slot->cup maps that follow it in memory are
