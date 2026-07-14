@@ -169,3 +169,44 @@ and li-vs-mr residues as non-actionable in matching work; (b) if anyone can
 source other mwcc 2.0-era builds (2.0a/2.0b/OEM revisions), test the two
 probes in this doc against them first -- a hit would likely convert dozens of
 functions at once.
+
+## Saved-register web ordering: declaration position is the primary lever
+(dll_0014_unk BFS trio, proven by three 100% matches)
+
+The GPR home a local's web receives tracks its DECLARATION position, not its
+first def/use position (statement moves of the defs change nothing; moving
+the single decl line flips the home). Three recipes that converted:
+- Seed-call split: a call result consumed only by a null-check plus a few
+  loads before a loop belongs in its OWN short-lived variable (stays in r3,
+  zero mr). Reusing the loop-body variable for the pre-loop segment merges
+  the webs and steals a saved home. (func13/func11 `linkNode`.)
+- Explicit walker: `for (k = 0, walk = (u32)base; k < 4; walk += 4, k++)`
+  materializes the link-slot IV as a decl-positionable variable, replacing
+  the compiler-created IV whose creation slot cannot be moved. Its decl
+  position then sets its home. (func13 `candWalk`, func11 fix slot: directly
+  after distWrite.)
+- One-line decl move: walkGroupFn went 89.7% -> 100% by moving `int lidx;`
+  from the head of the decl list to just after `ObjfsaPatch* patch;`.
+  Region-count diffs barely moved; the fuzzy score jumped 10 points. Sweep
+  decl positions before inventing structure.
+
+## Truncation-site shapes (walkGroupFn lidx endgame)
+For an int variable assigned a narrowed value, MWCC picks the instruction
+form by the ROOT of the RHS:
+- AND root (`x & 0xffff`) computes directly into the destination home.
+  But an AND root over a shift FUSES into one rlwinm; to keep the retail
+  srawi+clrlwi pair, stage the shift through a DEAD variable first
+  (`pidx = (int)(pgid & 0xff00) >> 8; lidx = pidx & 0xffff;` -- the dead
+  def folds to a scratch, the AND lands in the home).
+- Cast root (`(u8)pgid`, `(u16)(expr)`) computes into a temp and copies
+  (`mr`) into the home.
+- Two rvalue uses of the same narrow variable CSE into one hoisted widen
+  (PRE) unless the use sites have different IR node kinds (AND-mask at one
+  site, conversion-by-assignment at the other). This is what keeps a
+  variable phi-coalesced with no home at all.
+
+## Side effects inside dead-masked subexpressions are DELETED (reconfirmed)
+`outZ[n++ | (mB++ & 0)]` drops the mB increment entirely (8 addi -> 4).
+Never encode an increment inside an expression whose value is masked to a
+constant; always re-count the addi population against the target after any
+such experiment.
