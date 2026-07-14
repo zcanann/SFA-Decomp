@@ -361,3 +361,10 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         GXSetScissor(sx, sy, sw, sh);
     }
 }
+
+u32 lbl_80311340[14] = {
+    0, 0, 0, 0x00080000,
+    0, 0, 0, (u32)screenTransition_update,
+    (u32)screenTransition_fadeOut, (u32)screenTransition_fadeIn, (u32)screenTransition_fadeFrom, (u32)screenTransition_func07,
+    (u32)screenTransition_getAlpha, 0,
+};
