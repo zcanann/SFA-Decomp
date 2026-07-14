@@ -1807,6 +1807,10 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     s16 h;
     register int q;
     register int* ptr;
+    int* p2;
+    int i2;
+    int* p3;
+    int i3;
     int tmpB;
     int tmpA;
     int tmp2B;
@@ -1941,11 +1945,11 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
     }
     if (((u32)sub->flags44 >> 6 & 1) != 0)
     {
-        ptr = seqFn_800394a0();
+        p2 = seqFn_800394a0();
         zero = 0;
-        for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
+        for (i2 = 1, p2 = p2 + 1; i2 < 9; p2++, i2++)
         {
-            vec = objModelGetVecFn_800395d8(obj, *ptr);
+            vec = objModelGetVecFn_800395d8(obj, *p2);
             if (vec != 0)
             {
                 vec[2] = zero;
@@ -1977,18 +1981,18 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
             flag = 0x500;
         }
         sb = flag;
-        ptr = seqFn_800394a0();
-        q = 1;
-        ptr = ptr + 1;
-        for (; q < 9; q++)
+        p3 = seqFn_800394a0();
+        i3 = 1;
+        p3 = p3 + 1;
+        for (; i3 < 9; i3++)
         {
-            vec = objModelGetVecFn_800395d8(obj, *ptr);
+            vec = objModelGetVecFn_800395d8(obj, *p3);
             if (vec != 0)
             {
                 vec[2] = sb;
                 vec[0] = sa;
             }
-            ptr++;
+            p3++;
         }
     }
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState*)baddie)->animSpeedA,
@@ -2154,6 +2158,10 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     extern f32 lbl_8032970C[];
     int q;
     int* ptr;
+    int* p2;
+    int i2;
+    int* p3;
+    int i3;
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
     int tmpB;
@@ -2277,11 +2285,11 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
     }
     if (((u32)sub->flags44 >> 6 & 1) != 0)
     {
-        ptr = seqFn_800394a0();
+        p2 = seqFn_800394a0();
         zero = 0;
-        for (q = 1, ptr = ptr + 1; q < 9; ptr++, q++)
+        for (i2 = 1, p2 = p2 + 1; i2 < 9; p2++, i2++)
         {
-            vec = objModelGetVecFn_800395d8(obj, *ptr);
+            vec = objModelGetVecFn_800395d8(obj, *p2);
             if (vec != 0)
             {
                 vec[2] = zero;
@@ -2313,18 +2321,18 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
             flag = 0x500;
         }
         sb = flag;
-        ptr = seqFn_800394a0();
-        q = 1;
-        ptr = ptr + 1;
-        for (; q < 9; q++)
+        p3 = seqFn_800394a0();
+        i3 = 1;
+        p3 = p3 + 1;
+        for (; i3 < 9; i3++)
         {
-            vec = objModelGetVecFn_800395d8(obj, *ptr);
+            vec = objModelGetVecFn_800395d8(obj, *p3);
             if (vec != 0)
             {
                 vec[2] = sb;
                 vec[0] = sa;
             }
-            ptr++;
+            p3++;
         }
     }
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState*)baddie)->animSpeedA,
