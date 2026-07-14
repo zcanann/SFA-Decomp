@@ -23,6 +23,7 @@
 #include "main/object_api.h"
 #include "main/dll/WC/dll_0297_wctemplebri.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE        0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE  0x400
@@ -301,3 +302,20 @@ void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
     obj->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
+
+ObjectDescriptor gWCTempleBriObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wctemplebri_initialise,
+    (ObjectDescriptorCallback)wctemplebri_release,
+    0,
+    (ObjectDescriptorCallback)wctemplebri_init,
+    (ObjectDescriptorCallback)wctemplebri_update,
+    (ObjectDescriptorCallback)wctemplebri_hitDetect,
+    (ObjectDescriptorCallback)wctemplebri_render,
+    (ObjectDescriptorCallback)wctemplebri_free,
+    (ObjectDescriptorCallback)wctemplebri_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wctemplebri_getExtraSize,
+};

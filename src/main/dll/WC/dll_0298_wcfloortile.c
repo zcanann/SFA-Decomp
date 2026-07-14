@@ -38,6 +38,7 @@
 #include "main/dll/ARW/dll_029C_arwarwingbo.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 #define WCFLOORTILE_CHILD_OBJ_BOMB 0x605
 
@@ -658,3 +659,20 @@ void arwarwing_updateBarrelRoll(GameObject* obj, ArwingState* state)
     }
 }
 #pragma opt_propagation reset
+
+ObjectDescriptor gWCFloorTileObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wcfloortile_initialise,
+    (ObjectDescriptorCallback)wcfloortile_release,
+    0,
+    (ObjectDescriptorCallback)wcfloortile_init,
+    (ObjectDescriptorCallback)wcfloortile_update,
+    (ObjectDescriptorCallback)wcfloortile_hitDetect,
+    (ObjectDescriptorCallback)wcfloortile_render,
+    (ObjectDescriptorCallback)wcfloortile_free,
+    (ObjectDescriptorCallback)wcfloortile_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wcfloortile_getExtraSize,
+};

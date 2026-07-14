@@ -14,6 +14,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/dll/WM/dll_020F_wmspiritset.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5F90 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E5F94 = 0.0085f;
@@ -74,3 +75,20 @@ void wmspiritset_release(void)
 void wmspiritset_initialise(void)
 {
 }
+
+ObjectDescriptor gWM_SpiritSetObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wmspiritset_initialise,
+    (ObjectDescriptorCallback)wmspiritset_release,
+    0,
+    (ObjectDescriptorCallback)wmspiritset_init,
+    (ObjectDescriptorCallback)wmspiritset_update,
+    (ObjectDescriptorCallback)wmspiritset_hitDetect,
+    (ObjectDescriptorCallback)wmspiritset_render,
+    (ObjectDescriptorCallback)wmspiritset_free,
+    (ObjectDescriptorCallback)wmspiritset_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wmspiritset_getExtraSize,
+};

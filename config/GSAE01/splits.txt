@@ -2716,10 +2716,12 @@ main/dll/drlaserturret.c:
 
 main/dll/SP/dll_0286_spshopkeeper.c:
 	.text       start:0x801E76A0 end:0x801E832C
+	.data       start:0x80328370 end:0x803283E0
 
 main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
 	.sdata2     start:0x803E5A30 end:0x803E5A6C
+	.data       start:0x803283E0 end:0x80328418
 
 main/dll/SP/dll_0287_spscarab.c:
 	.text       start:0x801E8EA4 end:0x801E9328
@@ -2868,6 +2870,7 @@ main/dll/WM/dll_020E_wmsun.c:
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
 	.sdata2     start:0x803E5F90 end:0x803E5F98
+	.data       start:0x80328D60 end:0x80328D98
 
 main/dll/WM/dll_0210_wmplanets.c:
 	.text       start:0x801F7D34 end:0x801F7FF4
@@ -2923,14 +2926,15 @@ main/dll/VF/dll_021D_vfplift.c:
 
 main/light.c:
 	.text       start:0x801FB9AC end:0x801FD4A8
-	.data       start:0x80329050 end:0x80329088
+	.data       start:0x80329050 end:0x803291D8
 
 main/main.c:
 	.text       start:0x801FD4A8 end:0x801FE118
+	.data       start:0x803291D8 end:0x803292B8
 
 main/dll/dll_023F_dbegg.c:
 	.text       start:0x801FE118 end:0x801FF884
-	.data       start:0x803292F8 end:0x8032933C
+	.data       start:0x803292B8 end:0x8032933C
 
 main/dll/dll_0240_gcrobotblast.c:
 	.text       start:0x801FF884 end:0x801FF9B0
@@ -3181,10 +3185,11 @@ main/dll/dll_0271_drakorhoverpad.c:
 main/dll/dll_0272_hightop.c:
 	.text       start:0x8021CF60 end:0x8021F34C
 	.rodata     start:0x802C2590 end:0x802C25B8
-	.data       start:0x8032AB30 end:0x8032ABC0
+	.data       start:0x8032AB30 end:0x8032AC58
 
 main/dll/DR/dll_026F_drgenerator.c:
 	.text       start:0x8021F34C end:0x8021F8CC
+	.data       start:0x8032AC58 end:0x8032AC90
 
 main/dll/dll_0273_firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
@@ -3279,15 +3284,17 @@ main/dll/WC/dll_0295_wcapertures.c:
 
 main/dll/WC/dll_0296_wctempledia.c:
 	.text       start:0x802293F8 end:0x8022999C
-	.data       start:0x8032B348 end:0x8032B360
+	.data       start:0x8032B348 end:0x8032B398
 	.sdata      start:0x803DC3B8 end:0x803DC3C8
 	.sdata2     start:0x803E6E50 end:0x803E6E58
 
 main/dll/WC/dll_0297_wctemplebri.c:
 	.text       start:0x8022999C end:0x8022A298
+	.data       start:0x8032B398 end:0x8032B3D0
 
 main/dll/WC/dll_0298_wcfloortile.c:
 	.text       start:0x8022A298 end:0x8022B998
+	.data       start:0x8032B3D0 end:0x8032B408
 
 main/dll/ARW/dll_029A_arwarwing.c:
 	.text       start:0x8022B998 end:0x8022E418

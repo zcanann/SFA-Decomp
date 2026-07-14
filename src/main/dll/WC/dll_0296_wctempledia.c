@@ -9,6 +9,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 s16 gWcTempleDiaGameBitsA[4] = {0x2F8, 0x2D1, 0x2D2, 0};
 s16 gWcTempleDiaGameBitsB[4] = {0x203, 0x2EC, 0x2EF, 0};
@@ -239,3 +240,20 @@ void wctempledia_initialise(void)
 
 f32 gWcTempleDiaTargetSpeedTableA[] = {64.0f, 128.0f, 256.0f};
 f32 gWcTempleDiaTargetSpeedTableB[] = {-64.0f, -128.0f, -256.0f};
+
+ObjectDescriptor gWCTempleDiaObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wctempledia_initialise,
+    (ObjectDescriptorCallback)wctempledia_release,
+    0,
+    (ObjectDescriptorCallback)wctempledia_init,
+    (ObjectDescriptorCallback)wctempledia_update,
+    (ObjectDescriptorCallback)wctempledia_hitDetect,
+    (ObjectDescriptorCallback)wctempledia_render,
+    (ObjectDescriptorCallback)wctempledia_free,
+    (ObjectDescriptorCallback)wctempledia_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wctempledia_getExtraSize,
+};

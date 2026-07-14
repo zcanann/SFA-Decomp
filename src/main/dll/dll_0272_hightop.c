@@ -52,6 +52,7 @@
 #include "main/audio/sfx_play_api.h"
 #include "main/gamebit_ids.h"
 #include "main/player_control_interface.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".rodata") HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
 __declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
@@ -517,6 +518,47 @@ void HighTop_initialise(void)
 }
 
 #pragma dont_inline on
+int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
+int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
+int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
+                        -1032847360, 0x41C80000, 0x0, 0x42700000, -1043857408, 0x0, 0x42700000,  0x0,        0x0,
+                        0x0,         0x0,        0x0, 0x0,        0x420C0000,  0x0, 0x0,         -1039400960};
+f32 gHighTopBandSpeedThresholds[4] = {0.0f, 0.03f, 0.05f, 8.0f};
+
+void HighTop_hitDetect(GameObject* obj);
+void HighTop_update(GameObject* obj);
+
+ObjectDescriptor24 gHighTopObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)HighTop_initialise,
+    (ObjectDescriptorCallback)HighTop_release,
+    0,
+    (ObjectDescriptorCallback)HighTop_init,
+    (ObjectDescriptorCallback)HighTop_update,
+    (ObjectDescriptorCallback)HighTop_hitDetect,
+    (ObjectDescriptorCallback)HighTop_render,
+    (ObjectDescriptorCallback)HighTop_free,
+    (ObjectDescriptorCallback)HighTop_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)HighTop_getExtraSize,
+    (ObjectDescriptorCallback)HighTop_setScale,
+    (ObjectDescriptorCallback)hightop_func0B,
+    (ObjectDescriptorCallback)HighTop_modelMtxFn,
+    (ObjectDescriptorCallback)HighTop_render2,
+    (ObjectDescriptorCallback)hightop_func0E,
+    (ObjectDescriptorCallback)HighTop_func0F,
+    (ObjectDescriptorCallback)hightop_func10,
+    (ObjectDescriptorCallback)hightop_func11,
+    (ObjectDescriptorCallback)hightop_func12,
+    (ObjectDescriptorCallback)hightop_func13,
+    (ObjectDescriptorCallback)hightop_func14,
+    (ObjectDescriptorCallback)hightop_func15,
+    (ObjectDescriptorCallback)HighTop_renderGroundMarker,
+    (ObjectDescriptorCallback)HighTop_getLookTargetYaw,
+};
+
 int hightop_handleMotionEvent(int obj, u8 event)
 {
     HighTopRuntime* runtime = ((GameObject*)obj)->extra;
@@ -1207,9 +1249,3 @@ int hightop_stateHandler10(GameObject* obj, HighTopRuntime* stateArg)
 }
 #pragma opt_strength_reduction reset
 
-int gHighTopIdleSequenceIds[3] = {0x4, 0x5, 0x6};
-int gHighTopIdleSequenceWeights[3] = {0x32, 0x19, 0x19};
-int lbl_8032AB48[26] = {0x8,         0x9,        0x7, 0xA,        -1043857408, 0x0, -1032847360, 0x41C80000, 0x0,
-                        -1032847360, 0x41C80000, 0x0, 0x42700000, -1043857408, 0x0, 0x42700000,  0x0,        0x0,
-                        0x0,         0x0,        0x0, 0x0,        0x420C0000,  0x0, 0x0,         -1039400960};
-f32 gHighTopBandSpeedThresholds[4] = {0.0f, 0.03f, 0.05f, 8.0f};

@@ -20,6 +20,7 @@
 #include "main/objtexture.h"
 #include "main/object_render.h"
 #include "main/object_update_list.h"
+#include "main/object_descriptor.h"
 
 #define DRGENERATOR_OBJGROUP 0x3
 #define TIMER_OBJGROUP       0x4c
@@ -229,3 +230,20 @@ void drgenerator_release(void)
 void drgenerator_initialise(void)
 {
 }
+
+ObjectDescriptor gDrGeneratorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)drgenerator_initialise,
+    (ObjectDescriptorCallback)drgenerator_release,
+    0,
+    (ObjectDescriptorCallback)drgenerator_init,
+    (ObjectDescriptorCallback)drgenerator_update,
+    (ObjectDescriptorCallback)drgenerator_hitDetect,
+    (ObjectDescriptorCallback)drgenerator_render,
+    (ObjectDescriptorCallback)drgenerator_free,
+    (ObjectDescriptorCallback)drgenerator_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drgenerator_getExtraSize,
+};

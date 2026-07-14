@@ -62,6 +62,7 @@
 #include "main/audio/sfx_play_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/track_dolphin_api.h"
+#include "main/object_descriptor.h"
 
 #define DBEGG_OBJGROUP         0x24
 #define DBEGG_SIBLING_OBJGROUP 0x14
@@ -621,6 +622,27 @@ typedef struct DbEggIntPair
     s32 a;
     s32 b;
 } DbEggIntPair;
+
+void dbegg_update(GameObject* obj);
+
+ObjectDescriptor12 gDB_eggObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)dbegg_initialise,
+    (ObjectDescriptorCallback)dbegg_release,
+    0,
+    (ObjectDescriptorCallback)dbegg_init,
+    (ObjectDescriptorCallback)dbegg_update,
+    (ObjectDescriptorCallback)dbegg_hitDetect,
+    (ObjectDescriptorCallback)dbegg_render,
+    (ObjectDescriptorCallback)dbegg_free,
+    (ObjectDescriptorCallback)dbegg_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dbegg_getExtraSize,
+    (ObjectDescriptorCallback)dbegg_setScale,
+    (ObjectDescriptorCallback)dbegg_setLaunchVelocity,
+};
 
 char sAnimGreaterMessage[11] = " GREATER \n\000";
 

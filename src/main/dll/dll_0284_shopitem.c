@@ -40,6 +40,7 @@
 #include "main/newclouds.h"
 #include "main/model.h"
 #include "main/pad.h"
+#include "main/object_descriptor.h"
 
 #define SHOPITEM_OBJGROUP        0x4F
 #define SHOPITEM_TARGET_OBJGROUP 9
@@ -480,3 +481,20 @@ void shopitem_release(void)
 void shopitem_initialise(void)
 {
 }
+
+ObjectDescriptor gShopItemObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)shopitem_initialise,
+    (ObjectDescriptorCallback)shopitem_release,
+    0,
+    (ObjectDescriptorCallback)shopitem_init,
+    (ObjectDescriptorCallback)shopitem_update,
+    (ObjectDescriptorCallback)shopitem_hitDetect,
+    (ObjectDescriptorCallback)shopitem_render,
+    (ObjectDescriptorCallback)shopitem_free,
+    (ObjectDescriptorCallback)shopitem_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)shopitem_getExtraSize,
+};

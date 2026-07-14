@@ -19,6 +19,7 @@
 #include "main/frame_timing.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 typedef struct
 {
@@ -489,3 +490,71 @@ void VFP_SpellPlace_init(int obj, s8* def)
     }
     spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
 }
+
+ObjectDescriptor gVFP_flamepointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)VFP_flamepoint_init,
+    (ObjectDescriptorCallback)VFP_flamepoint_update,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)VFP_flamepoint_getExtraSize,
+};
+
+ObjectDescriptor gVFP_lavapoolObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)VFP_lavapool_initialise_nop,
+    (ObjectDescriptorCallback)VFP_lavapool_release_nop,
+    0,
+    (ObjectDescriptorCallback)VFP_lavapool_init,
+    (ObjectDescriptorCallback)VFP_lavapool_update,
+    (ObjectDescriptorCallback)VFP_lavapool_hitDetect_nop,
+    (ObjectDescriptorCallback)VFP_lavapool_render,
+    (ObjectDescriptorCallback)VFP_lavapool_free_nop,
+    (ObjectDescriptorCallback)VFP_lavapool_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)VFP_lavapool_getExtraSize_ret_24,
+};
+
+ObjectDescriptor gVFP_lavastarObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)VFP_lavastar_initialise,
+    (ObjectDescriptorCallback)VFP_lavastar_release,
+    0,
+    (ObjectDescriptorCallback)VFP_lavastar_init,
+    (ObjectDescriptorCallback)VFP_lavastar_update,
+    (ObjectDescriptorCallback)VFP_lavastar_hitDetect,
+    (ObjectDescriptorCallback)VFP_lavastar_render,
+    (ObjectDescriptorCallback)VFP_lavastar_free,
+    (ObjectDescriptorCallback)VFP_lavastar_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)VFP_lavastar_getExtraSize,
+};
+
+ObjectDescriptor gVFP_SpellPlaceObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)VFP_SpellPlace_initialise,
+    (ObjectDescriptorCallback)VFP_SpellPlace_release,
+    0,
+    (ObjectDescriptorCallback)VFP_SpellPlace_init,
+    (ObjectDescriptorCallback)VFP_SpellPlace_update,
+    (ObjectDescriptorCallback)VFP_SpellPlace_hitDetect,
+    (ObjectDescriptorCallback)VFP_SpellPlace_render,
+    (ObjectDescriptorCallback)VFP_SpellPlace_free,
+    (ObjectDescriptorCallback)VFP_SpellPlace_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)VFP_SpellPlace_getExtraSize,
+};

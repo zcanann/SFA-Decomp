@@ -40,6 +40,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -240,6 +241,23 @@ void ShopKeeper_init(GameObject* obj)
     dll_2E_func05(obj, (MoveLibState*)(state + 0x35C), -0x1C71, 0x3555, 2);
     ((ShopkeeperState*)state)->unk96D |= 0x12;
 }
+
+ObjectDescriptor gShopKeeperObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ShopKeeper_initialise,
+    (ObjectDescriptorCallback)ShopKeeper_release,
+    0,
+    (ObjectDescriptorCallback)ShopKeeper_init,
+    (ObjectDescriptorCallback)ShopKeeper_update,
+    (ObjectDescriptorCallback)ShopKeeper_hitDetect,
+    (ObjectDescriptorCallback)ShopKeeper_render,
+    (ObjectDescriptorCallback)ShopKeeper_free,
+    (ObjectDescriptorCallback)ShopKeeper_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)ShopKeeper_getExtraSize,
+};
 
 int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
 {
