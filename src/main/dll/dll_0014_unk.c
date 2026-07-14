@@ -1013,6 +1013,7 @@ int mathFn_800dbff0(float* point)
     ObjfsaWalkGroup* g;
     f32 y;
     f32 x;
+    f32 zLast;
     f32 z;
 
     down = gObjfsaLastWalkGroupIndex;
@@ -1035,8 +1036,9 @@ int mathFn_800dbff0(float* point)
             y = point[1];
             if (y < g->maxY && y > g->minY)
             {
+                zLast = point[2];
                 x = point[0];
-                z = point[2];
+                z = zLast;
                 i[0] = (j[0] = 0);
                 j[0] = 0;
                 for (; i[0] < 4; i[0]++, j[0] += 2)
@@ -1104,7 +1106,7 @@ int mathFn_800dbff0(float* point)
             for (; i[0] < 4; i[0]++, j[0] += 2)
             {
                 planeOff = g->planeOffsets[i[0]];
-                if (planeOff + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)
+                if (planeOff + (x * (f32)((s16*)g)[j[0]] + (f32)((s16*)g)[j[0] + 1] * z) > 0.0f)
                 {
                     break;
                 }
