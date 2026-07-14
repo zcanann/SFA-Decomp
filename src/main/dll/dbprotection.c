@@ -19,6 +19,7 @@
  * latches the object's local position as the home position.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_channel_query_api.h"
 #include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/render.h"
@@ -138,7 +139,6 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
 extern void Sfx_StopFromObject(int obj, int sfxId);
-extern s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel);
 
 extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
