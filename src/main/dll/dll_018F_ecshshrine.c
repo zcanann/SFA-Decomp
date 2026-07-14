@@ -75,6 +75,8 @@ typedef struct EcshIntPair
     int b;
 } EcshIntPair;
 
+typedef void (*EcshShrineUpdateMotionFn)(s16* obj);
+
 typedef struct MmShrineAnimState
 {
     ModelLightStruct* light;
@@ -455,7 +457,6 @@ void ecsh_shrine_free(int* obj)
 #pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
-    extern void ecsh_shrine_updateMotion(s16 * obj);
     f32 t[2];
     int msgC;
     int msgA;
@@ -494,7 +495,7 @@ void ecsh_shrine_update(s16* obj)
             getEnvfxActVoid(obj, player, ECSH_SHRINE_ENVFX_C, 0);
         }
     }
-    ecsh_shrine_updateMotion(obj);
+    ((EcshShrineUpdateMotionFn)ecsh_shrine_updateMotion)(obj);
     if (player != NULL && objIsCurModelNotZero(player) == 0)
     {
         staffToggle(player, 0);
