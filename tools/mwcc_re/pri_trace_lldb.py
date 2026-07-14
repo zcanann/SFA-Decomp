@@ -16,7 +16,10 @@ def on_commit(frame, bp_loc, extra_args, internal_dict):
     cls = d[0x25]
     b = rd(proc, 0x5e9b04 + cls * 4, 4)
     idx = int.from_bytes(b, 'little')
-    LOG.write(f'N cls={cls} idx={idx} pri={pri} flags=0x{flags:02x}\n')
+    sp = frame.GetSP()
+    ra = rd(proc, sp, 8)
+    retaddr = int.from_bytes(ra[:4], 'little') if ra else 0
+    LOG.write(f'N cls={cls} idx={idx} pri={pri} flags=0x{flags:02x} ra=0x{retaddr:x}\n')
     return False
 
 _armed = [False]

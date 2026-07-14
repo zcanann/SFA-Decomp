@@ -152,3 +152,12 @@ pri=2 (the eligibility MINIMUM) while scanBase-area webs (46/47) commit at pri=6
 Commit order is NOT globally descending in pri (two interleaved worklists / append during
 processing) - decode the worklist interleave next, then steer the base web's priority to
 flip the idx-48/idx-46 order (which fixes func1C's final 4 register lines).
+
+## Numbering caller identified: single in-order pass at 0x4c2932 (NOT the priority worklist)
+Return-address logging (pri_trace_lldb.py now records ra=) shows ALL GPR web numbering
+commits for func1C come from call site 0x4c2932 - the CodeGen_NumberWebs max-priority
+worklist (0x4356xx) never fires for this compile. Web indices therefore follow ONE
+deterministic value-graph walk. Decoding the walk order at 0x4c2932 (which value-graph
+traversal, and where SR-created values slot into it) is now THE single decode that explains
+- and allows steering - the cd-base(48)/scanBase(46-47) order in func1C AND the F40
+interloper slot in the walkgroup function. Priorities logged are metadata, not the order key.
