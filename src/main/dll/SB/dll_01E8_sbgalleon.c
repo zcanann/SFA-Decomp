@@ -83,7 +83,7 @@ extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern void fn_80089510(int idx, int r, int g, int b);
 extern void fn_80089578(int idx, int r, int g, int b);
-extern f32 gSbGalleonSkyLightVecs[12];
+const f32 gSbGalleonSkyLightVecs[12] = {-1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f};
 extern u8 lbl_803DC078[4];
 extern u8 gSbGalleonSkyColorBEnd[4];
 extern u8 gSbGalleonSkyColorAStart[4];
