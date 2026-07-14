@@ -26,6 +26,19 @@
 #include "main/dll/tricky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+f32 lbl_803DC0B8 = 15.0f;
+int lbl_803DC0BC = -1;
+f32 lbl_803DC0C0 = 8.5f;
+f32 lbl_803DC0C4 = 6.0f;
+f32 lbl_803DC0C8 = 1.05f;
+int lbl_803DC0CC = 5000;
+int lbl_803DC0D0 = 60;
+int lbl_803DC0D4 = 20;
+f32 lbl_803DC0D8 = 4.7f;
+s16 lbl_803DC0DC = 0x4000;
+f32 gDrCloudCageRouteDistGate = 2000.0f;
+char sSnowBikeVelDebugFmt[] = "vel %f\n";
+
 #define SNOWBIKE_OBJGROUP           0xa
 #define SNOWBIKE_AIRMETER_BGTEXTURE 0x5cd
 
@@ -101,7 +114,6 @@ typedef struct SnowBikeSetTypeState
     u8 pad4C4[0x4C8 - 0x4C4];
 } SnowBikeSetTypeState;
 
-extern int lbl_803DC0BC;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF8;
@@ -132,7 +144,6 @@ extern int gSnowBikeMountRomListTable[];
 extern void fn_801E991C(void* obj, void* path);
 extern void fn_801EB940(int obj, u8* state);
 extern s16 gSnowBikeHitObjectIdTable[];
-extern char sSnowBikeVelDebugFmt;
 extern f32 lbl_803E5B28;
 extern f32 lbl_803E5B88;
 extern f32 lbl_803E5BA4;
@@ -151,9 +162,6 @@ extern u32 lbl_803E5AE0;
 extern void* memcpy(void* dst, const void* src, int n);
 extern void Obj_ClearModelSlotIndex(int obj);
 extern void SnowBike_SeqFn();
-extern f32 lbl_803DC0B8;
-extern f32 lbl_803DC0C0;
-extern f32 lbl_803DC0C4;
 extern f32 lbl_803E5AF0;
 extern f32 lbl_803E5B14;
 extern f32 lbl_803E5B1C;
@@ -606,7 +614,7 @@ void SnowBike_hitDetect(GameObject* obj)
     if (*(void**)&state->linkedObj != NULL)
     {
         velScale = lbl_803E5C00;
-        OSReport(&sSnowBikeVelDebugFmt, mag);
+        OSReport(sSnowBikeVelDebugFmt, mag);
         if (((GameObject*)state->linkedObj)->anim.seqId == 909 || ((GameObject*)state->linkedObj)->anim.seqId == 910 ||
             ((GameObject*)state->linkedObj)->anim.seqId == 1236)
         {
