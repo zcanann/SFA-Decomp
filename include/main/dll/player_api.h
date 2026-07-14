@@ -6,6 +6,9 @@
 #include "main/dll/player_staff_api.h"
 
 int objFn_802962b4(GameObject* obj);
+int fn_80295A04(GameObject* obj, int selector);
+int fn_80295C0C(GameObject* obj);
+f32 fn_8029610C(GameObject* obj);
 int objGetAnimState80A(GameObject* obj);
 int objGetAnimStateFlags(GameObject* obj, int flag);
 int objIsCurModelNotZero(void* obj);
@@ -29,6 +32,8 @@ int playerGetTimeScale(GameObject* obj, f32* out);
 int isTrickyNear(GameObject* obj);
 int fn_8029669C(GameObject* obj);
 int fn_802966B4(GameObject* obj);
+int objFn_80296700(GameObject* obj);
+int fn_80296C4C(GameObject* obj);
 void objSetAnimStateFlags(GameObject* obj, int flag, int set);
 /* The raw integer parent preserves the matched player implementation's signed comparisons. */
 void fn_80296EB4(GameObject* obj, int newParent);

@@ -12,6 +12,7 @@
 #include "main/dll/waterfx_interface.h"
 #include "main/expgfx_internal.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/lightmap_api.h"
@@ -185,7 +186,6 @@ extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
 extern f32 fn_80138F78(void* tricky);
-extern f32 fn_8029610C(void* player);
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;

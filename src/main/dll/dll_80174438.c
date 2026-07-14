@@ -6,6 +6,7 @@
 #include "main/dll/pushable.h"
 #include "main/objtexture.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/resource.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
@@ -21,7 +22,6 @@ extern u32 fn_80174BFC();
 
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
-extern int fn_80295A04(void* player, int p2);
 extern void pushable_handleMsgs(int obj, int p2);
 extern f32 lbl_803E352C;
 extern f64 lbl_803E3530;
@@ -44,7 +44,7 @@ extern f32 lbl_803E3528;
 int fn_80174438(int obj, PushableState* state)
 {
     int def;
-    void* player;
+    GameObject* player;
 
     def = *(int*)&((GameObject*)obj)->anim.placementData;
     player = Obj_GetPlayerObject();

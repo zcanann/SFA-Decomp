@@ -222,7 +222,7 @@ void objSetAnimField48to0(GameObject* obj)
 
 void playerRenderQuakeSpell(int* obj)
 {
-    quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj);
+    quakeSpellFn_8016cee8(obj, (GameObject*)((GameObject*)obj)->ownerObj);
 }
 
 #pragma dont_inline on
@@ -863,7 +863,7 @@ void staff_update(int* obj)
         swp++;
     }
 
-    quakeSpellFn_8016cee8(obj, ((GameObject*)obj)->ownerObj);
+    quakeSpellFn_8016cee8(obj, (GameObject*)((GameObject*)obj)->ownerObj);
     objGetAnimState80A((GameObject*)(*(int*)&((GameObject*)obj)->ownerObj));
     ((StaffState*)state)->swipeTextureIndex = 0;
     {
@@ -1155,7 +1155,6 @@ void staff_setupSwipe(int unused1, u8* swipe, int unused3, int objArg)
 }
 #pragma opt_propagation reset
 
-extern int objFn_80296700(int* obj);
 extern void fn_802961A4(int* obj, int* type, f32* power);
 extern void fn_802960F4(GameObject* objc4, u8** out);
 extern f32 lbl_803E328C;
@@ -1185,7 +1184,7 @@ typedef struct QuakeFxParams
     f32 f3;
 } QuakeFxParams;
 
-void quakeSpellFn_8016cee8(int* obj, int* obj2)
+void quakeSpellFn_8016cee8(int* obj, GameObject* player)
 {
     QuakeFxParams fxB;
     QuakeFxParams fxA;
@@ -1194,7 +1193,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
     f32 dv;
     u8* pos2;
     u8* state = ((GameObject*)obj)->extra;
-    if (obj == NULL || obj2 == NULL)
+    if (obj == NULL || player == NULL)
     {
         return;
     }
@@ -1202,7 +1201,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
         if (((StaffState*)state)->glowEnable != 0)
         {
             f32 burstScale;
-            if (objFn_80296700(obj2) != 0)
+            if (objFn_80296700(player) != 0)
             {
                 power = lbl_803E3288;
                 burstScale = lbl_803E3288;
@@ -1225,7 +1224,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                                       lbl_803E3288, lbl_803E3288, lbl_803E329C * power, 0, 0);
             }
         }
-        fn_802961A4(obj2, &type, &power);
+        fn_802961A4((int*)player, &type, &power);
         fxB.id = 0;
         fxB.a = 0;
         fxB.b = 0;
@@ -1371,7 +1370,7 @@ void quakeSpellFn_8016cee8(int* obj, int* obj2)
                 idv = 0xc0e;
             }
             fxB.id = idv;
-            progress = ((GameObject*)obj2)->anim.currentMoveProgress;
+            progress = player->anim.currentMoveProgress;
             if (progress < lbl_803E32D0)
             {
                 fxB.f1 = lbl_803E32D4;

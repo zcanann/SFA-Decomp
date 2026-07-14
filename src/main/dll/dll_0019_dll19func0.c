@@ -1,5 +1,6 @@
 /* DLL 0x0019 — dll19 / camDebug group. TU: 0x8010DB7C–0x8010DD58. */
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/track_bbox_api.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
@@ -63,10 +64,8 @@ extern void** gTitleMenuControlInterfaceCopy;
 extern const f32 lbl_803E1C2C;
 __declspec(section ".rodata") u8 lbl_802C2190[16] = {
     0x00, 0x23, 0x00, 0x69, 0x00, 0x33, 0x00, 0x64, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-extern int fn_80295A04(int obj, int sel);
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
-extern f32 fn_8029610C(int obj);
 extern f32 lbl_803E1C64;
 extern f32 lbl_803E1C40;
 extern f32 lbl_803E1C44;
@@ -305,7 +304,7 @@ int dll_19_func13(GameObject *obj, u8* state, f32 distThreshold, int requireFar)
             {
                 result = 1;
             }
-            else if (fn_80295A04(player, 1) == 0)
+            else if (fn_80295A04((GameObject*)player, 1) == 0)
             {
                 result = 1;
             }
@@ -468,7 +467,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
         {
             if ((s8)((BaddieState*)state)->hitPoints != 0)
             {
-                if (fn_8029610C(obj) > lbl_803E1C64)
+                if (fn_8029610C((GameObject*)obj) > lbl_803E1C64)
                 {
                     found = 1;
                 }
@@ -501,7 +500,7 @@ int dll_19_func14(u8* self, u8* state, f32 frange, int halfAngle)
                 {
                     found = 1;
                 }
-                if (fn_80295A04(obj, 1) == 0)
+                if (fn_80295A04((GameObject*)obj, 1) == 0)
                 {
                     found = 0;
                 }
@@ -637,7 +636,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
             {
                 if (((BaddieState*)baddieState)->targetObj == NULL)
                 {
-                    if (fn_80295A04(player, 1) != 0)
+                    if (fn_80295A04((GameObject*)player, 1) != 0)
                     {
                         ((BaddieState*)baddieState)->targetObj = (void*)player;
                         ((BaddieState*)baddieState)->hasTarget = 0;

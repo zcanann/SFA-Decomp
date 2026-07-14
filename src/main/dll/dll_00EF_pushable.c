@@ -99,7 +99,6 @@ extern f32 gPushablePi;
 extern f32 gPushableYawHalfCircle;
 extern int gPushableSavedMapIdCount;
 extern int gPushableSavedMapIds[];
-extern int fn_80295A04(void* player, int a);
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
@@ -572,7 +571,7 @@ void pushable_update(int* obj)
 {
     PushableState* state;
     u8* def;
-    void* player;
+    GameObject* player;
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     state = ((GameObject*)obj)->extra;

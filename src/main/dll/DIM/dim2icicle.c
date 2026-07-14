@@ -19,6 +19,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/objhits.h"
@@ -456,7 +457,6 @@ void DIM2icicle_updateDarkIceMinesWarpAndEffects(DIMbossObject* obj, DIMbossRunt
     gDIMbossSequenceFlags &= DIMBOSS_SEQUENCE_FLAGS_PERSIST_AFTER_EFFECT_UPDATE;
 }
 
-extern int fn_80295A04(int obj, int sel);
 extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
@@ -498,7 +498,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     int* state;
     u8 hit;
     int hitResult;
-    int player;
+    GameObject* player;
     IcicleHitEntry* base;
     ObjHitsPriorityState* hitState;
     int hitType;
@@ -565,13 +565,13 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
         {
             if (((BaddieState*)playerObj)->targetObj == NULL)
             {
-                player = (int)Obj_GetPlayerObject();
+                player = Obj_GetPlayerObject();
                 if (fn_80295A04(player, 1) != 0)
                 {
                     ((void (*)(int, int, int, int, int, int, int, int, int)) *
                      (VtableFn**)(*gBaddieControlInterface + 0x28))(obj, playerObj, (int)state + 0x35c,
                                                                     (int)*(s16*)((int)state + 0x3f4), 0, 2, 10, -1, -1);
-                    *(int*)&((BaddieState*)playerObj)->targetObj = player;
+                    *(int*)&((BaddieState*)playerObj)->targetObj = (int)player;
                     ((BaddieState*)playerObj)->hasTarget = 0;
                 }
             }

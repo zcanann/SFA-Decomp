@@ -43,10 +43,6 @@
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern int fn_80295C0C(GameObject*);        /* gates mode 0x49 (with objFn_80296700) */
-extern int objFn_802962b4(GameObject* obj); /* gates mode 0x44 */
-extern int objFn_80296700(int obj);                /* gates mode 0x49 (with fn_80295C0C) */
-
 extern u8 gCutCamBboxBlocked; /* last bbox-hit result */
 extern f32 lbl_803DD52C;      /* yaw-offset blend gain */
 extern f32 lbl_803E1688;      /* 4.0f  - collision probe / trace radius */
@@ -205,8 +201,8 @@ void camcontrol_updateTargetAction(CameraObject* camera, GameObject* target)
             classId = ((GameObject*)camera->currentTarget)->anim.classId;
             if (((classId == 0x1c) || (classId == 0x2a)) && (target->anim.classId == 1))
             {
-                cond = objFn_80296700((int)target);
-                if ((cond != 0) && (cond = fn_80295C0C((GameObject*)target), cond != 0))
+                cond = objFn_80296700(target);
+                if ((cond != 0) && (cond = fn_80295C0C(target), cond != 0))
                 {
                     goto action_49;
                 }

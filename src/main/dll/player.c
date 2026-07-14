@@ -112,9 +112,7 @@ void playerDoTailAnims(int obj, void* statep);
 void playerUpdatePathEffectCountdown(GameObject* obj, int inner);
 int playerStopRidingObject(GameObject* obj);
 void fn_80295918(int obj, int sel, f32 fval);
-int fn_80295A04(GameObject* obj, int sel);
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3);
-int fn_80295C0C(GameObject* obj);
 int fn_80295C24(GameObject* obj);
 int fn_80295C40(GameObject* obj);
 int fn_80295C5C(GameObject* obj);
@@ -126,7 +124,6 @@ int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 void fn_802960E4(void);
 void fn_802960E8(void* playerObj, s16 effectId);
 void fn_802960F4(GameObject* obj, int* out);
-f32 fn_8029610C(GameObject* obj);
 void fn_80296124(GameObject* obj, void* p2, void* p3);
 void fn_802961A4(int obj, int* out1, f32* out2);
 void fn_802961FC(int a, u8 type);
@@ -137,7 +134,6 @@ int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerSetHeldObject(int obj, int held);
 f32 fn_802966F4(GameObject* obj);
-int objFn_80296700(int obj);
 void playerPutAwayStaff(GameObject* obj, int mode);
 void playerPullOutStaff(GameObject* obj, int mode);
 void saveSetOverrideHealth(int v);
@@ -145,7 +141,6 @@ void fn_80296BBC(GameObject* obj);
 void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
 void playerLock(GameObject* obj, int lock);
 int playerStatusIsPositive(GameObject* obj);
-int fn_80296C4C(int obj);
 int playerIsDead(int obj);
 void playerSetIsDead(GameObject* obj, int flag);
 void fn_80296D20(int obj, void* arg);
@@ -520,9 +515,9 @@ int playerGetMaxMagic(GameObject* obj)
     return *(s16*)((char*)inner->playerStatus + 6);
 }
 
-int fn_80296C4C(int obj)
+int fn_80296C4C(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     return (inner->flags3F3 >> 1) & 1;
 }
 
@@ -746,9 +741,9 @@ int fn_80295C5C(GameObject* obj)
     return inner->baddie.controlMode == 0x36 && ((ByteFlags*)((char*)inner + 0x3f3))->b10;
 }
 
-int objFn_80296700(int obj)
+int objFn_80296700(GameObject* obj)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = obj->extra;
     if (inner->staffGrown != 0 && inner->staffActionRequest != 0)
     {
         return 1;

@@ -99,7 +99,6 @@ extern f32 gKillerMushroomDetectRangeScale;
 extern f32 gKillerMushroomTriggerAnimSpeed;
 extern f32 gKillerMushroomStunAnimProgressDiv;
 
-extern f32 fn_8029610C(u8* player);
 extern void objFn_8002b67c(int* obj);
 #pragma dont_inline on
 s16 gKillerMushroomStateAnimMoves[12] = {0, 0, 4, 1, 2, 3, 5, 6, 6, 6, 0, 0};
@@ -469,7 +468,7 @@ void enemymushroom_update(int* obj)
             if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
                 (u16)(int)(gKillerMushroomDetectRangeScale * (f32)((EnemymushroomPlacement*)src)->detectRange))
             {
-                if (fn_8029610C((u8*)player) >= gKillerMushroomTriggerAnimSpeed)
+                if (fn_8029610C((GameObject*)player) >= gKillerMushroomTriggerAnimSpeed)
                 {
                     ((EnemyMushroomState*)state)->stateFlags =
                         (u8)(((EnemyMushroomState*)state)->stateFlags & ~MUSHROOM_STATEFLAG_HIT_PLAYER);

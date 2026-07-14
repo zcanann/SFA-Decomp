@@ -8,7 +8,7 @@ extern ObjectDescriptor23 gStaffObjDescriptor;
 extern u32 lbl_80320978[];
 
 void objSetAnimField48to0(GameObject* obj);
-void quakeSpellFn_8016cee8(int* obj, int* obj2);
+void quakeSpellFn_8016cee8(int* obj, GameObject* player);
 void quakeSpellTextureFn_8016dbf4(void);
 void staff_addHitReactValue(int* obj, s32 delta);
 void staffDoGrowShrinkAnim(GameObject* obj, u8 grow, u8 alternateRate, int unused);
