@@ -3229,11 +3229,11 @@ void gameTextInitFn_8001c794(void)
     int x3;
     int x2;
     int x1;
-    u16* src;
+    u16* dst;
     int x;
     int y;
     u8* rowBase;
-    u16* dst;
+    u16* src;
     int i;
     int j;
     void* tex;
