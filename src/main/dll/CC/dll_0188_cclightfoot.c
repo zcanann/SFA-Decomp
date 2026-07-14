@@ -84,16 +84,39 @@ __declspec(section ".sdata2") f32 lbl_803E469C = 0.0f;
 #include "main/audio/sfx_trigger_ids.h"
 #define CCLIGHTFOOT_OBJFLAG_HIDDEN 0x4000
 
+extern f32 lbl_803E4670;
+
+int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    CcLightfootState* state = (obj)->extra;
+    if (animUpdate->eventCount != 0)
+    {
+        int i;
+        for (i = 0; (u8)i < animUpdate->eventCount; i++)
+        {
+            int cmd = animUpdate->eventIds[(u8)i];
+            switch (cmd)
+            {
+            case 1:
+                if ((obj)->childObjs[0] != NULL)
+                {
+                    ObjLink_DetachChild(obj, (int)state->childObj);
+                }
+                break;
+            case 2:
+                (*gWaterfxInterface)
+                    ->spawnSplashBurst((void*)obj, (obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ,
+                                       lbl_803E4670);
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
 int cclightfoot_getExtraSize(void)
 {
     return 0x18;
-}
-
-void cclightfoot_init(int* obj, int* def)
-{
-    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
-    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_HIDDEN);
-    ((GameObject*)obj)->animEventCallback = CClightfoot_SeqFn;
 }
 
 void cclightfoot_free(int* obj, int flag)
@@ -150,36 +173,6 @@ void fn_801AA878(CcLightfootState* state, int* targetObj, f32 dist)
     state->state = CCLIGHTFOOT_STATE_APPROACH;
 }
 #pragma dont_inline reset
-
-extern f32 lbl_803E4670;
-
-int CClightfoot_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    CcLightfootState* state = (obj)->extra;
-    if (animUpdate->eventCount != 0)
-    {
-        int i;
-        for (i = 0; (u8)i < animUpdate->eventCount; i++)
-        {
-            int cmd = animUpdate->eventIds[(u8)i];
-            switch (cmd)
-            {
-            case 1:
-                if ((obj)->childObjs[0] != NULL)
-                {
-                    ObjLink_DetachChild(obj, (int)state->childObj);
-                }
-                break;
-            case 2:
-                (*gWaterfxInterface)
-                    ->spawnSplashBurst((void*)obj, (obj)->anim.worldPosX, (obj)->anim.worldPosY, (obj)->anim.worldPosZ,
-                                       lbl_803E4670);
-                break;
-            }
-        }
-    }
-    return 0;
-}
 
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
@@ -667,4 +660,11 @@ void cclightfoot_update(int obj)
     {
         state->flags &= ~1;
     }
+}
+
+void cclightfoot_init(int* obj, int* def)
+{
+    ((GameObject*)obj)->anim.rotX = (s16)((u32) * (u8*)((char*)def + 26) << 8);
+    ((GameObject*)obj)->objectFlags = (u16)(((GameObject*)obj)->objectFlags | CCLIGHTFOOT_OBJFLAG_HIDDEN);
+    ((GameObject*)obj)->animEventCallback = CClightfoot_SeqFn;
 }
