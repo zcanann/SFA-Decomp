@@ -48,9 +48,9 @@ def setup(debugger, command, result, internal_dict):
     target = debugger.GetSelectedTarget()
     for addr, fn in ((0x508680, 'on_driver'), (0x50899e, 'on_assign'), (0x5089c4, 'on_fallback')):
         bp = target.BreakpointCreateByAddress(addr)
-        bp.SetScriptCallbackFunction(f'mwcc_trace.{fn}')
+        bp.SetScriptCallbackFunction(f'select_trace_lldb.{fn}')
         bp.SetAutoContinue(True)
     result.PutCString('trace breakpoints set')
 
 def __lldb_init_module(debugger, internal_dict):
-    debugger.HandleCommand('command script add -f mwcc_trace.setup mwcc_trace_setup')
+    debugger.HandleCommand('command script add -f select_trace_lldb.setup mwcc_trace_setup')
