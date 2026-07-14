@@ -39,7 +39,7 @@
 #include "main/frame_timing.h"
 #include "main/model.h"
 #include "main/model_engine.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct BaddieAfterUpdateBonesCbState
@@ -153,10 +153,8 @@ extern u32 fn_80154C24();
 extern void* lbl_803DDA50;
 extern f32 lbl_803E25F8;
 extern f32 lbl_803E25FC;
-extern int objCreateLight(int a, int b);
 extern void objParticleFn_80099d84(int* obj, f32 f, int kind, f32 scale, int light);
 extern void Sfx_KeepAliveLoopedObjectSound(int* obj, int id);
-extern void ModelLightStruct_free(int light);
 extern void hagabonMK2_stopLoopSfx(int obj, u8* state);
 
 extern int objIsFrozen(int obj);
@@ -1573,7 +1571,7 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                     }
                     if (*(void**)&((EnemyState*)state)->modelLight == NULL)
                     {
-                        ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                        ((EnemyState*)state)->modelLight = (int)objCreateLight(0, 1);
                     }
                     objParticleFn_80099d84((int*)obj, lbl_803E256C, 3, ((EnemyState*)state)->particleScale,
                                            ((EnemyState*)state)->modelLight);
@@ -1583,7 +1581,7 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             {
                 if (*(void**)&((EnemyState*)state)->modelLight == NULL)
                 {
-                    ((EnemyState*)state)->modelLight = objCreateLight(0, 1);
+                    ((EnemyState*)state)->modelLight = (int)objCreateLight(0, 1);
                 }
                 objParticleFn_80099d84((int*)obj, lbl_803E256C, 4, ((EnemyState*)state)->particleScale,
                                        ((EnemyState*)state)->modelLight);
@@ -1615,7 +1613,7 @@ void enemy_hitDetect(GameObject* obj)
     if (*(void**)&((EnemyState*)state)->modelLight != NULL &&
         modelLightStruct_getActiveState((ModelLightStruct*)((EnemyState*)state)->modelLight) == 0)
     {
-        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ModelLightStruct_free((ModelLightStruct*)((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
     ((EnemyState*)state)->lastHitObject = ((ObjHitsPriorityState*)obj->anim.hitReactState)->lastHitObject;
@@ -1649,7 +1647,7 @@ void enemy_free(GameObject* obj, int flag)
     }
     if (*(void**)&((EnemyState*)state)->modelLight != NULL)
     {
-        ModelLightStruct_free(((EnemyState*)state)->modelLight);
+        ModelLightStruct_free((ModelLightStruct*)((EnemyState*)state)->modelLight);
         ((EnemyState*)state)->modelLight = 0;
     }
     if (*(void**)state != NULL)
@@ -2152,4 +2150,3 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         ((EnemyState*)state)->sightRange = enemySightRange;
     }
 }
-
