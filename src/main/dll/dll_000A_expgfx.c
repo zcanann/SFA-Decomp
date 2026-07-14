@@ -24,6 +24,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
+f32 lbl_803DB790 = -50.0f;
+
 typedef union ExpgfxWGPipe
 {
     u8 u8;

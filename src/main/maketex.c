@@ -27,6 +27,12 @@
 #include "main/audio/audio_control_api.h"
 #include "dolphin/dvd.h"
 
+u32 lbl_803DB700 = 0xD;
+#pragma explicit_zero_data on
+char* sMemoryCardFileName = 0;
+#pragma explicit_zero_data off
+int lbl_803DB708 = 0x404040FF;
+
 typedef struct
 {
     u8 useWorldSpace : 1;

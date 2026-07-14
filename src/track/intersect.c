@@ -26,6 +26,43 @@
 #include "main/pi_dolphin.h"
 #include "main/audio/sfx_trigger_ids.h"
 
+u8 lbl_803DB678 = 0x60;
+u8 gHudTintAlpha = 0xFF;
+u32 lbl_803DB67C = 0xFFFFFF60;
+GXColor lbl_803DB680 = {0xFF, 0xFF, 0xFF, 0x60};
+GXColor lbl_803DB684 = {0xA0, 0xA0, 0xA0, 0x80};
+GXColor lbl_803DB688 = {0xFF, 0xFF, 0xFF, 0x60};
+GXColor lbl_803DB68C = {0xA0, 0xA0, 0xA0, 0x80};
+u32 lbl_803DB690 = 0xC0000000;
+u32 lbl_803DB694 = 0x00C00000;
+u32 lbl_803DB698 = 0x0000C000;
+u32 lbl_803DB69C = 0x666666FF;
+GXColor lbl_803DB6A0 = {0, 0, 0, 0x7F};
+GXColor lbl_803DB6A4 = {0xFF, 0xFF, 0xFF, 0xFC};
+u32 lbl_803DB6A8 = 0xFFFFFFFF;
+f32 lbl_803DB6AC = 0.55f;
+f32 lbl_803DB6B0 = 2.0f;
+f32 lbl_803DB6B4 = 0.25f;
+f32 lbl_803DB6B8 = 0.4f;
+GXColor lbl_803DB6BC = {0x80, 0x80, 0x80, 0xFF};
+f32 lbl_803DB6C0 = 2.0f;
+f32 lbl_803DB6C4 = 0.3878f;
+f32 lbl_803DB6C8 = 15.0f;
+f32 lbl_803DB6CC = 100.0f;
+GXColor lbl_803DB6D0 = {0x42, 0x42, 0x42, 0};
+GXColor lbl_803DB6D4 = {0x81, 0x81, 0x81, 0};
+GXColor lbl_803DB6D8 = {0x19, 0x19, 0x19, 0};
+GXColor lbl_803DB6DC = {0x10, 0x10, 0x10, 0xFF};
+GXColor lbl_803DB6E0 = {0, 0, 0, 0xFF};
+GXColor lbl_803DB6E4 = {0, 0, 0x80, 0};
+GXColor lbl_803DB6E8 = {0x80, 0x80, 0, 0};
+GXColor lbl_803DB6EC = {0, 0x80, 0, 0};
+#pragma explicit_zero_data on
+GXColor lbl_803DB6F0 = {0, 0, 0, 0};
+#pragma explicit_zero_data off
+u32 lbl_803DB6F4 = 0xFFFFFF60;
+u32 lbl_803DB6F8 = 0xA0A0A080;
+
 typedef struct
 {
     f32 m[6];

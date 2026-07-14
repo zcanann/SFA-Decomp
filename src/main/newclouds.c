@@ -36,6 +36,15 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 
+f32 gNewCloudOvercastFadeLevel = 1.0f;
+f32 lbl_803DB764 = 1.0f;
+f32 lbl_803DB768 = 1.0f;
+int gNewCloudWindSourcesInit = 1;
+u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A};
+#pragma explicit_zero_data on
+int gNewCloudStarFogColor = 0;
+#pragma explicit_zero_data off
+
 /* CloudSpawnParams.flags58 / NewCloud.flags144A — spawn command / trigger bits */
 #define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
 #define NEWCLOUD_CMD_SPAWN      0x2  /* create/spawn cloud */

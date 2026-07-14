@@ -39,6 +39,22 @@
 #include "main/frame_timing.h"
 #include "main/mm.h"
 
+f32 gObjSeqCameraFov = 60.0f;
+int lbl_803DB714 = -1;
+int lbl_803DB718 = -1;
+int lbl_803DB71C = -1;
+int lbl_803DB720 = -1;
+int lbl_803DB724 = -1;
+int lbl_803DB728 = -1;
+int objSeqObjs = -1;
+f32 gObjSeqShakeAmplitude = 0.2f;
+char sSeqAAnimDataTag[] = "SEQA";
+char sSeqBAnimDataTag[] = "SEQB";
+#pragma explicit_zero_data on
+int lbl_803DB744 = 0;
+#pragma explicit_zero_data off
+u8 lbl_803DB748[4] = {0x20, 0x20, 0x20, 0xFF};
+
 #define ObjMsg_SendToObjectsLegacy(target, flags, sender, message, param) \
     ((void (*)(int, int, void*, int, void*))ObjMsg_SendToObjects)((target), (flags), (sender), (message), (param))
 #define ObjMsg_SendToNearbyObjectsLegacy(target, radius, flags, sender, message, param) \
@@ -115,7 +131,6 @@ extern ObjSeqBgCmd lbl_8039A5BC[];
 extern u8 lbl_80396918[];
 extern int lbl_8030EDA4[];
 extern int gObjSeqStreamTableA[];
-extern u8 lbl_803DB748;
 extern int lbl_803DB720;
 extern s16 seqGlobal1;
 extern s16 seqGlobal2;
@@ -197,8 +212,6 @@ f32 objCurveInterpolate(ObjCurveKey* keys, int count, int frame);
 extern int loadAndDecompressDataFile(int id, void* buf, int blockOff, int len, int a, int b, int c);
 extern int strncmp(const char* a, const char* b, u32 n);
 extern char sObjLoadAnimdataNullACRomTabWarning[];
-extern char sSeqAAnimDataTag;
-extern char sSeqBAnimDataTag;
 
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
@@ -3656,7 +3669,7 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
     }
 
     loadAndDecompressDataFile(0xd, &hdr, fileOffset, 8, 0, 0, 0);
-    if (strncmp(hdr.tag, &sSeqAAnimDataTag, 4) != 0 && strncmp(hdr.tag, &sSeqBAnimDataTag, 4) != 0)
+    if (strncmp(hdr.tag, sSeqAAnimDataTag, 4) != 0 && strncmp(hdr.tag, sSeqBAnimDataTag, 4) != 0)
     {
         logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
@@ -4725,8 +4738,8 @@ void fn_80088730(u8* out)
 {
     u8* src;
 
-    out[0] = lbl_803DB748;
-    src = &lbl_803DB748;
+    out[0] = lbl_803DB748[0];
+    src = lbl_803DB748;
     out[1] = src[1];
     out[2] = src[2];
     out[3] = src[3];

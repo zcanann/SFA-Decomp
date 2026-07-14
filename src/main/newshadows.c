@@ -16,6 +16,9 @@
 #include "main/pi_dolphin.h"
 #include "main/dll/DR/dll_80209FE0_shared.h"
 
+u8 lbl_803DB668[8] = {0xFF, 7, 6, 5, 4, 3, 2, 1};
+f32 lbl_803DB670 = 1.3333334f;
+
 typedef struct NewShadowEntry
 {
     u8 pad00[0x10];

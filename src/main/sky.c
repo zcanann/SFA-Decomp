@@ -28,6 +28,10 @@
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
 
+s8 lbl_803DB750 = 1;
+int lbl_803DB754 = 1;
+u8 lbl_803DB758 = 1;
+
 /* gSkyEnvFxFlags: per-group env-FX trigger enables + update state */
 #define SKY_ENVFX_GROUP_C        0x01 /* lbl_803DD138 group (GameBit 0x3ab) */
 #define SKY_ENVFX_GROUP_A        0x02 /* lbl_803DD130 group (GameBit 0x3ac) */

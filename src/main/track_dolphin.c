@@ -30,6 +30,13 @@
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
 
+f32 gShadowOffsetY = 1.0f;
+f32 lbl_803DB654 = 1.0f;
+s8 gShadowFlag = 10;
+s16 gSunMagnitude = 100;
+int gSunDirChanged = 1;
+f32 lbl_803DB660 = 0.01f;
+
 typedef struct TrackP6Entry
 {
     f32 relX0;

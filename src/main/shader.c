@@ -72,6 +72,10 @@ extern u8 lbl_80386648[];
 extern const f32 gMapBlockWorldSize;
 
 #include "main/object.h"
+
+int lbl_803DB620 = -1;
+s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
+f32 lbl_803DB62C = 0.5f;
 int objShouldLoad(int obj, s8 viewSlot, int mapEventGroup)
 {
     char* strs;
@@ -520,7 +524,6 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
     e->yStep = (s16)((yStep << 16) / (texHeightFixed >> 6));
 }
 
-extern s8 lbl_803DB624;
 extern u8* lbl_803DCE78;
 extern int mapCoordsToId(int x, int z, int layer);
 extern u32 getDataFileSize(int idx);
@@ -535,7 +538,7 @@ void mapSetup(int mapType, f32 a, s32* outMapId, s32* outEvent, f32 b, f32 c)
     s8* arr;
 
     layer = 0;
-    arr = (s8*)(int)&lbl_803DB624;
+    arr = (s8*)(int)lbl_803DB624;
     if (arr[0] != mapType)
     {
         layer = 1;
@@ -1516,7 +1519,7 @@ int mapCoordsToId(int x, int z, int layerIdx)
     int layer;
     int idx;
 
-    layer = curMapLayer + (&lbl_803DB624)[layerIdx];
+    layer = curMapLayer + lbl_803DB624[layerIdx];
     rects = (s16*)gShaderMapRomBuffers[1];
     bits = (u8*)gShaderMapRomBuffers[4];
     id = 0;

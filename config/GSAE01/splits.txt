@@ -150,55 +150,66 @@ main/rcp_dolphin.c:
 	.text       start:0x80051868 end:0x80055980
 	.data       start:0x8030C858 end:0x8030E4B0
 	.bss        start:0x803779C0 end:0x8037E0C0
+	.sdata      start:0x803DB600 end:0x803DB610
 
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
 	.rodata     start:0x802C1E58 end:0x802C1EA8
 	.data       start:0x8030E4B0 end:0x8030E868
 	.bss        start:0x8037E0C0 end:0x803868D8
+	.sdata      start:0x803DB620 end:0x803DB630
 
 main/lightmap.c:
 	.text       start:0x8005AB70 end:0x8005DF5C
 	.bss        start:0x803868D8 end:0x803878D8
+	.sdata      start:0x803DB630 end:0x803DB638
 
 main/tex_dolphin.c:
 	.text       start:0x8005DF5C end:0x8005F920
+	.sdata      start:0x803DB638 end:0x803DB648
 
 main/track_dolphin.c:
 	.text       start:0x8005F920 end:0x8006A028
 	.data       start:0x8030E868 end:0x8030E8B0
 	.bss        start:0x803879B0 end:0x8038DF48
+	.sdata      start:0x803DB650 end:0x803DB668
 	.sdata2     start:0x803DEC60 end:0x803DEC68
 
 main/newshadows.c:
 	.text       start:0x8006A028 end:0x8006EF38
 	.bss        start:0x8038DF48 end:0x80391DC0
+	.sdata      start:0x803DB668 end:0x803DB678
 
 track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 	.rodata     start:0x802C1EA8 end:0x802C1F80
 	.bss        start:0x80391DC0 end:0x80396918
+	.sdata      start:0x803DB678 end:0x803DB700
 
 main/maketex.c:
 	.text       start:0x8007E77C end:0x80080DE8
 	.data       start:0x8030EAB8 end:0x8030ECA8
+	.sdata      start:0x803DB700 end:0x803DB710
 
 main/objseq.c:
 	.text       start:0x80080DE8 end:0x80088758
 	.data       start:0x8030ECA8 end:0x8030EF58
 	.bss        start:0x80396918 end:0x8039A7A8
+	.sdata      start:0x803DB710 end:0x803DB750
 
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18
 	.rodata     start:0x802C1F80 end:0x802C1FA8
 	.data       start:0x8030F2C8 end:0x8030F5A0
 	.bss        start:0x8039A7A8 end:0x8039A818
+	.sdata      start:0x803DB750 end:0x803DB760
 
 main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
 	.rodata     start:0x802C1FA8 end:0x802C1FD8
 	.data       start:0x8030F5A0 end:0x8030F7B0
 	.bss        start:0x8039A818 end:0x8039AB28
+	.sdata      start:0x803DB760 end:0x803DB780
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:
 	.text       start:0x80094494 end:0x800944A0
@@ -219,6 +230,7 @@ main/dll/viewfinder.c:
 main/dll/objfx.c:
 	.text       start:0x800969B0 end:0x8009AD44
 	.rodata     start:0x802C1FD8 end:0x802C2160
+	.sdata      start:0x803DB788 end:0x803DB790
 
 main/dll/expgfxresource.c:
 	.text       start:0x8009AD44 end:0x8009B0E0
@@ -227,6 +239,7 @@ main/dll/dll_000A_expgfx.c:
 	.text       start:0x8009B0E0 end:0x8009FFF0
 	.data       start:0x8030F898 end:0x8030FD20
 	.bss        start:0x8039AB58 end:0x8039BE98
+	.sdata      start:0x803DB790 end:0x803DB798
 
 main/dll/dll_000B_dll0b.c:
 	.text       start:0x8009FFF0 end:0x800A3A40

@@ -29,6 +29,13 @@
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
 
+#pragma explicit_zero_data on
+u32 gRcpDistortAmbColor = 0;
+#pragma explicit_zero_data off
+int gRcpDistortMatColor = -1;
+u32 gRcpTexAllocTag = 6;
+char sDebugIntLineFormat[] = "%d\n";
+
 #define GX_CULL_NONE     0
 #define GX_CULL_FRONT    1
 #define GX_CULL_BACK     2
@@ -2340,7 +2347,6 @@ void texRestructRefs(int mode)
     texFlagFn_80023cbc(0);
 }
 
-extern char sDebugIntLineFormat;
 extern u8 gRcpTexAllocFailed;
 extern u32 gRcpTexAllocTag;
 extern int OSDisableInterrupts(void);
@@ -2391,7 +2397,7 @@ void* textureLoad(int texId, u8 flagIn)
             slot = n & 0x7fff;
             if (slot == 0x82e)
             {
-                OSReport(&sDebugIntLineFormat);
+                OSReport(sDebugIntLineFormat);
             }
         }
     }

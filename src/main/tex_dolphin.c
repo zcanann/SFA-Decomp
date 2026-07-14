@@ -8,6 +8,11 @@
 #include "main/model_light.h"
 #include "main/pi_dolphin.h"
 
+u8 lbl_803DB638[4] = {0x20, 0x20, 0x20, 0};
+int gTexShaderAmbColor = -1;
+int gTexLightmapAmbColor = -1;
+s8 gTexIndMtxScaleExp = -2;
+
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
 #define GX_CULL_BACK  2
@@ -30,7 +35,6 @@ extern int lbl_803DCE68;
 extern int lbl_803DCE6C;
 extern int gTexIndMtxTable[];
 extern u8 lbl_8037E0C0[];
-extern u8 lbl_803DB638;
 extern int gTexShaderAmbColor;
 extern int gTexLightmapAmbColor;
 extern s8 gTexIndMtxScaleExp;
@@ -1002,7 +1006,7 @@ LAB_8005F690:
         int* lightList = lbl_803DCE34;
         if (lightList != 0)
         {
-            fn_8004FDA0(lightList, &lbl_80382008, &lbl_803DB638);
+            fn_8004FDA0(lightList, &lbl_80382008, lbl_803DB638);
             goto LAB_8005F6F4;
         }
     }

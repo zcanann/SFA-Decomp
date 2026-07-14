@@ -34,6 +34,9 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/savegame_env_api.h"
+
+char colorFilterColor[4] = "\xFF\x70\x40";
+u8 colorScale = 0xFF;
 extern u32 FUN_800069f4();
 extern u32 mapBlockRender_setVtxDcrs();
 extern u32 DAT_803dda68;
@@ -889,7 +892,6 @@ extern char distortionFilterColor;
 extern void doDistortionFilter(void* buf, f32 a2, void* color, f32 a1);
 extern void renderGlows(void);
 extern u8 bEnableMonochromeFilter;
-extern char colorFilterColor;
 extern void doColorFilter(void* color);
 extern u8 bEnableSpiritVision;
 extern void doSpiritVisionFilter(void);
@@ -1062,7 +1064,7 @@ void sceneDraw(void)
     (*gCameraInterface)->minimapShowHelpTextForTarget(0, 0, 0, 0);
     if (bEnableMonochromeFilter != 0)
     {
-        doColorFilter(&colorFilterColor);
+        doColorFilter(colorFilterColor);
     }
     else if (bEnableSpiritVision != 0)
     {
@@ -1074,7 +1076,7 @@ void sceneDraw(void)
     }
     if (bEnableColorFilter == 1)
     {
-        doColorFilter(&colorFilterColor);
+        doColorFilter(colorFilterColor);
     }
     setShadowFlag_803db658(0);
 }
