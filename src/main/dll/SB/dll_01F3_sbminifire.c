@@ -18,8 +18,8 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/audio/sfx.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
@@ -135,7 +135,6 @@ void SB_MiniFire_update(GameObject* obj)
 
 void SB_MiniFire_init(GameObject* obj)
 {
-    extern void Sfx_PlayFromObject(int* obj, int sfxId);
     void* resource;
 
     obj->unkF4 = 180;
