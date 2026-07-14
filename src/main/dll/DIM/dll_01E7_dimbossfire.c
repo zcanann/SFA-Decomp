@@ -15,7 +15,6 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
 #include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
@@ -26,8 +25,6 @@
 #define DIMBOSSFIRE_OBJFLAG_PARENT_SLACK 0x1000
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
-#define MODEL_LIGHT_KIND_POINT 2
-extern void ModelLightStruct_free(ModelLightStruct* light);
 
 extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
@@ -90,7 +87,7 @@ void dimbossfire_free(GameObject *obj)
 {
     int o = (int)obj;
     int state;
-    void* light;
+    ModelLightStruct* light;
 
     state = *(int*)&((GameObject*)o)->extra;
     light = ((DimbossfireState*)state)->light;
@@ -188,11 +185,11 @@ void dimbossfire_update(GameObject *obj)
                     doRumble(lbl_803E4DB4 * playerDist);
                 }
             }
-            if ((void*)state->light == NULL)
+            if (state->light == NULL)
             {
                 light = objCreateLight(obj, 1);
                 state->light = light;
-                if ((void*)state->light != NULL)
+                if (state->light != NULL)
                 {
                     modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
                     lightSetFieldBC_8001db14(state->light, 1);
@@ -215,7 +212,7 @@ void dimbossfire_update(GameObject *obj)
         if (state->activeTimer <= lbl_803E4DA0)
         {
             state->activeTimer = *(f32*)&lbl_803E4DA0;
-            if (*(u32*)&state->light != 0)
+            if (state->light != NULL)
             {
                 ModelLightStruct_free(state->light);
                 state->light = 0;
