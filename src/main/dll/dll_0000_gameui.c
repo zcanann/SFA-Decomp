@@ -2,6 +2,7 @@
 #include "main/gametext_show_str_api.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/frame_timing.h"
+#include "main/gameloop_api.h"
 #include "main/dll/savegame.h"
 #include "main/gametext_box_api.h"
 #include "main/gametext_internal.h"
@@ -122,7 +123,6 @@ extern f32 lbl_803DBAA4;
 extern u8 lbl_803DD75B;
 extern u8 lbl_803DD77F;
 extern s32 lbl_803DD7E0;
-extern void setTimeStop(int v);
 extern u16 curGameText;
 extern u8 lbl_803DD7A9;
 extern u8 lbl_803DD8C8;
@@ -393,7 +393,6 @@ extern void drawWorldMapHud(void);
 extern void timeListDraw(int a, int b, int c);
 extern void pauseMenuRunSubmenu(int p1);
 extern void cMenuRun(void);
-extern void cutsceneFadeInOut(int a);
 extern u8 cMenuState;
 extern u8 cMenuOpen;
 extern s8 gCMenuScriptedInput;

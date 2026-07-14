@@ -349,8 +349,6 @@ extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 
 extern int fn_8011E0D8();
-extern void cutsceneFadeInOut(int a);
-extern void setTimeStop(int v);
 extern void* memset(void* p, int v, int n);
 extern void drawTexture(void* p, f32 a, f32 b, int c, int d);
 extern void drawScaledTexture(void* tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
