@@ -9,7 +9,7 @@
  */
 #include "main/dll/partfx_interface.h"
 #include "main/game_object.h"
-#include "main/modellight_api.h"
+#include "main/model_light.h"
 #include "main/object.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -73,16 +73,11 @@ typedef struct SBCannonBallState
     s8 flags;
     u8 pad1B[0x1C - 0x1B];
     f32 impactCooldown;
-    void* modelLight;
+    ModelLightStruct* modelLight;
     u8 pad24[0x28 - 0x24];
 } SBCannonBallState;
 
-extern void ModelLightStruct_free(void* effect);
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, int d);
-extern u8* objCreateLight(int* obj, int v);
-extern void modelLightStruct_setLightKind(u8* p, int v);
-extern void modelLightStruct_setDiffuseColor(u8* p, int a, int b, int c, int d);
-extern void modelLightStruct_setDistanceAttenuation(u8* obj, f32 a, f32 b);
 
 int SB_CannonBall_getExtraSize(void)
 {
@@ -234,7 +229,7 @@ void SB_CannonBall_init(GameObject* obj)
     SBCannonBallState* state = obj->extra;
     if (state->modelLight == NULL)
     {
-        state->modelLight = objCreateLight((int*)obj, SB_CANNONBALL_LIGHT_KIND);
+        state->modelLight = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
         if (state->modelLight != NULL)
         {
             modelLightStruct_setLightKind(state->modelLight, SB_CANNONBALL_LIGHT_FIELD50);
