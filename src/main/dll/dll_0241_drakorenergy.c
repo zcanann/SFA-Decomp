@@ -20,6 +20,7 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
+#include "main/object_render_legacy.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
@@ -56,7 +57,6 @@ extern int gDrakorEnergyHealAmount;
 extern f32 lbl_803DC174;
 extern s16 lbl_803DC178;
 
-extern void objRenderModelAndHitVolumes(int obj, int p1, int p2, int p3, int p4, f32 scale);
 extern void playerAddHealth(int obj, int amount);
 
 extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
