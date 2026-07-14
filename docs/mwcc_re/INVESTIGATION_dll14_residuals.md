@@ -234,3 +234,15 @@ wg cluster unchanged (wg=r22, curve=r23) and cost 4 region-lines (144 vs 140) - 
 edit; the committed lp/fyv staging at THOSE sites is shape-correct. F39's identity remains
 open - resolve via webmap operand decode (def-site correlation), not enumeration guessing.
 Probe state to build from: wgfep_perblock.c (per-block po2/pl2, 140 regions, 5/8 anchors).
+
+## webmap operand layout decoded + constraint found
+PCode operand record (inst+0x24+n*0xc, 12 bytes): [0]=kind (0=reg, 3=value-ref),
+[1]=class, [2:4]=le16 register/vreg, [4:8]=value-node ptr (kind 3). CONSTRAINT: the Apply
+hook (0x508804) fires POST-coloring - operands are already physical regs (observed 0-5),
+so instruction->WEB correlation needs a PRE-color hook instead: candidates are the
+interference-graph build (InterferenceGraph.c band; disasm exists in docs/mwcc_re/disasm/)
+or reading desc+0x26 (webIndex) through the kind-3 value-node ptr at Apply time (the
+descriptor survives coloring). The latter is a two-line tracer edit: follow o[4:8] ->
+RegInfo_Desc -> +0x26, logging web indices alongside physical regs = full web<->instruction
+<->register correlation in one pass. That identifies F39 (and any future interloper)
+directly from its def/use instructions.
