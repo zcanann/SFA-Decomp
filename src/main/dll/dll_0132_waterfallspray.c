@@ -43,9 +43,24 @@ typedef struct WaterFallSprayPlacement
 STATIC_ASSERT(offsetof(WaterFallSprayPlacement, gameBit) == 0x18);
 STATIC_ASSERT(offsetof(WaterFallSprayPlacement, count) == 0x24);
 
+int WaterFallSpray_getExtraSize(void)
+{
+    return 0x8;
+}
+
+int WaterFallSpray_SeqFn(int* obj)
+{
+    WaterFallSpray_update(obj);
+    return 0;
+}
+
 void WaterFallSpray_free(u8* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void WaterFallSpray_render(void)
+{
 }
 
 typedef struct WaterFallSprayPartfxArgs
@@ -165,21 +180,6 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
         ((WaterFallSprayState*)sub)->sfxIdA = WATERFALLSPRAY_DEFAULT_SFX_A;
         ((WaterFallSprayState*)sub)->sfxIdB = WATERFALLSPRAY_DEFAULT_SFX_B;
     }
-}
-
-void WaterFallSpray_render(void)
-{
-}
-
-int WaterFallSpray_getExtraSize(void)
-{
-    return 0x8;
-}
-
-int WaterFallSpray_SeqFn(int* obj)
-{
-    WaterFallSpray_update(obj);
-    return 0;
 }
 
 #pragma force_active on
