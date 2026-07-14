@@ -28,6 +28,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
+#include "main/object_descriptor.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define CCGASVENTCONTROL_CAMMODE_DEFAULT 0x42
@@ -151,6 +152,26 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4620);
 }
+
+void ccgasventcontrol_init(GameObject* obj, u8* def);
+void ccgasventcontrol_update(GameObject* obj);
+
+ObjectDescriptor gCCgasventControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ccgasventcontrol_init,
+    (ObjectDescriptorCallback)ccgasventcontrol_update,
+    0,
+    (ObjectDescriptorCallback)ccgasventcontrol_render,
+    (ObjectDescriptorCallback)ccgasventcontrol_free,
+    0,
+    ccgasventcontrol_getExtraSize,
+};
 
 void ccgasventcontrol_update(GameObject* obj)
 {

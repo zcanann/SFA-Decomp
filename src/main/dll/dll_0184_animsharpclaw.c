@@ -21,6 +21,7 @@
 #include "main/obj_link.h"
 #include "main/objseq.h"
 #include "main/dll/dll_0184_animsharpclaw.h"
+#include "main/object_descriptor.h"
 
 /* child setup-object id spawned on anim sequence event 1 */
 #define ANIMSHARPCLAW_CHILD_SETUP_ID 0x30B
@@ -204,3 +205,20 @@ void animsharpclaw_release(void)
 void animsharpclaw_initialise(void)
 {
 }
+
+ObjectDescriptor gAnimSharpclawObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)animsharpclaw_initialise,
+    (ObjectDescriptorCallback)animsharpclaw_release,
+    0,
+    (ObjectDescriptorCallback)animsharpclaw_init,
+    (ObjectDescriptorCallback)animsharpclaw_update,
+    (ObjectDescriptorCallback)animsharpclaw_hitDetect,
+    (ObjectDescriptorCallback)animsharpclaw_render,
+    (ObjectDescriptorCallback)animsharpclaw_free,
+    (ObjectDescriptorCallback)animsharpclaw_getObjectTypeId,
+    animsharpclaw_getExtraSize,
+};

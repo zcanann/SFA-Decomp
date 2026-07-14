@@ -1907,37 +1907,43 @@ main/dll/dll_017F_moonseedbush.c:
 
 main/dll/MMP/dll_0180_mmpasteroidre.c:
 	.text       start:0x801A6F4C end:0x801A78C8
-	.data       start:0x803231D0 end:0x803231E0
+	.data       start:0x803231D0 end:0x80323218
 	.bss        start:0x803AC900 end:0x803AC918
 
 main/dll/MMP/dll_0182_mmpmoonrock.c:
 	.text       start:0x801A78C8 end:0x801A8A40
 	.bss        start:0x803AC918 end:0x803AC930
 	.sdata2     start:0x803E4548 end:0x803E45B8
+	.data       start:0x80323218 end:0x80323250
 
 main/dll/MMP/dll_0181_mmptrenchfx.c:
 	.text       start:0x801A8A40 end:0x801A8E24
 	.bss        start:0x803AC930 end:0x803AC948
 	.sdata2     start:0x803E45B8 end:0x803E45C0
+	.data       start:0x80323250 end:0x80323288
 
 main/dll/MMP/dll_0183_mmpgyservent.c:
 	.text       start:0x801A8E24 end:0x801A8F88
+	.data       start:0x80323288 end:0x803232C0
 
 main/dll/dll_0184_animsharpclaw.c:
 	.text       start:0x801A8F88 end:0x801A9468
 	.sdata2     start:0x803E45C8 end:0x803E45D8
+	.data       start:0x803232C0 end:0x803232F8
 
 main/dll/dll_025B_msplantings.c:
 	.text       start:0x801A9468 end:0x801A9E74
 	.sdata2     start:0x803E45D8 end:0x803E460C
+	.data       start:0x803232F8 end:0x80323340
 
 main/dll/CC/dll_0185_ccgasvent.c:
 	.text       start:0x801A9E74 end:0x801A9FA8
 	.sdata2     start:0x803E4610 end:0x803E4618
+	.data       start:0x80323340 end:0x80323378
 
 main/dll/CC/dll_0186_ccgasventcontrol.c:
 	.text       start:0x801A9FA8 end:0x801AA558
-	.data       start:0x803233B0 end:0x803233CC
+	.data       start:0x80323378 end:0x803233CC
 	.sdata2     start:0x803E4618 end:0x803E4648
 	.sdata2     start:0x803E4648 end:0x803E4650
 

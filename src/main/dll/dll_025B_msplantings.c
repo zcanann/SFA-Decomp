@@ -31,6 +31,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_025B_msplantings.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 /* shared "moon seeds carried" counter game bit */
 #define GAMEBIT_MOONSEED_COUNT 0x86A
@@ -393,3 +394,24 @@ void MoonSeedPlantingSpot_release(void)
 void MoonSeedPlantingSpot_initialise(void)
 {
 }
+
+ObjectDescriptor14 gMoonSeedPlantingSpotObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_initialise,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_release,
+    0,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_init,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_update,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_hitDetect,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_render,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_free,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_getObjectTypeId,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_getExtraSize,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_setScale,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_func0B,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_modelMtxFn,
+    (ObjectDescriptorCallback)MoonSeedPlantingSpot_render2,
+};

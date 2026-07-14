@@ -19,6 +19,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/dll/MMP/dll_0181_mmptrenchfx.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 
@@ -123,3 +124,20 @@ void mmp_trenchfx_release(void)
 void mmp_trenchfx_initialise(void)
 {
 }
+
+ObjectDescriptor gMMP_trenchFXObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mmp_trenchfx_initialise,
+    (ObjectDescriptorCallback)mmp_trenchfx_release,
+    0,
+    (ObjectDescriptorCallback)mmp_trenchfx_init,
+    (ObjectDescriptorCallback)mmp_trenchfx_update,
+    (ObjectDescriptorCallback)mmp_trenchfx_hitDetect,
+    (ObjectDescriptorCallback)mmp_trenchfx_render,
+    (ObjectDescriptorCallback)mmp_trenchfx_free,
+    (ObjectDescriptorCallback)mmp_trenchfx_getObjectTypeId,
+    mmp_trenchfx_getExtraSize,
+};

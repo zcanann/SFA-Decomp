@@ -10,6 +10,7 @@
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/dll/CC/dll_0185_ccgasvent.h"
+#include "main/object_descriptor.h"
 
 #define CCGASVENT_GROUP           0x3f
 #define CCGASVENT_TARGET_OBJGROUP 5
@@ -74,3 +75,20 @@ void ccgasvent_init(int obj)
 {
     ObjGroup_AddObject(obj, CCGASVENT_GROUP);
 }
+
+ObjectDescriptor gCCgasventObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ccgasvent_init,
+    (ObjectDescriptorCallback)ccgasvent_update,
+    0,
+    (ObjectDescriptorCallback)ccgasvent_render,
+    (ObjectDescriptorCallback)ccgasvent_free,
+    0,
+    ccgasvent_getExtraSize,
+};

@@ -30,6 +30,7 @@
 #include "main/camera_shake_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/MMP/dll_0180_mmpasteroidre.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
@@ -303,3 +304,20 @@ void mmp_asteroid_re_update(int obj)
     }
     state->eventFlags &= ~ASTEROIDRE_SEQ_TICK;
 }
+
+ObjectDescriptor gMMP_asteroid_reObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mmp_asteroid_re_initialise,
+    (ObjectDescriptorCallback)mmp_asteroid_re_release,
+    0,
+    (ObjectDescriptorCallback)mmp_asteroid_re_init,
+    (ObjectDescriptorCallback)mmp_asteroid_re_update,
+    (ObjectDescriptorCallback)mmp_asteroid_re_hitDetect,
+    (ObjectDescriptorCallback)mmp_asteroid_re_render,
+    (ObjectDescriptorCallback)mmp_asteroid_re_free,
+    (ObjectDescriptorCallback)mmp_asteroid_re_getObjectTypeId,
+    mmp_asteroid_re_getExtraSize,
+};

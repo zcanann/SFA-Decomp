@@ -36,6 +36,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 #define MMPMOONROCK_OBJGROUP        4
 #define MMPMOONROCK_HIT_VOLUME_SLOT 14
@@ -717,3 +718,20 @@ void mmp_moonrock_update(GameObject* obj)
     (*gPartfxInterface)
         ->spawnObject((void*)obj, MMPMOONROCK_PARTFX, gMoonRockSpawnParams, 0x200001, -1, &particleHeight);
 }
+
+ObjectDescriptor gMMP_moonrockObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mmp_moonrock_initialise,
+    (ObjectDescriptorCallback)mmp_moonrock_release,
+    0,
+    (ObjectDescriptorCallback)mmp_moonrock_init,
+    (ObjectDescriptorCallback)mmp_moonrock_update,
+    (ObjectDescriptorCallback)mmp_moonrock_hitDetect,
+    (ObjectDescriptorCallback)mmp_moonrock_render,
+    (ObjectDescriptorCallback)mmp_moonrock_free,
+    (ObjectDescriptorCallback)mmp_moonrock_getObjectTypeId,
+    mmp_moonrock_getExtraSize,
+};

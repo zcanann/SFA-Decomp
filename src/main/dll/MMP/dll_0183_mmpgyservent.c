@@ -16,6 +16,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/MMP/dll_0183_mmpgyservent.h"
+#include "main/object_descriptor.h"
 
 #define MMPGYSERVENT_PARTFX_GEYSER              0x724
 #define MMPGYSERVENT_OBJFLAG_HIDDEN             0x4000
@@ -84,3 +85,20 @@ void mmp_gyservent_release(void)
 void mmp_gyservent_initialise(void)
 {
 }
+
+ObjectDescriptor gMMP_gyserventObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)mmp_gyservent_initialise,
+    (ObjectDescriptorCallback)mmp_gyservent_release,
+    0,
+    (ObjectDescriptorCallback)mmp_gyservent_init,
+    (ObjectDescriptorCallback)mmp_gyservent_update,
+    (ObjectDescriptorCallback)mmp_gyservent_hitDetect,
+    (ObjectDescriptorCallback)mmp_gyservent_render,
+    (ObjectDescriptorCallback)mmp_gyservent_free,
+    (ObjectDescriptorCallback)mmp_gyservent_getObjectTypeId,
+    mmp_gyservent_getExtraSize,
+};
