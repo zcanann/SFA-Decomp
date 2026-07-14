@@ -379,7 +379,7 @@ extern s8 lbl_803DD7A0;
 extern u8 lbl_803DD7BA;
 extern int lbl_803DD898;
 extern s16 lbl_803DD89E;
-extern u8 lbl_803DD8B7;
+extern s8 lbl_803DD8B7;
 extern s16 lbl_803DD8D2;
 extern f32 lbl_803E21D0;
 extern s16 cMenuFadeCounter;
@@ -581,7 +581,7 @@ void GameUI_update(void)
 {
     u8* player = (u8*)Obj_GetPlayerObject();
     u8* tricky = (u8*)getTrickyObject();
-    u8 sectionTarget;
+    s8 sectionTarget;
     s16 cx;
     s16 angDelta;
     u8 trickyProximity = 0;
