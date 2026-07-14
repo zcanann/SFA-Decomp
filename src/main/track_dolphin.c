@@ -2502,8 +2502,6 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
 
 void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
 {
-    u8* objLegacy = (u8*)obj;
-    u8* newParentLegacy = (u8*)newParent;
     GameObject* oldParent;
     ObjHitsPriorityState* hitState;
     int yawSum;
@@ -2511,8 +2509,8 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
     f32 dirZ;
     u8 dirBuf[16];
 
-    oldParent = (GameObject*)*(u8**)&obj->anim.parent;
-    if ((u8*)oldParent == newParentLegacy)
+    oldParent = (GameObject*)obj->anim.parent;
+    if (oldParent == newParent)
         return;
 
     if (oldParent != NULL)
@@ -2526,20 +2524,20 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
         return;
     }
 
-    *(u8**)(objLegacy + 0x30) = newParentLegacy;
-    hitState = (ObjHitsPriorityState*)*(u8**)&obj->anim.hitReactState;
+    obj->anim.parent = newParent;
+    hitState = (ObjHitsPriorityState*)obj->anim.hitReactState;
     if (oldParent != NULL)
     {
         Obj_TransformLocalPointToWorld(obj->anim.localPosX, obj->anim.localPosY,
                                        obj->anim.localPosZ, &obj->anim.worldPosX,
                                        &obj->anim.worldPosY, &obj->anim.worldPosZ,
                                        (u32)oldParent);
-        Obj_TransformLocalPointToWorld(*(f32*)(objLegacy + 0x80), *(f32*)(objLegacy + 0x84),
-                                       *(f32*)(objLegacy + 0x88), (f32*)(objLegacy + 0x8c),
-                                       (f32*)(objLegacy + 0x90), (f32*)(objLegacy + 0x94), (u32)oldParent);
+        Obj_TransformLocalPointToWorld(obj->anim.previousLocalPosX, obj->anim.previousLocalPosY,
+                                       obj->anim.previousLocalPosZ, &obj->anim.previousWorldPosX,
+                                       &obj->anim.previousWorldPosY, &obj->anim.previousWorldPosZ, (u32)oldParent);
         Obj_TransformLocalVectorToWorld(obj->anim.velocityX, __AR_Callback,
                                         obj->anim.velocityZ, &dirX, (f32*)dirBuf, &dirZ, (u32)oldParent);
-        yawSum = *(s16*)oldParent + obj->anim.rotX;
+        yawSum = oldParent->anim.rotX + obj->anim.rotX;
     }
     else
     {
@@ -2550,19 +2548,19 @@ void objHitDetectFn_80062e84(GameObject* obj, GameObject* newParent, int mode)
 
     if (mode != 0)
     {
-        if (*(u8**)(objLegacy + 0x30) != NULL)
+        if (obj->anim.parent != NULL)
         {
             Obj_TransformWorldPointToLocal(obj->anim.worldPosX, obj->anim.worldPosY,
                                            obj->anim.worldPosZ, &obj->anim.localPosX,
                                            &obj->anim.localPosY, &obj->anim.localPosZ,
-                                           (u32)*(u8**)(objLegacy + 0x30));
-            Obj_TransformWorldPointToLocal(*(f32*)(objLegacy + 0x8c), *(f32*)(objLegacy + 0x90),
-                                           *(f32*)(objLegacy + 0x94), (f32*)(objLegacy + 0x80),
-                                           (f32*)(objLegacy + 0x84), (f32*)(objLegacy + 0x88),
-                                           (u32)*(u8**)(objLegacy + 0x30));
-            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, (f32*)(objLegacy + 0x24), (f32*)dirBuf,
-                                            (f32*)(objLegacy + 0x2c), (u32)*(u8**)(objLegacy + 0x30));
-            yawSum = yawSum - *(s16*)(*(u8**)(objLegacy + 0x30));
+                                           (u32)obj->anim.parent);
+            Obj_TransformWorldPointToLocal(obj->anim.previousWorldPosX, obj->anim.previousWorldPosY,
+                                           obj->anim.previousWorldPosZ, &obj->anim.previousLocalPosX,
+                                           &obj->anim.previousLocalPosY, &obj->anim.previousLocalPosZ,
+                                           (u32)obj->anim.parent);
+            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ, &obj->anim.velocityX, (f32*)dirBuf,
+                                            &obj->anim.velocityZ, (u32)obj->anim.parent);
+            yawSum = yawSum - ((GameObject*)obj->anim.parent)->anim.rotX;
             if (yawSum > 0x8000)
                 yawSum -= 0xffff;
             if (yawSum < -0x8000)
