@@ -2368,13 +2368,14 @@ void walkgroupFindExitPointFn_800dc398(void)
     int back;
     ObjfsaPatch* np;
     u8 groupB;
-    char* slotPtr;
+    ObjfsaPatch* p;
     int flagIndex;
     int found;
     int curveCount;
+    int** listWalk;
     u8* pp;
     int listIndex;
-    int** listWalk;
+    char* slotPtr;
     int slot;
     int curve;
     u32 linked;
@@ -2389,14 +2390,12 @@ void walkgroupFindExitPointFn_800dc398(void)
     int zid;
     int checksum;
     int searchCount;
-    ObjfsaWalkGroup* wg;
     ObjfsaWalkGroup* wgB;
     ObjfsaPatchPlane* pl;
     ObjfsaPatch* pC;
     f32* po;
     int** curveList;
     ObjfsaPatch* sp;
-    ObjfsaPatch* p;
     char* lp;
     f32 fdx;
     f32 fdz;
@@ -2418,6 +2417,9 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 fy1;
     s16 fyv;
     f32 zero;
+    ObjfsaWalkGroup* wg;
+    ObjfsaWalkGroup* wgT;
+    ObjfsaWalkGroup* wgBT;
     patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
 
@@ -2496,8 +2498,7 @@ void walkgroupFindExitPointFn_800dc398(void)
             curve = (int)*listWalk;
             if (*(s8*)(curve + 0x19) == 0x26)
             {
-                wgB = &((ObjfsaWalkGroup*)patchBase[0])[*(u8*)(curve + 3)];
-                wg = (ObjfsaWalkGroup*)((char*)wgB + 0x3000);
+                wg = (ObjfsaWalkGroup*)((char*)patchBase[0] + (*(u8*)(curve + 3) * 40 + 0x3000));
                 lp = (char*)patchBase[0] + *(u8*)(curve + 3);
                 lp[OBJFSA_ACTIVE_WALKGROUPS_OFFSET] = 1;
 
@@ -2524,7 +2525,16 @@ void walkgroupFindExitPointFn_800dc398(void)
 
                 dxn = objfsaCorner(*(s8*)(curve + 0x5), scale, (f32*)(curve + 0x10)) - z3;
                 dzn = x3 - OBJFSA_CORNER(curve, curve + 0x4, 0x8);
-                OBJFSA_SET_PLANE(*wg, 3, x3, z3);
+                po = &wg->planeOffsets[3];
+                len = sqrtf(dxn * dxn + dzn * dzn);
+                if (len != lbl_803E05F0)
+                {
+                    dxn = dxn / len;
+                    dzn = dzn / len;
+                }
+                wg->planes[3].normalX = (s16)(gObjfsaPlaneNormalScale * dxn);
+                wg->planes[3].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);
+                *(po) = -((f32)wg->planes[3].normalX * (x3) + (f32)wg->planes[3].normalZ * (z3));
 
                 wg->maxY = (s16)(lbl_803E05D0 * (f32) * (s8*)(curve + 0x18) + *(f32*)(curve + 0xc));
                 wg->minY = (s16) - (lbl_803E05D0 * (f32) * (s8*)(curve + 0x1a) - *(f32*)(curve + 0xc));
@@ -2655,10 +2665,8 @@ void walkgroupFindExitPointFn_800dc398(void)
         p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
-            wg = &((ObjfsaWalkGroup*)patchBase[0])[pp[0]];
-            wg = (ObjfsaWalkGroup*)((char*)wg + 0x3000);
-            wgB = &((ObjfsaWalkGroup*)patchBase[0])[pp[1]];
-            wgB = (ObjfsaWalkGroup*)((char*)wgB + 0x3000);
+            wgT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[0] * 40 + 0x3000));
+            wgBT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[1] * 40 + 0x3000));
             fdx = (f32)(p->exit1X - p->exit0X);
             fdz = (f32)(p->exit1Z - p->exit0Z);
 
@@ -2673,11 +2681,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                 goto exit0Done;
             }
         scan0:
-            OBJFSA_EXIT_INSIDE(wg, (pC = p)->exit0X, p->exit0Z);
+            OBJFSA_EXIT_INSIDE(wgT, (pC = p)->exit0X, p->exit0Z);
             pB = pC;
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgB, pC->exit0X, pC->exit0Z);
+                OBJFSA_EXIT_INSIDE(wgBT, pC->exit0X, pC->exit0Z);
                 if (edge != 4)
                     goto update0;
             }
@@ -2694,10 +2702,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                 goto exit1Done;
             }
         scan1:
-            OBJFSA_EXIT_INSIDE(wg, pC->exit1X, pC->exit1Z);
+            OBJFSA_EXIT_INSIDE(wgT, pC->exit1X, pC->exit1Z);
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgB, pC->exit1X, pC->exit1Z);
+                OBJFSA_EXIT_INSIDE(wgBT, pC->exit1X, pC->exit1Z);
                 if (edge != 4)
                     goto update1;
             }
