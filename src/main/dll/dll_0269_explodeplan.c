@@ -12,6 +12,7 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 #include "main/dll/dll_0269_explodeplan.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69D0 = 1.0f;
 #pragma explicit_zero_data on
@@ -82,3 +83,20 @@ void explodeplan_release(void)
 void explodeplan_initialise(void)
 {
 }
+
+ObjectDescriptor gExplodePlanObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)explodeplan_initialise,
+    (ObjectDescriptorCallback)explodeplan_release,
+    0,
+    (ObjectDescriptorCallback)explodeplan_init,
+    (ObjectDescriptorCallback)explodeplan_update,
+    (ObjectDescriptorCallback)explodeplan_hitDetect,
+    (ObjectDescriptorCallback)explodeplan_render,
+    (ObjectDescriptorCallback)explodeplan_free,
+    (ObjectDescriptorCallback)explodeplan_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)explodeplan_getExtraSize,
+};

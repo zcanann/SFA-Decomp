@@ -45,6 +45,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE          0x288
 #define WCPUSHBLOCK_RENDER_TYPE_BASE    0x400
@@ -172,6 +173,25 @@ void wcpushblock_initialise(void)
 
 #pragma opt_common_subs off
 #pragma opt_dead_assignments off
+void wcpushblock_update(GameObject* obj);
+
+ObjectDescriptor gWCPushBlockObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wcpushblock_initialise,
+    (ObjectDescriptorCallback)wcpushblock_release,
+    0,
+    (ObjectDescriptorCallback)wcpushblock_init,
+    (ObjectDescriptorCallback)wcpushblock_update,
+    (ObjectDescriptorCallback)wcpushblock_hitDetect,
+    (ObjectDescriptorCallback)wcpushblock_render,
+    (ObjectDescriptorCallback)wcpushblock_free,
+    (ObjectDescriptorCallback)wcpushblock_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wcpushblock_getExtraSize,
+};
+
 void wcpushblock_update(GameObject* obj)
 {
 
@@ -683,7 +703,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
             if (state->tileAResetTimer <= lbl_803E6DA8)
             {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_A_COUNT, 0);
-                memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
+                memcpy(lbl_803AD2D8, lbl_8032B008.g, 0x40);
                 state->tileAResetTimer = gWcPushBlockTileResetTime;
             }
         }
@@ -708,7 +728,7 @@ void fn_802251B4(GameObject* obj, WcLevelControlState* state)
             if (state->tileBResetTimer <= lbl_803E6DA8)
             {
                 mainSetBits(WCPUSHBLOCK_GAMEBIT_B_COUNT, 0);
-                memcpy(lbl_803AD298, lbl_8032B088, 0x40);
+                memcpy(lbl_803AD298, lbl_8032B088.g, 0x40);
                 state->tileBResetTimer = gWcPushBlockTileResetTime;
             }
         }
@@ -1028,3 +1048,44 @@ int wclevelcont_traceMoveB(GameObject* obj, s16 a, s16 b, f32* outX, f32* outZ, 
 }
 
 #undef WCPUSHBLOCK_IFACE
+
+WcTileGrid lbl_8032B008 = {{
+    {0, 0, 0, 0, 0, 0, 8, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 4, 0, 0, 0},
+    {0, 2, 0, 0, 0, 0, 3, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 7},
+    {0, 0, 0, 0, 6, 0, 0, 0},
+    {0, 5, 0, 0, 1, 0, 0, 0},
+}};
+WcTileGrid lbl_8032B048 = {{
+    {0, 0, 0, 0, 0, 0, 4, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 3},
+    {0, 0, 0, 0, 2, 0, 0, 0},
+    {0, 1, 0, 0, 0, 0, 0, 0},
+}};
+WcTileGrid lbl_8032B088 = {{
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 1, 5, 0, 0, 2, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 3},
+    {0, 0, 0, 0, 0, 0, 6, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 7},
+    {0, 8, 0, 0, 4, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+}};
+WcTileGrid lbl_8032B0C8 = {{
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 1, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 2, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 3},
+    {0, 4, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+}};

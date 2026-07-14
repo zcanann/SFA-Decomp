@@ -19,6 +19,7 @@
 #include "main/object_api.h"
 #include "main/obj_placement.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -150,3 +151,24 @@ void DR_LightBea_release(void)
 void DR_LightBea_initialise(void)
 {
 }
+
+ObjectDescriptor gDrLightBeaObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DR_LightBea_initialise,
+    (ObjectDescriptorCallback)DR_LightBea_release,
+    0,
+    (ObjectDescriptorCallback)DR_LightBea_init,
+    (ObjectDescriptorCallback)DR_LightBea_update,
+    (ObjectDescriptorCallback)DR_LightBea_hitDetect,
+    (ObjectDescriptorCallback)DR_LightBea_render,
+    (ObjectDescriptorCallback)DR_LightBea_free,
+    (ObjectDescriptorCallback)DR_LightBea_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DR_LightBea_getExtraSize,
+};
+
+u32 lbl_8032AD68[12] = {
+    0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};

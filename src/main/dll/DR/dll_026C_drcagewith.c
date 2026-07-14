@@ -21,6 +21,7 @@
 #include "main/object_render.h"
 #include "main/objprint_api.h"
 #include "main/dll/objfx_api.h"
+#include "main/object_descriptor.h"
 
 #define DRCAGEWITH_CHILD_OBJ 1143
 
@@ -288,3 +289,24 @@ void DR_CageWith_release(void)
 void DR_CageWith_initialise(void)
 {
 }
+
+ObjectDescriptor11WithPadding gDrCageWithObjDescriptor = {
+    {
+        0,
+        0,
+        0,
+        OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+        (ObjectDescriptorCallback)DR_CageWith_initialise,
+        (ObjectDescriptorCallback)DR_CageWith_release,
+        0,
+        (ObjectDescriptorCallback)DR_CageWith_init,
+        (ObjectDescriptorCallback)DR_CageWith_update,
+        (ObjectDescriptorCallback)DR_CageWith_hitDetect,
+        (ObjectDescriptorCallback)DR_CageWith_render,
+        (ObjectDescriptorCallback)DR_CageWith_free,
+        (ObjectDescriptorCallback)DR_CageWith_getObjectTypeId,
+        (ObjectDescriptorExtraSizeCallback)DR_CageWith_getExtraSize,
+        (ObjectDescriptorCallback)DR_CageWith_setScale,
+    },
+    0,
+};

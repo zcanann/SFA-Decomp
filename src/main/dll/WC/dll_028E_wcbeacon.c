@@ -28,6 +28,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCBEACON_EXTRA_SIZE 0x8
 
@@ -190,3 +191,20 @@ void wcbeacon_init(GameObject* obj, WCBeaconSetup* setup)
         }
     }
 }
+
+ObjectDescriptor gWCBeaconObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)wcbeacon_init,
+    (ObjectDescriptorCallback)wcbeacon_update,
+    0,
+    (ObjectDescriptorCallback)wcbeacon_render,
+    0,
+    (ObjectDescriptorCallback)wcbeacon_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wcbeacon_getExtraSize,
+};

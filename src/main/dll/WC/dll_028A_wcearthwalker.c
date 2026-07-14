@@ -55,6 +55,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
+#include "main/object_descriptor.h"
 
 #define PAD_BUTTON_A 0x100
 
@@ -102,6 +103,28 @@ void earthwalker_release(void)
 void earthwalker_initialise(void)
 {
 }
+
+void earthwalker_init(GameObject* obj, int setup);
+void earthwalker_update(int obj);
+
+ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {{575, 706, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.01f, {0, 0, 0, 0}}};
+
+ObjectDescriptor gEarthWalkerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)earthwalker_initialise,
+    (ObjectDescriptorCallback)earthwalker_release,
+    0,
+    (ObjectDescriptorCallback)earthwalker_init,
+    (ObjectDescriptorCallback)earthwalker_update,
+    (ObjectDescriptorCallback)earthwalker_hitDetect,
+    (ObjectDescriptorCallback)earthwalker_render,
+    (ObjectDescriptorCallback)earthwalker_free,
+    (ObjectDescriptorCallback)earthwalker_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)earthwalker_getExtraSize,
+};
 
 void earthwalker_update(int obj)
 {
@@ -603,4 +626,3 @@ void earthwalker_init(GameObject* obj, int setup)
 
 #include "main/objHitReact.h"
 #include "main/gamebit_ids.h"
-ObjHitReactEntry gEarthWalkerHitReactEntries[1] = {{575, 706, -1, {0xFF, 0xFF}, 0, {0, 0, 0}, 0.01f, {0, 0, 0, 0}}};

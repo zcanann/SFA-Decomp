@@ -41,6 +41,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 int lbl_803DC398 = 0x14;
 #pragma explicit_zero_data on
@@ -561,3 +562,20 @@ void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
         voxmaps_gridToWorld(endPos, (s16*)gridOut);
     *(Vec3f*)out = *(Vec3f*)endPos;
 }
+
+ObjectDescriptor gBarrelGenerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)barrelgener_initialise,
+    (ObjectDescriptorCallback)barrelgener_release,
+    0,
+    (ObjectDescriptorCallback)barrelgener_init,
+    (ObjectDescriptorCallback)barrelgener_update,
+    (ObjectDescriptorCallback)barrelgener_hitDetect,
+    (ObjectDescriptorCallback)barrelgener_render,
+    (ObjectDescriptorCallback)barrelgener_free,
+    (ObjectDescriptorCallback)barrelgener_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)barrelgener_getExtraSize,
+};

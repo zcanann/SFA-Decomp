@@ -24,6 +24,7 @@
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 #include "main/dll/DR/dll_027E_drmusiccont.h"
 #include "main/object_render_legacy.h"
@@ -219,3 +220,20 @@ void drmusiccont_update(GameObject* obj)
         }
     }
 }
+
+ObjectDescriptor gDrMusicContObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)drmusiccont_initialise,
+    (ObjectDescriptorCallback)drmusiccont_release,
+    0,
+    (ObjectDescriptorCallback)drmusiccont_init,
+    (ObjectDescriptorCallback)drmusiccont_update,
+    (ObjectDescriptorCallback)drmusiccont_hitDetect,
+    (ObjectDescriptorCallback)drmusiccont_render,
+    (ObjectDescriptorCallback)drmusiccont_free,
+    (ObjectDescriptorCallback)drmusiccont_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drmusiccont_getExtraSize,
+};

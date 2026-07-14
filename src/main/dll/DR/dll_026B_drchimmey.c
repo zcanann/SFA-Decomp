@@ -12,6 +12,7 @@
 #include "main/obj_placement.h"
 #include "main/object_render.h"
 #include "main/dll/DR/dll_026B_drchimmey.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69E0 = 1.0f;
 #pragma explicit_zero_data on
@@ -97,3 +98,20 @@ void DR_Chimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
     state->offeringsRemaining = 3;
     storeZeroToFloatParam(&state->timer);
 }
+
+ObjectDescriptor gDrChimmeyObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)DR_Chimmey_init,
+    (ObjectDescriptorCallback)DR_Chimmey_update,
+    0,
+    (ObjectDescriptorCallback)DR_Chimmey_render,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)DR_Chimmey_getExtraSize,
+};

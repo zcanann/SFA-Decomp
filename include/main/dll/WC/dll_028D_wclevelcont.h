@@ -107,10 +107,16 @@ STATIC_ASSERT(offsetof(WcLevelControlState, thorntailMusicId) == 0x16);
 STATIC_ASSERT(offsetof(WcLevelControlState, ambientMusicId) == 0x18);
 STATIC_ASSERT(offsetof(WcLevelControlState, completionFlags) == 0x1A);
 
-extern u8 lbl_8032B0C8[][8];
-extern u8 lbl_8032B088[][8];
-extern u8 lbl_8032B048[][8];
-extern u8 lbl_8032B008[][8];
+typedef union WcTileGrid
+{
+    u8 g[8][8];
+    u64 align8;
+} WcTileGrid;
+
+extern WcTileGrid lbl_8032B0C8;
+extern WcTileGrid lbl_8032B088;
+extern WcTileGrid lbl_8032B048;
+extern WcTileGrid lbl_8032B008;
 extern u8 lbl_803AD298[][8];
 extern u8 lbl_803AD2D8[][8];
 extern f32 gWcPushBlockTileResetTime;

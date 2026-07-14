@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/obj_group.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCBLOCK_VARIANT_A          1
 
@@ -169,3 +170,20 @@ int wcblock_isPlayerAwayFromStoredCell(GameObject* obj, WCBlockState* state, Gam
 }
 
 #undef WCBLOCK_GRID_IFACE
+
+ObjectDescriptor gWCBouncyCraObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WCBouncyCra_initialise,
+    (ObjectDescriptorCallback)WCBouncyCra_release,
+    0,
+    (ObjectDescriptorCallback)WCBouncyCra_init,
+    (ObjectDescriptorCallback)WCBouncyCra_update,
+    (ObjectDescriptorCallback)WCBouncyCra_hitDetect,
+    (ObjectDescriptorCallback)WCBouncyCra_render,
+    (ObjectDescriptorCallback)WCBouncyCra_free,
+    (ObjectDescriptorCallback)WCBouncyCra_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)WCBouncyCra_getExtraSize,
+};

@@ -29,6 +29,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objfx.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 f32 lbl_803DC3B0 = 2.0f;
 f32 gDrBarrelGenGrabYOffset = -50.0f;
@@ -334,3 +335,20 @@ void DR_BarrelGr_release(void)
 void DR_BarrelGr_initialise(void)
 {
 }
+
+ObjectDescriptor gDrBarrelGrObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DR_BarrelGr_initialise,
+    (ObjectDescriptorCallback)DR_BarrelGr_release,
+    0,
+    (ObjectDescriptorCallback)DR_BarrelGr_init,
+    (ObjectDescriptorCallback)DR_BarrelGr_update,
+    (ObjectDescriptorCallback)DR_BarrelGr_hitDetect,
+    (ObjectDescriptorCallback)DR_BarrelGr_render,
+    (ObjectDescriptorCallback)DR_BarrelGr_free,
+    (ObjectDescriptorCallback)DR_BarrelGr_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DR_BarrelGr_getExtraSize,
+};

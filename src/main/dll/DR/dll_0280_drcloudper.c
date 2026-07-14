@@ -14,6 +14,7 @@
 #include "main/mapEventTypes.h"
 #include "main/obj_group.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 #include "main/dll/DR/dll_0280_drcloudper.h"
 
@@ -116,3 +117,22 @@ void DR_CloudPer_release(void)
 void DR_CloudPer_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDrCloudPerObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)DR_CloudPer_initialise,
+    (ObjectDescriptorCallback)DR_CloudPer_release,
+    0,
+    (ObjectDescriptorCallback)DR_CloudPer_init,
+    (ObjectDescriptorCallback)DR_CloudPer_update,
+    (ObjectDescriptorCallback)DR_CloudPer_hitDetect,
+    (ObjectDescriptorCallback)DR_CloudPer_render,
+    (ObjectDescriptorCallback)DR_CloudPer_free,
+    (ObjectDescriptorCallback)DR_CloudPer_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DR_CloudPer_getExtraSize,
+    (ObjectDescriptorCallback)DR_CloudPer_setScale,
+    (ObjectDescriptorCallback)DR_CloudPer_selectActiveCloud,
+};

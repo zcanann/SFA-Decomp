@@ -15,6 +15,7 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objtexture.h"
+#include "main/object_descriptor.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -128,3 +129,24 @@ void DR_EnergyDisc_release(void)
 void DR_EnergyDisc_initialise(void)
 {
 }
+
+ObjectDescriptor gDrEnergyDiscObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DR_EnergyDisc_initialise,
+    (ObjectDescriptorCallback)DR_EnergyDisc_release,
+    0,
+    (ObjectDescriptorCallback)DR_EnergyDisc_init,
+    (ObjectDescriptorCallback)DR_EnergyDisc_update,
+    (ObjectDescriptorCallback)DR_EnergyDisc_hitDetect,
+    (ObjectDescriptorCallback)DR_EnergyDisc_render,
+    (ObjectDescriptorCallback)DR_EnergyDisc_free,
+    (ObjectDescriptorCallback)DR_EnergyDisc_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DR_EnergyDisc_getExtraSize,
+};
+
+u32 lbl_8032AD00[12] = {
+    0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};

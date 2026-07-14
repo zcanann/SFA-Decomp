@@ -40,6 +40,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 f32 lbl_803DC2F8 = 5.0f;
 s16 lbl_803DC2FC = 3;
@@ -724,6 +725,47 @@ void drakorhoverpad_updateMain(GameObject* obj)
 #pragma opt_common_subs reset
 #pragma opt_dead_assignments reset
 
+int drakorhoverpad_setScale(GameObject* obj);
+int drakorhoverpad_render2(GameObject* obj);
+void drakorhoverpad_func12(int obj, f32* outFloat, int* outFlag);
+void drakorhoverpad_modelMtxFn(GameObject* obj, f32* ox, f32* oy, f32* oz);
+f32 drakorhoverpad_func13(int obj, f32* out);
+void drakorhoverpad_free(int obj);
+void drakorhoverpad_func17(GameObject* obj, int sel, int* out);
+void drakorhoverpad_func0F(int obj, f32* ox, f32* oy, f32* oz);
+void drakorhoverpad_renderGroundMarker(GameObject* obj, f32 scale);
+
+ObjectDescriptor24 gDrakorHoverPadObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)drakorhoverpad_initialise,
+    (ObjectDescriptorCallback)drakorhoverpad_release,
+    0,
+    (ObjectDescriptorCallback)drakorhoverpad_initMain,
+    (ObjectDescriptorCallback)drakorhoverpad_updateMain,
+    (ObjectDescriptorCallback)drakorhoverpad_hitDetect,
+    (ObjectDescriptorCallback)drakorhoverpad_render,
+    (ObjectDescriptorCallback)drakorhoverpad_free,
+    (ObjectDescriptorCallback)drakorhoverpad_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drakorhoverpad_getExtraSize,
+    (ObjectDescriptorCallback)drakorhoverpad_setScale,
+    (ObjectDescriptorCallback)drakorhoverpad_func0B,
+    (ObjectDescriptorCallback)drakorhoverpad_modelMtxFn,
+    (ObjectDescriptorCallback)drakorhoverpad_render2,
+    (ObjectDescriptorCallback)drakorhoverpad_func0E,
+    (ObjectDescriptorCallback)drakorhoverpad_func0F,
+    (ObjectDescriptorCallback)drakorhoverpad_func10,
+    (ObjectDescriptorCallback)drakorhoverpad_func11,
+    (ObjectDescriptorCallback)drakorhoverpad_func12,
+    (ObjectDescriptorCallback)drakorhoverpad_func13,
+    (ObjectDescriptorCallback)drakorhoverpad_func14,
+    (ObjectDescriptorCallback)drakorhoverpad_func15,
+    (ObjectDescriptorCallback)drakorhoverpad_renderGroundMarker,
+    (ObjectDescriptorCallback)drakorhoverpad_func17,
+};
+
 int drakorhoverpad_handlePathPointEvent(GameObject* obj, u8 eventCode, u8 subCode, void* out)
 {
     u8* p = (obj)->extra;
@@ -1101,3 +1143,14 @@ void drakorhoverpad_renderGroundMarker(GameObject* obj, f32 scale)
     mtx44_mult(gDrakorHoverpadMtx, mtx, gDrakorHoverpadMtx);
     fn_8003B950(gDrakorHoverpadMtx);
 }
+
+u8 lbl_8032AAB0[0x80] = {
+    0x04, 0x30, 0x0B, 0x00, 0x03, 0x00, 0x04, 0x31, 0x05, 0x00, 0x02, 0x00, 0x04, 0x32, 0x0B, 0x00,
+    0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x02,
+    0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x05,
+    0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x03,
+    0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x05,
+    0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x02,
+    0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x02,
+    0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x05,
+};

@@ -26,6 +26,7 @@
 #include "main/dll/WC/dll_0295_wcapertures.h"
 #include "main/dll/dll_0299.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -287,6 +288,23 @@ void wcpressures_initialise(void)
 {
 }
 
+ObjectDescriptor gWCPressureSObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wcpressures_initialise,
+    (ObjectDescriptorCallback)wcpressures_release,
+    0,
+    (ObjectDescriptorCallback)wcpressures_init,
+    (ObjectDescriptorCallback)wcpressures_update,
+    (ObjectDescriptorCallback)wcpressures_hitDetect,
+    (ObjectDescriptorCallback)wcpressures_render,
+    (ObjectDescriptorCallback)wcpressures_free,
+    (ObjectDescriptorCallback)wcpressures_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wcpressures_getExtraSize,
+};
+
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
 
 ObjectDescriptor gWCTrexStatuObjDescriptor = {0x00000000,
@@ -361,3 +379,4 @@ ObjectDescriptor gWCApertureSObjDescriptor = {0x00000000,
                                      (ObjectDescriptorCallback)wcapertures_free,
                                      (ObjectDescriptorCallback)wcapertures_getObjectTypeId,
                                      wcapertures_getExtraSize};
+

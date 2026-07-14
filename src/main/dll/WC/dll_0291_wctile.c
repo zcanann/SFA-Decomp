@@ -21,6 +21,7 @@
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCTILE_RENDER_TYPE_BASE    0x400
 #define WCTILE_RENDER_TYPE_SHIFT   0xb
@@ -219,3 +220,20 @@ void wctile_release(void)
 void wctile_initialise(void)
 {
 }
+
+ObjectDescriptor gWCTileObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wctile_initialise,
+    (ObjectDescriptorCallback)wctile_release,
+    0,
+    (ObjectDescriptorCallback)wctile_init,
+    (ObjectDescriptorCallback)wctile_update,
+    (ObjectDescriptorCallback)wctile_hitDetect,
+    (ObjectDescriptorCallback)wctile_render,
+    (ObjectDescriptorCallback)wctile_free,
+    (ObjectDescriptorCallback)wctile_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wctile_getExtraSize,
+};

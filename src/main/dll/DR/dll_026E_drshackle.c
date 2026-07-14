@@ -16,6 +16,7 @@
 #include "main/object_render.h"
 #include "main/objprint_render_api.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -245,3 +246,22 @@ void drshackle_release(void)
 void drshackle_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDrShackleObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)drshackle_initialise,
+    (ObjectDescriptorCallback)drshackle_release,
+    0,
+    (ObjectDescriptorCallback)drshackle_init,
+    (ObjectDescriptorCallback)drshackle_update,
+    (ObjectDescriptorCallback)drshackle_hitDetect,
+    (ObjectDescriptorCallback)drshackle_render,
+    (ObjectDescriptorCallback)drshackle_free,
+    (ObjectDescriptorCallback)drshackle_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drshackle_getExtraSize,
+    (ObjectDescriptorCallback)drshackle_setScale,
+    (ObjectDescriptorCallback)drshackle_func0B,
+};

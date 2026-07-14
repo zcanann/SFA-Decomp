@@ -15,6 +15,7 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCLEVELCONT_OBJGROUP 0x9
 
@@ -32,7 +33,7 @@ void wclevelcont_getSolvedTileXYB(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B0C8[i][j])
+            if (value == lbl_8032B0C8.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -50,7 +51,7 @@ void wclevelcont_getInitialTileXYB(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B088[i][j])
+            if (value == lbl_8032B088.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -109,7 +110,7 @@ void wclevelcont_getSolvedTileXYA(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B048[i][j])
+            if (value == lbl_8032B048.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -127,7 +128,7 @@ void wclevelcont_getInitialTileXYA(s16 value, s16* outRow, s16* outCol)
     {
         for (j = 0; j < 8; j++)
         {
-            if (value == lbl_8032B008[i][j])
+            if (value == lbl_8032B008.g[i][j])
             {
                 *outRow = i;
                 *outCol = j;
@@ -438,9 +439,9 @@ void wclevelcont_init(GameObject* obj)
 
     obj->animEventCallback = wclevelcont_seqFn;
     mainSetBits(0x810, 0);
-    memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
+    memcpy(lbl_803AD2D8, lbl_8032B008.g, 0x40);
     mainSetBits(0x811, 0);
-    memcpy(lbl_803AD298, lbl_8032B088, 0x40);
+    memcpy(lbl_803AD298, lbl_8032B088.g, 0x40);
     if ((u32)mainGetBit(0x7fa) != 0)
         state->completionFlags |= WCLEVELCTL_FLAG_PUZZLE_B;
     if ((u32)mainGetBit(0x7f9) != 0)
@@ -484,3 +485,34 @@ void wclevelcont_release(void)
 void wclevelcont_initialise(void)
 {
 }
+
+ObjectDescriptor24 gWCLevelContObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_24_SLOTS,
+    (ObjectDescriptorCallback)wclevelcont_initialise,
+    (ObjectDescriptorCallback)wclevelcont_release,
+    0,
+    (ObjectDescriptorCallback)wclevelcont_init,
+    (ObjectDescriptorCallback)wclevelcont_update,
+    (ObjectDescriptorCallback)wclevelcont_hitDetect,
+    (ObjectDescriptorCallback)wclevelcont_render,
+    (ObjectDescriptorCallback)wclevelcont_free,
+    (ObjectDescriptorCallback)wclevelcont_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)wclevelcont_getExtraSize,
+    (ObjectDescriptorCallback)wclevelcont_tileAToWorldPos,
+    (ObjectDescriptorCallback)wclevelcont_worldPosToTileA,
+    (ObjectDescriptorCallback)wclevelcont_setTileA,
+    (ObjectDescriptorCallback)wclevelcont_getTileA,
+    (ObjectDescriptorCallback)wclevelcont_getInitialTileXYA,
+    (ObjectDescriptorCallback)wclevelcont_getSolvedTileXYA,
+    (ObjectDescriptorCallback)wclevelcont_traceMoveA,
+    (ObjectDescriptorCallback)wclevelcont_tileBToWorldPos,
+    (ObjectDescriptorCallback)wclevelcont_worldPosToTileB,
+    (ObjectDescriptorCallback)wclevelcont_setTileB,
+    (ObjectDescriptorCallback)wclevelcont_getTileB,
+    (ObjectDescriptorCallback)wclevelcont_getInitialTileXYB,
+    (ObjectDescriptorCallback)wclevelcont_getSolvedTileXYB,
+    (ObjectDescriptorCallback)wclevelcont_traceMoveB,
+};

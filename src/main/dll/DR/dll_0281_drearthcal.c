@@ -7,6 +7,7 @@
 #include "main/obj_group.h"
 #include "main/obj_trigger.h"
 #include "main/objseq.h"
+#include "main/object_descriptor.h"
 
 #define DREARTHCAL_OBJFLAG_RENDERED 0x800
 
@@ -126,3 +127,22 @@ void drearthcal_release(void)
 void drearthcal_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDrEarthCalObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
+    (ObjectDescriptorCallback)drearthcal_initialise,
+    (ObjectDescriptorCallback)drearthcal_release,
+    0,
+    (ObjectDescriptorCallback)drearthcal_init,
+    (ObjectDescriptorCallback)drearthcal_update,
+    (ObjectDescriptorCallback)drearthcal_hitDetect,
+    (ObjectDescriptorCallback)drearthcal_render,
+    (ObjectDescriptorCallback)drearthcal_free,
+    (ObjectDescriptorCallback)drearthcal_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)drearthcal_getExtraSize,
+    (ObjectDescriptorCallback)drearthcal_setScale,
+    0,
+};

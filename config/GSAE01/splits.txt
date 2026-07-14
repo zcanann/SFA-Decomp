@@ -3205,31 +3205,37 @@ main/dll/DR/dll_0283_drbarrelgr.c:
 
 main/dll/WC/dll_028A_wcearthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
-	.data       start:0x8032AEC0 end:0x8032AED4
+	.data       start:0x8032AEC0 end:0x8032AF40
 
 main/dll/dll_028B.c:
 	.text       start:0x80223D18 end:0x8022408C
 	.rodata     start:0x802C25B8 end:0x802C25D8
+	.data       start:0x8032AF40 end:0x8032AF78
 
 main/dll/WC/dll_028C_wcbouncycra.c:
 	.text       start:0x8022408C end:0x802243F4
 	.sdata2     start:0x803E6D48 end:0x803E6D50
+	.data       start:0x8032AF78 end:0x8032AFB0
 
 main/dll/WC/dll_0290_wcpushblock.c:
 	.text       start:0x802243F4 end:0x802261B0
+	.data       start:0x8032AFB0 end:0x8032B108
 
 main/dll/WC/dll_028D_wclevelcont.c:
 	.text       start:0x802261B0 end:0x802272C8
+	.data       start:0x8032B108 end:0x8032B178
 
 main/dll/WC/dll_028E_wcbeacon.c:
 	.text       start:0x802272C8 end:0x802276AC
+	.data       start:0x8032B178 end:0x8032B1B0
 
 main/dll/WC/dll_0291_wctile.c:
 	.text       start:0x802276AC end:0x80227BB8
+	.data       start:0x8032B1B0 end:0x8032B1E8
 
 main/dll/WC/dll_028F_wcpressures.c:
 	.text       start:0x80227BB8 end:0x802281CC
-	.data       start:0x8032B220 end:0x8032B348
+	.data       start:0x8032B1E8 end:0x8032B348
 
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478

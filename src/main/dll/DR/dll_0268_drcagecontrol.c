@@ -15,6 +15,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0268_drcagecontrol.h"
 #include "main/dll/DR/dr_types.h"
+#include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69D8 = 1.0f;
 #pragma explicit_zero_data on
@@ -139,3 +140,20 @@ void DR_CageControl_release(void)
 void DR_CageControl_initialise(void)
 {
 }
+
+ObjectDescriptor gDrCageControlObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DR_CageControl_initialise,
+    (ObjectDescriptorCallback)DR_CageControl_release,
+    0,
+    (ObjectDescriptorCallback)DR_CageControl_init,
+    (ObjectDescriptorCallback)DR_CageControl_update,
+    (ObjectDescriptorCallback)DR_CageControl_hitDetect,
+    (ObjectDescriptorCallback)DR_CageControl_render,
+    (ObjectDescriptorCallback)DR_CageControl_free,
+    (ObjectDescriptorCallback)DR_CageControl_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)DR_CageControl_getExtraSize,
+};

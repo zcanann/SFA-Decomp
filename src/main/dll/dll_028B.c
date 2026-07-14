@@ -26,6 +26,7 @@
 #include "main/dll/dll_028B.h"
 #include "main/player_control_interface.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define DLL28B_OBJ_GROUP    3
 #define OBJFLAG_BIT_2000000 0x2000000
@@ -136,3 +137,20 @@ void dll_28B_initialise(void)
     gDll28BSubstateHandlers[2] = dll_28B_substateHandler2;
     gDll28BSubstateHandlers[3] = dll_28B_substateHandler3;
 }
+
+ObjectDescriptor dll_28B = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_28B_initialise,
+    (ObjectDescriptorCallback)dll_28B_release_nop,
+    0,
+    (ObjectDescriptorCallback)dll_28B_init,
+    (ObjectDescriptorCallback)dll_28B_update,
+    (ObjectDescriptorCallback)dll_28B_hitDetect_nop,
+    (ObjectDescriptorCallback)dll_28B_render,
+    (ObjectDescriptorCallback)dll_28B_free,
+    (ObjectDescriptorCallback)dll_28B_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)dll_28B_getExtraSize,
+};
