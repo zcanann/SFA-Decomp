@@ -118,7 +118,6 @@ int fn_80295C40(GameObject* obj);
 int fn_80295C5C(GameObject* obj);
 int fn_80295C88(int obj);
 int fn_80295CBC(GameObject* obj);
-int playerIsPathFollowing(int obj);
 void playerSetDisguised(GameObject* obj, int mode);
 int fn_8029605C(GameObject* obj, f32* outX, f32* outY);
 void fn_802960E4(void);
@@ -128,7 +127,6 @@ void fn_802961FC(int a, u8 type);
 int fn_80296240(GameObject* obj);
 int fn_8029630C(GameObject* obj);
 int objAnimFn_80296328(int obj);
-int fn_80296464(int obj);
 void playerSetHaveSpell(GameObject* obj, int spell, int set);
 int playerSetHeldObject(int obj, int held);
 f32 fn_802966F4(GameObject* obj);
@@ -137,8 +135,6 @@ void fn_80296BBC(GameObject* obj);
 void cameraGetPrevPos2(GameObject* obj, f32* x, f32* y, f32* z);
 void playerLock(GameObject* obj, int lock);
 int playerStatusIsPositive(GameObject* obj);
-int playerIsDead(int obj);
-void playerSetIsDead(GameObject* obj, int flag);
 void fn_80296D20(int obj, void* arg);
 void playerSetInCutscene(GameObject* obj);
 void playerSetCutsceneCameraFlag(GameObject* obj);
@@ -314,9 +310,9 @@ static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
     return (ObjHitsPriorityState*)obj->anim.hitReactState;
 }
 
-int playerIsPathFollowing(int obj)
+int playerIsPathFollowing(GameObject* player)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = player->extra;
     return (inner->flags3F4 >> 6) & 1;
 }
 
@@ -371,9 +367,9 @@ int playerGetFlags3F0Bit5(GameObject* obj)
     return (inner->flags3F0 >> 5) & 1;
 }
 
-int fn_80296464(int obj)
+int fn_80296464(GameObject* player)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = player->extra;
     return inner->flags360 & 1;
 }
 
@@ -499,9 +495,9 @@ u32 playerGetStateFlag310(GameObject* obj)
     return *(int*)((char*)inner + 0x310);
 }
 
-int playerGetCurMagic(int obj)
+int playerGetCurMagic(GameObject* player)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = player->extra;
     return *(s16*)((char*)inner->playerStatus + 4);
 }
 
@@ -517,9 +513,9 @@ int fn_80296C4C(GameObject* obj)
     return (inner->flags3F3 >> 1) & 1;
 }
 
-int playerIsDead(int obj)
+int playerIsDead(GameObject* player)
 {
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    PlayerState* inner = player->extra;
     return (inner->flags3F3 >> 2) & 1;
 }
 

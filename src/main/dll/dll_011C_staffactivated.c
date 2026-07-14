@@ -13,6 +13,7 @@
 #include "main/dll/partfx_interface.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/dll/staffflags_struct.h"
+#include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/dll/CF/staffactivated_helpers.h"
 #include "main/objseq.h"
@@ -72,7 +73,6 @@ extern f32 lbl_803E3C0C;
 extern f32 gStaffActivatedMinRootMotionScale;
 extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
-extern int playerIsPathFollowing(void);
 extern void landed_arwing_updateHitReaction(GameObject* obj, void* state);
 extern void landed_arwing_updateDamageTexture(GameObject* obj, void* state);
 
@@ -168,10 +168,11 @@ void staffactivated_update(GameObject* obj)
     } stk;
     StaffActivatedSetup* setup = (StaffActivatedSetup*)obj->anim.placementData;
     StaffActivatedState* state = obj->extra;
+    GameObject* player;
     int isSet;
     int gameBit;
 
-    Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
 
     if (((StaffFlags*)&state->flags)->b6)
     {
@@ -182,7 +183,7 @@ void staffactivated_update(GameObject* obj)
         obj->anim.resetHitboxFlags &= ~STAFFACTIVATED_OBJ_FLAG_LOCKED;
     }
 
-    if (((StaffFlags*)&state->flags)->b7 == 0 || playerIsPathFollowing() == 0)
+    if (((StaffFlags*)&state->flags)->b7 == 0 || playerIsPathFollowing(player) == 0)
     {
         obj->anim.resetHitboxFlags |= STAFFACTIVATED_OBJ_FLAG_DISABLED;
     }

@@ -27,6 +27,7 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/dll_0200_dll200.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_status.h"
 #include "main/obj_placement.h"
 
 typedef struct Dll200Placement
@@ -55,9 +56,6 @@ extern f32 lbl_803E5DA8;
 extern f32 lbl_803E5DAC;
 extern f32 lbl_803E5DB0;
 extern f32 lbl_803E5DB4;
-extern void playerSetHaveSpell(GameObject* player, int a, int b);
-extern int playerGetCurMagic(void);
-
 #pragma dont_inline on
 void fn_801F20D4(GameObject* obj)
 {
@@ -134,8 +132,8 @@ void fn_801F27E4(GameObject* obj)
         *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
         if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0)
         {
-            Obj_GetPlayerObject();
-            if (playerGetCurMagic() > 0)
+            GameObject* player = Obj_GetPlayerObject();
+            if (playerGetCurMagic(player) > 0)
             {
                 ((Dll200State*)state)->mode25 = 2;
                 (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);

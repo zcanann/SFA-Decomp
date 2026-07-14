@@ -15,14 +15,12 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_010E_deathseq.h"
+#include "main/dll/player_status.h"
 #include "main/dll/tricky_api.h"
 
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern void removeButtonObject(int* obj);
-extern int playerIsDead(void);
-extern void playerSetIsDead(GameObject* player, int v);
-
 /* .sdata2 constant pool */
 static const f32 lbl_803E3D18 = 50.0f;
 static const f32 lbl_803E3D1C = 0.0f;
@@ -74,7 +72,7 @@ void DeathSeq_update(int* obj)
     ObjTextureRuntimeSlot* tex;
 
     ready = 0;
-    if (playerIsDead() != 0)
+    if (playerIsDead(player) != 0)
     {
         state->distTarget = lbl_803E3D18;
         if (((GameObject*)obj)->anim.currentMove != 0x92)

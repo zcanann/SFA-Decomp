@@ -42,6 +42,7 @@
 #include "main/maketex_random_api.h"
 #include "main/maketex_sequence_api.h"
 #include "main/textrender_api.h"
+#include "main/dll/player_api.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
     ((s16 (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
@@ -71,7 +72,6 @@ extern f32 lbl_803E549C;
 
 extern u32 getButtonsJustPressed(int port);
 extern int playerHasKrazoaSpirit();
-extern int fn_80296464(void);
 extern void objSetPos(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
@@ -129,7 +129,7 @@ void warpstone_hitDetect(GameObject* obj)
 
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    void* player;
+    GameObject* player;
     int* state = ((GameObject*)obj)->extra;
     int* model;
     f32 z;
@@ -139,8 +139,8 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (v != 0)
     {
         objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E549C);
-        player = (void*)Obj_GetPlayerObject();
-        if (player != NULL && fn_80296464() != 0)
+        player = Obj_GetPlayerObject();
+        if (player != NULL && fn_80296464(player) != 0)
         {
             model = (int*)Obj_GetActiveModel(player);
             *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
