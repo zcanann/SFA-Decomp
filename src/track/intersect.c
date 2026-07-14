@@ -109,6 +109,14 @@ typedef struct
     f32 m[6];
 } IndMtxInit;
 
+typedef struct
+{
+    IndMtxInit ind;
+    u32 blk[6][7];
+} IndStageInitData;
+
+extern IndStageInitData lbl_802C1EA8;
+
 /* Entry of gDepthReadPendingQueue/gDepthReadResults (0xC stride, 0x14 cap). */
 typedef struct DepthReadRequest
 {
@@ -3774,7 +3782,6 @@ void fn_80077AD8(u8* st, u8* p2, f32* m, f32 depth)
 void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern u8 lbl_802C1EA8[0xC0];
     typedef struct
     {
         u32 w[7];
@@ -3799,12 +3806,12 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     int stage_base;
     f32 f31_val;
 
-    buf_c4 = *(Blk28*)(lbl_802C1EA8 + 0x18);
-    buf_a8 = *(Blk28*)(lbl_802C1EA8 + 0x34);
-    buf_8c = *(Blk28*)(lbl_802C1EA8 + 0x50);
-    buf_70 = *(Blk28*)(lbl_802C1EA8 + 0x6C);
-    buf_54 = *(Blk28*)(lbl_802C1EA8 + 0x88);
-    buf_38 = *(Blk28*)(lbl_802C1EA8 + 0xA4);
+    buf_c4 = *(Blk28*)&lbl_802C1EA8.blk[0];
+    buf_a8 = *(Blk28*)&lbl_802C1EA8.blk[1];
+    buf_8c = *(Blk28*)&lbl_802C1EA8.blk[2];
+    buf_70 = *(Blk28*)&lbl_802C1EA8.blk[3];
+    buf_54 = *(Blk28*)&lbl_802C1EA8.blk[4];
+    buf_38 = *(Blk28*)&lbl_802C1EA8.blk[5];
     stab0 = lbl_803DEEAC;
     *(u16*)((u8*)&stab1 + 0) = *(u16*)&lbl_803DEEB0;
     ((u8*)&stab1)[2] = lbl_803DEEB2;
@@ -4643,7 +4650,6 @@ void drawFn_80079e64(f32 s1, u8 mtxIdx, void* vec, f32 s2, u8 alpha0, u8 alpha1,
 void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
-    extern u8 lbl_802C1EA8[];
     Mtx mtx_44;
     f32 indMtx[6];
     int handle2;
@@ -4657,7 +4663,7 @@ void doHeatEffect(u8 alpha)
     u8 a2;
     u8 a1;
 
-    *(IndMtxInit*)indMtx = *(IndMtxInit*)lbl_802C1EA8;
+    *(IndMtxInit*)indMtx = lbl_802C1EA8.ind;
     v = fn_8000FA70Signed();
     if (v < 0)
     {
@@ -6387,11 +6393,6 @@ int saveCb_8007e748(int saveId, int size, void* dst)
     return 0;
 }
 
-typedef struct
-{
-    IndMtxInit ind;
-    u32 blk[6][7];
-} IndStageInitData;
 __declspec(section ".rodata") IndStageInitData lbl_802C1EA8 = {
     {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
     {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
