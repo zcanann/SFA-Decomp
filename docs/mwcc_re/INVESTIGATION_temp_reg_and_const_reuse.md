@@ -60,6 +60,35 @@ Target reuses a register that already holds the same constant; ours re-materiali
   functions with the shared-zero-local spelling before treating them as
   compiler-revision artifacts.
 
+- SECOND SOURCE-REACH (2026-07-14, RomCurve_getRandomLinkedOfTypes
+  99.3->100, dll_0014_unk): the derived-IV zero init keeps its `mr` when
+  the loop counter is a REUSED variable whose web already has defs (the
+  function recycled its typeIndex scratch for the dedup scan). A
+  fresh-named counter's `j = 0` is the web's only reaching def, so the
+  strength-reduction IV init folds to `li`; prior defs on the web block
+  the fold and the retail `mr IV,counter` falls out. Blocks matter too:
+  `j = 0` hoisted into its own basic block moves BOTH materializations
+  (the IV init tracks the counter's def block), so recycling beats
+  hoisting.
+- WEB-INDEX RULE (same session, pick2A/2B scans in func2C/initCurve
+  51->0 diff regions each): for the volatile-class register pairing of
+  an inlined scan, a NAMED load temp (`neighbor = c->linkIds[i]`)
+  colors before the enclosing pointer web, while the EXPRESSION form
+  (`c->linkIds[i]` repeated, CSE'd) colors after it. Same lever fixed
+  the saved-class FindById argument web (named guard local + repeated
+  expression as the call argument, getRandomLinkedOfTypes) and, in
+  indexed form, whole cursor files (func1E, projectPoint resolve loops:
+  the walked pointers were derived IVs, not source locals).
+- STILL PINNED after ~60 spellings (func13/func11 node vs distWrite,
+  Objfsa_GetPatchGroupIdAtPoint / mathFn_800dbff0 u8 i/j pair,
+  func20 result-web coalesce across mathSinf calls, projectPoint dx/dz
+  FPR homes): two same-degree webs whose relative color order differs
+  from retail with byte-identical instruction streams. Decl order,
+  scope, def order, def count, types, and dead-def numbering probes are
+  all inert; the tie-break lives in vreg numbering / coalesce-adoption
+  inside the PCode build (IroLinearForm band), which is the next disasm
+  target.
+
 ## B. Temp-register selection r0 vs rN for short-lived values
 
 Same statement shape gives a different scratch register (and thus hoistability).
