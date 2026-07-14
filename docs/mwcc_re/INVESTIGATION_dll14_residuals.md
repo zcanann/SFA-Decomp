@@ -606,3 +606,11 @@ end-walker vs staying separate) accounts for the base web's +16 edges - if the b
 NOT absorb the end-loop walker in the target (separate short web!), base's neighborhood
 shrinks by exactly the end-loop span. TEST: force a separate end-walker web (fresh pointer
 var for the end loop initialized from candidateDistances) - plausible C, directly testable.
+
+## End-walker split eliminated (retest on committed config: 56 regions)
+A late distRead + *distRead++ end loop kills the base web (frame shrinks, restgpr_18) -
+the target requires the fn-spanning base. The +16-edge composition difference must come
+from elsewhere; next: multi-edit simulator search (pairs/triples of edge edits and web
+insertions with generated neighborhoods) over the validated census to characterize the
+minimal flip, then map to source. Pipeline: adj_lldb.py -> census -> simulate() (in this
+doc) -> order check [66,61,60,59,54,46,48].
