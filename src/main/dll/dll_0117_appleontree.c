@@ -127,13 +127,6 @@ ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     (ObjectDescriptorCallback)AppleOnTree_modelMtxFn,
 };
 
-u32 jumptable_803214DC[] = {
-    (u32)((u8*)AppleOnTree_update + 0x170), (u32)((u8*)AppleOnTree_update + 0x274),
-    (u32)((u8*)AppleOnTree_update + 0x3C4), (u32)((u8*)AppleOnTree_update + 0x4E8),
-    (u32)((u8*)AppleOnTree_update + 0x554), (u32)((u8*)AppleOnTree_update + 0x6C8),
-    (u32)((u8*)AppleOnTree_update + 0x71C),
-};
-
 static inline void appleontree_markFallen(GameObject* obj)
 {
     int state = *(int*)&(obj)->extra;

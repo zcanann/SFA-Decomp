@@ -103,6 +103,18 @@ extern void padClearAnalogInputY(int port);
 
 void SH_LevelControl_setMusic(short* state);
 
+s16 lbl_80327618[130] = {
+    5,  8,  19, 20, 146, 147, 153, 174, 175, 176, 190, 417, 196, 197, 198, 245, 260, 277, 434, 97, 97, 97,
+    434, 437, 440, 440, 434, 97, 97, 97, 97, 97, 437, 440, 440, 440, 434, 97, 97, 97, 97, 97, 434, 97,
+    97, 97, 435, 95, 95, 95, 435, 438, 441, 441, 435, 95, 95, 95, 95, 95, 438, 441, 441, 441, 435, 95,
+    95, 95, 95, 95, 435, 95, 95, 95, 436, 96, 96, 96, 436, 439, 442, 442, 436, 96, 96, 96, 96, 96, 439,
+    442, 442, 442, 436, 96, 96, 96, 96, 96, 436, 96, 96, 96, -1, -1, -1, -1, -1, -1, 424, -1, -1, -1,
+    -1, -1, -1, -1, -1, 424, -1, 424, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+void* gSH_LevelControlObjDescriptor[14] = {
+    (void*)0x00000000, (void*)0x00000000,    (void*)0x00000000,    (void*)0x00090000,      (void*)0x00000000,
+    (void*)0x00000000, (void*)0x00000000,    SH_LevelControl_init, SH_LevelControl_update, (void*)0x00000000,
+    (void*)0x00000000, SH_LevelControl_free, (void*)0x00000000,    SH_LevelControl_getExtraSize};
+
 char sSPShopNumBloopsFormat[] = "numBloops %d\n";
 
 int SH_LevelControl_getExtraSize(void)
@@ -320,8 +332,6 @@ void SH_LevelControl_setMusic(short* obj)
 #pragma dont_inline on
 void SH_LevelControl_runBloopEvent(GameObject* obj, int state)
 {
-    extern s16 lbl_80327618[];
-
     int player;
     u8 i;
     u8 bloopsRemaining;
@@ -640,15 +650,13 @@ void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState* state)
 
 void SH_LevelControl_update(GameObject* obj)
 {
-    extern u8 lbl_80327618[0x104];
-
     u32* state;
     u32 val;
     u32 val2;
     u32 val3;
     GameObject* player;
     u8 animEvt;
-    u8* base = lbl_80327618;
+    u8* base = (u8*)lbl_80327618;
 
     state = (obj)->extra;
     if (((ShLevelcontrolState*)state)->hudTextTimer > lbl_803E54B4)
@@ -992,7 +1000,6 @@ void SH_LevelControl_init(GameObject* obj)
 
     if (mainGetBit(GAMEBIT_ITEM_BigScarabBag_Got) == 0)
     {
-        extern s16 lbl_80327618[];
         for (i = 0; i < 18; i++)
         {
             mainSetBits(lbl_80327618[i], 0);

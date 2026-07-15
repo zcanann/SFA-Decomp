@@ -38,8 +38,6 @@ extern f32 gRopeNodeMaxDistance;
 extern f32 gRopeNodeDamping;
 extern const f32 gRopeNodeBoundsMargin;
 
-extern void textRenderSetupFn_800795e8(void);
-extern void gxBlendFn_80078b4c(void);
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
 const u8 gRopeNodeDisplayList[96] = {

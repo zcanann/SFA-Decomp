@@ -1,4 +1,5 @@
 #include "main/dll/tricky_state.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/baddie/MMP_critterspit.h"
 #include "main/game_object.h"
 #include "main/obj_group.h"
@@ -20,8 +21,6 @@ extern f32 lbl_803E247C;
 extern f32 lbl_803E24C4;
 extern char sInWaterMessage[]; /* "in water\n" */
 extern char lbl_8031D478[];    /* "out of water\n" (head of the 0x38C Tricky debug-string blob @0x8031D478) */
-extern int trickyFn_8013b368(u8* obj, f32 dist, u8* state);
-
 #pragma peephole on
 void trickyFn_8013d8f0(u8* self, u8* state)
 {

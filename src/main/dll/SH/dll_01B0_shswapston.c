@@ -81,86 +81,13 @@ extern int fn_80080360(int obj, int seqId);
 extern void CMenu_SetFadeCounter(s16 v);
 extern void SHthorntail_updateDustEffects(int obj);
 
-int warpstone_getExtraSize(void)
-{
-    return 0xd8;
-}
-
-int warpstone_getObjectTypeId(void)
-{
-    return 0x48;
-}
-
-void warpstone_loadBaseUi(void)
-{
-    loadUiDll(0x1);
-}
-
-void warpstone_free(GameObject* obj, int mode)
-{
-    int* state = (obj)->extra;
-    if (*(void**)state != NULL && mode == 0)
-    {
-        ObjLink_DetachChild(obj, state[0]);
-        Obj_FreeObject((GameObject*)state[0]);
-    }
-}
-
-void warpstone_hitDetect(GameObject* obj)
-{
-    int* state = (obj)->extra;
-    f32 pos[3];
-    f32 lightPos[3];
-
-    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
-    {
-        pos[0] += playerMapOffsetX;
-        pos[2] += playerMapOffsetZ;
-        objLightFn_8009a1dc((void*)obj, lbl_803E54A0, lightPos, 1, 0);
-        if (randFn_80080100(3) != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
-        }
-        else
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
-        }
-        objAudioFn_800393f8Legacy(obj, state + 5, 171, -1280, -1, 0);
-    }
-}
-
-void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    GameObject* player;
-    int* state = ((GameObject*)obj)->extra;
-    int* model;
-    f32 z;
-    f32 y;
-    f32 x;
-    s32 v = visible;
-    if (v != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E549C);
-        player = Obj_GetPlayerObject();
-        if (player != NULL && fn_80296464(player) != 0)
-        {
-            model = (int*)Obj_GetActiveModel(player);
-            *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition((GameObject*)obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex,
-                                          &x, &y, &z, 0);
-            objSetPos(player, x, y, z);
-            playerRender((int)player, p2, p3, p4, p5, -1);
-        }
-    }
-}
-
 int warpstone_testEvent(u32 obj, u32 unused, int option)
 {
     s8 horizontal;
     s8 vertical;
 
     Obj_GetPlayerObject();
-    padGetAnalogInputS8(0, &horizontal, &vertical);
+    padGetAnalogInput(0, (u8*)&horizontal, (u8*)&vertical);
 
     switch (option)
     {
@@ -248,6 +175,11 @@ int warpstone_testEvent(u32 obj, u32 unused, int option)
     }
 
     return 0;
+}
+
+void warpstone_loadBaseUi(void)
+{
+    loadUiDll(0x1);
 }
 
 int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
@@ -369,6 +301,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
         case 0xe:
         case 0xf:
         case 0x10:
+        case 0x11:
             if (getCurUiDll() == 0x10)
             {
                 int dll16 = getDLL16Int();
@@ -400,6 +333,74 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
 
     SHthorntail_updateDustEffects((int)obj);
     return 0;
+}
+
+int warpstone_getExtraSize(void)
+{
+    return 0xd8;
+}
+
+int warpstone_getObjectTypeId(void)
+{
+    return 0x48;
+}
+
+void warpstone_free(GameObject* obj, int mode)
+{
+    int* state = (obj)->extra;
+    if (*(void**)state != NULL && mode == 0)
+    {
+        ObjLink_DetachChild(obj, state[0]);
+        Obj_FreeObject((GameObject*)state[0]);
+    }
+}
+
+void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    GameObject* player;
+    int* state = ((GameObject*)obj)->extra;
+    int* model;
+    f32 z;
+    f32 y;
+    f32 x;
+    s32 v = visible;
+    if (v != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E549C);
+        player = Obj_GetPlayerObject();
+        if (player != NULL && fn_80296464(player) != 0)
+        {
+            model = (int*)Obj_GetActiveModel(player);
+            *(u16*)((char*)model + 24) = (u16)(*(u16*)((char*)model + 24) & ~0x8);
+            ObjPath_GetPointWorldPosition((GameObject*)obj, ((WarpstoneUpdateMenuAnimObjState*)state)->pathPointIndex,
+                                          &x, &y, &z, 0);
+            objSetPos(player, x, y, z);
+            playerRender((int)player, p2, p3, p4, p5, -1);
+        }
+    }
+}
+
+void warpstone_hitDetect(GameObject* obj)
+{
+    int* state = (obj)->extra;
+    f32 pos[3];
+    f32 lightPos[3];
+
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos[0], &pos[1], &pos[2]) != 0)
+    {
+        pos[0] += playerMapOffsetX;
+        pos[2] += playerMapOffsetZ;
+        objLightFn_8009a1dc((void*)obj, lbl_803E54A0, lightPos, 1, 0);
+        if (randFn_80080100(3) != 0)
+        {
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
+        }
+        else
+        {
+            Sfx_PlayFromObject((int)obj, SFXTRIG_swapstone_move_short_2bc);
+        }
+        objAudioFn_800393f8Legacy(obj, state + 5, 171, -1280, -1, 0);
+    }
 }
 
 #include "main/dll/SC/SClantern.h"
@@ -613,14 +614,6 @@ void warpstone_update(int obj)
     }
 }
 
-void warpstone_release(void)
-{
-}
-
-void warpstone_initialise(void)
-{
-}
-
 void warpstone_init(GameObject* obj, u8* setup)
 {
     int state;
@@ -643,4 +636,12 @@ void warpstone_init(GameObject* obj, u8* setup)
     }
     mainSetBits(((WarpstoneState*)state)->gameBit10, 0);
     *(int*)state = 0;
+}
+
+void warpstone_release(void)
+{
+}
+
+void warpstone_initialise(void)
+{
 }

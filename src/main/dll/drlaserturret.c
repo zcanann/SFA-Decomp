@@ -16,6 +16,7 @@
  * commands the linked target object to begin the challenge.
  */
 #include "main/dll/DR/DRlaserturret.h"
+#include "main/dll/SP/dll_0286_spshopkeeper.h"
 #include "main/dll/player_api.h"
 #include "main/object_api.h"
 #include "main/dll/tricky_api.h"
@@ -36,7 +37,6 @@
 
 s16 gDrLaserTurretIdleAnimMoves[2] = {0x13, 0x11};
 __declspec(section ".sdata") f32 gDrLaserTurretIdleAnimStepScales[3] = {0.01f, 0.0125f, 0.0f};
-extern double shopKeeperRotateFn_801e7c4c(void* obj, void* playerObj, int p3);
 extern void* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
@@ -83,7 +83,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
         }
         return DR_LASERTURRET_STATE_CONTINUE;
     }
-    shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
+    shopKeeperRotateFn_801e7c4c((s16*)obj, playerObj, 0);
     obj->y = state->bobAmplitude *
                  mathSinf((double)(gDrLaserTurretPi * (float)(u32)state->bobPhase / gDrLaserTurretBobPhaseScale)) +
              state->bobBaseY;
@@ -198,7 +198,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimStat
         }
         return DR_LASERTURRET_STATE_CONTINUE;
     }
-    t = shopKeeperRotateFn_801e7c4c(obj, playerObj, 0);
+    t = shopKeeperRotateFn_801e7c4c((s16*)obj, playerObj, 0);
     rate = lbl_803E5A10;
     if (t > lbl_803E5A18)
     {

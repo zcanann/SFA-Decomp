@@ -6,6 +6,7 @@
  * in-bounds point, or scripted target (surfaceMode 6).
  */
 #include "main/dll/landedArwing.h"
+#include "main/dll/dll_00D3_staffAction.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
 #include "main/gamebits.h"
@@ -20,10 +21,6 @@
 
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
-extern void fn_80165B3C(GameObject *obj, int state);
-extern void landedarwing_moveSurfaceCrawler(int obj, int sub);
-extern void fn_80166444(int obj, int state);
-extern void updateConstrainedChaseVelocity(GameObject *obj, f32 x, f32 y, f32 z, f32 scale);
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E3004;
@@ -179,7 +176,7 @@ u32 LandedArwing_UpdateFlightChase(int obj, int state)
     }
     else
     {
-        landedarwing_moveSurfaceCrawler(obj, (int)sub);
+        landedarwing_moveSurfaceCrawler((short*)obj, sub);
     }
 
     return 0;
