@@ -15,6 +15,8 @@ typedef struct KtrexMsgBlob
     int w[4];
 } KtrexMsgBlob;
 
+STATIC_ASSERT(sizeof(KtrexMsgBlob) == 0x10);
+
 typedef struct KTRexWork
 {
     s16 unk0;
@@ -150,7 +152,7 @@ extern f32 gKTRexLaneSpeedMax[];
 extern f32 gKTRexLaneThreatHalfWidth;
 extern MapRomList* gKTRexMapBlock;
 extern void* gKTRexResource;
-extern KtrexMsgBlob gKTRexMsgTemplate;
+extern const KtrexMsgBlob gKTRexMsgTemplate;
 extern int gKTRexContactEffectCooldown;
 extern KTRexWork gKTRexEffectSpawnWork;
 extern const f32 lbl_803E67B8;

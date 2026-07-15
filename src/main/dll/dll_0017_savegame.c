@@ -146,6 +146,8 @@ typedef struct SaveGameDefaultPosition
     f32 z;
 } SaveGameDefaultPosition;
 
+STATIC_ASSERT(sizeof(SaveGameDefaultPosition) == 0xc);
+
 typedef struct SaveGameCharacterPosition
 {
     f32 x;
@@ -193,7 +195,7 @@ extern s8 gSaveGameMapActCacheIdx;
 extern u32 pRestartPoint;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
-__declspec(section ".rodata") SaveGameDefaultPosition gSaveGameDefaultPosition = {
+const SaveGameDefaultPosition gSaveGameDefaultPosition = {
     570.6483764648438f, -82.0f, 15790.8203125f};
 
 extern void stopRumble2(void);

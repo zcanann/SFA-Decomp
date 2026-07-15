@@ -2651,7 +2651,7 @@ void fn_8006CB50(void)
 #pragma opt_common_subs off
 #pragma opt_loop_invariants off
 #pragma opt_dead_assignments off
-void renderShadows(void)
+void renderShadows(int unused0, int unused1, int unused2)
 {
     char* casterPtr;
     f32 *vAp1, *vAp2, *mc54p;

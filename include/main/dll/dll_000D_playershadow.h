@@ -25,14 +25,6 @@ STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertY) == 0x16);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, vertZ) == 0x1c);
 STATIC_ASSERT(offsetof(PlayerShadowTriHit, surfaceType) == 0x48);
 
-struct PlayerShadowParamsBlob
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-};
-
 void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, GameObject* obj);
 void playerShadow_setMode(u8 v);
 void playerShadow_renderObject(GameObject* obj);

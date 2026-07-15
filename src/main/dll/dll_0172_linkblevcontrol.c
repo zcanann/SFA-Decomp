@@ -16,6 +16,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
+#include "main/sky.h"
 #include "main/object.h"
 #include "main/dll/dll_80136a40.h"
 #include "main/render_envfx_api.h"
@@ -90,7 +91,6 @@ __declspec(section ".sdata2") f32 lbl_803E47C8 = 2000.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E47CC = 0.0f;
 #pragma explicit_zero_data off
-extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 
 int linkb_levcontrol_getExtraSize(void)
 {

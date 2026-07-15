@@ -85,6 +85,8 @@ typedef struct CfGuardianMapData
 
 STATIC_ASSERT(sizeof(CfGuardianState) == 0xa9c);
 STATIC_ASSERT(offsetof(CfGuardianMapData, variant) == 0x19);
+STATIC_ASSERT(sizeof(GuardianVec) == 0xa);
+STATIC_ASSERT(sizeof(GuardianMsg) == 0x10);
 
 /* cfguardianPlayEventSfx/cfguardianFlyAlongPath are defined below taking
  * obj as an int; cfguardian_updateMain calls them through these pointer-first
@@ -162,11 +164,11 @@ extern f32 lbl_803E4158;
 extern f32 lbl_803E415C;
 
 extern int Curve_AdvanceAlongPath(int p1);
-__declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
-__declspec(section ".rodata") GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
+const GuardianVec gCfGuardianHitboxTemplateA = {{5, 15, 15, 0, 0}}; /* hitbox template copied at init */
+const GuardianVec gCfGuardianHitboxTemplateB = {{25, 25, 15, 5, 5}}; /* hitbox template copied at init */
 extern int gCfGuardianSeqStreamTable[][2];     /* chatter sequence-stream table, 0xf states */
 extern void objSeqInitFn_80080078(void* p, int n);
-__declspec(section ".rodata") GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
+const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern int cfguardian_updateMain();
 extern void normalize(f32* x, f32* y, f32* z);

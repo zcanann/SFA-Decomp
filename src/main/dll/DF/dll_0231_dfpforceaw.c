@@ -11,6 +11,7 @@
 #include "main/object_api.h"
 #include "main/obj_message.h"
 #include "main/dll/trickycurve_state.h"
+#include "main/dll/TrickyCurve.h"
 #include "main/mapEvent.h"
 #include "main/dll/sfxplayer.h"
 #include "main/dll/infopoint.h"

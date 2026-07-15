@@ -26,6 +26,7 @@
 #include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"
 #include "main/sky_api.h"
+#include "main/sky.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
@@ -46,7 +47,6 @@ int lbl_80323548[56] = {
 };
 
 
-extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 
 

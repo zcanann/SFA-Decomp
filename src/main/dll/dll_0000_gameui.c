@@ -722,7 +722,6 @@ extern s16 lbl_803DD784;
 extern s16 lbl_803DD786;
 extern s16 lbl_803DD78C;
 extern s8 lbl_803DBA64;
-extern void shadowRenderFn_8006b558(int* obj);
 extern u32 lbl_8033BE40[5];
 extern TaskHintEntry gTaskHintTable[GAMEUI_TASK_HINT_COUNT];
 extern s8 pauseMenuFrameCounter;
@@ -5958,7 +5957,7 @@ void perspectiveFn_80129db4(void)
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32) * (u16*)&((GameObject*)obj)->anim.rotZ, obj[4], lbl_803E1E3C,
                       lbl_803E1E68);
     }
-    shadowRenderFn_8006b558(((void**)lbl_803A9410)[lbl_803DBA64]);
+    shadowRenderFn_8006b558((int*)((void**)lbl_803A9410)[lbl_803DBA64]);
     {
         void* slot = ((void**)lbl_803A9410)[lbl_803DBA64];
         if (((u32*)slot)[0x13] > 0x90000000U)

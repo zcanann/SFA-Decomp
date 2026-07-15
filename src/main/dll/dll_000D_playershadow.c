@@ -31,7 +31,6 @@ u8 gPlayerShadowMode;
 #define PLAYERSHADOW_PARTFX_C 0x190
 
 extern u8 gPlayerShadowMode;
-__declspec(section ".rodata") u32 gPlayerShadowDefaultParams[4] = {0, 0, 0, 0};
 extern s16 lbl_803DD29A;
 extern s16 gPlayerShadowCamRotY;
 extern void fn_80069968(int* outA, int* outB);
@@ -46,13 +45,11 @@ f32 gPlayerShadowCamDelta[3] = {0.0f, 0.0f, 0.0f};
  * on each struck triangle. offsX/offsZ = obj position minus the tile origin,
  * so (vert - offs) + objPos recovers the world-space triangle corners. */
 union PlayerShadowConstF32 { f32 f; };
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF468 = { 0.1f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF46C = { 0.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF470 = { 1.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF474 = { 1000.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF478 = { 0.35f };
-#pragma explicit_zero_data off
+const union PlayerShadowConstF32 lbl_803DF468 = { 0.1f };
+const union PlayerShadowConstF32 lbl_803DF46C = { 0.0f };
+const union PlayerShadowConstF32 lbl_803DF470 = { 1.0f };
+const union PlayerShadowConstF32 lbl_803DF474 = { 1000.0f };
+const union PlayerShadowConstF32 lbl_803DF478 = { 0.35f };
 extern const union PlayerShadowConstF32 lbl_803DF488;
 extern const union PlayerShadowConstF32 lbl_803DF48C;
 extern const union PlayerShadowConstF32 lbl_803DF490;
@@ -206,14 +203,14 @@ void fn_800A3AF0(PlayerShadowTriHit* hits, int count, f32 offsX, f32 offsZ, Game
     }
 }
 
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF488 = { 10.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF48C = { 400.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF490 = { 130.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF494 = { 20.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF498 = { 100.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF49C = { 75.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF4A0 = { 230.0f };
-__declspec(section ".sdata2") const union PlayerShadowConstF32 lbl_803DF4A4 = { 125.0f };
+const union PlayerShadowConstF32 lbl_803DF488 = { 10.0f };
+const union PlayerShadowConstF32 lbl_803DF48C = { 400.0f };
+const union PlayerShadowConstF32 lbl_803DF490 = { 130.0f };
+const union PlayerShadowConstF32 lbl_803DF494 = { 20.0f };
+const union PlayerShadowConstF32 lbl_803DF498 = { 100.0f };
+const union PlayerShadowConstF32 lbl_803DF49C = { 75.0f };
+const union PlayerShadowConstF32 lbl_803DF4A0 = { 230.0f };
+const union PlayerShadowConstF32 lbl_803DF4A4 = { 125.0f };
 
 
 #pragma scheduling reset
@@ -239,8 +236,7 @@ void* playerShadow_funcs[10] = {(void*)0x00000000,
 #pragma scheduling off
 void playerShadow_renderObject(GameObject* obj)
 {
-    u32* defaults;
-    u32 params[4];
+    f32 radii[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     int* tileInfo;
     int hitTable;
     int hitCount;
@@ -251,8 +247,6 @@ void playerShadow_renderObject(GameObject* obj)
     f32 height;
     f32 radius;
 
-    defaults = gPlayerShadowDefaultParams;
-    *(struct PlayerShadowParamsBlob*)params = *(struct PlayerShadowParamsBlob*)defaults;
     hitTable = 0;
 
     if (gPlayerShadowMode == 0)
@@ -322,7 +316,7 @@ void playerShadow_renderObject(GameObject* obj)
     verts[7][1] = (obj)->anim.localPosY - height;
     verts[7][2] = (obj)->anim.localPosZ - radius;
 
-    hitDetect_calcSweptSphereBounds(&hitData, &verts[0][0], &verts[4][0], (f32*)params, 4);
+    hitDetect_calcSweptSphereBounds(&hitData, &verts[0][0], &verts[4][0], radii, 4);
     hitDetectFn_800691c0(obj, &hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;

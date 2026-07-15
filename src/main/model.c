@@ -848,9 +848,6 @@ extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
 extern f32 lbl_803DE870;
 
-__declspec(section ".rodata") int lbl_802C1AE8[3] = {0, 0, 0};
-__declspec(section ".rodata") int lbl_802C1AF4[3] = {0, 0, 0};
-
 void ObjModel_ApplyBlendChannels(u8* model)
 {
     u8* hdr;

@@ -63,10 +63,10 @@ void* gSkyMoonObject;
 u8* gSkySunObject;
 ModelLightStruct* gSkySunLight;
 u8 gSkyEnvFxFlags;
-int lbl_803DD13C;
-int lbl_803DD138;
-int lbl_803DD134;
-int lbl_803DD130;
+void* lbl_803DD13C;
+void* lbl_803DD138;
+void* lbl_803DD134;
+void* lbl_803DD130;
 u8* gSkyState;
 u16 gSkyMoonAlpha;
 u16 gSkySunAlpha;
@@ -115,10 +115,6 @@ u8 lbl_803DB758 = 1;
 #define GX_FOG_NONE                  0
 
 extern u8 gSkyConfigFieldIndices[];
-extern int lbl_803DD130;
-extern int lbl_803DD134;
-extern int lbl_803DD138;
-extern int lbl_803DD13C;
 extern u8 gSkyEnvFxFlags;
 extern u8* gSkyState;
 extern u8* gSkySunObject;
@@ -294,12 +290,12 @@ void envFxActFn_800887f8(u8 value)
     }
 }
 
-void fn_80088870(int a, int b, int c, int d)
+void fn_80088870(void* groupB, void* groupA, void* groupC, void* groupD)
 {
-    lbl_803DD13C = a;
-    lbl_803DD130 = b;
-    lbl_803DD138 = c;
-    lbl_803DD134 = d;
+    lbl_803DD13C = groupB;
+    lbl_803DD130 = groupA;
+    lbl_803DD138 = groupC;
+    lbl_803DD134 = groupD;
 }
 
 void envFxFn_80088884(void)

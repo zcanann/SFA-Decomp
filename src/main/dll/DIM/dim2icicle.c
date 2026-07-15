@@ -462,7 +462,6 @@ extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
 __declspec(section ".rodata") u32 lbl_802C2338[4] = {0x000A0019, 0x0019000A, 0x00140014, 0x00140000};
-__declspec(section ".rodata") int gDim2IcicleHitDescTemplate[4] = {6, 0x69, 0x69, 0xFF};
 extern u8 gDim2IcicleHitFxBuffer[];
 
 typedef struct IcicleHitDesc
@@ -472,6 +471,10 @@ typedef struct IcicleHitDesc
     int f2;
     int f3;
 } IcicleHitDesc;
+
+STATIC_ASSERT(sizeof(IcicleHitDesc) == 0x10);
+
+const IcicleHitDesc gDim2IcicleHitDescTemplate = {6, 0x69, 0x69, 0xFF};
 
 typedef struct IcicleHitEntry
 {
@@ -509,7 +512,7 @@ void DIM2icicle_updateHitResponse(int obj, int playerObj)
     state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
     hit = 0;
-    desc = *(IcicleHitDesc*)gDim2IcicleHitDescTemplate;
+    desc = gDim2IcicleHitDescTemplate;
     if (gDim2IcicleHitCooldown != 0)
     {
         gDim2IcicleHitCooldown = gDim2IcicleHitCooldown - 1;

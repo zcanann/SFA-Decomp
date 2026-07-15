@@ -47,8 +47,8 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
 extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
 extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
-__declspec(section ".rodata") int gArwingAttachmentItemSetWander[3] = {0x166, 0x167, 0x256};
-__declspec(section ".rodata") int gArwingAttachmentItemSetIdle[3] = {0x166, 0x167, 0x256};
+const ItemIdSet3 gArwingAttachmentItemSetWander = {0x166, 0x167, 0x256};
+const ItemIdSet3 gArwingAttachmentItemSetIdle = {0x166, 0x167, 0x256};
 extern f32 lbl_803E5D9C;
 extern ArwAttachTarget gArwingAttachmentTargets[];
 extern char sArwingAttachmentDiffFormat[];
@@ -64,7 +64,7 @@ void fn_801F20D4(GameObject* obj)
 
     state = *(int*)&(obj)->extra;
     Obj_GetPlayerObject();
-    itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetIdle;
+    itemSet = gArwingAttachmentItemSetIdle;
     if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) != 0)
     {
         *(u8*)&(obj)->anim.resetHitboxMode ^= INTERACT_FLAG_DISABLED;
@@ -406,7 +406,7 @@ void fn_801F2290(int obj)
 
     state = ((GameObject*)obj)->extra;
     Obj_GetPlayerObject();
-    itemSet = *(ItemIdSet3*)gArwingAttachmentItemSetWander;
+    itemSet = gArwingAttachmentItemSetWander;
     ((GameObject*)obj)->anim.localPosY = state->homeY;
     if (mainGetBit(GAMEBIT_WM_FoundKrystal) != 0)
     {

@@ -68,7 +68,6 @@ extern f32 gDimBossSpitGravity;
 extern f32 gDimBossSpitVelocityDamping;
 extern f32 lbl_803E4D68;
 extern const f32 lbl_803E4D6C;
-extern void postRenderSetAlphaBlendState(void);
 extern f32 lbl_803E4D70;
 extern f32 lbl_803E4D74;
 extern f32 lbl_803E4D78;

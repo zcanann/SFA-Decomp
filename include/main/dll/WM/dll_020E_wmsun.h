@@ -67,6 +67,7 @@ STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
 STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
+STATIC_ASSERT(sizeof(WmSunVec3) == 0xC);
 
 extern s16 gWmSunQuakeTimer; /* finale countdowns */
 extern s16 lbl_803DDCAA;
@@ -99,8 +100,8 @@ extern f32 lbl_803E5F80; /* 0.8f */
 extern f32 lbl_803E5F84; /* 2400.0f */
 extern f32 lbl_803E5F88; /* 2.8f */
 extern f32 lbl_803E5F8C; /* 1000.0f */
-extern WmSunVec3 gWmSunGlareDir;
-extern WmSunVec3 gWmSunGlareSun;
+extern const WmSunVec3 gWmSunGlareDir;
+extern const WmSunVec3 gWmSunGlareSun;
 extern f32 gWmSunGlareIntensity;
 extern f32 gWmSunGlareDamping;
 

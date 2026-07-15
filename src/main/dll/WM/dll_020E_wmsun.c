@@ -82,8 +82,8 @@ __declspec(section ".sdata2") f32 lbl_803E5F68 = 0.01f;
 __declspec(section ".sdata2") f32 lbl_803E5F6C = 0.0f;
 #pragma explicit_zero_data off
 #pragma force_active reset
-__declspec(section ".rodata") WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
-__declspec(section ".rodata") WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
+const WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
+const WmSunVec3 gWmSunGlareSun = {0.0f, 0.0f, -1.0f};
 
 int wmsun_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* actor)
 {

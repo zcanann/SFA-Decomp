@@ -28,6 +28,7 @@
 #include "main/lightmap_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/sky_api.h"
+#include "main/sky.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/dll/dll_0173_linklevcontrol.h"
 
@@ -72,7 +73,6 @@ u8 lbl_803239F0[224] = {
     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 };
 
-extern void fn_80088870(u8* a, u8* b, u8* c, u8* d);
 
 #pragma dont_inline on
 void link_levcontrol_updateAreaMusic(int* obj)

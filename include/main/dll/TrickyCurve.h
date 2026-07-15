@@ -5,6 +5,15 @@
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
+int TrickyCurve_getExtraSize(void);
+int TrickyCurve_getObjectTypeId(void);
+void TrickyCurve_free(int obj);
+void TrickyCurve_render(void);
+void TrickyCurve_hitDetect(void);
+void TrickyCurve_update(int* obj);
+void TrickyCurve_init(int* obj, u8* def);
+void TrickyCurve_release(void);
+void TrickyCurve_initialise(void);
 void TrickyCurve_updateBurstTrigger(GameObject* obj);
 void TrickyCurve_updateBoundsTrigger(int param_1);
 void TrickyCurve_updateEffectRingTrigger(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6,

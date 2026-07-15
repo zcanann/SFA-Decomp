@@ -103,7 +103,6 @@ STATIC_ASSERT(offsetof(ShieldState, segRotY) == 0x4C);
 STATIC_ASSERT(offsetof(ShieldState, segRotZ) == 0x54);
 STATIC_ASSERT(offsetof(ShieldState, flags0) == 0x5C);
 
-extern void postRenderSetAlphaBlendState(void);
 extern f32 fcos16(u16 angle);
 extern f32 lbl_803E33A8;
 extern f32 lbl_803E33AC;

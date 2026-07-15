@@ -42,7 +42,7 @@ typedef struct ObjHitReactMoveEntry {
   s16 entryByteCount;
 } ObjHitReactMoveEntry;
 
-extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
+extern const ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
 extern char sObjHitReactHitstateFrameString[];
 extern char sObjHitReactSphereOverflowString[];
 extern char sObjHitReactResetString[7];

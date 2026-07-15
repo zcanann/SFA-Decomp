@@ -35,8 +35,18 @@ STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 #define DFPTORCH_PARTFX_FLICKER 0x1f7
 #define DFPTORCH_PARTFX_IGNITE  0x1a3
 
+typedef struct DfpTorchEffectParams
+{
+    int m0;
+    int m1;
+    int m2;
+    int m3;
+} DfpTorchEffectParams;
+
+STATIC_ASSERT(sizeof(DfpTorchEffectParams) == 0x10);
+
 u8 gDfpTorchSequenceState;
-__declspec(section ".rodata") int gDfpTorchEffectParams[4] = {0x3E7, 0x8C, 0x8D, 0x28};
+const DfpTorchEffectParams gDfpTorchEffectParams = {0x3E7, 0x8C, 0x8D, 0x28};
 
 int DFP_Torch_getExtraSize(void)
 {
@@ -146,20 +156,13 @@ void DFP_Torch_hitDetect(void)
 
 void DFP_Torch_update(int obj)
 {
-    typedef struct
-    {
-        int m0;
-        int m1;
-        int m2;
-        int m3;
-    } TorchPrm;
     DfpTorchState* state = ((GameObject*)obj)->extra;
     void* res;
     int i;
     f32 buf[5];
-    TorchPrm prm;
+    DfpTorchEffectParams prm;
 
-    prm = *(TorchPrm*)gDfpTorchEffectParams;
+    prm = gDfpTorchEffectParams;
     Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     objUpdateOpacity((GameObject*)obj);
     switch (state->mode)

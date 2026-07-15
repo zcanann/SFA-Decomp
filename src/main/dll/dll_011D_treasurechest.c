@@ -24,6 +24,8 @@ typedef struct ChestHitParams
     u32 d;
 } ChestHitParams;
 
+STATIC_ASSERT(sizeof(ChestHitParams) == 0x10);
+
 typedef struct ChestFlags
 {
     u8 open : 1;
@@ -60,7 +62,7 @@ STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
 extern f32 lbl_803E3C20;
 int lbl_803DDAE4;
 extern f32 lbl_803E3C24;
-__declspec(section ".rodata") ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
+const ChestHitParams lbl_802C22B0 = {8, 0xFF, 0xFF, 0x78};
 void* lbl_803DDAE0;
 extern f32 lbl_803E3C28;
 extern f32 lbl_803E3C2C;

@@ -12,6 +12,9 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/screen_transition.h"
 #include "main/dll/NW/dll_01A1_nwmammoth.h"
+#include "main/dll/NW/dll_01A2_nwtricky.h"
+#include "main/dll/NW/dll_01A3_nwanimice.h"
+#include "main/dll/NW/dll_01A4_nwice.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/dll/NW/dll_01A5_nwlevcontrol.h"
 #include "main/dll/SH/dll_01A6_shtricky.h"
@@ -940,24 +943,6 @@ u8 lbl_803268B4[24] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x2
 int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
 int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
-/*__DATA_EXTERNS__*/
-extern void NW_ice_getExtraSize();
-extern void NW_ice_free();
-extern void NW_ice_render();
-extern void NW_ice_update();
-extern void NW_ice_init();
-extern void nw_animice_getExtraSize();
-extern void nw_animice_getObjectTypeId();
-extern void nw_animice_free();
-extern void nw_animice_render();
-extern void nw_animice_hitDetect();
-extern void nw_animice_update();
-extern void nw_animice_init();
-extern void nw_animice_release();
-extern void nw_animice_initialise();
-extern void NW_tricky_free();
-extern void NW_tricky_update();
-extern void NW_tricky_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gNW_mammothObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, (void*)0x00090000,
                                       (void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, NW_mammoth_init,

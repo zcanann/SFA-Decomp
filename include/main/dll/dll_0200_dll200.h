@@ -14,6 +14,11 @@ typedef struct ItemIdSet3
     int itemId2;
 } ItemIdSet3;
 
+STATIC_ASSERT(sizeof(ItemIdSet3) == 0xC);
+
+extern const ItemIdSet3 gArwingAttachmentItemSetWander;
+extern const ItemIdSet3 gArwingAttachmentItemSetIdle;
+
 typedef struct ArwAttachTarget
 {
     f32 x;

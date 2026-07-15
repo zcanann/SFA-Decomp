@@ -22,6 +22,8 @@ typedef struct ArwInitCfg
     u16 c;
 } ArwInitCfg;
 
+STATIC_ASSERT(sizeof(ArwInitCfg) == 0xC);
+
 extern GameObject* gArwing;
 extern f32 lbl_803E6ECC;
 extern f32 lbl_803E6ED0;
@@ -92,7 +94,7 @@ extern f32 lbl_803E7000;
 extern f32 gArwingFireTimerReset;
 extern f32 gArwingExplodeModeTime;
 extern u8 gArwingCourseMapIds[8];
-extern ArwInitCfg gArwingInitConfig;
+extern const ArwInitCfg gArwingInitConfig;
 extern int gArwingPathSetupData[];
 extern int sArwingPathName[];
 

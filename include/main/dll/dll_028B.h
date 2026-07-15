@@ -32,8 +32,8 @@ STATIC_ASSERT(offsetof(Dll28BState, playerDistance) == 0xAB8);
 STATIC_ASSERT(offsetof(Dll28BState, flagsAC0) == 0xAC0);
 STATIC_ASSERT(sizeof(Dll28BMoveBlendData) == 0x10);
 
-extern Dll28BMoveBlendData gDll28BMoveBlendDataA;
-extern Dll28BMoveBlendData gDll28BMoveBlendDataB;
+extern const Dll28BMoveBlendData gDll28BMoveBlendDataA;
+extern const Dll28BMoveBlendData gDll28BMoveBlendDataB;
 extern void* gDll28BSubstateHandlers[4];
 extern void* gDll28BStateHandlers[4];
 extern f32 lbl_803E6D18;

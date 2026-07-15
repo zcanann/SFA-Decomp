@@ -32,6 +32,7 @@
 #include "main/mm.h"
 #include "string.h"
 #include "main/newshadows.h"
+#include "main/newshadows_shadow_api.h"
 #include "main/rcp_dolphin.h"
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00E2_staff_api.h"
@@ -1356,9 +1357,6 @@ void lightmap_sortTransparentDrawQueue(void)
 }
 
 
-extern void shadowCreate(u8 * obj);
-extern void shadowRenderFn_8006b558(u8 * obj);
-extern void renderShadows(int a, int b, int c);
 void sortVisibleObjectKeysDescending(u32* arr, int n);
 
 #pragma opt_loop_invariants off
@@ -1443,11 +1441,11 @@ void getVisibleObjects(s8* opacity)
                     t = ((ObjAnimComponent*)o)->modelInstance->shadowType;
                     if (t == 2 || t == 1)
                     {
-                        shadowCreate(o);
+                        shadowCreate((int*)o);
                     }
                     else if (t == 4)
                     {
-                        shadowRenderFn_8006b558(o);
+                        shadowRenderFn_8006b558((int*)o);
                     }
                 }
                 if (gVisibleObjectSortKeyCount < 1000)

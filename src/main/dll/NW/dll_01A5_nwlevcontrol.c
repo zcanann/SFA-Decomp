@@ -14,6 +14,7 @@
 #include "main/game_timer_control_api.h"
 #include "main/gametext_show_api.h"
 #include "main/sky_api.h"
+#include "main/sky.h"
 #include "main/object_api.h"
 #include "main/render_envfx_api.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -79,7 +80,6 @@ extern u32 Music_Trigger();
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
-extern void fn_80088870(char* a, char* b, char* c, char* d);
 
 void nw_levcontrol_update(int objArg)
 {

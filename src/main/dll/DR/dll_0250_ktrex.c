@@ -70,7 +70,7 @@ s16 lbl_803DC298[4] = {0x560, 0x561, 0x562, 0x563};
 #define KTREX_ADVANCE_MSG      0xe0001 /* notify the struck object to advance its hit reaction */
 #define KTREX_PARTFX_HIT       0x328   /* hit-response effect spawned at the player contact point */
 
-__declspec(section ".rodata") KtrexMsgBlob gKTRexMsgTemplate = {{6, 0x69, 0x69, 0xFF}};
+const KtrexMsgBlob gKTRexMsgTemplate = {{6, 0x69, 0x69, 0xFF}};
 
 static inline f32* KTRex_GetActiveContactPointTable(GameObject* obj)
 {
@@ -1138,11 +1138,11 @@ void ktrex_updateContactEffects(GameObject* obj, KTRexRuntime* runtime)
     int hitType;
     u32 hitC;
     int hitA;
-    int msg[4];
+    KtrexMsgBlob msg;
     int hit;
     f32* contactPoints;
     f32* pt;
-    *(KtrexMsgBlob*)msg = gKTRexMsgTemplate;
+    msg = gKTRexMsgTemplate;
     if (gKTRexContactEffectCooldown != 0)
     {
         gKTRexContactEffectCooldown -= 1;
@@ -1209,10 +1209,10 @@ void ktrex_updateContactEffects(GameObject* obj, KTRexRuntime* runtime)
         gKTRexEffectSpawnWork.unk0 = 0;
         gKTRexEffectSpawnWork.unk2 = 0;
         gKTRexEffectSpawnWork.unk4 = 0;
-        msg[1] += randomGetRange(0, 0x9b);
-        msg[2] += randomGetRange(0, 0x9b);
+        msg.w[1] += randomGetRange(0, 0x9b);
+        msg.w[2] += randomGetRange(0, 0x9b);
         (*(void (**)(void*, int, void*, int, int, int*))(*(int*)gKTRexResource + 0x4))(obj, 0, &gKTRexEffectSpawnWork, 1,
-                                                                                       -1, msg);
+                                                                                       -1, msg.w);
         gKTRexContactEffectCooldown = 0x3c;
     }
     if ((s8)runtime->hitCountdown < 1)

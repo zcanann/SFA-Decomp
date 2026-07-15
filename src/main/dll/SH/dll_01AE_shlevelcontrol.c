@@ -29,6 +29,7 @@
 #include "main/game_object.h"
 #include "main/rcp_dolphin_api.h"
 #include "main/sky_api.h"
+#include "main/sky.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 #include "main/dll/SP/SPshopkeeper.h"
@@ -99,7 +100,6 @@ extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
 extern void padClearAnalogInputX(int port);
 extern void padClearAnalogInputY(int port);
-extern void fn_80088870(void* a, void* b, void* c, void* d);
 
 void SH_LevelControl_setMusic(short* state);
 
