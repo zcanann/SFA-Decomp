@@ -7,9 +7,6 @@
  * of random headings, and stows the checkpoint index. checkpoint4_render emits a
  * plain model render. The rest of the callbacks are stubs.
  *
- * The TU also owns the .data descriptor cluster for the sideload / siderepel /
- * setuppoint / collectible / magicgem siblings (their callbacks live in their
- * own DLLs and are referenced here as externs).
  */
 #include "main/dll/checkpoint4.h"
 #include "main/object_render.h"
@@ -18,7 +15,6 @@
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"
 #include "main/dll/dll_00ED_collectible_api.h"
-#include "main/dll/dll_00FF_magicgem.h"
 
 void checkpoint4_setScale(void)
 {
@@ -162,8 +158,3 @@ ObjectDescriptor17 gCollectibleObjDescriptor = {
     (ObjectDescriptorCallback)collectible_getVisibilityBitClear,
     (ObjectDescriptorCallback)collectible_setPosition,
 };
-u8 lbl_80320CB8[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-void* gMagicGemObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
-                                    (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, MagicDust_init,
-                                    MagicDust_update,  (void*)0x00000000,     MagicDust_render,  MagicDust_free,
-                                    (void*)0x00000000, MagicDust_getExtraSize};

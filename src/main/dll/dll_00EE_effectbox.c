@@ -31,12 +31,13 @@
 #define EFFECTBOX_OBJFLAG_HIDDEN             0x4000
 #define EFFECTBOX_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E3508;
-extern f32 lbl_803E350C;
-extern f32 lbl_803E3510;
-extern f32 lbl_803E3514;
 extern void fn_8002B758(void);
 extern void fn_8002B860(int obj);
+
+#define EFFECTBOX_RENDER_SCALE 1.0f
+#define EFFECTBOX_PI           3.1415927f
+#define EFFECTBOX_ANGLE_SCALE  32768.0f
+#define EFFECTBOX_ZERO         0.0f
 
 int EffectBox_getExtraSize(void)
 {
@@ -55,7 +56,7 @@ void EffectBox_free(void)
 void EffectBox_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3508);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, EFFECTBOX_RENDER_SCALE);
 }
 
 void EffectBox_hitDetect(void)
@@ -89,10 +90,10 @@ void EffectBox_update(GameObject* obj)
     gb = obj->unkF8;
     if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != mainGetBit(gb)))
     {
-        cosY = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
-        sinY = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / lbl_803E3510);
-        cosX = mathCosf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
-        sinX = mathSinf((lbl_803E350C * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / lbl_803E3510);
+        cosY = mathCosf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
+        sinY = mathSinf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
+        cosX = mathCosf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
+        sinX = mathSinf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotPitch << 8)) / EFFECTBOX_ANGLE_SCALE);
         extX = (f32)((EffectboxPlacement*)def)->extentX;
         extY = (f32)(((EffectboxPlacement*)def)->extentY << 1);
         extZ = (f32)((EffectboxPlacement*)def)->extentZ;
@@ -144,7 +145,7 @@ void EffectBox_update(GameObject* obj)
                 if ((proj > negExtZ) && (proj < extZ))
                 {
                     proj = dy * cosX + proj * sinX;
-                    if ((proj >= lbl_803E3514) && (proj < extY))
+                    if ((proj >= EFFECTBOX_ZERO) && (proj < extY))
                     {
                         switch (((EffectboxPlacement*)def)->targetMode)
                         {
