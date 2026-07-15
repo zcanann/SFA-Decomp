@@ -1,5 +1,6 @@
 #include "main/audio/snd3d_room.h"
 #include "main/audio/synth_delay.h"
+#include "main/audio/snd_synth_api.h"
 
 /* SndSpatialEntry.flags: room-fade one-shots driven per update tick */
 #define S3D_ENTRY_FADE_IN  0x80000000 /* ramp fade up toward full, then clear */
@@ -16,11 +17,6 @@ extern u8 snd_base_studio;
 extern u8 snd_max_studios;
 extern f32 lbl_803E7880;
 extern f32 lbl_803E7890;
-extern void synthActivateStudio(u8 studio, int active, int unk);
-extern void synthDeactivateStudio(u8 studio);
-extern void synthAddStudioInput(u8 studio, u8* input);
-extern void synthRemoveStudioInput(u8 studio, u8* input);
-
 typedef struct
 {
     f32 vol[129];
