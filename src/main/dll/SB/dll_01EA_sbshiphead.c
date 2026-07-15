@@ -28,6 +28,7 @@
 #include "main/obj_message.h"
 #include "main/obj_path.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/DB/DBprotection.h"
 #include "main/frame_timing.h"
 #include "main/dll/SB/dll_01EA_sbshiphead.h"
 #include "main/object_descriptor.h"
@@ -50,7 +51,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 /* object type id of the lobbed projectile spawned on the firing cue */
 #define SB_PROJECTILE_OBJID 0x138
 
-extern int DBprotection_getCameraState(u32 g);
 extern u32 getSbGalleon(void);
 extern u8 gSbShipHeadHasFiredFireball;
 int gSbShipHeadPrevGalleonPhase;
@@ -171,7 +171,7 @@ void SB_ShipHead_update(GameObject* obj)
     {
         return;
     }
-    camState = DBprotection_getCameraState(getSbGalleon());
+    camState = DBprotection_getCameraState((int*)getSbGalleon());
     if (camState == 2)
     {
         if (Vec_distance((void*)(player + 0x18), &object->anim.worldPosX) < gSbShipHeadHissSfxDistance)

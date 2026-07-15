@@ -39,7 +39,6 @@ extern void* return0_8005669C(int);
 extern int lbl_803DB610;
 void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
-char sShrineTimeFormat[] = "time %d\n";
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;
@@ -129,14 +128,14 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 mainSetBits(0x1d2, 0);
                 ((Dll19BState*)state)->brightnessBVel = -3;
                 break;
-            case 8:
+            case 9:
                 mainSetBits(0x128, 1);
                 if (lbl_803DDBE0 == NULL)
                 {
                     lbl_803DDBE0 = return0_8005669C(1);
                 }
                 break;
-            case 9:
+            case 8:
                 mainSetBits(0x127, 1);
                 break;
             case 0xb:
@@ -151,10 +150,6 @@ int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-void dll_19B_hitDetect(void)
-{
-}
-
 int dll_19B_getExtraSize(void)
 {
     return 0x18;
@@ -164,6 +159,11 @@ int dll_19B_getObjectTypeId(void)
     return 0x0;
 }
 
+void dll_19B_free(int* obj)
+{
+    (*gModgfxInterface)->detachSource(obj);
+}
+
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -171,10 +171,11 @@ void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5188);
 }
 
-void dll_19B_free(int* obj)
+void dll_19B_hitDetect(void)
 {
-    (*gModgfxInterface)->detachSource(obj);
 }
+
+char sShrineTimeFormat[] = "time %d\n";
 
 void dll_19B_update(int obj)
 {
@@ -395,13 +396,6 @@ void dll_19B_update(int obj)
         }
     }
 }
-void dll_19B_release(void)
-{
-}
-
-void dll_19B_initialise(void)
-{
-}
 
 void dll_19B_init(GameObject* obj, u8* params)
 {
@@ -449,11 +443,14 @@ void dll_19B_init(GameObject* obj, u8* params)
     obj->anim.worldPosZ = obj->anim.localPosZ;
 }
 
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* jumptable_8032668C[7] = {(void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490),
-                               (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4),
-                               (void*)((u8*)dll_19B_update + 0x6C0), (void*)((u8*)dll_19B_update + 0x7D0),
-                               (void*)((u8*)dll_19B_update + 0x72C)};
+void dll_19B_release(void)
+{
+}
+
+void dll_19B_initialise(void)
+{
+}
+
 void* dll_19C[14] = {(void*)0x00000000,       (void*)0x00000000,   (void*)0x00000000, (void*)0x00090000,
                      dll_19C_initialise,      dll_19C_release,     (void*)0x00000000, dll_19C_init,
                      dll_19C_update,          dll_19C_hitDetect,   dll_19C_render,    dll_19C_free,

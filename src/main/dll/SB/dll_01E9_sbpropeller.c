@@ -18,6 +18,7 @@
 #include "main/dll/sbpropellerstate_struct.h"
 #include "main/objhits.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/DB/DBprotection.h"
 #include "main/obj_path.h"
 #include "main/dll/SB/dll_01E9_sbpropeller.h"
 #include "main/object_render.h"
@@ -43,7 +44,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #define SB_PROPELLER_PARTFX_DEBRIS 0x7aa /* bankIndex==1 debris trail from path point 0 */
 
 
-extern int DBprotection_getCameraState(u32 g);
 extern f32 lbl_803E5810;
 extern f32 lbl_803E5814;
 extern f32 lbl_803E5818;
@@ -108,7 +108,7 @@ void SB_Propeller_update(GameObject* obj)
     {
         Sfx_KeepAliveLoopedObjectSound((int)obj, SB_PROPELLER_SFX_LOOP);
     }
-    camC = DBprotection_getCameraState(*(int*)&objAnim->parent);
+    camC = DBprotection_getCameraState((int*)*(int*)&objAnim->parent);
     if ((camC < 2) && (state->health <= 0))
     {
         state->smokeTimer = state->smokeTimer - timeDelta;
