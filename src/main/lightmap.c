@@ -1746,15 +1746,16 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
     GXBegin(GX_TRIANGLES, GX_VTXFMT0, triCount * 3 & 0xffff);
     for (tri = 0; tri < triCount; tri++)
     {
+        volatile u8* list = (volatile u8*)triList;
         for (vtx = 0; vtx < 3; vtx++)
         {
             GXPosition1x8(0);
-            posPtr = (s16*)(vertexBase + triList[vtx + 1] * 0x10);
+            posPtr = (s16*)(vertexBase + list[vtx + 1] * 0x10);
             GXPosition3s16(posPtr[0], posPtr[1], posPtr[2]);
-            clrPtr = vertexBase + triList[vtx + 1] * 0x10;
+            clrPtr = vertexBase + list[vtx + 1] * 0x10;
             GXColor4u8(*(u8*)(clrPtr + 0xc), *(u8*)(clrPtr + 0xd), *(u8*)(clrPtr + 0xe),
                        *(u8*)(clrPtr + 0xf));
-            texPtr = vertexBase + triList[vtx + 1] * 0x10;
+            texPtr = vertexBase + list[vtx + 1] * 0x10;
             GXTexCoord2s16(*(s16*)(texPtr + 8), *(s16*)(texPtr + 10));
         }
         triList = triList + 0x10;
