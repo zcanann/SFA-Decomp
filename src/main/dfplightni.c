@@ -6,14 +6,9 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 
-__declspec(section ".sdata2") f32 gDfpLightningTimerMax = 1000.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E64E4 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 gDfpLightningTimerInactiveMax = 1010.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E64EC = 0.0f;
-#pragma explicit_zero_data off
+#define DFPLIGHTNI_TIMER_MAX 1000.0f
+#define DFPLIGHTNI_TIMER_INACTIVE_MAX 1010.0f
+
 extern f32 gDfpLightningTimerActiveReset;
 extern f32 gDfpLightningOffsetScale;
 extern f32 gDfpLightningRadiusMin;
@@ -61,7 +56,7 @@ void DFP_Lightni_render(DfpLightniObject* obj)
     if (obj != 0)
     {
         state = dfplightni_getState(obj);
-        if (state->timer >= gDfpLightningTimerMax)
+        if (state->timer >= DFPLIGHTNI_TIMER_MAX)
         {
             eventActive = mainGetBit(DFPLIGHTNI_EVENT_TIMER_GAMEBIT);
             if (state->effectHandle != 0)
@@ -70,14 +65,14 @@ void DFP_Lightni_render(DfpLightniObject* obj)
             }
             if (eventActive != 0)
             {
-                if (state->timer >= gDfpLightningTimerMax + (f32)(s32)state->delayFrames)
+                if (state->timer >= DFPLIGHTNI_TIMER_MAX + (f32)(s32)state->delayFrames)
                 {
-                    state->timer = lbl_803E64E4;
+                    state->timer = 0.0f;
                 }
             }
-            else if (state->timer >= gDfpLightningTimerInactiveMax)
+            else if (state->timer >= DFPLIGHTNI_TIMER_INACTIVE_MAX)
             {
-                state->timer = lbl_803E64E4;
+                state->timer = 0.0f;
             }
         }
     }
@@ -105,11 +100,11 @@ void DFP_Lightni_update(DfpLightniObject* obj)
         {
             state->timer += timeDelta;
             eventActive = mainGetBit(state->eventId);
-            if ((eventActive != 0) && (state->timer < gDfpLightningTimerMax))
+            if ((eventActive != 0) && (state->timer < DFPLIGHTNI_TIMER_MAX))
             {
                 state->timer = gDfpLightningTimerActiveReset;
             }
-            if ((state->timer > state->triggerTime) && (state->timer < gDfpLightningTimerMax))
+            if ((state->timer > state->triggerTime) && (state->timer < DFPLIGHTNI_TIMER_MAX))
             {
                 start[0] = obj->position[0];
                 start[1] = obj->position[1];
@@ -182,7 +177,7 @@ void DFP_Lightni_update(DfpLightniObject* obj)
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP & DFPLIGHTNI_EFFECT_ANGLE_MASK, 0);
                     }
                 }
-                state->timer = gDfpLightningTimerMax;
+                state->timer = DFPLIGHTNI_TIMER_MAX;
             }
         }
     }

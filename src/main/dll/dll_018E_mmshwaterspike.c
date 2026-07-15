@@ -15,20 +15,11 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_018E_mmshwaterspike.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E4F80 = -9999.0f;
-__declspec(section ".sdata2") f32 lbl_803E4F84 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E4F88 = 0.5f;
-#pragma explicit_zero_data off
-#pragma force_active reset
-
 #define MMSHWATERSPIKE_HIT_VOLUME_SLOT 9
+#define MMSHWATERSPIKE_NO_RISE -9999.0f
+#define MMSHWATERSPIKE_RIPPLE_SCALE 0.5f
 
 extern char sWaterSpikeInvalidXyzAnimIdWarning[];
-extern f32 lbl_803E4F80;
-extern f32 lbl_803E4F84;
-extern f32 lbl_803E4F88;
 
 int mmsh_waterspike_getExtraSize(void)
 {
@@ -81,7 +72,7 @@ void mmsh_waterspike_update(int obj)
                                         ((GameObject*)obj)->anim.localPosZ, &hitList, 0, 0);
         if (hitCount != 0)
         {
-            riseDelta = lbl_803E4F80;
+            riseDelta = MMSHWATERSPIKE_NO_RISE;
             hitPtr = hitList;
             for (i = 0; i < hitCount; i++)
             {
@@ -111,11 +102,11 @@ void mmsh_waterspike_update(int obj)
         if (((GameObject*)obj)->unkF4 <= 0)
         {
             ((GameObject*)obj)->unkF4 = randomGetRange(0x3c, 0xf0);
-            if (lbl_803E4F84 == riseDelta)
+            if (riseDelta == 0.0f)
             {
                 (*gWaterfxInterface)->spawnRipple(
                     ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
-                    ((GameObject*)obj)->anim.localPosZ, 0, lbl_803E4F88, 3);
+                    ((GameObject*)obj)->anim.localPosZ, 0, MMSHWATERSPIKE_RIPPLE_SCALE, 3);
             }
         }
     }
