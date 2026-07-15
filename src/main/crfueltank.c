@@ -3,6 +3,7 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
+#include "main/proximitymine.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 
@@ -155,30 +156,23 @@ extern void KT_RexLevel_update();
 extern void KT_RexLevel_init();
 extern void KT_RexLevel_release();
 extern void KT_RexLevel_initialise();
-extern void ProximityMine_getExtraSize();
-extern void ProximityMine_getObjectTypeId();
-extern void ProximityMine_free();
-extern void ProximityMine_render();
-extern void ProximityMine_hitDetect();
-extern void ProximityMine_update();
-extern void ProximityMine_init();
-extern void ProximityMine_release();
-extern void ProximityMine_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-void* gProximityMineObjDescriptor[14] = {(void*)0x00000000,
-                                         (void*)0x00000000,
-                                         (void*)0x00000000,
-                                         (void*)0x00090000,
-                                         ProximityMine_initialise,
-                                         ProximityMine_release,
-                                         (void*)0x00000000,
-                                         ProximityMine_init,
-                                         ProximityMine_update,
-                                         ProximityMine_hitDetect,
-                                         ProximityMine_render,
-                                         ProximityMine_free,
-                                         ProximityMine_getObjectTypeId,
-                                         ProximityMine_getExtraSize};
+ObjectDescriptor gProximityMineObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ProximityMine_initialise,
+    (ObjectDescriptorCallback)ProximityMine_release,
+    0,
+    (ObjectDescriptorCallback)ProximityMine_init,
+    (ObjectDescriptorCallback)ProximityMine_update,
+    (ObjectDescriptorCallback)ProximityMine_hitDetect,
+    (ObjectDescriptorCallback)ProximityMine_render,
+    (ObjectDescriptorCallback)ProximityMine_free,
+    (ObjectDescriptorCallback)ProximityMine_getObjectTypeId,
+    ProximityMine_getExtraSize,
+};
 void* gKtRexLevelObjDescriptor[14] = {(void*)0x00000000,           (void*)0x00000000,       (void*)0x00000000,
                                       (void*)0x00090000,           KT_RexLevel_initialise,  KT_RexLevel_release,
                                       (void*)0x00000000,           KT_RexLevel_init,        KT_RexLevel_update,
