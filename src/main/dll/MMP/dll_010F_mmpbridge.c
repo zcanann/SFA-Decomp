@@ -15,7 +15,7 @@
 #include "main/objhits.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
 
-__declspec(section ".sdata") char lbl_803DBD90[] = "S %d\n";
+char lbl_803DBD90[] = "S %d\n";
 
 #define BRIDGE_TEX_OFFSET_START 0x800
 #define BRIDGE_TEX_OFFSET_MAX   0x131f

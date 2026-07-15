@@ -7,11 +7,10 @@
  * its render opacity by the player's distance to the linked object. Render is
  * gated by GameBit 0x3A2 / seqId 883 and suppressed when GameBit 110 is set
  * unless GameBit 898 is also set. The sequence callback (dll_16C_SeqFn) spawns
- * /frees a child object from a small id table (Blob10 @ lbl_802C2308) keyed by
+ * /frees a child object from a small id table keyed by
  * subObjIndex, and forwards trigger commands (1/2/3) to the linked object's
  * vtable.
  */
-#include "main/dll/blob10_struct.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
@@ -43,7 +42,14 @@ STATIC_ASSERT(sizeof(Dll16CState) == 0x24);
 /* seqId variant whose render is gated by GameBit 0x3A2 (docblock: "Render is gated by GameBit 0x3A2 / seqId 883") */
 #define DLL16C_RENDER_GATE_SEQID 883
 
-__declspec(section ".rodata") u8 lbl_802C2308[16] = {0, 0x23, 0, 0x69, 0, 0x33, 0, 0x64, 0, 0x1D, 0, 0, 0, 0, 0, 0};
+typedef struct Dll16CChildObjectIdTable
+{
+    s16 ids[5];
+} Dll16CChildObjectIdTable;
+
+STATIC_ASSERT(sizeof(Dll16CChildObjectIdTable) == 0xA);
+
+const Dll16CChildObjectIdTable lbl_802C2308 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern f32 lbl_803E4748;
 extern f32 lbl_803E474C;
 extern f32 lbl_803E4758;
@@ -165,7 +171,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     GameObject* linkedObj;
     Dll16CState* extra = obj->extra;
-    s16 ids[5];
+    Dll16CChildObjectIdTable childObjectIds;
 
     extra->opacity = 0xff;
     linkedObj = extra->linkedObj;
@@ -174,7 +180,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
         extra->subObjIndex = -1;
         animUpdate->triggerCommand = 0;
     }
-    *(Blob10*)ids = *(Blob10*)lbl_802C2308;
+    childObjectIds = lbl_802C2308;
 
     if (extra->subObjIndex != extra->subObjIndexApplied)
     {
@@ -190,7 +196,7 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
             if (idx > 0)
             {
                 *(int*)&obj->childObjs[0] =
-                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, obj->anim.parent);
+                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, childObjectIds.ids[idx - 1]), 4, -1, -1, obj->anim.parent);
                 obj->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
@@ -275,9 +281,9 @@ void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, in
 void dll_16C_update(GameObject* obj)
 {
     Dll16CState* extra = obj->extra;
-    s16 ids[5];
+    Dll16CChildObjectIdTable childObjectIds;
 
-    *(Blob10*)ids = *(Blob10*)lbl_802C2308;
+    childObjectIds = lbl_802C2308;
     if (extra->subObjIndex != extra->subObjIndexApplied)
     {
         if (obj->childObjs[0] != NULL)
@@ -292,7 +298,7 @@ void dll_16C_update(GameObject* obj)
             if (idx > 0)
             {
                 *(int*)&obj->childObjs[0] =
-                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1, obj->anim.parent);
+                    (int)Obj_SetupObject(Obj_AllocObjectSetup(24, childObjectIds.ids[idx - 1]), 4, -1, -1, obj->anim.parent);
                 obj->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;

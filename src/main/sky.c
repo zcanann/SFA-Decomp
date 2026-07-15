@@ -206,7 +206,7 @@ extern u8 lbl_803DB758;
 extern u16 lbl_803E8460;
 extern u8 lbl_803E8462;
 extern f32 lbl_8039A7B8[];
-__declspec(section ".rodata") f32 lbl_802C1F98[4] = {-1000.0f, -1000.0f, -1000.0f, 0.0f};
+const SkyVec3 lbl_802C1F98 = {-1000.0f, -1000.0f, -1000.0f};
 extern u8 gSkyColorBlendTable[];
 extern int lbl_803E8458;
 extern const f32 lbl_803DF0C8;
@@ -1375,7 +1375,7 @@ void sky2_run(void)
     f32 diff;
     f32 scale;
 
-    best = *(SkyVec3*)lbl_802C1F98;
+    best = lbl_802C1F98;
     r = lbl_803DF108;
     g = r;
     b = r;

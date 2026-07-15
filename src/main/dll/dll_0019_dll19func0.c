@@ -66,9 +66,15 @@ typedef struct Dll19Placement
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
+typedef struct Dll19ChildObjectIdTable
+{
+    s16 ids[5];
+} Dll19ChildObjectIdTable;
+
+STATIC_ASSERT(sizeof(Dll19ChildObjectIdTable) == 0xA);
+
 extern const f32 lbl_803E1C2C;
-__declspec(section ".rodata") u8 lbl_802C2190[16] = {
-    0x00, 0x23, 0x00, 0x69, 0x00, 0x33, 0x00, 0x64, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+const Dll19ChildObjectIdTable lbl_802C2190 = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern f32 lbl_803E1C48;
 extern const f32 lbl_803E1C6C;
 extern f32 lbl_803E1C64;
@@ -215,15 +221,7 @@ void dll_19_func0D(GameObject* obj, int state, f32 gravity, s8 field25f)
 
 void dll_19_func19(u8* cam, u8* ctx)
 {
-    struct Cfg8
-    {
-        u32 w0;
-        u32 w1;
-    };
-    s16 buf[5];
-
-    *(struct Cfg8*)&buf[0] = *(struct Cfg8*)lbl_802C2190;
-    *(u16*)&buf[4] = *(u16*)(lbl_802C2190 + 8);
+    Dll19ChildObjectIdTable childObjectIds = lbl_802C2190;
 
     if ((s8)ctx[1031] == (s8)ctx[1033])
     {
@@ -242,7 +240,7 @@ void dll_19_func19(u8* cam, u8* ctx)
     {
         if ((s8)ctx[1031] > 0)
         {
-            ObjPlacement* setup = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
+            ObjPlacement* setup = Obj_AllocObjectSetup(24, childObjectIds.ids[(s8)ctx[1031] - 1]);
             *(int*)&((GameObject*)cam)->childObjs[0] = (int)Obj_SetupObject(
                 setup, 4, -1, -1, ((GameObject*)cam)->anim.parent);
             *(u16*)(*(int*)&((GameObject*)cam)->childObjs[0] + 0xb0) = ((GameObject*)cam)->objectFlags & 7;
