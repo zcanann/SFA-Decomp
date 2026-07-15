@@ -104,6 +104,7 @@ main/mm.c:
 
 main/model.c:
 	.text       start:0x8002430C end:0x8002A5D4
+	.rodata     start:0x802C1AE8 end:0x802C1B00
 	.data       start:0x802CABB8 end:0x802CABF8
 	.bss        start:0x80340740 end:0x803408A8
 	.sdata      start:0x803DB440 end:0x803DB448
@@ -145,6 +146,7 @@ main/objprint.c:
 
 main/objprint_dolphin.c:
 	.text       start:0x8003D6F8 end:0x800443CC
+	.rodata     start:0x802C1B70 end:0x802C1C50
 	.data       start:0x802CAED0 end:0x802CAF48
 	.bss        start:0x80342E10 end:0x8035EF48
 	.sdata      start:0x803DB468 end:0x803DB4A0
