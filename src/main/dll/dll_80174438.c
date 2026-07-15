@@ -23,23 +23,23 @@ extern u32 fn_80174BFC();
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
 extern void pushable_handleMsgs(int obj, int p2);
-extern f32 lbl_803E352C;
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
-extern f32 lbl_803E3540;
-extern f32 lbl_803E3544;
-extern f32 lbl_803E3548;
-extern f32 lbl_803E354C;
-extern f32 lbl_803E3550;
-extern f32 lbl_803E3554;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E355C;
-extern f32 lbl_803E3560;
-extern f32 lbl_803E3564;
-extern f32 lbl_803E3568;
-extern f32 lbl_803E356C;
-extern f32 lbl_803E3570;
-extern f32 lbl_803E3528;
+#define PUSHABLE_ZERO 0.0f
+#define CURTAIN_TRIGGER_X_OFFSET -175.0f
+#define CURTAIN_POSITION_X_OFFSET 188.0
+#define CURTAIN_POSITION_Z_OFFSET 186.0
+#define MAGIC_GEM_INITIAL_DISTANCE 10000.0f
+#define MAGIC_GEM_ROOT_MOTION_CUTOFF 0.001f
+#define MAGIC_GEM_ROOT_MOTION_DECAY 0.02f
+#define MAGIC_GEM_HIDE_Y_OFFSET 300.0f
+#define MAGIC_GEM_EYE_OPEN_MIN 150.0f
+#define MAGIC_GEM_NEGATE -1.0f
+#define MAGIC_GEM_NEAR_Z_MIN 10.0f
+#define MAGIC_GEM_NEAR_X_MAX 30.0f
+#define MAGIC_GEM_NEAR_Z_MAX 40.0f
+#define MAGIC_GEM_BLINK_INTERVAL_SCALE 0.01f
+#define MAGIC_GEM_EYE_OPEN_MAX 225.0f
+#define MAGIC_GEM_EYE_POSITION_MAX 255.0f
+#define MAGIC_GEM_BLINK_SCALE_BASE 0.25f
 
 int fn_80174438(int obj, PushableState* state)
 {
@@ -59,13 +59,13 @@ int fn_80174438(int obj, PushableState* state)
     {
         fn_80174BFC(obj, state);
     }
-    if (((GameObject*)obj)->anim.localPosX <= lbl_803E352C + ((ObjPlacement*)def)->posX)
+    if (((GameObject*)obj)->anim.localPosX <= CURTAIN_TRIGGER_X_OFFSET + ((ObjPlacement*)def)->posX)
     {
         mainSetBits(state->gameBit, 1);
         state->flags |= 0x80;
-        ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - lbl_803E3530);
+        ((GameObject*)obj)->anim.localPosX = (f32)(((ObjPlacement*)def)->posX - CURTAIN_POSITION_X_OFFSET);
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
-        ((GameObject*)obj)->anim.localPosZ = (f32)(lbl_803E3538 + ((ObjPlacement*)def)->posZ);
+        ((GameObject*)obj)->anim.localPosZ = (f32)(CURTAIN_POSITION_Z_OFFSET + ((ObjPlacement*)def)->posZ);
         Sfx_PlayFromObject(obj, SFXTRIG_curtainopen16);
     }
     if (mainGetBit(0xa1a) != 0)
@@ -112,29 +112,28 @@ int fn_80174668(GameObject *obj, PushableState* state)
 {
     u8 flag;
     ObjTextureRuntimeSlot* tex;
-    f32 dy;
-    f32 dx;
     f32 cur;
+    f32 dx;
+    f32 dy;
     f32 bound;
     f32 eyeScaledX;
     f32 eyeScaledY;
     f32 dist[2];
 
     flag = 0;
-    dist[0] = lbl_803E3540;
+    dist[0] = MAGIC_GEM_INITIAL_DISTANCE;
     pushable_handleMsgs((int)obj, 0);
     if (mainGetBit(state->gameBit) != 0)
     {
         cur = (obj)->anim.rootMotionScale;
-        bound = lbl_803E3544;
+        bound = MAGIC_GEM_ROOT_MOTION_CUTOFF;
         if (cur > bound)
         {
-            (obj)->anim.rootMotionScale = -(lbl_803E3548 * timeDelta - (obj)->anim.
-                rootMotionScale);
+            obj->anim.rootMotionScale -= MAGIC_GEM_ROOT_MOTION_DECAY * timeDelta;
             if ((obj)->anim.rootMotionScale <= bound)
             {
-                (obj)->anim.rootMotionScale = lbl_803E3528;
-                (obj)->anim.localPosY = (obj)->anim.localPosY - lbl_803E354C;
+                (obj)->anim.rootMotionScale = PUSHABLE_ZERO;
+                obj->anim.localPosY -= MAGIC_GEM_HIDE_Y_OFFSET;
                 *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
@@ -148,52 +147,52 @@ int fn_80174668(GameObject *obj, PushableState* state)
     {
         return 0;
     }
-    if (state->eyeOpenAmount < lbl_803E3550)
+    if (state->eyeOpenAmount < MAGIC_GEM_EYE_OPEN_MIN)
     {
-        state->eyeOpenAmount = *(f32 *)&lbl_803E3550;
+        state->eyeOpenAmount = MAGIC_GEM_EYE_OPEN_MIN;
     }
     dy = ((GameObject*)state->nearestObj)->anim.localPosZ - (obj)->anim.localPosZ;
-    if (dy < lbl_803E3528)
+    if (dy < PUSHABLE_ZERO)
     {
-        dy = dy * lbl_803E3554;
+        dy *= MAGIC_GEM_NEGATE;
     }
     cur = state->unk_F0;
-    if (cur < lbl_803E3558 + dy)
+    if (cur < MAGIC_GEM_NEAR_Z_MIN + dy)
     {
         return 0;
     }
     dx = ((GameObject*)state->nearestObj)->anim.localPosX - (obj)->anim.localPosX;
-    if (dx < *(f32 *)&lbl_803E3528)
+    if (dx < PUSHABLE_ZERO)
     {
-        dx = dx * lbl_803E3554;
+        dx *= MAGIC_GEM_NEGATE;
     }
-    if (dx > lbl_803E355C)
+    if (dx > MAGIC_GEM_NEAR_X_MAX)
     {
         return 0;
     }
-    if ((cur >= lbl_803E3558 + dy) && (cur <= lbl_803E3560 + dy))
+    if ((cur >= MAGIC_GEM_NEAR_Z_MIN + dy) && (cur <= MAGIC_GEM_NEAR_Z_MAX + dy))
     {
         flag = 1;
         mainSetBits(0x1c9, 1);
     }
     tex = objFindTexture(obj, 0, 0);
-    state->blinkPhase = state->blinkStep * timeDelta + state->blinkPhase;
+    state->blinkPhase += state->blinkStep * timeDelta;
     if (state->blinkPhase >= state->blinkInterval)
     {
-        state->blinkStep = state->blinkStep * lbl_803E3554;
+        state->blinkStep *= MAGIC_GEM_NEGATE;
     }
-    else if (state->blinkPhase < lbl_803E3528)
+    else if (state->blinkPhase < PUSHABLE_ZERO)
     {
-        state->blinkInterval = lbl_803E3564 * (f32)(int)
+        state->blinkInterval = MAGIC_GEM_BLINK_INTERVAL_SCALE * (f32)(int)
         randomGetRange(0x19, 0x4b);
         state->blinkStep = state->blinkInterval / (f32)(int)
         randomGetRange(0x28, 0x46);
-        state->blinkPhase = lbl_803E3528;
+        state->blinkPhase = PUSHABLE_ZERO;
     }
     if (tex != NULL)
     {
-        state->eyeOpenAmount = state->eyeOpenAmount + state->eyeOpenSpeed;
-        if (state->eyeOpenAmount >= lbl_803E3568)
+        state->eyeOpenAmount += state->eyeOpenSpeed;
+        if (state->eyeOpenAmount >= MAGIC_GEM_EYE_OPEN_MAX)
         {
             mainSetBits(state->gameBit, 1);
             if (flag)
@@ -208,26 +207,26 @@ int fn_80174668(GameObject *obj, PushableState* state)
         }
         else
         {
-            state->eyePosX = state->eyePosX + state->eyeDriftSpeedX;
-            if (state->eyePosX > lbl_803E356C)
+            state->eyePosX += state->eyeDriftSpeedX;
+            if (state->eyePosX > MAGIC_GEM_EYE_POSITION_MAX)
             {
-                state->eyePosX = lbl_803E356C;
+                state->eyePosX = MAGIC_GEM_EYE_POSITION_MAX;
             }
-            else if (state->eyePosX < lbl_803E3528)
+            else if (state->eyePosX < PUSHABLE_ZERO)
             {
-                state->eyePosX = lbl_803E356C;
+                state->eyePosX = MAGIC_GEM_EYE_POSITION_MAX;
             }
-            state->eyePosY = state->eyePosY + state->eyeDriftSpeedY;
-            if (state->eyePosY > lbl_803E356C)
+            state->eyePosY += state->eyeDriftSpeedY;
+            if (state->eyePosY > MAGIC_GEM_EYE_POSITION_MAX)
             {
-                state->eyePosY = lbl_803E356C;
+                state->eyePosY = MAGIC_GEM_EYE_POSITION_MAX;
             }
-            else if (state->eyePosY < lbl_803E3528)
+            else if (state->eyePosY < PUSHABLE_ZERO)
             {
-                state->eyePosY = lbl_803E356C;
+                state->eyePosY = MAGIC_GEM_EYE_POSITION_MAX;
             }
-            eyeScaledX = state->eyePosX * (lbl_803E3570 + state->blinkPhase);
-            eyeScaledY = state->eyePosY * (lbl_803E3570 + state->blinkPhase);
+            eyeScaledX = state->eyePosX * (MAGIC_GEM_BLINK_SCALE_BASE + state->blinkPhase);
+            eyeScaledY = state->eyePosY * (MAGIC_GEM_BLINK_SCALE_BASE + state->blinkPhase);
             tex->colorR = (u8)(int)state->eyeOpenAmount;
             tex->colorG = (u8)(int)eyeScaledX;
             tex->colorB = (u8)(int)eyeScaledY;

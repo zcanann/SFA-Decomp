@@ -1575,6 +1575,7 @@ main/dll/dll_00EE_effectbox.c:
 
 main/dll/dll_80174438.c:
 	.text       start:0x80174438 end:0x80174A80
+	.sdata2     start:0x803E3528 end:0x803E3580
 
 main/dll/dll_00EF_pushable.c:
 	.text       start:0x80174A80 end:0x80176FC4
@@ -1582,7 +1583,7 @@ main/dll/dll_00EF_pushable.c:
 	.data       start:0x80320D48 end:0x80320DB8
 	.bss        start:0x803AC6E0 end:0x803AC780
 	.sbss       start:0x803DDAB8 end:0x803DDAC0
-	.sdata2     start:0x803E3528 end:0x803E35D8
+	.sdata2     start:0x803E3580 end:0x803E35D8
 
 main/dll/dll_00F0_warppoint.c:
 	.text       start:0x80176FC4 end:0x8017779C
