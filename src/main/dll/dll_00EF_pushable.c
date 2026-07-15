@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_play_int_return_legacy_api.h"
 #include "main/object_api.h"
+#include "main/camera.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -89,25 +90,53 @@ typedef void (*PushableAddContactObjectFn)(int obj, void* contactObj);
 #define PUSHABLE_OBJGROUP 5
 
 
-extern f32 lbl_803E3528;
-extern f32 lbl_803E3588;
-extern f32 lbl_803E3598;
-extern f32 lbl_803E3564;
-extern f32 lbl_803E356C;
-extern f32 lbl_803E3580;
-extern f32 lbl_803E3584;
+const f32 lbl_803E3528 = 0.0f;
+const f32 lbl_803E352C = -175.0f;
+const f64 lbl_803E3530 = 188.0;
+const f64 lbl_803E3538 = 186.0;
+const f32 lbl_803E3540 = 10000.0f;
+const f32 lbl_803E3544 = 0.001f;
+const f32 lbl_803E3548 = 0.02f;
+const f32 lbl_803E354C = 300.0f;
+const f32 lbl_803E3550 = 150.0f;
+const f32 lbl_803E3554 = -1.0f;
+const f32 lbl_803E3558 = 10.0f;
+const f32 lbl_803E355C = 30.0f;
+const f32 lbl_803E3560 = 40.0f;
+const f32 lbl_803E3564 = 0.01f;
+const f32 lbl_803E3568 = 225.0f;
+const f32 lbl_803E356C = 255.0f;
+const f32 lbl_803E3570 = 0.25f;
+const f32 lbl_803E3574 = 0.0f;
+const f64 lbl_803E3578 = 4503601774854144.0;
+const f32 lbl_803E3580 = 1.2f;
+const f32 lbl_803E3584 = 0.6f;
+const f32 lbl_803E3588 = 1.0f;
+const f32 lbl_803E358C = 0.5f;
+const f32 gPushablePi = 3.1415927410125732f;
+const f32 gPushableYawHalfCircle = 32768.0f;
+const f32 lbl_803E3598 = 4.0f;
+const f32 lbl_803E359C = 15.0f;
+const f32 lbl_803E35A0 = 8.0f;
+const f32 lbl_803E35A4 = 9.5f;
+const f32 lbl_803E35A8 = 0.985f;
+const f32 lbl_803E35AC = 0.94f;
+const f32 lbl_803E35B0 = 0.05f;
+const f32 lbl_803E35B4 = -0.05f;
+const f32 lbl_803E35B8 = 0.1f;
+const f32 lbl_803E35BC = 200.0f;
+const f32 lbl_803E35C0 = 50.0f;
+const f32 lbl_803E35C4 = 0.707f;
+const f32 lbl_803E35C8 = 20.0f;
+const f32 gPushableU16ScaleDenom = 65535.0f;
+const f64 lbl_803E35D0 = 4503599627370496.0;
 
 extern void memcpy(void* dst, void* src, int n);
-extern f32 lbl_803E358C;
-extern f32 gPushablePi;
-extern f32 gPushableYawHalfCircle;
 int gPushableSavedMapIdCount;
 int gPushableSavedMapIds[0x28];
 extern void pushable_savePos(int* obj);
 extern int fn_80174668(GameObject* obj, PushableState* state);
 extern void fn_80174438(int* obj, PushableState* state);
-extern f64 lbl_803E3530;
-extern f64 lbl_803E3538;
 extern int modelFileHeaderGetCullDistance(int hdr);
 
 int pushable_render2(GameObject* obj);
@@ -140,23 +169,8 @@ ObjectDescriptor14 gPushableObjDescriptor = {
 
 char sPushPullObjectHitpointOverflow[] = "PUSHPULL OBJECT: hitpoint overflow\n";
 extern void fn_8007FE04(int* array, int* count, int value);
-extern f32 gPushableU16ScaleDenom;
-extern f32 lbl_803E3558;
-extern f32 lbl_803E3540;
 const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
-extern f32 lbl_803E35A8;
-extern f32 lbl_803E35AC;
-extern f32 lbl_803E35B0;
-extern f32 lbl_803E35B4;
-extern f32 lbl_803E35B8;
-extern f32 lbl_803E35BC;
-extern f32 lbl_803E35C0;
-extern f32 lbl_803E35C4;
-extern f32 lbl_803E35C8;
-extern f32 lbl_803E359C;
-extern f32 lbl_803E35A0;
-extern f32 lbl_803E35A4;
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
 
 void fn_80174A80(GameObject* obj, PushableState* ext)
 {
@@ -865,34 +879,31 @@ void pushable_init(s16* obj, char* def)
     }
 }
 
-#pragma opt_common_subs off
 void pushable_hitDetect(GameObject* obj)
 {
-    int i;
+    TrackGroundHit* groundHit;
+    s8 hitCount;
     GameObject* player;
     PushableState* state;
-    f32* wp;
-    f32* hp;
-    int cnt2;
-    s8 cnt;
-    int cntE;
-    f32* w;
-    u8* e;
-    f32 acc;
-    f32 wpos[12];
-    f32 mtx[16];
+    int j;
+    int groundPointCount;
+    int waterHitCount;
+    int i;
+    f32 waterDepthSum;
+    PushablePoint worldPoints[4];
+    f32 transformMtx[16];
     TrackQueryBounds sweep;
-    MatrixTransform vec;
-    f32 hp4[4];
-    PushableRadii box;
-    TrackGroundHit** list;
-    f32 tmpY;
+    MatrixTransform transform;
+    f32 groundHeights[4];
+    PushableRadii radii;
+    TrackGroundHit** groundHits;
+    f32 groundHeightSum;
 
-    box = gPushableDefaultBox;
+    radii = gPushableDefaultBox;
     player = Obj_GetPlayerObject();
     state = obj->extra;
-    state->timer_0x110 = state->timer_0x110 - timeDelta;
-    if (state->timer_0x110 <= *(f32*)&lbl_803E3528)
+    state->timer_0x110 -= timeDelta;
+    if (state->timer_0x110 <= lbl_803E3528)
     {
         state->timer_0x110 = lbl_803E3528;
     }
@@ -907,34 +918,34 @@ void pushable_hitDetect(GameObject* obj)
         {
             k = lbl_803E35AC;
         }
-        state->pushAmountX = state->pushAmountX * k;
+        state->pushAmountX *= k;
         if (state->pushAmountX < lbl_803E35B0 && state->pushAmountX > lbl_803E35B4)
         {
             state->pushAmountX = lbl_803E3528;
         }
-        state->pushAmountZ = state->pushAmountZ * k;
+        state->pushAmountZ *= k;
         if (state->pushAmountZ < lbl_803E35B0 && state->pushAmountZ > lbl_803E35B4)
         {
             state->pushAmountZ = lbl_803E3528;
         }
         if (lbl_803E3528 != state->pushAmountX || lbl_803E3528 != state->pushAmountZ)
         {
-            vec.rotX = state->yaw;
-            vec.rotY = 0;
-            vec.rotZ = 0;
-            vec.scale = lbl_803E3588;
-            vec.x = 0.0f;
-            vec.y = 0.0f;
-            vec.z = 0.0f;
-            setMatrixFromObjectPos(mtx, &vec);
-            Matrix_TransformPoint(mtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX, (f32*)((char*)obj + 0x24),
-                                  &tmpY, (f32*)((char*)obj + 0x2c));
-            objMove((GameObject*)obj, ((PushableObjPos*)obj)->vx, lbl_803E3528, ((PushableObjPos*)obj)->vz);
+            transform.rotX = state->yaw;
+            transform.rotY = 0;
+            transform.rotZ = 0;
+            transform.scale = lbl_803E3588;
+            transform.x = 0.0f;
+            transform.y = 0.0f;
+            transform.z = 0.0f;
+            setMatrixFromObjectPos(transformMtx, &transform);
+            Matrix_TransformPoint(transformMtx, state->pushAmountZ, lbl_803E3528, state->pushAmountX,
+                                  &obj->anim.velocityX, &groundHeightSum, &obj->anim.velocityZ);
+            objMove(obj, obj->anim.velocityX, lbl_803E3528, obj->anim.velocityZ);
             if ((state->flags & 4) == 0)
             {
                 fn_80174BFC(obj, (int)state);
             }
-            state->flags = state->flags | PUSHABLE_FLAG_MOVING_Y;
+            state->flags |= PUSHABLE_FLAG_MOVING_Y;
         }
     }
     state->moveFlags.b6 = 1;
@@ -966,94 +977,84 @@ void pushable_hitDetect(GameObject* obj)
     }
     if ((state->flags & 4) != 0)
     {
-        obj->anim.velocityY = -(lbl_803E35B8 * timeDelta - obj->anim.velocityY);
-        obj->anim.localPosY = obj->anim.velocityY * timeDelta + obj->anim.localPosY;
+        obj->anim.velocityY -= lbl_803E35B8 * timeDelta;
+        obj->anim.localPosY += obj->anim.velocityY * timeDelta;
     }
     if ((state->flags & PUSHABLE_FLAG_MOVING_Y) != 0 || (state->flags & 4) != 0)
     {
         Obj_BuildTransformMatrices(obj);
-        i = 0;
-        wp = wpos;
-        w = wp;
-        e = (u8*)state;
-        for (; i < state->pointCount; i++)
+        for (i = 0; i < state->pointCount; i++)
         {
-            Obj_TransformLocalPointToWorld(((PushableState*)e)->cornerLocal[0].x, ((PushableState*)e)->cornerLocal[0].y,
-                                           ((PushableState*)e)->cornerLocal[0].z, w, w + 1, w + 2, (int*)obj);
-            w += 3;
-            e += 0xc;
+            Obj_TransformLocalPointToWorld(state->cornerLocal[i].x, state->cornerLocal[i].y, state->cornerLocal[i].z,
+                                           &worldPoints[i].x, &worldPoints[i].y, &worldPoints[i].z, obj);
         }
-        hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, wpos, box.values, 4);
-        sweep.minY = (int)((f32)sweep.minY - lbl_803E35BC);
-        sweep.maxY = (int)((f32)sweep.maxY + lbl_803E35BC);
+        hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, (f32*)worldPoints, radii.values, 4);
+        sweep.minY -= lbl_803E35BC;
+        sweep.maxY += lbl_803E35BC;
         hitDetectFn_800691c0(obj, &sweep, 1, 1);
-        tmpY = lbl_803E3528;
-        cnt2 = 0;
-        cntE = 0;
-        i = 0;
-        hp = hp4;
-        for (; i < state->pointCount; i++)
+        groundHeightSum = lbl_803E3528;
+        groundPointCount = 0;
+        waterHitCount = 0;
+        for (i = 0; i < state->pointCount; i++)
         {
-            f32 y = wp[1];
-            s8 found;
+            PushablePoint* point = &worldPoints[i];
+            f32* groundHeight = &groundHeights[i];
+            f32 y = point->y;
+            s8 foundGround;
 
-            *hp = y;
-            acc = lbl_803E3528;
-            cnt = (s8)hitDetectFn_80065e50(obj, wp[0], y, wp[2], &list, -1, 0);
-            found = 0;
-            if (cnt != 0)
+            *groundHeight = y;
+            waterDepthSum = lbl_803E3528;
+            hitCount = hitDetectFn_80065e50(obj, point->x, y, point->z, &groundHits, -1, 0);
+            foundGround = 0;
+            if (hitCount != 0)
             {
-                int j = 0;
-                int off = 0;
-                for (; j < cnt; j++)
+                for (j = 0; j < hitCount; j++)
                 {
-                    TrackGroundHit* hit = *(TrackGroundHit**)((u8*)list + off);
-                    if ((s8)hit->surfaceType == 0xe)
+                    groundHit = groundHits[j];
+                    if ((s8)groundHit->surfaceType == 0xe)
                     {
-                        f32 d = hit->height - obj->anim.localPosY;
-                        if (d > lbl_803E3528)
+                        f32 waterDepth = groundHit->height - obj->anim.localPosY;
+                        if (waterDepth > lbl_803E3528)
                         {
-                            acc = acc + d;
-                            cntE++;
+                            waterDepthSum += waterDepth;
+                            waterHitCount++;
                         }
                     }
-                    else if (found == 0)
+                    else if (foundGround == 0)
                     {
-                        f32 probeY = hit->height;
-                        if (probeY < lbl_803E3558 + wp[1] && probeY > wp[1] - lbl_803E35C0 && hit->normalY > lbl_803E35C4)
+                        f32 probeY = groundHit->height;
+                        if (probeY < lbl_803E3558 + point->y && probeY > point->y - lbl_803E35C0 &&
+                            groundHit->normalY > lbl_803E35C4)
                         {
-                            u32 contactObj;
-                            *hp = probeY;
-                            tmpY = tmpY + probeY;
-                            contactObj = (u32)(*(TrackGroundHit**)((u8*)list + off))->object;
-                            if (contactObj != 0)
+                            GameObject* contactObj;
+                            *groundHeight = probeY;
+                            groundHeightSum += probeY;
+                            contactObj = groundHits[j]->object;
+                            if (contactObj != NULL)
                             {
-                                ((PushableAddContactObjectFn)ObjHits_AddContactObject)(contactObj, obj);
+                                ((PushableAddContactObjectFn)ObjHits_AddContactObject)((int)contactObj, obj);
                             }
-                            cnt2++;
-                            found = 1;
+                            groundPointCount++;
+                            foundGround = 1;
                         }
                     }
-                    off += 4;
                 }
             }
-            wp += 3;
-            hp++;
         }
         state->prevWaterDepth = state->waterDepth;
-        if (cntE != 0)
+        if (waterHitCount != 0)
         {
-            state->waterDepth = acc / cntE;
+            state->waterDepth = waterDepthSum / waterHitCount;
         }
         else
         {
             state->waterDepth = lbl_803E3528;
         }
-        if (cnt2 != 0 && state->timer_0x110 <= *(f32*)&lbl_803E3528)
+        if (groundPointCount != 0 && state->timer_0x110 <= lbl_803E3528)
         {
             obj->anim.velocityY = lbl_803E3528;
-            obj->anim.localPosY = lbl_803E358C + tmpY / cnt2;
-            state->flags = state->flags & ~0xc;
+            obj->anim.localPosY = lbl_803E358C + groundHeightSum / groundPointCount;
+            state->flags &= ~0xc;
         }
         else
         {
@@ -1061,21 +1062,17 @@ void pushable_hitDetect(GameObject* obj)
             {
                 state->timer_0x110 = lbl_803E35C8;
             }
-            state->flags = state->flags | 0xc;
+            state->flags |= 0xc;
         }
     }
     Obj_BuildTransformMatrices(obj);
-    i = 0;
-    e = (u8*)state;
-    for (; i < state->pointCount; i++)
+    for (i = 0; i < state->pointCount; i++)
     {
-        Obj_TransformLocalPointToWorld(((PushableState*)e)->probeLocal[0].x, ((PushableState*)e)->probeLocal[0].y,
-                                       ((PushableState*)e)->probeLocal[0].z, (f32*)(e + 0x78), (f32*)(e + 0x7c),
-                                       (f32*)(e + 0x80), (int*)obj);
-        e += 0xc;
+        Obj_TransformLocalPointToWorld(state->probeLocal[i].x, state->probeLocal[i].y, state->probeLocal[i].z,
+                                       &state->cornerWorld[i].x, &state->cornerWorld[i].y, &state->cornerWorld[i].z,
+                                       obj);
     }
 }
-#pragma opt_common_subs reset
 
 int pushable_setScale(int* obj, s16* tgt, int flag, f32 dx, f32 dz)
 {
