@@ -104,17 +104,6 @@ STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
 
-extern f32 lbl_803E5888;
-extern const f32 lbl_803E588C;
-extern f32 lbl_803E5890;
-extern f32 lbl_803E5894;
-extern f32 lbl_803E5898;
-extern f32 lbl_803E589C;
-extern f32 gSbShipGunCannonballSpeedBoost;
-extern f32 gSbShipGunFireCameraShakeMagnitude;
-extern f32 lbl_803E58A8;
-extern f32 gSbShipGunNearSfxRangeThreshold;
-
 int SB_ShipGun_getExtraSize(void)
 {
     return 0x10;
@@ -140,7 +129,7 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     vis = visible;
     if (vis == 0 || state[0xc] == 0 || ((SBShipGunState*)state)->active == 0)
         return;
-    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5888);
+    ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 /* The cannonball setup block (SBShipGunPlacement) doubles as the spawn-
@@ -337,16 +326,16 @@ void SB_ShipGun_update(GameObject* obj)
             if ((((SBShipGunState*)state)->fireTimer < 0) && (Obj_IsLoadingLocked() != 0))
             {
                 Obj_GetWorldPosition((int)obj, &posX, &posY, &posZ);
-                spawnArgs.posX = lbl_803E588C;
-                spawnArgs.posY = lbl_803E588C;
-                spawnArgs.posZ = lbl_803E588C;
-                spawnArgs.scale = lbl_803E5888;
+                spawnArgs.posX = 0.0f;
+                spawnArgs.posY = 0.0f;
+                spawnArgs.posZ = 0.0f;
+                spawnArgs.scale = 1.0f;
                 spawnArgs.rot[0] = ((SBShipGunState*)state)->yawAngle;
                 spawnArgs.rot[1] = 0;
                 spawnArgs.rot[2] = 0;
-                offset.x = lbl_803E5890;
-                offset.y = lbl_803E5894;
-                offset.z = lbl_803E588C;
+                offset.x = 100.0f;
+                offset.y = 135.0f;
+                offset.z = 0.0f;
                 vecRotateZXY(spawnArgs.rot, &offset.x);
                 placement =
                     (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE, SB_CANNONBALL_ALIAS_OBJECT_TYPE);
@@ -360,14 +349,14 @@ void SB_ShipGun_update(GameObject* obj)
                 spawned = Obj_SetupObject((void*)placement, 5, 0xffffffff, 0xffffffff, 0);
                 placement = *state;
                 fdx = ((SBShipGunPlacement*)placement)->targetX - (obj)->anim.worldPosX;
-                fdy = ((SBShipGunPlacement*)placement)->targetY - ((obj)->anim.worldPosY - lbl_803E5898);
+                fdy = ((SBShipGunPlacement*)placement)->targetY - ((obj)->anim.worldPosY - 25.0f);
                 fdz = ((SBShipGunPlacement*)placement)->targetZ - (obj)->anim.worldPosZ;
                 posX = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
-                posX = lbl_803E589C / posX;
+                posX = 10.0f / posX;
                 spawned->anim.velocityX = fdx * posX;
                 spawned->anim.velocityY = fdy * posX;
                 spawned->anim.velocityZ = fdz * posX;
-                boost = gSbShipGunCannonballSpeedBoost;
+                boost = 8.0f;
                 spawned->anim.localPosX = boost * spawned->anim.velocityX + spawned->anim.localPosX;
                 spawned->anim.localPosY = boost * spawned->anim.velocityY + spawned->anim.localPosY;
                 spawned->anim.localPosZ = boost * spawned->anim.velocityZ + spawned->anim.localPosZ;
@@ -375,7 +364,7 @@ void SB_ShipGun_update(GameObject* obj)
                 spawned->unkF4 = SB_SHIPGUN_CANNONBALL_LIFETIME;
                 spawned->unkF8 = *state;
                 Camera_EnableViewYOffset();
-                CameraShake_SetAllMagnitudes(gSbShipGunFireCameraShakeMagnitude);
+                CameraShake_SetAllMagnitudes(0.1f);
                 Sfx_PlayFromObject((int)obj, SB_SHIPGUN_FIRE_ANIM);
                 ((SBShipGunState*)state)->volleyCount += 1;
                 if (((SBShipGunState*)state)->volleyCount == SB_SHIPGUN_VOLLEY_SIZE)
@@ -407,7 +396,7 @@ void SB_ShipGun_update(GameObject* obj)
             ((ObjHitsPriorityState*)(obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             if (*(char*)&((SBShipGunState*)state)->health == '\0')
             {
-                spawnExplosionLegacy((int)obj, lbl_803E5890, 1, 1, 1, 0, 1, 1, 0);
+                spawnExplosionLegacy((int)obj, 100.0f, 1, 1, 1, 0, 1, 1, 0);
                 ((SBShipGunState*)state)->phase = SB_SHIPGUN_PHASE_EXPLODED;
             }
             else
@@ -417,7 +406,7 @@ void SB_ShipGun_update(GameObject* obj)
             break;
         case SB_SHIPGUN_PHASE_EXPLODED:
         {
-            spawnArgs.scale = lbl_803E58A8;
+            spawnArgs.scale = 2.0f;
             spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
             ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
             spawnArgs.posX = spawnArgs.posX - (obj)->anim.worldPosX;
@@ -449,7 +438,7 @@ void SB_ShipGun_update(GameObject* obj)
                     ((SBShipGunState*)state)->fireTimer = 0;
                 }
             }
-            spawnArgs.scale = lbl_803E58A8;
+            spawnArgs.scale = 2.0f;
             spawnArgs.flags = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
             ObjPath_GetPointWorldPosition(obj, 0, &spawnArgs.posX, &spawnArgs.posY, &spawnArgs.posZ, 0);
             spawnArgs.posX = spawnArgs.posX - (obj)->anim.worldPosX;
@@ -466,7 +455,7 @@ void SB_ShipGun_update(GameObject* obj)
         if (*(char*)&((SBShipGunState*)state)->health == '\0')
         {
             dist = Vec_distance(&player->anim.worldPosX, &(obj)->anim.worldPosX);
-            if (dist < gSbShipGunNearSfxRangeThreshold)
+            if (dist < 200.0f)
             {
                 Sfx_PlayFromObject((int)obj, SB_SHIPGUN_RANGE_NEAR_ANIM);
             }
@@ -489,18 +478,6 @@ void SB_ShipGun_init(GameObject* obj)
     state->volleyCount = 0;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E5888 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") const f32 lbl_803E588C = 0.0f;
-#pragma explicit_zero_data reset
-__declspec(section ".sdata2") f32 lbl_803E5890 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E5894 = 135.0f;
-__declspec(section ".sdata2") f32 lbl_803E5898 = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E589C = 10.0f;
-__declspec(section ".sdata2") f32 gSbShipGunCannonballSpeedBoost = 8.0f;
-__declspec(section ".sdata2") f32 gSbShipGunFireCameraShakeMagnitude = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E58A8 = 2.0f;
-__declspec(section ".sdata2") f32 gSbShipGunNearSfxRangeThreshold = 200.0f;
 
 ObjectDescriptor gSB_ShipGunObjDescriptor = {
     0,

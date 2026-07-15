@@ -10,6 +10,9 @@
 #include "main/camera.h"
 #include "main/sky_state.h"
 #include "dolphin/gx/GXGeometry.h"
+#include "dolphin/gx/GXTev.h"
+#include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXCull.h"
 #include "main/dll/dll_801e991c.h"
 
 #define GX_BM_BLEND       1
@@ -28,14 +31,10 @@
 #define GX_VTXFMT2        2
 
 int lbl_803DDC60;
-extern ShColor lbl_803E5AE4;
+extern GXColor lbl_803E5AE4;
 extern const f32 lbl_803E5AE8;
 extern const f32 lbl_803E5AEC;
 
-extern void GXSetTevColor(int reg, ShColor color);
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int mode);
 extern void GXLoadPosMtxImm(f32* m, int id);
 extern void GXSetCurrentMtx(u32 id);
 
@@ -72,7 +71,7 @@ void fn_801E991C(int p1, char* table)
     u8 r;
     u8 g;
     u8 b;
-    ShColor color;
+    GXColor color;
     f32* verts;
     char* p;
     int i;

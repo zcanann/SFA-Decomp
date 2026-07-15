@@ -21,6 +21,7 @@
 #include "main/object.h"
 #include "main/dll/dll_00FE_magicplant.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/dll/objfsa.h"
 #include "main/dll/dll_0014_api.h"
 #include "main/gamebits.h"
 #include "main/obj_group.h"
@@ -50,8 +51,6 @@ typedef struct TrickyWarpCurveNode
 #define ROMCURVE_TYPE_TRICKYWARP '$'
 
 extern f32 lbl_803E38A0;
-
-extern int Objfsa_GetWalkGroupIndexAtPoint(f32* pos, int mode);
 
 void TrickyWarp_free(GameObject* obj)
 {
