@@ -457,7 +457,7 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)player)->anim.localPosX;
             dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)player)->anim.localPosZ;
             len = sqrtf(dx * dx + dz * dz);
-            if (len != lbl_803E3528)
+            if (len)
             {
                 dx = dx / len;
                 dz = dz / len;
@@ -770,46 +770,41 @@ void pushable_init(s16* obj, char* def)
     {
         for (i = 0; i < state->pointCount; i++)
         {
-            f32 coord;
             state->probeLocal[i].x = state->cornerLocal[i].x;
             state->probeLocal[i].y = state->cornerLocal[i].y;
             state->probeLocal[i].z = state->cornerLocal[i].z;
-            coord = state->probeLocal[i].x;
-            if (coord < 0.0f)
+            if (state->probeLocal[i].x < 0.0f)
             {
-                state->probeLocal[i].x = coord + lbl_803E358C;
+                state->probeLocal[i].x += lbl_803E358C;
             }
             else
             {
-                state->probeLocal[i].x = coord - lbl_803E358C;
+                state->probeLocal[i].x -= lbl_803E358C;
             }
-            coord = state->probeLocal[i].z;
-            if (coord < 0.0f)
+            if (state->probeLocal[i].z < 0.0f)
             {
-                state->probeLocal[i].z = coord + lbl_803E358C;
-            }
-            else
-            {
-                state->probeLocal[i].z = coord - lbl_803E358C;
-            }
-            coord = state->cornerLocal[i].x;
-            if (coord < 0.0f)
-            {
-                state->cornerLocal[i].x = coord + lbl_803E3588;
+                state->probeLocal[i].z += lbl_803E358C;
             }
             else
             {
-                state->cornerLocal[i].x = coord - lbl_803E3588;
+                state->probeLocal[i].z -= lbl_803E358C;
+            }
+            if (state->cornerLocal[i].x < 0.0f)
+            {
+                state->cornerLocal[i].x += lbl_803E3588;
+            }
+            else
+            {
+                state->cornerLocal[i].x -= lbl_803E3588;
                 state->cornerIdxPosX = i;
             }
-            coord = state->cornerLocal[i].z;
-            if (coord < 0.0f)
+            if (state->cornerLocal[i].z < 0.0f)
             {
-                state->cornerLocal[i].z = coord + lbl_803E3588;
+                state->cornerLocal[i].z += lbl_803E3588;
             }
             else
             {
-                state->cornerLocal[i].z = coord - lbl_803E3588;
+                state->cornerLocal[i].z -= lbl_803E3588;
                 state->cornerIdxPosZ = i;
             }
             Matrix_TransformPoint(mtx, state->probeLocal[i].x, state->probeLocal[i].y, state->probeLocal[i].z,
