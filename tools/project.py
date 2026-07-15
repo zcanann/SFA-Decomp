@@ -671,7 +671,6 @@ def generate_build_ninja(
         sys.exit("ProjectConfig.binutils_tag missing")
     objcopy = binutils / f"powerpc-eabi-objcopy{EXE}"
     objcopy_implicit = binutils_implicit or objcopy
-    relocatable_linker = binutils / f"powerpc-eabi-ld{EXE}"
 
     n.newline()
 
@@ -1081,7 +1080,7 @@ def generate_build_ninja(
                 variables["section_align_cmd"] = (
                     f"&& $python {serialize_path(section_realign)} "
                     f"{serialize_path(obj.src_obj_path)}"
-                    f" {serialize_path(objcopy)} {serialize_path(relocatable_linker)}"
+                    f" {serialize_path(objcopy)}"
                     f" {alignment_flags}"
                 )
 

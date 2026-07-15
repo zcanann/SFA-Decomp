@@ -87,6 +87,62 @@ void* gNW_levcontrolObjDescriptor[14] = {
     (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
     (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
 
+#pragma dont_inline on
+int fn_801CFD68(u8* stateBytes)
+{
+    extern s32 lbl_803269F8[];
+    NwLevControlState* state = (NwLevControlState*)stateBytes;
+    s32* table;
+    int obj;
+
+    table = lbl_803269F8;
+    obj = (int)ObjList_FindObjectById(table[state->tableIndex]);
+    if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
+    {
+        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+        state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
+        state->seqId = table[state->tableIndex + 7];
+        state->nextMode = table[state->tableIndex + 0xe];
+        state->tableIndex++;
+        state->timerMinutes = 0x1e;
+        return 1;
+    }
+
+    if (state->tableIndex != 0)
+    {
+        obj = (int)ObjList_FindObjectById(table[state->tableIndex - 1]);
+        if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
+        {
+            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
+            state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
+            state->seqId = table[state->tableIndex + 6];
+            state->timerMinutes = 0;
+            return 2;
+        }
+    }
+
+    return 0;
+}
+#pragma dont_inline reset
+
+int nw_levcontrol_getExtraSize(void)
+{
+    return 0x14;
+}
+
+/* On free, restore the default environment fx (only if this slot's object
+ * group is no longer active) and always stop the challenge timer. */
+void nw_levcontrol_free(GameObject* obj)
+{
+    s8 slot = obj->anim.mapEventSlot;
+    int groupStatus = (*gMapEventInterface)->getObjGroupStatus((s32)slot, 0);
+    if ((u8)groupStatus == 0)
+    {
+        envFxActFn_800887f8(0);
+    }
+    gameTimerStop();
+}
+
 void nw_levcontrol_update(int objArg)
 {
     int obj;
@@ -316,63 +372,11 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setObjGroupStatus(7, 9, 1);
 }
 
-int fn_801CFD68(u8* stateBytes)
-{
-    extern s32 lbl_803269F8[];
-    NwLevControlState* state = (NwLevControlState*)stateBytes;
-    s32* table;
-    int obj;
-
-    table = lbl_803269F8;
-    obj = (int)ObjList_FindObjectById(table[state->tableIndex]);
-    if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
-    {
-        (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
-        state->seqId = table[state->tableIndex + 7];
-        state->nextMode = table[state->tableIndex + 0xe];
-        state->tableIndex++;
-        state->timerMinutes = 0x1e;
-        return 1;
-    }
-
-    if (state->tableIndex != 0)
-    {
-        obj = (int)ObjList_FindObjectById(table[state->tableIndex - 1]);
-        if (ObjTrigger_IsSetById(obj, 0x1ee) != 0)
-        {
-            (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            state->mode = NWLEVCONTROL_MODE_WAIT_MENU_LOCK;
-            state->seqId = table[state->tableIndex + 6];
-            state->timerMinutes = 0;
-            return 2;
-        }
-    }
-
-    return 0;
-}
-
-int nw_levcontrol_getExtraSize(void)
-{
-    return 0x14;
-}
-
-/* On free, restore the default environment fx (only if this slot's object
- * group is no longer active) and always stop the challenge timer. */
-void nw_levcontrol_free(GameObject* obj)
-{
-    s8 slot = obj->anim.mapEventSlot;
-    int groupStatus = (*gMapEventInterface)->getObjGroupStatus((s32)slot, 0);
-    if ((u8)groupStatus == 0)
-    {
-        envFxActFn_800887f8(0);
-    }
-    gameTimerStop();
-}
-
+#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5278 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E527C = 60.0f;
 __declspec(section ".sdata2") f32 lbl_803E5280 = 300.0f;
 __declspec(section ".sdata2") f32 lbl_803E5284 = 0.0f;
 #pragma explicit_zero_data reset
+#pragma force_active reset

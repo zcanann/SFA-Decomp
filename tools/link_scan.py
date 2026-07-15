@@ -316,10 +316,6 @@ def main():
         if sb != so:
             rejected.append((sp, f"section-size {sb} vs {so}"))
             continue
-        ab, ao = section_alignments(built), section_alignments(orig)
-        if ab != ao:
-            rejected.append((sp, f"section-alignment {ab} vs {ao}"))
-            continue
         if any(
             name not in BSS_SECTIONS and section_bytes(built, name) != section_bytes(orig, name)
             for name in sb
@@ -354,6 +350,10 @@ def main():
                 if built_external.get(name) != orig_external.get(name)
             )
             rejected.append((sp, f"cross-object-symbol {changed[:3]}"))
+            continue
+        ab, ao = section_alignments(built), section_alignments(orig)
+        if ab != ao:
+            rejected.append((sp, f"section-alignment {ab} vs {ao}"))
             continue
         dead_bss = []
         for section in BSS_SECTIONS & sb.keys():
