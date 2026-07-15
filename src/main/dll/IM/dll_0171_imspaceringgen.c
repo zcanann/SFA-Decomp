@@ -30,8 +30,6 @@
 #define IMSPACERINGGEN_CHILD_OBJ_RING_PIECE 0x301
 
 extern GameObject* lbl_803DDB48;
-__declspec(section ".sdata2") f32 lbl_803E47C0 = 1.0f; /* render scale */
-__declspec(section ".sdata2") f32 lbl_803E47C4 = 9.0f; /* Y offset applied when chasing ring A */
 int IMSpaceRingGen_getExtraSize(void)
 {
     return 0xc;
@@ -51,7 +49,7 @@ void IMSpaceRingGen_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
     u8* state = ((GameObject*)obj)->extra;
     if (visible != 0 && (state[8] != 0 || ((GameObject*)obj)->anim.alpha != 0))
     {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, lbl_803E47C0);
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
@@ -137,7 +135,7 @@ void IMSpaceRingGen_update(GameObject* obj)
             obj->unkF4 = 1;
         }
         objMove((GameObject*)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
-                (lbl_803E47C4 + state->ringA->anim.localPosY) - obj->anim.localPosY,
+                (9.0f + state->ringA->anim.localPosY) - obj->anim.localPosY,
                 state->ringA->anim.localPosZ - obj->anim.localPosZ);
         obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x100;
         obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x20;

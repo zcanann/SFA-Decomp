@@ -12,8 +12,6 @@
 
 #define MCLIGHTNING_OBJGROUP 0x48
 
-__declspec(section ".sdata2") f32 lbl_803E7440 = 0.01f;
-
 int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     McLightningState* state = obj->extra;
@@ -24,11 +22,11 @@ int mclightning_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
         {
         case MCLIGHTNING_PHASE_READ_PARAM_A:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_B;
-            state->boltParamA = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
+            state->boltParamA = 0.01f * (f32)(u32)animUpdate->eventIds[i];
             break;
         case MCLIGHTNING_PHASE_READ_PARAM_B:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_C;
-            state->boltParamB = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
+            state->boltParamB = 0.01f * (f32)(u32)animUpdate->eventIds[i];
             break;
         case MCLIGHTNING_PHASE_READ_PARAM_C:
             state->flags.phase = MCLIGHTNING_PHASE_READ_PARAM_D;

@@ -21,6 +21,7 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/vecmath_distance_api.h"
+#include "main/lightmap_api.h"
 
 /* per-critter packed flags at byte 0x58; bits 27..30 hold a countdown mode */
 struct CritterFlags
@@ -36,7 +37,6 @@ struct CritterFlags
 extern f32 lbl_803E242C; /* initial search radius for ObjGroup_FindNearestObject */
 extern f32 lbl_803E24C4; /* squared eating-range threshold */
 
-extern int coordsToMapCell(u8* p, f32 a, f32 b);
 int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
 {
     int result = 0;
@@ -60,8 +60,7 @@ int trickyFoodFn_8013db3c(u8* tricky, u8* critter)
 
         if ((((GameObject*)levelObj)->objectFlags & MMPCRITTERSPIT_OBJFLAG_PARENT_SLACK) != 0)
         {
-            if (coordsToMapCell(levelObj, ((GameObject*)tricky)->anim.localPosX,
-                                ((GameObject*)tricky)->anim.localPosZ) == 0x38)
+            if (coordsToMapCell(((GameObject*)tricky)->anim.localPosX, ((GameObject*)tricky)->anim.localPosZ) == 0x38)
             {
                 if ((mainGetBit(0x385) == 0) && (mainGetBit(0x384) != 0))
                 {
