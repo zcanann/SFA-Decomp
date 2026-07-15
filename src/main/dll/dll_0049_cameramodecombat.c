@@ -1,4 +1,4 @@
-/* DLL 0x0049 (cameramodecombat) — Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
+/* DLL 0x0049 (cameramodecombat) - Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
 #include "main/camera_interface.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
@@ -16,26 +16,15 @@
 s32 gCamCombatPrevYawDiff;
 CameraModeCombatState* gCamCombatState;
 
-s32 gCamCombatPrevYawDiff;
-CameraModeCombatState* gCamCombatState;
-
-s32 gCamCombatPrevYawDiff;
-CameraModeCombatState* gCamCombatState;
-
-s32 gCamCombatPrevYawDiff;
-CameraModeCombatState* gCamCombatState;
-
 #define CAMERAMODECOMBAT_OBJFLAG_FREED 0x40
 #define CAMERAMODECOMBAT_CAMACTION_DEFAULT 0x42
 #define PAD_BUTTON_B 0x200
-extern CameraModeCombatState* gCamCombatState;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
 
 
 
-extern s32 gCamCombatPrevYawDiff;
 extern f64 lbl_803E1918;
 extern f32 lbl_803E18CC;
 extern f32 lbl_803E18D0;
@@ -68,7 +57,6 @@ void CameraModeCombat_copyToCurrent(void)
 {
 }
 
-#pragma dont_inline on
 void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f32* targetY)
 {
     GameObject* focus;
@@ -124,8 +112,6 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     }
     gCamCombatState->pathBlendTargetIndex = target->hitVolumeIndex;
 }
-#pragma dont_inline reset
-
 typedef struct {
     u8 b0 : 1;
     u8 b1 : 1;

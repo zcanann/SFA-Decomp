@@ -35,11 +35,6 @@ s8 gTitleScreenInitFrameStartPending;
 u32 gTitleScreenInitLoadingFrameCounter;
 u8 gTitleScreenInitDvdErrorLatched;
 
-f32 lbl_803DD5F4;
-s8 gTitleScreenInitFrameStartPending;
-u32 gTitleScreenInitLoadingFrameCounter;
-u8 gTitleScreenInitDvdErrorLatched;
-
 typedef struct LoadingScreenTexture
 {
     u8 _00[0xa];
@@ -72,10 +67,6 @@ typedef struct LoadingScreenTexture
 #define TITLESCREENINIT_TEXT_DVD_ERROR 0x565
 
 int gTitleScreenInitLoadingTextures[4];
-extern u8 gTitleScreenInitDvdErrorLatched;
-extern u32 gTitleScreenInitLoadingFrameCounter;
-extern s8 gTitleScreenInitFrameStartPending;
-extern f32 lbl_803DD5F4;
 extern f32 lbl_803E1CF0;
 extern f32 gTitleScreenInitAlphaMax;
 extern f32 gTitleScreenInitFadeFrames;

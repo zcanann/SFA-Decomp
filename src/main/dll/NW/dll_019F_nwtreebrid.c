@@ -43,9 +43,6 @@ typedef struct NwTreeBirdMapData
 
 #define TREEBIRD_SPAWN_PARTICLE(obj, id) (*gPartfxInterface)->spawnObject((void*)(obj), (id), 0, 1, -1, 0)
 
-__declspec(section ".sdata2") f32 lbl_803E51F8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E51FC = 100.0f;
-
 int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     TreeBirdState* state;
@@ -139,7 +136,7 @@ void treebird_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     float fx, fy, fz;
 
     state = ((GameObject*)obj)->extra;
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E51F8);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     if (state->targetObj != NULL)
     {
         ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &fx, &fy, &fz, 0);
@@ -156,7 +153,7 @@ void treebird_update(GameObject* obj)
     float dist;
 
     state = (obj)->extra;
-    dist = lbl_803E51FC;
+    dist = 100.0f;
     if (state->searchDelay != 0)
     {
         state->targetObj = (void*)ObjGroup_FindNearestObject(NWTREEBRID_TARGET_OBJGROUP, (int)obj, &dist);

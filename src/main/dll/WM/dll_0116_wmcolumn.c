@@ -43,11 +43,6 @@ typedef struct WmColumnPlacement
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
 
-__declspec(section ".sdata2") f32 lbl_803E37B8 = 1.0f;        /* render scale */
-__declspec(section ".sdata2") f32 lbl_803E37BC = 10000.0f;    /* nearest-object sentinel */
-__declspec(section ".sdata2") f32 lbl_803E37C0 = 35.0f;       /* scene-spot snap radius */
-__declspec(section ".sdata2") f32 lbl_803E37C4 = 60.0f;       /* pickup prompt distance */
-
 int WM_Column_getExtraSize(void)
 {
     return 0xa;
@@ -68,7 +63,7 @@ void WM_Column_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E37B8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -87,7 +82,7 @@ void WM_Column_update(int obj)
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    nearest = lbl_803E37BC;
+    nearest = 10000.0f;
     if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
     {
         if ((((GameObject*)obj)->unkF4 & 2) != 0)
@@ -97,7 +92,7 @@ void WM_Column_update(int obj)
             {
                 other = objects[i];
                 if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
-                    (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
+                    (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < 35.0f))
                 {
                     other = ((WmColumnPlacement*)((GameObject*)objects[i])->anim.placement)->gameBit;
                     if (other != -1)
@@ -110,7 +105,7 @@ void WM_Column_update(int obj)
         playerFlags = (int)Obj_GetPlayerObject();
         ObjGroup_FindNearestObject(WMCOLUMN_TARGET_OBJGROUP, obj, &nearest);
         playerFlags = playerGetStateFlag310((GameObject*)playerFlags);
-        if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4))
+        if (((playerFlags & 0x4000) != 0) && (nearest > 60.0f))
         {
             (*gCarryableInterface)->setVisible(state, 0);
             setAButtonIcon(5);
@@ -133,7 +128,7 @@ void WM_Column_update(int obj)
             {
                 other = objects[i];
                 if (((u32)other != obj) && (((GameObject*)other)->anim.seqId == 499) &&
-                    (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < lbl_803E37C0))
+                    (Vec_distance((float*)(obj + 0x18), (float*)(other + 0x18)) < 35.0f))
                 {
                     int mapData = *(int*)&((GameObject*)objects[i])->anim.placementData;
                     if (((GameObject*)obj)->anim.seqId == (s8)((WmColumnPlacement*)mapData)->modelIndex + 500)

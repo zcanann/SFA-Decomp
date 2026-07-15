@@ -39,17 +39,6 @@ u32 gPlayerMoveSlowMoveId;
 u8 gPlayerMoveVelHandled;
 u32 playerOverride;
 
-extern u32 gPlayerMoveSlowMoveId;
-extern u32 gPlayerMoveFastMoveId;
-extern u8 gPlayerMoveVelHandled;
-extern u8 gPlayerMoveAdvanced;
-extern s16 gPlayerMoveTargetYaw;
-extern u8 lbl_803DD44E;
-extern u8 lbl_803DD44F;
-extern u8 lbl_803DD450;
-extern f32 gPlayerMoveOverridePosZ;
-extern f32 gPlayerMoveOverridePosX;
-extern u32 playerOverride;
 extern const f32 lbl_803E0570;
 extern const f32 lbl_803E0574;
 extern const f32 lbl_803E0578;

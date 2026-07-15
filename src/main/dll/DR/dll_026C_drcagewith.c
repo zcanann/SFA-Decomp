@@ -31,21 +31,6 @@
 
 #define DRCAGEWITH_OBJFLAG_FREED 0x40
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69F0 = 1.0f;
-__declspec(section ".sdata2") f32 gDrCageWithFindObjMaxDist = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E69F8 = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E69FC = -1300.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A00 = 0.05f;
-__declspec(section ".sdata2") f32 gDrCageWithAngVelRateMin = -50.0f;
-__declspec(section ".sdata2") f32 gDrCageWithAngVelRateMax = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A0C = 9.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A10 = -16990.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A14 = -16968.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A18 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E6A1C = 0.0f;
-#pragma explicit_zero_data off
-
 int DR_CageWith_setScale(GameObject* obj)
 {
     DrcagewithState* state = obj->extra;
@@ -97,16 +82,17 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
 {
     DrcagewithState* state = (obj)->extra;
     GameObject* linkedObj;
+    f32 renderScale = 1.0f;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69F0);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)renderScale);
         if (state->spawnedObject != 0)
         {
             ObjPath_GetPointWorldPosition(obj, 0, &state->spawnedObject->anim.localPosX,
                                           &state->spawnedObject->anim.localPosY,
                                           &state->spawnedObject->anim.localPosZ, 0);
             objRenderModelAndHitVolumesFwdDoubleLegacy(state->spawnedObject, p2, p3, p4, p5,
-                                                        (double)lbl_803E69F0);
+                                                        (double)renderScale);
             linkedObj = state->linkedObject;
             if (linkedObj != 0)
             {
@@ -114,7 +100,7 @@ void DR_CageWith_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
                 linkedObj->anim.rotZ = state->spawnedObject->anim.rotZ;
                 ObjPath_GetPointWorldPosition(state->spawnedObject, 0, &linkedObj->anim.localPosX,
                                               &linkedObj->anim.localPosY, &linkedObj->anim.localPosZ, 0);
-                objRenderModelAndHitVolumesFwdDoubleLegacy(linkedObj, p2, p3, p4, p5, (double)lbl_803E69F0);
+                objRenderModelAndHitVolumesFwdDoubleLegacy(linkedObj, p2, p3, p4, p5, (double)renderScale);
             }
         }
     }
@@ -134,13 +120,13 @@ void DR_CageWith_hitDetect(GameObject* obj)
     f32 px;
     f32 div;
 
-    maxDist = gDrCageWithFindObjMaxDist;
+    maxDist = 300.0f;
     state = (obj)->extra;
     bf31 = &state->ropeFlags;
 
     if (bf31->b1 != 0)
     {
-        objParticleFn_80099d84(obj, lbl_803E69F8, 6, lbl_803E69F0, NULL);
+        objParticleFn_80099d84(obj, 1.5f, 6, 1.0f, NULL);
     }
 
     if ((obj)->anim.seqId == 2154 || (obj)->anim.seqId == 2155)
@@ -185,14 +171,14 @@ void DR_CageWith_hitDetect(GameObject* obj)
             return;
         }
         angVel = oneOverTimeDelta * ((obj)->anim.localPosX - (obj)->anim.previousLocalPosX);
-        angVel = angVel * lbl_803E69FC;
-        angVel = interpolate(angVel - state->angularVel, lbl_803E6A00, timeDelta);
+        angVel *= -1300.0f;
+        angVel = interpolate(angVel - state->angularVel, 0.05f, timeDelta);
         clamped =
-            (angVel < gDrCageWithAngVelRateMin * timeDelta)
-                ? gDrCageWithAngVelRateMin * timeDelta
-                : ((angVel > gDrCageWithAngVelRateMax * timeDelta) ? gDrCageWithAngVelRateMax * timeDelta : angVel);
+            (angVel < -50.0f * timeDelta)
+                ? -50.0f * timeDelta
+                : ((angVel > 50.0f * timeDelta) ? 50.0f * timeDelta : angVel);
         state->angularVel = state->angularVel + clamped;
-        for (i = 0, div = lbl_803E6A0C; i < 9; i++)
+        for (i = 0, div = 9.0f; i < 9; i++)
         {
             s16* jointVec = objModelGetVecFn_800395d8(obj, i);
             if (jointVec != NULL)
@@ -222,7 +208,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
         if (mainGetBit(3175) != 0)
         {
             px = (obj)->anim.localPosX;
-            if (px >= lbl_803E6A10 && px <= lbl_803E6A14)
+            if (px >= -16990.0f && px <= -16968.0f)
             {
                 mainSetBits(placement->openedGameBit, 1);
             }
@@ -271,9 +257,9 @@ void DR_CageWith_init(GameObject* obj, DrcagewithPlacement* placement)
         }
         obj->anim.rotX = (s16)(placement->initRotXByte << 8);
         state->unk8 = (f32)placement->unk1C;
-        state->unk10 = (f32)placement->unk1A / lbl_803E6A18;
+        state->unk10 = (f32)placement->unk1A / 10.0f;
         state->linkedObject = NULL;
-        fz = lbl_803E6A1C;
+        fz = 0.0f;
         state->unk14 = fz;
         state->unk18 = fz;
         state->unk1C = fz;

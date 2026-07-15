@@ -1,4 +1,4 @@
-/* DLL 0x0034 — title menu [8011611C-801166C8) */
+/* DLL 0x0034 - title menu [8011611C-801166C8) */
 #include "dolphin/os/OSReport.h"
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
@@ -61,21 +61,6 @@ static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern void printHeapStats(int mode);
 extern TitleMenuControl* gTitleMenuLinkInterface;
-extern u8 gTitleMenuSelectionFade;
-extern u8 gTitleMenuSelection;
-extern u8 gAttractMoviePreparePending;
-extern void* gAttractMovieScratchBuffer;
-extern void* gAttractMovieWorkBuffer;
-extern void* gAttractMovieOptionalBuffer;
-extern void* gAttractMovieBuffer3;
-extern void* gAttractMovieBuffer2;
-extern void* gAttractMovieBuffer1;
-extern void* gAttractMovieBuffer0;
-extern NAttractModeMovieDims gAttractMovieDims;
-extern int gAttractMovieOffsetY;
-extern int gAttractMovieOffsetX;
-extern u8 gAttractMovieRetraceCountdown;
-extern u8 gAttractMoviePlaybackEnabled;
 extern s32 gAttractMovieIdleFrameCount;
 extern u16* gRenderModeObj;
 
@@ -103,16 +88,6 @@ extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
 extern u8 lbl_803DB424;
 extern TitleMenuTextEntry lbl_8031A214[4];
-extern u8 gTitleMenuPreviousSelection;
-extern s8 gTitleMenuSelectionFadeStep;
-extern u8 lbl_803DD618;
-extern u8 gAttractMovieAutoplayEnabled;
-extern s32 gTitleMenuInputCooldown;
-extern u8 gAttractMovieReplayCountdown;
-extern u8 gTitleMenuReadyForInput;
-extern s8 gTitleMenuNextDllId;
-extern s8 gTitleMenuLoadDelay;
-extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
 extern f32 lbl_803E1D28;

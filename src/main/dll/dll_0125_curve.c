@@ -9,10 +9,7 @@
  * (getExtraSize/getObjectTypeId/func11/setScale/free) are stubs.
  */
 #include "main/dll/dll_0125_curve_api.h"
-
-__declspec(section ".sdata2") f32 lbl_803E33F0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E33F4 = 1.25f;
-__declspec(section ".sdata2") f32 lbl_803E33F8 = 1.100000023841858f;
+#include "main/object_render_legacy.h"
 
 int curve_func0B(void)
 {
@@ -40,7 +37,7 @@ void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(lbl_803E33F0);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
@@ -54,11 +51,11 @@ void curve_init(ObjAnimComponent* obj, CurvePlacementParams* params)
     }
     if (params->placement.base.type == ROMCURVE_TYPE_SCALE_OVERRIDE_15)
     {
-        obj->rootMotionScale = lbl_803E33F4;
+        obj->rootMotionScale = 1.25f;
     }
     else if (params->placement.base.type == ROMCURVE_TYPE_SCALE_OVERRIDE_16)
     {
-        obj->rootMotionScale = lbl_803E33F8;
+        obj->rootMotionScale = 1.1f;
     }
     else
     {

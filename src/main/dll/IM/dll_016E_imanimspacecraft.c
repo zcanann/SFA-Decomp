@@ -32,14 +32,6 @@ STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
 #define ANIMSPACECRAFT_MASK_GROUP 0x70
 
 char lbl_803AC948[0x18];
-__declspec(section ".sdata2") f32 lbl_803E4770 = 143.0f;  /* glow spawn offsets */
-__declspec(section ".sdata2") f32 lbl_803E4774 = 16.0f;
-__declspec(section ".sdata2") f32 lbl_803E4778 = -79.0f;
-__declspec(section ".sdata2") f32 lbl_803E477C = -143.0f;
-__declspec(section ".sdata2") f32 lbl_803E4780 = 1.0f;    /* render scale */
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E4784 = 0.0f;    /* init position component */
-#pragma explicit_zero_data off
 
 void imanimspacecraft_modelMtxFn(void)
 {
@@ -117,13 +109,13 @@ int imanimspacecraft_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     if (state->flags & ANIMSPACECRAFT_FLAG_BLINK_ON)
     {
-        *(f32*)(lbl_803AC948 + 0xc) = lbl_803E4770;
-        *(f32*)(lbl_803AC948 + 0x10) = lbl_803E4774;
-        *(f32*)(lbl_803AC948 + 0x14) = lbl_803E4778;
+        *(f32*)(lbl_803AC948 + 0xc) = 143.0f;
+        *(f32*)(lbl_803AC948 + 0x10) = 16.0f;
+        *(f32*)(lbl_803AC948 + 0x14) = -79.0f;
         (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
-        *(f32*)(lbl_803AC948 + 0xc) = lbl_803E477C;
-        *(f32*)(lbl_803AC948 + 0x10) = lbl_803E4774;
-        *(f32*)(lbl_803AC948 + 0x14) = lbl_803E4778;
+        *(f32*)(lbl_803AC948 + 0xc) = -143.0f;
+        *(f32*)(lbl_803AC948 + 0x10) = 16.0f;
+        *(f32*)(lbl_803AC948 + 0x14) = -79.0f;
         (*gPartfxInterface)->spawnObject(obj, ANIMSPACECRAFT_PARTFX, lbl_803AC948, 4, -1, NULL);
     }
     tex = objFindTexture((GameObject*)(obj), 0, 0);
@@ -177,7 +169,7 @@ void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4780);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void imanimspacecraft_hitDetect(void)
@@ -195,7 +187,7 @@ void imanimspacecraft_init(GameObject* obj)
 {
     f32 pos;
     obj->animEventCallback = imanimspacecraft_SeqFn;
-    pos = lbl_803E4784;
+    pos = 0.0f;
     *(f32*)(lbl_803AC948 + 0xc) = pos;
     *(f32*)(lbl_803AC948 + 0x10) = pos;
     *(f32*)(lbl_803AC948 + 0x14) = pos;
