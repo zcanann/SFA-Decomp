@@ -1338,10 +1338,7 @@ static inline void HandleVoices(void)
  */
 void synthDispatchFadeAction(SynthFade* fade)
 {
-    u8 action;
-
-    action = fade->delayAction;
-    switch (action)
+    switch (fade->delayAction)
     {
     case SYNTH_FADE_DELAY_ACTION_FREE_HANDLE:
         synthFreeHandle(fade->handle);
@@ -1366,7 +1363,6 @@ void synthHandle(u32 deltaTime)
     u32 s;
     SynthFade* fade;
     u32 mask;
-    f32 zeroThreshold;
 
     if (synthInfo.numSamples == 0)
     {
@@ -1379,14 +1375,12 @@ void synthHandle(u32 deltaTime)
     {
         if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0)
         {
-            zeroThreshold = lbl_803E77D0;
-            fade = synthMasterFader;
-            for (i = 0, mask = 1; i < SYNTH_FADE_COUNT; ++i)
+            for (i = 0, fade = synthMasterFader, mask = 1; i < SYNTH_FADE_COUNT; mask <<= 1, ++i, ++fade)
             {
                 if ((synthMasterFaderActiveFlags & mask) != 0)
                 {
                     fade->current = fade->target - fade->progress * (fade->target - fade->start);
-                    if ((fade->progress -= fade->progressStep) <= zeroThreshold)
+                    if ((fade->progress -= fade->progressStep) <= 0.f)
                     {
                         fade->current = fade->target;
                         synthDispatchFadeAction(fade);
@@ -1400,7 +1394,7 @@ void synthHandle(u32 deltaTime)
                 if ((synthMasterFaderPauseActiveFlags & mask) != 0)
                 {
                     fade->auxCurrent = fade->auxTarget - fade->auxProgress * (fade->auxTarget - fade->auxStart);
-                    if ((fade->auxProgress -= fade->auxProgressStep) <= zeroThreshold)
+                    if ((fade->auxProgress -= fade->auxProgressStep) <= 0.f)
                     {
                         fade->auxCurrent = fade->auxTarget;
                         if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) &&
@@ -1410,8 +1404,6 @@ void synthHandle(u32 deltaTime)
                         }
                     }
                 }
-                mask <<= 1;
-                ++fade;
             }
         }
         for (s = 0; s < 8; ++s)
