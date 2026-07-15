@@ -130,7 +130,7 @@ int trickyGuardFindBaddieTarget(TrickyRuntime* state);
 void trickyFlame(GameObject* obj, int trickyState)
 {
     char* strBase = lbl_8031D2E8;
-    void* target;
+    f32* target;
     void** slot;
     int i;
     void** slot2;
@@ -185,9 +185,9 @@ void trickyFlame(GameObject* obj, int trickyState)
         break;
     case 4:
         trickyDebugPrint(strBase + 0x720);
-        target = (void*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
-        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, (f32*)target, 1);
-        trickyMove((u8*)obj, (f32*)target);
+        target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
+        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, target, 1);
+        trickyMove((u8*)obj, target);
         if (Objfsa_GetWalkGroupIndexAtPoint((float*)&(obj)->anim.worldPosX, 0x0) == 0)
         {
             ((TrickyRuntime*)trickyState)->flags |= TRICKY_STATE_RESET_FLAG_10;
@@ -196,9 +196,9 @@ void trickyFlame(GameObject* obj, int trickyState)
         break;
     case 5:
         trickyDebugPrint(strBase + 0x734);
-        target = (void*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
-        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, (f32*)target, 1);
-        if (trickyMove((u8*)obj, (f32*)target) != 0)
+        target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[0] + 0x8);
+        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, target, 1);
+        if (trickyMove((u8*)obj, target) != 0)
         {
             break;
         }
@@ -313,9 +313,9 @@ void trickyFlame(GameObject* obj, int trickyState)
         break;
     case 2:
         trickyDebugPrint(strBase + 0x764);
-        target = (void*)((int)((TrickyRuntime*)trickyState)->homeObj + 0x18);
-        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2418, (u8*)trickyState, (f32*)target, 1);
-        if (trickyMove((u8*)obj, (f32*)target) == 0)
+        target = (f32*)((int)((TrickyRuntime*)trickyState)->homeObj + 0x18);
+        trickyUpdateApproachSpeed((u8*)obj, lbl_803E2418, (u8*)trickyState, target, 1);
+        if (trickyMove((u8*)obj, target) == 0)
         {
             objAnimFn_8013a3f0((int)obj, 0x1a, lbl_803E23E4, 0x4000000);
             ((TrickyRuntime*)trickyState)->guardState = 6;
@@ -396,9 +396,9 @@ void trickyFlame(GameObject* obj, int trickyState)
         ((TrickyRuntime*)trickyState)->guardTimer = ((TrickyRuntime*)trickyState)->guardTimer - timeDelta;
         if (((TrickyRuntime*)trickyState)->guardTimer <= lbl_803E23DC)
         {
-            target = (void*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[1] + 0x8);
-            trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, (f32*)target, 1);
-            trickyMove((u8*)obj, (f32*)target);
+            target = (f32*)(*(int*)&((TrickyRuntime*)trickyState)->guardPoint[1] + 0x8);
+            trickyUpdateApproachSpeed((u8*)obj, lbl_803E2488, (u8*)trickyState, target, 1);
+            trickyMove((u8*)obj, target);
             if (Objfsa_GetWalkGroupIndexAtPoint((float*)&(obj)->anim.worldPosX, 0x0) != 0)
             {
                 ((TrickyRuntime*)trickyState)->growlLatState = 1;
