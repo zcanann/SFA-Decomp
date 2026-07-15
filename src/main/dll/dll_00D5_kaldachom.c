@@ -55,9 +55,19 @@
 
 extern void fn_802961FC(int a, u8 type);
 
+typedef struct KaldaCombatParams
+{
+    u32 unk00;
+    u32 unk04;
+    u32 unk08;
+    u32 unk0C;
+} KaldaCombatParams;
+
+STATIC_ASSERT(sizeof(KaldaCombatParams) == 0x10);
+
 /* this DLL's data/sdata2 pool: lbl_803E30xx are float constants; the
    gKaldachom*SpawnScratch globals are mutable scratch (fx spawn position / radius). */
-__declspec(section ".rodata") u32 gKaldachomCombatParams[4] = {8, 255, 255, 120};
+const KaldaCombatParams gKaldachomCombatParams = {8, 255, 255, 120};
 f32 gKaldachomMouthSpawnScratch;
 f32 gKaldachomDustSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];
@@ -222,14 +232,6 @@ void kaldachom_handleAnimEvents(GameObject* obj, int state, int eventStateArg)
     }
 }
 
-typedef struct KaldaCombatParams
-{
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0C;
-} KaldaCombatParams;
-
 typedef struct KaldaCombatStack
 {
     f32 dx;
@@ -250,7 +252,7 @@ void kaldachom_updateCombat(GameObject* obj, int stateWithBaddieData, int state)
     u16 hitAux2;
 
     control = ((CampfireState*)stateWithBaddieData)->control;
-    st.p = *(KaldaCombatParams*)gKaldachomCombatParams;
+    st.p = gKaldachomCombatParams;
     playerObj = (int)Obj_GetPlayerObject();
     if (((GroundBaddieState*)state)->baddie.targetObj != NULL)
     {

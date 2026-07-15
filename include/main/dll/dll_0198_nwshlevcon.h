@@ -23,5 +23,14 @@ int dll_199_getObjectTypeId(void);
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_199_hitDetect(void);
 int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int nwsh_levcon_getExtraSize(void);
+int nwsh_levcon_getObjectTypeId(void);
+void nwsh_levcon_free(int obj);
+void nwsh_levcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void nwsh_levcon_hitDetect(void);
+void nwsh_levcon_update(int* obj);
+void nwsh_levcon_init(int* obj);
+void nwsh_levcon_release(void);
+void nwsh_levcon_initialise(void);
 
 #endif /* MAIN_DLL_DLL_1CA_H_ */

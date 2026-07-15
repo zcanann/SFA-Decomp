@@ -32,6 +32,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_descriptor.h"
 #include "main/voxmaps.h"
+#include "main/dll/dll_0198_nwshlevcon.h"
 
 typedef struct ResourceParamBlob
 {
@@ -73,16 +74,6 @@ __declspec(section ".sdata2") f32 lbl_803E5138 = 90.0f;
 __declspec(section ".sdata2") f32 lbl_803E513C = -2.0f;
 __declspec(section ".sdata2") f32 lbl_803E5140 = 8192.0f;
 __declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
-
-extern void nwsh_levcon_getExtraSize();
-extern void nwsh_levcon_getObjectTypeId();
-extern void nwsh_levcon_free();
-extern void nwsh_levcon_render();
-extern void nwsh_levcon_hitDetect();
-extern void nwsh_levcon_update();
-extern void nwsh_levcon_init();
-extern void nwsh_levcon_release();
-extern void nwsh_levcon_initialise();
 
 typedef struct Dll197Placement
 {

@@ -59,8 +59,10 @@ typedef struct PushableObjectDef
 
 typedef struct
 {
-    int a, b, c, d;
-} PushableBox16;
+    f32 values[4];
+} PushableRadii;
+
+STATIC_ASSERT(sizeof(PushableRadii) == 0x10);
 
 typedef struct
 {
@@ -141,7 +143,7 @@ extern void fn_8007FE04(int* array, int* count, int value);
 extern f32 gPushableU16ScaleDenom;
 extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
-__declspec(section ".rodata") int gPushableDefaultBox[4] = {0, 0, 0, 0};
+const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, int* obj);
 extern f32 lbl_803E35A8;
 extern f32 lbl_803E35AC;
@@ -882,11 +884,11 @@ void pushable_hitDetect(GameObject* obj)
     TrackQueryBounds sweep;
     MatrixTransform vec;
     f32 hp4[4];
-    PushableBox16 box;
+    PushableRadii box;
     TrackGroundHit** list;
     f32 tmpY;
 
-    box = *(PushableBox16*)gPushableDefaultBox;
+    box = gPushableDefaultBox;
     player = Obj_GetPlayerObject();
     state = obj->extra;
     state->timer_0x110 = state->timer_0x110 - timeDelta;
@@ -981,7 +983,7 @@ void pushable_hitDetect(GameObject* obj)
             w += 3;
             e += 0xc;
         }
-        hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, wpos, (f32*)&box, 4);
+        hitDetect_calcSweptSphereBounds(&sweep, (f32*)state->cornerWorld, wpos, box.values, 4);
         sweep.minY = (int)((f32)sweep.minY - lbl_803E35BC);
         sweep.maxY = (int)((f32)sweep.maxY + lbl_803E35BC);
         hitDetectFn_800691c0(obj, &sweep, 1, 1);

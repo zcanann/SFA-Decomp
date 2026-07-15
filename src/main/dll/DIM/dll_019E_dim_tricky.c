@@ -35,7 +35,15 @@ __declspec(section ".sdata2") f32 lbl_803E51E8 = 0.1f;
 __declspec(section ".sdata2") f32 lbl_803E51EC = 0.0f;
 #pragma explicit_zero_data off
 s8 gDimTrickyEggSequenceStage;
-__declspec(section ".rodata") u32 gDimTrickyEggResArgsTemplate[4] = {0x3E7, 0x8C, 0x8D, 0x28};
+
+typedef struct Dll19EResArgs
+{
+    u32 w[4];
+} Dll19EResArgs;
+
+STATIC_ASSERT(sizeof(Dll19EResArgs) == 0x10);
+
+const Dll19EResArgs gDimTrickyEggResArgsTemplate = {{0x3E7, 0x8C, 0x8D, 0x28}};
 
 /* Partfx: idle sparkle emitted in render while the object is visible (losVisible);
  * the egg-activation burst emitted 100x in update when the egg turns active. */
@@ -185,14 +193,6 @@ STATIC_ASSERT(offsetof(Dll19ESetup, scaleTimer) == 0x1A);
 STATIC_ASSERT(offsetof(Dll19ESetup, sequenceIndex) == 0x1C);
 STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
 
-typedef struct Dll19EResArgs
-{
-    u32 a;
-    u32 b;
-    u32 c;
-    u32 d;
-} Dll19EResArgs;
-
 #define TRICKY_EGG_EFFECT_RESOURCE_ID  0x69
 #define GAMEBIT_TRICKY_EGG_SEQUENCE_DONE  0x1d1
 #define GAMEBIT_TRICKY_EGG_CUTSCENE_DONE  0x1d5
@@ -207,11 +207,11 @@ void dll_19E_update(void* obj)
         u8 args[16];
         f32 scale;
     } effectBuf;
-    u32 resourceArgs[4];
+    Dll19EResArgs resourceArgs;
     int i;
 
     state = ((GameObject*)obj)->extra;
-    *(Dll19EResArgs*)resourceArgs = *(Dll19EResArgs*)gDimTrickyEggResArgsTemplate;
+    resourceArgs = gDimTrickyEggResArgsTemplate;
 
     ((void (*)(void*, int))Sfx_PlayFromObject)(obj, SFXmn_eggylaugh216);
     objUpdateOpacity((GameObject*)obj);
@@ -265,10 +265,10 @@ void dll_19E_update(void* obj)
             if (state->active != 0)
             {
                 resource = Resource_Acquire(TRICKY_EGG_EFFECT_RESOURCE_ID, 1);
-                resourceArgs[1] = state->sequenceIndex * 2 + 0x19d;
-                resourceArgs[2] = state->sequenceIndex * 2 + 0x19e;
+                resourceArgs.w[1] = state->sequenceIndex * 2 + 0x19d;
+                resourceArgs.w[2] = state->sequenceIndex * 2 + 0x19e;
                 (*(void (*)(void*, int, u8*, int, int, u32*))(*(int*)(*(int*)resource + 4)))(
-                    obj, 1, effectBuf.args, 0x10004, -1, resourceArgs);
+                    obj, 1, effectBuf.args, 0x10004, -1, resourceArgs.w);
                 Resource_Release(resource);
 
                 i = 0;
