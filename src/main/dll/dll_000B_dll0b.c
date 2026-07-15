@@ -19,6 +19,7 @@
 #include "main/dll/bonespawndata_struct.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_api.h"
 #include "main/lightmap_text_color_api.h"
 #include "track/intersect_render_setup_api.h"
 #include "track/intersect_geom_api.h"
@@ -363,7 +364,6 @@ extern void GXSetCullMode(int mode);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void gxTexColorFn_80079254(void);
 extern void gxBlendFn_80078b4c(void);
-extern void drawFn_8005cf8c(void* a, void* b, int count);
 
 /* Per-bone particle vertex update + draw. */
 
@@ -1367,13 +1367,14 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             {
                 if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000)
                 {
-                    drawFn_8005cf8c(buf1, buf2,
+                    drawFn_8005cf8c((int)buf1, (const u8*)buf2,
                                     ((PartfxEffectState*)p[slot])->colorVertexCount /
                                         ((PartfxEffectState*)p[slot])->drawGroupCount);
                 }
                 else
                 {
-                    drawFn_8005cf8c(buf1, buf2, ((PartfxEffectState*)p[slot])->colorVertexCount);
+                    drawFn_8005cf8c((int)buf1, (const u8*)buf2,
+                                    ((PartfxEffectState*)p[slot])->colorVertexCount);
                 }
                 buf1 = (char*)buf1 + (((PartfxEffectState*)p[slot])->drawGroupStride << 4);
                 if ((int)((PartfxEffectState*)p[slot])->flags & 0x8000000)

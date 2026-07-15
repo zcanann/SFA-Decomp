@@ -30,8 +30,6 @@ extern f32 lbl_803E3874;
 extern f32 lbl_803E3878;
 extern f32 lbl_803E387C;
 extern f32 lbl_803E3880;
-extern void dll_FD_update();
-extern void dll_FD_free();
 
 typedef struct Dll14DState
 {

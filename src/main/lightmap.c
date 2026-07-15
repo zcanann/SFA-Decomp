@@ -1730,7 +1730,7 @@ static inline void GXTexCoord2s16(const s16 s, const s16 t)
 static inline void GXPosition1x8(const u8 x) { wgfifo.u8 = x; }
 
 #pragma peephole on
-void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount)
+void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
 {
     s16* posPtr;
     int clrPtr, texPtr;

@@ -56,6 +56,7 @@ STATIC_ASSERT(sizeof(CcLightfootState) == 0x18);
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/objfx.h"
+#include "main/objfx_hit_emitter_api.h"
 #include "main/obj_link.h"
 #include "main/obj_list.h"
 #include "main/obj_trigger.h"
@@ -183,7 +184,6 @@ extern f32 lbl_803E4694;
 extern f32 lbl_803E4698;
 extern u8 gCcLightfootAnimTable[];
 u8 gCcLightfootHitCooldown[8];
-extern void objfx_spawnHitEmitterAtPos(f32* pos, u8 a, u8 b, u8 c, u8 d);
 
 typedef struct LightfootAnimTable
 {

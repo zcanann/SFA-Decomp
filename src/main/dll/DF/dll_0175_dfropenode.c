@@ -18,6 +18,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/lightmap_text_color_api.h"
+#include "main/lightmap_api.h"
 #include "main/camera.h"
 #include "track/intersect_api.h"
 
@@ -39,10 +40,9 @@ extern const f32 gRopeNodeBoundsMargin;
 
 extern void textRenderSetupFn_800795e8(void);
 extern void gxBlendFn_80078b4c(void);
-extern void drawFn_8005cf8c(void* matrix, void* displayList, int count);
 extern u8 lbl_80325E00[];
 extern u8 lbl_80325E60[];
-__declspec(section ".rodata") u8 gRopeNodeDisplayList[96] = {
+const u8 gRopeNodeDisplayList[96] = {
     0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 2, 3, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 0, 0, 0, 0,
@@ -477,7 +477,7 @@ void dfropenode_render(int obj, int p2, int p3)
         {
             node++;
             fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
-            drawFn_8005cf8c(matrix, gRopeNodeDisplayList, 6);
+            drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
         {
@@ -494,7 +494,7 @@ void dfropenode_render(int obj, int p2, int p3)
             {
                 node++;
                 fn_801C0BF8(lbl_80325E60, extra->angle, (node - 1)->pos, node->pos, matrix);
-                drawFn_8005cf8c(matrix, gRopeNodeDisplayList, 6);
+                drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
             }
         }
     }

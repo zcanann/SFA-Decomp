@@ -17,6 +17,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/lightmap_api.h"
 #include "main/lightmap_text_color_api.h"
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "main/vecmath.h"
@@ -67,7 +68,6 @@ __declspec(section ".sdata2") f32 lbl_803DF4C4 = 0.0495f;
 extern void GXSetCullMode(int mode);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
-extern void drawFn_8005cf8c(void* a, void* b, int count);
 extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 static inline int* Modgfx_GetActiveModel(void* obj)
@@ -323,7 +323,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         i = 0;
         do
         {
-            drawFn_8005cf8c(*grp2, base + 0x2f0, 0x20);
+            drawFn_8005cf8c((int)*grp2, (const u8*)(base + 0x2f0), 0x20);
             grp2 += 1;
             i += 1;
         } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);

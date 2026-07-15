@@ -7831,12 +7831,12 @@ typedef struct
     u16 base;
     u16 extra;
 } InflateBaseExtra;
-__declspec(section ".rodata") InflateBaseExtra gInflateLengthCodes[29] = {
+const InflateBaseExtra gInflateLengthCodes[29] = {
     {3, 0},   {4, 0},   {5, 0},   {6, 0},   {7, 0},   {8, 0},   {9, 0},   {10, 0},
     {11, 1},  {13, 1},  {15, 1},  {17, 1},  {19, 2},  {23, 2},  {27, 2},  {31, 2},
     {35, 3},  {43, 3},  {51, 3},  {59, 3},  {67, 4},  {83, 4},  {99, 4},  {115, 4},
     {131, 5}, {163, 5}, {195, 5}, {227, 5}, {258, 0}};
-__declspec(section ".rodata") InflateBaseExtra gInflateDistCodes[30] = {
+const InflateBaseExtra gInflateDistCodes[30] = {
     {1, 0},     {2, 0},     {3, 0},     {4, 0},     {5, 1},     {7, 1},
     {9, 2},     {13, 2},    {17, 3},    {25, 3},    {33, 4},    {49, 4},
     {65, 5},    {97, 5},    {129, 6},   {193, 6},   {257, 7},   {385, 7},
@@ -8267,7 +8267,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     int dsym;
                     u32 dist;
                     u32 io4 = (sym - 0x101) << 2;
-                    u8* lc = (u8*)gInflateLengthCodes;
+                    const u8* lc = (const u8*)gInflateLengthCodes;
                     len2 = *(u16*)(lc + io4);
                     lc += 2;
                     eb = *(u16*)(lc + io4);
@@ -8298,8 +8298,8 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         ZADV(*dp);
                     }
                     {
-                        u8* dc = (u8*)gInflateDistCodes;
-                        u16* dw = (u16*)(dc + (dsym << 2));
+                        const u8* dc = (const u8*)gInflateDistCodes;
+                        const u16* dw = (const u16*)(dc + (dsym << 2));
                         dist = *dw;
                         dw += 1;
                         eb = *dw;

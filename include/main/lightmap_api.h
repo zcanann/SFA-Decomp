@@ -16,7 +16,7 @@ u32 isOvercast(void);
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32* outX, f32* outZ);
 void setPendingMapLoad(int pending);
-void drawFn_8005cf8c(int vertexBase, u8* triList, int triCount);
+void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount);
 void doNothing_8005D148(void);
 void doNothing_8005D14C(void);
 void titleScreenFn_8005cdd4(int enabled);
