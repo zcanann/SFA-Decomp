@@ -16,7 +16,6 @@ const CHUNK_SIZE = 20
 const BATCH = [
   { name: 'animobjd2.c', baseline: '090345264b7e4a324194e00d6ecd98f0', pct: 92.974 },
   { name: 'balloonbaddie.c', baseline: '3b6ee22d2853e99dd29d3f233793f9c2', pct: 94.498 },
-  { name: 'boulder.c', baseline: '0c6eb5f855c427a726acbec5f4977a3b', pct: 100.0 },
   { name: 'bwalphaanim.c', baseline: 'b5b9cbed6c2642d46b436dfccb7f9bd9', pct: 100.0 },
   { name: 'camshipbattle5c.c', baseline: '848004a9ad22f317fe57b9dcab8a5d33', pct: 96.057 },
   { name: 'cannon.c', baseline: '384c6fad0410e79584d48e048506d64f', pct: 94.033 },

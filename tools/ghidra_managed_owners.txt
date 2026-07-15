@@ -31,7 +31,6 @@ main/dll/baddie/wall_crawler.c
 main/dll/wispBaddie.c
 main/dll/baddieControl.c
 main/dll/barrel.c
-main/dll/boulder.c
 main/dll/brokecannon.c
 main/dll/BWalphaanim.c
 main/dll/CAM/attention.c

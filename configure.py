@@ -1528,7 +1528,6 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/WM/dll_0209_wmlevelcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/WM/dll_020A_wmgeneralscales.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/LGT/lgtcontrollight.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/boulder.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DF/dll_022F_dfpfloorbar.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/tesla.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/infopoint.c", cflags=cflags_dll_noopt),

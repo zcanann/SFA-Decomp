@@ -215,12 +215,30 @@ void FireFlyFn_801f4f88(GameObject* obj)
     }
 }
 
+int firefly_getExtraSize(void)
+{
+    return FIREFLY_EXTRA_SIZE;
+}
+
+int firefly_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
 void firefly_free(GameObject* obj)
 {
     FireFlyState* state = obj->extra;
 
     modelLightStruct_freeSlot((ModelLightStruct**)state);
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void firefly_render(void)
+{
+}
+
+void firefly_hitDetect(void)
+{
 }
 
 void firefly_update(GameObject* obj)
@@ -301,23 +319,6 @@ void firefly_init(GameObject* obj, FireFlyMapData* mapData)
     {
         s16toFloat(&state->lifeTimer, 0xe10);
     }
-}
-
-int firefly_getExtraSize(void)
-{
-    return FIREFLY_EXTRA_SIZE;
-}
-int firefly_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-void firefly_render(void)
-{
-}
-
-void firefly_hitDetect(void)
-{
 }
 
 void firefly_release(void)

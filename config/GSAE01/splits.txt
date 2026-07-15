@@ -2942,10 +2942,7 @@ main/dll/WM/dll_020A_wmgeneralscales.c:
 	.sdata2     start:0x803E5E98 end:0x803E5EA8
 
 main/dll/LGT/lgtcontrollight.c:
-	.text       start:0x801F4C04 end:0x801F4ECC
-
-main/dll/boulder.c:
-	.text       start:0x801F4ECC end:0x801F4F88
+	.text       start:0x801F4C04 end:0x801F4F88
 
 main/dll/dll_020B_firefly.c:
 	.text       start:0x801F4F88 end:0x801F568C
