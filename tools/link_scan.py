@@ -116,7 +116,80 @@ def defined_symbol_layout(obj, known_names):
     return layout
 
 
-def relocation_references():
+def defined_symbol_locations(obj):
+    out = subprocess.run([OBJDUMP, "-t", obj], capture_output=True, text=True).stdout
+    locations = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) < 5:
+            continue
+        name = parts[-1]
+        section = parts[-3]
+        if section not in ALLOC_SECTIONS:
+            continue
+        try:
+            locations[name] = (section, int(parts[0], 16))
+        except ValueError:
+            continue
+    return locations
+
+
+def relocation_base(value):
+    return re.split(r"(?=[+-]0x)", value, maxsplit=1)[0]
+
+
+def section_bases(obj, addresses):
+    candidates = {}
+    for name, (section, offset) in defined_symbol_locations(obj).items():
+        if name in addresses:
+            candidates.setdefault(section, set()).add(addresses[name] - offset)
+    return {
+        section: next(iter(values))
+        for section, values in candidates.items()
+        if len(values) == 1
+    }
+
+
+def relocation_layout(obj, addresses, bases):
+    out = subprocess.run([OBJDUMP, "-r", obj], capture_output=True, text=True).stdout
+    symbols = defined_symbol_locations(obj)
+    section = None
+    layout = []
+    section_re = re.compile(r"^RELOCATION RECORDS FOR \[(.+)\]:$")
+    reloc_re = re.compile(r"^\s*([0-9A-Fa-f]+)\s+(R_\S+)\s+(\S+)\s*$")
+    for line in out.splitlines():
+        match = section_re.match(line)
+        if match:
+            section = match.group(1)
+            continue
+        match = reloc_re.match(line)
+        if match is None or section is None:
+            continue
+        if section in {"extab", "extabindex"}:
+            continue
+        offset = int(match.group(1), 16)
+        kind = match.group(2)
+        if section == ".text":
+            offset &= ~3
+        value = match.group(3)
+        base = relocation_base(value)
+        suffix = value[len(base):]
+        addend = int(suffix, 0) if suffix else 0
+        if base in symbols:
+            target_section, target_offset = symbols[base]
+            if target_section in bases:
+                target = ("address", bases[target_section] + target_offset + addend)
+            else:
+                target = (target_section, target_offset + addend)
+        elif base in addresses:
+            target = ("address", addresses[base] + addend)
+        else:
+            target = (base, addend)
+        layout.append((section, offset, kind, target))
+    return sorted(layout)
+
+
+def relocation_referrers():
     """Collect symbols referenced by retail input relocations.
 
     DTK's retail split objects are force-exported, while a compiled source
@@ -124,8 +197,9 @@ def relocation_references():
     An unreferenced source BSS section therefore is not promotion-safe even
     when its raw size and symbol layout match the retail object.
     """
-    refs = set()
+    refs = {}
     reloc_re = re.compile(r"^\s*[0-9A-Fa-f]+\s+R_\S+\s+(\S+)")
+    object_re = re.compile(r"^(.+\.o):\s+file format\s+")
     objects = list(glob.iglob(f"{BUILD}/obj/**/*.o", recursive=True))
     fd, rsp = tempfile.mkstemp(prefix="link_scan_objdump_", suffix=".rsp", text=True)
     try:
@@ -138,10 +212,15 @@ def relocation_references():
     finally:
         if os.path.exists(rsp):
             os.remove(rsp)
+    current_obj = None
     for line in out.splitlines():
-        match = reloc_re.match(line)
+        match = object_re.match(line)
         if match:
-            refs.add(re.split(r"[+-]0x", match.group(1), maxsplit=1)[0])
+            current_obj = os.path.abspath(match.group(1))
+            continue
+        match = reloc_re.match(line)
+        if match and current_obj is not None:
+            refs.setdefault(relocation_base(match.group(1)), set()).add(current_obj)
     return refs
 
 
@@ -181,6 +260,18 @@ def resolvable_names():
     return names
 
 
+def symbol_addresses():
+    addresses = {}
+    address_re = re.compile(r"=\s+\.\S+:0x([0-9A-Fa-f]+);")
+    for line in open(f"config/GSAE01/symbols.txt"):
+        if " = " not in line:
+            continue
+        match = address_re.search(line)
+        if match:
+            addresses[line.split(" = ", 1)[0].strip()] = int(match.group(1), 16)
+    return addresses
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--explain", action="store_true", help="print rejection reasons")
@@ -188,7 +279,9 @@ def main():
 
     report = json.load(open(f"{BUILD}/report.json"))
     resolvable = resolvable_names()
-    referenced = relocation_references()
+    addresses = symbol_addresses()
+    referrers = relocation_referrers()
+    referenced = set(referrers)
     force_active = force_active_names()
 
     good, rejected = [], []
@@ -215,6 +308,10 @@ def main():
         ):
             rejected.append((sp, "section-bytes"))
             continue
+        bases = section_bases(orig, addresses)
+        if relocation_layout(built, addresses, bases) != relocation_layout(orig, addresses, bases):
+            rejected.append((sp, "relocations"))
+            continue
         built_layout = defined_symbol_layout(built, resolvable)
         orig_layout = defined_symbol_layout(orig, resolvable)
         if built_layout != orig_layout:
@@ -224,6 +321,21 @@ def main():
                 if built_layout.get(name) != orig_layout.get(name)
             )
             rejected.append((sp, f"symbol-layout {changed[:3]}"))
+            continue
+        external_names = {
+            name
+            for name, owners in referrers.items()
+            if any(owner != os.path.abspath(orig) for owner in owners)
+        }
+        built_external = defined_symbol_layout(built, external_names)
+        orig_external = defined_symbol_layout(orig, external_names)
+        if built_external != orig_external:
+            changed = sorted(
+                name
+                for name in built_external.keys() | orig_external.keys()
+                if built_external.get(name) != orig_external.get(name)
+            )
+            rejected.append((sp, f"cross-object-symbol {changed[:3]}"))
             continue
         dead_bss = []
         for section in BSS_SECTIONS & sb.keys():
