@@ -4,11 +4,11 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 
-u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u32 midiSlot, u32 midiKey);
+u16 _GetInputValue(McmdVoiceState *state, McmdInputSlot *slot, u8 midiSlot, u8 midiKey);
 u16 inpGetVolume(McmdVoiceState *state);
 u16 inpGetPanning(McmdVoiceState *state);
-int inpGetSurPanning(McmdVoiceState *state);
-int inpGetPitchBend(McmdVoiceState *state);
+u16 inpGetSurPanning(McmdVoiceState *state);
+u16 inpGetPitchBend(McmdVoiceState *state);
 u16 inpGetDoppler(McmdVoiceState *state);
 u16 inpGetModulation(McmdVoiceState *state);
 u16 inpGetPedal(McmdVoiceState *state);

@@ -4184,41 +4184,21 @@ main/audio/snd3d.c:
 main/audio/snd_core.c:
 	extab       start:0x80005A90 end:0x80005A98
 	extabindex  start:0x80006368 end:0x80006374
-	.text       start:0x80281160 end:0x80281338
+	.text       start:0x80281160 end:0x80281310
 	.sdata2     start:0x803E78C8 end:0x803E78E0
 
-main/audio/inp_midi_set.c:
-	extab       start:0x80005A98 end:0x80005AA8
-	extabindex  start:0x80006374 end:0x8000638C
-	.text       start:0x80281338 end:0x80281A30
+main/audio/snd_midictrl.c:
+	extab       start:0x80005A98 end:0x80005B40
+	extabindex  start:0x80006374 end:0x80006470
+	.text       start:0x80281310 end:0x80282E5C
+	.data       start:0x8032FFE0 end:0x80330028
+	.bss        start:0x803CD760 end:0x803D3F60
 
-main/audio/inp_midi.c:
-	extab       start:0x80005AA8 end:0x80005AB8
-	extabindex  start:0x8000638C end:0x800063A4
-	.text       start:0x80281A30 end:0x80282070
-	.bss        start:0x803CD760 end:0x803D3CA0
-
-main/audio/inp_value.c:
-	extab       start:0x80005AB8 end:0x80005AD0
-	extabindex  start:0x800063A4 end:0x800063C8
-	.text       start:0x80282070 end:0x80282588
-
-main/audio/inp_voice.c:
-	extab       start:0x80005AD0 end:0x80005AE0
-	extabindex  start:0x800063C8 end:0x800063E0
-	.text       start:0x80282588 end:0x80282618
-
-main/audio/inp_voice_aux.c:
-	extab       start:0x80005AE0 end:0x80005B10
-	extabindex  start:0x800063E0 end:0x80006428
-	.text       start:0x80282618 end:0x802827C8
-
-main/audio/inp_ctrl.c:
-	extab       start:0x80005B10 end:0x80005B50
-	extabindex  start:0x80006428 end:0x80006488
-	.text       start:0x802827C8 end:0x80282FE0
-	.data       start:0x8032FFE0 end:0x80332220
-	.bss        start:0x803D3CA0 end:0x803D3EA0
+main/audio/snd_service.c:
+	extab       start:0x80005B40 end:0x80005B50
+	extabindex  start:0x80006470 end:0x80006488
+	.text       start:0x80282E5C end:0x80282FE0
+	.data       start:0x80330028 end:0x80330840
 
 main/audio/hw_init.c:
 	extab       start:0x80005B50 end:0x80005B70
@@ -4300,6 +4280,7 @@ main/audio/sal_dsp.c:
 	extab       start:0x80005C40 end:0x80005C90
 	extabindex  start:0x800065F0 end:0x80006668
 	.text       start:0x802848D8 end:0x80284B94
+	.data       start:0x80330840 end:0x80332220
 	.bss        start:0x803D4880 end:0x803D68E0
 
 main/audio/snd_reverb.c:

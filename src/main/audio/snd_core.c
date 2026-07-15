@@ -5,10 +5,6 @@
 
 #pragma exceptions on
 
-#define MIDI_DIRTY_GROUP_STRIDE 0x40
-#define MIDI_DIRTY_ENTRY_STRIDE 4
-
-extern u8 lbl_803D3CA0[];
 extern u8 gSynthInitialized;
 extern void IFFifoAlloc(void);
 extern double __frsqrte(double x);
@@ -70,18 +66,6 @@ f32 salNormalizeVector(f32* v)
     return len;
 }
 #pragma fp_contract reset
-
-void inpSetGlobalMIDIDirtyFlag(u8 index, u8 group, u32 flags)
-{
-    u8* groupBase;
-    u8* entry;
-    u32 offset;
-
-    groupBase = lbl_803D3CA0 + group * MIDI_DIRTY_GROUP_STRIDE;
-    offset = index * MIDI_DIRTY_ENTRY_STRIDE;
-    entry = groupBase + offset;
-    *(u32*)entry |= flags;
-}
 
 const float lbl_803E78C8 = 0.0f;
 const double lbl_803E78D0 = 0.5;

@@ -2,6 +2,7 @@
 #define MAIN_AUDIO_INP_MIDI_H_
 
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 
 #define INP_INVALID_SLOT 0xFF
 #define INP_MIDI_CTRL_BANK_SIZE 0x86
@@ -29,7 +30,7 @@ u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key);
 void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 u8 *inpGetChannelDefaults(u8 a, u8 b);
 void inpResetChannelDefaults(u8 a, u8 b);
-void inpAddCtrl(int obj, int b, int c, int d, u32 flag);
+void inpAddCtrl(McmdInputSlot* dest, u8 ctrl, s32 scale, u8 comb, u32 isVar);
 void inpFXCopyCtrl(u8 controller, int dstState, int srcState);
 void inpSetMidiLastNote(u8 a, u8 b, u8 v);
 u8 inpGetMidiLastNote(u8 a, u8 b);

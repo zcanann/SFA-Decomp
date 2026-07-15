@@ -112,21 +112,20 @@ void mcmdRandomKey(McmdVoiceState* state, McmdCommandArgs* args)
  */
 void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* cstep, u64 tstflag, u32 dirtyFlag)
 {
-    int comb;
+    u8 comb;
     s32 scale;
-    int destAddr;
 
-    if ((MAC_CFLAGS(svoice) & tstflag) == 0)
+    if (!(MAC_CFLAGS(svoice) & tstflag))
     {
         comb = 0;
         MAC_CFLAGS(svoice) |= tstflag;
     }
     else
     {
-        comb = cstep->value & 0xff;
+        comb = (u8)cstep->value;
     }
 
-    scale = (s32)(cstep->flags & 0xffff0000) / 100;
+    scale = ((s16)(cstep->flags >> 16) << 16) / 100;
     if (scale < 0)
     {
         scale -= ((s8)(cstep->value >> 0x10) << 8) / 100;
@@ -136,10 +135,9 @@ void SelectSource(McmdVoiceState* svoice, McmdInputSlot* dest, McmdCommandArgs* 
         scale += ((s8)(cstep->value >> 0x10) << 8) / 100;
     }
 
-    destAddr = (int)dest;
-    inpAddCtrl(destAddr, (cstep->flags >> 8) & 0xff, scale, comb, (u8)(cstep->value >> 8) != 0);
+    inpAddCtrl(dest, (u8)(cstep->flags >> 8), scale, comb, (u8)(cstep->value >> 8) != 0);
 
-    if (dirtyFlag & 0x80000000)
+    if ((dirtyFlag & 0x80000000) != 0)
     {
         inpSetGlobalMIDIDirtyFlag(svoice->midiSlot, svoice->midiEvent, dirtyFlag);
     }
