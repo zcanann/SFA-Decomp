@@ -28,15 +28,8 @@
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
 
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E4288 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E428C = 0.005f;
-#pragma force_active reset
-
 STATIC_ASSERT(sizeof(CfPrisonUncleState) == 0xa8);
 
-extern f32 lbl_803E428C;
-extern f32 lbl_803E4288;
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 
 /* release-sequence callback: on the cued trigger, thank Fox with a
@@ -79,17 +72,17 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
             ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                        lbl_803E4288);
+                                                                                        1.0f);
         }
     }
     else if (mainGetBit(GAMEBIT_CFPerchRelated004D) != 0 && visible != 0)
     {
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                    lbl_803E4288);
+                                                                                    1.0f);
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0)
         {
             ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4, p5,
-                                                                                        lbl_803E4288);
+                                                                                        1.0f);
         }
     }
     else if (sub != NULL && *(void**)&sub->target != NULL)
@@ -101,12 +94,12 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
                 if (objUpdateOpacity(sub->target) != 0)
                 {
                     ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3,
-                                                                                                p4, p5, lbl_803E4288);
+                                                                                                p4, p5, 1.0f);
                     ObjPath_GetPointWorldPosition(sub->target, 0, &obj->anim.localPosX, &obj->anim.localPosY,
                                                   &obj->anim.localPosZ, 0);
                 }
                 ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                              lbl_803E4288);
+                                                                                              1.0f);
             }
         }
         else
@@ -114,12 +107,12 @@ void cfprisonuncle_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
             if (objUpdateOpacity(sub->target) != 0)
             {
                 ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(sub->target, p2, p3, p4,
-                                                                                            p5, lbl_803E4288);
+                                                                                            p5, 1.0f);
             }
             if (visible != 0)
             {
                 ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                              lbl_803E4288);
+                                                                                              1.0f);
             }
         }
     }
@@ -181,7 +174,7 @@ void cfprisonuncle_update(GameObject* obj)
         else
         {
             objAnimFn_80038f38((GameObject*)obj, (char*)sub + 0x34);
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E428C,
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f,
                                                                         (f32)(u32)framesThisStep, 0);
         }
     }

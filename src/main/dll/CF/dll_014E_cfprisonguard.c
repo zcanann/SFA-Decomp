@@ -52,10 +52,8 @@ typedef struct CfPrisonGuardFlags39
 STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 
 extern f32 lbl_803E4268;
-extern f32 lbl_803E4280;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
-extern f32 lbl_803E4284;
 extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the
@@ -253,7 +251,7 @@ void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     CfPrisonGuardState* sub = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E4280);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
     }
     if (visible != 0)
     {
@@ -261,9 +259,9 @@ void CFPrisonGuard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         if (t > lbl_803E4260)
         {
             sub->alarmRamp = lbl_803E4264 * (f32)(u32)framesThisStep + t;
-            if (sub->alarmRamp < lbl_803E4284)
+            if (sub->alarmRamp < 1.5f)
             {
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E4280, 3, sub->alarmRamp, 0);
+                objParticleFn_80099d84((GameObject*)obj, 1.0f, 3, sub->alarmRamp, 0);
             }
         }
     }
@@ -358,8 +356,3 @@ void CFPrisonGuard_release(void)
 void CFPrisonGuard_initialise(void)
 {
 }
-
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E4280 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E4284 = 1.5f;
-#pragma force_active reset
