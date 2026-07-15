@@ -14,5 +14,10 @@
 #include "main/objhits.h"
 
 int scarab_sweptCollide(GameObject* obj);
+int Scarab_getExtraSize(void);
+void Scarab_free(void);
+void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void Scarab_update(GameObject* obj);
+void Scarab_init(int* obj, u8* def);
 
 #endif

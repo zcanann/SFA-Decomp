@@ -114,15 +114,6 @@ typedef void (*TrickyHandlerFn)(int obj, int state);
 
 typedef struct
 {
-    int a;
-    int b;
-    int c;
-    int d;
-    int e;
-} TrickyCmdQuery;
-
-typedef struct
-{
     u16 a;
     u16 b;
 } TrickySfxPair;
@@ -315,7 +306,6 @@ extern void battleDroidUpdateWhileFrozen(int obj, u8* state, int attacker, int h
 extern void crawler_onHit(GameObject* obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos, int sector);
 extern void hagabonMK2_updateWhileFrozen(int obj, u8* state, int attacker, int hit, int p5, int p6, Vec* hitPos,
                                          int sector);
-extern int gTrickyCmdQueryInit[];
 extern TrickySfxPair lbl_803E23C4;
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24D8;
@@ -948,14 +938,14 @@ void Tricky_update(int obj)
     u8* target;
     f32 z;
     u8 blockFlags[120];
-    TrickyCmdQuery cmdQuery;
+    TrickyItemIdList cmdQuery;
     TrickySfxPair pair;
 
     base = lbl_8031D2E8;
     state = *(int*)&((GameObject*)obj)->extra;
     trickyState = (TrickyState*)state;
     found = 0;
-    cmdQuery = *(TrickyCmdQuery*)gTrickyCmdQueryInit;
+    cmdQuery = gTrickyCmdQueryInit;
     pair = lbl_803E23C4;
     walkgroupFindExitPointFn_800dc398();
     if (mainGetBit(GAMEBIT_Tricky_LoadBadge) != 0 && *(void**)&trickyState->spawnedChild == NULL &&
@@ -1083,7 +1073,7 @@ void Tricky_update(int obj)
         }
         else
         {
-            cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&cmdQuery, 5);
+            cmd = (*gGameUIInterface)->isOneOfItemsBeingUsed(cmdQuery.ids, TRICKY_ITEM_ID_COUNT);
         }
         cursor = (u8*)state;
         count = trickyState->commandCount;

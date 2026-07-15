@@ -105,8 +105,8 @@ void fn_80144B50(u8* obj, u8* state);
 extern f32 lbl_803E24C8;
 extern f32 lbl_803E24AC;
 extern f32 lbl_803E23E4;
-__declspec(section ".rodata") int gTrickyCmdQueryInit[5] = {0, 1, 3, 4, 5};
-__declspec(section ".rodata") u32 lbl_802C21DC[5] = {0, 1, 3, 4, 5};
+const TrickyItemIdList gTrickyCmdQueryInit = {{0, 1, 3, 4, 5}};
+const TrickyItemIdList gTrickyFoodItemIds = {{0, 1, 3, 4, 5}};
 extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern f32 lbl_803E2520;
@@ -819,12 +819,9 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
     int tex;
     int result;
     short move;
-    struct Buf5
-    {
-        u32 a[5];
-    } buf;
+    TrickyItemIdList buf;
 
-    buf = *(struct Buf5*)lbl_802C21DC;
+    buf = gTrickyFoodItemIds;
     if (trickyFoodFn_8014460c(obj, (int*)state) != 0)
     {
         ((TrickyState*)state)->cooldownB = lbl_803E23DC;
@@ -837,7 +834,7 @@ int trickyFoodFn_80142d2c(GameObject* obj, int state)
         ((TrickyState*)state)->substate = 0;
         return 1;
     }
-    result = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)&buf, 5);
+    result = (*gGameUIInterface)->isOneOfItemsBeingUsed(buf.ids, TRICKY_ITEM_ID_COUNT);
     if (result != 2)
     {
         if (result < 2)

@@ -1,7 +1,19 @@
-#ifndef MAIN_DLL_COLLECTABLE_H_
-#define MAIN_DLL_COLLECTABLE_H_
+#ifndef MAIN_DLL_DLL_00C4_TRICKY_H_
+#define MAIN_DLL_DLL_00C4_TRICKY_H_
 
 #include "main/game_object.h"
+
+#define TRICKY_ITEM_ID_COUNT 5
+
+typedef struct TrickyItemIdList
+{
+    s32 ids[TRICKY_ITEM_ID_COUNT];
+} TrickyItemIdList;
+
+STATIC_ASSERT(sizeof(TrickyItemIdList) == 0x14);
+
+extern const TrickyItemIdList gTrickyCmdQueryInit;
+extern const TrickyItemIdList gTrickyFoodItemIds;
 #include "ghidra_import.h"
 #include "main/dll/tricky_state.h"
 #include "main/objanim_update.h"
@@ -75,4 +87,4 @@ int Tricky_func13(int* obj);
 int Tricky_func12(int* obj);
 int Tricky_getAvailableCommands(void);
 
-#endif /* MAIN_DLL_COLLECTABLE_H_ */
+#endif /* MAIN_DLL_DLL_00C4_TRICKY_H_ */

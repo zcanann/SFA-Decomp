@@ -584,6 +584,8 @@ typedef struct SwipeColorTable
     u32 w[16];
 } SwipeColorTable;
 
+STATIC_ASSERT(sizeof(SwipeColorTable) == 0x40);
+
 /* per-swipe trail record (stride 0x18, 3 records) */
 typedef struct SwipeRecord
 {
@@ -607,7 +609,7 @@ typedef struct SwipeVertex
     s16 pad12;
 } SwipeVertex;
 
-__declspec(section ".rodata") SwipeColorTable gStaffSwipeColorTable = {{
+const SwipeColorTable gStaffSwipeColorTable = {{
     0x08, 0xFF, 0xBE, 0x78, 0x08, 0xFF, 0xFF, 0x78,
     0x08, 0xB4, 0xF0, 0xFF, 0x08, 0xAA, 0xFF, 0xAA}};
 void staffDrawSwipe(int* obj, int* swipe);

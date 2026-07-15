@@ -30,6 +30,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
+#include "main/dll/dll_0106_scarab.h"
 #include "main/dll/CF/windlift.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
@@ -679,12 +680,6 @@ void largecrate_initialise(void)
 {
 }
 
-/*__DATA_EXTERNS__*/
-extern void Scarab_getExtraSize();
-extern void Scarab_free();
-extern void Scarab_render();
-extern void Scarab_update();
-extern void Scarab_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gScarabObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, (void*)0x00090000,
                                   (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, Scarab_init,
