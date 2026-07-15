@@ -4,6 +4,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/crfueltank.h"
 #include "main/proximitymine.h"
+#include "main/dll/DR/dll_024F_ktrexlevel.h"
 #include "main/gamebits.h"
 #include "main/objhits.h"
 
@@ -146,16 +147,6 @@ ObjectDescriptor gCrFuelTankObjDescriptor = {
     crfueltank_getExtraSize,
 };
 
-/*__DATA_EXTERNS__*/
-extern void KT_RexLevel_getExtraSize();
-extern void KT_RexLevel_getObjectTypeId();
-extern void KT_RexLevel_free();
-extern void KT_RexLevel_render();
-extern void KT_RexLevel_hitDetect();
-extern void KT_RexLevel_update();
-extern void KT_RexLevel_init();
-extern void KT_RexLevel_release();
-extern void KT_RexLevel_initialise();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 ObjectDescriptor gProximityMineObjDescriptor = {
     0,

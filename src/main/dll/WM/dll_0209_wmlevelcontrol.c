@@ -106,6 +106,13 @@ typedef struct
     LightVec3 fog;
 } LightVecSet;
 
+typedef struct
+{
+    LightVec3 vecs[4];
+} WmLevelControlSkyVecTable;
+
+STATIC_ASSERT(sizeof(WmLevelControlSkyVecTable) == 0x30);
+
 #define WMLEVELCONTROL_OBJGROUP 9
 
 /* LightFoot Village map-event id (seeded from the palace spirit chain). */
@@ -120,8 +127,12 @@ __declspec(section ".sdata2") f32 gWmLevelControlLightIntensityBase = 32.0f;
 __declspec(section ".sdata2") f32 gWmLevelControlLightIntensityRange = 128.0f;
 __declspec(section ".sdata2") f32 gWmLevelControlOverrideLightIntensity = 100.0f;
 extern f32 gWmLevelControlIntroMessageDuration;   /* 300.0: intro-message duration */
-__declspec(section ".rodata") f32 gWmLevelControlSkyVecTable[12] = {
-    -1.0f, -2.0f, -1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -2.0f, 1.0f, 1.0f, -0.25f, 1.0f}; /* sky light/color/fog vector table */
+const WmLevelControlSkyVecTable gWmLevelControlSkyVecTable = {{
+    {-1.0f, -2.0f, -1.0f},
+    {1.0f, -2.0f, 1.0f},
+    {1.0f, -2.0f, 1.0f},
+    {1.0f, -0.25f, 1.0f}
+}}; /* sky light/color/fog vector table */
 u8 gWmLevelControlBlendedLightColor[4];    /* blended light-color out-triplet */
 u8 gWmLevelControlBlendedSkyColor[4];      /* blended sky-color out-triplet */
 u8 gWmLevelControlBlendedFogColor[4];      /* blended fog-color out-triplet */
@@ -136,11 +147,11 @@ void fn_801F3F18(GameObject* obj)
     LightVecSet L;
     f32 lightX;
     f32 decay;
-    LightVec3* vecs;
+    const LightVec3* vecs;
     u8* fromColor;
     u8* toColor;
 
-    vecs = (LightVec3*)gWmLevelControlSkyVecTable;
+    vecs = gWmLevelControlSkyVecTable.vecs;
     L.fog = vecs[1];
     L.color = vecs[2];
     L.light = vecs[3];

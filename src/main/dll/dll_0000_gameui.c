@@ -392,7 +392,17 @@ extern u8 gTrickyAirMeterFillSpeed;
 extern s8 lbl_803DD7F8;
 extern s8 lbl_803DD7F9;
 extern int lbl_803E1E30;
-__declspec(section ".rodata") u16 lbl_802C21A0[6] = {0x2B7, 0x2CB, 0x2CC, 0x2B6, 0x2D7, 0x2D8};
+
+#define GAMEUI_TIME_LIST_COUNT 6
+
+typedef struct GameUiTimeIdList
+{
+    u16 ids[GAMEUI_TIME_LIST_COUNT];
+} GameUiTimeIdList;
+
+STATIC_ASSERT(sizeof(GameUiTimeIdList) == 0xC);
+
+const GameUiTimeIdList lbl_802C21A0 = {{0x2B7, 0x2CB, 0x2CC, 0x2B6, 0x2D7, 0x2D8}};
 __declspec(section ".rodata") int lbl_802C21AC[7] = {0, 0, 0, 0, 0, 0, 0};
 extern const f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
 extern f32 lbl_803DD850;
@@ -5580,23 +5590,14 @@ void fn_80128A7C(u8 i, int alpha, int flag)
     }
 }
 
-/* Number of best-time entries in the race-times list (bits[6]). */
-#define GAMEUI_TIME_LIST_COUNT 6
-
-extern u16 lbl_802C21A0[GAMEUI_TIME_LIST_COUNT];
-
 /* Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
 void timeListDraw(int unused1, int unused2, int unused3)
 {
-    struct TimeIdList
-    {
-        u16 ids[GAMEUI_TIME_LIST_COUNT];
-    };
-    u16 bits[GAMEUI_TIME_LIST_COUNT];
+    GameUiTimeIdList bits;
     char buf[0x24];
 
-    *(struct TimeIdList*)bits = *(struct TimeIdList*)lbl_802C21A0;
+    bits = lbl_802C21A0;
     if (pauseMenuState != 0)
     {
         return;
@@ -5638,7 +5639,7 @@ void timeListDraw(int unused1, int unused2, int unused3)
     {
         u16* p;
         int k = 0;
-        p = bits;
+        p = bits.ids;
         for (; k < GAMEUI_TIME_LIST_COUNT; k++)
         {
             int v = mainGetBit(*p);

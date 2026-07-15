@@ -28,9 +28,12 @@ import json
 import os
 import re
 import subprocess
+import tempfile
 
 BUILD = "build/GSAE01"
-OBJDUMP = "build/binutils/powerpc-eabi-objdump"
+EXE_SUFFIX = ".exe" if os.name == "nt" else ""
+OBJDUMP = os.path.abspath(f"build/binutils/powerpc-eabi-objdump{EXE_SUFFIX}")
+OBJCOPY = os.path.abspath(f"build/binutils/powerpc-eabi-objcopy{EXE_SUFFIX}")
 IGNORE_SECTIONS = {".comment", ".symtab", ".strtab", ".shstrtab", ".note.split"}
 BSS_SECTIONS = {".bss", ".sbss", ".sbss2"}
 
@@ -49,9 +52,10 @@ def section_sizes(obj):
 
 
 def section_bytes(obj, name):
-    tmp = "/tmp/_link_scan_sec.bin"
+    fd, tmp = tempfile.mkstemp(prefix="link_scan_sec_", suffix=".bin")
+    os.close(fd)
     subprocess.run(
-        ["build/binutils/powerpc-eabi-objcopy", "-O", "binary", f"--only-section={name}", obj, tmp],
+        [OBJCOPY, "-O", "binary", f"--only-section={name}", obj, tmp],
         capture_output=True,
     )
     try:
