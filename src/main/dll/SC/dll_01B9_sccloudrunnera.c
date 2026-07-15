@@ -11,13 +11,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
 
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E55E0 = 1.0f;
-#pragma force_active reset
-
 extern int* gTitleMenuControlInterfaceCopy;
 extern u8 lbl_803DB411;    /* trigger-interface update parameter */
-extern f32 lbl_803E55E0;   /* render fade alpha / posOffsetDecay base */
 
 /* Child object spawned in sc_cloudrunnera_update case 0, cached in childObjs[0]
  * and attached via ObjLink_AttachChild. */
@@ -69,7 +64,7 @@ void sc_cloudrunnera_free(int* obj)
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E55E0);
+    if (v != 0) objRenderModelAndHitVolumes((GameObject*)p1, 1.0f);
 }
 
 void sc_cloudrunnera_hitDetect(void)
@@ -148,7 +143,7 @@ void sc_cloudrunnera_update(int obj)
                 setup->unk1B = 0x9;
                 setup->unk1C = 0;
                 setup->unk1D = 0;
-                setup->unk20 = lbl_803E55E0;
+                setup->unk20 = 1.0f;
                 setup->unk26 = 0xff;
                 setup->unk27 = 0xff;
                 setup->unk28 = 0xff;
@@ -207,7 +202,7 @@ void sc_cloudrunnera_init(GameObject *obj, int def)
     seq = (obj)->extra;
     seq->gameBit = ((ScCloudrunneraPlacement*)def)->gameBit;
     seq->flags = -1;
-    base = lbl_803E55E0;
+    base = 1.0f;
     seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)def)->posOffsetDecayFactor);
     seq->curveId = -1;
     (obj)->unkF8 = 0;
