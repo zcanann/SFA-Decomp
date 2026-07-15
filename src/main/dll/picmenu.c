@@ -72,10 +72,6 @@ OSThread gPicMenuVideoDecodeThread;
 
 BOOL movieLoad(const char* fileName, void* onMemory)
 {
-    AttractMovieAudioInfo* audioInfo;
-    AttractMovieVideoInfo* videoInfo;
-    char* pb; /* holds the isOpen read/write only; other accesses use the raw global */
-    THPFrameCompInfo* compInfo;
     u32 readOff;
     s32 result;
     u32 i;
@@ -85,17 +81,13 @@ BOOL movieLoad(const char* fileName, void* onMemory)
         return 0;
     }
 
-    pb = (char*)&lbl_803A5D60;
-
-    if (((AttractMoviePlayer*)pb)->isOpen != 0)
+    if (((AttractMoviePlayer*)&lbl_803A5D60)->isOpen != 0)
     {
         return 0;
     }
 
-    videoInfo = &((AttractMoviePlayer*)pb)->videoInfo;
-    memset(videoInfo, 0, sizeof(*videoInfo));
-    audioInfo = &((AttractMoviePlayer*)&lbl_803A5D60)->audioInfo;
-    memset(audioInfo, 0, sizeof(*audioInfo));
+    memset(&((AttractMoviePlayer*)&lbl_803A5D60)->videoInfo, 0, sizeof(AttractMovieVideoInfo));
+    memset(&((AttractMoviePlayer*)&lbl_803A5D60)->audioInfo, 0, sizeof(AttractMovieAudioInfo));
 
     if (!DVDOpen(fileName, (DVDFileInfo*)&lbl_803A5D60))
     {
@@ -134,13 +126,12 @@ BOOL movieLoad(const char* fileName, void* onMemory)
             return 0;
         }
 
-        compInfo = &((AttractMoviePlayer*)&lbl_803A5D60)->compInfo;
-        memcpy(compInfo, gPicMenuDvdReadBuffer, sizeof(*compInfo));
-        readOff = compOff + sizeof(*compInfo);
+        memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->compInfo, gPicMenuDvdReadBuffer, sizeof(THPFrameCompInfo));
+        readOff = compOff + sizeof(THPFrameCompInfo);
         ((AttractMoviePlayer*)&lbl_803A5D60)->audioExists = 0;
     }
 
-    for (i = 0; i < compInfo->mNumComponents; i++)
+    for (i = 0; i < ((AttractMoviePlayer*)&lbl_803A5D60)->compInfo.mNumComponents; i++)
     {
         switch (((AttractMoviePlayer*)&lbl_803A5D60)->compInfo.mFrameComp[i])
         {
@@ -151,8 +142,9 @@ BOOL movieLoad(const char* fileName, void* onMemory)
                 DVDClose((DVDFileInfo*)&lbl_803A5D60);
                 return 0;
             }
-            memcpy(videoInfo, gPicMenuDvdReadBuffer, sizeof(*videoInfo));
-            readOff += sizeof(*videoInfo);
+            memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->videoInfo, gPicMenuDvdReadBuffer,
+                   sizeof(AttractMovieVideoInfo));
+            readOff += sizeof(AttractMovieVideoInfo);
             break;
         case THP_COMPONENT_AUDIO:
             result = DVDRead((DVDFileInfo*)&lbl_803A5D60, gPicMenuDvdReadBuffer, 0x20, readOff);
@@ -161,9 +153,10 @@ BOOL movieLoad(const char* fileName, void* onMemory)
                 DVDClose((DVDFileInfo*)&lbl_803A5D60);
                 return 0;
             }
-            memcpy(audioInfo, gPicMenuDvdReadBuffer, sizeof(*audioInfo));
+            memcpy(&((AttractMoviePlayer*)&lbl_803A5D60)->audioInfo, gPicMenuDvdReadBuffer,
+                   sizeof(AttractMovieAudioInfo));
             ((AttractMoviePlayer*)&lbl_803A5D60)->audioExists = 1;
-            readOff += sizeof(*audioInfo);
+            readOff += sizeof(AttractMovieAudioInfo);
             break;
         default:
             return 0;
@@ -174,7 +167,7 @@ BOOL movieLoad(const char* fileName, void* onMemory)
     ((AttractMoviePlayer*)&lbl_803A5D60)->state = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->playFlags = 0;
     ((AttractMoviePlayer*)&lbl_803A5D60)->isOnMemory = (s32)onMemory;
-    ((AttractMoviePlayer*)pb)->isOpen = 1;
+    ((AttractMoviePlayer*)&lbl_803A5D60)->isOpen = 1;
     ((AttractMoviePlayer*)&lbl_803A5D60)->curVolume = gPicMenuMaxVolume;
     ((AttractMoviePlayer*)&lbl_803A5D60)->targetVolume = gPicMenuMaxVolume;
     ((AttractMoviePlayer*)&lbl_803A5D60)->rampCount = 0;
@@ -389,20 +382,20 @@ void AttractMovieVideo_Decode(void* param)
     AttractMoviePlayer* player;
     char* db;
     u32 i;
-    char* dvdData;
     u32* compSizes;
 
     db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
     player = &lbl_803A5D60;
-    dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
 
     {
         AttractMoviePlayer* player2;
         u8* componentKind;
         void** readMsg;
+        char* dvdData;
         OSMessage tmpBuf;
 
+        dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
         readMsg = tmpBuf;
         i = 0;

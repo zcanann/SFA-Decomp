@@ -20,14 +20,6 @@
 #include "main/dll/dll_00ED_collectible_api.h"
 #include "main/dll/dll_00FF_magicgem.h"
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3420 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3424 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E3428 = 0.0078125f;
-__declspec(section ".sdata2") f32 lbl_803E342C = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E3430 = 2.0f;
-#pragma explicit_zero_data off
-
 void checkpoint4_setScale(void)
 {
 }
@@ -47,7 +39,7 @@ void checkpoint4_free(void)
 
 void checkpoint4_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes((GameObject*)obj, lbl_803E3420);
+    objRenderModelAndHitVolumes((GameObject*)obj, 1.0f);
 }
 
 void checkpoint4_hitDetect(void)
@@ -70,27 +62,27 @@ void checkpoint4_init(Checkpoint4Object* checkpoint, Checkpoint4Placement* place
     f32 matrix[16];
     state = checkpoint->state;
     radius = (f32)(int)placement->radius;
-    if ((f32)(int)placement->radius < *(f32*)&lbl_803E3424)
+    if ((f32)(int)placement->radius < 5.0f)
     {
-        radius = lbl_803E3424;
+        radius = 5.0f;
     }
-    radius = radius * lbl_803E3428;
+    radius *= 0.0078125f;
     checkpoint->objAnim.rootMotionScale = radius;
     checkpoint->objAnim.rotX = (s16)((s16)placement->rotX << 8);
     transform.rotX = checkpoint->objAnim.rotX;
     transform.rotY = checkpoint->objAnim.rotY;
     transform.rotZ = checkpoint->objAnim.rotZ;
-    transform.scale = lbl_803E3420;
-    transform.x = lbl_803E342C;
-    transform.y = lbl_803E342C;
-    transform.z = lbl_803E342C;
+    transform.scale = 1.0f;
+    transform.x = 0.0f;
+    transform.y = 0.0f;
+    transform.z = 0.0f;
     setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(matrix, lbl_803E342C, lbl_803E342C, lbl_803E3420, &state->planeNormalX, &state->planeNormalY,
+    Matrix_TransformPoint(matrix, 0.0f, 0.0f, 1.0f, &state->planeNormalX, &state->planeNormalY,
                           &state->planeNormalZ);
     yy = checkpoint->objAnim.localPosY * state->planeNormalY;
     state->planeDistance = -(yy + checkpoint->objAnim.localPosX * state->planeNormalX +
                              checkpoint->objAnim.localPosZ * state->planeNormalZ);
-    state->triggerRadius = lbl_803E3430 * checkpoint->objAnim.rootMotionScale;
+    state->triggerRadius = 2.0f * checkpoint->objAnim.rootMotionScale;
     i = 0;
     do
     {

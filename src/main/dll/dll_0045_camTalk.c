@@ -13,14 +13,6 @@
 #include "main/dll/player_api.h"
 
 CameraModeBikeState* gCamTalkBikeState;
-
-CameraModeBikeState* gCamTalkBikeState;
-
-CameraModeBikeState* gCamTalkBikeState;
-
-CameraModeBikeState* gCamTalkBikeState;
-
-extern CameraModeBikeState* gCamTalkBikeState;
 extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E1780;
 extern const f32 gCamTalkDefaultFov;

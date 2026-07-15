@@ -71,9 +71,6 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 #define BABYCLOUDRUNNER_FLAG_CLEAR_GATE_BIT  0x2
 #define BABYCLOUDRUNNER_FLAG_RANDOM_TRIGGER  0x4
 
-__declspec(section ".sdata2") f32 lbl_803E3848 = 1.0f;    /* render distance constant */
-__declspec(section ".sdata2") f32 lbl_803E384C = 100.0f;  /* initial max-distance for the nearest-object search */
-
 int dll_FC_getExtraSize_ret_8(void)
 {
     return sizeof(BabyCloudRunnerState);
@@ -91,7 +88,7 @@ void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3848);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_FC_hitDetect(int* obj)
@@ -112,7 +109,7 @@ void dll_FC_update(GameObject* obj)
     u32 randomTrigger;
     f32 maxDist;
 
-    maxDist = lbl_803E384C;
+    maxDist = 100.0f;
     placement = (BabyCloudRunnerPlacement*)(obj)->anim.placementData;
     state = (obj)->extra;
 

@@ -32,8 +32,6 @@ typedef struct BaddieinterestpPlacement
     u8 pad2E[0x30 - 0x2E]; /* 0x2E */
 } BaddieinterestpPlacement;
 
-__declspec(section ".sdata2") f32 lbl_803E3220 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3224 = 1600.0f;
 extern void fn_801504BC(int* obj, int kind);
 
 int BaddieInterestP_getExtraSize(void)
@@ -54,7 +52,7 @@ void BaddieInterestP_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3220);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void BaddieInterestP_hitDetect(void)
@@ -101,7 +99,7 @@ void BaddieInterestP_update(int* obj)
                 {
                     found = 0;
                     if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
-                                              &((GameObject*)other)->anim.worldPosX) < lbl_803E3224)
+                                              &((GameObject*)other)->anim.worldPosX) < 1600.0f)
                     {
                         if (((GameObject*)obj)->unkF4 == 0)
                         {
