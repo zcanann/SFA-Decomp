@@ -44,8 +44,8 @@ extern u8 lbl_803BDA74[];            /* per-studio aux B input slots */
 extern u8 lbl_803BDEF4[];            /* per-studio aux A input slots */
 extern u8 lbl_803DE2D0;              /* macro steps executed this frame */
 extern McmdCommandArgs lbl_803DE2E8; /* current macro step */
-extern f32 lbl_803E7810;             /* 1023.0f */
-extern f32 lbl_803E7814;             /* 1.0f */
+extern const f32 lbl_803E7810;       /* 1023.0f */
+extern const f32 lbl_803E7814;       /* 1.0f */
 extern f32 voiceAdsrSustainTable[];
 extern u8 voiceAdsrDecayTable[];
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
@@ -1644,5 +1644,5 @@ void macInit(void)
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803E7810 = 1023.0f;
-__declspec(section ".sdata2") f32 lbl_803E7814 = 1.0f;
+const f32 lbl_803E7810 = 1023.0f;
+const f32 lbl_803E7814 = 1.0f;
