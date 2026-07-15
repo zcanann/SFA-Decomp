@@ -30,7 +30,7 @@ __declspec(section ".sdata2") f32 lbl_803E5FA0 = 0.1f;
 #pragma explicit_zero_data off
 #pragma force_active reset
 
-__declspec(section ".rodata") u32 lbl_802C2500[4] = {0, 0, 0, 0};
+const u32 lbl_802C2500[4] = {0, 0, 0, 0};
 
 int WM_Planets_getExtraSize(void)
 {

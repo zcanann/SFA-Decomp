@@ -82,12 +82,6 @@ typedef struct ExpgfxCameraViewSlot
 
 STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
 
-typedef struct ObjFxCrystalBurstTable
-{
-    f32 amps[4];
-    s16 dirs[12][3];
-} ObjFxCrystalBurstTable;
-
 typedef union Dll0BDescriptorTable
 {
     u32 words[30];
@@ -3165,121 +3159,6 @@ u32 gExpgfxTrackedPoolSourceIds[0x50];
 ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[0xB0 / sizeof(ExpgfxTrackedSourceFrameMask)];
 u32 gExpgfxSlotActiveMasks[0x50];
 u32 gExpgfxSlotPoolBases[0x50];
-
-u8 gExpgfxStaticData[48] = {
-    192, 160, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0,
-    66,  72,  0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0, 66, 72, 0, 0,
-};
-
-s16 gExpgfxStaticPoolSlotTypeIds[80] = {
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0, 0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0,
-};
-
-u8 gExpgfxStaticPoolFrameFlags[112] = {
-    0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 64, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-};
-
-/* Crystal burst amplitude scales + spawn direction table (referenced by objfx.c). */
-ObjFxCrystalBurstTable gObjFxCrystalAmpTbl = {
-    {0.5f, 0.55f, 0.65f, 0.7f},
-    {
-        {-1000, 0, 1000},
-        {1000, 0, 1000},
-        {1000, 0, -1000},
-        {-1000, 0, -1000},
-        {-1000, -1000, 0},
-        {1000, -1000, 0},
-        {1000, 1000, 0},
-        {-1000, 1000, 0},
-        {-1000, -1000, 0},
-        {1000, -1000, 0},
-        {1000, 1000, 0},
-        {-1000, 1000, 0},
-    },
-};
-
-/* Light RGB triplets per fx type (referenced by objfx.c). */
-u8 gObjFxLightColorTbl[12][3] = {
-    {0x00, 0x00, 0x00}, {0x40, 0xFF, 0xFF}, {0xFF, 0xFF, 0x40}, {0xFF, 0x40, 0x7F},
-    {0x7F, 0x7F, 0x7F}, {0x40, 0xFF, 0x40}, {0xFF, 0xFF, 0x00}, {0xFF, 0x7F, 0x40},
-    {0xFF, 0xFF, 0x40}, {0x00, 0x7F, 0xFF}, {0x00, 0x00, 0x00}, {0x00, 0x00, 0x00},
-};
-
-ObjectDescriptor14 expgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_14_SLOTS,
-    (ObjectDescriptorCallback)expgfx_initialise,
-    (ObjectDescriptorCallback)expgfx_release,
-    0,
-    (ObjectDescriptorCallback)expgfx_onMapSetup,
-    (ObjectDescriptorCallback)expgfx_addremove,
-    (ObjectDescriptorCallback)expgfx_updateFrameState,
-    (ObjectDescriptorCallback)expgfx_resetAllPools,
-    (ObjectDescriptorCallback)expgfx_free,
-    (ObjectDescriptorCallback)expgfx_free2,
-    (ObjectDescriptorCallback)expgfx_func09,
-    (ObjectDescriptorCallback)expgfx_func0A_nop,
-    (ObjectDescriptorCallback)expgfx_func0B_nop,
-    (ObjectDescriptorCallback)expgfx_ownerFree3,
-    (ObjectDescriptorCallback)expgfx_updateSourceFrameFlags,
-};
-
-/* Switch jumptables for neighbouring objfx/itempickup particle fx code whose
- * .data was emitted in this unit's address range. */
-
-void* jumptable_8030FA9C[8] = {
-    (void*)((u8*)objfx_spawnDirectionalBurst + 0x390), (void*)((u8*)objfx_spawnDirectionalBurst + 0x170),
-    (void*)((u8*)objfx_spawnDirectionalBurst + 0x1D0), (void*)((u8*)objfx_spawnDirectionalBurst + 0x210),
-    (void*)((u8*)objfx_spawnDirectionalBurst + 0x24C), (void*)((u8*)objfx_spawnDirectionalBurst + 0x288),
-    (void*)((u8*)objfx_spawnDirectionalBurst + 0x2D8), (void*)((u8*)objfx_spawnDirectionalBurst + 0x32C)};
-void* jumptable_8030FABC[8] = {
-    (void*)((u8*)objfx_spawnArcedBurst + 0x30C), (void*)((u8*)objfx_spawnArcedBurst + 0x1F0),
-    (void*)((u8*)objfx_spawnArcedBurst + 0x200), (void*)((u8*)objfx_spawnArcedBurst + 0x218),
-    (void*)((u8*)objfx_spawnArcedBurst + 0x230), (void*)((u8*)objfx_spawnArcedBurst + 0x28C),
-    (void*)((u8*)objfx_spawnArcedBurst + 0x2E8), (void*)((u8*)objfx_spawnArcedBurst + 0x2F4)};
-void* jumptable_8030FADC[8] = {(void*)((u8*)objfx_spawnBoxBurst + 0x3A4), (void*)((u8*)objfx_spawnBoxBurst + 0x1E8),
-                               (void*)((u8*)objfx_spawnBoxBurst + 0x210), (void*)((u8*)objfx_spawnBoxBurst + 0x240),
-                               (void*)((u8*)objfx_spawnBoxBurst + 0x278), (void*)((u8*)objfx_spawnBoxBurst + 0x2E8),
-                               (void*)((u8*)objfx_spawnBoxBurst + 0x358), (void*)((u8*)objfx_spawnBoxBurst + 0x380)};
-void* jumptable_8030FAFC[15] = {
-    (void*)((u8*)fn_80098B18 + 0xB28), (void*)((u8*)fn_80098B18 + 0x538), (void*)((u8*)fn_80098B18 + 0x588),
-    (void*)((u8*)fn_80098B18 + 0x5D8), (void*)((u8*)fn_80098B18 + 0x628), (void*)((u8*)fn_80098B18 + 0x678),
-    (void*)((u8*)fn_80098B18 + 0x6C8), (void*)((u8*)fn_80098B18 + 0x718), (void*)((u8*)fn_80098B18 + 0x768),
-    (void*)((u8*)fn_80098B18 + 0x7B8), (void*)((u8*)fn_80098B18 + 0x854), (void*)((u8*)fn_80098B18 + 0x8F0),
-    (void*)((u8*)fn_80098B18 + 0x940), (void*)((u8*)fn_80098B18 + 0x9E4), (void*)((u8*)fn_80098B18 + 0xA88)};
-void* jumptable_8030FB38[9] = {
-    (void*)((u8*)fn_80098B18 + 0x434), (void*)((u8*)fn_80098B18 + 0x11C), (void*)((u8*)fn_80098B18 + 0x154),
-    (void*)((u8*)fn_80098B18 + 0x18C), (void*)((u8*)fn_80098B18 + 0x1C4), (void*)((u8*)fn_80098B18 + 0x254),
-    (void*)((u8*)fn_80098B18 + 0x2E4), (void*)((u8*)fn_80098B18 + 0x374), (void*)((u8*)fn_80098B18 + 0x3D0)};
-void* jumptable_8030FB5C[7] = {
-    (void*)((u8*)projectileParticleFxFn_80099660 + 0x40),  (void*)((u8*)projectileParticleFxFn_80099660 + 0x98),
-    (void*)((u8*)projectileParticleFxFn_80099660 + 0x12C), (void*)((u8*)projectileParticleFxFn_80099660 + 0x1C0),
-    (void*)((u8*)projectileParticleFxFn_80099660 + 0x218), (void*)((u8*)projectileParticleFxFn_80099660 + 0x304),
-    (void*)((u8*)projectileParticleFxFn_80099660 + 0x2AC)};
-void* jumptable_8030FB78[11] = {
-    (void*)((u8*)itemPickupDoParticleFx + 0x368), (void*)((u8*)itemPickupDoParticleFx + 0x48),
-    (void*)((u8*)itemPickupDoParticleFx + 0x98),  (void*)((u8*)itemPickupDoParticleFx + 0xE8),
-    (void*)((u8*)itemPickupDoParticleFx + 0x138), (void*)((u8*)itemPickupDoParticleFx + 0x188),
-    (void*)((u8*)itemPickupDoParticleFx + 0x1D8), (void*)((u8*)itemPickupDoParticleFx + 0x228),
-    (void*)((u8*)itemPickupDoParticleFx + 0x278), (void*)((u8*)itemPickupDoParticleFx + 0x318),
-    (void*)((u8*)itemPickupDoParticleFx + 0x2C8)};
-void* jumptable_8030FBA4[9] = {
-    (void*)((u8*)objParticleFn_80099d84 + 0x368), (void*)((u8*)objParticleFn_80099d84 + 0xCC),
-    (void*)((u8*)objParticleFn_80099d84 + 0x18C), (void*)((u8*)objParticleFn_80099d84 + 0x24C),
-    (void*)((u8*)objParticleFn_80099d84 + 0x274), (void*)((u8*)objParticleFn_80099d84 + 0x29C),
-    (void*)((u8*)objParticleFn_80099d84 + 0x2C8), (void*)((u8*)objParticleFn_80099d84 + 0x2F8),
-    (void*)((u8*)objParticleFn_80099d84 + 0x334)};
-void* jumptable_8030FBC8[10] = {(void*)((u8*)objLightFn_8009a1dc + 0x5FC), (void*)((u8*)objLightFn_8009a1dc + 0x50),
-                                (void*)((u8*)objLightFn_8009a1dc + 0x118), (void*)((u8*)objLightFn_8009a1dc + 0x1E0),
-                                (void*)((u8*)objLightFn_8009a1dc + 0x2A8), (void*)((u8*)objLightFn_8009a1dc + 0x2F4),
-                                (void*)((u8*)objLightFn_8009a1dc + 0x390), (void*)((u8*)objLightFn_8009a1dc + 0x42C),
-                                (void*)((u8*)objLightFn_8009a1dc + 0x4C8), (void*)((u8*)objLightFn_8009a1dc + 0x564)};
 
 char sExpgfxMismatchInAddRemove[] = "expgfx.c: mismatch in add/remove in exptab\n";
 

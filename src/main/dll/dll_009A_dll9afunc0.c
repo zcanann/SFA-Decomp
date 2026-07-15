@@ -26,7 +26,7 @@ typedef struct
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL9A_EFFECT_ID 0x31
 
-__declspec(section ".rodata") u8 gScreenFx9AAnimTemplate[16] = {
+const u8 gScreenFx9AAnimTemplate[16] = {
     0x00, 0x00, 0x00, 0x0A, 0x00, 0x28, 0x00, 0x3C, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 extern u8 lbl_80317B98[];
 extern f32 lbl_803E1370;

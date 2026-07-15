@@ -53,7 +53,7 @@ typedef struct
 
 /* Per-file declarations retained where their spelling is
    load-bearing for codegen, so they stay local to this TU. */
-__declspec(section ".rodata") int gSpiritDoorLockOrbitOffsetBase[4] = {0, 0, 0x40E00000, 0};
+const int gSpiritDoorLockOrbitOffsetBase[4] = {0, 0, 0x40E00000, 0};
 extern s16 gSpiritDoorLockSpinSpeed;
 extern s32 gSpiritDoorLockTexScrollSpeed;
 extern s32 gSpiritDoorLockTexScrollWrap;

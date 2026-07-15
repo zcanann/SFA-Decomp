@@ -35,7 +35,7 @@ __declspec(section ".sdata2") f32 lbl_803E5260 = 0.0f;
 #pragma explicit_zero_data off
 __declspec(section ".sdata2") f32 lbl_803E5264 = 600.0f;
 extern f32 lbl_803E5268;
-__declspec(section ".rodata") int lbl_802C23E8[4] = {0xF5B, 0x43EC9, 0x43ED6, 0};
+const int lbl_802C23E8[4] = {0xF5B, 0x43EC9, 0x43ED6, 0};
 
 int NW_tricky_SeqFn(void)
 {

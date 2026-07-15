@@ -5054,7 +5054,49 @@ typedef struct
     f32 v[2][3];
 } IndTexMtx23;
 
-extern IndTexMtx23 lbl_802C1E28;
+struct piIndMtx
+{
+    f32 m[2][3];
+};
+
+typedef struct
+{
+    u16 base;
+    u16 extra;
+} InflateBaseExtra;
+
+const u8 gInflateCodeLengthOrder[20] = {
+    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15, 0};
+const InflateBaseExtra gInflateLengthCodes[29] = {
+    {3, 0},   {4, 0},   {5, 0},   {6, 0},   {7, 0},   {8, 0},   {9, 0},   {10, 0},
+    {11, 1},  {13, 1},  {15, 1},  {17, 1},  {19, 2},  {23, 2},  {27, 2},  {31, 2},
+    {35, 3},  {43, 3},  {51, 3},  {59, 3},  {67, 4},  {83, 4},  {99, 4},  {115, 4},
+    {131, 5}, {163, 5}, {195, 5}, {227, 5}, {258, 0}};
+const InflateBaseExtra gInflateDistCodes[30] = {
+    {1, 0},     {2, 0},     {3, 0},     {4, 0},     {5, 1},     {7, 1},
+    {9, 2},     {13, 2},    {17, 3},    {25, 3},    {33, 4},    {49, 4},
+    {65, 5},    {97, 5},    {129, 6},   {193, 6},   {257, 7},   {385, 7},
+    {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
+    {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
+const struct piIndMtx lbl_802C1D50 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+const IndTexMtx23 lbl_802C1D68[4] = {
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
+    {{{3.0f, -1.0f, 1.0f}, {1.0f, -1.0f, 3.0f}}},
+    {{{1.0f, -2.0f, 1.0f}, {-2.0f, -1.0f, 1.0f}}},
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}}};
+const IndTexMtx23 lbl_802C1DC8 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+const IndTexMtx23 lbl_802C1DE0[2] = {
+    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
+    {{{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}}};
+const struct piIndMtx lbl_802C1E10 = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+const IndTexMtx23 lbl_802C1E28 = {
+    {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}}};
+const IndTexMtx23 gTexIndMtxTable = {
+    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
+
 extern u8* lbl_803DCD2C;
 extern int lbl_803DB5F4;
 extern f32 Prepared_803DEAD8;
@@ -5283,8 +5325,6 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
     }
 }
 
-extern IndTexMtx23 lbl_802C1DC8;
-extern IndTexMtx23 lbl_802C1DE0[];
 extern void fn_8006C504(void* out);
 extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
 extern void PSMTXIdentity(f32 m[3][4]);
@@ -5467,8 +5507,6 @@ typedef struct
     f32 x, y, z;
 } PiVec3;
 
-struct piIndMtx;
-extern struct piIndMtx lbl_802C1D50;
 extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
 extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
@@ -5653,7 +5691,6 @@ void fn_8004E0FC(void)
     lbl_803DCD68 += 2;
 }
 
-extern IndTexMtx23 lbl_802C1D68[];
 extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
 extern f32 ResetCoverCallback_803DEB2C;
@@ -6006,11 +6043,6 @@ void gxTextureFn_8004d5b4(void* p1)
     lbl_803DCD6A++;
 }
 
-struct piIndMtx
-{
-    f32 m[2][3];
-};
-
 extern u8 lbl_803DB5E8;
 extern int lbl_8030CEE0[];
 extern f32 lbl_803DEB38;
@@ -6090,8 +6122,6 @@ int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
     lbl_803DCD69 += 2;
     return result;
 }
-
-extern struct piIndMtx lbl_802C1E10;
 
 void fn_8004D6D8(void)
 {
@@ -7824,42 +7854,6 @@ extern u16 lbl_8030C9A0[];
 extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
-__declspec(section ".rodata") u8 gInflateCodeLengthOrder[20] = {
-    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15, 0};
-typedef struct
-{
-    u16 base;
-    u16 extra;
-} InflateBaseExtra;
-const InflateBaseExtra gInflateLengthCodes[29] = {
-    {3, 0},   {4, 0},   {5, 0},   {6, 0},   {7, 0},   {8, 0},   {9, 0},   {10, 0},
-    {11, 1},  {13, 1},  {15, 1},  {17, 1},  {19, 2},  {23, 2},  {27, 2},  {31, 2},
-    {35, 3},  {43, 3},  {51, 3},  {59, 3},  {67, 4},  {83, 4},  {99, 4},  {115, 4},
-    {131, 5}, {163, 5}, {195, 5}, {227, 5}, {258, 0}};
-const InflateBaseExtra gInflateDistCodes[30] = {
-    {1, 0},     {2, 0},     {3, 0},     {4, 0},     {5, 1},     {7, 1},
-    {9, 2},     {13, 2},    {17, 3},    {25, 3},    {33, 4},    {49, 4},
-    {65, 5},    {97, 5},    {129, 6},   {193, 6},   {257, 7},   {385, 7},
-    {513, 8},   {769, 8},   {1025, 9},  {1537, 9},  {2049, 10}, {3073, 10},
-    {4097, 11}, {6145, 11}, {8193, 12}, {12289, 12}, {16385, 13}, {24577, 13}};
-__declspec(section ".rodata") struct piIndMtx lbl_802C1D50 = {
-    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1D68[4] = {
-    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
-    {{{3.0f, -1.0f, 1.0f}, {1.0f, -1.0f, 3.0f}}},
-    {{{1.0f, -2.0f, 1.0f}, {-2.0f, -1.0f, 1.0f}}},
-    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1DC8 = {
-    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1DE0[2] = {
-    {{{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}},
-    {{{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}}};
-__declspec(section ".rodata") struct piIndMtx lbl_802C1E10 = {
-    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1E28 = {
-    {{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 0.5f}}};
-__declspec(section ".rodata") IndTexMtx23 gTexIndMtxTable = {
-    {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
 extern u8 lbl_803DCD20[];
 extern u8 lbl_803DCD18[];
 extern u8 lbl_80377880[0x14];
@@ -8018,7 +8012,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 hclen = (ZGB8() & 0xf) + 4;
                 ZADV(4);
                 {
-                    u8* order = gInflateCodeLengthOrder;
+                    const u8* order = gInflateCodeLengthOrder;
                     u8* lens880 = lbl_80377880;
                     u8* cnt20 = lbl_803DCD20;
                     for (i = 0; i != hclen; i++)

@@ -23,7 +23,7 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/printf.h"
 #include "main/dll/dll_003F_dll3f.h"
 
-__declspec(section ".sdata") char lbl_803DBBF0[] = "%2d";
+char lbl_803DBBF0[] = "%2d";
 
 /* texture asset loaded into lbl_803DD960 (this DLL's only texture) */
 #define DLL3F_TEXTURE_ID 0x47A
