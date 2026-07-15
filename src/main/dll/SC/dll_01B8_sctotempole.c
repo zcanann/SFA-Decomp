@@ -1,5 +1,5 @@
 /* DLL 0x1B8 - SCTotemPole [801DBFA0-801DC310).
- * The four LightFoot Village totem poles — the "Tracking Test". Each pole's
+ * The four LightFoot Village totem poles - the "Tracking Test". Each pole's
  * lit state is one GameBit: FRONT 0x81 / LEFT 0x82 / RIGHT 0x83 / REAR 0x84
  * (reset by sclevelcontrol on entry). Lighting all four plays the success
  * fanfare; the test is timed (beat MuscleFoot's record). */
@@ -18,21 +18,9 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E55D0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E55D4 = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E55D8 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E55DC = -0.01f;
-#pragma force_active reset
-
 u16 lbl_803DC068[4] = {0x2B7, 0x2CB, 0x2CC, 0};
 
 int lbl_803DDC08;
-extern f32 lbl_803E55D0;    /* render fade alpha */
-extern f32 lbl_803E55D4;    /* anim speed when a pole lights */
-extern f32 lbl_803E55D8;    /* completion-time score divisor */
-extern f32 lbl_803E55DC;    /* anim speed when a pole goes dark */
-
 STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
@@ -107,7 +95,7 @@ void sc_totempole_free(void)
 void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E55D0);
+    if (v != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void sc_totempole_hitDetect(void)
@@ -130,7 +118,7 @@ void sc_totempole_update(int obj)
         if (state->currentState != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
-            state->animSpeed = lbl_803E55D4;
+            state->animSpeed = 0.01f;
             playedFanfare = 0;
             if (mainGetBit(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
                 mainGetBit(SC_TOTEMPOLE_GAMEBIT_LEFT) != 0 &&
@@ -152,7 +140,7 @@ void sc_totempole_update(int obj)
                     }
                 }
                 ((int (*)(u16*, int))sc_totempole_sortCompletionGameBits)(
-                    (u16*)&lbl_803DC068, (s32)(fn_8001461C() / lbl_803E55D8));
+                    (u16*)&lbl_803DC068, (s32)(fn_8001461C() / 10.0f));
             }
             if (!playedFanfare)
             {
@@ -162,7 +150,7 @@ void sc_totempole_update(int obj)
         else
         {
             Sfx_PlayFromObject(obj, SFXTRIG_cflap2_c);
-            state->animSpeed = lbl_803E55DC;
+            state->animSpeed = -0.01f;
         }
     }
     ObjAnim_AdvanceCurrentMove((int)obj, state->animSpeed, timeDelta,

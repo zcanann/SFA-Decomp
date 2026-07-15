@@ -36,12 +36,6 @@
 /* romlist object type of the sword child (retail 'scalessword') */
 #define WMGENERALSCALES_SWORD_OBJECT_TYPE 0x1B8
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5E98 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5E9C = 800.0f;
-__declspec(section ".sdata2") f32 lbl_803E5EA0 = 1.1f; /* sword scale-up */
-__declspec(section ".sdata2") f32 lbl_803E5EA4 = 1.0f; /* render scale */
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 
 int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -81,14 +75,14 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, buf);
             Sfx_PlayFromObject(obj, SFXTRIG_id_7b);
             Sfx_PlayFromObject(obj, SFXTRIG_id_7c);
-            state->unk00 = lbl_803E5E98;
+            state->unk00 = 0.0f;
             break;
         case 3: /* slam variant */
             state->phase = WMGENERALSCALES_PHASE_SLAM1;
             (*gPartfxInterface)->spawnObject((void*)obj, WMGENERALSCALES_PARTFX_SLAM, NULL, 2, -1, NULL);
             Sfx_PlayFromObject(obj, SFXTRIG_id_7b);
             Sfx_PlayFromObject(obj, SFXTRIG_id_7c);
-            state->unk00 = lbl_803E5E9C;
+            state->unk00 = 800.0f;
             break;
         case 4: /* back to idle */
             state->phase = WMGENERALSCALES_PHASE_IDLE;
@@ -104,7 +98,7 @@ int WM_GeneralScales_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                 ((ObjPlacement*)setup)->color[1] = 4;
                 ((ObjPlacement*)setup)->color[3] = 0xff;
                 ObjLink_AttachChild(obj, (int)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0), 0);
-                *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= lbl_803E5EA0;
+                *(f32*)(*(int*)&((GameObject*)obj)->childObjs[0] + 8) *= 1.1f;
             }
             break;
         case 6: /* sheathe: detach the sword child */
@@ -160,7 +154,7 @@ void WM_GeneralScales_render(int* obj, int p2, int p3, int p4, int p5, s8 visibl
         return;
     if (visible == 0)
         return;
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5EA4);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void WM_GeneralScales_hitDetect(void)
@@ -175,7 +169,7 @@ void WM_GeneralScales_init(int* obj)
 {
     WmGeneralScalesState* state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->animEventCallback = WM_GeneralScales_SeqFn;
-    state->unk00 = lbl_803E5E98;
+    state->unk00 = 0.0f;
     state->phase = WMGENERALSCALES_PHASE_HIDDEN;
     *(int*)&((GameObject*)obj)->childObjs[0] = 0;
 }

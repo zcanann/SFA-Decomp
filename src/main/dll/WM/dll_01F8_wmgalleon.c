@@ -91,11 +91,6 @@ void* lbl_803DDC74;
 extern int* gScreensInterface;
 extern u32* lbl_803DCA94;
 s8 lbl_803DDC70;
-__declspec(section ".sdata2") f32 lbl_803E5CE8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5CEC = -121.0f;
-__declspec(section ".sdata2") f32 lbl_803E5CF0 = 116.0f;
-__declspec(section ".sdata2") f32 lbl_803E5CF4 = 5.0f;
-
 void WM_Galleon_initialise(void);
 void WM_Galleon_release(void);
 void WM_Galleon_init(int* obj, WMGalleonSetup* setup);
@@ -221,7 +216,7 @@ void WM_Galleon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
         return;
     }
 
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5CE8);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 
     if (lbl_803DDC70 != 0)
     {
@@ -295,9 +290,9 @@ void WM_Galleon_update(int* obj)
     }
     if (gameBitA4 == 0)
     {
-        ((GameObject*)player)->anim.localPosX = lbl_803E5CEC;
-        ((GameObject*)player)->anim.localPosY = lbl_803E5CF0;
-        ((GameObject*)player)->anim.localPosZ = lbl_803E5CF4;
+        ((GameObject*)player)->anim.localPosX = -121.0f;
+        ((GameObject*)player)->anim.localPosY = 116.0f;
+        ((GameObject*)player)->anim.localPosZ = 5.0f;
         objHitDetectFn_80062e84((GameObject*)player, (GameObject*)obj, 0);
         fn_80296BBC((GameObject*)(player));
         OBJ_S32(obj, 0xf8) = 1;

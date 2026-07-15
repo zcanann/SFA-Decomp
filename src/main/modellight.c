@@ -55,7 +55,6 @@ STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
 #define LIGHTCLIP_NEAR   0x10 /* worldZ < nearZ */
 #define LIGHTCLIP_FAR    0x20 /* worldZ > farZ */
 
-extern u8 gModelLightCount;
 extern f32 lbl_803DE750;
 extern f32 lbl_803DE754;
 extern f32 lbl_803DE758;
@@ -74,8 +73,6 @@ extern f32 lbl_803DE78C;
 extern f32 lbl_803DE788;
 extern f32 lbl_803DE794;
 extern f32 lbl_803DE798;
-extern u8 gModelLightUseModelRelativePositions;
-extern int gModelLightNextGXLightId;
 extern f32 lbl_803DE7A4;
 extern f32 lbl_803DE768;
 const ModelLightCornerBlock gModelLightCornerBlock = {{

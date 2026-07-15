@@ -158,7 +158,6 @@ ObjectDescriptor12 dll_CE = {
     (ObjectDescriptorCallback)dll_CE_func0B,
 };
 
-#pragma dont_inline on
 void fn_8015DAE8(void)
 {
     extern void* gIceBaddieStateHandlersB[];
@@ -187,8 +186,6 @@ void fn_8015DAE8(void)
     gIceBaddieStateHandlersB[6] = iceBaddie_stateHandlerB06;
     gIceBaddieStateHandlersB[7] = iceBaddie_stateHandlerB07;
 }
-#pragma dont_inline reset
-
 int fn_8015DC04(int obj, GroundBaddieState* state)
 {
 

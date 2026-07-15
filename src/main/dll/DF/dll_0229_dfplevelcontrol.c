@@ -40,12 +40,7 @@ STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 #define DFPLEVELCONTROL_MSG_PLAYER_HIT 0x60005
 
 extern s16 lbl_80329848[];
-extern u8 lbl_803DC183;
-extern u8 lbl_803DC182;
-extern s16 lbl_803DC180;
-extern int dbstealerworm_stateHandlerB06();
 int dbstealerworm_stateHandlerB06(GameObject* obj, int p2);
-extern void fn_80204098(GameObject*);
 
 void fn_80204098(GameObject* obj)
 {
