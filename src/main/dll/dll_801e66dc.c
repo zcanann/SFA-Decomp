@@ -15,14 +15,13 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/boneparticleeffect_interface.h"
 #include "main/game_object.h"
+#include "main/model_engine.h"
 #include "main/dll/dll_801e66dc.h"
 
 #define DLL801E66DC_OBJFLAG_RENDERED 0x800
 
 extern f32 lbl_803E59D8;
 extern f32 lbl_803E59DC;
-extern int Stack_IsEmpty(int stack);       /* voxmaps.c */
-extern int Stack_Pop(int stack, int* out); /* voxmaps.c */
 
 int fn_801E66DC(void)
 {
@@ -38,7 +37,7 @@ int fn_801E66EC(int objHandle, int animState)
     GameObject* obj = (GameObject*)objHandle;
     int state;
     f32 spawnParam;
-    int stk;
+    RingBufferQueue* stk;
     int nextState;
 
     state = (int)obj->extra;
@@ -56,7 +55,7 @@ int fn_801E66EC(int objHandle, int animState)
     *(f32*)(animState + 0x280) = lbl_803E59DC;
     if (*(u8*)(state + 0x9d6) == 0)
     {
-        stk = *(int*)(state + 0x9b0);
+        stk = *(RingBufferQueue**)(state + 0x9b0);
         nextState = 0;
         if (Stack_IsEmpty(stk) == 0)
         {

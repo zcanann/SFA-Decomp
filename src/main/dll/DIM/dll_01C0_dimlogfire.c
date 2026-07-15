@@ -49,17 +49,6 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #define DIMLOGFIRE_GROUP 0x31
 
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E4820 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E4824 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E4828 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E482C = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E4830 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E4834 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E4838 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E483C = 40.0f;
-#pragma explicit_zero_data off
-
 int DIMLogFire_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     DimLogFireState* state = obj->extra;
@@ -141,10 +130,10 @@ void DIMLogFire_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visib
             *(u16*)((char*)q + 0x18) = (u16)(*(u16*)((char*)q + 0x18) & ~0x8);
             *(u8*)((char*)(int*)state->subObj + 0x37) = *(u8*)((char*)obj + 0x37);
             ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(
-                (GameObject*)state->subObj, p2, p3, p4, p5, lbl_803E4820);
+                (GameObject*)state->subObj, p2, p3, p4, p5, 1.0f);
         }
         ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5,
-                                                                                     lbl_803E4820);
+                                                                                     1.0f);
         if (state->light != NULL)
         {
             if (state->light->glowType != 0)
@@ -181,39 +170,39 @@ void DIMLogFire_update(GameObject* obj)
     case DIMLOGFIRE_MODE_LIT:
         if (state->light != NULL)
         {
-            modelLightStruct_setEnabled(state->light, 1, lbl_803E4824);
+            modelLightStruct_setEnabled(state->light, 1, 2.0f);
         }
         Sfx_PlayFromObject((u32)obj, SFXTRIG_mushdizzylp12);
         state->flickerTimerA = state->flickerTimerA - timeDelta;
-        if (state->flickerTimerA <= lbl_803E4828)
+        if (state->flickerTimerA <= 0.0f)
         {
             flickerFlagA = 7;
-            state->flickerTimerA = state->flickerTimerA + lbl_803E482C;
+            state->flickerTimerA += 10.0f;
         }
         else
         {
             flickerFlagA = 0;
         }
         state->flickerTimerB = state->flickerTimerB - timeDelta;
-        if (state->flickerTimerB <= lbl_803E4828)
+        if (state->flickerTimerB <= 0.0f)
         {
             flickerFlagB = 1;
-            state->flickerTimerB = state->flickerTimerB + lbl_803E4820;
+            state->flickerTimerB += 1.0f;
         }
         else
         {
             flickerFlagB = 0;
         }
-        vec.x = lbl_803E4828;
-        vec.y = lbl_803E482C;
-        vec.z = lbl_803E4828;
+        vec.x = 0.0f;
+        vec.y = 10.0f;
+        vec.z = 0.0f;
         fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 2, flickerFlagA, flickerFlagB, (int)&vec);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, DIMLOGFIRE_HIT_VOLUME_SLOT, 1, 0);
         break;
     case DIMLOGFIRE_MODE_UNLIT:
         if (state->light != NULL)
         {
-            modelLightStruct_setEnabled(state->light, 0, lbl_803E4824);
+            modelLightStruct_setEnabled(state->light, 0, 2.0f);
         }
         if (state->strengthInit <= 0)
         {
@@ -289,8 +278,8 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
         state->dousedLatch = 1;
     }
     ((GameObject*)obj)->objectFlags |= DIMLOGFIRE_OBJFLAG_HITDETECT_DISABLED;
-    state->flickerTimerA = lbl_803E482C;
-    state->flickerTimerB = lbl_803E4820;
+    state->flickerTimerA = 10.0f;
+    state->flickerTimerB = 1.0f;
     if (state->light == NULL)
     {
         state->light = objCreateLight((GameObject*)obj, 1);
@@ -300,15 +289,15 @@ void DIMLogFire_init(int obj, DimlogfireObjectDef* def)
         modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(state->light, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setSpecularColor(state->light, 0xff, 0x7f, 0, 0xff);
-        radius = (int)(lbl_803E4830 * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setDistanceAttenuation(state->light, radius, lbl_803E4834 + radius);
-        modelLightStruct_setEnabled(state->light, 1, lbl_803E4828);
-        modelLightStruct_setPosition(state->light, lbl_803E4828, lbl_803E4838, *(f32*)&lbl_803E4828);
+        radius = (int)(20.0f * ((GameObject*)obj)->anim.rootMotionScale);
+        modelLightStruct_setDistanceAttenuation(state->light, radius, 30.0f + radius);
+        modelLightStruct_setEnabled(state->light, 1, 0.0f);
+        modelLightStruct_setPosition(state->light, 0.0f, 12.0f, 0.0f);
         modelLightStruct_startColorFade(state->light, 1, 3);
         modelLightStruct_setDiffuseTargetColor(state->light, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(state->light, 0, 0xff, 0x7f, 0, 0x87,
-                                   lbl_803E483C * ((GameObject*)obj)->anim.rootMotionScale);
-        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
+                                   40.0f * ((GameObject*)obj)->anim.rootMotionScale);
+        modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
     }
 }
 

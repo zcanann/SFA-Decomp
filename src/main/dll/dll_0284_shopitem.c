@@ -41,6 +41,8 @@
 #include "main/model.h"
 #include "main/pad.h"
 #include "main/object_descriptor.h"
+#include "dolphin/gx/GXPixel.h"
+#include "dolphin/gx/GXTev.h"
 
 #define SHOPITEM_OBJGROUP        0x4F
 #define SHOPITEM_TARGET_OBJGROUP 9
@@ -92,9 +94,6 @@ STATIC_ASSERT(sizeof(ShopItemState) == 0xEC);
 
 STATIC_ASSERT(sizeof(ShopkeeperState) == 0x9D8);
 STATIC_ASSERT(offsetof(ShopkeeperState, msgStack) == 0x9B0);
-
-extern void GXSetBlendMode(int type, int src, int dst, int op);
-extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
 #define GX_BM_NONE     0
 #define GX_BM_BLEND    1
