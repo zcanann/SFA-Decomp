@@ -26,6 +26,7 @@
 #include "main/gamebits.h"
 #include "main/obj_list.h"
 #include "main/objseq.h"
+#include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 
@@ -46,10 +47,6 @@ STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 #define DBSH_SPIN_DONE       0x7ef4 /* spinProgress at a full turn */
 
 #define PAD_BUTTON_A 0x100
-
-extern u8 gDbShSymbolScuffPlayed;
-
-extern int getButtonsJustPressedIfNotBusy(int p);
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E50E0 = 127.0f;
@@ -73,6 +70,7 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
     int idx;
     int count;
     int i;
+    int buttons;
     DbshSymbolState* state;
     int player;
 
@@ -121,7 +119,8 @@ int DBSH_Symbol_SeqFn(int obj, int anim, ObjAnimUpdateState* animUpdate)
             state->flags.active = 1;
             (*gObjectTriggerInterface)->yield((ObjSeqState*)animUpdate, 0xbd);
         }
-        if ((getButtonsJustPressedIfNotBusy(0) & PAD_BUTTON_A) != 0)
+        buttons = getButtonsJustPressedIfNotBusy(0);
+        if ((buttons & PAD_BUTTON_A) != 0)
         {
             state->spinSpeed += lbl_803E50E4;
         }

@@ -55,8 +55,6 @@ extern int gEffect5SinPhaseA;
 extern int gEffect5SinPhaseB;
 extern f32 gEffect5SinValueB;
 extern f32 gEffect5SinValueA;
-extern f32 gEffect5Pi;
-extern f32 gEffect5SinPhaseScale;
 extern f32 gEffect5AnimProgressA;
 extern f32 gEffect5AnimProgressB;
 
@@ -387,13 +385,13 @@ void Effect5_func05(void)
     {
         gEffect5SinPhaseA = 0;
     }
-    gEffect5SinValueA = mathSinf(gEffect5Pi * (f32)(s16)gEffect5SinPhaseA / gEffect5SinPhaseScale);
+    gEffect5SinValueA = mathSinf(3.14159274f * (f32)(s16)gEffect5SinPhaseA / 32768.0f);
     gEffect5SinPhaseB = gEffect5SinPhaseB + framesThisStep * 0x32;
     if (gEffect5SinPhaseB > 0x7fff)
     {
         gEffect5SinPhaseB = 0;
     }
-    gEffect5SinValueB = mathSinf(gEffect5Pi * (f32)(s16)gEffect5SinPhaseB / gEffect5SinPhaseScale);
+    gEffect5SinValueB = mathSinf(3.14159274f * (f32)(s16)gEffect5SinPhaseB / 32768.0f);
 }
 
 void Effect5_func03_nop(void)
@@ -407,6 +405,3 @@ void Effect5_release(void)
 void Effect5_initialise(void)
 {
 }
-
-__declspec(section ".sdata2") f32 gEffect5Pi = 3.14159274f;
-__declspec(section ".sdata2") f32 gEffect5SinPhaseScale = 32768.0f;

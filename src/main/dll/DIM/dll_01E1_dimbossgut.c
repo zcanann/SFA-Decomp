@@ -5,6 +5,7 @@
  * hit-volume pair and suppress sequence events.
  */
 #include "main/dll/DIM/dll_01E1_dimbossgut.h"
+#include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/DIM/dll_01E5_dimbossspit.h"
 #include "main/dll/DIM/dll_01E7_dimbossfire.h"
 #include "main/dll/DF/dfropenode.h"
@@ -18,17 +19,6 @@ extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
-extern void DIMbosstonsil_free(GameObject*);
-extern void DIMbosstonsil_func0B(void);
-extern void DIMbosstonsil_getExtraSize(void);
-extern void DIMbosstonsil_getObjectTypeId(void);
-extern void DIMbosstonsil_hitDetect(GameObject*);
-extern void DIMbosstonsil_init(void);
-extern void DIMbosstonsil_initialise(void);
-extern void DIMbosstonsil_release(void);
-extern void DIMbosstonsil_render(GameObject*);
-extern void DIMbosstonsil_setScale(GameObject*);
-extern void DIMbosstonsil_update(GameObject*);
 extern void ccriverflow_free(void);
 extern void ccriverflow_getExtraSize(void);
 extern void ccriverflow_init(void);
