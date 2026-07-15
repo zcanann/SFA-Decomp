@@ -112,7 +112,8 @@ u16 inpGetMidiCtrl(u8 controller, u8 slot, u8 key)
 
         if (controller < 0x40)
         {
-            return (st->fxCtrl[slot][controller & 0x1f] << 7) | st->fxCtrl[slot][(controller & 0x1f) + 0x20];
+            controller &= 0x1f;
+            return (st->fxCtrl[slot][controller] << 7) | st->fxCtrl[slot][controller + 0x20];
         }
         if (controller < 0x46)
         {
