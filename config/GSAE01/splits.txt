@@ -74,7 +74,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWTrace.c:
 
 main/textrender.c:
 	.text       start:0x80017434 end:0x8001CB3C
-	.data       start:0x802C8D40 end:0x802CA460
+	.data       start:0x802C8D40 end:0x802CA440
 	.bss        start:0x80339980 end:0x8033BE60
 	.sdata      start:0x803DB378 end:0x803DB408
 
@@ -87,7 +87,7 @@ main/modellight.c:
 
 main/gameloop.c:
 	.text       start:0x8001F54C end:0x80021370
-	.data       start:0x802CA460 end:0x802CA5F0
+	.data       start:0x802CA440 end:0x802CA5F0
 	.bss        start:0x8033BF88 end:0x8033C7A0
 	.sdata      start:0x803DB410 end:0x803DB430
 	.sbss       start:0x803DCA38 end:0x803DCB08
@@ -3619,10 +3619,7 @@ dolphin/os/OSCache.c:
 
 dolphin/os/OSContext.c:
 	.text       start:0x80242060 end:0x802428C8
-	.data       start:0x8032C7D0 end:0x8032C984
-
-main/unknown/autos/placeholder_8032C984.c:
-	.data       start:0x8032C984 end:0x8032C9A8
+	.data       start:0x8032C7D0 end:0x8032C9A7
 
 dolphin/os/OSError.c:
 	.text       start:0x802428C8 end:0x80242C10

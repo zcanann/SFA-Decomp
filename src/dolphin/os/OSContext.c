@@ -17,7 +17,7 @@ char lbl_8032C7D0[] =
     "ps%d \011= 0x%x \011 ps%d \011= 0x%x\n\000\000\000\000\nAddress:      B"
     "ack Chain    LR Save\n\000\000\0000x%08x:   0x%08x    0x%0"
     "8x\n";
-extern char OSContextFPUUnavailableMessage[];
+char OSContextFPUUnavailableMessage[] = "FPU-unavailable handler installed\n";
 
 static asm void __OSLoadFPUContext(register u32 dummy, register OSContext* fpucontext) {
     nofralloc

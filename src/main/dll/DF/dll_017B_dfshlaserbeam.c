@@ -14,7 +14,9 @@
 #include "main/vecmath.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/tricky_api.h"
 #include "main/object_api.h"
+#include "main/pad.h"
 #include "main/resource.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -150,9 +152,7 @@ extern const f32 lbl_803E4F44;
 extern const f32 lbl_803E4F48;
 extern const f32 lbl_803E4F4C;
 
-extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
-extern u8 padGetStickX(int port);
 
 void DFSH_LaserBeam_free(int* obj)
 {

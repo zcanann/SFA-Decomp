@@ -162,8 +162,6 @@ extern f32 lbl_803E04C0;
 extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 
-extern int randFn_80080100(int n);
-
 ObjectDescriptor6 lbl_80311100 = {
     0,
     0,

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/worldplanet_lighting.h"
+#include "main/sky.h"
 #include "main/sky_api.h"
 
 extern u8 lbl_803DC1F4[4];
@@ -22,9 +23,6 @@ extern f32 lbl_803E65FC;
 extern f32 lbl_803E6600;
 extern f32 gWorldPlanetLightingSkyDirX;
 extern f32 gWorldPlanetLightingSkyDirZ;
-extern void fn_80089510(int flags, u8 red, u8 green, u8 blue);
-extern void fn_80089578(int flags, u8 red, u8 green, u8 blue);
-
 #pragma peephole on
 void worldplanet_updateMapLighting(void)
 {

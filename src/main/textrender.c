@@ -3643,11 +3643,5 @@ void* jumptable_802CA420[8] = {
     (void*)((u8*)gameTextDrawBox + 0x368), (void*)((u8*)gameTextDrawBox + 0x6F8), (void*)((u8*)gameTextDrawBox + 0x068),
     (void*)((u8*)gameTextDrawBox + 0x114), (void*)((u8*)gameTextDrawBox + 0x06C),
 };
-void* jumptable_802CA440[8] = {
-    (void*)((u8*)loadAsset + 0x38), (void*)((u8*)loadAsset + 0x50), (void*)((u8*)loadAsset + 0x60),
-    (void*)((u8*)loadAsset + 0xA0), (void*)((u8*)loadAsset + 0x78), (void*)((u8*)loadAsset + 0xB8),
-    (void*)((u8*)loadAsset + 0xD8), (void*)((u8*)loadAsset + 0xF4),
-};
-
 void* lbl_8033BE40[5];
 void* gSubtitleBoxTextures[3];

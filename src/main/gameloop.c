@@ -350,6 +350,9 @@ void loadAsset(void* reqVoid)
 #pragma peephole reset
 #pragma scheduling reset
 
+char sGameLoopResetMessages[0x50] =
+    "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
+
 #pragma scheduling off
 #pragma peephole off
 void mapReload(void)
@@ -540,10 +543,7 @@ u32 mainGetBit(int eventId)
 }
 
 extern void gameBitFn_800ea2e0(u8 id);
-char sGameBitSetDuringSaveLoadWarning[204] =
-    "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is "
-    "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
-    "passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
+extern char sGameBitSetDuringSaveLoadWarning[];
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #pragma optimization_level 3
 void mainSetBits(int eventId, int value)
@@ -711,7 +711,7 @@ extern u8 GXNtsc480Prog[];
 extern u8 gGameLoopProgressiveMode;
 u8 lbl_8033C3B8[0x3E8];
 u8 gGameLoopRenderModeCopy[0x40];
-char sMainFinishedInitMessage[15] = "finished init\n";
+extern char sMainFinishedInitMessage[];
 extern void* lbl_803DCA94;
 extern void* gTitleMenuControlInterface;
 extern void* gTitleMenuControlInterfaceCopy;
@@ -1231,6 +1231,10 @@ void cardShowMessage(void)
     }
 }
 
+char sGameBitSetDuringSaveLoadWarning[204] =
+    "WARNING in mainSetBits: Bit %d can't be set to %d while a savegame is "
+    "loading\n\000\000GAME_STATE_RESETPRESSED\n\000\000\000\000GAME_STATE_RESETNOW\n\000\000\000\000audioQuit "
+    "passed\n\000\000\000GX flush passed\n\000\000\000\000VIFlush passed\n\000reset default\n\000\000";
 
 void cutsceneEnterExit(int entering, int affectSounds)
 {
@@ -1424,7 +1428,6 @@ extern u8 gGameLoopResetComboDebounce;
 extern f32 gGameLoopResetHoldTimer;
 extern f32 gGameLoopResetFadeOutTimer;
 extern u8 gGameLoopHardReset;
-extern char sGameLoopResetMessages[];
 extern f32 lbl_803DE7AC;
 
 void checkReset(void)
@@ -1561,19 +1564,4 @@ void checkReset(void)
     }
 }
 
-char sGameLoopResetMessages[0x50] =
-    "28/03/02 12:19\000\000Version 2.8 14/12/98 15.30 L.Schuneman\000\000\377\377\377\377\000\000\000.\000\000\0000";
-
-void* jumptable_802CA4B0[12] = {
-    (void*)((u8*)cardShowMessage + 0xE4), (void*)((u8*)cardShowMessage + 0x80), (void*)((u8*)cardShowMessage + 0x8C),
-    (void*)((u8*)cardShowMessage + 0x98), (void*)((u8*)cardShowMessage + 0xA4), (void*)((u8*)cardShowMessage + 0xB0),
-    (void*)((u8*)cardShowMessage + 0xB0), (void*)((u8*)cardShowMessage + 0xE4), (void*)((u8*)cardShowMessage + 0xE4),
-    (void*)((u8*)cardShowMessage + 0xC0), (void*)((u8*)cardShowMessage + 0xCC), (void*)((u8*)cardShowMessage + 0xDC),
-};
-void* jumptable_802CA5AC[13] = {
-    (void*)((u8*)checkReset + 0x214), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C),
-    (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x220),
-    (void*)((u8*)checkReset + 0x22C), (void*)((u8*)checkReset + 0x238), (void*)((u8*)checkReset + 0x24C),
-    (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C), (void*)((u8*)checkReset + 0x24C),
-    (void*)((u8*)checkReset + 0x244),
-};
+char sMainFinishedInitMessage[15] = "finished init\n";
