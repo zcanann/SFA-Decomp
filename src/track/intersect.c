@@ -121,7 +121,15 @@ typedef struct
     u32 blk[6][7];
 } IndStageInitData;
 
-extern IndStageInitData lbl_802C1EA8;
+static const IndStageInitData lbl_802C1EA8 = {
+    {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
+    {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 2, 2, 2, 2, 1, 0},
+     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 2, 2, 1, 0, 0, 0},
+     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
+     {2, 1, 0, 0, 0, 0, 0}}};
+static const IndMtxInit lbl_802C1F68 = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
 
 /* Entry of gDepthReadPendingQueue/gDepthReadResults (0xC stride, 0x14 cap). */
 typedef struct DepthReadRequest
@@ -146,7 +154,6 @@ extern u8 lbl_8030E8B0[];
 extern f32 gWaterFxState[4];
 extern u8 gWaterRipples[0x1000];
 extern u8 gWaterSplashQuads[0x3800];
-extern f32 lbl_802C1F68[6];
 extern f32 Gbase;
 extern void* gWaterFxTextures[4];
 extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
@@ -2465,7 +2472,7 @@ int modelCb_80074518(void* obj_a, void** obj_b, int slot)
     int alpha_byte;
     void (*pcb)(void*, void**, int);
 
-    *(IndMtxInit*)indMtx = *(IndMtxInit*)lbl_802C1F68;
+    *(IndMtxInit*)indMtx = lbl_802C1F68;
 
     model = obj_b[0];
     renderOp = ObjModel_GetRenderOp((ModelFileHeader*)model, slot);
@@ -6424,16 +6431,6 @@ int saveCb_8007e748(int saveId, int size, void* dst)
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
     return 0;
 }
-
-__declspec(section ".rodata") IndStageInitData lbl_802C1EA8 = {
-    {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}},
-    {{0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 2, 2, 2, 2, 1, 0},
-     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 2, 2, 1, 0, 0, 0},
-     {0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF},
-     {2, 1, 0, 0, 0, 0, 0}}};
-__declspec(section ".rodata") f32 lbl_802C1F68[6] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
 /* .bss block 0x80391DC0-0x803967C0 */
 f32 gWaterFxState[4];
