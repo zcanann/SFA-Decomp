@@ -532,6 +532,9 @@ void mmp_moonrock_update(GameObject* obj)
     u8 grabbed;
     int particleHeight;
     int count;
+    int i;
+    int stateCopy;
+    int* list;
     MmpMoonrockPlacement* def = (MmpMoonrockPlacement*)obj->anim.placementData;
     if (objPosToMapBlockIdx(obj->anim.localPosX, obj->anim.localPosY,
                             obj->anim.localPosZ) == -1)
@@ -599,9 +602,6 @@ void mmp_moonrock_update(GameObject* obj)
     state->flags &= ~MOONROCK_FLAG_GRAB_FRAME;
     if (grabbed != 0)
     {
-        int stateCopy;
-        int i;
-        int* list;
         u8 found;
         if ((playerGetStateFlag310(Obj_GetPlayerObject()) & 0x4000) != 0)
         {
@@ -619,11 +619,8 @@ void mmp_moonrock_update(GameObject* obj)
         (*gCarryableInterface)->setVisible(stateCopy, 0);
         {
             f32 k;
-            def = (MmpMoonrockPlacement*)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
-            i = 0;
-            list = (int*)def;
-            k = gMoonRockPickupRange;
-            for (; i < count; i++)
+            int* objects = (int*)ObjGroup_GetObjects(CARRYABLE_OBJGROUP, &count);
+            for (i = 0, list = objects, k = gMoonRockPickupRange; i < count; i++)
             {
                 u32 o = (u32)*list;
                 if (o != (u32)obj && ((GameObject*)o)->anim.seqId == 0x519 &&
