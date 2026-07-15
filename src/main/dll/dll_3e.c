@@ -24,6 +24,9 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/n_options.h"
 #include "main/dll/FRONT/dll_3B.h"
+#include "main/dll/FRONT/picmenu.h"
+#include "main/audio_decode_thread.h"
+#include "main/fileio.h"
 
 typedef struct AttractMovieControl
 {
@@ -83,18 +86,6 @@ extern void (*lbl_803DD664)(void);
 extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
 extern OSMessage lbl_803DD67C;
-extern OSMessage PopDecodedTextureSet(s32 flags);
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
-extern BOOL CreateVideoDecodeThread(int priority, void* param);
-extern BOOL CreateAudioDecodeThread(int priority, void* param);
-extern BOOL CreateReadThread(int priority);
-extern void VideoDecodeThreadStart(void);
-extern void ReadThreadStart(void);
-extern void VideoDecodeThreadCancel(void);
-extern void ReadThreadCancel(void);
-extern void PushFreeReadBuffer(OSMessage msg);
-extern void PushFreeTextureSet(OSMessage msg);
-
 void InitAllMessageQueue(void);
 
 void PlayControl(void)
@@ -359,7 +350,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
                 return FALSE;
             }
             startOffset = ((s32)ctrl->loopFrame + ctrl->frameOffset) - ctrl->dataOffset;
-            CreateVideoDecodeThread(0xf, (void*)startOffset);
+            CreateVideoDecodeThread(0xf, startOffset);
             if (ctrl->audioExists != 0)
             {
                 CreateAudioDecodeThread(0xc, (void*)startOffset);
@@ -367,7 +358,7 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags)
         }
         else
         {
-            CreateVideoDecodeThread(0xf, NULL);
+            CreateVideoDecodeThread(0xf, 0);
             if (ctrl->audioExists != 0)
             {
                 CreateAudioDecodeThread(0xc, NULL);

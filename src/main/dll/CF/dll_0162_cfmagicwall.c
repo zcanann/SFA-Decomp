@@ -31,9 +31,6 @@ STATIC_ASSERT(offsetof(CfMagicWallMapData, visibleEvent) == 0x20);
 /* a quarter turn: the wall is invisible when viewed from behind */
 #define CFMAGICWALL_SIDE_ANGLE 0x4000
 
-__declspec(section ".sdata2") f32 lbl_803E43D8 = 1.0f; /* render scale */
-__declspec(section ".sdata2") f32 lbl_803E43DC = 255.0f; /* full alpha */
-
 int cfmagicwall_getExtraSize(void)
 {
     return 0x0;
@@ -52,7 +49,7 @@ void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43D8);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void cfmagicwall_hitDetect(void)
@@ -98,7 +95,7 @@ void cfmagicwall_update(GameObject* obj)
 
             if (fadeDistance < range)
             {
-                alpha = lbl_803E43DC * (fadeDistance / range);
+                alpha = 255.0f * (fadeDistance / range);
             }
 
             (obj)->anim.alpha = alpha;
