@@ -25,7 +25,7 @@ u16 sndRand(void);
 s16 sndSin(u32 packed);
 void *sndBSearch(void *key, void *base, int count, u32 stride, int (*cmp)(void *, void *));
 void sndConvertMs(u32 *p);
-void sndConvertTicks(u32 *p, int x);
+void sndConvertTicks(u32 *p, McmdVoiceState *state);
 u32 sndConvert2Ms(u32 x);
 
 #endif /* MAIN_AUDIO_INP_CTRL_H_ */

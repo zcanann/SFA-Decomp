@@ -380,7 +380,7 @@ extern const f32 sSynthFadeTimeScale;
 #define sSynthFadeScale lbl_803E8430
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
-u32 synthGetVoiceSlotChannelScale(McmdVoiceState * slot);
+int synthGetVoiceSlotChannelScale(McmdVoiceState *slot);
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel);
 void synthInsertChannelEvent(SynthSequenceQueue* queue, SynthSequenceEvent* event);
 SynthSequenceEvent* synthHandleSequenceEvent(SynthSequenceEvent* event, u8 groupIndex, u32* output);

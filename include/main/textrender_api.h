@@ -27,6 +27,7 @@ void subtitleBuildLineTable(void);
 int subtitleIsActive(void);
 int setSubtitlesEnabled(int enabled);
 void* gameTextGetPhrase(int textId, int phraseIndex);
+void* gameTextGetStr(int textId);
 void gameTextResetCursor(int flags);
 #ifdef TEXTRENDER_DIRECT_INT_CURSOR_CALL
 void gameTextSetCursor(int x, int y, int flags);

@@ -4,7 +4,7 @@
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
 #include "main/audio/hw_init.h"
-#include "main/audio/inp_ctrl_api.h"
+#include "main/audio/inp_ctrl.h"
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
@@ -17,8 +17,6 @@
 
 extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 extern u16 sndRand(void);
-extern void sndConvertTicks(u32* p, McmdVoiceState* state);
-
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and
  * inserting the voice into the global time queue.

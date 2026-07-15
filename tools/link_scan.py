@@ -13,6 +13,12 @@ final link. This scanner adds the checks objdiff doesn't:
   2. Reloc safety    - every undefined symbol the built object references must
      be a globally-resolvable name in symbols.txt. (Catches source that still
      references a synthetic `lbl_ADDR`/`fn_ADDR` label the linker can't find.)
+  3. Symbol layout   - linker-visible symbols must retain their retail section,
+     offset, and size. (Catches equal-sized BSS blocks with a different internal
+     allocation order.)
+  4. BSS retention  - a source BSS section with no retail relocation users must
+     be explicitly force-active. (Catches compiled allocations that the linker
+     otherwise dead-strips.)
 
 What it CANNOT predict: cross-object common-symbol / bss merge shifts. Two
 objects can pass every check above and still move the .bss/.sdata base by a few
@@ -24,6 +30,7 @@ Usage:
     python3 tools/link_scan.py --explain       # also print why others were rejected
 """
 import argparse
+import glob
 import json
 import os
 import re
@@ -36,6 +43,20 @@ OBJDUMP = os.path.abspath(f"build/binutils/powerpc-eabi-objdump{EXE_SUFFIX}")
 OBJCOPY = os.path.abspath(f"build/binutils/powerpc-eabi-objcopy{EXE_SUFFIX}")
 IGNORE_SECTIONS = {".comment", ".symtab", ".strtab", ".shstrtab", ".note.split"}
 BSS_SECTIONS = {".bss", ".sbss", ".sbss2"}
+ALLOC_SECTIONS = {
+    ".text",
+    ".ctors",
+    ".dtors",
+    ".rodata",
+    ".data",
+    ".bss",
+    ".sdata",
+    ".sbss",
+    ".sdata2",
+    ".sbss2",
+    "extab",
+    "extabindex",
+}
 
 
 def section_sizes(obj):
@@ -70,6 +91,83 @@ def undefined_syms(obj):
     return [line.split()[-1] for line in out.splitlines() if "*UND*" in line]
 
 
+def defined_symbol_layout(obj, known_names):
+    """Return linker-visible symbol placement for names owned by this unit.
+
+    Whole-section byte equality is insufficient for BSS: two objects can have
+    the same total BSS size while assigning different offsets to the symbols
+    inside it.  The linker resolves relocations by symbol, so that layout must
+    match too.
+    """
+    out = subprocess.run([OBJDUMP, "-t", obj], capture_output=True, text=True).stdout
+    layout = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) < 5:
+            continue
+        name = parts[-1]
+        section = parts[-3]
+        if name not in known_names or section not in ALLOC_SECTIONS:
+            continue
+        try:
+            layout[name] = (section, int(parts[0], 16), int(parts[-2], 16))
+        except ValueError:
+            continue
+    return layout
+
+
+def relocation_references():
+    """Collect symbols referenced by retail input relocations.
+
+    DTK's retail split objects are force-exported, while a compiled source
+    object can lose a wholly unreferenced BSS section during the final link.
+    An unreferenced source BSS section therefore is not promotion-safe even
+    when its raw size and symbol layout match the retail object.
+    """
+    refs = set()
+    reloc_re = re.compile(r"^\s*[0-9A-Fa-f]+\s+R_\S+\s+(\S+)")
+    objects = list(glob.iglob(f"{BUILD}/obj/**/*.o", recursive=True))
+    fd, rsp = tempfile.mkstemp(prefix="link_scan_objdump_", suffix=".rsp", text=True)
+    try:
+        with os.fdopen(fd, "w") as f:
+            for obj in objects:
+                f.write(f'"{os.path.abspath(obj)}"\n')
+        out = subprocess.run(
+            [OBJDUMP, "-r", f"@{rsp}"], capture_output=True, text=True
+        ).stdout
+    finally:
+        if os.path.exists(rsp):
+            os.remove(rsp)
+    for line in out.splitlines():
+        match = reloc_re.match(line)
+        if match:
+            refs.add(re.split(r"[+-]0x", match.group(1), maxsplit=1)[0])
+    return refs
+
+
+def force_active_names():
+    names = set()
+    path = f"{BUILD}/ldscript.lcf"
+    if not os.path.exists(path):
+        return names
+    active = False
+    with open(path) as f:
+        for line in f:
+            stripped = line.strip()
+            if stripped == "FORCEACTIVE":
+                active = True
+                continue
+            if not active:
+                continue
+            if stripped == "{":
+                continue
+            if stripped == "}":
+                break
+            if stripped:
+                names.add(stripped)
+    return names
+
+
 def resolvable_names():
     names = set()
     scope_re = re.compile(r"scope:(\w+)")
@@ -90,6 +188,8 @@ def main():
 
     report = json.load(open(f"{BUILD}/report.json"))
     resolvable = resolvable_names()
+    referenced = relocation_references()
+    force_active = force_active_names()
 
     good, rejected = [], []
     for u in report["units"]:
@@ -114,6 +214,26 @@ def main():
             for name in sb
         ):
             rejected.append((sp, "section-bytes"))
+            continue
+        built_layout = defined_symbol_layout(built, resolvable)
+        orig_layout = defined_symbol_layout(orig, resolvable)
+        if built_layout != orig_layout:
+            changed = sorted(
+                name
+                for name in built_layout.keys() | orig_layout.keys()
+                if built_layout.get(name) != orig_layout.get(name)
+            )
+            rejected.append((sp, f"symbol-layout {changed[:3]}"))
+            continue
+        dead_bss = []
+        for section in BSS_SECTIONS & sb.keys():
+            owned = [name for name, entry in built_layout.items() if entry[0] == section]
+            if owned and not any(
+                name in referenced or name in force_active for name in owned
+            ):
+                dead_bss.append(section)
+        if dead_bss:
+            rejected.append((sp, f"unreferenced-bss {sorted(dead_bss)}"))
             continue
         bad = [s for s in undefined_syms(built) if s not in resolvable]
         if bad:

@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRpickup.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_interface.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
@@ -15,7 +16,6 @@ extern f32 lbl_803E5C2C;
 extern f32 lbl_803E5C30;
 
 extern void PSVECAdd(const void* a, const void* b, void* ab);
-extern float powfBitEstimate(float x, float y);
 
 void fn_801EC1AC(int obj, int state)
 {

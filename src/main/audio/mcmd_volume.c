@@ -3,14 +3,11 @@
 #pragma exceptions on
 #include "main/audio/mcmd.h"
 #include "main/audio/data_tables.h"
-#include "main/audio/inp_ctrl_api.h"
+#include "main/audio/inp_ctrl.h"
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
 #define MAC_FLAG64(hi, lo) (((u64)(hi) << 32) | (u64)(lo))
-
-extern void sndConvertTicks(u32* p, McmdVoiceState* state);
-extern s32 sndConvert2Ms(u32 v);
 
 /*
  * Translate a 16.16 volume through a curve table (MusyX TranslateVolume).

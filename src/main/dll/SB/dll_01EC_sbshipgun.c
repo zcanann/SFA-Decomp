@@ -35,6 +35,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/vecmath.h"
 #include "main/object.h"
+#include "main/object_transform.h"
 #include "main/camera.h"
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
@@ -102,8 +103,6 @@ STATIC_ASSERT(offsetof(SBShipGunState, health) == 0xC);
 STATIC_ASSERT(offsetof(SBShipGunState, active) == 0xD);
 STATIC_ASSERT(offsetof(SBShipGunState, volleyCount) == 0xE);
 STATIC_ASSERT(sizeof(SBShipGunState) == 0x10);
-
-extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 
 extern f32 lbl_803E5888;
 extern const f32 lbl_803E588C;

@@ -164,7 +164,7 @@ void mcmdPortamento(McmdVoiceState* state, McmdCommandArgs* args)
     }
     else
     {
-        sndConvertTicks(&time, (int)state);
+        sndConvertTicks(&time, state);
     }
 
     state->portamentoDuration = time;

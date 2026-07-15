@@ -17,6 +17,7 @@
 #include "main/game_object.h"
 #include "main/object.h"
 #include "main/object_api.h"
+#include "main/object_transform.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/sbshipheadstate_struct.h"
 #include "main/dll/sbpropellerstate_struct.h"
@@ -51,7 +52,6 @@ STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 
 extern int DBprotection_getCameraState(u32 g);
 extern u32 getSbGalleon(void);
-extern void Obj_GetWorldPosition(int obj, f32* x, f32* y, f32* z);
 extern u8 gSbShipHeadHasFiredFireball;
 int gSbShipHeadPrevGalleonPhase;
 u32 getSbGalleon(void);

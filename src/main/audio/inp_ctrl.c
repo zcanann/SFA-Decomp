@@ -409,9 +409,9 @@ void sndConvertMs(u32* p)
  * Compute a normalized scaled-1000-divided-by-32 value at *p using a
  * helper-derived divisor.
  */
-void sndConvertTicks(u32* p, int x)
+void sndConvertTicks(u32* p, McmdVoiceState* state)
 {
-    int div = synthGetVoiceSlotChannelScale(x);
+    int div = synthGetVoiceSlotChannelScale(state);
     *p = (((*p << 16) / div) * 0x3e8) >> 5;
 }
 

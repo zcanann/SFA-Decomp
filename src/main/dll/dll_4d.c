@@ -43,8 +43,6 @@ extern u8 lbl_803DD706;
 extern u8* lbl_803DD708;    /* save-file struct; [2] = subtitles enabled */
 extern int lbl_803A87D0[8]; /* created menu-row widgets of the active panel */
 
-extern int saveFileStruct_isCheatActive(u8 idx);
-
 void languageMenuInit(void)
 {
     MenuPanelGroup* panel;

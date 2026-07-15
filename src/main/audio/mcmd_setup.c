@@ -1,14 +1,13 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
 #include "main/audio/mcmd_exec.h"
+#include "main/audio/inp_ctrl.h"
 #include "main/audio/voice_conv.h"
 #include "main/audio/data_tables.h"
 
 #pragma exceptions on
 extern void synthFXCloneMidiSetup(McmdVoiceState* voice, McmdVoiceState* state);
 void DoSetPitch(McmdVoiceState* svoice);
-extern void sndConvertMs(u32* p);
-extern void sndConvertTicks(u32* p, McmdVoiceState* state);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState* state);
 extern int adsrSetup(McmdEnvelopeState* state);
 extern u8 voiceAdsrDecayTable[];

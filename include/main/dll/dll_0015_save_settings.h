@@ -4,6 +4,7 @@
 #include "global.h"
 
 void saveFileStruct_unlockCheat(u8 idx);
+int saveFileStruct_isCheatActive(u8 idx);
 int isCheatUnlocked(u8 idx);
 void saveFileStruct_resetVolumes(void);
 void* getSaveFileStruct(void);

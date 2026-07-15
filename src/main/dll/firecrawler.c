@@ -191,8 +191,6 @@ extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
 
 extern f32 lbl_803E2BA8;
-extern float powfBitEstimate(float x, float y);
-
 void fn_80157B58(int* obj, u8* state);
 
 extern f32 lbl_803E2C74;

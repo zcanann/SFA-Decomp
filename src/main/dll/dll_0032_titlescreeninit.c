@@ -82,7 +82,6 @@ extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-extern void* gameTextGetStr(int textId);
 extern void loadSunAndMoon(void);
 
 void runLoadingScreens(void)

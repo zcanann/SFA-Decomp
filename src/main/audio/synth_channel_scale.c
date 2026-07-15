@@ -349,9 +349,9 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key)
 /*
  * Look up an int from a 2D table indexed by state's ID bytes.
  */
-int synthGetVoiceSlotChannelScale(u8* state)
+int synthGetVoiceSlotChannelScale(McmdVoiceState* state)
 {
-    McmdVoiceState* v = (McmdVoiceState*)state;
+    McmdVoiceState* v = state;
     u32 bank;
     int key;
     if ((bank = v->midiEvent) == 0xff)

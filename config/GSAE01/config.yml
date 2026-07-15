@@ -9,6 +9,11 @@ game_name: Star Fox Adventures (USA)
 # (optional) Main module name. Defaults to "main".
 name: main
 
+# Retain the priority-sort table even though code addresses it through the
+# containing vidListNodes storage rather than by this symbol directly.
+force_active:
+  - voicePrioritySortLinks
+
 # Path to the main.dol file.
 object: sys/main.dol
 
