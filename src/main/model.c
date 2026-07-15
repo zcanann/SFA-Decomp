@@ -2133,7 +2133,6 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
     }
     if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
     {
-        int vtxBytes = sizes[0];
         int normalStride;
         if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
         {
@@ -2143,11 +2142,7 @@ int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChanne
         {
             normalStride = 3;
         }
-        {
-            int normalBytes = ((ModelFileHeader*)hdr)->normalCount * normalStride;
-            vtxBytes = normalBytes + vtxBytes;
-        }
-        sizes[0] = vtxBytes + 0x40;
+        sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
     }
     {
         int hitSphereBytes = ((ModelFileHeader*)hdr)->hitSphereCount << 4;
