@@ -18,22 +18,19 @@
 #define DLL63_EFFECT_ID 0x40
 
 extern u8 lbl_80312BD8[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E08C8 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E08CC = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E08D0 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E08D4 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E08D8 = 0.725f;
-__declspec(section ".sdata2") f32 lbl_803E08DC = 1.2f;
-__declspec(section ".sdata2") f32 lbl_803E08E0 = 0.35f;
-__declspec(section ".sdata2") f32 lbl_803E08E4 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E08E8 = 70.0f;
-__declspec(section ".sdata2") f32 lbl_803E08EC = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E08F0 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E08F4 = -0.7f;
-__declspec(section ".sdata2") f32 lbl_803E08F8 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E08FC = 0.1f;
-#pragma explicit_zero_data off
+
+#define DLL63_LARGE_INNER_SIZE 100.0f
+#define DLL63_OUTER_SIZE 200.0f
+#define DLL63_SMALL_INNER_SIZE 50.0f
+#define DLL63_PRIMARY_XZ_SCALE 0.725f
+#define DLL63_PRIMARY_Y_SCALE 1.2f
+#define DLL63_SECONDARY_XZ_SCALE 0.35f
+#define DLL63_LAYER_FIRST_X 70.0f
+#define DLL63_LAYER_SECOND_X 12.0f
+#define DLL63_LAYER_Z 20.0f
+#define DLL63_LAYER_X -0.7f
+#define DLL63_EFFECT_Y 4.0f
+#define DLL63_FLAG_SCALE 0.1f
 
 #pragma inline_max_size(4000)
 static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, u32 flags)
@@ -88,16 +85,16 @@ static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, 
         entries[0].flags = 7;
         entries[0].tex = &base[0xf0];
         entries[0].mode = 8;
-        entries[0].x = lbl_803E08C8;
-        entries[0].y = lbl_803E08C8;
-        entries[0].z = lbl_803E08C8;
+        entries[0].x = DLL63_LARGE_INNER_SIZE;
+        entries[0].y = DLL63_LARGE_INNER_SIZE;
+        entries[0].z = DLL63_LARGE_INNER_SIZE;
         entries[1].layer = 0;
         entries[1].flags = 7;
         entries[1].tex = &base[0x100];
         entries[1].mode = 8;
-        entries[1].x = lbl_803E08CC;
-        entries[1].y = lbl_803E08CC;
-        entries[1].z = lbl_803E08CC;
+        entries[1].x = DLL63_OUTER_SIZE;
+        entries[1].y = DLL63_OUTER_SIZE;
+        entries[1].z = DLL63_OUTER_SIZE;
         cmd = &entries[2];
     }
     else
@@ -106,41 +103,41 @@ static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, 
         entries[0].flags = 7;
         entries[0].tex = &base[0xf0];
         entries[0].mode = 8;
-        entries[0].x = lbl_803E08D0;
-        entries[0].y = lbl_803E08D0;
-        entries[0].z = lbl_803E08D0;
+        entries[0].x = DLL63_SMALL_INNER_SIZE;
+        entries[0].y = DLL63_SMALL_INNER_SIZE;
+        entries[0].z = DLL63_SMALL_INNER_SIZE;
         entries[1].layer = 0;
         entries[1].flags = 7;
         entries[1].tex = &base[0x100];
         entries[1].mode = 8;
-        entries[1].x = lbl_803E08CC;
-        entries[1].y = lbl_803E08CC;
-        entries[1].z = lbl_803E08CC;
+        entries[1].x = DLL63_OUTER_SIZE;
+        entries[1].y = DLL63_OUTER_SIZE;
+        entries[1].z = DLL63_OUTER_SIZE;
         cmd = &entries[2];
     }
     cmd->layer = 0;
     cmd->flags = 0xe;
     cmd->tex = &base[0xd4];
     cmd->mode = 4;
-    cmd->x = lbl_803E08D4;
-    cmd->y = lbl_803E08D4;
-    cmd->z = lbl_803E08D4;
+    cmd->x = 0.0f;
+    cmd->y = 0.0f;
+    cmd->z = 0.0f;
     if (variant != 3 || posSource == 0)
     {
         cmd[1].layer = 0;
         cmd[1].flags = 7;
         cmd[1].tex = &base[0x100];
         cmd[1].mode = 2;
-        cmd[1].x = lbl_803E08D8;
-        cmd[1].y = lbl_803E08DC;
-        cmd[1].z = lbl_803E08D8;
+        cmd[1].x = DLL63_PRIMARY_XZ_SCALE;
+        cmd[1].y = DLL63_PRIMARY_Y_SCALE;
+        cmd[1].z = DLL63_PRIMARY_XZ_SCALE;
         cmd[2].layer = 0;
         cmd[2].flags = 7;
         cmd[2].tex = &base[0xf0];
         cmd[2].mode = 2;
-        cmd[2].x = lbl_803E08E0;
-        cmd[2].y = lbl_803E08E4;
-        cmd[2].z = lbl_803E08E0;
+        cmd[2].x = DLL63_SECONDARY_XZ_SCALE;
+        cmd[2].y = 1.0f;
+        cmd[2].z = DLL63_SECONDARY_XZ_SCALE;
         cmd += 3;
     }
     else
@@ -149,125 +146,125 @@ static inline void dll_63_func03Body(u8* sourceObj, int variant, u8* posSource, 
         cmd[1].flags = 7;
         cmd[1].tex = &base[0x100];
         cmd[1].mode = 2;
-        cmd[1].x = lbl_803E08D8 * ((PartFxSpawnParams*)posSource)->scale;
-        cmd[1].y = lbl_803E08DC * ((PartFxSpawnParams*)posSource)->scale;
-        cmd[1].z = lbl_803E08D8 * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[1].x = DLL63_PRIMARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[1].y = DLL63_PRIMARY_Y_SCALE * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[1].z = DLL63_PRIMARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
         cmd[2].layer = 0;
         cmd[2].flags = 7;
         cmd[2].tex = &base[0xf0];
         cmd[2].mode = 2;
-        cmd[2].x = lbl_803E08E0 * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[2].x = DLL63_SECONDARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
         cmd[2].y = ((PartFxSpawnParams*)posSource)->scale;
-        cmd[2].z = lbl_803E08E0 * ((PartFxSpawnParams*)posSource)->scale;
+        cmd[2].z = DLL63_SECONDARY_XZ_SCALE * ((PartFxSpawnParams*)posSource)->scale;
         cmd += 3;
     }
     cmd[0].layer = 1;
     cmd[0].flags = 7;
     cmd[0].tex = &base[0xf0];
     cmd[0].mode = 4;
-    cmd[0].x = lbl_803E08E8;
-    cmd[0].y = lbl_803E08D4;
-    cmd[0].z = lbl_803E08D4;
+    cmd[0].x = DLL63_LAYER_FIRST_X;
+    cmd[0].y = 0.0f;
+    cmd[0].z = 0.0f;
     cmd[1].layer = 1;
     cmd[1].flags = 7;
     cmd[1].tex = &base[0x100];
     cmd[1].mode = 4;
-    cmd[1].x = lbl_803E08EC;
-    cmd[1].y = lbl_803E08D4;
-    cmd[1].z = lbl_803E08D4;
+    cmd[1].x = DLL63_LAYER_SECOND_X;
+    cmd[1].y = 0.0f;
+    cmd[1].z = 0.0f;
     cmd[2].layer = 1;
     cmd[2].flags = 0xe;
     cmd[2].tex = &base[0xd4];
     cmd[2].mode = 0x100;
-    cmd[2].x = lbl_803E08D4;
-    cmd[2].y = lbl_803E08D4;
-    cmd[2].z = lbl_803E08F0;
+    cmd[2].x = 0.0f;
+    cmd[2].y = 0.0f;
+    cmd[2].z = DLL63_LAYER_Z;
     cmd[3].layer = 1;
     cmd[3].flags = 0xe;
     cmd[3].tex = &base[0xd4];
     cmd[3].mode = 0x4000;
-    cmd[3].x = lbl_803E08F4;
-    cmd[3].y = lbl_803E08D4;
-    cmd[3].z = lbl_803E08D4;
+    cmd[3].x = DLL63_LAYER_X;
+    cmd[3].y = 0.0f;
+    cmd[3].z = 0.0f;
     cmd[4].layer = 2;
     cmd[4].flags = 0xe;
     cmd[4].tex = &base[0xd4];
     cmd[4].mode = 0x100;
-    cmd[4].x = lbl_803E08D4;
-    cmd[4].y = lbl_803E08D4;
-    cmd[4].z = lbl_803E08F0;
+    cmd[4].x = 0.0f;
+    cmd[4].y = 0.0f;
+    cmd[4].z = DLL63_LAYER_Z;
     cmd[5].layer = 2;
     cmd[5].flags = 0xe;
     cmd[5].tex = &base[0xd4];
     cmd[5].mode = 0x4000;
-    cmd[5].x = lbl_803E08F4;
-    cmd[5].y = lbl_803E08D4;
-    cmd[5].z = lbl_803E08D4;
+    cmd[5].x = DLL63_LAYER_X;
+    cmd[5].y = 0.0f;
+    cmd[5].z = 0.0f;
     cmd[6].layer = 3;
     cmd[6].flags = 0xe;
     cmd[6].tex = &base[0xd4];
     cmd[6].mode = 0x100;
-    cmd[6].x = lbl_803E08D4;
-    cmd[6].y = lbl_803E08D4;
-    cmd[6].z = lbl_803E08F0;
+    cmd[6].x = 0.0f;
+    cmd[6].y = 0.0f;
+    cmd[6].z = DLL63_LAYER_Z;
     cmd[7].layer = 3;
     cmd[7].flags = 0xe;
     cmd[7].tex = &base[0xd4];
     cmd[7].mode = 0x4000;
-    cmd[7].x = lbl_803E08F4;
-    cmd[7].y = lbl_803E08D4;
-    cmd[7].z = lbl_803E08D4;
+    cmd[7].x = DLL63_LAYER_X;
+    cmd[7].y = 0.0f;
+    cmd[7].z = 0.0f;
     cmd[8].layer = 4;
     cmd[8].flags = 1;
     cmd[8].tex = NULL;
     cmd[8].mode = 0x2000;
-    cmd[8].x = lbl_803E08D4;
-    cmd[8].y = lbl_803E08D4;
-    cmd[8].z = lbl_803E08D4;
+    cmd[8].x = 0.0f;
+    cmd[8].y = 0.0f;
+    cmd[8].z = 0.0f;
     cmd[9].layer = 5;
     cmd[9].flags = 7;
     cmd[9].tex = &base[0xf0];
     cmd[9].mode = 4;
-    cmd[9].x = lbl_803E08D4;
-    cmd[9].y = lbl_803E08D4;
-    cmd[9].z = lbl_803E08D4;
+    cmd[9].x = 0.0f;
+    cmd[9].y = 0.0f;
+    cmd[9].z = 0.0f;
     cmd[10].layer = 5;
     cmd[10].flags = 7;
     cmd[10].tex = &base[0x100];
     cmd[10].mode = 4;
-    cmd[10].x = lbl_803E08D4;
-    cmd[10].y = lbl_803E08D4;
-    cmd[10].z = lbl_803E08D4;
+    cmd[10].x = 0.0f;
+    cmd[10].y = 0.0f;
+    cmd[10].z = 0.0f;
     cmd[11].layer = 5;
     cmd[11].flags = 0xe;
     cmd[11].tex = &base[0xd4];
     cmd[11].mode = 0x100;
-    cmd[11].x = lbl_803E08D4;
-    cmd[11].y = lbl_803E08D4;
-    cmd[11].z = lbl_803E08F0;
+    cmd[11].x = 0.0f;
+    cmd[11].y = 0.0f;
+    cmd[11].z = DLL63_LAYER_Z;
     cmd[12].layer = 5;
     cmd[12].flags = 0xe;
     cmd[12].tex = &base[0xd4];
     cmd[12].mode = 0x4000;
-    cmd[12].x = lbl_803E08F4;
-    cmd[12].y = lbl_803E08D4;
-    cmd[12].z = lbl_803E08D4;
+    cmd[12].x = DLL63_LAYER_X;
+    cmd[12].y = 0.0f;
+    cmd[12].z = 0.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E08D4;
-    buf.pos[1] = lbl_803E08F8;
-    buf.pos[2] = lbl_803E08D4;
-    buf.col[0] = lbl_803E08D4;
-    buf.col[1] = lbl_803E08D4;
-    buf.col[2] = lbl_803E08D4;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = DLL63_EFFECT_Y;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
     if (flag != 0)
     {
-        buf.scale = lbl_803E08FC * flag;
+        buf.scale = DLL63_FLAG_SCALE * flag;
     }
     else
     {
-        buf.scale = lbl_803E08E4;
+        buf.scale = 1.0f;
     }
     buf.v40 = 1;
     buf.v3c = 0;

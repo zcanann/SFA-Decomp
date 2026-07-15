@@ -26,22 +26,6 @@
 extern u8 gDll8EEffectHwParams[];
 extern u8 gDll8EEffectVtxColorTable[];
 extern u8 gDll8EEffectSpawnResource[8];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E1138 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E113C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E1140 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E1144 = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E1148 = 0.8f;
-__declspec(section ".sdata2") f32 lbl_803E114C = 145.0f;
-__declspec(section ".sdata2") f32 lbl_803E1150 = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E1154 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E1158 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E115C = 21.0f;
-__declspec(section ".sdata2") f32 lbl_803E1160 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E1164 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E1168 = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E116C = 200.0f;
 #include "main/dll/dll_008F_dll8ffunc0.h"
 
 u8 gDll8EEffectSpawnResource[8] = {0, 0, 0, 1, 0, 2, 0, 0};
@@ -86,89 +70,89 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
     p[0].flags = 0;
     p[0].tex = NULL;
     p[0].mode = 0x80;
-    p[0].x = lbl_803E1138;
+    p[0].x = 0.0f;
     p[0].y = ry;
     p[0].z = rz;
     p[1].layer = 0;
     p[1].flags = 3;
     p[1].tex = gDll8EEffectTexture;
     p[1].mode = 4;
-    p[1].x = lbl_803E1138;
-    p[1].y = lbl_803E1138;
-    p[1].z = lbl_803E1138;
+    p[1].x = 0.0f;
+    p[1].y = 0.0f;
+    p[1].z = 0.0f;
     p[2].layer = 0;
     p[2].flags = 3;
     p[2].tex = gDll8EEffectTexture;
     p[2].mode = 2;
-    p[2].x = lbl_803E113C;
-    p[2].y = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x32) + lbl_803E1140;
-    p[2].z = lbl_803E1144 * (f32)(int)randomGetRange(0, 0x14) + lbl_803E1148;
+    p[2].x = 1.0f;
+    p[2].y = 0.01f * (f32)(int)randomGetRange(0, 0x32) + 0.5f;
+    p[2].z = 0.01f * (f32)(int)randomGetRange(0, 0x14) + 0.8f;
     p[3].layer = 1;
     p[3].flags = 3;
     p[3].tex = gDll8EEffectTexture;
     p[3].mode = 4;
     if ((int)randomGetRange(0, 0xa) == 0)
     {
-        p[3].x = lbl_803E114C + (f32)(int)randomGetRange(0, 0x1e);
+        p[3].x = 145.0f + (f32)(int)randomGetRange(0, 0x1e);
     }
     else
     {
-        p[3].x = lbl_803E1150 + (f32)(int)randomGetRange(0, 0xa);
+        p[3].x = 25.0f + (f32)(int)randomGetRange(0, 0xa);
     }
-    p[3].y = lbl_803E1138;
-    p[3].z = lbl_803E1138;
+    p[3].y = 0.0f;
+    p[3].z = 0.0f;
     p[4].layer = 2;
     p[4].flags = 0;
     p[4].tex = NULL;
     p[4].mode = 0x80;
-    p[4].x = lbl_803E1138;
-    p[4].y = lbl_803E1138;
+    p[4].x = 0.0f;
+    p[4].y = 0.0f;
     p[4].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[5].layer = 1;
     p[5].flags = 3;
     p[5].tex = gDll8EEffectTexture;
     p[5].mode = 2;
-    p[5].x = lbl_803E1154;
-    p[5].y = lbl_803E1158;
-    p[5].z = lbl_803E115C;
+    p[5].x = 10.0f;
+    p[5].y = 12.0f;
+    p[5].z = 21.0f;
     p[6].layer = 2;
     p[6].flags = 0;
     p[6].tex = NULL;
     p[6].mode = 0x80;
-    p[6].x = lbl_803E1138;
-    p[6].y = lbl_803E1138;
+    p[6].x = 0.0f;
+    p[6].y = 0.0f;
     p[6].z = (f32)(int)randomGetRange(0, 0xfffe);
     p[7].layer = 2;
     p[7].flags = 3;
     p[7].tex = gDll8EEffectTexture;
     p[7].mode = 4;
-    p[7].x = lbl_803E1138;
-    p[7].y = lbl_803E1138;
-    p[7].z = lbl_803E1138;
+    p[7].x = 0.0f;
+    p[7].y = 0.0f;
+    p[7].z = 0.0f;
     p[8].layer = 2;
     p[8].flags = 3;
     p[8].tex = gDll8EEffectTexture;
     p[8].mode = 2;
-    p[8].x = lbl_803E1160;
-    p[8].y = lbl_803E1164;
-    p[8].z = lbl_803E1168;
+    p[8].x = 0.1f;
+    p[8].y = 4.0f;
+    p[8].z = 0.05f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = *(f32*)&lbl_803E1138;
+    buf.pos[0] = 0.0f;
     if (variant == 0)
     {
-        buf.pos[1] = lbl_803E1138;
+        buf.pos[1] = 0.0f;
     }
     else if (variant == 1)
     {
-        buf.pos[1] = lbl_803E116C;
+        buf.pos[1] = 200.0f;
     }
-    buf.pos[2] = *(f32*)&lbl_803E1138;
-    buf.col[0] = lbl_803E1138;
-    buf.col[1] = lbl_803E1138;
-    buf.col[2] = *(f32*)&lbl_803E1138;
-    buf.scale = lbl_803E1164;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 4.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 3;
@@ -192,7 +176,7 @@ void dll_8E_func03(int sourceObj, int variant, int posSource, u32 flags)
         {
             buf.pos[0] += ((GameObject*)buf.ctx)->anim.worldPosX + ((PartFxSpawnParams*)posSource)->posX;
             buf.pos[1] += ((GameObject*)buf.ctx)->anim.worldPosY + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1138 + (((GameObject*)buf.ctx)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ);
+            buf.pos[2] += ((GameObject*)buf.ctx)->anim.worldPosZ + ((PartFxSpawnParams*)posSource)->posZ;
         }
         else if ((u32)buf.ctx != 0)
         {

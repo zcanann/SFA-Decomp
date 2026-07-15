@@ -22,11 +22,6 @@
 #include "main/dll/dll_0119_coldwatercontrol.h"
 #include "main/dll/player_api.h"
 
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E3B68 = -30.0f;
-__declspec(section ".sdata2") f32 lbl_803E3B6C = 240.0f;
-#pragma force_active reset
-
 #define GAMEBIT_COLDWATER_ARM  0x1bf
 #define GAMEBIT_COLDWATER_DONE 0x1bd
 
@@ -35,8 +30,6 @@ __declspec(section ".sdata2") f32 lbl_803E3B6C = 240.0f;
 #define COLDWATER_OBJFLAG_HIDDEN             0x4000
 #define COLDWATER_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E3B68; /* timer reset / initial value */
-extern f32 lbl_803E3B6C; /* repeat-hit period */
 int ColdWaterControl_getExtraSize(void)
 {
     return 0x8;
@@ -60,21 +53,21 @@ void ColdWaterControl_update(GameObject* obj)
     {
         if (fn_80295C40(state->playerObj) != 0)
         {
-            if (lbl_803E3B68 == state->timer)
+            if (-30.0f == state->timer)
             {
                 ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 0, 1);
             }
 
             state->timer = state->timer + timeDelta;
-            if (state->timer > lbl_803E3B6C)
+            if (state->timer > 240.0f)
             {
                 ObjHits_RecordObjectHit((int)state->playerObj, (int)obj, COLDWATER_HIT_PRIORITY, 1, 1);
-                state->timer = state->timer - lbl_803E3B6C;
+                state->timer = state->timer - 240.0f;
             }
         }
         else
         {
-            state->timer = lbl_803E3B68;
+            state->timer = -30.0f;
         }
     }
     else
@@ -87,6 +80,6 @@ void ColdWaterControl_update(GameObject* obj)
 void ColdWaterControl_init(GameObject* obj)
 {
     ColdwaterControlState* p = (ColdwaterControlState*)obj->extra;
-    p->timer = lbl_803E3B68;
+    p->timer = -30.0f;
     obj->objectFlags = (u16)(obj->objectFlags | (COLDWATER_OBJFLAG_HIDDEN | COLDWATER_OBJFLAG_HITDETECT_DISABLED));
 }

@@ -24,29 +24,6 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3DD8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DDC = 0.0f;
-__declspec(section ".sdata2") f64 lbl_803E3DE0 = 2.0;
-union CfCrateConstF32 { f32 f; };
-__declspec(section ".sdata2") const union CfCrateConstF32 lbl_803E3DE8 = { 40.0f };
-__declspec(section ".sdata2") f32 lbl_803E3DEC = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E3DF0 = 4000.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DF4 = 1000.0f;
-__declspec(section ".sdata2") f32 lbl_803E3DF8 = 0.002f;
-__declspec(section ".sdata2") f32 lbl_803E3DFC = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E00 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E04 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E08 = 180.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E0C = -180.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E10 = 90.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E14 = -90.0f;
-__declspec(section ".sdata2") f64 lbl_803E3E18 = 1.5;
-__declspec(section ".sdata2") f32 lbl_803E3E20 = 75.0f;
-#pragma explicit_zero_data off
-#pragma force_active reset
-
 u16 gCfCrateDefaultSfxTable[4] = {0x151, 0, 0, 0};
 
 typedef struct CfccratePlacement
@@ -80,21 +57,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
     (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
 
-extern f32 lbl_803E3DD8;
-extern f64 lbl_803E3DE0;
-extern f32 lbl_803E3DEC;
-extern f32 lbl_803E3DF0;
-extern f32 lbl_803E3DF4;
-extern f32 lbl_803E3DF8;
-extern f32 lbl_803E3DFC;
-extern f32 lbl_803E3E00;
-extern f32 lbl_803E3E04;
-extern f32 lbl_803E3E08;
-extern f32 lbl_803E3E0C;
-extern f32 lbl_803E3E10;
-extern f32 lbl_803E3E14;
-extern f64 lbl_803E3E18;
-extern f32 lbl_803E3E20;
 extern f32 lbl_803E3E30;
 extern f32 lbl_803E3E34;
 extern f32 lbl_803E3E38;
@@ -134,7 +96,7 @@ void CFCrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             return;
         }
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3DD8);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 int CFCrate_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -222,15 +184,15 @@ void CFCrate_update(GameObject* obj)
         }
         else
         {
-            (obj)->anim.localPosY = (f32) - (lbl_803E3DE0 * timeDelta - (obj)->anim.localPosY);
+            (obj)->anim.localPosY = (f32) - (2.0 * timeDelta - (obj)->anim.localPosY);
         }
         break;
     case 0x6fc: /* DFP_Water */
         if ((mainGetBit(state->gameBit) != 0) &&
-            ((obj)->anim.localPosY <= lbl_803E3DE8.f + ((CfccratePlacement*)viewslot)->homeY))
+            ((obj)->anim.localPosY <= 40.0f + ((CfccratePlacement*)viewslot)->homeY))
         {
-            (obj)->anim.localPosY = lbl_803E3DEC * timeDelta + (obj)->anim.localPosY;
-            if ((obj)->anim.localPosY >= lbl_803E3DE8.f + ((CfccratePlacement*)viewslot)->homeY)
+            (obj)->anim.localPosY = 0.5f * timeDelta + (obj)->anim.localPosY;
+            if ((obj)->anim.localPosY >= 40.0f + ((CfccratePlacement*)viewslot)->homeY)
             {
                 mainSetBits(state->gameBit, 0);
             }
@@ -239,25 +201,25 @@ void CFCrate_update(GameObject* obj)
     case 0x6fd: /* DFP_InnerRing */
         if (mainGetBit(state->gameBit) != 0)
         {
-            (obj)->anim.rotX = (obj)->anim.rotX + (s32)(lbl_803E3DF0 * timeDelta);
-            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
+            (obj)->anim.rotX = (obj)->anim.rotX + (s32)(4000.0f * timeDelta);
+            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(1000.0f * timeDelta);
         }
         else
         {
-            (obj)->anim.rotX = (obj)->anim.rotX + (s32)(lbl_803E3DF0 * timeDelta);
-            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
+            (obj)->anim.rotX = (obj)->anim.rotX + (s32)(4000.0f * timeDelta);
+            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(1000.0f * timeDelta);
         }
         break;
     case 0x6fe: /* DFP_OuterRing */
         if (mainGetBit(state->gameBit) != 0)
         {
-            (obj)->anim.rotY = (obj)->anim.rotY + (s32)(lbl_803E3DF0 * timeDelta);
-            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
+            (obj)->anim.rotY = (obj)->anim.rotY + (s32)(4000.0f * timeDelta);
+            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(1000.0f * timeDelta);
         }
         else
         {
-            (obj)->anim.rotY = (obj)->anim.rotY + (s32)(lbl_803E3DF0 * timeDelta);
-            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(lbl_803E3DF4 * timeDelta);
+            (obj)->anim.rotY = (obj)->anim.rotY + (s32)(4000.0f * timeDelta);
+            (obj)->anim.rotZ = (obj)->anim.rotZ + (s32)(1000.0f * timeDelta);
         }
         break;
     case 0x622: /* VFP_locksym */
@@ -273,10 +235,10 @@ void CFCrate_update(GameObject* obj)
     case 0x65c:
         break;
     case 0x65d:
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3DF8, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.002f, timeDelta, NULL);
         break;
     case 0x6b4: /* MMP_Organic... */
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E3DF8, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.002f, timeDelta, NULL);
         break;
     case 0x708: /* VFP_newball... */
         if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) != 0)
@@ -299,7 +261,7 @@ void CFCrate_update(GameObject* obj)
         }
         break;
     case 0x4bf:
-        if (((obj)->anim.localPosY < lbl_803E3DFC + ((CfccratePlacement*)viewslot)->homeY) &&
+        if (((obj)->anim.localPosY < 30.0f + ((CfccratePlacement*)viewslot)->homeY) &&
             (mainGetBit(state->gameBit) != 0))
         {
             (obj)->anim.localPosY = (obj)->anim.localPosY + timeDelta;
@@ -308,7 +270,7 @@ void CFCrate_update(GameObject* obj)
     case 0x828:
         if ((mainGetBit(state->gameBit2) != 0) && (state->gameBit2Latch == 0))
         {
-            if ((obj)->anim.rotZ + (rotDelta = (s32)(lbl_803E3E00 * timeDelta)) > 0x7fff)
+            if ((obj)->anim.rotZ + (rotDelta = (s32)(100.0f * timeDelta)) > 0x7fff)
             {
                 state->gameBit2Latch = 1;
                 (obj)->anim.rotZ = 0x7fff;
@@ -320,16 +282,16 @@ void CFCrate_update(GameObject* obj)
         }
         break;
     case 0x8e:
-        state->oscPosA = lbl_803E3E04 * state->oscVelA + state->oscPosA;
-        if ((state->oscPosA > lbl_803E3E08) || (state->oscPosA < lbl_803E3E0C))
+        state->oscPosA = 3.0f * state->oscVelA + state->oscPosA;
+        if ((state->oscPosA > 180.0f) || (state->oscPosA < -180.0f))
         {
             state->oscVelA = -state->oscVelA;
         }
-        if ((state->oscPosB > lbl_803E3E10) || (state->oscPosB < lbl_803E3E14))
+        if ((state->oscPosB > 90.0f) || (state->oscPosB < -90.0f))
         {
             state->oscVelB = -state->oscVelB;
         }
-        state->oscPosB = lbl_803E3E04 * state->oscVelB + state->oscPosB;
+        state->oscPosB = 3.0f * state->oscVelB + state->oscPosB;
         break;
     case 0x10d:
         state->sfxTimer -= framesThisStep;
@@ -351,18 +313,18 @@ void CFCrate_update(GameObject* obj)
         f32 dist;
         int player;
 
-        (obj)->anim.rotZ = (s16)(lbl_803E3E18 * (double)-(s32) * (s16*)(cam + 4));
+        (obj)->anim.rotZ = (s16)(1.5 * (double)-(s32) * (s16*)(cam + 4));
         player = (int)Obj_GetPlayerObject();
         fx = ((GameObject*)player)->anim.worldPosX - (obj)->anim.worldPosX;
         fz = ((GameObject*)player)->anim.worldPosZ - (obj)->anim.worldPosZ;
         fy = ((GameObject*)player)->anim.worldPosY - (obj)->anim.worldPosY;
         dist = sqrtf(fy * fy + (fx * fx + fz * fz));
-        if (dist < lbl_803E3E20 && state->proximityLatch == 1)
+        if (dist < 75.0f && state->proximityLatch == 1)
         {
             state->proximityLatch = 0;
             getLActionsVoid6((int)obj, (int)obj, 0x5c, 0, 0, 0);
         }
-        else if ((dist > *(f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
+        else if ((dist > 75.0f) && (state->proximityLatch == 0))
         {
             state->proximityLatch = 1;
             getLActionsVoid6((int)obj, (int)obj, 0x5d, 0, 0, 0);
@@ -383,7 +345,7 @@ void CFCrate_init(GameObject* obj, int aux)
     objAnim = (ObjAnimComponent*)obj;
     id = ((CfccratePlacement*)aux)->id;
     state = (obj)->extra;
-    zeroF = lbl_803E3DD8;
+    zeroF = 1.0f;
     state->unk2C = zeroF;
 
     switch (id)
@@ -467,7 +429,7 @@ void CFCrate_init(GameObject* obj, int aux)
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         if (mainGetBit(state->gameBit) != 0)
         {
-            (obj)->anim.localPosY = lbl_803E3DFC + ((CfccratePlacement*)aux)->homeY;
+            (obj)->anim.localPosY = 30.0f + ((CfccratePlacement*)aux)->homeY;
         }
         break;
     case 0x8e:
@@ -475,7 +437,7 @@ void CFCrate_init(GameObject* obj, int aux)
         (obj)->anim.rotY = 0;
         if (((CfccratePlacement*)aux)->param1C >= 0x3e8)
         {
-            (obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
+            (obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / 1000.0f);
         }
         else
         {
@@ -486,9 +448,9 @@ void CFCrate_init(GameObject* obj, int aux)
         state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
         state->oscPosA = state->oscPosB = lbl_803E3E30;
-        state->unk28 = lbl_803E3DF4;
+        state->unk28 = 1000.0f;
         state->unk20 = lbl_803E3E38;
-        state->oscVelA = state->oscVelB = lbl_803E3DEC;
+        state->oscVelA = state->oscVelB = 0.5f;
         (obj)->anim.rotZ = 0;
         (obj)->animEventCallback = CFCrate_SeqFn;
         break;
@@ -497,7 +459,7 @@ void CFCrate_init(GameObject* obj, int aux)
         (obj)->anim.rotY = 0;
         if (((CfccratePlacement*)aux)->param1C >= 0x3e8)
         {
-            (obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / lbl_803E3DF4);
+            (obj)->anim.rootMotionScale = zeroF / ((f32)(s32)((CfccratePlacement*)aux)->param1C / 1000.0f);
         }
         else
         {
@@ -528,7 +490,7 @@ void CFCrate_init(GameObject* obj, int aux)
         (obj)->unkF4 = 0;
         (obj)->unkF8 = 0;
         state->oscVelB = lbl_803E3E40;
-        state->oscVelA = lbl_803E3DEC;
+        state->oscVelA = 0.5f;
         state->unk32 = 0;
         state->unk34 = randomGetRange(0x3e8, 0x1388);
         state->proximityLatch = 1;
