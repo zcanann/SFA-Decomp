@@ -42,10 +42,13 @@
 
 #define DIMBOSS_OBJGROUP 3
 
-void (*gDIMbossHitDetectAnimTable[12])(void);
-void (*gDIMbossAnimTable[6])(void);
-MoveLibState gDIMbossAnimController;
-u32 gDIMbossRenderMtx[12];
+extern u32 gDIMbossRenderMtx[12];
+extern MoveLibState gDIMbossAnimController;
+extern void (*gDIMbossAnimTable[6])(void);
+extern void (*gDIMbossHitDetectAnimTable[12])(void);
+extern f32 gDIMbossAnimScratchBase[3];
+extern u8 gDim2IcicleDustFxSource[0x18];
+extern u8 gDim2IcicleHitFxBuffer[0x18];
 
 
 
@@ -75,7 +78,6 @@ extern void fn_801B9ECC(void);
 #define DIMBOSS_ENVFX_B 0xdc
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
-extern DIMbossAnimScratch gDIMbossAnimScratchBase;
 extern u32 lbl_802C2338[];
 extern u32* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
@@ -193,7 +195,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
     int eventIndex;
     int baddieResult;
 
-    animScratch = &gDIMbossAnimScratchBase;
+    animScratch = (DIMbossAnimScratch*)gDIMbossAnimScratchBase;
     runtime = obj->runtime;
     config = obj->config;
     updateResult = 0;
@@ -726,3 +728,11 @@ void DIMboss_initialiseAnimTables(void)
     table[4] = (DIMbossRawAnimCallback)DIMbossAnim_updatePlayerHitReaction;
     table[5] = fn_801B9ECC;
 }
+
+void (*gDIMbossHitDetectAnimTable[12])(void);
+void (*gDIMbossAnimTable[6])(void);
+MoveLibState gDIMbossAnimController;
+u32 gDIMbossRenderMtx[12];
+u8 gDim2IcicleHitFxBuffer[0x18];
+u8 gDim2IcicleDustFxSource[0x18];
+f32 gDIMbossAnimScratchBase[3];

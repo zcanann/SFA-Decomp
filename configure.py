@@ -1382,7 +1382,12 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_801b9ecc.c"),
             Object(NonMatching, "main/dll/DIM/dim2lift.c"),
             Object(NonMatching, "main/dll/DIM/dim2icicle.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DIM/dll_01E0_dimboss.c", cflags=cflags_dll_noopt),
+            Object(
+                MatchingFor("GSAE01"),
+                "main/dll/DIM/dll_01E0_dimboss.c",
+                cflags=cflags_dll_noopt,
+                section_alignments={".data": 4},
+            ),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_01E1_dimbossgut.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_223.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DIM/dimbossspit.c", cflags=cflags_dll_noopt),

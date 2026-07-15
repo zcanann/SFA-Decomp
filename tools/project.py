@@ -72,6 +72,7 @@ class Object:
             "mw_version": None,
             "progress_category": None,
             "scratch_preset_id": None,
+            "section_alignments": None,
             "shift_jis": None,
             "source": name,
             "src_dir": None,
@@ -668,6 +669,9 @@ def generate_build_ninja(
         )
     else:
         sys.exit("ProjectConfig.binutils_tag missing")
+    objcopy = binutils / f"powerpc-eabi-objcopy{EXE}"
+    objcopy_implicit = binutils_implicit or objcopy
+    relocatable_linker = binutils / f"powerpc-eabi-ld{EXE}"
 
     n.newline()
 
@@ -686,14 +690,18 @@ def generate_build_ninja(
     # Build rules
     ###
     compiler_path = compilers / "$mw_version"
+    section_realign = config.tools_dir / "section_realign.py"
 
     # MWCC
     mwcc = compiler_path / "mwcceppc.exe"
-    mwcc_cmd = f"{wrapper_cmd}{mwcc} $cflags -MMD -c $in -o $basedir"
+    mwcc_cmd = f"{wrapper_cmd}{mwcc} $cflags -MMD -c $in -o $basedir $section_align_cmd"
     mwcc_implicit: List[Optional[Path]] = [compilers_implicit or mwcc, wrapper_implicit]
 
     # MWCC with UTF-8 to Shift JIS wrapper
-    mwcc_sjis_cmd = f"{wrapper_cmd}{sjiswrap} {mwcc} $cflags -MMD -c $in -o $basedir"
+    mwcc_sjis_cmd = (
+        f"{wrapper_cmd}{sjiswrap} {mwcc} $cflags -MMD -c $in -o $basedir"
+        " $section_align_cmd"
+    )
     mwcc_sjis_implicit: List[Optional[Path]] = [*mwcc_implicit, sjiswrap]
 
     # MWCC for precompiled headers
@@ -1064,6 +1072,18 @@ def generate_build_ninja(
                 "basedir": os.path.dirname(obj.src_obj_path),
                 "basefile": obj.src_obj_path.with_suffix(""),
             }
+            section_alignments = obj.options["section_alignments"]
+            if section_alignments:
+                alignment_flags = " ".join(
+                    f"{section}={alignment}"
+                    for section, alignment in section_alignments.items()
+                )
+                variables["section_align_cmd"] = (
+                    f"&& $python {serialize_path(section_realign)} "
+                    f"{serialize_path(obj.src_obj_path)}"
+                    f" {serialize_path(objcopy)} {serialize_path(relocatable_linker)}"
+                    f" {alignment_flags}"
+                )
 
             if obj.options["shift_jis"] and obj.options["extab_padding"] is not None:
                 build_rule = "mwcc_sjis_extab"
@@ -1080,6 +1100,8 @@ def generate_build_ninja(
                 variables["extab_padding"] = "".join(
                     f"{i:02x}" for i in obj.options["extab_padding"]
                 )
+            if section_alignments:
+                build_implcit = [*build_implcit, objcopy_implicit, section_realign]
             n.comment(f"{obj.name}: {lib_name} (linked {obj.completed})")
             n.build(
                 outputs=obj.src_obj_path,

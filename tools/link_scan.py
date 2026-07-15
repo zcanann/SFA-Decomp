@@ -30,7 +30,6 @@ Usage:
     python3 tools/link_scan.py --explain       # also print why others were rejected
 """
 import argparse
-import glob
 import json
 import os
 import re
@@ -70,6 +69,20 @@ def section_sizes(obj):
                 continue
             sizes[name] = int(p[2], 16)
     return sizes
+
+
+def section_alignments(obj):
+    out = subprocess.run([OBJDUMP, "-h", obj], capture_output=True, text=True).stdout
+    alignments = {}
+    for line in out.splitlines():
+        p = line.split()
+        if len(p) >= 7 and p[0].isdigit():
+            name = p[1]
+            if name in IGNORE_SECTIONS or name.startswith(".debug") or name.startswith(".mwcats"):
+                continue
+            if p[6].startswith("2**"):
+                alignments[name] = 1 << int(p[6][3:])
+    return alignments
 
 
 def section_bytes(obj, name):
@@ -200,7 +213,8 @@ def relocation_referrers():
     refs = {}
     reloc_re = re.compile(r"^\s*[0-9A-Fa-f]+\s+R_\S+\s+(\S+)")
     object_re = re.compile(r"^(.+\.o):\s+file format\s+")
-    objects = list(glob.iglob(f"{BUILD}/obj/**/*.o", recursive=True))
+    config = json.load(open(f"{BUILD}/config.json"))
+    objects = [unit["object"] for unit in config["units"]]
     fd, rsp = tempfile.mkstemp(prefix="link_scan_objdump_", suffix=".rsp", text=True)
     try:
         with os.fdopen(fd, "w") as f:
@@ -301,6 +315,10 @@ def main():
         sb, so = section_sizes(built), section_sizes(orig)
         if sb != so:
             rejected.append((sp, f"section-size {sb} vs {so}"))
+            continue
+        ab, ao = section_alignments(built), section_alignments(orig)
+        if ab != ao:
+            rejected.append((sp, f"section-alignment {ab} vs {ao}"))
             continue
         if any(
             name not in BSS_SECTIONS and section_bytes(built, name) != section_bytes(orig, name)
