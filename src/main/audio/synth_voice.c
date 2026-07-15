@@ -670,7 +670,6 @@ void ZeroOffsetHandler(int voice)
     s32 pan;
     f32 preVol;
     f32 postVol;
-    s32 lfoInt;
 
     sv = HWVOICE(voice);
     if (!hwIsActive(voice) && sv->addr == 0)
@@ -731,8 +730,8 @@ void ZeroOffsetHandler(int voice)
     if ((sv->treScale | sv->treModAddScale) != 0)
     {
         Modulation = inpGetModulation((McmdVoiceState*)sv);
-        lfoInt = 0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1);
-        lfo = (f32)lfoInt * lbl_803E77A0;
+        lfo = lbl_803E77A0 *
+              (f32)(0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1));
         {
             f32 modScale = lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
             scale = lbl_803E77A4 * ((f32)sv->treScale * (lbl_803E77A8 - modScale));
@@ -764,19 +763,7 @@ void ZeroOffsetHandler(int voice)
         {
             HWVOICE_FLAGS(sv) &= ~0x200000000000ULL;
             pan = sv->panning[0] + (inpGetPanning((McmdVoiceState*)sv) - 0x2000) * 0x200;
-            if (pan < 0)
-            {
-                lfoInt = 0;
-            }
-            else if (pan > 0x7F0000)
-            {
-                lfoInt = 0x7F0000;
-            }
-            else
-            {
-                lfoInt = pan;
-            }
-            sv->lastPan = lfoInt;
+            sv->lastPan = pan < 0 ? 0 : (pan > 0x7F0000 ? 0x7F0000 : pan);
 
             if ((synthFlags & 2) != 0)
             {
