@@ -137,8 +137,8 @@ extern int* ObjGroup_GetObjects(int group, int* countOut);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
-__declspec(section ".rodata") u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
-__declspec(section ".rodata") SnowClawAnimTbl gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
+const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
+const SnowClawAnimTbl gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
 extern f32 lbl_803DC218;
@@ -594,14 +594,14 @@ void snowclaw_update(GameObject* obj)
     int turnSign;
     int pulseIndex;
     s8 healthState;
-    u32* pulseTable;
+    const u32* pulseTable;
     u32 pulseTypes[4];
     u32 pulseModes[4];
     u32* pulseType;
     u32* pulseMode;
     f32 pulseVec[3];
     SnowClawAnimTbl dropTable;
-    SnowClawPulse4* pulseSrc;
+    const SnowClawPulse4* pulseSrc;
 
     pulseTable = gSnowClawPulseTable;
     inner = obj->extra;
@@ -636,7 +636,7 @@ void snowclaw_update(GameObject* obj)
         ObjHits_EnableObject((int)sub);
     }
 
-    dropTable = *(SnowClawAnimTbl*)(pulseTable + 8);
+    dropTable = *(const SnowClawAnimTbl*)(pulseTable + 8);
     if (*(s8*)&((SnowclawState*)inner)->dropIndex != ((SnowclawState*)inner)->dropIndexApplied)
     {
         if (obj->childObjs[0] != NULL)
@@ -711,8 +711,8 @@ void snowclaw_update(GameObject* obj)
 
     if (*(s8*)&((SnowclawState*)inner)->health < 4)
     {
-        *(SnowClawPulse4*)pulseTypes = *(SnowClawPulse4*)&pulseTable[0];
-        pulseSrc = (SnowClawPulse4*)&pulseTable[4];
+        *(SnowClawPulse4*)pulseTypes = *(const SnowClawPulse4*)&pulseTable[0];
+        pulseSrc = (const SnowClawPulse4*)&pulseTable[4];
         *(SnowClawPulse4*)pulseModes = *pulseSrc;
         pulseIndex = 3 - *(s8*)&((SnowclawState*)inner)->health;
         i = ((SnowclawState*)inner)->tickCounter++;
