@@ -114,8 +114,8 @@ STATIC_ASSERT(offsetof(HighTopObject, runtime) == 0xB8);
 
 extern void* gHighTopStateHandlers[];
 extern void* gHighTopDefaultStateHandler;
-extern HtInitData gHighTopLookInitData1;
-extern HtInitData gHighTopLookInitData2;
+extern const HtInitData gHighTopLookInitData1;
+extern const HtInitData gHighTopLookInitData2;
 extern int gHighTopAirMeterInitValue;
 extern s16 gHighTopMovementSfxIds;
 extern f32 gHighTopGroundMarkerMtx[];

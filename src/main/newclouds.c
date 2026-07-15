@@ -297,10 +297,10 @@ typedef struct
     f32 v[3];
 } SnowVec3;
 
-__declspec(section ".rodata") SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
-__declspec(section ".rodata") SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
-__declspec(section ".rodata") SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
-__declspec(section ".rodata") const SnowFlakeUVs lbl_802C1FCC = {{-48, 0, 176, 0, 64, 256}};
+const SnowVec3 lbl_802C1FA8 = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 lbl_802C1FB4 = {{0.0f, 0.0f, 0.0f}};
+const SnowVec3 lbl_802C1FC0 = {{0.0f, 0.0f, 0.0f}};
+const SnowFlakeUVs lbl_802C1FCC = {{-48, 0, 176, 0, 64, 256}};
 
 #pragma dont_inline off
 void dll_07_func07(int arg)

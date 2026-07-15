@@ -56,8 +56,8 @@ void* gHighTopDefaultStateHandler;
 #include "main/player_control_interface.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".rodata") HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
-__declspec(section ".rodata") HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
+const HtInitData gHighTopLookInitData1 = {{5, 5, 0, 0, 0, 0, 0, 0, 0}};
+const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF}};
 
 #define PAD_BUTTON_A 0x100
 

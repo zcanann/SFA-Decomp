@@ -39,6 +39,8 @@ typedef struct ResourceParamBlob
     int w[4];
 } ResourceParamBlob;
 
+STATIC_ASSERT(sizeof(ResourceParamBlob) == 0x10);
+
 typedef struct Cup197State
 {
     s32 gameBit;
@@ -60,7 +62,7 @@ typedef struct Cup197State
 
 #define CUP_STAGE_COMPLETE_BIT 0x472
 
-__declspec(section ".rodata") int gDll197ResourceParamTemplate[4] = {0x3E7, 0x8C, 0x8D, 0x28};
+const ResourceParamBlob gDll197ResourceParamTemplate = {{0x3E7, 0x8C, 0x8D, 0x28}};
 s8 lbl_803DDBD0; /* shared 0..3 progression latch */
 __declspec(section ".sdata2") f32 lbl_803E5120 = 50.0f;
 __declspec(section ".sdata2") f32 lbl_803E5124 = 1.0f;
@@ -192,7 +194,7 @@ void dll_197_hitDetect(void)
 void dll_197_update(int obj)
 {
     Cup197State* state = ((GameObject*)obj)->extra;
-    int resourceParams[4];
+    ResourceParamBlob resourceParams;
     u8 callbackData[0x14];
     int player;
     f32 distance;
@@ -200,7 +202,7 @@ void dll_197_update(int obj)
     int effect;
     int stageEffectBase;
 
-    *(ResourceParamBlob*)resourceParams = *(ResourceParamBlob*)gDll197ResourceParamTemplate;
+    resourceParams = gDll197ResourceParamTemplate;
 
     player = (int)Obj_GetPlayerObject();
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
@@ -279,10 +281,10 @@ void dll_197_update(int obj)
     {
         resource = Resource_Acquire(0x69, 1);
         stageEffectBase = state->stage * 2;
-        resourceParams[1] = stageEffectBase + 0x19d;
-        resourceParams[2] = stageEffectBase + 0x19e;
+        resourceParams.w[1] = stageEffectBase + 0x19d;
+        resourceParams.w[2] = stageEffectBase + 0x19e;
         (*(void (*)(int, int, void*, int, int, void*))(*(int*)(*(int*)resource + 4)))(obj, 1, callbackData, 0x10004, -1,
-                                                                                      resourceParams);
+                                                                                      resourceParams.w);
         Resource_Release(resource);
 
         for (effect = 0; effect < 200; effect++)
