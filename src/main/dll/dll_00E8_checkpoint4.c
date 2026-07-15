@@ -14,7 +14,6 @@
 #include "main/dll/dll_00E9_setuppoint.h"
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"
-#include "main/dll/dll_00ED_collectible_api.h"
 
 void checkpoint4_setScale(void)
 {
@@ -134,27 +133,3 @@ void* gSetuppointObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000, (voi
                                       (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, setuppoint_init,
                                       (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000,
                                       (void*)0x00000000, (void*)0x00000000};
-u8 lbl_80320C58[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-ObjectDescriptor17 gCollectibleObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_17_SLOTS,
-    (ObjectDescriptorCallback)collectible_initialise,
-    (ObjectDescriptorCallback)collectible_release,
-    0,
-    (ObjectDescriptorCallback)collectible_init,
-    (ObjectDescriptorCallback)collectible_update,
-    (ObjectDescriptorCallback)collectible_hitDetect,
-    (ObjectDescriptorCallback)collectible_render,
-    (ObjectDescriptorCallback)collectible_free,
-    (ObjectDescriptorCallback)collectible_getObjectTypeId,
-    collectible_getExtraSize,
-    (ObjectDescriptorCallback)collectible_getIsHidden,
-    (ObjectDescriptorCallback)collectible_setDisabled,
-    (ObjectDescriptorCallback)collectible_getHitRegionId,
-    (ObjectDescriptorCallback)collectible_startBounceMotion,
-    (ObjectDescriptorCallback)collectible_setVisibilityBitClear,
-    (ObjectDescriptorCallback)collectible_getVisibilityBitClear,
-    (ObjectDescriptorCallback)collectible_setPosition,
-};
