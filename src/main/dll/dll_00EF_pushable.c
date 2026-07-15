@@ -179,6 +179,14 @@ extern void fn_8007FE04(int* array, int* count, int value);
 const PushableRadii gPushableDefaultBox = {{0.0f, 0.0f, 0.0f, 0.0f}};
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* obj);
 
+static void pushableClampToZero(f32* value)
+{
+    if (*value <= PUSHABLE_ZERO)
+    {
+        *value = PUSHABLE_ZERO;
+    }
+}
+
 #pragma dont_inline on
 int fn_80174438(int obj, PushableState* state)
 {
@@ -1128,10 +1136,7 @@ void pushable_hitDetect(GameObject* obj)
     player = Obj_GetPlayerObject();
     state = obj->extra;
     state->timer_0x110 -= timeDelta;
-    if (state->timer_0x110 <= PUSHABLE_ZERO)
-    {
-        state->timer_0x110 = PUSHABLE_ZERO;
-    }
+    pushableClampToZero(&state->timer_0x110);
     if (state->moveFlags.b7 == 0)
     {
         f32 k;
