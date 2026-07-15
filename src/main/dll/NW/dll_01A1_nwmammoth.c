@@ -16,8 +16,6 @@
 #include "main/dll/NW/dll_01A3_nwanimice.h"
 #include "main/dll/NW/dll_01A4_nwice.h"
 #include "main/dll/dll_01A0_nwgeyser.h"
-#include "main/dll/NW/dll_01A5_nwlevcontrol.h"
-#include "main/dll/SH/dll_01A6_shtricky.h"
 #include "main/audio/sfx.h"
 #include "main/vecmath.h"
 #include "main/curve.h"
@@ -978,18 +976,3 @@ u8 lbl_803269F8[308] = {
     0,  181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  181, 0, 181, 0,  183, 0, 183, 0,  183, 0, 183,
     0,  183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183,
     0,  183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183, 0,  183, 0, 183};
-void* gNW_levcontrolObjDescriptor[14] = {
-    (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000,  (void*)0x00090000,         (void*)0x00000000,
-    (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
-    (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
-void* jumptable_80326B64[13] = {(void*)((u8*)nw_levcontrol_update + 0x330), (void*)((u8*)nw_levcontrol_update + 0x378),
-                                (void*)((u8*)nw_levcontrol_update + 0x3CC), (void*)((u8*)nw_levcontrol_update + 0x3F4),
-                                (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4),
-                                (void*)((u8*)nw_levcontrol_update + 0x3F4), (void*)((u8*)nw_levcontrol_update + 0x3F4),
-                                (void*)((u8*)nw_levcontrol_update + 0x400), (void*)((u8*)nw_levcontrol_update + 0x420),
-                                (void*)((u8*)nw_levcontrol_update + 0x43C), (void*)((u8*)nw_levcontrol_update + 0x544),
-                                (void*)((u8*)nw_levcontrol_update + 0x564)};
-void* gSH_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
-                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, sh_tricky_init,
-                                     sh_tricky_update,  (void*)0x00000000,     (void*)0x00000000, (void*)0x00000000,
-                                     (void*)0x00000000, sh_tricky_getExtraSize};

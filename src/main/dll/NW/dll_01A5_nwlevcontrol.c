@@ -31,6 +31,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/audio/sfx.h"
+#include "main/dll/NW/dll_01A5_nwlevcontrol.h"
 
 /* obj+0xB8 per-class state block (getExtraSize == 0x14). */
 typedef struct NwLevControlState
@@ -80,6 +81,11 @@ extern u32 Music_Trigger();
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
+
+void* gNW_levcontrolObjDescriptor[14] = {
+    (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000,  (void*)0x00090000,         (void*)0x00000000,
+    (void*)0x00000000, (void*)0x00000000,  nw_levcontrol_init, nw_levcontrol_update,      (void*)0x00000000,
+    (void*)0x00000000, nw_levcontrol_free, (void*)0x00000000,  nw_levcontrol_getExtraSize};
 
 void nw_levcontrol_update(int objArg)
 {
