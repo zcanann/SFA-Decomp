@@ -1510,8 +1510,9 @@ void objFreeObjDef(u8* obj, int flag)
     void (*cb)(u8*);
     BoneParticleEffectSpawnFn cb2;
     int i;
-    int count;
+    int j;
     int n;
+    int count;
     u8* otherObj;
     int* bp;
     void* curTex;
@@ -1582,11 +1583,11 @@ void objFreeObjDef(u8* obj, int flag)
             }
         }
     }
-    for (i = 0; i < gObjCount; i++)
+    for (j = 0; j < gObjCount; j++)
     {
-        if (*(s16*)(((u8**)gObjList)[i] + 0x44) == 0x10)
+        if (*(s16*)(((u8**)gObjList)[j] + 0x44) == 0x10)
         {
-            bp = *(int**)(((u8**)gObjList)[i] + 0xb8);
+            bp = *(int**)(((u8**)gObjList)[j] + 0xb8);
             if (*(u8**)bp == obj)
             {
                 *bp = 0;
@@ -1635,12 +1636,12 @@ void objFreeObjDef(u8* obj, int flag)
         mm_free(((GameObject*)obj)->unkDC);
         *(int*)&((GameObject*)obj)->unkDC = 0;
     }
-    modelCount = (s8)((ObjAnimComponent*)obj)->modelInstance->modelCount;
-    for (i = 0; i < modelCount; i++)
+    modelCount = ((ObjAnimComponent*)obj)->modelInstance->modelCount;
+    for (j = 0; j < modelCount; j++)
     {
-        if ((int)((ObjAnimComponent*)obj)->banks[i] != 0)
+        if ((int)((ObjAnimComponent*)obj)->banks[j] != 0)
         {
-            ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[i]);
+            ObjModel_Release((u8*)((ObjAnimComponent*)obj)->banks[j]);
         }
     }
     if (((GameObject*)obj)->colorFadeFlags & OBJ_COLOR_FADE_FLAG_FROZEN)
@@ -1664,14 +1665,14 @@ void objFreeObjDef(u8* obj, int flag)
         ObjGroup_RemoveObject((u32)obj, group - 1);
     }
     type = ((GameObject*)obj)->anim.defId;
-    if (*(u8*)(gObjFileRefCount + type) == 0)
+    if (*(u8*)(type + (int)gObjFileRefCount) == 0)
     {
         debugPrintf(sObjFreeObjdefError);
     }
     else
     {
-        *(u8*)(gObjFileRefCount + type) -= 1;
-        if (*(u8*)(gObjFileRefCount + type) == 0)
+        *(u8*)(type + (int)gObjFileRefCount) -= 1;
+        if (gObjFileRefCount[type] == 0)
         {
             otherObj = ((u8**)gObjFileBufferTable)[type];
             if (*(void**)&((GameObject*)otherObj)->anim.parent != NULL)
@@ -2106,11 +2107,9 @@ void Obj_UpdateModelBlendStates(void)
 {
     ObjAnimComponent* objAnim;
     ObjAnimComponent* childAnim;
-    int ioff;
     int k;
     int i;
     int j;
-    u8* walker;
     u8* obj;
     u8* child;
     u8* m;
@@ -2119,10 +2118,9 @@ void Obj_UpdateModelBlendStates(void)
     ObjModelState* modelState;
 
     i = 0;
-    ioff = 0;
     for (; i < gObjCount; i++)
     {
-        obj = *(u8**)((int)gObjList + ioff);
+        obj = ((u8**)gObjList)[i];
         objAnim = (ObjAnimComponent*)obj;
         if (obj != 0 && objAnim->modelInstance != NULL)
         {
@@ -2131,10 +2129,10 @@ void Obj_UpdateModelBlendStates(void)
             {
                 modelState->shadowCastSlot = NULL;
             }
-            j = 0;
-            for (; j < objAnim->modelInstance->modelCount; j++)
+            k = 0;
+            for (; k < objAnim->modelInstance->modelCount; k++)
             {
-                m = (u8*)objAnim->banks[j];
+                m = (u8*)objAnim->banks[k];
                 if (m != 0)
                 {
                     ((ObjModel*)m)->bufferFlags &= ~8;
@@ -2145,10 +2143,9 @@ void Obj_UpdateModelBlendStates(void)
                 }
             }
             j = 0;
-            walker = obj;
             for (; j < ((GameObject*)obj)->childCount; j++)
             {
-                child = *(u8**)(walker + 0xc8);
+                child = (u8*)((GameObject*)obj)->childObjs[j];
                 childAnim = (ObjAnimComponent*)child;
                 if (child != 0 && childAnim->modelInstance != NULL)
                 {
@@ -2178,10 +2175,8 @@ void Obj_UpdateModelBlendStates(void)
                         }
                     }
                 }
-                walker += 4;
             }
         }
-        ioff += 4;
     }
 }
 
