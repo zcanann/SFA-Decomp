@@ -668,20 +668,23 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
 typedef struct
 {
     Vec v[5];
-} _PlaneDirPack;
+} PlayerFrustumPlaneDirections;
 
 typedef struct
 {
     f32 v[5];
-} _ScalePack;
+} PlayerFrustumPlaneScales;
 
-__declspec(section ".rodata") _PlaneDirPack sPlayerFrustumPlaneDirs = {
+STATIC_ASSERT(sizeof(PlayerFrustumPlaneDirections) == 0x3C);
+STATIC_ASSERT(sizeof(PlayerFrustumPlaneScales) == 0x14);
+
+const PlayerFrustumPlaneDirections sPlayerFrustumPlaneDirs = {
     {{0.0f, 0.0f, 1.0f},
      {1.0f, 0.0f, 0.0f},
      {-1.0f, 0.0f, 0.0f},
      {0.0f, 1.0f, 0.0f},
      {0.0f, -1.0f, 0.0f}}};
-__declspec(section ".rodata") _ScalePack sPlayerFrustumPlaneScales = {
+const PlayerFrustumPlaneScales sPlayerFrustumPlaneScales = {
     {0.0f, -25.0f, -25.0f, -25.0f, -25.0f}};
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
@@ -691,8 +694,8 @@ void playerVecFn_8005a9b0(void)
 {
     Vec tmp;
     Vec camPos;
-    _ScalePack scales;
-    _PlaneDirPack planes;
+    PlayerFrustumPlaneScales scales;
+    PlayerFrustumPlaneDirections planes;
     GameObject* player;
     CameraViewSlot* viewSlot;
     FrustumPlane* outPtr;

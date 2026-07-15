@@ -286,27 +286,6 @@ const f32 lbl_803E0FD8 = 1.0f;
 const f32 lbl_803E0FDC = 0.0f;
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-extern void dll_86_func00_nop();
-extern void dll_86_func01_nop();
-extern void dll_86_func03();
-extern void dll_87_func00_nop();
-extern void dll_87_func01_nop();
-extern void dll_87_func03();
-extern void dll_88_func00_nop();
-extern void dll_88_func01_nop();
-extern void dll_88_func03();
-extern void dll_89_func00_nop();
-extern void dll_89_func01_nop();
-extern void dll_89_func03();
-extern void dll_8A_func00_nop();
-extern void dll_8A_func01_nop();
-extern void dll_8A_func03();
-extern void dll_8B_func00_nop();
-extern void dll_8B_func01_nop();
-extern void dll_8B_func03();
-extern void dll_8C_func00_nop();
-extern void dll_8C_func01_nop();
-extern void dll_8C_func03();
 void* lbl_80316000[8] = {(void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00030000,
                          dll_85_func00_nop, dll_85_func01_nop, (void*)0x00000000, dll_85_func03};
 u8 lbl_80316020[16] = {0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
