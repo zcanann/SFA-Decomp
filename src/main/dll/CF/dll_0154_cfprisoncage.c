@@ -60,8 +60,6 @@ enum
    the same id powers a base in cfpowerbase) */
 #define CFPRISONCAGE_MSG_OPEN 0xA0005
 
-extern f32 lbl_803E42B0;
-extern f32 lbl_803E42B4;
 /* CFPrisonCage_SeqFn: lock interaction once the opened bit is set;
  * everything past the cage early-return is the SWITCH's logic - drain
  * the message queue (granting the opened bit on the keyed message),
@@ -137,7 +135,7 @@ void CFPrisonCage_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E42B0);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFPrisonCage_hitDetect(int* obj)
@@ -181,11 +179,11 @@ void CFPrisonCage_init(int* obj, u8* def)
     {
         if (mainGetBit(((CfPrisonCageObjectDef*)def)->openedBit) != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, 0.0f, 0);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E42B4, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
         }
     }
     else
@@ -204,11 +202,6 @@ void CFPrisonCage_release(void)
 void CFPrisonCage_initialise(void)
 {
 }
-
-__declspec(section ".sdata2") f32 lbl_803E42B0 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E42B4 = 0.0f;
-#pragma explicit_zero_data reset
 
 ObjectDescriptor gCFPrisonCageObjDescriptor = {
     0,
