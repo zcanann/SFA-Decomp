@@ -251,6 +251,12 @@ typedef struct SubtitleTextEntry
 #define GAMETEXT_LANGUAGE_COUNT               6
 #define GAMETEXT_SEQUENCE_SOURCE_ID           1
 
+typedef struct
+{
+    u8 pad[GAMETEXT_LOAD_REQUESTS_OFFSET];
+    GameTextLoadRequest requests[GAMETEXT_PENDING_SOURCE_COUNT];
+} GameTextLoadState;
+
 extern int curLanguage;
 extern TextFont* gameTextFonts;
 extern void* gameTextDrawFunc;
@@ -2507,9 +2513,11 @@ void gameTextLoadForCurMap(int sourceId)
     GameTextLoadSlot* slot;
     GameTextLoadSlot* freeSlot;
     u8* gameTextBase;
+    GameTextLoadState* loadState;
     int i;
 
     gameTextBase = gGameTextBase;
+    loadState = (GameTextLoadState*)gameTextBase;
     oldHeap = testAndSet_onlyUseHeap3(0);
     if (getGameState() != 0 && getGameState() != 1)
     {
@@ -2552,9 +2560,9 @@ void gameTextLoadForCurMap(int sourceId)
         slot++;
     } while (i-- != 0);
 
-    *(int*)(gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET) = 1;
-    *(dirPtr = gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET + 8) = (u8)curGameTextDir;
-    *(langPtr = gameTextBase + sourceId * sizeof(GameTextLoadRequest) + GAMETEXT_LOAD_REQUESTS_OFFSET + 9) = curLanguage;
+    loadState->requests[sourceId].state = 1;
+    *(dirPtr = &loadState->requests[sourceId].dirId) = (u8)curGameTextDir;
+    *(langPtr = &loadState->requests[sourceId].languageId) = curLanguage;
 
     slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     freeSlot = (slot->active == 0)       ? slot
