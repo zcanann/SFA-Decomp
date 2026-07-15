@@ -39,10 +39,13 @@
 #include "main/audio/audio_control_api.h"
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
+#include "main/pad.h"
 #include "main/maketex_random_api.h"
 #include "main/maketex_sequence_api.h"
 #include "main/textrender_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_0000_gameui_api.h"
+#include "main/dll/SC/SCchieflightfoot.h"
 #include "main/dll/SC/SClantern.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
@@ -73,13 +76,10 @@ int lbl_803DDBF4;
 extern f32 lbl_803E54A0;
 extern f32 lbl_803E549C;
 
-extern u32 getButtonsJustPressed(int port);
 extern int playerHasKrazoaSpirit();
 extern void playerRender(int obj, int a, int b, int c, int d, s8 flag);
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
-extern void CMenu_SetFadeCounter(s16 v);
-extern void SHthorntail_updateDustEffects(int obj);
 
 int warpstone_testEvent(u32 obj, u32 unused, int option)
 {
@@ -331,7 +331,7 @@ int warpstone_SeqFn(GameObject* obj, u32 unused, int animObj)
         }
     }
 
-    SHthorntail_updateDustEffects((int)obj);
+    SHthorntail_updateDustEffects((SHthorntailObject*)obj);
     return 0;
 }
 

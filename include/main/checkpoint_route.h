@@ -62,6 +62,9 @@ typedef struct CheckpointRouteState {
     s16 group;
 } CheckpointRouteState;
 
+extern CheckpointSlot gCheckpointRouteTable[];
+extern s32 gCheckpointRouteCount;
+
 CheckpointRouteEntry *Checkpoint_find(s32 key, s32 *idx_out);
 
 STATIC_ASSERT(offsetof(CheckpointRouteEntry, posX) == 0x08);

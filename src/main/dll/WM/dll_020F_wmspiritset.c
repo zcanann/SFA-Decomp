@@ -16,9 +16,6 @@
 #include "main/dll/WM/dll_020F_wmspiritset.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E5F90 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F94 = 0.0085f;
-
 /* romlist object-def variant driving this DLL (see docblock): def 921
    'WM_SpiritSet' (romlist type 0x264). */
 #define WMSPIRITSET_SEQID_SPIRITSET 0x264
@@ -44,7 +41,7 @@ void wmspiritset_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 
     if ((visibilityGameBit == -1 || mainGetBit(visibilityGameBit) != 0) && vis != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F90); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -63,7 +60,7 @@ void wmspiritset_init(GameObject* obj, WmSpiritSetMapData* mapData)
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     if (obj->anim.seqId == WMSPIRITSET_SEQID_SPIRITSET)
     {
-        obj->anim.rootMotionScale = lbl_803E5F94; /* 0.0085f */
+        obj->anim.rootMotionScale = 0.0085f;
     }
     state->visibilityGameBit = mapData->visibilityGameBit;
 }

@@ -10,6 +10,7 @@
  * objects (fn_801CFD68) firing their trigger sequences in turn.
  */
 #include "main/audio/sfx_ids.h"
+#include "main/audio/music_api.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/game_timer_control_api.h"
 #include "main/gametext_show_api.h"
@@ -77,7 +78,6 @@ enum NwLevControlMode
     NWLEVCONTROL_MODE_RESCUE_RETRIGGER = 0xc /* post-rescue re-trigger, then cleanup */
 };
 
-extern u32 Music_Trigger();
 extern f32 lbl_803E5278;
 extern f32 lbl_803E527C;
 extern f32 lbl_803E5280;
@@ -134,7 +134,7 @@ void nw_levcontrol_update(int objArg)
             state->dayNightMusic = -1;
             if (((int)state->flags & 0x10) != 0)
             {
-                Music_Trigger((int*)NWLEVCONTROL_MUSIC_TRACK, 0);
+                Music_Trigger(NWLEVCONTROL_MUSIC_TRACK, 0);
             }
         }
     }
@@ -145,7 +145,7 @@ void nw_levcontrol_update(int objArg)
             state->dayNightMusic = NWLEVCONTROL_MUSIC_TRACK;
             if (((int)state->flags & 0x10) != 0)
             {
-                Music_Trigger((int*)NWLEVCONTROL_MUSIC_TRACK, 1);
+                Music_Trigger(NWLEVCONTROL_MUSIC_TRACK, 1);
             }
         }
     }
@@ -240,7 +240,7 @@ void nw_levcontrol_update(int objArg)
                     state->flags = flags & ~2;
                     state->flags = state->flags & ~4;
                     gameTimerStop();
-                    Music_Trigger((int*)NWLEVCONTROL_MUSIC_TIMER_END, 0);
+                    Music_Trigger(NWLEVCONTROL_MUSIC_TIMER_END, 0);
                     mainSetBits(GAMEBIT_SnowHornArtifact19F, 1);
                 }
                 else

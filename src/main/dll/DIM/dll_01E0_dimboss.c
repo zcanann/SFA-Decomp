@@ -7,6 +7,7 @@
 #include "main/dll/DIM/dll_01E0_dimboss.h"
 #include "main/audio/music_api.h"
 #include "main/map_load.h"
+#include "main/mapEventTypes.h"
 #include "main/render_envfx_api.h"
 #include "main/game_object.h"
 #include "main/objhits.h"
@@ -147,16 +148,6 @@ typedef struct DIMbossPlayerInterface
     void (*init)(DIMbossObject* obj, DIMbossRuntime* runtime, int mode);
 } DIMbossPlayerInterface;
 
-typedef struct DIMbossMapEventInterface
-{
-    u8 pad00[0x40];
-    u8 (*getAreaState)(int areaId);
-    void (*setAreaState)(int areaId, int state);
-    u8 pad48[0x4C - 0x48];
-    int (*getAnimEvent)(int mapDir, int areaId);
-    void (*triggerArea)(int mapDir, int areaId, int enabled);
-} DIMbossMapEventInterface;
-
 typedef struct DIMbossObjectTriggerInterface
 {
     u8 pad00[0x48];
@@ -166,8 +157,6 @@ typedef struct DIMbossObjectTriggerInterface
     u8 pad54[0x58 - 0x54];
     void (*triggerEvent)(ObjAnimUpdateState* animUpdate, int eventId);
 } DIMbossObjectTriggerInterface;
-
-extern DIMbossMapEventInterface** gMapEventInterface;
 
 static inline DIMbossBaddieControlInterface* DIMboss_GetBaddieControlInterface(void)
 {
@@ -211,7 +200,7 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
     Obj_GetPlayerObject();
     topState = runtime->topState;
     runtime->phase = DIMBOSS_PHASE_START;
-    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
+    (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
     if (obj->renderPause != 0)
     {
         return 0;
@@ -245,13 +234,13 @@ int DIMboss_updateState(DIMbossObject* obj, u32 state, ObjAnimUpdateState* animU
             runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
             obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
             obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
-            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_LIFT, 0);
+            (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_LIFT, 0);
             break;
         case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 1);
+            (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 1);
             break;
         case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-            (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 0);
+            (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_BOSS, 0);
             break;
         case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
             gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_40004;
@@ -677,16 +666,16 @@ void DIMboss_init(DIMbossObject* obj, u32 params, int isAltVariant)
     {
         topState->stompDustDelay = 2;
         topState->introSinkHeight = lbl_803E4C78;
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 1);
+        (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 1);
     }
     else
     {
-        (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
+        (*gMapEventInterface)->setObjGroupStatus(DIMBOSS_MAP_DIR, DIMBOSS_MAP_AREA_INTRO_GATE, 0);
     }
     topState->defeatTimer = 0;
-    if ((*gMapEventInterface)->getAreaState(7) == 2)
+    if ((*gMapEventInterface)->getMapAct(7) == 2)
     {
-        (*gMapEventInterface)->setAreaState(7, 3);
+        (*gMapEventInterface)->setMapAct(7, 3);
     }
     mainSetBits(DIMBOSS_GAMEBIT_BOSS_ACTIVE, 1);
     unlockLevel(0, 0, 1);

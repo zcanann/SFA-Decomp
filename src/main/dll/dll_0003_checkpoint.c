@@ -39,7 +39,6 @@ extern f32 lbl_803E04E4;
 #pragma dont_inline on
 CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 {
-    extern s32 gCheckpointRouteCount;
     s32 high;
     s32 low;
     s32 mid;
@@ -669,7 +668,6 @@ void Checkpoint_release(void)
 
 void Checkpoint_reset(void)
 {
-    extern u32 gCheckpointRouteCount;
     gCheckpointRouteCount = 0x0;
 }
 
@@ -679,7 +677,6 @@ u32 gCheckpointPartFxListBuffer[0x14];
 void Checkpoint_initialise(void)
 {
     extern void* lbl_803DD41C;
-    extern u32 gCheckpointRouteCount;
     gCheckpointRouteCount = 0;
     lbl_803DD41C = gCheckpointPartFxListBuffer;
     lbl_803DD418 = (void*)((u8*)gCheckpointPartFxListBuffer + 0x28);
@@ -688,7 +685,6 @@ void Checkpoint_initialise(void)
 #pragma peephole off
 void Checkpoint_Add(CheckpointRouteEntry* entry)
 {
-    extern u32 gCheckpointRouteCount;
     int i = 0;
     CheckpointSlot* p = gCheckpointRouteTable;
     int count;
@@ -714,7 +710,6 @@ void Checkpoint_Add(CheckpointRouteEntry* entry)
 #pragma opt_common_subs off
 void Checkpoint_Remove(CheckpointRouteEntry* obj)
 {
-    extern u32 gCheckpointRouteCount;
     int count;
     int i = 0;
     CheckpointSlot* p = gCheckpointRouteTable;
@@ -752,7 +747,6 @@ extern f32 lbl_803E0538;
 #pragma opt_propagation off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
-    extern u32 gCheckpointRouteCount;
     int stack[64];
     char visited[200];
     s32 cur;

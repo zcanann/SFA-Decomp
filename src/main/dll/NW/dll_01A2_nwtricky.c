@@ -30,10 +30,6 @@
  * SnowHorn herd objects (seqId 0x13a)"). */
 #define NWTRICKY_SNOWHORN_HERD_SEQID 0x13a
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5260 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5264 = 600.0f;
 extern f32 lbl_803E5268;
 const int lbl_802C23E8[4] = {0xF5B, 0x43EC9, 0x43ED6, 0};
 
@@ -107,10 +103,10 @@ void NW_tricky_update(int* obj)
                 if (!(*(u8(**)(int*))(*(char**)*(char**)((char*)tricky + 0x68) + 0x40))(tricky))
                 {
                     mainSetBits(GAMEBIT_Tricky_Usable, 0);
-                    ((NwTrickyState*)state)->timer = lbl_803E5260;
+                    ((NwTrickyState*)state)->timer = 0.0f;
                 }
 
-                for (i2 = 0, ip = ids.ids, healthMin = lbl_803E5260; i2 < 3; ip++, i2++)
+                for (i2 = 0, ip = ids.ids, healthMin = 0.0f; i2 < 3; ip++, i2++)
                 {
                     found = (int*)ObjList_FindObjectById(*ip);
                     if (found != NULL && enemy_getHealthFraction((GameObject*)found) > healthMin)
@@ -123,9 +119,9 @@ void NW_tricky_update(int* obj)
 
                 ((NwTrickyState*)state)->timer += timeDelta;
                 timer = ((NwTrickyState*)state)->timer;
-                if (timer >= lbl_803E5264)
+                if (timer >= 600.0f)
                 {
-                    ((NwTrickyState*)state)->timer = timer - lbl_803E5264;
+                    ((NwTrickyState*)state)->timer = timer - 600.0f;
                     fn_80138920((GameObject*)tricky, 0x152, 0x1000);
                 }
             }

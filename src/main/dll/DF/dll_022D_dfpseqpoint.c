@@ -49,8 +49,6 @@ typedef struct DfpseqpointPlacement
 
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
-__declspec(section ".sdata2") f32 lbl_803E63B8 = 1.0f;
-
 int DFP_seqpoint_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     int blob = *(int*)&obj->extra;
@@ -127,7 +125,7 @@ void DFP_seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E63B8);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void DFP_seqpoint_hitDetect(void)

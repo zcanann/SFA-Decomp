@@ -16,13 +16,13 @@
 #include "main/gamebits.h"
 #include "main/lightmap_api.h"
 #include "main/map_block.h"
+#include "main/object.h"
+#include "main/rcp_dolphin.h"
 #include "main/dll/dll_0134_texscroll2.h"
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
 extern f32 lbl_803E3F30;
-extern void* getTablesBinEntry(int i);
-extern void* getLoadedTexture(int key);
 extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
                                     int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,
