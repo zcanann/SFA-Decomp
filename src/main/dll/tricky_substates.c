@@ -42,8 +42,10 @@
 #include "main/objprint_api.h"
 #include "main/dll/dll_00C4_tricky_api.h"
 #include "main/dll/skeetla_anim_api.h"
+#include "main/dll/skeetla.h"
+#include "main/dll/objfsa.h"
+#include "main/dll/baddie/trickyfollow.h"
 #include "main/dll/flameblast_api.h"
-extern int trickyFn_8013b368();
 
 /* GameCube controller button mask */
 #define PAD_BUTTON_A 0x100
@@ -94,13 +96,7 @@ extern f32 lbl_803E2424;
 extern f32 lbl_803E2410;
 extern f32 lbl_803E2414;
 extern f32 lbl_803E243C;
-extern void* Objfsa_FindNearestCurveType24(void* pos, int a, int b);
-extern int Objfsa_GetWalkGroupIndexAtPoint(void* pos, int a);
-extern void trickyUpdateApproachSpeed(u8* obj, f32 vel, u8* state, u8* pos, int flag);
-extern int trickyMove(u8* obj, u8* pos);
-extern void trickyTurnTowardYaw(u8* obj, s16 yaw);
 extern u32 gTrickySubstateSfxIdPairB;
-extern void* Objfsa_FindNearestEnabledCurveType24(void* pos, int a, int b);
 extern u32 gTrickySubstateSfxIdPairA;
 extern f32 lbl_803E2418;
 extern f32 lbl_803E2514;
@@ -181,7 +177,7 @@ void trickyDigTunnel(u8* obj, u8* state)
     switch (state[0xa])
     {
     case 0:
-        pc = Objfsa_FindNearestCurveType24(((TrickyState*)state)->targetPosPtr, -1, 2);
+        pc = Objfsa_FindNearestCurveType24((f32*)((TrickyState*)state)->targetPosPtr, -1, 2);
         ((TrickyState*)state)->unk708 = (u8*)(*gRomCurveInterface)->getById(((TrickyCurveNode*)pc)->links[0]);
         ((TrickyState*)state)->unk700 = pc;
         ((TrickyState*)state)->unk704 = (u8*)(*gRomCurveInterface)->getById(((TrickyCurveNode*)pc)->links[1]);
@@ -209,8 +205,8 @@ void trickyDigTunnel(u8* obj, u8* state)
         state[0xa] = 1;
     case 1:
         trickyDebugPrint((char*)(base + 0x7b8));
-        trickyFn_8013b368((int)obj, lbl_803E2488, state);
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0);
+        trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state);
+        gidx = Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), NULL);
         if (((TrickyCurveNode*)((TrickyState*)state)->unk708)->walkGroup == gidx)
         {
             state[0x9] = 1;
@@ -220,15 +216,15 @@ void trickyDigTunnel(u8* obj, u8* state)
     case 2:
         trickyDebugPrint((char*)(base + 0x7cc));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk700)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0)
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        if (trickyMove(obj, (f32*)pos) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x2010;
             state[0xa] = 3;
         }
         else
         {
-            if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == 0)
+            if (Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), NULL) == 0)
             {
                 ((TrickyState*)state)->stateFlags |= 0x2010;
             }
@@ -294,8 +290,8 @@ void trickyDigTunnel(u8* obj, u8* state)
                          Vec_xzDistance(&((GameObject*)obj)->anim.worldPosX,
                                         &((TrickyCurveNode*)((TrickyState*)state)->unk704)->x));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0)
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        if (trickyMove(obj, (f32*)pos) == 0)
         {
             trickyAdvanceNode(state);
             state[0xa] = 6;
@@ -304,8 +300,8 @@ void trickyDigTunnel(u8* obj, u8* state)
     case 6:
         trickyDebugPrint((char*)(base + 0x810));
         pos = (u8*)&((TrickyCurveNode*)((TrickyState*)state)->unk704)->x;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
-        if (trickyMove(obj, pos) == 0)
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32*)pos, 1);
+        if (trickyMove(obj, (f32*)pos) == 0)
         {
             if (lbl_803E23DC == ((TrickyState*)state)->waterLevel)
             {
@@ -341,8 +337,8 @@ void trickyDigTunnel(u8* obj, u8* state)
         break;
     case 7:
         trickyDebugPrint((char*)(base + 0x824));
-        gidx = Objfsa_GetWalkGroupIndexAtPoint(*(u8**)&((TrickyState*)state)->playerObj + 0x18, 0);
-        if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == gidx)
+        gidx = Objfsa_GetWalkGroupIndexAtPoint((f32*)(*(u8**)&((TrickyState*)state)->playerObj + 0x18), NULL);
+        if (Objfsa_GetWalkGroupIndexAtPoint((f32*)(obj + 0x18), NULL) == gidx)
         {
             state[0x8] = 1;
             state[0xa] = 0;
@@ -381,7 +377,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
     {
     case 0:
         ((TrickyState*)state)->unk70C =
-            Objfsa_FindNearestEnabledCurveType24(((TrickyState*)state)->followObj + 0x18, -1, 2);
+            Objfsa_FindNearestEnabledCurveType24((f32*)(((TrickyState*)state)->followObj + 0x18), -1, 2);
         if (((TrickyState*)state)->unk70C != NULL &&
             getXZDistance((float*)(((TrickyState*)state)->followObj + 0x18),
                           &((TrickyCurveNode*)((TrickyState*)state)->unk70C)->x) > lbl_803E2514)
@@ -390,7 +386,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         state[0xa] = 1;
     case 1:
-        ret = trickyFn_8013b368((int)obj, lbl_803E2488, state);
+        ret = trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state);
         if (ret == 0)
         {
             if (((TrickyState*)state)->unk70C != NULL)
@@ -438,7 +434,7 @@ void trickyFn_80141fec(u8* obj, u8* state)
         }
         break;
     case 2:
-        if (trickyFn_8013b368((int)obj, lbl_803E2418, state) == 0)
+        if (trickyFn_8013b368((u8*)obj, lbl_803E2418, (u8*)state) == 0)
         {
             ((TrickyState*)state)->stateFlags |= 0x10;
             state[0xa] = 3;
@@ -569,7 +565,7 @@ void trickyFn_80142524(u8* obj, u8* state)
                     }
                 }
                 if (trickyFoodFn_8014460c((GameObject*)obj, (int*)state) == 0 &&
-                    trickyFn_8013b368((int)obj, lbl_803E2488, state) == 0)
+                    trickyFn_8013b368((u8*)obj, lbl_803E2488, (u8*)state) == 0)
                 {
                     ((TrickyState*)state)->idleSfxTimer -= timeDelta;
                     if (((TrickyState*)state)->idleSfxTimer <= lbl_803E23DC)
@@ -736,7 +732,7 @@ int trickyFn_80142a14(int obj, int state)
         }
         tricky_startRandomIdleMove((GameObject*)(obj), state);
     }
-    else if ((u8)trickyFn_8013b368((int)obj, lbl_803E24C8, state) != 1)
+    else if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E24C8, (u8*)state) != 1)
     {
         ((FlagByte728*)(state + 0x728))->bf5 = 1;
         sfxId = randomGetRange(862, 863);
@@ -879,7 +875,7 @@ skip:
         }
         ((TrickyState*)state)->substate = 0;
     }
-    if ((u8)trickyFn_8013b368(obj, lbl_803E2408, state) == 1)
+    if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)state) == 1)
     {
         return 1;
     }
@@ -984,7 +980,7 @@ int trickyFn_801430e0(u8* obj, u8* state)
     {
         return 1;
     }
-    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, state) != 1)
+    if ((u8)trickyFn_8013b368((u8*)obj, lbl_803E2418, (u8*)state) != 1)
     {
         if (((TrickyState*)state)->childB != NULL)
         {
@@ -1362,7 +1358,7 @@ u32 trickyFn_80143b78(GameObject* obj, int* trickyState)
     {
         return 1;
     }
-    val = trickyFn_8013b368(obj, lbl_803E2408, trickyState);
+    val = trickyFn_8013b368((u8*)obj, lbl_803E2408, (u8*)trickyState);
     if (val == 1)
     {
         if (lbl_803E23DC == ((TrickyState*)trickyState)->cooldownA)
@@ -1416,7 +1412,7 @@ int trickyFn_80143c04(GameObject* obj, int state)
         }
         threshold = lbl_803E2408;
     }
-    result = trickyFn_8013b368((int)obj, threshold, state);
+    result = trickyFn_8013b368((u8*)obj, threshold, (u8*)state);
     if (result != 1)
     {
         if (result == 2)

@@ -96,5 +96,7 @@ f32 curves_getPathLength(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2);
 void curves_getPos(int curve,float *outX,float *outY,float *outZ,f32 phase);
 int RomCurve_findProjectedCurveFromStart(int curve,f32 x,f32 y,f32 z,float *outPhase);
 int Objfsa_GetWalkGroupIndexAtPoint(f32* point, ObjfsaWalkGroupPatchInfo* patchInfo);
+void* Objfsa_FindNearestCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
+void* Objfsa_FindNearestEnabledCurveType24(f32* position, int walkGroupFilter, int curveSubtypeFilter);
 
 #endif /* MAIN_DLL_OBJFSA_H_ */

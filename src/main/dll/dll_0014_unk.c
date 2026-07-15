@@ -2217,7 +2217,7 @@ int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* tar
     return 0;
 }
 
-void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
+void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
 {
     int count;
     int* hit;
@@ -2233,10 +2233,10 @@ void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
             (p4_filter == -1 || *((u8*)hit + 3) == p4_filter) &&
             (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
         {
-            f32 dx = *(f32*)pos - *(f32*)((char*)hit + 8);
-            f32 dy = *(f32*)(pos + 4) - *(f32*)((char*)hit + 0xC);
+            f32 dx = pos[0] - *(f32*)((char*)hit + 8);
+            f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
             f32 d;
-            f32 dz = *(f32*)(pos + 8) - *(f32*)((char*)hit + 0x10);
+            f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
             d = dy * dy;
             d += dx * dx;
             d += dz * dz;
@@ -2251,7 +2251,7 @@ void* Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter)
     return bestHit;
 }
 
-void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter)
+void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filter)
 {
     int count;
     int** list;
@@ -2278,10 +2278,10 @@ void* Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
                 gbId = *(s16*)((char*)hit + 0x32);
                 if (gbId == -1 || mainGetBit(gbId) == 0)
                 {
-                    f32 dx = *(f32*)pos - *(f32*)((char*)hit + 8);
-                    f32 dy = *(f32*)(pos + 4) - *(f32*)((char*)hit + 0xC);
+                    f32 dx = pos[0] - *(f32*)((char*)hit + 8);
+                    f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
                     f32 d;
-                    f32 dz = *(f32*)(pos + 8) - *(f32*)((char*)hit + 0x10);
+                    f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
                     d = dy * dy;
                     d += dx * dx;
                     d += dz * dz;

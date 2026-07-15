@@ -64,11 +64,12 @@ extern f32 lbl_803E39E0;
 extern f32 lbl_803E39E4;
 extern f32 lbl_803E39E8;
 
-typedef union LargeCrateVariantRemap
+typedef struct LargeCrateVariantRemap
 {
     s16 entries[6];
-    int words[3];
 } LargeCrateVariantRemap;
+
+STATIC_ASSERT(sizeof(LargeCrateVariantRemap) == 0xC);
 
 __declspec(section ".rodata") const LargeCrateVariantRemap gLargeCrateVariantARemap = {
     {0, 1, 2, 3, 4, 8}
