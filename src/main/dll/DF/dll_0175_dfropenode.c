@@ -382,6 +382,7 @@ typedef struct DfropenodeRenderState
     u8 blue;
 } DfropenodeRenderState;
 
+#pragma opt_loop_invariants off
 void dfropenode_render(int obj, int p2, int p3)
 {
     ObjAnimComponent* objAnim;
@@ -467,7 +468,7 @@ void dfropenode_render(int obj, int p2, int p3)
                 gxBlendFn_80078b4c();
                 alpha = (objAnim->alpha + objAnim->alpha) >> 1;
             }
-            selectTexture((Texture*)((&gRopeNodeTextures)[((DfropenodePlacement*)objDef)->textureIndex]), 0);
+            selectTexture((Texture*)(gRopeNodeTextures[((DfropenodePlacement*)objDef)->textureIndex]), 0);
             setTextColorByteLegacy((u32*)&p2, renderState.blue, renderState.green, renderState.red, (u8)alpha);
         }
         node = extra->rope->nodes;
@@ -498,6 +499,7 @@ void dfropenode_render(int obj, int p2, int p3)
     }
 }
 
+#pragma opt_loop_invariants reset
 void dfropenode_hitDetect(void)
 {
 }
