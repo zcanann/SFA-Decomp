@@ -141,19 +141,18 @@ void Curve_BuildSegmentLengthTable(Curve* curve, int count)
 }
 #pragma dont_inline reset
 
-#pragma opt_lifetimes off
 int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
 {
     int seg, savedIdx;
     f32* lengths = &curve->totalLen;
     f32 step = dt * timeDelta;
     f32 zero;
-    f32 zeroVal;
-    f32 base, frac, t;
 
-    if (step > lbl_803DE658)
+    if (step > 0.0f)
     {
-        seg = (int)(gCurveSegmentCount * curve->t);
+        f32 base, frac, t;
+
+        seg = (int)(20.0f * curve->t);
         if (seg == 20)
         {
             seg--;
@@ -163,13 +162,13 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
             f32 segLen = lengths[seg + 1];
             curve->segmentDistance = segLen + curve->segmentDistance;
         }
-        else if (curve->t >= lbl_803DE674)
+        else if (curve->t >= 1.0f)
         {
             return 1;
         }
         curve->pathDistance += step;
         step += curve->segmentDistance;
-        zero = lbl_803DE658;
+        zero = 0.0f;
         while (step > zero)
         {
             step -= lengths[seg + 1];
@@ -185,20 +184,20 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                     if (curve->px != NULL)
                     {
                         curve->sample[0] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE674, &curve->tangent[0]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, 1.0f, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
                         curve->sample[1] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE674, &curve->tangent[1]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, 1.0f, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
                         curve->sample[2] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE674, &curve->tangent[2]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, 1.0f, &curve->tangent[2]);
                     }
-                    curve->t = lbl_803DE674;
-                    curve->segmentDistance = lbl_803DE658;
+                    curve->t = 1.0f;
+                    curve->segmentDistance = 0.0f;
                     curve->pathDistance = curve->pathLength;
                     curve->idx = curve->count - 4;
                     return 1;
@@ -208,9 +207,9 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
             }
         }
         step += lengths[seg + 1];
-        base = seg / gCurveSegmentCount;
+        base = seg / 20.0f;
         frac = step / lengths[seg + 1];
-        t = frac * ((f32)(seg + 1) / *(f32*)&gCurveSegmentCount - base) + base;
+        t = frac * ((f32)(seg + 1) / 20.0f - base) + base;
         if (curve->px != NULL)
         {
             curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
@@ -227,9 +226,11 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         curve->segmentDistance = step;
         curve->dir = 0;
     }
-    else if (step < lbl_803DE658)
+    else if (step < 0.0f)
     {
-        seg = (int)(gCurveSegmentCount * curve->t);
+        f32 base, frac, t;
+
+        seg = (int)(20.0f * curve->t);
         if (seg == 20)
         {
             seg--;
@@ -238,13 +239,13 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
         {
             curve->segmentDistance = lengths[seg + 1] - curve->segmentDistance;
         }
-        else if (curve->t <= *(f32*)&lbl_803DE658)
+        else if (curve->t <= 0.0f)
         {
             return 1;
         }
         curve->pathDistance += step;
         step += curve->segmentDistance;
-        zero = lbl_803DE658;
+        zero = 0.0f;
         while (step < zero)
         {
             step += lengths[seg + 1];
@@ -260,22 +261,21 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                     if (curve->px != NULL)
                     {
                         curve->sample[0] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, lbl_803DE658, &curve->tangent[0]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->px + savedIdx, 0.0f, &curve->tangent[0]);
                     }
                     if (curve->py != NULL)
                     {
                         curve->sample[1] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, lbl_803DE658, &curve->tangent[1]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->py + savedIdx, 0.0f, &curve->tangent[1]);
                     }
                     if (curve->pz != NULL)
                     {
                         curve->sample[2] =
-                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, lbl_803DE658, &curve->tangent[2]);
+                            ((CurveEvalPtrFirst)curve->eval)(curve->pz + savedIdx, 0.0f, &curve->tangent[2]);
                     }
-                    zeroVal = lbl_803DE658;
-                    curve->t = zeroVal;
+                    curve->t = 0.0f;
                     curve->segmentDistance = -lengths[1];
-                    curve->pathDistance = zeroVal;
+                    curve->pathDistance = 0.0f;
                     curve->idx = 0;
                     return 1;
                 }
@@ -283,9 +283,9 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
                 seg = 19;
             }
         }
-        base = seg / gCurveSegmentCount;
+        base = seg / 20.0f;
         frac = step / lengths[seg + 1];
-        t = frac * ((f32)(seg + 1) / gCurveSegmentCount - base) + base;
+        t = frac * ((f32)(seg + 1) / 20.0f - base) + base;
         if (curve->px != NULL)
         {
             curve->sample[0] = ((CurveEvalPtrFirst)curve->eval)(curve->px + curve->idx, t, &curve->tangent[0]);
@@ -304,8 +304,6 @@ int Curve_AdvanceAlongPath(Curve* curve, f32 dt)
     }
     return 0;
 }
-#pragma opt_lifetimes reset
-
 void curvesSetupMoveNetworkCurve(Curve* curve)
 {
     if (curve->count < 4)
