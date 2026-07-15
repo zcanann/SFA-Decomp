@@ -97,12 +97,12 @@ STATIC_ASSERT(sizeof(ObjFxRandomBurstTable) == 0x34);
 STATIC_ASSERT(sizeof(ObjFxColorTable) == 0x1E);
 STATIC_ASSERT(sizeof(ObjFxSparkleEffectTable) == 0xE0);
 
-extern ObjFxS32Table5 lbl_802C1FF8;
+extern const ObjFxS32Table5 lbl_802C1FF8;
 extern ObjFxSparkleEffectTable lbl_802C200C;
 extern ObjFxU16Table11 lbl_802C20EC;
 extern ObjFxU16Table7 lbl_802C2104;
 extern ObjFxU16Table11 lbl_802C2114;
-extern ObjFxRandomBurstTable gObjFxRandomBurstTbl;
+extern const ObjFxRandomBurstTable gObjFxRandomBurstTbl;
 extern u8 gObjFxCrystalSparkleTbl[];
 extern f32 gObjFxCrystalAmpTbl[];
 extern s16 gObjFxCrystalSpinSpeed[4];

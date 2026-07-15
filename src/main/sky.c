@@ -148,8 +148,9 @@ extern f32 lbl_803DF07C;
 extern f32 lbl_803DF088;
 extern u16 gSkySunAlpha;
 extern u16 gSkyMoonAlpha;
-__declspec(section ".rodata") f32 gSkyBaseSunDirection[3] = {0.0f, 0.0f, 4600.0f};
-__declspec(section ".rodata") f32 gSkyBaseMoonDirection[3] = {0.0f, 0.0f, 4600.0f};
+STATIC_ASSERT(sizeof(SkyVec3) == 0xC);
+const SkyVec3 gSkyBaseSunDirection = {0.0f, 0.0f, 4600.0f};
+const SkyVec3 gSkyBaseMoonDirection = {0.0f, 0.0f, 4600.0f};
 extern const f32 gSkySunMoonFarPlane;
 extern const f32 gSkySunArcDuration;
 extern const f32 gSkySunFadeInThreshold;
@@ -2829,8 +2830,8 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     SkyState* sky;
 
     cam = Camera_GetCurrentViewSlot();
-    sunDir = *(SkyVec3*)gSkyBaseSunDirection;
-    moonDir = *(SkyVec3*)gSkyBaseMoonDirection;
+    sunDir = gSkyBaseSunDirection;
+    moonDir = gSkyBaseMoonDirection;
     v = 0;
     q1.x = pEXIInputFlag;
     q1.y = pEXIInputFlag;

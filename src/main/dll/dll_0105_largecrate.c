@@ -30,6 +30,7 @@
 #include "main/object_api.h"
 #include "main/objfx.h"
 #include "main/dll/dll_0105_largecrate.h"
+#include "main/dll/CF/windlift.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
 #include "main/sky_interface.h"
@@ -679,15 +680,6 @@ void largecrate_initialise(void)
 }
 
 /*__DATA_EXTERNS__*/
-extern void dll_107_getExtraSize_ret_44();
-extern void dll_107_getObjectTypeId();
-extern void dll_107_free();
-extern void dll_107_render();
-extern void dll_107_hitDetect_nop();
-extern void dll_107_update();
-extern void dll_107_init();
-extern void dll_107_release_nop();
-extern void dll_107_initialise_nop();
 extern void Scarab_getExtraSize();
 extern void Scarab_free();
 extern void Scarab_render();

@@ -2,6 +2,7 @@
  * DLL 0x107 - unreachable wind-lift/blow-vent object (no OBJECTS.bin def
  * references it: retail cut content). TU = 0x80185868..0x8018646C.
  */
+#include "main/dll/CF/windlift.h"
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
 #include "main/camera_interface.h"

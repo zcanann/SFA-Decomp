@@ -9,8 +9,15 @@ void Scarab_update(GameObject* obj);
 void FUN_80184a54(u64 param_1, u64 param_2, u64 param_3, u64 param_4, u64 param_5, u64 param_6, u64 param_7,
                   u64 param_8);
 void fn_80185868(GameObject* obj, f32 arg);
+int dll_107_getExtraSize_ret_44(void);
+int dll_107_getObjectTypeId(void);
+void dll_107_free(int* obj);
 void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState);
+void dll_107_hitDetect_nop(void);
 void dll_107_update(GameObject* obj);
+void dll_107_init(int obj, int pArg);
+void dll_107_release_nop(void);
+void dll_107_initialise_nop(void);
 
 extern ObjectDescriptor gDummy108ObjDescriptor;
 extern ObjectDescriptor gPortalSpellDoorObjDescriptor;
