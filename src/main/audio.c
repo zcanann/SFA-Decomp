@@ -48,7 +48,7 @@ typedef u8 (*MusicInitMidiWadU8Fn)(void);
 #define sndIsInstalledU32 ((SndIsInstalledU32Fn)sndIsInstalled)
 #define musicInitMidiWadU8 ((MusicInitMidiWadU8Fn)musicInitMidiWad)
 
-__declspec(section ".rodata") MusicSeqStartParams gMusicSeqStartParamsDefault = {
+const MusicSeqStartParams gMusicSeqStartParamsDefault = {
     4, {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}, 0x100, 0, 0x7F, {0}};
 
 s8 gAudioSoundMode = -1;

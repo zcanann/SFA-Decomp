@@ -30,6 +30,8 @@ typedef struct ModelLightCornerBlock
     f32 v[24];
 } ModelLightCornerBlock;
 
+STATIC_ASSERT(sizeof(ModelLightCornerBlock) == 0x60);
+
 #define GX_COLOR0    0
 #define GX_DF_NONE   0
 #define GX_DF_CLAMP  2
@@ -76,10 +78,10 @@ extern u8 gModelLightUseModelRelativePositions;
 extern int gModelLightNextGXLightId;
 extern f32 lbl_803DE7A4;
 extern f32 lbl_803DE768;
-__declspec(section ".rodata") f32 gModelLightCornerBlock[24] = {
+const ModelLightCornerBlock gModelLightCornerBlock = {{
     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f,
     -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
-    -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f};
+    -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f}};
 
 extern void GXInitLightDistAttn(u8* lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8* lt_obj, f32* k0, f32* k1, f32* k2);
@@ -1200,7 +1202,7 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8* light, u8* obj)
     f32 zero;
 
     scaledExtent = ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.hitboxScale;
-    cornerBlock = *(ModelLightCornerBlock*)gModelLightCornerBlock;
+    cornerBlock = gModelLightCornerBlock;
 
     worldPos[0] = ((GameObject*)obj)->anim.localPosX - playerMapOffsetX;
     worldPos[1] = ((GameObject*)obj)->anim.localPosY;

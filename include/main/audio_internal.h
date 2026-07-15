@@ -169,7 +169,7 @@ extern SfxObjectChannel gSfxObjectChannels[];
 extern u8 gSfxGlobalCtrlLevel;
 extern u32 gSfxObjectChannelMatchCount;
 extern u64 gSfxObjectChannelAge;
-extern MusicSeqStartParams gMusicSeqStartParamsDefault;
+extern const MusicSeqStartParams gMusicSeqStartParamsDefault;
 extern u8 gSfxTriggerExtraTable[];
 extern void* gSfxTriggersData;
 extern int gSfxTriggersCount;

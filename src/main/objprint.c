@@ -1868,12 +1868,14 @@ typedef struct IndTexMtx23
     f32 m[6];
 } IndTexMtx23;
 
+STATIC_ASSERT(sizeof(IndTexMtx23) == 0x18);
+
 typedef void (*ObjPrintSetIndTexMtxFn)(int id, IndTexMtx23* mtx, int scale);
 
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1B10 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
-__declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
+const IndTexMtx23 lbl_802C1B10 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
+const IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
+const IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
+const IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 
 #define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
 #define GXSetChanAmbColor ((ObjPrintSetChanColorFn)GXSetChanAmbColor)
@@ -1883,8 +1885,6 @@ __declspec(section ".rodata") IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern IndTexMtx23 lbl_802C1B40;
-    extern IndTexMtx23 lbl_802C1B58;
     extern int lbl_803DCC44;
     extern u8 lbl_803DCC3E;
     extern u8 lbl_803DCC3D;
@@ -2098,8 +2098,6 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern IndTexMtx23 lbl_802C1B10;
-    extern IndTexMtx23 lbl_802C1B28;
     extern ObjPrintS10Color lbl_803DE9F4;
     extern ObjPrintGXColor lbl_803DB494;
     extern int lbl_803DCC44;

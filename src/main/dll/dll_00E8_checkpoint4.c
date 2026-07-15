@@ -18,6 +18,7 @@
 #include "main/dll/dll_00EA_sideload.h"
 #include "main/dll/dll_00EB_siderepel.h"
 #include "main/dll/dll_00ED_collectible_api.h"
+#include "main/dll/dll_00FF_magicgem.h"
 
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E3420 = 1.0f;
@@ -27,11 +28,6 @@ __declspec(section ".sdata2") f32 lbl_803E342C = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E3430 = 2.0f;
 #pragma explicit_zero_data off
 
-extern void MagicDust_getExtraSize();
-extern void MagicDust_free();
-extern void MagicDust_render();
-extern void MagicDust_update();
-extern void MagicDust_init();
 void checkpoint4_setScale(void)
 {
 }
