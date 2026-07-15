@@ -1854,7 +1854,7 @@ GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, float* 
 }
 #pragma opt_loop_invariants reset
 
-u32 ObjList_ContainsObject(int obj)
+int ObjList_ContainsObject(int obj)
 {
     u32* entry;
     int i;

@@ -24,6 +24,7 @@
 #include "main/object_descriptor.h"
 #include "main/object_api.h"
 #include "main/object_render_legacy.h"
+#include "main/obj_list.h"
 #include "main/dll/pushable.h"
 #include "main/dll/player_target.h"
 #include "main/vecmath.h"
@@ -66,8 +67,6 @@ __declspec(section ".sdata2") f32 lbl_803E35F0 = 10.0f;
 __declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 /* single-precision override for codegen */
 f32 lbl_803AC780[4];
-
-extern int ObjList_ContainsObject(int obj);
 
 void InvHit_hitDetect(void)
 {

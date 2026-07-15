@@ -5,6 +5,7 @@
 
 void* ObjList_GetObjects(int* startIndex, int* objectCount);
 GameObject* ObjList_FindNearestObjectByDefNo(GameObject* obj, int defNo, f32* maxDistanceSq);
-u32 ObjList_ContainsObject(int obj);
+int ObjList_ContainsObject(int obj);
+int ObjList_PartitionForRender(int* objectCount);
 
 #endif /* MAIN_OBJ_LIST_H_ */

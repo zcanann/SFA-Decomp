@@ -61,8 +61,8 @@ s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
 #define KYTESMUM_MODE_ROAMING    2
 #define KYTESMUM_MODE_QUEST_B    3
 
-__declspec(section ".rodata") int gKytesMumQuestBits[3] = {0x43, 0x30A, -1};
-__declspec(section ".rodata") int gKytesMumTriggerIds[3] = {0, 2, -1};
+const s32 gKytesMumQuestBits[3] = {0x43, 0x30A, -1};
+const s32 gKytesMumTriggerIds[3] = {0, 2, -1};
 
 int kytesmum_getExtraSize(void)
 {

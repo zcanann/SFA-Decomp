@@ -1356,7 +1356,6 @@ void lightmap_sortTransparentDrawQueue(void)
 }
 
 
-extern int ObjList_PartitionForRender(int* count);
 extern void shadowCreate(u8 * obj);
 extern void shadowRenderFn_8006b558(u8 * obj);
 extern void renderShadows(int a, int b, int c);
