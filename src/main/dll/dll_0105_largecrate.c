@@ -72,10 +72,10 @@ typedef struct LargeCrateVariantRemap
 
 STATIC_ASSERT(sizeof(LargeCrateVariantRemap) == 0xC);
 
-__declspec(section ".rodata") const LargeCrateVariantRemap gLargeCrateVariantARemap = {
+const LargeCrateVariantRemap gLargeCrateVariantARemap = {
     {0, 1, 2, 3, 4, 8}
 };
-__declspec(section ".rodata") const LargeCrateVariantRemap gLargeCrateVariantBRemap = {
+const LargeCrateVariantRemap gLargeCrateVariantBRemap = {
     {0, 5, 6, 7, 8, 9}
 };
 

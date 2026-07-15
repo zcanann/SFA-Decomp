@@ -76,7 +76,7 @@ struct DirectionalLightObjDescriptorLayout
     char debugStrings[0xE0];
 };
 
-extern f32 lbl_802C2608[];
+extern const f32 lbl_802C2608[4];
 extern f32 lbl_803E7250;
 extern f32 lbl_803E7254;
 extern struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor;

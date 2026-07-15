@@ -10,7 +10,11 @@ void dll_7E_func03(int param_1,int param_2,int param_3,u32 param_4,u32 param_5,f
                  );
 void dll_7F_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_80_func03(int param_1,int param_2,int param_3,u32 param_4);
+void dll_81_func00_nop(void);
+void dll_81_func01_nop(void);
 void dll_81_func03(int param_1,int param_2,int param_3,u32 param_4);
+void dll_82_func00_nop(void);
+void dll_82_func01_nop(void);
 void dll_82_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_83_func03(int param_1,int param_2,int param_3,u32 param_4);
 void dll_84_func03(int param_1,int param_2,int param_3,u32 param_4);

@@ -5,7 +5,7 @@
 #include "main/dll/LGT/lgt_types.h"
 #include "main/obj_placement.h"
 
-extern f32 lbl_802C25F8[];
+extern const f32 lbl_802C25F8[4];
 
 typedef struct PointLightState
 {

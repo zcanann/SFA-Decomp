@@ -114,7 +114,7 @@ f32 gExplosionFalloffScaleGreen;
 f32 gExplosionFalloffScaleBlue;
 u8 gExplosionUpdateTick;
 extern f32 gExplosionSpreadDirs[];
-__declspec(section ".rodata") const FbTexTbl gExplosionTexTable = {
+const FbTexTbl gExplosionTexTable = {
     {0x5e1, 0x5f7, 0x5f8, 0x5f9}
 };
 

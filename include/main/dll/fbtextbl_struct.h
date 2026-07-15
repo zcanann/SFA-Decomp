@@ -8,4 +8,6 @@ typedef struct
     int v[4];
 } FbTexTbl;
 
+STATIC_ASSERT(sizeof(FbTexTbl) == 0x10);
+
 #endif
