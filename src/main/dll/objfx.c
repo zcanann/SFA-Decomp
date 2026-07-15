@@ -102,10 +102,9 @@ ObjectDescriptor14 expgfx_funcs = {
 
 s16 gObjFxCrystalSpinSpeed[4] = {-1024, -512, 512, 1024};
 
-__declspec(section ".rodata") u8 gObjFxCrystalSparkleTbl[0x20] = {
-    0x00, 0x00, 0x00, 0xFF, 0x7F, 0xFF, 0x7F, 0xC0, 0xFF, 0xFF, 0x7F,
-    0xFF, 0x7F, 0xC0, 0xFF, 0xFF, 0xA0, 0x00, 0xFF, 0xA0, 0x00, 0x7F,
-    0x40, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+const ObjFxColorTable gObjFxCrystalSparkleTbl = {
+    {0x0000, 0x00FF, 0x7FFF, 0x7FC0, 0xFFFF, 0x7FFF, 0x7FC0, 0xFFFF,
+     0xA000, 0xFFA0, 0x007F, 0x40FF, 0x0000, 0x0000, 0x0000}};
 const ObjFxS32Table5 lbl_802C1FF8 = {{0, 0, 0, 1, 2}};
 const ObjFxSparkleEffectTable lbl_802C200C = {
     {{0, 2, 3, 3, 3}},
@@ -354,10 +353,10 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
                                  int flags)
 {
     ObjFxParticleParams params;
-    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)gObjFxCrystalSparkleTbl + 0xd0);
-    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0xe4);
-    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0xf4);
-    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0x104);
+    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0xd0);
+    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xe4);
+    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xf4);
+    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x104);
     u16 rvec[3];
     int i;
     f32 f30;
@@ -439,10 +438,10 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
                            void* origin, int flags)
 {
     ObjFxParticleParams params;
-    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)gObjFxCrystalSparkleTbl + 0x8c);
-    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0xa0);
-    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0xb0);
-    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0xc0);
+    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x8c);
+    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xa0);
+    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xb0);
+    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0xc0);
     u16 rvec[3];
     int i;
     f32 fdelta;
@@ -536,10 +535,10 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
                          void* origin, int flags)
 {
     ObjFxParticleParams params;
-    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)gObjFxCrystalSparkleTbl + 0x48);
-    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0x5c);
-    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0x6c);
-    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)gObjFxCrystalSparkleTbl + 0x7c);
+    ObjFxU16Table9 tA = *(ObjFxU16Table9*)((char*)&gObjFxCrystalSparkleTbl + 0x48);
+    ObjFxU16Table8 tB = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x5c);
+    ObjFxU16Table8 tC = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x6c);
+    ObjFxU16Table8 tD = *(ObjFxU16Table8*)((char*)&gObjFxCrystalSparkleTbl + 0x7c);
     int i;
 
     params.scale = f8val;
@@ -1397,7 +1396,7 @@ void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale
 {
     ObjFxParticleParams params;
     f32 zoff = lbl_803DF394;
-    ObjFxColorTable colors = *(ObjFxColorTable*)gObjFxCrystalSparkleTbl;
+    ObjFxColorTable colors = gObjFxCrystalSparkleTbl;
     u8* cbuf;
     u8* cbuf1;
     u8* cbuf2;

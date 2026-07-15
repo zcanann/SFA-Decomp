@@ -109,7 +109,7 @@ extern const ObjFxU16Table11 lbl_802C20EC;
 extern const ObjFxU16Table7 lbl_802C2104;
 extern const ObjFxU16Table11 lbl_802C2114;
 extern const ObjFxRandomBurstTable gObjFxRandomBurstTbl;
-extern u8 gObjFxCrystalSparkleTbl[];
+extern const ObjFxColorTable gObjFxCrystalSparkleTbl;
 extern ObjFxCrystalBurstTable gObjFxCrystalAmpTbl;
 extern s16 gObjFxCrystalSpinSpeed[4];
 extern u8 gObjFxLightColorTbl[];
