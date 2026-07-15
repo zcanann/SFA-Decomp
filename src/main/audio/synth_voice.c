@@ -62,7 +62,7 @@ extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxBIndex[8];
 extern u8 synthAuxAMIDI[8];
 extern u8 synthAuxAIndex[8];
-extern int synthRealTimeHi;
+extern u64 synthRealTime;
 extern f32 lbl_803E77D0;
 
 typedef union SynthAuxInfo
@@ -467,8 +467,8 @@ void LowPrecisionHandler(int voice)
         goto end;
     }
 
-    lowDeltaTime = (u32)(*(u64*)&synthRealTimeHi - *(u64*)&sv->lastLowCallTimeHi);
-    *(u64*)&sv->lastLowCallTimeHi = *(u64*)&synthRealTimeHi;
+    lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastLowCallTimeHi);
+    *(u64*)&sv->lastLowCallTimeHi = synthRealTime;
 
     for (j = 0; j < 2; ++j)
     {
@@ -677,8 +677,8 @@ void ZeroOffsetHandler(int voice)
         goto end;
     }
 
-    lowDeltaTime = (u32)(*(u64*)&synthRealTimeHi - *(u64*)&sv->lastZeroCallTimeHi);
-    *(u64*)&sv->lastZeroCallTimeHi = *(u64*)&synthRealTimeHi;
+    lowDeltaTime = (u32)(synthRealTime - *(u64*)&sv->lastZeroCallTimeHi);
+    *(u64*)&sv->lastZeroCallTimeHi = synthRealTime;
 
     if ((HWVOICE_FLAGS(sv) & 0x8000) != 0)
     {
@@ -964,8 +964,8 @@ void fn_802712C8(SynthDelayedNode* fade)
 {
     SynthVoiceTimers* timers = (SynthVoiceTimers*)fade;
 
-    *(u64*)&timers->updateTimeHi0 = *(u64*)&synthRealTimeHi;
-    *(u64*)&timers->updateTimeHi1 = *(u64*)&synthRealTimeHi;
+    *(u64*)&timers->updateTimeHi0 = synthRealTime;
+    *(u64*)&timers->updateTimeHi1 = synthRealTime;
     synthQueueDelayedUpdate(fade, 0, 0);
     synthQueueDelayedUpdate(fade, 1, 0);
 }
@@ -1123,7 +1123,7 @@ void audioFn_80271498(u32 delta)
             }
         }
         hwFrameDone();
-        *(u64*)&synthRealTimeHi += delta;
+        synthRealTime += delta;
     }
 }
 

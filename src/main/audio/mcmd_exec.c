@@ -14,7 +14,7 @@
 extern int mcmdLoop();
 extern int macActiveRoot;
 extern int macTimeQueueRoot;
-extern int macRealTimeHi;
+extern u64 macRealTime;
 extern void synthQueueVoicePrimaryUpdates(void* state);
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
@@ -683,8 +683,8 @@ void macHandleActive(McmdVoiceState* sv)
         MAC_CFLAGS(sv) &= MAC_FLAG64(0, 8);
         MAC_CFLAGS(sv) |= MAC_FLAG64(0x3000, 0);
         memset(sv->localRegs, 0, sizeof(sv->localRegs));
-        *(u64*)&sv->activeTimeHi = *(u64*)&macRealTimeHi;
-        *(u64*)&sv->startTimeHi = *(u64*)&macRealTimeHi;
+        *(u64*)&sv->activeTimeHi = macRealTime;
+        *(u64*)&sv->startTimeHi = macRealTime;
         fn_802712C8(sv);
     }
 
@@ -1237,7 +1237,7 @@ void macHandle(u32 deltaTime)
     McmdVoiceState* nextSv;
     u64 w;
 
-    for (sv = (McmdVoiceState*)macTimeQueueRoot; sv != 0 && *(u64*)&sv->wakeTimeHi <= *(u64*)&macRealTimeHi;)
+    for (sv = (McmdVoiceState*)macTimeQueueRoot; sv != 0 && *(u64*)&sv->wakeTimeHi <= macRealTime;)
     {
         nextSv = sv->timeNext;
         w = *(u64*)&sv->wakeTimeHi;
@@ -1267,7 +1267,7 @@ void macHandle(u32 deltaTime)
         macHandleActive(sv);
     }
 
-    *(u64*)&macRealTimeHi += deltaTime;
+    macRealTime += deltaTime;
 }
 
 /*
@@ -1403,7 +1403,7 @@ void TimeQueueRemove(McmdVoiceState* sv, u32 disableUpdate)
             synthQueueVoicePrimaryUpdates(sv);
         }
         *(u64*)&sv->wakeTimeHi = 0;
-        *(u64*)&sv->activeTimeHi = *(u64*)&macRealTimeHi;
+        *(u64*)&sv->activeTimeHi = macRealTime;
         MAC_CFLAGS(sv) &= ~MAC_FLAG64(0, 0x40004);
     }
 }
@@ -1435,7 +1435,7 @@ void macMakeActive(McmdVoiceState* sv)
             }
             synthQueueVoicePrimaryUpdates(sv);
             *(u64*)&sv->wakeTimeHi = 0;
-            *(u64*)&sv->activeTimeHi = *(u64*)&macRealTimeHi;
+            *(u64*)&sv->activeTimeHi = macRealTime;
             MAC_CFLAGS(sv) &= ~MAC_FLAG64(0, 0x40004);
         }
         if ((sv->activeNext = (McmdVoiceState*)macActiveRoot) != 0)
@@ -1494,7 +1494,7 @@ void macMakeInactive(McmdVoiceState* sv, int newState)
                 }
             }
             *(u64*)&sv->wakeTimeHi = 0;
-            *(u64*)&sv->activeTimeHi = *(u64*)&macRealTimeHi;
+            *(u64*)&sv->activeTimeHi = macRealTime;
             MAC_CFLAGS(sv) &= ~MAC_FLAG64(0, 0x40004);
         }
     }
@@ -1635,7 +1635,7 @@ void macInit(void)
 
     macActiveRoot = 0;
     macTimeQueueRoot = 0;
-    *(u64*)&macRealTimeHi = 0;
+    macRealTime = 0;
     for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
         ((McmdVoiceState*)synthVoice)[i].macroBase = 0;

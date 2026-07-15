@@ -13,9 +13,9 @@
 #define MAC_WAIT(sv)       (*(u64*)&(sv)->wakeTimeHi)
 #define MAC_START_TIME(sv) (*(u64*)&(sv)->startTimeHi)
 #define MAC_WAIT_TIME(sv)  (*(u64*)&(sv)->activeTimeHi)
-#define MAC_REALTIME       macRealTimeHi
+#define MAC_REALTIME       macRealTime
 
-extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
+extern u64 macRealTime;
 extern u16 sndRand(void);
 /*
  * Delay/schedule a voice command, optionally randomizing the delay and

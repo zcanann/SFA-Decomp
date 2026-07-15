@@ -1,6 +1,6 @@
 #include "main/audio/inp_ctrl.h"
 
-extern u32 synthRealTimeHi;
+extern u64 synthRealTime;
 extern s16 varGet(int state, int useExCtrl, u8 index);
 extern u32 inpGetMidiCtrl(u8 controller, u32 slot, u32 key);
 
@@ -144,7 +144,7 @@ u16 _GetInputValue(McmdVoiceState* statePtr, McmdInputSlot* slotPtr, u32 midiSlo
             case MCMD_CTRL_VOICE_TIME:
                 if (statePtr != NULL)
                 {
-                    tmp = ((*(u64*)&synthRealTimeHi) - (*(u64*)&statePtr->startTimeHi)) >> 8;
+                    tmp = (synthRealTime - *(u64*)&statePtr->startTimeHi) >> 8;
                     if (tmp > 0x3fff)
                     {
                         tmp = 0x3fff;

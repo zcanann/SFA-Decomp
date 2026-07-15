@@ -77,8 +77,7 @@ typedef char synth_ctrl_assert_auxMixSlot[SYNTH_CTRL_OFFSETOF(SynthGlobalState, 
     } while (0)
 
 extern u8 lbl_803BCD90[];
-extern u32 synthRealTimeLo;
-extern u32 synthRealTimeHi;
+extern u64 synthRealTime;
 extern u32 synthFlags;
 extern u32 synthMessageCallback;
 extern u32 synthMasterFaderActiveFlags;
@@ -131,8 +130,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     f32 unusedA[2];
 
     state = lbl_803BCD90;
-    synthRealTimeLo = 0;
-    synthRealTimeHi = 0;
+    synthRealTime = 0;
     ((SynthGlobalState*)state)->sampleRate = sampleRate;
     ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
     synthFlags = 0;
