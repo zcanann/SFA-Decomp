@@ -29,7 +29,7 @@ void snd_handle_irq(void)
         return;
     }
 
-    doNothing_802737E8();
+    streamCorrectLoops();
     hwIRQEnterCritical();
     salCtrlDsp(salAiGetDest());
     hwIRQLeaveCritical();
@@ -65,7 +65,7 @@ void snd_handle_irq(void)
     s3dHandle();
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
-    synthUpdateJobTable();
+    streamHandle();
     hwIRQLeaveCritical();
     hwIRQEnterCritical();
     synthUpdateVirtualSamples();

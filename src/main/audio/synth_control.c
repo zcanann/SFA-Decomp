@@ -7,7 +7,7 @@
 #endif
 
 /*
- * Scalar fields of the global synth state block (lbl_803BCD90) named for
+ * Scalar fields of the global synth state block (synthTicksPerSecond) named for
  * readability. Only the constant-offset scalars are modelled here; the
  * fade table, delay-bucket ring, and aux arrays are still addressed raw
  * off the byte base. Used via inline cast so the base stays a u8*.
@@ -76,14 +76,14 @@ typedef char synth_ctrl_assert_auxMixSlot[SYNTH_CTRL_OFFSETOF(SynthGlobalState, 
         gSynthFadeMask |= 1 << (fadeIndex);                                                                            \
     } while (0)
 
-extern u8 lbl_803BCD90[];
+extern u32 synthTicksPerSecond[9][16];
 extern u64 synthRealTime;
 extern u32 synthFlags;
 extern u32 synthMessageCallback;
 extern u32 synthMasterFaderActiveFlags;
 extern u32 synthMasterFaderPauseActiveFlags;
-extern u8 synthAuxAIndex[8];
-extern u8 synthAuxBIndex[8];
+extern u8 synthAuxAMIDI[8];
+extern u8 synthAuxBMIDI[8];
 extern f32 lbl_803E77D0;
 extern f32 lbl_803E77A8;
 
@@ -129,7 +129,7 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     u32 auxIndex;
     f32 unusedA[2];
 
-    state = lbl_803BCD90;
+    state = (u8*)synthTicksPerSecond;
     synthRealTime = 0;
     ((SynthGlobalState*)state)->sampleRate = sampleRate;
     ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
@@ -260,9 +260,9 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     for (auxIndex = 0; auxIndex < 8; auxIndex++)
     {
         ((SynthGlobalState*)state)->auxASend[auxIndex] = 0;
-        synthAuxAIndex[auxIndex] = 0xFF;
+        synthAuxAMIDI[auxIndex] = 0xFF;
         ((SynthGlobalState*)state)->auxBSend[auxIndex] = 0;
-        synthAuxBIndex[auxIndex] = 0xFF;
+        synthAuxBMIDI[auxIndex] = 0xFF;
         ((SynthGlobalState*)state)->auxPairState[auxIndex][1] = 0;
         ((SynthGlobalState*)state)->auxPairState[auxIndex][0] = 0;
     }

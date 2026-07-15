@@ -1,5 +1,6 @@
 #include "global.h"
 #include "main/audio/synth_voice.h"
+#include "main/audio/synth_job_queue.h"
 #include "main/audio/mcmd.h"
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
@@ -38,6 +39,12 @@ typedef struct SynthVoiceTimers
     int updateTimeLo1;
 } SynthVoiceTimers;
 
+typedef struct SynthTables
+{
+    u32 ticksPerSecond[9][16];
+    SynthJobTab jobs[32];
+} SynthTables;
+
 STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeHi0) == 0x24);
 STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo0) == 0x28);
 STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeHi1) == 0x2c);
@@ -55,13 +62,13 @@ extern u8 gSynthDelayBucketCursor;
 
 extern void macHandle(u32 delta);
 
-extern u8 lbl_803BCD90[];
+extern u32 synthTicksPerSecond[9][16];
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
+extern u8 synthAuxBMIDISet[8];
 extern u8 synthAuxBMIDI[8];
-extern u8 synthAuxBIndex[8];
+extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
-extern u8 synthAuxAIndex[8];
 extern u64 synthRealTime;
 extern f32 lbl_803E77D0;
 
@@ -98,12 +105,12 @@ extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern s16 sndSin(u32 packed);
 
-extern u8* dataGetKeymap(u32 sampleId);
-extern int audioFn_8026f630(u32 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
-extern int audioLayerFn_8026f8b8(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi,
-                                 u8 midiSet, u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio,
+extern void* dataGetKeymap(u16 sampleId);
+extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
+extern u32 audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi,
+                                 u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio,
                                  u32 itd);
-extern int macStart(u32 id, u8 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+extern u32 macStart(u16 id, u8 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                     u8 section, u16 step, u16 trackid, u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
 typedef struct SynthVoiceLfo
@@ -214,13 +221,23 @@ typedef struct SynthHwVoice
 typedef struct SynthMasterFader
 {
     f32 volume;
-    u8 unk04[0x10];
+    f32 target;
+    f32 start;
+    f32 time;
+    f32 deltaTime;
     f32 pauseVol;
-    u8 unk18[0x30 - 0x18];
+    f32 pauseTarget;
+    f32 pauseStart;
+    f32 pauseTime;
+    f32 pauseDeltaTime;
+    u32 handle;
+    u8 delayAction;
+    u8 type;
+    u8 pad[2];
 } SynthMasterFader;
 
-#define SYNTH_MASTER_FADERS ((SynthMasterFader*)(lbl_803BCD90 + 0x5D4))
-#define SYNTH_TRACK_VOLUME  (lbl_803BCD90 + 0xBD4)
+#define SYNTH_MASTER_FADERS ((SynthMasterFader*)((u8*)synthTicksPerSecond + 0x5D4))
+#define SYNTH_TRACK_VOLUME  ((u8*)synthTicksPerSecond + 0xBD4)
 
 extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
 extern u16 voiceScaleSampleRate(u32 rate);
@@ -268,7 +285,7 @@ static inline u32 check_portamento(u8 key, u8 midi, u8 midiSet, u32 newVID, u32*
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
  */
-int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section,
+u32 StartKeymap(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section,
                 u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
 {
     u8 o;
@@ -327,7 +344,7 @@ int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 
                 }
                 return audioLayerFn_8026f8b8(keymap[o].id, prio, maxVoices, allocId, k | (key & 0x80), vol, pan, midi,
                                              midiSet, section, step, trackid,
-                                             vidFlag, vGroup, studio, itd);
+                                             vidFlag & 0xff, vGroup, studio, itd);
             }
         }
     }
@@ -350,7 +367,7 @@ static inline void unblockAllAllocatedVoices(u32 vid)
     }
 }
 
-int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
+u32 synthStartSound(u16 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet, u8 section, u16 step,
                     u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
     prio += prioOffset;
@@ -655,7 +672,7 @@ end:
 #pragma fp_contract off
 void ZeroOffsetHandler(int voice)
 {
-    u8* base = (u8*)(int)lbl_803BCD90;
+    u8* base = (u8*)(int)synthTicksPerSecond;
     SynthHwVoice* sv;
     u32 lowDeltaTime;
     u16 Modulation;
@@ -861,31 +878,16 @@ end:
  * Queue one of a fade's embedded delayed-action nodes into the 32-bucket
  * scheduler ring.
  */
-typedef struct SynthJobTab
-{
-    SynthDelayedNode* lowPrecision;
-    SynthDelayedNode* event;
-    SynthDelayedNode* zeroOffset;
-} SynthJobTab;
-
-typedef struct SynthJobTabBlock
-{
-    u8 unk000[0x240];
-    SynthJobTab table[0x20];
-} SynthJobTabBlock;
-
-#define SYNTH_JOB_TABLE (((SynthJobTabBlock*)lbl_803BCD90)->table)
-
 void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
 {
     SynthDelayedNode* newJq;
     SynthDelayedNode** root;
     u8 jobTabIndex;
     SynthJobTab* jobTab;
-    SynthJobTabBlock* block = (SynthJobTabBlock*)lbl_803BCD90;
+    SynthTables* tables = (SynthTables*)synthTicksPerSecond;
 
     jobTabIndex = ((delay / 256) + gSynthDelayBucketCursor) & 0x1F;
-    jobTab = &block->table[jobTabIndex];
+    jobTab = &tables->jobs[jobTabIndex];
 
     switch (mode)
     {
@@ -907,7 +909,7 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
             }
             else
             {
-                block->table[newJq->bucketIndex].lowPrecision = newJq->next;
+                tables->jobs[newJq->bucketIndex].lowPrecision = newJq->next;
             }
         }
         root = &jobTab->lowPrecision;
@@ -930,7 +932,7 @@ void synthQueueDelayedUpdate(SynthDelayedNode* fade, int mode, u32 delay)
             }
             else
             {
-                block->table[newJq->bucketIndex].zeroOffset = newJq->next;
+                tables->jobs[newJq->bucketIndex].zeroOffset = newJq->next;
             }
         }
         root = &jobTab->zeroOffset;
@@ -1011,6 +1013,17 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
 }
 #pragma dont_inline reset
 
+static inline void HandleVoices(void)
+{
+    SynthJobTab* jobTab;
+
+    jobTab = &((SynthTables*)synthTicksPerSecond)->jobs[gSynthDelayBucketCursor];
+    synthDrainDelayedBucket(&jobTab->lowPrecision, LowPrecisionHandler);
+    synthDrainDelayedBucket(&jobTab->event, EventHandler);
+    synthDrainDelayedBucket(&jobTab->zeroOffset, ZeroOffsetHandler);
+    gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
+}
+
 /*
  * Dispatch a completed fade action based on its type byte.
  */
@@ -1043,20 +1056,15 @@ void audioFn_80271498(u32 delta)
     u32 s;
     f32* fade;
     u32 mask;
-    SynthJobTab* jobTab;
     f32 zeroThreshold;
     u8* stateBase;
     f32 fadeDelta;
 
-    stateBase = lbl_803BCD90;
+    stateBase = (u8*)synthTicksPerSecond;
     if (*(u32*)(stateBase + 0x3c4) != 0)
     {
         macHandle(delta);
-        jobTab = &SYNTH_JOB_TABLE[gSynthDelayBucketCursor];
-        synthDrainDelayedBucket(&jobTab->lowPrecision, LowPrecisionHandler);
-        synthDrainDelayedBucket(&jobTab->event, EventHandler);
-        synthDrainDelayedBucket(&jobTab->zeroOffset, ZeroOffsetHandler);
-        gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
+        HandleVoices();
         if (hwGetTimeOffset() == 0)
         {
             if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0)
@@ -1102,23 +1110,23 @@ void audioFn_80271498(u32 delta)
             }
             for (s = 0; s < 8; s++)
             {
-                if (synthAuxAIndex[s] != 0xff)
+                if (synthAuxAMIDI[s] != 0xff)
                 {
-                    SynthAuxInfo infoA;
+                    SynthAuxInfo info;
                     for (i = 0; i < 4; i++)
                     {
-                        infoA.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAIndex[s], synthAuxAMIDI[s]);
+                        info.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAMIDI[s], synthAuxAMIDISet[s]);
                     }
-                    ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &infoA, ((u32*)(stateBase + 0xc14))[s]);
+                    ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &info, ((u32*)(stateBase + 0xc14))[s]);
                 }
-                if (synthAuxBIndex[s] != 0xff)
+                if (synthAuxBMIDI[s] != 0xff)
                 {
-                    SynthAuxInfo infoB;
+                    SynthAuxInfo info;
                     for (i = 0; i < 4; i++)
                     {
-                        infoB.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBIndex[s], synthAuxBMIDI[s]);
+                        info.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBMIDI[s], synthAuxBMIDISet[s]);
                     }
-                    ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &infoB, ((u32*)(stateBase + 0xc54))[s]);
+                    ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &info, ((u32*)(stateBase + 0xc54))[s]);
                 }
             }
         }

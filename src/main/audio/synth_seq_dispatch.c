@@ -147,7 +147,7 @@ extern int gSynthCurrentVoice;
 extern int gSynthCurrentVoiceSlotIndex;
 extern u32* gSynthFreeCallbacks;
 extern u8 lbl_803AF550[];
-extern u8 lbl_803BDA24[];
+extern u8 synthITDDefault[];
 extern u8 lbl_803DE224;
 
 extern int synthGetNextChannelEvent(u8 i);
@@ -391,7 +391,7 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                                                        key & 0xff, velocity & 0xff, 0x40, midi,
                                                        gSynthCurrentVoiceSlotIndex & 0xff, voice, 0, event->trackId,
                                                        sv2->chanMap[event->trackId], mod, vt,
-                                                       lbl_803BDA24[vt * 2])) == 0xFFFFFFFF)
+                                                       synthITDDefault[vt * 2])) == 0xFFFFFFFF)
                         {
                             if (note[0] != 0)
                             {

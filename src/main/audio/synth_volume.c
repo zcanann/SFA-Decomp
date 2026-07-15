@@ -21,7 +21,7 @@
 
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
-extern u8 lbl_803BCD90[];
+extern u32 synthTicksPerSecond[9][16];
 u8 lbl_803BD364[0x600];
 extern u8 gSynthInitialized;
 extern u32 synthMasterFaderActiveFlags;
@@ -45,7 +45,7 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
     u8* stateBase;
     SynthFade* fade;
 
-    stateBase = lbl_803BCD90;
+    stateBase = (u8*)synthTicksPerSecond;
     if ((convertedTime = timeMs) != 0)
     {
         sndConvertMs(&convertedTime);
@@ -201,7 +201,7 @@ void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
  */
 int synthIsFadeOutActive(u8 voiceIdx)
 {
-    u8* v = lbl_803BCD90 + voiceIdx * sizeof(SynthFade);
+    u8* v = (u8*)synthTicksPerSecond + voiceIdx * sizeof(SynthFade);
     if (((v[SYNTH_FADE_TABLE_OFFSET + 0x2d] != SYNTH_FADE_ACTION_DISABLED) &&
          ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
         (*(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 8) > *(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 4)))

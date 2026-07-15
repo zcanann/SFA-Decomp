@@ -108,7 +108,7 @@ void voiceKill(u32 voice)
     }
     if (voiceState->callbackActive != 0)
     {
-        synthCancelJob(voice);
+        streamKill(voice);
     }
     hwBreak(voice);
 }

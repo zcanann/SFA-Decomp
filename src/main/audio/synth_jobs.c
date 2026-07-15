@@ -25,11 +25,11 @@ typedef struct SynthSampleInfo
 
 #define DATA_KEYMAP_TAB ((DataRefEntry*)(base + 0x4600))
 
-extern SynthJob synthJobTable[];
+extern SynthJob streamInfo[];
 extern u32 synthFlags;
 extern f32 lbl_803E77D8;
-extern u8 synthJobTableCountdown;
-extern u8 synthJobTablePeriod;
+extern u8 streamCallCnt;
+extern u8 streamCallDelay;
 extern void* hwFlushStream(u8 handle); /* gets the stream play buffer */
 extern int hwChangeStudio(int slot);   /* gets the stream playback position */
 extern void hwGetPos(u8* buffer, u32 offset, u32 length, u8 handle, u32 callback, u32 user); /* flushes stream data */
@@ -39,7 +39,7 @@ extern void hwSetPitch(u32 voice, s32 pitch);
 extern void hwSetVolume(u32 voice, u8 table, f32 vol, u32 pan, u32 span, f32 auxa, f32 auxb);
 extern void hwSetStreamLoopPS(u32 voice, u32 ps);
 
-void synthUpdateJobTable(void)
+void streamHandle(void)
 {
     u32 i;
     u32 cpos;
@@ -48,13 +48,13 @@ void synthUpdateJobTable(void)
     SynthJob* si;
     f32 f;
 
-    if (synthJobTableCountdown != 0)
+    if (streamCallCnt != 0)
     {
-        --synthJobTableCountdown;
+        --streamCallCnt;
         return;
     }
-    synthJobTableCountdown = synthJobTablePeriod;
-    si = synthJobTable;
+    streamCallCnt = streamCallDelay;
+    si = streamInfo;
     for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; ++i, ++si)
     {
         switch (si->state)
@@ -274,16 +274,16 @@ void synthUpdateJobTable(void)
     }
 }
 
-void doNothing_802737E8(void)
+void streamCorrectLoops(void)
 {
 }
 
-void synthCancelJob(int voice)
+void streamKill(u32 voice)
 {
     SynthJob* job;
     int state;
 
-    job = synthJobTable + voice;
+    job = streamInfo + voice;
     state = job->state;
     if (state < SYNTH_JOB_STATE_DONE)
     {
@@ -302,7 +302,7 @@ cancel:
     job->callback(0, 0, 0, 0, job->callbackUser);
 }
 
-void synthRefreshJobVolumes(void)
+void streamOutputModeChanged(void)
 {
     u32 i;
     f32 volumeScale;
@@ -311,24 +311,24 @@ void synthRefreshJobVolumes(void)
     volumeScale = lbl_803E77D8;
     for (i = 0; i < SYNTH_CONFIGURATION->voiceCount; i++)
     {
-        if (synthJobTable[i].state != SYNTH_JOB_STATE_FREE)
+        if (streamInfo[i].state != SYNTH_JOB_STATE_FREE)
         {
-            synthJobTable[i].pan = synthJobTable[i].savedPan;
-            synthJobTable[i].surroundPan = synthJobTable[i].savedSurroundPan;
+            streamInfo[i].pan = streamInfo[i].savedPan;
+            streamInfo[i].surroundPan = streamInfo[i].savedSurroundPan;
             if ((synthFlags & 1) != 0)
             {
-                synthJobTable[i].pan = 0x40;
-                synthJobTable[i].surroundPan = 0;
+                streamInfo[i].pan = 0x40;
+                streamInfo[i].surroundPan = 0;
             }
             else if ((synthFlags & 2) == 0)
             {
-                synthJobTable[i].surroundPan = 0;
+                streamInfo[i].surroundPan = 0;
             }
-            if (synthJobTable[i].state != SYNTH_JOB_STATE_DONE)
+            if (streamInfo[i].state != SYNTH_JOB_STATE_DONE)
             {
-                hwSetVolume(synthJobTable[i].voice, 0, volumeScale * synthJobTable[i].volume,
-                            synthJobTable[i].pan << 0x10, synthJobTable[i].surroundPan << 0x10,
-                            volumeScale * synthJobTable[i].leftVolume, volumeScale * synthJobTable[i].rightVolume);
+                hwSetVolume(streamInfo[i].voice, 0, volumeScale * streamInfo[i].volume,
+                            streamInfo[i].pan << 0x10, streamInfo[i].surroundPan << 0x10,
+                            volumeScale * streamInfo[i].leftVolume, volumeScale * streamInfo[i].rightVolume);
             }
         }
     }

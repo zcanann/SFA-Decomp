@@ -23,15 +23,15 @@
 #define SND_OUTPUTMODE_SURROUND 2 /* Dolby Pro Logic surround */
 
 extern u8 gSynthVoiceNotes[];
-extern void* lbl_803BD9A4[8];
-extern void* lbl_803BD9C4[8];
-extern void* lbl_803BD9E4[8];
-extern void* lbl_803BDA04[8];
-extern u8 lbl_803BDA24[8][2];
+extern void* synthAuxAUser[8];
+extern void* synthAuxACallback[8];
+extern void* synthAuxBUser[8];
+extern void* synthAuxBCallback[8];
+extern u8 synthITDDefault[8][2];
+extern u8 synthAuxBMIDISet[8];
 extern u8 synthAuxBMIDI[8];
-extern u8 synthAuxBIndex[8];
+extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
-extern u8 synthAuxAIndex[8];
 extern u32 synthFlags;
 
 extern void synthUpdateHandle(u32 value0, u32 value1, u32 handle, s32 mode);
@@ -105,7 +105,7 @@ int sndFXStartEx(u32 fxId, u8 volume, u8 pan, u8 studio)
     int result;
     u8 auxIndex;
     sndBegin();
-    auxIndex = lbl_803BDA24[studio][1];
+    auxIndex = synthITDDefault[studio][1];
     result = synthFXStart(fxId, volume, pan, studio, auxIndex);
     sndEnd();
     return result;
@@ -186,7 +186,7 @@ void sndOutputMode(int mode)
         {
             *(u64*)((u8*)synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
         }
-        synthRefreshJobVolumes();
+        streamOutputModeChanged();
     }
 }
 
@@ -200,33 +200,33 @@ void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser
     sndBegin();
     if (auxACallback != 0)
     {
-        synthAuxAIndex[studio & 0xff] = auxAIndex;
+        synthAuxAMIDI[studio & 0xff] = auxAIndex;
         if (auxAIndex != 0xff)
         {
-            synthAuxAMIDI[studio & 0xff] = synthResolveHandle((u32)auxAData);
-            lbl_803BD9C4[studio & 0xff] = auxACallback;
-            lbl_803BD9A4[studio & 0xff] = auxAUser;
+            synthAuxAMIDISet[studio & 0xff] = synthResolveHandle((u32)auxAData);
+            synthAuxACallback[studio & 0xff] = auxACallback;
+            synthAuxAUser[studio & 0xff] = auxAUser;
         }
     }
     else
     {
-        lbl_803BD9C4[studio & 0xff] = 0;
-        synthAuxAIndex[studio & 0xff] = 0xff;
+        synthAuxACallback[studio & 0xff] = 0;
+        synthAuxAMIDI[studio & 0xff] = 0xff;
     }
     if (auxBCallback != 0)
     {
-        synthAuxBIndex[studio & 0xff] = auxBIndex;
+        synthAuxBMIDI[studio & 0xff] = auxBIndex;
         if (auxBIndex != 0xff)
         {
-            synthAuxBMIDI[studio & 0xff] = synthResolveHandle((u32)auxBData);
-            lbl_803BDA04[studio & 0xff] = auxBCallback;
-            lbl_803BD9E4[studio & 0xff] = auxBUser;
+            synthAuxBMIDISet[studio & 0xff] = synthResolveHandle((u32)auxBData);
+            synthAuxBCallback[studio & 0xff] = auxBCallback;
+            synthAuxBUser[studio & 0xff] = auxBUser;
         }
     }
     else
     {
-        lbl_803BDA04[studio & 0xff] = 0;
-        synthAuxBIndex[studio & 0xff] = 0xff;
+        synthAuxBCallback[studio & 0xff] = 0;
+        synthAuxBMIDI[studio & 0xff] = 0xff;
     }
     hwSetAUXProcessingCallbacks(studio, auxACallback, auxAUser, auxBCallback, auxBUser);
     sndEnd();
@@ -239,12 +239,12 @@ void sndSetAuxProcessingCallbacks(u32 studio, void* auxACallback, void* auxAUser
 void synthActivateStudio(u8 slot, int a, int b)
 {
     sndBegin();
-    lbl_803BD9C4[slot] = 0;
-    lbl_803BDA04[slot] = 0;
-    synthAuxAIndex[slot] = 0xff;
-    synthAuxBIndex[slot] = 0xff;
-    lbl_803BDA24[slot][1] = 0;
-    lbl_803BDA24[slot][0] = 0;
+    synthAuxACallback[slot] = 0;
+    synthAuxBCallback[slot] = 0;
+    synthAuxAMIDI[slot] = 0xff;
+    synthAuxBMIDI[slot] = 0xff;
+    synthITDDefault[slot][1] = 0;
+    synthITDDefault[slot][0] = 0;
     hwActivateStudio(slot, a, b);
     sndEnd();
 }
@@ -281,10 +281,10 @@ void synthDeactivateStudio(u8 slot)
         offset += SYNTH_VOICE_STRIDE;
     }
     sndBegin();
-    lbl_803BD9C4[slot] = 0;
-    lbl_803BDA04[slot] = 0;
-    synthAuxAIndex[slot] = 0xff;
-    synthAuxBIndex[slot] = 0xff;
+    synthAuxACallback[slot] = 0;
+    synthAuxBCallback[slot] = 0;
+    synthAuxAMIDI[slot] = 0xff;
+    synthAuxBMIDI[slot] = 0xff;
     sndEnd();
     hwDeactivateStudio(slot);
 }

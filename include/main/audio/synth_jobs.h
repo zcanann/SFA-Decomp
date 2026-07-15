@@ -3,10 +3,10 @@
 
 #include "ghidra_import.h"
 
-void synthUpdateJobTable(void);
-void doNothing_802737E8(void);
-void synthCancelJob(int voice);
-void synthRefreshJobVolumes(void);
+void streamHandle(void);
+void streamCorrectLoops(void);
+void streamKill(u32 voice);
+void streamOutputModeChanged(void);
 int dataInsertKeymap(u16 keymapId, void *data);
 int dataRemoveKeymap(u16 keymapId);
 

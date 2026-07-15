@@ -5,6 +5,7 @@
 #include "main/audio/voice_id.h"
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
+#include "main/audio/synth_job_queue.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #pragma exceptions on
@@ -59,7 +60,8 @@ typedef struct
 
 #define fabs __fabs
 
-u8 lbl_803BCD90[0x3C0];
+u32 synthTicksPerSecond[9][16];
+SynthJobTab synthJobTable[32];
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;
@@ -343,7 +345,7 @@ void synthSetStudioChannelScale(int value, u8 bank, u8 key)
     {
         bank = 8;
     }
-    *(u32*)(lbl_803BCD90 + bank * 0x40 + (key & 0xff) * 4) = (u32)((value << 3) * 0x600) / 0xf0;
+    synthTicksPerSecond[bank][key] = (u32)((value << 3) * 0x600) / 0xf0;
 }
 
 /*
@@ -357,7 +359,7 @@ int synthGetVoiceSlotChannelScale(McmdVoiceState* state)
     if ((bank = v->midiEvent) == 0xff)
         bank = 8;
     key = v->midiLayer;
-    return *(int*)(lbl_803BCD90 + bank * 64 + key * 4);
+    return synthTicksPerSecond[bank][key];
 }
 
 /*
