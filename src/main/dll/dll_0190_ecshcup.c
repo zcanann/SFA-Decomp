@@ -63,7 +63,7 @@ extern const f32 lbl_803E5080;
 extern const f32 lbl_803E5084;
 extern const f32 lbl_803E5088;
 u32 gEcShCupNearestObject;
-__declspec(section ".rodata") f32 lbl_802C23B8[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+const CupVec3 lbl_802C23B8 = {0.0f, 0.0f, 0.0f};
 extern const f32 lbl_803E50A0;
 extern const f32 lbl_803E50A4;
 extern const f32 lbl_803E50A8;
@@ -112,7 +112,7 @@ void ecsh_cup_update(short* obj)
     EcshCupState* state = ((GameObject*)obj)->extra;
     f32 fade;
 
-    v = *(CupVec3*)lbl_802C23B8;
+    v = lbl_802C23B8;
     dist = lbl_803E5064;
     mode = -1;
     buf[0] = 0;

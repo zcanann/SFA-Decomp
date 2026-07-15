@@ -61,9 +61,7 @@ extern f32 lbl_803E47F0;
 extern f32 gDimLavaDebrisGravity, gDimLavaGravity, lbl_803E47F8, lbl_803E47FC;
 extern f32 gDimLavaDebrisRootMotionScale, gDimLavaVelocityScale, gDimLavaPi, gDimLavaAngleUnitsHalfCircle;
 extern f32 gDimLavaLightAttenNear, gDimLavaLightAttenFar, gDimLavaGlowRadius;
-__declspec(section ".rodata") u8 gDimLavaDebrisBaseVec[16] = {
-    0x3F, 0x99, 0x99, 0x9A, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+const LavaVec gDimLavaDebrisBaseVec = {1.2f, 0.0f, 0.0f};
 
 
 static inline int* DIMcannon_GetActiveModel(void* obj)
@@ -138,7 +136,7 @@ void lavaball1be_init(s16* obj, u8* p)
             s16 rot[3];
             u8 pad[18];
         } s;
-        s.vec = *(LavaVec*)gDimLavaDebrisBaseVec;
+        s.vec = gDimLavaDebrisBaseVec;
         s.rot[2] = 0;
         s.rot[1] = randomGetRange(-0x2ee0, 0x2ee0);
         s.rot[0] = randomGetRange(0, 0xfffe);

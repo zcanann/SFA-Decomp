@@ -2478,7 +2478,7 @@ main/dll/dll_0194_gpshscene.c:
 
 main/dll/dll_0190_ecshcup.c:
 	.text       start:0x801C835C end:0x801C8EBC
-	.rodata     start:0x802C23B8 end:0x802C23C8
+	.rodata     start:0x802C23B8 end:0x802C23C4
 	.sbss       start:0x803DDBC8 end:0x803DDBD0
 
 main/dll/dll_0195_dbshshrine.c:

@@ -35,7 +35,6 @@ void aramQueueCallback(void* req)
  * ARQPostRequest, then bumps the head/count and restores interrupts.
  * If the queue is full, just unlocks and retries (busy-loop).
  */
-#pragma scheduling on
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
     AramTransferQueue* queue;
