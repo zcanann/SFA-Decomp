@@ -148,6 +148,8 @@ typedef struct
     int c3;
 } FrozenFxColors;
 
+STATIC_ASSERT(sizeof(FrozenFxColors) == 0x10);
+
 typedef struct
 {
     u8 fadeCounter : 5;
@@ -156,11 +158,10 @@ typedef struct
 
 struct VisBits16
 {
-    u32 w0;
-    u32 w1;
-    u32 w2;
-    u32 w3;
+    u32 w[4];
 };
+
+STATIC_ASSERT(sizeof(struct VisBits16) == 0x10);
 
 /* group owned by another DLL, queried here */
 #define TRICKYWARP_OBJ_GROUP 0x4b /* DLL 0x100 trickywarp */
@@ -215,7 +216,7 @@ extern void skeetla_spawnLinkedSparks(int obj);
 extern void Tricky_emitQueuedPathParticles(int obj, int state);
 extern int trickyFn_8013b368();
 extern f32 objFn_801948c0(int obj, int coord);
-__declspec(section ".rodata") u32 gTrickyVisibilityBitsInit[4] = {0x10000, 0x20000, 0x40000, 0x80000};
+const struct VisBits16 gTrickyVisibilityBitsInit = {{0x10000, 0x20000, 0x40000, 0x80000}};
 extern char lbl_8031D2E8[];
 extern char gTrickyPathPointCollision[];
 extern char sInWaterMessage[];
@@ -273,7 +274,7 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern int Objfsa_FindNearestEnabledCurveType24(void* pos, int filter4, int filter5);
 extern f32 lbl_803E25A4;
 extern f32 lbl_803E2500;
-__declspec(section ".rodata") int gTrickyFrozenFxColors[4] = {0x08, 0xFF, 0xFF, 0x78};
+const FrozenFxColors gTrickyFrozenFxColors = {0x08, 0xFF, 0xFF, 0x78};
 extern f32 lbl_803E2588;
 extern f32 lbl_803E258C;
 extern f32 lbl_803E2590;
@@ -2109,7 +2110,7 @@ void baddie_updateWhileFrozen(GameObject* obj, u8* state, u8 fromHit)
     u16 impactSfx;
 
     player = (int)Obj_GetPlayerObject();
-    colors = *(FrozenFxColors*)gTrickyFrozenFxColors;
+    colors = gTrickyFrozenFxColors;
     result = 2;
     if ((((TrickyState*)state)->flags2DC & 0x1800) == 0)
     {
@@ -2476,7 +2477,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     s16 probeGrid[4];
     s16 baseGrid[4];
     Vec probe;
-    u32 visibilityBits[4];
+    struct VisBits16 visibilityBits;
     Vec delta;
     TrackBBoxHit bboxHit;
     s16 baseAngle;
@@ -2485,7 +2486,7 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
     f32 angle;
     s16 setupId;
 
-    *(struct VisBits16*)&visibilityBits[0] = *(struct VisBits16*)&gTrickyVisibilityBitsInit[0];
+    visibilityBits = gTrickyVisibilityBitsInit;
     probe.x = ((GameObject*)obj)->anim.localPosX;
     probe.y = lbl_803E25A0 + ((GameObject*)obj)->anim.localPosY;
     probe.z = ((GameObject*)obj)->anim.localPosZ;
@@ -2543,11 +2544,11 @@ void baddieFn_8014a304(int obj, int state, f32 radius)
         }
         if (visible != 0)
         {
-            ((TrickyState*)state)->flags2DC |= visibilityBits[i];
+            ((TrickyState*)state)->flags2DC |= visibilityBits.w[i];
         }
         else
         {
-            ((TrickyState*)state)->flags2DC &= ~visibilityBits[i];
+            ((TrickyState*)state)->flags2DC &= ~visibilityBits.w[i];
         }
     }
 }

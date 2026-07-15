@@ -17,6 +17,7 @@
 #include "main/obj_path.h"
 #include "main/frame_timing.h"
 #include "main/dll/SC/dll_01B0_shswapston.h"
+#include "main/dll/SH/dll_01AE_shlevelcontrol.h"
 
 #define SCLANTERN_EVENT_LEFT_SPARK_A  1
 #define SCLANTERN_EVENT_RIGHT_SPARK_A 2
@@ -101,10 +102,6 @@ u32 playerFn_801d6d58(void)
     return 2;
 }
 
-extern void SH_LevelControl_getExtraSize();
-extern void SH_LevelControl_free();
-extern void SH_LevelControl_update();
-extern void SH_LevelControl_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* jumptable_803275C0[22] = {(void*)((u8*)warpstone_SeqFn + 0x1B0), (void*)((u8*)warpstone_SeqFn + 0x1BC),
                                 (void*)((u8*)warpstone_SeqFn + 0x35C), (void*)((u8*)warpstone_SeqFn + 0x1C8),

@@ -38,10 +38,13 @@ typedef struct CflevelcontrolState
     u8 padE[0x10 - 0xE];
 } CflevelcontrolState;
 
-typedef struct CfTriggerPos
+typedef struct CfTriggerPosTemplate
 {
-    int x, y, z;
-} CfTriggerPos;
+    Vec3f pos;
+    f32 unused;
+} CfTriggerPosTemplate;
+
+STATIC_ASSERT(sizeof(CfTriggerPosTemplate) == 0x10);
 
 typedef struct CfLevelControlFlags
 {
@@ -69,7 +72,7 @@ typedef struct CfLevelControlFlags
 
 extern s16 lbl_80323008[];
 extern f32 lbl_803E43E8;
-__declspec(section ".rodata") int lbl_802C22E8[4] = {0x443AB458, 0x44A3A000, 0xC67FE95C, 0};
+const CfTriggerPosTemplate lbl_802C22E8 = {{746.81787109375f, 1309.0f, -16378.33984375f}, 0.0f};
 extern f32 lbl_803E43EC;
 
 
@@ -122,13 +125,13 @@ void cflevelcontrol_update(GameObject* obj)
 {
     u8* state = obj->extra;
     int player = (int)Obj_GetPlayerObject();
-    CfTriggerPos triggerPos;
+    Vec3f triggerPos;
     u32 bit974;
     u8 bit975;
     int bit94e;
     int cameraMode;
 
-    triggerPos = *(CfTriggerPos*)lbl_802C22E8;
+    triggerPos = lbl_802C22E8.pos;
 
     if (((u32)state[0xc] >> 3 & 1) != 0)
     {
