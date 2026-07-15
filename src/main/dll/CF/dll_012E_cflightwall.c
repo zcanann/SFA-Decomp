@@ -10,12 +10,6 @@
 #define CFLIGHTWALL_OBJFLAG_UPDATE_DISABLED    0x8000
 #define CFLIGHTWALL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3EE8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EEC = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EF0 = 0.0f;
-#pragma explicit_zero_data off
-
 int CFLightWall_getExtraSize(void)
 {
     return 0x0;
@@ -32,7 +26,7 @@ void CFLightWall_free(void)
 
 void CFLightWall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3EE8);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFLightWall_hitDetect(void)
@@ -50,10 +44,10 @@ void CFLightWall_init(s16* obj, u8* def)
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3EEC;
-        if (((GameObject*)obj)->anim.rootMotionScale == lbl_803E3EF0)
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / 255.0f;
+        if (!((GameObject*)obj)->anim.rootMotionScale)
         {
-            ((GameObject*)obj)->anim.rootMotionScale = lbl_803E3EE8;
+            ((GameObject*)obj)->anim.rootMotionScale = 1.0f;
         }
         ((GameObject*)obj)->anim.rootMotionScale =
             ((GameObject*)obj)->anim.rootMotionScale * ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
