@@ -79,7 +79,6 @@ extern u8 synthAuxBMIDI[8];
 extern u8 synthAuxAMIDISet[8];
 extern u8 synthAuxAMIDI[8];
 extern u64 synthRealTime;
-extern f32 lbl_803E77D0;
 
 typedef struct SynthAuxInfo
 {
@@ -297,15 +296,6 @@ extern void macSetPedalState(SynthHwVoice* sv, u32 state);
 extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
-extern const f32 lbl_803E7798;
-extern const f32 lbl_803E779C;
-extern const f32 lbl_803E77A0;
-extern const f32 lbl_803E77A4;
-extern const f32 lbl_803E77A8;
-extern const f32 lbl_803E77AC;
-extern const f32 lbl_803E77B0;
-extern const f32 lbl_803E77B4;
-extern const f32 lbl_803E77B8;
 
 typedef struct LAYER
 {
@@ -1040,7 +1030,7 @@ void ZeroOffsetHandler(int voice)
 
     if (sv->track != 0xFF)
     {
-        vol = lbl_803E7798 * (faderVol * (f32)synthTrackVolume[sv->track]);
+        vol = (1.f / 127.f) * (faderVol * (f32)synthTrackVolume[sv->track]);
     }
     else
     {
@@ -1053,34 +1043,34 @@ void ZeroOffsetHandler(int voice)
         volUpdate = 1;
     }
 
-    voiceVol = lbl_803E779C * (f32)sv->volume;
+    voiceVol = (1.f / (8192.f * 1016.f)) * (f32)sv->volume;
 
     if ((sv->treScale | sv->treModAddScale) != 0)
     {
         Modulation = inpGetModulation((McmdVoiceState*)sv);
-        lfo = lbl_803E77A0 *
+        lfo = (1.f / 8192.f) *
               (f32)(0x2000 - ((0x2000 - ((s16)inpGetTremolo((McmdVoiceState*)sv) - 0x2000)) >> 1));
         {
-            f32 modScale = lbl_803E77AC * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
-            scale = lbl_803E77A4 * ((f32)sv->treScale * (lbl_803E77A8 - modScale));
+            f32 modScale = 1.490207e-08f * ((f32)Modulation * (f32)(0x1000 - sv->treModAddScale));
+            scale = (1.f / 4096.f) * ((f32)sv->treScale * (1.f - modScale));
         }
         if (sv->treCurScale < scale)
         {
-            if ((sv->treCurScale += lbl_803E77B0) > scale)
+            if ((sv->treCurScale += 0.2f) > scale)
             {
                 sv->treCurScale = scale;
             }
         }
         else if (sv->treCurScale > scale)
         {
-            if ((sv->treCurScale -= lbl_803E77B0) < scale)
+            if ((sv->treCurScale -= 0.2f) < scale)
             {
                 sv->treCurScale = scale;
             }
         }
         {
-            f32 tmp = lfo * (lbl_803E77A8 - sv->treCurScale);
-            voiceVol = voiceVol * (lbl_803E77A8 - tmp);
+            f32 tmp = lfo * (1.f - sv->treCurScale);
+            voiceVol = voiceVol * (1.f - tmp);
         }
         volUpdate = 1;
     }
@@ -1122,14 +1112,15 @@ void ZeroOffsetHandler(int voice)
     if (volUpdate || (sv->midiDirtyFlags & 0xF01) != 0)
     {
         preVol = voiceVol;
-        postVol = lbl_803E77B4 * (voiceVol * vol * (f32)inpGetVolume((McmdVoiceState*)sv));
-        auxa = lbl_803E7798 * (f32)sv->revVolOffset +
-               (lbl_803E77B4 * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
-                lbl_803E7798 *
-                    ((f32)sv->revVolScale * (lbl_803E77B4 * (postVol * (f32)inpGetReverb((McmdVoiceState*)sv)))));
-        auxb = lbl_803E77B4 * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
-               lbl_803E77B4 * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
-        sv->curOutputVolume = (u16)(lbl_803E77B8 * postVol);
+        postVol = (1.f / 16383.f) * (voiceVol * vol * (f32)inpGetVolume((McmdVoiceState*)sv));
+        auxa = (1.f / 127.f) * (f32)sv->revVolOffset +
+               ((1.f / 16383.f) * (preVol * (f32)inpGetPreAuxA((McmdVoiceState*)sv)) +
+                (1.f / 127.f) *
+                    ((f32)sv->revVolScale *
+                     ((1.f / 16383.f) * (postVol * (f32)inpGetReverb((McmdVoiceState*)sv)))));
+        auxb = (1.f / 16383.f) * (preVol * (f32)inpGetPreAuxB((McmdVoiceState*)sv)) +
+               (1.f / 16383.f) * (postVol * (f32)inpGetPostAuxB((McmdVoiceState*)sv));
+        sv->curOutputVolume = (u16)(32767.f * postVol);
         hwSetVolume(voice, sv->volTable, postVol, sv->lastPan, sv->lastSPan, auxa, auxb);
     }
 
@@ -1489,7 +1480,6 @@ extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void macSetExternalKeyoff(McmdVoiceState* slot);
 extern void macSampleEndNotify(void);
-extern f32 lbl_803E77D4;
 extern void* salMalloc(u32 size);
 extern void memset(void* dst, int value, u32 size);
 extern void inpInit(u32 unused);
@@ -1874,61 +1864,57 @@ void synthInit(u32 sampleRate, u32 voiceCount)
 
     {
         SynthFade* fade = (SynthFade*)(state + 0x5D4);
-        f32 auxCurrent;
-        f32 fadeCurrent = lbl_803E77D0;
         u32 pass;
-
-        auxCurrent = lbl_803E77A8;
 
         for (pass = 0; pass < 2; pass++)
         {
-            fade[0].current = fadeCurrent;
-            fade[0].auxCurrent = auxCurrent;
+            fade[0].current = 0.f;
+            fade[0].auxCurrent = 1.f;
             fade[0].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[1].current = fadeCurrent;
-            fade[1].auxCurrent = auxCurrent;
+            fade[1].current = 0.f;
+            fade[1].auxCurrent = 1.f;
             fade[1].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[2].current = fadeCurrent;
-            fade[2].auxCurrent = auxCurrent;
+            fade[2].current = 0.f;
+            fade[2].auxCurrent = 1.f;
             fade[2].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[3].current = fadeCurrent;
-            fade[3].auxCurrent = auxCurrent;
+            fade[3].current = 0.f;
+            fade[3].auxCurrent = 1.f;
             fade[3].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[4].current = fadeCurrent;
-            fade[4].auxCurrent = auxCurrent;
+            fade[4].current = 0.f;
+            fade[4].auxCurrent = 1.f;
             fade[4].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[5].current = fadeCurrent;
-            fade[5].auxCurrent = auxCurrent;
+            fade[5].current = 0.f;
+            fade[5].auxCurrent = 1.f;
             fade[5].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[6].current = fadeCurrent;
-            fade[6].auxCurrent = auxCurrent;
+            fade[6].current = 0.f;
+            fade[6].auxCurrent = 1.f;
             fade[6].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[7].current = fadeCurrent;
-            fade[7].auxCurrent = auxCurrent;
+            fade[7].current = 0.f;
+            fade[7].auxCurrent = 1.f;
             fade[7].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[8].current = fadeCurrent;
-            fade[8].auxCurrent = auxCurrent;
+            fade[8].current = 0.f;
+            fade[8].auxCurrent = 1.f;
             fade[8].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[9].current = fadeCurrent;
-            fade[9].auxCurrent = auxCurrent;
+            fade[9].current = 0.f;
+            fade[9].auxCurrent = 1.f;
             fade[9].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[10].current = fadeCurrent;
-            fade[10].auxCurrent = auxCurrent;
+            fade[10].current = 0.f;
+            fade[10].auxCurrent = 1.f;
             fade[10].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[11].current = fadeCurrent;
-            fade[11].auxCurrent = auxCurrent;
+            fade[11].current = 0.f;
+            fade[11].auxCurrent = 1.f;
             fade[11].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[12].current = fadeCurrent;
-            fade[12].auxCurrent = auxCurrent;
+            fade[12].current = 0.f;
+            fade[12].auxCurrent = 1.f;
             fade[12].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[13].current = fadeCurrent;
-            fade[13].auxCurrent = auxCurrent;
+            fade[13].current = 0.f;
+            fade[13].auxCurrent = 1.f;
             fade[13].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[14].current = fadeCurrent;
-            fade[14].auxCurrent = auxCurrent;
+            fade[14].current = 0.f;
+            fade[14].auxCurrent = 1.f;
             fade[14].type = SYNTH_FADE_ACTION_DISABLED;
-            fade[15].current = fadeCurrent;
-            fade[15].auxCurrent = auxCurrent;
+            fade[15].current = 0.f;
+            fade[15].auxCurrent = 1.f;
             fade[15].type = SYNTH_FADE_ACTION_DISABLED;
             fade += 16;
         }
@@ -1941,12 +1927,8 @@ void synthInit(u32 sampleRate, u32 voiceCount)
     {
         *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
     }
-    {
-        f32 auxCurrent = lbl_803E77A8;
-
-        ((SynthGlobalState*)state)->auxMixA = auxCurrent;
-        ((SynthGlobalState*)state)->auxMixB = auxCurrent;
-    }
+    ((SynthGlobalState*)state)->auxMixA = 1.f;
+    ((SynthGlobalState*)state)->auxMixB = 1.f;
 
     inpInit(0);
 
