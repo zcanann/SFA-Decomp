@@ -461,7 +461,7 @@ extern int* gTitleMenuControlInterfaceCopy;
 extern int* gDIMbossHitEffectResource;
 extern int gDim2IcicleHitCooldown;
 extern f32 lbl_803E4C10;
-__declspec(section ".rodata") u32 lbl_802C2338[4] = {0x000A0019, 0x0019000A, 0x00140014, 0x00140000};
+const s16 lbl_802C2338[7] = {10, 25, 25, 10, 20, 20, 20};
 extern u8 gDim2IcicleHitFxBuffer[];
 
 typedef struct IcicleHitDesc

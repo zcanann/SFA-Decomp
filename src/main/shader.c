@@ -1667,26 +1667,6 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
     }
 }
 
-/* Jumptables for switch statements in sceneDrawTransparentPolys (lightmap.c)
- * and mapBlockBounds_HasCornerPastDepthThreshold (tex_dolphin.c). The original
- * translation-unit boundary placed them in this unit's .data tail. */
-extern u8 sceneDrawTransparentPolys[];
-extern u8 mapBlockBounds_HasCornerPastDepthThreshold[];
-
-void* jumptable_8030E81C[10] = {
-    sceneDrawTransparentPolys + 0x64,  sceneDrawTransparentPolys + 0x88,  sceneDrawTransparentPolys + 0xD0,
-    sceneDrawTransparentPolys + 0xF0,  sceneDrawTransparentPolys + 0x110, sceneDrawTransparentPolys + 0x1B4,
-    sceneDrawTransparentPolys + 0x258, sceneDrawTransparentPolys + 0x2FC, sceneDrawTransparentPolys + 0x30C,
-    sceneDrawTransparentPolys + 0x314,
-};
-
-void* jumptable_8030E844[8] = {
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x60,  mapBlockBounds_HasCornerPastDepthThreshold + 0xC0,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x120, mapBlockBounds_HasCornerPastDepthThreshold + 0x180,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x1E0, mapBlockBounds_HasCornerPastDepthThreshold + 0x240,
-    mapBlockBounds_HasCornerPastDepthThreshold + 0x2A0, mapBlockBounds_HasCornerPastDepthThreshold + 0x300,
-};
-
 int mapRectFn_8005a728(int bx, int bz, char* obj)
 {
     f32 a1, a2, b1, b2, c1, c2;

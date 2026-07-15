@@ -173,17 +173,19 @@ main/rcp_dolphin.c:
 main/shader.c:
 	.text       start:0x80055980 end:0x8005AB70
 	.rodata     start:0x802C1E58 end:0x802C1EA8
-	.data       start:0x8030E4B0 end:0x8030E868
+	.data       start:0x8030E4B0 end:0x8030E81C
 	.bss        start:0x8037E0C0 end:0x803868D8
 	.sdata      start:0x803DB620 end:0x803DB630
 
 main/lightmap.c:
 	.text       start:0x8005AB70 end:0x8005DF5C
+	.data       start:0x8030E81C end:0x8030E844
 	.bss        start:0x803868D8 end:0x803878D8
 	.sdata      start:0x803DB630 end:0x803DB638
 
 main/tex_dolphin.c:
 	.text       start:0x8005DF5C end:0x8005F920
+	.data       start:0x8030E844 end:0x8030E864
 	.sdata      start:0x803DB638 end:0x803DB648
 
 main/track_dolphin.c:
@@ -1205,7 +1207,7 @@ main/dll/dll_8011d918.c:
 
 main/dll/dll_0000_gameui.c:
 	.text       start:0x8011D9B0 end:0x8012FECC
-	.rodata     start:0x802C21A0 end:0x802C21C8
+	.rodata     start:0x802C21A0 end:0x802C21C4
 	.data       start:0x8031AE20 end:0x8031B6F0
 	.bss        start:0x803A87F0 end:0x803A9364
 	.sdata      start:0x803DBA30 end:0x803DBBB0

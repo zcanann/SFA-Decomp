@@ -403,7 +403,7 @@ typedef struct GameUiTimeIdList
 STATIC_ASSERT(sizeof(GameUiTimeIdList) == 0xC);
 
 const GameUiTimeIdList lbl_802C21A0 = {{0x2B7, 0x2CB, 0x2CC, 0x2B6, 0x2D7, 0x2D8}};
-__declspec(section ".rodata") int lbl_802C21AC[7] = {0, 0, 0, 0, 0, 0, 0};
+const _IndMtx lbl_802C21AC = {{0, 0, 0, 0, 0, 0}};
 extern const f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
 extern f32 lbl_803DD850;
 extern f32 gTrickyHudTexMtxScale;
@@ -1973,7 +1973,7 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     f32 sval;
 
     chanCol = *(GXColor*)&lbl_803E1E30;
-    indmtx = *(_IndMtx*)lbl_802C21AC;
+    indmtx = lbl_802C21AC;
     op = ObjModel_GetRenderOp((ModelFileHeader*)*p2, p3);
     layer = Shader_getLayer(op, 0);
     tex0 = textureIdxToPtr(*(int*)layer);
