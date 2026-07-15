@@ -19,6 +19,7 @@
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/gameloop_api.h"
+#include "main/dll/pausemenu.h"
 #include "track/intersect_api.h"
 #include "main/frame_timing.h"
 
@@ -206,7 +207,6 @@ extern void GameUI_setInputOverride(void);
 extern void GameUI_setUnusedHudSetting(void);
 extern void GameUI_unselectAllItems(void);
 extern void GameUI_update(void);
-extern void pauseMenuDraw(void);
 extern void pauseMenuDrawStatus(void);
 extern void pauseMenuFn_80129ee0(void);
 

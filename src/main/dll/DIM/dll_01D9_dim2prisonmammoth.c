@@ -8,6 +8,7 @@
 #include "main/objHitReact.h"
 #include "main/game_object.h"
 #include "main/objprint_character_api.h"
+#include "main/objprint_api.h"
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/vecmath.h"
@@ -27,8 +28,6 @@ extern f32 gPrisonMammothMoveSpeedTable;
 extern s16 gPrisonMammothMoveIdTable;
 extern u8 gPrisonMammothStateFlagsTable;
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
-
-extern void fn_8003A168(GameObject* p1, int p2);
 
 int dim2prisonmammoth_defaultStateHandler(void)
 {

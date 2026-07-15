@@ -6,6 +6,7 @@
 #include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 
 typedef struct DfpStatue1State {
   s16 triggerSfxId;
@@ -36,7 +37,7 @@ typedef struct DfpStatue1Object {
   u16 objectFlags;
   u8 padB2[0xB8 - 0xB2];
   DfpStatue1State *state;
-  u32 (*updateState)(int obj, u32 param_2, int hitState);
+  u32 (*updateState)(int obj, u32 param_2, ObjAnimUpdateState *animUpdate);
 } DfpStatue1Object;
 
 STATIC_ASSERT(offsetof(DfpStatue1MapData, yawByte) == 0x18);

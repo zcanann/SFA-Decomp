@@ -22,14 +22,6 @@
 #include "main/dll/WM/dll_0210_wmplanets.h"
 #include "main/object_descriptor.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5F98 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F9C = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E5FA0 = 0.1f;
-#pragma explicit_zero_data off
-#pragma force_active reset
-
 const u32 lbl_802C2500[4] = {0, 0, 0, 0};
 
 int WM_Planets_getExtraSize(void)
@@ -50,7 +42,7 @@ void WM_Planets_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     if (vis != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F98); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -78,19 +70,19 @@ void WM_Planets_update(GameObject* obj)
 
     state->orbitYaw += state->orbitYawStep;
 
-    rotate.zeroX = lbl_803E5F9C; /* 0.0f */
-    rotate.zeroY = lbl_803E5F9C;
-    rotate.zeroZ = lbl_803E5F9C;
-    rotate.scale = lbl_803E5F98; /* 1.0f */
+    rotate.zeroX = 0.0f;
+    rotate.zeroY = 0.0f;
+    rotate.zeroZ = 0.0f;
+    rotate.scale = 1.0f;
     rotate.roll = 0;
     rotate.pitch = 0;
     rotate.yaw = state->orbitYaw;
     vecRotateZXY(&rotate.yaw, vec.f);
 
-    rotate.zeroX = lbl_803E5F9C;
-    rotate.zeroY = lbl_803E5F9C;
-    rotate.zeroZ = lbl_803E5F9C;
-    rotate.scale = lbl_803E5F98;
+    rotate.zeroX = 0.0f;
+    rotate.zeroY = 0.0f;
+    rotate.zeroZ = 0.0f;
+    rotate.scale = 1.0f;
     rotate.roll = 0;
     rotate.pitch = state->orbitPitch;
     rotate.yaw = 0;
@@ -105,15 +97,15 @@ void WM_Planets_update(GameObject* obj)
 void WM_Planets_init(GameObject* obj, WmPlanetsMapData* mapData)
 {
     WmPlanetsState* inner = obj->extra;
-    f32 a = lbl_803E5FA0 * obj->anim.modelInstance->rootMotionScaleBase; /* 0.1f * */
-    obj->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)mapData->scaleByte);
+    f32 a = 0.1f * obj->anim.modelInstance->rootMotionScaleBase;
+    obj->anim.rootMotionScale = a * (1.0f + (f32)(s32)mapData->scaleByte);
     if (*(s16*)mapData != 0)
     {
         inner->orbitRadius = -(f32)(s32)(mapData->radiusByte << 4);
     }
     else
     {
-        inner->orbitRadius = lbl_803E5F9C; /* 0.0f */
+        inner->orbitRadius = 0.0f;
     }
     inner->orbitYawStep = randomGetRange(0x64, 0xc8);
     inner->yawStep = randomGetRange(0xc8, 0x190);

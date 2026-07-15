@@ -40,11 +40,6 @@ typedef struct DfpfloorbarPlacement
  * "the puzzle controller object (seqId 0x431)"). */
 #define DFPFLOORBAR_CONTROLLER_SEQID 0x431
 
-__declspec(section ".sdata2") f32 lbl_803E6408 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E640C = 3.2f;
-__declspec(section ".sdata2") f32 lbl_803E6410 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E6414 = -1.0f;
-
 int dfpfloorbar_SeqFn(void)
 {
     return 0;
@@ -75,7 +70,7 @@ void DFP_Floorbar_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 t = visible;
     if (t != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E6408);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -121,14 +116,14 @@ void DFP_Floorbar_update(GameObject* obj)
             return;
         if (mainGetBit(0xe57) != 0)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
+            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
             return;
         }
         break;
     case 2:
         if (mainGetBit(0xe58) != 0)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
+            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
             return;
         }
         break;
@@ -169,13 +164,13 @@ void DFP_Floorbar_update(GameObject* obj)
     state->requiredScore = gDfpfloorbarModeTable[state->modeIndex];
 
     active = state->active;
-    if (active != 0 && (obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
+    if (active != 0 && (obj)->anim.localPosY > ((DfpfloorbarPlacement*)placement)->posY - 3.2f)
     {
         Sfx_KeepAliveLoopedObjectSound((int)obj, SFXTRIG_en_treedrum16_1c8);
-        (obj)->anim.localPosY = (obj)->anim.localPosY - timeDelta / lbl_803E6410;
-        if ((obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C)
+        (obj)->anim.localPosY = (obj)->anim.localPosY - timeDelta / 12.0f;
+        if ((obj)->anim.localPosY <= ((DfpfloorbarPlacement*)placement)->posY - 3.2f)
         {
-            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - lbl_803E640C;
+            (obj)->anim.localPosY = ((DfpfloorbarPlacement*)placement)->posY - 3.2f;
         }
         return;
     }
@@ -195,13 +190,13 @@ void DFP_Floorbar_update(GameObject* obj)
 
     yDelta = obj->anim.localPosY - playerObj->anim.localPosY;
     if (yDelta < 0.0f)
-        yDelta = yDelta * lbl_803E6414;
+        yDelta *= -1.0f;
     if (yDelta < 100.0f)
     {
         xMid = playerObj->anim.localPosX - (obj->anim.localPosX - 100.0f);
         zDelta = obj->anim.localPosZ - playerObj->anim.localPosZ;
         if (zDelta < 0.0f)
-            zDelta = zDelta * lbl_803E6414;
+            zDelta *= -1.0f;
         if (zDelta < 18.0f)
         {
             if (xMid >= 150.0f)
@@ -245,13 +240,13 @@ void DFP_Floorbar_init(GameObject* obj, int params)
 
     if (((DfpfloorbarPlacement*)params)->travelRange != 0)
     {
-        obj->anim.rootMotionScale = lbl_803E6408 / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
+        obj->anim.rootMotionScale = 1.0f / ((f32)(s32)((DfpfloorbarPlacement*)params)->travelRange / 1000.0f);
     }
 
     if (mainGetBit((int)state->completionGameBit) != 0)
     {
         state->active = 1;
-        obj->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - lbl_803E640C;
+        obj->anim.localPosY = ((DfpfloorbarPlacement*)params)->posY - 3.2f;
     }
 }
 
