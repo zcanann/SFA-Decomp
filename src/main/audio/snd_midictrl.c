@@ -831,8 +831,8 @@ typedef union AuxInputSlots
 } AuxInputSlots;
 
 extern u32 sndRandSeed;
-extern AuxInputSlots lbl_803BDA74;
-extern AuxInputSlots lbl_803BDEF4;
+extern AuxInputSlots inpAuxB;
+extern AuxInputSlots inpAuxA;
 u32 lbl_8032FFE0[4] = {0x80000001, 0x80000002, 0x80000004, 0x80000008};
 u32 lbl_8032FFF0[4] = {0x80000010, 0x80000020, 0x80000040, 0x80000080};
 
@@ -883,9 +883,9 @@ u16 inpGetAuxA(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
     if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFE0[index]))
     {
-        return lbl_803BDEF4.slots[studio][index].cachedValue;
+        return inpAuxA.slots[studio][index].cachedValue;
     }
-    return _GetInputValue(0, &lbl_803BDEF4.slots[studio][index], midi, midiSet);
+    return _GetInputValue(0, &inpAuxA.slots[studio][index], midi, midiSet);
 }
 
 /*
@@ -895,9 +895,9 @@ u16 inpGetAuxB(u8 studio, u8 index, u8 midi, u8 midiSet)
 {
     if (!inpResetGlobalMIDIDirtyFlag(midi, midiSet, lbl_8032FFF0[index]))
     {
-        return lbl_803BDA74.slots[studio][index].cachedValue;
+        return inpAuxB.slots[studio][index].cachedValue;
     }
-    return _GetInputValue(0, &lbl_803BDA74.slots[studio][index], midi, midiSet);
+    return _GetInputValue(0, &inpAuxB.slots[studio][index], midi, midiSet);
 }
 
 static void inpResetGlobalMIDIDirtyFlags(void)
@@ -983,8 +983,8 @@ void inpInit(u32 state)
         {
             for (j = 0; j < 4; j++)
             {
-                lbl_803BDEF4.slots[i][j].entryCount = 0;
-                lbl_803BDA74.slots[i][j].entryCount = 0;
+                inpAuxA.slots[i][j].entryCount = 0;
+                inpAuxB.slots[i][j].entryCount = 0;
             }
         }
 

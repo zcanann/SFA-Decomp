@@ -4,8 +4,8 @@
 extern u8 streamCallCnt;
 extern u8 streamCallDelay;
 extern u32 lbl_803DE284;
-u8 lbl_803BDA74[0x480];
-u8 lbl_803BDEF4[0x484];
+extern u8 inpAuxB[0x480];
+extern u8 inpAuxA[0x480];
 SynthJob streamInfo[64];
 
 void streamInit(void)
@@ -14,7 +14,7 @@ void streamInit(void)
 
     streamCallCnt = 0;
     streamCallDelay = 3;
-    for (i = 0; i < lbl_803BD150[0x210]; ++i)
+    for (i = 0; i < synthInfo.voiceCount; ++i)
     {
         streamInfo[i].state = SYNTH_JOB_STATE_FREE;
     }

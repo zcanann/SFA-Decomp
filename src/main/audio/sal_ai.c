@@ -102,7 +102,7 @@ int salInitAi(void* userCallback, u32 unused, u32* outSampleCount)
         AIRegisterDMACallback(salCallback);
         AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) + salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
                   SAL_AI_DMA_CHUNK_SIZE);
-        SYNTH_CONFIGURATION->unk04 = 0x20;
+        SYNTH_CONFIGURATION->numSamples = 0x20;
         *outSampleCount = SAL_AI_OUTPUT_SAMPLE_COUNT;
         return 1;
     }

@@ -37,23 +37,23 @@ static void voiceInitFreeList(void)
 {
     u32 i;
 
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    for (i = 0; i < synthInfo.voiceCount; i++)
     {
         freeList[i].prev = i - 1;
         freeList[i].next = i + 1;
         freeList[i].time = 1;
     }
     freeList[0].prev = 0xff;
-    freeList[lbl_803BD150[0x210] - 1].next = 0xff;
+    freeList[synthInfo.voiceCount - 1].next = 0xff;
     voiceListRoot = 0;
-    voiceListInsert = lbl_803BD150[0x210] - 1;
+    voiceListInsert = synthInfo.voiceCount - 1;
 }
 
 static void voiceInitPrioSort(void)
 {
     u32 i;
 
-    for (i = 0; i < lbl_803BD150[0x210]; i++)
+    for (i = 0; i < synthInfo.voiceCount; i++)
     {
         priorityLinks[i].time = 0;
     }

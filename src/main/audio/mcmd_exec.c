@@ -17,11 +17,11 @@ extern int macTimeQueueRoot;
 extern u64 macRealTime;
 extern void synthQueueVoicePrimaryUpdates(void* state);
 extern void voiceKill(u32 voice);
-extern u32 lbl_803BDA34[];
+extern s32 synthGlobalVariable[16];
 extern u32 voiceIsRegistered(int state);
 extern void (*synthMessageCallback)(u32 id, u32 message);
 
-#define SYNTH_GLOBAL_REG(index) (lbl_803BDA34[(index) - 0x10])
+#define SYNTH_GLOBAL_REG(index) (synthGlobalVariable[(index) - 0x10])
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv)     (*(u64*)&(sv)->inputFlags)
@@ -40,8 +40,8 @@ typedef struct MacDataTables
 } MacDataTables;
 
 extern u8 lbl_8032EDD0[];
-extern u8 lbl_803BDA74[];            /* per-studio aux B input slots */
-extern u8 lbl_803BDEF4[];            /* per-studio aux A input slots */
+extern u8 inpAuxB[];
+extern u8 inpAuxA[];
 extern u8 lbl_803DE2D0;              /* macro steps executed this frame */
 extern McmdCommandArgs lbl_803DE2E8; /* current macro step */
 extern const f32 lbl_803E7810;       /* 1023.0f */
@@ -1095,7 +1095,7 @@ void macHandleActive(McmdVoiceState* sv)
             hwSetPriority(sv->voiceHandle & 0xff, ((u32)sv->priorityGroup << 0x18) | (sv->priorityValue >> 0xf));
             break;
         case 0x32: /* send flag */
-            lbl_803BDA34[(cmd >> 8) & 0xff] = (cmd >> 0x10) & 0xff;
+            synthGlobalVariable[(cmd >> 8) & 0xff] = (cmd >> 0x10) & 0xff;
             break;
         case 0x33: /* set pitch wheel range */
             sv->pitchBendRangeUp = (cmd >> 0x10) & 0xff;
@@ -1169,14 +1169,14 @@ void macHandleActive(McmdVoiceState* sv)
         case 0x4d: /* aux A FX select */
         {
             u8 i = *para1 >> 0x18;
-            SelectSource(sv, (McmdInputSlot*)(lbl_803BDEF4 + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
+            SelectSource(sv, (McmdInputSlot*)(inpAuxA + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
                          ((MacDataTables*)lbl_8032EDD0)->auxAMask[i], ((MacDataTables*)lbl_8032EDD0)->auxADirty[i]);
             break;
         }
         case 0x4e: /* aux B FX select */
         {
             u8 i = *para1 >> 0x18;
-            SelectSource(sv, (McmdInputSlot*)(lbl_803BDA74 + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
+            SelectSource(sv, (McmdInputSlot*)(inpAuxB + sv->studio * 0x90 + i * 0x24), &lbl_803DE2E8,
                          ((MacDataTables*)lbl_8032EDD0)->auxBMask[i], ((MacDataTables*)lbl_8032EDD0)->auxBDirty[i]);
             break;
         }

@@ -5,6 +5,7 @@
 #include "main/audio/dsp_voice_state.h"
 #include "main/audio/sal_dsp.h"
 #include "main/audio/synth_jobs.h"
+#include "main/audio/synth_voice.h"
 #include "main/audio/synth_virtual_sample.h"
 
 extern u8 gSynthInitialized;
@@ -16,7 +17,6 @@ extern u32 salMessageCallback;
 extern void salExitDspCtrl(void);
 extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 extern void fn_8026EC44(u32 value);
-extern void audioFn_80271498(u32 value);
 
 void snd_handle_irq(void)
 {
@@ -56,7 +56,7 @@ void snd_handle_irq(void)
         hwIRQEnterCritical();
         hwSetTimeOffset(timeOffset);
         fn_8026EC44(0x100);
-        audioFn_80271498(0x100);
+        synthHandle(0x100);
         hwIRQLeaveCritical();
     }
 

@@ -3,18 +3,20 @@
 
 #include "ghidra_import.h"
 
-typedef struct SynthConfiguration {
+typedef struct SynthInfo {
     u32 sampleRate;
-    u32 unk04;
-    u8 unk08[0x208];
+    u32 numSamples;
+    u8 playbackInfo[0x208];
     u8 voiceCount;
     u8 musicVoiceCount;
     u8 fxVoiceCount;
     u8 studioCount;
-} SynthConfiguration;
+} SynthInfo;
 
-extern u8 lbl_803BD150[];
+typedef SynthInfo SynthConfiguration;
 
-#define SYNTH_CONFIGURATION ((SynthConfiguration*)lbl_803BD150)
+extern SynthInfo synthInfo;
+
+#define SYNTH_CONFIGURATION (&synthInfo)
 
 #endif /* MAIN_AUDIO_SYNTH_CONFIG_H_ */

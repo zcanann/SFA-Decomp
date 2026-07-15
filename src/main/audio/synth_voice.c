@@ -1,6 +1,7 @@
 #include "global.h"
 #include "main/audio/synth_voice.h"
 #include "main/audio/synth_job_queue.h"
+#include "main/audio/synth_config.h"
 #include "main/audio/mcmd.h"
 #include "main/dll/synthfade_struct.h"
 #include "util/carry.h"
@@ -62,7 +63,6 @@ extern u8 gSynthDelayBucketCursor;
 
 extern void macHandle(u32 delta);
 
-extern u32 synthTicksPerSecond[9][16];
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
 extern u8 synthAuxBMIDISet[8];
@@ -72,21 +72,24 @@ extern u8 synthAuxAMIDI[8];
 extern u64 synthRealTime;
 extern f32 lbl_803E77D0;
 
-typedef union SynthAuxInfo
+typedef struct SynthAuxInfo
 {
-    struct
+    union
     {
-        u16 para[4];
-    } parameterUpdate;
-    struct
-    {
-        s32* left;
-        s32* right;
-        s32* surround;
-    } bufferUpdate;
+        struct
+        {
+            u16 para[4];
+        } parameterUpdate;
+        struct
+        {
+            s32* left;
+            s32* right;
+            s32* surround;
+        } bufferUpdate;
+    } data;
 } SynthAuxInfo;
 
-typedef void (*SynthAuxCallback)(int active, SynthAuxInfo* info, u32 user);
+typedef void (*SynthAuxCallback)(u8 reason, SynthAuxInfo* info, void* user);
 
 extern u16 inpGetVolume(McmdVoiceState* state);
 extern u16 inpGetPanning(McmdVoiceState* state);
@@ -236,8 +239,44 @@ typedef struct SynthMasterFader
     u8 pad[2];
 } SynthMasterFader;
 
-#define SYNTH_MASTER_FADERS ((SynthMasterFader*)((u8*)synthTicksPerSecond + 0x5D4))
-#define SYNTH_TRACK_VOLUME  ((u8*)synthTicksPerSecond + 0xBD4)
+typedef struct SynthState
+{
+    u32 ticksPerSecond[9][16];
+    SynthJobTab jobTable[32];
+    SynthInfo info;
+    SynthMasterFader masterFader[32];
+    u8 trackVolume[64];
+    void* auxAUser[8];
+    SynthAuxCallback auxACallback[8];
+    void* auxBUser[8];
+    SynthAuxCallback auxBCallback[8];
+    u8 itdDefault[8][2];
+    s32 globalVariable[16];
+    u8 auxBInput[0x480];
+    u8 auxAInput[0x480];
+} SynthState;
+
+STATIC_ASSERT(offsetof(SynthState, info) == 0x3c0);
+STATIC_ASSERT(offsetof(SynthState, masterFader) == 0x5d4);
+STATIC_ASSERT(offsetof(SynthState, trackVolume) == 0xbd4);
+STATIC_ASSERT(offsetof(SynthState, auxAUser) == 0xc14);
+STATIC_ASSERT(offsetof(SynthState, auxACallback) == 0xc34);
+STATIC_ASSERT(offsetof(SynthState, auxBUser) == 0xc54);
+STATIC_ASSERT(offsetof(SynthState, auxBCallback) == 0xc74);
+
+u32 synthTicksPerSecond[9][16];
+u8 inpAuxA[0x480];
+u8 inpAuxB[0x480];
+s32 synthGlobalVariable[16];
+u8 synthITDDefault[8][2];
+SynthAuxCallback synthAuxBCallback[8];
+void* synthAuxBUser[8];
+SynthAuxCallback synthAuxACallback[8];
+void* synthAuxAUser[8];
+u8 synthTrackVolume[64];
+SynthMasterFader synthMasterFader[32];
+SynthInfo synthInfo;
+SynthJobTab synthJobTable[32];
 
 extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
 extern u16 voiceScaleSampleRate(u32 rate);
@@ -1015,9 +1054,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
 
 static inline void HandleVoices(void)
 {
-    SynthJobTab* jobTab;
-
-    jobTab = &((SynthTables*)synthTicksPerSecond)->jobs[gSynthDelayBucketCursor];
+    SynthJobTab* jobTab = &((SynthTables*)synthTicksPerSecond)->jobs[gSynthDelayBucketCursor];
     synthDrainDelayedBucket(&jobTab->lowPrecision, LowPrecisionHandler);
     synthDrainDelayedBucket(&jobTab->event, EventHandler);
     synthDrainDelayedBucket(&jobTab->zeroOffset, ZeroOffsetHandler);
@@ -1050,7 +1087,8 @@ void synthDispatchFadeAction(SynthFade* fade)
  * Periodic synth tick: drains delayed-action buckets, advances fade ramps,
  * runs AUX callbacks, and advances the global synth timer.
  */
-void audioFn_80271498(u32 delta)
+#pragma fp_contract off
+void synthHandle(u32 deltaTime)
 {
     u32 i;
     u32 s;
@@ -1058,81 +1096,78 @@ void audioFn_80271498(u32 delta)
     u32 mask;
     f32 zeroThreshold;
     u8* stateBase;
-    f32 fadeDelta;
 
     stateBase = (u8*)synthTicksPerSecond;
-    if (*(u32*)(stateBase + 0x3c4) != 0)
+    if (((SynthState*)stateBase)->info.numSamples == 0)
     {
-        macHandle(delta);
-        HandleVoices();
-        if (hwGetTimeOffset() == 0)
+        return;
+    }
+
+    macHandle(deltaTime);
+    HandleVoices();
+    if (hwGetTimeOffset() == 0)
+    {
+        if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0)
         {
-            if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0)
+            zeroThreshold = lbl_803E77D0;
+            fade = (f32*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
+            for (i = 0, mask = 1; i < SYNTH_FADE_COUNT; ++i)
             {
-                zeroThreshold = lbl_803E77D0;
-                fade = (f32*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-                for (i = 0, mask = 1; i < SYNTH_FADE_COUNT; i++)
+                if ((synthMasterFaderActiveFlags & mask) != 0)
                 {
-                    if ((synthMasterFaderActiveFlags & mask) != 0)
+                    fade[0] = fade[1] - fade[3] * (fade[1] - fade[2]);
+                    if ((fade[3] -= fade[4]) <= zeroThreshold)
                     {
-                        fadeDelta = fade[3] * (fade[1] - fade[2]);
-                        fade[0] = fade[1] - fadeDelta;
-                        fade[3] = fadeDelta = fade[3] - fade[4];
-                        if (fadeDelta <= zeroThreshold)
+                        fade[0] = fade[1];
+                        synthDispatchFadeAction((SynthFade*)fade);
+                        if (((synthMasterFaderActiveFlags &= ~mask) == 0) &&
+                            (synthMasterFaderPauseActiveFlags == 0))
                         {
-                            fade[0] = fade[1];
-                            synthDispatchFadeAction((SynthFade*)fade);
-                            if (((synthMasterFaderActiveFlags &= ~mask) == 0) &&
-                                (synthMasterFaderPauseActiveFlags == 0))
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
-                    if ((synthMasterFaderPauseActiveFlags & mask) != 0)
+                }
+                if ((synthMasterFaderPauseActiveFlags & mask) != 0)
+                {
+                    fade[5] = fade[6] - fade[8] * (fade[6] - fade[7]);
+                    if ((fade[8] -= fade[9]) <= zeroThreshold)
                     {
-                        fadeDelta = fade[8] * (fade[6] - fade[7]);
-                        fade[5] = fade[6] - fadeDelta;
-                        fade[8] = fadeDelta = fade[8] - fade[9];
-                        if (fadeDelta <= zeroThreshold)
+                        fade[5] = fade[6];
+                        if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) &&
+                            (synthMasterFaderActiveFlags == 0))
                         {
-                            fade[5] = fade[6];
-                            if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) &&
-                                (synthMasterFaderActiveFlags == 0))
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
-                    mask <<= 1;
-                    fade += 12;
                 }
-            }
-            for (s = 0; s < 8; s++)
-            {
-                if (synthAuxAMIDI[s] != 0xff)
-                {
-                    SynthAuxInfo info;
-                    for (i = 0; i < 4; i++)
-                    {
-                        info.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAMIDI[s], synthAuxAMIDISet[s]);
-                    }
-                    ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &info, ((u32*)(stateBase + 0xc14))[s]);
-                }
-                if (synthAuxBMIDI[s] != 0xff)
-                {
-                    SynthAuxInfo info;
-                    for (i = 0; i < 4; i++)
-                    {
-                        info.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBMIDI[s], synthAuxBMIDISet[s]);
-                    }
-                    ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &info, ((u32*)(stateBase + 0xc54))[s]);
-                }
+                mask <<= 1;
+                fade += 12;
             }
         }
-        hwFrameDone();
-        synthRealTime += delta;
+        for (s = 0; s < 8; ++s)
+        {
+            if (synthAuxAMIDI[s] != 0xff)
+            {
+                SynthAuxInfo info;
+                for (i = 0; i < 4; ++i)
+                {
+                    info.data.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAMIDI[s], synthAuxAMIDISet[s]);
+                }
+                ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &info, ((void**)(stateBase + 0xc14))[s]);
+            }
+            if (synthAuxBMIDI[s] != 0xff)
+            {
+                SynthAuxInfo info;
+                for (i = 0; i < 4; ++i)
+                {
+                    info.data.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBMIDI[s], synthAuxBMIDISet[s]);
+                }
+                ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &info, ((void**)(stateBase + 0xc54))[s]);
+            }
+        }
     }
+    hwFrameDone();
+    synthRealTime += deltaTime;
 }
 
 /*

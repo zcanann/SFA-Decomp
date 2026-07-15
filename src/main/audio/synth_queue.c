@@ -64,7 +64,7 @@ typedef struct SynthPage
 #define SYNTH_VOICE_STATE_ALLOCATED 2 /* on gSynthAllocatedVoices; playing */
 
 extern SynthSeqRuntime lbl_803AF550;
-extern u8 lbl_803BD964[0x40];
+extern u8 synthTrackVolume[0x40];
 extern int gSynthCurrentVoiceSlotIndex;
 extern void fn_8026E864(void);
 extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
@@ -234,7 +234,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     tracktab = (u32*)(arr->trackTableOffset + (u32)song);
     for (i = 0; i < 64; i++)
     {
-        lbl_803BD964[i] = 0x7F;
+        synthTrackVolume[i] = 0x7F;
         SYNTH_SEQUENCE_STATE(nseq, i)->stream = 0;
         if (tracktab[i] != 0)
         {

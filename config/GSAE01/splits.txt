@@ -4001,7 +4001,6 @@ main/audio/synth_channel_scale.c:
 	extab       start:0x80005680 end:0x80005690
 	extabindex  start:0x80005D50 end:0x80005D68
 	.text       start:0x8026EC44 end:0x8026F8B8
-	.bss        start:0x803BCD90 end:0x803BD150
 
 main/audio/synth_init.c:
 	extab       start:0x80005690 end:0x80005698
@@ -4012,6 +4011,7 @@ main/audio/synth_voice.c:
 	extab       start:0x80005698 end:0x800056F8
 	extabindex  start:0x80005D74 end:0x80005E04
 	.text       start:0x8026FC8C end:0x8027186C
+	.bss        start:0x803BCD90 end:0x803BE378
 	.sdata2     start:0x803E77C0 end:0x803E77D0
 
 main/audio/synth_delay.c:
@@ -4023,7 +4023,6 @@ main/audio/synth_volume.c:
 	extab       start:0x80005718 end:0x80005728
 	extabindex  start:0x80005E34 end:0x80005E4C
 	.text       start:0x80271B4C end:0x802720A8
-	.bss        start:0x803BD364 end:0x803BD964
 
 main/audio/synth_control.c:
 	extab       start:0x80005728 end:0x80005758
@@ -4037,7 +4036,7 @@ main/audio/snd_synth_api.c:
 
 main/audio/synth_job_init.c:
 	.text       start:0x80272EA4 end:0x80272F70
-	.bss        start:0x803BDA74 end:0x803BFC78
+	.bss        start:0x803BE378 end:0x803BFC78
 
 main/audio/synth_jobs.c:
 	extab       start:0x800057C8 end:0x800057F0

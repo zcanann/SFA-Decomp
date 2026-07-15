@@ -22,7 +22,7 @@
 extern void macSampleEndNotify(void);
 extern u32 hwGetVirtualSampleID(int slot);
 extern u32 synthTicksPerSecond[9][16];
-u8 lbl_803BD364[0x600];
+extern u8 synthMasterFader[0x600];
 extern u8 gSynthInitialized;
 extern u32 synthMasterFaderActiveFlags;
 extern u8* synthVoice;
@@ -220,7 +220,7 @@ void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
     {
         return;
     }
-    lbl_803BD364[(voiceIdx & 0xff) * sizeof(SynthFade) + 0x2d] = value;
+    synthMasterFader[(voiceIdx & 0xff) * sizeof(SynthFade) + 0x2d] = value;
 }
 
 /*
