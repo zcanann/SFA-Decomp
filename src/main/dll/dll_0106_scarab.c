@@ -47,6 +47,15 @@ typedef struct ScarabPlacement
     s16 mode; /* 0x1a: ScarabState.mode selector */
 } ScarabPlacement;
 
+typedef struct ScarabVec3
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} ScarabVec3;
+
+STATIC_ASSERT(sizeof(ScarabVec3) == 0xC);
+
 /* shared item-pickup ObjMsg protocol (see dll_00ED_collectible / dll_00FF_magicgem) */
 #define SCARAB_MSG_IN_RANGE     0x7000a /* sent to player when the scarab is in grab range */
 #define SCARAB_MSG_PICKUP       0x7000b /* player collected: award money and despawn */
@@ -82,14 +91,10 @@ extern f32 lbl_803DBDD0;
 extern f32 lbl_803DBDC4;
 extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
-__declspec(section ".rodata") u32 lbl_802C2298[3] = {0, 0, 0};
-__declspec(section ".rodata") u32 lbl_802C22A4[3] = {0, 0, 0};
+const ScarabVec3 sScarabStartInit = {0.0f, 0.0f, 0.0f};
+const ScarabVec3 sScarabEndInit = {0.0f, 0.0f, 0.0f};
 void Scarab_update(GameObject* obj)
 {
-    typedef struct
-    {
-        f32 x, y, z;
-    } ScarabVec3;
     typedef struct
     {
         s16 ang;
@@ -145,8 +150,8 @@ void Scarab_update(GameObject* obj)
 
     best[0] = 0;
     list = NULL;
-    start = *(ScarabVec3*)lbl_802C2298;
-    end = *(ScarabVec3*)lbl_802C22A4;
+    start = sScarabStartInit;
+    end = sScarabEndInit;
     flag = best[0];
     state = *(int*)&obj->extra;
     player = (int)Obj_GetPlayerObject();

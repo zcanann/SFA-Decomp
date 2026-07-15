@@ -83,14 +83,19 @@ typedef struct DllF7GasSetup
     s16 field2C; /* 0x2c */
 } DllF7GasSetup;
 
-typedef struct DllF7Vec
+typedef struct DllF7HitParams
 {
-    u8 b[16];
-} DllF7Vec;
+    u32 type;
+    u32 effectA;
+    u32 effectB;
+    u32 alpha;
+} DllF7HitParams;
+
+STATIC_ASSERT(sizeof(DllF7HitParams) == 0x10);
 
 typedef struct DllF7HitBlock
 {
-    DllF7Vec params;
+    DllF7HitParams params;
     s16 rotX;
     s16 rotY;
     s16 rotZ;
@@ -100,8 +105,7 @@ typedef struct DllF7HitBlock
     f32 z;
 } DllF7HitBlock;
 
-__declspec(section ".rodata") DllF7Vec lbl_802C2260 = {
-    {0, 0, 0, 0x08, 0, 0, 0, 0xFF, 0, 0, 0, 0xFF, 0, 0, 0, 0x78}};
+const DllF7HitParams lbl_802C2260 = {8, 0xFF, 0xFF, 0x78};
 
 /* dll_F7 (bouncing prop) object extra-state */
 typedef struct DllF7State
@@ -198,7 +202,7 @@ void dll_F7_update(int* obj)
             blk.rotZ = 0;
             blk.rotY = 0;
             blk.rotX = 0;
-            ((void (*)(int, int, s16*, int, int, DllF7Vec*))((int*)*(int**)gDllF7Resource5A)[1])(
+            ((void (*)(int, int, s16*, int, int, DllF7HitParams*))((int*)*(int**)gDllF7Resource5A)[1])(
                 0, 1, (s16*)((int)&blk + 16), 1025, -1, &blk.params);
         }
     }

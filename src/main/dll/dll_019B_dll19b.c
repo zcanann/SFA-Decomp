@@ -3,6 +3,8 @@
 #include "main/dll/dll_019C_dll19c.h"
 #include "main/dll/dll_019D_dll19d.h"
 #include "main/dll/dll_019E_dim_tricky.h"
+#include "main/dll/dll_019F_nwtreebrid.h"
+#include "main/dll/dll_01A0_nwgeyser.h"
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
@@ -447,14 +449,6 @@ void dll_19B_init(GameObject* obj, u8* params)
     obj->anim.worldPosZ = obj->anim.localPosZ;
 }
 
-/*__DATA_EXTERNS__*/
-extern void nw_geyser_free();
-extern void nw_geyser_update();
-extern void nw_geyser_init();
-extern void treebird_getExtraSize();
-extern void treebird_render();
-extern void treebird_update();
-extern void treebird_init();
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* jumptable_8032668C[7] = {(void*)((u8*)dll_19B_update + 0x380), (void*)((u8*)dll_19B_update + 0x490),
                                (void*)((u8*)dll_19B_update + 0x4B0), (void*)((u8*)dll_19B_update + 0x5E4),

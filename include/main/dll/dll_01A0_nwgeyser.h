@@ -7,6 +7,7 @@
 
 void treebird_init(GameObject* obj, int setup);
 int TreeBird_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
+void nw_geyser_free(int* obj);
 void nw_geyser_init(GameObject* obj);
 void nw_geyser_update(GameObject* obj);
 int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
