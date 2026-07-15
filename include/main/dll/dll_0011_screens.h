@@ -10,5 +10,6 @@
 void loadTaskTexts(void);
 int hintTextMapFn_800ea264(void);
 u8 getCurTaskHintTextMap(void);
+void gameBitFn_800ea2e0(u8 id);
 
 #endif

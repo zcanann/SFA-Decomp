@@ -2,6 +2,7 @@
  * triggers env-fx transitions, drives music track changes based on player
  * carry state, and maintains the countdown-armed SCGameBitLatch triggers. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"
+#include "main/dll/dll_0011_screens.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/audio/music_api.h"
 #include "main/sky_api.h"
@@ -78,7 +79,6 @@ typedef enum Dim2lavacontrolPhase
 
 extern f32 lbl_803E4B90;
 extern void fn_8004C1E4(int sfxId, f32 vol);
-extern void gameBitFn_800ea2e0(u8 id);
 extern u8 lbl_803DBF28[8];
 
 typedef void (*Dim2LavaControlGameBitSyncFn)(int id);

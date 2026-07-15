@@ -29,8 +29,6 @@
 
 extern f32 lbl_803E34B0;
 
-extern char sMagicGemCollectedMessage[];
-
 extern u16 lbl_803E34A8;
 extern u16 lbl_803E34AC;
 extern u8 lbl_80320CB8[];
@@ -55,6 +53,11 @@ extern const f32 gMagicGemPickupYRange;
 extern const f32 gMagicGemPickupRadiusBase;
 STATIC_ASSERT(offsetof(MagicGemState, flags27A) == 0x27A);
 
+int MagicDust_getExtraSize(void)
+{
+    return 0x288;
+}
+
 void MagicDust_free(GameObject* obj)
 {
     if (*(u32*)&obj->ownerObj != 0)
@@ -65,10 +68,7 @@ void MagicDust_free(GameObject* obj)
     return;
 }
 
-int MagicDust_getExtraSize(void)
-{
-    return 0x288;
-}
+char sMagicGemCollectedMessage[] = "Magic collected";
 
 void MagicDust_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -425,5 +425,3 @@ void MagicDust_init(GameObject* obj, MagicgemObjectDef* placement)
     ObjMsg_AllocQueue(obj, 1);
     return;
 }
-
-char sMagicGemCollectedMessage[] = "Magic collected";

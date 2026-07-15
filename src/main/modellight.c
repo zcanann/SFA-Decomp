@@ -1478,8 +1478,8 @@ void modelLightStruct_selectObjectLights(GameObject* obj, ModelLightStruct** out
                 green = (green < 0.0f) ? 0.0f : ((green > 255.0f) ? 255.0f : green);
                 blue = light->lightAmount * light->diffuseColor[2];
                 blue = (blue < 0.0f) ? 0.0f : ((blue > 255.0f) ? 255.0f : blue);
-                green = (red < green) ? green : red;
-                light->selectionScore = green;
+                red = (red > green) ? red : green;
+                light->selectionScore = red;
                 blue = (light->selectionScore > blue) ? light->selectionScore : blue;
                 light->selectionScore = blue;
             }

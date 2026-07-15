@@ -4,6 +4,7 @@
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and
  * initial level unlock. */
 #include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/dll_0011_screens.h"
 #include "main/dll/savegame_load_api.h"
 #include "main/gametext_show_api.h"
 #include "main/textrender_api.h"
@@ -70,7 +71,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 extern f32 lbl_803E4A24;
 extern f32 lbl_803E4A28;
-extern void gameBitFn_800ea2e0(u8 id);
 
 int dim_levelcontrol_getExtraSize(void) { return 0x10; }
 
