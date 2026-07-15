@@ -56,12 +56,21 @@ STATIC_ASSERT(offsetof(SynthVoiceTimers, updateTimeLo1) == 0x30);
 #define SYNTH_FADE_DELAY_ACTION_FREE_HANDLE  1
 #define SYNTH_FADE_DELAY_ACTION_QUEUE_HANDLE 2
 #define SYNTH_FADE_DELAY_ACTION_CLEAR_MIX    3
+#define SYNTH_FADE_ACTION_DISABLED           4
+#define SYNTH_INVALID_LINK_ID                0xffffffff
 #define SYNTH_VOICE_SLOT_SIZE                0x404
+#define SYNTH_VOICE_STRIDE                   0x404
 #define SYNTH_VOICE_CALLBACK_ACTIVE_OFFSET   0x11c
 
 extern u8 gSynthDelayBucketCursor;
+extern u8 gSynthInitialized;
 
 extern void macHandle(u32 delta);
+extern void voiceRegister(McmdVoiceState* state);
+extern void voiceKill(u32 voice);
+extern void voiceInitPriorityTables(void);
+extern void voiceInitRegistrationTables(void);
+extern void inpSetMidiLastNote(u8 channel, u8 set, u8 note);
 
 extern u32 synthMasterFaderPauseActiveFlags;
 extern u32 synthMasterFaderActiveFlags;
@@ -78,14 +87,14 @@ typedef struct SynthAuxInfo
     {
         struct
         {
-            u16 para[4];
-        } parameterUpdate;
-        struct
-        {
             s32* left;
             s32* right;
             s32* surround;
         } bufferUpdate;
+        struct
+        {
+            u16 para[4];
+        } parameterUpdate;
     } data;
 } SynthAuxInfo;
 
@@ -264,7 +273,8 @@ STATIC_ASSERT(offsetof(SynthState, auxACallback) == 0xc34);
 STATIC_ASSERT(offsetof(SynthState, auxBUser) == 0xc54);
 STATIC_ASSERT(offsetof(SynthState, auxBCallback) == 0xc74);
 
-u32 synthTicksPerSecond[9][16];
+static u32 synthTicksPerSecond[9][16];
+static SynthJobTab synthJobTable[32];
 u8 inpAuxA[0x480];
 u8 inpAuxB[0x480];
 s32 synthGlobalVariable[16];
@@ -274,9 +284,8 @@ void* synthAuxBUser[8];
 SynthAuxCallback synthAuxACallback[8];
 void* synthAuxAUser[8];
 u8 synthTrackVolume[64];
-SynthMasterFader synthMasterFader[32];
+SynthFade synthMasterFader[32];
 SynthInfo synthInfo;
-SynthJobTab synthJobTable[32];
 
 extern u32 voiceGetPitchRatio(u8 note, u32 sInfo);
 extern u16 voiceScaleSampleRate(u32 rate);
@@ -297,6 +306,271 @@ extern const f32 lbl_803E77AC;
 extern const f32 lbl_803E77B0;
 extern const f32 lbl_803E77B4;
 extern const f32 lbl_803E77B8;
+
+typedef struct LAYER
+{
+    u16 id;
+    u8 keyLow;
+    u8 keyHigh;
+    s8 transpose;
+    u8 volume;
+    s16 prioOffset;
+    u8 panning;
+    u8 reserved[3];
+} LAYER;
+
+extern void* dataGetLayer(u16 id, u16* count);
+extern u32 vidMakeRoot(McmdVoiceState* voice);
+u32 StartKeymap(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+                u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
+
+/*
+ * Set one studio/channel scale entry.
+ */
+void synthSetStudioChannelScale(int value, u8 bank, u8 key)
+{
+    if (bank == 0xff)
+    {
+        bank = 8;
+    }
+    synthTicksPerSecond[bank][key] = (u32)((value << 3) * 0x600) / 0xf0;
+}
+
+/*
+ * Look up an int from a 2D table indexed by state's ID bytes.
+ */
+int synthGetVoiceSlotChannelScale(McmdVoiceState* state)
+{
+    McmdVoiceState* v = state;
+    u32 bank;
+    int key;
+    if ((bank = v->midiEvent) == 0xff)
+        bank = 8;
+    key = v->midiLayer;
+    return synthTicksPerSecond[bank][key];
+}
+
+/*
+ * Flag-check and conditional store.
+ */
+void fn_8026F5B8(int state)
+{
+    McmdVoiceState* v = (McmdVoiceState*)state;
+    u64 flags;
+
+    flags = *(u64*)&v->inputFlags;
+    if ((flags & 0x20000) != 0)
+    {
+        return;
+    }
+    if (v->portamentoMode == 1)
+    {
+        if ((flags & 0x1000) == 0)
+        {
+            v->portamentoTime = 0;
+        }
+        else
+        {
+            v->portamentoTime = v->portamentoDuration;
+        }
+    }
+    else
+    {
+        v->portamentoTime = v->portamentoDuration;
+    }
+    v->portamentoCurPitch = v->registeredKey << 0x10;
+}
+
+/*
+ * Reuse an active voice matching the requested MIDI slot/channel.
+ */
+u32 audioFn_8026f630(u8 key, u8 slot, u8 channel, u32 voiceGroup, u32* outFlags)
+{
+    u32 i;
+    u32 result;
+    u32 previousId;
+    McmdVoiceState* voice;
+    McmdVoiceState* selectedVoice;
+    u32 sawHeldVoice;
+
+    sawHeldVoice = 0;
+    result = -1;
+    for (i = 0, voice = (McmdVoiceState*)synthVoice; i < SYNTH_CONFIGURATION->voiceCount; ++i, ++voice)
+    {
+        if (voice->macroAllocating == 0 && voice->voiceHandle != 0xffffffff && voice->midiSlot == slot &&
+            voice->midiEvent == channel)
+        {
+            if ((*(u64*)&voice->inputFlags & 2) != 0)
+            {
+                sawHeldVoice = 1;
+            }
+            if ((*(u64*)&voice->inputFlags & 0x10) != 0 && (*(u64*)&voice->inputFlags & 0x10000000008) != 8 &&
+                hwIsActive(i) != 0)
+            {
+                if (result == 0xffffffff && (*(u64*)&voice->inputFlags & 0x20002) == 0x20002)
+                {
+                    *outFlags = 1;
+                    return -1;
+                }
+
+                selectedVoice = voice;
+                voice->portamentoCurPitch = ((u32)voice->key << 16) + ((s32)voice->fineTune << 16) / 100;
+                voice->registeredKey = voice->key;
+                voice->key = key + ((voice->key & 0xff) - voice->keyBase);
+                voice->keyBase = key;
+                voice->fineTune = 0;
+                voice->portamentoTime = 0;
+                voice->outputFlags = voice->outputFlags | 0x20000LL;
+                vidRemoveVoice(&synthVoice[i]);
+                if (result == 0xffffffff)
+                {
+                    voice->voiceNextHandle = 0xffffffff;
+                    voice->voicePrevHandle = 0xffffffff;
+                    result = vidMakeNew(&synthVoice[i], voiceGroup);
+                    previousId = voice->voiceHandle;
+                }
+                else
+                {
+                    ((McmdVoiceState*)synthVoice)[previousId & 0xff].voiceNextHandle = voice->voiceHandle;
+                    voice->voicePrevHandle = previousId;
+                    previousId = voice->voiceHandle;
+                    vidMakeNew(&synthVoice[i], 0);
+                }
+            }
+        }
+    }
+
+    if (result != 0xffffffff)
+    {
+        voiceRegister(selectedVoice);
+        inpSetMidiLastNote(selectedVoice->midiSlot, selectedVoice->midiEvent, selectedVoice->key & 0xff);
+        *outFlags = 0;
+    }
+    else
+    {
+        *outFlags = sawHeldVoice;
+    }
+    return result;
+}
+
+u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 panning, u8 midi,
+                          u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd)
+{
+    u16 count;
+    u32 vid;
+    u32 new_id;
+    u32 id;
+    LAYER* l;
+    s32 pan;
+    s32 note;
+    u8 scaledVol;
+    u8 mKey;
+
+    vid = 0xFFFFFFFF;
+    if ((l = dataGetLayer(layerID, &count)) == NULL)
+    {
+        goto end;
+    }
+
+    mKey = key & 0x7f;
+    for (; count != 0; --count, l++)
+    {
+        if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey)
+        {
+            continue;
+        }
+
+        note = mKey + l->transpose;
+        note = note > 127 ? 127 : note < 0 ? 0 : note;
+
+        if ((l->id & 0xC000) == 0)
+        {
+            u32 rejected;
+            u32 ok;
+            if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, midi, midiSet) > 8064)
+            {
+                new_id = audioFn_8026f630(note & 0x7f, midi, midiSet, 0, &rejected);
+                ok = !rejected;
+            }
+            else
+            {
+                new_id = 0xFFFFFFFF;
+                ok = 1;
+            }
+            if (!ok)
+            {
+                continue;
+            }
+            if (new_id != 0xFFFFFFFF)
+            {
+                goto apply_new_id;
+            }
+        }
+
+        if ((l->panning & 0x80) == 0)
+        {
+            pan = l->panning - 0x40;
+            pan += panning;
+            pan = pan < 0 ? 0 : pan > 0x7f ? 0x7f : pan;
+        }
+        else
+        {
+            pan = 0x80;
+        }
+
+        scaledVol = (vol * l->volume) / 0x7f;
+        prio += l->prioOffset;
+        prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
+
+        switch (l->id & 0xC000)
+        {
+        case 0:
+            new_id = macStart(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                              section, step, trackid, 0, vGroup, studio, itd);
+            break;
+        case 0x4000:
+            new_id = StartKeymap(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi, midiSet,
+                                 section, step, trackid, 0, vGroup, studio, itd);
+            break;
+        case 0x8000:
+            new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, note | (key & 0x80), scaledVol, pan, midi,
+                                           midiSet, section, step, trackid, 0, vGroup, studio, itd);
+            break;
+        }
+
+        if (new_id != 0xFFFFFFFF)
+        {
+        apply_new_id:
+            if (vid == 0xFFFFFFFF)
+            {
+                if (vidFlag != 0)
+                {
+                    vid = vidMakeRoot(&synthVoice[new_id & 0xff]);
+                }
+                else
+                {
+                    vid = new_id;
+                }
+            }
+            else
+            {
+                synthVoice[id & 0xff].child = new_id;
+                synthVoice[new_id & 0xff].parent = id;
+            }
+            id = new_id;
+            while (synthVoice[id & 0xff].child != 0xFFFFFFFF)
+            {
+                synthVoice[id & 0xff].block = 1;
+                id = synthVoice[id & 0xff].child;
+            }
+            synthVoice[id & 0xff].block = 1;
+        }
+    }
+
+end:
+    return vid;
+}
+
 
 typedef struct KeymapEntry
 {
@@ -711,7 +985,6 @@ end:
 #pragma fp_contract off
 void ZeroOffsetHandler(int voice)
 {
-    u8* base = (u8*)(int)synthTicksPerSecond;
     SynthHwVoice* sv;
     u32 lowDeltaTime;
     u16 Modulation;
@@ -762,13 +1035,12 @@ void ZeroOffsetHandler(int voice)
 
     HWVOICE_FLAGS(sv) &= ~0x100000000000ULL;
 
-    faderVol = ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].pauseVol *
-               ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->vGroup].volume *
-               ((SynthMasterFader*)(base + SYNTH_FADE_TABLE_OFFSET))[sv->fxFlag ? 22 : 21].volume;
+    faderVol = synthMasterFader[sv->vGroup].auxCurrent * synthMasterFader[sv->vGroup].current *
+               synthMasterFader[sv->fxFlag ? 22 : 21].current;
 
     if (sv->track != 0xFF)
     {
-        vol = lbl_803E7798 * (faderVol * (f32)(base + 0xBD4)[sv->track]);
+        vol = lbl_803E7798 * (faderVol * (f32)synthTrackVolume[sv->track]);
     }
     else
     {
@@ -1054,7 +1326,7 @@ void synthDrainDelayedBucket(SynthDelayedNode** head, SynthDelayedBucketCallback
 
 static inline void HandleVoices(void)
 {
-    SynthJobTab* jobTab = &((SynthTables*)synthTicksPerSecond)->jobs[gSynthDelayBucketCursor];
+    SynthJobTab* jobTab = &synthJobTable[gSynthDelayBucketCursor];
     synthDrainDelayedBucket(&jobTab->lowPrecision, LowPrecisionHandler);
     synthDrainDelayedBucket(&jobTab->event, EventHandler);
     synthDrainDelayedBucket(&jobTab->zeroOffset, ZeroOffsetHandler);
@@ -1092,13 +1364,11 @@ void synthHandle(u32 deltaTime)
 {
     u32 i;
     u32 s;
-    f32* fade;
+    SynthFade* fade;
     u32 mask;
     f32 zeroThreshold;
-    u8* stateBase;
 
-    stateBase = (u8*)synthTicksPerSecond;
-    if (((SynthState*)stateBase)->info.numSamples == 0)
+    if (synthInfo.numSamples == 0)
     {
         return;
     }
@@ -1110,16 +1380,16 @@ void synthHandle(u32 deltaTime)
         if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0)
         {
             zeroThreshold = lbl_803E77D0;
-            fade = (f32*)(stateBase + SYNTH_FADE_TABLE_OFFSET);
+            fade = synthMasterFader;
             for (i = 0, mask = 1; i < SYNTH_FADE_COUNT; ++i)
             {
                 if ((synthMasterFaderActiveFlags & mask) != 0)
                 {
-                    fade[0] = fade[1] - fade[3] * (fade[1] - fade[2]);
-                    if ((fade[3] -= fade[4]) <= zeroThreshold)
+                    fade->current = fade->target - fade->progress * (fade->target - fade->start);
+                    if ((fade->progress -= fade->progressStep) <= zeroThreshold)
                     {
-                        fade[0] = fade[1];
-                        synthDispatchFadeAction((SynthFade*)fade);
+                        fade->current = fade->target;
+                        synthDispatchFadeAction(fade);
                         if (((synthMasterFaderActiveFlags &= ~mask) == 0) &&
                             (synthMasterFaderPauseActiveFlags == 0))
                         {
@@ -1129,10 +1399,10 @@ void synthHandle(u32 deltaTime)
                 }
                 if ((synthMasterFaderPauseActiveFlags & mask) != 0)
                 {
-                    fade[5] = fade[6] - fade[8] * (fade[6] - fade[7]);
-                    if ((fade[8] -= fade[9]) <= zeroThreshold)
+                    fade->auxCurrent = fade->auxTarget - fade->auxProgress * (fade->auxTarget - fade->auxStart);
+                    if ((fade->auxProgress -= fade->auxProgressStep) <= zeroThreshold)
                     {
-                        fade[5] = fade[6];
+                        fade->auxCurrent = fade->auxTarget;
                         if (((synthMasterFaderPauseActiveFlags &= ~mask) == 0) &&
                             (synthMasterFaderActiveFlags == 0))
                         {
@@ -1141,7 +1411,7 @@ void synthHandle(u32 deltaTime)
                     }
                 }
                 mask <<= 1;
-                fade += 12;
+                ++fade;
             }
         }
         for (s = 0; s < 8; ++s)
@@ -1153,7 +1423,7 @@ void synthHandle(u32 deltaTime)
                 {
                     info.data.parameterUpdate.para[i] = inpGetAuxA(s, i, synthAuxAMIDI[s], synthAuxAMIDISet[s]);
                 }
-                ((SynthAuxCallback*)(stateBase + 0xc34))[s](1, &info, ((void**)(stateBase + 0xc14))[s]);
+                synthAuxACallback[s](1, &info, synthAuxAUser[s]);
             }
             if (synthAuxBMIDI[s] != 0xff)
             {
@@ -1162,7 +1432,7 @@ void synthHandle(u32 deltaTime)
                 {
                     info.data.parameterUpdate.para[i] = inpGetAuxB(s, i, synthAuxBMIDI[s], synthAuxBMIDISet[s]);
                 }
-                ((SynthAuxCallback*)(stateBase + 0xc74))[s](1, &info, ((void**)(stateBase + 0xc54))[s]);
+                synthAuxBCallback[s](1, &info, synthAuxBUser[s]);
             }
         }
     }
@@ -1208,4 +1478,555 @@ int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u32 studioAux)
                                  volume, pan, 0xff, 0xff, 0, 0, 0xff, sampleInfo->auxIndex, 0, studio, studioAux);
     }
     return handle;
+}
+
+#define SYNTH_FADE_SELECTOR_ACTION_2      0xfa
+#define SYNTH_FADE_SELECTOR_ACTION_2_OR_3 0xfc
+#define SYNTH_FADE_SELECTOR_ACTION_3      0xfb
+#define SYNTH_FADE_SELECTOR_ACTION_0      0xfd
+#define SYNTH_FADE_SELECTOR_ACTION_1      0xfe
+#define SYNTH_FADE_SELECTOR_ACTION_0_OR_1 0xff
+#define SYNTH_FADE_TYPE_ACTION_0          0
+#define SYNTH_FADE_TYPE_ACTION_1          1
+#define SYNTH_FADE_TYPE_ACTION_2          2
+#define SYNTH_FADE_TYPE_ACTION_3          3
+
+extern int vidGetInternalId(u32 id);
+extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
+extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
+extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
+extern void macSetExternalKeyoff(McmdVoiceState* slot);
+extern void macSampleEndNotify(void);
+extern f32 lbl_803E77D4;
+extern void* salMalloc(u32 size);
+extern void memset(void* dst, int value, u32 size);
+extern void inpInit(u32 unused);
+extern void macInit(void);
+extern void vidInit(void);
+extern void voiceInitPriorityTables(void);
+extern void voiceInitRegistrationTables(void);
+extern void salFree(void* ptr);
+extern u32 synthMessageCallback;
+
+/*
+ * synthFXSetCtrl - sndFXCtrl underlying impl.
+ * Walks the handle's voice-slot chain, dispatching inpSetMidiCtrl per slot.
+ */
+u32 synthFXSetCtrl(u32 handle, u8 controller, u8 value)
+{
+    u32 found;
+    u8 idx;
+    McmdVoiceState* slot;
+
+    found = 0;
+    handle = vidGetInternalId(handle);
+    while (handle != 0xFFFFFFFFu)
+    {
+        idx = handle;
+        if (handle == synthVoice[idx].voiceHandle)
+        {
+            slot = &synthVoice[idx];
+            if ((*(u64*)&slot->inputFlags & 2) != 0)
+            {
+                inpSetMidiCtrl(controller, idx, slot->startupMidiEvent, value);
+            }
+            else
+            {
+                inpSetMidiCtrl(controller, idx, slot->midiEvent, value);
+            }
+            found = 1;
+            handle = synthVoice[idx].voiceNextHandle;
+        }
+        else
+        {
+            return found;
+        }
+    }
+    return found;
+}
+
+/*
+ * synthFXSetCtrl14 - sndFXCtrl14 underlying impl.
+ */
+u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value)
+{
+    u32 found;
+    u8 idx;
+    McmdVoiceState* slot;
+
+    found = 0;
+    handle = vidGetInternalId(handle);
+    while (handle != 0xFFFFFFFFu)
+    {
+        idx = handle;
+        if (handle == synthVoice[idx].voiceHandle)
+        {
+            slot = &synthVoice[idx];
+            if ((*(u64*)&slot->inputFlags & 2) != 0)
+            {
+                inpSetMidiCtrl14(controller, idx, slot->startupMidiEvent, value);
+            }
+            else
+            {
+                inpSetMidiCtrl14(controller, idx, slot->midiEvent, value);
+            }
+            found = 1;
+            handle = synthVoice[idx].voiceNextHandle;
+        }
+        else
+        {
+            return found;
+        }
+    }
+    return found;
+}
+
+/*
+ * synthFXCloneMidiSetup - copies the five FX-stage controllers
+ * (volume, pan, expression, reverb, chorus) between two handles.
+ */
+void synthFXCloneMidiSetup(u32 dstHandle, u32 srcHandle)
+{
+    inpFXCopyCtrl(0x07, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x0A, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x5B, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x80, dstHandle, srcHandle);
+    inpFXCopyCtrl(0x84, dstHandle, srcHandle);
+}
+
+/*
+ * synthSendKeyOff - sndFXKeyOff underlying impl.
+ * Walks the handle's voice-slot chain and signals key-off on each slot.
+ */
+u32 synthSendKeyOff(u32 handle)
+{
+    u32 found;
+    u32 idx;
+
+    found = 0;
+    if (gSynthInitialized != 0)
+    {
+        handle = vidGetInternalId(handle);
+        while (handle != 0xFFFFFFFFu)
+        {
+            idx = (u8)handle;
+            if (handle == synthVoice[idx].voiceHandle)
+            {
+                macSetExternalKeyoff(&synthVoice[idx]);
+                found = 1;
+            }
+            handle = synthVoice[idx].voiceNextHandle;
+        }
+    }
+    return found;
+}
+
+/*
+ * Route synth fade commands to one slot or to the broadcast pseudo-slots
+ * 0xfa through 0xff.
+ */
+static inline void synthSetupFade(SynthFade* fade, u32 time, u8 action, u32 handle, f32 target, f32 fadePos,
+                                   f32 fadeStepBase)
+{
+    fade->delayAction = action;
+    fade->handle = handle;
+    if (time != 0)
+    {
+        fade->start = fade->current;
+        fade->target = target;
+        fade->progress = fadePos;
+        fade->progressStep = fadeStepBase / time;
+    }
+    else
+    {
+        fade->current = fade->target = target;
+        if (fade->handle != SYNTH_INVALID_LINK_ID)
+        {
+            synthDispatchFadeAction(fade);
+        }
+    }
+}
+
+static inline void synthFinishFade(SynthFade* fade, u32* handle)
+{
+    if (*handle != SYNTH_INVALID_LINK_ID)
+    {
+        synthDispatchFadeAction(fade);
+    }
+}
+
+void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
+{
+    u32 convertedTime;
+    u32 i;
+    u8 matchState;
+    f32 targetVolume;
+    f32 fadeStepBase;
+    f32 fadePos;
+    SynthFade* fade;
+
+    if ((convertedTime = timeMs) != 0)
+    {
+        sndConvertMs(&convertedTime);
+    }
+
+    switch (target)
+    {
+    case SYNTH_FADE_SELECTOR_ACTION_0_OR_1:
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * volume;
+        for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+        {
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_0 || fade->type == SYNTH_FADE_TYPE_ACTION_1)
+            {
+                synthSetupFade(fade, convertedTime, action, SYNTH_INVALID_LINK_ID, targetVolume, fadePos, fadeStepBase);
+                synthMasterFaderActiveFlags |= 1U << i;
+            }
+        }
+        return;
+
+    case SYNTH_FADE_SELECTOR_ACTION_2_OR_3:
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * volume;
+        for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+        {
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_2 || fade->type == SYNTH_FADE_TYPE_ACTION_3)
+            {
+                synthSetupFade(fade, convertedTime, action, SYNTH_INVALID_LINK_ID, targetVolume, fadePos, fadeStepBase);
+                synthMasterFaderActiveFlags |= 1U << i;
+            }
+        }
+        return;
+
+    case SYNTH_FADE_SELECTOR_ACTION_2:
+        matchState = SYNTH_FADE_TYPE_ACTION_2;
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_3:
+        matchState = SYNTH_FADE_TYPE_ACTION_3;
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_0:
+        matchState = SYNTH_FADE_TYPE_ACTION_0;
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_1:
+        matchState = SYNTH_FADE_TYPE_ACTION_1;
+
+    setup_type:
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        targetVolume = lbl_803E7798 * volume;
+        for (fade = synthMasterFader, i = 0; i < SYNTH_FADE_COUNT; ++i, ++fade)
+        {
+            if (fade->type == matchState)
+            {
+                synthSetupFade(fade, convertedTime, action, SYNTH_INVALID_LINK_ID, targetVolume, fadePos, fadeStepBase);
+                synthMasterFaderActiveFlags |= 1U << i;
+            }
+        }
+        return;
+
+    default:
+    {
+        u32 fadeTime = convertedTime;
+        u8* slot = (u8*)&((SynthFade*)synthTicksPerSecond)[target];
+        u32* handlePtr;
+
+        *(u8*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x2c) = action;
+        *(handlePtr = (u32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x28)) = handle;
+        if (fadeTime != 0)
+        {
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x08) =
+                *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x00);
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x0c) = lbl_803E77A8;
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x10) = lbl_803E77D4 / fadeTime;
+        }
+        else
+        {
+            SynthFade* activeFade = (SynthFade*)(slot + SYNTH_FADE_TABLE_OFFSET);
+            *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x00) =
+                *(f32*)(slot + SYNTH_FADE_TABLE_OFFSET + 0x04) = lbl_803E7798 * volume;
+            synthFinishFade(activeFade, handlePtr);
+        }
+        synthMasterFaderActiveFlags |= 1U << target;
+        return;
+    }
+    }
+}
+int synthIsFadeOutActive(u8 voiceIdx)
+{
+    u8* v = (u8*)synthTicksPerSecond + voiceIdx * sizeof(SynthFade);
+    if (((v[SYNTH_FADE_TABLE_OFFSET + 0x2d] != SYNTH_FADE_ACTION_DISABLED) &&
+         ((synthMasterFaderActiveFlags & (1U << voiceIdx)) != 0)) &&
+        (*(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 8) > *(f32*)(v + SYNTH_FADE_TABLE_OFFSET + 4)))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/*
+ * Set a single byte field on a voice slot.
+ */
+void synthSetMusicVolumeType(u32 voiceIdx, u8 value)
+{
+    if (gSynthInitialized == 0)
+    {
+        return;
+    }
+    synthMasterFader[voiceIdx & 0xff].type = value;
+}
+
+/*
+ * Voice command dispatcher: runs different actions per command code.
+ *   0 -> validate current sample and mark the slot active
+ *   1 -> voiceKill
+ *   2 -> claim virtual sample slot
+ *   3 -> simple vacate via hwGetVirtualSampleID + synthHandleVirtualSampleDone
+ */
+int synthHWMessageHandler(int mode, u32 arg)
+{
+    u32 result = 0;
+
+    switch (mode)
+    {
+    case 0:
+    {
+        if (synthVoice[arg & 0xff].macroAllocating != 0)
+        {
+            break;
+        }
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
+        if (arg != synthVoice[arg & 0xff].voiceHandle)
+        {
+            break;
+        }
+        macSampleEndNotify();
+        break;
+    }
+    case 1:
+        voiceKill(arg & 0xff);
+        break;
+    case 2:
+        result = synthClaimVirtualSampleSlot(arg & 0xff);
+        break;
+    case 3:
+    {
+        synthHandleVirtualSampleDone(hwGetVirtualSampleID(arg & 0xff));
+        break;
+    }
+    }
+    return result;
+}
+
+typedef struct SynthGlobalState
+{
+    u8 pad000[0x200];
+    u32 dspDmaSize;
+    u8 pad204[0x1bc];
+    u32 sampleRate;
+    u8 pad3c4[0x600];
+    f32 auxMixA;
+    u8 pad9c8[0x2c];
+    f32 auxMixB;
+    u8 pad9f8[0x1d9];
+    u8 initialized;
+    u8 padbd2[0xc34 - 0xbd2];
+    u32 auxASend[8];
+    u8 padc54[0xc74 - 0xc54];
+    u32 auxBSend[8];
+    u8 auxPairState[8][2];
+    u32 auxMixSlot[16];
+} SynthGlobalState;
+
+typedef struct SynthJobEntry
+{
+    u32 lowPrecision;
+    u32 event;
+    u32 zeroOffset;
+} SynthJobEntry;
+
+static inline void synthInitJobQueue(u8* state)
+{
+    SynthJobEntry* jobTable = (SynthJobEntry*)(state + 0x240);
+    u8 i;
+
+    for (i = 0; i < 32; ++i)
+    {
+        jobTable[i].lowPrecision = 0;
+        jobTable[i].event = 0;
+        jobTable[i].zeroOffset = 0;
+    }
+
+    gSynthDelayBucketCursor = 0;
+}
+
+void synthInit(u32 sampleRate, u32 voiceCount)
+{
+    u8* state;
+    u32 voiceIndex;
+    u32 fadeIndex;
+    u32 auxIndex;
+    f32 unusedA[2];
+
+    state = (u8*)synthTicksPerSecond;
+    synthRealTime = 0;
+    ((SynthGlobalState*)state)->sampleRate = sampleRate;
+    ((SynthGlobalState*)state)->dspDmaSize = 0x1800;
+    synthFlags = 0;
+    synthMessageCallback = 0;
+
+    synthVoice = salMalloc(voiceCount * SYNTH_VOICE_STRIDE);
+    memset(synthVoice, 0, voiceCount * SYNTH_VOICE_STRIDE);
+
+    for (voiceIndex = 0; voiceIndex < voiceCount; voiceIndex++)
+    {
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0xF4) = SYNTH_INVALID_LINK_ID;
+        *(u64*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x114) = 0;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x110) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x10C) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x121) = 0xFF;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x154) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x192) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x190) = 0x80;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x191) = 0;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x180) = 0x400000;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x170) = 0x400000;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x184) = 0;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x174) = 0;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1A0) = 0;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1A4) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1B8) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1B9) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11C) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11E) = 0x17;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x104) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x193) = 1;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C0) = 0;
+        *(u16*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C4) = 0;
+        *(u16*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1C6) = 0x7FFF;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1CC) = 0;
+        *(u16*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1D0) = 0;
+        *(u16*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x1D2) = 0x7FFF;
+        *(u32*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x13C) = 0x6400;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x131) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x11F) = 0;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x08) = (u8)voiceIndex;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x09) = 0xFF;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x14) = (u8)voiceIndex;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x15) = 0xFF;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x20) = (u8)voiceIndex;
+        *(u8*)((u8*)synthVoice + voiceIndex * SYNTH_VOICE_STRIDE + 0x21) = 0xFF;
+    }
+
+    {
+        SynthFade* fade = (SynthFade*)(state + 0x5D4);
+        f32 auxCurrent;
+        f32 fadeCurrent = lbl_803E77D0;
+        u32 pass;
+
+        auxCurrent = lbl_803E77A8;
+
+        for (pass = 0; pass < 2; pass++)
+        {
+            fade[0].current = fadeCurrent;
+            fade[0].auxCurrent = auxCurrent;
+            fade[0].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[1].current = fadeCurrent;
+            fade[1].auxCurrent = auxCurrent;
+            fade[1].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[2].current = fadeCurrent;
+            fade[2].auxCurrent = auxCurrent;
+            fade[2].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[3].current = fadeCurrent;
+            fade[3].auxCurrent = auxCurrent;
+            fade[3].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[4].current = fadeCurrent;
+            fade[4].auxCurrent = auxCurrent;
+            fade[4].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[5].current = fadeCurrent;
+            fade[5].auxCurrent = auxCurrent;
+            fade[5].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[6].current = fadeCurrent;
+            fade[6].auxCurrent = auxCurrent;
+            fade[6].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[7].current = fadeCurrent;
+            fade[7].auxCurrent = auxCurrent;
+            fade[7].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[8].current = fadeCurrent;
+            fade[8].auxCurrent = auxCurrent;
+            fade[8].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[9].current = fadeCurrent;
+            fade[9].auxCurrent = auxCurrent;
+            fade[9].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[10].current = fadeCurrent;
+            fade[10].auxCurrent = auxCurrent;
+            fade[10].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[11].current = fadeCurrent;
+            fade[11].auxCurrent = auxCurrent;
+            fade[11].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[12].current = fadeCurrent;
+            fade[12].auxCurrent = auxCurrent;
+            fade[12].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[13].current = fadeCurrent;
+            fade[13].auxCurrent = auxCurrent;
+            fade[13].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[14].current = fadeCurrent;
+            fade[14].auxCurrent = auxCurrent;
+            fade[14].type = SYNTH_FADE_ACTION_DISABLED;
+            fade[15].current = fadeCurrent;
+            fade[15].auxCurrent = auxCurrent;
+            fade[15].type = SYNTH_FADE_ACTION_DISABLED;
+            fade += 16;
+        }
+    }
+
+    synthMasterFaderActiveFlags = 0;
+    synthMasterFaderPauseActiveFlags = 0;
+    ((SynthGlobalState*)state)->initialized = 1;
+    for (fadeIndex = 0; fadeIndex < 8; fadeIndex++)
+    {
+        *(u8*)(state + 0xA51 + fadeIndex * sizeof(SynthFade)) = 0;
+    }
+    {
+        f32 auxCurrent = lbl_803E77A8;
+
+        ((SynthGlobalState*)state)->auxMixA = auxCurrent;
+        ((SynthGlobalState*)state)->auxMixB = auxCurrent;
+    }
+
+    inpInit(0);
+
+    for (auxIndex = 0; auxIndex < 8; auxIndex++)
+    {
+        ((SynthGlobalState*)state)->auxASend[auxIndex] = 0;
+        synthAuxAMIDI[auxIndex] = 0xFF;
+        ((SynthGlobalState*)state)->auxBSend[auxIndex] = 0;
+        synthAuxBMIDI[auxIndex] = 0xFF;
+        ((SynthGlobalState*)state)->auxPairState[auxIndex][1] = 0;
+        ((SynthGlobalState*)state)->auxPairState[auxIndex][0] = 0;
+    }
+
+    macInit();
+    vidInit();
+    voiceInitPriorityTables();
+
+    for (auxIndex = 0; auxIndex < 16; auxIndex++)
+    {
+        ((SynthGlobalState*)state)->auxMixSlot[auxIndex] = 0;
+    }
+
+    voiceInitRegistrationTables();
+
+    synthInitJobQueue(state);
+    hwSetMesgCallback((u32)synthHWMessageHandler);
+}
+
+void synthExit(void)
+{
+    salFree(synthVoice);
 }
