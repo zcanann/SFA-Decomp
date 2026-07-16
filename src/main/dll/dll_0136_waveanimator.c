@@ -151,11 +151,11 @@ void fn_801923F8(int* cfgArg)
         x = heightIdx;
         i = heightIdx;
         colorSplitZero = lbl_803E3F44;
-        for (; i < cfg->period; i++)
+        for (; heightIdx < cfg->period; heightIdx++)
         {
             int src[1];
             int byte[1];
-            for (j = 0, src[0] = heightIdx, byte[0] = x; j < cfg->period; src[0] += 4, byte[0] += 3, heightIdx += 4, x += 3, j++)
+            for (j = 0, src[0] = x, byte[0] = i; j < cfg->period; src[0] += 4, byte[0] += 3, x += 4, i += 3, j++)
             {
                 f32 v = *(f32*)((u8*)lbl_803DDAF4 + src[0]);
                 if (v < colorSplitZero)
