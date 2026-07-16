@@ -797,8 +797,9 @@ void ObjSeq_runBgCmds(void)
             objPtr++;
         }
 
+        n = 0;
         mp = matched;
-        for (n = 0; n < matchCount; n++)
+        for (; n < matchCount; n++)
         {
             candidate = *mp;
             model = *(u8**)(candidate + 0x4c);
@@ -2646,8 +2647,8 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
         {
             entry = base + lbl_803DD113 * 8;
             *(u8**)(entry + 0x3ca4) = activeObj;
-            *(s8*)(entry + 0x3caa) = (s8)((*(s16*)(cmd + 2) >> 12) & 0xf);
-            if (*(s8*)(entry + 0x3caa) == 0xb || *(s8*)(entry + 0x3caa) == 0xc)
+            *(s8*)((int)entry + 0x3caa) = (s8)((*(s16*)(cmd + 2) >> 12) & 0xf);
+            if (*(s8*)((int)entry + 0x3caa) == 0xb || *(s8*)((int)entry + 0x3caa) == 0xc)
             {
                 u8* entry2;
                 val = *(s16*)(cmd + 6);
@@ -3309,13 +3310,11 @@ int ObjSeq_update(u8* obj, f32 t)
             slot = (s8)((ObjSeqState*)seq)->slot;
             if ((s8)base[slot + 0x3cf4] != 0)
             {
-                p = base + slot * 2;
-                *(s16*)(p + 0x3694) = ((ObjSeqState*)seq)->curFrame;
+                ((s16*)(base + 0x3694))[slot] = ((ObjSeqState*)seq)->curFrame;
                 (base + (s8)((ObjSeqState*)seq)->slot)[0x338c] = 2;
                 ((f32*)(base + 0x3740))[(s8)((ObjSeqState*)seq)->slot] = (f32)((ObjSeqState*)seq)->curFrame;
             }
-            slot = (s8)((ObjSeqState*)seq)->slot;
-            if (lbl_803DEFF0 == ((f32*)(base + 0x3740))[slot])
+            if (lbl_803DEFF0 == ((f32*)(base + 0x3740))[slot = (s8)((ObjSeqState*)seq)->slot])
             {
                 if (lbl_803DB724 == slot)
                 {
