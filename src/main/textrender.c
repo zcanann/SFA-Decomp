@@ -265,8 +265,6 @@ extern GameTextBox gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern const f32 lbl_803DE70C;
 extern const f32 lbl_803DE710;
-extern const f32 lbl_803DE714;
-extern const f32 lbl_803DE718;
 extern int gGameTextShadowOffsetX;
 extern int gGameTextShadowOffsetY;
 extern int gameTextCharset;
@@ -312,10 +310,7 @@ extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
 extern int gSubtitleElapsedFrames;
 extern int gSubtitleLineCount;
-extern const f32 gSubtitleFramesPerSecond;
 extern void* gGameTextBoxEdgeTexture;
-extern const f32 lbl_803DE730;
-extern const f32 gSubtitleNoTimeSentinel;
 extern u32 lbl_80339C40[];
 
 extern int saveFileStruct_isCheatActive(u8 idx);
@@ -981,12 +976,12 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         fy1 = e710 * ((f32)(u32)g->height * lbl_803DC9A0) + fy0;
         if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704)
         {
-            u0 = lbl_803DE714 * -fx0 + u0;
+            u0 = 8.0f * -fx0 + u0;
             fx0 = lbl_803DE704;
         }
         if (fy0 < *(f32*)&lbl_803DE704 && fy1 > lbl_803DE704)
         {
-            v0 = lbl_803DE714 * -fy0 + v0;
+            v0 = 8.0f * -fy0 + v0;
             fy0 = lbl_803DE704;
         }
 
@@ -1086,16 +1081,16 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
             if (gameTextDrawFunc != NULL)
             {
-                f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
-                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
+                f32 sH = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
                     fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
                     (v0 + (f32)(g->height << 5)) / sH);
             }
             else
             {
-                f32 sH = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xc);
-                f32 sW = lbl_803DE718 * (f32)(u32) * (u16*)((u8*)tex + 0xa);
+                f32 sH = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xc);
+                f32 sW = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xa);
                 textRenderChar((int)fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
                                (v0 + (f32)(g->height << 5)) / sH);
             }
@@ -2863,7 +2858,7 @@ void subtitleUpdateAndDraw(int a)
         {
             gSubtitleElapsedFrames += framesThisStep;
         }
-        gSubtitleCurTime = gSubtitleElapsedFrames / gSubtitleFramesPerSecond;
+        gSubtitleCurTime = gSubtitleElapsedFrames / 60.0f;
         if (gSubtitleLineIndex + 1 < gSubtitleLineCount &&
             gSubtitleCurTime >= gSubtitleLineTimes[gSubtitleLineIndex + 1])
         {
@@ -3073,7 +3068,7 @@ void subtitleBuildLineTable(void)
 
     s[0] = (SubtitleLineTable*)gSubtitleLineTable;
     total = 0;
-    curTime = lbl_803DE730;
+    curTime = 0.0f;
     if (gGameTextSequenceMode != 0)
     {
         savedCharset = gameTextGetCharset();
@@ -3085,7 +3080,7 @@ void subtitleBuildLineTable(void)
     gSubtitleBlockCount = 0;
     for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
     {
-        s[0]->times[i] = gSubtitleNoTimeSentinel;
+        s[0]->times[i] = 0.0001f;
     }
     for (i = 0; i < t->count; i++)
     {
@@ -3117,7 +3112,7 @@ void subtitleBuildLineTable(void)
     }
     for (k = 0; k < gSubtitleLineCount; k++)
     {
-        if (gSubtitleNoTimeSentinel != s[0]->times[k])
+        if (0.0001f != s[0]->times[k])
         {
             curTime = s[0]->times[k];
             total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
@@ -3131,7 +3126,7 @@ void subtitleBuildLineTable(void)
                 ftotal = total;
                 if (m < 255)
                 {
-                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
+                    if (0.0001f != s[0]->times[m + 1])
                     {
                         delta = s[0]->times[m + 1] - curTime;
                         found = 1;
