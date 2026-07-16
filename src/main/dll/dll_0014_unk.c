@@ -80,32 +80,18 @@ typedef struct ObjfsaWalkGroup
     u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
 } ObjfsaWalkGroup;
 
-extern const f32 lbl_803E063C;
 extern f32 lbl_803E0640;
 extern f32 gFloatOne;
 extern f32 lbl_803E05F0;
-extern f32 lbl_803E0644;
 extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
 extern f32 lbl_803E05C8;
-extern f32 lbl_803E05CC;
-extern f32 lbl_803E05F4;
 extern f32 lbl_803E05D0;
-extern f32 gRomCurveAnglePi;
-extern f32 lbl_803E05D8;
 extern f32 lbl_803E0610;
 extern f32 gRomCurveAnglePi2;
 extern f32 lbl_803E0618;
 extern f32 gFloatZero;
 extern f32 gFloatNegOne;
-extern f32 lbl_803E0648;
-extern f32 lbl_803E064C;
-extern f32 lbl_803E0650;
-extern f32 lbl_803E0654;
-extern f32 gObjfsaNearestDistInit;
-extern f32 lbl_803E0600;
-extern f32 lbl_803E0604;
-extern f32 gObjfsaPlaneNormalScale;
 extern f32 lbl_803E0608;
 
 typedef void (*RomCurveGetAdjacentWindowIntFn)(int curve, int* outIds);
@@ -119,12 +105,9 @@ typedef int (*CurvesPointInsideLoopLegacyFn)(u32 curveId, double x, double y, do
     ((RomCurveProjectAdjacentLegacyFn)RomCurve_projectPointToAdjacentWindow)
 #define curves_isPointInsideLoopLegacy \
     ((CurvesPointInsideLoopLegacyFn)curves_isPointInsideLoop)
-extern f32 lbl_803E060C;
 extern char sObjfsaMissingPatchExitPoint0[];
 extern char sObjfsaMissingPatchExitPoint1[];
 extern f32 gFloatHalf;
-extern f32 lbl_803E065C;
-extern f32 lbl_803E0660;
 extern const f32 gRomCurveFindDistInit;
 
 extern u32 countLeadingZeros();
@@ -148,8 +131,8 @@ u8 gObjfsaWalkGroupActive[0xB8];
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
     }                                                                                                                  \
-    (P).planes[K].normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                      \
-    (P).planes[K].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                      \
+    (P).planes[K].normalX = (s16)(32767.0f * dxn);                                                      \
+    (P).planes[K].normalZ = (s16)(32767.0f * dzn);                                                      \
     (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
 #define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
     exitFz = (f32)(ZF);                                                                                                \
@@ -175,8 +158,8 @@ u8 gObjfsaWalkGroupActive[0xB8];
         dxn = dxn / len;                                                                                               \
         dzn = dzn / len;                                                                                               \
     }                                                                                                                  \
-    pl->normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                                \
-    pl->normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                                \
+    pl->normalX = (s16)(32767.0f * dxn);                                                                \
+    pl->normalZ = (s16)(32767.0f * dzn);                                                                \
     *(po) = -((f32)pl->normalX * (XA) + (f32)pl->normalZ * (ZA))
 
 int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
@@ -278,7 +261,7 @@ void fn_800D9EE8(float* p)
     *a ^= *b;
     if (*p >= lbl_803E05C8)
     {
-        *p = lbl_803E05CC;
+        *p = 0.99f;
     }
 }
 
@@ -615,15 +598,15 @@ int fn_800D9F38(void* walker, void* curve)
         f32 t;
         *(f32*)(A + 0xa8) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+            mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
         *(f32*)(A + 0xb0) = lbl_803E05D0 * t;
         *(f32*)(A + 0xc8) = *(f32*)(B + 0xc);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
+            mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2d)) << 8) / 32768.0f);
         *(f32*)(A + 0xd0) = lbl_803E05D0 * t;
         *(f32*)(A + 0xe8) = *(f32*)(B + 0x10);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+            mathCosf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
         *(f32*)(A + 0xf0) = lbl_803E05D0 * t;
     }
     else
@@ -631,15 +614,15 @@ int fn_800D9F38(void* walker, void* curve)
         f32 t;
         *(f32*)(A + 0xbc) = *(f32*)(B + 0x8);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+            mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
         *(f32*)(A + 0xc4) = lbl_803E05D0 * t;
         *(f32*)(A + 0xdc) = *(f32*)(B + 0xc);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
+            mathSinf(3.1415927f * (float)((s32)((s8) * (B + 0x2d)) << 8) / 32768.0f);
         *(f32*)(A + 0xe4) = lbl_803E05D0 * t;
         *(f32*)(A + 0xfc) = *(f32*)(B + 0x10);
         t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+            mathCosf(3.1415927f * (float)((s32)((s8) * (B + 0x2c)) << 8) / 32768.0f);
         *(f32*)(A + 0x104) = lbl_803E05D0 * t;
     }
     return 0;
@@ -650,7 +633,7 @@ static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset
     f32 angle;
     f32 trig;
 
-    angle = gRomCurveAnglePi * (f32)((s32) * (s8*)((char*)*nodePtr + angleOffset) << 8) / lbl_803E05D8;
+    angle = 3.1415927f * (f32)((s32) * (s8*)((char*)*nodePtr + angleOffset) << 8) / 32768.0f;
     if (useCos)
     {
         trig = mathCosf(angle);
@@ -703,7 +686,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
             curvesSetupMoveNetworkCurve((float*)state);
             if (state->phase <= lbl_803E05F0)
             {
-                state->phase = lbl_803E05F4;
+                state->phase = 0.01f;
             }
         }
     }
@@ -737,7 +720,7 @@ int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
             curvesSetupMoveNetworkCurve((float*)state);
             if (state->phase >= lbl_803E05C8)
             {
-                state->phase = lbl_803E05CC;
+                state->phase = 0.99f;
             }
         }
     }
@@ -750,11 +733,11 @@ void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
 {
     if (state->phase <= lbl_803E05F0)
     {
-        state->phase = lbl_803E05F4;
+        state->phase = 0.01f;
     }
     else if (state->phase >= lbl_803E05C8)
     {
-        state->phase = lbl_803E05CC;
+        state->phase = 0.99f;
     }
     Curve_AdvanceAlongPath(state, dt);
 }
@@ -826,7 +809,7 @@ void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
     int* hit;
     int* bestHit;
     int** list = (int**)(*gRomCurveInterface)->getCurves(&count);
-    f32 minDist = gObjfsaNearestDistInit;
+    f32 minDist = 3.4028235e+38f;
     int i;
     bestHit = 0;
     for (i = count; i > 0; i--)
@@ -865,7 +848,7 @@ void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filte
     s16 gbId;
     f32 minDist;
     int** tmp = (int**)(*gRomCurveInterface)->getCurves(&count);
-    minDist = gObjfsaNearestDistInit;
+    minDist = 3.4028235e+38f;
     bestHit = 0;
     i = 0;
     list = tmp;
@@ -1518,11 +1501,11 @@ void walkgroupFindExitPointFn_800dc398(void)
     {
         if (blockFlags[2] != 0 || blockFlags[0x34] != 0)
         {
-            scale = lbl_803E0600;
+            scale = 14.0f;
         }
         else
         {
-            scale = lbl_803E0604;
+            scale = 10.0f;
         }
 
         curveList = (int**)(*gRomCurveInterface)->getCurves(&curveCount);
@@ -1606,8 +1589,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                     dxn = dxn / len;
                     dzn = dzn / len;
                 }
-                wg->planes[3].normalX = (s16)(gObjfsaPlaneNormalScale * dxn);
-                wg->planes[3].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);
+                wg->planes[3].normalX = (s16)(32767.0f * dxn);
+                wg->planes[3].normalZ = (s16)(32767.0f * dzn);
                 *(po) = -((f32)wg->planes[3].normalX * (x3) + (f32)wg->planes[3].normalZ * (z3));
 
                 wg->maxY = (s16)(lbl_803E05D0 * (f32) * (s8*)(curve + 0x18) + *(f32*)(curve + 0xc));
@@ -1735,7 +1718,7 @@ void walkgroupFindExitPointFn_800dc398(void)
         pi = 1;
         pp = &pairs[2];
         zero = lbl_803E05F0;
-        div = lbl_803E060C;
+        div = 20.0f;
         p = &patchBase[0][1];
         for (; pi < gObjfsaPatchCount; pp += 2, p++, pi++)
         {
@@ -2310,7 +2293,7 @@ int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char
     u8 traceResult;
     u64 objPos;
 
-    bestDistance = lbl_803E063C;
+    bestDistance = 1905.0f;
     bestCurve = NULL;
     bestActionDistance = bestDistance;
     bestActionCurve = NULL;
@@ -2587,8 +2570,8 @@ int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 
     bestNeighborIds[1] = -1;
     bestNeighborIds[0] = -1;
-    bestDistances[1] = lbl_803E0644;
-    bestDistances[0] = lbl_803E0644;
+    bestDistances[1] = 5000000.0f;
+    bestDistances[0] = 5000000.0f;
 
     segment.startX = ((ObjfsaRomCurveDef*)curve)->x;
     segment.startY = ((ObjfsaRomCurveDef*)curve)->y;
@@ -2882,8 +2865,8 @@ int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* 
         projected =
             RomCurve_projectPointToAdjacentWindowLegacy(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset,
                                                         &phase);
-        if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
-            verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654)
+        if (projected != 0 && lateralOffset > -300.0f && lateralOffset < 300.0f &&
+            verticalOffset > -100.0f && verticalOffset < 100.0f)
         {
             *outPhase = phase;
             return curve;
@@ -3099,7 +3082,7 @@ int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
     previousCurveId |= curveId;
     curve = RomCurve_FindByIdInline(curveId);
     hitCount = 0;
-    *outDistance = lbl_803E065C;
+    *outDistance = 200000.0f;
     do
     {
         nextCurveId = ROMCURVE_LINK_ID_NONE;
@@ -3119,7 +3102,7 @@ int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
         if (nextCurveId != (int)ROMCURVE_LINK_ID_NONE)
         {
             nextCurve = RomCurve_FindByIdInline(nextCurveId);
-            if (RomCurve_segmentIntersectsOriginRayXZ(x, y, z, curve, nextCurve, lbl_803E0660) != 0)
+            if (RomCurve_segmentIntersectsOriginRayXZ(x, y, z, curve, nextCurve, 1000.0f) != 0)
             {
                 dx = curve->x - x;
                 dy = curve->y - y;
@@ -3703,7 +3686,7 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
     *outZ = zero;
     *outY = zero;
     *outX = zero;
-    bestDistance = lbl_803E0644;
+    bestDistance = 5000000.0f;
     for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
     {
         curve = romCurves[curveIndex];
