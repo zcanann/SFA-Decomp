@@ -127,6 +127,33 @@ void pauseMenuAnimateCarousel(void);
 void pauseMenuInit(void);
 void pauseMenuDoSave(void);
 void perspectiveFn_80129db4(void);
+void GameUI_airMeterInitType0(int a, int b, int c);
+void GameUI_airMeterRun(int value);
+void GameUI_airMeterSetField24(f32 value);
+void GameUI_airMeterSetShutdown(void);
+void GameUI_airMeterShutdown(void);
+void GameUI_finishNpcDialogue(void);
+void GameUI_func07(void);
+s16 GameUI_func0D(void);
+void GameUI_func0E(u8 value);
+void GameUI_func0F(s32 a, s32 b, s32 c);
+void GameUI_func14(s16 a, int b, int c);
+void GameUI_func15(s16 a, int b, int c);
+void GameUI_gameTextShowNpcDialogue(s32 id, s32 unusedA, s32 unusedB, s32 disableInput);
+void GameUI_hudDraw(int a, int b, int c);
+void GameUI_initAirMeter(int a, int b);
+void GameUI_initialise(void);
+int GameUI_isAnyItemBeingUsed(void);
+int GameUI_isItemBeingUsed(s32 id);
+s32 GameUI_isOneOfItemsBeingUsed(s32* ids, int count);
+void GameUI_release(void);
+int GameUI_run(void);
+void GameUI_setInputOverride(int enabled, s16 x, s16 y);
+void GameUI_setUnusedHudSetting(u8 value);
+void GameUI_unselectAllItems(void);
+void GameUI_update(void);
+s32 CMenu_GetState(void);
+void CMenu_SetShouldClose(int value);
 
 
 #endif /* MAIN_DLL_DLL_0000_GAMEUI_H_ */

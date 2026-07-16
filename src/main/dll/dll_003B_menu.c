@@ -16,6 +16,7 @@
  * HUD is hidden.
  */
 #include "main/dll/dll_003B_menu.h"
+#include "main/dll/dll_0000_gameui.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
 #include "main/gameloop_api.h"
@@ -179,36 +180,6 @@ u8 gHudButtonIcons[] = {
     0x00, 0x09, 0x00, 0x04, 0x00, 0x0A, 0x00, 0x2B, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0B, 0x00, 0x10, 0x00, 0x0B, 0x00,
     0x3C, 0x00, 0x0B, 0x00, 0x1D, 0x00, 0x0C, 0x00, 0x49, 0x00, 0x0C,
 };
-
-extern void CMenu_GetState(void);
-extern void CMenu_SetShouldClose(void);
-extern void GameUI_airMeterInitType0(void);
-extern void GameUI_airMeterRun(void);
-extern void GameUI_airMeterSetField24(void);
-extern void GameUI_airMeterSetShutdown(void);
-extern void GameUI_airMeterShutdown(void);
-extern void GameUI_finishNpcDialogue(void);
-extern void GameUI_func07(void);
-extern void GameUI_func0D(void);
-extern void GameUI_func0E(void);
-extern void GameUI_func0F(void);
-extern void GameUI_func14(void);
-extern void GameUI_func15(void);
-extern void GameUI_gameTextShowNpcDialogue(void);
-extern void GameUI_hudDraw(void);
-extern void GameUI_initAirMeter(void);
-extern void GameUI_initialise(void);
-extern void GameUI_isAnyItemBeingUsed(void);
-extern void GameUI_isItemBeingUsed(void);
-extern void GameUI_isOneOfItemsBeingUsed(void);
-extern void GameUI_release(void);
-extern void GameUI_run(void);
-extern void GameUI_setInputOverride(void);
-extern void GameUI_setUnusedHudSetting(void);
-extern void GameUI_unselectAllItems(void);
-extern void GameUI_update(void);
-extern void pauseMenuDrawStatus(void);
-extern void pauseMenuFn_80129ee0(void);
 
 u32 lbl_8031B818[222] = {
     0x00480121, 0x01d30100, 0x100c0a00, 0x0cff030c, 0x3fd9999a, 0x0000044d, 0x000003a9, 0x00000000, 0x00480240,
