@@ -38,3 +38,9 @@ Verified diagnoses from the matching fleets; each blocked on authority outside a
   mapSetup, viewportEffectFn_8000e380): register coloring is fixable by decl order OR init-emission order
   but the two constraints oppose each other vs target — suggests slightly different source-level constructs
   in the original TUs rather than allocator noise.
+
+## Reverse-creation temp-numbering signature (fleet observation, 2026-07-16)
+Across independent `-opt nopeephole,noschedule` units (newclouds snowCloudUpdateFlakes, dll_000B dll_0B_func09, plus the debugPrint family), wherever >=2 compiler temps coexist in a region, RETAIL assigns their registers in reverse creation order relative to our build - a clean cyclic rotation, not noise. Decl-order and the full opt-pragma family are inert against it. Combined with the web-numbering decode (our ordinary-temp band numbers reverse-creation), this smells like a compiler-invocation-level difference (pass order / deferred inlining / a point-release numbering flip) rather than any per-function source form. Suggested owner experiment: diff temp-web numbering on one small repro fn across MWCC point releases / -inline variants.
+
+## titleScreenDrawFn_80093db4 tail (newclouds, 98.68)
+Target pre-evaluates all three GXWGFifo f32->s16 conversions right-to-left (v[2],v[1],v[0] -> r4,r3,r0, no extsh) BEFORE the three sth stores. No C89 source form found that un-fuses the convert-store pairs without introducing extsh (inline-helper, reversed int locals, comma-expr, 7-pragma sweep all fail). Possibly the same deferred-inlining/pass-order issue as above.
