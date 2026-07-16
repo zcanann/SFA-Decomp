@@ -2074,11 +2074,11 @@ void* loadCharacter(s16* data, int flags, int arg2, int arg3, void* parent, int 
     count = modelDef->modelCount;
     if (flags29 & OBJLOAD_FLAG_INDEXED_MODEL)
     {
-        idx = (flags29 >> 0xb) & 0xf;
-        if (idx < count)
+        i = (flags29 >> 0xb) & 0xf;
+        if (i < count)
         {
-            models[idx] = ObjModel_Load(-modelDef->modelFileIds[idx], flags29, &size);
-            offsets[idx] = total;
+            models[i] = ObjModel_Load(-modelDef->modelFileIds[i], flags29, &size);
+            offsets[i] = total;
             total += size;
         }
     }
