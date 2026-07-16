@@ -15,90 +15,6 @@ f32 gScreenTransitionAlphaStep;
 f32 screenTransitionAlpha;
 
 extern u8 gScreenTransitionDone;
-u8 screenTransition_func07(void)
-{
-    return gScreenTransitionDone;
-}
-
-extern f32 screenTransitionAlpha;
-f32 screenTransition_getAlpha(void)
-{
-    return screenTransitionAlpha;
-}
-
-extern u8 screenTransitionPause;
-#pragma peephole off
-void setScreenTransitionPause(u32 pause)
-{
-    screenTransitionPause = pause;
-}
-#pragma peephole reset
-
-extern f32 gScreenTransitionAlphaMax;
-u32 isScreenTransitionActive(void)
-{
-    return gScreenTransitionAlphaMax == screenTransitionAlpha;
-}
-
-extern f32 lbl_803E0564;
-extern f32 lbl_803E0560;
-extern f32 lbl_803E055C;
-extern f32 gScreenTransitionAlphaStep;
-extern f32 gScreenTransitionHoldTimer;
-extern u8 gScreenTransitionType;
-extern u8 gScreenTransitionDelay;
-
-#pragma scheduling off
-#pragma peephole off
-
-void screenTransitionFn_800d7b04(int duration, int type)
-{
-    screenTransitionAlpha = gScreenTransitionAlphaMax;
-    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
-    gScreenTransitionType = type;
-    gScreenTransitionDelay = 5;
-}
-
-void screenTransition_fadeFrom(int duration, int type, f32 from)
-{
-    screenTransitionAlpha = gScreenTransitionAlphaMax * from;
-    gScreenTransitionAlphaStep = -(lbl_803E055C * from) / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
-    gScreenTransitionType = type;
-    gScreenTransitionDelay = 1;
-}
-
-#pragma opt_common_subs off
-void screenTransition_fadeIn(int duration, int type)
-{
-    if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
-    {
-        screenTransitionAlpha = gScreenTransitionAlphaMax;
-    }
-    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
-    gScreenTransitionType = type;
-    gScreenTransitionDelay = 1;
-}
-#pragma opt_common_subs reset
-
-#pragma opt_common_subs off
-void screenTransition_fadeOut(int duration, int type)
-{
-    if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
-    {
-        screenTransitionAlpha = lbl_803E0560;
-    }
-    gScreenTransitionAlphaStep = lbl_803E055C / duration;
-    gScreenTransitionHoldTimer = lbl_803E0560;
-    gScreenTransitionType = type;
-    gScreenTransitionDelay = 0;
-}
-#pragma opt_common_subs reset
-
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -149,79 +65,6 @@ static inline void screenTransitionFadeColor(u8 r, u8 g, u8 b)
     hudDrawRect(sx, sy, sw, sh, col);
     GXSetScissor(sx, sy, sw, sh);
 }
-
-#pragma opt_common_subs off
-void screenTransition_update(int p1, int p2, int p3)
-{
-    if (gScreenTransitionDelay != 0)
-    {
-        gScreenTransitionDelay--;
-    }
-    else
-    {
-        if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
-        {
-            (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
-            gScreenTransitionHoldTimer = lbl_803E0560;
-        }
-        screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
-        if (screenTransitionAlpha < lbl_803E0560)
-        {
-            screenTransitionAlpha = lbl_803E0560;
-            gScreenTransitionDone = 1;
-            if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
-            {
-                setHudOpacity(0xff);
-            }
-            return;
-        }
-        if (screenTransitionAlpha > gScreenTransitionAlphaMax)
-        {
-            screenTransitionAlpha = gScreenTransitionAlphaMax;
-            gScreenTransitionDone = 1;
-            if (screenTransitionPause == 0)
-            {
-                gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
-            }
-            if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
-            {
-                setHudOpacity(0xff);
-            }
-        }
-        else
-        {
-            gScreenTransitionDone = 0;
-        }
-    }
-    if (gDvdErrorPauseActive != 0)
-    {
-        return;
-    }
-    switch (gScreenTransitionType)
-    {
-    case SCREEN_TRANSITION_BLACK:
-    {
-        screenTransitionFadeBlack();
-        break;
-    }
-    case SCREEN_TRANSITION_WHITE:
-    {
-        screenTransitionFadeColor(0xff, 0xff, 0xff);
-        break;
-    }
-    case SCREEN_TRANSITION_WHITE_WIPE:
-        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
-        break;
-    case SCREEN_TRANSITION_RED:
-    {
-        screenTransitionFadeColor(0xff, 0, 0);
-        break;
-    }
-    case SCREEN_TRANSITION_HUD:
-        break;
-    }
-}
-#pragma opt_common_subs reset
 
 extern f32 gScreenTransitionAlphaMidpoint;
 extern f32 lbl_803E0544;
@@ -361,6 +204,172 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         GXSetScissor(sx, sy, sw, sh);
     }
 }
+
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 screenTransitionPause;
+#pragma peephole off
+void setScreenTransitionPause(u32 pause)
+{
+    screenTransitionPause = pause;
+}
+#pragma peephole reset
+
+u8 screenTransition_func07(void)
+{
+    return gScreenTransitionDone;
+}
+
+extern f32 screenTransitionAlpha;
+f32 screenTransition_getAlpha(void)
+{
+    return screenTransitionAlpha;
+}
+
+extern f32 gScreenTransitionAlphaMax;
+extern f32 lbl_803E0564;
+extern f32 lbl_803E0560;
+extern f32 lbl_803E055C;
+extern f32 gScreenTransitionAlphaStep;
+extern f32 gScreenTransitionHoldTimer;
+extern u8 gScreenTransitionType;
+extern u8 gScreenTransitionDelay;
+
+#pragma scheduling off
+#pragma peephole off
+void screenTransition_fadeFrom(int duration, int type, f32 from)
+{
+    screenTransitionAlpha = gScreenTransitionAlphaMax * from;
+    gScreenTransitionAlphaStep = -(lbl_803E055C * from) / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 1;
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+
+u32 isScreenTransitionActive(void)
+{
+    return gScreenTransitionAlphaMax == screenTransitionAlpha;
+}
+
+#pragma scheduling off
+#pragma peephole off
+
+void screenTransitionFn_800d7b04(int duration, int type)
+{
+    screenTransitionAlpha = gScreenTransitionAlphaMax;
+    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 5;
+}
+
+#pragma opt_common_subs off
+void screenTransition_fadeIn(int duration, int type)
+{
+    if (gScreenTransitionAlphaStep >= lbl_803E0560 || lbl_803E0560 == screenTransitionAlpha)
+    {
+        screenTransitionAlpha = gScreenTransitionAlphaMax;
+    }
+    gScreenTransitionAlphaStep = lbl_803E0564 / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 1;
+}
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs off
+void screenTransition_fadeOut(int duration, int type)
+{
+    if (gScreenTransitionAlphaStep <= lbl_803E0560 || gScreenTransitionAlphaMax == screenTransitionAlpha)
+    {
+        screenTransitionAlpha = lbl_803E0560;
+    }
+    gScreenTransitionAlphaStep = lbl_803E055C / duration;
+    gScreenTransitionHoldTimer = lbl_803E0560;
+    gScreenTransitionType = type;
+    gScreenTransitionDelay = 0;
+}
+#pragma opt_common_subs reset
+
+#pragma opt_common_subs off
+void screenTransition_update(int p1, int p2, int p3)
+{
+    if (gScreenTransitionDelay != 0)
+    {
+        gScreenTransitionDelay--;
+    }
+    else
+    {
+        if (screenTransitionPause == 0 && gScreenTransitionHoldTimer >= gScreenTransitionHoldDuration)
+        {
+            (*gScreenTransitionInterface)->step(0x1e, gScreenTransitionType);
+            gScreenTransitionHoldTimer = lbl_803E0560;
+        }
+        screenTransitionAlpha = gScreenTransitionAlphaStep * timeDelta + screenTransitionAlpha;
+        if (screenTransitionAlpha < lbl_803E0560)
+        {
+            screenTransitionAlpha = lbl_803E0560;
+            gScreenTransitionDone = 1;
+            if (gScreenTransitionType == SCREEN_TRANSITION_HUD)
+            {
+                setHudOpacity(0xff);
+            }
+            return;
+        }
+        if (screenTransitionAlpha > gScreenTransitionAlphaMax)
+        {
+            screenTransitionAlpha = gScreenTransitionAlphaMax;
+            gScreenTransitionDone = 1;
+            if (screenTransitionPause == 0)
+            {
+                gScreenTransitionHoldTimer = gScreenTransitionHoldTimer + timeDelta;
+            }
+            if (gScreenTransitionType != SCREEN_TRANSITION_HUD)
+            {
+                setHudOpacity(0xff);
+            }
+        }
+        else
+        {
+            gScreenTransitionDone = 0;
+        }
+    }
+    if (gDvdErrorPauseActive != 0)
+    {
+        return;
+    }
+    switch (gScreenTransitionType)
+    {
+    case SCREEN_TRANSITION_BLACK:
+    {
+        screenTransitionFadeBlack();
+        break;
+    }
+    case SCREEN_TRANSITION_WHITE:
+    {
+        screenTransitionFadeColor(0xff, 0xff, 0xff);
+        break;
+    }
+    case SCREEN_TRANSITION_WHITE_WIPE:
+        screenRectFn_800d7568(p1, p2, p3, 0xff, 0xff, 0xff);
+        break;
+    case SCREEN_TRANSITION_RED:
+    {
+        screenTransitionFadeColor(0xff, 0, 0);
+        break;
+    }
+    case SCREEN_TRANSITION_HUD:
+        break;
+    }
+}
+#pragma opt_common_subs reset
+
+#pragma peephole reset
+#pragma scheduling reset
 
 u32 lbl_80311340[14] = {
     0, 0, 0, 0x00080000,
