@@ -303,14 +303,14 @@ extern int lbl_803DC9D0;
 extern int lbl_803DC9D4;
 extern int gGameTextLastLanguage;
 extern void* lbl_8033BE40[];
-extern void* gGameTextBoxCornerTexture;
-extern void* gGameTextBoxBgTexture;
+extern Texture* gGameTextBoxCornerTexture;
+extern Texture* gGameTextBoxBgTexture;
 extern u32 gGameTextBoxFillColor;
 extern int gSubtitleLineIndex;
 extern f32 gSubtitleCurTime;
 extern int gSubtitleElapsedFrames;
 extern int gSubtitleLineCount;
-extern void* gGameTextBoxEdgeTexture;
+extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
 extern int saveFileStruct_isCheatActive(u8 idx);
@@ -3527,7 +3527,7 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 #pragma opt_strength_reduction off
 void gameTextInitFn_8001c794(void)
 {
-    void** q;
+    Texture** q;
     s16* p;
     int x0;
     int off;
@@ -3540,12 +3540,13 @@ void gameTextInitFn_8001c794(void)
     u8* rowBase;
     int i;
     int j;
-    void* tex;
+    Texture* tex;
+    int count;
 
-    i = 1;
+    count = 1;
     p = &gGameTextBoxTexAssets + 1;
     q = &gGameTextBoxBgTexture + 1;
-    while (p--, q--, i-- != 0)
+    while (p--, q--, count-- != 0)
     {
         *q = textureLoadAsset(*p);
     }
