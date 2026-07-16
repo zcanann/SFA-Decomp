@@ -724,8 +724,8 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     f32 attractRatio;
     staticData = EXPGFX_STATIC_DATA;
     runtime = EXPGFX_RUNTIME_DATA;
-    attractRatio = 1.0f;
-    trickyRange = 0.0f;
+    attractRatio = lbl_803DF354;
+    trickyRange = lbl_803DF35C;
     playerRange = trickyRange;
     player = (GameObject*)Obj_GetPlayerObject();
     tricky = (GameObject*)getTrickyObject();
@@ -1273,11 +1273,10 @@ foundFirst:
                     {
                         if (lbl_803DF38C * slot->lifetimeFrameLimit > (f32)slot->lifetimeFrame)
                         {
-                            f32 boost = lbl_803DF404;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_IMPACT_BOOST_LATCH | 0LL;
-                            slot->velocityX *= boost;
-                            slot->velocityY *= boost;
-                            slot->velocityZ *= boost;
+                            slot->velocityX *= lbl_803DF404;
+                            slot->velocityY *= lbl_803DF404;
+                            slot->velocityZ *= lbl_803DF404;
                         }
                     }
                     if ((slot->renderFlags & EXPGFX_RENDER_STRETCHED_TRAIL) != 0)
