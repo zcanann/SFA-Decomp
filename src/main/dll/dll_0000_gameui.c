@@ -5401,10 +5401,9 @@ void fn_80128470(int alpha)
     fn_80128A7C((u8)lbl_803DD7D8, alpha, 0);
     {
         f32 base = lbl_803DBAC0;
-        f32 s = mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
-        f32 amp = base;
-        amp += base * s;
-        fn_80128A7C((u8)lbl_803DD7D8, (s16)alpha * amp, 4);
+        fn_80128A7C((u8)lbl_803DD7D8,
+                    (s16)alpha * (base + base * mathSinf(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94)),
+                    4);
     }
     {
         int n = (s16)alpha * (0x200 - lbl_803DD75C);
