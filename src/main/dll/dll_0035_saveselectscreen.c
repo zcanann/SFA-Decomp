@@ -187,24 +187,6 @@ void saveSelectOpenFile(int sel, int slot)
         }
     }
 }
-#pragma dont_inline reset
-
-void SaveSelectScreen_release(void)
-{
-    int i;
-    void* zero;
-
-    zero = NULL;
-    i = 0;
-    do
-    {
-        mm_free(gSaveSelectTextBuffers[i]);
-        gSaveSelectTextBuffers[i] = zero;
-        i++;
-    } while (i < SAVE_SELECT_TEXT_BUFFER_COUNT);
-}
-
-#pragma dont_inline on
 void saveFileSelect_init(int sel, int slot)
 {
     int i;
@@ -254,7 +236,8 @@ void saveFileSelect_init(int sel, int slot)
         }
     }
 }
-#pragma dont_inline reset
+
+#pragma dont_inline off
 void saveSelectSetupMenuItems(SaveSelectPanel* p)
 {
     int i;
@@ -332,7 +315,6 @@ void saveSelectGoToChapterSelect(void)
         lbl_803DD6C4 = 0;
     }
 }
-
 #pragma dont_inline on
 #pragma opt_dead_assignments off
 void saveSelectFn_8011a70c(void)
@@ -370,6 +352,7 @@ void saveSelectFn_8011a70c(void)
         }
     }
 }
+
 #pragma opt_dead_assignments reset
 void saveSelectGoToChooseSlot(int arg)
 {
@@ -414,9 +397,6 @@ void saveSelectGoToChooseSlot(int arg)
         saveSelectGoToChapterSelect();
     }
 }
-#pragma dont_inline reset
-
-#pragma dont_inline on
 void saveSelectScreenFree(int runExitCallback)
 {
     void** p;
@@ -467,7 +447,8 @@ void saveSelectScreenFree(int runExitCallback)
         gSaveSelectMenuItem = NULL;
     }
 }
-#pragma dont_inline reset
+
+#pragma dont_inline off
 
 void SaveSelectScreen_render(int param)
 {
@@ -573,6 +554,10 @@ void SaveSelectScreen_render(int param)
     {
         gSaveSelectRefreshCounter = 0;
     }
+}
+
+void SaveSelectScreen_frameEnd_nop(void)
+{
 }
 
 int SaveSelectScreen_run(void)
@@ -741,6 +726,21 @@ int SaveSelectScreen_run(void)
     return 0;
 }
 
+void SaveSelectScreen_release(void)
+{
+    int i;
+    void* zero;
+
+    zero = NULL;
+    i = 0;
+    do
+    {
+        mm_free(gSaveSelectTextBuffers[i]);
+        gSaveSelectTextBuffers[i] = zero;
+        i++;
+    } while (i < SAVE_SELECT_TEXT_BUFFER_COUNT);
+}
+
 void SaveSelectScreen_initialise(void)
 {
     int i;
@@ -803,10 +803,6 @@ void SaveSelectScreen_initialise(void)
     {
         gSaveSelectTextBuffers[i] = mmAlloc(5, 5, 0);
     }
-}
-
-void SaveSelectScreen_frameEnd_nop(void)
-{
 }
 
 extern TitleMenuTextEntry lbl_8031A4B0[];
