@@ -351,9 +351,9 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
     u8 blurred[128];
     u8 row[152];
     u8* data;
-    u32 sum;
+    u32 sum[1];
     u32 i;
-    int k;
+    int k[1];
 
     data = texData + 0x60;
     if (window % 8 == 0)
@@ -387,16 +387,16 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 *dst = fill;
                 dst++;
             }
-            sum = 0;
-            for (k = 0; k < window; k++)
+            sum[0] = 0;
+            for (k[0] = sum[0]; k[0] < window; k[0]++)
             {
-                sum += row[k];
+                sum[0] += row[k[0]];
             }
-            for (k = 0; k < size; k++)
+            for (k[0] = 0; k[0] < size; k[0]++)
             {
-                blurred[k] = sum / window;
-                sum -= row[k];
-                sum += (row + window)[k];
+                blurred[k[0]] = sum[0] / window;
+                sum[0] -= row[k[0]];
+                sum[0] += (row + window)[k[0]];
             }
             src = (u32*)blurred;
             wp = tile;
@@ -441,16 +441,16 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     *dst = fill;
                     dst++;
                 }
-                sum = 0;
-                for (k = 0; k < window; k++)
+                sum[0] = 0;
+                for (k[0] = 0; k[0] < window; k[0]++)
                 {
-                    sum += row[k];
+                    sum[0] += row[k[0]];
                 }
-                for (k = 0; k < size; k++)
+                for (k[0] = 0; k[0] < size; k[0]++)
                 {
-                    blurred[k] = sum / window;
-                    sum -= row[k];
-                    sum += (row + window)[k];
+                    blurred[k[0]] = sum[0] / window;
+                    sum[0] -= row[k[0]];
+                    sum[0] += (row + window)[k[0]];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
@@ -498,16 +498,16 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 *dst = fillhw;
                 dst++;
             }
-            sum = 0;
-            for (k = 0; k < window; k++)
+            sum[0] = 0;
+            for (k[0] = 0; k[0] < window; k[0]++)
             {
-                sum += row[k];
+                sum[0] += row[k[0]];
             }
-            for (k = 0; k < size; k++)
+            for (k[0] = 0; k[0] < size; k[0]++)
             {
-                blurred[k] = sum / window;
-                sum -= row[k];
-                sum += (row + window)[k];
+                blurred[k[0]] = sum[0] / window;
+                sum[0] -= row[k[0]];
+                sum[0] += (row + window)[k[0]];
             }
             src = (u16*)blurred;
             for (x = 0; x < size; x += 8)
@@ -553,16 +553,16 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     *dst = fillhw;
                     dst++;
                 }
-                sum = 0;
-                for (k = 0; k < window; k++)
+                sum[0] = 0;
+                for (k[0] = 0; k[0] < window; k[0]++)
                 {
-                    sum += row[k];
+                    sum[0] += row[k[0]];
                 }
-                for (k = 0; k < size; k++)
+                for (k[0] = 0; k[0] < size; k[0]++)
                 {
-                    blurred[k] = sum / window;
-                    sum -= row[k];
-                    sum += (row + window)[k];
+                    blurred[k[0]] = sum[0] / window;
+                    sum[0] -= row[k[0]];
+                    sum[0] += (row + window)[k[0]];
                 }
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
