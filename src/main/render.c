@@ -116,138 +116,6 @@ int getLActions(int a, int b, u16 idx)
     return 0;
 }
 
-#pragma dont_inline on
-void render_copyPackedU64Tail(u64* dst, u32 packed)
-{
-    /* Preserve the leading bytes of *dst; fill the tail from the aligned
-       64-bit word shifted down. */
-    u64 src = *(u64*)(packed & ~7);
-
-    switch (packed & 7)
-    {
-    case 7:
-        *dst = src;
-        break;
-    case 6:
-        *dst = (*dst & 0xff00000000000000ULL) | (src >> 8);
-        break;
-    case 5:
-        *dst = (*dst & 0xffff000000000000ULL) | (src >> 16);
-        break;
-    case 4:
-        *dst = (*dst & 0xffffff0000000000ULL) | (src >> 24);
-        break;
-    case 3:
-        *dst = (*dst & 0xffffffff00000000ULL) | (src >> 32);
-        break;
-    case 2:
-        *dst = (*dst & 0xffffffffff000000ULL) | (src >> 40);
-        break;
-    case 1:
-        *dst = (*dst & 0xffffffffffff0000ULL) | (src >> 48);
-        break;
-    case 0:
-        *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56);
-        break;
-    }
-}
-#pragma dont_inline reset
-
-#pragma dont_inline on
-void render_copyPackedU64Head(u64* dst, u32 packed)
-{
-    /* Fill the head from the aligned 64-bit word; preserve bytes after the
-       unaligned source offset. */
-    u64 src = *(u64*)(packed & ~7);
-
-    switch (packed & 7)
-    {
-    case 0:
-        *dst = src;
-        break;
-    case 1:
-        *dst = (*dst & 0xffULL) | (src << 8);
-        break;
-    case 2:
-        *dst = (*dst & 0xffffULL) | (src << 16);
-        break;
-    case 3:
-        *dst = (*dst & 0xffffffULL) | (src << 24);
-        break;
-    case 4:
-        *dst = (*dst & 0xffffffffULL) | (src << 32);
-        break;
-    case 5:
-        *dst = (*dst & 0xffffffffffULL) | (src << 40);
-        break;
-    case 6:
-        *dst = (*dst & 0xffffffffffffULL) | (src << 48);
-        break;
-    case 7:
-        *dst = (*dst & 0xffffffffffffffULL) | (src << 56);
-        break;
-    }
-}
-#pragma dont_inline reset
-
-int getEnvfxActImmediately(struct GameObject* a, struct GameObject* b, u16 idx, int d)
-{
-    u8 raw[0x80];
-    EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
-
-    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
-    if (e != NULL)
-    {
-        if (e->kind <= 2 || e->kind == 4)
-        {
-            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 3)
-        {
-            e->field_2a = 0;
-            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-        else if (e->kind == 5)
-        {
-            e->field_2a = 0;
-            (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 6)
-        {
-            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-    }
-    return 0;
-}
-
-int getEnvfxAct(struct GameObject* a, struct GameObject* b, u16 idx, int d)
-{
-    u8 raw[0x80];
-    EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
-
-    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
-    if (e != NULL)
-    {
-        if (e->kind <= 2 || e->kind == 4)
-        {
-            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 3)
-        {
-            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-        else if (e->kind == 5)
-        {
-            (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
-        }
-        else if (e->kind == 6)
-        {
-            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
-        }
-    }
-    return 0;
-}
-
 u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int gap, u8 bw)
 {
     int acc;
@@ -612,10 +480,79 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     } while ((u64)(u32)dst != end);
 }
 
-int return0xFFFF_80008B6C(void)
+#pragma dont_inline on
+void render_copyPackedU64Tail(u64* dst, u32 packed)
 {
-    return -0x1;
+    /* Preserve the leading bytes of *dst; fill the tail from the aligned
+       64-bit word shifted down. */
+    u64 src = *(u64*)(packed & ~7);
+
+    switch (packed & 7)
+    {
+    case 7:
+        *dst = src;
+        break;
+    case 6:
+        *dst = (*dst & 0xff00000000000000ULL) | (src >> 8);
+        break;
+    case 5:
+        *dst = (*dst & 0xffff000000000000ULL) | (src >> 16);
+        break;
+    case 4:
+        *dst = (*dst & 0xffffff0000000000ULL) | (src >> 24);
+        break;
+    case 3:
+        *dst = (*dst & 0xffffffff00000000ULL) | (src >> 32);
+        break;
+    case 2:
+        *dst = (*dst & 0xffffffffff000000ULL) | (src >> 40);
+        break;
+    case 1:
+        *dst = (*dst & 0xffffffffffff0000ULL) | (src >> 48);
+        break;
+    case 0:
+        *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56);
+        break;
+    }
 }
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void render_copyPackedU64Head(u64* dst, u32 packed)
+{
+    /* Fill the head from the aligned 64-bit word; preserve bytes after the
+       unaligned source offset. */
+    u64 src = *(u64*)(packed & ~7);
+
+    switch (packed & 7)
+    {
+    case 0:
+        *dst = src;
+        break;
+    case 1:
+        *dst = (*dst & 0xffULL) | (src << 8);
+        break;
+    case 2:
+        *dst = (*dst & 0xffffULL) | (src << 16);
+        break;
+    case 3:
+        *dst = (*dst & 0xffffffULL) | (src << 24);
+        break;
+    case 4:
+        *dst = (*dst & 0xffffffffULL) | (src << 32);
+        break;
+    case 5:
+        *dst = (*dst & 0xffffffffffULL) | (src << 40);
+        break;
+    case 6:
+        *dst = (*dst & 0xffffffffffffULL) | (src << 48);
+        break;
+    case 7:
+        *dst = (*dst & 0xffffffffffffffULL) | (src << 56);
+        break;
+    }
+}
+#pragma dont_inline reset
 
 s16 renderModeSetOrGet(int mode)
 {
@@ -625,4 +562,67 @@ s16 renderModeSetOrGet(int mode)
         return mode;
     }
     return gRenderMode;
+}
+
+int return0xFFFF_80008B6C(void)
+{
+    return -0x1;
+}
+
+int getEnvfxActImmediately(struct GameObject* a, struct GameObject* b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
+    if (e != NULL)
+    {
+        if (e->kind <= 2 || e->kind == 4)
+        {
+            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
+        }
+        else if (e->kind == 3)
+        {
+            e->field_2a = 0;
+            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
+        }
+        else if (e->kind == 5)
+        {
+            e->field_2a = 0;
+            (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
+        }
+        else if (e->kind == 6)
+        {
+            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
+        }
+    }
+    return 0;
+}
+
+int getEnvfxAct(struct GameObject* a, struct GameObject* b, u16 idx, int d)
+{
+    u8 raw[0x80];
+    EnvfxActEntry* e = (EnvfxActEntry*)(((u32)raw + 0x1f) & ~0x1f);
+
+    getTabEntry(e, MLDF_FILEID_ENVFXACT_BIN, idx * 0x60, 0x60);
+    if (e != NULL)
+    {
+        if (e->kind <= 2 || e->kind == 4)
+        {
+            (*gNewCloudsInterface)->updateEnvfxAct(a, b, e, d);
+        }
+        else if (e->kind == 3)
+        {
+            (*gSky2Interface)->updateEnvfxAct(a, b, e, d, idx);
+        }
+        else if (e->kind == 5)
+        {
+            (*gSkyInterface)->updateEnvfxAct(a, b, e, d);
+        }
+        else if (e->kind == 6)
+        {
+            (*gCloudActionInterface)->updateEnvfxAct(a, b, e, d, idx);
+        }
+    }
+    return 0;
 }
