@@ -1177,28 +1177,32 @@ int fn_80060688(GameObject* obj, int type)
 /* fn_80062808 -- begin a new shadow-volume frame: clear the per-frame
  * counts, flip the three double-buffer selectors, and rotate the current
  * write pointers to the buffer picked by this frame's flip index. */
+#pragma opt_propagation off
 void fn_80062808(void)
 {
     void* bufPtr;
+    s16 zero;
     if ((s8)gShadowFlag == 0)
     {
         return;
     }
-    lbl_803DCEF8 = 0;
-    lbl_803DCEFC = 0;
-    lbl_803DCEF4 = 0;
+    zero = 0;
+    lbl_803DCEF8 = zero;
+    lbl_803DCEFC = zero;
+    lbl_803DCEF4 = zero;
     lbl_803DCEEC = 1 - lbl_803DCEEC;
     lbl_803DCEED = 1 - lbl_803DCEED;
     lbl_803DCEEE = 1 - lbl_803DCEEE;
     bufPtr = lbl_803DCF24[lbl_803DCEEC];
     lbl_803DCF08 = bufPtr;
-    lbl_803DCEF4 = 0;
+    lbl_803DCEF4 = zero;
     lbl_803DCF10 = lbl_803DCF20;
     lbl_803DCF18 = lbl_803DCF1C;
     lbl_803DCF04 = bufPtr;
     lbl_803DCF14 = lbl_803DCF1C;
     lbl_803DCF0C = lbl_803DCF20;
 }
+#pragma opt_propagation reset
 
 void fn_80065574(int matchVal, GameObject* obj, int flag)
 {
