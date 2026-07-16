@@ -189,7 +189,6 @@ void fn_8015DAE8(void)
 int fn_8015DC04(int obj, GroundBaddieState* state)
 {
 
-    extern f64 lbl_803E2DC0;
     int count;
     int i;
     GroundBaddieState* sub;
@@ -705,7 +704,6 @@ int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 
 void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 {
-    extern f64 lbl_803E2DC0;
     extern f32 lbl_803E2DF4;
     extern f32 lbl_803E2DF8;
     extern f32 lbl_803E2DFC;
