@@ -377,7 +377,6 @@ static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
     return (ObjHitsPriorityState*)obj->anim.hitReactState;
 }
 #pragma optimization_level 1
-#pragma dont_inline on
 int playerStopRidingObject(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
@@ -409,7 +408,6 @@ int playerStopRidingObject(GameObject* obj)
     }
     return 0;
 }
-#pragma dont_inline reset
 #pragma optimization_level reset
 
 void fn_80295918(GameObject* obj, int sel, f32 fval)
@@ -14910,7 +14908,6 @@ void fn_802B066C(GameObject* obj, int state)
     }
 }
 
-#pragma dont_inline on
 void playerStaffInit(GameObject* obj, int state)
 {
     GameObject* child;
@@ -14953,7 +14950,6 @@ void playerStaffInit(GameObject* obj, int state)
         staffToggle(obj, 0);
     }
 }
-#pragma dont_inline reset
 
 
 void playerDoEyeAnims(GameObject* obj, int state)
@@ -15936,6 +15932,7 @@ void playerItemGetAnimFn(int obj, int inner, int state)
 }
 #pragma opt_loop_invariants reset
 #pragma opt_propagation off
+#pragma inline_max_size(7)
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
 {
     int ctrl;
@@ -16931,6 +16928,7 @@ void fn_802B4A9C(int obj, int inner, int inner2)
         }
     }
 }
+#pragma inline_max_size reset
 #pragma opt_propagation reset
 
 void playerAnimate(int obj, int state, f32 fv)
