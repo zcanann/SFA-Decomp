@@ -8105,6 +8105,7 @@ extern int getSbGalleon(void);
 extern int DBprotection_getCameraState(void);
 extern f32 lbl_803E8160;
 
+#pragma opt_propagation off
 void playerDoHitDetection(int obj)
 {
     int inner = *(int*)&((GameObject*)obj)->extra;
@@ -8122,7 +8123,8 @@ void playerDoHitDetection(int obj)
     if (((ByteFlags*)((char*)inner + 0x3f2))->b20 != 0 &&
         (((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) != 0)
     {
-        ((PlayerState*)inner)->baddie.physicsActive = 0;
+        u8 zero = 0;
+        ((PlayerState*)inner)->baddie.physicsActive = zero;
     }
     (*gPathControlInterface)->update((void*)obj, (void*)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void*)obj, (void*)(inner + 4));
@@ -8137,7 +8139,10 @@ void playerDoHitDetection(int obj)
                 (*(void**)((sub = *(int*)((char*)gPlayerPathObject + 0x54)) + 0x50) != NULL ||
                  (*(s8*)(sub + 0xad) != 0 && *(s8*)(sub + 0xac) != 0xe)))
             {
-                Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = 1;
+                {
+                    u8 one = 1;
+                    Player_GetObjHitsState((GameObject*)(obj))->suppressOutgoingHits = one;
+                }
                 ((PlayerState*)inner)->boulderChargeLevel = lbl_803E7EA4;
                 *(u8*)&((PlayerState*)inner)->hitWindowIndex = *(u8*)&((PlayerState*)inner)->activeHitWindow;
                 {
@@ -8347,6 +8352,7 @@ void playerDoHitDetection(int obj)
         *(u32*)&((PlayerState*)inner)->flags360 &= ~0x400000LL;
     }
 }
+#pragma opt_propagation reset
 
 typedef struct
 {
