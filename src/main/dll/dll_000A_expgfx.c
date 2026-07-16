@@ -669,25 +669,26 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     ExpgfxBounds* bounds;
     ExpgfxRuntimeDataLayout* runtime;
     int next;
-    GameObject* player;
-    GameObject* tricky;
+    f32* maxXPtr;
+    f32* minYPtr;
+    f32* maxYPtr;
+    f32* minZPtr;
+    f32* maxZPtr;
     int pool;
     int sky;
     ExpgfxStaticDataLayout* staticData;
-    f32* maxXPtr;
-    f32* minZPtr;
-    f32* maxZPtr;
     s16 slotIdx;
     ExpgfxSlot* slot;
     ExpgfxQuadTemplateVertex* template;
     s16 texT1;
     s16 texT0;
     s16 texS1;
+    s16 texS0;
+    GameObject* player;
+    GameObject* tricky;
     u8* nextBuf;
     u8 parity;
-    f32* minYPtr;
     u32 resource;
-    s16 texS0;
     s8* scan;
     int batch;
     int curPool;
@@ -696,7 +697,6 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     void* cache;
     u8* curCache;
     u8* curPoolBuf;
-    f32* maxYPtr;
     ExpgfxSourceObject* srcObj;
     u8 prefetched;
     int ambRPlus1;
@@ -1100,7 +1100,8 @@ foundFirst:
                         f32 fade;
 
                         rnd = randomGetRange(0, 5);
-                        slot->velocityY *= -(lbl_803DF3E4 * (f32)(int)rnd + lbl_803DF38C);
+                        fade = -((f32)(int)rnd * lbl_803DF3E4 + lbl_803DF38C);
+                        slot->velocityY *= fade;
                         if (slot->velocityY > lbl_803DF390)
                         {
                             slot->velocityY = lbl_803DF390;
@@ -1240,9 +1241,9 @@ foundFirst:
                         }
                         else if (srcObj != NULL)
                         {
-                            rot.x = slot->posX.value + srcObj->localPosX;
-                            rot.y = slot->posY.value + srcObj->localPosY;
-                            rot.z = slot->posZ.value + srcObj->localPosZ;
+                            rot.x = slot->posX.value + srcObj->worldPosX;
+                            rot.y = slot->posY.value + srcObj->worldPosY;
+                            rot.z = slot->posZ.value + srcObj->worldPosZ;
                         }
                         else
                         {
