@@ -3334,11 +3334,11 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             struct PackHeader* hdr = (struct PackHeader*)(qptr + offsetFlags);
             if (hdr->magic == 0xe0e0e0e0)
             {
-                memcpy((void*)destBuf, (void*)(((int)hdr + hdr->auxSize + 0x18 - qptr) + qptr), hdr->decompressedSize);
+                memcpy((void*)destBuf, (void*)(qptr + (hdr->auxSize + (int)hdr - qptr + 0x18)), hdr->decompressedSize);
             }
             else if (hdr->magic == 0xfacefeed)
             {
-                zlbDecompress((void*)(((int)hdr + hdr->auxSize + 0x28 - qptr) + qptr), hdr->compressedSize - 0x10,
+                zlbDecompress((void*)(qptr + (hdr->auxSize + (int)hdr - qptr + 0x28)), hdr->compressedSize - 0x10,
                               destBuf, &hdr->decompressedSize);
                 DCStoreRange((void*)destBuf, hdr->decompressedSize);
             }
