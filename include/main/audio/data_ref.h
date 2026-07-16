@@ -68,7 +68,7 @@ typedef struct FX_GROUP {
 } FX_GROUP;
 
 typedef struct SynthDataTables {
-    SDIR_TAB sdir[128];       /* 0x0000 dataSmpSDirTable */
+    SDIR_TAB sdir[128];       /* 0x0000 dataSmpSDirs */
     DATA_TAB curve[2048];     /* 0x0600 dataCurveTable */
     DATA_TAB keymap[256];     /* 0x4600 dataKeymapTable */
     LAYER_TAB layer[256];     /* 0x4E00 dataLayerTable */
@@ -89,13 +89,6 @@ typedef MAC_MAINTAB DataMacroBucket;
 typedef FX_TAB DataFXEntry;
 typedef struct { FX_TAB key; u8 pad[2]; } DataFXSearchKey;
 
-extern SDIR_DATA dataGetSampleSearchKey;
-extern LAYER_TAB dataGetLayerSearchKey;
-extern DataFXSearchKey dataGetFXSearchKey;
-extern u8 dataSmpSDirTable[];
-extern DATA_TAB dataCurveTable[2048];
-extern DATA_TAB dataKeymapTable[256];
-extern MAC_MAINTAB dataMacroBucketTable[512];
 extern u16 dataSmpSDirNum;
 extern u16 dataCurveNum;
 extern u16 dataKeymapNum;

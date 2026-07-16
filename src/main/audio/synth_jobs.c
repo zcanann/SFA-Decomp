@@ -23,8 +23,6 @@ typedef struct SynthSampleInfo
     u8 compType;
 } SynthSampleInfo;
 
-#define DATA_KEYMAP_TAB ((DataRefEntry*)(base + 0x4600))
-
 extern SynthJob streamInfo[];
 extern u32 synthFlags;
 extern f32 lbl_803E77D8;
@@ -333,78 +331,4 @@ void streamOutputModeChanged(void)
         }
     }
     sndEnd();
-}
-
-int dataInsertKeymap(u16 keymapId, void* keymapData)
-{
-    u8* base = dataSmpSDirTable;
-    long i;
-    long j;
-
-    sndBegin();
-    for (i = 0; i < dataKeymapNum && DATA_KEYMAP_TAB[i].key < keymapId; ++i)
-        ;
-    if (i < dataKeymapNum)
-    {
-        if (keymapId != ((DataRefEntry*)(base + i * 8))[0x8C0].key)
-        {
-            if (dataKeymapNum < 256)
-            {
-                for (j = dataKeymapNum - 1; j >= i; --j)
-                    DATA_KEYMAP_TAB[j + 1] = DATA_KEYMAP_TAB[j];
-                ++dataKeymapNum;
-            }
-            else
-            {
-                sndEnd();
-                return 0;
-            }
-        }
-        else
-        {
-            ((DataRefEntry*)(base + i * 8))[0x8C0].refCount++;
-            sndEnd();
-            return 0;
-        }
-    }
-    else if (dataKeymapNum < 256)
-    {
-        ++dataKeymapNum;
-    }
-    else
-    {
-        sndEnd();
-        return 0;
-    }
-
-    DATA_KEYMAP_TAB[i].key = keymapId;
-    DATA_KEYMAP_TAB[i].data = keymapData;
-    DATA_KEYMAP_TAB[i].refCount = 1;
-    sndEnd();
-    return 1;
-}
-
-int dataRemoveKeymap(u16 keymapId)
-{
-    u8* base = dataSmpSDirTable;
-    long i;
-    long j;
-    long n;
-
-    sndBegin();
-    n = dataKeymapNum;
-    for (i = 0; i < n && keymapId != DATA_KEYMAP_TAB[i].key; ++i)
-        ;
-    if (i != n && --DATA_KEYMAP_TAB[i].refCount == 0)
-    {
-        for (j = i + 1; j < n; j++)
-        {
-            DATA_KEYMAP_TAB[j - 1] = DATA_KEYMAP_TAB[j];
-        }
-        --dataKeymapNum;
-        sndEnd();
-        return 1;
-    }
-    sndEnd();
-    return 0;
 }

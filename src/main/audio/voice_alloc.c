@@ -7,29 +7,13 @@
 
 #pragma exceptions on
 
-typedef struct AllocVoice
-{
-    u8 pad000[0x100];
-    u16 allocId;
-    u8 pad102[0xA];
-    u8 prio;
-    u8 pad10D[3];
-    u32 age;
-    u32 cFlagsHi;
-    u32 cFlagsLo;
-    u8 block;
-    u8 fxFlag;
-    u8 pad11E[0x404 - 0x11E];
-} AllocVoice;
-
-#define ALLOC_VOICE     ((AllocVoice*)synthVoice)
-#define VOICE_CFLAGS(i) (*(u64*)&ALLOC_VOICE[i].cFlagsHi)
+#define VOICE_CFLAGS(i) (*(u64*)&synthVoice[i].inputFlags)
 
 #define VB_PRIO_HEAD(vb, p)      (*(u8*)((u8*)&(vb)->priorityGroupHeads[0] + (p)))
 #define VB_PRIO_LINK_NEXT(vb, i) (((SynthVoiceListNode*)((u8*)&(vb)->priorityLinks[0] + (i) * 4))->next)
 #define VB_PRIO_SORT_NEXT(vb, p) (((SynthRootListNode*)((u8*)&(vb)->prioritySortLinks[0] + (p) * 4))->next)
-#define AV_PRIO(i)               (*(u8*)((u8*)&ALLOC_VOICE[0].prio + (i) * 0x404))
-#define AV_FXFLAG(i)             (*(u8*)((u8*)&ALLOC_VOICE[0].fxFlag + (i) * 0x404))
+#define AV_PRIO(i)               (synthVoice[i].priorityGroup)
+#define AV_FXFLAG(i)             (synthVoice[i].streamKind)
 
 VoiceIdSlot voiceFreeListSlots[64];
 extern u8 synthIdleWaitActive;
@@ -48,9 +32,9 @@ extern u8 vidListNodes[];
 u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 {
     s32 i;
-    u16 prioNode;
     s32 num;
     s32 voice;
+    u16 prioNode;
     u32 type_alloc;
     u32 pn3;
     SynthVoiceListNode* sfv;
@@ -91,19 +75,19 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 u32 pn1 = prioNode;
                 for (i = VB_PRIO_HEAD(vb, pn1); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
                 {
-                    if (allocId != ALLOC_VOICE[i].allocId)
+                    if (allocId != synthVoice[i].baseSample)
                         continue;
                     ++num;
-                    if (ALLOC_VOICE[i].block)
+                    if (synthVoice[i].block)
                         continue;
 
-                    if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag)
+                    if (!type_alloc || fxFlag == synthVoice[i].streamKind)
                     {
                         if (VOICE_CFLAGS(i) & 2)
                             continue;
                         if (voice != -1)
                         {
-                            if (ALLOC_VOICE[i].age < ALLOC_VOICE[voice].age)
+                            if (synthVoice[i].priorityValue < synthVoice[voice].priorityValue)
                                 voice = i;
                         }
                         else
@@ -123,7 +107,7 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
                 i = VB_PRIO_HEAD(vb, pn);
                 while (i != 0xff)
                 {
-                    if (allocId == ALLOC_VOICE[i].allocId)
+                    if (allocId == synthVoice[i].baseSample)
                     {
                         num++;
                     }
@@ -153,23 +137,22 @@ u32 voiceAllocate(u8 priority, u8 maxVoices, u16 allocId, u8 fxFlag)
 
                 while (prioNode != 0xFFFF && priority >= prioNode && voice == -1)
                 {
-                    pn3 = prioNode;
-                    for (i = VB_PRIO_HEAD(vb, pn3); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
+                    for (pn3 = prioNode, i = VB_PRIO_HEAD(vb, pn3); i != 0xff; i = VB_PRIO_LINK_NEXT(vb, i))
                     {
-                        if (ALLOC_VOICE[i].block != 0)
-                            continue;
-
-                        if (!type_alloc || fxFlag == ALLOC_VOICE[i].fxFlag)
+                        if ((synthVoice[i].block == 0) && (!type_alloc || fxFlag == synthVoice[i].streamKind))
                         {
-                            if (VOICE_CFLAGS(i) & 2)
-                                continue;
-                            if (voice != -1)
+                            if ((VOICE_CFLAGS(i) & 2) == 0)
                             {
-                                if (ALLOC_VOICE[voice].age > ALLOC_VOICE[i].age)
+                                if (voice != -1)
+                                {
+                                    if (synthVoice[voice].priorityValue > synthVoice[i].priorityValue)
+                                        voice = i;
+                                }
+                                else
+                                {
                                     voice = i;
+                                }
                             }
-                            else
-                                voice = i;
                         }
                     }
                     prioNode = VB_PRIO_SORT_NEXT(vb, pn3);

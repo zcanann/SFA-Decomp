@@ -4025,14 +4025,14 @@ main/audio/synth_job_init.c:
 	.bss        start:0x803BE378 end:0x803BFC78
 
 main/audio/synth_jobs.c:
-	extab       start:0x800057C8 end:0x800057F0
-	extabindex  start:0x80005F3C end:0x80005F78
-	.text       start:0x80272F70 end:0x80273D2C
+	extab       start:0x800057C8 end:0x800057E0
+	extabindex  start:0x80005F3C end:0x80005F60
+	.text       start:0x80272F70 end:0x802739B8
 
 main/audio/data_tables.c:
-	extab       start:0x800057F0 end:0x80005880
-	extabindex  start:0x80005F78 end:0x80006050
-	.text       start:0x80273D2C end:0x80275364
+	extab       start:0x800057E0 end:0x80005880
+	extabindex  start:0x80005F60 end:0x80006050
+	.text       start:0x802739B8 end:0x80275364
 	.bss        start:0x803BFC78 end:0x803CA2B0
 
 main/audio/mcmd_wait.c:

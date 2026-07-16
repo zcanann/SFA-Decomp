@@ -10,10 +10,9 @@
 
 #pragma exceptions on
 
-#define dataSmpSDirs           (((SynthDataTables*)dataSmpSDirTable)->sdir)
-#define dataLayerTab           (((SynthDataTables*)dataSmpSDirTable)->layer)
-#define dataMacMainTab         (((SynthDataTables*)dataSmpSDirTable)->macMain)
-#define dataMacSubTabmem       (((SynthDataTables*)dataSmpSDirTable)->macSub)
+#define dataLayerTab           (((SynthDataTables*)dataSmpSDirs)->layer)
+#define dataMacMainTab         (((SynthDataTables*)dataSmpSDirs)->macMain)
+#define dataMacSubTabmem       (((SynthDataTables*)dataSmpSDirs)->macSub)
 extern s32 dataGetMacro_main;
 extern s32 dataGetMacro_bucket;
 extern MAC_SUBTAB dataGetMacro_key;
@@ -30,11 +29,111 @@ extern void hwRemoveSample(SAMPLE_HEADER* header, void* addr);
 extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);
 extern int hwTransAddr(int addr);
 
+DataFXSearchKey dataGetFXSearchKey;
+LAYER_TAB dataGetLayerSearchKey;
+SDIR_DATA dataGetSampleSearchKey;
+
+FX_GROUP dataFXGroupTable[128];
+MAC_SUBTAB dataMacroTable[2048];
+MAC_MAINTAB dataMacroBucketTable[512];
+LAYER_TAB dataLayerTable[256];
+DATA_TAB dataKeymapTable[256];
+DATA_TAB dataCurveTable[2048];
+static SDIR_TAB dataSmpSDirs[128];
+
+int dataInsertKeymap(u16 cid, void* keymapData)
+{
+    long i;
+    long j;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
+    DATA_TAB* c;
+
+    sndBegin();
+
+    c = &t->keymap[0];
+    for (i = 0; i < dataKeymapNum && c->id < cid; ++c, ++i)
+        ;
+
+    if (i < dataKeymapNum)
+    {
+        if (cid != t->keymap[i].id)
+        {
+            if (dataKeymapNum < 256)
+            {
+                c = t->keymap;
+                for (j = dataKeymapNum - 1; j >= i; --j)
+                    c[j + 1] = c[j];
+                ++dataKeymapNum;
+            }
+            else
+            {
+                sndEnd();
+                return 0;
+            }
+        }
+        else
+        {
+            t->keymap[i].refCount++;
+            sndEnd();
+            return 0;
+        }
+    }
+    else if (dataKeymapNum < 256)
+    {
+        ++dataKeymapNum;
+    }
+    else
+    {
+        sndEnd();
+        return 0;
+    }
+
+    t->keymap[i].id = cid;
+    t->keymap[i].data = keymapData;
+    t->keymap[i].refCount = 1;
+    sndEnd();
+    return 1;
+}
+
+int dataRemoveKeymap(u16 sid)
+{
+    long i;
+    long j;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
+    long num;
+
+    sndBegin();
+    num = dataKeymapNum;
+    {
+        DATA_TAB* c = &t->keymap[0];
+        for (i = 0; i < num && sid != c->id; ++c, ++i)
+            ;
+    }
+
+    if (i != num && --t->keymap[i].refCount == 0)
+    {
+        {
+            DATA_TAB* keymap = t->keymap;
+            DATA_TAB* p = &keymap[i + 1];
+            for (j = i + 1; j < num; j++)
+            {
+                p[-1] = p[0];
+                p++;
+            }
+        }
+        --dataKeymapNum;
+        sndEnd();
+        return 1;
+    }
+    sndEnd();
+    return 0;
+}
+
 s32 dataInsertLayer(u16 cid, void* layerdata, u16 size)
 {
     long i;
     long j;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
 
     sndBegin();
 
@@ -92,7 +191,7 @@ s32 dataRemoveLayer(u16 sid)
 {
     long i;
     long j;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     long num;
 
     sndBegin();
@@ -128,7 +227,7 @@ s32 dataInsertCurve(u16 cid, void* curvedata)
 {
     long i;
     long j;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
 
     sndBegin();
 
@@ -179,7 +278,7 @@ s32 dataRemoveCurve(u16 sid)
 {
     long i;
     long j;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     long num;
 
     sndBegin();
@@ -214,33 +313,33 @@ s32 dataRemoveCurve(u16 sid)
 s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
     SDIR_TAB* p;
+    SDIR_TAB* table = dataSmpSDirs;
     s32 i;
-    SynthDataTables* t[1];
     SDIR_DATA* s;
-    u16 count;
+    u16 n;
     u16 j;
     u16 k;
 
-    for (i = 0, p = (t[0] = (SynthDataTables*)dataSmpSDirTable)->sdir; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
+    for (i = 0, p = table; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
         ;
 
     if (i == dataSmpSDirNum)
     {
         if (dataSmpSDirNum < 128)
         {
-            count = 0;
+            n = 0;
             for (s = sdir; s->id != 0xFFFF; ++s)
             {
-                ++count;
+                ++n;
             }
 
             sndBegin();
-            for (j = 0; j < count; ++j)
+            for (j = 0; j < n; ++j)
             {
                 for (i = 0; i < dataSmpSDirNum; ++i)
                 {
-                    s = t[0]->sdir[i].data;
-                    for (k = 0; k < t[0]->sdir[i].numSmp; ++k)
+                    s = table[i].data;
+                    for (k = 0; k < table[i].numSmp; ++k)
                     {
                         if (sdir[j].id == s[k].id)
                             goto found_id;
@@ -258,9 +357,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
             }
 
             i = dataSmpSDirNum;
-            t[0]->sdir[i].data = sdir;
-            t[0]->sdir[i].numSmp = count;
-            t[0]->sdir[i].base = smp_data;
+            table[i].data = sdir;
+            table[i].numSmp = n;
+            table[i].base = smp_data;
             ++dataSmpSDirNum;
             sndEnd();
             return 1;
@@ -300,7 +399,7 @@ done:
 
     if (sdir->ref_cnt == 0)
     {
-        tab = (t = (SynthDataTables*)dataSmpSDirTable)->sdir;
+        tab = (t = (SynthDataTables*)dataSmpSDirs)->sdir;
         sdir->addr = (void*)(sdir->offset + (u32)tab[i].base);
         header = &sdir->header;
         hwSaveSample(&header, &sdir->addr);
@@ -339,7 +438,7 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 {
     long i;
     FX_GROUP* g;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
 
     g = t->fxGroup;
     for (i = 0; i < dataFXGroupNum && gid != g[i].gid; ++i)
@@ -369,7 +468,7 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 #pragma opt_dead_assignments off
 s32 dataInsertMacro(u16 mid, void* macroaddr)
 {
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     long main;
     long pos;
     long base;
@@ -440,7 +539,7 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
 
 s32 dataRemoveMacro(u16 mid)
 {
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     s32 base;
     s32 i;
     MAC_MAINTAB* m;
@@ -521,7 +620,7 @@ s32 smpcmp(void* p1, void* p2)
 s32 dataGetSample(u16 sid, SAMPLE_INFO* newsmp)
 {
     long i;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
 
     t->getSampleKey.id = sid;
 
@@ -587,7 +686,7 @@ s32 layercmp(void* p1, void* p2)
 
 void* dataGetLayer(u16 cid, u16* count)
 {
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
 
     t->getLayerKey.id = cid;
     if ((dataGetLayer_result =
@@ -609,7 +708,7 @@ FX_TAB* dataGetFX(u16 fid)
     FX_TAB* ret;
     long i;
     FX_TAB* tab;
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirTable;
+    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     FX_GROUP* g;
     int zero;
 
@@ -649,15 +748,3 @@ int IFFifoAlloc(int addr)
 {
     return hwTransAddr(addr);
 }
-
-DataFXSearchKey dataGetFXSearchKey;
-LAYER_TAB dataGetLayerSearchKey;
-SDIR_DATA dataGetSampleSearchKey;
-
-FX_GROUP dataFXGroupTable[128];
-MAC_SUBTAB dataMacroTable[2048];
-MAC_MAINTAB dataMacroBucketTable[512];
-LAYER_TAB dataLayerTable[256];
-DATA_TAB dataKeymapTable[256];
-DATA_TAB dataCurveTable[2048];
-u8 dataSmpSDirTable[0x600];
