@@ -91,35 +91,40 @@ f32 gBoneParticleConfigTable[108] = {
 void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
 {
     BoneFxVtx vtx;
-    void** grp;
+    int* model;
     s16 j;
     s16 k;
     int row;
     u32 id;
     u32 cls;
     u8* mtx;
-    u8* idp;
+    GameObject* gobj;
     u8* base;
     f32* scaleA;
     f32* scaleB;
     f32* scaleC;
-    int* model;
+    u8* idp;
+    void** grp;
     void** grp2;
     int slot;
     u8* jb;
     s32 idx;
+    f32 k2002;
+    f32 one;
+    f32 zero;
     f32 dx;
     f32 dy;
     f32 dz;
 
+    gobj = (GameObject*)obj;
     base = (u8*)gBoneParticleConfigTable;
     if (mainGetBit(GAMEBIT_TRICKYCURVE_PLAYER_HIT) != 0)
     {
         mainSetBits(GAMEBIT_TRICKYCURVE_PLAYER_HIT, 0);
         gBoneParticleEffectTimer = 0xf;
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_281);
+        Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_281);
     }
-    model = Modgfx_GetActiveModel((void*)obj);
+    model = (int*)((ObjAnimComponent*)gobj)->banks[((ObjAnimComponent*)gobj)->bankIndex];
     if (gBoneParticleStageIndex > 6)
     {
         gBoneParticleStageIndex = 0;
@@ -138,13 +143,13 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMax;
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_282);
+        Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     else if (gBoneParticleDrift < gBoneParticleDriftMin)
     {
         gBoneParticleDriftVelocity = gBoneParticleDriftVelocity * lbl_803DF4B0;
         gBoneParticleDrift = gBoneParticleDriftMin;
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_282);
+        Sfx_PlayFromObject((u32)gobj, SFXTRIG_id_282);
     }
     slot = 0;
     grp2 = gBoneParticleEffectBuffers;
@@ -157,12 +162,15 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
             row = 0;
             j = 0;
             idp = base + 0x5b4;
+            zero = lbl_803DF4A8.f;
+            one = lbl_803DF4B8.f;
+            k2002 = lbl_803DF4BC.f;
             while (j < 5)
             {
-                vtx.vx = lbl_803DF4A8.f;
-                vtx.vy = lbl_803DF4A8.f;
-                vtx.vz = lbl_803DF4A8.f;
-                vtx.w = lbl_803DF4B8.f;
+                vtx.vx = zero;
+                vtx.vy = zero;
+                vtx.vz = zero;
+                vtx.w = one;
                 vtx.sz = 0;
                 vtx.sy = 0;
                 vtx.sx = 0;
@@ -176,19 +184,19 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 dx = *(f32*)(mtx + 0x30) + playerMapOffsetX;
                 dy = *(f32*)(mtx + 0x34);
                 dz = *(f32*)(mtx + 0x38) + playerMapOffsetZ;
-                dx = dx - ((GameObject*)obj)->anim.localPosX;
-                dy = dy - ((GameObject*)obj)->anim.localPosY;
-                dz = dz - ((GameObject*)obj)->anim.localPosZ;
-                dx = dx * lbl_803DF4BC.f;
+                dx = dx - gobj->anim.localPosX;
+                dy = dy - gobj->anim.localPosY;
+                dz = dz - gobj->anim.localPosZ;
+                dx = dx * k2002;
                 if (id == 0x1d || id == 0x1d)
                 {
                     dy = *(f32*)&lbl_803DF4BC.f * (8.0f + dy);
                 }
                 else
                 {
-                    dy = dy * lbl_803DF4BC.f;
+                    dy = dy * k2002;
                 }
-                dz = dz * lbl_803DF4BC.f;
+                dz = dz * k2002;
                 Matrix_TransformPoint((f32*)mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                 k = 0;
                 scaleA = (f32*)(base + 0x90);
@@ -222,9 +230,9 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                     Matrix_TransformPoint((f32*)mtx, vtx.vx, vtx.vy, vtx.vz, &vtx.vx, &vtx.vy, &vtx.vz);
                     vtx.vx = vtx.vx + playerMapOffsetX;
                     vtx.vz = vtx.vz + playerMapOffsetZ;
-                    ((ParticleSlot*)*grp)[k + row].posX = dx + (vtx.vx - ((GameObject*)obj)->anim.localPosX);
-                    ((ParticleSlot*)*grp)[k + row].posY = dy + (vtx.vy - ((GameObject*)obj)->anim.localPosY);
-                    ((ParticleSlot*)*grp)[k + row].posZ = dz + (vtx.vz - ((GameObject*)obj)->anim.localPosZ);
+                    ((ParticleSlot*)*grp)[k + row].posX = dx + (vtx.vx - gobj->anim.localPosX);
+                    ((ParticleSlot*)*grp)[k + row].posY = dy + (vtx.vy - gobj->anim.localPosY);
+                    ((ParticleSlot*)*grp)[k + row].posZ = dz + (vtx.vz - gobj->anim.localPosZ);
                     ((ParticleSlot*)*grp)[k + row].alpha = 0x9b;
                     ((ParticleSlot*)*grp)[k + row].texV =
                         (s16)(((ParticleSlot*)(base + 0x1b0))[k + row].texV - (gBoneParticleScrollOffset << 2));
@@ -240,16 +248,16 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
         }
         grp += 1;
     }
-    vtx.vx = ((GameObject*)obj)->anim.localPosX;
-    vtx.vy = ((GameObject*)obj)->anim.localPosY;
-    vtx.vz = ((GameObject*)obj)->anim.localPosZ;
+    vtx.vx = gobj->anim.localPosX;
+    vtx.vy = gobj->anim.localPosY;
+    vtx.vz = gobj->anim.localPosZ;
     vtx.w = 0.0495f;
     setTextColorContextLegacy(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
-        (*gPartfxInterface)->spawnObject(obj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((u8*)gobj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((u8*)gobj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
+        (*gPartfxInterface)->spawnObject((u8*)gobj, BONE_PARTICLE_EFFECT_PARTFX, NULL, 1, -1, NULL);
         if ((int)randomGetRange(0, 1) != 0)
         {
             textureFn_800541ac(ctx, gBoneParticleTextureA, 0, 0, 0, 0, 0);
