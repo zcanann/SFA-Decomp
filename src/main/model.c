@@ -39,1175 +39,99 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_ALWAYS 7
 extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-int return0_8002969C(void) { return 0x0; }
-int return0_8002A5B8(void) { return 0x0; }
-
-#pragma scheduling off
-#pragma peephole off
-void* fn_80028354(u8* modelFile, int index)
-{
-    return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
-}
-
-void* fn_80028364(u8* modelFile, int index)
-{
-    return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
-}
-
-void* modelFileGetDisplayList(u8* modelFile, int displayListIndex)
-{
-    return ((ModelFileHeader*)modelFile)->displayLists + displayListIndex * 0x1c;
-}
-
-void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out)
-{
-    ObjModel* model;
-    u32 jointCount;
-    u8* jointMtx;
-
-    model = (ObjModel*)modelBytes;
-    jointCount = model->file->jointCount;
-    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
-    {
-        jointIndex = 0;
-    }
-
-    jointMtx = model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40;
-    out[0] = *(f32*)(jointMtx + 0xc);
-    out[1] = *(f32*)(jointMtx + 0x1c);
-    out[2] = *(f32*)(jointMtx + 0x2c);
-}
-
-Texture* ObjModel_GetTexture(ModelFileHeader* model, int textureIndex)
-{
-    return textureIdxToPtr(model->textureIds[textureIndex]);
-}
-
-s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex)
-{
-    return (s16*)(modelFile->vertices + vertexIndex * 6);
-}
-
-ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* model, int renderOpIndex)
-{
-    return &model->renderOps[renderOpIndex];
-}
-
-u16 modelFileHeaderGetCullDistance(u8* modelFile)
-{
-    return ((ModelFileHeader*)modelFile)->cullDistance;
-}
-
-void ObjModel_ClearRenderAttachment(u8* model)
-{
-    if (((ObjModel*)model)->renderAttachment != NULL)
-    {
-        mm_free(((ObjModel*)model)->renderAttachment);
-        ((ObjModel*)model)->renderAttachment = NULL;
-    }
-    else
-    {
-        ((ObjModel*)model)->renderCallback = NULL;
-    }
-}
-
-void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale)
-{
-    if (((ObjModel*)model)->renderAttachment == NULL)
-    {
-        ((ObjModel*)model)->renderCallback = gxTextureFn_80072dfc;
-    }
-}
-
-s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex)
-{
-    return (s16*)(model->vtxBuf[(model->bufferFlags >> 1) & 1] + vertexIndex * 6);
-}
-
-void* ObjModel_GetPostRenderCallback(ObjModel* model)
-{
-    return model->postRenderCallback;
-}
-
-void postRenderSetAlphaBlendState(void)
-{
-    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    gxSetZMode_(1, GX_LEQUAL, 0);
-    gxSetPeControl_ZCompLoc_(1);
-    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-}
-
-void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback)
-{
-    model->postRenderCallback = callback;
-}
-
-void* ObjModel_GetRenderCallback(ObjModel* model)
-{
-    return model->renderCallback;
-}
-
-void ObjModel_SetRenderCallback(u8* model, void* callback)
-{
-    ((ObjModel*)model)->renderCallback = callback;
-}
-
-void ObjModel_ToggleVertexBuffer(u8* model)
-{
-    ((ObjModel*)model)->bufferFlags ^= 2;
-}
-
-void ObjModel_ToggleMatrixBuffer(u8* model)
-{
-    ((ObjModel*)model)->bufferFlags ^= 1;
-}
-
-ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex)
-{
-    ObjModel* model;
-    u32 jointCount;
-
-    model = (ObjModel*)modelBytes;
-    jointCount = model->file->jointCount;
-    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
-    {
-        jointIndex = 0;
-    }
-
-    return (ObjModelJointMatrix*)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40);
-}
-
-ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex)
-{
-    return &model->textureRefs[renderOpIndex];
-}
-
-int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
-{
-    return baseSize + resource[8] * resource[7];
-}
-
-
-#pragma scheduling on
-#pragma peephole on
-void __set_debug_bba(u8* p)
-{
-    p[0x19] = 0;
-}
-
-int roundUpTo4(int x);
-
-int roundUpTo8(int x);
-
-int roundUpTo16(int x);
-
-int roundUpTo32(int x);
-
-void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
-{
-    chain->enabled = enabled;
-}
-
 extern void* memset(void* dst, int val, int n);
-
-void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
-{
-    chain->originX = x;
-    chain->originY = y;
-    chain->originZ = z;
-}
-
-int alignUp2(int x);
-
-
-void* getCache(void);
-
 extern f32 gModelPhaseWrapPeriod;
-
-void cacheQueueWait(int sync);
-
-#pragma scheduling off
-#pragma peephole off
-void ObjModelChain_AdvancePhase(ObjModelChain* chain)
-{
-    chain->updateFlag = 0;
-    chain->phase += timeDelta;
-    if (chain->phase > gModelPhaseWrapPeriod)
-    {
-        chain->phase -= *(f32*)&gModelPhaseWrapPeriod;
-    }
-}
-
-asm
-void setGQR6(register u32 v)
-{
-    nofralloc
-    mtspr GQR6, v
-    blr
-}
-
-asm
-void setGQR7(register u32 v)
-{
-    nofralloc
-    mtspr GQR7, v
-    blr
-}
-
-#pragma dont_inline on
-void setGQR7Packed(int a, int b, int c, int d)
-{
-    setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
-}
-
-#pragma dont_inline off
-int ObjModel_HasActiveBlendChannels(ObjModel* model)
-{
-    ObjModelBlendChannel* ch;
-
-    if (model->file->morphTargetPtrs == NULL)
-    {
-        return 0;
-    }
-    ch = model->blendChannels;
-    if (ch[0].weight != ch[0].targetWeight || (ch[0].flags0E & 0xe))
-    {
-        return 1;
-    }
-    if (ch[1].weight != ch[1].targetWeight || (ch[1].flags0E & 0xe))
-    {
-        return 1;
-    }
-    if (ch[2].weight != ch[2].targetWeight || (ch[2].flags0E & 0xe))
-    {
-        return 1;
-    }
-    return 0;
-}
-
-void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
-{
-    ObjModelBlendChannel* ch;
-
-    if (channel > 2 || model->file->morphTargetPtrs == NULL)
-    {
-        return;
-    }
-    ch = model->blendChannels + channel;
-    if (weight != ch->weight)
-    {
-        ch->weight = weight;
-    }
-    ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
-}
-
-typedef f32 Mtx[3][4];
-
-#pragma opt_propagation off
-int modelGetAmapSize(int animId, int amapFlag, int animCount)
-{
-    int size;
-    if (amapFlag != 0)
-    {
-        size = animCount * 2 + 8;
-        while (size & 7)
-        {
-            size++;
-        }
-    }
-    else
-    {
-        {
-            int words;
-            words = animCount * 4;
-            size = words;
-        }
-        while (size & 7)
-        {
-            size++;
-        }
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (animId & ~3) << 2, 0x20);
-        size += gModelAnimOffsetTable[(animId & 3) + 1] - gModelAnimOffsetTable[animId & 3];
-    }
-    return size;
-}
-#pragma opt_propagation reset
-
 extern void shaderInit(u8* def, void* out, int arg, int n);
-
-void ObjModel_RelocateModelData(u8* m)
-{
-    int i;
-    if (*(u32*)&((ModelFileHeader*)m)->hitVolumes)
-    {
-        ((ModelFileHeader*)m)->hitVolumes = m + *(u32*)&((ModelFileHeader*)m)->hitVolumes;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->jointData)
-    {
-        ((ModelFileHeader*)m)->jointData = m + *(u32*)&((ModelFileHeader*)m)->jointData;
-        if (*(u32*)&((ModelFileHeader*)m)->unk18)
-        {
-            ((ModelFileHeader*)m)->unk18 = m + *(u32*)&((ModelFileHeader*)m)->unk18;
-        }
-        if (*(u32*)&((ModelFileHeader*)m)->unk1C)
-        {
-            ((ModelFileHeader*)m)->unk1C = m + *(u32*)&((ModelFileHeader*)m)->unk1C;
-        }
-        if (*(u32*)&((ModelFileHeader*)m)->jointBlendData)
-        {
-            ((ModelFileHeader*)m)->jointBlendData = m + *(u32*)&((ModelFileHeader*)m)->jointBlendData;
-        }
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->unk54)
-    {
-        ((ModelFileHeader*)m)->unk54 = m + *(u32*)&((ModelFileHeader*)m)->unk54;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->textureIds)
-    {
-        *(u8**)&((ModelFileHeader*)m)->textureIds = m + *(u32*)&((ModelFileHeader*)m)->textureIds;
-    }
-    ((ModelFileHeader*)m)->vertices = m + *(u32*)&((ModelFileHeader*)m)->vertices;
-    if (*(u32*)&((ModelFileHeader*)m)->normals)
-    {
-        ((ModelFileHeader*)m)->normals = m + *(u32*)&((ModelFileHeader*)m)->normals;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->colors)
-    {
-        ((ModelFileHeader*)m)->colors = m + *(u32*)&((ModelFileHeader*)m)->colors;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->texCoords)
-    {
-        ((ModelFileHeader*)m)->texCoords = m + *(u32*)&((ModelFileHeader*)m)->texCoords;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->instrs)
-    {
-        ((ModelFileHeader*)m)->instrs = m + *(u32*)&((ModelFileHeader*)m)->instrs;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->displayLists)
-    {
-        ((ModelFileHeader*)m)->displayLists = m + *(u32*)&((ModelFileHeader*)m)->displayLists;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs)
-    {
-        ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries)
-    {
-        ((ModelFileHeader*)m)->vertexAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase)
-    {
-        ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->blendAnimEntries)
-    {
-        ((ModelFileHeader*)m)->blendAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->blendAnimEntries;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->blendAnimBase)
-    {
-        ((ModelFileHeader*)m)->blendAnimBase = m + *(u32*)&((ModelFileHeader*)m)->blendAnimBase;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->renderOps)
-    {
-        ((ModelFileHeader*)m)->renderOps = (ModelRenderOp*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
-    }
-    for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
-    {
-        *(u8**)(((ModelFileHeader*)m)->displayLists + i * 0x1c) = m + *(u32*)(((ModelFileHeader*)m)->displayLists + i *
-            0x1c);
-    }
-    for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++)
-    {
-        ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles)
-    {
-        ((ModelFileHeader*)m)->collisionTriangles = m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles;
-    }
-    if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks)
-    {
-        ((ModelFileHeader*)m)->collisionBlocks = m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks;
-    }
-}
-
-/* defined in pi_dolphin.c with 5 params; the retail caller here emits a
-   6th arg (the model id) -- keep the caller-side arity */
 extern void loadModelsBin(int fileOffset, int* animCount, int* headerSize, int* amapFlag, int* dataLen, int id);
-
-#pragma dont_inline on
-void* ObjModel_LoadModelData(int id)
-{
-    int fileOffset, dataLen, animCount, headerSize, amapFlag;
-    int amapSize;
-    void* model;
-    if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, id, &fileOffset) == 0)
-    {
-        return NULL;
-    }
-    loadModelsBin(fileOffset, &animCount, &headerSize, &amapFlag, &dataLen, id);
-    headerSize = roundUpTo8(headerSize);
-    headerSize += 0xb0;
-    amapSize = modelGetAmapSize(id, amapFlag, animCount);
-    model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
-    loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
-    ((ModelFileHeader*)model)->headerSize = headerSize;
-    *(u16*)((u8*)model + 0x4) = id; /* modelId (in unk04) */
-    ((ModelFileHeader*)model)->animationCount = animCount;
-    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
-    ((ModelFileHeader*)model)->refCount = 1;
-    if (((ModelFileHeader*)model)->animationCount == 0)
-    {
-        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_NO_ANIMATIONS;
-    }
-    if (amapFlag != 0)
-    {
-        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_VERTEX_ANIM_AREA;
-    }
-    return model;
-}
-
-#pragma dont_inline off
-void ObjModel_ResolveRenderOpTextures(u8* m)
-{
-    int j, k;
-    u8* op;
-    for (j = 0; j < m[0xf8]; j++)
-    {
-        op = *(u8**)(m + 0x38) + j * 0x44;
-        for (k = 0; k < op[0x41]; k++)
-        {
-            /* e is an 8-byte per-renderop texture record whose id sits at
-               e + 0x24; the GameObject overlay below is offset-equivalent and
-               its member spelling is byte-load-bearing (a raw *(int*)(e + 0x24)
-               re-spelling shifts MWCC's alias/CSE class) -- keep as is. */
-            u8* e = op + k * 8;
-            if (*(int*)&((GameObject*)e)->anim.velocityX != -1)
-            {
-                *(int*)&((GameObject*)e)->anim.velocityX = ((int*)*(u8**)(m + 0x20))[*(int*)&((GameObject*)e)->anim.velocityX];
-            }
-            else
-            {
-                *(int*)&((GameObject*)e)->anim.velocityX = 0;
-            }
-        }
-        if (*(int*)(op + 0x34) != -1)
-        {
-            *(int*)(op + 0x34) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x34)];
-        }
-        else
-        {
-            *(int*)(op + 0x34) = 0;
-        }
-        if (*(int*)(op + 0x38) != -1)
-        {
-            *(int*)(op + 0x38) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x38)];
-        }
-        else
-        {
-            *(int*)(op + 0x38) = 0;
-        }
-        if (*(int*)(op + 0x1c) != -1)
-        {
-            if (*(int*)(op + 0x1c) == -2)
-            {
-                *(int*)(op + 0x1c) = 0;
-            }
-            else
-            {
-                *(int*)(op + 0x1c) = 1;
-            }
-        }
-        else
-        {
-            *(int*)(op + 0x1c) = 0;
-        }
-        if (*(int*)(op + 0x18) != -1)
-        {
-            *(int*)(op + 0x18) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x18)];
-        }
-        else
-        {
-            *(int*)(op + 0x18) = 0;
-        }
-        if (!(((ModelFileHeader*)m)->shaderFlags & 0xc))
-        {
-            *(int*)(op + 0x8) = 0;
-        }
-        if (!(((ModelFileHeader*)m)->shaderFlags & 0xe00))
-        {
-            *(int*)(op + 0x14) = 0;
-        }
-    }
-}
-
-#pragma dont_inline on
-void ObjModel_RelocateAnimData(u8* m, u8* dst)
-{
-    int i;
-    ((ModelFileHeader*)m)->vertexAnimEntriesRaw = ((ModelFileHeader*)m)->vertexAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimCount; i++)
-    {
-        ((ObjModel*)dst)->vertexAnimData[i] = *(int*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x60);
-        if (*(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
-            vertexAnimBase)
-        {
-            *(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x64) =
-                *(u32*)&((ModelFileHeader*)m)->vertexAnimBase + *(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i *
-                    0x74 + 0x64);
-        }
-    }
-    ((ModelFileHeader*)m)->blendAnimEntriesRaw = ((ModelFileHeader*)m)->blendAnimEntries;
-    for (i = 0; i < ((ModelFileHeader*)m)->blendAnimCount; i++)
-    {
-        ((ObjModel*)dst)->blendAnimData[i] =
-            *(int*)&((ObjModel*)dst)->normalBuf + *(int*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x60);
-        if (*(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
-            blendAnimBase)
-        {
-            *(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x64) =
-                *(u32*)&((ModelFileHeader*)m)->blendAnimBase + *(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i *
-                    0x74 + 0x64);
-        }
-    }
-}
-
-#pragma dont_inline off
-void ObjModel_LoadRenderOpTextures(u8* model, int arg)
-{
-    int i;
-    u8* hdr = *(u8**)model;
-    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
-    {
-        return;
-    }
-    ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-    for (i = 0; i < (*(u8**)model)[0xf8]; i++)
-    {
-        shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], (u8*)&((ObjModel*)model)->textureRefs[i], arg,
-                   ((ModelFileHeader*)hdr)->shaderFlags);
-    }
-}
-
-int loadModelAndAnimTabs(void)
-{
-    int* p = getCurrentDataFile(MLDF_FILEID_MODELS_TAB_A);
-    if (p == NULL)
-    {
-        return 0;
-    }
-    gModelTabEntryCount = 0;
-    while (*p != -1)
-    {
-        p++;
-        gModelTabEntryCount++;
-    }
-    gModelTabEntryCount--;
-    gModelAnimFlagsTable = getCurrentDataFile(MLDF_FILEID_ANIM_TAB_A);
-    if (gModelAnimFlagsTable == NULL)
-    {
-        return 0;
-    }
-    lbl_803DCB58 = 0;
-    return 1;
-}
-
 extern void* memcpy(void* dst, const void* src, int n);
-extern u32 PPCMfhid2(void);
-
-
-void copyToCache(void* dst, void* src, u32 count);
-
-void ObjModel_InitRenderBuffers(void)
-{
-    if ((PPCMfhid2() & 0x10000000) == 0)
-    {
-        void* cache = getCache();
-        DCInvalidateRange(cache, 0x4000);
-        LCEnable();
-    }
-    ObjModel_InitScratchBuffers();
-    setGQR6_2(7, 4, 7, 4);
-}
-
-
-void modelFn_800292e0(void)
-{
-    u8 buf[8];
-    gModelList->iter = gModelList->entries;
-    while (gModelList->iter != gModelList->end)
-    {
-        s16* iter = gModelList->iter;
-        if (*iter == -1)
-        {
-            memset(buf, 0, gModelList->dataSize);
-        }
-        else
-        {
-            memcpy(buf, iter + 1, gModelList->dataSize);
-        }
-        gModelList->iter += gModelList->strideShorts;
-    }
-}
-
-void* animationLoad(int id, int a, int b, int e, int f);
-
-void model_multMtxs(u8* model, f32* out)
-{
-    u8* hdr = *(u8**)model;
-    u32 i;
-    for (i = 0; i < hdr[0xf3]; i++)
-    {
-        int j = i;
-        u8* h = *(u8**)model;
-        u32 cnt = h[0xf3];
-        int lim;
-        f32* base;
-        if (cnt != 0)
-        {
-            lim = cnt + h[0xf4];
-        }
-        else
-        {
-            lim = 1;
-        }
-        if (j >= lim)
-        {
-            j = 0;
-        }
-        base = *(f32**)(model + 0xc + (((ObjModel*)model)->bufferFlags & 1) * 4);
-        PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
-    }
-}
-
-void ObjModelChain_Free(ObjModelChain* chain)
-{
-    int i;
-    for (i = 0; i < chain->count; i++)
-    {
-        mm_free(chain->entries[i].frameBuffer);
-    }
-    mm_free(chain->entries);
-    mm_free(chain);
-}
-
-extern f32 gModelDefaultOriginX;
-extern f32 gModelDefaultOriginY;
-extern f32 gModelDefaultOriginZ;
 extern f32 lbl_803DE828;
-extern const f32 gModelVertexScale;
-
-ObjModelChain* ObjModelChain_Alloc(void* models, int count)
-{
-    int** p;
-    int off;
-    ObjModelChain* state;
-    int i;
-
-    state = mmAlloc(0x1c, 0x1a, 0);
-    state->count = count;
-    state->unk19 = 0;
-    state->updateFlag = 0;
-    state->entries = mmAlloc(count * 0xc, 0x1a, 0);
-    i = 0;
-    p = models;
-    off = 0;
-    for (; i < count; i++)
-    {
-        *(int**)((char*)state->entries + off + 4) = *p;
-        *(int*)((char*)state->entries + off + 8) = (*p)[1];
-        *(void**)((char*)state->entries + off) = mmAlloc((*(int*)((char*)state->entries + off + 8) + 1) * 0x54, 0x1a, 0);
-        p++;
-        off += 0xc;
-    }
-    state->originX = gModelDefaultOriginX;
-    state->originY = gModelDefaultOriginY;
-    state->originZ = gModelDefaultOriginZ;
-    state->phase = lbl_803DE828;
-    state->enabled = 1;
-    return state;
-}
-
-void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out)
-{
-    s16* vertex;
-
-    vertex = (s16*)(model->vertices + vertexIndex * 6);
-    if ((model->flags & 0x800) != 0)
-    {
-        out[0] = vertex[0];
-        out[1] = vertex[1];
-        out[2] = vertex[2];
-    }
-    else
-    {
-        out[0] = vertex[0] * gModelVertexScale;
-        out[1] = vertex[1] * gModelVertexScale;
-        out[2] = vertex[2] * gModelVertexScale;
-    }
-}
-
-void memcpyToCache(void* dst, void* src, u32 count);
-
-void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
-{
-    void* out = NULL;
-    animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
-    return out;
-}
-
-u8* gModelCacheBuffersA[4];
-u8* gModelCacheBuffersB[6];
-
-#pragma dont_inline on
-void ObjModel_InitScratchBuffers(void)
-{
-    u8* c = getCache();
-    gModelCacheBuffersA[0] = c;
-    gModelCacheBuffersA[1] = c + 0x1000;
-    gModelCacheBuffersA[2] = c + 0x2000;
-    gModelCacheBuffersA[3] = c + 0x3000;
-    c = getCache();
-    gModelCacheBuffersB[0] = c;
-    gModelCacheBuffersB[1] = c + 0x1000;
-    gModelCacheBuffersB[2] = c + 0x1800;
-    gModelCacheBuffersB[3] = c + 0x2000;
-    gModelCacheBuffersB[4] = c + 0x3000;
-    gModelCacheBuffersB[5] = c + 0x3800;
-}
-
-#pragma dont_inline off
-void ObjModel_ClearBlendChannels(ObjModel* model)
-{
-    if (model->file->morphTargetPtrs != NULL)
-    {
-        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
-        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
-    }
-}
-
 extern f32 lbl_803DE840;
-
-void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags)
-{
-    ObjModelBlendChannel* ch;
-    u8* hdr;
-    if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargetPtrs == NULL)
-    {
-        return;
-    }
-    if (a < -1)
-    {
-        return;
-    }
-    if (b < -1)
-    {
-        return;
-    }
-    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount || b >= ((ModelFileHeader*)hdr)->morphTargetCount)
-    {
-        return;
-    }
-    ch = model->blendChannels + channel;
-    if (a == -1 && b == -1)
-    {
-        if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1)
-        {
-            flags |= 6;
-        }
-        else
-        {
-            return;
-        }
-    }
-    if (ch[0].morphTargetA == a && ch[0].morphTargetB == b)
-    {
-        return;
-    }
-    ch[0].morphTargetA = a;
-    ch[0].morphTargetB = b;
-    if (!(flags & 0x10))
-    {
-        ch[0].weight = lbl_803DE828;
-    }
-    ch[0].targetWeight = lbl_803DE840;
-    ch[0].weightRate = weight;
-    ch[0].flags0E = flags | BLENDCHAN_FLAG_FADING;
-}
-
 extern f32 lbl_803DE818;
-extern f32 lbl_803DE868;
-extern f32 lbl_803DE86C;
-extern f32 lbl_803DE870;
-
-void ObjModel_ApplyBlendChannels(ObjModel* model)
-{
-    ModelFileHeader* hdr;
-    ObjModelBlendChannel* ch;
-    int i;
-    s16 defFrame;
-    int chanActive[3] = {0, 0, 0};
-    int chanFade[3] = {0, 0, 0};
-    u8* targetA;
-    u8* targetB;
-    u8* srcVtx;
-    u8* dstVtx;
-    int fadeBits;
-
-    hdr = model->file;
-    if (hdr->morphTargetPtrs == NULL)
-    {
-        return;
-    }
-    defFrame = hdr->vertexCount + 1;
-    for (i = 0; i < 3; i++)
-    {
-        ch = &model->blendChannels[i];
-        if (ch->weight != ch->targetWeight)
-        {
-            ch->flags0E &= ~0xc;
-            ch->flags0E |= BLENDCHAN_FLAG_FADING;
-        }
-        fadeBits = ch->flags0E & 0xc;
-        chanFade[i] = fadeBits;
-        if (ch->morphTargetA != -1 || ch->morphTargetB != -1 || fadeBits != 0)
-        {
-            chanActive[i] = 1;
-        }
-        if (chanFade[i] & 4)
-        {
-            ch->flags0E &= ~BLENDCHAN_FLAG_FADING;
-            ch->flags0E |= BLENDCHAN_FLAG_FADED;
-        }
-        else if (chanFade[i] & 8)
-        {
-            ch->flags0E &= ~BLENDCHAN_FLAG_FADED;
-        }
-    }
-    if (chanActive[0] == 0 && chanActive[1] == 0 && chanActive[2] == 0)
-    {
-        return;
-    }
-    if (chanActive[1])
-    {
-        chanActive[0] = 0;
-    }
-    if (chanFade[2])
-    {
-        chanFade[0] = 1;
-        chanFade[1] = 1;
-    }
-    if ((chanActive[0] && chanFade[0]) || (chanActive[1] && chanFade[1]))
-    {
-        if (chanActive[2])
-        {
-            chanFade[2] = 1;
-        }
-    }
-    for (i = 0; i < 3; i++)
-    {
-        if (chanActive[i] && hdr->vertexAnimEntries)
-        {
-            chanFade[i] = 1;
-        }
-        ch = &model->blendChannels[i];
-        if (ch->flags0E & BLENDCHAN_FLAG_RESET_WEIGHT)
-        {
-            ch->flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
-            ch->weight = lbl_803DE828;
-        }
-        if (chanActive[i] && chanFade[i])
-        {
-            f32 weight;
-            f32 tw;
-            f32 eased;
-
-            if (ch->morphTargetA > -1)
-            {
-                targetA = hdr->morphTargetPtrs[ch->morphTargetA];
-            }
-            else
-            {
-                targetA = (u8*)&defFrame;
-            }
-            if (ch->morphTargetB > -1)
-            {
-                targetB = hdr->morphTargetPtrs[ch->morphTargetB];
-            }
-            else
-            {
-                targetB = (u8*)&defFrame;
-            }
-            if (i == 2)
-            {
-                if (chanActive[0] == 0 && chanActive[1] == 0)
-                {
-                    srcVtx = hdr->vertices;
-                }
-                else
-                {
-                    srcVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
-                }
-            }
-            else
-            {
-                srcVtx = hdr->vertices;
-            }
-            weight = ch->weight;
-            if (weight > lbl_803DE818)
-            {
-                ch->weight = lbl_803DE818;
-            }
-            else if (weight < lbl_803DE828)
-            {
-                if (ch->flags0E & BLENDCHAN_FLAG_CLAMP_TARGET)
-                {
-                    if (weight < lbl_803DE840)
-                    {
-                        ch->weight = lbl_803DE840;
-                    }
-                }
-                else
-                {
-                    ch->weight = lbl_803DE828;
-                }
-            }
-            weight = ch->weight;
-            if (weight >= lbl_803DE828)
-            {
-                tw = weight;
-                eased = lbl_803DE868 * tw + lbl_803DE86C * (tw * tw) - tw * (tw * tw);
-            }
-            else
-            {
-                tw = weight * lbl_803DE840;
-                eased = lbl_803DE868 * tw + lbl_803DE86C * (tw * tw) - tw * (tw * tw);
-                eased *= lbl_803DE840;
-            }
-            dstVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
-            modelApplyBoneTransforms(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB,
-                                     (int)(lbl_803DE870 * eased));
-            model->unk60 = 1;
-        }
-        if (ch->targetWeight != ch->weight)
-        {
-            ch->targetWeight = ch->weight;
-        }
-    }
-}
-
 extern f32 lbl_803DE874;
 extern f32 lbl_803DE878;
 extern f32 lbl_803DE87C;
-
-#pragma scheduling on
-void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
-{
-    int i;
-    ObjModelBlendChannel* ch;
-    if (((ObjModel*)model)->file->morphTargetPtrs == NULL)
-    {
-        return;
-    }
-    for (i = 0; i < 3; i++)
-    {
-        ch = ((ObjModel*)model)->blendChannels + i;
-        if (ch[0].morphTargetA == -1 && ch[0].morphTargetB == -1)
-        {
-            continue;
-        }
-        if (ch[0].flags0E & BLENDCHAN_FLAG_MANUAL)
-        {
-            continue;
-        }
-        ch[0].weight = ch[0].weightRate * dt + ch[0].weight;
-        if (ch[0].weight >= lbl_803DE874)
-        {
-            ch[0].weight = lbl_803DE874;
-            ch[0].weightRate = lbl_803DE878;
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
-        }
-        else if (ch[0].weight <= lbl_803DE87C)
-        {
-            ch[0].weight = lbl_803DE87C;
-            ch[0].weightRate = lbl_803DE878;
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
-        }
-    }
-}
-
-#pragma scheduling off
-void* ObjModel_LoadAnimData(u8* p, int b, int c)
-{
-    void* m = modelLoad_layoutBuffers(p, b, p[0] == 1, c);
-    modelAnimResetState(m, ((ObjModel*)m)->animStateA);
-    if (((ObjModel*)m)->animStateB != NULL)
-    {
-        modelAnimResetState(m, ((ObjModel*)m)->animStateB);
-    }
-    ObjModel_RelocateAnimData(p, m);
-    *(int*)(p + 8) = 0;
-    DCStoreRange(p, ((ModelFileHeader*)p)->dataSize);
-    return m;
-}
-
 extern int modelLoad_calcSizes(void* model, int arg, int* out, int flag);
-
-void* ObjModel_Load(int id, int loadFlag, int* outSize)
-{
-    int sizes[7];
-    int realId[1];
-    u8* header;
-    int i[1];
-    u8* h[1];
-    int off[1];
-    int tex;
-    int idc;
-    realId[0] = 0;
-    i[0] = 0;
-    idc = id;
-    if (idc < 0)
-    {
-        realId[0] = -idc;
-    }
-    else
-    {
-        fileLoadToBufferOffset(MLDF_FILEID_MODELIND_BIN, gModelResourceBuffer, idc * 2, 8);
-        realId[0] = gModelResourceBuffer[0];
-    }
-    if (ModelList_getHeader(gModelList, realId[0], &header) == 0)
-    {
-        header = ObjModel_LoadModelData(realId[0]);
-        ObjModel_RelocateModelData(header);
-        h[0] = header;
-        i[0] = 0;
-        off[0] = i[0];
-        for (; i[0] < h[0][0xf2]; i[0]++)
-        {
-            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
-            *(int*)(*(int*)(h[0] + 0x20) + off[0]) = tex;
-            off[0] += 4;
-        }
-        ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations(header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
-        modelInitModelList(gModelList, realId[0], &header);
-    }
-    else
-    {
-        (*(u8*)header)++;
-    }
-    *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
-    return header;
-}
-
-
-void ObjModel_InitResourceCaches(void)
-{
-    void* m;
-    gModelList = allocModelStruct(0x8c, 4);
-    gModelAnimCacheList = allocModelStruct(0xc4, 4);
-    m = mmAlloc(0x830, 0xa, 0);
-    gModelResourceBuffer = m;
-    gModelAnimOffsetTable = (int*)((u8*)m + 0x800);
-    lbl_803DCB5C = (int*)((u8*)m + 0x810);
-    loadModelAndAnimTabs();
-}
-
-void ObjModel_Release(u8* model)
-{
-    u8* header;
-    int z[2];
-    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
-    {
-        ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
-        z[0] = 0;
-        for (z[1] = z[0]; z[0] < (*(u8**)model)[0xf8]; z[1] += 0xc, z[0]++)
-        {
-            ShaderDef_free((int*)&((ObjModel*)model)->textureRefs[z[0]]);
-        }
-    }
-    header = *(u8**)model;
-    if (((ObjModel*)model)->renderAttachment != NULL)
-    {
-        mm_free(((ObjModel*)model)->renderAttachment);
-    }
-    if (--((ModelFileHeader*)header)->refCount == 0)
-    {
-        model_adjustModelList(gModelList, *(u16*)(header + 0x4)); /* modelId */
-        z[0] = 0;
-        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
-        {
-            textureFree((Texture*)(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1]))));
-        }
-        if (((ModelFileHeader*)header)->animationModelPtrs != NULL && ((ModelFileHeader*)header)->animationCount != 0)
-        {
-            z[0] = 0;
-            for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->animationCount; z[1] += 4, z[0]++)
-            {
-                int idx;
-                void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + z[1]);
-                if (tex != NULL && (s8)-- * (u8*)tex <= 0)
-                {
-                    model_findIdxInModelList(gModelAnimCacheList, &tex, &idx);
-                    model_adjustModelList(gModelAnimCacheList, idx);
-                    mm_free(tex);
-                }
-            }
-        }
-        mm_free(header);
-    }
-}
-
-void setGQR6_2(int a, int b, int c, int d)
-{
-    setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
-}
-
-/* Per-bone delta-transform opcode bits: a set bit means the X/Y/Z
-   component is present (as an s16) in the stream, else it is 0. */
 #define MODEL_BONEXFORM_HAS_X 0x2000
 #define MODEL_BONEXFORM_HAS_Y 0x4000
 #define MODEL_BONEXFORM_HAS_Z 0x8000
-
-/* Hand-written assembly in the retail game: modelBoneTransforms_next is a
-   private subroutine of modelApplyBoneTransform with a custom calling
-   convention no C signature can express -- it takes the delta-stream cursor
-   in r20 (advanced in place), returns the unpacked x/y/z deltas in
-   r10/r12/r15, and clobbers only r21/r22, letting the caller keep its own
-   incoming arguments live in the volatile argument registers across the
-   calls. modelApplyBoneTransform itself is EABI-conformant externally.
-
-   Behavior: interpolates two per-vertex s16 delta streams (a = *pd, b = *pe)
-   with weights (0x10000 - f) and f, adds the result to the source vertex
-   stream p (6-byte x/y/z records), and writes n blended vertices to out.
-   Each stream record is a u16 header: low 13 bits = vertex index, top three
-   bits flag which of x/y/z deltas follow (MODEL_BONEXFORM_HAS_*).
-   Vertices before both streams' next index are copied through unchanged. */
-#pragma dont_inline on
-asm void modelBoneTransforms_next(void)
+extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
+#define WALKANIM_COPY_SLOT(J, K)                                                          \
+    *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
+    *(u8*)(stk + (J) + 0x60 + (K)) = *((u8*)(channel + (J) + 0x60) + (K));                \
+    *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
+    *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
+    *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
+extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
+#define LOADCOLOR_BLOCK(SLOT)                                                         \
+    {                                                                                 \
+        int idx;                                                                      \
+        u32 v;                                                                        \
+        int sz4;                                                                      \
+        u8 buf[4];                                                                    \
+        int sz;                                                                       \
+        u8 *hp;                                                                       \
+                                                                                      \
+        v = (u32)(SLOT);                                                              \
+        idx = **(s16 **)(hdr + 0x6c);                                                 \
+        if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
+            *(u16 *)(hdr + 4) == 3) {                                                 \
+            if (v == 0) {                                                             \
+                if (ModelList_getHeader(gModelAnimCacheList, idx, &hp) == 0) {               \
+                    sz4 = *(int *)((u8 *)gModelAnimFlagsTable + idx * 4);                     \
+                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, sz4, 0, (int)&sz, idx, 1);     \
+                    hp = mmAlloc(sz, 10, 0);                                    \
+                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, hp, sz4, sz, (int)buf, idx, 0); \
+                    *hp = 1;                                                          \
+                    modelInitModelList(gModelAnimCacheList, idx, &hp);                       \
+                } else {                                                              \
+                    *hp += 1;                                                         \
+                }                                                                     \
+            } else {                                                                  \
+                animLoadFromTable(hdr, idx, 0, (u8 *)v);                               \
+            }                                                                         \
+        }                                                                             \
+    }
+extern u8 gModelJointScratchBuffer[0x140];
+#define BLENDTBL_ENTRY(K, OFF)                              \
+    if (poseWeights[K] != 0) {                                        \
+        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offA + (OFF));     \
+        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offB + (OFF));     \
+        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
+        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
+    }
+extern char sModelAnimationBufferOverflowWarning[];
+extern f32 lbl_803DE850;
+extern f32 gModelJitterAxis[];
+typedef struct ObjHitBufs
 {
-    nofralloc
-    lhz r21, 0(r20)
-    addi r20, r20, 2
-    andi. r22, r21, MODEL_BONEXFORM_HAS_X
-    li r10, 0
-    beq lbl_BTN_y
-    lha r10, 0(r20)
-    addi r20, r20, 2
-lbl_BTN_y:
-    andi. r22, r21, MODEL_BONEXFORM_HAS_Y
-    li r12, 0
-    beq lbl_BTN_z
-    lha r12, 0(r20)
-    addi r20, r20, 2
-lbl_BTN_z:
-    andi. r22, r21, MODEL_BONEXFORM_HAS_Z
-    li r15, 0
-    beqlr
-    lha r15, 0(r20)
-    addi r20, r20, 2
-    blr
-}
+    u8 pad00[0x48];
+    u8* bufs[2];
+    u8* cur;
+} ObjHitBufs;
+extern void PSMTXReorder(f32 * src, f32 * dst);
+extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
+extern void fn_80025F38(int* a, int b, u8* p, u8* q);
+extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
+extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
+extern void PSMTXTranspose(f32 * src, f32 * dst);
+extern f32 fn_802920A4(f32 x);
+extern f32 gModelDotClampMax;
+extern f32 gModelDotClampMin;
+extern f32 gMapSavedPlayerOffsetX;
+extern f32 gMapSavedPlayerOffsetZ;
+
+void setGQR7Packed(int a, int b, int c, int d);
+void setGQR6_2(int a, int b, int c, int d);
+asm void modelBoneTransforms_next(void);
+static u8* modelGetBoneMtx(u8* m, int idx);
+asm void ObjModel_TransformVerticesWithTranslation(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
+asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
+asm void ObjModel_TransformQuadVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
+static int boneBlendSlotLimit(u8* model);
+
+#pragma dont_inline on
+#pragma peephole off
+#pragma scheduling off
 
 asm void modelApplyBoneTransform(u8* p, u8* out, u16 n, u8** pd, u8** pe, int f, u16 pos)
 {
@@ -1337,11 +261,33 @@ lbl_ABT_done:
     blr
     // clang-format on
 }
-#pragma dont_inline reset
-#pragma peephole off
+asm void modelBoneTransforms_next(void)
+{
+    nofralloc
+    lhz r21, 0(r20)
+    addi r20, r20, 2
+    andi. r22, r21, MODEL_BONEXFORM_HAS_X
+    li r10, 0
+    beq lbl_BTN_y
+    lha r10, 0(r20)
+    addi r20, r20, 2
+lbl_BTN_y:
+    andi. r22, r21, MODEL_BONEXFORM_HAS_Y
+    li r12, 0
+    beq lbl_BTN_z
+    lha r12, 0(r20)
+    addi r20, r20, 2
+lbl_BTN_z:
+    andi. r22, r21, MODEL_BONEXFORM_HAS_Z
+    li r15, 0
+    beqlr
+    lha r15, 0(r20)
+    addi r20, r20, 2
+    blr
+}
 
-extern void lbl_80006C6C(int* out, u8* a, void* buf, int c, int d, u8* e, int f, int g);
-u8 gModelJointScratchBuffer[0x140];
+#pragma dont_inline reset
+#pragma dont_inline off
 
 void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
 {
@@ -1408,16 +354,100 @@ void modelAnimUpdateChannels(u8* hdr, u8* stk, int n)
         blendChan += 4;
     }
 }
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
 
-#define WALKANIM_COPY_SLOT(J, K)                                                          \
-    *(u16*)(stk + (J)*2 + (0x44 + (K)*2)) = *(u16*)(channel + (J)*2 + (0x44 + (K)*2));    \
-    *(u8*)(stk + (J) + 0x60 + (K)) = *((u8*)(channel + (J) + 0x60) + (K));                \
-    *(f32*)(stk + (J)*4 + (0x14 + (K)*4)) = *(f32*)(channel + (J)*4 + (0x14 + (K)*4));    \
-    *(f32*)(stk + (J)*4 + (4 + (K)*4)) = *(f32*)(channel + (J)*4 + (4 + (K)*4));          \
-    *(u32*)(stk + (J)*4 + (0x34 + (K)*4)) = *(u32*)(channel + (J)*4 + (0x34 + (K)*4));
+void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int slotA, int slotB, int blendSel, int mode, s16 eventVal)
+{
+    u8 stk[0x64];
+    int mtxBuf;
+    u8* hdr;
+    u32 idxA;
+    u8 idxB;
+    int fl;
+    int cacheOff;
+    u8* p;
 
+    hdr = *(u8**)model;
+    {
+        u32 sel = *(u16*)(model + 0x18) & 1;
+        u8* pb = model + 12;
+        mtxBuf = *(int*)(pb + sel * 4);
+    }
+    if ((u8)mode & 0x10)
+    {
+        ((ObjAnimState*)channel)->framePhase = t * ((ObjAnimState*)channel)->frameLength;
+    }
+    idxA = (u8)slotA;
+    p = channel + idxA;
+    *(u8*)(stk + 0x60) = *(u8*)(p + 0x60);
+    p = channel + idxA * 4;
+    *(f32*)(stk + 0x14) = *(f32*)(p + 0x14);
+    *(f32*)(stk + 4) = *(f32*)(p + 4);
+    *(int*)(stk + 0x34) = *(int*)&((ModelFileHeader*)p)->texCoords;
+    idxB = (u8)slotB;
+    p = channel + idxB;
+    *(u8*)(stk + 0x61) = *(u8*)(p + 0x60);
+    p = channel + idxB * 4;
+    *(f32*)(stk + 0x18) = *(f32*)(p + 0x14);
+    *(f32*)(stk + 8) = *(f32*)(p + 4);
+    idxB = (u8)blendSel;
+    p = channel + 0x34;
+    *(int*)(stk + 0x38) = *(int*)(p + idxB * 4);
+    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
+    {
+        *(u16*)(stk + 0x44) = 0;
+        *(u16*)(stk + 0x46) = 1;
+        cacheOff = *(u16*)((u8*)(channel + 0x44) + idxA * 2) * 4;
+        *(int*)(stk + 0x1c) = *(int*)((u8*)(channel + 0x1c) + cacheOff);
+        if (idxB < 2)
+        {
+            cacheOff = *(u16*)((u8*)(channel + 0x44) + idxB * 2) * 4;
+            *(int*)(stk + 0x20) = *(int*)((u8*)(channel + 0x1c) + cacheOff);
+        }
+        else
+        {
+            cacheOff = *(u16*)((u8*)(channel + 0x44) + idxB * 2) * 4;
+            *(int*)(stk + 0x20) = *(int*)((u8*)(channel + 0x24) + cacheOff);
+        }
+    }
+    else
+    {
+        *(u16*)(stk + 0x44) = *(u16*)((u8*)(channel + 0x44) + idxA * 2);
+        *(u16*)(stk + 0x46) = *(u16*)((u8*)(channel + 0x44) + idxB * 2);
+    }
+    if (eventVal == 0)
+    {
+        eventVal = 1;
+    }
+    *(u16*)(stk + 0x58) = eventVal;
+    modelAnimUpdateChannels(hdr, stk, 2);
+    {
+        int modeLow = mode & 0xF;
+        mode = modeLow;
+        if ((modeLow & 0xC) == 0)
+        {
+            int sv = ((ObjAnimState*)channel)->moveControlFlags;
+            if (sv & 1)
+            {
+                mode = (modeLow | 0x10) & 0xFF;
+            }
+            if (sv & 4)
+            {
+                mode = (mode | 0x20) & 0xFF;
+            }
+        }
+    }
+    lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
+}
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
 #pragma ppc_unroll_factor_limit 8
 #pragma ppc_unroll_instructions_limit 256
+#pragma ppc_unroll_speculative on
 #pragma ppc_unroll_speculative off
 void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int flags)
 {
@@ -1599,41 +629,21 @@ void modelWalkAnimFn_800248b8(u8* dst, u8* model, u8* channel, f32 blend, int fl
         }
     }
 }
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
 #pragma ppc_unroll_speculative on
+
+void* animationLoad(int id, int a, int b, int e, int f);
+
+void* ObjAnim_LoadCachedMove(int animId, int moveIndex, u8* cache, ObjAnimDef* animDef)
+{
+    void* out = NULL;
+    animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
+    return out;
+}
 #pragma ppc_unroll_factor_limit 4
 #pragma ppc_unroll_instructions_limit 96
-
-extern void* animLoadFromTable(u8* hdr, int idx, int a, u8* b);
-
-#define LOADCOLOR_BLOCK(SLOT)                                                         \
-    {                                                                                 \
-        int idx;                                                                      \
-        u32 v;                                                                        \
-        int sz4;                                                                      \
-        u8 buf[4];                                                                    \
-        int sz;                                                                       \
-        u8 *hp;                                                                       \
-                                                                                      \
-        v = (u32)(SLOT);                                                              \
-        idx = **(s16 **)(hdr + 0x6c);                                                 \
-        if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
-            *(u16 *)(hdr + 4) == 3) {                                                 \
-            if (v == 0) {                                                             \
-                if (ModelList_getHeader(gModelAnimCacheList, idx, &hp) == 0) {               \
-                    sz4 = *(int *)((u8 *)gModelAnimFlagsTable + idx * 4);                     \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, sz4, 0, (int)&sz, idx, 1);     \
-                    hp = mmAlloc(sz, 10, 0);                                    \
-                    loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, hp, sz4, sz, (int)buf, idx, 0); \
-                    *hp = 1;                                                          \
-                    modelInitModelList(gModelAnimCacheList, idx, &hp);                       \
-                } else {                                                              \
-                    *hp += 1;                                                         \
-                }                                                                     \
-            } else {                                                                  \
-                animLoadFromTable(hdr, idx, 0, (u8 *)v);                               \
-            }                                                                         \
-        }                                                                             \
-    }
+#pragma ppc_unroll_speculative on
 
 void modelAnimResetState(void* m, void* data)
 {
@@ -1687,70 +697,288 @@ void modelAnimResetState(void* m, void* data)
         channel->prevBlendCacheSlot = channel->moveCacheSlot;
     }
 }
-
-#define BLENDTBL_ENTRY(K, OFF)                              \
-    if (poseWeights[K] != 0) {                                        \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offA + (OFF));     \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = (s16)(offB + (OFF));     \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
-        ((s16 *)gModelJointScratchBuffer)[outPos++] = poseWeights[K];                  \
-    }
-
-void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
+#pragma opt_loop_invariants off
+int modelLoadAnimations(void* model, int id, void* animBase)
 {
-    ObjAnimComponent* objAnim;
-    int poseOff;
-    ObjModelInstance* modelDef;
-    int defOff;
+    int tabBase;
+    u8* buf = animBase;
+    int* tbl;
+    u8* hdr = model;
+    int sz;
+    int hdrOff[1];
+    int groupSlot;
     int i;
-    u32 jointRemap;
-    int offA;
-    int offB;
-    int outPos;
-    s16* poseWeights;
-    u8* rowA;
-    u8* rowB;
+    int animIdx;
+    int padBytes;
+    int animId;
+    int dataOff;
+    int listIdx;
+    u8* atlasEntry;
+    u8 buf2[4];
+    int sz2;
+    u8* atlasHdr;
+    u8* atlasPtr;
+    u8 newRefCount;
 
+    padBytes = 0;
+    tbl = gModelAnimOffsetTable;
+    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, tbl, id << 1, 0x10);
+    tabBase = *(s16*)tbl;
+    if (((ModelFileHeader*)hdr)->animationCount == 0)
+    {
+        return 0;
+    }
+    sz = (((ModelFileHeader*)hdr)->animationCount << 1) + 8;
+    if (sz > 0x800)
+    {
+        debugPrintf(sModelAnimationBufferOverflowWarning, sz);
+    }
+    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (id & ~3) << 2, 0x20);
+    ((ModelFileHeader*)hdr)->animationDataFileOffset = gModelAnimOffsetTable[id & 3];
+    dataOff = gModelAnimOffsetTable[id & 3];
+    id = gModelAnimOffsetTable[(id & 3) + 1] - dataOff;
     if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
-        rowA = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x44) * 4);
-        rowB = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x46) * 4);
+        ((ModelFileHeader*)hdr)->animationHeaderBuffer = buf;
+        while (sz & 7)
+        {
+            sz++;
+        }
+        padBytes = sz;
+        buf += sz;
+        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, ((ModelFileHeader*)hdr)->animationHeaderBuffer, tabBase, sz);
     }
     else
     {
-        rowA = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
-        rowB = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, gModelResourceBuffer, tabBase, sz);
+        ((ModelFileHeader*)hdr)->animationHeaderBuffer = (u8*)gModelResourceBuffer;
     }
-    objAnim = (ObjAnimComponent*)obj;
-    modelDef = objAnim->modelInstance;
-    defOff = 0;
-    outPos = 0;
-    i = 0;
-    poseOff = 0;
-    for (; i < modelDef->jointCount; i++)
+    hdrOff[0] = 0;
+    groupSlot = 0;
     {
-        jointRemap = *(u8*)(modelDef->jointData + defOff + objAnim->bankIndex + 1);
-        if (jointRemap != 0xff)
-        {
-            poseWeights = (s16*)(objAnim->jointPoseData + poseOff);
-            offA = *(s8*)(rowA + jointRemap) << 6;
-            offB = *(s8*)(rowB + jointRemap) << 6;
-            BLENDTBL_ENTRY(0, 0)
-            BLENDTBL_ENTRY(1, 2)
-            BLENDTBL_ENTRY(2, 4)
-            BLENDTBL_ENTRY(3, 0xc)
-            BLENDTBL_ENTRY(4, 0xe)
-            BLENDTBL_ENTRY(5, 0x10)
-            BLENDTBL_ENTRY(6, 0x18)
-            BLENDTBL_ENTRY(7, 0x1a)
-            BLENDTBL_ENTRY(8, 0x1c)
-        }
-        defOff += modelDef->modelCount + 1;
-        poseOff += 0x12;
+        u8* slot = hdr + groupSlot++ * 2;
+        *(s16*)(slot + 0x70) = (s16)hdrOff[0];
     }
-    ((s16*)gModelJointScratchBuffer)[outPos++] = 0x1000;
-    ((s16*)gModelJointScratchBuffer)[outPos] = 0x1000;
+    i = 0;
+    for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++)
+    {
+        if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff[0]) == -1)
+        {
+            *(s16*)(hdr + groupSlot++ * 2 + 0x70) = (s16)(i + 1);
+        }
+        hdrOff[0] += 2;
+    }
+    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0)
+    {
+        *(int*)&((ModelFileHeader*)hdr)->animationHeaderBuffer = 0;
+        ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
+        buf += ((ModelFileHeader*)hdr)->animationCount * 4;
+        padBytes += ((ModelFileHeader*)hdr)->animationCount * 4;
+        while (padBytes & 7)
+        {
+            buf++;
+            padBytes++;
+        }
+        ((ModelFileHeader*)hdr)->animationDataSection = buf;
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, ((ModelFileHeader*)hdr)->animationDataSection,
+                               ((ModelFileHeader*)hdr)->animationDataFileOffset, id);
+        animIdx = 0;
+        do
+        {
+            animId = *(s16*)((u8*)gModelResourceBuffer + animIdx * 2);
+            if (animId != -1)
+            {
+                if ((getLoadedFileFlags(0) & 0x100000) && *(u16*)(hdr + 4) != 1 &&
+                    *(u16*)(hdr + 4) != 3)
+                {
+                    atlasPtr = 0;
+                }
+                else
+                {
+                    if (ModelList_getHeader(gModelAnimCacheList, animId, &atlasHdr) == 0)
+                    {
+                        dataOff = *(int*)((u8*)gModelAnimFlagsTable + animId * 4);
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, dataOff, 0, (int)&sz2, animId, 1);
+                        atlasHdr = mmAlloc(sz2, 10, 0);
+                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, atlasHdr, dataOff, sz2, (int)buf2, animId, 0);
+                        *atlasHdr = 1;
+                        modelInitModelList(gModelAnimCacheList, animId, &atlasHdr);
+                    }
+                    else
+                    {
+                        *atlasHdr += 1;
+                    }
+                    atlasPtr = atlasHdr;
+                }
+                *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = atlasPtr;
+                if (*(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) == 0)
+                {
+                    int relIdx;
+
+                    relIdx = 0;
+                    for (; relIdx < animIdx; relIdx++)
+                    {
+                        atlasEntry = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + relIdx * 4);
+                        if (atlasEntry != 0)
+                        {
+                            newRefCount = (*atlasEntry -= 1);
+                            if ((s8)newRefCount <= 0)
+                            {
+                                model_findIdxInModelList(gModelAnimCacheList, &atlasEntry, &listIdx);
+                                model_adjustModelList(gModelAnimCacheList, listIdx);
+                                mm_free(atlasEntry);
+                            }
+                        }
+                    }
+                    *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
+                    return 1;
+                }
+            }
+            else
+            {
+                *(int*)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = 0;
+            }
+            animIdx++;
+        }
+        while (animIdx < (int)((ModelFileHeader*)hdr)->animationCount);
+    }
+    else
+    {
+        *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
+    }
+    return 0;
 }
+#pragma opt_loop_invariants reset
+#pragma opt_propagation off
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+int modelGetAmapSize(int animId, int amapFlag, int animCount)
+{
+    int size;
+    if (amapFlag != 0)
+    {
+        size = animCount * 2 + 8;
+        while (size & 7)
+        {
+            size++;
+        }
+    }
+    else
+    {
+        {
+            int words;
+            words = animCount * 4;
+            size = words;
+        }
+        while (size & 7)
+        {
+            size++;
+        }
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (animId & ~3) << 2, 0x20);
+        size += gModelAnimOffsetTable[(animId & 3) + 1] - gModelAnimOffsetTable[animId & 3];
+    }
+    return size;
+}
+#pragma opt_lifetimes off
+#pragma opt_loop_invariants on
+#pragma opt_propagation reset
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
+{
+    u8* hdr = model;
+    int total;
+    int va;
+
+    if (((ModelFileHeader*)hdr)->animationCount != 0)
+    {
+        sizes[6] = ((u32)((ModelFileHeader*)hdr)->jointCount + (u32)((ModelFileHeader*)hdr)->extraJointCount) * 0x80;
+    }
+    else
+    {
+        sizes[6] = 0x80;
+    }
+    if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || ((ModelFileHeader*)hdr)->vertexAnimEntries != 0 || (((
+        ModelFileHeader*)hdr)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS) != 0)
+    {
+        sizes[0] = (u32)((ModelFileHeader*)hdr)->vertexCount * 0xc + 0x60;
+    }
+    else
+    {
+        sizes[0] = 0;
+    }
+    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
+    {
+        int normalStride;
+        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
+        {
+            normalStride = 9;
+        }
+        else
+        {
+            normalStride = 3;
+        }
+        sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
+    }
+    {
+        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitSphereCount << 4;
+        sizes[1] = hitSphereBytes << 1;
+    }
+    sizes[3] = 0;
+    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) != 0)
+    {
+        sizes[5] = ((ModelFileHeader*)hdr)->headerSize;
+        while ((sizes[5] & 7) != 0)
+        {
+            *(int*)((int)sizes + 0x14) = *(int*)((int)sizes + 0x14) + 1;
+        }
+        sizes[3] = sizes[5] << 2;
+    }
+    sizes[4] = 0x68;
+    if ((flags & 0x80) != 0)
+    {
+        sizes[4] = sizes[4] << 1;
+        sizes[3] = sizes[3] << 1;
+    }
+    if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || forceBlendChannels != 0)
+    {
+        sizes[4] = sizes[4] + 0x30;
+        total = sizes[3] + sizes[4] + 100;
+        total = (sizes[6] + sizes[1] + 8) + total;
+    }
+    else
+    {
+        total = sizes[4] + 100;
+        total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
+    }
+    total = total + sizes[0];
+    if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
+        unk18 != 0)
+    {
+        total = ((u32)((ModelFileHeader*)hdr)->jointCount << 1) + (((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2)
+            + 0x1c + total;
+    }
+    if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
+    {
+        total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
+        total = total + 4;
+    }
+    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
+    {
+        total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
+        total = total + 4;
+    }
+    total = total + (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
+    if ((flags & 0x8000) != 0)
+    {
+        total = total + 0x1a;
+    }
+    return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
+}
+#pragma opt_lifetimes reset
+#pragma opt_loop_invariants reset
 
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
 {
@@ -1943,259 +1171,284 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
     ((ObjModel*)out2)->unk60 = 0;
     return out2;
 }
-
-extern char sModelAnimationBufferOverflowWarning[];
-
-#pragma opt_loop_invariants off
-int modelLoadAnimations(void* model, int id, void* animBase)
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma scheduling on
+#pragma peephole on
+static int boneBlendSlotLimit(u8* model)
 {
-    int tabBase;
-    u8* buf = animBase;
-    int* tbl;
-    u8* hdr = model;
-    int sz;
-    int hdrOff[1];
-    int groupSlot;
-    int i;
-    int animIdx;
-    int padBytes;
-    int animId;
-    int dataOff;
-    int listIdx;
-    u8* atlasEntry;
-    u8 buf2[4];
-    int sz2;
-    u8* atlasHdr;
-    u8* atlasPtr;
-    u8 newRefCount;
+    u8* p = *(u8**)model;
+    if (p[0xf3] != 0)
+    {
+        return p[0xf3] + p[0xf4];
+    }
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
-    padBytes = 0;
-    tbl = gModelAnimOffsetTable;
-    fileLoadToBufferOffset(MLDF_FILEID_MODANIM_TAB, tbl, id << 1, 0x10);
-    tabBase = *(s16*)tbl;
-    if (((ModelFileHeader*)hdr)->animationCount == 0)
+void fn_80025F38(int* a, int b, u8* blend, u8* chain)
+{
+    u8* model = (u8*)a;
+    f32 tmp[12];
+    f32 mt[12];
+    f32 target[3];
+    f32 work[3];
+    f32 out[3];
+    f32 dir2[3];
+    f32 dir1[3];
+    f32 axis[3];
+    int nextIdx;
+    int i;
+    int idx;
+    f32* m;
+    int prevOff;
+    f32 dot;
+    f32 cap;
+    u8* bankSel;
+
+    idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
+    if (idx >= boneBlendSlotLimit(model))
     {
-        return 0;
+        idx = 0;
     }
-    sz = (((ModelFileHeader*)hdr)->animationCount << 1) + 8;
-    if (sz > 0x800)
+    bankSel = model + 0xc;
+    PSMTXCopy(*(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
+    idx = (*(int***)(chain + 4))[0][0];
+    if (idx >= boneBlendSlotLimit(model))
     {
-        debugPrintf(sModelAnimationBufferOverflowWarning, sz);
+        idx = 0;
     }
-    fileLoadToBufferOffset(MLDF_FILEID_AMAP_TAB, gModelAnimOffsetTable, (id & ~3) << 2, 0x20);
-    ((ModelFileHeader*)hdr)->animationDataFileOffset = gModelAnimOffsetTable[id & 3];
-    dataOff = gModelAnimOffsetTable[id & 3];
-    id = gModelAnimOffsetTable[(id & 3) + 1] - dataOff;
-    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
+    bankSel = model + 0xc;
+    m = *(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
+    cap = gModelDotClampMax;
+    for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
-        ((ModelFileHeader*)hdr)->animationHeaderBuffer = buf;
-        while (sz & 7)
+        nextIdx = (*(int***)(chain + 4))[0][i];
+        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
+        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
+            playerMapOffsetX;
+        target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
+        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
+            playerMapOffsetZ;
+        work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
+        work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
+        work[2] = *(f32*)(*(u8**)chain + i * 0x54 - 0x34);
+        PSVECAdd(work, (f32*)(*(u8**)chain + i * 0x54 + 0x18), work);
+        PSMTXMultVec(tmp, work, work);
+        PSVECSubtract(target, out, dir1);
+        PSVECNormalize(dir1, dir1);
+        PSVECSubtract(work, out, dir2);
+        PSVECNormalize(dir2, dir2);
+        dot = PSVECDotProduct(dir2, dir1);
+        if (dot < cap && dot > gModelDotClampMin)
         {
-            sz++;
-        }
-        padBytes = sz;
-        buf += sz;
-        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, ((ModelFileHeader*)hdr)->animationHeaderBuffer, tabBase, sz);
-    }
-    else
-    {
-        fileLoadToBufferOffset(MLDF_FILEID_MODANIM_BIN, gModelResourceBuffer, tabBase, sz);
-        ((ModelFileHeader*)hdr)->animationHeaderBuffer = (u8*)gModelResourceBuffer;
-    }
-    hdrOff[0] = 0;
-    groupSlot = 0;
-    {
-        u8* slot = hdr + groupSlot++ * 2;
-        *(s16*)(slot + 0x70) = (s16)hdrOff[0];
-    }
-    i = 0;
-    for (; i < (int)((ModelFileHeader*)hdr)->animationCount; i++)
-    {
-        if (*(s16*)(((ModelFileHeader*)hdr)->animationHeaderBuffer + hdrOff[0]) == -1)
-        {
-            *(s16*)(hdr + groupSlot++ * 2 + 0x70) = (s16)(i + 1);
-        }
-        hdrOff[0] += 2;
-    }
-    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) == 0)
-    {
-        *(int*)&((ModelFileHeader*)hdr)->animationHeaderBuffer = 0;
-        ((ModelFileHeader*)hdr)->animationModelPtrs = buf;
-        buf += ((ModelFileHeader*)hdr)->animationCount * 4;
-        padBytes += ((ModelFileHeader*)hdr)->animationCount * 4;
-        while (padBytes & 7)
-        {
-            buf++;
-            padBytes++;
-        }
-        ((ModelFileHeader*)hdr)->animationDataSection = buf;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, ((ModelFileHeader*)hdr)->animationDataSection,
-                               ((ModelFileHeader*)hdr)->animationDataFileOffset, id);
-        animIdx = 0;
-        do
-        {
-            animId = *(s16*)((u8*)gModelResourceBuffer + animIdx * 2);
-            if (animId != -1)
+            if (dot < lbl_803DE818 && dot > lbl_803DE840)
             {
-                if ((getLoadedFileFlags(0) & 0x100000) && *(u16*)(hdr + 4) != 1 &&
-                    *(u16*)(hdr + 4) != 3)
+                PSVECCrossProduct(dir2, dir1, axis);
+                if (dot < lbl_803DE840)
                 {
-                    atlasPtr = 0;
+                    dot = lbl_803DE840;
                 }
                 else
                 {
-                    if (ModelList_getHeader(gModelAnimCacheList, animId, &atlasHdr) == 0)
-                    {
-                        dataOff = *(int*)((u8*)gModelAnimFlagsTable + animId * 4);
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, dataOff, 0, (int)&sz2, animId, 1);
-                        atlasHdr = mmAlloc(sz2, 10, 0);
-                        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, atlasHdr, dataOff, sz2, (int)buf2, animId, 0);
-                        *atlasHdr = 1;
-                        modelInitModelList(gModelAnimCacheList, animId, &atlasHdr);
-                    }
-                    else
-                    {
-                        *atlasHdr += 1;
-                    }
-                    atlasPtr = atlasHdr;
+                    f32 sub = lbl_803DE818 - dot;
+                    dot = sub * *(f32*)(blend + 8) + dot;
                 }
-                *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = atlasPtr;
-                if (*(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) == 0)
-                {
-                    int relIdx;
-
-                    relIdx = 0;
-                    for (; relIdx < animIdx; relIdx++)
-                    {
-                        atlasEntry = *(u8**)(((ModelFileHeader*)hdr)->animationModelPtrs + relIdx * 4);
-                        if (atlasEntry != 0)
-                        {
-                            newRefCount = (*atlasEntry -= 1);
-                            if ((s8)newRefCount <= 0)
-                            {
-                                model_findIdxInModelList(gModelAnimCacheList, &atlasEntry, &listIdx);
-                                model_adjustModelList(gModelAnimCacheList, listIdx);
-                                mm_free(atlasEntry);
-                            }
-                        }
-                    }
-                    *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
-                    return 1;
-                }
+                PSMTXTranspose(tmp, mt);
+                PSMTXMultVecSR(mt, axis, axis);
+                PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
             }
             else
             {
-                *(int*)(((ModelFileHeader*)hdr)->animationModelPtrs + animIdx * 4) = 0;
+                PSMTXIdentity(m);
             }
-            animIdx++;
         }
-        while (animIdx < (int)((ModelFileHeader*)hdr)->animationCount);
+        PSMTXConcat(tmp, m, m);
+        m[3] = out[0];
+        m[7] = out[1];
+        m[11] = out[2];
+        PSMTXCopy(m, tmp);
+        work[0] = *(f32*)(*(u8**)chain + i * 0x54 + 0x18);
+        work[1] = *(f32*)(*(u8**)chain + i * 0x54 + 0x1c);
+        work[2] = *(f32*)(*(u8**)chain + i * 0x54 + 0x20);
+        PSMTXMultVec(m, work, work);
+        PSMTXCopy(m, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x24));
+        if (i < *(int*)(chain + 8))
+        {
+            idx = nextIdx;
+            if (nextIdx >= boneBlendSlotLimit(model))
+            {
+                idx = 0;
+            }
+            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
+        }
     }
-    else
-    {
-        *(int*)&((ModelFileHeader*)hdr)->animationModelPtrs = 0;
-    }
-    return 0;
 }
 
-#pragma opt_loop_invariants on
-#pragma opt_lifetimes off
-int modelLoad_calcSizes(void* model, int flags, int* sizes, int forceBlendChannels)
+void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
 {
-    u8* hdr = model;
-    int total;
-    int va;
+    u8* model = (u8*)a;
+    f32 tmp[12];
+    f32 mt[12];
+    f32 target[3];
+    f32 work[3];
+    f32 out[3];
+    f32 dir2[3];
+    f32 dir1[3];
+    f32 axis[3];
+    int nextIdx;
+    int i;
+    int idx;
+    f32* m;
+    int prevOff;
+    f32 dot;
+    f32 cap;
 
-    if (((ModelFileHeader*)hdr)->animationCount != 0)
+    idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
+    if (idx >= boneBlendSlotLimit(model))
     {
-        sizes[6] = ((u32)((ModelFileHeader*)hdr)->jointCount + (u32)((ModelFileHeader*)hdr)->extraJointCount) * 0x80;
+        idx = 0;
     }
-    else
+    PSMTXCopy(*(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
+    idx = (*(int***)(chain + 4))[0][0];
+    if (idx >= boneBlendSlotLimit(model))
     {
-        sizes[6] = 0x80;
+        idx = 0;
     }
-    if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || ((ModelFileHeader*)hdr)->vertexAnimEntries != 0 || (((
-        ModelFileHeader*)hdr)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS) != 0)
+    m = *(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
+    cap = gModelDotClampMax;
+    for (i = 1; i < *(int*)(chain + 8) + 1; i++)
     {
-        sizes[0] = (u32)((ModelFileHeader*)hdr)->vertexCount * 0xc + 0x60;
-    }
-    else
-    {
-        sizes[0] = 0;
-    }
-    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
-    {
-        int normalStride;
-        if (((ModelFileHeader*)hdr)->flags24 & MODEL_FLAGS24_NORMALS_9BYTE)
+        nextIdx = (*(int***)(chain + 4))[0][i];
+        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
+        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
+            playerMapOffsetX;
+        target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
+        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
+            playerMapOffsetZ;
+        work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
+        work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
+        work[2] = *(f32*)(*(u8**)chain + i * 0x54 - 0x34);
+        if ((u32)cb != 0)
         {
-            normalStride = 9;
+            ((void (*)(int, int*, f32*, int, int, f32))cb)(b, a, work, cbArg, i, *(f32*)(blend + 0x14));
+        }
+        PSVECAdd(work, (f32*)(*(u8**)chain + i * 0x54 + 0x18), work);
+        PSMTXMultVec(tmp, work, work);
+        PSVECSubtract(target, out, dir1);
+        PSVECNormalize(dir1, dir1);
+        PSVECSubtract(work, out, dir2);
+        PSVECNormalize(dir2, dir2);
+        dot = PSVECDotProduct(dir2, dir1);
+        if (dot < cap && dot > gModelDotClampMin)
+        {
+            PSVECCrossProduct(dir2, dir1, axis);
+            if (dot < lbl_803DE840)
+            {
+                dot = lbl_803DE840;
+            }
+            else
+            {
+                f32 sub = lbl_803DE818 - dot;
+                dot = sub * *(f32*)(blend + 8) + dot;
+            }
+            PSMTXTranspose(tmp, mt);
+            PSMTXMultVecSR(mt, axis, axis);
+            PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
         }
         else
         {
-            normalStride = 3;
+            PSMTXIdentity(m);
         }
-        sizes[0] += ((ModelFileHeader*)hdr)->normalCount * normalStride + 0x40;
-    }
-    {
-        int hitSphereBytes = ((ModelFileHeader*)hdr)->hitSphereCount << 4;
-        sizes[1] = hitSphereBytes << 1;
-    }
-    sizes[3] = 0;
-    if ((((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA) != 0)
-    {
-        sizes[5] = ((ModelFileHeader*)hdr)->headerSize;
-        while ((sizes[5] & 7) != 0)
+        PSMTXConcat(tmp, m, m);
+        m[3] = out[0];
+        m[7] = out[1];
+        m[11] = out[2];
+        PSMTXCopy(m, tmp);
+        work[0] = *(f32*)(*(u8**)chain + i * 0x54 + 0x18);
+        work[1] = *(f32*)(*(u8**)chain + i * 0x54 + 0x1c);
+        work[2] = *(f32*)(*(u8**)chain + i * 0x54 + 0x20);
+        PSMTXMultVec(m, work, work);
+        PSMTXCopy(m, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x24));
+        if (i < *(int*)(chain + 8))
         {
-            *(int*)((int)sizes + 0x14) = *(int*)((int)sizes + 0x14) + 1;
+            idx = nextIdx;
+            if (nextIdx >= boneBlendSlotLimit(model))
+            {
+                idx = 0;
+            }
+            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
         }
-        sizes[3] = sizes[5] << 2;
+        *(f32*)(*(u8**)chain + i * 0x54 + 0xc) = work[0] - (gMapSavedPlayerOffsetX + *(f32*)(*(u8**)chain + i * 0x54) -
+            playerMapOffsetX);
+        *(f32*)(*(u8**)chain + i * 0x54 + 0x10) = work[1] - *(f32*)(*(u8**)chain + i * 0x54 + 4);
+        *(f32*)(*(u8**)chain + i * 0x54 + 0x14) = work[2] - (gMapSavedPlayerOffsetZ + *(f32*)(*(u8**)chain + i * 0x54 + 8) -
+            playerMapOffsetZ);
+        *(f32*)(*(u8**)chain + i * 0x54) = work[0];
+        *(f32*)(*(u8**)chain + i * 0x54 + 4) = work[1];
+        *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
     }
-    sizes[4] = 0x68;
-    if ((flags & 0x80) != 0)
+}
+#pragma dont_inline reset
+#pragma dont_inline on
+void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
+{
+    extern f32 lbl_803DCB48;
+    extern f32 lbl_803DE844;
+    extern f32 lbl_803DE848;
+    extern f32 lbl_803DE84C;
+    f32 vec[3];
+    int modelIndex;
+    ModelFileHeader* hdr;
+    u32 count;
+    int total;
+    u8* base;
+    f32 dot;
+    f32 scaled;
+    f32 amp;
+    int off;
+    int i;
+
+    modelIndex = 0;
+    hdr = model->file;
+    count = hdr->jointCount;
+    if (count != 0)
     {
-        sizes[4] = sizes[4] << 1;
-        sizes[3] = sizes[3] << 1;
-    }
-    if (((ModelFileHeader*)hdr)->morphTargetCount != 0 || forceBlendChannels != 0)
-    {
-        sizes[4] = sizes[4] + 0x30;
-        total = sizes[3] + sizes[4] + 100;
-        total = (sizes[6] + sizes[1] + 8) + total;
+        total = count + hdr->extraJointCount;
     }
     else
     {
-        total = sizes[4] + 100;
-        total = (sizes[3] + sizes[6] + sizes[1] + 8) + total;
+        total = 1;
     }
-    total = total + sizes[0];
-    if (((ModelFileHeader*)hdr)->jointData != 0 && ((ModelFileHeader*)hdr)->jointCount != 0 && ((ModelFileHeader*)hdr)->
-        unk18 != 0)
+    if (modelIndex >= total)
     {
-        total = ((u32)((ModelFileHeader*)hdr)->jointCount << 1) + (((u32)((ModelFileHeader*)hdr)->jointCount * 7) << 2)
-            + 0x1c + total;
+        modelIndex = 0;
     }
-    if (((ModelFileHeader*)hdr)->vertexAnimEntries != 0)
+    base = model->jointMatrices[model->bufferFlags & 1] + modelIndex * 0x40;
+    vec[0] = *(f32*)(base + 0x20);
+    vec[1] = *(f32*)(base + 0x24);
+    vec[2] = *(f32*)(base + 0x28);
+    dot = PSVECDotProduct(vec, gModelJitterAxis);
+    if (dot < lbl_803DE828)
     {
-        total = (va = (u32)((ModelFileHeader*)hdr)->vertexAnimCount * 4, va + total);
-        total = total + 4;
+        dot = lbl_803DE828;
     }
-    if (((ModelFileHeader*)hdr)->blendAnimEntries != 0)
+    scaled = lbl_803DCB48 * (lbl_803DE844 - dot);
+    amp = lbl_803DE848 * randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
+    i = 0;
+    off = 0;
+    while (i < entry->frameCount + 1)
     {
-        total = (va = (u32)((ModelFileHeader*)hdr)->blendAnimCount * 4, va + total);
-        total = total + 4;
+        u8* p = (u8*)entry->frameBuffer + off;
+        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * chain->originY + gModelJitterAxis[0] * amp;
+        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * chain->originY + chain->originZ);
+        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->originY + gModelJitterAxis[2] * amp;
+        off += 0x54;
+        i++;
     }
-    total = total + (u32)((ModelFileHeader*)hdr)->renderOpCount * 0xc;
-    if ((flags & 0x8000) != 0)
-    {
-        total = total + 0x1a;
-    }
-    return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
-#pragma opt_lifetimes reset
-
-extern f32 lbl_803DE850;
-
-#pragma dont_inline on
+#pragma opt_common_subs reset
 void fn_80026928(int* obj, int b, int* desc)
 {
     int i;
@@ -2298,154 +1551,717 @@ void fn_80026928(int* obj, int b, int* desc)
         PSMTXMultVec((f32*)(obj[(*(u16*)((u8*)obj + 0x18) & 1) + 3] + lastJointIdx * 0x40), (f32*)(lastEntry + 0x18), (f32*)lastEntry);
     }
 }
-
-#pragma opt_common_subs off
-void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
-{
-    int size;
-    int flags;
-    int out2;
-    u8* buf;
-    int stride;
-
-    flags = 0;
-    fileLoadToBufferOffset(MLDF_FILEID_PREANIM_TAB, &flags, id << 2, 4);
-    if (flags & 0x10000000)
-    {
-        loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, 0, flags, 0, (int)&size, id, 1);
-        buf = out + 0x80;
-        loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, buf, flags, size, (int)&out2, id, 0);
-        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
-    }
-    else
-    {
-        flags = *(u32*)((int)gModelAnimFlagsTable + id * 4);
-        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, flags, 0, (int)&size, id, 1);
-        buf = out + 0x80;
-        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, buf, flags, size, (int)&out2, id, 0);
-        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
-        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
-    }
-    return buf;
-}
-
+#pragma dont_inline reset
 #pragma dont_inline off
 #pragma opt_common_subs on
-#pragma optimization_level 1
-void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
+void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
 {
-    int tmp;
-    int size;
-    u8* ptr;
-    u32 v;
-    int i;
-    u32 ftype;
-
-    if ((getLoadedFileFlags(0) & 0x100000) != 0 && (ftype = *(u16*)(hdr + 4)) != 1 && ftype != 3)
-    {
-        return 0;
-    }
-    if (bufout == 0)
-    {
-        if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
-        {
-            u8* np;
-            int idx2;
-            v = ((u32*)gModelAnimFlagsTable)[(idx2 = i)];
-            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, v, 0, (int)&size, i, 1);
-            ptr = np = mmAlloc(size, 10, 0);
-            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, v, size, (int)&tmp, i, 0);
-            *ptr = 1;
-            modelInitModelList(gModelAnimCacheList, id, &ptr);
-        }
-        else
-        {
-            u8* p = ptr;
-            *p += 1;
-        }
-        return ptr;
-    }
-    return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
-}
-#pragma optimization_level reset
-
-typedef struct
-{
-    u8 pad[0xc];
-    u8* buf;
-} AnimBufSel;
-
-extern f32 gModelJitterAxis[];
-
-#pragma dont_inline on
-void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
-{
-    extern f32 lbl_803DCB48;
-    extern f32 lbl_803DE844;
-    extern f32 lbl_803DE848;
-    extern f32 lbl_803DE84C;
-    f32 vec[3];
-    int modelIndex;
-    ModelFileHeader* hdr;
-    u32 count;
-    int total;
-    u8* base;
-    f32 dot;
-    f32 scaled;
-    f32 amp;
     int off;
     int i;
 
-    modelIndex = 0;
-    hdr = model->file;
-    count = hdr->jointCount;
-    if (count != 0)
+    if (((ObjModelChain*)p)->enabled != 0)
     {
-        total = count + hdr->extraJointCount;
+        i = 0;
+        off = 0;
+        for (; i < ((ObjModelChain*)p)->count; i++)
+        {
+            if (((ObjModelChain*)p)->unk19 == 0)
+            {
+                fn_80026928(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
+            }
+            if (getHudHiddenFrameCount() == 0)
+            {
+                modelAnimFn_80026790((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
+                fn_80026308(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
+            }
+            else
+            {
+                fn_80025F38(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
+            }
+            off += 0xc;
+        }
+        ((ObjModelChain*)p)->updateFlag = 1;
+        ((ObjModelChain*)p)->unk19 = 1;
+    }
+}
+#pragma dont_inline reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma peephole on
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling on
+
+void ObjModelChain_SetEnabled(ObjModelChain* chain, u8 enabled)
+{
+    chain->enabled = enabled;
+}
+
+
+void ObjModelChain_SetOrigin(ObjModelChain* chain, f32 x, f32 y, f32 z)
+{
+    chain->originX = x;
+    chain->originY = y;
+    chain->originZ = z;
+}
+void __set_debug_bba(u8* p)
+{
+    p[0x19] = 0;
+}
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
+void ObjModelChain_AdvancePhase(ObjModelChain* chain)
+{
+    chain->updateFlag = 0;
+    chain->phase += timeDelta;
+    if (chain->phase > gModelPhaseWrapPeriod)
+    {
+        chain->phase -= *(f32*)&gModelPhaseWrapPeriod;
+    }
+}
+#pragma dont_inline off
+
+void ObjModelChain_Free(ObjModelChain* chain)
+{
+    int i;
+    for (i = 0; i < chain->count; i++)
+    {
+        mm_free(chain->entries[i].frameBuffer);
+    }
+    mm_free(chain->entries);
+    mm_free(chain);
+}
+
+extern f32 gModelDefaultOriginX;
+extern f32 gModelDefaultOriginY;
+extern f32 gModelDefaultOriginZ;
+extern const f32 gModelVertexScale;
+
+ObjModelChain* ObjModelChain_Alloc(void* models, int count)
+{
+    int** p;
+    int off;
+    ObjModelChain* state;
+    int i;
+
+    state = mmAlloc(0x1c, 0x1a, 0);
+    state->count = count;
+    state->unk19 = 0;
+    state->updateFlag = 0;
+    state->entries = mmAlloc(count * 0xc, 0x1a, 0);
+    i = 0;
+    p = models;
+    off = 0;
+    for (; i < count; i++)
+    {
+        *(int**)((char*)state->entries + off + 4) = *p;
+        *(int*)((char*)state->entries + off + 8) = (*p)[1];
+        *(void**)((char*)state->entries + off) = mmAlloc((*(int*)((char*)state->entries + off + 8) + 1) * 0x54, 0x1a, 0);
+        p++;
+        off += 0xc;
+    }
+    state->originX = gModelDefaultOriginX;
+    state->originY = gModelDefaultOriginY;
+    state->originZ = gModelDefaultOriginZ;
+    state->phase = lbl_803DE828;
+    state->enabled = 1;
+    return state;
+}
+
+void Model_GetVertexPosition(ModelFileHeader* model, int vertexIndex, f32* out)
+{
+    s16* vertex;
+
+    vertex = (s16*)(model->vertices + vertexIndex * 6);
+    if ((model->flags & 0x800) != 0)
+    {
+        out[0] = vertex[0];
+        out[1] = vertex[1];
+        out[2] = vertex[2];
     }
     else
     {
-        total = 1;
-    }
-    if (modelIndex >= total)
-    {
-        modelIndex = 0;
-    }
-    base = model->jointMatrices[model->bufferFlags & 1] + modelIndex * 0x40;
-    vec[0] = *(f32*)(base + 0x20);
-    vec[1] = *(f32*)(base + 0x24);
-    vec[2] = *(f32*)(base + 0x28);
-    dot = PSVECDotProduct(vec, gModelJitterAxis);
-    if (dot < lbl_803DE828)
-    {
-        dot = lbl_803DE828;
-    }
-    scaled = lbl_803DCB48 * (lbl_803DE844 - dot);
-    amp = lbl_803DE848 * randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
-    i = 0;
-    off = 0;
-    while (i < entry->frameCount + 1)
-    {
-        u8* p = (u8*)entry->frameBuffer + off;
-        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * chain->originY + gModelJitterAxis[0] * amp;
-        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * chain->originY + chain->originZ);
-        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->originY + gModelJitterAxis[2] * amp;
-        off += 0x54;
-        i++;
+        out[0] = vertex[0] * gModelVertexScale;
+        out[1] = vertex[1] * gModelVertexScale;
+        out[2] = vertex[2] * gModelVertexScale;
     }
 }
 
 
-typedef struct ObjHitBufs
-{
-    u8 pad00[0x48];
-    u8* bufs[2];
-    u8* cur;
-} ObjHitBufs;
 
-#pragma dont_inline off
+int loadModelAndAnimTabs(void)
+{
+    int* p = getCurrentDataFile(MLDF_FILEID_MODELS_TAB_A);
+    if (p == NULL)
+    {
+        return 0;
+    }
+    gModelTabEntryCount = 0;
+    while (*p != -1)
+    {
+        p++;
+        gModelTabEntryCount++;
+    }
+    gModelTabEntryCount--;
+    gModelAnimFlagsTable = getCurrentDataFile(MLDF_FILEID_ANIM_TAB_A);
+    if (gModelAnimFlagsTable == NULL)
+    {
+        return 0;
+    }
+    lbl_803DCB58 = 0;
+    return 1;
+}
+
+int roundUpTo4(int x);
+
+int roundUpTo8(int x);
+
+int roundUpTo16(int x);
+
+int roundUpTo32(int x);
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+/* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
+   two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
+   worker chunks in via copyToCache while the previous chunk is being processed,
+   then writing transformed verts (6 bytes each) back to dstVtx. */
+void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale)
+{
+    extern u16 gModelCopyChunkWordLimit;
+    u16 vtxPos;
+    u16 chunk;
+    u16 words;
+    u16 nextChunk;
+    u16 nextWords;
+    u16 bufIdx;
+    u8* cache;
+    u8* out;
+    int curBuf;
+    u8* in;
+    int sync;
+
+    cache = getCache();
+    vtxPos = 0;
+    if (vtxCount > gModelCopyChunkWordLimit)
+    {
+        chunk = gModelCopyChunkWordLimit;
+    }
+    else
+    {
+        chunk = vtxCount;
+    }
+    words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
+    copyToCache(cache, srcVtx, words);
+    bufIdx = 0;
+    sync = 0;
+    while (vtxCount != 0)
+    {
+        vtxCount -= chunk;
+        if (vtxCount != 0)
+        {
+            if (vtxCount > gModelCopyChunkWordLimit)
+            {
+                nextChunk = gModelCopyChunkWordLimit;
+            }
+            else
+            {
+                nextChunk = vtxCount;
+            }
+            nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
+            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
+            sync = 1;
+        }
+        cacheQueueWait(sync);
+        curBuf = bufIdx;
+        in = cache + curBuf * 0x2000;
+        out = in + 0x1000;
+        modelApplyBoneTransform(in, out, chunk, (u8**)&targetA, (u8**)&targetB, blendScale, vtxPos);
+        memcpyToCache(dstVtx + vtxPos * 6, out, words);
+        vtxPos += chunk;
+        sync = 1;
+        bufIdx = curBuf ^ 1;
+        chunk = nextChunk;
+        words = nextWords;
+    }
+    cacheQueueWait(0);
+}
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+
+void model_multMtxs(u8* model, f32* out)
+{
+    u8* hdr = *(u8**)model;
+    u32 i;
+    for (i = 0; i < hdr[0xf3]; i++)
+    {
+        int j = i;
+        u8* h = *(u8**)model;
+        u32 cnt = h[0xf3];
+        int lim;
+        f32* base;
+        if (cnt != 0)
+        {
+            lim = cnt + h[0xf4];
+        }
+        else
+        {
+            lim = 1;
+        }
+        if (j >= lim)
+        {
+            j = 0;
+        }
+        base = *(f32**)(model + 0xc + (((ObjModel*)model)->bufferFlags & 1) * 4);
+        PSMTXConcat(out, base + j * 0x10, base + j * 0x10);
+    }
+}
+
+int alignUp2(int x);
+
+
+void* getCache(void);
+
+
+void cacheQueueWait(int sync);
+
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+#pragma scheduling on
+#pragma peephole on
+static u8* modelGetBoneMtx(u8* m, int idx)
+{
+    u32 cnt;
+    int lim;
+
+    cnt = *(u8*)(*(u8**)m + 0xf3);
+    if (cnt != 0)
+    {
+        lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+    }
+    else
+    {
+        lim = 1;
+    }
+    if (idx >= lim)
+    {
+        idx = 0;
+    }
+    return ((ObjModel*)m)->jointMatrices[*(u16*)(m + 0x18) & 1] + idx * 0x40;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void modelInitBoneMtxs(u8* m, u8* out)
+{
+    u8* hdr;
+    u32 i;
+    u8* mtx;
+    int boneOff;
+    ModelBone* bone;
+    u8* dst;
+    f32 tmp[12];
+
+    hdr = *(u8**)m;
+    i = 0;
+    boneOff = 0;
+    dst = out;
+    for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
+    {
+        mtx = modelGetBoneMtx(m, i);
+        bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
+        PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
+        PSMTXConcat((f32*)mtx, tmp, tmp);
+        PSMTXReorder(tmp, (f32*)dst);
+        boneOff += 0x1c;
+        dst += 0x30;
+    }
+}
+#pragma opt_propagation off
+void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
+{
+    u8* dst;
+    int boneOff;
+    u8* hdr;
+    u32 i;
+    u8* mtx;
+    ModelBone* bone;
+    f32 tmp[12];
+
+    hdr = *(u8**)m;
+    if (((ModelFileHeader*)hdr)->jointCount == 0)
+    {
+        u32 cnt;
+        int lim;
+        int idx;
+
+        idx = 0;
+        cnt = *(u8*)(*(u8**)m + 0xf3);
+        if (cnt != 0)
+        {
+            lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+        }
+        else
+        {
+            lim = 1;
+        }
+        if (lim <= 0)
+        {
+            idx = 0;
+        }
+        {
+            u8* base = m + ((*(u16*)(m + 0x18) & 1) << 2);
+            mtx = *(u8**)(base + 0xc) + idx * 0x40;
+        }
+        PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
+    }
+    else
+    {
+        i = 0;
+        boneOff = 0;
+        dst = out;
+        for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
+        {
+            mtx = modelGetBoneMtx(m, i);
+            bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
+            PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
+            PSMTXConcat((f32*)mtx, tmp, tmp);
+            PSMTXReorder(tmp, (f32*)dst);
+            PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
+            boneOff += 0x1c;
+            dst += 0x30;
+        }
+    }
+}
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma opt_propagation reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+
+extern f32 lbl_803DE868;
+extern f32 lbl_803DE86C;
+extern f32 lbl_803DE870;
+
+void ObjModel_ApplyBlendChannels(ObjModel* model)
+{
+    ModelFileHeader* hdr;
+    ObjModelBlendChannel* ch;
+    int i;
+    s16 defFrame;
+    int chanActive[3] = {0, 0, 0};
+    int chanFade[3] = {0, 0, 0};
+    u8* targetA;
+    u8* targetB;
+    u8* srcVtx;
+    u8* dstVtx;
+    int fadeBits;
+
+    hdr = model->file;
+    if (hdr->morphTargetPtrs == NULL)
+    {
+        return;
+    }
+    defFrame = hdr->vertexCount + 1;
+    for (i = 0; i < 3; i++)
+    {
+        ch = &model->blendChannels[i];
+        if (ch->weight != ch->targetWeight)
+        {
+            ch->flags0E &= ~0xc;
+            ch->flags0E |= BLENDCHAN_FLAG_FADING;
+        }
+        fadeBits = ch->flags0E & 0xc;
+        chanFade[i] = fadeBits;
+        if (ch->morphTargetA != -1 || ch->morphTargetB != -1 || fadeBits != 0)
+        {
+            chanActive[i] = 1;
+        }
+        if (chanFade[i] & 4)
+        {
+            ch->flags0E &= ~BLENDCHAN_FLAG_FADING;
+            ch->flags0E |= BLENDCHAN_FLAG_FADED;
+        }
+        else if (chanFade[i] & 8)
+        {
+            ch->flags0E &= ~BLENDCHAN_FLAG_FADED;
+        }
+    }
+    if (chanActive[0] == 0 && chanActive[1] == 0 && chanActive[2] == 0)
+    {
+        return;
+    }
+    if (chanActive[1])
+    {
+        chanActive[0] = 0;
+    }
+    if (chanFade[2])
+    {
+        chanFade[0] = 1;
+        chanFade[1] = 1;
+    }
+    if ((chanActive[0] && chanFade[0]) || (chanActive[1] && chanFade[1]))
+    {
+        if (chanActive[2])
+        {
+            chanFade[2] = 1;
+        }
+    }
+    for (i = 0; i < 3; i++)
+    {
+        if (chanActive[i] && hdr->vertexAnimEntries)
+        {
+            chanFade[i] = 1;
+        }
+        ch = &model->blendChannels[i];
+        if (ch->flags0E & BLENDCHAN_FLAG_RESET_WEIGHT)
+        {
+            ch->flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
+            ch->weight = lbl_803DE828;
+        }
+        if (chanActive[i] && chanFade[i])
+        {
+            f32 weight;
+            f32 tw;
+            f32 eased;
+
+            if (ch->morphTargetA > -1)
+            {
+                targetA = hdr->morphTargetPtrs[ch->morphTargetA];
+            }
+            else
+            {
+                targetA = (u8*)&defFrame;
+            }
+            if (ch->morphTargetB > -1)
+            {
+                targetB = hdr->morphTargetPtrs[ch->morphTargetB];
+            }
+            else
+            {
+                targetB = (u8*)&defFrame;
+            }
+            if (i == 2)
+            {
+                if (chanActive[0] == 0 && chanActive[1] == 0)
+                {
+                    srcVtx = hdr->vertices;
+                }
+                else
+                {
+                    srcVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
+                }
+            }
+            else
+            {
+                srcVtx = hdr->vertices;
+            }
+            weight = ch->weight;
+            if (weight > lbl_803DE818)
+            {
+                ch->weight = lbl_803DE818;
+            }
+            else if (weight < lbl_803DE828)
+            {
+                if (ch->flags0E & BLENDCHAN_FLAG_CLAMP_TARGET)
+                {
+                    if (weight < lbl_803DE840)
+                    {
+                        ch->weight = lbl_803DE840;
+                    }
+                }
+                else
+                {
+                    ch->weight = lbl_803DE828;
+                }
+            }
+            weight = ch->weight;
+            if (weight >= lbl_803DE828)
+            {
+                tw = weight;
+                eased = lbl_803DE868 * tw + lbl_803DE86C * (tw * tw) - tw * (tw * tw);
+            }
+            else
+            {
+                tw = weight * lbl_803DE840;
+                eased = lbl_803DE868 * tw + lbl_803DE86C * (tw * tw) - tw * (tw * tw);
+                eased *= lbl_803DE840;
+            }
+            dstVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
+            modelApplyBoneTransforms(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB,
+                                     (int)(lbl_803DE870 * eased));
+            model->unk60 = 1;
+        }
+        if (ch->targetWeight != ch->weight)
+        {
+            ch->targetWeight = ch->weight;
+        }
+    }
+}
+
+#pragma scheduling reset
+#pragma scheduling on
+void ObjModel_AdvanceBlendChannels(u8* model, f32 dt)
+{
+    int i;
+    ObjModelBlendChannel* ch;
+    if (((ObjModel*)model)->file->morphTargetPtrs == NULL)
+    {
+        return;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        ch = ((ObjModel*)model)->blendChannels + i;
+        if (ch[0].morphTargetA == -1 && ch[0].morphTargetB == -1)
+        {
+            continue;
+        }
+        if (ch[0].flags0E & BLENDCHAN_FLAG_MANUAL)
+        {
+            continue;
+        }
+        ch[0].weight = ch[0].weightRate * dt + ch[0].weight;
+        if (ch[0].weight >= lbl_803DE874)
+        {
+            ch[0].weight = lbl_803DE874;
+            ch[0].weightRate = lbl_803DE878;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
+        }
+        else if (ch[0].weight <= lbl_803DE87C)
+        {
+            ch[0].weight = lbl_803DE87C;
+            ch[0].weightRate = lbl_803DE878;
+            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
+        }
+    }
+}
+
+#pragma scheduling reset
+#pragma scheduling off
+int ObjModel_HasActiveBlendChannels(ObjModel* model)
+{
+    ObjModelBlendChannel* ch;
+
+    if (model->file->morphTargetPtrs == NULL)
+    {
+        return 0;
+    }
+    ch = model->blendChannels;
+    if (ch[0].weight != ch[0].targetWeight || (ch[0].flags0E & 0xe))
+    {
+        return 1;
+    }
+    if (ch[1].weight != ch[1].targetWeight || (ch[1].flags0E & 0xe))
+    {
+        return 1;
+    }
+    if (ch[2].weight != ch[2].targetWeight || (ch[2].flags0E & 0xe))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
+{
+    ObjModelBlendChannel* ch;
+
+    if (channel > 2 || model->file->morphTargetPtrs == NULL)
+    {
+        return;
+    }
+    ch = model->blendChannels + channel;
+    if (weight != ch->weight)
+    {
+        ch->weight = weight;
+    }
+    ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
+}
+
+typedef f32 Mtx[3][4];
+
+
+
+#pragma dont_inline on
+void ObjModel_SetBlendChannelTargets(ObjModel* model, int channel, int a, int b, f32 weight, int flags)
+{
+    ObjModelBlendChannel* ch;
+    u8* hdr;
+    if (channel > 2 || ((ModelFileHeader*)(hdr = (u8*)model->file))->morphTargetPtrs == NULL)
+    {
+        return;
+    }
+    if (a < -1)
+    {
+        return;
+    }
+    if (b < -1)
+    {
+        return;
+    }
+    if (a >= ((ModelFileHeader*)hdr)->morphTargetCount || b >= ((ModelFileHeader*)hdr)->morphTargetCount)
+    {
+        return;
+    }
+    ch = model->blendChannels + channel;
+    if (a == -1 && b == -1)
+    {
+        if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1)
+        {
+            flags |= 6;
+        }
+        else
+        {
+            return;
+        }
+    }
+    if (ch[0].morphTargetA == a && ch[0].morphTargetB == b)
+    {
+        return;
+    }
+    ch[0].morphTargetA = a;
+    ch[0].morphTargetB = b;
+    if (!(flags & 0x10))
+    {
+        ch[0].weight = lbl_803DE828;
+    }
+    ch[0].targetWeight = lbl_803DE840;
+    ch[0].weightRate = weight;
+    ch[0].flags0E = flags | BLENDCHAN_FLAG_FADING;
+}
+#pragma dont_inline reset
+void ObjModel_ClearBlendChannels(ObjModel* model)
+{
+    if (model->file->morphTargetPtrs != NULL)
+    {
+        ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, -1, lbl_803DE828, 7);
+        ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
+    }
+}
+
+/* defined in pi_dolphin.c with 5 params; the retail caller here emits a
+   6th arg (the model id) -- keep the caller-side arity */
+
+#pragma opt_common_subs on
 #pragma opt_loop_invariants off
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
 void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u8* obj)
 {
     extern f32 gMapSavedPlayerOffsetX;
@@ -2557,275 +2373,441 @@ void objUpdateHitSpheres(u8* hitState, u8* hdrOwner, u8* prevObj, u8* boneMtx, u
         prevSphere += 0x10;
     }
 }
+
 #pragma opt_loop_invariants reset
+#pragma opt_loop_invariants on
 
-extern void PSMTXReorder(f32 * src, f32 * dst);
+extern f32 lbl_803DE880;
 
-#pragma scheduling on
-#pragma peephole on
-static u8* modelGetBoneMtx(u8* m, int idx)
+void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot)
 {
-    u32 cnt;
-    int lim;
+    ObjAnimState* ch;
+    int saved;
+    s16 srot[3];
+    int bv;
+    u8* anim;
 
-    cnt = *(u8*)(*(u8**)m + 0xf3);
-    if (cnt != 0)
+    if (model->file->animationCount == 0)
     {
-        lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+        f32 z = lbl_803DE828;
+        outPos[0] = z;
+        outPos[1] = z;
+        outPos[2] = z;
+        outRot[0] = 0;
+        outRot[1] = 0;
+        outRot[2] = 0;
+    }
+    if (b != 0)
+    {
+        ch = model->animStateB;
     }
     else
     {
-        lim = 1;
+        ch = model->animStateA;
     }
-    if (idx >= lim)
+    saved = *(int*)&ch->moveFrameData;
     {
-        idx = 0;
+        /* the four frame-data pointers (move/prevMove/blend/prevBlend) are
+           indexed as one array here; the selected one is swapped into the
+           moveFrameData slot for fn_80007F78, then restored */
+        ObjAnimFrameCommand** p = &ch->moveFrameData;
+        ch->moveFrameData = p[idx];
     }
-    return ((ObjModel*)m)->jointMatrices[*(u16*)(m + 0x18) & 1] + idx * 0x40;
-}
-
-#pragma scheduling off
-#pragma peephole off
-void modelInitBoneMtxs(u8* m, u8* out)
-{
-    u8* hdr;
-    u32 i;
-    u8* mtx;
-    int boneOff;
-    ModelBone* bone;
-    u8* dst;
-    f32 tmp[12];
-
-    hdr = *(u8**)m;
-    i = 0;
-    boneOff = 0;
-    dst = out;
-    for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
+    if (model->file->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
     {
-        mtx = modelGetBoneMtx(m, i);
-        bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
-        PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
-        PSMTXConcat((f32*)mtx, tmp, tmp);
-        PSMTXReorder(tmp, (f32*)dst);
-        boneOff += 0x1c;
-        dst += 0x30;
-    }
-}
-
-#pragma opt_propagation off
-void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
-{
-    u8* dst;
-    int boneOff;
-    u8* hdr;
-    u32 i;
-    u8* mtx;
-    ModelBone* bone;
-    f32 tmp[12];
-
-    hdr = *(u8**)m;
-    if (((ModelFileHeader*)hdr)->jointCount == 0)
-    {
-        u32 cnt;
-        int lim;
-        int idx;
-
-        idx = 0;
-        cnt = *(u8*)(*(u8**)m + 0xf3);
-        if (cnt != 0)
+        if (idx > 1)
         {
-            lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+            u8** q = ch->blendMoveCache;
+            u16* p = &ch->moveCacheSlot;
+            anim = q[p[idx]] + 0x80;
         }
         else
         {
-            lim = 1;
+            u8** q = ch->moveCache;
+            u16* p = &ch->moveCacheSlot;
+            anim = q[p[idx]] + 0x80;
         }
-        if (lim <= 0)
-        {
-            idx = 0;
-        }
-        {
-            u8* base = m + ((*(u16*)(m + 0x18) & 1) << 2);
-            mtx = *(u8**)(base + 0xc) + idx * 0x40;
-        }
-        PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
     }
     else
     {
-        i = 0;
-        boneOff = 0;
-        dst = out;
-        for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
-        {
-            mtx = modelGetBoneMtx(m, i);
-            bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
-            PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
-            PSMTXConcat((f32*)mtx, tmp, tmp);
-            PSMTXReorder(tmp, (f32*)dst);
-            PSMTXConcat((f32*)out2, (f32*)mtx, (f32*)mtx);
-            boneOff += 0x1c;
-            dst += 0x30;
-        }
+        u16* p = &ch->moveCacheSlot;
+        anim = ((u8**)model->file->animationModelPtrs)[p[idx]];
     }
-}
-#pragma opt_propagation reset
-
-/* Double-buffered DMA-cache vertex transform: stream vtxCount verts through a
-   two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
-   worker chunks in via copyToCache while the previous chunk is being processed,
-   then writing transformed verts (6 bytes each) back to dstVtx. */
-void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale)
-{
-    extern u16 gModelCopyChunkWordLimit;
-    u16 vtxPos;
-    u16 chunk;
-    u16 words;
-    u16 nextChunk;
-    u16 nextWords;
-    u16 bufIdx;
-    u8* cache;
-    u8* out;
-    int curBuf;
-    u8* in;
-    int sync;
-
-    cache = getCache();
-    vtxPos = 0;
-    if (vtxCount > gModelCopyChunkWordLimit)
+    ch->framePhase = t * ch->frameLength;
+    bv = ((u8*)ch->moveFrameData)[2];
     {
-        chunk = gModelCopyChunkWordLimit;
+        f32 fr = ch->framePhase;
+        int n = fr;
+        f32 fcv = n;
+        if (fcv != fr)
+        {
+            *(s16*)((u8*)ch + 0x4c) = bv;
+        }
+        else
+        {
+            *(s16*)((u8*)ch + 0x4c) = 0;
+        }
+        if (ch->frameType != 0 && fcv == ch->frameLength - lbl_803DE818)
+        {
+            *(s16*)((u8*)ch + 0x4c) = (s16)(-bv * n);
+        }
+        *(u8**)((u8*)ch + 0x2c) = anim + *(s16*)(anim + 2) + bv * n;
+    }
+    fn_80007F78((u8*)ch, srot, outRot);
+    *(int*)&ch->moveFrameData = saved;
+    {
+        f32 k = lbl_803DE880;
+        outPos[0] = k * srot[0];
+        outPos[1] = k * srot[1];
+        outPos[2] = k * srot[2];
+    }
+    outPos[0] = outPos[0] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 4);
+    outPos[1] = outPos[1] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 8);
+    outPos[2] = outPos[2] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 0xc);
+    outPos[0] *= s;
+    outPos[1] *= s;
+    outPos[2] *= s;
+}
+
+#pragma dont_inline reset
+#pragma dont_inline on
+#pragma opt_common_subs reset
+#pragma opt_common_subs off
+void* animLoadFromTable(u8* hdr, int id, int idx, u8* out)
+{
+    int size;
+    int flags;
+    int out2;
+    u8* buf;
+    int stride;
+
+    flags = 0;
+    fileLoadToBufferOffset(MLDF_FILEID_PREANIM_TAB, &flags, id << 2, 4);
+    if (flags & 0x10000000)
+    {
+        loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, 0, flags, 0, (int)&size, id, 1);
+        buf = out + 0x80;
+        loadAndDecompressDataFile(MLDF_FILEID_PREANIM_BIN, buf, flags, size, (int)&out2, id, 0);
+        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     }
     else
     {
-        chunk = vtxCount;
+        flags = *(u32*)((int)gModelAnimFlagsTable + id * 4);
+        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, flags, 0, (int)&size, id, 1);
+        buf = out + 0x80;
+        loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, buf, flags, size, (int)&out2, id, 0);
+        stride = ((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8;
+        fileLoadToBufferOffset(MLDF_FILEID_AMAP_BIN, out, ((ModelFileHeader*)hdr)->animationDataFileOffset + idx * stride, stride);
     }
-    words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
-    copyToCache(cache, srcVtx, words);
-    bufIdx = 0;
-    sync = 0;
-    while (vtxCount != 0)
-    {
-        vtxCount -= chunk;
-        if (vtxCount != 0)
-        {
-            if (vtxCount > gModelCopyChunkWordLimit)
-            {
-                nextChunk = gModelCopyChunkWordLimit;
-            }
-            else
-            {
-                nextChunk = vtxCount;
-            }
-            nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
-            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
-            sync = 1;
-        }
-        cacheQueueWait(sync);
-        curBuf = bufIdx;
-        in = cache + curBuf * 0x2000;
-        out = in + 0x1000;
-        modelApplyBoneTransform(in, out, chunk, (u8**)&targetA, (u8**)&targetB, blendScale, vtxPos);
-        memcpyToCache(dstVtx + vtxPos * 6, out, words);
-        vtxPos += chunk;
-        sync = 1;
-        bufIdx = curBuf ^ 1;
-        chunk = nextChunk;
-        words = nextWords;
-    }
-    cacheQueueWait(0);
+    return buf;
 }
 
-extern void fn_80026308(int* a, int b, u8* p, u8* q, int d, int i);
-extern void fn_80025F38(int* a, int b, u8* p, u8* q);
-
-#pragma peephole off
-void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
+#pragma dont_inline reset
+#pragma dont_inline off
+#pragma opt_common_subs reset
+#pragma opt_common_subs on
+#pragma optimization_level 1
+void* loadAnimation(int hdr, s16 id, int b, u8* bufout)
 {
-    int off;
+    int tmp;
+    int size;
+    u8* ptr;
+    u32 v;
     int i;
+    u32 ftype;
 
-    if (((ObjModelChain*)p)->enabled != 0)
+    if ((getLoadedFileFlags(0) & 0x100000) != 0 && (ftype = *(u16*)(hdr + 4)) != 1 && ftype != 3)
     {
-        i = 0;
-        off = 0;
-        for (; i < ((ObjModelChain*)p)->count; i++)
-        {
-            if (((ObjModelChain*)p)->unk19 == 0)
-            {
-                fn_80026928(a, b, (int*)((u8*)((ObjModelChain*)p)->entries + off));
-            }
-            if (getHudHiddenFrameCount() == 0)
-            {
-                modelAnimFn_80026790((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
-                fn_80026308(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
-            }
-            else
-            {
-                fn_80025F38(a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
-            }
-            off += 0xc;
-        }
-        ((ObjModelChain*)p)->updateFlag = 1;
-        ((ObjModelChain*)p)->unk19 = 1;
+        return 0;
     }
+    if (bufout == 0)
+    {
+        if (ModelList_getHeader(gModelAnimCacheList, (i = id), &ptr) == 0)
+        {
+            u8* np;
+            int idx2;
+            v = ((u32*)gModelAnimFlagsTable)[(idx2 = i)];
+            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, 0, v, 0, (int)&size, i, 1);
+            ptr = np = mmAlloc(size, 10, 0);
+            loadAndDecompressDataFile(MLDF_FILEID_ANIM_BIN_A, np, v, size, (int)&tmp, i, 0);
+            *ptr = 1;
+            modelInitModelList(gModelAnimCacheList, id, &ptr);
+        }
+        else
+        {
+            u8* p = ptr;
+            *p += 1;
+        }
+        return ptr;
+    }
+    return animLoadFromTable((u8*)hdr, id, (s16)b, bufout);
 }
-#pragma peephole reset
-
-#pragma peephole off
-void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
+#pragma dont_inline reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma optimization_level reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+void* fn_80028354(u8* modelFile, int index)
 {
-    ModelRenderInstrsState dstState;
-    ModelRenderInstrsState srcState;
-    u8* dstBits;
-    u8* srcBits;
-    int vertBits;
-    u8* p;
-    u8* end;
-    int v;
-    int t;
+    return ((ModelFileHeader*)modelFile)->collisionTriangles + index * 8;
+}
 
-    memcpy(dst, src, *(u16*)(src + 2));
-    srcBits = src + *(u16*)(dst + 2);
-    dstBits = dst + *(u16*)(dst + 2);
-    vertBits = dst[8] << 3;
-    modelRenderInstrsState_init(&dstState, dstBits, (dstSize - *(u16*)(dst + 2)) << 3,
-                                (dstSize - *(u16*)(dst + 2)) << 3);
-    modelRenderInstrsState_init(&srcState, srcBits, (srcSize - *(u16*)(dst + 2)) << 3,
-                                (srcSize - *(u16*)(dst + 2)) << 3);
-    memset(dstBits, 0, dstSize - *(u16*)(dst + 2));
-    p = dst + 0xa;
-    end = dst + *(u16*)(dst + 2);
-    while (p < end)
+extern u32 PPCMfhid2(void);
+
+
+void copyToCache(void* dst, void* src, u32 count);
+
+void* fn_80028364(u8* modelFile, int index)
+{
+    return ((ModelFileHeader*)modelFile)->collisionBlocks + index * 0x14;
+}
+
+void* modelFileGetDisplayList(u8* modelFile, int displayListIndex)
+{
+    return ((ModelFileHeader*)modelFile)->displayLists + displayListIndex * 0x1c;
+}
+
+
+void ObjModel_CopyJointTranslation(u8* modelBytes, int jointIndex, f32* out)
+{
+    ObjModel* model;
+    u32 jointCount;
+    u8* jointMtx;
+
+    model = (ObjModel*)modelBytes;
+    jointCount = model->file->jointCount;
+    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
     {
-        v = *(s16*)p;
-        p += 2;
-        t = v & 0xF;
-        if (t != 0)
-        {
-            if (t < 0)
-            {
-                srcBits = (u8*)fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
-            }
-            else
-            {
-                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits, t);
-            }
-        }
+        jointIndex = 0;
     }
-    *(u16*)dst &= ~0x20;
-    if (*(u16*)(dst + 4) != 0)
+
+    jointMtx = model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40;
+    out[0] = *(f32*)(jointMtx + 0xc);
+    out[1] = *(f32*)(jointMtx + 0x1c);
+    out[2] = *(f32*)(jointMtx + 0x2c);
+}
+
+Texture* ObjModel_GetTexture(ModelFileHeader* model, int textureIndex)
+{
+    return textureIdxToPtr(model->textureIds[textureIndex]);
+}
+
+s16* ObjModel_GetBaseVertexCoords(ModelFileHeader* modelFile, int vertexIndex)
+{
+    return (s16*)(modelFile->vertices + vertexIndex * 6);
+}
+
+ModelRenderOp* ObjModel_GetRenderOp(ModelFileHeader* model, int renderOpIndex)
+{
+    return &model->renderOps[renderOpIndex];
+}
+
+void memcpyToCache(void* dst, void* src, u32 count);
+
+u16 modelFileHeaderGetCullDistance(u8* modelFile)
+{
+    return ((ModelFileHeader*)modelFile)->cullDistance;
+}
+
+u8* gModelCacheBuffersA[4];
+u8* gModelCacheBuffersB[6];
+
+
+void ObjModel_ClearRenderAttachment(u8* model)
+{
+    if (((ObjModel*)model)->renderAttachment != NULL)
     {
-        u32 oldOff = *(u16*)(dst + 4);
-        *(u16*)(dst + 4) = *(u16*)(dst + 2) + (vertBits >> 3) * (dst[7] + 2);
-        *(u16*)(dst + 4) = (*(u16*)(dst + 4) + 7) & ~7;
-        memcpy(dst + *(u16*)(dst + 4), src + *(u16*)(src + 4), srcSize - oldOff);
+        mm_free(((ObjModel*)model)->renderAttachment);
+        ((ObjModel*)model)->renderAttachment = NULL;
+    }
+    else
+    {
+        ((ObjModel*)model)->renderCallback = NULL;
     }
 }
+
+
+void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int enabled, f32 scale)
+{
+    if (((ObjModel*)model)->renderAttachment == NULL)
+    {
+        ((ObjModel*)model)->renderCallback = gxTextureFn_80072dfc;
+    }
+}
+
+s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex)
+{
+    return (s16*)(model->vtxBuf[(model->bufferFlags >> 1) & 1] + vertexIndex * 6);
+}
+
+void* ObjModel_GetPostRenderCallback(ObjModel* model)
+{
+    return model->postRenderCallback;
+}
+
+
+
+void postRenderSetAlphaBlendState(void)
+{
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+    gxSetZMode_(1, GX_LEQUAL, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+}
+
+
+void ObjModel_SetPostRenderCallback(ObjModel* model, void* callback)
+{
+    model->postRenderCallback = callback;
+}
+
+void* ObjModel_GetRenderCallback(ObjModel* model)
+{
+    return model->renderCallback;
+}
+
+void ObjModel_SetRenderCallback(u8* model, void* callback)
+{
+    ((ObjModel*)model)->renderCallback = callback;
+}
+
+void ObjModel_ToggleVertexBuffer(u8* model)
+{
+    ((ObjModel*)model)->bufferFlags ^= 2;
+}
+
+void ObjModel_ToggleMatrixBuffer(u8* model)
+{
+    ((ObjModel*)model)->bufferFlags ^= 1;
+}
+
+/* Per-bone delta-transform opcode bits: a set bit means the X/Y/Z
+   component is present (as an s16) in the stream, else it is 0. */
+
+/* Hand-written assembly in the retail game: modelBoneTransforms_next is a
+   private subroutine of modelApplyBoneTransform with a custom calling
+   convention no C signature can express -- it takes the delta-stream cursor
+   in r20 (advanced in place), returns the unpacked x/y/z deltas in
+   r10/r12/r15, and clobbers only r21/r22, letting the caller keep its own
+   incoming arguments live in the volatile argument registers across the
+   calls. modelApplyBoneTransform itself is EABI-conformant externally.
+
+   Behavior: interpolates two per-vertex s16 delta streams (a = *pd, b = *pe)
+   with weights (0x10000 - f) and f, adds the result to the source vertex
+   stream p (6-byte x/y/z records), and writes n blended vertices to out.
+   Each stream record is a u16 header: low 13 bits = vertex index, top three
+   bits flag which of x/y/z deltas follow (MODEL_BONEXFORM_HAS_*).
+   Vertices before both streams' next index are copied through unchanged. */
+
+ObjModelJointMatrix* ObjModel_GetJointMatrix(u8* modelBytes, int jointIndex)
+{
+    ObjModel* model;
+    u32 jointCount;
+
+    model = (ObjModel*)modelBytes;
+    jointCount = model->file->jointCount;
+    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1))
+    {
+        jointIndex = 0;
+    }
+
+    return (ObjModelJointMatrix*)(model->jointMatrices[model->bufferFlags & 1] + jointIndex * 0x40);
+}
+
+ModelRenderOpTextureRefs* ObjModel_GetRenderOpTextureRefs(ObjModel* model, int renderOpIndex)
+{
+    return &model->textureRefs[renderOpIndex];
+}
+
+u8 gModelJointScratchBuffer[0x140];
+#pragma dont_inline off
+void ObjModel_LoadRenderOpTextures(u8* model, int arg)
+{
+    int i;
+    u8* hdr = *(u8**)model;
+    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
+    {
+        return;
+    }
+    ((ObjModel*)model)->bufferFlags |= OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
+    for (i = 0; i < (*(u8**)model)[0xf8]; i++)
+    {
+        shaderInit((u8*)&((ModelFileHeader*)hdr)->renderOps[i], (u8*)&((ObjModel*)model)->textureRefs[i], arg,
+                   ((ModelFileHeader*)hdr)->shaderFlags);
+    }
+}
+
+
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+
+void ObjModel_BuildAnimBlendTable(u8* obj, u8* channel, u8* hdr)
+{
+    ObjAnimComponent* objAnim;
+    int poseOff;
+    ObjModelInstance* modelDef;
+    int defOff;
+    int i;
+    u32 jointRemap;
+    int offA;
+    int offB;
+    int outPos;
+    s16* poseWeights;
+    u8* rowA;
+    u8* rowB;
+
+    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
+    {
+        rowA = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x44) * 4);
+        rowB = *(u8**)((u8*)(channel + 0x1c) + *(u16*)(channel + 0x46) * 4);
+    }
+    else
+    {
+        rowA = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x44) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+        rowB = ((ModelFileHeader*)hdr)->animationDataSection + *(u16*)(channel + 0x46) * (((((ModelFileHeader*)hdr)->jointCount - 1) & ~7) + 8);
+    }
+    objAnim = (ObjAnimComponent*)obj;
+    modelDef = objAnim->modelInstance;
+    defOff = 0;
+    outPos = 0;
+    i = 0;
+    poseOff = 0;
+    for (; i < modelDef->jointCount; i++)
+    {
+        jointRemap = *(u8*)(modelDef->jointData + defOff + objAnim->bankIndex + 1);
+        if (jointRemap != 0xff)
+        {
+            poseWeights = (s16*)(objAnim->jointPoseData + poseOff);
+            offA = *(s8*)(rowA + jointRemap) << 6;
+            offB = *(s8*)(rowB + jointRemap) << 6;
+            BLENDTBL_ENTRY(0, 0)
+            BLENDTBL_ENTRY(1, 2)
+            BLENDTBL_ENTRY(2, 4)
+            BLENDTBL_ENTRY(3, 0xc)
+            BLENDTBL_ENTRY(4, 0xe)
+            BLENDTBL_ENTRY(5, 0x10)
+            BLENDTBL_ENTRY(6, 0x18)
+            BLENDTBL_ENTRY(7, 0x1a)
+            BLENDTBL_ENTRY(8, 0x1c)
+        }
+        defOff += modelDef->modelCount + 1;
+        poseOff += 0x12;
+    }
+    ((s16*)gModelJointScratchBuffer)[outPos++] = 0x1000;
+    ((s16*)gModelJointScratchBuffer)[outPos] = 0x1000;
+}
+
+
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
 
 extern s16 gModelRootRotX;
 extern s16 gModelRootRotY;
 extern s16 gModelRootRotZ;
-extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 
 void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
 {
@@ -2876,100 +2858,603 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
     }
 }
 
-typedef struct
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+void ObjModel_ResolveRenderOpTextures(u8* m)
 {
-    u8 _0[0xc];
-    int bufs[2];
-} MdlSelBufs;
-
-typedef struct
-{
-    u8 _0[0x34];
-    int vals[2];
-} ChF34;
-
-void modelAnimFn_800246a0(u8* dst, u8* model, u8* channel, f32 t, int flags, int slotA, int slotB, int blendSel, int mode, s16 eventVal)
-{
-    u8 stk[0x64];
-    int mtxBuf;
-    u8* hdr;
-    u32 idxA;
-    u8 idxB;
-    int fl;
-    int cacheOff;
-    u8* p;
-
-    hdr = *(u8**)model;
+    int j, k;
+    u8* op;
+    for (j = 0; j < m[0xf8]; j++)
     {
-        u32 sel = *(u16*)(model + 0x18) & 1;
-        u8* pb = model + 12;
-        mtxBuf = *(int*)(pb + sel * 4);
-    }
-    if ((u8)mode & 0x10)
-    {
-        ((ObjAnimState*)channel)->framePhase = t * ((ObjAnimState*)channel)->frameLength;
-    }
-    idxA = (u8)slotA;
-    p = channel + idxA;
-    *(u8*)(stk + 0x60) = *(u8*)(p + 0x60);
-    p = channel + idxA * 4;
-    *(f32*)(stk + 0x14) = *(f32*)(p + 0x14);
-    *(f32*)(stk + 4) = *(f32*)(p + 4);
-    *(int*)(stk + 0x34) = *(int*)&((ModelFileHeader*)p)->texCoords;
-    idxB = (u8)slotB;
-    p = channel + idxB;
-    *(u8*)(stk + 0x61) = *(u8*)(p + 0x60);
-    p = channel + idxB * 4;
-    *(f32*)(stk + 0x18) = *(f32*)(p + 0x14);
-    *(f32*)(stk + 8) = *(f32*)(p + 4);
-    idxB = (u8)blendSel;
-    p = channel + 0x34;
-    *(int*)(stk + 0x38) = *(int*)(p + idxB * 4);
-    if (((ModelFileHeader*)hdr)->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
-    {
-        *(u16*)(stk + 0x44) = 0;
-        *(u16*)(stk + 0x46) = 1;
-        cacheOff = *(u16*)((u8*)(channel + 0x44) + idxA * 2) * 4;
-        *(int*)(stk + 0x1c) = *(int*)((u8*)(channel + 0x1c) + cacheOff);
-        if (idxB < 2)
+        op = *(u8**)(m + 0x38) + j * 0x44;
+        for (k = 0; k < op[0x41]; k++)
         {
-            cacheOff = *(u16*)((u8*)(channel + 0x44) + idxB * 2) * 4;
-            *(int*)(stk + 0x20) = *(int*)((u8*)(channel + 0x1c) + cacheOff);
+            /* e is an 8-byte per-renderop texture record whose id sits at
+               e + 0x24; the GameObject overlay below is offset-equivalent and
+               its member spelling is byte-load-bearing (a raw *(int*)(e + 0x24)
+               re-spelling shifts MWCC's alias/CSE class) -- keep as is. */
+            u8* e = op + k * 8;
+            if (*(int*)&((GameObject*)e)->anim.velocityX != -1)
+            {
+                *(int*)&((GameObject*)e)->anim.velocityX = ((int*)*(u8**)(m + 0x20))[*(int*)&((GameObject*)e)->anim.velocityX];
+            }
+            else
+            {
+                *(int*)&((GameObject*)e)->anim.velocityX = 0;
+            }
+        }
+        if (*(int*)(op + 0x34) != -1)
+        {
+            *(int*)(op + 0x34) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x34)];
         }
         else
         {
-            cacheOff = *(u16*)((u8*)(channel + 0x44) + idxB * 2) * 4;
-            *(int*)(stk + 0x20) = *(int*)((u8*)(channel + 0x24) + cacheOff);
+            *(int*)(op + 0x34) = 0;
         }
+        if (*(int*)(op + 0x38) != -1)
+        {
+            *(int*)(op + 0x38) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x38)];
+        }
+        else
+        {
+            *(int*)(op + 0x38) = 0;
+        }
+        if (*(int*)(op + 0x1c) != -1)
+        {
+            if (*(int*)(op + 0x1c) == -2)
+            {
+                *(int*)(op + 0x1c) = 0;
+            }
+            else
+            {
+                *(int*)(op + 0x1c) = 1;
+            }
+        }
+        else
+        {
+            *(int*)(op + 0x1c) = 0;
+        }
+        if (*(int*)(op + 0x18) != -1)
+        {
+            *(int*)(op + 0x18) = ((int*)*(u8**)(m + 0x20))[*(int*)(op + 0x18)];
+        }
+        else
+        {
+            *(int*)(op + 0x18) = 0;
+        }
+        if (!(((ModelFileHeader*)m)->shaderFlags & 0xc))
+        {
+            *(int*)(op + 0x8) = 0;
+        }
+        if (!(((ModelFileHeader*)m)->shaderFlags & 0xe00))
+        {
+            *(int*)(op + 0x14) = 0;
+        }
+    }
+}
+#pragma dont_inline reset
+#pragma dont_inline on
+void ObjModel_RelocateAnimData(u8* m, u8* dst)
+{
+    int i;
+    ((ModelFileHeader*)m)->vertexAnimEntriesRaw = ((ModelFileHeader*)m)->vertexAnimEntries;
+    for (i = 0; i < ((ModelFileHeader*)m)->vertexAnimCount; i++)
+    {
+        ((ObjModel*)dst)->vertexAnimData[i] = *(int*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x60);
+        if (*(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
+            vertexAnimBase)
+        {
+            *(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i * 0x74 + 0x64) =
+                *(u32*)&((ModelFileHeader*)m)->vertexAnimBase + *(u32*)(((ModelFileHeader*)m)->vertexAnimEntries + i *
+                    0x74 + 0x64);
+        }
+    }
+    ((ModelFileHeader*)m)->blendAnimEntriesRaw = ((ModelFileHeader*)m)->blendAnimEntries;
+    for (i = 0; i < ((ModelFileHeader*)m)->blendAnimCount; i++)
+    {
+        ((ObjModel*)dst)->blendAnimData[i] =
+            *(int*)&((ObjModel*)dst)->normalBuf + *(int*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x60);
+        if (*(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x64) < *(u32*)&((ModelFileHeader*)m)->
+            blendAnimBase)
+        {
+            *(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i * 0x74 + 0x64) =
+                *(u32*)&((ModelFileHeader*)m)->blendAnimBase + *(u32*)(((ModelFileHeader*)m)->blendAnimEntries + i *
+                    0x74 + 0x64);
+        }
+    }
+}
+
+
+#pragma dont_inline reset
+#pragma dont_inline off
+
+
+void ObjModel_RelocateModelData(u8* m)
+{
+    int i;
+    if (*(u32*)&((ModelFileHeader*)m)->hitVolumes)
+    {
+        ((ModelFileHeader*)m)->hitVolumes = m + *(u32*)&((ModelFileHeader*)m)->hitVolumes;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->jointData)
+    {
+        ((ModelFileHeader*)m)->jointData = m + *(u32*)&((ModelFileHeader*)m)->jointData;
+        if (*(u32*)&((ModelFileHeader*)m)->unk18)
+        {
+            ((ModelFileHeader*)m)->unk18 = m + *(u32*)&((ModelFileHeader*)m)->unk18;
+        }
+        if (*(u32*)&((ModelFileHeader*)m)->unk1C)
+        {
+            ((ModelFileHeader*)m)->unk1C = m + *(u32*)&((ModelFileHeader*)m)->unk1C;
+        }
+        if (*(u32*)&((ModelFileHeader*)m)->jointBlendData)
+        {
+            ((ModelFileHeader*)m)->jointBlendData = m + *(u32*)&((ModelFileHeader*)m)->jointBlendData;
+        }
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->unk54)
+    {
+        ((ModelFileHeader*)m)->unk54 = m + *(u32*)&((ModelFileHeader*)m)->unk54;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->textureIds)
+    {
+        *(u8**)&((ModelFileHeader*)m)->textureIds = m + *(u32*)&((ModelFileHeader*)m)->textureIds;
+    }
+    ((ModelFileHeader*)m)->vertices = m + *(u32*)&((ModelFileHeader*)m)->vertices;
+    if (*(u32*)&((ModelFileHeader*)m)->normals)
+    {
+        ((ModelFileHeader*)m)->normals = m + *(u32*)&((ModelFileHeader*)m)->normals;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->colors)
+    {
+        ((ModelFileHeader*)m)->colors = m + *(u32*)&((ModelFileHeader*)m)->colors;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->texCoords)
+    {
+        ((ModelFileHeader*)m)->texCoords = m + *(u32*)&((ModelFileHeader*)m)->texCoords;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->instrs)
+    {
+        ((ModelFileHeader*)m)->instrs = m + *(u32*)&((ModelFileHeader*)m)->instrs;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->displayLists)
+    {
+        ((ModelFileHeader*)m)->displayLists = m + *(u32*)&((ModelFileHeader*)m)->displayLists;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs)
+    {
+        ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries)
+    {
+        ((ModelFileHeader*)m)->vertexAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimEntries;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->vertexAnimBase)
+    {
+        ((ModelFileHeader*)m)->vertexAnimBase = m + *(u32*)&((ModelFileHeader*)m)->vertexAnimBase;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->blendAnimEntries)
+    {
+        ((ModelFileHeader*)m)->blendAnimEntries = m + *(u32*)&((ModelFileHeader*)m)->blendAnimEntries;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->blendAnimBase)
+    {
+        ((ModelFileHeader*)m)->blendAnimBase = m + *(u32*)&((ModelFileHeader*)m)->blendAnimBase;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->renderOps)
+    {
+        ((ModelFileHeader*)m)->renderOps = (ModelRenderOp*)(m + *(u32*)&((ModelFileHeader*)m)->renderOps);
+    }
+    for (i = 0; i < ((ModelFileHeader*)m)->displayListCount + ((ModelFileHeader*)m)->shadowDisplayListCount; i++)
+    {
+        *(u8**)(((ModelFileHeader*)m)->displayLists + i * 0x1c) = m + *(u32*)(((ModelFileHeader*)m)->displayLists + i *
+            0x1c);
+    }
+    for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++)
+    {
+        ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles)
+    {
+        ((ModelFileHeader*)m)->collisionTriangles = m + *(u32*)&((ModelFileHeader*)m)->collisionTriangles;
+    }
+    if (*(u32*)&((ModelFileHeader*)m)->collisionBlocks)
+    {
+        ((ModelFileHeader*)m)->collisionBlocks = m + *(u32*)&((ModelFileHeader*)m)->collisionBlocks;
+    }
+}
+
+#pragma dont_inline reset
+#pragma dont_inline on
+void* ObjModel_LoadModelData(int id)
+{
+    int fileOffset, dataLen, animCount, headerSize, amapFlag;
+    int amapSize;
+    void* model;
+    if (getTableFileEntry(MLDF_FILEID_MODELS_TAB_A, id, &fileOffset) == 0)
+    {
+        return NULL;
+    }
+    loadModelsBin(fileOffset, &animCount, &headerSize, &amapFlag, &dataLen, id);
+    headerSize = roundUpTo8(headerSize);
+    headerSize += 0xb0;
+    amapSize = modelGetAmapSize(id, amapFlag, animCount);
+    model = (void*)roundUpTo16((int)mmAlloc(dataLen + amapSize + 0x1f4, 9, 0));
+    loadAndDecompressDataFile(MLDF_FILEID_MODELS_BIN_A, model, fileOffset, dataLen, 0, id, 0);
+    ((ModelFileHeader*)model)->headerSize = headerSize;
+    *(u16*)((u8*)model + 0x4) = id; /* modelId (in unk04) */
+    ((ModelFileHeader*)model)->animationCount = animCount;
+    ((ModelFileHeader*)model)->flags &= ~MODEL_FLAG_VERTEX_ANIM_AREA;
+    ((ModelFileHeader*)model)->refCount = 1;
+    if (((ModelFileHeader*)model)->animationCount == 0)
+    {
+        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_NO_ANIMATIONS;
+    }
+    if (amapFlag != 0)
+    {
+        ((ModelFileHeader*)model)->flags |= MODEL_FLAG_VERTEX_ANIM_AREA;
+    }
+    return model;
+}
+
+
+#pragma dont_inline reset
+#pragma dont_inline off
+
+
+void modelFn_800292e0(void)
+{
+    u8 buf[8];
+    gModelList->iter = gModelList->entries;
+    while (gModelList->iter != gModelList->end)
+    {
+        s16* iter = gModelList->iter;
+        if (*iter == -1)
+        {
+            memset(buf, 0, gModelList->dataSize);
+        }
+        else
+        {
+            memcpy(buf, iter + 1, gModelList->dataSize);
+        }
+        gModelList->iter += gModelList->strideShorts;
+    }
+}
+
+
+void ObjModel_Release(u8* model)
+{
+    u8* header;
+    int z[2];
+    if (((ObjModel*)model)->bufferFlags & OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED)
+    {
+        ((ObjModel*)model)->bufferFlags &= ~OBJMODEL_BUFFER_FLAG_TEXTURES_LOADED;
+        z[0] = 0;
+        for (z[1] = z[0]; z[0] < (*(u8**)model)[0xf8]; z[1] += 0xc, z[0]++)
+        {
+            ShaderDef_free((int*)&((ObjModel*)model)->textureRefs[z[0]]);
+        }
+    }
+    header = *(u8**)model;
+    if (((ObjModel*)model)->renderAttachment != NULL)
+    {
+        mm_free(((ObjModel*)model)->renderAttachment);
+    }
+    if (--((ModelFileHeader*)header)->refCount == 0)
+    {
+        model_adjustModelList(gModelList, *(u16*)(header + 0x4)); /* modelId */
+        z[0] = 0;
+        for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->textureCount; z[1] += 4, z[0]++)
+        {
+            textureFree((Texture*)(textureIdxToPtr(*(s32*)((u8*)((ModelFileHeader*)header)->textureIds + z[1]))));
+        }
+        if (((ModelFileHeader*)header)->animationModelPtrs != NULL && ((ModelFileHeader*)header)->animationCount != 0)
+        {
+            z[0] = 0;
+            for (z[1] = z[0]; z[0] < ((ModelFileHeader*)header)->animationCount; z[1] += 4, z[0]++)
+            {
+                int idx;
+                void* tex = *(void**)(((ModelFileHeader*)header)->animationModelPtrs + z[1]);
+                if (tex != NULL && (s8)-- * (u8*)tex <= 0)
+                {
+                    model_findIdxInModelList(gModelAnimCacheList, &tex, &idx);
+                    model_adjustModelList(gModelAnimCacheList, idx);
+                    mm_free(tex);
+                }
+            }
+        }
+        mm_free(header);
+    }
+}
+
+void* ObjModel_LoadAnimData(u8* p, int b, int c)
+{
+    void* m = modelLoad_layoutBuffers(p, b, p[0] == 1, c);
+    modelAnimResetState(m, ((ObjModel*)m)->animStateA);
+    if (((ObjModel*)m)->animStateB != NULL)
+    {
+        modelAnimResetState(m, ((ObjModel*)m)->animStateB);
+    }
+    ObjModel_RelocateAnimData(p, m);
+    *(int*)(p + 8) = 0;
+    DCStoreRange(p, ((ModelFileHeader*)p)->dataSize);
+    return m;
+}
+
+typedef struct
+{
+    u8 pad[0xc];
+    u8* buf;
+} AnimBufSel;
+
+
+
+
+void* ObjModel_Load(int id, int loadFlag, int* outSize)
+{
+    int sizes[7];
+    int realId[1];
+    u8* header;
+    int i[1];
+    u8* h[1];
+    int off[1];
+    int tex;
+    int idc;
+    realId[0] = 0;
+    i[0] = 0;
+    idc = id;
+    if (idc < 0)
+    {
+        realId[0] = -idc;
     }
     else
     {
-        *(u16*)(stk + 0x44) = *(u16*)((u8*)(channel + 0x44) + idxA * 2);
-        *(u16*)(stk + 0x46) = *(u16*)((u8*)(channel + 0x44) + idxB * 2);
+        fileLoadToBufferOffset(MLDF_FILEID_MODELIND_BIN, gModelResourceBuffer, idc * 2, 8);
+        realId[0] = gModelResourceBuffer[0];
     }
-    if (eventVal == 0)
+    if (ModelList_getHeader(gModelList, realId[0], &header) == 0)
     {
-        eventVal = 1;
-    }
-    *(u16*)(stk + 0x58) = eventVal;
-    modelAnimUpdateChannels(hdr, stk, 2);
-    {
-        int modeLow = mode & 0xF;
-        mode = modeLow;
-        if ((modeLow & 0xC) == 0)
+        header = ObjModel_LoadModelData(realId[0]);
+        ObjModel_RelocateModelData(header);
+        h[0] = header;
+        i[0] = 0;
+        off[0] = i[0];
+        for (; i[0] < h[0][0xf2]; i[0]++)
         {
-            int sv = ((ObjAnimState*)channel)->moveControlFlags;
-            if (sv & 1)
+            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
+            *(int*)(*(int*)(h[0] + 0x20) + off[0]) = tex;
+            off[0] += 4;
+        }
+        ObjModel_ResolveRenderOpTextures(header);
+        modelLoadAnimations(header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
+        modelInitModelList(gModelList, realId[0], &header);
+    }
+    else
+    {
+        (*(u8*)header)++;
+    }
+    *outSize = modelLoad_calcSizes(header, loadFlag, sizes, 0);
+    return header;
+}
+
+
+
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+int return0_8002969C(void) { return 0x0; }
+
+
+#pragma dont_inline off
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma peephole on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+#pragma scheduling on
+
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma peephole off
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling off
+
+
+void ObjModel_InitResourceCaches(void)
+{
+    void* m;
+    gModelList = allocModelStruct(0x8c, 4);
+    gModelAnimCacheList = allocModelStruct(0xc4, 4);
+    m = mmAlloc(0x830, 0xa, 0);
+    gModelResourceBuffer = m;
+    gModelAnimOffsetTable = (int*)((u8*)m + 0x800);
+    lbl_803DCB5C = (int*)((u8*)m + 0x810);
+    loadModelAndAnimTabs();
+}
+
+#pragma dont_inline reset
+#pragma dont_inline on
+void ObjModel_InitScratchBuffers(void)
+{
+    u8* c = getCache();
+    gModelCacheBuffersA[0] = c;
+    gModelCacheBuffersA[1] = c + 0x1000;
+    gModelCacheBuffersA[2] = c + 0x2000;
+    gModelCacheBuffersA[3] = c + 0x3000;
+    c = getCache();
+    gModelCacheBuffersB[0] = c;
+    gModelCacheBuffersB[1] = c + 0x1000;
+    gModelCacheBuffersB[2] = c + 0x1800;
+    gModelCacheBuffersB[3] = c + 0x2000;
+    gModelCacheBuffersB[4] = c + 0x3000;
+    gModelCacheBuffersB[5] = c + 0x3800;
+}
+
+#pragma dont_inline reset
+#pragma dont_inline off
+
+void ObjModel_InitRenderBuffers(void)
+{
+    if ((PPCMfhid2() & 0x10000000) == 0)
+    {
+        void* cache = getCache();
+        DCInvalidateRange(cache, 0x4000);
+        LCEnable();
+    }
+    ObjModel_InitScratchBuffers();
+    setGQR6_2(7, 4, 7, 4);
+}
+
+
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+
+void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
+{
+    u16 sizes[2];
+
+    setGQR7Packed(hdr[6], 6, hdr[6], 6);
+    ObjModel_InitScratchBuffers();
+    if (((ModelFileHeader*)hdr)->flags != 0)
+    {
+        u8* q;
+        int words;
+        int w2;
+        u32 i;
+        u32 nb;
+        u8* dst;
+
+        q = *(u8**)(hdr + 0xc);
+        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
+        copyToCache(gModelCacheBuffersA[0], data + *(int*)(q + 0x60), words);
+        sizes[0] = words;
+        w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
+        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(q + 0x64), w2);
+        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
+        {
+            q = *(u8**)(hdr + 0xc) + i * 0x74;
+            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
+            nb = (i + 1) & 1;
+            copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
+            sizes[(i + 1) & 1] = words;
             {
-                mode = (modeLow | 0x10) & 0xFF;
+                u8* q2;
+                int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
+                copyToCache(gModelCacheBuffersA[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
             }
-            if (sv & 4)
+            cacheQueueWait(2);
+            if ((u8)quad)
             {
-                mode = (mode | 0x20) & 0xFF;
+                dst = outs[i];
+                ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                     gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                     q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                     q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                     *(u16*)(q + 0x70));
+                memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+            }
+            else
+            {
+                dst = outs[i];
+                ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                 gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 *(u16*)(q + 0x70));
+                memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
             }
         }
+        q = *(u8**)(hdr + 0xc) + i * 0x74;
+        cacheQueueWait(0);
+        if ((u8)quad)
+        {
+            dst = outs[i];
+            ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                 gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                 *(u16*)(q + 0x70));
+            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+        }
+        else
+        {
+            dst = outs[i];
+            ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                             gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                             q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                             q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                             *(u16*)(q + 0x70));
+            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+        }
+        cacheQueueWait(0);
     }
-    lbl_80006C6C(&mtxBuf, dst, stk, *(int*)&((ModelFileHeader*)hdr)->jointData, ((ModelFileHeader*)hdr)->jointCount, gModelJointScratchBuffer, flags, (u8)mode);
+}
+
+
+void ObjModel_BlendVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
+{
+    u16 sizes[2];
+
+    setGQR7Packed(hdr[6], 7, hdr[6], 7);
+    ObjModel_InitScratchBuffers();
+    if (((ModelFileHeader*)hdr)->flags != 0)
+    {
+        u8* q;
+        int words;
+        int w2;
+        u32 i;
+        u32 nb;
+        u8* dst;
+
+        q = *(u8**)(hdr + 0xc);
+        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
+        copyToCache(gModelCacheBuffersA[0], data + *(int*)(q + 0x60), words);
+        sizes[0] = words;
+        w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
+        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(q + 0x64), w2);
+        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
+        {
+            q = *(u8**)(hdr + 0xc) + i * 0x74;
+            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
+            nb = (i + 1) & 1;
+            copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
+            sizes[(i + 1) & 1] = words;
+            {
+                u8* q2;
+                int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
+                copyToCache(gModelCacheBuffersA[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
+            }
+            cacheQueueWait(2);
+            dst = out + offs[i];
+            ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                      gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                      *(u16*)(q + 0x70));
+            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+        }
+        q = *(u8**)(hdr + 0xc) + i * 0x74;
+        cacheQueueWait(0);
+        dst = out + offs[i];
+        ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                  gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
+                                                  q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                  q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
+                                                  *(u16*)(q + 0x70));
+        memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+        cacheQueueWait(0);
+    }
 }
 
 asm void ObjModel_TransformVerticesWithTranslation(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count)
@@ -3075,60 +3560,17 @@ lbl_TVWT_loop:
     blr
 }
 
-void ObjModel_BlendVertexStream(u8* mtxs, u8* hdr, u8* data, int* offs, u8* out)
+typedef struct
 {
-    u16 sizes[2];
+    u8 _0[0xc];
+    int bufs[2];
+} MdlSelBufs;
 
-    setGQR7Packed(hdr[6], 7, hdr[6], 7);
-    ObjModel_InitScratchBuffers();
-    if (((ModelFileHeader*)hdr)->flags != 0)
-    {
-        u8* q;
-        int words;
-        int w2;
-        u32 i;
-        u32 nb;
-        u8* dst;
-
-        q = *(u8**)(hdr + 0xc);
-        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
-        copyToCache(gModelCacheBuffersA[0], data + *(int*)(q + 0x60), words);
-        sizes[0] = words;
-        w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(q + 0x64), w2);
-        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
-        {
-            q = *(u8**)(hdr + 0xc) + i * 0x74;
-            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
-            nb = (i + 1) & 1;
-            copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[(i + 1) & 1] = words;
-            {
-                u8* q2;
-                int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
-                copyToCache(gModelCacheBuffersA[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
-            }
-            cacheQueueWait(2);
-            dst = out + offs[i];
-            ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                      gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                      q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                      *(u16*)(q + 0x70));
-            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
-        }
-        q = *(u8**)(hdr + 0xc) + i * 0x74;
-        cacheQueueWait(0);
-        dst = out + offs[i];
-        ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                  gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                  q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                  q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                  *(u16*)(q + 0x70));
-        memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
-        cacheQueueWait(0);
-    }
-}
+typedef struct
+{
+    u8 _0[0x34];
+    int vals[2];
+} ChF34;
 
 asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count)
 {
@@ -3406,404 +3848,116 @@ lbl_TQVL_loop:
     addi    r1,r1,160
     blr
 }
+#pragma dont_inline reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
 
-void ObjModel_BlendNormalStream(u8* mtxs, u8* hdr, u8* data, u8** outs, int quad)
+asm
+void setGQR6(register u32 v)
 {
-    u16 sizes[2];
+    nofralloc
+    mtspr GQR6, v
+    blr
+}
 
-    setGQR7Packed(hdr[6], 6, hdr[6], 6);
-    ObjModel_InitScratchBuffers();
-    if (((ModelFileHeader*)hdr)->flags != 0)
+asm
+void setGQR7(register u32 v)
+{
+    nofralloc
+    mtspr GQR7, v
+    blr
+}
+#pragma dont_inline on
+void setGQR7Packed(int a, int b, int c, int d)
+{
+    setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
+}
+#pragma dont_inline reset
+#pragma dont_inline off
+
+void setGQR6_2(int a, int b, int c, int d)
+{
+    setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
+}
+#pragma opt_common_subs on
+#pragma opt_loop_invariants on
+#pragma ppc_unroll_factor_limit 4
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+void ObjModel_UnpackResourcePayload(u8* src, int srcSize, u8* dst, int dstSize)
+{
+    ModelRenderInstrsState dstState;
+    ModelRenderInstrsState srcState;
+    u8* dstBits;
+    u8* srcBits;
+    int vertBits;
+    u8* p;
+    u8* end;
+    int v;
+    int t;
+
+    memcpy(dst, src, *(u16*)(src + 2));
+    srcBits = src + *(u16*)(dst + 2);
+    dstBits = dst + *(u16*)(dst + 2);
+    vertBits = dst[8] << 3;
+    modelRenderInstrsState_init(&dstState, dstBits, (dstSize - *(u16*)(dst + 2)) << 3,
+                                (dstSize - *(u16*)(dst + 2)) << 3);
+    modelRenderInstrsState_init(&srcState, srcBits, (srcSize - *(u16*)(dst + 2)) << 3,
+                                (srcSize - *(u16*)(dst + 2)) << 3);
+    memset(dstBits, 0, dstSize - *(u16*)(dst + 2));
+    p = dst + 0xa;
+    end = dst + *(u16*)(dst + 2);
+    while (p < end)
     {
-        u8* q;
-        int words;
-        int w2;
-        u32 i;
-        u32 nb;
-        u8* dst;
-
-        q = *(u8**)(hdr + 0xc);
-        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
-        copyToCache(gModelCacheBuffersA[0], data + *(int*)(q + 0x60), words);
-        sizes[0] = words;
-        w2 = (u32)(((q = *(u8**)(hdr + 0xc))[0x6f] << 5) + 0x1f) >> 5;
-        copyToCache(*(u8**)((int)gModelCacheBuffersA + 4), *(u8**)(q + 0x64), w2);
-        for (i = 0; i < (u32)(((ModelFileHeader*)hdr)->flags - 1); i++)
+        v = *(s16*)p;
+        p += 2;
+        t = v & 0xF;
+        if (t != 0)
         {
-            q = *(u8**)(hdr + 0xc) + i * 0x74;
-            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
-            nb = (i + 1) & 1;
-            copyToCache(gModelCacheBuffersA[(u8)(nb * 2)], data + *(int*)(q + 0xd4), words);
-            sizes[(i + 1) & 1] = words;
+            if (t < 0)
             {
-                u8* q2;
-                int w3 = (u32)(((q2 = *(u8**)(hdr + 0xc) + i * 0x74)[0xe3] << 5) + 0x1f) >> 5;
-                copyToCache(gModelCacheBuffersA[(u8)((u8)(nb * 2) + 1)], *(u8**)(q2 + 0xd8), w3);
-            }
-            cacheQueueWait(2);
-            if ((u8)quad)
-            {
-                dst = outs[i];
-                ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                     gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                     q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                     q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                     *(u16*)(q + 0x70));
-                memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+                srcBits = (u8*)fn_80006B1C(&srcState, &dstState, dst[7], vertBits, t);
             }
             else
             {
-                dst = outs[i];
-                ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                 gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 *(u16*)(q + 0x70));
-                memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
+                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits, t);
             }
         }
-        q = *(u8**)(hdr + 0xc) + i * 0x74;
-        cacheQueueWait(0);
-        if ((u8)quad)
-        {
-            dst = outs[i];
-            ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                                 gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                                 *(u16*)(q + 0x70));
-            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
-        }
-        else
-        {
-            dst = outs[i];
-            ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
-                                             gModelCacheBuffersA[(u8)((i & 1) * 2) + 1],
-                                             q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                             q[0x72] + (int)gModelCacheBuffersA[(u8)((i & 1) * 2)],
-                                             *(u16*)(q + 0x70));
-            memcpyToCache(dst, gModelCacheBuffersA[(u8)((i & 1) * 2)], sizes[i & 1]);
-        }
-        cacheQueueWait(0);
+    }
+    *(u16*)dst &= ~0x20;
+    if (*(u16*)(dst + 4) != 0)
+    {
+        u32 oldOff = *(u16*)(dst + 4);
+        *(u16*)(dst + 4) = *(u16*)(dst + 2) + (vertBits >> 3) * (dst[7] + 2);
+        *(u16*)(dst + 4) = (*(u16*)(dst + 4) + 7) & ~7;
+        memcpy(dst + *(u16*)(dst + 4), src + *(u16*)(src + 4), srcSize - oldOff);
     }
 }
 
-extern f32 lbl_803DE880;
-extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 
-void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s, f32* outPos, s16* outRot)
-{
-    ObjAnimState* ch;
-    int saved;
-    s16 srot[3];
-    int bv;
-    u8* anim;
-
-    if (model->file->animationCount == 0)
-    {
-        f32 z = lbl_803DE828;
-        outPos[0] = z;
-        outPos[1] = z;
-        outPos[2] = z;
-        outRot[0] = 0;
-        outRot[1] = 0;
-        outRot[2] = 0;
-    }
-    if (b != 0)
-    {
-        ch = model->animStateB;
-    }
-    else
-    {
-        ch = model->animStateA;
-    }
-    saved = *(int*)&ch->moveFrameData;
-    {
-        /* the four frame-data pointers (move/prevMove/blend/prevBlend) are
-           indexed as one array here; the selected one is swapped into the
-           moveFrameData slot for fn_80007F78, then restored */
-        ObjAnimFrameCommand** p = &ch->moveFrameData;
-        ch->moveFrameData = p[idx];
-    }
-    if (model->file->flags & MODEL_FLAG_VERTEX_ANIM_AREA)
-    {
-        if (idx > 1)
-        {
-            u8** q = ch->blendMoveCache;
-            u16* p = &ch->moveCacheSlot;
-            anim = q[p[idx]] + 0x80;
-        }
-        else
-        {
-            u8** q = ch->moveCache;
-            u16* p = &ch->moveCacheSlot;
-            anim = q[p[idx]] + 0x80;
-        }
-    }
-    else
-    {
-        u16* p = &ch->moveCacheSlot;
-        anim = ((u8**)model->file->animationModelPtrs)[p[idx]];
-    }
-    ch->framePhase = t * ch->frameLength;
-    bv = ((u8*)ch->moveFrameData)[2];
-    {
-        f32 fr = ch->framePhase;
-        int n = fr;
-        f32 fcv = n;
-        if (fcv != fr)
-        {
-            *(s16*)((u8*)ch + 0x4c) = bv;
-        }
-        else
-        {
-            *(s16*)((u8*)ch + 0x4c) = 0;
-        }
-        if (ch->frameType != 0 && fcv == ch->frameLength - lbl_803DE818)
-        {
-            *(s16*)((u8*)ch + 0x4c) = (s16)(-bv * n);
-        }
-        *(u8**)((u8*)ch + 0x2c) = anim + *(s16*)(anim + 2) + bv * n;
-    }
-    fn_80007F78((u8*)ch, srot, outRot);
-    *(int*)&ch->moveFrameData = saved;
-    {
-        f32 k = lbl_803DE880;
-        outPos[0] = k * srot[0];
-        outPos[1] = k * srot[1];
-        outPos[2] = k * srot[2];
-    }
-    outPos[0] = outPos[0] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 4);
-    outPos[1] = outPos[1] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 8);
-    outPos[2] = outPos[2] + *(f32*)(*(u8**)(*(u8**)model + 0x3c) + 0xc);
-    outPos[0] *= s;
-    outPos[1] *= s;
-    outPos[2] *= s;
-}
-
-extern void PSMTXTranspose(f32 * src, f32 * dst);
-extern f32 fn_802920A4(f32 x);
-extern f32 gModelDotClampMax;
-extern f32 gModelDotClampMin;
-extern f32 gMapSavedPlayerOffsetX;
-extern f32 gMapSavedPlayerOffsetZ;
-
-#pragma scheduling on
+#pragma peephole reset
 #pragma peephole on
-static int boneBlendSlotLimit(u8* model)
-{
-    u8* p = *(u8**)model;
-    if (p[0xf3] != 0)
-    {
-        return p[0xf3] + p[0xf4];
-    }
-    return 1;
-}
+#pragma scheduling reset
+#pragma scheduling on
 
-#pragma scheduling off
+#pragma dont_inline reset
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma ppc_unroll_factor_limit 100
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+int return0_8002A5B8(void) { return 0x0; }
 #pragma peephole off
-void fn_80025F38(int* a, int b, u8* blend, u8* chain)
+#pragma scheduling off
+
+int ObjModel_GetUnpackedResourceSize(u8* resource, int baseSize)
 {
-    u8* model = (u8*)a;
-    f32 tmp[12];
-    f32 mt[12];
-    f32 target[3];
-    f32 work[3];
-    f32 out[3];
-    f32 dir2[3];
-    f32 dir1[3];
-    f32 axis[3];
-    int nextIdx;
-    int i;
-    int idx;
-    f32* m;
-    int prevOff;
-    f32 dot;
-    f32 cap;
-    u8* bankSel;
-
-    idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
-    if (idx >= boneBlendSlotLimit(model))
-    {
-        idx = 0;
-    }
-    bankSel = model + 0xc;
-    PSMTXCopy(*(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
-    idx = (*(int***)(chain + 4))[0][0];
-    if (idx >= boneBlendSlotLimit(model))
-    {
-        idx = 0;
-    }
-    bankSel = model + 0xc;
-    m = *(f32**)(bankSel + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
-    cap = gModelDotClampMax;
-    for (i = 1; i < *(int*)(chain + 8) + 1; i++)
-    {
-        nextIdx = (*(int***)(chain + 4))[0][i];
-        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
-        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
-            playerMapOffsetX;
-        target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
-        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
-            playerMapOffsetZ;
-        work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
-        work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
-        work[2] = *(f32*)(*(u8**)chain + i * 0x54 - 0x34);
-        PSVECAdd(work, (f32*)(*(u8**)chain + i * 0x54 + 0x18), work);
-        PSMTXMultVec(tmp, work, work);
-        PSVECSubtract(target, out, dir1);
-        PSVECNormalize(dir1, dir1);
-        PSVECSubtract(work, out, dir2);
-        PSVECNormalize(dir2, dir2);
-        dot = PSVECDotProduct(dir2, dir1);
-        if (dot < cap && dot > gModelDotClampMin)
-        {
-            if (dot < lbl_803DE818 && dot > lbl_803DE840)
-            {
-                PSVECCrossProduct(dir2, dir1, axis);
-                if (dot < lbl_803DE840)
-                {
-                    dot = lbl_803DE840;
-                }
-                else
-                {
-                    f32 sub = lbl_803DE818 - dot;
-                    dot = sub * *(f32*)(blend + 8) + dot;
-                }
-                PSMTXTranspose(tmp, mt);
-                PSMTXMultVecSR(mt, axis, axis);
-                PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
-            }
-            else
-            {
-                PSMTXIdentity(m);
-            }
-        }
-        PSMTXConcat(tmp, m, m);
-        m[3] = out[0];
-        m[7] = out[1];
-        m[11] = out[2];
-        PSMTXCopy(m, tmp);
-        work[0] = *(f32*)(*(u8**)chain + i * 0x54 + 0x18);
-        work[1] = *(f32*)(*(u8**)chain + i * 0x54 + 0x1c);
-        work[2] = *(f32*)(*(u8**)chain + i * 0x54 + 0x20);
-        PSMTXMultVec(m, work, work);
-        PSMTXCopy(m, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x24));
-        if (i < *(int*)(chain + 8))
-        {
-            idx = nextIdx;
-            if (nextIdx >= boneBlendSlotLimit(model))
-            {
-                idx = 0;
-            }
-            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
-        }
-    }
-}
-
-void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
-{
-    u8* model = (u8*)a;
-    f32 tmp[12];
-    f32 mt[12];
-    f32 target[3];
-    f32 work[3];
-    f32 out[3];
-    f32 dir2[3];
-    f32 dir1[3];
-    f32 axis[3];
-    int nextIdx;
-    int i;
-    int idx;
-    f32* m;
-    int prevOff;
-    f32 dot;
-    f32 cap;
-
-    idx = *(s8*)(*(u8**)(b + 0x3c) + (*(int***)(chain + 4))[0][0] * 0x1c);
-    if (idx >= boneBlendSlotLimit(model))
-    {
-        idx = 0;
-    }
-    PSMTXCopy(*(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10, tmp);
-    idx = (*(int***)(chain + 4))[0][0];
-    if (idx >= boneBlendSlotLimit(model))
-    {
-        idx = 0;
-    }
-    m = *(f32**)((u8*)(model + 0xc) + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x10;
-    cap = gModelDotClampMax;
-    for (i = 1; i < *(int*)(chain + 8) + 1; i++)
-    {
-        nextIdx = (*(int***)(chain + 4))[0][i];
-        PSMTXMultVec(tmp, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x18), out);
-        target[0] = gMapSavedPlayerOffsetX + (*(f32*)(*(u8**)chain + i * 0x54) + *(f32*)(*(u8**)chain + i * 0x54 + 0xc)) -
-            playerMapOffsetX;
-        target[1] = *(f32*)(*(u8**)chain + i * 0x54 + 4) + *(f32*)(*(u8**)chain + i * 0x54 + 0x10);
-        target[2] = gMapSavedPlayerOffsetZ + (*(f32*)(*(u8**)chain + i * 0x54 + 8) + *(f32*)(*(u8**)chain + i * 0x54 + 0x14)) -
-            playerMapOffsetZ;
-        work[0] = *(f32*)(*(u8**)chain + i * 0x54 - 0x3c);
-        work[1] = *(f32*)(*(u8**)chain + i * 0x54 - 0x38);
-        work[2] = *(f32*)(*(u8**)chain + i * 0x54 - 0x34);
-        if ((u32)cb != 0)
-        {
-            ((void (*)(int, int*, f32*, int, int, f32))cb)(b, a, work, cbArg, i, *(f32*)(blend + 0x14));
-        }
-        PSVECAdd(work, (f32*)(*(u8**)chain + i * 0x54 + 0x18), work);
-        PSMTXMultVec(tmp, work, work);
-        PSVECSubtract(target, out, dir1);
-        PSVECNormalize(dir1, dir1);
-        PSVECSubtract(work, out, dir2);
-        PSVECNormalize(dir2, dir2);
-        dot = PSVECDotProduct(dir2, dir1);
-        if (dot < cap && dot > gModelDotClampMin)
-        {
-            PSVECCrossProduct(dir2, dir1, axis);
-            if (dot < lbl_803DE840)
-            {
-                dot = lbl_803DE840;
-            }
-            else
-            {
-                f32 sub = lbl_803DE818 - dot;
-                dot = sub * *(f32*)(blend + 8) + dot;
-            }
-            PSMTXTranspose(tmp, mt);
-            PSMTXMultVecSR(mt, axis, axis);
-            PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
-        }
-        else
-        {
-            PSMTXIdentity(m);
-        }
-        PSMTXConcat(tmp, m, m);
-        m[3] = out[0];
-        m[7] = out[1];
-        m[11] = out[2];
-        PSMTXCopy(m, tmp);
-        work[0] = *(f32*)(*(u8**)chain + i * 0x54 + 0x18);
-        work[1] = *(f32*)(*(u8**)chain + i * 0x54 + 0x1c);
-        work[2] = *(f32*)(*(u8**)chain + i * 0x54 + 0x20);
-        PSMTXMultVec(m, work, work);
-        PSMTXCopy(m, (f32*)(*(u8**)chain + (i - 1) * 0x54 + 0x24));
-        if (i < *(int*)(chain + 8))
-        {
-            idx = nextIdx;
-            if (nextIdx >= boneBlendSlotLimit(model))
-            {
-                idx = 0;
-            }
-            m = *(f32**)((u8*)model + ((((ObjModel*)model)->bufferFlags & 1) << 2) + 0xc) + idx * 0x10;
-        }
-        *(f32*)(*(u8**)chain + i * 0x54 + 0xc) = work[0] - (gMapSavedPlayerOffsetX + *(f32*)(*(u8**)chain + i * 0x54) -
-            playerMapOffsetX);
-        *(f32*)(*(u8**)chain + i * 0x54 + 0x10) = work[1] - *(f32*)(*(u8**)chain + i * 0x54 + 4);
-        *(f32*)(*(u8**)chain + i * 0x54 + 0x14) = work[2] - (gMapSavedPlayerOffsetZ + *(f32*)(*(u8**)chain + i * 0x54 + 8) -
-            playerMapOffsetZ);
-        *(f32*)(*(u8**)chain + i * 0x54) = work[0];
-        *(f32*)(*(u8**)chain + i * 0x54 + 4) = work[1];
-        *(f32*)(*(u8**)chain + i * 0x54 + 8) = work[2];
-    }
+    return baseSize + resource[8] * resource[7];
 }
 
 char sModelAnimationBufferOverflowWarning[] = "Warning: Model animation buffer overflow!! size=%d\n";
