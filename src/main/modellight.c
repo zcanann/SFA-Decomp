@@ -1102,18 +1102,20 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
     f32 viewDir[3];
     f32 localDir[3];
     u32 color;
-    int lightId;
-    f32* view;
+    int lightId[1];
+    f32* view[1];
     int lightType;
 
+    view[0] = NULL;
+    lightId[0] = 0;
     if (gModelLightChannelStates[channel].mode == 0 || gModelLightChannelStates[channel].mode == 2)
     {
         modelLightStruct_loadDiffuseGXLight(light, obj, gModelLightNextGXLightId);
     }
     else
     {
-        lightId = gModelLightNextGXLightId;
-        view = Camera_GetViewMatrix();
+        lightId[0] = gModelLightNextGXLightId;
+        view[0] = Camera_GetViewMatrix();
         lightType = ((ModelLightStruct*)light)->lightKind;
         switch (lightType)
         {
@@ -1122,7 +1124,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
             PSVECNormalize(localDir, localDir);
             if (((ModelLightStruct*)light)->transformMode == 0)
             {
-                PSMTXMultVecSR(view, localDir, viewDir);
+                PSMTXMultVecSR(view[0], localDir, viewDir);
             }
             else
             {
@@ -1140,7 +1142,7 @@ void modelLightStruct_loadChannelLight(int channel, u8* light, u8* obj)
         }
         color = *(u32*)(light + 0x100);
         GXInitLightColor(light + 0xc0, &color);
-        GXLoadLightObjImm(light + 0xc0, lightId);
+        GXLoadLightObjImm(light + 0xc0, lightId[0]);
     }
     gModelLightChannelStates[channel].lightMask |= gModelLightNextGXLightId;
     gModelLightNextGXLightId <<= 1;
