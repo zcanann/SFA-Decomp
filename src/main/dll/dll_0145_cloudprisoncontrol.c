@@ -60,18 +60,6 @@ s8 lbl_803DDB08;  /* deferred-message queue count */
 CPTargetEntry lbl_803AC7D8[20]; /* registered-target list */
 int lbl_803AC878[0x22];         /* deferred-message queue storage */
 
-void CloudPrisonControl_free(void)
-{
-}
-
-void CloudPrisonControl_hitDetect(void)
-{
-}
-
-void CloudPrisonControl_release(void)
-{
-}
-
 int CloudPrisonControl_getExtraSize(void)
 {
     return 0x0;
@@ -81,9 +69,8 @@ int CloudPrisonControl_getObjectTypeId(void)
     return 0x0;
 }
 
-void CloudPrisonControl_initialise(void)
+void CloudPrisonControl_free(void)
 {
-    lbl_803DBE08 = 1;
 }
 
 void CloudPrisonControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -93,9 +80,8 @@ void CloudPrisonControl_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4108);
 }
 
-void CloudPrisonControl_init(GameObject* obj)
+void CloudPrisonControl_hitDetect(void)
 {
-    ObjMsg_AllocQueue(obj, 0xa);
 }
 
 void CloudPrisonControl_update(GameObject* obj)
@@ -182,6 +168,20 @@ void CloudPrisonControl_update(GameObject* obj)
             break;
         }
     }
+}
+
+void CloudPrisonControl_init(GameObject* obj)
+{
+    ObjMsg_AllocQueue(obj, 0xa);
+}
+
+void CloudPrisonControl_release(void)
+{
+}
+
+void CloudPrisonControl_initialise(void)
+{
+    lbl_803DBE08 = 1;
 }
 
 u32 gCloudPrisonControlObjDescriptor[30] = {0x00000000,
