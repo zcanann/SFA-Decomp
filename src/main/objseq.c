@@ -1954,9 +1954,9 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
     ObjTextureRuntimeSlot* tex1;
     ObjTextureRuntimeSlot* tex2;
     ObjTextureRuntimeSlot* tex5;
+    int slots;
     int k;
     int* modelIds;
-    int slots;
     int i;
     int vol;
     s16 scroll;
@@ -2287,9 +2287,9 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
                     }
                     if (vec != NULL)
                     {
-                        for (k = 1; k < slots; k++)
+                        for (k = 1, modelIds++; k < slots; modelIds++, k++)
                         {
-                            vec2 = objModelGetVecFn_800395d8((GameObject*)(seqObj), modelIds[k]);
+                            vec2 = objModelGetVecFn_800395d8((GameObject*)(seqObj), *modelIds);
                             if (vec2 != NULL)
                             {
                                 vec2[1] = vec[1];
