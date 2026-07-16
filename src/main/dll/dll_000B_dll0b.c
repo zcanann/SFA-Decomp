@@ -141,7 +141,6 @@ extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern f32 gModgfxMotionStep;
-extern const f32 gModgfxColorClampMax;
 
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
 
@@ -267,7 +266,6 @@ extern void gxBlendFn_80078b4c(void);
 
 /* Per-bone particle vertex update + draw. */
 
-extern const f32 lbl_803DF438;
 
 void fn_800A02DC(ModgfxState* state, f32* in)
 {
@@ -280,8 +278,8 @@ void fn_800A02DC(ModgfxState* state, f32* in)
     u8 ovx, ovy;
     int j;
 
-    dx = (s32)(*(f32*)&lbl_803DF438 * (in[1] * gModgfxMotionStep));
-    dy = (s32)(lbl_803DF438 * (in[2] * gModgfxMotionStep));
+    dx = (s32)(4.0f * (in[1] * gModgfxMotionStep));
+    dy = (s32)(4.0f * (in[2] * gModgfxMotionStep));
 
     cur = state->vertexBuffers[state->activeVertexBufferIndex];
     prev = state->vertexBuffers[1 - state->activeVertexBufferIndex];
@@ -378,11 +376,80 @@ void fn_800A0478(ModgfxState* state)
 #pragma peephole reset
 #pragma peephole off
 
+
+void fn_800A0524(void* state, void* p, int mode)
+{
+    u8* buf = ((u8**)((char*)state + 0x78))[((ModgfxState*)state)->activeVertexBufferIndex];
+    int j;
+
+    if (mode == 1)
+    {
+        f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
+        f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
+        f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
+        if (((ModgfxState*)state)->blendFrameCount != 0)
+        {
+            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc];
+            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd];
+            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe];
+            ((ModgfxState*)state)->blendColorStepR =
+                (tr - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc]) / (f32) * (s16*)((char*)state + 0xfe);
+            ((ModgfxState*)state)->blendColorStepG =
+                (tg - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd]) / (f32) * (s16*)((char*)state + 0xfe);
+            ((ModgfxState*)state)->blendColorStepB =
+                (tb - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe]) / (f32) * (s16*)((char*)state + 0xfe);
+        }
+        else
+        {
+            ((ModgfxState*)state)->blendColorR = tr;
+            ((ModgfxState*)state)->blendColorG = tg;
+            ((ModgfxState*)state)->blendColorB = tb;
+            {
+                f32 z = lbl_803DF430;
+                ((ModgfxState*)state)->blendColorStepR = z;
+                ((ModgfxState*)state)->blendColorStepG = z;
+                ((ModgfxState*)state)->blendColorStepB = z;
+            }
+        }
+    }
+    ((ModgfxState*)state)->blendColorR += ((ModgfxState*)state)->blendColorStepR;
+    ((ModgfxState*)state)->blendColorG += ((ModgfxState*)state)->blendColorStepG;
+    ((ModgfxState*)state)->blendColorB += ((ModgfxState*)state)->blendColorStepB;
+    if (((ModgfxState*)state)->blendColorR < lbl_803DF430)
+    {
+        ((ModgfxState*)state)->blendColorR = lbl_803DF430;
+    }
+    else if (((ModgfxState*)state)->blendColorR > 255.0f)
+    {
+        ((ModgfxState*)state)->blendColorR = 255.0f;
+    }
+    if (((ModgfxState*)state)->blendColorG < lbl_803DF430)
+    {
+        ((ModgfxState*)state)->blendColorG = lbl_803DF430;
+    }
+    else if (((ModgfxState*)state)->blendColorG > 255.0f)
+    {
+        ((ModgfxState*)state)->blendColorG = 255.0f;
+    }
+    if (((ModgfxState*)state)->blendColorB < lbl_803DF430)
+    {
+        ((ModgfxState*)state)->blendColorB = lbl_803DF430;
+    }
+    else if (((ModgfxState*)state)->blendColorB > 255.0f)
+    {
+        ((ModgfxState*)state)->blendColorB = 255.0f;
+    }
+    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
+    {
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
+        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
+    }
+}
+
 void fn_800A081C(int state, int cmd, int mode)
 {
     extern f32 gModgfxMotionStep;
-    extern f32 lbl_803DF430;
-    extern f32 lbl_803DF434;
 
     if (mode == 1)
     {
@@ -434,78 +501,6 @@ void fn_800A081C(int state, int cmd, int mode)
     }
 }
 
-void fn_800A0524(void* state, void* p, int mode)
-{
-    extern f32 lbl_803DF430;
-    extern const f32 gModgfxColorClampMax;
-    u8* buf = ((u8**)((char*)state + 0x78))[((ModgfxState*)state)->activeVertexBufferIndex];
-    int j;
-
-    if (mode == 1)
-    {
-        f32 tr = ((ModgfxVertexGroupCmd*)p)->valueX;
-        f32 tg = ((ModgfxVertexGroupCmd*)p)->valueY;
-        f32 tb = ((ModgfxVertexGroupCmd*)p)->valueZ;
-        if (((ModgfxState*)state)->blendFrameCount != 0)
-        {
-            ((ModgfxState*)state)->blendColorR = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc];
-            ((ModgfxState*)state)->blendColorG = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd];
-            ((ModgfxState*)state)->blendColorB = (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe];
-            ((ModgfxState*)state)->blendColorStepR =
-                (tr - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xc]) / (f32) * (s16*)((char*)state + 0xfe);
-            ((ModgfxState*)state)->blendColorStepG =
-                (tg - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xd]) / (f32) * (s16*)((char*)state + 0xfe);
-            ((ModgfxState*)state)->blendColorStepB =
-                (tb - (f32)(u32)buf[(*(s16**)((char*)p + 0x10))[0] * 16 + 0xe]) / (f32) * (s16*)((char*)state + 0xfe);
-        }
-        else
-        {
-            ((ModgfxState*)state)->blendColorR = tr;
-            ((ModgfxState*)state)->blendColorG = tg;
-            ((ModgfxState*)state)->blendColorB = tb;
-            {
-                f32 z = lbl_803DF430;
-                ((ModgfxState*)state)->blendColorStepR = z;
-                ((ModgfxState*)state)->blendColorStepG = z;
-                ((ModgfxState*)state)->blendColorStepB = z;
-            }
-        }
-    }
-    ((ModgfxState*)state)->blendColorR += ((ModgfxState*)state)->blendColorStepR;
-    ((ModgfxState*)state)->blendColorG += ((ModgfxState*)state)->blendColorStepG;
-    ((ModgfxState*)state)->blendColorB += ((ModgfxState*)state)->blendColorStepB;
-    if (((ModgfxState*)state)->blendColorR < lbl_803DF430)
-    {
-        ((ModgfxState*)state)->blendColorR = lbl_803DF430;
-    }
-    else if (((ModgfxState*)state)->blendColorR > gModgfxColorClampMax)
-    {
-        ((ModgfxState*)state)->blendColorR = gModgfxColorClampMax;
-    }
-    if (((ModgfxState*)state)->blendColorG < lbl_803DF430)
-    {
-        ((ModgfxState*)state)->blendColorG = lbl_803DF430;
-    }
-    else if (((ModgfxState*)state)->blendColorG > gModgfxColorClampMax)
-    {
-        ((ModgfxState*)state)->blendColorG = gModgfxColorClampMax;
-    }
-    if (((ModgfxState*)state)->blendColorB < lbl_803DF430)
-    {
-        ((ModgfxState*)state)->blendColorB = lbl_803DF430;
-    }
-    else if (((ModgfxState*)state)->blendColorB > gModgfxColorClampMax)
-    {
-        ((ModgfxState*)state)->blendColorB = gModgfxColorClampMax;
-    }
-    for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
-    {
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xc] = (int)((ModgfxState*)state)->blendColorR;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xd] = (int)((ModgfxState*)state)->blendColorG;
-        buf[(*(s16**)((char*)p + 0x10))[j] * 16 + 0xe] = (int)((ModgfxState*)state)->blendColorB;
-    }
-}
-
 /* Integer-vector lerp setup. On mode 1, snap or step-interpolate the rotation offset triple
  * toward the rounded params, then advance it by the per-step delta. */
 void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
@@ -542,8 +537,6 @@ void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 void fn_800A0AB4(void* state, void* p, int mode, u8 idx)
 {
     extern f32 gModgfxMotionStep;
-    extern f32 lbl_803DF430;
-    extern const f32 gModgfxColorClampMax;
     int k = idx * 2;
     char* slots = (char*)state + 0x78;
     u8* bufB = *(u8**)(slots + ((ModgfxState*)state)->activeVertexBufferIndex * 4);
@@ -578,9 +571,9 @@ animate:
     {
         *(f32*)(kb + 0xb0) = lbl_803DF430;
     }
-    else if (*(f32*)(kb + 0xb0) > gModgfxColorClampMax)
+    else if (*(f32*)(kb + 0xb0) > 255.0f)
     {
-        *(f32*)(kb + 0xb0) = gModgfxColorClampMax;
+        *(f32*)(kb + 0xb0) = 255.0f;
     }
     {
         for (j = 0; j < ((ModgfxVertexGroupCmd*)p)->indexCount; j++)
@@ -596,7 +589,6 @@ animate:
 void fn_800A0C78(void* state, void* p, int mode, u8 idx)
 {
     extern f32 gModgfxMotionStep;
-    extern f32 lbl_803DF434;
     int idx2 = idx * 2;
 #define base ((char*)state + idx2 * 0xc)
     int j;
@@ -812,10 +804,6 @@ extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void textBlendSetupFn_80078a7c(void);
 extern void fn_800542F4(void);
-extern const f32 gModgfxOffsetRangeMax;
-extern const f32 gModgfxOffsetRangeMin;
-extern const f32 lbl_803DF458;
-extern const f32 lbl_803DF45C;
 
 int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
 {
@@ -935,15 +923,15 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                                            ((PartfxEffectState*)p[slot])->sourceYawIndex);
             }
         }
-        if (rot[0] > gModgfxOffsetRangeMax || rot[0] < gModgfxOffsetRangeMin)
+        if (rot[0] > 65534.0f || rot[0] < -65534.0f)
         {
             rot[0] = -playerMapOffsetX;
         }
-        if (rot[1] > *(f32*)&gModgfxOffsetRangeMax || rot[1] < gModgfxOffsetRangeMin)
+        if (rot[1] > 65534.0f || rot[1] < -65534.0f)
         {
             rot[1] = lbl_803DF430;
         }
-        if (rot[2] > gModgfxOffsetRangeMax || rot[2] < gModgfxOffsetRangeMin)
+        if (rot[2] > 65534.0f || rot[2] < -65534.0f)
         {
             rot[2] = -playerMapOffsetZ;
         }
@@ -952,12 +940,12 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
         xf.z = rot[2] + pos[2];
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x400000)
         {
-            dscale = lbl_803DF458 * ((PartfxEffectState*)p[slot])->renderScale;
+            dscale = 0.5f * ((PartfxEffectState*)p[slot])->renderScale;
             xf.scale = dscale + dscale / (int)randomGetRange(1, 10);
         }
         else
         {
-            xf.scale = lbl_803DF45C * ((PartfxEffectState*)p[slot])->renderScale;
+            xf.scale = 0.01f * ((PartfxEffectState*)p[slot])->renderScale;
         }
         if ((int)((PartfxEffectState*)p[slot])->flags & 0x80000)
         {
@@ -1225,7 +1213,6 @@ void dll_0B_func07(void* source)
     }
 }
 
-extern const f32 lbl_803DF460;
 
 static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
 {
@@ -1528,9 +1515,9 @@ void dll_0B_func05(void)
                     }
                     ((ModgfxEffectSlot*)eff)->alphaCurrent =
                         ((ModgfxEffectSlot*)eff)->alphaCurrent + ((ModgfxEffectSlot*)eff)->alphaDelta;
-                    if (((ModgfxEffectSlot*)eff)->alphaCurrent > gModgfxColorClampMax)
+                    if (((ModgfxEffectSlot*)eff)->alphaCurrent > 255.0f)
                     {
-                        ((ModgfxEffectSlot*)eff)->alphaCurrent = gModgfxColorClampMax;
+                        ((ModgfxEffectSlot*)eff)->alphaCurrent = 255.0f;
                     }
                     else if (((ModgfxEffectSlot*)eff)->alphaCurrent < lbl_803DF430)
                     {
@@ -1821,11 +1808,11 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
                 if (((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource != NULL)
                 {
                     *(s16*)(dstv + 8) =
-                        lbl_803DF460 *
+                        128.0f *
                         ((f32)sb[3] / (f32) *
                          (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource + 0xa));
                     *(s16*)(dstv + 0xa) =
-                        lbl_803DF460 *
+                        128.0f *
                         ((f32)sb[4] / (f32) *
                          (u16*)((u8*)((PartfxEffectState**)gPartfxActiveEffects)[slot]->textureResource + 0xc));
                 }
