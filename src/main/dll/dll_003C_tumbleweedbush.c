@@ -21,6 +21,8 @@
 #include "main/gametext_box_api.h"
 #include "main/gametext_command_api.h"
 #include "main/dll/baddie/dll_003C_TumbleweedBush.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
+#include "main/dll/dll_003E_dummy3e.h"
 #include "main/gametext_show_api.h"
 #include "main/gametext_show_str_api.h"
 #include "main/hud_visibility_api.h"
@@ -29,39 +31,6 @@
 #include "main/pad.h"
 #include "main/textrender_api.h"
 #include "main/frame_timing.h"
-
-extern void TitleMenuItem_setAButtonToggle(void);
-
-extern void TitleMenuItem_isChanged(void);
-
-extern void TitleMenuItem_setVal(void);
-
-extern void TitleMenuItem_getVal(void);
-
-extern void TitleMenuItem_setEnabled(void);
-
-extern void TitleMenuItem_isEnabled(void);
-
-extern void TitleMenuItem_render(void);
-
-extern void TitleMenuItem_update(void);
-
-extern void TitleMenuItem_free(void);
-
-extern void TitleMenuItem_createWithWindow(void);
-extern void Dummy3E_func05_ret_1(void);
-
-extern void TitleMenuItem_create(void);
-extern void Dummy3E_func04_nop(void);
-
-extern void TitleMenuItem_createWithText(void);
-extern void Dummy3E_func03_ret_0(void);
-
-extern void TitleMenuItem_release(void);
-extern void Dummy3E_release(void);
-
-extern void TitleMenuItem_initialise(void);
-extern void Dummy3E_initialise(void);
 
 #define LINK_ITEM_SLOTS 25 /* per-item icon-strip slot capacity */
 

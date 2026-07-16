@@ -16,7 +16,7 @@
  * constants (lbl_803E21F0/F4/F8) live in the front-menu DLL.
  */
 #include "main/audio/sfx_ids.h"
-#include "main/dll/titlemenuitem_struct.h"
+#include "main/dll/dll_003D_titlemenuitem.h"
 #include "main/pad.h"
 #include "main/texture.h"
 #include "main/mm.h"
