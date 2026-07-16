@@ -33,6 +33,7 @@
 #include "main/dll/dll_029B_arwingandrossstuff.h"
 #include "main/dll/ARW/dll_02A1_arwlevelcon.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
+#include "main/dll/CC/dll_0186_ccgasventcontrol.h"
 #include "main/dll/DR/dll_0281_drearthcal.h"
 #include "main/dll/dll_0299.h"
 #include "main/dll/dll_02B1_cmbsrc.h"
@@ -108,8 +109,8 @@ extern ResourceDescriptor gAnimatedObjDescriptor, gAppleOnTreeObjDescriptor, gAr
 extern ResourceDescriptor gBaddieObjDescriptor, gBarrelPadObjDescriptor,
     gBlastedObjDescriptor, gBombPlantObjDescriptor, gBombPlantSporeObjDescriptor, gBombPlantingSpotObjDescriptor,
     gBossDrakorObjDescriptor;
-extern ResourceDescriptor gCCSharpclawPadObjDescriptor, gCCTestInfotObjDescriptor, gCCgasventControlObjDescriptor,
-    gCCgasventObjDescriptor, gCClevcontrolObjDescriptor, gCClightfootObjDescriptor, gCCpedstalObjDescriptor;
+extern ResourceDescriptor gCCSharpclawPadObjDescriptor, gCCTestInfotObjDescriptor, gCCgasventObjDescriptor,
+    gCClevcontrolObjDescriptor, gCClightfootObjDescriptor, gCCpedstalObjDescriptor;
 extern ResourceDescriptor gCCqueenObjDescriptor, gCCriverflowObjDescriptor, gCFCrateObjDescriptor,
     gCFForceFieldObjDescriptor, gCFGuardianObjDescriptor, gCFLevelControlObjDescriptor, gCFMagicWallObjDescriptor,
     gCFMainCrystalObjDescriptor;
@@ -1316,7 +1317,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &gMMP_gyserventObjDescriptor,
     &gAnimSharpclawObjDescriptor,
     &gCCgasventObjDescriptor,
-    &gCCgasventControlObjDescriptor,
+    (ResourceDescriptor*)&gCCgasventControlObjDescriptor,
     &gCCqueenObjDescriptor,
     &gCClightfootObjDescriptor,
     &gCCSharpclawPadObjDescriptor,
