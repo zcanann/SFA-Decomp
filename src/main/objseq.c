@@ -1741,7 +1741,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     ((ObjSeqState*)seq)->unk79 = 0;
     ((ObjSeqState*)seq)->targetObj = NULL;
     ((ObjSeqState*)seq)->unk7B = 0;
-    ((ObjSeqState*)seq)->fade = 0.0f;
+    ((ObjSeqState*)seq)->fade = lbl_803DEFB0;
     ((ObjSeqState*)seq)->curFrame = -1;
 
     found = -1;
@@ -1858,16 +1858,19 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
             else
             {
+                f32 wrap;
+                f32 low;
                 ((GameObject*)activeObj)->anim.currentMoveProgress += speed;
-                while (((GameObject*)activeObj)->anim.currentMoveProgress > lbl_803DEFC8)
+                wrap = lbl_803DEFC8;
+                while (((GameObject*)activeObj)->anim.currentMoveProgress > wrap)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress =
-                        ((GameObject*)activeObj)->anim.currentMoveProgress - lbl_803DEFC8;
+                    ((GameObject*)activeObj)->anim.currentMoveProgress -= wrap;
                 }
-                while (((GameObject*)activeObj)->anim.currentMoveProgress < 0.0f)
+                wrap = lbl_803DEFC8;
+                low = lbl_803DEFB0;
+                while (((GameObject*)activeObj)->anim.currentMoveProgress < low)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress =
-                        ((GameObject*)activeObj)->anim.currentMoveProgress + lbl_803DEFC8;
+                    ((GameObject*)activeObj)->anim.currentMoveProgress += wrap;
                 }
             }
         }
