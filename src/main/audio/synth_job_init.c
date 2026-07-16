@@ -18,7 +18,3 @@ void streamInit(void)
     }
     lbl_803DE284 = 0;
 }
-
-void fn_80272F6C(void)
-{
-}
