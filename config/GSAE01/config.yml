@@ -122,6 +122,8 @@ block_relocations:
   end: 0x80080408
 - target: 0x800C0100
   end: 0x800C0104
+- target: 0x80008000
+  end: 0x80008004
 
 # Embedded copyrighted asset: the boot / loading-screen texture set (0x40000). dtk
 # extracts its bytes from the user's own disc into gitignored build/ at split time and

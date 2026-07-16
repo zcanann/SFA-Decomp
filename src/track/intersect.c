@@ -104,9 +104,7 @@ GXColor lbl_803DB6E0 = {0, 0, 0, 0xFF};
 GXColor lbl_803DB6E4 = {0, 0, 0x80, 0};
 GXColor lbl_803DB6E8 = {0x80, 0x80, 0, 0};
 GXColor lbl_803DB6EC = {0, 0x80, 0, 0};
-#pragma explicit_zero_data on
-GXColor lbl_803DB6F0 = {0, 0, 0, 0};
-#pragma explicit_zero_data off
+GXColor lbl_803DB6F0 = {0x80, 0, 0x80, 0};
 u32 lbl_803DB6F4 = 0xFFFFFF60;
 u32 lbl_803DB6F8 = 0xA0A0A080;
 
