@@ -1901,13 +1901,15 @@ void skyFn_80062a54(f32 a, f32 b, f32 c, int param)
 #pragma opt_propagation reset
 
 #pragma opt_strength_reduction off
+#pragma opt_propagation off
 int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* outPtr, f32* input, int limit)
 {
     int n = 0;
     int outCount = 0;
     ObjModelState* modelState = ((ObjAnimComponent*)obj)->modelState;
+    s16 zero = 0;
 
-    gShadowVisibleCount = 0;
+    gShadowVisibleCount = zero;
     for (; n < count; n++, input += 5)
     {
         int vis = 1;
@@ -1947,6 +1949,7 @@ int fn_80061DD8(void* obj, void* u1, void* u2, int count, f32* outBase, f32* out
     }
     return gShadowVisibleCount > 0;
 }
+#pragma opt_propagation reset
 #pragma opt_strength_reduction reset
 
 void fn_8006135C(s16* out, GameObject* obj)
