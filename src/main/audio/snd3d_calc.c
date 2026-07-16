@@ -53,6 +53,13 @@ extern double __frsqrte(double x);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 
+typedef struct SndFVector
+{
+    f32 x;
+    f32 y;
+    f32 z;
+} SndFVector;
+
 #define S3D_MAX_GROUPS                   0x40
 #define S3D_MAX_ACTIVE_NODES             0x40
 #define S3D_EMITTER_FLAG_RESTART_ON_STOP 0x00000002
@@ -73,157 +80,131 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
 #pragma fp_contract off
+extern inline f32 sqrtf(f32 x)
+{
+    volatile f32 y;
+
+    if (x > 0.0f)
+    {
+        f64 guess = __frsqrte((f64)x);
+        guess = 0.5 * guess * (3.0 - guess * guess * x);
+        guess = 0.5 * guess * (3.0 - guess * guess * x);
+        guess = 0.5 * guess * (3.0 - guess * guess * x);
+        y = (f32)((f64)x * guess);
+        return y;
+    }
+    return x;
+}
+
 void s3dCalcEmitter(Snd3DEmitter* emitter, f32* distanceOut, f32* panOut, f32* azimuthOut, f32* pitchOut,
                     f32* frontBackOut)
 {
     SndSpatialListener* listener;
-    f64 k1;
-    f64 k3;
-    f32 half;
-    f32 one;
-    f32 zero;
-    f32 frontBackSum;
-    f32 pitchSum;
-    f32 azimuthSum;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 listenerDistance;
-    f32 ratio;
-    f32 curveParam;
-    f32 listenerVelocityDistance;
-    f32 projectedDistance;
-    /* unusedA/unusedB are never referenced; they reserve stack to match the
-     * retail frame layout around transformed[] (frame size 0xE8). */
-    f32 unusedA[7];
-    f32 transformed[3];
-    f32 unusedB[7];
-    volatile f32 tmp1;
-    volatile f32 tmp2;
-    volatile f32 tmp3;
+    SndFVector d;
+    SndFVector v;
+    SndFVector p;
+    f32 relativeSpeed;
+    f32 distance;
+    f32 newDistance;
+    f32 frameTime;
+    f32 distanceRatio;
+    SndFVector pan;
     u32 listenerCount;
-    f64 invSqrt;
 
-    listenerCount = 0;
-    *distanceOut = zero = lbl_803E7880;
-    *panOut = one = lbl_803E78A4;
-    azimuthSum = pitchSum = frontBackSum = zero;
-    listener = s3dListenerRoot;
-    half = lbl_803E78B0;
-    k3 = lbl_803E7898;
-    k1 = lbl_803E78A8;
+    frameTime = 1.0f / 60.0f;
+    *distanceOut = 0.0f;
+    *panOut = 1.0f;
+    pan.x = pan.y = pan.z = 0.0f;
 
-    for (; listener != (SndSpatialListener*)0x0; listener = listener->next)
+    for (listenerCount = 0, listener = s3dListenerRoot; listener != NULL;
+         listener = listener->next, listenerCount++)
     {
-        dx = emitter->posX - (listener->posX + listener->velX * listener->time);
-        dy = emitter->posY - (listener->posY + listener->velY * listener->time);
-        dz = emitter->posZ - (listener->posZ + listener->velZ * listener->time);
-        listenerDistance = dx * dx + dy * dy + dz * dz;
-        if (listenerDistance > zero)
-        {
-            invSqrt = __frsqrte((f64)listenerDistance);
-            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
-            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
-            invSqrt = k3 * invSqrt * (k1 - listenerDistance * (invSqrt * invSqrt));
-            tmp1 = (f32)((f64)listenerDistance * invSqrt);
-            listenerDistance = tmp1;
-        }
+        d.x = emitter->posX - (listener->posX + listener->velX * listener->time);
+        d.y = emitter->posY - (listener->posY + listener->velY * listener->time);
+        d.z = emitter->posZ - (listener->posZ + listener->velZ * listener->time);
+        distance = sqrtf(d.x * d.x + d.y * d.y + d.z * d.z);
 
-        if (emitter->maxDistance >= listenerDistance)
+        if (emitter->maxDistance >= distance)
         {
-            ratio = listenerDistance / emitter->maxDistance;
-            curveParam = emitter->distanceCurve;
-            if (curveParam >= zero)
+            distanceRatio = distance / emitter->maxDistance;
+            if (emitter->distanceCurve >= 0.0f)
             {
-                dz = one - curveParam;
-                *distanceOut += listener->volumeScale *
-                                (emitter->minVolume + (emitter->maxVolume - emitter->minVolume) *
-                                                          (one - (dz * ratio + ratio * (curveParam * ratio))));
-            }
-            else
-            {
-                dz = one + curveParam;
                 *distanceOut += listener->volumeScale *
                                 (emitter->minVolume +
                                  (emitter->maxVolume - emitter->minVolume) *
-                                     (one - (dz * ratio - curveParam * (one - (one - ratio) * (one - ratio)))));
+                                     (1.0f -
+                                      ((1.0f - emitter->distanceCurve) * distanceRatio +
+                                       emitter->distanceCurve * distanceRatio * distanceRatio)));
+            }
+            else
+            {
+                *distanceOut += listener->volumeScale *
+                                (emitter->minVolume +
+                                 (emitter->maxVolume - emitter->minVolume) *
+                                     (1.0f -
+                                      ((emitter->distanceCurve + 1.0f) * distanceRatio -
+                                       emitter->distanceCurve *
+                                           (1.0f - (1.0f - distanceRatio) * (1.0f - distanceRatio)))));
             }
 
-            if ((emitter->flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM) == 0)
+            if (!(emitter->flags & S3D_EMITTER_FLAG_WAITING_FOR_ROOM))
             {
-                if (((emitter->flags & 0x00000008) != 0) || ((listener->flags & 1) != 0))
+                if ((emitter->flags & 0x00000008) || (listener->flags & 1))
                 {
-                    dx = listener->refX - emitter->refX;
-                    dy = listener->refY - emitter->refY;
-                    dz = listener->refZ - emitter->refZ;
-                    listenerVelocityDistance = dx * dx + dy * dy + dz * dz;
-                    if (listenerVelocityDistance > zero)
-                    {
-                        invSqrt = __frsqrte((f64)listenerVelocityDistance);
-                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
-                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
-                        invSqrt = k3 * invSqrt * (k1 - listenerVelocityDistance * (invSqrt * invSqrt));
-                        tmp2 = (f32)((f64)listenerVelocityDistance * invSqrt);
-                        listenerVelocityDistance = tmp2;
-                    }
+                    v.x = listener->refX - emitter->refX;
+                    v.y = listener->refY - emitter->refY;
+                    v.z = listener->refZ - emitter->refZ;
+                    relativeSpeed = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 
-                    if (listenerVelocityDistance > zero)
+                    if (relativeSpeed > 0.0f)
                     {
-                        dz = (emitter->posZ + emitter->refZ * half) - (listener->posZ + listener->refZ * half);
-                        dx = (emitter->posX + emitter->refX * half) - (listener->posX + listener->refX * half);
-                        dy = (emitter->posY + emitter->refY * half) - (listener->posY + listener->refY * half);
-                        projectedDistance = dz * dz + (dx * dx + dy * dy);
-                        if (projectedDistance > zero)
+                        d.x = (emitter->posX + emitter->refX * frameTime) -
+                              (listener->posX + listener->refX * frameTime);
+                        d.y = (emitter->posY + emitter->refY * frameTime) -
+                              (listener->posY + listener->refY * frameTime);
+                        d.z = (emitter->posZ + emitter->refZ * frameTime) -
+                              (listener->posZ + listener->refZ * frameTime);
+                        newDistance = sqrtf(d.x * d.x + d.y * d.y + d.z * d.z);
+
+                        if (newDistance < distance)
                         {
-                            invSqrt = __frsqrte((f64)projectedDistance);
-                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
-                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
-                            invSqrt = k3 * invSqrt * (k1 - projectedDistance * (invSqrt * invSqrt));
-                            tmp3 = (f32)((f64)projectedDistance * invSqrt);
-                            projectedDistance = tmp3;
-                        }
-                        if (projectedDistance < listenerDistance)
-                        {
-                            *panOut = listener->panScale / (listener->panScale - listenerVelocityDistance);
+                            *panOut = listener->panScale / (listener->panScale - relativeSpeed);
                         }
                         else
                         {
-                            *panOut = listener->panScale / (listener->panScale + listenerVelocityDistance);
+                            *panOut = listener->panScale / (listener->panScale + relativeSpeed);
                         }
                     }
                 }
 
-                if (zero != listenerDistance)
+                if (distance != 0.0f)
                 {
-                    salApplyMatrix(listener->matrix, &emitter->posX, transformed);
-                    if (transformed[2] <= zero)
+                    salApplyMatrix(listener->matrix, &emitter->posX, &p.x);
+                    if (p.z <= 0.0f)
                     {
-                        frontBackSum += -listener->rearRange < transformed[2] ? -transformed[2] / listener->rearRange
-                                                                              : lbl_803E78A4;
+                        pan.z += -listener->rearRange < p.z ? -p.z / listener->rearRange : 1.0f;
                     }
                     else
                     {
-                        frontBackSum += listener->frontRange > transformed[2] ? -transformed[2] / listener->frontRange
-                                                                              : lbl_803E7890;
+                        pan.z += listener->frontRange > p.z ? -p.z / listener->frontRange : -1.0f;
                     }
 
-                    if (((zero != transformed[0]) || (zero != transformed[1])) || (zero != transformed[2]))
+                    if (p.x != 0.0f || p.y != 0.0f || p.z != 0.0f)
                     {
-                        salNormalizeVector(transformed);
+                        salNormalizeVector(&p.x);
                     }
-                    azimuthSum += transformed[0];
-                    pitchSum -= transformed[1];
+                    pan.x += p.x;
+                    pan.y -= p.y;
                 }
             }
         }
-        listenerCount++;
     }
 
     if (listenerCount != 0)
     {
-        *azimuthOut = azimuthSum / listenerCount;
-        *pitchOut = pitchSum / listenerCount;
-        *frontBackOut = frontBackSum / listenerCount;
+        *azimuthOut = pan.x / listenerCount;
+        *pitchOut = pan.y / listenerCount;
+        *frontBackOut = pan.z / listenerCount;
     }
 }
 #pragma fp_contract reset
