@@ -5485,10 +5485,10 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     sp2 = (f32*)startPos;
     slotp = slots;
     outp = slots;
-    syp = &ws[1];
-    szp = &ws[2];
-    wzp = &we[2];
     wyp = &we[1];
+    wzp = &we[2];
+    szp = &ws[2];
+    syp = &ws[1];
     edge1p = edge1;
     edge2p = edge2;
     vbp = vb;
