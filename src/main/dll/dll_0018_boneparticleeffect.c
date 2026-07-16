@@ -78,40 +78,9 @@ void boneParticleEffect_func08_nop(void)
 {
 }
 
-void boneParticleEffect_func06_nop(void)
-{
-}
-
-void boneParticleEffect_func04_nop(void)
-{
-}
-
-void boneParticleEffect_func03_nop(void)
-{
-}
-
-/* scheduling-off intentionally stays in effect through end-of-file (release/update/initialise/
-   spawnAtBones); peephole is re-enabled at boneParticleEffect_spawnAtBones below. Do not close. */
+/* scheduling-off intentionally stays in effect through end-of-file. Do not close. */
 #pragma scheduling off
 #pragma peephole off
-void boneParticleEffect_release(void)
-{
-    int i;
-    void* zero;
-    i = 0;
-    zero = NULL;
-    do
-    {
-        if (gBoneParticleEffectBuffers[i] != NULL)
-            mm_free(gBoneParticleEffectBuffers[i]);
-        gBoneParticleEffectBuffers[i] = zero;
-        i++;
-    } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
-    if (gBoneParticleTextureA != NULL)
-        textureFree((Texture*)(gBoneParticleTextureA));
-    if (gBoneParticleTextureB != NULL)
-        textureFree((Texture*)(gBoneParticleTextureB));
-}
 
 f32 gBoneParticleConfigTable[108] = {
     -1500.0f, 0.0f,     -1500.0f, -1500.0f, 0.0f,     1500.0f, 1500.0f, 0.0f,    1500.0f, 1500.0f,  0.0f,    -1500.0f,
@@ -330,6 +299,11 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
 }
 #pragma opt_propagation reset
 
+void boneParticleEffect_func06_nop(void)
+{
+}
+
+
 ParticleSlot gBoneParticleInitData[] = {
     {-500, -900, -500, 0, 0, 0, 255, 255, 255, 255},
     {500, -900, -500, 0, 63, 0, 255, 255, 255, 255},
@@ -417,37 +391,6 @@ ParticleSlot gBoneParticleInitData[] = {
     {16192, 0, 16220, 44040, 16142, -9961, 63, 64, 0, 0},
 };
 
-void boneParticleEffect_initialise(void)
-{
-    int i;
-    int j;
-
-    gBoneParticleTextureA = textureLoadAsset(BONE_PARTICLE_TEXTURE_A_ID);
-    gBoneParticleTextureB = textureLoadAsset(BONE_PARTICLE_TEXTURE_B_ID);
-    gBoneParticleEffectBuffers[0] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[1] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[2] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[3] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[4] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[5] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
-    for (i = 0; i < BONE_PARTICLE_EFFECT_BUFFER_COUNT; i++)
-    {
-        for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++)
-        {
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posX = gBoneParticleInitData[j].posX;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posY = gBoneParticleInitData[j].posY;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posZ = gBoneParticleInitData[j].posZ;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texU = gBoneParticleInitData[j].texU;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texV = gBoneParticleInitData[j].texV;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].red = gBoneParticleInitData[j].red;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].green = gBoneParticleInitData[j].green;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].blue = gBoneParticleInitData[j].blue;
-            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
-        }
-    }
-}
-
 void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraArg, u8 prob, short* src)
 {
     void* model;
@@ -491,6 +434,64 @@ void boneParticleEffect_spawnAtBones(GameObject* obj, int effectId, void* extraA
                 data.unk6 = 0;
             }
             (*gPartfxInterface)->spawnObject(obj, effectId, &data, 2, -1, extraArg);
+        }
+    }
+}
+
+void boneParticleEffect_func04_nop(void)
+{
+}
+
+void boneParticleEffect_func03_nop(void)
+{
+}
+
+void boneParticleEffect_release(void)
+{
+    int i;
+    void* zero;
+    i = 0;
+    zero = NULL;
+    do
+    {
+        if (gBoneParticleEffectBuffers[i] != NULL)
+            mm_free(gBoneParticleEffectBuffers[i]);
+        gBoneParticleEffectBuffers[i] = zero;
+        i++;
+    } while (i < BONE_PARTICLE_EFFECT_BUFFER_COUNT);
+    if (gBoneParticleTextureA != NULL)
+        textureFree((Texture*)(gBoneParticleTextureA));
+    if (gBoneParticleTextureB != NULL)
+        textureFree((Texture*)(gBoneParticleTextureB));
+}
+
+void boneParticleEffect_initialise(void)
+{
+    int i;
+    int j;
+
+    gBoneParticleTextureA = textureLoadAsset(BONE_PARTICLE_TEXTURE_A_ID);
+    gBoneParticleTextureB = textureLoadAsset(BONE_PARTICLE_TEXTURE_B_ID);
+    gBoneParticleEffectBuffers[0] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[1] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[2] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[3] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[4] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[5] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    gBoneParticleEffectBuffers[6] = mmAlloc(BONE_PARTICLE_EFFECT_BUFFER_BYTES, 0x15, 0);
+    for (i = 0; i < BONE_PARTICLE_EFFECT_BUFFER_COUNT; i++)
+    {
+        for (j = 0; j < BONE_PARTICLE_EFFECT_SLOT_COUNT; j++)
+        {
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posX = gBoneParticleInitData[j].posX;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posY = gBoneParticleInitData[j].posY;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].posZ = gBoneParticleInitData[j].posZ;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texU = gBoneParticleInitData[j].texU;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].texV = gBoneParticleInitData[j].texV;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].red = gBoneParticleInitData[j].red;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].green = gBoneParticleInitData[j].green;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].blue = gBoneParticleInitData[j].blue;
+            ((ParticleSlot*)gBoneParticleEffectBuffers[i])[j].alpha = 0xff;
         }
     }
 }
