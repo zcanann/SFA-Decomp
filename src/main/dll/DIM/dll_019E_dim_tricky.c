@@ -20,20 +20,10 @@
 
 
 
-__declspec(section ".sdata2") f32 gDimTrickyLosMinDist = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E51CC = 1.0f;
-__declspec(section ".sdata2") f32 gDimTrickyLosObjOffsetDist = 32.0f;
-__declspec(section ".sdata2") f32 gDimTrickyLosCamOffsetDist = -20.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E51D8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E51DC = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E51E0 = -2.0f;
-__declspec(section ".sdata2") f32 gDimTrickyScaleTimerDivisor = 8192.0f;
-__declspec(section ".sdata2") f32 lbl_803E51E8 = 0.1f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E51EC = 0.0f;
-#pragma explicit_zero_data off
+#define DIM_TRICKY_LOS_MIN_DIST 50.0f
+#define DIM_TRICKY_LOS_OBJ_OFFSET_DIST 32.0f
+#define DIM_TRICKY_LOS_CAM_OFFSET_DIST -20.0f
+#define DIM_TRICKY_SCALE_TIMER_DIVISOR 8192.0f
 s8 gDimTrickyEggSequenceStage;
 
 typedef struct Dll19EResArgs
@@ -119,29 +109,29 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
         stk.delta[1] = camera->y - (obj)->anim.localPosY;
         stk.delta[2] = camera->z - (obj)->anim.localPosZ;
         dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
-        if (dist > gDimTrickyLosMinDist)
+        if (dist > DIM_TRICKY_LOS_MIN_DIST)
         {
-            invDist = lbl_803E51CC / dist;
+            invDist = 1.0f / dist;
             nx = stk.delta[0] * invDist;
             stk.delta[0] = nx;
             ny = stk.delta[1] * invDist;
             stk.delta[1] = ny;
             nz = stk.delta[2] * invDist;
             stk.delta[2] = nz;
-            facx = gDimTrickyLosObjOffsetDist * nx;
+            facx = DIM_TRICKY_LOS_OBJ_OFFSET_DIST * nx;
             midA[0] = facx;
-            facy = gDimTrickyLosObjOffsetDist * ny;
+            facy = DIM_TRICKY_LOS_OBJ_OFFSET_DIST * ny;
             midA[1] = facy;
-            facz = gDimTrickyLosObjOffsetDist * nz;
+            facz = DIM_TRICKY_LOS_OBJ_OFFSET_DIST * nz;
             midA[2] = facz;
             midA[0] = facx + (obj)->anim.localPosX;
             midA[1] = facy + (obj)->anim.localPosY;
             midA[2] = facz + (obj)->anim.localPosZ;
-            facx2 = gDimTrickyLosCamOffsetDist * nx;
+            facx2 = DIM_TRICKY_LOS_CAM_OFFSET_DIST * nx;
             midB[0] = facx2;
-            facy2 = gDimTrickyLosCamOffsetDist * ny;
+            facy2 = DIM_TRICKY_LOS_CAM_OFFSET_DIST * ny;
             midB[1] = facy2;
-            facz2 = gDimTrickyLosCamOffsetDist * nz;
+            facz2 = DIM_TRICKY_LOS_CAM_OFFSET_DIST * nz;
             midB[2] = facz2;
             midB[0] = facx2 + camera->x;
             midB[1] = facy2 + camera->y;
@@ -162,9 +152,9 @@ void dll_19E_render(GameObject *obj, int p2, int p3, int p4,
         {
             if (state->losVisible != 0)
             {
-                stk.args.x = lbl_803E51D8;
-                stk.args.y = lbl_803E51DC;
-                stk.args.z = lbl_803E51D8;
+                stk.args.x = 0.0f;
+                stk.args.y = 5.0f;
+                stk.args.z = 0.0f;
                 (*gPartfxInterface)->spawnObject((void*)obj, DIMTRICKY_PARTFX_IDLE_SPARKLE, &stk.args, 0x12, -1, NULL);
             }
             state->delayTimer = (s16)(randomGetRange(-10, 10) + 0x3c);
@@ -222,7 +212,7 @@ void dll_19E_update(void* obj)
 
     if (state->mode == DIM_TRICKY_MODE_EGG_INTERACT)
     {
-        effectBuf.scale = lbl_803E51E0;
+        effectBuf.scale = -2.0f;
         state->previousActive = state->active;
         if ((ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0) ||
             ((state->settleTimer != 0) && (state->settleTimer <= 0x14)))
@@ -344,18 +334,18 @@ void dll_19E_init(u8* obj, Dll19ESetup* setup)
     ((GameObject*)obj)->anim.rotX = (s16)(((s32)setup->objectType & 0x3f) << 10);
     if (setup->scaleTimer > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = setup->scaleTimer / gDimTrickyScaleTimerDivisor;
+        ((GameObject*)obj)->anim.rootMotionScale = setup->scaleTimer / DIM_TRICKY_SCALE_TIMER_DIVISOR;
     }
     else
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E51E8;
+        ((GameObject*)obj)->anim.rootMotionScale = 0.1f;
     }
 
     state->mode = setup->mode;
     state->active = 0;
     state->sequenceIndex = 0;
     state->gameBitId = setup->gameBitId;
-    stackArg.scale = lbl_803E51E0;
+    stackArg.scale = -2.0f;
 
     switch (state->mode)
     {
