@@ -975,15 +975,10 @@ main/dll/cutcam.c:
 main/dll/dll_0042_unk.c:
 	.text       start:0x801046F4 end:0x80106654
 
-main/dll/pathcam.c:
-	.text       start:0x80106654 end:0x8010684C
-
-main/dll/camlockon.c:
-	.text       start:0x8010684C end:0x80106F78
+main/dll/pathcamgroup.c:
+	.text       start:0x80106654 end:0x80107AEC
 	.sbss       start:0x803DD538 end:0x803DD540
-
-main/dll/dll_0043_unk.c:
-	.text       start:0x80106F78 end:0x80107AEC
+	.sdata2     start:0x803E1740 end:0x803E177C
 
 main/dll/dll_0045_camTalk.c:
 	.text       start:0x80107AEC end:0x8010847C

@@ -47,18 +47,11 @@ typedef struct CameraModeStaffAnimSettings
 #define CAMMODE_VIEWFINDER 0x44 /* dll_0044_cameramodeviewfinder (action) */
 #define CAMMODE_COMBAT     0x49 /* dll_0049_cameramodecombat (follow) */
 
-extern void memset(void* ptr, int value, int size);
-extern f32 lbl_803E1740;
-extern f32 lbl_803E1744;
-extern f32 gCamStaffAnimCurveMin;
-extern f32 gCamStaffAnimCurveMax;
-extern f32 gCamStaffAnimPi;
-extern f32 gCamStaffAnimHalfCircleBams;
-extern f32 gCamStaffAnimDegToBams;
-extern f32 lbl_803E176C;
-extern f32 lbl_803E1770;
-extern f32 lbl_803E1774;
-extern f32 lbl_803E1778;
+__declspec(section ".sdata2") f32 gCamStaffAnimCurveMin = -100000.0f;
+__declspec(section ".sdata2") f32 gCamStaffAnimCurveMax = 100000.0f;
+__declspec(section ".sdata2") f32 gCamStaffAnimPi = 3.1415927f;
+__declspec(section ".sdata2") f32 gCamStaffAnimHalfCircleBams = 32768.0f;
+__declspec(section ".sdata2") f32 gCamStaffAnimDegToBams = 182.04445f;
 
 #pragma dont_inline on
 void camcontrol_updatePathTargetAction(CameraObject* camera, GameObject* target)
@@ -119,14 +112,14 @@ done:
 }
 #pragma dont_inline reset
 
+void CameraModeStaffAnim_copyToCurrent(void)
+{
+}
+
 void camcontrol_releasePathState(void)
 {
     mm_free(gCamcontrolPathState);
     gCamcontrolPathState = NULL;
-}
-
-void CameraModeStaffAnim_copyToCurrent(void)
-{
 }
 
 #pragma dont_inline on
@@ -190,7 +183,7 @@ void camclimb_update(CameraObject* cam)
         {
             gCamcontrolPathState->initialiseCurve[4] = gCamcontrolPathState->initialiseCurve[4] + timeDelta;
         }
-        if (gCamcontrolPathState->initialiseCurve[4] > lbl_803E1740)
+        if (gCamcontrolPathState->initialiseCurve[4] > 0.0f)
         {
             needsReset = camcontrol_getTargetPosition(cam, &target->anim, &cam->anim.worldPosX, &cam->anim.rotY);
             if (needsReset == 1)
@@ -203,7 +196,7 @@ void camclimb_update(CameraObject* cam)
             needsReset = 1;
         }
         ((void (*)(int, f32*, f32*, f32*, f32*, f32, int))(*gCameraInterface)->getRelativePosition)(
-            (int)cam, &relX, &relY, &relZ, &relDistXZ, lbl_803E1740, 0);
+            (int)cam, &relX, &relY, &relZ, &relDistXZ, 0.0f, 0);
         angle = getAngle((double)relX, (double)relZ);
         yawDelta = 0x8000 - (angle & 0xffff);
         yawDelta = yawDelta - (u32)(u16)cam->anim.rotX;
@@ -232,7 +225,7 @@ void camclimb_update(CameraObject* cam)
 
 #pragma scheduling on
 #pragma peephole on
-static f32 CameraModeStaffAnim_angleToRadians(int angle)
+static inline f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
     return (gCamStaffAnimPi * angle) / gCamStaffAnimHalfCircleBams;
 }
@@ -322,9 +315,9 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
     {
         pathRadius = gCamcontrolPathState->actionParamX * gCamcontrolPathState->actionParamX -
                      gCamcontrolPathState->actionParamZ * gCamcontrolPathState->actionParamZ;
-        if (pathRadius < lbl_803E176C)
+        if (pathRadius < 5.0f)
         {
-            pathRadius = lbl_803E176C;
+            pathRadius = 5.0f;
         }
         pathRadius = sqrtf(pathRadius);
 
@@ -350,7 +343,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
 
         dx = camera->anim.localPosX - localPos[0];
         dz = camera->anim.localPosZ - localPos[2];
-        pathRadius = lbl_803E1770 * sqrtf(dx * dx + dz * dz);
+        pathRadius = 0.5f * sqrtf(dx * dx + dz * dz);
         turnAmount = getAngle(-relCos, -relSin) - (u16)getAngle(dx, dz);
 
         if (turnAmount > 0x8000)
@@ -392,7 +385,7 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
         }
         else
         {
-            pathScale = lbl_803E1740;
+            pathScale = 0.0f;
         }
 
         baseX = localPos[0] - (relCos * pathScale);
@@ -429,8 +422,8 @@ void CameraModeStaffAnim_init(CameraObject* camera, int unused, u8* settings)
 
         pathScale = gCamcontrolPathState->pathCurve.pathLength;
         (*gCameraInterface)
-            ->initialise(pathScale, &gCamcontrolPathState->initialiseCurve[0], lbl_803E1774, lbl_803E1770, lbl_803E1744,
-                         lbl_803E1778);
+            ->initialise(pathScale, &gCamcontrolPathState->initialiseCurve[0], 20.0f, 0.5f, 1.0f,
+                         -10.0f);
 
         gCamcontrolPathState->curveMin = gCamStaffAnimCurveMin;
         gCamcontrolPathState->curveMax = gCamStaffAnimCurveMax;

@@ -12,6 +12,8 @@
 
 CamcontrolPathState* gCamcontrolPathState;
 
+void vecRotateZXY(s16* rotation, f32* vector);
+
 
 #pragma inline_depth(4)
 void camcontrol_buildPathAngles(s16* outArr, u16* outCount, s16 baseAngle, s16 deltaAngle,
@@ -84,3 +86,4 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
 
     *outPointCount = pointCount;
 }
+#pragma inline_depth(2)

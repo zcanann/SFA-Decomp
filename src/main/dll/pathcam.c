@@ -10,9 +10,6 @@
 #include "main/object_transform.h"
 #include "string.h"
 
-extern f32 lbl_803E1740;
-extern f32 lbl_803E1744;
-extern f32 lbl_803E1748;
 
 u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* target, CameraObject* camera)
 {
@@ -44,26 +41,26 @@ u8 camcontrol_samplePathState(f32* outX, f32* height, f32* outZ, GameObject* tar
         gCamcontrolPathState->pointsX[i] = work.sampleX;
         gCamcontrolPathState->pointsZ[i] = work.sampleZ;
     }
-    if (lbl_803E1740 != gCamcontrolPathState->pathCurve.pathLength)
+    if (0.0f != gCamcontrolPathState->pathCurve.pathLength)
     {
         pathT = gCamcontrolPathState->pathCurve.pathDistance / gCamcontrolPathState->pathCurve.pathLength;
     }
     else
     {
-        pathT = lbl_803E1740;
+        pathT = 0.0f;
     }
-    if (pathT > lbl_803E1744)
+    if (pathT > 1.0f)
     {
-        pathT = lbl_803E1744;
+        pathT = 1.0f;
     }
-    else if (pathT < *(f32*)&lbl_803E1740)
+    else if (pathT < 0.0f)
     {
-        pathT = *(f32*)&lbl_803E1740;
+        pathT = 0.0f;
     }
     pathT = Curve_EvalHermite(pathT, gCamcontrolPathState->initialiseCurve, (float*)0x0);
-    if (pathT < lbl_803E1748)
+    if (pathT < 0.2f)
     {
-        pathT = lbl_803E1748;
+        pathT = 0.2f;
     }
     Curve_AdvanceAlongPath(&gCamcontrolPathState->pathCurve, pathT);
     *outX = gCamcontrolPathState->pathCurve.sample[0];
