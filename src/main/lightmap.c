@@ -198,6 +198,7 @@ void updateVisibleGeometry(void)
     u16 fov;
     f32 ox, oy, oz;
     f32 dd;
+    f32* pw;
     MatrixTransform st;
     f32 m[17];
 
@@ -227,36 +228,38 @@ void updateVisibleGeometry(void)
     gViewFrustumPlanes[n = 0].normalY = oy;
     gViewFrustumPlanes[n = 0].normalZ = oz;
     dd = -(zz * oz + (xx * ox + yy * oy));
+    pw = &gViewFrustumPlanes[0].distance;
     i = 0;
-    gViewFrustumPlanes[i].distance = dd;
+    pw[i * 5] = dd;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
     ratio = fn_80293D0C(fov) / tt;
     ratio2 = ratio * ratio;
-    tt = changed_803DEC08.lo * ratio2;
-    tt = fn_80292248(sqrtf(tt * changed_803DEC08.lo + ratio2));
+    ff = changed_803DEC08.lo;
+    tt = ff * ratio2;
+    tt = fn_80292248(sqrtf(ff * tt + ratio2));
     ff = floor(tt);
     ss = fn_802943F4(tt);
     Matrix_TransformPoint(m, ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
     gViewFrustumPlanes[n = 1].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
-    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
+    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, -ss, lbl_803DEBCC, -ff, &ox, &oy, &oz);
     gViewFrustumPlanes[n = 2].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
-    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
+    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, lbl_803DEBCC, -ss, -ff, &ox, &oy, &oz);
     gViewFrustumPlanes[n = 3].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
-    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
+    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     Matrix_TransformPoint(m, lbl_803DEBCC, ss, -ff, &ox, &oy, &oz);
     gViewFrustumPlanes[n = 4].normalX = ox;
     gViewFrustumPlanes[n].normalY = oy;
     gViewFrustumPlanes[n].normalZ = oz;
-    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
+    pw[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 #pragma opt_propagation reset
