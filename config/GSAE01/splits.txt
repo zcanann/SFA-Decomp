@@ -611,7 +611,7 @@ main/dll/dll_0077_dll77func0.c:
 
 main/dll/dll_0078_dll78func0.c:
 	.text       start:0x800F2F4C end:0x800F3400
-	.sdata2     start:0x803E0C70 end:0x803E0CA8
+	.sdata2     start:0x803E0C70 end:0x803E0CA4
 	.sdata2     start:0x803E0CA8 end:0x803E0CB0
 
 main/dll/dll_0079_dll79func0.c:

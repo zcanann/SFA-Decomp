@@ -12,8 +12,8 @@
  *
  * dll_78_func01_nop / dll_78_func00_nop are the empty DLL stub entries.
  *
- * The draw-command geometry/texture constants live in .data at
- * lbl_803E0C70.. and the shared particle texture set at lbl_803149B0.
+ * The draw-command geometry is fixed; lbl_803149B0 is the shared particle
+ * texture set used by each command.
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
@@ -25,77 +25,63 @@
 #define DLL78_EFFECT_ID 0x34
 
 extern u8 lbl_803149B0[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0C70 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C74 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C78 = 0.3f;
-__declspec(section ".sdata2") f32 lbl_803E0C7C = 0.7f;
-__declspec(section ".sdata2") f32 lbl_803E0C80 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E0C84 = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E0C88 = 3.5f;
-__declspec(section ".sdata2") f32 lbl_803E0C8C = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C90 = -1.5f;
-__declspec(section ".sdata2") f32 lbl_803E0C94 = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C98 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C9C = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E0CA0 = -3.0f;
-#pragma explicit_zero_data off
 
 void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
     ModgfxPointerSpawnPacket buf;
     u8* tex = lbl_803149B0;
     GfxCmd* e = buf.entries;
+    f32 originOffset = 0.0f;
     e[0].layer = 0;
     e[0].flags = 0xc8;
     e[0].tex = NULL;
     e[0].mode = 0x800000;
-    e[0].x = lbl_803E0C70;
-    e[0].y = lbl_803E0C74;
-    e[0].z = lbl_803E0C74;
+    e[0].x = 1.0f;
+    e[0].y = originOffset;
+    e[0].z = originOffset;
     e[1].layer = 0;
     e[1].flags = 0xe;
     e[1].tex = &tex[212];
     e[1].mode = 0x80;
-    e[1].x = lbl_803E0C74;
-    e[1].y = lbl_803E0C74;
+    e[1].x = originOffset;
+    e[1].y = originOffset;
     if (posSource != 0)
     {
         e[1].z = (f32) * (s16*)posSource;
     }
     else
     {
-        e[1].z = lbl_803E0C74;
+        e[1].z = originOffset;
     }
     e[2].layer = 0;
     e[2].flags = 7;
     e[2].tex = &tex[256];
     e[2].mode = 4;
-    e[2].x = lbl_803E0C74;
-    e[2].y = lbl_803E0C74;
-    e[2].z = lbl_803E0C74;
+    e[2].x = originOffset;
+    e[2].y = originOffset;
+    e[2].z = originOffset;
     e[3].layer = 0;
     e[3].flags = 7;
     e[3].tex = &tex[240];
     e[3].mode = 2;
-    e[3].x = lbl_803E0C78;
-    e[3].y = lbl_803E0C7C;
-    e[3].z = lbl_803E0C78;
+    e[3].x = 0.3f;
+    e[3].y = 0.7f;
+    e[3].z = 0.3f;
     e[4].layer = 0;
     e[4].flags = 7;
     e[4].tex = &tex[256];
     e[4].mode = 2;
     if (posSource != 0)
     {
-        e[4].x = lbl_803E0C70;
-        e[4].y = lbl_803E0C80;
-        e[4].z = lbl_803E0C70;
+        e[4].x = 1.0f;
+        e[4].y = 0.5f;
+        e[4].z = 1.0f;
     }
     else
     {
-        e[4].x = lbl_803E0C70;
-        e[4].y = lbl_803E0C80;
-        e[4].z = lbl_803E0C70;
+        e[4].x = 1.0f;
+        e[4].y = 0.5f;
+        e[4].z = 1.0f;
     }
     e[5].layer = 1;
     e[5].flags = 7;
@@ -103,58 +89,58 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[5].mode = 2;
     if (posSource != 0)
     {
-        e[5].x = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[5].y = lbl_803E0C84 * (lbl_803E0C8C * (f32)((PartFxSpawnParams*)posSource)->unk4);
-        e[5].z = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[5].x = 0.01f * (3.5f * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[5].y = 0.01f * (2.0f * (f32)((PartFxSpawnParams*)posSource)->unk4);
+        e[5].z = 0.01f * (3.5f * (f32)((PartFxSpawnParams*)posSource)->unk4);
     }
     else
     {
-        e[5].x = lbl_803E0C88;
-        e[5].y = lbl_803E0C8C;
-        e[5].z = lbl_803E0C88;
+        e[5].x = 3.5f;
+        e[5].y = 2.0f;
+        e[5].z = 3.5f;
     }
     e[6].layer = 1;
     e[6].flags = 0x7a;
     e[6].tex = NULL;
     e[6].mode = 0x10000;
-    e[6].x = lbl_803E0C74;
-    e[6].y = lbl_803E0C74;
-    e[6].z = lbl_803E0C74;
+    e[6].x = originOffset;
+    e[6].y = originOffset;
+    e[6].z = originOffset;
     e[7].layer = 1;
     e[7].flags = 0xe;
     e[7].tex = &tex[212];
     e[7].mode = 0x4000;
-    e[7].x = lbl_803E0C74;
-    e[7].y = lbl_803E0C90;
-    e[7].z = lbl_803E0C74;
+    e[7].x = originOffset;
+    e[7].y = -1.5f;
+    e[7].z = originOffset;
     e[8].layer = 1;
     e[8].flags = 7;
     e[8].tex = &tex[240];
     e[8].mode = 4;
-    e[8].x = lbl_803E0C94;
-    e[8].y = lbl_803E0C74;
-    e[8].z = lbl_803E0C74;
+    e[8].x = 255.0f;
+    e[8].y = originOffset;
+    e[8].z = originOffset;
     e[9].layer = 2;
     e[9].flags = 0xe;
     e[9].tex = &tex[212];
     e[9].mode = 2;
-    e[9].x = lbl_803E0C98;
-    e[9].y = lbl_803E0C9C;
-    e[9].z = lbl_803E0C98;
+    e[9].x = 3.0f;
+    e[9].y = 0.1f;
+    e[9].z = 3.0f;
     e[10].layer = 2;
     e[10].flags = 0xe;
     e[10].tex = &tex[212];
     e[10].mode = 0x4000;
-    e[10].x = lbl_803E0C74;
-    e[10].y = lbl_803E0CA0;
-    e[10].z = lbl_803E0C74;
+    e[10].x = originOffset;
+    e[10].y = -3.0f;
+    e[10].z = originOffset;
     e[11].layer = 2;
     e[11].flags = 7;
     e[11].tex = &tex[240];
     e[11].mode = 4;
-    e[11].x = lbl_803E0C74;
-    e[11].y = lbl_803E0C74;
-    e[11].z = lbl_803E0C74;
+    e[11].x = originOffset;
+    e[11].y = originOffset;
+    e[11].z = originOffset;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
@@ -166,14 +152,14 @@ void dll_78_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else
     {
-        buf.pos[0] = lbl_803E0C74;
-        buf.pos[1] = lbl_803E0C74;
-        buf.pos[2] = lbl_803E0C74;
+        buf.pos[0] = originOffset;
+        buf.pos[1] = originOffset;
+        buf.pos[2] = originOffset;
     }
-    buf.col[0] = lbl_803E0C74;
-    buf.col[1] = lbl_803E0C74;
-    buf.col[2] = lbl_803E0C74;
-    buf.scale = lbl_803E0C70;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 0xe;
