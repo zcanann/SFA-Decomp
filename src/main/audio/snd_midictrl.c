@@ -830,7 +830,6 @@ typedef union AuxInputSlots
     u8 bytes[0x480];
 } AuxInputSlots;
 
-extern u32 sndRandSeed;
 extern AuxInputSlots inpAuxB;
 extern AuxInputSlots inpAuxA;
 u32 lbl_8032FFE0[4] = {0x80000001, 0x80000002, 0x80000004, 0x80000008};

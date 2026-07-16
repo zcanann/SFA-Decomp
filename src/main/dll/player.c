@@ -2847,9 +2847,6 @@ typedef struct
     u8 pad5;
 } WallHit;
 
-extern f32 lbl_803E7FF8;
-extern f32 lbl_803E8000;
-extern f32 lbl_803E8004;
 
 #pragma opt_common_subs off
 int playerStateClimbWall(GameObject* obj, int state)
@@ -14466,7 +14463,6 @@ int fn_802AC7DC(int obj, int state, int inner, f32 fv)
     }
 }
 
-extern f32 lbl_803E80C0;
 
 #pragma opt_loop_invariants off
 int fn_802A87CC(GameObject* obj, char* cam, f32* out, f32* vec, f32 fa, f32 fb)

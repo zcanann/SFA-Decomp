@@ -3047,7 +3047,6 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
     }
 }
 
-extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
 extern char sTrackCellCoordFormat[];

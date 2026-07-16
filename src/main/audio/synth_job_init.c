@@ -4,8 +4,6 @@
 extern u8 streamCallCnt;
 extern u8 streamCallDelay;
 extern u32 lbl_803DE284;
-extern u8 inpAuxB[0x480];
-extern u8 inpAuxA[0x480];
 SynthJob streamInfo[64];
 
 void streamInit(void)

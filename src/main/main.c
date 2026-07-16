@@ -91,7 +91,6 @@ STATIC_ASSERT(offsetof(VfpLavaPoolState, speedFactor) == 0x10);
 #define MAIN_LAVAPOOL_PARTFX 0x3a2
 #define MAIN_LAVASTAR_PARTFX 0x3a4
 
-extern f32 lbl_803DC074;
 extern void* gVfpLavaPoolEffectResource;
 extern f32 lbl_803E6168;
 extern f32 gVfpLavaPoolWaveSin;

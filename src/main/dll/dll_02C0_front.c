@@ -1113,7 +1113,7 @@ void gameTextBoxFn_80134d40(int alpha, int hideHighlight, u32 showArrows)
     }
     drawTexture(gTitleScreenMainTex,
                 (f32)(int)((0x280 - (((int)((Texture*)gTitleScreenMainTex)->width * 0xbe) / 0x100)) / 2),
-                (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
+                (f32)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
     if ((showArrows & 0xff) != 0u)
     {
         xb = (int)mtx[3];
