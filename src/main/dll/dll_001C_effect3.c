@@ -7,14 +7,12 @@
  * render flags, mostly randomized via randomGetRange - then hands it to
  * gExpgfxInterface->spawnEffect. Behavior-flag bit 0 means "offset start
  * position by the attached source"; spawnFlags bit 0x200000 selects an
- * explicit PartFxSpawnParams source over the attached object. The object's
- * vtable (projgfx_funcs) is otherwise all nop/unsupported callbacks.
+ * explicit PartFxSpawnParams source over the attached object.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
-#include "main/dll/fxnode9_struct.h"
 #include "main/dll/partfxspawn_struct.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
@@ -22,7 +20,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_001C_effect3.h"
 
-extern FxNode9 lbl_8039C350;
+extern PartFxSpawnParams lbl_8039C350;
 extern f32 lbl_803DF9D0;
 extern f32 lbl_803DF9D4;
 extern f32 lbl_803DF9D8;
@@ -67,39 +65,6 @@ extern f32 lbl_803DFA70;
 extern f32 lbl_803DFA74;
 extern f32 lbl_803DFA78;
 
-ObjectDescriptor11 projgfx_funcs = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_11_SLOTS,
-    projgfx_initialise,
-    (ObjectDescriptorCallback)projgfx_release_doUnsupported,
-    0,
-    projgfx_onMapSetup,
-    (ObjectDescriptorCallback)projgfx_func04_ret_m1,
-    (ObjectDescriptorCallback)projgfx_func05_nop,
-    (ObjectDescriptorCallback)projgfx_func06_nop,
-    (ObjectDescriptorCallback)projgfx_func07_nop,
-    (ObjectDescriptorCallback)projgfx_getObjectTypeId,
-    (ObjectDescriptorCallback)projgfx_setzscale_doUnsupported,
-    (ObjectDescriptorCallback)projgfx_rayhit_doUnsupported,
-};
-
-char sProjgfxRayhitDoNoLongerSupported[] = "<projgfx rayhit Do>No Longer supported \n";
-static u8 sProjgfxStringPad0[] = {0, 0, 0};
-char sProjgfxSetzscaleDoNoLongerSupported[] = "<projgfx setzscale  Do>No Longer supported \n";
-static u8 sProjgfxStringPad1[] = {0, 0, 0};
-char sProjgfxReleaseDoNoLongerSupported[] = "<projgfx release Do>No Longer supported \n";
-static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
-
-/*
- * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
- * the consumer-side definition of this 0x64-byte spawn request consumed by
- * gExpgfxInterface->spawnEffect (expgfx_addremove). Widths kept as written here
- * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
- * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
- */
-
 #define FILL350()                                                                                                      \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -107,15 +72,13 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
         lbl_8039C350.posY = lbl_803DF9D0;                                                                              \
         lbl_8039C350.posZ = lbl_803DF9D0;                                                                              \
         lbl_8039C350.scale = lbl_803DF9D4;                                                                             \
-        lbl_8039C350.unk0 = 0;                                                                                         \
-        lbl_8039C350.unk2 = 0;                                                                                         \
-        lbl_8039C350.unk4 = 0;                                                                                         \
-        spawnParams = (PartFxSpawnParams*)&lbl_8039C350;                                                               \
+        lbl_8039C350.rotX = 0;                                                                                         \
+        lbl_8039C350.rotY = 0;                                                                                         \
+        lbl_8039C350.rotZ = 0;                                                                                         \
+        spawnParams = &lbl_8039C350;                                                                                   \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
-int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
+int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
                    void* extraArgsIn)
 {
     int spawnResult;
@@ -166,16 +129,16 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x1f4:
         if (spawnParams == 0)
             FILL350();
-        cfg.startPosX = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0x14, -0xa);
-        cfg.startPosY = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0xa);
-        cfg.startPosZ = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0);
+        cfg.startPosX = lbl_803DF9D8 * (f32)randomGetRange(-0x14, -0xa);
+        cfg.startPosY = lbl_803DF9D8 * (f32)randomGetRange(-0xa, 0xa);
+        cfg.startPosZ = lbl_803DF9D8 * (f32)randomGetRange(-0xa, 0);
         if (spawnParams != 0)
         {
-            cfg.startPosX = cfg.startPosX + spawnParams->posX;
-            cfg.startPosY = cfg.startPosY + spawnParams->posY;
-            cfg.startPosZ = cfg.startPosZ + spawnParams->posZ;
+            cfg.startPosX += spawnParams->posX;
+            cfg.startPosY += spawnParams->posY;
+            cfg.startPosZ += spawnParams->posZ;
         }
-        cfg.scale = lbl_803DF9DC * (f32)(s32)randomGetRange(0xd, 0x14);
+        cfg.scale = lbl_803DF9DC * (f32)randomGetRange(0xd, 0x14);
         cfg.lifetimeFrames = 0x19;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80200;
@@ -191,9 +154,9 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.startPosZ = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0);
         if (spawnParams != 0)
         {
-            cfg.startPosX = cfg.startPosX + spawnParams->posX;
-            cfg.startPosY = cfg.startPosY + spawnParams->posY;
-            cfg.startPosZ = cfg.startPosZ + spawnParams->posZ;
+            cfg.startPosX += spawnParams->posX;
+            cfg.startPosY += spawnParams->posY;
+            cfg.startPosZ += spawnParams->posZ;
         }
         cfg.scale = lbl_803DF9E0 * (f32)(s32)randomGetRange(1, 4);
         cfg.lifetimeFrames = 0x19;
@@ -508,12 +471,12 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.startPosZ = (f32)(s32)randomGetRange(-5, 5);
         speed = lbl_803DF9E0 * (f32)(s32)randomGetRange(0, 0x258) + lbl_803DFA54;
         cfg.velocityY = lbl_803DFA10 * (f32)(s32)randomGetRange(0, 0xc8) + lbl_803DF9D4;
-        cfg.velocityX = mathSinf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
-        cfg.velocityZ = mathCosf(gEffect3Pi * (f32) * (s16*)sourceObj / gEffect3AngleFullScale);
+        cfg.velocityX = mathSinf(gEffect3Pi * (f32)*sourceObj / gEffect3AngleFullScale);
+        cfg.velocityZ = mathCosf(gEffect3Pi * (f32)*sourceObj / gEffect3AngleFullScale);
         horizSpeed = speed * (lbl_803DFA60 * (f32)(s32)randomGetRange(0, 0x14)) + lbl_803DF9D8;
-        cfg.velocityX = cfg.velocityX * horizSpeed;
-        cfg.velocityZ = cfg.velocityZ * horizSpeed;
-        cfg.velocityY = cfg.velocityY * speed;
+        cfg.velocityX *= horizSpeed;
+        cfg.velocityZ *= horizSpeed;
+        cfg.velocityY *= speed;
         cfg.scale = lbl_803DFA68 * (f32)(s32)randomGetRange(0, 0xa) + lbl_803DFA64;
         cfg.lifetimeFrames = randomGetRange(0xb4, 0xc8);
         cfg.initialAlpha = 0xff;
@@ -583,24 +546,24 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     default:
         return -1;
     }
-    cfg.behaviorFlags = cfg.behaviorFlags | spawnFlags;
+    cfg.behaviorFlags |= spawnFlags;
     if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0))
         cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)
     {
         if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
         {
-            cfg.startPosX = cfg.startPosX + cfg.sourcePosY;
-            cfg.startPosY = cfg.startPosY + cfg.sourcePosZ;
-            cfg.startPosZ = cfg.startPosZ + cfg.sourcePosW;
+            cfg.startPosX += cfg.sourcePosY;
+            cfg.startPosY += cfg.sourcePosZ;
+            cfg.startPosZ += cfg.sourcePosW;
         }
         else
         {
             if (cfg.attachedSource != 0)
             {
-                cfg.startPosX = cfg.startPosX + ((GameObject*)cfg.attachedSource)->anim.worldPosX;
-                cfg.startPosY = cfg.startPosY + ((GameObject*)cfg.attachedSource)->anim.worldPosY;
-                cfg.startPosZ = cfg.startPosZ + ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
+                cfg.startPosX += ((GameObject*)cfg.attachedSource)->anim.worldPosX;
+                cfg.startPosY += ((GameObject*)cfg.attachedSource)->anim.worldPosY;
+                cfg.startPosZ += ((GameObject*)cfg.attachedSource)->anim.worldPosZ;
             }
         }
     }
@@ -608,8 +571,6 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL350
-#pragma scheduling reset
-#pragma peephole reset
 
 void Effect3_func05_nop(void)
 {
@@ -626,4 +587,3 @@ void Effect3_release(void)
 void Effect3_initialise(void)
 {
 }
-
