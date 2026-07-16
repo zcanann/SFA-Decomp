@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/objanim_internal.h"
+#include "main/mldf_fileid.h"
 
 typedef struct CamcontrolBaddieControlInterface {
   u8 pad00[0x60];
@@ -207,7 +208,7 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_ACTION_FLAG_NO_BLEND 0x80
 #define CAMCONTROL_ACTION_RECORD_SIZE 0x10
 #define CAMCONTROL_QUEUED_ACTION_PARAM_SIZE sizeof(CamcontrolQueuedActionParam)
-#define CAMCONTROL_ACTION_FILE_ID 0xB
+#define CAMCONTROL_ACTION_FILE_ID MLDF_FILEID_CAMACTIO_BIN
 #define CAMCONTROL_ACTION_HEAP 0xF
 #define CAMCONTROL_HANDLER_ENTRY_SIZE sizeof(CamcontrolHandlerEntry)
 #define CAMCONTROL_HANDLER_RESOURCE_TYPE 4

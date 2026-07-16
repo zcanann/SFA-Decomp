@@ -3706,13 +3706,13 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
         animId = animId + 1;
     }
 
-    if (getTableFileEntry(0xe, animId, &fileOffset) == 0)
+    if (getTableFileEntry(MLDF_FILEID_ANIMCURV_TAB_A, animId, &fileOffset) == 0)
     {
         logPrintf(sObjLoadAnimdataNullACRomTabWarning);
         return;
     }
 
-    loadAndDecompressDataFile(0xd, &hdr, fileOffset, 8, 0, 0, 0);
+    loadAndDecompressDataFile(MLDF_FILEID_ANIMCURV_BIN_A, &hdr, fileOffset, 8, 0, 0, 0);
     if (strncmp(hdr.tag, sSeqAAnimDataTag, 4) != 0 && strncmp(hdr.tag, sSeqBAnimDataTag, 4) != 0)
     {
         logPrintf(sObjLoadAnimdataNullACRomTabWarning);
@@ -3734,7 +3734,7 @@ void ObjSeq_objLoadAnimdata(u8* seq, u8* obj)
         return;
     }
 
-    loadAndDecompressDataFile(0xd, ((ObjSeqState*)seq)->cmds, fileOffset + 8, hdr.size, 0, 0, 0);
+    loadAndDecompressDataFile(MLDF_FILEID_ANIMCURV_BIN_A, ((ObjSeqState*)seq)->cmds, fileOffset + 8, hdr.size, 0, 0, 0);
     ((ObjSeqState*)seq)->animCount = (s16)(((hdr.size >> 2) - hdr.count) >> 1);
     ((ObjSeqState*)seq)->animEntries = ((ObjSeqState*)seq)->cmds + hdr.count * 4;
 

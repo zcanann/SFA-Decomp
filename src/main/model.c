@@ -2858,7 +2858,7 @@ void ObjModel_UpdateAnimMatrices(u8* model, u8* blend, u8* obj, u8* dst)
         modelWalkAnimFn_800248b8(dst, model, *(u8**)(model + 0x2c),
                                  ((GameObject*)obj)->anim.currentMoveProgress, 0x7f);
     }
-    else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & 8)
+    else if (((ObjAnimState*)((ObjModel*)model)->animStateA)->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP)
     {
         ch2 = ((ObjModel*)model)->animStateB;
         modelAnimFn_800246a0(dst, model, (u8*)ch, ((GameObject*)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,

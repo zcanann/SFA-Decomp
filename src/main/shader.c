@@ -2695,7 +2695,7 @@ void doPendingMapLoads(void)
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_BIN_A);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_TAB_A);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_BIN_A);
-                        gMapBlockIndexList = (int*)getCurrentDataFile(38);
+                        gMapBlockIndexList = (int*)getCurrentDataFile(MLDF_FILEID_BLOCKS_TAB_A);
                         gMapBlockIndexCount = 0;
                         {
                             int* p3;
