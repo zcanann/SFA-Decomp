@@ -209,9 +209,9 @@ static inline u16 seqHandleStream(SeqStream* stream)
     return stream->val;
 }
 
-static inline void seqDoPrgChange(SynthMidiState* seq, u8 prg, u32 midi)
+static inline void seqDoPrgChange(SynthMidiCtrlBlock* base, SynthMidiState* seq, u8 prg, u32 midi)
 {
-    ((SynthMidiCtrlBlock*)lbl_803AF550)->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
+    base->midiCtrl[gSynthCurrentVoiceSlotIndex][midi] = 0xFFFF;
     if (midi != 9)
     {
         prg = seq->progs[prg];
@@ -278,31 +278,7 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
         prog = tEntry->prgChange;
         if (prog != 0xff)
         {
-            SynthMidiState* sv2 = (SynthMidiState*)gSynthCurrentVoice;
-            u8 chan = pattern->chan;
-            u32 idx;
-
-            base->midiCtrl[gSynthCurrentVoiceSlotIndex][chan] = 0xFFFF;
-            if (chan != 9)
-            {
-                idx = sv2->progs[prog];
-                if (idx != 0xff)
-                {
-                    sv2->chanPatch[chan].macroId = sv2->patchTable[idx].macroId;
-                    sv2->chanPatch[chan].a = sv2->patchTable[idx].a;
-                    sv2->chanPatch[chan].b = sv2->patchTable[idx].b;
-                }
-            }
-            else
-            {
-                idx = sv2->drumProgs[prog];
-                if (idx != 0xff)
-                {
-                    sv2->chanPatch[chan].macroId = sv2->drumTable[idx].macroId;
-                    sv2->chanPatch[chan].a = sv2->drumTable[idx].a;
-                    sv2->chanPatch[chan].b = sv2->drumTable[idx].b;
-                }
-            }
+            seqDoPrgChange(base, (SynthMidiState*)gSynthCurrentVoice, prog, pattern->chan);
         }
         if (tEntry->velocity != 0xff)
         {
@@ -322,7 +298,7 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
             switch (velocity)
             {
             case 0:
-                seqDoPrgChange((SynthMidiState*)gSynthCurrentVoice, key & 0x7f, midi);
+                seqDoPrgChange(base, (SynthMidiState*)gSynthCurrentVoice, key & 0x7f, midi);
                 break;
             case 1:
                 inpSetMidiCtrl(SEQ_META_KEY_OFF, midi, gSynthCurrentVoiceSlotIndex & 0xff, key & 0x7f);
@@ -376,6 +352,7 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                         SynthMidiState* sv2;
                         s16 mod;
                         u8 vt;
+                        u8 tid;
 
                         if (lbl_803DE224 != 0)
                         {
@@ -386,11 +363,12 @@ int fn_8026E0E4(SeqEvent* event, u8 voice, u32* flag)
                             mod = 0;
                         }
                         sv2 = (SynthMidiState*)gSynthCurrentVoice;
+                        tid = event->trackId;
                         vt = sv2->studioIndex;
                         if ((note[2] = synthStartSound(macId, sv2->chanPatch[midi].a, sv2->chanPatch[midi].b,
                                                        key & 0xff, velocity & 0xff, 0x40, midi,
-                                                       gSynthCurrentVoiceSlotIndex & 0xff, voice, 0, event->trackId,
-                                                       sv2->chanMap[event->trackId], mod, vt,
+                                                       gSynthCurrentVoiceSlotIndex & 0xff, voice, 0, tid,
+                                                       sv2->chanMap[tid], mod, vt,
                                                        synthITDDefault[vt * 2])) == 0xFFFFFFFF)
                         {
                             if (note[0] != 0)
