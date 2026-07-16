@@ -691,6 +691,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     s8* scan;
     int batch;
     int curPool;
+    int scaled;
     u32* maskPtr;
     void* cache;
     u8* curCache;
@@ -897,9 +898,12 @@ foundFirst:
             parity ^= 1;
             cacheQueueWait(prefetched);
             slot--;
-            maskPtr = &runtime->poolActiveMasks[pool];
+            slotIdx = 0;
+            scaled = pool * 4;
+            maskPtr = (u32*)((u8*)runtime + scaled);
+            maskPtr = (u32*)((u8*)maskPtr + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
             curPoolBuf = (u8*)cache + parity * 0x1000;
-            for (slotIdx = 0; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++)
+            for (; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++)
             {
                 ExpgfxQuadVertex* quad;
                 ExpgfxTableEntry* entry;
@@ -1311,7 +1315,6 @@ foundFirst:
                     {
                         texS0 = 0x80;
                         texT0 = 0x80;
-                        texS1 = 0;
                         if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0)
                         {
                             texS1 = 0x80;
@@ -1381,9 +1384,6 @@ foundFirst:
                         f32 axisX;
                         f32 axisY;
                         f32 axisZ;
-                        s16 baseX;
-                        s16 baseY;
-                        s16 baseZ;
 
                         sx = lbl_803DF35C;
                         sy = sx;
@@ -1425,12 +1425,9 @@ foundFirst:
                         axisY = lbl_803DF408 * (workB / norm);
                         axisZ = lbl_803DF408 * (attractRatio / norm);
                         attractRatio = lbl_803DF40C / (gExpgfxU16ToUnitScale * (f32)(u16)slot->scaleTarget);
-                        baseX = axisX;
-                        quad[0].x = baseX;
-                        baseY = axisY;
-                        quad[0].y = baseY;
-                        baseZ = axisZ;
-                        quad[0].z = baseZ;
+                        quad[0].x = (s16)axisX;
+                        quad[0].y = (s16)axisY;
+                        quad[0].z = (s16)axisZ;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
                         *(s16*)&quad[1].x = (attractRatio * (slot->posX.value - prevX) + axisX);
@@ -1443,9 +1440,9 @@ foundFirst:
                         *(s16*)&quad[2].z = (attractRatio * (slot->posZ.value - prevZ) - axisZ);
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
-                        quad[3].x = -baseX;
-                        quad[3].y = -baseY;
-                        quad[3].z = -baseZ;
+                        quad[3].x = -(s16)axisX;
+                        quad[3].y = -(s16)axisY;
+                        quad[3].z = -(s16)axisZ;
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
@@ -1761,7 +1758,7 @@ foundFirst:
                     }
                 }
             }
-            memcpyToCache((void*)runtime->slotPoolBases[pool], curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
+            memcpyToCache((void*)*(u32*)((u8*)runtime->slotPoolBases + scaled), curPoolBuf, EXPGFX_POOL_CACHE_LINE_COUNT);
             prefetched = 1;
             pool = next;
         }
