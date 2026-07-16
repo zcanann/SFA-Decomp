@@ -13,31 +13,6 @@
 #include "main/dll/dll_0077_dll77func0.h"
 #include "main/dll/dll_0078_dll78func0.h"
 
-__declspec(section ".sdata2") f32 lbl_803E0BE8 = 81.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BEC = 82.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BF0 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BF4 = 101.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BF8 = 102.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BFC = 103.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C00 = 104.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C04 = 105.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C08 = 106.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C0C = 107.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C10 = 111.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C14 = 112.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C18 = 125.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C1C = 126.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C20 = 133.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C24 = 134.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C28 = 157.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C2C = 158.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C30 = 999.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0C34 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E0C38 = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E0C3C = 1.0f;
-
 s16 gModgfxFxHwTuning[8] = {0, 155, 200, 155, 0, 0, 0, 0};
 
 void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
@@ -46,8 +21,9 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     int fl;
     GfxCmd* entries;
     GfxCmd* e;
-    f32 fa = lbl_803E0BE8;
-    f32 fb = lbl_803E0BEC;
+    f32 originOffset = 0.0f;
+    f32 fa = 81.0f;
+    f32 fb = 82.0f;
     fl = 100;
     if (variant == 0)
     {
@@ -55,46 +31,46 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else if (variant == 1)
     {
-        fa = lbl_803E0BF0;
-        fb = lbl_803E0BF4;
+        fa = 100.0f;
+        fb = 101.0f;
         fl = 0x8c;
     }
     else if (variant == 2)
     {
-        fa = lbl_803E0BF8;
-        fb = lbl_803E0BFC;
+        fa = 102.0f;
+        fb = 103.0f;
         fl = 0x8c;
     }
     else if (variant == 3)
     {
-        fa = lbl_803E0C00;
-        fb = lbl_803E0C04;
+        fa = 104.0f;
+        fb = 105.0f;
         fl = 0x8c;
     }
     else if (variant == 4)
     {
-        fa = lbl_803E0C08;
-        fb = lbl_803E0C0C;
+        fa = 106.0f;
+        fb = 107.0f;
         fl = 0x154;
     }
     else if (variant == 5)
     {
-        fa = lbl_803E0C10;
-        fb = lbl_803E0C14;
+        fa = 111.0f;
+        fb = 112.0f;
         fl = 0x280;
         gModgfxFxHwTuning[2] = 800;
     }
     else if (variant == 6)
     {
-        fa = lbl_803E0C18;
-        fb = lbl_803E0C1C;
+        fa = 125.0f;
+        fb = 126.0f;
         fl = 100;
         gModgfxFxHwTuning[2] = 0x14;
     }
     else if (variant == 7)
     {
-        fa = lbl_803E0C20;
-        fb = lbl_803E0C24;
+        fa = 133.0f;
+        fb = 134.0f;
         fl = 200;
         gModgfxFxHwTuning[1] = 0x14;
         gModgfxFxHwTuning[2] = 0x14;
@@ -102,8 +78,8 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     }
     else if (variant == 8)
     {
-        fa = lbl_803E0C28;
-        fb = lbl_803E0C2C;
+        fa = 157.0f;
+        fb = 158.0f;
         fl = 0x41;
         gModgfxFxHwTuning[1] = 0x14;
         gModgfxFxHwTuning[2] = 0x14;
@@ -114,7 +90,7 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     entries[0].flags = fl;
     entries[0].tex = NULL;
     entries[0].mode = 0x20000000;
-    entries[0].x = lbl_803E0C30;
+    entries[0].x = 999.0f;
     entries[0].y = fa;
     entries[0].z = fb;
     e = &entries[1];
@@ -124,23 +100,23 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 0;
         e[0].tex = NULL;
         e[0].mode = 0x80000;
-        e[0].x = lbl_803E0C34;
-        e[0].y = lbl_803E0C38;
-        e[0].z = lbl_803E0C34;
+        e[0].x = originOffset;
+        e[0].y = 200.0f;
+        e[0].z = originOffset;
         e[1].layer = 1;
         e[1].flags = 0;
         e[1].tex = NULL;
         e[1].mode = 0x80000;
-        e[1].x = lbl_803E0C34;
-        e[1].y = lbl_803E0C34;
-        e[1].z = lbl_803E0C34;
+        e[1].x = originOffset;
+        e[1].y = originOffset;
+        e[1].z = originOffset;
         e[2].layer = 3;
         e[2].flags = 0;
         e[2].tex = NULL;
         e[2].mode = 0x80000;
-        e[2].x = lbl_803E0C34;
-        e[2].y = lbl_803E0C38;
-        e[2].z = lbl_803E0C34;
+        e[2].x = originOffset;
+        e[2].y = 200.0f;
+        e[2].z = originOffset;
         e += 3;
     }
     else if (variant == 6)
@@ -149,9 +125,9 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 1;
         e[0].tex = NULL;
         e[0].mode = 0x2000;
-        e[0].x = lbl_803E0C34;
-        e[0].y = lbl_803E0C34;
-        e[0].z = lbl_803E0C34;
+        e[0].x = originOffset;
+        e[0].y = originOffset;
+        e[0].z = originOffset;
         e += 1;
     }
     else if (variant == 8)
@@ -160,28 +136,28 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 1;
         e[0].tex = NULL;
         e[0].mode = 0x2000;
-        e[0].x = lbl_803E0C34;
-        e[0].y = lbl_803E0C34;
-        e[0].z = lbl_803E0C34;
+        e[0].x = originOffset;
+        e[0].y = originOffset;
+        e[0].z = originOffset;
         e += 1;
     }
     e[0].layer = 4;
     e[0].flags = 0;
     e[0].tex = NULL;
     e[0].mode = 0x20000000;
-    e[0].x = lbl_803E0C30;
+    e[0].x = 999.0f;
     e[0].y = fa;
     e[0].z = fb;
     buf.v58 = 0;
     buf.ctx = (int)sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0C34;
-    buf.pos[1] = lbl_803E0C34;
-    buf.pos[2] = lbl_803E0C34;
-    buf.col[0] = lbl_803E0C34;
-    buf.col[1] = lbl_803E0C34;
-    buf.col[2] = lbl_803E0C34;
-    buf.scale = lbl_803E0C3C;
+    buf.pos[0] = originOffset;
+    buf.pos[1] = originOffset;
+    buf.pos[2] = originOffset;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 0;
     buf.v3c = 0;
     buf.v59 = 0;
@@ -202,15 +178,15 @@ void dll_75_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0C34 + ((GameObject*)sourceObj)->anim.worldPosZ;
+            buf.pos[0] = originOffset + ((GameObject*)sourceObj)->anim.worldPosX;
+            buf.pos[1] = originOffset + ((GameObject*)sourceObj)->anim.worldPosY;
+            buf.pos[2] = originOffset + ((GameObject*)sourceObj)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0C34 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = originOffset + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);

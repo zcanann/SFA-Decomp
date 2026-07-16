@@ -25,20 +25,6 @@
 #define DLL74_EFFECT_ID_DEFAULT  0xd9
 
 extern u8 lbl_803146D8[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0BB8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E0BBC = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E0BC0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BC4 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BC8 = -90.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BCC = -290.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BD0 = 70.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BD4 = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E0BD8 = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BDC = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BE0 = -4.0f;
-__declspec(section ".sdata2") f32 lbl_803E0BE4 = 17.0f;
 
 void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -50,18 +36,18 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     entries[0].flags = 0x15;
     entries[0].tex = &base[0x1b0];
     entries[0].mode = 4;
-    entries[0].x = lbl_803E0BB8;
-    entries[0].y = lbl_803E0BB8;
-    entries[0].z = lbl_803E0BB8;
+    entries[0].x = 0.0f;
+    entries[0].y = 0.0f;
+    entries[0].z = 0.0f;
     if (variant == 0)
     {
         entries[1].layer = 0;
         entries[1].flags = 0x15;
         entries[1].tex = &base[0x1b0];
         entries[1].mode = 2;
-        entries[1].x = lbl_803E0BBC;
-        entries[1].y = lbl_803E0BC0;
-        entries[1].z = lbl_803E0BBC;
+        entries[1].x = 0.01f;
+        entries[1].y = 1.0f;
+        entries[1].z = 0.01f;
         e = &entries[2];
     }
     else
@@ -70,9 +56,9 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].flags = 0x15;
         entries[1].tex = &base[0x1b0];
         entries[1].mode = 2;
-        entries[1].x = lbl_803E0BBC;
-        entries[1].y = lbl_803E0BC4;
-        entries[1].z = lbl_803E0BBC;
+        entries[1].x = 0.01f;
+        entries[1].y = 3.0f;
+        entries[1].z = 0.01f;
         e = &entries[2];
     }
     if (variant == 0)
@@ -81,9 +67,9 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e->flags = 0;
         e->tex = NULL;
         e->mode = 0x400000;
-        e->x = lbl_803E0BB8;
-        e->y = lbl_803E0BC8;
-        e->z = lbl_803E0BB8;
+        e->x = 0.0f;
+        e->y = -90.0f;
+        e->z = 0.0f;
         e++;
     }
     else
@@ -92,34 +78,34 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e->flags = 0;
         e->tex = NULL;
         e->mode = 0x400000;
-        e->x = lbl_803E0BB8;
-        e->y = lbl_803E0BCC;
-        e->z = lbl_803E0BB8;
+        e->x = 0.0f;
+        e->y = -290.0f;
+        e->z = 0.0f;
         e++;
     }
     e[0].layer = 1;
     e[0].flags = 0x15;
     e[0].tex = &base[0x1b0];
     e[0].mode = 2;
-    e[0].x = lbl_803E0BD0;
-    e[0].y = lbl_803E0BD4;
-    e[0].z = lbl_803E0BD0;
+    e[0].x = 70.0f;
+    e[0].y = 1.5f;
+    e[0].z = 70.0f;
     e[1].layer = 1;
     e[1].flags = 0xe;
     e[1].tex = &base[0x1f8];
     e[1].mode = 4;
-    e[1].x = lbl_803E0BD8;
-    e[1].y = lbl_803E0BB8;
-    e[1].z = lbl_803E0BB8;
+    e[1].x = 255.0f;
+    e[1].y = 0.0f;
+    e[1].z = 0.0f;
     if (variant == 0)
     {
         e[2].layer = 1;
         e[2].flags = 0x15;
         e[2].tex = &base[0x1b0];
         e[2].mode = 0x4000;
-        e[2].x = lbl_803E0BB8;
-        e[2].y = lbl_803E0BDC;
-        e[2].z = lbl_803E0BB8;
+        e[2].x = 0.0f;
+        e[2].y = 4.0f;
+        e[2].z = 0.0f;
         e += 3;
     }
     else
@@ -128,34 +114,34 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[2].flags = 0x15;
         e[2].tex = &base[0x1b0];
         e[2].mode = 0x4000;
-        e[2].x = lbl_803E0BB8;
-        e[2].y = lbl_803E0BE0;
-        e[2].z = lbl_803E0BB8;
+        e[2].x = 0.0f;
+        e[2].y = -4.0f;
+        e[2].z = 0.0f;
         e += 3;
     }
     e[0].layer = 2;
     e[0].flags = 7;
     e[0].tex = &base[0x164];
     e[0].mode = 2;
-    e[0].x = lbl_803E0BE4;
-    e[0].y = lbl_803E0BC0;
-    e[0].z = lbl_803E0BE4;
+    e[0].x = 17.0f;
+    e[0].y = 1.0f;
+    e[0].z = 17.0f;
     e[1].layer = 2;
     e[1].flags = 7;
     e[1].tex = &base[0x174];
     e[1].mode = 2;
-    e[1].x = lbl_803E0BD4;
-    e[1].y = lbl_803E0BC0;
-    e[1].z = lbl_803E0BD4;
+    e[1].x = 1.5f;
+    e[1].y = 1.0f;
+    e[1].z = 1.5f;
     if (variant == 0)
     {
         e[2].layer = 2;
         e[2].flags = 0x15;
         e[2].tex = &base[0x1b0];
         e[2].mode = 0x4000;
-        e[2].x = lbl_803E0BB8;
-        e[2].y = lbl_803E0BDC;
-        e[2].z = lbl_803E0BB8;
+        e[2].x = 0.0f;
+        e[2].y = 4.0f;
+        e[2].z = 0.0f;
         e += 3;
     }
     else
@@ -164,28 +150,28 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[2].flags = 0x15;
         e[2].tex = &base[0x1b0];
         e[2].mode = 0x4000;
-        e[2].x = lbl_803E0BB8;
-        e[2].y = lbl_803E0BE0;
-        e[2].z = lbl_803E0BB8;
+        e[2].x = 0.0f;
+        e[2].y = -4.0f;
+        e[2].z = 0.0f;
         e += 3;
     }
     e[0].layer = 2;
     e[0].flags = 0xe;
     e[0].tex = &base[0x1f8];
     e[0].mode = 4;
-    e[0].x = lbl_803E0BB8;
-    e[0].y = lbl_803E0BB8;
-    e[0].z = lbl_803E0BB8;
+    e[0].x = 0.0f;
+    e[0].y = 0.0f;
+    e[0].z = 0.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0BB8;
-    buf.pos[1] = lbl_803E0BB8;
-    buf.pos[2] = lbl_803E0BB8;
-    buf.col[0] = lbl_803E0BB8;
-    buf.col[1] = lbl_803E0BB8;
-    buf.col[2] = lbl_803E0BB8;
-    buf.scale = lbl_803E0BC0;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 2;
     buf.v3c = 7;
     buf.v59 = 0xe;
@@ -206,15 +192,15 @@ void dll_74_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != NULL)
         {
-            buf.pos[0] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosX;
-            buf.pos[1] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosY;
-            buf.pos[2] = lbl_803E0BB8 + ((GameObject*)sourceObj)->anim.localPosZ;
+            buf.pos[0] += ((GameObject*)sourceObj)->anim.localPosX;
+            buf.pos[1] += ((GameObject*)sourceObj)->anim.localPosY;
+            buf.pos[2] += ((GameObject*)sourceObj)->anim.localPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0BB8 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)
