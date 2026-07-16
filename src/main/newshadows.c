@@ -1592,23 +1592,25 @@ void allocLotsOfTextures(void)
     u8 saved;
     int i;
     int j;
-    int h;
+    Texture* frameTexture;
     f32 rc;
-    char* g = (char*)(int)gNewShadowEntries;
+    char* shadowData = (char*)(int)gNewShadowEntries;
+    Texture** renderTargets = (Texture**)(shadowData + 0x3a10);
+    Texture** frameTextures = (Texture**)(shadowData + 0x294);
     f32 cy;
 
     saved = testAndSet_onlyUseHeap3(1);
 
-    *(int*)(g + 0x3a10) = (int)textureAlloc(0x100, 0x100, 0, 0, 0, 0, 0, 1, 1);
-    *(int*)(g + 0x3a14) = (int)textureAlloc(0x100, 0x100, 1, 0, 0, 0, 0, 0, 0);
-    *(int*)(g + 0x3a18) = *(int*)(g + 0x3a14);
-    *(int*)(g + 0x3a1c) = *(int*)(g + 0x3a14);
-    *(int*)(g + 0x3a20) = *(int*)(g + 0x3a14);
-    *(int*)(g + 0x3a24) = *(int*)(g + 0x3a14);
-    *(int*)(g + 0x3a28) = *(int*)(g + 0x3a14);
-    *(int*)(g + 0x3a2c) = *(int*)(g + 0x3a14);
-    memset((void*)(*(int*)(g + 0x3a10) + 0x60), 0, *(u32*)(*(int*)(g + 0x3a10) + 0x44));
-    DCFlushRange((void*)(*(int*)(g + 0x3a10) + 0x60), *(int*)(*(int*)(g + 0x3a10) + 0x44));
+    renderTargets[0] = textureAlloc(0x100, 0x100, 0, 0, 0, 0, 0, 1, 1);
+    renderTargets[1] = textureAlloc(0x100, 0x100, 1, 0, 0, 0, 0, 0, 0);
+    renderTargets[2] = renderTargets[1];
+    renderTargets[3] = renderTargets[1];
+    renderTargets[4] = renderTargets[1];
+    renderTargets[5] = renderTargets[1];
+    renderTargets[6] = renderTargets[1];
+    renderTargets[7] = renderTargets[1];
+    memset(renderTargets[0] + 1, 0, renderTargets[0]->dataSize);
+    DCFlushRange(renderTargets[0] + 1, renderTargets[0]->dataSize);
 
     gNewShadowReflectionTexture = textureAlloc(0x140, 0xf0, 4, 0, 0, 0, 0, 1, 1);
     gNewShadowReflectionSmallTexture = (int)textureAlloc(0x50, 0x3c, 4, 0, 0, 0, 0, 1, 1);
@@ -1625,7 +1627,7 @@ void allocLotsOfTextures(void)
         isum = lowoff + rowoff;
         for (; j < 0x20; j++)
         {
-            int base = gNewShadowDiskTexture;
+            u8* base = (u8*)gNewShadowDiskTexture;
             int off = isum + (j & 3) * 8;
             f32 dx, dz, d2;
             off += (j >> 2) * 0x80;
@@ -1636,10 +1638,10 @@ void allocLotsOfTextures(void)
             dx = dx * Yachuff_803DEDF0;
             dz = dz * Yachuff_803DEDF0;
             d2 = dx * dx + dz * dz;
-            *(u8*)(base + off) = __PADFixBits * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
+            base[off] = __PADFixBits * ((d2 > lbl_803DED2C) ? lbl_803DED28 : (lbl_803DED2C - d2));
         }
     }
-    DCFlushRange((void*)(gNewShadowDiskTexture + 0x60), *(int*)(gNewShadowDiskTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowDiskTexture + 0x60), ((Texture*)gNewShadowDiskTexture)->dataSize);
 
     gNewShadowSmallDiskTexture = (int)textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x10; i++)
@@ -1652,7 +1654,7 @@ void allocLotsOfTextures(void)
         isum = lowoff + rowoff;
         for (; j < 0x10; j++)
         {
-            int base = gNewShadowSmallDiskTexture;
+            u8* base = (u8*)gNewShadowSmallDiskTexture;
             int off = isum + (j & 3) * 8;
             f32 dx, dz, d2;
             off += (j >> 2) * 0x40;
@@ -1671,10 +1673,10 @@ void allocLotsOfTextures(void)
             {
                 d2 = sqrtf(lbl_803DED2C - d2);
             }
-            *(u8*)(base + off) = __PADFixBits * d2;
+            base[off] = __PADFixBits * d2;
         }
     }
-    DCFlushRange((void*)(gNewShadowSmallDiskTexture + 0x60), *(int*)(gNewShadowSmallDiskTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowSmallDiskTexture + 0x60), ((Texture*)gNewShadowSmallDiskTexture)->dataSize);
 
     gNewShadowBumpTexture = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
     {
@@ -1770,7 +1772,7 @@ void allocLotsOfTextures(void)
             }
         }
     }
-    DCFlushRange((void*)(gNewShadowBumpTexture + 0x60), *(int*)(gNewShadowBumpTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowBumpTexture + 0x60), ((Texture*)gNewShadowBumpTexture)->dataSize);
 
     lbl_803DCFCC = (u32)textureLoadAsset(0x5b0);
     lbl_803DCFC8 = (u32)textureLoadAsset(0x600);
@@ -1779,40 +1781,40 @@ void allocLotsOfTextures(void)
     gNewShadowRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 0, 0);
     for (i = 0; i < 0x100; i++)
     {
-        int t;
-        t = gNewShadowRampTexture + (i & 7);
+        u8* t;
+        t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x60) = i;
-        t = gNewShadowRampTexture + (i & 7);
+        t[0x60] = i;
+        t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x68) = i;
-        t = gNewShadowRampTexture + (i & 7);
+        t[0x68] = i;
+        t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x70) = i;
-        t = gNewShadowRampTexture + (i & 7);
+        t[0x70] = i;
+        t = (u8*)gNewShadowRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x78) = i;
+        t[0x78] = i;
     }
-    DCFlushRange((void*)(gNewShadowRampTexture + 0x60), *(int*)(gNewShadowRampTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowRampTexture + 0x60), ((Texture*)gNewShadowRampTexture)->dataSize);
 
     gNewShadowInverseRampTexture = (int)textureAlloc(0x100, 4, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x100; i++)
     {
-        int t;
-        t = gNewShadowInverseRampTexture + (i & 7);
+        u8* t;
+        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x60) = (u8)(255 - i);
-        t = gNewShadowInverseRampTexture + (i & 7);
+        t[0x60] = (u8)(255 - i);
+        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x68) = (u8)(255 - i);
-        t = gNewShadowInverseRampTexture + (i & 7);
+        t[0x68] = (u8)(255 - i);
+        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x70) = (u8)(255 - i);
-        t = gNewShadowInverseRampTexture + (i & 7);
+        t[0x70] = (u8)(255 - i);
+        t = (u8*)gNewShadowInverseRampTexture + (i & 7);
         t += (i >> 3) * 0x20;
-        *(u8*)(t + 0x78) = (u8)(255 - i);
+        t[0x78] = (u8)(255 - i);
     }
-    DCFlushRange((void*)(gNewShadowInverseRampTexture + 0x60), *(int*)(gNewShadowInverseRampTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowInverseRampTexture + 0x60), ((Texture*)gNewShadowInverseRampTexture)->dataSize);
 
     gNewShadowFalloffTexture = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++)
@@ -1826,11 +1828,11 @@ void allocLotsOfTextures(void)
         cy = cy * Yachuff_803DEDE0;
         for (; j < 0x80; j++)
         {
-            int base = gNewShadowFalloffTexture;
+            u8* base = (u8*)gNewShadowFalloffTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
             f32 d2 = sqrtf(cx * cx + cy * cy);
-            *(u8*)(base + off) =
+            base[off] =
                 (d2 < CPUFifo_803DED38)
                     ? 0xa0
                     : ((d2 > lbl_803DED2C)
@@ -1838,7 +1840,7 @@ void allocLotsOfTextures(void)
                            : (int)(160.0f * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38)));
         }
     }
-    DCFlushRange((void*)(gNewShadowFalloffTexture + 0x60), *(int*)(gNewShadowFalloffTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowFalloffTexture + 0x60), ((Texture*)gNewShadowFalloffTexture)->dataSize);
 
     gNewShadowRadialTexture = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++)
@@ -1854,20 +1856,20 @@ void allocLotsOfTextures(void)
         cy = cy * cy;
         for (; j < 0x80; j++)
         {
-            int base = gNewShadowRadialTexture;
+            u8* base = (u8*)gNewShadowRadialTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = __fabsf(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0);
             f32 d2 = sqrtf(cx * cx + cy);
             f32 v = lbl_803DED2C - d2;
             if (v < lbl_803DED28)
                 v = lbl_803DED28;
-            *(u8*)(base + off) = 255.0f * v;
+            base[off] = 255.0f * v;
         }
     }
-    DCFlushRange((void*)(gNewShadowRadialTexture + 0x60), *(int*)(gNewShadowRadialTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowRadialTexture + 0x60), ((Texture*)gNewShadowRadialTexture)->dataSize);
 
     lbl_803DCFB8 = (int)textureAlloc(0x40, 0x40, 1, 0, 0, 0, 0, 1, 1);
-    DCInvalidateRange((void*)(lbl_803DCFB8 + 0x60), *(int*)(lbl_803DCFB8 + 0x44));
+    DCInvalidateRange((void*)(lbl_803DCFB8 + 0x60), ((Texture*)lbl_803DCFB8)->dataSize);
     fn_80069EB8(0);
 
     lbl_803DCFB4 = (int)textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
@@ -1884,14 +1886,14 @@ void allocLotsOfTextures(void)
         c0 = __fabsf(c0);
         for (; j < 4; j++)
         {
-            int base = lbl_803DCFB4;
+            u8* base = (u8*)lbl_803DCFB4;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60;
             f32 v = sqrtf(c0);
             v = sqrtf(v);
-            *(u8*)(base + off) = 255.0f * (1.0f - v);
+            base[off] = 255.0f * (1.0f - v);
         }
     }
-    DCFlushRange((void*)(lbl_803DCFB4 + 0x60), *(int*)(lbl_803DCFB4 + 0x44));
+    DCFlushRange((void*)(lbl_803DCFB4 + 0x60), ((Texture*)lbl_803DCFB4)->dataSize);
 
     gNewShadowRingTexture = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 1, 1, 1, 1);
     for (i = 0; i < 0x80; i++)
@@ -1906,7 +1908,7 @@ void allocLotsOfTextures(void)
         isum = lowoff + rowoff;
         for (; j < 0x80; j++)
         {
-            int base = gNewShadowRingTexture;
+            u8* base = (u8*)gNewShadowRingTexture;
             int off = isum + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
             f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
             f32 d2 = sqrtf(cx * cx + cy2);
@@ -1927,10 +1929,10 @@ void allocLotsOfTextures(void)
                 }
                 d2 = sqrtf(d2);
             }
-            *(u8*)(base + off) = 16.0f * d2;
+            base[off] = 16.0f * d2;
         }
     }
-    DCFlushRange((void*)(gNewShadowRingTexture + 0x60), *(int*)(gNewShadowRingTexture + 0x44));
+    DCFlushRange((void*)(gNewShadowRingTexture + 0x60), ((Texture*)gNewShadowRingTexture)->dataSize);
 
     lbl_803DCF94 = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 4; i++)
@@ -1952,69 +1954,69 @@ void allocLotsOfTextures(void)
         t += rowoff;
         *(u16*)(t + 0x78) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE1C & 0xff));
     }
-    DCFlushRange((void*)(lbl_803DCF94 + 0x60), *(int*)(lbl_803DCF94 + 0x44));
+    DCFlushRange((void*)(lbl_803DCF94 + 0x60), ((Texture*)lbl_803DCF94)->dataSize);
 
-    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
-    memset((void*)(h + 0x60), 0, *(u32*)(h + 0x44));
-    *(u16*)(h + 0xe) = 1;
-    DCFlushRange((void*)(h + 0x60), *(int*)(h + 0x44));
-    *(int*)(g + 0x294) = h;
-    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
-    memset((void*)(h + 0x60), 0, *(u32*)(h + 0x44));
-    *(u16*)(h + 0xe) = 1;
-    DCFlushRange((void*)(h + 0x60), *(int*)(h + 0x44));
-    *(int*)(g + 0x298) = h;
-    h = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
-    memset((void*)(h + 0x60), 0, *(u32*)(h + 0x44));
-    *(u16*)(h + 0xe) = 1;
-    DCFlushRange((void*)(h + 0x60), *(int*)(h + 0x44));
-    *(int*)(g + 0x29c) = h;
+    frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset(frameTexture + 1, 0, frameTexture->dataSize);
+    frameTexture->refCount = 1;
+    DCFlushRange(frameTexture + 1, frameTexture->dataSize);
+    frameTextures[0] = frameTexture;
+    frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset(frameTexture + 1, 0, frameTexture->dataSize);
+    frameTexture->refCount = 1;
+    DCFlushRange(frameTexture + 1, frameTexture->dataSize);
+    frameTextures[1] = frameTexture;
+    frameTexture = textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    memset(frameTexture + 1, 0, frameTexture->dataSize);
+    frameTexture->refCount = 1;
+    DCFlushRange(frameTexture + 1, frameTexture->dataSize);
+    frameTextures[2] = frameTexture;
     GXTexModeSync();
 
     {
-        u8* p;
-        for (i = 0, p = (u8*)(int)gNewShadowEntries; i < 0x20; i += 0x10)
+        u8* entryBytes;
+        for (i = 0, entryBytes = (u8*)(int)gNewShadowEntries; i < 0x20; i += 0x10)
         {
-            p[0x010] = 0;
-            p[0x011] = 1;
-            p[0x024] = 0;
-            p[0x025] = 1;
-            p[0x038] = 0;
-            p[0x039] = 1;
-            p[0x04c] = 0;
-            p[0x04d] = 1;
-            p[0x060] = 0;
-            p[0x061] = 1;
-            p[0x074] = 0;
-            p[0x075] = 1;
-            p[0x088] = 0;
-            p[0x089] = 1;
-            p[0x09c] = 0;
-            p[0x09d] = 1;
-            p[0x0b0] = 0;
-            p[0x0b1] = 1;
-            p[0x0c4] = 0;
-            p[0x0c5] = 1;
-            p[0x0d8] = 0;
-            p[0x0d9] = 1;
-            p[0x0ec] = 0;
-            p[0x0ed] = 1;
-            p[0x100] = 0;
-            p[0x101] = 1;
-            p[0x114] = 0;
-            p[0x115] = 1;
-            p[0x128] = 0;
-            p[0x129] = 1;
-            p[0x13c] = 0;
-            p[0x13d] = 1;
-            p += 0x140;
+            entryBytes[0x010] = 0;
+            entryBytes[0x011] = 1;
+            entryBytes[0x024] = 0;
+            entryBytes[0x025] = 1;
+            entryBytes[0x038] = 0;
+            entryBytes[0x039] = 1;
+            entryBytes[0x04c] = 0;
+            entryBytes[0x04d] = 1;
+            entryBytes[0x060] = 0;
+            entryBytes[0x061] = 1;
+            entryBytes[0x074] = 0;
+            entryBytes[0x075] = 1;
+            entryBytes[0x088] = 0;
+            entryBytes[0x089] = 1;
+            entryBytes[0x09c] = 0;
+            entryBytes[0x09d] = 1;
+            entryBytes[0x0b0] = 0;
+            entryBytes[0x0b1] = 1;
+            entryBytes[0x0c4] = 0;
+            entryBytes[0x0c5] = 1;
+            entryBytes[0x0d8] = 0;
+            entryBytes[0x0d9] = 1;
+            entryBytes[0x0ec] = 0;
+            entryBytes[0x0ed] = 1;
+            entryBytes[0x100] = 0;
+            entryBytes[0x101] = 1;
+            entryBytes[0x114] = 0;
+            entryBytes[0x115] = 1;
+            entryBytes[0x128] = 0;
+            entryBytes[0x129] = 1;
+            entryBytes[0x13c] = 0;
+            entryBytes[0x13d] = 1;
+            entryBytes += 0x140;
         }
-        p = (u8*)(int)gNewShadowEntries + i * 0x14;
+        entryBytes = (u8*)(int)gNewShadowEntries + i * 0x14;
         for (; i < 0x21; i++)
         {
-            p[0x10] = 0;
-            p[0x11] = 1;
-            p += 0x14;
+            entryBytes[0x10] = 0;
+            entryBytes[0x11] = 1;
+            entryBytes += 0x14;
         }
     }
     GXInvalidateTexAll();
