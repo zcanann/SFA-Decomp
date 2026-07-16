@@ -234,6 +234,16 @@ struct MldfTables
     s16 owners[0x60];         /* mapId owning the slot, -1 = free */
 };
 
+struct MldfIterators
+{
+    u32* ptrs;
+    s16* owners;
+    int* ids;
+    char** names;
+    int* sizes;
+    u8* flags;
+};
+
 #define MLDF_MAP_NAME(i)  (nm->mapNames[i])
 #define MLDF_FILE_NAME(i) (nm->fileNames[i])
 #define MLDF_ADJ(i)       (nm->adjacency[i])
@@ -4336,42 +4346,40 @@ void* fileLoad(int id)
 
 int initLoadFiles(void)
 {
-    int* ids;
     int i;
-    int* rom;
-    s16* owners;
+    struct MldfIterators it;
     u8* himem;
     struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
-    char** names[1];
-    int* sizes;
-    u8* flags;
-    u32* ptrs;
     if (lbl_803DCC90 == 0)
     {
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
-        i = 0;
-        rom = tbl->romList;
-        for (; i < 0x75; i++)
         {
-            *rom = 0;
-            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
+            int* rom;
+
+            i = 0;
+            rom = tbl->romList;
+            for (; i < 0x75; rom++, i++)
             {
-                piRomLoadSection(0, i, 0);
+                *rom = 0;
+                if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
+                {
+                    piRomLoadSection(0, i, 0);
+                }
             }
-            rom++;
         }
         lbl_803DCC98 = 0;
-        i = 0;
-        himem = (u8*)tbl + 0x20000;
-        ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
-        owners = (s16*)(himem - 26824); /* tbl->owners */
-        ids = (int*)(himem - 28360);    /* tbl->ids */
-        names[0] = sResourceFileNameTable;
-        sizes = (int*)(himem - 28008); /* tbl->sizes */
-        flags = himem - 28448;         /* tbl->loadedFlags */
-        for (; i <= 0x57; i++)
+        for (i = 0,
+             himem = (u8*)tbl + 0x20000,
+             it.ptrs = (u32*)(himem - 27176),
+             it.owners = (s16*)(himem - 26824),
+             it.ids = (int*)(himem - 28360),
+             it.names = sResourceFileNameTable,
+             it.sizes = (int*)(himem - 28008),
+             it.flags = himem - 28448;
+             i <= 0x57;
+             it.ptrs++, it.owners++, it.ids++, it.names++, it.sizes++, it.flags++, i++)
         {
             switch (i)
             {
@@ -4421,31 +4429,25 @@ int initLoadFiles(void)
             case 84:
             case 85:
             case 86:
-                *ptrs = 0;
-                *owners = -1;
-                *ids = -1;
+                *it.ptrs = 0;
+                *it.owners = -1;
+                *it.ids = -1;
                 break;
             default:
-                if (*ptrs == 0)
+                if (*it.ptrs == 0)
                 {
                     int fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
-                    DVDOpen(*names[0], (DVDFileInfo*)fi);
-                    *sizes = DVD_FI_LENGTH(fi);
-                    *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
+                    DVDOpen(*it.names, (DVDFileInfo*)fi);
+                    *it.sizes = DVD_FI_LENGTH(fi);
+                    *it.ptrs = (u32)mmAlloc(*it.sizes + 0x20, 0x7d7d7d7d, 0);
                     lbl_803DCC88 = lbl_803DCC88 + 1;
-                    DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
+                    DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)*it.ptrs, *it.sizes, 0, dvdReadCb_80041d30, 2);
                 }
-                *owners = -1;
-                *ids = -1;
+                *it.owners = -1;
+                *it.ids = -1;
                 break;
             }
-            *flags = 0;
-            ptrs++;
-            owners++;
-            ids++;
-            names[0]++;
-            sizes++;
-            flags++;
+            *it.flags = 0;
         }
     }
     if (lbl_803DCC88 == 0)
