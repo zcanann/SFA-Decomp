@@ -100,7 +100,7 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
     f32 sclB;
     s32 i;
     s32 ret;
-    f32* v3;
+    f32* currentOutZ;
 
     ret = 1;
     if (p == NULL)
@@ -118,29 +118,22 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         return 0;
     }
 
-    cosA = -mathSinf(gCheckpointPi * (f32)(p->heading << 8) / gCheckpointAngleToRadians);
-    sinA = -mathCosf(gCheckpointPi * (f32)(p->heading << 8) / gCheckpointAngleToRadians);
-    cosB = -mathSinf(gCheckpointPi * (f32)(q->heading << 8) / gCheckpointAngleToRadians);
-    sinB = -mathCosf(gCheckpointPi * (f32)(q->heading << 8) / gCheckpointAngleToRadians);
-    sclA = gCheckpointWidthScale * (f32)(u32)p->width;
-    sclB = gCheckpointWidthScale * (f32)(u32)q->width;
+    cosA = -mathSinf(gCheckpointPi * (p->heading << 8) / gCheckpointAngleToRadians);
+    sinA = -mathCosf(gCheckpointPi * (p->heading << 8) / gCheckpointAngleToRadians);
+    cosB = -mathSinf(gCheckpointPi * (q->heading << 8) / gCheckpointAngleToRadians);
+    sinB = -mathCosf(gCheckpointPi * (q->heading << 8) / gCheckpointAngleToRadians);
+    sclA = gCheckpointWidthScale * p->width;
+    sclB = gCheckpointWidthScale * q->width;
 
     if (mode == 1)
     {
-        /* The literal 2.0f / 3.1415927f / 32768.0f / 0.0f below emit local
-         * .sdata2 pool doubles; the retail build shared them with the named
-         * sdata2 globals of equal value (lbl_803E04E4/E8, gCheckpointPi,
-         * gCheckpointAngleToRadians). That merge is a linker data-placement
-         * (SDA/symbols) artifact, NOT source-forceable: rewriting these as the
-         * named externs regresses (they are f32/lfs while the int->float bias
-         * needs an f64 conversion double). Keep the literals. */
         f32 prodA;
         f32 prodB;
         f32 prodC;
         f32 prodD;
         j = 0;
         i = 0;
-        v3 = out3;
+        currentOutZ = out3;
         prodA = sclA * sinA;
         prodB = sclB * sinB;
         prodC = sclA * -cosA;
@@ -149,20 +142,20 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         {
             out1[0] = p->sideOffsets[i] * prodA + p->posX;
             out1[1] = q->sideOffsets[i] * prodB + q->posX;
-            out1[2] = 2.0f * ((f32)(u32)p->waveAmplitude * mathSinf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
-            out1[3] = 2.0f * ((f32)(u32)q->waveAmplitude * mathSinf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
+            out1[2] = 2.0f * (p->waveAmplitude * mathSinf(3.1415927f * (p->wavePhase << 8) / 32768.0f));
+            out1[3] = 2.0f * (q->waveAmplitude * mathSinf(3.1415927f * (q->wavePhase << 8) / 32768.0f));
             out2[0] = sclA * p->heightOffsets[i] + p->posY;
             out2[1] = sclB * q->heightOffsets[i] + q->posY;
             out2[2] = 0.0f;
             out2[3] = 0.0f;
-            v3[0] = p->sideOffsets[i] * prodC + p->posZ;
-            v3[1] = q->sideOffsets[i] * prodD + q->posZ;
-            v3[2] = 2.0f * ((f32)(u32)p->waveAmplitude * mathCosf(3.1415927f * (f32)(p->wavePhase << 8) / 32768.0f));
-            v3[3] = 2.0f * ((f32)(u32)q->waveAmplitude * mathCosf(3.1415927f * (f32)(q->wavePhase << 8) / 32768.0f));
+            currentOutZ[0] = p->sideOffsets[i] * prodC + p->posZ;
+            currentOutZ[1] = q->sideOffsets[i] * prodD + q->posZ;
+            currentOutZ[2] = 2.0f * (p->waveAmplitude * mathCosf(3.1415927f * (p->wavePhase << 8) / 32768.0f));
+            currentOutZ[3] = 2.0f * (q->waveAmplitude * mathCosf(3.1415927f * (q->wavePhase << 8) / 32768.0f));
             i += 1;
             out1 += 4;
             out2 += 4;
-            v3 += 4;
+            currentOutZ += 4;
             j += 4;
         } while (j < 0x10);
     }
@@ -170,46 +163,46 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
     {
         out1[0] = fa * (sclA * sinA) + p->posX;
         out1[1] = fa * (sclB * sinB) + q->posX;
-        out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+        out1[2] = lbl_803E04E4 * (p->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
+        out1[3] = lbl_803E04E4 * (q->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
         out2[0] = sclA * fb + p->posY;
         out2[1] = sclB * fb + q->posY;
         {
-            f32 e8 = lbl_803E04E8;
-            out2[2] = e8;
-            out2[3] = e8;
+            f32 zero = lbl_803E04E8;
+            out2[2] = zero;
+            out2[3] = zero;
         }
         out3[0] = fa * (sclA * -cosA) + p->posZ;
         out3[1] = fa * (sclB * -cosB) + q->posZ;
-        out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+        out3[2] = lbl_803E04E4 * (p->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
+        out3[3] = lbl_803E04E4 * (q->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
     }
     else
     {
         s32 pointIdx = mode - 2;
         out1[0] = p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
         out1[1] = q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
-        out1[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out1[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+        out1[2] = lbl_803E04E4 * (p->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
+        out1[3] = lbl_803E04E4 * (q->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
         out2[0] = sclA * p->heightOffsets[pointIdx] + p->posY;
         out2[1] = sclB * q->heightOffsets[pointIdx] + q->posY;
         {
-            f32 e8 = lbl_803E04E8;
-            out2[2] = e8;
-            out2[3] = e8;
+            f32 zero = lbl_803E04E8;
+            out2[2] = zero;
+            out2[3] = zero;
         }
         out3[0] = p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
         out3[1] = q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
-        out3[2] = lbl_803E04E4 * ((f32)(u32)p->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (f32)(p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out3[3] = lbl_803E04E4 * ((f32)(u32)q->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (f32)(q->wavePhase << 8) / gCheckpointAngleToRadians));
+        out3[2] = lbl_803E04E4 * (p->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
+        out3[3] = lbl_803E04E4 * (q->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
     }
     return ret;
 }
