@@ -1993,11 +1993,12 @@ void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
 void gameTextInitFn_8001a234(void)
 {
     u8* clearPtr;
+    u8* glyphPage;
     u8** glyphPagePtr;
     u8* fontState;
     u8* textWindow;
     u8* gameTextBase;
-    u8* glyphPage;
+    int glyphPageCount;
     u8* request;
     u8* p;
     f32 zero;
@@ -2014,11 +2015,11 @@ void gameTextInitFn_8001a234(void)
         *(u16*)(p + 0xa) = *(u16*)(p + 6);
     }
 
-    i = GAMETEXT_LOAD_SLOT_COUNT;
+    glyphPageCount = GAMETEXT_LOAD_SLOT_COUNT;
     glyphPage = gameTextBase + 0x2c0;
     glyphPagePtr = (u8**)(gameTextBase + 0xc0);
     fontState = gameTextBase + 0xa0;
-    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, i-- != 0)
+    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, glyphPageCount-- != 0)
     {
         *glyphPagePtr = glyphPage;
         *(u16*)fontState = 0xffff;
