@@ -3218,13 +3218,15 @@ main/dll/DR/dll_0250_ktrex.c:
 	.sbss       start:0x803DDD48 end:0x803DDD60
 
 main/dll/DR/dll_0251_ktrexfloorswitch.c:
-	.text       start:0x80215A3C end:0x80216620
+	.text       start:0x80215A3C end:0x802164D0
 	.rodata     start:0x802C2560 end:0x802C2578
 	.sdata      start:0x803DC2A0 end:0x803DC2A8
 	.sbss       start:0x803DDD60 end:0x803DDD68
+	.sdata2     start:0x803E6858 end:0x803E6898
 
 main/dll/DR/dll_0252_ktlazerwall.c:
-	.text       start:0x80216620 end:0x80216B48
+	.text       start:0x802164D0 end:0x80216B48
+	.sdata2     start:0x803E6898 end:0x803E68C0
 
 main/dll/DR/dll_0253_ktlazerlight.c:
 	.text       start:0x80216B48 end:0x80216D18

@@ -10,6 +10,10 @@
  * advancing its lifetime) until it expires. A flags byte at extra[0]
  * tracks the firing/lightning state, with extra[1] holding the previous
  * frame's flags so sfx fire on edges.
+ *
+ * ktrexfloorswitch_spawnEnergyArc is invoked with THIS object (its
+ * 'runtime' overlays KtlazerwallState, where 0x10 is the bolt pointer -
+ * distinct from ktrexfloorswitch's flags byte at the same offset).
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
@@ -22,6 +26,49 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DR/dll_0252_ktlazerwall.h"
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E6898 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E689C = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E68A0 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E68A4 = 0.3f;
+
+#pragma dont_inline on
+void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
+{
+    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
+    f32 pos[3];
+    f32 dir[3];
+    if (runtime->boltObj != 0)
+    {
+        mm_free(runtime->boltObj);
+        runtime->boltObj = 0;
+    }
+    pos[0] = (obj)->anim.localPosX;
+    pos[1] = (obj)->anim.localPosY;
+    pos[2] = (obj)->anim.localPosZ;
+    dir[0] = lbl_803E6898;
+    {
+        f32 fr = angle;
+        fr = fr * runtime->angleScale;
+        dir[1] = -(fr * lbl_803E689C);
+    }
+    dir[2] = scale;
+    vecRotateZXY(&obj->anim.rotX, dir);
+    dir[0] += (obj)->anim.localPosX;
+    dir[1] += (obj)->anim.localPosY;
+    dir[2] += (obj)->anim.localPosZ;
+    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
+    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0, lbl_803E68A4,
+                                                  angle, 96, 0);
+}
+#pragma dont_inline reset
+
+__declspec(section ".sdata2") f32 lbl_803E68B0 = 120.0f;
+__declspec(section ".sdata2") f32 lbl_803E68B4 = 0.25f;
+__declspec(section ".sdata2") f32 lbl_803E68B8 = 230.0f;
+__declspec(section ".sdata2") f32 lbl_803E68BC = 0.01f;
 
 int KT_Lazerwall_getExtraSize(void)
 {

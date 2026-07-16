@@ -8,10 +8,6 @@
  * (0x55a/0x55b) and tells ktrexlevel to update the branch path. The plate
  * mesh rises/lowers between configured heights via curve-lookups (the rom
  * curve interface) and animates its texture scroll + particle/sfx cues.
- *
- * spawnEnergyArc is a shared helper invoked by ktlazerwall with ITS object
- * (so 'runtime' there overlays KtlazerwallState, where 0x10 is the bolt
- * pointer - distinct from this object's flags byte at the same offset).
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll/DR/dll_0251_ktrexfloorswitch.h"
@@ -51,9 +47,16 @@ int gKTrexFloorSwitchCurveFindResult = 0x19;
 #define KTREXFLOORSWITCH_PARTFX_MOVING  0x488 /* emitted each frame the plate is actively rising/sinking */
 #define KTREXFLOORSWITCH_PARTFX_SETTLED 0x486 /* emitted once the plate has stopped moving */
 
-void KT_RexFloorSwitch_free(void)
-{
-}
+__declspec(section ".sdata2") f32 lbl_803E6858 = 1.0f;
+__declspec(section ".sdata2") f64 gKTrexFloorSwitchPi = 3.142;
+__declspec(section ".sdata2") f64 gKTrexFloorSwitchBamHalfCircle = 32768.0;
+__declspec(section ".sdata2") f32 gKTrexFloorSwitchTriggerBoxInset = 5.0f;
+__declspec(section ".sdata2") f32 gKTrexFloorSwitchRiseSpeed = 0.075f;
+__declspec(section ".sdata2") f32 gKTrexFloorSwitchRetractSpeed = 0.125f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E687C = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 gKTrexFloorSwitchScrollSpeed = 8.0f;
 
 int KT_RexFloorSwitch_getExtraSize(void)
 {
@@ -65,15 +68,7 @@ int KT_RexFloorSwitch_getObjectTypeId(void)
     return 0x0;
 }
 
-void KT_RexFloorSwitch_hitDetect(void)
-{
-}
-
-void KT_RexFloorSwitch_initialise(void)
-{
-}
-
-void KT_RexFloorSwitch_release(void)
+void KT_RexFloorSwitch_free(void)
 {
 }
 
@@ -85,57 +80,8 @@ void KT_RexFloorSwitch_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char vi
     }
 }
 
-void KT_RexFloorSwitch_init(GameObject* obj, char* placement)
+void KT_RexFloorSwitch_hitDetect(void)
 {
-    char* extra = obj->extra;
-    int curve;
-    obj->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
-    ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
-    obj->unkF4 = 1;
-    obj->unkF8 = 1;
-    {
-        KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&obj->anim.placementData;
-        curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
-            pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
-    }
-    if (curve != -1)
-    {
-        curve = (int)(*gRomCurveInterface)->getById(curve);
-        if ((u32)curve != 0)
-        {
-            obj->anim.localPosX = *(f32*)(curve + 0x8);
-            obj->anim.localPosZ = *(f32*)(curve + 0x10);
-        }
-    }
-}
-
-void ktrexfloorswitch_spawnEnergyArc(GameObject* obj, f32 scale, int angle)
-{
-    KtrexfloorswitchSpawnEnergyArcState* runtime = (obj)->extra;
-    f32 pos[3];
-    f32 dir[3];
-    if (runtime->boltObj != 0)
-    {
-        mm_free(runtime->boltObj);
-        runtime->boltObj = 0;
-    }
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
-    dir[0] = lbl_803E6898;
-    {
-        f32 fr = angle;
-        fr = fr * runtime->angleScale;
-        dir[1] = -(fr * lbl_803E689C);
-    }
-    dir[2] = scale;
-    vecRotateZXY(&obj->anim.rotX, dir);
-    dir[0] += (obj)->anim.localPosX;
-    dir[1] += (obj)->anim.localPosY;
-    dir[2] += (obj)->anim.localPosZ;
-    runtime->unk8 = (f32)(int)randomGetRange(10, angle);
-    runtime->boltObj = lightningCreateU16Promoted((const Vec3f*)pos, (const Vec3f*)dir, lbl_803E68A0, lbl_803E68A4,
-                                                  angle, 96, 0);
 }
 
 void KT_RexFloorSwitch_update(GameObject* obj)
@@ -454,4 +400,36 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         }
     }
     ((KtrexfloorswitchState*)state)->prevGraceTimer = ((KtrexfloorswitchState*)state)->graceTimer;
+}
+
+void KT_RexFloorSwitch_init(GameObject* obj, char* placement)
+{
+    char* extra = obj->extra;
+    int curve;
+    obj->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
+    ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
+    obj->unkF4 = 1;
+    obj->unkF8 = 1;
+    {
+        KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&obj->anim.placementData;
+        curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(
+            pl->curveX, pl->baseHeight, pl->curveZ, &gKTrexFloorSwitchCurveFindResult, 1, 0);
+    }
+    if (curve != -1)
+    {
+        curve = (int)(*gRomCurveInterface)->getById(curve);
+        if ((u32)curve != 0)
+        {
+            obj->anim.localPosX = *(f32*)(curve + 0x8);
+            obj->anim.localPosZ = *(f32*)(curve + 0x10);
+        }
+    }
+}
+
+void KT_RexFloorSwitch_release(void)
+{
+}
+
+void KT_RexFloorSwitch_initialise(void)
+{
 }
