@@ -22,22 +22,16 @@
 #include "main/object_descriptor.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 gImSpaceThrusterWeightMax = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E478C = -0.2f;
-__declspec(section ".sdata2") f32 lbl_803E4790 = 0.2f;
-__declspec(section ".sdata2") f32 gImSpaceThrusterAlphaToWeightScale = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E4798 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E479C = 0.0f;
-#pragma explicit_zero_data off
+#define IM_SPACE_THRUSTER_WEIGHT_MAX 1.0f
+#define IM_SPACE_THRUSTER_ALPHA_TO_WEIGHT_SCALE 255.0f
 #pragma force_active reset
 
 s16 gImSpaceThrusterKeyframeIndexA[6] = {0x160, 0x161, 0x162, 0x163, 0x165, 0};
 s16 gImSpaceThrusterKeyframeIndexB[6] = {3, 4, 5, 6, 7, 0};
-extern f32 gImSpaceThrusterWeightMax;
-extern f32 gImSpaceThrusterRootMotionScaleKind01, gImSpaceThrusterRootMotionScaleKind23,
-    gImSpaceThrusterRootMotionScaleKind56, gImSpaceThrusterRootMotionScaleKind4;
-extern f32 lbl_803E478C, lbl_803E4790, gImSpaceThrusterAlphaToWeightScale, lbl_803E4798;
+extern f32 gImSpaceThrusterRootMotionScaleKind01;
+extern f32 gImSpaceThrusterRootMotionScaleKind23;
+extern f32 gImSpaceThrusterRootMotionScaleKind56;
+extern f32 gImSpaceThrusterRootMotionScaleKind4;
 static inline ObjModel* getActiveModel(void* obj)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -66,7 +60,7 @@ void imspacethruster_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, gImSpaceThrusterWeightMax);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, IM_SPACE_THRUSTER_WEIGHT_MAX);
 }
 
 void imspacethruster_hitDetect(void)
@@ -90,7 +84,7 @@ void imspacethruster_update(GameObject* obj)
         case IMSPACETHRUSTER_PHASE_OFF:
             if (mode == 1)
             {
-                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
+                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, -0.2f, 0x10);
                 obj->anim.alpha = 0xff;
                 state->phase = IMSPACETHRUSTER_PHASE_ON;
             }
@@ -107,7 +101,7 @@ void imspacethruster_update(GameObject* obj)
         case IMSPACETHRUSTER_PHASE_ON:
             if (mode == 0)
             {
-                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
+                ObjModel_SetBlendChannelTargets(getActiveModel(obj), 0, -1, 0, 0.2f, 0x10);
                 state->blendTimer = 0xb4;
                 obj->anim.alpha = 0xa4;
                 state->phase = IMSPACETHRUSTER_PHASE_FADE_OUT;
@@ -129,14 +123,14 @@ void imspacethruster_update(GameObject* obj)
         }
         if (state->kind < 5)
         {
-            f32 weight = obj->anim.alpha / gImSpaceThrusterAlphaToWeightScale;
-            if (weight > gImSpaceThrusterWeightMax)
+            f32 weight = obj->anim.alpha / IM_SPACE_THRUSTER_ALPHA_TO_WEIGHT_SCALE;
+            if (weight > IM_SPACE_THRUSTER_WEIGHT_MAX)
             {
-                weight = gImSpaceThrusterWeightMax;
+                weight = IM_SPACE_THRUSTER_WEIGHT_MAX;
             }
-            else if (weight < lbl_803E4798)
+            else if (weight < 0.0f)
             {
-                weight = lbl_803E4798;
+                weight = 0.0f;
             }
             ((void (*)(int, f32, int))((void**)*(void**)*(int*)(*(int*)&obj->anim.parent + 0x68))[10])(
                 *(int*)&obj->anim.parent, weight, state->kind);
@@ -190,8 +184,8 @@ void imspacethruster_init(GameObject* obj, u8* placement)
         break;
     }
     model = getActiveModel(obj);
-    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, gImSpaceThrusterWeightMax);
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.0f, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, IM_SPACE_THRUSTER_WEIGHT_MAX);
     {
         u32 kind = state->kind;
         if (kind < 5)

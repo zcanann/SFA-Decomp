@@ -10,7 +10,6 @@ typedef struct DrEnergyDiscState
 } DrEnergyDiscState;
 
 extern int lbl_803DC380;
-extern f32 lbl_803E6BB0;
 
 typedef struct DrenergydiscPlacement
 {

@@ -38,6 +38,8 @@
 #include "main/gamebits.h"
 #include "main/objhits.h"
 
+#define DUSTER_OBJ_MOVE_STEP_SCALE 0.02f
+
 typedef struct DusterSetup
 {
     u8 pad00[0x24];
@@ -101,7 +103,6 @@ extern f32 gDusterObjLaunchVelocityX;
 extern f32 gDusterObjDriftSpinRate;
 extern f32 gDusterObjPickupRangeY;
 extern f32 gDusterObjPickupRangeXZ;
-extern f32 gDusterObjMoveStepScale;
 
 int duster_SeqFn(u8* obj)
 {
@@ -361,7 +362,7 @@ void duster_init(GameObject* obj, u8* params)
     setup = (DusterSetup*)params;
     state = (obj)->extra;
     state->settleTimer = randomGetRange(0, 0x32);
-    state->moveStepScale = gDusterObjMoveStepScale;
+    state->moveStepScale = DUSTER_OBJ_MOVE_STEP_SCALE;
     state->activeGameBit = setup->activeGameBit;
     if (state->activeGameBit >= 0x6fe)
     {
@@ -387,7 +388,3 @@ void duster_init(GameObject* obj, u8* params)
     (obj)->animEventCallback = duster_SeqFn;
 }
 
-__declspec(section ".sdata2") f32 gDusterObjMoveStepScale = 0.02f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E38E4 = 0.0f;
-#pragma explicit_zero_data reset

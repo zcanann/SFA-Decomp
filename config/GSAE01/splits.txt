@@ -1694,7 +1694,7 @@ main/dll/dll_0102_staypoint.c:
 
 main/dll/dll_0118_duster.c:
 	.text       start:0x801804C8 end:0x80180DC8
-	.sdata2     start:0x803E38D8 end:0x803E38E8
+	.sdata2     start:0x803E38D8 end:0x803E38E4
 
 main/dll/dll_0103_curvefish.c:
 	.text       start:0x80180DC8 end:0x801814D0
@@ -2139,7 +2139,8 @@ main/dll/CC/dll_0188_cclightfoot.c:
 	.text       start:0x801AA734 end:0x801AB468
 	.data       start:0x80323408 end:0x803234D8
 	.sbss       start:0x803DDB38 end:0x803DDB40
-	.sdata2     start:0x803E4670 end:0x803E46A8
+	.sdata2     start:0x803E4670 end:0x803E469C
+	.sdata2     start:0x803E46A0 end:0x803E46A8
 
 main/dll/CC/dll_0189_ccsharpclawpad.c:
 	.text       start:0x801AB468 end:0x801AB6F8
@@ -2191,7 +2192,8 @@ main/dll/IM/dll_016E_imanimspacecraft.c:
 main/dll/IM/dll_016F_imspacethruster.c:
 	.text       start:0x801AE508 end:0x801AE984
 	.data       start:0x80323818 end:0x80323868
-	.sdata2     start:0x803E4788 end:0x803E47A8
+	.sdata2     start:0x803E4788 end:0x803E479C
+	.sdata2     start:0x803E47A0 end:0x803E47A8
 
 main/dll/IM/dll_0170_imspacering.c:
 	.text       start:0x801AE984 end:0x801AEAE4
