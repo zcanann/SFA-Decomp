@@ -15,6 +15,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
+register int gRenderReserved asm("r14");
+
 const int lbl_802C18C0[89] = {
     0x4, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE,
     0x10, 0x11, 0x13, 0x15, 0x17, 0x19, 0x1C, 0x1F,
@@ -376,6 +378,7 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
     } frac;
 
     addrB = posA + curB;
+    curB = addrB;
     end = (u32)(dst + 3);
     t = t - floorf(t);
     t = t * lbl_803DE544;
@@ -425,7 +428,12 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
         outPos += 2;
 
         sample = 0;
-        if (hw & 0x10)
+        if ((hw & 0x10) == 0)
+        {
+            sample = 0;
+            goto storeSecond;
+        }
+        else
         {
             u64 nib3;
 
@@ -444,11 +452,15 @@ void fn_80007F78(u8* anim, u16* dst, u16* out)
                     bufB <<= (nib2 & 0xFFFFFFFF);
                 }
                 tp += 2;
-                if (!((u32)h & 0x20))
+                if (((u32)h & 0x20) == 0)
                 {
+                    sample = 0;
                     goto storeSecond;
                 }
-                h = *(u16*)(u32)tp;
+                else
+                {
+                    h = *(u16*)(u32)tp;
+                }
             }
             nib3 = h & 0xf;
             if (nib3 != 0)
