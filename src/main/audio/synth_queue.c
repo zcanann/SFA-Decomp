@@ -217,7 +217,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
     for (i = 0; i < 16; i++)
     {
         nseq->section[i].bpm = bpm;
-        synthSetStudioChannelScale(bpm >> 10, seqId, (u8)i);
+        synthSetStudioChannelScale(bpm >> 10, seqId, i);
         if (arr->masterTrackOffset != 0)
         {
             nseq->section[i].masterTrackBase = (u8*)(arr->masterTrackOffset + (u32)song);
@@ -328,7 +328,7 @@ u32 seqStartPlay(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* par
 /*
  * Advance the master (tempo) track of one sequence section (HandleMasterTrack).
  */
-void fn_8026CF78(int secIndex)
+void fn_8026CF78(u8 secIndex)
 {
     SynthSequenceQueue* section;
 
