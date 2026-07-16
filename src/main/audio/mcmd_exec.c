@@ -606,6 +606,7 @@ void macHandleActive(McmdVoiceState* sv)
     u8* channelDefaults;
     f32 one;
     f32 dlsScaleMax;
+    u32 unused[6];
 
     if (MAC_CFLAGS(sv) & 3)
     {
