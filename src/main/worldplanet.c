@@ -122,160 +122,7 @@ void worldplanet_hitDetect(void)
     return;
 }
 
-void worldplanet_release(void)
-{
-}
-
-void worldplanet_initialise(void)
-{
-}
-
-void worldplanet_init(GameObject* obj)
-{
-    WorldPlanetState* state;
-    int z[2];
-    int layer;
-    int j;
-    int flag;
-
-    state = obj->extra;
-    gWorldPlanetSelectConfirmTimer = 0;
-    mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
-    z[0] = 0;
-    z[1] = z[0];
-    for (; z[1] < WORLDPLANET_PLANET_COUNT; z[1]++)
-    {
-        if (mainGetBit(gWorldPlanetGameBitTable[z[1]]) != 0)
-        {
-            flag = 1;
-            if (gWorldPlanetHintFlagTable[z[1]] != 0)
-            {
-                if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD)
-                {
-                    flag = 0;
-                }
-            }
-            if ((u8)flag != 0)
-            {
-                z[0] |= 1 << z[1];
-            }
-        }
-    }
-    state->unlockedPlanetMask = z[0];
-    if (gWorldPlanetSavedSelection != -1)
-    {
-        state->selectedPlanet = gWorldPlanetSavedSelection;
-    }
-    else
-    {
-        for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++)
-        {
-            if (mainGetBit(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0)
-            {
-                state->selectedPlanet = gWorldPlanetDefaultSelectOrder[j];
-                break;
-            }
-        }
-    }
-    gWorldPlanetExitWarpTimer = 0;
-    setDrawLights(0);
-    audioStopByMask(0xf);
-    Music_Trigger(WORLDPLANET_BOOT_MUSIC_TRIGGER, 1);
-    gWorldPlanetPathProgress = lbl_803E65F8;
-    setShowWorldMapHud(1);
-    gWorldPlanetLoadedMapId = -1;
-    unlockLevel(0, 0, 1);
-    mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
-    layer = getCurMapLayer();
-    (*gMapEventInterface)->savePoint((int)&obj->anim.localPosX, 0, 0, layer);
-    (*gScreenTransitionInterface)->step(0x1e, 1);
-    gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
-    mainSetBits(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
-    state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
-    envFxActFn_800887f8(0);
-}
-
-#pragma peephole on
-void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
-{
-    WorldPlanetState* state = obj->extra;
-    int stickX;
-    int stickY;
-    s8 resX;
-    s8 resY;
-
-    stickX = padGetStickXInt(0);
-    stickY = padGetStickYInt(0);
-    resX = 0;
-    resY = 0;
-    if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)
-    {
-        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            resX = -1;
-            state->stickXRepeatFrames = 0;
-        }
-        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            resX = 1;
-            state->stickXRepeatFrames = 0;
-        }
-        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            resY = -1;
-            state->stickYRepeatFrames = 0;
-        }
-        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            resY = 1;
-            state->stickYRepeatFrames = 0;
-        }
-        state->prevStickY = stickY;
-        if (state->prevStickY < -WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            state->stickYRepeatFrames++;
-        }
-        else if (state->prevStickY > WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            state->stickYRepeatFrames++;
-        }
-        else
-        {
-            state->stickYRepeatFrames = 0;
-        }
-        if (state->stickYRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
-        {
-            state->prevStickY = 0;
-            state->stickYRepeatFrames = 0;
-        }
-        state->prevStickX = stickX;
-        if (state->prevStickX < -WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            state->stickXRepeatFrames++;
-        }
-        else if (state->prevStickX > WORLDPLANET_INPUT_STICK_THRESHOLD)
-        {
-            state->stickXRepeatFrames++;
-        }
-        else
-        {
-            state->stickXRepeatFrames = 0;
-        }
-        if (state->stickXRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
-        {
-            state->prevStickX = 0;
-            state->stickXRepeatFrames = 0;
-        }
-        *(s8*)outX = resX;
-        *(s8*)outY = resY;
-    }
-    else
-    {
-        *outX = 0;
-        *outY = 0;
-    }
-}
-#pragma peephole reset
+void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY);
 
 #pragma opt_lifetimes off
 #pragma opt_loop_invariants off
@@ -654,6 +501,161 @@ void worldplanet_update(GameObject* obj)
 #pragma opt_strength_reduction reset
 #pragma opt_loop_invariants reset
 #pragma opt_lifetimes reset
+
+#pragma peephole on
+void worldplanet_readMapInput(GameObject* obj, u8* outX, u8* outY)
+{
+    WorldPlanetState* state = obj->extra;
+    int stickX;
+    int stickY;
+    s8 resX;
+    s8 resY;
+
+    stickX = padGetStickXInt(0);
+    stickY = padGetStickYInt(0);
+    resX = 0;
+    resY = 0;
+    if (getLoadedFileFlags(WORLDPLANET_SAVE_FILE_SLOT) == 0)
+    {
+        if ((s8)stickX < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            resX = -1;
+            state->stickXRepeatFrames = 0;
+        }
+        if ((s8)stickX > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickX <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            resX = 1;
+            state->stickXRepeatFrames = 0;
+        }
+        if ((s8)stickY < -WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY >= -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            resY = -1;
+            state->stickYRepeatFrames = 0;
+        }
+        if ((s8)stickY > WORLDPLANET_INPUT_STICK_THRESHOLD && state->prevStickY <= WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            resY = 1;
+            state->stickYRepeatFrames = 0;
+        }
+        state->prevStickY = stickY;
+        if (state->prevStickY < -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            state->stickYRepeatFrames++;
+        }
+        else if (state->prevStickY > WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            state->stickYRepeatFrames++;
+        }
+        else
+        {
+            state->stickYRepeatFrames = 0;
+        }
+        if (state->stickYRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
+        {
+            state->prevStickY = 0;
+            state->stickYRepeatFrames = 0;
+        }
+        state->prevStickX = stickX;
+        if (state->prevStickX < -WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            state->stickXRepeatFrames++;
+        }
+        else if (state->prevStickX > WORLDPLANET_INPUT_STICK_THRESHOLD)
+        {
+            state->stickXRepeatFrames++;
+        }
+        else
+        {
+            state->stickXRepeatFrames = 0;
+        }
+        if (state->stickXRepeatFrames > WORLDPLANET_INPUT_REPEAT_FRAMES)
+        {
+            state->prevStickX = 0;
+            state->stickXRepeatFrames = 0;
+        }
+        *(s8*)outX = resX;
+        *(s8*)outY = resY;
+    }
+    else
+    {
+        *outX = 0;
+        *outY = 0;
+    }
+}
+#pragma peephole reset
+
+void worldplanet_init(GameObject* obj)
+{
+    WorldPlanetState* state;
+    int z[2];
+    int layer;
+    int j;
+    int flag;
+
+    state = obj->extra;
+    gWorldPlanetSelectConfirmTimer = 0;
+    mainSetBits(WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, 1);
+    z[0] = 0;
+    z[1] = z[0];
+    for (; z[1] < WORLDPLANET_PLANET_COUNT; z[1]++)
+    {
+        if (mainGetBit(gWorldPlanetGameBitTable[z[1]]) != 0)
+        {
+            flag = 1;
+            if (gWorldPlanetHintFlagTable[z[1]] != 0)
+            {
+                if ((s32)getNextTaskHintText() > WORLDPLANET_HINT_UNLOCK_THRESHOLD)
+                {
+                    flag = 0;
+                }
+            }
+            if ((u8)flag != 0)
+            {
+                z[0] |= 1 << z[1];
+            }
+        }
+    }
+    state->unlockedPlanetMask = z[0];
+    if (gWorldPlanetSavedSelection != -1)
+    {
+        state->selectedPlanet = gWorldPlanetSavedSelection;
+    }
+    else
+    {
+        for (j = 0; j < WORLDPLANET_PLANET_COUNT; j++)
+        {
+            if (mainGetBit(gWorldPlanetGameBitTable[gWorldPlanetDefaultSelectOrder[j]]) != 0)
+            {
+                state->selectedPlanet = gWorldPlanetDefaultSelectOrder[j];
+                break;
+            }
+        }
+    }
+    gWorldPlanetExitWarpTimer = 0;
+    setDrawLights(0);
+    audioStopByMask(0xf);
+    Music_Trigger(WORLDPLANET_BOOT_MUSIC_TRIGGER, 1);
+    gWorldPlanetPathProgress = lbl_803E65F8;
+    setShowWorldMapHud(1);
+    gWorldPlanetLoadedMapId = -1;
+    unlockLevel(0, 0, 1);
+    mapUnload(WORLDPLANET_MAIN_MAP_ID, WORLDPLANET_MAP_PRELOAD_FLAG);
+    layer = getCurMapLayer();
+    (*gMapEventInterface)->savePoint((int)&obj->anim.localPosX, 0, 0, layer);
+    (*gScreenTransitionInterface)->step(0x1e, 1);
+    gWorldPlanetInputLockTimer = WORLDPLANET_COUNTDOWN_FRAMES;
+    mainSetBits(gWorldPlanetGameBitTable[WORLDPLANET_SLOT_DINOSAUR_PLANET], 1);
+    state->foxSpawnTimer = WORLDPLANET_FOX_SPAWN_INITIAL_FRAMES;
+    envFxActFn_800887f8(0);
+}
+
+void worldplanet_release(void)
+{
+}
+
+void worldplanet_initialise(void)
+{
+}
 
 /* Per-WorldPlanetSlot parameter table. Columns are WorldPlanetSlot 0..4
  * (Walled City / CloudRunner / Dinosaur / Dragon Rock / DarkIce). Declared
