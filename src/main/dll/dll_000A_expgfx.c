@@ -211,6 +211,9 @@ extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
 extern void fn_8007D670(void);
+#define setupAlphaTextureTev fn_80079180
+#define setupExpgfxRenderState fn_8007D670
+#define applyDepthModeOverrideViewport fn_8000F83C
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
 extern const f32 lbl_803DF350;
@@ -1973,7 +1976,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 sx, sy, sz;
     f32 scaleFactor;
     u32 texture;
-    void* viewMatrix;
+    MtxPtr viewMatrix;
     f32 sinA, cosA;
     u32 behaviorFlags;
     f32 sinC, cosC;
@@ -1981,10 +1984,11 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 cC, sC, cB, sB, cA, ay_cosB, sA, pz_sinB;
     f32 px, nx, py, pz, ny;
     f32 aimDelta[3];
-    s16* vtxStream;
+    ExpgfxQuadVertex* quad;
+    ExpgfxQuadVertex* vertexStream;
     int vertexIndex;
     f32 viewProjW;
-    int dummy;
+    int hudHiddenFrameCount;
     u32* activeMasks;
     int alphaMode;
     int blendMode;
@@ -1992,12 +1996,12 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     int zCompLoc;
     u32 currentTexture;
     int trackedFlags;
-    void* dstBuf;
-    dstBuf = getCache();
+    ExpgfxSlot* cachedSlots;
+    cachedSlots = getCache();
     trackedFlags = 0;
-    dummy = getHudHiddenFrameCount();
+    hudHiddenFrameCount = getHudHiddenFrameCount();
     Camera_GetProjectionMatrix();
-    copyToCache(dstBuf, (void*)slotPoolBase, EXPGFX_POOL_CACHE_LINE_COUNT);
+    copyToCache(cachedSlots, (void*)slotPoolBase, EXPGFX_POOL_CACHE_LINE_COUNT);
 
     GXClearVtxDesc();
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -2008,10 +2012,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     GXSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetNumChans(1);
     GXSetCullMode(GX_CULL_NONE);
-    viewMatrix = Camera_GetViewMatrix();
-    GXLoadPosMtxImm((void*)viewMatrix, GX_PNMTX0);
-    PSMTXCopy((void*)viewMatrix, lbl_803967C0);
-    fn_8007D670();
+    viewMatrix = (MtxPtr)Camera_GetViewMatrix();
+    GXLoadPosMtxImm(viewMatrix, GX_PNMTX0);
+    PSMTXCopy(viewMatrix, lbl_803967C0);
+    setupExpgfxRenderState();
     _gxSetFogParams();
     if ((short)renderModeSetOrGet(-1) == 1)
     {
@@ -2026,13 +2030,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     currentTexture = 0;
     cacheQueueWait(0);
 
-    slot = (ExpgfxSlot*)((char*)dstBuf - EXPGFX_SLOT_SIZE);
+    slot = cachedSlots - 1;
     slotIndex = 0;
     activeMasks = &gExpgfxSlotActiveMasks[poolIndex];
     tabBase = gExpgfxTableEntries;
     do
     {
-        slot = (ExpgfxSlot*)((char*)slot + EXPGFX_SLOT_SIZE);
+        slot++;
         tabEntry = &tabBase[((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK];
         sourceObject = (ExpgfxSourceObject*)tabEntry->sourceId;
         texture = tabEntry->resource;
@@ -2134,7 +2138,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sy = slot->renderY;
         sz = slot->renderZ;
         scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
-        if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
+        if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && hudHiddenFrameCount == 0)
         {
             f32 base = lbl_803DF358 * scaleSize;
             f32 rnd = (f32)(s32)randomGetRange(1, 10);
@@ -2219,7 +2223,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 if ((s8)alphaMode != 0)
                 {
                     textureSetupFn_800799c0();
-                    fn_80079180();
+                    setupAlphaTextureTev();
                     textRenderSetupFn_80079804();
                     alphaMode = 0;
                 }
@@ -2269,7 +2273,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 if ((s8)zMode != 1)
                 {
-                    fn_8000F83C();
+                    applyDepthModeOverrideViewport();
                     gxSetZMode_(1, 3, 0);
                     zMode = 1;
                 }
@@ -2297,13 +2301,14 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
 
         sx -= playerMapOffsetX;
         sz -= playerMapOffsetZ;
-        vtxStream = (s16*)slot;
+        quad = (ExpgfxQuadVertex*)slot;
+        vertexStream = quad;
         GXBegin(GX_QUADS, GX_VTXFMT4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
-            px = scaleFactor * __OSs16tof32(&vtxStream[0]);
-            py = scaleFactor * __OSs16tof32(&vtxStream[1]);
-            pz = scaleFactor * __OSs16tof32(&vtxStream[2]);
+            px = scaleFactor * __OSs16tof32(&vertexStream->x);
+            py = scaleFactor * __OSs16tof32(&vertexStream->y);
+            pz = scaleFactor * __OSs16tof32(&vertexStream->z);
             if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
             {
                 cC = cosC;
@@ -2332,8 +2337,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 worldY = sy + (py * sB + (-pz) * cB);
                 worldZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
             }
-            viewProjW = ((f32*)viewMatrix)[8] * worldX + ((f32*)viewMatrix)[9] * worldY + ((f32*)viewMatrix)[10] * worldZ +
-                        ((f32*)viewMatrix)[11];
+            viewProjW = viewMatrix[2][0] * worldX + viewMatrix[2][1] * worldY + viewMatrix[2][2] * worldZ +
+                        viewMatrix[2][3];
             if (viewProjW > lbl_803DB790)
             {
                 alpha = (int)((f32)(s32)alpha * ((-viewProjW) - lbl_803DF414) / ((-lbl_803DB790) - lbl_803DF414));
@@ -2345,9 +2350,9 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                 u8 colorR;
                 u8 colorG;
                 u8 colorB;
-                colorB = ((u8*)slot)[14];
-                colorG = ((u8*)slot)[13];
-                colorR = ((u8*)slot)[12];
+                colorB = quad->colorB;
+                colorG = quad->colorG;
+                colorR = quad->colorR;
                 GXWGFifo.u8 = colorR;
                 GXWGFifo.u8 = colorG;
                 GXWGFifo.u8 = colorB;
@@ -2356,12 +2361,12 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             {
                 s16 texU;
                 s16 texV;
-                texV = vtxStream[5];
-                texU = vtxStream[4];
+                texV = vertexStream->texT;
+                texU = vertexStream->texS;
                 GXWGFifo.s16 = texU;
                 GXWGFifo.s16 = texV;
             }
-            vtxStream += 8;
+            vertexStream++;
         }
 
     next_slot:
