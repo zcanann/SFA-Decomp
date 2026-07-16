@@ -48,7 +48,6 @@ extern f32 gScreenTransitionHoldTimer;
 extern u8 gScreenTransitionType;
 extern u8 gScreenTransitionDelay;
 
-#pragma scheduling off
 #pragma peephole off
 
 void screenTransitionFn_800d7b04(int duration, int type)
@@ -98,7 +97,6 @@ void screenTransition_fadeOut(int duration, int type)
 #pragma opt_common_subs reset
 
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
