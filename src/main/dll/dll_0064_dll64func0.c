@@ -3,7 +3,7 @@
  *
  * dll_64_func03 builds a fixed nine-command Modgfx effect description on
  * the stack (the GfxCmd entries[] table, each a textured billboard layer
- * read out of the lbl_80312D18 model-data blob) and submits it through
+ * read out of the effect's model-data blob) and submits it through
  * gModgfxInterface->spawnEffect. The overall effect scale tracks the
  * source object's placement byte at offset 0x1a; when bit 0 of the caller
  * flags requests world placement the base position is taken from either
@@ -22,16 +22,14 @@
 
 
 extern u8 lbl_80312D18[];
-__declspec(section ".sdata2") f32 lbl_803E0908 = 0.75f;
-__declspec(section ".sdata2") f32 lbl_803E090C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E0910 = 0.45f;
-__declspec(section ".sdata2") f32 lbl_803E0914 = 0.6f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0918 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E091C = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E0920 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E0924 = 0.1f;
+
+#define DLL64_PRIMARY_COMMAND_XZ 0.75f
+#define DLL64_UNIT_SCALE         1.0f
+#define DLL64_SECONDARY_XZ       0.45f
+#define DLL64_SECONDARY_Y        0.6f
+#define DLL64_COMMAND_LENGTH     200.0f
+#define DLL64_COMMAND_DEPTH      20.0f
+#define DLL64_PLACEMENT_SCALE    0.1f
 
 void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -47,81 +45,81 @@ void dll_64_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     buf.entries[0].flags = 7;
     buf.entries[0].tex = &base[0xf0];
     buf.entries[0].mode = 2;
-    buf.entries[0].x = lbl_803E0908;
-    buf.entries[0].y = lbl_803E090C;
-    buf.entries[0].z = lbl_803E0908;
+    buf.entries[0].x = DLL64_PRIMARY_COMMAND_XZ;
+    buf.entries[0].y = DLL64_UNIT_SCALE;
+    buf.entries[0].z = DLL64_PRIMARY_COMMAND_XZ;
     buf.entries[1].layer = 0;
     buf.entries[1].flags = 7;
     buf.entries[1].tex = &base[0x100];
     buf.entries[1].mode = 2;
-    buf.entries[1].x = lbl_803E0910;
-    buf.entries[1].y = lbl_803E0914;
-    buf.entries[1].z = lbl_803E0910;
+    buf.entries[1].x = DLL64_SECONDARY_XZ;
+    buf.entries[1].y = DLL64_SECONDARY_Y;
+    buf.entries[1].z = DLL64_SECONDARY_XZ;
     buf.entries[2].layer = 0;
     buf.entries[2].flags = 0xe;
     buf.entries[2].tex = &base[0xd4];
     buf.entries[2].mode = 4;
-    buf.entries[2].x = lbl_803E0918;
-    buf.entries[2].y = lbl_803E0918;
-    buf.entries[2].z = lbl_803E0918;
+    buf.entries[2].x = 0.0f;
+    buf.entries[2].y = 0.0f;
+    buf.entries[2].z = 0.0f;
     buf.entries[3].layer = 1;
     buf.entries[3].flags = 7;
     buf.entries[3].tex = &base[0x100];
     buf.entries[3].mode = 4;
-    buf.entries[3].x = lbl_803E091C;
-    buf.entries[3].y = lbl_803E0918;
-    buf.entries[3].z = lbl_803E0918;
+    buf.entries[3].x = DLL64_COMMAND_LENGTH;
+    buf.entries[3].y = 0.0f;
+    buf.entries[3].z = 0.0f;
     buf.entries[4].layer = 1;
     buf.entries[4].flags = 0xe;
     buf.entries[4].tex = &base[0xd4];
     buf.entries[4].mode = 0x100;
-    buf.entries[4].x = lbl_803E0918;
-    buf.entries[4].y = lbl_803E0918;
-    buf.entries[4].z = lbl_803E0920;
+    buf.entries[4].x = 0.0f;
+    buf.entries[4].y = 0.0f;
+    buf.entries[4].z = DLL64_COMMAND_DEPTH;
     buf.entries[5].layer = 2;
     buf.entries[5].flags = 0xe;
     buf.entries[5].tex = &base[0xd4];
     buf.entries[5].mode = 0x100;
-    buf.entries[5].x = lbl_803E0918;
-    buf.entries[5].y = lbl_803E0918;
-    buf.entries[5].z = lbl_803E0920;
+    buf.entries[5].x = 0.0f;
+    buf.entries[5].y = 0.0f;
+    buf.entries[5].z = DLL64_COMMAND_DEPTH;
     buf.entries[6].layer = 3;
     buf.entries[6].flags = 1;
     buf.entries[6].tex = 0;
     buf.entries[6].mode = 0x2000;
-    buf.entries[6].x = lbl_803E0918;
-    buf.entries[6].y = lbl_803E0918;
-    buf.entries[6].z = lbl_803E0918;
+    buf.entries[6].x = 0.0f;
+    buf.entries[6].y = 0.0f;
+    buf.entries[6].z = 0.0f;
     buf.entries[7].layer = 4;
     buf.entries[7].flags = 7;
     buf.entries[7].tex = &base[0x100];
     buf.entries[7].mode = 4;
-    buf.entries[7].x = lbl_803E0918;
-    buf.entries[7].y = lbl_803E0918;
-    buf.entries[7].z = lbl_803E0918;
+    buf.entries[7].x = 0.0f;
+    buf.entries[7].y = 0.0f;
+    buf.entries[7].z = 0.0f;
     buf.entries[8].layer = 4;
     buf.entries[8].flags = 0xe;
     buf.entries[8].tex = &base[0xd4];
     buf.entries[8].mode = 0x100;
-    buf.entries[8].x = lbl_803E0918;
-    buf.entries[8].y = lbl_803E0918;
-    buf.entries[8].z = lbl_803E0920;
+    buf.entries[8].x = 0.0f;
+    buf.entries[8].y = 0.0f;
+    buf.entries[8].z = DLL64_COMMAND_DEPTH;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0918;
-    buf.pos[1] = lbl_803E0918;
-    buf.pos[2] = lbl_803E0918;
-    buf.col[0] = lbl_803E0918;
-    buf.col[1] = lbl_803E0918;
-    buf.col[2] = lbl_803E0918;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
     if (flag != 0)
     {
-        buf.scale = lbl_803E0924 * flag;
+        buf.scale = DLL64_PLACEMENT_SCALE * flag;
     }
     else
     {
-        buf.scale = lbl_803E090C;
+        buf.scale = DLL64_UNIT_SCALE;
     }
     buf.v40 = 1;
     buf.v3c = 0;

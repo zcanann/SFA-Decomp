@@ -11,20 +11,10 @@
 
 CameraModeStaticState* lbl_803DD558;
 
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 gCamDebugOrbitRadiusInit = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E1874 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E1878 = 100000.0f;
-__declspec(section ".sdata2") f32 lbl_803E187C = 0.0f;
-#pragma explicit_zero_data off
-#pragma force_active reset
-
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMSTATIC_CAMMODE_DEFAULT 0x42
 
 extern CameraModeStaticState* lbl_803DD558;
-extern f32 lbl_803E1878;
 
 #pragma dont_inline on
 void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
@@ -32,15 +22,15 @@ void* fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
     int* list;
     int i;
     void* best;
-    double bestDist;
+    f32 bestDist;
     int count;
     int* obj;
     int* tmpList;
     f32 dx, dy, dz;
     f32 yy;
-    double dist;
+    f32 dist;
 
-    bestDist = lbl_803E1878;
+    bestDist = 100000.0f;
     best = NULL;
     tmpList = (int*)ObjGroup_GetObjects(7, &count);
     for (i = 0, list = tmpList; i < count; i++)

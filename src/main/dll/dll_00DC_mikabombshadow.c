@@ -13,18 +13,12 @@
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
 
-__declspec(section ".sdata2") f32 lbl_803E31C0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E31C4 = 4.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E31C8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 gMikaBombGravityAccel = 0.01f;
-__declspec(section ".sdata2") f32 gMikaBombMinFallVelocity = -2.5f;
-__declspec(section ".sdata2") f32 lbl_803E31D4 = -1.0f;
-__declspec(section ".sdata2") f32 lbl_803E31D8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E31DC = 14.0f;
-__declspec(section ".sdata2") f32 lbl_803E31E0 = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E31E4 = 16384.0f;
+const f32 lbl_803E31C0 = 1.0f;
+const f32 lbl_803E31C4 = 4.0f;
+const f32 lbl_803E31C8 = 0.0f;
+const f32 gMikaBombGravityAccel = 0.01f;
+const f32 gMikaBombMinFallVelocity = -2.5f;
+const f32 lbl_803E31D4 = -1.0f;
 extern int fn_80065684(int a, f32 b, f32 val, f32 d, f32* out, int e);
 
 int MikaBombShadow_getExtraSize(void)
@@ -59,18 +53,19 @@ void MikaBombShadow_hitDetect(void)
 void MikaBombShadow_update(int* obj)
 {
     int* owner;
-    f32 fz = lbl_803E31D8;
+    f32 fz = 1.0f;
     f32 scaleFactor;
     f32 alpha;
 
     owner = ((GameObject*)obj)->ownerObj;
     scaleFactor = fz - (((GameObject*)owner)->anim.localPosY - ((GameObject*)obj)->anim.localPosY) /
                            *(f32*)((GameObject*)obj)->extra;
-    ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31DC * scaleFactor + fz;
-    alpha = scaleFactor * lbl_803E31E0;
+    ((GameObject*)obj)->anim.modelState->shadowScale = 14.0f * scaleFactor + fz;
+    alpha = scaleFactor;
+    alpha *= 1.5f;
     if (alpha > fz)
         alpha = fz;
-    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = lbl_803E31E4 * alpha;
+    ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 16384.0f * alpha;
 }
 
 void MikaBombShadow_init(int* obj)
@@ -88,7 +83,7 @@ void MikaBombShadow_init(int* obj)
     *(f32*)state = out;
     ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - out;
     ((GameObject*)obj)->anim.modelState->shadowAlphaStep = 0;
-    ((GameObject*)obj)->anim.modelState->shadowScale = lbl_803E31D8;
+    ((GameObject*)obj)->anim.modelState->shadowScale = 1.0f;
 }
 
 void MikaBombShadow_release(void)

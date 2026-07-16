@@ -994,13 +994,13 @@ main/dll/dll_0044_cameramodeviewfinder.c:
 
 main/dll/dll_0046_cameramodedebug.c:
 	.text       start:0x80109748 end:0x80109B04
-	.sbss       start:0x803DD550 end:0x803DD558
-	.sdata2     start:0x803E1868 end:0x803E1870
+	.sbss       start:0x803DD550 end:0x803DD554
+	.sdata2     start:0x803E1868 end:0x803E1874
 
 main/dll/dll_0048_cameramodestatic.c:
 	.text       start:0x80109B04 end:0x8010A104
-	.sbss       start:0x803DD558 end:0x803DD560
-	.sdata2     start:0x803E1870 end:0x803E1888
+	.sbss       start:0x803DD558 end:0x803DD55C
+	.sdata2     start:0x803E1878 end:0x803E1888
 
 main/dll/dll_8010a104.c:
 	.text       start:0x8010A104 end:0x8010A590

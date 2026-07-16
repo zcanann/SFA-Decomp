@@ -13,15 +13,6 @@
 #include "main/object_render_legacy.h"
 #include "main/frame_timing.h"
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E31F8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E31FC = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E3200 = 1800.0f;
-__declspec(section ".sdata2") f32 lbl_803E3204 = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E3208 = 64.0f;
-__declspec(section ".sdata2") f32 lbl_803E320C = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E3210 = 0.015625f;
-#pragma explicit_zero_data off
 int GCbaddieShield_getExtraSize(void)
 {
     return 0x8;
@@ -43,7 +34,7 @@ void GCbaddieShield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (((GameObject*)obj)->unkF4)
         {
         case 0:
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E31F8);
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
             break;
         default:
             break;
@@ -59,16 +50,17 @@ void GCbaddieShield_update(int* obj)
 {
     f32* state = ((GameObject*)obj)->extra;
     state[0] = state[0] - timeDelta;
-    if (state[0] <= lbl_803E31FC)
+    if (state[0] <= 0.0f)
     {
         Obj_FreeObject((GameObject*)obj);
         return;
     }
-    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)(lbl_803E3200 * timeDelta));
-    ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + (s32)(lbl_803E3204 * timeDelta));
-    if (state[0] <= lbl_803E3208)
+    ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX + (s32)(1800.0f * timeDelta));
+    ((GameObject*)obj)->anim.rotZ = (s16)(((GameObject*)obj)->anim.rotZ + (s32)(200.0f * timeDelta));
+    if (state[0] <= 64.0f)
     {
-        ((GameObject*)obj)->anim.alpha = (u8)(s32)(lbl_803E320C * (state[0] * lbl_803E3210));
+        f32 fadeScale = 0.015625f;
+        ((GameObject*)obj)->anim.alpha = (u8)(s32)(255.0f * (state[0] * fadeScale));
     }
     else
     {

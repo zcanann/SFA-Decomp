@@ -33,7 +33,6 @@ extern f32 gCamDebugOrbitRadiusMin;
 extern f32 gCamDebugOrbitRadiusMax;
 extern f32 gCamDebugPi;
 extern f32 gCamDebugAngleUnitScale;
-extern f32 gCamDebugOrbitRadiusInit;
 extern u32 getButtonsHeld(int port);
 extern u8 padGetCX(int port);
 extern u8 padGetCY(int port);
@@ -132,7 +131,7 @@ void CameraModeDebug_init(void)
     {
         gCamDebugState = (CameraModeDebugState*)mmAlloc(sizeof(CameraModeDebugState), 0xf, 0);
     }
-    gCamDebugState->orbitRadius = gCamDebugOrbitRadiusInit;
+    gCamDebugState->orbitRadius = 50.0f;
     gCamDebugState->radiusVelocity = lbl_803E1840;
     return;
 }
