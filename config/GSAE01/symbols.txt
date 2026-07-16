@@ -21404,7 +21404,6 @@ lbl_803E41C4 = .sdata2:0x803E41C4; // type:object size:0x4 align:4 data:float
 gWindLiftHeightByteScale = .sdata2:0x803E41C8; // type:object size:0x4 align:4 data:float
 gWindLiftDefaultHeight = .sdata2:0x803E41CC; // type:object size:0x4 align:4 data:float
 lbl_803E41D0 = .sdata2:0x803E41D0; // type:object size:0x4 align:4 data:float
-lbl_803E41D4 = .sdata2:0x803E41D4; // type:object size:0x4 align:4 data:float
 gCfMainCrystalPylonBeamY = .sdata2:0x803E41D8; // type:object size:0x4 align:4 data:float
 lbl_803E41DC = .sdata2:0x803E41DC; // type:object size:0x4 align:4 data:float
 lbl_803E41E0 = .sdata2:0x803E41E0; // type:object size:0x4 align:4 data:float

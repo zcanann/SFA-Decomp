@@ -15,6 +15,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/dll/player_motion.h"
 #include "main/gamebits.h"
 #include "main/audio/music_trigger_ids.h"
@@ -31,6 +32,8 @@
 #define CFWINDLIFT_OBJFLAG_PARENT_SLACK 0x1000
 
 #define WINDLIFT_SLOTS 14 /* max tracked lift slots */
+#define WINDLIFT_HEIGHT_BYTE_SCALE 4.0f
+#define WINDLIFT_DEFAULT_HEIGHT    90.0f
 
 /* WindLiftSlot.phaseFlags bits */
 #define WLSLOT_RISING   0x1  /* rise force active this frame */
@@ -58,8 +61,6 @@ typedef struct
     u8 _f2 : 6;
 } WindLiftSub;
 
-extern f32 gWindLiftHeightByteScale;
-extern f32 gWindLiftDefaultHeight;
 extern f32 lbl_803E4190;
 extern const f32 lbl_803E416C;
 extern u8 gWindLiftSeqDurationTable[];
@@ -503,14 +504,14 @@ void WindLift_init(int* obj, u8* def)
     sub->timer = 0;
     if (((WindliftObjectDef*)def)->heightByte != 0)
     {
-        sub->liftHeight = gWindLiftHeightByteScale * (f32)((WindliftObjectDef*)def)->heightByte;
+        sub->liftHeight = WINDLIFT_HEIGHT_BYTE_SCALE * (f32)((WindliftObjectDef*)def)->heightByte;
     }
     else
     {
-        sub->liftHeight = gWindLiftDefaultHeight;
+        sub->liftHeight = WINDLIFT_DEFAULT_HEIGHT;
     }
     ((GameObject*)obj)->anim.rootMotionScale =
-        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / gWindLiftDefaultHeight;
+        (*(f32*)(*(char**)&((GameObject*)obj)->anim.modelInstance + 4) * sub->liftHeight) / WINDLIFT_DEFAULT_HEIGHT;
     /* skip the rise-in ramp after the convergence cutscene (0x57)
        or for long lifts */
     if (mainGetBit(GAMEBIT_CF_PowerOn) != 0 || sub->duration >= 0xa)
@@ -558,61 +559,33 @@ u8 gWindLiftSeqDurationTable[] = {
     0x00, 0x00, 0x00, 0x58, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x59, 0x00, 0x00, 0x00, 0x02,
     0x00, 0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x0A, 0xD7, 0x00, 0x00, 0x00, 0x04,
 };
-
 u8 gWindLiftSeqGamebitTable[] = {
     0x00, 0x00, 0x0A, 0x94, 0x00, 0x00, 0x00, 0x95, 0x00, 0x00, 0x0A, 0x98,
     0x00, 0x00, 0x00, 0x95, 0x00, 0x00, 0x0A, 0x99, 0x00, 0x00, 0x00, 0x95,
 };
 
-/* descriptor/ptr table auto 0x80322a80-0x80322b28 */
-u32 gWindLiftObjDescriptor[14] = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00090000,
-                                  (u32)WindLift_initialise,
-                                  (u32)WindLift_release,
-                                  0x00000000,
-                                  (u32)WindLift_init,
-                                  (u32)WindLift_update,
-                                  (u32)WindLift_hitDetect,
-                                  (u32)WindLift_render,
-                                  (u32)WindLift_free,
-                                  (u32)WindLift_getObjectTypeId,
-                                  (u32)WindLift_getExtraSize};
-u32 gCFPowerBaseObjDescriptor[14] = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x00090000,
-                                     (u32)CFPowerBase_initialise,
-                                     (u32)CFPowerBase_release,
-                                     0x00000000,
-                                     (u32)CFPowerBase_init,
-                                     (u32)CFPowerBase_update,
-                                     (u32)CFPowerBase_hitDetect,
-                                     (u32)CFPowerBase_render,
-                                     (u32)CFPowerBase_free,
-                                     (u32)CFPowerBase_getObjectTypeId,
-                                     (u32)CFPowerBase_getExtraSize};
-u32 gCFMainCrystalObjDescriptor[14] = {0x00000000,
-                                       0x00000000,
-                                       0x00000000,
-                                       0x00090000,
-                                       (u32)CFMainCrystal_initialise,
-                                       (u32)CFMainCrystal_release,
-                                       0x00000000,
-                                       (u32)CFMainCrystal_init,
-                                       (u32)CFMainCrystal_update,
-                                       (u32)CFMainCrystal_hitDetect,
-                                       (u32)CFMainCrystal_render,
-                                       (u32)CFMainCrystal_free,
-                                       (u32)CFMainCrystal_getObjectTypeId,
-                                       (u32)CFMainCrystal_getExtraSize};
-
-#pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 gWindLiftHeightByteScale = 4.0f;
-__declspec(section ".sdata2") f32 gWindLiftDefaultHeight = 90.0f;
-__declspec(section ".sdata2") f32 lbl_803E41D0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E41D4 = 0.0f;
-#pragma explicit_zero_data off
-#pragma force_active reset
+/* Object descriptors exported by this DLL bundle. */
+ObjectDescriptor gWindLiftObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WindLift_initialise, (ObjectDescriptorCallback)WindLift_release, 0,
+    (ObjectDescriptorCallback)WindLift_init, (ObjectDescriptorCallback)WindLift_update,
+    (ObjectDescriptorCallback)WindLift_hitDetect, (ObjectDescriptorCallback)WindLift_render,
+    (ObjectDescriptorCallback)WindLift_free, (ObjectDescriptorCallback)WindLift_getObjectTypeId,
+    WindLift_getExtraSize,
+};
+ObjectDescriptor gCFPowerBaseObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFPowerBase_initialise, (ObjectDescriptorCallback)CFPowerBase_release, 0,
+    (ObjectDescriptorCallback)CFPowerBase_init, (ObjectDescriptorCallback)CFPowerBase_update,
+    (ObjectDescriptorCallback)CFPowerBase_hitDetect, (ObjectDescriptorCallback)CFPowerBase_render,
+    (ObjectDescriptorCallback)CFPowerBase_free, (ObjectDescriptorCallback)CFPowerBase_getObjectTypeId,
+    CFPowerBase_getExtraSize,
+};
+ObjectDescriptor gCFMainCrystalObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFMainCrystal_initialise, (ObjectDescriptorCallback)CFMainCrystal_release, 0,
+    (ObjectDescriptorCallback)CFMainCrystal_init, (ObjectDescriptorCallback)CFMainCrystal_update,
+    (ObjectDescriptorCallback)CFMainCrystal_hitDetect, (ObjectDescriptorCallback)CFMainCrystal_render,
+    (ObjectDescriptorCallback)CFMainCrystal_free, (ObjectDescriptorCallback)CFMainCrystal_getObjectTypeId,
+    CFMainCrystal_getExtraSize,
+};

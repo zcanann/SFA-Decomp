@@ -25,7 +25,7 @@ typedef struct WindliftObjectDef
     f32 posZ; /* 0x10 */
     u8 pad14[0x18 - 0x14];
     s8 unk18;
-    s8 heightByte;    /* 0x19: lift height in gWindLiftHeightByteScale units (0 = default) */
+    s8 heightByte;    /* 0x19: lift height in 4-unit increments (0 = default) */
     s16 pullStrength; /* 0x1A */
     s16 delay;
     s16 seqId;

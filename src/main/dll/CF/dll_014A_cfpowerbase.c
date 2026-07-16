@@ -46,9 +46,6 @@ enum
 /* trigger-sequence progress past which pylon messages are answered */
 #define CFPOWERBASE_SEQ_READY 175
 
-extern f32 lbl_803E41D0;
-
-
 int CFPowerBase_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     CfPowerBaseState* sub = (obj)->extra;
@@ -120,7 +117,7 @@ void CFPowerBase_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E41D0);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void CFPowerBase_hitDetect(void)
