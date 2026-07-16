@@ -1009,6 +1009,7 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
 {
     float* contact;
     int countB;
+    ObjHitsPriorityState* stateA;
     ObjHitsPriorityState* stateB;
     ObjHitsPriorityState* stateSrc;
     float* cw;
@@ -1040,7 +1041,6 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     int i;
     int j;
     int k;
-    ObjHitsPriorityState* stateA;
     int hit;
     int idxA;
     ObjHitsPriorityState* react;
@@ -1090,9 +1090,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     u8 volA0[24];
 
     result = 0;
-    stateA = ObjAnim_GetPriorityHitState((ObjAnimComponent*)objA);
-    stateB = ObjAnim_GetPriorityHitState((ObjAnimComponent*)objB);
-    stateSrc = ObjAnim_GetPriorityHitState((ObjAnimComponent*)srcObj);
+    stateA = (ObjHitsPriorityState*)((ObjAnimComponent*)objA)->hitReactState;
+    stateB = (ObjHitsPriorityState*)((ObjAnimComponent*)objB)->hitReactState;
+    stateSrc = (ObjHitsPriorityState*)((ObjAnimComponent*)srcObj)->hitReactState;
     if ((stateSrc->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) &&
         (*(s8*)&stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0))
     {
