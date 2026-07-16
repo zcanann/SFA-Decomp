@@ -4,6 +4,8 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+struct GameObject;
+
 /* Per-object extra state for the SB_Galleon boss (SB_Galleon_getExtraSize ==
  * 0xB4). Shared by the SB_Galleon handlers in DBstealerworm.c and the
  * protection-spirit phase handlers in DBprotection.c (fn_801DFA28,
@@ -32,7 +34,7 @@ typedef struct SBGalleonState {
     f32 swayY;       /* 0x3c */
     f32 swayZ;       /* 0x40 */
     f32 moveScale;   /* 0x44 */
-    u8 *targetObj;   /* 0x48 */
+    struct GameObject *targetObj; /* 0x48: flight target (the Tricky object) */
     int linkedActor; /* 0x4c: 0xf7-type object found on msg case 3 */
     f32 homeX;       /* 0x50 */
     f32 homeY;       /* 0x54 */

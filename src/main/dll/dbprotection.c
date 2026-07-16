@@ -140,7 +140,7 @@ extern f32 lbl_803E57B0;
 extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
-extern void fn_801EED5C(int obj, f32* x, f32* y, f32* z);
+extern void fn_801EED5C(GameObject* obj, f32* x, f32* y, f32* z);
 extern u32 sbGetPropeller(void);
 
 
@@ -166,14 +166,14 @@ ObjectDescriptor15 gSB_GalleonObjDescriptor = {
     (ObjectDescriptorCallback)SB_Galleon_func0E,
 };
 
-void fn_801DFA28(u8* obj)
+void fn_801DFA28(GameObject* obj)
 {
     int spawnData;
-    u8* state;
-    u8* tricky;
+    SBGalleonState* state;
+    GameObject* tricky;
     GameObject** objects;
     int sfxObj;
-    u8* otherObj;
+    GameObject* otherObj;
     s8 c;
     int t;
     int nextState;
@@ -209,29 +209,28 @@ void fn_801DFA28(u8* obj)
     int objCount;
     f32 camShake;
 
-    spawnData = *(int*)&((GameObject*)obj)->anim.placementData;
-    state = ((GameObject*)obj)->extra;
+    spawnData = *(int*)&obj->anim.placementData;
+    state = obj->extra;
     camShake = lbl_803E56C8;
-    ((GameObject*)obj)->anim.mapEventSlot = -1;
-    if ((*(void**)&((SBGalleonState*)state)->targetObj != NULL) &&
-        ((*(s16*)(((SBGalleonState*)state)->targetObj + 6) & 0x40) != 0))
+    obj->anim.mapEventSlot = -1;
+    if ((state->targetObj != NULL) && ((state->targetObj->anim.flags & 0x40) != 0))
     {
-        ((SBGalleonState*)state)->targetObj = NULL;
+        state->targetObj = NULL;
     }
-    if (*(void**)&((SBGalleonState*)state)->targetObj == NULL)
+    if (state->targetObj == NULL)
     {
         objects = ObjList_GetObjects(&objIndex, &objCount);
         for (t = objIndex; t < objCount; t++)
         {
-            otherObj = (u8*)objects[t];
-            if (((GameObject*)otherObj)->anim.seqId == DBPROTECTION_TRICKY_TARGET_SEQID)
+            otherObj = objects[t];
+            if (otherObj->anim.seqId == DBPROTECTION_TRICKY_TARGET_SEQID)
             {
-                ((SBGalleonState*)state)->targetObj = otherObj;
+                state->targetObj = otherObj;
                 t = objCount;
             }
         }
     }
-    if (((SBGalleonState*)state)->phase >= 2)
+    if (state->phase >= 2)
     {
         Sfx_PlayFromObject((int)obj, SFXTRIG_tr_gal_lightning);
     }
@@ -239,73 +238,73 @@ void fn_801DFA28(u8* obj)
     {
         Sfx_StopFromObjectIntLegacy((int)obj, SFXTRIG_tr_gal_lightning);
     }
-    tricky = ((SBGalleonState*)state)->targetObj;
+    tricky = state->targetObj;
     if (tricky == NULL)
         goto end;
-    if ((tricky != NULL) && (*(int*)(tricky + 0xF4) == 0))
+    if ((tricky != NULL) && (tricky->unkF4 == 0))
     {
-        fn_801EED5C((int)tricky, (f32*)(state + 0x50), (f32*)(state + 0x54), (f32*)(state + 0x58));
+        fn_801EED5C(tricky, &state->homeX, &state->homeY, &state->homeZ);
     }
-    ((SBGalleonState*)state)->timer26 -= framesThisStep;
-    if (((SBGalleonState*)state)->timer26 < 0)
+    state->timer26 -= framesThisStep;
+    if (state->timer26 < 0)
     {
-        ((SBGalleonState*)state)->timer26 = 0;
+        state->timer26 = 0;
     }
-    c = ((SBGalleonState*)state)->stage;
+    c = state->stage;
     if (c == 7)
     {
-        ((SBGalleonState*)state)->damagePhase = 3;
+        state->damagePhase = 3;
     }
     else if (c == 8)
     {
-        ((SBGalleonState*)state)->damagePhase = 4;
+        state->damagePhase = 4;
     }
     else if (c == 9)
     {
-        ((SBGalleonState*)state)->damagePhase = 5;
+        state->damagePhase = 5;
     }
-    if (((SBGalleonState*)state)->phase < 2)
+    if (state->phase < 2)
     {
-        ((SBGalleonState*)state)->wanderTimerA -= timeDelta;
-        if (((SBGalleonState*)state)->wanderTimerA <= lbl_803E56CC)
+        state->wanderTimerA -= timeDelta;
+        if (state->wanderTimerA <= lbl_803E56CC)
         {
-            ((SBGalleonState*)state)->wanderFlagA ^= 1;
-            ((SBGalleonState*)state)->wanderTimerA = (f32)(int)randomGetRange(0xB4, 300);
+            state->wanderFlagA ^= 1;
+            state->wanderTimerA = (f32)(int)randomGetRange(0xB4, 300);
         }
-        if (((SBGalleonState*)state)->wanderFlagA != 0)
+        if (state->wanderFlagA != 0)
         {
-            ((SBGalleonState*)state)->wanderA = lbl_803E56D0 * timeDelta + ((SBGalleonState*)state)->wanderA;
-        }
-        else
-        {
-            ((SBGalleonState*)state)->wanderA -= timeDelta;
-        }
-        ((SBGalleonState*)state)->wanderTimerB -= timeDelta;
-        if (((SBGalleonState*)state)->wanderTimerB <= lbl_803E56CC)
-        {
-            ((SBGalleonState*)state)->wanderFlagB ^= 1;
-            ((SBGalleonState*)state)->wanderTimerB = (f32)(int)randomGetRange(0xB4, 300);
-        }
-        if (((SBGalleonState*)state)->wanderFlagB != 0)
-        {
-            ((SBGalleonState*)state)->wanderB = lbl_803E56D0 * timeDelta + ((SBGalleonState*)state)->wanderB;
+            state->wanderA = lbl_803E56D0 * timeDelta + state->wanderA;
         }
         else
         {
-            ((SBGalleonState*)state)->wanderB -= timeDelta;
+            state->wanderA -= timeDelta;
+        }
+        state->wanderTimerB -= timeDelta;
+        if (state->wanderTimerB <= lbl_803E56CC)
+        {
+            state->wanderFlagB ^= 1;
+            state->wanderTimerB = (f32)(int)randomGetRange(0xB4, 300);
+        }
+        if (state->wanderFlagB != 0)
+        {
+            state->wanderB = lbl_803E56D0 * timeDelta + state->wanderB;
+        }
+        else
+        {
+            state->wanderB -= timeDelta;
         }
     }
     else
     {
         amp = lbl_803E56D4;
-        ((SBGalleonState*)state)->wanderA = -(amp * timeDelta - ((SBGalleonState*)state)->wanderA);
-        ((SBGalleonState*)state)->wanderB = -(amp * timeDelta - ((SBGalleonState*)state)->wanderB);
+        state->wanderA = -(amp * timeDelta - state->wanderA);
+        state->wanderB = -(amp * timeDelta - state->wanderB);
     }
-    dx = ((SBGalleonState*)state)->wanderA;
-    ((SBGalleonState*)state)->wanderA = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
-    dx = ((SBGalleonState*)state)->wanderB;
-    ((SBGalleonState*)state)->wanderB = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
-    switch (((SBGalleonState*)state)->phase)
+    dx = state->wanderA;
+    state->wanderA = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
+    dx = state->wanderB;
+    state->wanderB = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
+    switch (state->phase)
     {
     case 0:
         camShake = lbl_803E56C8;
@@ -736,7 +735,7 @@ void fn_801DFA28(u8* obj)
         {
             wrap = wrap + 0xFFFF;
         }
-        ((GameObject*)obj)->anim.rotY = *(s16*)(int)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
+        obj->anim.rotY = obj->anim.rotY + ((wrap * framesThisStep) >> 6);
         dx = ((SBGalleonState*)state)->homeX - ((GameObject*)obj)->anim.localPosX;
         dz = ((SBGalleonState*)state)->homeZ - ((GameObject*)obj)->anim.localPosZ;
         sqrtf(dx * dx + dz * dz); /* match: dead sqrt present in target */
@@ -751,17 +750,17 @@ void fn_801DFA28(u8* obj)
         {
             dv = -0x3C;
         }
-        ((GameObject*)obj)->anim.rotZ = dv * timeDelta + (f32) * (s16*)(int)(obj + 0x4);
+        obj->anim.rotZ = dv * timeDelta + (f32)obj->anim.rotZ;
         objPos.x = lbl_803E56CC;
         objPos.y = lbl_803E56CC;
         objPos.z = lbl_803E56CC;
         objPos.scale = lbl_803E57A4;
         objPos.rotX = ((GameObject*)obj)->anim.rotX;
-        objPos.rotY = *(s16*)(int)(obj + 0x2);
-        objPos.rotZ = *(s16*)(int)(obj + 0x4);
+        objPos.rotY = obj->anim.rotY;
+        objPos.rotZ = obj->anim.rotZ;
         setMatrixFromObjectPos(mtx, &objPos);
         Matrix_TransformPoint(mtx, lbl_803E56CC, *(f32*)&lbl_803E56CC, -((SBGalleonState*)state)->speed * timeDelta,
-                              (f32*)(state + 0x0), (f32*)(state + 0x4), (f32*)(state + 0x8));
+                              &state->driftX, &state->driftY, &state->driftZ);
         if (((SBGalleonState*)state)->phase == 7)
         {
             ((SBGalleonState*)state)->posX = tx;
@@ -807,7 +806,7 @@ void fn_801DFA28(u8* obj)
                 ((GameObject*)obj)->anim.localPosY = lbl_803E57AC;
                 ((GameObject*)obj)->anim.localPosZ = *(f32*)(spawnData + 0x10);
                 Sfx_StopObjectChannel((int)obj, 1);
-                DBPROT_MAP_EVENT(*(u8*)(obj + 0x34), 2, 1);
+                DBPROT_MAP_EVENT(obj->anim.pad34, 2, 1);
                 OBJECT_TRIGGER_REFRESH(0, obj, -1);
                 goto end;
             }
@@ -842,10 +841,10 @@ void fn_801DFA28(u8* obj)
             blendK * (timeDelta * (ambB - ((SBGalleonState*)state)->swayResponseSmooth));
         if (((SBGalleonState*)state)->phase == 0)
         {
-            zRatio = (f32) * (s16*)(int)(tricky + 0x2) / ((SBGalleonState*)state)->swayScaleSmooth;
+            zRatio = (f32)tricky->anim.rotY / ((SBGalleonState*)state)->swayScaleSmooth;
             ((SBGalleonState*)state)->swayZ +=
                 timeDelta * (((SBGalleonState*)state)->swayResponseSmooth *
-                             ((f32) - *(s16*)(int)(tricky + 0x4) / ((SBGalleonState*)state)->swayScaleSmooth -
+                             ((f32)-tricky->anim.rotZ / ((SBGalleonState*)state)->swayScaleSmooth -
                               ((SBGalleonState*)state)->swayZ));
             ((SBGalleonState*)state)->swayY +=
                 timeDelta * (((SBGalleonState*)state)->swayResponseSmooth * (zRatio - ((SBGalleonState*)state)->swayY));

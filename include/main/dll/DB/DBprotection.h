@@ -3,7 +3,9 @@
 
 #include "ghidra_import.h"
 
-void fn_801DFA28(u8 *obj);
+struct GameObject;
+
+void fn_801DFA28(struct GameObject *obj);
 void DBprotection_updateEnvfxGameBits(u8 *state);
 int DBprotection_getCameraState(int *obj);
 void DBprotection_updateShield(int *obj);
