@@ -371,7 +371,8 @@ main/dll/dll_0027_effect14.c:
 	.text       start:0x800C65B4 end:0x800C8008
 	.data       start:0x80310DE8 end:0x80310E88
 	.bss        start:0x8039C3F8 end:0x8039C410
-	.sdata2     start:0x803E0000 end:0x803E0178
+	.sdata2     start:0x803E0000 end:0x803E0084
+	.sdata2     start:0x803E0088 end:0x803E0178
 
 main/dll/dll_0029_effect16.c:
 	.text       start:0x800C8008 end:0x800C9140
