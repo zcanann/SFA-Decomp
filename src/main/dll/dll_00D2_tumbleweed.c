@@ -249,20 +249,6 @@ void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if ((s32)visible >= 1) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2F80);
 }
-
-void tumbleweed_update(GameObject *obj)
-{
-    if ((obj)->anim.seqId == TUMBLEWEED_TYPE_1)
-    {
-        tumbleweed_updateTargetedStateMachine(obj);
-    }
-    else
-    {
-        tumbleweed_updateStateMachine(obj);
-    }
-    tumbleweed_updateEffects(obj);
-}
-
 #pragma opt_loop_invariants off
 void tumbleweed_updateStateMachine(GameObject* obj)
 {
@@ -497,120 +483,8 @@ void tumbleweed_updateStateMachine(GameObject* obj)
         }
     }
 }
+
 #pragma opt_loop_invariants reset
-
-void tumbleweed_init(GameObject *obj, int defData)
-{
-    int aux = *(int*)&(obj)->extra;
-
-    ((BackpackState*)aux)->anchorPosX = (obj)->anim.localPosX;
-    ((BackpackState*)aux)->anchorPosZ = (obj)->anim.localPosZ;
-    ((BackpackState*)aux)->triggerRange = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
-    ((BackpackState*)aux)->variant = *(u8*)(defData + 0x1b);
-    ((BackpackState*)aux)->targetScale = (obj)->anim.rootMotionScale;
-    ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
-    randomGetRange(0xc8, 0x1f4);
-    *(u32*)&((BackpackState*)aux)->targetObj = 0;
-    (obj)->anim.rootMotionScale = lbl_803E2FD0;
-    (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
-    (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
-    (*gPathControlInterface)->attachObject((void*)obj, (void*)aux);
-    ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_GROWING;
-    ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)
-    randomGetRange(-0x12c, 0x12c);
-    ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP);
-    ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP_SECONDARY);
-    ObjHits_DisableObject((u32)obj);
-    ObjMsg_AllocQueue((void*)obj, 1);
-    if ((obj)->anim.seqId == TUMBLEWEED_TYPE_3)
-    {
-        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 0x10);
-    }
-}
-
-void tumbleweed_updateEffects(GameObject *obj)
-{
-    TumbleweedState* state = (obj)->extra;
-    int i;
-    s16 type;
-
-    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_BURST) != 0)
-    {
-        switch ((obj)->anim.seqId)
-        {
-        case TUMBLEWEED_TYPE_3:
-        case TUMBLEWEED_TYPE_1:
-        case TUMBLEWEED_TYPE_4:
-            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
-            do
-            {
-                (*gPartfxInterface)->spawnObject(
-                    (void*)obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL,
-                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
-                i = i - 1;
-            }
-            while (i != 0);
-            break;
-        default:
-            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
-            do
-            {
-                (*gPartfxInterface)->spawnObject(
-                    (void*)obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL,
-                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
-                i = i - 1;
-            }
-            while (i != 0);
-            break;
-        }
-        Sfx_PlayFromObject((int)obj, TUMBLEWEED_SFX_BURST);
-        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_BURST);
-    }
-
-    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_PUFF) != 0)
-    {
-        switch ((obj)->anim.seqId)
-        {
-        case TUMBLEWEED_TYPE_3:
-        case TUMBLEWEED_TYPE_1:
-        case TUMBLEWEED_TYPE_4:
-            (*gPartfxInterface)->spawnObject(
-                (void*)obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL,
-                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
-            break;
-        default:
-            (*gPartfxInterface)->spawnObject(
-                (void*)obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL,
-                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
-            break;
-        }
-        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_PUFF);
-    }
-
-    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_DESPAWN) != 0)
-    {
-        (obj)->anim.alpha = 0;
-        state->mode = TUMBLEWEED_PHASE_DESPAWNING;
-        state->despawnTimer = lbl_803E2FC8;
-        ObjHits_DisableObject((u32)obj);
-        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
-    }
-
-    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
-        ((obj)->objectFlags & TUMBLEWEED_OBJFLAG_RENDERED) != 0)
-    {
-        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
-        if ((int)(u8)(++state->hitPulseCounter) % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
-        {
-            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, 0, 0, 0);
-        }
-        else
-        {
-            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, 0);
-        }
-        Sfx_KeepAliveLoopedObjectSound((int)obj, TUMBLEWEED_SFX_HIT_LOOP);
-    }
-}
 
 void tumbleweed_updateTargetedStateMachine(GameObject *obj)
 {
@@ -703,6 +577,132 @@ void tumbleweed_updateTargetedStateMachine(GameObject *obj)
         {
             ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->growRate - timeDelta;
         }
+    }
+}
+
+void tumbleweed_updateEffects(GameObject *obj)
+{
+    TumbleweedState* state = (obj)->extra;
+    int i;
+    s16 type;
+
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_BURST) != 0)
+    {
+        switch ((obj)->anim.seqId)
+        {
+        case TUMBLEWEED_TYPE_3:
+        case TUMBLEWEED_TYPE_1:
+        case TUMBLEWEED_TYPE_4:
+            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
+            do
+            {
+                (*gPartfxInterface)->spawnObject(
+                    (void*)obj, TUMBLEWEED_EFFECT_BURST_SPECIAL, NULL,
+                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
+                i = i - 1;
+            }
+            while (i != 0);
+            break;
+        default:
+            i = TUMBLEWEED_EFFECT_SPAWN_COUNT;
+            do
+            {
+                (*gPartfxInterface)->spawnObject(
+                    (void*)obj, TUMBLEWEED_EFFECT_BURST_DEFAULT, NULL,
+                    TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
+                i = i - 1;
+            }
+            while (i != 0);
+            break;
+        }
+        Sfx_PlayFromObject((int)obj, TUMBLEWEED_SFX_BURST);
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_BURST);
+    }
+
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_PUFF) != 0)
+    {
+        switch ((obj)->anim.seqId)
+        {
+        case TUMBLEWEED_TYPE_3:
+        case TUMBLEWEED_TYPE_1:
+        case TUMBLEWEED_TYPE_4:
+            (*gPartfxInterface)->spawnObject(
+                (void*)obj, TUMBLEWEED_EFFECT_PUFF_SPECIAL, NULL,
+                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
+            break;
+        default:
+            (*gPartfxInterface)->spawnObject(
+                (void*)obj, TUMBLEWEED_EFFECT_PUFF_DEFAULT, NULL,
+                TUMBLEWEED_PARTFX_MODE_ACTIVE, -1, NULL);
+            break;
+        }
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_PUFF);
+    }
+
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_DESPAWN) != 0)
+    {
+        (obj)->anim.alpha = 0;
+        state->mode = TUMBLEWEED_PHASE_DESPAWNING;
+        state->despawnTimer = lbl_803E2FC8;
+        ObjHits_DisableObject((u32)obj);
+        state->effectFlags = (u8)(state->effectFlags & ~TUMBLEWEED_EFFECT_FLAG_DESPAWN);
+    }
+
+    if ((state->effectFlags & TUMBLEWEED_EFFECT_FLAG_HIT_PULSE) != 0 &&
+        ((obj)->objectFlags & TUMBLEWEED_OBJFLAG_RENDERED) != 0)
+    {
+        ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, TUMBLEWEED_HIT_PULSE_VOLUME_SLOT, 1, 0);
+        if ((int)(u8)(++state->hitPulseCounter) % TUMBLEWEED_HIT_PULSE_PERIOD != 0)
+        {
+            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, 0, 0, 0);
+        }
+        else
+        {
+            fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 1, TUMBLEWEED_HIT_PULSE_ALT_STYLE, 0, 0);
+        }
+        Sfx_KeepAliveLoopedObjectSound((int)obj, TUMBLEWEED_SFX_HIT_LOOP);
+    }
+}
+
+void tumbleweed_update(GameObject *obj)
+{
+    if ((obj)->anim.seqId == TUMBLEWEED_TYPE_1)
+    {
+        tumbleweed_updateTargetedStateMachine(obj);
+    }
+    else
+    {
+        tumbleweed_updateStateMachine(obj);
+    }
+    tumbleweed_updateEffects(obj);
+}
+
+void tumbleweed_init(GameObject *obj, int defData)
+{
+    int aux = *(int*)&(obj)->extra;
+
+    ((BackpackState*)aux)->anchorPosX = (obj)->anim.localPosX;
+    ((BackpackState*)aux)->anchorPosZ = (obj)->anim.localPosZ;
+    ((BackpackState*)aux)->triggerRange = (short)(lbl_803E2FCC * *(f32*)(defData + 0x1c));
+    ((BackpackState*)aux)->variant = *(u8*)(defData + 0x1b);
+    ((BackpackState*)aux)->targetScale = (obj)->anim.rootMotionScale;
+    ((BackpackState*)aux)->growRate = ((BackpackState*)aux)->targetScale / (f32)(s32)
+    randomGetRange(0xc8, 0x1f4);
+    *(u32*)&((BackpackState*)aux)->targetObj = 0;
+    (obj)->anim.rootMotionScale = lbl_803E2FD0;
+    (*gPathControlInterface)->init((void*)aux, 0, 0x40000, 1);
+    (*gPathControlInterface)->setLocalPointCollision((void*)aux, 1, gTumbleweedCollisionPoint, gTumbleweedCollisionPointData, 8);
+    (*gPathControlInterface)->attachObject((void*)obj, (void*)aux);
+    ((BackpackState*)aux)->phase = TUMBLEWEED_PHASE_GROWING;
+    ((BackpackState*)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)
+    randomGetRange(-0x12c, 0x12c);
+    ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP);
+    ObjGroup_AddObject((int)obj, TUMBLEWEED_OBJGROUP_SECONDARY);
+    ObjHits_DisableObject((u32)obj);
+    ObjMsg_AllocQueue((void*)obj, 1);
+    if ((obj)->anim.seqId == TUMBLEWEED_TYPE_3)
+    {
+        ((BackpackState*)aux)->flags = (u8)(((BackpackState*)aux)->flags | 0x10);
     }
 }
 
