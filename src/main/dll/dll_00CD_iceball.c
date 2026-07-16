@@ -3,7 +3,7 @@
  *
  * IceBall_update integrates the iceball each frame: an unkF4 lifetime timer,
  * primed to 0xb4 (180 frames), counts down by timeDelta (freeing the object at
- * <0), gravity (lbl_803E2E54) and drag (lbl_803E2E58) are applied to the Y
+ * <0), gravity (0.07f) and drag (0.97f) are applied to the Y
  * velocity, the model is spun (rotX/rotY/rotZ += 910), and it is moved + given
  * a radius-5 hit sphere.
  * On contact it plays an impact effect and goes invisible for 120 frames
@@ -34,9 +34,6 @@
 
 #define ICEBALL_MSG_NOTIFY_OWNER 0x80 /* vtable msg notifying the owning ChukChuk on impact */
 
-__declspec(section ".sdata2") f32 lbl_803E2E50 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E2E54 = 0.07f;
-__declspec(section ".sdata2") f32 lbl_803E2E58 = 0.97f;
 
 
 #pragma dont_inline on
@@ -65,7 +62,7 @@ void fn_8015FBEC(GameObject* obj)
 
     Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
     Camera_EnableViewYOffset();
-    CameraShake_SetAllMagnitudes(lbl_803E2E50);
+    CameraShake_SetAllMagnitudes(1.0f);
 }
 #pragma dont_inline reset
 
@@ -91,7 +88,7 @@ void fn_8015FCCC(GameObject* obj)
     int n;
 
     Camera_EnableViewYOffset();
-    CameraShake_SetAllMagnitudes(lbl_803E2E50);
+    CameraShake_SetAllMagnitudes(1.0f);
     Sfx_PlayFromObject(obj, SFXTRIG_mn_lummy311_26a);
     type = (obj)->anim.seqId;
     if (type == 0x2cb)
@@ -164,7 +161,7 @@ void IceBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 visible32 = visible;
     if (visible32 != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E2E50);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma scheduling on
 #pragma peephole on
@@ -190,8 +187,8 @@ void IceBall_update(u16* obj, int unused)
     {
         return;
     }
-    ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY - lbl_803E2E54 * timeDelta;
-    ((GameObject*)objInt)->anim.velocityY = ((GameObject*)objInt)->anim.velocityY * lbl_803E2E58;
+    ((GameObject*)objInt)->anim.velocityY -= 0.07f * timeDelta;
+    ((GameObject*)objInt)->anim.velocityY *= 0.97f;
     ((GameObject*)objInt)->anim.rotX += 910;
     ((GameObject*)objInt)->anim.rotZ += 910;
     ((GameObject*)objInt)->anim.rotY += 910;
