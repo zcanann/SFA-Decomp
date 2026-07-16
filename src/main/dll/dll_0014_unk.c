@@ -2334,8 +2334,8 @@ inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base)
 #define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
 
 #define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
-    po = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
     pl = &OBJFSA_NEWPATCH.planes[K];                                                                                   \
+    po = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
     dxn = (DXE);                                                                                                       \
     dzn = (DZE);                                                                                                       \
     len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
