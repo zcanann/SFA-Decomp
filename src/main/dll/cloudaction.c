@@ -17,6 +17,9 @@
  * texture each frame.
  */
 #include "main/dll/cloudaction.h"
+#include "main/newclouds.h"
+#include "main/pi_dolphin_api.h"
+#include "main/rcp_dolphin_api.h"
 #include "main/texture.h"
 #include "main/dll/waterfx.h"
 #include "main/dll/ppcwgpipe_struct.h"
@@ -42,11 +45,18 @@
 
 CloudActionRuntime lbl_8039AB28;
 
-extern void __kill_critical_regions(void);
+GameObject* lbl_803DD1F0;
+u8 cloudOverridePosition;
+f32 lbl_803DD1E8;
+f32 lbl_803DD1E4;
+f32 lbl_803DD1E0;
 
-extern void __begin_critical_region(void);
+volatile f32 gCloudActionGlareQuadSize = 8000.0f;
 
-extern void __end_critical_region(void);
+__declspec(section ".sdata2") f32 lbl_803DF2B0 = 0.0001f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803DF2B4 = 0.0f;
+#pragma explicit_zero_data reset
 
 extern void fn_8008DAE8(int obj);
 extern void fn_800412B8(int a, int b, int c);
@@ -74,6 +84,62 @@ static inline void GXTex2f32(f32 s, f32 t)
 {
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
+}
+
+void cloudClearOverridePosition(void)
+{
+    gCloudOverridePositionValid = 0;
+}
+
+void cloudSetOverridePosition(f32 a, f32 b, f32 c)
+{
+    gCloudOverridePositionValid = 1;
+    gCloudOverridePositionX = a;
+    gCloudOverridePositionY = b;
+    gCloudOverridePositionZ = c;
+}
+
+void* cloudGetLayerTextureSize(f32* out1, f32* out2)
+{
+    ObjTextureRuntimeSlot* tex;
+    int* layer;
+
+    if (lbl_8039AB28.mainCloudObj != NULL)
+    {
+        layer = (int*)Shader_getLayer(ObjModel_GetRenderOp(Obj_GetActiveModel(lbl_8039AB28.mainCloudObj)->file, 0), 0);
+        tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
+        if (tex != NULL)
+        {
+            f32 scale = lbl_803DF2B0;
+            *out1 = scale * tex->offsetS;
+            *out2 = scale * tex->offsetT;
+        }
+        else
+        {
+            f32 d = lbl_803DF2B4;
+            *out1 = d;
+            *out2 = d;
+        }
+        return textureIdxToPtr(*layer);
+    }
+    {
+        f32 d = lbl_803DF2B4;
+        *out1 = d;
+        *out2 = d;
+    }
+    return NULL;
+}
+
+void __kill_critical_regions(void)
+{
+}
+
+void __begin_critical_region(void)
+{
+}
+
+void __end_critical_region(void)
+{
 }
 
 void cloudaction_func08_nop(void)

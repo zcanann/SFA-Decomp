@@ -1299,10 +1299,6 @@ void snowCloudUpdateFlakes(u8* snow)
     }
 }
 
-extern const f32 lbl_803DF2B0;
-extern f32 lbl_803DF2B4;
-
-
 extern char lbl_8030F500[];
 extern const f32 gNewCloudType0Height;
 extern const f32 gNewCloudType0Scale;
@@ -2611,61 +2607,6 @@ void titleScreenDrawFn_80093db4(void)
 }
 
 int gNewCloudMusicIdByType[5] = {43, 0, 0, 0, 0};
-
-void cloudClearOverridePosition(void)
-{
-    gCloudOverridePositionValid = 0;
-}
-
-
-
-
-void cloudSetOverridePosition(f32 a, f32 b, f32 c)
-{
-    gCloudOverridePositionValid = 1;
-    gCloudOverridePositionX = a;
-    gCloudOverridePositionY = b;
-    gCloudOverridePositionZ = c;
-}
-
-
-
-#pragma opt_common_subs off
-#pragma opt_dead_assignments off
-#pragma opt_loop_invariants off
-#pragma opt_common_subs reset
-#pragma opt_dead_assignments reset
-#pragma opt_loop_invariants reset
-void* cloudGetLayerTextureSize(f32* out1, f32* out2)
-{
-    ObjTextureRuntimeSlot* tex;
-    int* layer;
-
-    if (lbl_8039AB28.mainCloudObj != NULL)
-    {
-        layer = (int*)Shader_getLayer(ObjModel_GetRenderOp(Obj_GetActiveModel(lbl_8039AB28.mainCloudObj)->file, 0), 0);
-        tex = objFindTexture((GameObject*)(lbl_8039AB28.mainCloudObj), 0, 0);
-        if (tex != NULL)
-        {
-            f32 scale = lbl_803DF2B0;
-            *out1 = scale * tex->offsetS;
-            *out2 = scale * tex->offsetT;
-        }
-        else
-        {
-            f32 d = lbl_803DF2B4;
-            *out1 = d;
-            *out2 = d;
-        }
-        return textureIdxToPtr(*layer);
-    }
-    {
-        f32 d = lbl_803DF2B4;
-        *out1 = d;
-        *out2 = d;
-    }
-    return NULL;
-}
 
 char sSnowFreeSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowFreeSnowCloud\n";
 char sSnowPrintSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowPrintSnowCloud\n";

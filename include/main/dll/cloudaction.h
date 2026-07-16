@@ -16,7 +16,7 @@ STATIC_ASSERT(sizeof(CloudEnvTbl) == 0x38);
 extern CloudEnvTbl gCloudActionEnvTbl;
 extern volatile f32 gCloudActionGlareQuadSize;
 extern s32 lbl_803DB618[2];
-extern const f32 lbl_803DF2B4;
+extern f32 lbl_803DF2B4;
 union CloudActionConstF32 { f32 f; };
 extern const union CloudActionConstF32 lbl_803DF2C0;
 extern const union CloudActionConstF32 lbl_803DF2C4;
