@@ -33,6 +33,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"
+#include "dolphin/gx/GXStruct.h"
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object.h"
@@ -188,7 +189,7 @@ extern u16 gDebugScreenHeight;
 extern u32 gDebugMarginRight;
 extern u32 gDebugMarginBottom;
 
-extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32* color);
+extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, GXColor* color);
 extern void OSResumeThread(u8* thread);
 extern void OSSetErrorHandler(int kind, void* handler);
 extern void OSCreateThread(u8* thread, void* entry, void* arg, void* stack_top, int stack_size, int prio, int flags);
@@ -198,7 +199,7 @@ extern int dll_19_func1B(GameObject* p);
         (GameObject*)(obj), (red), (green), (blue), (alpha), (enabled))
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
 extern void gxDebugTextureFn_80078c1c(void);
-extern void GXSetTevColor(int id, int* color);
+extern void GXSetTevColor(int id, GXColor* color);
 extern int OSDisableInterrupts(void);
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern void VISetPreRetraceCallback(void* cb);
@@ -351,6 +352,7 @@ int fn_80136A40(int unused, int c)
     }
     return c;
 }
+
 #pragma optimization_level 3
 int debugPrintDrawRecord(int color, u8* p)
 {
@@ -363,18 +365,18 @@ int debugPrintDrawRecord(int color, u8* p)
     u32 x0;
     f32 sc;
     int rm;
-    u8 c0;
-    u8 c1;
-    u8 c2;
-    u8 c3;
-    u8 colb1[4];
-    u32 colw1;
-    u32 colw4; /* case 0x82 */
-    u8 colb4[4];
-    u32 colw2; /* case 0xa */
-    u8 colb2[4];
-    u32 colw3; /* line-wrap path */
-    u8 colb3[4];
+    u8 red;
+    u8 green;
+    u8 blue;
+    u8 alpha;
+    GXColor textColorSource;
+    GXColor textColor;
+    GXColor positionColor;
+    GXColor positionColorSource;
+    GXColor newlineColor;
+    GXColor newlineColorSource;
+    GXColor wrapColor;
+    GXColor wrapColorSource;
     u8* start = p;
 
     while ((c = *p++) != 0)
@@ -389,39 +391,39 @@ int debugPrintDrawRecord(int color, u8* p)
             gDebugFixedWidthMode = 1;
             break;
         case 0x81:
-            c0 = p[0];
-            c1 = p[1];
-            c2 = p[2];
-            c3 = p[3];
+            red = p[0];
+            green = p[1];
+            blue = p[2];
+            alpha = p[3];
             p += 4;
             if (gDebugDrawPass != 0)
             {
-                colb1[0] = c0;
-                colb1[1] = c1;
-                colb1[2] = c2;
-                colb1[3] = c3;
-                colw1 = *(u32*)colb1;
-                GXSetTevColor(GX_TEVREG0, (int*)&colw1);
+                textColorSource.r = red;
+                textColorSource.g = green;
+                textColorSource.b = blue;
+                textColorSource.a = alpha;
+                textColor = textColorSource;
+                GXSetTevColor(GX_TEVREG0, &textColor);
             }
             break;
         case 0x87:
             gDebugScaleBiasX = p[0];
-            c0 = p[1];
+            red = p[1];
             p += 2;
-            gDebugScaleBiasY = c0;
+            gDebugScaleBiasY = red;
             break;
         case 0x85:
-            c0 = p[0];
-            c1 = p[1];
-            c2 = p[2];
-            c3 = p[3];
+            red = p[0];
+            green = p[1];
+            blue = p[2];
+            alpha = p[3];
             p += 4;
             if (gDebugDrawPass == 0)
             {
-                gDebugTextColorR = c0;
-                gDebugTextColorG = c1;
-                gDebugTextColorB = c2;
-                gDebugTextColorA = c3;
+                gDebugTextColorR = red;
+                gDebugTextColorG = green;
+                gDebugTextColorB = blue;
+                gDebugTextColorA = alpha;
                 setTextColorContextOnlyLegacy(color);
             }
             break;
@@ -443,12 +445,12 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = (u32)((f32)(u32)y1 * sc);
                     x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     x2 = (u32)((f32)(u32)x2 * sc);
-                    colb4[0] = gDebugTextColorR;
-                    colb4[1] = gDebugTextColorG;
-                    colb4[2] = gDebugTextColorB;
-                    colb4[3] = gDebugTextColorA;
-                    colw4 = *(u32*)colb4;
-                    hudDrawRect(y0, x0, y1, x2, &colw4);
+                    positionColorSource.r = gDebugTextColorR;
+                    positionColorSource.g = gDebugTextColorG;
+                    positionColorSource.b = gDebugTextColorB;
+                    positionColorSource.a = gDebugTextColorA;
+                    positionColor = positionColorSource;
+                    hudDrawRect(y0, x0, y1, x2, &positionColor);
                 }
             }
             debugPrintYpos = *p++;
@@ -483,12 +485,12 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = (u32)((f32)(u32)y1 * sc);
                     x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     x2 = (u32)((f32)(u32)x2 * sc);
-                    colb2[0] = gDebugTextColorR;
-                    colb2[1] = gDebugTextColorG;
-                    colb2[2] = gDebugTextColorB;
-                    colb2[3] = gDebugTextColorA;
-                    colw2 = *(u32*)colb2;
-                    hudDrawRect(y0, x0, y1, x2, &colw2);
+                    newlineColorSource.r = gDebugTextColorR;
+                    newlineColorSource.g = gDebugTextColorG;
+                    newlineColorSource.b = gDebugTextColorB;
+                    newlineColorSource.a = gDebugTextColorA;
+                    newlineColor = newlineColorSource;
+                    hudDrawRect(y0, x0, y1, x2, &newlineColor);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -535,12 +537,12 @@ int debugPrintDrawRecord(int color, u8* p)
                     y1 = (u32)((f32)(u32)y1 * sc);
                     x0 = (u32)((f32)x0 * (sc = gDebugScaleY + gDebugScaleBiasY));
                     x2 = (u32)((f32)(u32)x2 * sc);
-                    colb3[0] = gDebugTextColorR;
-                    colb3[1] = gDebugTextColorG;
-                    colb3[2] = gDebugTextColorB;
-                    colb3[3] = gDebugTextColorA;
-                    colw3 = *(u32*)colb3;
-                    hudDrawRect(y0, x0, y1, x2, &colw3);
+                    wrapColorSource.r = gDebugTextColorR;
+                    wrapColorSource.g = gDebugTextColorG;
+                    wrapColorSource.b = gDebugTextColorB;
+                    wrapColorSource.a = gDebugTextColorA;
+                    wrapColor = wrapColorSource;
+                    hudDrawRect(y0, x0, y1, x2, &wrapColor);
                 }
             }
             debugPrintYpos = gDebugPrintOriginY;
@@ -618,10 +620,10 @@ void debugPrintDraw(int ctx)
     u32 y2;
     u32 xa, xb, ya, yb;
     u32 xs;
-    u32 colw;
+    GXColor colw;
     u8* p;
     u16 tx, ty;
-    u32 colb;
+    GXColor colb;
     u32 x1;
     f32 scale;
     int pass;
@@ -685,10 +687,10 @@ void debugPrintDraw(int ctx)
         xb = (u32)((f32)y2 * scale);
         ya = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
         yb = (u32)((f32)x1 * scale);
-        ((u8*)&colb)[0] = gDebugTextColorR;
-        ((u8*)&colb)[1] = gDebugTextColorG;
-        ((u8*)&colb)[2] = gDebugTextColorB;
-        ((u8*)&colb)[3] = gDebugTextColorA;
+        colb.r = gDebugTextColorR;
+        colb.g = gDebugTextColorG;
+        colb.b = gDebugTextColorB;
+        colb.a = gDebugTextColorA;
         colw = colb;
         hudDrawRect(xa, ya, xb, yb, &colw);
     }
