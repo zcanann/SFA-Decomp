@@ -1684,14 +1684,14 @@ void dll_0B_func05(void)
 #pragma opt_propagation off
 s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
 {
-    ModgfxSpawnContext* st = base;
     int base0;
-    int slot;
+    int total = 0;
+    ModgfxSpawnContext* st = base;
     int found;
     int i;
     int spawnCount;
     int divThresh;
-    int total = 0;
+    int slot;
     f32 fz434;
     f32 fz430;
 
@@ -1980,7 +1980,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->byte126 = lbl_803DD282;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->vertexCount = c;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->colorVertexCount = e;
-    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = *(void**)(st + 4);
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceObject = st->attachedSource;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->instanceObject = NULL;
     *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->sourceYawIndex = st->sourceYawIndex;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->drawGroupCount = st->drawGroupCount;
