@@ -31,7 +31,6 @@ extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern f32 __kernel_sin(f32);
 extern f32 __kernel_cos(f32, f32);
 
-
 #pragma scheduling off
 #pragma peephole off
 f32 getXZDistance(f32* a, f32* b)
@@ -328,22 +327,22 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     sz = sz * lbl_803DE7F0;
 
     t1 = cy * cz;
-    u = t1 * cx;
+    s = t1 * cx;
     t2 = sx * sz;
-    u = t2 - u;
-    mtx[0] = u;
+    s = t2 - s;
+    mtx[0] = s;
     t2 = cy * sz;
     v = t2 * cx;
     v = v + sx * cz;
     mtx[1] = v;
     mtx[2] = -(cx * sy);
-    mtx[3] = (u = 0.0f);
+    mtx[3] = (u = lbl_803DE7C0);
     mtx[4] = -(sy * cz);
     mtx[5] = sy * sz;
     mtx[6] = cy;
     mtx[7] = u;
-    u = t1 * sx;
-    mtx[8] = u + cx * sz;
+    v = t1 * sx;
+    mtx[8] = v + cx * sz;
     t2 = t2 * sx;
     mtx[9] = cx * cz - t2;
     mtx[10] = sx * sy;
@@ -378,7 +377,7 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     s = s * z;
     t1 = t1 + s;
     mtx[14] = t1;
-    mtx[15] = 1.0f;
+    mtx[15] = lbl_803DE7C4;
 }
 #pragma opt_dead_assignments reset
 #pragma opt_lifetimes reset
