@@ -1991,7 +1991,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     int zMode;
     int zCompLoc;
     u32 currentTexture;
-    u8 trackedFlags;
+    int trackedFlags;
     void* dstBuf;
     dstBuf = getCache();
     trackedFlags = 0;
@@ -2093,35 +2093,39 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             }
             alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
         }
-        else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0 && (f32)(s32)slot->lifetimeFrame <= lifeFraction)
-        {
-            f32 ratio = (f32)(s32)slot->lifetimeFrame / lifeFraction;
-            if (ratio < lbl_803DF35C)
-            {
-                ratio = lbl_803DF35C;
-            }
-            else if (ratio > lbl_803DF354)
-            {
-                ratio = lbl_803DF354;
-            }
-            alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-        }
-        else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0)
-        {
-            f32 ratio = (lifeFraction - ((f32)(s32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
-            if (ratio < lbl_803DF35C)
-            {
-                ratio = lbl_803DF35C;
-            }
-            else if (ratio > lbl_803DF354)
-            {
-                ratio = lbl_803DF354;
-            }
-            alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
-        }
         else
         {
-            alpha = slot->initialAlpha;
+            u32 pulse = behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE;
+            if (pulse != 0 && (f32)(s32)slot->lifetimeFrame <= lifeFraction)
+            {
+                f32 ratio = (f32)(s32)slot->lifetimeFrame / lifeFraction;
+                if (ratio < lbl_803DF35C)
+                {
+                    ratio = lbl_803DF35C;
+                }
+                else if (ratio > lbl_803DF354)
+                {
+                    ratio = lbl_803DF354;
+                }
+                alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
+            }
+            else if (pulse != 0)
+            {
+                f32 ratio = (lifeFraction - ((f32)(s32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
+                if (ratio < lbl_803DF35C)
+                {
+                    ratio = lbl_803DF35C;
+                }
+                else if (ratio > lbl_803DF354)
+                {
+                    ratio = lbl_803DF354;
+                }
+                alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
+            }
+            else
+            {
+                alpha = slot->initialAlpha;
+            }
         }
 
         angleB = 0;
@@ -2130,7 +2134,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sy = slot->renderY;
         sz = slot->renderZ;
         scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
-        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
+        if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
         {
             f32 base = lbl_803DF358 * scaleSize;
             f32 rnd = (f32)(s32)randomGetRange(1, 10);
@@ -2222,11 +2226,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             }
             else if ((flags & EXPGFX_RENDER_ALT_ALPHA_SETUP) != 0)
             {
-                if (!((s8)alphaMode == 4 && trackedFlags == (flags & EXPGFX_RENDER_OVERRIDE_COLORS)))
+                if (!((s8)alphaMode == 4 && (((u8)trackedFlags != flags) & EXPGFX_RENDER_OVERRIDE_COLORS) == 0))
                 {
+                    int masked;
                     setupReflectionIndirectTev(flags & EXPGFX_RENDER_OVERRIDE_COLORS);
                     alphaMode = 4;
-                    trackedFlags = (int)(slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS);
+                    masked = slot->renderFlags & EXPGFX_RENDER_OVERRIDE_COLORS;
+                    trackedFlags = masked;
                 }
             }
             else if ((s8)alphaMode != 1)
@@ -2293,7 +2299,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         sz -= playerMapOffsetZ;
         vtxStream = (s16*)slot;
         GXBegin(GX_QUADS, GX_VTXFMT4, 4);
-        for (vertexIndex = 4; vertexIndex != 0; vertexIndex--)
+        for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
             f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
             f32 py = scaleFactor * __OSs16tof32(&vtxStream[1]);
@@ -2303,21 +2309,35 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             f32 ay_cosB, pz_sinB;
             if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
             {
-                f32 nx = px * cosC - py * sinC;
-                f32 ny = px * sinC + py * cosC;
-                pz_sinB = pz * sinB;
-                ay_cosB = ny * cosB;
-                outX = sx + (nx * sinA + cosA * ay_cosB + cosA * pz_sinB);
-                outY = sy + (ny * sinB + (-pz) * cosB);
-                outZ = sz + ((-nx) * cosA + sinA * ay_cosB + sinA * pz_sinB);
+                f32 cC = cosC;
+                f32 sC = sinC;
+                f32 nx = px * cC - py * sC;
+                f32 ny = px * sC + py * cC;
+                f32 cA = cosA;
+                f32 sB = sinB;
+                f32 sA;
+                f32 cB;
+                pz_sinB = pz * sB;
+                sA = sinA;
+                cB = cosB;
+                ay_cosB = ny * cB;
+                outX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
+                outY = sy + (ny * sB + (-pz) * cB);
+                outZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
             }
             else
             {
-                pz_sinB = pz * sinB;
-                ay_cosB = py * cosB;
-                outX = sx + (px * sinA + cosA * ay_cosB + cosA * pz_sinB);
-                outY = sy + (py * sinB + (-pz) * cosB);
-                outZ = sz + ((-px) * cosA + sinA * ay_cosB + sinA * pz_sinB);
+                f32 cA = cosA;
+                f32 sB = sinB;
+                f32 sA;
+                f32 cB;
+                pz_sinB = pz * sB;
+                sA = sinA;
+                cB = cosB;
+                ay_cosB = py * cB;
+                outX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
+                outY = sy + (py * sB + (-pz) * cB);
+                outZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
             }
             viewProjW = ((f32*)viewMatrix)[8] * outX + ((f32*)viewMatrix)[9] * outY + ((f32*)viewMatrix)[10] * outZ +
                         ((f32*)viewMatrix)[11];
