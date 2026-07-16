@@ -146,6 +146,7 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime* trickyState)
 }
 
 #pragma scheduling off
+#pragma opt_propagation off
 #pragma opt_common_subs off
 #pragma opt_strength_reduction on
 #pragma opt_lifetimes off
@@ -752,6 +753,7 @@ void trickyFlame(GameObject* obj, int trickyState)
     }
 }
 #pragma opt_common_subs reset
+#pragma opt_propagation reset
 void fn_8014128C(void)
 {
 }
