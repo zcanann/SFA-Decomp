@@ -47,8 +47,11 @@ __declspec(section ".sdata2") f32 lbl_803E26D8 = 1.0f;
 __declspec(section ".sdata2") f32 gWispBaddiePi = 3.1415927f;
 __declspec(section ".sdata2") f32 lbl_803E26E0 = 32768.0f;
 __declspec(section ".sdata2") f32 lbl_803E26E4 = 400.0f;
-union WispBaddieConstF32 { f32 f; };
-__declspec(section ".sdata2") const union WispBaddieConstF32 lbl_803E26E8 = { 0.006f };
+union WispBaddieConstF32
+{
+    f32 f;
+};
+__declspec(section ".sdata2") const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
 __declspec(section ".sdata2") f32 lbl_803E26EC = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F4 = 0.9f;
@@ -539,7 +542,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
-            ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags & ~0x40;
+            ((BaddieState*)state)->controlFlags = (int)((BaddieState*)state)->controlFlags & ~0x40LL;
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
