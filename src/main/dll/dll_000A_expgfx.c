@@ -211,6 +211,9 @@ extern void fn_8007D670(void);
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
 extern const f32 lbl_803DF350;
+extern const f32 lbl_803DF354;
+extern const f32 lbl_803DF358;
+extern const f32 lbl_803DF35C;
 extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
 extern const f32 lbl_803DF424;
@@ -1974,6 +1977,8 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     u32 behaviorFlags;
     f32 sinC, cosC;
     f32 worldX, worldY, worldZ;
+    f32 cC, sC, cB, sB, cA, ay_cosB, sA, pz_sinB;
+    f32 px, nx, py, pz, ny;
     f32 aimDelta[3];
     s16* vtxStream;
     int vertexIndex;
@@ -2042,18 +2047,18 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         if ((state & 1) != 0)
             goto next_slot;
 
-        lifeFraction = 0.5f * (f32)(s32)slot->lifetimeFrameLimit;
+        lifeFraction = lbl_803DF358 * (f32)(s32)slot->lifetimeFrameLimit;
         behaviorFlags = slot->behaviorFlags;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_TO_OPAQUE) != 0)
         {
             f32 ratio = (f32)(s32)slot->lifetimeFrame / (f32)(s32)slot->lifetimeFrameLimit;
-            if (ratio < 0.0f)
+            if (ratio < lbl_803DF35C)
             {
-                ratio = 0.0f;
+                ratio = lbl_803DF35C;
             }
-            else if (ratio > 1.0f)
+            else if (ratio > lbl_803DF354)
             {
-                ratio = 1.0f;
+                ratio = lbl_803DF354;
             }
             {
                 u32 baseAlpha = slot->initialAlpha;
@@ -2063,13 +2068,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0)
         {
             f32 ratio = (f32)(s32)slot->lifetimeFrame / (f32)(s32)slot->lifetimeFrameLimit;
-            if (ratio < 0.0f)
+            if (ratio < lbl_803DF35C)
             {
-                ratio = 0.0f;
+                ratio = lbl_803DF35C;
             }
-            else if (ratio > 1.0f)
+            else if (ratio > lbl_803DF354)
             {
-                ratio = 1.0f;
+                ratio = lbl_803DF354;
             }
             alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
         }
@@ -2077,13 +2082,13 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
                  (f32)(s32)slot->lifetimeFrame <= lifeFraction)
         {
             f32 ratio = (f32)(s32)slot->lifetimeFrame / lifeFraction;
-            if (ratio < 0.0f)
+            if (ratio < lbl_803DF35C)
             {
-                ratio = 0.0f;
+                ratio = lbl_803DF35C;
             }
-            else if (ratio > 1.0f)
+            else if (ratio > lbl_803DF354)
             {
-                ratio = 1.0f;
+                ratio = lbl_803DF354;
             }
             alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
         }
@@ -2093,26 +2098,26 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
             if (pulse != 0 && (f32)(s32)slot->lifetimeFrame <= lifeFraction)
             {
                 f32 ratio = (f32)(s32)slot->lifetimeFrame / lifeFraction;
-                if (ratio < 0.0f)
+                if (ratio < lbl_803DF35C)
                 {
-                    ratio = 0.0f;
+                    ratio = lbl_803DF35C;
                 }
-                else if (ratio > 1.0f)
+                else if (ratio > lbl_803DF354)
                 {
-                    ratio = 1.0f;
+                    ratio = lbl_803DF354;
                 }
                 alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
             }
             else if (pulse != 0)
             {
                 f32 ratio = (lifeFraction - ((f32)(s32)slot->lifetimeFrame - lifeFraction)) / lifeFraction;
-                if (ratio < 0.0f)
+                if (ratio < lbl_803DF35C)
                 {
-                    ratio = 0.0f;
+                    ratio = lbl_803DF35C;
                 }
-                else if (ratio > 1.0f)
+                else if (ratio > lbl_803DF354)
                 {
-                    ratio = 1.0f;
+                    ratio = lbl_803DF354;
                 }
                 alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
             }
@@ -2130,7 +2135,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         scaleSize = gExpgfxU16ToUnitScale * (f32)(u32)slot->scaleCurrent;
         if ((behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0)
         {
-            f32 base = 0.5f * scaleSize;
+            f32 base = lbl_803DF358 * scaleSize;
             f32 rnd = (f32)(s32)randomGetRange(1, 10);
             scaleFactor = base + base / rnd;
         }
@@ -2295,65 +2300,63 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         GXBegin(GX_QUADS, GX_VTXFMT4, 4);
         for (vertexIndex = 0; vertexIndex < 4; vertexIndex++)
         {
-            f32 px = scaleFactor * __OSs16tof32(&vtxStream[0]);
-            f32 py = scaleFactor * __OSs16tof32(&vtxStream[1]);
-            f32 pz = scaleFactor * __OSs16tof32(&vtxStream[2]);
-            f32 outX, outY, outZ;
-            f32 ax, ay;
-            f32 ay_cosB, pz_sinB;
+            px = scaleFactor * __OSs16tof32(&vtxStream[0]);
+            py = scaleFactor * __OSs16tof32(&vtxStream[1]);
+            pz = scaleFactor * __OSs16tof32(&vtxStream[2]);
             if ((slot->renderFlags & (EXPGFX_RENDER_PHASE_ROTATE_A | EXPGFX_RENDER_PHASE_ROTATE_B)) != 0)
             {
-                f32 cC = cosC;
-                f32 sC = sinC;
-                f32 nx = px * cC - py * sC;
-                f32 ny = px * sC + py * cC;
-                f32 cA = cosA;
-                f32 sB = sinB;
-                f32 sA;
-                f32 cB;
+                cC = cosC;
+                sC = sinC;
+                nx = px * cC - py * sC;
+                ny = px * sC + py * cC;
+                cA = cosA;
+                sB = sinB;
                 pz_sinB = pz * sB;
                 sA = sinA;
                 cB = cosB;
                 ay_cosB = ny * cB;
-                outX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
-                outY = sy + (ny * sB + (-pz) * cB);
-                outZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
+                worldX = sx + (nx * sA + cA * ay_cosB + cA * pz_sinB);
+                worldY = sy + (ny * sB + (-pz) * cB);
+                worldZ = sz + ((-nx) * cA + sA * ay_cosB + sA * pz_sinB);
             }
             else
             {
-                f32 cA = cosA;
-                f32 sB = sinB;
-                f32 sA;
-                f32 cB;
+                cA = cosA;
+                sB = sinB;
                 pz_sinB = pz * sB;
                 sA = sinA;
                 cB = cosB;
                 ay_cosB = py * cB;
-                outX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
-                outY = sy + (py * sB + (-pz) * cB);
-                outZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
+                worldX = sx + (px * sA + cA * ay_cosB + cA * pz_sinB);
+                worldY = sy + (py * sB + (-pz) * cB);
+                worldZ = sz + ((-px) * cA + sA * ay_cosB + sA * pz_sinB);
             }
-            viewProjW = ((f32*)viewMatrix)[8] * outX + ((f32*)viewMatrix)[9] * outY + ((f32*)viewMatrix)[10] * outZ +
+            viewProjW = ((f32*)viewMatrix)[8] * worldX + ((f32*)viewMatrix)[9] * worldY + ((f32*)viewMatrix)[10] * worldZ +
                         ((f32*)viewMatrix)[11];
             if (viewProjW > lbl_803DB790)
             {
                 alpha = (int)((f32)(s32)alpha * ((-viewProjW) - lbl_803DF414) / ((-lbl_803DB790) - lbl_803DF414));
             }
-            GXWGFifo.f32 = outX;
-            GXWGFifo.f32 = outY;
-            GXWGFifo.f32 = outZ;
+            GXWGFifo.f32 = worldX;
+            GXWGFifo.f32 = worldY;
+            GXWGFifo.f32 = worldZ;
             {
-                u8 colorR = ((u8*)slot)[12];
-                u8 colorG = ((u8*)slot)[13];
-                u8 colorB = ((u8*)slot)[14];
+                u8 colorR;
+                u8 colorG;
+                u8 colorB;
+                colorB = ((u8*)slot)[14];
+                colorG = ((u8*)slot)[13];
+                colorR = ((u8*)slot)[12];
                 GXWGFifo.u8 = colorR;
                 GXWGFifo.u8 = colorG;
                 GXWGFifo.u8 = colorB;
             }
             GXWGFifo.u8 = alpha;
             {
-                s16 texU = vtxStream[4];
-                s16 texV = vtxStream[5];
+                s16 texU;
+                s16 texV;
+                texV = vtxStream[5];
+                texU = vtxStream[4];
                 GXWGFifo.s16 = texU;
                 GXWGFifo.s16 = texV;
             }
