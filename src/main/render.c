@@ -425,19 +425,24 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
 int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int count, int gap, u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
-    int bw = bitWidth;
-    u32 mask = ~(-1 << bw);
-    int sh16 = 0x10 - bw;
+    u32 mask;
+    int sh16;
     int i;
+    int bw = bitWidth;
+
+    mask = ~(-1 << bw);
+    sh16 = 0x10 - bw;
     for (i = 0; i < count; i++)
     {
+        int sByte;
         int sbit = src->bit;
-        int sByte = sbit >> 3;
-        u8* sp = (u8*)src->instrs + sByte;
-        u8* dp;
         u32 val;
+        u8* sp;
+        u8* dp;
         int curBit;
         u32 packed;
+        sByte = sbit >> 3;
+        sp = (u8*)src->instrs + sByte;
         val = sp[0] << 16;
         val = val | (sp[1] << 8);
         val = val | sp[2];
