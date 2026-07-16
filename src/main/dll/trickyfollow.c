@@ -1481,7 +1481,8 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         return;
     }
     {
-        f32 step = lbl_803E2420 * timeDelta + ((TrickyState*)state)->speed;
+        f32 step = ((TrickyState*)state)->speed;
+        step = lbl_803E2420 * timeDelta + step;
         ((TrickyState*)state)->speed = (step > gTrickyFollowMaxSpeed) ? gTrickyFollowMaxSpeed : step;
     }
 }
