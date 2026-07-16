@@ -2611,6 +2611,7 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
     TrackBlockDescriptor* desc = (TrackBlockDescriptor*)(base + 0x424);
     TrackBlockDescriptor* end;
     u8* ptr;
+    f32* p5;
     int i, j;
     int sorted;
     int conv[6];
@@ -2669,12 +2670,11 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
         i = 0;
         for (j = 0; j < lbl_803DCF60 - 1; j++)
         {
-            f32** pp = (f32**)(lbl_803DCF64 + i);
-            f32* p5 = pp[0];
-            if (*p5 < *pp[1])
+            p5 = ((f32**)(lbl_803DCF64 + i))[0];
+            if (*p5 < *((f32**)(lbl_803DCF64 + i))[1])
             {
                 sorted = 0;
-                pp[0] = pp[1];
+                ((f32**)(lbl_803DCF64 + i))[0] = ((f32**)(lbl_803DCF64 + i))[1];
                 *(f32**)(lbl_803DCF64 + i + 4) = p5;
             }
             i += 4;
