@@ -5135,10 +5135,10 @@ void textureFn_8004c330(void* p1, void* mtx)
             ylo = (y & 3) * 2;
             for (; x < 0x20; x++)
             {
-                v3 = (int)lbl_803DCD2C + ylo;
-                v3 = v3 + yhi;
-                v3 = v3 + (x & 3) * 8;
-                dst = (u8*)v3 + (x >> 2) * 0x100;
+                v1 = (int)lbl_803DCD2C + ylo;
+                v1 = v1 + yhi;
+                v1 = v1 + (x & 3) * 8;
+                dst = (u8*)v1 + (x >> 2) * 0x100;
                 v1 = randomGetRange(0x80, 0xff);
                 v2 = v1 - randomGetRange(0, 0x40);
                 v3 = v1 - randomGetRange(0x40, 0x80);
