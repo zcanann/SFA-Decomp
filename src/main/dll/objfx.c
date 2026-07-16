@@ -431,7 +431,7 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
     }
 }
 
-__declspec(section ".sdata2") f32 gObjFxPi = 3.1415927f;
+#define OBJ_FX_PI 3.1415927f
 
 void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 angBase, f32 lo, f32 hi,
                            void* origin, int flags)
@@ -480,13 +480,13 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
             break;
         case 4:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)val / 32768.0f;
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathCosf(a));
             params.position[0] = lbl_803DF354 - f30 * f30;
             break;
         case 5:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)val / 32768.0f;
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathSinf(a));
             params.position[0] = lbl_803DF354 - f30 * f30;
             break;
@@ -561,14 +561,14 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
         case 4:
             params.position[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.position[1]);
-            a = gObjFxPi * (f32)(u32)val / 32768.0f;
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
             params.position[1] = lbl_803DF358 * mathCosf(a);
             params.position[2] -= lbl_803DF358;
             break;
         case 5:
             params.position[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.position[1]);
-            a = gObjFxPi * (f32)(u32)val / 32768.0f;
+            a = OBJ_FX_PI * (f32)(u32)val / 32768.0f;
             params.position[1] = lbl_803DF358 * mathSinf(a);
             params.position[2] -= lbl_803DF358;
             break;

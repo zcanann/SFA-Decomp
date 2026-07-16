@@ -81,10 +81,5 @@ void DR_Creator_release(void);
 void DR_Creator_initialise(void);
 
 extern const f32 lbl_803E69A8;
-extern f32 lbl_803E69C0;
-extern f32 lbl_803E69C4;
-extern f32 lbl_803E69C8;
-extern f32 lbl_803E69BC;
-extern f32 lbl_803E69B8;
 
 #endif /* MAIN_DLL_DR_DLL_0265_DRCREATOR_H_ */

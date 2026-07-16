@@ -142,15 +142,15 @@ void DR_Creator_update(GameObject* obj)
                         ((DrcreatorState*)projectile)->unk2 = 0;
                         projectile->anim.rotX = randomGetRange(0, 65535);
                         ((DrcreatorState*)projectile)->velocityX =
-                            lbl_803E69B8 *
-                            (lbl_803E69BC * ((f32) * (int*)runtime *
-                                             -mathSinf((lbl_803E69C0 * (f32)(obj)->anim.rotX) / lbl_803E69C4)));
+                            0.03f *
+                            (10.0f * ((f32) * (int*)runtime *
+                                             -mathSinf((3.14159274f * (f32)(obj)->anim.rotX) / 32768.0f)));
                         ((DrcreatorState*)projectile)->velocityY =
-                            lbl_803E69B8 * ((f32) * (int*)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
+                            0.03f * ((f32) * (int*)runtime * (0.01f * (f32)(int)randomGetRange(0, 1000)));
                         ((DrcreatorState*)projectile)->velocityZ =
-                            lbl_803E69B8 *
-                            (lbl_803E69BC * ((f32) * (int*)runtime *
-                                             -mathCosf((lbl_803E69C0 * (f32)(obj)->anim.rotX) / lbl_803E69C4)));
+                            0.03f *
+                            (10.0f * ((f32) * (int*)runtime *
+                                             -mathCosf((3.14159274f * (f32)(obj)->anim.rotX) / 32768.0f)));
                         ((DrcreatorState*)projectile)->creatorObj = obj;
                     }
                     ((DrcreatorState*)runtime)->spawnTimer =
@@ -188,12 +188,4 @@ void DR_Creator_initialise(void)
 char sDrCreatorTimeFormat[15] = " Time %i : %i \000";
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69B8 = 0.03f;
-__declspec(section ".sdata2") f32 lbl_803E69BC = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E69C0 = 3.14159274f;
-__declspec(section ".sdata2") f32 lbl_803E69C4 = 32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E69C8 = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E69CC = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset

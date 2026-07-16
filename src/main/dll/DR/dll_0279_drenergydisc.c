@@ -6,7 +6,7 @@
  * one-shot servo whir on its first frame active, forces its texture to
  * the energised id and scrolls the texture's T coordinate each step.
  * When the "move" game bit (placement 0x1E) is set the disc switches to
- * animation move lbl_803E6BB0. init seeds the spawn rotation from the
+ * animation move 1.0f. init seeds the spawn rotation from the
  * placement and primes the activated/texture state from the active bit.
  */
 #include "main/audio/sfx.h"
@@ -24,10 +24,6 @@
 
 int lbl_803DC380 = -400;
 
-__declspec(section ".sdata2") f32 lbl_803E6BB0 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6BB4 = 0.0f;
-#pragma explicit_zero_data off
 
 #define DRENERGYDISC_OBJFLAG_HIDDEN             0x4000
 #define DRENERGYDISC_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -87,7 +83,7 @@ void DR_EnergyDisc_update(GameObject* obj)
 
     if ((u32)mainGetBit(setup->moveGameBit) != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E6BB0, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, 1.0f, 0);
     }
 }
 

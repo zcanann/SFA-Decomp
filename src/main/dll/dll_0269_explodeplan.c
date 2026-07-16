@@ -14,10 +14,6 @@
 #include "main/dll/dll_0269_explodeplan.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E69D0 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69D4 = 0.0f;
-#pragma explicit_zero_data off
 
 #define EXPLODEPLAN_OBJECT_TYPE_ID 0x0
 
@@ -37,9 +33,11 @@ void explodeplan_free(void)
 
 void explodeplan_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
+    f32 scale = 1.0f;
+
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, (double)lbl_803E69D0);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, scale);
     }
 }
 
