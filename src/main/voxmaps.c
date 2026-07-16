@@ -405,8 +405,8 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
     int z6hi;
     u8 buf[3][4];
     u8* p;
-    int sumA;
     int sumB;
+    int sumA;
     int bitmapCol;
     int blocked;
     int adj;
@@ -522,14 +522,16 @@ int fn_800119FC(s16* dest, s16* start, s16* out)
                 }
                 if (!blocked)
                 {
+                    u8* q;
                     sumA = *(u8*)&buf[i][0];
-                    sumB = *(u8*)&buf[next][0];
+                    q = buf[next];
+                    sumB = q[0];
                     sumA += buf[i][1];
-                    sumB += buf[next][1];
+                    sumB += q[1];
                     sumA += buf[i][2];
-                    sumB += buf[next][2];
+                    sumB += q[2];
                     sumA += buf[i][3];
-                    sumB += buf[next][3];
+                    sumB += q[3];
                     if (next == 2 && sumB == 0)
                     {
                         blocked = 1;
