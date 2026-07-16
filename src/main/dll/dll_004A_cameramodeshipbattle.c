@@ -40,6 +40,7 @@ void CameraModeShipBattle_free(void)
 }
 
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeShipBattle_update(short* cam)
 {
     f32 fa;
@@ -99,10 +100,11 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - gCamShipBattleState->smoothedZOffset);
         fa = (f32)focus->anim.rotY / lbl_803E1968;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - gCamShipBattleState->smoothedYOffset);
-        fb = gCamShipBattleState->smoothedZOffset;
+        state = gCamShipBattleState;
         fc = lbl_803E196C;
+        fb = state->smoothedZOffset;
         fa = fc * fb;
-        gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - fb);
+        state->smoothedZOffset = -(fa * timeDelta - fb);
         fb = gCamShipBattleState->smoothedYOffset;
         fa = fc * fb;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - fb);
@@ -115,10 +117,11 @@ void CameraModeShipBattle_update(short* cam)
         gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - gCamShipBattleState->smoothedZOffset);
         fa = (f32)focus->anim.rotY / lbl_803E1968;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - gCamShipBattleState->smoothedYOffset);
-        fb = gCamShipBattleState->smoothedZOffset;
+        state = gCamShipBattleState;
         fc = lbl_803E196C;
+        fb = state->smoothedZOffset;
         fa = fc * fb;
-        gCamShipBattleState->smoothedZOffset = -(fa * timeDelta - fb);
+        state->smoothedZOffset = -(fa * timeDelta - fb);
         fb = gCamShipBattleState->smoothedYOffset;
         fa = fc * fb;
         gCamShipBattleState->smoothedYOffset = -(fa * timeDelta - fb);
@@ -150,6 +153,7 @@ void CameraModeShipBattle_update(short* cam)
                                    *(int*)&((CameraObject*)cam)->anim.parent);
 }
 #pragma opt_common_subs reset
+#pragma opt_propagation reset
 
 void CameraModeShipBattle_init(void)
 {
