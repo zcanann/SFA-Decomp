@@ -46,13 +46,6 @@ extern f32 gDrLaserTurretDefaultAnimStepScale;
 extern f32 gDrLaserTurretPi;
 extern f32 gDrLaserTurretBobPhaseScale;
 extern f32 lbl_803E59F0;
-extern f32 lbl_803E5A08;
-extern f32 lbl_803E5A0C;
-extern f32 lbl_803E5A10;
-extern f32 lbl_803E5A14;
-extern f32 lbl_803E5A18;
-extern f32 lbl_803E5A1C;
-extern f32 lbl_803E5A20;
 
 int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {
@@ -113,6 +106,14 @@ int DRlaserturret_updateIdle(DRLaserTurretObject* obj, DRLaserTurretAnimState* a
     }
     return 0;
 }
+
+__declspec(section ".sdata2") f32 lbl_803E5A08 = 0.99f;
+__declspec(section ".sdata2") f32 lbl_803E5A0C = -0.0125f;
+__declspec(section ".sdata2") f32 lbl_803E5A10 = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E5A14 = -0.9f;
+__declspec(section ".sdata2") f32 lbl_803E5A18 = 80.0f;
+__declspec(section ".sdata2") f32 lbl_803E5A1C = -0.002f;
+__declspec(section ".sdata2") f32 lbl_803E5A20 = 10000.0f;
 
 int DRlaserturret_updateTracking(DRLaserTurretObject* obj, DRLaserTurretAnimState* animState)
 {

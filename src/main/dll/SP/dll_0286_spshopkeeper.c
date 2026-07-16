@@ -85,160 +85,23 @@ extern f32 lbl_803E59D8;
 extern void* lbl_803AD068[8];
 void* lbl_803DDC58;
 extern f32 lbl_803E5A20;
-extern f32 lbl_803E59DC;
+
 extern f32 lbl_803E59F0;
-extern f32 lbl_803E5A28;
 
-extern f32 lbl_803E5A24;
+void fn_801E7DC8(GameObject* obj, int state, int count);
 
-void fn_801E7DC8(GameObject* obj, int state, int count)
-{
-    int i;
-    f32 groundHeight;
-    int setup;
+__declspec(section ".sdata2") f32 lbl_803E5A24 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E5A28 = 300.0f;
 
-    if (Obj_IsLoadingLocked() == 0)
-        return;
-
-    (*gMapEventInterface)->setObjGroupStatus((s32)(obj)->anim.mapEventSlot, 6, 1);
-
-    hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &groundHeight,
-                         0);
-
-    for (i = 0; i < count; i++)
-    {
-        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
-        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
-    }
-
-    for (i = 0; i < count; i++)
-    {
-        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
-        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
-        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
-        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
-        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
-        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
-        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
-        ((ShopkeeperSpawnSetup*)setup)->kind = 1;
-        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
-        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
-    }
-}
-
-void ShopKeeper_free(GameObject* obj)
-{
-    Stack_Free(((ShopkeeperState*)obj->extra)->msgStack);
-    return;
-}
-
-void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int state = *(int*)&(obj)->extra;
-    f32 fxParams[4];
-    fxParams[0] = lbl_803E59D8;
-    if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
-    {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
-        dll_2E_func06(obj, (MoveLibState*)(state + 0x35c), 0);
-    }
-    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
-    {
-        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, fxParams, 0x50, NULL);
-    }
-}
-
-void ShopKeeper_hitDetect(void)
-{
-}
-
-void ShopKeeper_release(void)
-{
-}
-
-int ShopKeeper_getExtraSize(void)
-{
-    return 0x9d8;
-}
-int ShopKeeper_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-void ShopKeeper_initialise(void)
-{
-    lbl_803AD068[0] = DRlaserturret_startLinkedTarget;
-    lbl_803AD068[1] = DRlaserturret_updateTracking;
-    lbl_803AD068[2] = DRlaserturret_updateIdle;
-    lbl_803AD068[3] = TREX_Lazerwall_updateTimedChallenge;
-    lbl_803AD068[4] = TREX_Lazerwall_waitForStartBit;
-    lbl_803AD068[5] = TREX_Lazerwall_popQueuedState;
-    lbl_803AD068[6] = fn_801E66EC;
-    lbl_803AD068[7] = fn_801E66E4;
-    lbl_803DDC58 = fn_801E66DC;
-}
-
-void ShopKeeper_update(GameObject* obj)
-{
-    void* player;
-    int state;
-    f32 dist;
-    player = Obj_GetPlayerObject();
-    state = *(int*)&(obj)->extra;
-    dist = lbl_803E5A20;
-    ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
-    if (((ShopkeeperState*)state)->textTimer > lbl_803E59DC)
-    {
-        gameTextShow(0x433);
-        ((ShopkeeperState*)state)->textTimer = ((ShopkeeperState*)state)->textTimer - timeDelta;
-        if (((ShopkeeperState*)state)->textTimer < lbl_803E59DC)
-        {
-            ((ShopkeeperState*)state)->textTimer = *(f32*)&lbl_803E59DC;
-        }
-    }
-    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_FACING) != 0)
-    {
-        shopKeeperRotateFn_801e7c4c((s16*)obj, player, 1);
-    }
-    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
-    if (*(void**)&((ShopkeeperState*)state)->vendorObj == NULL)
-    {
-        ((ShopkeeperState*)state)->vendorObj =
-            ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, (int)obj, &dist);
-    }
-    ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
-    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
-    dll_2E_func03(obj, (MoveLibState*)(state + 0x35C));
-    characterDoEyeAnimsState(obj, state + 0x980);
-    (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
-}
-
-void ShopKeeper_init(GameObject* obj)
-{
-    int state = *(int*)&(obj)->extra;
-    (obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
-    (obj)->animEventCallback = fn_801E76A0;
-    (obj)->anim.modelState->flags |= 0x810;
-    ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
-    ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
-    ((ShopkeeperState*)state)->opacity = 0xFF;
-    ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;
-    dll_2E_func05(obj, (MoveLibState*)(state + 0x35C), -0x1C71, 0x3555, 2);
-    ((ShopkeeperState*)state)->unk96D |= 0x12;
-}
+int ShopKeeper_getExtraSize(void);
+int ShopKeeper_getObjectTypeId(void);
+void ShopKeeper_free(GameObject* obj);
+void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void ShopKeeper_hitDetect(void);
+void ShopKeeper_update(GameObject* obj);
+void ShopKeeper_init(GameObject* obj);
+void ShopKeeper_release(void);
+void ShopKeeper_initialise(void);
 
 ObjectDescriptor gShopKeeperObjDescriptor = {
     0,
@@ -419,6 +282,7 @@ int fn_801E76A0(GameObject* obj, int unused, ObjSeqState* seq, s8 advance)
     return 0;
 }
 
+#pragma dont_inline on
 f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
 {
     f32 dist;
@@ -469,3 +333,155 @@ f32 shopKeeperRotateFn_801e7c4c(s16* obj, void* player, int mode)
     }
     return dist;
 }
+#pragma dont_inline reset
+
+void fn_801E7DC8(GameObject* obj, int state, int count)
+{
+    int i;
+    f32 groundHeight;
+    int setup;
+
+    if (Obj_IsLoadingLocked() == 0)
+        return;
+
+    (*gMapEventInterface)->setObjGroupStatus((s32)(obj)->anim.mapEventSlot, 6, 1);
+
+    hitDetectFn_800658a4(obj, (obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ, &groundHeight,
+                         0);
+
+    for (i = 0; i < count; i++)
+    {
+        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
+        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        setup = (int)Obj_AllocObjectSetup(0x24, OBJTYPE_SPSCARAB);
+        ((ShopkeeperSpawnSetup*)setup)->base.posX = (obj)->anim.localPosX;
+        ((ShopkeeperSpawnSetup*)setup)->base.posY = (obj)->anim.localPosY;
+        ((ShopkeeperSpawnSetup*)setup)->base.posZ = (obj)->anim.localPosZ;
+        ((ShopkeeperSpawnSetup*)setup)->rotXByte = randomGetRange(-128, 127);
+        ((ShopkeeperSpawnSetup*)setup)->groundY = (obj)->anim.localPosY - groundHeight;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[1] = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[3] = 255;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[0] = 16;
+        ((ShopkeeperSpawnSetup*)setup)->base.color[2] = 6;
+        ((ShopkeeperSpawnSetup*)setup)->kind = 1;
+        ((ShopkeeperSpawnSetup*)setup)->base.mapId = ((ShopkeeperState*)state)->vendorObj;
+        Obj_SetupObject((ObjPlacement*)setup, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
+    }
+}
+
+int ShopKeeper_getExtraSize(void)
+{
+    return 0x9d8;
+}
+
+int ShopKeeper_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+void ShopKeeper_free(GameObject* obj)
+{
+    Stack_Free(((ShopkeeperState*)obj->extra)->msgStack);
+    return;
+}
+
+void ShopKeeper_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state = *(int*)&(obj)->extra;
+    f32 fxParams[4];
+    fxParams[0] = lbl_803E59D8;
+    if (((ShopkeeperState*)state)->controlMode != 7 && visible != 0)
+    {
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)((int)obj, p2, p3, p4, p5, lbl_803E59D8);
+        dll_2E_func06(obj, (MoveLibState*)(state + 0x35c), 0);
+    }
+    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_TICK) != 0)
+    {
+        (*gBoneParticleEffectInterface)->spawnEffect((void*)obj, 0x7ef, fxParams, 0x50, NULL);
+    }
+}
+
+void ShopKeeper_hitDetect(void)
+{
+}
+
+void ShopKeeper_update(GameObject* obj)
+{
+    void* player;
+    int state;
+    f32 dist;
+    player = Obj_GetPlayerObject();
+    state = *(int*)&(obj)->extra;
+    dist = lbl_803E5A20;
+    ((ShopkeeperState*)state)->flags9D4 &= ~SHOPKEEPER_FLAG_TICK;
+    if (((ShopkeeperState*)state)->textTimer > lbl_803E59DC)
+    {
+        gameTextShow(0x433);
+        ((ShopkeeperState*)state)->textTimer = ((ShopkeeperState*)state)->textTimer - timeDelta;
+        if (((ShopkeeperState*)state)->textTimer < lbl_803E59DC)
+        {
+            ((ShopkeeperState*)state)->textTimer = *(f32*)&lbl_803E59DC;
+        }
+    }
+    if ((((ShopkeeperState*)state)->flags9D4 & SHOPKEEPER_FLAG_FACING) != 0)
+    {
+        shopKeeperRotateFn_801e7c4c((s16*)obj, player, 1);
+    }
+    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase;
+    if (*(void**)&((ShopkeeperState*)state)->vendorObj == NULL)
+    {
+        ((ShopkeeperState*)state)->vendorObj =
+            ObjGroup_FindNearestObject(SPSHOPKEEPER_TARGET_OBJGROUP, (int)obj, &dist);
+    }
+    ((ShopkeeperState*)state)->playerMoney = playerGetMoney(player);
+    (*gPlayerInterface)->update((void*)obj, (void*)state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
+    dll_2E_func03(obj, (MoveLibState*)(state + 0x35C));
+    characterDoEyeAnimsState(obj, state + 0x980);
+    (obj)->anim.alpha = ((ShopkeeperState*)state)->opacity;
+}
+
+void ShopKeeper_init(GameObject* obj)
+{
+    int state = *(int*)&(obj)->extra;
+    (obj)->objectFlags |= SPSHOPKEEPER_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->animEventCallback = fn_801E76A0;
+    (obj)->anim.modelState->flags |= 0x810;
+    ((ShopkeeperState*)state)->unk9B8 = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
+    ((ShopkeeperState*)state)->msgStack = allocModelStruct_800139e8(4, 4);
+    ((ShopkeeperState*)state)->opacity = 0xFF;
+    ((ShopkeeperState*)state)->textTimer = lbl_803E5A28;
+    dll_2E_func05(obj, (MoveLibState*)(state + 0x35C), -0x1C71, 0x3555, 2);
+    ((ShopkeeperState*)state)->unk96D |= 0x12;
+}
+
+void ShopKeeper_release(void)
+{
+}
+
+void ShopKeeper_initialise(void)
+{
+    lbl_803AD068[0] = DRlaserturret_startLinkedTarget;
+    lbl_803AD068[1] = DRlaserturret_updateTracking;
+    lbl_803AD068[2] = DRlaserturret_updateIdle;
+    lbl_803AD068[3] = TREX_Lazerwall_updateTimedChallenge;
+    lbl_803AD068[4] = TREX_Lazerwall_waitForStartBit;
+    lbl_803AD068[5] = TREX_Lazerwall_popQueuedState;
+    lbl_803AD068[6] = fn_801E66EC;
+    lbl_803AD068[7] = fn_801E66E4;
+    lbl_803DDC58 = fn_801E66DC;
+}
+

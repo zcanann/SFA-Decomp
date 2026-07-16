@@ -2797,14 +2797,12 @@ main/dll/dll_801e66dc.c:
 main/dll/trex_lazerwall.c:
 	.text       start:0x801E67BC end:0x801E6B10
 
-main/dll/drlaserturret.c:
-	.text       start:0x801E6B10 end:0x801E76A0
-	.sdata      start:0x803DC0A0 end:0x803DC0B0
-
-main/dll/SP/dll_0286_spshopkeeper.c:
-	.text       start:0x801E76A0 end:0x801E832C
+main/dll/laserturretgroup.c:
+	.text       start:0x801E6B10 end:0x801E832C
 	.data       start:0x80328370 end:0x803283E0
+	.sdata      start:0x803DC0A0 end:0x803DC0B0
 	.sbss       start:0x803DDC58 end:0x803DDC5C
+	.sdata2     start:0x803E59F8 end:0x803E5A30
 
 main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
