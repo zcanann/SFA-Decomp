@@ -111,36 +111,6 @@ typedef struct HagabonAnimState
     u16 moveEventFlags; /* 0x2F8 move-progress event bits (0x200/0x40/0x1000/1/0x80) */
 } HagabonAnimState;
 
-void wispbaddie_hitDetect(void)
-{
-}
-
-void wispbaddie_free(GameObject* obj)
-{
-    void** state = (obj)->extra;
-    ObjGroup_RemoveObject((int)obj, WISPBADDIE_OBJGROUP);
-    if (*state != NULL)
-    {
-        mm_free(*state);
-        *state = NULL;
-    }
-}
-
-int wispbaddie_getExtraSize(void)
-{
-    return 0x2c;
-}
-int wispbaddie_getObjectTypeId(void)
-{
-    return 0x9;
-}
-
-void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (visible == 0)
-        return;
-}
-
 void fn_8014F620(GameObject* obj, WispBaddieState* state)
 {
     RomCurveWalker* curve;
@@ -216,6 +186,36 @@ void fn_8014F620(GameObject* obj, WispBaddieState* state)
 
     objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
+}
+
+int wispbaddie_getExtraSize(void)
+{
+    return 0x2c;
+}
+int wispbaddie_getObjectTypeId(void)
+{
+    return 0x9;
+}
+
+void wispbaddie_free(GameObject* obj)
+{
+    void** state = (obj)->extra;
+    ObjGroup_RemoveObject((int)obj, WISPBADDIE_OBJGROUP);
+    if (*state != NULL)
+    {
+        mm_free(*state);
+        *state = NULL;
+    }
+}
+
+void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible == 0)
+        return;
+}
+
+void wispbaddie_hitDetect(void)
+{
 }
 
 void wispbaddie_update(GameObject* obj)
@@ -354,8 +354,8 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
     (obj)->objectFlags = (u16)((obj)->objectFlags | WISPBADDIE_OBJFLAG_HITDETECT_DISABLED);
 }
 
-#pragma scheduling off
 #pragma peephole off
+#pragma scheduling off
 void wispbaddie_release(void)
 {
 }
@@ -381,10 +381,6 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
     wispbaddie_getExtraSize,
 };
 
-void fn_8014FF20(void)
-{
-}
-
 void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code)
 {
     if (code == 0x10)
@@ -395,6 +391,10 @@ void battleDroidUpdateWhileFrozen(int obj, int* state, int arg, int code)
     {
         ((BaddieState*)state)->reactionFlags |= 0x8;
     }
+}
+
+void fn_8014FF20(void)
+{
 }
 
 void fn_8014FF24(int obj, int state)
