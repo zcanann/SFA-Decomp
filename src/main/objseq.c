@@ -4558,7 +4558,6 @@ void ObjSeq_RefreshActionCursor(void* obj, void* seqFile, u8* seq)
 
 #pragma ppc_unroll_speculative off
 #pragma optimization_level 3
-#pragma opt_propagation off
 void ObjSeq_onMapSetup(void)
 {
     u8* base = lbl_80396918;
@@ -4706,12 +4705,10 @@ void ObjSeq_onMapSetup(void)
     }
 
     {
-        flagsB = base + i;
-        modes = (s16*)(base + 0x3a98) + i;
-        frames = (f32*)base + i;
-        handles2 = (int*)(frames + 3321);
-        marks2 = flagsB + 0x338c;
-        for (; i < 0x55; i++)
+        for (flagsB = base + i, modes = (s16*)(base + 0x3a98) + i, frames = (f32*)base + i,
+             handles2 = (int*)(frames + 3321), marks2 = flagsB + 0x338c;
+             i < 0x55;
+             i++, modes++, handles2++, marks2++)
         {
             frames = (f32*)(handles2 + 300);
             dists = (f32*)(handles2 + 215);
@@ -4734,9 +4731,6 @@ void ObjSeq_onMapSetup(void)
             counts[0] = 0;
             handles2[0] = 0;
             marks2[0] = 0;
-            modes++;
-            handles2++;
-            marks2++;
         }
     }
 
@@ -4748,7 +4742,6 @@ void ObjSeq_onMapSetup(void)
     lbl_803DD0F8 = 0;
     gObjSeqBgCmdCount = 0;
 }
-#pragma opt_propagation reset
 #pragma optimization_level reset
 #pragma ppc_unroll_speculative on
 
