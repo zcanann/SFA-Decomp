@@ -40,6 +40,7 @@
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
 
+extern char gMoonRockSpawnParams[0x18];
 #define MMPMOONROCK_OBJGROUP        4
 #define MMPMOONROCK_HIT_VOLUME_SLOT 14
 #define CARRYABLE_OBJGROUP          0x10
@@ -73,8 +74,6 @@ typedef struct MmpMoonrockPlacement
 } MmpMoonrockPlacement;
 
 
-#pragma scheduling on
-#pragma peephole on
 
 const f32 lbl_803E4548 = 0.707f;
 const f32 lbl_803E454C = 8.0f;
@@ -100,31 +99,64 @@ const f32 gMoonRockPi = 3.1415927f;
 const f32 gMoonRockAngleScale = 32768.0f;
 const f32 gMoonRockWobbleAmplitude = 182.0f;
 const f32 lbl_803E45A4 = 0.0f;
-
-void mmp_moonrock_hitDetect(void)
-{
-}
-
-void mmp_moonrock_release(void)
-{
-}
-
-void mmp_moonrock_initialise(void)
-{
-}
-
-int mmp_moonrock_getExtraSize(void)
-{
-    return 0x30;
-}
-int mmp_moonrock_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-
-#pragma scheduling off
 #pragma peephole off
+#pragma scheduling off
+
+
+#pragma dont_inline on
+int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
+{
+    TrackGroundHit** results;
+    f32* e;
+    int i;
+    int count;
+
+    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
+    *out1 = y;
+    *out2 = 0;
+    for (i = 0; i < count; i++)
+    {
+        if ((s8)results[i]->surfaceType != 0xE && y < results[i]->height &&
+            (y2 > results[i]->height || i == count - 1))
+        {
+            *out2 = (int)results[i]->object;
+            *out1 = results[i]->height;
+            return (results[i]->normalY < *(f32*)&lbl_803E4548) + 1;
+        }
+    }
+    return 0;
+}
+#pragma dont_inline off
+#pragma dont_inline on
+void fn_801A79E0(GameObject* obj)
+{
+    TrackBBoxHit hitScratch;
+    int hitObjOut;
+    MmpMoonrockState* state;
+    int hit;
+    state = (obj)->extra;
+    hit = ObjHits_GetPriorityHit(obj, &hitObjOut, 0, 0);
+    if (hit == 0)
+    {
+        hit = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, *(f32*)&lbl_803E454C, 1, &hitScratch,
+                                 obj, 1, -1, 0xff, 0);
+    }
+    if ((hit != 0) || ((((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0 &&
+                        (state->flags & MOONROCK_FLAG_THROWN) != 0) ||
+                       (state->flags & MOONROCK_FLAG_SUNK) != 0))
+    {
+        (obj)->anim.localPosY = (obj)->anim.localPosY + *(f32*)&lbl_803E4550;
+        spawnExplosionLegacy((int)obj, *(f32*)&lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
+        state->flags |= MOONROCK_FLAG_RESPAWNING;
+        state->respawnTimer = *(f32*)&gMoonRockRespawnTime;
+        (obj)->anim.alpha = 0;
+        (obj)->anim.localPosX = state->homeX;
+        (obj)->anim.localPosY = state->homeY;
+        (obj)->anim.localPosZ = state->homeZ;
+        saveGame_saveObjectPos((GameObject*)obj);
+    }
+}
+#pragma dont_inline reset
 void fn_801A7B10(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
@@ -217,67 +249,7 @@ void fn_801A7B10(GameObject* obj)
         obj->anim.velocityZ = zeroVel;
     }
 }
-
-
 #pragma dont_inline on
-void fn_801A79E0(GameObject* obj)
-{
-    TrackBBoxHit hitScratch;
-    int hitObjOut;
-    MmpMoonrockState* state;
-    int hit;
-    state = (obj)->extra;
-    hit = ObjHits_GetPriorityHit(obj, &hitObjOut, 0, 0);
-    if (hit == 0)
-    {
-        hit = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, *(f32*)&lbl_803E454C, 1, &hitScratch,
-                                 obj, 1, -1, 0xff, 0);
-    }
-    if ((hit != 0) || ((((ObjHitsPriorityState*)(obj)->anim.hitReactState)->contactFlags != 0 &&
-                        (state->flags & MOONROCK_FLAG_THROWN) != 0) ||
-                       (state->flags & MOONROCK_FLAG_SUNK) != 0))
-    {
-        (obj)->anim.localPosY = (obj)->anim.localPosY + *(f32*)&lbl_803E4550;
-        spawnExplosionLegacy((int)obj, *(f32*)&lbl_803E4554, 1, 1, 0, 0, 0, 1, 0);
-        state->flags |= MOONROCK_FLAG_RESPAWNING;
-        state->respawnTimer = *(f32*)&gMoonRockRespawnTime;
-        (obj)->anim.alpha = 0;
-        (obj)->anim.localPosX = state->homeX;
-        (obj)->anim.localPosY = state->homeY;
-        (obj)->anim.localPosZ = state->homeZ;
-        saveGame_saveObjectPos((GameObject*)obj);
-    }
-}
-#pragma dont_inline reset
-
-#pragma scheduling on
-#pragma peephole on
-void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
-{
-    (obj)->anim.localPosX = x;
-    (obj)->anim.localPosY = y;
-    (obj)->anim.localPosZ = z;
-    saveGame_saveObjectPos((GameObject*)obj);
-}
-
-#pragma scheduling off
-void mmp_moonrock_free(int obj)
-{
-    ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
-    (*gCarryableInterface)->free(obj);
-}
-
-void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
-    {
-        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, *(f32*)&lbl_803E457C);
-    }
-}
-
-
-#pragma dont_inline on
-#pragma peephole off
 void fn_801A7CC4(GameObject* obj)
 {
     MmpMoonrockState* state = obj->extra;
@@ -309,80 +281,6 @@ void fn_801A7CC4(GameObject* obj)
     state->flags |= MOONROCK_FLAG_THROWN;
 }
 #pragma dont_inline reset
-
-void fn_801A80F0(GameObject* obj, u8 flag)
-{
-    MmpMoonrockState* state = obj->extra;
-    if (flag != 0)
-    {
-        state->flags |= MOONROCK_FLAG_FROZEN;
-        *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-    }
-    else
-    {
-        state->flags &= ~MOONROCK_FLAG_FROZEN;
-        *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    }
-}
-
-
-int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* out2)
-{
-    TrackGroundHit** results;
-    f32* e;
-    int i;
-    int count;
-
-    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
-    *out1 = y;
-    *out2 = 0;
-    for (i = 0; i < count; i++)
-    {
-        if ((s8)results[i]->surfaceType != 0xE && y < results[i]->height &&
-            (y2 > results[i]->height || i == count - 1))
-        {
-            *out2 = (int)results[i]->object;
-            *out1 = results[i]->height;
-            return (results[i]->normalY < *(f32*)&lbl_803E4548) + 1;
-        }
-    }
-    return 0;
-}
-
-void mmp_moonrock_init(GameObject* obj, int param2)
-{
-    MmpMoonrockState* state = (obj)->extra;
-    u8 kind;
-    (obj)->objectFlags = (obj)->objectFlags | MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED;
-    *(s16*)&state->flags = 0;
-    state->kind = mainGetBit(((MmpMoonrockPlacement*)param2)->kindGameBit);
-    kind = state->kind;
-    if (kind != 0)
-    {
-        if ((u8)(kind - 3) <= 1 || kind == 6)
-        {
-            state->flags = state->flags | MOONROCK_FLAG_PLACED;
-        }
-        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
-    }
-    else
-    {
-        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
-    }
-    {
-        f32 z = (obj)->anim.localPosY;
-        state->baseY = z;
-        state->baseY2 = z;
-    }
-    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&(obj)->extra, 0x32);
-    (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x2c))((int)state, 1);
-    ObjGroup_AddObject((int)obj, MMPMOONROCK_OBJGROUP);
-    state->homeX = (obj)->anim.localPosX;
-    state->homeY = (obj)->anim.localPosY;
-    state->homeZ = (obj)->anim.localPosZ;
-    ObjHits_DisableObject((int)obj);
-    fn_801A7D74(obj, 1, 2);
-}
 
 
 
@@ -526,7 +424,71 @@ void fn_801A7D74(GameObject* obj, u8 place, u8 mode)
     }
 }
 
-char gMoonRockSpawnParams[0x18];
+
+#pragma peephole on
+#pragma scheduling on
+void fn_801A80C4(GameObject* obj, f32 x, f32 y, f32 z)
+{
+    (obj)->anim.localPosX = x;
+    (obj)->anim.localPosY = y;
+    (obj)->anim.localPosZ = z;
+    saveGame_saveObjectPos((GameObject*)obj);
+}
+
+
+#pragma peephole off
+#pragma scheduling off
+
+void fn_801A80F0(GameObject* obj, u8 flag)
+{
+    MmpMoonrockState* state = obj->extra;
+    if (flag != 0)
+    {
+        state->flags |= MOONROCK_FLAG_FROZEN;
+        *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+    }
+    else
+    {
+        state->flags &= ~MOONROCK_FLAG_FROZEN;
+        *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
+    }
+}
+
+#pragma peephole on
+#pragma scheduling on
+
+int mmp_moonrock_getExtraSize(void)
+{
+    return 0x30;
+}
+
+int mmp_moonrock_getObjectTypeId(void)
+{
+    return 0x0;
+}
+#pragma scheduling off
+void mmp_moonrock_free(int obj)
+{
+    ObjGroup_RemoveObject((u32)obj, MMPMOONROCK_OBJGROUP);
+    (*gCarryableInterface)->free(obj);
+}
+
+
+
+void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if ((*gCarryableInterface)->isVisible(obj, visible) != 0)
+    {
+        ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, *(f32*)&lbl_803E457C);
+    }
+}
+#pragma scheduling on
+
+void mmp_moonrock_hitDetect(void)
+{
+}
+#pragma peephole off
+#pragma scheduling off
 
 void mmp_moonrock_update(GameObject* obj)
 {
@@ -716,6 +678,53 @@ void mmp_moonrock_update(GameObject* obj)
     particleHeight = (int)(obj->anim.localPosY - state->baseY);
     (*gPartfxInterface)
         ->spawnObject((void*)obj, MMPMOONROCK_PARTFX, gMoonRockSpawnParams, 0x200001, -1, &particleHeight);
+}
+
+void mmp_moonrock_init(GameObject* obj, int param2)
+{
+    MmpMoonrockState* state = (obj)->extra;
+    u8 kind;
+    (obj)->objectFlags = (obj)->objectFlags | MMPMOONROCK_OBJFLAG_HITDETECT_DISABLED;
+    *(s16*)&state->flags = 0;
+    state->kind = mainGetBit(((MmpMoonrockPlacement*)param2)->kindGameBit);
+    kind = state->kind;
+    if (kind != 0)
+    {
+        if ((u8)(kind - 3) <= 1 || kind == 6)
+        {
+            state->flags = state->flags | MOONROCK_FLAG_PLACED;
+        }
+        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 0);
+    }
+    else
+    {
+        (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x20))((int)state, 1);
+    }
+    {
+        f32 z = (obj)->anim.localPosY;
+        state->baseY = z;
+        state->baseY2 = z;
+    }
+    (*gCarryableInterface)->initAnim((void*)obj, *(int*)&(obj)->extra, 0x32);
+    (*(int (**)(int, int))((u8*)*gCarryableInterface + 0x2c))((int)state, 1);
+    ObjGroup_AddObject((int)obj, MMPMOONROCK_OBJGROUP);
+    state->homeX = (obj)->anim.localPosX;
+    state->homeY = (obj)->anim.localPosY;
+    state->homeZ = (obj)->anim.localPosZ;
+    ObjHits_DisableObject((int)obj);
+    fn_801A7D74(obj, 1, 2);
+}
+#pragma peephole on
+#pragma scheduling on
+
+void mmp_moonrock_release(void)
+{
+}
+
+char gMoonRockSpawnParams[0x18];
+
+void mmp_moonrock_initialise(void)
+{
 }
 
 ObjectDescriptor gMMP_moonrockObjDescriptor = {
