@@ -812,7 +812,7 @@ void fn_80095164(WaterParticle* s)
         }
         sc = 2.0f * ph + 1.0f;
         PSMTXScale(mtxB, sc, 1.0f, sc);
-        PSMTXTrans(mtxC, lbl_803DF300, 2.0f * fade, lbl_803DF300);
+        PSMTXTrans(mtxC, 0.0f, 2.0f * fade, 0.0f);
         PSMTXConcat(mtxC, mtxB, mtxD);
         PSMTXConcat(scale, mtxD, mtxD);
         PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
