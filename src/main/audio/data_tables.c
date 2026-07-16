@@ -33,13 +33,13 @@ DataFXSearchKey dataGetFXSearchKey;
 LAYER_TAB dataGetLayerSearchKey;
 SDIR_DATA dataGetSampleSearchKey;
 
-FX_GROUP dataFXGroupTable[128];
-MAC_SUBTAB dataMacroTable[2048];
-MAC_MAINTAB dataMacroBucketTable[512];
-LAYER_TAB dataLayerTable[256];
-DATA_TAB dataKeymapTable[256];
-DATA_TAB dataCurveTable[2048];
 static SDIR_TAB dataSmpSDirs[128];
+static DATA_TAB dataCurveTable[2048];
+static DATA_TAB dataKeymapTable[256];
+static LAYER_TAB dataLayerTable[256];
+static MAC_MAINTAB dataMacroBucketTable[512];
+static MAC_SUBTAB dataMacroTable[2048];
+static FX_GROUP dataFXGroupTable[128];
 
 int dataInsertKeymap(u16 cid, void* keymapData)
 {
@@ -461,37 +461,32 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
     return 0;
 }
 
-#pragma opt_dead_assignments off
 s32 dataInsertMacro(u16 mid, void* macroaddr)
 {
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
     long main;
     long pos;
     long base;
     long i;
-    u16 num;
 
     sndBegin();
 
-    num = t->macMain[(mid >> 6) & 0x3ff].num;
-
-    if (num == 0)
+    if (dataMacroBucketTable[(mid >> 6) & 0x3ff].num == 0)
     {
-        pos = base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex = dataMacTotal;
+        pos = base = dataMacroBucketTable[(mid >> 6) & 0x3ff].subTabIndex = dataMacTotal;
     }
     else
     {
-        base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex;
-        for (i = 0; i < num && ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id < mid; ++i)
+        base = dataMacroBucketTable[(mid >> 6) & 0x3ff].subTabIndex;
+        for (i = 0; i < dataMacroBucketTable[(mid >> 6) & 0x3ff].num && dataMacroTable[base + i].id < mid; ++i)
         {
         }
 
-        if (i < num)
+        if (i < dataMacroBucketTable[(mid >> 6) & 0x3ff].num)
         {
             pos = base + i;
-            if (mid == t->macSub[pos].id)
+            if (mid == dataMacroTable[pos].id)
             {
-                t->macSub[pos].refCount++;
+                dataMacroTable[pos].refCount++;
                 sndEnd();
                 return 0;
             }
@@ -504,26 +499,22 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
 
     if (dataMacTotal < 2048)
     {
-        MAC_MAINTAB* m = (MAC_MAINTAB*)((u8*)t + 0x5A00);
         main = mid >> 6;
         for (i = 0; i < 512; ++i)
         {
-            if (m[i].subTabIndex > base)
+            if (dataMacroBucketTable[i].subTabIndex > base)
             {
-                m[i].subTabIndex++;
+                dataMacroBucketTable[i].subTabIndex++;
             }
         }
 
-        {
-            MAC_SUBTAB* sub = t->macSub;
-            for (i = dataMacTotal - 1; i >= pos; --i)
-                sub[i + 1] = sub[i];
-        }
+        for (i = dataMacTotal - 1; i >= pos; --i)
+            dataMacroTable[i + 1] = dataMacroTable[i];
 
-        t->macSub[pos].id = mid;
-        t->macSub[pos].data = macroaddr;
-        t->macSub[pos].refCount = 1;
-        t->macMain[main].num++;
+        dataMacroTable[pos].id = mid;
+        dataMacroTable[pos].data = macroaddr;
+        dataMacroTable[pos].refCount = 1;
+        dataMacroBucketTable[main].num++;
         dataMacTotal++;
         sndEnd();
         return 1;
@@ -531,48 +522,39 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
     sndEnd();
     return 0;
 }
-#pragma opt_dead_assignments reset
 
 s32 dataRemoveMacro(u16 mid)
 {
-    SynthDataTables* t = (SynthDataTables*)dataSmpSDirs;
+    s32 main;
     s32 base;
     s32 i;
-    MAC_MAINTAB* m;
 
     sndBegin();
+    main = (mid >> 6) & 0x3ff;
 
-    if (t->macMain[(mid >> 6) & 0x3ff].num != 0)
+    if (dataMacroBucketTable[main].num != 0)
     {
-        m = &t->macMain[(mid >> 6) & 0x3ff];
-        base = t->macMain[(mid >> 6) & 0x3ff].subTabIndex;
-        for (i = 0; i < m->num && mid != ((MAC_SUBTAB*)((u8*)&t->macSub[0] + (base + i) * 8))->id; ++i)
+        base = dataMacroBucketTable[main].subTabIndex;
+        for (i = 0; i < dataMacroBucketTable[main].num && mid != dataMacroTable[base + i].id; ++i)
         {
         }
 
-        if (i < m->num)
+        if (i < dataMacroBucketTable[main].num)
         {
-            if (--t->macSub[base + i].refCount == 0)
+            if (--dataMacroTable[base + i].refCount == 0)
             {
-                {
-                    MAC_SUBTAB* macSub = t->macSub;
-                    MAC_SUBTAB* p = &macSub[base + i + 1];
-                    for (i = base + i + 1; i < dataMacTotal; ++i)
-                    {
-                        p[-1] = p[0];
-                        ++p;
-                    }
-                }
+                for (i = base + i + 1; i < dataMacTotal; ++i)
+                    dataMacroTable[i - 1] = dataMacroTable[i];
 
                 for (i = 0; i < 512; ++i)
                 {
-                    if (((MAC_MAINTAB*)((u8*)t + 0x5A00))[i].subTabIndex > base)
+                    if (dataMacroBucketTable[i].subTabIndex > base)
                     {
-                        --((MAC_MAINTAB*)((u8*)t + 0x5A00))[i].subTabIndex;
+                        --dataMacroBucketTable[i].subTabIndex;
                     }
                 }
 
-                --m->num;
+                --dataMacroBucketTable[main].num;
                 --dataMacTotal;
             }
         }
