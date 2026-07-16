@@ -2236,7 +2236,7 @@ main/dll/DIM/dll_01C1_dimsnowball.c:
 	.text       start:0x801B0DD4 end:0x801B13E8
 	.data       start:0x80323BC0 end:0x80325360
 	.sdata      start:0x803DBEE8 end:0x803DBEF0
-	.sdata2     start:0x803E4848 end:0x803E4DD8
+	.sdata2     start:0x803E4848 end:0x803E4CD0
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 	.text       start:0x801B13E8 end:0x801B13E8
@@ -2389,11 +2389,9 @@ main/dll/DIM/dll_01E2_dimbosstonsil.c:
 	.text       start:0x801BE44C end:0x801BEEA0
 	.sbss       start:0x803DDB90 end:0x803DDBB8
 
-main/dll/mmsh_waterspike.c:
-	.text       start:0x801BEEA0 end:0x801BF048
-
-main/dll/DIM/dll_01E3_dimbossgut2.c:
-	.text       start:0x801BF048 end:0x801BF8D8
+main/dll/DIM/dimgut2group.c:
+	.text       start:0x801BEEA0 end:0x801BF8D8
+	.sdata2     start:0x803E4CD0 end:0x803E4D34
 
 main/dll/DIM/dll_01E5_dimbossspit.c:
 	.text       start:0x801BF8D8 end:0x801BFFF4

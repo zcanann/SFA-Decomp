@@ -29,25 +29,8 @@
 #define DIMBOSSGUT2_PARTFX   0x32b
 
 extern int* gBaddieControlInterface;
-extern f32 lbl_803E4CF0;
-extern f32 lbl_803E4CD0;
-extern f32 lbl_803E4CD4;
-extern f32 lbl_803E4CD8;
-extern f32 lbl_803E4CDC;
-extern f32 lbl_803E4CE0;
-extern f32 gDimBossGut2Pi;
-extern f32 gDimBossGut2AngleUnitToRadians;
-extern f32 lbl_803E4CEC;
-extern f32 lbl_803E4D20;
-extern f32 lbl_803E4D10;
-extern f32 lbl_803E4D14;
-extern f32 lbl_803E4D18;
-extern f32 lbl_803E4D1C;
-extern f32 lbl_803E4D24;
-extern f32 lbl_803E4D28;
-extern f32 lbl_803E4D2C;
-extern f32 lbl_803E4D30;
 extern f32 lbl_803E4D04;
+extern f32 lbl_803E4D10;
 
 void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
 {
@@ -83,9 +66,9 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
         }
         (obj)->anim.rotX = angle;
         curve->f4 = curve->f4 + (f32)(delta >> 4);
-        if (curve->f10 < lbl_803E4D14)
+        if (curve->f10 < 0.15f)
         {
-            curve->f10 = curve->f10 + lbl_803E4D18;
+            curve->f10 += 0.002f;
         }
         angleMag = delta / 0xb6;
         if (angleMag < 0)
@@ -96,7 +79,7 @@ void dimbossgut2_updateTracking(GameObject* obj, Dimbossgut2State* state)
         if (angleScale > lbl_803E4CF0)
         {
             curve->f10 = curve->f10 / angleScale;
-            curve->f8 = curve->f8 + lbl_803E4D1C;
+            curve->f8 += 0.01f;
         }
         if (curve->f8 > lbl_803E4CD8)
         {
@@ -244,7 +227,7 @@ void DIM_BossGut2_update(GameObject* obj)
         posData->timer16 += framesThisStep;
         fn_801BEEA0((s16*)obj, (u8*)state);
         dimbossgut2_updateTracking(obj, state);
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4D20, timeDelta, NULL);
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumePriority = 9;
         ((ObjHitsPriorityState*)*(int*)&(obj)->anim.hitReactState)->hitVolumeId = 1;
         ObjHits_RegisterActiveHitVolumeObject((int)obj);
@@ -301,7 +284,7 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
     curve->fC = lbl_803E4CD8;
     if (count != 0)
     {
-        curve->fC = lbl_803E4D24;
+        curve->fC = -9999.0f;
         for (i = 0; i < count; i++)
         {
             f32 d = list[i]->height - (obj)->anim.localPosY;
@@ -315,16 +298,16 @@ void DIM_BossGut2_init(GameObject* obj, int def, int p3)
         }
     }
     curve->fC += (obj)->anim.localPosY;
-    ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4D20, timeDelta, NULL);
+    ObjAnim_SetCurrentMove((int)obj, 0, (f32)(int)randomGetRange(0, 0x63) / 100.0f, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.015f, timeDelta, NULL);
     curve->light = objCreateLight(obj, 1);
     if (curve->light != NULL)
     {
         modelLightStruct_setLightKind(curve->light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setDiffuseColor(curve->light, 0, 255, 0, 0);
         lightSetFieldBC_8001db14(curve->light, 1);
-        modelLightStruct_setDistanceAttenuation(curve->light, lbl_803E4D2C, lbl_803E4CE0);
-        modelLightStruct_setupGlow(curve->light, 0, 0, 255, 0, 127, lbl_803E4D30);
+        modelLightStruct_setDistanceAttenuation(curve->light, 10.0f, lbl_803E4CE0);
+        modelLightStruct_setupGlow(curve->light, 0, 0, 255, 0, 127, 15.0f);
         modelLightStruct_setGlowProjectionRadius(curve->light, lbl_803E4D04);
     }
 }

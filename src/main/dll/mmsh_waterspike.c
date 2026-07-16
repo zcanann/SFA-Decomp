@@ -11,12 +11,22 @@
  *   +0x08 f32 targetY  - desired height offset
  *   +0x0C f32 baseY    - rest height the spike bobs around
  *   +0x14 s16 phase    - bob phase angle, advanced +0x400/frame
- * The lbl_803E4D0x floats are shared .sdata2 damping/scale divisors.
  */
 #include "main/dll/mmsh_waterspike.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 
+__declspec(section ".sdata2") f32 lbl_803E4CD0 = -0.025f;
+__declspec(section ".sdata2") f32 lbl_803E4CD4 = 0.25f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4CD8 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E4CDC = 14.0f;
+__declspec(section ".sdata2") f32 lbl_803E4CE0 = 20.0f;
+__declspec(section ".sdata2") f32 gDimBossGut2Pi = 3.1415927f;
+__declspec(section ".sdata2") f32 gDimBossGut2AngleUnitToRadians = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E4CEC = 0.65f;
+__declspec(section ".sdata2") f32 lbl_803E4CF0 = 1.0f;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;
@@ -35,6 +45,7 @@ typedef struct WaterSpikeMotion
     /* 0x14 */ s16 phase; /* bob phase angle, advanced +0x400/frame */
 } WaterSpikeMotion;
 
+#pragma dont_inline on
 void fn_801BEEA0(s16* obj, u8* state)
 {
     WaterSpikeMotion* motion;
@@ -69,3 +80,10 @@ void fn_801BEEA0(s16* obj, u8* state)
     motion->ySpeed = motion->ySpeed / lbl_803E4D0C;
     motion->zSpin = motion->zSpin / lbl_803E4D10;
 }
+#pragma dont_inline reset
+
+__declspec(section ".sdata2") f32 lbl_803E4D00 = 65535.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D04 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D08 = 2048.0f;
+__declspec(section ".sdata2") f32 lbl_803E4D0C = 1.07f;
+__declspec(section ".sdata2") f32 lbl_803E4D10 = 1.04f;
