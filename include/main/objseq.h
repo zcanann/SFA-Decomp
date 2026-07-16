@@ -89,8 +89,9 @@ STATIC_ASSERT(offsetof(ObjectTriggerInterface, setRunSequenceWorldSpace) == 0x84
 
 struct ObjSeqState {
     void *targetObj;
-    u8 unk04[8];
-    f32 unk0C;
+    f32 posStepX;
+    f32 posStepY;
+    f32 posStepZ;
     f32 unk10;
     s16 rotStepX;  /* added to obj rotation each step */
     s16 rotStepY;
