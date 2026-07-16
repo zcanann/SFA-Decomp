@@ -275,7 +275,7 @@ void fn_8015165C(GameObject* obj, u8* state)
                     u8* p28c = p28 + 12;
                     *(u8*)(state + 0x2f2) = (u8) * (u32*)(p28c + *(u16*)(state + 0x338) * 16);
                 }
-                fn_8014D08C(obj, (int)state, (p28 + *(u16*)(state + 0x338) * 16)[8],
+                fn_8014D08C(obj, (int)state, ((SeqEntry*)p28)[*(u16*)(state + 0x338)].anim,
                             *(f32*)(p28 + *(u16*)(state + 0x338) * 16), 0,
                             (u8)((SeqEntry*)p28)[*(u16*)(state + 0x338)].mask);
                 ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(

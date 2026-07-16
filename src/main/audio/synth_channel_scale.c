@@ -71,7 +71,7 @@ extern u32* gSynthFreeCallbacks;
 extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
-extern SynthPool lbl_803AF550;
+extern u8 lbl_803AF550[];
 
 extern u8 synthIsFadeOutActive(u8 idx);
 extern u32 fn_8026E9D0(u8 ch, u32 dt);
@@ -282,12 +282,11 @@ void fn_8026F30C(void)
 {
     SynthSong* sp;
     u16* np;
-    SynthPool* pool;
+    SynthPool* pool = (SynthPool*)lbl_803AF550;
     u32 i;
     int j;
     u32 prev[1];
 
-    pool = (SynthPool*)(u8*)&lbl_803AF550;
     gSynthQueuedVoices = NULL;
     np = pool->lastNotes[0];
     gSynthAllocatedVoices = 0;

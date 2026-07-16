@@ -281,7 +281,7 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 {
     ExpgfxRuntimeDataLayout* runtime;
     u32 activeBit;
-    u8* resBase;
+    u32* resources;
     ExpgfxSlot* slot;
     u32 inactiveBitMask;
 
@@ -297,25 +297,24 @@ void expgfxRemove(u32 slotPoolBase, int poolIndex, int slotIndex, int skipTextur
 
     if (skipTextureFree == 0)
     {
-        resBase = (u8*)&runtime->expTab[0].resource;
+        resources = &runtime->expTab[0].resource;
 
-        if (*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16) != 0)
+        if (resources[Expgfx_GetSlotTableIndex(slot) * 4] != 0)
         {
             gExpgfxTextureFreeInProgress = 1;
-            textureFree((Texture*)(
-                (void*)*(u32*)(resBase + (((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK) * 16)));
+            textureFree((Texture*)(void*)resources[Expgfx_GetSlotTableIndex(slot) * 4]);
             gExpgfxTextureFreeInProgress = 0;
         }
 
         {
-            u32 tableIndex = ((u32)slot->encodedTableIndex >> 1) & EXPGFX_SLOT_TABLE_INDEX_MASK;
+            u32 tableIndex = Expgfx_GetSlotTableIndex(slot);
 
             if (runtime->expTab[tableIndex].refCount != 0)
             {
                 runtime->expTab[tableIndex].refCount--;
                 if (runtime->expTab[tableIndex].refCount == 0)
                 {
-                    *(u32*)(resBase + tableIndex * 16) = 0;
+                    resources[tableIndex * 4] = 0;
                     runtime->expTab[tableIndex].sourceId = 0;
                 }
             }
