@@ -670,14 +670,14 @@ void expgfx_initSlotQuad(void* slotPtr)
 #pragma opt_propagation off
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
-    ExpgfxStaticDataLayout* staticData;
+    ExpgfxBounds* bounds;
     ExpgfxRuntimeDataLayout* runtime;
     int next;
     GameObject* player;
     GameObject* tricky;
     int pool;
     int sky;
-    ExpgfxBounds* bounds;
+    ExpgfxStaticDataLayout* staticData;
     f32* maxXPtr;
     f32* minZPtr;
     f32* maxZPtr;
