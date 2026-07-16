@@ -10,9 +10,9 @@
  * used. flags is OR'd into the effect flag word and, when bit 0 is set, the
  * source object's position (ctx+0x18..0x20, or posSource) is added in.
  *
- * The geometry/colour constants live in the shared lbl_803E10E0.. pool and
- * the per-effect parameter block at gDll8DEffectParamBlock (texture base +0x8c, the
- * s16 size words at +0xb0..+0xbc).
+ * The geometry/colour constants and the per-effect parameter block at
+ * gDll8DEffectParamBlock (texture base +0x8c, s16 size words at +0xb0..+0xbc)
+ * define the command stream.
  *
  * dll_8D_func00_nop / dll_8D_func01_nop are empty export-table slots.
  */
@@ -30,30 +30,25 @@
 #define DLL8D_EFFECT_ID_VARIANT2 0x23b
 
 extern u8 gDll8DEffectParamBlock[];
-__declspec(section ".sdata2") f32 lbl_803E10E0 = 999.0f;
-__declspec(section ".sdata2") f32 lbl_803E10E4 = 94.0f;
-__declspec(section ".sdata2") f32 lbl_803E10E8 = 95.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E10EC = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E10F0 = 32640.0f;
-__declspec(section ".sdata2") f32 lbl_803E10F4 = 3.2f;
-__declspec(section ".sdata2") f32 lbl_803E10F8 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E10FC = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E1100 = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E1104 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E1108 = 28.0f;
-__declspec(section ".sdata2") f32 lbl_803E110C = 96.0f;
-__declspec(section ".sdata2") f32 lbl_803E1110 = 97.0f;
-__declspec(section ".sdata2") f32 lbl_803E1114 = 1.2f;
-__declspec(section ".sdata2") f32 lbl_803E1118 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E111C = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E1120 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E1124 = 400.0f;
-__declspec(section ".sdata2") f32 lbl_803E1128 = 800.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E112C = 0.0f;
-#pragma explicit_zero_data off
+
+#define DLL8D_COMMAND_SENTINEL          999.0f
+#define DLL8D_VARIANT0_POSITION_Y       94.0f
+#define DLL8D_VARIANT0_POSITION_Z       95.0f
+#define DLL8D_DEFAULT_POSITION_Y        32640.0f
+#define DLL8D_VARIANT0_COMMAND_SCALE    3.2f
+#define DLL8D_VARIANT0_COMMAND_DEPTH    30.0f
+#define DLL8D_UNIT_SCALE                1.0f
+#define DLL8D_JITTER_STEP               0.05f
+#define DLL8D_VARIANT1_JITTER_BASE      5.0f
+#define DLL8D_VARIANT1_JITTER_DEPTH     28.0f
+#define DLL8D_ALT_POSITION_Y            96.0f
+#define DLL8D_ALT_POSITION_Z            97.0f
+#define DLL8D_VARIANT2_JITTER_BASE      1.2f
+#define DLL8D_VARIANT2_JITTER_DEPTH     12.0f
+#define DLL8D_HALF_SCALE                0.5f
+#define DLL8D_DOUBLE_SCALE              2.0f
+#define DLL8D_VARIANT0_EFFECT_RANGE     400.0f
+#define DLL8D_ALT_EFFECT_RANGE          800.0f
 
 int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -72,9 +67,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 0x8c;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E10E4;
-        p->z = lbl_803E10E8;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_VARIANT0_POSITION_Y;
+        p->z = DLL8D_VARIANT0_POSITION_Z;
         p++;
         p->layer = 0;
         p->flags = 9;
@@ -89,18 +84,18 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            p->x = lbl_803E10EC;
-            p->y = lbl_803E10F0;
-            p->z = lbl_803E10EC;
+            p->x = 0.0f;
+            p->y = DLL8D_DEFAULT_POSITION_Y;
+            p->z = 0.0f;
             p++;
         }
         p->layer = 0;
         p->flags = 8;
         p->tex = base + 0x8c;
         p->mode = 2;
-        p->x = lbl_803E10F4;
-        p->y = lbl_803E10F4;
-        p->z = lbl_803E10F8;
+        p->x = DLL8D_VARIANT0_COMMAND_SCALE;
+        p->y = DLL8D_VARIANT0_COMMAND_SCALE;
+        p->z = DLL8D_VARIANT0_COMMAND_DEPTH;
         p++;
     }
     else if (variant == 1)
@@ -111,33 +106,33 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 2;
         p->tex = NULL;
         p->mode = 0x1800000;
-        p->x = lbl_803E10FC;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_UNIT_SCALE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
         p->layer = 0;
         p->flags = 0x69;
         p->tex = NULL;
         p->mode = 0x1800000;
-        p->x = lbl_803E10FC;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_UNIT_SCALE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
         p->layer = 0;
         p->flags = 8;
         p->tex = base + 0x8c;
         p->mode = 2;
-        jitter = lbl_803E1100 * (f32)(int)randomGetRange(0, 0xc);
-        p->y = p->x = lbl_803E1104 + jitter;
-        p->z = lbl_803E1108 + jitter;
+        jitter = DLL8D_JITTER_STEP * (f32)(int)randomGetRange(0, 0xc);
+        p->y = p->x = DLL8D_VARIANT1_JITTER_BASE + jitter;
+        p->z = DLL8D_VARIANT1_JITTER_DEPTH + jitter;
         p++;
         p->layer = 0;
         p->flags = 0x8c;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E110C;
-        p->z = lbl_803E1110;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_ALT_POSITION_Y;
+        p->z = DLL8D_ALT_POSITION_Z;
         p++;
         p->layer = 0;
         p->flags = 9;
@@ -152,9 +147,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            p->x = lbl_803E10EC;
-            p->y = lbl_803E10F0;
-            p->z = lbl_803E10EC;
+            p->x = 0.0f;
+            p->y = DLL8D_DEFAULT_POSITION_Y;
+            p->z = 0.0f;
             p++;
         }
     }
@@ -166,25 +161,25 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 0x1fc;
         p->tex = NULL;
         p->mode = 0x1800000;
-        p->x = lbl_803E10FC;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_UNIT_SCALE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
         p->layer = 0;
         p->flags = 8;
         p->tex = base + 0x8c;
         p->mode = 2;
-        jitter = lbl_803E1100 * (f32)(int)randomGetRange(0, 0xc);
-        p->y = p->x = lbl_803E1114 + jitter;
-        p->z = lbl_803E1118 + jitter;
+        jitter = DLL8D_JITTER_STEP * (f32)(int)randomGetRange(0, 0xc);
+        p->y = p->x = DLL8D_VARIANT2_JITTER_BASE + jitter;
+        p->z = DLL8D_VARIANT2_JITTER_DEPTH + jitter;
         p++;
         p->layer = 0;
         p->flags = 0x8c;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E110C;
-        p->z = lbl_803E1110;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_ALT_POSITION_Y;
+        p->z = DLL8D_ALT_POSITION_Z;
         p++;
         p->layer = 0;
         p->flags = 9;
@@ -199,9 +194,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         }
         else
         {
-            p->x = lbl_803E10EC;
-            p->y = lbl_803E10F0;
-            p->z = lbl_803E10EC;
+            p->x = 0.0f;
+            p->y = DLL8D_DEFAULT_POSITION_Y;
+            p->z = 0.0f;
             p++;
         }
     }
@@ -211,23 +206,23 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p[0].flags = 9;
         p[0].tex = base + 0x8c;
         p[0].mode = 0x4000;
-        p[0].x = lbl_803E10EC;
-        p[0].y = lbl_803E10EC;
-        p[0].z = lbl_803E10EC;
+        p[0].x = 0.0f;
+        p[0].y = 0.0f;
+        p[0].z = 0.0f;
         p[1].layer = 1;
         p[1].flags = 0x68;
         p[1].tex = NULL;
         p[1].mode = 0x800000;
-        p[1].x = lbl_803E10FC;
-        p[1].y = lbl_803E10EC;
-        p[1].z = lbl_803E10EC;
+        p[1].x = DLL8D_UNIT_SCALE;
+        p[1].y = 0.0f;
+        p[1].z = 0.0f;
         p[2].layer = 1;
         p[2].flags = 8;
         p[2].tex = base + 0x8c;
         p[2].mode = 2;
-        p[2].x = lbl_803E111C;
-        p[2].y = lbl_803E111C;
-        p[2].z = lbl_803E111C;
+        p[2].x = DLL8D_HALF_SCALE;
+        p[2].y = DLL8D_HALF_SCALE;
+        p[2].z = DLL8D_HALF_SCALE;
         p += 3;
     }
     else if (variant == 1)
@@ -236,16 +231,16 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p[0].flags = 9;
         p[0].tex = base + 0x8c;
         p[0].mode = 0x4000;
-        p[0].x = lbl_803E10EC;
-        p[0].y = lbl_803E10EC;
-        p[0].z = lbl_803E10EC;
+        p[0].x = 0.0f;
+        p[0].y = 0.0f;
+        p[0].z = 0.0f;
         p[1].layer = 1;
         p[1].flags = 0x8f;
         p[1].tex = NULL;
         p[1].mode = 0x1800000;
-        p[1].x = lbl_803E1120;
-        p[1].y = lbl_803E10EC;
-        p[1].z = lbl_803E10EC;
+        p[1].x = DLL8D_DOUBLE_SCALE;
+        p[1].y = 0.0f;
+        p[1].z = 0.0f;
         p += 2;
     }
     else if (variant == 2)
@@ -254,16 +249,16 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p[0].flags = 9;
         p[0].tex = base + 0x8c;
         p[0].mode = 0x4000;
-        p[0].x = lbl_803E10EC;
-        p[0].y = lbl_803E10EC;
-        p[0].z = lbl_803E10EC;
+        p[0].x = 0.0f;
+        p[0].y = 0.0f;
+        p[0].z = 0.0f;
         p[1].layer = 1;
         p[1].flags = 0x1fd;
         p[1].tex = NULL;
         p[1].mode = 0x1800000;
-        p[1].x = lbl_803E1120;
-        p[1].y = lbl_803E10EC;
-        p[1].z = lbl_803E10EC;
+        p[1].x = DLL8D_DOUBLE_SCALE;
+        p[1].y = 0.0f;
+        p[1].z = 0.0f;
         p += 2;
     }
     if (variant == 0)
@@ -272,9 +267,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1124;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_VARIANT0_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     else if (variant == 1)
@@ -283,9 +278,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1128;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_ALT_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     else if (variant == 2)
@@ -294,9 +289,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1128;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_ALT_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     if (variant == 0)
@@ -305,9 +300,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1124;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_VARIANT0_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     else if (variant == 1)
@@ -316,9 +311,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1128;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_ALT_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     else if (variant == 2)
@@ -327,18 +322,18 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0x8c;
         p->mode = 0x100;
-        p->x = lbl_803E1128;
-        p->y = lbl_803E10EC;
-        p->z = lbl_803E10EC;
+        p->x = DLL8D_ALT_EFFECT_RANGE;
+        p->y = 0.0f;
+        p->z = 0.0f;
         p++;
     }
     p->layer = 2;
     p->flags = 9;
     p->tex = base + 0x8c;
     p->mode = 4;
-    p->x = lbl_803E10EC;
-    p->y = lbl_803E10EC;
-    p->z = lbl_803E10EC;
+    p->x = 0.0f;
+    p->y = 0.0f;
+    p->z = 0.0f;
     p++;
     if (variant == 0)
     {
@@ -346,9 +341,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 0;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E10E4;
-        p->z = lbl_803E10E8;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_VARIANT0_POSITION_Y;
+        p->z = DLL8D_VARIANT0_POSITION_Z;
         p++;
     }
     else if (variant == 1)
@@ -357,9 +352,9 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 0;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E110C;
-        p->z = lbl_803E1110;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_ALT_POSITION_Y;
+        p->z = DLL8D_ALT_POSITION_Z;
         p++;
     }
     else if (variant == 2)
@@ -368,29 +363,29 @@ int dll_8D_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 0;
         p->tex = NULL;
         p->mode = 0x20000000;
-        p->x = lbl_803E10E0;
-        p->y = lbl_803E110C;
-        p->z = lbl_803E1110;
+        p->x = DLL8D_COMMAND_SENTINEL;
+        p->y = DLL8D_ALT_POSITION_Y;
+        p->z = DLL8D_ALT_POSITION_Z;
         p++;
     }
     buf.ctx = sourceObj;
     buf.v44 = variant;
     if (variant == 0)
     {
-        buf.pos[0] = lbl_803E10EC;
-        buf.pos[1] = lbl_803E10EC;
-        buf.pos[2] = lbl_803E10EC;
+        buf.pos[0] = 0.0f;
+        buf.pos[1] = 0.0f;
+        buf.pos[2] = 0.0f;
     }
     else
     {
-        buf.pos[0] = lbl_803E10EC;
-        buf.pos[1] = lbl_803E10EC;
-        buf.pos[2] = lbl_803E10EC;
+        buf.pos[0] = 0.0f;
+        buf.pos[1] = 0.0f;
+        buf.pos[2] = 0.0f;
     }
-    buf.col[0] = lbl_803E10EC;
-    buf.col[1] = lbl_803E10EC;
-    buf.col[2] = lbl_803E10EC;
-    buf.scale = lbl_803E10FC;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = DLL8D_UNIT_SCALE;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 9;
