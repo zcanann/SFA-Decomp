@@ -2515,8 +2515,8 @@ void expgfx_free(u32 sourceId)
             gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
 
-        poolSourceIds++;
         slotPoolBases++;
+        poolSourceIds++;
         poolActiveCounts++;
         poolIndex++;
     }
