@@ -678,8 +678,22 @@ struct EnglishDiscStatusResource
 /* Dino-language glyph substitution order (see translateToDinoLanguage). */
 u8 sGameTextGlyphOrder[0x1b] = "urstovwxazbcmdefghtkilnpoq";
 
-#pragma scheduling off
+int getControlCharLen(u32 c);
+void* gameTextGet(int textId);
+int gameTextFn_8001b44c(int x);
+int subtitleIsActive(void);
+void subtitleFn_8001b700(void);
+void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block);
+void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo);
+void gameTextLoadForCurMap(int sourceId);
+void gameTextLoadGraphicsFn_8001a918(void);
+void gameTextInitFn_8001c794(void);
+void subtitleBuildLineTable(void);
+
+#pragma dont_inline off
 #pragma peephole off
+#pragma scheduling off
+
 int getControlCharLen(u32 c)
 {
     CtrlCharEntry* p = lbl_802C86F0;
@@ -694,6 +708,41 @@ int getControlCharLen(u32 c)
     }
     return 0;
 }
+
+void gameTextSetWindow(u8* textBox)
+{
+    int i;
+    GameTextSlot* s;
+    int idx;
+
+    if (textBox == NULL)
+    {
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        gCurTextBox = NULL;
+        s->opcode = 8;
+        s->arg0 = 0xff;
+    }
+    else
+    {
+        i = gGameTextCommandCount;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        idx = (textBox - (u8*)gTextBoxes) / 0x20;
+        if (idx == 0xff)
+        {
+            gCurTextBox = NULL;
+        }
+        else
+        {
+            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
+        }
+        s->opcode = 8;
+        s->arg0 = idx;
+    }
+}
+#pragma dont_inline reset
 
 static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
 {
@@ -1079,6 +1128,85 @@ struct
 
 char sGameTextMapPathFormat[] = "gametext/%s/%s.bin";
 
+void translateToDinoLanguage(u8* str)
+{
+    int byteOff = 0;
+    u32 ch;
+    int charLen;
+    u8* p;
+
+    if (str == NULL)
+    {
+        return;
+    }
+    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
+    {
+        if (ch >= 0xe000 && ch <= 0xf8ff)
+        {
+            byteOff += getControlCharLen(ch) * 2;
+        }
+        else
+        {
+            int base;
+            if (ch >= 0x61 && ch <= 0x7a)
+            {
+                base = 0x61;
+            }
+            else if (ch >= 0x41 && ch <= 0x5a)
+            {
+                base = 0x41;
+            }
+            else
+            {
+                base = 0;
+            }
+            if (base != 0)
+            {
+                *p = sGameTextGlyphOrder[ch - base] - 0x61 + base;
+            }
+        }
+        byteOff += charLen;
+    }
+}
+#pragma dont_inline off
+#pragma opt_strength_reduction on
+#pragma opt_unroll_loops on
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+int GameText_CountPrintableChars(u8* str)
+{
+    int count;
+    int off;
+    int len;
+    u32 ch;
+
+    count = 0;
+    off = 0;
+    if (str == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
+    {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF)
+        {
+            off += getControlCharLen(ch) * 2;
+        }
+        else
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+#pragma dont_inline reset
+#pragma opt_strength_reduction reset
+#pragma opt_unroll_loops reset
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+
 void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH, int glyphLang)
 {
     int byteOff;
@@ -1185,48 +1313,111 @@ void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* out
         *outZero = lbl_803DE704;
     }
 }
+#pragma dont_inline off
+#pragma opt_strength_reduction on
+#pragma opt_unroll_loops on
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
 
-void translateToDinoLanguage(u8* str)
+SubtitleCmd* subtitleParseControlCmds(int str, int* count)
 {
-    int byteOff = 0;
+    int off;
+    int n;
+    u8* tbl;
+    int len;
     u32 ch;
-    int charLen;
-    u8* p;
 
-    if (str == NULL)
+    off = 0;
+    n = 0;
+    tbl = (u8*)lbl_80339C40;
+    if ((u8*)str == NULL)
     {
-        return;
+        return NULL;
     }
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
+    while ((ch = utf8GetNextChar((u8*)(str + off), &len)) != 0)
     {
-        if (ch >= 0xe000 && ch <= 0xf8ff)
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF)
         {
-            byteOff += getControlCharLen(ch) * 2;
+            int i;
+            int n2;
+            u16* q;
+
+            n++;
+            if (n > 0x10)
+            {
+                break;
+            }
+            *(u32*)tbl = ch;
+            q = (u16*)(tbl + 4);
+            n2 = getControlCharLen(ch);
+            if (n2 > 4)
+            {
+                n2 = 4;
+            }
+            for (i = 0; i < n2; i++)
+            {
+                u32 hi = ((u8*)str)[off++];
+                u32 lo = ((u8*)str)[off++];
+                *q++ = (hi << 8) | lo;
+            }
         }
-        else
-        {
-            int base;
-            if (ch >= 0x61 && ch <= 0x7a)
-            {
-                base = 0x61;
-            }
-            else if (ch >= 0x41 && ch <= 0x5a)
-            {
-                base = 0x41;
-            }
-            else
-            {
-                base = 0;
-            }
-            if (base != 0)
-            {
-                *p = sGameTextGlyphOrder[ch - base] - 0x61 + base;
-            }
-        }
-        byteOff += charLen;
+    }
+    if (n == 0)
+    {
+        return NULL;
+    }
+    {
+        int size = n * 0xc;
+        u8* buf = mmAlloc(size, 0x1a, 0);
+        memcpy(buf, lbl_80339C40, size);
+        *count = n;
+        return (SubtitleCmd*)buf;
     }
 }
 
+
+int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
+{
+    int off;
+    int len;
+    u32 ch;
+    int n;
+    int i;
+
+    off = 0;
+    if (str == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
+    {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF)
+        {
+            n = getControlCharLen(ch);
+            if (ch == target)
+            {
+                for (i = 0; i < n; i++)
+                {
+                    u32 hi = str[off++];
+                    u32 lo = str[off++];
+                    out[i] = (hi << 8) | lo;
+                }
+                return 1;
+            }
+            off += n * 2;
+        }
+    }
+    return 0;
+}
+
+#pragma dont_inline reset
+#pragma opt_strength_reduction reset
+#pragma opt_unroll_loops reset
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+#pragma peephole reset
 #pragma peephole on
 void* gameTextGetPhrase(int textId, int phraseIndex)
 {
@@ -1341,6 +1532,7 @@ void* gameTextGetStr(int textId)
     return *(void**)*(u8**)((u8*)t + 8);
 }
 
+#pragma peephole reset
 #pragma peephole off
 void* gameTextGet(int textId)
 {
@@ -1451,108 +1643,88 @@ void* gameTextGet(int textId)
     *(f32*)gGameTextFallbackBuf = lbl_803DE704;
     return gGameTextLastEntry;
 }
-#pragma peephole reset
-
-#pragma scheduling on
-int getCurLanguage(void)
-{
-    return curLanguage;
-}
-
-#pragma dont_inline on
-void* getCurGameText(void)
-{
-    return curGameTextDir;
-}
-
-int gameTextGetCharset(void)
-{
-    return gameTextCharset;
-}
-
 #pragma dont_inline off
-void gameTextSetDrawFunc(void* fn)
-{
-    gameTextDrawFunc = fn;
-}
 
-f32 gameTextFn_80019c00(void)
+void gameTextResetCursor(int flags)
 {
-    return gameTextFonts->timer;
+    if (flags & 1)
+    {
+        lbl_803DC9AA = 0;
+        lbl_803DC9A8 = 0;
+    }
+    if (flags & 2)
+    {
+        int* p = &gGameTextCommandSlots[gGameTextCommandCount++].opcode;
+        *p = 0xb;
+    }
 }
 
 GameTextStateElem gGameTextCharsets[0xA0 / sizeof(GameTextStateElem)];
 
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-int gameTextGetState(int i)
-{
-    return gGameTextCharsets[i].state;
-}
 
-#pragma dont_inline off
-void mainLoopDoGameText(void)
+void gameTextSetCursor(u16 x, u16 y, int flags)
 {
-    if (gGameTextSequenceMode != 0)
+    if (flags & 1)
     {
-        if (gameTextGetState(1) == 2 && gSubtitleActive == 1)
-        {
-            subtitleBuildLineTable();
-        }
+        lbl_803DC9AA = x;
+        lbl_803DC9A8 = y;
     }
-    else
-    {
-        if (gameTextGetState(0) == 2 && (int)gGameTextPendingDir == (int)getCurGameText() && gSubtitleActive == 1)
-        {
-            subtitleBuildLineTable();
-        }
-    }
-}
-
-void gameTextInit(void)
-{
-    gameTextInitFn_8001c794();
-    lbl_803DC980 = 1;
-    gameTextLoadDir(0x1c);
-}
-
-int setSubtitlesEnabled(int enabled)
-{
-    int old = gSubtitlesEnabled;
-    gSubtitlesEnabled = enabled;
-    if (enabled == 0)
-    {
-        subtitleFn_8001b700();
-    }
-    return old;
-}
-
-#pragma dont_inline on
-void gameTextSetCharset(int charset, int flags)
-{
-    if (gameTextDrawFunc != NULL || (flags & 1))
-    {
-        gameTextFonts = (TextFont*)&gGameTextCharsets[charset];
-        gameTextCharset = charset;
-        if (charset == 2)
-        {
-            int color = gGameTextClearColor;
-            hudDrawRect(0, 0, 0xa00, 0x780, &color);
-            lbl_803DC99C = 0;
-        }
-    }
-    if (gameTextDrawFunc == NULL || (flags & 2))
+    if (flags & 2)
     {
         int i = gGameTextCommandCount;
         GameTextSlot* s;
         gGameTextCommandCount = i + 1;
         s = &gGameTextCommandSlots[i];
-        s->opcode = 0xf;
-        s->arg0 = charset;
+        s->opcode = 0xa;
+        s->arg0 = (u16)x;
+        s->arg1 = (u16)y;
     }
 }
 
+void gameTextSetWindowStrPos(int idx, int x, int y)
+{
+    if (gameTextDrawFunc != NULL)
+    {
+        gTextBoxes[idx].cursorX = x;
+        gTextBoxes[idx].cursorY = y;
+    }
+    else
+    {
+        int i = gGameTextCommandCount;
+        GameTextSlot* s;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        s->opcode = 4;
+        s->arg0 = idx;
+        s->arg1 = x;
+        s->arg2 = y;
+    }
+}
+#pragma dont_inline reset
+#pragma dont_inline on
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
+{
+    if (gameTextDrawFunc != NULL)
+    {
+        lbl_803DC9A7 = r;
+        lbl_803DC9A6 = g;
+        lbl_803DC9A5 = b;
+        lbl_803DC9A4 = a;
+    }
+    else
+    {
+        int i = gGameTextCommandCount;
+        GameTextSlot* s;
+        gGameTextCommandCount = i + 1;
+        s = &gGameTextCommandSlots[i];
+        s->opcode = 3;
+        s->arg0 = r;
+        s->arg1 = g;
+        s->arg2 = b;
+        s->arg3 = a;
+    }
+}
+#pragma dont_inline reset
 #pragma dont_inline off
 void gameTextLoadDir(int dirId)
 {
@@ -1616,446 +1788,78 @@ void gameTextLoadDir(int dirId)
     }
 }
 
-void gameTextResetCursor(int flags)
+#pragma dont_inline reset
+#pragma dont_inline on
+#pragma peephole reset
+#pragma peephole on
+#pragma scheduling reset
+#pragma scheduling on
+
+int gameTextGetCharset(void)
 {
-    if (flags & 1)
-    {
-        lbl_803DC9AA = 0;
-        lbl_803DC9A8 = 0;
-    }
-    if (flags & 2)
-    {
-        int* p = &gGameTextCommandSlots[gGameTextCommandCount++].opcode;
-        *p = 0xb;
-    }
+    return gameTextCharset;
 }
 
-void gameTextSetWindow(u8* textBox)
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
+void gameTextSetCharset(int charset, int flags)
 {
-    int i;
-    GameTextSlot* s;
-    int idx;
-
-    if (textBox == NULL)
+    if (gameTextDrawFunc != NULL || (flags & 1))
     {
-        i = gGameTextCommandCount;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        gCurTextBox = NULL;
-        s->opcode = 8;
-        s->arg0 = 0xff;
-    }
-    else
-    {
-        i = gGameTextCommandCount;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        idx = (textBox - (u8*)gTextBoxes) / 0x20;
-        if (idx == 0xff)
+        gameTextFonts = (TextFont*)&gGameTextCharsets[charset];
+        gameTextCharset = charset;
+        if (charset == 2)
         {
-            gCurTextBox = NULL;
+            int color = gGameTextClearColor;
+            hudDrawRect(0, 0, 0xa00, 0x780, &color);
+            lbl_803DC99C = 0;
         }
-        else
-        {
-            gCurTextBox = (u8*)gTextBoxes + idx * 0x20;
-        }
-        s->opcode = 8;
-        s->arg0 = idx;
     }
-}
-
-void gameTextSetCursor(u16 x, u16 y, int flags)
-{
-    if (flags & 1)
-    {
-        lbl_803DC9AA = x;
-        lbl_803DC9A8 = y;
-    }
-    if (flags & 2)
+    if (gameTextDrawFunc == NULL || (flags & 2))
     {
         int i = gGameTextCommandCount;
         GameTextSlot* s;
         gGameTextCommandCount = i + 1;
         s = &gGameTextCommandSlots[i];
-        s->opcode = 0xa;
-        s->arg0 = (u16)x;
-        s->arg1 = (u16)y;
-    }
-}
-
-int gameTextFn_8001b44c(int x)
-{
-    if (gGameTextSequenceMode == 0)
-    {
-        gGameTextSavedDir = x;
-        return 1;
-    }
-    return 0;
-}
-
-#pragma peephole on
-void gameTextLoadTaskText(int taskId)
-{
-    int textId;
-    int dirId;
-    s16* taskList;
-    int count;
-    int allowed;
-
-    if (gameTextGetTaskText(taskId, &textId, &dirId) != 0)
-    {
-        if (gSubtitlesEnabled == 0)
-        {
-            taskList = gGameTextTaskTextAllowList;
-            for (count = 0; count < 0xb; count++)
-            {
-                if (taskId == taskList[count])
-                {
-                    allowed = 1;
-                    goto checkAllowed;
-                }
-            }
-            allowed = 0;
-        checkAllowed:
-            if (allowed == 0)
-            {
-                return;
-            }
-        }
-
-        gGameTextPendingTextId = textId;
-        gGameTextPendingDir = (void*)dirId;
-        if (dirId == 0x29)
-        {
-            loadGameTextSequence(dirId, textId);
-            gGameTextSequenceMode = 1;
-        }
-        else
-        {
-            gGameTextSavedDir = (int)getCurGameText();
-            gameTextLoadDir((int)gGameTextPendingDir);
-            gGameTextSequenceMode = 0;
-        }
-        gSubtitleActive = 1;
-        gSubtitleColorR = 0xff;
-        gSubtitleColorG = 0xff;
-        gSubtitleColorB = 0xff;
-        gSubtitleColorA = 0xff;
+        s->opcode = 0xf;
+        s->arg0 = charset;
     }
 }
 #pragma peephole reset
-
-int subtitleIsActive(void)
+#pragma peephole on
+#pragma scheduling reset
+#pragma scheduling on
+void* getCurGameText(void)
 {
-    int ret;
-
-    ret = 0;
-    if (gSubtitlesEnabled != 0)
-    {
-        if (gSubtitleActive != 0)
-        {
-            ret = 1;
-        }
-    }
-    return ret;
+    return curGameTextDir;
 }
-
-#pragma dont_inline on
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a)
+#pragma dont_inline reset
+int getCurLanguage(void)
 {
-    if (gameTextDrawFunc != NULL)
-    {
-        lbl_803DC9A7 = r;
-        lbl_803DC9A6 = g;
-        lbl_803DC9A5 = b;
-        lbl_803DC9A4 = a;
-    }
-    else
-    {
-        int i = gGameTextCommandCount;
-        GameTextSlot* s;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 3;
-        s->arg0 = r;
-        s->arg1 = g;
-        s->arg2 = b;
-        s->arg3 = a;
-    }
+    return curLanguage;
 }
-
 #pragma dont_inline off
-void gameTextSetWindowStrPos(int idx, int x, int y)
+
+f32 gameTextFn_80019c00(void)
 {
-    if (gameTextDrawFunc != NULL)
-    {
-        gTextBoxes[idx].cursorX = x;
-        gTextBoxes[idx].cursorY = y;
-    }
-    else
-    {
-        int i = gGameTextCommandCount;
-        GameTextSlot* s;
-        gGameTextCommandCount = i + 1;
-        s = &gGameTextCommandSlots[i];
-        s->opcode = 4;
-        s->arg0 = idx;
-        s->arg1 = x;
-        s->arg2 = y;
-    }
+    return gameTextFonts->timer;
+}
+#pragma dont_inline reset
+#pragma dont_inline on
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
+int gameTextGetState(int i)
+{
+    return gGameTextCharsets[i].state;
 }
 
-void* gSubtitleLineTable[0x100];
-
-#pragma opt_unroll_loops off
-void gameTextInitFn_8001bd14(void)
-{
-    int i;
-    int zero;
-    int (*scratch)[8];
-
-    zero = 0;
-    gSubtitleActive = zero;
-    gSubtitlesEnabled = 1;
-    gGameTextSavedDir = -1;
-
-    scratch = (int (*)[8])gSubtitleLineTable;
-    for (i = 0; i < 32; i++)
-    {
-        scratch[i][0] = zero;
-        scratch[i][1] = zero;
-        scratch[i][2] = zero;
-        scratch[i][3] = zero;
-        scratch[i][4] = zero;
-        scratch[i][5] = zero;
-        scratch[i][6] = zero;
-        scratch[i][7] = zero;
-    }
-}
+#pragma dont_inline reset
+#pragma dont_inline off
 #pragma opt_unroll_loops on
-
-#pragma dont_inline on
-void subtitleFn_8001b700(void)
-{
-    void** slot;
-    int i;
-    int oldDelay;
-
-    if (gSubtitleActive != 0)
-    {
-        gSubtitleActive = 0;
-        i = 0;
-        slot = gSubtitleLineTable;
-        while (i < gSubtitleBlockCount)
-        {
-            if (slot[i] != NULL)
-            {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(slot[i]);
-                mmSetFreeDelay(oldDelay);
-                slot[i] = NULL;
-            }
-            i++;
-        }
-
-        if (gGameTextSavedDir != -1)
-        {
-            gameTextLoadDir(gGameTextSavedDir);
-            gGameTextSavedDir = -1;
-        }
-    }
-}
-
-#pragma dont_inline off
-void fn_8001BDD4(int mode)
-{
-    switch (mode)
-    {
-    case 3:
-        textureFree((Texture*)(gSubtitleBoxTextures[0]));
-        textureFree((Texture*)(gSubtitleBoxTextures[1]));
-        textureFree((Texture*)(gSubtitleBoxTextures[2]));
-        break;
-    }
-}
-
-void fn_8001BE2C(int mode)
-{
-    switch (mode)
-    {
-    case 3:
-        gSubtitleBoxTextures[0] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT);
-        gSubtitleBoxTextures[1] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID);
-        gSubtitleBoxTextures[2] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT);
-        break;
-    }
-}
-
-void subtitleStart(int x)
-{
-    if (gSubtitlesEnabled != 0)
-    {
-        gGameTextPendingTextId = x;
-        gGameTextPendingDir = getCurGameText();
-        gGameTextSequenceMode = 0;
-        gGameTextSavedDir = -1;
-        gSubtitleActive = 1;
-        gSubtitleColorR = 0xff;
-        gSubtitleColorG = 0xff;
-        gSubtitleColorB = 0xff;
-        gSubtitleColorA = 0xff;
-    }
-}
-
-u8 curGameTexts[0x260];
-
-void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block)
-{
-    int i;
-    u8* match = (u8*)block;
-    u8* p = curGameTexts;
-    (void)result;
-    for (i = 8; i != 0; i--)
-    {
-        if (match == p)
-        {
-            *(int*)(p + 0x44) = 5;
-            return;
-        }
-        p += 0x4c;
-    }
-}
-
-void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
-{
-    u8* match = (u8*)fileInfo;
-    int i;
-    u8* p = curGameTexts;
-    if (status != -1 && status != -3)
-    {
-        for (i = 8; i != 0; i--)
-        {
-            if (match == p)
-            {
-                *(int*)(p + 0x44) = 2;
-                return;
-            }
-            p += 0x4c;
-        }
-    }
-    else
-    {
-        p = curGameTexts;
-        for (i = 8; i != 0; i--)
-        {
-            if (match == p)
-            {
-                *(int*)(p + 0x44) = 5;
-                return;
-            }
-            p += 0x4c;
-        }
-    }
-}
-
-void gameTextInitFn_8001a234(void)
-{
-    u8* clearPtr;
-    u8* glyphPage;
-    u8** glyphPagePtr;
-    u8* fontState;
-    u8* textWindow;
-    u8* gameTextBase;
-    int glyphPageCount;
-    u8* request;
-    u8* p;
-    f32 zero;
-    int i;
-    int j;
-
-    gameTextBase = gGameTextBase;
-
-    i = 0x94;
-    p = textWindow = (u8*)gTextBoxes + 0x1280;
-    while (p -= 0x20, i-- != 0)
-    {
-        *(u16*)(p + 8) = *(u16*)(p + 2);
-        *(u16*)(p + 0xa) = *(u16*)(p + 6);
-    }
-
-    glyphPageCount = GAMETEXT_LOAD_SLOT_COUNT;
-    glyphPage = gameTextBase + 0x2c0;
-    glyphPagePtr = (u8**)(gameTextBase + 0xc0);
-    fontState = gameTextBase + 0xa0;
-    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, glyphPageCount-- != 0)
-    {
-        *glyphPagePtr = glyphPage;
-        *(u16*)fontState = 0xffff;
-        *(u16*)(fontState + 2) = 1;
-        fontState[4] = 0xff;
-        fontState[5] = 0;
-        fontState[6] = 0;
-        fontState[7] = 0;
-        *(u8***)(fontState + 8) = glyphPagePtr;
-    }
-
-    i = 0x94;
-    while (textWindow -= 0x20, i-- != 0)
-    {
-        textWindow[0x1e] = 0xff;
-    }
-
-    j = 4;
-    request = gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET;
-    zero = lbl_803DE704;
-    while (request -= 0x28, j-- != 0)
-    {
-        *(int*)(request + 8) = 0;
-        *(int*)(request + 0xc) = 0;
-        *(int*)(request + 0) = 0;
-        *(int*)(request + 4) = 0;
-        *(int*)(request + 0x1c) = 0;
-        *(f32*)(request + 0x20) = zero;
-        request[0x24] = 0xff;
-        request[0x25] = 6;
-
-        i = 3;
-        clearPtr = request + 0xc;
-        while (clearPtr -= 4, i-- != 0)
-        {
-            *(int*)(clearPtr + 0x10) = 0;
-        }
-    }
-
-    gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_FONT_SLOT_OFFSET);
-    gameTextCharset = 2;
-    curLanguage = -1;
-    curGameTextDir = (void*)-1;
-    gCurTextBox = NULL;
-    gGameTextLastLanguage = -1;
-    gGameTextLastDir = -1;
-    lbl_803DC9BC = 0;
-    lbl_803DC9A7 = 0xff;
-    lbl_803DC9A6 = 0xff;
-    lbl_803DC9A5 = 0xff;
-    lbl_803DC9A4 = 0xff;
-    gGameTextCommandCount = 0;
-    lbl_803DC9C4 = (char*)(gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET);
-    gGameTextBufferIndex = 0;
-    textWindow = gameTextBase + 0x40;
-    gGameTextLastEntry = textWindow;
-    gCurTextBuffer = *(int*)*(void**)(textWindow + 8);
-    lbl_803DC992 = 0;
-    lbl_803DC991 = 0;
-    lbl_803DC990 = 0;
-    gGameTextShadowOffsetX = 5;
-    gGameTextShadowOffsetY = 5;
-    lbl_803DC984 = 1;
-    lbl_803DC980 = 0;
-    gameTextLoadGraphicsFn_8001a918();
-    curGameTextDir = (void*)3;
-    lbl_803DB378 = (void*)mmCreateMemoryStore(0x800);
-}
 
 void gameTextRun(void)
 {
@@ -2310,88 +2114,118 @@ void gameTextRun(void)
     }
     gCurTextBox = NULL;
 }
+#pragma opt_unroll_loops reset
 
-char sGameTextSequencePathFormat[] = "gametext/Sequences/%d_%s.bin";
+void gameTextInit(void)
+{
+    gameTextInitFn_8001c794();
+    lbl_803DC980 = 1;
+    gameTextLoadDir(0x1c);
+}
 
-/* 4 unreferenced zero bytes sit between the sequence path format and the
- * task-text allow list in retail .data (0x802C9EE4); the declspec keeps this
- * filler out of .sdata so the section layout matches. */
-__declspec(section ".data") int sGameTextUnused[1] = {0};
+#pragma opt_unroll_loops on
 
-/* Task (fortune-teller) text ids that may be shown; 0-terminated. */
-s16 gGameTextTaskTextAllowList[12] = {
-    0x69, 0x6d, 0x83, 0x490, 0x493, 0x492, 0x180, 0x47f, 0x1d, 0x20, 0x3c8, 0,
-};
+void gameTextInitFn_8001a234(void)
+{
+    u8* clearPtr;
+    u8* glyphPage;
+    u8** glyphPagePtr;
+    u8* fontState;
+    u8* textWindow;
+    u8* gameTextBase;
+    int glyphPageCount;
+    u8* request;
+    u8* p;
+    f32 zero;
+    int i;
+    int j;
 
-u16 gGameTextBoxCornerTexSrc[256] = {
-    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047,
-    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047,
-    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x1047, 0x1048, 0x1048, 0x2048,
-    0x2048, 0x2048, 0x2048, 0x2048, 0x2048, 0x2048, 0x0047, 0x0047, 0x0047, 0x0047, 0x1048, 0x2048, 0x3058, 0x3059,
-    0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x0047, 0x0047, 0x0047, 0x1048, 0x2058, 0x3059,
-    0x4059, 0x4059, 0x4059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x0047, 0x0047, 0x1047, 0x2058,
-    0x3059, 0x4059, 0x5059, 0x5059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x0047,
-    0x2048, 0x3059, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x0047, 0x0047, 0x3058, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x0047, 0x1048, 0x3059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059,
-    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048,
-    0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
-    0x505A, 0x505A, 0x505A, 0x505A,
-};
+    gameTextBase = gGameTextBase;
 
-typedef struct GlyphResource802CA100 {
-    u16 rows0[320];
-    void* embedded;
-    u16 rows1[78];
-} GlyphResource802CA100;
-
-GlyphResource802CA100 lbl_802CA100 = {
+    i = 0x94;
+    p = textWindow = (u8*)gTextBoxes + 0x1280;
+    while (p -= 0x20, i-- != 0)
     {
-    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x1444, 0x3444,
-    0x1444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
-    0x0444, 0x0444, 0x0444, 0x3344, 0x7455, 0xA98D, 0xADAE, 0xB5F0, 0x3444, 0x0444, 0x0444, 0x0444,
-    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x3333, 0x7455, 0xB1CF,
-    0xBA11, 0xBA11, 0xC674, 0xCEB6, 0x3445, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
-    0x0444, 0x0444, 0x0444, 0x0444, 0x6344, 0xB1CF, 0xBE53, 0xCAB5, 0xDB19, 0xDF39, 0xF3DE, 0xFFFF,
-    0x2556, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x7455,
-    0xBA11, 0xD6F7, 0xFBFF, 0xFFFF, 0xFFFF, 0xF3BE, 0xFFFF, 0xF7FF, 0x2555, 0x0444, 0x0444, 0x0444,
-    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x6445, 0xBA11, 0xE35B, 0xFFFF, 0xFFFF, 0xFFFF,
-    0xE79C, 0xCEB6, 0xE75B, 0xCAB6, 0x2444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
-    0x0444, 0x3333, 0xB1EF, 0xD718, 0xFFFF, 0xFFFF, 0xEB9D, 0xCED6, 0xBE52, 0xB1CF, 0xCA95, 0xB5EF,
-    0x2444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0xA14B, 0xCA95, 0xFFFF,
-    0xFFFF, 0xEFBD, 0xC695, 0xB610, 0xADAE, 0xA14B, 0xADAE, 0x9D2A, 0x94E8, 0x9929, 0x9929, 0x9929,
-    0x9909, 0x9929, 0x9929, 0x992A, 0x4333, 0xADAE, 0xE77C, 0xFFFF, 0xF3DE, 0xCAB5, 0xB5F0, 0xA98D,
-    0x9D2A, 0x94C7, 0x90A6, 0x8C84, 0x9908, 0xA9AD, 0xA9AD, 0xA9AD, 0xA98D, 0xA9AD, 0xA58D, 0xA9AE,
-    0x7333, 0xB1CF, 0xF7DE, 0xFFFF, 0xDB19, 0xBE32, 0xADAE, 0xA14B, 0x98E8, 0x8C85, 0x8443, 0x8001,
-    0x94E8, 0xADCF, 0xADAF, 0xADCE, 0xADCF, 0xADCE, 0xADCF, 0xADCF, 0x9908, 0xB611, 0xFBFF, 0xFFFF,
-    0xCAB6, 0xBA11, 0xA98C, 0x9D2A, 0x98E8, 0x8C65, 0x90C6, 0x9508, 0xA14B, 0xA56C, 0xA14C, 0xA56C,
-    0xA14C, 0xA14C, 0xA16C, 0xA56C, 0x9D29, 0xBA12, 0xFFFF, 0xF3DE, 0xC674, 0xB5F0, 0xA96C, 0xA12A,
-    0x94A7, 0x6465, 0x7585, 0x7586, 0x7596, 0x7596, 0x7596, 0x75A6, 0x75A6, 0x75A6, 0x75A6, 0x75A6,
-    0x9909, 0xBA11, 0xFBFF, 0xE37B, 0xBA31, 0xB1CF, 0xA14B, 0x9D0A, 0x94C7, 0x5485, 0x5595, 0x5595,
-    0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x9D29, 0xB610, 0xEF9C, 0xEB5B,
-    0xD2D6, 0xCEB5, 0xADAE, 0x98EA, 0x7233, 0x5586, 0x5596, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
-    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0xA14B, 0xCA95, 0xFFFF, 0xEFBD, 0xCA95, 0xBE32, 0xA96D, 0x98EA,
-    0x7233, 0x5485, 0x5595, 0x65A5, 0x65A5, 0x65A5, 0x6595, 0x6595, 0x6595, 0x6595, 0x65A5, 0x6595,
-    0x94E7, 0xADAE, 0xF3DE, 0xEB9D, 0xC253, 0xB5EF, 0xA54B, 0x98EA, 0x7233, 0x5586, 0x66A6, 0x66A6,
-    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
-    },
-    (void*)((u8*)textRenderStr + 0xb30),
+        *(u16*)(p + 8) = *(u16*)(p + 2);
+        *(u16*)(p + 0xa) = *(u16*)(p + 6);
+    }
+
+    glyphPageCount = GAMETEXT_LOAD_SLOT_COUNT;
+    glyphPage = gameTextBase + 0x2c0;
+    glyphPagePtr = (u8**)(gameTextBase + 0xc0);
+    fontState = gameTextBase + 0xa0;
+    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, glyphPageCount-- != 0)
     {
-    0x9085, 0xEFBE, 0xC674, 0xB5F0, 0xA56C, 0x98EA, 0x7233, 0x5485, 0x6595, 0x65A5, 0x65A5, 0x6595,
-    0x6595, 0x6595, 0x6595, 0x6595, 0x6595, 0x6595, 0xA2A5, 0x9EA4, 0x8423, 0xEFBE, 0xCA95, 0xB5F0,
-    0xA56C, 0x98EA, 0x7233, 0x5586, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
-    0x66A6, 0x66A6, 0xA2A6, 0xAAE8, 0x8844, 0xEB9D, 0xCEB6, 0xB5F0, 0xA54C, 0x98EA, 0x7233, 0x5485,
-    0x6595, 0x65A5, 0x6595, 0x65A5, 0x6595, 0x6595, 0x65A5, 0x65A5, 0x6595, 0x6595, 0xA6A6, 0xB32A,
-    0x8824, 0xE75B, 0xCEB6, 0xB5F0, 0xA54C, 0x98EA, 0x7233, 0x5596, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
-    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
-    },
-};
+        *glyphPagePtr = glyphPage;
+        *(u16*)fontState = 0xffff;
+        *(u16*)(fontState + 2) = 1;
+        fontState[4] = 0xff;
+        fontState[5] = 0;
+        fontState[6] = 0;
+        fontState[7] = 0;
+        *(u8***)(fontState + 8) = glyphPagePtr;
+    }
+
+    i = 0x94;
+    while (textWindow -= 0x20, i-- != 0)
+    {
+        textWindow[0x1e] = 0xff;
+    }
+
+    j = 4;
+    request = gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET;
+    zero = lbl_803DE704;
+    while (request -= 0x28, j-- != 0)
+    {
+        *(int*)(request + 8) = 0;
+        *(int*)(request + 0xc) = 0;
+        *(int*)(request + 0) = 0;
+        *(int*)(request + 4) = 0;
+        *(int*)(request + 0x1c) = 0;
+        *(f32*)(request + 0x20) = zero;
+        request[0x24] = 0xff;
+        request[0x25] = 6;
+
+        i = 3;
+        clearPtr = request + 0xc;
+        while (clearPtr -= 4, i-- != 0)
+        {
+            *(int*)(clearPtr + 0x10) = 0;
+        }
+    }
+
+    gameTextFonts = (TextFont*)(gameTextBase + GAMETEXT_FONT_SLOT_OFFSET);
+    gameTextCharset = 2;
+    curLanguage = -1;
+    curGameTextDir = (void*)-1;
+    gCurTextBox = NULL;
+    gGameTextLastLanguage = -1;
+    gGameTextLastDir = -1;
+    lbl_803DC9BC = 0;
+    lbl_803DC9A7 = 0xff;
+    lbl_803DC9A6 = 0xff;
+    lbl_803DC9A5 = 0xff;
+    lbl_803DC9A4 = 0xff;
+    gGameTextCommandCount = 0;
+    lbl_803DC9C4 = (char*)(gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET);
+    gGameTextBufferIndex = 0;
+    textWindow = gameTextBase + 0x40;
+    gGameTextLastEntry = textWindow;
+    gCurTextBuffer = *(int*)*(void**)(textWindow + 8);
+    lbl_803DC992 = 0;
+    lbl_803DC991 = 0;
+    lbl_803DC990 = 0;
+    gGameTextShadowOffsetX = 5;
+    gGameTextShadowOffsetY = 5;
+    lbl_803DC984 = 1;
+    lbl_803DC980 = 0;
+    gameTextLoadGraphicsFn_8001a918();
+    curGameTextDir = (void*)3;
+    lbl_803DB378 = (void*)mmCreateMemoryStore(0x800);
+}
+
+
+extern char sGameTextSequencePathFormat[];
 
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
 {
@@ -2471,6 +2305,9 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
 }
+
+void* gSubtitleLineTable[0x100];
+
 
 void gameTextLoadForCurMap(int sourceId)
 {
@@ -2566,340 +2403,9 @@ void gameTextLoadForCurMap(int sourceId)
     testAndSet_onlyUseHeap3(oldHeap);
 }
 
-#pragma dont_inline on
-void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
-{
-    u32 colorB;
-    u32 colorA;
-    int c6y1;
-    int c6y0;
-    int c6x1;
-    int c6x0;
-    int c3y1;
-    int c3y0;
-    int c3x1;
-    s16 savedY;
-    s16 savedX;
-    u16 boxFlags;
-    u8* cur;
-    int cy;
-    int cx;
-    int hh;
-    int hw;
-    s16 x7;
-    s16 y7;
-    u16 w7;
-    u16 h7;
-    int c3x0;
-    int y2;
-    int w2;
-    int xw;
-    s16 x2;
-    int half;
-    int rem;
-
-    savedX = ((GameTextBox*)box)->cursorX;
-    savedY = ((GameTextBox*)box)->cursorY;
-    boxFlags = ((GameTextBox*)box)->flags;
-    if (boxFlags & 1)
-    {
-        return;
-    }
-    ((GameTextBox*)box)->flags = boxFlags | 1;
-    switch (((GameTextBox*)box)->style)
-    {
-    case 5:
-        return;
-    case 7:
-        if ((int)getCurGameText() == 3)
-        {
-            u16 bh = ((GameTextBox*)box)->height;
-            u16 bw = ((GameTextBox*)box)->width;
-            s16 by = ((GameTextBox*)box)->y;
-            s16 bx = ((GameTextBox*)box)->x;
-            colorB = gGameTextBoxFillColor;
-            hudDrawRect(bx, by, bx + bw, by + bh, &colorB);
-        }
-        else
-        {
-            h7 = ((GameTextBox*)box)->height;
-            w7 = ((GameTextBox*)box)->width;
-            y7 = ((GameTextBox*)box)->y;
-            x7 = ((GameTextBox*)box)->x;
-            GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawHudBox(x7, y7, (s16)w7, (s16)h7, 0xff, 1);
-        }
-        break;
-    case 1:
-    {
-        u16 bh = ((GameTextBox*)box)->height;
-        u16 bw = ((GameTextBox*)box)->width;
-        s16 by = ((GameTextBox*)box)->y;
-        s16 bx = ((GameTextBox*)box)->x;
-        colorA = gGameTextBoxFillColor;
-        hudDrawRect(bx, by, bx + bw, by + bh, &colorA);
-    }
-    break;
-    case 6:
-        if (strPtr == NULL)
-        {
-            return;
-        }
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL)
-        {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
-        }
-        else if ((u32)boxId != 0)
-        {
-            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0,
-                                   &c6y1);
-        }
-        gameTextSetWindow(cur);
-        hw = (c6x1 - c6x0) >> 1;
-        hh = (c6y1 - c6y0) >> 1;
-        cx = c6x0 + hw;
-        cy = c6y0 + hh;
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset),
-                          (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100, hw + gGameTextBoxCornerInset,
-                          hh + gGameTextBoxCornerInset, 0);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100,
-                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 1);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset), cy, 0xff, 0x100,
-                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 2);
-        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, cy, 0xff, 0x100, hw + gGameTextBoxCornerInset,
-                          hh + gGameTextBoxCornerInset, 3);
-        break;
-    case 0:
-        drawScaledTexture(gGameTextBoxBgTexture, (f32)((GameTextBox*)box)->x, (f32)((GameTextBox*)box)->y, 0xff, 0x100,
-                          ((GameTextBox*)box)->width, ((GameTextBox*)box)->height, 0);
-        break;
-    case 3:
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL)
-        {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
-        }
-        else if ((u32)boxId != 0)
-        {
-            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0,
-                                   &c3y1);
-        }
-        gameTextSetWindow(cur);
-        drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
-        drawScaledTexture(gSubtitleBoxTextures[1], (f32)c3x0, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100,
-                          c3x1 - c3x0, 0x24, 0);
-        drawTexture(gSubtitleBoxTextures[2], (f32)c3x1, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
-        break;
-    case 2:
-        x2 = ((GameTextBox*)box)->x;
-        w2 = ((GameTextBox*)box)->width;
-        xw = x2 + w2;
-        y2 = ((GameTextBox*)box)->y;
-        half = w2 >> 1;
-        if (half > 0xc)
-        {
-            half = 0xc;
-        }
-        rem = w2 - half * 2;
-        if (rem < 0)
-        {
-            rem = 0;
-        }
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture(lbl_8033BE40[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
-        drawTexture(lbl_8033BE40[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
-        if (half != 0)
-        {
-            drawScaledTexture(lbl_8033BE40[1], (f32)x2, (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100, half, 0x3a,
-                              0);
-            drawPartialTexture(lbl_8033BE40[3], (f32)(xw - half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
-                               half, 0x3a, 0xc - half, 0);
-        }
-        if (rem != 0)
-        {
-            drawScaledTexture(lbl_8033BE40[2], (f32)(x2 + half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
-                              rem, 0x3a, 0);
-        }
-        break;
-    case 4:
-        boxDrawFn_8001c5ac(strPtr, boxId, box);
-        break;
-    }
-    ((GameTextBox*)box)->cursorX = savedX;
-    ((GameTextBox*)box)->cursorY = savedY;
-}
-
-#pragma dont_inline off
-void setLanguageFn_8001ad64(void* reqp)
-{
-    u8* req = reqp;
-    int** slot;
-    u16* p;
-    u32 bpp;
-    int ofs;
-    int* table;
-    u32 w;
-    u32 h;
-    int i;
-    u8* txt;
-    int* texHdr;
-    u8* hdr;
-    u16* texStart;
-    int* data;
-    u16 kind;
-    u8* entries;
-    int numStrings;
-    int* strs;
-    int n;
-    u32 size;
-    u16* newBuf;
-    u16* old;
-    int delta;
-    int* strs2;
-    GameTextCharset* cs;
-
-    DCStoreRange(*(void**)(req + 0x3c), *(u32*)(req + 0x40));
-    if (req[0x4b] == 1)
-    {
-        cs = (GameTextCharset*)&gGameTextCharsets[1];
-    }
-    else if (req[0x4b] == 3)
-    {
-        cs = (GameTextCharset*)&gGameTextCharsets[3];
-    }
-    else
-    {
-        cs = (GameTextCharset*)&gGameTextCharsets[0];
-        curGameTextDir = (void*)req[0x48];
-        curLanguage = req[0x49];
-    }
-    data = *(int**)(req + 0x3c);
-    cs->headerCount = data[0];
-    if (cs->headerCount == 0)
-    {
-        cs->status = 3;
-        *(int*)(req + 0x44) = 6;
-        return;
-    }
-    cs->strings = (u8*)(data + 1);
-    hdr = (u8*)data + cs->headerCount * 16;
-    cs->count = *(u16*)(hdr + 4);
-    ofs = *(u16*)(hdr + 6);
-    entries = hdr + 8;
-    cs->entries = entries;
-    table = (int*)(entries + cs->count * 12);
-    numStrings = table[0];
-    strs = table + 1;
-    for (i = 0; i < cs->count; i++)
-    {
-        *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
-    }
-    txt = (u8*)(table + numStrings) + 4;
-    {
-        int j;
-        for (j = 0; j < numStrings; j++)
-        {
-            strs[j] = strs[j] + (int)txt;
-        }
-    }
-    texHdr = (int*)(txt + ofs);
-    p = (u16*)((u8*)texHdr + texHdr[0]);
-    p += 2;
-    texStart = p;
-    slot = (int**)cs;
-    while (1)
-    {
-        kind = p[0];
-        bpp = p[1];
-        w = p[2];
-        h = p[3];
-        p += 4;
-        if (w == 0 && h == 0)
-        {
-            break;
-        }
-        switch (kind)
-        {
-        case 1:
-            kind = 5;
-            break;
-        case 2:
-            kind = 0;
-            break;
-        }
-        if (slot[4] != NULL)
-        {
-            mmSetFreeDelay(0);
-            mm_free(slot[4]);
-            mmSetFreeDelay(2);
-        }
-        slot[4] = (int*)textureAlloc(w, h, kind, 0, 0, 0, 0, 1, 1);
-        if (slot[4] != NULL)
-        {
-            if (bpp == 4)
-            {
-                u8* src8 = (u8*)p;
-                u8* dst8 = (u8*)slot[4] + 0x60;
-                n = (int)(w * h) >> 1;
-                while (n--)
-                {
-                    *dst8++ = *src8++;
-                }
-                DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
-            }
-            else
-            {
-                u16* src16 = p;
-                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
-                n = w * h;
-                while (n--)
-                {
-                    *dst16++ = *src16++;
-                }
-                DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
-            }
-        }
-        p += (int)(w * h * bpp) >> 4;
-        slot = slot + 1;
-    }
-    size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
-    newBuf = mmAlloc(size, 0x1a, 0);
-    n = size >> 1;
-    {
-        u16* d = newBuf;
-        u16* s;
-        old = *(u16**)(req + 0x3c);
-        s = old;
-        delta = (int)newBuf - (int)old;
-        while (n--)
-        {
-            *d++ = *s++;
-        }
-    }
-    cs->strings = cs->strings + delta;
-    cs->entries = cs->entries + delta;
-    for (i = 0; i < cs->count; i++)
-    {
-        *(int*)(cs->entries + i * 12 + 8) = *(int*)(cs->entries + i * 12 + 8) + delta;
-    }
-    strs2 = (int*)((u8*)strs + delta);
-    for (i = 0; i < numStrings; i++)
-    {
-        strs2[i] += delta;
-    }
-    mmSetFreeDelay(0);
-    mm_free(*(void**)(req + 0x3c));
-    *(int*)(req + 0x3c) = 0;
-    mmSetFreeDelay(2);
-    *(u16**)(req + 0x3c) = newBuf;
-    cs->status = 2;
-    *(int*)(req + 0x44) = 3;
-}
-
-#pragma ppc_unroll_speculative off
-#pragma ppc_unroll_instructions_limit 32
 #pragma opt_loop_invariants off
+#pragma ppc_unroll_instructions_limit 32
+#pragma ppc_unroll_speculative off
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     int wbytes;
@@ -3086,12 +2592,258 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int*)(base31 + 0x6c) = 2;
 }
+
 #pragma opt_loop_invariants reset
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+void setLanguageFn_8001ad64(void* reqp)
+{
+    u8* req = reqp;
+    int** slot;
+    u16* p;
+    u32 bpp;
+    int ofs;
+    int* table;
+    u32 w;
+    u32 h;
+    int i;
+    u8* txt;
+    int* texHdr;
+    u8* hdr;
+    u16* texStart;
+    int* data;
+    u16 kind;
+    u8* entries;
+    int numStrings;
+    int* strs;
+    int n;
+    u32 size;
+    u16* newBuf;
+    u16* old;
+    int delta;
+    int* strs2;
+    GameTextCharset* cs;
+
+    DCStoreRange(*(void**)(req + 0x3c), *(u32*)(req + 0x40));
+    if (req[0x4b] == 1)
+    {
+        cs = (GameTextCharset*)&gGameTextCharsets[1];
+    }
+    else if (req[0x4b] == 3)
+    {
+        cs = (GameTextCharset*)&gGameTextCharsets[3];
+    }
+    else
+    {
+        cs = (GameTextCharset*)&gGameTextCharsets[0];
+        curGameTextDir = (void*)req[0x48];
+        curLanguage = req[0x49];
+    }
+    data = *(int**)(req + 0x3c);
+    cs->headerCount = data[0];
+    if (cs->headerCount == 0)
+    {
+        cs->status = 3;
+        *(int*)(req + 0x44) = 6;
+        return;
+    }
+    cs->strings = (u8*)(data + 1);
+    hdr = (u8*)data + cs->headerCount * 16;
+    cs->count = *(u16*)(hdr + 4);
+    ofs = *(u16*)(hdr + 6);
+    entries = hdr + 8;
+    cs->entries = entries;
+    table = (int*)(entries + cs->count * 12);
+    numStrings = table[0];
+    strs = table + 1;
+    for (i = 0; i < cs->count; i++)
+    {
+        *(int**)(cs->entries + i * 12 + 8) = strs + *(int*)(cs->entries + i * 12 + 8);
+    }
+    txt = (u8*)(table + numStrings) + 4;
+    {
+        int j;
+        for (j = 0; j < numStrings; j++)
+        {
+            strs[j] = strs[j] + (int)txt;
+        }
+    }
+    texHdr = (int*)(txt + ofs);
+    p = (u16*)((u8*)texHdr + texHdr[0]);
+    p += 2;
+    texStart = p;
+    slot = (int**)cs;
+    while (1)
+    {
+        kind = p[0];
+        bpp = p[1];
+        w = p[2];
+        h = p[3];
+        p += 4;
+        if (w == 0 && h == 0)
+        {
+            break;
+        }
+        switch (kind)
+        {
+        case 1:
+            kind = 5;
+            break;
+        case 2:
+            kind = 0;
+            break;
+        }
+        if (slot[4] != NULL)
+        {
+            mmSetFreeDelay(0);
+            mm_free(slot[4]);
+            mmSetFreeDelay(2);
+        }
+        slot[4] = (int*)textureAlloc(w, h, kind, 0, 0, 0, 0, 1, 1);
+        if (slot[4] != NULL)
+        {
+            if (bpp == 4)
+            {
+                u8* src8 = (u8*)p;
+                u8* dst8 = (u8*)slot[4] + 0x60;
+                n = (int)(w * h) >> 1;
+                while (n--)
+                {
+                    *dst8++ = *src8++;
+                }
+                DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
+            }
+            else
+            {
+                u16* src16 = p;
+                u16* dst16 = (u16*)((u8*)slot[4] + 0x60);
+                n = w * h;
+                while (n--)
+                {
+                    *dst16++ = *src16++;
+                }
+                DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
+            }
+        }
+        p += (int)(w * h * bpp) >> 4;
+        slot = slot + 1;
+    }
+    size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
+    newBuf = mmAlloc(size, 0x1a, 0);
+    n = size >> 1;
+    {
+        u16* d = newBuf;
+        u16* s;
+        old = *(u16**)(req + 0x3c);
+        s = old;
+        delta = (int)newBuf - (int)old;
+        while (n--)
+        {
+            *d++ = *s++;
+        }
+    }
+    cs->strings = cs->strings + delta;
+    cs->entries = cs->entries + delta;
+    for (i = 0; i < cs->count; i++)
+    {
+        *(int*)(cs->entries + i * 12 + 8) = *(int*)(cs->entries + i * 12 + 8) + delta;
+    }
+    strs2 = (int*)((u8*)strs + delta);
+    for (i = 0; i < numStrings; i++)
+    {
+        strs2[i] += delta;
+    }
+    mmSetFreeDelay(0);
+    mm_free(*(void**)(req + 0x3c));
+    *(int*)(req + 0x3c) = 0;
+    mmSetFreeDelay(2);
+    *(u16**)(req + 0x3c) = newBuf;
+    cs->status = 2;
+    *(int*)(req + 0x44) = 3;
+}
+
+extern u8 curGameTexts[0x260];
+
+void dvdCancelCallback_8001b39c(s32 result, DVDCommandBlock* block)
+{
+    int i;
+    u8* match = (u8*)block;
+    u8* p = curGameTexts;
+    (void)result;
+    for (i = 8; i != 0; i--)
+    {
+        if (match == p)
+        {
+            *(int*)(p + 0x44) = 5;
+            return;
+        }
+        p += 0x4c;
+    }
+}
+
+void gameTextOpenCallback_8001b3d0(s32 status, DVDFileInfo* fileInfo)
+{
+    u8* match = (u8*)fileInfo;
+    int i;
+    u8* p = curGameTexts;
+    if (status != -1 && status != -3)
+    {
+        for (i = 8; i != 0; i--)
+        {
+            if (match == p)
+            {
+                *(int*)(p + 0x44) = 2;
+                return;
+            }
+            p += 0x4c;
+        }
+    }
+    else
+    {
+        p = curGameTexts;
+        for (i = 8; i != 0; i--)
+        {
+            if (match == p)
+            {
+                *(int*)(p + 0x44) = 5;
+                return;
+            }
+            p += 0x4c;
+        }
+    }
+}
+
+u8 curGameTexts[0x260];
+#pragma opt_unroll_loops reset
+#pragma peephole reset
+#pragma peephole on
+#pragma scheduling reset
+#pragma scheduling on
+void gameTextSetDrawFunc(void* fn)
+{
+    gameTextDrawFunc = fn;
+}
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
+
+int gameTextFn_8001b44c(int x)
+{
+    if (gGameTextSequenceMode == 0)
+    {
+        gGameTextSavedDir = x;
+        return 1;
+    }
+    return 0;
+}
+#pragma opt_unroll_loops on
 #pragma ppc_unroll_instructions_limit 96
 #pragma ppc_unroll_speculative on
 
-int gSubtitleLineStrs[0x100];
-f32 gSubtitleLineTimes[0x100];
+extern f32 gSubtitleLineTimes[0x100];
+
+extern int gSubtitleLineStrs[0x100];
 
 void subtitleUpdateAndDraw(int a)
 {
@@ -3154,6 +2906,589 @@ void subtitleUpdateAndDraw(int a)
         }
     }
 }
+#pragma opt_unroll_loops reset
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+void mainLoopDoGameText(void)
+{
+    if (gGameTextSequenceMode != 0)
+    {
+        if (gameTextGetState(1) == 2 && gSubtitleActive == 1)
+        {
+            subtitleBuildLineTable();
+        }
+    }
+    else
+    {
+        if (gameTextGetState(0) == 2 && (int)gGameTextPendingDir == (int)getCurGameText() && gSubtitleActive == 1)
+        {
+            subtitleBuildLineTable();
+        }
+    }
+}
+
+char sGameTextSequencePathFormat[] = "gametext/Sequences/%d_%s.bin";
+
+/* 4 unreferenced zero bytes sit between the sequence path format and the
+ * task-text allow list in retail .data (0x802C9EE4); the declspec keeps this
+ * filler out of .sdata so the section layout matches. */
+__declspec(section ".data") int sGameTextUnused[1] = {0};
+
+/* Task (fortune-teller) text ids that may be shown; 0-terminated. */
+s16 gGameTextTaskTextAllowList[12] = {
+    0x69, 0x6d, 0x83, 0x490, 0x493, 0x492, 0x180, 0x47f, 0x1d, 0x20, 0x3c8, 0,
+};
+
+u16 gGameTextBoxCornerTexSrc[256] = {
+    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047,
+    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047,
+    0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x0047, 0x1047, 0x1048, 0x1048, 0x2048,
+    0x2048, 0x2048, 0x2048, 0x2048, 0x2048, 0x2048, 0x0047, 0x0047, 0x0047, 0x0047, 0x1048, 0x2048, 0x3058, 0x3059,
+    0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x4059, 0x0047, 0x0047, 0x0047, 0x1048, 0x2058, 0x3059,
+    0x4059, 0x4059, 0x4059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x5059, 0x0047, 0x0047, 0x1047, 0x2058,
+    0x3059, 0x4059, 0x5059, 0x5059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x0047,
+    0x2048, 0x3059, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x0047, 0x0047, 0x3058, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x0047, 0x1048, 0x3059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059,
+    0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x0047, 0x2048,
+    0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x0047, 0x2048, 0x4059, 0x5059, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A, 0x505A,
+    0x505A, 0x505A, 0x505A, 0x505A,
+};
+
+typedef struct GlyphResource802CA100 {
+    u16 rows0[320];
+    void* embedded;
+    u16 rows1[78];
+} GlyphResource802CA100;
+
+GlyphResource802CA100 lbl_802CA100 = {
+    {
+    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x1444, 0x3444,
+    0x1444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
+    0x0444, 0x0444, 0x0444, 0x3344, 0x7455, 0xA98D, 0xADAE, 0xB5F0, 0x3444, 0x0444, 0x0444, 0x0444,
+    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x3333, 0x7455, 0xB1CF,
+    0xBA11, 0xBA11, 0xC674, 0xCEB6, 0x3445, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
+    0x0444, 0x0444, 0x0444, 0x0444, 0x6344, 0xB1CF, 0xBE53, 0xCAB5, 0xDB19, 0xDF39, 0xF3DE, 0xFFFF,
+    0x2556, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x7455,
+    0xBA11, 0xD6F7, 0xFBFF, 0xFFFF, 0xFFFF, 0xF3BE, 0xFFFF, 0xF7FF, 0x2555, 0x0444, 0x0444, 0x0444,
+    0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x6445, 0xBA11, 0xE35B, 0xFFFF, 0xFFFF, 0xFFFF,
+    0xE79C, 0xCEB6, 0xE75B, 0xCAB6, 0x2444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444,
+    0x0444, 0x3333, 0xB1EF, 0xD718, 0xFFFF, 0xFFFF, 0xEB9D, 0xCED6, 0xBE52, 0xB1CF, 0xCA95, 0xB5EF,
+    0x2444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0x0444, 0xA14B, 0xCA95, 0xFFFF,
+    0xFFFF, 0xEFBD, 0xC695, 0xB610, 0xADAE, 0xA14B, 0xADAE, 0x9D2A, 0x94E8, 0x9929, 0x9929, 0x9929,
+    0x9909, 0x9929, 0x9929, 0x992A, 0x4333, 0xADAE, 0xE77C, 0xFFFF, 0xF3DE, 0xCAB5, 0xB5F0, 0xA98D,
+    0x9D2A, 0x94C7, 0x90A6, 0x8C84, 0x9908, 0xA9AD, 0xA9AD, 0xA9AD, 0xA98D, 0xA9AD, 0xA58D, 0xA9AE,
+    0x7333, 0xB1CF, 0xF7DE, 0xFFFF, 0xDB19, 0xBE32, 0xADAE, 0xA14B, 0x98E8, 0x8C85, 0x8443, 0x8001,
+    0x94E8, 0xADCF, 0xADAF, 0xADCE, 0xADCF, 0xADCE, 0xADCF, 0xADCF, 0x9908, 0xB611, 0xFBFF, 0xFFFF,
+    0xCAB6, 0xBA11, 0xA98C, 0x9D2A, 0x98E8, 0x8C65, 0x90C6, 0x9508, 0xA14B, 0xA56C, 0xA14C, 0xA56C,
+    0xA14C, 0xA14C, 0xA16C, 0xA56C, 0x9D29, 0xBA12, 0xFFFF, 0xF3DE, 0xC674, 0xB5F0, 0xA96C, 0xA12A,
+    0x94A7, 0x6465, 0x7585, 0x7586, 0x7596, 0x7596, 0x7596, 0x75A6, 0x75A6, 0x75A6, 0x75A6, 0x75A6,
+    0x9909, 0xBA11, 0xFBFF, 0xE37B, 0xBA31, 0xB1CF, 0xA14B, 0x9D0A, 0x94C7, 0x5485, 0x5595, 0x5595,
+    0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x55A5, 0x9D29, 0xB610, 0xEF9C, 0xEB5B,
+    0xD2D6, 0xCEB5, 0xADAE, 0x98EA, 0x7233, 0x5586, 0x5596, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
+    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0xA14B, 0xCA95, 0xFFFF, 0xEFBD, 0xCA95, 0xBE32, 0xA96D, 0x98EA,
+    0x7233, 0x5485, 0x5595, 0x65A5, 0x65A5, 0x65A5, 0x6595, 0x6595, 0x6595, 0x6595, 0x65A5, 0x6595,
+    0x94E7, 0xADAE, 0xF3DE, 0xEB9D, 0xC253, 0xB5EF, 0xA54B, 0x98EA, 0x7233, 0x5586, 0x66A6, 0x66A6,
+    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
+    },
+    (void*)((u8*)textRenderStr + 0xb30),
+    {
+    0x9085, 0xEFBE, 0xC674, 0xB5F0, 0xA56C, 0x98EA, 0x7233, 0x5485, 0x6595, 0x65A5, 0x65A5, 0x6595,
+    0x6595, 0x6595, 0x6595, 0x6595, 0x6595, 0x6595, 0xA2A5, 0x9EA4, 0x8423, 0xEFBE, 0xCA95, 0xB5F0,
+    0xA56C, 0x98EA, 0x7233, 0x5586, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
+    0x66A6, 0x66A6, 0xA2A6, 0xAAE8, 0x8844, 0xEB9D, 0xCEB6, 0xB5F0, 0xA54C, 0x98EA, 0x7233, 0x5485,
+    0x6595, 0x65A5, 0x6595, 0x65A5, 0x6595, 0x6595, 0x65A5, 0x65A5, 0x6595, 0x6595, 0xA6A6, 0xB32A,
+    0x8824, 0xE75B, 0xCEB6, 0xB5F0, 0xA54C, 0x98EA, 0x7233, 0x5596, 0x66A6, 0x66A6, 0x66A6, 0x66A6,
+    0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6, 0x66A6
+    },
+};
+#pragma dont_inline reset
+#pragma dont_inline on
+#pragma opt_unroll_loops on
+void subtitleFn_8001b700(void)
+{
+    void** slot;
+    int i;
+    int oldDelay;
+
+    if (gSubtitleActive != 0)
+    {
+        gSubtitleActive = 0;
+        i = 0;
+        slot = gSubtitleLineTable;
+        while (i < gSubtitleBlockCount)
+        {
+            if (slot[i] != NULL)
+            {
+                oldDelay = mmSetFreeDelay(0);
+                mm_free(slot[i]);
+                mmSetFreeDelay(oldDelay);
+                slot[i] = NULL;
+            }
+            i++;
+        }
+
+        if (gGameTextSavedDir != -1)
+        {
+            gameTextLoadDir(gGameTextSavedDir);
+            gGameTextSavedDir = -1;
+        }
+    }
+}
+#pragma dont_inline reset
+#pragma dont_inline on
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
+#pragma opt_strength_reduction on
+#pragma optimization_level 1
+#pragma peephole off
+void subtitleBuildLineTable(void)
+{
+    int savedCharset;
+    SubtitleLineTable* s[1];
+    f32 delta;
+    f32 curTime;
+    SubtitleTextEntry* t;
+    u8* win;
+    int m;
+    int i;
+    char* str;
+    int k;
+    int total;
+    int oldDelay;
+    char** strLines;
+    int found;
+    int q;
+    int n;
+    int count;
+    int args[3];
+    f32 ftotal;
+    void** blk;
+
+    s[0] = (SubtitleLineTable*)gSubtitleLineTable;
+    total = 0;
+    curTime = lbl_803DE730;
+    if (gGameTextSequenceMode != 0)
+    {
+        savedCharset = gameTextGetCharset();
+        gameTextSetCharset(1, 1);
+    }
+    t = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
+    win = (u8*)gTextBoxes + 0x140;
+    gSubtitleLineCount = 0;
+    gSubtitleBlockCount = 0;
+    for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
+    {
+        s[0]->times[i] = gSubtitleNoTimeSentinel;
+    }
+    for (i = 0; i < t->count; i++)
+    {
+        str = t->strs[i];
+        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
+        if (n != 0)
+        {
+            q = args[2] / 60;
+            s[0]->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
+        }
+        strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
+        if (strLines != NULL)
+        {
+            for (k = 0; k < count; k++)
+            {
+                s[0]->lines[gSubtitleLineCount++] = strLines[k];
+            }
+            blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
+            if (*blk != NULL)
+            {
+                oldDelay = mmSetFreeDelay(0);
+                blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
+                mm_free(*blk);
+                mmSetFreeDelay(oldDelay);
+            }
+            blk = (void**)((u8*)s[0] + gSubtitleBlockCount++ * 4);
+            *blk = strLines;
+        }
+    }
+    for (k = 0; k < gSubtitleLineCount; k++)
+    {
+        if (gSubtitleNoTimeSentinel != s[0]->times[k])
+        {
+            curTime = s[0]->times[k];
+            total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
+        }
+        else
+        {
+            found = 0;
+            m = k;
+            for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
+            {
+                ftotal = total;
+                if (m < 255)
+                {
+                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
+                    {
+                        delta = s[0]->times[m + 1] - curTime;
+                        found = 1;
+                    }
+                    n = GameText_CountPrintableChars((u8*)s[0]->lines[m]);
+                    s[0]->times[m] = n;
+                    total += n;
+                    if (found != 0)
+                    {
+                        for (q = m; q >= k; q--)
+                        {
+                            s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
+                        }
+                        break;
+                    }
+                    m++;
+                }
+            }
+        }
+    }
+    gSubtitleLineIndex = 0;
+    gSubtitleElapsedFrames = 0;
+    gSubtitleActive = 2;
+    if (gGameTextSequenceMode != 0)
+    {
+        gameTextSetCharset(savedCharset, 1);
+    }
+}
+
+#pragma dont_inline reset
+#pragma dont_inline off
+#pragma opt_strength_reduction reset
+#pragma optimization_level reset
+#pragma ppc_unroll_instructions_limit 70
+#pragma ppc_unroll_speculative on
+
+void subtitleStart(int x)
+{
+    if (gSubtitlesEnabled != 0)
+    {
+        gGameTextPendingTextId = x;
+        gGameTextPendingDir = getCurGameText();
+        gGameTextSequenceMode = 0;
+        gGameTextSavedDir = -1;
+        gSubtitleActive = 1;
+        gSubtitleColorR = 0xff;
+        gSubtitleColorG = 0xff;
+        gSubtitleColorB = 0xff;
+        gSubtitleColorA = 0xff;
+    }
+}
+
+#pragma opt_unroll_loops reset
+#pragma peephole reset
+#pragma peephole on
+void gameTextLoadTaskText(int taskId)
+{
+    int textId;
+    int dirId;
+    s16* taskList;
+    int count;
+    int allowed;
+
+    if (gameTextGetTaskText(taskId, &textId, &dirId) != 0)
+    {
+        if (gSubtitlesEnabled == 0)
+        {
+            taskList = gGameTextTaskTextAllowList;
+            for (count = 0; count < 0xb; count++)
+            {
+                if (taskId == taskList[count])
+                {
+                    allowed = 1;
+                    goto checkAllowed;
+                }
+            }
+            allowed = 0;
+        checkAllowed:
+            if (allowed == 0)
+            {
+                return;
+            }
+        }
+
+        gGameTextPendingTextId = textId;
+        gGameTextPendingDir = (void*)dirId;
+        if (dirId == 0x29)
+        {
+            loadGameTextSequence(dirId, textId);
+            gGameTextSequenceMode = 1;
+        }
+        else
+        {
+            gGameTextSavedDir = (int)getCurGameText();
+            gameTextLoadDir((int)gGameTextPendingDir);
+            gGameTextSequenceMode = 0;
+        }
+        gSubtitleActive = 1;
+        gSubtitleColorR = 0xff;
+        gSubtitleColorG = 0xff;
+        gSubtitleColorB = 0xff;
+        gSubtitleColorA = 0xff;
+    }
+}
+
+#pragma peephole reset
+#pragma peephole off
+
+int subtitleIsActive(void)
+{
+    int ret;
+
+    ret = 0;
+    if (gSubtitlesEnabled != 0)
+    {
+        if (gSubtitleActive != 0)
+        {
+            ret = 1;
+        }
+    }
+    return ret;
+}
+
+int gSubtitleLineStrs[0x100];
+f32 gSubtitleLineTimes[0x100];
+
+int setSubtitlesEnabled(int enabled)
+{
+    int old = gSubtitlesEnabled;
+    gSubtitlesEnabled = enabled;
+    if (enabled == 0)
+    {
+        subtitleFn_8001b700();
+    }
+    return old;
+}
+#pragma opt_unroll_loops off
+void gameTextInitFn_8001bd14(void)
+{
+    int i;
+    int zero;
+    int (*scratch)[8];
+
+    zero = 0;
+    gSubtitleActive = zero;
+    gSubtitlesEnabled = 1;
+    gGameTextSavedDir = -1;
+
+    scratch = (int (*)[8])gSubtitleLineTable;
+    for (i = 0; i < 32; i++)
+    {
+        scratch[i][0] = zero;
+        scratch[i][1] = zero;
+        scratch[i][2] = zero;
+        scratch[i][3] = zero;
+        scratch[i][4] = zero;
+        scratch[i][5] = zero;
+        scratch[i][6] = zero;
+        scratch[i][7] = zero;
+    }
+}
+
+#pragma opt_unroll_loops reset
+#pragma opt_unroll_loops on
+void fn_8001BDD4(int mode)
+{
+    switch (mode)
+    {
+    case 3:
+        textureFree((Texture*)(gSubtitleBoxTextures[0]));
+        textureFree((Texture*)(gSubtitleBoxTextures[1]));
+        textureFree((Texture*)(gSubtitleBoxTextures[2]));
+        break;
+    }
+}
+
+
+void fn_8001BE2C(int mode)
+{
+    switch (mode)
+    {
+    case 3:
+        gSubtitleBoxTextures[0] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_LEFT);
+        gSubtitleBoxTextures[1] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_MID);
+        gSubtitleBoxTextures[2] = textureLoadAsset(TEXTRENDER_TEXTURE_SUBTITLE_BOX_RIGHT);
+        break;
+    }
+}
+
+#pragma dont_inline reset
+#pragma dont_inline on
+void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
+{
+    u32 colorB;
+    u32 colorA;
+    int c6y1;
+    int c6y0;
+    int c6x1;
+    int c6x0;
+    int c3y1;
+    int c3y0;
+    int c3x1;
+    s16 savedY;
+    s16 savedX;
+    u16 boxFlags;
+    u8* cur;
+    int cy;
+    int cx;
+    int hh;
+    int hw;
+    s16 x7;
+    s16 y7;
+    u16 w7;
+    u16 h7;
+    int c3x0;
+    int y2;
+    int w2;
+    int xw;
+    s16 x2;
+    int half;
+    int rem;
+
+    savedX = ((GameTextBox*)box)->cursorX;
+    savedY = ((GameTextBox*)box)->cursorY;
+    boxFlags = ((GameTextBox*)box)->flags;
+    if (boxFlags & 1)
+    {
+        return;
+    }
+    ((GameTextBox*)box)->flags = boxFlags | 1;
+    switch (((GameTextBox*)box)->style)
+    {
+    case 5:
+        return;
+    case 7:
+        if ((int)getCurGameText() == 3)
+        {
+            u16 bh = ((GameTextBox*)box)->height;
+            u16 bw = ((GameTextBox*)box)->width;
+            s16 by = ((GameTextBox*)box)->y;
+            s16 bx = ((GameTextBox*)box)->x;
+            colorB = gGameTextBoxFillColor;
+            hudDrawRect(bx, by, bx + bw, by + bh, &colorB);
+        }
+        else
+        {
+            h7 = ((GameTextBox*)box)->height;
+            w7 = ((GameTextBox*)box)->width;
+            y7 = ((GameTextBox*)box)->y;
+            x7 = ((GameTextBox*)box)->x;
+            GXSetScissor(0, 0, 0x280, 0x1e0);
+            drawHudBox(x7, y7, (s16)w7, (s16)h7, 0xff, 1);
+        }
+        break;
+    case 1:
+    {
+        u16 bh = ((GameTextBox*)box)->height;
+        u16 bw = ((GameTextBox*)box)->width;
+        s16 by = ((GameTextBox*)box)->y;
+        s16 bx = ((GameTextBox*)box)->x;
+        colorA = gGameTextBoxFillColor;
+        hudDrawRect(bx, by, bx + bw, by + bh, &colorA);
+    }
+    break;
+    case 6:
+        if (strPtr == NULL)
+        {
+            return;
+        }
+        cur = gameTextGetCurBox();
+        if (strPtr != NULL)
+        {
+            gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
+        }
+        else if ((u32)boxId != 0)
+        {
+            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0,
+                                   &c6y1);
+        }
+        gameTextSetWindow(cur);
+        hw = (c6x1 - c6x0) >> 1;
+        hh = (c6y1 - c6y0) >> 1;
+        cx = c6x0 + hw;
+        cy = c6y0 + hh;
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset),
+                          (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100, hw + gGameTextBoxCornerInset,
+                          hh + gGameTextBoxCornerInset, 0);
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, (f32)(c6y0 - gGameTextBoxCornerInset), 0xff, 0x100,
+                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 1);
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)(c6x0 - gGameTextBoxCornerInset), cy, 0xff, 0x100,
+                          hw + gGameTextBoxCornerInset, hh + gGameTextBoxCornerInset, 2);
+        drawScaledTexture(gGameTextBoxCornerTexture, (f32)cx, cy, 0xff, 0x100, hw + gGameTextBoxCornerInset,
+                          hh + gGameTextBoxCornerInset, 3);
+        break;
+    case 0:
+        drawScaledTexture(gGameTextBoxBgTexture, (f32)((GameTextBox*)box)->x, (f32)((GameTextBox*)box)->y, 0xff, 0x100,
+                          ((GameTextBox*)box)->width, ((GameTextBox*)box)->height, 0);
+        break;
+    case 3:
+        cur = gameTextGetCurBox();
+        if (strPtr != NULL)
+        {
+            gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
+        }
+        else if ((u32)boxId != 0)
+        {
+            gameTextBoxFn_800164b0((char*)boxId, (int)(box - (u8*)gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0,
+                                   &c3y1);
+        }
+        gameTextSetWindow(cur);
+        drawTexture(gSubtitleBoxTextures[0], (f32)(c3x0 - 0x16), (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
+        drawScaledTexture(gSubtitleBoxTextures[1], (f32)c3x0, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100,
+                          c3x1 - c3x0, 0x24, 0);
+        drawTexture(gSubtitleBoxTextures[2], (f32)c3x1, (f32)(c3y0 - 9), ((GameTextBox*)box)->alpha, 0x100);
+        break;
+    case 2:
+        x2 = ((GameTextBox*)box)->x;
+        w2 = ((GameTextBox*)box)->width;
+        xw = x2 + w2;
+        y2 = ((GameTextBox*)box)->y;
+        half = w2 >> 1;
+        if (half > 0xc)
+        {
+            half = 0xc;
+        }
+        rem = w2 - half * 2;
+        if (rem < 0)
+        {
+            rem = 0;
+        }
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        drawTexture(lbl_8033BE40[0], (f32)(x2 - 0x34), (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
+        drawTexture(lbl_8033BE40[4], (f32)xw, (f32)(y2 - 0x23), ((GameTextBox*)box)->alpha, 0x100);
+        if (half != 0)
+        {
+            drawScaledTexture(lbl_8033BE40[1], (f32)x2, (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100, half, 0x3a,
+                              0);
+            drawPartialTexture(lbl_8033BE40[3], (f32)(xw - half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
+                               half, 0x3a, 0xc - half, 0);
+        }
+        if (rem != 0)
+        {
+            drawScaledTexture(lbl_8033BE40[2], (f32)(x2 + half), (f32)(y2 - 0x13), ((GameTextBox*)box)->alpha, 0x100,
+                              rem, 0x3a, 0);
+        }
+        break;
+    case 4:
+        boxDrawFn_8001c5ac(strPtr, boxId, box);
+        break;
+    }
+    ((GameTextBox*)box)->cursorX = savedX;
+    ((GameTextBox*)box)->cursorY = savedY;
+}
+#pragma dont_inline reset
+#pragma dont_inline off
+#pragma ppc_unroll_instructions_limit 96
+#pragma ppc_unroll_speculative on
 
 void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
 {
@@ -3190,13 +3525,11 @@ void boxDrawFn_8001c5ac(u16* strPtr, int boxId, u8* p)
     ((void (*)(void*, f32, f32, int, int, int, int, int))drawScaledTexture)(
         gGameTextBoxEdgeTexture, midX, midY, alpha, 0x100, halfW + gGameTextBoxInset, halfH + gGameTextBoxInset, 3);
 }
-
-#pragma opt_strength_reduction off
-#pragma opt_propagation off
-#pragma opt_loop_invariants off
 #pragma opt_common_subs off
 #pragma opt_lifetimes off
-#pragma peephole off
+#pragma opt_loop_invariants off
+#pragma opt_propagation off
+#pragma opt_strength_reduction off
 void gameTextInitFn_8001c794(void)
 {
     void** q;
@@ -3342,249 +3675,6 @@ void gameTextInitFn_8001c794(void)
         y += 4;
     }
     DCFlushRange((u8*)gGameTextBoxEdgeTexture + 0x60, 800);
-}
-#pragma opt_lifetimes reset
-#pragma opt_common_subs reset
-#pragma opt_loop_invariants reset
-#pragma opt_propagation reset
-#pragma peephole reset
-#pragma ppc_unroll_instructions_limit 96
-
-#pragma opt_strength_reduction on
-#pragma optimization_level 1
-#pragma peephole off
-void subtitleBuildLineTable(void)
-{
-    int savedCharset;
-    SubtitleLineTable* s[1];
-    f32 delta;
-    f32 curTime;
-    SubtitleTextEntry* t;
-    u8* win;
-    int m;
-    int i;
-    char* str;
-    int k;
-    int total;
-    int oldDelay;
-    char** strLines;
-    int found;
-    int q;
-    int n;
-    int count;
-    int args[3];
-    f32 ftotal;
-    void** blk;
-
-    s[0] = (SubtitleLineTable*)gSubtitleLineTable;
-    total = 0;
-    curTime = lbl_803DE730;
-    if (gGameTextSequenceMode != 0)
-    {
-        savedCharset = gameTextGetCharset();
-        gameTextSetCharset(1, 1);
-    }
-    t = (SubtitleTextEntry*)gameTextGet(gGameTextPendingTextId);
-    win = (u8*)gTextBoxes + 0x140;
-    gSubtitleLineCount = 0;
-    gSubtitleBlockCount = 0;
-    for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
-    {
-        s[0]->times[i] = gSubtitleNoTimeSentinel;
-    }
-    for (i = 0; i < t->count; i++)
-    {
-        str = t->strs[i];
-        n = GameText_FindControlCodeArgs((u8*)str, TEXT_CTRL_SEQ_TIME, args);
-        if (n != 0)
-        {
-            q = args[2] / 60;
-            s[0]->times[gSubtitleLineCount] = (f32)(args[1] + args[0] * 60 + q);
-        }
-        strLines = textMeasureFn_80016c9c(str, (f32)(u32) * (u16*)(win + 2), *(f32*)(win + 0xc), &count, NULL);
-        if (strLines != NULL)
-        {
-            for (k = 0; k < count; k++)
-            {
-                s[0]->lines[gSubtitleLineCount++] = strLines[k];
-            }
-            blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
-            if (*blk != NULL)
-            {
-                oldDelay = mmSetFreeDelay(0);
-                blk = (void**)((u8*)s[0] + gSubtitleBlockCount * 4);
-                mm_free(*blk);
-                mmSetFreeDelay(oldDelay);
-            }
-            blk = (void**)((u8*)s[0] + gSubtitleBlockCount++ * 4);
-            *blk = strLines;
-        }
-    }
-    for (k = 0; k < gSubtitleLineCount; k++)
-    {
-        if (gSubtitleNoTimeSentinel != s[0]->times[k])
-        {
-            curTime = s[0]->times[k];
-            total = GameText_CountPrintableChars((u8*)s[0]->lines[k]);
-        }
-        else
-        {
-            found = 0;
-            m = k;
-            for (i = 0; i < SUBTITLE_LINE_COUNT; i++)
-            {
-                ftotal = total;
-                if (m < 255)
-                {
-                    if (gSubtitleNoTimeSentinel != s[0]->times[m + 1])
-                    {
-                        delta = s[0]->times[m + 1] - curTime;
-                        found = 1;
-                    }
-                    n = GameText_CountPrintableChars((u8*)s[0]->lines[m]);
-                    s[0]->times[m] = n;
-                    total += n;
-                    if (found != 0)
-                    {
-                        for (q = m; q >= k; q--)
-                        {
-                            s[0]->times[q] = s[0]->times[q + 1] - delta * (s[0]->times[q] / total);
-                        }
-                        break;
-                    }
-                    m++;
-                }
-            }
-        }
-    }
-    gSubtitleLineIndex = 0;
-    gSubtitleElapsedFrames = 0;
-    gSubtitleActive = 2;
-    if (gGameTextSequenceMode != 0)
-    {
-        gameTextSetCharset(savedCharset, 1);
-    }
-}
-
-#pragma optimization_level reset
-int GameText_CountPrintableChars(u8* str)
-{
-    int count;
-    int off;
-    int len;
-    u32 ch;
-
-    count = 0;
-    off = 0;
-    if (str == NULL)
-    {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
-    {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF)
-        {
-            off += getControlCharLen(ch) * 2;
-        }
-        else
-        {
-            count++;
-        }
-    }
-    return count;
-}
-
-int GameText_FindControlCodeArgs(u8* str, u32 target, int* out)
-{
-    int off;
-    int len;
-    u32 ch;
-    int n;
-    int i;
-
-    off = 0;
-    if (str == NULL)
-    {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0)
-    {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF)
-        {
-            n = getControlCharLen(ch);
-            if (ch == target)
-            {
-                for (i = 0; i < n; i++)
-                {
-                    u32 hi = str[off++];
-                    u32 lo = str[off++];
-                    out[i] = (hi << 8) | lo;
-                }
-                return 1;
-            }
-            off += n * 2;
-        }
-    }
-    return 0;
-}
-
-SubtitleCmd* subtitleParseControlCmds(int str, int* count)
-{
-    int off;
-    int n;
-    u8* tbl;
-    int len;
-    u32 ch;
-
-    off = 0;
-    n = 0;
-    tbl = (u8*)lbl_80339C40;
-    if ((u8*)str == NULL)
-    {
-        return NULL;
-    }
-    while ((ch = utf8GetNextChar((u8*)(str + off), &len)) != 0)
-    {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF)
-        {
-            int i;
-            int n2;
-            u16* q;
-
-            n++;
-            if (n > 0x10)
-            {
-                break;
-            }
-            *(u32*)tbl = ch;
-            q = (u16*)(tbl + 4);
-            n2 = getControlCharLen(ch);
-            if (n2 > 4)
-            {
-                n2 = 4;
-            }
-            for (i = 0; i < n2; i++)
-            {
-                u32 hi = ((u8*)str)[off++];
-                u32 lo = ((u8*)str)[off++];
-                *q++ = (hi << 8) | lo;
-            }
-        }
-    }
-    if (n == 0)
-    {
-        return NULL;
-    }
-    {
-        int size = n * 0xc;
-        u8* buf = mmAlloc(size, 0x1a, 0);
-        memcpy(buf, lbl_80339C40, size);
-        *count = n;
-        return (SubtitleCmd*)buf;
-    }
 }
 
 /* .bss block 0x80339980-0x8033AF40 */
