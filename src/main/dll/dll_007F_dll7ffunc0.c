@@ -22,22 +22,6 @@ u8 lbl_803DB8E8[8] = {0, 8, 0, 0, 0, 0, 0, 0};
 #define DLL7F_EFFECT_ID_DEFAULT  0x8a
 
 extern u8 lbl_80315328[];
-__declspec(section ".sdata2") f32 lbl_803E0E20 = 999.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E24 = 94.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E28 = 95.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0E2C = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E0E30 = 16383.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E34 = 0.7f;
-__declspec(section ".sdata2") f32 lbl_803E0E38 = 3.3333333f;
-__declspec(section ".sdata2") f32 lbl_803E0E3C = 0.36666667f;
-__declspec(section ".sdata2") f32 lbl_803E0E40 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E44 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E48 = -400.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E4C = -4.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E50 = 400.0f;
-__declspec(section ".sdata2") f32 lbl_803E0E54 = 1.0f;
 
 void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -45,14 +29,15 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
     u8* base = lbl_80315328;
     FbCmd* p;
     FbCmd* e = buf.entries;
+    f32 originOffset = 0.0f;
 
     e[0].layer = 0;
     e[0].flags = 0x8c;
     e[0].tex = NULL;
     e[0].mode = 0x20000000;
-    e[0].x = lbl_803E0E20;
-    e[0].y = lbl_803E0E24;
-    e[0].z = lbl_803E0E28;
+    e[0].x = 999.0f;
+    e[0].y = 94.0f;
+    e[0].z = 95.0f;
     p = &e[1];
     if (variant != 2)
     {
@@ -60,9 +45,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0xe8;
         p->mode = 0x80;
-        p->x = lbl_803E0E2C;
-        p->y = lbl_803E0E2C;
-        p->z = lbl_803E0E30;
+        p->x = originOffset;
+        p->y = originOffset;
+        p->z = 16383.0f;
         p++;
     }
     if (variant == 0)
@@ -71,9 +56,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 8;
         p->tex = base + 0xfc;
         p->mode = 2;
-        p->x = lbl_803E0E34;
-        p->y = lbl_803E0E34;
-        p->z = lbl_803E0E38;
+        p->x = 0.7f;
+        p->y = 0.7f;
+        p->z = 3.3333333f;
         p++;
     }
     else
@@ -82,9 +67,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 8;
         p->tex = base + 0xfc;
         p->mode = 2;
-        p->x = lbl_803E0E3C;
-        p->y = lbl_803E0E3C;
-        p->z = lbl_803E0E40;
+        p->x = 0.36666667f;
+        p->y = 0.36666667f;
+        p->z = 5.0f;
         p++;
     }
     if (variant == 0)
@@ -93,9 +78,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 8;
         p->tex = base + 0xe8;
         p->mode = 2;
-        p->x = lbl_803E0E44;
-        p->y = lbl_803E0E44;
-        p->z = lbl_803E0E44;
+        p->x = 3.0f;
+        p->y = 3.0f;
+        p->z = 3.0f;
         p++;
     }
     else
@@ -104,9 +89,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 8;
         p->tex = base + 0xe8;
         p->mode = 2;
-        p->x = lbl_803E0E44;
-        p->y = lbl_803E0E44;
-        p->z = lbl_803E0E44;
+        p->x = 3.0f;
+        p->y = 3.0f;
+        p->z = 3.0f;
         p++;
     }
     if (variant == 0)
@@ -115,17 +100,17 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0xe8;
         p->mode = 0x100;
-        p->x = lbl_803E0E48;
-        p->y = lbl_803E0E2C;
-        p->z = lbl_803E0E2C;
+        p->x = -400.0f;
+        p->y = originOffset;
+        p->z = originOffset;
         p++;
         p->layer = 1;
         p->flags = 1;
         p->tex = lbl_803DB8E8;
         p->mode = 0x4000;
-        p->x = lbl_803E0E4C;
-        p->y = lbl_803E0E4C;
-        p->z = lbl_803E0E2C;
+        p->x = -4.0f;
+        p->y = -4.0f;
+        p->z = originOffset;
     }
     else if (variant == 1)
     {
@@ -133,9 +118,9 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0xe8;
         p->mode = 0x100;
-        p->x = lbl_803E0E50;
-        p->y = lbl_803E0E2C;
-        p->z = lbl_803E0E2C;
+        p->x = 400.0f;
+        p->y = originOffset;
+        p->z = originOffset;
         p++;
     }
     if (variant == 0)
@@ -144,17 +129,17 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0xe8;
         p->mode = 0x100;
-        p->x = lbl_803E0E48;
-        p->y = lbl_803E0E2C;
-        p->z = lbl_803E0E2C;
+        p->x = -400.0f;
+        p->y = originOffset;
+        p->z = originOffset;
         p++;
         p->layer = 2;
         p->flags = 1;
         p->tex = lbl_803DB8E8;
         p->mode = 0x4000;
-        p->x = lbl_803E0E4C;
-        p->y = lbl_803E0E4C;
-        p->z = lbl_803E0E2C;
+        p->x = -4.0f;
+        p->y = -4.0f;
+        p->z = originOffset;
     }
     else if (variant == 1)
     {
@@ -162,35 +147,35 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
         p->flags = 9;
         p->tex = base + 0xe8;
         p->mode = 0x100;
-        p->x = lbl_803E0E50;
-        p->y = lbl_803E0E2C;
-        p->z = lbl_803E0E2C;
+        p->x = 400.0f;
+        p->y = originOffset;
+        p->z = originOffset;
         p++;
     }
     p->layer = 2;
     p->flags = 9;
     p->tex = base + 0xe8;
     p->mode = 4;
-    p->x = lbl_803E0E2C;
-    p->y = lbl_803E0E2C;
-    p->z = lbl_803E0E2C;
+    p->x = originOffset;
+    p->y = originOffset;
+    p->z = originOffset;
     p++;
     p->layer = 3;
     p->flags = 0;
     p->tex = NULL;
     p->mode = 0x20000000;
-    p->x = lbl_803E0E20;
-    p->y = lbl_803E0E24;
-    p->z = lbl_803E0E28;
+    p->x = 999.0f;
+    p->y = 94.0f;
+    p->z = 95.0f;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0E2C;
-    buf.pos[1] = lbl_803E0E2C;
-    buf.pos[2] = lbl_803E0E2C;
-    buf.col[0] = lbl_803E0E2C;
-    buf.col[1] = lbl_803E0E2C;
-    buf.col[2] = lbl_803E0E2C;
-    buf.scale = lbl_803E0E54;
+    buf.pos[0] = originOffset;
+    buf.pos[1] = originOffset;
+    buf.pos[2] = originOffset;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 9;
@@ -211,15 +196,15 @@ void dll_7F_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E0E2C + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E0E2C + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E0E2C + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0E2C + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0E2C + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0E2C + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     if (variant == 0)

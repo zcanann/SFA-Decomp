@@ -629,7 +629,7 @@ main/dll/dll_007A_dll7afunc0.c:
 main/dll/dll_007B_dll7bfunc0.c:
 	.text       start:0x800F4174 end:0x800F472C
 	.data       start:0x80314CB0 end:0x80314E08
-	.sdata2     start:0x803E0D38 end:0x803E0D80
+	.sdata2     start:0x803E0D38 end:0x803E0D7C
 	.sdata2     start:0x803E0D80 end:0x803E0D88
 
 main/dll/dll_007C_dll7cfunc0.c:
@@ -640,7 +640,7 @@ main/dll/dll_007C_dll7cfunc0.c:
 main/dll/dll_007D_dll7dfunc0.c:
 	.text       start:0x800F4C70 end:0x800F4FA4
 	.sbss       start:0x803DD4B0 end:0x803DD4B8
-	.sdata2     start:0x803E0DD8 end:0x803E0E00
+	.sdata2     start:0x803E0DD8 end:0x803E0DFC
 
 main/dll/dll_007E_dll7efunc0.c:
 	.text       start:0x800F4FA4 end:0x800F52E0

@@ -16,25 +16,6 @@
 #define DLL7B_EFFECT_ID 0x8e
 
 extern u8 gDll7BEffectResourceData[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0D38 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D3C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D40 = 0.7f;
-__declspec(section ".sdata2") f32 lbl_803E0D44 = 16767.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D48 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D4C = 75.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D50 = 999.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D54 = 111.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D58 = 112.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D5C = 70.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D60 = 150.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D64 = 90.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D68 = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E0D6C = -0.3f;
-__declspec(section ".sdata2") f32 lbl_803E0D70 = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E0D74 = 0.3f;
-__declspec(section ".sdata2") f32 lbl_803E0D78 = 5.0f;
-#pragma explicit_zero_data off
 
 void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -54,18 +35,18 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     entries[0].flags = 0xe;
     entries[0].tex = &base[0xf4];
     entries[0].mode = 4;
-    entries[0].x = lbl_803E0D38;
-    entries[0].y = lbl_803E0D38;
-    entries[0].z = lbl_803E0D38;
+    entries[0].x = 0.0f;
+    entries[0].y = 0.0f;
+    entries[0].z = 0.0f;
     if (variant == 1)
     {
         entries[1].layer = 0;
         entries[1].flags = 0xe;
         entries[1].tex = &base[0xf4];
         entries[1].mode = 2;
-        entries[1].x = lbl_803E0D3C;
-        entries[1].y = lbl_803E0D3C;
-        entries[1].z = lbl_803E0D3C;
+        entries[1].x = 1.0f;
+        entries[1].y = 1.0f;
+        entries[1].z = 1.0f;
         e = &entries[2];
     }
     else
@@ -74,41 +55,41 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         entries[1].flags = 0xe;
         entries[1].tex = &base[0xf4];
         entries[1].mode = 2;
-        entries[1].x = lbl_803E0D3C;
-        entries[1].y = lbl_803E0D40 * (f32)(int)randomGetRange(3, 5);
-        entries[1].z = lbl_803E0D3C;
+        entries[1].x = 1.0f;
+        entries[1].y = 0.7f * (f32)(int)randomGetRange(3, 5);
+        entries[1].z = 1.0f;
         e = &entries[2];
     }
     e[0].layer = 0;
     e[0].flags = 0xe;
     e[0].tex = &base[0xf4];
     e[0].mode = 0x80;
-    e[0].x = lbl_803E0D38;
-    e[0].y = lbl_803E0D38;
-    e[0].z = lbl_803E0D44;
+    e[0].x = 0.0f;
+    e[0].y = 0.0f;
+    e[0].z = 16767.0f;
     if (variant == 1)
     {
         e[1].layer = 0;
         e[1].flags = 0xe;
         e[1].tex = &base[0xf4];
         e[1].mode = 0x400000;
-        e[1].x = lbl_803E0D48;
-        e[1].y = lbl_803E0D4C;
-        e[1].z = lbl_803E0D38;
+        e[1].x = 100.0f;
+        e[1].y = 75.0f;
+        e[1].z = 0.0f;
         e[2].layer = 0;
         e[2].flags = 0x190;
         e[2].tex = NULL;
         e[2].mode = 0x20000000;
-        e[2].x = lbl_803E0D50;
-        e[2].y = lbl_803E0D54;
-        e[2].z = lbl_803E0D58;
+        e[2].x = 999.0f;
+        e[2].y = 111.0f;
+        e[2].z = 112.0f;
         e[3].layer = 0;
         e[3].flags = 0;
         e[3].tex = NULL;
         e[3].mode = 0x80000;
-        e[3].x = lbl_803E0D5C;
-        e[3].y = lbl_803E0D60;
-        e[3].z = lbl_803E0D38;
+        e[3].x = 70.0f;
+        e[3].y = 150.0f;
+        e[3].z = 0.0f;
         e += 4;
     }
     else
@@ -117,8 +98,8 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[1].flags = 0xe;
         e[1].tex = &base[0xf4];
         e[1].mode = 0x400000;
-        e[1].x = lbl_803E0D64 + (f32)(int)randomGetRange(0, 0x14);
-        e[1].y = lbl_803E0D4C;
+        e[1].x = 90.0f + (f32)(int)randomGetRange(0, 0x14);
+        e[1].y = 75.0f;
         e[1].z = (f32)(int)randomGetRange(0, 0x1e);
         e += 2;
     }
@@ -126,16 +107,16 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     e[0].flags = 10;
     e[0].tex = &base[0x110];
     e[0].mode = 4;
-    e[0].x = lbl_803E0D68;
-    e[0].y = lbl_803E0D38;
-    e[0].z = lbl_803E0D38;
+    e[0].x = 255.0f;
+    e[0].y = 0.0f;
+    e[0].z = 0.0f;
     e[1].layer = 1;
     e[1].flags = 0xe;
     e[1].tex = &base[0xf4];
     e[1].mode = 2;
-    e[1].x = lbl_803E0D3C;
-    e[1].y = lbl_803E0D3C;
-    e[1].z = lbl_803E0D3C;
+    e[1].x = 1.0f;
+    e[1].y = 1.0f;
+    e[1].z = 1.0f;
     e += 2;
     if (variant != 1)
     {
@@ -143,32 +124,32 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 0xe;
         e[0].tex = &base[0xf4];
         e[0].mode = 0x400000;
-        e[0].x = lbl_803E0D6C * (f32)(int)randomGetRange(1, 0x28);
-        e[0].y = lbl_803E0D38;
-        e[0].z = lbl_803E0D38;
+        e[0].x = -0.3f * (f32)(int)randomGetRange(1, 0x28);
+        e[0].y = 0.0f;
+        e[0].z = 0.0f;
         e += 1;
     }
     e[0].layer = 2;
     e[0].flags = 0xe;
     e[0].tex = &base[0xf4];
     e[0].mode = 0x4000;
-    e[0].x = lbl_803E0D70 * (f32)(int)randomGetRange(-3, 3);
-    e[0].y = lbl_803E0D38;
-    e[0].z = lbl_803E0D38;
+    e[0].x = 0.1f * (f32)(int)randomGetRange(-3, 3);
+    e[0].y = 0.0f;
+    e[0].z = 0.0f;
     e[1].layer = 3;
     e[1].flags = 0xe;
     e[1].tex = &base[0xf4];
     e[1].mode = 0x4000;
-    e[1].x = lbl_803E0D74;
-    e[1].y = lbl_803E0D38;
-    e[1].z = lbl_803E0D38;
+    e[1].x = 0.3f;
+    e[1].y = 0.0f;
+    e[1].z = 0.0f;
     e[2].layer = 3;
     e[2].flags = 10;
     e[2].tex = &base[0x110];
     e[2].mode = 4;
-    e[2].x = lbl_803E0D38;
-    e[2].y = lbl_803E0D38;
-    e[2].z = lbl_803E0D38;
+    e[2].x = 0.0f;
+    e[2].y = 0.0f;
+    e[2].z = 0.0f;
     e += 3;
     if (variant == 1)
     {
@@ -176,21 +157,21 @@ void dll_7B_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
         e[0].flags = 0;
         e[0].tex = NULL;
         e[0].mode = 0x20000000;
-        e[0].x = lbl_803E0D50;
-        e[0].y = lbl_803E0D54;
-        e[0].z = lbl_803E0D58;
+        e[0].x = 999.0f;
+        e[0].y = 111.0f;
+        e[0].z = 112.0f;
         e += 1;
     }
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0D38;
-    buf.pos[1] = lbl_803E0D78;
-    buf.pos[2] = lbl_803E0D38;
-    buf.col[0] = lbl_803E0D38;
-    buf.col[1] = lbl_803E0D38;
-    buf.col[2] = lbl_803E0D38;
-    buf.scale = lbl_803E0D3C;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 5.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 0xe;
