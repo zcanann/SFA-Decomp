@@ -4707,8 +4707,8 @@ void ObjSeq_onMapSetup(void)
     }
 
     {
-        for (flagsB = base + i, modes = (s16*)(base + 0x3a98) + i, frames = (f32*)base + i,
-             handles2 = (int*)(frames + 3321), marks2 = flagsB + 0x338c;
+        for (flagsB = base + i, modes = (s16*)(base + 0x3a98) + i,
+             handles2 = (int*)(base + 0x33e4) + i, marks2 = flagsB + 0x338c;
              i < 0x55;
              i++, modes++, handles2++, marks2++)
         {

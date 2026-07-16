@@ -4901,7 +4901,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         break;
     case 3:
         pauseMenuDoSave();
-        alpha = (s32)(hudElementOpacity * lbl_803DD760);
+        alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
@@ -4968,7 +4968,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         break;
     case 4:
         pauseMenuDoSave();
-        alpha = (s32)(hudElementOpacity * lbl_803DD760);
+        alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
@@ -5050,7 +5050,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     case 9:
     case 10:
         pauseMenuDoSave();
-        alpha = (s32)(hudElementOpacity * lbl_803DD760);
+        alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
         lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
