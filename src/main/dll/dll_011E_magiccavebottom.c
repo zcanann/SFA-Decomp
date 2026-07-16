@@ -1,4 +1,4 @@
-/* DLL 0x011E (magiccavebottom) — Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
+/* DLL 0x011E (magiccavebottom) - Magic Cave bottom area objects [0x8018ADB4-0x8018AFC8). */
 #include "main/dll/dll_011E_magiccavebottom.h"
 #include "main/objseq.h"
 #include "main/objprint_render_api.h"

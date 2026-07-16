@@ -1,4 +1,4 @@
-/* DLL — SC level-control tail objects [801DBFA0-801DC310) */
+/* DLL - SC level-control tail objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
 #include "main/dll/scmusictreesetup_struct.h"
 #include "main/gamebit_ids.h"

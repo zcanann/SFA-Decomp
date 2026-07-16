@@ -1,4 +1,4 @@
-/* DLL 0x1DE — DIM2 Lava Control: manages the DIM2 lava-rise sequence —
+/* DLL 0x1DE - DIM2 Lava Control: manages the DIM2 lava-rise sequence -
  * triggers env-fx transitions, drives music track changes based on player
  * carry state, and maintains the countdown-armed SCGameBitLatch triggers. */
 #include "main/dll/dim2pathgeneratorstate_struct.h"

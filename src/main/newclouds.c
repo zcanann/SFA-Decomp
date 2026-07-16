@@ -70,7 +70,7 @@ u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A
 int gNewCloudStarFogColor = 0;
 #pragma explicit_zero_data off
 
-/* CloudSpawnParams.flags58 / NewCloud.flags144A — spawn command / trigger bits */
+/* CloudSpawnParams.flags58 / NewCloud.flags144A - spawn command / trigger bits */
 #define NEWCLOUD_CMD_SPIN       0x1  /* enable cloud spin */
 #define NEWCLOUD_CMD_SPAWN      0x2  /* create/spawn cloud */
 #define NEWCLOUD_CMD_DESPAWN    0x4  /* despawn / finish toggle */
@@ -79,7 +79,7 @@ int gNewCloudStarFogColor = 0;
 #define NEWCLOUD_CMD_KILL       0x20 /* kill snow cloud */
 #define NEWCLOUD_CMD_ROTFIXED   0x80 /* fixed flash rotation (cloudType 4) */
 
-/* CloudSpawnParams.flags59 / NewCloud.lightningFlags — lightning cadence bits */
+/* CloudSpawnParams.flags59 / NewCloud.lightningFlags - lightning cadence bits */
 #define NEWCLOUD_LTG_SLOW       0x8  /* slow lightning cadence */
 #define NEWCLOUD_LTG_MED        0x10 /* medium lightning cadence */
 #define NEWCLOUD_LTG_FAST       0x20 /* fast lightning cadence */

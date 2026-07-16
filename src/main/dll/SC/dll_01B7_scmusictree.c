@@ -1,4 +1,4 @@
-/* DLL 0x01B7 — SC music-tree objects [801DBFA0-801DC310) */
+/* DLL 0x01B7 - SC music-tree objects [801DBFA0-801DC310) */
 #include "main/obj_placement.h"
 #include "main/object_render_legacy.h"
 #include "main/shader_api.h"

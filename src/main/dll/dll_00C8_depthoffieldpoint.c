@@ -1,5 +1,5 @@
 /*
- * DLL 0x00C8 (depthoffieldpoint) — depth-of-field point object
+ * DLL 0x00C8 (depthoffieldpoint) - depth-of-field point object
  * [0x8016CD48-0x8016CEE8).
  *
  * A placed point that drives the screen blur (depth-of-field) filter.

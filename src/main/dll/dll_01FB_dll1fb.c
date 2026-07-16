@@ -1,4 +1,4 @@
-/* DLL 0x01FB — WCLaser render object (WarpZone cannon laser). TU: 0x801F0900–0x801F0AE4. */
+/* DLL 0x01FB - WCLaser render object (WarpZone cannon laser). TU: 0x801F0900-0x801F0AE4. */
 #include "main/obj_placement.h"
 #include "main/pad_api.h"
 #include "main/resource.h"

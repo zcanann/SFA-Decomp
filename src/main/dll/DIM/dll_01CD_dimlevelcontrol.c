@@ -1,4 +1,4 @@
-/* DLL 0x01CD — DIM level-control object for Snowhorn Wastes 2.
+/* DLL 0x01CD - DIM level-control object for Snowhorn Wastes 2.
  * Manages time-of-day music (day=0xC5, night=0xE2), map-event latching via
  * SCGameBitLatch_Update (8 latch bits controlling music triggers), environment
  * fx for the lava area, an NPC dialogue trigger (game bits 0x3E2/0x3E3), and

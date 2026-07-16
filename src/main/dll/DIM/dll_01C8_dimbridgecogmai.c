@@ -1,5 +1,5 @@
 /*
- * dimbridgecogmai (DLL 0x1C8) — bridge cog main object for Dinosaur Island
+ * dimbridgecogmai (DLL 0x1C8) - bridge cog main object for Dinosaur Island
  * Mission 2.  Watches one or more gamebits and, when they become set, either
  * hides the cog or triggers an animation sequence depending on the gamebit
  * value; also fires sequence events from the SeqFn callback.

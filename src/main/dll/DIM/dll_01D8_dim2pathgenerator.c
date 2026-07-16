@@ -1,5 +1,5 @@
 /*
- * dim2pathgenerator (DLL 0x1D8) — snowball path-generator for Snowhorn Wastes 2.
+ * dim2pathgenerator (DLL 0x1D8) - snowball path-generator for Snowhorn Wastes 2.
  * Finds and loads a RomCurve spline near its placement position (curve group 21),
  * then periodically spawns dim2snowball objects (DLL type in spawnTypes[]) from a
  * free pool (object group 47) or via Obj_AllocObjectSetup, alternating between two

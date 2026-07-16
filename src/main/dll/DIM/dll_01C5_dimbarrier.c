@@ -1,5 +1,5 @@
 /*
- * dimbarrier (DLL 0x1C5) — barrier object for Dinosaur Island Mission.
+ * dimbarrier (DLL 0x1C5) - barrier object for Dinosaur Island Mission.
  * While a live type-470 object is in the trigger list, counts down an arm
  * timer; on expiry fades the barrier out and latches its gamebit.
  */

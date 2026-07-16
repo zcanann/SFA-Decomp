@@ -1,6 +1,6 @@
 /*
- * dimgate (DLL 0x1C3) — mission gate object for Dinosaur Island.
- * Opens (hitbox state 0→2) once a type-399 object appears in the trigger
+ * dimgate (DLL 0x1C3) - mission gate object for Dinosaur Island.
+ * Opens (hitbox state 0->2) once a type-399 object appears in the trigger
  * list, latching a gamebit so the gate stays open on reload.
  */
 #include "main/game_object.h"

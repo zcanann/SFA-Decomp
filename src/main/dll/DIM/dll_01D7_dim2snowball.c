@@ -1,5 +1,5 @@
 /*
- * dim2snowball (DLL 0x1D7) — rolling snowball projectile for Snowhorn Wastes 2.
+ * dim2snowball (DLL 0x1D7) - rolling snowball projectile for Snowhorn Wastes 2.
  * Follows a Hermite spline path provided by the dim2pathgenerator (vtable slot 8),
  * then enters ballistic physics after leaving the path's launch node (curve byte == 32
  * + game bit 0x288). Bounces off walls (objBboxFn_800640cc), fades in/out via alpha,

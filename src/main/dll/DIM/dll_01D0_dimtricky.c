@@ -1,4 +1,4 @@
-/* DLL 0x1D0 — DIM Tricky companion object.
+/* DLL 0x1D0 - DIM Tricky companion object.
  * A simple 1-byte state machine (states 0-3) that watches game bit 0xA1B to
  * trigger a Tricky companion-pickup sequence: clears bits 0x4E4/0x4E5, then
  * dispatches a vtable call (slot 14 of Tricky's object type at offset

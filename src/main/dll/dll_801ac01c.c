@@ -1,13 +1,13 @@
 /*
- * DLL fragment [801AC01C-801AC160) — World Map HUD enter/leave handlers,
+ * DLL fragment [801AC01C-801AC160) - World Map HUD enter/leave handlers,
  * called from the IM ice-mountain object (dll_0169). Each handler queries
  * the player object's vtable[0x48] mode via playerGetFocusObject(Obj_GetPlayerObject())
  * and writes a HUD-state byte (5 = world-map shown, 6 = hidden) into the
  * object's extra-state block while toggling the world-map HUD and the
  * associated game bits.
- *   fn_801AC01C: enter — clears the 0x3a3/0x3a2 request bits, locks level
+ *   fn_801AC01C: enter - clears the 0x3a3/0x3a2 request bits, locks level
  *     0x17, shows/hides the HUD and sets 0x37b or 0xce.
- *   fn_801AC108: leave — only acts when request bit 0x3a3 is set; clears the
+ *   fn_801AC108: leave - only acts when request bit 0x3a3 is set; clears the
  *     request bits, sets 0x4e5, enables object group 1, sets 0x379 or 0xcb.
  */
 #include "main/game_object.h"

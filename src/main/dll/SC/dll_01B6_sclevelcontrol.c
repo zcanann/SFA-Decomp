@@ -1,4 +1,4 @@
-/* DLL 0x01B6 — SC level-control objects [801DAFA4-801DAFDC).
+/* DLL 0x01B6 - SC level-control objects [801DAFA4-801DAFDC).
  * Master controller for the LightFoot Village (map "swapcircle", map-event
  * 0xe). Drives the village "mode" that gates which NPCs spawn (see lightfoot
  * objShouldLoad): mode 1->2 when GameBit 0x5f3 is set (water spellstone placed

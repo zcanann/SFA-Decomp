@@ -1,4 +1,4 @@
-/* DLL 0x13E — DIMBossIceSmash [0x80194890-0x80197190): spinning ice shards
+/* DLL 0x13E - DIMBossIceSmash [0x80194890-0x80197190): spinning ice shards
  * launched during the DIM boss fight.  Each shard integrates velocity and
  * rotation, optionally follows a path-control surface bounce, fades over a
  * per-setup lifetime window, and emits two trail particles per frame while

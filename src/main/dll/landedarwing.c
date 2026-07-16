@@ -15,7 +15,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 
-/* raw offsets — kept as-is to match staffAction.c handlers */
+/* raw offsets - kept as-is to match staffAction.c handlers */
 #define BADDIESTATE_HANDLER_TICK_FLAG 0x34d
 #define BADDIESTATE_JUST_LAUNCHED 0x27a
 

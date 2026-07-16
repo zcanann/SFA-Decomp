@@ -1,4 +1,4 @@
-/* DLL 0x0033 (nrareware) — Rareware logo / loading screen front-end [0x80115F20-0x8011611C). */
+/* DLL 0x0033 (nrareware) - Rareware logo / loading screen front-end [0x80115F20-0x8011611C). */
 #include "dolphin/os/OSReport.h"
 #include "main/screen_transition.h"
 #include "main/gamebits.h"

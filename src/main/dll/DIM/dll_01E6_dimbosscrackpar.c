@@ -5,7 +5,7 @@
  * (one indexed by placement particleIndex, plus a fixed glow burst).
  * The animEventCallback (DIMbosscrackpar_SeqFn) does the same on sequence ticks.
  * NOTE: mainGetBit is used implicitly (no include); adding gamebits.h changes
- * codegen at the  cast call sites — leave it implicit.
+ * codegen at the  cast call sites - leave it implicit.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"

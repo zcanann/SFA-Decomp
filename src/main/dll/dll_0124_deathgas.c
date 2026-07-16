@@ -1,4 +1,4 @@
-/* DLL 0x0124 — death-gas objects [8018BC48-8018BC50) */
+/* DLL 0x0124 - death-gas objects [8018BC48-8018BC50) */
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"

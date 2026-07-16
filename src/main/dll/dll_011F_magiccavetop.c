@@ -1,4 +1,4 @@
-/* DLL 0x011F (magiccavetop) — Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
+/* DLL 0x011F (magiccavetop) - Magic Cave top area objects [0x8018AFC8-0x8018B7B0). */
 #include "main/objseq.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"

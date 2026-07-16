@@ -1,4 +1,4 @@
-/* DLL 0x0121 — infotext. TU: 0x8018B9F0–0x8018BB00. */
+/* DLL 0x0121 - infotext. TU: 0x8018B9F0-0x8018BB00. */
 #include "main/game_object.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
