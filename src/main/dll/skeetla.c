@@ -847,7 +847,6 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
     s8 i;
     s8 j;
     s8 failedCount;
-    int idx;
 
     for (i = 0; i < TRICKY_ROUTE_CANDIDATE_COUNT; i++)
     {
@@ -890,11 +889,10 @@ int trickyFindReachableRouteIndex(u8* state, u32* routes, u8* routeFlags, int pa
             {
                 if (routes[i] != 0)
                 {
-                    idx = i;
-                    status[idx] = fn_8004B218(state + 0x538 + idx * 0x30, 0x1f4);
-                    if (status[idx] == 1)
+                    status[(int)i] = fn_8004B218(state + 0x538 + i * 0x30, 0x1f4);
+                    if (status[(int)i] == 1)
                     {
-                        return idx;
+                        return i;
                     }
                     return -1;
                 }
