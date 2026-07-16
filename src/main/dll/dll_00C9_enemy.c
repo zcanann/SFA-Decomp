@@ -993,7 +993,7 @@ void sidekickToy_updateCurveTargetLatch(GameObject* obj)
 
 int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
 {
-    int i;
+    int b2;
     TrickyTargetRec* cur[1];
     int state;
     int n;
@@ -1001,7 +1001,7 @@ int fn_8014C11C(short* obj, f32 radius, u8 flags, int max, TrickyTargetRec* out)
     short ang;
     short* tgt;
     u32 diff;
-    int b2;
+    int i;
     int b4;
     f32 d2;
     int count;
