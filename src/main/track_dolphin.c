@@ -1785,9 +1785,9 @@ void fn_80069EB8(int param)
         {
             int idx;
             u32 s;
-            idx = (j & 7) + ((j >> 3) << 5);
-            idx += mid;
-            idx += hi;
+            s = (j & 7) + ((j >> 3) << 5);
+            s += mid;
+            idx = s + hi;
             s = scaled;
             if (s > 0x3fc0)
             {
