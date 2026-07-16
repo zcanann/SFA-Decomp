@@ -5207,7 +5207,10 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
             gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + textX;
+            {
+                s32 textWidth = b8 - bc;
+                textX = textWidth + textX;
+            }
             textX += 0xa;
             gameTextFn_80016810(0x442, 0, textX + 0x78);
             gameTextBoundsS32(0x442, 0, 0, &b14, &b10, &bc, &b8);
