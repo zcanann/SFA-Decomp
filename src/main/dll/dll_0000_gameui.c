@@ -5203,7 +5203,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             textX += 5;
             gameTextFn_80016810(0x441, 0, textX + 0x78);
             gameTextBoundsS32(0x441, 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + textX;
+            textX += b8 - bc;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
             gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
@@ -5214,7 +5214,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             textX += 0xa;
             gameTextFn_80016810(0x442, 0, textX + 0x78);
             gameTextBoundsS32(0x442, 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + textX;
+            textX += b8 - bc;
             gameTextFn_80016810(0x43a, 0, textX + 0x82);
             break;
         }
