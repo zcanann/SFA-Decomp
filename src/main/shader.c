@@ -1246,7 +1246,7 @@ extern int gShaderMapRomBuffers[];
 extern void* memset(void* p, int v, int n);
 
 #define INIT_MAP_SLOT(slot)                                                                                 \
-    e = (char*)gShaderMapRomBuffers[1] + (slot) * 10 + ofs;                                                 \
+    e = (char*)gShaderMapRomBuffers[1] + (slot) * 10 + ofs[0];                                              \
     *(s8*)((char*)gShaderMapRomBuffers[3] + idx + (slot)) = -128;                                          \
     *(s16*)(e + 0) = -32768;                                                                               \
     *(s16*)(e + 2) = -32768;                                                                               \
@@ -1262,7 +1262,7 @@ void initMaps(void)
     void* data;
     int total;
     int i;
-    int ofs;
+    int ofs[1];
     int idx;
     char* e;
 
@@ -1276,7 +1276,7 @@ void initMaps(void)
     gShaderMapRomBuffers[4] = (int)mmAlloc(8192, 5, 0);
     memset((void*)gShaderMapRomBuffers[4], 0, 8192);
     idx = 0;
-    ofs = 0;
+    ofs[0] = 0;
     for (i = 0; i < 16; i++)
     {
         INIT_MAP_SLOT(0);
@@ -1287,7 +1287,7 @@ void initMaps(void)
         INIT_MAP_SLOT(5);
         INIT_MAP_SLOT(6);
         INIT_MAP_SLOT(7);
-        ofs += 80;
+        ofs[0] += 80;
         idx += 8;
     }
     i = 0;
