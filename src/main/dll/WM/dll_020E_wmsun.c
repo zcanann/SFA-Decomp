@@ -58,28 +58,8 @@
 
 #pragma force_active on
 #pragma explicit_zero_data on
+#define WM_SUN_PI 3.1415927f
 __declspec(section ".sdata2") f32 lbl_803E5F20 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5F24 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F28 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E5F2C = 20.0f;
-__declspec(section ".sdata2") f32 gWmSunPi = 3.1415927f;
-__declspec(section ".sdata2") f32 lbl_803E5F34 = 32767.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F38 = 32768.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F3C = 0.1f;
-__declspec(section ".sdata2") f32 lbl_803E5F40 = -0.1f;
-__declspec(section ".sdata2") f32 lbl_803E5F44 = 0.2f;
-__declspec(section ".sdata2") f32 lbl_803E5F48 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F4C = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F50 = 0.0005f;
-__declspec(section ".sdata2") f32 lbl_803E5F54 = 0.0002f;
-__declspec(section ".sdata2") f32 lbl_803E5F58 = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E5F5C = 65535.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F60 = 0.001f;
-__declspec(section ".sdata2") f32 lbl_803E5F64 = -0.001f;
-__declspec(section ".sdata2") f32 lbl_803E5F68 = 0.01f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5F6C = 0.0f;
 #pragma explicit_zero_data off
 #pragma force_active reset
 const WmSunVec3 gWmSunGlareDir = {0.0f, 0.0f, -1.0f};
@@ -114,7 +94,7 @@ void wmsun_updateGlare(GameObject* obj)
     g.vx = lbl_803E5F20;
     g.vy = lbl_803E5F20;
     g.vz = lbl_803E5F20;
-    g.intensity = lbl_803E5F24;
+    g.intensity = 1.0f;
     g.ang[2] = 0;
     g.ang[1] = 0;
     g.ang[0] = obj->anim.rotX;
@@ -168,57 +148,57 @@ void wmsun_updateGlare(GameObject* obj)
             {
                 sqrtf(prod);
             }
-            if (cosang > lbl_803E5F28)
+            if (cosang > 0.5f)
             {
-                g.vx = lbl_803E5F2C * dot;
+                g.vx = 20.0f * dot;
                 g.vy = lbl_803E5F20;
-                g.vz = lbl_803E5F2C * hz;
-                f = mathSinf(gWmSunPi * (lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - gWmSunGlareIntensity;
-                if (f > lbl_803E5F3C || f < lbl_803E5F40)
+                g.vz = 20.0f * hz;
+                f = mathSinf(WM_SUN_PI * (32767.0f * (cosang - 0.5f)) / 32768.0f) - gWmSunGlareIntensity;
+                if (f > 0.1f || f < -0.1f)
                 {
                     gWmSunGlareIntensity = gWmSunGlareIntensity + f / timeDelta;
                 }
                 g.intensity = gWmSunGlareIntensity;
-                if (gWmSunGlareIntensity > *(f32*)&lbl_803E5F44)
+                if (gWmSunGlareIntensity > 0.2f)
                 {
-                    if (gWmSunGlareDamping < lbl_803E5F4C)
+                    if (gWmSunGlareDamping < 4.0f)
                     {
-                        gWmSunGlareDamping = gWmSunGlareDamping + (gWmSunGlareIntensity - lbl_803E5F44) / lbl_803E5F48;
+                        gWmSunGlareDamping = gWmSunGlareDamping + (gWmSunGlareIntensity - 0.2f) / 100.0f;
                     }
                     f = g.intensity - gWmSunGlareDamping;
                     g.intensity = f;
-                    if (f < *(f32*)&lbl_803E5F44)
+                    if (f < 0.2f)
                     {
-                        g.intensity = *(f32*)&lbl_803E5F44;
+                        g.intensity = 0.2f;
                     }
                 }
                 else
                 {
-                    gWmSunGlareDamping = gWmSunGlareDamping - (gWmSunGlareIntensity - lbl_803E5F44) / lbl_803E5F2C;
+                    gWmSunGlareDamping = gWmSunGlareDamping - (gWmSunGlareIntensity - 0.2f) / 20.0f;
                 }
-                g.intensity = lbl_803E5F50 * (f32)(int)randomGetRange(0, 0x1e) + g.intensity;
-                if (gWmSunGlareIntensity > lbl_803E5F58)
+                g.intensity = 0.0005f * (f32)(int)randomGetRange(0, 0x1e) + g.intensity;
+                if (gWmSunGlareIntensity > 0.05f)
                 {
-                    gWmSunGlareIntensity = gWmSunGlareIntensity - lbl_803E5F54;
+                    gWmSunGlareIntensity = gWmSunGlareIntensity - 0.0002f;
                 }
                 g.ang[2] = 0;
                 g.ang[1] = 0;
-                g.ang[0] = lbl_803E5F5C * cosang;
+                g.ang[0] = 65535.0f * cosang;
             }
             else
             {
                 f = lbl_803E5F20 - gWmSunGlareIntensity;
-                if (f > lbl_803E5F60)
+                if (f > 0.001f)
                 {
                     gWmSunGlareIntensity = oneOverTimeDelta * f + gWmSunGlareIntensity;
                 }
-                else if (f < lbl_803E5F64)
+                else if (f < -0.001f)
                 {
                     gWmSunGlareIntensity = oneOverTimeDelta * f + gWmSunGlareIntensity;
                 }
                 if (gWmSunGlareDamping > *(f32*)&lbl_803E5F20)
                 {
-                    gWmSunGlareDamping = -(lbl_803E5F68 * timeDelta - gWmSunGlareDamping);
+                    gWmSunGlareDamping = -(0.01f * timeDelta - gWmSunGlareDamping);
                     if (gWmSunGlareDamping < *(f32*)&lbl_803E5F20)
                     {
                         gWmSunGlareDamping = *(f32*)&lbl_803E5F20;
@@ -230,7 +210,7 @@ void wmsun_updateGlare(GameObject* obj)
         {
             if (gWmSunGlareDamping > hy)
             {
-                gWmSunGlareDamping = -(lbl_803E5F68 * timeDelta - gWmSunGlareDamping);
+                gWmSunGlareDamping = -(0.01f * timeDelta - gWmSunGlareDamping);
                 if (gWmSunGlareDamping < hy)
                 {
                     gWmSunGlareDamping = hy;
@@ -266,7 +246,7 @@ void wmsun_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
     if (vis != 0 && state->renderEnabled != 0)
     {
         doNothing_8005D148Legacy(p2, 0x10000);
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F24); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f); /* 1.0f */
         doNothing_8005D14CLegacy(p2, 0x10000);
     }
 }
@@ -332,13 +312,13 @@ void wmsun_update(GameObject* obj)
             {
                 thresh = 0x1900;
                 mult = 3;
-                spd = lbl_803E5F78;
+                spd = 0.00375f;
             }
             if (state->riseStep < thresh)
             {
                 state->riseStep = state->riseStep + framesThisStep * mult;
                 (obj)->anim.rootMotionScale = -(spd * timeDelta - (obj)->anim.rootMotionScale);
-                (obj)->anim.localPosY = lbl_803E5F7C * (spd * timeDelta) + (obj)->anim.localPosY;
+                (obj)->anim.localPosY = 50.0f * (spd * timeDelta) + (obj)->anim.localPosY;
             }
             else if (mainGetBit(0x222) != 0 && mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0)
             {
@@ -349,7 +329,7 @@ void wmsun_update(GameObject* obj)
             if (mainGetBit(GAMEBIT_WM_FinaleQuakeActive) == 0 && state->riseStep > 0x960 &&
                 (int)randomGetRange(0, 100) == 0)
             {
-                CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(state->riseStep - 0x960) / lbl_803E5F84));
+                CameraShake_SetAllMagnitudes(0.8f * ((f32)(state->riseStep - 0x960) / 2400.0f));
                 mainSetBits(0x370, 1);
             }
             (obj)->anim.rotX += state->riseStep;
@@ -450,7 +430,7 @@ void wmsun_update(GameObject* obj)
             {
                 if (gWmSunQuakeTimer > 600 && (int)randomGetRange(0, 10) == 0)
                 {
-                    CameraShake_SetAllMagnitudes(lbl_803E5F88); /* 2.8f */
+                    CameraShake_SetAllMagnitudes(2.8f); /* 2.8f */
                 }
                 if (gWmSunQuakeTimer > 0)
                 {
@@ -488,7 +468,7 @@ void wmsun_update(GameObject* obj)
                 }
                 if ((int)randomGetRange(0, 8) == 0)
                 {
-                    CameraShake_SetAllMagnitudes(lbl_803E5F88);
+                    CameraShake_SetAllMagnitudes(2.8f);
                 }
             }
         }
@@ -521,11 +501,11 @@ void wmsun_init(GameObject* obj, WmSunMapData* mapData)
         state->riseStep = 100;
         if (mapData->rootMotionScaleParam >= 1000)
         {
-            obj->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
+            obj->anim.rootMotionScale = mapData->rootMotionScaleParam / 1000.0f;
         }
         else
         {
-            obj->anim.rootMotionScale = lbl_803E5F24; /* 1.0f */
+            obj->anim.rootMotionScale = 1.0f; /* 1.0f */
         }
     }
     else if (mode == WMSUN_SEQID_SUN) /* WM_sun */
@@ -538,11 +518,11 @@ void wmsun_init(GameObject* obj, WmSunMapData* mapData)
         obj->anim.rotX = (s16)(mapData->rotXByte << 8);
         if (mapData->rootMotionScaleParam >= 0)
         {
-            obj->anim.rootMotionScale = mapData->rootMotionScaleParam / lbl_803E5F8C;
+            obj->anim.rootMotionScale = mapData->rootMotionScaleParam / 1000.0f;
         }
         else
         {
-            obj->anim.rootMotionScale = lbl_803E5F24;
+            obj->anim.rootMotionScale = 1.0f;
         }
         *(u8*)&objAnim->bankIndex = mapData->bankIndex;
         bank = objAnim->bankIndex;
@@ -579,7 +559,7 @@ void wmsun_init(GameObject* obj, WmSunMapData* mapData)
         objAnim->alpha = 0;
         if (mapData->rootMotionScaleParam != 0)
         {
-            obj->anim.rootMotionScale = lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam / lbl_803E5F8C);
+            obj->anim.rootMotionScale = 1.0f / ((f32)mapData->rootMotionScaleParam / 1000.0f);
         }
     }
 }
@@ -610,10 +590,4 @@ ObjectDescriptor gWM_sunObjDescriptor = {
 };
 
 #pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E5F78 = 0.00375f;
-__declspec(section ".sdata2") f32 lbl_803E5F7C = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F80 = 0.8f;
-__declspec(section ".sdata2") f32 lbl_803E5F84 = 2400.0f;
-__declspec(section ".sdata2") f32 lbl_803E5F88 = 2.8f;
-__declspec(section ".sdata2") f32 lbl_803E5F8C = 1000.0f;
 #pragma force_active reset

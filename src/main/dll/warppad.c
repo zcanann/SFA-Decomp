@@ -44,6 +44,10 @@
 extern u8 lbl_803DCDE0;
 extern s16 lbl_803DCEB8;
 #pragma explicit_zero_data on
+#define WARP_PAD_PULSE_STAGE1_TIME 120.0f
+#define WARP_PAD_PULSE_STAGE2_TIME 360.0f
+#define WARP_PAD_PULSE_STAGE3_TIME 420.0f
+#define WARP_PAD_PULSE_END_TIME 480.0f
 __declspec(section ".sdata2") f32 lbl_803E3E98 = 0.0f;
 #pragma explicit_zero_data off
 __declspec(section ".sdata2") f32 lbl_803E3E9C = 55.0f;
@@ -52,17 +56,6 @@ __declspec(section ".sdata2") f32 lbl_803E3EA4 = 0.75f;
 __declspec(section ".sdata2") f32 lbl_803E3EA8 = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E3EAC = 110.0f;
 __declspec(section ".sdata2") f32 lbl_803E3EB0 = 0.5f;
-__declspec(section ".sdata2") f32 gWarpPadPulseStage1Time = 120.0f;
-__declspec(section ".sdata2") f32 gWarpPadPulseStage2Time = 360.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EBC = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E3EC0 = 0.0009f;
-__declspec(section ".sdata2") f32 lbl_803E3EC4 = 240.0f;
-__declspec(section ".sdata2") f32 gWarpPadPulseStage3Time = 420.0f;
-__declspec(section ".sdata2") f32 lbl_803E3ECC = 0.00036f;
-__declspec(section ".sdata2") f32 gWarpPadPulseEndTime = 480.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3ED4 = 0.0f;
-#pragma explicit_zero_data off
 extern f32 gWarpPadTriggerDist;
 /* state->flags bits are defined in warp_pad.h (WARPPAD_FLAG_*) */
 
@@ -176,26 +169,26 @@ void warpPadFn_8019042c(GameObject* obj)
 
     if ((state->flags & WARPPAD_FLAG_PULSE_FX) != 0)
     {
-        if (state->pulseTimer < gWarpPadPulseStage1Time)
+        if (state->pulseTimer < WARP_PAD_PULSE_STAGE1_TIME)
         {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
         }
-        else if (state->pulseTimer < gWarpPadPulseStage2Time)
+        else if (state->pulseTimer < WARP_PAD_PULSE_STAGE2_TIME)
         {
-            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / lbl_803E3EBC)
+            if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer / 3.0f)
             {
                 (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_PULSE, &fx, 2, -1, NULL);
             }
             fx.count = 0x28;
             fx.unk0 = 0;
-            fx.scale = lbl_803E3EC0 * ((state->pulseTimer - gWarpPadPulseStage1Time) / lbl_803E3EC4);
+            fx.scale = 0.0009f * ((state->pulseTimer - WARP_PAD_PULSE_STAGE1_TIME) / 240.0f);
             (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
             state->flags = state->flags | WARPPAD_FLAG_LATCH;
         }
-        else if (state->pulseTimer < gWarpPadPulseStage3Time)
+        else if (state->pulseTimer < WARP_PAD_PULSE_STAGE3_TIME)
         {
             if ((f32)(s32)randomGetRange(0, 0x1e0) < state->pulseTimer * lbl_803E3EB0)
             {
@@ -205,14 +198,14 @@ void warpPadFn_8019042c(GameObject* obj)
             {
                 state->flags = state->flags & ~WARPPAD_FLAG_LATCH;
                 fx.count = 0x46;
-                fx.scale = lbl_803E3ECC;
+                fx.scale = 0.00036f;
                 for (i = 0xf; i != 0; i--)
                 {
                     (*gPartfxInterface)->spawnObject((void*)obj, WARPPAD_PARTFX_SURGE, &fx, 2, -1, NULL);
                 }
             }
         }
-        else if (!(state->pulseTimer < gWarpPadPulseEndTime))
+        else if (!(state->pulseTimer < WARP_PAD_PULSE_END_TIME))
         {
             state->pulseTimer = lbl_803E3E98;
             state->flags = state->flags & ~WARPPAD_FLAG_PULSE_FX;

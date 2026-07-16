@@ -75,31 +75,6 @@ extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 gWmSunEnvfxTimer;
 extern f32 lbl_803E5F20;
-extern f32 lbl_803E5F24;
-extern f32 lbl_803E5F28;
-extern f32 lbl_803E5F2C;
-extern f32 gWmSunPi;
-extern f32 lbl_803E5F34;
-extern f32 lbl_803E5F38;
-extern f32 lbl_803E5F3C;
-extern f32 lbl_803E5F40;
-extern f32 lbl_803E5F44;
-extern f32 lbl_803E5F48;
-extern f32 lbl_803E5F4C;
-extern f32 lbl_803E5F50;
-extern f32 lbl_803E5F54;
-extern f32 lbl_803E5F58;
-extern f32 lbl_803E5F5C;
-extern f32 lbl_803E5F60;
-extern f32 lbl_803E5F64;
-extern f32 lbl_803E5F68;
-extern f32 lbl_803E5F6C;
-extern f32 lbl_803E5F78; /* 0.00375f */
-extern f32 lbl_803E5F7C; /* 50.0f */
-extern f32 lbl_803E5F80; /* 0.8f */
-extern f32 lbl_803E5F84; /* 2400.0f */
-extern f32 lbl_803E5F88; /* 2.8f */
-extern f32 lbl_803E5F8C; /* 1000.0f */
 extern const WmSunVec3 gWmSunGlareDir;
 extern const WmSunVec3 gWmSunGlareSun;
 extern f32 gWmSunGlareIntensity;

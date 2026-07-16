@@ -1856,7 +1856,7 @@ main/dll/dll_012D_lfxemitter.c:
 
 main/dll/warppad.c:
 	.text       start:0x8019042C end:0x80190BD4
-	.sdata2     start:0x803E3E98 end:0x803E3ED8
+	.sdata2     start:0x803E3E98 end:0x803E3ED4
 	.sdata2     start:0x803E3ED8 end:0x803E3EE0
 
 main/dll/dll_012C_transporter.c:
@@ -2970,7 +2970,8 @@ main/dll/WM/dll_020E_wmsun.c:
 	.text       start:0x801F6E8C end:0x801F7C50
 	.rodata     start:0x802C24E8 end:0x802C2500
 	.data       start:0x80328D28 end:0x80328D60
-	.sdata2     start:0x803E5F20 end:0x803E5F90
+	.sdata2     start:0x803E5F20 end:0x803E5F6C
+	.sdata2     start:0x803E5F70 end:0x803E5F90
 
 main/dll/WM/dll_020F_wmspiritset.c:
 	.text       start:0x801F7C50 end:0x801F7D34
@@ -2988,7 +2989,7 @@ main/dll/WM/dll_0211_wmwallcrawler.c:
 	.data       start:0x80328DD0 end:0x80328E58
 	.sdata      start:0x803DC130 end:0x803DC138
 	.sbss       start:0x803DDCB8 end:0x803DDCC0
-	.sdata2     start:0x803E5FB0 end:0x803E6020
+	.sdata2     start:0x803E5FB0 end:0x803E601C
 	.sdata2     start:0x803E6020 end:0x803E6038
 
 main/dll/WM/dll_0215_wmnewcrystal.c:

@@ -92,23 +92,8 @@ __declspec(section ".sdata2") f32 lbl_803E5FE4 = -10.0f;
 __declspec(section ".sdata2") f32 lbl_803E5FE8 = -0.1f;
 __declspec(section ".sdata2") f32 lbl_803E5FEC = 2.0f;
 __declspec(section ".sdata2") f32 lbl_803E5FF0 = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E5FF4 = 15.0f;
-__declspec(section ".sdata2") f32 lbl_803E5FF8 = 13.0f;
-__declspec(section ".sdata2") f32 lbl_803E5FFC = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E6000 = 0.3f;
-__declspec(section ".sdata2") f32 lbl_803E6004 = 0.7f;
-__declspec(section ".sdata2") f32 lbl_803E6008 = 26.0f;
-__declspec(section ".sdata2") f32 lbl_803E600C = 8.0f;
-__declspec(section ".sdata2") f32 lbl_803E6010 = 0.065f;
-__declspec(section ".sdata2") f32 lbl_803E6014 = 0.03f;
-__declspec(section ".sdata2") f32 lbl_803E6018 = -0.01f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E601C = 0.0f;
-#pragma explicit_zero_data off
 extern u16 gWallCrawlerVariantFlags[];
 extern u8 gWallCrawlerPointCollision[];
-extern f32 lbl_803E6030;
-extern f32 lbl_803E6034;
 
 /* overlay of state->hitBits */
 typedef struct
@@ -602,20 +587,20 @@ void wmwallcrawler_update(GameObject* obj)
                                 }
                                 if (((GameObject*)ob)->anim.currentMove == 0 &&
                                     (state->flags & WMWALLCRAWLER_FLAG_ATTACK_MOVE) != 0 &&
-                                    dist < lbl_803E5FF4)
+                                    dist < 15.0f)
                                 {
                                     ObjAnim_SetCurrentMove(ob, 2, lbl_803E5FB0, 0);
                                 }
-                                if (dist < lbl_803E5FF8 ||
+                                if (dist < 13.0f ||
                                     ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) != 0 &&
                                      ((((ObjHitsPriorityState*)((GameObject*)ob)->anim.hitReactState)->flags & 8) !=
                                       0) &&
-                                     dist < lbl_803E5FFC))
+                                     dist < 50.0f))
                                 {
                                     gWallCrawlerHitCount += 1;
                                     if (((GameObject*)ob)->anim.currentMove == 2 &&
-                                        ((GameObject*)ob)->anim.currentMoveProgress > lbl_803E6000 &&
-                                        ((GameObject*)ob)->anim.currentMoveProgress < lbl_803E6004)
+                                        ((GameObject*)ob)->anim.currentMoveProgress > 0.3f &&
+                                        ((GameObject*)ob)->anim.currentMoveProgress < 0.7f)
                                     {
                                         ObjMsg_SendToObject((void*)player, WMWALLCRAWLER_MSG_PLAYER_BURST, (void*)ob,
                                                             1);
@@ -643,7 +628,7 @@ void wmwallcrawler_update(GameObject* obj)
                                     }
                                     if ((state->flags & WMWALLCRAWLER_FLAG_TARGET_NEAREST) == 0)
                                     {
-                                        d = lbl_803E6008;
+                                        d = 26.0f;
                                         ((GameObject*)ob)->anim.localPosX =
                                             d * -((GameObject*)ob)->anim.velocityX + ((GameObject*)ob)->anim.localPosX;
                                         ((GameObject*)ob)->anim.localPosZ =
@@ -651,7 +636,7 @@ void wmwallcrawler_update(GameObject* obj)
                                     }
                                     else
                                     {
-                                        d = lbl_803E600C;
+                                        d = 8.0f;
                                         ((GameObject*)ob)->anim.localPosX =
                                             d * -((GameObject*)ob)->anim.velocityX + ((GameObject*)ob)->anim.localPosX;
                                         ((GameObject*)ob)->anim.localPosZ =
@@ -673,10 +658,10 @@ void wmwallcrawler_update(GameObject* obj)
                                 switch (((GameObject*)ob)->anim.currentMove)
                                 {
                                 case 0:
-                                    state->animSpeed = lbl_803E6010 * speed;
+                                    state->animSpeed = 0.065f * speed;
                                     break;
                                 case 2:
-                                    state->animSpeed = lbl_803E6014;
+                                    state->animSpeed = 0.03f;
                                     break;
                                 case 1:
                                     state->animSpeed = lbl_803E5FCC;
@@ -699,7 +684,7 @@ void wmwallcrawler_update(GameObject* obj)
                             if (((GameObject*)ob)->anim.velocityY > lbl_803E5FE0)
                             {
                                 ((GameObject*)ob)->anim.velocityY =
-                                    lbl_803E6018 * timeDelta + ((GameObject*)ob)->anim.velocityY;
+                                    -0.01f * timeDelta + ((GameObject*)ob)->anim.velocityY;
                             }
                             if (((GameObject*)ob)->anim.localPosY < state->homeY)
                             {
@@ -757,7 +742,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData)
     else if ((flags & WMWALLCRAWLER_FLAG_TIMED_EXPLODE) != 0)
     {
         s16toFloat((f32*)&state->explodeTimer, 0x4b0);
-        state->triggerRadius = lbl_803E6030;
+        state->triggerRadius = 100.0f;
         (obj)->anim.rotZ = 0;
         state->mode = WMWALLCRAWLER_MODE_DESCEND;
     }
@@ -775,7 +760,7 @@ void wmwallcrawler_init(GameObject* obj, WmwallcrawlerMapData* mapData)
     state->heightOffset = mapData->heightOffset;
     (obj)->anim.localPosY = mapData->base.posY + (f32)(int)state->heightOffset;
     state->lifeTimer = (s16)(randomGetRange(0, 0x50) + 0x190);
-    state->fleeChaseThreshold = lbl_803E6034;
+    state->fleeChaseThreshold = 80.0f;
     state->counterGameBit = mapData->counterGameBit;
     if ((state->flags & WMWALLCRAWLER_FLAG_PATH_CONTROL) != 0)
     {
@@ -822,5 +807,3 @@ void* gWM_WallCrawlerObjDescriptor[15] = {(void*)0x00000000,
 u8 lbl_80328E28[48] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-__declspec(section ".sdata2") f32 lbl_803E6030 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E6034 = 80.0f;

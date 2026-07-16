@@ -70,11 +70,6 @@ extern f32 lbl_803E746C;
 extern f32 lbl_803E7470;
 extern f32 lbl_803E7474;
 extern f32 lbl_803E7478;
-extern f32 lbl_803E747C;
-extern f32 lbl_803E7480;
-extern f32 lbl_803E7484;
-extern f32 lbl_803E7488;
-extern f32 lbl_803E748C;
 
 int gf_levelcon_SeqFn(GameObject* obj, int eventId, ObjAnimUpdateState* animUpdate);
 int gf_levelcon_getExtraSize(void);
