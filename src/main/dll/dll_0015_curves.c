@@ -1063,11 +1063,11 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
     f32* pf;
     int byteOff;
     int outOff;
-    /* Parallel loop walkers kept in arrays so the codegen matches (see dll_15_func0A):
-     * element init copies survive as the retail mr chain. */
+    /* Parallel loop walkers; loopIdx/wb kept in arrays so the codegen matches (see
+     * dll_15_func0A): element init copies survive as the retail mr chain. */
     int loopIdx[2];
-    u8* wb[1];  /* worldBase walker */
-    int off[1]; /* byteOff walker; element init copy keeps the retail mr */
+    u8* wb[1]; /* worldBase walker */
+    int off;   /* byteOff walker */
     int i;
     int worldIdx;
     int linked;
@@ -1123,15 +1123,15 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             loopIdx[0] = 0;
             loopIdx[1] = loopIdx[0];
             wb[0] = (u8*)collision;
-            off[0] = loopIdx[0];
+            off = loopIdx[0];
             while (loopIdx[1] < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
             {
-                pf = (f32*)((u8*)collision->localPointPositions + off[0]);
+                pf = (f32*)((u8*)collision->localPointPositions + off);
                 Matrix_TransformPoint(m1a, pf[0], pf[1], pf[2], (f32*)(wb[0] + 228),
                                       &collision->localPointWorld[0][loopIdx[0] + 1],
                                       &collision->localPointWorld[0][loopIdx[0] + 2]);
                 wb[0] += 0xc;
-                off[0] += 0xc;
+                off += 0xc;
                 loopIdx[0] += 3;
                 loopIdx[1]++;
             }
@@ -1185,15 +1185,15 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             loopIdx[0] = 0;
             loopIdx[1] = loopIdx[0];
             wb[0] = (u8*)collision;
-            off[0] = loopIdx[0];
+            off = loopIdx[0];
             for (; loopIdx[1] < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; loopIdx[1]++)
             {
-                pf = (f32*)((u8*)collision->segmentLocalPoints + off[0]);
+                pf = (f32*)((u8*)collision->segmentLocalPoints + off);
                 Matrix_TransformPoint(m1b, pf[0], pf[1], pf[2], (f32*)(wb[0] + 8),
                                       &collision->points[0][loopIdx[0] + 1], &collision->points[0][loopIdx[0] + 2]);
                 collision->segmentHitTypes[loopIdx[1]] = -1;
                 wb[0] += 0xc;
-                off[0] += 0xc;
+                off += 0xc;
                 loopIdx[0] += 3;
             }
             if ((s32)(state->flags & 2) != 0)
@@ -1310,15 +1310,15 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             loopIdx[0] = 0;
             loopIdx[1] = loopIdx[0];
             wb[0] = (u8*)collision;
-            off[0] = loopIdx[0];
+            off = loopIdx[0];
             while (loopIdx[1] < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
             {
-                pf = (f32*)((u8*)collision->localPointPositions + off[0]);
+                pf = (f32*)((u8*)collision->localPointPositions + off);
                 Matrix_TransformPoint(m2a, pf[0], pf[1], pf[2], (f32*)(wb[0] + 228),
                                       &collision->localPointWorld[0][loopIdx[0] + 1],
                                       &collision->localPointWorld[0][loopIdx[0] + 2]);
                 wb[0] += 0xc;
-                off[0] += 0xc;
+                off += 0xc;
                 loopIdx[0] += 3;
                 loopIdx[1]++;
             }
@@ -1351,15 +1351,15 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             loopIdx[0] = 0;
             loopIdx[1] = loopIdx[0];
             wb[0] = (u8*)collision;
-            off[0] = loopIdx[0];
+            off = loopIdx[0];
             for (; loopIdx[1] < (int)(u32)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; loopIdx[1]++)
             {
-                pf = (f32*)((u8*)collision->segmentLocalPoints + off[0]);
+                pf = (f32*)((u8*)collision->segmentLocalPoints + off);
                 Matrix_TransformPoint(m2b, pf[0], pf[1], pf[2], (f32*)(wb[0] + 8),
                                       &collision->points[0][loopIdx[0] + 1], &collision->points[0][loopIdx[0] + 2]);
                 collision->segmentHitTypes[loopIdx[1]] = -1;
                 wb[0] += 0xc;
-                off[0] += 0xc;
+                off += 0xc;
                 loopIdx[0] += 3;
             }
             memcpy(collision->traceStart, collision->points,
@@ -1395,15 +1395,15 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
             loopIdx[0] = 0;
             loopIdx[1] = loopIdx[0];
             wb[0] = (u8*)collision;
-            off[0] = loopIdx[0];
+            off = loopIdx[0];
             while (loopIdx[1] < (int)(collision->pointCounts & CURVES_POINT_COUNT_LOCAL_MASK))
             {
-                pf = (f32*)((u8*)collision->localPointPositions + off[0]);
+                pf = (f32*)((u8*)collision->localPointPositions + off);
                 Matrix_TransformPoint(mE, pf[0], pf[1], pf[2], (f32*)(wb[0] + 228),
                                       &collision->localPointWorld[0][loopIdx[0] + 1],
                                       &collision->localPointWorld[0][loopIdx[0] + 2]);
                 wb[0] += 0xc;
-                off[0] += 0xc;
+                off += 0xc;
                 loopIdx[0] += 3;
                 loopIdx[1]++;
             }
