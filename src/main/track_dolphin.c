@@ -969,54 +969,55 @@ void intersectModLineBuild(int* obj)
     {
         IntersectLine* line;
         int i;
-        if (gIntersectLineCount >= 0x5dc)
-            break;
-        line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
-        line->end0 = sp[0xc];
-        line->end1 = sp[0xd];
-        *(u8*)&line->kind = sp[0xf];
-        if ((line->kind & 0x3f) == 0x11)
+        if (gIntersectLineCount < 0x5dc)
         {
-            line->kind &= ~0x3f;
-            line->kind |= 2;
+            line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
+            line->end0 = sp[0xc];
+            line->end1 = sp[0xd];
+            *(u8*)&line->kind = sp[0xf];
+            if ((line->kind & 0x3f) == 0x11)
+            {
+                line->kind &= ~0x3f;
+                line->kind |= 2;
+            }
+            line->flags = sp[0xe];
+            *(s8*)&line->flags ^= 0x10;
+            line->param = *(s16*)(sp + 0x10);
+            for (i = 0; i < 2; i++)
+            {
+                f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
+                f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
+                f32 z = (f32)(s16) * (s16*)(sp + i * 2 + 8);
+                if (gIntersectPointCount < 0x6a4)
+                    line->pt[i] = insertPoint(gIntersectLineCount, link, x, y, z);
+            }
+            gIntersectLineCount++;
         }
-        line->flags = sp[0xe];
-        *(s8*)&line->flags ^= 0x10;
-        line->param = *(s16*)(sp + 0x10);
-        for (i = 0; i < 2; i++)
-        {
-            f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
-            f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
-            f32 z = (f32)(s16) * (s16*)(sp + i * 2 + 8);
-            if (gIntersectPointCount < 0x6a4)
-                line->pt[i] = insertPoint(gIntersectLineCount, link, x, y, z);
-        }
-        gIntersectLineCount++;
     }
     {
         int off;
         for (li = 0, off = li; li < gIntersectLineCount; off += 0x10, li++)
         {
-            IntersectLine* L = (IntersectLine*)((u8*)lbl_803DCF34 + off);
-            int t0 = L->pt[0] * 2;
+            IntersectLine* line = (IntersectLine*)((u8*)lbl_803DCF34 + off);
+            int t0 = line->pt[0] * 2;
             s16* e0 = &link[t0];
             s16* e1;
             if (e0[0] > -1 && e0[0] != li)
-                L->adj[0] = e0[0];
+                line->adj[0] = e0[0];
             else if (e0[1] > -1 && e0[1] != li)
-                L->adj[0] = e0[1];
+                line->adj[0] = e0[1];
             else
-                L->adj[0] = -1;
+                line->adj[0] = -1;
             {
-                int t1 = L->pt[1] * 2;
+                int t1 = line->pt[1] * 2;
                 e1 = &link[t1];
             }
             if (e1[0] > -1 && e1[0] != li)
-                L->adj[1] = e1[0];
+                line->adj[1] = e1[0];
             else if (e1[1] > -1 && e1[1] != li)
-                L->adj[1] = e1[1];
+                line->adj[1] = e1[1];
             else
-                L->adj[1] = -1;
+                line->adj[1] = -1;
         }
     }
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0)
