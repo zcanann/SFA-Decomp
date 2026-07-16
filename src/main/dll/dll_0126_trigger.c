@@ -82,8 +82,6 @@
 #define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 extern f32 lbl_803E40D8;
-extern f32 lbl_803E40FC;
-extern f32 lbl_803E4100;
 extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
@@ -94,7 +92,6 @@ extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
 
-extern f32 lbl_803E40F8;
 
 #define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
@@ -113,7 +110,7 @@ void Trigger_init(u8* obj, u8* params)
         ((GameObject*)obj)->anim.rotZ = 0;
         ((GameObject*)obj)->anim.rotY = 0;
         ((GameObject*)obj)->anim.rotX = (s16)(((TriggerPlacement*)params)->rot[0] << 8);
-        ((GameObject*)obj)->anim.rootMotionScale = range / lbl_803E40F8;
+        ((GameObject*)obj)->anim.rootMotionScale = range / 55.4256f;
         break;
     case 0x4c:
         ((TriggerState*)state)->gateBits[0] = ((TriggerPlacement*)params)->gateBitSrc[0];
@@ -261,7 +258,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                         t = (int)Obj_GetPlayerObject();
                         if ((void*)t != NULL)
                         {
-                            fn_80295918((GameObject*)t, 1, lbl_803E40FC);
+                            fn_80295918((GameObject*)t, 1, 14.0f);
                         }
                         break;
                     }
@@ -674,7 +671,7 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
                     }
                     break;
                 case 0x2c:
-                    **(f32**)(seqArg + 0xb8) = lbl_803E4100 * (f32)(s32)((p[2] << 8) | p[3]);
+                    **(f32**)(seqArg + 0xb8) = 0.1f * (f32)(s32)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = (int)Obj_GetPlayerObject();
@@ -748,8 +745,6 @@ void Trigger_free(GameObject* obj)
  * placementData+0x18). Gates whether the entry runs for a given activation leg.
  */
 
-extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
-extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
 
 
 void Trigger_render(void)
@@ -772,7 +767,7 @@ void Trigger_hitDetect(GameObject* obj)
     s16 ty;
     f32 dist[1];
 
-    dist[0] = lbl_803E4104;
+    dist[0] = 200.0f;
     if (((TriggerPlacement*)def)->triggerId <= 0 || ((TriggerPlacement*)def)->typeId == 0xf4)
     {
         triggerObj = (int)Obj_GetPlayerObject();
