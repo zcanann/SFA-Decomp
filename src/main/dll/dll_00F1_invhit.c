@@ -64,18 +64,6 @@ typedef struct InvhitObjectDef
 /* single-precision override for codegen */
 f32 lbl_803AC780[4];
 
-void InvHit_hitDetect(void)
-{
-}
-
-void InvHit_release(void)
-{
-}
-
-void InvHit_initialise(void)
-{
-}
-
 int InvHit_getExtraSize(void)
 {
     return 0xc;
@@ -84,16 +72,8 @@ int InvHit_getObjectTypeId(void)
 {
     return 0x0;
 }
-
-#pragma scheduling off
-void InvHit_render(int* obj, int a, int b, int c, int d)
-{
-    objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
-}
-#pragma scheduling reset
-
-#pragma scheduling off
 #pragma peephole off
+#pragma scheduling off
 void InvHit_free(GameObject* obj)
 {
     char* inner = obj->extra;
@@ -104,10 +84,24 @@ void InvHit_free(GameObject* obj)
         break;
     }
 }
+#pragma peephole on
+void InvHit_render(int* obj, int a, int b, int c, int d)
+{
+    objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
+}
+#pragma scheduling on
 
+void InvHit_hitDetect(void)
+{
+}
+
+#pragma peephole off
+#pragma scheduling off
 
 void InvHit_init(int* obj, u8* def);
 void InvHit_update(int* obj);
+void InvHit_release(void);
+void InvHit_initialise(void);
 
 ObjectDescriptor gInvHitObjDescriptor = {
     0,
@@ -372,4 +366,17 @@ void InvHit_init(int* obj, u8* def)
     ((GameObject*)obj)->objectFlags =
         ((GameObject*)obj)->objectFlags | (INVHIT_OBJFLAG_HIDDEN | INVHIT_OBJFLAG_HITDETECT_DISABLED);
 }
+
+
 #pragma opt_common_subs reset
+#pragma peephole on
+#pragma scheduling on
+
+void InvHit_release(void)
+{
+}
+
+
+void InvHit_initialise(void)
+{
+}
