@@ -30,6 +30,7 @@
 #include "main/map_load.h"
 #include "main/object.h"
 #include "main/dll/player_api.h"
+#include "main/dll/player_data.h"
 #include "main/camera_interface.h"
 #include "main/dll/cloudaction_interface.h"
 #include "main/game_ui_interface.h"
@@ -97,7 +98,6 @@
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
 
 extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
-extern int* gPlayerShadowInterface;
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;

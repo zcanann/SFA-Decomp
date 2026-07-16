@@ -20,8 +20,8 @@
 #include "main/screen_transition.h"
 #include "main/dll/dll_0035_saveselectscreen.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/gameloop_api.h"
 
-extern u8 lbl_803DB424;
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern u8 lbl_803DD6C4;
 extern u8 lbl_803DD6CC;

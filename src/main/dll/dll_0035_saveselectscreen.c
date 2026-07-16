@@ -94,7 +94,6 @@ typedef struct SaveSelectPanel
 #define SAVESELECTSCREEN_TEXTURE_ID 0x2dd
 
 
-extern u8 lbl_803DB424;
 extern TitleMenuControl* gTitleMenuControlInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern TitleMenuControl* gTitleMenuItemInterface;
