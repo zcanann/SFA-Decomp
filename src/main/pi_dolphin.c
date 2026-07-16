@@ -1078,7 +1078,7 @@ extern void dvdReadCb_80041d30();
 extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
 extern int lbl_803DCC98;
-extern int lbl_803DCC84;
+extern volatile int lbl_803DCC84;
 extern void* lbl_803DCCD8;
 extern void* lbl_803DCCE4;
 extern void* displayFrameBuffer;
@@ -4347,6 +4347,8 @@ void* fileLoad(int id)
 int initLoadFiles(void)
 {
     int i;
+    DVDFileInfo* fileInfo;
+    int* rom;
     struct MldfIterators it;
     u8* himem;
     struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
@@ -4355,18 +4357,14 @@ int initLoadFiles(void)
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
+        i = 0;
+        rom = tbl->romList;
+        for (; i < 0x75; rom++, i++)
         {
-            int* rom;
-
-            i = 0;
-            rom = tbl->romList;
-            for (; i < 0x75; rom++, i++)
+            *rom = 0;
+            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
             {
-                *rom = 0;
-                if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
-                {
-                    piRomLoadSection(0, i, 0);
-                }
+                piRomLoadSection(0, i, 0);
             }
         }
         lbl_803DCC98 = 0;
@@ -4436,12 +4434,12 @@ int initLoadFiles(void)
             default:
                 if (*it.ptrs == 0)
                 {
-                    int fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
-                    DVDOpen(*it.names, (DVDFileInfo*)fi);
-                    *it.sizes = DVD_FI_LENGTH(fi);
+                    fileInfo = (DVDFileInfo*)AtomicSList_PopIntLegacy(lbl_803DCC8C);
+                    DVDOpen(*it.names, fileInfo);
+                    *it.sizes = fileInfo->length;
                     *it.ptrs = (u32)mmAlloc(*it.sizes + 0x20, 0x7d7d7d7d, 0);
                     lbl_803DCC88 = lbl_803DCC88 + 1;
-                    DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)*it.ptrs, *it.sizes, 0, dvdReadCb_80041d30, 2);
+                    DVDReadAsyncPrio(fileInfo, (void*)*it.ptrs, *it.sizes, 0, dvdReadCb_80041d30, 2);
                 }
                 *it.owners = -1;
                 *it.ids = -1;
@@ -4452,15 +4450,15 @@ int initLoadFiles(void)
     }
     if (lbl_803DCC88 == 0)
     {
-        if (((*(int*)&lbl_803DCC80 & 0x100) == 0 || (*(int*)&lbl_803DCC80 & 0x400) == 0) &&
-            ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
+        if (((lbl_803DCC80 & 0x100) == 0 || (lbl_803DCC80 & 0x400) == 0) &&
+            ((lbl_803DCC84 & 0x100) == 0 || (lbl_803DCC84 & 0x400) == 0))
         {
             int saved = testAndSet_onlyUseHeap3(0);
             mapLoadDataFile(5, MLDF_FILEID_TEX0_BIN_A);
             mapLoadDataFile(5, MLDF_FILEID_TEX0_TAB_A);
             testAndSet_onlyUseHeap3(saved);
         }
-        else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
+        else if ((lbl_803DCC84 & 0x100) != 0 && (lbl_803DCC84 & 0x400) != 0)
         {
             mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
             mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
