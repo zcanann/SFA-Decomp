@@ -52,6 +52,76 @@ char sLanguageNameGerman[] = "German";
 char sLanguageNameItalian[] = "Italian";
 char sLanguageNameSpanish[] = "Spanish";
 
+int utf8GetNextChar(u8* str, int* outLen);
+static inline int gameTextIdExists(int id);
+char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH);
+static inline int textCountChars(char* lineStr);
+
+static inline int gameTextIdExists(int id)
+{
+    GlyphEntry* e;
+    int count;
+    int i;
+
+    if (gameTextFonts->mode != 2)
+    {
+        return 0;
+    }
+    e = gameTextFonts->entries;
+    count = gameTextFonts->count;
+    for (i = 0; i != count; i++)
+    {
+        if (e->id == id)
+        {
+            return 1;
+        }
+        e++;
+    }
+    return 0;
+}
+
+static inline int textCountChars(char* lineStr)
+{
+    int charCount;
+    int byteOffset;
+    u32 ch;
+    int charLen;
+
+    charCount = 0;
+    byteOffset = 0;
+    if (lineStr == NULL)
+    {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
+    {
+        byteOffset += charLen;
+        if (ch >= 0xe000 && ch <= 0xf8ff)
+        {
+            SpecialGlyph* g = lbl_802C86F0;
+            int n;
+            int val;
+            for (n = 46; n-- != 0;)
+            {
+                if (g->key == ch)
+                {
+                    val = g->val;
+                    goto haveVal;
+                }
+                g++;
+            }
+            val = 0;
+        haveVal:
+            byteOffset += val * 2;
+        }
+        else
+        {
+            charCount++;
+        }
+    }
+    return charCount;
+}
+
 #pragma auto_inline off
 int isSpace(u32 c)
 {
@@ -64,226 +134,28 @@ int isSpace(u32 c)
     return result;
 }
 
-void* gameTextGetBox(int box)
+char* gameStrcpy(char* dst, char* src)
 {
-    return &gTextBoxes[box * 0x20];
-}
-
-void* gameTextGetCurBox(void)
-{
-    return gCurTextBox;
-}
-
-void gameTextFn_80016c18(int a, int b)
-{
-    int i = gGameTextCommandCount++;
-    GameTextSlot* e = &gGameTextCommandSlots[i];
-    e->opcode = 1;
-    e->arg0 = a;
-    e->arg1 = b;
-}
-
-void gameTextFreePhrase(int* p)
-{
-    p[0] = 0;
-    p[1] = 0;
-    p[2] = 0;
-    p[3] = 0;
-    if (((void**)p)[5] != NULL)
+    u32 ch;
+    int len;
+    do
     {
-        mm_free(((void**)p)[5]);
-        ((void**)p)[5] = NULL;
-    }
-}
-
-void gameTextFn_80016810(int a, int b, int c)
-{
-    int i;
-    GameTextSlot* e;
-    if (gameTextDrawFunc != NULL)
-    {
-        gameTextFn_8001658c(a, b, c);
-    }
-    else
-    {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 2;
-        e->arg0 = a;
-        e->arg1 = b;
-        e->arg2 = c;
-    }
-}
-
-int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
-{
-    int i;
-    TaskTextEntry* e = gTaskTextTable;
-    for (i = 0; i < 0x7a; i++)
-    {
-        if (e->objSeqId == id)
+        ch = utf8GetNextChar((u8*)src, &len);
+        while (len-- != 0)
         {
-            if (outTextSeqId != NULL)
-            {
-                *outTextSeqId = e->textSeqId;
-            }
-            if (outDirId != NULL)
-            {
-                *outDirId = e->dirId;
-            }
-            return 1;
+            *dst++ = *src++;
         }
-        e++;
-    }
-    return 0;
+        if (ch >= 0xe000 && ch <= 0xf8ff)
+        {
+            len = getControlCharLen(ch) * 2;
+            while (len-- != 0)
+            {
+                *dst++ = *src++;
+            }
+        }
+    } while (ch != 0);
+    return dst - 1;
 }
-
-void gameTextShowTimeStr(char* str)
-{
-    int i;
-    GameTextSlot* e;
-    char* buf;
-    i = gGameTextCommandCount++;
-    e = &gGameTextCommandSlots[i];
-    e->opcode = 5;
-    buf = lbl_803DC9C4;
-    lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
-    e->arg0 = (int)buf;
-}
-
-void gameTextShow(int a)
-{
-    int i;
-    GameTextSlot* e;
-    if (gameTextDrawFunc != NULL)
-    {
-        gameTextFn_8001658c(a, 0, 0);
-    }
-    else
-    {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 2;
-        e->arg0 = a;
-        e->arg1 = 0;
-        e->arg2 = 0;
-    }
-}
-
-void gameTextShowStr(char* text, int box, int arg2, int arg3)
-{
-    int i;
-    GameTextSlot* e;
-    char* buf;
-    if (gameTextDrawFunc != NULL)
-    {
-        TextSlot* slot = (TextSlot*)gTextBoxes + box;
-        slot->f18 = arg2;
-        slot->f1a = arg3;
-        gameTextRenderStrs(text, box);
-    }
-    else
-    {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 7;
-        buf = lbl_803DC9C4;
-        lbl_803DC9C4 = gameStrcpy(buf, text) + 1;
-        e->arg0 = (int)buf;
-        e->arg1 = box;
-        e->arg2 = arg2;
-        e->arg3 = arg3;
-    }
-}
-
-void gameTextAppendStr(char* str, int arg2)
-{
-    int i;
-    GameTextSlot* e;
-    char* buf;
-    if (gameTextDrawFunc != NULL)
-    {
-        gameTextRenderStrs(str, arg2);
-    }
-    else
-    {
-        i = gGameTextCommandCount++;
-        e = &gGameTextCommandSlots[i];
-        e->opcode = 6;
-        buf = lbl_803DC9C4;
-        lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
-        e->arg0 = (int)buf;
-        e->arg1 = arg2;
-    }
-}
-
-void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
-{
-    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
-    s16 savedX = box->f18;
-    s16 savedY = box->f1a;
-    lbl_803DC9BC = 1;
-    lbl_803DC9B0 = 0x7FFFFFFF;
-    lbl_803DC9AC = 0;
-    lbl_803DC9B8 = 0x7FFFFFFF;
-    lbl_803DC9B4 = 0;
-    gameTextRenderStrs(str, boxIdx);
-    lbl_803DC9BC = 0;
-    if (outMinX != NULL)
-    {
-        *outMinX = lbl_803DC9B8 >> 2;
-    }
-    if (outMinY != NULL)
-    {
-        *outMinY = lbl_803DC9B4 >> 2;
-    }
-    if (outMaxX != NULL)
-    {
-        *outMaxX = lbl_803DC9B0 >> 2;
-    }
-    if (outMaxY != NULL)
-    {
-        *outMaxY = lbl_803DC9AC >> 2;
-    }
-    box->f18 = savedX;
-    box->f1a = savedY;
-}
-
-void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
-                                int* outMinY)
-{
-    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
-    s16 savedX = box->f18;
-    s16 savedY = box->f1a;
-    lbl_803DC9BC = 1;
-    lbl_803DC9B0 = 0x7FFFFFFF;
-    lbl_803DC9AC = 0;
-    lbl_803DC9B8 = 0x7FFFFFFF;
-    lbl_803DC9B4 = 0;
-    box->f18 = x;
-    box->f1a = y;
-    gameTextRenderStrs(str, boxIdx);
-    lbl_803DC9BC = 0;
-    if (outMinX != NULL)
-    {
-        *outMinX = lbl_803DC9B8 >> 2;
-    }
-    if (outMinY != NULL)
-    {
-        *outMinY = lbl_803DC9B4 >> 2;
-    }
-    if (outMaxX != NULL)
-    {
-        *outMaxX = lbl_803DC9B0 >> 2;
-    }
-    if (outMaxY != NULL)
-    {
-        *outMaxY = lbl_803DC9AC >> 2;
-    }
-    box->f18 = savedX;
-    box->f1a = savedY;
-}
-
 #pragma dont_inline on
 int utf8GetNextChar(u8* str, int* outLen)
 {
@@ -317,50 +189,156 @@ int utf8GetNextChar(u8* str, int* outLen)
 }
 #pragma dont_inline reset
 
-char* gameStrcpy(char* dst, char* src)
+int gameTextGetTaskText(int id, int* outTextSeqId, int* outDirId)
 {
-    u32 ch;
-    int len;
-    do
-    {
-        ch = utf8GetNextChar((u8*)src, &len);
-        while (len-- != 0)
-        {
-            *dst++ = *src++;
-        }
-        if (ch >= 0xe000 && ch <= 0xf8ff)
-        {
-            len = getControlCharLen(ch) * 2;
-            while (len-- != 0)
-            {
-                *dst++ = *src++;
-            }
-        }
-    } while (ch != 0);
-    return dst - 1;
-}
-
-static inline int gameTextIdExists(int id)
-{
-    GlyphEntry* e;
-    int count;
     int i;
-
-    if (gameTextFonts->mode != 2)
+    TaskTextEntry* e = gTaskTextTable;
+    for (i = 0; i < 0x7a; i++)
     {
-        return 0;
-    }
-    e = gameTextFonts->entries;
-    count = gameTextFonts->count;
-    for (i = 0; i != count; i++)
-    {
-        if (e->id == id)
+        if (e->objSeqId == id)
         {
+            if (outTextSeqId != NULL)
+            {
+                *outTextSeqId = e->textSeqId;
+            }
+            if (outDirId != NULL)
+            {
+                *outDirId = e->dirId;
+            }
             return 1;
         }
         e++;
     }
     return 0;
+}
+
+void gameTextShowStr(char* text, int box, int arg2, int arg3)
+{
+    int i;
+    GameTextSlot* e;
+    char* buf;
+    if (gameTextDrawFunc != NULL)
+    {
+        TextSlot* slot = (TextSlot*)gTextBoxes + box;
+        slot->f18 = arg2;
+        slot->f1a = arg3;
+        gameTextRenderStrs(text, box);
+    }
+    else
+    {
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 7;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, text) + 1;
+        e->arg0 = (int)buf;
+        e->arg1 = box;
+        e->arg2 = arg2;
+        e->arg3 = arg3;
+    }
+}
+#pragma ppc_unroll_speculative off
+
+void gameTextRenderStrs(char* str, int boxIdx)
+{
+    TextSlot* slot = (TextSlot*)gTextBoxes + boxIdx;
+    char** lines;
+    int count;
+    f32 lineH;
+    int i;
+    int closeAtEnd = 0;
+
+    if (lbl_803DC9C0 != 1)
+    {
+        slot->f12 = slot->f10;
+        if (lbl_803DC9BC == 0)
+        {
+            gameTextDrawBox(NULL, (int)str, slot);
+        }
+    }
+    lines = textMeasureFn_80016c9c(str, (f32)(u32)slot->f08, slot->f0c, &count, &lineH);
+    if (lines == NULL)
+    {
+        slot->f1a = (s16)(lineH * count + slot->f1a);
+        return;
+    }
+    if (gameTextDrawFunc != NULL)
+    {
+        gxSetScissorRect(0, 0, 0, 0, 0x280, 0x1e0);
+    }
+    else if (lbl_803DC9BC == 0)
+    {
+        gxSetScissorRect(0, 0, slot->f14, slot->f16, slot->f14 + slot->f08, slot->f16 + slot->f0a);
+    }
+    lbl_803DC9A0 = slot->f0c;
+    for (i = 0; i < count; i++)
+    {
+        if (i == count - 1 && slot->f12 == 3)
+        {
+            slot->f12 = 0;
+            closeAtEnd = 1;
+        }
+        if (lbl_803DC984 == 1 && lbl_803DC9BC == 0)
+        {
+            u8 save7 = lbl_803DC9A7;
+            u8 save6 = lbl_803DC9A6;
+            u8 save5 = lbl_803DC9A5;
+            f32 saveColor = lbl_803DC9A0;
+            lbl_803DC9A7 = lbl_803DC992;
+            lbl_803DC9A6 = lbl_803DC991;
+            lbl_803DC9A5 = lbl_803DC990;
+            textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 1);
+            lbl_803DC9A7 = save7;
+            lbl_803DC9A6 = save6;
+            lbl_803DC9A5 = save5;
+            lbl_803DC9A0 = saveColor;
+        }
+        textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 0);
+        slot->f1a = (s16)((f32)slot->f1a + lineH);
+        if (closeAtEnd)
+        {
+            slot->f12 = 3;
+        }
+    }
+    if (lbl_803DC9BC == 0)
+    {
+        Camera_ApplyCurrentViewport(NULL);
+    }
+}
+#pragma ppc_unroll_speculative off
+
+void gameTextAppendStr(char* str, int arg2)
+{
+    int i;
+    GameTextSlot* e;
+    char* buf;
+    if (gameTextDrawFunc != NULL)
+    {
+        gameTextRenderStrs(str, arg2);
+    }
+    else
+    {
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 6;
+        buf = lbl_803DC9C4;
+        lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+        e->arg0 = (int)buf;
+        e->arg1 = arg2;
+    }
+}
+
+void gameTextShowTimeStr(char* str)
+{
+    int i;
+    GameTextSlot* e;
+    char* buf;
+    i = gGameTextCommandCount++;
+    e = &gGameTextCommandSlots[i];
+    e->opcode = 5;
+    buf = lbl_803DC9C4;
+    lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
+    e->arg0 = (int)buf;
 }
 
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
@@ -399,6 +377,339 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
     }
 }
 
+void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
+                                int* outMinY)
+{
+    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
+    s16 savedX = box->f18;
+    s16 savedY = box->f1a;
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    box->f18 = x;
+    box->f1a = y;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL)
+    {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL)
+    {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL)
+    {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL)
+    {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    box->f18 = savedX;
+    box->f1a = savedY;
+}
+
+void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
+{
+    TextSlot* box = (TextSlot*)gTextBoxes + boxIdx;
+    s16 savedX = box->f18;
+    s16 savedY = box->f1a;
+    lbl_803DC9BC = 1;
+    lbl_803DC9B0 = 0x7FFFFFFF;
+    lbl_803DC9AC = 0;
+    lbl_803DC9B8 = 0x7FFFFFFF;
+    lbl_803DC9B4 = 0;
+    gameTextRenderStrs(str, boxIdx);
+    lbl_803DC9BC = 0;
+    if (outMinX != NULL)
+    {
+        *outMinX = lbl_803DC9B8 >> 2;
+    }
+    if (outMinY != NULL)
+    {
+        *outMinY = lbl_803DC9B4 >> 2;
+    }
+    if (outMaxX != NULL)
+    {
+        *outMaxX = lbl_803DC9B0 >> 2;
+    }
+    if (outMaxY != NULL)
+    {
+        *outMaxY = lbl_803DC9AC >> 2;
+    }
+    box->f18 = savedX;
+    box->f1a = savedY;
+}
+#pragma ppc_unroll_speculative off
+
+void gameTextFn_8001658c(int a, int b, int c)
+{
+    GameTextDef* def = (GameTextDef*)gameTextGet(a);
+    TextSlot* slot;
+    u8 save7 = lbl_803DC9A7;
+    u8 save6 = lbl_803DC9A6;
+    u8 save5 = lbl_803DC9A5;
+    u8 save4 = lbl_803DC9A4;
+    int i;
+
+    lbl_803DC9C0 = 1;
+    if (gCurTextBox != NULL)
+    {
+        slot = gCurTextBox;
+    }
+    else if (def->slotHint == 255)
+    {
+        slot = (TextSlot*)gTextBoxes + 2;
+    }
+    else
+    {
+        slot = (TextSlot*)gTextBoxes + def->slotHint;
+    }
+
+    if ((u8*)slot == gTextBoxes + 0x10a0)
+    {
+        lbl_803DC9A7 = 255;
+        lbl_803DC9A6 = 255;
+        lbl_803DC9A5 = 255;
+        lbl_803DC9A4 = 255;
+    }
+
+    if (def->alignH == 0)
+    {
+        slot->f12 = slot->f10;
+    }
+    slot->f18 = b;
+    slot->f1a = c;
+
+    if (lbl_803DC9BC == 0)
+    {
+        int mode;
+        if (def->alignV == 0)
+        {
+            mode = slot->f11;
+        }
+        else
+        {
+            mode = def->alignV;
+        }
+        if (mode == 2 || mode == 3)
+        {
+            int maxX, maxY, minX, minY;
+            int v;
+            gameTextFn_8001628c(a, b, c, &maxX, &maxY, &minX, &minY);
+            v = slot->f0a - (minY - minX);
+            if (mode == 2)
+            {
+                slot->f1a = (s16)(v / 2);
+            }
+            else
+            {
+                slot->f1a = v;
+            }
+        }
+    }
+
+    if (lbl_803DC9BC == 0)
+    {
+        gameTextDrawBox(def, 0, slot);
+    }
+    if (gameTextDrawFunc != NULL)
+    {
+        gxSetScissorRect(0, 0, 0, 0, 640, 480);
+    }
+    else
+    {
+        if (slot->f14 < 0)
+        {
+            slot->f14 = 0;
+        }
+        if (slot->f16 < 0)
+        {
+            slot->f16 = 0;
+        }
+        if (lbl_803DC9BC == 0)
+        {
+            gxSetScissorRect(0, 0, slot->f14, slot->f16, slot->f14 + slot->f08, slot->f16 + slot->f0a);
+        }
+    }
+
+    i = 0;
+    for (; i < def->count; i++)
+    {
+        gameTextRenderStrs(def->strings[i], slot - (TextSlot*)gTextBoxes);
+    }
+
+    lbl_803DC9C0 = 0;
+    if (lbl_803DC9BC == 0)
+    {
+        Camera_ApplyCurrentViewport(0);
+    }
+    lbl_803DC9A7 = save7;
+    lbl_803DC9A6 = save6;
+    lbl_803DC9A5 = save5;
+    lbl_803DC9A4 = save4;
+}
+#pragma ppc_unroll_speculative off
+
+void gameTextFn_80016810(int a, int b, int c)
+{
+    int i;
+    GameTextSlot* e;
+    if (gameTextDrawFunc != NULL)
+    {
+        gameTextFn_8001658c(a, b, c);
+    }
+    else
+    {
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 2;
+        e->arg0 = a;
+        e->arg1 = b;
+        e->arg2 = c;
+    }
+}
+
+
+void gameTextShow(int a)
+{
+    int i;
+    GameTextSlot* e;
+    if (gameTextDrawFunc != NULL)
+    {
+        gameTextFn_8001658c(a, 0, 0);
+    }
+    else
+    {
+        i = gGameTextCommandCount++;
+        e = &gGameTextCommandSlots[i];
+        e->opcode = 2;
+        e->arg0 = a;
+        e->arg1 = 0;
+        e->arg2 = 0;
+    }
+}
+#pragma ppc_unroll_speculative off
+
+void textDisplayFn_800168dc(int textId, TextDisplayState* state)
+{
+    GameTextDef* def;
+    int charCount;
+    char* lineStr;
+    int special;
+
+    if (*(int*)((u8*)gameTextFonts + 0x1c) == 1)
+    {
+        return;
+    }
+    def = (GameTextDef*)gameTextGet(textId);
+    special = 0;
+    if ((u8*)def >= lbl_803399C0 && (u8*)def < lbl_803399C0 + 0x60)
+    {
+        special = 1;
+    }
+    if (special)
+    {
+        state->f8 = 1;
+        return;
+    }
+    lineStr = def->strings[state->charIndex];
+    charCount = textCountChars(lineStr);
+    if (state->active == 0)
+    {
+        lbl_803DC998 = 0;
+        lbl_803DC994 = lbl_803DE700;
+        state->f10 = def->count;
+        state->f8 = 0;
+        state->active = 1;
+    }
+    if (lbl_803DE700 == lbl_803DC994)
+    {
+        Sfx_PlayFromObject(0, SFXTRIG_clock_loop);
+    }
+    lbl_803DC99C = 1;
+    lbl_803DC998 = 0;
+    lbl_803DC994 = timeDelta * lbl_803DB3D0 + lbl_803DC994;
+    if (lbl_803DC994 >= (f32)(charCount - 2))
+    {
+        Sfx_StopFromObject(0, SFXTRIG_clock_loop);
+    }
+    if (state->fC != 0)
+    {
+        if (lbl_803DC994 < charCount)
+        {
+            lbl_803DC994 = charCount;
+        }
+        else
+        {
+            for (;;)
+            {
+                if (state->fC > 0)
+                {
+                    state->charIndex++;
+                }
+                else
+                {
+                    state->charIndex--;
+                }
+                if (state->charIndex < def->count && *(u8*)def->strings[state->charIndex] == 0)
+                {
+                    continue;
+                }
+                break;
+            }
+            if (state->charIndex < 0)
+            {
+                state->charIndex = 0;
+            }
+            else if (state->charIndex >= def->count)
+            {
+                state->charIndex = def->count - 1;
+            }
+            else
+            {
+                lbl_803DC994 = lbl_803DE700;
+            }
+            if (state->charIndex < 0)
+            {
+                state->charIndex = 0;
+            }
+            if (state->charIndex == def->count - 1)
+            {
+                if ((state->fC = 1) != 0 && lbl_803DC994 >= charCount)
+                {
+                    state->f8 = 1;
+                }
+                else
+                {
+                    goto setF8Zero;
+                }
+            }
+            else
+            {
+            setF8Zero:
+                state->f8 = 0;
+            }
+            state->fC = 0;
+        }
+    }
+    gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
+}
+#pragma ppc_unroll_speculative off
+
+
+void gameTextFn_80016c18(int a, int b)
+{
+    int i = gGameTextCommandCount++;
+    GameTextSlot* e = &gGameTextCommandSlots[i];
+    e->opcode = 1;
+    e->arg0 = a;
+    e->arg1 = b;
+}
+
 static inline int gameTextCtrlCharLen(u32 c)
 {
     SpecialGlyph* p = lbl_802C86F0;
@@ -432,6 +743,19 @@ static inline MeasGlyph* gameTextFindGlyph(u32 ch, int langIdx)
     return NULL;
 }
 
+
+void gameTextFreePhrase(int* p)
+{
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = 0;
+    p[3] = 0;
+    if (((void**)p)[5] != NULL)
+    {
+        mm_free(((void**)p)[5]);
+        ((void**)p)[5] = NULL;
+    }
+}
 #pragma ppc_unroll_speculative on
 char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f32* outLineH)
 {
@@ -646,326 +970,16 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 }
 #pragma ppc_unroll_speculative off
 
-void gameTextRenderStrs(char* str, int boxIdx)
-{
-    TextSlot* slot = (TextSlot*)gTextBoxes + boxIdx;
-    char** lines;
-    int count;
-    f32 lineH;
-    int i;
-    int closeAtEnd = 0;
+#pragma ppc_unroll_speculative off
 
-    if (lbl_803DC9C0 != 1)
-    {
-        slot->f12 = slot->f10;
-        if (lbl_803DC9BC == 0)
-        {
-            gameTextDrawBox(NULL, (int)str, slot);
-        }
-    }
-    lines = textMeasureFn_80016c9c(str, (f32)(u32)slot->f08, slot->f0c, &count, &lineH);
-    if (lines == NULL)
-    {
-        slot->f1a = (s16)(lineH * count + slot->f1a);
-        return;
-    }
-    if (gameTextDrawFunc != NULL)
-    {
-        gxSetScissorRect(0, 0, 0, 0, 0x280, 0x1e0);
-    }
-    else if (lbl_803DC9BC == 0)
-    {
-        gxSetScissorRect(0, 0, slot->f14, slot->f16, slot->f14 + slot->f08, slot->f16 + slot->f0a);
-    }
-    lbl_803DC9A0 = slot->f0c;
-    for (i = 0; i < count; i++)
-    {
-        if (i == count - 1 && slot->f12 == 3)
-        {
-            slot->f12 = 0;
-            closeAtEnd = 1;
-        }
-        if (lbl_803DC984 == 1 && lbl_803DC9BC == 0)
-        {
-            u8 save7 = lbl_803DC9A7;
-            u8 save6 = lbl_803DC9A6;
-            u8 save5 = lbl_803DC9A5;
-            f32 saveColor = lbl_803DC9A0;
-            lbl_803DC9A7 = lbl_803DC992;
-            lbl_803DC9A6 = lbl_803DC991;
-            lbl_803DC9A5 = lbl_803DC990;
-            textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 1);
-            lbl_803DC9A7 = save7;
-            lbl_803DC9A6 = save6;
-            lbl_803DC9A5 = save5;
-            lbl_803DC9A0 = saveColor;
-        }
-        textRenderStr(lines[i], slot, slot->f18, slot->f1a, lineH, 0);
-        slot->f1a = (s16)((f32)slot->f1a + lineH);
-        if (closeAtEnd)
-        {
-            slot->f12 = 3;
-        }
-    }
-    if (lbl_803DC9BC == 0)
-    {
-        Camera_ApplyCurrentViewport(NULL);
-    }
+void* gameTextGetBox(int box)
+{
+    return &gTextBoxes[box * 0x20];
 }
 
-static inline int textCountChars(char* lineStr)
+void* gameTextGetCurBox(void)
 {
-    int charCount;
-    int byteOffset;
-    u32 ch;
-    int charLen;
-
-    charCount = 0;
-    byteOffset = 0;
-    if (lineStr == NULL)
-    {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar((u8*)(lineStr + byteOffset), &charLen)) != 0)
-    {
-        byteOffset += charLen;
-        if (ch >= 0xe000 && ch <= 0xf8ff)
-        {
-            SpecialGlyph* g = lbl_802C86F0;
-            int n;
-            int val;
-            for (n = 46; n-- != 0;)
-            {
-                if (g->key == ch)
-                {
-                    val = g->val;
-                    goto haveVal;
-                }
-                g++;
-            }
-            val = 0;
-        haveVal:
-            byteOffset += val * 2;
-        }
-        else
-        {
-            charCount++;
-        }
-    }
-    return charCount;
-}
-
-void textDisplayFn_800168dc(int textId, TextDisplayState* state)
-{
-    GameTextDef* def;
-    int charCount;
-    char* lineStr;
-    int special;
-
-    if (*(int*)((u8*)gameTextFonts + 0x1c) == 1)
-    {
-        return;
-    }
-    def = (GameTextDef*)gameTextGet(textId);
-    special = 0;
-    if ((u8*)def >= lbl_803399C0 && (u8*)def < lbl_803399C0 + 0x60)
-    {
-        special = 1;
-    }
-    if (special)
-    {
-        state->f8 = 1;
-        return;
-    }
-    lineStr = def->strings[state->charIndex];
-    charCount = textCountChars(lineStr);
-    if (state->active == 0)
-    {
-        lbl_803DC998 = 0;
-        lbl_803DC994 = lbl_803DE700;
-        state->f10 = def->count;
-        state->f8 = 0;
-        state->active = 1;
-    }
-    if (lbl_803DE700 == lbl_803DC994)
-    {
-        Sfx_PlayFromObject(0, SFXTRIG_clock_loop);
-    }
-    lbl_803DC99C = 1;
-    lbl_803DC998 = 0;
-    lbl_803DC994 = timeDelta * lbl_803DB3D0 + lbl_803DC994;
-    if (lbl_803DC994 >= (f32)(charCount - 2))
-    {
-        Sfx_StopFromObject(0, SFXTRIG_clock_loop);
-    }
-    if (state->fC != 0)
-    {
-        if (lbl_803DC994 < charCount)
-        {
-            lbl_803DC994 = charCount;
-        }
-        else
-        {
-            for (;;)
-            {
-                if (state->fC > 0)
-                {
-                    state->charIndex++;
-                }
-                else
-                {
-                    state->charIndex--;
-                }
-                if (state->charIndex < def->count && *(u8*)def->strings[state->charIndex] == 0)
-                {
-                    continue;
-                }
-                break;
-            }
-            if (state->charIndex < 0)
-            {
-                state->charIndex = 0;
-            }
-            else if (state->charIndex >= def->count)
-            {
-                state->charIndex = def->count - 1;
-            }
-            else
-            {
-                lbl_803DC994 = lbl_803DE700;
-            }
-            if (state->charIndex < 0)
-            {
-                state->charIndex = 0;
-            }
-            if (state->charIndex == def->count - 1)
-            {
-                if ((state->fC = 1) != 0 && lbl_803DC994 >= charCount)
-                {
-                    state->f8 = 1;
-                }
-                else
-                {
-                    goto setF8Zero;
-                }
-            }
-            else
-            {
-            setF8Zero:
-                state->f8 = 0;
-            }
-            state->fC = 0;
-        }
-    }
-    gameTextRenderStrs(def->strings[state->charIndex], 0x7c);
-}
-
-void gameTextFn_8001658c(int a, int b, int c)
-{
-    GameTextDef* def = (GameTextDef*)gameTextGet(a);
-    TextSlot* slot;
-    u8 save7 = lbl_803DC9A7;
-    u8 save6 = lbl_803DC9A6;
-    u8 save5 = lbl_803DC9A5;
-    u8 save4 = lbl_803DC9A4;
-    int i;
-
-    lbl_803DC9C0 = 1;
-    if (gCurTextBox != NULL)
-    {
-        slot = gCurTextBox;
-    }
-    else if (def->slotHint == 255)
-    {
-        slot = (TextSlot*)gTextBoxes + 2;
-    }
-    else
-    {
-        slot = (TextSlot*)gTextBoxes + def->slotHint;
-    }
-
-    if ((u8*)slot == gTextBoxes + 0x10a0)
-    {
-        lbl_803DC9A7 = 255;
-        lbl_803DC9A6 = 255;
-        lbl_803DC9A5 = 255;
-        lbl_803DC9A4 = 255;
-    }
-
-    if (def->alignH == 0)
-    {
-        slot->f12 = slot->f10;
-    }
-    slot->f18 = b;
-    slot->f1a = c;
-
-    if (lbl_803DC9BC == 0)
-    {
-        int mode;
-        if (def->alignV == 0)
-        {
-            mode = slot->f11;
-        }
-        else
-        {
-            mode = def->alignV;
-        }
-        if (mode == 2 || mode == 3)
-        {
-            int maxX, maxY, minX, minY;
-            int v;
-            gameTextFn_8001628c(a, b, c, &maxX, &maxY, &minX, &minY);
-            v = slot->f0a - (minY - minX);
-            if (mode == 2)
-            {
-                slot->f1a = (s16)(v / 2);
-            }
-            else
-            {
-                slot->f1a = v;
-            }
-        }
-    }
-
-    if (lbl_803DC9BC == 0)
-    {
-        gameTextDrawBox(def, 0, slot);
-    }
-    if (gameTextDrawFunc != NULL)
-    {
-        gxSetScissorRect(0, 0, 0, 0, 640, 480);
-    }
-    else
-    {
-        if (slot->f14 < 0)
-        {
-            slot->f14 = 0;
-        }
-        if (slot->f16 < 0)
-        {
-            slot->f16 = 0;
-        }
-        if (lbl_803DC9BC == 0)
-        {
-            gxSetScissorRect(0, 0, slot->f14, slot->f16, slot->f14 + slot->f08, slot->f16 + slot->f0a);
-        }
-    }
-
-    i = 0;
-    for (; i < def->count; i++)
-    {
-        gameTextRenderStrs(def->strings[i], slot - (TextSlot*)gTextBoxes);
-    }
-
-    lbl_803DC9C0 = 0;
-    if (lbl_803DC9BC == 0)
-    {
-        Camera_ApplyCurrentViewport(0);
-    }
-    lbl_803DC9A7 = save7;
-    lbl_803DC9A6 = save6;
-    lbl_803DC9A5 = save5;
-    lbl_803DC9A4 = save4;
+    return gCurTextBox;
 }
 
 TaskTextEntry gTaskTextTable[208] = {
