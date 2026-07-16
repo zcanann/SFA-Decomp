@@ -42,6 +42,8 @@
 #include "dolphin/os/OSReport.h"
 #include "dolphin/os/OSRtc.h"
 
+extern f32 lbl_803DE594;
+
 typedef u32 (*SndIsInstalledU32Fn)(void);
 typedef u8 (*MusicInitMidiWadU8Fn)(void);
 
@@ -1529,7 +1531,6 @@ int c;
 
 int d;
 {
-    extern f32 lbl_803DE594;
     SfxObjectChannel* ch;
     s32 i;
     u32 handle;

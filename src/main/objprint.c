@@ -111,6 +111,9 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 
 extern u32 objRenderFuzzFn_8003d6f8();
 extern void fn_8006C4C0(int* a, int* b, int* c);
+extern f32 lbl_803DE9A4;
+extern f32 lbl_803DE9C8;
+extern f32 lbl_803DE99C;
 
 typedef void (*ObjPrintSetTevKColorFn)(int id, ObjPrintGXColor color);
 typedef void (*ObjPrintSetChanColorFn)(int chan, ObjPrintGXColor color);
@@ -119,10 +122,6 @@ typedef void (*ObjPrintLoadTexMtxFn)(f32* mtx, int id, int type);
 
 void objAnimFn_80038f38(GameObject* obj, char* state)
 {
-    extern f32 lbl_803DE9A4;
-    extern f32 lbl_803DE9C8;
-    extern f32 lbl_803DE99C;
-    extern f32 lbl_803DB464;
     s16* found;
     int timer;
 
@@ -255,8 +254,6 @@ void fn_8003A9C0(char* p, int count, s16 a, s16 b)
         count--;
     }
 }
-extern f32 lbl_803DE9C8;
-extern f32 lbl_803DE99C;
 
 void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
 {
@@ -330,13 +327,13 @@ void objRenderShadowIfVisible(GameObject* obj)
     }
 }
 
+extern f32 lbl_803DE9D8;
+extern f32 lbl_803DE9DC;
+extern f32 lbl_803DE9E0;
+
 #pragma dont_inline on
 int fn_800399C0(s16* curve, s16* state)
 {
-    extern f32 lbl_803DE9A4;
-    extern f32 lbl_803DE9D8;
-    extern f32 lbl_803DE9DC;
-    extern f32 lbl_803DE9E0;
     f32 buf[4];
     f32 ratio;
     s16 lo;
@@ -587,7 +584,6 @@ void modelInitMtxs(int def, int model)
 }
 
 extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
-extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int volume, u8 force)
 {
@@ -917,8 +913,6 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 
 int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
 {
-    extern f32 lbl_803DE9D8;
-    extern f32 lbl_803DE9DC;
     int* keys;
     int i;
     int total;
@@ -998,13 +992,13 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
 
 int fn_8003BB84(f32* m, f32* out);
 
+extern f32 gObjPrintHalfPi;
+extern f32 gObjPrintNegHalfPi;
+extern const f32 gObjPrintAngleUnitScale;
+extern const f32 gObjPrintTwoPi;
+
 int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
 {
-
-    extern f32 gObjPrintHalfPi;
-    extern f32 gObjPrintNegHalfPi;
-    extern const f32 gObjPrintAngleUnitScale;
-    extern const f32 gObjPrintTwoPi;
     f32 buf[12];
     f32 x;
     f32 y;
@@ -1184,9 +1178,10 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
     }
 }
 
+extern f32 lbl_803DE9E8;
+
 void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
 {
-    extern f32 lbl_803DE9E8;
     int masked;
     int flag;
 
@@ -1702,13 +1697,11 @@ typedef struct ObjPrintFlipFlag
     u8 rest : 7;
 } ObjPrintFlipFlag;
 
+extern ObjPrintFlipFlag lbl_803DCC00;
+
 #pragma opt_loop_invariants off
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
-    extern f32 lbl_803DE9D8;
-    extern f32 lbl_803DE9DC;
-    extern int lbl_803DB460;
-    extern ObjPrintFlipFlag lbl_803DCC00;
     s16 src[2];
     s16 dst[2];
     GameObject* go = (GameObject*)obj;
@@ -1877,6 +1870,22 @@ const IndTexMtx23 lbl_802C1B28 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 const IndTexMtx23 lbl_802C1B40 = {{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f}};
 const IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 
+extern int lbl_803DCC44;
+extern u8 lbl_803DCC3E;
+extern u8 lbl_803DCC3D;
+extern u32 lbl_803DE9FC;
+extern u32 lbl_803DEA00;
+extern u32 lbl_803DB470;
+extern u32 lbl_803DB468;
+extern int lbl_803DB498;
+extern int lbl_803DB49C;
+extern f32 lbl_803DEA28;
+extern f32 lbl_803DEA2C;
+extern f32 lbl_803DEA30;
+extern f32 lbl_803DEA34;
+extern f32 lbl_803DEA38;
+extern f32 lbl_803DEA1C;
+
 #define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
 #define GXSetChanAmbColor ((ObjPrintSetChanColorFn)GXSetChanAmbColor)
 #define GXSetChanMatColor ((ObjPrintSetChanColorFn)GXSetChanMatColor)
@@ -1885,22 +1894,6 @@ const IndTexMtx23 lbl_802C1B58 = {{0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f}};
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
-    extern int lbl_803DCC44;
-    extern u8 lbl_803DCC3E;
-    extern u8 lbl_803DCC3D;
-    extern u32 lbl_803DE9FC;
-    extern u32 lbl_803DEA00;
-    extern u32 lbl_803DB470;
-    extern u32 lbl_803DB468;
-    extern int lbl_803DB498;
-    extern int lbl_803DB49C;
-    extern f32 lbl_803DEA28;
-    extern f32 lbl_803DEA2C;
-    extern f32 lbl_803DEA30;
-    extern f32 lbl_803DEA34;
-    extern f32 lbl_803DEA38;
-    extern f32 lbl_803DEA04;
-    extern f32 lbl_803DEA1C;
     f32 mtx4[12];
     f32 mtx3[12];
     f32 mtx2[12];
@@ -2083,6 +2076,15 @@ typedef struct ObjPrintS10Color
 
 typedef void (*ObjPrintSetTevColorS10Fn)(int id, ObjPrintS10Color color);
 
+extern ObjPrintS10Color lbl_803DE9F4;
+extern ObjPrintGXColor lbl_803DB494;
+extern u8 lbl_803DCC35;
+extern u8 lbl_803DCC36;
+extern int lbl_803DCC5C;
+extern u8 lbl_803DCC60;
+extern int lbl_803DB48C;
+extern int lbl_803DB490;
+
 static inline int shaderProjDisabled(ModelLightStruct* light)
 {
     int flag;
@@ -2098,22 +2100,6 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
 {
-    extern ObjPrintS10Color lbl_803DE9F4;
-    extern ObjPrintGXColor lbl_803DB494;
-    extern int lbl_803DCC44;
-    extern u8 lbl_803DCC3E;
-    extern u8 lbl_803DCC35;
-    extern u8 lbl_803DCC36;
-    extern int lbl_803DCC5C;
-    extern u8 lbl_803DCC60;
-    extern u32 lbl_803DB468;
-    extern int lbl_803DB48C;
-    extern int lbl_803DB490;
-    extern f32 lbl_803DEA28;
-    extern f32 lbl_803DEA2C;
-    extern f32 lbl_803DEA30;
-    extern f32 lbl_803DEA04;
-    extern f32 lbl_803DEA1C;
     f32 mtx4[12];
     f32 mtx3[12];
     f32 mtx2[12];

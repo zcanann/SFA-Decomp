@@ -161,7 +161,12 @@ typedef struct CharSpawn
 #define OBJLOAD_FLAG_INDEXED_MODEL 0x0400 /* load one model at index (flags29>>11 & 0xf) */
 #define OBJLOAD_FLAG_SHADOW_TYPE3  0x8000 /* modelDef->shadowType == 3 */
 
+extern f32 lbl_803DE888;
 extern f32 lbl_803DE88C;
+extern f32 lbl_803DE894;
+extern f32 lbl_803DE898;
+extern f32 lbl_803DE8D4;
+extern f32 lbl_803DE8D8;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
 void* gObjPtrTable[20];
@@ -2576,9 +2581,6 @@ int objGetTotalDataSize(void* tmpl, u8* def, s16* data, int flags)
 
 void fn_8002A5DC(u8* obj)
 {
-    extern f32 lbl_803DE888;
-    extern f32 lbl_803DE894;
-    extern f32 lbl_803DE898;
     f32 m2[12];
     f32 rot[12];
     f32 vecA[3];
@@ -2627,8 +2629,6 @@ void fn_8002A5DC(u8* obj)
 
 void modelInitBones(f32 scale, void* model)
 {
-    extern f32 lbl_803DE8D4;
-    extern f32 lbl_803DE8D8;
     f32* srcP;
     int off;
     int boneOff;
