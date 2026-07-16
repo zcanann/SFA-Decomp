@@ -3358,12 +3358,14 @@ main/dll/WC/dll_028C_wcbouncycra.c:
 	.sdata2     start:0x803E6D48 end:0x803E6D50
 
 main/dll/WC/dll_0290_wcpushblock.c:
-	.text       start:0x802243F4 end:0x802261B0
+	.text       start:0x802243F4 end:0x802251B4
 	.data       start:0x8032AFB0 end:0x8032B108
+	.sdata2     start:0x803E6D98 end:0x803E6DA0
 
 main/dll/WC/dll_028D_wclevelcont.c:
-	.text       start:0x802261B0 end:0x802272C8
+	.text       start:0x802251B4 end:0x802272C8
 	.data       start:0x8032B108 end:0x8032B178
+	.sdata2     start:0x803E6DC8 end:0x803E6DD0
 
 main/dll/WC/dll_028E_wcbeacon.c:
 	.text       start:0x802272C8 end:0x802276AC
