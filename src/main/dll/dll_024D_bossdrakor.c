@@ -998,4 +998,3 @@ void bossdrakor_release(void)
 void bossdrakor_initialise(void)
 {
 }
-

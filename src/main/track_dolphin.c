@@ -3588,7 +3588,7 @@ void renderGlows(void)
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)sky * sunDot;
                 _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
-                alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
+                alpha = lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot;
                 fade = RecalibrateBits_803DEC3C * sunDot;
                 sunDot = fade * WaitingBits_803DEC40;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
