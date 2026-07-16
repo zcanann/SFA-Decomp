@@ -58,64 +58,28 @@ extern f32 lbl_803E3148;
 
 #define POLLEN_PARTFX_MOTE 0x4ba
 
-#pragma dont_inline on
-void Pollen_burst(GameObject* obj)
-{
-    int burstCounter;
-    PollenExtra* extra;
-    u8* fragment;
+void Pollen_burst(GameObject* obj);
 
-    extra = *(PollenExtra**)&(obj)->extra;
-    if (Obj_IsLoadingLocked() == 0)
-    {
-        return;
-    }
-    burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
-    do
-    {
-        fragment = (u8*)Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
-        ((GameObject*)fragment)->anim.rootMotionScale = (obj)->anim.localPosX;
-        ((GameObject*)fragment)->anim.localPosX = (obj)->anim.localPosY;
-        ((GameObject*)fragment)->anim.localPosY = (obj)->anim.localPosZ;
-        *(u8*)&((GameObject*)fragment)->anim.rotZ = 1;
-        *(u8*)(fragment + 5) = 1;
-        *(u8*)&((GameObject*)fragment)->anim.flags = 0xff;
-        *(u8*)(fragment + 7) = 0xff;
-        fragment = (u8*)Obj_SetupObject((ObjPlacement*)fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, NULL);
-        if (fragment != 0)
-        {
-            ((GameObject*)fragment)->anim.rotY = 0;
-            ((GameObject*)fragment)->anim.rotX = randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
-            ((GameObject*)fragment)->anim.velocityX =
-                lbl_803E3144 *
-                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                (obj)->anim.velocityX;
-            ((GameObject*)fragment)->anim.velocityY =
-                lbl_803E3148 *
-                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                (obj)->anim.velocityY;
-            ((GameObject*)fragment)->anim.velocityZ =
-                lbl_803E3144 *
-                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
-                (obj)->anim.velocityZ;
-            *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = (int)obj;
-        }
-    } while (burstCounter-- != 0);
-    extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
+
+int Pollen_getExtraSize(void)
+{
+    return sizeof(PollenExtra);
 }
-#pragma dont_inline reset
-
-void Pollen_release(void)
+int Pollen_getObjectTypeId(void)
 {
-}
-
-void Pollen_initialise(void)
-{
+    return 0x0;
 }
 
 void Pollen_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
+}
+
+void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3138);
 }
 
 void Pollen_hitDetect(GameObject* obj)
@@ -132,43 +96,6 @@ void Pollen_hitDetect(GameObject* obj)
         obj->anim.velocityZ = fz;
         obj->anim.alpha = 0;
         ObjHits_DisableObject((u32)obj);
-    }
-}
-
-int Pollen_getExtraSize(void)
-{
-    return sizeof(PollenExtra);
-}
-int Pollen_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-void Pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3138);
-}
-
-void Pollen_init(GameObject* obj)
-{
-    PollenExtra* extra = *(PollenExtra**)&obj->extra;
-    extra->phaseX = randomGetRange(-0x8000, 0x7fff);
-    extra->driftVelocity = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
-    extra->phaseY = randomGetRange(-0x8000, 0x7fff);
-    extra->settleVelocity = lbl_803E313C;
-    extra->phaseSpeed = randomGetRange(0xe6, 0x1f4);
-    extra->unk10 = 0;
-    extra->fragmentSpawnTimer = 0;
-    obj->anim.alpha = 0xff;
-    ObjHits_DisableObject((u32)obj);
-    {
-        int* p = *(int**)&obj->anim.modelState;
-        if (p != NULL)
-        {
-            *(int*)&((ObjModelState*)p)->flags = *(int*)&((ObjModelState*)p)->flags | 0x810;
-        }
     }
 }
 
@@ -222,4 +149,79 @@ void Pollen_update(int obj)
     {
         Obj_FreeObject((GameObject*)obj);
     }
+}
+#pragma dont_inline on
+void Pollen_burst(GameObject* obj)
+{
+    int burstCounter;
+    PollenExtra* extra;
+    u8* fragment;
+
+    extra = *(PollenExtra**)&(obj)->extra;
+    if (Obj_IsLoadingLocked() == 0)
+    {
+        return;
+    }
+    burstCounter = POLLEN_FRAGMENT_BURST_COUNTER_START;
+    do
+    {
+        fragment = (u8*)Obj_AllocObjectSetup(POLLEN_FRAGMENT_SETUP_SIZE, POLLEN_FRAGMENT_OBJECT_ID);
+        ((GameObject*)fragment)->anim.rootMotionScale = (obj)->anim.localPosX;
+        ((GameObject*)fragment)->anim.localPosX = (obj)->anim.localPosY;
+        ((GameObject*)fragment)->anim.localPosY = (obj)->anim.localPosZ;
+        *(u8*)&((GameObject*)fragment)->anim.rotZ = 1;
+        *(u8*)(fragment + 5) = 1;
+        *(u8*)&((GameObject*)fragment)->anim.flags = 0xff;
+        *(u8*)(fragment + 7) = 0xff;
+        fragment = (u8*)Obj_SetupObject((ObjPlacement*)fragment, POLLEN_FRAGMENT_SETUP_KIND, -1, -1, NULL);
+        if (fragment != 0)
+        {
+            ((GameObject*)fragment)->anim.rotY = 0;
+            ((GameObject*)fragment)->anim.rotX = randomGetRange(0, POLLEN_FRAGMENT_RANDOM_ANGLE_MAX);
+            ((GameObject*)fragment)->anim.velocityX =
+                lbl_803E3144 *
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                (obj)->anim.velocityX;
+            ((GameObject*)fragment)->anim.velocityY =
+                lbl_803E3148 *
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                (obj)->anim.velocityY;
+            ((GameObject*)fragment)->anim.velocityZ =
+                lbl_803E3144 *
+                    (f32)(s32)randomGetRange(POLLEN_FRAGMENT_RANDOM_OFFSET_MIN, POLLEN_FRAGMENT_RANDOM_OFFSET_MAX) +
+                (obj)->anim.velocityZ;
+            *(int*)(fragment + POLLEN_FRAGMENT_PARENT_OBJECT_OFFSET) = (int)obj;
+        }
+    } while (burstCounter-- != 0);
+    extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
+}
+#pragma dont_inline off
+
+void Pollen_init(GameObject* obj)
+{
+    PollenExtra* extra = *(PollenExtra**)&obj->extra;
+    extra->phaseX = randomGetRange(-0x8000, 0x7fff);
+    extra->driftVelocity = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
+    extra->phaseY = randomGetRange(-0x8000, 0x7fff);
+    extra->settleVelocity = lbl_803E313C;
+    extra->phaseSpeed = randomGetRange(0xe6, 0x1f4);
+    extra->unk10 = 0;
+    extra->fragmentSpawnTimer = 0;
+    obj->anim.alpha = 0xff;
+    ObjHits_DisableObject((u32)obj);
+    {
+        int* p = *(int**)&obj->anim.modelState;
+        if (p != NULL)
+        {
+            *(int*)&((ObjModelState*)p)->flags = *(int*)&((ObjModelState*)p)->flags | 0x810;
+        }
+    }
+}
+
+void Pollen_release(void)
+{
+}
+
+void Pollen_initialise(void)
+{
 }
