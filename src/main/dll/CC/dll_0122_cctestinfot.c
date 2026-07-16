@@ -15,6 +15,7 @@
 #include "main/minimap_api.h"
 #include "main/dll/CC/dll_0122_cctestinfot.h"
 #include "main/dll/CF/dll_012A_cfcrate.h"
+#include "main/dll/CF/dll_012B_fxemit.h"
 #include "main/dll/dll_010E_deathseq.h"
 #include "main/dll/dll_0123_fuelcell.h"
 #include "main/dll/dll_0124_deathgas.h"
@@ -27,24 +28,6 @@
 
 extern f32 lbl_803E3C88; /* hold-time reset value when the trigger fires */
 extern f32 lbl_803E3C8C; /* hold-time ceiling / minimum to keep showing text */
-
-extern void FxEmit_getExtraSize(void);
-
-extern void FxEmit_getObjectTypeId(void);
-
-extern void FxEmit_free(void);
-
-extern void FxEmit_render(void);
-
-extern void FxEmit_hitDetect(void);
-
-extern void FxEmit_update(void);
-
-extern void FxEmit_init(void);
-
-extern void FxEmit_release(void);
-
-extern void FxEmit_initialise(void);
 
 int CCTestInfot_getExtraSize(void)
 {
@@ -201,20 +184,22 @@ u32 gCFCrateObjDescriptor[14] = {0x00000000,
                                  (u32)CFCrate_free,
                                  (u32)CFCrate_getObjectTypeId,
                                  (u32)CFCrate_getExtraSize};
-u32 gFXEmitObjDescriptor[14] = {0x00000000,
-                                0x00000000,
-                                0x00000000,
-                                0x00090000,
-                                (u32)FxEmit_initialise,
-                                (u32)FxEmit_release,
-                                0x00000000,
-                                (u32)FxEmit_init,
-                                (u32)FxEmit_update,
-                                (u32)FxEmit_hitDetect,
-                                (u32)FxEmit_render,
-                                (u32)FxEmit_free,
-                                (u32)FxEmit_getObjectTypeId,
-                                (u32)FxEmit_getExtraSize};
+ObjectDescriptor gFXEmitObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)FxEmit_initialise,
+    (ObjectDescriptorCallback)FxEmit_release,
+    0,
+    (ObjectDescriptorCallback)FxEmit_init,
+    (ObjectDescriptorCallback)FxEmit_update,
+    (ObjectDescriptorCallback)FxEmit_hitDetect,
+    (ObjectDescriptorCallback)FxEmit_render,
+    (ObjectDescriptorCallback)FxEmit_free,
+    (ObjectDescriptorCallback)FxEmit_getObjectTypeId,
+    FxEmit_getExtraSize,
+};
 
 __declspec(section ".sdata2") f32 lbl_803E3C88 = 600.0f;
 #pragma explicit_zero_data on

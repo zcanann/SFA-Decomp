@@ -161,8 +161,11 @@ void CFCrate_initialise(void);
 int FxEmit_getExtraSize(void);
 int FxEmit_getObjectTypeId(void);
 void FxEmit_free(FxEmitObject* obj);
+void FxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FxEmit_hitDetect(void);
 void FxEmit_update(FxEmitObject* obj);
 void FxEmit_init(FxEmitObject* obj, FxEmitPlacement* setup);
+void FxEmit_release(void);
+void FxEmit_initialise(void);
 
 #endif /* MAIN_DLL_CF_CFTREASSHARPY_H_ */
