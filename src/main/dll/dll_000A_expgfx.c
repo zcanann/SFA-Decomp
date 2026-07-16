@@ -7,7 +7,7 @@
 #include "main/hud_visibility_api.h"
 #include "main/shader_api.h"
 #include "main/debug.h"
-#include "math.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/object.h"
 #include "main/camera.h"
 #include "main/dll_000A_expgfx.h"
