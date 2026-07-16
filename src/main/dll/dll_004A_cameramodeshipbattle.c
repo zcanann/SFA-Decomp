@@ -29,6 +29,16 @@ extern f32 lbl_803E1980;
 
 extern int shipBattleFn_801eed24(GameObject* focus);
 
+void CameraModeShipBattle_copyToCurrent(void)
+{
+}
+
+void CameraModeShipBattle_free(void)
+{
+    mm_free(gCamShipBattleState);
+    gCamShipBattleState = 0;
+}
+
 #pragma opt_common_subs off
 void CameraModeShipBattle_update(short* cam)
 {
@@ -166,22 +176,12 @@ void CameraModeShipBattle_init(void)
     return;
 }
 
-void CameraModeShipBattle_copyToCurrent(void)
-{
-}
-
 void CameraModeShipBattle_release(void)
 {
 }
 
 void CameraModeShipBattle_initialise(void)
 {
-}
-
-void CameraModeShipBattle_free(void)
-{
-    mm_free(gCamShipBattleState);
-    gCamShipBattleState = 0;
 }
 
 u32 lbl_80319D18[12] = {0x00000000,
