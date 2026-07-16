@@ -44,3 +44,9 @@ Across independent `-opt nopeephole,noschedule` units (newclouds snowCloudUpdate
 
 ## titleScreenDrawFn_80093db4 tail (newclouds, 98.68)
 Target pre-evaluates all three GXWGFifo f32->s16 conversions right-to-left (v[2],v[1],v[0] -> r4,r3,r0, no extsh) BEFORE the three sth stores. No C89 source form found that un-fuses the convert-store pairs without introducing extsh (inline-helper, reversed int locals, comma-expr, 7-pragma sweep all fail). Possibly the same deferred-inlining/pass-order issue as above.
+
+## camshipbattle5c fn_8010AC48 (99.066) - true source form found, blocked by one FP home flip
+Our pass1 is written z-first (`sqrtf(nz*nz+nx*nx)`, `-(nz*z+nx*x)`); the retail form for BOTH passes is x-first like our pass2. Applying `sqrtf(nx*nx+nz*nz)` + `-(nx*pts[1]->x+nz*pts[1]->z)` (src/main/dll/camshipbattle5c.c ~lines 314/320) yields perfect 1:1 instruction alignment, zero insert/delete - the SOLE residual is nx/nz homed f25/f26 vs target f26/f25 in pass1. Fuzzy currently scores the wrong-home z-first version higher (98.816 with the correct form) because the broken alignment gets textual reg-token credit. If anyone cracks the FP pair-home flip, those two x-first edits are the required companion.
+
+## Frame-slack lever scope refinement
+Trailing `u32 unused[K]` pads are DEAD-STRIPPED when the frame size already matches - the lever only applies when target `stwu r1,-N` differs from ours (as in the audio wins). Intra-frame temp-slot freshness (objanim AdvanceCurrentMove fresh fctiwz slots 8-48 vs our LIFO reuse; ObjSeq_update mirror-order slot assignment) is allocator-internal - decl reorders byte-inert, statement fusion byte-inert.
