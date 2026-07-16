@@ -565,7 +565,7 @@ main/dll/dll_006D_dll6dfunc0.c:
 
 main/dll/dll_006E_dll6efunc0.c:
 	.text       start:0x800F0A4C end:0x800F0C9C
-	.sdata2     start:0x803E0A98 end:0x803E0AB8
+	.sdata2     start:0x803E0A98 end:0x803E0AB4
 
 main/dll/dll_006F_dll6ffunc0.c:
 	.text       start:0x800F0C9C end:0x800F11E4
