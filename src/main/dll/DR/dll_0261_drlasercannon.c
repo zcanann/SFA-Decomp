@@ -138,7 +138,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     s16 wrapDelta;
 
     /* Fetch the barrel's secondary rotation vector (pitch channel) from the model. */
-    vec = (s16*)objModelGetVecFn_800395d8((GameObject*)self, 0xb);
+    vec = objModelGetVecFn_800395d8(self, 0xb);
     if (vec == NULL)
     {
         return 0;
