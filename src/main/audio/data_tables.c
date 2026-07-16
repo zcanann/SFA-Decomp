@@ -463,25 +463,27 @@ s32 dataInsertFX(u16 gid, FX_TAB* fx, u16 fxNum)
 
 s32 dataInsertMacro(u16 mid, void* macroaddr)
 {
-    long main;
+    u32 main;
     long pos;
     long base;
     long i;
 
     sndBegin();
 
-    if (dataMacroBucketTable[(mid >> 6) & 0x3ff].num == 0)
+    main = mid >> 6;
+
+    if (dataMacroBucketTable[main].num == 0)
     {
-        pos = base = dataMacroBucketTable[(mid >> 6) & 0x3ff].subTabIndex = dataMacTotal;
+        pos = base = dataMacroBucketTable[main].subTabIndex = dataMacTotal;
     }
     else
     {
-        base = dataMacroBucketTable[(mid >> 6) & 0x3ff].subTabIndex;
-        for (i = 0; i < dataMacroBucketTable[(mid >> 6) & 0x3ff].num && dataMacroTable[base + i].id < mid; ++i)
+        base = dataMacroBucketTable[main].subTabIndex;
+        for (i = 0; i < dataMacroBucketTable[main].num && dataMacroTable[base + i].id < mid; ++i)
         {
         }
 
-        if (i < dataMacroBucketTable[(mid >> 6) & 0x3ff].num)
+        if (i < dataMacroBucketTable[main].num)
         {
             pos = base + i;
             if (mid == dataMacroTable[pos].id)
@@ -499,7 +501,6 @@ s32 dataInsertMacro(u16 mid, void* macroaddr)
 
     if (dataMacTotal < 2048)
     {
-        main = mid >> 6;
         for (i = 0; i < 512; ++i)
         {
             if (dataMacroBucketTable[i].subTabIndex > base)
