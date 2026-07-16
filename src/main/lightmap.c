@@ -85,12 +85,14 @@ void updateVisibleGeometry(void)
 {
     u8* cam;
     int n;
+    int i;
     f32 tt, ff, ss;
     f32 scale;
     f32 xx, yy, zz;
     f32 ratio, ratio2;
     u16 fov;
     f32 ox, oy, oz;
+    f32 dd;
     MatrixTransform st;
     f32 m[17];
 
@@ -118,8 +120,10 @@ void updateVisibleGeometry(void)
     Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
     gViewFrustumPlanes[0].normalX = ox;
     gViewFrustumPlanes[n = 0].normalY = oy;
-    gViewFrustumPlanes[n].normalZ = oz;
-    gViewFrustumPlanes[n].distance = -(zz * oz + (xx * ox + yy * oy));
+    gViewFrustumPlanes[n = 0].normalZ = oz;
+    dd = -(zz * oz + (xx * ox + yy * oy));
+    i = 0;
+    gViewFrustumPlanes[i].distance = dd;
     fov = (int)(gLightmapDegToBamScale * scale) & 0xffff;
     tt = fn_80293AC4(fov);
     ratio = fn_80293D0C(fov) / tt;
@@ -1021,7 +1025,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x78000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 8;
-    lbl_803DCE30++;
+    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
     if (lbl_803DCE30 == 1000)
     {
         sceneDrawTransparentPolys();
@@ -1029,7 +1033,7 @@ void sceneDraw(void)
     }
     *(u32*)(((int)q + 8) + lbl_803DCE30 * 16) = 0x50000000;
     *(u32*)(((int)q + 12) + lbl_803DCE30 * 16) = 9;
-    lbl_803DCE30++;
+    lbl_803DCE30 = *(volatile s32*)&lbl_803DCE30 + 1;
     sceneDrawTransparentPolys();
     (*gModgfxInterface)->markSourceFrameUpdated(buf);
     (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
