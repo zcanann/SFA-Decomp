@@ -746,7 +746,6 @@ extern f32 lbl_803E0538;
  * lies within, recording the matched checkpoint and local coordinates. */
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
-    CheckpointSlot* cp2;
     int stack[64];
     char visited[200];
     s32 cur;
