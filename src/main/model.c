@@ -3504,6 +3504,7 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
     ObjAnimState* ch;
     int saved;
     s16 srot[3];
+    int bv;
     u8* anim;
 
     if (model->file->animationCount == 0)
@@ -3553,8 +3554,8 @@ void ObjModel_SampleJointTransform(ObjModel* model, int b, int idx, f32 t, f32 s
         anim = ((u8**)model->file->animationModelPtrs)[p[idx]];
     }
     ch->framePhase = t * ch->frameLength;
+    bv = ((u8*)ch->moveFrameData)[2];
     {
-        int bv = ((u8*)ch->moveFrameData)[2];
         f32 fr = ch->framePhase;
         int n = fr;
         f32 fcv = n;
