@@ -1835,12 +1835,12 @@ main/dll/DR/dll_0128_kttorch.c:
 main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
 	.sdata      start:0x803DBDE8 end:0x803DBDF0
-	.sdata2     start:0x803E3DD8 end:0x803E3E30
+	.sdata2     start:0x803E3DD8 end:0x803E3E40
 
 main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
 	.data       start:0x80321F70 end:0x80321F80
-	.sdata2     start:0x803E3E30 end:0x803E3E58
+	.sdata2     start:0x803E3E40 end:0x803E3E58
 	.sdata2     start:0x803E3E58 end:0x803E3E60
 
 main/dll/dll_0130_areafxemit.c:

@@ -45,12 +45,6 @@ typedef struct FxEmitWorldSpawnArgs
 } FxEmitWorldSpawnArgs;
 
 extern char sCFTreasSharpyDebugFormat[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3E30 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E3E34 = 0.2f;
-__declspec(section ".sdata2") f32 lbl_803E3E38 = 400.0f;
-__declspec(section ".sdata2") f32 lbl_803E3E3C = -1.0f;
 __declspec(section ".sdata2") f32 lbl_803E3E40 = 600.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E3E44 = 0.0f;

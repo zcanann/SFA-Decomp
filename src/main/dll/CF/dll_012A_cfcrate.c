@@ -24,6 +24,8 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 
+extern f32 lbl_803E3E40;
+
 u16 gCfCrateDefaultSfxTable[4] = {0x151, 0, 0, 0};
 
 typedef struct CfccratePlacement
@@ -57,11 +59,6 @@ STATIC_ASSERT(offsetof(CfccratePlacement, gameBit) == 0x20);
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d)                                                                            \
     (*gPartfxInterface)->spawnObject((void*)(obj), (fxId), (void*)(a), (b), (c), (void*)(d))
 
-extern f32 lbl_803E3E30;
-extern f32 lbl_803E3E34;
-extern f32 lbl_803E3E38;
-extern f32 lbl_803E3E3C;
-extern f32 lbl_803E3E40;
 
 
 int CFCrate_getExtraSize(void)
@@ -413,7 +410,7 @@ void CFCrate_init(GameObject* obj, int aux)
     case 0x6b4:
         (obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
         (obj)->anim.rotY = ((CfccratePlacement*)aux)->param1A;
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3E30, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0, 0.0f, 0);
         break;
     case 0x66c:
         (obj)->anim.rotX = (short)(((CfccratePlacement*)aux)->rotX << 8);
@@ -441,15 +438,15 @@ void CFCrate_init(GameObject* obj, int aux)
         }
         else
         {
-            (obj)->anim.rootMotionScale = lbl_803E3E34;
+            (obj)->anim.rootMotionScale = 0.2f;
         }
         state->gameBit2Latch = 0;
         state->homeX = ((CfccratePlacement*)aux)->homeX;
         state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
-        state->oscPosA = state->oscPosB = lbl_803E3E30;
+        state->oscPosA = state->oscPosB = 0.0f;
         state->unk28 = 1000.0f;
-        state->unk20 = lbl_803E3E38;
+        state->unk20 = 400.0f;
         state->oscVelA = state->oscVelB = 0.5f;
         (obj)->anim.rotZ = 0;
         (obj)->animEventCallback = CFCrate_SeqFn;
@@ -469,7 +466,7 @@ void CFCrate_init(GameObject* obj, int aux)
         state->gameBit = ((CfccratePlacement*)aux)->gameBit;
         if (mainGetBit(state->gameBit) != 0)
         {
-            state->oscVelB = state->oscVelB * lbl_803E3E3C;
+            state->oscVelB *= -1.0f;
         }
         break;
     case 0xd7:
@@ -479,7 +476,7 @@ void CFCrate_init(GameObject* obj, int aux)
         state->homeX = ((CfccratePlacement*)aux)->homeX;
         state->homeY = ((CfccratePlacement*)aux)->homeY;
         state->homeZ = ((CfccratePlacement*)aux)->homeZ;
-        state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = lbl_803E3E30;
+        state->oscVelA = state->oscVelB = state->unk20 = state->unk28 = state->oscPosA = state->oscPosB = 0.0f;
         (obj)->animEventCallback = CFCrate_SeqFn;
         break;
     case 0x125:
