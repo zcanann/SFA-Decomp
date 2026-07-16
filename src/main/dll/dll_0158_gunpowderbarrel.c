@@ -53,6 +53,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
+#include "main/carryable_interface.h"
 
 f32 lbl_803DBE80 = 10.0f;
 f32 lbl_803DBE84 = 0.4f;
@@ -85,7 +86,6 @@ typedef struct GunpowderbarrelPlacement
     s16 unk1E;
 } GunpowderbarrelPlacement;
 
-extern u32* gCarryableInterface;
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 

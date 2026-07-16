@@ -72,7 +72,7 @@ f32 gKaldachomMouthSpawnScratch;
 f32 gKaldachomDustSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
-extern u32* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 void* gKaldachomEffectResource;
 extern f32 lbl_803E3060;
 extern f32 lbl_803E307C;

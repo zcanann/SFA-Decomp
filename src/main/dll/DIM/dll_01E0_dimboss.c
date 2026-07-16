@@ -78,7 +78,7 @@ extern void fn_801B9ECC(void);
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern u32 lbl_802C2338[];
-extern u32* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;

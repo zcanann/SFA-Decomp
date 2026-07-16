@@ -43,7 +43,7 @@ typedef struct GrimblePlacement
 #define GRIMBLE_OBJGROUP    3
 #define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 
-extern void* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void* gGrimbleStateHandlersA[11];

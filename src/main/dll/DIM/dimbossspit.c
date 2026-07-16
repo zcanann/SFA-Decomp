@@ -36,7 +36,7 @@ extern f32 lbl_803DDBA0;
 extern f32 lbl_803DDBA4;
 extern u8 lbl_803DDBA8[8];
 extern u8 lbl_803DDBB0[8];
-extern u8* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CB4;

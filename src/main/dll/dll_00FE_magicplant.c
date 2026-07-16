@@ -38,6 +38,7 @@
 #include "main/dll/dll_00FD.h"
 #include "main/mm.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/camera_interface.h"
 
 s16 gMagicPlantGemDefIds[4] = {0x2C4, 0x2CD, 0x2CE, 0x2CF};
 
@@ -87,7 +88,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 #define MAGICPLANT_IDLE_TIMER_MIN  300   /* frames between idle-sway retriggers (lo..hi) */
 #define MAGICPLANT_IDLE_TIMER_MAX  600
 
-extern void* gCameraInterface;
 extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
 extern f32 gMagicPlantHitReactAnimStep;

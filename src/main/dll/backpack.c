@@ -44,7 +44,7 @@ typedef struct LandedArwingTriggerLaunchTargetState
 /* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
 #define LANDED_ARWING_FLAG_BOUNCE 0x4000
 
-extern void* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;

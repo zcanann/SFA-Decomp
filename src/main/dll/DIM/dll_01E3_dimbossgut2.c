@@ -28,7 +28,7 @@
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
 
-extern u32* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern f32 lbl_803E4CF0;
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;

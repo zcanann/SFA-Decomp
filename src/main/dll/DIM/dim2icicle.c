@@ -47,7 +47,7 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
 
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
-extern u32* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BD8;

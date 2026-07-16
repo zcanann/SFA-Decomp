@@ -29,7 +29,7 @@
 /* particle-spawn flag word: bit 0x200000 | bit 0x1 */
 #define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
 
-extern void* gBaddieControlInterface;
+extern int* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;
