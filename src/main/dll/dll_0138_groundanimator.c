@@ -74,26 +74,12 @@ extern const f32 lbl_803E3FC0;
 extern int fn_80060688(GameObject* block, int v);
 extern void fn_801A80C4(GameObject* o, f32 x, f32 y, f32 z);
 
-int groundanimator_getExtraSize(void)
-{
-    return 0x30;
-}
-
 u8 groundanimator_modelMtxFn(int* obj)
 {
     return *(u8*)((char*)(int*)((GameObject*)obj)->extra + 0x2b);
 }
 
-#pragma peephole off
-void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
-}
-
 #pragma scheduling off
-#pragma peephole on
 u8 groundanimator_isFullySunk(int* obj)
 {
     GroundAnimatorState* state = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
@@ -104,87 +90,6 @@ u8 groundanimator_isFullySunk(int* obj)
 }
 
 #pragma peephole off
-void groundanimator_init(int* obj, int* desc)
-{
-    GroundAnimatorState* vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
-    vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
-    vstate->lastDepth = lbl_803E3FB8;
-    vstate->radius = (f32)((WaveanimatorObjectDef*)desc)->radius;
-    if (((WaveanimatorObjectDef*)desc)->sinkEnable != 0)
-    {
-        if (mainGetBit(((WaveanimatorObjectDef*)desc)->originX) != 0)
-        {
-            vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
-            vstate->flags |= 2;
-        }
-        ObjGroup_AddObject((int)obj, GROUNDANIMATOR_OBJGROUP);
-        if (*(u8*)&((WaveanimatorObjectDef*)desc)->period > 1)
-        {
-            *(u8*)&((WaveanimatorObjectDef*)desc)->period = 0;
-        }
-    }
-}
-
-void groundanimator_free(int* obj, int flag)
-{
-    void* entry;
-    void* vtx;
-    int innoff;
-    int midoff;
-    int off;
-    int blkIdx;
-    int mid;
-    int inner;
-    MapBlockData* block;
-    GroundAnimatorState* w;
-    int* r21;
-    void* nv;
-    int* cell;
-    f32 local[4];
-    w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
-    r21 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
-    if (flag == 0)
-    {
-        block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
-                                                (double)((GameObject*)obj)->anim.localPosY,
-                                                (double)((GameObject*)obj)->anim.localPosZ));
-        if (block != NULL)
-        {
-            for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
-            {
-                entry = mapBlockFn_800606ec((int*)block, blkIdx);
-                if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
-                {
-                    for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
-                    {
-                        nv = fn_800606DC((int*)block, mid);
-                        for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
-                        {
-                            cell = (int*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
-                            fn_800605F0(cell, local);
-                            if (*(void**)&w->heightBuf != NULL)
-                            {
-                                local[1] = (f32) * (s16*)((char*)w->heightBuf + innoff);
-                                fn_8006058C(cell, local);
-                            }
-                            innoff += 2;
-                            midoff += 2;
-                            off += 2;
-                            vtx = (char*)vtx + 2;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    if (*(void**)&w->falloffBuf != NULL)
-    {
-        mm_free((void*)w->falloffBuf);
-    }
-    ObjGroup_RemoveObject((int)obj, GROUNDANIMATOR_OBJGROUP);
-}
-
 f32 groundanimator_setScale(int* obj, int* target)
 {
     int* r31;
@@ -309,6 +214,83 @@ void fn_801932C8(int* obj, GroundAnimatorState* state, int* placement)
     }
 }
 
+#pragma scheduling on
+#pragma peephole on
+int groundanimator_getExtraSize(void)
+{
+    return 0x30;
+}
+
+#pragma scheduling off
+#pragma peephole off
+void groundanimator_free(int* obj, int flag)
+{
+    void* entry;
+    void* vtx;
+    int innoff;
+    int midoff;
+    int off;
+    int blkIdx;
+    int mid;
+    int inner;
+    MapBlockData* block;
+    GroundAnimatorState* w;
+    int* r21;
+    void* nv;
+    int* cell;
+    f32 local[4];
+    w = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
+    r21 = (int*)*(int*)&((GameObject*)obj)->anim.placementData;
+    if (flag == 0)
+    {
+        block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject*)obj)->anim.localPosX,
+                                                (double)((GameObject*)obj)->anim.localPosY,
+                                                (double)((GameObject*)obj)->anim.localPosZ));
+        if (block != NULL)
+        {
+            for (blkIdx = 0, off = 0; blkIdx < ((MapBlockData*)block)->polyGroupCount; blkIdx++)
+            {
+                entry = mapBlockFn_800606ec((int*)block, blkIdx);
+                if (((GroundanimatorPlacement*)r21)->blockId == mapBlockFn_80060678(entry))
+                {
+                    for (mid = *(u16*)entry, midoff = off; mid < *(u16*)((char*)entry + 0x14); mid++)
+                    {
+                        nv = fn_800606DC((int*)block, mid);
+                        for (inner = 0, vtx = nv, innoff = midoff; inner < 3; inner++)
+                        {
+                            cell = (int*)((char*)((MapBlockData*)block)->vertices + *(u16*)vtx * 6);
+                            fn_800605F0(cell, local);
+                            if (*(void**)&w->heightBuf != NULL)
+                            {
+                                local[1] = (f32) * (s16*)((char*)w->heightBuf + innoff);
+                                fn_8006058C(cell, local);
+                            }
+                            innoff += 2;
+                            midoff += 2;
+                            off += 2;
+                            vtx = (char*)vtx + 2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (*(void**)&w->falloffBuf != NULL)
+    {
+        mm_free((void*)w->falloffBuf);
+    }
+    ObjGroup_RemoveObject((int)obj, GROUNDANIMATOR_OBJGROUP);
+}
+
+#pragma scheduling on
+void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3FC4);
+}
+
+#pragma scheduling off
 #pragma fp_contract off
 void groundanimator_update(int* obj)
 {
@@ -531,6 +513,29 @@ void groundanimator_update(int* obj)
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
     }
     objRenderFn_80041018((GameObject*)obj);
+}
+
+#pragma fp_contract on
+void groundanimator_init(int* obj, int* desc)
+{
+    GroundAnimatorState* vstate = (GroundAnimatorState*)*(int*)&((GameObject*)obj)->extra;
+    vstate->modelVariant = (u8)((WaveanimatorObjectDef*)desc)->modelVariant;
+    vstate->yOffset = (f32)((WaveanimatorObjectDef*)desc)->yOffset;
+    vstate->lastDepth = lbl_803E3FB8;
+    vstate->radius = (f32)((WaveanimatorObjectDef*)desc)->radius;
+    if (((WaveanimatorObjectDef*)desc)->sinkEnable != 0)
+    {
+        if (mainGetBit(((WaveanimatorObjectDef*)desc)->originX) != 0)
+        {
+            vstate->sinkDepth = lbl_803E3F98 * (f32) * (u8*)&((WaveanimatorObjectDef*)desc)->sinkDepthScale;
+            vstate->flags |= 2;
+        }
+        ObjGroup_AddObject((int)obj, GROUNDANIMATOR_OBJGROUP);
+        if (*(u8*)&((WaveanimatorObjectDef*)desc)->period > 1)
+        {
+            *(u8*)&((WaveanimatorObjectDef*)desc)->period = 0;
+        }
+    }
 }
 
 ObjectDescriptor14 gGroundAnimatorObjDescriptor = {
