@@ -1954,7 +1954,6 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
 
 #pragma optimization_level 2
 #pragma opt_propagation off
-#pragma opt_lifetimes on
 #pragma opt_common_subs off
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
@@ -2377,7 +2376,6 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     }
 }
 #pragma opt_common_subs reset
-#pragma opt_lifetimes reset
 #pragma opt_propagation reset
 #pragma optimization_level reset
 
