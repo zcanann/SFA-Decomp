@@ -83,7 +83,7 @@ extern char lbl_8031D2E8[];
 extern int isInWalkGroupOrPatch(f32* pos);
 extern u32 Objfsa_GetWalkGroupIndexAtPoint(f32* pos, void* info);
 extern s16 walkGroupFn_800db3e4(f32* pos, f32* target, int walkGroup);
-extern u16 Objfsa_GetPatchGroupIdAtPoint(void* pos);
+extern int Objfsa_GetPatchGroupIdAtPoint(void* pos);
 extern void fn_800DB240(void* pos, void* out, u32 patch);
 extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
 extern int trickyMove(u8* obj, void* moveState);
