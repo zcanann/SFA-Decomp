@@ -2879,7 +2879,8 @@ void doPendingMapLoads(void)
                 {
                     s8 first = 1;
                     int i3 = gShaderRomListSlotCount - 1;
-                    char* p4 = base + 0x418C + i3 * 8;
+                    char* p4 = base + i3 * 8;
+                    p4 += 0x418C;
                     for (; i3 >= 0; i3--)
                     {
                         if (*(s8*)(p4 + 6) == 0)
