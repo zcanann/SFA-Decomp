@@ -34,7 +34,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 /* anim.resetHitboxMode bit forced on each update tick. */
 #define SB_SEQDOOR_HITBOX_RESET_BIT 0x10
 
-extern f32 lbl_803E5920;
 
 int SB_SeqDoor_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -63,7 +62,7 @@ void SB_SeqDoor_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5920);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -105,10 +104,6 @@ void SB_SeqDoor_initialise(void)
 {
 }
 
-__declspec(section ".sdata2") f32 lbl_803E5920 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5924 = 0.0f;
-#pragma explicit_zero_data reset
 
 ObjectDescriptor gSB_SeqDoorObjDescriptor = {
     0,

@@ -30,10 +30,6 @@
 
 #define VFPSTATUEBALL_HIT_SEQID 0x14b /* staff-strike object seq id */
 
-__declspec(section ".sdata2") f32 lbl_803E60B8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E60BC = 0.0f;
-#pragma explicit_zero_data off
 int VFP_statueball_getExtraSize(void)
 {
     return 0xc;
@@ -87,17 +83,17 @@ void VFP_statueball_update(int* obj)
     variant = ((VfpStatueBallPlacement*)setup)->variant;
     if (variant == 0)
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 5, 1, state->particleChance,
                                     state->particleAlpha, 0, 0);
     }
     else if (variant == 1)
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 2, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 2, 1, state->particleChance,
                                     state->particleAlpha, 0, 0);
     }
     else
     {
-        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 1, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, 1.0f, 1, 1, state->particleChance,
                                     state->particleAlpha, 0, 0);
     }
 

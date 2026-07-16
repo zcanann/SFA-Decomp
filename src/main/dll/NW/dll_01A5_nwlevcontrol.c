@@ -78,9 +78,6 @@ enum NwLevControlMode
     NWLEVCONTROL_MODE_RESCUE_RETRIGGER = 0xc /* post-rescue re-trigger, then cleanup */
 };
 
-extern f32 lbl_803E5278;
-extern f32 lbl_803E527C;
-extern f32 lbl_803E5280;
 
 void* gNW_levcontrolObjDescriptor[14] = {
     (void*)0x00000000, (void*)0x00000000,  (void*)0x00000000,  (void*)0x00090000,         (void*)0x00000000,
@@ -159,13 +156,13 @@ void nw_levcontrol_update(int objArg)
     obj = objArg;
     state = (NwLevControlState*)((GameObject*)obj)->extra;
     player = (short*)Obj_GetPlayerObject();
-    if (state->countdown > lbl_803E5278)
+    if (state->countdown > 0.0f)
     {
         gameTextShow(0x435);
         state->countdown = state->countdown - timeDelta;
-        if (state->countdown < lbl_803E5278)
+        if (state->countdown < 0.0f)
         {
-            state->countdown = *(f32*)&lbl_803E5278;
+            state->countdown = 0.0f;
         }
     }
     status = (*gMapEventInterface)->getMapAct((int)((GameObject*)obj)->anim.mapEventSlot);
@@ -301,7 +298,7 @@ void nw_levcontrol_update(int objArg)
                 }
                 else
                 {
-                    int extra = (int)(fn_80014668() / lbl_803E527C);
+                    int extra = (int)(fn_80014668() / 60.0f);
                     gameTimerStop();
                     gameTimerInit(0x15, (u32)state->timerMinutes + extra);
                     timerSetToCountUp();
@@ -349,7 +346,7 @@ void nw_levcontrol_init(int* obj)
         state->mode = NWLEVCONTROL_MODE_WAIT_START;
     }
 
-    state->countdown = lbl_803E5280;
+    state->countdown = 300.0f;
 
     fn_80088870(base + 0x8c, base + 0x54, base + 0xc4, base + 0xfc);
 
@@ -373,10 +370,4 @@ void nw_levcontrol_init(int* obj)
 }
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5278 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E527C = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E5280 = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E5284 = 0.0f;
-#pragma explicit_zero_data reset
 #pragma force_active reset

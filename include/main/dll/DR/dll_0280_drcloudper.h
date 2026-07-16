@@ -43,9 +43,6 @@ STATIC_ASSERT(offsetof(DrCloudPerObject, mapDir) == 0xac);
 STATIC_ASSERT(offsetof(DrCloudPerObject, flagsB0) == 0xb0);
 STATIC_ASSERT(offsetof(DrCloudPerObject, state) == 0xb8);
 
-extern f32 lbl_803E6BF0;
-extern f32 lbl_803E6BF4;
-extern f32 lbl_803E6BF8;
 
 int DR_CloudPer_setScale(int obj);
 int DR_CloudPer_selectActiveCloud(int obj);

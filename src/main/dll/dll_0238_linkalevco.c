@@ -58,10 +58,6 @@
 /* per-instance extra block reserved by the object system; unused by this TU */
 #define LINKA_LEVCONTROL_EXTRA_SIZE 4
 
-__declspec(section ".sdata2") f32 lbl_803E64D8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E64DC = 0.0f;
-#pragma explicit_zero_data off
 
 int LinkALevControl_seqFn(FireObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -179,7 +175,7 @@ void LinkALevControl_free(void)
 
 void LinkALevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E64D8);
+    objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void LinkALevControl_hitDetect(void)

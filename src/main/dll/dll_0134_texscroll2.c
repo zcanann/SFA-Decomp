@@ -22,7 +22,6 @@
 #include "main/object_render_legacy.h"
 #include "main/object_descriptor.h"
 
-extern f32 lbl_803E3F30;
 extern void mapTextureScrollSetStep(int slot, int xStep, int yStep, int texWidthFixed, int texHeightFixed,
                                     int secondaryXStep, int secondaryYStep, int texWidthFixed2, int texHeightFixed2);
 extern int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed, int secondaryXStep,
@@ -127,7 +126,7 @@ void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3F30);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void texscroll2_hitDetect(void)
@@ -194,10 +193,6 @@ void texscroll2_initialise(void)
 {
 }
 
-__declspec(section ".sdata2") f32 lbl_803E3F30 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3F34 = 0.0f;
-#pragma explicit_zero_data reset
 
 ObjectDescriptor11WithPadding gTexscroll2ObjDescriptor = {
     {

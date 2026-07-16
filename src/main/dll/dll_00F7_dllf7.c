@@ -27,17 +27,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
 union DllF7ConstF32 { f32 f; };
 __declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3400 = { 0.0f };
 __declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3404 = { 1.0f };
-__declspec(section ".sdata2") f32 lbl_803E3408 = 12.0f;
-__declspec(section ".sdata2") f32 lbl_803E340C = 1200.0f;
-__declspec(section ".sdata2") f32 lbl_803E3410 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E3414 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E3418 = 120.0f;
-__declspec(section ".sdata2") f32 lbl_803E341C = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 #define DLLF7_OBJGROUP        0x3e
@@ -118,11 +110,6 @@ typedef struct DllF7State
     s8 byteB;
 } DllF7State;
 
-extern f32 lbl_803E3408;
-extern f32 lbl_803E340C;
-extern f32 lbl_803E3410;
-extern f32 lbl_803E3414;
-extern f32 lbl_803E3418;
 void* gDllF7Resource5A;
 void* gDllF7Resource5B;
 
@@ -195,7 +182,7 @@ void dll_F7_update(int* obj)
             Sfx_PlayAtPositionFromObjectPtrFirstLegacy(obj, blk.x, blk.y, blk.z, SFXTRIG_crtsmsh6);
             Obj_SetActiveModelIndex((GameObject*)obj, 2 - state->hitsRemaining);
             state->bounceOffset = lbl_803E3404.f;
-            state->bounceVelocity = lbl_803E3408;
+            state->bounceVelocity = 12.0f;
             blk.x += playerMapOffsetX;
             blk.z += playerMapOffsetZ;
             blk.scale = lbl_803E3404.f;
@@ -211,7 +198,7 @@ void dll_F7_update(int* obj)
         int* params = *(int**)&((GameObject*)obj)->anim.placementData;
         if (state->byteB == 0)
         {
-            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->mapEventId, lbl_803E340C);
+            (*gMapEventInterface)->addTime(((DllF7Placement*)params)->mapEventId, 1200.0f);
         }
         state->byte9 = 1;
         state->byte8 = 0;
@@ -226,7 +213,7 @@ void dll_F7_update(int* obj)
             s16* alloc = (s16*)Obj_AllocObjectSetup(0x30, DLLF7_CHILD_OBJ_GAS);
             ((DllF7GasSetup*)alloc)->field1C = -1;
             ((DllF7GasSetup*)alloc)->posX = ((GameObject*)obj)->anim.localPosX;
-            ((DllF7GasSetup*)alloc)->posY = lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
+            ((DllF7GasSetup*)alloc)->posY = 10.0f + ((GameObject*)obj)->anim.localPosY;
             ((DllF7GasSetup*)alloc)->posZ = ((GameObject*)obj)->anim.localPosZ;
             ((DllF7GasSetup*)alloc)->field1A = 3;
             ((DllF7GasSetup*)alloc)->field2C = -1;
@@ -237,14 +224,14 @@ void dll_F7_update(int* obj)
         else
         {
             int* near;
-            radius = lbl_803E3414;
+            radius = 50.0f;
             near = (int*)ObjGroup_FindNearestObject(DLLF7_TARGET_OBJGROUP, (int)obj, &radius);
             if (near != NULL)
             {
                 ((GameObject*)near)->anim.localPosX = ((GameObject*)near)->anim.worldPosX =
                     ((GameObject*)obj)->anim.localPosX;
                 ((GameObject*)near)->anim.localPosY = ((GameObject*)near)->anim.worldPosY =
-                    lbl_803E3410 + ((GameObject*)obj)->anim.localPosY;
+                    10.0f + ((GameObject*)obj)->anim.localPosY;
                 ((GameObject*)near)->anim.localPosZ = ((GameObject*)near)->anim.worldPosZ =
                     ((GameObject*)obj)->anim.localPosZ;
                 *(s16*)near = *(s16*)obj;
@@ -259,9 +246,9 @@ void dll_F7_update(int* obj)
         {
             state->bounceOffset = lbl_803E3400.f;
         }
-        else if (state->bounceOffset > lbl_803E3418)
+        else if (state->bounceOffset > 120.0f)
         {
-            state->bounceOffset = lbl_803E3418 - (state->bounceOffset - lbl_803E3418);
+            state->bounceOffset = 120.0f - (state->bounceOffset - 120.0f);
             state->bounceVelocity = -state->bounceVelocity;
         }
     }

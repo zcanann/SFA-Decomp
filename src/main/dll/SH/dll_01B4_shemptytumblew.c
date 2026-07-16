@@ -13,9 +13,6 @@
 #define SHEMPTYTUMBLEW_OBJFLAG_HIDDEN 0x4000
 
 f32 lbl_803DDC00;
-extern f32 lbl_803E5540;
-extern f32 lbl_803E5544;
-extern f32 lbl_803E5548;
 
 
 void SH_EmptyTumbleW_update(GameObject* obj)
@@ -32,14 +29,8 @@ void SH_EmptyTumbleW_init(s16* obj, ShEmptyTumblewPlacement* def)
     ((GameObject*)obj)->anim.rotX = def->rotXByte << 8;
     ((GameObject*)obj)->anim.rootMotionScale = def->scale;
     scale = ((GameObject*)obj)->anim.rootMotionScale;
-    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(lbl_803E5540 * scale), (int)(lbl_803E5544 * scale),
-                               (int)(lbl_803E5548 * scale));
+    ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(15.0f * scale), (int)(-5.0f * scale),
+                               (int)(100.0f * scale));
     ((GameObject*)obj)->objectFlags |= SHEMPTYTUMBLEW_OBJFLAG_HIDDEN;
 }
 
-__declspec(section ".sdata2") f32 lbl_803E5540 = 15.0f;
-__declspec(section ".sdata2") f32 lbl_803E5544 = -5.0f;
-__declspec(section ".sdata2") f32 lbl_803E5548 = 100.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E554C = 0.0f;
-#pragma explicit_zero_data reset

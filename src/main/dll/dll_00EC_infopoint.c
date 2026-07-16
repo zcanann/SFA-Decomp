@@ -19,10 +19,6 @@
 #include "main/texture.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3B70 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E3B74 = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -32,7 +28,6 @@ __declspec(section ".sdata2") f32 lbl_803E3B74 = 0.0f;
 
 #define PAD_BUTTON_A 0x100
 
-extern f32 lbl_803E3B70;
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
 
@@ -82,7 +77,7 @@ void InfoPoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E3B70);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 #pragma peephole reset
 #pragma scheduling reset

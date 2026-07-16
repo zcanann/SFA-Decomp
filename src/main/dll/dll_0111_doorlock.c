@@ -26,10 +26,6 @@
 #include "main/pad.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3798 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E379C = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
@@ -54,7 +50,6 @@ typedef struct DoorlockPlacement
 #define GAMEBIT_DOORLOCK_UNLOCKED 0x930
 #define DOORLOCK_OBJGROUP         0xf
 
-extern f32 lbl_803E3798;
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -104,7 +99,7 @@ void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
 
 render_basic:
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3798);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void Lock_DoorLock_update(GameObject* obj)

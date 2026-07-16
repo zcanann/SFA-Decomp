@@ -18,10 +18,6 @@
 #include "main/object_render_legacy.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E37A8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E37AC = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
@@ -41,7 +37,6 @@ STATIC_ASSERT(offsetof(IMMultiSeqPlacement, polarityMask) == 0x30);
 #define IMMULTISEQ_OBJFLAG_HIDDEN             0x4000
 #define IMMULTISEQ_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E37A8;
 
 /* IMMultiSeq_SeqFn: end-of-sequence predicate. With a valid trigger id,
    peek at the next step's active game bit; if its polarity has flipped
@@ -99,7 +94,7 @@ void IMMultiSeq_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E37A8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void IMMultiSeq_hitDetect(void)

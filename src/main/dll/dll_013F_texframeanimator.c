@@ -53,7 +53,6 @@ typedef union ObjDescriptorTable
 #define TEXFRAMEANIMATOR_OBJFLAG_HIDDEN             0x4000
 #define TEXFRAMEANIMATOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E4060;
 extern u8 WaterFallSpray_free[];
 extern u8 WaterFallSpray_getExtraSize[];
 extern u8 WaterFallSpray_init[];
@@ -118,7 +117,7 @@ void TexFrameAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4060);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void TexFrameAnimator_hitDetect(void)
@@ -226,7 +225,3 @@ ObjDescriptorTable gSfxPlayerObjDescriptor = {{0x00000000, 0x00000000, 0x0000000
                                                0x00000000, (u32)sfxplayerObj_free, 0x00000000,
                                                (u32)sfxplayerObj_getExtraSize}};
 
-__declspec(section ".sdata2") f32 lbl_803E4060 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E4064 = 0.0f;
-#pragma explicit_zero_data reset

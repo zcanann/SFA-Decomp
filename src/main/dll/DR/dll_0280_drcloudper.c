@@ -18,12 +18,6 @@
 
 #include "main/dll/DR/dll_0280_drcloudper.h"
 
-__declspec(section ".sdata2") f32 lbl_803E6BF0 = 3.1415927f;
-__declspec(section ".sdata2") f32 lbl_803E6BF4 = 32768.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6BF8 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E6BFC = 0.0f;
-#pragma explicit_zero_data off
 
 #define DRCLOUDPER_GROUP_TRIGGER        0x13
 #define DRCLOUDPER_GROUP_SURFACE        0x39
@@ -98,9 +92,9 @@ void DR_CloudPer_init(int obj, int setup)
         cloud->yaw = yawTmp;
     }
     state = cloud->state;
-    state->normalX = mathSinf(lbl_803E6BF0 * cloud->yaw / lbl_803E6BF4);
-    state->normalY = lbl_803E6BF8;
-    state->normalZ = mathCosf(lbl_803E6BF0 * cloud->yaw / lbl_803E6BF4);
+    state->normalX = mathSinf(3.1415927f * cloud->yaw / 32768.0f);
+    state->normalY = 0.0f;
+    state->normalZ = mathCosf(3.1415927f * cloud->yaw / 32768.0f);
     state->planeDistance =
         -(state->normalZ * cloud->posZ + (state->normalX * cloud->posX + state->normalY * cloud->posY));
     cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;

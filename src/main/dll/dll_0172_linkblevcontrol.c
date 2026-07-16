@@ -87,10 +87,6 @@ u8 lbl_803238D8[224] = {
     0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7,
     0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7, 0x00, 0xB7,
 };
-__declspec(section ".sdata2") f32 lbl_803E47C8 = 2000.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E47CC = 0.0f;
-#pragma explicit_zero_data off
 
 int linkb_levcontrol_getExtraSize(void)
 {
@@ -237,9 +233,9 @@ void linkb_levcontrol_update(int* obj)
         {
             mainSetBits(GAMEBIT_TrickyTalk, 0xff);
         }
-        if (state->timer >= lbl_803E47C8)
+        if (state->timer >= 2000.0f)
         {
-            state->timer = state->timer - lbl_803E47C8;
+            state->timer = state->timer - 2000.0f;
             if (mainGetBit(GAMEBIT_TrickyTalk) == 0xff && cur[0] < 4)
             {
                 mainSetBits(GAMEBIT_TrickyTalk, 1);

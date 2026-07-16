@@ -52,10 +52,6 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define SCREEN_TRANSITION_START(kind, value)      (*gScreenTransitionInterface)->step((kind), (value))
 
 u8 lbl_803DDC78;
-__declspec(section ".sdata2") f32 lbl_803E5CF8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5CFC = 0.0f;
-#pragma explicit_zero_data off
 
 int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -92,7 +88,7 @@ void WM_seqobject_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E5CF8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 

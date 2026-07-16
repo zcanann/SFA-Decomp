@@ -20,10 +20,6 @@
 #include "main/rcp_dolphin.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E37A0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E37A4 = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
@@ -64,7 +60,6 @@ enum
     SEQOBJECT_OBJGROUP = 0xf
 };
 
-extern f32 lbl_803E37A0;
 
 void objCallOnloadCallback(GameObject* obj)
 {
@@ -138,7 +133,7 @@ void SeqObject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E37A0);
+        objRenderModelAndHitVolumes((GameObject*)p1, 1.0f);
 }
 
 void SeqObject_update(GameObject* obj)

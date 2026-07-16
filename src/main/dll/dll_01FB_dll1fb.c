@@ -27,12 +27,6 @@ STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 #include "main/gamebits.h"
 #include "main/object_render_legacy.h"
 #define PAD_BUTTON_A 0x100
-__declspec(section ".sdata2") f32 lbl_803E5D00 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5D04 = 0.01f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5D08 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E5D0C = 0.0f;
-#pragma explicit_zero_data off
 
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
@@ -86,7 +80,7 @@ void dll_1FB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     {
         return;
     }
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5D00);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1FB_hitDetect_nop(void)
@@ -104,7 +98,7 @@ void dll_1FB_update(int* obj)
         buttonDisable(0, PAD_BUTTON_A);
         mainSetBits(GAMEBIT_K1_SHRINE_DOOR_DIALOGUE_DONE, 1);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D04, timeDelta, NULL);
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.01f, timeDelta, NULL);
 }
 
 void dll_1FB_init(int* obj, u8* def)
@@ -120,7 +114,7 @@ void dll_1FB_init(int* obj, u8* def)
     ((GameObject*)obj)->anim.rotY = setup->objectParam;
     state->baseMove = setup->baseMove;
     state->triggerMode = setup->triggerMode;
-    ObjAnim_SetCurrentMove((int)obj, state->baseMove + 0x100, lbl_803E5D08, 0);
+    ObjAnim_SetCurrentMove((int)obj, state->baseMove + 0x100, 0.0f, 0);
 }
 
 void dll_1FB_release_nop(void)

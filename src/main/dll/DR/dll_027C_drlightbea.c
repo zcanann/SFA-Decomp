@@ -27,12 +27,6 @@
 
 #include "main/dll/DR/dll_027C_drlightbea.h"
 
-__declspec(section ".sdata2") f32 lbl_803E6BB8 = 15.0f;
-__declspec(section ".sdata2") f32 lbl_803E6BBC = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E6BC0 = 0.1f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6BC4 = 0.0f;
-#pragma explicit_zero_data off
 
 int DR_LightBea_getExtraSize(void)
 {
@@ -74,7 +68,7 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
         {
             player = Obj_GetPlayerObject();
             state->handle->end[0] = player->anim.localPosX;
-            state->handle->end[1] = lbl_803E6BB8 + player->anim.localPosY;
+            state->handle->end[1] = 15.0f + player->anim.localPosY;
             state->handle->end[2] = player->anim.localPosZ;
         }
         lightningRenderLegacy(state->handle);
@@ -114,11 +108,11 @@ void DR_LightBea_render(GameObject* obj, int p2, int p3, int p4, int p5)
             {
                 player = Obj_GetPlayerObject();
                 targetPos[0] = player->anim.localPosX;
-                targetPos[1] = lbl_803E6BB8 + player->anim.localPosY;
+                targetPos[1] = 15.0f + player->anim.localPosY;
                 targetPos[2] = player->anim.localPosZ;
             }
             state->handle = lightningCreateU16Promoted((const Vec3f*)sourcePos, (const Vec3f*)targetPos,
-                                                       lbl_803E6BBC, lbl_803E6BC0, randomGetRange(5, 0xf), 0x60, 0);
+                                                       0.05f, 0.1f, randomGetRange(5, 0xf), 0x60, 0);
         }
     }
 }

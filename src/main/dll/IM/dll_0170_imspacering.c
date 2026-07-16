@@ -17,10 +17,6 @@
 #include "main/object_descriptor.h"
 
 extern GameObject* lbl_803DDB48;
-__declspec(section ".sdata2") f32 lbl_803E47B8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E47BC = 0.0f;
-#pragma explicit_zero_data off
 
 int IMSpaceRing_getExtraSize(void)
 {
@@ -39,7 +35,7 @@ void IMSpaceRing_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E47B8);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void IMSpaceRing_hitDetect(void)

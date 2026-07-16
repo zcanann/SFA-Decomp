@@ -7,13 +7,8 @@
 #include "main/gamebits.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
 union InvisibleHitSwitchConstF32 { f32 f; };
 __declspec(section ".sdata2") const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E3734 = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E3738 = 120.0f;
-__declspec(section ".sdata2") f32 lbl_803E373C = 0.1f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 #define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
@@ -54,9 +49,6 @@ typedef struct InvisibleHitSwitchState
     u8 pad24[0x28 - 0x24];
 } InvisibleHitSwitchState;
 
-extern f32 lbl_803E3734;
-extern f32 lbl_803E3738;
-extern f32 lbl_803E373C;
 extern f32 lbl_803E3750;
 
 int InvisibleHitSwitch_getExtraSize(void) { return 0xc; }
@@ -104,7 +96,7 @@ void InvisibleHitSwitch_update(GameObject *obj)
     if (((InvisibleHitSwitchState*)state)->activationTimer != *(f32*)&lbl_803E3730.f)
     {
         ((InvisibleHitSwitchState*)state)->activationTimer = ((InvisibleHitSwitchState*)state)->activationTimer - timeDelta;
-        if (((InvisibleHitSwitchState*)state)->activationTimer < lbl_803E3734)
+        if (((InvisibleHitSwitchState*)state)->activationTimer < 60.0f)
         {
             hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
             if ((int)((InvisibleHitSwitchState*)state)->hitId == hitId)
@@ -133,7 +125,7 @@ void InvisibleHitSwitch_update(GameObject *obj)
         {
             if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_DELAYED)
             {
-                ((InvisibleHitSwitchState*)state)->activationTimer = lbl_803E3738;
+                ((InvisibleHitSwitchState*)state)->activationTimer = 120.0f;
                 return;
             }
             ((InvisibleHitSwitchState*)state)->active = 1;
@@ -141,7 +133,7 @@ void InvisibleHitSwitch_update(GameObject *obj)
             if ((((InvisibleHitSwitchPlacement*)state2)->triggerMode & SWITCH_MODE_MASK) == SWITCH_MODE_MOMENTARY)
             {
                 ((InvisibleHitSwitchState*)state)->cooldownTimer =
-                    lbl_803E3734 * (lbl_803E373C *
+                    60.0f * (0.1f *
                     (f32)((InvisibleHitSwitchPlacement*)state2)->cooldownFrames);
             }
         }

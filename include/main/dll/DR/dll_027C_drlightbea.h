@@ -31,9 +31,6 @@ typedef struct DrLightBeaState
     DrLightBeaFlags flags;   /* 0x04 */
 } DrLightBeaState;
 
-extern f32 lbl_803E6BB8;
-extern f32 lbl_803E6BBC;
-extern f32 lbl_803E6BC0;
 
 int DR_LightBea_getExtraSize(void);
 int DR_LightBea_getObjectTypeId(void);

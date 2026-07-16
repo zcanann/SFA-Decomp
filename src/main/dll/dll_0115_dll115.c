@@ -22,10 +22,6 @@
 #include "main/dll/dll_0115_dll115.h"
 
 #pragma force_active on
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E37B0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E37B4 = 0.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 /* object group this object joins while active */
@@ -45,7 +41,6 @@ enum
 #define DLL115_OBJFLAG_HIDDEN             0x4000
 #define DLL115_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E37B0;
 
 /* Sequence-event callback: while a trigger sequence is running on an
  * indexed step, end it once the NEXT step's gate bit (placement+0x28) has
@@ -100,7 +95,7 @@ void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E37B0);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_115_hitDetect_nop(void)

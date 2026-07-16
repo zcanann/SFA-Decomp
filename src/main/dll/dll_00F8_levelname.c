@@ -45,9 +45,6 @@
 #define LEVELNAME_SEQEV_SHOW    1 /* anim event id that triggers the banner */
 #define LEVELNAME_SEQFN_HANDLED 4 /* LevelName_SeqFn return when the show event fired */
 
-__declspec(section ".sdata2") f32 lbl_803E36E0 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E36E4 = 3.1415927410125732f;
-__declspec(section ".sdata2") f32 lbl_803E36E8 = 32768.0f;
 
 int LevelName_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -125,9 +122,9 @@ void LevelName_update(GameObject* obj)
             state->phase = LEVELNAME_PHASE_SLIDE_OUT;
         }
         ((LevelnameState*)state)->bannerY =
-            (s16)((s32)(lbl_803E36E0 *
-                        mathSinf((lbl_803E36E4 * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) /
-                                 lbl_803E36E8)) +
+            (s16)((s32)(30.0f *
+                        mathSinf((3.1415927410125732f * (f32)((s32)((LevelnameState*)state)->holdTimer * 0x500)) /
+                                 32768.0f)) +
                   LEVELNAME_BANNER_Y_MAX);
         break;
     }

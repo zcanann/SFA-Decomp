@@ -61,7 +61,6 @@ enum
 #define VFPLEVELCONTROL_OBJFLAG_HIDDEN             0x4000
 #define VFPLEVELCONTROL_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern f32 lbl_803E6060;
 
 /* Advance the ordered spell-tablet puzzle. The four step bits must be
    set in array order; the next-expected bit advances the step, any
@@ -148,7 +147,7 @@ void VFP_LevelControl_update(GameObject* obj)
             getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_0, 0);
             getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_1, 0);
             getEnvfxActImmediatelyVoid((int)obj, (int)obj, VFP_ENVFX_INTRO_2, 0);
-            skyFn_80088e54(1, lbl_803E6060);
+            skyFn_80088e54(1, 0.0f);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
         (obj)->unkF4 = 1;
@@ -252,7 +251,3 @@ void VFP_LevelControl_initialise(void)
     lbl_803DC148 = VFP_TIMER_INIT;
 }
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E6060 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E6064 = 0.0f;
-#pragma explicit_zero_data reset

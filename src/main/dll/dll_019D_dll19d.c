@@ -36,10 +36,6 @@ typedef struct Dll19DState
 } Dll19DState;
 
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E51B8 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E51BC = 0.0f;
-#pragma explicit_zero_data off
 
 /* partfx ids: 0x2a0 = impact burst (spawned 3x on hit in dll_19D_hitDetect
  * and the update hit-link branch); 0x29d = per-frame flight trail. */
@@ -76,9 +72,9 @@ void dll_19D_hitDetect(GameObject* obj)
 
     state = *(int*)&((GameObject*)self)->extra;
     state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    vec[3] = lbl_803E51B8;
-    vec[4] = lbl_803E51B8;
-    vec[5] = lbl_803E51B8;
+    vec[3] = 0.0f;
+    vec[4] = 0.0f;
+    vec[5] = 0.0f;
     vec[2] = (float)(int)(s8)((Dll19DPlacement*)state2)->variant;
 
     linkObj = *(int*)&((GameObject*)self)->anim.hitReactState;
@@ -106,9 +102,9 @@ void dll_19D_update(GameObject* obj)
 
     state = *(int*)&((GameObject*)self)->extra;
     def = *(int*)&((GameObject*)self)->anim.placementData;
-    vec[3] = lbl_803E51B8;
-    vec[4] = lbl_803E51B8;
-    vec[5] = lbl_803E51B8;
+    vec[3] = 0.0f;
+    vec[4] = 0.0f;
+    vec[5] = 0.0f;
     vec[2] = (float)(int)(s8)((Dll19DPlacement*)def)->variant;
 
     if ((((Dll19DState*)state)->flags & 1) == 0)
@@ -136,7 +132,7 @@ void dll_19D_update(GameObject* obj)
             getLActionsInt6(self, self, 1, 0, 0, 0);
             ((Dll19DState*)state)->flags = (u8)((u32)((Dll19DState*)state)->flags | 2);
         }
-        zero = lbl_803E51B8;
+        zero = 0.0f;
         ((GameObject*)self)->anim.velocityX = zero;
         ((GameObject*)self)->anim.velocityY = zero;
         ((GameObject*)self)->anim.velocityZ = zero;
