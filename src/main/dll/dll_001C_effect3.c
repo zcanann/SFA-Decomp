@@ -131,13 +131,13 @@ static u8 sProjgfxStringPad2[] = {0, 0, 0, 0, 0, 0};
 
 #pragma scheduling off
 #pragma peephole off
-#pragma opt_common_subs off
-int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
+int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
                    void* extraArgsIn)
 {
     int spawnResult;
     PartFxSpawn cfg;
-    s16* extraArgs = extraArgsIn;
+    f32* extraArgs = extraArgsIn;
+    PartFxSpawnParams* spawnParams = spawnParamsIn;
 
     if (sourceObj == 0)
         return -1;
@@ -309,9 +309,9 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         }
         if (extraArgs != 0)
         {
-            cfg.velocityX = *(f32*)extraArgs;
+            cfg.velocityX = extraArgs[0];
             cfg.velocityY = lbl_803DF9E8 * (f32)(s32)randomGetRange(0, 0x14);
-            cfg.velocityZ = *(f32*)(extraArgs + 2);
+            cfg.velocityZ = extraArgs[1];
         }
         cfg.scale = lbl_803DF9FC * (f32)(s32)randomGetRange(0, 0xa) + lbl_803DF9F8;
         cfg.lifetimeFrames = randomGetRange(0xbe, 0xfa);
@@ -623,6 +623,4 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
     return spawnResult;
 }
-#pragma opt_common_subs reset
-
 #undef FILL350

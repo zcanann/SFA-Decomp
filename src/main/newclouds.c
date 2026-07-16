@@ -1088,6 +1088,7 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
     int oddFlag;
     int halfWidth;
     int i;
+    int j;
     int segs;
     f32 mtx[12];
     f32 dir[3];
@@ -1131,9 +1132,9 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
         return;
     }
     total = lbl_803DF1A0;
-    for (i = 0; i < segs; i++)
+    for (j = 0; j < segs; j++)
     {
-        total += (i + 1);
+        total += (j + 1);
     }
     weight = lbl_803DF1A4 / total;
     px = start[0];

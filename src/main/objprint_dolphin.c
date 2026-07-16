@@ -3873,8 +3873,6 @@ void mapLoadDataFiles(int mapIdx)
 
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
-#define MAPTBLP(idx, disp) (*(int**)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
-
 struct MldfTables
 {
     u8 pad0[0x160];
@@ -3894,6 +3892,7 @@ struct MldfTables
     s16 owners[0x60];
 };
 
+#define MAPTBLP(idx)    (*(int**)(((idx) << 2) + ((u32)&((struct MldfTables*)base)->ptrs[0])))
 #define MAPID_RT(s)    (*(int*)(((s) << 2) + ((u32) & tbl->ids[0])))
 #define MAPPTR_RT(s)   (*(u32*)(((s) << 2) + ((u32) & tbl->ptrs[0])))
 #define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
@@ -4105,20 +4104,20 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     int count = 0;
     int* p1;
     int* p2;
-    int* src1 = MAPTBLP(id, -0x6A28);
-    if (src1 == NULL || MAPTBLP(idx, -0x6A28) == NULL)
+    int* src1 = MAPTBLP(id);
+    if (src1 == NULL || MAPTBLP(idx) == NULL)
     {
         if (src1 == NULL)
         {
             e1 = 1;
         }
-        if (MAPTBLP(idx, -0x6A28) == NULL)
+        if (MAPTBLP(idx) == NULL)
         {
             e2 = 1;
         }
     }
     p1 = (int*)(u32)src1;
-    p2 = MAPTBLP(idx, -0x6A28);
+    p2 = MAPTBLP(idx);
     if (tbl == (u32*)(base + 0x170e0))
     {
         count = 0x800;

@@ -387,6 +387,25 @@ void synthQueueVoice(SynthVoice* voice)
     voice->state = SYNTH_VOICE_STATE_ALLOCATED;
 }
 
+static inline void synthKillVoiceCallbacks(SynthVoice* voice)
+{
+    SynthCallbackLink* callback;
+    u32 i;
+
+    for (i = 0; i < 2; i++)
+    {
+        for (callback = voice->callbackLists[i]; callback != 0; callback = callback->next)
+        {
+            voiceKillById(callback->callbackId);
+        }
+    }
+
+    for (callback = voice->callbackLists[2]; callback != 0; callback = callback->next)
+    {
+        voiceKillById(callback->callbackId);
+    }
+}
+
 /*
  * Move a queued handle to the allocated list after a delayed fade completes.
  */
@@ -395,10 +414,6 @@ void synthQueueHandle(u32 handle)
     u32 key;
     u32 found;
     SynthVoice* sv;
-    u32 i;
-    SynthCallbackLink* cb;
-    SynthVoice* base;
-    SynthCallbackLink* cb2;
     SynthVoice* voice;
 
     key = handle & 0x7fffffffu;
@@ -453,31 +468,10 @@ done:
         {
             gSynthAllocatedVoices->prev = voice;
         }
-        voice->prev = (SynthVoice*)(i = 0);
+        voice->prev = 0;
         gSynthAllocatedVoices = voice;
         voice->state = SYNTH_VOICE_STATE_ALLOCATED;
-
-        {
-            base = voice;
-            for (; i < 2; i++)
-            {
-                cb = base->callbackLists[0];
-                while (cb != 0)
-                {
-                    voiceKillById(cb->callbackId);
-                    cb = cb->next;
-                }
-                base = (SynthVoice*)((u8*)base + 4);
-            }
-        }
-        {
-            cb2 = voice->callbackLists[2];
-            while (cb2 != 0)
-            {
-                voiceKillById(cb2->callbackId);
-                cb2 = cb2->next;
-            }
-        }
+        synthKillVoiceCallbacks(voice);
         synthRecycleVoiceCallbacks(voice);
     }
     else
