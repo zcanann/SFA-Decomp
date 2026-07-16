@@ -1169,28 +1169,45 @@ static inline void errDisplayFillBackdrop(int xcb, int x)
     int row;
     int n;
     u16* fbrow;
+    u16 fill;
 
     do
     {
         row = 0;
         for (n = 0; n < 60; n++)
         {
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + row);
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x500));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xA00));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0xF00));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1400));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1900));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x1E00));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
-            fbrow = (u16*)((char*)debugDrawFrameBuffer + (row + 0x2300));
-            *(u16*)(xcb + (int)fbrow) = 0x1080;
+            fill = 0x1080;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x500);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0xA00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0xF00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1400);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1900);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1E00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x2300);
+            *(u16*)(xcb + (int)fbrow) = fill;
             row += 0x2800;
         }
         xcb += 2;
@@ -1198,6 +1215,7 @@ static inline void errDisplayFillBackdrop(int xcb, int x)
     } while (x < 0x280);
 }
 
+#pragma ppc_unroll_instructions_limit 64
 #pragma opt_strength_reduction off
 #pragma opt_propagation off
 void errDisplayThreadMain(void)
