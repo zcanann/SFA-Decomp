@@ -121,7 +121,6 @@ extern GameObject* focusedNpc;
 extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
-extern f32 lbl_803DEFA0;
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
 extern u8 lbl_803DD0F8;
@@ -865,12 +864,12 @@ int randFn_80080100(int n)
 
 int fn_80080150(const f32* p)
 {
-    return lbl_803DEFA0 != *p;
+    return 0.0f != *p;
 }
 
 void storeZeroToFloatParam(f32* p)
 {
-    *p = lbl_803DEFA0;
+    *p = 0.0f;
 }
 
 void s16toFloat(f32* p, s16 val)
@@ -882,7 +881,7 @@ void s16toFloat(f32* p, s16 val)
 int timerCountDown(f32* p)
 {
     f32 v = *p;
-    f32 zero = lbl_803DEFA0;
+    f32 zero = 0.0f;
     if (v != zero)
     {
         *p = v - timeDelta;
