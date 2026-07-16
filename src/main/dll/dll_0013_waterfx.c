@@ -597,9 +597,9 @@ void waterfx_func05(int obj, int renderParam)
         {
             fn_8007C664((int)gWaterfxWakeTexture);
         }
-        for (i = 0, o32 = 0, o64 = 0; i < WATERFX_POOL_SIZE; o32 += 0x20, o64 += 0x40, i++)
+        for (i = 0, oPool = 0, o64 = 0; i < WATERFX_POOL_SIZE; oPool += 0x1c, o64 += 0x40, i++)
         {
-            g = &((WaterEntry*)gWaterfxWakePool)[i];
+            g = (WaterEntry*)((char*)gWaterfxWakePool + oPool);
             if (g->active != 0 && g->f18 == 0)
             {
                 setTextColor(obj, 0xff, 0xff, 0xff, (u8)g->active);
@@ -613,7 +613,7 @@ void waterfx_func05(int obj, int renderParam)
                 ((void (*)(int, int, void*, f32, f32, int))Camera_LoadModelViewMatrix)(
                     obj, renderParam, &dp, lbl_803DF2EC, lbl_803DF300, 0);
                 fn_8007D670();
-                drawFn_8005cf8c((int)((char*)gWaterfxWakeVtx + o64), (u8*)gWaterfxWakeVtxDesc + o32, 2);
+                drawFn_8005cf8c((int)((char*)gWaterfxWakeVtx + o64), (u8*)gWaterfxWakeVtxDesc + i * 0x20, 2);
             }
         }
         fn_800542F4();
