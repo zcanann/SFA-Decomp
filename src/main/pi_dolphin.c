@@ -284,9 +284,6 @@ struct PackHeader
     int compressedSize;   /* +0x0c */
 };
 
-#pragma scheduling off
-#pragma peephole off
-#pragma optimize_for_size on
 extern char sResourceFileNameAudioBin[];
 extern char sResourceFileNameSfxTab[];
 extern char sResourceFileNameSfxBin[];
@@ -949,6 +946,171 @@ void* jumptable_802CC254[73] = {
 char sMapAssetPathFormats[0x78] =
     "%s/animcurv.bin\0%s/animcurv.tab\0%s/voxmap.bin\0\0\0warlock/voxmap.bin\0\0%s/voxmap.tab\0\0"
     "\0%s/mod%d.zlb.bin\0\0\0\0%s/mod%d.tab";
+extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
+extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
+extern char* sMapFileNameTable[];
+extern u8 lbl_803DCD28;
+extern f32 lbl_803DCD44;
+extern f32 lbl_803DCD40;
+extern u32 lbl_803DB5EC;
+extern f32 lbl_803DB5F0;
+extern u32 sMapFileNameIndexRemapTable[];
+extern u8 lbl_803DCD31;
+extern f32 lbl_803DCD34;
+extern f32 lbl_803DCD38;
+extern f32 lbl_803DCD3C;
+extern u8 lbl_803DCCB0;
+extern void gxPerfFn_8004a77c(int);
+extern void* lbl_803DCD10;
+extern void VISetBlack(int);
+extern u8 lbl_803DB5CC;
+extern void C_MTXOrtho(f32* mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
+extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
+extern char* lbl_803DCD08;
+extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
+extern void GXEnableBreakPt(void* p);
+extern void* lbl_803DCCD4;
+extern void* renderFrameBuffer;
+extern void* externalFrameBuffer0;
+extern void* externalFrameBuffer1;
+extern u8 lbl_803DCCA7;
+extern u16 lbl_803DB5CE;
+extern char lbl_8035F730[0x10];
+extern u8 GXNtsc480Prog[];
+extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
+extern void fn_80053C40(u8* tex, void* out);
+extern u8 lbl_803DCD30;
+extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
+extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
+extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
+extern u8 lbl_803DCD68;
+extern int lbl_803DCD80;
+extern u8 lbl_803DCD69;
+extern f32 lbl_803DEACC;
+extern f32 lbl_803DEADC;
+extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
+extern int lbl_803DCD78;
+extern u8* lbl_803DCD2C;
+extern int lbl_803DB5F4;
+extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
+extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
+extern void GXSetTevColorS10(int id, void* color);
+extern void GXSetTevKColor(int id, void* color);
+extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
+extern void PSMTXIdentity(f32 m[3][4]);
+extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
+typedef struct
+{
+    f32 x, y, z;
+} PiVec3;
+extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
+extern u8 lbl_803DB5E8;
+extern void GXSetTevOp(int stage, int mode);
+extern f32 lbl_803DEAE4;
+extern u8 lbl_803DCD6B;
+extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
+extern int fn_8006C754(void);
+extern int fn_8006C74C(void);
+extern f32 lbl_803DEAF4;
+extern f32 lbl_803DEAF8;
+extern f32 lbl_803DEAFC;
+extern f32 lbl_803DEB00;
+extern int lbl_803DCD84;
+extern f32 bootThisDol_803DEAE8;
+extern f32 lbl_803DEAEC;
+extern f32 lbl_803DEAF0;
+extern void GXSetTevColor(int id, void* color);
+extern u8 gLoadingScreenTextures[];
+extern char lbl_8035F680[0x38];
+extern void OSStopStopwatch(void* sw);
+extern u64 OSCheckStopwatch(void* sw);
+extern void OSResetStopwatch(void* sw);
+extern void OSStartStopwatch(void* sw);
+extern int OSGetCurrentThread(void);
+extern int Queue_GetCount(void* q);
+extern void OSSleepThread(void* q);
+extern void GXInvalidateVtxCache(void);
+extern int GXReadDrawSync(void);
+extern void VISetNextFrameBuffer(void* fb);
+extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
+extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
+extern void GXInitFifoBase(void* fifo, void* base, u32 size);
+extern void GXSetCPUFifo(void* fifo);
+extern void GXSetGPFifo(void* fifo);
+extern int GXInit(void* base, u32 size);
+extern void OSWakeupThread(void* q);
+extern int Queue_Peek(void* q, void* out);
+extern void Queue_Pop(void* q, void* out);
+extern void GXDisableBreakPt(void);
+extern void GXPeekZ(int x, int y, void* out);
+extern f32 lbl_803DCCC0;
+extern f32 physicsTimeScale;
+extern f32 lbl_803DEAA0;
+extern f32 lbl_803DEA74;
+extern f32 lbl_803DEA7C;
+extern f32 lbl_803DCCB4;
+extern u8 lbl_803DB411;
+extern int lbl_803DCCDC;
+extern int lbl_803DCCAC;
+extern int lbl_803DCCA0;
+extern u16 lbl_803DCCAA;
+extern u8 lbl_803DCCA9;
+extern int lbl_803DB5C8;
+extern u16 gDepthReadPendingQueue[];
+extern u16 gDepthReadResults[];
+extern u16 gDepthReadPendingCount;
+extern u16 gDepthReadResultCount;
+extern u8 lbl_803DCCA8;
+extern int stackCreate(int n, int stride);
+extern void dvdReadCb_80041d30();
+extern u8 lbl_803DCC90;
+extern int lbl_803DCC88;
+extern int lbl_803DCC98;
+extern int lbl_803DCC84;
+extern void* lbl_803DCCD8;
+extern void* lbl_803DCCE4;
+extern void* displayFrameBuffer;
+extern u8 lbl_803DCCA6;
+extern u8 lbl_803DCCA4;
+extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
+extern int OSCreateHeap(void* start, void* end);
+extern void OSSetCurrentHeap(int heap);
+extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
+extern void Queue_Init(void* q, void* buf, int n, int stride);
+extern void OSInitThreadQueue(char* q);
+extern void GXSetBreakPtCallback(void (*cb)());
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
+extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
+extern u32 GXSetDispCopyYScale(f32 vscale);
+extern void GXSetDispCopyDst(int wd, int ht);
+extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
+extern void GXSetDither(int dither);
+extern void GXSetDispCopyGamma(int gamma);
+extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
+extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
+extern char lbl_8035F6B8[0x78];
+extern char* lbl_803DCCE0;
+extern int lbl_803DCCB8;
+extern int lbl_803DCCF4;
+extern u8 lbl_803DCD00;
+extern int lbl_803DCCFC;
+extern u8 lbl_803DCCF8;
+extern f32 lbl_803DEA94;
+extern f32 lbl_803DEA98;
+extern u8 lbl_803DCD20[];
+extern u8 lbl_803DCD18[];
+
+void piRomLoadSection(int romOffset, int mapIndex, int destBuf);
+int GXFlush_(u8 visible, int unused);
+void loadDataFiles(int arg);
+void waitNextFrame(void);
+
+#pragma optimize_for_size on
+#pragma peephole off
+#pragma scheduling off
 
 u32 mapLoadDataFile(int mapId, int fileId)
 {
@@ -2251,15 +2413,16 @@ u32 mapLoadDataFile(int mapId, int fileId)
     return result;
 }
 
+char sAssetHaltFormat[] = "HALT\t%s\n";
+char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
+
 
 
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(void* dst, int size, int out, void* src);
-extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
-extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
 
-#pragma optimize_for_size reset
 #pragma dont_inline on
+#pragma optimize_for_size reset
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
                               u32 flagBits)
 {
@@ -3442,63 +3605,27 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
     }
     return 0;
 }
-#pragma dont_inline reset
 
-#pragma scheduling on
-#pragma peephole on
 extern int lbl_8035F208[];
 extern u32 lbl_8035F3E8[];
-extern char* sMapFileNameTable[];
 extern int lbl_803DCC74;
 extern void romListReadCb();
-#pragma scheduling off
-#pragma peephole off
-void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
-{
-    char buf[1024];
-    int fi;
-    int ok;
-    struct PackHeader* hdr;
+#pragma dont_inline reset
+#pragma ppc_unroll_speculative on
 
-    if (((void*)destBuf == NULL) && ((void*)lbl_8035F208[mapIndex] == NULL))
-    {
-        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
-        fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
-        ok = DVDOpen(buf, (DVDFileInfo*)fi);
-        if (ok != 0)
-        {
-            lbl_8035F208[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
-            lbl_803DCC74 = 1;
-            DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)lbl_8035F208[mapIndex], DVD_FI_LENGTH(fi), 0, romListReadCb, 2);
-        }
-    }
-    else
-    {
-        if ((void*)lbl_8035F208[mapIndex] == NULL)
-        {
-            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
-            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
-            ok = DVDOpen(buf, (DVDFileInfo*)fi);
-            if (ok == 0)
-            {
-                return;
-            }
-            lbl_8035F208[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
-            DVDRead((DVDFileInfo*)fi, (void*)lbl_8035F208[mapIndex], DVD_FI_LENGTH(fi), 0);
-            DVDClose((DVDFileInfo*)fi);
-            AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
-        }
-        hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
-        if (hdr->magic == 0xfacefeed)
-        {
-            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf, &hdr->decompressedSize);
-            DCStoreRange((void*)destBuf, hdr->decompressedSize);
-        }
-    }
+
+int mapGetDirIdx(int idx)
+{
+    if (idx >= 0x4b)
+        return 5;
+    return sMapFileNameIndexRemapTable[idx];
 }
 
-#pragma scheduling on
+#pragma peephole reset
 #pragma peephole on
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling on
 void FUN_80045be8(void)
 {
     if ((DAT_803dd970 == &DAT_8032f2b4) || (DAT_803dd970[0x18] != '\0'))
@@ -3659,248 +3786,104 @@ void FUN_8004812c(int tex, int arg)
     }
     return;
 }
-
-extern u8 lbl_803DCD28;
-u8 isHeavyFogEnabled(void)
-{
-    return lbl_803DCD28;
-}
-
-void disableHeavyFog(void)
-{
-    lbl_803DCD28 = 0x0;
-}
-
-extern f32 lbl_803DCD44;
-extern f32 lbl_803DCD40;
-
-void fn_8004C234(f32* p1, f32* p2)
-{
-    *p1 = lbl_803DCD44;
-    *p2 = lbl_803DCD40;
-}
-
-extern u32 lbl_803DB5EC;
-extern f32 lbl_803DB5F0;
-extern f32 lbl_803DEAC8;
-#pragma scheduling off
-void fn_8004C1E4(u8 b, f32 scale)
-{
-    ((u8*)&lbl_803DB5EC)[3] = b;
-    lbl_803DB5F0 = scale;
-    if (scale > lbl_803DEAC8)
-    {
-        lbl_803DB5F0 = lbl_803DEAC8;
-    }
-}
-
+#pragma peephole reset
 #pragma peephole off
-void* fn_8004B118(int* p)
-{
-    void** arr;
-    int idx = *(s16*)((char*)p + 0x2c);
-    if (idx < *(s16*)((char*)p + 0x2a))
-    {
-        arr = *(void***)((char*)p + 8);
-        (*(s16*)((char*)p + 0x2c))++;
-        return arr[idx];
-    }
-    return NULL;
-}
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling off
 
-int fn_8004B148(int* p)
-{
-    int node;
-    u32 cur;
-    u32 prev;
-    int i;
-    int count;
-    int* entry;
+extern void printHeapStats(int a);
+extern char sAssetHaltFormat[];
+extern int lbl_8035EF48[];
+extern s16 lbl_803DCC78;
 
-    prev = p[7];
-    node = *p + prev * 0x10;
-    *(u8*)(node + 0xd) = 0xff;
-    while ((cur = *(u8*)(node + 0xc)) != 0xff)
-    {
-        node = *p + cur * 0x10;
-        *(u8*)(node + 0xd) = prev;
-        prev = cur;
-    }
-    if (*(u8*)(node + 0xd) == 0xff)
-    {
-        entry = NULL;
-    }
-    else
-    {
-        entry = (int*)(*p + (u32) * (u8*)(node + 0xd) * 0x10);
-    }
-    count = 0;
-    i = 0;
-    while (entry != NULL)
-    {
-        *(int*)(p[2] + i) = *entry;
-        i += 4;
-        count++;
-        if (count >= 100)
-        {
-            entry = NULL;
-        }
-        else if (*(u8*)((int)entry + 0xd) == 0xff)
-        {
-            entry = NULL;
-        }
-        else
-        {
-            entry = (int*)(*p + (u32) * (u8*)((int)entry + 0xd) * 0x10);
-        }
-    }
-    *(s16*)((int)p + 0x2a) = count;
-    *(u16*)(p + 0xb) = 0;
-    return count;
-}
-
-#pragma ppc_unroll_speculative off
-int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
+void loadDataFiles(int arg)
 {
     int i;
-    int* node;
-    u32* heap;
-    int s;
-    u32 pri;
-    int parent;
-    u16 idx;
-    u16* hh;
-    u16 v;
-
-    *(s16*)((char*)queue + 0x22) = 0;
-    *(s16*)((char*)queue + 0x20) = 0;
-    for (i = 0; i < 0xfe; i++)
+    if (getButtonsJustPressed(2) & PAD_BUTTON_A)
     {
-        *(int*)(queue[1] + i * 8) = 0;
-        *(u8*)(*queue + i * 16 + 0xe) = 0;
+        int vi = 0x4F;
+        vi++;
+        for (; vi < 0x57; vi++)
+        {
+        }
+        printHeapStats(1);
     }
-    queue[6] = startNode;
-    queue[3] = targetPos;
-    queue[4] = pathId;
-    *(u8*)((char*)queue + 0x28) = routeFlags & 1;
-    queue[9] = 10000;
-    s = *(s16*)((char*)queue + 0x20);
-    if (s == 0xfe)
+    if (getButtonsJustPressed(2) & PAD_BUTTON_B)
     {
-        node = NULL;
+        defragMemory(0);
     }
-    else
+    if (lbl_803DCC78 != 0)
     {
-        node = (int*)(*queue + (*(s16*)((char*)queue + 0x20))++ * 0x10);
-        *node = startNode;
-        node[2] = 0;
-        *(u8*)(node + 3) = 0xff;
-        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)queue[3]);
+        if (lbl_803DCC78 == 1)
+        {
+            defragMemory(0);
+        }
+        lbl_803DCC78--;
     }
-    i = node[1] + node[2];
-    heap = (u32*)queue[1];
-    hh = (u16*)queue[1];
-    v = *(s16*)((char*)queue + 0x20) - 1;
-    hh[++(*(s16*)((char*)queue + 0x22)) * 4 + 2] = v;
-    *(u32*)((int)heap + *(s16*)((char*)queue + 0x22) * 8) = -1 - i;
-    i = *(s16*)((char*)queue + 0x22);
-    pri = *(u32*)((int)heap + i * 8);
-    idx = hh[i * 4 + 2];
-    *heap = -1;
-    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+    for (i = 0; i <= 0x57; i++)
     {
-        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
-        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
-        i = parent;
+        if (lbl_8035EF48[i] != -1)
+        {
+            debugPrintSetColor(0, 0xff, 0, 0xff);
+            logPrintf(sAssetHaltFormat, sResourceFileNameTable[i]);
+            debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
+            lbl_803DCC70 = 1;
+            if (mapLoadDataFile(lbl_8035EF48[i], i) != 0)
+            {
+                lbl_8035EF48[i] = -1;
+                printHeapStats(1);
+            }
+            lbl_803DCC70 = 0;
+        }
     }
-    *(u32*)((int)heap + i * 8) = pri;
-    hh[i * 4 + 2] = idx;
-    return 0;
+    loadTableFiles();
 }
 #pragma ppc_unroll_speculative on
-
-void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
+void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
 {
-    u32 base = lbl_8035F3E8[0x4f];
-    if (base != 0)
+    char buf[1024];
+    int fi;
+    int ok;
+    struct PackHeader* hdr;
+
+    if (((void*)destBuf == NULL) && ((void*)lbl_8035F208[mapIndex] == NULL))
     {
-        if (queryMode == 1 && frameTable != 0)
+        sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
+        fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
+        ok = DVDOpen(buf, (DVDFileInfo*)fi);
+        if (ok != 0)
         {
-            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
-            int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
+            lbl_8035F208[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
+            lbl_803DCC74 = 1;
+            DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)lbl_8035F208[mapIndex], DVD_FI_LENGTH(fi), 0, romListReadCb, 2);
         }
-        else if (queryMode == 2 && frameTable != 0)
+    }
+    else
+    {
+        if ((void*)lbl_8035F208[mapIndex] == NULL)
         {
-            memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
+            sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[mapIndex]);
+            fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
+            ok = DVDOpen(buf, (DVDFileInfo*)fi);
+            if (ok == 0)
+            {
+                return;
+            }
+            lbl_8035F208[mapIndex] = (int)mmAlloc(DVD_FI_LENGTH(fi), 0x7d7d7d7d, 0);
+            DVDRead((DVDFileInfo*)fi, (void*)lbl_8035F208[mapIndex], DVD_FI_LENGTH(fi), 0);
+            DVDClose((DVDFileInfo*)fi);
+            AtomicSList_PushIntLegacy(lbl_803DCC8C, fi);
         }
-        else
+        hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
+        if (hdr->magic == 0xfacefeed)
         {
-            int e = base + (texId & 0xffffff) * 2;
-            int v = *(int*)(e + 0xc);
-            *outA = *(int*)(e + 8);
-            if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
-            {
-                *outB = 0xffffffff;
-            }
-            else
-            {
-                *outB = v;
-            }
+            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf, &hdr->decompressedSize);
+            DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
 }
-
-void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
-{
-    int idx = -1;
-    if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0)
-    {
-        int s = OSDisableInterrupts();
-        int flags = lbl_803DCC80;
-        u32 f478;
-        u32 f520;
-        OSRestoreInterrupts(s);
-        f478 = lbl_8035F3E8[0x24];
-        f520 = lbl_8035F3E8[0x4e];
-        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0)
-        {
-            idx = 0x4d;
-        }
-        else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0)
-        {
-            idx = 0x23;
-        }
-        else if (f478 != 0 && (flags & 0x100) == 0)
-        {
-            idx = 0x23;
-        }
-        else if (f520 != 0 && (flags & 0x200) == 0)
-        {
-            idx = 0x4d;
-        }
-        if (queryMode == 1 && frameTable != 0)
-        {
-            int base = lbl_8035F3E8[idx];
-            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
-            int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
-        }
-        else if (queryMode == 2 && frameTable != 0)
-        {
-            memcpy(frameTable, (void*)(lbl_8035F3E8[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
-        }
-        else
-        {
-            int e = lbl_8035F3E8[idx] + (texId & 0xffffff) * 2 + 4;
-            int v = *(int*)(e + 8);
-            *outA = *(int*)(e + 4);
-            *outB = v;
-        }
-    }
-}
+#pragma ppc_unroll_speculative on
 
 void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
@@ -4004,49 +3987,501 @@ void tex1GetFrame(u32 texId, int unused, int* outA, int* outB, int count, u8* fr
     }
 }
 
-extern u32 sMapFileNameIndexRemapTable[];
-extern u8 lbl_803DCD31;
-extern f32 lbl_803DCD34;
-extern f32 lbl_803DCD38;
-extern f32 lbl_803DCD3C;
+extern f32 lbl_803DEAC8;
 
-int mapGetDirIdx(int idx)
+void tex0GetFrame(int texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
-    if (idx >= 0x4b)
-        return 5;
-    return sMapFileNameIndexRemapTable[idx];
+    int idx = -1;
+    if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0)
+    {
+        int s = OSDisableInterrupts();
+        int flags = lbl_803DCC80;
+        u32 f478;
+        u32 f520;
+        OSRestoreInterrupts(s);
+        f478 = lbl_8035F3E8[0x24];
+        f520 = lbl_8035F3E8[0x4e];
+        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0)
+        {
+            idx = 0x4d;
+        }
+        else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0)
+        {
+            idx = 0x23;
+        }
+        else if (f478 != 0 && (flags & 0x100) == 0)
+        {
+            idx = 0x23;
+        }
+        else if (f520 != 0 && (flags & 0x200) == 0)
+        {
+            idx = 0x4d;
+        }
+        if (queryMode == 1 && frameTable != 0)
+        {
+            int base = lbl_8035F3E8[idx];
+            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+            int v = *(int*)(e + 8);
+            *outA = *(int*)(e + 4);
+            *outB = v;
+        }
+        else if (queryMode == 2 && frameTable != 0)
+        {
+            memcpy(frameTable, (void*)(lbl_8035F3E8[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
+        }
+        else
+        {
+            int e = lbl_8035F3E8[idx] + (texId & 0xffffff) * 2 + 4;
+            int v = *(int*)(e + 8);
+            *outA = *(int*)(e + 4);
+            *outB = v;
+        }
+    }
 }
 
-void setColor_803db5d0(u8 r, u8 g, u8 b)
+
+void texPreGetMipmap(u32 texId, int unused, int* outA, int* outB, int count, u8* frameTable, int queryMode)
 {
-    lbl_803DB5D0[0] = r;
-    lbl_803DB5D0[1] = g;
-    lbl_803DB5D0[2] = b;
+    u32 base = lbl_8035F3E8[0x4f];
+    if (base != 0)
+    {
+        if (queryMode == 1 && frameTable != 0)
+        {
+            int e = base + (texId & 0xffffff) * 2 + *(int*)(frameTable + count * 4) + 4;
+            int v = *(int*)(e + 8);
+            *outA = *(int*)(e + 4);
+            *outB = v;
+        }
+        else if (queryMode == 2 && frameTable != 0)
+        {
+            memcpy(frameTable, (void*)(base + (texId & 0xffffff) * 2), (count + 1) * 4);
+        }
+        else
+        {
+            int e = base + (texId & 0xffffff) * 2;
+            int v = *(int*)(e + 0xc);
+            *outA = *(int*)(e + 8);
+            if (strncmp(sDirBlockTag, (char*)e, 3) == 0)
+            {
+                *outB = 0xffffffff;
+            }
+            else
+            {
+                *outB = v;
+            }
+        }
+    }
 }
 
-void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
+void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
 {
-    lbl_803DCD28 = 1;
-    lbl_803DCD44 = a;
-    lbl_803DCD40 = b;
-    lbl_803DCD3C = c;
-    lbl_803DCD38 = d;
-    lbl_803DCD34 = e;
-    lbl_803DCD31 = mode;
+    u32 tab0 = 0;
+    u32 tab1 = 0;
+    int idx = -1;
+    int flags;
+    int saved;
+    char* entry;
+    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0)
+    {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        if ((flags & 4) == 0 && (flags & 1) == 0)
+        {
+            tab0 = lbl_8035F3E8[0x2a];
+        }
+        if ((flags & 8) == 0 && (flags & 2) == 0)
+        {
+            tab1 = lbl_8035F3E8[0x45];
+        }
+        if (tab1 != 0 && (offsetFlags & 0x20000000) != 0)
+        {
+            idx = 0x46;
+        }
+        else if (tab0 != 0 && (offsetFlags & 0x10000000) != 0)
+        {
+            idx = 0x2b;
+        }
+        else if (tab0 != 0)
+        {
+            idx = 0x2b;
+        }
+        else if (tab1 != 0)
+        {
+            idx = 0x46;
+        }
+        entry = (char*)lbl_8035F3E8[idx] + (offsetFlags & 0x0fffffff);
+        *p18 = *(int*)(entry + 0x18);
+        *p1c = *(int*)(entry + 0x1c);
+        *p20 = *(int*)(entry + 0x20);
+        *p4 = *(int*)(entry + 0x4);
+    }
 }
 
-void* Shader_getLayer(void* base, int idx)
+#pragma peephole reset
+#pragma peephole on
+
+/* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
+   bin/tab); the byte-offset spelling is codegen-load-bearing */
+void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
 {
-    return (u8*)base + idx * 8 + 0x24;
+    char* base = (char*)lbl_8035F3E8;
+    char* e;
+    if (*(void**)(base + 0x74) == NULL)
+        return;
+    if (*(void**)(base + 0x78) == NULL)
+        return;
+    e = *(char**)(base + 0x74) + idx;
+    *out1 = *(s16*)(e + 0x1c);
+    *out2 = *(s16*)(e + 0x1e);
+    *out3 = *(int*)(*(char**)(base + 0x74) + *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
+}
+#pragma peephole reset
+#pragma peephole off
+
+void checkLoadBlock(int a, int* pc, int* p8)
+{
+    int idx = -1;
+    int flags;
+    int saved;
+    char* blk;
+    u32 t25, t47;
+    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) || (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0))
+    {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t25 = lbl_8035F3E8[0x25];
+        t47 = lbl_8035F3E8[0x47];
+        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0)
+        {
+            idx = 0x25;
+        }
+        else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0)
+        {
+            idx = 0x47;
+        }
+        else if (t25 != 0 && (flags & 0x10000) == 0)
+        {
+            idx = 0x25;
+        }
+        else if (t47 != 0 && (flags & 0x40000) == 0)
+        {
+            idx = 0x47;
+        }
+        blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+        if (strncmp(blk, sZlbBlockTag, 3) != 0)
+        {
+            *p8 = 0;
+            *pc = 0;
+        }
+        else
+        {
+            {
+                int vc = ZLB_HDR(blk)->compressedSize;
+                *p8 = ZLB_HDR(blk)->decompressedSize;
+                *pc = vc;
+            }
+        }
+    }
+    else
+    {
+        *p8 = 0;
+        *pc = 0;
+    }
 }
 
-extern u8 lbl_803DCCB0;
-extern void gxPerfFn_8004a77c(int);
-
-void gxTransformFn_8004a83c(void)
+void loadVoxMaps(int a, int* pc, int* p8)
 {
-    lbl_803DCCB0 = 0;
-    gxPerfFn_8004a77c(0);
+    int idx = -1;
+    int flags;
+    int saved;
+    char* blk;
+    u32 t1b, t54;
+    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) || (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0))
+    {
+        saved = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(saved);
+        t1b = lbl_8035F3E8[0x1b];
+        t54 = lbl_8035F3E8[0x54];
+        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0)
+        {
+            idx = 0x1b;
+        }
+        else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0)
+        {
+            idx = 0x54;
+        }
+        else if (t1b != 0 && (flags & 0x1000000) == 0)
+        {
+            idx = 0x1b;
+        }
+        else if (t54 != 0 && (flags & 0x4000000) == 0)
+        {
+            idx = 0x54;
+        }
+        if ((a & 0xf0000000) != 0)
+        {
+            blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
+            if (strncmp(blk, sZlbBlockTag, 3) != 0)
+            {
+                *p8 = 0;
+                *pc = 0;
+            }
+            else
+            {
+                {
+                    int vc = ZLB_HDR(blk)->compressedSize;
+                    *p8 = ZLB_HDR(blk)->decompressedSize;
+                    *pc = vc;
+                }
+            }
+        }
+        else
+        {
+            *p8 = 0;
+            *pc = 0;
+        }
+    }
+    else
+    {
+        *p8 = 0;
+        *pc = 0;
+    }
+}
+
+extern u32 lbl_8035F0A8[];
+
+u32 getDataFileSize(int idx)
+{
+    if (lbl_8035F3E8[idx] != 0)
+    {
+        return lbl_8035F0A8[idx];
+    }
+    *(u8*)0 = 0;
+    return 0;
+}
+int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
+{
+    DVDFileInfo fileInfo;
+    int asize;
+    void* tmp;
+    if (size == 0)
+        return 0;
+    if (lbl_8035F3E8[id] != 0)
+    {
+        {
+            int base = lbl_8035F3E8[id];
+            memcpy(buffer, (void*)(base + offset), size);
+        }
+        DCStoreRange(buffer, size);
+        return size;
+    }
+    DVDOpen(sResourceFileNameTable[id], &fileInfo);
+    if (((int)buffer & 0x1fu) != 0 || (size & 0x1f) != 0)
+    {
+        asize = (size + 0x1f) & ~0x1f;
+        tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
+        DCInvalidateRange(tmp, asize);
+        DVDRead(&fileInfo, tmp, asize, offset);
+        memcpy(buffer, tmp, size);
+        mm_free(tmp);
+    }
+    else
+    {
+        DCInvalidateRange(buffer, size);
+        DVDRead(&fileInfo, buffer, size, offset);
+    }
+    DVDClose(&fileInfo);
+    DCStoreRange(buffer, size);
+    return size;
+}
+#pragma peephole reset
+#pragma peephole on
+
+int fileLoadToBuffer(int id, void* buffer)
+{
+    DVDFileInfo fileInfo;
+    if (lbl_8035F3E8[id] != 0)
+    {
+        memcpy(buffer, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+        DCStoreRange(buffer, lbl_8035F0A8[id]);
+        return lbl_8035F0A8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], &fileInfo);
+    DCInvalidateRange(buffer, fileInfo.length);
+    DVDRead(&fileInfo, buffer, fileInfo.length, 0);
+    DVDClose(&fileInfo);
+    return fileInfo.length;
+}
+
+void* fileLoad(int id)
+{
+    DVDFileInfo fileInfo;
+    if (lbl_8035F3E8[id] != 0)
+    {
+        return (void*)lbl_8035F3E8[id];
+    }
+    DVDOpen(sResourceFileNameTable[id], &fileInfo);
+    lbl_8035F0A8[id] = fileInfo.length;
+    lbl_8035F3E8[id] = (u32)mmAlloc(lbl_8035F0A8[id] + 0x20, 0x7d7d7d7d, 0);
+    DCInvalidateRange((void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
+    DVDRead(&fileInfo, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
+    DVDClose(&fileInfo);
+    return (void*)lbl_8035F3E8[id];
+}
+#pragma peephole reset
+#pragma peephole off
+
+int initLoadFiles(void)
+{
+    int* ids;
+    int i;
+    int* rom;
+    s16* owners;
+    u8* himem;
+    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
+    char** names[1];
+    int* sizes;
+    u8* flags;
+    u32* ptrs;
+    if (lbl_803DCC90 == 0)
+    {
+        lbl_803DCC90 = 1;
+        lbl_803DCC88 = 0;
+        lbl_803DCC8C = stackCreate(0x5e, 0x40);
+        i = 0;
+        rom = tbl->romList;
+        for (; i < 0x75; i++)
+        {
+            *rom = 0;
+            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
+            {
+                piRomLoadSection(0, i, 0);
+            }
+            rom++;
+        }
+        lbl_803DCC98 = 0;
+        i = 0;
+        himem = (u8*)tbl + 0x20000;
+        ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
+        owners = (s16*)(himem - 26824); /* tbl->owners */
+        ids = (int*)(himem - 28360);    /* tbl->ids */
+        names[0] = sResourceFileNameTable;
+        sizes = (int*)(himem - 28008); /* tbl->sizes */
+        flags = himem - 28448;         /* tbl->loadedFlags */
+        for (; i <= 0x57; i++)
+        {
+            switch (i)
+            {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 13:
+            case 14:
+            case 17:
+            case 18:
+            case 24:
+            case 26:
+            case 27:
+            case 32:
+            case 33:
+            case 35:
+            case 36:
+            case 37:
+            case 38:
+            case 42:
+            case 43:
+            case 47:
+            case 48:
+            case 54:
+            case 66:
+            case 67:
+            case 68:
+            case 69:
+            case 70:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 83:
+            case 84:
+            case 85:
+            case 86:
+                *ptrs = 0;
+                *owners = -1;
+                *ids = -1;
+                break;
+            default:
+                if (*ptrs == 0)
+                {
+                    int fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
+                    DVDOpen(*names[0], (DVDFileInfo*)fi);
+                    *sizes = DVD_FI_LENGTH(fi);
+                    *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
+                    lbl_803DCC88 = lbl_803DCC88 + 1;
+                    DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
+                }
+                *owners = -1;
+                *ids = -1;
+                break;
+            }
+            *flags = 0;
+            ptrs++;
+            owners++;
+            ids++;
+            names[0]++;
+            sizes++;
+            flags++;
+        }
+    }
+    if (lbl_803DCC88 == 0)
+    {
+        if (((*(int*)&lbl_803DCC80 & 0x100) == 0 || (*(int*)&lbl_803DCC80 & 0x400) == 0) &&
+            ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
+        {
+            int saved = testAndSet_onlyUseHeap3(0);
+            mapLoadDataFile(5, MLDF_FILEID_TEX0_BIN_A);
+            mapLoadDataFile(5, MLDF_FILEID_TEX0_TAB_A);
+            testAndSet_onlyUseHeap3(saved);
+        }
+        else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
+        {
+            mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
+            mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
+            mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
+            mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
+            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
+            lbl_803DCC84 = 0;
+            lbl_803DCC80 = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma peephole on
+void tvInit(void)
+{
+    gRenderModeObj->viWidth = 0x294;
+    gRenderModeObj->viXOrigin = gRenderModeObj->viXOrigin - 0xa;
+    VIConfigure(gRenderModeObj);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
 }
 
 typedef union
@@ -4061,6 +4496,498 @@ typedef union
 
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
+#pragma peephole reset
+#pragma peephole off
+
+extern u8 enableDebugText;
+
+void gpuErrorHandler(u32 retraceCount)
+{
+    char* strs = (char*)gLoadingScreenTextures;
+    int tok[3];
+    u32 botClks;
+    int botPerf0;
+    u32 botClks2;
+    int botPerf1;
+    u32 topClks;
+    int topPerf0;
+    u32 topClks2;
+    int topPerf1;
+    u8 cmdRdy;
+    u8 readIdle;
+    u8 fifoErr;
+    u32 xfStuck;
+    u32 cmdStuck;
+    u32 rdIdle;
+    u32 cmdIdle;
+
+    if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0)
+    {
+        Queue_Pop(lbl_8035F730, tok);
+        lbl_803DCCAC = 0;
+        OSWakeupThread(&lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        }
+        else
+        {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void*)tok[0]);
+            lbl_803DCCA7 = 1;
+        }
+        lbl_803DCCA8 = 0;
+        lbl_803DCCA9 = 0;
+    }
+    lbl_803DCCA5 = 1;
+    lbl_803DCCA6 = 1;
+    switch (lbl_803DCCA4)
+    {
+    case 0:
+        if (OSGetResetButtonState() != 0)
+        {
+            lbl_803DCCA4++;
+        }
+        break;
+    case 1:
+        if (OSGetResetButtonState() == 0)
+        {
+            lbl_803DCCA4++;
+            setShouldResetNextFrame(1);
+        }
+        break;
+    }
+    if (enableDebugText != 0 && (void*)lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
+    {
+        debugPrintfxy(0x32, 100, strs + 0x40000);
+        GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
+        GXReadXfRasMetric(&topPerf0, (int*)&topClks, &topPerf1, (int*)&topClks2);
+        xfStuck = (topClks - botClks) == 0;
+        cmdStuck = (topPerf0 - botPerf0) == 0;
+        rdIdle = (topClks2 - botClks2) != 0;
+        cmdIdle = (topPerf1 - botPerf1) != 0;
+        GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
+        debugPrintfxy(0x32, 0x78, strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
+        if (cmdStuck == 0 && rdIdle != 0)
+        {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40048);
+        }
+        else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
+        {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40068);
+        }
+        else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
+        {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40090);
+        }
+        else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
+        {
+            debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
+        }
+        else
+        {
+            debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
+        }
+        debugPrintfxy(0x32, 0xa0, sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
+    }
+}
+#pragma peephole reset
+#pragma peephole on
+void logGpuHang(void);
+
+void videoSwapFrameBuffers(u32 retraceCount)
+{
+    int sync;
+    int tok[3];
+    char fifo[140];
+
+    lbl_803DCCA0 = lbl_803DCCA0 + 1;
+    sync = GXReadDrawSync();
+    if ((u16)sync == (u16)(lbl_803DCCAA + 1))
+    {
+        lbl_803DCCAA = sync;
+        if (displayFrameBuffer == externalFrameBuffer0)
+        {
+            displayFrameBuffer = externalFrameBuffer1;
+        }
+        else
+        {
+            displayFrameBuffer = externalFrameBuffer0;
+        }
+        VISetNextFrameBuffer(displayFrameBuffer);
+        VIFlush();
+        lbl_803DCCA9 = 1;
+        lbl_803DB5C8 = lbl_803DCCA0;
+        lbl_803DCCA0 = 0;
+    }
+    lbl_803DCCAC = lbl_803DCCAC + 1;
+    if (lbl_803DCCB0 != 0 && (u32) * (volatile int*)&lbl_803DCCAC > 18000)
+    {
+        logGpuHang();
+        gxErrorFn_80060b40();
+        modelFn_800292e0();
+        __GXAbortWaitPECopyDone();
+        GXInitFifoBase(fifo, renderFrameBuffer, 0x10000);
+        GXSetCPUFifo(fifo);
+        GXSetGPFifo(fifo);
+        lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+        if (Queue_IsEmpty(lbl_8035F730) == 0)
+        {
+            Queue_Pop(lbl_8035F730, tok);
+        }
+        OSWakeupThread(&lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        }
+        else
+        {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void*)tok[0]);
+        }
+        gxPerfFn_8004a77c(1);
+    }
+}
+
+void videoFn_800499e8(void)
+{
+    char peek[12];
+    int tok[3];
+    u16* src;
+    u16* dst;
+    int i;
+
+    if (gAttractMovieState == 2 || gAttractMovieState == 3)
+    {
+        THPPlayerPostDrawDone();
+    }
+    Queue_Peek(lbl_8035F730, &peek);
+    i = 0;
+    src = gDepthReadPendingQueue;
+    dst = gDepthReadResults;
+    for (; i < (int)(u32)gDepthReadPendingCount; i++)
+    {
+        dst[i * 6] = src[i * 6];
+        dst[i * 6 + 1] = src[i * 6 + 1];
+        *(int*)(dst + i * 6 + 4) = *(int*)(src + i * 6 + 4);
+        GXPeekZ(dst[i * 6], dst[i * 6 + 1], dst + i * 6 + 2);
+    }
+    gDepthReadResultCount = gDepthReadPendingCount;
+    gDepthReadPendingCount = 0;
+    if (*(void**)(peek + 8) == displayFrameBuffer)
+    {
+        lbl_803DCCA8 = 1;
+        lbl_803DCCA9 = 0;
+    }
+    else
+    {
+        Queue_Pop(lbl_8035F730, tok);
+        lbl_803DCCAC = 0;
+        OSWakeupThread(&lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) != 0)
+        {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        }
+        else
+        {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void*)tok[0]);
+            lbl_803DCCA7 = 1;
+        }
+    }
+}
+#pragma peephole reset
+#pragma peephole off
+
+extern f32 lbl_803DEA70;
+extern f32 lbl_803DEA78;
+extern f32 lbl_803DEA88;
+extern f32 lbl_803DEA8C;
+extern f32 lbl_803DEA90;
+extern f32 hudMatrix[];
+
+void initViewport(void)
+{
+    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+}
+#pragma opt_common_subs off
+#pragma opt_propagation off
+void videoInit(void)
+{
+    u8 fifo[0x80];
+    f32 mtx[3][4];
+    int cc;
+    u32 lo;
+    u32 hi;
+    u32 next;
+    int fbSize;
+    lo = (u32)OSGetArenaLo();
+    hi = (u32)OSGetArenaHi();
+    memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
+    DCStoreRange((void*)(hi - 0x40000), 0x40000);
+    fbSize = 0x40000;
+    lbl_803DCCE4 = (void*)fbSize;
+    lbl_803DCCD8 = gLoadingScreenTextures;
+    DCInvalidateRange((char*)gLoadingScreenTextures, fbSize);
+    lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+    lbl_803DCCE0 = lbl_803DCCD8;
+    GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32)gRenderModeObj->xfbHeight / gRenderModeObj->efbHeight);
+    fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2;
+    externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
+    fbSize += 0x1f;
+    externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
+    next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
+    OSSetArenaLo((void*)next);
+    OSSetArenaLo((void*)(lo = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
+    lo = (lo + 0x1f) & ~0x1f;
+    hi = hi & ~0x1f;
+    OSSetCurrentHeap(OSCreateHeap((void*)lo, (void*)hi));
+    VIConfigure(gRenderModeObj);
+    GXInitFifoBase(fifo, externalFrameBuffer0, 0x10000);
+    GXSetCPUFifo(fifo);
+    GXSetGPFifo(fifo);
+    GXInitFifoLimits(lbl_803DCCD4, (u32)lbl_803DCCE4 - 0x4000, (u32)((u32)lbl_803DCCE4 * 3) >> 2);
+    GXSetCPUFifo(lbl_803DCCD4);
+    GXSetGPFifo(lbl_803DCCD4);
+    Queue_Init(lbl_8035F730, lbl_8035F6B8, 10, 0xc);
+    OSInitThreadQueue(&lbl_803DCCC4);
+    VISetPreRetraceCallback(videoSwapFrameBuffers);
+    VISetPostRetraceCallback(gpuErrorHandler);
+    GXSetBreakPtCallback(videoFn_800499e8);
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, lbl_803DEA70,
+                  lbl_803DEA78);
+    GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
+    GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
+    GXSetDispCopyDst(gRenderModeObj->fbWidth, (u16)lbl_803DCCB8);
+    if (gRenderModeObj->aa != 0)
+    {
+        GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
+        GXSetDither(GX_TRUE);
+    }
+    else
+    {
+        GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+        GXSetDither(GX_FALSE);
+    }
+    displayFrameBuffer = externalFrameBuffer0;
+    renderFrameBuffer = externalFrameBuffer1;
+    VISetNextFrameBuffer(displayFrameBuffer);
+    GXSetDispCopyGamma(GX_GM_1_0);
+    VISetBlack(1);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    GXClearVtxDesc();
+    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S16, 7);
+    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_POS, GX_POS_XYZ, GX_S16, 2);
+    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_NRM, GX_NRM_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_TEX1, GX_TEX_ST, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_POS, GX_POS_XYZ, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_NBT, GX_NRM_NBT, GX_S8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_TEX0, GX_TEX_ST, GX_S16, 7);
+    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_NRM, GX_NRM_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_POS, GX_POS_XYZ, GX_S16, 3);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX0, GX_TEX_ST, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX1, GX_TEX_ST, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX2, GX_TEX_ST, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX3, GX_TEX_ST, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_POS, GX_POS_XYZ, GX_S16, 8);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
+    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
+    lbl_803DCCF4 = 0;
+    GXSetCullMode(GX_CULL_NONE);
+    cc = *(int*)&lbl_803DB5D0;
+    GXSetCopyClear(&cc, 0xffffff);
+    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+    GXSetNumChans(1);
+    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+    lbl_803DCD00 = 1;
+    lbl_803DCCFC = 3;
+    lbl_803DCCF8 = 1;
+    gxSetZMode_(1, GX_LEQUAL, 1);
+    gxSetPeControl_ZCompLoc_(1);
+    GXEnableTexOffsets(0, 1, 1);
+    PSMTXIdentity(mtx);
+    GXLoadPosMtxImm(mtx, GX_PNMTX0);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX3x4);
+    GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX3x4);
+    GXSetCurrentMtx(GX_PNMTX0);
+    C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+    GXSetMisc(GX_MT_XF_FLUSH, 8);
+    PPCMtmsr(PPCMfmsr() | MSR_PM);
+    PPCMthid0(PPCMfhid0() | HID0_SPD);
+}
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
+
+void setColor_803db5d0(u8 r, u8 g, u8 b)
+{
+    lbl_803DB5D0[0] = r;
+    lbl_803DB5D0[1] = g;
+    lbl_803DB5D0[2] = b;
+}
+
+extern int lbl_803DCD88;
+extern int lbl_803DCD8C;
+extern int lbl_803DCD90;
+extern u8 lbl_803DCD6A;
+extern void GXSetTevDirect(GXTevStageID tev_stage);
+extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
+extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
+extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                            GXTevRegID out_reg);
+extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
+                            GXTevRegID out_reg);
+#pragma peephole reset
+#pragma peephole on
+void setDisplayCopyFilter(void)
+{
+    u8* p = (u8*)gRenderModeObj;
+    if (p == GXNtsc480Prog || p[0x18] != 0)
+    {
+        GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
+    }
+    else
+    {
+        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+    }
+}
+
+#pragma peephole reset
+#pragma peephole off
+
+extern void GXSetAlphaUpdate(GXBool update_enable);
+extern void GXFlush(void);
+extern void Queue_Push(void* q, void* item);
+extern void GXSetDrawSync(u16 v);
+extern void GXCopyDisp(void* fb, u8 clear);
+
+int GXFlush_(u8 visible, int unused)
+{
+    void* fifo_get;
+    void* fifo_put;
+    void* item[3];
+    int s;
+    void* next;
+    gxSetZMode_(1, GX_LEQUAL, 1);
+    GXSetAlphaUpdate(GX_TRUE);
+    GXFlush();
+    GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
+    item[0] = fifo_put;
+    item[1] = 0;
+    item[2] = renderFrameBuffer;
+    s = OSDisableInterrupts();
+    Queue_Push(&lbl_8035F730[0], item);
+    if (lbl_803DCCA7 == 0)
+    {
+        GXEnableBreakPt(fifo_put);
+        lbl_803DCCA7 = 1;
+    }
+    OSRestoreInterrupts(s);
+    GXSetDrawSync(lbl_803DB5CE);
+    GXCopyDisp(renderFrameBuffer, 1);
+    GXFlush();
+    lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
+    next = renderFrameBuffer == externalFrameBuffer0 ? externalFrameBuffer1 : externalFrameBuffer0;
+    renderFrameBuffer = next;
+    if (visible != 0 && lbl_803DB5CC != 0)
+    {
+        lbl_803DB5CC--;
+        if (lbl_803DB5CC == 0)
+        {
+            VISetBlack(0);
+            lbl_803DB5CC = 0;
+        }
+    }
+    return 0;
+}
+
+
+
+void viFn_8004a56c(int val)
+{
+    int v = val;
+    VISetBlack(1);
+    VIFlush();
+    lbl_803DB5CC = v;
+}
+void logGpuHang(void)
+{
+    char* strs = (char*)gLoadingScreenTextures;
+    int topClks, topPerf0, topClks2, topPerf1;
+    int botClks, botPerf0, botClks2, botPerf1;
+    u32 xfStuck;
+    u32 cmdStuck;
+    u32 rdIdle;
+    u32 cmdIdle;
+    u8 cmdRdy;
+    u8 readIdle;
+    u8 fifoErr;
+
+    GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
+    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
+    xfStuck = (botClks - topClks) == 0;
+    cmdStuck = (botPerf0 - topPerf0) == 0;
+    rdIdle = (botClks2 - topClks2) != 0;
+    cmdIdle = (botPerf1 - topPerf1) != 0;
+    GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
+    OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
+    if (cmdStuck == 0 && rdIdle != 0)
+    {
+        OSReport(strs + 0x400fc);
+    }
+    else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
+    {
+        OSReport(strs + 0x4011c);
+    }
+    else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
+    {
+        OSReport(strs + 0x40144);
+    }
+    else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
+    {
+        OSReport(strs + 0x4016c);
+    }
+    else
+    {
+        OSReport(strs + 0x4019c);
+    }
+}
 #pragma dont_inline on
 void gxPerfFn_8004a77c(int enabled)
 {
@@ -4090,84 +5017,65 @@ void gxPerfFn_8004a77c(int enabled)
 }
 #pragma dont_inline reset
 
-extern void* lbl_803DCD10;
 
-void allocSomething32bytes(void)
+void gxTransformFn_8004a83c(void)
 {
-    lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
+    lbl_803DCCB0 = 0;
+    gxPerfFn_8004a77c(0);
 }
 
-extern u32 lbl_8035F0A8[];
+extern char sThreadStateAttrSuspendFormat[];
 
-u32 getDataFileSize(int idx)
+void waitNextFrame(void)
 {
-    if (lbl_8035F3E8[idx] != 0)
+    int lvl;
+    u32 frames;
+
+    OSStopStopwatch(lbl_8035F680);
+    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
+    OSResetStopwatch(lbl_8035F680);
+    OSStartStopwatch(lbl_8035F680);
+    timeDelta = physicsTimeScale * lbl_803DEAA0 * lbl_803DCCC0;
+    if (gDvdErrorPauseActive != 0)
     {
-        return lbl_8035F0A8[idx];
+        timeDelta = lbl_803DEA70;
     }
-    *(u8*)0 = 0;
-    return 0;
-}
-
-extern void VISetBlack(int);
-
-extern u8 lbl_803DB5CC;
-
-void viFn_8004a56c(int val)
-{
-    int v = val;
-    VISetBlack(1);
-    VIFlush();
-    lbl_803DB5CC = v;
-}
-
-void freeAndNull(void** p)
-{
-    if (*p != NULL)
+    if (timeDelta > lbl_803DEA74)
     {
-        mm_free(*p);
-        *p = NULL;
+        timeDelta = *(f32*)&lbl_803DEA74;
     }
-}
-
-extern f32 lbl_803DEA70;
-extern f32 lbl_803DEA78;
-extern f32 lbl_803DEA88;
-extern f32 lbl_803DEA8C;
-extern f32 lbl_803DEA90;
-extern f32 hudMatrix[];
-extern void C_MTXOrtho(f32* mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
-
-void initViewport(void)
-{
-    C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32*)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
-}
-
-extern int lbl_803DCD88;
-extern int lbl_803DCD8C;
-extern int lbl_803DCD90;
-extern u8 lbl_803DCD6A;
-extern void GXSetTevDirect(GXTevStageID tev_stage);
-extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
-extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
-extern void GXSetTevColorIn(GXTevStageID stage, GXTevColorArg a, GXTevColorArg b, GXTevColorArg c, GXTevColorArg d);
-extern void GXSetTevAlphaIn(GXTevStageID stage, GXTevAlphaArg a, GXTevAlphaArg b, GXTevAlphaArg c, GXTevAlphaArg d);
-extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
-                            GXTevRegID out_reg);
-
-void fn_80050F2C(void)
-{
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_C2, GX_CC_TEXC, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
+    if (timeDelta > lbl_803DEA7C)
+    {
+        oneOverTimeDelta = lbl_803DEA78 / timeDelta;
+    }
+    else
+    {
+        oneOverTimeDelta = lbl_803DEA78;
+    }
+    frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
+    lbl_803DB411 = frames;
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
+    framesThisStep = frames;
+    if (lbl_803DB411 < 1)
+    {
+        framesThisStep = 1;
+    }
+    lvl = OSDisableInterrupts();
+    lbl_803DCCDC = OSGetCurrentThread();
+    if (*(u16*)(lbl_803DCCDC + 0x2c8) != 2)
+    {
+        OSReport(sThreadStateAttrSuspendFormat, *(u16*)(lbl_803DCCDC + 0x2c8), *(u16*)(lbl_803DCCDC + 0x2ca),
+                 *(int*)(lbl_803DCCDC + 0x2cc));
+    }
+    if ((u32)Queue_GetCount(lbl_8035F730) > 1)
+    {
+        lbl_803DCCAC = 0;
+        OSSleepThread(&lbl_803DCCC4);
+    }
+    OSRestoreInterrupts(lvl);
+    Camera_ApplyFullViewport();
+    GXInvalidateVtxCache();
+    GXInvalidateTexAll();
 }
 
 #pragma dont_inline on
@@ -4211,6 +5119,8 @@ int fn_8004AA24(int* ctx, int* ref)
     }
 }
 
+extern u8 lbl_803779A0[];
+
 void fn_8004AAD4(u8* arr, int size, int idx)
 {
     u16* h = (u16*)arr;
@@ -4243,118 +5153,6 @@ void fn_8004AAD4(u8* arr, int size, int idx)
     h[idx * 4 + 2] = val;
 }
 #pragma dont_inline reset
-
-int fn_8004B218(void* q_, u32 n_)
-{
-    int n;
-    int* q = q_;
-    int idx;
-    int done;
-    int result;
-    int* elem;
-    int* heap;
-    n = n_;
-    done = 0;
-    result = 0;
-    while (done == 0 && n != 0)
-    {
-        heap = *(int**)((char*)q + 0x4);
-        if (*(s16*)((char*)q + 0x22) == 0)
-        {
-            idx = -1;
-        }
-        else
-        {
-            idx = *(u16*)((char*)heap + 0xc);
-            *(int*)((char*)heap + 0x8) = *(int*)((int)heap + *(s16*)((char*)q + 0x22) * 8);
-            *(u16*)((char*)heap + 0xc) = *(u16*)((char*)heap + (*(s16*)((char*)q + 0x22))-- * 8 + 4);
-            fn_8004AAD4((u8*)heap, *(s16*)((char*)q + 0x22), 1);
-        }
-        if (idx >= 0)
-        {
-            elem = (int*)(*(int*)((char*)q + 0) + idx * 16);
-            *(int*)((char*)q + 0x1c) = idx;
-            if (fn_8004AA24(q, elem) != 0)
-            {
-                done = 1;
-                result = 1;
-            }
-            else
-            {
-                *((u8*)elem + 0xe) = 1;
-                fn_8004AFA0(q, elem, idx);
-            }
-        }
-        else
-        {
-            done = 1;
-            result = -1;
-        }
-        n--;
-    }
-    return result;
-}
-extern char* lbl_803DCD08;
-
-void fn_8004AFA0(int* q, int* elem, int idx)
-{
-    u8 mask;
-    char* p;
-    char* node;
-    char* obj;
-    int bit;
-    int t;
-    node = (char*)elem[0];
-    if (*(u8*)((char*)q + 0x28) != 0)
-    {
-        t = *(s8*)(node + 0x1b);
-    }
-    else
-    {
-        t = ~*(s8*)(node + 0x1b);
-    }
-    bit = 0;
-    p = node;
-    mask = t;
-    for (; bit < 4; bit++)
-    {
-        int nodeId = *(int*)(p + 0x1c);
-        if (nodeId > -1 && (mask & (1 << bit)) != 0)
-        {
-            obj = (char*)(*gRomCurveInterface)->getById(nodeId);
-            if (obj != 0)
-            {
-                switch (*(s8*)(obj + 0x19))
-                {
-                case 0x24:
-                {
-                    s16 ev1;
-                    s16 ev2;
-                    mainGetBit(0x4e2);
-                    ev1 = *(s16*)(obj + 0x30);
-                    if (ev1 == -1 || mainGetBit(ev1) != 0)
-                    {
-                        ev2 = *(s16*)(obj + 0x32);
-                        if (ev2 == -1 || mainGetBit(ev2) == 0)
-                        {
-                            if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
-                            {
-                                f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
-                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
-                            }
-                        }
-                    }
-                    break;
-                }
-                default:
-                    lbl_803DCD08 = obj;
-                    break;
-                }
-            }
-        }
-        p += 4;
-    }
-}
 
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
 {
@@ -4541,512 +5339,273 @@ found:
     }
 }
 
-extern void GXSetAlphaUpdate(GXBool update_enable);
-extern void GXFlush(void);
-extern void GXGetFifoPtrs(void* fifo, void** out_g, void** out_p);
-extern void Queue_Push(void* q, void* item);
-extern void GXEnableBreakPt(void* p);
-extern void GXSetDrawSync(u16 v);
-extern void GXCopyDisp(void* fb, u8 clear);
-extern void* lbl_803DCCD4;
-extern void* renderFrameBuffer;
-extern void* externalFrameBuffer0;
-extern void* externalFrameBuffer1;
-extern u8 lbl_803DCCA7;
-extern u16 lbl_803DB5CE;
-extern char lbl_8035F730[0x10];
-
-int GXFlush_(u8 visible, int unused)
+void fn_8004AFA0(int* q, int* elem, int idx)
 {
-    void* fifo_get;
-    void* fifo_put;
-    void* item[3];
-    int s;
-    void* next;
-    gxSetZMode_(1, GX_LEQUAL, 1);
-    GXSetAlphaUpdate(GX_TRUE);
-    GXFlush();
-    GXGetFifoPtrs(lbl_803DCCD4, &fifo_get, &fifo_put);
-    item[0] = fifo_put;
-    item[1] = 0;
-    item[2] = renderFrameBuffer;
-    s = OSDisableInterrupts();
-    Queue_Push(&lbl_8035F730[0], item);
-    if (lbl_803DCCA7 == 0)
+    u8 mask;
+    char* p;
+    char* node;
+    char* obj;
+    int bit;
+    int t;
+    node = (char*)elem[0];
+    if (*(u8*)((char*)q + 0x28) != 0)
     {
-        GXEnableBreakPt(fifo_put);
-        lbl_803DCCA7 = 1;
-    }
-    OSRestoreInterrupts(s);
-    GXSetDrawSync(lbl_803DB5CE);
-    GXCopyDisp(renderFrameBuffer, 1);
-    GXFlush();
-    lbl_803DB5CE = (u16)(lbl_803DB5CE + 1);
-    next = renderFrameBuffer == externalFrameBuffer0 ? externalFrameBuffer1 : externalFrameBuffer0;
-    renderFrameBuffer = next;
-    if (visible != 0 && lbl_803DB5CC != 0)
-    {
-        lbl_803DB5CC--;
-        if (lbl_803DB5CC == 0)
-        {
-            VISetBlack(0);
-            lbl_803DB5CC = 0;
-        }
-    }
-    return 0;
-}
-#pragma optimize_for_size reset
-
-extern u8 GXNtsc480Prog[];
-extern void GXSetCopyFilter(u8 aa, u8* pat, u8 vf_en, u8* vfilter);
-#pragma peephole on
-void setDisplayCopyFilter(void)
-{
-    u8* p = (u8*)gRenderModeObj;
-    if (p == GXNtsc480Prog || p[0x18] != 0)
-    {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 0, p + 0x32);
+        t = *(s8*)(node + 0x1b);
     }
     else
     {
-        GXSetCopyFilter(p[0x19], p + 0x1a, 1, lbl_803DB5D4);
+        t = ~*(s8*)(node + 0x1b);
     }
-}
-
-extern void fn_80053C40(u8* tex, void* out);
-extern u8 lbl_803779A0[];
-#pragma peephole off
-void textureFn_8004c264(Texture* texture, int mapId)
-{
-    void* base;
-    if (texture == NULL)
-        return;
-    base = &((u8*)texture)[32];
-    if (((u8*)texture)[72] != 0)
+    bit = 0;
+    p = node;
+    mask = t;
+    for (; bit < 4; bit++)
     {
-        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 64), mapId);
-    }
-    else
-    {
-        GXLoadTexObj(base, mapId);
-    }
-    if (*(void**)((u8*)texture + 80) != NULL)
-    {
-        fn_80053C40((u8*)texture, lbl_803779A0);
-        GXLoadTexObj((GXTexObj*)lbl_803779A0, GX_TEXMAP1);
-    }
-}
-
-void selectTexture(Texture* texture, int mapId)
-{
-    void* base;
-    if (texture == NULL)
-        return;
-    base = &((u8*)texture)[0x20];
-    if (((u8*)texture)[0x48] != 0)
-    {
-        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 0x40), mapId);
-    }
-    else
-    {
-        GXLoadTexObj(base, mapId);
-    }
-}
-
-void loadModelsBin(int offsetFlags, int* p1c, int* p20, int* p18, int* p4)
-{
-    u32 tab0 = 0;
-    u32 tab1 = 0;
-    int idx = -1;
-    int flags;
-    int saved;
-    char* entry;
-    if (lbl_8035F3E8[0x2b] != 0 || lbl_8035F3E8[0x46] != 0)
-    {
-        saved = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(saved);
-        if ((flags & 4) == 0 && (flags & 1) == 0)
+        int nodeId = *(int*)(p + 0x1c);
+        if (nodeId > -1 && (mask & (1 << bit)) != 0)
         {
-            tab0 = lbl_8035F3E8[0x2a];
-        }
-        if ((flags & 8) == 0 && (flags & 2) == 0)
-        {
-            tab1 = lbl_8035F3E8[0x45];
-        }
-        if (tab1 != 0 && (offsetFlags & 0x20000000) != 0)
-        {
-            idx = 0x46;
-        }
-        else if (tab0 != 0 && (offsetFlags & 0x10000000) != 0)
-        {
-            idx = 0x2b;
-        }
-        else if (tab0 != 0)
-        {
-            idx = 0x2b;
-        }
-        else if (tab1 != 0)
-        {
-            idx = 0x46;
-        }
-        entry = (char*)lbl_8035F3E8[idx] + (offsetFlags & 0x0fffffff);
-        *p18 = *(int*)(entry + 0x18);
-        *p1c = *(int*)(entry + 0x1c);
-        *p20 = *(int*)(entry + 0x20);
-        *p4 = *(int*)(entry + 0x4);
-    }
-}
-
-void checkLoadBlock(int a, int* pc, int* p8)
-{
-    int idx = -1;
-    int flags;
-    int saved;
-    char* blk;
-    u32 t25, t47;
-    if ((lbl_8035F3E8[0x26] != 0 && lbl_8035F3E8[0x25] != 0) || (lbl_8035F3E8[0x48] != 0 && lbl_8035F3E8[0x47] != 0))
-    {
-        saved = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(saved);
-        t25 = lbl_8035F3E8[0x25];
-        t47 = lbl_8035F3E8[0x47];
-        if (t25 != 0 && (a & 0x10000000) != 0 && (flags & 0x10000) == 0)
-        {
-            idx = 0x25;
-        }
-        else if (t47 != 0 && (a & 0x20000000) != 0 && (flags & 0x40000) == 0)
-        {
-            idx = 0x47;
-        }
-        else if (t25 != 0 && (flags & 0x10000) == 0)
-        {
-            idx = 0x25;
-        }
-        else if (t47 != 0 && (flags & 0x40000) == 0)
-        {
-            idx = 0x47;
-        }
-        blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-        if (strncmp(blk, sZlbBlockTag, 3) != 0)
-        {
-            *p8 = 0;
-            *pc = 0;
-        }
-        else
-        {
+            obj = (char*)(*gRomCurveInterface)->getById(nodeId);
+            if (obj != 0)
             {
-                int vc = ZLB_HDR(blk)->compressedSize;
-                *p8 = ZLB_HDR(blk)->decompressedSize;
-                *pc = vc;
-            }
-        }
-    }
-    else
-    {
-        *p8 = 0;
-        *pc = 0;
-    }
-}
-
-void loadVoxMaps(int a, int* pc, int* p8)
-{
-    int idx = -1;
-    int flags;
-    int saved;
-    char* blk;
-    u32 t1b, t54;
-    if ((lbl_8035F3E8[0x1a] != 0 && lbl_8035F3E8[0x1b] != 0) || (lbl_8035F3E8[0x53] != 0 && lbl_8035F3E8[0x54] != 0))
-    {
-        saved = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(saved);
-        t1b = lbl_8035F3E8[0x1b];
-        t54 = lbl_8035F3E8[0x54];
-        if (t1b != 0 && (a & 0x80000000) != 0 && (flags & 0x1000000) == 0)
-        {
-            idx = 0x1b;
-        }
-        else if (t54 != 0 && (a & 0x20000000) != 0 && (flags & 0x4000000) == 0)
-        {
-            idx = 0x54;
-        }
-        else if (t1b != 0 && (flags & 0x1000000) == 0)
-        {
-            idx = 0x1b;
-        }
-        else if (t54 != 0 && (flags & 0x4000000) == 0)
-        {
-            idx = 0x54;
-        }
-        if ((a & 0xf0000000) != 0)
-        {
-            blk = (char*)lbl_8035F3E8[idx] + (a & 0x00ffffff);
-            if (strncmp(blk, sZlbBlockTag, 3) != 0)
-            {
-                *p8 = 0;
-                *pc = 0;
-            }
-            else
-            {
+                switch (*(s8*)(obj + 0x19))
                 {
-                    int vc = ZLB_HDR(blk)->compressedSize;
-                    *p8 = ZLB_HDR(blk)->decompressedSize;
-                    *pc = vc;
+                case 0x24:
+                {
+                    s16 ev1;
+                    s16 ev2;
+                    mainGetBit(0x4e2);
+                    ev1 = *(s16*)(obj + 0x30);
+                    if (ev1 == -1 || mainGetBit(ev1) != 0)
+                    {
+                        ev2 = *(s16*)(obj + 0x32);
+                        if (ev2 == -1 || mainGetBit(ev2) == 0)
+                        {
+                            if (!(*(s8*)(obj + 0x1a) == 8 && *(s8*)(node + 0x1a) == 9))
+                            {
+                                f32 d = vec3f_distanceSquared((f32*)(node + 8), (f32*)(obj + 8));
+                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
+                            }
+                        }
+                    }
+                    break;
+                }
+                default:
+                    lbl_803DCD08 = obj;
+                    break;
                 }
             }
         }
+        p += 4;
+    }
+}
+#pragma ppc_unroll_speculative on
+void* fn_8004B118(int* p)
+{
+    void** arr;
+    int idx = *(s16*)((char*)p + 0x2c);
+    if (idx < *(s16*)((char*)p + 0x2a))
+    {
+        arr = *(void***)((char*)p + 8);
+        (*(s16*)((char*)p + 0x2c))++;
+        return arr[idx];
+    }
+    return NULL;
+}
+
+int fn_8004B148(int* p)
+{
+    int node;
+    u32 cur;
+    u32 prev;
+    int i;
+    int count;
+    int* entry;
+
+    prev = p[7];
+    node = *p + prev * 0x10;
+    *(u8*)(node + 0xd) = 0xff;
+    while ((cur = *(u8*)(node + 0xc)) != 0xff)
+    {
+        node = *p + cur * 0x10;
+        *(u8*)(node + 0xd) = prev;
+        prev = cur;
+    }
+    if (*(u8*)(node + 0xd) == 0xff)
+    {
+        entry = NULL;
+    }
+    else
+    {
+        entry = (int*)(*p + (u32) * (u8*)(node + 0xd) * 0x10);
+    }
+    count = 0;
+    i = 0;
+    while (entry != NULL)
+    {
+        *(int*)(p[2] + i) = *entry;
+        i += 4;
+        count++;
+        if (count >= 100)
+        {
+            entry = NULL;
+        }
+        else if (*(u8*)((int)entry + 0xd) == 0xff)
+        {
+            entry = NULL;
+        }
         else
         {
-            *p8 = 0;
-            *pc = 0;
+            entry = (int*)(*p + (u32) * (u8*)((int)entry + 0xd) * 0x10);
         }
     }
-    else
-    {
-        *p8 = 0;
-        *pc = 0;
-    }
+    *(s16*)((int)p + 0x2a) = count;
+    *(u16*)(p + 0xb) = 0;
+    return count;
 }
+#pragma ppc_unroll_speculative on
 
-void fn_80050FF4(u8 mode)
+int fn_8004B218(void* q_, u32 n_)
 {
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (mode != 0)
+    int n;
+    int* q = q_;
+    int idx;
+    int done;
+    int result;
+    int* elem;
+    int* heap;
+    n = n_;
+    done = 0;
+    result = 0;
+    while (done == 0 && n != 0)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_APREV, GX_CC_C1, GX_CC_C2);
+        heap = *(int**)((char*)q + 0x4);
+        if (*(s16*)((char*)q + 0x22) == 0)
+        {
+            idx = -1;
+        }
+        else
+        {
+            idx = *(u16*)((char*)heap + 0xc);
+            *(int*)((char*)heap + 0x8) = *(int*)((int)heap + *(s16*)((char*)q + 0x22) * 8);
+            *(u16*)((char*)heap + 0xc) = *(u16*)((char*)heap + (*(s16*)((char*)q + 0x22))-- * 8 + 4);
+            fn_8004AAD4((u8*)heap, *(s16*)((char*)q + 0x22), 1);
+        }
+        if (idx >= 0)
+        {
+            elem = (int*)(*(int*)((char*)q + 0) + idx * 16);
+            *(int*)((char*)q + 0x1c) = idx;
+            if (fn_8004AA24(q, elem) != 0)
+            {
+                done = 1;
+                result = 1;
+            }
+            else
+            {
+                *((u8*)elem + 0xe) = 1;
+                fn_8004AFA0(q, elem, idx);
+            }
+        }
+        else
+        {
+            done = 1;
+            result = -1;
+        }
+        n--;
     }
-    else
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_APREV, GX_CC_RASC, GX_CC_C2);
-    }
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
+    return result;
 }
-
-extern u8 lbl_803DCD30;
-
-void gxTextureFn_80050e28(u8 mode)
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_speculative off
+int fn_8004B31C(int* queue, int startNode, int targetPos, int pathId, u8 routeFlags)
 {
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (mode != 0)
+    int i;
+    int* node;
+    u32* heap;
+    int s;
+    u32 pri;
+    int parent;
+    u16 idx;
+    u16* hh;
+    u16 v;
+
+    *(s16*)((char*)queue + 0x22) = 0;
+    *(s16*)((char*)queue + 0x20) = 0;
+    for (i = 0; i < 0xfe; i++)
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_C2);
+        *(int*)(queue[1] + i * 8) = 0;
+        *(u8*)(*queue + i * 16 + 0xe) = 0;
+    }
+    queue[6] = startNode;
+    queue[3] = targetPos;
+    queue[4] = pathId;
+    *(u8*)((char*)queue + 0x28) = routeFlags & 1;
+    queue[9] = 10000;
+    s = *(s16*)((char*)queue + 0x20);
+    if (s == 0xfe)
+    {
+        node = NULL;
     }
     else
     {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_C2);
+        node = (int*)(*queue + (*(s16*)((char*)queue + 0x20))++ * 0x10);
+        *node = startNode;
+        node[2] = 0;
+        *(u8*)(node + 3) = 0xff;
+        node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)queue[3]);
     }
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
+    i = node[1] + node[2];
+    heap = (u32*)queue[1];
+    hh = (u16*)queue[1];
+    v = *(s16*)((char*)queue + 0x20) - 1;
+    hh[++(*(s16*)((char*)queue + 0x22)) * 4 + 2] = v;
+    *(u32*)((int)heap + *(s16*)((char*)queue + 0x22) * 8) = -1 - i;
+    i = *(s16*)((char*)queue + 0x22);
+    pri = *(u32*)((int)heap + i * 8);
+    idx = hh[i * 4 + 2];
+    *heap = -1;
+    while (parent = i >> 1, *(u32*)(hh + parent * 4) < pri)
+    {
+        *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
+        *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
+        i = parent;
+    }
+    *(u32*)((int)heap + i * 8) = pri;
+    hh[i * 4 + 2] = idx;
+    return 0;
 }
 
 extern void GXSetTevIndRepeat(int stage);
-extern void PSMTXScale(f32 m[3][4], f32 x, f32 y, f32 z);
-extern void PSMTXTrans(f32 m[3][4], f32 x, f32 y, f32 z);
-extern void PSMTXConcat(f32 dst[3][4], f32 a[3][4], f32 b[3][4]);
-extern void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type);
 extern void GXSetTexCoordGen2(GXTexCoordID dst_coord, GXTexGenType func, GXTexGenSrc src_param, u32 mtx,
                               GXBool normalize, u32 pt_texmtx);
 extern void GXSetTevSwapModeTable(GXTevSwapSel table, GXTevColorChan red, GXTevColorChan green, GXTevColorChan blue,
                                   GXTevColorChan alpha);
-extern u8 lbl_803DCD68;
-extern int lbl_803DCD80;
-extern u8 lbl_803DCD69;
-extern f32 lbl_803DEACC;
-extern f32 Breaking_803DEB40;
-extern f32 lbl_803DEADC;
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_speculative on
 
-void fn_800510F0(void* p1, u8 flag2, u8 flag3)
+void freeAndNull(void** p)
 {
-    f32 mtxB[3][4];
-    f32 mtxA[3][4];
-    int texmap;
-    if (lbl_803DCD68 == 0)
+    if (*p != NULL)
     {
-        GXSetTevDirect(lbl_803DCD90);
+        mm_free(*p);
+        *p = NULL;
     }
-    if (flag2 != 0)
-    {
-        GXSetTevIndRepeat(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, GX_COLOR_NULL);
-    }
-    else
-    {
-        PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
-        PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
-        PSMTXConcat(mtxB, mtxA, mtxA);
-        GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
-        lbl_803DCD80 = lbl_803DCD80 + 3;
-        lbl_803DCD88 = lbl_803DCD88 + 1;
-        lbl_803DCD69 += 1;
-    }
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A2, GX_CA_ZERO);
-    if (flag2 != 0)
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1, GX_CC_ZERO);
-    }
-    else
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
-    }
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-    if ((flag3 & 1) != 0)
-    {
-        GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_GREEN);
-    }
-    else
-    {
-        GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
-    }
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP3);
-    texmap = lbl_803DCD8C;
-    if (p1 != 0)
-    {
-        char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
-        {
-        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
-        }
-        else
-        {
-        GXLoadTexObj((GXTexObj*)tex, texmap);
-        }
-    }
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A += 1;
 }
+#pragma peephole reset
+#pragma peephole on
 
-extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
-
-void textureFn_80051348(void* p1, u8 p2)
+void trickyVoxAllocFn_8004b5d4(int* out)
 {
-    f32 mtxB[3][4];
-    f32 mtxA[3][4];
-    u8 buf[3];
-    int out_c;
-    int out_8;
-    int texmap;
-    PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
-    PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
-    PSMTXConcat(mtxB, mtxA, mtxA);
-    GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
-    buf[0] = p2;
-    buf[1] = p2;
-    buf[2] = p2;
-    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
-    GXSetTevKColorSel(lbl_803DCD90, out_c);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
-    if (lbl_803DCD68 == 0)
-    {
-        GXSetTevDirect(lbl_803DCD90);
-    }
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_RASC);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    texmap = lbl_803DCD8C;
-    if (p1 != 0)
-    {
-        char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
-        {
-        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
-        }
-        else
-        {
-        GXLoadTexObj((GXTexObj*)tex, texmap);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A += 1;
-    lbl_803DCD69 += 1;
+    out[0] = (int)mmAlloc(0x1960, 0x10, 0);
+    out[1] = out[0] + 0xfe0;
+    out[2] = out[1] + 0x7f0;
 }
+#pragma peephole reset
+#pragma peephole off
 
-extern int lbl_803DCD78;
 
-void fn_80051528(void* p1, void* mtx)
+void allocSomething32bytes(void)
 {
-    u8 buf[3];
-    int out_c;
-    int out_8;
-    objGetColor(0, &buf[0], &buf[1], &buf[2]);
-    if (mtx != 0)
-    {
-        GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-        lbl_803DCD80 = lbl_803DCD80 + 3;
-    }
-    else
-    {
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    }
-    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
-    GXSetTevKColorSel(lbl_803DCD90, out_c);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_RASC, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    GXSetTevDirect(lbl_803DCD90 + 1);
-    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_CPREV, GX_CC_RASC, GX_CC_RASA, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevDirect(lbl_803DCD90 + 2);
-    GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_ZERO, GX_CC_CPREV, GX_CC_TEXC, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
-    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    {
-        int id = lbl_803DCD8C;
-        if (p1 != 0)
-        {
-            void* obj = (char*)p1 + 0x20;
-            if (*(u8*)((char*)p1 + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-    }
-    lbl_803DCD78 = lbl_803DCD78 + 1;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 3;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A += 3;
-    lbl_803DCD69 += 1;
+    lbl_803DCD10 = mmAlloc(0x20, 0xff, 0);
 }
 
 typedef struct
@@ -5097,2760 +5656,25 @@ const IndTexMtx23 lbl_802C1E28 = {
 const IndTexMtx23 gTexIndMtxTable = {
     {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}}};
 
-extern u8* lbl_803DCD2C;
-extern int lbl_803DB5F4;
 extern f32 Prepared_803DEAD8;
 extern f32 lbl_803DEAE0;
 extern int lbl_803DCD7C;
-extern void GXSetIndTexMtx(GXIndTexMtxID mtx_id, const f32 offset[2][3], s8 scale_exp);
 extern void GXSetIndTexOrder(GXIndTexStageID ind_stage, GXTexCoordID tex_coord, GXTexMapID tex_map);
 extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, GXIndTexFormat format,
                              GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
                              GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
-void textureFn_8004c330(void* p1, void* mtx)
-{
-    IndTexMtx23 m;
-    f32 sx;
-    f32 sy;
-    int out_c;
-    int out_8;
-    int yhi;
-    int ylo;
-    int y;
-    int x;
-    int v1;
-    u8* dst;
-    int v2;
-    int v3;
-    m = lbl_802C1E28;
-    if (lbl_803DCD2C == 0)
-    {
-        lbl_803DCD2C = textureAlloc(0x20, 0x20, 4, 0, 0, 1, 1, 1, 1);
-        for (y = 0; y < 0x20; y++)
-        {
-            x = 0;
-            yhi = (y >> 2) * 0x20;
-            ylo = (y & 3) * 2;
-            for (; x < 0x20; x++)
-            {
-                v1 = (int)lbl_803DCD2C + ylo;
-                v1 = v1 + yhi;
-                v1 = v1 + (x & 3) * 8;
-                dst = (u8*)v1 + (x >> 2) * 0x100;
-                v1 = randomGetRange(0x80, 0xff);
-                v2 = v1 - randomGetRange(0, 0x40);
-                v3 = v1 - randomGetRange(0x40, 0x80);
-                *(u16*)(dst + 0x60) = ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
-            }
-        }
-        DCFlushRange(lbl_803DCD2C + 0x60, *(u32*)(lbl_803DCD2C + 0x44));
-    }
-    newshadows_getReflectionScrollOffsets(&sx, &sy);
-    m.v[0][1] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sx) + lbl_803DEADC;
-    m.v[1][2] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sy) + lbl_803DEADC;
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD0, lbl_803DCD8C + 1, GX_ALPHA_BUMPN);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    if (mtx != 0)
-    {
-        GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-        lbl_803DCD80 = lbl_803DCD80 + 3;
-    }
-    else
-    {
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    }
-    GXSetIndTexMtx(GX_ITM_0, m.v, (s8)lbl_803DB5F4);
-    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C);
-    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 7, 1, 0, 0, 0, 0, 3);
-    gxTextureFn_8004bf88(lbl_803DB5F8, 1, 0, &out_c, &out_8);
-    GXSetTevKColorSel(lbl_803DCD90, out_c);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevDirect(lbl_803DCD90 + 1);
-    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C0, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    {
-        int id = lbl_803DCD8C;
-        if (p1 != 0)
-        {
-            void* obj = (char*)p1 + 0x20;
-            if (*(u8*)((char*)p1 + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-    }
-    {
-        int id2 = lbl_803DCD8C + 1;
-        u8* tex = lbl_803DCD2C;
-        if (tex != 0)
-        {
-            void* obj = tex + 0x20;
-            if (*(u8*)(tex + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex + 0x40), id2);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id2);
-            }
-        }
-    }
-    lbl_803DCD78 = lbl_803DCD78 + 1;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 2;
-    lbl_803DCD8C = lbl_803DCD8C + 2;
-    lbl_803DCD6A += 2;
-    lbl_803DCD69 += 1;
-    lbl_803DCD68 += 1;
-}
-typedef struct
-{
-    int a;
-    int b;
-} PiColorS10;
-
-extern int WidthTable_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
-extern int lbl_803DEAB8;
-extern int lbl_803DEABC;
-extern int lbl_803DEAC0;
-extern int lbl_803DCD74;
-extern int lbl_803DCD70;
-extern int lbl_803DCD6C;
-extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
-extern void GXSetTevColorS10(int id, void* color);
-extern void GXSetTevKColor(int id, void* color);
-
-#pragma opt_common_subs off
-void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
-{
-    u8 buf5c[0x20];
-    u8 buf3c[0x20];
-    u8 buf1c[0x20];
-    PiColorS10 cs10;
-    int ck1;
-    int ck2;
-    int ck3;
-    int h2;
-    int w2;
-    if (lbl_803DCD6A > 0xb || lbl_803DCD69 > 6 || lbl_803DCD8C > 5 || lbl_803DCD74 > 1)
-    {
-        return;
-    }
-    {
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_A0);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
-        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        GXSetTevKAlphaSel(lbl_803DCD90, lbl_803DCD6C);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 2, GX_COLOR_NULL);
-        GXSetTevDirect(lbl_803DCD90 + 1);
-        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C1);
-        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_FALSE, GX_TEVREG1);
-        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_A1);
-        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
-        GXSetTevKColorSel(lbl_803DCD90 + 1, lbl_803DCD70 + 1);
-        GXSetTevKAlphaSel(lbl_803DCD90 + 1, lbl_803DCD6C + 1);
-        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevDirect(lbl_803DCD90 + 2);
-        GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, GX_CC_C1);
-        GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A1);
-        GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevOrder(lbl_803DCD90 + 3, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-        GXSetTevDirect(lbl_803DCD90 + 3);
-        GXSetTevColorIn(lbl_803DCD90 + 3, GX_CC_A1, GX_CC_C1, GX_CC_KONST, GX_CC_ZERO);
-        GXSetTevColorOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevAlphaIn(lbl_803DCD90 + 3, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevAlphaOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevSwapMode(lbl_803DCD90 + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevKColorSel(lbl_803DCD90 + 3, lbl_803DCD70 + 2);
-        GXSetTevOrder(lbl_803DCD90 + 4, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-        GXSetTevDirect(lbl_803DCD90 + 4);
-        GXSetTevColorIn(lbl_803DCD90 + 4, GX_CC_CPREV, GX_CC_C1, GX_CC_KONST, GX_CC_ZERO);
-        GXSetTevColorOp(lbl_803DCD90 + 4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaIn(lbl_803DCD90 + 4, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevAlphaOp(lbl_803DCD90 + 4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevSwapMode(lbl_803DCD90 + 4, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevKColorSel(lbl_803DCD90 + 4, GX_TEV_KCSEL_1_4);
-        lbl_803DCD30 = 1;
-        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
-        GXSetTevColorS10(1, &cs10);
-        ck1 = lbl_803DEAB8;
-        GXSetTevKColor(lbl_803DCD74, &ck1);
-        ck2 = lbl_803DEABC;
-        GXSetTevKColor(lbl_803DCD74 + 1, &ck2);
-        ck3 = lbl_803DEAC0;
-        GXSetTevKColor(lbl_803DCD74 + 2, &ck3);
-        GXInitTexObj((GXTexObj*)buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD((GXTexObj*)buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj((GXTexObj*)buf5c, lbl_803DCD8C);
-        GXInitTexObj((GXTexObj*)buf3c, tex1, w2 = w >> 1, h2 = h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD((GXTexObj*)buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj((GXTexObj*)buf3c, lbl_803DCD8C + 1);
-        GXInitTexObj((GXTexObj*)buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
-        GXInitTexObjLOD((GXTexObj*)buf1c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
-        GXLoadTexObj((GXTexObj*)buf1c, lbl_803DCD8C + 2);
-        lbl_803DCD90 = lbl_803DCD90 + 5;
-        lbl_803DCD88 = lbl_803DCD88 + 2;
-        lbl_803DCD8C = lbl_803DCD8C + 3;
-        lbl_803DCD74 = lbl_803DCD74 + 3;
-        lbl_803DCD70 = lbl_803DCD70 + 3;
-        lbl_803DCD6C = lbl_803DCD6C + 3;
-        lbl_803DCD6A += 5;
-        lbl_803DCD69 += 2;
-    }
-}
-
-extern void fn_8006C504(void* out);
-extern void mapTextureScrollGetOffset(u8 idx, f32* x, f32* y);
-extern void PSMTXIdentity(f32 m[3][4]);
-extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
-extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
-extern f32 SaveEnd_803DEAD4;
-extern f32 lbl_803DEB04;
-extern f32 lbl_803DEB08;
-extern f32 lbl_803DEB0C;
-extern f32 lbl_803DEB10;
-extern f32 lbl_803DEB14;
-extern f32 lbl_803DEB18;
-
-#pragma opt_common_subs reset
-#pragma opt_common_subs off
-void fn_8004DA54(char* p1)
-{
-    f32 mtxf4[3][4];
-    f32 mtxc4[3][4];
-    f32 mtx94[3][4];
-    f32 mtx64[3][4];
-    IndTexMtx23 m1;
-    IndTexMtx23 m2;
-    u8* tex30;
-    u8* tex2c;
-    f32 rx;
-    f32 ry;
-    f32 cv;
-    f32 sv;
-    f32 tsx;
-    f32 tsy;
-    int kc;
-    f32 f31v;
-    f32 s;
-    f32 k;
-    f32 t;
-    u8* tex24;
-    m1 = lbl_802C1DC8;
-    m2 = lbl_802C1DE0[0];
-    tex24 = *(u8**)(p1 + 0x24);
-    if (tex24 != 0)
-    {
-        void* obj = tex24 + 0x20;
-        if (*(u8*)(tex24 + 0x48) != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex24 + 0x40), 2);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
-        }
-    }
-    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    newshadows_getReflectionScrollOffsets(&rx, &ry);
-    fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
-    s = mathCosf(Prepared_803DEAD8 * ry);
-    k = lbl_803DEB08 * s + lbl_803DEB04;
-    k = k * lbl_803DB5F0;
-    cv = cv * k;
-    sv = sv * k;
-    m1.v[0][0] = cv;
-    m1.v[0][1] = sv;
-    m1.v[1][0] = -sv;
-    m1.v[1][1] = cv;
-    fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
-    s = mathCosf(Prepared_803DEAD8 * rx);
-    f31v = lbl_803DEADC * s + lbl_803DEADC;
-    k = lbl_803DEB08 * s + lbl_803DEB04;
-    k = k * lbl_803DB5F0;
-    cv = cv * k;
-    sv = sv * k;
-    m2.v[0][0] = cv;
-    m2.v[0][1] = sv;
-    m2.v[1][0] = -sv;
-    m2.v[1][1] = cv;
-    fn_8006C504(&tex2c);
-    if (tex2c != 0)
-    {
-        void* obj = tex2c + 0x20;
-        if (*(u8*)(tex2c + 0x48) != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex2c + 0x40), 0);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP0);
-        }
-    }
-    {
-        u8 b = *(u8*)(p1 + 0x2a);
-        if (b != 0xff)
-        {
-            mapTextureScrollGetOffset(b, &tsx, &tsy);
-            PSMTXTrans(mtx64, tsx, tsy, lbl_803DEACC);
-        }
-        else
-        {
-            PSMTXIdentity(mtx64);
-        }
-    }
-    GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
-    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
-    getTextureFn_8006c5e4((u32*)&tex30);
-    if (tex30 != 0)
-    {
-        void* obj = tex30 + 0x20;
-        if (*(u8*)(tex30 + 0x48) != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex30 + 0x40), 1);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP1);
-        }
-    }
-    PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
-    mtxf4[1][3] = lbl_803DEB08 * ry;
-    GXLoadTexMtxImm(mtxf4, GX_PTTEXMTX0, GX_MTX3x4);
-    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX0);
-    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
-    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
-    GXSetIndTexMtx(GX_ITM_0, m1.v, -2);
-    GXSetIndTexMtx(GX_ITM_1, m2.v, -2);
-    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
-    PSMTXScale(mtxc4, lbl_803DEB0C, *(f32*)&lbl_803DEB0C, lbl_803DEAC8);
-    PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
-    PSMTXConcat(mtx94, mtxc4, mtxc4);
-    t = lbl_803DEB14 * rx;
-    mtxc4[0][3] = t;
-    mtxc4[1][3] = t;
-    GXLoadTexMtxImm(mtxc4, GX_PTTEXMTX1, GX_MTX3x4);
-    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX1);
-    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
-    GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
-    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
-    ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
-    ((u8*)&lbl_803DB5EC)[1] = 0;
-    ((u8*)&lbl_803DB5EC)[2] = 0;
-    kc = lbl_803DB5EC;
-    GXSetTevKColor(lbl_803DCD74, &kc);
-    GXSetTevKAlphaSel(GX_TEVSTAGE0, lbl_803DCD6C);
-    GXSetTevKColorSel(GX_TEVSTAGE1, lbl_803DCD70);
-    GXSetTevDirect(GX_TEVSTAGE0);
-    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_RED);
-    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP2, GX_COLOR0A0);
-    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
-    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_KONST, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
-    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP3);
-    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_KONST, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD3, GX_TEXMAP0, GX_COLOR_NULL);
-    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_CPREV, GX_CC_TEXC, GX_CC_APREV, GX_CC_ZERO);
-    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD88 = 4;
-    lbl_803DCD90 = 3;
-    lbl_803DCD8C = 3;
-    lbl_803DCD80 = 0x49;
-    lbl_803DCD7C = 2;
-    lbl_803DCD6A = 3;
-    lbl_803DCD69 = 4;
-    lbl_803DCD68 = 2;
-    lbl_803DCD74 = 1;
-    lbl_803DCD70 = 0xd;
-    lbl_803DCD6C = 0x1d;
-}
-#pragma opt_common_subs reset
-
-typedef struct
-{
-    f32 x, y, z;
-} PiVec3;
-
-extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3* axis, f32 rad);
-extern void fn_8006C510(void* out);
-extern f32 lbl_803DEB1C;
-extern f32 lbl_803DEB20;
-extern f32 LastLength_803DEB24;
-extern f32 lbl_803DEB28;
-extern f32 SaveStart_803DEAD0;
-
-void fn_8004E0FC(void)
-{
-    f32 m1e8[3][4];
-    f32 m1b8[3][4];
-    f32 m188[3][4];
-    f32 m158[3][4];
-    f32 m128[3][4];
-    f32 mf8[3][4];
-    f32 mc8[3][4];
-    f32 m98[3][4];
-    f32 m68[3][4];
-    IndTexMtx23 im;
-    PiVec3 va;
-    PiVec3 vb;
-    PiVec3 vc;
-    PiVec3 vd;
-    u8* tex1c;
-    u8* tex18;
-    f32 rx;
-    f32 ry;
-    void* invView;
-    va = ((PiVec3*)&lbl_802C1D50)[4];
-    vb = ((PiVec3*)&lbl_802C1D50)[5];
-    vc = ((PiVec3*)&lbl_802C1D50)[6];
-    vd = ((PiVec3*)&lbl_802C1D50)[7];
-    im = *(IndTexMtx23*)((PiVec3*)&lbl_802C1D50 + 8);
-    invView = Camera_GetInverseViewMatrix();
-    PSMTXRotAxisRad(mf8, &va, lbl_803DEAC8);
-    PSMTXRotAxisRad(mc8, &vb, lbl_803DEAC8);
-    PSMTXRotAxisRad(m98, &vc, lbl_803DEAC8);
-    PSMTXRotAxisRad(m68, &vd, lbl_803DEAC8);
-    m1e8[0][0] = lbl_803DEB1C;
-    m1e8[0][1] = lbl_803DEACC;
-    m1e8[0][2] = lbl_803DEACC;
-    m1e8[0][3] = SaveStart_803DEAD0 * (*(f32*)&lbl_803DEB20 * playerMapOffsetX);
-    m1e8[1][0] = lbl_803DEACC;
-    m1e8[1][1] = lbl_803DEB1C;
-    m1e8[1][2] = lbl_803DEACC;
-    m1e8[1][3] = lbl_803DEACC;
-    m1e8[2][0] = lbl_803DEACC;
-    m1e8[2][1] = lbl_803DEACC;
-    m1e8[2][2] = lbl_803DEB1C;
-    m1e8[2][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetZ);
-    m1b8[0][0] = LastLength_803DEB24;
-    m1b8[0][1] = lbl_803DEACC;
-    m1b8[0][2] = lbl_803DEACC;
-    m1b8[0][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetX);
-    m1b8[1][0] = lbl_803DEACC;
-    m1b8[1][1] = LastLength_803DEB24;
-    m1b8[1][2] = lbl_803DEACC;
-    m1b8[1][3] = lbl_803DEACC;
-    m1b8[2][0] = lbl_803DEACC;
-    m1b8[2][1] = lbl_803DEACC;
-    m1b8[2][2] = LastLength_803DEB24;
-    m1b8[2][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetZ);
-    PSMTXConcat(m1e8, invView, m1e8);
-    PSMTXConcat(mf8, m1e8, m1e8);
-    m1e8[2][0] = lbl_803DEACC;
-    m1e8[2][1] = lbl_803DEACC;
-    m1e8[2][2] = lbl_803DEACC;
-    m1e8[2][3] = lbl_803DEAC8;
-    PSMTXConcat(m1b8, invView, m1b8);
-    PSMTXConcat(mc8, m1b8, m1b8);
-    m1b8[2][0] = lbl_803DEACC;
-    m1b8[2][1] = lbl_803DEACC;
-    m1b8[2][2] = lbl_803DEACC;
-    m1b8[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(m1e8, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    GXLoadTexMtxImm(m1b8, lbl_803DCD80 + 3, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-    fn_8006C510(&tex1c);
-    {
-        int id = lbl_803DCD8C;
-        if (tex1c != 0)
-        {
-            void* obj = tex1c + 0x20;
-            if (*(u8*)(tex1c + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-    }
-    newshadows_getReflectionScrollOffsets(&rx, &ry);
-    GXSetIndTexMtx(GX_ITM_1, im.v, -1);
-    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
-    m188[0][0] = lbl_803DEB20;
-    m188[0][1] = lbl_803DEACC;
-    m188[0][2] = lbl_803DEACC;
-    m188[0][3] = lbl_803DEB20 * playerMapOffsetX + rx;
-    m188[1][0] = lbl_803DEACC;
-    m188[1][1] = lbl_803DEB20;
-    m188[1][2] = lbl_803DEACC;
-    m188[1][3] = lbl_803DEACC;
-    m188[2][0] = lbl_803DEACC;
-    m188[2][1] = lbl_803DEACC;
-    m188[2][2] = lbl_803DEB20;
-    m188[2][3] = lbl_803DEB20 * playerMapOffsetZ;
-    PSMTXRotRad(m128, 0x79, lbl_803DEB28);
-    PSMTXConcat(m128, m188, m188);
-    PSMTXConcat(m188, invView, m188);
-    PSMTXConcat(m98, m188, m188);
-    m188[2][0] = lbl_803DEACC;
-    m188[2][1] = lbl_803DEACC;
-    m188[2][2] = lbl_803DEACC;
-    m188[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(m188, lbl_803DCD80 + 6, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
-    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 0, 0, 0, 0, 0);
-    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
-    GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 3, lbl_803DCD8C + 1);
-    m158[0][0] = lbl_803DEB20;
-    m158[0][1] = lbl_803DEACC;
-    m158[0][2] = lbl_803DEACC;
-    m158[0][3] = lbl_803DEB20 * playerMapOffsetX;
-    m158[1][0] = lbl_803DEACC;
-    m158[1][1] = lbl_803DEB20;
-    m158[1][2] = lbl_803DEACC;
-    m158[1][3] = lbl_803DEACC;
-    m158[2][0] = lbl_803DEACC;
-    m158[2][1] = lbl_803DEACC;
-    m158[2][2] = lbl_803DEB20;
-    m158[2][3] = lbl_803DEB20 * playerMapOffsetZ + ry;
-    PSMTXConcat(m158, invView, m158);
-    PSMTXConcat(m68, m158, m158);
-    m158[2][0] = lbl_803DEACC;
-    m158[2][1] = lbl_803DEACC;
-    m158[2][2] = lbl_803DEACC;
-    m158[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(m158, lbl_803DCD80 + 9, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 3, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 9);
-    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
-    GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXA, GX_CC_CPREV);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR0A0);
-    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXA, GX_CC_CPREV);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    getTextureFn_8006c5e4((u32*)&tex18);
-    {
-        int id2 = lbl_803DCD8C + 1;
-        if (tex18 != 0)
-        {
-            void* obj = tex18 + 0x20;
-            if (*(u8*)(tex18 + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex18 + 0x40), id2);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id2);
-            }
-        }
-    }
-    lbl_803DCD88 = lbl_803DCD88 + 4;
-    lbl_803DCD90 = lbl_803DCD90 + 2;
-    lbl_803DCD8C = lbl_803DCD8C + 2;
-    lbl_803DCD80 = lbl_803DCD80 + 0xc;
-    lbl_803DCD7C = lbl_803DCD7C + 2;
-    lbl_803DCD6A += 2;
-    lbl_803DCD69 += 4;
-    lbl_803DCD68 += 2;
-}
-
-extern f32 lbl_803DEAC4;
-extern void fn_8006C528(void* out);
-extern f32 ResetCoverCallback_803DEB2C;
-
-void renderHeavyFog(void* fogColor)
-{
-    f32 mcc[3][4];
-    f32 m9c[3][4];
-    f32 m6c[3][4];
-    f32 mrot[3][4];
-    IndTexMtx23 im;
-    u8* tex20;
-    u8* tex1c;
-    f32 a;
-    f32 b;
-    int kc;
-    f32(*iv)[4];
-    f32 k;
-    im = lbl_802C1D68[0];
-    iv = (f32(*)[4])Camera_GetInverseViewMatrix();
-    mcc[0][0] = lbl_803DEACC;
-    mcc[0][1] = lbl_803DEACC;
-    mcc[0][2] = lbl_803DEAC4 / lbl_803DCD3C;
-    mcc[0][3] = lbl_803DCD38;
-    k = lbl_803DEAC4 / (lbl_803DCD44 - lbl_803DCD40);
-    mcc[1][0] = k * iv[1][0];
-    mcc[1][1] = k * iv[1][1];
-    mcc[1][2] = k * iv[1][2];
-    mcc[1][3] = k * iv[1][3] + -lbl_803DCD44 * k;
-    mcc[2][0] = lbl_803DEACC;
-    mcc[2][1] = lbl_803DEACC;
-    mcc[2][2] = lbl_803DEACC;
-    mcc[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    kc = *(int*)fogColor;
-    GXSetTevKColor(lbl_803DCD74, &kc);
-    fn_8006C528(&tex20);
-    {
-        int id = lbl_803DCD8C;
-        if (tex20 != 0)
-        {
-            void* obj = tex20 + 0x20;
-            if (*(u8*)(tex20 + 0x48) != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex20 + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-    }
-    if (lbl_803DCD31 != 0)
-    {
-        newshadows_getReflectionScrollOffsets(&a, &b);
-        b = b * lbl_803DEAE0;
-        a = a * lbl_803DEB08;
-        GXSetIndTexMtx(GX_ITM_1, im.v, -2);
-        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 1, lbl_803DCD8C + 1);
-        m9c[0][0] = lbl_803DCD34;
-        m9c[0][1] = lbl_803DEACC;
-        m9c[0][2] = lbl_803DEACC;
-        m9c[0][3] = playerMapOffsetX * lbl_803DCD34 + a;
-        m9c[1][0] = lbl_803DEACC;
-        m9c[1][1] = lbl_803DCD34;
-        m9c[1][2] = lbl_803DEACC;
-        m9c[1][3] = lbl_803DEACC;
-        m9c[2][0] = lbl_803DEACC;
-        m9c[2][1] = lbl_803DEACC;
-        m9c[2][2] = lbl_803DEACC;
-        m9c[2][3] = lbl_803DEAC8;
-        PSMTXRotRad(mrot, 0x7a, lbl_803DEB28);
-        PSMTXConcat(mrot, m9c, m9c);
-        PSMTXConcat(m9c, iv, m9c);
-        GXLoadTexMtxImm(m9c, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-        GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 6, 6, 0, 0, 0);
-        GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
-        GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
-        m6c[0][0] = lbl_803DEACC;
-        m6c[0][1] = lbl_803DEACC;
-        m6c[0][2] = lbl_803DCD34;
-        m6c[0][3] = playerMapOffsetZ * lbl_803DCD34 + b;
-        m6c[1][0] = lbl_803DEACC;
-        m6c[1][1] = lbl_803DCD34;
-        m6c[1][2] = lbl_803DEACC;
-        m6c[1][3] = lbl_803DEACC;
-        m6c[2][0] = lbl_803DEACC;
-        m6c[2][1] = lbl_803DEACC;
-        m6c[2][2] = lbl_803DEACC;
-        m6c[2][3] = lbl_803DEAC8;
-        PSMTXRotRad(mrot, 0x78, ResetCoverCallback_803DEB2C);
-        PSMTXConcat(mrot, m6c, m6c);
-        PSMTXConcat(m6c, iv, m6c);
-        GXLoadTexMtxImm(m6c, lbl_803DCD80 + 6, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
-        GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
-        GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
-        GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        lbl_803DCD30 = 1;
-        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_CPREV, GX_CC_KONST, GX_CC_TEXA, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        getTextureFn_8006c5e4((u32*)&tex1c);
-        {
-            int id2 = lbl_803DCD8C + 1;
-            if (tex1c != 0)
-            {
-                void* obj = tex1c + 0x20;
-                if (*(u8*)(tex1c + 0x48) != 0)
-                {
-                    GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id2);
-                }
-                else
-                {
-                    GXLoadTexObj((GXTexObj*)obj, id2);
-                }
-            }
-        }
-        GXSetTevKColorSel(lbl_803DCD90 + 1, lbl_803DCD70);
-        lbl_803DCD88 = lbl_803DCD88 + 3;
-        lbl_803DCD90 = lbl_803DCD90 + 2;
-        lbl_803DCD8C = lbl_803DCD8C + 2;
-        lbl_803DCD80 = lbl_803DCD80 + 9;
-        lbl_803DCD7C = lbl_803DCD7C + 2;
-        lbl_803DCD6A += 2;
-        lbl_803DCD69 += 3;
-        lbl_803DCD68 += 2;
-    }
-    else
-    {
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_KONST, GX_CC_TEXA, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        lbl_803DCD30 = 1;
-        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        lbl_803DCD88 = lbl_803DCD88 + 1;
-        lbl_803DCD90 = lbl_803DCD90 + 1;
-        lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD80 = lbl_803DCD80 + 3;
-        lbl_803DCD6A += 1;
-        lbl_803DCD69 += 1;
-    }
-    lbl_803DCD74 = lbl_803DCD74 + 1;
-    lbl_803DCD70 = lbl_803DCD70 + 1;
-    lbl_803DCD6C = lbl_803DCD6C + 1;
-}
-
-void textureFn_8004ff20(void* p1)
-{
-    if (p1 != 0)
-    {
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_RASA, GX_CC_TEXC);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        lbl_803DCD30 = 1;
-        {
-            int id = lbl_803DCD8C;
-            if (p1 != 0)
-            {
-                char* tex = (char*)p1 + 0x20;
-                if (*(u8*)((char*)p1 + 0x48) != 0)
-                {
-                    GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), id);
-                }
-                else
-                {
-                    GXLoadTexObj((GXTexObj*)tex, id);
-                }
-            }
-        }
-        lbl_803DCD88 = lbl_803DCD88 + 1;
-        lbl_803DCD90 = lbl_803DCD90 + 1;
-        lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD69 += 1;
-        lbl_803DCD6A += 1;
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR1A1);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_RASA, GX_CC_CPREV);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        lbl_803DCD90 = lbl_803DCD90 + 1;
-        lbl_803DCD6A += 1;
-    }
-}
-
-void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
-{
-    u8* buf = bufp;
-    u8 found1 = 0;
-    u8 found2 = 0;
-    if (flag1 != 0)
-    {
-        if (buf[0] == buf[1] && buf[0] == buf[2])
-        {
-            if (buf[0] == 0xff)
-            {
-                *out1 = 0;
-                found1 = 1;
-            }
-            else if (buf[0] == 0xe0)
-            {
-                *out1 = 1;
-                found1 = 1;
-            }
-            else if (buf[0] == 0xc0)
-            {
-                *out1 = 2;
-                found1 = 1;
-            }
-            else if (buf[0] == 0xa0)
-            {
-                *out1 = 3;
-                found1 = 1;
-            }
-            else if (buf[0] == 0x80)
-            {
-                *out1 = 4;
-                found1 = 1;
-            }
-            else if (buf[0] == 0x60)
-            {
-                *out1 = 5;
-                found1 = 1;
-            }
-            else if (buf[0] == 0x40)
-            {
-                *out1 = 6;
-                found1 = 1;
-            }
-            else if (buf[0] == 0x20)
-            {
-                *out1 = 7;
-                found1 = 1;
-            }
-        }
-        if (found1 == 0)
-        {
-            *out1 = lbl_803DCD70;
-        }
-    }
-    else
-    {
-        found1 = 1;
-    }
-    if (flag2 != 0)
-    {
-        if (buf[3] == 0xff)
-        {
-            *out2 = 0;
-            found2 = 1;
-        }
-        else if (buf[3] == 0xe0)
-        {
-            *out2 = 1;
-            found2 = 1;
-        }
-        else if (buf[3] == 0xc0)
-        {
-            *out2 = 2;
-            found2 = 1;
-        }
-        else if (buf[3] == 0xa0)
-        {
-            *out2 = 3;
-            found2 = 1;
-        }
-        else if (buf[3] == 0x80)
-        {
-            *out2 = 4;
-            found2 = 1;
-        }
-        else if (buf[3] == 0x60)
-        {
-            *out2 = 5;
-            found2 = 1;
-        }
-        else if (buf[3] == 0x40)
-        {
-            *out2 = 6;
-            found2 = 1;
-        }
-        else if (buf[3] == 0x20)
-        {
-            *out2 = 7;
-            found2 = 1;
-        }
-        if (found2 == 0)
-        {
-            *out2 = lbl_803DCD6C;
-        }
-    }
-    else
-    {
-        found2 = 1;
-    }
-    if (found1 == 0 || found2 == 0)
-    {
-        int color = *(int*)bufp;
-        GXSetTevKColor(lbl_803DCD74, &color);
-        lbl_803DCD74 = lbl_803DCD74 + 1;
-        lbl_803DCD70 = lbl_803DCD70 + 1;
-        lbl_803DCD6C = lbl_803DCD6C + 1;
-    }
-}
-
-void gxTextureFn_8004d5b4(void* p1)
-{
-    u8 buf[3];
-    int color;
-    u8 b = *(u8*)((char*)p1 + 0x43);
-    buf[2] = b;
-    buf[1] = b;
-    buf[0] = b;
-    color = *(int*)buf;
-    GXSetTevKColor(lbl_803DCD74, &color);
-    GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_C0, GX_CC_KONST, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD74 = lbl_803DCD74 + 1;
-    lbl_803DCD70 = lbl_803DCD70 + 1;
-    lbl_803DCD6C = lbl_803DCD6C + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
-
-extern u8 lbl_803DB5E8;
-extern int lbl_8030CEE0[];
-extern f32 lbl_803DEB38;
-extern f32 lbl_803DEB3C;
-extern void GXSetTevOp(int stage, int mode);
-
-int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
-{
-    struct piIndMtx indmtx;
-    f32 mtx[3][4];
-    f32 v;
-    int result;
-    int texmap;
-    int t;
-    indmtx = lbl_802C1D50;
-    t = lbl_803DB5E8 & 1;
-    result = 0;
-    if (t == 0)
-    {
-        return 0;
-    }
-    GXSetIndTexMtx(GX_ITM_0, indmtx.m, 0);
-    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
-    if (p4 != 0)
-    {
-        void* texptr;
-        u32 div;
-        int p2v = (p3 & 0xf) * 4 + 1;
-        texptr = textureIdxToPtr(p4);
-        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2v);
-        if (div != 0)
-        {
-            GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
-        }
-        else
-        {
-            result = p2v & 0xff;
-        }
-    }
-    else
-    {
-        result = 1;
-    }
-    v = lbl_803DEADC * (lbl_803DEB38 * ((f32)(s32)((p3 & 0xf0) >> 4) / lbl_803DEB3C - lbl_803DEAC8));
-    PSMTXScale(mtx, v, v, lbl_803DEACC);
-    mtx[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_BINRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TANGENT, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 5, 6, 6, 0, 0, 0);
-    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
-    GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
-    GXSetTevOp(lbl_803DCD90, GX_PASSCLR);
-    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
-    GXSetTevOp(lbl_803DCD90 + 1, GX_PASSCLR);
-    texmap = lbl_803DCD8C;
-    if (p1 != 0)
-    {
-        char* tex = (char*)p1 + 0x20;
-        if (*(u8*)((char*)p1 + 0x48) != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)tex, texmap);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD7C = lbl_803DCD7C + 1;
-    lbl_803DCD88 = lbl_803DCD88 + 2;
-    lbl_803DCD90 = lbl_803DCD90 + 2;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A += 2;
-    lbl_803DCD68 += 1;
-    lbl_803DCD69 += 2;
-    return result;
-}
-
-void fn_8004D6D8(void)
-{
-    struct piIndMtx indmtx;
-    void* tex;
-    int id;
-    f32 v;
-    indmtx = lbl_802C1E10;
-    v = lbl_803DEADC * fn_8006C670();
-    indmtx.m[0][0] = v;
-    indmtx.m[1][2] = v;
-    if (lbl_803DCD88 > 0)
-    {
-        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 - 1, lbl_803DCD8C + 1);
-    }
-    else
-    {
-        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C + 1);
-    }
-    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
-    GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
-    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
-    getTextureFn_8006c5e4((u32*)&tex);
-    id = lbl_803DCD8C + 1;
-    if (tex != NULL)
-    {
-        void* obj = (char*)tex + 0x20;
-        if (*(u8*)((char*)tex + 0x48) != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, id);
-        }
-    }
-    GXLoadTexMtxImm(lbl_80396820, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    selectReflectionTexture(lbl_803DCD8C);
-    lbl_803DCD7C = lbl_803DCD7C + 1;
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 2;
-    lbl_803DCD6A++;
-    lbl_803DCD69++;
-    lbl_803DCD68++;
-}
-
-void fn_8004F380(f32 scale, int* colorIn, f32* pos)
-{
-    f32 matA[3][4];
-    f32 matB[3][4];
-    u8* src;
-    int color;
-    int id;
-    f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
-    {
-        return;
-    }
-    {
-        f = 0.5f / scale;
-        matA[0][0] = f;
-        matA[0][1] = 0.0f;
-        matA[0][2] = 0.0f;
-        matA[0][3] = -pos[0] * f + 0.5f;
-        matA[1][0] = 0.0f;
-        matA[1][1] = 0.0f;
-        matA[1][2] = f;
-        matA[1][3] = -pos[2] * f + 0.5f;
-        matA[2][0] = 0.0f;
-        matA[2][1] = 0.0f;
-        matA[2][2] = 0.0f;
-        matA[2][3] = 1.0f;
-        matB[0][0] = 0.0f;
-        matB[0][1] = f;
-        matB[0][2] = 0.0f;
-        matB[0][3] = -pos[1] * f + 0.5f;
-        matB[1][0] = 0.0f;
-        matB[1][1] = 0.0f;
-        matB[1][2] = 0.0f;
-        matB[1][3] = 0.5f;
-        matB[2][0] = 0.0f;
-        matB[2][1] = 0.0f;
-        matB[2][2] = 0.0f;
-        matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
-        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
-        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevDirect(lbl_803DCD90 + 1);
-        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_C1);
-        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        id = lbl_803DCD8C;
-        if (src != NULL)
-        {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-        lbl_803DCD90 = lbl_803DCD90 + 2;
-        lbl_803DCD88 = lbl_803DCD88 + 2;
-        lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD74 = lbl_803DCD74 + 1;
-        lbl_803DCD70 = lbl_803DCD70 + 1;
-        lbl_803DCD6C = lbl_803DCD6C + 1;
-        lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 += 2;
-        lbl_803DCD6A += 2;
-    }
-}
-
-void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
-{
-    f32 matA[3][4];
-    f32 matB[3][4];
-    u8* src;
-    int color;
-    int id;
-    f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
-    {
-        return;
-    }
-    {
-        f = 0.5f / scale;
-        matA[0][0] = f;
-        matA[0][1] = 0.0f;
-        matA[0][2] = 0.0f;
-        matA[0][3] = -pos[0] * f + 0.5f;
-        matA[1][0] = 0.0f;
-        matA[1][1] = 0.0f;
-        matA[1][2] = f;
-        matA[1][3] = -pos[2] * f + 0.5f;
-        matA[2][0] = 0.0f;
-        matA[2][1] = 0.0f;
-        matA[2][2] = 0.0f;
-        matA[2][3] = 1.0f;
-        matB[0][0] = 0.0f;
-        matB[0][1] = f;
-        matB[0][2] = 0.0f;
-        matB[0][3] = -pos[1] * f + 0.5f;
-        matB[1][0] = 0.0f;
-        matB[1][1] = 0.0f;
-        matB[1][2] = 0.0f;
-        matB[1][3] = 0.5f;
-        matB[2][0] = 0.0f;
-        matB[2][1] = 0.0f;
-        matB[2][2] = 0.0f;
-        matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
-        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
-        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevDirect(lbl_803DCD90 + 1);
-        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        id = lbl_803DCD8C;
-        if (src != NULL)
-        {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-        lbl_803DCD90 = lbl_803DCD90 + 2;
-        lbl_803DCD88 = lbl_803DCD88 + 2;
-        lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD74 = lbl_803DCD74 + 1;
-        lbl_803DCD70 = lbl_803DCD70 + 1;
-        lbl_803DCD6C = lbl_803DCD6C + 1;
-        lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 += 2;
-        lbl_803DCD6A += 2;
-    }
-}
-
-extern f32 lbl_803DEAE4;
-
-void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
-{
-    f32 matA[3][4];
-    f32 matB[3][4];
-    u8* src;
-    int color;
-    int id;
-    f32 f;
-    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7)
-    {
-        return;
-    }
-    {
-        if (scale < 0.1f)
-        {
-            scale = 0.1f;
-        }
-        f = 0.5f / scale;
-        matA[0][0] = f;
-        matA[0][1] = 0.0f;
-        matA[0][2] = 0.0f;
-        matA[0][3] = -pos[0] * f + 0.5f;
-        matA[1][0] = 0.0f;
-        matA[1][1] = 0.0f;
-        matA[1][2] = f;
-        matA[1][3] = -pos[2] * f + 0.5f;
-        matA[2][0] = 0.0f;
-        matA[2][1] = 0.0f;
-        matA[2][2] = 0.0f;
-        matA[2][3] = 1.0f;
-        matB[0][0] = 0.0f;
-        matB[0][1] = f;
-        matB[0][2] = 0.0f;
-        matB[0][3] = -pos[1] * f + 0.5f;
-        matB[1][0] = 0.0f;
-        matB[1][1] = 0.0f;
-        matB[1][2] = 0.0f;
-        matB[1][3] = 0.5f;
-        matB[2][0] = 0.0f;
-        matB[2][1] = 0.0f;
-        matB[2][2] = 0.0f;
-        matB[2][3] = 1.0f;
-        fn_8006C540((u32*)&src);
-        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
-        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
-        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
-        GXSetTevDirect(lbl_803DCD90);
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-        color = *colorIn;
-        GXSetTevKColor(lbl_803DCD74, &color);
-        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevDirect(lbl_803DCD90 + 1);
-        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
-        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_CPREV);
-        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        lbl_803DCD30 = 1;
-        id = lbl_803DCD8C;
-        if (src != NULL)
-        {
-            u8* obj = src + 0x20;
-            if (src[0x48] != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-        lbl_803DCD90 = lbl_803DCD90 + 2;
-        lbl_803DCD88 = lbl_803DCD88 + 2;
-        lbl_803DCD8C = lbl_803DCD8C + 1;
-        lbl_803DCD74 = lbl_803DCD74 + 1;
-        lbl_803DCD70 = lbl_803DCD70 + 1;
-        lbl_803DCD6C = lbl_803DCD6C + 1;
-        lbl_803DCD80 = lbl_803DCD80 + 6;
-        lbl_803DCD69 += 2;
-        lbl_803DCD6A += 2;
-    }
-}
-
-void fn_8005011C(int objInst)
-{
-    u8* src;
-    f32 mtx[3][4];
-    u8* obj2;
-    int id;
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevDirect(lbl_803DCD90 + 1);
-    GXSetTevDirect(lbl_803DCD90 + 2);
-    GXSetTevDirect(lbl_803DCD90 + 3);
-    PSMTXConcat((f32(*)[4])(objInst + 0x30), (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
-    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-    PSMTXConcat((f32(*)[4])objInst, (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
-    GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
-    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80 + 3);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
-    GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
-    GXSetTevOrder(lbl_803DCD90 + 3, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
-    GXSetTevKColorSel(lbl_803DCD90 + 2, GX_TEV_KCSEL_1_4);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C0, GX_CC_TEXC, GX_CC_ONE, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_COMP_R8_GT, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_C1, GX_CC_KONST, GX_CC_C0, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevColorIn(lbl_803DCD90 + 3, GX_CC_C2, GX_CC_ZERO, GX_CC_C0, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 3, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-    GXSetTevAlphaOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    fn_8006C5B8((u32*)&src);
-    id = lbl_803DCD8C;
-    if (src != NULL)
-    {
-        void* obj = src + 0x20;
-        if (src[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, id);
-        }
-    }
-    id = lbl_803DCD8C + 1;
-    obj2 = *(u8**)(objInst + 0x60);
-    if (obj2 != NULL)
-    {
-        void* obj = obj2 + 0x20;
-        if (obj2[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, id);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 6;
-    lbl_803DCD88 = lbl_803DCD88 + 2;
-    lbl_803DCD8C = lbl_803DCD8C + 2;
-    lbl_803DCD69 += 2;
-    lbl_803DCD6A += 4;
-    lbl_803DCD90 = lbl_803DCD90 + 4;
-}
-
-extern u8 lbl_803DCD6B;
-
-void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int variant)
-{
-    int inputSel;
-    int texmap;
-    GXSetTevDirect(lbl_803DCD90);
-    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    if (variant == 0 || variant == 2)
-    {
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
-    }
-    else
-    {
-        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR1A1);
-    }
-    if (*(int*)&lbl_803DCD90 == 0)
-    {
-        inputSel = GX_CC_ONE;
-    }
-    else
-    {
-        inputSel = GX_CC_C1;
-    }
-    if (stageMode == 0)
-    {
-        if (compMode == 2)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, inputSel, GX_CC_TEXC, GX_CC_ZERO);
-        }
-        else if (compMode == 3)
-        {
-            GXSetTevColorIn(lbl_803DCD90, inputSel, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
-        }
-        else if (compMode == 1)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, inputSel);
-        }
-        else if (variant == 0 || variant == 1)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, inputSel);
-        }
-        else
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, inputSel);
-        }
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        if (compMode == 1)
-        {
-            GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        }
-        else
-        {
-            GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-        }
-    }
-    else if (stageMode == 1)
-    {
-        if (compMode == 2)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_C2, GX_CC_TEXC, GX_CC_ZERO);
-        }
-        else if (compMode == 3)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_C2, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
-        }
-        else if (compMode == 1)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C2);
-        }
-        else if (variant == 0 || variant == 1)
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, GX_CC_C2);
-        }
-        else
-        {
-            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, GX_CC_C2);
-        }
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
-        if (compMode == 1)
-        {
-            GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-        }
-        else
-        {
-            GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-        }
-    }
-    else
-    {
-        lbl_803DCD6B = 1;
-        lbl_803DCD30 = 1;
-        GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
-        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ONE);
-        if (compMode == 3)
-        {
-            GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_RASA, GX_CA_TEXA, GX_CA_KONST);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        }
-        else
-        {
-            GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_RASA, GX_CA_TEXA, GX_CA_ZERO);
-            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-        }
-        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    }
-    texmap = lbl_803DCD8C;
-    if (texSrc != NULL)
-    {
-        u8* tex = texSrc + 0x20;
-        if (texSrc[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)(texSrc + 0x40), texmap);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)tex, texmap);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6A++;
-    lbl_803DCD69++;
-}
-
-extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
-extern int fn_8006C754(void);
-extern int fn_8006C74C(void);
-extern f32 lbl_803DEAF4;
-extern f32 lbl_803DEAF8;
-extern f32 lbl_803DEAFC;
-extern f32 lbl_803DEB00;
-
-#pragma opt_common_subs off
-void fn_8004D230(void)
-{
-    f32 mtx1[4][4];
-    f32 mtx2[3][4];
-    u8* obj1;
-    GameObject* player;
-    u8* obj2;
-    int id;
-    f32 dist;
-    f32 tmp;
-    f32 t;
-
-    obj1 = (u8*)fn_8006C754();
-    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4, lbl_803DEADC, lbl_803DEADC,
-                    lbl_803DEADC, lbl_803DEADC);
-    GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
-    if (lbl_803DCD90 == 0)
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
-    }
-    else
-    {
-        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    }
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
-    lbl_803DCD30 = 1;
-    id = lbl_803DCD8C;
-    if (obj1 != NULL)
-    {
-        void* obj = obj1 + 0x20;
-        if (obj1[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj1 + 0x40), id);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, id);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    player = Obj_GetPlayerObject();
-    if (player != NULL)
-    {
-        dist = Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
-                                                    ((GameObject*)player)->anim.worldPosY,
-                                                    ((GameObject*)player)->anim.worldPosZ);
-    }
-    else
-    {
-        dist = lbl_803DEAFC;
-    }
-    tmp = dist - lbl_803DEB00;
-    t = -(lbl_803DEAC8 / (dist - tmp));
-    mtx2[0][0] = lbl_803DEACC;
-    mtx2[0][1] = lbl_803DEACC;
-    mtx2[0][2] = t;
-    mtx2[0][3] = t * tmp;
-    mtx2[1][0] = lbl_803DEACC;
-    mtx2[1][1] = lbl_803DEACC;
-    mtx2[1][2] = lbl_803DEACC;
-    mtx2[1][3] = lbl_803DEACC;
-    mtx2[2][0] = lbl_803DEACC;
-    mtx2[2][1] = lbl_803DEACC;
-    mtx2[2][2] = lbl_803DEACC;
-    mtx2[2][3] = lbl_803DEACC;
-    GXLoadTexMtxImm(mtx2, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    GXSetTevKAlphaSel(lbl_803DCD90, GX_TEV_KASEL_1);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_A1, GX_CA_TEXA, GX_CA_KONST);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    obj2 = (u8*)fn_8006C74C();
-    id = lbl_803DCD8C;
-    if (obj2 != NULL)
-    {
-        void* obj = obj2 + 0x20;
-        if (obj2[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, id);
-        }
-    }
-    lbl_803DCD80 = lbl_803DCD80 + 3;
-    lbl_803DCD88 = lbl_803DCD88 + 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD8C = lbl_803DCD8C + 1;
-    lbl_803DCD6B = 1;
-    lbl_803DCD6A += 2;
-    lbl_803DCD69 += 2;
-}
-
-#pragma opt_common_subs reset
-
-extern int lbl_803DCD84;
-extern f32 bootThisDol_803DEAE8;
-extern f32 lbl_803DEAEC;
-extern f32 lbl_803DEAF0;
-
-#pragma opt_common_subs off
-void fn_8004CE0C(void* viewMtx)
-{
-    f32 mtx40[3][4];
-    f32 mtx70[3][4];
-    f32 sx;
-    f32 sy;
-    u8* obj7c;
-    u8* obj80;
-
-    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-    GXSetTevDirect(GX_TEVSTAGE0);
-    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
-    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
-    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_RASA, GX_CA_ZERO);
-    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    mtx40[0][0] = lbl_803DEAE4;
-    mtx40[0][1] = lbl_803DEACC;
-    mtx40[0][2] = lbl_803DEACC;
-    mtx40[0][3] = lbl_803DEACC;
-    mtx40[1][0] = lbl_803DEACC;
-    mtx40[1][1] = lbl_803DEACC;
-    mtx40[1][2] = lbl_803DEAE4;
-    mtx40[1][3] = lbl_803DEACC;
-    GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
-    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    getTextureFn_8006c5e4((u32*)&obj7c);
-    if (obj7c != NULL)
-    {
-        void* obj = obj7c + 0x20;
-        if (obj7c[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj7c + 0x40), 2);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
-        }
-    }
-    newshadows_getReflectionScrollOffsets(&sx, &sy);
-    PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
-    mtx70[0][0] = bootThisDol_803DEAE8;
-    mtx70[1][1] = bootThisDol_803DEAE8;
-    GXLoadTexMtxImm(mtx70, GX_TEXMTX1, GX_MTX2x4);
-    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
-    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
-    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
-    GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
-    GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_1_2);
-    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
-    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV, GX_CC_CPREV);
-    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
-    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    fn_8006C5B8((u32*)&obj80);
-    if (obj80 != NULL)
-    {
-        void* obj = obj80 + 0x20;
-        if (obj80[0x48] != 0)
-        {
-            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj80 + 0x40), 3);
-        }
-        else
-        {
-            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP3);
-        }
-    }
-    mtx40[0][0] = lbl_803DEACC;
-    mtx40[0][1] = lbl_803DEACC;
-    mtx40[0][2] = lbl_803DEAEC;
-    mtx40[0][3] = lbl_803DEAF0;
-    mtx40[1][0] = lbl_803DEACC;
-    mtx40[1][1] = lbl_803DEACC;
-    mtx40[1][2] = lbl_803DEACC;
-    mtx40[1][3] = lbl_803DEACC;
-    PSMTXConcat(mtx40, viewMtx, mtx40);
-    GXLoadTexMtxImm(mtx40, GX_TEXMTX2, GX_MTX2x4);
-    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    GXSetTevDirect(GX_TEVSTAGE2);
-    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD3, GX_TEXMAP3, GX_COLOR_NULL);
-    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
-    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD90 = 3;
-    lbl_803DCD88 = 4;
-    lbl_803DCD8C = 4;
-    lbl_803DCD7C = 1;
-    lbl_803DCD84 = 0x27;
-    lbl_803DCD6A = 3;
-    lbl_803DCD69 = 4;
-    lbl_803DCD68 = 1;
-}
-
-#pragma opt_common_subs reset
-
-extern void printHeapStats(int a);
-extern char sAssetHaltFormat[];
-extern int lbl_8035EF48[];
-extern s16 lbl_803DCC78;
-
-void loadDataFiles(int arg)
-{
-    int i;
-    if (getButtonsJustPressed(2) & PAD_BUTTON_A)
-    {
-        int vi = 0x4F;
-        vi++;
-        for (; vi < 0x57; vi++)
-        {
-        }
-        printHeapStats(1);
-    }
-    if (getButtonsJustPressed(2) & PAD_BUTTON_B)
-    {
-        defragMemory(0);
-    }
-    if (lbl_803DCC78 != 0)
-    {
-        if (lbl_803DCC78 == 1)
-        {
-            defragMemory(0);
-        }
-        lbl_803DCC78--;
-    }
-    for (i = 0; i <= 0x57; i++)
-    {
-        if (lbl_8035EF48[i] != -1)
-        {
-            debugPrintSetColor(0, 0xff, 0, 0xff);
-            logPrintf(sAssetHaltFormat, sResourceFileNameTable[i]);
-            debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
-            lbl_803DCC70 = 1;
-            if (mapLoadDataFile(lbl_8035EF48[i], i) != 0)
-            {
-                lbl_8035EF48[i] = -1;
-                printHeapStats(1);
-            }
-            lbl_803DCC70 = 0;
-        }
-    }
-    loadTableFiles();
-}
-
-#pragma peephole on
-void tvInit(void)
-{
-    gRenderModeObj->viWidth = 0x294;
-    gRenderModeObj->viXOrigin = gRenderModeObj->viXOrigin - 0xa;
-    VIConfigure(gRenderModeObj);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-}
-
-/* base+0x74 / base+0x78 are lbl_8035F3E8[0x1d]/[0x1e] (MldfTables.ptrs: maps info
-   bin/tab); the byte-offset spelling is codegen-load-bearing */
-void mapsBinGetRomlistSize(int idx, int* out1, int* out2, int* out3, int p5)
-{
-    char* base = (char*)lbl_8035F3E8;
-    char* e;
-    if (*(void**)(base + 0x74) == NULL)
-        return;
-    if (*(void**)(base + 0x78) == NULL)
-        return;
-    e = *(char**)(base + 0x74) + idx;
-    *out1 = *(s16*)(e + 0x1c);
-    *out2 = *(s16*)(e + 0x1e);
-    *out3 = *(int*)(*(char**)(base + 0x74) + *(int*)(*(char**)(base + 0x78) + p5 * 4 + 0x18) + 4);
-}
-
-void trickyVoxAllocFn_8004b5d4(int* out)
-{
-    out[0] = (int)mmAlloc(0x1960, 0x10, 0);
-    out[1] = out[0] + 0xfe0;
-    out[2] = out[1] + 0x7f0;
-}
-
-void* fileLoad(int id)
-{
-    DVDFileInfo fileInfo;
-    if (lbl_8035F3E8[id] != 0)
-    {
-        return (void*)lbl_8035F3E8[id];
-    }
-    DVDOpen(sResourceFileNameTable[id], &fileInfo);
-    lbl_8035F0A8[id] = fileInfo.length;
-    lbl_8035F3E8[id] = (u32)mmAlloc(lbl_8035F0A8[id] + 0x20, 0x7d7d7d7d, 0);
-    DCInvalidateRange((void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
-    DVDRead(&fileInfo, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id], 0);
-    DVDClose(&fileInfo);
-    return (void*)lbl_8035F3E8[id];
-}
-
-int fileLoadToBuffer(int id, void* buffer)
-{
-    DVDFileInfo fileInfo;
-    if (lbl_8035F3E8[id] != 0)
-    {
-        memcpy(buffer, (void*)lbl_8035F3E8[id], lbl_8035F0A8[id]);
-        DCStoreRange(buffer, lbl_8035F0A8[id]);
-        return lbl_8035F0A8[id];
-    }
-    DVDOpen(sResourceFileNameTable[id], &fileInfo);
-    DCInvalidateRange(buffer, fileInfo.length);
-    DVDRead(&fileInfo, buffer, fileInfo.length, 0);
-    DVDClose(&fileInfo);
-    return fileInfo.length;
-}
-#pragma peephole off
-int fileLoadToBufferOffset(int id, void* buffer, int offset, int size)
-{
-    DVDFileInfo fileInfo;
-    int asize;
-    void* tmp;
-    if (size == 0)
-        return 0;
-    if (lbl_8035F3E8[id] != 0)
-    {
-        {
-            int base = lbl_8035F3E8[id];
-            memcpy(buffer, (void*)(base + offset), size);
-        }
-        DCStoreRange(buffer, size);
-        return size;
-    }
-    DVDOpen(sResourceFileNameTable[id], &fileInfo);
-    if (((int)buffer & 0x1fu) != 0 || (size & 0x1f) != 0)
-    {
-        asize = (size + 0x1f) & ~0x1f;
-        tmp = mmAlloc(asize, 0x7d7d7d7d, 0);
-        DCInvalidateRange(tmp, asize);
-        DVDRead(&fileInfo, tmp, asize, offset);
-        memcpy(buffer, tmp, size);
-        mm_free(tmp);
-    }
-    else
-    {
-        DCInvalidateRange(buffer, size);
-        DVDRead(&fileInfo, buffer, size, offset);
-    }
-    DVDClose(&fileInfo);
-    DCStoreRange(buffer, size);
-    return size;
-}
-#pragma peephole on
-void fn_8004EECC(void)
-{
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_ZERO, GX_CC_RASA, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
-
-void fn_8004F080(void)
-{
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevDirect(lbl_803DCD90 + 1);
-    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
-    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevDirect(lbl_803DCD90 + 2);
-    GXSetTevOrder(lbl_803DCD90 + 2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_CPREV, GX_CC_C2, GX_CC_RASA, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 3;
-    lbl_803DCD6A = lbl_803DCD6A + 3;
-}
-
-extern void textureFn_8006c75c(int a);
-
-void fn_8004D928(void)
-{
-    textureFn_8006c75c(lbl_803DCD8C);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevKColorSel(lbl_803DCD90, GX_TEV_KCSEL_1_4);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD88++;
-    lbl_803DCD90++;
-    lbl_803DCD8C++;
-    lbl_803DCD84 = 0x27;
-    lbl_803DCD6A++;
-    lbl_803DCD69++;
-}
-
-void fn_8004FDA0(u8* texSrc, void* texMtx)
-{
-    GXSetTevDirect(lbl_803DCD90);
-    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
-    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
-    GXSetTevKColorSel(lbl_803DCD90, GX_TEV_KCSEL_1_2);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXA, GX_CC_CPREV, GX_CC_CPREV);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    {
-        int id = lbl_803DCD8C;
-        if (texSrc != NULL)
-        {
-            void* obj = texSrc + 0x20;
-            if (texSrc[0x48] != 0)
-            {
-                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(texSrc + 0x40), id);
-            }
-            else
-            {
-                GXLoadTexObj((GXTexObj*)obj, id);
-            }
-        }
-    }
-    lbl_803DCD88++;
-    lbl_803DCD90++;
-    lbl_803DCD8C++;
-    lbl_803DCD80 += 3;
-    lbl_803DCD6A++;
-    lbl_803DCD69++;
-}
-
-void fn_80050A28(int scale)
-{
-    f32 m[3][4];
-    PSMTXScale(m, scale, scale, lbl_803DEACC);
-    m[2][3] = lbl_803DEAC8;
-    GXLoadTexMtxImm(m, lbl_803DCD80, 0);
-    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
-    lbl_803DCD80 += 3;
-    lbl_803DCD88++;
-    lbl_803DCD69++;
-}
-
-void fn_8004F2B0(void)
-{
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
-
-extern void GXSetTevColor(int id, void* color);
-
-void fn_8004EF9C(int* param)
-{
-    int color = param[0];
-    GXSetTevColor(GX_TEVREG1, &color);
-    GXSetTevDirect(lbl_803DCD90);
-    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
-    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
-    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
-    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
-    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    lbl_803DCD30 = 1;
-    lbl_803DCD90 = lbl_803DCD90 + 1;
-    lbl_803DCD6A++;
-}
-
-extern u8 gLoadingScreenTextures[];
-extern char lbl_8035F680[0x38];
-extern void OSStopStopwatch(void* sw);
-extern u64 OSCheckStopwatch(void* sw);
-extern void OSResetStopwatch(void* sw);
-extern void OSStartStopwatch(void* sw);
-extern int OSGetCurrentThread(void);
-extern int Queue_GetCount(void* q);
-extern void OSSleepThread(void* q);
-
-extern void GXInvalidateVtxCache(void);
-
-extern int GXReadDrawSync(void);
-extern void VISetNextFrameBuffer(void* fb);
-extern void GXReadXfRasMetric(int* a, int* b, int* c, int* d);
-extern void GXGetGPStatus(u8* a, u8* b, u8* c, u8* d, u8* e);
-
-extern void GXInitFifoBase(void* fifo, void* base, u32 size);
-extern void GXSetCPUFifo(void* fifo);
-extern void GXSetGPFifo(void* fifo);
-extern int GXInit(void* base, u32 size);
-extern void OSWakeupThread(void* q);
-extern int Queue_Peek(void* q, void* out);
-extern void Queue_Pop(void* q, void* out);
-extern void GXDisableBreakPt(void);
-extern void GXPeekZ(int x, int y, void* out);
-extern f32 lbl_803DCCC0;
-extern f32 physicsTimeScale;
-extern f32 lbl_803DEAA0;
-extern f32 lbl_803DEA74;
-extern f32 lbl_803DEA7C;
-extern f32 lbl_803DCCB4;
-extern u8 lbl_803DB411;
-extern int lbl_803DCCDC;
-extern int lbl_803DCCAC;
-extern int lbl_803DCCA0;
-extern u16 lbl_803DCCAA;
-extern u8 lbl_803DCCA9;
-extern int lbl_803DB5C8;
-extern u16 gDepthReadPendingQueue[];
-extern u16 gDepthReadResults[];
-extern u16 gDepthReadPendingCount;
-extern u16 gDepthReadResultCount;
-extern u8 lbl_803DCCA8;
-extern int stackCreate(int n, int stride);
-extern void dvdReadCb_80041d30();
-extern u8 lbl_803DCC90;
-extern int lbl_803DCC88;
-extern int lbl_803DCC98;
-extern int lbl_803DCC84;
-#pragma peephole off
-char sAssetHaltFormat[] = "HALT\t%s\n";
-char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
-
-int initLoadFiles(void)
-{
-    int* ids;
-    int i;
-    int* rom;
-    s16* owners;
-    u8* himem;
-    struct MldfTables* tbl = (struct MldfTables*)lbl_80345E10;
-    char** names[1];
-    int* sizes;
-    u8* flags;
-    u32* ptrs;
-    if (lbl_803DCC90 == 0)
-    {
-        lbl_803DCC90 = 1;
-        lbl_803DCC88 = 0;
-        lbl_803DCC8C = stackCreate(0x5e, 0x40);
-        i = 0;
-        rom = tbl->romList;
-        for (; i < 0x75; i++)
-        {
-            *rom = 0;
-            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5)))
-            {
-                piRomLoadSection(0, i, 0);
-            }
-            rom++;
-        }
-        lbl_803DCC98 = 0;
-        i = 0;
-        himem = (u8*)tbl + 0x20000;
-        ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
-        owners = (s16*)(himem - 26824); /* tbl->owners */
-        ids = (int*)(himem - 28360);    /* tbl->ids */
-        names[0] = sResourceFileNameTable;
-        sizes = (int*)(himem - 28008); /* tbl->sizes */
-        flags = himem - 28448;         /* tbl->loadedFlags */
-        for (; i <= 0x57; i++)
-        {
-            switch (i)
-            {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-            case 13:
-            case 14:
-            case 17:
-            case 18:
-            case 24:
-            case 26:
-            case 27:
-            case 32:
-            case 33:
-            case 35:
-            case 36:
-            case 37:
-            case 38:
-            case 42:
-            case 43:
-            case 47:
-            case 48:
-            case 54:
-            case 66:
-            case 67:
-            case 68:
-            case 69:
-            case 70:
-            case 71:
-            case 72:
-            case 73:
-            case 74:
-            case 75:
-            case 76:
-            case 77:
-            case 78:
-            case 83:
-            case 84:
-            case 85:
-            case 86:
-                *ptrs = 0;
-                *owners = -1;
-                *ids = -1;
-                break;
-            default:
-                if (*ptrs == 0)
-                {
-                    int fi = AtomicSList_PopIntLegacy(lbl_803DCC8C);
-                    DVDOpen(*names[0], (DVDFileInfo*)fi);
-                    *sizes = DVD_FI_LENGTH(fi);
-                    *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
-                    lbl_803DCC88 = lbl_803DCC88 + 1;
-                    DVDReadAsyncPrio((DVDFileInfo*)fi, (void*)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
-                }
-                *owners = -1;
-                *ids = -1;
-                break;
-            }
-            *flags = 0;
-            ptrs++;
-            owners++;
-            ids++;
-            names[0]++;
-            sizes++;
-            flags++;
-        }
-    }
-    if (lbl_803DCC88 == 0)
-    {
-        if (((*(int*)&lbl_803DCC80 & 0x100) == 0 || (*(int*)&lbl_803DCC80 & 0x400) == 0) &&
-            ((*(volatile int*)&lbl_803DCC84 & 0x100) == 0 || (*(volatile int*)&lbl_803DCC84 & 0x400) == 0))
-        {
-            int saved = testAndSet_onlyUseHeap3(0);
-            mapLoadDataFile(5, MLDF_FILEID_TEX0_BIN_A);
-            mapLoadDataFile(5, MLDF_FILEID_TEX0_TAB_A);
-            testAndSet_onlyUseHeap3(saved);
-        }
-        else if ((*(volatile int*)&lbl_803DCC84 & 0x100) != 0 && (*(volatile int*)&lbl_803DCC84 & 0x400) != 0)
-        {
-            mergeTableFiles(tbl->mergeModels, 0x2a, 0x45, 0x800);
-            mergeTableFiles(tbl->mergeAnim, 0x2f, 0x49, 3000);
-            mergeTableFiles(tbl->mergeTex0, 0x24, 0x4e, 0x1000);
-            mergeTableFiles(tbl->mergeTex1, 0x21, 0x4c, 0x1000);
-            mergeTableFiles(tbl->mergeBlocks, 0x26, 0x48, 0x800);
-            lbl_803DCC84 = 0;
-            lbl_803DCC80 = 0;
-            return 1;
-        }
-    }
-    return 0;
-}
-#pragma optimize_for_size reset
-
-extern char sThreadStateAttrSuspendFormat[];
-
-void waitNextFrame(void)
-{
-    int lvl;
-    u32 frames;
-
-    OSStopStopwatch(lbl_8035F680);
-    lbl_803DCCC0 = OSCheckStopwatch(lbl_8035F680) / (f32)(u32)((*(u32*)0x800000f8 >> 2) / 1000);
-    OSResetStopwatch(lbl_8035F680);
-    OSStartStopwatch(lbl_8035F680);
-    timeDelta = physicsTimeScale * lbl_803DEAA0 * lbl_803DCCC0;
-    if (gDvdErrorPauseActive != 0)
-    {
-        timeDelta = lbl_803DEA70;
-    }
-    if (timeDelta > lbl_803DEA74)
-    {
-        timeDelta = *(f32*)&lbl_803DEA74;
-    }
-    if (timeDelta > lbl_803DEA7C)
-    {
-        oneOverTimeDelta = lbl_803DEA78 / timeDelta;
-    }
-    else
-    {
-        oneOverTimeDelta = lbl_803DEA78;
-    }
-    frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
-    lbl_803DB411 = frames;
-    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
-    framesThisStep = frames;
-    if (lbl_803DB411 < 1)
-    {
-        framesThisStep = 1;
-    }
-    lvl = OSDisableInterrupts();
-    lbl_803DCCDC = OSGetCurrentThread();
-    if (*(u16*)(lbl_803DCCDC + 0x2c8) != 2)
-    {
-        OSReport(sThreadStateAttrSuspendFormat, *(u16*)(lbl_803DCCDC + 0x2c8), *(u16*)(lbl_803DCCDC + 0x2ca),
-                 *(int*)(lbl_803DCCDC + 0x2cc));
-    }
-    if ((u32)Queue_GetCount(lbl_8035F730) > 1)
-    {
-        lbl_803DCCAC = 0;
-        OSSleepThread(&lbl_803DCCC4);
-    }
-    OSRestoreInterrupts(lvl);
-    Camera_ApplyFullViewport();
-    GXInvalidateVtxCache();
-    GXInvalidateTexAll();
-}
-
-void logGpuHang(void);
-extern void* lbl_803DCCD8;
-extern void* lbl_803DCCE4;
-extern void* displayFrameBuffer;
-#pragma peephole on
-void videoSwapFrameBuffers(u32 retraceCount)
-{
-    int sync;
-    int tok[3];
-    char fifo[140];
-
-    lbl_803DCCA0 = lbl_803DCCA0 + 1;
-    sync = GXReadDrawSync();
-    if ((u16)sync == (u16)(lbl_803DCCAA + 1))
-    {
-        lbl_803DCCAA = sync;
-        if (displayFrameBuffer == externalFrameBuffer0)
-        {
-            displayFrameBuffer = externalFrameBuffer1;
-        }
-        else
-        {
-            displayFrameBuffer = externalFrameBuffer0;
-        }
-        VISetNextFrameBuffer(displayFrameBuffer);
-        VIFlush();
-        lbl_803DCCA9 = 1;
-        lbl_803DB5C8 = lbl_803DCCA0;
-        lbl_803DCCA0 = 0;
-    }
-    lbl_803DCCAC = lbl_803DCCAC + 1;
-    if (lbl_803DCCB0 != 0 && (u32) * (volatile int*)&lbl_803DCCAC > 18000)
-    {
-        logGpuHang();
-        gxErrorFn_80060b40();
-        modelFn_800292e0();
-        __GXAbortWaitPECopyDone();
-        GXInitFifoBase(fifo, renderFrameBuffer, 0x10000);
-        GXSetCPUFifo(fifo);
-        GXSetGPFifo(fifo);
-        lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
-        if (Queue_IsEmpty(lbl_8035F730) == 0)
-        {
-            Queue_Pop(lbl_8035F730, tok);
-        }
-        OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
-        {
-            GXDisableBreakPt();
-            lbl_803DCCA7 = 0;
-        }
-        else
-        {
-            Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void*)tok[0]);
-        }
-        gxPerfFn_8004a77c(1);
-    }
-}
-
-void videoFn_800499e8(void)
-{
-    char peek[12];
-    int tok[3];
-    u16* src;
-    u16* dst;
-    int i;
-
-    if (gAttractMovieState == 2 || gAttractMovieState == 3)
-    {
-        THPPlayerPostDrawDone();
-    }
-    Queue_Peek(lbl_8035F730, &peek);
-    i = 0;
-    src = gDepthReadPendingQueue;
-    dst = gDepthReadResults;
-    for (; i < (int)(u32)gDepthReadPendingCount; i++)
-    {
-        dst[i * 6] = src[i * 6];
-        dst[i * 6 + 1] = src[i * 6 + 1];
-        *(int*)(dst + i * 6 + 4) = *(int*)(src + i * 6 + 4);
-        GXPeekZ(dst[i * 6], dst[i * 6 + 1], dst + i * 6 + 2);
-    }
-    gDepthReadResultCount = gDepthReadPendingCount;
-    gDepthReadPendingCount = 0;
-    if (*(void**)(peek + 8) == displayFrameBuffer)
-    {
-        lbl_803DCCA8 = 1;
-        lbl_803DCCA9 = 0;
-    }
-    else
-    {
-        Queue_Pop(lbl_8035F730, tok);
-        lbl_803DCCAC = 0;
-        OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
-        {
-            GXDisableBreakPt();
-            lbl_803DCCA7 = 0;
-        }
-        else
-        {
-            Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void*)tok[0]);
-            lbl_803DCCA7 = 1;
-        }
-    }
-}
-
-#pragma peephole off
-void logGpuHang(void)
-{
-    char* strs = (char*)gLoadingScreenTextures;
-    int topClks, topPerf0, topClks2, topPerf1;
-    int botClks, botPerf0, botClks2, botPerf1;
-    u32 xfStuck;
-    u32 cmdStuck;
-    u32 rdIdle;
-    u32 cmdIdle;
-    u8 cmdRdy;
-    u8 readIdle;
-    u8 fifoErr;
-
-    GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
-    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
-    xfStuck = (botClks - topClks) == 0;
-    cmdStuck = (botPerf0 - topPerf0) == 0;
-    rdIdle = (botClks2 - topClks2) != 0;
-    cmdIdle = (botPerf1 - topPerf1) != 0;
-    GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
-    OSReport(strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-    if (cmdStuck == 0 && rdIdle != 0)
-    {
-        OSReport(strs + 0x400fc);
-    }
-    else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
-    {
-        OSReport(strs + 0x4011c);
-    }
-    else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
-    {
-        OSReport(strs + 0x40144);
-    }
-    else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
-    {
-        OSReport(strs + 0x4016c);
-    }
-    else
-    {
-        OSReport(strs + 0x4019c);
-    }
-}
-
-extern u8 lbl_803DCCA6;
-extern u8 lbl_803DCCA4;
-extern u8 enableDebugText;
-
-void gpuErrorHandler(u32 retraceCount)
-{
-    char* strs = (char*)gLoadingScreenTextures;
-    int tok[3];
-    u32 botClks;
-    int botPerf0;
-    u32 botClks2;
-    int botPerf1;
-    u32 topClks;
-    int topPerf0;
-    u32 topClks2;
-    int topPerf1;
-    u8 cmdRdy;
-    u8 readIdle;
-    u8 fifoErr;
-    u32 xfStuck;
-    u32 cmdStuck;
-    u32 rdIdle;
-    u32 cmdIdle;
-
-    if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0)
-    {
-        Queue_Pop(lbl_8035F730, tok);
-        lbl_803DCCAC = 0;
-        OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) != 0)
-        {
-            GXDisableBreakPt();
-            lbl_803DCCA7 = 0;
-        }
-        else
-        {
-            Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void*)tok[0]);
-            lbl_803DCCA7 = 1;
-        }
-        lbl_803DCCA8 = 0;
-        lbl_803DCCA9 = 0;
-    }
-    lbl_803DCCA5 = 1;
-    lbl_803DCCA6 = 1;
-    switch (lbl_803DCCA4)
-    {
-    case 0:
-        if (OSGetResetButtonState() != 0)
-        {
-            lbl_803DCCA4++;
-        }
-        break;
-    case 1:
-        if (OSGetResetButtonState() == 0)
-        {
-            lbl_803DCCA4++;
-            setShouldResetNextFrame(1);
-        }
-        break;
-    }
-    if (enableDebugText != 0 && (void*)lbl_803DCCDC != NULL && (u32)lbl_803DCCAC > 600)
-    {
-        debugPrintfxy(0x32, 100, strs + 0x40000);
-        GXReadXfRasMetric(&botPerf0, (int*)&botClks, &botPerf1, (int*)&botClks2);
-        GXReadXfRasMetric(&topPerf0, (int*)&topClks, &topPerf1, (int*)&topClks2);
-        xfStuck = (topClks - botClks) == 0;
-        cmdStuck = (topPerf0 - botPerf0) == 0;
-        rdIdle = (topClks2 - botClks2) != 0;
-        cmdIdle = (topPerf1 - botPerf1) != 0;
-        GXGetGPStatus(&fifoErr, &fifoErr, &cmdRdy, &readIdle, &fifoErr);
-        debugPrintfxy(0x32, 0x78, strs + 0x4002c, cmdRdy, readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
-        if (cmdStuck == 0 && rdIdle != 0)
-        {
-            debugPrintfxy(0x32, 0x8c, strs + 0x40048);
-        }
-        else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0)
-        {
-            debugPrintfxy(0x32, 0x8c, strs + 0x40068);
-        }
-        else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0)
-        {
-            debugPrintfxy(0x32, 0x8c, strs + 0x40090);
-        }
-        else if (cmdRdy != 0 && readIdle != 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0 && cmdIdle != 0)
-        {
-            debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
-        }
-        else
-        {
-            debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
-        }
-        debugPrintfxy(0x32, 0xa0, sProgramCounterFormat, *(int*)(lbl_803DCCDC + 0x198));
-    }
-}
-
-extern void* OSInitAlloc(void* lo, void* hi, int numHeaps);
-extern int OSCreateHeap(void* start, void* end);
-extern void OSSetCurrentHeap(int heap);
-extern void GXInitFifoLimits(void* fifo, u32 hi, u32 lo);
-extern void Queue_Init(void* q, void* buf, int n, int stride);
-extern void OSInitThreadQueue(char* q);
-extern void GXSetBreakPtCallback(void (*cb)());
-extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
-extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
-extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
-extern u32 GXSetDispCopyYScale(f32 vscale);
-extern void GXSetDispCopyDst(int wd, int ht);
-extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
-extern void GXSetDither(int dither);
-extern void GXSetDispCopyGamma(int gamma);
-
-extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
-extern void GXSetCopyClear(void* clear_clr, u32 clear_z);
-
-extern char lbl_8035F6B8[0x78];
-extern char* lbl_803DCCE0;
-extern int lbl_803DCCB8;
-extern int lbl_803DCCF4;
-extern u8 lbl_803DCD00;
-extern int lbl_803DCCFC;
-extern u8 lbl_803DCCF8;
-extern f32 lbl_803DEA94;
-extern f32 lbl_803DEA98;
-
-#pragma opt_common_subs off
-#pragma opt_propagation off
-void videoInit(void)
-{
-    u8 fifo[0x80];
-    f32 mtx[3][4];
-    int cc;
-    u32 lo;
-    u32 hi;
-    u32 next;
-    int fbSize;
-    lo = (u32)OSGetArenaLo();
-    hi = (u32)OSGetArenaHi();
-    memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
-    DCStoreRange((void*)(hi - 0x40000), 0x40000);
-    fbSize = 0x40000;
-    lbl_803DCCE4 = (void*)fbSize;
-    lbl_803DCCD8 = gLoadingScreenTextures;
-    DCInvalidateRange((char*)gLoadingScreenTextures, fbSize);
-    lbl_803DCCD4 = (void*)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
-    lbl_803DCCE0 = lbl_803DCCD8;
-    GXSetDispCopySrc(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
-    lbl_803DCCB8 = GXSetDispCopyYScale((f32)gRenderModeObj->xfbHeight / gRenderModeObj->efbHeight);
-    fbSize = (u16)((gRenderModeObj->fbWidth + 0xf) & ~0xf) * lbl_803DCCB8 * 2;
-    externalFrameBuffer0 = (void*)((lo + 0x1f) & ~0x1f);
-    fbSize += 0x1f;
-    externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
-    next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
-    OSSetArenaLo((void*)next);
-    OSSetArenaLo((void*)(lo = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
-    lo = (lo + 0x1f) & ~0x1f;
-    hi = hi & ~0x1f;
-    OSSetCurrentHeap(OSCreateHeap((void*)lo, (void*)hi));
-    VIConfigure(gRenderModeObj);
-    GXInitFifoBase(fifo, externalFrameBuffer0, 0x10000);
-    GXSetCPUFifo(fifo);
-    GXSetGPFifo(fifo);
-    GXInitFifoLimits(lbl_803DCCD4, (u32)lbl_803DCCE4 - 0x4000, (u32)((u32)lbl_803DCCE4 * 3) >> 2);
-    GXSetCPUFifo(lbl_803DCCD4);
-    GXSetGPFifo(lbl_803DCCD4);
-    Queue_Init(lbl_8035F730, lbl_8035F6B8, 10, 0xc);
-    OSInitThreadQueue(&lbl_803DCCC4);
-    VISetPreRetraceCallback(videoSwapFrameBuffers);
-    VISetPostRetraceCallback(gpuErrorHandler);
-    GXSetBreakPtCallback(videoFn_800499e8);
-    GXSetViewport(lbl_803DEA70, lbl_803DEA70, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, lbl_803DEA70,
-                  lbl_803DEA78);
-    GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
-    GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
-    GXSetDispCopyDst(gRenderModeObj->fbWidth, (u16)lbl_803DCCB8);
-    if (gRenderModeObj->aa != 0)
-    {
-        GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
-        GXSetDither(GX_TRUE);
-    }
-    else
-    {
-        GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
-        GXSetDither(GX_FALSE);
-    }
-    displayFrameBuffer = externalFrameBuffer0;
-    renderFrameBuffer = externalFrameBuffer1;
-    VISetNextFrameBuffer(displayFrameBuffer);
-    GXSetDispCopyGamma(GX_GM_1_0);
-    VISetBlack(1);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    GXClearVtxDesc();
-    GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
-    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S16, 7);
-    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_POS, GX_POS_XYZ, GX_S16, 2);
-    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_NRM, GX_NRM_XYZ, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT2, GX_VA_TEX1, GX_TEX_ST, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_POS, GX_POS_XYZ, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_NBT, GX_NRM_NBT, GX_S8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT3, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_TEX0, GX_TEX_ST, GX_S16, 7);
-    GXSetVtxAttrFmt(GX_VTXFMT4, GX_VA_NRM, GX_NRM_XYZ, GX_F32, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_POS, GX_POS_XYZ, GX_S16, 3);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX0, GX_TEX_ST, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX1, GX_TEX_ST, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX2, GX_TEX_ST, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT5, GX_VA_TEX3, GX_TEX_ST, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_POS, GX_POS_XYZ, GX_S16, 8);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT6, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_NRM, GX_NRM_XYZ, GX_S8, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA4, 0);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX0, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX1, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX2, GX_TEX_ST, GX_S16, 10);
-    GXSetVtxAttrFmt(GX_VTXFMT7, GX_VA_TEX3, GX_TEX_ST, GX_S16, 10);
-    lbl_803DCCF4 = 0;
-    GXSetCullMode(GX_CULL_NONE);
-    cc = *(int*)&lbl_803DB5D0;
-    GXSetCopyClear(&cc, 0xffffff);
-    GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-    GXSetNumChans(1);
-    GXSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-    lbl_803DCD00 = 1;
-    lbl_803DCCFC = 3;
-    lbl_803DCCF8 = 1;
-    gxSetZMode_(1, GX_LEQUAL, 1);
-    gxSetPeControl_ZCompLoc_(1);
-    GXEnableTexOffsets(0, 1, 1);
-    PSMTXIdentity(mtx);
-    GXLoadPosMtxImm(mtx, GX_PNMTX0);
-    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX3x4);
-    GXLoadTexMtxImm(mtx, GX_TEXMTX1, GX_MTX3x4);
-    GXSetCurrentMtx(GX_PNMTX0);
-    C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
-    GXSetMisc(GX_MT_XF_FLUSH, 8);
-    PPCMtmsr(PPCMfmsr() | MSR_PM);
-    PPCMthid0(PPCMfhid0() | HID0_SPD);
-}
-
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-#pragma optimize_for_size on
 #pragma optimization_level 1
 #pragma opt_common_subs off
 #pragma opt_propagation off
-#pragma use_lmw_stmw on
 #pragma peephole on
+#pragma use_lmw_stmw on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
 extern u16 lbl_8030C9A0[];
 extern u8 lbl_8030CDA0[];
 extern u8 lbl_8030CDC0[];
 extern u8 lbl_8030CDE0[];
-extern u8 lbl_803DCD20[];
-extern u8 lbl_803DCD18[];
 extern u8 lbl_80377880[0x14];
 extern u16 lbl_80377894[0x10];
 extern u16 lbl_80377954[0x10];
@@ -8359,12 +6183,2261 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
     } while (final == 0);
     return 0;
 }
-#pragma peephole reset
-#pragma optimize_for_size reset
+
+typedef struct
+{
+    int a;
+    int b;
+} PiColorS10;
+
+extern int WidthTable_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
+extern int lbl_803DEAB8;
+extern int lbl_803DEABC;
+extern int lbl_803DEAC0;
+extern int lbl_803DCD74;
+extern int lbl_803DCD70;
+extern int lbl_803DCD6C;
+
 #pragma optimization_level reset
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
+#pragma peephole off
+#pragma ppc_unroll_speculative on
+#pragma scheduling off
 #pragma use_lmw_stmw reset
+
+void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
+{
+    u8* buf = bufp;
+    u8 found1 = 0;
+    u8 found2 = 0;
+    if (flag1 != 0)
+    {
+        if (buf[0] == buf[1] && buf[0] == buf[2])
+        {
+            if (buf[0] == 0xff)
+            {
+                *out1 = 0;
+                found1 = 1;
+            }
+            else if (buf[0] == 0xe0)
+            {
+                *out1 = 1;
+                found1 = 1;
+            }
+            else if (buf[0] == 0xc0)
+            {
+                *out1 = 2;
+                found1 = 1;
+            }
+            else if (buf[0] == 0xa0)
+            {
+                *out1 = 3;
+                found1 = 1;
+            }
+            else if (buf[0] == 0x80)
+            {
+                *out1 = 4;
+                found1 = 1;
+            }
+            else if (buf[0] == 0x60)
+            {
+                *out1 = 5;
+                found1 = 1;
+            }
+            else if (buf[0] == 0x40)
+            {
+                *out1 = 6;
+                found1 = 1;
+            }
+            else if (buf[0] == 0x20)
+            {
+                *out1 = 7;
+                found1 = 1;
+            }
+        }
+        if (found1 == 0)
+        {
+            *out1 = lbl_803DCD70;
+        }
+    }
+    else
+    {
+        found1 = 1;
+    }
+    if (flag2 != 0)
+    {
+        if (buf[3] == 0xff)
+        {
+            *out2 = 0;
+            found2 = 1;
+        }
+        else if (buf[3] == 0xe0)
+        {
+            *out2 = 1;
+            found2 = 1;
+        }
+        else if (buf[3] == 0xc0)
+        {
+            *out2 = 2;
+            found2 = 1;
+        }
+        else if (buf[3] == 0xa0)
+        {
+            *out2 = 3;
+            found2 = 1;
+        }
+        else if (buf[3] == 0x80)
+        {
+            *out2 = 4;
+            found2 = 1;
+        }
+        else if (buf[3] == 0x60)
+        {
+            *out2 = 5;
+            found2 = 1;
+        }
+        else if (buf[3] == 0x40)
+        {
+            *out2 = 6;
+            found2 = 1;
+        }
+        else if (buf[3] == 0x20)
+        {
+            *out2 = 7;
+            found2 = 1;
+        }
+        if (found2 == 0)
+        {
+            *out2 = lbl_803DCD6C;
+        }
+    }
+    else
+    {
+        found2 = 1;
+    }
+    if (found1 == 0 || found2 == 0)
+    {
+        int color = *(int*)bufp;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+    }
+}
+
+extern void fn_8006C504(void* out);
+extern void GXSetIndTexCoordScale(GXIndTexStageID ind_state, GXIndTexScale scale_s, GXIndTexScale scale_t);
+extern f32 SaveEnd_803DEAD4;
+extern f32 lbl_803DEB04;
+extern f32 lbl_803DEB08;
+extern f32 lbl_803DEB0C;
+extern f32 lbl_803DEB10;
+extern f32 lbl_803DEB14;
+extern f32 lbl_803DEB18;
+
+#pragma peephole reset
+#pragma peephole on
+#pragma ppc_unroll_speculative on
+void fn_8004C1E4(u8 b, f32 scale)
+{
+    ((u8*)&lbl_803DB5EC)[3] = b;
+    lbl_803DB5F0 = scale;
+    if (scale > lbl_803DEAC8)
+    {
+        lbl_803DB5F0 = lbl_803DEAC8;
+    }
+}
+
+#pragma scheduling reset
+#pragma scheduling on
+
+void disableHeavyFog(void)
+{
+    lbl_803DCD28 = 0x0;
+}
+#pragma peephole reset
+#pragma peephole off
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling off
+
+void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode)
+{
+    lbl_803DCD28 = 1;
+    lbl_803DCD44 = a;
+    lbl_803DCD40 = b;
+    lbl_803DCD3C = c;
+    lbl_803DCD38 = d;
+    lbl_803DCD34 = e;
+    lbl_803DCD31 = mode;
+}
+#pragma peephole reset
+#pragma peephole on
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling on
+
+
+void fn_8004C234(f32* p1, f32* p2)
+{
+    *p1 = lbl_803DCD44;
+    *p2 = lbl_803DCD40;
+}
+
+u8 isHeavyFogEnabled(void)
+{
+    return lbl_803DCD28;
+}
+#pragma peephole reset
+#pragma peephole off
+#pragma ppc_unroll_speculative on
+#pragma scheduling reset
+#pragma scheduling off
+
+void* Shader_getLayer(void* base, int idx)
+{
+    return (u8*)base + idx * 8 + 0x24;
+}
+void textureFn_8004c264(Texture* texture, int mapId)
+{
+    void* base;
+    if (texture == NULL)
+        return;
+    base = &((u8*)texture)[32];
+    if (((u8*)texture)[72] != 0)
+    {
+        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 64), mapId);
+    }
+    else
+    {
+        GXLoadTexObj(base, mapId);
+    }
+    if (*(void**)((u8*)texture + 80) != NULL)
+    {
+        fn_80053C40((u8*)texture, lbl_803779A0);
+        GXLoadTexObj((GXTexObj*)lbl_803779A0, GX_TEXMAP1);
+    }
+}
+
+void selectTexture(Texture* texture, int mapId)
+{
+    void* base;
+    if (texture == NULL)
+        return;
+    base = &((u8*)texture)[0x20];
+    if (((u8*)texture)[0x48] != 0)
+    {
+        GXLoadTexObjPreLoaded(base, *(void**)((u8*)texture + 0x40), mapId);
+    }
+    else
+    {
+        GXLoadTexObj(base, mapId);
+    }
+}
+#pragma opt_lifetimes off
+void textureFn_8004c330(void* p1, void* mtx)
+{
+    IndTexMtx23 m;
+    f32 sx;
+    f32 sy;
+    int out_c;
+    int out_8;
+    int yhi;
+    int ylo;
+    int y;
+    int x;
+    int v1;
+    u8* dst;
+    int v2;
+    int v3;
+    m = lbl_802C1E28;
+    if (lbl_803DCD2C == 0)
+    {
+        lbl_803DCD2C = textureAlloc(0x20, 0x20, 4, 0, 0, 1, 1, 1, 1);
+        for (y = 0; y < 0x20; y++)
+        {
+            x = 0;
+            yhi = (y >> 2) * 0x20;
+            ylo = (y & 3) * 2;
+            for (; x < 0x20; x++)
+            {
+                v1 = (int)lbl_803DCD2C + ylo;
+                v1 = v1 + yhi;
+                v1 = v1 + (x & 3) * 8;
+                dst = (u8*)v1 + (x >> 2) * 0x100;
+                v1 = randomGetRange(0x80, 0xff);
+                v2 = v1 - randomGetRange(0, 0x40);
+                v3 = v1 - randomGetRange(0x40, 0x80);
+                *(u16*)(dst + 0x60) = ((v1 & 0xf8) >> 3) | ((v2 & 0xf8) << 8 | (v3 & 0xfc) << 3);
+            }
+        }
+        DCFlushRange(lbl_803DCD2C + 0x60, *(u32*)(lbl_803DCD2C + 0x44));
+    }
+    newshadows_getReflectionScrollOffsets(&sx, &sy);
+    m.v[0][1] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sx) + lbl_803DEADC;
+    m.v[1][2] = lbl_803DEAE0 * mathSinf(Prepared_803DEAD8 * sy) + lbl_803DEADC;
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD0, lbl_803DCD8C + 1, GX_ALPHA_BUMPN);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    if (mtx != 0)
+    {
+        GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+    }
+    else
+    {
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    }
+    GXSetIndTexMtx(GX_ITM_0, m.v, (s8)lbl_803DB5F4);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 7, 1, 0, 0, 0, 0, 3);
+    gxTextureFn_8004bf88(lbl_803DB5F8, 1, 0, &out_c, &out_8);
+    GXSetTevKColorSel(lbl_803DCD90, out_c);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXC, GX_CC_RASA, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C0, GX_CC_CPREV, GX_CC_APREV, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    {
+        int id = lbl_803DCD8C;
+        if (p1 != 0)
+        {
+            void* obj = (char*)p1 + 0x20;
+            if (*(u8*)((char*)p1 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+    }
+    {
+        int id2 = lbl_803DCD8C + 1;
+        u8* tex = lbl_803DCD2C;
+        if (tex != 0)
+        {
+            void* obj = tex + 0x20;
+            if (*(u8*)(tex + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex + 0x40), id2);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id2);
+            }
+        }
+    }
+    lbl_803DCD78 = lbl_803DCD78 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD6A += 2;
+    lbl_803DCD69 += 1;
+    lbl_803DCD68 += 1;
+}
+#pragma opt_common_subs off
+#pragma opt_lifetimes reset
+void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
+{
+    u8 buf5c[0x20];
+    u8 buf3c[0x20];
+    u8 buf1c[0x20];
+    PiColorS10 cs10;
+    int ck1;
+    int ck2;
+    int ck3;
+    int h2;
+    int w2;
+    if (lbl_803DCD6A > 0xb || lbl_803DCD69 > 6 || lbl_803DCD8C > 5 || lbl_803DCD74 > 1)
+    {
+        return;
+    }
+    {
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_A0);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        GXSetTevKAlphaSel(lbl_803DCD90, lbl_803DCD6C);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 2, GX_COLOR_NULL);
+        GXSetTevDirect(lbl_803DCD90 + 1);
+        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_C1);
+        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_FALSE, GX_TEVREG1);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_A1);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVREG1);
+        GXSetTevKColorSel(lbl_803DCD90 + 1, lbl_803DCD70 + 1);
+        GXSetTevKAlphaSel(lbl_803DCD90 + 1, lbl_803DCD6C + 1);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevDirect(lbl_803DCD90 + 2);
+        GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, GX_CC_C1);
+        GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_TEXA, GX_CA_ZERO, GX_CA_ZERO, GX_CA_A1);
+        GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevOrder(lbl_803DCD90 + 3, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+        GXSetTevDirect(lbl_803DCD90 + 3);
+        GXSetTevColorIn(lbl_803DCD90 + 3, GX_CC_A1, GX_CC_C1, GX_CC_KONST, GX_CC_ZERO);
+        GXSetTevColorOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevAlphaIn(lbl_803DCD90 + 3, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        GXSetTevAlphaOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevSwapMode(lbl_803DCD90 + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevKColorSel(lbl_803DCD90 + 3, lbl_803DCD70 + 2);
+        GXSetTevOrder(lbl_803DCD90 + 4, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+        GXSetTevDirect(lbl_803DCD90 + 4);
+        GXSetTevColorIn(lbl_803DCD90 + 4, GX_CC_CPREV, GX_CC_C1, GX_CC_KONST, GX_CC_ZERO);
+        GXSetTevColorOp(lbl_803DCD90 + 4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaIn(lbl_803DCD90 + 4, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevAlphaOp(lbl_803DCD90 + 4, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevSwapMode(lbl_803DCD90 + 4, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevKColorSel(lbl_803DCD90 + 4, GX_TEV_KCSEL_1_4);
+        lbl_803DCD30 = 1;
+        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
+        GXSetTevColorS10(1, &cs10);
+        ck1 = lbl_803DEAB8;
+        GXSetTevKColor(lbl_803DCD74, &ck1);
+        ck2 = lbl_803DEABC;
+        GXSetTevKColor(lbl_803DCD74 + 1, &ck2);
+        ck3 = lbl_803DEAC0;
+        GXSetTevKColor(lbl_803DCD74 + 2, &ck3);
+        GXInitTexObj((GXTexObj*)buf5c, tex0, w, h, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf5c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf5c, lbl_803DCD8C);
+        GXInitTexObj((GXTexObj*)buf3c, tex1, w2 = w >> 1, h2 = h >> 1, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf3c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf3c, lbl_803DCD8C + 1);
+        GXInitTexObj((GXTexObj*)buf1c, tex2, w2, h2, GX_TF_I8, GX_CLAMP, GX_CLAMP, 0);
+        GXInitTexObjLOD((GXTexObj*)buf1c, 0, 0, lbl_803DEACC, lbl_803DEACC, lbl_803DEACC, 0, 0, 0);
+        GXLoadTexObj((GXTexObj*)buf1c, lbl_803DCD8C + 2);
+        lbl_803DCD90 = lbl_803DCD90 + 5;
+        lbl_803DCD88 = lbl_803DCD88 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 3;
+        lbl_803DCD74 = lbl_803DCD74 + 3;
+        lbl_803DCD70 = lbl_803DCD70 + 3;
+        lbl_803DCD6C = lbl_803DCD6C + 3;
+        lbl_803DCD6A += 5;
+        lbl_803DCD69 += 2;
+    }
+}
+void fn_8004CE0C(void* viewMtx)
+{
+    f32 mtx40[3][4];
+    f32 mtx70[3][4];
+    f32 sx;
+    f32 sy;
+    u8* obj7c;
+    u8* obj80;
+
+    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_TEXA, GX_CA_ZERO, GX_CA_RASA, GX_CA_ZERO);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    mtx40[0][0] = lbl_803DEAE4;
+    mtx40[0][1] = lbl_803DEACC;
+    mtx40[0][2] = lbl_803DEACC;
+    mtx40[0][3] = lbl_803DEACC;
+    mtx40[1][0] = lbl_803DEACC;
+    mtx40[1][1] = lbl_803DEACC;
+    mtx40[1][2] = lbl_803DEAE4;
+    mtx40[1][3] = lbl_803DEACC;
+    GXLoadTexMtxImm(mtx40, GX_TEXMTX0, GX_MTX2x4);
+    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
+    getTextureFn_8006c5e4((u32*)&obj7c);
+    if (obj7c != NULL)
+    {
+        void* obj = obj7c + 0x20;
+        if (obj7c[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj7c + 0x40), 2);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
+        }
+    }
+    newshadows_getReflectionScrollOffsets(&sx, &sy);
+    PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
+    mtx70[0][0] = bootThisDol_803DEAE8;
+    mtx70[1][1] = bootThisDol_803DEAE8;
+    GXLoadTexMtxImm(mtx70, GX_TEXMTX1, GX_MTX2x4);
+    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevKColorSel(GX_TEVSTAGE1, GX_TEV_KCSEL_1_2);
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV, GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
+    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    fn_8006C5B8((u32*)&obj80);
+    if (obj80 != NULL)
+    {
+        void* obj = obj80 + 0x20;
+        if (obj80[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj80 + 0x40), 3);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP3);
+        }
+    }
+    mtx40[0][0] = lbl_803DEACC;
+    mtx40[0][1] = lbl_803DEACC;
+    mtx40[0][2] = lbl_803DEAEC;
+    mtx40[0][3] = lbl_803DEAF0;
+    mtx40[1][0] = lbl_803DEACC;
+    mtx40[1][1] = lbl_803DEACC;
+    mtx40[1][2] = lbl_803DEACC;
+    mtx40[1][3] = lbl_803DEACC;
+    PSMTXConcat(mtx40, viewMtx, mtx40);
+    GXLoadTexMtxImm(mtx40, GX_TEXMTX2, GX_MTX2x4);
+    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevDirect(GX_TEVSTAGE2);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD3, GX_TEXMAP3, GX_COLOR_NULL);
+    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
+    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD90 = 3;
+    lbl_803DCD88 = 4;
+    lbl_803DCD8C = 4;
+    lbl_803DCD7C = 1;
+    lbl_803DCD84 = 0x27;
+    lbl_803DCD6A = 3;
+    lbl_803DCD69 = 4;
+    lbl_803DCD68 = 1;
+}
+void fn_8004D230(void)
+{
+    f32 mtx1[4][4];
+    f32 mtx2[3][4];
+    u8* obj1;
+    GameObject* player;
+    u8* obj2;
+    int id;
+    f32 dist;
+    f32 tmp;
+    f32 t;
+
+    obj1 = (u8*)fn_8006C754();
+    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4, lbl_803DEADC, lbl_803DEADC,
+                    lbl_803DEADC, lbl_803DEADC);
+    GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
+    if (lbl_803DCD90 == 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+    lbl_803DCD30 = 1;
+    id = lbl_803DCD8C;
+    if (obj1 != NULL)
+    {
+        void* obj = obj1 + 0x20;
+        if (obj1[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj1 + 0x40), id);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    player = Obj_GetPlayerObject();
+    if (player != NULL)
+    {
+        dist = Camera_DistanceToCurrentViewPosition(((GameObject*)player)->anim.worldPosX,
+                                                    ((GameObject*)player)->anim.worldPosY,
+                                                    ((GameObject*)player)->anim.worldPosZ);
+    }
+    else
+    {
+        dist = lbl_803DEAFC;
+    }
+    tmp = dist - lbl_803DEB00;
+    t = -(lbl_803DEAC8 / (dist - tmp));
+    mtx2[0][0] = lbl_803DEACC;
+    mtx2[0][1] = lbl_803DEACC;
+    mtx2[0][2] = t;
+    mtx2[0][3] = t * tmp;
+    mtx2[1][0] = lbl_803DEACC;
+    mtx2[1][1] = lbl_803DEACC;
+    mtx2[1][2] = lbl_803DEACC;
+    mtx2[1][3] = lbl_803DEACC;
+    mtx2[2][0] = lbl_803DEACC;
+    mtx2[2][1] = lbl_803DEACC;
+    mtx2[2][2] = lbl_803DEACC;
+    mtx2[2][3] = lbl_803DEACC;
+    GXLoadTexMtxImm(mtx2, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+    GXSetTevKAlphaSel(lbl_803DCD90, GX_TEV_KASEL_1);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_A1, GX_CA_TEXA, GX_CA_KONST);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    obj2 = (u8*)fn_8006C74C();
+    id = lbl_803DCD8C;
+    if (obj2 != NULL)
+    {
+        void* obj = obj2 + 0x20;
+        if (obj2[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6B = 1;
+    lbl_803DCD6A += 2;
+    lbl_803DCD69 += 2;
+}
+#pragma opt_common_subs reset
+
+void gxTextureFn_8004d5b4(void* p1)
+{
+    u8 buf[3];
+    int color;
+    u8 b = *(u8*)((char*)p1 + 0x43);
+    buf[2] = b;
+    buf[1] = b;
+    buf[0] = b;
+    color = *(int*)buf;
+    GXSetTevKColor(lbl_803DCD74, &color);
+    GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_C0, GX_CC_KONST, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD74 = lbl_803DCD74 + 1;
+    lbl_803DCD70 = lbl_803DCD70 + 1;
+    lbl_803DCD6C = lbl_803DCD6C + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+
+
+void fn_8004D6D8(void)
+{
+    struct piIndMtx indmtx;
+    void* tex;
+    int id;
+    f32 v;
+    indmtx = lbl_802C1E10;
+    v = lbl_803DEADC * fn_8006C670();
+    indmtx.m[0][0] = v;
+    indmtx.m[1][2] = v;
+    if (lbl_803DCD88 > 0)
+    {
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 - 1, lbl_803DCD8C + 1);
+    }
+    else
+    {
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C + 1);
+    }
+    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+    GXSetIndTexMtx(GX_ITM_1, indmtx.m, -3);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
+    getTextureFn_8006c5e4((u32*)&tex);
+    id = lbl_803DCD8C + 1;
+    if (tex != NULL)
+    {
+        void* obj = (char*)tex + 0x20;
+        if (*(u8*)((char*)tex + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)tex + 0x40), id);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, id);
+        }
+    }
+    GXLoadTexMtxImm(lbl_80396820, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    selectReflectionTexture(lbl_803DCD8C);
+    lbl_803DCD7C = lbl_803DCD7C + 1;
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+    lbl_803DCD68++;
+}
+
+
+
+#pragma peephole reset
+#pragma peephole on
+
+extern void textureFn_8006c75c(int a);
+
+void fn_8004D928(void)
+{
+    textureFn_8006c75c(lbl_803DCD8C);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX2, GX_FALSE, GX_PTIDENTITY);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevKColorSel(lbl_803DCD90, GX_TEV_KCSEL_1_4);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_CPREV);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD88++;
+    lbl_803DCD90++;
+    lbl_803DCD8C++;
+    lbl_803DCD84 = 0x27;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+}
+
+#pragma opt_common_subs off
+#pragma peephole reset
+#pragma peephole off
+void fn_8004DA54(char* p1)
+{
+    f32 mtxf4[3][4];
+    f32 mtxc4[3][4];
+    f32 mtx94[3][4];
+    f32 mtx64[3][4];
+    IndTexMtx23 m1;
+    IndTexMtx23 m2;
+    u8* tex30;
+    u8* tex2c;
+    f32 rx;
+    f32 ry;
+    f32 cv;
+    f32 sv;
+    f32 tsx;
+    f32 tsy;
+    int kc;
+    f32 f31v;
+    f32 s;
+    f32 k;
+    f32 t;
+    u8* tex24;
+    m1 = lbl_802C1DC8;
+    m2 = lbl_802C1DE0[0];
+    tex24 = *(u8**)(p1 + 0x24);
+    if (tex24 != 0)
+    {
+        void* obj = tex24 + 0x20;
+        if (*(u8*)(tex24 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex24 + 0x40), 2);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP2);
+        }
+    }
+    GXSetTexCoordGen2(GX_TEXCOORD3, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    newshadows_getReflectionScrollOffsets(&rx, &ry);
+    fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
+    s = mathCosf(Prepared_803DEAD8 * ry);
+    k = lbl_803DEB08 * s + lbl_803DEB04;
+    k = k * lbl_803DB5F0;
+    cv = cv * k;
+    sv = sv * k;
+    m1.v[0][0] = cv;
+    m1.v[0][1] = sv;
+    m1.v[1][0] = -sv;
+    m1.v[1][1] = cv;
+    fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
+    s = mathCosf(Prepared_803DEAD8 * rx);
+    f31v = lbl_803DEADC * s + lbl_803DEADC;
+    k = lbl_803DEB08 * s + lbl_803DEB04;
+    k = k * lbl_803DB5F0;
+    cv = cv * k;
+    sv = sv * k;
+    m2.v[0][0] = cv;
+    m2.v[0][1] = sv;
+    m2.v[1][0] = -sv;
+    m2.v[1][1] = cv;
+    fn_8006C504(&tex2c);
+    if (tex2c != 0)
+    {
+        void* obj = tex2c + 0x20;
+        if (*(u8*)(tex2c + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex2c + 0x40), 0);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP0);
+        }
+    }
+    {
+        u8 b = *(u8*)(p1 + 0x2a);
+        if (b != 0xff)
+        {
+            mapTextureScrollGetOffset(b, &tsx, &tsy);
+            PSMTXTrans(mtx64, tsx, tsy, lbl_803DEACC);
+        }
+        else
+        {
+            PSMTXIdentity(mtx64);
+        }
+    }
+    GXLoadTexMtxImm(mtx64, GX_PTTEXMTX2, GX_MTX3x4);
+    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX2);
+    getTextureFn_8006c5e4((u32*)&tex30);
+    if (tex30 != 0)
+    {
+        void* obj = tex30 + 0x20;
+        if (*(u8*)(tex30 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex30 + 0x40), 1);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, GX_TEXMAP1);
+        }
+    }
+    PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
+    mtxf4[1][3] = lbl_803DEB08 * ry;
+    GXLoadTexMtxImm(mtxf4, GX_PTTEXMTX0, GX_MTX3x4);
+    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX0);
+    GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP1);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
+    GXSetIndTexMtx(GX_ITM_0, m1.v, -2);
+    GXSetIndTexMtx(GX_ITM_1, m2.v, -2);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+    PSMTXScale(mtxc4, lbl_803DEB0C, *(f32*)&lbl_803DEB0C, lbl_803DEAC8);
+    PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
+    PSMTXConcat(mtx94, mtxc4, mtxc4);
+    t = lbl_803DEB14 * rx;
+    mtxc4[0][3] = t;
+    mtxc4[1][3] = t;
+    GXLoadTexMtxImm(mtxc4, GX_PTTEXMTX1, GX_MTX3x4);
+    GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX3x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTTEXMTX1);
+    GXSetIndTexOrder(GX_INDTEXSTAGE1, GX_TEXCOORD2, GX_TEXMAP1);
+    GXSetIndTexCoordScale(GX_INDTEXSTAGE1, GX_ITS_1, GX_ITS_1);
+    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
+    ((u8*)&lbl_803DB5EC)[0] = lbl_803DEB18 * f31v;
+    ((u8*)&lbl_803DB5EC)[1] = 0;
+    ((u8*)&lbl_803DB5EC)[2] = 0;
+    kc = lbl_803DB5EC;
+    GXSetTevKColor(lbl_803DCD74, &kc);
+    GXSetTevKAlphaSel(GX_TEVSTAGE0, lbl_803DCD6C);
+    GXSetTevKColorSel(GX_TEVSTAGE1, lbl_803DCD70);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_RED);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP2, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_KONST, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP3);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_4, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_KONST, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD3, GX_TEXMAP0, GX_COLOR_NULL);
+    GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_CPREV, GX_CC_TEXC, GX_CC_APREV, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevSwapMode(GX_TEVSTAGE2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD88 = 4;
+    lbl_803DCD90 = 3;
+    lbl_803DCD8C = 3;
+    lbl_803DCD80 = 0x49;
+    lbl_803DCD7C = 2;
+    lbl_803DCD6A = 3;
+    lbl_803DCD69 = 4;
+    lbl_803DCD68 = 2;
+    lbl_803DCD74 = 1;
+    lbl_803DCD70 = 0xd;
+    lbl_803DCD6C = 0x1d;
+}
+
+#pragma opt_common_subs reset
+
+extern void fn_8006C510(void* out);
+extern f32 lbl_803DEB1C;
+extern f32 lbl_803DEB20;
+extern f32 LastLength_803DEB24;
+extern f32 lbl_803DEB28;
+extern f32 SaveStart_803DEAD0;
+
+void fn_8004E0FC(void)
+{
+    f32 m1e8[3][4];
+    f32 m1b8[3][4];
+    f32 m188[3][4];
+    f32 m158[3][4];
+    f32 m128[3][4];
+    f32 mf8[3][4];
+    f32 mc8[3][4];
+    f32 m98[3][4];
+    f32 m68[3][4];
+    IndTexMtx23 im;
+    PiVec3 va;
+    PiVec3 vb;
+    PiVec3 vc;
+    PiVec3 vd;
+    u8* tex1c;
+    u8* tex18;
+    f32 rx;
+    f32 ry;
+    void* invView;
+    va = ((PiVec3*)&lbl_802C1D50)[4];
+    vb = ((PiVec3*)&lbl_802C1D50)[5];
+    vc = ((PiVec3*)&lbl_802C1D50)[6];
+    vd = ((PiVec3*)&lbl_802C1D50)[7];
+    im = *(IndTexMtx23*)((PiVec3*)&lbl_802C1D50 + 8);
+    invView = Camera_GetInverseViewMatrix();
+    PSMTXRotAxisRad(mf8, &va, lbl_803DEAC8);
+    PSMTXRotAxisRad(mc8, &vb, lbl_803DEAC8);
+    PSMTXRotAxisRad(m98, &vc, lbl_803DEAC8);
+    PSMTXRotAxisRad(m68, &vd, lbl_803DEAC8);
+    m1e8[0][0] = lbl_803DEB1C;
+    m1e8[0][1] = lbl_803DEACC;
+    m1e8[0][2] = lbl_803DEACC;
+    m1e8[0][3] = SaveStart_803DEAD0 * (*(f32*)&lbl_803DEB20 * playerMapOffsetX);
+    m1e8[1][0] = lbl_803DEACC;
+    m1e8[1][1] = lbl_803DEB1C;
+    m1e8[1][2] = lbl_803DEACC;
+    m1e8[1][3] = lbl_803DEACC;
+    m1e8[2][0] = lbl_803DEACC;
+    m1e8[2][1] = lbl_803DEACC;
+    m1e8[2][2] = lbl_803DEB1C;
+    m1e8[2][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetZ);
+    m1b8[0][0] = LastLength_803DEB24;
+    m1b8[0][1] = lbl_803DEACC;
+    m1b8[0][2] = lbl_803DEACC;
+    m1b8[0][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetX);
+    m1b8[1][0] = lbl_803DEACC;
+    m1b8[1][1] = LastLength_803DEB24;
+    m1b8[1][2] = lbl_803DEACC;
+    m1b8[1][3] = lbl_803DEACC;
+    m1b8[2][0] = lbl_803DEACC;
+    m1b8[2][1] = lbl_803DEACC;
+    m1b8[2][2] = LastLength_803DEB24;
+    m1b8[2][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetZ);
+    PSMTXConcat(m1e8, invView, m1e8);
+    PSMTXConcat(mf8, m1e8, m1e8);
+    m1e8[2][0] = lbl_803DEACC;
+    m1e8[2][1] = lbl_803DEACC;
+    m1e8[2][2] = lbl_803DEACC;
+    m1e8[2][3] = lbl_803DEAC8;
+    PSMTXConcat(m1b8, invView, m1b8);
+    PSMTXConcat(mc8, m1b8, m1b8);
+    m1b8[2][0] = lbl_803DEACC;
+    m1b8[2][1] = lbl_803DEACC;
+    m1b8[2][2] = lbl_803DEACC;
+    m1b8[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m1e8, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXLoadTexMtxImm(m1b8, lbl_803DCD80 + 3, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
+    fn_8006C510(&tex1c);
+    {
+        int id = lbl_803DCD8C;
+        if (tex1c != 0)
+        {
+            void* obj = tex1c + 0x20;
+            if (*(u8*)(tex1c + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+    }
+    newshadows_getReflectionScrollOffsets(&rx, &ry);
+    GXSetIndTexMtx(GX_ITM_1, im.v, -1);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
+    m188[0][0] = lbl_803DEB20;
+    m188[0][1] = lbl_803DEACC;
+    m188[0][2] = lbl_803DEACC;
+    m188[0][3] = lbl_803DEB20 * playerMapOffsetX + rx;
+    m188[1][0] = lbl_803DEACC;
+    m188[1][1] = lbl_803DEB20;
+    m188[1][2] = lbl_803DEACC;
+    m188[1][3] = lbl_803DEACC;
+    m188[2][0] = lbl_803DEACC;
+    m188[2][1] = lbl_803DEACC;
+    m188[2][2] = lbl_803DEB20;
+    m188[2][3] = lbl_803DEB20 * playerMapOffsetZ;
+    PSMTXRotRad(m128, 0x79, lbl_803DEB28);
+    PSMTXConcat(m128, m188, m188);
+    PSMTXConcat(m188, invView, m188);
+    PSMTXConcat(m98, m188, m188);
+    m188[2][0] = lbl_803DEACC;
+    m188[2][1] = lbl_803DEACC;
+    m188[2][2] = lbl_803DEACC;
+    m188[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m188, lbl_803DCD80 + 6, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 0, 0, 0, 0, 0);
+    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+    GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 3, lbl_803DCD8C + 1);
+    m158[0][0] = lbl_803DEB20;
+    m158[0][1] = lbl_803DEACC;
+    m158[0][2] = lbl_803DEACC;
+    m158[0][3] = lbl_803DEB20 * playerMapOffsetX;
+    m158[1][0] = lbl_803DEACC;
+    m158[1][1] = lbl_803DEB20;
+    m158[1][2] = lbl_803DEACC;
+    m158[1][3] = lbl_803DEACC;
+    m158[2][0] = lbl_803DEACC;
+    m158[2][1] = lbl_803DEACC;
+    m158[2][2] = lbl_803DEB20;
+    m158[2][3] = lbl_803DEB20 * playerMapOffsetZ + ry;
+    PSMTXConcat(m158, invView, m158);
+    PSMTXConcat(m68, m158, m158);
+    m158[2][0] = lbl_803DEACC;
+    m158[2][1] = lbl_803DEACC;
+    m158[2][2] = lbl_803DEACC;
+    m158[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m158, lbl_803DCD80 + 9, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 3, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 9);
+    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+    GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXA, GX_CC_CPREV);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR0A0);
+    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXA, GX_CC_CPREV);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    getTextureFn_8006c5e4((u32*)&tex18);
+    {
+        int id2 = lbl_803DCD8C + 1;
+        if (tex18 != 0)
+        {
+            void* obj = tex18 + 0x20;
+            if (*(u8*)(tex18 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex18 + 0x40), id2);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id2);
+            }
+        }
+    }
+    lbl_803DCD88 = lbl_803DCD88 + 4;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD80 = lbl_803DCD80 + 0xc;
+    lbl_803DCD7C = lbl_803DCD7C + 2;
+    lbl_803DCD6A += 2;
+    lbl_803DCD69 += 4;
+    lbl_803DCD68 += 2;
+}
+
+extern f32 lbl_803DEAC4;
+extern void fn_8006C528(void* out);
+extern f32 ResetCoverCallback_803DEB2C;
+
+void renderHeavyFog(void* fogColor)
+{
+    f32 mcc[3][4];
+    f32 m9c[3][4];
+    f32 m6c[3][4];
+    f32 mrot[3][4];
+    IndTexMtx23 im;
+    u8* tex20;
+    u8* tex1c;
+    f32 a;
+    f32 b;
+    int kc;
+    f32(*iv)[4];
+    f32 k;
+    im = lbl_802C1D68[0];
+    iv = (f32(*)[4])Camera_GetInverseViewMatrix();
+    mcc[0][0] = lbl_803DEACC;
+    mcc[0][1] = lbl_803DEACC;
+    mcc[0][2] = lbl_803DEAC4 / lbl_803DCD3C;
+    mcc[0][3] = lbl_803DCD38;
+    k = lbl_803DEAC4 / (lbl_803DCD44 - lbl_803DCD40);
+    mcc[1][0] = k * iv[1][0];
+    mcc[1][1] = k * iv[1][1];
+    mcc[1][2] = k * iv[1][2];
+    mcc[1][3] = k * iv[1][3] + -lbl_803DCD44 * k;
+    mcc[2][0] = lbl_803DEACC;
+    mcc[2][1] = lbl_803DEACC;
+    mcc[2][2] = lbl_803DEACC;
+    mcc[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    kc = *(int*)fogColor;
+    GXSetTevKColor(lbl_803DCD74, &kc);
+    fn_8006C528(&tex20);
+    {
+        int id = lbl_803DCD8C;
+        if (tex20 != 0)
+        {
+            void* obj = tex20 + 0x20;
+            if (*(u8*)(tex20 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex20 + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+    }
+    if (lbl_803DCD31 != 0)
+    {
+        newshadows_getReflectionScrollOffsets(&a, &b);
+        b = b * lbl_803DEAE0;
+        a = a * lbl_803DEB08;
+        GXSetIndTexMtx(GX_ITM_1, im.v, -2);
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 1, lbl_803DCD8C + 1);
+        m9c[0][0] = lbl_803DCD34;
+        m9c[0][1] = lbl_803DEACC;
+        m9c[0][2] = lbl_803DEACC;
+        m9c[0][3] = playerMapOffsetX * lbl_803DCD34 + a;
+        m9c[1][0] = lbl_803DEACC;
+        m9c[1][1] = lbl_803DCD34;
+        m9c[1][2] = lbl_803DEACC;
+        m9c[1][3] = lbl_803DEACC;
+        m9c[2][0] = lbl_803DEACC;
+        m9c[2][1] = lbl_803DEACC;
+        m9c[2][2] = lbl_803DEACC;
+        m9c[2][3] = lbl_803DEAC8;
+        PSMTXRotRad(mrot, 0x7a, lbl_803DEB28);
+        PSMTXConcat(mrot, m9c, m9c);
+        PSMTXConcat(m9c, iv, m9c);
+        GXLoadTexMtxImm(m9c, lbl_803DCD80 + 3, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
+        GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 6, 6, 0, 0, 0);
+        GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+        GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
+        m6c[0][0] = lbl_803DEACC;
+        m6c[0][1] = lbl_803DEACC;
+        m6c[0][2] = lbl_803DCD34;
+        m6c[0][3] = playerMapOffsetZ * lbl_803DCD34 + b;
+        m6c[1][0] = lbl_803DEACC;
+        m6c[1][1] = lbl_803DCD34;
+        m6c[1][2] = lbl_803DEACC;
+        m6c[1][3] = lbl_803DEACC;
+        m6c[2][0] = lbl_803DEACC;
+        m6c[2][1] = lbl_803DEACC;
+        m6c[2][2] = lbl_803DEACC;
+        m6c[2][3] = lbl_803DEAC8;
+        PSMTXRotRad(mrot, 0x78, ResetCoverCallback_803DEB2C);
+        PSMTXConcat(mrot, m6c, m6c);
+        PSMTXConcat(m6c, iv, m6c);
+        GXLoadTexMtxImm(m6c, lbl_803DCD80 + 6, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 2, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 6);
+        GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+        GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
+        GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        lbl_803DCD30 = 1;
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_CPREV, GX_CC_KONST, GX_CC_TEXA, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        getTextureFn_8006c5e4((u32*)&tex1c);
+        {
+            int id2 = lbl_803DCD8C + 1;
+            if (tex1c != 0)
+            {
+                void* obj = tex1c + 0x20;
+                if (*(u8*)(tex1c + 0x48) != 0)
+                {
+                    GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(tex1c + 0x40), id2);
+                }
+                else
+                {
+                    GXLoadTexObj((GXTexObj*)obj, id2);
+                }
+            }
+        }
+        GXSetTevKColorSel(lbl_803DCD90 + 1, lbl_803DCD70);
+        lbl_803DCD88 = lbl_803DCD88 + 3;
+        lbl_803DCD90 = lbl_803DCD90 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 2;
+        lbl_803DCD80 = lbl_803DCD80 + 9;
+        lbl_803DCD7C = lbl_803DCD7C + 2;
+        lbl_803DCD6A += 2;
+        lbl_803DCD69 += 3;
+        lbl_803DCD68 += 2;
+    }
+    else
+    {
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_KONST, GX_CC_TEXA, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        lbl_803DCD30 = 1;
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+        lbl_803DCD6A += 1;
+        lbl_803DCD69 += 1;
+    }
+    lbl_803DCD74 = lbl_803DCD74 + 1;
+    lbl_803DCD70 = lbl_803DCD70 + 1;
+    lbl_803DCD6C = lbl_803DCD6C + 1;
+}
+#pragma peephole reset
+#pragma peephole on
+void fn_8004EECC(void)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_CPREV, GX_CC_ZERO, GX_CC_RASA, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+
+void fn_8004EF9C(int* param)
+{
+    int color = param[0];
+    GXSetTevColor(GX_TEVREG1, &color);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+void fn_8004F080(void)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevDirect(lbl_803DCD90 + 2);
+    GXSetTevOrder(lbl_803DCD90 + 2, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_CPREV, GX_CC_C2, GX_CC_RASA, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 3;
+    lbl_803DCD6A = lbl_803DCD6A + 3;
+}
+
+void fn_8004F2B0(void)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR_NULL);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+#pragma peephole off
+extern int lbl_8030CEE0[];
+
+extern f32 lbl_803DEB38;
+
+extern f32 lbl_803DEB3C;
+
+int textureFn_80050ad8(void* p1, int p2, u8 p3, u32 p4)
+{
+    struct piIndMtx indmtx;
+    f32 mtx[3][4];
+    f32 v;
+    int result;
+    int texmap;
+    int t;
+    indmtx = lbl_802C1D50;
+    t = lbl_803DB5E8 & 1;
+    result = 0;
+    if (t == 0)
+    {
+        return 0;
+    }
+    GXSetIndTexMtx(GX_ITM_0, indmtx.m, 0);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + p2, lbl_803DCD8C);
+    if (p4 != 0)
+    {
+        void* texptr;
+        u32 div;
+        int p2v = (p3 & 0xf) * 4 + 1;
+        texptr = textureIdxToPtr(p4);
+        div = (u32) * (u16*)((char*)texptr + 0xa) / (u32)(*(u16*)((char*)p1 + 0xa) * p2v);
+        if (div != 0)
+        {
+            GXSetIndTexCoordScale(lbl_803DCD7C, lbl_8030CEE0[div - 1], lbl_8030CEE0[div - 1]);
+        }
+        else
+        {
+            result = p2v & 0xff;
+        }
+    }
+    else
+    {
+        result = 1;
+    }
+    v = lbl_803DEADC * (lbl_803DEB38 * ((f32)(s32)((p3 & 0xf0) >> 4) / lbl_803DEB3C - lbl_803DEAC8));
+    PSMTXScale(mtx, v, v, lbl_803DEACC);
+    mtx[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_BINRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX2x4, GX_TG_TANGENT, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 5, 6, 6, 0, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C, 0, 3, 9, 6, 6, 1, 0, 0);
+    GXSetTevIndirect(lbl_803DCD90 + 2, lbl_803DCD7C, 0, 0, 0, 0, 0, 1, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
+    GXSetTevOp(lbl_803DCD90, GX_PASSCLR);
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, (lbl_803DCD8C + 1) | 0x100, GX_COLOR_NULL);
+    GXSetTevOp(lbl_803DCD90 + 1, GX_PASSCLR);
+    texmap = lbl_803DCD8C;
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)tex, texmap);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD7C = lbl_803DCD7C + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 2;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A += 2;
+    lbl_803DCD68 += 1;
+    lbl_803DCD69 += 2;
+    return result;
+}
+#pragma peephole reset
+
+#pragma peephole reset
+#pragma peephole off
+
+void fn_8004F380(f32 scale, int* colorIn, f32* pos)
+{
+    f32 matA[3][4];
+    f32 matB[3][4];
+    u8* src;
+    int color;
+    int id;
+    f32 f;
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
+    {
+        f = 0.5f / scale;
+        matA[0][0] = f;
+        matA[0][1] = 0.0f;
+        matA[0][2] = 0.0f;
+        matA[0][3] = -pos[0] * f + 0.5f;
+        matA[1][0] = 0.0f;
+        matA[1][1] = 0.0f;
+        matA[1][2] = f;
+        matA[1][3] = -pos[2] * f + 0.5f;
+        matA[2][0] = 0.0f;
+        matA[2][1] = 0.0f;
+        matA[2][2] = 0.0f;
+        matA[2][3] = 1.0f;
+        matB[0][0] = 0.0f;
+        matB[0][1] = f;
+        matB[0][2] = 0.0f;
+        matB[0][3] = -pos[1] * f + 0.5f;
+        matB[1][0] = 0.0f;
+        matB[1][1] = 0.0f;
+        matB[1][2] = 0.0f;
+        matB[1][3] = 0.5f;
+        matB[2][0] = 0.0f;
+        matB[2][1] = 0.0f;
+        matB[2][2] = 0.0f;
+        matB[2][3] = 1.0f;
+        fn_8006C540((u32*)&src);
+        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        color = *colorIn;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevDirect(lbl_803DCD90 + 1);
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_C1);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        id = lbl_803DCD8C;
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+        lbl_803DCD90 = lbl_803DCD90 + 2;
+        lbl_803DCD88 = lbl_803DCD88 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+        lbl_803DCD80 = lbl_803DCD80 + 6;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
+    }
+}
+
+void fn_8004F6D8(f32 scale, int* colorIn, f32* pos)
+{
+    f32 matA[3][4];
+    f32 matB[3][4];
+    u8* src;
+    int color;
+    int id;
+    f32 f;
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0xc || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
+    {
+        f = 0.5f / scale;
+        matA[0][0] = f;
+        matA[0][1] = 0.0f;
+        matA[0][2] = 0.0f;
+        matA[0][3] = -pos[0] * f + 0.5f;
+        matA[1][0] = 0.0f;
+        matA[1][1] = 0.0f;
+        matA[1][2] = f;
+        matA[1][3] = -pos[2] * f + 0.5f;
+        matA[2][0] = 0.0f;
+        matA[2][1] = 0.0f;
+        matA[2][2] = 0.0f;
+        matA[2][3] = 1.0f;
+        matB[0][0] = 0.0f;
+        matB[0][1] = f;
+        matB[0][2] = 0.0f;
+        matB[0][3] = -pos[1] * f + 0.5f;
+        matB[1][0] = 0.0f;
+        matB[1][1] = 0.0f;
+        matB[1][2] = 0.0f;
+        matB[1][3] = 0.5f;
+        matB[2][0] = 0.0f;
+        matB[2][1] = 0.0f;
+        matB[2][2] = 0.0f;
+        matB[2][3] = 1.0f;
+        fn_8006C540((u32*)&src);
+        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        color = *colorIn;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevDirect(lbl_803DCD90 + 1);
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        id = lbl_803DCD8C;
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+        lbl_803DCD90 = lbl_803DCD90 + 2;
+        lbl_803DCD88 = lbl_803DCD88 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+        lbl_803DCD80 = lbl_803DCD80 + 6;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
+    }
+}
+
+
+void fn_8004FA30(f32 scale, int* colorIn, f32* pos)
+{
+    f32 matA[3][4];
+    f32 matB[3][4];
+    u8* src;
+    int color;
+    int id;
+    f32 f;
+    if (!(lbl_803DCD74 <= 3) || lbl_803DCD6A >= 0x10 || lbl_803DCD69 >= 7)
+    {
+        return;
+    }
+    {
+        if (scale < 0.1f)
+        {
+            scale = 0.1f;
+        }
+        f = 0.5f / scale;
+        matA[0][0] = f;
+        matA[0][1] = 0.0f;
+        matA[0][2] = 0.0f;
+        matA[0][3] = -pos[0] * f + 0.5f;
+        matA[1][0] = 0.0f;
+        matA[1][1] = 0.0f;
+        matA[1][2] = f;
+        matA[1][3] = -pos[2] * f + 0.5f;
+        matA[2][0] = 0.0f;
+        matA[2][1] = 0.0f;
+        matA[2][2] = 0.0f;
+        matA[2][3] = 1.0f;
+        matB[0][0] = 0.0f;
+        matB[0][1] = f;
+        matB[0][2] = 0.0f;
+        matB[0][3] = -pos[1] * f + 0.5f;
+        matB[1][0] = 0.0f;
+        matB[1][1] = 0.0f;
+        matB[1][2] = 0.0f;
+        matB[1][3] = 0.5f;
+        matB[2][0] = 0.0f;
+        matB[2][1] = 0.0f;
+        matB[2][2] = 0.0f;
+        matB[2][3] = 1.0f;
+        fn_8006C540((u32*)&src);
+        GXLoadTexMtxImm(matA, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+        GXLoadTexMtxImm(matB, lbl_803DCD80 + 3, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80 + 3);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+        color = *colorIn;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_TEXC, GX_CC_ZERO);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevDirect(lbl_803DCD90 + 1);
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, GX_COLOR_NULL);
+        GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_ZERO, GX_CC_C0, GX_CC_TEXC, GX_CC_CPREV);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        lbl_803DCD30 = 1;
+        id = lbl_803DCD8C;
+        if (src != NULL)
+        {
+            u8* obj = src + 0x20;
+            if (src[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+        lbl_803DCD90 = lbl_803DCD90 + 2;
+        lbl_803DCD88 = lbl_803DCD88 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+        lbl_803DCD80 = lbl_803DCD80 + 6;
+        lbl_803DCD69 += 2;
+        lbl_803DCD6A += 2;
+    }
+}
+#pragma peephole reset
+#pragma peephole on
+
+void fn_8004FDA0(u8* texSrc, void* texMtx)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevKColorSel(lbl_803DCD90, GX_TEV_KCSEL_1_2);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_KONST, GX_CC_TEXA, GX_CC_CPREV, GX_CC_CPREV);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ADDHALF, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    {
+        int id = lbl_803DCD8C;
+        if (texSrc != NULL)
+        {
+            void* obj = texSrc + 0x20;
+            if (texSrc[0x48] != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(texSrc + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+    }
+    lbl_803DCD88++;
+    lbl_803DCD90++;
+    lbl_803DCD8C++;
+    lbl_803DCD80 += 3;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+}
+#pragma peephole reset
+#pragma peephole off
+
+void textureFn_8004ff20(void* p1)
+{
+    if (p1 != 0)
+    {
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_RASA, GX_CC_TEXC);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        lbl_803DCD30 = 1;
+        {
+            int id = lbl_803DCD8C;
+            if (p1 != 0)
+            {
+                char* tex = (char*)p1 + 0x20;
+                if (*(u8*)((char*)p1 + 0x48) != 0)
+                {
+                    GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), id);
+                }
+                else
+                {
+                    GXLoadTexObj((GXTexObj*)tex, id);
+                }
+            }
+        }
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD69 += 1;
+        lbl_803DCD6A += 1;
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR1A1);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_RASA, GX_CC_CPREV);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD6A += 1;
+    }
+}
+
+void fn_8005011C(int objInst)
+{
+    u8* src;
+    f32 mtx[3][4];
+    u8* obj2;
+    int id;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevDirect(lbl_803DCD90 + 2);
+    GXSetTevDirect(lbl_803DCD90 + 3);
+    PSMTXConcat((f32(*)[4])(objInst + 0x30), (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
+    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
+    PSMTXConcat((f32(*)[4])objInst, (f32(*)[4])Camera_GetInverseViewMatrix(), mtx);
+    GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, GX_TG_MTX3x4, GX_TG_POS, GX_IDENTITY, GX_FALSE, lbl_803DCD80 + 3);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
+    GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
+    GXSetTevOrder(lbl_803DCD90 + 3, lbl_803DCD88 + 1, lbl_803DCD8C + 1, GX_COLOR_NULL);
+    GXSetTevKColorSel(lbl_803DCD90 + 2, GX_TEV_KCSEL_1_4);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_C0, GX_CC_TEXC, GX_CC_ONE, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_COMP_R8_GT, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG0);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_C1, GX_CC_KONST, GX_CC_C0, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevColorIn(lbl_803DCD90 + 3, GX_CC_C2, GX_CC_ZERO, GX_CC_C0, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 3, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevSwapMode(lbl_803DCD90 + 3, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+    GXSetTevAlphaOp(lbl_803DCD90 + 3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    fn_8006C5B8((u32*)&src);
+    id = lbl_803DCD8C;
+    if (src != NULL)
+    {
+        void* obj = src + 0x20;
+        if (src[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(src + 0x40), id);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, id);
+        }
+    }
+    id = lbl_803DCD8C + 1;
+    obj2 = *(u8**)(objInst + 0x60);
+    if (obj2 != NULL)
+    {
+        void* obj = obj2 + 0x20;
+        if (obj2[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)(obj2 + 0x40), id);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 6;
+    lbl_803DCD88 = lbl_803DCD88 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD69 += 2;
+    lbl_803DCD6A += 4;
+    lbl_803DCD90 = lbl_803DCD90 + 4;
+}
+
+
+void fn_80050558(u8* texSrc, void* texMtx, int stageMode, int compMode, int variant)
+{
+    int inputSel;
+    int texmap;
+    GXSetTevDirect(lbl_803DCD90);
+    GXLoadTexMtxImm(texMtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX3x4, GX_TG_POS, GX_PNMTX0, GX_FALSE, lbl_803DCD80);
+    if (variant == 0 || variant == 2)
+    {
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
+    }
+    else
+    {
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR1A1);
+    }
+    if (*(int*)&lbl_803DCD90 == 0)
+    {
+        inputSel = GX_CC_ONE;
+    }
+    else
+    {
+        inputSel = GX_CC_C1;
+    }
+    if (stageMode == 0)
+    {
+        if (compMode == 2)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, inputSel, GX_CC_TEXC, GX_CC_ZERO);
+        }
+        else if (compMode == 3)
+        {
+            GXSetTevColorIn(lbl_803DCD90, inputSel, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
+        }
+        else if (compMode == 1)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, inputSel);
+        }
+        else if (variant == 0 || variant == 1)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, inputSel);
+        }
+        else
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, inputSel);
+        }
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        if (compMode == 1)
+        {
+            GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        }
+        else
+        {
+            GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+        }
+    }
+    else if (stageMode == 1)
+    {
+        if (compMode == 2)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_C2, GX_CC_TEXC, GX_CC_ZERO);
+        }
+        else if (compMode == 3)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_C2, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ZERO);
+        }
+        else if (compMode == 1)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C2);
+        }
+        else if (variant == 0 || variant == 1)
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASC, GX_CC_TEXC, GX_CC_C2);
+        }
+        else
+        {
+            GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_RASA, GX_CC_TEXC, GX_CC_C2);
+        }
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+        GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+        if (compMode == 1)
+        {
+            GXSetTevColorOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+        }
+        else
+        {
+            GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+        }
+    }
+    else
+    {
+        lbl_803DCD6B = 1;
+        lbl_803DCD30 = 1;
+        GXSetTevSwapModeTable(GX_TEV_SWAP1, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
+        GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP1, GX_TEV_SWAP1);
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ONE);
+        if (compMode == 3)
+        {
+            GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_RASA, GX_CA_TEXA, GX_CA_KONST);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_SUB, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        }
+        else
+        {
+            GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_RASA, GX_CA_TEXA, GX_CA_ZERO);
+            GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        }
+        GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    }
+    texmap = lbl_803DCD8C;
+    if (texSrc != NULL)
+    {
+        u8* tex = texSrc + 0x20;
+        if (texSrc[0x48] != 0)
+        {
+            GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)(texSrc + 0x40), texmap);
+        }
+        else
+        {
+            GXLoadTexObj((GXTexObj*)tex, texmap);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+}
+
+
+
+
+#pragma peephole reset
+#pragma peephole on
+
+void fn_80050A28(int scale)
+{
+    f32 m[3][4];
+    PSMTXScale(m, scale, scale, lbl_803DEACC);
+    m[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
+    lbl_803DCD80 += 3;
+    lbl_803DCD88++;
+    lbl_803DCD69++;
+}
+#pragma peephole reset
+#pragma peephole off
+
+extern int lbl_8030CEE0[];
+extern f32 lbl_803DEB38;
+extern f32 lbl_803DEB3C;
+
+
+
+
+void gxTextureFn_80050e28(u8 mode)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    if (mode != 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_C1, GX_CC_C2);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_CPREV, GX_CC_RASC, GX_CC_C2);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_APREV);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+void fn_80050F2C(void)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_C2, GX_CC_TEXC, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+
+
+void fn_80050FF4(u8 mode)
+{
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    if (mode != 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_APREV, GX_CC_C1, GX_CC_C2);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_APREV, GX_CC_RASC, GX_CC_C2);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD6A++;
+}
+extern f32 Breaking_803DEB40;
+
+void fn_800510F0(void* p1, u8 flag2, u8 flag3)
+{
+    f32 mtxB[3][4];
+    f32 mtxA[3][4];
+    int texmap;
+    if (lbl_803DCD68 == 0)
+    {
+        GXSetTevDirect(lbl_803DCD90);
+    }
+    if (flag2 != 0)
+    {
+        GXSetTevIndRepeat(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, GX_COLOR_NULL);
+    }
+    else
+    {
+        PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+        PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
+        PSMTXConcat(mtxB, mtxA, mtxA);
+        GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD69 += 1;
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A2, GX_CA_ZERO);
+    if (flag2 != 0)
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_C1, GX_CC_ZERO);
+    }
+    else
+    {
+        GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC, GX_CC_ZERO);
+    }
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG2);
+    if ((flag3 & 1) != 0)
+    {
+        GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_BLUE, GX_CH_BLUE, GX_CH_BLUE, GX_CH_GREEN);
+    }
+    else
+    {
+        GXSetTevSwapModeTable(GX_TEV_SWAP3, GX_CH_RED, GX_CH_RED, GX_CH_RED, GX_CH_GREEN);
+    }
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP3);
+    texmap = lbl_803DCD8C;
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
+        GXLoadTexObj((GXTexObj*)tex, texmap);
+        }
+    }
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A += 1;
+}
+
+
+
+
+
+
+void textureFn_80051348(void* p1, u8 p2)
+{
+    f32 mtxB[3][4];
+    f32 mtxA[3][4];
+    u8 buf[3];
+    int out_c;
+    int out_8;
+    int texmap;
+    PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+    PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
+    PSMTXConcat(mtxB, mtxA, mtxA);
+    GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
+    buf[0] = p2;
+    buf[1] = p2;
+    buf[2] = p2;
+    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
+    GXSetTevKColorSel(lbl_803DCD90, out_c);
+    GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, lbl_803DCD80);
+    if (lbl_803DCD68 == 0)
+    {
+        GXSetTevDirect(lbl_803DCD90);
+    }
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_TEXC, GX_CC_KONST, GX_CC_RASC);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVREG1);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    texmap = lbl_803DCD8C;
+    if (p1 != 0)
+    {
+        char* tex = (char*)p1 + 0x20;
+        if (*(u8*)((char*)p1 + 0x48) != 0)
+        {
+        GXLoadTexObjPreLoaded((GXTexObj*)tex, *(GXTexRegion**)((char*)p1 + 0x40), texmap);
+        }
+        else
+        {
+        GXLoadTexObj((GXTexObj*)tex, texmap);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A += 1;
+    lbl_803DCD69 += 1;
+}
+
+
+
+void fn_80051528(void* p1, void* mtx)
+{
+    u8 buf[3];
+    int out_c;
+    int out_8;
+    objGetColor(0, &buf[0], &buf[1], &buf[2]);
+    if (mtx != 0)
+    {
+        GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, lbl_803DCD80);
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+    }
+    else
+    {
+        GXSetTexCoordGen2(lbl_803DCD88, GX_TG_MTX2x4, lbl_803DCD78, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+    }
+    gxTextureFn_8004bf88(buf, 1, 0, &out_c, &out_8);
+    GXSetTevKColorSel(lbl_803DCD90, out_c);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90, GX_CC_ZERO, GX_CC_KONST, GX_CC_RASC, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    lbl_803DCD30 = 1;
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevOrder(lbl_803DCD90 + 1, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90 + 1, GX_CC_CPREV, GX_CC_RASC, GX_CC_RASA, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO);
+    GXSetTevColorOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevDirect(lbl_803DCD90 + 2);
+    GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88, lbl_803DCD8C, GX_COLOR_NULL);
+    GXSetTevSwapMode(lbl_803DCD90 + 2, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorIn(lbl_803DCD90 + 2, GX_CC_ZERO, GX_CC_CPREV, GX_CC_TEXC, GX_CC_ZERO);
+    GXSetTevAlphaIn(lbl_803DCD90 + 2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
+    GXSetTevColorOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(lbl_803DCD90 + 2, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    {
+        int id = lbl_803DCD8C;
+        if (p1 != 0)
+        {
+            void* obj = (char*)p1 + 0x20;
+            if (*(u8*)((char*)p1 + 0x48) != 0)
+            {
+                GXLoadTexObjPreLoaded((GXTexObj*)obj, *(GXTexRegion**)((char*)p1 + 0x40), id);
+            }
+            else
+            {
+                GXLoadTexObj((GXTexObj*)obj, id);
+            }
+        }
+    }
+    lbl_803DCD78 = lbl_803DCD78 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 3;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A += 3;
+    lbl_803DCD69 += 1;
+}
 
 /* .bss glue 0x8035EF48-0x803779C0 */
 u8 lbl_803779A0[0x20];
