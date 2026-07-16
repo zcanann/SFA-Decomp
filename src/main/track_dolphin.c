@@ -4636,18 +4636,21 @@ void trackIntersect(void)
 {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
-    f32 fz0;
     s16* q;
     u8* rp;
     int toff;
     int bi;
     int base;
+    int fo;
+    int fi;
     int tn;
     int k;
     int gx, gz;
     int layer;
     int i, j, off;
     s16 prev, t;
+    f32 fz0;
+    f32 x, y, z;
 
     lbl_803DCF44 = 0;
     if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
@@ -4679,13 +4682,12 @@ void trackIntersect(void)
 
     for (layer = 0; layer < 5; layer++)
     {
-        f32 scale = lbl_803DECE0;
         u8* idx = mapGetBlockIdx(layer);
         for (gz = 0, base = 0; gz < 0x10; base += 0x10, gz++)
         {
             gx = 0;
             bi = base;
-            fz0 = scale * gz;
+            fz0 = lbl_803DECE0 * gz;
             for (; gx < 0x10; bi++, gx++)
             {
                 if ((s8)idx[bi] >= 0)
@@ -4720,9 +4722,9 @@ void trackIntersect(void)
                             rp = (u8*)rec;
                             for (; k < 2; q++, rp += 2, k++)
                             {
-                                f32 x = fx + q[0];
-                                f32 y = q[2];
-                                f32 z = q[4] + fz;
+                                x = fx + q[0];
+                                y = q[2];
+                                z = q[4] + fz;
                                 if (gIntersectPointCount < 0x6a4)
                                 {
                                     *(s16*)(rp + 4) = insertPoint(gIntersectLineCount, edges, x, y, z);
@@ -4832,9 +4834,9 @@ void trackIntersect(void)
     }
 
     prev = -1;
-    for (i = 0, off = i; i < gIntersectLineCount; off += 2, i++)
+    for (fo = (fi = 0); fi < gIntersectLineCount; fo += 2, fi++)
     {
-        t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + off) * 0x10 + 3) & 0x3f);
+        t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + fo) * 0x10 + 3) & 0x3f);
         if (t >= 0x14)
         {
             t = 1;
@@ -4842,7 +4844,7 @@ void trackIntersect(void)
         }
         if (prev != t)
         {
-            u16 v = i;
+            u16 v = fi;
             int ti = t * 2;
             gIntersectSegmentTypeTable[ti] = v;
             if (prev != -1)
