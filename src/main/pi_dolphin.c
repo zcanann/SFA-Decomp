@@ -7710,7 +7710,6 @@ void videoInit(void)
     u32 hi;
     u32 next;
     int fbSize;
-    u32 x;
     lo = (u32)OSGetArenaLo();
     hi = (u32)OSGetArenaHi();
     memcpy((void*)(hi - 0x40000), gLoadingScreenTextures, 0x40000);
@@ -7729,10 +7728,10 @@ void videoInit(void)
     externalFrameBuffer1 = (void*)(((u32)externalFrameBuffer0 + fbSize) & ~0x1f);
     next = ((u32)externalFrameBuffer1 + fbSize) & ~0x1f;
     OSSetArenaLo((void*)next);
-    OSSetArenaLo((void*)(x = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
-    x = (x + 0x1f) & ~0x1f;
+    OSSetArenaLo((void*)(lo = (u32)OSInitAlloc((void*)next, (void*)hi, 1)));
+    lo = (lo + 0x1f) & ~0x1f;
     hi = hi & ~0x1f;
-    OSSetCurrentHeap(OSCreateHeap((void*)x, (void*)hi));
+    OSSetCurrentHeap(OSCreateHeap((void*)lo, (void*)hi));
     VIConfigure(gRenderModeObj);
     GXInitFifoBase(fifo, externalFrameBuffer0, 0x10000);
     GXSetCPUFifo(fifo);
@@ -7747,7 +7746,7 @@ void videoInit(void)
     GXSetBreakPtCallback(videoFn_800499e8);
     GXSetViewport(lbl_803DEA70, lbl_803DEA70, gRenderModeObj->fbWidth, gRenderModeObj->xfbHeight, lbl_803DEA70,
                   lbl_803DEA78);
-    GXSetFieldMode(gRenderModeObj->field_rendering, (u32)(gRenderModeObj->xfbHeight - gRenderModeObj->viHeight) >> 31);
+    GXSetFieldMode(gRenderModeObj->field_rendering, gRenderModeObj->xfbHeight < gRenderModeObj->viHeight);
     GXSetScissor(0, 0, gRenderModeObj->fbWidth, gRenderModeObj->efbHeight);
     GXSetDispCopyDst(gRenderModeObj->fbWidth, (u16)lbl_803DCCB8);
     if (gRenderModeObj->aa != 0)
