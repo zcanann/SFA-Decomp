@@ -140,8 +140,59 @@ ObjfsaPatch gObjfsaPatches[0x3000 / sizeof(ObjfsaPatch)];
 ObjfsaWalkGroup gObjfsaWalkGroups[0x1C48 / sizeof(ObjfsaWalkGroup)];
 u8 gObjfsaWalkGroupActive[0xB8];
 
-#pragma scheduling on
+#define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
+#define OBJFSA_SET_PLANE(P, K, XA, ZA)                                                                                 \
+    len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
+    if (len != lbl_803E05F0)                                                                                           \
+    {                                                                                                                  \
+        dxn = dxn / len;                                                                                               \
+        dzn = dzn / len;                                                                                               \
+    }                                                                                                                  \
+    (P).planes[K].normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                      \
+    (P).planes[K].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                      \
+    (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
+#define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
+    exitFz = (f32)(ZF);                                                                                                \
+    exitFx = (f32)(XF);                                                                                                \
+    for (normalIdx = 0, edge = normalIdx; edge < 4; edge++, normalIdx += 2)                                                    \
+    {                                                                                                                  \
+        if ((WGP)->planeOffsets[edge] +                                                                                \
+                (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
+            zero)                                                                                                      \
+        {                                                                                                              \
+            break;                                                                                                     \
+        }                                                                                                              \
+    }
+#define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
+#define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
+    pl = &OBJFSA_NEWPATCH.planes[K];                                                                                   \
+    po = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
+    dxn = (DXE);                                                                                                       \
+    dzn = (DZE);                                                                                                       \
+    len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
+    if (len != lbl_803E05F0)                                                                                           \
+    {                                                                                                                  \
+        dxn = dxn / len;                                                                                               \
+        dzn = dzn / len;                                                                                               \
+    }                                                                                                                  \
+    pl->normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                                \
+    pl->normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                                \
+    *(po) = -((f32)pl->normalX * (XA) + (f32)pl->normalZ * (ZA))
+
+int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode);
+int mathFn_800dbff0(float* point);
+u8 RomCurve_goNextPoint(RomCurveWalker* state);
+static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos);
+inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base);
+u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
+                                          float* outVerticalOffset, float* outPhase);
+int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance);
+RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex);
+void RomCurve_getAdjacentWindow(RomCurveDef* curve, int* outIds);
+f32 RomCurve_distanceToSegment(f32 x, f32 y, f32 z, RomCurveSegmentProjection* segment);
+
 #pragma peephole on
+#pragma scheduling on
 
 static inline ObjfsaPatch* Objfsa_GetPatch(int patchIndex)
 {
@@ -214,100 +265,27 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId, u32 currentWalkGro
     return patchGroupId & 0xff;
 }
 
-#pragma opt_loop_invariants off
-#pragma scheduling off
-int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
+#pragma opt_common_subs on
+#pragma peephole reset
+#pragma peephole off
+#pragma ppc_unroll_instructions_limit 80
+void fn_800D9EE8(float* p)
 {
-    int curveIndex;
-    ObjfsaRomCurveDef* curve;
-    ObjfsaRomCurveDef* bestCurve;
-    ObjfsaRomCurveDef* bestActionCurve;
-    f32 bestDistance;
-    f32 bestActionDistance;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 distance;
-    f32 curvePos[3];
-    s16 curveGrid[4];
-    s16 objGrid[4];
-    u8 traceHit;
-    int bboxHit[20];
-    int typeIndex;
-    u8 traceResult;
-    u64 objPos;
-
-    bestDistance = lbl_803E063C;
-    bestCurve = NULL;
-    bestActionDistance = bestDistance;
-    bestActionCurve = NULL;
-
-    objPos = obj + 0xc;
-    curvePos[0] = *(f32*)objPos;
-    curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
-    curvePos[2] = *(f32*)(obj + 0x14);
-    voxmaps_worldToGrid(curvePos, objGrid);
-
-    for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
+    u32* a = (u32*)((char*)p + 0x9c);
+    u32* b = (u32*)((char*)p + 0xa4);
+    *a ^= *b;
+    *b ^= *a;
+    *a ^= *b;
+    if (*p >= lbl_803E05C8)
     {
-        curve = (ObjfsaRomCurveDef*)romCurves[curveIndex];
-        typeIndex = 0;
-        do
-        {
-            if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0))
-            {
-                dx = curve->x - ((GameObject*)obj)->anim.localPosX;
-                dy = curve->y - ((GameObject*)obj)->anim.localPosY;
-                dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
-                distance = sqrtf(dz * dz + (dx * dx + dy * dy));
-                if (distance < bestDistance)
-                {
-                    curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E0640 + curve->y;
-                    curvePos[2] = curve->z;
-                    voxmaps_worldToGrid(curvePos, curveGrid);
-                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
-                    if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
-                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
-                    {
-                        bestDistance = distance;
-                        bestCurve = curve;
-                    }
-                }
-                if ((curve->action == action) && (distance < bestActionDistance))
-                {
-                    curvePos[0] = curve->x;
-                    curvePos[1] = lbl_803E0640 + curve->y;
-                    curvePos[2] = curve->z;
-                    voxmaps_worldToGrid(curvePos, curveGrid);
-                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
-                    if (((traceHit == 1) || (traceResult != 0)) &&
-                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
-                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
-                    {
-                        bestActionDistance = distance;
-                        bestActionCurve = curve;
-                    }
-                }
-                typeIndex = typeCount;
-            }
-            typeIndex++;
-        } while (typeIndex < typeCount);
+        *p = lbl_803E05CC;
     }
-    if (bestActionCurve != NULL)
-    {
-        bestCurve = bestActionCurve;
-    }
-    if (bestCurve != NULL)
-    {
-        return bestCurve->id;
-    }
-    return -1;
 }
 
-#pragma opt_loop_invariants reset
-#pragma scheduling on
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma peephole on
+#pragma ppc_unroll_instructions_limit 70
 static inline int Objfsa_FindRomCurveById(int curveId)
 {
     int hi;
@@ -419,8 +397,10 @@ static inline RomCurveDef* RomCurve_FindByIdWithLimit(u32 curveId, int lim)
     return NULL;
 }
 
-#pragma scheduling off
+#pragma peephole reset
 #pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
 static inline int Objfsa_RomCurveIsBlocked(int curve)
 {
     int slot;
@@ -481,139 +461,6 @@ static inline int RomCurve_CollectBlockedLinks(RomCurveDef* curve, int* ids)
     }
     return count;
 }
-
-f32 curves_getPathLength(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
-{
-    int cand1[4];
-    int cand2[4];
-    int cand3[4];
-    int done;
-    int slot;
-    u32 mask;
-    f32 total;
-    int count;
-    int next;
-    u32 cur;
-    int n;
-    int reachedForward;
-    int blocked;
-    int found;
-    int k;
-    int nextId;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32* tmpPos;
-
-    if (startNode == endNode)
-    {
-        dx = posB[0] - posA[0];
-        dy = posB[1] - posA[1];
-        dz = posB[2] - posA[2];
-        total = sqrtf(dx * dx + dy * dy + dz * dz);
-        if (t2 < t1)
-        {
-            total = -total;
-        }
-        goto done_exit;
-    }
-
-    reachedForward = 0;
-    done = 0;
-    found = startNode;
-    while (done == 0)
-    {
-        blocked = Objfsa_RomCurveIsBlocked(found);
-        if (blocked != 0)
-        {
-            done = 1;
-            reachedForward = 0;
-        }
-        else
-        {
-            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)found, cand1);
-            if (count != 0)
-            {
-                nextId = cand1[randomGetRange(0, count - 1)];
-            }
-            else
-            {
-                nextId = -1;
-            }
-            found = Objfsa_FindRomCurveById(nextId);
-            if (found == endNode)
-            {
-                done = 1;
-                reachedForward = 1;
-            }
-        }
-    }
-
-    if (reachedForward == 0)
-    {
-        cur = startNode;
-        startNode = endNode;
-        endNode = cur;
-        tmpPos = posA;
-        posA = posB;
-        posB = tmpPos;
-    }
-
-    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand2);
-    if (count != 0)
-    {
-        nextId = cand2[randomGetRange(0, count - 1)];
-    }
-    else
-    {
-        nextId = -1;
-    }
-    found = Objfsa_FindRomCurveById(nextId);
-    startNode = found;
-    dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
-    dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
-    dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
-    total = sqrtf(dx * dx + dy * dy + dz * dz);
-    done = 0;
-
-    while (done == 0)
-    {
-        if (startNode == endNode)
-        {
-            done = 1;
-            dx = posB[0] - ((ObjfsaRomCurveDef*)startNode)->x;
-            dy = posB[1] - ((ObjfsaRomCurveDef*)startNode)->y;
-            dz = posB[2] - ((ObjfsaRomCurveDef*)startNode)->z;
-            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
-        }
-        else
-        {
-            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand3);
-            if (count != 0)
-            {
-                nextId = cand3[randomGetRange(0, count - 1)];
-            }
-            else
-            {
-                nextId = -1;
-            }
-            next = Objfsa_FindRomCurveById(nextId);
-            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)startNode)->x;
-            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)startNode)->y;
-            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)startNode)->z;
-            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
-            startNode = next;
-        }
-    }
-
-    if (reachedForward == 0)
-    {
-        total = -total;
-    }
-done_exit:
-    return total;
-}
-
 #pragma opt_loop_invariants off
 int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGroupIndex)
 {
@@ -755,6 +602,374 @@ int walkGroupFn_800db3e4(float* prevPoint, float* nextPoint, u32 currentWalkGrou
 }
 #pragma opt_loop_invariants reset
 
+#pragma opt_common_subs on
+int fn_800D9F38(void* walker, void* curve)
+{
+    char* A = walker;
+    char* B = curve;
+    if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0)
+        return 1;
+    *(void**)(A + 0xa4) = curve;
+    if (*(int*)(A + 0x80) != 0)
+    {
+        f32 t;
+        *(f32*)(A + 0xa8) = *(f32*)(B + 0x8);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0xb0) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xc8) = *(f32*)(B + 0xc);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0xd0) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xe8) = *(f32*)(B + 0x10);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0xf0) = lbl_803E05D0 * t;
+    }
+    else
+    {
+        f32 t;
+        *(f32*)(A + 0xbc) = *(f32*)(B + 0x8);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0xc4) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xdc) = *(f32*)(B + 0xc);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0xe4) = lbl_803E05D0 * t;
+        *(f32*)(A + 0xfc) = *(f32*)(B + 0x10);
+        t = (float)(u32) * (u8*)(B + 0x2e) *
+            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
+        *(f32*)(A + 0x104) = lbl_803E05D0 * t;
+    }
+    return 0;
+}
+
+static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
+{
+    f32 angle;
+    f32 trig;
+
+    angle = gRomCurveAnglePi * (f32)((s32) * (s8*)((char*)*nodePtr + angleOffset) << 8) / lbl_803E05D8;
+    if (useCos)
+    {
+        trig = mathCosf(angle);
+    }
+    else
+    {
+        trig = mathSinf(angle);
+    }
+    trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
+    return lbl_803E05D0 * trig;
+}
+
+int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
+{
+    char* stateBytes;
+
+    stateBytes = (char*)state;
+    if (state->nodeA0 == NULL || state->nodeA4 == NULL || targetCurve == NULL)
+    {
+        return 1;
+    }
+
+    if (state->reverse != 0)
+    {
+        state->node9C = state->nodeA0;
+        state->nodeA0 = state->nodeA4;
+        state->nodeA4 = targetCurve;
+
+        memcpy(stateBytes + 0xb8, stateBytes + 0xa8, 0x10);
+        memcpy(stateBytes + 0xd8, stateBytes + 0xc8, 0x10);
+        memcpy(stateBytes + 0xf8, stateBytes + 0xe8, 0x10);
+
+        state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
+        state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
+        state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
+        state->hermX[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
+
+        state->hermY[0] = *(f32*)((char*)state->nodeA4 + 0xc);
+        state->hermY[1] = *(f32*)((char*)state->nodeA0 + 0xc);
+        state->hermY[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
+        state->hermY[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
+
+        state->hermZ[0] = *(f32*)((char*)state->nodeA4 + 0x10);
+        state->hermZ[1] = *(f32*)((char*)state->nodeA0 + 0x10);
+        state->hermZ[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
+        state->hermZ[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
+
+        if (state->moveNetwork != 0)
+        {
+            curvesSetupMoveNetworkCurve((float*)state);
+            if (state->phase <= lbl_803E05F0)
+            {
+                state->phase = lbl_803E05F4;
+            }
+        }
+    }
+    else
+    {
+        state->node9C = state->nodeA0;
+        state->nodeA0 = state->nodeA4;
+        state->nodeA4 = targetCurve;
+
+        memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
+        memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
+        memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+
+        state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
+        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
+        state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
+        state->hermX2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
+
+        state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
+        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
+        state->hermY2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
+        state->hermY2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
+
+        state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
+        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
+        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
+        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
+
+        if (state->moveNetwork != 0)
+        {
+            curvesSetupMoveNetworkCurve((float*)state);
+            if (state->phase >= lbl_803E05C8)
+            {
+                state->phase = lbl_803E05CC;
+            }
+        }
+    }
+
+    return 0;
+}
+#pragma peephole reset
+#pragma peephole on
+void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
+{
+    if (state->phase <= lbl_803E05F0)
+    {
+        state->phase = lbl_803E05F4;
+    }
+    else if (state->phase >= lbl_803E05C8)
+    {
+        state->phase = lbl_803E05CC;
+    }
+    Curve_AdvanceAlongPath(state, dt);
+}
+#pragma peephole reset
+#pragma peephole off
+
+int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
+{
+    if (state->reverse != 0)
+    {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
+        state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
+        state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
+        state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
+        state->hermX[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
+
+        state->hermY[0] = *(f32*)((char*)state->nodeA4 + 0xc);
+        state->hermY[1] = *(f32*)((char*)state->nodeA0 + 0xc);
+        state->hermY[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
+        state->hermY[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
+
+        state->hermZ[0] = *(f32*)((char*)state->nodeA4 + 0x10);
+        state->hermZ[1] = *(f32*)((char*)state->nodeA0 + 0x10);
+        state->hermZ[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
+        state->hermZ[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
+    }
+    else
+    {
+        state->nodeA0 = fromCurve;
+        state->nodeA4 = toCurve;
+
+        state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
+        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
+        state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
+        state->hermX2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
+
+        state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
+        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
+        state->hermY2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
+        state->hermY2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
+
+        state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
+        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
+        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
+        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
+    }
+
+    if (curveFn_800da23c(state, targetCurve) != 0)
+    {
+        return 1;
+    }
+
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
+    return 0;
+}
+
+
+void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
+{
+    int count;
+    int* hit;
+    int* bestHit;
+    int** list = (int**)(*gRomCurveInterface)->getCurves(&count);
+    f32 minDist = gObjfsaNearestDistInit;
+    int i;
+    bestHit = 0;
+    for (i = count; i > 0; i--)
+    {
+        hit = *list;
+        if (hit != 0 && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY &&
+            (p4_filter == -1 || *((u8*)hit + 3) == p4_filter) &&
+            (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
+        {
+            f32 dx = pos[0] - *(f32*)((char*)hit + 8);
+            f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
+            f32 d;
+            f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
+            d = dy * dy;
+            d += dx * dx;
+            d += dz * dz;
+            if (d < minDist)
+            {
+                minDist = d;
+                bestHit = hit;
+            }
+        }
+        list++;
+    }
+    return bestHit;
+}
+
+
+void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filter)
+{
+    int count;
+    int** list;
+    int i;
+    int* hit;
+    int* bestHit;
+    s16 gbId;
+    f32 minDist;
+    int** tmp = (int**)(*gRomCurveInterface)->getCurves(&count);
+    minDist = gObjfsaNearestDistInit;
+    bestHit = 0;
+    i = 0;
+    list = tmp;
+    for (; i < count; i++)
+    {
+        hit = *list;
+        if (hit != 0 && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY &&
+            (p4_filter == -1 || *((u8*)hit + 3) == p4_filter) &&
+            (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
+        {
+            gbId = *(s16*)((char*)hit + 0x30);
+            if (gbId == -1 || mainGetBit(gbId) != 0)
+            {
+                gbId = *(s16*)((char*)hit + 0x32);
+                if (gbId == -1 || mainGetBit(gbId) == 0)
+                {
+                    f32 dx = pos[0] - *(f32*)((char*)hit + 8);
+                    f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
+                    f32 d;
+                    f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
+                    d = dy * dy;
+                    d += dx * dx;
+                    d += dz * dz;
+                    if (d < minDist)
+                    {
+                        minDist = d;
+                        bestHit = hit;
+                    }
+                }
+            }
+        }
+        list++;
+    }
+    return bestHit;
+}
+#pragma ppc_unroll_instructions_limit 80
+
+void walkPath_writeU16LE(u32 v, u8* dst)
+{
+    v = v & 0xffff;
+    dst[0] = v;
+    dst[1] = (u8)((s32)v >> 8);
+}
+
+#define WALKGROUP_TRY_RETURN(idx)                                                                                      \
+    if (Objfsa_IsWalkGroupActive(idx))                                                                                 \
+    {                                                                                                                  \
+        g = &gObjfsaWalkGroups[idx];                                                                                   \
+        y = point[1];                                                                                                  \
+        if (y < g->maxY && y > g->minY)                                                                                \
+        {                                                                                                              \
+            z = point[2];                                                                                              \
+            x = point[0];                                                                                              \
+            i[0] = (j[0] = 0);                                                                                         \
+            j[0] = 0;                                                                                                  \
+            for (; i[0] < 4; i[0]++, j[0] += 2)                                                                        \
+            {                                                                                                          \
+                if (g->planeOffsets[i[0]] + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)          \
+                {                                                                                                      \
+                    break;                                                                                             \
+                }                                                                                                      \
+            }                                                                                                          \
+            if (i[0] == 4)                                                                                             \
+            {                                                                                                          \
+                gObjfsaLastWalkGroupIndex = (idx);                                                                     \
+                return (idx);                                                                                          \
+            }                                                                                                          \
+        }                                                                                                              \
+    }
+
+int fn_800DB240(int p1, f32* outVec, u16 id)
+{
+    u8 i;
+    f32 d1;
+
+    for (i = 0; i < 256; i++)
+    {
+        if (gObjfsaPatches[i].groupId == id)
+            break;
+    }
+
+    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
+    outVec[1] = *(f32*)(p1 + 4);
+    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
+    d1 = vec3f_distanceSquared((f32*)p1, outVec);
+
+    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit1X;
+    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit1Z;
+
+    if (vec3f_distanceSquared((f32*)p1, outVec) < d1)
+    {
+        return 1;
+    }
+
+    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
+    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
+    return 1;
+}
+
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants off
+#pragma ppc_unroll_instructions_limit 70
+#pragma opt_loop_invariants reset
+
 u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
 {
     u8 k;
@@ -794,6 +1009,7 @@ u32 isPointWithinPatchGroup(float* point, u32 patchGroupIndex, int groupId)
     OSReport(sObjfsaIsPointWithinPatchGroupError);
     return 0;
 }
+
 
 int getPatchGroup(float* point, int patchGroupIndex)
 {
@@ -845,7 +1061,7 @@ int getPatchGroup(float* point, int patchGroupIndex)
     }
     return 0;
 }
-
+#pragma peephole reset
 #pragma peephole on
 u32 isInWalkGroupOrPatch(float* point)
 {
@@ -890,7 +1106,7 @@ u32 isInWalkGroupOrPatch(float* point)
     }
     return 0;
 }
-
+#pragma peephole reset
 #pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patchInfo)
 {
@@ -948,6 +1164,97 @@ int Objfsa_GetWalkGroupIndexAtPoint(float* point, ObjfsaWalkGroupPatchInfo* patc
     return wgi;
 }
 
+#define ROMCURVE_REFRESH_CONTROL(secondOff)                                                                            \
+    *(f32*)(stateBytes + 0xb8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0x8);                                            \
+    *(f32*)(stateBytes + 0xbc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0x8);                                     \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
+        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618);   \
+    *(f32*)(stateBytes + 0xc0) = lbl_803E0610 * t;                                                                     \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
+        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2c) << 8) /           \
+                 lbl_803E0618);                                                                                        \
+    *(f32*)(stateBytes + 0xc4) = lbl_803E0610 * t;                                                                     \
+    *(f32*)(stateBytes + 0xd8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0xc);                                            \
+    *(f32*)(stateBytes + 0xdc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0xc);                                     \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
+        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2d) << 8) / lbl_803E0618);   \
+    *(f32*)(stateBytes + 0xe0) = lbl_803E0610 * t;                                                                     \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
+        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2d) << 8) /           \
+                 lbl_803E0618);                                                                                        \
+    *(f32*)(stateBytes + 0xe4) = lbl_803E0610 * t;                                                                     \
+    *(f32*)(stateBytes + 0xf8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0x10);                                           \
+    *(f32*)(stateBytes + 0xfc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0x10);                                    \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
+        mathCosf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618);   \
+    *(f32*)(stateBytes + 0x100) = lbl_803E0610 * t;                                                                    \
+    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
+        mathCosf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2c) << 8) /           \
+                 lbl_803E0618);                                                                                        \
+    *(f32*)(stateBytes + 0x104) = lbl_803E0610 * t
+#pragma opt_common_subs on
+
+static inline int RomCurve_pickRandomControlPointId_2A(int curve)
+{
+    int count;
+    u32 mask;
+    int i;
+    int result;
+    int candidates[4];
+
+    count = 0;
+    mask = 1;
+    for (i = 0; i < 4; i = i + 1)
+    {
+        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) == 0) &&
+            (((RomCurveDef*)curve)->linkIds[i] != -1))
+        {
+            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
+        }
+        mask = mask << 1;
+    }
+    if (count != 0)
+    {
+        result = candidates[randomGetRange(0, count - 1)];
+    }
+    else
+    {
+        result = -1;
+    }
+    return result;
+}
+
+static inline int RomCurve_pickRandomControlPointId_2B(int curve)
+{
+    int count;
+    u32 mask;
+    int i;
+    int result;
+    int candidates[4];
+
+    count = 0;
+    mask = 1;
+    for (i = 0; i < 4; i = i + 1)
+    {
+        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) != 0) &&
+            (((RomCurveDef*)curve)->linkIds[i] != -1))
+        {
+            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
+        }
+        mask = mask << 1;
+    }
+    if (count != 0)
+    {
+        result = candidates[randomGetRange(0, count - 1)];
+    }
+    else
+    {
+        result = -1;
+    }
+    return result;
+}
+#pragma opt_common_subs reset
+
 u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
 {
     int n;
@@ -984,33 +1291,19 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float* point)
     return 0;
 }
 
-#define WALKGROUP_TRY_RETURN(idx)                                                                                      \
-    if (Objfsa_IsWalkGroupActive(idx))                                                                                 \
-    {                                                                                                                  \
-        g = &gObjfsaWalkGroups[idx];                                                                                   \
-        y = point[1];                                                                                                  \
-        if (y < g->maxY && y > g->minY)                                                                                \
-        {                                                                                                              \
-            z = point[2];                                                                                              \
-            x = point[0];                                                                                              \
-            i[0] = (j[0] = 0);                                                                                         \
-            j[0] = 0;                                                                                                  \
-            for (; i[0] < 4; i[0]++, j[0] += 2)                                                                        \
-            {                                                                                                          \
-                if (g->planeOffsets[i[0]] + (x * (f32)((s16*)g)[j[0]] + z * (f32)((s16*)g)[j[0] + 1]) > 0.0f)          \
-                {                                                                                                      \
-                    break;                                                                                             \
-                }                                                                                                      \
-            }                                                                                                          \
-            if (i[0] == 4)                                                                                             \
-            {                                                                                                          \
-                gObjfsaLastWalkGroupIndex = (idx);                                                                     \
-                return (idx);                                                                                          \
-            }                                                                                                          \
-        }                                                                                                              \
-    }
+#pragma opt_common_subs on
+#pragma peephole reset
+#pragma peephole on
+#pragma scheduling reset
+#pragma scheduling on
 
+
+#pragma opt_common_subs reset
 #pragma opt_common_subs off
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
 int mathFn_800dbff0(float* point)
 {
     s16 up;
@@ -1130,1223 +1423,15 @@ int mathFn_800dbff0(float* point)
     }
     return 0;
 }
+#pragma opt_common_subs reset
 #pragma opt_common_subs on
-
-#pragma scheduling on
-#pragma peephole on
-void doNothing_onTrickyFree(void)
-{
-}
-
-void doNothing_onTrickyInit(void)
-{
-}
-
-#pragma scheduling off
-#pragma peephole off
-int fn_800D9F38(void* walker, void* curve)
-{
-    char* A = walker;
-    char* B = curve;
-    if (*(u32*)(A + 0xa0) == 0 || *(u32*)(A + 0xa4) == 0 || curve == 0)
-        return 1;
-    *(void**)(A + 0xa4) = curve;
-    if (*(int*)(A + 0x80) != 0)
-    {
-        f32 t;
-        *(f32*)(A + 0xa8) = *(f32*)(B + 0x8);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0xb0) = lbl_803E05D0 * t;
-        *(f32*)(A + 0xc8) = *(f32*)(B + 0xc);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0xd0) = lbl_803E05D0 * t;
-        *(f32*)(A + 0xe8) = *(f32*)(B + 0x10);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0xf0) = lbl_803E05D0 * t;
-    }
-    else
-    {
-        f32 t;
-        *(f32*)(A + 0xbc) = *(f32*)(B + 0x8);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0xc4) = lbl_803E05D0 * t;
-        *(f32*)(A + 0xdc) = *(f32*)(B + 0xc);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathSinf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2d)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0xe4) = lbl_803E05D0 * t;
-        *(f32*)(A + 0xfc) = *(f32*)(B + 0x10);
-        t = (float)(u32) * (u8*)(B + 0x2e) *
-            mathCosf(gRomCurveAnglePi * (float)((s32)((s8) * (B + 0x2c)) << 8) / lbl_803E05D8);
-        *(f32*)(A + 0x104) = lbl_803E05D0 * t;
-    }
-    return 0;
-}
-
-void RomCurve_setNextNode(void* walker, void* curve)
-{
-    char* A = walker;
-    f32 t;
-    if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
-    {
-        *(void**)(A + 0xa4) = curve;
-        *(f32*)(A + 0xbc) = *(f32*)((*(char**)(A + 0xa4)) + 0x8);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0xc4) = lbl_803E0610 * t;
-        *(f32*)(A + 0xdc) = *(f32*)((*(char**)(A + 0xa4)) + 0xc);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0xe4) = lbl_803E0610 * t;
-        *(f32*)(A + 0xfc) = *(f32*)((*(char**)(A + 0xa4)) + 0x10);
-        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
-            mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
-        *(f32*)(A + 0x104) = lbl_803E0610 * t;
-    }
-}
-
-int RomCurve_setClosed(RomCurveWalker* state, int closed)
-{
-    float savedPhase;
-    float t;
-    void* tmpCurve;
-
-    if (closed == state->reverse)
-    {
-        return 0;
-    }
-    if (state->nodeA0 == 0 || state->node9C == 0)
-    {
-        return 1;
-    }
-
-    savedPhase = state->phase;
-    state->reverse = closed;
-    tmpCurve = state->node9C;
-    state->node9C = state->nodeA4;
-    state->nodeA4 = tmpCurve;
-
-    state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
-    state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
-    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
-        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
-    state->hermX2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
-        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
-    state->hermX2[3] = lbl_803E0610 * t;
-
-    state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
-    state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
-    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
-        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2d)) << 8) / lbl_803E0618);
-    state->hermY2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
-        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2d)) << 8) / lbl_803E0618);
-    state->hermY2[3] = lbl_803E0610 * t;
-
-    state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
-    state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
-    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
-        mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
-    state->hermZ2[2] = lbl_803E0610 * t;
-    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
-        mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
-    state->hermZ2[3] = lbl_803E0610 * t;
-
-    if (RomCurve_goNextPoint(state) != 0)
-    {
-        return 1;
-    }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove((float*)state);
-    state->phase = savedPhase;
-    return 0;
-}
-
-#define ROMCURVE_REFRESH_CONTROL(secondOff)                                                                            \
-    *(f32*)(stateBytes + 0xb8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0x8);                                            \
-    *(f32*)(stateBytes + 0xbc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0x8);                                     \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
-        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618);   \
-    *(f32*)(stateBytes + 0xc0) = lbl_803E0610 * t;                                                                     \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
-        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2c) << 8) /           \
-                 lbl_803E0618);                                                                                        \
-    *(f32*)(stateBytes + 0xc4) = lbl_803E0610 * t;                                                                     \
-    *(f32*)(stateBytes + 0xd8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0xc);                                            \
-    *(f32*)(stateBytes + 0xdc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0xc);                                     \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
-        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2d) << 8) / lbl_803E0618);   \
-    *(f32*)(stateBytes + 0xe0) = lbl_803E0610 * t;                                                                     \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
-        mathSinf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2d) << 8) /           \
-                 lbl_803E0618);                                                                                        \
-    *(f32*)(stateBytes + 0xe4) = lbl_803E0610 * t;                                                                     \
-    *(f32*)(stateBytes + 0xf8) = *(f32*)(*(s32*)(stateBytes + 0xa0) + 0x10);                                           \
-    *(f32*)(stateBytes + 0xfc) = *(f32*)(*(s32*)(stateBytes + (secondOff)) + 0x10);                                    \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + 0xa0) + 0x2e) *                                                      \
-        mathCosf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + 0xa0) + 0x2c) << 8) / lbl_803E0618);   \
-    *(f32*)(stateBytes + 0x100) = lbl_803E0610 * t;                                                                    \
-    t = (float)(u32) * (u8*)(*(s32*)(stateBytes + (secondOff)) + 0x2e) *                                               \
-        mathCosf(gRomCurveAnglePi2 * (float)((s32) * (s8*)(*(s32*)(stateBytes + (secondOff)) + 0x2c) << 8) /           \
-                 lbl_803E0618);                                                                                        \
-    *(f32*)(stateBytes + 0x104) = lbl_803E0610 * t
-
-static inline int RomCurve_pickRandomControlPointId_2A(int curve)
-{
-    int count;
-    u32 mask;
-    int i;
-    int result;
-    int candidates[4];
-
-    count = 0;
-    mask = 1;
-    for (i = 0; i < 4; i = i + 1)
-    {
-        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) == 0) &&
-            (((RomCurveDef*)curve)->linkIds[i] != -1))
-        {
-            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
-        }
-        mask = mask << 1;
-    }
-    if (count != 0)
-    {
-        result = candidates[randomGetRange(0, count - 1)];
-    }
-    else
-    {
-        result = -1;
-    }
-    return result;
-}
-
-static inline int RomCurve_pickRandomControlPointId_2B(int curve)
-{
-    int count;
-    u32 mask;
-    int i;
-    int result;
-    int candidates[4];
-
-    count = 0;
-    mask = 1;
-    for (i = 0; i < 4; i = i + 1)
-    {
-        if ((-1 < ((RomCurveDef*)curve)->linkIds[i]) && ((((RomCurveDef*)curve)->blockedLinkMask & mask) != 0) &&
-            (((RomCurveDef*)curve)->linkIds[i] != -1))
-        {
-            candidates[count++] = ((RomCurveDef*)curve)->linkIds[i];
-        }
-        mask = mask << 1;
-    }
-    if (count != 0)
-    {
-        result = candidates[randomGetRange(0, count - 1)];
-    }
-    else
-    {
-        result = -1;
-    }
-    return result;
-}
-
-u8 RomCurve_goNextPoint(RomCurveWalker* state)
-{
-    char* stateBytes;
-    int neighborId;
-    int nextCurve;
-    float t;
-
-    if (state == NULL)
-    {
-        return 1;
-    }
-    stateBytes = (char*)state;
-    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
-    {
-        return 1;
-    }
-
-    state->node9C = state->nodeA0;
-    state->nodeA0 = state->nodeA4;
-    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
-
-    if (state->reverse != 0)
-    {
-        neighborId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
-    }
-    else
-    {
-        neighborId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-    }
-
-    if (neighborId == -1)
-    {
-        goto clearAndReturn;
-    }
-
-    nextCurve = Objfsa_FindRomCurveById(neighborId);
-
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
-    {
-        goto returnOne;
-    }
-
-    if (state->reverse != 0)
-    {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
-    }
-    else
-    {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
-    }
-
-    if (state->moveNetwork != 0)
-    {
-        curvesSetupMoveNetworkCurve((float*)state);
-    }
-    if (state->reverse != 0)
-    {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
-    }
-    else
-    {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
-    }
-    return 0;
-clearAndReturn:
-    state->nodeA4 = NULL;
-returnOne:
-    return 1;
-}
-
-#pragma scheduling on
-#pragma peephole on
-static inline f32 RomCurveNode_GetHermiteTangent(void** nodePtr, int angleOffset, int useCos)
-{
-    f32 angle;
-    f32 trig;
-
-    angle = gRomCurveAnglePi * (f32)((s32) * (s8*)((char*)*nodePtr + angleOffset) << 8) / lbl_803E05D8;
-    if (useCos)
-    {
-        trig = mathCosf(angle);
-    }
-    else
-    {
-        trig = mathSinf(angle);
-    }
-    trig = (f32)(u32) * (u8*)((char*)*nodePtr + 0x2e) * trig;
-    return lbl_803E05D0 * trig;
-}
-
-
-#pragma scheduling off
-#pragma peephole off
-int RomCurve_func29(RomCurveWalker* state, int pickIdx)
-{
-    char* stateBytes;
-    int nextId;
-    int nextCurve;
-    f32 t;
-
-    if (state == NULL)
-    {
-        return 1;
-    }
-
-    stateBytes = (char*)state;
-    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
-    {
-        return 1;
-    }
-
-    state->node9C = state->nodeA0;
-    state->nodeA0 = state->nodeA4;
-    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
-
-    if (state->reverse != 0)
-    {
-        nextId = RomCurve_getControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
-    }
-    else
-    {
-        nextId = RomCurve_getUnblockedControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
-    }
-
-    if (nextId == -1)
-    {
-        goto failClear;
-    }
-
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (state->nodeA4 == NULL)
-    {
-        goto fail;
-    }
-
-    if (state->reverse != 0)
-    {
-        ROMCURVE_REFRESH_CONTROL(0x9c);
-    }
-    else
-    {
-        ROMCURVE_REFRESH_CONTROL(0xa4);
-    }
-
-    if (state->moveNetwork != 0)
-    {
-        curvesSetupMoveNetworkCurve((float*)state);
-    }
-
-    if (state->reverse != 0)
-    {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
-    }
-    else
-    {
-        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
-    }
-
-    return 0;
-
-failClear:
-    state->nodeA4 = NULL;
-fail:
-    return 1;
-}
-
-int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
-{
-    int candidates[4];
-    int neighbor;
-    int count = 0;
-    u32 mask = 1;
-    int i;
-    for (i = 0; i < 4; i++)
-    {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
-        {
-            candidates[count++] = neighbor;
-        }
-        mask <<= 1;
-    }
-    if (count != 0)
-    {
-        if (pickIdx > count - 1)
-            pickIdx = count - 1;
-        if (pickIdx == -1)
-        {
-            pickIdx = randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
-}
-
-int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
-{
-    int candidates[4];
-    int neighbor;
-    int count = 0;
-    u32 mask = 1;
-    int i;
-    for (i = 0; i < 4; i++)
-    {
-        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
-        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
-        {
-            candidates[count++] = neighbor;
-        }
-        mask <<= 1;
-    }
-    if (count != 0)
-    {
-        if (pickIdx > count - 1)
-            pickIdx = count - 1;
-        if (pickIdx == -1)
-        {
-            pickIdx = randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
-}
-
-int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* outPhase)
-{
-    int projected;
-    int linkId;
-    float lateralOffset;
-    float verticalOffset;
-    float phase;
-    int adjacentWindow[4];
-    int candidates[4];
-    u32 mask[1];
-    int count[1];
-    int n;
-    int k;
-
-    goto loopTest;
-    do
-    {
-        RomCurve_getAdjacentWindowInt(curve, adjacentWindow);
-        projected =
-            RomCurve_projectPointToAdjacentWindowLegacy(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset,
-                                                        &phase);
-        if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
-            verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654)
-        {
-            *outPhase = phase;
-            return curve;
-        }
-
-        count[0] = 0;
-        mask[0] = 1;
-        for (k = 0; k < 4; k++)
-        {
-            n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
-            if (n > -1 && ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask[0]) == 0 && n != 0)
-            {
-                candidates[count[0]++] = n;
-            }
-            mask[0] <<= 1;
-        }
-        if (count[0] != 0)
-        {
-            linkId = candidates[randomGetRange(0, count[0] - 1)];
-        }
-        else
-        {
-            linkId = -1;
-        }
-        curve = Objfsa_FindRomCurveById(linkId);
-    loopTest:
-        for (k = 0; k < 4; k++)
-        {
-            if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
-                ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
-            {
-                k = 0;
-                goto checkLoop;
-            }
-        }
-        k = 1;
-    checkLoop:
-        if (k != 0)
-        {
-            break;
-        }
-    } while (1);
-
-    *outPhase = gFloatZero;
-    return curve;
-}
-
-void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
-{
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    int linkId;
-    int c2;
-    int candidates[4];
-    int count;
-
-    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)curve, candidates);
-    if (count != 0)
-    {
-        linkId = candidates[randomGetRange(0, count - 1)];
-    }
-    else
-    {
-        linkId = -1;
-    }
-    c2 = Objfsa_FindRomCurveById(linkId);
-
-    if ((void*)c2 == NULL)
-    {
-        *outX = ((ObjfsaRomCurveDef*)curve)->x;
-        *outY = ((ObjfsaRomCurveDef*)curve)->y;
-        *outZ = ((ObjfsaRomCurveDef*)curve)->z;
-    }
-    else
-    {
-        dy = ((ObjfsaRomCurveDef*)c2)->y - ((ObjfsaRomCurveDef*)curve)->y;
-        dz = ((ObjfsaRomCurveDef*)c2)->z - ((ObjfsaRomCurveDef*)curve)->z;
-        dx = ((ObjfsaRomCurveDef*)c2)->x - ((ObjfsaRomCurveDef*)curve)->x;
-        *outX = dx * phase + ((ObjfsaRomCurveDef*)curve)->x;
-        *outY = dy * phase + ((ObjfsaRomCurveDef*)curve)->y;
-        *outZ = dz * phase + ((ObjfsaRomCurveDef*)curve)->z;
-    }
-}
-
-int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
-{
-    char* stateBytes;
-    u32 currentCurve;
-    int nextId;
-    u32 nextCurve;
-    f32 t;
-
-    if (state == NULL)
-    {
-        return 1;
-    }
-    if (startCurveId == -1)
-    {
-        goto fail;
-    }
-
-    stateBytes = (char*)state;
-    if (state->reverse != 0)
-    {
-        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-        if (nextId == -1)
-        {
-            return 1;
-        }
-        startCurveId = nextId;
-    }
-
-    currentCurve = Objfsa_FindRomCurveById(startCurveId);
-    *(s32*)&state->nodeA0 = currentCurve;
-    if (currentCurve == 0)
-    {
-        state->nodeA0 = NULL;
-        return 1;
-    }
-
-    if (state->reverse != 0)
-    {
-        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
-    }
-    else
-    {
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-    }
-    if (nextId == -1)
-    {
-        return 1;
-    }
-
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (nextCurve == 0)
-    {
-        state->nodeA4 = NULL;
-        return 1;
-    }
-
-    ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
-    {
-        return 1;
-    }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove((float*)state);
-    return 0;
-fail:
-    return 1;
-}
-
-int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, int curveType, f32 maxDistance)
-{
-    char* stateBytes;
-    int curveId;
-    u32 currentCurve;
-    int nextId;
-    u32 nextCurve;
-    int distanceCurve;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 distance;
-    f32 t;
-
-    if (state == NULL)
-    {
-        return 1;
-    }
-
-    stateBytes = (char*)state;
-    curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)((int)obj, curveTypes, 1, curveType, 0xc);
-    if (curveId == -1)
-    {
-        goto fail;
-    }
-
-    if (state->reverse != 0)
-    {
-        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-        if (nextId == -1)
-        {
-            return 1;
-        }
-        curveId = nextId;
-    }
-
-    currentCurve = Objfsa_FindRomCurveById(curveId);
-    *(s32*)&state->nodeA0 = currentCurve;
-    if (currentCurve == 0)
-    {
-        state->nodeA0 = NULL;
-        return 1;
-    }
-
-    if (state->reverse != 0)
-    {
-        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
-    }
-    else
-    {
-        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
-    }
-    if (nextId == -1)
-    {
-        return 1;
-    }
-
-    nextCurve = Objfsa_FindRomCurveById(nextId);
-    *(s32*)&state->nodeA4 = nextCurve;
-    if (nextCurve == 0)
-    {
-        state->nodeA4 = NULL;
-        return 1;
-    }
-
-    if (maxDistance != gFloatZero)
-    {
-        if (state->reverse != 0)
-        {
-            distanceCurve = *(s32*)&state->nodeA4;
-            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
-        }
-        else
-        {
-            distanceCurve = *(s32*)&state->nodeA0;
-            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
-            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
-            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
-        }
-        distance = sqrtf(dx * dx + dy * dy + dz * dz);
-        if (distance > maxDistance)
-        {
-            return 1;
-        }
-    }
-
-    ROMCURVE_REFRESH_CONTROL(0xa4);
-    if (RomCurve_goNextPoint(state) != 0)
-    {
-        return 1;
-    }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove((float*)state);
-    return 0;
-fail:
-    return 1;
-}
-
-int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
-{
-    f32* scanBase;
-    int top;
-    int queueCurve;
-    int directIndex;
-    int directSlot;
-    int directLinkId;
-    u32 directCurve;
-    int startIndex;
-    int candidateCount;
-    int queueCount;
-    int linkId;
-    int linkCurve;
-    int insertIndex;
-    int sel[2];
-    int found;
-    int i;
-    int j;
-    int linkSlot;
-    f32 distance;
-    f32 linkDistance;
-    int candidateIds[4];
-    f32 candidateDistances[4];
-    int queueIndices[40];
-    f32 queueDistances[40];
-    u8 visited[ROMCURVE_MAX_CURVES];
-
-    if (startCurve == 0)
-    {
-        return -1;
-    }
-    if (RomCurve_findByIdWithIndex(*(s32*)(startCurve + 0x14), &startIndex) == NULL)
-    {
-        return -1;
-    }
-
-    candidateCount = 0;
-    directSlot = 0;
-    for (; directSlot < 4; directSlot++)
-    {
-        scanBase = queueDistances;
-        directLinkId = ((RomCurveDef*)startCurve)->linkIds[directSlot];
-        if (directLinkId <= -1)
-        {
-            continue;
-        }
-
-        for (i = 0; i < ROMCURVE_MAX_CURVES; i++)
-        {
-            visited[i] = 0;
-        }
-        visited[startIndex] = 1;
-
-        directCurve = (u32)RomCurve_findByIdWithIndex(((RomCurveDef*)startCurve)->linkIds[directSlot], &directIndex);
-        if (directCurve == 0)
-        {
-            continue;
-        }
-
-        distance = (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
-                   (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10));
-        queueDistances[0] = (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
-                                (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
-                            (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
-                                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) +
-                            distance;
-        queueCount = 0;
-        queueIndices[queueCount++] = directIndex;
-        visited[directIndex] = 1;
-
-        found = 0;
-        do
-        {
-            if (queueCount > 0)
-            {
-                queueCount--;
-                top = queueCount;
-                directIndex = queueIndices[top];
-                queueCurve = (int)romCurves[directIndex];
-                distance = queueDistances[top];
-                sel[0] = 0;
-
-                if (*(u8*)(queueCurve + 0x34) == 1)
-                {
-                    found = 1;
-                    candidateDistances[candidateCount] = distance;
-                    candidateIds[candidateCount++] = ((RomCurveDef*)startCurve)->linkIds[directSlot];
-                    continue;
-                }
-
-                for (linkSlot = 0; linkSlot < 4; linkSlot++)
-                {
-                    linkId = *(s32*)((queueCurve + linkSlot * 4) + 0x1c);
-                    if (linkId <= -1)
-                    {
-                        continue;
-                    }
-
-                    linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
-                    if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 ||
-                        queueCount >= ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)
-                    {
-                        continue;
-                    }
-
-                    linkDistance = (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) *
-                                       (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) +
-                                   (distance +
-                                    (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
-                                        (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
-                                    (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
-                                        (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)));
-
-                    insertIndex = 0;
-                    while (insertIndex < queueCount && scanBase[insertIndex] > linkDistance)
-                    {
-                        insertIndex++;
-                    }
-                    for (j = queueCount; j > insertIndex; j--)
-                    {
-                        queueIndices[j] = queueIndices[j - 1];
-                        queueDistances[j] = queueDistances[j - 1];
-                    }
-                    queueCount++;
-                    top++;
-                    queueDistances[insertIndex] = linkDistance;
-                    queueIndices[insertIndex] = directIndex;
-                    visited[directIndex] = 1;
-                }
-            }
-            else
-            {
-                found = 1;
-            }
-        } while (!found);
-    }
-
-    if (candidateCount == 0)
-    {
-        return -1;
-    }
-    if (candidateCount == 1)
-    {
-        *previousCurveId = *(s32*)(startCurve + 0x14);
-        return candidateIds[0];
-    }
-    if (candidateCount > 1)
-    {
-        for (i = 0; i < candidateCount; i++)
-        {
-            if (*previousCurveId == candidateIds[i])
-            {
-                for (; i < candidateCount - 1; i++)
-                {
-                    candidateIds[i] = candidateIds[i + 1];
-                    candidateDistances[i] = candidateDistances[i + 1];
-                }
-                candidateCount--;
-            }
-        }
-
-        *previousCurveId = *(s32*)(startCurve + 0x14);
-        sel[1] = 0;
-        sel[0] = sel[1];
-        for (; sel[0] < candidateCount; sel[0]++)
-        {
-            if (candidateDistances[sel[0]] < candidateDistances[sel[1]])
-            {
-                sel[1] = sel[0];
-            }
-        }
-        return candidateIds[sel[1]];
-    }
-    return -1;
-}
-
-#pragma peephole on
-void RomCurve_stepClamped(RomCurveWalker* state, f32 dt)
-{
-    if (state->phase <= lbl_803E05F0)
-    {
-        state->phase = lbl_803E05F4;
-    }
-    else if (state->phase >= lbl_803E05C8)
-    {
-        state->phase = lbl_803E05CC;
-    }
-    Curve_AdvanceAlongPath(state, dt);
-}
-
-#pragma peephole off
-int curveFn_800da23c(RomCurveWalker* state, void* targetCurve)
-{
-    char* stateBytes;
-
-    stateBytes = (char*)state;
-    if (state->nodeA0 == NULL || state->nodeA4 == NULL || targetCurve == NULL)
-    {
-        return 1;
-    }
-
-    if (state->reverse != 0)
-    {
-        state->node9C = state->nodeA0;
-        state->nodeA0 = state->nodeA4;
-        state->nodeA4 = targetCurve;
-
-        memcpy(stateBytes + 0xb8, stateBytes + 0xa8, 0x10);
-        memcpy(stateBytes + 0xd8, stateBytes + 0xc8, 0x10);
-        memcpy(stateBytes + 0xf8, stateBytes + 0xe8, 0x10);
-
-        state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
-        state->hermX[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
-
-        state->hermY[0] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY[1] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
-        state->hermY[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
-
-        state->hermZ[0] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ[1] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
-        state->hermZ[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
-
-        if (state->moveNetwork != 0)
-        {
-            curvesSetupMoveNetworkCurve((float*)state);
-            if (state->phase <= lbl_803E05F0)
-            {
-                state->phase = lbl_803E05F4;
-            }
-        }
-    }
-    else
-    {
-        state->node9C = state->nodeA0;
-        state->nodeA0 = state->nodeA4;
-        state->nodeA4 = targetCurve;
-
-        memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
-        memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
-        memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
-
-        state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
-        state->hermX2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
-
-        state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
-        state->hermY2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
-
-        state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
-        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
-
-        if (state->moveNetwork != 0)
-        {
-            curvesSetupMoveNetworkCurve((float*)state);
-            if (state->phase >= lbl_803E05C8)
-            {
-                state->phase = lbl_803E05CC;
-            }
-        }
-    }
-
-    return 0;
-}
-
-int fn_800DA980(RomCurveWalker* state, void* fromCurve, void* toCurve, void* targetCurve)
-{
-    if (state->reverse != 0)
-    {
-        state->nodeA0 = fromCurve;
-        state->nodeA4 = toCurve;
-
-        state->hermX[0] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX[1] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
-        state->hermX[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
-
-        state->hermY[0] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY[1] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
-        state->hermY[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
-
-        state->hermZ[0] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ[1] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ[2] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
-        state->hermZ[3] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
-    }
-    else
-    {
-        state->nodeA0 = fromCurve;
-        state->nodeA4 = toCurve;
-
-        state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
-        state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
-        state->hermX2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 0);
-        state->hermX2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 0);
-
-        state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
-        state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
-        state->hermY2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2d, 0);
-        state->hermY2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2d, 0);
-
-        state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
-        state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
-        state->hermZ2[2] = RomCurveNode_GetHermiteTangent(&state->nodeA0, 0x2c, 1);
-        state->hermZ2[3] = RomCurveNode_GetHermiteTangent(&state->nodeA4, 0x2c, 1);
-    }
-
-    if (curveFn_800da23c(state, targetCurve) != 0)
-    {
-        return 1;
-    }
-
-    state->node94 = Curve_EvalHermite;
-    state->node98 = Curve_BuildHermiteCoeffs;
-    state->coeffX = state->hermX;
-    state->coeffY = state->hermY;
-    state->coeffZ = state->hermZ;
-    state->moveNetwork = 8;
-    curvesMove((float*)state);
-    return 0;
-}
-
-void* Objfsa_FindNearestCurveType24(f32* pos, int p4_filter, int p5_filter)
-{
-    int count;
-    int* hit;
-    int* bestHit;
-    int** list = (int**)(*gRomCurveInterface)->getCurves(&count);
-    f32 minDist = gObjfsaNearestDistInit;
-    int i;
-    bestHit = 0;
-    for (i = count; i > 0; i--)
-    {
-        hit = *list;
-        if (hit != 0 && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY &&
-            (p4_filter == -1 || *((u8*)hit + 3) == p4_filter) &&
-            (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
-        {
-            f32 dx = pos[0] - *(f32*)((char*)hit + 8);
-            f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
-            f32 d;
-            f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
-            d = dy * dy;
-            d += dx * dx;
-            d += dz * dz;
-            if (d < minDist)
-            {
-                minDist = d;
-                bestHit = hit;
-            }
-        }
-        list++;
-    }
-    return bestHit;
-}
-
-void* Objfsa_FindNearestEnabledCurveType24(f32* pos, int p4_filter, int p5_filter)
-{
-    int count;
-    int** list;
-    int i;
-    int* hit;
-    int* bestHit;
-    s16 gbId;
-    f32 minDist;
-    int** tmp = (int**)(*gRomCurveInterface)->getCurves(&count);
-    minDist = gObjfsaNearestDistInit;
-    bestHit = 0;
-    i = 0;
-    list = tmp;
-    for (; i < count; i++)
-    {
-        hit = *list;
-        if (hit != 0 && (s8) * ((u8*)hit + 0x19) == ROMCURVE_TYPE_TRICKY &&
-            (p4_filter == -1 || *((u8*)hit + 3) == p4_filter) &&
-            (p5_filter == -1 || (s8) * ((u8*)hit + 0x1A) == p5_filter))
-        {
-            gbId = *(s16*)((char*)hit + 0x30);
-            if (gbId == -1 || mainGetBit(gbId) != 0)
-            {
-                gbId = *(s16*)((char*)hit + 0x32);
-                if (gbId == -1 || mainGetBit(gbId) == 0)
-                {
-                    f32 dx = pos[0] - *(f32*)((char*)hit + 8);
-                    f32 dy = pos[1] - *(f32*)((char*)hit + 0xC);
-                    f32 d;
-                    f32 dz = pos[2] - *(f32*)((char*)hit + 0x10);
-                    d = dy * dy;
-                    d += dx * dx;
-                    d += dz * dz;
-                    if (d < minDist)
-                    {
-                        minDist = d;
-                        bestHit = hit;
-                    }
-                }
-            }
-        }
-        list++;
-    }
-    return bestHit;
-}
-
-#define OBJFSA_CORNER(BASE, OFF, POSOFF) (f32)((f32) * (s8*)(OFF) * scale + *(f32*)((BASE) + (POSOFF)))
-
+#pragma opt_propagation off
+#pragma ppc_unroll_instructions_limit 60
 inline f32 objfsaCorner(s8 ofs, f32 scl, f32* base)
 {
     return (f32)((f32)ofs * scl + *base);
 }
 
-#define OBJFSA_SET_PLANE(P, K, XA, ZA)                                                                                 \
-    len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != lbl_803E05F0)                                                                                           \
-    {                                                                                                                  \
-        dxn = dxn / len;                                                                                               \
-        dzn = dzn / len;                                                                                               \
-    }                                                                                                                  \
-    (P).planes[K].normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                      \
-    (P).planes[K].normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                      \
-    (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) + (f32)(P).planes[K].normalZ * (ZA))
-
-#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase[0] + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
-
-#define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
-    exitFz = (f32)(ZF);                                                                                                \
-    exitFx = (f32)(XF);                                                                                                \
-    for (normalIdx = 0, edge = normalIdx; edge < 4; edge++, normalIdx += 2)                                                    \
-    {                                                                                                                  \
-        if ((WGP)->planeOffsets[edge] +                                                                                \
-                (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
-            zero)                                                                                                      \
-        {                                                                                                              \
-            break;                                                                                                     \
-        }                                                                                                              \
-    }
-
-#define OBJFSA_NEWPATCH (patchBase[0][gObjfsaPatchCount])
-
-#define OBJFSA_SET_NEWPATCH_PLANE(K, DXE, DZE, XA, ZA)                                                                 \
-    pl = &OBJFSA_NEWPATCH.planes[K];                                                                                   \
-    po = &OBJFSA_NEWPATCH.planeOffsets[K];                                                                             \
-    dxn = (DXE);                                                                                                       \
-    dzn = (DZE);                                                                                                       \
-    len = sqrtf(dxn * dxn + dzn * dzn);                                                                                \
-    if (len != lbl_803E05F0)                                                                                           \
-    {                                                                                                                  \
-        dxn = dxn / len;                                                                                               \
-        dzn = dzn / len;                                                                                               \
-    }                                                                                                                  \
-    pl->normalX = (s16)(gObjfsaPlaneNormalScale * dxn);                                                                \
-    pl->normalZ = (s16)(gObjfsaPlaneNormalScale * dzn);                                                                \
-    *(po) = -((f32)pl->normalX * (XA) + (f32)pl->normalZ * (ZA))
-
-#pragma opt_propagation off
-#pragma ppc_unroll_instructions_limit 60
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch* patchBase[1];
@@ -2702,8 +1787,788 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
     }
 }
-#pragma ppc_unroll_instructions_limit 80
 #pragma opt_propagation reset
+#pragma peephole reset
+#pragma peephole on
+#pragma ppc_unroll_instructions_limit 70
+#pragma scheduling reset
+#pragma scheduling on
+void doNothing_onTrickyFree(void)
+{
+}
+
+void doNothing_onTrickyInit(void)
+{
+}
+#pragma peephole reset
+#pragma peephole off
+#pragma scheduling reset
+#pragma scheduling off
+
+int RomCurve_func2C(RomCurveWalker* state, int unused, int startCurveId)
+{
+    char* stateBytes;
+    u32 currentCurve;
+    int nextId;
+    u32 nextCurve;
+    f32 t;
+
+    if (state == NULL)
+    {
+        return 1;
+    }
+    if (startCurveId == -1)
+    {
+        goto fail;
+    }
+
+    stateBytes = (char*)state;
+    if (state->reverse != 0)
+    {
+        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(startCurveId);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        if (nextId == -1)
+        {
+            return 1;
+        }
+        startCurveId = nextId;
+    }
+
+    currentCurve = Objfsa_FindRomCurveById(startCurveId);
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (currentCurve == 0)
+    {
+        state->nodeA0 = NULL;
+        return 1;
+    }
+
+    if (state->reverse != 0)
+    {
+        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+    }
+    else
+    {
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+    }
+    if (nextId == -1)
+    {
+        return 1;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(nextId);
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (nextCurve == 0)
+    {
+        state->nodeA4 = NULL;
+        return 1;
+    }
+
+    ROMCURVE_REFRESH_CONTROL(0xa4);
+    if (RomCurve_goNextPoint(state) != 0)
+    {
+        return 1;
+    }
+
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
+    return 0;
+fail:
+    return 1;
+}
+
+#pragma dont_inline on
+int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        if (pickIdx > count - 1)
+            pickIdx = count - 1;
+        if (pickIdx == -1)
+        {
+            pickIdx = randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+#pragma dont_inline off
+
+#pragma dont_inline on
+int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
+{
+    int candidates[4];
+    int neighbor;
+    int count = 0;
+    u32 mask = 1;
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        neighbor = ((ObjfsaRomCurveDef*)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude)
+        {
+            candidates[count++] = neighbor;
+        }
+        mask <<= 1;
+    }
+    if (count != 0)
+    {
+        if (pickIdx > count - 1)
+            pickIdx = count - 1;
+        if (pickIdx == -1)
+        {
+            pickIdx = randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+#pragma dont_inline off
+int RomCurve_func29(RomCurveWalker* state, int pickIdx)
+{
+    char* stateBytes;
+    int nextId;
+    int nextCurve;
+    f32 t;
+
+    if (state == NULL)
+    {
+        return 1;
+    }
+
+    stateBytes = (char*)state;
+    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
+    {
+        return 1;
+    }
+
+    state->node9C = state->nodeA0;
+    state->nodeA0 = state->nodeA4;
+    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
+    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
+    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+
+    if (state->reverse != 0)
+    {
+        nextId = RomCurve_getControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
+    }
+    else
+    {
+        nextId = RomCurve_getUnblockedControlPointId(*(s32*)&state->nodeA0, -1, pickIdx);
+    }
+
+    if (nextId == -1)
+    {
+        goto failClear;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(nextId);
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
+    {
+        goto fail;
+    }
+
+    if (state->reverse != 0)
+    {
+        ROMCURVE_REFRESH_CONTROL(0x9c);
+    }
+    else
+    {
+        ROMCURVE_REFRESH_CONTROL(0xa4);
+    }
+
+    if (state->moveNetwork != 0)
+    {
+        curvesSetupMoveNetworkCurve((float*)state);
+    }
+
+    if (state->reverse != 0)
+    {
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
+    }
+    else
+    {
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
+    }
+
+    return 0;
+
+failClear:
+    state->nodeA4 = NULL;
+fail:
+    return 1;
+}
+
+
+void RomCurve_setNextNode(void* walker, void* curve)
+{
+    char* A = walker;
+    f32 t;
+    if (curve != 0 && (u32)curve != *(u32*)(A + 0xa4))
+    {
+        *(void**)(A + 0xa4) = curve;
+        *(f32*)(A + 0xbc) = *(f32*)((*(char**)(A + 0xa4)) + 0x8);
+        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
+            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32*)(A + 0xc4) = lbl_803E0610 * t;
+        *(f32*)(A + 0xdc) = *(f32*)((*(char**)(A + 0xa4)) + 0xc);
+        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
+            mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2d)) << 8) / lbl_803E0618);
+        *(f32*)(A + 0xe4) = lbl_803E0610 * t;
+        *(f32*)(A + 0xfc) = *(f32*)((*(char**)(A + 0xa4)) + 0x10);
+        t = (float)(u32) * (u8*)((*(char**)(A + 0xa4)) + 0x2e) *
+            mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((*(char**)(A + 0xa4)) + 0x2c)) << 8) / lbl_803E0618);
+        *(f32*)(A + 0x104) = lbl_803E0610 * t;
+    }
+}
+
+
+int RomCurve_setClosed(RomCurveWalker* state, int closed)
+{
+    float savedPhase;
+    float t;
+    void* tmpCurve;
+
+    if (closed == state->reverse)
+    {
+        return 0;
+    }
+    if (state->nodeA0 == 0 || state->node9C == 0)
+    {
+        return 1;
+    }
+
+    savedPhase = state->phase;
+    state->reverse = closed;
+    tmpCurve = state->node9C;
+    state->node9C = state->nodeA4;
+    state->nodeA4 = tmpCurve;
+
+    state->hermX2[0] = *(f32*)((char*)state->nodeA0 + 0x8);
+    state->hermX2[1] = *(f32*)((char*)state->nodeA4 + 0x8);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
+        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermX2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermX2[3] = lbl_803E0610 * t;
+
+    state->hermY2[0] = *(f32*)((char*)state->nodeA0 + 0xc);
+    state->hermY2[1] = *(f32*)((char*)state->nodeA4 + 0xc);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
+        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2d)) << 8) / lbl_803E0618);
+    state->hermY2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+        mathSinf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2d)) << 8) / lbl_803E0618);
+    state->hermY2[3] = lbl_803E0610 * t;
+
+    state->hermZ2[0] = *(f32*)((char*)state->nodeA0 + 0x10);
+    state->hermZ2[1] = *(f32*)((char*)state->nodeA4 + 0x10);
+    t = (float)(u32) * (u8*)((char*)state->nodeA0 + 0x2e) *
+        mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA0 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermZ2[2] = lbl_803E0610 * t;
+    t = (float)(u32) * (u8*)((char*)state->nodeA4 + 0x2e) *
+        mathCosf(gRomCurveAnglePi2 * (float)((s32)((s8) * ((char*)state->nodeA4 + 0x2c)) << 8) / lbl_803E0618);
+    state->hermZ2[3] = lbl_803E0610 * t;
+
+    if (RomCurve_goNextPoint(state) != 0)
+    {
+        return 1;
+    }
+
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
+    state->phase = savedPhase;
+    return 0;
+}
+
+u8 RomCurve_goNextPoint(RomCurveWalker* state)
+{
+    char* stateBytes;
+    int neighborId;
+    int nextCurve;
+    float t;
+
+    if (state == NULL)
+    {
+        return 1;
+    }
+    stateBytes = (char*)state;
+    if (state->nodeA0 == NULL || state->nodeA4 == NULL)
+    {
+        return 1;
+    }
+
+    state->node9C = state->nodeA0;
+    state->nodeA0 = state->nodeA4;
+    memcpy(stateBytes + 0xa8, stateBytes + 0xb8, 0x10);
+    memcpy(stateBytes + 0xc8, stateBytes + 0xd8, 0x10);
+    memcpy(stateBytes + 0xe8, stateBytes + 0xf8, 0x10);
+
+    if (state->reverse != 0)
+    {
+        neighborId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+    }
+    else
+    {
+        neighborId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+    }
+
+    if (neighborId == -1)
+    {
+        goto clearAndReturn;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(neighborId);
+
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (state->nodeA4 == NULL)
+    {
+        goto returnOne;
+    }
+
+    if (state->reverse != 0)
+    {
+        ROMCURVE_REFRESH_CONTROL(0x9c);
+    }
+    else
+    {
+        ROMCURVE_REFRESH_CONTROL(0xa4);
+    }
+
+    if (state->moveNetwork != 0)
+    {
+        curvesSetupMoveNetworkCurve((float*)state);
+    }
+    if (state->reverse != 0)
+    {
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatNegOne);
+    }
+    else
+    {
+        ((void (*)(float*, double))Curve_AdvanceAlongPath)((float*)state, gFloatOne);
+    }
+    return 0;
+clearAndReturn:
+    state->nodeA4 = NULL;
+returnOne:
+    return 1;
+}
+
+int RomCurve_initCurve(RomCurveWalker* state, GameObject* obj, int* curveTypes, int curveType, f32 maxDistance)
+{
+    char* stateBytes;
+    int curveId;
+    u32 currentCurve;
+    int nextId;
+    u32 nextCurve;
+    int distanceCurve;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    f32 t;
+
+    if (state == NULL)
+    {
+        return 1;
+    }
+
+    stateBytes = (char*)state;
+    curveId = ((int (*)(int, int*, int, int, char))curves_findNearObj)((int)obj, curveTypes, 1, curveType, 0xc);
+    if (curveId == -1)
+    {
+        goto fail;
+    }
+
+    if (state->reverse != 0)
+    {
+        *(s32*)&state->nodeA0 = Objfsa_FindRomCurveById(curveId);
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+        if (nextId == -1)
+        {
+            return 1;
+        }
+        curveId = nextId;
+    }
+
+    currentCurve = Objfsa_FindRomCurveById(curveId);
+    *(s32*)&state->nodeA0 = currentCurve;
+    if (currentCurve == 0)
+    {
+        state->nodeA0 = NULL;
+        return 1;
+    }
+
+    if (state->reverse != 0)
+    {
+        nextId = RomCurve_pickRandomControlPointId_2B(*(s32*)&state->nodeA0);
+    }
+    else
+    {
+        nextId = RomCurve_pickRandomControlPointId_2A(*(s32*)&state->nodeA0);
+    }
+    if (nextId == -1)
+    {
+        return 1;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(nextId);
+    *(s32*)&state->nodeA4 = nextCurve;
+    if (nextCurve == 0)
+    {
+        state->nodeA4 = NULL;
+        return 1;
+    }
+
+    if (maxDistance != gFloatZero)
+    {
+        if (state->reverse != 0)
+        {
+            distanceCurve = *(s32*)&state->nodeA4;
+            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
+        }
+        else
+        {
+            distanceCurve = *(s32*)&state->nodeA0;
+            dx = *(f32*)(distanceCurve + 0x8) - (obj)->anim.localPosX;
+            dy = *(f32*)(distanceCurve + 0xc) - (obj)->anim.localPosY;
+            dz = *(f32*)(distanceCurve + 0x10) - (obj)->anim.localPosZ;
+        }
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (distance > maxDistance)
+        {
+            return 1;
+        }
+    }
+
+    ROMCURVE_REFRESH_CONTROL(0xa4);
+    if (RomCurve_goNextPoint(state) != 0)
+    {
+        return 1;
+    }
+
+    state->node94 = Curve_EvalHermite;
+    state->node98 = Curve_BuildHermiteCoeffs;
+    state->coeffX = state->hermX;
+    state->coeffY = state->hermY;
+    state->coeffZ = state->hermZ;
+    state->moveNetwork = 8;
+    curvesMove((float*)state);
+    return 0;
+fail:
+    return 1;
+}
+#pragma opt_common_subs reset
+#pragma opt_loop_invariants off
+#pragma peephole reset
+#pragma peephole on
+int curves_findNearObj(int obj, int* curveTypes, int typeCount, int action, char bboxMode)
+{
+    int curveIndex;
+    ObjfsaRomCurveDef* curve;
+    ObjfsaRomCurveDef* bestCurve;
+    ObjfsaRomCurveDef* bestActionCurve;
+    f32 bestDistance;
+    f32 bestActionDistance;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    f32 curvePos[3];
+    s16 curveGrid[4];
+    s16 objGrid[4];
+    u8 traceHit;
+    int bboxHit[20];
+    int typeIndex;
+    u8 traceResult;
+    u64 objPos;
+
+    bestDistance = lbl_803E063C;
+    bestCurve = NULL;
+    bestActionDistance = bestDistance;
+    bestActionCurve = NULL;
+
+    objPos = obj + 0xc;
+    curvePos[0] = *(f32*)objPos;
+    curvePos[1] = lbl_803E0640 + *(f32*)(obj + 0x10);
+    curvePos[2] = *(f32*)(obj + 0x14);
+    voxmaps_worldToGrid(curvePos, objGrid);
+
+    for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++)
+    {
+        curve = (ObjfsaRomCurveDef*)romCurves[curveIndex];
+        typeIndex = 0;
+        do
+        {
+            if ((curve->type == curveTypes[typeIndex]) || (typeCount <= 0))
+            {
+                dx = curve->x - ((GameObject*)obj)->anim.localPosX;
+                dy = curve->y - ((GameObject*)obj)->anim.localPosY;
+                dz = curve->z - ((GameObject*)obj)->anim.localPosZ;
+                distance = sqrtf(dz * dz + (dx * dx + dy * dy));
+                if (distance < bestDistance)
+                {
+                    curvePos[0] = curve->x;
+                    curvePos[1] = lbl_803E0640 + curve->y;
+                    curvePos[2] = curve->z;
+                    voxmaps_worldToGrid(curvePos, curveGrid);
+                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
+                    if (((traceHit == 1) || (traceResult != 0)) &&
+                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
+                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
+                    {
+                        bestDistance = distance;
+                        bestCurve = curve;
+                    }
+                }
+                if ((curve->action == action) && (distance < bestActionDistance))
+                {
+                    curvePos[0] = curve->x;
+                    curvePos[1] = lbl_803E0640 + curve->y;
+                    curvePos[2] = curve->z;
+                    voxmaps_worldToGrid(curvePos, curveGrid);
+                    traceResult = voxmaps_traceLine((VoxPos*)curveGrid, (VoxPos*)objGrid, NULL, &traceHit, 0);
+                    if (((traceHit == 1) || (traceResult != 0)) &&
+                        (objBboxFn_800640cc((f32*)(obj + 0xc), curvePos, gFloatOne, 0,
+                                           (TrackBBoxHit*)bboxHit, (GameObject*)obj, bboxMode, -1, 0, 0) == 0))
+                    {
+                        bestActionDistance = distance;
+                        bestActionCurve = curve;
+                    }
+                }
+                typeIndex = typeCount;
+            }
+            typeIndex++;
+        } while (typeIndex < typeCount);
+    }
+    if (bestActionCurve != NULL)
+    {
+        bestCurve = bestActionCurve;
+    }
+    if (bestCurve != NULL)
+    {
+        return bestCurve->id;
+    }
+    return -1;
+}
+#pragma opt_common_subs on
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma peephole off
+
+
+
+
+#define OBJFSA_WG(GRP) ((ObjfsaWalkGroup*)((char*)patchBase[0] + (GRP) * OBJFSA_PATCHGROUP_STRIDE + 0x3000))
+
+
+
+
+
+int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int* previousCurveId)
+{
+    f32* scanBase;
+    int top;
+    int queueCurve;
+    int directIndex;
+    int directSlot;
+    int directLinkId;
+    u32 directCurve;
+    int startIndex;
+    int candidateCount;
+    int queueCount;
+    int linkId;
+    int linkCurve;
+    int insertIndex;
+    int sel[2];
+    int found;
+    int i;
+    int j;
+    int linkSlot;
+    f32 distance;
+    f32 linkDistance;
+    int candidateIds[4];
+    f32 candidateDistances[4];
+    int queueIndices[40];
+    f32 queueDistances[40];
+    u8 visited[ROMCURVE_MAX_CURVES];
+
+    if (startCurve == 0)
+    {
+        return -1;
+    }
+    if (RomCurve_findByIdWithIndex(*(s32*)(startCurve + 0x14), &startIndex) == NULL)
+    {
+        return -1;
+    }
+
+    candidateCount = 0;
+    directSlot = 0;
+    for (; directSlot < 4; directSlot++)
+    {
+        scanBase = queueDistances;
+        directLinkId = ((RomCurveDef*)startCurve)->linkIds[directSlot];
+        if (directLinkId <= -1)
+        {
+            continue;
+        }
+
+        for (i = 0; i < ROMCURVE_MAX_CURVES; i++)
+        {
+            visited[i] = 0;
+        }
+        visited[startIndex] = 1;
+
+        directCurve = (u32)RomCurve_findByIdWithIndex(((RomCurveDef*)startCurve)->linkIds[directSlot], &directIndex);
+        if (directCurve == 0)
+        {
+            continue;
+        }
+
+        distance = (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10)) *
+                   (*(f32*)(directCurve + 0x10) - *(f32*)(startCurve + 0x10));
+        queueDistances[0] = (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) *
+                                (*(f32*)(directCurve + 0x8) - *(f32*)(startCurve + 0x8)) +
+                            (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) *
+                                (*(f32*)(directCurve + 0xc) - *(f32*)(startCurve + 0xc)) +
+                            distance;
+        queueCount = 0;
+        queueIndices[queueCount++] = directIndex;
+        visited[directIndex] = 1;
+
+        found = 0;
+        do
+        {
+            if (queueCount > 0)
+            {
+                queueCount--;
+                top = queueCount;
+                directIndex = queueIndices[top];
+                queueCurve = (int)romCurves[directIndex];
+                distance = queueDistances[top];
+                sel[0] = 0;
+
+                if (*(u8*)(queueCurve + 0x34) == 1)
+                {
+                    found = 1;
+                    candidateDistances[candidateCount] = distance;
+                    candidateIds[candidateCount++] = ((RomCurveDef*)startCurve)->linkIds[directSlot];
+                    continue;
+                }
+
+                for (linkSlot = 0; linkSlot < 4; linkSlot++)
+                {
+                    linkId = *(s32*)((queueCurve + linkSlot * 4) + 0x1c);
+                    if (linkId <= -1)
+                    {
+                        continue;
+                    }
+
+                    linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &directIndex);
+                    if ((void*)linkCurve == NULL || (s8)visited[directIndex] != 0 ||
+                        queueCount >= ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)
+                    {
+                        continue;
+                    }
+
+                    linkDistance = (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) *
+                                       (*(f32*)(queueCurve + 0x10) - *(f32*)(linkCurve + 0x10)) +
+                                   (distance +
+                                    (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) *
+                                        (*(f32*)(queueCurve + 0x8) - *(f32*)(linkCurve + 0x8)) +
+                                    (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)) *
+                                        (*(f32*)(queueCurve + 0xc) - *(f32*)(linkCurve + 0xc)));
+
+                    insertIndex = 0;
+                    while (insertIndex < queueCount && scanBase[insertIndex] > linkDistance)
+                    {
+                        insertIndex++;
+                    }
+                    for (j = queueCount; j > insertIndex; j--)
+                    {
+                        queueIndices[j] = queueIndices[j - 1];
+                        queueDistances[j] = queueDistances[j - 1];
+                    }
+                    queueCount++;
+                    top++;
+                    queueDistances[insertIndex] = linkDistance;
+                    queueIndices[insertIndex] = directIndex;
+                    visited[directIndex] = 1;
+                }
+            }
+            else
+            {
+                found = 1;
+            }
+        } while (!found);
+    }
+
+    if (candidateCount == 0)
+    {
+        return -1;
+    }
+    if (candidateCount == 1)
+    {
+        *previousCurveId = *(s32*)(startCurve + 0x14);
+        return candidateIds[0];
+    }
+    if (candidateCount > 1)
+    {
+        for (i = 0; i < candidateCount; i++)
+        {
+            if (*previousCurveId == candidateIds[i])
+            {
+                for (; i < candidateCount - 1; i++)
+                {
+                    candidateIds[i] = candidateIds[i + 1];
+                    candidateDistances[i] = candidateDistances[i + 1];
+                }
+                candidateCount--;
+            }
+        }
+
+        *previousCurveId = *(s32*)(startCurve + 0x14);
+        sel[1] = 0;
+        sel[0] = sel[1];
+        for (; sel[0] < candidateCount; sel[0]++)
+        {
+            if (candidateDistances[sel[0]] < candidateDistances[sel[1]])
+            {
+                sel[1] = sel[0];
+            }
+        }
+        return candidateIds[sel[1]];
+    }
+    return -1;
+}
+#pragma ppc_unroll_instructions_limit 80
 
 int RomCurve_func1B(int curve, int preferredNeighborId, f32 x, f32 y, f32 z)
 {
@@ -2820,57 +2685,252 @@ int RomCurve_func16(double x, double y, double z)
 
     return -1;
 }
+#pragma opt_common_subs reset
+#pragma ppc_unroll_instructions_limit 70
 
-void walkPath_writeU16LE(u32 v, u8* dst)
+f32 curves_getPathLength(u32 startNode, u32 endNode, f32* posA, f32* posB, f32 t1, f32 t2)
 {
-    v = v & 0xffff;
-    dst[0] = v;
-    dst[1] = (u8)((s32)v >> 8);
+    int cand1[4];
+    int cand2[4];
+    int cand3[4];
+    int done;
+    int slot;
+    u32 mask;
+    f32 total;
+    int count;
+    int next;
+    u32 cur;
+    int n;
+    int reachedForward;
+    int blocked;
+    int found;
+    int k;
+    int nextId;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32* tmpPos;
+
+    if (startNode == endNode)
+    {
+        dx = posB[0] - posA[0];
+        dy = posB[1] - posA[1];
+        dz = posB[2] - posA[2];
+        total = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (t2 < t1)
+        {
+            total = -total;
+        }
+        goto done_exit;
+    }
+
+    reachedForward = 0;
+    done = 0;
+    found = startNode;
+    while (done == 0)
+    {
+        blocked = Objfsa_RomCurveIsBlocked(found);
+        if (blocked != 0)
+        {
+            done = 1;
+            reachedForward = 0;
+        }
+        else
+        {
+            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)found, cand1);
+            if (count != 0)
+            {
+                nextId = cand1[randomGetRange(0, count - 1)];
+            }
+            else
+            {
+                nextId = -1;
+            }
+            found = Objfsa_FindRomCurveById(nextId);
+            if (found == endNode)
+            {
+                done = 1;
+                reachedForward = 1;
+            }
+        }
+    }
+
+    if (reachedForward == 0)
+    {
+        cur = startNode;
+        startNode = endNode;
+        endNode = cur;
+        tmpPos = posA;
+        posA = posB;
+        posB = tmpPos;
+    }
+
+    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand2);
+    if (count != 0)
+    {
+        nextId = cand2[randomGetRange(0, count - 1)];
+    }
+    else
+    {
+        nextId = -1;
+    }
+    found = Objfsa_FindRomCurveById(nextId);
+    startNode = found;
+    dx = ((ObjfsaRomCurveDef*)found)->x - posA[0];
+    dy = ((ObjfsaRomCurveDef*)found)->y - posA[1];
+    dz = ((ObjfsaRomCurveDef*)found)->z - posA[2];
+    total = sqrtf(dx * dx + dy * dy + dz * dz);
+    done = 0;
+
+    while (done == 0)
+    {
+        if (startNode == endNode)
+        {
+            done = 1;
+            dx = posB[0] - ((ObjfsaRomCurveDef*)startNode)->x;
+            dy = posB[1] - ((ObjfsaRomCurveDef*)startNode)->y;
+            dz = posB[2] - ((ObjfsaRomCurveDef*)startNode)->z;
+            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+        }
+        else
+        {
+            count = RomCurve_CollectUnblockedLinks((RomCurveDef*)startNode, cand3);
+            if (count != 0)
+            {
+                nextId = cand3[randomGetRange(0, count - 1)];
+            }
+            else
+            {
+                nextId = -1;
+            }
+            next = Objfsa_FindRomCurveById(nextId);
+            dx = ((ObjfsaRomCurveDef*)next)->x - ((ObjfsaRomCurveDef*)startNode)->x;
+            dy = ((ObjfsaRomCurveDef*)next)->y - ((ObjfsaRomCurveDef*)startNode)->y;
+            dz = ((ObjfsaRomCurveDef*)next)->z - ((ObjfsaRomCurveDef*)startNode)->z;
+            total = total + sqrtf(dx * dx + dy * dy + dz * dz);
+            startNode = next;
+        }
+    }
+
+    if (reachedForward == 0)
+    {
+        total = -total;
+    }
+done_exit:
+    return total;
 }
 
-#pragma scheduling on
-void fn_800D9EE8(float* p)
+#pragma opt_common_subs on
+
+void curves_getPos(int curve, float* outX, float* outY, float* outZ, f32 phase)
 {
-    u32* a = (u32*)((char*)p + 0x9c);
-    u32* b = (u32*)((char*)p + 0xa4);
-    *a ^= *b;
-    *b ^= *a;
-    *a ^= *b;
-    if (*p >= lbl_803E05C8)
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    int linkId;
+    int c2;
+    int candidates[4];
+    int count;
+
+    count = RomCurve_CollectUnblockedLinks((RomCurveDef*)curve, candidates);
+    if (count != 0)
     {
-        *p = lbl_803E05CC;
+        linkId = candidates[randomGetRange(0, count - 1)];
+    }
+    else
+    {
+        linkId = -1;
+    }
+    c2 = Objfsa_FindRomCurveById(linkId);
+
+    if ((void*)c2 == NULL)
+    {
+        *outX = ((ObjfsaRomCurveDef*)curve)->x;
+        *outY = ((ObjfsaRomCurveDef*)curve)->y;
+        *outZ = ((ObjfsaRomCurveDef*)curve)->z;
+    }
+    else
+    {
+        dy = ((ObjfsaRomCurveDef*)c2)->y - ((ObjfsaRomCurveDef*)curve)->y;
+        dz = ((ObjfsaRomCurveDef*)c2)->z - ((ObjfsaRomCurveDef*)curve)->z;
+        dx = ((ObjfsaRomCurveDef*)c2)->x - ((ObjfsaRomCurveDef*)curve)->x;
+        *outX = dx * phase + ((ObjfsaRomCurveDef*)curve)->x;
+        *outY = dy * phase + ((ObjfsaRomCurveDef*)curve)->y;
+        *outZ = dz * phase + ((ObjfsaRomCurveDef*)curve)->z;
     }
 }
 
-#pragma scheduling off
-int fn_800DB240(int p1, f32* outVec, u16 id)
-{
-    u8 i;
-    f32 d1;
 
-    for (i = 0; i < 256; i++)
+int RomCurve_findProjectedCurveFromStart(int curve, f32 x, f32 y, f32 z, float* outPhase)
+{
+    int projected;
+    int linkId;
+    float lateralOffset;
+    float verticalOffset;
+    float phase;
+    int adjacentWindow[4];
+    int candidates[4];
+    u32 mask[1];
+    int count[1];
+    int n;
+    int k;
+
+    goto loopTest;
+    do
     {
-        if (gObjfsaPatches[i].groupId == id)
+        RomCurve_getAdjacentWindowInt(curve, adjacentWindow);
+        projected =
+            RomCurve_projectPointToAdjacentWindowLegacy(adjacentWindow, x, y, z, &lateralOffset, &verticalOffset,
+                                                        &phase);
+        if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
+            verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654)
+        {
+            *outPhase = phase;
+            return curve;
+        }
+
+        count[0] = 0;
+        mask[0] = 1;
+        for (k = 0; k < 4; k++)
+        {
+            n = ((ObjfsaRomCurveDef*)curve)->linkIds[k];
+            if (n > -1 && ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & mask[0]) == 0 && n != 0)
+            {
+                candidates[count[0]++] = n;
+            }
+            mask[0] <<= 1;
+        }
+        if (count[0] != 0)
+        {
+            linkId = candidates[randomGetRange(0, count[0] - 1)];
+        }
+        else
+        {
+            linkId = -1;
+        }
+        curve = Objfsa_FindRomCurveById(linkId);
+    loopTest:
+        for (k = 0; k < 4; k++)
+        {
+            if (((ObjfsaRomCurveDef*)curve)->linkIds[k] != -1 &&
+                ((s8)((ObjfsaRomCurveDef*)curve)->blockedLinkMask & (1 << k)) == 0)
+            {
+                k = 0;
+                goto checkLoop;
+            }
+        }
+        k = 1;
+    checkLoop:
+        if (k != 0)
+        {
             break;
-    }
+        }
+    } while (1);
 
-    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
-    outVec[1] = *(f32*)(p1 + 4);
-    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
-    d1 = vec3f_distanceSquared((f32*)p1, outVec);
-
-    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit1X;
-    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit1Z;
-
-    if (vec3f_distanceSquared((f32*)p1, outVec) < d1)
-    {
-        return 1;
-    }
-
-    outVec[0] = (f32)(s32)gObjfsaPatches[i].exit0X;
-    outVec[2] = (f32)(s32)gObjfsaPatches[i].exit0Z;
-    return 1;
+    *outPhase = gFloatZero;
+    return curve;
 }
+#pragma ppc_unroll_instructions_limit 80
 
 u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, float* outLateralOffset,
                                           float* outVerticalOffset, float* outPhase)
@@ -2990,6 +3050,37 @@ u32 RomCurve_projectPointToAdjacentWindow(f32 x, f32 y, f32 z, u32* curveIds, fl
     }
     return 0;
 }
+#pragma opt_common_subs reset
+#pragma opt_common_subs off
+#pragma dont_inline on
+int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW)
+{
+    f32 ax;
+    f32 bx;
+    f32 az;
+    f32 bz;
+    f32 cross1;
+    f32 sum1;
+    ax = a->x;
+    az = a->z;
+    bx = b->x;
+    bz = b->z;
+    cross1 = bx * az - ax * bz;
+    sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
+    if ((sum1 <= gFloatZero && cross1 >= gFloatZero) || (sum1 >= gFloatZero && cross1 < gFloatZero))
+    {
+        f32 cross_a = -z * ax + x * az;
+        f32 cross_b = -z * bx + x * bz;
+        if ((cross_a <= gFloatZero && cross_b >= gFloatZero) || (cross_a >= gFloatZero && cross_b < gFloatZero))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma dont_inline off
+#pragma opt_common_subs reset
+#pragma opt_common_subs on
 
 int curves_isPointInsideLoop(u32 curveId, f32 x, f32 y, f32 z, f32* outDistance)
 {
@@ -3086,6 +3177,7 @@ int curves_findNearestOfType16(f32 x, f32 y, f32 z, int queryAll)
     }
     return nearestCurveId;
 }
+
 
 #define SQ(v) ((v) * (v))
 
@@ -3242,6 +3334,23 @@ int RomCurve_func13(u32 curveId, int typeFilter, int maxDist, int* outLink)
     return -1;
 }
 
+int curves_findByAction(int act)
+{
+    int i;
+
+    for (i = 0; i < nRomCurves; i++)
+    {
+        RomCurveDef* c = romCurves[i];
+        if (c->type == ROMCURVE_TYPE_ACTION)
+        {
+            if (c->action == act)
+            {
+                return c->id;
+            }
+        }
+    }
+    return -1;
+}
 #pragma fp_contract off
 int RomCurve_func11(RomCurveDef* curve, int typeFilter, int actionFilter, int* outCurveId)
 {
@@ -3472,6 +3581,32 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef* curve, int* types, int typeCoun
     return -1;
 }
 
+int curves_isNotPoint(RomCurveDef* curve)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if ((s32)curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int curves_isPoint(RomCurveDef* curve)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if ((s32)curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) != 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 f32 curves_distXZ(f32 x, f32 z, u32 curveId)
 {
     RomCurveDef* curve;
@@ -3508,12 +3643,16 @@ f32 curves_distToObj(GameObject* obj, u32 curveId)
     return gFloatNegOne;
 }
 
-int curves_isNotPoint(RomCurveDef* curve)
+#define ROMCURVE_PLACEMENT_ANGLE(v) ((gRomCurveAnglePi2 * (f32)((s32)(v) << 8)) / lbl_803E0618)
+
+static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
 {
-    int i;
-    for (i = 0; i < 4; i++)
+    int bit;
+    s32* lp = curve->base.linkIds;
+
+    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) == 0)
+        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
         {
             return 0;
         }
@@ -3521,18 +3660,21 @@ int curves_isNotPoint(RomCurveDef* curve)
     return 1;
 }
 
-int curves_isPoint(RomCurveDef* curve)
+static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
 {
-    int i;
-    for (i = 0; i < 4; i++)
+    int bit;
+    s32* lp = curve->base.linkIds;
+
+    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
     {
-        if ((s32)curve->linkIds[i] != -1 && (curve->blockedLinkMask & (1 << i)) != 0)
+        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
         {
             return 0;
         }
     }
     return 1;
 }
+
 
 f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ)
 {
@@ -3602,6 +3744,13 @@ f32 curves_find(int type, int action, f32 x, f32 y, f32 z, f32* outX, f32* outY,
     return bestDistance;
 }
 
+
+void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
+{
+    *startOut = gRomCurveLastFindStart;
+    *endOut = gRomCurveLastFindEnd;
+}
+
 RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex)
 {
     int high;
@@ -3635,39 +3784,6 @@ RomCurveDef* RomCurve_findByIdWithIndex(u32 curveId, int* outIndex)
     *outIndex = -1;
     return NULL;
 }
-
-#define ROMCURVE_PLACEMENT_ANGLE(v) ((gRomCurveAnglePi2 * (f32)((s32)(v) << 8)) / lbl_803E0618)
-
-static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef* curve)
-{
-    int bit;
-    s32* lp = curve->base.linkIds;
-
-    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
-    {
-        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
-static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef* curve)
-{
-    int bit;
-    s32* lp = curve->base.linkIds;
-
-    for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++)
-    {
-        if ((s32)*lp++ != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0)
-        {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 #pragma opt_propagation off
 int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ, s8* outTypes)
 {
@@ -3781,7 +3897,6 @@ int RomCurve_func20(RomCurvePlacementDef* curve, f32* outX, f32* outY, f32* outZ
     }
     return n;
 }
-
 #pragma opt_propagation reset
 int RomCurve_countRandomPoints(RomCurveDef* curve)
 {
@@ -4225,6 +4340,12 @@ int RomCurve_find(int* types, int typeCount, f32 x, f32 y, f32 z, int action)
     return -1;
 }
 
+void* RomCurve_getCurves(int* outCount)
+{
+    *outCount = nRomCurves;
+    return romCurves;
+}
+
 void RomCurve_remove(RomCurveDef* curve)
 {
     RomCurveDef** tableSlot;
@@ -4282,79 +4403,22 @@ void RomCurve_add(RomCurveDef* curve)
     romCurves[insertIndex] = curve;
 }
 
-void RomCurve_release(void)
-{
-}
-
-void RomCurve_initialise(void)
-{
-}
-
 void curves_initialise(void)
 {
     nRomCurves = 0x0;
 }
 
-void RomCurve_func0D(RomCurveDef** startOut, RomCurveDef** endOut)
+void RomCurve_release(void)
 {
-    *startOut = gRomCurveLastFindStart;
-    *endOut = gRomCurveLastFindEnd;
-}
-
-void* RomCurve_getCurves(int* outCount)
-{
-    *outCount = nRomCurves;
-    return romCurves;
-}
-
-int curves_findByAction(int act)
-{
-    int i;
-
-    for (i = 0; i < nRomCurves; i++)
-    {
-        RomCurveDef* c = romCurves[i];
-        if (c->type == ROMCURVE_TYPE_ACTION)
-        {
-            if (c->action == act)
-            {
-                return c->id;
-            }
-        }
-    }
-    return -1;
 }
 
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
-#pragma opt_common_subs off
-int RomCurve_segmentIntersectsOriginRayXZ(f32 x, f32 unusedY, f32 z, RomCurveDef* a, RomCurveDef* b, f32 unusedW)
+
+void RomCurve_initialise(void)
 {
-    f32 ax;
-    f32 bx;
-    f32 az;
-    f32 bz;
-    f32 cross1;
-    f32 sum1;
-    ax = a->x;
-    az = a->z;
-    bx = b->x;
-    bz = b->z;
-    cross1 = bx * az - ax * bz;
-    sum1 = cross1 + (x * (bz - az) + z * (ax - bx));
-    if ((sum1 <= gFloatZero && cross1 >= gFloatZero) || (sum1 >= gFloatZero && cross1 < gFloatZero))
-    {
-        f32 cross_a = -z * ax + x * az;
-        f32 cross_b = -z * bx + x * bz;
-        if ((cross_a <= gFloatZero && cross_b >= gFloatZero) || (cross_a >= gFloatZero && cross_b < gFloatZero))
-        {
-            return 1;
-        }
-    }
-    return 0;
 }
-#pragma opt_common_subs reset
 
 char sObjfsaMissingPatchExitPoint0[] = "Unable to find exit point 0 on patch between walkgroup %d and %d\n";
 char sObjfsaMissingPatchExitPoint1[] = "Unable to find exit point 1 on patch between walkgroup %d and %d\n";
