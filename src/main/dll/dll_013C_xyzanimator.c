@@ -163,6 +163,50 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
 }
 #pragma opt_lifetimes reset
 
+void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block);
+
+int XyzAnimator_getExtraSize(void)
+{
+    return 0x50;
+}
+
+void XyzAnimator_free(GameObject* obj, int flag)
+{
+    int block;
+    XyzAnimatorState* state;
+    XyzAnimatorPlacement* setup;
+    f32 zero;
+
+    state = (XyzAnimatorState*)(obj)->extra;
+    setup = *(XyzAnimatorPlacement**)&(obj)->anim.placementData;
+    zero = lbl_803E4000;
+    state->offsetX = zero;
+    state->offsetY = zero;
+    state->offsetZ = zero;
+    if (flag == 0)
+    {
+        block = objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
+                                    (double)(obj)->anim.localPosZ);
+        block = (int)mapGetBlock(block);
+        if (((void*)block != NULL) && (state->vertexCount != 0))
+        {
+            fn_80194C40(setup, state, block);
+        }
+    }
+    if (*(void**)&state->dataBuffer != NULL)
+    {
+        mm_free(*(void**)&state->dataBuffer);
+    }
+    ObjGroup_RemoveObject((int)obj, XYZANIMATOR_OBJGROUP);
+}
+
+void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4004);
+}
+
 #pragma opt_dead_assignments off
 #pragma opt_loop_invariants off
 void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
@@ -245,48 +289,6 @@ void fn_80194C40(XyzAnimatorPlacement* def, XyzAnimatorState* state, int block)
 }
 #pragma opt_loop_invariants reset
 #pragma opt_dead_assignments reset
-
-int XyzAnimator_getExtraSize(void)
-{
-    return 0x50;
-}
-
-void XyzAnimator_free(GameObject* obj, int flag)
-{
-    int block;
-    XyzAnimatorState* state;
-    XyzAnimatorPlacement* setup;
-    f32 zero;
-
-    state = (XyzAnimatorState*)(obj)->extra;
-    setup = *(XyzAnimatorPlacement**)&(obj)->anim.placementData;
-    zero = lbl_803E4000;
-    state->offsetX = zero;
-    state->offsetY = zero;
-    state->offsetZ = zero;
-    if (flag == 0)
-    {
-        block = objPosToMapBlockIdx((double)(obj)->anim.localPosX, (double)(obj)->anim.localPosY,
-                                    (double)(obj)->anim.localPosZ);
-        block = (int)mapGetBlock(block);
-        if (((void*)block != NULL) && (state->vertexCount != 0))
-        {
-            fn_80194C40(setup, state, block);
-        }
-    }
-    if (*(void**)&state->dataBuffer != NULL)
-    {
-        mm_free(*(void**)&state->dataBuffer);
-    }
-    ObjGroup_RemoveObject((int)obj, XYZANIMATOR_OBJGROUP);
-}
-
-void XyzAnimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4004);
-}
 
 void XyzAnimator_update(GameObject* obj)
 {
