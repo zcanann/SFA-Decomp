@@ -91,6 +91,8 @@ extern void fn_80063368(short* obj);
 extern void setRumbleEnabled(u8 enabled);
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
+RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
+
 
 static inline u32 RomCurve_GetId(RomCurveDef* curve)
 {
@@ -466,10 +468,8 @@ void fn_800E58FC(GameObject* obj, CurvesCollisionState* collision)
         obj->anim.worldPosZ = collision->points[0][2];
     }
 }
-#pragma opt_common_subs reset
 
 #pragma dont_inline on
-#pragma opt_common_subs off
 void fn_800E5CBC(short* obj, int state)
 {
     CurvesCollisionState* collision;
@@ -520,10 +520,8 @@ void fn_800E5CBC(short* obj, int state)
         collision->surfaceNormalZ = normalZ;
     }
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 
-#pragma dont_inline on
+#pragma opt_common_subs reset
 void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
 {
     u32 hitCount;
@@ -554,8 +552,8 @@ void fn_800E5E38(GameObject* obj, CurvesCollisionState* collision)
         hitIndex--;
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 #pragma opt_propagation off
 void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
 {
@@ -638,8 +636,8 @@ void fn_800E5F1C(GameObject* obj, CurvesCollisionState* collision)
     collision->resultWaterDepth = collision->waterDepth[0];
     collision->resultFloorGap = collision->floorGap[0];
 }
-#pragma opt_propagation reset
 
+#pragma opt_propagation reset
 #pragma opt_unroll_count 4
 void curves_updateLocalPointCollision(int obj, CurvesCollisionState* collision)
 {
@@ -1441,6 +1439,29 @@ void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue
     }
 }
 
+void dll_15_func07(void* obj, CurvesCollisionState* state)
+{
+    u32 flags;
+    s8 type;
+    u8 mask;
+    mask = 0;
+    flags = state->flags;
+    if ((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) == 0 || (s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) == 0)
+    {
+        return;
+    }
+    type = state->subtype;
+    if (type == CURVES_COLLISION_SUBTYPE_OBJECT || type == CURVES_COLLISION_SUBTYPE_POINT)
+    {
+        if ((s32)(flags & 0x00000004) != 0)
+            mask |= 0x1;
+        if ((s32)(flags & 0x01000000) != 0)
+            mask |= 0x20;
+        hitDetectFn_800691c0((GameObject*)obj, &state->hitBounds, mask, 1);
+    }
+}
+
+
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
 {
     f32 maxX;
@@ -1614,7 +1635,6 @@ void dll_15_func06(GameObject* obj, CurvesCollisionState* state)
         state->hitBounds.maxZ = maxZ;
     }
 }
-
 #pragma opt_unroll_count 8
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types)
 {
@@ -1632,28 +1652,6 @@ void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoin
     state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
 #pragma opt_unroll_count 0
-
-void dll_15_func07(void* obj, CurvesCollisionState* state)
-{
-    u32 flags;
-    s8 type;
-    u8 mask;
-    mask = 0;
-    flags = state->flags;
-    if ((s32)(flags & CURVES_COLLISION_STATE_ACTIVE) == 0 || (s32)(flags & CURVES_COLLISION_STATE_HIT_SEGMENTS) == 0)
-    {
-        return;
-    }
-    type = state->subtype;
-    if (type == CURVES_COLLISION_SUBTYPE_OBJECT || type == CURVES_COLLISION_SUBTYPE_POINT)
-    {
-        if ((s32)(flags & 0x00000004) != 0)
-            mask |= 0x1;
-        if ((s32)(flags & 0x01000000) != 0)
-            mask |= 0x20;
-        hitDetectFn_800691c0((GameObject*)obj, &state->hitBounds, mask, 1);
-    }
-}
 
 void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount, f32* localPointPositions,
                                      f32* localPointRadii, int primaryHitType, int secondaryHitType)
@@ -1687,6 +1685,14 @@ void curves_clear(CurvesCollisionState* state, int updateMode, u32 flags, int su
     state->flags = flags | CURVES_COLLISION_STATE_ACTIVE;
     state->updateMode = updateMode;
     state->heightPadding = 5;
+}
+
+void dll_15_release_nop(void)
+{
+}
+
+void dll_15_initialise_nop(void)
+{
 }
 
 u32 playerHasKrazoaSpirit(u8 checkStoryBits, u32 bit)
@@ -1723,12 +1729,47 @@ void saveFileStruct_setCheatActive(u8 optionIndex, u8 active)
     }
 }
 
-void dll_15_release_nop(void)
+int saveFileStruct_isCheatActive(u8 idx)
 {
+    SaveData* save;
+
+    save = &saveData;
+    if ((save->registeredDebugOptions & (1 << idx)) != 0)
+    {
+        if ((save->enabledDebugOptions & (1 << idx)) != 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
-void dll_15_initialise_nop(void)
+void saveFileStruct_unlockCheat(u8 idx)
 {
+    SaveData* p = &saveData;
+    u32 reg = p->registeredDebugOptions;
+    u32 mask = 1 << idx;
+    p->registeredDebugOptions = reg | mask;
+}
+
+int isCheatUnlocked(u8 idx)
+{
+    SaveData* p = &saveData;
+    u32 reg = p->registeredDebugOptions;
+    u32 mask = 1 << idx;
+    return reg & mask;
+}
+
+void saveFileStruct_resetVolumes(void)
+{
+    saveData.musicVolume = 0x7f;
+    saveData.sfxVolume = 0x7f;
+    saveData.speechVolume = 0x7f;
+}
+
+void* getSaveFileStruct(void)
+{
+    return &saveData;
 }
 
 void loadSaveSettings(void)
@@ -1742,11 +1783,6 @@ void loadSaveSettings(void)
     audioSetVolumesU8(saveData.sfxVolume, 10, 0, 1, 0);
     audioSetVolumesU8(saveData.musicVolume, 10, 1, 0, 0);
     audioSetVolumesU8(saveData.speechVolume, 10, 0, 0, 1);
-}
-
-void* getSaveFileStruct(void)
-{
-    return &saveData;
 }
 
 void* getLastSavedGameTexts(void)
@@ -1781,44 +1817,6 @@ int pushable_savePos(int obj)
                 *(f32*)((u32)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 8 + (i << 4));
             ((GameObject*)obj)->anim.localPosZ =
                 *(f32*)((u32)gSaveGameData + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc + (i << 4));
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void saveFileStruct_resetVolumes(void)
-{
-    saveData.musicVolume = 0x7f;
-    saveData.sfxVolume = 0x7f;
-    saveData.speechVolume = 0x7f;
-}
-
-int isCheatUnlocked(u8 idx)
-{
-    SaveData* p = &saveData;
-    u32 reg = p->registeredDebugOptions;
-    u32 mask = 1 << idx;
-    return reg & mask;
-}
-
-void saveFileStruct_unlockCheat(u8 idx)
-{
-    SaveData* p = &saveData;
-    u32 reg = p->registeredDebugOptions;
-    u32 mask = 1 << idx;
-    p->registeredDebugOptions = reg | mask;
-}
-
-int saveFileStruct_isCheatActive(u8 idx)
-{
-    SaveData* save;
-
-    save = &saveData;
-    if ((save->registeredDebugOptions & (1 << idx)) != 0)
-    {
-        if ((save->enabledDebugOptions & (1 << idx)) != 0)
-        {
             return 1;
         }
     }
