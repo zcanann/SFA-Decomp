@@ -3,6 +3,9 @@
 
 #include "ghidra_import.h"
 
+struct TrackBlockDescriptor;
+struct TrackTriangle;
+
 void FUN_8005fab0(int param_1,float *param_2);
 void FUN_8005fb68(void);
 void FUN_8005fdec(void);
@@ -113,5 +116,6 @@ void FUN_80064384(int param_1);
 /* extern-cleanup: defining-file public prototypes */
 int fn_80060C14(int* obj, int triBuf, void* planesOut, int vertsOut, int p7, f32 offX, f32 offZ, int p8, int kindMask);
 void objDrawFn_80061f0c(void* cache, void* blockData, int* obj, int slot, void* p7, void* buf48, f32 f);
-void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown);
+void fn_800659A8(struct TrackTriangle* triStart, struct TrackTriangle* triEnd, struct TrackBlockDescriptor* desc,
+                 f32 qx, f32 qz, int allowDown);
 #endif /* MAIN_TRACK_DOLPHIN_H_ */

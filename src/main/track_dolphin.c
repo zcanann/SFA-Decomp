@@ -38,7 +38,7 @@
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
 u8 gActiveTrackBlockCount;
-int lbl_803DCF68;
+TrackGroundHit* lbl_803DCF68;
 int lbl_803DCF64;
 s8 lbl_803DCF60;
 s16 gIntersectLineCount;
@@ -357,7 +357,7 @@ extern f32 lbl_803DCF50;
 extern f32 lbl_803DCF58;
 extern f32 __PADFixBits;
 extern int lbl_803DCF64;
-extern int lbl_803DCF68;
+extern TrackGroundHit* lbl_803DCF68;
 extern s8 lbl_803DCF60;
 extern const f32 lbl_803DECE8;
 extern const f32 lbl_803DECE0;
@@ -2683,7 +2683,7 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
             mode = 1;
     }
 
-    lbl_803DCF68 = (int)(base + 0xdc);
+    lbl_803DCF68 = (TrackGroundHit*)(base + 0xdc);
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
     end = (TrackBlockDescriptor*)(base + 0x424) + gActiveTrackBlockCount;
@@ -2694,13 +2694,13 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
         if (desc->object != NULL)
         {
             Matrix_TransformPoint(desc->currentMatrix, x, __AR_Callback, z, &tx, &ty, &tz);
-            fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
+            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, tx, tz, mode);
         }
         else
         {
-            fn_800659A8((void*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
-                        (void*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, x, z, mode);
+            fn_800659A8((TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c),
+                        (TrackTriangle*)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c), desc, x, z, mode);
         }
     }
 
@@ -2734,7 +2734,8 @@ int hitDetectFn_80065e50(GameObject* obj, f32 x, f32 y, f32 z, TrackGroundHit***
     return lbl_803DCF60;
 }
 
-void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int allowDown)
+void fn_800659A8(TrackTriangle* triStart, TrackTriangle* triEnd, TrackBlockDescriptor* desc, f32 qx, f32 qz,
+                 int allowDown)
 {
     f32* vxp;
     f32* vyp;
@@ -2748,12 +2749,12 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
     f32 vzs[7];
     f32 vec[4];
 
-    if (((TrackBlockDescriptor*)desc)->object == NULL)
+    if (desc->object == NULL)
     {
         qx -= (f32)((int*)gTrackGridOrigin)[0];
         qz -= (f32)((int*)gTrackGridOrigin)[2];
     }
-    for (tri = triStart; (void*)tri < triEnd; tri++)
+    for (tri = triStart; tri < triEnd; tri++)
     {
         s8 fl = tri->flags;
         int inside;
@@ -2767,11 +2768,11 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
         vec[0] = tri->planeN[0];
         vec[1] = tri->planeN[1];
         vec[2] = tri->planeN[2];
-        if (!(vec[1] > __AR_Callback))
+        if (!(vec[1] > 0.0f))
         {
             if (allowDown == 0)
                 continue;
-            if (__AR_Callback == vec[1])
+            if (0.0f == vec[1])
                 continue;
         }
         planeY = -(vec[0] * qx + vec[2] * qz + tri->planeD) / vec[1];
@@ -2789,30 +2790,30 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
             for (i = 0; i < 3; i++)
             {
                 int nxt;
-                f32 c31;
-                f32 c30;
+                f32 zero;
+                f32 extrudeDistance;
                 f32 nz, ny, nx, mag;
-                c30 = lbl_803DECC0;
-                c31 = __AR_Callback;
+                extrudeDistance = 10.0f;
+                zero = 0.0f;
 
                 nxt = i + 1;
                 if (nxt > 2)
                     nxt = 0;
-                vxp[3] = c30 * vec[0] + vxp[i];
-                vyp[3] = c30 * vec[1] + vyp[i];
-                vzp[3] = c30 * vec[2] + vzp[i];
+                vxp[3] = extrudeDistance * vec[0] + vxp[i];
+                vyp[3] = extrudeDistance * vec[1] + vyp[i];
+                vzp[3] = extrudeDistance * vec[2] + vzp[i];
                 nx = vyp[3] * (vzp[i] - vzp[nxt]) + (vyp[i] * (vzp[nxt] - vzp[3]) + vyp[nxt] * (vzp[3] - vzp[i]));
                 ny = vzp[3] * (vxp[i] - vxp[nxt]) + (vzp[i] * (vxp[nxt] - vxp[3]) + vzp[nxt] * (vxp[3] - vxp[i]));
                 nz = vxp[3] * (vyp[i] - vyp[nxt]) + (vxp[i] * (vyp[nxt] - vyp[3]) + vxp[nxt] * (vyp[3] - vyp[i]));
                 mag = sqrtf(nx * nx + ny * ny + nz * nz);
-                if (mag > c31)
+                if (mag > zero)
                 {
-                    f32 s = lbl_803DECC4 / mag;
+                    f32 s = 1.0f / mag;
                     nx *= s;
                     ny *= s;
                     nz *= s;
                 }
-                if (-(nx * vxp[i] + ny * vyp[i] + nz * vzp[i]) + (nx * qx + ny * planeY + nz * qz) > lbl_803DECE4)
+                if (-(nx * vxp[i] + ny * vyp[i] + nz * vzp[i]) + (nx * qx + ny * planeY + nz * qz) > 0.2f)
                 {
                     inside = 0;
                     break;
@@ -2823,19 +2824,18 @@ void fn_800659A8(void* triStart, void* triEnd, void* desc, f32 qx, f32 qz, int a
             continue;
         if ((s8)lbl_803DCF60 >= 0x23)
             break;
-        if (((TrackBlockDescriptor*)desc)->object != NULL)
+        if (desc->object != NULL)
         {
-            Matrix_TransformPoint(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, qx, planeY, qz, &ox, &planeY,
-                                  &oz);
-            Matrix_TransformVector(((TrackBlockDescriptor*)desc)->currentCollisionMatrix, vec, vec);
+            Matrix_TransformPoint(desc->currentCollisionMatrix, qx, planeY, qz, &ox, &planeY, &oz);
+            Matrix_TransformVector(desc->currentCollisionMatrix, vec, vec);
         }
-        *(f32*)(lbl_803DCF68 + 0) = planeY;
-        *(u8*)(lbl_803DCF68 + 0x14) = tri->surfaceType;
-        *(f32*)(lbl_803DCF68 + 0x4) = vec[0];
-        *(f32*)(lbl_803DCF68 + 0x8) = vec[1];
-        *(f32*)(lbl_803DCF68 + 0xc) = vec[2];
-        *(int*)(lbl_803DCF68 + 0x10) = (int)((TrackBlockDescriptor*)desc)->object;
-        lbl_803DCF68 = lbl_803DCF68 + 0x18;
+        lbl_803DCF68->height = planeY;
+        lbl_803DCF68->surfaceType = tri->surfaceType;
+        lbl_803DCF68->normalX = vec[0];
+        lbl_803DCF68->normalY = vec[1];
+        lbl_803DCF68->normalZ = vec[2];
+        lbl_803DCF68->object = desc->object;
+        lbl_803DCF68++;
         lbl_803DCF60++;
     }
 }
