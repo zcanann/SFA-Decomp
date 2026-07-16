@@ -17,7 +17,7 @@
  *                                   x/y/z onto the state; trickyFn_8013b368
  *                                   then steers toward it.
  * fn_8013E0D0                    - the circling state machine, dispatched on
- *                                   substate ((TrickyState*)st)->substate (0 acquire, 1 approach,
+ *                                   substate t->substate (0 acquire, 1 approach,
  *                                   2/3/4 the special charge/spawn/finish
  *                                   path, 5 orbit-and-pick-best). It spawns
  *                                   helper objects (ids 0x17b, 0x4f0),
@@ -168,10 +168,9 @@ typedef struct
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
 #pragma opt_propagation off
-void fn_8013E0D0(int* obj, u8* st)
+void fn_8013E0D0(int* obj, TrickyState* t)
 {
     GameObject* gobj = (GameObject*)obj;
-    TrickyState* t = (TrickyState*)st;
     char* str = lbl_8031D2E8;
     int* best = NULL;
     f32 bestd = lbl_803E23DC;
@@ -345,8 +344,7 @@ void fn_8013E0D0(int* obj, u8* st)
                             }
                             ((TrickyPackedSlots*)((char*)t + 0x7bc))->c = free_;
                             *(int*)&t->child =
-                                (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1,
-                                                    (void*)*(int*)&gobj->anim.parent);
+                                (int)Obj_SetupObject((ObjPlacement*)o, 4, -1, -1, (void*)*(int*)&gobj->anim.parent);
                             ObjLink_AttachChild((int)gobj, *(int*)&t->child,
                                                 ((TrickyPackedSlots*)((char*)t + 0x7bc))->c);
                             {
@@ -427,9 +425,8 @@ void fn_8013E0D0(int* obj, u8* st)
                         ((AnimObjD2DripSetup*)o)->head.color[0] = 2;
                         ((AnimObjD2DripSetup*)o)->head.color[1] = 1;
                         ((AnimObjD2DripSetup*)o)->index = i;
-                        *(int*)(p + 0x700) = (int)Obj_SetupObject((ObjPlacement*)o, 5,
-                                                                 gobj->anim.mapEventSlot, -1,
-                                                                 (void*)*(int*)&gobj->anim.parent);
+                        *(int*)(p + 0x700) = (int)Obj_SetupObject((ObjPlacement*)o, 5, gobj->anim.mapEventSlot, -1,
+                                                                  (void*)*(int*)&gobj->anim.parent);
                         p += 4;
                     }
                 }
