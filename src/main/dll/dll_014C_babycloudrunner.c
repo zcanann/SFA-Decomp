@@ -90,7 +90,7 @@ extern f32 lbl_803E424C;
 extern f32 lbl_803E4250;
 extern f32 lbl_803E4254;
 
-extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
+extern void fn_8003ADC4(GameObject* obj, GameObject* target, void* state, int limit, int inverted, int mode);
 
 void babycloudrunner_release(void);
 void babycloudrunner_initialise(void);
@@ -144,20 +144,20 @@ int fn_8019E3F4(int* obj)
     return 1;
 }
 
-void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
+void sandworm_turnTowardTargetAnim(GameObject* obj, GameObject* target, BabyCloudRunnerState* state, int playMove)
 {
-    int shifted;
-    fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
-    ((GameObject*)obj)->anim.rotX += (shifted >>= 3);
+    int yawStep;
+    fn_8003ADC4(obj, target, state->lookBlock, 0x28, 0, 3);
+    yawStep = Obj_GetYawDeltaToObject(obj, target, 0);
+    obj->anim.rotX += (yawStep >>= 3);
     if (playMove == 0)
         return;
-    if ((s16)shifted > -200 && (s16)shifted < 200)
+    if ((s16)yawStep > -200 && (s16)yawStep < 200)
     {
-        if (sub->turnLatch != 0)
+        if (state->turnLatch != 0)
         {
-            sub->turnLatch = 0;
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E4218, 0);
+            state->turnLatch = 0;
+            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4218, 0);
         }
         else
         {
@@ -166,23 +166,23 @@ void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* su
     }
     else
     {
-        if (sub->turnLatch == 0)
+        if (state->turnLatch == 0)
         {
-            sub->turnLatch = 1;
-            ObjAnim_SetCurrentMove(obj, 9, lbl_803E4218, 0);
+            state->turnLatch = 1;
+            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E4218, 0);
         }
         else
         {
-            int t;
-            if ((int)(s16)shifted > 0)
+            int turnAnimStep;
+            if ((int)(s16)yawStep > 0)
             {
-                t = (s16)shifted >> 2;
+                turnAnimStep = (s16)yawStep >> 2;
             }
             else
             {
-                t = -(s16)shifted >> 2;
+                turnAnimStep = -(s16)yawStep >> 2;
             }
-            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)turnAnimStep / lbl_803E4240, timeDelta, 0);
         }
     }
 }
@@ -371,7 +371,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 8:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)player, 0);
-        fn_8003ADC4((GameObject*)(obj), (int*)player, sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)obj, (GameObject*)player, sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         if (inRange != 0)
         {
@@ -385,7 +385,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     case 5:
         animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)getTrickyObject(), 0);
-        fn_8003ADC4((GameObject*)(obj), (int*)getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
+        fn_8003ADC4((GameObject*)obj, (GameObject*)getTrickyObject(), sub->lookBlock, 0x28, 0, 3);
         ((GameObject*)obj)->anim.rotX += (s16)yaw / 8;
         break;
     }
@@ -534,7 +534,7 @@ void babycloudrunner_update(int* obj)
                     if (near != NULL &&
                         Vec_distance(&((GameObject*)near)->anim.worldPosX, (f32*)((char*)sub + 0x18)) < gBabyCloudRunnerTargetNearDist)
                     {
-                        sandworm_turnTowardTargetAnim((int)obj, (int)near, sub, 0);
+                        sandworm_turnTowardTargetAnim((GameObject*)obj, (GameObject*)near, sub, 0);
                         if (Vec_distance(&((GameObject*)Obj_GetPlayerObject())->anim.worldPosX,
                                          &((GameObject*)near)->anim.worldPosX) >
                             gBabyCloudRunnerPlayerFarDist)
@@ -641,7 +641,7 @@ void babycloudrunner_update(int* obj)
                         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                         sub->unkB0 = 1;
                     }
-                    sandworm_turnTowardTargetAnim((int)obj, (int)Obj_GetPlayerObject(), sub, 1);
+                    sandworm_turnTowardTargetAnim((GameObject*)obj, Obj_GetPlayerObject(), sub, 1);
                     if (ObjAnim_AdvanceCurrentMove((int)obj, sub->animSpeed, timeDelta,
                                                                                   0) != 0)
                     {
@@ -733,4 +733,3 @@ void babycloudrunner_release(void)
 void babycloudrunner_initialise(void)
 {
 }
-
