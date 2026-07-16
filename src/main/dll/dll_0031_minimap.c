@@ -456,7 +456,7 @@ int Minimap_update(void)
                     boxH = gMinimapBoxHeight;
                     b = (f32)boxH / (f32)texH;
                     a = (a > b) ? b : a;
-                    a = (a > gMinimapMaxZoom) ? gMinimapMaxZoom : a;
+                    a = (a < gMinimapMaxZoom) ? a : gMinimapMaxZoom;
                     gMinimapMinZoom = a;
                     if (gMinimapAxisSwap != 0)
                     {
