@@ -3266,7 +3266,7 @@ void gameTextInitFn_8001c794(void)
         j = 0;
         x = 0;
         x0 = 0;
-        for (; j < 2;)
+        while (j++ < 2)
         {
             x1 = (x + 1) * 2;
             x2 = (x + 2) * 2;
@@ -3326,7 +3326,6 @@ void gameTextInitFn_8001c794(void)
             dst += 32;
             x += 8;
             x0 += 8;
-            j++;
         }
         y += 4;
     }
