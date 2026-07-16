@@ -95,7 +95,8 @@ static inline f32 sal_fmod(f32 x, f32 y, f64 absy)
         return x;
     }
     n = (s64)(u64)(x / y);
-    return x - y * (f32)n;
+    x = x - y * (f32)n;
+    return x;
 }
 
 static inline void synthHandleKeyOffCallbacks(void)
@@ -137,7 +138,6 @@ void fn_8026EC44(u32 dt)
     f64 absRange;
     f32 range;
     f32 c1;
-    f32 val;
     f32 freq;
     u8 fade;
     /* never referenced; reserves stack to match the retail frame (0xB0) */
@@ -185,9 +185,7 @@ void fn_8026EC44(u32 dt)
                 st = &cs->streams[0];
                 freq = c0 * ((f32)st->cur * dt);
                 freq = freq * (c1 * (f32)(u32)st->vol);
-                val = range * freq;
-                val = sal_fmod(val, range, absRange);
-                st->d[st->idx].step = val;
+                st->d[st->idx].step = sal_fmod(range * freq, range, absRange);
                 *(int*)&st->d[st->idx].delta = floorf(freq);
                 ret = fn_8026E9D0(0, dt);
                 cb = synthUpdateCallbacks();
@@ -231,9 +229,7 @@ void fn_8026EC44(u32 dt)
                     st = &cs->streams[ch];
                     freq = c0 * ((f32)st->cur * dt);
                     freq = freq * (c1 * (f32)(u32)st->vol);
-                    val = range * freq;
-                    val = sal_fmod(val, range, absRange);
-                    st->d[st->idx].step = val;
+                    st->d[st->idx].step = sal_fmod(range * freq, range, absRange);
                     *(int*)&st->d[st->idx].delta = floorf(freq);
                     ret |= fn_8026E9D0(ch, dt);
                 }
