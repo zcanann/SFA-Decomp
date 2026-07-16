@@ -547,7 +547,7 @@ void mmp_moonrock_update(GameObject* obj)
     if ((state->flags & MOONROCK_FLAG_RESPAWNING) != 0)
     {
         f32 v = state->respawnTimer;
-        f32 k = *(f32*)&lbl_803E4554;
+        f32 k = lbl_803E4554;
         if (v > k)
         {
             state->respawnTimer = v - timeDelta;
