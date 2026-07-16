@@ -67,22 +67,6 @@ extern f32 lbl_803DFA70;
 extern f32 lbl_803DFA74;
 extern f32 lbl_803DFA78;
 
-void Effect3_func05_nop(void)
-{
-}
-
-void Effect3_func03_nop(void)
-{
-}
-
-void Effect3_release(void)
-{
-}
-
-void Effect3_initialise(void)
-{
-}
-
 ObjectDescriptor11 projgfx_funcs = {
     0,
     0,
@@ -624,3 +608,22 @@ int Effect3_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     return spawnResult;
 }
 #undef FILL350
+#pragma scheduling reset
+#pragma peephole reset
+
+void Effect3_func05_nop(void)
+{
+}
+
+void Effect3_func03_nop(void)
+{
+}
+
+void Effect3_release(void)
+{
+}
+
+void Effect3_initialise(void)
+{
+}
+
