@@ -21,63 +21,7 @@
 #include "main/dll/DIM/dll_01C7_dimlavasmash.h"
 
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
-
-#define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
-
 #define DIMLAVASMASH_HIT_SEQID_CANNONBALL 397 /* dimlavaball cannonball (0x18d) */
-
-extern f32 lbl_803E48F8;
-
-extern int mapBlockFn_800606ec(int map, int idx);
-extern int mapBlockFn_80060678(void);
-
-void dimlavasmash_free(void)
-{
-}
-
-void dimlavasmash_hitDetect(void)
-{
-}
-
-void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    u8* state = ((GameObject*)obj)->extra;
-    if (state[2] == 2 && visible != 0)
-    {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48F8);
-    }
-}
-
-void dimlavasmash_update(int* obj)
-{
-    u8* state;
-    ObjHitsPriorityState* hitState;
-    state = ((GameObject*)obj)->extra;
-    if (state[2] == 1)
-    {
-        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
-        hitState->flags &= ~1;
-    }
-    else if (((GameObject*)obj)->unkF4 == 0)
-    {
-        if ((s8)state[0] != -1)
-        {
-            (*gObjectTriggerInterface)->runSequence((s8)state[0], obj, -1);
-        }
-        ((GameObject*)obj)->unkF4 = 1;
-    }
-}
-
-int dimlavasmash_getExtraSize(void)
-{
-    return 0x3;
-}
-int dimlavasmash_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-typedef void (*DimLavaSmashSetBlockSurfaceFlagsFn)(int* block, int disable, int surfaceType);
 
 #pragma dont_inline on
 #pragma opt_propagation off
@@ -122,8 +66,8 @@ void dimlavasmash_setBlockSurfaceFlags(int map, int disable, int surfaceType)
         }
     }
 }
+#pragma dont_inline off
 #pragma opt_propagation reset
-#pragma dont_inline reset
 
 int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -166,6 +110,63 @@ int dimlavasmash_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpda
         }
     }
     return ((DimlavasmashState*)state)->state == 0;
+}
+
+int dimlavasmash_getExtraSize(void)
+{
+    return 0x3;
+}
+int dimlavasmash_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+#define DIMLAVASMASH_OBJFLAG_HITDETECT_DISABLED 0x2000
+
+
+extern f32 lbl_803E48F8;
+
+extern int mapBlockFn_800606ec(int map, int idx);
+extern int mapBlockFn_80060678(void);
+
+void dimlavasmash_free(void)
+{
+}
+
+void dimlavasmash_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8* state = ((GameObject*)obj)->extra;
+    if (state[2] == 2 && visible != 0)
+    {
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48F8);
+    }
+}
+
+typedef void (*DimLavaSmashSetBlockSurfaceFlagsFn)(int* block, int disable, int surfaceType);
+
+
+void dimlavasmash_hitDetect(void)
+{
+}
+
+void dimlavasmash_update(int* obj)
+{
+    u8* state;
+    ObjHitsPriorityState* hitState;
+    state = ((GameObject*)obj)->extra;
+    if (state[2] == 1)
+    {
+        hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
+        hitState->flags &= ~1;
+    }
+    else if (((GameObject*)obj)->unkF4 == 0)
+    {
+        if ((s8)state[0] != -1)
+        {
+            (*gObjectTriggerInterface)->runSequence((s8)state[0], obj, -1);
+        }
+        ((GameObject*)obj)->unkF4 = 1;
+    }
 }
 
 void dimlavasmash_init(s16* obj, s8* def)
