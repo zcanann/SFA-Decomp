@@ -53,3 +53,11 @@ Trailing `u32 unused[K]` pads are DEAD-STRIPPED when the frame size already matc
 
 ## symbols.txt over-carve: lbl_803DE9F4 (objprint shaderFuzzFn_8003cc1c residual)
 Same targimpl/next-symbol-distance class you've been fixing: retail obj relocs reference `lbl_803DE9F4+0x4`, proving 0x803DE9F4 is ONE size:0x8 object, but symbols.txt (lines ~15953-15954) carves it as two 4-byte labels lbl_803DE9F4/lbl_803DE9F8. DOL bytes at 803DE9F4 = 00ff00ff00ff00ff (u16 0x00ff mask pairs - paired-single/psq_l mask shape, not floats despite data:float-adjacent neighbors). Merging to one 0x8 object should clear the SPLIT-SYMBOL region in shaderFuzzFn_8003cc1c (99.899); left to you to avoid concurrent dtk re-splits.
+
+## Interface-global typing (unification scout, 2026-07-16)
+Mechanical unification of divergent local extern types landed (11 units, md5-identical). Design-grade residue for an owner pass:
+- gBaddieControlInterface is declared int* (header+definition) but EVERY consumer treats it as pointer-to-pointer-to-fn-table ((void**)*g indexed at slots 4..22); dll_0001_camcontrol.h already has a partial CamcontrolBaddieControlInterface struct proving the shape. A shared typed BaddieControlInterface** would let ~10 units drop their cast-noise. Same for gPlayerShadowInterface (int* but used as *(fn**)(*g + 0x8/0xc)).
+- SHthorntailEventInterface/SHthorntailPathControlInterface (SH/SHthorntail_internal.h) and NwMammothPathControlInterface mirror the canonical MapEventInterface/PathControlInterface vtables at identical offsets with different field names (SH setAnimEvent@0x50 == canonical setObjGroupStatus@0x50) - likely misread duplicates; renaming to consume the canonical headers needs body edits. NW field names already match canonical exactly (easiest convert).
+- gameloop.c defines gCarryableInterface/gPathControlInterface/gPlayerShadowInterface as void* (lines ~88-103) diverging from canonical headers, plus late block-scope-style extern redecls (~715-725).
+- voxmaps.h declares gMapBlockOriginWorldX/Z as int while shader.c/track_dolphin.c use f32 - one side is wrong; f32 usage pattern suggests the header.
+- dll_0035_saveselectscreen treats gMapEventInterface as single-indirection TitleMenuControl* with raw vtable[8]/[30]/[36] (gotoSavegame/setCharacter/getCurCharPos) - candidate for canonical-type consumption.
