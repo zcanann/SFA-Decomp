@@ -7255,6 +7255,7 @@ int initLoadFiles(void)
             rom++;
         }
         lbl_803DCC98 = 0;
+        i = 0;
         himem = (u8*)tbl + 0x20000;
         ptrs = (u32*)(himem - 27176);   /* tbl->ptrs */
         owners = (s16*)(himem - 26824); /* tbl->owners */
@@ -7262,7 +7263,7 @@ int initLoadFiles(void)
         names[0] = sResourceFileNameTable;
         sizes = (int*)(himem - 28008); /* tbl->sizes */
         flags = himem - 28448;         /* tbl->loadedFlags */
-        for (i = 0; i <= 0x57; i++)
+        for (; i <= 0x57; i++)
         {
             switch (i)
             {
