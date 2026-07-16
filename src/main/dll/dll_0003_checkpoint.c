@@ -744,23 +744,20 @@ extern f32 lbl_803E0538;
 
 /* Flood-search the route graph (filtered by group) for the segment the object
  * lies within, recording the matched checkpoint and local coordinates. */
-#pragma opt_dead_assignments off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
-    CheckpointSlot* cp2;
     int stack[64];
     char visited[200];
     s32 cur;
     s32 slot;
     CheckpointRouteEntry* cp;
-    s32* lp;
     int count, k, i, j;
     CheckpointRouteEntry* n;
     CheckpointRouteEntry* e;
     f32 distA, sin1, cos2, sin2;
     f32 dist1, dist2, nx, nz, outX, sum;
-    f32 offs2, cos1, distB, dx, dy, len, q, t0, dz, offs1, b1, width;
-    f32 px, py, pz, frac, outY;
+    f32 offs2, cos1, distB, dx, dy, len, q, t0, dz, offs1, b1;
+    f32 px, py, pz, width, frac, outY;
     f32 ddy;
 
     count = 0;
@@ -775,9 +772,9 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     }
     else
     {
-        for (i = 0, cp2 = gCheckpointRouteTable; i < (int)gCheckpointRouteCount; i++, cp2++)
+        for (i = 0; i < (int)gCheckpointRouteCount; i++)
         {
-            e = cp2->entry;
+            e = gCheckpointRouteTable[i].entry;
             if (visited[i] == 0 && (filter == -1 || e->group == filter))
             {
                 nx = e->posX - obj->anim.localPosX;
@@ -818,11 +815,9 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         {
             return;
         }
-        k = 0;
-        lp = (s32*)cp;
-        for (; k < 2; lp++, k++)
+        for (k = 0; k < 2; k++)
         {
-            n = Checkpoint_find(lp[8], &slot);
+            n = Checkpoint_find(cp->forwardLinkIds[k], &slot);
             if (n != NULL)
             {
                 cos1 = mathSinf((gCheckpointPi * (f32)(cp->heading << 8)) / gCheckpointAngleToRadians);
@@ -849,8 +844,9 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                         nz = dz * q;
                     }
                     q = cos1 * nx + sin1 * nz;
+                    cos1 = cos2 * nx + sin2 * nz;
                     t0 = -dist1 / q;
-                    sum = t0 + dist2 / (cos2 * nx + sin2 * nz);
+                    sum = t0 + dist2 / cos1;
                     if (sum > lbl_803E0528 || sum < lbl_803E052C)
                     {
                         frac = t0 / sum;
@@ -872,8 +868,13 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
                     px = -(dx * frac - cp->posX);
                     py = -(dy * frac - cp->posY);
                     pz = -(dz * frac - cp->posZ);
-                    outY = (obj->anim.localPosY - py) / width;
-                    outX = (-(px * nz - pz * nx) + (obj->anim.localPosX * nz - obj->anim.localPosZ * nx)) / width;
+                    dy = obj->anim.localPosY;
+                    outY = (dy - py) / width;
+                    dx = obj->anim.localPosX;
+                    dz = obj->anim.localPosZ;
+                    b1 = -(px * nz - pz * nx);
+                    b1 += dx * nz - dz * nx;
+                    outX = b1 / width;
                     if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534)
                     {
                     }
@@ -892,32 +893,23 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
         if (visited[cur] == 0)
         {
+            for (j = 1; j >= 0; j--)
             {
-                /* lp walks cp + j words; backLinkIds at word 6 (0x18),
-                 * forwardLinkIds at word 8 (0x20). Single induction pointer
-                 * matches the retail strength-reduced addressing. */
-                j = 1;
-                lp = (s32*)cp + 1;
-                for (; j >= 0; j--)
+                n = Checkpoint_find(cp->backLinkIds[j], &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
                 {
-                    n = Checkpoint_find(lp[6], &slot);
-                    if (n != NULL && visited[slot] == 0 && count < 0x3c)
-                    {
-                        stack[count++] = slot;
-                    }
-                    n = Checkpoint_find(lp[8], &slot);
-                    if (n != NULL && visited[slot] == 0 && count < 0x3c)
-                    {
-                        stack[count++] = slot;
-                    }
-                    lp--;
+                    stack[count++] = slot;
+                }
+                n = Checkpoint_find(cp->forwardLinkIds[j], &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c)
+                {
+                    stack[count++] = slot;
                 }
             }
             visited[cur] = 1;
         }
     }
 }
-#pragma opt_dead_assignments reset
 
 u32 lbl_803112E8[22] = {
     0, 0, 0, 0x00110000,
