@@ -240,7 +240,7 @@ void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 t
         accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
         accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
         accel = accel / ((accelDenom < lbl_803E48D4) ? accelDenom : lbl_803E48D4);
-        accel = (accel > lbl_803E48B8) ? accel : lbl_803E48B8;
+        accel = (lbl_803E48B8 > accel) ? lbl_803E48B8 : accel;
         accel = sqrtf(accel);
         state->launchSpeed += (accel - state->launchSpeed) / lbl_803E48D8;
     }
