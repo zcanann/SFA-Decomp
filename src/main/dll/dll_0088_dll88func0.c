@@ -18,94 +18,87 @@
 #define DLL88_EFFECT_ID 0x205
 
 extern u8 lbl_80316240[];
-__declspec(section ".sdata2") f32 lbl_803E1010 = 20.7f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E1014 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E1018 = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E101C = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E1020 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E1024 = 1.5f;
 
 void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     FbBuf buf;
     u8* base = (u8*)(int)lbl_80316240;
     FbCmd* e = buf.entries;
+    f32 originOffset = 0.0f;
 
     e[0].layer = 0;
     e[0].flags = 0x19;
     e[0].tex = base + 0x1bc;
     e[0].mode = 2;
-    e[0].x = lbl_803E1010;
-    e[0].y = lbl_803E1010;
-    e[0].z = lbl_803E1010;
+    e[0].x = 20.7f;
+    e[0].y = 20.7f;
+    e[0].z = 20.7f;
     e[1].layer = 0;
     e[1].flags = 0x19;
     e[1].tex = base + 0x1bc;
     e[1].mode = 0x80;
-    e[1].x = lbl_803E1014;
-    e[1].y = lbl_803E1014;
-    e[1].z = lbl_803E1014;
+    e[1].x = originOffset;
+    e[1].y = originOffset;
+    e[1].z = originOffset;
     e[2].layer = 0;
     e[2].flags = 0x7a;
     e[2].tex = 0;
     e[2].mode = 0x10000;
-    e[2].x = lbl_803E1014;
-    e[2].y = lbl_803E1014;
-    e[2].z = lbl_803E1014;
+    e[2].x = originOffset;
+    e[2].y = originOffset;
+    e[2].z = originOffset;
     e[3].layer = 0;
     e[3].flags = 0x19;
     e[3].tex = base + 0x1bc;
     e[3].mode = 4;
-    e[3].x = lbl_803E1014;
-    e[3].y = lbl_803E1014;
-    e[3].z = lbl_803E1014;
+    e[3].x = originOffset;
+    e[3].y = originOffset;
+    e[3].z = originOffset;
     e[4].layer = 1;
     e[4].flags = 0x19;
     e[4].tex = base + 0x1bc;
     e[4].mode = 4;
-    e[4].x = lbl_803E1018;
-    e[4].y = lbl_803E1014;
-    e[4].z = lbl_803E1014;
+    e[4].x = 255.0f;
+    e[4].y = originOffset;
+    e[4].z = originOffset;
     e[5].layer = 1;
     e[5].flags = 0x19;
     e[5].tex = base + 0x1bc;
     e[5].mode = 2;
-    e[5].x = lbl_803E101C;
-    e[5].y = lbl_803E101C;
-    e[5].z = lbl_803E1020;
+    e[5].x = 2.0f;
+    e[5].y = 2.0f;
+    e[5].z = 1.0f;
     e[6].layer = 2;
     e[6].flags = 0x19;
     e[6].tex = base + 0x1bc;
     e[6].mode = 2;
-    e[6].x = lbl_803E1024;
-    e[6].y = lbl_803E1024;
-    e[6].z = lbl_803E1020;
+    e[6].x = 1.5f;
+    e[6].y = 1.5f;
+    e[6].z = 1.0f;
     e[7].layer = 3;
     e[7].flags = 0x19;
     e[7].tex = base + 0x1bc;
     e[7].mode = 2;
-    e[7].x = lbl_803E1024;
-    e[7].y = lbl_803E1024;
-    e[7].z = lbl_803E1020;
+    e[7].x = 1.5f;
+    e[7].y = 1.5f;
+    e[7].z = 1.0f;
     e[8].layer = 3;
     e[8].flags = 0x19;
     e[8].tex = base + 0x1bc;
     e[8].mode = 4;
-    e[8].x = lbl_803E1014;
-    e[8].y = lbl_803E1014;
-    e[8].z = lbl_803E1014;
+    e[8].x = originOffset;
+    e[8].y = originOffset;
+    e[8].z = originOffset;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1014;
-    buf.pos[1] = lbl_803E1014;
-    buf.pos[2] = lbl_803E1014;
-    buf.col[0] = lbl_803E1014;
-    buf.col[1] = lbl_803E1014;
-    buf.col[2] = lbl_803E1014;
-    buf.scale = lbl_803E1020;
+    buf.pos[0] = originOffset;
+    buf.pos[1] = originOffset;
+    buf.pos[2] = originOffset;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 25;
     buf.v59 = 0x19;
@@ -126,15 +119,15 @@ void dll_88_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E1014 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E1014 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E1014 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1014 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x19, (u8*)(int)lbl_80316240, 0x20, base + 0xfc, DLL88_EFFECT_ID, 0);
