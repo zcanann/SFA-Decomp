@@ -49,8 +49,8 @@ void CameraModeBike_free(void)
     gCamTalkBikeState = 0;
 }
 
-#pragma opt_propagation off
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void CameraModeBike_update(CameraObject* camera)
 {
     float rollStep;
@@ -139,9 +139,9 @@ void CameraModeBike_update(CameraObject* camera)
     }
     return;
 }
-#pragma opt_propagation reset
-#pragma opt_common_subs reset
 
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
 #pragma peephole off
 void CameraModeBike_init(CameraObject* camera)
 {
@@ -155,6 +155,14 @@ void CameraModeBike_init(CameraObject* camera)
     gCamTalkBikeState->defaultFov = gCamTalkDefaultFov;
     gCamTalkBikeState->defaultScale = lbl_803E1788;
     gCamTalkBikeState->followDistance = gCamTalkDefaultFollowDist;
+}
+
+void CameraModeBike_release(void)
+{
+}
+
+void CameraModeBike_initialise(void)
+{
 }
 
 void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
@@ -283,12 +291,4 @@ void firstPersonExit(CameraObject* camera)
         }
     }
     curvesMove(&lbl_803DD548->viewCurve);
-}
-
-void CameraModeBike_release(void)
-{
-}
-
-void CameraModeBike_initialise(void)
-{
 }
