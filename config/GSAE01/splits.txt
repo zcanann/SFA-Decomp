@@ -2437,13 +2437,15 @@ main/dll/DF/dll_0179_dfshobjcreator.c:
 	.data       start:0x80326080 end:0x803260B8
 
 main/dll/DF/dll_017B_dfshlaserbeam.c:
-	.text       start:0x801C3E3C end:0x801C4B10
+	.text       start:0x801C3E3C end:0x801C4664
 	.data       start:0x803260B8 end:0x803260F0
 	.sbss       start:0x803DDBB8 end:0x803DDBC0
+	.sdata2     start:0x803E4EC0 end:0x803E4F08
 
 main/dll/dll_018C_mmshshrine.c:
-	.text       start:0x801C4B10 end:0x801C53A0
+	.text       start:0x801C4664 end:0x801C53A0
 	.data       start:0x803260F0 end:0x803261D8
+	.sdata2     start:0x803E4F08 end:0x803E4F64
 
 main/dll/dll_018D_mmshscales.c:
 	.text       start:0x801C53A0 end:0x801C578C

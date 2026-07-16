@@ -13,6 +13,9 @@
  * opcodes that toggle the light and drive the model sway parameters.
  */
 #include "main/dll/dll_018C_mmshshrine.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
+#include "main/vecmath_distance_api.h"
+#include "main/pad.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
 #include "main/audio/music_api.h"
@@ -85,16 +88,75 @@ enum MMSHShrinePhase
     MMSH_SHRINE_PHASE_RESET = 5       /* clear flags, return to idle         */
 };
 
-extern f32 lbl_803E4F40;
-extern f32 lbl_803E4F50;
-extern f32 lbl_803E4F54;
-extern f32 lbl_803E4F58;
-extern f32 lbl_803E4F5C;
-extern f32 lbl_803E4F60;
-
 extern void fn_8011F6D4(u32 x);
-extern int fn_801C49B8(int obj);
-extern void fn_801C4664(int obj);
+extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
+
+typedef struct DFSHLaserBeamConfig
+{
+    u8 pad00[0x18];
+    s8 yawByte;
+    u8 proximityMode;
+    s16 rangeAngle;
+    u8 pad1C[0x1E - 0x1C];
+    s16 disableGameBit;
+} DFSHLaserBeamConfig;
+
+typedef struct DFSHLaserBeamRuntime
+{
+    void* beamTexture;
+    f32 swayPhase;
+    f32 swayVelocity;
+    f32 swayAccel;
+    f32 swayTarget;
+    u8 pad14[0x18 - 0x14];
+    s32 flags;
+    f32 beamVolumeScale;
+    s16 orbitAngleA;
+    s16 orbitAngleB;
+    s16 orbitAngleC;
+    u8 beamActive;
+    u8 beamLocked;
+    s8 proximityHalfWidth;
+    s8 hitCooldown;
+    s16 hitStrength;
+    s16 lockTimer;
+    s16 cycleTimer;
+    s16 warmupThreshold;
+    f32 hitPos[3];
+    f32 hitX;
+    u8 pad40[0x44 - 0x40];
+    f32 hitZ;
+    u8 modgfxAttached;
+    u8 blastPhase;
+    u8 proximityMode;
+    u8 pad4B[0x4C - 0x4B];
+} DFSHLaserBeamRuntime;
+
+typedef struct DFSHLaserBeamObject
+{
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    s16 flags06;
+    u8 pad08[0x0C - 0x08];
+    f32 localPosX;
+    f32 localPosY;
+    f32 localPosZ;
+    f32 worldPosX;
+    f32 worldPosY;
+    f32 worldPosZ;
+    u8 pad24[0x36 - 0x24];
+    u8 alpha;
+    u8 pad37[0x4C - 0x37];
+    DFSHLaserBeamConfig* config;
+    u8 pad50[0xB8 - 0x50];
+    DFSHLaserBeamRuntime* runtime;
+} DFSHLaserBeamObject;
+
+#define DFSH_LASER_ORBIT_A(runtime)          (*(s16*)((u8*)(runtime) + 0x1E))
+#define DFSH_LASER_ORBIT_B(runtime)          (*(s16*)((u8*)(runtime) + 0x20))
+#define DFSH_LASER_ORBIT_C(runtime)          (*(s16*)((u8*)(runtime) + 0x22))
+#define DFSH_LASER_FLAGS(runtime)            (*(s32*)((u8*)(runtime) + 0x18))
 typedef struct MMSHShrineRuntime
 {
     ModelLightStruct* light;
@@ -164,6 +226,163 @@ ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     (ObjectDescriptorCallback)MMSH_Shrine_getObjectTypeId,
     MMSH_Shrine_getExtraSize,
 };
+
+__declspec(section ".sdata2") const f32 lbl_803E4F08 = 512.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F0C = 128.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F10 = 192.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F14 = 20.0f;
+__declspec(section ".sdata2") const f32 gLaserBeamOrbitPi = 3.1415927f;
+__declspec(section ".sdata2") const f32 gLaserBeamOrbitAngleScale = 32768.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F20 = 600.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F24 = 0.005f;
+__declspec(section ".sdata2") const f32 lbl_803E4F28 = 12.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F2C = 30.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F30 = 255.0f;
+
+#pragma dont_inline on
+/*
+ * Advances the ambient laser-beam bob, aim, and player proximity alpha.
+ */
+#pragma opt_common_subs off
+void fn_801C4664(void* objArg)
+{
+    DFSHLaserBeamConfig* config;
+    DFSHLaserBeamRuntime* runtime;
+    void* playerObj;
+    DFSHLaserBeamObject* obj;
+    f32 trigA;
+    f32 trigB;
+    s32 angleDelta;
+    f32 distance;
+    ObjAnimEventList animEvents;
+
+    obj = (DFSHLaserBeamObject*)objArg;
+    config = obj->config;
+    runtime = obj->runtime;
+    playerObj = Obj_GetPlayerObject();
+
+    if ((obj->flags06 & OBJANIM_FLAG_HIDDEN) != 0)
+    {
+        obj->yaw = 0;
+        obj->localPosY = *(f32*)((u8*)config + 0xC);
+        return;
+    }
+
+    DFSH_LASER_ORBIT_A(runtime) = (s16)(DFSH_LASER_ORBIT_A(runtime) + (int)(*(f32*)&lbl_803E4F08 * timeDelta));
+    DFSH_LASER_ORBIT_B(runtime) = (s16)(DFSH_LASER_ORBIT_B(runtime) + (int)(*(f32*)&lbl_803E4F0C * timeDelta));
+    DFSH_LASER_ORBIT_C(runtime) = (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(*(f32*)&lbl_803E4F10 * timeDelta));
+
+    obj->localPosY =
+        *(f32*)&lbl_803E4F14 + (*(f32*)((u8*)config + 0xC) +
+                        mathSinf((*(f32*)&gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / *(f32*)&gLaserBeamOrbitAngleScale));
+
+    trigA = mathSinf((*(f32*)&gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) / *(f32*)&gLaserBeamOrbitAngleScale);
+    trigB = mathSinf((*(f32*)&gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / *(f32*)&gLaserBeamOrbitAngleScale);
+    trigB = trigB + trigA;
+    obj->roll = (s16)(*(f32*)&lbl_803E4F20 * trigB);
+
+    trigA = mathSinf((*(f32*)&gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) / *(f32*)&gLaserBeamOrbitAngleScale);
+    trigB = mathSinf((*(f32*)&gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / *(f32*)&gLaserBeamOrbitAngleScale);
+    trigB = trigB + trigA;
+    obj->pitch = (s16)(*(f32*)&lbl_803E4F20 * trigB);
+
+    ObjAnim_AdvanceCurrentMove((int)obj, *(f32*)&lbl_803E4F24, timeDelta, &animEvents);
+    if (playerObj == NULL)
+    {
+        return;
+    }
+
+    angleDelta = (u16)getAngle(obj->worldPosX - ((GameObject*)playerObj)->anim.worldPosX,
+                               obj->worldPosZ - ((GameObject*)playerObj)->anim.worldPosZ) -
+                 (u16)obj->yaw;
+    if (angleDelta > 0x8000)
+    {
+        angleDelta -= 0xFFFF;
+    }
+    if (angleDelta < -0x8000)
+    {
+        angleDelta += 0xFFFF;
+    }
+
+    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / *(f32*)&lbl_803E4F28));
+    distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
+    if (distance <= *(f32*)&lbl_803E4F2C)
+    {
+        obj->alpha = (u8)(int)(*(f32*)&lbl_803E4F30 * (distance / *(f32*)&lbl_803E4F2C));
+    }
+    else
+    {
+        obj->alpha = 0xFF;
+    }
+}
+#pragma opt_common_subs reset
+#pragma dont_inline reset
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4F40 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") const f32 lbl_803E4F44 = 72.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4F48 = 0.0010416667209938169f;
+__declspec(section ".sdata2") const f32 lbl_803E4F4C = 96.0f;
+
+#pragma dont_inline on
+/*
+ * Drives the DragonRock Shrine laser-beam sway controller.
+ */
+int fn_801C49B8(void* objArg)
+{
+    DFSHLaserBeamObject* obj;
+    DFSHLaserBeamRuntime* runtime;
+    f32 stickAccel;
+    f32 target;
+    f32 zero;
+    int swayValue;
+
+    obj = (DFSHLaserBeamObject*)objArg;
+    runtime = obj->runtime;
+    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
+    {
+        fn_8011F6D4(1);
+        DFSH_LASER_FLAGS(runtime) |= 0x20;
+        zero = lbl_803E4F40;
+        runtime->swayPhase = zero;
+        runtime->swayVelocity = zero;
+        runtime->swayAccel = zero;
+    }
+
+    stickAccel = (f32)(s8)padGetStickX(0) / *(f32*)&lbl_803E4F44;
+    stickAccel = stickAccel * *(f32*)&lbl_803E4F48;
+    runtime->swayVelocity += stickAccel * timeDelta;
+
+    target = runtime->swayTarget;
+    if (target < lbl_803E4F40 && runtime->swayAccel > target)
+    {
+        runtime->swayAccel -= *(f32*)&lbl_803E4F48 * timeDelta;
+    }
+    else if (target > *(f32*)&lbl_803E4F40)
+    {
+        if (runtime->swayAccel < target)
+        {
+            runtime->swayAccel += *(f32*)&lbl_803E4F48 * timeDelta;
+        }
+    }
+
+    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
+    swayValue = (int)(*(f32*)&lbl_803E4F4C * runtime->swayPhase);
+    fearTestMeterSetRange(0x60, 0x39, swayValue);
+    if ((swayValue > 0x39) || (swayValue < -0x39))
+    {
+        return 1;
+    }
+    return 0;
+}
+#pragma dont_inline reset
+
+__declspec(section ".sdata2") f32 lbl_803E4F50 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4F54 = -0.0026041667442768812f;
+__declspec(section ".sdata2") f32 lbl_803E4F58 = 0.0026041667442768812f;
+__declspec(section ".sdata2") f32 lbl_803E4F5C = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E4F60 = 0.5f;
 
 int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
 {
@@ -236,7 +455,7 @@ int MMSH_Shrine_SeqFn(int objArg, u32 unused, MMSHShrineSequenceState* seq)
         seq->commands[i] = 0;
     }
 
-    if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) && ((u8)fn_801C49B8(objArg) != 0))
+    if (((runtime->latch.activeMask & MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE) != 0) && ((u8)fn_801C49B8((void*)objArg) != 0))
     {
         fn_8011F6D4(0);
         runtime->latch.activeMask &= ~(MMSH_SHRINE_LATCH_FLAG_SWAY_ACTIVE | MMSH_SHRINE_LATCH_FLAG_SWAY_RESET);
@@ -340,7 +559,7 @@ void MMSH_Shrine_update(int objArg)
         }
     }
     unlockLevel(mapGetDirIdx(MMSH_SHRINE_LOAD_MAP_DIR), 1, 0);
-    fn_801C4664((int)obj);
+    fn_801C4664((void*)obj);
     SCGameBitLatch_Update(&runtime->latch, MMSH_SHRINE_LATCH_FLAG_AMBIENT_LOCK, -1, -1, MMSH_SHRINE_GB_OPEN, 0xa);
     SCGameBitLatch_UpdateInverted(&runtime->latch, MMSH_SHRINE_LATCH_FLAG_CHECK_COMPLETE, -1, -1,
                                   MMSH_SHRINE_GB_MUSIC_LOCK, 8);

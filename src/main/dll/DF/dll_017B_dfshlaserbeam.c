@@ -121,38 +121,33 @@ typedef struct DFSHLaserBeamObject
         obj, id, a, flags, owner, unk)
 
 void* gLaserBeamEffectResource;
-extern f32 lbl_803E4EC0;
-extern f32 lbl_803E4EC4;
-extern f32 lbl_803E4EC8;
-extern f32 lbl_803E4ECC;
-extern const f32 lbl_803E4ED0;
-extern const f32 lbl_803E4ED4;
-extern const f32 gLaserBeamAimPi;
-extern const f32 gLaserBeamAimAngleScale;
-extern const f32 lbl_803E4EE0;
-extern const f32 lbl_803E4EE4;
-extern const f32 lbl_803E4EE8;
-extern const f32 lbl_803E4EEC;
-extern const f32 lbl_803E4EF0;
-extern const f32 lbl_803E4EF4;
-extern const f32 lbl_803E4EF8;
-extern const f32 lbl_803E4F08;
-extern const f32 lbl_803E4F0C;
-extern const f32 lbl_803E4F10;
-extern const f32 lbl_803E4F14;
-extern const f32 gLaserBeamOrbitPi;
-extern const f32 gLaserBeamOrbitAngleScale;
-extern const f32 lbl_803E4F20;
-extern const f32 lbl_803E4F24;
-extern const f32 lbl_803E4F28;
-extern const f32 lbl_803E4F2C;
-extern const f32 lbl_803E4F30;
-extern f32 lbl_803E4F40;
-extern const f32 lbl_803E4F44;
-extern const f32 lbl_803E4F48;
-extern const f32 lbl_803E4F4C;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4EC0 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E4EC4 = 0.0026000000070780516f;
+__declspec(section ".sdata2") f32 lbl_803E4EC8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4ECC = 0.052000001072883606f;
+__declspec(section ".sdata2") const f32 lbl_803E4ED0 = 127.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4ED4 = 0.5f;
+__declspec(section ".sdata2") const f32 gLaserBeamAimPi = 3.1415927f;
+__declspec(section ".sdata2") const f32 gLaserBeamAimAngleScale = 32768.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EE0 = 5.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EE4 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E4EE8 = 63.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EEC = 2.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EF0 = -20.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EF4 = 20.0f;
+__declspec(section ".sdata2") const f32 lbl_803E4EF8 = 0.04f;
 
-extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
+int DFSH_LaserBeam_getExtraSize(void)
+{
+    return 0x4c;
+}
+
+int DFSH_LaserBeam_getObjectTypeId(void)
+{
+    return 0x0;
+}
 
 void DFSH_LaserBeam_free(int* obj)
 {
@@ -173,15 +168,6 @@ void DFSH_LaserBeam_render(void)
 
 void DFSH_LaserBeam_hitDetect(void)
 {
-}
-
-int DFSH_LaserBeam_getExtraSize(void)
-{
-    return 0x4c;
-}
-int DFSH_LaserBeam_getObjectTypeId(void)
-{
-    return 0x0;
 }
 
 void DFSH_LaserBeam_update(u32 objAddr)
@@ -267,14 +253,14 @@ void DFSH_LaserBeam_update(u32 objAddr)
 
     if (DFSH_LASER_ACTIVE(runtime) != 0)
     {
-        Sfx_SetObjectChannelVolumePtrIntLegacy(obj, 0x40, (int)(lbl_803E4ED0 * runtime->beamVolumeScale),
-                                               lbl_803E4ED4);
+        Sfx_SetObjectChannelVolumePtrIntLegacy(obj, 0x40, (int)(*(f32*)&lbl_803E4ED0 * runtime->beamVolumeScale),
+                                               *(f32*)&lbl_803E4ED4);
     }
 
     range = (f32)(int)config->rangeAngle;
     rangeSq = range * range;
-    yawSin = mathCosf((gLaserBeamAimPi * obj->yaw) / gLaserBeamAimAngleScale);
-    yawCos = mathSinf((gLaserBeamAimPi * obj->yaw) / gLaserBeamAimAngleScale);
+    yawSin = mathCosf((*(f32*)&gLaserBeamAimPi * obj->yaw) / *(f32*)&gLaserBeamAimAngleScale);
+    yawCos = mathSinf((*(f32*)&gLaserBeamAimPi * obj->yaw) / *(f32*)&gLaserBeamAimAngleScale);
     beamPlane = -(obj->localPosX * yawSin + obj->localPosZ * yawCos);
     playerObj = Obj_GetPlayerObject();
 
@@ -325,9 +311,9 @@ void DFSH_LaserBeam_update(u32 objAddr)
     }
     if (((playerObj != NULL) && (DFSH_LASER_DAMAGE_COOLDOWN(runtime) == 0)) && (DFSH_LASER_ACTIVE(runtime) != 0))
     {
-        heightThreshold = lbl_803E4EE0 + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
+        heightThreshold = *(f32*)&lbl_803E4EE0 + (f32)(int)DFSH_LASER_HEIGHT_WINDOW(runtime);
         heightDelta = ((GameObject*)playerObj)->anim.localPosY - obj->localPosY;
-        if ((heightDelta < heightThreshold) && (heightDelta > -(lbl_803E4EE4 + heightThreshold)))
+        if ((heightDelta < heightThreshold) && (heightDelta > -(*(f32*)&lbl_803E4EE4 + heightThreshold)))
         {
             xDelta = ((GameObject*)playerObj)->anim.localPosX - obj->localPosX;
             zDelta = ((GameObject*)playerObj)->anim.localPosZ - obj->localPosZ;
@@ -345,7 +331,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     lateralAbs = lbl_803E4EE8;
                 }
                 lateralAbs = *(f32*)&lbl_803E4EE8 - lateralAbs;
-                DFSH_LASER_HIT_STRENGTH(runtime) = (s16)(int)(lbl_803E4EEC * lateralAbs);
+                DFSH_LASER_HIT_STRENGTH(runtime) = (s16)(int)(*(f32*)&lbl_803E4EEC * lateralAbs);
                 if (DFSH_LASER_MODGFX_ATTACHED(runtime) == 1)
                 {
                     MODGFX_DETACH(obj);
@@ -356,8 +342,8 @@ void DFSH_LaserBeam_update(u32 objAddr)
                     pushDistance =
                         ((beamPlane + (yawSin * ((GameObject*)playerObj)->anim.previousLocalPosX +
                                        yawCos * ((GameObject*)playerObj)->anim.previousLocalPosZ)) < lbl_803E4EC0)
-                            ? lbl_803E4EF0
-                            : lbl_803E4EF4;
+                            ? *(f32*)&lbl_803E4EF0
+                            : *(f32*)&lbl_803E4EF4;
                     if (objGetAnimState80A((GameObject*)(playerObj)) != 0x1D7)
                     {
                         int i;
@@ -394,7 +380,7 @@ void DFSH_LaserBeam_update(u32 objAddr)
     runtime->swayTarget = runtime->swayAccel;
     DFSH_LASER_RANGE_VALUE(runtime) = *(f32*)((u8*)runtime + 0x14) + range;
     DFSH_LASER_HEIGHT_WINDOW(runtime) = 8;
-    ((GameObject*)obj)->anim.currentMoveProgress += lbl_803E4EF8 * timeDelta;
+    ((GameObject*)obj)->anim.currentMoveProgress += *(f32*)&lbl_803E4EF8 * timeDelta;
     if (((GameObject*)obj)->anim.currentMoveProgress > *(f32*)&lbl_803E4EC8)
     {
         ((GameObject*)obj)->anim.currentMoveProgress -= lbl_803E4EC8;
@@ -435,134 +421,6 @@ void DFSH_LaserBeam_release(void)
 
 void DFSH_LaserBeam_initialise(void)
 {
-}
-
-/*
- * Advances the ambient laser-beam bob, aim, and player proximity alpha.
- */
-#pragma opt_common_subs off
-void fn_801C4664(void* objArg)
-{
-    DFSHLaserBeamConfig* config;
-    DFSHLaserBeamRuntime* runtime;
-    void* playerObj;
-    DFSHLaserBeamObject* obj;
-    f32 trigA;
-    f32 trigB;
-    s32 angleDelta;
-    f32 distance;
-    ObjAnimEventList animEvents;
-
-    obj = (DFSHLaserBeamObject*)objArg;
-    config = obj->config;
-    runtime = obj->runtime;
-    playerObj = Obj_GetPlayerObject();
-
-    if ((obj->flags06 & OBJANIM_FLAG_HIDDEN) != 0)
-    {
-        obj->yaw = 0;
-        obj->localPosY = *(f32*)((u8*)config + 0xC);
-        return;
-    }
-
-    DFSH_LASER_ORBIT_A(runtime) = (s16)(DFSH_LASER_ORBIT_A(runtime) + (int)(lbl_803E4F08 * timeDelta));
-    DFSH_LASER_ORBIT_B(runtime) = (s16)(DFSH_LASER_ORBIT_B(runtime) + (int)(lbl_803E4F0C * timeDelta));
-    DFSH_LASER_ORBIT_C(runtime) = (s16)(DFSH_LASER_ORBIT_C(runtime) + (int)(lbl_803E4F10 * timeDelta));
-
-    obj->localPosY =
-        lbl_803E4F14 + (*(f32*)((u8*)config + 0xC) +
-                        mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale));
-
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_B(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = trigB + trigA;
-    obj->roll = (s16)(lbl_803E4F20 * trigB);
-
-    trigA = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_C(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = mathSinf((gLaserBeamOrbitPi * DFSH_LASER_ORBIT_A(runtime)) / gLaserBeamOrbitAngleScale);
-    trigB = trigB + trigA;
-    obj->pitch = (s16)(lbl_803E4F20 * trigB);
-
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E4F24, timeDelta, &animEvents);
-    if (playerObj == NULL)
-    {
-        return;
-    }
-
-    angleDelta = (u16)getAngle(obj->worldPosX - ((GameObject*)playerObj)->anim.worldPosX,
-                               obj->worldPosZ - ((GameObject*)playerObj)->anim.worldPosZ) -
-                 (u16)obj->yaw;
-    if (angleDelta > 0x8000)
-    {
-        angleDelta -= 0xFFFF;
-    }
-    if (angleDelta < -0x8000)
-    {
-        angleDelta += 0xFFFF;
-    }
-
-    obj->yaw = (s16)(obj->yaw + (s16)(((f32)angleDelta * timeDelta) / lbl_803E4F28));
-    distance = Vec_xzDistance(&obj->worldPosX, &((GameObject*)playerObj)->anim.worldPosX);
-    if (distance <= lbl_803E4F2C)
-    {
-        obj->alpha = (u8)(int)(lbl_803E4F30 * (distance / lbl_803E4F2C));
-    }
-    else
-    {
-        obj->alpha = 0xFF;
-    }
-}
-#pragma opt_common_subs reset
-
-/*
- * Drives the DragonRock Shrine laser-beam sway controller.
- */
-int fn_801C49B8(void* objArg)
-{
-    DFSHLaserBeamObject* obj;
-    DFSHLaserBeamRuntime* runtime;
-    f32 stickAccel;
-    f32 target;
-    f32 zero;
-    int swayValue;
-
-    obj = (DFSHLaserBeamObject*)objArg;
-    runtime = obj->runtime;
-    if ((DFSH_LASER_FLAGS(runtime) & 0x20) == 0)
-    {
-        fn_8011F6D4(1);
-        DFSH_LASER_FLAGS(runtime) |= 0x20;
-        zero = lbl_803E4F40;
-        runtime->swayPhase = zero;
-        runtime->swayVelocity = zero;
-        runtime->swayAccel = zero;
-    }
-
-    stickAccel = (f32)(s8)padGetStickX(0) / lbl_803E4F44;
-    stickAccel = stickAccel * lbl_803E4F48;
-    runtime->swayVelocity += stickAccel * timeDelta;
-
-    target = runtime->swayTarget;
-    if (target < lbl_803E4F40 && runtime->swayAccel > target)
-    {
-        runtime->swayAccel -= lbl_803E4F48 * timeDelta;
-    }
-    else if (target > *(f32*)&lbl_803E4F40)
-    {
-        if (runtime->swayAccel < target)
-        {
-            runtime->swayAccel += *(f32*)&lbl_803E4F48 * timeDelta;
-        }
-    }
-
-    runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
-    swayValue = (int)(lbl_803E4F4C * runtime->swayPhase);
-    fearTestMeterSetRange(0x60, 0x39, swayValue);
-    if ((swayValue > 0x39) || (swayValue < -0x39))
-    {
-        return 1;
-    }
-    return 0;
 }
 
 ObjectDescriptor gDFSH_LaserBeamObjDescriptor = {
