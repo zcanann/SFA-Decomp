@@ -80,10 +80,18 @@ void drmusiccont_update(GameObject* obj)
 {
     DrmusiccontState* state = obj->extra;
     DrMusicContFlags* flags = &state->flags;
-    u32 bit0;
-    u32 bit1;
-    u32 bit2;
-    u32 bit3;
+    u8 bitE30;
+    u8 bitE31;
+    u8 bitE32;
+    u8 bitE33;
+    u8 bitE38;
+    u8 bitE3C;
+    u8 bitE3D;
+    u8 bitE3E;
+    u8 bit9E0;
+    u8 bit9E1;
+    u8 bit9E2;
+    u8 bit9E7;
 
     cloudSetOverridePosition(gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
                              gDrMusicControlCloudOverridePosZ);
@@ -105,50 +113,50 @@ void drmusiccont_update(GameObject* obj)
     SCGameBitLatch_UpdateInverted(&state->gameBitLatch, 1, -1, -1, 0xe26, 0xb8);
     SCGameBitLatch_Update(&state->gameBitLatch, 4, -1, -1, 0xcbb, 0xc4);
 
-    bit0 = (u8)mainGetBit(0xe30);
-    bit1 = (u8)mainGetBit(0xe31);
-    bit2 = (u8)mainGetBit(0xe32);
-    bit3 = (u8)mainGetBit(0xe33);
-    if (flags->b_e9c == 0 && bit0 && bit1 && bit2 && bit3)
+    bitE30 = (u8)mainGetBit(0xe30);
+    bitE31 = (u8)mainGetBit(0xe31);
+    bitE32 = (u8)mainGetBit(0xe32);
+    bitE33 = (u8)mainGetBit(0xe33);
+    if (flags->b_e9c == 0 && bitE30 && bitE31 && bitE32 && bitE33)
     {
         flags->b_e9c = 1;
         mainSetBits(GAMEBIT_DR_ShutDownRobotShields, 1);
         Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
     }
-    else if (bit0 != flags->b_e30 || bit1 != flags->b_e31 || bit2 != flags->b_e32 || bit3 != flags->b_e33)
+    else if (bitE30 != flags->b_e30 || bitE31 != flags->b_e31 || bitE32 != flags->b_e32 || bitE33 != flags->b_e33)
     {
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
-    flags->b_e30 = bit0;
-    flags->b_e31 = bit1;
-    flags->b_e32 = bit2;
-    flags->b_e33 = bit3;
+    flags->b_e30 = bitE30;
+    flags->b_e31 = bitE31;
+    flags->b_e32 = bitE32;
+    flags->b_e33 = bitE33;
 
-    bit0 = (u8)mainGetBit(0xe38);
-    bit1 = (u8)mainGetBit(0xe3c);
-    bit2 = (u8)mainGetBit(0xe3d);
-    bit3 = (u8)mainGetBit(0xe3e);
-    if (flags->b_e39 == 0 && bit0 && bit1 && bit2 && bit3)
+    bitE38 = (u8)mainGetBit(0xe38);
+    bitE3C = (u8)mainGetBit(0xe3c);
+    bitE3D = (u8)mainGetBit(0xe3d);
+    bitE3E = (u8)mainGetBit(0xe3e);
+    if (flags->b_e39 == 0 && bitE38 && bitE3C && bitE3D && bitE3E)
     {
         flags->b_e39 = 1;
         Sfx_PlayFromObject(0, SFXTRIG_mpick1_b);
     }
-    else if (bit0 != flags->b_e38 || bit1 != flags->b_e3c || bit2 != flags->b_e3d || bit3 != flags->b_e3e)
+    else if (bitE38 != flags->b_e38 || bitE3C != flags->b_e3c || bitE3D != flags->b_e3d || bitE3E != flags->b_e3e)
     {
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
     }
-    flags->b_e38 = bit0;
-    flags->b_e3c = bit1;
-    flags->b_e3d = bit2;
-    flags->b_e3e = bit3;
+    flags->b_e38 = bitE38;
+    flags->b_e3c = bitE3C;
+    flags->b_e3d = bitE3D;
+    flags->b_e3e = bitE3E;
 
-    bit0 = (u8)mainGetBit(0x9e0);
-    bit1 = (u8)mainGetBit(0x9e1);
-    bit2 = (u8)mainGetBit(0x9e2);
-    bit3 = (u8)mainGetBit(0x9e7);
-    if (!(bit0 && bit1 && bit2 && bit3))
+    bit9E0 = (u8)mainGetBit(0x9e0);
+    bit9E1 = (u8)mainGetBit(0x9e1);
+    bit9E2 = (u8)mainGetBit(0x9e2);
+    bit9E7 = (u8)mainGetBit(0x9e7);
+    if (!(bit9E0 && bit9E1 && bit9E2 && bit9E7))
     {
-        if (bit0 != flags->b_9e0 || bit1 != flags->b_9e1 || bit2 != flags->b_9e2 || bit3 != flags->b_9e7)
+        if (bit9E0 != flags->b_9e0 || bit9E1 != flags->b_9e1 || bit9E2 != flags->b_9e2 || bit9E7 != flags->b_9e7)
         {
             state->stingerTimer = gDrMusicControlStingerTimerDuration;
         }
@@ -165,10 +173,10 @@ void drmusiccont_update(GameObject* obj)
             }
         }
     }
-    flags->b_9e0 = bit0;
-    flags->b_9e1 = bit1;
-    flags->b_9e2 = bit2;
-    flags->b_9e7 = bit3;
+    flags->b_9e0 = bit9E0;
+    flags->b_9e1 = bit9E1;
+    flags->b_9e2 = bit9E2;
+    flags->b_9e7 = bit9E7;
 
     if (flags->b_state != 0)
     {
