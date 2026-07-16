@@ -8,7 +8,7 @@
  * referenced externally.
  */
 #include "main/dll/SC/SClantern.h"
-#include "main/audio/sfx_play_legacy_api.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/audio/sfx_position_api.h"
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -29,7 +29,6 @@
 #define SCLANTERN_SPARK_SUPPRESS_MOVE 0x1b
 
 extern ObjAnimEventList gSClanternObjAnimEvents;
-extern f32 lbl_803E5498;
 
 u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
@@ -84,7 +83,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     {
         ObjPath_GetPointWorldPosition((GameObject*)obj, pointIndex - 1, &posX, &posY, &posZ, 0);
         if (!((lantern->anim.currentMove == SCLANTERN_SPARK_SUPPRESS_MOVE) &&
-              (lantern->anim.currentMoveProgress < lbl_803E5498)))
+              (lantern->anim.currentMoveProgress < 0.8f)))
         {
             Sfx_PlayAtPositionFromObjectIntFirstLegacy(obj, posX, posY, posZ, SCLANTERN_SPARK_SFX_ID);
         }
@@ -92,6 +91,7 @@ u32 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     return advanceResult;
 }
 
+#pragma dont_inline on
 u32 playerFn_801d6d58(void)
 {
     u32 playerObj;
@@ -101,3 +101,4 @@ u32 playerFn_801d6d58(void)
     objGetAnimStateFlags((GameObject*)playerObj, 0xff);
     return 2;
 }
+#pragma dont_inline reset
