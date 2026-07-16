@@ -749,6 +749,12 @@ def generate_build_ninja(
         mwcc_extab_implicit.append(transform_dep)
         mwcc_sjis_extab_implicit.append(transform_dep)
 
+    # Section realignment appends a second command after MWCC. On Windows,
+    # force these variants through cmd so the chain is not forwarded to MWCC
+    # (or sjiswrap) as compiler arguments.
+    mwcc_realign_cmd = f"{CHAIN}{mwcc_cmd}"
+    mwcc_sjis_realign_cmd = f"{CHAIN}{mwcc_sjis_cmd}"
+
     normalize_rsp = config.tools_dir / "normalize_rsp.py"
 
     n.comment("Link ELF file")
@@ -788,6 +794,26 @@ def generate_build_ninja(
     n.rule(
         name="mwcc_sjis",
         command=mwcc_sjis_cmd,
+        description="MWCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.newline()
+
+    n.comment("MWCC build (with section realignment)")
+    n.rule(
+        name="mwcc_realign",
+        command=mwcc_realign_cmd,
+        description="MWCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.newline()
+
+    n.comment("MWCC build (with UTF-8 to Shift JIS wrapper and section realignment)")
+    n.rule(
+        name="mwcc_sjis_realign",
+        command=mwcc_sjis_realign_cmd,
         description="MWCC $out",
         depfile="$basefile.d",
         deps="gcc",
@@ -1091,7 +1117,7 @@ def generate_build_ninja(
                     f"{i:02x}" for i in obj.options["extab_padding"]
                 )
             elif obj.options["shift_jis"]:
-                build_rule = "mwcc_sjis"
+                build_rule = "mwcc_sjis_realign" if section_alignments else "mwcc_sjis"
                 build_implcit = mwcc_sjis_implicit
             elif obj.options["extab_padding"] is not None:
                 build_rule = "mwcc_extab"
@@ -1099,6 +1125,8 @@ def generate_build_ninja(
                 variables["extab_padding"] = "".join(
                     f"{i:02x}" for i in obj.options["extab_padding"]
                 )
+            elif section_alignments:
+                build_rule = "mwcc_realign"
             if section_alignments:
                 build_implcit = [*build_implcit, objcopy_implicit, section_realign]
             n.comment(f"{obj.name}: {lib_name} (linked {obj.completed})")
