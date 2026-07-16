@@ -62,47 +62,28 @@
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
-
-/* group owned by another DLL, queried here */
 #define TIMER_OBJGROUP                  0x4c /* DLL 0x2B5 timer */
 #define TARGET_OBJGROUP                 0xf  /* player-target group; nearest object gets the trigger's sequence */
 #define TRICKY_TARGET_OBJGROUP          0x32 /* nearest object searched from the tricky object */
 #define TRICKY_TARGET_OBJGROUP_FALLBACK 0x31 /* fallback group when TRICKY_TARGET_OBJGROUP has none */
-
-/* Env-effect ids co-activated by the type-3 command (p[3] sub-case); the A set
-   runs for sub-cases 0/1, the B set for sub-case 2. Opaque distinct roles per index. */
 #define TRIGGER_ENVFX_A0 0x134
 #define TRIGGER_ENVFX_A1 0x135
 #define TRIGGER_ENVFX_A2 0x142
 #define TRIGGER_ENVFX_B0 0x136
 #define TRIGGER_ENVFX_B1 0x137
 #define TRIGGER_ENVFX_B2 0x143
-
-/*
- * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
- */
 #define TRIGGER_SFLAG_ENTERED     0x01 /* enter-direction command list has run (latch) */
 #define TRIGGER_SFLAG_EXITED      0x02 /* exit-direction command list has run (latch) */
 #define TRIGGER_SFLAG_DISABLED    0x04 /* trigger's game bit was already set at init: fire enter once */
-#define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
-
-/*
- * Per-command-entry flags byte (entry[0] in the 4-byte command records at
- * placementData+0x18). Gates whether the entry runs for a given activation leg.
- */
 #define TRIGGER_CMD_ON_ENTER          0x01 /* run when activation direction is enter (legCode > 0) */
 #define TRIGGER_CMD_ON_EXIT           0x02 /* run when activation direction is exit (legCode < 0) */
 #define TRIGGER_CMD_ONCE_ENTER        0x04 /* enter leg runs only once (latched vs SFLAG_ENTERED) */
 #define TRIGGER_CMD_ONCE_EXIT         0x08 /* exit leg runs only once (latched vs SFLAG_EXITED) */
 #define TRIGGER_CMD_UNCONDITIONAL     0x10 /* ignore enter/exit gating */
 #define TRIGGER_CMD_OVERRIDE_DISABLED 0x20 /* run even when SFLAG_DISABLED is set */
-
-extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
-extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
-
 extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
@@ -113,39 +94,9 @@ extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);
 
-void Trigger_render(void)
-{
-}
+extern f32 lbl_803E40F8;
 
-void Trigger_update(void)
-{
-}
-
-void Trigger_release(void)
-{
-}
-
-void Trigger_initialise(void)
-{
-}
-#pragma reset
-
-void Trigger_free(GameObject* obj)
-{
-    u8 i;
-    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
-    i = 0;
-
-    while (i < 8)
-    {
-        if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
-        {
-            Sfx_StopFromObjectLegacy(obj, (u16)((entry[2] << 8) | entry[3]));
-        }
-        i++;
-        entry += 4;
-    }
-}
+#define TRIGGER_SFLAG_SEED_TARGET 0x40 /* first hit: seed target position from current, not previous */
 
 void Trigger_init(u8* obj, u8* params)
 {
@@ -201,17 +152,8 @@ void Trigger_init(u8* obj, u8* params)
     state[0] = (u8)(state[0] | TRIGGER_SFLAG_SEED_TARGET);
 }
 
-int Trigger_getExtraSize(void)
-{
-    return 0xac;
-}
-int Trigger_getObjectTypeId(void)
-{
-    return 0x0;
-}
-
-#pragma opt_strength_reduction on
 #pragma opt_loop_invariants off
+#pragma opt_strength_reduction on
 void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
 {
     char* desc = (char*)&gTriggerObjDescriptor;
@@ -762,8 +704,57 @@ void objInterpretSeq(int obj, int seqArg, int legCode, int distSq)
         *state |= TRIGGER_SFLAG_EXITED;
     }
 }
-#pragma opt_strength_reduction reset
 #pragma opt_loop_invariants reset
+#pragma opt_strength_reduction reset
+
+int Trigger_getExtraSize(void)
+{
+    return 0xac;
+}
+int Trigger_getObjectTypeId(void)
+{
+    return 0x0;
+}
+
+void Trigger_free(GameObject* obj)
+{
+    u8 i;
+    u8* entry = *(u8**)&(obj)->anim.placementData + 0x18;
+    i = 0;
+
+    while (i < 8)
+    {
+        if ((entry[0] & (TRIGGER_CMD_ON_ENTER | TRIGGER_CMD_ON_EXIT)) != 0 && entry[1] != 3 && entry[1] == 4)
+        {
+            Sfx_StopFromObjectLegacy(obj, (u16)((entry[2] << 8) | entry[3]));
+        }
+        i++;
+        entry += 4;
+    }
+}
+#pragma reset
+
+/* group owned by another DLL, queried here */
+
+/* Env-effect ids co-activated by the type-3 command (p[3] sub-case); the A set
+   runs for sub-cases 0/1, the B set for sub-case 2. Opaque distinct roles per index. */
+
+/*
+ * TriggerState+0 status byte (`*state`). See objInterpretSeq / Trigger_hitDetect.
+ */
+
+/*
+ * Per-command-entry flags byte (entry[0] in the 4-byte command records at
+ * placementData+0x18). Gates whether the entry runs for a given activation leg.
+ */
+
+extern f32 lbl_803E40F8; /* unnamed f32 constant from the shared .sdata2 pool (range divisor) */
+extern f32 lbl_803E4104; /* unnamed f32 constant from the shared .sdata2 pool (hit-detect distance seed) */
+
+
+void Trigger_render(void)
+{
+}
 
 void Trigger_hitDetect(GameObject* obj)
 {
@@ -987,6 +978,20 @@ void Trigger_hitDetect(GameObject* obj)
             }
         }
     }
+}
+
+void Trigger_update(void)
+{
+}
+
+
+
+void Trigger_release(void)
+{
+}
+
+void Trigger_initialise(void)
+{
 }
 
 ObjectDescriptor gTriggerObjDescriptor = {
