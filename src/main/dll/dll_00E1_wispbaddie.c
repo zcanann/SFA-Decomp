@@ -421,24 +421,29 @@ void battleDroidInit(int unused, char* p)
     ((BaddieState*)p)->unk31C = v1c;
 }
 
+#pragma opt_propagation off
 u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
 {
     u8* base = lbl_8031DD30;
+    u8* sequenceBase;
     WispEventRow* eventRows;
     u8 eventIndex;
     int ei;
     int flag20;
-    u8 sequenceIndex;
-    u32 stateFlags;
     u8 eventFlags;
+    u32 stateFlags;
+    u8 sequenceIndex;
     f32 blendScale;
     f32 blendTimer;
     int eventTableIndex;
+    int controlMask;
+    int controlFlags;
     WispEventRow* row;
     u32 sf2;
 
     sequenceIndex = ((BaddieState*)state)->inWhirlpoolGroup;
-    eventRows = *(WispEventRow**)(base + sequenceIndex * 0x28 + 0x1444);
+    sequenceBase = base + sequenceIndex * 0x28;
+    eventRows = *(WispEventRow**)(sequenceBase + 0x1444);
     stateFlags = ((BaddieState*)state)->controlFlags;
     if ((stateFlags & 0x4000) != 0)
     {
@@ -542,7 +547,9 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
         if (*(f32*)(state + 0x32c) <= *(f32*)&lbl_803E2740)
         {
             *(f32*)(state + 0x32c) = lbl_803E2740;
-            ((BaddieState*)state)->controlFlags = (int)((BaddieState*)state)->controlFlags & ~0x40LL;
+            controlFlags = ((BaddieState*)state)->controlFlags;
+            controlMask = ~0x40;
+            ((BaddieState*)state)->controlFlags = controlFlags & controlMask;
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
             *(u8*)(state + 0x2f2) = *(u8*)(state + 0x2f2) & ~0x80;
@@ -556,6 +563,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     }
     return 0;
 }
+#pragma opt_propagation reset
 
 void fn_8015039C(GameObject* obj, int animState)
 {
