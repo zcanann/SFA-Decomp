@@ -17,14 +17,6 @@
 #define DLL8A_EFFECT_ID 0x1fd
 
 extern u8 lbl_80316650[]; /* effect resource table: tex blob + halfword params */
-__declspec(section ".sdata2") f32 lbl_803E1050 = 0.5f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E1054 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E1058 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E105C = 0.0f;
-#pragma explicit_zero_data off
 
 void dll_8A_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -36,19 +28,19 @@ void dll_8A_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 8;
     e[0].tex = base + 0x98;
     e[0].mode = 2;
-    e[0].x = lbl_803E1050;
-    e[0].y = lbl_803E1050;
-    e[0].z = lbl_803E1050;
+    e[0].x = 0.5f;
+    e[0].y = 0.5f;
+    e[0].z = 0.5f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1054;
-    buf.pos[1] = lbl_803E1054;
-    buf.pos[2] = lbl_803E1054;
-    buf.col[0] = lbl_803E1054;
-    buf.col[1] = lbl_803E1054;
-    buf.col[2] = lbl_803E1054;
-    buf.scale = lbl_803E1058;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 8;
@@ -69,15 +61,15 @@ void dll_8A_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1054 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E1054 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E1054 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E1054 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E1054 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1054 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_80316650, 0xc, base + 0x50, DLL8A_EFFECT_ID, 0);

@@ -1,8 +1,8 @@
 /*
  * dll89func0 (DLL 0x89) - one entry of the foodbag/modgfx spawn-effect
  * family (dll_7C..dll_90 in foodbag.h). dll_89_func03 fills a stack
- * FbBuf command list with ten FbCmd layers (texture/mode/xyz from the
- * lbl_803E10xx float pool and the lbl_80316460 resource block) and hands
+ * FbBuf command list with ten FbCmd layers (texture/mode/xyz from float
+ * literals and the lbl_80316460 resource block) and hands
  * it to gModgfxInterface->spawnEffect (effect 0x1fd). When flag bit 0 is
  * requested the effect is positioned from sourceObj's transform (+0x18)
  * or, when none, from posSource (+0xc). The two _nop entries are empty
@@ -14,28 +14,12 @@
 #include "main/dll/fb_cmd.h"
 #include "main/dll/foodbag.h"
 
-#pragma explicit_zero_data on
 u8 lbl_803DB908[8] = {0};
-#pragma explicit_zero_data off
 
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL89_EFFECT_ID 0x1fd
 
 extern u8 lbl_80316460[];
-__declspec(section ".sdata2") f32 lbl_803E1028 = 1.1f;
-__declspec(section ".sdata2") f32 lbl_803E102C = 1.2f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E1030 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E1034 = 8.0f;
-__declspec(section ".sdata2") f32 lbl_803E1038 = 72.0f;
-__declspec(section ".sdata2") f32 lbl_803E103C = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E1040 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E1044 = 32.1f;
-__declspec(section ".sdata2") f32 lbl_803E1048 = 255.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E104C = 0.0f;
-#pragma explicit_zero_data off
 
 void dll_89_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
@@ -47,82 +31,82 @@ void dll_89_func03(int sourceObj, int variant, int posSource, u32 flags)
     e[0].flags = 10;
     e[0].tex = base + 0x1ac;
     e[0].mode = 2;
-    e[0].x = lbl_803E1028;
-    e[0].y = lbl_803E102C;
-    e[0].z = lbl_803E1028;
+    e[0].x = 1.1f;
+    e[0].y = 1.2f;
+    e[0].z = 1.1f;
     e[1].layer = 0;
     e[1].flags = 10;
     e[1].tex = base + 0x1ac;
     e[1].mode = 4;
-    e[1].x = lbl_803E1030;
-    e[1].y = lbl_803E1030;
-    e[1].z = lbl_803E1030;
+    e[1].x = 0.0f;
+    e[1].y = 0.0f;
+    e[1].z = 0.0f;
     e[2].layer = 0;
     e[2].flags = 0;
     e[2].tex = NULL;
     e[2].mode = 0x400000;
-    e[2].x = lbl_803E1034;
-    e[2].y = lbl_803E1038;
-    e[2].z = lbl_803E103C;
+    e[2].x = 8.0f;
+    e[2].y = 72.0f;
+    e[2].z = 5.0f;
     e[3].layer = 1;
     e[3].flags = 10;
     e[3].tex = base + 0x1ac;
     e[3].mode = 0x4000;
-    e[3].x = lbl_803E1040;
-    e[3].y = lbl_803E1040;
-    e[3].z = lbl_803E1030;
+    e[3].x = 1.0f;
+    e[3].y = 1.0f;
+    e[3].z = 0.0f;
     e[4].layer = 0;
     e[4].flags = 9;
     e[4].tex = base + 0x198;
     e[4].mode = 2;
-    e[4].x = lbl_803E1044;
-    e[4].y = lbl_803E102C;
-    e[4].z = lbl_803E1044;
+    e[4].x = 32.1f;
+    e[4].y = 1.2f;
+    e[4].z = 32.1f;
     e[5].layer = 2;
     e[5].flags = 1;
     e[5].tex = lbl_803DB908;
     e[5].mode = 4;
-    e[5].x = lbl_803E1048;
-    e[5].y = lbl_803E1030;
-    e[5].z = lbl_803E1030;
+    e[5].x = 255.0f;
+    e[5].y = 0.0f;
+    e[5].z = 0.0f;
     e[6].layer = 2;
     e[6].flags = 10;
     e[6].tex = base + 0x1ac;
     e[6].mode = 0x4000;
-    e[6].x = lbl_803E1040;
-    e[6].y = lbl_803E1040;
-    e[6].z = lbl_803E1030;
+    e[6].x = 1.0f;
+    e[6].y = 1.0f;
+    e[6].z = 0.0f;
     e[7].layer = 3;
     e[7].flags = 10;
     e[7].tex = base + 0x1ac;
     e[7].mode = 0x4000;
-    e[7].x = lbl_803E1040;
-    e[7].y = lbl_803E1040;
-    e[7].z = lbl_803E1030;
+    e[7].x = 1.0f;
+    e[7].y = 1.0f;
+    e[7].z = 0.0f;
     e[8].layer = 4;
     e[8].flags = 10;
     e[8].tex = base + 0x1ac;
     e[8].mode = 0x4000;
-    e[8].x = lbl_803E1040;
-    e[8].y = lbl_803E1040;
-    e[8].z = lbl_803E1030;
+    e[8].x = 1.0f;
+    e[8].y = 1.0f;
+    e[8].z = 0.0f;
     e[9].layer = 4;
     e[9].flags = 10;
     e[9].tex = base + 0x1ac;
     e[9].mode = 4;
-    e[9].x = lbl_803E1030;
-    e[9].y = lbl_803E1030;
-    e[9].z = lbl_803E1030;
+    e[9].x = 0.0f;
+    e[9].y = 0.0f;
+    e[9].z = 0.0f;
     buf.v58 = 0;
     buf.ctx = sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E1030;
-    buf.pos[1] = lbl_803E1030;
-    buf.pos[2] = lbl_803E1030;
-    buf.col[0] = lbl_803E1030;
-    buf.col[1] = lbl_803E1030;
-    buf.col[2] = lbl_803E1030;
-    buf.scale = lbl_803E1030;
+    buf.pos[0] = 0.0f;
+    buf.pos[1] = 0.0f;
+    buf.pos[2] = 0.0f;
+    buf.col[0] = 0.0f;
+    buf.col[1] = 0.0f;
+    buf.col[2] = 0.0f;
+    buf.scale = 0.0f;
     buf.v40 = 1;
     buf.v3c = 10;
     buf.v59 = 10;
@@ -143,15 +127,15 @@ void dll_89_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((u32)sourceObj != 0)
         {
-            buf.pos[0] = lbl_803E1030 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E1030 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E1030 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E1030 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E1030 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E1030 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 10, (u8*)(int)lbl_80316460, 8, base + 0x168, DLL89_EFFECT_ID, 0);

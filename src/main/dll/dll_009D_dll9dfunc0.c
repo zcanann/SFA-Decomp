@@ -24,16 +24,6 @@
 /* lbl_80318038: shared texture + halfword table; lbl_803E13F8..1414:
    gfx-constant pool. Home TU unknown. */
 extern u8 lbl_80318038[];
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E13F8 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E13FC = 16.0f;
-__declspec(section ".sdata2") f32 lbl_803E1400 = 20.0f;
-__declspec(section ".sdata2") f32 lbl_803E1404 = -600.0f;
-__declspec(section ".sdata2") f32 lbl_803E1408 = 105.0f;
-__declspec(section ".sdata2") f32 lbl_803E140C = 1200.0f;
-__declspec(section ".sdata2") f32 lbl_803E1410 = -1200.0f;
-__declspec(section ".sdata2") f32 lbl_803E1414 = 1.0f;
 
 void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
 {
@@ -41,109 +31,110 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     u8* tab = (u8*)(int)lbl_80318038;
     GfxCmd* e = buf.entries;
     u32 effectFlags;
+    f32 originOffset = 0.0f;
 
     e[0].layer = 0;
     e[0].flags = 0x15;
     e[0].tex = &tab[432];
     e[0].mode = 4;
-    e[0].x = lbl_803E13F8;
-    e[0].y = lbl_803E13F8;
-    e[0].z = lbl_803E13F8;
+    e[0].x = originOffset;
+    e[0].y = originOffset;
+    e[0].z = originOffset;
     e[1].layer = 0;
     e[1].flags = 7;
     e[1].tex = &tab[356];
     e[1].mode = 2;
-    e[1].x = lbl_803E13FC;
-    e[1].y = lbl_803E1400;
-    e[1].z = lbl_803E13FC;
+    e[1].x = 16.0f;
+    e[1].y = 20.0f;
+    e[1].z = 16.0f;
     e[2].layer = 0;
     e[2].flags = 7;
     e[2].tex = &tab[372];
     e[2].mode = 2;
-    e[2].x = lbl_803E1400;
-    e[2].y = lbl_803E1400;
-    e[2].z = lbl_803E1400;
+    e[2].x = 20.0f;
+    e[2].y = 20.0f;
+    e[2].z = 20.0f;
     e[3].layer = 0;
     e[3].flags = 7;
     e[3].tex = &tab[388];
     e[3].mode = 2;
-    e[3].x = lbl_803E13FC;
-    e[3].y = lbl_803E1400;
-    e[3].z = lbl_803E13FC;
+    e[3].x = 16.0f;
+    e[3].y = 20.0f;
+    e[3].z = 16.0f;
     e[4].layer = 0;
     e[4].flags = 0;
     e[4].tex = NULL;
     e[4].mode = 0x400000;
-    e[4].x = lbl_803E13F8;
-    e[4].y = lbl_803E1404;
-    e[4].z = lbl_803E13F8;
+    e[4].x = originOffset;
+    e[4].y = -600.0f;
+    e[4].z = originOffset;
     e[5].layer = 1;
     e[5].flags = 7;
     e[5].tex = &tab[372];
     e[5].mode = 4;
-    e[5].x = lbl_803E1408;
-    e[5].y = lbl_803E13F8;
-    e[5].z = lbl_803E13F8;
+    e[5].x = 105.0f;
+    e[5].y = originOffset;
+    e[5].z = originOffset;
     e[6].layer = 1;
     e[6].flags = 0x15;
     e[6].tex = &tab[432];
     e[6].mode = 0x4000;
-    e[6].x = lbl_803E13F8;
-    e[6].y = lbl_803E13F8;
-    e[6].z = lbl_803E13F8;
+    e[6].x = originOffset;
+    e[6].y = originOffset;
+    e[6].z = originOffset;
     e[7].layer = 1;
     e[7].flags = 0;
     e[7].tex = NULL;
     e[7].mode = 0x400000;
-    e[7].x = lbl_803E13F8;
-    e[7].y = lbl_803E140C;
-    e[7].z = lbl_803E13F8;
+    e[7].x = originOffset;
+    e[7].y = 1200.0f;
+    e[7].z = originOffset;
     e[8].layer = 2;
     e[8].flags = 0x15;
     e[8].tex = &tab[432];
     e[8].mode = 0x4000;
-    e[8].x = lbl_803E13F8;
-    e[8].y = lbl_803E13F8;
-    e[8].z = lbl_803E13F8;
+    e[8].x = originOffset;
+    e[8].y = originOffset;
+    e[8].z = originOffset;
     e[9].layer = 2;
     e[9].flags = 0;
     e[9].tex = NULL;
     e[9].mode = 0x400000;
-    e[9].x = lbl_803E13F8;
-    e[9].y = lbl_803E1410;
-    e[9].z = lbl_803E13F8;
+    e[9].x = originOffset;
+    e[9].y = -1200.0f;
+    e[9].z = originOffset;
     e[10].layer = 3;
     e[10].flags = 0x15;
     e[10].tex = &tab[432];
     e[10].mode = 0x4000;
-    e[10].x = lbl_803E13F8;
-    e[10].y = lbl_803E13F8;
-    e[10].z = lbl_803E13F8;
+    e[10].x = originOffset;
+    e[10].y = originOffset;
+    e[10].z = originOffset;
     e[11].layer = 3;
     e[11].flags = 0;
     e[11].tex = NULL;
     e[11].mode = 0x400000;
-    e[11].x = lbl_803E13F8;
-    e[11].y = lbl_803E140C;
-    e[11].z = lbl_803E13F8;
+    e[11].x = originOffset;
+    e[11].y = 1200.0f;
+    e[11].z = originOffset;
     e[12].layer = 3;
     e[12].flags = 7;
     e[12].tex = &tab[372];
     e[12].mode = 4;
-    e[12].x = lbl_803E13F8;
-    e[12].y = lbl_803E13F8;
-    e[12].z = lbl_803E13F8;
+    e[12].x = originOffset;
+    e[12].y = originOffset;
+    e[12].z = originOffset;
 
     buf.v58 = 0;
     buf.ctx = (int)sourceObj;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E13F8;
-    buf.pos[1] = lbl_803E13F8;
-    buf.pos[2] = lbl_803E13F8;
-    buf.col[0] = lbl_803E13F8;
-    buf.col[1] = lbl_803E13F8;
-    buf.col[2] = lbl_803E13F8;
-    buf.scale = lbl_803E1414;
+    buf.pos[0] = originOffset;
+    buf.pos[1] = originOffset;
+    buf.pos[2] = originOffset;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 2;
     buf.v3c = 7;
     buf.v59 = 0xe;
@@ -165,15 +156,15 @@ void dll_9D_func03(u8* sourceObj, int variant, u8* posSource, u32 flags)
     {
         if (sourceObj != NULL)
         {
-            buf.pos[0] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosX;
-            buf.pos[1] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosY;
-            buf.pos[2] = lbl_803E13F8 + ((GameObject*)(sourceObj))->anim.worldPosZ;
+            buf.pos[0] += ((GameObject*)(sourceObj))->anim.worldPosX;
+            buf.pos[1] += ((GameObject*)(sourceObj))->anim.worldPosY;
+            buf.pos[2] += ((GameObject*)(sourceObj))->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E13F8 + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E13F8 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E13F8 + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] += ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] += ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] += ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8*)(int)lbl_80318038, 0x18, &tab[212], DLL9D_EFFECT_ID, 0);
