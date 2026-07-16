@@ -3078,12 +3078,12 @@ extern u8 lbl_80345E10[0x160];
 
 void defragMemory(int mode)
 {
-    int pass;
     char* q1;
     char* q2;
     char* q3;
     char* q4;
     int i;
+    int pass;
     int done;
     u8* base = lbl_80345E10;
     done = 0;
