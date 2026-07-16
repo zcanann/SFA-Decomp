@@ -3,9 +3,11 @@
 
 #include "types.h"
 
+typedef struct ObjModel ObjModel;
+
 void ObjModel_ToggleVertexBuffer(u8* model);
 void ObjModel_ToggleMatrixBuffer(u8* model);
-void ObjModel_ApplyBlendChannels(u8* model);
+void ObjModel_ApplyBlendChannels(ObjModel* model);
 void model_multMtxs(u8* model, f32* out);
 void modelInitBoneMtxs(u8* model, u8* out);
 void modelInitBoneMtxs2(u8* model, u8* out2, u8* out);

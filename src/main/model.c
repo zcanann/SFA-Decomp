@@ -121,9 +121,7 @@ void ObjModel_EnableDefaultRenderCallback(void* obj, u8* model, f32* mtx, int en
 
 s16* ObjModel_GetCurrentVertexCoords(ObjModel* model, int vertexIndex)
 {
-    u8* modelBytes = (u8*)model;
-    modelBytes += ((((model->bufferFlags >> 1) & 1) * 4));
-    return (s16*)(((ObjModel*)modelBytes)->vtxBuf0 + vertexIndex * 6);
+    return (s16*)(model->vtxBuf[(model->bufferFlags >> 1) & 1] + vertexIndex * 6);
 }
 
 void* ObjModel_GetPostRenderCallback(ObjModel* model)
@@ -395,7 +393,7 @@ void ObjModel_RelocateModelData(u8* m)
     }
     if (*(u32*)&((ModelFileHeader*)m)->morphTargetPtrs)
     {
-        ((ModelFileHeader*)m)->morphTargetPtrs = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs;
+        ((ModelFileHeader*)m)->morphTargetPtrs = (u8**)(m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs);
     }
     if (*(u32*)&((ModelFileHeader*)m)->vertexAnimEntries)
     {
@@ -424,8 +422,7 @@ void ObjModel_RelocateModelData(u8* m)
     }
     for (i = 0; i < ((ModelFileHeader*)m)->morphTargetCount; i++)
     {
-        *(u8**)(((ModelFileHeader*)m)->morphTargetPtrs + i * 4) = m + *(u32*)(((ModelFileHeader*)m)->morphTargetPtrs + i
-            * 4);
+        ((ModelFileHeader*)m)->morphTargetPtrs[i] = m + *(u32*)&((ModelFileHeader*)m)->morphTargetPtrs[i];
     }
     if (*(u32*)&((ModelFileHeader*)m)->collisionTriangles)
     {
@@ -848,51 +845,48 @@ extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
 extern f32 lbl_803DE870;
 
-void ObjModel_ApplyBlendChannels(u8* model)
+void ObjModel_ApplyBlendChannels(ObjModel* model)
 {
-    u8* hdr;
+    ModelFileHeader* hdr;
     ObjModelBlendChannel* ch;
     int i;
     s16 defFrame;
     int chanActive[3] = {0, 0, 0};
     int chanFade[3] = {0, 0, 0};
-    void* targetA;
-    void* targetB;
-    int srcVtx;
-    int dstVtx;
+    u8* targetA;
+    u8* targetB;
+    u8* srcVtx;
+    u8* dstVtx;
     int fadeBits;
-    f32 weight;
-    f32 tw;
-    f32 eased;
 
-    hdr = *(u8**)model;
-    if (((ModelFileHeader*)hdr)->morphTargetPtrs == NULL)
+    hdr = model->file;
+    if (hdr->morphTargetPtrs == NULL)
     {
         return;
     }
-    defFrame = ((ModelFileHeader*)hdr)->vertexCount + 1;
+    defFrame = hdr->vertexCount + 1;
     for (i = 0; i < 3; i++)
     {
-        ch = ((ObjModel*)model)->blendChannels + i;
-        if (ch[0].weight != ch[0].targetWeight)
+        ch = &model->blendChannels[i];
+        if (ch->weight != ch->targetWeight)
         {
-            ch[0].flags0E &= ~0xc;
-            ch[0].flags0E |= BLENDCHAN_FLAG_FADING;
+            ch->flags0E &= ~0xc;
+            ch->flags0E |= BLENDCHAN_FLAG_FADING;
         }
-        fadeBits = ch[0].flags0E & 0xc;
+        fadeBits = ch->flags0E & 0xc;
         chanFade[i] = fadeBits;
-        if (ch[0].morphTargetA != -1 || ch[0].morphTargetB != -1 || fadeBits != 0)
+        if (ch->morphTargetA != -1 || ch->morphTargetB != -1 || fadeBits != 0)
         {
             chanActive[i] = 1;
         }
         if (chanFade[i] & 4)
         {
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADING;
-            ch[0].flags0E |= BLENDCHAN_FLAG_FADED;
+            ch->flags0E &= ~BLENDCHAN_FLAG_FADING;
+            ch->flags0E |= BLENDCHAN_FLAG_FADED;
         }
         else if (chanFade[i] & 8)
         {
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_FADED;
+            ch->flags0E &= ~BLENDCHAN_FLAG_FADED;
         }
     }
     if (chanActive[0] == 0 && chanActive[1] == 0 && chanActive[2] == 0)
@@ -917,69 +911,73 @@ void ObjModel_ApplyBlendChannels(u8* model)
     }
     for (i = 0; i < 3; i++)
     {
-        if (chanActive[i] && ((ModelFileHeader*)hdr)->vertexAnimEntries)
+        if (chanActive[i] && hdr->vertexAnimEntries)
         {
             chanFade[i] = 1;
         }
-        ch = ((ObjModel*)model)->blendChannels + i;
-        if (ch[0].flags0E & BLENDCHAN_FLAG_RESET_WEIGHT)
+        ch = &model->blendChannels[i];
+        if (ch->flags0E & BLENDCHAN_FLAG_RESET_WEIGHT)
         {
-            ch[0].flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
-            ch[0].weight = lbl_803DE828;
+            ch->flags0E &= ~BLENDCHAN_FLAG_RESET_WEIGHT;
+            ch->weight = lbl_803DE828;
         }
         if (chanActive[i] && chanFade[i])
         {
-            if (ch[0].morphTargetA > -1)
+            f32 weight;
+            f32 tw;
+            f32 eased;
+
+            if (ch->morphTargetA > -1)
             {
-                targetA = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].morphTargetA];
+                targetA = hdr->morphTargetPtrs[ch->morphTargetA];
             }
             else
             {
-                targetA = &defFrame;
+                targetA = (u8*)&defFrame;
             }
-            if (ch[0].morphTargetB > -1)
+            if (ch->morphTargetB > -1)
             {
-                targetB = (void*)((int*)(((ModelFileHeader*)hdr)->morphTargetPtrs))[ch[0].morphTargetB];
+                targetB = hdr->morphTargetPtrs[ch->morphTargetB];
             }
             else
             {
-                targetB = &defFrame;
+                targetB = (u8*)&defFrame;
             }
             if (i == 2)
             {
                 if (chanActive[0] == 0 && chanActive[1] == 0)
                 {
-                    srcVtx = *(int*)&((ModelFileHeader*)hdr)->vertices;
+                    srcVtx = hdr->vertices;
                 }
                 else
                 {
-                    srcVtx = *(int*)(model + ((((ObjModel*)model)->bufferFlags >> 1) & 1) * 4 + 0x1c);
+                    srcVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
                 }
             }
             else
             {
-                srcVtx = *(int*)&((ModelFileHeader*)hdr)->vertices;
+                srcVtx = hdr->vertices;
             }
-            weight = ch[0].weight;
+            weight = ch->weight;
             if (weight > lbl_803DE818)
             {
-                ch[0].weight = lbl_803DE818;
+                ch->weight = lbl_803DE818;
             }
             else if (weight < lbl_803DE828)
             {
-                if (ch[0].flags0E & BLENDCHAN_FLAG_CLAMP_TARGET)
+                if (ch->flags0E & BLENDCHAN_FLAG_CLAMP_TARGET)
                 {
                     if (weight < lbl_803DE840)
                     {
-                        ch[0].weight = lbl_803DE840;
+                        ch->weight = lbl_803DE840;
                     }
                 }
                 else
                 {
-                    ch[0].weight = lbl_803DE828;
+                    ch->weight = lbl_803DE828;
                 }
             }
-            weight = ch[0].weight;
+            weight = ch->weight;
             if (weight >= lbl_803DE828)
             {
                 tw = weight;
@@ -989,16 +987,16 @@ void ObjModel_ApplyBlendChannels(u8* model)
             {
                 tw = weight * lbl_803DE840;
                 eased = lbl_803DE868 * tw + lbl_803DE86C * (tw * tw) - tw * (tw * tw);
-                eased = eased * lbl_803DE840;
+                eased *= lbl_803DE840;
             }
-            dstVtx = *(int*)(model + ((((ObjModel*)model)->bufferFlags >> 1) & 1) * 4 + 0x1c);
-            modelApplyBoneTransforms(srcVtx, dstVtx, ((ModelFileHeader*)hdr)->vertexCount, targetA, targetB,
+            dstVtx = model->vtxBuf[(model->bufferFlags >> 1) & 1];
+            modelApplyBoneTransforms(srcVtx, dstVtx, hdr->vertexCount, targetA, targetB,
                                      (int)(lbl_803DE870 * eased));
-            ((ObjModel*)model)->unk60 = 1;
+            model->unk60 = 1;
         }
-        if (ch[0].targetWeight != ch[0].weight)
+        if (ch->targetWeight != ch->weight)
         {
-            ch[0].targetWeight = ch[0].weight;
+            ch->targetWeight = ch->weight;
         }
     }
 }
@@ -1790,21 +1788,21 @@ void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c)
         ModelFileHeader*)p)->flags & MODEL_FLAG_DYNAMIC_VERTEX_BUFFERS))
     {
         pos = roundUpTo32(pos);
-        *(int*)&((ObjModel*)out2)->vtxBuf0 = pos;
+        *(int*)&((ObjModel*)out2)->vtxBuf[0] = pos;
         pos = roundUpTo32(pos + ((ModelFileHeader*)p)->vertexCount * 6);
-        *(int*)&((ObjModel*)out2)->vtxBuf1 = pos;
+        *(int*)&((ObjModel*)out2)->vtxBuf[1] = pos;
         end = pos + ((ModelFileHeader*)p)->vertexCount * 6;
-        memcpy(((ObjModel*)out2)->vtxBuf0, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
-        DCFlushRange(((ObjModel*)out2)->vtxBuf0, ((ModelFileHeader*)p)->vertexCount * 6);
-        memcpy(((ObjModel*)out2)->vtxBuf1, ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
-        DCFlushRange(((ObjModel*)out2)->vtxBuf1, ((ModelFileHeader*)p)->vertexCount * 6);
+        memcpy(((ObjModel*)out2)->vtxBuf[0], ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel*)out2)->vtxBuf[0], ((ModelFileHeader*)p)->vertexCount * 6);
+        memcpy(((ObjModel*)out2)->vtxBuf[1], ((ModelFileHeader*)p)->vertices, ((ModelFileHeader*)p)->vertexCount * 6);
+        DCFlushRange(((ObjModel*)out2)->vtxBuf[1], ((ModelFileHeader*)p)->vertexCount * 6);
         pos = roundUpTo32(end);
     }
     else
     {
         end = *(int*)&((ModelFileHeader*)p)->vertices;
-        *(int*)&((ObjModel*)out)->vtxBuf1 = end;
-        *(int*)&((ObjModel*)out2)->vtxBuf0 = end;
+        *(int*)&((ObjModel*)out)->vtxBuf[1] = end;
+        *(int*)&((ObjModel*)out2)->vtxBuf[0] = end;
     }
     if (((ModelFileHeader*)p)->blendAnimEntries != NULL)
     {
@@ -2219,8 +2217,8 @@ void fn_80026928(int* obj, int b, int* desc)
         int lim;
 
         *(f32*)(entry + 0x18) = *(f32*)(*(int*)(b + 0x3c) + jointIdx * 0x1c + 4);
-        *(f32*)&((ObjModel*)entry)->vtxBuf0 = *(f32*)(*(int*)(b + 0x3c) + jointIdx * 0x1c + 8);
-        *(f32*)&((ObjModel*)entry)->vtxBuf1 = *(f32*)(*(int*)(b + 0x3c) + jointIdx * 0x1c + 0xc);
+        *(f32*)&((ObjModel*)entry)->vtxBuf[0] = *(f32*)(*(int*)(b + 0x3c) + jointIdx * 0x1c + 8);
+        *(f32*)&((ObjModel*)entry)->vtxBuf[1] = *(f32*)(*(int*)(b + 0x3c) + jointIdx * 0x1c + 0xc);
 
         idx = jointIdx;
         hdr = *(u8**)obj;
@@ -2682,7 +2680,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
    two-slot scratch cache (0x2000 apart, transform output at +0x1000), copying
    worker chunks in via copyToCache while the previous chunk is being processed,
    then writing transformed verts (6 bytes each) back to dstVtx. */
-void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* targetA, void* targetB, int blendScale)
+void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale)
 {
     extern u16 gModelCopyChunkWordLimit;
     u16 vtxPos;
@@ -2708,7 +2706,7 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
         chunk = vtxCount;
     }
     words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
-    copyToCache(cache, (void*)srcVtx, words);
+    copyToCache(cache, srcVtx, words);
     bufIdx = 0;
     sync = 0;
     while (vtxCount != 0)
@@ -2725,7 +2723,7 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
                 nextChunk = vtxCount;
             }
             nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
-            copyToCache(cache + (bufIdx ^ 1) * 0x2000, (u8*)srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
+            copyToCache(cache + (bufIdx ^ 1) * 0x2000, srcVtx + (vtxPos + gModelCopyChunkWordLimit) * 6, nextWords);
             sync = 1;
         }
         cacheQueueWait(sync);
@@ -2733,7 +2731,7 @@ void modelApplyBoneTransforms(int srcVtx, int dstVtx, u16 vtxCount, void* target
         in = cache + curBuf * 0x2000;
         out = in + 0x1000;
         modelApplyBoneTransform(in, out, chunk, (u8**)&targetA, (u8**)&targetB, blendScale, vtxPos);
-        memcpyToCache((u8*)dstVtx + vtxPos * 6, out, words);
+        memcpyToCache(dstVtx + vtxPos * 6, out, words);
         vtxPos += chunk;
         sync = 1;
         bufIdx = curBuf ^ 1;

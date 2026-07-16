@@ -1520,7 +1520,6 @@ void objFreeObjDef(u8* obj, int flag)
     void* shadowRenderResource;
     int modelCount;
     int group;
-    int type;
 
     if (*(u8*)&((GameObject*)obj)->contactRefCount != 0)
     {
@@ -1664,26 +1663,32 @@ void objFreeObjDef(u8* obj, int flag)
     {
         ObjGroup_RemoveObject((u32)obj, group - 1);
     }
-    type = ((GameObject*)obj)->anim.defId;
-    if (*(u8*)(type + (int)gObjFileRefCount) == 0)
     {
-        debugPrintf(sObjFreeObjdefError);
-    }
-    else
-    {
-        *(u8*)(type + (int)gObjFileRefCount) -= 1;
-        if (gObjFileRefCount[type] == 0)
+        s16 type;
+        u8* refCounts;
+
+        type = ((GameObject*)obj)->anim.defId;
+        refCounts = gObjFileRefCount;
+        if (refCounts[type] == 0)
         {
-            otherObj = ((u8**)gObjFileBufferTable)[type];
-            if (*(void**)&((GameObject*)otherObj)->anim.parent != NULL)
+            debugPrintf(sObjFreeObjdefError);
+        }
+        else
+        {
+            refCounts[type]--;
+            if (gObjFileRefCount[type] == 0)
             {
-                mm_free(((GameObject*)otherObj)->anim.parent);
+                otherObj = ((u8**)gObjFileBufferTable)[type];
+                if (*(void**)&((GameObject*)otherObj)->anim.parent != NULL)
+                {
+                    mm_free(((GameObject*)otherObj)->anim.parent);
+                }
+                if (*(void**)(otherObj + 0x34) != NULL)
+                {
+                    mm_free(*(void**)(otherObj + 0x34));
+                }
+                mm_free(otherObj);
             }
-            if (*(void**)(otherObj + 0x34) != NULL)
-            {
-                mm_free(*(void**)(otherObj + 0x34));
-            }
-            mm_free(otherObj);
         }
     }
     if (((GameObject*)obj)->seqIndex > -1)

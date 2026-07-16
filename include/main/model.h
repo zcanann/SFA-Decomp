@@ -96,7 +96,7 @@ typedef struct ModelFileHeader {
     u8 *instrs;
     u16 instrsBitLenWords; /* 0xD8: render-instruction stream length; *8 gives bit length (see objprint_dolphin render-instr readers) */
     u8 unkDA[2];
-    u8 *morphTargetPtrs; /* pointer table, morphTargetCount entries */
+    u8 **morphTargetPtrs; /* pointer table, morphTargetCount entries */
     u16 cullDistance;
     u16 shaderFlags;
     u16 vertexCount;
@@ -197,8 +197,7 @@ typedef struct ObjModel {
     u8 *jointWorkspace; /* 0x1c header + per-joint tables */
     u16 bufferFlags; /* 1 = mtx buffer select, 2 = vtx buffer select, 0x40 = textures loaded */
     u8 unk1A[2];
-    u8 *vtxBuf0;
-    u8 *vtxBuf1;
+    u8 *vtxBuf[2];
     u8 *normalBuf;
     struct ObjModelBlendChannel *blendChannels; /* 3 channels */
     void *animStateA;  /* ObjAnimState */
@@ -284,7 +283,7 @@ void ObjModelChain_Free(ObjModelChain *chain);
 
 /* extern-cleanup: defining-file public prototypes */
 void setGQR6_2(int a, int b, int c, int d);
-void modelApplyBoneTransforms(int a, int b, u16 c, void* d, void* e, int f);
+void modelApplyBoneTransforms(u8* srcVtx, u8* dstVtx, u16 vtxCount, u8* targetA, u8* targetB, int blendScale);
 void* modelLoad_layoutBuffers(u8* p, int b, int isType1, int c);
 void modelAnimResetState(void* m, void* data);
 int modelLoadAnimations(void* model, int id, void* animBase);
