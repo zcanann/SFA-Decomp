@@ -8,6 +8,6 @@ void Effect3_func03_nop(void);
 void Effect3_release(void);
 void Effect3_initialise(void);
 int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
-                   void* extraArgsIn);
+                   f32* extraArgs);
 
 #endif /* MAIN_DLL_DLL_001C_EFFECT3_H_ */

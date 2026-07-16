@@ -316,6 +316,9 @@ main/dll/dll_001B_effect2.c:
 
 main/dll/dll_001C_effect3.c:
 	.text       start:0x800B6EF8 end:0x800B8D7C
+	.data       start:0x80310808 end:0x8031089C
+	.bss        start:0x8039C350 end:0x8039C368
+	.sdata2     start:0x803DF9D0 end:0x803DFA88
 
 main/dll/dll_001D_effect4.c:
 	.text       start:0x800B8D7C end:0x800BC244
