@@ -4141,13 +4141,13 @@ main/audio/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
 	extabindex  start:0x8000629C end:0x800062D8
 	.text       start:0x8027BA04 end:0x8027C48C
-	.bss        start:0x803CC1E0 end:0x803CC8C0
 
 main/audio/hw_dspctrl.c:
 	extab       start:0x80005A30 end:0x80005A50
 	extabindex  start:0x800062D8 end:0x80006308
 	.text       start:0x8027C48C end:0x8027F2AC
 	.data       start:0x8032FDA0 end:0x8032FDB8
+	.bss        start:0x803CC1E0 end:0x803CC8C0
 
 main/audio/snd3d_room.c:
 	extab       start:0x80005A50 end:0x80005A68

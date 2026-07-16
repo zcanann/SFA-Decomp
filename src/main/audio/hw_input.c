@@ -1,11 +1,12 @@
 #include "main/audio/hw_input.h"
+#include "main/unknown/autos/musyx_dsp.h"
 
 #pragma exceptions on
 
-extern u8 lbl_803CC1E0[];
-extern void salAddStudioInput(void* entry, void* input);
+extern DSPstudioinfo dspStudio[8];
+extern void salAddStudioInput(DSPstudioinfo* studio, void* input);
 
 void hwAddInput(u8 index, void* input)
 {
-    salAddStudioInput(lbl_803CC1E0 + index * 0xbc, input);
+    salAddStudioInput(&dspStudio[index], input);
 }

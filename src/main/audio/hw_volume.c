@@ -3,7 +3,7 @@
 
 #pragma exceptions on
 
-extern u8 lbl_803CC1E0[];
+extern DSPstudioinfo dspStudio[8];
 extern u8 lbl_802C2820[];
 extern f32 lbl_803E78E4;
 
@@ -35,7 +35,6 @@ void hwSetVolume(int slot, u32 p2, f32 vol, f32 auxa, f32 auxb, u32 aux, u32 p7)
 
     {
         u32 f0w = voice->flags;
-        DSPstudioinfo* dspStudio = (DSPstudioinfo*)lbl_803CC1E0;
         f0w &= 0x80000000;
         salCalcVolumeMatrix(p2, out, aux, p7, f0w != 0, dspStudio[voice->studio].type == 1, vol, auxa, auxb);
     }
@@ -98,7 +97,7 @@ void hwOff(int slot)
  */
 void hwSetAUXProcessingCallbacks(u8 idx, void* cb0, void* cb1, void* cb2, void* cb3)
 {
-    DSPstudioinfo* entry = (DSPstudioinfo*)(lbl_803CC1E0 + idx * 0xbc);
+    DSPstudioinfo* entry = &dspStudio[idx];
     entry->auxAHandler = cb0;
     entry->auxAUser = cb1;
     entry->auxBHandler = cb2;

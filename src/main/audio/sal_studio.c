@@ -14,8 +14,7 @@ extern void* dspITDBuffer;
 extern s32* dspSurround;
 extern void* dspCmdList;
 extern u32 dspARAMZeroBuffer;
-u8 lbl_803CC1E0[0x6E0];
-#define dspStudio ((DSPstudioinfo*)lbl_803CC1E0)
+extern DSPstudioinfo dspStudio[8];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
 

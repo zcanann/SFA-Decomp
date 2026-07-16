@@ -4,15 +4,14 @@
 #include "main/audio/dsp_voice_state.h"
 #include "dolphin/os/OSCache.h"
 
-extern u8 lbl_803CC1E0[];
-extern void salRemoveStudioInput(void* p, void* input);
+extern DSPstudioinfo dspStudio[8];
+extern void salRemoveStudioInput(DSPstudioinfo* studio, void* input);
 extern int aramGetStreamBufferAddress(int stream, void* out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, u32 callback, u32 callbackArg);
 
 void hwRemoveInput(u32 idx, void* input)
 {
-    u32 offset = (idx & 0xff) * 0xbc;
-    salRemoveStudioInput(lbl_803CC1E0 + offset, input);
+    salRemoveStudioInput(&dspStudio[idx & 0xff], input);
 }
 
 #pragma optimization_level 1
