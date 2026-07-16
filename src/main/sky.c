@@ -253,7 +253,7 @@ extern void GXSetNumTevStages(int n);
 extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);
-extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
+extern void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z);
 extern void* memset(void* dst, int c, int n);
 int getEnvFxBit2BA(void)
 {
@@ -3064,12 +3064,12 @@ void skyFn_8008aee8(void)
     int texW;
     u32 screenRes;
     int texHandle;
+    f32 u;
     f32 frac;
     f32 t;
     f32 tc;
-    f32 u;
-    f32 widthF;
     f32 sinProd;
+    f32 widthF;
     f32 angle;
     f32 blend;
     f32 v;
@@ -3089,7 +3089,8 @@ void skyFn_8008aee8(void)
         sky = *(int**)&gSkyState;
         frac = ((SkyTimeBlend*)sky)->time / gSkySecondsPerDay;
         t = (frac < pEXIInputFlag) ? pEXIInputFlag : ((frac > EXIInputFlag) ? EXIInputFlag : frac);
-        if (t >= pEXIInputFlag && t < lbl_803DF0C8)
+        u = pEXIInputFlag;
+        if (t >= u && t < lbl_803DF0C8)
         {
             u = t / lbl_803DF0C8;
             ((SkyTimeBlend*)sky)->phase = 0;
@@ -3220,8 +3221,8 @@ void skyFn_8008aee8(void)
         sinProd *= lbl_803DF0B8;
         texW = *(u16*)(texC + 0xc);
         v = angle / (lbl_803DF0EC * (f32)(u32)texW);
-        skyDrawFn_80075d5c(pEXIInputFlag, v, EXIInputFlag, v - sinProd / (f32)(u32)texW, 0, 0,
-                           (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, -0x18f);
+        skyDrawFn_80075d5c(0, 0, (screenRes & 0xffff) << 2, (screenRes >> 16) << 2, pEXIInputFlag, v,
+                           EXIInputFlag, v - sinProd / (f32)(u32)texW, -0x18f);
     }
 }
 #pragma opt_common_subs reset
