@@ -3127,7 +3127,7 @@ int playerStateClimbWall(GameObject* obj, int state)
                     }
                     else
                     {
-                        pnt[1] = pnt[1] + 11.0f;
+                        pnt[1] += 11.0f;
                     }
                     for (i = 0, ph = 30.0f; i < 2; i++)
                     {
