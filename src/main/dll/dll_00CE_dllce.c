@@ -122,6 +122,9 @@ extern f32 lbl_803E2DC8;
 
 extern void* gChukChukMoveHandlers[];
 extern void* gChukChukCheckHandlers[];
+extern void* gIceBaddieStateHandlersB[];
+extern void* gIceBaddieStateHandlersA[];
+extern f32 timeDelta;
 
 
 
@@ -159,8 +162,6 @@ ObjectDescriptor12 dll_CE = {
 
 void fn_8015DAE8(void)
 {
-    extern void* gIceBaddieStateHandlersB[];
-    extern void* gIceBaddieStateHandlersA[];
 
     gIceBaddieStateHandlersA[0] = iceBaddie_updateOpenHitState;
     gIceBaddieStateHandlersA[1] = iceBaddie_updateOpenState;
@@ -303,7 +304,6 @@ int fn_8015DEB4(int* obj, GroundBaddieState* state)
 #pragma opt_common_subs off
 int fn_8015DF20(GameObject* obj, GroundBaddieState* state)
 {
-    extern f32 lbl_803E2DC8;
     GroundBaddieState* sub = obj->extra;
     f32* v;
     f32 z;
@@ -365,7 +365,6 @@ int fn_8015E044(int* obj, GroundBaddieState* state)
 
 int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 {
-    extern f32 lbl_803E2DC8;
             GroundBaddieState* sub;
     f32 spd;
 
@@ -406,7 +405,6 @@ int fn_8015E0C8(GameObject* obj, GroundBaddieState* state)
 int fn_8015E210(int* obj, GroundBaddieState* state)
 {
 
-    extern f32 lbl_803E2DC8;
         int* objs;
     int count;
     int i;
@@ -466,7 +464,6 @@ int fn_8015E210(int* obj, GroundBaddieState* state)
 int fn_8015E3A0(GameObject* obj, int state)
 {
 
-    extern f32 lbl_803E2DC8;
         GroundBaddieState* sub = (obj)->extra;
     int count;
     int idx;
@@ -537,7 +534,6 @@ int fn_8015E520(int* obj, GroundBaddieState* state)
 int fn_8015E5DC(short* obj, GroundBaddieState* state)
 {
 
-    extern f32 lbl_803E2DC8;
             int count;
     int i;
     GroundBaddieState* sub;
@@ -589,7 +585,6 @@ int fn_8015E5DC(short* obj, GroundBaddieState* state)
 int fn_8015E798(GameObject* obj, GroundBaddieState* state)
 {
 
-    extern f32 lbl_803E2DC8;
             GroundBaddieState* sub;
     u8* hit;
 
@@ -629,7 +624,6 @@ int fn_8015E798(GameObject* obj, GroundBaddieState* state)
 int fn_8015E8BC(GameObject* obj, GroundBaddieState* state)
 {
 
-    extern f32 lbl_803E2DC8;
                 GroundBaddieState* sub;
     u8* hit;
     int flags;
@@ -711,7 +705,6 @@ void fn_8015EA48(GameObject* obj, GroundBaddieState* state)
 
 void fn_8015EB6C(GameObject* obj, int state, int target)
 {
-    extern f32 timeDelta;
             int sub = *(int*)&((GroundBaddieState*)state)->control;
     char* r;
 
@@ -856,7 +849,6 @@ void dll_CE_free(int* obj)
 
 void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern f32 lbl_803E2DC8;
         GroundBaddieState* sub = ((GameObject*)p1)->extra;
     f32 t;
 
@@ -879,10 +871,6 @@ void dll_CE_hitDetect_nop(void)
 #pragma dont_inline on
 void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
 {
-    extern void* gChukChukMoveHandlers[];
-    extern void* gChukChukCheckHandlers[];
-    extern f32 timeDelta;
-    extern f32 lbl_803E2DC8;
             GroundBaddieState* sub;
     int setup;
     u8* hit;
@@ -969,7 +957,6 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
 
 void dll_CE_init(GameObject* obj, u8* def, int flags)
 {
-    extern f32 lbl_803E2DC8;
         GroundBaddieState* sub;
     u8 mode;
     f32* v;

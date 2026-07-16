@@ -222,8 +222,6 @@ int gcRobotLight_init(GameObject* obj, int childId)
 
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
-    extern f32 lbl_803E2810;
-    extern f32 lbl_803E2814;
     int sub;
     f32 fz;
 
@@ -523,6 +521,7 @@ extern f32 lbl_803E2888;
 extern f32 lbl_803E288C;
 extern f32 lbl_803E2890;
 extern f32 lbl_803E2894;
+extern f32 lbl_803E2810;
 
 #pragma peephole off
 void fn_80152B90(int* obj, u8* state)
