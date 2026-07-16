@@ -299,7 +299,7 @@ extern f32 SendMailData;
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
-int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmd, int flags, void* out);
+int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmd, s8 flags, void* out);
 void* ObjSeq_ToggleCommand3Target(u8* obj, u8* seq, u8* src);
 
 typedef struct CamRequest
@@ -1700,7 +1700,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     } pos;
     u8* activeObj;
     f32* posp;
-    int out;
+    int out[3];
     u8* cmd;
     f32 speed;
     u8* model;
@@ -1866,8 +1866,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                 {
                     ((GameObject*)activeObj)->anim.currentMoveProgress -= wrap;
                 }
-                wrap = lbl_803DEFC8;
                 low = lbl_803DEFB0;
+                wrap = lbl_803DEFC8;
                 while (((GameObject*)activeObj)->anim.currentMoveProgress < low)
                 {
                     ((GameObject*)activeObj)->anim.currentMoveProgress += wrap;
@@ -1905,7 +1905,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                         ((ObjSeqState*)seq)->retriggerFrame += cmd[1];
                     }
                     ((ObjSeqState*)seq)->cmdCursor += 1;
-                    if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0)
+                    if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, out) != 0)
                     {
                         return;
                     }
@@ -2424,7 +2424,7 @@ void ObjSeq_ApplyFrameCurves(u8* obj, u8* seqObj, u8* seq, int frame)
 }
 #pragma opt_loop_invariants reset
 
-int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, int flags, void* out)
+int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void* out)
 {
     u8* base = lbl_80396918;
     s8 noExec;
