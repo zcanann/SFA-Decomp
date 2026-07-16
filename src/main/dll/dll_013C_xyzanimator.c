@@ -108,6 +108,7 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
     VertexS16* vtx;
 
     edgeOffset[0] = 0;
+    edge[0] = 0;
     blockIndex = 0;
     coordOffset[0] = 0;
     triangleOffset[0] = coordOffset[0];
@@ -147,8 +148,8 @@ void fn_80194964(XyzAnimatorPlacement* setup, XyzAnimatorState* state, int block
             }
         }
     }
-    edge[0] = 0;
-    edgeIdx[0] = edge[0];
+    edgeIdx[0] = 0;
+    edge[0] = edgeIdx[0];
     for (; edgeIdx[0] < (int)(u32)((MapBlockData*)block)->edgeCount; edgeIdx[0]++)
     {
         blockIndex = (int)fn_800606FC((int*)block, edgeIdx[0]);
