@@ -2387,9 +2387,9 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
     int j;
     int i;
     u32 wB;
+    int redA;
     int redB;
     int bf;
-    int redA;
     int rf;
     int gf;
     u16 outv;
@@ -2424,19 +2424,20 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         {
             for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
             {
+                u8 *pa0, *pt, *pa2, *pa, *pb, *pc;
+                u32 wd;
                 j = 0;
                 w = i & 0xfffffffc;
                 h = (i & 3) * 8;
-                for (; j < (int)*(u16*)(src1 + 0xa); j++)
+                for (; j < (int)(wd = *(u16*)(src1 + 0xa)); j++)
                 {
-                    u8 *pa, *pb, *pc;
                     i6 = (j & 3) * 2;
-                    pa = src1 + i6;
+                    pa0 = src1 + i6;
                     i4 = (j >> 2) * 0x20;
-                    pa += i4;
-                    pa += h;
-                    i12 = (int)*(u16*)(src1 + 0xa) * w * 2;
-                    pa += i12;
+                    pt = pa0 + i4;
+                    pa2 = pt + h;
+                    i12 = (int)wd * w * 2;
+                    pa = pa2 + i12;
                     texA = *(u16*)(pa + 0x60);
                     redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
                     pb = src2 + i6;
@@ -2455,10 +2456,10 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
                           0xfc)
                          << 3;
                     outv = bf | (rf | gf);
-                    pc = dst + i6;
-                    pc += i4;
-                    pc += h;
-                    pc += i12;
+                    pt = dst + i6;
+                    pt += i4;
+                    pt += h;
+                    pc = pt + i12;
                     *(u16*)(pc + 0x60) = outv;
                 }
             }
@@ -2468,34 +2469,35 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
             for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
             {
                 int i5, i4;
+                u32 wd;
                 j = 0;
                 i5 = (i >> 2) * 8;
                 i4 = (i & 3) * 8;
-                for (; j < (int)*(u16*)(src1 + 0xa); j++)
+                for (; j < (int)(wd = *(u16*)(src1 + 0xa)); j++)
                 {
                     int i9 = (j & 3) * 2;
                     int i12;
                     int i6;
-                    u8 *ad, *bd, *cd;
+                    u8 *at, *ad, *bd, *bt, *ct, *cd;
                     int aLo, bLo, aHi, bHi;
-                    ad = src1 + i9;
+                    bt = src1 + i9;
                     i12 = (j >> 2) * 0x40;
-                    ad += i12;
-                    ad += i4;
-                    i6 = (int)*(u16*)(src1 + 0xa) * i5 * 2;
-                    ad += i6;
-                    bd = src2 + i9;
-                    bd += i12;
-                    bd += i4;
-                    bd += i6;
+                    at = bt + i12;
+                    bt = at + i4;
+                    i6 = (int)wd * i5 * 2;
+                    ad = bt + i6;
+                    bt = src2 + i9;
+                    bt += i12;
+                    bt += i4;
+                    bd = bt + i6;
                     aLo = (u8) * (u16*)(ad + 0x60);
                     bLo = (u8) * (u16*)(bd + 0x60);
                     texA = *(u16*)(ad + 0x80);
                     aHi = (u8)((int)(texA & 0xff00) >> 8);
                     texB = *(u16*)(bd + 0x80);
                     bHi = (u8)((int)(texB & 0xff00) >> 8);
-                    cd = dst + i9;
-                    cd += i12;
+                    ct = dst + i9;
+                    cd = ct + i12;
                     cd += i4;
                     cd += 0x60;
                     *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
