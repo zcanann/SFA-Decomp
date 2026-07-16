@@ -33,7 +33,6 @@ const f32 lbl_802C2608[4] = {0.0f, 0.0f, 1.0f, 0.0f};
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E7250 = 0.0f;
 #pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E7254 = 1.0f;
 
 struct DirectionalLightObjDescriptorLayout gDirectionalLightObjDescriptor = {
     0,
@@ -209,7 +208,7 @@ void directionallight_free(GameObject* obj)
 
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7254);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void directionallight_hitDetect(void)
@@ -235,7 +234,7 @@ void directionallight_update(GameObject* obj)
         if ((u32)mainGetBit(setup->enableBit) == 0)
         {
             state->enabled = 0;
-            modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
+            modelLightStruct_setEnabled(state->light, 0, 1.0f);
         }
         if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0)
         {
@@ -248,7 +247,7 @@ void directionallight_update(GameObject* obj)
         if ((u32)mainGetBit(setup->enableBit) != 0)
         {
             state->enabled = 1;
-            modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);
+            modelLightStruct_setEnabled(state->light, 1, 1.0f);
         }
     }
 

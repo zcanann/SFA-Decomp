@@ -24,21 +24,14 @@
 #include "main/object_render_legacy.h"
 
 #pragma explicit_zero_data on
+#define ARW_PROXIMITY_TAUNT_DISTANCE 2700.0f
+#define ARW_PROXIMITY_ACTIVATE_DISTANCE 5120.0f
+#define ARW_PROXIMITY_FADE_IN_RATE 3.0f
+#define ARW_PROXIMITY_WARNING_DISTANCE 900.0f
 __declspec(section ".sdata2") f32 lbl_803E71D8 = 0.0f;
 #pragma explicit_zero_data off
 __declspec(section ".sdata2") f32 lbl_803E71DC = 100.0f;
 __declspec(section ".sdata2") f32 lbl_803E71E0 = 127.0f;
-__declspec(section ".sdata2") f32 lbl_803E71E4 = 1.0f;
-__declspec(section ".sdata2") f32 gArwProximityTauntDistance = 2700.0f;
-__declspec(section ".sdata2") f32 gArwProximityActivateDistance = 5120.0f;
-__declspec(section ".sdata2") f32 lbl_803E71F0 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E71F4 = 70.0f;
-__declspec(section ".sdata2") f32 lbl_803E71F8 = 65.0f;
-__declspec(section ".sdata2") f32 gArwProximityFadeInRate = 3.0f;
-__declspec(section ".sdata2") f32 gArwProximityWarningDistance = 900.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7204 = 0.0f;
-#pragma explicit_zero_data off
 
 #pragma dont_inline on
 
@@ -80,7 +73,7 @@ void arwproximit_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 sca
     {
         queueGlowRender(state->light);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E71E4);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwproximit_hitDetect(void)
@@ -97,7 +90,7 @@ void arwproximit_update(GameObject* obj)
         GameObject* arwing = (GameObject*)getArwing();
         if (arwing == NULL)
             arwing = (GameObject*)Obj_GetPlayerObject();
-        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < gArwProximityTauntDistance)
+        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < ARW_PROXIMITY_TAUNT_DISTANCE)
         {
             gameTextFn_80125ba4(0xb);
             state->textVariant = 0;
@@ -111,18 +104,18 @@ void arwproximit_update(GameObject* obj)
         GameObject* arwing = (GameObject*)getArwing();
         if (arwing == NULL)
             arwing = (GameObject*)Obj_GetPlayerObject();
-        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < gArwProximityActivateDistance)
+        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < ARW_PROXIMITY_ACTIVATE_DISTANCE)
         {
             state->light = objCreateLight(obj, 1);
             if (state->light != NULL)
             {
                 modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-                modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8, lbl_803E71F0);
+                modelLightStruct_setPosition(state->light, lbl_803E71D8, *(f32*)&lbl_803E71D8, 50.0f);
                 modelLightStruct_setDiffuseColor(state->light, 0, 0xff, 0, 0);
                 modelLightStruct_setDiffuseTargetColor(state->light, 0, 0, 0, 0);
-                modelLightStruct_setDistanceAttenuation(state->light, lbl_803E71F0, lbl_803E71F4);
-                modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
-                modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E71F0);
+                modelLightStruct_setDistanceAttenuation(state->light, 50.0f, 70.0f);
+                modelLightStruct_setupGlow(state->light, 0, 0, 0xff, 0, 0x64, 65.0f);
+                modelLightStruct_setGlowProjectionRadius(state->light, 50.0f);
             }
             ObjHits_EnableObject((int)obj);
             ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
@@ -135,14 +128,14 @@ void arwproximit_update(GameObject* obj)
     default:
     {
         GameObject* arwing;
-        int alpha = (int)(gArwProximityFadeInRate * timeDelta + (f32)(u32)objAnim->alpha);
+        int alpha = (int)(ARW_PROXIMITY_FADE_IN_RATE * timeDelta + (f32)(u32)objAnim->alpha);
         if (alpha > 0xff)
             alpha = 0xff;
         objAnim->alpha = alpha;
         arwing = (GameObject*)getArwing();
         if (arwing == NULL)
             arwing = (GameObject*)Obj_GetPlayerObject();
-        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < gArwProximityWarningDistance)
+        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < ARW_PROXIMITY_WARNING_DISTANCE)
         {
             if (state->light != NULL)
             {

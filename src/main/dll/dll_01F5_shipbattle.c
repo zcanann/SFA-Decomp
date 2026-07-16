@@ -28,8 +28,6 @@
 #pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5958 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E595C = 1.0f;
-#pragma explicit_zero_data off
 #pragma force_active reset
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
@@ -45,7 +43,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 lbl_803E595C;
 extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
 f32 lbl_803DDC50[2];
@@ -76,7 +73,7 @@ void ShipBattle_free(int* obj)
 
 void ShipBattle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E595C);
+    ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
     if (((GameObject*)obj)->anim.seqId == SHIPBATTLE_FIRE_SEQ_ID)
     {
         objfx_spawnFlaggedTrailBurst(obj, 0.11f, 4, 389, 5, NULL);
@@ -158,7 +155,7 @@ void ShipBattle_init(GameObject* obj, int def)
     state = obj->extra;
     state->unk6A = ((ShipBattleObjectDef*)def)->unk1A;
     state->unk6E = -1;
-    state->unk24 = lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
+    state->unk24 = 1.0f / (1.0f + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
     state->unk28 = -1;
 
     chainIndex = obj->unkF4;

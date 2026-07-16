@@ -8,14 +8,6 @@
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;
 extern f32 lbl_803E71E0;
-extern f32 lbl_803E71E4;
-extern f32 gArwProximityTauntDistance;
-extern f32 gArwProximityActivateDistance;
-extern f32 lbl_803E71F0;
-extern f32 lbl_803E71F4;
-extern f32 lbl_803E71F8;
-extern f32 gArwProximityFadeInRate;
-extern f32 gArwProximityWarningDistance;
 
 typedef struct ARWProximitSetup
 {

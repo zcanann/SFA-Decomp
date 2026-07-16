@@ -24,14 +24,6 @@
 #include "main/frame_timing.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E5E58 = 440.0f; /* chase range */
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5E5C = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5E60 = 0.01f; /* chase speed factor */
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5E64 = 0.0f;
-#pragma explicit_zero_data off
 
 int WM_Worm_getExtraSize(void)
 {
@@ -74,7 +66,7 @@ void WM_Worm_update(GameObject* obj)
     if (player != NULL)
     {
         dist = Vec_xzDistance(&player->anim.worldPosX, &((ObjPlacement*)obj->anim.placementData)->posX);
-        if (dist > lbl_803E5E58)
+        if (dist > 440.0f)
         {
             obj->anim.localPosX = state->homeX;
             obj->anim.localPosY = state->homeY;
@@ -88,19 +80,19 @@ void WM_Worm_update(GameObject* obj)
             /* "axis offset != 0" spelled as two strict compares; the
                self-reassign split keeps the scale product in the dN
                register (recipe #85). */
-            if ((dx > lbl_803E5E5C) || (dx < lbl_803E5E5C))
+            if ((dx > 0.0f) || (dx < 0.0f))
             {
-                dx = lbl_803E5E60 * dx;
+                dx = 0.01f * dx;
                 obj->anim.localPosX = dx * timeDelta + obj->anim.localPosX;
             }
-            if ((dy > lbl_803E5E5C) || (dy < lbl_803E5E5C))
+            if ((dy > 0.0f) || (dy < 0.0f))
             {
-                dy = lbl_803E5E60 * dy;
+                dy = 0.01f * dy;
                 obj->anim.localPosY = dy * timeDelta + obj->anim.localPosY;
             }
-            if ((dz > lbl_803E5E5C) || (dz < lbl_803E5E5C))
+            if ((dz > 0.0f) || (dz < 0.0f))
             {
-                dz = lbl_803E5E60 * dz;
+                dz = 0.01f * dz;
                 obj->anim.localPosZ = dz * timeDelta + obj->anim.localPosZ;
             }
             burstCount = state->burstCount;

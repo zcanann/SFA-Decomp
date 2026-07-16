@@ -2930,7 +2930,7 @@ main/dll/dll_0206_lightsource.c:
 main/dll/WM/dll_0207_wmworm.c:
 	.text       start:0x801F3C2C end:0x801F3F18
 	.data       start:0x80328B40 end:0x80328B78
-	.sdata2     start:0x803E5E58 end:0x803E5E68
+	.sdata2     start:0x803E5E58 end:0x803E5E64
 	.sdata2     start:0x803E5E68 end:0x803E5E70
 
 main/dll/WM/dll_0209_wmlevelcontrol.c:
@@ -3465,7 +3465,7 @@ main/dll/ARW/dll_02A6_arwsquadron.c:
 
 main/dll/ARW/dll_02A7_arwproximit.c:
 	.text       start:0x802331B0 end:0x802338F0
-	.sdata2     start:0x803E71D8 end:0x803E7208
+	.sdata2     start:0x803E71D8 end:0x803E7204
 	.sdata2     start:0x803E7208 end:0x803E7218
 
 main/dll/ARW/dll_02A8_arwblocker.c:

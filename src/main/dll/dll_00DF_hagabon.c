@@ -65,6 +65,7 @@ typedef struct HagabonPlacement
 #define HAGABON_FLAG_FADE_OUT        0x10
 
 extern f32 lbl_803DDA58; /* last-seen curve point cache, shared with swarmbaddie */
+#define HAGABON_ALPHA_MAX 255.0f
 __declspec(section ".sdata2") f32 lbl_803E2608 = 400.0f;
 __declspec(section ".sdata2") f32 lbl_803E260C = 128.0f;
 __declspec(section ".sdata2") f32 lbl_803E2610 = 256.0f;
@@ -74,22 +75,6 @@ __declspec(section ".sdata2") f32 gHagabonPi = 3.1415927f;
 __declspec(section ".sdata2") f32 lbl_803E2620 = 32768.0f;
 union HagabonConstF32 { f32 f; };
 __declspec(section ".sdata2") const union HagabonConstF32 lbl_803E2624 = { 0.001f };
-__declspec(section ".sdata2") f32 lbl_803E2628 = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E262C = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E2630 = 0.9f;
-__declspec(section ".sdata2") f32 lbl_803E2634 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E2638 = -0.5f;
-__declspec(section ".sdata2") f32 lbl_803E263C = 12.0f;
-extern f32 lbl_803E2650;
-extern f32 gHagabonAlphaMax;
-extern f32 lbl_803E2658;
-extern f32 lbl_803E265C;
-extern f32 lbl_803E2660;
-extern f32 lbl_803E2664;
-extern f32 lbl_803E2668;
-extern f32 lbl_803E266C;
-extern f32 lbl_803E2670;
-extern f32 lbl_803E2674;
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);
@@ -140,7 +125,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
         obj->anim.velocityX +=
             lbl_803E2624.f * (state->player->anim.localPosX - obj->anim.localPosX);
         obj->anim.velocityY +=
-            lbl_803E2624.f * ((lbl_803E2628 + state->player->anim.localPosY) - obj->anim.localPosY);
+            lbl_803E2624.f * ((60.0f + state->player->anim.localPosY) - obj->anim.localPosY);
         obj->anim.velocityZ +=
             lbl_803E2624.f * (state->player->anim.localPosZ - obj->anim.localPosZ);
     }
@@ -160,40 +145,40 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
         waveA = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseB) / lbl_803E2620);
         waveB = mathSinf((gHagabonPi * (f32)(u32)state->wavePhaseA) / lbl_803E2620);
         waveA = waveB + waveA;
-        waveA = ((lbl_803E262C * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
+        waveA = ((10.0f * waveA) + *(f32*)(curve + 0x6c)) - obj->anim.localPosY;
         obj->anim.velocityY += lbl_803E2624.f * waveA;
         obj->anim.velocityZ +=
             lbl_803E2624.f * (*(f32*)(curve + 0x70) - obj->anim.localPosZ);
     }
 
-    obj->anim.velocityX *= (damp = lbl_803E2630);
+    obj->anim.velocityX *= (damp = 0.9f);
     obj->anim.velocityY *= damp;
     obj->anim.velocityZ *= damp;
 
-    if (obj->anim.velocityX > lbl_803E2634)
+    if (obj->anim.velocityX > 0.5f)
     {
-        obj->anim.velocityX = *(f32*)&lbl_803E2634;
+        obj->anim.velocityX = 0.5f;
     }
-    if (obj->anim.velocityY > lbl_803E2634)
+    if (obj->anim.velocityY > 0.5f)
     {
-        obj->anim.velocityY = *(f32*)&lbl_803E2634;
+        obj->anim.velocityY = 0.5f;
     }
-    if (obj->anim.velocityZ > lbl_803E2634)
+    if (obj->anim.velocityZ > 0.5f)
     {
-        obj->anim.velocityZ = *(f32*)&lbl_803E2634;
+        obj->anim.velocityZ = 0.5f;
     }
 
-    if (obj->anim.velocityX < lbl_803E2638)
+    if (obj->anim.velocityX < -0.5f)
     {
-        obj->anim.velocityX = *(f32*)&lbl_803E2638;
+        obj->anim.velocityX = -0.5f;
     }
-    if (obj->anim.velocityY < lbl_803E2638)
+    if (obj->anim.velocityY < -0.5f)
     {
-        obj->anim.velocityY = *(f32*)&lbl_803E2638;
+        obj->anim.velocityY = -0.5f;
     }
-    if (obj->anim.velocityZ < lbl_803E2638)
+    if (obj->anim.velocityZ < -0.5f)
     {
-        obj->anim.velocityZ = *(f32*)&lbl_803E2638;
+        obj->anim.velocityZ = -0.5f;
     }
 
     objMove((GameObject*)obj, obj->anim.velocityX * timeDelta, obj->anim.velocityY * timeDelta,
@@ -214,7 +199,7 @@ void fn_8014E1DC(GameObject* obj, HagabonState* state)
         angleDelta += 0xffff;
     }
 
-    obj->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+    obj->anim.rotX += (s32)(((f32)angleDelta * timeDelta) / 12.0f);
 }
 
 int Hagabon_getExtraSize(void)
@@ -250,16 +235,16 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         switch (obj->unkF4)
         {
         case 0:
-            objRenderModelAndHitVolumes(obj, lbl_803E2650);
+            objRenderModelAndHitVolumes(obj, 1.0f);
             if ((state->flags & HAGABON_FLAG_FADE_OUT) != 0)
             {
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E2650, 3,
-                                       (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
+                objParticleFn_80099d84((GameObject*)obj, 1.0f, 3,
+                                       (f32)(u32)obj->anim.alpha / HAGABON_ALPHA_MAX, 0);
             }
             if ((state->flags & HAGABON_FLAG_FADE_IN) != 0)
             {
-                objParticleFn_80099d84((GameObject*)obj, lbl_803E2650, 4,
-                                       (f32)(u32)obj->anim.alpha / gHagabonAlphaMax, 0);
+                objParticleFn_80099d84((GameObject*)obj, 1.0f, 4,
+                                       (f32)(u32)obj->anim.alpha / HAGABON_ALPHA_MAX, 0);
             }
             break;
         }
@@ -317,11 +302,11 @@ void Hagabon_update(int obj)
 
     player = Obj_GetPlayerObject();
     dist = Vec_distance((f32*)(obj + 0x18), &player->anim.worldPosX);
-    if (dist < lbl_803E2658)
+    if (dist < 300.0f)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_en_twiggysnap11);
     }
-    else if (dist > lbl_803E265C)
+    else if (dist > 350.0f)
     {
         Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
     }
@@ -364,7 +349,7 @@ void Hagabon_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_wp_stftest122_1f2);
             lightPos[0] += playerMapOffsetX;
             lightPos[2] += playerMapOffsetZ;
-            objLightFn_8009a1dc((void*)obj, lbl_803E2660, effectPos, 3, 0);
+            objLightFn_8009a1dc((void*)obj, 0.014f, effectPos, 3, 0);
             (*gMapEventInterface)
                 ->addTime(((HagabonPlacement*)data)->mapEventId,
                           (f32)(s32)(((HagabonPlacement*)data)->timeReward * 0x3c));
@@ -395,12 +380,12 @@ void Hagabon_update(int obj)
         dp[2] = *(f32*)(oldCurve + 0x70) - ((GameObject*)obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
-    if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (state->pathDistance > lbl_803E2664))
+    if (((state->flags & HAGABON_FLAG_CHASE) != 0) && (state->pathDistance > 250.0f))
     {
         state->flags &= ~HAGABON_FLAG_CHASE;
         state->flags |= HAGABON_FLAG_PATH_RETURN;
     }
-    if (((state->flags & HAGABON_FLAG_PATH_RETURN) != 0) && (state->pathDistance < lbl_803E2668))
+    if (((state->flags & HAGABON_FLAG_PATH_RETURN) != 0) && (state->pathDistance < 30.0f))
     {
         state->flags &= ~HAGABON_FLAG_PATH_RETURN;
     }
@@ -418,9 +403,9 @@ void Hagabon_init(GameObject* obj, int data, int skip_alloc)
 {
     HagabonState* state = obj->extra;
     HagabonPlacement* placement = (HagabonPlacement*)data;
-    state->curveStep = (f32)(s32)placement->curveStepRaw / lbl_803E266C;
-    state->animSpeed = lbl_803E2670;
-    state->chaseRadius = lbl_803E2674 * (f32)(s32)placement->chaseRadiusScale;
+    state->curveStep = (f32)(s32)placement->curveStepRaw / 100.0f;
+    state->animSpeed = 0.005f;
+    state->chaseRadius = 4.0f * (f32)(s32)placement->chaseRadiusScale;
     if (skip_alloc == 0)
     {
         *(void**)&state->curve = mmAlloc(0x108, 0x1A, 0);
@@ -468,13 +453,3 @@ ObjectDescriptor gHagabonObjDescriptor = {
     Hagabon_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E2650 = 1.0f;
-__declspec(section ".sdata2") f32 gHagabonAlphaMax = 255.0f;
-__declspec(section ".sdata2") f32 lbl_803E2658 = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E265C = 350.0f;
-__declspec(section ".sdata2") f32 lbl_803E2660 = 0.014f;
-__declspec(section ".sdata2") f32 lbl_803E2664 = 250.0f;
-__declspec(section ".sdata2") f32 lbl_803E2668 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E266C = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E2670 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E2674 = 4.0f;
