@@ -9,10 +9,8 @@
 #include "main/dll/IM/dll_016D_imicepillar.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E4768 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E476C = 0.0f;
-#pragma explicit_zero_data off
+const f32 lbl_803E4768 = 1.0f;
+const f32 lbl_803E476C = 0.0f;
 
 int imicepillar_getExtraSize(void)
 {
@@ -31,7 +29,7 @@ void imicepillar_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4768);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void imicepillar_hitDetect(void)

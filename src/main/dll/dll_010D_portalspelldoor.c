@@ -19,6 +19,7 @@
 #include "main/dll/dll_0119_coldwatercontrol.h"
 #include "main/dll/dll_00EC_infopoint.h"
 #include "main/dll/dll_011A_decoration11a.h"
+#include "main/dll/CF/windlift.h"
 
 typedef struct PortalspelldoorPlacement
 {
@@ -39,12 +40,6 @@ STATIC_ASSERT(sizeof(PortalSpellDoorState) == 0x10);
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;
 extern f32 lbl_803E3A88;
-
-extern void LanternFireFly_modelMtxFn(void);
-
-extern void LanternFireFly_func0B(GameObject*);
-
-extern void LanternFireFly_setScale(void);
 
 extern void LanternFireFly_getExtraSize(void);
 extern void dll_109_getExtraSize_ret_16(void);
