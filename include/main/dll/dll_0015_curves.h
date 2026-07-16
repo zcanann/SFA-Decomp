@@ -269,7 +269,7 @@ void dll_15_func0A(GameObject* obj, CurvesCollisionState* state);
 f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height);
 double FUN_800e56bc(u64 param_1, double param_2, double param_3, double param_4, int param_5);
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);
-void dll_15_func08(short* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step);
+void dll_15_func08(GameObject* curveObj, CurvesCollisionState* state, u32 updateValue, f32 step);
 void FUN_800e6140(u32 param_1, CurvesCollisionState* state);
 void dll_15_func05(CurvesCollisionState* state, int count, f32* segmentLocalPoints, f32* radii, s8* types);
 void dll_15_func06(GameObject* obj, CurvesCollisionState* state);

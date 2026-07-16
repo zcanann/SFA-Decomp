@@ -366,7 +366,10 @@ typedef struct ObjAnimComponent {
     };
     Vec3f velocity;
   };
-  void *parent;
+  union {
+    void *parent;
+    struct ObjAnimComponent *parentAnim;
+  };
   u8 pad34;
   s8 transformMatrixIndex;
   u8 alpha;
@@ -388,8 +391,14 @@ typedef struct ObjAnimComponent {
     u32 placementDataAddress; /* raw address view used by ownership guards */
   };
   ObjDef *modelInstance;
-  ObjHitReactState *hitReactState;
-  ObjProximityList *proximityList;
+  union {
+    ObjHitReactState *hitReactState;
+    struct ObjAnimComponent *linkedAnim;
+  };
+  union {
+    ObjProximityList *proximityList;
+    struct ObjHitboxTransformState *hitboxTransformState;
+  };
   struct ObjWeaponDaTable *weaponDaTable;
   struct ObjAnimEventTable *eventTable;
   ObjModelState *modelState;
