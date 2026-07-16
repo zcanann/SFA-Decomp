@@ -1290,8 +1290,9 @@ void renderSceneGeometry(int* p1, s8* order)
         for (oi = 0; oi < 16; oi++)
         {
             row = order[oi];
+            ii = 0;
             rowF = worldSize * (f32)row;
-            for (ii = 0; ii < 16; ii++)
+            for (; ii < 16; ii++)
             {
                 col = order[ii];
                 cell = row + col * 0x10;
