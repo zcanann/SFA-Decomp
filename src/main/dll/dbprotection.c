@@ -178,6 +178,7 @@ void fn_801DFA28(u8* obj)
     int t;
     int nextState;
     int wrap;
+    int diff;
     u32 angY;
     int iv;
     int dv;
@@ -699,17 +700,17 @@ void fn_801DFA28(u8* obj)
         }
         wrap = (getAngle(dx, dz) & 0xFFFF) + 0x8000;
         angY = getAngle(dy, dist) & 0xFFFF;
-        wrap = wrap - (((GameObject*)obj)->anim.rotX & 0xFFFF);
-        if (wrap > 0x8000)
+        diff = wrap - (((GameObject*)obj)->anim.rotX & 0xFFFF);
+        if (diff > 0x8000)
         {
-            wrap = wrap - 0xFFFF;
+            diff = diff - 0xFFFF;
         }
-        if (wrap < -0x8000)
+        if (diff < -0x8000)
         {
-            wrap = wrap + 0xFFFF;
+            diff = diff + 0xFFFF;
         }
         ((SBGalleonState*)state)->turnRate =
-            ((SBGalleonState*)state)->turnRate + ((framesThisStep * (wrap - ((SBGalleonState*)state)->turnRate)) >> 4);
+            ((SBGalleonState*)state)->turnRate + ((framesThisStep * (diff - ((SBGalleonState*)state)->turnRate)) >> 4);
         c = ((SBGalleonState*)state)->phase;
         if ((c == 3) || (c == 4))
         {
