@@ -19,7 +19,7 @@ typedef struct ScarabState
     s16 pickupSfx; /* 0x1e */
     s16 particleId; /* 0x20 */
     s16 burstModel; /* 0x22: model index for objfx_spawnDirectionalBurst */
-    u8 phase; /* 0x24 */
+    s8 phase; /* 0x24 */
     u8 pad25[2];
     u8 moneyKind; /* 0x27 */
     u8 flags28; /* 0x28: 1 = collected, waiting on the money message */
