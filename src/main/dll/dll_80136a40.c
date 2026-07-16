@@ -228,670 +228,60 @@ u8 gDebugGlyphMetricsTable[192] = {
     0x66, 0x6B, 0x6C, 0x70, 0x72, 0x77, 0x79, 0x7C, 0x7E, 0x82, 0x84, 0x89, 0x8B, 0x92, 0x94, 0x99, 0x9B, 0xA0,
     0xA2, 0xA6, 0xA8, 0xAB, 0xAD, 0xAE, 0xB0, 0xB3, 0xB5, 0xB9, 0xB5, 0xB9,
 };
-
-void reportAllocFail(void)
+void errDisplayHandler(s16 a, u32 b, u32 c, u32 d);
+static inline void errDisplayFillBackdrop(int xcb, int x)
 {
-}
-
-f32 fn_80138F78(u8* obj)
-{
-    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14;
-}
-GameObject* fn_80138F84(GameObject* obj)
-{
-    return ((TrickyImpressState*)obj->extra)->stayPoint;
-}
-s16 fn_80138F90(u8* obj)
-{
-    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414;
-}
-void* trickyGetQueuedPathParticlePos(GameObject* obj)
-{
-    return &((TrickyImpressState*)obj->extra)->renderPosX;
-}
-
-/* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
- * and the delta to b's position, then emit it 20 times via the partfx
- * interface and clear the flag. */
-#pragma peephole off
-void Tricky_emitQueuedPathParticles(u8* a, u8* b)
-{
-    struct
-    {
-        s16 hx, hy, hz;
-        f32 fk;
-        f32 dx, dy, dz;
-    } stk;
-    u8 i = 0x14;
-    u32 flags = ((TrickyImpressState*)b)->flags54;
-    if ((flags & 0x1800) == 0)
-        return;
-    stk.dx = ((TrickyImpressState*)b)->renderPosX - ((GameObject*)a)->anim.worldPosX;
-    stk.dy = ((TrickyImpressState*)b)->renderPosY - ((GameObject*)a)->anim.worldPosY;
-    stk.dz = ((TrickyImpressState*)b)->renderPosZ - ((GameObject*)a)->anim.worldPosZ;
-    stk.fk = lbl_803E23E8;
-    stk.hx = ((GameObject*)a)->anim.rotX;
-    stk.hy = ((GameObject*)a)->anim.rotY;
-    stk.hz = ((GameObject*)a)->anim.rotZ;
-    if ((flags & 0x800) == 0)
-    {
-        while (i-- != 0)
-        {
-            (*gPartfxInterface)->spawnObject(a, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
-        }
-        ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
-    }
-}
-
-#pragma optimization_level 1
-int trickySelectQueuedCommandTarget(u8* state, int commandType)
-{
-    f32 bestPriorityDist;
-    f32 bestFallbackDist;
-    u8* entry;
-    int i;
-    u8* bestPriorityTarget;
-    u8* bestFallbackTarget;
-
-    bestPriorityDist = lbl_803E2418;
-    bestPriorityTarget = NULL;
-    bestFallbackDist = bestPriorityDist;
-    bestFallbackTarget = NULL;
-
-    for (i = 0, entry = state; i < state[0x798]; i++)
-    {
-        if (*(s8*)(entry + 0x74d) == commandType)
-        {
-            f32 dist = getXZDistance(&((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX,
-                                     (f32*)(*(u8**)(entry + 0x748) + 0x18));
-
-            if (*(s8*)(entry + 0x74c) == 1)
-            {
-                if (dist < bestPriorityDist)
-                {
-                    bestPriorityDist = dist;
-                    bestPriorityTarget = *(u8**)(entry + 0x748);
-                }
-            }
-            else if (dist < bestFallbackDist)
-            {
-                bestFallbackDist = dist;
-                bestFallbackTarget = *(u8**)(entry + 0x748);
-            }
-        }
-        entry += 8;
-    }
-
-    if (bestPriorityTarget != NULL)
-    {
-        ((TrickyState*)state)->followObj = bestPriorityTarget;
-    }
-    else
-    {
-        if (bestFallbackTarget == NULL)
-        {
-            return 0;
-        }
-        ((TrickyState*)state)->followObj = bestFallbackTarget;
-    }
-
-    {
-        u8* targetPos = ((TrickyState*)state)->followObj + 0x18;
-        if (((TrickyState*)state)->targetPosPtr != targetPos)
-        {
-            ((TrickyState*)state)->targetPosPtr = targetPos;
-            *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
-            ((TrickyState*)state)->linkedWalkGroup = 0;
-        }
-    }
-
-    state[0xa] = 0;
-    return 1;
-}
-
-#pragma optimization_level reset
-/* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
- * checks bit 0x10. Returns 1 only when the post-OR check passes. */
-int trickyFn_80138f14(GameObject* obj)
-{
-    u8* b = obj->extra;
-    if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u)
-    {
-        ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
-        if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-/* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
- * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
- * debugLogEnd cursor to the start of the 0x1100-byte arena. */
-#pragma peephole on
-void debugPrintInit(void)
-{
-    getScreenResolution();
-    gDebugScaleX = gDebugInitialScale;
-    gDebugScaleY = gDebugInitialScale;
-    gDebugScaleBiasX = 0;
-    gDebugScaleBiasY = 0;
-    gDebugFontTex0 = textureLoadAsset(DEBUG_FONT_TEXTURE0_ID);
-    gDebugFontTex1 = textureLoadAsset(1);
-    gDebugFontTex2 = textureLoadAsset(2);
-    debugLogEnd = debugLogBuffer;
-}
-
-/* Emit a SetColor record (tag 0x81 + 4 RGBA bytes + 0 terminator) into the debug log; aborts
- * when the record counter at gDebugRecordCount has already exceeded 0xFA. */
-#pragma optimization_level 1
-void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
-{
+    int row;
     int n;
-    u8* p;
-    u8* termCursor;
-    u8 tag;
-    u8 term;
-    n = gDebugRecordCount + 1;
-    gDebugRecordCount = n;
-    if (n > 0xfa)
-        return;
-    tag = 0x81;
-    p = debugLogEnd;
-    debugLogEnd = p + 1;
-    *p = tag;
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = r;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = g;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = b;
-    }
-    {
-        u8* q = debugLogEnd;
-        debugLogEnd = q + 1;
-        *q = a;
-    }
-    term = 0;
-    termCursor = debugLogEnd;
-    debugLogEnd = termCursor + 1;
-    *termCursor = term;
-}
-#pragma optimization_level reset
+    u16* fbrow;
+    u16 fill;
 
-/* Drop-anim trigger guard. Returns 1
- * (and dispatches the drop anim via objAudioFn_800393f8) only when:
- *   - bit 0x40 of obj->_b8->_58 is clear,
- *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
- *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
+    do
+    {
+        row = 0;
+        for (n = 0; n < 60; n++)
+        {
+            fill = 0x1080;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x500);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0xA00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0xF00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1400);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1900);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x1E00);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            fbrow = debugDrawFrameBuffer;
+            fbrow = (u16*)((char*)fbrow + row);
+            fbrow = (u16*)((char*)fbrow + 0x2300);
+            *(u16*)(xcb + (int)fbrow) = fill;
+            row += 0x2800;
+        }
+        xcb += 2;
+        x++;
+    } while (x < 0x280);
+}
+void errDisplayThreadMain(void);
+
 #pragma peephole off
-int fn_80138920(GameObject* obj, int sfxId, int vol)
-{
-    u8* b = ((GameObject*)obj)->extra;
-    s16 v;
-    if ((u32)((b[0x58] >> 6) & 1) != 0u)
-        return 0;
-    v = ((GameObject*)obj)->anim.currentMove;
-    switch (v)
-    {
-    case 41:
-    case 42:
-    case 43:
-    case 44:
-    case 45:
-    case 46:
-    case 47:
-        return 0;
-    }
-    if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 16) != 0)
-        return 0;
-    objAudioFn_800393f8Legacy(obj, b + 936, sfxId, vol, -1, 0);
-    return 1;
-}
-
-#pragma peephole on
-void debugPrintf(char* fmt, ...)
-{
-    va_list args;
-
-    if ((int)((u8*)debugLogEnd - debugLogBuffer) <= 0x1000)
-    {
-        va_start(args, fmt);
-        vsprintf(debugLogEnd, fmt, args);
-    }
-}
-
-void logPrintf(char* fmt, ...)
-{
-}
-
-/* Set bit 0x80000000 of obj->_b8->_54
- * and store lbl_803E2408 into obj->_b8->_808. */
-void trickyImpress(GameObject* obj)
-{
-    u8* b = ((GameObject*)obj)->extra;
-    ((TrickyImpressState*)b)->flags54 |= 0x80000000;
-    ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
-}
-
-/* Reset debug log/print state: rewind
- * debugLogEnd to the start of the buffer and reload the print x/y
- * coordinates from saved values. */
-#pragma peephole off
-void debugPrintReset(void)
-{
-    u32 yp;
-    u32 xp;
-    debugLogEnd = debugLogBuffer;
-    yp = gDebugPrintOriginY & 0xffff;
-    debugPrintYpos = yp;
-    xp = gDebugPrintOriginX & 0xffff;
-    debugPrintXpos = xp;
-}
-
-/* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
-void fn_80138908(GameObject* obj, int v)
-{
-    ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
-}
-
-/* Stash 4 args to four globals and resume
- * the thread at &gErrDisplayThread. */
-void errDisplayHandler(s16 a, u32 b, u32 c, u32 d)
-{
-    gErrExceptionType = a;
-    gErrContext = b;
-    lbl_803DDA38 = c;
-    lbl_803DDA34 = d;
-    OSResumeThread(gErrDisplayThread);
-}
-
-void errDisplayInstallHandlers(void)
-{
-    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_DSI, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_PROTECTION, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_ISI, errDisplayHandler);
-    OSSetErrorHandler(OS_ERROR_ALIGNMENT, errDisplayHandler);
-    OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
-}
-
-int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTypes)
-{
-    int* objs;
-    int* tmpList;
-    int closest;
-    int i;
-    f32 bestDistSq;
-    int count;
-
-    bestDistSq = maxRadius;
-    closest = 0;
-    tmpList = (int*)ObjGroup_GetObjects(3, &count);
-    bestDistSq = bestDistSq * bestDistSq;
-    i = 0;
-    objs = tmpList;
-
-    for (; i < count; i++)
-    {
-        int* data;
-        f32 obj_extra;
-        int v1, v2;
-        s32 g1, g2;
-
-        if (dll_19_func1B((GameObject*)(*objs)) != 0)
-        {
-            obj_extra = (**(f32(**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
-        }
-        else
-        {
-            obj_extra = enemy_getHealthFraction((GameObject*)*objs);
-        }
-
-        data = (int*)*(int*)(*objs + 0x4c);
-        g1 = *(s16*)((char*)data + 0x18);
-        if (g1 == -1)
-        {
-            v1 = 0;
-        }
-        else
-        {
-            v1 = mainGetBit(g1);
-        }
-        g2 = *(s16*)((char*)data + 0x1a);
-        if (g2 == -1)
-        {
-            v2 = 1;
-        }
-        else
-        {
-            v2 = mainGetBit(g2);
-        }
-
-        if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > lbl_803E23DC && v1 == 0 &&
-            v2 != 0)
-        {
-            if (((GameObject*)*objs)->anim.seqId != 2129)
-            {
-                if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0)
-                {
-                    if (allowSpecialTypes == 0)
-                    {
-                        s16 m = ((GameObject*)*objs)->anim.seqId;
-                        if (m == 1022 || m == 1239 || m == 636 || m == 593)
-                            goto next;
-                    }
-                    {
-                        f32 dist = vec3f_distanceSquared((f32*)(origin + 0x18), (f32*)(*objs + 0x18));
-                        if (dist < bestDistSq)
-                        {
-                            bestDistSq = dist;
-                            closest = *objs;
-                        }
-                    }
-                }
-            }
-        }
-    next:
-        objs++;
-    }
-    return closest;
-}
-
-void fn_80138D7C(int obj, int state)
-{
-    u8 ratio = (u8)((s32) * (u8*)(*(int*)(state + 0) + 2) / 10);
-
-    if (*(u8*)(state + 0x82c) != ratio)
-    {
-        f32 t;
-        if (mainGetBit(1005) == 0)
-        {
-            mainSetBits(1005, 1);
-            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-            ((TrickyImpressState*)state)->flags54 |= 0x4000;
-            *(f32*)(state + 0x828) = *(f32*)(state + 0x828) + lbl_803E2408;
-        }
-        *(f32*)(state + 0x828) = *(f32*)(state + 0x828) - timeDelta;
-        t = *(f32*)(state + 0x828);
-        if (!(t > lbl_803E2408))
-        {
-            if (t > lbl_803E23DC)
-            {
-                f32 alpha;
-                if (t > lbl_803E23E0)
-                {
-                    alpha = lbl_803E23E8 - (t - lbl_803E23E0) / lbl_803E23E0;
-                }
-                else
-                {
-                    *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
-                    alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
-                }
-                Obj_SetModelColorOverrideRecursivePromoted(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
-            }
-            else
-            {
-                *(u8*)(state + 0x82c) = ratio;
-                Obj_SetModelColorOverrideRecursivePromoted(obj, 0, 0, 0, 0, 0);
-            }
-        }
-    }
-}
-
-/* Weighted blend-channel animator. On state[0x82e] bit 0x80,
- * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
- * the active flag. While bit 0x40 is set, ramps state[0x830] toward
- * data[0] / data[1] with acceleration lbl_803E23E4 and damping
- * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
- * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
-void Tricky_updateBlendChannelWeight(int obj, u8* state)
-{
-    ObjModel* model;
-    f32 target;
-    Obj_GetActiveModel((GameObject*)obj);
-    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
-    {
-        model = Obj_GetActiveModel((GameObject*)obj);
-        ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
-        *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
-        ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->pending = 0;
-        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->active = 1;
-    }
-    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
-    {
-        u8* data = *(u8**)(state + 0);
-        target = (f32)(u32)data[0] / (f32)(u32)data[1];
-        if (target > *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET))
-        {
-            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
-                lbl_803E23E4 * timeDelta + *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET);
-            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
-                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
-            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > lbl_803E23E8)
-            {
-                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E8;
-            }
-            else if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > target)
-            {
-                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) < lbl_803E23EC)
-                {
-                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
-                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
-                }
-                else
-                {
-                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
-                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
-                }
-            }
-        }
-        else if (target < *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET))
-        {
-            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
-                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) - lbl_803E23E4 * timeDelta;
-            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
-                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
-            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < *(f32*)&lbl_803E23DC)
-            {
-                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
-                    lbl_803E23DC;
-            }
-            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
-            {
-                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) > lbl_803E23F4)
-                {
-                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
-                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
-                }
-                else
-                {
-                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
-                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
-                }
-            }
-        }
-        ObjModel_SetBlendChannelWeight(Obj_GetActiveModel((GameObject*)obj), 1,
-                                       lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
-    }
-}
-
-PPCWGPipe GXWGFifo : (0xCC008000);
-
-void objAnimFreeChildren(int a, int b, GameObject** c)
-{
-    char buf[4];
-    void *v0, *v1, *v2;
-
-    if (*c == NULL)
-    {
-        return;
-    }
-    ObjLink_DetachChild((GameObject*)a, (int)*c);
-    Obj_FreeObject(*c);
-    *c = NULL;
-    buf[0] = -1;
-    buf[1] = -1;
-    buf[2] = -1;
-    v0 = *(void**)(b + 0x7a8);
-    if (v0 != NULL)
-    {
-        buf[((TrickyImpressState*)b)->childSlotMap >> 6 & 3] = 1;
-    }
-    v1 = *(void**)(b + 0x7b0);
-    if (v1 != NULL)
-    {
-        buf[((TrickyImpressState*)b)->childSlotMap >> 4 & 3] = 1;
-    }
-    v2 = *(void**)(b + 0x7b8);
-    if (v2 != NULL)
-    {
-        buf[((TrickyImpressState*)b)->childSlotMap >> 2 & 3] = 1;
-    }
-    if (buf[0] == -1)
-    {
-        if (v0 != NULL)
-        {
-            ObjLink_DetachChild((GameObject*)a, (int)v0);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj0, 0);
-            ((AnimSlots*)(b + 0x7bc))->s0 = 0;
-        }
-        else if (v1 != NULL)
-        {
-            ObjLink_DetachChild((GameObject*)a, (int)v1);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj1, 0);
-            ((AnimSlots*)(b + 0x7bc))->s1 = 0;
-        }
-        else if (v2 != NULL)
-        {
-            ObjLink_DetachChild((GameObject*)a, (int)v2);
-            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj2, 0);
-            ((AnimSlots*)(b + 0x7bc))->s2 = 0;
-        }
-    }
-}
-
-#pragma opt_strength_reduction off
-void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
-{
-    int c1;
-    int i;
-    int a0;
-    int a1;
-    int a2;
-    int a3;
-    int c0;
-    int bit;
-    int row1;
-    int row0;
-
-    if (enableDebugText != 0)
-    {
-        i = 0;
-        row1 = (y + 1) * 0x280;
-        row0 = y * 0x280;
-        for (; i < 5; i++)
-        {
-            bit = 0;
-            c0 = x + row0;
-            a0 = c0;
-            a1 = c0 + 1;
-            c1 = row1 + x;
-            a2 = c1;
-            a3 = c1 + 1;
-            for (; bit < 8; bit++)
-            {
-                if (((1 << bit) & grid[i]) != 0)
-                {
-                    debugDrawFrameBuffer[a0] = 0xC080;
-                    debugDrawFrameBuffer[a1] = 0xC080;
-                    debugDrawFrameBuffer[a2] = 0xC080;
-                    debugDrawFrameBuffer[a3] = 0xC080;
-                }
-                a0++;
-                a1++;
-                a2++;
-                a3++;
-            }
-            DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
-            DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
-            row0 += 0x500;
-            row1 += 0x500;
-        }
-    }
-}
-#pragma opt_strength_reduction reset
-
-void debugPrintfxy(int x, int y, char* fmt, ...)
-{
-    int xx;
-    int yy;
-    u16* saved;
-    int x0 = x;
-    u8* ch;
-    u8* scan;
-    u8* glyph;
-    va_list args;
-    char buf[256];
-
-    if (enableDebugText != 0)
-    {
-        xx = x0;
-        yy = y;
-        va_start(args, fmt);
-        vsprintf(buf, fmt, args);
-        saved = debugDrawFrameBuffer;
-        ch = (u8*)&buf[-1];
-        scan = (u8*)buf - 1;
-        while (ch++, *++scan != 0)
-        {
-            switch (*ch)
-            {
-            case 0xa:
-                yy += 0xc;
-                xx = x0;
-                break;
-            case 9:
-                xx += 0x40 - (xx & 0x3f);
-                break;
-            case 0x20:
-                xx += 8;
-                break;
-            default:
-                if (*ch >= 0x61 && *ch <= 0x7a)
-                {
-                    *ch -= 0x20;
-                }
-                if (*ch >= 0x21 && *ch <= 0x5a)
-                {
-                    debugDrawFrameBuffer = externalFrameBuffer0;
-                    debugTextDrawToFrameBuffer(xx, yy, glyph = gDebugFontGlyphs + (*ch - 0x21) * 5, -1);
-                    debugDrawFrameBuffer = externalFrameBuffer1;
-                    debugTextDrawToFrameBuffer(xx, yy, glyph, -1);
-                    xx += 0xf;
-                }
-                break;
-            }
-        }
-        debugDrawFrameBuffer = saved;
-    }
-}
 
 int fn_80136A40(int unused, int c)
 {
@@ -961,7 +351,6 @@ int fn_80136A40(int unused, int c)
     }
     return c;
 }
-
 #pragma optimization_level 3
 int debugPrintDrawRecord(int color, u8* p)
 {
@@ -1162,62 +551,339 @@ int debugPrintDrawRecord(int color, u8* p)
     }
     return p - start;
 }
-#pragma optimization_level reset
-
-static inline void errDisplayFillBackdrop(int xcb, int x)
+#pragma optimization_level 1
+#pragma peephole on
+void debugPrintSetColor(u8 r, u8 g, u8 b, u8 a)
 {
-    int row;
     int n;
-    u16* fbrow;
-    u16 fill;
-
-    do
+    u8* p;
+    u8* termCursor;
+    u8 tag;
+    u8 term;
+    n = gDebugRecordCount + 1;
+    gDebugRecordCount = n;
+    if (n > 0xfa)
+        return;
+    tag = 0x81;
+    p = debugLogEnd;
+    debugLogEnd = p + 1;
+    *p = tag;
     {
-        row = 0;
-        for (n = 0; n < 60; n++)
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = r;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = g;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = b;
+    }
+    {
+        u8* q = debugLogEnd;
+        debugLogEnd = q + 1;
+        *q = a;
+    }
+    term = 0;
+    termCursor = debugLogEnd;
+    debugLogEnd = termCursor + 1;
+    *termCursor = term;
+}
+#pragma optimization_level reset
+#pragma peephole off
+void debugPrintReset(void)
+{
+    u32 yp;
+    u32 xp;
+    debugLogEnd = debugLogBuffer;
+    yp = gDebugPrintOriginY & 0xffff;
+    debugPrintYpos = yp;
+    xp = gDebugPrintOriginX & 0xffff;
+    debugPrintXpos = xp;
+}
+#pragma opt_propagation off
+#pragma opt_strength_reduction on
+#pragma ppc_unroll_instructions_limit 64
+
+/* Lay out the debug log
+ * twice (measure pass then draw pass), drawing the backing rect between
+ * the passes when the log produced any extent. */
+void debugPrintDraw(int ctx)
+{
+    u32 yv;
+    u32 y2;
+    u32 xa, xb, ya, yb;
+    u32 xs;
+    u32 colw;
+    u8* p;
+    u16 tx, ty;
+    u32 colb;
+    u32 x1;
+    f32 scale;
+    int pass;
+    u32 res;
+    u32 sw;
+    u32 ys;
+    u32 sh;
+
+    res = getScreenResolution();
+    gDebugScreenHeight = res >> 0x10;
+    gDebugScreenWidth = res;
+    GXSetScissor(0, 0, (u16)res, gDebugScreenHeight);
+    sw = gDebugScreenWidth;
+    if (sw <= 0x140)
+    {
+        gDebugPrintOriginY = 0x10;
+        gDebugMarginRight = sw - 0x10;
+    }
+    else
+    {
+        gDebugPrintOriginY = 0x20;
+        gDebugMarginRight = sw - 0x20;
+    }
+    sh = gDebugScreenHeight;
+    if (sh <= 0xf0)
+    {
+        gDebugPrintOriginX = 0x10;
+        gDebugMarginBottom = sh - 0x10;
+    }
+    else
+    {
+        gDebugPrintOriginX = 0x20;
+        gDebugMarginBottom = sh - 0x20;
+    }
+    gxDebugTextureFn_80078c1c();
+    p = debugLogBuffer;
+    debugPrintYpos = ty = gDebugPrintOriginY;
+    debugPrintXpos = tx = gDebugPrintOriginX;
+    gDebugCurrentFontSet = 0xffffffff;
+    pass = 0;
+    gDebugFixedWidthMode = pass;
+    gDebugRectStartY = ty;
+    gDebugRectStartX = tx;
+    for (; p != debugLogEnd;)
+    {
+        gDebugDrawPass = pass;
+        p += debugPrintDrawRecord(ctx, p);
+    }
+    x1 = debugPrintXpos + 0xa;
+    yv = debugPrintYpos;
+    xs = gDebugRectStartX;
+    ys = gDebugRectStartY;
+    if ((((yv - ys) == 0) | ((x1 - xs) == 0)) == 0)
+    {
+        if (ys >= 2)
         {
-            fill = 0x1080;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0x500);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0xA00);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0xF00);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0x1400);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0x1900);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0x1E00);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            fbrow = debugDrawFrameBuffer;
-            fbrow = (u16*)((char*)fbrow + row);
-            fbrow = (u16*)((char*)fbrow + 0x2300);
-            *(u16*)(xcb + (int)fbrow) = fill;
-            row += 0x2800;
+            ys -= 2;
         }
-        xcb += 2;
-        x++;
-    } while (x < 0x280);
+        y2 = yv + 2;
+        xa = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
+        xb = (u32)((f32)y2 * scale);
+        ya = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
+        yb = (u32)((f32)x1 * scale);
+        ((u8*)&colb)[0] = gDebugTextColorR;
+        ((u8*)&colb)[1] = gDebugTextColorG;
+        ((u8*)&colb)[2] = gDebugTextColorB;
+        ((u8*)&colb)[3] = gDebugTextColorA;
+        colw = colb;
+        hudDrawRect(xa, ya, xb, yb, &colw);
+    }
+    p = debugLogBuffer;
+    debugPrintYpos = gDebugPrintOriginY;
+    debugPrintXpos = gDebugPrintOriginX;
+    gDebugCurrentFontSet = 0xffffffff;
+    gDebugFixedWidthMode = 0;
+    pass = 1;
+    for (; p != debugLogEnd;)
+    {
+        gDebugDrawPass = pass;
+        p += debugPrintDrawRecord(ctx, p);
+    }
+    debugLogEnd = debugLogBuffer;
+    gDebugRecordCount = 0;
 }
 
-#pragma ppc_unroll_instructions_limit 64
+/* When b->_54 carries the spawn flag, build a particle descriptor on the stack from a's heading
+ * and the delta to b's position, then emit it 20 times via the partfx
+ * interface and clear the flag. */
+#pragma opt_propagation reset
+#pragma opt_strength_reduction reset
+#pragma peephole on
+#pragma ppc_unroll_instructions_limit 100
+void debugPrintf(char* fmt, ...)
+{
+    va_list args;
+
+    if ((int)((u8*)debugLogEnd - debugLogBuffer) <= 0x1000)
+    {
+        va_start(args, fmt);
+        vsprintf(debugLogEnd, fmt, args);
+    }
+}
+
+
+void logPrintf(char* fmt, ...)
+{
+}
+
+void debugPrintInit(void)
+{
+    getScreenResolution();
+    gDebugScaleX = gDebugInitialScale;
+    gDebugScaleY = gDebugInitialScale;
+    gDebugScaleBiasX = 0;
+    gDebugScaleBiasY = 0;
+    gDebugFontTex0 = textureLoadAsset(DEBUG_FONT_TEXTURE0_ID);
+    gDebugFontTex1 = textureLoadAsset(1);
+    gDebugFontTex2 = textureLoadAsset(2);
+    debugLogEnd = debugLogBuffer;
+}
+
+/* Title-screen system init. Calls getScreenResolution, primes the two float counters, clears
+ * two state bytes, acquires three sized buffers (605/1/2 bytes) and primes the
+ * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma opt_strength_reduction off
+#pragma peephole off
+void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
+{
+    int c1;
+    int i;
+    int a0;
+    int a1;
+    int a2;
+    int a3;
+    int c0;
+    int bit;
+    int row1;
+    int row0;
+
+    if (enableDebugText != 0)
+    {
+        i = 0;
+        row1 = (y + 1) * 0x280;
+        row0 = y * 0x280;
+        for (; i < 5; i++)
+        {
+            bit = 0;
+            c0 = x + row0;
+            a0 = c0;
+            a1 = c0 + 1;
+            c1 = row1 + x;
+            a2 = c1;
+            a3 = c1 + 1;
+            for (; bit < 8; bit++)
+            {
+                if (((1 << bit) & grid[i]) != 0)
+                {
+                    debugDrawFrameBuffer[a0] = 0xC080;
+                    debugDrawFrameBuffer[a1] = 0xC080;
+                    debugDrawFrameBuffer[a2] = 0xC080;
+                    debugDrawFrameBuffer[a3] = 0xC080;
+                }
+                a0++;
+                a1++;
+                a2++;
+                a3++;
+            }
+            DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
+            DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
+            row0 += 0x500;
+            row1 += 0x500;
+        }
+    }
+}
+
+/* Emit a SetColor record (tag 0x81 + 4 RGBA bytes + 0 terminator) into the debug log; aborts
+ * when the record counter at gDebugRecordCount has already exceeded 0xFA. */
+#pragma opt_strength_reduction reset
+
+void debugPrintfxy(int x, int y, char* fmt, ...)
+{
+    int xx;
+    int yy;
+    u16* saved;
+    int x0 = x;
+    u8* ch;
+    u8* scan;
+    u8* glyph;
+    va_list args;
+    char buf[256];
+
+    if (enableDebugText != 0)
+    {
+        xx = x0;
+        yy = y;
+        va_start(args, fmt);
+        vsprintf(buf, fmt, args);
+        saved = debugDrawFrameBuffer;
+        ch = (u8*)&buf[-1];
+        scan = (u8*)buf - 1;
+        while (ch++, *++scan != 0)
+        {
+            switch (*ch)
+            {
+            case 0xa:
+                yy += 0xc;
+                xx = x0;
+                break;
+            case 9:
+                xx += 0x40 - (xx & 0x3f);
+                break;
+            case 0x20:
+                xx += 8;
+                break;
+            default:
+                if (*ch >= 0x61 && *ch <= 0x7a)
+                {
+                    *ch -= 0x20;
+                }
+                if (*ch >= 0x21 && *ch <= 0x5a)
+                {
+                    debugDrawFrameBuffer = externalFrameBuffer0;
+                    debugTextDrawToFrameBuffer(xx, yy, glyph = gDebugFontGlyphs + (*ch - 0x21) * 5, -1);
+                    debugDrawFrameBuffer = externalFrameBuffer1;
+                    debugTextDrawToFrameBuffer(xx, yy, glyph, -1);
+                    xx += 0xf;
+                }
+                break;
+            }
+        }
+        debugDrawFrameBuffer = saved;
+    }
+}
+
+/* Drop-anim trigger guard. Returns 1
+ * (and dispatches the drop anim via objAudioFn_800393f8) only when:
+ *   - bit 0x40 of obj->_b8->_58 is clear,
+ *   - the target halfword obj->_a0 is OUTSIDE the [41, 47] window,
+ *   - Sfx_IsPlayingFromObjectChannel(obj, 16) returns 0. */
+
+void errDisplayInstallHandlers(void)
+{
+    OSSetErrorHandler(OS_ERROR_SYSTEM_RESET, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_MACHINE_CHECK, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_DSI, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PERFORMACE_MONITOR, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_SYSTEM_INTERRUPT, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_PROTECTION, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ISI, errDisplayHandler);
+    OSSetErrorHandler(OS_ERROR_ALIGNMENT, errDisplayHandler);
+    OSCreateThread(gErrDisplayThread, errDisplayThreadMain, 0, gErrDisplayThreadStack + 4096, 4096, 0, 1);
+}
+
+#pragma peephole reset
+
+void reportAllocFail(void)
+{
+}
 #pragma opt_propagation off
+#pragma opt_strength_reduction off
+#pragma peephole off
+#pragma ppc_unroll_instructions_limit 64
 void errDisplayThreadMain(void)
 {
     char* strs = (char*)gDebugFontGlyphs;
@@ -1442,104 +1108,453 @@ void errDisplayThreadMain(void)
         }
     }
 }
-#pragma opt_strength_reduction on
+#pragma opt_propagation reset
+#pragma opt_strength_reduction reset
+#pragma ppc_unroll_instructions_limit 100
 
-/* Lay out the debug log
- * twice (measure pass then draw pass), drawing the backing rect between
- * the passes when the log produced any extent. */
-void debugPrintDraw(int ctx)
+/* Stash 4 args to four globals and resume
+ * the thread at &gErrDisplayThread. */
+void errDisplayHandler(s16 a, u32 b, u32 c, u32 d)
 {
-    u32 yv;
-    u32 y2;
-    u32 xa, xb, ya, yb;
-    u32 xs;
-    u32 colw;
-    u8* p;
-    u16 tx, ty;
-    u32 colb;
-    u32 x1;
-    f32 scale;
-    int pass;
-    u32 res;
-    u32 sw;
-    u32 ys;
-    u32 sh;
+    gErrExceptionType = a;
+    gErrContext = b;
+    lbl_803DDA38 = c;
+    lbl_803DDA34 = d;
+    OSResumeThread(gErrDisplayThread);
+}
 
-    res = getScreenResolution();
-    gDebugScreenHeight = res >> 0x10;
-    gDebugScreenWidth = res;
-    GXSetScissor(0, 0, (u16)res, gDebugScreenHeight);
-    sw = gDebugScreenWidth;
-    if (sw <= 0x140)
+/* Reset debug log/print state: rewind
+ * debugLogEnd to the start of the buffer and reload the print x/y
+ * coordinates from saved values. */
+
+/* Bit setter at bit 6 (0x40) of obj->_b8->_58. */
+void fn_80138908(GameObject* obj, int v)
+{
+    ((struct Bits58*)((GameObject*)obj)->extra)->b6 = v;
+}
+int fn_80138920(GameObject* obj, int sfxId, int vol)
+{
+    u8* b = ((GameObject*)obj)->extra;
+    s16 v;
+    if ((u32)((b[0x58] >> 6) & 1) != 0u)
+        return 0;
+    v = ((GameObject*)obj)->anim.currentMove;
+    switch (v)
     {
-        gDebugPrintOriginY = 0x10;
-        gDebugMarginRight = sw - 0x10;
+    case 41:
+    case 42:
+    case 43:
+    case 44:
+    case 45:
+    case 46:
+    case 47:
+        return 0;
     }
-    else
+    if (Sfx_IsPlayingFromObjectChannelPtrLegacy(obj, 16) != 0)
+        return 0;
+    objAudioFn_800393f8Legacy(obj, b + 936, sfxId, vol, -1, 0);
+    return 1;
+}
+
+void objAnimFreeChildren(int a, int b, GameObject** c)
+{
+    char buf[4];
+    void *v0, *v1, *v2;
+
+    if (*c == NULL)
     {
-        gDebugPrintOriginY = 0x20;
-        gDebugMarginRight = sw - 0x20;
+        return;
     }
-    sh = gDebugScreenHeight;
-    if (sh <= 0xf0)
+    ObjLink_DetachChild((GameObject*)a, (int)*c);
+    Obj_FreeObject(*c);
+    *c = NULL;
+    buf[0] = -1;
+    buf[1] = -1;
+    buf[2] = -1;
+    v0 = *(void**)(b + 0x7a8);
+    if (v0 != NULL)
     {
-        gDebugPrintOriginX = 0x10;
-        gDebugMarginBottom = sh - 0x10;
+        buf[((TrickyImpressState*)b)->childSlotMap >> 6 & 3] = 1;
     }
-    else
+    v1 = *(void**)(b + 0x7b0);
+    if (v1 != NULL)
     {
-        gDebugPrintOriginX = 0x20;
-        gDebugMarginBottom = sh - 0x20;
+        buf[((TrickyImpressState*)b)->childSlotMap >> 4 & 3] = 1;
     }
-    gxDebugTextureFn_80078c1c();
-    p = debugLogBuffer;
-    debugPrintYpos = ty = gDebugPrintOriginY;
-    debugPrintXpos = tx = gDebugPrintOriginX;
-    gDebugCurrentFontSet = 0xffffffff;
-    pass = 0;
-    gDebugFixedWidthMode = pass;
-    gDebugRectStartY = ty;
-    gDebugRectStartX = tx;
-    for (; p != debugLogEnd;)
+    v2 = *(void**)(b + 0x7b8);
+    if (v2 != NULL)
     {
-        gDebugDrawPass = pass;
-        p += debugPrintDrawRecord(ctx, p);
+        buf[((TrickyImpressState*)b)->childSlotMap >> 2 & 3] = 1;
     }
-    x1 = debugPrintXpos + 0xa;
-    yv = debugPrintYpos;
-    xs = gDebugRectStartX;
-    ys = gDebugRectStartY;
-    if ((((yv - ys) == 0) | ((x1 - xs) == 0)) == 0)
+    if (buf[0] == -1)
     {
-        if (ys >= 2)
+        if (v0 != NULL)
         {
-            ys -= 2;
+            ObjLink_DetachChild((GameObject*)a, (int)v0);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj0, 0);
+            ((AnimSlots*)(b + 0x7bc))->s0 = 0;
         }
-        y2 = yv + 2;
-        xa = (u32)((f32)ys * (scale = gDebugScaleX + gDebugScaleBiasX));
-        xb = (u32)((f32)y2 * scale);
-        ya = (u32)((f32)xs * (scale = gDebugScaleY + gDebugScaleBiasY));
-        yb = (u32)((f32)x1 * scale);
-        ((u8*)&colb)[0] = gDebugTextColorR;
-        ((u8*)&colb)[1] = gDebugTextColorG;
-        ((u8*)&colb)[2] = gDebugTextColorB;
-        ((u8*)&colb)[3] = gDebugTextColorA;
-        colw = colb;
-        hudDrawRect(xa, ya, xb, yb, &colw);
+        else if (v1 != NULL)
+        {
+            ObjLink_DetachChild((GameObject*)a, (int)v1);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj1, 0);
+            ((AnimSlots*)(b + 0x7bc))->s1 = 0;
+        }
+        else if (v2 != NULL)
+        {
+            ObjLink_DetachChild((GameObject*)a, (int)v2);
+            ObjLink_AttachChild(a, ((TrickyImpressState*)b)->childObj2, 0);
+            ((AnimSlots*)(b + 0x7bc))->s2 = 0;
+        }
     }
-    p = debugLogBuffer;
-    debugPrintYpos = gDebugPrintOriginY;
-    debugPrintXpos = gDebugPrintOriginX;
-    gDebugCurrentFontSet = 0xffffffff;
-    gDebugFixedWidthMode = 0;
-    pass = 1;
-    for (; p != debugLogEnd;)
+}
+
+/* Weighted blend-channel animator. On state[0x82e] bit 0x80,
+ * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
+ * the active flag. While bit 0x40 is set, ramps state[0x830] toward
+ * data[0] / data[1] with acceleration lbl_803E23E4 and damping
+ * lbl_803E23F0, clamps to [0, lbl_803E23E8], and pushes the result to the
+ * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
+void Tricky_updateBlendChannelWeight(int obj, u8* state)
+{
+    ObjModel* model;
+    f32 target;
+    Obj_GetActiveModel((GameObject*)obj);
+    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 7) & 1) != 0)
     {
-        gDebugDrawPass = pass;
-        p += debugPrintDrawRecord(ctx, p);
+        model = Obj_GetActiveModel((GameObject*)obj);
+        ObjModel_SetBlendChannelTargets(model, 1, -1, 0x1a, lbl_803E23DC, 0x21);
+        *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E0;
+        ObjModel_SetBlendChannelWeight(model, 0, lbl_803E23DC);
+        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->pending = 0;
+        ((TumbleweedBlendFlags*)(state + TUMBLEWEED_BLEND_FLAGS_OFFSET))->active = 1;
     }
-    debugLogEnd = debugLogBuffer;
-    gDebugRecordCount = 0;
+    if ((u32)((state[TUMBLEWEED_BLEND_FLAGS_OFFSET] >> 6) & 1) != 0)
+    {
+        u8* data = *(u8**)(state + 0);
+        target = (f32)(u32)data[0] / (f32)(u32)data[1];
+        if (target > *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET))
+        {
+            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                lbl_803E23E4 * timeDelta + *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET);
+            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > lbl_803E23E8)
+            {
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = lbl_803E23E8;
+            }
+            else if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) > target)
+            {
+                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) < lbl_803E23EC)
+                {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
+                }
+                else
+                {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
+                }
+            }
+        }
+        else if (target < *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET))
+        {
+            *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) - lbl_803E23E4 * timeDelta;
+            *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) =
+                *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * timeDelta +
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET);
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < *(f32*)&lbl_803E23DC)
+            {
+                *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                    lbl_803E23DC;
+            }
+            if (*(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) < target)
+            {
+                if (*(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) > lbl_803E23F4)
+                {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) = lbl_803E23DC;
+                    *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) = target;
+                }
+                else
+                {
+                    *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) =
+                        *(f32*)(state + TUMBLEWEED_BLEND_VELOCITY_OFFSET) * lbl_803E23F0;
+                }
+            }
+        }
+        ObjModel_SetBlendChannelWeight(Obj_GetActiveModel((GameObject*)obj), 1,
+                                       lbl_803E23F8 * *(f32*)(state + TUMBLEWEED_BLEND_WEIGHT_OFFSET) - lbl_803E23E8);
+    }
+}
+
+void fn_80138D7C(int obj, int state)
+{
+    u8 ratio = (u8)((s32) * (u8*)(*(int*)(state + 0) + 2) / 10);
+
+    if (*(u8*)(state + 0x82c) != ratio)
+    {
+        f32 t;
+        if (mainGetBit(1005) == 0)
+        {
+            mainSetBits(1005, 1);
+            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
+            ((TrickyImpressState*)state)->flags54 |= 0x4000;
+            *(f32*)(state + 0x828) = *(f32*)(state + 0x828) + lbl_803E2408;
+        }
+        *(f32*)(state + 0x828) = *(f32*)(state + 0x828) - timeDelta;
+        t = *(f32*)(state + 0x828);
+        if (!(t > lbl_803E2408))
+        {
+            if (t > lbl_803E23DC)
+            {
+                f32 alpha;
+                if (t > lbl_803E23E0)
+                {
+                    alpha = lbl_803E23E8 - (t - lbl_803E23E0) / lbl_803E23E0;
+                }
+                else
+                {
+                    *(u8*)(*(int*)((char*)Obj_GetActiveModel((GameObject*)obj) + 0x34) + 8) = ratio;
+                    alpha = *(f32*)(state + 0x828) / lbl_803E23E0;
+                }
+                Obj_SetModelColorOverrideRecursivePromoted(obj, 255, 255, 255, (s32)(lbl_803E240C * alpha), 1);
+            }
+            else
+            {
+                *(u8*)(state + 0x82c) = ratio;
+                Obj_SetModelColorOverrideRecursivePromoted(obj, 0, 0, 0, 0, 0);
+            }
+        }
+    }
+}
+#pragma peephole on
+
+/* Set bit 0x80000000 of obj->_b8->_54
+ * and store lbl_803E2408 into obj->_b8->_808. */
+void trickyImpress(GameObject* obj)
+{
+    u8* b = ((GameObject*)obj)->extra;
+    ((TrickyImpressState*)b)->flags54 |= 0x80000000;
+    ((TrickyImpressState*)b)->unk808 = lbl_803E2408;
+}
+#pragma peephole off
+/* GameBit-gated bit toggle on obj->_b8->_54: requires mainGetBit(GAMEBIT_Tricky_Usable); sets bit 0x10000 then
+ * checks bit 0x10. Returns 1 only when the post-OR check passes. */
+int trickyFn_80138f14(GameObject* obj)
+{
+    u8* b = obj->extra;
+    if ((u32)mainGetBit(GAMEBIT_Tricky_Usable) != 0u)
+    {
+        ((TrickyImpressState*)b)->flags54 |= 0x10000LL;
+        if ((((TrickyImpressState*)b)->flags54 & 0x10) != 0u)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+PPCWGPipe GXWGFifo : (0xCC008000);
+#pragma peephole reset
+
+f32 fn_80138F78(u8* obj)
+{
+    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk14;
+}
+
+GameObject* fn_80138F84(GameObject* obj)
+{
+    return ((TrickyImpressState*)obj->extra)->stayPoint;
+}
+s16 fn_80138F90(u8* obj)
+{
+    return ((TrickyImpressState*)((GameObject*)obj)->extra)->unk414;
+}
+void* trickyGetQueuedPathParticlePos(GameObject* obj)
+{
+    return &((TrickyImpressState*)obj->extra)->renderPosX;
+}
+
+#pragma peephole off
+
+int trickyFindNearestUsableBaddie(int origin, f32 maxRadius, int allowSpecialTypes)
+{
+    int* objs;
+    int* tmpList;
+    int closest;
+    int i;
+    f32 bestDistSq;
+    int count;
+
+    bestDistSq = maxRadius;
+    closest = 0;
+    tmpList = (int*)ObjGroup_GetObjects(3, &count);
+    bestDistSq = bestDistSq * bestDistSq;
+    i = 0;
+    objs = tmpList;
+
+    for (; i < count; i++)
+    {
+        int* data;
+        f32 obj_extra;
+        int v1, v2;
+        s32 g1, g2;
+
+        if (dll_19_func1B((GameObject*)(*objs)) != 0)
+        {
+            obj_extra = (**(f32(**)(int))((char*)(*gBaddieControlInterface) + 0x60))(*objs);
+        }
+        else
+        {
+            obj_extra = enemy_getHealthFraction((GameObject*)*objs);
+        }
+
+        data = (int*)*(int*)(*objs + 0x4c);
+        g1 = *(s16*)((char*)data + 0x18);
+        if (g1 == -1)
+        {
+            v1 = 0;
+        }
+        else
+        {
+            v1 = mainGetBit(g1);
+        }
+        g2 = *(s16*)((char*)data + 0x1a);
+        if (g2 == -1)
+        {
+            v2 = 1;
+        }
+        else
+        {
+            v2 = mainGetBit(g2);
+        }
+
+        if (ObjGroup_ContainsObject(*objs, TRICKY_BADDIE_TARGET_OBJGROUP) == 0 && obj_extra > lbl_803E23DC && v1 == 0 &&
+            v2 != 0)
+        {
+            if (((GameObject*)*objs)->anim.seqId != 2129)
+            {
+                if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)((char*)data + 0x14)) != 0)
+                {
+                    if (allowSpecialTypes == 0)
+                    {
+                        s16 m = ((GameObject*)*objs)->anim.seqId;
+                        if (m == 1022 || m == 1239 || m == 636 || m == 593)
+                            goto next;
+                    }
+                    {
+                        f32 dist = vec3f_distanceSquared((f32*)(origin + 0x18), (f32*)(*objs + 0x18));
+                        if (dist < bestDistSq)
+                        {
+                            bestDistSq = dist;
+                            closest = *objs;
+                        }
+                    }
+                }
+            }
+        }
+    next:
+        objs++;
+    }
+    return closest;
+}
+
+
+void Tricky_emitQueuedPathParticles(u8* a, u8* b)
+{
+    struct
+    {
+        s16 hx, hy, hz;
+        f32 fk;
+        f32 dx, dy, dz;
+    } stk;
+    u8 i = 0x14;
+    u32 flags = ((TrickyImpressState*)b)->flags54;
+    if ((flags & 0x1800) == 0)
+        return;
+    stk.dx = ((TrickyImpressState*)b)->renderPosX - ((GameObject*)a)->anim.worldPosX;
+    stk.dy = ((TrickyImpressState*)b)->renderPosY - ((GameObject*)a)->anim.worldPosY;
+    stk.dz = ((TrickyImpressState*)b)->renderPosZ - ((GameObject*)a)->anim.worldPosZ;
+    stk.fk = lbl_803E23E8;
+    stk.hx = ((GameObject*)a)->anim.rotX;
+    stk.hy = ((GameObject*)a)->anim.rotY;
+    stk.hz = ((GameObject*)a)->anim.rotZ;
+    if ((flags & 0x800) == 0)
+    {
+        while (i-- != 0)
+        {
+            (*gPartfxInterface)->spawnObject(a, TRICKY_PATH_PARTFX, &stk, 2, -1, NULL);
+        }
+        ((TrickyImpressState*)b)->flags54 = ((TrickyImpressState*)b)->flags54 & ~0x1000LL;
+    }
+}
+#pragma optimization_level 1
+int trickySelectQueuedCommandTarget(u8* state, int commandType)
+{
+    f32 bestPriorityDist;
+    f32 bestFallbackDist;
+    u8* entry;
+    int i;
+    u8* bestPriorityTarget;
+    u8* bestFallbackTarget;
+
+    bestPriorityDist = lbl_803E2418;
+    bestPriorityTarget = NULL;
+    bestFallbackDist = bestPriorityDist;
+    bestFallbackTarget = NULL;
+
+    for (i = 0, entry = state; i < state[0x798]; i++)
+    {
+        if (*(s8*)(entry + 0x74d) == commandType)
+        {
+            f32 dist = getXZDistance(&((GameObject*)((TrickyState*)state)->playerObj)->anim.worldPosX,
+                                     (f32*)(*(u8**)(entry + 0x748) + 0x18));
+
+            if (*(s8*)(entry + 0x74c) == 1)
+            {
+                if (dist < bestPriorityDist)
+                {
+                    bestPriorityDist = dist;
+                    bestPriorityTarget = *(u8**)(entry + 0x748);
+                }
+            }
+            else if (dist < bestFallbackDist)
+            {
+                bestFallbackDist = dist;
+                bestFallbackTarget = *(u8**)(entry + 0x748);
+            }
+        }
+        entry += 8;
+    }
+
+    if (bestPriorityTarget != NULL)
+    {
+        ((TrickyState*)state)->followObj = bestPriorityTarget;
+    }
+    else
+    {
+        if (bestFallbackTarget == NULL)
+        {
+            return 0;
+        }
+        ((TrickyState*)state)->followObj = bestFallbackTarget;
+    }
+
+    {
+        u8* targetPos = ((TrickyState*)state)->followObj + 0x18;
+        if (((TrickyState*)state)->targetPosPtr != targetPos)
+        {
+            ((TrickyState*)state)->targetPosPtr = targetPos;
+            *(u32*)&((TrickyState*)state)->stateFlags &= ~0x400LL;
+            ((TrickyState*)state)->linkedWalkGroup = 0;
+        }
+    }
+
+    state[0xa] = 0;
+    return 1;
 }
 
 u8 gDebugFontGlyphs[580] = {
