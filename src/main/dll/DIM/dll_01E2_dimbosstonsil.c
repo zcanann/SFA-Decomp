@@ -18,6 +18,7 @@
 #include "main/dll/DIM/DIMbossspit.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/baddie_control_interface.h"
 #include "main/player_control_interface.h"
 #include "main/gamebits.h"
 #include "main/pad.h"
@@ -54,7 +55,6 @@ ModelLightStruct* gDIMbosstonsilLight;
 
 int DIMbosstonsil_SeqFn(GameObject* obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void* gBaddieControlInterface;
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red;
@@ -222,7 +222,6 @@ int DIMbosstonsil_getObjectTypeId(void)
 
 void DIMbosstonsil_free(GameObject* obj)
 {
-    extern void* gBaddieControlInterface;
     DIMbosstonsilState* state;
 
     state = (obj)->extra;
@@ -277,7 +276,6 @@ void DIMbosstonsil_hitDetect(GameObject* obj)
 
 void DIMbosstonsil_update(GameObject* obj)
 {
-    extern void* gBaddieControlInterface;
     DIMbosstonsilState* state;
     DIMbosstonsilConfig* config;
     u8 red, green, blue, alpha;
@@ -350,7 +348,6 @@ void DIMbosstonsil_update(GameObject* obj)
 #pragma opt_propagation off
 void DIMbosstonsil_init(int obj, u32 def, int isAltVariant)
 {
-    extern u32* gBaddieControlInterface;
     u8 variant;
     int state;
 

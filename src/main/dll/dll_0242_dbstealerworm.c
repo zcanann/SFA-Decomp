@@ -154,6 +154,58 @@ extern u32 lbl_80329514[];
 extern f32 lbl_803E62BC;
 extern f32 lbl_803E62F4;
 extern f32 lbl_803E62E8;
+extern int lbl_80329634[];
+extern int lbl_80329640[];
+extern f32 lbl_803E6334;
+extern f32 lbl_803E6338;
+extern f32 lbl_803E633C;
+extern int gDbStealerwormSfxIds[];
+extern f32 lbl_803E6340;
+extern f32 lbl_803E62C8;
+extern f32 lbl_803E634C;
+extern f32 lbl_803E6350;
+extern f32 lbl_803E6354;
+extern f32 lbl_803E6358;
+extern f32 lbl_803E637C;
+extern f32 lbl_803E62B4;
+extern f32 lbl_803E62B8;
+extern f32 lbl_803E6380;
+extern f32 lbl_803E6370;
+extern f32 lbl_803E6374;
+extern f32 lbl_803E6378;
+extern f32 lbl_803E6344;
+extern f32 lbl_803E6348;
+extern f32 lbl_803E62D0;
+extern f32 lbl_803E62F0;
+extern f32 lbl_803E62F8;
+extern f32 lbl_803E62AC;
+extern f32 lbl_803E62B0;
+extern f32 lbl_803E6384;
+extern f32 lbl_803E635C;
+extern f32 gDbStealerwormPi;
+extern f32 lbl_803E6364;
+extern f32 lbl_803E6310;
+extern f32 lbl_803E6314;
+extern f32 lbl_803E6318;
+extern f32 lbl_803E631C;
+extern f32 lbl_803E6320;
+extern f32 lbl_803E62C4;
+extern f32 lbl_803E62CC;
+extern f32 lbl_803E6300;
+extern f32 lbl_803E6324;
+extern f32 lbl_803E6328;
+extern f32 lbl_803E632C;
+extern f32 lbl_803E6330;
+extern f32 lbl_803E6388;
+extern f32 lbl_803E638C;
+extern u8 lbl_803AD0C0[];
+extern u32 lbl_803293B8[];
+extern f32 lbl_803E6304;
+extern f32 lbl_803E6308;
+extern f32 lbl_803E630C;
+extern f32 lbl_803E62C0;
+extern f32 lbl_803E62D4;
+extern f32 lbl_803E62D8;
 extern f32 lbl_803E62EC;
 
 int dbstealerworm_stateHandlerB04(int obj, int baddie)
@@ -279,11 +331,6 @@ int dbstealerworm_stateHandlerA09(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
 {
 
-    extern int lbl_80329634[];
-    extern int lbl_80329640[];
-    extern f32 lbl_803E6334;
-    extern f32 lbl_803E6338;
-    extern f32 lbl_803E633C;
 
     GroundBaddieState* sub = (obj)->extra;
     int data = *(int*)&(obj)->anim.placementData;
@@ -343,8 +390,6 @@ int dbstealerworm_stateHandlerA06(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie)
 {
 
-    extern int gDbStealerwormSfxIds[];
-    extern f32 lbl_803E6340;
     BaddieState* bs = (BaddieState*)baddie;
     DbStealerwormControl* sub_40c;
     int frame[3];
@@ -407,7 +452,6 @@ int dbstealerworm_stateHandlerA05(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA03(int obj, int baddie)
 {
 
-    extern f32 lbl_803E62F4;
 
     if (*(char*)&((BaddieState*)baddie)->moveJustStartedA != '\0')
     {
@@ -426,10 +470,6 @@ int dbstealerworm_stateHandlerA03(int obj, int baddie)
 
 int dbstealerworm_stateHandlerA01(GameObject* obj, int baddie)
 {
-    extern int lbl_80329640[];
-    extern f32 lbl_803E62C8;
-    extern f32 lbl_803E62F4;
-    extern f32 lbl_803E634C;
     BaddieState* bs = (BaddieState*)baddie;
     GroundBaddieState* sub;
     DbStealerwormControl* sub_40c;
@@ -608,10 +648,6 @@ int dbstealerworm_stateHandlerB01(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA00(GameObject* obj, int baddie)
 {
 
-    extern int lbl_80329640[];
-    extern f32 lbl_803E6350;
-    extern f32 lbl_803E6354;
-    extern f32 lbl_803E6358;
     GroundBaddieState* sub = (obj)->extra;
     DbStealerwormControl* sub_40c = (DbStealerwormControl*)sub->control;
     BaddieState* bs = (BaddieState*)baddie;
@@ -785,10 +821,6 @@ int dbstealerworm_stateHandlerA0E(GameObject* obj, int baddie)
 void fn_80202EF0(GameObject* obj, int baddie)
 {
 
-    extern f32 lbl_803E637C;
-    extern f32 lbl_803E62B4;
-    extern f32 lbl_803E62B8;
-    extern f32 lbl_803E6380;
     ObjPlacement* setup;
     GameObject* newObj;
     f32 dur;
@@ -826,10 +858,6 @@ void fn_80202EF0(GameObject* obj, int baddie)
 #pragma dont_inline on
 int fn_80202C78(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
-    extern f32 lbl_803E6370;
-    extern f32 lbl_803E634C;
-    extern f32 lbl_803E62C8;
-    extern f32 lbl_803E6374;
     BaddieState* state = (obj)->extra;
     f32 yawF;
     int yaw;
@@ -878,10 +906,6 @@ int fn_80202C78(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed,
 #pragma dont_inline on
 int fn_80202DA4(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed, f32 unused, f32 range)
 {
-    extern f32 lbl_803E6378;
-    extern f32 lbl_803E634C;
-    extern f32 lbl_803E62C8;
-    extern f32 lbl_803E6374;
     BaddieState* state = obj->extra;
     f32 yawF;
     int yaw;
@@ -924,8 +948,6 @@ int fn_80202DA4(GameObject* obj, GameObject* otherObj, f32 yawOffset, f32 speed,
 int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
 {
 
-    extern f32 lbl_803E6344;
-    extern f32 lbl_803E6348;
     GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)state->control;
     BaddieState* bs = (BaddieState*)baddie;
@@ -967,8 +989,6 @@ int dbstealerworm_stateHandlerA02(GameObject* obj, int baddie)
 
 void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    extern f32 lbl_803E62D0;
-    extern f32 lbl_803E62C8;
     GroundBaddieState* state;
     char* path;
     DbStealerwormControl* sub;
@@ -1014,12 +1034,6 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
 #pragma fp_contract off
 int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie)
 {
-    extern f32 lbl_803E62F0;
-    extern f32 lbl_803E62F4;
-    extern f32 lbl_803E62EC;
-    extern f32 lbl_803E62F8;
-    extern f32 lbl_803E62FC;
-    extern f32 lbl_803E62B8;
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&obj->extra)->control;
     BaddieState* bs = (BaddieState*)baddie;
     int targetObj;
@@ -1102,10 +1116,6 @@ int dbstealerworm_stateHandlerA0D(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 {
     extern int lbl_803296FC[];
-    extern f32 lbl_803E62AC;
-    extern f32 lbl_803E62B0;
-    extern f32 lbl_803E62B4;
-    extern f32 lbl_803E62B8;
     GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub;
     int data = *(int*)&(obj)->anim.placementData;
@@ -1193,10 +1203,6 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 void fn_80203144(GameObject* obj, int groundState, int baddie)
 {
 
-    extern int lbl_80329640[];
-    extern f32 lbl_803E62B0;
-    extern f32 lbl_803E6354;
-    extern f32 lbl_803E6384;
     GroundBaddieState* st = (GroundBaddieState*)groundState;
     DbStealerwormControl* sub = (DbStealerwormControl*)st->control;
     u32 near;
@@ -1259,10 +1265,6 @@ void fn_80203144(GameObject* obj, int groundState, int baddie)
 int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 {
 
-    extern f32 lbl_803E635C;
-    extern f32 lbl_803E62C8;
-    extern f32 gDbStealerwormPi;
-    extern f32 lbl_803E6364;
     int* objCursor;
     f32* weightCursor;
     BaddieState* state = (obj)->extra;
@@ -1336,8 +1338,6 @@ int fn_80202A2C(GameObject* obj, int* objs, f32* weights, int n, f32 limit)
 int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 {
 
-    extern u32 lbl_80329514[];
-    extern f32 lbl_803E62AC;
     GroundBaddieState* state = (obj)->extra;
     DbStealerwormControl* sub;
     int data = *(int*)&(obj)->anim.placementData;
@@ -1438,11 +1438,6 @@ int dbstealerworm_stateHandlerB06(GameObject* obj, int baddie)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 {
-    extern f32 lbl_803E6310;
-    extern f32 lbl_803E6314;
-    extern f32 lbl_803E6318;
-    extern f32 lbl_803E631C;
-    extern f32 lbl_803E6320;
     DbStealerwormControl* sub = (DbStealerwormControl*)(*(GroundBaddieState**)&(obj)->extra)->control;
     int c30 = sub->objGroup;
     int c2c = sub->msgMode;
@@ -1543,10 +1538,6 @@ int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 {
 
-    extern f32 lbl_803E62B4;
-    extern f32 lbl_803E62C4;
-    extern f32 lbl_803E62CC;
-    extern f32 lbl_803E62D0;
     extern int lbl_8032971C[];
     extern f32 lbl_8032972C[];
     GroundBaddieState* blob = (obj)->extra;
@@ -1792,16 +1783,6 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 lbl_803E62C4;
-    extern f32 lbl_803E62C8;
-    extern f32 lbl_803E62CC;
-    extern f32 lbl_803E62D0;
-    extern f32 lbl_803E62F4;
-    extern f32 lbl_803E6300;
-    extern f32 lbl_803E6324;
-    extern f32 lbl_803E6328;
-    extern f32 lbl_803E632C;
-    extern f32 lbl_803E6330;
     extern int lbl_803296FC[];
     extern f32 lbl_8032970C[];
     GroundBaddieState* blob = obj->extra;
@@ -2007,11 +1988,6 @@ int dbstealerworm_stateHandlerA07(GameObject* obj, int baddie, f32 t)
 #pragma opt_propagation off
 void dbstealerworm_update(u8* objp)
 {
-    extern f32 lbl_803E62FC;
-    extern f32 lbl_803E6388;
-    extern f32 lbl_803E638C;
-    extern u8 lbl_803AD0C0[];
-    extern u32 lbl_803293B8[];
     char* st;
     char* tbl;
     int blob;
@@ -2149,13 +2125,6 @@ void dbstealerworm_update(u8* objp)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 lbl_803E62CC;
-    extern f32 lbl_803E62D0;
-    extern f32 lbl_803E62B4;
-    extern f32 lbl_803E62F4;
-    extern f32 lbl_803E6300;
-    extern f32 lbl_803E6324;
-    extern f32 lbl_803E6328;
     extern int lbl_803296FC[];
     extern f32 lbl_8032970C[];
     int q;
@@ -2346,14 +2315,6 @@ int dbstealerworm_stateHandlerA08(GameObject* obj, int baddie, f32 t)
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 lbl_803E62B0;
-    extern f32 lbl_803E62B8;
-    extern f32 lbl_803E6300;
-    extern f32 lbl_803E6304;
-    extern f32 lbl_803E6308;
-    extern f32 lbl_803E630C;
-    extern f32 lbl_803E62CC;
-    extern u32 lbl_803293B8[];
     char* tbl = (char*)lbl_803293B8;
     GroundBaddieState* blob = obj->extra;
     DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
@@ -2497,13 +2458,6 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 
 int dbstealerworm_stateHandlerA0F(GameObject* obj, int baddie, f32 t)
 {
-    extern f32 lbl_803E62C0;
-    extern f32 lbl_803E62C4;
-    extern f32 lbl_803E62C8;
-    extern f32 lbl_803E62CC;
-    extern f32 lbl_803E62D0;
-    extern f32 lbl_803E62D4;
-    extern f32 lbl_803E62D8;
     extern int lbl_8032973C[];
     extern f32 lbl_8032974C[];
     GroundBaddieState* blob = obj->extra;

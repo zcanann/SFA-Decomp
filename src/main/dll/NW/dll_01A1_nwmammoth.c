@@ -79,7 +79,14 @@ extern f32 gNwMammothPlayerNearDistSq;
 extern f32 gNwMammothPathDecel;
 extern f32 gNwMammothPathSpeedMax;
 extern f32 lbl_803E5250;
+extern u8 lbl_803DBF70[4];
+extern u8 lbl_803DBF74[4];
+extern u8 lbl_803DBF78[4];
+extern u8 lbl_803DBF7C[4];
 extern u8 lbl_803DBF80[4];
+extern u8 lbl_803DBFB4[4];
+extern u8 lbl_803DBFB8[4];
+extern u8 lbl_803DBFBC[4];
 extern u8 lbl_803DBF84[4];
 extern u8 lbl_803DBF88[4];
 extern u8 lbl_803DBF8C[4];
@@ -122,10 +129,6 @@ int NW_mammoth_getExtraSize(void)
 #pragma dont_inline on
 void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
 {
-    extern u8 lbl_803DBF70[4];
-    extern u8 lbl_803DBF74[4];
-    extern u8 lbl_803DBF78[4];
-    extern u8 lbl_803DBF7C[4];
     NwMammothState* state = (NwMammothState*)baddie;
 
     (void)mapData;
@@ -182,9 +185,6 @@ void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
 
 void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
 {
-    extern u8 lbl_803DBFB4[4];
-    extern u8 lbl_803DBFB8[4];
-    extern u8 lbl_803DBFBC[4];
     NwMammothState* state = (NwMammothState*)baddie;
 
     (void)mapData;

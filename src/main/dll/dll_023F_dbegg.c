@@ -92,6 +92,26 @@ extern const f32 gDbEggAngleHalfPeriod;
 extern const f32 lbl_803E6200;
 extern const f32 lbl_803E6204;
 extern const f32 lbl_803E6208;
+extern int lbl_803E61C0;
+extern const f32 lbl_803E6220;
+extern const f32 lbl_803E6224;
+extern const f32 lbl_803E6228;
+extern const f32 lbl_803E622C;
+extern const f32 lbl_803E6230;
+extern const f32 lbl_803E6234;
+extern const f32 lbl_803E6238;
+extern const f32 lbl_803E623C;
+extern const f32 lbl_803E6240;
+extern const f32 lbl_803E6244;
+extern const f32 lbl_803E6248;
+extern const f32 lbl_803E624C;
+extern const f32 lbl_803E6250;
+extern const f32 lbl_803E6254;
+extern const f32 lbl_803E6258;
+extern const f32 lbl_803E625C;
+extern const f32 lbl_803E6260;
+extern const f32 lbl_803E6264;
+extern const f32 lbl_803E6268;
 STATIC_ASSERT(sizeof(DbStealerwormControl) == 0x50);
 STATIC_ASSERT(sizeof(DfpLevelControlState) == 0xC);
 STATIC_ASSERT(sizeof(DfpObjCreatorState) == 0x1C);
@@ -153,9 +173,6 @@ typedef struct DbeggPlacement
 #pragma optimization_level 2
 void dbegg_processMessages(GameObject* obj)
 {
-    extern const f32 lbl_803E61C8;
-    extern const f32 lbl_803E61CC;
-
     int eggState;
     AnimBehaviorConfig* config;
     u32 msgType = 0;
@@ -648,33 +665,6 @@ char sAnimGreaterMessage[11] = " GREATER \n\000";
 
 void dbegg_update(GameObject* obj)
 {
-    extern f32 oneOverTimeDelta;
-    extern char sAnimGreaterMessage[11];
-    extern int lbl_803E61C0;
-    extern const f32 lbl_803E61C8;
-    extern const f32 lbl_803E61CC;
-    extern const f32 lbl_803E61E4;
-    extern const f32 lbl_803E61EC;
-    extern const f32 lbl_803E6200;
-    extern const f32 lbl_803E6220;
-    extern const f32 lbl_803E6224;
-    extern const f32 lbl_803E6228;
-    extern const f32 lbl_803E622C;
-    extern const f32 lbl_803E6230;
-    extern const f32 lbl_803E6234;
-    extern const f32 lbl_803E6238;
-    extern const f32 lbl_803E623C;
-    extern const f32 lbl_803E6240;
-    extern const f32 lbl_803E6244;
-    extern const f32 lbl_803E6248;
-    extern const f32 lbl_803E624C;
-    extern const f32 lbl_803E6250;
-    extern const f32 lbl_803E6254;
-    extern const f32 lbl_803E6258;
-    extern const f32 lbl_803E625C;
-    extern const f32 lbl_803E6260;
-    extern const f32 lbl_803E6264;
-    extern const f32 lbl_803E6268;
     int data = *(int*)&(obj)->anim.placementData;
 #define hitState ((ObjHitsPriorityState*)(obj)->anim.hitReactState)
     GameObject* player;

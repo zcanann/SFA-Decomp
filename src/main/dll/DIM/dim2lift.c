@@ -59,6 +59,13 @@ extern f32 lbl_803E4C18;
 extern f32 lbl_803E4C1C;
 extern f32 lbl_803E4C20;
 extern f32 lbl_803E4BBC;
+extern f32 lbl_803E4BF0;
+extern f32 lbl_803E4BF4;
+extern f32 lbl_803E4BF8;
+extern f32 lbl_803E4BFC;
+extern f32 lbl_803E4C28;
+extern f32 lbl_803E4C2C;
+extern f32 lbl_803E4C30;
 extern s16 gDim2LiftFarMoveChoices[30];
 extern s16 gDim2LiftFarFlankMoveChoices[4];
 extern u8 gDIMbossAnimController[];
@@ -78,9 +85,6 @@ STATIC_ASSERT(sizeof(DIM2icicleBlueWhiteEffectPlacement) == 0x24);
 
 void DIM2icicle_createStateLight(GameObject* obj, u8 isGreen)
 {
-    extern f32 lbl_803E4C28;
-    extern f32 lbl_803E4C2C;
-    extern f32 lbl_803E4C30;
     ModelLightStruct** lightSlot = (ModelLightStruct**)*(int*)&((GroundBaddieState*)*(int*)&obj->extra)->control;
 
     if (*(void**)lightSlot != NULL)
@@ -237,11 +241,6 @@ int DIMbossAnim_finishDefeat(GameObject* obj, int p2)
 int DIMbossHitDetect_liftImpact(int obj, int p2)
 {
     f32 zeroProgress;
-
-    extern f32 lbl_803E4BF0;
-    extern f32 lbl_803E4BF4;
-    extern f32 lbl_803E4BF8;
-    extern f32 lbl_803E4BFC;
 
     ((BaddieState*)p2)->moveSpeed = lbl_803E4BF0;
     zeroProgress = lbl_803E4BD8;

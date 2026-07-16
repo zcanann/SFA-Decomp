@@ -52,6 +52,7 @@ typedef void (*SpellStoneUseFn)(GameObject* obj);
  * this DLL follow later in this same file (next .text range).
  */
 
+extern u32 gSpellStoneEventId;
 extern f32 lbl_803E6100;
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
@@ -354,7 +355,6 @@ typedef struct SpellStoneUseState
 
 void spellStoneUseFn_801fd270(GameObject* obj)
 {
-    extern u32 gSpellStoneEventId;
     SpellStoneUseState* state = obj->extra;
     s16 cond = 1;
     void* player = Obj_GetPlayerObject();
@@ -1077,7 +1077,6 @@ void dll_224_hitDetect(void* obj)
 #pragma peephole off
 void dll_224_update(GameObject* obj)
 {
-    extern int gSpellStoneEventId;
     int mapAct;
     mapAct = (*gMapEventInterface)->getMapAct((obj)->anim.mapEventSlot);
     switch (mapAct)
