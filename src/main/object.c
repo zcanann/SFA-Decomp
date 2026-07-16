@@ -164,8 +164,7 @@ typedef struct CharSpawn
 extern f32 lbl_803DE88C;
 extern f32 gObjColorFadeRate;
 extern f32 gObjColorFadeAlphaMax;
-extern s8 gObjPtrTableCount;
-int gObjPtrTable[20];
+void* gObjPtrTable[20];
 extern int gObjTablesBinCount;
 extern int* gObjTablesBinIndex;
 extern u8* gObjTablesBinData;
@@ -256,10 +255,6 @@ void doNothing_afterRenderObject(void)
 }
 
 void doNothing_beforeRenderObject(void)
-{
-}
-
-void fn_8002B85C(void)
 {
 }
 
@@ -530,7 +525,7 @@ void fn_8002B758(void* v)
 {
     int i;
 
-    for (i = 0; i < gObjPtrTableCount && (void*)gObjPtrTable[i] != v; i++)
+    for (i = 0; i < gObjPtrTableCount && gObjPtrTable[i] != v; i++)
     {
     }
     if (i == gObjPtrTableCount)
@@ -549,7 +544,7 @@ void fn_8002B860(void* v)
 {
     s8 i = gObjPtrTableCount;
     gObjPtrTableCount = i + 1;
-    gObjPtrTable[i] = (int)v;
+    gObjPtrTable[i] = v;
 }
 
 #pragma peephole off
