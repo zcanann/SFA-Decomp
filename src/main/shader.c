@@ -990,9 +990,9 @@ extern int lbl_803DCE7C;
 
 int mapGetRomListAndOffsets(int p1, int flag)
 {
-    int tabOff = (p1 * 7) * 4;
-    int offset0 = *(int*)(lbl_803DCE7C + tabOff);
-    int tailLen = *(int*)((lbl_803DCE7C + 0x1c) + tabOff) - offset0;
+    int words = p1 * 7;
+    int offset0 = *(int*)(lbl_803DCE7C + (words << 2));
+    int tailLen = *(int*)((lbl_803DCE7C + 0x1c) + ((u32)words << 2)) - offset0;
     int v0, v1, v2;
     int i;
 
@@ -1000,15 +1000,15 @@ int mapGetRomListAndOffsets(int p1, int flag)
     lbl_803DCEA0 = mmAlloc(tailLen + (v0 + 7 >> 3) + 0x401 + v2, 5, 0);
     fileLoadToBufferOffset(MLDF_FILEID_MAPS_BIN, lbl_803DCEA0, offset0, tailLen);
 
-    *(int*)((char*)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 4) + tabOff) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0xc) + tabOff) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x10) + tabOff) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x14) + tabOff) - offset0;
-    *(int*)((char*)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x18) + tabOff) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0xc) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 4) + (words << 2)) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x14) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 8) + (words << 2)) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x30) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0xc) + (words << 2)) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x2c) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x10) + (words << 2)) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x34) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x14) + (words << 2)) - offset0;
+    *(int*)((char*)lbl_803DCEA0 + 0x20) = (int)lbl_803DCEA0 + *(int*)((lbl_803DCE7C + 0x18) + (words << 2)) - offset0;
 
-    piRomLoadSection(*(int*)((lbl_803DCE7C + 0x18) + tabOff), p1, *(int*)((char*)lbl_803DCEA0 + 0x20));
-    *(int*)((char*)lbl_803DCEA0 + 0x10) = (*(int*)((lbl_803DCE7C + 0x1c) + tabOff) + v2) + (int)lbl_803DCEA0 - offset0;
+    piRomLoadSection(*(int*)((lbl_803DCE7C + 0x18) + (words << 2)), p1, *(int*)((char*)lbl_803DCEA0 + 0x20));
+    *(int*)((char*)lbl_803DCEA0 + 0x10) = (*(int*)((lbl_803DCE7C + 0x1c) + (words << 2)) + v2) + (int)lbl_803DCEA0 - offset0;
 
     for (i = 0; i < (v0 + 7 >> 3) + 1; i++)
     {
