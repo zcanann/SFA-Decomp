@@ -90,51 +90,7 @@ typedef struct LinkMenuItemDB
     s8 timer;
     u8 pad39[3];
 } LinkMenuItemDB;
-
-void titleScreenFn_80130464(u8 v)
-{
-    linkFlag_803dd8f8 = v;
-}
-void setLinkNotRotated(void)
-{
-    linkIsRotated = 0;
-}
-void setLinkIsRotated(void)
-{
-    linkIsRotated = 1;
-}
-u8 Link_func0C(void)
-{
-    return linkCount_803dd90e;
-}
-#pragma scheduling off
-#pragma peephole off
-void Link_func0A(int idx, int v)
-{
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    gTumbleweedBushItems[idx].state = v;
-}
-#pragma peephole reset
-s32 Link_func09(int idx)
-{
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    return gTumbleweedBushItems[idx].state;
-}
-#pragma scheduling reset
-void Link_setOpacity(u8 v)
-{
-    linkItemOpacity = v;
-}
-#pragma peephole off
-void Link_setSelected(int v)
-{
-    linkSelected = v;
-}
-#pragma peephole reset
-s32 Link_getSelected(void)
-{
-    return linkSelected;
-}
+#define LINK_FLAG_DRAW_SLOTS        0x0004
 
 #pragma scheduling off
 u16 fn_80130124(void)
@@ -142,9 +98,8 @@ u16 fn_80130124(void)
     extern LinkMenuItemDB gTumbleweedBushItems[40];
     return gTumbleweedBushItems[linkSelected].itemId;
 }
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
+#pragma peephole off
 void linkInitTextures(LinkMenuItemDB* item)
 {
     int budget;
@@ -181,9 +136,160 @@ void linkInitTextures(LinkMenuItemDB* item)
     }
 }
 #pragma dont_inline reset
+#pragma scheduling reset
+void linkDrawFn_801302c0(void)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    LinkMenuItemDB* sel;
+    int resetTimer;
+    void* iconTex;
+    int i;
+    int selLeft;
+    int selRight;
+    int itemLeft;
+    int itemRight;
+    int iconWidth;
+
+    resetTimer = 4;
+    gTumbleweedBushItems[linkSelected].timer = resetTimer;
+    sel = &gTumbleweedBushItems[linkSelected];
+    if (((sel->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)sel->slots[0] != -1))
+    {
+        iconTex = *(void**)(linkTextures + sel->slots[0] * 8);
+    }
+    else
+    {
+        iconTex = sel->texture;
+    }
+    if (iconTex != NULL)
+    {
+        iconWidth = ((Texture*)iconTex)->height;
+        selLeft = sel->iconLeft;
+    }
+    else
+    {
+        if (getCurLanguage() == 4)
+        {
+            iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
+        }
+        else
+        {
+            iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+        }
+        selLeft = sel->textLeft - 2;
+    }
+    selRight = selLeft + iconWidth;
+    for (i = 0; i < gTumbleweedBushItemCount; i++)
+    {
+        if (i != linkSelected)
+        {
+            if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) &&
+                ((s8)gTumbleweedBushItems[i].slots[0] != -1))
+            {
+                iconTex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
+            }
+            else
+            {
+                iconTex = gTumbleweedBushItems[i].texture;
+            }
+            if (iconTex != NULL)
+            {
+                iconWidth = ((Texture*)iconTex)->height;
+                itemLeft = gTumbleweedBushItems[i].iconLeft;
+            }
+            else
+            {
+                if (getCurLanguage() == 4)
+                {
+                    iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
+                }
+                else
+                {
+                    iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+                }
+                itemLeft = gTumbleweedBushItems[i].textLeft - 2;
+            }
+            itemRight = itemLeft + iconWidth;
+            if (itemLeft < selRight && itemRight > selLeft)
+            {
+                gTumbleweedBushItems[i].timer = resetTimer;
+            }
+        }
+    }
+}
 #pragma peephole reset
-#pragma scheduling off
+
+void titleScreenFn_80130464(u8 v)
+{
+    linkFlag_803dd8f8 = v;
+}
+void setLinkNotRotated(void)
+{
+    linkIsRotated = 0;
+}
+void setLinkIsRotated(void)
+{
+    linkIsRotated = 1;
+}
 #pragma peephole off
+
+#pragma dont_inline on
+void linkDrawFn_80130484(void)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    LinkMenuItemDB* item;
+    void* iconTex;
+    int i;
+    int minX;
+    int maxX;
+    int iconWidth;
+    int left;
+    int right;
+
+    minX = 480;
+    maxX = 0;
+    i = 0;
+    for (; i < gTumbleweedBushItemCount; i++)
+    {
+        item = &gTumbleweedBushItems[i];
+        if (((item->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)item->slots[0] != -1))
+        {
+            iconTex = *(void**)(linkTextures + item->slots[0] * 8);
+        }
+        else
+        {
+            iconTex = item->texture;
+        }
+        if (iconTex != NULL)
+        {
+            iconWidth = ((Texture*)iconTex)->height;
+            left = item->iconLeft;
+        }
+        else
+        {
+            if (getCurLanguage() == 4)
+            {
+                iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
+            }
+            else
+            {
+                iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
+            }
+            left = item->textLeft - 2;
+        }
+        right = left + iconWidth;
+        if (left < minX)
+        {
+            minX = left;
+        }
+        if (right > maxX)
+        {
+            maxX = right;
+        }
+    }
+}
+#pragma dont_inline off
+#pragma scheduling off
 void Link_func0F(void)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -195,9 +301,6 @@ void Link_func0F(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
 void Link_copy(u8* srcArg)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -230,8 +333,14 @@ void Link_copy(u8* srcArg)
         }
     }
 }
-#pragma scheduling off
+
+#pragma scheduling reset
+u8 Link_func0C(void)
+{
+    return linkCount_803dd90e;
+}
 #pragma peephole off
+#pragma scheduling off
 void Link_func0B(u8* srcArg)
 {
     extern LinkMenuItemDB gTumbleweedBushItems[40];
@@ -246,9 +355,23 @@ void Link_func0B(u8* srcArg)
         gTumbleweedBushItems[i].timer = 2;
     }
 }
+void Link_func0A(int idx, int v)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    gTumbleweedBushItems[idx].state = v;
+}
+
 #pragma peephole reset
+s32 Link_func09(int idx)
+{
+    extern LinkMenuItemDB gTumbleweedBushItems[40];
+    return gTumbleweedBushItems[idx].state;
+}
 #pragma scheduling reset
-#pragma scheduling reset
+void Link_setOpacity(u8 v)
+{
+    linkItemOpacity = v;
+}
 
 typedef struct LinkTextureSlot
 {
@@ -280,12 +403,60 @@ typedef struct LinkMenuItemDA
     u8 pad39[3];
 } LinkMenuItemDA;
 
-#define LINK_FLAG_DRAW_SLOTS        0x0004
 #define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
 #define LINK_FLAG_DIM_OPACITY       0x0800
 #define LINK_FLAG_FADE_TIMER_ONLY   0x1040
 #define LINK_FLAG_HIDDEN            0x4000
 #define LINK_FLAG_SELECTED_COLOR    0x0080
+
+#pragma peephole off
+void Link_setSelected(int v)
+{
+    linkSelected = v;
+}
+
+typedef struct LinkMenuItem
+{
+    u16 textId;
+    u16 boxId;
+    s16 rightX;
+    s16 textLeft;
+    s16 slotWidth;
+    s16 x;
+    s16 y;
+    u8 pad0E[2];
+
+    union
+    {
+        int textureAssetId;
+        void* texture;
+    };
+
+    u16 width;
+    u16 flags;
+    u8 pad18[2];
+    s8 upLink;
+    s8 downLink;
+    s8 leftLink;
+    s8 rightLink;
+    s8 state;
+    s8 slots[LINK_ITEM_SLOTS];
+    s8 timer;
+    u8 pad39[3];
+} LinkMenuItem;
+
+#define LINK_FLAG_DISABLE_NAV_TO 0x1000
+#define LINK_FLAG_NO_ACCEPT      0x0020
+#define LINK_FLAG_INHERIT_X      0x0008
+#define LINK_FLAG_NO_SLOTS       0x0010
+#define LINK_FLAG_CENTRE         0x0400
+#define LINK_IS_NAVIGABLE(index) ((gTumbleweedBushItems[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
+
+#pragma peephole reset
+s32 Link_getSelected(void)
+{
+    return linkSelected;
+}
 
 #pragma peephole off
 void Link_render(void)
@@ -449,46 +620,7 @@ void Link_render(void)
 
     MWTRACE(0xff);
 }
-#pragma peephole reset
 
-typedef struct LinkMenuItem
-{
-    u16 textId;
-    u16 boxId;
-    s16 rightX;
-    s16 textLeft;
-    s16 slotWidth;
-    s16 x;
-    s16 y;
-    u8 pad0E[2];
-
-    union
-    {
-        int textureAssetId;
-        void* texture;
-    };
-
-    u16 width;
-    u16 flags;
-    u8 pad18[2];
-    s8 upLink;
-    s8 downLink;
-    s8 leftLink;
-    s8 rightLink;
-    s8 state;
-    s8 slots[LINK_ITEM_SLOTS];
-    s8 timer;
-    u8 pad39[3];
-} LinkMenuItem;
-
-#define LINK_FLAG_DISABLE_NAV_TO 0x1000
-#define LINK_FLAG_NO_ACCEPT      0x0020
-#define LINK_FLAG_INHERIT_X      0x0008
-#define LINK_FLAG_NO_SLOTS       0x0010
-#define LINK_FLAG_CENTRE         0x0400
-#define LINK_IS_NAVIGABLE(index) ((gTumbleweedBushItems[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
-
-#pragma peephole off
 #pragma opt_propagation off
 u32 Link_update(void)
 {
@@ -631,40 +763,24 @@ u32 Link_update(void)
     linkDrawFn_80130484();
     return result;
 }
+
 #pragma opt_propagation reset
 #pragma peephole reset
 
-#pragma peephole off
-void Link_release(void)
+void Link_free(void)
 {
+    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
 
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < gTumbleweedBushItemCount; i++)
     {
-        textureFree((Texture*)(((LinkTextureSlot*)linkTextures)[i].texture));
+        if (gTumbleweedBushItems[i].texture != NULL)
+        {
+            textureFree((Texture*)(gTumbleweedBushItems[i].texture));
+        }
     }
-    fn_8001BDD4(3);
+    gTumbleweedBushItemCount = 0;
 }
-#pragma peephole reset
-
-#pragma peephole off
-void Link_initialise(void)
-{
-    int i;
-
-    for (i = 0; i < 6; i++)
-    {
-        ((LinkTextureSlot*)linkTextures)[i].texture = textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
-    }
-
-    padFn_80014b18(10);
-    linkItemOpacity = 0xff;
-    fn_8001BE2C(3);
-    linkIsRotated = 0;
-    linkFlag_803dd8f8 = 1;
-}
-#pragma peephole reset
-
 #pragma peephole off
 void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage, int unused1, int unused2,
                 int baseRed, int baseGreen, int baseBlue, int selectedRed, int selectedGreen, int selectedBlue)
@@ -759,160 +875,32 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
         gTumbleweedBushDefaultText = defaultText;
     }
 }
-#pragma peephole reset
 
-void Link_free(void)
+void Link_release(void)
 {
-    extern LinkMenuItem gTumbleweedBushItems[40];
     int i;
 
-    for (i = 0; i < gTumbleweedBushItemCount; i++)
+    for (i = 0; i < 6; i++)
     {
-        if (gTumbleweedBushItems[i].texture != NULL)
-        {
-            textureFree((Texture*)(gTumbleweedBushItems[i].texture));
-        }
+        textureFree((Texture*)(((LinkTextureSlot*)linkTextures)[i].texture));
     }
-    gTumbleweedBushItemCount = 0;
+    fn_8001BDD4(3);
 }
-
-#pragma peephole off
-void linkDrawFn_801302c0(void)
+void Link_initialise(void)
 {
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* sel;
-    int resetTimer;
-    void* iconTex;
     int i;
-    int selLeft;
-    int selRight;
-    int itemLeft;
-    int itemRight;
-    int iconWidth;
 
-    resetTimer = 4;
-    gTumbleweedBushItems[linkSelected].timer = resetTimer;
-    sel = &gTumbleweedBushItems[linkSelected];
-    if (((sel->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)sel->slots[0] != -1))
+    for (i = 0; i < 6; i++)
     {
-        iconTex = *(void**)(linkTextures + sel->slots[0] * 8);
+        ((LinkTextureSlot*)linkTextures)[i].texture = textureLoadAsset(((LinkTextureSlot*)linkTextures)[i].assetId);
     }
-    else
-    {
-        iconTex = sel->texture;
-    }
-    if (iconTex != NULL)
-    {
-        iconWidth = ((Texture*)iconTex)->height;
-        selLeft = sel->iconLeft;
-    }
-    else
-    {
-        if (getCurLanguage() == 4)
-        {
-            iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
-        }
-        else
-        {
-            iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
-        }
-        selLeft = sel->textLeft - 2;
-    }
-    selRight = selLeft + iconWidth;
-    for (i = 0; i < gTumbleweedBushItemCount; i++)
-    {
-        if (i != linkSelected)
-        {
-            if (((gTumbleweedBushItems[i].flags & LINK_FLAG_DRAW_SLOTS) != 0) &&
-                ((s8)gTumbleweedBushItems[i].slots[0] != -1))
-            {
-                iconTex = *(void**)(linkTextures + gTumbleweedBushItems[i].slots[0] * 8);
-            }
-            else
-            {
-                iconTex = gTumbleweedBushItems[i].texture;
-            }
-            if (iconTex != NULL)
-            {
-                iconWidth = ((Texture*)iconTex)->height;
-                itemLeft = gTumbleweedBushItems[i].iconLeft;
-            }
-            else
-            {
-                if (getCurLanguage() == 4)
-                {
-                    iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
-                }
-                else
-                {
-                    iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
-                }
-                itemLeft = gTumbleweedBushItems[i].textLeft - 2;
-            }
-            itemRight = itemLeft + iconWidth;
-            if (itemLeft < selRight && itemRight > selLeft)
-            {
-                gTumbleweedBushItems[i].timer = resetTimer;
-            }
-        }
-    }
+
+    padFn_80014b18(10);
+    linkItemOpacity = 0xff;
+    fn_8001BE2C(3);
+    linkIsRotated = 0;
+    linkFlag_803dd8f8 = 1;
 }
-
-void linkDrawFn_80130484(void)
-{
-    extern LinkMenuItemDB gTumbleweedBushItems[40];
-    LinkMenuItemDB* item;
-    void* iconTex;
-    int i;
-    int minX;
-    int maxX;
-    int iconWidth;
-    int left;
-    int right;
-
-    minX = 480;
-    maxX = 0;
-    i = 0;
-    for (; i < gTumbleweedBushItemCount; i++)
-    {
-        item = &gTumbleweedBushItems[i];
-        if (((item->flags & LINK_FLAG_DRAW_SLOTS) != 0) && ((s8)item->slots[0] != -1))
-        {
-            iconTex = *(void**)(linkTextures + item->slots[0] * 8);
-        }
-        else
-        {
-            iconTex = item->texture;
-        }
-        if (iconTex != NULL)
-        {
-            iconWidth = ((Texture*)iconTex)->height;
-            left = item->iconLeft;
-        }
-        else
-        {
-            if (getCurLanguage() == 4)
-            {
-                iconWidth = *(u16*)(lbl_802C8680 + 0xa) + 2;
-            }
-            else
-            {
-                iconWidth = *(u16*)(lbl_802C8680 + 0x4a) + 2;
-            }
-            left = item->textLeft - 2;
-        }
-        right = left + iconWidth;
-        if (left < minX)
-        {
-            minX = left;
-        }
-        if (right > maxX)
-        {
-            maxX = right;
-        }
-    }
-}
-#pragma peephole reset
 
 LinkMenuItemDB gTumbleweedBushItems[40];
 
