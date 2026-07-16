@@ -727,8 +727,8 @@ void Camera_UpdateProjection(void* viewportArg)
     u8 viewIndex = gCameraCurrentViewIndex;
     u8 activeViewIndex;
     u32 resolution = getScreenResolution();
-    u32 screenHeight = resolution & 0xffff;
     u32 screenWidth = resolution >> 16;
+    u32 screenHeight = resolution & 0xffff;
     u8* base = gCameraViewportEntries;
     u8* viewportEntry = base + viewIndex * 0x34;
 
@@ -774,8 +774,8 @@ void Camera_UpdateProjection(void* viewportArg)
     }
     else
     {
-        u32 halfScreenHeight = screenHeight >> 1;
         u32 halfScreenWidth = screenWidth >> 1;
+        u32 halfScreenHeight = screenHeight >> 1;
 
         activeViewIndex = gCameraCurrentViewIndex;
         viewportEntry = gCameraViewportEntries;
@@ -783,14 +783,12 @@ void Camera_UpdateProjection(void* viewportArg)
         if ((*(int*)(viewportEntry + 0x30) & 1) == 0)
         {
             s16 scaledHalfHeight;
-            s16 scaledHalfWidth;
 
             scaledHalfHeight = (s16)(halfScreenHeight << 2);
             gCameraViewportScreenParams[activeViewIndex * 8 + 4] = scaledHalfHeight;
-            scaledHalfWidth = (s16)(halfScreenWidth << 2);
-            gCameraViewportScreenParams[activeViewIndex * 8 + 5] = scaledHalfWidth;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 5] = (s16)(halfScreenWidth << 2);
             gCameraViewportScreenParams[activeViewIndex * 8 + 0] = scaledHalfHeight;
-            gCameraViewportScreenParams[activeViewIndex * 8 + 1] = scaledHalfWidth;
+            gCameraViewportScreenParams[activeViewIndex * 8 + 1] = (s16)(halfScreenWidth << 2);
         }
 
         if (gCameraProjectionMode == 1)
