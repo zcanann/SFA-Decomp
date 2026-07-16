@@ -747,6 +747,7 @@ extern f32 lbl_803E0538;
 #pragma opt_dead_assignments off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
+    CheckpointSlot* cp2;
     int stack[64];
     char visited[200];
     s32 cur;
@@ -756,7 +757,6 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
     int count, k, i, j;
     CheckpointRouteEntry* n;
     CheckpointRouteEntry* e;
-    CheckpointSlot* cp2;
     f32 distA, sin1, cos2, sin2;
     f32 dist1, dist2, nx, nz, outX, sum;
     f32 offs2, cos1, distB, dx, dy, len, q, t0, dz, offs1, b1, width;
