@@ -5418,19 +5418,32 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
     f32 tmp2[3];
     f32 frac;
     f32 ndot;
-    TrackBlockDescriptor* descEnd;
+    f32 dS;
+    f32 dE;
+    f32 dotv;
+    f32 sq;
+    f32 disc;
+    f32 root;
+    f32 tt;
+    f32 rr;
+    u8 vertexBit;
+    u8 nextBit;
+    u8 found;
+    s16 hit;
+    TrackTriangle* tri;
+    u32 objmtx;
+    TrackBlockDescriptor* desc;
+    u8 bounces;
     f32 eps;
     f32 negStep, radius, maxStep;
     f32 offX, offZ;
     f32 mag;
-    TrackBlockDescriptor* desc;
-    TrackTriangle* tri;
-    u32 objmtx;
-    u8 bounces;
-    u8 found;
-    s16 hit;
+    u32 descBytes;
+    TrackBlockDescriptor* descEnd;
 
-    descEnd = (descBase = gTrackBlockDescriptors) + gActiveTrackBlockCount;
+    descBytes = gActiveTrackBlockCount * sizeof(TrackBlockDescriptor);
+    descBase = gTrackBlockDescriptors;
+    descEnd = (TrackBlockDescriptor*)((u32)descBase + descBytes);
     offX = (f32) * (int*)gTrackGridOrigin;
     offZ = (f32) * (int*)(gTrackGridOrigin + 8);
     i = 0;
@@ -5488,8 +5501,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     ws[1] = svFromp[1];
                     ws[2] = svFromp[2] - offZ;
                     we[0] = cur[0] - offX;
-                    *wyp = cur[1];
-                    *wzp = cur[2] - offZ;
+                    wyp[0] = cur[1];
+                    wzp[0] = cur[2] - offZ;
                 }
                 PSVECSubtract(we, ws, delta);
                 mag = PSVECMag(delta);
@@ -5501,7 +5514,6 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
                     s16* ts = (s16*)tri;
-                    f32 dE, dS;
                     u8 b;
                     tri->edgeOutBits = 0;
                     if (tri->flags & 0x10)
@@ -5517,8 +5529,6 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     if ((dS <= (*(f32*)&__AR_Callback) && dE >= (*(f32*)&__AR_Callback)) ||
                         (dS >= (*(f32*)&__AR_Callback) && dE <= (*(f32*)&__AR_Callback)))
                     {
-                        f32 lo, hi;
-                        f32 cv;
                         if (dS != dE)
                         {
                             frac = dS / (dS - dE);
@@ -5529,12 +5539,9 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         }
                         PSVECScale(delta, hitpt, frac);
                         PSVECAdd(hitpt, ws, hitpt);
-                        lo = ts[(tri->minMaxY & 0xf) + 0xb] - maxStep;
-                        if (hitpt[1] < lo)
+                        if (hitpt[1] < ts[(tri->minMaxY & 0xf) + 0xb] - maxStep)
                             continue;
-                        cv = ts[(tri->minMaxY >> 4) + 0xb];
-                        hi = cv + maxStep;
-                        if (hitpt[1] > hi)
+                        if (hitpt[1] > ts[(tri->minMaxY >> 4) + 0xb] + maxStep)
                             continue;
                         edge0[0] = tri->edgeN0[0];
                         edge0[1] = tri->edgeN0[1];
@@ -5600,19 +5607,19 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
-                    u8 bit;
+                    u8 edgeBit;
                     if (tri->edgeOutBits == 0)
                         continue;
-                    for (bit = 0; bit < 3; bit++)
+                    for (edgeBit = 0; edgeBit < 3; edgeBit++)
                     {
                         s16* vs;
                         u8 k;
-                        if ((tri->edgeOutBits & (1 << bit)) == 0)
+                        if ((tri->edgeOutBits & (1 << edgeBit)) == 0)
                             continue;
-                        k = bit + 1;
+                        k = edgeBit + 1;
                         if (k > 2)
                             k = 0;
-                        vs = (s16*)((u8*)tri + bit * 2);
+                        vs = (s16*)((u8*)tri + edgeBit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
@@ -5633,21 +5640,18 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                 for (tri = (TrackTriangle*)(gTrackTriangleBuffer + desc->firstTriangle * 0x4c);
                      (u32)tri < (u32)(gTrackTriangleBuffer + desc[1].firstTriangle * 0x4c); tri++)
                 {
-                    u8 bit;
                     if (tri->edgeOutBits == 0)
                         continue;
-                    for (bit = 0; bit < 3; bit++)
+                    for (vertexBit = 0; vertexBit < 3; vertexBit++)
                     {
                         s16* vs;
-                        u8 k;
                         int ok;
-                        f32 dotv, sq, disc, root, tt, rr, rr2;
-                        if ((tri->edgeOutBits & (1 << bit)) == 0)
+                        if ((tri->edgeOutBits & (1 << vertexBit)) == 0)
                             continue;
-                        k = bit + 1;
-                        if (k > 2)
-                            k = 0;
-                        vs = (s16*)((u8*)tri + bit * 2);
+                        nextBit = vertexBit + 1;
+                        if (nextBit > 2)
+                            nextBit = 0;
+                        vs = (s16*)((u8*)tri + vertexBit * 2);
                         va[0] = vs[8];
                         va[1] = vs[0xb];
                         va[2] = vs[0xe];
@@ -5700,29 +5704,29 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                             hit = 1;
                             goto found_hit;
                         }
-                        vs = (s16*)((u8*)tri + k * 2);
+                        vs = (s16*)((u8*)tri + nextBit * 2);
                         vb[0] = vs[8];
                         vb[1] = vs[0xb];
                         vb[2] = vs[0xe];
-                        rr2 = rdatap[1];
+                        dE = rdatap[1];
                         PSVECSubtract(vbp, ws, tmp2);
                         sq = PSVECDotProduct(tmp2, dir);
                         dotv = PSVECSquareMag(tmp2);
-                        if (sq < (*(f32*)&__AR_Callback) && dotv > rr2)
+                        if (sq < (*(f32*)&__AR_Callback) && dotv > dE)
                         {
                             ok = 0;
                         }
                         else
                         {
                             disc = -(sq * sq - dotv);
-                            if (disc > rr2)
+                            if (disc > dE)
                             {
                                 ok = 0;
                             }
                             else
                             {
-                                root = sqrtf(rr2 - disc);
-                                if (dotv > rr2)
+                                root = sqrtf(dE - disc);
+                                if (dotv > dE)
                                 {
                                     tt = sq - root;
                                 }
@@ -5736,7 +5740,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                                     PSVECAdd(ws, hitpt, hitpt);
                                     PSVECSubtract(hitpt, vbp, plane);
                                     PSVECNormalize(plane, plane);
-                                    root = sqrtf(rr2);
+                                    root = sqrtf(dE);
                                     ndot = -PSVECDotProduct(hitpt, plane);
                                     plane[3] = ndot + root;
                                     frac = tt;
@@ -5758,6 +5762,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
             found_hit:
                 if (hit != 0)
                 {
+                    u32 triFlags;
                     we[0] = hitpt[0];
                     we[1] = hitpt[1];
                     we[2] = hitpt[2];
@@ -5766,7 +5771,8 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                     norm4[2] = plane[2];
                     norm4[3] = plane[3];
                     typeb = tri->surfaceType;
-                    typeb2 = *(u8*)&tri->flags;
+                    triFlags = *(u8*)&tri->flags;
+                    typeb2 = (u8)triFlags;
                     objmtx = *(u32*)desc;
                     svWorld[0] = ws[0];
                     svWorld[1] = ws[1];
@@ -5783,7 +5789,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
                         outp[2] = norm4[2];
                         outp[3] = norm4[3];
                         typeSlotp[0x50] = typeb;
-                        typeSlotp[0x58] = typeb2;
+                        typeSlotp[0x58] = (u8)triFlags;
                         *(int*)(slotp + 0x5c) = objmtx;
                         bounces++;
                         goto slot_done;
@@ -5859,7 +5865,7 @@ u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos
         sp1 += 3;
         sp2 += 3;
     } while (i < count);
-    return (u8)(retLo | (retHi << 4));
+    return (u8)((retHi << 4) | retLo);
 }
 #pragma opt_propagation reset
 #pragma opt_common_subs reset
