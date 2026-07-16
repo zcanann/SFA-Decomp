@@ -890,17 +890,27 @@ int saveGame(int writeImages)
     return ret;
 }
 
+static u64 saveGame_checksum(u64* p, int count)
+{
+    u64 x[1];
+    u16 i[1];
+    u64 acc[1];
+
+    x[0] = 0;
+    acc[0] = 1;
+    for (i[0] = (int)x[0]; (int)i[0] < count; i[0]++)
+    {
+        x[0] ^= p[i[0]];
+        acc[0] += p[i[0]];
+    }
+    return x[0] ^ (acc[0] + 13);
+}
+
 /* Saves the game: verifies the existing save slots' checksums, rewrites
  * stale slots and card images, then runs the caller's callback and maps the
  * result to a status code. */
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD, SaveGameCallback cb)
 {
-    u64 x[1];
-    u16 i[1];
-    u64* p;
-    u64 acc[1];
-    u64 x2[1];
-    u64 acc2[1];
     u64 chk;
     u64 chk2;
     u64 c;
@@ -925,16 +935,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     result = CARDRead(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, 0x2000);
     if (result == CARD_RESULT_READY)
     {
-        p = (u64*)lbl_803DD044;
-        x[0] = 0;
-        acc[0] = 1;
-        for (i[0] = (int)x[0]; (int)i[0] < 0x3ff; i[0]++)
-        {
-            u64 v = p[i[0]];
-            x[0] = x[0] ^ v;
-            acc[0] = acc[0] + v;
-        }
-        c = x[0] ^ (acc[0] + 13);
+        c = saveGame_checksum((u64*)lbl_803DD044, 0x3ff);
         chk = c;
         if (c != *(u64*)(lbl_803DD044 + 0x1ff8))
         {
@@ -942,16 +943,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
             result = CARDRead(&lbl_80396900.fileInfo, (void*)lbl_803DD044, 0x2000, 0x4000);
             if (result == CARD_RESULT_READY)
             {
-                p = (u64*)lbl_803DD044;
-                x2[0] = 0;
-                acc2[0] = 1;
-                for (i[0] = (int)x2[0]; (int)i[0] < 0x3ff; i[0]++)
-                {
-                    u64 v = p[i[0]];
-                    x2[0] = x2[0] ^ v;
-                    acc2[0] = acc2[0] + v;
-                }
-                c = x2[0] ^ (acc2[0] + 13);
+                c = saveGame_checksum((u64*)lbl_803DD044, 0x3ff);
                 chk = c;
                 if (c == *(u64*)(lbl_803DD044 + 0x1ff8))
                 {
@@ -1010,16 +1002,7 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
         result = CARDRead(&lbl_80396900.fileInfo, m, 0x2000, 0);
         if (result == CARD_RESULT_READY)
         {
-            p = (u64*)gSaveCardImageBuffer;
-            x[0] = 0;
-            acc[0] = 1;
-            for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
-            {
-                u64 v = p[i[0]];
-                x[0] = x[0] ^ v;
-                acc[0] = acc[0] + v;
-            }
-            chk2 = x[0] ^ (acc[0] + 13);
+            chk2 = saveGame_checksum((u64*)gSaveCardImageBuffer, 0x400);
             if (chk2 != *(u64*)(lbl_803DD044 + 0xa40))
             {
                 if ((u8)writeImages != 0)
