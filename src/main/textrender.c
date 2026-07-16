@@ -770,6 +770,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     u32 ch;
     int params[8];
     u32 scisX, scisY, scisW, scisH;
+    f32 e710;
 
     byteOff = 0;
     spaceExtra = lbl_803DE704;
@@ -903,7 +904,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             case TEXT_ALIGN_CENTER:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
-                x = ((f32)(u32) * (u16*)(win + 8) - measW) * lbl_803DE70C + (f32) * (s16*)(win + 0x14);
+                x = (f32)(u32) * (u16*)(win + 8) - measW;
+                x = x * lbl_803DE70C + (f32) * (s16*)(win + 0x14);
                 break;
             case TEXT_ALIGN_JUSTIFY:
             {
@@ -954,14 +956,15 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
         u0 = (f32)(g->u << 5);
         v0 = (f32)(g->v << 5);
+        e710 = lbl_803DE710;
         fx0 = (f32)g->offsetX * lbl_803DC9A0;
         fx0 = x + fx0;
-        fx0 = lbl_803DE710 * fx0;
+        fx0 = e710 * fx0;
         fy0 = (f32)g->offsetY * lbl_803DC9A0;
         fy0 = y + fy0;
-        fy0 = lbl_803DE710 * fy0;
-        fx1 = lbl_803DE710 * ((f32)(u32)g->width * lbl_803DC9A0) + fx0;
-        fy1 = lbl_803DE710 * ((f32)(u32)g->height * lbl_803DC9A0) + fy0;
+        fy0 = e710 * fy0;
+        fx1 = e710 * ((f32)(u32)g->width * lbl_803DC9A0) + fx0;
+        fy1 = e710 * ((f32)(u32)g->height * lbl_803DC9A0) + fy0;
         if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704)
         {
             u0 = lbl_803DE714 * -fx0 + u0;
