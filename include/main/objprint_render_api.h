@@ -5,6 +5,7 @@
 
 typedef struct GameObject GameObject;
 typedef struct ModelLightStruct ModelLightStruct;
+typedef struct ObjModel ObjModel;
 
 extern ModelLightStruct* lbl_803DCC64;
 
@@ -19,7 +20,7 @@ void modelInitMtxs(int modelFile, int model);
 void modelMtxFn_8003be38(int modelFile, int model, int matrix, int matrix2);
 int objRotateFn_8003bce8(f32* matrix, s16* outX, s16* outY, s16* outZ);
 int modelRenderCb_8003c268(int obj, int* model, int renderOpIndex);
-int shaderFuzzFn_8003cc1c(int obj, int* model, int renderOpIndex);
+int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int renderOpIndex);
 
 #define modelInitMtxsPtrLegacy(modelFile, model) \
     (((void (*)(u8*, int*))modelInitMtxs)((modelFile), (model)))

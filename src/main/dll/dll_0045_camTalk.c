@@ -132,7 +132,7 @@ void CameraModeBike_update(CameraObject* camera)
             angleDelta = angleDelta + 0xFFFF;
         }
         rollStep = (f32)(s32)angleDelta * timeDelta;
-        camera->anim.rotZ = rollStep * lbl_803E17B4 + camera->anim.rotZ;
+        camera->anim.rotZ += rollStep * lbl_803E17B4;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
                                        &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                        (u32)camera->anim.parent);

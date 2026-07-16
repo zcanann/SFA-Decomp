@@ -2069,21 +2069,24 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 #undef GXSetChanAmbColor
 #undef GXSetTevKColor
 
-typedef struct ObjPrintS10Color
-{
-    s16 r, g, b, a;
-} ObjPrintS10Color;
+typedef void (*ObjPrintSetTevColorS10Fn)(int id, GXColorS10 color);
 
-typedef void (*ObjPrintSetTevColorS10Fn)(int id, ObjPrintS10Color color);
-
-extern ObjPrintS10Color lbl_803DE9F4;
+extern GXColorS10 lbl_803DE9F4;
 extern ObjPrintGXColor lbl_803DB494;
+extern int lbl_803DCC44;
+extern u8 lbl_803DCC3E;
 extern u8 lbl_803DCC35;
 extern u8 lbl_803DCC36;
 extern int lbl_803DCC5C;
 extern u8 lbl_803DCC60;
+extern u32 lbl_803DB468;
 extern int lbl_803DB48C;
 extern int lbl_803DB490;
+extern f32 lbl_803DEA28;
+extern f32 lbl_803DEA2C;
+extern f32 lbl_803DEA30;
+extern f32 lbl_803DEA04;
+extern f32 lbl_803DEA1C;
 
 static inline int shaderProjDisabled(ModelLightStruct* light)
 {
@@ -2098,7 +2101,7 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
 #define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
 #define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
-int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
+int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
 {
     f32 mtx4[12];
     f32 mtx3[12];
@@ -2106,7 +2109,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     f32 mtxR[12];
     IndTexMtx23 mtxA;
     IndTexMtx23 mtxB;
-    ObjPrintS10Color s10;
+    GXColorS10 s10;
     int coord;
     int texTbl;
     int texCnt;
@@ -2123,7 +2126,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     s10 = lbl_803DE9F4;
     mtxA = lbl_802C1B10;
     mtxB = lbl_802C1B28;
-    rop = (u8*)ObjModel_GetRenderOp((ModelFileHeader*)*model, ropIdx);
+    rop = (u8*)ObjModel_GetRenderOp(model->file, ropIdx);
     if ((*(u32*)(rop + 0x3c) & 0x200) == 0)
     {
         lbl_803DCC3E = 0;
@@ -2181,11 +2184,11 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     {
-        u8 v = *(u8*)(obj + 0xf1);
+        u8 v = obj->unkF1[0];
         s10.b = v;
         s10.g = v;
         s10.r = v;
-        s10.a = *(u8*)(obj + 0x37) - 0xff;
+        s10.a = obj->anim.pad37[0] - 0xff;
     }
     GXSetTevColorS10(3, s10);
     PSMTXScale(mtx3, lbl_803DEA2C, *(f32*)&lbl_803DEA2C, lbl_803DEA04);
@@ -2193,7 +2196,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     PSMTXConcat(mtx2, mtx3, mtx3);
     GXLoadTexMtxImm(mtx3, GX_PTTEXMTX1, GX_MTX3x4);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_NRM, GX_TEXMTX0, GX_FALSE, GX_PTTEXMTX1);
-    selectTexture((Texture*)(ObjModel_GetRenderOpTextureRefs((ObjModel*)model, ropIdx)->texture0), 1);
+    selectTexture((Texture*)(ObjModel_GetRenderOpTextureRefs(model, ropIdx)->texture0), 1);
     GXSetTevDirect(GX_TEVSTAGE1);
     GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR0A0);
     GXSetTevSwapMode(GX_TEVSTAGE1, GX_TEV_SWAP0, GX_TEV_SWAP0);
@@ -2334,7 +2337,7 @@ int shaderFuzzFn_8003cc1c(int obj, int* model, int ropIdx)
     }
     GXSetNumIndStages(2);
     GXSetCullMode(GX_CULL_BACK);
-    if ((*(u16*)(*model + 2) & 0x100) != 0)
+    if ((model->file->flags & 0x100) != 0)
     {
         GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
     }
