@@ -233,6 +233,7 @@ void waterfx_drawFn_800953fc(void)
     int i;
     int m;
     void* dl;
+    u8 a[1];
 
     GXSetMisc(1, 0);
     gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
@@ -266,19 +267,20 @@ void waterfx_drawFn_800953fc(void)
     DCInvalidateRange(dl, 2880);
     GXBeginDisplayList(gWaterfxSplashDisplayList, 2880);
     GXResetWriteGatherPipe();
+    a[0] = 0;
     for (k = 0; k < 15; k++)
     {
         GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT2, 16);
         for (m = 7; m >= 0; m--)
         {
-            u8 a = m * 3;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u8 = a;
+            a[0] = m * 3;
+            GXWGFifo.u8 = a[0];
+            GXWGFifo.u8 = a[0];
             GXWGFifo.u16 = k;
             GXWGFifo.u16 = m;
             GXWGFifo.u16 = m * 16 + k;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u8 = a;
+            GXWGFifo.u8 = a[0];
+            GXWGFifo.u8 = a[0];
             GXWGFifo.u16 = (k + 1) % 16;
             GXWGFifo.u16 = m;
             GXWGFifo.u16 = m * 16 + (k + 1) % 16;
