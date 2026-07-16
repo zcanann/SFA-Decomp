@@ -1245,6 +1245,18 @@ void unloadMap(void)
 extern int gShaderMapRomBuffers[];
 extern void* memset(void* p, int v, int n);
 
+#define INIT_MAP_SLOT(slot)                                                                                 \
+    e = (char*)gShaderMapRomBuffers[1] + (slot) * 10 + ofs;                                                 \
+    *(s8*)((char*)gShaderMapRomBuffers[3] + idx + (slot)) = -128;                                          \
+    *(s16*)(e + 0) = -32768;                                                                               \
+    *(s16*)(e + 2) = -32768;                                                                               \
+    *(s16*)(e + 4) = -32768;                                                                               \
+    *(s16*)(e + 6) = -32768;                                                                               \
+    *(s8*)(e + 8) = -128;                                                                                  \
+    *(s8*)(e + 9) = -128;                                                                                  \
+    ((s16*)gShaderMapRomBuffers[2])[(idx + (slot)) << 1] = -1;                                             \
+    ((s16*)gShaderMapRomBuffers[2])[((idx + (slot)) << 1) + 1] = -1
+
 void initMaps(void)
 {
     void* data;
@@ -1253,7 +1265,6 @@ void initMaps(void)
     int i2;
     int ofs;
     int idx;
-    int k;
     char* e;
 
     data = 0;
@@ -1265,103 +1276,33 @@ void initMaps(void)
     gShaderMapRomBuffers[3] = (int)mmAlloc(128, 5, 0);
     gShaderMapRomBuffers[4] = (int)mmAlloc(8192, 5, 0);
     memset((void*)gShaderMapRomBuffers[4], 0, 8192);
-    idx = ofs = 0;
+    idx = 0;
+    ofs = 0;
     for (i = 0; i < 16; i++)
     {
-        e = (char*)gShaderMapRomBuffers[1] + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[idx << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[(idx << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 10 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 1) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 1) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 1) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 20 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 2) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 2) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 2) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 30 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 3) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 3) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 3) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 40 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 4) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 4) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 4) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 50 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 5) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 5) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 5) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 60 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 6) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 6) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 6) << 1) + 1] = -1;
-        e = (char*)gShaderMapRomBuffers[1] + 70 + ofs;
-        *(s8*)((char*)gShaderMapRomBuffers[3] + idx + 7) = -128;
-        *(s16*)(e + 0) = -32768;
-        *(s16*)(e + 2) = -32768;
-        *(s16*)(e + 4) = -32768;
-        *(s16*)(e + 6) = -32768;
-        *(s8*)(e + 8) = -128;
-        *(s8*)(e + 9) = -128;
-        ((s16*)gShaderMapRomBuffers[2])[(idx + 7) << 1] = -1;
-        ((s16*)gShaderMapRomBuffers[2])[((idx + 7) << 1) + 1] = -1;
+        INIT_MAP_SLOT(0);
+        INIT_MAP_SLOT(1);
+        INIT_MAP_SLOT(2);
+        INIT_MAP_SLOT(3);
+        INIT_MAP_SLOT(4);
+        INIT_MAP_SLOT(5);
+        INIT_MAP_SLOT(6);
+        INIT_MAP_SLOT(7);
         ofs += 80;
         idx += 8;
     }
     i2 = 0;
-    total = total / 12;
+    total /= 12;
     while (i2 < total && *(s16*)((char*)data + i2 * 12 + 6) > -1)
     {
         *(s8*)((char*)gShaderMapRomBuffers[3] + *(s16*)((char*)data + i2 * 12 + 6)) =
-            (s8) * (s16*)((char*)data + i2 * 12 + 4);
+            (s8)*(s16*)((char*)data + i2 * 12 + 4);
         mapInitSetRects((s16*)((char*)gShaderMapRomBuffers[1] + *(s16*)((char*)data + i2 * 12 + 6) * 10),
                         (u8*)((char*)gShaderMapRomBuffers[4] + *(s16*)((char*)data + i2 * 12 + 6) * 64),
                         *(s16*)((char*)data + i2 * 12), *(s16*)((char*)data + i2 * 12 + 2),
                         *(s16*)((char*)data + i2 * 12 + 6));
-        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] = *(s16*)((char*)data + i2 * 12 + 8);
+        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] =
+            *(s16*)((char*)data + i2 * 12 + 8);
         ((s16*)gShaderMapRomBuffers[2])[(*(s16*)((char*)data + i2 * 12 + 6) << 1) + 1] =
             *(s16*)((char*)data + i2 * 12 + 0xa);
         i2++;
@@ -1371,6 +1312,8 @@ void initMaps(void)
     lbl_803DCEB4 = 0;
     mm_free(data);
 }
+
+#undef INIT_MAP_SLOT
 
 void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx)
 {
