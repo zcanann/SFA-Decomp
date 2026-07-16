@@ -54,14 +54,6 @@ extern f32 lbl_803E2EF0;
 extern f32 lbl_803E2EF4;
 extern f32 lbl_803E2EF8;
 extern f32 lbl_803E2EFC;
-extern f32 lbl_803E2F00;
-extern f32 lbl_803E2F08;
-extern f32 lbl_803E2F0C;
-extern f32 lbl_803E2F18;
-extern f32 lbl_803E2F1C;
-extern f32 gGrimblePathSearchMaxDist;
-extern f32 lbl_803E2F24;
-extern f32 lbl_803E2F28;
 int grimble_animEventCallback(void);
 void fn_801627F4(GameObject* obj);
 
@@ -108,7 +100,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
     d = r;
     x = r;
     angle = getAngle(y, d);
-    obj->anim.rotY = (lbl_803E2EBC - lbl_803E2F00 * obj->anim.currentMoveProgress) *
+    obj->anim.rotY = (lbl_803E2EBC - 2.0f * obj->anim.currentMoveProgress) *
                      (f32)(s16)(angle * ((((GrimbleControl*)sub)->reversed << 1) - 1));
     if (*(s8*)&((GroundBaddieState*)state)->baddie.moveDone != 0)
     {
@@ -126,7 +118,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
             }
             else
             {
-                vel *= lbl_803E2EBC + dist / lbl_803E2F08;
+                vel *= lbl_803E2EBC + dist / 300.0f;
             }
         }
         ((GrimbleControl*)sub)->targetProgress = ((GrimbleControl*)sub)->pathProgress - vel;
@@ -134,7 +126,7 @@ int grimble_stateHandlerA02(GameObject* obj, char* state, f32 arg)
         spd = (spd > lbl_803E2EBC) ? spd : lbl_803E2EBC;
         ((GrimbleControl*)sub)->targetProgress = spd;
         spd = ((GrimbleControl*)sub)->targetProgress;
-        spd = (spd < lbl_803E2F0C) ? spd : lbl_803E2F0C;
+        spd = (spd < 6.0f) ? spd : 6.0f;
         ((GrimbleControl*)sub)->targetProgress = spd;
         return 4;
     }
@@ -165,7 +157,7 @@ int grimble_stateHandlerA01(GameObject* obj, char* state, f32 arg)
     }
     (*(void (**)(int, char*, f32))(*(int*)(*(int*)(((GrimbleControl*)sub)->pathObj + 0x68)) + 0x28))(
         ((GrimbleControl*)sub)->pathObj, sub + 0x48,
-        lbl_803E2F18 *
+        50.4f *
             (((GroundBaddieState*)state)->baddie.moveSpeed * (f32)(1 - (((GrimbleControl*)sub)->reversed << 1))));
     if (((GrimbleControl*)sub)->pathProgress < lbl_803E2EF4)
     {
@@ -234,8 +226,8 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
     }
     (*(void (**)(int, int, int, u16*, u16*, u16*))(*(int*)gBaddieControlInterface + 0x14))(
         (int)obj, *(int*)&((GroundBaddieState*)state)->baddie.targetObj, 0x10, &zone, &pad, &dist);
-    if (zone > 3 && zone < 0xc && dist > 0x190 && ((GrimbleControl*)sub)->pathProgress > lbl_803E2F00 &&
-        ((GrimbleControl*)sub)->pathProgress < lbl_803E2F1C)
+    if (zone > 3 && zone < 0xc && dist > 0x190 && ((GrimbleControl*)sub)->pathProgress > 2.0f &&
+        ((GrimbleControl*)sub)->pathProgress < 5.0f)
     {
         return 3;
     }
@@ -267,6 +259,13 @@ int grimble_stateHandlerA00(GameObject* obj, char* state, f32 arg)
 }
 #pragma opt_common_subs reset
 #pragma fp_contract reset
+
+int grimble_animEventCallback(void)
+{
+    return 0x0;
+}
+
+__declspec(section ".sdata2") f32 gGrimblePathSearchMaxDist = 200.0f;
 
 void fn_801627F4(GameObject* obj)
 {
@@ -334,16 +333,32 @@ void fn_801627F4(GameObject* obj)
             ((GrimbleControl*)sub)->reversed = facing;
             obj->anim.rotX = ((GrimbleControl*)sub)->baseRotX + (!((GrimbleControl*)sub)->reversed << 15);
             progress = ((GrimbleControl*)sub)->pathProgress - (f32)((((GrimbleControl*)sub)->reversed << 1) - 1) *
-                                                                  ((f32)(int)randomGetRange(0xa, 0x3c) / lbl_803E2F24);
+                                                                  ((f32)(int)randomGetRange(0xa, 0x3c) / 10.0f);
             ((GrimbleControl*)sub)->targetProgress = progress;
             progress = ((GrimbleControl*)sub)->targetProgress;
             progress = (progress > lbl_803E2EBC) ? progress : lbl_803E2EBC;
             ((GrimbleControl*)sub)->targetProgress = progress;
             progress = ((GrimbleControl*)sub)->targetProgress;
-            progress = (progress < lbl_803E2F0C) ? progress : lbl_803E2F0C;
+            progress = (progress < 6.0f) ? progress : 6.0f;
             ((GrimbleControl*)sub)->targetProgress = progress;
         }
     }
+}
+
+int grimble_getExtraSize(void)
+{
+    return 0x46c;
+}
+int grimble_getObjectTypeId(void)
+{
+    return 0x59;
+}
+
+void grimble_free(GameObject* obj)
+{
+    int* state = obj->extra;
+    ObjGroup_RemoveObject((u32)obj, GRIMBLE_OBJGROUP);
+    (*(void (**)(int, int*, int))(*(int*)gBaddieControlInterface + 0x40))((int)obj, state, 0);
 }
 
 #pragma opt_common_subs off
@@ -371,7 +386,15 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GroundBaddieState*)state)->flags400 = ((GroundBaddieState*)state)->flags400 & ~0x100;
     }
 }
+#pragma opt_common_subs reset
 
+void grimble_hitDetect(int obj)
+{
+    (*(void (**)(int, int*, void*))(*(int*)gPlayerInterface + 0xC))(obj, ((GameObject*)obj)->extra,
+                                                                    gGrimbleStateHandlersA);
+}
+
+#pragma opt_common_subs off
 void grimble_update(GameObject* obj)
 {
     char* state;
@@ -386,7 +409,7 @@ void grimble_update(GameObject* obj)
         if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {
             (*(void (**)(int, int, char*, int, int, int, int, f32))(*(int*)gBaddieControlInterface + 0x58))(
-                (int)obj, def, state, 0xa, 6, 0x10e, 0x36, lbl_803E2F28);
+                (int)obj, def, state, 0xa, 6, 0x10e, 0x36, 20.0f);
             ((GroundBaddieState*)state)->baddie.substate = 1;
             ((GroundBaddieState*)state)->baddie.moveJustStartedB = 1;
             obj->anim.alpha = 0;
@@ -452,7 +475,7 @@ void grimble_init(int obj, int def, int flag)
         flags |= 1;
     }
     (*(void (**)(int, int, char*, int, int, int, u8, f32))(*(int*)gBaddieControlInterface + 0x58))(
-        obj, def, state, 0, 0, 0, flags, lbl_803E2F28);
+        obj, def, state, 0, 0, 0, flags, 20.0f);
     ((GameObject*)obj)->animEventCallback = grimble_animEventCallback;
     (*(void (**)(int, char*, int))(*(int*)gPlayerInterface + 0x14))(obj, state, 0);
     ((GroundBaddieState*)state)->baddie.substate = 0;
@@ -464,35 +487,9 @@ void grimble_release(void)
 {
 }
 
-int grimble_animEventCallback(void)
-{
-    return 0x0;
-}
-int grimble_getExtraSize(void)
-{
-    return 0x46c;
-}
-int grimble_getObjectTypeId(void)
-{
-    return 0x59;
-}
-
 void grimble_initialise(void)
 {
     grimble_initialiseStateHandlerTables();
-}
-
-void grimble_free(GameObject* obj)
-{
-    int* state = obj->extra;
-    ObjGroup_RemoveObject((u32)obj, GRIMBLE_OBJGROUP);
-    (*(void (**)(int, int*, int))(*(int*)gBaddieControlInterface + 0x40))((int)obj, state, 0);
-}
-
-void grimble_hitDetect(int obj)
-{
-    (*(void (**)(int, int*, void*))(*(int*)gPlayerInterface + 0xC))(obj, ((GameObject*)obj)->extra,
-                                                                    gGrimbleStateHandlersA);
 }
 
 ObjectDescriptor gGrimbleObjDescriptor = {

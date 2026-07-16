@@ -16,6 +16,7 @@
 #include "main/object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/audio/sfx_play_api.h"
 #include "main/dll/dll_80161130.h"
 #include "main/dll/grimble_state.h"
 #include "main/objhits.h"
@@ -27,24 +28,28 @@ STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
 extern int* gBaddieControlInterface;
-extern f32 lbl_803E2EB8;
-extern f32 lbl_803E2EE8;
-extern f32 lbl_803E2EB0;
-extern f32 gScarabTargetStandoffDist;
-extern f32 lbl_803E2EBC;
-extern f32 lbl_803E2EC0;
-extern f32 lbl_803E2EC4;
-extern f32 lbl_803E2EC8;
-extern f32 lbl_803E2ECC;
-extern f32 lbl_803E2ED0;
-extern f32 lbl_803E2ED4;
+
+__declspec(section ".sdata2") f32 lbl_803E2EB0 = -100.0f;
+__declspec(section ".sdata2") f32 gScarabTargetStandoffDist = 45.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2EB8 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E2EBC = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2EC0 = 2.5f;
+__declspec(section ".sdata2") f32 lbl_803E2EC4 = -2.5f;
+__declspec(section ".sdata2") f32 lbl_803E2EC8 = 0.04f;
+__declspec(section ".sdata2") f32 lbl_803E2ECC = -0.07f;
+__declspec(section ".sdata2") f32 lbl_803E2ED0 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E2ED4 = 0.028f;
+
 extern f32 lbl_803E2EE0;
 extern f32 lbl_803E2EE4;
+extern f32 lbl_803E2EE8;
+extern f32 lbl_803E2EEC;
 extern f32 lbl_803E2EF0;
 extern f32 lbl_803E2EF4;
 extern f32 lbl_803E2EF8;
 extern f32 lbl_803E2EFC;
-extern f32 lbl_803E2EEC;
 
 
 void ChukChuk_free(void);
@@ -80,13 +85,6 @@ void ChukChuk_setScale(int obj, int v);
 void IceBall_init(void* obj);
 
 #pragma peephole off
-int grimble_stateHandlerB03(int obj, GroundBaddieState* state)
-{
-    if ((s8)state->baddie.hitPoints < 1)
-        return 5;
-    return 1;
-}
-
 #pragma scheduling off
 int grimble_stateHandlerB05(int* obj, GroundBaddieState* state)
 {
@@ -96,24 +94,6 @@ int grimble_stateHandlerB05(int* obj, GroundBaddieState* state)
         sub->subMode = 0;
         mainSetBits(sub->gameBitB, 0);
         mainSetBits(sub->gameBitA, 1);
-    }
-    return 0;
-}
-
-int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
-{
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
-    if ((s8)state->baddie.moveJustStartedA != 0)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2EB8, 0);
-        state->baddie.moveDone = 0;
-    }
-    state->baddie.moveSpeed = lbl_803E2EE8;
-    if (((s32)state->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
-    {
-        Sfx_PlayFromObject(obj, SFXTRIG_wp_iceywindlp16_233);
-        state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
-        ((void (*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
     }
     return 0;
 }
@@ -137,6 +117,73 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState* state)
             return 0;
         }
         return 6;
+    }
+    return 0;
+}
+
+#pragma scheduling on
+int grimble_stateHandlerB03(int obj, GroundBaddieState* state)
+{
+    if ((s8)state->baddie.hitPoints < 1)
+        return 5;
+    return 1;
+}
+
+#pragma scheduling off
+int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
+{
+    int* target;
+    f32 dx;
+    f32 dz;
+    f32 magAbs;
+    u32 rel;
+
+    target = *(int**)&state->baddie.targetObj;
+    if (target == NULL)
+    {
+        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
+        return 1;
+    }
+    if (state->baddie.controlMode != 6)
+    {
+        dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX;
+        dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ;
+        rel = (getAngle(dx, dz) - *(s16*)obj) & 0xffff;
+        if (rel > 0x4000 && rel < 0xc000)
+        {
+            dx = lbl_803E2EB0;
+        }
+        else
+        {
+            dx = sqrtf(dx * dx + dz * dz) - gScarabTargetStandoffDist;
+        }
+        magAbs = dx < lbl_803E2EB8 ? -dx : dx;
+        if (magAbs < lbl_803E2EBC)
+        {
+            if (state->baddie.controlMode == 1 || (state->baddie.controlMode == 5 && (s8)state->baddie.moveDone != 0))
+            {
+                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 6);
+                goto post;
+            }
+        }
+        if (state->baddie.controlMode == 1)
+            goto post;
+        if (dx > lbl_803E2EC0)
+        {
+            if (state->baddie.controlMode != 4 && (state->baddie.controlMode != 5 || (s8)state->baddie.moveDone != 0))
+            {
+                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+            }
+        }
+        if (dx < lbl_803E2EC4)
+        {
+            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
+        }
+    post:
+        if (state->baddie.controlMode == 1)
+        {
+            state->baddie.moveSpeed = (dx > lbl_803E2EB8) ? lbl_803E2EC8 : lbl_803E2ECC;
+        }
     }
     return 0;
 }
@@ -178,6 +225,15 @@ int grimble_stateHandlerB00(int obj, GroundBaddieState* p)
     return 0;
 }
 
+__declspec(section ".sdata2") f32 lbl_803E2EE0 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E2EE4 = 0.025f;
+__declspec(section ".sdata2") f32 lbl_803E2EE8 = 0.048f;
+__declspec(section ".sdata2") f32 lbl_803E2EEC = 0.018f;
+__declspec(section ".sdata2") f32 lbl_803E2EF0 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E2EF4 = 0.3f;
+__declspec(section ".sdata2") f32 lbl_803E2EF8 = 6.7f;
+__declspec(section ".sdata2") f32 lbl_803E2EFC = 0.1f;
+
 int grimble_stateHandlerA09(GameObject* obj, GroundBaddieState* p)
 {
     GroundBaddieState* sub;
@@ -191,7 +247,7 @@ int grimble_stateHandlerA09(GameObject* obj, GroundBaddieState* p)
     p->baddie.animSpeedB = spd;
     if ((s8)p->baddie.moveJustStartedA != 0)
     {
-        Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c_27c);
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_seal4_c_27c);
         if ((s8)p->baddie.moveJustStartedA != 0)
         {
             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E2EB8, 0);
@@ -202,6 +258,67 @@ int grimble_stateHandlerA09(GameObject* obj, GroundBaddieState* p)
         (obj)->anim.alpha = 0xff;
         sub->flags400 |= 0x100;
     }
+    if ((s8)p->baddie.moveDone != 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int grimble_stateHandlerA08(int* obj, GroundBaddieState* state)
+{
+    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    if ((s8)state->baddie.moveJustStartedA != 0)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2EB8, 0);
+        state->baddie.moveDone = 0;
+    }
+    state->baddie.moveSpeed = lbl_803E2EE8;
+    if (((s32)state->baddie.eventFlags & BADDIE_EVENT_LANDING) != 0)
+    {
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_iceywindlp16_233);
+        state->baddie.eventFlags &= ~BADDIE_EVENT_LANDING;
+        ((void (*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, sub->triggerId, -1, 1);
+    }
+    return 0;
+}
+
+int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
+{
+    GrimbleControl* ctrl;
+    s16 yaw;
+    int diff;
+    f32 spd;
+
+    ctrl = ((GroundBaddieState*)((GameObject*)obj)->extra)->control;
+    if ((s8)p->baddie.moveJustStartedA != 0)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2EB8, 0);
+        p->baddie.moveDone = 0;
+    }
+    if ((s8)p->baddie.moveJustStartedA != 0)
+    {
+        Sfx_PlayFromObject((u32)obj, SFXTRIG_ms_windlift_loop);
+    }
+    p->baddie.moveSpeed = lbl_803E2EEC;
+    yaw = ctrl->baseRotX;
+    diff = *obj - (yaw & 0xffff);
+    if (diff > 0x8000)
+    {
+        diff -= 0xffff;
+    }
+    if (diff < -0x8000)
+    {
+        diff += 0xffff;
+    }
+    *obj = yaw;
+    if (diff > 0x3ffc || diff < -0x3ffc)
+    {
+        *obj += 0x8000;
+    }
+    spd = lbl_803E2EB8;
+    p->baddie.animSpeedA = spd;
+    p->baddie.animSpeedB = spd;
     if ((s8)p->baddie.moveDone != 0)
     {
         return 1;
@@ -274,49 +391,6 @@ int grimble_stateHandlerA06(GameObject* obj, GroundBaddieState* p, f32 spd)
     if ((s8)p->baddie.moveDone != 0)
     {
         return 5;
-    }
-    return 0;
-}
-
-int grimble_stateHandlerA07(short* obj, GroundBaddieState* p)
-{
-    GrimbleControl* ctrl;
-    s16 yaw;
-    int diff;
-    f32 spd;
-
-    ctrl = ((GroundBaddieState*)((GameObject*)obj)->extra)->control;
-    if ((s8)p->baddie.moveJustStartedA != 0)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E2EB8, 0);
-        p->baddie.moveDone = 0;
-    }
-    if ((s8)p->baddie.moveJustStartedA != 0)
-    {
-        Sfx_PlayFromObject(obj, SFXTRIG_ms_windlift_loop);
-    }
-    p->baddie.moveSpeed = lbl_803E2EEC;
-    yaw = ctrl->baseRotX;
-    diff = *obj - (yaw & 0xffff);
-    if (diff > 0x8000)
-    {
-        diff -= 0xffff;
-    }
-    if (diff < -0x8000)
-    {
-        diff += 0xffff;
-    }
-    *obj = yaw;
-    if (diff > 0x3ffc || diff < -0x3ffc)
-    {
-        *obj += 0x8000;
-    }
-    spd = lbl_803E2EB8;
-    p->baddie.animSpeedA = spd;
-    p->baddie.animSpeedB = spd;
-    if ((s8)p->baddie.moveDone != 0)
-    {
-        return 1;
     }
     return 0;
 }
@@ -442,64 +516,6 @@ int grimble_stateHandlerA03(short* obj, GroundBaddieState* p)
     if ((s8)p->baddie.moveDone != 0)
     {
         return 1;
-    }
-    return 0;
-}
-
-int scarab_updateProximityGate(int* obj, GroundBaddieState* state)
-{
-    int* target;
-    f32 dx;
-    f32 dz;
-    f32 magAbs;
-    u32 rel;
-
-    target = *(int**)&state->baddie.targetObj;
-    if (target == NULL)
-    {
-        ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 0);
-        return 1;
-    }
-    if (state->baddie.controlMode != 6)
-    {
-        dx = ((GameObject*)obj)->anim.localPosX - ((GameObject*)target)->anim.localPosX;
-        dz = ((GameObject*)obj)->anim.localPosZ - ((GameObject*)target)->anim.localPosZ;
-        rel = (getAngle(dx, dz) - *(s16*)obj) & 0xffff;
-        if (rel > 0x4000 && rel < 0xc000)
-        {
-            dx = lbl_803E2EB0;
-        }
-        else
-        {
-            dx = sqrtf(dx * dx + dz * dz) - gScarabTargetStandoffDist;
-        }
-        magAbs = dx < lbl_803E2EB8 ? -dx : dx;
-        if (magAbs < lbl_803E2EBC)
-        {
-            if (state->baddie.controlMode == 1 || (state->baddie.controlMode == 5 && (s8)state->baddie.moveDone != 0))
-            {
-                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 6);
-                goto post;
-            }
-        }
-        if (state->baddie.controlMode == 1)
-            goto post;
-        if (dx > lbl_803E2EC0)
-        {
-            if (state->baddie.controlMode != 4 && (state->baddie.controlMode != 5 || (s8)state->baddie.moveDone != 0))
-            {
-                ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
-            }
-        }
-        if (dx < lbl_803E2EC4)
-        {
-            ((void (*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8*)state, 1);
-        }
-    post:
-        if (state->baddie.controlMode == 1)
-        {
-            state->baddie.moveSpeed = (dx > lbl_803E2EB8) ? lbl_803E2EC8 : lbl_803E2ECC;
-        }
     }
     return 0;
 }

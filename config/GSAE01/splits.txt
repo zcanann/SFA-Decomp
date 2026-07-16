@@ -1393,12 +1393,10 @@ main/dll/dll_00CB_dllcb.c:
 	.text       start:0x801601C4 end:0x80161130
 	.bss        start:0x803AC5D0 end:0x803AC5E8
 
-main/dll/dll_80161130.c:
-	.text       start:0x80161130 end:0x80161F0C
-
-main/dll/dll_00D0_grimble.c:
-	.text       start:0x80161F0C end:0x80162FC0
+main/dll/grimblegroup.c:
+	.text       start:0x80161130 end:0x80162FC0
 	.data       start:0x80320178 end:0x803201E8
+	.sdata2     start:0x803E2EB0 end:0x803E2F30
 
 main/dll/dll_00CF_cannonclaw.c:
 	.text       start:0x80162FC0 end:0x801631C8
