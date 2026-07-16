@@ -14,7 +14,6 @@
 #include "main/dll/DR/dll_026B_drchimmey.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E69E0 = 1.0f;
 
 int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
 {
@@ -32,7 +31,8 @@ void DR_Chimmey_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
+        f32 scale = 1.0f;
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
     }
 }
 

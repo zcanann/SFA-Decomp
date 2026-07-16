@@ -61,7 +61,6 @@ extern f32 lbl_803E33A0;
 extern f32 lbl_803DBD60;
 extern void firepipe_releaseEffectObject(int* obj);
 #pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3388 = 1.0f;
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
@@ -112,7 +111,8 @@ void flamethrowerspe_free(void)
 
 void flamethrowerspe_render(void)
 {
-    objRenderModelAndHitVolumes(lbl_803E3388);
+    f32 scale = 1.0f;
+    objRenderModelAndHitVolumes(scale);
 }
 
 void flamethrowerspe_hitDetect(void)

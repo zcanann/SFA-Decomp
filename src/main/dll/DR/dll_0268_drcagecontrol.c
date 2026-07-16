@@ -17,7 +17,6 @@
 #include "main/dll/DR/dr_types.h"
 #include "main/object_descriptor.h"
 
-__declspec(section ".sdata2") f32 lbl_803E69D8 = 1.0f;
 
 int DR_CageControl_SeqFn(GameObject* obj)
 {
@@ -75,7 +74,8 @@ void DR_CageControl_render(void* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visib
 {
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
+        f32 scale = 1.0f;
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
     }
 }
 

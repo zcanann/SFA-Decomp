@@ -16,7 +16,6 @@ STATIC_ASSERT(offsetof(CageControlPlacement, armGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(CageControlPlacement, watchGameBit) == 0x20);
 STATIC_ASSERT(sizeof(CageControlPlacement) == 0x28);
 
-extern f32 lbl_803E69D8;
 
 int DR_CageControl_SeqFn(GameObject* obj);
 int DR_CageControl_getExtraSize(void);

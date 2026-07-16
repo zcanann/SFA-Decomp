@@ -61,7 +61,6 @@ typedef struct InvhitObjectDef
 #define INVHIT_MODE_FIXED_RADIUS      6 /* fixed primary-radius hit volume */
 #define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
 
-__declspec(section ".sdata2") f32 lbl_803E35E8 = 1.0f;
 /* single-precision override for codegen */
 f32 lbl_803AC780[4];
 
@@ -86,10 +85,12 @@ int InvHit_getObjectTypeId(void)
     return 0x0;
 }
 
+#pragma scheduling off
 void InvHit_render(int* obj, int a, int b, int c, int d)
 {
-    objRenderModelAndHitVolumes((int)obj, a, b, c, d, lbl_803E35E8);
+    objRenderModelAndHitVolumes((int)obj, a, b, c, d, 1.0f);
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

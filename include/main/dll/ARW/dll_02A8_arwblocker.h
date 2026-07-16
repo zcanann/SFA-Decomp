@@ -5,7 +5,6 @@
 #include "global.h"
 #include "main/obj_placement.h"
 
-extern f32 lbl_803E7218;
 
 typedef struct ARWBlockerSetup
 {

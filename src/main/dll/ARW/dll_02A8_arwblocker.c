@@ -21,7 +21,6 @@
 #define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */
 #define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
 
-__declspec(section ".sdata2") f32 lbl_803E7218 = 1.0f;
 
 #pragma peephole off
 int ARWBlocker_SeqFn(GameObject* obj)
@@ -56,10 +55,12 @@ void ARWBlocker_free(void)
 {
 }
 
+#pragma scheduling off
 void ARWBlocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7218);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
+#pragma scheduling reset
 
 void ARWBlocker_hitDetect(void)
 {
