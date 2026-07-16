@@ -14002,11 +14002,9 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
              arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
-                int held;
-                f32 s;
-                held = (int)((PlayerState*)inner)->focusObject;
-                s = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-                (*(void (*)(f32)) * (int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(s);
+                char* held = (char*)((PlayerState*)inner)->focusObject;
+                ObjDef* mi = ((GameObject*)obj)->anim.modelInstance;
+                (*(void (*)(char*, f32)) * (int*)(*(int*)(*(int*)(held + 0x68)) + 0x50))(held, mi->rootMotionScaleBase);
             }
         }
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
