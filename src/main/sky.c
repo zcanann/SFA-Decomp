@@ -3059,6 +3059,7 @@ void skyFn_8008aee8(void)
     u8* ambientColor;
     int idxA;
     int idxB;
+    int phase;
     int gradA;
     int gradB;
     int texW;
@@ -3132,10 +3133,11 @@ void skyFn_8008aee8(void)
         }
         tc = (u < pEXIInputFlag) ? pEXIInputFlag : ((u > EXIInputFlag) ? EXIInputFlag : u);
         sky = *(int**)&gSkyState;
-        if (((SkyTimeBlend*)sky)->phase != ((SkyTimeBlend*)sky)->prevPhase)
+        phase = ((SkyTimeBlend*)sky)->phase;
+        if (phase != ((SkyTimeBlend*)sky)->prevPhase)
         {
-            texA = sky[((SkyTimeBlend*)sky)->phase + 0x87];
-            texB = sky[(((SkyTimeBlend*)sky)->phase + 1) % 8 + 0x87];
+            texA = sky[phase + 0x87];
+            texB = sky[(phase + 1) % 8 + 0x87];
             if (((SkyTimeBlend*)sky)->texAId != texA)
             {
                 textureFree((Texture*)((void*)sky[0]));
