@@ -50,3 +50,6 @@ Our pass1 is written z-first (`sqrtf(nz*nz+nx*nx)`, `-(nz*z+nx*x)`); the retail 
 
 ## Frame-slack lever scope refinement
 Trailing `u32 unused[K]` pads are DEAD-STRIPPED when the frame size already matches - the lever only applies when target `stwu r1,-N` differs from ours (as in the audio wins). Intra-frame temp-slot freshness (objanim AdvanceCurrentMove fresh fctiwz slots 8-48 vs our LIFO reuse; ObjSeq_update mirror-order slot assignment) is allocator-internal - decl reorders byte-inert, statement fusion byte-inert.
+
+## symbols.txt over-carve: lbl_803DE9F4 (objprint shaderFuzzFn_8003cc1c residual)
+Same targimpl/next-symbol-distance class you've been fixing: retail obj relocs reference `lbl_803DE9F4+0x4`, proving 0x803DE9F4 is ONE size:0x8 object, but symbols.txt (lines ~15953-15954) carves it as two 4-byte labels lbl_803DE9F4/lbl_803DE9F8. DOL bytes at 803DE9F4 = 00ff00ff00ff00ff (u16 0x00ff mask pairs - paired-single/psq_l mask shape, not floats despite data:float-adjacent neighbors). Merging to one 0x8 object should clear the SPLIT-SYMBOL region in shaderFuzzFn_8003cc1c (99.899); left to you to avoid concurrent dtk re-splits.
