@@ -384,14 +384,12 @@ void mmFreeDeferred(void* p)
         while (gMmDeferredFreeCount > 0)
         {
             DeferredFree* top;
-            int count;
 
             mmFree(stack[0].ptr);
-            count = gMmDeferredFreeCount;
-            top = &stack[count];
+            top = &stack[gMmDeferredFreeCount];
             stack[0].ptr = top[-1].ptr;
             stack[0].delay = top[-1].delay;
-            gMmDeferredFreeCount = count - 1;
+            gMmDeferredFreeCount--;
         }
         OSReport(sMmStbfStackTooDeepError);
     }
