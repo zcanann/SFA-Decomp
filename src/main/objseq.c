@@ -3183,10 +3183,18 @@ int ObjSeq_update(u8* obj, f32 t)
             switch (op)
             {
             case 0x12:
-                pressed = (getButtonsJustPressed(0) & PAD_BUTTON_A) != 0;
+                if ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0)
+                {
+                    goto set_pressed_zero;
+                }
+                pressed = 1;
                 break;
             case 0x13:
-                pressed = (getButtonsJustPressed(0) & PAD_BUTTON_B) != 0;
+                if ((getButtonsJustPressed(0) & PAD_BUTTON_B) == 0)
+                {
+                    goto set_pressed_zero;
+                }
+                pressed = 1;
                 break;
             case 0x14:
             case 0x15:
