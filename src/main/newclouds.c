@@ -1030,9 +1030,9 @@ void snowCloudUpdateFlakes(u8* snow)
         f32 size2;
         f32 negSize2;
         angleToVec2((u16)(0xffff - cam->yaw), &c1, &s1);
+        m = (f32*)(snow + 0x1008);
         size2 = gSnowFlakeSize;
         negSize2 = -size2;
-        m = e->verts;
         for (i = 0; i < 20; i++)
         {
             m[0] = negSize2 * s1;
