@@ -159,6 +159,136 @@ void waterfx_setupSplashDropPointRender(void)
     GXSetTevKColor(0, kcol);
 }
 
+/*
+ * Renders one splash burst as a ring of 8 expanding, fading sprite bands.
+ * For each of the 8 bands it builds a model-view matrix (scaled by the burst
+ * radius, bulged outward and lifted by a parabolic 'fade' arc, translated to
+ * the impact point and multiplied by the camera view), loads it as a posmtx,
+ * and writes that band's per-vertex alpha into the color array (s->vtxColors).
+ * The completed geometry is drawn twice (front then back cull) via the shared
+ * display list.
+ */
+void fn_80095164(WaterParticle* s)
+{
+    f32 mtxD[12];
+    f32 scale[12];
+    f32 mtxB[12];
+    f32 mtxC[12];
+    int mtxIdx;
+    u8* colorOut;
+    int i;
+
+    PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
+    i = 0;
+    mtxIdx = 0;
+    colorOut = (u8*)s;
+    for (; i < 8; i++)
+    {
+        f32 life = s->f10;
+        f32 ph = lbl_803DF2E0;
+        f32 bandOfs = lbl_803DF2E4 * ((f32)i / lbl_803DF2F8);
+        f32 dd;
+        f32 lim;
+        f32 sc;
+        f32 fade;
+        f32 alpha;
+        f32 phb;
+        phb = ph + bandOfs;
+        ph = phb * life;
+        dd = ph - 0.5f;
+        fade = -(lbl_803DF2F0 * (dd * dd) - 1.0f);
+        lim = lbl_803DF2F4 + bandOfs;
+        if (life < lim)
+        {
+            alpha = 1.0f;
+        }
+        else
+        {
+            alpha = (1.0f - life) / (1.0f - lim);
+        }
+        sc = 2.0f * ph + 1.0f;
+        PSMTXScale(mtxB, sc, 1.0f, sc);
+        PSMTXTrans(mtxC, 0.0f, 2.0f * fade, 0.0f);
+        PSMTXConcat(mtxC, mtxB, mtxD);
+        PSMTXConcat(scale, mtxD, mtxD);
+        PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
+        PSMTXConcat(mtxC, mtxD, mtxD);
+        PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
+        GXLoadPosMtxImm(mtxD, mtxIdx);
+        *(u32*)(colorOut + 0x18) = (u8)(int)(lbl_803DF304 * alpha);
+        mtxIdx += 3;
+        colorOut += 4;
+    }
+    DCStoreRange(s->vtxColors, 32);
+    GXSetArray(GX_VA_CLR0, s->vtxColors, 4);
+    GXSetCullMode(GX_CULL_FRONT);
+    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
+    GXSetCullMode(GX_CULL_BACK);
+    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
+}
+
+void waterfx_drawFn_800953fc(void)
+{
+    int k;
+    int j;
+    int i;
+    int m;
+    void* dl;
+
+    GXSetMisc(1, 0);
+    gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
+    gWaterfxSplashTexCoordArray = mmAlloc(1024, 0, 0);
+    for (i = 0; i < 8; i++)
+    {
+        for (j = 0; j < 16; j++)
+        {
+            if (i == 0)
+            {
+                f32* pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
+                f32 ang = gWaterfxPi * (f32)(j * 2) / lbl_803DF314;
+                f32 sv = fn_802942EC(ang);
+                f32 cv = fn_80293F7C(ang);
+                pos[0] = sv;
+                pos[1] = lbl_803DF300;
+                pos[2] = cv;
+            }
+            {
+                int idx = i * 16 + j;
+                f32* tex = (f32*)((u8*)gWaterfxSplashTexCoordArray + idx * 8);
+                tex[0] = j / lbl_803DF314;
+                tex[1] = i / lbl_803DF2F8;
+            }
+        }
+    }
+    DCStoreRange(gWaterfxSplashPosArray, 192);
+    DCStoreRange(gWaterfxSplashTexCoordArray, 1024);
+    dl = mmAlloc(2880, 0x7F7F7FFF, 0);
+    gWaterfxSplashDisplayList = dl;
+    DCInvalidateRange(dl, 2880);
+    GXBeginDisplayList(gWaterfxSplashDisplayList, 2880);
+    GXResetWriteGatherPipe();
+    for (k = 0; k < 15; k++)
+    {
+        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT2, 16);
+        for (m = 7; m >= 0; m--)
+        {
+            u8 a = m * 3;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u16 = k;
+            GXWGFifo.u16 = m;
+            GXWGFifo.u16 = m * 16 + k;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u16 = (k + 1) % 16;
+            GXWGFifo.u16 = m;
+            GXWGFifo.u16 = m * 16 + (k + 1) % 16;
+        }
+    }
+    gWaterfxSplashDisplayListSize = GXEndDisplayList();
+    GXSetMisc(1, 8);
+}
+
 int waterfx_consumePendingImpactNearPoint(f32* vec, f32 dist)
 {
     if (gWaterfxPendingImpactPositionValid != 0 &&
@@ -761,136 +891,6 @@ void waterfx_initialise(void)
     gWaterfxWakeTexture = textureLoadAsset(WATERFX_TEXTURE_WAKE);
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
-}
-
-/*
- * Renders one splash burst as a ring of 8 expanding, fading sprite bands.
- * For each of the 8 bands it builds a model-view matrix (scaled by the burst
- * radius, bulged outward and lifted by a parabolic 'fade' arc, translated to
- * the impact point and multiplied by the camera view), loads it as a posmtx,
- * and writes that band's per-vertex alpha into the color array (s->vtxColors).
- * The completed geometry is drawn twice (front then back cull) via the shared
- * display list.
- */
-void fn_80095164(WaterParticle* s)
-{
-    f32 mtxD[12];
-    f32 scale[12];
-    f32 mtxB[12];
-    f32 mtxC[12];
-    int mtxIdx;
-    u8* colorOut;
-    int i;
-
-    PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
-    i = 0;
-    mtxIdx = 0;
-    colorOut = (u8*)s;
-    for (; i < 8; i++)
-    {
-        f32 life = s->f10;
-        f32 ph = lbl_803DF2E0;
-        f32 bandOfs = lbl_803DF2E4 * ((f32)i / lbl_803DF2F8);
-        f32 dd;
-        f32 lim;
-        f32 sc;
-        f32 fade;
-        f32 alpha;
-        f32 phb;
-        phb = ph + bandOfs;
-        ph = phb * life;
-        dd = ph - 0.5f;
-        fade = -(lbl_803DF2F0 * (dd * dd) - 1.0f);
-        lim = lbl_803DF2F4 + bandOfs;
-        if (life < lim)
-        {
-            alpha = 1.0f;
-        }
-        else
-        {
-            alpha = (1.0f - life) / (1.0f - lim);
-        }
-        sc = 2.0f * ph + 1.0f;
-        PSMTXScale(mtxB, sc, 1.0f, sc);
-        PSMTXTrans(mtxC, 0.0f, 2.0f * fade, 0.0f);
-        PSMTXConcat(mtxC, mtxB, mtxD);
-        PSMTXConcat(scale, mtxD, mtxD);
-        PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
-        PSMTXConcat(mtxC, mtxD, mtxD);
-        PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
-        GXLoadPosMtxImm(mtxD, mtxIdx);
-        *(u32*)(colorOut + 0x18) = (u8)(int)(lbl_803DF304 * alpha);
-        mtxIdx += 3;
-        colorOut += 4;
-    }
-    DCStoreRange(s->vtxColors, 32);
-    GXSetArray(GX_VA_CLR0, s->vtxColors, 4);
-    GXSetCullMode(GX_CULL_FRONT);
-    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
-    GXSetCullMode(GX_CULL_BACK);
-    GXCallDisplayList(gWaterfxSplashDisplayList, gWaterfxSplashDisplayListSize);
-}
-
-void waterfx_drawFn_800953fc(void)
-{
-    int k;
-    int j;
-    int i;
-    int m;
-    void* dl;
-
-    GXSetMisc(1, 0);
-    gWaterfxSplashPosArray = mmAlloc(192, 0, 0);
-    gWaterfxSplashTexCoordArray = mmAlloc(1024, 0, 0);
-    for (i = 0; i < 8; i++)
-    {
-        for (j = 0; j < 16; j++)
-        {
-            if (i == 0)
-            {
-                f32* pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
-                f32 ang = gWaterfxPi * (f32)(j * 2) / lbl_803DF314;
-                f32 sv = fn_802942EC(ang);
-                f32 cv = fn_80293F7C(ang);
-                pos[0] = sv;
-                pos[1] = lbl_803DF300;
-                pos[2] = cv;
-            }
-            {
-                int idx = i * 16 + j;
-                f32* tex = (f32*)((u8*)gWaterfxSplashTexCoordArray + idx * 8);
-                tex[0] = j / lbl_803DF314;
-                tex[1] = i / lbl_803DF2F8;
-            }
-        }
-    }
-    DCStoreRange(gWaterfxSplashPosArray, 192);
-    DCStoreRange(gWaterfxSplashTexCoordArray, 1024);
-    dl = mmAlloc(2880, 0x7F7F7FFF, 0);
-    gWaterfxSplashDisplayList = dl;
-    DCInvalidateRange(dl, 2880);
-    GXBeginDisplayList(gWaterfxSplashDisplayList, 2880);
-    GXResetWriteGatherPipe();
-    for (k = 0; k < 15; k++)
-    {
-        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT2, 16);
-        for (m = 7; m >= 0; m--)
-        {
-            u8 a = m * 3;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u16 = k;
-            GXWGFifo.u16 = m;
-            GXWGFifo.u16 = m * 16 + k;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u8 = a;
-            GXWGFifo.u16 = (k + 1) % 16;
-            GXWGFifo.u16 = m;
-            GXWGFifo.u16 = m * 16 + (k + 1) % 16;
-        }
-    }
-    gWaterfxSplashDisplayListSize = GXEndDisplayList();
-    GXSetMisc(1, 8);
 }
 
 char sWaterfxDllAllocFailed[] = "Could not allocate memory for waterfx dll\n";
