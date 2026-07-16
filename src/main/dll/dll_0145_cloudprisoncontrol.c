@@ -164,12 +164,13 @@ void CloudPrisonControl_update(GameObject* obj)
             lbl_803DDB09--;
             count = lbl_803DDB09;
             p[0] = &lbl_803AC7D8[count];
-            for (; i < count; i++)
+            while (count > i)
             {
                 p[0][-1].obj = p[0][0].obj;
                 p[0][-1].value = p[0][0].value;
                 p[0][-1].flags = p[0][0].flags;
                 p[0]--;
+                count--;
             }
             break;
         default:
