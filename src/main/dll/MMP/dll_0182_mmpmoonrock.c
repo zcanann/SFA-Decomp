@@ -656,8 +656,7 @@ void mmp_moonrock_update(GameObject* obj)
     state->bobPhase += 0x1000;
     state->rollPhase += 0xDAC;
     state->pitchPhase += 0x800;
-    ((void (*)(void*, f32, f32, f32))objMove)(obj, *(f32*)&lbl_803E4554, obj->anim.velocityY * timeDelta,
-                                            *(f32*)&lbl_803E4554);
+    objMove(obj, 0.0f, obj->anim.velocityY * timeDelta, 0.0f);
     obj->anim.localPosY =
         obj->anim.localPosY + mathSinf((*(f32*)&gMoonRockPi * state->bobPhase) / *(f32*)&gMoonRockAngleScale);
     if (obj->anim.localPosY < state->baseY)
