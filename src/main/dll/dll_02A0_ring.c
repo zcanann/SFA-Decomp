@@ -17,6 +17,8 @@
  * (RingTable); the optional glow is a ModelLightStruct.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/audio/sfx_ids.h"
+#include "main/audio/sfx_trigger_ids.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "dolphin/mtx.h"
 #include "main/frame_timing.h"
@@ -62,15 +64,171 @@
 #define RING_MODEL_ALT      1
 #define RING_OBJFLAG_HIDDEN 0x4000
 
+#pragma dont_inline on
+void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
+{
+    u8 mode = state->route;
+    if (mode == 1 || mode == 3)
+    {
+        f32 edge, cur, lim;
+        obj->anim.localPosX = state->pullHeight * timeDelta + obj->anim.localPosX;
+        cur = obj->anim.localPosX;
+        lim = state->origX;
+        edge = lim + (f32)(u32)state->linkId;
+        if (cur > edge)
+        {
+            obj->anim.localPosX = edge - (cur - edge);
+            state->pullHeight = -state->pullHeight;
+        }
+        else
+        {
+            edge = lim - (f32)(u32)state->linkId;
+            if (cur < edge)
+            {
+                obj->anim.localPosX = edge - (cur - edge);
+                state->pullHeight = -state->pullHeight;
+            }
+        }
+    }
+    else if (mode == 4 || mode == 5)
+    {
+        f32 edge, cur, lim;
+        obj->anim.localPosY = state->pullHeight * timeDelta + obj->anim.localPosY;
+        cur = obj->anim.localPosY;
+        lim = state->origY;
+        edge = lim + (f32)(u32)state->linkId;
+        if (cur > edge)
+        {
+            obj->anim.localPosY = edge - (cur - edge);
+            state->pullHeight = -state->pullHeight;
+        }
+        else
+        {
+            edge = lim - (f32)(u32)state->linkId;
+            if (cur < edge)
+            {
+                obj->anim.localPosY = edge - (cur - edge);
+                state->pullHeight = -state->pullHeight;
+            }
+        }
+    }
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
+{
+    GameObject* arwingObj = arwing;
+    ArwbombcollHandleArwingHitPlacement* setup =
+        (ArwbombcollHandleArwingHitPlacement*)obj->anim.placementData;
+    u8 mode = state->mode;
+    if (mode == 0)
+    {
+        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
+        if (arwingObj->anim.seqId == 0x601)
+        {
+            arwarwing_addHealth(arwingObj, 1);
+            arwarwing_addScore(arwingObj, 0xa);
+        }
+    }
+    else if (mode == 1)
+    {
+        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
+        if (arwingObj->anim.seqId == 0x601)
+        {
+            arwarwing_addMaxHealth(arwingObj, 1);
+            arwarwing_addHealth(arwingObj, arwarwing_getMaxHealth(arwingObj));
+        }
+    }
+    else if (mode == 3 || mode == 4)
+    {
+        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
+        gameBitIncrement(setup->eventId);
+    }
+    else
+    {
+        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_laser216);
+        if (arwingObj->anim.seqId == 0x601)
+        {
+            int seg;
+            int collected;
+            arwarwing_incrementCollectedRingCount(arwingObj);
+            arwarwing_addHealth(arwingObj, 1);
+            arwarwing_addScore(arwingObj, 0x14);
+            seg = arwarwing_getRequiredRingCount(arwingObj);
+            collected = arwarwing_getCollectedRingCount(arwingObj);
+            if (collected == seg)
+            {
+                if (state->flags.bit20)
+                    gameTextFn_80125ba4(7);
+            }
+            else
+            {
+                if (state->flags.bit20)
+                    gameTextFn_80125ba4(9);
+            }
+        }
+    }
+    state->phase = 2;
+}
+#pragma dont_inline reset
+
+#pragma dont_inline on
+int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing)
+{
+    ObjAnimComponent* objAnim = &obj->anim;
+    ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
+    RingFlags* f = &state->flags;
+    if (f->bit10)
+    {
+        f32 dx = objAnim->localPosX - arwingAnim->localPosX;
+        f32 dy = objAnim->localPosY - arwingAnim->localPosY;
+        f32 dz;
+        if (dy < 0.0f)
+            dy = -dy;
+        dz = objAnim->localPosZ - arwingAnim->localPosZ;
+        if (dy <= 100.0f)
+        {
+            if (dx * dx + dz * dz < 1600.0f)
+                return 1;
+        }
+    }
+    else
+    {
+        f32 objZ;
+        f32 currentZDelta = (objZ = objAnim->localPosZ) - arwingAnim->localPosZ;
+        f32 previousZDelta = objZ - arwingAnim->previousLocalPosZ;
+        if (currentZDelta <= 0.0f && previousZDelta >= 0.0f)
+        {
+            f32 dx = objAnim->localPosX - arwingAnim->localPosX;
+            f32 dy = objAnim->localPosY - arwingAnim->localPosY;
+            if (sqrtf(dx * dx + dy * dy) < 55.0f)
+                return 1;
+            if (state->mode == 2 && f->bit20)
+                gameTextFn_80125ba4(0xa);
+        }
+    }
+    return 0;
+}
+#pragma dont_inline reset
+
+__declspec(section ".sdata2") f32 lbl_803E70B0 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E70B4 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E70B8 = 1000.0f;
+__declspec(section ".sdata2") f32 lbl_803E70BC = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E70C0 = 120.0f;
+
 int ring_getExtraSize(void)
 {
     return sizeof(RingState);
 }
 
+
 int ring_getObjectTypeId(void)
 {
     return 0;
 }
+
 
 void ring_free(GameObject* obj)
 {
@@ -82,9 +240,6 @@ void ring_free(GameObject* obj)
     }
 }
 
-void ring_hitDetect(void)
-{
-}
 
 void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
@@ -96,77 +251,11 @@ void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E70B0);
 }
 
-void ring_release(void)
+
+void ring_hitDetect(void)
 {
 }
 
-void ring_initialise(void)
-{
-}
-
-void ring_init(GameObject* obj, RingPlacement* setup)
-{
-    RingState* state = (obj)->extra;
-    RingPlacement* p = setup;
-    RingFlags* f = &state->flags;
-    s16 type = (obj)->anim.seqId;
-    if (type == RING_OBJ_ARW_SILVER)
-    {
-        state->mode = RING_MODE_SILVER;
-    }
-    else if (type == RING_OBJ_AND_SILVER)
-    {
-        state->mode = RING_MODE_SILVER;
-        f->bit10 = 1;
-    }
-    else if (type == RING_OBJ_ARW_GOLD)
-    {
-        state->mode = RING_MODE_GOLD;
-    }
-    else if (type == RING_OBJ_WC_MOON)
-    {
-        state->mode = RING_MODE_WC_MOON;
-    }
-    else if (type == RING_OBJ_WC_SUN)
-    {
-        state->mode = RING_MODE_WC_SUN;
-    }
-    else
-    {
-        state->mode = RING_MODE_GOLD;
-    }
-    state->route = p->route;
-    if (state->route == RING_ROUTE_STATIONARY_SHOT || state->route == RING_ROUTE_MOVING_SHOT_A ||
-        state->route == RING_ROUTE_MOVING_SHOT_B)
-    {
-        f->bit80 = 0;
-        Obj_SetActiveModelIndex(obj, RING_MODEL_ALT);
-    }
-    else
-    {
-        f->bit80 = 1;
-        ObjHits_DisableObject((int)obj);
-    }
-    state->linkId = p->linkId;
-    state->pullHeight = (f32)p->pullHeight / lbl_803E70C4;
-    state->origX = (obj)->anim.localPosX;
-    state->origY = (obj)->anim.localPosY;
-    if (p->modeFlag != 0)
-        f->bit20 = 1;
-    else
-        f->bit20 = 0;
-    (obj)->anim.rotX = -32768;
-    if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
-    {
-        f->bit10 = 1;
-        state->arwingYOffset = lbl_803E70D8;
-    }
-    else
-    {
-        (obj)->anim.flags |= RING_OBJFLAG_HIDDEN;
-        (obj)->anim.alpha = 0;
-    }
-}
 
 void ring_update(GameObject* obj)
 {
@@ -281,7 +370,7 @@ void ring_update(GameObject* obj)
         obj->anim.rotX = (f32)(int)obj->anim.rotX + lbl_803E70B8 * timeDelta;
         break;
     case RING_PHASE_PULL_TO_ARWING:
-        if (state->pullTimer > lbl_803E70A0)
+        if (state->pullTimer > 0.0f)
         {
             if (arwing != NULL)
             {
@@ -348,9 +437,9 @@ void ring_update(GameObject* obj)
                 }
             }
             state->pullTimer -= timeDelta;
-            if (state->pullTimer <= lbl_803E70A0)
+            if (state->pullTimer <= 0.0f)
             {
-                f32 fz = lbl_803E70A0;
+                f32 fz = 0.0f;
                 state->pullTimer = fz;
                 obj->anim.localPosX = setup->base.posX;
                 obj->anim.localPosY = setup->base.posY;
@@ -379,3 +468,81 @@ void ring_update(GameObject* obj)
         modelLightStruct_updateGlowAlpha(state->light);
     }
 }
+
+
+__declspec(section ".sdata2") f32 lbl_803E70D8 = 20.0f;
+
+void ring_init(GameObject* obj, RingPlacement* setup)
+{
+    RingState* state = (obj)->extra;
+    RingPlacement* p = setup;
+    RingFlags* f = &state->flags;
+    s16 type = (obj)->anim.seqId;
+    if (type == RING_OBJ_ARW_SILVER)
+    {
+        state->mode = RING_MODE_SILVER;
+    }
+    else if (type == RING_OBJ_AND_SILVER)
+    {
+        state->mode = RING_MODE_SILVER;
+        f->bit10 = 1;
+    }
+    else if (type == RING_OBJ_ARW_GOLD)
+    {
+        state->mode = RING_MODE_GOLD;
+    }
+    else if (type == RING_OBJ_WC_MOON)
+    {
+        state->mode = RING_MODE_WC_MOON;
+    }
+    else if (type == RING_OBJ_WC_SUN)
+    {
+        state->mode = RING_MODE_WC_SUN;
+    }
+    else
+    {
+        state->mode = RING_MODE_GOLD;
+    }
+    state->route = p->route;
+    if (state->route == RING_ROUTE_STATIONARY_SHOT || state->route == RING_ROUTE_MOVING_SHOT_A ||
+        state->route == RING_ROUTE_MOVING_SHOT_B)
+    {
+        f->bit80 = 0;
+        Obj_SetActiveModelIndex(obj, RING_MODEL_ALT);
+    }
+    else
+    {
+        f->bit80 = 1;
+        ObjHits_DisableObject((int)obj);
+    }
+    state->linkId = p->linkId;
+    state->pullHeight = (f32)p->pullHeight / 10.0f;
+    state->origX = (obj)->anim.localPosX;
+    state->origY = (obj)->anim.localPosY;
+    if (p->modeFlag != 0)
+        f->bit20 = 1;
+    else
+        f->bit20 = 0;
+    (obj)->anim.rotX = -32768;
+    if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
+    {
+        f->bit10 = 1;
+        state->arwingYOffset = lbl_803E70D8;
+    }
+    else
+    {
+        (obj)->anim.flags |= RING_OBJFLAG_HIDDEN;
+        (obj)->anim.alpha = 0;
+    }
+}
+
+
+void ring_release(void)
+{
+}
+
+
+void ring_initialise(void)
+{
+}
+

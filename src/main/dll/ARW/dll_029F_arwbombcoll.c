@@ -36,187 +36,43 @@ void arwbombcoll_setLifetime(GameObject* obj, int lifetime)
     state->lifetime = lifetime;
 }
 
+
+__declspec(section ".sdata2") f32 lbl_803E7078 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E707C = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 gArwBombCollActivateDistanceZ = 3840.0f;
+__declspec(section ".sdata2") f32 gArwBombCollAlphaFadeRate = 3.0f;
+__declspec(section ".sdata2") f32 gArwBombCollSpinRate = 600.0f;
+__declspec(section ".sdata2") f32 lbl_803E708C = 100.0f;
+
 int ARWBombColl_getExtraSize(void)
 {
     return 8;
 }
+
 
 int ARWBombColl_getObjectTypeId(void)
 {
     return 0;
 }
 
+
 void ARWBombColl_free(void)
 {
 }
 
-void ARWBombColl_hitDetect(void)
-{
-}
 
 void ARWBombColl_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
-void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup)
-{
-    ObjAnimComponent* objAnim = &obj->anim;
-    ARWBombCollSetup* mapData = setup;
 
-    obj->anim.rotX = (s16)(mapData->rotX << 8);
-    objAnim->alpha = 0;
-}
-
-void ARWBombColl_release(void)
+void ARWBombColl_hitDetect(void)
 {
 }
 
-void ARWBombColl_initialise(void)
-{
-}
-
-void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
-{
-    u8 mode = state->route;
-    if (mode == 1 || mode == 3)
-    {
-        f32 edge, cur, lim;
-        obj->anim.localPosX = state->pullHeight * timeDelta + obj->anim.localPosX;
-        cur = obj->anim.localPosX;
-        lim = state->origX;
-        edge = lim + (f32)(u32)state->linkId;
-        if (cur > edge)
-        {
-            obj->anim.localPosX = edge - (cur - edge);
-            state->pullHeight = -state->pullHeight;
-        }
-        else
-        {
-            edge = lim - (f32)(u32)state->linkId;
-            if (cur < edge)
-            {
-                obj->anim.localPosX = edge - (cur - edge);
-                state->pullHeight = -state->pullHeight;
-            }
-        }
-    }
-    else if (mode == 4 || mode == 5)
-    {
-        f32 edge, cur, lim;
-        obj->anim.localPosY = state->pullHeight * timeDelta + obj->anim.localPosY;
-        cur = obj->anim.localPosY;
-        lim = state->origY;
-        edge = lim + (f32)(u32)state->linkId;
-        if (cur > edge)
-        {
-            obj->anim.localPosY = edge - (cur - edge);
-            state->pullHeight = -state->pullHeight;
-        }
-        else
-        {
-            edge = lim - (f32)(u32)state->linkId;
-            if (cur < edge)
-            {
-                obj->anim.localPosY = edge - (cur - edge);
-                state->pullHeight = -state->pullHeight;
-            }
-        }
-    }
-}
-
-void Ring_onCollect(GameObject* obj, RingState* state, GameObject* arwing)
-{
-    GameObject* arwingObj = arwing;
-    ArwbombcollHandleArwingHitPlacement* setup =
-        (ArwbombcollHandleArwingHitPlacement*)obj->anim.placementData;
-    u8 mode = state->mode;
-    if (mode == 0)
-    {
-        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        if (arwingObj->anim.seqId == 0x601)
-        {
-            arwarwing_addHealth(arwingObj, 1);
-            arwarwing_addScore(arwingObj, 0xa);
-        }
-    }
-    else if (mode == 1)
-    {
-        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        if (arwingObj->anim.seqId == 0x601)
-        {
-            arwarwing_addMaxHealth(arwingObj, 1);
-            arwarwing_addHealth(arwingObj, arwarwing_getMaxHealth(arwingObj));
-        }
-    }
-    else if (mode == 3 || mode == 4)
-    {
-        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_lsrhitobj16);
-        gameBitIncrement(setup->eventId);
-    }
-    else
-    {
-        Sfx_PlayFromObject((int)arwing, SFXTRIG_ar_laser216);
-        if (arwingObj->anim.seqId == 0x601)
-        {
-            int seg;
-            int collected;
-            arwarwing_incrementCollectedRingCount(arwingObj);
-            arwarwing_addHealth(arwingObj, 1);
-            arwarwing_addScore(arwingObj, 0x14);
-            seg = arwarwing_getRequiredRingCount(arwingObj);
-            collected = arwarwing_getCollectedRingCount(arwingObj);
-            if (collected == seg)
-            {
-                if (state->flags.bit20)
-                    gameTextFn_80125ba4(7);
-            }
-            else
-            {
-                if (state->flags.bit20)
-                    gameTextFn_80125ba4(9);
-            }
-        }
-    }
-    state->phase = 2;
-}
-
-int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwing)
-{
-    ObjAnimComponent* objAnim = &obj->anim;
-    ObjAnimComponent* arwingAnim = &((GameObject*)arwing)->anim;
-    RingFlags* f = &state->flags;
-    if (f->bit10)
-    {
-        f32 dx = objAnim->localPosX - arwingAnim->localPosX;
-        f32 dy = objAnim->localPosY - arwingAnim->localPosY;
-        f32 dz;
-        if (dy < lbl_803E70A0)
-            dy = -dy;
-        dz = objAnim->localPosZ - arwingAnim->localPosZ;
-        if (dy <= gArwBombCollHitToleranceY)
-        {
-            if (dx * dx + dz * dz < gArwBombCollHitRadiusSq)
-                return 1;
-        }
-    }
-    else
-    {
-        f32 objZ;
-        f32 currentZDelta = (objZ = objAnim->localPosZ) - arwingAnim->localPosZ;
-        f32 previousZDelta = objZ - arwingAnim->previousLocalPosZ;
-        if (currentZDelta <= lbl_803E70A0 && previousZDelta >= *(f32*)&lbl_803E70A0)
-        {
-            f32 dx = objAnim->localPosX - arwingAnim->localPosX;
-            f32 dy = objAnim->localPosY - arwingAnim->localPosY;
-            if (sqrtf(dx * dx + dy * dy) < gArwBombCollPlaneHitRadius)
-                return 1;
-            if (state->mode == 2 && f->bit20)
-                gameTextFn_80125ba4(0xa);
-        }
-    }
-    return 0;
-}
 
 #pragma opt_common_subs off
 void ARWBombColl_update(int obj)
@@ -345,4 +201,25 @@ active:
     }
 }
 }
+
 #pragma opt_common_subs reset
+
+void ARWBombColl_init(GameObject* obj, ARWBombCollSetup* setup)
+{
+    ObjAnimComponent* objAnim = &obj->anim;
+    ARWBombCollSetup* mapData = setup;
+
+    obj->anim.rotX = (s16)(mapData->rotX << 8);
+    objAnim->alpha = 0;
+}
+
+
+void ARWBombColl_release(void)
+{
+}
+
+
+void ARWBombColl_initialise(void)
+{
+}
+

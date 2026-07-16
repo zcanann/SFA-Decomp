@@ -3432,11 +3432,12 @@ main/dll/dll_029E_Dummy29E.c:
 	.text       start:0x8022F52C end:0x8022F558
 
 main/dll/ARW/dll_029F_arwbombcoll.c:
-	.text       start:0x8022F558 end:0x8022FE00
-	.sdata2     start:0x803E7070 end:0x803E7078
+	.text       start:0x8022F558 end:0x8022FA00
+	.sdata2     start:0x803E7070 end:0x803E7098
 
 main/dll/dll_02A0_ring.c:
-	.text       start:0x8022FE00 end:0x802308B4
+	.text       start:0x8022FA00 end:0x802308B4
+	.sdata2     start:0x803E7098 end:0x803E70E0
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:
 	.text       start:0x802308B4 end:0x80230E2C
