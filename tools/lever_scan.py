@@ -14,6 +14,9 @@ Signatures (levers, see agent memory / git history for the mechanism):
   PREEVAL-HOIST   a compare+branch(+li) block moved between regions
                   (array-elem accumulator de-hoist)
   WRONG-SYMBOL    named reloc differs on both sides (lbl_X vs lbl_Y)
+  SPLIT-SYMBOL    reloc names differ but resolve to the SAME address (target
+                  base+addend vs current per-element symbol; arrayifying the
+                  source REGRESSES codegen — proven on newshadows — leave it)
   POOL-NEUTRAL    @NNN pool vs named lbl at same site (#70, score-neutral)
   EXT-DELTA       extsb/extsh/clrlwi present on one side only (narrowing)
   CALL-RESULT     current-only `li r3,K`/`mr r3` between two bl's
@@ -53,6 +56,21 @@ BRANCH_RE = re.compile(r"^b(?:eq|ne|lt|gt|le|ge)[+-]? ")
 
 def mnem(i: str) -> str:
     return i.split()[0] if i and not i.startswith("RELOC") else ""
+
+
+ADDR_RELOC_RE = re.compile(r"_([0-9A-Fa-f]{8})(?:\+0x([0-9a-f]+))?$")
+
+
+def reloc_address(r: str):
+    m = ADDR_RELOC_RE.search(r)
+    if not m:
+        return None
+    return int(m.group(1), 16) + (int(m.group(2), 16) if m.group(2) else 0)
+
+
+def same_address_reloc(a: str, b: str) -> bool:
+    ra, rb = reloc_address(a), reloc_address(b)
+    return ra is not None and ra == rb
 
 
 def get_objdump() -> Path:
@@ -114,7 +132,10 @@ def classify_fn(t: list[str], c: list[str]):
             ):
                 label = "POOL-NEUTRAL"
             elif set(t_rel) != set(c_rel):
-                label = "WRONG-SYMBOL"
+                if all(same_address_reloc(a, b) for a, b in zip(t_rel, c_rel)) and len(t_rel) == len(c_rel):
+                    label = "SPLIT-SYMBOL"
+                else:
+                    label = "WRONG-SYMBOL"
 
         ext = {"extsb", "extsh", "clrlwi"}
         if label is None:
