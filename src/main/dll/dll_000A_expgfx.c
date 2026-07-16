@@ -177,6 +177,9 @@ extern f32 gExpgfxYVelocityNegativeLimit;
 extern const f32 gExpgfxSlotMotionStep;
 
 extern f32 fn_80138F78(void* tricky);
+#define getTrickyAttractionRange fn_80138F78
+#define getPlayerAttractionRange fn_8029610C
+#define getSkyDirection          fn_800897D4
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
 extern f32 lbl_803DF38C;
@@ -733,7 +736,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     gExpgfxPhaseAngleA += (int)(lbl_803DF3C8 * timeDelta);
     gExpgfxPhaseAngleB += (int)(lbl_803DF3CC * timeDelta);
     sky = getSkyStructField24C();
-    fn_800897D4(sky, &camDir[0], &camDir[1], &camDir[2]);
+    getSkyDirection(sky, &camDir[0], &camDir[1], &camDir[2]);
     PSMTXMultVec((void*)Camera_GetViewRotationMatrix(), (void*)camDir, (void*)camDir);
     camScale = -camDir[2];
     if (camScale < lbl_803DF3D0)
@@ -842,11 +845,11 @@ foundFirst:
         Camera_GetCurrentViewSlot();
         if (tricky != NULL)
         {
-            trickyRange = fn_80138F78(tricky);
+            trickyRange = getTrickyAttractionRange(tricky);
         }
         if (player != NULL)
         {
-            playerRange = fn_8029610C(player);
+            playerRange = getPlayerAttractionRange(player);
         }
         prefetched = 0;
         ambRPlus1 = ambScaled[2] + 1;
@@ -959,9 +962,9 @@ foundFirst:
                     rot.y = 0.0f;
                     rot.z = 0.0f;
                     rot.scale = 1.0f;
-                    *(s16*)&rot.angleZ = ((f32)slot->sourceVecZ * timeDelta);
-                    *(s16*)&rot.angleY = ((f32)slot->sourceVecY * timeDelta);
-                    *(s16*)&rot.angleX = ((f32)slot->sourceVecX * timeDelta);
+                    rot.angleZ = (f32)slot->sourceVecZ * timeDelta;
+                    rot.angleY = (f32)slot->sourceVecY * timeDelta;
+                    rot.angleX = (f32)slot->sourceVecX * timeDelta;
                     vecRotateZXY(&rot.angleX, &slot->posX.value);
                 }
                 if ((slot->renderFlags & EXPGFX_RENDER_ATTRACT_TARGET_MASK) != 0)
@@ -1139,14 +1142,14 @@ foundFirst:
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            *(u16*)&slot->scaleCurrent = ((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1 | 0LL;
                         }
                         else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0)
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            *(u16*)&slot->scaleCurrent = ((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
                         }
@@ -1154,7 +1157,7 @@ foundFirst:
                         {
                             slot->velocityX *= 0.5f;
                             slot->velocityZ *= 0.5f;
-                            *(u16*)&slot->scaleCurrent = ((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
                             if (slot->soundHandle != -1)
@@ -1174,7 +1177,7 @@ foundFirst:
                                 v = slot->velocityZ;
                                 slot->velocityZ = v * (st - v);
                             }
-                            *(u16*)&slot->scaleCurrent = ((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
+                            slot->scaleCurrent = (f32)slot->scaleCurrent * lbl_803DF3F4;
                             slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4 | 0LL;
                             slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
                             if (slot->soundHandle != -1)
@@ -1290,8 +1293,7 @@ foundFirst:
                     slot->posZ.value += slot->velocityZ * timeDelta;
                     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0)
                     {
-                        *(u16*)&slot->scaleCurrent =
-                            ((f32)(u16)slot->scaleStep * timeDelta + (f32)(u16)slot->scaleCurrent);
+                        slot->scaleCurrent = (f32)slot->scaleStep * timeDelta + (f32)slot->scaleCurrent;
                     }
                     else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0)
                     {
@@ -1430,14 +1432,14 @@ foundFirst:
                         quad[0].z = (s16)axisZ;
                         quad[0].texS = texS0;
                         quad[0].texT = texT0;
-                        *(s16*)&quad[1].x = (attractRatio * (slot->posX.value - prevX) + axisX);
-                        *(s16*)&quad[1].y = (attractRatio * (slot->posY.value - prevY) + axisY);
-                        *(s16*)&quad[1].z = (attractRatio * (slot->posZ.value - prevZ) + axisZ);
+                        quad[1].x = attractRatio * (slot->posX.value - prevX) + axisX;
+                        quad[1].y = attractRatio * (slot->posY.value - prevY) + axisY;
+                        quad[1].z = attractRatio * (slot->posZ.value - prevZ) + axisZ;
                         quad[1].texS = texS1;
                         quad[1].texT = texT0;
-                        *(s16*)&quad[2].x = (attractRatio * (slot->posX.value - prevX) - axisX);
-                        *(s16*)&quad[2].y = (attractRatio * (slot->posY.value - prevY) - axisY);
-                        *(s16*)&quad[2].z = (attractRatio * (slot->posZ.value - prevZ) - axisZ);
+                        quad[2].x = attractRatio * (slot->posX.value - prevX) - axisX;
+                        quad[2].y = attractRatio * (slot->posY.value - prevY) - axisY;
+                        quad[2].z = attractRatio * (slot->posZ.value - prevZ) - axisZ;
                         quad[2].texS = texS1;
                         quad[2].texT = texT1;
                         quad[3].x = -(s16)axisX;
