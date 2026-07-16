@@ -112,6 +112,10 @@ int camcontrol_traceMove(float* fromPos, float* toPos, float* outPos, u8* traceW
 }
 #pragma dont_inline reset
 
+void doNothing_80103660(int unused)
+{
+}
+
 u8 camcontrol_traceFromTarget(float* fromPos, GameObject* target, float* outPos)
 {
     float targetPos[3];
@@ -643,6 +647,3 @@ void camcontrol_updateModeSettings(int camera)
     }
 }
 
-void doNothing_80103660(int unused)
-{
-}
