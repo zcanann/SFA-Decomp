@@ -210,7 +210,7 @@ extern void fn_80079180(void);
 extern void fn_8007D670(void);
 extern const f32 lbl_803DF414;
 extern f32 lbl_803DB790;
-extern f32 lbl_803DF350;
+extern const f32 lbl_803DF350;
 extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
 extern const f32 lbl_803DF424;
