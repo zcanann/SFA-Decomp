@@ -404,8 +404,8 @@ extern u8* mapGetBlockIdx(int layer);
 
 void trackDolphin_buildShadowVolumePlanes(int* obj, void* buf48, void* bufA8);
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1,
-                       f32 y1, f32 z1);
+extern int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
+                       f32 y1, f32 z1, u8 flags);
 extern u8 hitDetect_800667ec(int mode, void* tri1, void* tri2, int startPos, int endPos, int count, void* slots,
                              int flagsArg);
 extern int doLotsOfMath(void* a, void* b, f32 f, int c, void* d, int* e, int g, int h, int i, int self);
@@ -2075,103 +2075,108 @@ void hitDetectFn_800691c0(GameObject* obj, TrackQueryBounds* ranges, u32 a, int 
     f32 f28 = (f32)(ranges->maxY + 5);
     f32 f27 = (f32)(ranges->minZ - 5);
     f32 f26 = (f32)(ranges->maxZ + 5);
-    s16 i;
-    int flag80;
     ObjAnimComponent** resetObjects;
-    TrackBlockDescriptor* desc;
-    TrackBlockDescriptor* descEnd;
-    int cur;
-    int count;
+    int flag80;
+    s16 i;
+    ObjAnimComponent* resetObj;
+    int* model;
     int masked;
+    int count;
 
-    gTrackBlockDescriptors[0].object = NULL;
-    gTrackBlockDescriptors[0].firstTriangle = 0;
-    desc = &gTrackBlockDescriptors[1];
-    descEnd = &gTrackBlockDescriptors[20];
-    gTrackTriangleBufferEnd = gTrackTriangleBuffer + 0x16440;
-    masked = a & 0xffff;
-    if ((masked & 0x10) != 0)
     {
-        cur = gTrackTriangleBuffer;
-    }
-    else
-    {
-        cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27, f30, f28, f26, a, b);
-    }
-    if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
-    {
-        ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
-        i = 0;
-        resetObjects = t;
-        flag80 = masked & 0x80;
-        for (; i < count; i++, resetObjects++)
+        int cur;
+        TrackBlockDescriptor* desc;
+        TrackBlockDescriptor* descEnd;
+
+        desc = gTrackBlockDescriptors;
+        desc->object = NULL;
+        desc->firstTriangle = 0;
+        desc++;
+        descEnd = &gTrackBlockDescriptors[20];
+        gTrackTriangleBufferEnd = gTrackTriangleBuffer + 0x16440;
+        masked = a & 0xffff;
+        if ((masked & 0x10) != 0)
         {
-            ObjAnimComponent* resetObj = *resetObjects;
-            ObjHitsPriorityState* hitState;
-            ObjHitboxTransformState* transformState;
-            int n;
-            int* model;
-            int hdr;
-            f32 r, c;
-
-            if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
-                continue;
-            hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
-            if (hitState == NULL)
-                continue;
-            transformState = ((ObjHitbox*)resetObj)->transformState;
-            if (transformState == NULL)
-                continue;
-            if (transformState->resetFrames != 0)
-                continue;
-            if (transformState->pad10E != 0)
-                continue;
-            model = (int*)resetObj->banks[(s8)hitState->stateIndex];
-            if (model == NULL)
-                continue;
-            hdr = *(int*)model;
-            if (*(u16*)(hdr + 0xf0) == 0)
-                continue;
-            r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void*)hdr);
-            c = resetObj->worldPosX;
-            if (f30 < c - r)
-                continue;
-            if (f31 > c + r)
-                continue;
-            c = resetObj->worldPosY;
-            if (f28 < c - r)
-                continue;
-            if (f29 > c + r)
-                continue;
-            c = resetObj->worldPosZ;
-            if (f26 < c - r)
-                continue;
-            if (f27 > c + r)
-                continue;
-
-            desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                           ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
-            desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                  (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
-            desc->alternateCollisionMatrix =
-                (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
-            desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
-                                    ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
-
-            desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
-            desc->object = resetObj;
-            cur = fn_80067B84(cur, desc, (int)model, a, lbl_803DECC4, f31, f29, f27, f30, f28, f26);
-            desc++;
-            if ((u32)cur >= gTrackTriangleBufferEnd)
-                break;
-            if (desc >= descEnd)
-                break;
+            cur = gTrackTriangleBuffer;
         }
+        else
+        {
+            cur = mapLoadBlocksFn_800685cc(gTrackTriangleBuffer, f31, f29, f27, f30, f28, f26, a, b);
+        }
+        if ((u32)cur < gTrackTriangleBufferEnd && (masked & 1) && obj != NULL)
+        {
+            ObjAnimComponent** t = ObjHitReact_GetResetObjects(&count);
+            i = 0;
+            resetObjects = t;
+            flag80 = masked & 0x80;
+            for (; i < count; resetObjects++, i++)
+            {
+                ObjHitsPriorityState* hitState;
+                ObjHitboxTransformState* transformState;
+                int n;
+                int hdr;
+                f32 r, c;
+
+                resetObj = *resetObjects;
+                if (flag80 && (resetObj->modelInstance->flags & 0x01000000))
+                    continue;
+                hitState = (ObjHitsPriorityState*)resetObj->hitReactState;
+                if (hitState == NULL)
+                    continue;
+                transformState = ((ObjHitbox*)resetObj)->transformState;
+                if (transformState == NULL)
+                    continue;
+                if (transformState->resetFrames != 0)
+                    continue;
+                if (transformState->pad10E != 0)
+                    continue;
+                model = (int*)resetObj->banks[(s8)hitState->stateIndex];
+                if (model == NULL)
+                    continue;
+                hdr = *(int*)model;
+                if (*(u16*)(hdr + 0xf0) == 0)
+                    continue;
+                r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void*)hdr);
+                c = resetObj->worldPosX;
+                if (f30 < c - r)
+                    continue;
+                if (f31 > c + r)
+                    continue;
+                c = resetObj->worldPosY;
+                if (f28 < c - r)
+                    continue;
+                if (f29 > c + r)
+                    continue;
+                c = resetObj->worldPosZ;
+                if (f26 < c - r)
+                    continue;
+                if (f27 > c + r)
+                    continue;
+
+                desc->currentCollisionMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                               ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex + 2) << 4);
+                desc->currentMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                      (((ObjHitbox*)resetObj)->transformState->activeMatrixIndex << 4);
+                desc->alternateCollisionMatrix =
+                    (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                    (((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) + 2) << 4);
+                desc->alternateMatrix = (f32*)((ObjHitbox*)resetObj)->transformState->matrices +
+                                        ((((ObjHitbox*)resetObj)->transformState->activeMatrixIndex ^ 1) << 4);
+
+                desc->firstTriangle = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+                desc->object = resetObj;
+                cur = fn_80067B84(cur, desc, (int)model, lbl_803DECC4, f31, f29, f27, f30, f28, f26, a);
+                desc++;
+                if ((u32)cur >= gTrackTriangleBufferEnd)
+                    break;
+                if (desc >= descEnd)
+                    break;
+            }
+        }
+        gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
+        gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
+        desc->firstTriangle = gTrackTriangleCount;
     }
-    gTrackTriangleCount = (s16)((cur - (int)gTrackTriangleBuffer) / 0x4c);
-    gActiveTrackBlockCount = (u8)(desc - gTrackBlockDescriptors);
-    desc->firstTriangle = gTrackTriangleCount;
 }
 
 #pragma opt_propagation off
@@ -3964,8 +3969,8 @@ int objBboxFn_800640cc(f32* p0, f32* p1, f32 f, int p5, TrackBBoxHit* out, GameO
 /* fn_80067B84 -- gather model triangles overlapping a swept bbox into the
  * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
  * cursor. */
-int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, u8 flags, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1,
-                f32 y1, f32 z1)
+int fn_80067B84(int cur, TrackBlockDescriptor* desc, int model, f32 scale, f32 x0, f32 y0, f32 z0, f32 x1, f32 y1,
+                f32 z1, u8 flags)
 {
     f32 xd, xc, xb, xa;
     f32 zd, zc, zb, za;
