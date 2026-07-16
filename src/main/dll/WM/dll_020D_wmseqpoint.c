@@ -26,11 +26,6 @@
 #include "main/vecmath_distance_api.h"
 #include "main/dll/WM/dll_020D_wmseqpoint.h"
 
-__declspec(section ".sdata2") f32 lbl_803E5F10 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5F14 = 0.0f;
-#pragma explicit_zero_data off
-
 /* state->triggerMode: how the trigger sequence is armed */
 enum
 {
@@ -226,7 +221,7 @@ void wmseqpoint_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E5F10); /* 1.0f */
+        objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
