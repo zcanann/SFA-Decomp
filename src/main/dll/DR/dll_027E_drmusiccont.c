@@ -76,35 +76,6 @@ void drmusiccont_hitDetect(void)
 {
 }
 
-void drmusiccont_release(void)
-{
-}
-
-void drmusiccont_initialise(void)
-{
-}
-
-void drmusiccont_init(GameObject* obj)
-{
-    DrmusiccontState* state = obj->extra;
-    DrMusicContFlags* flags = &state->flags;
-
-    flags->b_e30 = mainGetBit(0xe30);
-    flags->b_e31 = mainGetBit(0xe31);
-    flags->b_e32 = mainGetBit(0xe32);
-    flags->b_e33 = mainGetBit(0xe33);
-    flags->b_e9c = mainGetBit(GAMEBIT_DR_ShutDownRobotShields);
-    flags->b_e38 = mainGetBit(0xe38);
-    flags->b_e3c = mainGetBit(0xe3c);
-    flags->b_e3d = mainGetBit(0xe3d);
-    flags->b_e3e = mainGetBit(0xe3e);
-    flags->b_e39 = mainGetBit(0xe39);
-    flags->b_9e0 = mainGetBit(0x9e0);
-    flags->b_9e1 = mainGetBit(0x9e1);
-    flags->b_9e2 = mainGetBit(0x9e2);
-    flags->b_9e7 = mainGetBit(0x9e7);
-}
-
 void drmusiccont_update(GameObject* obj)
 {
     DrmusiccontState* state = obj->extra;
@@ -237,3 +208,32 @@ ObjectDescriptor gDrMusicContObjDescriptor = {
     (ObjectDescriptorCallback)drmusiccont_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)drmusiccont_getExtraSize,
 };
+
+void drmusiccont_init(GameObject* obj)
+{
+    DrmusiccontState* state = obj->extra;
+    DrMusicContFlags* flags = &state->flags;
+
+    flags->b_e30 = mainGetBit(0xe30);
+    flags->b_e31 = mainGetBit(0xe31);
+    flags->b_e32 = mainGetBit(0xe32);
+    flags->b_e33 = mainGetBit(0xe33);
+    flags->b_e9c = mainGetBit(GAMEBIT_DR_ShutDownRobotShields);
+    flags->b_e38 = mainGetBit(0xe38);
+    flags->b_e3c = mainGetBit(0xe3c);
+    flags->b_e3d = mainGetBit(0xe3d);
+    flags->b_e3e = mainGetBit(0xe3e);
+    flags->b_e39 = mainGetBit(0xe39);
+    flags->b_9e0 = mainGetBit(0x9e0);
+    flags->b_9e1 = mainGetBit(0x9e1);
+    flags->b_9e2 = mainGetBit(0x9e2);
+    flags->b_9e7 = mainGetBit(0x9e7);
+}
+
+void drmusiccont_release(void)
+{
+}
+
+void drmusiccont_initialise(void)
+{
+}
