@@ -65,11 +65,6 @@
 #define WCPRESSURES_OBJFLAG_HIDDEN             0x4000
 #define WCPRESSURES_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-int wcpressures_getExtraSize(void)
-{
-    return WCPRESSURES_EXTRA_SIZE;
-}
-
 int wcpressures_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     WCPressuresState* state = (WCPressuresState*)obj->extra;
@@ -104,6 +99,11 @@ int wcpressures_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdat
     }
 
     return 0;
+}
+
+int wcpressures_getExtraSize(void)
+{
+    return WCPRESSURES_EXTRA_SIZE;
 }
 
 int wcpressures_getObjectTypeId(GameObject* obj)
