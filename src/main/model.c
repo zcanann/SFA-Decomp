@@ -1062,39 +1062,41 @@ extern s16* gModelResourceBuffer;
 void* ObjModel_Load(int id, int loadFlag, int* outSize)
 {
     int sizes[7];
-    int realId;
+    int realId[1];
     u8* header;
-    int i;
-    u8* h;
-    int off;
+    int i[1];
+    u8* h[1];
+    int off[1];
     int tex;
     int idc;
+    realId[0] = 0;
+    i[0] = 0;
     idc = id;
     if (idc < 0)
     {
-        realId = -idc;
+        realId[0] = -idc;
     }
     else
     {
         fileLoadToBufferOffset(MLDF_FILEID_MODELIND_BIN, gModelResourceBuffer, idc * 2, 8);
-        realId = gModelResourceBuffer[0];
+        realId[0] = gModelResourceBuffer[0];
     }
-    if (ModelList_getHeader(gModelList, realId, &header) == 0)
+    if (ModelList_getHeader(gModelList, realId[0], &header) == 0)
     {
-        header = ObjModel_LoadModelData(realId);
+        header = ObjModel_LoadModelData(realId[0]);
         ObjModel_RelocateModelData(header);
-        h = header;
-        i = 0;
-        off = i;
-        for (; i < h[0xf2]; i++)
+        h[0] = header;
+        i[0] = 0;
+        off[0] = i[0];
+        for (; i[0] < h[0][0xf2]; i[0]++)
         {
-            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h + 0x20) + off) | 0x8000), 1);
-            *(int*)(*(int*)(h + 0x20) + off) = tex;
-            off += 4;
+            tex = textureLoadIntLegacy(-(*(int*)(*(int*)(h[0] + 0x20) + off[0]) | 0x8000), 1);
+            *(int*)(*(int*)(h[0] + 0x20) + off[0]) = tex;
+            off[0] += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);
-        modelLoadAnimations(header, realId, header + ((ModelFileHeader*)header)->dataSize);
-        modelInitModelList(gModelList, realId, &header);
+        modelLoadAnimations(header, realId[0], header + ((ModelFileHeader*)header)->dataSize);
+        modelInitModelList(gModelList, realId[0], &header);
     }
     else
     {
