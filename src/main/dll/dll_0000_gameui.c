@@ -4558,10 +4558,10 @@ void drawFn_80125424(void)
             {
                 gHeadDisplayPanelWidth = HEADPANEL_WIDTH_MAX;
                 gHeadDisplayActive = 0;
-                if (*(int*)(gHeadDisplayEntryTable + gHeadDisplayEntryIdx * HEADREC_STRIDE) != -1)
+                if (((HeadDisplayEntry*)gHeadDisplayEntryTable)[gHeadDisplayEntryIdx].streamId != -1)
                 {
                     AudioStream_StopCurrent();
-                    ((void (*)(int))doNothing_8000CF54)(0);
+                    doNothing_8000CF54Int(0);
                 }
             }
             gHeadDisplayPanelHeight = gHeadDisplayPanelHeight - framesThisStep * 10;
@@ -4627,13 +4627,13 @@ void drawFn_80125424(void)
         if (gHeadDisplayModelObjs[type] != NULL)
         {
             ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[type], lbl_8031BFA8[type], timeDelta, NULL);
-            if (*(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData > 0x90000000u)
+            if (gHeadDisplayModelObjs[type]->anim.placementDataAddress > 0x90000000u)
             {
-                *(u32*)&((GameObject*)gHeadDisplayModelObjs[type])->anim.placementData = 0;
+                gHeadDisplayModelObjs[type]->anim.placementDataAddress = 0;
             }
-            *(u8*)((u8*)gHeadDisplayModelObjs[type] + 0x37) = 0xff;
+            gHeadDisplayModelObjs[type]->anim.renderAlpha = 0xff;
             objRender(0, 0, 0, 0, gHeadDisplayModelObjs[type], 1);
-            *(u16*)((u8*)Obj_GetActiveModel((GameObject*)gHeadDisplayModelObjs[type]) + 0x18) &= ~8;
+            Obj_GetActiveModel(gHeadDisplayModelObjs[type])->bufferFlags &= ~8;
         }
         Camera_SetCurrentViewIndex(0);
         if (lbl_803DD7E0 != 0)

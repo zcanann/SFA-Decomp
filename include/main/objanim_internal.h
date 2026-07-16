@@ -370,7 +370,10 @@ typedef struct ObjAnimComponent {
   u8 pad34;
   s8 transformMatrixIndex;
   u8 alpha;
-  u8 pad37[0x38 - 0x37];
+  union {
+    u8 renderAlpha;
+    u8 pad37[0x38 - 0x37];
+  };
   void *next; /* 0x38: intrusive object-list link (wiki ObjInstance.next); list not ordered */
   f32 loadDistance; /* 0x3C: wiki ObjInstance.loadDistance (same value as cullDistance2) */
   f32 cullDistance2; /* 0x40: wiki ObjInstance.cullDistance2 - camera-distance opacity term */
@@ -382,6 +385,7 @@ typedef struct ObjAnimComponent {
     s16 *placementData; /* raw view - the s16* deref width is load-bearing
                            at placementData[i] sites; keep for those */
     struct ObjPlacement *placement; /* typed view of the common head */
+    u32 placementDataAddress; /* raw address view used by ownership guards */
   };
   ObjDef *modelInstance;
   ObjHitReactState *hitReactState;
