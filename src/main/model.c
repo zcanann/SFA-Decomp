@@ -2387,14 +2387,16 @@ typedef struct
 extern f32 gModelJitterAxis[];
 
 #pragma dont_inline on
-void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
+void modelAnimFn_80026790(ObjModel* model, int unused, ObjModelChain* chain, ObjModelChainEntry* entry)
 {
     extern f32 lbl_803DCB48;
     extern f32 lbl_803DE844;
     extern f32 lbl_803DE848;
     extern f32 lbl_803DE84C;
     f32 vec[3];
-    u8* hdr;
+    int modelIndex;
+    ModelFileHeader* hdr;
+    u32 count;
     int total;
     u8* base;
     f32 dot;
@@ -2403,24 +2405,22 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     int off;
     int i;
 
-    idx = 0;
-    hdr = *(u8**)model;
-    if (hdr[0xf3] != 0)
+    modelIndex = 0;
+    hdr = model->file;
+    count = hdr->jointCount;
+    if (count != 0)
     {
-        total = hdr[0xf3] + hdr[0xf4];
+        total = count + hdr->extraJointCount;
     }
     else
     {
         total = 1;
     }
-    if (idx >= total)
+    if (modelIndex >= total)
     {
-        idx = 0;
+        modelIndex = 0;
     }
-    {
-        u8* p = model + 0xc;
-        base = *(u8**)((u8*)p + ((((ObjModel*)model)->bufferFlags & 1) << 2)) + idx * 0x40;
-    }
+    base = model->jointMatrices[model->bufferFlags & 1] + modelIndex * 0x40;
     vec[0] = *(f32*)(base + 0x20);
     vec[1] = *(f32*)(base + 0x24);
     vec[2] = *(f32*)(base + 0x28);
@@ -2433,12 +2433,12 @@ void modelAnimFn_80026790(u8* model, int idx, u8* m, u8* anim)
     amp = lbl_803DE848 * randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
     i = 0;
     off = 0;
-    while (i < *(int*)(anim + 8) + 1)
+    while (i < entry->frameCount + 1)
     {
-        u8* p = *(u8**)anim + off;
-        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * *(f32*)&((ModelFileHeader*)m)->dataSize + gModelJitterAxis[0] * amp;
-        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * *(f32*)&((ModelFileHeader*)m)->dataSize + *(f32*)(m + 0x10));
-        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * *(f32*)&((ModelFileHeader*)m)->dataSize + gModelJitterAxis[2] * amp;
+        u8* p = (u8*)entry->frameBuffer + off;
+        *(f32*)&((ModelFileHeader*)p)->dataSize = *(f32*)&((ModelFileHeader*)p)->dataSize * chain->originY + gModelJitterAxis[0] * amp;
+        *(f32*)(p + 0x10) = gModelJitterAxis[1] * amp + (*(f32*)(p + 0x10) * chain->originY + chain->originZ);
+        *(f32*)(p + 0x14) = *(f32*)(p + 0x14) * chain->originY + gModelJitterAxis[2] * amp;
         off += 0x54;
         i++;
     }
@@ -2764,7 +2764,7 @@ void playerTailFn_80026b3c(int* a, int b, u8* p, int d)
             }
             if (getHudHiddenFrameCount() == 0)
             {
-                modelAnimFn_80026790((u8*)a, b, p, (u8*)((ObjModelChain*)p)->entries + off);
+                modelAnimFn_80026790((ObjModel*)a, b, (ObjModelChain*)p, (ObjModelChainEntry*)((u8*)((ObjModelChain*)p)->entries + off));
                 fn_80026308(a, b, p, (u8*)((ObjModelChain*)p)->entries + off, d, i);
             }
             else
