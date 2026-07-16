@@ -313,7 +313,6 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     f32 z;
     f32 t;
     f32 sz;
-    f32 zero;
 
     c = (f32)(int)(gVecMathAngleScale * fcos16((u16) * (s16*)transform));
     cx = c * lbl_803DE7F0;
@@ -338,17 +337,17 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     v = v + sx * cz;
     mtx[1] = v;
     mtx[2] = -(cx * sy);
-    mtx[3] = (zero = lbl_803DE7C0);
+    mtx[3] = (u = 0.0f);
     mtx[4] = -(sy * cz);
     mtx[5] = sy * sz;
     mtx[6] = cy;
-    mtx[7] = zero;
+    mtx[7] = u;
     u = t1 * sx;
     mtx[8] = u + cx * sz;
     t2 = t2 * sx;
     mtx[9] = cx * cz - t2;
     mtx[10] = sx * sy;
-    mtx[11] = zero;
+    mtx[11] = u;
     x = *(f32*)((u8*)transform + 0xc);
     y = *(f32*)((u8*)transform + 0x10);
     z = *(f32*)((u8*)transform + 0x14);
@@ -372,14 +371,14 @@ void mtxRotateByVec3s(f32* mtx, const void* transform)
     mtx[13] = t;
     s = mtx[2];
     s = s * x;
-    t = mtx[6];
-    t = t * y;
-    t = t + s;
+    t1 = mtx[6];
+    t1 = t1 * y;
+    t1 = t1 + s;
     s = mtx[10];
     s = s * z;
-    t = t + s;
-    mtx[14] = t;
-    mtx[15] = lbl_803DE7C4;
+    t1 = t1 + s;
+    mtx[14] = t1;
+    mtx[15] = 1.0f;
 }
 #pragma opt_dead_assignments reset
 #pragma opt_lifetimes reset
