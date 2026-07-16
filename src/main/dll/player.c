@@ -15943,7 +15943,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     int tbl;
     int mapVal;
     int result;
-    register u8* inner;
+    register PlayerState* inner;
     u8 found;
     f32 npos[3];
     f32 pz;
@@ -15974,7 +15974,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     if (*(void**)&gPlayerEggObject != NULL)
     {
         *(int*)&((GameObject*)gPlayerEggObject)->anim.parent = *(int*)&((GameObject*)obj)->anim.parent;
-        if (((PlayerState*)inner)->characterId == 0)
+        if (inner->characterId == 0)
         {
             *(s16*)(gPlayerEggObject + 6) |= 0x4000;
         }
@@ -15989,33 +15989,33 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         ObjPath_GetPointWorldPosition((GameObject*)obj, 4, &gPlayerStaffObject->anim.localPosX,
                                       &gPlayerStaffObject->anim.localPosY, &gPlayerStaffObject->anim.localPosZ, 0);
     }
-    if ((((u32) * (u8*)((char*)inner + 0x3f3) >> 3 & 1) != 0 || ((PlayerState*)inner)->animState == 0x40) &&
+    if ((((u32) * (u8*)((char*)inner + 0x3f3) >> 3 & 1) != 0 || inner->animState == 0x40) &&
         ((u32) * (u8*)((char*)inner + 0x3f4) >> 7 & 1) == 0)
     {
         playerSetDisguised((GameObject*)obj, 0);
-        ((PlayerState*)inner)->animState = -1;
+        inner->animState = -1;
     }
     ObjHits_DisableObject(obj);
-    *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_HITDETECT;
+    *(u32*)&inner->flags360 &= ~PLAYER_FLAG_HITDETECT;
     if ((s8)seq->movementState != 0)
     {
         s8 c;
-        *(u32*)&((PlayerState*)inner)->flags360 &= ~PLAYER_FLAG_AIM_READY;
+        *(u32*)&inner->flags360 &= ~PLAYER_FLAG_AIM_READY;
         {
             f32 fz = 0.0f;
-            ((PlayerState*)inner)->knockbackTimer = fz;
-            ((PlayerState*)inner)->knockbackHitTimer = fz;
+            inner->knockbackTimer = fz;
+            inner->knockbackHitTimer = fz;
         }
         if (((u32) * (u8*)((char*)inner + 0x3f2) >> 7 & 1) == 0)
         {
             if (gPlayerPathObject != NULL && ((u32) * (u8*)((char*)inner + 0x3f4) >> 6 & 1) != 0)
             {
-                ((PlayerState*)inner)->staffActionRequest = 1;
+                inner->staffActionRequest = 1;
                 ((ByteFlags*)((char*)inner + 0x3f4))->b08 = 1;
             }
-            ((PlayerState*)inner)->isHoldingObject = 0;
+            inner->isHoldingObject = 0;
             {
-                GameObject* p = ((PlayerState*)inner)->heldObj;
+                GameObject* p = inner->heldObj;
                 if (p != NULL)
                 {
                     s16 sp = p->anim.seqId;
@@ -16027,9 +16027,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     {
                         objSaveFn_800ea774(p);
                     }
-                    *(s16*)((char*)((PlayerState*)inner)->heldObj + 6) &= ~0x4000;
-                    *(int*)((char*)((PlayerState*)inner)->heldObj + 0xf8) = 0;
-                    ((PlayerState*)inner)->heldObj = 0;
+                    *(s16*)((char*)inner->heldObj + 6) &= ~0x4000;
+                    *(int*)((char*)inner->heldObj + 0xf8) = 0;
+                    inner->heldObj = 0;
                 }
             }
         }
@@ -16042,7 +16042,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 seq->posOffsetX = ((GameObject*)obj)->anim.localPosX - ((GameObject*)obj2)->anim.localPosX;
                 seq->posOffsetY = ((GameObject*)obj)->anim.localPosY - ((GameObject*)obj2)->anim.localPosY;
                 seq->posOffsetZ = ((GameObject*)obj)->anim.localPosZ - ((PlayerState*)obj2)->baddie.posX;
-                seq->rotOffsetX = ((PlayerState*)inner)->targetYaw - (u16) * (s16*)obj2;
+                seq->rotOffsetX = inner->targetYaw - (u16) * (s16*)obj2;
                 if (seq->rotOffsetX > 0x8000)
                 {
                     seq->rotOffsetX = seq->rotOffsetX - 0xffff;
@@ -16077,10 +16077,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 seq->movementState = 0;
             }
             ((GameObject*)obj)->anim.activeMove = -1;
-            ((PlayerState*)inner)->bodyLeanHalf = 0;
-            ((PlayerState*)inner)->headPitch = 0;
-            ((PlayerState*)inner)->bodyLeanAngle = 0;
-            ((PlayerState*)inner)->headYaw = 0;
+            inner->bodyLeanHalf = 0;
+            inner->headPitch = 0;
+            inner->bodyLeanAngle = 0;
+            inner->headYaw = 0;
         }
         else if (c == 4)
         {
