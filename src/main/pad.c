@@ -32,40 +32,6 @@ u32 lbl_803398D0[4];
 u32 gPadButtonsJustPressed[4];
 u8 gPadStatuses[0x60];
 
-void doNothing_endOfFrame(void)
-{
-}
-
-void setJoypadDisabled(void)
-{
-    joypadDisabled = 1;
-}
-
-void padFn_80014b18(int value)
-{
-    gPadStickRepeatDelay = value;
-}
-
-u32 buttonGetDisabled(int port)
-{
-    return ~gPadButtonMask[port];
-}
-
-void buttonDisable(int port, u32 mask)
-{
-    gPadButtonMask[port] &= ~mask;
-}
-
-void padClearAnalogInputY(int port)
-{
-    (&gPadAnalogY)[port] = 0;
-}
-
-void padClearAnalogInputX(int port)
-{
-    (&gPadAnalogX)[port] = 0;
-}
-
 void stopRumble2(void)
 {
     if (rumbleEnabled != 0)
@@ -96,9 +62,34 @@ void doRumble(f32 duration)
     }
 }
 
-void setRumbleEnabled(u8 enabled)
+void setJoypadDisabled(void)
 {
-    rumbleEnabled = enabled;
+    joypadDisabled = 1;
+}
+
+void padFn_80014b18(int value)
+{
+    gPadStickRepeatDelay = value;
+}
+
+u32 buttonGetDisabled(int port)
+{
+    return ~gPadButtonMask[port];
+}
+
+void buttonDisable(int port, u32 mask)
+{
+    gPadButtonMask[port] &= ~mask;
+}
+
+void padClearAnalogInputY(int port)
+{
+    (&gPadAnalogY)[port] = 0;
+}
+
+void padClearAnalogInputX(int port)
+{
+    (&gPadAnalogX)[port] = 0;
 }
 
 void padGetAnalogInput(int port, u8* x, u8* y)
@@ -279,98 +270,9 @@ u32 getButtonsHeld(int port)
     return gPadButtonsHeld[port] & gPadButtonMask[port];
 }
 
-int initControllers(void)
+void doNothing_endOfFrame(void)
 {
-    PadStateBlock* base[1];
-    u8* prevStickY;
-    u8* prevStickX;
-    u8* repeatY;
-    u8* repeatX;
-    u8* analogY;
-    u8* analogX;
-    u32* heldButtons;
-    u32* buttonsPressed;
-    u32* buttonsReleased;
-    u32* controlStick;
-    u16* prevTriggers;
-    u16* triggers;
-    u16* triggersReleased;
-    u16* triggersPressed;
-    PADStatus* statuses;
-    u8* secondStatus;
-    s32 i;
-
-    base[0] = (PadStateBlock*)gPadStateBlock;
-    gPadResetMask = 0xF0000000;
-    PADInit();
-    PADRecalibrate(gPadResetMask);
-    if (PADReset(gPadResetMask) != 0)
-    {
-        gPadResetMask = 0;
-    }
-
-    i = 0;
-    prevStickY = &gPadPrevStickY;
-    prevStickX = &gPadPrevStickX;
-    repeatY = &gPadRepeatY;
-    repeatX = &gPadRepeatX;
-    analogY = &gPadAnalogY;
-    analogX = &gPadAnalogX;
-    heldButtons = base[0]->held;
-    buttonsPressed = base[0]->buttons;
-    buttonsReleased = base[0]->released;
-    controlStick = base[0]->pressed;
-    prevTriggers = &gPadPrevTriggers;
-    triggers = &gPadTriggers;
-    triggersReleased = &gPadTriggersReleased;
-    triggersPressed = &gPadTriggersPressed;
-    statuses = base[0]->status;
-
-    for (; i < 4; i++)
-    {
-        *prevStickY = 0;
-        *prevStickX = 0;
-        *repeatY = 0;
-        *repeatX = 0;
-        *analogY = 0;
-        *analogX = 0;
-        *heldButtons = 0;
-        *buttonsPressed = 0;
-        *buttonsReleased = 0;
-        *controlStick = 0;
-        *prevTriggers = 0;
-        *triggers = 0;
-        *triggersReleased = 0;
-        *triggersPressed = 0;
-        memset(statuses, 0, sizeof(PADStatus));
-        secondStatus = (u8*)base[0];
-        secondStatus += (i + 4) * sizeof(PADStatus);
-        memset(secondStatus + 0x40, 0, sizeof(PADStatus));
-
-        prevStickY++;
-        prevStickX++;
-        repeatY++;
-        repeatX++;
-        analogY++;
-        analogX++;
-        heldButtons++;
-        buttonsPressed++;
-        buttonsReleased++;
-        controlStick++;
-        prevTriggers++;
-        triggers++;
-        triggersReleased++;
-        triggersPressed++;
-        statuses++;
-    }
-
-    gPadStatusToggle = 0;
-    rumbleEnabled = 1;
-    PADControlMotor(0, PAD_MOTOR_STOP_HARD);
-    gRumbleTimer = lbl_803DE6E8;
-    return 0;
 }
-
 #pragma opt_common_subs off
 void padUpdate(void)
 {
@@ -613,5 +515,103 @@ void padUpdate(void)
     lbl_803DCCA5 = 0;
 }
 #pragma opt_common_subs reset
+
+void setRumbleEnabled(u8 enabled)
+{
+    rumbleEnabled = enabled;
+}
+
+
+int initControllers(void)
+{
+    PadStateBlock* base[1];
+    u8* prevStickY;
+    u8* prevStickX;
+    u8* repeatY;
+    u8* repeatX;
+    u8* analogY;
+    u8* analogX;
+    u32* heldButtons;
+    u32* buttonsPressed;
+    u32* buttonsReleased;
+    u32* controlStick;
+    u16* prevTriggers;
+    u16* triggers;
+    u16* triggersReleased;
+    u16* triggersPressed;
+    PADStatus* statuses;
+    u8* secondStatus;
+    s32 i;
+
+    base[0] = (PadStateBlock*)gPadStateBlock;
+    gPadResetMask = 0xF0000000;
+    PADInit();
+    PADRecalibrate(gPadResetMask);
+    if (PADReset(gPadResetMask) != 0)
+    {
+        gPadResetMask = 0;
+    }
+
+    i = 0;
+    prevStickY = &gPadPrevStickY;
+    prevStickX = &gPadPrevStickX;
+    repeatY = &gPadRepeatY;
+    repeatX = &gPadRepeatX;
+    analogY = &gPadAnalogY;
+    analogX = &gPadAnalogX;
+    heldButtons = base[0]->held;
+    buttonsPressed = base[0]->buttons;
+    buttonsReleased = base[0]->released;
+    controlStick = base[0]->pressed;
+    prevTriggers = &gPadPrevTriggers;
+    triggers = &gPadTriggers;
+    triggersReleased = &gPadTriggersReleased;
+    triggersPressed = &gPadTriggersPressed;
+    statuses = base[0]->status;
+
+    for (; i < 4; i++)
+    {
+        *prevStickY = 0;
+        *prevStickX = 0;
+        *repeatY = 0;
+        *repeatX = 0;
+        *analogY = 0;
+        *analogX = 0;
+        *heldButtons = 0;
+        *buttonsPressed = 0;
+        *buttonsReleased = 0;
+        *controlStick = 0;
+        *prevTriggers = 0;
+        *triggers = 0;
+        *triggersReleased = 0;
+        *triggersPressed = 0;
+        memset(statuses, 0, sizeof(PADStatus));
+        secondStatus = (u8*)base[0];
+        secondStatus += (i + 4) * sizeof(PADStatus);
+        memset(secondStatus + 0x40, 0, sizeof(PADStatus));
+
+        prevStickY++;
+        prevStickX++;
+        repeatY++;
+        repeatX++;
+        analogY++;
+        analogX++;
+        heldButtons++;
+        buttonsPressed++;
+        buttonsReleased++;
+        controlStick++;
+        prevTriggers++;
+        triggers++;
+        triggersReleased++;
+        triggersPressed++;
+        statuses++;
+    }
+
+    gPadStatusToggle = 0;
+    rumbleEnabled = 1;
+    PADControlMotor(0, PAD_MOTOR_STOP_HARD);
+    gRumbleTimer = lbl_803DE6E8;
+    return 0;
+}
 
 u32 gPadButtonMask[4] = {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF};
