@@ -3,6 +3,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render_legacy.h"
+#include "main/dll/dll_0190_ecshcup.h"
 #include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "main/objseq.h"
