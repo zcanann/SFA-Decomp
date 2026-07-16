@@ -28,7 +28,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
 #define MMPTRENCHFX_PARTFX_TICK 0x720
 
 char lbl_803AC930[0x18];
-extern f32 lbl_803E45C0;
 extern f32 lbl_803E45B0;
 extern f32 lbl_803E45B4;
 
@@ -95,6 +94,7 @@ void mmp_trenchfx_update(GameObject* obj)
 }
 #pragma scheduling reset
 
+#pragma scheduling off
 void mmp_trenchfx_init(GameObject* obj, int data)
 {
     MmpTrenchfxState* state = obj->extra;
@@ -113,8 +113,9 @@ void mmp_trenchfx_init(GameObject* obj, int data)
     angle = (s16)(((s32)place->emitAngleX) << 8);
     state->emitAngles[0] = angle;
     obj->anim.rotX = angle;
-    obj->anim.rootMotionScale = lbl_803E45C0;
+    obj->anim.rootMotionScale = 0.1f;
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 void mmp_trenchfx_release(void)
@@ -141,7 +142,3 @@ ObjectDescriptor gMMP_trenchFXObjDescriptor = {
     (ObjectDescriptorCallback)mmp_trenchfx_getObjectTypeId,
     mmp_trenchfx_getExtraSize,
 };
-
-#pragma force_active on
-__declspec(section ".sdata2") f32 lbl_803E45C0 = 0.1f;
-#pragma force_active reset

@@ -50,26 +50,13 @@ STATIC_ASSERT(offsetof(HagabonState, flags) == 0x26);
 #define SWARMBADDIE_FLAG_CHASE_LOCKOUT   0x04 /* strayed too far; block re-chase until back near path */
 #define SWARMBADDIE_FLAG_CHASE_MASK      0x06
 
-__declspec(section ".sdata2") f32 lbl_803E2678 = 400.0f;
-__declspec(section ".sdata2") f32 lbl_803E267C = 0.003f;
-__declspec(section ".sdata2") f32 lbl_803E2680 = 30.0f;
-__declspec(section ".sdata2") f32 lbl_803E2684 = 0.9f;
-__declspec(section ".sdata2") f32 lbl_803E2688 = 0.8f;
-__declspec(section ".sdata2") f32 lbl_803E268C = -0.8f;
-__declspec(section ".sdata2") f32 lbl_803E2690 = 32.0f;
-__declspec(section ".sdata2") f32 lbl_803E2694 = 23.0f;
-__declspec(section ".sdata2") f32 lbl_803E2698 = 4.0f;
-__declspec(section ".sdata2") f32 gSwarmBaddieDegToAngle = 182.0f;
-__declspec(section ".sdata2") f32 gSwarmBaddiePi = 3.1415927f;
-__declspec(section ".sdata2") f32 gSwarmBaddieS16AngleScale = 32768.0f;
+#define SWARM_BADDIE_DEG_TO_ANGLE 182.0f
+#define SWARM_BADDIE_PI 3.1415927f
+#define SWARM_BADDIE_S16_ANGLE_SCALE 32768.0f
 extern f32 lbl_803E26B0;
 extern f32 lbl_803E26B4;
 extern f32 lbl_803E26B8;
 extern f32 lbl_803E26BC;
-extern f32 lbl_803E26C0;
-extern f32 lbl_803E26C4;
-extern f32 lbl_803E26C8;
-extern f32 lbl_803E26CC;
 int gSwarmBaddieLastCurvePoint;
 
 void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
@@ -82,69 +69,69 @@ void fn_8014EE8C(GameObject* obj, SwarmBaddieState* state)
     done = Curve_AdvanceAlongPath(&curve->curve, state->curveStep);
     if (((done != 0) || (curve->atSegmentEnd != gSwarmBaddieLastCurvePoint)) &&
         ((*gRomCurveInterface)->goNextPoint((void*)curve) != 0) &&
-        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, lbl_803E2678, lbl_803DBC78, -1) != 0))
+        ((*gRomCurveInterface)->initCurve((void*)state->curve, (void*)obj, 400.0f, lbl_803DBC78, -1) != 0))
     {
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
     gSwarmBaddieLastCurvePoint = curve->atSegmentEnd;
     if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0)
     {
-        step = lbl_803E267C;
+        step = 0.003f;
         (obj)->anim.velocityX = step * (state->player->anim.localPosX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
         (obj)->anim.velocityY =
-            step * ((lbl_803E2680 + state->player->anim.localPosY) - (obj)->anim.localPosY) + (obj)->anim.velocityY;
+            step * ((30.0f + state->player->anim.localPosY) - (obj)->anim.localPosY) + (obj)->anim.velocityY;
         (obj)->anim.velocityZ = step * (state->player->anim.localPosZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
     else
     {
-        step = lbl_803E267C;
+        step = 0.003f;
         (obj)->anim.velocityX = step * (curve->posX - (obj)->anim.localPosX) + (obj)->anim.velocityX;
         (obj)->anim.velocityY = step * (curve->posY - (obj)->anim.localPosY) + (obj)->anim.velocityY;
         (obj)->anim.velocityZ = step * (curve->posZ - (obj)->anim.localPosZ) + (obj)->anim.velocityZ;
     }
 
-    (obj)->anim.velocityX = (obj)->anim.velocityX * (step = lbl_803E2684);
+    (obj)->anim.velocityX = (obj)->anim.velocityX * (step = 0.9f);
     (obj)->anim.velocityY *= step;
     (obj)->anim.velocityZ *= step;
 
-    if ((obj)->anim.velocityX > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityX > 0.8f)
     {
-        (obj)->anim.velocityX = lbl_803E2688;
+        (obj)->anim.velocityX = 0.8f;
     }
-    if ((obj)->anim.velocityY > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityY > 0.8f)
     {
-        (obj)->anim.velocityY = lbl_803E2688;
+        (obj)->anim.velocityY = 0.8f;
     }
-    if ((obj)->anim.velocityZ > *(f32*)&lbl_803E2688)
+    if ((obj)->anim.velocityZ > 0.8f)
     {
-        (obj)->anim.velocityZ = lbl_803E2688;
+        (obj)->anim.velocityZ = 0.8f;
     }
-    if ((obj)->anim.velocityX < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityX < -0.8f)
     {
-        (obj)->anim.velocityX = lbl_803E268C;
+        (obj)->anim.velocityX = -0.8f;
     }
-    if ((obj)->anim.velocityY < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityY < -0.8f)
     {
-        (obj)->anim.velocityY = lbl_803E268C;
+        (obj)->anim.velocityY = -0.8f;
     }
-    if ((obj)->anim.velocityZ < *(f32*)&lbl_803E268C)
+    if ((obj)->anim.velocityZ < -0.8f)
     {
-        (obj)->anim.velocityZ = lbl_803E268C;
+        (obj)->anim.velocityZ = -0.8f;
     }
 
     objMove((GameObject*)obj, (obj)->anim.velocityX * timeDelta, (obj)->anim.velocityY * timeDelta,
             (obj)->anim.velocityZ * timeDelta);
 
-    state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);
-    state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
+    state->yawWavePhase += (s16)(32.0f * timeDelta);
+    state->rollWavePhase += (s16)(23.0f * timeDelta);
 
     (obj)->anim.rotX +=
-        (s16)(lbl_803E2698 *
-              (gSwarmBaddieDegToAngle * mathSinf((gSwarmBaddiePi * state->yawWavePhase) / gSwarmBaddieS16AngleScale)));
+        (s16)(4.0f *
+              (SWARM_BADDIE_DEG_TO_ANGLE * mathSinf((SWARM_BADDIE_PI * state->yawWavePhase) / SWARM_BADDIE_S16_ANGLE_SCALE)));
 
     (obj)->anim.rotZ +=
-        (s16)(lbl_803E2698 *
-              (gSwarmBaddieDegToAngle * mathSinf((gSwarmBaddiePi * state->rollWavePhase) / gSwarmBaddieS16AngleScale)));
+        (s16)(4.0f *
+              (SWARM_BADDIE_DEG_TO_ANGLE * mathSinf((SWARM_BADDIE_PI * state->rollWavePhase) / SWARM_BADDIE_S16_ANGLE_SCALE)));
 }
 
 int SwarmBaddie_getExtraSize(void)
@@ -176,6 +163,11 @@ void SwarmBaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void SwarmBaddie_hitDetect(void)
 {
 }
+
+__declspec(section ".sdata2") f32 lbl_803E26B0 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E26B4 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E26B8 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E26BC = 63.0f;
 
 void SwarmBaddie_update(GameObject* obj)
 {
@@ -209,9 +201,9 @@ void SwarmBaddie_update(GameObject* obj)
     }
     volume = state->hitVolumeEnvelope;
     Sfx_SetObjectChannelVolumeScaleFirstLegacy(
-        lbl_803E26C0 *
-                mathSinf((gSwarmBaddiePi * (f32)(state->yawWavePhase + state->rollWavePhase)) /
-                         gSwarmBaddieS16AngleScale) +
+        0.05f *
+                mathSinf((SWARM_BADDIE_PI * (f32)(state->yawWavePhase + state->rollWavePhase)) /
+                         SWARM_BADDIE_S16_ANGLE_SCALE) +
             volume,
         (int)obj, 0x40, (int)(lbl_803E26BC * volume));
     (*gPartfxInterface)->spawnObject((void*)obj, SWARMBADDIE_PARTFX, NULL, 2, -1, &state->hitVolumeEnvelope);
@@ -230,12 +222,12 @@ void SwarmBaddie_update(GameObject* obj)
         d.z = oldTarget->posZ - (obj)->anim.worldPosZ;
         state->pathDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     }
-    if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > lbl_803E26C4))
+    if (((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) && (state->pathDistance > 250.0f))
     {
         state->flags = state->flags & ~SWARMBADDIE_FLAG_CHASE_PLAYER;
         state->flags = state->flags | SWARMBADDIE_FLAG_CHASE_LOCKOUT;
     }
-    if (((state->flags & SWARMBADDIE_FLAG_CHASE_LOCKOUT) != 0) && (state->pathDistance < lbl_803E26C8))
+    if (((state->flags & SWARMBADDIE_FLAG_CHASE_LOCKOUT) != 0) && (state->pathDistance < 60.0f))
     {
         state->flags = state->flags & ~SWARMBADDIE_FLAG_CHASE_LOCKOUT;
     }
@@ -250,8 +242,8 @@ void SwarmBaddie_update(GameObject* obj)
 void SwarmBaddie_init(GameObject* obj, int data, int skip_alloc)
 {
     SwarmBaddieState* state = (obj)->extra;
-    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / lbl_803E26CC;
-    state->chaseRadius = lbl_803E2698 * (f32)(s32) * (s8*)(data + 0x19);
+    state->curveStep = (f32)(s32) * (s16*)(data + 0x1A) / 50.0f;
+    state->chaseRadius = 4.0f * (f32)(s32) * (s8*)(data + 0x19);
     state->hitVolumeEnvelope = lbl_803E26B4;
     if (skip_alloc == 0)
     {
@@ -295,11 +287,3 @@ ObjectDescriptor gSwarmBaddieObjDescriptor = {
     SwarmBaddie_getExtraSize,
 };
 
-__declspec(section ".sdata2") f32 lbl_803E26B0 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E26B4 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E26B8 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E26BC = 63.0f;
-__declspec(section ".sdata2") f32 lbl_803E26C0 = 0.05f;
-__declspec(section ".sdata2") f32 lbl_803E26C4 = 250.0f;
-__declspec(section ".sdata2") f32 lbl_803E26C8 = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E26CC = 50.0f;
