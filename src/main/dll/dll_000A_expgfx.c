@@ -1946,13 +1946,17 @@ void expgfx_renderSourcePools(int sourceId, int sourceMode)
     }
 }
 
-#pragma optimization_level 2
+#pragma optimization_level 3
 #pragma opt_propagation off
 #pragma opt_common_subs off
+#pragma opt_loop_invariants off
+#pragma opt_lifetimes off
+#pragma ppc_unroll_speculative off
+#pragma ppc_unroll_factor_limit 1
 void drawGlow(u32 slotPoolBase, int poolIndex)
 {
     s16 angleB;
-    u32 texture;
+    s16 angleA;
     ExpgfxSlot* slot;
     ExpgfxTableEntry* tabBase;
     ExpgfxTableEntry* tabEntry;
@@ -1967,7 +1971,7 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
     f32 scaleSize;
     f32 sx, sy, sz;
     f32 scaleFactor;
-    s16 angleA;
+    u32 texture;
     void* viewMatrix;
     f32 sinA, cosA;
     u32 behaviorFlags;
@@ -2369,6 +2373,10 @@ void drawGlow(u32 slotPoolBase, int poolIndex)
         gExpgfxRenderResetPending = 0;
     }
 }
+#pragma ppc_unroll_speculative on
+#pragma ppc_unroll_factor_limit 4
+#pragma opt_lifetimes reset
+#pragma opt_loop_invariants reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 #pragma optimization_level reset
