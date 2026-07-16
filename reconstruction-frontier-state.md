@@ -7791,3 +7791,34 @@ tree), gameloop (sibling brute-forcing mainSetBits decl-order in-tree — left u
   addrs, @N-fold relocs) and flag ASYMMETRIC cmpwi/cmplwi and exts counts. Pure-single-diff cmp-flips
   and lone spurious-exts are the clean type wins; multi-line diffs = coloring welds. Only doorf4 &
   trickyguardspot were pure cmp-flips in the whole band; warpstone was the lone clean exts.
+
+## WIN Jul16 drawGlow (dll_000A_expgfx) 98.81->99.38 (e2f4bb83ea) — mtctr-under-O2 CRACKED (flag re-derivation)
+- MECHANISM (probe-proven with unit cflags -O4,p via wibo/mwcceppc GC/2.0): the counted-loop→`mtctr`/`bdnz`
+  transform is HARD-GATED at `optimization_level >= 3`. At O2 NO source shape and NO pragma unlocks it
+  (probed: do-while/countdown/for, opt_strength_reduction on, opt_loop_invariants on, opt_lifetimes on,
+  opt_dead_code/assignments on, opt_vectorize_loops on, opt_unroll_loops on — all keep the
+  `li rN,0; b BOTTOM; ...; addi/cmpwi/blt` counter loop). A call in the body blocks CTR at any level
+  (CTR volatile across calls). Small const-trip loops at O3+ FULLY unroll instead (even with
+  ppc_unroll_speculative off + factor_limit 1); mtctr appears only when the body exceeds the unroll window.
+- KEY DIFFERENTIAL: O3 + `opt_loop_invariants off` + `opt_lifetimes off` (prop/cse already off) reproduces
+  the O2 codegen of a big-body loop nearly instruction-for-instruction EXCEPT the loop becomes mtctr/bdnz
+  = the drawGlow target shape. So "#pragma optimization_level 2"-looking fns with a CTR loop were really
+  O3/O4 + per-pass offs. The old 94.98 O3/O4 crater was the 2x SPECULATIVE UNROLL (file-level
+  ppc_unroll factor 4 / instr-limit 256 let the ~110-instr quad body 2x-unroll: `li r0,2; mtctr`);
+  adding fn-scoped `ppc_unroll_speculative off; ppc_unroll_factor_limit 1` kills it.
+- FINAL drawGlow pragma set: optimization_level 3; opt_propagation off; opt_common_subs off;
+  opt_loop_invariants off; opt_lifetimes off; ppc_unroll_speculative off; ppc_unroll_factor_limit 1
+  (restore on/4 after fn). sr/da/dc offs are score-neutral on top of li+lt. O4 == O3 with this set.
+- SECONDARY WIN: decl-order swap `u32 texture` <-> `s16 angleA` fixed the whole r22<->r27 web swap
+  (+0.054). Loop-tail lbz/lha REVERSED-load order is NOT decl-order forceable (reversing block-local
+  init order matches load order but anti-swaps r0/r5 regs, net worse); scheduling on = 72.9 (way off),
+  peephole on = 95.4 — fn is genuinely sched-off/peep-off.
+- RESIDUAL at 99.38 (banked): 2x `li r27,0` vs target `mr r27,r28` (angleA=angleB copy: the O3 Iro
+  pipeline const-folds the copy even with propagation/cse/da/dc/sr/lt off; chained `a=b=0` inert;
+  O2 emitted the mr — unknown always-on-at-O3 fold, likely CodeGenNumbering) • quad-loop FP-perm
+  (px/py/pz T=f8/f10/f11 vs C=f2/f3/f1, ~20 regions; fn-top hoist of px/py/pz decls NEUTRAL; #82 cap)
+  • 2 tail load-order swaps. T=C=843 instrs.
+- REUSABLE LEVER (coupled li-const/opt_level trades cap class): a target fn under an "O2-ish" pragma
+  stack showing `mtctr` on a big-body counted loop => re-derive flags as O3 + opt_loop_invariants off +
+  opt_lifetimes off + fn-scoped unroll suppression. Hunt candidates: sub-100 fns whose target has
+  mtctr/bdnz but whose unit/fn pragma context implies O2.
