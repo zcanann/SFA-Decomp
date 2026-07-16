@@ -1148,7 +1148,6 @@ void doQueuedLoads(void)
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 extern int lbl_803DCACC;
-extern u8 lbl_803DB424;
 
 void cardShowMessage(void)
 {

@@ -7573,7 +7573,6 @@ void logGpuHang(void)
     }
 }
 
-extern u8 lbl_803DCCA5;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 enableDebugText;

@@ -20,6 +20,7 @@
 #include "main/lightmap_api.h"
 #include "main/pi_dolphin.h"
 #include "main/track_dolphin_api.h"
+#include "main/shader_api.h"
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
@@ -234,7 +235,6 @@ extern const f32 Uachuff_803DEE04;
 extern const f32 Uachuff_803DEE14, Uachuff_803DEE18, Uachuff_803DEE1C;
 extern u8 lbl_803DCF80;
 extern u16 lbl_803DCFA0;
-extern f32 playerMapOffsetX, playerMapOffsetZ;
 extern const f32 lbl_803DED0C;
 extern const f32 lbl_803DED14, Chan_803DED18;
 extern const f32 Enabled_803DED20, BarnacleEnabled_803DED24;
