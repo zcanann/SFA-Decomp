@@ -2685,15 +2685,15 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
 }
 
 #pragma dont_inline on
-int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, u8 boundsTemplateId)
+int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, int boundsTemplateId)
 {
     u32 behaviorFlags;
+    ExpgfxSlot* slot;
     ExpgfxSourceObject* attachedSource;
     ExpgfxResourceHandle* resourceHandle;
     ExpgfxRuntimeDataLayout* runtime;
     GameObject* playerObj;
-    ExpgfxSlot* slot;
-    s16 texS0 = 0;
+    s16 texT1 = 0;
     int expTabIndex;
     int attachedTableKey;
     u32 bit;
@@ -2702,10 +2702,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     u32 inverseBit;
     short poolIndex;
     short slotIndex;
-    s16 texT1 = 0;
-    int resourceTableIndex;
     s16 texT0 = 0;
+    int resourceTableIndex;
     s16 texS1 = 0;
+    s16 texS0 = 0;
     f32 scaleVal;
     u8* poolSourceModesByte;
     u8 modeFlag;
@@ -2715,10 +2715,10 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     runtime = EXPGFX_RUNTIME_DATA;
     poolIndex = 0;
     slotIndex = 0;
+    texT1 = 0;
+    texT0 = 0;
     texS1 = 0;
     texS0 = 0;
-    texT0 = 0;
-    texT1 = 0;
     if (getHudHiddenFrameCount() != 0)
     {
         return EXPGFX_INVALID_POOL_INDEX;
@@ -2842,8 +2842,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         if (attachedSource != NULL)
         {
             attachedTableKey = attachedSource->attachedTableKey;
+            attachedSource = NULL;
         }
-        attachedSource = NULL;
 
         expTabIndex = expgfx_addToTable((u32)resourceHandle, (u32)attachedSource, attachedTableKey,
                                         config->texture.parts.textureId);
@@ -2945,8 +2945,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             }
             else
             {
-                dx = playerObj->anim.worldPosX - (slot->startPosX.value + config->actorAimOffset.localOffsetX);
-                dz = playerObj->anim.worldPosZ - (slot->startPosZ.value + config->actorAimOffset.localOffsetZ);
+                dx = playerObj->anim.worldPosX - (slot->startPosX.value + attachedSource->localPosX);
+                dz = playerObj->anim.worldPosZ - (slot->startPosZ.value + attachedSource->localPosZ);
                 distSq = dx * dx + dz * dz;
                 if (distSq < lbl_803DF424 && lbl_803DF35C != playerObj->anim.velocityX &&
                     lbl_803DF35C != playerObj->anim.velocityZ)
@@ -2954,11 +2954,11 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
                     slot->velocityX = slot->velocityX - dx / (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityY =
                         slot->velocityY - ((lbl_803DF428 + playerObj->anim.worldPosY) -
-                                           (slot->startPosY.value + config->actorAimOffset.localOffsetY)) /
+                                           (slot->startPosY.value + attachedSource->localPosY)) /
                                               (f32)(s32)((int)slot->lifetimeFrame << 1);
                     slot->velocityZ =
                         slot->velocityZ -
-                        (playerObj->anim.worldPosZ - (slot->startPosZ.value + config->actorAimOffset.localOffsetZ)) /
+                        (playerObj->anim.worldPosZ - (slot->startPosZ.value + attachedSource->localPosZ)) /
                             (f32)(s32)((int)slot->lifetimeFrame << 1);
                 }
             }
@@ -3000,7 +3000,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         }
 
         {
-            ExpgfxRuntimeDataLayout* poolModeBase = (ExpgfxRuntimeDataLayout*)((u8*)runtime + poolIndex);
+            int pi2 = poolIndex;
+            ExpgfxRuntimeDataLayout* poolModeBase = (ExpgfxRuntimeDataLayout*)((u8*)runtime + pi2);
             modeFlag = (config->behaviorFlags & EXPGFX_BEHAVIOR_SOURCE_MODE_FLAG) != 0 ? 1 : 0;
             poolModeBase->poolSourceModes[0] = modeFlag;
             if (poolModeBase->poolSourceModes[0] != 0 &&
@@ -3008,8 +3009,8 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             {
                 poolModeBase->poolSourceModes[0] = poolModeBase->poolSourceModes[0] + 1;
             }
+            runtime->poolBoundsTemplateIds[pi2] = (u8)boundsTemplateId;
         }
-        runtime->poolBoundsTemplateIds[poolIndex] = boundsTemplateId;
 
         DCFlushRange(slot, EXPGFX_SLOT_SIZE);
         gExpgfxLastAddedSlot = (int)slot;
