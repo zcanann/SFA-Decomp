@@ -4293,7 +4293,7 @@ typedef void (*HeadDisplayDrawScaledTextureFn)(void* tex, f32 x, f32 y, u8 alpha
 
 void drawFn_80125424(void)
 {
-    int iv[3];
+    int iv[4];
     u32 width;
     u32 height;
     int type;
@@ -4414,7 +4414,9 @@ void drawFn_80125424(void)
             alphaI = alphaTmp < 0 ? 0 : alphaTmp;
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + iv[0]),
+            iv[3] = width;
+            iv[3] += iv[0];
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)iv[3],
                                (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
             alphaI = (int)((f32)(s16)alpha * (lbl_803E2010 + wave));
             if (alphaI < 0)
@@ -4423,7 +4425,7 @@ void drawFn_80125424(void)
             }
             randX = randomGetRange(0, 0x1e) << 1;
             randY = randomGetRange(0, 0x1e) << 1;
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(int)(width + iv[0] + 2),
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(iv[3] + 2),
                                (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
             iv[1] += 0x3520;
             iv[2] += 0x1f40;
@@ -4432,14 +4434,14 @@ void drawFn_80125424(void)
         HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
         HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2054, (s16)width, alpha, 0x100, 5,
                                          (s16)height, 0);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width + (s16)height, alpha, 0x100,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, alpha, 0x100,
                                          0x78, 5, 2);
         HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2058, (s16)width, alpha, 0x100, 5,
                                          (s16)height, 1);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width + (s16)height, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, alpha, 0x100, 5,
                                          5, 3);
         HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width - 5, alpha, 0x100, 5, 5, 1);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width + (s16)height, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, alpha, 0x100, 5,
                                          5, 2);
     }
 }
