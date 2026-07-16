@@ -2638,6 +2638,7 @@ main/dll/SH/dll_01B1_shstaff.c:
 
 main/dll/SH/dll_01B2_shstaffhaze.c:
 	.text       start:0x801DA8C4 end:0x801DA954
+	.sdata2     start:0x803E5518 end:0x803E5524
 
 main/dll/SH/dll_01B3_shbeacon.c:
 	.text       start:0x801DA954 end:0x801DAFA4

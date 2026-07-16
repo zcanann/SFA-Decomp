@@ -12,18 +12,13 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/SH/dll_01B2_shstaffhaze.h"
 
-extern f32 lbl_803E5518;
-extern f32 lbl_803E551C;
-extern f32 lbl_803E5520;
-
-
 void SH_StaffHaze_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5)
 {
     float vec[3];
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E5518);
-    vec[0] = lbl_803E551C;
-    vec[1] = lbl_803E5520;
-    vec[2] = lbl_803E551C;
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
+    vec[0] = 0.0f;
+    vec[1] = 0.5f;
+    vec[2] = 0.0f;
     fn_80098B18Legacy((int)obj, (obj)->anim.rootMotionScale, 4, 0, 0, (int)&vec[0]);
 }
 
