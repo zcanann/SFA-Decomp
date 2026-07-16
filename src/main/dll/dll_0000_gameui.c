@@ -6229,7 +6229,7 @@ void pauseMenuFn_80129ee0(void)
 {
     PauseTbl* tbl = (PauseTbl*)lbl_8031AE20;
     CMenuHud* hud = (CMenuHud*)lbl_803A87F0;
-    u8* player;
+    GameObject* player;
     u16 btn;
     u8 isArwing;
     u8 menuMin;
@@ -6239,7 +6239,7 @@ void pauseMenuFn_80129ee0(void)
     u8 analogX;
     u8 analogY;
 
-    player = (u8*)Obj_GetPlayerObject();
+    player = Obj_GetPlayerObject();
     btn = 0;
     isArwing = 0;
     objIsCurModelNotZero(player);
@@ -6258,7 +6258,7 @@ void pauseMenuFn_80129ee0(void)
     }
     if (player == 0)
     {
-        player = (void*)getArwing();
+        player = getArwing();
         if (player != 0)
         {
             isArwing = 1;
@@ -6270,8 +6270,7 @@ void pauseMenuFn_80129ee0(void)
     }
     if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
         (player != 0 &&
-         coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ) == 0 &&
-         playerGetFocusObject((GameObject*)player) != NULL))
+         coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == 0 && playerGetFocusObject(player) != NULL))
     {
         menuMax = 4;
     }
@@ -6279,13 +6278,13 @@ void pauseMenuFn_80129ee0(void)
     if (player != 0)
     {
         int cell;
-        if (*(void**)(player + 0x30) != NULL)
+        if (player->anim.parent != NULL)
         {
-            cell = ((GameObject*)*(char**)(player + 0x30))->anim.mapEventSlot;
+            cell = ((GameObject*)player->anim.parent)->anim.mapEventSlot;
         }
         else
         {
-            cell = coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+            cell = coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
         }
         lbl_803DD8E0 = cell;
         if (cell == 0x36)
@@ -6382,13 +6381,13 @@ void pauseMenuFn_80129ee0(void)
         {
         case 0:
         {
-            int audioFree;
             int camMode;
+            int audioFree;
             int canOpen;
             camMode = (*gCameraInterface)->getMode();
             canOpen = 1;
             audioFree = 0;
-            if ((player == 0 || !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
+            if ((player == 0 || !(player->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
                 getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0)
             {
                 audioFree = 1;
@@ -6439,7 +6438,7 @@ void pauseMenuFn_80129ee0(void)
             }
             {
                 s16 tm = lbl_803DD772;
-                if (tm != 0 && player != 0 && !(((GameObject*)player)->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) &&
+                if (tm != 0 && player != 0 && !(player->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK) &&
                     (u8)pauseMenuIsFox() != 0)
                 {
                     s16 nv;
@@ -6464,7 +6463,7 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD7DC = nt;
                 if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C)
                 {
-                    lbl_803DD7DC = 0.0f;
+                    lbl_803DD7DC = lbl_803E1E3C;
                     Sfx_PlayFromObject(0, SFXTRIG_scabshort32);
                 }
                 lbl_803DD770 += framesThisStep;
@@ -6482,7 +6481,7 @@ void pauseMenuFn_80129ee0(void)
             pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
             if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentIdLegacy() == 0 && AudioStream_IsPreparing() == 0)
             {
-                ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
+                ObjAnim_SetCurrentMove((int)hud->anims[(s8)lbl_803DD781], 0, lbl_803E1E3C, 0);
                 lbl_803DD781 = 0;
             }
             if ((s8)analogX != 0 || lbl_803DD78C == 0 || lbl_803DBA64 < menuMin || lbl_803DBA64 > menuMax)
@@ -6552,11 +6551,11 @@ void pauseMenuFn_80129ee0(void)
                 u8 prev;
                 Sfx_PlayFromObject(0, SFXTRIG_wmap_swoosh);
                 buttonDisable(0, PAD_BUTTON_A);
-                lbl_803DD7BC = 0.0f;
-                lbl_803DD7C0 = 0.0f;
+                lbl_803DD7BC = lbl_803E1E3C;
+                lbl_803DD7C0 = lbl_803E1E3C;
                 lbl_803DD764 = lbl_803E1E60;
                 lbl_803DD7D8 = 0;
-                lbl_803DD768 = 0.0f;
+                lbl_803DD768 = lbl_803E1E3C;
                 prev = lbl_803DBA64;
                 switch ((s8)prev)
                 {
@@ -6629,7 +6628,7 @@ void pauseMenuFn_80129ee0(void)
                     arwingHudVisible = 1;
                 }
                 pauseMenuState = 0;
-                if (player == 0 || fn_80296C4C((GameObject*)player) == 0)
+                if (player == 0 || fn_80296C4C(player) == 0)
                 {
                     AudioStream_StopCurrent();
                 }
@@ -6949,7 +6948,7 @@ void pauseMenuFn_80129ee0(void)
                     break;
                 case 8:
                     charState[9] -= 1;
-                    playerHeal((GameObject*)player);
+                    playerHeal(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
                     pauseMenuFrameCounter = 0x3c;
@@ -6989,7 +6988,7 @@ void pauseMenuFn_80129ee0(void)
                 if (player != 0)
                 {
                     lbl_803DD8E0 =
-                        coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);
+                        coordsToMapCell(player->anim.localPosX, player->anim.localPosZ);
                     if (lbl_803DD8E0 == 7)
                     {
                         for (lbl_803DD756 = 0; lbl_803DD756 < 4;)
