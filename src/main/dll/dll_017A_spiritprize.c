@@ -230,13 +230,20 @@ void SpiritPrize_update(GameObject* obj)
     {
         int matchingObj;
         int prizeId;
-        int duplicateCount;
+        int cnt[1];
+        int pid[1];
+        int duplicateCount[1];
 
         prizeId = *(s8*)&state->prizeId;
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
-        duplicateCount = objectIndex = 0;
-        while (objectIndex < objectCount)
+        cnt[0] = 0;
+        pid[0] = 0;
+        duplicateCount[0] = 0;
+        objectIndex = duplicateCount[0];
+        pid[0] = (u32)prizeId;
+        cnt[0] = objectCount;
+        while (objectIndex < cnt[0])
         {
             childObj = objects[objectIndex];
             if (((GameObject*)childObj)->seqIndex == prizeId)
@@ -245,16 +252,16 @@ void SpiritPrize_update(GameObject* obj)
             }
             if (((GameObject*)childObj)->seqIndex == -2 &&
                 ((GameObject*)childObj)->anim.classId == SPIRITPRIZE_CLASS_ID &&
-                prizeId == (s8)((SpiritPrizeState*)*(int*)&((GameObject*)childObj)->extra)->prizeId)
+                pid[0] == (s8)((SpiritPrizeState*)*(int*)&((GameObject*)childObj)->extra)->prizeId)
             {
-                duplicateCount++;
+                duplicateCount[0]++;
             }
             objectIndex++;
         }
-        if (duplicateCount <= 1 && (void*)matchingObj != NULL && ((GameObject*)matchingObj)->seqIndex != -1)
+        if (duplicateCount[0] <= 1 && (void*)matchingObj != NULL && ((GameObject*)matchingObj)->seqIndex != -1)
         {
             ((GameObject*)matchingObj)->seqIndex = -1;
-            (*gObjectTriggerInterface)->endSequence(prizeId);
+            (*gObjectTriggerInterface)->endSequence(pid[0]);
         }
         (obj)->seqIndex = -1;
         Obj_FreeObject(obj);
