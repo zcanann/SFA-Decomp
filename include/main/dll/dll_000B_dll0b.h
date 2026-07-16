@@ -12,6 +12,6 @@
 #include "main/mm.h"
 #include "main/vecmath.h"
 
-s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, int f, void* g);
 
 #endif

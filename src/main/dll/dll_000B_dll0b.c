@@ -142,7 +142,7 @@ extern f32 lbl_803DF434;
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern f32 gModgfxMotionStep;
 
-s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g);
+s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, int f, void* g);
 
 #define gModgfxSpawnContext (*(ModgfxSpawnContext*)gModgfxSpawnContextStorage)
 s16 dll_0B_func18(void)
@@ -1668,11 +1668,10 @@ void dll_0B_func05(void)
 }
 
 #pragma opt_propagation off
-s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void* g)
+s16 dll_0B_func04(ModgfxSpawnContext* st, int z, int c, s16* b, int e, s16* d, int f, void* g)
 {
     int base0;
     int total = 0;
-    ModgfxSpawnContext* st = base;
     int found;
     int i;
     int spawnCount;
@@ -1825,7 +1824,7 @@ s16 dll_0B_func04(void* base, int z, int c, void* b, int e, void* d, int f, void
         }
     }
 
-    *(u8*)&((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount = st->pendingSpawnCount;
+    ((PartfxEffectState**)gPartfxActiveEffects)[slot]->emitterCount = st->pendingSpawnCount;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word114 = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word118 = 0;
     ((PartfxEffectState**)gPartfxActiveEffects)[slot]->word11C = 0;
