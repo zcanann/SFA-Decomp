@@ -2757,8 +2757,9 @@ void doPendingMapLoads(void)
                         gMapBlockIndexCount = 0;
                         {
                             int* p3;
-                            for (p3 = gMapBlockIndexList; gMapBlockIndexList != 0 && *p3 != -1; p3++)
+                            for (p3 = gMapBlockIndexList; gMapBlockIndexList != 0 && *p3 != -1;)
                             {
+                                p3++;
                                 gMapBlockIndexCount = gMapBlockIndexCount + 1;
                             }
                         }
