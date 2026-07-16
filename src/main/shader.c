@@ -985,7 +985,7 @@ int mapProcessRomList(int slot)
     return i;
 }
 
-extern void mapsBinGetRomlistSize(int offset, int* a, int* b, int* c);
+extern void mapsBinGetRomlistSize(int offset, int* a, int* b, int* c, int tabIndex);
 extern int lbl_803DCE7C;
 
 int mapGetRomListAndOffsets(int p1, int flag)
@@ -996,7 +996,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     int v0, v1, v2;
     int i;
 
-    mapsBinGetRomlistSize(offset0, &v0, &v1, &v2);
+    mapsBinGetRomlistSize(offset0, &v0, &v1, &v2, words);
     lbl_803DCEA0 = mmAlloc(tailLen + (v0 + 7 >> 3) + 0x401 + v2, 5, 0);
     fileLoadToBufferOffset(MLDF_FILEID_MAPS_BIN, lbl_803DCEA0, offset0, tailLen);
 
