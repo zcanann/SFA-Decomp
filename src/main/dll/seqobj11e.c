@@ -56,7 +56,6 @@ typedef void (*SeqObj11ESetMovePointerStateFn)(GameObject* obj, void* state, int
 
 #pragma scheduling off
 #pragma peephole off
-#pragma opt_common_subs off
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E27F8 = 200.0f;
 __declspec(section ".sdata2") f32 lbl_803E27FC = 300.0f;
@@ -67,6 +66,168 @@ __declspec(section ".sdata2") f32 lbl_803E280C = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E2810 = 2.5f;
 __declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
 #pragma explicit_zero_data off
+
+/* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
+ * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
+
+typedef struct
+{
+    f32 animSpeed; /* 0x0 */
+    u32 unk4;      /* 0x4 */
+    u8 anim;       /* 0x8 */
+    u8 next;       /* 0x9 */
+    u8 alt;        /* 0xa */
+    u8 flagB;      /* 0xb */
+} Seq11ERow;
+
+extern Seq11ERow gSeq11EStateTable[];
+extern void fn_80151C68(int* obj, u8* state);
+extern void fn_80151DB8(int* obj, u8* state);
+
+void fn_80152040(int* obj, u8* state)
+{
+    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
+    u32 flags;
+
+    if (((BaddieState*)state)->seqEntryIndex == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+        {
+            fn_80151C68(obj, state);
+        }
+    }
+    else
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
+    }
+    flags = ((BaddieState*)state)->controlFlags;
+    if (flags & BADDIE_CONTROL_JUST_TRIGGERED)
+    {
+        if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
+        {
+            ((BaddieState*)state)->controlFlags = flags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
+        }
+    }
+    flags = ((BaddieState*)state)->controlFlags;
+    if (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
+    {
+        int anim;
+        u8* animTbl;
+
+        if (((BaddieState*)state)->seqEntryIndex == 0)
+        {
+            if (flags & 0x20000000)
+            {
+                if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
+                {
+                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
+                }
+                else
+                {
+                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+                }
+            }
+        }
+        else if (((BaddieState*)state)->seqEntryIndex == 2)
+        {
+            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 || !(((BaddieState*)state)->controlFlags & 0x20000000))
+            {
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+            }
+        }
+        else if (((BaddieState*)state)->seqEntryIndex == 3)
+        {
+            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
+            {
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
+            }
+            else
+            {
+                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+            }
+        }
+        else
+        {
+            ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+        }
+        anim = ((GameObject*)obj)->anim.currentMove;
+        if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->seqEntryIndex * 12])
+        {
+            if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 &&
+                animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 4)
+            {
+                Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
+            }
+            ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)(
+                (GameObject*)obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
+                *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
+        }
+    }
+    if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].flagB != 0)
+    {
+        fn_80151DB8(obj, state);
+    }
+}
+
+extern f32 lbl_803E27F8;
+extern f32 lbl_803E27FC;
+extern f32 lbl_803E2800;
+extern f32 lbl_803E2804;
+extern f32 lbl_803E2808;
+extern f32 lbl_803E280C;
+
+void guardClaw_init(int* obj, u8* state)
+{
+    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
+    f32 fz;
+    ((BaddieState*)state)->speedScale = lbl_803E27F8;
+    ((BaddieState*)state)->unk2A8 = lbl_803E27FC;
+    ((BaddieState*)state)->unk2E4 = 1;
+    ((BaddieState*)state)->unk2E4 |= 0xC80;
+    ((BaddieState*)state)->unk308 = lbl_803E2800;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2804;
+    ((BaddieState*)state)->unk304 = lbl_803E2808;
+    ((BaddieState*)state)->unk320 = 0;
+    fz = lbl_803E280C;
+    *(f32*)&((BaddieState*)state)->eventFlags = fz;
+    ((BaddieState*)state)->unk321 = 0;
+    ((BaddieState*)state)->unk318 = fz;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fz;
+    if (*((s8*)sub + 0x2e) != -1)
+    {
+        *(int*)&((BaddieState*)state)->controlFlags |= 1;
+    }
+    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+}
+
+int gcRobotLight_init(GameObject* obj, int childId)
+{
+    int sub;
+    u8* setup;
+
+    sub = *(int*)&obj->anim.placementData;
+    Obj_GetPlayerObject();
+    if (Obj_IsLoadingLocked() == 0)
+        return 0;
+    setup = (u8*)Obj_AllocObjectSetup(36, childId);
+    *(s16*)(setup + 0) = childId;
+    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
+    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
+    ((ObjPlacement*)setup)->color[1] = 1;
+    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
+    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
+    ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
+    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
+    ((Seq11EChildSetup*)setup)->unk19 = 0;
+    ((Seq11EChildSetup*)setup)->unk20 = 149;
+    return (int)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
+}
+
+#pragma opt_common_subs off
 
 void gcRobotPatrol_updateWhileFrozen(GameObject* obj, int state, int unused, int msg)
 {
@@ -117,6 +278,7 @@ typedef struct
     f32 d;
 } SeqFxParams;
 
+#pragma dont_inline on
 void fn_80152514(int* obj, u8* state)
 {
     int* def;
@@ -310,6 +472,60 @@ void fn_80152514(int* obj, u8* state)
         }
     }
 }
+#pragma dont_inline off
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2850 = 60.0f;
+__declspec(section ".sdata2") f32 lbl_803E2854 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E2858 = 0.006f;
+__declspec(section ".sdata2") f32 lbl_803E285C = 0.99f;
+__declspec(section ".sdata2") f32 lbl_803E2860 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
+#pragma explicit_zero_data off
+
+/* scheduling stays off; only peephole flips on for the next two handlers */
+#pragma peephole on
+void gcRobotPatrol_init(GameObject* obj, int state)
+{
+    extern f32 lbl_803E2850;
+    extern f32 lbl_803E2854;
+    extern f32 lbl_803E2858;
+    extern f32 lbl_803E285C;
+    extern f32 lbl_803E2860;
+    f32 fz;
+
+    ((BaddieState*)state)->speedScale = lbl_803E2850;
+    *(u32*)&((BaddieState*)state)->unk2E4 = 41;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x7000;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20000LL;
+    ((BaddieState*)state)->unk308 = lbl_803E2854;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2858;
+    ((BaddieState*)state)->unk304 = lbl_803E285C;
+    ((BaddieState*)state)->unk320 = 0;
+    fz = 1.0f;
+    *(f32*)&((BaddieState*)state)->eventFlags = fz;
+    ((BaddieState*)state)->unk321 = 0;
+    ((BaddieState*)state)->unk318 = fz;
+    ((BaddieState*)state)->unk322 = 0;
+    ((BaddieState*)state)->unk31C = fz;
+    *(f32*)(state + 0x32c) = lbl_803E2814;
+    obj->anim.hitboxScale = lbl_803E2860;
+    Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
+}
+
+void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
+{
+    if (msg == 16 || msg == 17)
+    {
+        return;
+    }
+    Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_248);
+    *(s16*)&((BaddieState*)state)->hitCounter = 0;
+    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
+    ((BaddieState*)state)->reactionFlags |= 0x8;
+}
 
 /* fn_80152B90: firefly hover update: circle drift, bob between heights,
  * periodically drop a spawned object, ambient sfx timers. */
@@ -326,17 +542,7 @@ extern f32 lbl_803E288C;
 extern f32 lbl_803E2890;
 extern f32 lbl_803E2894;
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E2850 = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E2854 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E2858 = 0.006f;
-__declspec(section ".sdata2") f32 lbl_803E285C = 0.99f;
-__declspec(section ".sdata2") f32 lbl_803E2860 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
-#pragma explicit_zero_data off
-
+#pragma peephole off
 void fn_80152B90(int* obj, u8* state)
 {
     f32 y;
@@ -431,210 +637,6 @@ __declspec(section ".sdata2") f32 lbl_803E2888 = 500.0f;
 __declspec(section ".sdata2") f32 lbl_803E288C = 1.5f;
 __declspec(section ".sdata2") f32 lbl_803E2890 = 7.5f;
 __declspec(section ".sdata2") f32 lbl_803E2894 = 1.0f;
-
-
-int gcRobotLight_init(GameObject* obj, int childId)
-{
-    int sub;
-    u8* setup;
-
-    sub = *(int*)&obj->anim.placementData;
-    Obj_GetPlayerObject();
-    if (Obj_IsLoadingLocked() == 0)
-        return 0;
-    setup = (u8*)Obj_AllocObjectSetup(36, childId);
-    *(s16*)(setup + 0) = childId;
-    ((ObjPlacement*)setup)->color[0] = ((ObjPlacement*)sub)->color[0];
-    ((ObjPlacement*)setup)->color[2] = ((ObjPlacement*)sub)->color[2];
-    ((ObjPlacement*)setup)->color[1] = 1;
-    ((ObjPlacement*)setup)->color[3] = ((ObjPlacement*)sub)->color[3];
-    ((ObjPlacement*)setup)->posX = obj->anim.localPosX;
-    ((ObjPlacement*)setup)->posY = obj->anim.localPosY;
-    ((ObjPlacement*)setup)->posZ = obj->anim.localPosZ;
-    ((Seq11EChildSetup*)setup)->unk19 = 0;
-    ((Seq11EChildSetup*)setup)->unk20 = 149;
-    return (int)Obj_SetupObject((ObjPlacement*)setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-}
-
-/* scheduling stays off; only peephole flips on for the next two handlers */
-#pragma peephole on
-void gcRobotPatrol_init(GameObject* obj, int state)
-{
-    extern f32 lbl_803E2850;
-    extern f32 lbl_803E2854;
-    extern f32 lbl_803E2858;
-    extern f32 lbl_803E285C;
-    extern f32 lbl_803E2860;
-    f32 fz;
-
-    ((BaddieState*)state)->speedScale = lbl_803E2850;
-    *(u32*)&((BaddieState*)state)->unk2E4 = 41;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x7000;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20000LL;
-    ((BaddieState*)state)->unk308 = lbl_803E2854;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2858;
-    ((BaddieState*)state)->unk304 = lbl_803E285C;
-    ((BaddieState*)state)->unk320 = 0;
-    fz = 1.0f;
-    *(f32*)&((BaddieState*)state)->eventFlags = fz;
-    ((BaddieState*)state)->unk321 = 0;
-    ((BaddieState*)state)->unk318 = fz;
-    ((BaddieState*)state)->unk322 = 0;
-    ((BaddieState*)state)->unk31C = fz;
-    *(f32*)(state + 0x32c) = lbl_803E2814;
-    obj->anim.hitboxScale = lbl_803E2860;
-    Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
-}
-
-void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
-{
-    if (msg == 16 || msg == 17)
-    {
-        return;
-    }
-    Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_248);
-    *(s16*)&((BaddieState*)state)->hitCounter = 0;
-    *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
-    ((BaddieState*)state)->reactionFlags |= 0x8;
-}
-
-extern f32 lbl_803E27F8;
-extern f32 lbl_803E27FC;
-extern f32 lbl_803E2800;
-extern f32 lbl_803E2804;
-extern f32 lbl_803E2808;
-extern f32 lbl_803E280C;
-
-#pragma peephole off
-void guardClaw_init(int* obj, u8* state)
-{
-    int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
-    f32 fz;
-    ((BaddieState*)state)->speedScale = lbl_803E27F8;
-    ((BaddieState*)state)->unk2A8 = lbl_803E27FC;
-    ((BaddieState*)state)->unk2E4 = 1;
-    ((BaddieState*)state)->unk2E4 |= 0xC80;
-    ((BaddieState*)state)->unk308 = lbl_803E2800;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2804;
-    ((BaddieState*)state)->unk304 = lbl_803E2808;
-    ((BaddieState*)state)->unk320 = 0;
-    fz = lbl_803E280C;
-    *(f32*)&((BaddieState*)state)->eventFlags = fz;
-    ((BaddieState*)state)->unk321 = 0;
-    ((BaddieState*)state)->unk318 = fz;
-    ((BaddieState*)state)->unk322 = 0;
-    ((BaddieState*)state)->unk31C = fz;
-    if (*((s8*)sub + 0x2e) != -1)
-    {
-        *(int*)&((BaddieState*)state)->controlFlags |= 1;
-    }
-    *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-}
-
-/* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
- * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
-
-typedef struct
-{
-    f32 animSpeed; /* 0x0 */
-    u32 unk4;      /* 0x4 */
-    u8 anim;       /* 0x8 */
-    u8 next;       /* 0x9 */
-    u8 alt;        /* 0xa */
-    u8 flagB;      /* 0xb */
-} Seq11ERow;
-
-extern Seq11ERow gSeq11EStateTable[];
-extern void fn_80151C68(int* obj, u8* state);
-extern void fn_80151DB8(int* obj, u8* state);
-
-void fn_80152040(int* obj, u8* state)
-{
-    int* def = *(int**)&((GameObject*)obj)->anim.placementData;
-    u32 flags;
-
-    if (((BaddieState*)state)->seqEntryIndex == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-        if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-        {
-            fn_80151C68(obj, state);
-        }
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-    }
-    flags = ((BaddieState*)state)->controlFlags;
-    if (flags & BADDIE_CONTROL_JUST_TRIGGERED)
-    {
-        if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
-        {
-            ((BaddieState*)state)->controlFlags = flags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
-        }
-    }
-    flags = ((BaddieState*)state)->controlFlags;
-    if (flags & BADDIE_CONTROL_SEQUENCE_DRIVEN)
-    {
-        int anim;
-        u8* animTbl;
-
-        if (((BaddieState*)state)->seqEntryIndex == 0)
-        {
-            if (flags & 0x20000000)
-            {
-                if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
-                {
-                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
-                }
-                else
-                {
-                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
-                }
-            }
-        }
-        else if (((BaddieState*)state)->seqEntryIndex == 2)
-        {
-            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 || !(((BaddieState*)state)->controlFlags & 0x20000000))
-            {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
-            }
-        }
-        else if (((BaddieState*)state)->seqEntryIndex == 3)
-        {
-            if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
-            {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
-            }
-            else
-            {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
-            }
-        }
-        else
-        {
-            ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
-        }
-        anim = ((GameObject*)obj)->anim.currentMove;
-        if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->seqEntryIndex * 12])
-        {
-            if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 &&
-                animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 4)
-            {
-                Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
-            }
-            ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)(
-                (GameObject*)obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
-                *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
-        }
-    }
-    if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].flagB != 0)
-    {
-        fn_80151DB8(obj, state);
-    }
-}
 
 Seq11ERow gSeq11EStateTable[6] = {
     {3.0f, 0x1, 0, 1, 4, 1}, {2.0f, 0x0, 1, 2, 2, 1}, {3.0f, 0x1, 2, 3, 3, 1},
