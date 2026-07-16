@@ -13,7 +13,7 @@ extern const float lbl_803E7988;
 extern const float lbl_803E798C;
 extern const float lbl_803E7990;
 extern const float lbl_803E7994;
-extern const float lbl_803E7998;
+extern const float lbl_803E7998[2];
 extern const float lbl_803E79A0;
 extern const float lbl_803E79A4;
 extern const float lbl_803E79A8;
@@ -90,8 +90,18 @@ float exp2f(float x)
 
 float expf(float x)
 {
-    return exp2f(lbl_803E7998 * *(float*)&x);
+    return exp2f(lbl_803E7998[0] * *(float*)&x);
 }
+
+const float lbl_803E7978 = -127.0f;
+const float lbl_803E797C = 0.0f;
+const float lbl_803E7980 = 1.0f;
+const float lbl_803E7984 = 1.0000035762786865f;
+const float lbl_803E7988 = 0.692969560623169f;
+const float lbl_803E798C = 0.24162131547927856f;
+const float lbl_803E7990 = 0.05171773582696915f;
+const float lbl_803E7994 = 0.013683983124792576f;
+const float lbl_803E7998[2] = {1.4426950216293335f, 0.0f};
 
 float fastCastS16ToFloat(s16* p)
 {
@@ -117,6 +127,13 @@ void fastCastFloatToS16(float x, s16* p)
     }
 }
 
+const float lbl_803E79A0 = 65536.0f;
+const float lbl_803E79A4 = 0.0f;
+const float lbl_803E79A8 = -1.0f;
+const float lbl_803E79AC = 8388608.0f;
+const float lbl_803E79B0 = 1.0f;
+const float lbl_803E79B4 = 0.0f;
+
 #pragma optimization_level 0
 #pragma optimize_for_size on
 float fastFloorf(float x)
@@ -127,31 +144,31 @@ float fastFloorf(float x)
     int int_value;
 
     abs_x = __fabsf(x);
-    if (abs_x < lbl_803E79A0) {
+    if (abs_x < *(float*)&lbl_803E79A0) {
         fastCastFloatToU16(abs_x, &short_value);
         rounded = fastCastU16ToFloat(&short_value);
 
-        if (x >= lbl_803E79A4) {
+        if (x >= *(float*)&lbl_803E79A4) {
             return rounded;
         }
 
         if (x != -rounded) {
-            return lbl_803E79A8 - rounded;
+            return *(float*)&lbl_803E79A8 - rounded;
         }
 
         return -rounded;
     }
 
-    if (abs_x < lbl_803E79AC) {
+    if (abs_x < *(float*)&lbl_803E79AC) {
         int_value = x;
         rounded = (float)int_value;
 
-        if (x >= lbl_803E79A4) {
+        if (x >= *(float*)&lbl_803E79A4) {
             return rounded;
         }
 
         if (x != rounded) {
-            return rounded - lbl_803E79B0;
+            return rounded - *(float*)&lbl_803E79B0;
         }
 
         return rounded;
@@ -161,21 +178,3 @@ float fastFloorf(float x)
 }
 #pragma optimize_for_size reset
 #pragma optimization_level reset
-
-const float lbl_803E7978 = -127.0f;
-const float lbl_803E797C = 0.0f;
-const float lbl_803E7980 = 1.0f;
-const float lbl_803E7984 = 1.0000035762786865f;
-const float lbl_803E7988 = 0.692969560623169f;
-const float lbl_803E798C = 0.24162131547927856f;
-const float lbl_803E7990 = 0.05171773582696915f;
-const float lbl_803E7994 = 0.013683983124792576f;
-const float lbl_803E7998 = 1.4426950216293335f;
-const float lbl_803E79A0 = 65536.0f;
-const float lbl_803E79A4 = 0.0f;
-const float lbl_803E79A8 = -1.0f;
-const float lbl_803E79AC = 8388608.0f;
-const float lbl_803E79B0 = 1.0f;
-const float lbl_803E79B4 = 0.0f;
-const float lbl_803E79B8 = 176.0f;
-const float lbl_803E79BC = -0.0f;
