@@ -121,6 +121,7 @@ typedef struct
     void* itemTextures[64]; /* 0x9c8 */
 } GameUiHud;
 
+extern u32 lbl_8031BF90[6];
 
 /* extern-cleanup: defining-file public prototypes */
 void pauseMenuAnimateCarousel(void);

@@ -1212,14 +1212,14 @@ main/dll/dll_8011d918.c:
 main/dll/dll_0000_gameui.c:
 	.text       start:0x8011D9B0 end:0x8012FECC
 	.rodata     start:0x802C21A0 end:0x802C21C4
-	.data       start:0x8031AE20 end:0x8031B6F0
+	.data       start:0x8031AE20 end:0x8031C168
 	.bss        start:0x803A87F0 end:0x803A9364
 	.sdata      start:0x803DBA30 end:0x803DBBB0
 	.sbss       start:0x803DD728 end:0x803DD8E0
 
 main/dll/dll_003B_menu.c:
 	.text       start:0x8012FECC end:0x80130124
-	.data       start:0x8031B6F0 end:0x8031C1A8
+	.data       start:0x8031C168 end:0x8031C1A8
 	.sbss       start:0x803DD8E8 end:0x803DD8F8
 
 main/dll/dll_003C_tumbleweedbush.c:
