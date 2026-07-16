@@ -159,8 +159,8 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     buf.col[1] = *(f32*)&lbl_803E0A00;
     buf.col[2] = *(f32*)&lbl_803E0A00;
     buf.scale = lbl_803E0A10;
-    buf.v3c = 0;
     buf.v40 = 1;
+    buf.v3c = 0;
     buf.v59 = 8;
     buf.v5a = 0;
     buf.v5b = 0x1e;
@@ -177,7 +177,7 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     buf.flags |= flags | 0x80;
     if (variant == 2)
     {
-        buf.flags ^= 0x40000LL;
+        buf.flags ^= 0x40000;
     }
     else
     {
