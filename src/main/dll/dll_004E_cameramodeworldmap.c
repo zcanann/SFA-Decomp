@@ -62,35 +62,8 @@ extern f32 lbl_803E1A64;
 extern f32 lbl_803E1A68;
 extern f32 gCamWorldMapAlphaScale;
 
-#pragma scheduling off
 #pragma peephole off
-void CameraModeWorldMap_release(void)
-{
-}
-
-void CameraModeWorldMap_initialise(void)
-{
-}
-
-void CameraModeWorldMap_init(int* obj)
-{
-    register u32 bitval;
-    if (gCamWorldMapState == NULL)
-    {
-        gCamWorldMapState = (CameraModeWorldMapState*)mmAlloc(sizeof(CameraModeWorldMapState), 15, 0);
-    }
-    gCamWorldMapState->distance = gCamWorldMapDistanceMax;
-    gCamWorldMapState->distanceVelocity = lbl_803E1A28;
-    bitval = 0;
-    gCamWorldMapState->mode = bitval;
-    gCamWorldMapState->previousMode = bitval;
-    gCamWorldMapState->flags.transitionActive = 0;
-    gCamWorldMapState->settleFrames = 1;
-    gCamWorldMapState->focusBlendTimer = 0;
-    gCamWorldMapState->focusObjectId = 0;
-    *(f32*)&((GameObject*)obj)->seqIndex = lbl_803E1A80;
-    ((GameObject*)obj)->anim.rotX = -32768;
-}
+#pragma scheduling off
 
 void CameraModeWorldMap_copyToCurrent(int* p1, int kind)
 {
@@ -123,7 +96,6 @@ void CameraModeWorldMap_free(void)
     mm_free((void*)gCamWorldMapState);
     gCamWorldMapState = NULL;
 }
-
 #pragma opt_common_subs off
 #pragma opt_propagation off
 void CameraModeWorldMap_update(u8* obj)
@@ -422,7 +394,36 @@ void CameraModeWorldMap_update(u8* obj)
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int*)&camera->anim.parent);
 }
+#pragma opt_common_subs reset
 #pragma opt_propagation reset
+
+void CameraModeWorldMap_init(int* obj)
+{
+    register u32 bitval;
+    if (gCamWorldMapState == NULL)
+    {
+        gCamWorldMapState = (CameraModeWorldMapState*)mmAlloc(sizeof(CameraModeWorldMapState), 15, 0);
+    }
+    gCamWorldMapState->distance = gCamWorldMapDistanceMax;
+    gCamWorldMapState->distanceVelocity = lbl_803E1A28;
+    bitval = 0;
+    gCamWorldMapState->mode = bitval;
+    gCamWorldMapState->previousMode = bitval;
+    gCamWorldMapState->flags.transitionActive = 0;
+    gCamWorldMapState->settleFrames = 1;
+    gCamWorldMapState->focusBlendTimer = 0;
+    gCamWorldMapState->focusObjectId = 0;
+    *(f32*)&((GameObject*)obj)->seqIndex = lbl_803E1A80;
+    ((GameObject*)obj)->anim.rotX = -32768;
+}
+void CameraModeWorldMap_release(void)
+{
+}
+
+
+void CameraModeWorldMap_initialise(void)
+{
+}
 
 u32 lbl_80319E08[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
         (u32)CameraModeWorldMap_initialise, (u32)CameraModeWorldMap_release,
