@@ -3873,14 +3873,37 @@ void mapLoadDataFiles(int mapIdx)
 
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
 
-#define MAPTBL32(idx, disp) (*(int*)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
-#define MAPTBLP(idx, disp)  (*(int**)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
-#define MAPTBL16(idx, disp) (*(s16*)((char*)base + ((idx) * 2 + 0x20000) + (disp)))
+#define MAPTBLP(idx, disp) (*(int**)((char*)base + ((idx) * 4 + 0x20000) + (disp)))
 
+struct MldfTables
+{
+    u8 pad0[0x160];
+    int fileInfo[0x58];
+    u8 mergeAnimCurv[0x7f40];
+    u8 mergeVoxMap[0x2000];
+    u8 mergeBlocks[0x2000];
+    u8 mergeTex1[0x4000];
+    u8 mergeTex0[0x4000];
+    u8 mergeAnim[0x2ee0];
+    u8 mergeModels[0x2000];
+    u8 loadedFlags[0x58];
+    int ids[0x58];
+    int sizes[0x58];
+    int romList[0x78];
+    u32 ptrs[0x58];
+    s16 owners[0x60];
+};
+
+#define MAPID_RT(s)    (*(int*)(((s) << 2) + ((u32) & tbl->ids[0])))
+#define MAPPTR_RT(s)   (*(u32*)(((s) << 2) + ((u32) & tbl->ptrs[0])))
+#define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
+
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
 int mapUnload(int mapId, int flags)
 {
-    u8* base;
     char* hi;
+    struct MldfTables* tbl;
     int* e;
     int f20;
     int f10;
@@ -3893,7 +3916,7 @@ int mapUnload(int mapId, int flags)
     int j;
     int* st;
 
-    base = lbl_80345E10;
+    tbl = (struct MldfTables*)lbl_80345E10;
     i = 0;
     needWait = 0;
     st = (int*)(*gMapEventInterface)->getCurCharPos();
@@ -3956,13 +3979,13 @@ int mapUnload(int mapId, int flags)
         f10 = flags & 0x10000000;
         f80 = flags & 0x80000000;
         lockp = &gObjLevelLockSlots;
-        hi = (char*)base + 0x20000;
+        hi = (char*)tbl + 0x20000;
         for (; i < 0x38; i += 2)
         {
-            if ((f20 && mapId == MAPTBL32(e[0], -0x6EC8)) || (f10 && mapId != MAPTBL32(e[0], -0x6EC8)) ||
-                ((flags & e[1]) && mapId == MAPTBL32(e[0], -0x6EC8)))
+            if ((f20 && mapId == MAPID_RT(e[0])) || (f10 && mapId != MAPID_RT(e[0])) ||
+                ((flags & e[1]) && mapId == MAPID_RT(e[0])))
             {
-                MAPTBL32(e[0], -0x6EC8) = -1;
+                MAPID_RT(e[0]) = -1;
             }
             {
                 int idx = e[0];
@@ -3970,9 +3993,9 @@ int mapUnload(int mapId, int flags)
                 {
                     s16 v;
                     if (f80 || ((flags & e[1]) && mapId == ((s16*)(hi + -0x68C8))[idx]) ||
-                        (f10 && mapId != MAPTBL16(idx, -0x68C8)) || (f20 && mapId == MAPTBL16(idx, -0x68C8)))
+                        (f10 && mapId != MAPOWNER_RT(idx)) || (f20 && mapId == MAPOWNER_RT(idx)))
                     {
-                        if (gObjLevelLockSlots != (v = MAPTBL16(idx, -0x68C8)) && lockp[1] != v)
+                        if (gObjLevelLockSlots != (v = MAPOWNER_RT(idx)) && lockp[1] != v)
                         {
                             switch (idx)
                             {
@@ -4005,53 +4028,57 @@ int mapUnload(int mapId, int flags)
                                 mmSetFreeDelay(0);
                                 for (j = 0; j < 75; j++)
                                 {
-                                    if (sMapFileNameIndexRemapTable[j] == MAPTBL16(e[0], -0x68C8))
+                                    if (sMapFileNameIndexRemapTable[j] == MAPOWNER_RT(e[0]))
                                     {
                                         break;
                                     }
                                 }
                                 if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5)
                                 {
-                                    int* slot = (int*)((char*)base + (j * 4 + 0x20000));
+                                    int* slot = (int*)((j << 2) + ((u32)tbl + 0x20000));
                                     mm_free((void*)slot[-0x6C08 / 4]);
                                     slot[-0x6C08 / 4] = 0;
                                 }
                                 break;
                             }
-                            mm_free((void*)MAPTBL32(e[0], -0x6A28));
+                            mm_free((void*)MAPPTR_RT(e[0]));
                             mmSetFreeDelay(2);
-                            MAPTBL32(e[0], -0x6A28) = 0;
-                            ((s16*)(hi + -0x68C8))[e[0]] = -1;
-                            MAPTBL32(e[0], -0x6D68) = 0;
+                            {
+                                u32 sh = (u32)tbl + 0x20000;
+                                u32 a4 = sh + (e[0] << 2);
+                                *(u32*)(a4 - 0x6A28) = 0;
+                                *(s16*)(sh + (e[0] << 1) - 0x68C8) = -1;
+                                *(int*)(a4 - 0x6D68) = 0;
+                            }
                             switch (e[0])
                             {
                             case 0x2a:
                             case 0x45:
-                                mergeTableFiles((u32*)(base + 0x170e0), 0x2a, 0x45, 0x800);
+                                mergeTableFiles((u32*)tbl->mergeModels, 0x2a, 0x45, 0x800);
                                 break;
                             case 0x2f:
                             case 0x49:
-                                mergeTableFiles((u32*)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+                                mergeTableFiles((u32*)tbl->mergeAnim, 0x2f, 0x49, 0xbb8);
                                 break;
                             case 0x24:
                             case 0x4e:
-                                mergeTableFiles((u32*)(base + 0x10200), 0x24, 0x4e, 0x1000);
+                                mergeTableFiles((u32*)tbl->mergeTex0, 0x24, 0x4e, 0x1000);
                                 break;
                             case 0x21:
                             case 0x4c:
-                                mergeTableFiles((u32*)(base + 0xc200), 0x21, 0x4c, 0x1000);
+                                mergeTableFiles((u32*)tbl->mergeTex1, 0x21, 0x4c, 0x1000);
                                 break;
                             case 0x26:
                             case 0x48:
-                                mergeTableFiles((u32*)(base + 0xa200), 0x26, 0x48, 0x800);
+                                mergeTableFiles((u32*)tbl->mergeBlocks, 0x26, 0x48, 0x800);
                                 break;
                             case 0x1a:
                             case 0x53:
-                                mergeTableFiles((u32*)(base + 0x8200), 0x1a, 0x53, 0x800);
+                                mergeTableFiles((u32*)tbl->mergeVoxMap, 0x1a, 0x53, 0x800);
                                 break;
                             case 0xe:
                             case 0x56:
-                                mergeTableFiles((u32*)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+                                mergeTableFiles((u32*)tbl->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
                                 break;
                             }
                         }
@@ -4063,6 +4090,8 @@ int mapUnload(int mapId, int flags)
     }
     return 1;
 }
+#pragma opt_loop_invariants reset
+#pragma opt_common_subs reset
 
 extern char sAssetIndexOverflowError[];
 
@@ -4348,9 +4377,7 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
 }
 #pragma opt_lifetimes reset
 
-#undef MAPTBL32
 #undef MAPTBLP
-#undef MAPTBL16
 
 extern s32 gObjTableFileRequestFlags;
 
