@@ -211,6 +211,7 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     u32 loopAddr;
     u32 zeroAddr;
     u32 busClock;
+    u32 unused[1];
 
     msp = &dspStudio[0];
     dspCmdCurBase = dspCmdPtr = dspCmdList;
@@ -228,8 +229,8 @@ void salBuildCommandList(s16* dest, u32 nsDelay)
     {
         cyclesUsed += 45000;
     }
-    rampResetOffsetFlags[0] = 0;
     busClock = __OSBusClock;
+    rampResetOffsetFlags[0] = 0;
     for (st = 0; st < salMaxStudioNum; st++)
     {
         if (msp[st].state == 1)
