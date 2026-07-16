@@ -2110,8 +2110,8 @@ void Obj_ResetObjectSystem(void)
 
 void Obj_UpdateModelBlendStates(void)
 {
-    ObjAnimComponent* objAnim;
     ObjAnimComponent* childAnim;
+    ObjAnimComponent* objAnim;
     int k;
     int i;
     int j;
