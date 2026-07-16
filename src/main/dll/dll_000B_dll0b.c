@@ -825,6 +825,7 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
     void* tex;
     int n131p1;
     int n131;
+    int j;
     f32 dirX;
     f32 dirZ;
     f32 dscale;
@@ -1040,11 +1041,10 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
                 n131p1 = 0;
             }
         }
-        if ((int)((PartfxEffectState*)p[slot])->flags & 0x1000000)
+        if (((int)((PartfxEffectState*)p[slot])->flags & 0x1000000) &&
+            (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400)))
         {
-            if (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400))
             {
-                int j;
                 for (j = 0; j < (u8)n131p1; j++)
                 {
                     tex = *(void**)tex;
@@ -1072,11 +1072,10 @@ int dll_0B_func09(void* a0, int a1, int a2, u8 a3, void* a4)
             gxTexColorFn_80079254();
             textRenderSetupFn_80079804();
         }
-        if ((int)((PartfxEffectState*)p[slot])->flags & 0x05000000)
+        if (((int)((PartfxEffectState*)p[slot])->flags & 0x05000000) &&
+            (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400)))
         {
-            if (((PartfxEffectState*)p[slot])->frameUpdated != 0 || ((int)((PartfxEffectState*)p[slot])->flags & 0x400))
             {
-                int j;
                 tex = ((PartfxEffectState*)p[slot])->textureResource;
                 for (j = 0; j < (u8)n131; j++)
                 {
