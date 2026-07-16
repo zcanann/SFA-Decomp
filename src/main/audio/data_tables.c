@@ -312,15 +312,13 @@ s32 dataRemoveCurve(u16 sid)
 
 s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
 {
-    SDIR_TAB* p;
-    SDIR_TAB* table = dataSmpSDirs;
     s32 i;
     SDIR_DATA* s;
     u16 n;
     u16 j;
     u16 k;
 
-    for (i = 0, p = table; i < dataSmpSDirNum && p->data != sdir; ++p, ++i)
+    for (i = 0; i < dataSmpSDirNum && dataSmpSDirs[i].data != sdir; ++i)
         ;
 
     if (i == dataSmpSDirNum)
@@ -338,10 +336,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
             {
                 for (i = 0; i < dataSmpSDirNum; ++i)
                 {
-                    s = table[i].data;
-                    for (k = 0; k < table[i].numSmp; ++k)
+                    for (k = 0; k < dataSmpSDirs[i].numSmp; ++k)
                     {
-                        if (sdir[j].id == s[k].id)
+                        if (sdir[j].id == dataSmpSDirs[i].data[k].id)
                             goto found_id;
                     }
                 }
@@ -356,10 +353,9 @@ s32 dataInsertSDir(SDIR_DATA* sdir, void* smp_data)
                 }
             }
 
-            i = dataSmpSDirNum;
-            table[i].data = sdir;
-            table[i].numSmp = n;
-            table[i].base = smp_data;
+            dataSmpSDirs[dataSmpSDirNum].data = sdir;
+            dataSmpSDirs[dataSmpSDirNum].numSmp = n;
+            dataSmpSDirs[dataSmpSDirNum].base = smp_data;
             ++dataSmpSDirNum;
             sndEnd();
             return 1;
