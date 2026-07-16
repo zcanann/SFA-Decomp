@@ -2255,7 +2255,7 @@ void fn_8008C9F4(u8* cfg, u8 flags)
 {
     int i;
     u8* p2;
-    int z[2];
+    int z[2] = {0};
 
     if (((Sky2Config*)cfg)->flags & 0x80)
     {
@@ -2263,7 +2263,6 @@ void fn_8008C9F4(u8* cfg, u8 flags)
     }
     else
     {
-        z[0] = 0;
         z[1] = z[0];
     }
     *(int*)((&gSky2State)[z[1]]) = z[0];
