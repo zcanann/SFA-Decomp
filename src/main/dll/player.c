@@ -13958,6 +13958,7 @@ int playerState08(GameObject* obj, int state, f32 fv)
 extern int lbl_803E7E68;
 extern int lbl_803E7E6C;
 
+#pragma opt_propagation off
 void playerRender(int obj, int a, int b, int c, int d, s8 flag)
 {
     int in2;
@@ -14001,9 +14002,11 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
              arrayIndexOf((int*)&lbl_803DC6C4, 2, ((PlayerState*)inner)->baddie.controlMode) != -1))
         {
             {
-                int held = (int)((PlayerState*)inner)->focusObject;
-                (*(void (*)(f32)) * (int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(
-                    ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase);
+                int held;
+                f32 s;
+                held = (int)((PlayerState*)inner)->focusObject;
+                s = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
+                (*(void (*)(f32)) * (int*)(*(int*)(*(int*)((char*)held + 0x68)) + 0x50))(s);
             }
         }
         if ((*(u32*)&((PlayerState*)inner)->flags360 & 0x8000000) != 0)
@@ -14053,7 +14056,10 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         else if ((void*)gPlayerHeldObject != NULL)
         {
             *(u32*)((char*)gPlayerHeldObject + 0x3c) &= ~0x100000LL;
-            gPlayerHeldObject = 0;
+            {
+                int zero = 0;
+                gPlayerHeldObject = zero;
+            }
         }
         {
             in2 = *(int*)&((GameObject*)obj)->extra;
@@ -14090,8 +14096,14 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
         if (((PlayerState*)inner)->knockbackTimer > lbl_803E7EA4 || (((PlayerState*)inner)->pendingFxFlags & 2) != 0)
         {
-            tbl[0] = lbl_803E7E68;
-            tbl[1] = lbl_803E7E6C;
+            {
+                int t1;
+                int t0;
+                t0 = lbl_803E7E68;
+                t1 = lbl_803E7E6C;
+                tbl[0] = t0;
+                tbl[1] = t1;
+            }
             objParticleFn_80099d84((GameObject*)obj, lbl_803E7E9C,
                                    tbl[((((PlayerState*)inner)->knockKindBits >> 5) & 7) - 1] & 0xff,
                                    lbl_803E7EE0, NULL);
@@ -14160,6 +14172,7 @@ void playerRender(int obj, int a, int b, int c, int d, s8 flag)
         }
     }
 }
+#pragma opt_propagation reset
 
 
 typedef struct
