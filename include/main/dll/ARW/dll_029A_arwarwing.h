@@ -20,9 +20,10 @@ typedef struct ArwInitCfg
     int a;
     int b;
     u16 c;
+    int d;
 } ArwInitCfg;
 
-STATIC_ASSERT(sizeof(ArwInitCfg) == 0xC);
+STATIC_ASSERT(sizeof(ArwInitCfg) == 0x10);
 
 extern GameObject* gArwing;
 extern f32 lbl_803E6ECC;
