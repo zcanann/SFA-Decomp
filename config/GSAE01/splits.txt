@@ -554,7 +554,7 @@ main/dll/dll_006A_dll6afunc0.c:
 
 main/dll/dll_006B_dll6bfunc0.c:
 	.text       start:0x800F058C end:0x800F07DC
-	.sdata2     start:0x803E0A58 end:0x803E0A78
+	.sdata2     start:0x803E0A58 end:0x803E0A74
 
 main/dll/dll_006C_dummy6c.c:
 	.text       start:0x800F07DC end:0x800F07EC
@@ -821,7 +821,7 @@ main/dll/dll_00A7_dlla7func0.c:
 
 main/dll/dll_00A8_dlla8func0.c:
 	.text       start:0x800FFB44 end:0x800FFF04
-	.sdata2     start:0x803E1598 end:0x803E15D0
+	.sdata2     start:0x803E1598 end:0x803E15CC
 
 main/dll/dll_00A9_dlla9func0.c:
 	.text       start:0x800FFF04 end:0x801002C0
@@ -2527,7 +2527,7 @@ main/dll/DIM/dll_019E_dim_tricky.c:
 	.text       start:0x801CCFA4 end:0x801CD7DC
 	.rodata     start:0x802C23D8 end:0x802C23E8
 	.sbss       start:0x803DDBE8 end:0x803DDBF0
-	.sdata2     start:0x803E51C8 end:0x803E51F0
+	.sdata2     start:0x803E51C8 end:0x803E51EC
 	.sdata2     start:0x803E51F0 end:0x803E51F8
 
 main/dll/NW/dll_019F_nwtreebrid.c:

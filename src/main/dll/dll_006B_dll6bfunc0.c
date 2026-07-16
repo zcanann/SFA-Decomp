@@ -3,7 +3,7 @@
  * func03: a one-shot spawner that builds a 6-command Modgfx draw list on
  * the stack and submits it through (*gModgfxInterface)->spawnEffect. The
  * command template and its geometry/colour constants are read from the
- * lbl_80313A40 data blob and the lbl_803E0A* float pool. When the request
+ * lbl_80313A40 data blob and inline float constants. When the request
  * flag bit 0 is set, the world position is taken either from the source
  * object (sourceObj+0x18..0x20) or from the PartFxSpawnParams packet.
  *
@@ -26,77 +26,66 @@
 #define DLL6B_EFFECT_ID 0x5e
 
 extern u8 lbl_80313A40[];
-__declspec(section ".sdata2") f32 lbl_803E0A58 = 255.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0A5C = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E0A60 = 0.01f;
-__declspec(section ".sdata2") f32 lbl_803E0A64 = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E0A68 = 4000.0f;
-__declspec(section ".sdata2") f32 lbl_803E0A6C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E0A70 = 10.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E0A74 = 0.0f;
-#pragma explicit_zero_data off
 
 void dll_6B_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
     ModgfxSpawnPacket buf;
     u8* base = (u8*)(int)lbl_80313A40;
     int ctx;
+    f32 originOffset = 0.0f;
     buf.entries[0].layer = 0;
     buf.entries[0].flags = 5;
     buf.entries[0].tex = &base[84];
     buf.entries[0].mode = 4;
-    buf.entries[0].x = lbl_803E0A58;
-    buf.entries[0].y = lbl_803E0A5C;
-    buf.entries[0].z = lbl_803E0A5C;
+    buf.entries[0].x = 255.0f;
+    buf.entries[0].y = originOffset;
+    buf.entries[0].z = originOffset;
     buf.entries[1].layer = 0;
     buf.entries[1].flags = 5;
     buf.entries[1].tex = &base[84];
     buf.entries[1].mode = 2;
-    buf.entries[1].x = lbl_803E0A60;
-    buf.entries[1].y = lbl_803E0A60;
-    buf.entries[1].z = lbl_803E0A60;
+    buf.entries[1].x = 0.01f;
+    buf.entries[1].y = 0.01f;
+    buf.entries[1].z = 0.01f;
     buf.entries[2].layer = 0;
     buf.entries[2].flags = 5;
     buf.entries[2].tex = &base[84];
     buf.entries[2].mode = 8;
-    buf.entries[2].x = lbl_803E0A64;
-    buf.entries[2].y = lbl_803E0A64;
-    buf.entries[2].z = lbl_803E0A64;
+    buf.entries[2].x = 200.0f;
+    buf.entries[2].y = 200.0f;
+    buf.entries[2].z = 200.0f;
     buf.entries[3].layer = 0;
     buf.entries[3].flags = 0x7a;
     buf.entries[3].tex = 0;
     buf.entries[3].mode = 0x10000;
-    buf.entries[3].x = lbl_803E0A5C;
-    buf.entries[3].y = lbl_803E0A5C;
-    buf.entries[3].z = lbl_803E0A5C;
+    buf.entries[3].x = originOffset;
+    buf.entries[3].y = originOffset;
+    buf.entries[3].z = originOffset;
     buf.entries[4].layer = 1;
     buf.entries[4].flags = 5;
     buf.entries[4].tex = &base[84];
     buf.entries[4].mode = 4;
-    buf.entries[4].x = lbl_803E0A5C;
-    buf.entries[4].y = lbl_803E0A5C;
-    buf.entries[4].z = lbl_803E0A5C;
+    buf.entries[4].x = originOffset;
+    buf.entries[4].y = originOffset;
+    buf.entries[4].z = originOffset;
     buf.entries[5].layer = 1;
     buf.entries[5].flags = 5;
     buf.entries[5].tex = &base[84];
     buf.entries[5].mode = 2;
-    buf.entries[5].x = (*(f32*)&lbl_803E0A68);
-    buf.entries[5].y = (*(f32*)&lbl_803E0A6C);
-    buf.entries[5].z = (*(f32*)&lbl_803E0A68);
+    buf.entries[5].x = 4000.0f;
+    buf.entries[5].y = 1.0f;
+    buf.entries[5].z = 4000.0f;
     buf.v58 = 0;
     ctx = sourceObj;
     buf.ctx = ctx;
     buf.v44 = variant;
-    buf.pos[0] = lbl_803E0A5C;
-    buf.pos[1] = (*(f32*)&lbl_803E0A70);
-    buf.pos[2] = lbl_803E0A5C;
-    buf.col[0] = lbl_803E0A5C;
-    buf.col[1] = lbl_803E0A5C;
-    buf.col[2] = lbl_803E0A5C;
-    buf.scale = (*(f32*)&lbl_803E0A6C);
+    buf.pos[0] = originOffset;
+    buf.pos[1] = 10.0f;
+    buf.pos[2] = originOffset;
+    buf.col[0] = originOffset;
+    buf.col[1] = originOffset;
+    buf.col[2] = originOffset;
+    buf.scale = 1.0f;
     buf.v40 = 1;
     buf.v3c = 0;
     buf.v59 = 5;
@@ -117,15 +106,15 @@ void dll_6B_func03(int sourceObj, int variant, int posSource, u32 flags)
     {
         if ((void*)ctx != NULL)
         {
-            buf.pos[0] = lbl_803E0A5C + ((GameObject*)ctx)->anim.worldPosX;
-            buf.pos[1] = lbl_803E0A70 + ((GameObject*)ctx)->anim.worldPosY;
-            buf.pos[2] = lbl_803E0A5C + ((GameObject*)ctx)->anim.worldPosZ;
+            buf.pos[0] = originOffset + ((GameObject*)ctx)->anim.worldPosX;
+            buf.pos[1] = 10.0f + ((GameObject*)ctx)->anim.worldPosY;
+            buf.pos[2] = originOffset + ((GameObject*)ctx)->anim.worldPosZ;
         }
         else
         {
-            buf.pos[0] = lbl_803E0A5C + ((PartFxSpawnParams*)posSource)->posX;
-            buf.pos[1] = lbl_803E0A70 + ((PartFxSpawnParams*)posSource)->posY;
-            buf.pos[2] = lbl_803E0A5C + ((PartFxSpawnParams*)posSource)->posZ;
+            buf.pos[0] = originOffset + ((PartFxSpawnParams*)posSource)->posX;
+            buf.pos[1] = 10.0f + ((PartFxSpawnParams*)posSource)->posY;
+            buf.pos[2] = originOffset + ((PartFxSpawnParams*)posSource)->posZ;
         }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, 5, (u8*)(int)lbl_80313A40, 4, &base[52], DLL6B_EFFECT_ID, 0);

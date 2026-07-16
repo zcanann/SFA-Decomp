@@ -432,7 +432,6 @@ void objfx_spawnDirectionalBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode,
 }
 
 __declspec(section ".sdata2") f32 gObjFxPi = 3.1415927f;
-__declspec(section ".sdata2") f32 lbl_803DF370 = 32768.0f;
 
 void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 angBase, f32 lo, f32 hi,
                            void* origin, int flags)
@@ -481,13 +480,13 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
             break;
         case 4:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / 32768.0f;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathCosf(a));
             params.position[0] = lbl_803DF354 - f30 * f30;
             break;
         case 5:
             val = (u16)(int)(lbl_803DF350 * f29);
-            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / 32768.0f;
             f29 = lbl_803DF358 * (lbl_803DF354 + mathSinf(a));
             params.position[0] = lbl_803DF354 - f30 * f30;
             break;
@@ -517,19 +516,6 @@ void objfx_spawnArcedBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 ch
     }
 }
 
-__declspec(section ".sdata2") f32 lbl_803DF380 = 0.001f;
-__declspec(section ".sdata2") f32 lbl_803DF384 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803DF388 = 2.25f;
-__declspec(section ".sdata2") f32 lbl_803DF38C = 0.25f;
-__declspec(section ".sdata2") f32 lbl_803DF390 = 0.3f;
-__declspec(section ".sdata2") f32 lbl_803DF394 = 40.0f;
-__declspec(section ".sdata2") f32 lbl_803DF398 = 75.0f;
-__declspec(section ".sdata2") f32 lbl_803DF39C = 55.0f;
-__declspec(section ".sdata2") f32 lbl_803DF3A0 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803DF3A4 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803DF3A8 = 22.0f;
-__declspec(section ".sdata2") f32 lbl_803DF3AC = 256.0f;
-__declspec(section ".sdata2") f32 lbl_803DF3B0 = 300.0f;
 
 void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chance, f32 mulX, f32 mulY, f32 mulZ,
                          void* origin, int flags)
@@ -575,14 +561,14 @@ void objfx_spawnBoxBurst(void* obj, u8 idx, f32 f8val, u8 kind, u8 mode, u8 chan
         case 4:
             params.position[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.position[1]);
-            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / 32768.0f;
             params.position[1] = lbl_803DF358 * mathCosf(a);
             params.position[2] -= lbl_803DF358;
             break;
         case 5:
             params.position[0] -= lbl_803DF358;
             val = (u16)(int)(lbl_803DF350 * params.position[1]);
-            a = gObjFxPi * (f32)(u32)val / lbl_803DF370;
+            a = gObjFxPi * (f32)(u32)val / 32768.0f;
             params.position[1] = lbl_803DF358 * mathSinf(a);
             params.position[2] -= lbl_803DF358;
             break;
@@ -719,9 +705,9 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
         n = framesThisStep;
     }
     params.scale = fa;
-    if (fb <= lbl_803DF380)
+    if (fb <= 0.001f)
     {
-        fb = lbl_803DF380;
+        fb = 0.001f;
     }
     params.position[0] = fb;
     if (type != 0)
@@ -779,12 +765,12 @@ void objfx_spawnLightPulse(GameObject* obj, u8 type, int a3, u8 mode, void* ligh
             vecRotateZXY((s16*)obj, &lvec[3]);
             Camera_ProjectWorldPointWithOffset(
                 (obj)->anim.worldPosX + lvec[3] - playerMapOffsetX, (obj)->anim.worldPosY + lvec[4],
-                (obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, lbl_803DF384, &proj[2], &proj[1], &proj[0]);
+                (obj)->anim.worldPosZ + lvec[5] - playerMapOffsetZ, 10.0f, &proj[2], &proj[1], &proj[0]);
         }
         else
         {
             Camera_ProjectWorldPointWithOffset((obj)->anim.worldPosX - playerMapOffsetX, (obj)->anim.worldPosY,
-                                               (obj)->anim.worldPosZ - playerMapOffsetZ, lbl_803DF384, &proj[2],
+                                               (obj)->anim.worldPosZ - playerMapOffsetZ, 10.0f, &proj[2],
                                                &proj[1], &proj[0]);
         }
         ((ObjFxNdcToScreenFn)Camera_NdcToScreen)(proj[2], proj[1], proj[0], &screen[2], &screen[1], &screen[0]);
@@ -975,7 +961,7 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
     switch (t)
     {
     case 3:
-        params.scale = params.scale * lbl_803DF388;
+        params.scale *= 2.25f;
         effB = 1968;
         break;
     case 9:
@@ -1163,9 +1149,9 @@ void fn_80098B18(void* obj, f32 scale, int type, int count, int mode, f32* vec)
             }
             break;
         case 12:
-            if (params.scale < lbl_803DF38C)
+            if (params.scale < 0.25f)
             {
-                params.scale = *(f32*)&lbl_803DF38C;
+                params.scale = 0.25f;
             }
             params.pad00[2] = 50;
             for (j = 0; j < n * 2; j++)
@@ -1225,7 +1211,7 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
             ps.scale = scale;
             (*gPartfxInterface)->spawnObject(obj, 0x7a0, &ps, 1, -1, NULL);
         }
-        tailScale = lbl_803DF390;
+        tailScale = 0.3f;
         break;
     case 1:
         i = 10;
@@ -1266,7 +1252,7 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
             ps.scale = scale;
             (*gPartfxInterface)->spawnObject(obj, 0x7a6, &ps, 1, -1, NULL);
         }
-        tailScale = lbl_803DF390;
+        tailScale = 0.3f;
         break;
     case 4:
         i = 10;
@@ -1292,7 +1278,7 @@ void projectileParticleFxFn_80099660(void* obj, int mode)
             ps.scale = scale;
             (*gPartfxInterface)->spawnObject(obj, 0x7a1, &ps, 1, -1, NULL);
         }
-        tailScale = lbl_803DF390;
+        tailScale = 0.3f;
         break;
     default:
         return;
@@ -1395,7 +1381,7 @@ void itemPickupDoParticleFx(void* obj, int mode, u8 count, f32 fval)
 void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale, ModelLightStruct* light)
 {
     ObjFxParticleParams params;
-    f32 zoff = lbl_803DF394;
+    f32 zoff = 40.0f;
     ObjFxColorTable colors = gObjFxCrystalSparkleTbl;
     u8* cbuf;
     u8* cbuf1;
@@ -1461,7 +1447,7 @@ void objParticleFn_80099d84(GameObject* obj, f32 scale, int type, f32 extraScale
         cbuf2 = (u8*)&colors + 2;
         modelLightStruct_setDiffuseColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3], cbuf2[(u8)type * 3], 0xff);
         modelLightStruct_setSpecularColor(light, cbuf[(u8)type * 3], cbuf1[(u8)type * 3], cbuf2[(u8)type * 3], 0xff);
-        modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, 75.0f);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
         modelLightStruct_setEnabled(light, 0, lbl_803DF354);
@@ -1583,13 +1569,13 @@ void objLightFn_8009a1dc(void* obj, f32 scale, void* origin, u8 type, void* ligh
     {
         modelLightStruct_setLightKind(light, MODEL_LIGHT_KIND_POINT);
         modelLightStruct_setPosition(light, ((GameObject*)origin)->anim.localPosX,
-                                     lbl_803DF384 + ((GameObject*)origin)->anim.localPosY,
+                                     10.0f + ((GameObject*)origin)->anim.localPosY,
                                      ((GameObject*)origin)->anim.localPosZ);
         modelLightStruct_setDiffuseColor(light, gObjFxLightColorTbl[type * 3], gObjFxLightColorTbl[type * 3 + 1],
                                          gObjFxLightColorTbl[type * 3 + 2], 0xff);
         modelLightStruct_setSpecularColor(light, gObjFxLightColorTbl[type * 3], gObjFxLightColorTbl[type * 3 + 1],
                                           gObjFxLightColorTbl[type * 3 + 2], 0xff);
-        modelLightStruct_setDistanceAttenuation(light, lbl_803DF394, lbl_803DF39C);
+        modelLightStruct_setDistanceAttenuation(light, 40.0f, 55.0f);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, 1, lbl_803DF35C);
         modelLightStruct_setEnabled(light, 0, lbl_803DF358);
@@ -1615,8 +1601,8 @@ void fn_8009A8C8(GameObject* obj, f32 thresh)
         if (d <= thresh)
         {
             f32 t = lbl_803DF354 - d / thresh;
-            CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
-            doRumble(lbl_803DF3A8 * t);
+            CameraShake_Start(5.0f * t, 10.0f * t, 4.0f);
+            doRumble(22.0f * t);
         }
     }
 }
@@ -1634,7 +1620,7 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         ((GameObject*)obj)->anim.localPosX = vy;
         ((GameObject*)obj)->anim.localPosY = vz;
         ((ExplosionSetup*)obj)->unk19 = a;
-        *(s16*)((char*)obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16*)((char*)obj + 0x1a) = (s16)(256.0f * fval);
         *(s16*)((char*)obj + 0x1c) = f1cinit;
         if (flag4 != 0)
         {
@@ -1660,11 +1646,11 @@ void DIMexplosionFn_8009a96c(u8* src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
                 f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent*)src)->worldPosX,
                                                              ((ObjAnimComponent*)src)->worldPosY,
                                                              ((ObjAnimComponent*)src)->worldPosZ);
-                if (d <= lbl_803DF3B0)
+                if (d <= 300.0f)
                 {
-                    f32 t = lbl_803DF354 - d / lbl_803DF3B0;
-                    CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
-                    doRumble(lbl_803DF3A8 * t);
+                    f32 t = lbl_803DF354 - d / 300.0f;
+                    CameraShake_Start(5.0f * t, 10.0f * t, 4.0f);
+                    doRumble(22.0f * t);
                 }
             }
         }
@@ -1685,7 +1671,7 @@ void spawnExplosion(GameObject* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag
         ((GameObject*)obj)->anim.localPosX = src->anim.worldPosY;
         ((GameObject*)obj)->anim.localPosY = src->anim.worldPosZ;
         ((ExplosionSetup*)obj)->unk19 = a;
-        *(s16*)((char*)obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
+        *(s16*)((char*)obj + 0x1a) = (s16)(256.0f * fval);
         *(s16*)((char*)obj + 0x1c) = f1cinit;
         if (flag4 != 0)
         {
@@ -1710,11 +1696,11 @@ void spawnExplosion(GameObject* src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag
             {
                 f32 d = Camera_DistanceToCurrentViewPosition(src->anim.worldPosX, src->anim.worldPosY,
                                                              src->anim.worldPosZ);
-                if (d <= lbl_803DF3B0)
+                if (d <= 300.0f)
                 {
-                    f32 t = lbl_803DF354 - d / lbl_803DF3B0;
-                    CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
-                    doRumble(lbl_803DF3A8 * t);
+                    f32 t = lbl_803DF354 - d / 300.0f;
+                    CameraShake_Start(5.0f * t, 10.0f * t, 4.0f);
+                    doRumble(22.0f * t);
                 }
             }
         }

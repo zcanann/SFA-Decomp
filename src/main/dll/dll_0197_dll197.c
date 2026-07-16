@@ -64,18 +64,6 @@ typedef struct Cup197State
 
 const ResourceParamBlob gDll197ResourceParamTemplate = {{0x3E7, 0x8C, 0x8D, 0x28}};
 s8 lbl_803DDBD0; /* shared 0..3 progression latch */
-__declspec(section ".sdata2") f32 lbl_803E5120 = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E5124 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5128 = 32.0f;
-__declspec(section ".sdata2") f32 lbl_803E512C = -20.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5130 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E5134 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E5138 = 90.0f;
-__declspec(section ".sdata2") f32 lbl_803E513C = -2.0f;
-__declspec(section ".sdata2") f32 lbl_803E5140 = 8192.0f;
-__declspec(section ".sdata2") f32 lbl_803E5144 = 0.1f;
 
 typedef struct Dll197Placement
 {
@@ -105,6 +93,7 @@ void dll_197_free(int obj)
 
 void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
+    f32 originOffset = 0.0f;
     struct
     {
         u8 pad[0xc];
@@ -141,22 +130,22 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     dir[2] = camera->z - (obj)->anim.localPosZ;
 
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
-    if (dist > lbl_803E5120)
+    if (dist > 50.0f)
     {
-        scale = lbl_803E5124 / dist;
+        scale = 1.0f / dist;
         dir[0] = dir[0] * scale;
         dir[1] = dir[1] * scale;
         dir[2] = dir[2] * scale;
 
-        objTrace[0] = lbl_803E5128 * dir[0];
-        objTrace[1] = lbl_803E5128 * dir[1];
-        objTrace[2] = lbl_803E5128 * dir[2];
+        objTrace[0] = 32.0f * dir[0];
+        objTrace[1] = 32.0f * dir[1];
+        objTrace[2] = 32.0f * dir[2];
         objTrace[0] = objTrace[0] + (obj)->anim.localPosX;
         objTrace[1] = objTrace[1] + (obj)->anim.localPosY;
         objTrace[2] = objTrace[2] + (obj)->anim.localPosZ;
-        cameraTrace[0] = lbl_803E512C * dir[0];
-        cameraTrace[1] = lbl_803E512C * dir[1];
-        cameraTrace[2] = lbl_803E512C * dir[2];
+        cameraTrace[0] = -20.0f * dir[0];
+        cameraTrace[1] = -20.0f * dir[1];
+        cameraTrace[2] = -20.0f * dir[2];
         cameraTrace[0] = cameraTrace[0] + camera->x;
         cameraTrace[1] = cameraTrace[1] + camera->y;
         cameraTrace[2] = cameraTrace[2] + camera->z;
@@ -178,9 +167,9 @@ void dll_197_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (state->visibleToCamera != 0)
     {
-        particleParams.pos[0] = lbl_803E5130;
-        particleParams.pos[1] = lbl_803E5134;
-        particleParams.pos[2] = lbl_803E5130;
+        particleParams.pos[0] = originOffset;
+        particleParams.pos[1] = 5.0f;
+        particleParams.pos[2] = originOffset;
         (*gPartfxInterface)->spawnObject((void*)obj, DLL197_PARTFX_SPARKLE, &particleParams, 0x12, -1, NULL);
     }
 
@@ -208,12 +197,12 @@ void dll_197_update(int obj)
     distance = Vec_distance((void*)(player + 0x18), &((GameObject*)obj)->anim.worldPosX);
     if (Sfx_IsPlayingFromObjectChannelIntLegacy(obj, 0x40) != 0)
     {
-        if (distance >= lbl_803E5138 && state->active != 0)
+        if (distance >= 90.0f && state->active != 0)
         {
             Sfx_StopObjectChannel(obj, 0x40);
         }
     }
-    else if (distance < lbl_803E5138 && state->active != 0)
+    else if (distance < 90.0f && state->active != 0)
     {
         Sfx_PlayFromObject(obj, SFXTRIG_mushdizzylp12);
     }
@@ -234,7 +223,7 @@ void dll_197_update(int obj)
         return;
     }
 
-    *(f32*)(callbackData + 0x10) = lbl_803E513C;
+    *(f32*)(callbackData + 0x10) = -2.0f;
     state->previousActive = state->active;
     if (ObjHits_GetPriorityHit((GameObject*)(obj), 0, 0, 0) != 0 ||
         (state->hitCooldown != 0 && state->hitCooldown <= 0x14))
@@ -352,17 +341,17 @@ void dll_197_init(int obj, int dataArg)
     ((GameObject*)obj)->anim.rotX = (s16)(((s8)data->rotXParam & 0x3fu) << 10);
     if (data->scale > 0)
     {
-        ((GameObject*)obj)->anim.rootMotionScale = (f32)data->scale / lbl_803E5140;
+        ((GameObject*)obj)->anim.rootMotionScale = (f32)data->scale / 8192.0f;
     }
     else
     {
-        ((GameObject*)obj)->anim.rootMotionScale = lbl_803E5144;
+        ((GameObject*)obj)->anim.rootMotionScale = 0.1f;
     }
     *(u8*)(st + 0xb) = data->kind;
     ((Dll197State*)st)->unkC = 0;
     ((Dll197State*)st)->menuState = 0;
     *(int*)st = data->unk1e;
-    stk.f = lbl_803E513C;
+    stk.f = -2.0f;
     switch (*(u8*)(st + 0xb))
     {
     case 0:
