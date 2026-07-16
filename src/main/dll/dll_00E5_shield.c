@@ -189,8 +189,6 @@ void staffFn_80170380(GameObject* obj, int cmd)
     u8* state;
     GameObject* glow;
     GameObject* player;
-    f32 amp;
-    f32 k;
     tbl[0] = lbl_80320A28;
     state = obj->extra;
     player = Obj_GetPlayerObject();
@@ -278,6 +276,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
             }
             ((ShieldState*)state)->fadeTarget = lbl_803E33B0;
             {
+                f32 amp;
+                f32 k;
                 u8* hw;
                 u8* w;
                 f32* t1;
@@ -362,6 +362,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
             u8* w;
             f32* t0;
             f32* t1;
+            f32 k;
+            f32 amp;
             amp = lbl_803E33C4;
             ((ShieldState*)state)->fadeRate = amp;
             i = 0;
@@ -398,6 +400,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
     case 4:
     {
         f32 fade = lbl_803E33CC;
+        f32 amp;
         ((ShieldState*)state)->fadeTarget = fade;
         amp = lbl_803E33C4;
         ((ShieldState*)state)->fadeRate = amp;
@@ -408,6 +411,7 @@ void staffFn_80170380(GameObject* obj, int cmd)
             f32* t0;
             u8* w;
             f32* t1;
+            f32 k;
             i = 0;
             hw = state;
             t0 = (f32*)((char*)tbl[0] + 0x20);
@@ -442,6 +446,8 @@ void staffFn_80170380(GameObject* obj, int cmd)
         f32* t0;
         u8* w;
         f32* t1;
+        f32 amp;
+        f32 k;
         i = 0;
         hw = state;
         t0 = (f32*)((char*)tbl[0] + 0x20);
