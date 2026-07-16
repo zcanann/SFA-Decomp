@@ -2996,7 +2996,8 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         entry = (char*)*(u32*)((char*)gShaderRomListSlots + slot * 8);
         pairs = (s16*)gShaderMapRomBuffers[2];
         cv3 = (s8)pairs[id << 1];
-        cv4 = (s8)pairs[(id << 1) + 1];
+        cv4 = pairs[(id << 1) + 1];
+        cv4 = (s8)cv4;
         out[0] = id;
         out[1] = cv3;
         out[2] = cv4;
