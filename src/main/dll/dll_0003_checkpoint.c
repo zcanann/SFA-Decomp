@@ -744,7 +744,7 @@ extern f32 lbl_803E0538;
 
 /* Flood-search the route graph (filtered by group) for the segment the object
  * lies within, recording the matched checkpoint and local coordinates. */
-#pragma opt_propagation off
+#pragma opt_dead_assignments off
 void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
 {
     int stack[64];
@@ -917,7 +917,7 @@ void Checkpoint_func06(GameObject* obj, CheckpointRouteState* state, int filter)
         }
     }
 }
-#pragma opt_propagation reset
+#pragma opt_dead_assignments reset
 
 u32 lbl_803112E8[22] = {
     0, 0, 0, 0x00110000,
