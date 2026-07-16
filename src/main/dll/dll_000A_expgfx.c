@@ -3033,7 +3033,6 @@ void expgfx_onMapSetup(void)
     u8* poolSourceModes;
     u32* poolSourceIds;
     int poolIndex;
-    int resourceIndex;
 
     runtime[0] = EXPGFX_RUNTIME_DATA;
     expgfxRemoveAll();
@@ -3069,8 +3068,9 @@ void expgfx_onMapSetup(void)
     trackedFrameMasks[1].highWord = 0;
 
     gExpgfxTextureFreeInProgress = 1;
+    poolIndex = 0;
     resourceEntry = runtime[0]->resourceTable;
-    for (resourceIndex = 0; resourceIndex < EXPGFX_RESOURCE_TABLE_COUNT; resourceEntry++, resourceIndex++)
+    while (poolIndex < EXPGFX_RESOURCE_TABLE_COUNT)
     {
         if (resourceEntry->resource != NULL)
         {
@@ -3080,6 +3080,8 @@ void expgfx_onMapSetup(void)
         resourceEntry->resourceId = 0;
         resourceEntry->evictionScore = 0;
         resourceEntry->reserved = 0;
+        resourceEntry++;
+        poolIndex++;
     }
     gExpgfxTextureFreeInProgress = 0;
 }
