@@ -6887,11 +6887,10 @@ void loadDataFiles(int arg)
     int i;
     if (getButtonsJustPressed(2) & PAD_BUTTON_A)
     {
+        int vi = 0x4F;
+        vi++;
+        for (; vi < 0x57; vi++)
         {
-            int vi = 0x50;
-            do
-            {
-            } while (++vi < 0x57);
         }
         printHeapStats(1);
     }
