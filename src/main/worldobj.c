@@ -94,8 +94,6 @@ void worldobj_init(GameObject* obj, int arg);
 void worldobj_spawnGreatFoxEffects(GameObject* obj);
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId);
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-int worldobj_getExtraSize(void);
-void worldobj_hitDetect(void);
 
 
 #pragma dont_inline on
