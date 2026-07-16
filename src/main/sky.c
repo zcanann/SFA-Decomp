@@ -2667,55 +2667,55 @@ void skyFn_8008a04c(void)
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2)
 {
     f32 dir[3];
-    int c01;
-    int c02;
-    int c03;
-    int c11;
-    int c12;
-    int c13;
-    int pb;
-    int scale2;
-    int ofs;
+    int ambientR;
+    int ambientG;
+    int ambientB;
+    int lightR;
+    int lightG;
+    int lightB;
+    u32 previousComponent;
+    int lightScale;
+    int entryOffset;
     u8* skyEntry;
-    f32 bl;
-    int scale1;
-    u8* prev;
-    u8* cur2;
+    f32 blend;
+    int ambientScale;
+    SkyLight* previous;
+    SkyLight* current;
 
     dir[0] = -x;
     dir[1] = -y;
     dir[2] = -z;
     if (slot == 2)
     {
-        prev = gSkyState + ((SkyState*)gSkyState)->previousLightIndex * 0xa4 + 0x20;
-        cur2 = gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0x20;
-        dir[0] = *(f32*)(prev + 0x70) +
-                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x70) - *(f32*)(prev + 0x70));
-        dir[1] = *(f32*)(prev + 0x74) +
-                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x74) - *(f32*)(prev + 0x74));
-        dir[2] = *(f32*)(prev + 0x78) +
-                 ((SkyState*)gSkyState)->lightBlendFactor * (*(f32*)(cur2 + 0x78) - *(f32*)(prev + 0x78));
-        bl = ((SkyState*)gSkyState)->lightBlendFactor;
-        pb = prev[0x58];
-        r = (int)(bl * ((f32)(u32)cur2[0x58] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x59];
-        g = (int)(bl * ((f32)(u32)cur2[0x59] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x5a];
-        b = (int)(bl * ((f32)(u32)cur2[0x5a] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x60];
-        c01 = (int)(bl * ((f32)(u32)cur2[0x60] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x61];
-        c02 = (int)(bl * ((f32)(u32)cur2[0x61] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x62];
-        c03 = (int)(bl * ((f32)(u32)cur2[0x62] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x68];
-        c11 = (int)(bl * ((f32)(u32)cur2[0x68] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x69];
-        c12 = (int)(bl * ((f32)(u32)cur2[0x69] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0x6a];
-        c13 = (int)(bl * ((f32)(u32)cur2[0x6a] - (f32)(u32)pb) + (f32)(u32)pb);
-        pb = prev[0xa0];
-        c2 = (int)(bl * ((f32)(u32)cur2[0xa0] - (f32)(u32)pb) + (f32)(u32)pb);
+        previous = (SkyLight*)(gSkyState + ((SkyState*)gSkyState)->previousLightIndex * 0xa4 + 0x20);
+        current = (SkyLight*)(gSkyState + ((SkyState*)gSkyState)->currentLightIndex * 0xa4 + 0x20);
+        dir[0] = previous->directionX +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (current->directionX - previous->directionX);
+        dir[1] = previous->directionY +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (current->directionY - previous->directionY);
+        dir[2] = previous->directionZ +
+                 ((SkyState*)gSkyState)->lightBlendFactor * (current->directionZ - previous->directionZ);
+        blend = ((SkyState*)gSkyState)->lightBlendFactor;
+        previousComponent = previous->ambientR;
+        r = (int)(blend * ((f32)current->ambientR - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->ambientG;
+        g = (int)(blend * ((f32)current->ambientG - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->ambientB;
+        b = (int)(blend * ((f32)current->ambientB - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->scaledAmbientR;
+        ambientR = (int)(blend * ((f32)current->scaledAmbientR - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->scaledAmbientG;
+        ambientG = (int)(blend * ((f32)current->scaledAmbientG - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->scaledAmbientB;
+        ambientB = (int)(blend * ((f32)current->scaledAmbientB - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->lightR;
+        lightR = (int)(blend * ((f32)current->lightR - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->lightG;
+        lightG = (int)(blend * ((f32)current->lightG - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->lightB;
+        lightB = (int)(blend * ((f32)current->lightB - (f32)previousComponent) + (f32)previousComponent);
+        previousComponent = previous->blendAlpha;
+        c2 = (int)(blend * ((f32)current->blendAlpha - (f32)previousComponent) + (f32)previousComponent);
     }
     else
     {
@@ -2727,34 +2727,34 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
             PSVECNormalize(dir, dir);
             PSMTXMultVecSR(Camera_GetInverseViewMatrix(), dir, dir);
         }
-        ofs = slot * 0xa4;
+        entryOffset = slot * 0xa4;
         if (((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->active != 0)
         {
-            skyEntry = gSkyState + ofs;
+            skyEntry = gSkyState + entryOffset;
             dir[0] = *(f32*)(skyEntry + 0xa8);
             dir[1] = *(f32*)(skyEntry + 0xac);
             dir[2] = *(f32*)(skyEntry + 0xb0);
             r = skyEntry[0x7c];
             g = skyEntry[0x7d];
             b = skyEntry[0x7e];
-            c01 = skyEntry[0x84];
-            c02 = skyEntry[0x85];
-            c03 = skyEntry[0x86];
-            c11 = skyEntry[0x8c];
-            c12 = skyEntry[0x8d];
-            c13 = skyEntry[0x8e];
+            ambientR = skyEntry[0x84];
+            ambientG = skyEntry[0x85];
+            ambientB = skyEntry[0x86];
+            lightR = skyEntry[0x8c];
+            lightG = skyEntry[0x8d];
+            lightB = skyEntry[0x8e];
             c2 = 0xff;
         }
         else
         {
-            scale1 = a2 + 1;
-            c01 = r * scale1 >> 8;
-            c02 = g * scale1 >> 8;
-            c03 = b * scale1 >> 8;
-            scale2 = b2 + 1;
-            c11 = r * scale2 >> 8;
-            c12 = g * scale2 >> 8;
-            c13 = b * scale2 >> 8;
+            ambientScale = a2 + 1;
+            ambientR = r * ambientScale >> 8;
+            ambientG = g * ambientScale >> 8;
+            ambientB = b * ambientScale >> 8;
+            lightScale = b2 + 1;
+            lightR = r * lightScale >> 8;
+            lightG = g * lightScale >> 8;
+            lightB = b * lightScale >> 8;
         }
     }
     *(f32*)&gSkyState[slot * 0xa4 + 0x90] = dir[0];
@@ -2766,12 +2766,12 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     *(f32*)&gSkyState[slot * 0xa4 + 0x9c] = -dir[0];
     *(f32*)&gSkyState[slot * 0xa4 + 0xa0] = -dir[1];
     *(f32*)&gSkyState[slot * 0xa4 + 0xa4] = -dir[2];
-    gSkyState[slot * 0xa4 + 0x80] = (u8)(c01 * (colorScale + 1) >> 8);
-    gSkyState[slot * 0xa4 + 0x81] = (u8)(c02 * (colorScale + 1) >> 8);
-    gSkyState[slot * 0xa4 + 0x82] = (u8)(c03 * (colorScale + 1) >> 8);
-    gSkyState[slot * 0xa4 + 0x88] = c11;
-    gSkyState[slot * 0xa4 + 0x89] = c12;
-    gSkyState[slot * 0xa4 + 0x8a] = c13;
+    gSkyState[slot * 0xa4 + 0x80] = (u8)(ambientR * (colorScale + 1) >> 8);
+    gSkyState[slot * 0xa4 + 0x81] = (u8)(ambientG * (colorScale + 1) >> 8);
+    gSkyState[slot * 0xa4 + 0x82] = (u8)(ambientB * (colorScale + 1) >> 8);
+    gSkyState[slot * 0xa4 + 0x88] = lightR;
+    gSkyState[slot * 0xa4 + 0x89] = lightG;
+    gSkyState[slot * 0xa4 + 0x8a] = lightB;
     gSkyState[slot * 0xa4 + 0xc0] = c2;
 }
 
