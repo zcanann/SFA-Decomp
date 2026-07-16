@@ -123,7 +123,12 @@ typedef struct
         if (*(u32*)((st) + 0x28) != px)                                                                                \
         {                                                                                                              \
             *(u32*)((st) + 0x28) = px;                                                                                 \
-            *(s32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG;                              \
+            {                                                                                                          \
+                u32 m;                                                                                                 \
+                u32 f2 = *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET);                                                    \
+                m = ~TRICKY_STATE_TARGET_DIRTY_FLAG;                                                                   \
+                *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) = f2 & m;                                                    \
+            }                                                                                                          \
             *(s16*)((st) + 0xd2) = 0;                                                                                  \
         }                                                                                                              \
     }
@@ -133,11 +138,11 @@ typedef struct
         f32 z = lbl_803E23DC;                                                                                          \
         *(f32*)((st) + 0x71c) = z;                                                                                     \
         *(f32*)((st) + 0x720) = z;                                                                                     \
-        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;                                      \
-        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000;                                   \
-        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000;                                   \
-        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000;                                   \
-        *(u8*)((st) + 0xd) = 0xFF;                                                                                     \
+        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= 0xFFFFFFEFLL;                                                     \
+        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= 0xFFFEFFFFLL;                                                     \
+        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= 0xFFFDFFFFLL;                                                     \
+        *(u32*)((st) + TRICKY_STATE_FLAGS_OFFSET) &= 0xFFFBFFFFLL;                                                     \
+        *(s8*)((st) + 0xd) = 0xFF;                                                                                     \
     }
 #define TRICKY_RESET(st)                                                                                               \
     *(u8*)((st) + 8) = 1;                                                                                              \
@@ -162,6 +167,7 @@ typedef struct
 
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
+#pragma opt_propagation off
 void fn_8013E0D0(int* obj, u8* st)
 {
     GameObject* gobj = (GameObject*)obj;
@@ -455,7 +461,12 @@ void fn_8013E0D0(int* obj, u8* st)
             }
             Sfx_RemoveLoopedObjectSoundPtrIntLegacy((int*)gobj, SFXTRIG_trpopn_c);
             TRICKY_BARK((int*)gobj, 0x29d, 0);
-            t->stateFlags &= ~TRICKY_STATE_RESET_FLAG_10;
+            {
+                u32 m;
+                u32 f2 = t->stateFlags;
+                m = ~TRICKY_STATE_RESET_FLAG_10;
+                t->stateFlags = f2 & m;
+            }
             t->substate = ANIMOBJD2_SUBSTATE_ACQUIRE;
         }
         break;
@@ -574,6 +585,7 @@ void fn_8013E0D0(int* obj, u8* st)
     }
     }
 }
+#pragma opt_propagation reset
 #pragma opt_common_subs reset
 #pragma opt_loop_invariants reset
 
