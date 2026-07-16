@@ -28,3 +28,13 @@ Verified diagnoses from the matching fleets; each blocked on authority outside a
 - renderSceneGeometry (lightmap 97.59): the required `opt_propagation off` (for the row chain) forces a
   2-instr loop guard the target lacks; propagation-on matches the unroll but opens a worse web rotation.
   Current form is the local optimum; both configs verified.
+
+## Added 2026-07-15 (wall-audit round)
+- fn_801FD6B4 (main.c, 99.36): target has a redundant `frsp f0,f1` on the mathSinf result + bare stfs —
+  strong evidence the original TU declared `double mathSinf(double)` (the CLAUDE.md f32-vs-double note in
+  reverse). Not expressible under the shared `float mathSinf(float)` header without a tree-wide proto
+  decision. Seven source forms reproduce the frsp but never target's fresh-dest late placement.
+- Coupled-constraint wall class (dll_8D_func03, ObjSeq_onMapSetup scratch-coalesce, gameTextGet,
+  mapSetup, viewportEffectFn_8000e380): register coloring is fixable by decl order OR init-emission order
+  but the two constraints oppose each other vs target — suggests slightly different source-level constructs
+  in the original TUs rather than allocator noise.
