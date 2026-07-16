@@ -914,7 +914,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         }
         if (ch == 0x20)
         {
-            x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
+            x = lbl_803DC9A0 * (f32)(g->advanceX + (g->width + g->offsetX)) + x;
             x = x + spaceExtra;
             continue;
         }
@@ -972,8 +972,8 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             }
             if (g->lang == GAMETEXT_FONT_FACE)
             {
-                int iw = g->advanceX + g->width + g->offsetX;
-                int ih = g->advanceY + g->height + g->offsetY;
+                int iw = g->advanceX + (g->width + g->offsetX);
+                int ih = g->advanceY + (g->height + g->offsetY);
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
                 gxSetScissorRect(0, 0, *(s16*)(winBase + 0xfd4), *(s16*)(winBase + 0xfd6),
                                  *(s16*)(winBase + 0xfd4) + *(u16*)(winBase + 0xfc8),
@@ -1059,7 +1059,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
         if ((int)g->lang != GAMETEXT_FONT_FACE)
         {
-            x = lbl_803DC9A0 * (f32)(g->width + (g->advanceX + g->offsetX)) + x;
+            x = lbl_803DC9A0 * (f32)(g->advanceX + (g->width + g->offsetX)) + x;
         }
     }
 }
