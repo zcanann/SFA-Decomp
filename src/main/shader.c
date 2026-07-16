@@ -1262,7 +1262,6 @@ void initMaps(void)
     void* data;
     int total;
     int i;
-    int i2;
     int ofs;
     int idx;
     char* e;
@@ -1291,21 +1290,21 @@ void initMaps(void)
         ofs += 80;
         idx += 8;
     }
-    i2 = 0;
+    i = 0;
     total /= 12;
-    while (i2 < total && *(s16*)((char*)data + i2 * 12 + 6) > -1)
+    while (i < total && *(s16*)((char*)data + i * 12 + 6) > -1)
     {
-        *(s8*)((char*)gShaderMapRomBuffers[3] + *(s16*)((char*)data + i2 * 12 + 6)) =
-            (s8)*(s16*)((char*)data + i2 * 12 + 4);
-        mapInitSetRects((s16*)((char*)gShaderMapRomBuffers[1] + *(s16*)((char*)data + i2 * 12 + 6) * 10),
-                        (u8*)((char*)gShaderMapRomBuffers[4] + *(s16*)((char*)data + i2 * 12 + 6) * 64),
-                        *(s16*)((char*)data + i2 * 12), *(s16*)((char*)data + i2 * 12 + 2),
-                        *(s16*)((char*)data + i2 * 12 + 6));
-        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] =
-            *(s16*)((char*)data + i2 * 12 + 8);
-        ((s16*)gShaderMapRomBuffers[2])[(*(s16*)((char*)data + i2 * 12 + 6) << 1) + 1] =
-            *(s16*)((char*)data + i2 * 12 + 0xa);
-        i2++;
+        *(s8*)((char*)gShaderMapRomBuffers[3] + *(s16*)((char*)data + i * 12 + 6)) =
+            (s8)*(s16*)((char*)data + i * 12 + 4);
+        mapInitSetRects((s16*)((char*)gShaderMapRomBuffers[1] + *(s16*)((char*)data + i * 12 + 6) * 10),
+                        (u8*)((char*)gShaderMapRomBuffers[4] + *(s16*)((char*)data + i * 12 + 6) * 64),
+                        *(s16*)((char*)data + i * 12), *(s16*)((char*)data + i * 12 + 2),
+                        *(s16*)((char*)data + i * 12 + 6));
+        ((s16*)gShaderMapRomBuffers[2])[*(s16*)((char*)data + i * 12 + 6) << 1] =
+            *(s16*)((char*)data + i * 12 + 8);
+        ((s16*)gShaderMapRomBuffers[2])[(*(s16*)((char*)data + i * 12 + 6) << 1) + 1] =
+            *(s16*)((char*)data + i * 12 + 0xa);
+        i++;
     }
     curMapType = 0;
     lbl_803DCEB6 = 0;
