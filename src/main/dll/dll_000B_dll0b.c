@@ -1622,7 +1622,7 @@ void dll_0B_func05(void)
     int k;
     void* res;
     s16 ang[3];
-    f32 q[4];
+    volatile f32 q[4];
     BoneSpawnData tmpl;
     int objCount;
     int objIdx;
@@ -1797,7 +1797,7 @@ void dll_0B_func05(void)
                                     (*gPartfxInterface)
                                         ->spawnObject(*(int**)&((ModgfxEffectSlot*)eff)->sourceObj,
                                                       (int)((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posZ, &tmpl,
-                                                      0x200001, -1, q);
+                                                      0x200001, -1, 0);
                                 }
                                 ((ModgfxEffectSlot*)eff)->pendingFrameIdx =
                                     ((ModgfxPendingSpawn*)(E9 + emIdx * 0x18))->posY;
