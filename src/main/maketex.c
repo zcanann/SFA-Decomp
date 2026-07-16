@@ -557,6 +557,7 @@ void loadMemCardImages(void)
     u64 x2[1];
     u64 a2[1];
 
+    a[0] = 0;
     if (lbl_803DC968 != 0)
     {
         *(u8*)(gSaveCardImageBuffer + 0x00) = 0x83;
@@ -629,8 +630,8 @@ void loadMemCardImages(void)
         DVDClose(&fi);
     }
     p = (u64*)gSaveCardImageBuffer;
-    a[0] = 1;
     x[0] = 0;
+    a[0] = 1;
     for (i[0] = (int)x[0]; (int)i[0] < 0x400; i[0]++)
     {
         x[0] = x[0] ^ p[i[0]];
