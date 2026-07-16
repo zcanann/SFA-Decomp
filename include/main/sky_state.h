@@ -10,12 +10,28 @@
  * read/write evidence in sky.c are named; everything else is padded.
  */
 typedef struct SkyLight {
-    u8 unk00[0x64];
+    u8 unk00[0x58];
+    u8 ambientR;
+    u8 ambientG;
+    u8 ambientB;
+    u8 unk5B;
+    u8 overrideAmbientR;
+    u8 overrideAmbientG;
+    u8 overrideAmbientB;
+    u8 unk5F;
+    u8 scaledAmbientR;
+    u8 scaledAmbientG;
+    u8 scaledAmbientB;
+    u8 unk63;
     u8 unk64;
-    u8 unk65[7];
-    u8 unk6C;
-    u8 unk6D;
-    u8 unk6E;
+    u8 unk65[3];
+    u8 lightR;
+    u8 lightG;
+    u8 lightB;
+    u8 unk6B;
+    u8 overrideLightR;
+    u8 overrideLightG;
+    u8 overrideLightB;
     u8 unk6F;
     f32 directionX;
     f32 directionY;
@@ -23,9 +39,13 @@ typedef struct SkyLight {
     f32 moonDirectionX;
     f32 moonDirectionY;
     f32 moonDirectionZ;
-    u8 unk88[0x14];
+    f32 overrideDirectionX;
+    f32 overrideDirectionY;
+    f32 overrideDirectionZ;
+    u8 unk94[8];
     f32 unk9C;
-    u8 unkA0[4];
+    u8 blendAlpha;
+    u8 unkA1[3];
 } SkyLight;
 
 STATIC_ASSERT(sizeof(SkyLight) == 0xA4);
