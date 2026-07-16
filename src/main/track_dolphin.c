@@ -2867,8 +2867,10 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
         {
             f32 fbd = b[1] * p[1];
             f32 fad = a[1] * p[1];
-            fb = (fbd + (b0 = b[0]) * p[0] + b[2] * p[2] + p[3]) - y;
-            fa = (fad + (a0 = a[0]) * p[0] + a[2] * p[2] + p[3]) - y;
+            b0 = b[0];
+            fb = (fbd + b0 * p[0] + b[2] * p[2] + p[3]) - y;
+            a0 = a[0];
+            fa = (fad + a0 * p[0] + a[2] * p[2] + p[3]) - y;
         }
         if (fa != fb)
             scale = fa / (fa - fb);
@@ -2947,10 +2949,12 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
                 b[0] = t * p[0] + b[0];
                 b[1] = t * p[1] + b[1];
                 b[2] = t * p[2] + b[2];
+                goto done;
+            }
+            case 9:
+            case 0xa:
                 break;
             }
-            case 0xb:
-            default:
             {
                 f32 dotL = b[1] * p[1];
                 f32 dot = dotL + b[0] * p[0] + b[2] * p[2] + p[3];
@@ -2963,11 +2967,10 @@ int fn_800660C8(f32* a, f32* b, f32* c, f32* p, u8 type, f32 f1p, f32 y)
                     d = y / d;
                     b[1] = b[1] + d;
                 }
-                break;
-            }
             }
         }
     }
+done:
     return 1;
 }
 #pragma opt_common_subs reset
