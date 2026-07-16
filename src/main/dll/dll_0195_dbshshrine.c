@@ -8,6 +8,8 @@
  * level/map unlocks and toggles the attached point light.
  */
 #include "main/dll/dll_0195_dbshshrine.h"
+#include "main/vecmath_distance_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/player_api.h"
 #include "main/dll/objfx_api.h"
 #include "main/frame_timing.h"
@@ -63,10 +65,87 @@
 #define MAP_EVENT_GET_ANIM(mapId, eventId)          (*gMapEventInterface)->getObjGroupStatus((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 
-extern f32 lbl_803E50DC;
-extern f32 lbl_803E50D8;
+__declspec(section ".sdata2") f32 lbl_803E50A0 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E50A4 = 128.0f;
+__declspec(section ".sdata2") f32 lbl_803E50A8 = 192.0f;
+__declspec(section ".sdata2") f32 lbl_803E50AC = 20.0f;
+__declspec(section ".sdata2") f32 gEcShCupPi = 3.1415927f;
+__declspec(section ".sdata2") f32 gEcShCupAngleToRadDivisor = 32768.0f;
+__declspec(section ".sdata2") f32 lbl_803E50B8 = 600.0f;
+__declspec(section ".sdata2") f32 lbl_803E50BC = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E50C0 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803E50C4 = 30.0f;
+__declspec(section ".sdata2") f32 lbl_803E50C8 = 255.0f;
 
-extern void fn_801C8B68(DbshShrineObject* obj);
+#pragma dont_inline on
+void fn_801C8B68(int obj)
+{
+    register int self = obj;
+    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
+    register int state = *(int*)&((GameObject*)self)->extra;
+    GameObject* player = Obj_GetPlayerObject();
+    ObjAnimEventList local_var;
+    f32 dist;
+    f32 angA, angB;
+    int delta;
+
+    if ((((GameObject*)self)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+    {
+        ((GameObject*)self)->anim.rotX = 0;
+        ((GameObject*)self)->anim.localPosY = *(float*)(state2 + 0xc);
+        return;
+    }
+
+    *(short*)(state + 0xe) = (short)((int)*(short*)(state + 0xe) + (int)(lbl_803E50A0 * timeDelta));
+    *(short*)(state + 0x10) = (short)((int)*(short*)(state + 0x10) + (int)(lbl_803E50A4 * timeDelta));
+    *(short*)(state + 0x12) = (short)((int)*(short*)(state + 0x12) + (int)(lbl_803E50A8 * timeDelta));
+
+    ((GameObject*)self)->anim.localPosY =
+        lbl_803E50AC + (*(float*)(state2 + 0xc) +
+                        mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor));
+    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x10)) / gEcShCupAngleToRadDivisor);
+    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
+    angB = angB + angA;
+    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * angB);
+    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x12)) / gEcShCupAngleToRadDivisor);
+    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
+    angB = angB + angA;
+    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * angB);
+
+    ObjAnim_AdvanceCurrentMove(self, lbl_803E50BC, timeDelta,
+                                                                 (ObjAnimEventList*)&local_var);
+
+    if (player == NULL)
+        return;
+
+    {
+        float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
+        float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
+        int ang = (u16)getAngle(dx, dz);
+        delta = ang - (int)(u16)((GameObject*)self)->anim.rotX;
+        if (delta > 0x8000)
+            delta -= 0xffff;
+        if (delta < -0x8000)
+            delta += 0xffff;
+        ((GameObject*)self)->anim.rotX =
+            (short)((int)*(s16*)(int)(GameObject*)self + (int)((f32)delta * timeDelta / lbl_803E50C0));
+    }
+    dist = Vec_xzDistance((f32*)((u8*)self + 24), &player->anim.worldPosX);
+    if (dist <= lbl_803E50C4)
+    {
+        ((GameObject*)self)->anim.alpha = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
+    }
+    else
+    {
+        ((GameObject*)self)->anim.alpha = 0xff;
+    }
+}
+#pragma dont_inline reset
+
+__declspec(section ".sdata2") f32 lbl_803E50D8 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E50DC = 0.0f;
+#pragma explicit_zero_data reset
 
 int DBSH_Shrine_SeqFn(int obj, u32 unused, ObjAnimUpdateState* animUpdate)
 {
@@ -203,7 +282,7 @@ void dbsh_shrine_update(DbshShrineObject* obj)
         }
     }
 
-    fn_801C8B68(obj);
+    fn_801C8B68((int)obj);
     SCGameBitLatch_Update(&runtime->latch, 2, -1, -1, DBSH_SHRINE_GB_APPROACH, 0xe);
     SCGameBitLatch_UpdateInverted(&runtime->latch, 1, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 8);
     SCGameBitLatch_Update(&runtime->latch, 4, -1, -1, DBSH_SHRINE_GB_SCENE_BLOCK, 0xc4);

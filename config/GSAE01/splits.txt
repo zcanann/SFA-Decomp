@@ -2473,12 +2473,14 @@ main/dll/dll_0194_gpshscene.c:
 	.text       start:0x801C82C8 end:0x801C835C
 
 main/dll/dll_0190_ecshcup.c:
-	.text       start:0x801C835C end:0x801C8EBC
+	.text       start:0x801C835C end:0x801C8B68
 	.rodata     start:0x802C23B8 end:0x802C23C4
 	.sbss       start:0x803DDBC8 end:0x803DDBD0
+	.sdata2     start:0x803E5060 end:0x803E50A0
 
 main/dll/dll_0195_dbshshrine.c:
-	.text       start:0x801C8EBC end:0x801C9660
+	.text       start:0x801C8B68 end:0x801C9660
+	.sdata2     start:0x803E50A0 end:0x803E50E0
 
 main/dll/dll_0196_dbshsymbol.c:
 	.text       start:0x801C9660 end:0x801C9E54

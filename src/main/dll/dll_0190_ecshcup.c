@@ -1,4 +1,4 @@
-/* DLL 0x190 - ECSHCup [801C835C-801C83D0) */
+/* DLL 0x190 - ECSHCup [801C835C-801C8B68) */
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/vecmath_distance_api.h"
@@ -52,54 +52,46 @@ typedef struct
 #define ECSHCUP_PARTFX_TRANSITION 0x271
 #define ECSHCUP_HIT_VOLUME_SLOT   10
 
-extern const f32 lbl_803E5060;
-extern const f32 lbl_803E5064;
-extern const f32 lbl_803E5068;
-extern const f32 lbl_803E506C;
-extern const f32 lbl_803E5070;
-extern const f32 lbl_803E5074;
-extern const f32 lbl_803E5078;
-extern const f32 lbl_803E507C;
-extern const f32 lbl_803E5080;
-extern const f32 lbl_803E5084;
-extern const f32 lbl_803E5088;
+__declspec(section ".sdata2") const f32 lbl_803E5060 = 1.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5064 = 500.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") const f32 lbl_803E5068 = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") const f32 lbl_803E506C = 10.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5070 = 100.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5074 = 0.02f;
+__declspec(section ".sdata2") const f32 lbl_803E5078 = 0.5f;
+__declspec(section ".sdata2") const f32 lbl_803E507C = 2.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5080 = 255.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5084 = 50.0f;
+__declspec(section ".sdata2") const f32 lbl_803E5088 = 30.0f;
 u32 gEcShCupNearestObject;
 const CupVec3 lbl_802C23B8 = {0.0f, 0.0f, 0.0f};
-extern const f32 lbl_803E50A0;
-extern const f32 lbl_803E50A4;
-extern const f32 lbl_803E50A8;
-extern const f32 lbl_803E50AC;
-extern const f32 gEcShCupPi;
-extern const f32 gEcShCupAngleToRadDivisor;
-extern const f32 lbl_803E50B8;
-extern const f32 lbl_803E50BC;
-extern const f32 lbl_803E50C0;
-extern const f32 lbl_803E50C4;
-extern const f32 lbl_803E50C8;
-
-void ecsh_cup_hitDetect(void)
-{
-}
 
 int ecsh_cup_getExtraSize(void)
 {
     return 0x30;
 }
+
 int ecsh_cup_getObjectTypeId(void)
 {
     return 0x0;
+}
+
+void ecsh_cup_free(int* obj)
+{
+    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5060);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, *(f32*)&lbl_803E5060);
 }
 
-void ecsh_cup_free(int* obj)
+void ecsh_cup_hitDetect(void)
 {
-    (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
 void ecsh_cup_update(short* obj)
@@ -114,7 +106,7 @@ void ecsh_cup_update(short* obj)
     f32 fade;
 
     v = lbl_802C23B8;
-    dist = lbl_803E5064;
+    dist = *(f32*)&lbl_803E5064;
     mode = -1;
     buf[0] = 0;
     if (gEcShCupNearestObject == 0)
@@ -128,9 +120,9 @@ void ecsh_cup_update(short* obj)
         if (mode != 6)
         {
             state->spawnTimer -= timeDelta;
-            if (state->spawnTimer <= lbl_803E5068)
+            if (state->spawnTimer <= *(f32*)&lbl_803E5068)
             {
-                state->spawnTimer = lbl_803E506C;
+                state->spawnTimer = *(f32*)&lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7)
                 {
                     (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_IDLE, NULL, 0, -1, NULL);
@@ -138,12 +130,12 @@ void ecsh_cup_update(short* obj)
             }
         }
         state->bobTimer -= timeDelta;
-        if (state->bobTimer <= lbl_803E5068)
+        if (state->bobTimer <= *(f32*)&lbl_803E5068)
         {
             state->bobDir = (u32)state->bobDir * -1;
-            state->bobTimer = lbl_803E5070;
+            state->bobTimer = *(f32*)&lbl_803E5070;
         }
-        ((GameObject*)obj)->anim.localPosY = lbl_803E5074 * state->bobDir + ((GameObject*)obj)->anim.localPosY;
+        ((GameObject*)obj)->anim.localPosY = *(f32*)&lbl_803E5074 * state->bobDir + ((GameObject*)obj)->anim.localPosY;
         if (mode == 1 && state->currentMode == 1)
         {
             ((GameObject*)obj)->anim.localPosX = state->velX * timeDelta + ((GameObject*)obj)->anim.localPosX;
@@ -163,34 +155,34 @@ void ecsh_cup_update(short* obj)
         {
             if (((GameObject*)obj)->anim.localPosY < state->spawnPosY)
             {
-                ((GameObject*)obj)->anim.localPosY = lbl_803E5078 * timeDelta + ((GameObject*)obj)->anim.localPosY;
+                ((GameObject*)obj)->anim.localPosY = *(f32*)&lbl_803E5078 * timeDelta + ((GameObject*)obj)->anim.localPosY;
             }
             if (*(u8*)((char*)obj + 0x37) != 0xff)
             {
                 fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
-                fade = lbl_803E507C * timeDelta + fade;
-                if (fade >= lbl_803E5080)
+                fade = *(f32*)&lbl_803E507C * timeDelta + fade;
+                if (fade >= *(f32*)&lbl_803E5080)
                 {
-                    fade = lbl_803E5080;
+                    fade = *(f32*)&lbl_803E5080;
                 }
                 *(u8*)((char*)obj + 0x37) = (u8)fade;
             }
             state->spawnTimer -= timeDelta;
-            if (state->spawnTimer <= lbl_803E5068)
+            if (state->spawnTimer <= *(f32*)&lbl_803E5068)
             {
-                state->spawnTimer = lbl_803E506C;
+                state->spawnTimer = *(f32*)&lbl_803E506C;
                 (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
             }
         }
         else if (m == 7)
         {
-            if (((GameObject*)obj)->anim.localPosY > state->spawnPosY - lbl_803E5084)
+            if (((GameObject*)obj)->anim.localPosY > state->spawnPosY - *(f32*)&lbl_803E5084)
             {
-                ((GameObject*)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject*)obj)->anim.localPosY);
+                ((GameObject*)obj)->anim.localPosY = -(*(f32*)&lbl_803E5078 * timeDelta - ((GameObject*)obj)->anim.localPosY);
                 state->spawnTimer -= timeDelta;
-                if (state->spawnTimer <= lbl_803E5068)
+                if (state->spawnTimer <= *(f32*)&lbl_803E5068)
                 {
-                    state->spawnTimer = lbl_803E506C;
+                    state->spawnTimer = *(f32*)&lbl_803E506C;
                     if (mode != 3)
                     {
                         (*gPartfxInterface)->spawnObject(obj, ECSHCUP_PARTFX_TRANSITION, NULL, 0, -1, NULL);
@@ -200,10 +192,10 @@ void ecsh_cup_update(short* obj)
             if (*(u8*)((char*)obj + 0x37) != 0)
             {
                 fade = (f32)(u32) * (u8*)((char*)obj + 0x37);
-                fade = fade - lbl_803E507C * timeDelta;
-                if (fade <= lbl_803E5068)
+                fade = fade - *(f32*)&lbl_803E507C * timeDelta;
+                if (fade <= *(f32*)&lbl_803E5068)
                 {
-                    fade = lbl_803E5068;
+                    fade = *(f32*)&lbl_803E5068;
                 }
                 *(u8*)((char*)obj + 0x37) = (u8)fade;
             }
@@ -220,22 +212,22 @@ void ecsh_cup_update(short* obj)
         {
             (*(void (*)(int, f32*, f32*)) *
              (int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x24))((u8)state->slotId, &v.x, &v.z);
-            state->velX = (v.x - ((GameObject*)obj)->anim.localPosX) / lbl_803E5070;
-            state->velZ = (v.z - ((GameObject*)obj)->anim.localPosZ) / lbl_803E5070;
+            state->velX = (v.x - ((GameObject*)obj)->anim.localPosX) / *(f32*)&lbl_803E5070;
+            state->velZ = (v.z - ((GameObject*)obj)->anim.localPosZ) / *(f32*)&lbl_803E5070;
             state->startPosX = ((GameObject*)obj)->anim.localPosX;
             state->startPosZ = ((GameObject*)obj)->anim.localPosZ;
             state->currentMode = mode;
         }
         else if (m == 0 && m != state->currentMode)
         {
-            state->velX = lbl_803E5068;
-            state->velZ = lbl_803E5068;
+            state->velX = *(f32*)&lbl_803E5068;
+            state->velZ = *(f32*)&lbl_803E5068;
             state->currentMode = mode;
         }
         else if (m == 2 && m != state->currentMode)
         {
-            state->velX = lbl_803E5068;
-            state->velZ = lbl_803E5068;
+            state->velX = *(f32*)&lbl_803E5068;
+            state->velZ = *(f32*)&lbl_803E5068;
             (*(void (*)(int, f32, f32)) * (int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x2c))(
                 (u8)state->slotId, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ);
             state->currentMode = mode;
@@ -256,7 +248,7 @@ void ecsh_cup_update(short* obj)
         {
             if (player != NULL)
             {
-                if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) < lbl_803E5088)
+                if (Vec_distance(&((GameObject*)obj)->anim.worldPosX, &player->anim.worldPosX) < *(f32*)&lbl_803E5088)
                 {
                     (*(void (*)(int)) *
                      (int*)(*(int*)(*(int*)(gEcShCupNearestObject + 0x68)) + 0x30))((u8)state->slotId);
@@ -270,10 +262,6 @@ void ecsh_cup_update(short* obj)
     }
 }
 
-void ecsh_cup_release(void)
-{
-}
-
 void ecsh_cup_init(int obj, int def)
 {
     int state;
@@ -281,15 +269,15 @@ void ecsh_cup_init(int obj, int def)
     EcshCupPlacement* p = (EcshCupPlacement*)def;
 
     state = *(int*)&((GameObject*)obj)->extra;
-    dist = lbl_803E5064;
+    dist = *(f32*)&lbl_803E5064;
     gEcShCupNearestObject = 0;
     ((EcshCupState*)state)->startPosX = ((GameObject*)obj)->anim.localPosX;
     ((EcshCupState*)state)->startPosY = ((GameObject*)obj)->anim.localPosY;
     ((EcshCupState*)state)->startPosZ = ((GameObject*)obj)->anim.localPosZ;
     ((EcshCupState*)state)->spawnPosY = ((GameObject*)obj)->anim.localPosY;
-    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - lbl_803E5084;
+    ((GameObject*)obj)->anim.localPosY = ((GameObject*)obj)->anim.localPosY - *(f32*)&lbl_803E5084;
     {
-        f32 fz = lbl_803E5068;
+        f32 fz = *(f32*)&lbl_803E5068;
         ((EcshCupState*)state)->velX = fz;
         ((EcshCupState*)state)->velY = fz;
         ((EcshCupState*)state)->velZ = fz;
@@ -300,7 +288,7 @@ void ecsh_cup_init(int obj, int def)
     ((EcshCupState*)state)->spinRate = randomGetRange(-0x320, 0x320);
     *(u8*)&((EcshCupState*)state)->bobDir = 1;
     *(u8*)(obj + 0x37) = 0;
-    ((EcshCupState*)state)->spawnTimer = lbl_803E5068;
+    ((EcshCupState*)state)->spawnTimer = *(f32*)&lbl_803E5068;
     if (gEcShCupNearestObject == 0)
     {
         gEcShCupNearestObject = ObjGroup_FindNearestObject(ECSHCUP_TARGET_OBJGROUP, obj, &dist);
@@ -310,69 +298,10 @@ void ecsh_cup_init(int obj, int def)
     ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
 }
 
-void ecsh_cup_initialise(void)
+void ecsh_cup_release(void)
 {
 }
 
-void fn_801C8B68(int obj)
+void ecsh_cup_initialise(void)
 {
-    register int self = obj;
-    register int state2 = *(int*)&((GameObject*)self)->anim.placementData;
-    register int state = *(int*)&((GameObject*)self)->extra;
-    GameObject* player = Obj_GetPlayerObject();
-    ObjAnimEventList local_var;
-    f32 dist;
-    f32 angA, angB;
-    int delta;
-
-    if ((((GameObject*)self)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
-    {
-        ((GameObject*)self)->anim.rotX = 0;
-        ((GameObject*)self)->anim.localPosY = *(float*)(state2 + 0xc);
-        return;
-    }
-
-    *(short*)(state + 0xe) = (short)((int)*(short*)(state + 0xe) + (int)(lbl_803E50A0 * timeDelta));
-    *(short*)(state + 0x10) = (short)((int)*(short*)(state + 0x10) + (int)(lbl_803E50A4 * timeDelta));
-    *(short*)(state + 0x12) = (short)((int)*(short*)(state + 0x12) + (int)(lbl_803E50A8 * timeDelta));
-
-    ((GameObject*)self)->anim.localPosY =
-        lbl_803E50AC + (*(float*)(state2 + 0xc) +
-                        mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor));
-    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x10)) / gEcShCupAngleToRadDivisor);
-    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
-    angB = angB + angA;
-    *(s16*)&((GameObject*)self)->anim.rotZ = (lbl_803E50B8 * angB);
-    angA = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0x12)) / gEcShCupAngleToRadDivisor);
-    angB = mathSinf((gEcShCupPi * (f32)(s32) * (short*)(state + 0xe)) / gEcShCupAngleToRadDivisor);
-    angB = angB + angA;
-    *(s16*)&((GameObject*)self)->anim.rotY = (lbl_803E50B8 * angB);
-
-    ObjAnim_AdvanceCurrentMove(self, lbl_803E50BC, timeDelta,
-                                                                 (ObjAnimEventList*)&local_var);
-
-    if (player == NULL)
-        return;
-
-    {
-        float dx = ((GameObject*)self)->anim.worldPosX - player->anim.worldPosX;
-        float dz = ((GameObject*)self)->anim.worldPosZ - player->anim.worldPosZ;
-        int ang = (u16)getAngle(dx, dz);
-        delta = ang - (int)(u16)((GameObject*)self)->anim.rotX;
-        if (delta > 0x8000)
-            delta -= 0xffff;
-        if (delta < -0x8000)
-            delta += 0xffff;
-        ((GameObject*)self)->anim.rotX =
-            (short)((int)*(s16*)(int)(GameObject*)self + (int)((f32)delta * timeDelta / lbl_803E50C0));
-    }
-    dist = Vec_xzDistance((f32*)((u8*)self + 24), &player->anim.worldPosX);
-    if (dist <= lbl_803E50C4)
-    {
-        ((GameObject*)self)->anim.alpha = (u8)(int)(lbl_803E50C8 * (dist / lbl_803E50C4));
-    }
-    else
-    {
-        ((GameObject*)self)->anim.alpha = 0xff;
-    }
 }
