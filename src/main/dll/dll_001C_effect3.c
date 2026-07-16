@@ -49,13 +49,14 @@ static inline PartFxSpawnParams* Effect3_getDefaultSpawnParams(void)
 int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsIn, u32 spawnFlags, u8 modelId,
                    f32* extraArgs)
 {
-    PartFxSpawnParams* spawnParams = spawnParamsIn;
-    int spawnResult;
+    u32 hasAttachedSource;
     PartFxSpawn cfg;
+    PartFxSpawnParams* spawnParams = spawnParamsIn;
 
     if (sourceObj == 0)
         return -1;
-    if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
+    hasAttachedSource = spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE;
+    if (hasAttachedSource != 0)
     {
         if (spawnParams == 0)
             return -1;
@@ -518,7 +519,7 @@ int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsI
         cfg.behaviorFlags ^= 2LL;
     if ((cfg.behaviorFlags & 1) != 0)
     {
-        if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0)
+        if (hasAttachedSource != 0)
         {
             cfg.startPosX += cfg.sourcePosY;
             cfg.startPosY += cfg.sourcePosZ;
@@ -534,8 +535,7 @@ int Effect3_func04(s16* sourceObj, int effectId, PartFxSpawnParams* spawnParamsI
             }
         }
     }
-    spawnResult = (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
-    return spawnResult;
+    return (*gExpgfxInterface)->spawnEffect(&cfg, -1, effectId, 0);
 }
 void Effect3_func05_nop(void)
 {
