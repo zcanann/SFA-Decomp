@@ -6352,7 +6352,7 @@ int playerStateClimbWall(GameObject* obj, int state)
 {
     int mask;
     ObjModel* jt;
-    int inner;
+    register int inner;
     int b6;
     int b7;
     int b8;
@@ -16272,9 +16272,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
         }
         else
         {
+            f32 dx2;
             f32 dz2;
             f32 dist;
-            f32 dx2;
             f32 d2;
             if (c != 1)
             {
@@ -16427,8 +16427,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 if (found != 0)
                 {
                     ((PlayerState*)inner)->unk6A4 = 1.0f;
-                    ((PlayerState*)inner)->unk6A8 = ((PlayerState*)inner)->savedPosY;
-                    ((PlayerState*)inner)->unk6AC = ((PlayerState*)inner)->savedPosZ;
+                    ((PlayerState*)inner)->unk6A8 = ((PlayerState*)inner)->savedPosX;
+                    ((PlayerState*)inner)->unk6AC = ((PlayerState*)inner)->savedPosY;
                     ((PlayerState*)inner)->unk6B0 = ((PlayerState*)inner)->savedPosZ;
                     va = (int)((PlayerState*)inner)->focusObject;
                     (*(void (*)(int, int)) * (int*)((char*)*(int*)(*(int*)(va + 0x68)) + 0x3c))(va, 2);
@@ -16804,7 +16804,9 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 0x2b:
             {
                 register u32 m;
-                ((GameObject*)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
+                m = ((GameObject*)obj)->anim.modelState->flags;
+                m &= ~OBJ_MODEL_STATE_SHADOW_VISIBLE;
+                ((GameObject*)obj)->anim.modelState->flags = m;
                 break;
             }
             case 0x2c:
