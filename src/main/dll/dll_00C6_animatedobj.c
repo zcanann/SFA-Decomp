@@ -147,51 +147,55 @@ void animatedobj_free(int* obj, int seqFlag)
     }
 }
 
-
-void animatedobj_init(int* obj, int* params)
+void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state;
-    int f4;
-    objSetSlot((GameObject*)obj, 0x64);
-    state = ((GameObject*)obj)->extra;
-    ((AnimatedobjState*)state)->unk6A = ((AnimatedobjPlacement*)params)->unk1A;
-    ((AnimatedobjState*)state)->unk6E = -1;
+    f32 mWorld[12];
+    f32 mTransPlayer[12];
+    f32 mWorldCombined[12];
+    f32 mTransNeg[12];
+    f32 mRotY[12];
+    f32 mRotZ[12];
+    f32 mTransPos[12];
+    f32 mCam[12];
+    f32 mA[12];
+    f32 mB[12];
+    f32 mC[12];
+    f32 mD[12];
+    f32 mFinal[12];
+
+    ObjSeqState* seq = ((GameObject*)obj)->extra;
+    if ((seq->stateFlags & 4) != 0)
     {
-        f32 d = lbl_803E3228;
-        ((AnimatedobjState*)state)->unk24 = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
+        int* prm;
+        s16* cam;
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, mWorld, 0);
+        prm = *(int**)&((GameObject*)obj)->anim.placementData;
+        PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement*)prm)->posX - playerMapOffsetX),
+                   -((AnimatedobjPlacement*)prm)->posY,
+                   -(((AnimatedobjPlacement*)prm)->posZ - playerMapOffsetZ));
+        PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
+        cam = (s16*)(*gCameraInterface)->getCamera();
+        ((GameObject*)cam)->anim.rotY += 0x8000;
+        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E3228;
+        Obj_BuildWorldTransformMatrix((GameObject*)cam, mCam, 0);
+        ((GameObject*)cam)->anim.rotY += 0x8000;
+        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E322C;
+        PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
+        PSMTXRotRad(mRotY, 'y', lbl_803E3230);
+        PSMTXRotRad(mRotZ, 'z', lbl_803E3230);
+        PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
+        PSMTXConcat(mTransNeg, mCam, mA);
+        PSMTXConcat(mRotY, mA, mB);
+        PSMTXConcat(mRotZ, mB, mC);
+        PSMTXConcat(mTransPos, mC, mD);
+        PSMTXConcat(mD, mWorldCombined, mFinal);
+        objSetMtxFn_800412d4((u32)mFinal);
+        objRenderModelPtrLegacy(obj);
     }
-    ((AnimatedobjState*)state)->unk28 = -1;
-    ((AnimatedobjState*)state)->unk98 = 0;
-    ((AnimatedobjState*)state)->unk94 = 0;
-    ((AnimatedobjState*)state)->unk116 = 0;
-    ((AnimatedobjState*)state)->unk114 = 0;
-    ((AnimatedobjState*)state)->unkE8 = 0;
-    f4 = ((GameObject*)obj)->unkF4;
-    if (f4 == 0 && ((AnimatedobjPlacement*)params)->loadKey != 1)
+    else
     {
-        (*gObjectTriggerInterface)
-            ->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3228);
     }
-    else if (f4 != 0 && ((AnimatedobjPlacement*)params)->loadKey != f4 - 1)
-    {
-        (*gObjectTriggerInterface)->freeState((u8*)state);
-        if (((AnimatedobjPlacement*)params)->loadKey != -1)
-        {
-            (*gObjectTriggerInterface)
-                ->loadAnimData((u8*)state, (u8*)params);
-        }
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
-    }
-    {
-        ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
-        if (modelState != NULL)
-        {
-            modelState->shadowTintA = 0x64;
-            ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
-        }
-    }
-    Obj_SetModelRenderOpAlpha(obj, 0xff);
 }
 
 
@@ -283,55 +287,51 @@ void animatedobj_update(int* obj)
 }
 #pragma opt_loop_invariants reset
 
-void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    f32 mWorld[12];
-    f32 mTransPlayer[12];
-    f32 mWorldCombined[12];
-    f32 mTransNeg[12];
-    f32 mRotY[12];
-    f32 mRotZ[12];
-    f32 mTransPos[12];
-    f32 mCam[12];
-    f32 mA[12];
-    f32 mB[12];
-    f32 mC[12];
-    f32 mD[12];
-    f32 mFinal[12];
 
-    ObjSeqState* seq = ((GameObject*)obj)->extra;
-    if ((seq->stateFlags & 4) != 0)
+void animatedobj_init(int* obj, int* params)
+{
+    int* state;
+    int f4;
+    objSetSlot((GameObject*)obj, 0x64);
+    state = ((GameObject*)obj)->extra;
+    ((AnimatedobjState*)state)->unk6A = ((AnimatedobjPlacement*)params)->unk1A;
+    ((AnimatedobjState*)state)->unk6E = -1;
     {
-        int* prm;
-        s16* cam;
-        Obj_BuildWorldTransformMatrix((GameObject*)obj, mWorld, 0);
-        prm = *(int**)&((GameObject*)obj)->anim.placementData;
-        PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement*)prm)->posX - playerMapOffsetX),
-                   -((AnimatedobjPlacement*)prm)->posY,
-                   -(((AnimatedobjPlacement*)prm)->posZ - playerMapOffsetZ));
-        PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
-        cam = (s16*)(*gCameraInterface)->getCamera();
-        ((GameObject*)cam)->anim.rotY += 0x8000;
-        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E3228;
-        Obj_BuildWorldTransformMatrix((GameObject*)cam, mCam, 0);
-        ((GameObject*)cam)->anim.rotY += 0x8000;
-        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E322C;
-        PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
-        PSMTXRotRad(mRotY, 'y', lbl_803E3230);
-        PSMTXRotRad(mRotZ, 'z', lbl_803E3230);
-        PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
-        PSMTXConcat(mTransNeg, mCam, mA);
-        PSMTXConcat(mRotY, mA, mB);
-        PSMTXConcat(mRotZ, mB, mC);
-        PSMTXConcat(mTransPos, mC, mD);
-        PSMTXConcat(mD, mWorldCombined, mFinal);
-        objSetMtxFn_800412d4((u32)mFinal);
-        objRenderModelPtrLegacy(obj);
+        f32 d = lbl_803E3228;
+        ((AnimatedobjState*)state)->unk24 = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
     }
-    else
+    ((AnimatedobjState*)state)->unk28 = -1;
+    ((AnimatedobjState*)state)->unk98 = 0;
+    ((AnimatedobjState*)state)->unk94 = 0;
+    ((AnimatedobjState*)state)->unk116 = 0;
+    ((AnimatedobjState*)state)->unk114 = 0;
+    ((AnimatedobjState*)state)->unkE8 = 0;
+    f4 = ((GameObject*)obj)->unkF4;
+    if (f4 == 0 && ((AnimatedobjPlacement*)params)->loadKey != 1)
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3228);
+        (*gObjectTriggerInterface)
+            ->loadAnimData((u8*)state, (u8*)params);
+        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
+    else if (f4 != 0 && ((AnimatedobjPlacement*)params)->loadKey != f4 - 1)
+    {
+        (*gObjectTriggerInterface)->freeState((u8*)state);
+        if (((AnimatedobjPlacement*)params)->loadKey != -1)
+        {
+            (*gObjectTriggerInterface)
+                ->loadAnimData((u8*)state, (u8*)params);
+        }
+        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
+    }
+    {
+        ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
+        if (modelState != NULL)
+        {
+            modelState->shadowTintA = 0x64;
+            ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
+        }
+    }
+    Obj_SetModelRenderOpAlpha(obj, 0xff);
 }
 
 
