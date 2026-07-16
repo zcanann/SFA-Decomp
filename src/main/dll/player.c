@@ -18353,40 +18353,70 @@ int Lightfoot_UpdateTargetAnimationCycle(GameObject* obj, int state, f32 fv)
     return 0;
 }
 
+typedef struct LightfootButtonTimingState
+{
+    u8 pad00[0x18];
+    u16 phase;
+    u16 previousPhase2;
+    u16 previousPhase;
+    u8 pad1E[0x24 - 0x1E];
+    u16 animationIndex;
+    u8 pad26[0x2D - 0x26];
+    u8 difficulty;
+} LightfootButtonTimingState;
+STATIC_ASSERT(offsetof(LightfootButtonTimingState, phase) == 0x18);
+STATIC_ASSERT(offsetof(LightfootButtonTimingState, animationIndex) == 0x24);
+STATIC_ASSERT(offsetof(LightfootButtonTimingState, difficulty) == 0x2D);
+
+typedef struct LightfootChallengePlacement
+{
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 completionGameBit;
+    u8 pad1C[0x30 - 0x1C];
+    s16 activeGameBit;
+} LightfootChallengePlacement;
+STATIC_ASSERT(offsetof(LightfootChallengePlacement, completionGameBit) == 0x1A);
+STATIC_ASSERT(offsetof(LightfootChallengePlacement, activeGameBit) == 0x30);
+
+typedef void (*LightfootPlayerUpdateFn)(GameObject* obj, int state, f32 timeDelta, int flags);
+
 int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
 {
-    int q;
-    EmitCtrlTbl* t = (EmitCtrlTbl*)lbl_80334EE8;
-    int inner = *(int*)&obj->extra;
-    int data = *(int*)((char*)inner + 0x40c);
-    void* p = ((PlayerState*)state)->baddie.targetObj;
-    if (p != NULL)
+    LightfootChallengePlacement* placement;
+    EmitCtrlTbl* controls = (EmitCtrlTbl*)lbl_80334EE8;
+    GroundBaddieState* actor = obj->extra;
+    LightfootButtonTimingState* challenge = actor->control;
+    BaddieState* playerState = (BaddieState*)state;
+    GameObject* target = playerState->targetObj;
+    if (target != NULL)
     {
-        fn_8003B0D0(obj, (GameObject*)p, (CharacterEyeAnimState*)(inner + 0x3ac), 0x19);
+        fn_8003B0D0(obj, target, (CharacterEyeAnimState*)actor->eyeAnimState, 0x19);
     }
     if (obj->unkF8 == 0)
     {
-        *(u16*)((char*)data + 0x1a) = *(u16*)((char*)data + 0x1c);
-        *(u16*)((char*)data + 0x1c) = *(u16*)((char*)data + 0x18);
-        *(u16*)((char*)data + 0x18) += (u16)(lbl_803E81AC * timeDelta);
+        challenge->previousPhase2 = challenge->previousPhase;
+        challenge->previousPhase = challenge->phase;
+        challenge->phase += (u16)(lbl_803E81AC * timeDelta);
     }
-    if (*(u16*)((char*)data + 0x24) < 4)
+    if (challenge->animationIndex < 4)
     {
-        int v = (s16)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32) * (u16*)((char*)data + 0x18) / lbl_803E81B8));
-        int w = (int)(lbl_803E81B0 * t->scales[*(u8*)((char*)data + 0x2d)]);
+        int meterPosition =
+            (s16)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32)challenge->phase / lbl_803E81B8));
+        int successRange = (int)(lbl_803E81B0 * controls->scales[challenge->difficulty]);
         if (obj->unkF8 == 0)
         {
-            if ((s16) * (u16*)((char*)data + 0x18) * (s16) * (u16*)((char*)data + 0x1c) < 0)
+            if ((s16)challenge->phase * (s16)challenge->previousPhase < 0)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_lockon3_off);
             }
         }
         setAButtonIcon(6);
-        fearTestMeterSetRange(0x60, (u8)w, v);
-        if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x100) && obj->unkF8 == 0)
+        fearTestMeterSetRange(0x60, (u8)successRange, meterPosition);
+        if ((getButtonsJustPressed(0) & 0x100) && obj->unkF8 == 0)
         {
-            int a = v < 0 ? -v : v;
-            if (a <= w)
+            int distanceFromCenter = meterPosition < 0 ? -meterPosition : meterPosition;
+            if (distanceFromCenter <= successRange)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
                 obj->unkF8 = 2;
@@ -18403,54 +18433,53 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
     {
         fn_8011F6D4(0);
     }
-    if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0 ||
-        *(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+    if (*(s8*)&playerState->moveDone != 0 || *(s8*)&playerState->moveJustStartedA != 0)
     {
-        if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+        if (*(s8*)&playerState->moveJustStartedA != 0)
         {
-            int i;
-            u16* b;
-            *(u8*)((char*)data + 0x2d) = 0;
-            for (i = 0, b = t->bits; i < 8; b++, i++)
+            int index;
+            u16* gameBit;
+            challenge->difficulty = 0;
+            for (index = 0, gameBit = controls->bits; index < 8; gameBit++, index++)
             {
-                if (mainGetBit(*b) != 0)
+                if (mainGetBit(*gameBit) != 0)
                 {
-                    *(u8*)((char*)data + 0x2d) += 1;
+                    challenge->difficulty += 1;
                 }
             }
-            *(u16*)((char*)data + 0x18) = (u16)randomGetRange(0, 0xffff);
-            *(u16*)((char*)data + 0x1c) = *(u16*)((char*)data + 0x18);
-            *(u16*)((char*)data + 0x1a) = *(u16*)((char*)data + 0x1c);
+            challenge->phase = (u16)randomGetRange(0, 0xffff);
+            challenge->previousPhase = challenge->phase;
+            challenge->previousPhase2 = challenge->previousPhase;
             fearTestMeterSetRange(
-                0x60, (u8)(int)(lbl_803E81BC * t->scales[*(u8*)((char*)data + 0x2d)]),
-                (int)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32) * (u16*)((char*)data + 0x18) / lbl_803E81B8)));
+                0x60, (u8)(int)(lbl_803E81BC * controls->scales[challenge->difficulty]),
+                (int)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32)challenge->phase / lbl_803E81B8)));
             fn_8011F6D4(1);
             setAButtonIcon(6);
         }
-        q = *(int*)&obj->anim.placementData;
-        if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+        placement = (LightfootChallengePlacement*)obj->anim.placementData;
+        if (*(s8*)&playerState->moveJustStartedA != 0)
         {
-            *(u16*)((char*)data + 0x24) = 0;
-            obj->anim.localPosX = *(f32*)((char*)q + 0x8);
-            obj->anim.localPosZ = *(f32*)((char*)q + 0x10);
+            challenge->animationIndex = 0;
+            obj->anim.localPosX = placement->base.posX;
+            obj->anim.localPosZ = placement->base.posZ;
         }
         else
         {
-            *(u16*)((char*)data + 0x24) += 1;
+            challenge->animationIndex += 1;
         }
-        if (t->anims[*(u16*)((char*)data + 0x24)] == -1)
+        if (controls->anims[challenge->animationIndex] == -1)
         {
-            *(u16*)((char*)data + 0x24) = 0;
-            obj->anim.localPosX = *(f32*)((char*)q + 0x8);
-            obj->anim.localPosZ = *(f32*)((char*)q + 0x10);
-            mainSetBits(*(s16*)((char*)q + 0x1a), 1);
-            mainSetBits(*(s16*)((char*)q + 0x30), 0);
+            challenge->animationIndex = 0;
+            obj->anim.localPosX = placement->base.posX;
+            obj->anim.localPosZ = placement->base.posZ;
+            mainSetBits(placement->completionGameBit, 1);
+            mainSetBits(placement->activeGameBit, 0);
             return 3;
         }
-        ObjAnim_SetCurrentMove((int)obj, t->anims[*(u16*)((char*)data + 0x24)], lbl_803E8180, 0);
+        ObjAnim_SetCurrentMove((int)obj, controls->anims[challenge->animationIndex], lbl_803E8180, 0);
     }
-    ((PlayerState*)state)->baddie.moveSpeed = t->blends[*(u16*)((char*)data + 0x24)];
-    (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))((int)obj, state, fv, 1);
+    playerState->moveSpeed = controls->blends[challenge->animationIndex];
+    ((LightfootPlayerUpdateFn)(*gPlayerInterface)->updateAnimRootMotion)(obj, state, fv, 1);
     return 0;
 }
 
