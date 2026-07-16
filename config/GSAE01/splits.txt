@@ -1946,11 +1946,11 @@ main/dll/dll_0141_lightning.c:
 
 main/dll/dll_0132_waterfallspray.c:
 	.text       start:0x80197DA8 end:0x80198194
-	.sdata2     start:0x803E40B0 end:0x803E40C0
+	.sdata2     start:0x803E40B0 end:0x803E40B8
 
 main/dll/dll_0133_sfxplayer.c:
 	.text       start:0x80198194 end:0x80198A00
-	.sdata2     start:0x803E40C0 end:0x803E40C8
+	.sdata2     start:0x803E40B8 end:0x803E40C8
 
 main/dll/dll_80198a00.c:
 	.text       start:0x80198A00 end:0x80198FA4

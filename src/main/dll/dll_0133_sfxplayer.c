@@ -80,8 +80,6 @@ typedef struct SfxplayerPlacement
 #define SFXPLAYER_FLAG_ROM_CURVE        0x8  /* feed a rom-curve channel each frame */
 #define SFXPLAYER_FLAG_AT_OBJECT        0x10 /* play at the object's position */
 
-extern f32 lbl_803E40B8;
-extern f32 lbl_803E40BC;
 int sfxplayerObj_getExtraSize(void)
 {
     return 0x8;
@@ -267,9 +265,9 @@ void sfxplayerObj_update(u8* obj)
             (((data->flags & SFXPLAYER_FLAG_TRIGGER_ON_CLEAR) != 0) && (bitState == 0)))
         {
             state->delayTimer -= timeDelta;
-            if (state->delayTimer <= lbl_803E40B8)
+            if (state->delayTimer <= 0.0f)
             {
-                state->delayTimer = (f32)(s32)randomGetRange(data->randDelayMin, data->randDelayMax) * lbl_803E40BC;
+                state->delayTimer = (f32)(s32)randomGetRange(data->randDelayMin, data->randDelayMax) * 60.0f;
                 SFXPLAYER_START_SOUND(data->sfx1);
                 SFXPLAYER_START_SOUND(data->sfx2);
             }
@@ -307,7 +305,7 @@ void sfxplayerObj_init(u8* obj, u8* dataBytes)
     {
         int delay = randomGetRange(data->randDelayMin, data->randDelayMax);
         f32 delayF = delay;
-        delayF = lbl_803E40BC * delayF;
+        delayF = 60.0f * delayF;
         state->delayTimer = delayF;
         break;
     }
