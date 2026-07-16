@@ -3688,23 +3688,23 @@ int cMenuCountAvailableEntries(short* arr, s8 flag)
 
 int cMenuSetItems(s16* items, char useTricky)
 {
-    s16* w2;
     s16* stP;
-    int active;
-    s16* w3;
     s16* src;
-    u8* w4;
+    int count;
+    int halfOff[1];
     s16* ids;
-    void** texW;
+    s16* dst;
     int* wordP;
     u8* base;
-    s16* dst;
     u8* flP;
-    int halfOff;
-    s16* idsW2;
-    int count;
-    s16* w1;
     int wordOff;
+    s16* w1;
+    s16* w2;
+    s16* w3;
+    u8* w4;
+    int active;
+    void** texW;
+    s16* idsW2;
     void** texP2;
     int i;
     s16 saved[CMENU_ITEM_SLOT_COUNT];
@@ -3722,8 +3722,8 @@ int cMenuSetItems(s16* items, char useTricky)
     {
         *w2 = *w1;
         *w1 = -1;
-        halfOff = 0;
-        *w3 = halfOff;
+        halfOff[0] = 0;
+        *w3 = halfOff[0];
         *w4 = 1;
         w1++;
         w2++;
@@ -3746,13 +3746,13 @@ int cMenuSetItems(s16* items, char useTricky)
                 {
                     if (src[1] < 0 || mainGetBit(src[1]) == 0)
                     {
-                        *(s16*)(base + halfOff + 0x948) = src[3];
+                        *(s16*)(base + halfOff[0] + 0x948) = src[3];
                         *(int*)(base + wordOff + 0x848) = src[0];
                         *(int*)(base + wordOff + 0x748) = src[2];
                         *(int*)(base + wordOff + 0x648) = src[1];
                         *(u8*)(base + count + 0x448) = active;
-                        *(s16*)(base + halfOff + 0x548) = src[6];
-                        *(s16*)(base + halfOff + 0x5c8) = src[5];
+                        *(s16*)(base + halfOff[0] + 0x548) = src[6];
+                        *(s16*)(base + halfOff[0] + 0x5c8) = src[5];
                         *(u8*)(base + count + 0x508) = *(u8*)(src + 7);
                         *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
                         if (src[2] < 0 || mainGetBit(src[2]) == 0)
@@ -3765,7 +3765,7 @@ int cMenuSetItems(s16* items, char useTricky)
                         }
                         count++;
                         wordOff += 4;
-                        halfOff += 2;
+                        halfOff[0] += 2;
                     }
                 }
                 else if (src[1] < 0 || mainGetBit(src[1]) == 0)
@@ -3774,13 +3774,13 @@ int cMenuSetItems(s16* items, char useTricky)
                     {
                         gCMenuForcedSelIndex = count;
                     }
-                    *(s16*)(base + halfOff + 0x948) = src[3];
+                    *(s16*)(base + halfOff[0] + 0x948) = src[3];
                     *(int*)(base + wordOff + 0x848) = src[0];
                     *(int*)(base + wordOff + 0x748) = src[2];
                     *(int*)(base + wordOff + 0x648) = src[1];
                     *(u8*)(base + count + 0x448) = active;
-                    *(s16*)(base + halfOff + 0x548) = src[6];
-                    *(s16*)(base + halfOff + 0x5c8) = src[5];
+                    *(s16*)(base + halfOff[0] + 0x548) = src[6];
+                    *(s16*)(base + halfOff[0] + 0x5c8) = src[5];
                     *(u8*)(base + count + 0x508) = *(u8*)(src + 7);
                     *(u8*)(base + count + 0x4c8) = ((u8*)src)[0xf];
                     if (src[2] < 0 || mainGetBit(src[2]) == 0)
@@ -3793,7 +3793,7 @@ int cMenuSetItems(s16* items, char useTricky)
                     }
                     count++;
                     wordOff += 4;
-                    halfOff += 2;
+                    halfOff[0] += 2;
                 }
             }
         }
