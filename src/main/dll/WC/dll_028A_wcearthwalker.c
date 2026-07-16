@@ -208,7 +208,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 4;
                 }
-                else if ((s32)mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
                 {
                     newState = 3;
                 }
@@ -249,7 +249,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 9;
                 }
-                else if ((s32)mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
                 {
                     newState = 8;
                 }
@@ -294,7 +294,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 0xe;
                 }
-                else if ((s32)mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
                 {
                     newState = 0xd;
                 }
@@ -345,7 +345,7 @@ void earthwalker_update(int obj)
                         newState = 0x11;
                     }
                 }
-                else if ((s32)mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
                 {
                     newState = 0x10;
                 }
@@ -379,7 +379,7 @@ void earthwalker_update(int obj)
                 {
                     newState = 6;
                 }
-                else if ((s32)mainGetBit(0xc55) != 0)
+                else if ((s32)mainGetBit(GAMEBIT_ITEM_SuperQuake_Got) != 0)
                 {
                     newState = 5;
                 }

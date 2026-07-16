@@ -21,6 +21,7 @@
 #include "main/objtexture.h"
 #include "main/objseq.h"
 #include "main/gamebits.h"
+#include "main/gamebit_ids.h"
 #include "main/model.h"
 #include "main/maketex_api.h"
 #include "main/vecmath.h"
@@ -215,7 +216,7 @@ int fn_80174438(int obj, PushableState* state)
         ((GameObject*)obj)->anim.localPosZ = (f32)(CURTAIN_POSITION_Z_OFFSET + ((ObjPlacement*)def)->posZ);
         Sfx_PlayFromObjectIntReturnLegacy(obj, SFXTRIG_curtainopen16);
     }
-    if (mainGetBit(0xa1a) != 0)
+    if (mainGetBit(GAMEBIT_PushableRelated0A1A) != 0)
     {
         ((GameObject*)obj)->anim.localPosX = ((ObjPlacement*)def)->posX;
         ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;

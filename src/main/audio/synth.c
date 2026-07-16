@@ -1485,8 +1485,6 @@ extern void memset(void* dst, int value, u32 size);
 extern void inpInit(u32 unused);
 extern void macInit(void);
 extern void vidInit(void);
-extern void voiceInitPriorityTables(void);
-extern void voiceInitRegistrationTables(void);
 extern void salFree(void* ptr);
 extern u32 synthMessageCallback;
 

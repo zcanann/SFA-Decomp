@@ -60,7 +60,6 @@ typedef struct
 
 #define fabs __fabs
 
-extern u32 synthTicksPerSecond[9][16];
 extern SynthSong* gSynthQueuedVoices;
 extern SynthSong* gSynthFreeVoices;
 extern SynthSong* gSynthCurrentVoice;

@@ -352,7 +352,6 @@ extern const f32 lbl_803DE730;
 extern const f32 gSubtitleNoTimeSentinel;
 extern u32 lbl_80339C40[];
 
-extern void loadAsset(void* req);
 extern int saveFileStruct_isCheatActive(u8 idx);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void textRenderSetup(void);

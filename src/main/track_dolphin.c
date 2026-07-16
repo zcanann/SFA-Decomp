@@ -361,7 +361,6 @@ extern TrackGroundHit* lbl_803DCF68;
 extern s8 lbl_803DCF60;
 extern const f32 lbl_803DECE8;
 extern const f32 lbl_803DECE0;
-extern const f32 lbl_803DECE4;
 extern const f32 lbl_803DECEC;
 extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
 extern const f32 lbl_803DEC78;
