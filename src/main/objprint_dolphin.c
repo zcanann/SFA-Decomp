@@ -181,6 +181,55 @@ typedef struct ObjModelRenderOp
     u8 pad38[0x3C - 0x38];
     u32 flags;
 } ObjModelRenderOp;
+extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
+extern s32 gObjLevelLockSlots;
+extern volatile int lbl_803DCC80;
+extern int OSDisableInterrupts(void);
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
+extern f32 lbl_803DEA04;
+extern const f32 lbl_803DEA1C;
+extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
+extern void GXLoadPosMtxImm(f32* m, int id);
+typedef struct
+{
+    u8* data;
+    int pad[3];
+    int pos;
+} MtxBitStream;
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetCurrentMtx(u32 id);
+extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
+extern void GXSetCullMode(int mode);
+extern void GXLoadTexMtxImm(f32* m, int id, int type);
+extern void GXLoadNrmMtxImm(f32* m, int id);
+extern void GXBegin(int prim, int fmt, u16 count);
+typedef struct
+{
+    u8 r, g, b, a;
+} ObjGXColor;
+typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
+extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
+extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
+extern void GXSetTevColor(int id, u32* color);
+extern f32 lbl_803DEA38;
+extern f32 lbl_803DEA4C;
+extern f32 lbl_803DEA50;
+extern f32 lbl_803DEA54;
+extern f32 lbl_803DEA48;
+extern s16 lbl_803DCC78;
+extern void* memcpy(void*, void*, int);
+extern u32 lbl_803DCC84;
+extern void* lbl_803DCC8C;
+extern s16 sMapFileNameAdjacencyTable[];
+extern char sAssetIndexOverflowError[];
+
+int getLoadedFileFlags(int slot);
+s32 mapCheckCurBlocks(int v);
+
 
 // ObjModelRenderOp.flags (+0x3C) bits
 #define SHADER_FLAG_BACKFACE_CULL      0x8
@@ -203,7 +252,6 @@ extern u32 FUN_80017608();
 extern u32 FUN_80017620();
 extern void* FUN_80017624();
 
-extern void FUN_80247a7c(f32* m, f32 x, f32 y, f32 z);
 extern u32 FUN_80258674();
 extern u32 FUN_80258944();
 extern u32 FUN_80259288();
@@ -290,371 +338,12 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025cce8(1, 4, 5, 5);
     return;
 }
-
-extern u32 lbl_803DCC74;
-void objSetMtxFn_800412d4(u32 x)
-{
-    curObjMtx = x;
-}
-void set_shadowFlag_803dcc29(u8 x)
-{
-    lbl_803DCC29 = x;
-}
-u32 isRomListLoading(void)
-{
-    return lbl_803DCC74;
-}
-
-extern u32 lbl_803DCC70;
-void clearForceLoadImmediately(void)
-{
-    lbl_803DCC70 = 0x0;
-}
-void setForceLoadImmediately(void)
-{
-    lbl_803DCC70 = 0x1;
-}
-
-
-void fn_800412B8(u8 r, u8 g, u8 b)
-{
-    gObjOverrideColorPending = 1;
-    gObjOverrideColor = r;
-    (&gObjOverrideColor)[1] = g;
-    (&gObjOverrideColor)[2] = b;
-}
-
-extern s32 gObjLevelLockSlots;
-
-int lockLevel(s32 val, int idx)
-{
-    s32 cur = (&gObjLevelLockSlots)[idx];
-    if (cur == -2)
-    {
-        (&gObjLevelLockSlots)[idx] = val;
-        return -1;
-    }
-    return cur;
-}
-
-extern volatile int lbl_803DCC80;
-extern int OSDisableInterrupts(void);
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
-
-void setLoadedFileFlags_blocks1(void)
-{
-    int s = OSDisableInterrupts();
-    lbl_803DCC80 |= 0x100000;
-    OSRestoreInterrupts(s);
-}
-
-int getLoadedFileFlags(int slot)
-{
-    int s = OSDisableInterrupts();
-    u32 v = lbl_803DCC80;
-    OSRestoreInterrupts(s);
-    return v;
-}
-
-void clearLoadedFileFlags_blocks1(void)
-{
-    int s = OSDisableInterrupts();
-    if (lbl_803DCC80 & 0x100000)
-    {
-        lbl_803DCC80 ^= 0x100000;
-    }
-    OSRestoreInterrupts(s);
-}
-
-extern s16 gObjMapBlockInfo[];
-
-s32 mapCheckCurBlocks(int v)
-{
-    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
-        return 0;
-    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v)
-        return 1;
-    return -1;
-}
-
-
-void renderResetFn_8003fc60(void)
-{
-    gObjRenderSetupDone = 0;
-    gObjCachedTexture = 0;
-    gObjCachedModel = 0;
-    lbl_803DCC34 = 0;
-    gObjGxVtxDescCache = -1;
-    gObjGxBlendModeCache = 0xff;
-    gObjGxZCompLocCache = 0xff;
-    gObjGxAlphaCompareCache = -1;
-    gObjGxZWriteCache = 0xff;
-    gObjGxZCompareCache = 0xff;
-    gObjGxCullModeCache = 0xff;
-    gObjGxKColorCache[3] = 0;
-    gObjGxKColorCache[2] = 0;
-    gObjGxKColorCache[1] = 0;
-    gObjGxKColorCache[0] = 0;
-}
-
-// DVDGetCommandBlockStatus() command-block states (DVD_STATE_*)
-#define DVD_STATE_FATAL_ERROR   -1
-#define DVD_STATE_END           0
-#define DVD_STATE_BUSY          1
-#define DVD_STATE_WAITING       2
-#define DVD_STATE_COVER_CLOSED  3
-#define DVD_STATE_NO_DISK       4
-#define DVD_STATE_COVER_OPEN    5
-#define DVD_STATE_WRONG_DISK    6
-#define DVD_STATE_MOTOR_STOPPED 7
-#define DVD_STATE_PAUSING       8
-#define DVD_STATE_IGNORED       9
-#define DVD_STATE_CANCELED      10
-#define DVD_STATE_RETRY         11
-
-int fn_80041D98(DVDCommandBlock* block)
-{
-    s32 status;
-    if (block == NULL)
-    {
-        return -1;
-    }
-    status = DVDGetCommandBlockStatus(block);
-    switch (status)
-    {
-    case DVD_STATE_FATAL_ERROR:
-        return status;
-    case DVD_STATE_END:
-        return status;
-    case DVD_STATE_BUSY:
-        return status;
-    case DVD_STATE_WAITING:
-        return status;
-    case DVD_STATE_COVER_CLOSED:
-        return status;
-    case DVD_STATE_NO_DISK:
-        return status;
-    case DVD_STATE_COVER_OPEN:
-        return status;
-    case DVD_STATE_WRONG_DISK:
-        return status;
-    case DVD_STATE_MOTOR_STOPPED:
-        return status;
-    case DVD_STATE_PAUSING:
-        return status;
-    case DVD_STATE_IGNORED:
-        return status;
-    case DVD_STATE_CANCELED:
-        return status;
-    case DVD_STATE_RETRY:
-        return status;
-    }
-    return 0;
-}
-
-extern f32 lbl_803DEA04;
-#pragma dont_inline on
-void objRenderShadow(int* obj)
-{
-    if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
-    {
-        curObjMtx = 0;
-        return;
-    }
-    {
-        int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
-        if (*(u8*)((char*)m + 246) != 0)
-        {
-            objRenderShadow2(obj, obj, (u8*)m, 1);
-        }
-        else
-        {
-            modelDoRenderInstrs(obj, obj, (u8*)m, 1);
-        }
-    }
-    if (((GameObject*)obj)->anim.classId == 1)
-    {
-        u8* iter;
-        int i = 0;
-        iter = (u8*)obj;
-        for (; i < ((GameObject*)obj)->childCount; i++)
-        {
-            int* child = *(int**)(iter + 200);
-            if (child != NULL)
-            {
-                objRenderChild(child, obj, 1);
-            }
-            iter += 4;
-        }
-    }
-}
-#pragma dont_inline reset
-
 extern f32 lbl_803DEA60;
 extern f32 lbl_803DEA5C;
 extern f32 lbl_803DEA64;
 extern f32 lbl_803DEA68;
-extern const f32 lbl_803DEA1C;
 extern f32 lbl_803DEA6C;
-extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
-void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
-
-void objRenderFn_800413d4(int* obj)
-{
-    int* model;
-    u32 savedMtx;
-    gObjFuzzStep = 4;
-    model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    savedMtx = curObjMtx;
-    lbl_803DCC3D = gObjFuzzPhase;
-    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
-    {
-        modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 2);
-        curObjMtx = savedMtx;
-    }
-    curObjMtx = 0;
-    gObjFuzzPhase += timeDelta;
-    if (gObjFuzzPhase > lbl_803DEA60)
-    {
-        gObjFuzzPhase -= lbl_803DEA5C;
-    }
-}
-
-void fuzzRenderFn_800412dc(int* obj)
-{
-    int* model;
-    u32 savedMtx;
-    gObjFuzzStep = 1;
-    model = (int*)Obj_GetActiveModel((GameObject*)obj);
-    savedMtx = curObjMtx;
-    lbl_803DCC3D = gObjFuzzPhase;
-    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268Legacy);
-    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
-    {
-        modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 8);
-        curObjMtx = savedMtx;
-    }
-    curObjMtx = 0;
-    ObjModel_SetRenderCallback((u8*)model, NULL);
-    gObjFuzzPhase += timeDelta;
-    if (gObjFuzzPhase > lbl_803DEA60)
-    {
-        gObjFuzzPhase -= lbl_803DEA5C;
-    }
-}
-
-void objRenderFuzz(int* obj)
-{
-    int n;
-    u8 maxN;
-    int cnt;
-    int* model;
-    u32 savedMtx;
-    u8 strong;
-    f32 dx, dy, dz, dist;
-    CameraViewSlot* cam = Camera_GetCurrentViewSlot();
-    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) ||
-        ((GameObject*)obj)->anim.mapEventSlot == 0x3f || ((GameObject*)obj)->anim.seqId == 0x882 ||
-        ((GameObject*)obj)->anim.seqId == 0x887)
-    {
-        strong = 1;
-        if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x77d ||
-            ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
-        {
-            maxN = 0xf;
-        }
-        else
-        {
-            maxN = 7;
-        }
-    }
-    else
-    {
-        strong = 0;
-        maxN = 3;
-    }
-    {
-        u32 m = curObjMtx;
-        if (m != 0)
-        {
-            dx = *(f32*)&((ModelFileHeader*)m)->dataSize - (cam->x - playerMapOffsetX);
-            dy = *(f32*)&((ModelFileHeader*)m)->unk1C - cam->y;
-            dz = *(f32*)&((ModelFileHeader*)m)->normals - (cam->z - playerMapOffsetZ);
-        }
-        else
-        {
-            dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
-            dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
-            dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
-        }
-    }
-    dist = sqrtf(dx * dx + dy * dy + dz * dz);
-    if (strong == 0)
-    {
-        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) /
-                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
-        gObjFuzzStep = 2;
-    }
-    else
-    {
-        cnt = (s32)((lbl_803DEA68 * dist) /
-                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
-        gObjFuzzStep = 1;
-    }
-    n = 16 - cnt;
-    if (n > 0)
-    {
-        if (n > maxN)
-        {
-            n = maxN;
-        }
-        model = (int*)Obj_GetActiveModel((GameObject*)obj);
-        savedMtx = curObjMtx;
-        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1cLegacy);
-        for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++)
-        {
-            modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 4);
-            curObjMtx = savedMtx;
-        }
-        curObjMtx = 0;
-        ObjModel_SetRenderCallback((u8*)model, NULL);
-    }
-}
-
-void objRenderFn_80041018(GameObject* obj)
-{
-    ObjDefHitVolume* p;
-    ObjHitVolumeRuntimeTransform* q;
-    int* model;
-    ObjDefHitVolume* base;
-    int i;
-    base = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
-    q = ((GameObject*)obj)->anim.hitVolumeTransforms;
-    if (!(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x28))
-    {
-        model = (int*)Obj_GetActiveModel((GameObject*)obj);
-        i = 0;
-        p = base;
-        for (; i < ((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i++)
-        {
-            int j = p->jointIndices[OBJPRINT_ACTIVE_BANK_INDEX(obj)];
-            ObjModelJointMatrix* mtx;
-            if (j >= 0)
-            {
-                mtx = ObjModel_GetJointMatrix((u8*)model, j);
-            }
-            else
-            {
-                mtx = NULL;
-            }
-            objMtxFn_80041104(NULL, &q->centerX, &p->posX, base->flags & 0x10, (int*)obj, 0);
-            objMtxFn_80041104((f32*)mtx, &q->jointX, &p->jointOffsetX, base->flags & 0x10, (int*)obj, 1);
-            p++;
-            q++;
-        }
-    }
-}
 
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
 {
@@ -712,612 +401,7 @@ void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e)
     }
 }
 
-void objRenderModel(GameObject* obj)
-{
-    int d1;
-    f32 d2;
-    int d3;
-    int d4;
-    f32 px;
-    f32 py;
-    f32 pz;
-    s32 sx;
-    s32 sy;
-    s32 sz;
-    u32 col;
-    int* model = (int*)Obj_GetActiveModel(obj);
-    if (lbl_803DEA04 == obj->anim.rootMotionScale)
-    {
-        curObjMtx = 0;
-        return;
-    }
-    {
-        int m0 = *model;
-        if (*(u16*)(m0 + 2) & 0x8000)
-        {
-            modelDoAltRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
-        }
-        else
-        {
-            modelDoRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
-        }
-    }
-    {
-        u8* iter;
-        int i = 0;
-        iter = (u8*)obj;
-        for (; i < obj->childCount; i++)
-        {
-            int* child = *(int**)&((GameObject*)iter)->childObjs[0];
-            if (child != NULL)
-            {
-                objRenderChild(child, (int*)obj, 0);
-            }
-            iter += 4;
-        }
-    }
-    if (OBJPRINT_MODEL_DEF(obj)->shadowType != 4)
-    {
-        return;
-    }
-    if (lbl_803DCC29 != 0)
-    {
-        return;
-    }
-    {
-        s16 t = obj->anim.seqId;
-        if (t == 0x6a8)
-            return;
-        if (t == 0x6a9)
-            return;
-        if (t == 0x6aa)
-            return;
-        if (t == 0x6ab)
-            return;
-        if (t == 0x6ac)
-            return;
-        if (t == 0x752)
-            return;
-    }
-    Camera_ProjectWorldPointWithOffset(
-        obj->anim.localPosX - playerMapOffsetX, obj->anim.localPosY, obj->anim.localPosZ - playerMapOffsetZ,
-        obj->anim.hitboxScale * obj->anim.rootMotionScale, &px, &py, &pz);
-    Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
-    if (sz <= depthReadRequestPollPointerKey(sx, sy, obj))
-    {
-        obj->anim.modelState->shadowAlphaStep = 0x20;
-    }
-    else
-    {
-        obj->anim.modelState->shadowAlphaStep = -0x20;
-    }
-    {
-        int a;
-        a = obj->anim.modelState->shadowAlpha;
-        a += obj->anim.modelState->shadowAlphaStep;
-        if (a > 0xff)
-        {
-            obj->anim.modelState->shadowAlpha = 0xff;
-        }
-        else if (a < 0)
-        {
-            obj->anim.modelState->shadowAlpha = 0;
-        }
-        else
-        {
-            obj->anim.modelState->shadowAlpha = a;
-        }
-    }
-    gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
-    objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
-    col = *(u32*)gObjShadowColor;
-    hudDrawColoredLegacy(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
-}
-
-typedef struct
-{
-    f32 pos[3];
-    s16 rot[3];
-    s8 joints[6];
-} ChildEnt;
-
-void objRenderChild(int* child, int* parent, u8 isShadow)
-{
-    f32 res[3];
-    MatrixTransform blk;
-    f32 wm[16];
-    f32 m2[16];
-    f32 dx, dz;
-    int off;
-    f32* mtx;
-    if (lbl_803DEA04 == ((GameObject*)child)->anim.rootMotionScale)
-    {
-        curObjMtx = 0;
-        return;
-    }
-    Obj_GetActiveModel((GameObject*)child);
-    {
-        int* pmodel = (int*)Obj_GetActiveModel((GameObject*)parent);
-        ChildEnt* ent;
-        int j;
-        u8* tbl = *(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c);
-        off = (((GameObject*)child)->objectFlags & 7) * 0x18;
-        ent = (ChildEnt*)(tbl + off);
-        j = ent->joints[OBJPRINT_ACTIVE_BANK_INDEX(parent)];
-        blk.x = *(f32*)(off + (char*)tbl);
-        blk.y = ent->pos[1];
-        blk.z = ent->pos[2];
-        if (j == -1)
-        {
-            Obj_BuildWorldTransformMatrix((GameObject*)parent, wm, 0);
-            mtx = wm;
-        }
-        else
-        {
-            mtx = (f32*)ObjModel_GetJointMatrix((u8*)pmodel, j);
-        }
-    }
-    if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8)
-    {
-        CameraViewSlot* cam = Camera_GetCurrentViewSlot();
-        blk.scale = ((GameObject*)child)->anim.rootMotionScale;
-        dx = ((GameObject*)child)->anim.localPosX - cam->x;
-        dz = ((GameObject*)child)->anim.localPosZ - cam->z;
-        blk.rotX = getAngle(dx, dz) + 0x8000;
-        blk.rotY = getAngle(((GameObject*)child)->anim.localPosY - cam->y,
-                              sqrtf(dx * dx + dz * dz));
-        blk.rotZ = cam->roll;
-        setMatrixFromObjectTransposed(&blk, m2);
-        res[0] = m2[3];
-        res[1] = m2[7];
-        res[2] = m2[11];
-        PSMTXMultVec(mtx, res, res);
-        m2[3] = res[0];
-        m2[7] = res[1];
-        m2[11] = res[2];
-    }
-    else
-    {
-        ChildEnt* pr;
-        blk.scale = lbl_803DEA1C;
-        pr = (ChildEnt*)(*(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c) + off);
-        blk.rotX = pr->rot[0];
-        blk.rotY = pr->rot[1];
-        blk.rotZ = pr->rot[2];
-        setMatrixFromObjectTransposed(&blk, m2);
-        PSMTXConcat(mtx, m2, m2);
-    }
-    if (isShadow == 0)
-    {
-        void* space;
-        ((GameObject*)child)->anim.worldPosX = m2[3] + playerMapOffsetX;
-        ((GameObject*)child)->anim.worldPosY = m2[7];
-        ((GameObject*)child)->anim.worldPosZ = m2[11] + playerMapOffsetZ;
-        space = ((GameObject*)child)->anim.parent;
-        if (space != NULL)
-        {
-            Obj_TransformWorldPointToLocal(((GameObject*)child)->anim.worldPosX, ((GameObject*)child)->anim.worldPosY,
-                                           ((GameObject*)child)->anim.worldPosZ, &((GameObject*)child)->anim.localPosX,
-                                           &((GameObject*)child)->anim.localPosY, &((GameObject*)child)->anim.localPosZ,
-                                           (u32)space);
-        }
-        else
-        {
-            ((GameObject*)child)->anim.localPosX = ((GameObject*)child)->anim.worldPosX;
-            ((GameObject*)child)->anim.localPosY = ((GameObject*)child)->anim.worldPosY;
-            ((GameObject*)child)->anim.localPosZ = ((GameObject*)child)->anim.worldPosZ;
-        }
-        objRotateFn_8003bce8VoidLegacy(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
-    }
-    *(u8*)((char*)child + 0x37) = ((((GameObject*)child)->anim.alpha + 1) * *(u8*)((char*)parent + 0x37)) >> 8;
-    *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
-    if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
-    {
-        curObjMtx = (u32)m2;
-        if (isShadow == 0)
-        {
-            ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
-            objRenderModelPtrLegacy(child);
-        }
-        else
-        {
-            objRenderShadow(child);
-        }
-    }
-}
-
-extern void GXLoadPosMtxImm(f32* m, int id);
-u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
-
-/*
- * Bit-cursor over the model's render-instruction stream
- * (ModelFileHeader.instrs, bit length at header +0xD8 * 8).  Every reader
- * fetches 3 bytes little-endian around the cursor and shifts by (pos & 7).
- * Stream grammar (4-bit opcodes):
- *   1 = bind render op: 6-bit renderOps index (shader state setup)
- *   2 = draw: 8-bit display-list index -> GXCallDisplayList
- *   3 = vertex descriptor block: 1-bit pos/nrm/clr/tex size selectors
- *   4 = load matrices: 4-bit count, then 8-bit joint-matrix indices
- *   5 = end of stream
- * The stream is walked through a MtxBitStream (data at +0, cursor at +0x10).
- */
-typedef struct
-{
-    u8* data;
-    int pad[3];
-    int pos;
-} MtxBitStream;
-
-#pragma optimization_level 2
-#pragma inline_max_size(4000)
-#pragma dont_inline on
-void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
-{
-    char* cache = (char*)getCache();
-    if (lbl_803DCC48 == 1)
-    {
-        char* c2 = (char*)getCache();
-        char* src;
-        char* dst;
-        int i;
-        obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
-        src = c2 + 0x2700;
-        dst = c2;
-        cacheQueueWait(0);
-        for (i = 0; i < obj; i++)
-        {
-            PSMTXConcat(mtx, (f32*)src, (f32*)dst);
-            src += 0x40;
-            dst += 0x30;
-        }
-        lbl_803DCC48 = 2;
-    }
-    {
-        u8* tbl[1];
-        int i;
-        int count;
-        f32 tmp[12];
-        {
-            u32 w;
-            int pos = bs->pos;
-            int off = pos >> 3;
-            u8* p;
-            w = bs->data[off];
-            p = (u8*)(off + (char*)bs->data);
-            w |= p[1] << 8;
-            w |= p[2] << 16;
-            bs->pos = pos + 4;
-            count = (w >> (pos & 7)) & 0xf;
-        }
-        i = 0;
-        tbl[0] = gObjGxPosMtxIdTable;
-        for (; i < count; i++)
-        {
-            int idx;
-            {
-                int off;
-                u32 w;
-                int pos = bs->pos;
-                u8* p;
-                off = pos >> 3;
-                p = (u8*)(off + bs->data);
-                w = p[0];
-                w |= p[1] << 8;
-                w |= p[2] << 16;
-                bs->pos = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
-            }
-            if (lbl_803DCC48 == 2)
-            {
-                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
-            }
-            else
-            {
-                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl[0]);
-            }
-            tbl[0]++;
-        }
-    }
-}
-#pragma dont_inline reset
-#pragma inline_max_size reset
-#pragma optimization_level reset
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-extern void GXSetCullMode(int mode);
-
-#pragma dont_inline on
-void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
-{
-    u32 flags = 0;
-    if (hdr[0xf3] > 1)
-    {
-        flags |= 1;
-    }
-    {
-        u32 w;
-        int pos = bs->pos;
-        int off = pos >> 3;
-        u8* p;
-        w = bs->data[off];
-        p = (u8*)(off + (char*)bs->data);
-        w |= p[1] << 8;
-        w |= p[2] << 16;
-        bs->pos = pos + 1;
-        flags |= ((int)(w >> (pos & 7)) & 1) ? 2 : 0;
-    }
-    {
-        u32 w;
-        int pos = bs->pos;
-        int off = pos >> 3;
-        u8* p;
-        w = bs->data[off];
-        p = (u8*)(off + (char*)bs->data);
-        w |= p[1] << 8;
-        w |= p[2] << 16;
-        bs->pos = pos + 1;
-        flags |= ((int)(w >> (pos & 7)) & 1) ? 4 : 0;
-    }
-    if (gObjGxVtxDescCache != flags)
-    {
-        GXClearVtxDesc();
-        if (flags & 1)
-        {
-            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
-        }
-        else
-        {
-            GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
-        }
-        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? GX_INDEX16 : GX_INDEX8);
-        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? GX_INDEX16 : GX_INDEX8);
-        gObjGxVtxDescCache = flags;
-    }
-}
-#pragma dont_inline reset
-
-#pragma scheduling off
-#pragma opt_common_subs off
-void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
-{
-    u8 blend;
-    u8 zwrite;
-    u8 zcmp;
-    u8 zcomploc;
-    u32 alpha;
-    u8 cull;
-    u32 sf;
-    if (obj[0x37] < 0xff || ((sf = *(u32*)(shader + 0x3c)) & SHADER_FLAG_FORCE_BLEND))
-    {
-        blend = 1;
-        if (((ModelFileHeader*)m)->flags & 0x400)
-        {
-            zwrite = 0;
-            zcmp = 0;
-            zcomploc = 1;
-            alpha = 0;
-        }
-        else if (((ModelFileHeader*)m)->flags & 0x2000)
-        {
-            zwrite = 1;
-            zcmp = 1;
-            zcomploc = 0;
-            alpha = 0xdf;
-        }
-        else
-        {
-            zwrite = 1;
-            zcmp = 0;
-            zcomploc = 1;
-            alpha = 0;
-        }
-    }
-    else if (sf & SHADER_FLAG_ALPHA_TEST_OPAQUE)
-    {
-        blend = 0;
-        if (((ModelFileHeader*)m)->flags & 0x400)
-        {
-            zwrite = 0;
-            zcmp = 0;
-        }
-        else
-        {
-            zwrite = 1;
-            zcmp = 1;
-        }
-        zcomploc = 0;
-        alpha = 0x40;
-    }
-    else
-    {
-        blend = 0;
-        if (((ModelFileHeader*)m)->flags & 0x400)
-        {
-            zwrite = 0;
-            zcmp = 0;
-        }
-        else
-        {
-            zwrite = 1;
-            zcmp = 1;
-        }
-        zcomploc = 1;
-        alpha = 0;
-    }
-    if (*(u32*)(shader + 0x3c) & SHADER_FLAG_BACKFACE_CULL)
-    {
-        cull = 1;
-    }
-    else
-    {
-        cull = 0;
-    }
-    if (gObjGxBlendModeCache != blend)
-    {
-        if (blend != 0)
-        {
-            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-        }
-        else
-        {
-            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-        }
-        gObjGxBlendModeCache = blend;
-    }
-    if (gObjGxZWriteCache != zwrite || gObjGxZCompareCache != zcmp)
-    {
-        gxSetZModeByteLegacy(zwrite, 3, zcmp);
-        gObjGxZWriteCache = zwrite;
-        gObjGxZCompareCache = zcmp;
-    }
-    if (gObjGxZCompLocCache != zcomploc)
-    {
-        gxSetPeControl_ZCompLocByteLegacy(zcomploc);
-        gObjGxZCompLocCache = zcomploc;
-    }
-    if (gObjGxAlphaCompareCache != alpha)
-    {
-        gObjGxAlphaCompareCache = alpha;
-        if (alpha != 0)
-        {
-            GXSetAlphaCompare(GX_GREATER, (u8)alpha, GX_AOP_AND, GX_GREATER, (u8)alpha);
-        }
-        else
-        {
-            GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-        }
-    }
-    if (cull != gObjGxCullModeCache)
-    {
-        gObjGxCullModeCache = cull;
-        if (cull != 0)
-        {
-            GXSetCullMode(GX_CULL_BACK);
-        }
-        else
-        {
-            GXSetCullMode(GX_CULL_NONE);
-        }
-    }
-}
-#pragma opt_common_subs reset
-#pragma scheduling reset
-
-extern void GXLoadTexMtxImm(f32* m, int id, int type);
-extern void GXLoadNrmMtxImm(f32* m, int id);
-
-#pragma optimization_level 2
-void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
-{
-    u8* tbl[1];
-    char* cache;
-    tbl[0] = gObjGxPosMtxIdTable;
-    cache = (char*)getCache();
-    if (lbl_803DCC48 == 1)
-    {
-        if (skip == 0)
-        {
-            modelMtxFn_8003be38PtrLegacy(hdr, model, mtx, m1);
-        }
-        else
-        {
-            char* c2 = (char*)getCache();
-            char* dst;
-            int i;
-            int total = hdr[0xf3] + hdr[0xf4];
-            hdr = (u8*)(c2 + 0x2700);
-            dst = c2;
-            cacheQueueWait(0);
-            for (i = 0; i < total; i++)
-            {
-                PSMTXConcat(mtx, (f32*)hdr, (f32*)dst);
-                hdr += 0x40;
-                dst += 0x30;
-            }
-            lbl_803DCC48 = 2;
-        }
-    }
-    {
-        u8* tbl2;
-        int i;
-        int count;
-        f32 tmp[12];
-        {
-            u32 w;
-            int pos = bs->pos;
-            int off = pos >> 3;
-            u8* p;
-            w = bs->data[off];
-            p = (u8*)(off + (char*)bs->data);
-            w |= p[1] << 8;
-            w |= p[2] << 16;
-            bs->pos = pos + 4;
-            count = (w >> (pos & 7)) & 0xf;
-        }
-        if (count < 0 || count > 20)
-        {
-            OSReport((char*)&tbl[0][0x48], count);
-        }
-        i = 0;
-        tbl2 = tbl[0] + 0xc;
-        for (; i < count; i++)
-        {
-            int idx;
-            {
-                u32 w;
-                int pos = bs->pos;
-                int off = pos >> 3;
-                u8* p = (u8*)(off + bs->data);
-                w = p[0];
-                w |= p[1] << 8;
-                w |= p[2] << 16;
-                bs->pos = pos + 8;
-                idx = (w >> (pos & 7)) & 0xff;
-            }
-            if (lbl_803DCC48 == 2)
-            {
-                u8* pm = (u8*)(cache + idx * 0x30);
-                u8* nm = pm + 0x12c0;
-                GXLoadPosMtxImm((f32*)pm, *tbl[0]);
-                if (skip == 0 && tex != 0)
-                {
-                    GXLoadTexMtxImm((f32*)nm, *tbl2, 0);
-                }
-                if (skip == 0 && nrm != 0)
-                {
-                    GXLoadNrmMtxImm((f32*)nm, *tbl[0]);
-                }
-            }
-            else
-            {
-                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
-                GXLoadPosMtxImm(tmp, *tbl[0]);
-                if (skip == 0 && (nrm != 0 || tex != 0))
-                {
-                    tmp[3] = lbl_803DEA04;
-                    tmp[7] = lbl_803DEA04;
-                    tmp[11] = lbl_803DEA04;
-                    PSMTXConcat(tmp, m1, tmp);
-                    if (tex != 0)
-                    {
-                        GXLoadTexMtxImm(tmp, *tbl2, 0);
-                    }
-                    if (nrm != 0)
-                    {
-                        GXLoadNrmMtxImm(tmp, *tbl[0]);
-                    }
-                }
-            }
-            tbl[0]++;
-            tbl2++;
-        }
-    }
-}
-#pragma optimization_level reset
-
+#pragma opt_propagation on
 typedef union
 {
     u8 u8;
@@ -1329,9 +413,9 @@ typedef union
 } ObjWGPipe;
 
 extern ObjWGPipe GXWGFifo : (0xCC008000);
-extern void GXBegin(int prim, int fmt, u16 count);
 
-#pragma opt_propagation on
+extern u8 gObjGxPosMtxIdTable[12];
+
 void objRenderFn_8003d980(u8* obj, int* p2)
 {
     f32 wm[16];
@@ -1425,12 +509,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     }
 }
 #pragma opt_propagation reset
-
-
-typedef struct
-{
-    u8 r, g, b, a;
-} ObjGXColor;
 
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
@@ -1608,6 +686,237 @@ void objFn_8003dc50(u8* obj, u8* model)
         }
     }
 }
+#pragma optimization_level 2
+#pragma dont_inline on
+#pragma inline_max_size(4000)
+void modelLoadMtxsToGx(int obj, int* model, MtxBitStream* bs, f32* mtx)
+{
+    char* cache = (char*)getCache();
+    if (lbl_803DCC48 == 1)
+    {
+        char* c2 = (char*)getCache();
+        char* src;
+        char* dst;
+        int i;
+        obj = *(u8*)(obj + 0xf3) + *(u8*)(obj + 0xf4);
+        src = c2 + 0x2700;
+        dst = c2;
+        cacheQueueWait(0);
+        for (i = 0; i < obj; i++)
+        {
+            PSMTXConcat(mtx, (f32*)src, (f32*)dst);
+            src += 0x40;
+            dst += 0x30;
+        }
+        lbl_803DCC48 = 2;
+    }
+    {
+        u8* tbl[1];
+        int i;
+        int count;
+        f32 tmp[12];
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8* p;
+            w = bs->data[off];
+            p = (u8*)(off + (char*)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 4;
+            count = (w >> (pos & 7)) & 0xf;
+        }
+        i = 0;
+        tbl[0] = gObjGxPosMtxIdTable;
+        for (; i < count; i++)
+        {
+            int idx;
+            {
+                int off;
+                u32 w;
+                int pos = bs->pos;
+                u8* p;
+                off = pos >> 3;
+                p = (u8*)(off + bs->data);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs->pos = pos + 8;
+                idx = (w >> (pos & 7)) & 0xff;
+            }
+            if (lbl_803DCC48 == 2)
+            {
+                GXLoadPosMtxImm((f32*)(cache + idx * 0x30), *tbl[0]);
+            }
+            else
+            {
+                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
+                GXLoadPosMtxImm(tmp, *tbl[0]);
+            }
+            tbl[0]++;
+        }
+    }
+}
+#pragma optimization_level reset
+#pragma optimization_level 2
+#pragma dont_inline reset
+void renderOpMatrix(u8* hdr, int* model, MtxBitStream* bs, f32* m1, f32* mtx, u8 nrm, u8 tex, u8 skip)
+{
+    u8* tbl[1];
+    char* cache;
+    tbl[0] = gObjGxPosMtxIdTable;
+    cache = (char*)getCache();
+    if (lbl_803DCC48 == 1)
+    {
+        if (skip == 0)
+        {
+            modelMtxFn_8003be38PtrLegacy(hdr, model, mtx, m1);
+        }
+        else
+        {
+            char* c2 = (char*)getCache();
+            char* dst;
+            int i;
+            int total = hdr[0xf3] + hdr[0xf4];
+            hdr = (u8*)(c2 + 0x2700);
+            dst = c2;
+            cacheQueueWait(0);
+            for (i = 0; i < total; i++)
+            {
+                PSMTXConcat(mtx, (f32*)hdr, (f32*)dst);
+                hdr += 0x40;
+                dst += 0x30;
+            }
+            lbl_803DCC48 = 2;
+        }
+    }
+    {
+        u8* tbl2;
+        int i;
+        int count;
+        f32 tmp[12];
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8* p;
+            w = bs->data[off];
+            p = (u8*)(off + (char*)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 4;
+            count = (w >> (pos & 7)) & 0xf;
+        }
+        if (count < 0 || count > 20)
+        {
+            OSReport((char*)&tbl[0][0x48], count);
+        }
+        i = 0;
+        tbl2 = tbl[0] + 0xc;
+        for (; i < count; i++)
+        {
+            int idx;
+            {
+                u32 w;
+                int pos = bs->pos;
+                int off = pos >> 3;
+                u8* p = (u8*)(off + bs->data);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs->pos = pos + 8;
+                idx = (w >> (pos & 7)) & 0xff;
+            }
+            if (lbl_803DCC48 == 2)
+            {
+                u8* pm = (u8*)(cache + idx * 0x30);
+                u8* nm = pm + 0x12c0;
+                GXLoadPosMtxImm((f32*)pm, *tbl[0]);
+                if (skip == 0 && tex != 0)
+                {
+                    GXLoadTexMtxImm((f32*)nm, *tbl2, 0);
+                }
+                if (skip == 0 && nrm != 0)
+                {
+                    GXLoadNrmMtxImm((f32*)nm, *tbl[0]);
+                }
+            }
+            else
+            {
+                PSMTXConcat(mtx, (f32*)ObjModel_GetJointMatrix((u8*)model, idx), tmp);
+                GXLoadPosMtxImm(tmp, *tbl[0]);
+                if (skip == 0 && (nrm != 0 || tex != 0))
+                {
+                    tmp[3] = lbl_803DEA04;
+                    tmp[7] = lbl_803DEA04;
+                    tmp[11] = lbl_803DEA04;
+                    PSMTXConcat(tmp, m1, tmp);
+                    if (tex != 0)
+                    {
+                        GXLoadTexMtxImm(tmp, *tbl2, 0);
+                    }
+                    if (nrm != 0)
+                    {
+                        GXLoadNrmMtxImm(tmp, *tbl[0]);
+                    }
+                }
+            }
+            tbl[0]++;
+            tbl2++;
+        }
+    }
+}
+#pragma optimization_level reset
+#pragma dont_inline on
+void ModelHeader_setupPosTexFmt(u8* hdr, int* model, MtxBitStream* bs, int p4)
+{
+    u32 flags = 0;
+    if (hdr[0xf3] > 1)
+    {
+        flags |= 1;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8* p;
+        w = bs->data[off];
+        p = (u8*)(off + (char*)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 2 : 0;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8* p;
+        w = bs->data[off];
+        p = (u8*)(off + (char*)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 4 : 0;
+    }
+    if (gObjGxVtxDescCache != flags)
+    {
+        GXClearVtxDesc();
+        if (flags & 1)
+        {
+            GXSetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
+        }
+        else
+        {
+            GXSetCurrentMtx(gObjGxPosMtxIdTable[0]);
+        }
+        GXSetVtxDesc(GX_VA_POS, (flags & 2) ? GX_INDEX16 : GX_INDEX8);
+        GXSetVtxDesc(GX_VA_TEX0, (flags & 4) ? GX_INDEX16 : GX_INDEX8);
+        gObjGxVtxDescCache = flags;
+    }
+}
+#pragma dont_inline reset
 
 void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5, u8* out1, u8* out2)
 {
@@ -1766,9 +1075,619 @@ void modelRenderFn_setVtxDescr(u8* hdr, u8* m, u32* p3, MtxBitStream* bs, u8 p5,
         }
     }
 }
+#pragma opt_propagation off
+u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
+{
+    u16 alpha;
+    u8* colp;
+    void* tex;
+    u8* prev;
+    u8* layer;
+    u8 ok;
+    int layerIdx;
+    u8 color[4];
+    f32 m[12];
+
+    ok = 1;
+    if (p3[0] != 0 || p3[1] != 0)
+    {
+        int i;
+        u8 cnt;
+        cnt = 0;
+        for (i = 0; i < shader[0x41]; i++)
+        {
+            u8* l = Shader_getLayer(shader, i);
+            if (l[4] & 0x80)
+            {
+                cnt++;
+            }
+        }
+        if (cnt > 1)
+        {
+            ok = 0;
+        }
+    }
+    layerIdx = 0;
+    colp = (u8*)&gObjCurChanColor;
+    {
+        for (; layerIdx < shader[0x41]; layerIdx++)
+        {
+            layer = Shader_getLayer(shader, layerIdx);
+            if ((layer[4] & 0x80) == mask)
+            {
+                if ((*(u32*)(shader + 0x3c) & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
+                {
+                    gxTextureFn_80050e28IntLegacy(p3[0] != 0 ? 1 : 0);
+                    return 1;
+                }
+                alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
+                if (*(u32*)layer != 0)
+                {
+                    f32* mtxp;
+                    u8 fl;
+                    tex = textureIdxToPtr(*(u32*)layer);
+                    {
+                        u32 jid = layer[5];
+                        if (jid != 0)
+                        {
+                            ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
+                            ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+                            ObjTextureSlotDef* q = modelDef->textureSlotDefs;
+                            int n = modelDef->textureSlotCount;
+                            int k;
+                            for (k = 0; k < n; k++)
+                            {
+                                if ((int)jid == q->materialIndex)
+                                {
+                                    tex = textureCrazyPointerFollowLegacy(tex, slots[k].textureId);
+                                    break;
+                                }
+                                q++;
+                            }
+                            {
+                                f32 tx;
+                                f32 ty;
+                                u32 jid2 = layer[5];
+                                ObjTextureRuntimeSlot* slots2 = ((GameObject*)obj)->anim.textureSlots;
+                                ObjDef* modelDef2 = ((GameObject*)obj)->anim.modelInstance;
+                                ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
+                                int n2 = modelDef2->textureSlotCount;
+                                int k2;
+                                for (k2 = 0; k2 < n2; k2++)
+                                {
+                                    if ((int)jid2 == q2->materialIndex)
+                                    {
+                                        tx = lbl_803DEA48 * slots2[k2].offsetS;
+                                        ty = lbl_803DEA48 * slots2[k2].offsetT;
+                                        goto trans;
+                                    }
+                                    q2++;
+                                }
+                                ty = tx = lbl_803DEA04;
+                            trans:
+                                PSMTXTrans(m, tx, ty, lbl_803DEA04);
+                                mtxp = m;
+                            }
+                        }
+                        else
+                        {
+                            mtxp = NULL;
+                        }
+                    }
+                    if (layerIdx == 0)
+                    {
+                        if ((p3[0] != 0 || p3[1] != 0 || p6 != 0) && ok)
+                        {
+                            fl = 8;
+                        }
+                        else
+                        {
+                            fl = 0;
+                        }
+                        color[3] = alpha;
+                    }
+                    else
+                    {
+                        fl = prev[4] & 0x7f;
+                        color[3] = 0xff;
+                    }
+                    color[0] = 0xff;
+                    color[1] = 0xff;
+                    color[2] = 0xff;
+                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
+                    {
+                        gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, color, *((u8*)p3 + 8), 1);
+                    }
+                    else if (p5 != 0)
+                    {
+                        colp[3] = color[3];
+                        if (shader[0x40] & 0x10)
+                        {
+                            fn_80051B00Legacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor);
+                        }
+                        else
+                        {
+                            gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor,
+                                                  *((u8*)p3 + 8), 1);
+                        }
+                    }
+                    else
+                    {
+                        if (shader[0x40] & 0x10)
+                        {
+                            fn_80051868Legacy(tex, (int)mtxp, (u8)fl);
+                            if (color[3] < 0xff)
+                            {
+                                gxColorFn_80052764PtrLegacy(color);
+                            }
+                        }
+                        else
+                        {
+                            fn_80051D5CIntMtxLegacy(tex, (int)mtxp, (u8)fl, color);
+                        }
+                    }
+                }
+                else
+                {
+                    color[0] = shader[4];
+                    color[1] = shader[5];
+                    color[2] = shader[6];
+                    color[3] = alpha;
+                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
+                    {
+                        gxColorFn_80052764PtrLegacy(color);
+                    }
+                    else if (p5 != 0)
+                    {
+                        colp[3] = alpha;
+                        gxColorFn_80052764PtrLegacy((u8*)&gObjCurChanColor);
+                    }
+                    else
+                    {
+                        if (shader[0x40] & 0x10)
+                        {
+                            gxColorFn_800523d0();
+                            if (color[3] < 0xff)
+                            {
+                                gxColorFn_80052764PtrLegacy(color);
+                            }
+                        }
+                        else
+                        {
+                            textureFn_800524ecLegacy(color);
+                        }
+                    }
+                }
+            }
+            prev = layer;
+        }
+    }
+    return ok;
+}
+u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
+{
+    int* op;
+    u32* refs;
+    u32 idx;
+    u8 shad;
+    int nlay;
+    int envtex;
+    ObjModelRenderCb cb;
+    f32 m2[12];
+    f32 t2[12];
+    f32 wm[12];
+    f32 t1[12];
+    int a;
+    int b;
+    u8 color[4];
+    f32 fogc;
+    u32 tmp1;
+    u32 tmp2;
+
+    shad = 0;
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8* p;
+        w = bs->data[off];
+        p = (u8*)(off + (char*)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 6;
+        idx = (w >> (pos & 7)) & 0x3f;
+    }
+    cb = (ObjModelRenderCb)ObjModel_GetRenderCallback((ObjModel*)am);
+    if (cb != NULL && cb((int*)obj, am, idx) != 0)
+    {
+        return idx;
+    }
+    op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)*am, idx);
+    refs = (u32*)ObjModel_GetRenderOpTextureRefs((ObjModel*)am, idx);
+    resetLotsOfRenderVars();
+    envtex = 0;
+    if ((refs[0] != 0 || refs[1] != 0) && ((ObjModelRenderOp*)op)->envTextureId != 0)
+    {
+        void* t = textureIdxToPtr(((ObjModelRenderOp*)op)->envTextureId);
+        int nl = lbl_803DCC5C + 1;
+        if (refs[0] != 0)
+        {
+            nl += 1;
+        }
+        if (refs[1] != 0)
+        {
+            nl += 1;
+        }
+        envtex = textureFn_80050ad8ByteLegacy(t, nl, ((u8*)op)[0x42],
+                                              ((ObjModelRenderOp*)op)->indirectTextureId);
+    }
+    if (refs[0] != 0)
+    {
+        textureFn_80051348IntLegacy(refs[0], obj[0xf1]);
+    }
+    if (refs[1] != 0)
+    {
+        if (((ObjModelRenderOp*)op)->unk1C != 0)
+        {
+            color[0] = 0xff;
+            color[1] = 0xff;
+            color[2] = 0xff;
+            color[3] = ((u8*)op)[0x22];
+        }
+        else
+        {
+            color[3] = 0;
+        }
+        tmp1 = *(u32*)color;
+        GXSetTevColor(GX_TEVREG2, &tmp1);
+        fn_800510F0IntLegacy(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
+        if (color[3] != 0)
+        {
+            fn_80050FF4IntLegacy(refs[0] != 0 ? 1 : 0);
+        }
+    }
+    else
+    {
+        tmp2 = gObjGxDefaultChanColor;
+        GXSetTevColor(GX_TEVREG2, &tmp2);
+    }
+    nlay = lbl_803DCC5C;
+    if (gObjShadowNear != 0)
+    {
+        fn_8004D230();
+        shad = 1;
+        nlay = 0;
+    }
+    else
+    {
+        int b4;
+        f32* mx;
+        u8 b5f = OBJPRINT_MODEL_DEF(obj)->renderFlags;
+        b4 = b5f & 4;
+        if (b4 && (mx = (f32*)((GameObject*)obj)->anim.modelState->shadowCastSlot) != NULL)
+        {
+            fn_8005011CMatrixLegacy(mx);
+            nlay = 0;
+        }
+        else if (b5f & 0x10)
+        {
+            fn_8004D6D8();
+            nlay = 0;
+        }
+        else if (b4 == 0)
+        {
+            ModelLightStruct** lp;
+            u8* sp;
+            int i;
+            i = 0;
+            lp = &lbl_803DCC64;
+            sp = &lbl_803DCC60;
+            for (; i < lbl_803DCC5C; i++)
+            {
+                u32 t = (u32)modelLightStruct_getProjectionTexture(*lp);
+                if (t != 0)
+                {
+                    modelLightStruct_getProjectionTevModes(*lp, &a, &b);
+                    if (a == 2)
+                    {
+                        shad = 1;
+                    }
+                    {
+                        int mtx = (int)modelLightStruct_getProjectionTexMtx(*lp);
+                        fn_80050558IntLegacy(t, mtx, a, b, *sp);
+                    }
+                }
+                lp++;
+                sp++;
+            }
+        }
+    }
+    if (envtex != 0)
+    {
+        fn_80050A28(envtex);
+    }
+    {
+        u32 t18;
+        if ((t18 = ((ObjModelRenderOp*)op)->textureId) != 0 && ((ObjModelRenderOp*)op)->unk1C == 0 && refs[1] != 0)
+        {
+            textureIdxToPtr(t18);
+            fn_80050F2C();
+        }
+    }
+    {
+        u8 hl;
+        if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((*(u16*)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)),
+                                   nlay) == 0)
+        {
+            gxTextureFn_80050e28IntLegacy(refs[0] != 0 ? 1 : 0);
+        }
+        if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_DECAL_LAYER)
+        {
+            u8* l1 = Shader_getLayer((u8*)op, 1);
+            {
+                f32 tx;
+                f32 ty;
+                u32 jid = l1[5];
+                ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
+                ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
+                ObjTextureSlotDef* q = modelDef->textureSlotDefs;
+                int n = modelDef->textureSlotCount;
+                int k;
+                for (k = 0; k < n; k++)
+                {
+                    if ((int)jid == q->materialIndex)
+                    {
+                        tx = lbl_803DEA48 * slots[k].offsetS;
+                        ty = lbl_803DEA48 * slots[k].offsetT;
+                        goto trans2;
+                    }
+                    q++;
+                }
+                ty = tx = lbl_803DEA04;
+            trans2:
+                PSMTXTrans(m2, tx, ty, lbl_803DEA04);
+            }
+            textureFn_8004c330(textureIdxToPtr(*(u32*)l1), m2);
+        }
+        modelRenderFn_8003e98c(obj, (u8*)op, refs, 0, hl, nlay);
+    }
+    if (isHeavyFogEnabled() && !(*(u16*)(p2 + 2) & 0x100))
+    {
+        getColor803dd01cFloatLegacy(&fogc);
+        renderHeavyFog(&fogc);
+    }
+    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_PROJECTED_TEX_PASS)
+    {
+        f32* vm = Camera_GetViewMatrix();
+        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
+        PSMTXConcat(vm, wm, t1);
+        PSMTXConcat((f32*)lbl_803967F0, t1, t2);
+        GXLoadTexMtxImm(t2, 0x24, 0);
+        fn_8004D928();
+    }
+    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER)
+    {
+        gxTextureFn_8004d5b4(op);
+    }
+    {
+        u8 e5 = ((GameObject*)obj)->colorFadeFlags;
+        if ((e5 & OBJ_COLOR_FADE_FLAG_ACTIVE) || (e5 & OBJ_COLOR_FADE_FLAG_OVERRIDE))
+        {
+            color[0] = obj[0xec];
+            color[1] = obj[0xed];
+            color[2] = obj[0xee];
+            color[3] = obj[0xef];
+            gxTextureFn_80052638ByteLegacy(color);
+        }
+    }
+    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_WATER_CAUSTIC)
+    {
+        fn_80118240();
+    }
+    textureFn_800528bc();
+    {
+        ObjModelRenderCb pcb = (ObjModelRenderCb)ObjModel_GetPostRenderCallback((ObjModel*)am);
+        if (pcb != NULL)
+        {
+            pcb((int*)obj, am, idx);
+        }
+        else
+        {
+            u8 zon = 1;
+            if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_FORCE_BLEND) || shad)
+            {
+                u16 f2;
+                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+                f2 = *(u16*)(p2 + 2);
+                if (f2 & 0x400)
+                {
+                    gxSetZModeByteLegacy(0, 3, 0);
+                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                }
+                else if (f2 & 0x2000)
+                {
+                    zon = 0;
+                    gxSetZModeByteLegacy(1, 3, 1);
+                    GXSetAlphaCompare(GX_GREATER, lbl_803DCC3C, GX_AOP_AND, GX_GREATER, lbl_803DCC3C);
+                }
+                else
+                {
+                    gxSetZModeByteLegacy(1, 3, 0);
+                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                }
+            }
+            else if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
+            {
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+                if (*(u16*)(p2 + 2) & 0x400)
+                {
+                    gxSetZModeByteLegacy(0, 3, 0);
+                }
+                else
+                {
+                    gxSetZModeByteLegacy(1, 3, 1);
+                }
+                GXSetAlphaCompare(GX_GREATER, 0x40, GX_AOP_AND, GX_GREATER, 0x40);
+            }
+            else
+            {
+                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+                if (*(u16*)(p2 + 2) & 0x400)
+                {
+                    gxSetZModeByteLegacy(0, 3, 0);
+                }
+                else
+                {
+                    gxSetZModeByteLegacy(1, 3, 1);
+                }
+                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+            }
+            if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
+            {
+                zon = 0;
+            }
+            gxSetPeControl_ZCompLocByteLegacy(zon);
+        }
+    }
+    if (((ObjModelRenderOp*)op)->flags & 8)
+    {
+        GXSetCullMode(GX_CULL_BACK);
+    }
+    else
+    {
+        GXSetCullMode(GX_CULL_NONE);
+    }
+    return idx;
+}
+#pragma opt_common_subs off
+#pragma opt_propagation reset
+#pragma scheduling off
+void shaderSetGxFlags(u8* obj, u8* m, u8* shader)
+{
+    u8 blend;
+    u8 zwrite;
+    u8 zcmp;
+    u8 zcomploc;
+    u32 alpha;
+    u8 cull;
+    u32 sf;
+    if (obj[0x37] < 0xff || ((sf = *(u32*)(shader + 0x3c)) & SHADER_FLAG_FORCE_BLEND))
+    {
+        blend = 1;
+        if (((ModelFileHeader*)m)->flags & 0x400)
+        {
+            zwrite = 0;
+            zcmp = 0;
+            zcomploc = 1;
+            alpha = 0;
+        }
+        else if (((ModelFileHeader*)m)->flags & 0x2000)
+        {
+            zwrite = 1;
+            zcmp = 1;
+            zcomploc = 0;
+            alpha = 0xdf;
+        }
+        else
+        {
+            zwrite = 1;
+            zcmp = 0;
+            zcomploc = 1;
+            alpha = 0;
+        }
+    }
+    else if (sf & SHADER_FLAG_ALPHA_TEST_OPAQUE)
+    {
+        blend = 0;
+        if (((ModelFileHeader*)m)->flags & 0x400)
+        {
+            zwrite = 0;
+            zcmp = 0;
+        }
+        else
+        {
+            zwrite = 1;
+            zcmp = 1;
+        }
+        zcomploc = 0;
+        alpha = 0x40;
+    }
+    else
+    {
+        blend = 0;
+        if (((ModelFileHeader*)m)->flags & 0x400)
+        {
+            zwrite = 0;
+            zcmp = 0;
+        }
+        else
+        {
+            zwrite = 1;
+            zcmp = 1;
+        }
+        zcomploc = 1;
+        alpha = 0;
+    }
+    if (*(u32*)(shader + 0x3c) & SHADER_FLAG_BACKFACE_CULL)
+    {
+        cull = 1;
+    }
+    else
+    {
+        cull = 0;
+    }
+    if (gObjGxBlendModeCache != blend)
+    {
+        if (blend != 0)
+        {
+            GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+        }
+        else
+        {
+            GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+        }
+        gObjGxBlendModeCache = blend;
+    }
+    if (gObjGxZWriteCache != zwrite || gObjGxZCompareCache != zcmp)
+    {
+        gxSetZModeByteLegacy(zwrite, 3, zcmp);
+        gObjGxZWriteCache = zwrite;
+        gObjGxZCompareCache = zcmp;
+    }
+    if (gObjGxZCompLocCache != zcomploc)
+    {
+        gxSetPeControl_ZCompLocByteLegacy(zcomploc);
+        gObjGxZCompLocCache = zcomploc;
+    }
+    if (gObjGxAlphaCompareCache != alpha)
+    {
+        gObjGxAlphaCompareCache = alpha;
+        if (alpha != 0)
+        {
+            GXSetAlphaCompare(GX_GREATER, (u8)alpha, GX_AOP_AND, GX_GREATER, (u8)alpha);
+        }
+        else
+        {
+            GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+        }
+    }
+    if (cull != gObjGxCullModeCache)
+    {
+        gObjGxCullModeCache = cull;
+        if (cull != 0)
+        {
+            GXSetCullMode(GX_CULL_BACK);
+        }
+        else
+        {
+            GXSetCullMode(GX_CULL_NONE);
+        }
+    }
+}
+#pragma opt_common_subs reset
+#pragma scheduling reset
 
 extern f32 gObjJointMtxTemp[];
-typedef u8 (*ObjModelRenderCb)(int* obj, int* am, int p3);
 extern void GXSetTevKColor(int id, u32* color);
 extern void GXSetArray(int attr, int ptr, int stride);
 
@@ -1919,20 +1838,34 @@ void modelDoAltRenderInstrs(int* obj, int* obj2, u8* m, int p4)
     }
 }
 
-f32 gObjBoneMtxBuffer[0xC00];
+
+void renderResetFn_8003fc60(void)
+{
+    gObjRenderSetupDone = 0;
+    gObjCachedTexture = 0;
+    gObjCachedModel = 0;
+    lbl_803DCC34 = 0;
+    gObjGxVtxDescCache = -1;
+    gObjGxBlendModeCache = 0xff;
+    gObjGxZCompLocCache = 0xff;
+    gObjGxAlphaCompareCache = -1;
+    gObjGxZWriteCache = 0xff;
+    gObjGxZCompareCache = 0xff;
+    gObjGxCullModeCache = 0xff;
+    gObjGxKColorCache[3] = 0;
+    gObjGxKColorCache[2] = 0;
+    gObjGxKColorCache[1] = 0;
+    gObjGxKColorCache[0] = 0;
+}
 extern void GXSetNumTexGens(u8 nTexGens);
 extern void GXSetNumTevStages(u8 nStages);
 extern void GXSetNumIndStages(u8 nIndStages);
 extern void GXSetTevOrder(int stage, int coord, int map, int color);
 extern void GXSetTevDirect(int stage);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
 extern void GXSetTevSwapMode(int stage, int ras, int tex);
-extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
-extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
 typedef void (*ObjShadowCb)(int* obj, int* am, f32* wm);
-extern void GXSetTevColor(int id, u32* color);
+
+extern f32 gObjBoneMtxBuffer[0xC00];
 
 void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
 {
@@ -2182,15 +2115,9 @@ void objRenderShadow2(int* obj, int* obj2, u8* m, int p4)
         }
     }
 }
-
-extern f32 lbl_803DEA38;
-extern f32 lbl_803DEA4C;
-extern f32 lbl_803DEA50;
-extern f32 lbl_803DEA54;
-u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
-u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
-
 #pragma opt_dead_assignments off
+extern u8 gObjGxTexMtxIdTable[12];
+
 void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
 {
     f32 fm[16];
@@ -2601,505 +2528,554 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
         }
     }
 }
+
 #pragma opt_dead_assignments reset
 
-extern f32 lbl_803DEA48;
+void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
 
-#pragma opt_propagation off
-u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6)
+void objRenderFn_80041018(GameObject* obj)
 {
-    u16 alpha;
-    u8* colp;
-    void* tex;
-    u8* prev;
-    u8* layer;
-    u8 ok;
-    int layerIdx;
-    u8 color[4];
-    f32 m[12];
-
-    ok = 1;
-    if (p3[0] != 0 || p3[1] != 0)
+    ObjDefHitVolume* p;
+    ObjHitVolumeRuntimeTransform* q;
+    int* model;
+    ObjDefHitVolume* base;
+    int i;
+    base = ((GameObject*)obj)->anim.modelInstance->hitVolumes;
+    q = ((GameObject*)obj)->anim.hitVolumeTransforms;
+    if (!(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & 0x28))
     {
-        int i;
-        u8 cnt;
-        cnt = 0;
-        for (i = 0; i < shader[0x41]; i++)
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
+        i = 0;
+        p = base;
+        for (; i < ((GameObject*)obj)->anim.modelInstance->hitVolumeCount; i++)
         {
-            u8* l = Shader_getLayer(shader, i);
-            if (l[4] & 0x80)
+            int j = p->jointIndices[OBJPRINT_ACTIVE_BANK_INDEX(obj)];
+            ObjModelJointMatrix* mtx;
+            if (j >= 0)
             {
-                cnt++;
-            }
-        }
-        if (cnt > 1)
-        {
-            ok = 0;
-        }
-    }
-    layerIdx = 0;
-    colp = (u8*)&gObjCurChanColor;
-    {
-        for (; layerIdx < shader[0x41]; layerIdx++)
-        {
-            layer = Shader_getLayer(shader, layerIdx);
-            if ((layer[4] & 0x80) == mask)
-            {
-                if ((*(u32*)(shader + 0x3c) & SHADER_FLAG_DECAL_LAYER) && layerIdx == 1)
-                {
-                    gxTextureFn_80050e28IntLegacy(p3[0] != 0 ? 1 : 0);
-                    return 1;
-                }
-                alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
-                if (*(u32*)layer != 0)
-                {
-                    f32* mtxp;
-                    u8 fl;
-                    tex = textureIdxToPtr(*(u32*)layer);
-                    {
-                        u32 jid = layer[5];
-                        if (jid != 0)
-                        {
-                            ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
-                            ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
-                            ObjTextureSlotDef* q = modelDef->textureSlotDefs;
-                            int n = modelDef->textureSlotCount;
-                            int k;
-                            for (k = 0; k < n; k++)
-                            {
-                                if ((int)jid == q->materialIndex)
-                                {
-                                    tex = textureCrazyPointerFollowLegacy(tex, slots[k].textureId);
-                                    break;
-                                }
-                                q++;
-                            }
-                            {
-                                f32 tx;
-                                f32 ty;
-                                u32 jid2 = layer[5];
-                                ObjTextureRuntimeSlot* slots2 = ((GameObject*)obj)->anim.textureSlots;
-                                ObjDef* modelDef2 = ((GameObject*)obj)->anim.modelInstance;
-                                ObjTextureSlotDef* q2 = modelDef2->textureSlotDefs;
-                                int n2 = modelDef2->textureSlotCount;
-                                int k2;
-                                for (k2 = 0; k2 < n2; k2++)
-                                {
-                                    if ((int)jid2 == q2->materialIndex)
-                                    {
-                                        tx = lbl_803DEA48 * slots2[k2].offsetS;
-                                        ty = lbl_803DEA48 * slots2[k2].offsetT;
-                                        goto trans;
-                                    }
-                                    q2++;
-                                }
-                                ty = tx = lbl_803DEA04;
-                            trans:
-                                PSMTXTrans(m, tx, ty, lbl_803DEA04);
-                                mtxp = m;
-                            }
-                        }
-                        else
-                        {
-                            mtxp = NULL;
-                        }
-                    }
-                    if (layerIdx == 0)
-                    {
-                        if ((p3[0] != 0 || p3[1] != 0 || p6 != 0) && ok)
-                        {
-                            fl = 8;
-                        }
-                        else
-                        {
-                            fl = 0;
-                        }
-                        color[3] = alpha;
-                    }
-                    else
-                    {
-                        fl = prev[4] & 0x7f;
-                        color[3] = 0xff;
-                    }
-                    color[0] = 0xff;
-                    color[1] = 0xff;
-                    color[2] = 0xff;
-                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
-                    {
-                        gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, color, *((u8*)p3 + 8), 1);
-                    }
-                    else if (p5 != 0)
-                    {
-                        colp[3] = color[3];
-                        if (shader[0x40] & 0x10)
-                        {
-                            fn_80051B00Legacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor);
-                        }
-                        else
-                        {
-                            gxFn_80051fb8IntLegacy(tex, (int)mtxp, (u8)fl, (u8*)&gObjCurChanColor,
-                                                  *((u8*)p3 + 8), 1);
-                        }
-                    }
-                    else
-                    {
-                        if (shader[0x40] & 0x10)
-                        {
-                            fn_80051868Legacy(tex, (int)mtxp, (u8)fl);
-                            if (color[3] < 0xff)
-                            {
-                                gxColorFn_80052764PtrLegacy(color);
-                            }
-                        }
-                        else
-                        {
-                            fn_80051D5CIntMtxLegacy(tex, (int)mtxp, (u8)fl, color);
-                        }
-                    }
-                }
-                else
-                {
-                    color[0] = shader[4];
-                    color[1] = shader[5];
-                    color[2] = shader[6];
-                    color[3] = alpha;
-                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff))
-                    {
-                        gxColorFn_80052764PtrLegacy(color);
-                    }
-                    else if (p5 != 0)
-                    {
-                        colp[3] = alpha;
-                        gxColorFn_80052764PtrLegacy((u8*)&gObjCurChanColor);
-                    }
-                    else
-                    {
-                        if (shader[0x40] & 0x10)
-                        {
-                            gxColorFn_800523d0();
-                            if (color[3] < 0xff)
-                            {
-                                gxColorFn_80052764PtrLegacy(color);
-                            }
-                        }
-                        else
-                        {
-                            textureFn_800524ecLegacy(color);
-                        }
-                    }
-                }
-            }
-            prev = layer;
-        }
-    }
-    return ok;
-}
-#pragma opt_propagation reset
-
-
-#pragma opt_propagation off
-u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)
-{
-    int* op;
-    u32* refs;
-    u32 idx;
-    u8 shad;
-    int nlay;
-    int envtex;
-    ObjModelRenderCb cb;
-    f32 m2[12];
-    f32 t2[12];
-    f32 wm[12];
-    f32 t1[12];
-    int a;
-    int b;
-    u8 color[4];
-    f32 fogc;
-    u32 tmp1;
-    u32 tmp2;
-
-    shad = 0;
-    {
-        u32 w;
-        int pos = bs->pos;
-        int off = pos >> 3;
-        u8* p;
-        w = bs->data[off];
-        p = (u8*)(off + (char*)bs->data);
-        w |= p[1] << 8;
-        w |= p[2] << 16;
-        bs->pos = pos + 6;
-        idx = (w >> (pos & 7)) & 0x3f;
-    }
-    cb = (ObjModelRenderCb)ObjModel_GetRenderCallback((ObjModel*)am);
-    if (cb != NULL && cb((int*)obj, am, idx) != 0)
-    {
-        return idx;
-    }
-    op = (int*)ObjModel_GetRenderOp((ModelFileHeader*)*am, idx);
-    refs = (u32*)ObjModel_GetRenderOpTextureRefs((ObjModel*)am, idx);
-    resetLotsOfRenderVars();
-    envtex = 0;
-    if ((refs[0] != 0 || refs[1] != 0) && ((ObjModelRenderOp*)op)->envTextureId != 0)
-    {
-        void* t = textureIdxToPtr(((ObjModelRenderOp*)op)->envTextureId);
-        int nl = lbl_803DCC5C + 1;
-        if (refs[0] != 0)
-        {
-            nl += 1;
-        }
-        if (refs[1] != 0)
-        {
-            nl += 1;
-        }
-        envtex = textureFn_80050ad8ByteLegacy(t, nl, ((u8*)op)[0x42],
-                                              ((ObjModelRenderOp*)op)->indirectTextureId);
-    }
-    if (refs[0] != 0)
-    {
-        textureFn_80051348IntLegacy(refs[0], obj[0xf1]);
-    }
-    if (refs[1] != 0)
-    {
-        if (((ObjModelRenderOp*)op)->unk1C != 0)
-        {
-            color[0] = 0xff;
-            color[1] = 0xff;
-            color[2] = 0xff;
-            color[3] = ((u8*)op)[0x22];
-        }
-        else
-        {
-            color[3] = 0;
-        }
-        tmp1 = *(u32*)color;
-        GXSetTevColor(GX_TEVREG2, &tmp1);
-        fn_800510F0IntLegacy(refs[1], refs[0] != 0 ? 1 : 0, ((u8*)op)[0x20]);
-        if (color[3] != 0)
-        {
-            fn_80050FF4IntLegacy(refs[0] != 0 ? 1 : 0);
-        }
-    }
-    else
-    {
-        tmp2 = gObjGxDefaultChanColor;
-        GXSetTevColor(GX_TEVREG2, &tmp2);
-    }
-    nlay = lbl_803DCC5C;
-    if (gObjShadowNear != 0)
-    {
-        fn_8004D230();
-        shad = 1;
-        nlay = 0;
-    }
-    else
-    {
-        int b4;
-        f32* mx;
-        u8 b5f = OBJPRINT_MODEL_DEF(obj)->renderFlags;
-        b4 = b5f & 4;
-        if (b4 && (mx = (f32*)((GameObject*)obj)->anim.modelState->shadowCastSlot) != NULL)
-        {
-            fn_8005011CMatrixLegacy(mx);
-            nlay = 0;
-        }
-        else if (b5f & 0x10)
-        {
-            fn_8004D6D8();
-            nlay = 0;
-        }
-        else if (b4 == 0)
-        {
-            ModelLightStruct** lp;
-            u8* sp;
-            int i;
-            i = 0;
-            lp = &lbl_803DCC64;
-            sp = &lbl_803DCC60;
-            for (; i < lbl_803DCC5C; i++)
-            {
-                u32 t = (u32)modelLightStruct_getProjectionTexture(*lp);
-                if (t != 0)
-                {
-                    modelLightStruct_getProjectionTevModes(*lp, &a, &b);
-                    if (a == 2)
-                    {
-                        shad = 1;
-                    }
-                    {
-                        int mtx = (int)modelLightStruct_getProjectionTexMtx(*lp);
-                        fn_80050558IntLegacy(t, mtx, a, b, *sp);
-                    }
-                }
-                lp++;
-                sp++;
-            }
-        }
-    }
-    if (envtex != 0)
-    {
-        fn_80050A28(envtex);
-    }
-    {
-        u32 t18;
-        if ((t18 = ((ObjModelRenderOp*)op)->textureId) != 0 && ((ObjModelRenderOp*)op)->unk1C == 0 && refs[1] != 0)
-        {
-            textureIdxToPtr(t18);
-            fn_80050F2C();
-        }
-    }
-    {
-        u8 hl;
-        if (modelRenderFn_8003e98c(obj, (u8*)op, refs, 0x80, hl = ((*(u16*)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)),
-                                   nlay) == 0)
-        {
-            gxTextureFn_80050e28IntLegacy(refs[0] != 0 ? 1 : 0);
-        }
-        if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_DECAL_LAYER)
-        {
-            u8* l1 = Shader_getLayer((u8*)op, 1);
-            {
-                f32 tx;
-                f32 ty;
-                u32 jid = l1[5];
-                ObjTextureRuntimeSlot* slots = ((GameObject*)obj)->anim.textureSlots;
-                ObjDef* modelDef = ((GameObject*)obj)->anim.modelInstance;
-                ObjTextureSlotDef* q = modelDef->textureSlotDefs;
-                int n = modelDef->textureSlotCount;
-                int k;
-                for (k = 0; k < n; k++)
-                {
-                    if ((int)jid == q->materialIndex)
-                    {
-                        tx = lbl_803DEA48 * slots[k].offsetS;
-                        ty = lbl_803DEA48 * slots[k].offsetT;
-                        goto trans2;
-                    }
-                    q++;
-                }
-                ty = tx = lbl_803DEA04;
-            trans2:
-                PSMTXTrans(m2, tx, ty, lbl_803DEA04);
-            }
-            textureFn_8004c330(textureIdxToPtr(*(u32*)l1), m2);
-        }
-        modelRenderFn_8003e98c(obj, (u8*)op, refs, 0, hl, nlay);
-    }
-    if (isHeavyFogEnabled() && !(*(u16*)(p2 + 2) & 0x100))
-    {
-        getColor803dd01cFloatLegacy(&fogc);
-        renderHeavyFog(&fogc);
-    }
-    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_PROJECTED_TEX_PASS)
-    {
-        f32* vm = Camera_GetViewMatrix();
-        Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
-        PSMTXConcat(vm, wm, t1);
-        PSMTXConcat((f32*)lbl_803967F0, t1, t2);
-        GXLoadTexMtxImm(t2, 0x24, 0);
-        fn_8004D928();
-    }
-    if (OBJPRINT_MODEL_DEF(obj)->renderFlags & OBJDEF_RENDERFLAG_DEFERRED_RENDER)
-    {
-        gxTextureFn_8004d5b4(op);
-    }
-    {
-        u8 e5 = ((GameObject*)obj)->colorFadeFlags;
-        if ((e5 & OBJ_COLOR_FADE_FLAG_ACTIVE) || (e5 & OBJ_COLOR_FADE_FLAG_OVERRIDE))
-        {
-            color[0] = obj[0xec];
-            color[1] = obj[0xed];
-            color[2] = obj[0xee];
-            color[3] = obj[0xef];
-            gxTextureFn_80052638ByteLegacy(color);
-        }
-    }
-    if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_WATER_CAUSTIC)
-    {
-        fn_80118240();
-    }
-    textureFn_800528bc();
-    {
-        ObjModelRenderCb pcb = (ObjModelRenderCb)ObjModel_GetPostRenderCallback((ObjModel*)am);
-        if (pcb != NULL)
-        {
-            pcb((int*)obj, am, idx);
-        }
-        else
-        {
-            u8 zon = 1;
-            if (obj[0x37] < 0xff || (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_FORCE_BLEND) || shad)
-            {
-                u16 f2;
-                GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
-                f2 = *(u16*)(p2 + 2);
-                if (f2 & 0x400)
-                {
-                    gxSetZModeByteLegacy(0, 3, 0);
-                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-                }
-                else if (f2 & 0x2000)
-                {
-                    zon = 0;
-                    gxSetZModeByteLegacy(1, 3, 1);
-                    GXSetAlphaCompare(GX_GREATER, lbl_803DCC3C, GX_AOP_AND, GX_GREATER, lbl_803DCC3C);
-                }
-                else
-                {
-                    gxSetZModeByteLegacy(1, 3, 0);
-                    GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
-                }
-            }
-            else if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
-            {
-                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if (*(u16*)(p2 + 2) & 0x400)
-                {
-                    gxSetZModeByteLegacy(0, 3, 0);
-                }
-                else
-                {
-                    gxSetZModeByteLegacy(1, 3, 1);
-                }
-                GXSetAlphaCompare(GX_GREATER, 0x40, GX_AOP_AND, GX_GREATER, 0x40);
+                mtx = ObjModel_GetJointMatrix((u8*)model, j);
             }
             else
             {
-                GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-                if (*(u16*)(p2 + 2) & 0x400)
-                {
-                    gxSetZModeByteLegacy(0, 3, 0);
-                }
-                else
-                {
-                    gxSetZModeByteLegacy(1, 3, 1);
-                }
-                GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+                mtx = NULL;
             }
-            if (((ObjModelRenderOp*)op)->flags & SHADER_FLAG_ALPHA_TEST_OPAQUE)
-            {
-                zon = 0;
-            }
-            gxSetPeControl_ZCompLocByteLegacy(zon);
+            objMtxFn_80041104(NULL, &q->centerX, &p->posX, base->flags & 0x10, (int*)obj, 0);
+            objMtxFn_80041104((f32*)mtx, &q->jointX, &p->jointOffsetX, base->flags & 0x10, (int*)obj, 1);
+            p++;
+            q++;
         }
     }
-    if (((ObjModelRenderOp*)op)->flags & 8)
+}
+
+
+
+void fn_800412B8(u8 r, u8 g, u8 b)
+{
+    gObjOverrideColorPending = 1;
+    gObjOverrideColor = r;
+    (&gObjOverrideColor)[1] = g;
+    (&gObjOverrideColor)[2] = b;
+}
+
+extern u32 lbl_803DCC74;
+void objSetMtxFn_800412d4(u32 x)
+{
+    curObjMtx = x;
+}
+
+void fuzzRenderFn_800412dc(int* obj)
+{
+    int* model;
+    u32 savedMtx;
+    gObjFuzzStep = 1;
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    savedMtx = curObjMtx;
+    lbl_803DCC3D = gObjFuzzPhase;
+    ObjModel_SetRenderCallback((u8*)model, modelRenderCb_8003c268Legacy);
+    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
     {
-        GXSetCullMode(GX_CULL_BACK);
+        modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 8);
+        curObjMtx = savedMtx;
+    }
+    curObjMtx = 0;
+    ObjModel_SetRenderCallback((u8*)model, NULL);
+    gObjFuzzPhase += timeDelta;
+    if (gObjFuzzPhase > lbl_803DEA60)
+    {
+        gObjFuzzPhase -= lbl_803DEA5C;
+    }
+}
+
+void objRenderFn_800413d4(int* obj)
+{
+    int* model;
+    u32 savedMtx;
+    gObjFuzzStep = 4;
+    model = (int*)Obj_GetActiveModel((GameObject*)obj);
+    savedMtx = curObjMtx;
+    lbl_803DCC3D = gObjFuzzPhase;
+    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += gObjFuzzStep)
+    {
+        modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 2);
+        curObjMtx = savedMtx;
+    }
+    curObjMtx = 0;
+    gObjFuzzPhase += timeDelta;
+    if (gObjFuzzPhase > lbl_803DEA60)
+    {
+        gObjFuzzPhase -= lbl_803DEA5C;
+    }
+}
+
+void objRenderFuzz(int* obj)
+{
+    int n;
+    u8 maxN;
+    int cnt;
+    int* model;
+    u32 savedMtx;
+    u8 strong;
+    f32 dx, dy, dz, dist;
+    CameraViewSlot* cam = Camera_GetCurrentViewSlot();
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_PARENT_SLACK) ||
+        ((GameObject*)obj)->anim.mapEventSlot == 0x3f || ((GameObject*)obj)->anim.seqId == 0x882 ||
+        ((GameObject*)obj)->anim.seqId == 0x887)
+    {
+        strong = 1;
+        if (((GameObject*)obj)->anim.classId == 1 || ((GameObject*)obj)->anim.seqId == 0x77d ||
+            ((GameObject*)obj)->anim.seqId == 0x882 || ((GameObject*)obj)->anim.seqId == 0x887)
+        {
+            maxN = 0xf;
+        }
+        else
+        {
+            maxN = 7;
+        }
     }
     else
     {
-        GXSetCullMode(GX_CULL_NONE);
+        strong = 0;
+        maxN = 3;
     }
-    return idx;
+    {
+        u32 m = curObjMtx;
+        if (m != 0)
+        {
+            dx = *(f32*)&((ModelFileHeader*)m)->dataSize - (cam->x - playerMapOffsetX);
+            dy = *(f32*)&((ModelFileHeader*)m)->unk1C - cam->y;
+            dz = *(f32*)&((ModelFileHeader*)m)->normals - (cam->z - playerMapOffsetZ);
+        }
+        else
+        {
+            dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
+            dy = ((GameObject*)obj)->anim.worldPosY - cam->y;
+            dz = ((GameObject*)obj)->anim.worldPosZ - cam->z;
+        }
+    }
+    dist = sqrtf(dx * dx + dy * dy + dz * dz);
+    if (strong == 0)
+    {
+        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) /
+                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
+        gObjFuzzStep = 2;
+    }
+    else
+    {
+        cnt = (s32)((lbl_803DEA68 * dist) /
+                    (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale));
+        gObjFuzzStep = 1;
+    }
+    n = 16 - cnt;
+    if (n > 0)
+    {
+        if (n > maxN)
+        {
+            n = maxN;
+        }
+        model = (int*)Obj_GetActiveModel((GameObject*)obj);
+        savedMtx = curObjMtx;
+        ObjModel_SetRenderCallback((u8*)model, shaderFuzzFn_8003cc1cLegacy);
+        for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++)
+        {
+            modelDoRenderInstrs(obj, ((GameObject*)obj)->ownerObj ? ((GameObject*)obj)->ownerObj : obj, (u8*)*model, 4);
+            curObjMtx = savedMtx;
+        }
+        curObjMtx = 0;
+        ObjModel_SetRenderCallback((u8*)model, NULL);
+    }
 }
-#pragma opt_propagation reset
 
-u8 lbl_80345E10[0x160];
-extern s16 lbl_803DCC78;
-extern void* memcpy(void*, void*, int);
+typedef struct
+{
+    f32 pos[3];
+    s16 rot[3];
+    s8 joints[6];
+} ChildEnt;
+#pragma dont_inline on
+void objRenderShadow(int* obj)
+{
+    if (lbl_803DEA04 == ((GameObject*)obj)->anim.rootMotionScale)
+    {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int* m = *(int**)Obj_GetActiveModel((GameObject*)obj);
+        if (*(u8*)((char*)m + 246) != 0)
+        {
+            objRenderShadow2(obj, obj, (u8*)m, 1);
+        }
+        else
+        {
+            modelDoRenderInstrs(obj, obj, (u8*)m, 1);
+        }
+    }
+    if (((GameObject*)obj)->anim.classId == 1)
+    {
+        u8* iter;
+        int i = 0;
+        iter = (u8*)obj;
+        for (; i < ((GameObject*)obj)->childCount; i++)
+        {
+            int* child = *(int**)(iter + 200);
+            if (child != NULL)
+            {
+                objRenderChild(child, obj, 1);
+            }
+            iter += 4;
+        }
+    }
+}
+
+
+/*
+ * Bit-cursor over the model's render-instruction stream
+ * (ModelFileHeader.instrs, bit length at header +0xD8 * 8).  Every reader
+ * fetches 3 bytes little-endian around the cursor and shifts by (pos & 7).
+ * Stream grammar (4-bit opcodes):
+ *   1 = bind render op: 6-bit renderOps index (shader state setup)
+ *   2 = draw: 8-bit display-list index -> GXCallDisplayList
+ *   3 = vertex descriptor block: 1-bit pos/nrm/clr/tex size selectors
+ *   4 = load matrices: 4-bit count, then 8-bit joint-matrix indices
+ *   5 = end of stream
+ * The stream is walked through a MtxBitStream (data at +0, cursor at +0x10).
+ */
+
+#pragma dont_inline reset
+
+void objRenderChild(int* child, int* parent, u8 isShadow)
+{
+    f32 res[3];
+    MatrixTransform blk;
+    f32 wm[16];
+    f32 m2[16];
+    f32 dx, dz;
+    int off;
+    f32* mtx;
+    if (lbl_803DEA04 == ((GameObject*)child)->anim.rootMotionScale)
+    {
+        curObjMtx = 0;
+        return;
+    }
+    Obj_GetActiveModel((GameObject*)child);
+    {
+        int* pmodel = (int*)Obj_GetActiveModel((GameObject*)parent);
+        ChildEnt* ent;
+        int j;
+        u8* tbl = *(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c);
+        off = (((GameObject*)child)->objectFlags & 7) * 0x18;
+        ent = (ChildEnt*)(tbl + off);
+        j = ent->joints[OBJPRINT_ACTIVE_BANK_INDEX(parent)];
+        blk.x = *(f32*)(off + (char*)tbl);
+        blk.y = ent->pos[1];
+        blk.z = ent->pos[2];
+        if (j == -1)
+        {
+            Obj_BuildWorldTransformMatrix((GameObject*)parent, wm, 0);
+            mtx = wm;
+        }
+        else
+        {
+            mtx = (f32*)ObjModel_GetJointMatrix((u8*)pmodel, j);
+        }
+    }
+    if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8)
+    {
+        CameraViewSlot* cam = Camera_GetCurrentViewSlot();
+        blk.scale = ((GameObject*)child)->anim.rootMotionScale;
+        dx = ((GameObject*)child)->anim.localPosX - cam->x;
+        dz = ((GameObject*)child)->anim.localPosZ - cam->z;
+        blk.rotX = getAngle(dx, dz) + 0x8000;
+        blk.rotY = getAngle(((GameObject*)child)->anim.localPosY - cam->y,
+                              sqrtf(dx * dx + dz * dz));
+        blk.rotZ = cam->roll;
+        setMatrixFromObjectTransposed(&blk, m2);
+        res[0] = m2[3];
+        res[1] = m2[7];
+        res[2] = m2[11];
+        PSMTXMultVec(mtx, res, res);
+        m2[3] = res[0];
+        m2[7] = res[1];
+        m2[11] = res[2];
+    }
+    else
+    {
+        ChildEnt* pr;
+        blk.scale = lbl_803DEA1C;
+        pr = (ChildEnt*)(*(u8**)(*(int*)&((GameObject*)parent)->anim.modelInstance + 0x2c) + off);
+        blk.rotX = pr->rot[0];
+        blk.rotY = pr->rot[1];
+        blk.rotZ = pr->rot[2];
+        setMatrixFromObjectTransposed(&blk, m2);
+        PSMTXConcat(mtx, m2, m2);
+    }
+    if (isShadow == 0)
+    {
+        void* space;
+        ((GameObject*)child)->anim.worldPosX = m2[3] + playerMapOffsetX;
+        ((GameObject*)child)->anim.worldPosY = m2[7];
+        ((GameObject*)child)->anim.worldPosZ = m2[11] + playerMapOffsetZ;
+        space = ((GameObject*)child)->anim.parent;
+        if (space != NULL)
+        {
+            Obj_TransformWorldPointToLocal(((GameObject*)child)->anim.worldPosX, ((GameObject*)child)->anim.worldPosY,
+                                           ((GameObject*)child)->anim.worldPosZ, &((GameObject*)child)->anim.localPosX,
+                                           &((GameObject*)child)->anim.localPosY, &((GameObject*)child)->anim.localPosZ,
+                                           (u32)space);
+        }
+        else
+        {
+            ((GameObject*)child)->anim.localPosX = ((GameObject*)child)->anim.worldPosX;
+            ((GameObject*)child)->anim.localPosY = ((GameObject*)child)->anim.worldPosY;
+            ((GameObject*)child)->anim.localPosZ = ((GameObject*)child)->anim.worldPosZ;
+        }
+        objRotateFn_8003bce8VoidLegacy(m2, (s16*)child, (s16*)child + 1, (s16*)child + 2);
+    }
+    *(u8*)((char*)child + 0x37) = ((((GameObject*)child)->anim.alpha + 1) * *(u8*)((char*)parent + 0x37)) >> 8;
+    *(u8*)((char*)child + 0xf1) = *(u8*)((char*)parent + 0xf1);
+    if (!(((GameObject*)child)->anim.flags & OBJANIM_FLAG_HIDDEN))
+    {
+        curObjMtx = (u32)m2;
+        if (isShadow == 0)
+        {
+            ((GameObject*)child)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
+            objRenderModelPtrLegacy(child);
+        }
+        else
+        {
+            objRenderShadow(child);
+        }
+    }
+}
+
+
+void objRenderModel(GameObject* obj)
+{
+    int d1;
+    f32 d2;
+    int d3;
+    int d4;
+    f32 px;
+    f32 py;
+    f32 pz;
+    s32 sx;
+    s32 sy;
+    s32 sz;
+    u32 col;
+    int* model = (int*)Obj_GetActiveModel(obj);
+    if (lbl_803DEA04 == obj->anim.rootMotionScale)
+    {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int m0 = *model;
+        if (*(u16*)(m0 + 2) & 0x8000)
+        {
+            modelDoAltRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
+        }
+        else
+        {
+            modelDoRenderInstrs((int*)obj, obj->ownerObj ? (int*)obj->ownerObj : (int*)obj, (u8*)m0, 0);
+        }
+    }
+    {
+        u8* iter;
+        int i = 0;
+        iter = (u8*)obj;
+        for (; i < obj->childCount; i++)
+        {
+            int* child = *(int**)&((GameObject*)iter)->childObjs[0];
+            if (child != NULL)
+            {
+                objRenderChild(child, (int*)obj, 0);
+            }
+            iter += 4;
+        }
+    }
+    if (OBJPRINT_MODEL_DEF(obj)->shadowType != 4)
+    {
+        return;
+    }
+    if (lbl_803DCC29 != 0)
+    {
+        return;
+    }
+    {
+        s16 t = obj->anim.seqId;
+        if (t == 0x6a8)
+            return;
+        if (t == 0x6a9)
+            return;
+        if (t == 0x6aa)
+            return;
+        if (t == 0x6ab)
+            return;
+        if (t == 0x6ac)
+            return;
+        if (t == 0x752)
+            return;
+    }
+    Camera_ProjectWorldPointWithOffset(
+        obj->anim.localPosX - playerMapOffsetX, obj->anim.localPosY, obj->anim.localPosZ - playerMapOffsetZ,
+        obj->anim.hitboxScale * obj->anim.rootMotionScale, &px, &py, &pz);
+    Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+    if (sz <= depthReadRequestPollPointerKey(sx, sy, obj))
+    {
+        obj->anim.modelState->shadowAlphaStep = 0x20;
+    }
+    else
+    {
+        obj->anim.modelState->shadowAlphaStep = -0x20;
+    }
+    {
+        int a;
+        a = obj->anim.modelState->shadowAlpha;
+        a += obj->anim.modelState->shadowAlphaStep;
+        if (a > 0xff)
+        {
+            obj->anim.modelState->shadowAlpha = 0xff;
+        }
+        else if (a < 0)
+        {
+            obj->anim.modelState->shadowAlpha = 0;
+        }
+        else
+        {
+            obj->anim.modelState->shadowAlpha = a;
+        }
+    }
+    gObjShadowColor[3] = obj->anim.modelState->shadowAlpha;
+    objShadowFn_8006c5f0Legacy(obj, &d1, &d2, &d3, &d4);
+    col = *(u32*)gObjShadowColor;
+    hudDrawColoredLegacy(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
+}
+
+void set_shadowFlag_803dcc29(u8 x)
+{
+    lbl_803DCC29 = x;
+}
+
+
+
+extern int lbl_803DCC88;
+
+void dvdReadCb_80041d30(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        lbl_803DCC88--;
+    }
+}
+
+
+
+// DVDGetCommandBlockStatus() command-block states (DVD_STATE_*)
+#define DVD_STATE_FATAL_ERROR   -1
+#define DVD_STATE_END           0
+#define DVD_STATE_BUSY          1
+#define DVD_STATE_WAITING       2
+#define DVD_STATE_COVER_CLOSED  3
+#define DVD_STATE_NO_DISK       4
+#define DVD_STATE_COVER_OPEN    5
+#define DVD_STATE_WRONG_DISK    6
+#define DVD_STATE_MOTOR_STOPPED 7
+#define DVD_STATE_PAUSING       8
+#define DVD_STATE_IGNORED       9
+#define DVD_STATE_CANCELED      10
+#define DVD_STATE_RETRY         11
+
+int fn_80041D98(DVDCommandBlock* block)
+{
+    s32 status;
+    if (block == NULL)
+    {
+        return -1;
+    }
+    status = DVDGetCommandBlockStatus(block);
+    switch (status)
+    {
+    case DVD_STATE_FATAL_ERROR:
+        return status;
+    case DVD_STATE_END:
+        return status;
+    case DVD_STATE_BUSY:
+        return status;
+    case DVD_STATE_WAITING:
+        return status;
+    case DVD_STATE_COVER_CLOSED:
+        return status;
+    case DVD_STATE_NO_DISK:
+        return status;
+    case DVD_STATE_COVER_OPEN:
+        return status;
+    case DVD_STATE_WRONG_DISK:
+        return status;
+    case DVD_STATE_MOTOR_STOPPED:
+        return status;
+    case DVD_STATE_PAUSING:
+        return status;
+    case DVD_STATE_IGNORED:
+        return status;
+    case DVD_STATE_CANCELED:
+        return status;
+    case DVD_STATE_RETRY:
+        return status;
+    }
+    return 0;
+}
+u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
+u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
+
+
+
+extern u32 lbl_803DCC70;
+void clearForceLoadImmediately(void)
+{
+    lbl_803DCC70 = 0x0;
+}
+void setForceLoadImmediately(void)
+{
+    lbl_803DCC70 = 0x1;
+}
+int getLoadedFileFlags(int slot)
+{
+    int s = OSDisableInterrupts();
+    u32 v = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    return v;
+}
 
 #pragma optimization_level 2
+extern u8 lbl_80345E10[0x160];
+
 void defragMemory(int mode)
 {
     int pass;
@@ -3318,114 +3294,180 @@ void defragMemory(int mode)
     }
     texFlagFn_80023cbc(0);
 }
+
+f32 gObjBoneMtxBuffer[0xC00];
 #pragma optimization_level reset
 
-void* getCurrentDataFile(int id)
+extern u32 gObjBlockStatus[0x63F6];
+
+void animCurvReadCb(s32 result, DVDFileInfo* fileInfo)
 {
-    u8* base = lbl_80345E10;
-    switch (id)
+    if (result < 0)
     {
-    case 42:
-        return &base[0x170e0];
-    case 47:
-        return &base[0x14200];
-    case 36:
-        return &base[0x10200];
-    case 33:
-        return &base[0xc200];
-    case 80:
-        return *(void**)&base[0x19718];
-    case 38:
-        return &base[0xa200];
-    case 26:
-        return &base[0x8200];
-    case 14:
-        return &base[0x2c0];
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
     }
-    return NULL;
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10000000)
+        {
+            lbl_803DCC84 |= 0x10000000;
+            gObjBlockStatus[0x34 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x40000000)
+        {
+            lbl_803DCC84 |= 0x40000000;
+            gObjBlockStatus[0x154 / 4] = 0;
+        }
+    }
 }
 
-extern u32 lbl_803DCC84;
-extern void* lbl_803DCC8C;
+u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
+
+
+void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000000)
+        {
+            lbl_803DCC84 |= 0x20000000;
+            gObjBlockStatus[0x38 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x80000000)
+        {
+            lbl_803DCC84 |= 0x80000000;
+            gObjBlockStatus[0x158 / 4] = 0;
+        }
+    }
+}
+
+
+
+void voxMapReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1000000)
+        {
+            lbl_803DCC84 |= 0x1000000;
+            gObjBlockStatus[0x6c / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x4000000)
+        {
+            lbl_803DCC84 |= 0x4000000;
+            gObjBlockStatus[0x150 / 4] = 0;
+        }
+    }
+}
+
+
+
+void voxMapTabReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x2000000)
+        {
+            lbl_803DCC84 |= 0x2000000;
+            gObjBlockStatus[0x68 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x8000000)
+        {
+            lbl_803DCC84 |= 0x8000000;
+            gObjBlockStatus[0x14c / 4] = 0;
+        }
+    }
+}
+
+u8 lbl_80345E10[0x160];
+
+
+void blocksTabReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x20000)
+        {
+            lbl_803DCC84 |= 0x20000;
+            gObjBlockStatus[0x98 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x80000)
+        {
+            lbl_803DCC84 |= 0x80000;
+            gObjBlockStatus[0x120 / 4] = 0;
+        }
+    }
+}
+
+void romListReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    lbl_803DCC74 = 0;
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+}
+
 extern u32 lbl_8035F3E8[];
 u32 gObjBlockStatus[0x63F6];
-void tex0tab1readCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        mm_free((void*)lbl_8035F3E8[36]);
-        lbl_8035F3E8[36] = 0;
-        gObjBlockStatus[36] = 0;
-        if (lbl_803DCC80 & 0x400)
-        {
-            lbl_803DCC84 |= 0x400;
-            gObjBlockStatus[36] = 0;
-        }
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x400)
-        {
-            lbl_803DCC84 |= 0x400;
-            gObjBlockStatus[36] = 0;
-        }
-    }
-}
 
-void tex0tab2readCb(s32 result, DVDFileInfo* fileInfo)
+void blocksReadCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        mm_free((void*)lbl_8035F3E8[78]);
-        lbl_8035F3E8[78] = 0;
-        gObjBlockStatus[78] = 0;
-        if (lbl_803DCC80 & 0x800)
-        {
-            lbl_803DCC84 |= 0x800;
-            gObjBlockStatus[78] = 0;
-        }
     }
     else
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x800)
+        if (lbl_803DCC80 & 0x10000)
         {
-            lbl_803DCC84 |= 0x800;
-            gObjBlockStatus[78] = 0;
+            lbl_803DCC84 |= 0x10000;
+            gObjBlockStatus[0x94 / 4] = 0;
         }
-    }
-}
-
-void tex1tab1readCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        mm_free((void*)lbl_8035F3E8[78]);
-        lbl_8035F3E8[78] = 0;
-        gObjBlockStatus[78] = 0;
-        if (lbl_803DCC80 & 0x4000)
+        else if (lbl_803DCC80 & 0x40000)
         {
-            lbl_803DCC84 |= 0x4000;
-            gObjBlockStatus[33] = 0;
-        }
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x4000)
-        {
-            lbl_803DCC84 |= 0x4000;
-            gObjBlockStatus[33] = 0;
+            lbl_803DCC84 |= 0x40000;
+            gObjBlockStatus[0x11c / 4] = 0;
         }
     }
 }
@@ -3457,268 +3499,29 @@ void tex1tab2readCb(s32 result, DVDFileInfo* fileInfo)
     }
 }
 
-void romListReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    lbl_803DCC74 = 0;
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-}
-
-int unlockLevel(s32 val, int idx, int flag)
-{
-    s32 cur;
-    if (flag == 1)
-    {
-        (&gObjLevelLockSlots)[0] = -2;
-        (&gObjLevelLockSlots)[1] = -2;
-        return -1;
-    }
-    cur = (&gObjLevelLockSlots)[idx];
-    if (val == cur || cur == -2)
-    {
-        (&gObjLevelLockSlots)[idx] = -2;
-        return -1;
-    }
-    return cur;
-}
-
-extern int lbl_803DCC88;
-
-void dvdReadCb_80041d30(s32 result, DVDFileInfo* fileInfo)
+void tex1tab1readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void*)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        gObjBlockStatus[78] = 0;
+        if (lbl_803DCC80 & 0x4000)
+        {
+            lbl_803DCC84 |= 0x4000;
+            gObjBlockStatus[33] = 0;
+        }
     }
     else
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        lbl_803DCC88--;
-    }
-}
-
-void animReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x10)
+        if (lbl_803DCC80 & 0x4000)
         {
-            lbl_803DCC84 |= 0x10;
-            gObjBlockStatus[0xc0 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x20)
-        {
-            lbl_803DCC84 |= 0x20;
-            gObjBlockStatus[0x128 / 4] = 0;
-        }
-    }
-}
-
-void animCurvReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x10000000)
-        {
-            lbl_803DCC84 |= 0x10000000;
-            gObjBlockStatus[0x34 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x40000000)
-        {
-            lbl_803DCC84 |= 0x40000000;
-            gObjBlockStatus[0x154 / 4] = 0;
-        }
-    }
-}
-
-void animCurvTabReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x20000000)
-        {
-            lbl_803DCC84 |= 0x20000000;
-            gObjBlockStatus[0x38 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x80000000)
-        {
-            lbl_803DCC84 |= 0x80000000;
-            gObjBlockStatus[0x158 / 4] = 0;
-        }
-    }
-}
-
-void animTabReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x40)
-        {
-            lbl_803DCC84 |= 0x40;
-            gObjBlockStatus[0xbc / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x80)
-        {
-            lbl_803DCC84 |= 0x80;
-            gObjBlockStatus[0x124 / 4] = 0;
-        }
-    }
-}
-
-void blocksReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x10000)
-        {
-            lbl_803DCC84 |= 0x10000;
-            gObjBlockStatus[0x94 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x40000)
-        {
-            lbl_803DCC84 |= 0x40000;
-            gObjBlockStatus[0x11c / 4] = 0;
-        }
-    }
-}
-
-void blocksTabReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x20000)
-        {
-            lbl_803DCC84 |= 0x20000;
-            gObjBlockStatus[0x98 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x80000)
-        {
-            lbl_803DCC84 |= 0x80000;
-            gObjBlockStatus[0x120 / 4] = 0;
-        }
-    }
-}
-
-void modelsReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x1)
-        {
-            lbl_803DCC84 |= 0x1;
-            gObjBlockStatus[0xac / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x2)
-        {
-            lbl_803DCC84 |= 0x2;
-            gObjBlockStatus[0x118 / 4] = 0;
-        }
-    }
-}
-
-void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x4)
-        {
-            lbl_803DCC84 |= 0x4;
-            gObjBlockStatus[0xa8 / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x8)
-        {
-            lbl_803DCC84 |= 0x8;
-            gObjBlockStatus[0x114 / 4] = 0;
-        }
-    }
-}
-
-void tex0readCb(s32 result, DVDFileInfo* fileInfo)
-{
-    if (result < 0)
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-    }
-    else
-    {
-        DVDClose(fileInfo);
-        AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x100)
-        {
-            lbl_803DCC84 |= 0x100;
-            gObjBlockStatus[0x8c / 4] = 0;
-        }
-        else if (lbl_803DCC80 & 0x200)
-        {
-            lbl_803DCC84 |= 0x200;
-            gObjBlockStatus[0x134 / 4] = 0;
+            lbl_803DCC84 |= 0x4000;
+            gObjBlockStatus[33] = 0;
         }
     }
 }
@@ -3747,31 +3550,60 @@ void tex1ReadCb(s32 result, DVDFileInfo* fileInfo)
     }
 }
 
-void voxMapReadCb(s32 result, DVDFileInfo* fileInfo)
+void tex0tab2readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void*)lbl_8035F3E8[78]);
+        lbl_8035F3E8[78] = 0;
+        gObjBlockStatus[78] = 0;
+        if (lbl_803DCC80 & 0x800)
+        {
+            lbl_803DCC84 |= 0x800;
+            gObjBlockStatus[78] = 0;
+        }
     }
     else
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x1000000)
+        if (lbl_803DCC80 & 0x800)
         {
-            lbl_803DCC84 |= 0x1000000;
-            gObjBlockStatus[0x6c / 4] = 0;
+            lbl_803DCC84 |= 0x800;
+            gObjBlockStatus[78] = 0;
         }
-        else if (lbl_803DCC80 & 0x4000000)
+    }
+}
+void tex0tab1readCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        mm_free((void*)lbl_8035F3E8[36]);
+        lbl_8035F3E8[36] = 0;
+        gObjBlockStatus[36] = 0;
+        if (lbl_803DCC80 & 0x400)
         {
-            lbl_803DCC84 |= 0x4000000;
-            gObjBlockStatus[0x150 / 4] = 0;
+            lbl_803DCC84 |= 0x400;
+            gObjBlockStatus[36] = 0;
+        }
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x400)
+        {
+            lbl_803DCC84 |= 0x400;
+            gObjBlockStatus[36] = 0;
         }
     }
 }
 
-void voxMapTabReadCb(s32 result, DVDFileInfo* fileInfo)
+void tex0readCb(s32 result, DVDFileInfo* fileInfo)
 {
     if (result < 0)
     {
@@ -3782,21 +3614,152 @@ void voxMapTabReadCb(s32 result, DVDFileInfo* fileInfo)
     {
         DVDClose(fileInfo);
         AtomicSList_Push(lbl_803DCC8C, fileInfo);
-        if (lbl_803DCC80 & 0x2000000)
+        if (lbl_803DCC80 & 0x100)
         {
-            lbl_803DCC84 |= 0x2000000;
-            gObjBlockStatus[0x68 / 4] = 0;
+            lbl_803DCC84 |= 0x100;
+            gObjBlockStatus[0x8c / 4] = 0;
         }
-        else if (lbl_803DCC80 & 0x8000000)
+        else if (lbl_803DCC80 & 0x200)
         {
-            lbl_803DCC84 |= 0x8000000;
-            gObjBlockStatus[0x14c / 4] = 0;
+            lbl_803DCC84 |= 0x200;
+            gObjBlockStatus[0x134 / 4] = 0;
         }
     }
+}
+
+void animReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x10)
+        {
+            lbl_803DCC84 |= 0x10;
+            gObjBlockStatus[0xc0 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x20)
+        {
+            lbl_803DCC84 |= 0x20;
+            gObjBlockStatus[0x128 / 4] = 0;
+        }
+    }
+}
+
+void modelsReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x1)
+        {
+            lbl_803DCC84 |= 0x1;
+            gObjBlockStatus[0xac / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x2)
+        {
+            lbl_803DCC84 |= 0x2;
+            gObjBlockStatus[0x118 / 4] = 0;
+        }
+    }
+}
+
+void animTabReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x40)
+        {
+            lbl_803DCC84 |= 0x40;
+            gObjBlockStatus[0xbc / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x80)
+        {
+            lbl_803DCC84 |= 0x80;
+            gObjBlockStatus[0x124 / 4] = 0;
+        }
+    }
+}
+
+void modelsTabReadCb(s32 result, DVDFileInfo* fileInfo)
+{
+    if (result < 0)
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+    }
+    else
+    {
+        DVDClose(fileInfo);
+        AtomicSList_Push(lbl_803DCC8C, fileInfo);
+        if (lbl_803DCC80 & 0x4)
+        {
+            lbl_803DCC84 |= 0x4;
+            gObjBlockStatus[0xa8 / 4] = 0;
+        }
+        else if (lbl_803DCC80 & 0x8)
+        {
+            lbl_803DCC84 |= 0x8;
+            gObjBlockStatus[0x114 / 4] = 0;
+        }
+    }
+}
+
+#pragma dont_inline on
+void mapLoadDataFiles(int mapIdx)
+{
+    if (sMapFileNameAdjacencyTable[mapIdx] != -1)
+    {
+        int* r = (int*)(*gMapEventInterface)->getCurCharPos();
+        *(s8*)((char*)r + 0xe) = mapIdx;
+    }
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_BIN_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_TAB_A);
+    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
+}
+#pragma dont_inline reset
+
+extern s16 gObjMapBlockInfo[];
+
+s32 mapCheckCurBlocks(int v)
+{
+    if (((s16*)((char*)gObjMapBlockInfo + 0x4a))[0] == v)
+        return 0;
+    if (((s16*)((char*)gObjMapBlockInfo + 0x8e))[0] == v)
+        return 1;
+    return -1;
 }
 
 extern int sMapFileNameIndexRemapTable[];
-extern s16 sMapFileNameAdjacencyTable[];
 
 int loadMapAndParent(int mapId)
 {
@@ -3820,27 +3783,180 @@ int loadMapAndParent(int mapId)
     return idx;
 }
 
-void mapLoadDataFiles(int mapIdx)
+void clearLoadedFileFlags_blocks1(void)
 {
-    if (sMapFileNameAdjacencyTable[mapIdx] != -1)
+    int s = OSDisableInterrupts();
+    if (lbl_803DCC80 & 0x100000)
     {
-        int* r = (int*)(*gMapEventInterface)->getCurCharPos();
-        *(s8*)((char*)r + 0xe) = mapIdx;
+        lbl_803DCC80 ^= 0x100000;
     }
-    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX1_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_TEX0_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIM_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_MODELS_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_BLOCKS_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_VOXMAP_BIN_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_TAB_A);
-    mapLoadDataFile(mapIdx, MLDF_FILEID_ANIMCURV_BIN_A);
+    OSRestoreInterrupts(s);
+}
+
+
+void setLoadedFileFlags_blocks1(void)
+{
+    int s = OSDisableInterrupts();
+    lbl_803DCC80 |= 0x100000;
+    OSRestoreInterrupts(s);
+}
+u32 isRomListLoading(void)
+{
+    return lbl_803DCC74;
+}
+
+
+extern s32 gObjTableFileRequestFlags;
+
+u32 loadTableFiles(void)
+{
+    u8* base = lbl_80345E10;
+    int s = OSDisableInterrupts();
+    int flags = getLoadedFileFlags(0);
+    lbl_803DCC80;
+    if ((gObjTableFileRequestFlags & 0x4) && !(flags & 0x4) && *(s32*)(base + 0x191e4) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x170e0), 0x2a, 0x45, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x8) && !(flags & 0x8) && *(s32*)(base + 0x19250) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x170e0), 0x2a, 0x45, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x40) && !(flags & 0x40) && *(s32*)(base + 0x191f8) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+    }
+    if ((gObjTableFileRequestFlags & 0x80) && !(flags & 0x80) && *(s32*)(base + 0x19260) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+    }
+    if ((gObjTableFileRequestFlags & 0x400) && !(flags & 0x400) && *(s32*)(base + 0x191c4) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x10200), 0x24, 0x4e, 0x1000);
+    }
+    if ((gObjTableFileRequestFlags & 0x800) && !(flags & 0x800) && *(s32*)(base + 0x1926c) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x10200), 0x24, 0x4e, 0x1000);
+    }
+    if ((gObjTableFileRequestFlags & 0x4000) && !(flags & 0x4000) && *(s32*)(base + 0x191b8) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0xc200), 0x21, 0x4c, 0x1000);
+    }
+    if ((gObjTableFileRequestFlags & 0x8000) && !(flags & 0x8000) && *(s32*)(base + 0x19264) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0xc200), 0x21, 0x4c, 0x1000);
+    }
+    if ((gObjTableFileRequestFlags & 0x20000) && !(flags & 0x20000) && *(s32*)(base + 0x191cc) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0xa200), 0x26, 0x48, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x80000) && !(flags & 0x80000) && *(s32*)(base + 0x19254) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0xa200), 0x26, 0x48, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x2000000) && !(flags & 0x2000000) && *(s32*)(base + 0x191a4) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x8200), 0x1a, 0x53, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x8000000) && !(flags & 0x8000000) && *(s32*)(base + 0x19288) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x8200), 0x1a, 0x53, 0x800);
+    }
+    if ((gObjTableFileRequestFlags & 0x20000000) && !(flags & 0x20000000) && *(s32*)(base + 0x1916c) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+    }
+    if ((gObjTableFileRequestFlags & 0x80000000) && !(flags & 0x80000000) && *(s32*)(base + 0x1928c) == -1)
+    {
+        mergeTableFiles((u32*)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+    }
+    gObjTableFileRequestFlags = flags;
+    lbl_803DCC80 = lbl_803DCC80 ^ lbl_803DCC84;
+    lbl_803DCC84 = 0;
+    OSRestoreInterrupts(s);
+    return lbl_803DCC80;
+}
+
+int unlockLevel(s32 val, int idx, int flag)
+{
+    s32 cur;
+    if (flag == 1)
+    {
+        (&gObjLevelLockSlots)[0] = -2;
+        (&gObjLevelLockSlots)[1] = -2;
+        return -1;
+    }
+    cur = (&gObjLevelLockSlots)[idx];
+    if (val == cur || cur == -2)
+    {
+        (&gObjLevelLockSlots)[idx] = -2;
+        return -1;
+    }
+    return cur;
+}
+
+
+int lockLevel(s32 val, int idx)
+{
+    s32 cur = (&gObjLevelLockSlots)[idx];
+    if (cur == -2)
+    {
+        (&gObjLevelLockSlots)[idx] = val;
+        return -1;
+    }
+    return cur;
+}
+
+int getTableFileEntry(int fileId, int index, int* out)
+{
+    u8* base = lbl_80345E10;
+    int count = 0;
+    void* table = NULL;
+    switch (fileId)
+    {
+    case 0x2a:
+        count = 0x800;
+        table = (u8*)(base + 0x10000) + 0x70e0;
+        break;
+    case 0x2f:
+        count = 0xbb8;
+        table = (u8*)(base + 0x10000) + 0x4200;
+        break;
+    case 0x24:
+        count = 0x1000;
+        table = (u8*)(base + 0x10000) + 0x200;
+        break;
+    case 0x21:
+        count = 0x1000;
+        table = (u8*)(base + 0x10000) - 0x3e00;
+        break;
+    case 0x50:
+        table = *(void**)&base[0x19718];
+        break;
+    case 0x26:
+        count = 0x800;
+        table = (u8*)(base + 0x10000) - 0x5e00;
+        break;
+    case 0x1a:
+        count = 0x800;
+        table = (u8*)(base + 0x10000) - 0x7e00;
+        break;
+    case 0xe:
+        count = 0x1fd0;
+        table = &base[0x2c0];
+        break;
+    }
+    if (index < 0 || index >= count)
+    {
+        debugPrintfxy(0x14, 0x28, sAssetIndexOverflowError);
+        return 0;
+    }
+    if (table != NULL)
+    {
+        *out = ((int*)table)[index];
+        return 1;
+    }
+    return 0;
 }
 
 int mergeTableFiles(u32* tbl, int id, int idx, int count_);
@@ -3869,8 +3985,35 @@ struct MldfTables
 #define MAPPTR_RT(s)   (*(u32*)(((s) << 2) + ((u32) & tbl->ptrs[0])))
 #define MAPOWNER_RT(s) (*(s16*)(((s) << 1) + ((u32) & tbl->owners[0])))
 
-#pragma opt_loop_invariants off
+
+void* getCurrentDataFile(int id)
+{
+    u8* base = lbl_80345E10;
+    switch (id)
+    {
+    case 42:
+        return &base[0x170e0];
+    case 47:
+        return &base[0x14200];
+    case 36:
+        return &base[0x10200];
+    case 33:
+        return &base[0xc200];
+    case 80:
+        return *(void**)&base[0x19718];
+    case 38:
+        return &base[0xa200];
+    case 26:
+        return &base[0x8200];
+    case 14:
+        return &base[0x2c0];
+    }
+    return NULL;
+}
+
+
 #pragma opt_common_subs off
+#pragma opt_loop_invariants off
 int mapUnload(int mapId, int flags)
 {
     char* hi;
@@ -4057,12 +4200,10 @@ int mapUnload(int mapId, int flags)
     }
     return 1;
 }
-#pragma opt_loop_invariants reset
+
 #pragma opt_common_subs reset
-
-extern char sAssetIndexOverflowError[];
-
 #pragma opt_lifetimes off
+#pragma opt_loop_invariants reset
 int mergeTableFiles(u32* tbl, int id, int idx, int count_)
 {
     u8* base = lbl_80345E10;
@@ -4342,132 +4483,9 @@ int mergeTableFiles(u32* tbl, int id, int idx, int count_)
     }
     return 1;
 }
+#undef MAPTBLP
 #pragma opt_lifetimes reset
 
-#undef MAPTBLP
-
-extern s32 gObjTableFileRequestFlags;
-
-u32 loadTableFiles(void)
-{
-    u8* base = lbl_80345E10;
-    int s = OSDisableInterrupts();
-    int flags = getLoadedFileFlags(0);
-    lbl_803DCC80;
-    if ((gObjTableFileRequestFlags & 0x4) && !(flags & 0x4) && *(s32*)(base + 0x191e4) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x170e0), 0x2a, 0x45, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x8) && !(flags & 0x8) && *(s32*)(base + 0x19250) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x170e0), 0x2a, 0x45, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x40) && !(flags & 0x40) && *(s32*)(base + 0x191f8) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x14200), 0x2f, 0x49, 0xbb8);
-    }
-    if ((gObjTableFileRequestFlags & 0x80) && !(flags & 0x80) && *(s32*)(base + 0x19260) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x14200), 0x2f, 0x49, 0xbb8);
-    }
-    if ((gObjTableFileRequestFlags & 0x400) && !(flags & 0x400) && *(s32*)(base + 0x191c4) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x10200), 0x24, 0x4e, 0x1000);
-    }
-    if ((gObjTableFileRequestFlags & 0x800) && !(flags & 0x800) && *(s32*)(base + 0x1926c) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x10200), 0x24, 0x4e, 0x1000);
-    }
-    if ((gObjTableFileRequestFlags & 0x4000) && !(flags & 0x4000) && *(s32*)(base + 0x191b8) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0xc200), 0x21, 0x4c, 0x1000);
-    }
-    if ((gObjTableFileRequestFlags & 0x8000) && !(flags & 0x8000) && *(s32*)(base + 0x19264) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0xc200), 0x21, 0x4c, 0x1000);
-    }
-    if ((gObjTableFileRequestFlags & 0x20000) && !(flags & 0x20000) && *(s32*)(base + 0x191cc) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0xa200), 0x26, 0x48, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x80000) && !(flags & 0x80000) && *(s32*)(base + 0x19254) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0xa200), 0x26, 0x48, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x2000000) && !(flags & 0x2000000) && *(s32*)(base + 0x191a4) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x8200), 0x1a, 0x53, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x8000000) && !(flags & 0x8000000) && *(s32*)(base + 0x19288) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x8200), 0x1a, 0x53, 0x800);
-    }
-    if ((gObjTableFileRequestFlags & 0x20000000) && !(flags & 0x20000000) && *(s32*)(base + 0x1916c) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
-    }
-    if ((gObjTableFileRequestFlags & 0x80000000) && !(flags & 0x80000000) && *(s32*)(base + 0x1928c) == -1)
-    {
-        mergeTableFiles((u32*)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
-    }
-    gObjTableFileRequestFlags = flags;
-    lbl_803DCC80 = lbl_803DCC80 ^ lbl_803DCC84;
-    lbl_803DCC84 = 0;
-    OSRestoreInterrupts(s);
-    return lbl_803DCC80;
-}
-
-int getTableFileEntry(int fileId, int index, int* out)
-{
-    u8* base = lbl_80345E10;
-    int count = 0;
-    void* table = NULL;
-    switch (fileId)
-    {
-    case 0x2a:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) + 0x70e0;
-        break;
-    case 0x2f:
-        count = 0xbb8;
-        table = (u8*)(base + 0x10000) + 0x4200;
-        break;
-    case 0x24:
-        count = 0x1000;
-        table = (u8*)(base + 0x10000) + 0x200;
-        break;
-    case 0x21:
-        count = 0x1000;
-        table = (u8*)(base + 0x10000) - 0x3e00;
-        break;
-    case 0x50:
-        table = *(void**)&base[0x19718];
-        break;
-    case 0x26:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) - 0x5e00;
-        break;
-    case 0x1a:
-        count = 0x800;
-        table = (u8*)(base + 0x10000) - 0x7e00;
-        break;
-    case 0xe:
-        count = 0x1fd0;
-        table = &base[0x2c0];
-        break;
-    }
-    if (index < 0 || index >= count)
-    {
-        debugPrintfxy(0x14, 0x28, sAssetIndexOverflowError);
-        return 0;
-    }
-    if (table != NULL)
-    {
-        *out = ((int*)table)[index];
-        return 1;
-    }
-    return 0;
-}
 
 f32 gObjJointMtxTemp[24] = {
     1.0f,         0.0f,           0.0f,           0.0f,           0.0f,           1.0f,
