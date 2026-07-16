@@ -53,6 +53,7 @@ typedef struct PollenExtra
 extern f32 lbl_803E313C;
 extern f32 lbl_803E3138;
 extern f32 lbl_803E3140;
+extern f32 lbl_803E3144;
 extern f32 lbl_803E3148;
 
 #define POLLEN_PARTFX_MOTE 0x4ba
@@ -60,7 +61,6 @@ extern f32 lbl_803E3148;
 #pragma dont_inline on
 void Pollen_burst(GameObject* obj)
 {
-    extern f32 lbl_803E3144;
     int burstCounter;
     PollenExtra* extra;
     u8* fragment;
@@ -192,8 +192,8 @@ void Pollen_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_majring2);
             ((GameObject*)obj)->anim.alpha = 0;
         }
-        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta, ((GameObject*)obj)->anim.velocityY * timeDelta,
-                ((GameObject*)obj)->anim.velocityZ * timeDelta);
+        objMove((GameObject*)obj, ((GameObject*)obj)->anim.velocityX * timeDelta,
+                ((GameObject*)obj)->anim.velocityY * timeDelta, ((GameObject*)obj)->anim.velocityZ * timeDelta);
         ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, POLLEN_HIT_VOLUME_SLOT, 1, 0);
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 7);
         ObjHits_EnableObject((u32)obj);

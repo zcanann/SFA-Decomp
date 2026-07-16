@@ -70,6 +70,7 @@ extern f32 lbl_803E2E70;
 extern f32 lbl_803E2E74;
 extern f32 lbl_803E2E78;
 extern f32 lbl_803E2E9C;
+extern void* gDllCBMoveHandlers[];
 void* gDllCBStateHandlers[6];
 extern u8 lbl_80320008[];
 extern u8 lbl_80320080[];
@@ -171,7 +172,6 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
 #pragma dont_inline on
 void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 {
-    extern void* gDllCBMoveHandlers[];
     int setup;
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
@@ -245,8 +245,6 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
 
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
-
-    extern void* gDllCBMoveHandlers[];
     int setup;
     RomCurveWalker* path;
     int sub;
@@ -442,7 +440,6 @@ int fn_801603E8(int* obj, u8* obj2)
     return 0;
 }
 
-extern u8 gDllCBMoveHandlers[];
 #pragma peephole on
 void dll_CB_hitDetect(int* obj)
 {

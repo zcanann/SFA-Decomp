@@ -11,11 +11,11 @@ extern u8 gNrarewareTransitionStarted;
 extern f32 lbl_803E1D08;
 extern f32 lbl_803E1D0C;
 extern u8 gNrarewareTimeoutFlag;
+extern s8 gNrarewareExitDelay;
+extern s8 gNrarewareStage;
 
 void n_rareware_render(void)
 {
-    extern u8 gNrarewareExitDelay;
-    extern u8 gNrarewareStage;
     int frame;
 
     if (((s8)gNrarewareTransitionStarted != 0) && ((s8)gNrarewareExitDelay <= 10))
@@ -48,8 +48,6 @@ static char sNRarewareReportTag[] = "n_rareware\n";
 
 int n_rareware_frameStart(void)
 {
-    extern s8 gNrarewareExitDelay;
-    extern s8 gNrarewareStage;
     int frameStep;
 
     frameStep = framesThisStep;
@@ -95,8 +93,6 @@ void n_rareware_release(void)
 
 void n_rareware_initialise(void)
 {
-    extern s8 gNrarewareExitDelay;
-    extern s8 gNrarewareStage;
     fn_8001404C(0);
     gNrarewareFrameCounter = 0;
     gNrarewareStage = 0;

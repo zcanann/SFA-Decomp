@@ -31,8 +31,8 @@ extern f32 lbl_803E1D94;
 extern f32 lbl_803E1D98;
 extern f32 lbl_803E1D9C;
 
-extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv,
-                                  f32* outMaxH, int glyphLang);
+extern void gameTextMeasureString(u8* str, f32 scale, f32* outW, f32* outZero, f32* outMaxAdv, f32* outMaxH,
+                                  int glyphLang);
 
 s32 gEnterSaveNameCharWidths[40];
 s32 gEnterSaveNameCharOffsets[40];
@@ -44,10 +44,10 @@ extern u32 gEnterSaveNameTotalWidth;
 extern u8 lbl_803DD6EC;
 extern u8 lbl_803DD6ED;
 extern int* gTitleMenuLinkInterface;
+extern char gEnterSaveNameBuffer;
 
 void EnterSaveNameScreen_render(void)
 {
-    extern u8 gEnterSaveNameBuffer;
     extern int gEnterSaveNameSelectedIndex;
     u8 buf[2];
     int i;
@@ -71,11 +71,10 @@ void EnterSaveNameScreen_render(void)
 
     gEnterSaveNameColorAnimTime = gEnterSaveNameColorAnimTime + timeDelta;
 
-    gameTextSetColorInt(
-        (int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D98 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
-        (int)(mathSinf(lbl_803E1D9C * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
-        0xff);
+    gameTextSetColorInt((int)(mathSinf(lbl_803E1D94 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+                        (int)(mathSinf(lbl_803E1D98 * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+                        (int)(mathSinf(lbl_803E1D9C * gEnterSaveNameColorAnimTime) * lbl_803E1D90 + lbl_803E1D8C),
+                        0xff);
 
     i = gEnterSaveNameSelectedIndex;
     gameTextShowStr(gameTextGetStr(gEnterSaveNameCharTextIds[i]), 0x56,
@@ -89,23 +88,21 @@ void EnterSaveNameScreen_frameEnd(void)
 {
 }
 
-#define ENTER_SAVE_NAME_CHAR_COUNT 40
-#define ENTER_SAVE_NAME_DELETE_INDEX 38
-#define ENTER_SAVE_NAME_DONE_INDEX 39
-#define ENTER_SAVE_NAME_MAX_LENGTH 3
-#define ENTER_SAVE_NAME_MENU_DLL 5
-#define ENTER_SAVE_NAME_SFX_CONFIRM 0x418
-#define ENTER_SAVE_NAME_SFX_DELETE 0x419
-#define ENTER_SAVE_NAME_SFX_TYPE 0x41A
-#define PAD_BUTTON_A 0x100
-#define PAD_BUTTON_B 0x200
+extern s32 gEnterSaveNameSelectedIndex;
 
-u32
-EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
-                        , u32 arg6, u32 arg7, u32 arg8)
+#define ENTER_SAVE_NAME_CHAR_COUNT   40
+#define ENTER_SAVE_NAME_DELETE_INDEX 38
+#define ENTER_SAVE_NAME_DONE_INDEX   39
+#define ENTER_SAVE_NAME_MAX_LENGTH   3
+#define ENTER_SAVE_NAME_MENU_DLL     5
+#define ENTER_SAVE_NAME_SFX_CONFIRM  0x418
+#define ENTER_SAVE_NAME_SFX_DELETE   0x419
+#define ENTER_SAVE_NAME_SFX_TYPE     0x41A
+#define PAD_BUTTON_A                 0x100
+#define PAD_BUTTON_B                 0x200
+
+u32 EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5, u32 arg6, u32 arg7, u32 arg8)
 {
-    extern char gEnterSaveNameBuffer;
-    extern s32 gEnterSaveNameSelectedIndex;
     s8 stickX;
     int buttons;
     u8 moved;
@@ -149,7 +146,8 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
             moved = 1;
         }
         if ((0 < gEnterSaveNameSelectedIndex) &&
-            (gEnterSaveNameScrollPos <= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex] - gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex - 1] / 2)))
+            (gEnterSaveNameScrollPos <= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex] -
+                                              gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex - 1] / 2)))
         {
             moved = 1;
         }
@@ -181,7 +179,8 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
             moved = 1;
         }
         if ((gEnterSaveNameSelectedIndex < ENTER_SAVE_NAME_DONE_INDEX) &&
-            (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex + 1] + gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex + 1] / 2)))
+            (gEnterSaveNameScrollPos >= (f32)(gEnterSaveNameCharOffsets[gEnterSaveNameSelectedIndex + 1] +
+                                              gEnterSaveNameCharWidths[gEnterSaveNameSelectedIndex + 1] / 2)))
         {
             moved = 1;
         }
@@ -239,7 +238,7 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
                     *(char*)gameTextGetStr(gEnterSaveNameCharTextIds[gEnterSaveNameSelectedIndex]);
                 (&gEnterSaveNameBuffer)[*(volatile u8*)&gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
-                Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_TYPE);
+                Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_TYPE);
                 if (gEnterSaveNameLength == ENTER_SAVE_NAME_MAX_LENGTH)
                 {
                     gEnterSaveNameAutoScrolling = 1;
@@ -247,7 +246,7 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
             }
             else if ((gEnterSaveNameSelectedIndex == ENTER_SAVE_NAME_DELETE_INDEX) && (gEnterSaveNameLength != 0))
             {
-                Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_DELETE);
+                Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_DELETE);
                 gEnterSaveNameLength -= 1;
                 (&gEnterSaveNameBuffer)[gEnterSaveNameLength] = 0;
                 lbl_803DD6EC = 2;
@@ -262,7 +261,7 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
                     (&gEnterSaveNameBuffer)[2] = 'X';
                     (&gEnterSaveNameBuffer)[3] = 0;
                 }
-                Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_CONFIRM);
+                Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_CONFIRM);
                 gplayNewGame(&gEnterSaveNameBuffer, saveFileSelect_currentSlotIndex);
                 loadUiDll(ENTER_SAVE_NAME_MENU_DLL);
                 lbl_803DD6EC = 2;
@@ -271,7 +270,7 @@ EnterSaveNameScreen_run(u32 arg1, u32 arg2, int arg3, u32 arg4, u32 arg5
         else if (buttons & PAD_BUTTON_B)
         {
             gEnterSaveNameAutoScrolling = 0;
-            Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_DELETE);
+            Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_DELETE);
             if (gEnterSaveNameLength != 0)
             {
                 gEnterSaveNameLength -= 1;
@@ -295,8 +294,6 @@ void EnterSaveNameScreen_release(void)
 
 void EnterSaveNameScreen_initialise(void)
 {
-    extern char gEnterSaveNameBuffer;
-    extern s32 gEnterSaveNameSelectedIndex;
     int i;
     f32 width;
 
@@ -308,8 +305,7 @@ void EnterSaveNameScreen_initialise(void)
 
     for (i = 0; i < ENTER_SAVE_NAME_CHAR_COUNT; i++)
     {
-        gameTextMeasureString((u8*)gameTextGetStr(gEnterSaveNameCharTextIds[i]), 1.0f, &width, NULL,
-                              NULL, NULL, -1);
+        gameTextMeasureString((u8*)gameTextGetStr(gEnterSaveNameCharTextIds[i]), 1.0f, &width, NULL, NULL, NULL, -1);
         gEnterSaveNameCharWidths[i] = width;
         gEnterSaveNameCharOffsets[i] = gEnterSaveNameTotalWidth;
         gEnterSaveNameTotalWidth += gEnterSaveNameCharWidths[i];
@@ -322,9 +318,18 @@ void EnterSaveNameScreen_initialise(void)
     Sfx_PlayFromObject(0, ENTER_SAVE_NAME_SFX_CONFIRM);
 }
 
-u16 gEnterSaveNameCharTextIds[40] = { 0x037f, 0x0380, 0x0381, 0x0382, 0x0383, 0x0384, 0x0385, 0x0386, 0x0387, 0x0388, 0x0389, 0x038a, 0x038b, 0x038c, 0x038d, 0x038e, 0x038f, 0x0390, 0x0391, 0x0392, 0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 0x0398, 0x0489, 0x048a, 0x048b, 0x048c, 0x048d, 0x048e, 0x048f, 0x0490, 0x0491, 0x0492, 0x0399, 0x039a, 0x039b, 0x039c };
+u16 gEnterSaveNameCharTextIds[40] = {0x037f, 0x0380, 0x0381, 0x0382, 0x0383, 0x0384, 0x0385, 0x0386, 0x0387, 0x0388,
+                                     0x0389, 0x038a, 0x038b, 0x038c, 0x038d, 0x038e, 0x038f, 0x0390, 0x0391, 0x0392,
+                                     0x0393, 0x0394, 0x0395, 0x0396, 0x0397, 0x0398, 0x0489, 0x048a, 0x048b, 0x048c,
+                                     0x048d, 0x048e, 0x048f, 0x0490, 0x0491, 0x0492, 0x0399, 0x039a, 0x039b, 0x039c};
 
-u32 lbl_8031A8D0[10] = {0x00000000, 0x00000000, 0x00000000, 0x00050000,
-        (u32)EnterSaveNameScreen_initialise, (u32)EnterSaveNameScreen_release,
-        0x00000000, (u32)EnterSaveNameScreen_run, (u32)EnterSaveNameScreen_frameEnd,
-        (u32)EnterSaveNameScreen_render};
+u32 lbl_8031A8D0[10] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)EnterSaveNameScreen_initialise,
+                        (u32)EnterSaveNameScreen_release,
+                        0x00000000,
+                        (u32)EnterSaveNameScreen_run,
+                        (u32)EnterSaveNameScreen_frameEnd,
+                        (u32)EnterSaveNameScreen_render};

@@ -23,10 +23,9 @@
 #include "main/pad.h"
 #include "main/object_descriptor.h"
 
-#define ObjMsg_PopLegacy(obj, msg, param, flags) \
-    ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
-#define ObjGroup_FindNearestObjectLegacy(group, from, distance) \
-    ((GameObject* (*)())ObjGroup_FindNearestObject)((group), (from), (distance))
+#define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
+#define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
+    ((GameObject * (*)()) ObjGroup_FindNearestObject)((group), (from), (distance))
 
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_B 0x200
@@ -45,6 +44,7 @@ extern f32 lbl_803E5158;
 
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;
+extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBD8;
 extern f32 lbl_803E515C;
 extern f32 lbl_803E5160;
@@ -76,7 +76,6 @@ void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_199_free(int* obj)
 {
-    extern void* gTitleMenuControlInterface;
     (*gModgfxInterface)->detachSource(obj);
     ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void (*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
@@ -106,7 +105,6 @@ ObjectDescriptor dll_199 = {
 
 int dll_199_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern void* gTitleMenuControlInterface;
     u8* st;
     int i;
     u8 eventId;
@@ -221,7 +219,6 @@ typedef struct Dll199ObjectDef
 
 void dll_199_update(int obj)
 {
-    extern int* gTitleMenuControlInterface;
     short* state;
     GameObject* player;
     int queue;
@@ -412,8 +409,7 @@ void dll_199_update(int obj)
             mainSetBits(0x5b9, 1);
             {
                 int* res = Resource_Acquire(0x6a, 1);
-                state[6] =
-                    (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
+                state[6] = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
                 Resource_Release(res);
             }
             mainSetBits(0x1cd, 0);
@@ -464,7 +460,6 @@ void dll_199_update(int obj)
 
 void dll_199_init(GameObject* obj, int def)
 {
-    extern int* gTitleMenuControlInterface;
     short* state;
     int* res;
     short id;

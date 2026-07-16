@@ -24,9 +24,8 @@
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 
-#define ObjMsg_PopLegacy(obj, msg, param, flags) \
-    ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
-#define ObjGroup_FindNearestObjectLegacy(group, from, distance) \
+#define ObjMsg_PopLegacy(obj, msg, param, flags) ((int (*)())ObjMsg_Pop)((obj), (msg), (param), (flags))
+#define ObjGroup_FindNearestObjectLegacy(group, from, distance)                                                        \
     ((int (*)())ObjGroup_FindNearestObject)((group), (from), (distance))
 
 #define DLL19B_TARGET_OBJGROUP 0xe
@@ -37,6 +36,7 @@
 
 extern void* return0_8005669C(int);
 extern int lbl_803DB610;
+extern int* gTitleMenuControlInterface;
 void* lbl_803DDBE0;
 extern f32 lbl_803E5188;
 extern f32 lbl_803E518C;
@@ -59,8 +59,6 @@ STATIC_ASSERT(offsetof(Dll19BPlacement, activationDistPacked) == 0x1A);
 
 int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    extern int* gTitleMenuControlInterface;
-
     int state;
     int i;
 
@@ -179,8 +177,6 @@ char sShrineTimeFormat[] = "time %d\n";
 
 void dll_19B_update(int obj)
 {
-    extern void* gTitleMenuControlInterface;
-
     Dll19BState* st;
     int player;
     int near;
@@ -384,8 +380,7 @@ void dll_19B_update(int obj)
             mainSetBits(0x127, 1);
             {
                 void* handle = Resource_Acquire(0x6a, 1);
-                st->gfxHandle =
-                    (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                st->gfxHandle = (*(s16(**)(int, int, int, int, int, int))(*(int*)handle + 4))(obj, 2, 0, 0x402, -1, 0);
                 Resource_Release(handle);
             }
             mainSetBits(0x1d8, 0);
@@ -399,8 +394,6 @@ void dll_19B_update(int obj)
 
 void dll_19B_init(GameObject* obj, u8* params)
 {
-    extern void* gTitleMenuControlInterface;
-
     register Dll19BState* sub;
     void* res;
 
@@ -435,8 +428,7 @@ void dll_19B_init(GameObject* obj, u8* params)
     sub->unk10 = 0xc8;
     sub->countdown = 0xfa0;
     res = Resource_Acquire(0x6a, 1);
-    sub->gfxHandle =
-        ((s16 (*)(GameObject*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
+    sub->gfxHandle = ((s16(*)(GameObject*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 0x402, -1, 0);
     Resource_Release(res);
     obj->anim.worldPosX = obj->anim.localPosX;
     obj->anim.worldPosY = obj->anim.localPosY;

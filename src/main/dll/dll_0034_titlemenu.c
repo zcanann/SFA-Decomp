@@ -69,10 +69,10 @@ extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
 extern f32 lbl_803E1D18;
 
-#define NATTRACTMODE_MOVIE_PATH_OFFSET 0x154
-#define NATTRACTMODE_MALLOC_FAILED_OFFSET 0x160
-#define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET 0x18C
-#define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
+#define NATTRACTMODE_MOVIE_PATH_OFFSET      0x154
+#define NATTRACTMODE_MALLOC_FAILED_OFFSET   0x160
+#define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET  0x18C
+#define NATTRACTMODE_SOURCE_FILE_OFFSET     0x1B4
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
 
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
@@ -167,8 +167,7 @@ void n_attractmode_prepareMovie(void)
     ok = AttractMovieAudio_Init(NATTRACTMODE_MOVIE_SETUP_ID);
     if (ok != 0)
     {
-        ok = movieLoad(attractModeStrings + NATTRACTMODE_MOVIE_PATH_OFFSET,
-                       NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
+        ok = movieLoad(attractModeStrings + NATTRACTMODE_MOVIE_PATH_OFFSET, NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
         if (ok == 0)
         {
             AttractMovieAudio_Shutdown();
@@ -178,8 +177,8 @@ void n_attractmode_prepareMovie(void)
             THPPlayerGetVideoInfo(&gAttractMovieDims);
             gAttractMovieOffsetX = ((u32)gRenderModeObj[2] - gAttractMovieDims.width) >> 1;
             gAttractMovieOffsetY = ((u32)gRenderModeObj[3] - gAttractMovieDims.height) >> 1;
-            AttractMovie_GetBufferSizes(movieBuffer0Size, &movieBuffer1Size, &movieBuffer2Size,
-                                        &movieBuffer3Size, &optionalBufferSize, &workBufferSize);
+            AttractMovie_GetBufferSizes(movieBuffer0Size, &movieBuffer1Size, &movieBuffer2Size, &movieBuffer3Size,
+                                        &optionalBufferSize, &workBufferSize);
             gAttractMovieBuffer0 = mmAlloc(movieBuffer0Size[0], NATTRACTMODE_MOVIE_HEAP, 0);
             gAttractMovieBuffer1 = mmAlloc(movieBuffer1Size, NATTRACTMODE_MOVIE_HEAP, 0);
             gAttractMovieBuffer2 = mmAlloc(movieBuffer2Size, NATTRACTMODE_MOVIE_HEAP, 0);
@@ -194,10 +193,9 @@ void n_attractmode_prepareMovie(void)
             }
             gAttractMovieWorkBuffer = mmAlloc(workBufferSize, NATTRACTMODE_MOVIE_HEAP, 0);
             gAttractMovieScratchBuffer = mmAlloc(NATTRACTMODE_WORK_BUFFER_SIZE, NATTRACTMODE_MOVIE_HEAP, 0);
-            if (((((gAttractMovieBuffer0 == 0) || (gAttractMovieBuffer1 == 0)) ||
-                    (gAttractMovieBuffer2 == 0)) || ((gAttractMovieBuffer3 == 0 ||
-                    ((gAttractMovieOptionalBuffer == 0 &&
-                        (optionalBufferSize != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
+            if (((((gAttractMovieBuffer0 == 0) || (gAttractMovieBuffer1 == 0)) || (gAttractMovieBuffer2 == 0)) ||
+                 ((gAttractMovieBuffer3 == 0 || ((gAttractMovieOptionalBuffer == 0 &&
+                                                  (optionalBufferSize != NATTRACTMODE_OPTIONAL_BUFFER_SIZE_NONE)))))) ||
                 ((gAttractMovieWorkBuffer == 0 || (gAttractMovieScratchBuffer == 0))))
             {
                 AttractMovieAudio_Shutdown();
@@ -257,14 +255,12 @@ void n_attractmode_prepareMovie(void)
                 }
                 DCInvalidateRange(gAttractMovieWorkBuffer, workBufferSize);
                 DCInvalidateRange(gAttractMovieScratchBuffer, NATTRACTMODE_WORK_BUFFER_SIZE);
-                AttractMovie_AssignBuffers(gAttractMovieBuffer0, gAttractMovieBuffer1,
-                                           gAttractMovieBuffer2, gAttractMovieBuffer3,
-                                           gAttractMovieOptionalBuffer, gAttractMovieWorkBuffer);
+                AttractMovie_AssignBuffers(gAttractMovieBuffer0, gAttractMovieBuffer1, gAttractMovieBuffer2,
+                                           gAttractMovieBuffer3, gAttractMovieOptionalBuffer, gAttractMovieWorkBuffer);
                 ok = prepareAttractMode(0, 1);
                 if (ok == 0)
                 {
-                    OSPanic(attractModeStrings + NATTRACTMODE_SOURCE_FILE_OFFSET,
-                            NATTRACTMODE_PREPARE_FAIL_LINE,
+                    OSPanic(attractModeStrings + NATTRACTMODE_SOURCE_FILE_OFFSET, NATTRACTMODE_PREPARE_FAIL_LINE,
                             attractModeStrings + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
                 }
                 THPPlayerPlay();
@@ -274,13 +270,11 @@ void n_attractmode_prepareMovie(void)
                 gAttractMovieIdleFrameCount = 0;
                 if ((int)gTitleMenuSelection == TITLE_MENU_ATTRACT_MOVIE_STATE)
                 {
-                    Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_TITLE,
-                                        NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
+                    Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_TITLE, NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
                 }
                 else
                 {
-                    Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_MUTED,
-                                        NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
+                    Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_MUTED, NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
                 }
             }
         }
@@ -302,8 +296,7 @@ void TitleMenu_render(u8* obj)
     if (menuAction == TITLE_MENU_CAMERA_ACTION_ACTIVE)
     {
         gameTextSetDrawFunc(titleScreenTextDrawFunc);
-        titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14,
-                                    lbl_803E1D18);
+        titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14, lbl_803E1D18);
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
         (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
@@ -317,35 +310,46 @@ void TitleMenu_frameEnd(void)
 {
 }
 
-#define TitleMenu_GetMenuId() (*(int (**)(void))((int)*gCameraInterface + 0x10))()
-#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state,arg)
-#define TitleMenu_GetFadeState() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
-#define TitleMenu_GetSelection() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
-#define TitleMenu_BindEntries() (*(void (**)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
+#define TitleMenu_GetMenuId()              (*(int (**)(void))((int)*gCameraInterface + 0x10))()
+#define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)*gCameraInterface + 0x60))(state, arg)
+#define TitleMenu_GetFadeState()           (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
+#define TitleMenu_GetSelection()           (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
+#define TitleMenu_BindEntries()                                                                                        \
+    (*(void (**)(TitleMenuTextEntry*))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
 #define TitleMenu_ClearPanel() (*(void (**)(void))((int)gTitleMenuLinkInterface->vtable + 8))()
-#define TitleMenu_OpenPanel() (*(void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))((int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff)
-#define TitleMenu_SetPanelSelection(selection) (*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection)
-#define TitleMenu_SetEntryHighlight(entry) \
-  do { \
-    int i; \
-    for (i = 0; i < 4; i++) { \
-      if (i == (entry)) { \
-        lbl_8031A214[i].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN; \
-      } else { \
-        lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN; \
-      } \
-    } \
-    TitleMenu_BindEntries(); \
-  } while (0)
-#define TitleMenu_ReloadSaveSettings() \
-  do { \
-    int result; \
-    result = saveFn_800e8508(); \
-    if ((result == 0) && (lbl_803DB424 != 0)) { \
-      memCardFn_8007dd04(1); \
-    } \
-    loadSaveSettings(); \
-  } while (0)
+#define TitleMenu_OpenPanel()                                                                                          \
+    (*(void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))(                         \
+        (int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214, 9, 5, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff)
+#define TitleMenu_SetPanelSelection(selection)                                                                         \
+    (*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18))(selection)
+#define TitleMenu_SetEntryHighlight(entry)                                                                             \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        int i;                                                                                                         \
+        for (i = 0; i < 4; i++)                                                                                        \
+        {                                                                                                              \
+            if (i == (entry))                                                                                          \
+            {                                                                                                          \
+                lbl_8031A214[i].flags &= ~TITLE_MENU_TEXT_ENTRY_HIDDEN;                                                \
+            }                                                                                                          \
+            else                                                                                                       \
+            {                                                                                                          \
+                lbl_8031A214[i].flags |= TITLE_MENU_TEXT_ENTRY_HIDDEN;                                                 \
+            }                                                                                                          \
+        }                                                                                                              \
+        TitleMenu_BindEntries();                                                                                       \
+    } while (0)
+#define TitleMenu_ReloadSaveSettings()                                                                                 \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        int result;                                                                                                    \
+        result = saveFn_800e8508();                                                                                    \
+        if ((result == 0) && (lbl_803DB424 != 0))                                                                      \
+        {                                                                                                              \
+            memCardFn_8007dd04(1);                                                                                     \
+        }                                                                                                              \
+        loadSaveSettings();                                                                                            \
+    } while (0)
 
 int TitleMenu_run(void)
 {
@@ -406,8 +410,7 @@ int TitleMenu_run(void)
     {
         n_attractmode_releaseMovieBuffers();
     }
-    if (((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
-            (gAttractMoviePlaybackEnabled != 0)) &&
+    if (((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) && (gAttractMoviePlaybackEnabled != 0)) &&
         (gTitleMenuReadyForInput != 0))
     {
         buttons = getButtonsJustPressed(0);
@@ -509,8 +512,7 @@ int TitleMenu_run(void)
 
     menuId = TitleMenu_GetFadeState();
     gTitleMenuSelection = TitleMenu_GetSelection();
-    if (((lbl_803E1D28 == titleScreenGetCamProgress()) &&
-            (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
+    if (((lbl_803E1D28 == titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
         (gAttractMoviePlaybackEnabled == 0))
     {
         gTitleMenuSelectionFadeStep = TITLE_MENU_SELECTION_FADE_STEP;
@@ -610,9 +612,10 @@ void TitleMenu_setSelection(int selection)
     (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
 
+extern TitleMenuTextEntry sNAttractModeStringBlock[1];
+
 void TitleMenu_initialise(void)
 {
-    extern TitleMenuTextEntry sNAttractModeStringBlock[1];
     int i;
     int mode;
 
@@ -634,22 +637,23 @@ void TitleMenu_initialise(void)
     mode = getUiDllFn_80014930();
     if (mode == 3)
     {
-        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
-            gTitleMenuLinkInterface->vtable)[1](sNAttractModeStringBlock, 1, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
+                    int))gTitleMenuLinkInterface->vtable)[1](sNAttractModeStringBlock, 1, 0, 0, 0, 0, 0x14, 200, 0xff,
+                                                             0xff, 0xff, 0xff);
         gTitleMenuPanelOpen = 0;
     }
     else
     {
-        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
-            gTitleMenuLinkInterface->vtable)[1](lbl_8031A214, 4, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+        ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int,
+                    int))gTitleMenuLinkInterface->vtable)[1](lbl_8031A214, 4, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff,
+                                                             0xff);
         gTitleMenuPanelOpen = 1;
     }
     ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](gTitleMenuSelection);
     titleScreenFn_801368a4(0);
 
     mode = getUiDllFn_80014930();
-    if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
-            (mode = getUiDllFn_80014930(), mode == 6)) ||
+    if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) || (mode = getUiDllFn_80014930(), mode == 6)) ||
         (mode = getUiDllFn_80014930(), mode == 5))
     {
         (*gScreenTransitionInterface)->step(0x23, 5);
@@ -680,8 +684,7 @@ void TitleMenu_initialise(void)
     gAttractMovieLoopCompleted = 0;
 
     if ((gAttractMovieAutoplayEnabled != 0) &&
-        ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) ||
-            (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED)))
+        ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) || (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED)))
     {
         n_attractmode_prepareMovie();
         titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
@@ -708,19 +711,86 @@ void TitleMenu_initialise(void)
 TitleMenuTextEntry sNAttractModeStringBlock[1] = {
     {
         0x036D,
-        { 0x00, 0x35, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00 },
+        {0x00, 0x35, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00, 0x01, 0x40, 0x01, 0x90, 0x00, 0x00},
         -1,
-        { 0x00, 0xC8 },
+        {0x00, 0xC8},
         0x0280,
-        { 0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        {0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0,  0,  0,  0,  0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     },
 };
 
 /* descriptor/ptr table auto 0x8031a214-0x8031a3b0 */
 TitleMenuTextEntry lbl_8031A214[4] = {
-    { 0x0331, {0x00,0x11,0x01,0x40,0x01,0x0a,0x00,0x00,0x01,0x40,0x00,0xb4,0x00,0x00}, -1, {0x00,0x64}, 0x0200, {0x00,0x00,0x03,0x01,0xff,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} },
-    { 0x035a, {0x00,0x11,0x01,0x40,0x01,0x3d,0x00,0x00,0x01,0x40,0x00,0xbb,0x00,0x00}, -1, {0x00,0x8c}, 0x0200, {0x00,0x00,0x00,0x02,0xff,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} },
-    { 0x035c, {0x00,0x11,0x01,0x40,0x01,0x3d,0x00,0x00,0x01,0x40,0x00,0xbb,0x00,0x00}, -1, {0x00,0xb4}, 0x0200, {0x00,0x00,0x01,0x03,0xff,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} },
-    { 0x035b, {0x00,0x11,0x01,0x40,0x01,0x70,0x00,0x00,0x01,0x40,0x00,0xbb,0x00,0x00}, -1, {0x00,0x8c}, 0x0200, {0x00,0x00,0x02,0x00,0xff,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} },
+    {0x0331,
+     {0x00, 0x11, 0x01, 0x40, 0x01, 0x0a, 0x00, 0x00, 0x01, 0x40, 0x00, 0xb4, 0x00, 0x00},
+     -1,
+     {0x00, 0x64},
+     0x0200,
+     {0x00, 0x00, 0x03, 0x01, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+    {0x035a,
+     {0x00, 0x11, 0x01, 0x40, 0x01, 0x3d, 0x00, 0x00, 0x01, 0x40, 0x00, 0xbb, 0x00, 0x00},
+     -1,
+     {0x00, 0x8c},
+     0x0200,
+     {0x00, 0x00, 0x00, 0x02, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+    {0x035c,
+     {0x00, 0x11, 0x01, 0x40, 0x01, 0x3d, 0x00, 0x00, 0x01, 0x40, 0x00, 0xbb, 0x00, 0x00},
+     -1,
+     {0x00, 0xb4},
+     0x0200,
+     {0x00, 0x00, 0x01, 0x03, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+    {0x035b,
+     {0x00, 0x11, 0x01, 0x40, 0x01, 0x70, 0x00, 0x00, 0x01, 0x40, 0x00, 0xbb, 0x00, 0x00},
+     -1,
+     {0x00, 0x8c},
+     0x0200,
+     {0x00, 0x00, 0x02, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
 };
-u32 lbl_8031A304[43] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, (u32)TitleMenu_initialise, (u32)TitleMenu_release, 0x00000000, (u32)TitleMenu_run, (u32)TitleMenu_frameEnd, (u32)TitleMenu_render, 0x73746172, 0x666f782e, 0x74687000, 0x5e5e5e5e, 0x5e5e5e5e, 0x5e5e5e5e, 0x5e5e5e5e, 0x20206d61, 0x6c6c6f63, 0x20666f72, 0x206d6f76, 0x69652066, 0x61696c65, 0x640a0000, 0x5e5e5e5e, 0x5e5e5e5e, 0x5e5e5e5e, 0x5e5e5e5e, 0x20205245, 0x53545255, 0x43542066, 0x6f72206d, 0x6f766965, 0x0a000000, 0x6e5f6174, 0x74726163, 0x746d6f64, 0x652e6300, 0x4661696c, 0x20746f20, 0x70726570, 0x6172650a, 0x00000000 };
+u32 lbl_8031A304[43] = {0x00000000,
+                        0x00000000,
+                        0x00000000,
+                        0x00050000,
+                        (u32)TitleMenu_initialise,
+                        (u32)TitleMenu_release,
+                        0x00000000,
+                        (u32)TitleMenu_run,
+                        (u32)TitleMenu_frameEnd,
+                        (u32)TitleMenu_render,
+                        0x73746172,
+                        0x666f782e,
+                        0x74687000,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x20206d61,
+                        0x6c6c6f63,
+                        0x20666f72,
+                        0x206d6f76,
+                        0x69652066,
+                        0x61696c65,
+                        0x640a0000,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x5e5e5e5e,
+                        0x20205245,
+                        0x53545255,
+                        0x43542066,
+                        0x6f72206d,
+                        0x6f766965,
+                        0x0a000000,
+                        0x6e5f6174,
+                        0x74726163,
+                        0x746d6f64,
+                        0x652e6300,
+                        0x4661696c,
+                        0x20746f20,
+                        0x70726570,
+                        0x6172650a,
+                        0x00000000};

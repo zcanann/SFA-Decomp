@@ -37,7 +37,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 
-#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance) \
+#define Obj_GetYawDeltaToObjectLegacy(obj, target, distance)                                                           \
     ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
 
 /* Persistent movement-state block that sits at the start of the per-object
@@ -67,6 +67,7 @@ extern f32 lbl_803E1CB4;
 extern f32 lbl_803E1CB8;
 extern f32 gMoveLibPi;
 extern f32 gMoveLibAngleHalfScale;
+extern f32 lbl_803E1CA0;
 extern f32 lbl_803E1CA4;
 extern f32 lbl_803E1CD0;
 extern f32 lbl_803E1CD4;
@@ -151,10 +152,8 @@ f32 fn_80114224(const Vec* start, const Vec* end, const Vec* startTangent, const
     return total;
 }
 
-int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteState* state, f32* phaseOut,
-                f32 speed)
+int fn_80114408(GameObject* obj, const MoveLibWaypointDef* def, MoveLibHermiteState* state, f32* phaseOut, f32 speed)
 {
-    extern f32 lbl_803E1CA0;
     int ret = 0;
 
     if (def != NULL)
@@ -246,7 +245,7 @@ f32 dll_2E_func0B(GameObject* obj, int arg)
     int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
     if (r > -1)
     {
-        return ((f32 (*)(int, int))(*gRomCurveInterface)->slot24)((int)obj, r);
+        return ((f32(*)(int, int))(*gRomCurveInterface)->slot24)((int)obj, r);
     }
     return lbl_803E1C88;
 }
@@ -389,8 +388,8 @@ void dll_2E_func06(GameObject* obj, MoveLibState* s, int point)
 
 /* Advances the object along its movement curve, snapping to ground and
  * easing the yaw toward the path direction. */
-int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHermiteState* state,
-                  int curveVariant, f32* rootOut, int* flags)
+int dll_2E_func0E(GameObject* obj, RomCurveWalker* route, f32 phase, MoveLibHermiteState* state, int curveVariant,
+                  f32* rootOut, int* flags)
 {
     int moved;
     int hit;
@@ -496,8 +495,8 @@ int dll_2E_func07(GameObject* obj, ObjSeqState* seq, MoveLibState* s, s16 a, s16
                 s->setupFlag = 0;
                 s->phase = MOVELIB_PHASE_RUN;
             case MOVELIB_PHASE_RUN:
-                if (objAnimFn_80115650((PostObjAnimComponent*)obj, (PostObject*)player, &s->turnState,
-                                      (PostControl*)s, (float*)s, pair, &s->targetX) == 0)
+                if (objAnimFn_80115650((PostObjAnimComponent*)obj, (PostObject*)player, &s->turnState, (PostControl*)s,
+                                       (float*)s, pair, &s->targetX) == 0)
                 {
                     s->phase = MOVELIB_PHASE_DONE;
                 }
@@ -558,8 +557,8 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
         obj->anim.localPosZ = target->z;
         if (*flags & 1)
         {
-            if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
-                                     obj->anim.localPosZ, &ground, 0) == 0)
+            if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) ==
+                0)
             {
                 obj->anim.localPosY -= ground;
             }
@@ -572,8 +571,7 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
     obj->anim.velocityZ = dz * (speed * timeDelta);
     if (*flags & 1)
     {
-        if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY,
-                                 obj->anim.localPosZ, &ground, 0) == 0)
+        if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) == 0)
         {
             obj->anim.localPosY -= ground;
         }
@@ -589,7 +587,7 @@ int dll_2E_func0D(GameObject* obj, const MoveLibTarget* target, f32 speed, int m
         {
             delta = delta + 0xffff;
         }
-        obj->anim.rotX = (f32)*(s16*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
+        obj->anim.rotX = (f32) * (s16*)obj + (lbl_803E1CB8 + delta) * (speed * timeDelta) / dist;
     }
     objMove(obj, obj->anim.velocityX, obj->anim.velocityY, obj->anim.velocityZ);
     if (move != -1)
@@ -682,10 +680,9 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
         else
         {
             targetObj = s->lockTarget;
-            target = (u32)(targetObj != NULL
-                               ? targetObj
-                               : (targetObj =
-                                      (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP, (int)obj, (f32*)&sv)));
+            target = (u32)(targetObj != NULL ? targetObj
+                                             : (targetObj = (void*)ObjGroup_FindNearestObject(MOVELIB_TARGET_OBJGROUP,
+                                                                                              (int)obj, (f32*)&sv)));
             if (targetObj != NULL)
             {
                 if ((s->modeBits & 0x20) != 0)
@@ -773,8 +770,7 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 ival = (short)yawDelta;
                 ival = (ival >= 0) ? ival : -ival;
                 if (((0x5555 < ival) || (target == 0)) ||
-                    (Vec_distance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) >
-                     s->lookAtMaxDistance))
+                    (Vec_distance(&obj->anim.worldPosX, &((GameObject*)target)->anim.worldPosX) > s->lookAtMaxDistance))
                 {
                     if ((s->phase != MOVELIB_PHASE_IDLE) || ((target == 0 && (*(u32*)&s->lastTarget != 0))))
                     {
@@ -807,8 +803,8 @@ void dll_2E_func03(GameObject* obj, MoveLibState* s)
                 }
                 if (((s->modeBits & 8) == 0) && (s->setupFlag != 0))
                 {
-                    s->setupFlag = !fn_8003A8B4((PostObjAnimComponent*)obj, (PostMotionTarget*)seqHandle,
-                                                s->pointCount, s->animChannels);
+                    s->setupFlag = !fn_8003A8B4((PostObjAnimComponent*)obj, (PostMotionTarget*)seqHandle, s->pointCount,
+                                                s->animChannels);
                 }
             }
         }
@@ -854,9 +850,9 @@ int objAnimFn_80115650(PostObjAnimComponent* objAnim, PostObject* obj, int* turn
         yawDelta += -0x8000;
     }
 
-    hitResult = objMathFn_8003a380(objAnim, obj, control->primary,
-                                   ((control->flags & 8) != 0) ? NULL : control->secondary, control->events, distance,
-                                   8, control->eventState);
+    hitResult =
+        objMathFn_8003a380(objAnim, obj, control->primary, ((control->flags & 8) != 0) ? NULL : control->secondary,
+                           control->events, distance, 8, control->eventState);
     if ((control->flags & 8) == 0)
     {
         control->blocked = (u32)__cntlzw(fn_8003A8B4(objAnim, motion, control->contactAnim, control->secondary)) >> 5;

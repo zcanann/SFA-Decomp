@@ -148,6 +148,7 @@ extern f32 lbl_803E4FE8;
 extern f32 lbl_803E4FEC;
 extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
+extern void* gEcShShrineActiveObject;
 extern EcshIntPair lbl_803E8470;
 
 extern void gpsh_shrine_getExtraSize(void);
@@ -219,8 +220,7 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
     state->orbitB = (s16)(state->orbitB + (s32)(gEcShShrineOrbitSpeedB * timeDelta));
     state->orbitC = (s16)(state->orbitC + (s32)(gEcShShrineOrbitSpeedC * timeDelta));
 
-    obj->posY =
-        lbl_803E4F9C + (config->posY + mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
+    obj->posY = lbl_803E4F9C + (config->posY + mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale));
 
     trigA = mathSinf((gEcShShrinePi * state->orbitB) / gEcShShrineAngleUnitScale);
     trigB = mathSinf((gEcShShrinePi * state->orbitA) / gEcShShrineAngleUnitScale);
@@ -236,9 +236,8 @@ void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 
     if (player != NULL)
     {
-        angleDelta = (u16)getAngle(obj->posX - player->anim.worldPosX,
-                                   obj->posZ - player->anim.worldPosZ) -
-                     (u16)obj->yaw;
+        angleDelta =
+            (u16)getAngle(obj->posX - player->anim.worldPosX, obj->posZ - player->anim.worldPosZ) - (u16)obj->yaw;
         if (angleDelta > 0x8000)
         {
             angleDelta -= 0xFFFF;
@@ -320,7 +319,6 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
 
 void ecsh_shrine_getPhaseAndSpiritCup(int* outAnimState, u8* outSpiritCup)
 {
-    extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL)
@@ -332,7 +330,6 @@ void ecsh_shrine_getPhaseAndSpiritCup(int* outAnimState, u8* outSpiritCup)
 
 void ecsh_shrine_checkCupPick(u8 cupIndex)
 {
-    extern int gEcShShrineActiveObject;
     int* obj = (int*)gEcShShrineActiveObject;
     int* inner;
     if (obj == NULL)
@@ -350,7 +347,6 @@ void ecsh_shrine_checkCupPick(u8 cupIndex)
 
 void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
 {
-    extern int gEcShShrineActiveObject;
     int slot;
     if ((int*)gEcShShrineActiveObject == NULL)
         return;
@@ -361,7 +357,6 @@ void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
 
 void ecsh_shrine_getCupPos(u8 cupIndex, f32* outX, f32* outZ)
 {
-    extern void* gEcShShrineActiveObject;
     int slot;
     if (gEcShShrineActiveObject == NULL)
         return;
@@ -373,7 +368,6 @@ void ecsh_shrine_getCupPos(u8 cupIndex, f32* outX, f32* outZ)
 
 void ecsh_shrine_setScale(s16* out)
 {
-    extern void* gEcShShrineActiveObject;
     int* obj = gEcShShrineActiveObject;
     int* state;
     if (obj == NULL)
@@ -412,8 +406,7 @@ void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
         modelLightStruct_setEnabled((ModelLightStruct*)*inner, 1, lbl_803E4FC8);
     }
     objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4FC8);
-    objParticleFn_80099d84((GameObject*)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8,
-                           (ModelLightStruct*)*inner);
+    objParticleFn_80099d84((GameObject*)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (ModelLightStruct*)*inner);
 }
 
 void ecsh_shrine_free(int* obj)
@@ -884,7 +877,6 @@ void ecsh_shrine_initialise(void)
 
 void ecsh_shrine_init(s16* obj, s8* def)
 {
-    extern s16* gEcShShrineActiveObject;
     int* sub = ((GameObject*)obj)->extra;
     u8 gv;
     lbl_803DDBC0 = 0;

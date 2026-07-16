@@ -156,6 +156,8 @@ extern f32 lbl_803E2CB8;
 extern f32 lbl_803E2C1C;
 extern f32 lbl_803E2C20;
 extern f32 lbl_803E2C24;
+extern f32 lbl_803E2BA0;
+extern f32 lbl_803E2BA4;
 extern f32 lbl_803E2BB8;
 extern f32 lbl_803E2BD4;
 extern f32 lbl_803E2BE4;
@@ -310,8 +312,8 @@ void firecrawler_spawnFirepipe(int* obj, u8* state)
     if (Obj_IsLoadingLocked() != 0)
     {
         child = (int*)Obj_AllocObjectSetup(0x24, FIREPIPE_OBJ_ID);
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)child + 0x8),
-                                      (f32*)((char*)child + 0xc), (f32*)((char*)child + 0x10), 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)((char*)child + 0x8), (f32*)((char*)child + 0xc),
+                                      (f32*)((char*)child + 0x10), 0);
         ((FirepipeSetup*)child)->head.color[0] = 1;
         ((FirepipeSetup*)child)->head.color[1] = 4;
         ((FirepipeSetup*)child)->head.color[2] = 0xff;
@@ -468,7 +470,6 @@ u8 lbl_8031FC00[0x18] = {0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x19, 0x00, 0
 
 u8 lbl_8031FC18[0x14] = {0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00,
                          0x00, 0x09, 0x00, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x0b};
-
 
 void* gCrawlerModelChainIds[] = {
     &lbl_803DBD00, &lbl_803DBD08, &lbl_803DBD10, &lbl_803DBD18, &lbl_803DBD20,
@@ -699,8 +700,6 @@ void crawler_initVariant(int* obj, int* st)
 #pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
 {
-    extern f32 lbl_803E2BA0;
-    extern f32 lbl_803E2BA4;
     typedef struct
     {
         u8 pad[4];
@@ -741,8 +740,8 @@ void fn_80157CDC(int obj, int state)
                 void* player = Obj_GetPlayerObject();
                 if ((((GameObject*)player)->objectFlags & FIRECRAWLER_OBJFLAG_PARENT_SLACK) == 0)
                 {
-                    f32 dist = Vec_distance(&((GameObject*)obj)->anim.worldPosX,
-                                            &((GameObject*)player)->anim.worldPosX);
+                    f32 dist =
+                        Vec_distance(&((GameObject*)obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX);
                     if (dist <= lbl_803E2B80)
                     {
                         f32 amt = lbl_803E2BA4 - dist / lbl_803E2B80;
@@ -912,8 +911,8 @@ void fn_80157B58(int* obj, u8* state)
     {
         int child;
         int setup = (int)Obj_AllocObjectSetup(0x24, 0x869);
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(setup + 8), (f32*)(setup + 0xc),
-                                      (f32*)(setup + 0x10), 0);
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, (f32*)(setup + 8), (f32*)(setup + 0xc), (f32*)(setup + 0x10),
+                                      0);
         ((ObjPlacement*)setup)->color[0] = 1;
         ((ObjPlacement*)setup)->color[1] = 4;
         ((ObjPlacement*)setup)->color[2] = 0xff;
@@ -1469,8 +1468,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
         tgtA[2] = -(lbl_803E2B38 * cosA - ((GameObject*)obj)->anim.localPosZ);
         /* 0x261 = BaddieState.contactSfxFlags; kept raw - typed member as a
          * call arg shifts arg emission bytes here. */
-        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, (TrackBBoxHit*)bufA,
-                                        (GameObject*)obj, *(u8*)(state + 0x261), -1, 0xff, 0);
+        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, (TrackBBoxHit*)bufA, (GameObject*)obj,
+                                        *(u8*)(state + 0x261), -1, 0xff, 0);
         ang =
             getAngle(
                 ((GameObject*)obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
@@ -1519,8 +1518,8 @@ void hoodedZyck_updateB(s16* obj, u8* state)
                     tgtB[0] = -(lbl_803E2B38 * sinB - ((GameObject*)obj)->anim.localPosX);
                     tgtB[1] = lbl_803E2B3C + ((GameObject*)obj)->anim.localPosY;
                     tgtB[2] = -(lbl_803E2B38 * cosB - ((GameObject*)obj)->anim.localPosZ);
-                    if ((u8)objBboxFn_800640cc(posB, tgtB, lbl_803E2B18, 3, (TrackBBoxHit*)bufB,
-                                              (GameObject*)obj, *(u8*)(state + 0x261), -1, 0xff, 0) == 0)
+                    if ((u8)objBboxFn_800640cc(posB, tgtB, lbl_803E2B18, 3, (TrackBBoxHit*)bufB, (GameObject*)obj,
+                                               *(u8*)(state + 0x261), -1, 0xff, 0) == 0)
                     {
                         if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
                         {

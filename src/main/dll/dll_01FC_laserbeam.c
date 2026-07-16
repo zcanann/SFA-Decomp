@@ -25,6 +25,7 @@
 #include "main/dll/dll200state_struct.h"
 #include "main/dll/LGT/dll_0206_lightsource.h"
 #include "main/game_object.h"
+#include "main/frame_timing.h"
 #include "main/dll/player_api.h"
 #include "main/obj_placement.h"
 #include "main/resource.h"
@@ -134,12 +135,10 @@ static const f32 lbl_803E5D40 = -20.0f;
 static const f32 lbl_803E5D44 = 20.0f;
 static const f32 lbl_803E5D48 = 0.04f;
 
+extern int* gLaserBeamObjModgfxResource;
+
 void LaserBeam_update(int obj2)
 {
-
-    extern int* gLaserBeamObjModgfxResource;
-    extern u8 framesThisStep;
-    extern f32 timeDelta;
     char* t;
     LaserBeamState* b;
     GameObject* player;
@@ -479,8 +478,6 @@ void LaserBeam_init(s16* obj, char* arg)
     }
 }
 #pragma opt_strength_reduction reset
-
-extern void* gLaserBeamObjModgfxResource;
 
 void LaserBeam_release(void)
 {
