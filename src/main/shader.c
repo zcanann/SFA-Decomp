@@ -2143,7 +2143,7 @@ void mapLoadUnloadObjects(int flag)
                             while (*bp == -1)
                             {
                                 bit += 8;
-                                cur += *(u8*)(objStart + 2) * 4;
+                                cur = objStart + *(u8*)(objStart + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
                                 cur += *(u8*)(cur + 2) * 4;
@@ -2156,7 +2156,7 @@ void mapLoadUnloadObjects(int flag)
                             }
                             mask = 1;
                         }
-                        cur += *(u8*)(objStart + 2) * 4;
+                        cur = objStart + *(u8*)(objStart + 2) * 4;
                     }
                 }
             }
