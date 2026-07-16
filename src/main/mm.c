@@ -75,113 +75,69 @@ typedef struct
     DeferredFree deferred[2000];
     MmRegion regions[8];
 } MmGlobal;
-
 extern void* gAttractMovieScratchBuffer;
-extern char sMmFreeInvalidLocationError[];
-extern char sMmAllocFreeMessageBlock[];
-extern char sMmStbfStackTooDeepError[];
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
-
 extern char sMemStatsFormat[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
-extern int __OSCurrHeap;
-extern void* lbl_803DD498;
-extern void* lbl_803DCAFC;
-extern char sMmSpawnedUnalignedSlotWarning[];
-extern int lbl_803DCC7C;
-extern char sMmFreeMemoryUsageCorruptedError[];
-
 extern void LCQueueWait();
-extern asm BOOL OSRestoreInterrupts(register BOOL level);
-extern void heapFree(int region, int slotIdx);
-extern void* OSAllocFromHeap(int heap, int size);
-extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
 extern void* memcpy(void* dst, const void* src, int n);
 
-int roundUpTo4(int x)
-{
-    int r = x & 3;
-    if (r > 0)
-    {
-        x += 4 - r;
-    }
-    return x;
-}
-
-int roundUpTo8(int x)
-{
-    int r = x & 7;
-    if (r > 0)
-    {
-        x += 8 - r;
-    }
-    return x;
-}
-
-int roundUpTo16(int x)
-{
-    int r = x & 0xf;
-    if (r > 0)
-    {
-        x += 0x10 - r;
-    }
-    return x;
-}
-
-int roundUpTo32(int x)
-{
-    int r = x & 0x1f;
-    if (r > 0)
-    {
-        x += 0x20 - r;
-    }
-    return x;
-}
-
-void texFlagFn_80023cbc(int v)
-{
-    lbl_803DCB10 = v;
-}
-
-#pragma dont_inline on
-int mmSetFreeDelay(int v)
-{
-    int old = gMmFreeDelay;
-    gMmOpCount++;
-    gMmFreeDelay = v;
-    return old;
-}
-
-int testAndSet_onlyUseHeap3(int v)
-{
-    gMmOpCount++;
-    {
-        int old = gMmUseHeap3;
-        gMmUseHeap3 = v;
-        return old;
-    }
-}
-
-int testAndSet_onlyUseHeaps1and2(int v)
-{
-    gMmOpCount++;
-    {
-        int old = gMmUseHeaps1and2;
-        gMmUseHeaps1and2 = v;
-        return old;
-    }
-}
+void mmFreeDeferred(void* p);
+void mmFree(void* p);
+void* mmAlloc(int size, int type, int flag);
 
 #pragma dont_inline off
-int alignUp2(int x)
+
+void memcpyToCache(void* dst, void* src, u32 count)
 {
-    int r = x & 1;
-    if (r > 0)
+    if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
-        x += 2 - r;
+        int len;
+        if (count != 0)
+        {
+            len = count << 5;
+        }
+        else
+        {
+            len = 0x1000;
+        }
+        memcpy(dst, src, len);
+        DCFlushRange(dst, len);
     }
-    return x;
+    else
+    {
+        LCStoreBlocks(dst, src, count);
+    }
+}
+
+void cacheQueueWait(int sync)
+{
+    if (gAttractMovieState == 4 || gAttractMovieState == 0)
+    {
+        LCQueueWait();
+    }
+}
+
+void copyToCache(void* dst, void* src, u32 count)
+{
+    if (gAttractMovieState != 4 && gAttractMovieState != 0)
+    {
+        int len;
+        if (count != 0)
+        {
+            len = count << 5;
+        }
+        else
+        {
+            len = 0x1000;
+        }
+        memcpy(dst, src, len);
+    }
+    else
+    {
+        LCLoadBlocks(dst, src, count);
+    }
 }
 
 void* getCache(void)
@@ -193,92 +149,42 @@ void* getCache(void)
     return (void*)0xe0000000;
 }
 
-void cacheQueueWait(int sync)
-{
-    if (gAttractMovieState == 4 || gAttractMovieState == 0)
-    {
-        LCQueueWait();
-    }
-}
+extern void* gMmStoreArray[0x20];
 
-void mm_free(void* p)
+void* mmAllocateFromFBMemoryStore(int handle, int size)
 {
-    if (gMmFreeDelay == 0)
-    {
-        mmFree(p);
-    }
-    else
-    {
-        mmFreeDeferred(p);
-    }
-}
-
-void AtomicSList_Push(void** list, void* node)
-{
-    int intr = OSDisableInterrupts();
-    *(void**)node = *list;
-    *list = node;
-    OSRestoreInterrupts(intr);
-}
-
-MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
-
-int mmGetRegionForPtr(u8* ptr)
-{
+    int sz = size;
+    MmStore* found;
     int i;
-    for (i = 0; i < gMmRegionCount; i++)
+    found = NULL;
+    i = 0;
+    while (i < 0x20)
     {
-        if (ptr > gMmRegionTable[i].start && ptr < gMmRegionTable[i].start + gMmRegionTable[i].size)
+        if (gMmStoreArray[i] != NULL && handle == ((MmStore*)gMmStoreArray[i])->handle)
         {
-            return i;
+            found = gMmStoreArray[i];
+            break;
+        }
+        if (++i == 0x20)
+        {
+            OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);
+            return 0;
         }
     }
-    return -1;
+    if (found != NULL)
+    {
+        size = found->size - ((int)found->bufCur - (int)found->buf);
+        if (size < sz)
+        {
+            OSReport(sMmMemoryStoreMessageBlock);
+            return 0;
+        }
+        found->bufCur = (char*)found->bufCur + sz;
+        return (void*)((int)found->bufCur - sz);
+    }
+    return 0;
 }
 
-#pragma dont_inline on
-void* mmInitRegion(u8* buf, int size, int numSlots)
-{
-    int regIdx = gMmRegionCount++;
-    int slotsBytes = numSlots * 0x1c;
-    int after = size - slotsBytes;
-    int i;
-    HeapItem* slot;
-    int freePtr;
-    gMmRegionTable[regIdx].numSlots = numSlots;
-    gMmRegionTable[regIdx].slotCount = 0;
-    gMmRegionTable[regIdx].start = buf;
-    gMmRegionTable[regIdx].size = size;
-    gMmRegionTable[regIdx].usedBytes = 0;
-    slot = (HeapItem*)gMmRegionTable[regIdx].start;
-    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
-    {
-        slot->stack = i;
-        slot++;
-    }
-    slot = (HeapItem*)gMmRegionTable[regIdx].start;
-    freePtr = (int)buf + slotsBytes;
-    if (freePtr & 0x1f)
-    {
-        *(int*)&slot->key = (freePtr & ~0x1f) + 0x20;
-    }
-    else
-    {
-        *(int*)&slot->key = freePtr;
-    }
-    slot->size = after;
-    slot->type = 0;
-    slot->prev = -1;
-    slot->next = -1;
-    gMmRegionTable[regIdx].slotCount++;
-    return gMmRegionTable[regIdx].start;
-}
-
-DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
-
-void* gMmStoreArray[0x20];
-
-#pragma dont_inline off
 int mmCreateMemoryStore(int size)
 {
     char* msg = sMmShowInfoFBMemoryStoreMessageBlock;
@@ -352,7 +258,258 @@ int mmCreateMemoryStore(int size)
     }
     return store->handle;
 }
+#pragma dont_inline on
 
+int testAndSet_onlyUseHeaps1and2(int v)
+{
+    gMmOpCount++;
+    {
+        int old = gMmUseHeaps1and2;
+        gMmUseHeaps1and2 = v;
+        return old;
+    }
+}
+
+int testAndSet_onlyUseHeap3(int v)
+{
+    gMmOpCount++;
+    {
+        int old = gMmUseHeap3;
+        gMmUseHeap3 = v;
+        return old;
+    }
+}
+
+#pragma dont_inline off
+
+extern MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
+
+int printHeapStats(void)
+{
+    OSReport(sMemStatsFormat, gMmRegion0Used, gMmRegionTable[0].size, gMmRegion1Used, gMmRegionTable[1].size,
+             gMmRegion2Used, gMmRegionTable[2].size, gMmRegion3Used, gMmRegionTable[3].size,
+             gMmRegionTable[0].slotCount, gMmRegionTable[0].numSlots, gMmRegionTable[1].slotCount,
+             gMmRegionTable[1].numSlots, gMmRegionTable[2].slotCount, gMmRegionTable[2].numSlots,
+             gMmRegionTable[3].slotCount, gMmRegionTable[3].numSlots);
+    return gMmRegion0Used + (gMmRegion1Used + gMmRegion2Used + gMmRegion3Used);
+}
+int alignUp2(int x)
+{
+    int r = x & 1;
+    if (r > 0)
+    {
+        x += 2 - r;
+    }
+    return x;
+}
+#pragma dont_inline reset
+
+extern char sMmFreeInvalidLocationError[];
+extern char sMmAllocFreeMessageBlock[];
+extern char sMmStbfStackTooDeepError[];
+
+extern int __OSCurrHeap;
+extern void* lbl_803DD498;
+extern void* lbl_803DCAFC;
+extern char sMmSpawnedUnalignedSlotWarning[];
+extern int lbl_803DCC7C;
+extern char sMmFreeMemoryUsageCorruptedError[];
+
+extern asm BOOL OSRestoreInterrupts(register BOOL level);
+extern void heapFree(int region, int slotIdx);
+extern void* OSAllocFromHeap(int heap, int size);
+extern void reportAllocFail(int, int, int, int, int, int, int, int, int, int, int);
+
+int roundUpTo4(int x)
+{
+    int r = x & 3;
+    if (r > 0)
+    {
+        x += 4 - r;
+    }
+    return x;
+}
+
+int roundUpTo8(int x)
+{
+    int r = x & 7;
+    if (r > 0)
+    {
+        x += 8 - r;
+    }
+    return x;
+}
+
+int roundUpTo16(int x)
+{
+    int r = x & 0xf;
+    if (r > 0)
+    {
+        x += 0x10 - r;
+    }
+    return x;
+}
+
+MmRegion gMmRegionTable[0xA0 / sizeof(MmRegion)];
+
+int roundUpTo32(int x)
+{
+    int r = x & 0x1f;
+    if (r > 0)
+    {
+        x += 0x20 - r;
+    }
+    return x;
+}
+
+#pragma dont_inline off
+
+#pragma dont_inline on
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
+{
+    int ni;
+    HeapItem* base;
+    int oldSize;
+    while (size % 32 != 0)
+    {
+        size++;
+    }
+    base = (HeapItem*)gMmRegionTable[region].start;
+    base[idx].type = type;
+    oldSize = base[idx].size;
+    base[idx].size = size;
+    base[idx].tag = itemTag;
+    if (oldSize > size)
+    {
+        s16 oldNext;
+        ni = base[gMmRegionTable[region].slotCount++].stack;
+        base[idx].type = newType;
+        while ((oldSize - size) % 32 != 0)
+        {
+            size++;
+        }
+        base[idx].size = oldSize - size;
+        base[ni].type = type;
+        base[ni].key = (char*)base[idx].key + oldSize - size;
+        if ((int)base[ni].key % 32 != 0)
+        {
+            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
+        }
+        base[ni].size = size;
+        base[ni].tag = itemTag;
+        base[ni].allocTick = gMmTickCount;
+        oldNext = base[idx].next;
+        base[ni].next = oldNext;
+        base[ni].prev = idx;
+        base[idx].next = ni;
+        if (oldNext != -1)
+        {
+            base[oldNext].prev = ni;
+        }
+        return ni;
+    }
+    return idx;
+}
+#pragma dont_inline off
+
+DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
+
+void* gMmStoreArray[0x20];
+
+
+#pragma dont_inline on
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag)
+{
+    int oldSize;
+    int ni;
+    HeapItem* base;
+    base = (HeapItem*)gMmRegionTable[region].start;
+    base[idx].type = type;
+    oldSize = base[idx].size;
+    base[idx].size = newSize;
+    base[idx].tag = itemTag;
+    if (oldSize > newSize)
+    {
+        s16 oldNext;
+        ni = base[gMmRegionTable[region].slotCount++].stack;
+        base[ni].key = (char*)base[idx].key + newSize;
+        if ((int)base[ni].key % 32 != 0)
+        {
+            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
+        }
+        base[ni].size = oldSize - newSize;
+        base[ni].type = newType;
+        oldNext = base[idx].next;
+        base[ni].next = oldNext;
+        base[ni].prev = idx;
+        base[idx].next = ni;
+        if (oldNext != -1)
+        {
+            base[oldNext].prev = ni;
+        }
+        base[idx].allocTick = gMmTickCount;
+        return ni;
+    }
+    return idx;
+}
+#pragma dont_inline off
+
+#pragma dont_inline on
+void heapFree(int region, int idx)
+{
+    s16 next;
+    s16 prev;
+    HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
+    next = base[idx].next;
+    prev = base[idx].prev;
+    base[idx].type = 0;
+    gMmOpCount++;
+    gMmRegionTable[region].usedBytes -= base[idx].size;
+    if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
+    {
+        OSReport(sMmFreeMemoryUsageCorruptedError);
+    }
+    if (next != -1 && base[next].type == 0)
+    {
+        s16 nn;
+        base[idx].size += base[next].size;
+        nn = base[next].next;
+        base[idx].next = nn;
+        if (nn != -1)
+        {
+            base[nn].prev = idx;
+        }
+        base[--gMmRegionTable[region].slotCount].stack = next;
+    }
+    if (prev != -1 && base[prev].type == 0)
+    {
+        s16 in;
+        base[prev].size += base[idx].size;
+        in = base[idx].next;
+        base[prev].next = in;
+        if (in != -1)
+        {
+            base[in].prev = prev;
+        }
+        base[--gMmRegionTable[region].slotCount].stack = idx;
+    }
+}
+#pragma dont_inline off
+
+int mmGetRegionForPtr(u8* ptr)
+{
+    int i;
+    for (i = 0; i < gMmRegionCount; i++)
+    {
+        if (ptr > gMmRegionTable[i].start && ptr < gMmRegionTable[i].start + gMmRegionTable[i].size)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+#pragma dont_inline on
 void mmFreeDeferred(void* p)
 {
     DeferredFree* stack;
@@ -379,7 +536,41 @@ void mmFreeDeferred(void* p)
     gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
     gMmDeferredFreeCount++;
 }
+#pragma dont_inline off
 
+void mmFree(void* p)
+{
+    int region;
+    int i;
+    HeapItem* base;
+    gMmLastFreeTick = OSGetTick();
+    region = mmGetRegionForPtr(p);
+    if (region != -1)
+    {
+        base = (HeapItem*)gMmRegionTable[region].start;
+        i = 0;
+        do
+        {
+            if (base[i].key == p)
+            {
+                s16 t = base[i].type;
+                if (t == 1 || t == 4)
+                {
+                    heapFree(region, i);
+                }
+                else
+                {
+                    OSReport(sMmFreeInvalidLocationError, p);
+                }
+                return;
+            }
+            i = base[i].next;
+        } while (i != -1);
+    }
+    OSReport(sMmAllocFreeMessageBlock, p);
+}
+
+#pragma dont_inline on
 void mmFreeTick(int arg)
 {
     MmGlobal* g[1];
@@ -491,122 +682,34 @@ void mmFreeTick(int arg)
                  g[0]->regions[3].numSlots);
     }
 }
+#pragma dont_inline off
 
-void mmFree(void* p)
+#pragma dont_inline on
+void mm_free(void* p)
 {
-    int region;
-    int i;
-    HeapItem* base;
-    gMmLastFreeTick = OSGetTick();
-    region = mmGetRegionForPtr(p);
-    if (region != -1)
+    if (gMmFreeDelay == 0)
     {
-        base = (HeapItem*)gMmRegionTable[region].start;
-        i = 0;
-        do
-        {
-            if (base[i].key == p)
-            {
-                s16 t = base[i].type;
-                if (t == 1 || t == 4)
-                {
-                    heapFree(region, i);
-                }
-                else
-                {
-                    OSReport(sMmFreeInvalidLocationError, p);
-                }
-                return;
-            }
-            i = base[i].next;
-        } while (i != -1);
+        mmFree(p);
     }
-    OSReport(sMmAllocFreeMessageBlock, p);
-}
-
-void* mmAllocateFromFBMemoryStore(int handle, int size)
-{
-    int sz = size;
-    MmStore* found;
-    int i;
-    found = NULL;
-    i = 0;
-    while (i < 0x20)
+    else
     {
-        if (gMmStoreArray[i] != NULL && handle == ((MmStore*)gMmStoreArray[i])->handle)
-        {
-            found = gMmStoreArray[i];
-            break;
-        }
-        if (++i == 0x20)
-        {
-            OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);
-            return 0;
-        }
+        mmFreeDeferred(p);
     }
-    if (found != NULL)
-    {
-        size = found->size - ((int)found->bufCur - (int)found->buf);
-        if (size < sz)
-        {
-            OSReport(sMmMemoryStoreMessageBlock);
-            return 0;
-        }
-        found->bufCur = (char*)found->bufCur + sz;
-        return (void*)((int)found->bufCur - sz);
-    }
-    return 0;
 }
-
-void mmInit(void)
-{
-    int size;
-    int t;
-    void* p;
-    u8* lo;
-    gMmRegionCount = 0;
-    lo = OSGetArenaLo();
-    t = (u8*)OSGetArenaHi() - lo - 0x6c0000;
-    size = t - 0x720;
-    gMmRegion0Size = size;
-    p = OSAllocFromHeap(__OSCurrHeap, size);
-    DCFlushRange(p, size);
-    mmInitRegion(p, size, 0xfa);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
-    lbl_803DD498 = p;
-    lbl_803DCAFC = (u8*)p + 0x6ec;
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x1c0000);
-    DCFlushRange(p, 0x1c0000);
-    mmInitRegion(p, 0x1c0000, 0x352);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x9ffa0);
-    DCFlushRange(p, 0x9ffa0);
-    mmInitRegion(p, 0x9ffa0, 0x352);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x45ffa0);
-    DCFlushRange(p, 0x45ffa0);
-    mmInitRegion(p, 0x45ffa0, 0x244);
-
-    gMmOpCount++;
-    gMmFreeDelay = 2;
-    gMmDeferredFreeCount = 0;
-}
-
-int printHeapStats(void)
-{
-    OSReport(sMemStatsFormat, gMmRegion0Used, gMmRegionTable[0].size, gMmRegion1Used, gMmRegionTable[1].size,
-             gMmRegion2Used, gMmRegionTable[2].size, gMmRegion3Used, gMmRegionTable[3].size,
-             gMmRegionTable[0].slotCount, gMmRegionTable[0].numSlots, gMmRegionTable[1].slotCount,
-             gMmRegionTable[1].numSlots, gMmRegionTable[2].slotCount, gMmRegionTable[2].numSlots,
-             gMmRegionTable[3].slotCount, gMmRegionTable[3].numSlots);
-    return gMmRegion0Used + (gMmRegion1Used + gMmRegion2Used + gMmRegion3Used);
-}
+#pragma dont_inline off
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag);
 
+#pragma dont_inline on
+int mmSetFreeDelay(int v)
+{
+    int old = gMmFreeDelay;
+    gMmOpCount++;
+    gMmFreeDelay = v;
+    return old;
+}
+#pragma dont_inline off
 #pragma opt_lifetimes off
 int mmAllocFromRegion(int region, int size, int type, int tag)
 {
@@ -758,127 +861,6 @@ int mmAllocFromRegion(int region, int size, int type, int tag)
 }
 #pragma opt_lifetimes reset
 
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
-{
-    int ni;
-    HeapItem* base;
-    int oldSize;
-    while (size % 32 != 0)
-    {
-        size++;
-    }
-    base = (HeapItem*)gMmRegionTable[region].start;
-    base[idx].type = type;
-    oldSize = base[idx].size;
-    base[idx].size = size;
-    base[idx].tag = itemTag;
-    if (oldSize > size)
-    {
-        s16 oldNext;
-        ni = base[gMmRegionTable[region].slotCount++].stack;
-        base[idx].type = newType;
-        while ((oldSize - size) % 32 != 0)
-        {
-            size++;
-        }
-        base[idx].size = oldSize - size;
-        base[ni].type = type;
-        base[ni].key = (char*)base[idx].key + oldSize - size;
-        if ((int)base[ni].key % 32 != 0)
-        {
-            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
-        }
-        base[ni].size = size;
-        base[ni].tag = itemTag;
-        base[ni].allocTick = gMmTickCount;
-        oldNext = base[idx].next;
-        base[ni].next = oldNext;
-        base[ni].prev = idx;
-        base[idx].next = ni;
-        if (oldNext != -1)
-        {
-            base[oldNext].prev = ni;
-        }
-        return ni;
-    }
-    return idx;
-}
-
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag)
-{
-    int oldSize;
-    int ni;
-    HeapItem* base;
-    base = (HeapItem*)gMmRegionTable[region].start;
-    base[idx].type = type;
-    oldSize = base[idx].size;
-    base[idx].size = newSize;
-    base[idx].tag = itemTag;
-    if (oldSize > newSize)
-    {
-        s16 oldNext;
-        ni = base[gMmRegionTable[region].slotCount++].stack;
-        base[ni].key = (char*)base[idx].key + newSize;
-        if ((int)base[ni].key % 32 != 0)
-        {
-            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
-        }
-        base[ni].size = oldSize - newSize;
-        base[ni].type = newType;
-        oldNext = base[idx].next;
-        base[ni].next = oldNext;
-        base[ni].prev = idx;
-        base[idx].next = ni;
-        if (oldNext != -1)
-        {
-            base[oldNext].prev = ni;
-        }
-        base[idx].allocTick = gMmTickCount;
-        return ni;
-    }
-    return idx;
-}
-
-void heapFree(int region, int idx)
-{
-    s16 next;
-    s16 prev;
-    HeapItem* base = (HeapItem*)gMmRegionTable[region].start;
-    next = base[idx].next;
-    prev = base[idx].prev;
-    base[idx].type = 0;
-    gMmOpCount++;
-    gMmRegionTable[region].usedBytes -= base[idx].size;
-    if (gMmRegionTable[region].usedBytes < 0 || gMmRegionTable[region].usedBytes > gMmRegionTable[region].size)
-    {
-        OSReport(sMmFreeMemoryUsageCorruptedError);
-    }
-    if (next != -1 && base[next].type == 0)
-    {
-        s16 nn;
-        base[idx].size += base[next].size;
-        nn = base[next].next;
-        base[idx].next = nn;
-        if (nn != -1)
-        {
-            base[nn].prev = idx;
-        }
-        base[--gMmRegionTable[region].slotCount].stack = next;
-    }
-    if (prev != -1 && base[prev].type == 0)
-    {
-        s16 in;
-        base[prev].size += base[idx].size;
-        in = base[idx].next;
-        base[prev].next = in;
-        if (in != -1)
-        {
-            base[in].prev = prev;
-        }
-        base[--gMmRegionTable[region].slotCount].stack = idx;
-    }
-}
-
 int getHeapItemSize(void* ptr)
 {
     int i = mmGetRegionForPtr(ptr);
@@ -897,109 +879,13 @@ int getHeapItemSize(void* ptr)
         }
     }
 }
+#pragma dont_inline reset
 
-void* AtomicSList_Pop(void** list)
+void texFlagFn_80023cbc(int v)
 {
-    int intr = OSDisableInterrupts();
-    void* head = *list;
-    if (head == NULL)
-    {
-        OSRestoreInterrupts(intr);
-        return NULL;
-    }
-    *list = *(void**)head;
-    OSRestoreInterrupts(intr);
-    return head;
+    lbl_803DCB10 = v;
 }
-
-void copyToCache(void* dst, void* src, u32 count)
-{
-    if (gAttractMovieState != 4 && gAttractMovieState != 0)
-    {
-        int len;
-        if (count != 0)
-        {
-            len = count << 5;
-        }
-        else
-        {
-            len = 0x1000;
-        }
-        memcpy(dst, src, len);
-    }
-    else
-    {
-        LCLoadBlocks(dst, src, count);
-    }
-}
-
-void memcpyToCache(void* dst, void* src, u32 count)
-{
-    if (gAttractMovieState != 4 && gAttractMovieState != 0)
-    {
-        int len;
-        if (count != 0)
-        {
-            len = count << 5;
-        }
-        else
-        {
-            len = 0x1000;
-        }
-        memcpy(dst, src, len);
-        DCFlushRange(dst, len);
-    }
-    else
-    {
-        LCStoreBlocks(dst, src, count);
-    }
-}
-
-void* stackCreate(int count, int size)
-{
-    u8* s;
-    int prev;
-    void** first;
-    void** cur;
-    u8* next;
-    int n;
-
-    n = testAndSet_onlyUseHeaps1and2(2);
-    prev = n;
-    s = mmAlloc(size * count + 0x20, 0x11, 0);
-    testAndSet_onlyUseHeaps1and2(prev);
-    *(s16*)(s + 0xc) = size;
-    *(s16*)(s + 0xe) = count;
-    *(u16*)(s + 0x10) = 0;
-    *(int*)(s + 4) = (int)s + *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20;
-    first = (void**)(s + 0x20);
-    cur = first;
-    next = (u8*)first + size;
-    n = count - 2;
-    for (; n > 0; n--)
-    {
-        *cur = next;
-        cur = (void**)*cur;
-        next += size;
-    }
-    *cur = 0;
-    *(void**)s = first;
-    cur = *(void***)s;
-    while (cur != 0)
-    {
-        int ok = 0;
-        if (cur >= first && cur < *(void***)(s + 4))
-        {
-            ok = 1;
-        }
-        if (ok == 0)
-        {
-            break;
-        }
-        cur = (void**)*cur;
-    }
-    return s;
-}
+#pragma dont_inline off
 
 void* mmAlloc(int size, int type, int flag)
 {
@@ -1069,6 +955,148 @@ void* mmAlloc(int size, int type, int flag)
         ok = 0;
     }
     return result;
+}
+#pragma dont_inline on
+void* mmInitRegion(u8* buf, int size, int numSlots)
+{
+    int regIdx = gMmRegionCount++;
+    int slotsBytes = numSlots * 0x1c;
+    int after = size - slotsBytes;
+    int i;
+    HeapItem* slot;
+    int freePtr;
+    gMmRegionTable[regIdx].numSlots = numSlots;
+    gMmRegionTable[regIdx].slotCount = 0;
+    gMmRegionTable[regIdx].start = buf;
+    gMmRegionTable[regIdx].size = size;
+    gMmRegionTable[regIdx].usedBytes = 0;
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
+    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++)
+    {
+        slot->stack = i;
+        slot++;
+    }
+    slot = (HeapItem*)gMmRegionTable[regIdx].start;
+    freePtr = (int)buf + slotsBytes;
+    if (freePtr & 0x1f)
+    {
+        *(int*)&slot->key = (freePtr & ~0x1f) + 0x20;
+    }
+    else
+    {
+        *(int*)&slot->key = freePtr;
+    }
+    slot->size = after;
+    slot->type = 0;
+    slot->prev = -1;
+    slot->next = -1;
+    gMmRegionTable[regIdx].slotCount++;
+    return gMmRegionTable[regIdx].start;
+}
+#pragma dont_inline off
+
+void mmInit(void)
+{
+    int size;
+    int t;
+    void* p;
+    u8* lo;
+    gMmRegionCount = 0;
+    lo = OSGetArenaLo();
+    t = (u8*)OSGetArenaHi() - lo - 0x6c0000;
+    size = t - 0x720;
+    gMmRegion0Size = size;
+    p = OSAllocFromHeap(__OSCurrHeap, size);
+    DCFlushRange(p, size);
+    mmInitRegion(p, size, 0xfa);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
+    lbl_803DD498 = p;
+    lbl_803DCAFC = (u8*)p + 0x6ec;
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x1c0000);
+    DCFlushRange(p, 0x1c0000);
+    mmInitRegion(p, 0x1c0000, 0x352);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x9ffa0);
+    DCFlushRange(p, 0x9ffa0);
+    mmInitRegion(p, 0x9ffa0, 0x352);
+
+    p = OSAllocFromHeap(__OSCurrHeap, 0x45ffa0);
+    DCFlushRange(p, 0x45ffa0);
+    mmInitRegion(p, 0x45ffa0, 0x244);
+
+    gMmOpCount++;
+    gMmFreeDelay = 2;
+    gMmDeferredFreeCount = 0;
+}
+
+void* AtomicSList_Pop(void** list)
+{
+    int intr = OSDisableInterrupts();
+    void* head = *list;
+    if (head == NULL)
+    {
+        OSRestoreInterrupts(intr);
+        return NULL;
+    }
+    *list = *(void**)head;
+    OSRestoreInterrupts(intr);
+    return head;
+}
+
+void AtomicSList_Push(void** list, void* node)
+{
+    int intr = OSDisableInterrupts();
+    *(void**)node = *list;
+    *list = node;
+    OSRestoreInterrupts(intr);
+}
+
+void* stackCreate(int count, int size)
+{
+    u8* s;
+    int prev;
+    void** first;
+    void** cur;
+    u8* next;
+    int n;
+
+    n = testAndSet_onlyUseHeaps1and2(2);
+    prev = n;
+    s = mmAlloc(size * count + 0x20, 0x11, 0);
+    testAndSet_onlyUseHeaps1and2(prev);
+    *(s16*)(s + 0xc) = size;
+    *(s16*)(s + 0xe) = count;
+    *(u16*)(s + 0x10) = 0;
+    *(int*)(s + 4) = (int)s + *(s16*)(s + 0xe) * *(s16*)(s + 0xc) + 0x20;
+    first = (void**)(s + 0x20);
+    cur = first;
+    next = (u8*)first + size;
+    n = count - 2;
+    for (; n > 0; n--)
+    {
+        *cur = next;
+        cur = (void**)*cur;
+        next += size;
+    }
+    *cur = 0;
+    *(void**)s = first;
+    cur = *(void***)s;
+    while (cur != 0)
+    {
+        int ok = 0;
+        if (cur >= first && cur < *(void***)(s + 4))
+        {
+            ok = 1;
+        }
+        if (ok == 0)
+        {
+            break;
+        }
+        cur = (void**)*cur;
+    }
+    return s;
 }
 
 /* dtk-split chunk of MWCC's pooled OSReport format strings (truncated at the symbol boundary), so it is emitted as raw bytes. */
