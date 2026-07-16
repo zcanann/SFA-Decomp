@@ -1057,6 +1057,8 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     float xA;
     float yA;
     float zA;
+    float minA;
+    float maxA;
     float dax;
     float day;
     float daz;
@@ -1069,9 +1071,6 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     float cy;
     float cz;
     float bb;
-    float invLenSq;
-    float minA;
-    float maxA;
     float lo;
     float hi;
     float blo;
@@ -1082,8 +1081,9 @@ u8 ObjHits_CheckHitVolumes(int objA, int objB, int srcObj, char checkA, char che
     float q;
     float sc;
     float bestX;
-    float bestDepth;
     float bestZ;
+    float bestDepth;
+    float invLenSq;
     float defs[8];
     float sphs[8];
     u8 volB0[24];
