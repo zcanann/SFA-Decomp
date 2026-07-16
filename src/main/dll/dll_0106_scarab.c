@@ -72,6 +72,7 @@ extern f32 lbl_803E39F4;
 extern f32 lbl_803E39F8;
 extern f32 lbl_803E39FC;
 extern f32 lbl_803E3A00;
+extern f32 lbl_803E3A04;
 extern f32 lbl_803E3A08;
 extern f32 lbl_803E3A0C;
 extern f32 lbl_803E3A10;
@@ -93,6 +94,231 @@ extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
 const ScarabVec3 sScarabStartInit = {0.0f, 0.0f, 0.0f};
 const ScarabVec3 sScarabEndInit = {0.0f, 0.0f, 0.0f};
+int scarab_sweptCollide(GameObject* obj)
+{
+    typedef struct HitDetectResults
+    {
+        f32 hitInfo[4][4];
+        f32 radii[4];
+        u8 axisTable[12];
+        u32 solidFlags[4];
+    } HitDetectResults;
+
+    u8* state;
+    TrackQueryBounds sweptBounds;
+    f32 endPoints[12];
+    f32 startPoints[12];
+    HitDetectResults results;
+    int idx;
+    u8 hit;
+
+    state = *(u8**)&(obj)->anim.hitReactState;
+    if (state != 0)
+    {
+        endPoints[0] = (obj)->anim.localPosX;
+        endPoints[1] = (obj)->anim.localPosY;
+        endPoints[2] = (obj)->anim.localPosZ;
+        startPoints[0] = (obj)->anim.previousLocalPosX;
+        startPoints[1] = (obj)->anim.previousLocalPosY;
+        startPoints[2] = (obj)->anim.previousLocalPosZ;
+        results.radii[0] = lbl_803E39F4;
+        *(s8*)&results.axisTable[0] = -1;
+        results.axisTable[4] = 0x3;
+    }
+    else
+    {
+        return 0;
+    }
+
+    hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, results.radii, 1);
+    hitDetectFn_800691c0(obj, &sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
+    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
+    if (hit != 0)
+    {
+        if ((hit & 1) != 0)
+        {
+            idx = 0;
+        }
+        else if ((hit & 2) != 0)
+        {
+            idx = 1;
+        }
+        else if ((hit & 4) != 0)
+        {
+            idx = 2;
+        }
+        else
+        {
+            idx = 3;
+        }
+
+        *(u8*)&((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
+        ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
+        ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
+        ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
+        gScarabSweptHitInfo[0] = results.hitInfo[idx][0];
+        gScarabSweptHitInfo[1] = results.hitInfo[idx][1];
+        gScarabSweptHitInfo[2] = results.hitInfo[idx][2];
+        gScarabSweptHitInfo[3] = results.hitInfo[idx][3];
+
+        if (results.solidFlags[idx] != 0)
+        {
+            ((ObjHitsPriorityState*)state)->contactFlags =
+                *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
+            (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+            (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+            (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+            ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
+            return 1;
+        }
+        ((ObjHitsPriorityState*)state)->contactFlags =
+            *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
+        (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
+        (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
+        (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
+        ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
+        ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
+        ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
+        return 1;
+    }
+    return 0;
+}
+
+typedef struct GuardianAngleParams
+{
+    s16 a, b, c;
+    f32 w;
+    f32 x, y, z;
+} GuardianAngleParams;
+
+void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
+{
+    f32* velCache = ((GameObject*)obj)->extra;
+    GuardianAngleParams rotParams;
+    f32 buf[3];
+
+    if (mode == 1)
+    {
+        buf[0] = p2[1];
+        buf[1] = p2[2];
+        buf[2] = p2[3];
+    }
+    else if (mode == 0)
+    {
+        buf[0] = p3[0];
+        buf[1] = p3[1];
+        buf[2] = p3[2];
+    }
+    else if (mode == 2)
+    {
+        f32 sq, d;
+        ((GameObject*)obj)->anim.velocityX = p3[0];
+        ((GameObject*)obj)->anim.velocityZ = p3[2];
+        sq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
+             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
+        if (sq != lbl_803E39F8)
+        {
+            sq = sqrtf(sq);
+        }
+        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (d = lbl_803E39FC * sq);
+        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / d;
+        velCache[0] = ((GameObject*)obj)->anim.velocityX;
+        velCache[1] = ((GameObject*)obj)->anim.velocityZ;
+        ((GameObject*)obj)->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
+        return;
+    }
+
+    rotParams.x = lbl_803E39F8;
+    rotParams.y = lbl_803E39F8;
+    rotParams.z = lbl_803E39F8;
+    rotParams.w = lbl_803E3A00;
+    rotParams.c = 0;
+    rotParams.b = 0;
+    rotParams.a = ((GameObject*)obj)->anim.rotX;
+
+    vecRotateZXY(&rotParams.a, buf);
+
+    if (p2)
+    {
+        u16 a = getAngle(buf[0], buf[1]);
+        ((GameObject*)obj)->anim.rotY = (u16)getAngle(buf[2], buf[1]);
+        ((GameObject*)obj)->anim.rotZ = a;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.rotZ = 0;
+        ((GameObject*)obj)->anim.rotY = getAngle(p3[0] + p3[2], p3[1]);
+        if (((GameObject*)obj)->anim.rotY < 0)
+        {
+            ((GameObject*)obj)->anim.rotY *= -1;
+        }
+        ((GameObject*)obj)->anim.rotX = getAngle(p3[0], p3[2]);
+    }
+}
+
+int Scarab_getExtraSize(void)
+{
+    return 0x34;
+}
+
+void Scarab_free(void)
+{
+}
+
+void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state;
+    int model;
+    u8* shellColors;
+    int i;
+
+    state = *(int*)&obj->extra;
+    model = ((int (*)(void*))Obj_GetActiveModel)(obj);
+    if (obj->anim.seqId == 0x3d6)
+    {
+        i = 0;
+        shellColors = gScarabColorVariantsD;
+        for (; i < 7; i++)
+        {
+            if (*shellColors == *(u8*)(*(int*)(model + 0x34) + 8))
+            {
+                i++;
+                if (i == 7)
+                {
+                    i = 0;
+                }
+                *(u8*)(*(int*)(model + 0x34) + 8) = (gScarabColorVariantsD)[i];
+                break;
+            }
+            shellColors++;
+        }
+    }
+
+    if (((ScarabState*)state)->despawnTimer == 0)
+    {
+        if (obj->unkF8 != 0)
+        {
+            if (visible != -1)
+            {
+                return;
+            }
+        }
+        else if (visible == 0)
+        {
+            return;
+        }
+
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A00);
+        if ((visible != 0) && (obj->anim.alpha != 0))
+        {
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,
+                                        lbl_803E3A04, 0, 0);
+        }
+    }
+}
+
 void Scarab_update(GameObject* obj)
 {
     typedef struct
@@ -550,7 +776,6 @@ void Scarab_update(GameObject* obj)
     }
 }
 
-
 void Scarab_init(int* obj, u8* def)
 {
     ScarabState* state = ((GameObject*)obj)->extra;
@@ -596,229 +821,3 @@ void Scarab_init(int* obj, u8* def)
     ObjMsg_AllocQueue(obj, 2);
 }
 
-extern f32 lbl_803E3A04;
-
-typedef struct GuardianAngleParams
-{
-    s16 a, b, c;
-    f32 w;
-    f32 x, y, z;
-} GuardianAngleParams;
-
-void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
-{
-    f32* velCache = ((GameObject*)obj)->extra;
-    GuardianAngleParams rotParams;
-    f32 buf[3];
-
-    if (mode == 1)
-    {
-        buf[0] = p2[1];
-        buf[1] = p2[2];
-        buf[2] = p2[3];
-    }
-    else if (mode == 0)
-    {
-        buf[0] = p3[0];
-        buf[1] = p3[1];
-        buf[2] = p3[2];
-    }
-    else if (mode == 2)
-    {
-        f32 sq, d;
-        ((GameObject*)obj)->anim.velocityX = p3[0];
-        ((GameObject*)obj)->anim.velocityZ = p3[2];
-        sq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
-        if (sq != lbl_803E39F8)
-        {
-            sq = sqrtf(sq);
-        }
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (d = lbl_803E39FC * sq);
-        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / d;
-        velCache[0] = ((GameObject*)obj)->anim.velocityX;
-        velCache[1] = ((GameObject*)obj)->anim.velocityZ;
-        ((GameObject*)obj)->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
-        return;
-    }
-
-    rotParams.x = lbl_803E39F8;
-    rotParams.y = lbl_803E39F8;
-    rotParams.z = lbl_803E39F8;
-    rotParams.w = lbl_803E3A00;
-    rotParams.c = 0;
-    rotParams.b = 0;
-    rotParams.a = ((GameObject*)obj)->anim.rotX;
-
-    vecRotateZXY(&rotParams.a, buf);
-
-    if (p2)
-    {
-        u16 a = getAngle(buf[0], buf[1]);
-        ((GameObject*)obj)->anim.rotY = (u16)getAngle(buf[2], buf[1]);
-        ((GameObject*)obj)->anim.rotZ = a;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rotY = getAngle(p3[0] + p3[2], p3[1]);
-        if (((GameObject*)obj)->anim.rotY < 0)
-        {
-            ((GameObject*)obj)->anim.rotY *= -1;
-        }
-        ((GameObject*)obj)->anim.rotX = getAngle(p3[0], p3[2]);
-    }
-}
-
-int Scarab_getExtraSize(void)
-{
-    return 0x34;
-}
-
-void Scarab_free(void)
-{
-}
-
-void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int state;
-    int model;
-    u8* shellColors;
-    int i;
-
-    state = *(int*)&obj->extra;
-    model = ((int (*)(void*))Obj_GetActiveModel)(obj);
-    if (obj->anim.seqId == 0x3d6)
-    {
-        i = 0;
-        shellColors = gScarabColorVariantsD;
-        for (; i < 7; i++)
-        {
-            if (*shellColors == *(u8*)(*(int*)(model + 0x34) + 8))
-            {
-                i++;
-                if (i == 7)
-                {
-                    i = 0;
-                }
-                *(u8*)(*(int*)(model + 0x34) + 8) = (gScarabColorVariantsD)[i];
-                break;
-            }
-            shellColors++;
-        }
-    }
-
-    if (((ScarabState*)state)->despawnTimer == 0)
-    {
-        if (obj->unkF8 != 0)
-        {
-            if (visible != -1)
-            {
-                return;
-            }
-        }
-        else if (visible == 0)
-        {
-            return;
-        }
-
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E3A00);
-        if ((visible != 0) && (obj->anim.alpha != 0))
-        {
-            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)((ScarabState*)state)->burstModel, 1, 0x14,
-                                        lbl_803E3A04, 0, 0);
-        }
-    }
-}
-
-int scarab_sweptCollide(GameObject* obj)
-{
-    typedef struct HitDetectResults
-    {
-        f32 hitInfo[4][4];
-        f32 radii[4];
-        u8 axisTable[12];
-        u32 solidFlags[4];
-    } HitDetectResults;
-
-    u8* state;
-    TrackQueryBounds sweptBounds;
-    f32 endPoints[12];
-    f32 startPoints[12];
-    HitDetectResults results;
-    int idx;
-    u8 hit;
-
-    state = *(u8**)&(obj)->anim.hitReactState;
-    if (state != 0)
-    {
-        endPoints[0] = (obj)->anim.localPosX;
-        endPoints[1] = (obj)->anim.localPosY;
-        endPoints[2] = (obj)->anim.localPosZ;
-        startPoints[0] = (obj)->anim.previousLocalPosX;
-        startPoints[1] = (obj)->anim.previousLocalPosY;
-        startPoints[2] = (obj)->anim.previousLocalPosZ;
-        results.radii[0] = lbl_803E39F4;
-        *(s8*)&results.axisTable[0] = -1;
-        results.axisTable[4] = 0x3;
-    }
-    else
-    {
-        return 0;
-    }
-
-    hitDetect_calcSweptSphereBounds(&sweptBounds, startPoints, endPoints, results.radii, 1);
-    hitDetectFn_800691c0(obj, &sweptBounds, ((ObjHitsPriorityState*)state)->trackContactMask, 1);
-    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
-    if (hit != 0)
-    {
-        if ((hit & 1) != 0)
-        {
-            idx = 0;
-        }
-        else if ((hit & 2) != 0)
-        {
-            idx = 1;
-        }
-        else if ((hit & 4) != 0)
-        {
-            idx = 2;
-        }
-        else
-        {
-            idx = 3;
-        }
-
-        *(u8*)&((ObjHitsPriorityState*)state)->contactHitVolume = results.axisTable[idx];
-        ((ObjHitsPriorityState*)state)->contactPosX = endPoints[idx * 3];
-        ((ObjHitsPriorityState*)state)->contactPosY = endPoints[idx * 3 + 1];
-        ((ObjHitsPriorityState*)state)->contactPosZ = endPoints[idx * 3 + 2];
-        gScarabSweptHitInfo[0] = results.hitInfo[idx][0];
-        gScarabSweptHitInfo[1] = results.hitInfo[idx][1];
-        gScarabSweptHitInfo[2] = results.hitInfo[idx][2];
-        gScarabSweptHitInfo[3] = results.hitInfo[idx][3];
-
-        if (results.solidFlags[idx] != 0)
-        {
-            ((ObjHitsPriorityState*)state)->contactFlags =
-                *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND_NONZERO;
-            (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-            (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-            (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-            ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
-            ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
-            ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
-            return 1;
-        }
-        ((ObjHitsPriorityState*)state)->contactFlags =
-            *(u8*)&((ObjHitsPriorityState*)state)->contactFlags | OBJHITS_CONTACT_FLAG_KIND0;
-        (obj)->anim.localPosX = ((ObjHitsPriorityState*)state)->contactPosX;
-        (obj)->anim.localPosY = ((ObjHitsPriorityState*)state)->contactPosY;
-        (obj)->anim.localPosZ = ((ObjHitsPriorityState*)state)->contactPosZ;
-        ((ObjHitsPriorityState*)state)->localPosX = (obj)->anim.previousLocalPosX;
-        ((ObjHitsPriorityState*)state)->localPosY = (obj)->anim.previousLocalPosY;
-        ((ObjHitsPriorityState*)state)->localPosZ = (obj)->anim.previousLocalPosZ;
-        return 1;
-    }
-    return 0;
-}
