@@ -857,7 +857,6 @@ void shaderInit(u8* def, void** out, u8* obj)
     out[1] = *slot;
 }
 
-
 void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, void* forceTex, int flags, int packed)
 {
     int i;
@@ -925,7 +924,6 @@ void textureFn_800541ac(int p1 /* unused; target never reads r3 */, int* tex, vo
     selectTexture((Texture*)((int)cur), 0);
     selectTexture((Texture*)((int)result), 1);
 }
-
 
 void textureAnimFn_80053f2c(const Texture* texture, u32* node, s32* cnt)
 {
@@ -1118,9 +1116,9 @@ void mapInstantiateObjects(int* p1, int mapId, int index, int p4)
                     byteIdx = objIndex >> 3;
                     bit = 1 << (objIndex & 7);
                     vis = *(s8**)((char*)bm2 + 0x10);
-                    vis[byteIdx] = vis[byteIdx] & ~bit;
+                    vis[byteIdx] &= ~bit;
                     vis = *(s8**)((char*)bm2 + 0x10);
-                    vis[byteIdx] = vis[byteIdx] | bit;
+                    vis[byteIdx] |= bit;
                 }
                 Obj_SetupObject((ObjPlacement*)obj, 1, mapId, objIndex, (void*)p4);
             }
@@ -2138,10 +2136,10 @@ void gxTextureFn_80052efc(void)
     u8* slots[1];
     int i;
     int clearSlot;
+    u8 group;
     int k;
     int model;
     u8* tex;
-    u8 group;
 
     gxFn_80052dc0();
     PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
@@ -2199,8 +2197,8 @@ void gxTextureFn_80052efc(void)
     i = 0;
     for (; i < 6; i++)
     {
-        if (((Texture*)((RcpDistortSlot*)slots[0])[i].texture)->refCount != 0 && ((RcpDistortSlot*)slots[0])[i].mode == 0 &&
-            gRcpDistortGroup == ((RcpDistortSlot*)slots[0])[i].group)
+        if (((Texture*)((RcpDistortSlot*)slots[0])[i].texture)->refCount != 0 &&
+            ((RcpDistortSlot*)slots[0])[i].mode == 0 && gRcpDistortGroup == ((RcpDistortSlot*)slots[0])[i].group)
         {
             model = ((RcpDistortSlot*)slots[0])[i].model;
             modelTextureFn_80089970(2 - (i - 3));
