@@ -15,13 +15,6 @@
 #include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69E0 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69E4 = 0.0f;
-#pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E69E8 = 90.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69EC = 0.0f;
-#pragma explicit_zero_data off
 
 int drchimmey_countdownCallback(DRChimmeyObject* obj, int amount)
 {
@@ -79,7 +72,7 @@ void DR_Chimmey_update(DRChimmeyObject* obj)
     if (timerCountDown(&state->timer) != 0)
     {
         state->linkedObject = NULL;
-        state->timer = lbl_803E69E4;
+        state->timer = 0.0f;
         state->eventActive = 0;
         state->offeringsRemaining = 1;
         mainSetBits(state->completionGameBit, 0);
@@ -93,7 +86,7 @@ void DR_Chimmey_init(DRChimmeyObject* obj, DRChimmeySetup* setup)
 
     obj->yaw = (s16)(setup->yawByte << 8);
     state = obj->state;
-    state->timerDuration = lbl_803E69E8;
+    state->timerDuration = 90.0f;
     state->completionGameBit = setup->completionGameBit;
     state->offeringsRemaining = 3;
     storeZeroToFloatParam(&state->timer);

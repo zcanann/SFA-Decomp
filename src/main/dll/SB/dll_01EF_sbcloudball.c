@@ -69,16 +69,14 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 /* romlist type id the cloud ball reacts to on contact (plays the shatter sfx) */
 #define CLOUDBALL_TARGET_TYPE_ID 142
 
+#define SB_CLOUD_BALL_FADE_TIME 50.0f
+#define SB_CLOUD_BALL_VELOCITY_SCALE 2.0f
+#define SB_CLOUD_BALL_TRAIL_VEL_SCALE 0.1f
+#define SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE 0.22f
 __declspec(section ".sdata2") f32 lbl_803E58E8 = 1.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E58EC = 0.0f;
 #pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 gSbCloudBallFadeTime = 50.0f;
-__declspec(section ".sdata2") f32 lbl_803E58F4 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E58F8 = 0.005f;
-__declspec(section ".sdata2") f32 gSbCloudBallVelocityScale = 2.0f;
-__declspec(section ".sdata2") f32 gSbCloudBallTrailVelScale = 0.1f;
-__declspec(section ".sdata2") f32 gSbCloudBallTrailParticleScale = 0.22f;
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
 extern void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int effectParam, int f4, int origin, f32 scale);
@@ -130,7 +128,7 @@ void SB_CloudBall_hitDetect(GameObject* obj)
         ObjHitsPriorityState* hits = ObjAnim_GetPriorityHitState(&obj->anim);
         hits->flags = (s16)(hits->flags & ~1);
     }
-    state->fadeTimer = gSbCloudBallFadeTime;
+    state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
     obj->anim.alpha = 0;
     projectileParticleFxFn_80099660Legacy((int*)obj, lbl_803E58E8, 2);
 }
@@ -157,7 +155,7 @@ void SB_CloudBall_update(GameObject* obj)
         obj->anim.previousLocalPosX = obj->anim.localPosX;
         obj->anim.previousLocalPosY = obj->anim.localPosY;
         obj->anim.previousLocalPosZ = obj->anim.localPosZ;
-        obj->anim.rootMotionScale = lbl_803E58F8 * (f32)(int)randomGetRange(-0x64, 0x64) + lbl_803E58F4;
+        obj->anim.rootMotionScale = 0.005f * (f32)(int)randomGetRange(-0x64, 0x64) + 3.0f;
         if (*(s8*)&state->launched == 0)
         {
             state->velX = obj->anim.velocityX;
@@ -168,7 +166,7 @@ void SB_CloudBall_update(GameObject* obj)
             state->posY = obj->anim.localPosY;
             state->posZ = obj->anim.localPosZ;
         }
-        velocityScale = gSbCloudBallVelocityScale;
+        velocityScale = SB_CLOUD_BALL_VELOCITY_SCALE;
         state->posX = velocityScale * (state->velX * timeDelta) + state->posX;
         state->posY = velocityScale * (state->velY * timeDelta) + state->posY;
         state->posZ = velocityScale * (state->velZ * timeDelta) + state->posZ;
@@ -182,7 +180,7 @@ void SB_CloudBall_update(GameObject* obj)
             if (state->fadeTimer == lbl_803E58EC)
             {
                 obj->anim.alpha = 0;
-                state->fadeTimer = gSbCloudBallFadeTime;
+                state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
             }
         }
         obj->anim.rotX = (s16)getAngle(obj->anim.localPosX - obj->anim.previousLocalPosX,
@@ -195,17 +193,17 @@ void SB_CloudBall_update(GameObject* obj)
         if (ObjAnim_GetPriorityHitState(&obj->anim)->contactFlags != 0 && state->fadeTimer == lbl_803E58EC)
         {
             projectileParticleFxFn_80099660Legacy((int*)obj, lbl_803E58E8, 2);
-            state->fadeTimer = gSbCloudBallFadeTime;
+            state->fadeTimer = SB_CLOUD_BALL_FADE_TIME;
             obj->anim.alpha = 0;
         }
-        particleVelocity[0] = gSbCloudBallTrailVelScale * -state->velX;
-        particleVelocity[1] = gSbCloudBallTrailVelScale * -state->velY;
-        particleVelocity[2] = gSbCloudBallTrailVelScale * -state->velZ;
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+        particleVelocity[0] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velX;
+        particleVelocity[1] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velY;
+        particleVelocity[2] = SB_CLOUD_BALL_TRAIL_VEL_SCALE * -state->velZ;
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
                                                                 0xf, particleVelocity);
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
                                                                 0xf, particleVelocity);
-        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, gSbCloudBallTrailParticleScale, 2, 0x156,
+        ((SBCloudBallTrailBurstFn)objfx_spawnFlaggedTrailBurst)((int*)obj, SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE, 2, 0x156,
                                                                 0xf, particleVelocity);
         (*gPartfxInterface)->spawnObject((void*)obj, SBCLOUDBALL_PARTFX, NULL, 2, -1, NULL);
     }

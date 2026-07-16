@@ -2679,7 +2679,7 @@ main/dll/dll_801dd170.c:
 main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DDA28
 	.data       start:0x80327A18 end:0x80327A60
-	.sdata2     start:0x803E55F0 end:0x803E5610
+	.sdata2     start:0x803E55F0 end:0x803E560C
 	.sdata2     start:0x803E5610 end:0x803E5618
 
 main/dll/SC/dll_01BB_sctotembond.c:
@@ -3276,12 +3276,12 @@ main/dll/dll_0269_explodeplan.c:
 main/dll/DR/dll_0268_drcagecontrol.c:
 	.text       start:0x8021A13C end:0x8021A42C
 	.data       start:0x8032A8F8 end:0x8032A930
-	.sdata2     start:0x803E69D8 end:0x803E69E0
+	.sdata2     start:0x803E69D8 end:0x803E69DC
 
 main/dll/DR/dll_026B_drchimmey.c:
 	.text       start:0x8021A42C end:0x8021A62C
 	.data       start:0x8032A930 end:0x8032A968
-	.sdata2     start:0x803E69E0 end:0x803E69F0
+	.sdata2     start:0x803E69E0 end:0x803E69EC
 
 main/dll/DR/dll_026C_drcagewith.c:
 	.text       start:0x8021A62C end:0x8021ACE8
@@ -3470,7 +3470,7 @@ main/dll/ARW/dll_02A7_arwproximit.c:
 
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
-	.sdata2     start:0x803E7218 end:0x803E7228
+	.sdata2     start:0x803E7218 end:0x803E7224
 	.sdata2     start:0x803E7228 end:0x803E7230
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:
@@ -3499,7 +3499,7 @@ main/dll/dll_02AD_softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
 	.data       start:0x8032BB70 end:0x8032BBA8
 	.sbss       start:0x803DDD98 end:0x803DDDA8
-	.sdata2     start:0x803E7288 end:0x803E72A0
+	.sdata2     start:0x803E7288 end:0x803E729C
 	.sdata2     start:0x803E72A0 end:0x803E72B0
 
 main/dll/dll_02AE_waterflowwe.c:
@@ -3513,7 +3513,7 @@ main/dll/dll_02AF_tree.c:
 
 main/dll/dll_02B0_brokenpipe.c:
 	.text       start:0x80236154 end:0x80236298
-	.sdata2     start:0x803E7338 end:0x803E7348
+	.sdata2     start:0x803E7338 end:0x803E7344
 	.sdata2     start:0x803E7348 end:0x803E7358
 
 main/dll/dll_02B1_cmbsrc.c:

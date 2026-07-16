@@ -70,14 +70,6 @@ __declspec(section ".sdata2") f32 gTotemPuzzleAngleStep = 8192.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E55F4 = 0.0f;
 #pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E55F8 = 16.5f;
-__declspec(section ".sdata2") f32 lbl_803E55FC = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E5600 = 2.0f;
-__declspec(section ".sdata2") f32 lbl_803E5604 = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E5608 = 30.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E560C = 0.0f;
-#pragma explicit_zero_data off
 extern f32 lbl_803E5618;
 extern const f32 lbl_803E561C;
 extern const f32 lbl_803E5620;
@@ -154,14 +146,14 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject* obj, SCTotemPuzzleSt
     {
         ObjTextureRuntimeSlot* solvedTexture;
         particleBox.x = lbl_803E55F4;
-        particleBox.y = lbl_803E55F8;
+        particleBox.y = 16.5f;
         particleBox.z = lbl_803E55F4;
-        particleBox.alpha = lbl_803E55FC;
+        particleBox.alpha = 1.0f;
 
         for (objectIndex = 20; objectIndex != 0; objectIndex--)
         {
-            objfx_spawnArcedBurstLegacy(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604, *(f32*)&lbl_803E5604,
-                                       lbl_803E5608, &particleBox, 0);
+            objfx_spawnArcedBurstLegacy(obj, 7, 2.0f, 5, 7, 100, 25.0f, 25.0f,
+                                       30.0f, &particleBox, 0);
         }
 
         solvedTexture = objFindTexture((GameObject*)(obj), 0, 0);
@@ -207,7 +199,7 @@ void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
     if (v != 0)
     {
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E55FC);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -399,7 +391,7 @@ void sc_totempuzzle_init(ScTotemPuzzleObject* obj, ScTotemPuzzleMapData* params)
     {
         state->flags = 1;
     }
-    state->peerPhaseOffset = lbl_803E55FC;
+    state->peerPhaseOffset = 1.0f;
     obj->animEventCallback = sc_totempuzzle_animEventCallback;
     obj->objectFlags =
         (u16)(obj->objectFlags | (SC_TOTEMPUZZLE_OBJFLAG_HIDDEN | SC_TOTEMPUZZLE_OBJFLAG_HITDETECT_DISABLED));

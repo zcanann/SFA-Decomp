@@ -62,9 +62,6 @@ typedef struct InvhitObjectDef
 #define INVHIT_MODE_SELF_FREE         7 /* self-free once owner hit list drops it */
 
 __declspec(section ".sdata2") f32 lbl_803E35E8 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E35EC = 48.0f;
-__declspec(section ".sdata2") f32 lbl_803E35F0 = 10.0f;
-__declspec(section ".sdata2") f32 lbl_803E35F4 = 20.0f;
 /* single-precision override for codegen */
 f32 lbl_803AC780[4];
 
@@ -238,14 +235,14 @@ void InvHit_update(int* obj)
                 break;
             dx = ((GameObject*)targetObj)->anim.localPosX - ((GameObject*)obj)->anim.localPosX;
             dz = ((GameObject*)targetObj)->anim.localPosZ - ((GameObject*)obj)->anim.localPosZ;
-            smoothTime = lbl_803E35EC;
+            smoothTime = 48.0f;
             qt = dx / smoothTime;
             ((GameObject*)obj)->anim.localPosX = qt * timeDelta + ((GameObject*)obj)->anim.localPosX;
             qt = dz / smoothTime;
             ((GameObject*)obj)->anim.localPosZ = qt * timeDelta + ((GameObject*)obj)->anim.localPosZ;
             dx = ((GameObject*)targetObj)->anim.localPosX - state->anchorX;
             dz = ((GameObject*)targetObj)->anim.localPosZ - state->anchorZ;
-            reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
+            reach = 10.0f + sqrtf(dx * dx + dz * dz);
             dx2 = ((GameObject*)obj)->anim.localPosX - state->anchorX;
             dz2 = ((GameObject*)obj)->anim.localPosZ - state->anchorZ;
             dist = sqrtf(dx2 * dx2 + dz2 * dz2);
@@ -267,7 +264,7 @@ void InvHit_update(int* obj)
             i = 0;
             cnt = tmp;
         }
-        thr = lbl_803E35F4;
+        thr = 20.0f;
         for (; i < cnt; i++)
         {
             f32 h = hits[0][i]->height;

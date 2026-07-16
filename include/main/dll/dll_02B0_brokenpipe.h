@@ -28,7 +28,6 @@ STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
 extern f32 lbl_803E7338;
 extern f32 lbl_803E733C;
-extern f32 lbl_803E7340;
 extern ObjectDescriptor gBrokenPipeObjDescriptor;
 
 int brokenpipe_getExtraSize(void);

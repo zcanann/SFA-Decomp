@@ -31,8 +31,6 @@ __declspec(section ".sdata2") f32 lbl_803E7290 = 0.005f;
 __declspec(section ".sdata2") f32 lbl_803E7294 = 255.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E7298 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E729C = 0.0f;
-#pragma explicit_zero_data off
 
 #define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
 

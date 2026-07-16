@@ -16,10 +16,6 @@ __declspec(section ".sdata2") f32 lbl_803E7338 = 255.0f;
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E733C = 0.0f;
 #pragma explicit_zero_data off
-__declspec(section ".sdata2") f32 lbl_803E7340 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7344 = 0.0f;
-#pragma explicit_zero_data off
 
 #define BROKENPIPE_OBJFLAG_HIDDEN 0x4000
 
@@ -48,7 +44,7 @@ void brokenpipe_init(GameObject* obj, BrokenPipeSetup* setup)
         object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7338;
         if (object->anim.rootMotionScale == lbl_803E733C)
         {
-            object->anim.rootMotionScale = lbl_803E7340;
+            object->anim.rootMotionScale = 1.0f;
         }
         ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                   (int)((f32)((ObjHitsPriorityState*)object->anim.hitReactState)->primaryRadius *

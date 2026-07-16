@@ -62,8 +62,6 @@ __declspec(section ".sdata2") f32 lbl_803DF4B0 = -1.0f;
 __declspec(section ".sdata2") f32 gBoneParticleDriftMin = -500.0f;
 __declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
 __declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
-__declspec(section ".sdata2") f32 lbl_803DF4C0 = 8.0f;
-__declspec(section ".sdata2") f32 lbl_803DF4C4 = 0.0495f;
 
 extern void GXSetCullMode(int mode);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
@@ -223,7 +221,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
                 dx = dx * lbl_803DF4BC.f;
                 if (id == 0x1d || id == 0x1d)
                 {
-                    dy = *(f32*)&lbl_803DF4BC.f * (lbl_803DF4C0 + dy);
+                    dy = *(f32*)&lbl_803DF4BC.f * (8.0f + dy);
                 }
                 else
                 {
@@ -284,7 +282,7 @@ void boneParticleEffect_update(void* ctx, int renderParam, u8* obj)
     vtx.vx = ((GameObject*)obj)->anim.localPosX;
     vtx.vy = ((GameObject*)obj)->anim.localPosY;
     vtx.vz = ((GameObject*)obj)->anim.localPosZ;
-    vtx.w = lbl_803DF4C4;
+    vtx.w = 0.0495f;
     setTextColorContextLegacy(ctx, 0xff, 0xff, 0xff, 0xff);
     if (gBoneParticleEffectTimer != 0)
     {

@@ -22,11 +22,6 @@
 #define ARWBLOCKER_SEQMODE_ARMED   1 /* fires sequence 1; reports armed until locked */
 
 __declspec(section ".sdata2") f32 lbl_803E7218 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E721C = 5120.0f;
-__declspec(section ".sdata2") f32 lbl_803E7220 = 3.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7224 = 0.0f;
-#pragma explicit_zero_data off
 
 #pragma peephole off
 int ARWBlocker_SeqFn(GameObject* obj)
@@ -80,9 +75,9 @@ void ARWBlocker_update(GameObject* obj)
 
     if (arwing == NULL)
         arwing = Obj_GetPlayerObject();
-        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < lbl_803E721C)
+        if (Vec_distance(&objAnim->worldPosX, &arwing->anim.worldPosX) < 5120.0f)
     {
-        int alpha = (int)(lbl_803E7220 * timeDelta + (f32)(u32)objAnim->alpha);
+        int alpha = (int)(3.0f * timeDelta + (f32)(u32)objAnim->alpha);
         if (alpha > 0xff)
             alpha = 0xff;
         objAnim->alpha = alpha;

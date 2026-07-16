@@ -18,9 +18,6 @@
 #include "main/object_descriptor.h"
 
 __declspec(section ".sdata2") f32 lbl_803E69D8 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E69DC = 0.0f;
-#pragma explicit_zero_data off
 
 int DR_CageControl_SeqFn(GameObject* obj)
 {

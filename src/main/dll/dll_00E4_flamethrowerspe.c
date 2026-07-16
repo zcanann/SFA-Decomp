@@ -62,10 +62,6 @@ extern f32 lbl_803DBD60;
 extern void firepipe_releaseEffectObject(int* obj);
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E3388 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E338C = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E3390 = 0.10000000149011612f;
-__declspec(section ".sdata2") f32 lbl_803E3394 = 0.11999999731779099f;
-#pragma explicit_zero_data off
 extern f32 lbl_803DBD68;
 extern f32 lbl_803DBD6C;
 extern int lbl_803DBD64;
@@ -131,10 +127,10 @@ void flamethrowerspe_update(int* obj)
     switch (((FlamethrowerspeState*)state)->phase)
     {
     case FLAMETHROWERSPE_PHASE_LAUNCH:
-        ((GameObject*)obj)->anim.velocityX = lbl_803E338C;
+        ((GameObject*)obj)->anim.velocityX = 0.0f;
         ((GameObject*)obj)->anim.velocityZ =
-            lbl_803DBD68 * (lbl_803E3390 * (((FlamethrowerspeState*)state)->sizeScale *
-                                            (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
+            lbl_803DBD68 * (0.10000000149011612f * (((FlamethrowerspeState*)state)->sizeScale *
+                                            (0.11999999731779099f * (f32)(s32)randomGetRange(0x64, 0x96))));
         vecRotateZXY(&((GameObject*)obj)->anim.rotX, &((GameObject*)obj)->anim.velocityX);
         ((FlamethrowerspeState*)state)->sphereRadius = lbl_803DBD6C * ((FlamethrowerspeState*)state)->sizeScale;
         s16toFloat(&((FlamethrowerspeState*)state)->lifeTimer, lbl_803DBD64);
@@ -170,7 +166,7 @@ void flamethrowerspe_init(int* obj, int* params)
         f32 r = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E33A0;
         ((FlamethrowerspeState*)state)->sizeScale = r * lbl_803DBD60;
     }
-    ((GameObject*)obj)->anim.velocityY = lbl_803E338C;
+    ((GameObject*)obj)->anim.velocityY = 0.0f;
     ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     ((FlamethrowerspeState*)state)->phase = FLAMETHROWERSPE_PHASE_LAUNCH;
     ObjHits_DisableObject(obj);
