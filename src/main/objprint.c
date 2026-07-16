@@ -70,6 +70,38 @@ typedef struct
 {
     s16 v[9];
 } ObjJointPose18;
+extern f32 lbl_803DE9D8;
+extern f32 lbl_803DE9DC;
+extern f32 lbl_803DE9E0;
+extern int lbl_803DCC48;
+extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
+extern f32 lbl_803DB464;
+extern void PSMTXConcat(void* a, void* b, void* c);
+extern f32 lbl_803DEA04;
+extern void playerRender(int obj, int a, int b, int c, int d, int flag);
+extern f32 lbl_803DE9E4;
+extern f32 gObjPrintDegToAngle;
+typedef struct ObjPrintFlipFlag
+{
+    u8 flip : 1;
+    u8 rest : 7;
+} ObjPrintFlipFlag;
+extern ObjPrintFlipFlag lbl_803DCC00;
+extern int lbl_803DCC44;
+extern u8 lbl_803DCC3E;
+extern u32 lbl_803DB468;
+extern f32 lbl_803DEA28;
+extern f32 lbl_803DEA2C;
+extern f32 lbl_803DEA30;
+extern f32 lbl_803DEA04;
+extern f32 lbl_803DEA1C;
+#define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
+#define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
+#define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
+#define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
+
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind);
+
 
 /*
  * ObjDef.jointData (+0x10) is a packed joint-binding table scanned by every
@@ -169,624 +201,6 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     }
 }
 
-extern u8 lbl_803DCC3C;
-void fn_8003B950(f32* matrix)
-{
-    lbl_803DCC10 = (u32)matrix;
-}
-u8 fn_8003BB74(void)
-{
-    return lbl_803DCC3C;
-}
-void fn_8003BB7C(u8 x)
-{
-    lbl_803DCC3C = x;
-}
-
-
-void fn_8003B608(s16 a, s16 b, s16 c)
-{
-    lbl_803DCC18 = a;
-    lbl_803DCC16 = b;
-    lbl_803DCC14 = c;
-    lbl_803DCC08 = 1;
-}
-
-void fn_80039264(s32* p)
-{
-    *p = -1;
-}
-
-int lbl_802CAE88[10] = {0, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13};
-
-int* seqFn_800394a0(void)
-{
-    return lbl_802CAE88;
-}
-
-s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
-{
-    int vecOffset;
-    int entries;
-    int entryIdx;
-    void* m;
-    s16* result;
-    int count;
-    int i;
-
-    result = NULL;
-    m = OBJPRINT_MODEL_INSTANCE(obj);
-    if (m != NULL)
-    {
-        entryIdx = 0;
-        vecOffset = 0;
-        count = OBJPRINT_JOINT_COUNT(m);
-        for (i = 0; i < count; i++)
-        {
-            entries = *(int*)&((ObjDef*)m)->jointData;
-            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
-                (s32) * (u8*)(entries + entryIdx) == target)
-            {
-                result = (s16*)((char*)(obj)->anim.jointPoseData + vecOffset);
-            }
-            entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
-            vecOffset += 0x12;
-        }
-    }
-    return result;
-}
-
-void fn_8003A9C0(char* p, int count, s16 a, s16 b)
-{
-    while (count > 0)
-    {
-        *(s16*)(p + 0x14) = a;
-        *(s16*)(p + 0x44) = b;
-        p += 0x60;
-        count--;
-    }
-}
-
-void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
-{
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
-    {
-        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
-        *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
-        *(s16*)((char*)p + 0x14) = -0x500;
-        *(u8*)p = 1;
-        *(f32*)((char*)p + 4) = lbl_803DE99C;
-    }
-}
-
-void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
-{
-    int** table = OBJPRINT_BANK_TABLE((int*)obj);
-    (void)scale;
-    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
-    {
-        objRenderModelWithBankTableLegacy((int*)obj, table);
-        if (obj->anim.hitVolumeTransforms != NULL)
-        {
-            objRenderFn_80041018((GameObject*)obj);
-        }
-    }
-}
-
-void fn_8003B5E0(int a, int b, int c, u8 d)
-{
-    lbl_803DCC0D = a;
-    lbl_803DCC0C = b;
-    lbl_803DCC0B = c;
-    lbl_803DCC09 = 1;
-    lbl_803DCC0A = d;
-}
-
-ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMaterialIndex)
-{
-    ObjTextureRuntimeSlot* result = NULL;
-    ObjDef* modelDef = (obj)->anim.modelInstance;
-    if (modelDef != NULL)
-    {
-        int count;
-        ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
-        if (entries == NULL)
-            return NULL;
-        {
-            int i;
-            count = modelDef->textureSlotCount;
-            for (i = 0; i < count; i++)
-            {
-                if (target == entries[i].tag)
-                {
-                    result = &(obj)->anim.textureSlots[i];
-                }
-            }
-        }
-    }
-    return result;
-}
-
-extern void objRenderShadow(void* obj);
-
-void objRenderShadowIfVisible(GameObject* obj)
-{
-    void** arr = *(void***)&(obj)->anim.banks;
-    s8 idx = (obj)->anim.bankIndex;
-    if (arr[idx] != NULL)
-    {
-        objRenderShadow(obj);
-    }
-}
-
-extern f32 lbl_803DE9D8;
-extern f32 lbl_803DE9DC;
-extern f32 lbl_803DE9E0;
-
-#pragma dont_inline on
-int fn_800399C0(s16* curve, s16* state)
-{
-    f32 buf[4];
-    f32 ratio;
-    s16 lo;
-    s16 hi;
-
-    buf[0] = lbl_803DE9D8;
-    buf[1] = lbl_803DE9D8;
-    buf[2] = lbl_803DE9DC;
-    buf[3] = lbl_803DE9E0;
-
-    lo = curve[10];
-    hi = curve[11];
-    if (lo != hi)
-    {
-        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
-    }
-    else
-    {
-        return 1;
-    }
-
-    if (ratio > lbl_803DE99C)
-    {
-        ratio = lbl_803DE99C;
-    }
-    else if (ratio < lbl_803DE9A4)
-    {
-        ratio = lbl_803DE9A4;
-    }
-
-    {
-        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
-        if (curve[10] < curve[11])
-        {
-            rate = -rate;
-        }
-        state[1] = rate * timeDelta + (f32)(s32)state[1];
-    }
-
-    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
-    {
-        state[1] = curve[10];
-        return 1;
-    }
-    return 0;
-}
-#pragma dont_inline reset
-
-void fn_8003A168(GameObject* obj, int state)
-{
-    s16* found;
-
-    found = objFindJointVecByKey(obj, 0);
-    if (found == NULL)
-        return;
-    if (found[0] != 0)
-    {
-        found[0] = (s16)((s32)found[0] * 3 / 4);
-    }
-    if (found[1] != 0)
-    {
-        found[1] = (s16)((s32)found[1] * 3 / 4);
-    }
-    *(s16*)(state + 0x1a) = 0;
-}
-
-void objModelClearVecFn_8003aa40(GameObject* obj)
-{
-    s16* found;
-    int slot;
-
-    for (slot = 0; slot < 0x16; slot++)
-    {
-        found = objFindJointVecByKey(obj, slot);
-        if (found != NULL)
-        {
-            found[0] = 0;
-            found[1] = 0;
-            found[2] = 0;
-        }
-    }
-}
-
-void fn_8003AC14(GameObject* obj, int* keys, int count)
-{
-    s16* found;
-    int idx;
-
-    for (idx = 0; idx < count; idx++)
-    {
-        found = objFindJointVecByKey(obj, *keys);
-        if (found != NULL)
-        {
-            found[1] = (s16)(found[1] * 3 >> 2);
-            found[0] = (s16)(found[0] * 3 >> 2);
-            found[2] = (s16)(found[2] * 3 >> 2);
-        }
-        keys++;
-    }
-}
-
-void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
-{
-    s16* found;
-    int idx;
-
-    for (idx = 0; idx < count;)
-    {
-        found = objFindJointVecByKey(obj, *keys);
-        if (found != NULL)
-        {
-            *(s16*)(out + 0x16) = found[1];
-            *(s16*)(out + 0x46) = found[0];
-        }
-        keys++;
-        idx++;
-        out += 0x60;
-    }
-}
-
-void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi)
-{
-    s16* found;
-    int idx;
-    int v;
-
-    for (idx = 0; idx < count; idx++)
-    {
-        found = objFindJointVecByKey(obj, *keys);
-        if (found != NULL)
-        {
-            v = found[0];
-            if (v < lo)
-                v = lo;
-            else if (v > hi)
-                v = hi;
-            found[0] = v;
-            v = found[1];
-            if (v < lo)
-                v = lo;
-            else if (v > hi)
-                v = hi;
-            found[1] = v;
-            v = found[2];
-            if (v < lo)
-                v = lo;
-            else if (v > hi)
-                v = hi;
-            found[2] = v;
-        }
-        keys++;
-    }
-}
-
-static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind)
-{
-    ObjTextureSlotDef* list;
-    int n;
-    int k;
-    ObjDef* modelDef;
-    ObjTextureRuntimeSlot* found;
-
-    found = NULL;
-    modelDef = obj->anim.modelInstance;
-    if (modelDef != NULL)
-    {
-        list = modelDef->textureSlotDefs;
-        if (list == NULL)
-        {
-            return NULL;
-        }
-        n = (s32)(u32)modelDef->textureSlotCount;
-        for (k = 0; k < n; k++)
-        {
-            if (list->tag == kind)
-            {
-                found = &obj->anim.textureSlots[k];
-            }
-            list++;
-        }
-    }
-    return found;
-}
-
-void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
-
-void fn_8003B228(GameObject* obj, int state)
-{
-    ObjTextureRuntimeSlot* foundA;
-    ObjTextureRuntimeSlot* foundB;
-    int val;
-
-    foundA = characterFindEyeJoint(obj, 5);
-    foundB = characterFindEyeJoint(obj, 4);
-    if (foundA == NULL || foundB == NULL)
-    {
-        return;
-    }
-    val = foundB->textureId;
-    val += framesThisStep * 0x30;
-    if (val >= 0x200)
-    {
-        val = 0x200;
-    }
-    foundA->textureId = val;
-    foundB->textureId = val;
-    *(u8*)(state + 0x1e) = 1;
-}
-
-extern int lbl_803DCC48;
-
-void modelInitMtxs(int def, int model)
-{
-    int cache;
-    int mtx;
-    int count;
-    u8 rem;
-
-    cache = (int)getCache();
-    if (*(u8*)(def + 0xf4) != 0)
-    {
-        modelCalcVtxGroupMtxs(def, model);
-    }
-    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
-    if (count >= 2 && count <= 0x64)
-    {
-        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
-        DCFlushRange((void*)mtx, count << 6);
-        rem = (u8)(count << 1);
-        cache += 0x2700;
-        while (rem >= 0x80)
-        {
-            copyToCache((void*)cache, (void*)mtx, 0);
-            rem -= 0x80;
-            mtx += 0x1000;
-            cache += 0x1000;
-        }
-        if (rem != 0)
-        {
-            copyToCache((void*)cache, (void*)mtx, rem);
-        }
-        lbl_803DCC48 = 1;
-    }
-    else
-    {
-        lbl_803DCC48 = 3;
-    }
-}
-
-extern void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 x);
-
-void objAudioFn_800393f8(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int volume, u8 force)
-{
-    if (force == 0 && Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
-    {
-        return;
-    }
-    Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
-    state->timer = volume;
-    state->pitch = (s16)(-pitch);
-    state->active = 1;
-    state->blendWeight = lbl_803DE99C;
-}
-
-void fn_8003B500(GameObject* obj, s16* state)
-{
-    s16* found;
-
-    found = objFindJointVecByKey(obj, 0);
-    if (found != NULL)
-    {
-        if (found[0] != 0)
-        {
-            found[0] = (s16)(found[0] * 3 / 4);
-        }
-        fn_80039DF8(obj, state, found, lbl_803DE9A4);
-        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
-    }
-}
-
-extern f32 lbl_803DB464;
-
-void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force)
-{
-    u16 sfx;
-    s16 pitch;
-    u32 count;
-    int model;
-    int did;
-
-    pitch = soundDef->pitch;
-    sfx = (u16)soundDef->sfxId;
-    if (force != 0 || Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
-    {
-        Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
-        state->timer = lbl_803DE9C8;
-        state->pitch = (s16)(-pitch);
-        state->active = 1;
-        state->blendWeight = lbl_803DE99C;
-    }
-    count = soundDef->blendCount;
-    if (count != 0)
-    {
-        model = (int)OBJPRINT_ACTIVE_BANK(obj);
-        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
-        {
-            ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
-                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
-                                            lbl_803DE99C / lbl_803DB464, 0);
-            did = 1;
-        }
-        else
-        {
-            did = 0;
-        }
-        if (did != 0)
-        {
-            soundDef->pitch = 0;
-        }
-    }
-}
-
-
-void objPosFn_80039510(GameObject* obj, int key, f32* outPosition)
-{
-    int* table;
-    int i;
-    int k;
-    int n;
-    int joint;
-    int model;
-
-    table = (void*)(obj)->anim.modelInstance;
-    i = 0;
-    n = (s32)(u32)((ObjDef*)table)->jointCount;
-    for (k = 0; k < n; k++)
-    {
-        if (key == (int)(*(u8**)&((ObjDef*)table)->jointData)[i])
-        {
-            joint = (*(u8**)&((ObjDef*)table)->jointData + i + OBJPRINT_ACTIVE_BANK_INDEX(obj))[1];
-            break;
-        }
-        i = i + ((ObjDef*)table)->modelCount + 1;
-    }
-    model = (int)Obj_GetActiveModel(obj);
-    model = (int)ObjModel_GetJointMatrix((u8*)model, joint);
-    outPosition[0] = *(f32*)((char*)model + 0xc);
-    outPosition[1] = *(f32*)((char*)model + 0x1c);
-    outPosition[2] = *(f32*)((char*)model + 0x2c);
-    outPosition[0] += playerMapOffsetX;
-    outPosition[2] += playerMapOffsetZ;
-}
-
-extern void PSMTXConcat(void* a, void* b, void* c);
-extern f32 lbl_803DEA04;
-
-void modelMtxFn_8003be38(int def, int p2, int mtxA, int mtxB)
-{
-    int cache;
-    int count;
-    int i;
-    int mid;
-    int dstB;
-    int dstA;
-    f32 fill;
-
-    cache = (int)getCache();
-    count = (s32)(u32) * (u8*)((char*)def + 0xf3) + (s32)(u32) * (u8*)((char*)def + 0xf4);
-    dstA = cache + 0x2700;
-    mid = cache;
-    dstB = cache + 0x12c0;
-    cacheQueueWait(0);
-    i = 0;
-    fill = lbl_803DEA04;
-    for (; i < count; i++)
-    {
-        PSMTXConcat((void*)mtxA, (void*)dstA, (void*)mid);
-        PSMTXConcat((void*)mid, (void*)mtxB, (void*)dstB);
-        *(f32*)((char*)dstB + 0xc) = fill;
-        *(f32*)((char*)dstB + 0x1c) = fill;
-        *(f32*)((char*)dstB + 0x2c) = fill;
-        dstA += 0x40;
-        mid += 0x30;
-        dstB += 0x30;
-    }
-    lbl_803DCC48 = 2;
-}
-
-extern void doNothing_beforeRenderObject(int x);
-extern void doNothing_afterRenderObject(void);
-extern void playerRender(int obj, int a, int b, int c, int d, int flag);
-
-void objRender(int a, int b, int c, int d, int obj, int flag)
-{
-    void* sub;
-    int walk;
-    int i;
-    void (*vfn)(int, int, int, int, int, int);
-
-    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0 || ((GameObject*)obj)->ownerObj != NULL)
-        return;
-    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
-        return;
-    sub = *(void**)&((GameObject*)obj)->anim.parent;
-    if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
-        return;
-
-    doNothing_beforeRenderObject(4);
-    ((GameObject*)obj)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
-    sub = *(void**)&((GameObject*)obj)->anim.dll;
-    if (sub != NULL)
-    {
-        if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0)
-        {
-            vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
-            if (vfn != NULL)
-            {
-                vfn(obj, a, b, c, d, flag);
-            }
-        }
-        else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
-        {
-            (*(void (*)(int))objRenderModel)(obj);
-            if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
-            {
-                objRenderFn_80041018((GameObject*)obj);
-            }
-        }
-    }
-    else if ((s8)flag != 0)
-    {
-        switch (((GameObject*)obj)->anim.seqId)
-        {
-        case 0:
-        case 0x1f:
-            playerRender(obj, a, b, c, d, flag);
-            break;
-        default:
-            if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
-            {
-                (*(void (*)(int))objRenderModel)(obj);
-                if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
-                {
-                    objRenderFn_80041018((GameObject*)obj);
-                }
-            }
-            break;
-        }
-    }
-    doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
-    {
-        int staff = *(int*)&((GameObject*)walk)->childObjs[0];
-        if (((GameObject*)staff)->anim.classId == 0x2d)
-        {
-            staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
-        }
-        walk += 4;
-    }
-}
-
 void objModelAndSoundFn_80039118(int obj, int state)
 {
     int frame;
@@ -836,99 +250,201 @@ void objModelAndSoundFn_80039118(int obj, int state)
     }
 }
 
-extern f32 lbl_803DE9E4;
-
-void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
+void fn_80039264(s32* p)
 {
-    s16* found;
-    int flag;
+    *p = -1;
+}
 
-    found = objFindJointVecByKey(obj, 0);
-    if (found != NULL)
+void objAudioFn_80039270(u32 obj, void* p, u16 sfxId)
+{
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)
     {
-        if (found[0] != 0)
-        {
-            found[0] = (s16)(found[0] * 3 / 4);
-        }
-        if (val < lbl_803DE9A4)
-        {
-            val = -val;
-        }
-        if (val <= lbl_803DE9E4)
-        {
-            fn_80039DF8(obj, (s16*)state, found, val);
-        }
-        else
-        {
-            fn_80039B54((int)obj, (s16*)state, found, val);
-        }
-        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
-        if (val > lbl_803DE9E4)
-        {
-            flag = 1;
-        }
-        else
-        {
-            flag = 0;
-        }
-        *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
+        Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
+        *(f32*)((char*)p + 0xc) = lbl_803DE9C8;
+        *(s16*)((char*)p + 0x14) = -0x500;
+        *(u8*)p = 1;
+        *(f32*)((char*)p + 4) = lbl_803DE99C;
     }
 }
 
-extern f32 gObjPrintDegToAngle;
 
-void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle)
+void objSoundFn_800392f0(GameObject* obj, ObjSoundState* state, ObjSoundDef* soundDef, u8 force)
 {
-    s16* found;
+    u16 sfx;
+    s16 pitch;
+    u32 count;
+    int model;
+    int did;
 
-    found = objFindJointVecByKey(obj, 0);
-    if (found != NULL)
+    pitch = soundDef->pitch;
+    sfx = (u16)soundDef->sfxId;
+    if (force != 0 || Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) == 0)
     {
-        state->headYaw =
-            (s16)((s16)getAngle((obj)->anim.localPosX - target->anim.localPosX,
-                                (obj)->anim.localPosZ - target->anim.localPosZ) -
-                  (obj)->anim.rotX);
-        maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
-        if (state->headYaw > maxAngle)
+        Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
+        state->timer = lbl_803DE9C8;
+        state->pitch = (s16)(-pitch);
+        state->active = 1;
+        state->blendWeight = lbl_803DE99C;
+    }
+    count = soundDef->blendCount;
+    if (count != 0)
+    {
+        model = (int)OBJPRINT_ACTIVE_BANK(obj);
+        if (*(u8*)((char*)*(int*)model + 0xf9) != 0)
         {
-            state->headYaw = maxAngle;
+            ObjModel_SetBlendChannelTargets((ObjModel*)model, 2,
+                                            *(s8*)((char*)*(int*)((char*)model + 0x28) + 0x2d), count - 1,
+                                            lbl_803DE99C / lbl_803DB464, 0);
+            did = 1;
         }
-        if (state->headYaw < -maxAngle)
+        else
         {
-            state->headYaw = -maxAngle;
+            did = 0;
         }
-        found[1] = state->headYaw;
+        if (did != 0)
+        {
+            soundDef->pitch = 0;
+        }
     }
 }
 
-int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
 
-int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
+void objAudioFn_800393f8(GameObject* obj, ObjSoundState* state, u16 sfx, int pitch, int volume, u8 force)
 {
-    int* keys;
+    if (force == 0 && Sfx_IsPlayingFromObjectChannel((u32)obj, 0x10) != 0)
+    {
+        return;
+    }
+    Sfx_PlayFromObjectChannel((u32)obj, 0x10, sfx);
+    state->timer = volume;
+    state->pitch = (s16)(-pitch);
+    state->active = 1;
+    state->blendWeight = lbl_803DE99C;
+}
+
+int lbl_802CAE88[10] = {0, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13};
+
+int* seqFn_800394a0(void)
+{
+    return lbl_802CAE88;
+}
+
+ObjTextureRuntimeSlot* objFindTexture(GameObject* obj, int target, int unusedMaterialIndex)
+{
+    ObjTextureRuntimeSlot* result = NULL;
+    ObjDef* modelDef = (obj)->anim.modelInstance;
+    if (modelDef != NULL)
+    {
+        int count;
+        ObjTextureSlotDef* entries = modelDef->textureSlotDefs;
+        if (entries == NULL)
+            return NULL;
+        {
+            int i;
+            count = modelDef->textureSlotCount;
+            for (i = 0; i < count; i++)
+            {
+                if (target == entries[i].tag)
+                {
+                    result = &(obj)->anim.textureSlots[i];
+                }
+            }
+        }
+    }
+    return result;
+}
+
+
+void objPosFn_80039510(GameObject* obj, int key, f32* outPosition)
+{
+    int* table;
     int i;
-    int total;
-    char* p4;
-    int count;
-    int obj;
-    s16* found;
+    int k;
+    int n;
+    int joint;
+    int model;
 
-    obj = objArg;
-    count = countArg;
-    p4 = p4Arg;
-    total = 0;
+    table = (void*)(obj)->anim.modelInstance;
     i = 0;
-    keys = keyList;
-    while (i < count)
+    n = (s32)(u32)((ObjDef*)table)->jointCount;
+    for (k = 0; k < n; k++)
     {
-        found = objFindJointVecByKey((GameObject*)(obj), *keys);
-        total += fn_800399C0((s16*)p4, found);
-        total += fn_80039834((s16*)(p4 + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
-        keys++;
-        i++;
-        p4 += 0x60;
+        if (key == (int)(*(u8**)&((ObjDef*)table)->jointData)[i])
+        {
+            joint = (*(u8**)&((ObjDef*)table)->jointData + i + OBJPRINT_ACTIVE_BANK_INDEX(obj))[1];
+            break;
+        }
+        i = i + ((ObjDef*)table)->modelCount + 1;
     }
-    return (count * 2 - total) == 0;
+    model = (int)Obj_GetActiveModel(obj);
+    model = (int)ObjModel_GetJointMatrix((u8*)model, joint);
+    outPosition[0] = *(f32*)((char*)model + 0xc);
+    outPosition[1] = *(f32*)((char*)model + 0x1c);
+    outPosition[2] = *(f32*)((char*)model + 0x2c);
+    outPosition[0] += playerMapOffsetX;
+    outPosition[2] += playerMapOffsetZ;
+}
+
+s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
+{
+    int vecOffset;
+    int entries;
+    int entryIdx;
+    void* m;
+    s16* result;
+    int count;
+    int i;
+
+    result = NULL;
+    m = OBJPRINT_MODEL_INSTANCE(obj);
+    if (m != NULL)
+    {
+        entryIdx = 0;
+        vecOffset = 0;
+        count = OBJPRINT_JOINT_COUNT(m);
+        for (i = 0; i < count; i++)
+        {
+            entries = *(int*)&((ObjDef*)m)->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1) != 0xff &&
+                (s32) * (u8*)(entries + entryIdx) == target)
+            {
+                result = (s16*)((char*)(obj)->anim.jointPoseData + vecOffset);
+            }
+            entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
+            vecOffset += 0x12;
+        }
+    }
+    return result;
+}
+
+static inline ObjTextureRuntimeSlot* characterFindEyeJoint(GameObject* obj, int kind)
+{
+    ObjTextureSlotDef* list;
+    int n;
+    int k;
+    ObjDef* modelDef;
+    ObjTextureRuntimeSlot* found;
+
+    found = NULL;
+    modelDef = obj->anim.modelInstance;
+    if (modelDef != NULL)
+    {
+        list = modelDef->textureSlotDefs;
+        if (list == NULL)
+        {
+            return NULL;
+        }
+        n = (s32)(u32)modelDef->textureSlotCount;
+        for (k = 0; k < n; k++)
+        {
+            if (list->tag == kind)
+            {
+                found = &obj->anim.textureSlots[k];
+            }
+            list++;
+        }
+    }
+    return found;
 }
 
 #pragma dont_inline on
@@ -980,98 +496,55 @@ int fn_80039834(s16* curve, s16* state, f32 a, f32 b)
     }
     return 0;
 }
-#pragma dont_inline reset
-
-int fn_8003BB84(f32* m, f32* out);
-
-extern f32 gObjPrintHalfPi;
-extern f32 gObjPrintNegHalfPi;
-extern const f32 gObjPrintAngleUnitScale;
-extern const f32 gObjPrintTwoPi;
-
-int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
+int fn_800399C0(s16* curve, s16* state)
 {
-    f32 buf[12];
-    f32 x;
-    f32 y;
-    f32 z;
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
 
-    if (fn_8003BB84(m, buf) == 0)
+    buf[0] = lbl_803DE9D8;
+    buf[1] = lbl_803DE9D8;
+    buf[2] = lbl_803DE9DC;
+    buf[3] = lbl_803DE9E0;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi)
     {
-        return 0;
-    }
-    x = __kernel_sin(-buf[6]);
-    if (x < gObjPrintHalfPi)
-    {
-        if (x > gObjPrintNegHalfPi)
-        {
-            y = __kernel_cos(buf[2], buf[10]);
-            z = __kernel_cos(buf[4], buf[5]);
-        }
-        else
-        {
-            y = __kernel_cos(buf[1], buf[0]);
-            z = lbl_803DEA04;
-            y = z - y;
-        }
+        ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
     }
     else
     {
-        y = __kernel_cos(buf[1], buf[0]);
-        z = lbl_803DEA04;
-        y = y - z;
+        return 1;
     }
-    *outC = (s16)(s32)(gObjPrintAngleUnitScale * z / gObjPrintTwoPi);
-    *outB = (s16)(s32)(gObjPrintAngleUnitScale * x / gObjPrintTwoPi);
-    *outA = (s16)(s32)(gObjPrintAngleUnitScale * y / gObjPrintTwoPi);
-    return 1;
-}
 
-#pragma opt_common_subs off
-int fn_8003BB84(f32* m, f32* out)
-{
-    f32 v3[3];
-    f32 v1[3];
-    f32 v2[3];
-    f32 zero;
-
-    v1[0] = m[0];
-    v1[1] = m[1];
-    v1[2] = m[2];
-    v2[0] = m[4];
-    v2[1] = m[5];
-    v2[2] = m[6];
-    v3[0] = m[8];
-    v3[1] = m[9];
-    v3[2] = m[10];
-
-    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04) ||
-        (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04) ||
-        (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
+    if (ratio > lbl_803DE99C)
     {
-        return 0;
+        ratio = lbl_803DE99C;
+    }
+    else if (ratio < lbl_803DE9A4)
+    {
+        ratio = lbl_803DE9A4;
     }
 
-    PSVECNormalize(v1, v1);
-    PSVECNormalize(v2, v2);
-    PSVECNormalize(v3, v3);
+    {
+        f32 rate = Curve_EvalHermiteValuesFirst(buf, ratio, 0);
+        if (curve[10] < curve[11])
+        {
+            rate = -rate;
+        }
+        state[1] = rate * timeDelta + (f32)(s32)state[1];
+    }
 
-    out[0] = v1[0];
-    out[1] = v1[1];
-    out[2] = v1[2];
-    zero = lbl_803DEA04;
-    out[3] = zero;
-    out[4] = v2[0];
-    out[5] = v2[1];
-    out[6] = v2[2];
-    out[7] = zero;
-    out[8] = v3[0];
-    out[9] = v3[1];
-    out[10] = v3[2];
-    out[11] = zero;
-    return 1;
+    if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191)
+    {
+        state[1] = curve[10];
+        return 1;
+    }
+    return 0;
 }
-#pragma opt_common_subs reset
+#pragma dont_inline reset
 
 void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
 {
@@ -1169,6 +642,8 @@ void fn_80039B54(int obj, s16* curve, s16* state, f32 val)
         break;
     }
 }
+
+
 
 extern f32 lbl_803DE9E8;
 
@@ -1306,391 +781,61 @@ void fn_80039DF8(GameObject* obj, s16* curve, s16* state, f32 val)
     }
 }
 
-#pragma opt_loop_invariants off
-void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
+void fn_8003A168(GameObject* obj, int state)
 {
-    s16 ang[2];
-    s16* found[1];
-    void* m[1];
+    s16* found;
 
-    found[0] = NULL;
-    m[0] = (void*)(obj)->anim.modelInstance;
-    if (m[0] != NULL)
+    found = objFindJointVecByKey(obj, 0);
+    if (found == NULL)
+        return;
+    if (found[0] != 0)
     {
-        int iv[2];
-        int n;
-        int j;
-        iv[0] = (int)found[0];
-        iv[1] = (int)found[0];
-        n = ((ObjDef*)m[0])->jointCount;
-        for (j = 0; j < n; j++)
-        {
-            int entries = *(int*)&((ObjDef*)m[0])->jointData;
-            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
-                (int)*(u8*)(entries + iv[0]) == 0)
-            {
-                found[0] = (s16*)((char*)(obj)->anim.jointPoseData + iv[1]);
-            }
-            iv[0] += ((ObjDef*)m[0])->modelCount + 1;
-            iv[1] += 0x12;
-        }
+        found[0] = (s16)((s32)found[0] * 3 / 4);
     }
-    if (found[0] != NULL)
+    if (found[1] != 0)
     {
-        if (tgt == NULL)
+        found[1] = (s16)((s32)found[1] * 3 / 4);
+    }
+    *(s16*)(state + 0x1a) = 0;
+}
+
+
+void fn_8003A230(GameObject* obj, CharacterEyeAnimState* state, f32 val)
+{
+    s16* found;
+    int flag;
+
+    found = objFindJointVecByKey(obj, 0);
+    if (found != NULL)
+    {
+        if (found[0] != 0)
         {
-            found[0][1] = found[0][1] >> 1;
-            found[0][0] = found[0][0] >> 1;
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        if (val < lbl_803DE9A4)
+        {
+            val = -val;
+        }
+        if (val <= lbl_803DE9E4)
+        {
+            fn_80039DF8(obj, (s16*)state, found, val);
         }
         else
         {
-            f32 dx = (obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
-            f32 dy = (obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
-            f32 dz = (obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
-            f32 dist = sqrtf(dx * dx + dy * dy);
-            int minB;
-            int negA;
-            char* p[1];
-            s16* ap[1];
-            int i;
-            f32 prodB;
-
-            ang[0] = (s16)getAngle(dx, dy) - (u16)(obj)->anim.rotX;
-            if (ang[0] > 0x8000)
-            {
-                ang[0] = (s16)(ang[0] - 0xffff);
-            }
-            if (ang[0] < -0x8000)
-            {
-                ang[0] = (s16)(ang[0] + 0xffff);
-            }
-            if (inv != 0)
-            {
-                ang[0] = (s16)(ang[0] + 0x8000);
-            }
-            ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
-
-            a = (s16)(gObjPrintDegToAngle * a);
-            p[0] = p3;
-            ap[0] = ang;
-            prodB = gObjPrintDegToAngle * b;
-            minB = -(s16)(s32)prodB;
-            negA = -a;
-            for (i = 0; i < 2; i++)
-            {
-                int v;
-                int w;
-                *ap[0] -= *(s16*)(p[0] + 0x14);
-                v = *ap[0];
-                if (v < minB)
-                {
-                    w = minB;
-                }
-                else
-                {
-                    if (v > (s16)(int)(f64)prodB)
-                    {
-                        v = (int)(f64)prodB;
-                    }
-                    w = (s16)v;
-                }
-                *ap[0] = (s16)w;
-                *(s16*)(p[0] + 0x14) += *ap[0];
-                if (*(s16*)(p[0] + 0x14) > a)
-                {
-                    *(s16*)(p[0] + 0x14) = a;
-                }
-                if (*(s16*)(p[0] + 0x14) < negA)
-                {
-                    *(s16*)(p[0] + 0x14) = negA;
-                }
-                p[0] += 0x30;
-                ap[0]++;
-            }
-            found[0][1] = *(s16*)(p3 + 0x14);
-            found[0][0] = *(s16*)(p3 + 0x44);
+            fn_80039B54((int)obj, (s16*)state, found, val);
         }
-    }
-}
-
-#pragma opt_loop_invariants reset
-#pragma opt_propagation off
-#pragma opt_common_subs off
-void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
-{
-    f32 va[3];
-    f32 vb[3];
-    int k;
-    char* q;
-    f32* vp;
-    int i;
-    char* base;
-    int model;
-    int obj;
-    int staff;
-
-    staff = staffArg;
-    obj = objArg;
-    model = modelArg;
-    if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
-    {
-        int off;
-        base = (char*)((GameObject*)staff)->extra;
-        i = 0;
-        k = 1;
-        off = 0x18;
-        q = base;
-        vp = va;
-
-        while (i < *(s16*)(base + 0xb0))
-        {
-            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
-            {
-                void* jm;
-                char* t;
-                int joint;
-                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
-                jm = ObjModel_GetJointMatrix((u8*)model, joint);
-                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                *(volatile f32*)vp = *(f32*)(t + off + 0x18);
-                va[1] = *(f32*)(t + off + 0x1c);
-                va[2] = *(f32*)(t + off + 0x20);
-                PSMTXMultVec(jm, vp, vp);
-                *(volatile f32*)vp = *(volatile f32*)vp + playerMapOffsetX;
-                va[2] = va[2] + playerMapOffsetZ;
-                *(f32*)(q + 0x6c) = vp[0];
-                *(f32*)(q + 0x74) = va[1];
-                *(f32*)(q + 0x7c) = va[2];
-            }
-            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
-            {
-                char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
-                char* row = t + off;
-                int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
-                char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
-                vb[0] = *(f32*)row;
-                vb[1] = *(f32*)(t + off + 4);
-                vb[2] = *(f32*)(t + off + 8);
-                PSMTXMultVec(mtx2, vb, vb);
-                vb[0] = vb[0] + playerMapOffsetX;
-                vb[2] = vb[2] + playerMapOffsetZ;
-                *(f32*)(q + 0x54) = vb[0];
-                *(f32*)(q + 0x5c) = vb[1];
-                *(f32*)(q + 0x64) = vb[2];
-            }
-            k += 2;
-            off += 0x30;
-            q += 4;
-            i++;
-        }
-
-        if (*(s16*)(base + 0xb0) != 0)
-        {
-            char* r = base + *(s16*)(base + 0xb2) * 4;
-            va[0] = *(f32*)(r + 0x6c);
-            va[1] = *(f32*)(r + 0x74);
-            va[2] = *(f32*)(r + 0x7c);
-            (*(void (**)(int, int, f32*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, vb);
-            va[0] = va[0] - vb[0];
-            va[1] = va[1] - vb[1];
-            va[2] = va[2] - vb[2];
-            ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
-            {
-                f32 dx = va[0] * va[0];
-                f32 dz = va[2] * va[2];
-                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
-            }
-            ((GameObject*)staff)->anim.rotZ = 0;
-        }
-    }
-}
-#pragma opt_common_subs reset
-#pragma opt_propagation reset
-
-void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state)
-{
-    ObjTextureRuntimeSlot* a;
-    ObjTextureRuntimeSlot* b;
-
-    a = characterFindEyeJoint(obj, 5);
-    b = characterFindEyeJoint(obj, 4);
-
-    if (a == NULL || b == NULL)
-    {
-        return;
-    }
-    {
-        int st;
-        int v;
-
-        v = b->textureId;
-        st = state->blinkState;
-
-        switch (st & 0xf)
-        {
-        case 0:
-        {
-            s8 t = state->blinkTimer;
-            if (t > 0)
-            {
-                state->blinkTimer = t - framesThisStep;
-            }
-            else if ((int)randomGetRange(0, 1000) > 0x3de)
-            {
-                state->blinkState = 1;
-                state->blinkTimer = 0;
-            }
-        }
-        break;
-        case 1:
-            if ((st & 0x80) != 0)
-            {
-                v = v - framesThisStep * 0x60;
-                if (v < 0)
-                {
-                    v = 0;
-                    state->blinkState = 0;
-                    state->blinkTimer = 0;
-                }
-            }
-            else
-            {
-                v = v + framesThisStep * 0x60;
-                if (v > 0x200)
-                {
-                    if (v - 0x200 < 0)
-                    {
-                        v = 0;
-                        state->blinkState = 0;
-                    }
-                    else
-                    {
-                        v = 0x2ff;
-                        state->blinkState = -127;
-                    }
-                    state->blinkTimer = 0x28;
-                }
-            }
-            a->textureId = v;
-            b->textureId = v;
-            break;
-        }
-        characterDoEyeMovements(obj, state, lbl_803DE9A4);
-    }
-}
-
-void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused)
-{
-    ObjTextureRuntimeSlot* foundA;
-    ObjTextureRuntimeSlot* foundB;
-    s16 t;
-    int flag;
-    s8 timer;
-
-    foundA = characterFindEyeJoint(obj, 1);
-    foundB = characterFindEyeJoint(obj, 0);
-    if (foundA == NULL || foundB == NULL)
-    {
-        return;
-    }
-
-    flag = 0;
-    t = state->movementStep;
-    if (t == 0)
-    {
-        flag = 1;
-    }
-    if (t > 0)
-    {
-        if (foundA->offsetS >= state->movementTarget)
+        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
+        if (val > lbl_803DE9E4)
         {
             flag = 1;
         }
-    }
-    if (t < 0)
-    {
-        if (foundA->offsetS <= state->movementTarget)
+        else
         {
-            flag = 1;
+            flag = 0;
         }
-    }
-    if (flag != 0)
-    {
-        state->movementTarget = randomGetRange(-0x3e8, 0x3e8);
-        state->movementStep = (state->movementTarget < foundA->offsetS) ? -0x96 : 0x96;
-        state->movementTimer = randomGetRange(0x1e, 0x64);
-    }
-    timer = state->movementTimer;
-    if (timer > 0)
-    {
-        state->movementTimer = timer - framesThisStep;
-    }
-    else
-    {
-        foundA->offsetS = (s16)(foundA->offsetS + state->movementStep * framesThisStep);
-        foundA->offsetT = 0;
-        foundB->offsetS = foundA->offsetS;
-        foundB->offsetT = 0;
+        *(s16*)((char*)state + 0x1a) = (s16)(*(s16*)((char*)state + 0x1a) | (flag << 8));
     }
 }
-
-void modelCalcVtxGroupMtxs(int def, int model)
-{
-    f32 ma[12];
-    f32 mb[12];
-    f32 trans[12];
-    int off;
-    int i;
-
-    for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
-    {
-        f32* out;
-        f32* m1;
-        char* jd;
-        f32* m2;
-        u8* grp;
-        f32 w;
-        f32 wi;
-
-        grp = (u8*)(*(int*)(def + 0x54) + off);
-        out = (f32*)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
-        m1 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[0]);
-        m2 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[1]);
-
-        w = (f32)grp[2] / 4.0f;
-        wi = 1.0f - w;
-
-        jd = (char*)(*(int*)(def + 0x3c) + grp[0] * 0x1c);
-        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
-        PSMTXConcat(m1, trans, ma);
-        jd = (char*)(*(int*)(def + 0x3c) + grp[1] * 0x1c);
-        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
-        PSMTXConcat(m2, trans, mb);
-
-        out[0] = ma[0] * w + mb[0] * wi;
-        out[1] = ma[1] * w + mb[1] * wi;
-        out[2] = ma[2] * w + mb[2] * wi;
-        out[3] = ma[3] * w + mb[3] * wi;
-        out[4] = ma[4] * w + mb[4] * wi;
-        out[5] = ma[5] * w + mb[5] * wi;
-        out[6] = ma[6] * w + mb[6] * wi;
-        out[7] = ma[7] * w + mb[7] * wi;
-        out[8] = ma[8] * w + mb[8] * wi;
-        out[9] = ma[9] * w + mb[9] * wi;
-        out[10] = ma[10] * w + mb[10] * wi;
-        out[11] = ma[11] * w + mb[11] * wi;
-        off += 4;
-    }
-}
-
-typedef struct ObjPrintFlipFlag
-{
-    u8 flip : 1;
-    u8 rest : 7;
-} ObjPrintFlipFlag;
-
-extern ObjPrintFlipFlag lbl_803DCC00;
-
 #pragma opt_loop_invariants off
 int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk6, int p7, f32 yOff)
 {
@@ -1848,6 +993,880 @@ int objMathFn_8003a380(int obj, char* tgt, f32* pos, char* p4, s16* spd, int unk
 }
 #pragma opt_loop_invariants reset
 
+int fn_8003A8B4(int objArg, int* keyList, int countArg, char* p4Arg)
+{
+    int* keys;
+    int i;
+    int total;
+    char* p4;
+    int count;
+    int obj;
+    s16* found;
+
+    obj = objArg;
+    count = countArg;
+    p4 = p4Arg;
+    total = 0;
+    i = 0;
+    keys = keyList;
+    while (i < count)
+    {
+        found = objFindJointVecByKey((GameObject*)(obj), *keys);
+        total += fn_800399C0((s16*)p4, found);
+        total += fn_80039834((s16*)(p4 + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
+        keys++;
+        i++;
+        p4 += 0x60;
+    }
+    return (count * 2 - total) == 0;
+}
+
+void fn_8003A9C0(char* p, int count, s16 a, s16 b)
+{
+    while (count > 0)
+    {
+        *(s16*)(p + 0x14) = a;
+        *(s16*)(p + 0x44) = b;
+        p += 0x60;
+        count--;
+    }
+}
+
+
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
+
+void objModelClearVecFn_8003aa40(GameObject* obj)
+{
+    s16* found;
+    int slot;
+
+    for (slot = 0; slot < 0x16; slot++)
+    {
+        found = objFindJointVecByKey(obj, slot);
+        if (found != NULL)
+        {
+            found[0] = 0;
+            found[1] = 0;
+            found[2] = 0;
+        }
+    }
+}
+
+void fn_8003AAE0(GameObject* obj, int* keys, int count, int lo, int hi)
+{
+    s16* found;
+    int idx;
+    int v;
+
+    for (idx = 0; idx < count; idx++)
+    {
+        found = objFindJointVecByKey(obj, *keys);
+        if (found != NULL)
+        {
+            v = found[0];
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
+            found[0] = v;
+            v = found[1];
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
+            found[1] = v;
+            v = found[2];
+            if (v < lo)
+                v = lo;
+            else if (v > hi)
+                v = hi;
+            found[2] = v;
+        }
+        keys++;
+    }
+}
+
+void fn_8003AC14(GameObject* obj, int* keys, int count)
+{
+    s16* found;
+    int idx;
+
+    for (idx = 0; idx < count; idx++)
+    {
+        found = objFindJointVecByKey(obj, *keys);
+        if (found != NULL)
+        {
+            found[1] = (s16)(found[1] * 3 >> 2);
+            found[0] = (s16)(found[0] * 3 >> 2);
+            found[2] = (s16)(found[2] * 3 >> 2);
+        }
+        keys++;
+    }
+}
+
+void objFn_8003acfc(GameObject* obj, int* keys, int count, int out)
+{
+    s16* found;
+    int idx;
+
+    for (idx = 0; idx < count;)
+    {
+        found = objFindJointVecByKey(obj, *keys);
+        if (found != NULL)
+        {
+            *(s16*)(out + 0x16) = found[1];
+            *(s16*)(out + 0x46) = found[0];
+        }
+        keys++;
+        idx++;
+        out += 0x60;
+    }
+}
+#pragma opt_loop_invariants off
+void fn_8003ADC4(GameObject* obj, char* tgt, char* p3, int a, u8 inv, int b)
+{
+    s16 ang[2];
+    s16* found[1];
+    void* m[1];
+
+    found[0] = NULL;
+    m[0] = (void*)(obj)->anim.modelInstance;
+    if (m[0] != NULL)
+    {
+        int iv[2];
+        int n;
+        int j;
+        iv[0] = (int)found[0];
+        iv[1] = (int)found[0];
+        n = ((ObjDef*)m[0])->jointCount;
+        for (j = 0; j < n; j++)
+        {
+            int entries = *(int*)&((ObjDef*)m[0])->jointData;
+            if ((int)*(u8*)(entries + OBJPRINT_ACTIVE_BANK_INDEX(obj) + iv[0] + 1) != 0xff &&
+                (int)*(u8*)(entries + iv[0]) == 0)
+            {
+                found[0] = (s16*)((char*)(obj)->anim.jointPoseData + iv[1]);
+            }
+            iv[0] += ((ObjDef*)m[0])->modelCount + 1;
+            iv[1] += 0x12;
+        }
+    }
+    if (found[0] != NULL)
+    {
+        if (tgt == NULL)
+        {
+            found[0][1] = found[0][1] >> 1;
+            found[0][0] = found[0][0] >> 1;
+        }
+        else
+        {
+            f32 dx = (obj)->anim.localPosX - ((GameObject*)tgt)->anim.localPosX;
+            f32 dy = (obj)->anim.localPosZ - ((GameObject*)tgt)->anim.localPosZ;
+            f32 dz = (obj)->anim.localPosY - ((GameObject*)tgt)->anim.localPosY;
+            f32 dist = sqrtf(dx * dx + dy * dy);
+            int minB;
+            int negA;
+            char* p[1];
+            s16* ap[1];
+            int i;
+            f32 prodB;
+
+            ang[0] = (s16)getAngle(dx, dy) - (u16)(obj)->anim.rotX;
+            if (ang[0] > 0x8000)
+            {
+                ang[0] = (s16)(ang[0] - 0xffff);
+            }
+            if (ang[0] < -0x8000)
+            {
+                ang[0] = (s16)(ang[0] + 0xffff);
+            }
+            if (inv != 0)
+            {
+                ang[0] = (s16)(ang[0] + 0x8000);
+            }
+            ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
+
+            a = (s16)(gObjPrintDegToAngle * a);
+            p[0] = p3;
+            ap[0] = ang;
+            prodB = gObjPrintDegToAngle * b;
+            minB = -(s16)(s32)prodB;
+            negA = -a;
+            for (i = 0; i < 2; i++)
+            {
+                int v;
+                int w;
+                *ap[0] -= *(s16*)(p[0] + 0x14);
+                v = *ap[0];
+                if (v < minB)
+                {
+                    w = minB;
+                }
+                else
+                {
+                    if (v > (s16)(int)(f64)prodB)
+                    {
+                        v = (int)(f64)prodB;
+                    }
+                    w = (s16)v;
+                }
+                *ap[0] = (s16)w;
+                *(s16*)(p[0] + 0x14) += *ap[0];
+                if (*(s16*)(p[0] + 0x14) > a)
+                {
+                    *(s16*)(p[0] + 0x14) = a;
+                }
+                if (*(s16*)(p[0] + 0x14) < negA)
+                {
+                    *(s16*)(p[0] + 0x14) = negA;
+                }
+                p[0] += 0x30;
+                ap[0]++;
+            }
+            found[0][1] = *(s16*)(p3 + 0x14);
+            found[0][0] = *(s16*)(p3 + 0x44);
+        }
+    }
+}
+#pragma opt_loop_invariants reset
+
+
+void fn_8003B0D0(GameObject* obj, GameObject* target, CharacterEyeAnimState* state, int maxAngle)
+{
+    s16* found;
+
+    found = objFindJointVecByKey(obj, 0);
+    if (found != NULL)
+    {
+        state->headYaw =
+            (s16)((s16)getAngle((obj)->anim.localPosX - target->anim.localPosX,
+                                (obj)->anim.localPosZ - target->anim.localPosZ) -
+                  (obj)->anim.rotX);
+        maxAngle = (s16)(gObjPrintDegToAngle * maxAngle);
+        if (state->headYaw > maxAngle)
+        {
+            state->headYaw = maxAngle;
+        }
+        if (state->headYaw < -maxAngle)
+        {
+            state->headYaw = -maxAngle;
+        }
+        found[1] = state->headYaw;
+    }
+}
+
+void fn_8003B228(GameObject* obj, int state)
+{
+    ObjTextureRuntimeSlot* foundA;
+    ObjTextureRuntimeSlot* foundB;
+    int val;
+
+    foundA = characterFindEyeJoint(obj, 5);
+    foundB = characterFindEyeJoint(obj, 4);
+    if (foundA == NULL || foundB == NULL)
+    {
+        return;
+    }
+    val = foundB->textureId;
+    val += framesThisStep * 0x30;
+    if (val >= 0x200)
+    {
+        val = 0x200;
+    }
+    foundA->textureId = val;
+    foundB->textureId = val;
+    *(u8*)(state + 0x1e) = 1;
+}
+
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused);
+
+void characterDoEyeAnims(GameObject* obj, CharacterEyeAnimState* state)
+{
+    ObjTextureRuntimeSlot* a;
+    ObjTextureRuntimeSlot* b;
+
+    a = characterFindEyeJoint(obj, 5);
+    b = characterFindEyeJoint(obj, 4);
+
+    if (a == NULL || b == NULL)
+    {
+        return;
+    }
+    {
+        int st;
+        int v;
+
+        v = b->textureId;
+        st = state->blinkState;
+
+        switch (st & 0xf)
+        {
+        case 0:
+        {
+            s8 t = state->blinkTimer;
+            if (t > 0)
+            {
+                state->blinkTimer = t - framesThisStep;
+            }
+            else if ((int)randomGetRange(0, 1000) > 0x3de)
+            {
+                state->blinkState = 1;
+                state->blinkTimer = 0;
+            }
+        }
+        break;
+        case 1:
+            if ((st & 0x80) != 0)
+            {
+                v = v - framesThisStep * 0x60;
+                if (v < 0)
+                {
+                    v = 0;
+                    state->blinkState = 0;
+                    state->blinkTimer = 0;
+                }
+            }
+            else
+            {
+                v = v + framesThisStep * 0x60;
+                if (v > 0x200)
+                {
+                    if (v - 0x200 < 0)
+                    {
+                        v = 0;
+                        state->blinkState = 0;
+                    }
+                    else
+                    {
+                        v = 0x2ff;
+                        state->blinkState = -127;
+                    }
+                    state->blinkTimer = 0x28;
+                }
+            }
+            a->textureId = v;
+            b->textureId = v;
+            break;
+        }
+        characterDoEyeMovements(obj, state, lbl_803DE9A4);
+    }
+}
+
+void characterDoEyeMovements(GameObject* obj, CharacterEyeAnimState* state, f32 unused)
+{
+    ObjTextureRuntimeSlot* foundA;
+    ObjTextureRuntimeSlot* foundB;
+    s16 t;
+    int flag;
+    s8 timer;
+
+    foundA = characterFindEyeJoint(obj, 1);
+    foundB = characterFindEyeJoint(obj, 0);
+    if (foundA == NULL || foundB == NULL)
+    {
+        return;
+    }
+
+    flag = 0;
+    t = state->movementStep;
+    if (t == 0)
+    {
+        flag = 1;
+    }
+    if (t > 0)
+    {
+        if (foundA->offsetS >= state->movementTarget)
+        {
+            flag = 1;
+        }
+    }
+    if (t < 0)
+    {
+        if (foundA->offsetS <= state->movementTarget)
+        {
+            flag = 1;
+        }
+    }
+    if (flag != 0)
+    {
+        state->movementTarget = randomGetRange(-0x3e8, 0x3e8);
+        state->movementStep = (state->movementTarget < foundA->offsetS) ? -0x96 : 0x96;
+        state->movementTimer = randomGetRange(0x1e, 0x64);
+    }
+    timer = state->movementTimer;
+    if (timer > 0)
+    {
+        state->movementTimer = timer - framesThisStep;
+    }
+    else
+    {
+        foundA->offsetS = (s16)(foundA->offsetS + state->movementStep * framesThisStep);
+        foundA->offsetT = 0;
+        foundB->offsetS = foundA->offsetS;
+        foundB->offsetT = 0;
+    }
+}
+
+void fn_8003B500(GameObject* obj, s16* state)
+{
+    s16* found;
+
+    found = objFindJointVecByKey(obj, 0);
+    if (found != NULL)
+    {
+        if (found[0] != 0)
+        {
+            found[0] = (s16)(found[0] * 3 / 4);
+        }
+        fn_80039DF8(obj, state, found, lbl_803DE9A4);
+        *(s16*)((char*)state + 0x1a) = (s16)(u16)(u8) * (s16*)((char*)state + 0x1a);
+    }
+}
+
+void fn_8003B5E0(int a, int b, int c, u8 d)
+{
+    lbl_803DCC0D = a;
+    lbl_803DCC0C = b;
+    lbl_803DCC0B = c;
+    lbl_803DCC09 = 1;
+    lbl_803DCC0A = d;
+}
+
+
+void fn_8003B608(s16 a, s16 b, s16 c)
+{
+    lbl_803DCC18 = a;
+    lbl_803DCC16 = b;
+    lbl_803DCC14 = c;
+    lbl_803DCC08 = 1;
+}
+
+int fn_80039834(s16* curve, s16* state, f32 a, f32 b);
+#pragma opt_common_subs off
+#pragma opt_propagation off
+void staffMtxFn_8003b620(int staffArg, int objArg, int modelArg, int a, int b, int c)
+{
+    f32 va[3];
+    f32 vb[3];
+    int k;
+    char* q;
+    f32* vp;
+    int i;
+    char* base;
+    int model;
+    int obj;
+    int staff;
+
+    staff = staffArg;
+    obj = objArg;
+    model = modelArg;
+    if (*(u8*)(*(char**)(staff + 0x50) + 0x58) >= 2 && ((GameObject*)staff)->anim.classId == 0x2d)
+    {
+        int off;
+        base = (char*)((GameObject*)staff)->extra;
+        i = 0;
+        k = 1;
+        off = 0x18;
+        q = base;
+        vp = va;
+
+        while (i < *(s16*)(base + 0xb0))
+        {
+            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
+            {
+                void* jm;
+                char* t;
+                int joint;
+                joint = (*(s8**)(*(char**)(staff + 0x50) + 0x2c))[off + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x2a];
+                jm = ObjModel_GetJointMatrix((u8*)model, joint);
+                t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
+                *(volatile f32*)vp = *(f32*)(t + off + 0x18);
+                va[1] = *(f32*)(t + off + 0x1c);
+                va[2] = *(f32*)(t + off + 0x20);
+                PSMTXMultVec(jm, vp, vp);
+                *(volatile f32*)vp = *(volatile f32*)vp + playerMapOffsetX;
+                va[2] = va[2] + playerMapOffsetZ;
+                *(f32*)(q + 0x6c) = vp[0];
+                *(f32*)(q + 0x74) = va[1];
+                *(f32*)(q + 0x7c) = va[2];
+            }
+            if (k < *(u8*)(*(char**)(staff + 0x50) + 0x58))
+            {
+                char* t = *(char**)(*(char**)(staff + 0x50) + 0x2c);
+                char* row = t + off;
+                int idx2 = *(s8*)(row + OBJPRINT_ACTIVE_BANK_INDEX(staff) + 0x12);
+                char* mtx2 = *(char**)(model + ((*(u16*)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
+                vb[0] = *(f32*)row;
+                vb[1] = *(f32*)(t + off + 4);
+                vb[2] = *(f32*)(t + off + 8);
+                PSMTXMultVec(mtx2, vb, vb);
+                vb[0] = vb[0] + playerMapOffsetX;
+                vb[2] = vb[2] + playerMapOffsetZ;
+                *(f32*)(q + 0x54) = vb[0];
+                *(f32*)(q + 0x5c) = vb[1];
+                *(f32*)(q + 0x64) = vb[2];
+            }
+            k += 2;
+            off += 0x30;
+            q += 4;
+            i++;
+        }
+
+        if (*(s16*)(base + 0xb0) != 0)
+        {
+            char* r = base + *(s16*)(base + 0xb2) * 4;
+            va[0] = *(f32*)(r + 0x6c);
+            va[1] = *(f32*)(r + 0x74);
+            va[2] = *(f32*)(r + 0x7c);
+            (*(void (**)(int, int, f32*))(*(int*)((GameObject*)staff)->anim.dll + 0x28))(staff, obj, vb);
+            va[0] = va[0] - vb[0];
+            va[1] = va[1] - vb[1];
+            va[2] = va[2] - vb[2];
+            ((GameObject*)staff)->anim.rotX = getAngle(va[0], va[2]);
+            {
+                f32 dx = va[0] * va[0];
+                f32 dz = va[2] * va[2];
+                ((GameObject*)staff)->anim.rotY = (s16)(-getAngle(va[1], sqrtf(dx + dz)) + 0x4000);
+            }
+            ((GameObject*)staff)->anim.rotZ = 0;
+        }
+    }
+}
+
+#pragma opt_common_subs reset
+#pragma opt_propagation reset
+
+extern void objRenderShadow(void* obj);
+
+void objRenderShadowIfVisible(GameObject* obj)
+{
+    void** arr = *(void***)&(obj)->anim.banks;
+    s8 idx = (obj)->anim.bankIndex;
+    if (arr[idx] != NULL)
+    {
+        objRenderShadow(obj);
+    }
+}
+
+int fn_8003BB84(f32* m, f32* out);
+
+void objRenderModelAndHitVolumes(GameObject* obj, f32 scale)
+{
+    int** table = OBJPRINT_BANK_TABLE((int*)obj);
+    (void)scale;
+    if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL)
+    {
+        objRenderModelWithBankTableLegacy((int*)obj, table);
+        if (obj->anim.hitVolumeTransforms != NULL)
+        {
+            objRenderFn_80041018((GameObject*)obj);
+        }
+    }
+}
+
+
+extern u8 lbl_803DCC3C;
+void fn_8003B950(f32* matrix)
+{
+    lbl_803DCC10 = (u32)matrix;
+}
+
+extern void doNothing_beforeRenderObject(int x);
+extern void doNothing_afterRenderObject(void);
+
+void objRender(int a, int b, int c, int d, int obj, int flag)
+{
+    void* sub;
+    int walk;
+    int i;
+    void (*vfn)(int, int, int, int, int, int);
+
+    if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_FREED) != 0 || ((GameObject*)obj)->ownerObj != NULL)
+        return;
+    if ((((GameObject*)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+        return;
+    sub = *(void**)&((GameObject*)obj)->anim.parent;
+    if (sub != NULL && (((GameObject*)sub)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0)
+        return;
+
+    doNothing_beforeRenderObject(4);
+    ((GameObject*)obj)->objectFlags |= OBJECT_OBJFLAG_RENDERED;
+    sub = *(void**)&((GameObject*)obj)->anim.dll;
+    if (sub != NULL)
+    {
+        if ((((GameObject*)obj)->objectFlags & OBJECT_OBJFLAG_HIDDEN) == 0)
+        {
+            vfn = *(void (**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
+            if (vfn != NULL)
+            {
+                vfn(obj, a, b, c, d, flag);
+            }
+        }
+        else if ((s8)flag != 0 && OBJPRINT_ACTIVE_BANK(obj) != NULL)
+        {
+            (*(void (*)(int))objRenderModel)(obj);
+            if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
+            {
+                objRenderFn_80041018((GameObject*)obj);
+            }
+        }
+    }
+    else if ((s8)flag != 0)
+    {
+        switch (((GameObject*)obj)->anim.seqId)
+        {
+        case 0:
+        case 0x1f:
+            playerRender(obj, a, b, c, d, flag);
+            break;
+        default:
+            if (OBJPRINT_ACTIVE_BANK(obj) != NULL)
+            {
+                (*(void (*)(int))objRenderModel)(obj);
+                if (((GameObject*)obj)->anim.hitVolumeTransforms != NULL)
+                {
+                    objRenderFn_80041018((GameObject*)obj);
+                }
+            }
+            break;
+        }
+    }
+    doNothing_afterRenderObject();
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject*)obj)->childCount; i++)
+    {
+        int staff = *(int*)&((GameObject*)walk)->childObjs[0];
+        if (((GameObject*)staff)->anim.classId == 0x2d)
+        {
+            staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
+        }
+        walk += 4;
+    }
+}
+u8 fn_8003BB74(void)
+{
+    return lbl_803DCC3C;
+}
+
+void fn_8003BB7C(u8 x)
+{
+    lbl_803DCC3C = x;
+}
+
+#pragma opt_common_subs off
+int fn_8003BB84(f32* m, f32* out)
+{
+    f32 v3[3];
+    f32 v1[3];
+    f32 v2[3];
+    f32 zero;
+
+    v1[0] = m[0];
+    v1[1] = m[1];
+    v1[2] = m[2];
+    v2[0] = m[4];
+    v2[1] = m[5];
+    v2[2] = m[6];
+    v3[0] = m[8];
+    v3[1] = m[9];
+    v3[2] = m[10];
+
+    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04) ||
+        (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04) ||
+        (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04))
+    {
+        return 0;
+    }
+
+    PSVECNormalize(v1, v1);
+    PSVECNormalize(v2, v2);
+    PSVECNormalize(v3, v3);
+
+    out[0] = v1[0];
+    out[1] = v1[1];
+    out[2] = v1[2];
+    zero = lbl_803DEA04;
+    out[3] = zero;
+    out[4] = v2[0];
+    out[5] = v2[1];
+    out[6] = v2[2];
+    out[7] = zero;
+    out[8] = v3[0];
+    out[9] = v3[1];
+    out[10] = v3[2];
+    out[11] = zero;
+    return 1;
+}
+#pragma opt_common_subs reset
+
+extern f32 gObjPrintHalfPi;
+extern f32 gObjPrintNegHalfPi;
+extern const f32 gObjPrintAngleUnitScale;
+extern const f32 gObjPrintTwoPi;
+
+int objRotateFn_8003bce8(f32* m, s16* outA, s16* outB, s16* outC)
+{
+    f32 buf[12];
+    f32 x;
+    f32 y;
+    f32 z;
+
+    if (fn_8003BB84(m, buf) == 0)
+    {
+        return 0;
+    }
+    x = __kernel_sin(-buf[6]);
+    if (x < gObjPrintHalfPi)
+    {
+        if (x > gObjPrintNegHalfPi)
+        {
+            y = __kernel_cos(buf[2], buf[10]);
+            z = __kernel_cos(buf[4], buf[5]);
+        }
+        else
+        {
+            y = __kernel_cos(buf[1], buf[0]);
+            z = lbl_803DEA04;
+            y = z - y;
+        }
+    }
+    else
+    {
+        y = __kernel_cos(buf[1], buf[0]);
+        z = lbl_803DEA04;
+        y = y - z;
+    }
+    *outC = (s16)(s32)(gObjPrintAngleUnitScale * z / gObjPrintTwoPi);
+    *outB = (s16)(s32)(gObjPrintAngleUnitScale * x / gObjPrintTwoPi);
+    *outA = (s16)(s32)(gObjPrintAngleUnitScale * y / gObjPrintTwoPi);
+    return 1;
+}
+
+
+void modelMtxFn_8003be38(int def, int p2, int mtxA, int mtxB)
+{
+    int cache;
+    int count;
+    int i;
+    int mid;
+    int dstB;
+    int dstA;
+    f32 fill;
+
+    cache = (int)getCache();
+    count = (s32)(u32) * (u8*)((char*)def + 0xf3) + (s32)(u32) * (u8*)((char*)def + 0xf4);
+    dstA = cache + 0x2700;
+    mid = cache;
+    dstB = cache + 0x12c0;
+    cacheQueueWait(0);
+    i = 0;
+    fill = lbl_803DEA04;
+    for (; i < count; i++)
+    {
+        PSMTXConcat((void*)mtxA, (void*)dstA, (void*)mid);
+        PSMTXConcat((void*)mid, (void*)mtxB, (void*)dstB);
+        *(f32*)((char*)dstB + 0xc) = fill;
+        *(f32*)((char*)dstB + 0x1c) = fill;
+        *(f32*)((char*)dstB + 0x2c) = fill;
+        dstA += 0x40;
+        mid += 0x30;
+        dstB += 0x30;
+    }
+    lbl_803DCC48 = 2;
+}
+
+#pragma dont_inline on
+void modelCalcVtxGroupMtxs(int def, int model)
+{
+    f32 ma[12];
+    f32 mb[12];
+    f32 trans[12];
+    int off;
+    int i;
+
+    for (i = 0, off = 0; i < *(u8*)(def + 0xf4); i++)
+    {
+        f32* out;
+        f32* m1;
+        char* jd;
+        f32* m2;
+        u8* grp;
+        f32 w;
+        f32 wi;
+
+        grp = (u8*)(*(int*)(def + 0x54) + off);
+        out = (f32*)ObjModel_GetJointMatrix((u8*)model, i + *(u8*)(def + 0xf3));
+        m1 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[0]);
+        m2 = (f32*)ObjModel_GetJointMatrix((u8*)model, grp[1]);
+
+        w = (f32)grp[2] / 4.0f;
+        wi = 1.0f - w;
+
+        jd = (char*)(*(int*)(def + 0x3c) + grp[0] * 0x1c);
+        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
+        PSMTXConcat(m1, trans, ma);
+        jd = (char*)(*(int*)(def + 0x3c) + grp[1] * 0x1c);
+        PSMTXTrans(trans, -*(f32*)(jd + 0x10), -*(f32*)(jd + 0x14), -*(f32*)(jd + 0x18));
+        PSMTXConcat(m2, trans, mb);
+
+        out[0] = ma[0] * w + mb[0] * wi;
+        out[1] = ma[1] * w + mb[1] * wi;
+        out[2] = ma[2] * w + mb[2] * wi;
+        out[3] = ma[3] * w + mb[3] * wi;
+        out[4] = ma[4] * w + mb[4] * wi;
+        out[5] = ma[5] * w + mb[5] * wi;
+        out[6] = ma[6] * w + mb[6] * wi;
+        out[7] = ma[7] * w + mb[7] * wi;
+        out[8] = ma[8] * w + mb[8] * wi;
+        out[9] = ma[9] * w + mb[9] * wi;
+        out[10] = ma[10] * w + mb[10] * wi;
+        out[11] = ma[11] * w + mb[11] * wi;
+        off += 4;
+    }
+}
+#pragma dont_inline reset
+
+
+
+
+
+void modelInitMtxs(int def, int model)
+{
+    int cache;
+    int mtx;
+    int count;
+    u8 rem;
+
+    cache = (int)getCache();
+    if (*(u8*)(def + 0xf4) != 0)
+    {
+        modelCalcVtxGroupMtxs(def, model);
+    }
+    count = (s32)(u32) * (u8*)(def + 0xf3) + (s32)(u32) * (u8*)(def + 0xf4);
+    if (count >= 2 && count <= 0x64)
+    {
+        mtx = (int)ObjModel_GetJointMatrix((u8*)model, 0);
+        DCFlushRange((void*)mtx, count << 6);
+        rem = (u8)(count << 1);
+        cache += 0x2700;
+        while (rem >= 0x80)
+        {
+            copyToCache((void*)cache, (void*)mtx, 0);
+            rem -= 0x80;
+            mtx += 0x1000;
+            cache += 0x1000;
+        }
+        if (rem != 0)
+        {
+            copyToCache((void*)cache, (void*)mtx, rem);
+        }
+        lbl_803DCC48 = 1;
+    }
+    else
+    {
+        lbl_803DCC48 = 3;
+    }
+}
+
 typedef struct IndTexMtx23
 {
     f32 m[6];
@@ -1878,11 +1897,17 @@ extern f32 lbl_803DEA34;
 extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA1C;
 
+#undef GXSetTevKColor
 #define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
+#undef GXSetChanAmbColor
 #define GXSetChanAmbColor ((ObjPrintSetChanColorFn)GXSetChanAmbColor)
+#undef GXSetChanMatColor
 #define GXSetChanMatColor ((ObjPrintSetChanColorFn)GXSetChanMatColor)
+#undef GXSetIndTexMtx
 #define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
+#undef GXSetFog
 #define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
+#undef GXLoadTexMtxImm
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
 {
@@ -2054,31 +2079,17 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
-#undef GXLoadTexMtxImm
-#undef GXSetFog
-#undef GXSetIndTexMtx
-#undef GXSetChanMatColor
-#undef GXSetChanAmbColor
-#undef GXSetTevKColor
 
 typedef void (*ObjPrintSetTevColorS10Fn)(int id, GXColorS10 color);
 
 extern GXColorS10 lbl_803DE9F4;
 extern ObjPrintGXColor lbl_803DB494;
-extern int lbl_803DCC44;
-extern u8 lbl_803DCC3E;
 extern u8 lbl_803DCC35;
 extern u8 lbl_803DCC36;
 extern int lbl_803DCC5C;
 extern u8 lbl_803DCC60;
-extern u32 lbl_803DB468;
 extern int lbl_803DB48C;
 extern int lbl_803DB490;
-extern f32 lbl_803DEA28;
-extern f32 lbl_803DEA2C;
-extern f32 lbl_803DEA30;
-extern f32 lbl_803DEA04;
-extern f32 lbl_803DEA1C;
 
 static inline int shaderProjDisabled(ModelLightStruct* light)
 {
@@ -2088,10 +2099,15 @@ static inline int shaderProjDisabled(ModelLightStruct* light)
     return flag;
 }
 
+#undef GXSetTevKColor
 #define GXSetTevKColor ((ObjPrintSetTevKColorFn)GXSetTevKColor)
+#undef GXSetTevColorS10
 #define GXSetTevColorS10 ((ObjPrintSetTevColorS10Fn)GXSetTevColorS10)
+#undef GXSetIndTexMtx
 #define GXSetIndTexMtx ((ObjPrintSetIndTexMtxFn)GXSetIndTexMtx)
+#undef GXSetFog
 #define GXSetFog ((ObjPrintSetFogFn)GXSetFog)
+#undef GXLoadTexMtxImm
 #define GXLoadTexMtxImm ((ObjPrintLoadTexMtxFn)GXLoadTexMtxImm)
 int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
 {
@@ -2342,8 +2358,3 @@ int shaderFuzzFn_8003cc1c(GameObject* obj, ObjModel* model, int ropIdx)
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     return 1;
 }
-#undef GXLoadTexMtxImm
-#undef GXSetFog
-#undef GXSetIndTexMtx
-#undef GXSetTevColorS10
-#undef GXSetTevKColor
