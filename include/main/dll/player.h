@@ -50,7 +50,7 @@ int playerStateOnLadder(int obj, int state);
 int playerStateClimbWall(GameObject* obj, int state);
 int playerStateAimStaff(int obj, int state);
 int playerStateAttack(GameObject* obj, int state, f32 fv);
-int playerState1D(int obj, int state, f32 fv);
+int playerState1D(int obj, PlayerState* state, f32 fv);
 int playerStateIdle(int obj, int state, f32 fv);
 int playerState08(GameObject* obj, int state, f32 fv);
 

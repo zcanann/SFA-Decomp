@@ -3263,7 +3263,7 @@ typedef struct
     int b;
 } ColPair;
 
-extern int lbl_803E7E78;
+extern ColPair lbl_803E7E78;
 extern f32 lbl_803E7FDC;
 extern f32 lbl_803E7FE0;
 extern f32 lbl_803E7FE4;
@@ -5078,11 +5078,13 @@ void fn_8029DAE0(GameObject* obj, int* p2)
     ObjHits_SyncObjectPositionIfDirtyLegacy(obj);
 }
 #pragma opt_common_subs off
-int playerState1D(int obj, int state, f32 fv)
+int playerState1D(int obj, PlayerState* state, f32 fv)
 {
-    int prev;
     HeadMoveTable* tbl = (HeadMoveTable*)lbl_80332EC0;
-    PlayerState* inner = ((GameObject*)obj)->extra;
+    int prev;
+    int* tblB;
+    GameObject* self = (GameObject*)obj;
+    PlayerState* inner = self->extra;
     int sub;
     int nextMove = -1;
     int doXform = 1;
@@ -5096,15 +5098,15 @@ int playerState1D(int obj, int state, f32 fv)
     f32 yOut;
     ColPair col;
 
-    col = *(ColPair*)&lbl_803E7E78;
+    col = lbl_803E7E78;
     setAButtonIcon(0xf);
-    if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+    if (*(s8*)&state->baddie.moveJustStartedA != 0)
     {
         ((ByteFlags*)((char*)inner + 0x3f3))->b01 = ((ByteFlags*)((char*)inner + 0x3f3))->b08;
-        *(s16*)((char*)state + 0x278) = 0x1d;
+        state->baddie.stateId = 0x1d;
         inner->stateHandler = (int)fn_8029DAE0;
     }
-    if (*(s8*)&((PlayerState*)state)->baddie.moveJustStartedA != 0)
+    if (*(s8*)&state->baddie.moveJustStartedA != 0)
     {
         if (gPlayerPathObject != 0 && ((ByteFlags*)((char*)inner + 0x3f4))->b40 != 0)
         {
@@ -5116,18 +5118,18 @@ int playerState1D(int obj, int state, f32 fv)
             cameraSetInterpMode(2);
             (*gCameraInterface)->setMode(0x52, 1, 0, 8, &col, 0x1e, 0xff);
         }
-        *(u8*)&((PlayerState*)inner)->stickDirection = 0;
+        inner->stickDirection = 0;
         inner->latchedStickDir = 0;
         inner->targetYaw = getAngle(inner->surfaceNormalX, inner->surfaceNormalZ);
         {
             s16 ang = inner->targetYaw;
             inner->yaw = ang;
-            *(s16*)obj = ang;
+            self->anim.rotX = ang;
         }
         ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
         ObjAnim_SetCurrentMove(obj, 0x5f, lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 8);
-        ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
+        state->baddie.moveSpeed = lbl_803E7EF8;
         {
             f32 z = lbl_803E7EA4;
             inner->stickTargetX = z;
@@ -5140,17 +5142,17 @@ int playerState1D(int obj, int state, f32 fv)
     {
         f32 z = lbl_803E7EA4;
         inner->aimInputX = z;
-        ((PlayerState*)state)->baddie.animSpeedA = z;
-        ((PlayerState*)state)->baddie.animSpeedB = z;
+        state->baddie.animSpeedA = z;
+        state->baddie.animSpeedB = z;
     }
     sub = inner->contactObject;
-    switch (((GameObject*)obj)->anim.currentMove)
+    switch (self->anim.currentMove)
     {
     case 0x5f:
-        if ((*(int*)&((PlayerState*)state)->baddie.unk318 & 0x100) == 0)
+        if ((*(int*)&state->baddie.unk318 & 0x100) == 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
+            *(u32*)&inner->flags360 |= PLAYER_FLAG_TELEPORTED;
+            *(int*)&state->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
         break;
@@ -5158,17 +5160,17 @@ int playerState1D(int obj, int state, f32 fv)
     case 0x4e:
     case 0x5a:
     case 0x65:
-        if (*(s8*)&((PlayerState*)state)->baddie.moveDone != 0)
+        if (*(s8*)&state->baddie.moveDone != 0)
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
+            *(u32*)&inner->flags360 |= PLAYER_FLAG_TELEPORTED;
+            *(int*)&state->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
         camCall = 1;
         doXform = 0;
         break;
     }
-    prev = *(u8*)&((PlayerState*)inner)->stickDirection;
+    prev = *(u8*)&inner->stickDirection;
     t = (f32)padGetStickXS8(0) / lbl_803E7FA8;
     xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
     t2 = (f32)padGetStickYS8(0) / lbl_803E7FA8;
@@ -5177,36 +5179,36 @@ int playerState1D(int obj, int state, f32 fv)
     {
         if (yc > lbl_803E7F14)
         {
-            xT = -(lbl_803E7F48 * yc - lbl_803E7FDC);
+            xT = lbl_803E7FDC - lbl_803E7F48 * yc;
             inner->stickTargetY = yT = lbl_803E7EA4;
-            *(u8*)&((PlayerState*)inner)->stickDirection = 1;
+            inner->stickDirection = 1;
         }
         else if (yc < lbl_803E7FE0)
         {
-            xT = -(lbl_803E7F48 * yc - lbl_803E7F6C);
+            xT = lbl_803E7F6C - lbl_803E7F48 * yc;
             inner->stickTargetY = yT = lbl_803E7EA4;
-            *(u8*)&((PlayerState*)inner)->stickDirection = 2;
+            inner->stickDirection = 2;
         }
         else if (xc > lbl_803E7F14)
         {
             inner->stickTargetX = xT = lbl_803E7EA4;
             yT = lbl_803E7EAC * xc + lbl_803E7F6C;
-            *(u8*)&((PlayerState*)inner)->stickDirection = 3;
+            inner->stickDirection = 3;
         }
         else if (xc < lbl_803E7FE0)
         {
             inner->stickTargetX = xT = lbl_803E7EA4;
             yT = lbl_803E7EAC * xc + lbl_803E7FDC;
-            *(u8*)&((PlayerState*)inner)->stickDirection = 4;
+            inner->stickDirection = 4;
         }
         else
         {
             if (inner->stickTargetX <= lbl_803E7F6C && inner->stickTargetX >= lbl_803E7FDC &&
                 inner->stickTargetY <= lbl_803E7F6C && inner->stickTargetY >= lbl_803E7FDC)
             {
-                *(u8*)&((PlayerState*)inner)->stickDirection = 0;
+                inner->stickDirection = 0;
                 nextMove = 0x5f;
-                ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7EF8;
+                state->baddie.moveSpeed = lbl_803E7EF8;
             }
             xT = lbl_803E7EA4;
             yT = lbl_803E7EA4;
@@ -5218,21 +5220,21 @@ int playerState1D(int obj, int state, f32 fv)
         }
     }
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0 &&
-        ((*(int*)&((PlayerState*)state)->baddie.unk318 & 0x100) == 0 || inner->stickEdgeLatch != 0 ||
+        ((*(int*)&state->baddie.unk318 & 0x100) == 0 || inner->stickEdgeLatch != 0 ||
          (((ByteFlags*)((char*)inner + 0x3f1))->b01 == 0 && *(f32*)((char*)state + 0x1b0) >= lbl_803E7F58)))
     {
         if (inner->stickDirection != 0)
         {
             ObjAnim_SetCurrentMove(obj, tbl->moveA[inner->stickDirection], lbl_803E7E98, 0);
-            ((PlayerState*)state)->baddie.moveSpeed = lbl_803E7F20;
+            state->baddie.moveSpeed = lbl_803E7F20;
         }
         else
         {
-            *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
-            *(int*)&((PlayerState*)state)->baddie.unk308 = (int)fn_802A514C;
+            *(u32*)&inner->flags360 |= PLAYER_FLAG_TELEPORTED;
+            *(int*)&state->baddie.unk308 = (int)fn_802A514C;
             return 2;
         }
-        *(u8*)&((PlayerState*)inner)->stickDirection = 0;
+        inner->stickDirection = 0;
         ((ByteFlags*)((char*)inner + 0x3f3))->b80 = 1;
     }
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0)
@@ -5245,13 +5247,13 @@ int playerState1D(int obj, int state, f32 fv)
                 gPlayerSfxTimerD = randomGetRange(0xb4, 0xf0);
                 Sfx_PlayFromObject(obj, SFXTRIG_literun116);
             }
-            *(u32*)&((PlayerState*)inner)->flags360 |= 0x200LL;
-            if (inner->stickDirection != (u8)prev || *(s8*)&((PlayerState*)inner)->latchedStickDir == 0)
+            *(u32*)&inner->flags360 |= 0x200LL;
+            if (inner->stickDirection != (u8)prev || *(s8*)&inner->latchedStickDir == 0)
             {
                 ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
                 inner->latchedStickDir = 0;
             }
-            else if (inner->stickDirection == *(s8*)&((PlayerState*)inner)->latchedStickDir)
+            else if (inner->stickDirection == *(s8*)&inner->latchedStickDir)
             {
                 if (((ByteFlags*)((char*)inner + 0x3f3))->b08 != 0 && ((ByteFlags*)((char*)inner + 0x3f3))->b01 == 0)
                 {
@@ -5265,17 +5267,16 @@ int playerState1D(int obj, int state, f32 fv)
             }
             if (((ByteFlags*)((char*)inner + 0x3f2))->b01 != 0)
             {
-                ((PlayerState*)state)->baddie.moveSpeed =
-                    lbl_803E7EF8 * ((PlayerState*)state)->baddie.inputMagnitude + tbl->spdD[inner->stickDirection];
+                state->baddie.moveSpeed =
+                    lbl_803E7EF8 * state->baddie.inputMagnitude + tbl->spdD[inner->stickDirection];
                 nextMove = tbl->moveC[inner->stickDirection];
             }
             else
             {
-                int* tblB;
-                if (((GameObject*)obj)->anim.currentMove != (tblB = tbl->moveB)[inner->stickDirection] ||
-                    ((GameObject*)obj)->anim.currentMoveProgress >= lbl_803E7FE4)
+                if (self->anim.currentMove != (tblB = tbl->moveB)[inner->stickDirection] ||
+                    self->anim.currentMoveProgress >= lbl_803E7FE4)
                 {
-                    ((PlayerState*)state)->baddie.moveSpeed =
+                    state->baddie.moveSpeed =
                         lbl_803E7F78 * ((f32)randomGetRange(0, 100) / lbl_803E7F5C) + tbl->spdE[inner->stickDirection];
                 }
                 nextMove = tblB[inner->stickDirection];
@@ -5283,9 +5284,10 @@ int playerState1D(int obj, int state, f32 fv)
         }
         {
             u8 res;
+            s8 direction = inner->stickDirection;
             f32 a;
             f32 b;
-            if (inner->stickDirection == 0)
+            if (direction == 0)
             {
                 a = lbl_803E7EA4;
                 b = lbl_803E7EA4;
@@ -5296,7 +5298,7 @@ int playerState1D(int obj, int state, f32 fv)
                 b = inner->stickTargetY;
             }
             res = (*(u8 (*)(int, int, int, f32, f32))(*(int*)(*(int*)(*(int*)((char*)sub + 0x68)) + 0x20)))(
-                sub, obj, inner->stickDirection, a, b);
+                sub, obj, direction, a, b);
             if (res == 1)
             {
                 inner->latchedStickDir = 1;
@@ -5315,7 +5317,7 @@ int playerState1D(int obj, int state, f32 fv)
             }
             else if (res == 5)
             {
-                *(u8*)&((PlayerState*)inner)->stickEdgeLatch = 1;
+                inner->stickEdgeLatch = 1;
             }
             else
             {
@@ -5323,7 +5325,7 @@ int playerState1D(int obj, int state, f32 fv)
             }
         }
     }
-    if (nextMove != -1 && ((GameObject*)obj)->anim.currentMove != nextMove &&
+    if (nextMove != -1 && self->anim.currentMove != nextMove &&
         ((int (*)(ObjAnimComponent*))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent*)obj) == 0)
     {
         ObjAnim_SetCurrentMove(obj, nextMove, lbl_803E7EA4, 0);
@@ -5331,7 +5333,7 @@ int playerState1D(int obj, int state, f32 fv)
     }
     if (camCall != 0)
     {
-        (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))(obj, state, fv, 3);
+        (*(void (*)(int, int, f32, int))(*(int*)((char*)*gPlayerInterface + 0x20)))(obj, (int)state, fv, 3);
     }
     if (doXform != 0)
     {
@@ -5340,8 +5342,8 @@ int playerState1D(int obj, int state, f32 fv)
             (void*)(obj + 0x14), sub);
         {
             f32 k = lbl_803E7FB8;
-            ((GameObject*)obj)->anim.localPosX = k * inner->surfaceNormalX + ((GameObject*)obj)->anim.localPosX;
-            ((GameObject*)obj)->anim.localPosZ = k * inner->surfaceNormalZ + ((GameObject*)obj)->anim.localPosZ;
+            self->anim.localPosX = k * inner->surfaceNormalX + self->anim.localPosX;
+            self->anim.localPosZ = k * inner->surfaceNormalZ + self->anim.localPosZ;
         }
     }
     ((ByteFlags*)((char*)inner + 0x3f3))->b01 = ((ByteFlags*)((char*)inner + 0x3f3))->b08;
