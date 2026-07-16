@@ -17559,7 +17559,7 @@ void playerUpdateWhileTimeStopped(int obj)
 }
 #pragma opt_common_subs off
 #pragma opt_propagation off
-#pragma dont_inline on
+#pragma inline_max_size(7)
 
 void playerUpdate(GameObject* obj)
 {
@@ -17682,7 +17682,7 @@ void playerUpdate(GameObject* obj)
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
-                u32 acc = *(u32*)((char*)inner + 0x310);
+                u32 acc = playerLoadPendingHitBits((char*)inner + 0x310);
                 int idx = i + 0x8b9;
                 *(u32*)((char*)inner + 0x310) = acc | (1 << *(u8*)((char*)inner + idx));
             }
@@ -17845,7 +17845,7 @@ void playerUpdate(GameObject* obj)
         }
     }
 }
-#pragma dont_inline reset
+#pragma inline_max_size reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
