@@ -1362,10 +1362,17 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     MatrixTransform blk;
     int* mdl = p2;
     u8* data = (u8*)mdl[22];
+    s16 b;
+    s16 c;
+    u16* idx;
+    int off;
+    s16* v;
     int i;
     s16* verts;
     s16* uvs;
-    int off;
+    u8* tri;
+    s16 a;
+    s16* uv;
     f32* vm = Camera_GetViewMatrix();
     Obj_BuildWorldTransformMatrix((GameObject*)obj, wm, 0);
     PSMTXConcat(vm, wm, cm);
@@ -1391,33 +1398,34 @@ void objRenderFn_8003d980(u8* obj, int* p2)
         off = 0;
         for (; i < *(u16*)(data + 0xc); i++)
         {
-            u8* tri = *(u8**)data + off;
-            u16* idx = (u16*)tri;
             int k;
+            tri = *(u8**)data + off;
+            idx = (u16*)tri;
             for (k = 0; k < 3; k++)
             {
-                s16* v = verts + *idx * 3;
-                s16 c = v[2];
-                s16 b = v[1];
-                s16 a = v[0];
+                v = verts + *idx * 3;
+                c = v[2];
+                b = v[1];
+                a = v[0];
                 GXWGFifo.s16 = a;
                 GXWGFifo.s16 = b;
                 GXWGFifo.s16 = c;
                 {
-                    u8 c2 = tri[8];
-                    u8 b2 = tri[7];
-                    u8 a2 = tri[6];
+                    u8 b2;
+                    u8 c2;
+                    u8 a2;
+                    c2 = tri[8];
+                    b2 = tri[7];
+                    a2 = tri[6];
                     GXWGFifo.u8 = a2;
                     GXWGFifo.u8 = b2;
                     GXWGFifo.u8 = c2;
                 }
-                {
-                    s16* uv = uvs + *idx * 2;
-                    s16 u1 = uv[1];
-                    s16 u0 = uv[0];
-                    GXWGFifo.s16 = u0;
-                    GXWGFifo.s16 = u1;
-                }
+                uv = uvs + *idx * 2;
+                b = uv[1];
+                a = uv[0];
+                GXWGFifo.s16 = a;
+                GXWGFifo.s16 = b;
                 idx++;
             }
             off += 0xa;
@@ -1426,15 +1434,11 @@ void objRenderFn_8003d980(u8* obj, int* p2)
     GXSetCurrentMtx(0);
     if (randomGetRange(0, 5) == 0)
     {
-        int r = randomGetRange(0, *(s16*)(data + 0xe) - 1);
+        int m = randomGetRange(0, *(s16*)(data + 0xe) - 1) * 3;
         f32 fs = ((GameObject*)obj)->anim.rootMotionScale;
-        int m = r * 3;
-        int j = m << 1;
-        s16* pv;
         blk.x = fs * (f32)(verts[m] >> 8) + ((GameObject*)obj)->anim.localPosX;
-        pv = (s16*)((char*)verts + j);
-        blk.y = fs * (f32)(pv[1] >> 8) + ((GameObject*)obj)->anim.localPosY;
-        blk.z = fs * (f32)(pv[2] >> 8) + ((GameObject*)obj)->anim.localPosZ;
+        blk.y = fs * (f32)(verts[m + 1] >> 8) + ((GameObject*)obj)->anim.localPosY;
+        blk.z = fs * (f32)(verts[m + 2] >> 8) + ((GameObject*)obj)->anim.localPosZ;
         blk.scale = lbl_803DEA1C;
         blk.rotX = 0;
         blk.rotZ = 0;
@@ -3132,9 +3136,16 @@ extern void* memcpy(void*, void*, int);
 #pragma optimization_level 2
 void defragMemory(int mode)
 {
+    int pass;
+    char* q1;
+    char* q2;
+    char* q3;
+    char* q4;
+    int i;
+    int done;
     u8* base = lbl_80345E10;
-    int done = 0;
-    int pass = 0;
+    done = 0;
+    pass = 0;
     texFlagFn_80023cbc(2);
     if (getLoadedFileFlags(0) != 0)
     {
@@ -3148,11 +3159,12 @@ void defragMemory(int mode)
     }
     if (mode != 0)
     {
-        int i;
         char* p1;
         char* p2;
         char* p3;
         char* p4;
+        void* n;
+        int i;
         testAndSet_onlyUseHeaps1and2(1);
         i = 0;
         {
@@ -3179,7 +3191,6 @@ void defragMemory(int mode)
             case 0x54:
             case 0x55:
             {
-                void* n;
                 if (*(void**)p1 == NULL)
                 {
                     break;
@@ -3231,11 +3242,6 @@ void defragMemory(int mode)
     base = (u8*)((char*)base + 0x20000);
     while (done == 0 && pass < 10)
     {
-        char* q1;
-        char* q2;
-        char* q3;
-        char* q4;
-        int i;
         done = 1;
         i = 0;
         q1 = (char*)base - 0x6a28;
@@ -4042,13 +4048,9 @@ int mapUnload(int mapId, int flags)
                             }
                             mm_free((void*)MAPPTR_RT(e[0]));
                             mmSetFreeDelay(2);
-                            {
-                                u32 sh = (u32)tbl + 0x20000;
-                                u32 a4 = sh + (e[0] << 2);
-                                *(u32*)(a4 - 0x6A28) = 0;
-                                *(s16*)(sh + (e[0] << 1) - 0x68C8) = -1;
-                                *(int*)(a4 - 0x6D68) = 0;
-                            }
+                            *(u32*)((u32)tbl + 0x20000 + (e[0] << 2) - 0x6A28) = 0;
+                            *(s16*)((u32)tbl + 0x20000 + (e[0] << 1) - 0x68C8) = -1;
+                            *(int*)((u32)tbl + 0x20000 + (e[0] << 2) - 0x6D68) = 0;
                             switch (e[0])
                             {
                             case 0x2a:
