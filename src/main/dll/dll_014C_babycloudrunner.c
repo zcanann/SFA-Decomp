@@ -92,221 +92,13 @@ extern f32 lbl_803E4254;
 
 extern void fn_8003ADC4(GameObject* a, int* b, void* c, int d, int e, int f);
 
-#pragma scheduling off
-#pragma peephole off
-void babycloudrunner_init(int* obj, u8* defBytes)
-{
-    BabyCloudRunnerState* sub;
-    BabyCloudRunnerPlacement* def = (BabyCloudRunnerPlacement*)defBytes;
+void babycloudrunner_release(void);
+void babycloudrunner_initialise(void);
 
-    ObjHits_EnableObject(obj);
-    ObjMsg_AllocQueue(obj, 4);
-    ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
-    ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
-    ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
-    sub = ((GameObject*)obj)->extra;
-    sub->unkB0 = 0;
-    sub->unkB4 = 0;
-    sub->unkB8 = 0;
-    sub->unkBC = 0;
-    sub->turnLatch = 0;
-    sub->behaviourState = def->behaviourState;
-    sub->unkCC = 0;
-    storeZeroToFloatParam(&sub->unk00);
-    sub->linkedObj = 0;
-    sub->roostYaw = ((GameObject*)obj)->anim.rotX;
-    sub->flags22C = 0;
-    sub->animSpeed = lbl_803E422C;
-    sub->runnerState = 0;
-    if (mainGetBit(def->runnerGameBit) != 0)
-    {
-        ObjHits_DisableObject(obj);
-        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
-        sub->flags22C = (u8)(sub->flags22C & ~1);
-        Obj_RemoveFromUpdateList((u8*)obj);
-        ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
-    }
-    else
-    {
-        sub->runnerIndex = def->runnerGameBit - 0x2fc;
-        if (((GameObject*)obj)->anim.seqId == 0x788)
-        {
-            sub->runnerIndex = -1;
-            sub->curveSpeed = lbl_803E4244;
-            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTableSpecial;
-        }
-        else
-        {
-            if (sub->runnerIndex < 0 || sub->runnerIndex > 4)
-            {
-                sub->runnerState = 3;
-            }
-            sub->curveSpeed = lbl_803E4258;
-            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTable;
-            ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
-        }
-        ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
-    }
-}
-
-#pragma scheduling on
-void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 isVisible;
-
-    isVisible = visible;
-    if (isVisible != 0)
-    {
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4228);
-    }
-    return;
-}
-
-#pragma peephole on
-
-/* Turn toward the target by a fraction of the yaw delta; when roughly aligned
- * play/advance the idle move, otherwise start or speed-scale the turn move by
- * the delta. */
-#pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_common_subs off
-void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
-{
-    int shifted;
-    fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
-    shifted = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
-    ((GameObject*)obj)->anim.rotX += (shifted >>= 3);
-    if (playMove == 0)
-        return;
-    if ((s16)shifted > -200 && (s16)shifted < 200)
-    {
-        if (sub->turnLatch != 0)
-        {
-            sub->turnLatch = 0;
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E4218, 0);
-        }
-        else
-        {
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E423C, timeDelta, 0);
-        }
-    }
-    else
-    {
-        if (sub->turnLatch == 0)
-        {
-            sub->turnLatch = 1;
-            ObjAnim_SetCurrentMove(obj, 9, lbl_803E4218, 0);
-        }
-        else
-        {
-            int t;
-            if ((int)(s16)shifted > 0)
-            {
-                t = (s16)shifted >> 2;
-            }
-            else
-            {
-                t = -(s16)shifted >> 2;
-            }
-            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
-        }
-    }
-}
-#pragma opt_common_subs reset
-#pragma peephole on
-#pragma dont_inline reset
-
-/* When the player gets within the trigger radius and the runner is in state 3,
- * fire its burst (notify, bump the counter, set the gamebit); otherwise just
- * play the idle audio cue. */
-#pragma peephole off
-int babycloudrunner_tryCapture(void* p)
-{
-    int* obj;
-    int flag;
-    BabyCloudRunnerPlacement* r;
-    BabyCloudRunnerState* sub;
-    BabyCloudRunnerPlacement* q;
-    void* player;
-    obj = p;
-    sub = ((GameObject*)obj)->extra;
-    q = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
-    player = Obj_GetPlayerObject();
-    r = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
-    flag = 0;
-    if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
-        (f32)(s16)r->innerRadius)
-    {
-        if (sub->runnerState == 3)
-        {
-            if ((((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
-            {
-                flag = 1;
-            }
-        }
-    }
-    if (flag != 0)
-    {
-        s16toFloat(&sub->unk00, 0x3c);
-        ((GameObject*)obj)->unkF4 = 1;
-        ((GameObject*)obj)->anim.rotX = sub->roostYaw;
-        (*gObjectTriggerInterface)->runSequence(4, obj, -1);
-        sub->unk00 = lbl_803E4244;
-        gameBitIncrement(0x901);
-        sub->behaviourState = 0xc;
-        mainSetBits(q->enableBit, 1);
-        ((GameObject*)obj)->unkF4 = 0;
-        return 1;
-    }
-    objAudioFn_800393f8Legacy(obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
-    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_ice_freeze);
-    return 0;
-}
-#pragma peephole reset
-
-#pragma scheduling on
-void babycloudrunner_hitDetect(void)
-{
-}
-
-void babycloudrunner_release(void)
-{
-}
-
-void babycloudrunner_initialise(void)
-{
-}
-
-int babycloudrunner_getExtraSize(void)
-{
-    return 0x248;
-}
-
-int babycloudrunner_getObjectTypeId(void)
-{
-    return 0;
-}
-
-#pragma scheduling off
-#pragma peephole off
-int babycloudrunner_setScale(int* obj)
-{
-    BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
-    return !(state->flags22C & 1);
-}
-
-void babycloudrunner_free(int* obj)
-{
-    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
-    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
-}
-
-/* Pick the burrow/surface move from the vertical speed, clamp the playback
- * rate, latch the spit SFX while surfacing fast, and advance the current
- * move. */
 #pragma dont_inline on
 #pragma opt_common_subs off
+#pragma peephole off
+#pragma scheduling off
 int fn_8019E3F4(int* obj)
 {
     f32 speed;
@@ -351,8 +143,121 @@ int fn_8019E3F4(int* obj)
     ObjAnim_AdvanceCurrentMove((int)obj, speed, timeDelta, 0);
     return 1;
 }
+
+void sandworm_turnTowardTargetAnim(int obj, int target, BabyCloudRunnerState* sub, int playMove)
+{
+    int shifted;
+    fn_8003ADC4((GameObject*)obj, (int*)target, sub->lookBlock, 0x28, 0, 3);
+    shifted = Obj_GetYawDeltaToObject((GameObject*)obj, (GameObject*)target, 0);
+    ((GameObject*)obj)->anim.rotX += (shifted >>= 3);
+    if (playMove == 0)
+        return;
+    if ((s16)shifted > -200 && (s16)shifted < 200)
+    {
+        if (sub->turnLatch != 0)
+        {
+            sub->turnLatch = 0;
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E4218, 0);
+        }
+        else
+        {
+            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E423C, timeDelta, 0);
+        }
+    }
+    else
+    {
+        if (sub->turnLatch == 0)
+        {
+            sub->turnLatch = 1;
+            ObjAnim_SetCurrentMove(obj, 9, lbl_803E4218, 0);
+        }
+        else
+        {
+            int t;
+            if ((int)(s16)shifted > 0)
+            {
+                t = (s16)shifted >> 2;
+            }
+            else
+            {
+                t = -(s16)shifted >> 2;
+            }
+            ObjAnim_AdvanceCurrentMove((int)obj, (f32)(s16)t / lbl_803E4240, timeDelta, 0);
+        }
+    }
+}
+
+
+/* Turn toward the target by a fraction of the yaw delta; when roughly aligned
+ * play/advance the idle move, otherwise start or speed-scale the turn move by
+ * the delta. */
+#pragma dont_inline off
 #pragma opt_common_subs reset
-#pragma dont_inline reset
+int babycloudrunner_tryCapture(void* p)
+{
+    int* obj;
+    int flag;
+    BabyCloudRunnerPlacement* r;
+    BabyCloudRunnerState* sub;
+    BabyCloudRunnerPlacement* q;
+    void* player;
+    obj = p;
+    sub = ((GameObject*)obj)->extra;
+    q = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
+    player = Obj_GetPlayerObject();
+    r = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
+    flag = 0;
+    if (Vec_distance(&((GameObject*)player)->anim.worldPosX, &((GameObject*)obj)->anim.worldPosX) <
+        (f32)(s16)r->innerRadius)
+    {
+        if (sub->runnerState == 3)
+        {
+            if ((((GameObject*)obj)->objectFlags & BABYCLOUDRUNNER_OBJFLAG_PARENT_SLACK) == 0)
+            {
+                flag = 1;
+            }
+        }
+    }
+    if (flag != 0)
+    {
+        s16toFloat(&sub->unk00, 0x3c);
+        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->anim.rotX = sub->roostYaw;
+        (*gObjectTriggerInterface)->runSequence(4, obj, -1);
+        sub->unk00 = lbl_803E4244;
+        gameBitIncrement(0x901);
+        sub->behaviourState = 0xc;
+        mainSetBits(q->enableBit, 1);
+        ((GameObject*)obj)->unkF4 = 0;
+        return 1;
+    }
+    objAudioFn_800393f8Legacy(obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
+    Sfx_PlayFromObject((int)obj, SFXTRIG_wp_ice_freeze);
+    return 0;
+}
+
+/* When the player gets within the trigger radius and the runner is in state 3,
+ * fire its burst (notify, bump the counter, set the gamebit); otherwise just
+ * play the idle audio cue. */
+int babycloudrunner_setScale(int* obj)
+{
+    BabyCloudRunnerState* state = ((GameObject*)obj)->extra;
+    return !(state->flags22C & 1);
+}
+
+
+/* Range-check the runner against the player and its trigger radii, chirp for
+ * queued cues, then steer toward the player (or Tricky) per the current
+ * behaviour state. */
+int babycloudrunner_getExtraSize(void);
+int babycloudrunner_getObjectTypeId(void);
+void babycloudrunner_free(int* obj);
+void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
+void babycloudrunner_hitDetect(void);
+void babycloudrunner_update(int* obj);
+void babycloudrunner_init(int* obj, u8* defBytes);
+void babycloudrunner_release(void);
+void babycloudrunner_initialise(void);
 
 int gBabyCloudRunnerAirMeterValues[4] = {0x1770, 0x2EE0, 0x2EE0, 0x3E80};
 
@@ -377,9 +282,6 @@ ObjectDescriptor12 gBabyCloudRunnerObjDescriptor = {
     (ObjectDescriptorCallback)babycloudrunner_tryCapture,
 };
 
-/* Range-check the runner against the player and its trigger radii, chirp for
- * queued cues, then steer toward the player (or Tricky) per the current
- * behaviour state. */
 int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
     BabyCloudRunnerPlacement* def = *(BabyCloudRunnerPlacement**)&((GameObject*)obj)->anim.placementData;
@@ -489,11 +391,46 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
+#pragma peephole on
+#pragma scheduling on
 
-/* Full runner brain - despawn on its gamebit, run the captured/timer flow,
- * follow its rom curve while fleeing, hand off to the nearest sandworm, and
- * once freed steer home to the roost point. */
+int babycloudrunner_getExtraSize(void)
+{
+    return 0x248;
+}
+
+int babycloudrunner_getObjectTypeId(void)
+{
+    return 0;
+}
+#pragma peephole off
+#pragma scheduling off
+
+void babycloudrunner_free(int* obj)
+{
+    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+    ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
+}
+#pragma scheduling on
+void babycloudrunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 isVisible;
+
+    isVisible = visible;
+    if (isVisible != 0)
+    {
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4228);
+    }
+    return;
+}
+
+#pragma peephole on
+void babycloudrunner_hitDetect(void)
+{
+}
 #pragma opt_common_subs off
+#pragma peephole off
+#pragma scheduling off
 void babycloudrunner_update(int* obj)
 {
     char* player;
@@ -722,5 +659,78 @@ void babycloudrunner_update(int* obj)
         }
     }
 }
+
+/* Pick the burrow/surface move from the vertical speed, clamp the playback
+ * rate, latch the spit SFX while surfacing fast, and advance the current
+ * move. */
 #pragma opt_common_subs reset
+void babycloudrunner_init(int* obj, u8* defBytes)
+{
+    BabyCloudRunnerState* sub;
+    BabyCloudRunnerPlacement* def = (BabyCloudRunnerPlacement*)defBytes;
+
+    ObjHits_EnableObject(obj);
+    ObjMsg_AllocQueue(obj, 4);
+    ((GameObject*)obj)->animEventCallback = babycloudrunner_SeqFn;
+    ((GameObject*)obj)->anim.rotX = (s16)(def->initialYaw << 8);
+    ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
+    sub = ((GameObject*)obj)->extra;
+    sub->unkB0 = 0;
+    sub->unkB4 = 0;
+    sub->unkB8 = 0;
+    sub->unkBC = 0;
+    sub->turnLatch = 0;
+    sub->behaviourState = def->behaviourState;
+    sub->unkCC = 0;
+    storeZeroToFloatParam(&sub->unk00);
+    sub->linkedObj = 0;
+    sub->roostYaw = ((GameObject*)obj)->anim.rotX;
+    sub->flags22C = 0;
+    sub->animSpeed = lbl_803E422C;
+    sub->runnerState = 0;
+    if (mainGetBit(def->runnerGameBit) != 0)
+    {
+        ObjHits_DisableObject(obj);
+        ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
+        sub->flags22C = (u8)(sub->flags22C & ~1);
+        Obj_RemoveFromUpdateList((u8*)obj);
+        ObjGroup_RemoveObject((int)obj, BABYCLOUDRUNNER_OBJGROUP);
+    }
+    else
+    {
+        sub->runnerIndex = def->runnerGameBit - 0x2fc;
+        if (((GameObject*)obj)->anim.seqId == 0x788)
+        {
+            sub->runnerIndex = -1;
+            sub->curveSpeed = lbl_803E4244;
+            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTableSpecial;
+        }
+        else
+        {
+            if (sub->runnerIndex < 0 || sub->runnerIndex > 4)
+            {
+                sub->runnerState = 3;
+            }
+            sub->curveSpeed = lbl_803E4258;
+            sub->mutterSfxTable = gBabyCloudRunnerMutterSfxTable;
+            ObjGroup_AddObject((int)obj, BABYCLOUDRUNNER_OBJGROUP_SECONDARY);
+        }
+        ((BabyCloudrunnerFlags*)&sub->spitFlags)->resetLatch = 0;
+    }
+}
+
+#pragma peephole on
+#pragma scheduling on
+
+void babycloudrunner_release(void)
+{
+}
+
+/* Full runner brain - despawn on its gamebit, run the captured/timer flow,
+ * follow its rom curve while fleeing, hand off to the nearest sandworm, and
+ * once freed steer home to the roost point. */
+
+void babycloudrunner_initialise(void)
+{
+}
 
