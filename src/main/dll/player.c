@@ -377,6 +377,7 @@ static inline ObjHitsPriorityState* Player_GetObjHitsState(GameObject* obj)
     return (ObjHitsPriorityState*)obj->anim.hitReactState;
 }
 #pragma optimization_level 1
+#pragma dont_inline on
 int playerStopRidingObject(GameObject* obj)
 {
     PlayerState* inner = obj->extra;
@@ -408,6 +409,7 @@ int playerStopRidingObject(GameObject* obj)
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma optimization_level reset
 
 void fn_80295918(GameObject* obj, int sel, f32 fval)
@@ -438,6 +440,7 @@ void fn_80295918(GameObject* obj, int sel, f32 fval)
     }
 }
 
+#pragma dont_inline on
 int fn_80295A04(GameObject* obj, int sel)
 {
     int state = *(int*)&obj->extra;
@@ -491,6 +494,7 @@ int fn_80295A04(GameObject* obj, int sel)
     }
     return 0;
 }
+#pragma dont_inline reset
 
 void objSetPos(GameObject* obj, f32 f1, f32 f2, f32 f3)
 {
@@ -12023,6 +12027,7 @@ void playerDie(GameObject* obj)
     AudioStream_Play(0x51e0, AudioStream_StartPrepared);
 }
 #pragma opt_propagation off
+#pragma dont_inline on
 void fn_802AABE4(int obj)
 {
     s16* movp;
@@ -12055,6 +12060,7 @@ void fn_802AABE4(int obj)
     }
     ObjAnim_WriteStateWord((ObjAnimComponent*)obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
+#pragma dont_inline reset
 #pragma opt_propagation reset
 
 void playerDrawTeleportAnim(GameObject* obj)
@@ -12134,6 +12140,7 @@ void playerDrawTeleportAnim(GameObject* obj)
     GXSetColorUpdate(1);
 }
 
+#pragma dont_inline on
 void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
 {
     int v;
@@ -12182,6 +12189,7 @@ void fn_802AAF80(GameObject* obj, int inner, int a, int b, int c)
         }
     }
 }
+#pragma dont_inline reset
 #pragma opt_strength_reduction off
 int fn_802AB1D0(GameObject* obj)
 {
@@ -14902,6 +14910,7 @@ void fn_802B066C(GameObject* obj, int state)
     }
 }
 
+#pragma dont_inline on
 void playerStaffInit(GameObject* obj, int state)
 {
     GameObject* child;
@@ -14944,6 +14953,7 @@ void playerStaffInit(GameObject* obj, int state)
         staffToggle(obj, 0);
     }
 }
+#pragma dont_inline reset
 
 
 void playerDoEyeAnims(GameObject* obj, int state)
@@ -17549,6 +17559,7 @@ void playerUpdateWhileTimeStopped(int obj)
 }
 #pragma opt_common_subs off
 #pragma opt_propagation off
+#pragma dont_inline on
 
 void playerUpdate(GameObject* obj)
 {
@@ -17671,7 +17682,7 @@ void playerUpdate(GameObject* obj)
             *(int*)((char*)inner + 0x310) = 0;
             for (i = 0; i < ((PlayerState*)inner)->queuedBitCount; i++)
             {
-                u32 acc = playerLoadPendingHitBits((char*)inner + 0x310);
+                u32 acc = *(u32*)((char*)inner + 0x310);
                 int idx = i + 0x8b9;
                 *(u32*)((char*)inner + 0x310) = acc | (1 << *(u8*)((char*)inner + idx));
             }
@@ -17834,6 +17845,7 @@ void playerUpdate(GameObject* obj)
         }
     }
 }
+#pragma dont_inline reset
 #pragma opt_common_subs reset
 #pragma opt_propagation reset
 
