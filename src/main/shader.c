@@ -2748,8 +2748,7 @@ void doPendingMapLoads(void)
                         }
                         ((ShaderRomListSlot*)(base + 0x418C))[slot].flag = 1;
                         gMapCurRomListSlot = slot;
-                        mapGetDirIdx(gShaderCurMapEventId);
-                        mapCheckCurBlocks(0);
+                        mapCheckCurBlocks(mapGetDirIdx(gShaderCurMapEventId));
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_TAB_A);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_BLOCKS_BIN_A);
                         mapLoadDataFile(mapGetDirIdx(gShaderCurMapEventId), MLDF_FILEID_VOXMAP_TAB_A);
