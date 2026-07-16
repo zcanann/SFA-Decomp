@@ -56,16 +56,6 @@ typedef void (*SeqObj11ESetMovePointerStateFn)(GameObject* obj, void* state, int
 
 #pragma scheduling off
 #pragma peephole off
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E27F8 = 200.0f;
-__declspec(section ".sdata2") f32 lbl_803E27FC = 300.0f;
-__declspec(section ".sdata2") f32 lbl_803E2800 = 0.0055555557f;
-__declspec(section ".sdata2") f32 lbl_803E2804 = 0.17f;
-__declspec(section ".sdata2") f32 lbl_803E2808 = 0.97f;
-__declspec(section ".sdata2") f32 lbl_803E280C = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E2810 = 2.5f;
-__declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
-#pragma explicit_zero_data off
 
 /* fn_80152040: state-table driver: walks the 12-byte gSeq11EStateTable state
  * rows, advancing on GameBit + sequence flags and kicking the matching anim. */
@@ -172,24 +162,19 @@ void fn_80152040(int* obj, u8* state)
     }
 }
 
-extern f32 lbl_803E27F8;
-extern f32 lbl_803E27FC;
-extern f32 lbl_803E2800;
-extern f32 lbl_803E2804;
-extern f32 lbl_803E2808;
 extern f32 lbl_803E280C;
 
 void guardClaw_init(int* obj, u8* state)
 {
     int* sub = *(int**)&((GameObject*)obj)->anim.placementData;
     f32 fz;
-    ((BaddieState*)state)->speedScale = lbl_803E27F8;
-    ((BaddieState*)state)->unk2A8 = lbl_803E27FC;
+    ((BaddieState*)state)->speedScale = 200.0f;
+    ((BaddieState*)state)->unk2A8 = 300.0f;
     ((BaddieState*)state)->unk2E4 = 1;
     ((BaddieState*)state)->unk2E4 |= 0xC80;
-    ((BaddieState*)state)->unk308 = lbl_803E2800;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2804;
-    ((BaddieState*)state)->unk304 = lbl_803E2808;
+    ((BaddieState*)state)->unk308 = 0.0055555557f;
+    ((BaddieState*)state)->animDeltaScale = 0.17f;
+    ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
     fz = lbl_803E280C;
     *(f32*)&((BaddieState*)state)->eventFlags = fz;
@@ -203,6 +188,12 @@ void guardClaw_init(int* obj, u8* state)
     }
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E280C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E2810 = 2.5f;
+__declspec(section ".sdata2") f32 lbl_803E2814 = 0.0f;
+#pragma explicit_zero_data off
 
 int gcRobotLight_init(GameObject* obj, int childId)
 {
@@ -474,35 +465,20 @@ void fn_80152514(int* obj, u8* state)
 }
 #pragma dont_inline off
 
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E2850 = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E2854 = 0.005f;
-__declspec(section ".sdata2") f32 lbl_803E2858 = 0.006f;
-__declspec(section ".sdata2") f32 lbl_803E285C = 0.99f;
-__declspec(section ".sdata2") f32 lbl_803E2860 = 100.0f;
-__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
-#pragma explicit_zero_data off
 
 /* scheduling stays off; only peephole flips on for the next two handlers */
 #pragma peephole on
 void gcRobotPatrol_init(GameObject* obj, int state)
 {
-    extern f32 lbl_803E2850;
-    extern f32 lbl_803E2854;
-    extern f32 lbl_803E2858;
-    extern f32 lbl_803E285C;
-    extern f32 lbl_803E2860;
-    f32 fz;
+                        f32 fz;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2850;
+    ((BaddieState*)state)->speedScale = 60.0f;
     *(u32*)&((BaddieState*)state)->unk2E4 = 41;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x7000;
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20000LL;
-    ((BaddieState*)state)->unk308 = lbl_803E2854;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2858;
-    ((BaddieState*)state)->unk304 = lbl_803E285C;
+    ((BaddieState*)state)->unk308 = 0.005f;
+    ((BaddieState*)state)->animDeltaScale = 0.006f;
+    ((BaddieState*)state)->unk304 = 0.99f;
     ((BaddieState*)state)->unk320 = 0;
     fz = 1.0f;
     *(f32*)&((BaddieState*)state)->eventFlags = fz;
@@ -511,9 +487,15 @@ void gcRobotPatrol_init(GameObject* obj, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fz;
     *(f32*)(state + 0x32c) = lbl_803E2814;
-    obj->anim.hitboxScale = lbl_803E2860;
+    obj->anim.hitboxScale = 100.0f;
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
+#pragma explicit_zero_data off
 
 void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
 {
