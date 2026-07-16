@@ -120,7 +120,7 @@ int gunpowderbarrel_canBeGrabbed(GameObject* obj)
     GunpowderBarrelState* state = obj->extra;
     int result = 0;
     if (state->heldByCarryInterface == 0 &&
-        state->respawnTimer == 0.0f &&
+        !state->respawnTimer &&
         (*(int (**)(GunpowderBarrelState*))(*(int*)gCarryableInterface + 0x14))(state) == 0)
     {
         result = 1;
