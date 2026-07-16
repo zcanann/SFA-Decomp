@@ -290,29 +290,108 @@ s32 Obj_BuildTransformMatrixSlot(GameObject* obj)
     return gObjTransformMatrixSlot - 1;
 }
 
-f32* Camera_GetViewRotationMatrix(void)
+void viewportEffectFn_8000e380(void)
 {
-    return gCameraViewRotationMatrix;
-}
+    CameraViewSlot* slot;
+    f32 expTerm;
+    f32 one;
+    f32 factorial;
+    f32 n;
+    f32 term;
+    f32 falloffTime;
+    f32 shakeTimer;
+    f32 sinePhase;
+    f32 phaseScale;
+    s32 i;
 
-f32* Camera_GetInverseViewRotationMatrix(void)
-{
-    return gCameraInverseViewRotationMatrix;
-}
+    gCameraViewportYOffset = cameraViewportYOffset;
+    if (gCameraFarPlaneTransitionFramesLeft != 0)
+    {
+        gCameraFarPlaneTransitionFramesLeft -= framesThisStep;
+        if (gCameraFarPlaneTransitionFramesLeft < 0)
+        {
+            gCameraFarPlaneTransitionFramesLeft = 0;
+        }
+        gCameraFarPlane = ((f32)gCameraFarPlaneTransitionFramesLeft / gCameraFarPlaneTransitionFrames) *
+                              (gCameraFarPlaneTransitionStart - gCameraFarPlaneTransitionTarget) +
+                          gCameraFarPlaneTransitionTarget;
+    }
 
-f32* Camera_GetViewMatrix(void)
-{
-    return gCameraViewMatrix;
-}
+    gObjTransformMatrixSlot = 0;
+    slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
 
-f32* Camera_GetInverseViewMatrix(void)
-{
-    return gCameraInverseViewMatrix;
-}
+    if (slot->shakeActive == 0)
+    {
+        slot->shakeFlipTimer--;
+        while (slot->shakeFlipTimer < 0)
+        {
+            slot->shakeFlipTimer++;
+            slot->shakeMagnitude = gCameraShakeMagnitudeDecay * -slot->shakeMagnitude;
+        }
+    }
+    else if (slot->shakeActive == 1)
+    {
+        falloffTime = -slot->shakeFalloff * (shakeTimer = slot->shakeTimer);
+        expTerm = *(f32*)&lbl_803DE5F0;
+        n = expTerm;
+        term = falloffTime;
+        factorial = expTerm;
+        one = expTerm;
 
-CameraViewSlot* Camera_GetCurrentViewSlot(void)
-{
-    return &gCameraShakeSlots[gCameraCurrentViewIndex];
+        for (i = 0; i < 2; i++)
+        {
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+            expTerm += term / factorial;
+            n += one;
+            term *= falloffTime;
+            factorial *= n;
+        }
+
+        phaseScale = lbl_803DE5FC * slot->shakeDuration;
+        sinePhase = (gCameraPi * (phaseScale * shakeTimer)) / lbl_803DE600;
+        slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * mathCosf(sinePhase);
+        if ((slot->shakeMagnitude < gCameraShakeStopThreshold) && (slot->shakeMagnitude > gCameraShakeStopThresholdNeg))
+        {
+            slot->shakeMagnitude = lbl_803DE60C;
+            slot->shakeActive = -1;
+        }
+        slot->shakeTimer += timeDelta / lbl_803DE610;
+    }
 }
 
 u8 CameraShake_IsActive(void)
@@ -420,31 +499,6 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
     transform->z += playerMapOffsetZ;
 }
 
-void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
-{
-    f32 coord;
-
-    if (outX != NULL)
-    {
-        coord = ndcX * (f32)(gCameraViewportScreenParams[0] >> 2);
-        coord = coord + (f32)(gCameraViewportScreenParams[4] >> 2);
-        *outX = coord;
-    }
-
-    if (outY != NULL)
-    {
-        coord = ndcY * (f32)(gCameraViewportScreenParams[1] >> 2);
-        coord = coord + (f32)(gCameraViewportScreenParams[5] >> 2);
-        *outY = coord;
-        *outY = 0x1E0 - *outY;
-    }
-
-    if (outZ != NULL)
-    {
-        *outZ = (s32)(gCameraDepth24BitMax * (lbl_803DE5F0 + ndcZ));
-    }
-}
-
 void screenFn_8000e944(void* viewportArg)
 {
     u32 resolution;
@@ -491,66 +545,28 @@ void screenFn_8000e944(void* viewportArg)
     gCameraCurrentViewIndex = 0;
 }
 
-void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ)
+void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
 {
-    f32 pos[3];
-    f32 w;
-    f32 invW;
+    f32 coord;
 
-    pos[0] = x;
-    pos[1] = y;
-    pos[2] = z;
-    PSMTXMultVec(gCameraViewMatrix, pos, pos);
-
-    *outViewZ = pos[2];
-    *outX = gCameraProjectionMatrix[3] + (gCameraProjectionMatrix[0] * pos[0] + gCameraProjectionMatrix[1] * pos[1] +
-                                          gCameraProjectionMatrix[2] * pos[2]);
-    *outY = gCameraProjectionMatrix[7] + (gCameraProjectionMatrix[4] * pos[0] + gCameraProjectionMatrix[5] * pos[1] +
-                                          gCameraProjectionMatrix[6] * pos[2]);
-    *outZ = gCameraProjectionMatrix[11] + (gCameraProjectionMatrix[8] * pos[0] + gCameraProjectionMatrix[9] * pos[1] +
-                                           gCameraProjectionMatrix[10] * pos[2]);
-
-    w = gCameraProjectionMatrix[15] + (gCameraProjectionMatrix[12] * pos[0] + gCameraProjectionMatrix[13] * pos[1] +
-                                       gCameraProjectionMatrix[14] * pos[2]);
-    if (lbl_803DE60C != w)
+    if (outX != NULL)
     {
-        invW = lbl_803DE5F0 / w;
-        *outX *= invW;
-        *outY *= invW;
-        *outZ *= invW;
+        coord = ndcX * (f32)(gCameraViewportScreenParams[0] >> 2);
+        coord = coord + (f32)(gCameraViewportScreenParams[4] >> 2);
+        *outX = coord;
     }
-}
 
-void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ)
-{
-    f32 pos[3];
-    f32 offsetVec[3];
-    f32 w;
-    f32 invW;
-
-    pos[0] = x;
-    pos[1] = y;
-    pos[2] = z;
-    PSMTXMultVec(gCameraViewMatrix, pos, pos);
-    PSVECNormalize(pos, offsetVec);
-    PSVECScale(offsetVec, offsetVec, offset);
-    PSVECSubtract(pos, offsetVec, pos);
-
-    *outX = gCameraProjectionMatrix[3] + (gCameraProjectionMatrix[0] * pos[0] + gCameraProjectionMatrix[1] * pos[1] +
-                                          gCameraProjectionMatrix[2] * pos[2]);
-    *outY = gCameraProjectionMatrix[7] + (gCameraProjectionMatrix[4] * pos[0] + gCameraProjectionMatrix[5] * pos[1] +
-                                          gCameraProjectionMatrix[6] * pos[2]);
-    *outZ = gCameraProjectionMatrix[11] + (gCameraProjectionMatrix[8] * pos[0] + gCameraProjectionMatrix[9] * pos[1] +
-                                           gCameraProjectionMatrix[10] * pos[2]);
-
-    w = gCameraProjectionMatrix[15] + (gCameraProjectionMatrix[12] * pos[0] + gCameraProjectionMatrix[13] * pos[1] +
-                                       gCameraProjectionMatrix[14] * pos[2]);
-    if (lbl_803DE60C != w)
+    if (outY != NULL)
     {
-        invW = lbl_803DE5F0 / w;
-        *outX *= invW;
-        *outY *= invW;
-        *outZ *= invW;
+        coord = ndcY * (f32)(gCameraViewportScreenParams[1] >> 2);
+        coord = coord + (f32)(gCameraViewportScreenParams[5] >> 2);
+        *outY = coord;
+        *outY = 0x1E0 - *outY;
+    }
+
+    if (outZ != NULL)
+    {
+        *outZ = (s32)(gCameraDepth24BitMax * (lbl_803DE5F0 + ndcZ));
     }
 }
 
@@ -600,110 +616,68 @@ void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* 
     }
 }
 
-void viewportEffectFn_8000e380(void)
+void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ)
 {
-    CameraViewSlot* slot;
-    f32 expTerm;
-    f32 one;
-    f32 factorial;
-    f32 n;
-    f32 term;
-    f32 falloffTime;
-    f32 shakeTimer;
-    f32 sinePhase;
-    f32 phaseScale;
-    s32 i;
+    f32 pos[3];
+    f32 offsetVec[3];
+    f32 w;
+    f32 invW;
 
-    gCameraViewportYOffset = cameraViewportYOffset;
-    if (gCameraFarPlaneTransitionFramesLeft != 0)
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    PSMTXMultVec(gCameraViewMatrix, pos, pos);
+    PSVECNormalize(pos, offsetVec);
+    PSVECScale(offsetVec, offsetVec, offset);
+    PSVECSubtract(pos, offsetVec, pos);
+
+    *outX = gCameraProjectionMatrix[3] + (gCameraProjectionMatrix[0] * pos[0] + gCameraProjectionMatrix[1] * pos[1] +
+                                          gCameraProjectionMatrix[2] * pos[2]);
+    *outY = gCameraProjectionMatrix[7] + (gCameraProjectionMatrix[4] * pos[0] + gCameraProjectionMatrix[5] * pos[1] +
+                                          gCameraProjectionMatrix[6] * pos[2]);
+    *outZ = gCameraProjectionMatrix[11] + (gCameraProjectionMatrix[8] * pos[0] + gCameraProjectionMatrix[9] * pos[1] +
+                                           gCameraProjectionMatrix[10] * pos[2]);
+
+    w = gCameraProjectionMatrix[15] + (gCameraProjectionMatrix[12] * pos[0] + gCameraProjectionMatrix[13] * pos[1] +
+                                       gCameraProjectionMatrix[14] * pos[2]);
+    if (lbl_803DE60C != w)
     {
-        gCameraFarPlaneTransitionFramesLeft -= framesThisStep;
-        if (gCameraFarPlaneTransitionFramesLeft < 0)
-        {
-            gCameraFarPlaneTransitionFramesLeft = 0;
-        }
-        gCameraFarPlane = ((f32)gCameraFarPlaneTransitionFramesLeft / gCameraFarPlaneTransitionFrames) *
-                              (gCameraFarPlaneTransitionStart - gCameraFarPlaneTransitionTarget) +
-                          gCameraFarPlaneTransitionTarget;
-    }
-
-    gObjTransformMatrixSlot = 0;
-    slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
-
-    if (slot->shakeActive == 0)
-    {
-        slot->shakeFlipTimer--;
-        while (slot->shakeFlipTimer < 0)
-        {
-            slot->shakeFlipTimer++;
-            slot->shakeMagnitude = gCameraShakeMagnitudeDecay * -slot->shakeMagnitude;
-        }
-    }
-    else if (slot->shakeActive == 1)
-    {
-        falloffTime = -slot->shakeFalloff * (shakeTimer = slot->shakeTimer);
-        expTerm = *(f32*)&lbl_803DE5F0;
-        n = expTerm;
-        term = falloffTime;
-        factorial = expTerm;
-        one = expTerm;
-
-        for (i = 0; i < 2; i++)
-        {
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-            expTerm += term / factorial;
-            n += one;
-            term *= falloffTime;
-            factorial *= n;
-        }
-
-        phaseScale = lbl_803DE5FC * slot->shakeDuration;
-        sinePhase = (gCameraPi * (phaseScale * shakeTimer)) / lbl_803DE600;
-        slot->shakeMagnitude = slot->shakeMagnitudeTarget * expTerm * mathCosf(sinePhase);
-        if ((slot->shakeMagnitude < gCameraShakeStopThreshold) && (slot->shakeMagnitude > gCameraShakeStopThresholdNeg))
-        {
-            slot->shakeMagnitude = lbl_803DE60C;
-            slot->shakeActive = -1;
-        }
-        slot->shakeTimer += timeDelta / lbl_803DE610;
+        invW = lbl_803DE5F0 / w;
+        *outX *= invW;
+        *outY *= invW;
+        *outZ *= invW;
     }
 }
 
+void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ)
+{
+    f32 pos[3];
+    f32 w;
+    f32 invW;
+
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    PSMTXMultVec(gCameraViewMatrix, pos, pos);
+
+    *outViewZ = pos[2];
+    *outX = gCameraProjectionMatrix[3] + (gCameraProjectionMatrix[0] * pos[0] + gCameraProjectionMatrix[1] * pos[1] +
+                                          gCameraProjectionMatrix[2] * pos[2]);
+    *outY = gCameraProjectionMatrix[7] + (gCameraProjectionMatrix[4] * pos[0] + gCameraProjectionMatrix[5] * pos[1] +
+                                          gCameraProjectionMatrix[6] * pos[2]);
+    *outZ = gCameraProjectionMatrix[11] + (gCameraProjectionMatrix[8] * pos[0] + gCameraProjectionMatrix[9] * pos[1] +
+                                           gCameraProjectionMatrix[10] * pos[2]);
+
+    w = gCameraProjectionMatrix[15] + (gCameraProjectionMatrix[12] * pos[0] + gCameraProjectionMatrix[13] * pos[1] +
+                                       gCameraProjectionMatrix[14] * pos[2]);
+    if (lbl_803DE60C != w)
+    {
+        invW = lbl_803DE5F0 / w;
+        *outX *= invW;
+        *outY *= invW;
+        *outZ *= invW;
+    }
+}
 #pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
@@ -719,8 +693,7 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     clipped = clipped - viewportY;
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
-#pragma dont_inline reset
-
+#pragma dont_inline off
 #pragma opt_common_subs off
 void Camera_UpdateProjection(void* viewportArg)
 {
@@ -851,6 +824,7 @@ f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
     return sqrtf(dz + (dx + dy));
 }
 
+
 void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
@@ -859,6 +833,7 @@ void Camera_SetCurrentViewRotation(int yaw, int pitch, int roll)
     slot->pitch = pitch;
     slot->roll = roll;
 }
+
 
 void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 {
@@ -869,6 +844,25 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
     slot->z = z;
 }
 
+f32* Camera_GetViewRotationMatrix(void)
+{
+    return gCameraViewRotationMatrix;
+}
+
+f32* Camera_GetInverseViewRotationMatrix(void)
+{
+    return gCameraInverseViewRotationMatrix;
+}
+
+f32* Camera_GetViewMatrix(void)
+{
+    return gCameraViewMatrix;
+}
+
+f32* Camera_GetInverseViewMatrix(void)
+{
+    return gCameraInverseViewMatrix;
+}
 #pragma optimization_level 2
 void Camera_UpdateViewMatrices(void)
 {
@@ -925,6 +919,7 @@ void Camera_UpdateViewMatrices(void)
     PSMTXCopy((f32*)(base + 5760), (f32*)(base + 5632));
     *(f32*)(base + 5632 + 44) = *(f32*)(base + 5632 + 28) = *(f32*)(base + 5632 + 12) = lbl_803DE60C;
 }
+
 #pragma optimization_level reset
 
 void Camera_ApplyFullViewport(void)
@@ -999,6 +994,11 @@ u16 fn_8000FA70(void)
 u16 fn_8000FA90(void)
 {
     return gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
+}
+
+CameraViewSlot* Camera_GetCurrentViewSlot(void)
+{
+    return &gCameraShakeSlots[gCameraCurrentViewIndex];
 }
 
 u8 Camera_IsViewYOffsetEnabled(void)
@@ -1103,9 +1103,9 @@ void Camera_SetFovY(f32 fovY)
     gCameraFovY = fovY;
 }
 
-#pragma ppc_unroll_speculative on
 #pragma ppc_unroll_factor_limit 3
 #pragma ppc_unroll_instructions_limit 80
+#pragma ppc_unroll_speculative on
 void Camera_InitState(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
