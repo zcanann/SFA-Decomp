@@ -223,7 +223,7 @@ main/objseq.c:
 	.sbss       start:0x803DD060 end:0x803DD128
 
 main/sky.c:
-	.text       start:0x80088758 end:0x8008EE18
+	.text       start:0x80088758 end:0x8008ED88
 	.rodata     start:0x802C1F80 end:0x802C1FA4
 	.data       start:0x8030F2C8 end:0x8030F5A0
 	.bss        start:0x8039A7A8 end:0x8039A818
@@ -231,7 +231,7 @@ main/sky.c:
 	.sbss       start:0x803DD128 end:0x803DD190
 
 main/newclouds.c:
-	.text       start:0x8008EE18 end:0x8009436C
+	.text       start:0x8008ED88 end:0x8009436C
 	.rodata     start:0x802C1FA8 end:0x802C1FD8
 	.data       start:0x8030F5A0 end:0x8030F7B0
 	.bss        start:0x8039A818 end:0x8039AB28

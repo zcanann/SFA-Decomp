@@ -223,6 +223,36 @@ void lightningRender(LightningEffect* p)
     srand(savedSeed);
 }
 
+f32 fn_8008ED88(void)
+{
+    u8* state;
+    u16 totalFrames;
+    u16 currentFrame;
+
+    state = (u8*)lbl_803DD19C;
+    if (state != NULL)
+    {
+        totalFrames = *(u16*)(state + 0x22);
+        currentFrame = *(u16*)(state + 0x20);
+        return (f32)(s32)(totalFrames - currentFrame) / totalFrames;
+    }
+    return lbl_803DF1A0;
+}
+
+void fn_8008EDE8(f32* out)
+{
+    u8* state;
+
+    state = (u8*)lbl_803DD19C;
+    if (state == NULL)
+    {
+        return;
+    }
+    out[0] = *(f32*)(state + 0);
+    out[1] = *(f32*)((u8*)lbl_803DD19C + 4);
+    out[2] = *(f32*)((u8*)lbl_803DD19C + 8);
+}
+
 void lightningDrawStrand(f32* from, f32* to, int width, f32 segScale, int* seed)
 {
     int segs;

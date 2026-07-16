@@ -174,12 +174,10 @@ extern f32 lbl_803DF138;
 extern f32 lbl_803DF13C;
 extern f32 lbl_803DF140;
 extern const f32 lbl_803DF144;
-extern f32 lbl_803DF1A0;
 extern u8 colorScale;
 extern int lbl_803DB610;
 extern s8 gSky2DrawMode;
 extern u8* gSky2State;
-extern u8* lbl_803DD19C;
 extern u8 gSkySunPositionPrev;
 extern f32 gSkySunDirection[];
 extern f32 gSkyMoonDirection[];
@@ -954,20 +952,6 @@ void sky2_initialise(void)
 }
 #pragma opt_propagation reset
 
-void fn_8008EDE8(f32* out)
-{
-    u8* state;
-
-    state = lbl_803DD19C;
-    if (state == NULL)
-    {
-        return;
-    }
-    out[0] = *(f32*)(state + 0);
-    out[1] = *(f32*)(lbl_803DD19C + 4);
-    out[2] = *(f32*)(lbl_803DD19C + 8);
-}
-
 int fn_8008B71C(int slot)
 {
     u8* sky;
@@ -1027,22 +1011,6 @@ int dll_06_func0F(void)
         return 0xff;
     }
     return (int)(lbl_803DF118 * ((y - lbl_803DF138) / lbl_803DF140));
-}
-
-f32 fn_8008ED88(void)
-{
-    u8* state;
-    u16 totalFrames;
-    u16 currentFrame;
-
-    state = lbl_803DD19C;
-    if (state != NULL)
-    {
-        totalFrames = *(u16*)(state + 0x22);
-        currentFrame = *(u16*)(state + 0x20);
-        return (f32)(s32)(totalFrames - currentFrame) / totalFrames;
-    }
-    return lbl_803DF1A0;
 }
 
 int return0_80088758(void)
