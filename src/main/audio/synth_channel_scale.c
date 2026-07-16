@@ -120,28 +120,58 @@ static inline void synthHandleKeyOffCallbacks(void)
     gSynthCurrentVoice->counter = (gSynthCurrentVoice->counter + 1) % 5;
 }
 
+static inline void synthSetTickDelta(SynthStream* section, u32 deltaTime, f32 c0, f32 c1, f32 range, f64 absRange)
+{
+    f32 tickDelta = c0 * ((f32)section->cur * deltaTime);
+    tickDelta = tickDelta * (c1 * (f32)(u32)section->vol);
+
+    section->d[section->idx].step = sal_fmod(range * tickDelta, range, absRange);
+    *(int*)&section->d[section->idx].delta = floorf(tickDelta);
+}
+
+static inline void synthHandleMasterTrack(u8 secIndex)
+{
+    SynthStream* section;
+    u32* evt;
+
+    section = &gSynthCurrentVoice->streams[secIndex];
+    if (section->base != NULL)
+    {
+        while (*(evt = section->evt) != 0xffffffff)
+        {
+            if (*evt > section->o[section->idx].out)
+            {
+                break;
+            }
+            if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0)
+            {
+                synthSetStudioChannelScale((section->cur = evt[1]) >> 10, gSynthCurrentVoiceSlotIndex, secIndex);
+            }
+            else
+            {
+                synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex, secIndex);
+                section->cur = section->evt[1] << 10;
+            }
+            section->evt = section->evt + 2;
+        }
+    }
+}
+
 void fn_8026EC44(u32 dt)
 {
-    SynthSong* cs;
-    u32* evt;
-    int i;
-    int hasFree;
     u32 sum;
-    int cnt;
-    SynthStream* st;
-    u32 ch;
+    u32 i;
+    u32 j;
     u32 ret;
     u32 cb;
     SynthSong* song;
     SynthSong* next;
+    SynthSong* cs;
+    u8 fade;
     f32 c0;
     f64 absRange;
     f32 range;
     f32 c1;
-    f32 freq;
-    u8 fade;
-    /* never referenced; reserves stack to match the retail frame (0xB0) */
-    f32 unusedA[4];
 
     if (dt != 0)
     {
@@ -160,91 +190,39 @@ void fn_8026EC44(u32 dt)
             lbl_803DE224 = fade;
             if (cs->multiMode == 0)
             {
-                st = (SynthStream*)((u8*)cs + 0x14E8);
-                if (st->base != NULL)
-                {
-                    while (*(evt = st->evt) != 0xffffffff)
-                    {
-                        if (*evt > st->o[st->idx].out)
-                        {
-                            break;
-                        }
-                        if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0)
-                        {
-                            synthSetStudioChannelScale((st->cur = evt[1]) >> 10, gSynthCurrentVoiceSlotIndex, 0);
-                        }
-                        else
-                        {
-                            synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex, 0);
-                            st->cur = st->evt[1] << 10;
-                        }
-                        st->evt = st->evt + 2;
-                    }
-                }
-                cs = gSynthCurrentVoice;
-                st = &cs->streams[0];
-                freq = c0 * ((f32)st->cur * dt);
-                freq = freq * (c1 * (f32)(u32)st->vol);
-                st->d[st->idx].step = sal_fmod(range * freq, range, absRange);
-                *(int*)&st->d[st->idx].delta = floorf(freq);
+                synthHandleMasterTrack(0);
+                synthSetTickDelta(gSynthCurrentVoice->streams, dt, c0, c1, range, absRange);
                 ret = fn_8026E9D0(0, dt);
                 cb = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
-                sum = gSynthCurrentVoice->streams[0].o[0].acc + gSynthCurrentVoice->streams[0].d[0].step;
-                gSynthCurrentVoice->streams[0].o[0].acc = sum & 0xffff;
-                sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[0].out += sum + gSynthCurrentVoice->streams[0].d[0].delta;
-                sum = gSynthCurrentVoice->streams[0].o[1].acc + gSynthCurrentVoice->streams[0].d[1].step;
-                gSynthCurrentVoice->streams[0].o[1].acc = sum & 0xffff;
-                sum = sum >> 16;
-                gSynthCurrentVoice->streams[0].o[1].out += sum + gSynthCurrentVoice->streams[0].d[1].delta;
+                for (i = 0; i < 2; ++i)
+                {
+                    sum = gSynthCurrentVoice->streams[0].o[i].acc + gSynthCurrentVoice->streams[0].d[i].step;
+                    gSynthCurrentVoice->streams[0].o[i].acc = sum & 0xffff;
+                    sum = sum >> 16;
+                    gSynthCurrentVoice->streams[0].o[i].out += sum + gSynthCurrentVoice->streams[0].d[i].delta;
+                }
             }
             else
             {
                 ret = 0;
-                for (ch = 0; ch < 0x10; ch++)
+                for (i = 0; i < 0x10; i++)
                 {
-                    st = &gSynthCurrentVoice->streams[(u8)ch];
-                    if (st->base != NULL)
-                    {
-                        while (*(evt = st->evt) != 0xffffffff)
-                        {
-                            if (*evt > st->o[st->idx].out)
-                            {
-                                break;
-                            }
-                            if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0)
-                            {
-                                synthSetStudioChannelScale((st->cur = evt[1]) >> 10, gSynthCurrentVoiceSlotIndex, ch);
-                            }
-                            else
-                            {
-                                synthSetStudioChannelScale(evt[1], gSynthCurrentVoiceSlotIndex, ch);
-                                st->cur = st->evt[1] << 10;
-                            }
-                            st->evt = st->evt + 2;
-                        }
-                    }
-                    cs = gSynthCurrentVoice;
-                    st = &cs->streams[ch];
-                    freq = c0 * ((f32)st->cur * dt);
-                    freq = freq * (c1 * (f32)(u32)st->vol);
-                    st->d[st->idx].step = sal_fmod(range * freq, range, absRange);
-                    *(int*)&st->d[st->idx].delta = floorf(freq);
-                    ret |= fn_8026E9D0(ch, dt);
+                    synthHandleMasterTrack(i);
+                    synthSetTickDelta(&gSynthCurrentVoice->streams[i], dt, c0, c1, range, absRange);
+                    ret |= fn_8026E9D0(i, dt);
                 }
                 cb = synthUpdateCallbacks();
                 synthHandleKeyOffCallbacks();
                 for (i = 0; i < 16; i++)
                 {
-                    sum = gSynthCurrentVoice->streams[i].o[0].acc + gSynthCurrentVoice->streams[i].d[0].step;
-                    gSynthCurrentVoice->streams[i].o[0].acc = sum & 0xffff;
-                    sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[0].out += sum + gSynthCurrentVoice->streams[i].d[0].delta;
-                    sum = gSynthCurrentVoice->streams[i].o[1].acc + gSynthCurrentVoice->streams[i].d[1].step;
-                    gSynthCurrentVoice->streams[i].o[1].acc = sum & 0xffff;
-                    sum = sum >> 16;
-                    gSynthCurrentVoice->streams[i].o[1].out += sum + gSynthCurrentVoice->streams[i].d[1].delta;
+                    for (j = 0; j < 2; ++j)
+                    {
+                        sum = gSynthCurrentVoice->streams[i].o[j].acc + gSynthCurrentVoice->streams[i].d[j].step;
+                        gSynthCurrentVoice->streams[i].o[j].acc = sum & 0xffff;
+                        sum = sum >> 16;
+                        gSynthCurrentVoice->streams[i].o[j].out += sum + gSynthCurrentVoice->streams[i].d[j].delta;
+                    }
                 }
             }
             if ((ret == 0) && (cb == 0))
