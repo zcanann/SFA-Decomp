@@ -44,14 +44,11 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
  * which suspends the normal map-act scripted update for that tick. */
 #define DLL200_MODE_HITREACTING 0x80
 
-extern ObjHitReactEntry gArwingAttachmentHitReactTable[];
 extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5D98;
 const ItemIdSet3 gArwingAttachmentItemSetWander = {0x166, 0x167, 0x256};
 const ItemIdSet3 gArwingAttachmentItemSetIdle = {0x166, 0x167, 0x256};
 extern f32 lbl_803E5D9C;
-extern ArwAttachTarget gArwingAttachmentTargets[];
-extern char sArwingAttachmentDiffFormat[];
 extern f32 lbl_803E5DA8;
 extern f32 lbl_803E5DAC;
 extern f32 lbl_803E5DB0;

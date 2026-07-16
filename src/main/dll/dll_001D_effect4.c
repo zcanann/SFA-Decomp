@@ -19,31 +19,12 @@ f32 gEffect4SpawnCyclePhaseSlow = 0.3f;
 f32 gEffect4TickCyclePhaseFast = 0.1f;
 f32 gEffect4TickCyclePhaseSlow = 0.3f;
 
-extern f32 gEffect4TickCyclePhaseFast;
-extern f32 gEffect4TickCyclePhaseSlow;
-extern int gEffect4SinPhaseCounterA;
-extern int gEffect4SinPhaseCounterB;
-extern f32 gEffect4SinValueB;
-extern f32 gEffect4SinValueA;
-extern f32 lbl_803DF878;
 extern f32 lbl_803DFA88;
 extern f32 lbl_803DFA8C;
 extern f32 lbl_803DFA90;
 extern f32 lbl_803DFA98;
 extern f32 gEffect4Pi;
 extern f32 gEffect4SinPhaseScale;
-extern f32 lbl_803DFCE0;
-extern FxNode9 lbl_8039C398;
-extern FxNode9 lbl_8039C380;
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-extern f32 gEffect4SpawnCyclePhaseFast;
-extern f32 gEffect4SpawnCyclePhaseSlow;
 extern f32 gEffect4SpawnCyclePhaseSlowStep;
 extern f32 lbl_803DFA9C;
 extern f32 lbl_803DFAA0;
@@ -121,7 +102,6 @@ extern f32 lbl_803DFBBC;
 extern f32 lbl_803DFBC0;
 extern f32 lbl_803DFBC4;
 extern f32 lbl_803DFBC8;
-extern FxNode9 lbl_8039C320;
 
 void Effect4_func03_nop(void)
 {

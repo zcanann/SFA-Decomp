@@ -48,10 +48,6 @@ int gWarpStoneUiMenuActive;
 extern f32 lbl_803E22E0;
 extern f32 lbl_803E22D8;
 extern f32 lbl_803E22DC;
-extern int lbl_803DBBF8;
-extern int lbl_803DBBFC;
-extern int lbl_803DBC00;
-extern int lbl_803DBC04;
 extern u8 gWarpStoneUiMenuItemTemplates[];
 extern int* gTitleMenuLinkInterface;
 

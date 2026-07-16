@@ -44,15 +44,7 @@ s32 gBoneParticleBufferFlip;
 #define GX_CULL_NONE 0
 
 extern void* gBoneParticleEffectBuffers[];
-extern void* gBoneParticleTextureA;
-extern void* gBoneParticleTextureB;
-extern s16 gBoneParticleEffectTimer;
-extern s16 gBoneParticleStageIndex;
-extern s32 lbl_803DD2B0;
-extern s32 gBoneParticleScrollOffset;
-extern f32 gBoneParticleDrift;
 extern f32 gBoneParticleDriftVelocity;
-extern s32 gBoneParticleBufferFlip;
 union BoneParticleConstF32 { f32 f; };
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };

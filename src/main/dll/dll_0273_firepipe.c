@@ -58,11 +58,6 @@ int lbl_803DC350 = 0x0A;
 #define FIREPIPE_OBJFLAG_UPDATE_DISABLED 0x8000
 extern void Obj_InsertIntoUpdateList(int obj);
 
-extern f32 lbl_803DC340;
-extern f32 lbl_803DC344;
-extern s16 lbl_803DC348;
-extern f32 lbl_803DC34C;
-extern int lbl_803DC350;
 extern f32 lbl_803E6B70;
 extern f32 lbl_803E6B74;
 extern f32 lbl_803E6B78;

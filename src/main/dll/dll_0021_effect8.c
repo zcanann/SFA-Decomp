@@ -21,22 +21,12 @@ f32 lbl_803DB814 = 0.3f;
 f32 lbl_803DB818 = 0.1f;
 f32 lbl_803DB81C = 0.3f;
 
-extern f32 lbl_803DB818;
-extern f32 lbl_803DB81C;
-extern int gModgfxSinePhaseA;
-extern int gModgfxSinePhaseB;
-extern f32 gModgfxSineWaveB;
-extern f32 gModgfxSineWaveA;
-extern f32 lbl_803DF878;
-extern f32 lbl_803DFCE0;
 extern f32 lbl_803DFD98;
 extern f32 lbl_803DFD9C;
 extern f32 lbl_803DFDA8;
 extern f32 gModgfxPi;
 extern f32 lbl_803DFE24;
 extern FxNode9 lbl_8039C380;
-extern f32 lbl_803DB810;
-extern f32 lbl_803DB814;
 extern f32 lbl_803DFDA4;
 extern f32 lbl_803DFDB0;
 extern f32 lbl_803DFDB4;
@@ -63,14 +53,6 @@ extern f32 lbl_803DFE04;
 extern f32 lbl_803DFE08;
 extern f32 lbl_803DFE0C;
 extern f32 lbl_803DFE10;
-extern FxNode9 lbl_8039C338;
-extern f32 lbl_803DF884;
-extern FxNode9 lbl_8039C368;
-extern f32 lbl_803DFCEC;
-extern FxNode9 lbl_8039C350;
-extern f32 lbl_803DF9D0;
-extern f32 lbl_803DF9D4;
-extern FxNode9 lbl_8039C320;
 
 void Effect8_func03_nop(void)
 {

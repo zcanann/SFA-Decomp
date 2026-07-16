@@ -31,10 +31,6 @@ u32 lbl_803DD4A8;
 u32 lbl_803DD4A4;
 u32 lbl_803DD4A0;
 
-extern u32 lbl_803DD4A0;
-extern u32 lbl_803DD4A4;
-extern u32 lbl_803DD4A8;
-extern u32 lbl_803DD4AC;
 extern char* sMapDirectoryNameTable[];
 extern u8 lbl_803A4218[];
 extern s16 lbl_803119E0[];

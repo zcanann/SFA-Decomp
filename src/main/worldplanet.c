@@ -56,9 +56,6 @@ extern f32 lbl_803E6618;
  * [2] Dinosaur Planet (== WORLDPLANET_GAMEBIT_WORLD_MAP_OPEN, always set),
  * [3] Dragon Rock, [4] DarkIce Mines. */
 int gWorldPlanetGameBitTable[WORLDPLANET_PLANET_COUNT] = {1019, 1018, 2659, 1020, 1017};
-extern u8 gWorldPlanetHintFlagTable[8];
-extern u8 gWorldPlanetDefaultSelectOrder[8];
-extern int gWorldPlanetSavedSelection;
 extern int gWorldPlanetSelectConfirmTimer;
 extern u8 gWorldPlanetExitWarpTimer;
 extern s16 gWorldPlanetInputLockTimer;
@@ -73,12 +70,7 @@ extern f32 lbl_803DDD00;
 extern s16 gWorldPlanetReselectDelayTimer;
 extern int lbl_803DDD10;
 extern int gWorldPlanetObjectIdTable[3][5]; /* [row][WorldPlanetSlot]; see definition for row meanings */
-extern u8 gWorldPlanetSelectionToIndex[8];
-extern u8 gWorldPlanetTitleStringIds[8];
 /* per-planet mission-briefing speaker model (WorldMapBriefingSpeaker), indexed by WorldPlanetSlot */
-extern u8 gWorldPlanetBriefingSpeakerModel[8];
-extern u8 gWorldPlanetLoadMapIndices[6];
-extern u8 gWorldPlanetWarpMapIndices[6];
 
 extern float fsin16Approx(int angle);
 extern float fcos16Approx(int angle);

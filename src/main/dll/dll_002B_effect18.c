@@ -19,14 +19,6 @@ f32 gEffect18Progress1 = 0.3f;
 f32 gEffect18Progress2 = 0.1f;
 f32 gEffect18Progress3 = 0.3f;
 
-extern f32 gEffect18Progress2;
-extern f32 gEffect18Progress3;
-extern s32 gEffect18SinePhaseA;
-extern s32 gEffect18SinePhaseB;
-extern f32 gEffect18SineValueB;
-extern f32 gEffect18SineValueA;
-extern f32 gEffect18Progress0;
-extern f32 gEffect18Progress1;
 
 ObjectDescriptor6 lbl_80311038 = {
     0,

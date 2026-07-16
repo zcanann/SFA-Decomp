@@ -41,9 +41,6 @@ extern int lbl_803DCE68;
 extern int lbl_803DCE6C;
 extern int gTexIndMtxTable[];
 extern u8 lbl_8037E0C0[];
-extern int gTexShaderAmbColor;
-extern int gTexLightmapAmbColor;
-extern s8 gTexIndMtxScaleExp;
 extern int lbl_80382008[5];
 #define FRUSTUM_PLANE_COUNT 5
 extern FrustumPlane gViewFrustumPlanes[FRUSTUM_PLANE_COUNT];

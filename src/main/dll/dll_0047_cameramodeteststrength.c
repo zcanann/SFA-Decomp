@@ -19,7 +19,6 @@ CamCannonState* lbl_803DD560;
 /* Release camera back to the default gameplay mode on exit (cameramode DLL 0x42). */
 #define CAMTESTSTRENGTH_CAMMODE_DEFAULT 0x42
 
-extern CamCannonState* lbl_803DD560;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
 extern f32 lbl_803E1890;

@@ -96,7 +96,6 @@ extern f32 gMagicPlantIdleAnimStep;
 extern f32 lbl_803E3890;
 extern f32 gMagicPlantBuzzStartDist;
 extern f32 gMagicPlantBuzzStopDist;
-extern s16 gMagicPlantGemDefIds[4];
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();

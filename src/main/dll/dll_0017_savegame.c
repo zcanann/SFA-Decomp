@@ -183,16 +183,10 @@ typedef struct MapBitTransient
     s8 timer;
 } MapBitTransient;
 
-extern u8 saveGameLoadStatus;
-extern s8 gSaveGameCurrentSlot;
-extern u8* lbl_803DD498;
 extern f32 lbl_803E06C8;
 extern f32 lbl_803E06CC;
 extern u16 gSaveGameMapActBits[];
 extern u16 gSaveGameMapObjGroupBits[];
-extern int gSaveGameObjGroupCacheIdx;
-extern s8 gSaveGameMapActCacheIdx;
-extern u32 pRestartPoint;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 const SaveGameDefaultPosition gSaveGameDefaultPosition = {

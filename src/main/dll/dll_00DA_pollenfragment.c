@@ -78,8 +78,6 @@ typedef struct PollenFragmentExtra
 extern f32 lbl_803E3198;
 extern f32 lbl_803E319C;
 extern f32 lbl_803E3158;
-extern f32 lbl_803DBD48;
-extern f32 lbl_803DBD4C;
 extern const f32 lbl_803E315C;
 extern f32 lbl_803E3160;
 extern const f32 lbl_803E3164;

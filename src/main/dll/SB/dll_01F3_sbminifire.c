@@ -62,7 +62,6 @@ STATIC_ASSERT(sizeof(SBKyteCageState) == 0x8);
 
 STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
-extern int gSbMiniFireResourceVariant;
 
 int SB_MiniFire_getExtraSize(void)
 {

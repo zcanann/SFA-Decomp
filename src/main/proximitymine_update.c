@@ -34,17 +34,10 @@ f32 lbl_803DC24C = 0.5f;
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E6778;
-extern f32 lbl_803DC234;
-extern u8 lbl_803DC238;
-extern f32 lbl_803DC23C;
-extern u8 lbl_803DC240;
-extern f32 lbl_803DC244;
-extern f32 lbl_803DC248;
 extern f32 lbl_803E677C;
 extern f32 lbl_803E6780;
 extern f32 gProximityMineMinVelocityY;
 extern f32 gProximityMineGravityAccel;
-extern s32 lbl_803DC230;
 extern f32 lbl_803E6774;
 extern f32 gProximityMineHeightScale;
 extern f32 lbl_803E679C;

@@ -76,37 +76,19 @@ typedef struct
     MmRegion regions[8];
 } MmGlobal;
 
-extern u8 lbl_803DCB10;
-extern int gMmFreeDelay;
-extern int gMmOpCount;
-extern int gMmUseHeap3;
-extern int gMmUseHeaps1and2;
 extern void* gAttractMovieScratchBuffer;
-extern u8 gMmRegionCount;
 extern char sMmFreeInvalidLocationError[];
 extern char sMmAllocFreeMessageBlock[];
-extern int gMmLastFreeTick;
 extern char sMmStbfStackTooDeepError[];
-extern s16 gMmDeferredFreeCount;
 extern char sMmShowInfoFBMemoryStoreMessageBlock[];
 
-extern int gMmNextStoreHandle;
-extern int gMmStatsPrintCounter;
-extern int gMmTickCount;
 extern char sMemStatsFormat[];
-extern int gMmRegion0Used;
-extern int gMmRegion1Used;
-extern int gMmRegion2Used;
-extern int gMmRegion3Used;
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 extern int __OSCurrHeap;
-extern int gMmRegion0Size;
 extern void* lbl_803DD498;
 extern void* lbl_803DCAFC;
 extern char sMmSpawnedUnalignedSlotWarning[];
-extern int gMmRegion0SpawnEnabled;
-extern int gMmNextAllocId;
 extern int lbl_803DCC7C;
 extern char sMmFreeMemoryUsageCorruptedError[];
 

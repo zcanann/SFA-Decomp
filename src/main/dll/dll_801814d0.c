@@ -55,9 +55,6 @@ STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 /* Group of carryable/blockable objects the duster blast applies area damage to. */
 #define DUSTER_AREADAMAGE_OBJGROUP 0x10
 
-extern int lbl_803DBDA0;
-extern f32 lbl_803DBDA4;
-extern f32 lbl_803DBDA8;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 

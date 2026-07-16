@@ -42,7 +42,6 @@ typedef struct
 
 extern f32 lbl_803E6678;
 int gWorldObjEffectRenderDelay;
-extern u8 gWorldObjVariantAlphaTable[8];
 int gWorldObjEffectTargetObj;
 extern f32 lbl_803E6668;
 extern f32 lbl_803E66B4;

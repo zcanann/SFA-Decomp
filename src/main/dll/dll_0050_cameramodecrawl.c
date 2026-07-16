@@ -30,7 +30,6 @@
 
 CameraModeCrawlState* lbl_803DD598;
 
-extern CameraModeCrawlState* lbl_803DD598;
 
 void CameraModeCrawl_copyToCurrent(void* param1, int param2)
 {

@@ -36,14 +36,6 @@ f32 gEffect16ScrollPhaseB = 0.3f;
 f32 gEffect16TimedScrollPhaseA = 0.1f;
 f32 gEffect16TimedScrollPhaseB = 0.3f;
 
-extern f32 gEffect16ScrollPhaseA;
-extern f32 gEffect16ScrollPhaseB;
-extern f32 gEffect16TimedScrollPhaseA;
-extern f32 gEffect16TimedScrollPhaseB;
-extern s32 gEffect16SinPhaseCounterA;
-extern s32 gEffect16SinPhaseCounterB;
-extern f32 gEffect16SinValueB;
-extern f32 gEffect16SinValueA;
 extern f32 lbl_803E00A8;
 extern f32 lbl_803E00AC;
 extern f32 lbl_803E00B0;

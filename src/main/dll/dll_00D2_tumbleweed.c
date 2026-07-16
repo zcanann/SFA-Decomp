@@ -45,7 +45,6 @@ extern const f32 lbl_803E2FC8;
 extern const f32 lbl_803E2FCC;
 extern const f32 lbl_803E2FD0;
 extern const f32 lbl_803E2FB4;
-extern u8 gTumbleweedCollisionPointData[8];
 extern u8 gTumbleweedCollisionPoint[0xc];
 extern void fn_80163990(int obj, int aux);
 extern const f32 lbl_803E2FA0;

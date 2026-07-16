@@ -25,7 +25,6 @@ u8 lbl_803DB940[8] = {0, 4, 0, 5, 0, 6, 0, 7};
 
 
 extern u8 lbl_80317528[];
-extern u8 lbl_803DB940[8];
 /* contiguous .sdata2 float constant table, 0x803E1298..0x803E12B8 (0x24 bytes);
    declared as individual scalars because the array form changes the access reloc */
 extern f32 lbl_803E1298;

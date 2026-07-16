@@ -35,16 +35,10 @@ f32 gEffect20SpawnScrollB = 0.3f;
 f32 gEffect20StepScrollA = 0.1f;
 f32 gEffect20StepScrollB = 0.3f;
 
-extern f32 gEffect20StepScrollA;
-extern f32 gEffect20StepScrollB;
 extern f32 lbl_803E0310;
 extern f32 lbl_803E0314;
 extern f32 gEffect20DefaultScale;
 extern f32 lbl_803E0320;
-extern s32 gEffect20SinePhase0;
-extern s32 gEffect20SinePhase1;
-extern f32 gEffect20SineValue1;
-extern f32 gEffect20SineValue0;
 extern f32 gEffect20Pi;
 extern f32 lbl_803E0348;
 
@@ -55,8 +49,6 @@ extern f32 lbl_803E0348;
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-extern f32 gEffect20SpawnScrollA;
-extern f32 gEffect20SpawnScrollB;
 extern f32 lbl_803E031C;
 extern f32 lbl_803E0324;
 extern f32 lbl_803E0328;

@@ -896,7 +896,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 extern int isRomListLoading(void);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];
-extern int lbl_803DB620;
 
 typedef struct ShaderRomListSlot
 {
@@ -2182,15 +2181,12 @@ extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
 extern int gMapBlockOriginX;
 extern int gMapBlockOriginZ;
-extern int gMapBlockOriginWorldX;
-extern int gMapBlockOriginWorldZ;
 extern f32 gMapSavedPlayerOffsetX;
 extern f32 gMapSavedPlayerOffsetZ;
 extern int gMapCurRomListSlot;
 extern u8 gMapLoadDeferred;
 extern u8 bEnableBlurFilter;
 extern u8 bEnableMotionBlur;
-extern f32 lbl_803DB62C;
 extern int lbl_803DCE00;
 extern u8 lbl_803DCEBD;
 extern f32 gShaderDefaultTimeOfDay;
@@ -2406,7 +2402,6 @@ void beginLoadingMap(void)
 
 extern void loadModelAndAnimTabs(void);
 
-extern char sTrackPiLockedFormat[];
 extern s8* gMapLayerCellStates;
 extern int gMapPendingFileFlags;
 extern int* gMapBlockIndexList;
@@ -2991,7 +2986,6 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 
 extern void* lbl_803DCEA8;
 extern int lbl_803DCE74;
-extern char sTrackCellCoordFormat[];
 
 #pragma optimization_level 2
 void mapDebugRender(int* state)

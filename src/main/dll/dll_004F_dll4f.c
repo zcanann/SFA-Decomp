@@ -11,7 +11,6 @@
 
 CameraMode4FState* gCameraMode4FState;
 
-extern CameraMode4FState* gCameraMode4FState;
 
 #pragma scheduling off
 #pragma peephole off

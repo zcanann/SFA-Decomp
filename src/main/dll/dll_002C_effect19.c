@@ -32,14 +32,6 @@ f32 gEffect19ScrollPhase1 = 0.3f;
 f32 gEffect19ScrollPhase2 = 0.1f;
 f32 gEffect19ScrollPhase3 = 0.3f;
 
-extern f32 gEffect19ScrollPhase2;
-extern f32 gEffect19ScrollPhase3;
-extern s32 gEffect19Osc0Angle;
-extern s32 gEffect19Osc1Angle;
-extern f32 gEffect19Osc1Value;
-extern f32 gEffect19Osc0Value;
-extern f32 gEffect19ScrollPhase0;
-extern f32 gEffect19ScrollPhase1;
 
 int Effect19_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                     f32* extraArgs)

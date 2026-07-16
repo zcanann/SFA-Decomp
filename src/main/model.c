@@ -302,7 +302,6 @@ void ObjModel_SetBlendChannelWeight(ObjModel* model, int channel, f32 weight)
 }
 
 typedef f32 Mtx[3][4];
-extern int* gModelAnimOffsetTable;
 
 #pragma opt_propagation off
 int modelGetAmapSize(int animId, int amapFlag, int animCount)
@@ -334,9 +333,6 @@ int modelGetAmapSize(int animId, int amapFlag, int animCount)
 }
 #pragma opt_propagation reset
 
-extern int gModelTabEntryCount;
-extern void* gModelAnimFlagsTable;
-extern int lbl_803DCB58;
 extern void shaderInit(u8* def, void* out, int arg, int n);
 
 void ObjModel_RelocateModelData(u8* m)
@@ -633,7 +629,6 @@ void ObjModel_InitRenderBuffers(void)
     setGQR6_2(7, 4, 7, 4);
 }
 
-extern ModelList* gModelList;
 
 void modelFn_800292e0(void)
 {
@@ -1057,7 +1052,6 @@ void* ObjModel_LoadAnimData(u8* p, int b, int c)
 }
 
 extern int modelLoad_calcSizes(void* model, int arg, int* out, int flag);
-extern s16* gModelResourceBuffer;
 
 void* ObjModel_Load(int id, int loadFlag, int* outSize)
 {
@@ -1106,8 +1100,6 @@ void* ObjModel_Load(int id, int loadFlag, int* outSize)
     return header;
 }
 
-extern ModelList* gModelAnimCacheList;
-extern int* lbl_803DCB5C;
 
 void ObjModel_InitResourceCaches(void)
 {

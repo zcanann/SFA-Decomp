@@ -32,9 +32,6 @@ int lbl_803DB9D4 = -4;
 /* curve-node tag selecting the matrix-based base point in update() */
 #define CLOUDRUNNER_CURVE_TAG 1049
 
-extern CameraModeCloudRunnerState* lbl_803DD5B8;
-extern f32 lbl_803DB9D0;
-extern int lbl_803DB9D4;
 
 void CameraModeCloudRunner_copyToCurrent(void)
 {

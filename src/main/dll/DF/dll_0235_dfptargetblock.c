@@ -25,7 +25,6 @@
 #pragma force_active on
 union TargetBlockConstF32 { f32 f; };
 #pragma force_active reset
-extern const union TargetBlockConstF32 lbl_803E6488;
 extern const union TargetBlockConstF32 lbl_803E6490;
 extern const union TargetBlockConstF32 lbl_803E6494;
 extern const union TargetBlockConstF32 lbl_803E6498;
@@ -38,11 +37,6 @@ extern const union TargetBlockConstF32 lbl_803E64B4;
 extern const union TargetBlockConstF32 lbl_803E64B8;
 extern const union TargetBlockConstF32 lbl_803E64BC;
 extern const union TargetBlockConstF32 lbl_803E64C0;
-extern const union TargetBlockConstF32 lbl_803E64C4;
-extern const union TargetBlockConstF32 lbl_803E64C8;
-extern const union TargetBlockConstF32 gTargetBlockMinVertexYSeed;
-extern const union TargetBlockConstF32 lbl_803E64D0;
-extern const union TargetBlockConstF32 lbl_803E64D4;
 extern f32 lbl_803E64A8;
 
 typedef struct DfpTargetBlockPartfxArgs

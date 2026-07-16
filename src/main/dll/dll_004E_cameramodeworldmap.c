@@ -38,7 +38,6 @@ CameraModeWorldMapState* gCamWorldMapState;
 #define PAD_BUTTON_DOWN 0x004
 #define PAD_BUTTON_UP   0x008
 
-extern CameraModeWorldMapState* gCamWorldMapState;
 extern f32 gCamWorldMapDistanceMax;
 extern f32 lbl_803E1A28;
 extern f32 lbl_803E1A80;

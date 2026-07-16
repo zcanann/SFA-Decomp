@@ -87,14 +87,6 @@ extern int dll_19_func1B(GameObject* p); /* nonzero = obj is baddie-control mana
 u8 gCamcontrolStateStorage[0x148];
 CamcontrolHandlerEntry* gCamcontrolHandlerEntries[20];
 extern CamcontrolBaddieControlInterface** gBaddieControlInterface;
-extern f32 gCamcontrolSavedFocusWorldZ;
-extern f32 gCamcontrolSavedFocusWorldY;
-extern f32 gCamcontrolSavedFocusWorldX;
-extern f32 gCamcontrolSavedFocusLocalZ;
-extern f32 gCamcontrolSavedFocusLocalY;
-extern f32 gCamcontrolSavedFocusLocalX;
-extern s8 lbl_803DD4CB;
-extern u32 lbl_803DD4CC;
 
 static inline CamcontrolBaddieControlInterface* camcontrol_GetBaddieControlInterface(void)
 {

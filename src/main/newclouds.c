@@ -87,9 +87,6 @@ int gNewCloudStarFogColor = 0;
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1D8;
 extern const f32 lbl_803DF1DC;
-extern u8 gNewCloudBlizzardActive;
-extern LightningEffect* lbl_803DD19C;
-extern u8 gNewCloudInitialized;
 
 void lightningRenderActive(void)
 {
@@ -178,21 +175,7 @@ void cloudSetOverridePosition(f32 a, f32 b, f32 c)
 
 void* gNewCloudLayerTextures[4];
 void* gNewClouds[8];
-extern void* lbl_803DD1C8;
-extern void* lbl_803DD1C4;
 extern const f32 lbl_803DF1A4;
-extern f32 gNewCloudOvercastFadeLevel;
-extern f32 lbl_803DB764;
-extern f32 lbl_803DB768;
-extern f32 gNewCloudScrollPhaseA;
-extern f32 gNewCloudScrollPhaseB;
-extern f32 gNewCloudScrollPhaseC;
-extern f32 lbl_803DD190;
-extern f32 gNewCloudOvercastFadeRate;
-extern u8 gNewCloudSnowFlashAlpha;
-extern u8 lbl_803DD199;
-extern u8 lbl_803DD19A;
-extern u8 gNewCloudBlizzardActivePrev;
 void snowFreeSnowCloud(int index);
 
 void newclouds_release(void)
@@ -625,9 +608,6 @@ void lightningRender(LightningEffect* p)
     srand(savedSeed);
 }
 
-extern s16 gSnowFlakeWaveAngle;
-extern f32 gSnowFlakeWaveValue;
-extern f32 lbl_803DD1B0;
 extern const f32 gSnowFlakeWaveAmpScale;
 extern const f32 gSnowFlakeSize;
 extern const f32 gSnowFlakeSizeLarge;
@@ -739,16 +719,12 @@ void snowCloudInitFlakes(f32* buf, f32 a, f32 b, int cloudId)
 extern void fn_800790AC(void);
 
 
-extern int gNewCloudStarFogColor;
-extern u8 gNewCloudStarAlphaRanges[8];
 u8 gNewCloudStarColorRanges[24] = {
     0xD0, 0xFF, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0xD0, 0xFF,
     0xD0, 0xFF, 0xA0, 0xD0, 0x80, 0xA0, 0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF,
 };
 u16 gNewCloudStarDisplayListSizes[0x5C];
 void* gNewCloudStarDisplayLists[0x5C];
-extern char* gNewCloudStarTextureA;
-extern char* gNewCloudStarTextureB;
 extern const f32 gNewCloudStarFadeInTime;
 extern const f32 lbl_803DF284;
 extern const f32 gNewCloudStarFadeOutTime;
@@ -1214,7 +1190,6 @@ void lightningDrawBolt(f32* start, f32* end, int width, f32 segScale, f32 d, int
 }
 
 
-extern u8 gNewCloudStarsInitialized;
 extern const f32 gNewCloudStarRadius;
 extern const f32 gNewCloudStarAxisThreshold;
 extern const f32 lbl_803DF298;
@@ -1554,7 +1529,6 @@ void snowReposSnowCloud(int cloudId)
 }
 
 extern char lbl_8030F500[];
-extern int gNewCloudWindSourcesInit;
 extern const f32 lbl_803DF1FC;
 extern const f32 lbl_803DF214;
 extern const f32 gNewCloudType0Height;
@@ -2430,7 +2404,6 @@ void dll_07_func06(void)
 extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32* mtx, f32 xScale, f32 yScale, f32 zScale);
 
-extern int gNewCloudFlashRotAngle;
 extern const f32 lbl_803DF204;
 
 #pragma opt_loop_invariants off

@@ -18,7 +18,6 @@
 #define DLL91_EFFECT_ID 0x45
 
 extern u8 gDll91Func0ResourceBlob[];
-extern u8 gDll91Func0Tex[8];
 extern f32 lbl_803E11D8;
 extern f32 lbl_803E11DC;
 extern f32 lbl_803E11E0;

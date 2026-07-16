@@ -22,7 +22,6 @@
 
 CameraModePervState* lbl_803DD5C8;
 
-extern CameraModePervState* lbl_803DD5C8;
 extern f32 lbl_803E1B98;
 extern f32 lbl_803E1B9C;
 

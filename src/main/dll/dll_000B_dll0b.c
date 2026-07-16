@@ -136,10 +136,6 @@ STATIC_ASSERT(offsetof(PartfxEffectState, textureIsBorrowed) == 0x13F);
 
 u8 gModgfxSpawnContextStorage[0x60];
 ModgfxPendingSpawn gModgfxPendingSpawnQueue[0x300 / sizeof(ModgfxPendingSpawn)];
-extern s16 gModgfxLastSpawnHandle;
-extern s16 gModgfxSequenceParamIndex;
-extern ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
-extern ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 #define gModgfxSpawnContext (*(ModgfxSpawnContext*)gModgfxSpawnContextStorage)
 s16 dll_0B_func18(void)
 {
@@ -196,7 +192,6 @@ void dll_0B_func10(void)
     gModgfxSequenceParamIndex = 0;
 }
 
-extern u8 lbl_803DD282;
 extern void fn_800A1040(s16 a, int b);
 
 #pragma scheduling on
@@ -689,7 +684,6 @@ void dll_0B_func16(void* a, void* b, void* c, void* d, void* e, int f, void* g)
 }
 
 extern const f32 lbl_803DF460;
-extern s16 gPartfxSequenceIdCounter;
 
 static inline int modgfx_findFreeEffectSlot(void** p, int found, int i)
 {

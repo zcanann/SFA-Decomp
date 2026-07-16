@@ -69,7 +69,6 @@ typedef struct CameraModeViewfinderInitArgs
 
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void* memset(void* dst, int v, int n);
-extern ViewfinderState* lbl_803DD548;
 extern f32 lbl_803E17C0;
 extern f32 lbl_803E17C4;
 extern f32 lbl_803E17C8;

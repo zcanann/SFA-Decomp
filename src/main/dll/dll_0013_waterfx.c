@@ -108,7 +108,6 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 #define GX_TEV_KCSEL_K0   0xc
 #define GX_TEV_KASEL_K0_A 0x1c
 
-extern u16 gWaterfxSplashDisplayListSize;
 extern const f32 lbl_803DF2E0;
 extern const f32 lbl_803DF2E4;
 extern const f32 lbl_803DF2F0;

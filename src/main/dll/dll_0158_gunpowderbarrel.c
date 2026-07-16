@@ -86,41 +86,11 @@ typedef struct GunpowderbarrelPlacement
 } GunpowderbarrelPlacement;
 
 extern u32* gCarryableInterface;
-extern const f32 lbl_803E42DC;
 extern int findSurfaceInYRange(int* obj, f32 x, f32 top, f32 z, f32 bottom, f32* outY, int** outObj);
 
 
-extern const f32 lbl_803E42C4;
-extern const f32 lbl_803E4308;
-extern const f32 lbl_803E430C;
-extern const f32 lbl_803E4310;
-extern const f32 lbl_803E4314;
-extern const f32 lbl_803E4318;
-extern const f32 lbl_803E431C;
-extern const f32 lbl_803E4320;
-extern f32 lbl_803DBE88;
-extern f32 lbl_803DBE84;
-extern const f32 lbl_803E4324;
-extern const f32 lbl_803E4328;
-extern const f32 lbl_803E432C;
-extern const f32 lbl_803E4330;
-extern const f32 lbl_803E4334;
 extern void memset(void* p, int c, int n);
-extern const f32 lbl_803E4338;
-extern const f32 gGunpowderBarrelPi;
-extern const f32 gGunpowderBarrelHalfAngleUnit;
-extern f32 lbl_803DBE80;
 
-extern const f32 lbl_803E42C8;
-extern const f32 lbl_803E42CC;
-extern const f32 lbl_803E42D0;
-extern const f32 lbl_803E42D4;
-extern const f32 lbl_803E42D8;
-extern const f32 lbl_803E42E0;
-extern const f32 lbl_803E42E4;
-extern const f32 lbl_803E42E8;
-extern const f32 lbl_803E42EC;
-extern const f32 gGunpowderBarrelAngleUnit;
 
 /* Bit flags at GunpowderBarrelState+0x4a (heldFlags). */
 typedef struct

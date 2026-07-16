@@ -84,7 +84,6 @@ extern GameObject* focusedNpc;
 extern s16 seqGlobal2;
 extern s16 seqGlobal1;
 extern u8 seqGlobal3;
-extern u32 lbl_803DB700;
 extern f32 lbl_803DEFA0;
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;

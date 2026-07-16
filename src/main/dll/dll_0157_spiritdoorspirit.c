@@ -20,7 +20,6 @@ f32 lbl_803DBE78 = 0.7f;
 
 #define SPIRITDOORSPIRIT_OBJGROUP 0x4e
 
-extern f32 lbl_803DBE78;
 
 extern u64 ObjGroup_RemoveObject();
 extern u32 ObjGroup_AddObject();

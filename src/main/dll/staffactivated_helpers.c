@@ -59,7 +59,6 @@ extern f32 lbl_803E3BCC;
 extern f32 lbl_803E3BD8;
 extern const f32 lbl_803E3BDC;
 extern const f32 lbl_803E3BE0;
-extern s16 lbl_803DBDE0[4];
 
 void staffactivated_updateLiftHeight(GameObject* obj, StaffActivatedState* state)
 {

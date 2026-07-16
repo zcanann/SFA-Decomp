@@ -142,7 +142,6 @@ extern f32 lbl_803E4E70;
 extern f32 gDfShShrineFadeDistance;
 extern f32 lbl_803E4E78;
 extern f32 lbl_803E4E88;
-extern u8 gDfShShrinePendingReward;
 u16 gDfShShrineRewardTable[50] = {
     246, 2997,  247, 2998,  248,  249,   250,  251,   2995, 2996,  60,   60,    60,   60,    600,   600,   600,
     600, 600,   600, 3000,  3008, 3001,  3009, 3002,  3003, 3004,  3005, 3006,  3007, 4,     36948, 4,     37071,

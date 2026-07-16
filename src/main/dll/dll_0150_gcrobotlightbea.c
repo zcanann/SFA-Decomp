@@ -41,8 +41,6 @@ STATIC_ASSERT(sizeof(GcRobotLightBeaState) == 0xc);
 
 #define GCROBOTLIGHTBEA_HIT_VOLUME_SLOT 0x17
 
-extern f32 lbl_803DBE58;
-extern f32 lbl_803DBE5C;
 
 extern void Obj_TransformLocalVectorByWorldMatrix(void* obj, f32* src, f32* dst);
 extern void voxmaps_traceScaledVectorEnd(f32* dst, void* posA, f32* dir, f32 factor);

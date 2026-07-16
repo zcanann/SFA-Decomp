@@ -10,7 +10,6 @@
 
 CameraModeShipBattleState* gCamShipBattleState;
 
-extern CameraModeShipBattleState* gCamShipBattleState;
 extern f32 lbl_803E1948;
 extern f32 lbl_803E194C;
 extern f32 lbl_803E1950;

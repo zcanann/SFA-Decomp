@@ -51,7 +51,6 @@ typedef struct DimbossicesmashPlacement
 } DimbossicesmashPlacement;
 
 u8 lbl_803DDB00;
-extern u8 lbl_803DBDF8[8];
 
 #pragma explicit_zero_data on
 u8 lbl_80322368[0xC] = {0};

@@ -86,7 +86,6 @@ extern void titleScreenFn_80130464(u8 v);
 
 extern void titleScreenFn_801368a4(u8 arg);
 extern void titleScreenFn_801368c4(s8 arg);
-extern u8 lbl_803DB424;
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;

@@ -68,8 +68,6 @@ typedef struct CurvesSaveGameObjectPosition
 
 extern SaveData saveData;
 extern u8 gSaveGameData[];
-extern s32 sCurvesCachedHitCount;
-extern u32 sCurvesCachedHitObj;
 extern f32 lbl_803E0668;
 extern const f32 lbl_803E066C;
 extern const f32 lbl_803E068C;

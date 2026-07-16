@@ -37,10 +37,6 @@ f32 titleScreenCamProgress = 1.0f;
 STATIC_ASSERT(sizeof(CameraModeTitlePose) == 0x14);
 
 extern CameraModeTitlePose gCamTitlePoseTable[];
-extern u8 gCamTitleCurPose;
-extern u8 gCamTitlePrevPose;
-extern u8 gCamTitleStartPosePending;
-extern f32 titleScreenCamProgress;
 CameraModeTitlePose gCamTitleStartPose;
 extern u8 dll_19_func03_nop[];
 extern u8 dll_19_func04_nop[];

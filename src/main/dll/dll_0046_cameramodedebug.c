@@ -23,7 +23,6 @@ CameraModeDebugState* gCamDebugState;
 #define PAD_BUTTON_DOWN  0x004
 #define PAD_BUTTON_UP    0x008
 
-extern CameraModeDebugState* gCamDebugState;
 extern f32 lbl_803E1840;
 extern f32 gCamDebugZoomInRate;
 extern f32 gCamDebugZoomOutRate;

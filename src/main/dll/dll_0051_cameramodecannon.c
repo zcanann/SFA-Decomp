@@ -21,7 +21,6 @@
 
 CameraModeCannonState* lbl_803DD5A0;
 
-extern CameraModeCannonState* lbl_803DD5A0;
 
 void CameraModeCannon_copyToCurrent(void)
 {

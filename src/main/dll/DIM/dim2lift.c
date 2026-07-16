@@ -67,7 +67,6 @@ extern f32 lbl_803E4C28;
 extern f32 lbl_803E4C2C;
 extern f32 lbl_803E4C30;
 extern s16 gDim2LiftFarMoveChoices[30];
-extern s16 gDim2LiftFarFlankMoveChoices[4];
 extern u8 gDIMbossAnimController[];
 
 #pragma scheduling off

@@ -291,8 +291,6 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     return;
 }
 
-extern u32 curObjMtx;
-extern u8 lbl_803DCC29;
 extern u32 lbl_803DCC74;
 void objSetMtxFn_800412d4(u32 x)
 {
@@ -317,8 +315,6 @@ void setForceLoadImmediately(void)
     lbl_803DCC70 = 0x1;
 }
 
-extern u8 gObjOverrideColorPending;
-extern u8 gObjOverrideColor;
 
 void fn_800412B8(u8 r, u8 g, u8 b)
 {
@@ -381,18 +377,6 @@ s32 mapCheckCurBlocks(int v)
     return -1;
 }
 
-extern u8 gObjRenderSetupDone;
-extern u32 gObjCachedTexture;
-extern u32 gObjCachedModel;
-extern u8 lbl_803DCC34;
-extern u32 gObjGxVtxDescCache;
-extern u8 gObjGxBlendModeCache;
-extern u8 gObjGxZCompLocCache;
-extern u32 gObjGxAlphaCompareCache;
-extern u8 gObjGxZWriteCache;
-extern u8 gObjGxZCompareCache;
-extern u8 gObjGxCullModeCache;
-extern u8 gObjGxKColorCache[4];
 
 void renderResetFn_8003fc60(void)
 {
@@ -506,17 +490,12 @@ void objRenderShadow(int* obj)
 }
 #pragma dont_inline reset
 
-extern s32 gObjFuzzStep;
-extern s32 lbl_803DCC44;
-extern u8 lbl_803DCC3D;
-extern f32 gObjFuzzPhase;
 extern f32 lbl_803DEA60;
 extern f32 lbl_803DEA5C;
 extern f32 lbl_803DEA64;
 extern f32 lbl_803DEA68;
 extern const f32 lbl_803DEA1C;
 extern f32 lbl_803DEA6C;
-extern u8 gObjShadowColor[4];
 extern void modelDoAltRenderInstrs(int* obj, int* obj2, u8* model, int p4);
 
 void objMtxFn_80041104(f32* mtx, f32* out, s16* in, int flag, int* obj, int e);
@@ -947,7 +926,6 @@ void objRenderChild(int* child, int* parent, u8 isShadow)
     }
 }
 
-extern s32 lbl_803DCC48;
 extern void GXLoadPosMtxImm(f32* m, int id);
 u8 gObjGxPosMtxIdTable[12] = {0x00, 0x03, 0x06, 0x09, 0x0C, 0x0F, 0x12, 0x15, 0x18, 0x1B, 0x00, 0x00};
 
@@ -1448,7 +1426,6 @@ void objRenderFn_8003d980(u8* obj, int* p2)
 }
 #pragma opt_propagation reset
 
-extern s32 lbl_803DCC5C;
 
 typedef struct
 {
@@ -1459,12 +1436,6 @@ extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
 extern void GXSetNumChans(u8 nChans);
-extern u32 lbl_803DB468;
-extern u32 gObjGxDefaultChanColor;
-extern u32 lbl_803DB470;
-extern u32 gObjCurChanColor;
-extern u8 gObjShadowNear;
-extern u8 lbl_803DCC60;
 
 void objFn_8003dc50(u8* obj, u8* model)
 {
@@ -2216,10 +2187,6 @@ extern f32 lbl_803DEA38;
 extern f32 lbl_803DEA4C;
 extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
-extern f32 gObjShadowDist;
-extern u8 lbl_803DCC35;
-extern u8 lbl_803DCC20;
-extern u8 lbl_803DCC3E;
 u8 gObjGxTexMtxIdTable[12] = {0x1E, 0x21, 0x24, 0x27, 0x2A, 0x2D, 0x30, 0x33, 0x36, 0x39, 0x00, 0x00};
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs);
 
@@ -2829,7 +2796,6 @@ u8 modelRenderFn_8003e98c(u8* obj, u8* shader, u32* p3, int mask, int p5, int p6
 }
 #pragma opt_propagation reset
 
-extern u8 lbl_803DCC3C;
 
 #pragma opt_propagation off
 u32 objRenderFn_8003edf4(u8* obj, u8* p2, int* am, MtxBitStream* bs)

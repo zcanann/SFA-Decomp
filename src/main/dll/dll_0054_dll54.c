@@ -36,7 +36,6 @@ CameraMode54State* gCameraModeNpcSpeakState;
 #define DLL54_LOOKAT_SEQID 0x2ab
 #define DLL54_ORIGIN_SEQID 0x4dc
 
-extern CameraMode54State* gCameraModeNpcSpeakState;
 
 #pragma scheduling off
 #pragma peephole off

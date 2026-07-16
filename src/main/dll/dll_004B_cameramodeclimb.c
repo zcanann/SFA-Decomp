@@ -52,7 +52,6 @@ extern f32 gCamClimbDefaultEndMinHeight;
 extern f32 gCamClimbDefaultEndMaxHeight;
 extern f32 lbl_803E19C4;
 extern f32 gCamClimbDefaultHeightAdjustRate;
-extern CameraModeClimbState* gCamClimbState;
 
 extern void memset(void* dst, int val, int size);
 

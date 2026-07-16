@@ -25,7 +25,6 @@ u8 lbl_803DB930[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 #define DLL92_EFFECT_ID 0x3c
 
 extern u8 lbl_803171C0[];
-extern u8 lbl_803DB930[8];
 extern f32 lbl_803E1210;
 extern f32 lbl_803E1214;
 extern f32 lbl_803E1218;

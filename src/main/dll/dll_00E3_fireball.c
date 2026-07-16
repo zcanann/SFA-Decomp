@@ -121,7 +121,6 @@ extern const f32 lbl_803E3360;
 extern const f32 lbl_803E3364;
 extern const f32 lbl_803E3368;
 extern const f32 lbl_803E336C;
-extern u8 gFireballColorIndexTable[8];
 extern const f32 lbl_803E3350;
 extern const f32 lbl_803E3340;
 

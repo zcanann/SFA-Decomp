@@ -58,13 +58,6 @@ extern f32 gDrakorEnergyGravity;
 extern f32 gDrakorEnergyPi;
 extern f32 gDrakorEnergyPhaseDivisor;
 extern f32 lbl_803E6294;
-extern f32 gDrakorEnergyBobAmplitude;
-extern f32 gDrakorEnergySeekRange;
-extern f32 lbl_803DC168;
-extern f32 gDrakorEnergyChaseSpeed;
-extern int gDrakorEnergyHealAmount;
-extern f32 lbl_803DC174;
-extern s16 lbl_803DC178;
 
 extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
 

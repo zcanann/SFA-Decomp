@@ -169,7 +169,6 @@ void objAnimFn_80038f38(GameObject* obj, char* state)
     }
 }
 
-extern u32 lbl_803DCC10;
 extern u8 lbl_803DCC3C;
 void fn_8003B950(f32* matrix)
 {
@@ -184,8 +183,6 @@ void fn_8003BB7C(u8 x)
     lbl_803DCC3C = x;
 }
 
-extern s16 lbl_803DCC18, lbl_803DCC16, lbl_803DCC14;
-extern u8 lbl_803DCC08;
 
 void fn_8003B608(s16 a, s16 b, s16 c)
 {
@@ -207,11 +204,6 @@ int* seqFn_800394a0(void)
     return lbl_802CAE88;
 }
 
-extern u8 lbl_803DCC09;
-extern u8 lbl_803DCC0A;
-extern u8 lbl_803DCC0B;
-extern u8 lbl_803DCC0C;
-extern u8 lbl_803DCC0D;
 s16* objModelGetVecFn_800395d8(GameObject* obj, int target)
 {
     int vecOffset;

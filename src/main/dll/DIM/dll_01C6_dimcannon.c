@@ -63,18 +63,9 @@ extern f32 lbl_803E48B8;
 extern void DIMwooddoor_updateShardAim(GameObject* obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int* obj, int p2);
 
-extern int lbl_803DBF10;
-extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
-extern f32 gDimCannonAnimAdvanceSpeedCur;
 
-extern u8 gDimCannonMaxCharge;
-extern s16 lbl_803DBF02;
-extern s16 lbl_803DBF04;
-extern f32 gDimCannonAimStickScale;
-extern f32 lbl_803DBEF8;
-extern f32 lbl_803DBEFC;
 
 void DIMCannon_hitDetect(void)
 {

@@ -86,7 +86,6 @@ STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 #define MAP_EVENT_SET(mapId, eventId, value)      (*gMapEventInterface)->setObjGroupStatus((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 
-extern u32 lbl_803DC0F0;
 void* lbl_803DDC74;
 extern int* gScreensInterface;
 extern u32* lbl_803DCA94;

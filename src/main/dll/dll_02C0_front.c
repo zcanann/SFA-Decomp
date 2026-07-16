@@ -191,8 +191,6 @@ void TitleScreen_release(void)
     gTitleScreenSetupDone = 0;
 }
 
-extern s8 lbl_803DBC08;
-extern s8 lbl_803DBC09;
 extern f32 lbl_803E2318;
 extern f32 lbl_803E22F8;
 u8 gTitleScreenMtx[0x34];
@@ -524,7 +522,6 @@ extern f32 lbl_803E237C;
 extern f32 lbl_803E2380;
 extern f32 lbl_803E2384;
 extern f32 lbl_803E2388;
-extern f32 lbl_803DBC0C;
 u8 gTitleScreenSfxFlagGrid[0x48];
 extern void fn_8003B228(GameObject* obj, int state);
 void fn_80134870(int obj, u8* arr);
@@ -899,7 +896,6 @@ void fn_80134870(int obj, u8* arr)
     }
 }
 
-extern u16 lbl_803DBC0A;
 extern u8 lbl_803DB411;
 
 typedef struct

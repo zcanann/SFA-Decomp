@@ -67,7 +67,6 @@ extern f32 lbl_803E3AD4;
 extern f32 lbl_803E3AD8;
 extern f32 lbl_803E3ADC;
 extern f32 lbl_803E3AE0;
-extern f32 lbl_803DBDD8;
 
 int LanternFireFly_getExtraSize(void)
 {

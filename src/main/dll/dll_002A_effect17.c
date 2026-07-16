@@ -17,14 +17,6 @@ f32 gEffect17AnimProgressB = 0.3f;
 f32 gEffect17AnimProgressC = 0.1f;
 f32 gEffect17AnimProgressD = 0.3f;
 
-extern f32 gEffect17AnimProgressC;
-extern f32 gEffect17AnimProgressD;
-extern s32 gEffect17SinPhaseA;
-extern s32 gEffect17SinPhaseB;
-extern f32 gEffect17SinValueB;
-extern f32 gEffect17SinValueA;
-extern f32 gEffect17AnimProgressA;
-extern f32 gEffect17AnimProgressB;
 
 ObjectDescriptor6 lbl_80310FE0 = {
     0,

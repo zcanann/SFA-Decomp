@@ -141,9 +141,6 @@ typedef enum DbEggMode
 } DbEggMode;
 extern u32 FUN_80006824();
 extern u64 FUN_800305f8();
-extern f32 lbl_803E6F40;
-extern f32 lbl_803E6F80;
-extern f32 lbl_803E6F84;
 
 typedef struct DbeggPlacement
 {

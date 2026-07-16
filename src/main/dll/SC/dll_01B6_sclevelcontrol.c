@@ -59,7 +59,6 @@ STATIC_ASSERT(sizeof(ScLevelControlState) == 0x24);
 #define SCLEVELCONTROL_ENVFX_D 0x246
 #define SCLEVELCONTROL_ENVFX_E 0x51
 
-extern u16 gScLevelControlMusicStepSequence[4];
 
 /* .sdata2 constant pool */
 static const f32 lbl_803E5550 = 120.0f;

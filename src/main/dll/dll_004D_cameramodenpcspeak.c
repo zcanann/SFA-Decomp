@@ -37,7 +37,6 @@ int lbl_803DB9BC = 10000;
 f32 lbl_803DB9C0 = 2.0f;
 f32 lbl_803DB9C4 = 0.09f;
 
-extern CameraModeNpcSpeakState* gCamNpcSpeakState;
 extern f32 gCamNpcSpeakPi;
 extern f32 gCamNpcSpeakAngleToRadDivisor;
 extern f32 lbl_803E19D8;
@@ -57,15 +56,6 @@ extern f32 lbl_803E1A14;
 extern f32 lbl_803E1A18;
 extern f32 lbl_803E1A1C;
 extern f32 lbl_803E1A20;
-extern f32 lbl_803DB9C0;
-extern f32 lbl_803DB9A8;
-extern f32 lbl_803DB9AC;
-extern f32 lbl_803DB9B0;
-extern f32 lbl_803DB9B4;
-extern f32 lbl_803DB9B8;
-extern int lbl_803DB9BC;
-extern f32 lbl_803DD580;
-extern f32 lbl_803DB9C4;
 
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 

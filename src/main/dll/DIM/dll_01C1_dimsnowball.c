@@ -76,11 +76,7 @@ s16 lbl_803DBEE8 = 0x3E6;
 #define DIMSNOWBALL_OBJFLAG_HIDDEN       0x4000
 #define DIMSNOWBALL_OBJFLAG_FREED        0x40
 
-extern s16 lbl_803DBEE8;
 extern s16 gDimSnowballCoords[];
-extern f32 lbl_803E484C;
-extern f32 lbl_803E4854;
-extern f32 lbl_803E4848;
 
 int dimsnowball_getExtraSize(void)
 {
