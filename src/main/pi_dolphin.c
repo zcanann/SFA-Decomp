@@ -5664,6 +5664,7 @@ extern void GXSetTevIndirect(GXTevStageID tev_stage, GXIndTexStageID ind_stage, 
                              GXIndTexBiasSel bias_sel, GXIndTexMtxID matrix_sel, GXIndTexWrap wrap_s,
                              GXIndTexWrap wrap_t, GXBool add_prev, GXBool utc_lod, GXIndTexAlphaSel alpha_sel);
 
+#pragma optimize_for_size on
 #pragma optimization_level 1
 #pragma opt_common_subs off
 #pragma opt_propagation off
@@ -6203,6 +6204,7 @@ extern int lbl_803DCD6C;
 #pragma ppc_unroll_speculative on
 #pragma scheduling off
 #pragma use_lmw_stmw reset
+#pragma optimize_for_size reset
 
 void gxTextureFn_8004bf88(void* bufp, u8 flag1, u8 flag2, int* out1, int* out2)
 {
