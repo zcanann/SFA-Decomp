@@ -2752,7 +2752,6 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     }
     else
     {
-        ofs = slot * 0xa4;
         if (((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->unused80 != 0)
         {
             dir[0] = lbl_803DF06C;
@@ -2761,6 +2760,7 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
             PSVECNormalize(dir, dir);
             PSMTXMultVecSR(Camera_GetInverseViewMatrix(), dir, dir);
         }
+        ofs = slot * 0xa4;
         if (((SkyBlendStateFlags*)(gSkyState + slot * 0xa4 + 0xc1))->active != 0)
         {
             skyEntry = gSkyState + ofs;
