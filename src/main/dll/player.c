@@ -11026,8 +11026,8 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
         case 32:
             if (((PlayerState*)cfg)->baddie.animSpeedA > lbl_803E7E98)
             {
-                r = lbl_803E7F6C + ((PlayerState*)state)->sinkOffsetY;
-                ((PlayerState*)state)->sinkOffsetY = (r < clamp) ? r : lbl_803E7EA4;
+                fv2 = lbl_803E7F6C + ((PlayerState*)state)->sinkOffsetY;
+                ((PlayerState*)state)->sinkOffsetY = (fv2 < clamp) ? fv2 : clamp;
             }
             else
             {
@@ -11074,7 +11074,7 @@ void fn_802B1E5C(GameObject* obj, int state, int cfg, f32 dt)
             if (((PlayerState*)state)->sinkOffsetY < *(f32*)&lbl_803E7EA4)
             {
                 fv2 = lbl_803E7EFC * ((PlayerState*)cfg)->baddie.animSpeedA + ((PlayerState*)state)->sinkOffsetY;
-                ((PlayerState*)state)->sinkOffsetY = (fv2 < lbl_803E7EA4) ? fv2 : lbl_803E7EA4;
+                ((PlayerState*)state)->sinkOffsetY = (fv2 < *(f32*)&lbl_803E7EA4) ? fv2 : *(f32*)&lbl_803E7EA4;
                 velMag = -((PlayerState*)state)->sinkOffsetY;
             }
             break;
