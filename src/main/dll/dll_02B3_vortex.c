@@ -223,6 +223,57 @@ void Vortex_hitDetect(void)
 {
 }
 
+void Vortex_update(GameObject* obj)
+{
+    VortexState* state = obj->extra;
+    VortexSetup* setup = (VortexSetup*)obj->anim.placementData;
+    u32 active;
+
+    state->flags.active = 0;
+    if (setup->activeGameBit != -1)
+    {
+        state->flags.active = mainGetBit(setup->activeGameBit);
+    }
+
+    if (obj->anim.seqId == 0x29a || obj->anim.seqId == 0x829)
+    {
+        if (state->flags.active != 0)
+        {
+            if (setup->invertGameBit != -1)
+            {
+                state->flags.active = !mainGetBit(setup->invertGameBit);
+            }
+        }
+    }
+
+    active = state->flags.active;
+    if (active != 0)
+    {
+        if (state->alpha < lbl_803E73E0)
+        {
+            f32 hi = lbl_803E73E0;
+            state->alpha = gVortexAlphaFadeSpeed * timeDelta + state->alpha;
+            if (state->alpha > hi)
+            {
+                state->alpha = hi;
+            }
+            return;
+        }
+    }
+    if (active == 0)
+    {
+        if (state->alpha > lbl_803E73D0)
+        {
+            f32 lo = lbl_803E73D0;
+            state->alpha = state->alpha - gVortexAlphaFadeSpeed * timeDelta;
+            if (state->alpha < lo)
+            {
+                state->alpha = lo;
+            }
+        }
+    }
+}
+
 #pragma opt_strength_reduction on
 #pragma opt_propagation off
 void Vortex_init(GameObject* obj, VortexSetup* setup)
@@ -291,57 +342,6 @@ void Vortex_init(GameObject* obj, VortexSetup* setup)
 }
 #pragma opt_strength_reduction reset
 #pragma opt_propagation reset
-
-void Vortex_update(GameObject* obj)
-{
-    VortexState* state = obj->extra;
-    VortexSetup* setup = (VortexSetup*)obj->anim.placementData;
-    u32 active;
-
-    state->flags.active = 0;
-    if (setup->activeGameBit != -1)
-    {
-        state->flags.active = mainGetBit(setup->activeGameBit);
-    }
-
-    if (obj->anim.seqId == 0x29a || obj->anim.seqId == 0x829)
-    {
-        if (state->flags.active != 0)
-        {
-            if (setup->invertGameBit != -1)
-            {
-                state->flags.active = !mainGetBit(setup->invertGameBit);
-            }
-        }
-    }
-
-    active = state->flags.active;
-    if (active != 0)
-    {
-        if (state->alpha < lbl_803E73E0)
-        {
-            f32 hi = lbl_803E73E0;
-            state->alpha = gVortexAlphaFadeSpeed * timeDelta + state->alpha;
-            if (state->alpha > hi)
-            {
-                state->alpha = hi;
-            }
-            return;
-        }
-    }
-    if (active == 0)
-    {
-        if (state->alpha > lbl_803E73D0)
-        {
-            f32 lo = lbl_803E73D0;
-            state->alpha = state->alpha - gVortexAlphaFadeSpeed * timeDelta;
-            if (state->alpha < lo)
-            {
-                state->alpha = lo;
-            }
-        }
-    }
-}
 
 void Vortex_release(void)
 {
