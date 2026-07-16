@@ -684,36 +684,52 @@ u16 getMinimapY(void)
     return lbl_803DD938;
 }
 
-#pragma dont_inline on
-void Minimap_setupCompassBlip(void)
+u8 isAreaNameTextActive(void)
 {
-    f32 scale;
-    f32 posZ;
-    f32 center;
-    f32 posY;
-    f32 posX;
-    u8 i;
-
-    i = 0;
-    posX = gMinimapFNeg15;
-    posY = gMinimapFNeg9_8;
-    center = gMinimapZero;
-    posZ = gMinimapFNeg40;
-    scale = gMinimapF0_05;
-    for (; i < 2; i++)
+    u32 act = 0;
+    if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && gMinimapEnabled != 0)
     {
-        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
-        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
-        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
+        act = 1;
     }
+    if ((u8)act == 0)
+    {
+        return act;
+    }
+    gMinimapAreaNameDelay = 5;
+    return act;
 }
-#pragma dont_inline reset
+
+PPCWGPipe GXWGFifo : (0xCC008000);
+
+void fn_8013351C(void)
+{
+    u32 col;
+    u32 c2;
+    f32 c0;
+    f32 s0;
+    f32 c1;
+    f32 s1;
+    f32 cc2;
+    f32 s2;
+    int y;
+
+    col = gMinimapCompassColor;
+    ((u8*)&col)[3] = gMinimapFadeAlpha;
+    gMinimapCompassPhase = -(gMinimapBlipNearDist * timeDelta - gMinimapCompassPhase);
+    if (gMinimapCompassPhase > *(f32*)&gMinimapF32768)
+    {
+        gMinimapCompassPhase = gMinimapCompassPhase - gMinimapF65536;
+    }
+    c0 = gMinimapF60 * mathSinf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
+    s0 = gMinimapF60 * mathCosf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
+    c1 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
+    s1 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
+    cc2 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
+    s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
+    y = lbl_803DD938 + 0x32;
+    c2 = col;
+    hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2, &c2);
+}
 
 void Minimap_drawCompassBlip(void)
 {
@@ -765,21 +781,36 @@ static inline void Minimap_freeObjectSlots(GameObject** slots, int count)
     }
 }
 
-void Minimap_release(void)
+#pragma dont_inline on
+void Minimap_setupCompassBlip(void)
 {
-    if (minimapTexture != NULL)
-        textureFree((Texture*)(minimapTexture));
-    textureFree((Texture*)(lbl_803DD940));
-    Minimap_freeObjectSlots(lbl_803DBBC8, 2);
-    minimapTexture = NULL;
-    lbl_803DD940 = NULL;
-}
+    f32 scale;
+    f32 posZ;
+    f32 center;
+    f32 posY;
+    f32 posX;
+    u8 i;
 
-void Minimap_initialise(void)
-{
-    lbl_803DD940 = textureLoadAsset(MINIMAP_TEXTURE_COMPASS);
-    lbl_803DD938 = 340;
+    i = 0;
+    posX = gMinimapFNeg15;
+    posY = gMinimapFNeg9_8;
+    center = gMinimapZero;
+    posZ = gMinimapFNeg40;
+    scale = gMinimapF0_05;
+    for (; i < 2; i++)
+    {
+        lbl_803DBBC8[i] = (GameObject*)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = posX;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = posY;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosX = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosY = center;
+        ((GameObject*)lbl_803DBBC8[i])->anim.localPosZ = posZ;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotX = 2000;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rotY = 0;
+        ((GameObject*)lbl_803DBBC8[i])->anim.rootMotionScale = scale;
+    }
 }
+#pragma dont_inline reset
 
 void fn_80133934(void)
 {
@@ -789,55 +820,6 @@ void fn_80133934(void)
         minimapTexture = NULL;
         lbl_803DD92C = NULL;
     }
-}
-
-#pragma scheduling off
-#pragma peephole off
-u8 isAreaNameTextActive(void)
-{
-    u32 act = 0;
-    if (gMinimapViewMode == MINIMAP_VIEW_MODE_AREA_NAME && gMinimapEnabled != 0)
-    {
-        act = 1;
-    }
-    if ((u8)act == 0)
-    {
-        return act;
-    }
-    gMinimapAreaNameDelay = 5;
-    return act;
-}
-
-PPCWGPipe GXWGFifo : (0xCC008000);
-
-void fn_8013351C(void)
-{
-    u32 col;
-    u32 c2;
-    f32 c0;
-    f32 s0;
-    f32 c1;
-    f32 s1;
-    f32 cc2;
-    f32 s2;
-    int y;
-
-    col = gMinimapCompassColor;
-    ((u8*)&col)[3] = gMinimapFadeAlpha;
-    gMinimapCompassPhase = -(gMinimapBlipNearDist * timeDelta - gMinimapCompassPhase);
-    if (gMinimapCompassPhase > *(f32*)&gMinimapF32768)
-    {
-        gMinimapCompassPhase = gMinimapCompassPhase - gMinimapF65536;
-    }
-    c0 = gMinimapF60 * mathSinf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
-    s0 = gMinimapF60 * mathCosf((gMinimapPi * gMinimapCompassPhase) / gMinimapF32768);
-    c1 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
-    s1 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapF24576)) / gMinimapF32768);
-    cc2 = gMinimapTwo * mathSinf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
-    s2 = gMinimapTwo * mathCosf((gMinimapPi * (gMinimapCompassPhase + gMinimapFNeg24576)) / gMinimapF32768);
-    y = lbl_803DD938 + 0x32;
-    c2 = col;
-    hudDrawTriangle(gMinimapF110 - c0, y - s0, gMinimapF110 - c1, y - s1, gMinimapF110 - cc2, y - s2, &c2);
 }
 
 void Minimap_frameStart(void)
@@ -1052,6 +1034,22 @@ void Minimap_frameStart(void)
             }
         }
     }
+}
+
+void Minimap_release(void)
+{
+    if (minimapTexture != NULL)
+        textureFree((Texture*)(minimapTexture));
+    textureFree((Texture*)(lbl_803DD940));
+    Minimap_freeObjectSlots(lbl_803DBBC8, 2);
+    minimapTexture = NULL;
+    lbl_803DD940 = NULL;
+}
+
+void Minimap_initialise(void)
+{
+    lbl_803DD940 = textureLoadAsset(MINIMAP_TEXTURE_COMPASS);
+    lbl_803DD938 = 340;
 }
 
 u32 lbl_8031C5D0[10] = {0x00000000,
