@@ -81,33 +81,16 @@ typedef struct
    tables and FP constants. */
 
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
-extern void fn_8015039C(GameObject* obj, u8* state);
-extern u8 fn_8014FFB4(GameObject* obj, u8* state, int a);
-extern void fn_8014CF7C(int obj, u8* state, f32 x, f32 z, int a, int b);
-extern char lbl_8031F16C[];
-extern char lbl_8031DD30[];
 u8 gGroundBaddieTargetSearchResult[0x80];
-extern f32 lbl_803E2740;
-extern f32 lbl_803E2748;
-extern f32 lbl_803E2754;
-extern f32 lbl_803E27A4;
-extern f32 lbl_803E27A8;
-extern f32 lbl_803E27AC;
-extern f32 lbl_803E27B0;
-extern f32 lbl_803E27B4;
-extern f32 lbl_803E27B8;
-extern f32 lbl_803E27BC;
-extern f32 lbl_803E27C0;
-extern f32 lbl_803E27C4;
-extern f32 lbl_803E27C8;
-extern f32 lbl_803E27CC;
-extern f32 lbl_803E27D0;
 
 #pragma scheduling on
 #pragma peephole on
 
 #pragma scheduling off
 #pragma peephole off
+
+__declspec(section ".sdata2") f32 lbl_803E27A4 = 0.6f;
+__declspec(section ".sdata2") f32 lbl_803E27A8 = 0.8f;
 
 #pragma dont_inline on
 void fn_801511E8(GameObject* obj, u8* state)
@@ -116,7 +99,7 @@ void fn_801511E8(GameObject* obj, u8* state)
     u32 idx;
     char* base;
 
-    base = lbl_8031F16C;
+    base = (char*)lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
     if ((f32) * (u16*)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState*)state)->baddie.speedScale)
@@ -153,6 +136,8 @@ void fn_801511E8(GameObject* obj, u8* state)
 }
 #pragma dont_inline reset
 
+__declspec(section ".sdata2") f32 lbl_803E27AC = 100.0f;
+
 void fn_801513AC(GameObject* obj, u8* state)
 {
     u8* entry;
@@ -160,7 +145,7 @@ void fn_801513AC(GameObject* obj, u8* state)
     s16 d;
     char* base;
 
-    base = lbl_8031F16C;
+    base = (char*)lbl_8031F16C;
     base += state[0x33b] * 40;
     entry = *(u8**)(base + 12);
     if (fn_8014C11C((int)obj, lbl_803E27AC, 1, 16, gGroundBaddieTargetSearchResult) >= 1)
@@ -243,7 +228,7 @@ void fn_8015165C(GameObject* obj, u8* state)
     {
         fn_8001FEA8();
     }
-    fn_8015039C(obj, state);
+    ((void (*)(GameObject*, u8*))fn_8015039C)(obj, state);
     tv = *(f32*)(state + 0x328);
     fz = lbl_803E2740;
     if (tv != fz && *(u16*)(state + 0x338) != 0)
@@ -256,7 +241,7 @@ void fn_8015165C(GameObject* obj, u8* state)
             *(u16*)(state + 0x338) = (p28 + *(u16*)(state + 0x338) * 16)[10];
         }
     }
-    if ((u8)fn_8014FFB4(obj, state, 1) == 0)
+    if ((u8)((u8 (*)(GameObject*, u8*, int))fn_8014FFB4)(obj, state, 1) == 0)
     {
         if ((((GroundBaddieState*)state)->baddie.controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
         {
@@ -307,11 +292,22 @@ void fn_8015165C(GameObject* obj, u8* state)
         }
         if ((state[0x323] & 8) == 0)
         {
-            fn_8014CF7C((int)obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
+            ((void (*)(int, u8*, f32, f32, int, int))fn_8014CF7C)(
+                (int)obj, state, ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosX,
                         ((GameObject*)((GroundBaddieState*)state)->baddie.trackedObj)->anim.localPosZ, 10, 0);
         }
     }
 }
+
+__declspec(section ".sdata2") f32 lbl_803E27B0 = 0.17f;
+__declspec(section ".sdata2") f32 lbl_803E27B4 = 0.97f;
+__declspec(section ".sdata2") f32 lbl_803E27B8 = 1.25f;
+__declspec(section ".sdata2") f32 lbl_803E27BC = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E27C0 = 110.0f;
+__declspec(section ".sdata2") f32 lbl_803E27C4 = 120.0f;
+__declspec(section ".sdata2") f32 lbl_803E27C8 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E27CC = 0.75f;
+__declspec(section ".sdata2") f32 lbl_803E27D0 = -0.05f;
 
 void sharpClawInit(int obj, u8* state)
 {
@@ -325,11 +321,11 @@ void sharpClawInit(int obj, u8* state)
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0x3040;
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0x40300000LL;
     *(u32*)&((GroundBaddieState*)state)->baddie.unk2E4 |= 0xC00;
-    ((GroundBaddieState*)state)->baddie.unk308 = lbl_803E2754;
+    ((GroundBaddieState*)state)->baddie.unk308 = 0.005f;
     ((GroundBaddieState*)state)->baddie.animDeltaScale = lbl_803E27B0;
     ((GroundBaddieState*)state)->baddie.unk304 = lbl_803E27B4;
     state[0x320] = 35;
-    fz = lbl_803E2748;
+    fz = 1.0f;
     *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz;
     state[0x321] = 34;
     ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;
@@ -402,7 +398,7 @@ void sharpClawInit(int obj, u8* state)
         state[0x33b] = 5;
         z = 0;
         state[0x320] = z;
-        fz2 = lbl_803E2748;
+        fz2 = 1.0f;
         *(f32*)&((GroundBaddieState*)state)->baddie.eventFlags = fz2;
         state[0x321] = 21;
         ((GroundBaddieState*)state)->baddie.unk318 = lbl_803E27B8;

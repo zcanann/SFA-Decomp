@@ -1343,19 +1343,17 @@ main/dll/dll_00E0_swarmbaddie.c:
 	.sdata2     start:0x803E2678 end:0x803E26D0
 
 main/dll/dll_00E1_wispbaddie.c:
-	.text       start:0x8014F620 end:0x801504F8
+	.text       start:0x8014F620 end:0x8014FFB4
 	.data       start:0x8031DCF8 end:0x8031F290
 	.sdata      start:0x803DBC80 end:0x803DBC88
 	.sbss       start:0x803DDA68 end:0x803DDA70
-	.sdata2     start:0x803E26D0 end:0x803E2758
+	.sdata2     start:0x803E26D0 end:0x803E2740
 
-main/dll/newseqobj.c:
-	.text       start:0x801504F8 end:0x801511E8
-
-main/dll/seqobj11d.c:
-	.text       start:0x801511E8 end:0x80151DB8
+main/dll/newseqobjgroup.c:
+	.text       start:0x8014FFB4 end:0x80151DB8
 	.bss        start:0x803AC428 end:0x803AC4A8
 	.sdata      start:0x803DBC88 end:0x803DBCA8
+	.sdata2     start:0x803E2740 end:0x803E27D4
 
 main/dll/groundbaddiepush.c:
 	.text       start:0x80151DB8 end:0x80152040
