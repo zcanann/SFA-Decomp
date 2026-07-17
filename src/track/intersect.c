@@ -139,7 +139,7 @@ typedef struct DepthReadRequest
     s32 key;   /* 0x8: opaque request key */
 } DepthReadRequest;
 
-extern f32 lbl_803DFB10;
+extern f32 __THPInfo;
 
 extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
@@ -155,7 +155,8 @@ extern u8 gWaterSplashQuads[0x3800];
 extern f32 Gbase;
 extern void* gWaterFxTextures[4];
 extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
-extern f32 lbl_803DFADC, lbl_803DFAE0, lbl_803DFAE4;
+extern f32 lbl_803DEE5C, lbl_803DEE64;
+extern f32 Gwid;
 extern f32 lbl_803DEED8, lbl_803DEEE8, lbl_803DEEEC, lbl_803DEEF0, lbl_803DEEF4;
 extern f32 lbl_803DEF24, lbl_803DEF28, lbl_803DEF30, lbl_803DEF34, lbl_803DEF38;
 extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
@@ -806,10 +807,10 @@ void mapInitFn_8006fccc(void)
     *(u32*)(base + 0x14) = (u32)textureLoadAsset(0x18);
     *(u32*)(base + 0x18) = (u32)textureLoadAsset(0x1A);
     *(u32*)(base + 0x1C) = (u32)textureLoadAsset(0x646);
-    *(f32*)(base + 0x00) = lbl_803DFADC;
-    *(f32*)(base + 0x04) = lbl_803DFAE0;
-    *(f32*)(base + 0x08) = lbl_803DFAE0;
-    *(f32*)(base + 0x0C) = lbl_803DFAE4;
+    *(f32*)(base + 0x00) = lbl_803DEE5C;
+    *(f32*)(base + 0x04) = Gwid;
+    *(f32*)(base + 0x08) = Gwid;
+    *(f32*)(base + 0x0C) = lbl_803DEE64;
     gWaterFxDisabled = 0;
     gWaterQuadWriteIdx = 0;
     gWaterRippleWriteIdx = 0;
@@ -937,7 +938,7 @@ void normalize(f32* x, f32* y, f32* z)
     f32 len;
 
     len = sqrtf(*z * *z + (*x * *x + *y * *y));
-    scale = lbl_803DFB10 / len;
+    scale = __THPInfo / len;
     *x = *x * scale;
     *y = *y * scale;
     *z = *z * scale;

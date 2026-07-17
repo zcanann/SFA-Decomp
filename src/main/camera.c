@@ -1098,7 +1098,7 @@ void Camera_SetFovY(f32 fovY)
 {
     if (fovY == 0.0f)
     {
-        fovY = 1.0f;
+        fovY = 60.0f;
     }
     gCameraFovY = fovY;
 }
