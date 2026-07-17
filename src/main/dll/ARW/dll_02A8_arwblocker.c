@@ -16,6 +16,7 @@
 #include "main/dll/ARW/dll_02A8_arwblocker.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 /* placement sequenceMode: which object sequence the blocker fires on approach */
 #define ARWBLOCKER_SEQMODE_DEFAULT 0 /* fires sequence 0; never reports "armed" */
@@ -125,3 +126,12 @@ void ARWBlocker_release(void)
 void ARWBlocker_initialise(void)
 {
 }
+
+ObjectDescriptor gARWBlockerObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ARWBlocker_initialise, (ObjectDescriptorCallback)ARWBlocker_release, 0,
+    (ObjectDescriptorCallback)ARWBlocker_init, (ObjectDescriptorCallback)ARWBlocker_update,
+    (ObjectDescriptorCallback)ARWBlocker_hitDetect, (ObjectDescriptorCallback)ARWBlocker_render,
+    (ObjectDescriptorCallback)ARWBlocker_free, (ObjectDescriptorCallback)ARWBlocker_getObjectTypeId,
+    ARWBlocker_getExtraSize,
+};

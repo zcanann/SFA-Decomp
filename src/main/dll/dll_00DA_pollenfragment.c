@@ -26,6 +26,7 @@
 #include "main/obj_group.h"
 #include "main/obj_path.h"
 #include "main/objfx.h"
+#include "main/object_descriptor.h"
 
 f32 lbl_803DBD48 = 1024.0f;
 f32 lbl_803DBD4C = 512.0f;
@@ -53,6 +54,30 @@ typedef struct
     u8 smoothTurn : 1; /* 0x12 bit 5 */
     u8 usePath : 1;    /* 0x12 bit 4 */
 } PollenFragmentDef;
+
+PollenFragmentConfig lbl_80320538 = {
+    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
+};
+
+PollenFragmentConfig lbl_8032054C = {
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
+};
+
+PollenFragmentConfig lbl_80320560 = {
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
+};
+
+PollenFragmentConfig lbl_80320574 = {
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
+};
+
+PollenFragmentConfig lbl_80320588 = {
+    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
+};
+
+PollenFragmentConfig* lbl_8032059C[] = {
+    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
+};
 
 typedef struct PollenFragmentExtra
 {
@@ -359,3 +384,12 @@ void pollenfragment_update(int obj)
 }
 #pragma opt_strength_reduction reset
 #pragma opt_common_subs reset
+
+ObjectDescriptor gPollenFragmentObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pollenfragment_initialise, (ObjectDescriptorCallback)pollenfragment_release, 0,
+    (ObjectDescriptorCallback)pollenfragment_init, (ObjectDescriptorCallback)pollenfragment_update,
+    (ObjectDescriptorCallback)pollenfragment_hitDetect, (ObjectDescriptorCallback)pollenfragment_render,
+    (ObjectDescriptorCallback)pollenfragment_free, (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
+    pollenfragment_getExtraSize,
+};

@@ -21,6 +21,7 @@
 int lbl_803DDD94;
 int lbl_803DDD90;
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
 void fn_80231028(GameObject* obj, int speed)
@@ -128,3 +129,12 @@ void dll_2A3_release_nop(void)
 void dll_2A3_initialise_nop(void)
 {
 }
+
+ObjectDescriptor dll_2A3 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_2A3_initialise_nop, (ObjectDescriptorCallback)dll_2A3_release_nop, 0,
+    (ObjectDescriptorCallback)dll_2A3_init, (ObjectDescriptorCallback)dll_2A3_update,
+    (ObjectDescriptorCallback)dll_2A3_hitDetect, (ObjectDescriptorCallback)dll_2A3_render,
+    (ObjectDescriptorCallback)dll_2A3_free, (ObjectDescriptorCallback)dll_2A3_getObjectTypeId,
+    dll_2A3_getExtraSize_ret_12,
+};

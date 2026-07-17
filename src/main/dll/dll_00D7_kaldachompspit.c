@@ -24,6 +24,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/sfx_stop_channel_api.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_EXPLOSIVE 0x1f
 #define KALDACHOMPSPIT_HIT_VOLUME_SLOT_DEFAULT   0xa
@@ -285,3 +286,12 @@ void KaldaChompSpit_release(void)
 void KaldaChompSpit_initialise(void)
 {
 }
+
+ObjectDescriptor gKaldaChompSpitObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)KaldaChompSpit_initialise, (ObjectDescriptorCallback)KaldaChompSpit_release, 0,
+    (ObjectDescriptorCallback)KaldaChompSpit_init, (ObjectDescriptorCallback)KaldaChompSpit_update,
+    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect, (ObjectDescriptorCallback)KaldaChompSpit_render,
+    (ObjectDescriptorCallback)KaldaChompSpit_free, (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
+    KaldaChompSpit_getExtraSize,
+};

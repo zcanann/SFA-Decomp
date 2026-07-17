@@ -16,6 +16,7 @@
 #include "main/vecmath.h"
 #include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
 int ARWSpeedStr_getExtraSize(void)
@@ -93,3 +94,12 @@ void ARWSpeedStr_release(void)
 void ARWSpeedStr_initialise(void)
 {
 }
+
+ObjectDescriptor gARWSpeedStrObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ARWSpeedStr_initialise, (ObjectDescriptorCallback)ARWSpeedStr_release, 0,
+    (ObjectDescriptorCallback)ARWSpeedStr_init, (ObjectDescriptorCallback)ARWSpeedStr_update,
+    (ObjectDescriptorCallback)ARWSpeedStr_hitDetect, (ObjectDescriptorCallback)ARWSpeedStr_render,
+    (ObjectDescriptorCallback)ARWSpeedStr_free, (ObjectDescriptorCallback)ARWSpeedStr_getObjectTypeId,
+    ARWSpeedStr_getExtraSize,
+};

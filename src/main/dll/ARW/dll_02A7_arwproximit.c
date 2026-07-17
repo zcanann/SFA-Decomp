@@ -20,6 +20,7 @@
 #include "main/dll/ARW/dll_02A7_arwproximit.h"
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
 
@@ -247,3 +248,12 @@ void arwproximit_release(void)
 void arwproximit_initialise(void)
 {
 }
+
+ObjectDescriptor gARWProximitObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwproximit_initialise, (ObjectDescriptorCallback)arwproximit_release, 0,
+    (ObjectDescriptorCallback)arwproximit_init, (ObjectDescriptorCallback)arwproximit_update,
+    (ObjectDescriptorCallback)arwproximit_hitDetect, (ObjectDescriptorCallback)arwproximit_render,
+    (ObjectDescriptorCallback)arwproximit_free, (ObjectDescriptorCallback)arwproximit_getObjectTypeId,
+    arwproximit_getExtraSize,
+};

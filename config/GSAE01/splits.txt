@@ -1476,20 +1476,24 @@ main/dll/cfdoorlightgroup.c:
 
 main/dll/dll_00D6_kaldachomme.c:
 	.text       start:0x80169360 end:0x801696D4
-	.data       start:0x80320458 end:0x803205E8
+	.data       start:0x80320458 end:0x80320490
 
 main/dll/dll_00D7_kaldachompspit.c:
 	.text       start:0x801696D4 end:0x80169EF4
+	.data       start:0x80320490 end:0x803204C8
 
 main/dll/dll_00D8_pinponspike.c:
 	.text       start:0x80169EF4 end:0x8016A3C8
+	.data       start:0x803204C8 end:0x80320500
 	.sdata2     start:0x803E3130 end:0x803E3138
 
 main/dll/dll_00D9_pollen.c:
 	.text       start:0x8016A3C8 end:0x8016A8E0
+	.data       start:0x80320500 end:0x80320538
 
 main/dll/dll_00DA_pollenfragment.c:
 	.text       start:0x8016A8E0 end:0x8016B230
+	.data       start:0x80320538 end:0x803205E8
 	.sdata      start:0x803DBD48 end:0x803DBD50
 
 main/dll/dll_00DB_mikabomb.c:
@@ -3482,37 +3486,45 @@ main/dll/ARW/dll_02A1_arwlevelcon.c:
 
 main/dll/ARW/dll_02A2_arwspeedstr.c:
 	.text       start:0x80230E2C end:0x80231028
+	.data       start:0x8032B808 end:0x8032B840
 	.sdata2     start:0x803E70F8 end:0x803E7100
 
 main/dll/dll_02A3.c:
 	.text       start:0x80231028 end:0x8023134C
+	.data       start:0x8032B840 end:0x8032B878
 	.sbss       start:0x803DDD90 end:0x803DDD98
 	.sdata2     start:0x803E7110 end:0x803E7130
 
 main/dll/dll_02A4.c:
 	.text       start:0x8023134C end:0x802315EC
+	.data       start:0x8032B878 end:0x8032B8B0
 	.sdata2     start:0x803E7130 end:0x803E7138
 
 main/dll/ARW/dll_02A5_arwgenerato.c:
 	.text       start:0x802315EC end:0x80231A90
+	.data       start:0x8032B8B0 end:0x8032B8E8
 	.sdata2     start:0x803E7148 end:0x803E7160
 
 main/dll/ARW/dll_02A6_arwsquadron.c:
 	.text       start:0x80231A90 end:0x802331B0
+	.data       start:0x8032B8E8 end:0x8032B920
 
 main/dll/ARW/dll_02A7_arwproximit.c:
 	.text       start:0x802331B0 end:0x802338F0
+	.data       start:0x8032B920 end:0x8032B958
 	.sdata2     start:0x803E71D8 end:0x803E7204
 	.sdata2     start:0x803E7208 end:0x803E7218
 
 main/dll/ARW/dll_02A8_arwblocker.c:
 	.text       start:0x802338F0 end:0x80233B0C
+	.data       start:0x8032B958 end:0x8032B990
 	.sdata2     start:0x803E7218 end:0x803E7224
 	.sdata2     start:0x803E7228 end:0x803E7230
 
 main/dll/LGT/dll_02A9_lgtpointlight.c:
 	.text       start:0x80233B0C end:0x8023404C
 	.rodata     start:0x802C25F8 end:0x802C2608
+	.data       start:0x8032B990 end:0x8032B9C8
 	.sdata2     start:0x803E7230 end:0x803E7250
 
 main/dll/LGT/dll_02AA_lgtdirectionallight.c:

@@ -22,6 +22,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define ARW_SQUADRON_PARTFX_SMOKE 0x7d0 /* damage smoke effect (pfx.f8 = damageSmokeScale) */
 #define ARW_SQUADRON_PARTFX_FIRE  0x7d1 /* fire effect (pfx.f8 = fireFxScale) */
@@ -355,6 +356,14 @@ void arwsquadron_updateVolley(GameObject* obj, ArwSquadronState* state, ArwSquad
     }
 }
 #pragma dont_inline off
+
+ObjectDescriptor gARWSquadronObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
+    (ObjectDescriptorCallback)ARWSquadron_init, (ObjectDescriptorCallback)ARWSquadron_update,
+    (ObjectDescriptorCallback)ARWSquadron_hitDetect, (ObjectDescriptorCallback)ARWSquadron_render,
+    (ObjectDescriptorCallback)ARWSquadron_free, (ObjectDescriptorCallback)ARWSquadron_getObjectTypeId,
+    ARWSquadron_getExtraSize,
+};
 
 void arwsquadron_emitEffects(GameObject* obj, ArwSquadronState* state)
 {

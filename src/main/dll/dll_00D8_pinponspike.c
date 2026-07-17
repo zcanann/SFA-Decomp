@@ -27,6 +27,7 @@
 #include "main/vecmath.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx.h"
+#include "main/object_descriptor.h"
 
 #define PINPONSPIKE_HIT_VOLUME_SLOT 10
 
@@ -187,3 +188,12 @@ void pinponspike_release(void)
 void pinponspike_initialise(void)
 {
 }
+
+ObjectDescriptor gPinPonSpikeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)pinponspike_initialise, (ObjectDescriptorCallback)pinponspike_release, 0,
+    (ObjectDescriptorCallback)pinponspike_init, (ObjectDescriptorCallback)pinponspike_update,
+    (ObjectDescriptorCallback)pinponspike_hitDetect, (ObjectDescriptorCallback)pinponspike_render,
+    (ObjectDescriptorCallback)pinponspike_free, (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
+    pinponspike_getExtraSize,
+};

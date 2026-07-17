@@ -1,8 +1,6 @@
 /*
  * kaldachomme (DLL 0x00D6) - the KaldaChompMe animated chomping-mouth
- * object plus the data records for several sibling objects whose code
- * lives in neighbouring DLLs (kaldachompspit, pinponspike, pollen,
- * pollenfragment).
+ * object.
  *
  * KaldaChompMe drives a single animation move toward a target progress
  * value (state @0x00..0x0C) at state->step per frame; setLinkedMouthMode
@@ -10,19 +8,13 @@
  * open/close move (mode 1 = moveId 0, mode 2 = moveId 1). render draws
  * via objRenderModelAndHitVolumes when the visible flag is set; init seeds the
  * rotation from the placement bytes and starts move 0.
- *
- * This TU also owns the ObjectDescriptors and the PollenFragmentConfig
- * table (the config pointer table) for the sibling pollen-fragment object.
  */
 #include "main/game_object.h"
 #include "main/object_api.h"
 #include "main/dll/dll_00D6_kaldachomme_api.h"
-#include "main/dll/dll_00D7_kaldachompspit_api.h"
-#include "main/dll/dll_00D8_pinponspike_api.h"
-#include "main/dll/dll_00D9_pollen_api.h"
-#include "main/dll/dll_00DA_pollenfragment_api.h"
 #include "main/obj_placement.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
 typedef struct KaldaChompMeState
@@ -225,96 +217,4 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
     (ObjectDescriptorCallback)KaldaChompMe_free,
     (ObjectDescriptorCallback)KaldaChompMe_getObjectTypeId,
     KaldaChompMe_getExtraSize,
-};
-
-ObjectDescriptor gKaldaChompSpitObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)KaldaChompSpit_initialise,
-    (ObjectDescriptorCallback)KaldaChompSpit_release,
-    0,
-    (ObjectDescriptorCallback)KaldaChompSpit_init,
-    (ObjectDescriptorCallback)KaldaChompSpit_update,
-    (ObjectDescriptorCallback)KaldaChompSpit_hitDetect,
-    (ObjectDescriptorCallback)KaldaChompSpit_render,
-    (ObjectDescriptorCallback)KaldaChompSpit_free,
-    (ObjectDescriptorCallback)KaldaChompSpit_getObjectTypeId,
-    KaldaChompSpit_getExtraSize,
-};
-
-ObjectDescriptor gPinPonSpikeObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pinponspike_initialise,
-    (ObjectDescriptorCallback)pinponspike_release,
-    0,
-    (ObjectDescriptorCallback)pinponspike_init,
-    (ObjectDescriptorCallback)pinponspike_update,
-    (ObjectDescriptorCallback)pinponspike_hitDetect,
-    (ObjectDescriptorCallback)pinponspike_render,
-    (ObjectDescriptorCallback)pinponspike_free,
-    (ObjectDescriptorCallback)pinponspike_getObjectTypeId,
-    pinponspike_getExtraSize,
-};
-
-ObjectDescriptor gPollenObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)Pollen_initialise,
-    (ObjectDescriptorCallback)Pollen_release,
-    0,
-    (ObjectDescriptorCallback)Pollen_init,
-    (ObjectDescriptorCallback)Pollen_update,
-    (ObjectDescriptorCallback)Pollen_hitDetect,
-    (ObjectDescriptorCallback)Pollen_render,
-    (ObjectDescriptorCallback)Pollen_free,
-    (ObjectDescriptorCallback)Pollen_getObjectTypeId,
-    Pollen_getExtraSize,
-};
-
-PollenFragmentConfig lbl_80320538 = {
-    0x0000, 0x049F, 0x00B9, 0x04BA, 0x04BA, -1, 0.2f, 0x0000, 0xC000,
-};
-
-PollenFragmentConfig lbl_8032054C = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x7000,
-};
-
-PollenFragmentConfig lbl_80320560 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x2000,
-};
-
-PollenFragmentConfig lbl_80320574 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, -1, 0.2f, 0x0000, 0x2000,
-};
-
-PollenFragmentConfig lbl_80320588 = {
-    0x02FA, 0x02FB, 0x0496, 0x068F, 0x068F, 0x068F, 0.4f, 0x0026, 0x3000,
-};
-
-PollenFragmentConfig* lbl_8032059C[] = {
-    &lbl_80320538, &lbl_8032054C, &lbl_80320560, &lbl_80320574, &lbl_80320588,
-};
-
-ObjectDescriptor gPollenFragmentObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)pollenfragment_initialise,
-    (ObjectDescriptorCallback)pollenfragment_release,
-    0,
-    (ObjectDescriptorCallback)pollenfragment_init,
-    (ObjectDescriptorCallback)pollenfragment_update,
-    (ObjectDescriptorCallback)pollenfragment_hitDetect,
-    (ObjectDescriptorCallback)pollenfragment_render,
-    (ObjectDescriptorCallback)pollenfragment_free,
-    (ObjectDescriptorCallback)pollenfragment_getObjectTypeId,
-    pollenfragment_getExtraSize,
 };

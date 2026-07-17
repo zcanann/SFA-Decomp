@@ -23,6 +23,7 @@
 #include "main/game_object.h"
 #include "main/modellight_api.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/dll/LGT/dll_02A9_lgtpointlight.h"
 
 const f32 lbl_802C25F8[4] = {0.0f, 0.0f, 1.0f, 0.0f};
@@ -209,3 +210,12 @@ void PointLight_release(void)
 void PointLight_initialise(void)
 {
 }
+
+ObjectDescriptor gPointLightObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)PointLight_initialise, (ObjectDescriptorCallback)PointLight_release, 0,
+    (ObjectDescriptorCallback)PointLight_init, (ObjectDescriptorCallback)PointLight_update,
+    (ObjectDescriptorCallback)PointLight_hitDetect, (ObjectDescriptorCallback)PointLight_render,
+    (ObjectDescriptorCallback)PointLight_free, (ObjectDescriptorCallback)PointLight_getObjectTypeId,
+    PointLight_getExtraSize,
+};

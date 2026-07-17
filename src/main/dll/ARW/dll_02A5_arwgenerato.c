@@ -20,6 +20,7 @@
 #include "main/dll/ARW/dll_02A4.h"
 #include "main/dll/ARW/dll_02A5_arwgenerato.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
 /* Spawn-setup buffer for a squadron ship: ObjPlacement head (pos/color) plus
@@ -172,3 +173,12 @@ void arwgenerato_release(void)
 void arwgenerato_initialise(void)
 {
 }
+
+ObjectDescriptor gARWGeneratoObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwgenerato_initialise, (ObjectDescriptorCallback)arwgenerato_release, 0,
+    (ObjectDescriptorCallback)arwgenerato_init, (ObjectDescriptorCallback)arwgenerato_update,
+    (ObjectDescriptorCallback)arwgenerato_hitDetect, (ObjectDescriptorCallback)arwgenerato_render,
+    (ObjectDescriptorCallback)arwgenerato_free, (ObjectDescriptorCallback)arwgenerato_getObjectTypeId,
+    arwgenerato_getExtraSize,
+};

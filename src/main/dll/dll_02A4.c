@@ -17,6 +17,7 @@
 #include "main/object.h"
 #include "main/dll/ARW/dll_02A3.h"
 #include "main/dll/ARW/dll_02A4.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 
 /* random start-rotation range and per-axis spin-rate range */
@@ -101,3 +102,12 @@ void dll_2A4_release_nop(void)
 void dll_2A4_initialise_nop(void)
 {
 }
+
+ObjectDescriptor dll_2A4 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_2A4_initialise_nop, (ObjectDescriptorCallback)dll_2A4_release_nop, 0,
+    (ObjectDescriptorCallback)dll_2A4_init, (ObjectDescriptorCallback)dll_2A4_update,
+    (ObjectDescriptorCallback)dll_2A4_hitDetect_nop, (ObjectDescriptorCallback)dll_2A4_render,
+    (ObjectDescriptorCallback)dll_2A4_free_nop, (ObjectDescriptorCallback)dll_2A4_getObjectTypeId,
+    dll_2A4_getExtraSize_ret_12,
+};
