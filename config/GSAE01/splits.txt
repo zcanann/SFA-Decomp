@@ -2392,6 +2392,7 @@ main/dll/DIM/dimgut2group.c:
 
 main/dll/DIM/dll_01E5_dimbossspit.c:
 	.text       start:0x801BF8D8 end:0x801BFFF4
+	.sdata2     start:0x803E4D58 end:0x803E4D60
 
 main/dll/dll_01E4_magicmaker.c:
 	.text       start:0x801BFFF4 end:0x801C02B8
