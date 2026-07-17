@@ -4042,7 +4042,7 @@ main/audio/mcmd_setup.c:
 	extabindex  start:0x80006068 end:0x800060B0
 	.text       start:0x802757C4 end:0x802763C0
 	.bss        start:0x803CA2B0 end:0x803CA2D0
-	.sdata2     start:0x803E77F0 end:0x803E7800
+	.sdata2     start:0x803E77F0 end:0x803E77FC
 
 main/audio/mcmd_volume.c:
 	extab       start:0x800058C0 end:0x800058D0
