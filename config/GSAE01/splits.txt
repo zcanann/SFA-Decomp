@@ -1362,7 +1362,11 @@ main/dll/fall_ladders.c:
 	.sdata      start:0x803DBCD0 end:0x803DBCD8
 
 main/dll/fireflylantern.c:
-	.text       start:0x80154870 end:0x8015536C
+	.text       start:0x80154870 end:0x80154FB4
+
+main/dll/fireflylantern_steer.c:
+	.text       start:0x80154FB4 end:0x8015536C
+	.sdata2     start:0x803E2A10 end:0x803E2A20
 
 main/dll/duster.c:
 	.text       start:0x8015536C end:0x80157004

@@ -1164,6 +1164,7 @@ config.libs = [
             Object(NonMatching, "main/dll/magicplant.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/fall_ladders.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/fireflylantern.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/fireflylantern_steer.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/duster.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/firecrawler.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00CA_icebaddie.c", cflags=cflags_dll_noopt),
