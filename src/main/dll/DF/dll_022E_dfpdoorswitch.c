@@ -4,8 +4,6 @@
  * "<doorswitch Init>No Longer supported" via OSReport; the object holds no
  * extra state.
  */
-#include "main/dll/DF/dll_022B_dfptorch.h"
-#include "main/dll/DF/dll_022D_dfpseqpoint.h"
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "dolphin/os/OSReport.h"
 
@@ -50,35 +48,3 @@ void doorswitch_initialise(void)
 
 char sDoorswitchInitNoLongerSupported[] = "<doorswitch Init>No Longer supported \n";
 
-ObjectDescriptor gDFP_seqpointObjDescriptor = {
-    0x00000000,
-    0x00000000,
-    0x00000000,
-    0x00090000,
-    (ObjectDescriptorCallback)DFP_seqpoint_initialise,
-    (ObjectDescriptorCallback)DFP_seqpoint_release,
-    0x00000000,
-    (ObjectDescriptorCallback)DFP_seqpoint_init,
-    (ObjectDescriptorCallback)DFP_seqpoint_update,
-    (ObjectDescriptorCallback)DFP_seqpoint_hitDetect,
-    (ObjectDescriptorCallback)DFP_seqpoint_render,
-    (ObjectDescriptorCallback)DFP_seqpoint_free,
-    (ObjectDescriptorCallback)DFP_seqpoint_getObjectTypeId,
-    DFP_seqpoint_getExtraSize,
-};
-ObjectDescriptor gDFP_TorchObjDescriptor = {
-    0x00000000,
-    0x00000000,
-    0x00000000,
-    0x00090000,
-    (ObjectDescriptorCallback)DFP_Torch_initialise,
-    (ObjectDescriptorCallback)DFP_Torch_release,
-    0x00000000,
-    (ObjectDescriptorCallback)DFP_Torch_init,
-    (ObjectDescriptorCallback)DFP_Torch_update,
-    (ObjectDescriptorCallback)DFP_Torch_hitDetect,
-    (ObjectDescriptorCallback)DFP_Torch_render,
-    (ObjectDescriptorCallback)DFP_Torch_free,
-    (ObjectDescriptorCallback)DFP_Torch_getObjectTypeId,
-    DFP_Torch_getExtraSize,
-};

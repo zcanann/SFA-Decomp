@@ -21,6 +21,7 @@
 #include "main/shader_api.h"
 #include "main/voxmaps.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(DfpTorchState) == 0x10);
 
@@ -302,3 +303,12 @@ void DFP_Torch_release(void)
 void DFP_Torch_initialise(void)
 {
 }
+
+ObjectDescriptor gDFP_TorchObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DFP_Torch_initialise, (ObjectDescriptorCallback)DFP_Torch_release, 0,
+    (ObjectDescriptorCallback)DFP_Torch_init, (ObjectDescriptorCallback)DFP_Torch_update,
+    (ObjectDescriptorCallback)DFP_Torch_hitDetect, (ObjectDescriptorCallback)DFP_Torch_render,
+    (ObjectDescriptorCallback)DFP_Torch_free, (ObjectDescriptorCallback)DFP_Torch_getObjectTypeId,
+    DFP_Torch_getExtraSize,
+};
