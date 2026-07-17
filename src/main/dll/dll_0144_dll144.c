@@ -8,8 +8,6 @@
  * event callback. render forwards a fixed scale (lbl_803E56C0) to the
  * shared objRenderModelAndHitVolumes when visible.
  *
- * The trailing gFElevControlObjDescriptor (the sibling FElevControl
- * elevator-control object, owned by DLL 0x142) is emitted here too.
  */
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
@@ -18,16 +16,6 @@
 #include "main/dll/dll_0144_dll144.h"
 
 extern f32 lbl_803E56C0;
-
-int FElevControl_getExtraSize(void);
-int FElevControl_getObjectTypeId(void);
-void FElevControl_free(void);
-void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void FElevControl_hitDetect(void);
-void FElevControl_update(void);
-void FElevControl_init(int x);
-void FElevControl_release(void);
-void FElevControl_initialise(void);
 
 int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -76,23 +64,6 @@ void dll_144_release(void)
 void dll_144_initialise(void)
 {
 }
-
-ObjectDescriptor gFElevControlObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)FElevControl_initialise,
-    (ObjectDescriptorCallback)FElevControl_release,
-    0,
-    (ObjectDescriptorCallback)FElevControl_init,
-    (ObjectDescriptorCallback)FElevControl_update,
-    (ObjectDescriptorCallback)FElevControl_hitDetect,
-    (ObjectDescriptorCallback)FElevControl_render,
-    (ObjectDescriptorCallback)FElevControl_free,
-    (ObjectDescriptorCallback)FElevControl_getObjectTypeId,
-    FElevControl_getExtraSize,
-};
 
 ObjectDescriptor lbl_80327BA8 = {
     0,

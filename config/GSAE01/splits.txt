@@ -2736,10 +2736,11 @@ main/dll/dll_0143_feseqobject.c:
 
 main/dll/dll_0142_felevcontrol.c:
 	.text       start:0x801DF934 end:0x801DF9AC
+	.data       start:0x80327B70 end:0x80327BA8
 
 main/dll/dll_0144_dll144.c:
 	.text       start:0x801DF9AC end:0x801DFA28
-	.data       start:0x80327B70 end:0x80327BE0
+	.data       start:0x80327BA8 end:0x80327BE0
 
 main/dll/dbprotection.c:
 	.text       start:0x801DFA28 end:0x801E1588
