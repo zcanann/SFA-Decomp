@@ -4147,21 +4147,11 @@ main/audio/synth_adsr.c:
 	.text       start:0x8027A60C end:0x8027ACB8
 	.sdata2     start:0x803E7830 end:0x803E7858
 
-main/audio/vsample_alloc.c:
-	extab       start:0x800059C0 end:0x800059C8
-	extabindex  start:0x80006230 end:0x8000623C
-	.text       start:0x8027ACB8 end:0x8027AFC0
-
-main/audio/vsample_events.c:
-	extab       start:0x800059C8 end:0x800059D8
-	extabindex  start:0x8000623C end:0x80006254
-	.text       start:0x8027AFC0 end:0x8027B25C
+main/audio/synth_vsamples.c:
+	extab       start:0x800059C0 end:0x800059E0
+	extabindex  start:0x80006230 end:0x80006260
+	.text       start:0x8027ACB8 end:0x8027B42C
 	.bss        start:0x803CB290 end:0x803CBBE0
-
-main/audio/vsample_update.c:
-	extab       start:0x800059D8 end:0x800059E0
-	extabindex  start:0x80006254 end:0x80006260
-	.text       start:0x8027B25C end:0x8027B42C
 
 main/audio/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
