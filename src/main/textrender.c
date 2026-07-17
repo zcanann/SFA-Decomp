@@ -2503,12 +2503,13 @@ void gameTextLoadGraphicsFn_8001a918(void)
     {
         if (lbl_803DC968)
         {
-            int c = *(int*)glyph;
             u16* p[1];
             int i;
+            int c;
             u32 val;
             int hi;
             u8 lo;
+            c = *(int*)glyph;
             p[0] = gGameTextSjisGlyphTable;
             i = 0xfe;
             while (i--)
@@ -2577,12 +2578,19 @@ void gameTextLoadGraphicsFn_8001a918(void)
         *(u8*)(glyph + 0xe) = 6;
         *(u8*)(glyph + 0xf) = 0;
         {
-            u32* src = (u32*)buf;
-            int ty = *(u16*)(glyph + 6) >> 3;
-            int tx = *(u16*)(glyph + 4) >> 3;
-            int tyEnd = ty + 3;
-            int txEnd = tx + 3;
-            int row = ty;
+            u32* src;
+            int ty;
+            int tx;
+            int tyEnd;
+            int txEnd;
+            int row;
+
+            src = (u32*)buf;
+            tx = *(u16*)(glyph + 4) >> 3;
+            ty = *(u16*)(glyph + 6) >> 3;
+            row = ty;
+            txEnd = tx + 3;
+            tyEnd = ty + 3;
             for (; row < tyEnd; row++)
             {
                 int j2 = tx;

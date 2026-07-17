@@ -1578,7 +1578,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_0273_firepipe.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0279_drenergydisc.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_027C_drlightbea.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DR/dll_027E_drmusiccont.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DR/dll_027E_drmusiccont.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0280_drcloudper.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0281_drearthcal.c"),
             Object(NonMatching, "main/dll/dll_0282_barrelgener.c", cflags=cflags_dll_noopt),
