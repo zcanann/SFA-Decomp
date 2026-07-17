@@ -264,13 +264,13 @@ extern u32 FUN_8025c224();
 extern u32 FUN_8025c2a8();
 extern u32 FUN_8025c368();
 extern u32 FUN_8025c510();
-extern u32 GXSetBlendMode();
+extern u32 GXSetTevKColorSel();
 extern u32 FUN_8025c5f0();
 extern u32 FUN_8025c65c();
 extern u32 FUN_8025c828();
 extern u32 FUN_8025ca04();
 extern void FUN_8025ca38(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
-extern u32 FUN_8025cce8();
+extern u32 GXSetBlendMode();
 extern u32 FUN_8025d8c4();
 extern u32 lbl_803DB468;
 extern u32 lbl_803DB470;
@@ -312,7 +312,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     envColor = savedEnvColor;
     FUN_8025c510(0, (u8*)&envColor);
     FUN_8025c5f0(0, 0x1c);
-    GXSetBlendMode(0, 0xc);
+    GXSetTevKColorSel(0, 0xc);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
     FUN_8004812c(*(int*)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
     FUN_80247a7c(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
@@ -332,7 +332,7 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
     FUN_8025ca38(0, 0.0f, 0.0f, 0.0f, 0.0f, *(ObjPrintGXColor*)&lbl_803DB468);
     gxSetZModeByteLegacy(1, 3, 0);
     gxSetPeControl_ZCompLocByteLegacy(1);
-    FUN_8025cce8(1, 4, 5, 5);
+    GXSetBlendMode(1, 4, 5, 5);
     return;
 }
 extern f32 lbl_803DEA60;
