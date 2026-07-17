@@ -144,7 +144,7 @@ void fn_8008D088(int slot);
 void fn_8008BDA8(void);
 void skyFn_8008a04c(void);
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int ambientIntensity,
-                 int lightIntensity, int blendAlpha);
+                 int lightIntensity, u8 blendAlpha);
 void renderSunAndMoon(int a, int b, int c, int d, int visible);
 void skyFn_8008aee8(void);
 void Sky_func03(int a, int b, u8* cfg);
