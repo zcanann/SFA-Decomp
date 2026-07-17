@@ -295,9 +295,6 @@ STATIC_ASSERT(offsetof(FCVars, moveChainIndex) == 0x33e);
 STATIC_ASSERT(offsetof(FCVars, reactStep) == 0x33f);
 STATIC_ASSERT(offsetof(FCVars, linkedObj) == 0x340);
 
-void whirlpool_updateWhileFrozen(void)
-{
-}
 
 void hagabonMK2_stopLoopSfx(int obj)
 {
@@ -337,82 +334,7 @@ void firecrawler_spawnFirepipe(int* obj, u8* state)
 }
 #pragma dont_inline reset
 
-void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
-{
-    u8* base;
-    u32 r;
 
-    {
-        u8* bbase;
-        u32 idx;
-        bbase = (u8*)gCrawlerReactionTables;
-        idx = ((FCVars*)st)->turnDelta;
-        bbase = bbase + idx * 8;
-        base = *(u8**)(bbase + 4);
-    }
-
-    if (cmd == 0x11)
-    {
-        return;
-    }
-    if (cmd == 0x10)
-    {
-        ((BaddieState*)st)->reactionFlags |= 0x20;
-        return;
-    }
-    if (((FCVars*)st)->moveTableIndex > 3)
-    {
-        Baddie_SetMove((int*)obj, st, 6, lbl_803E2CB8, 0, 0);
-    }
-    else
-    {
-        Baddie_SetMove((int*)obj, st, 5, lbl_803E2CB8, 0, 0);
-    }
-    r = randomGetRange(0, 3);
-    ((BaddieState*)st)->seqEntryIndex = base[r];
-    ((BaddieState*)st)->reactionFlags |= 0x8;
-    if (sub > (int)((BaddieState*)st)->hitCounter)
-    {
-        ((BaddieState*)st)->hitCounter = 0;
-    }
-    else
-    {
-        ((BaddieState*)st)->hitCounter = (u16)(((BaddieState*)st)->hitCounter - sub);
-    }
-    if (((BaddieState*)st)->hitCounter == 0)
-    {
-        Sfx_PlayFromObject(obj, SFXTRIG_baddie_eggsnatch_carry2);
-    }
-    if (cmd == 0x1a)
-        return;
-    Sfx_PlayFromObject(obj, SFXTRIG_stftest);
-}
-
-void snowworm_applyReactionState(int* obj, int* st)
-{
-    u8* t1 = *(u8**)((char*)gCrawlerReactionTables + ((FCVars*)st)->turnDelta * 8);
-    *((u8*)obj + 0xaf) = (u8)(*((u8*)obj + 0xaf) | 0x8);
-    if ((((BaddieState*)st)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        s16 a = ((GameObject*)obj)->anim.currentMove;
-        if (a == 7)
-        {
-            ((BaddieState*)st)->seqEntryIndex = 1;
-        }
-        else if (a != 0)
-        {
-            ((BaddieState*)st)->seqEntryIndex = 0;
-        }
-        {
-            u8* bbase = t1;
-            f32* fbase = (f32*)t1;
-            u32 idx2 = ((BaddieState*)st)->seqEntryIndex;
-            u32 off = idx2 * 0xc;
-            Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
-        }
-    }
-    crawler_playReactionEffects(obj, st);
-}
 
 extern u8 lbl_8031F3A0[];
 extern u8 lbl_8031F3D0[];
@@ -501,75 +423,6 @@ u8* gCrawlerReactionTables[] = {
     lbl_803DBD38,
 };
 
-void crawler_playReactionEffects(int* obj, int* st)
-{
-    u16 flag = 0;
-    switch (((GameObject*)obj)->anim.currentMove)
-    {
-    case 2:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_blooplaugh3, 2);
-        }
-        flag = 1;
-        break;
-    case 3:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_haga_death);
-        }
-        break;
-    case 4:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            if (((GameObject*)obj)->anim.currentMoveProgress < lbl_803E2CBC)
-            {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh1);
-            }
-            else
-            {
-                Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_rach_call1);
-            }
-        }
-        break;
-    case 5:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
-        }
-        break;
-    case 6:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_eggsnatch);
-        }
-        break;
-    case 7:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObjectLimited((u32)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
-        }
-        flag = 1;
-        break;
-    case 9:
-        if (((FCVars*)st)->moveEventMask != 0)
-        {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_baddie_blooplaugh2);
-        }
-        break;
-    }
-    if (flag != 0)
-    {
-        if (((FCVars*)st)->turnDelta != 0)
-        {
-            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_TURN, NULL, 2, -1, NULL);
-        }
-        else
-        {
-            (*gPartfxInterface)->spawnObject(obj, FIRECRAWLER_PARTFX_MOVE_STRAIGHT, NULL, 2, -1, NULL);
-        }
-    }
-}
 
 #pragma opt_common_subs off
 void crawler_initTailModel(int* obj, int* st)
@@ -635,29 +488,6 @@ void hagabonMK2_updateWhileFrozen(int obj, int* st, int unused, int cmd)
     }
 }
 
-void crawler_initVariant(int* obj, int* st)
-{
-    ((BaddieState*)st)->speedScale = lbl_803E2CC0;
-    /* 0x33b: crawler variant selector (shares slot with BaddieState.inWhirlpoolGroup);
-     * kept raw - single site, member spelling off u8* st is byte-risky. */
-    *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
-    ((BaddieState*)st)->unk2A8 = lbl_803E2CC4;
-    *(u32*)&((BaddieState*)st)->unk2E4 = 0x42003;
-    ((BaddieState*)st)->unk308 = lbl_803E2CC8;
-    ((BaddieState*)st)->animDeltaScale = lbl_803E2CCC;
-    ((BaddieState*)st)->unk304 = lbl_803E2CD0;
-    *((u8*)st + 0x320) = 0;
-    {
-        f32 d = lbl_803E2CD4;
-        *(f32*)&((BaddieState*)st)->eventFlags = d;
-        *((u8*)st + 0x321) = 0xa;
-        ((BaddieState*)st)->unk318 = d;
-        *((u8*)st + 0x322) = 7;
-        ((BaddieState*)st)->unk31C = d;
-    }
-    ((BaddieState*)st)->seqEntryIndex = 1;
-    ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
-}
 
 #pragma opt_loop_invariants off
 void fn_80157CDC(int obj, int state)
@@ -841,29 +671,6 @@ void crawler_checkNearbyActive(int obj, u8* state)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_8015A52C(s16* obj)
-{
-    u8 locked = Obj_IsLoadingLocked();
-    if (locked != 0)
-    {
-        int* setup = (int*)Obj_AllocObjectSetup(0x24, 0x51b);
-        ((GameObject*)setup)->anim.rootMotionScale = ((GameObject*)obj)->anim.localPosX;
-        ((GameObject*)setup)->anim.localPosX = lbl_803E2C98 + ((GameObject*)obj)->anim.localPosY;
-        ((GameObject*)setup)->anim.localPosY = ((GameObject*)obj)->anim.localPosZ;
-        ((ObjPlacement*)setup)->color[0] = 1;
-        ((ObjPlacement*)setup)->color[1] = 4;
-        ((ObjPlacement*)setup)->color[3] = 0xff;
-        setup = (int*)Obj_SetupObject((ObjPlacement*)setup, 5, -1, -1, 0);
-        if (setup != NULL)
-        {
-            ((GameObject*)setup)->anim.velocityX =
-                lbl_803E2C9C * -mathSinf((gCrawlerPi * (f32)*obj) / gCrawlerHalfCircleBams);
-            ((GameObject*)setup)->anim.velocityY = lbl_803E2CA8;
-            ((GameObject*)setup)->anim.velocityZ =
-                lbl_803E2C9C * -mathCosf((gCrawlerPi * (f32)*obj) / gCrawlerHalfCircleBams);
-        }
-    }
-}
 #pragma dont_inline reset
 
 void fn_80157B58(int* obj, u8* state)
@@ -899,80 +706,6 @@ void fn_80157B58(int* obj, u8* state)
     }
 }
 
-void snowworm_update(int* obj, u8* state)
-{
-    u8* tbl = *(u8**)((char*)gCrawlerReactionTables + ((FCVars*)state)->turnDelta * 8);
-    int i;
-
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
-    ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
-    if (((GameObject*)obj)->anim.currentMove == 0)
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED;
-        ObjHits_DisableObject((int)obj);
-    }
-    else
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED;
-        ObjHits_EnableObject((int)obj);
-    }
-
-    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0 &&
-        ((BaddieState*)state)->seqEntryIndex <= 1)
-    {
-        if (((FCVars*)state)->turnDelta != 0 || (int)randomGetRange(0, 0x14) < 10)
-        {
-            ((BaddieState*)state)->seqEntryIndex = 1;
-        }
-        else
-        {
-            ((BaddieState*)state)->seqEntryIndex = 7;
-        }
-        ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
-    }
-
-    if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
-    {
-        *(char*)&((BaddieState*)state)->seqEntryIndex += 1;
-        if (((BaddieState*)state)->seqEntryIndex > gSnowwormSeqIndexMax[((FCVars*)state)->turnDelta])
-        {
-            ((BaddieState*)state)->seqEntryIndex = gSnowwormSeqIndexReset[((FCVars*)state)->turnDelta];
-        }
-        if (((FCVars*)state)->moveTableIndex < 4)
-        {
-            i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, (tbl + i)[8], *(f32*)((int)tbl + i), 0, 0);
-        }
-        else
-        {
-            i = ((BaddieState*)state)->seqEntryIndex * 0xc;
-            Baddie_SetMove(obj, state, (tbl + i)[9], *(f32*)((int)tbl + i), 0, 0);
-        }
-        if (((GameObject*)obj)->anim.currentMove == 9)
-        {
-            fn_8015A52C((s16*)obj);
-        }
-        else if (((GameObject*)obj)->anim.currentMove == 1)
-        {
-            int r = randomGetRange(0, ((BaddieState*)state)->inWhirlpoolGroup);
-            s16 a = randomGetRange(-0x8000, 0x7fff);
-            f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
-            ((GameObject*)obj)->anim.localPosX =
-                r * mathSinf(angle) + *(f32*)(*(int*)&((GameObject*)obj)->anim.placementData + 8);
-            ((GameObject*)obj)->anim.localPosZ =
-                r * mathCosf(angle) + ((GameObject*)((GameObject*)obj)->anim.placementData)->anim.localPosY;
-            fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                        ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ, 1, 0);
-        }
-    }
-
-    fn_8014CF7C(obj, state, ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX,
-                ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ,
-                lbl_803DBD30[((FCVars*)state)->turnDelta], 0);
-    crawler_playReactionEffects(obj, (int*)state);
-}
 
 
 typedef struct
