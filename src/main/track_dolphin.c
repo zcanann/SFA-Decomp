@@ -301,7 +301,7 @@ extern u8 lbl_803DCE06;
 extern int gGlowLightList[];
 extern char gViewFrustumPlanes[];
 extern u8 lbl_803DCE98;
-extern const f32 CurrTiming_803DEC20;
+extern const f32 lbl_803DEC20;
 extern int lbl_803DCE80;
 extern int gMapBlockIndexCount;
 extern int gMapBlockIndexList;
@@ -323,9 +323,9 @@ extern u8 colorScale;
 extern f32 gSunFlareFade;
 extern int gSunOcclusionSampleOffsets[];
 extern f32 lbl_803DEBD4, lbl_803DEBD8, lbl_803DEBDC;
-extern f32 displayOffsetH_803DEBFC, flushFlag_803DEBE4;
-extern f32 Initialized_803DEC30, EnabledBits_803DEC34, ResettingBits_803DEC38;
-extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
+extern f32 lbl_803DEBFC, lbl_803DEBE4;
+extern f32 lbl_803DEC30, lbl_803DEC34, lbl_803DEC38;
+extern f32 lbl_803DEC3C, lbl_803DEC40;
 extern const f32 lbl_803DECA0;
 extern const f32 lbl_803DECA4;
 extern const f32 lbl_803DECA8;
@@ -1090,9 +1090,9 @@ void intersectModLineBuild(int* obj)
 
 void fn_800605F0(s16* in, f32* out)
 {
-    out[0] = (f32)(s32)in[0] * CurrTiming_803DEC20;
-    out[1] = (f32)(s32)in[1] * CurrTiming_803DEC20;
-    out[2] = (f32)(s32)in[2] * CurrTiming_803DEC20;
+    out[0] = (f32)(s32)in[0] * lbl_803DEC20;
+    out[1] = (f32)(s32)in[1] * lbl_803DEC20;
+    out[2] = (f32)(s32)in[2] * lbl_803DEC20;
 }
 
 int fn_80060688(GameObject* obj, int type)
@@ -3576,11 +3576,11 @@ void renderGlows(void)
                 if (sz <= d && pauseMenuGetState() == 0)
                     occ++;
             }
-            fade = (f32)(u32)occ / flushFlag_803DEBE4 - gSunFlareFade;
-            if (fade > Initialized_803DEC30)
-                fade = Initialized_803DEC30;
-            else if (fade < EnabledBits_803DEC34)
-                fade = EnabledBits_803DEC34;
+            fade = (f32)(u32)occ / lbl_803DEBE4 - gSunFlareFade;
+            if (fade > lbl_803DEC30)
+                fade = lbl_803DEC30;
+            else if (fade < lbl_803DEC34)
+                fade = lbl_803DEC34;
             gSunFlareFade = gSunFlareFade + fade;
             sunDot = sunDot * gSunFlareFade;
             if (sunDot > lbl_803DEBCC)
@@ -3591,10 +3591,10 @@ void renderGlows(void)
                 selectTexture((Texture*)((int)fn_8008912C()), 0);
                 getAmbientColor(0, &amb[0], &amb[1], &amb[2]);
                 sunDot = (f32)(u32)sky * sunDot;
-                _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(displayOffsetH_803DEBFC * sunDot));
-                alpha = lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot;
-                fade = RecalibrateBits_803DEC3C * sunDot;
-                sunDot = fade * WaitingBits_803DEC40;
+                _gxSetTevColor2(amb[0], amb[1], amb[2], (int)(lbl_803DEBFC * sunDot));
+                alpha = lbl_803DEBD8 - lbl_803DEC38 * sunDot;
+                fade = lbl_803DEC3C * sunDot;
+                sunDot = fade * lbl_803DEC40;
                 GXBegin(GX_QUADS, GX_VTXFMT2, 4);
                 GXWGFifo.f32 = -sunDot;
                 GXWGFifo.f32 = -sunDot;

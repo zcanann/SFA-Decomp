@@ -3059,7 +3059,7 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
 
 
 extern FrustumPlane gPlayerRelativeFrustumPlanes[];
-extern f32 PostCB_803DEBF4;
+extern f32 lbl_803DEBF4;
 extern void PSMTXMultVec(f32* mtx, Vec* in, f32* out);
 
 void playerVecFn_8005a9b0(void)
@@ -3091,7 +3091,7 @@ void playerVecFn_8005a9b0(void)
     }
     else
     {
-        clipDist = PostCB_803DEBF4;
+        clipDist = lbl_803DEBF4;
     }
     scales.v[0] = clipDist;
 

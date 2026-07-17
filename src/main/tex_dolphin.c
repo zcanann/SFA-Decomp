@@ -27,10 +27,10 @@ s8 gTexIndMtxScaleExp = -2;
 
 extern f32 lbl_803DEBC8;
 extern f32 lbl_803DEBCC;
-extern const f32 displayOffsetH_803DEBFC;
-extern f32 CurrTiming_803DEC20;
+extern const f32 lbl_803DEBFC;
+extern f32 lbl_803DEC20;
 extern const f32 gTexIndMtxScale;
-extern f32 FBSet_803DEC28;
+extern f32 lbl_803DEC28;
 extern const f32 lbl_803DEC2C;
 extern int lbl_803DEBB0;
 extern ModelLightStruct* gTexDimmedLightList[2];
@@ -102,8 +102,8 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds, float* xform)
     f32 timing;
 
     i = 0;
-    timing = CurrTiming_803DEC20;
-    fbset = FBSet_803DEC28;
+    timing = lbl_803DEC20;
+    fbset = lbl_803DEC28;
     while (1)
     {
         {
@@ -267,7 +267,7 @@ void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* shader, int* b
         selectTexture((Texture*)(*(int*)(texTable + (u8)i * 4)), 1);
         {
             f32 s = (f32)((i & 0xff) + 1) * gTexIndMtxScale;
-            indMtx[0][0] = s * displayOffsetH_803DEBFC;
+            indMtx[0][0] = s * lbl_803DEBFC;
         }
         indMtx[1][1] = indMtx[0][0];
         GXSetIndTexMtx(GX_ITM_0, (const float (*)[3])indMtx, gTexIndMtxScaleExp);

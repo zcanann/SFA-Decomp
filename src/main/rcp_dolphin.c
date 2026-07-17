@@ -130,7 +130,7 @@ typedef struct F32Pair
 } F32Pair;
 extern f32 lbl_803DEB60;
 extern f32 lbl_803DEB78;
-extern F32Pair LastReadIssued_803DEB58;
+extern F32Pair lbl_803DEB58;
 extern f32 lbl_803DEB5C;
 extern f32 lbl_803DEB7C;
 extern void GXSetTevKAlphaSel(int tev, int sel);
@@ -152,7 +152,7 @@ extern void GXSetMisc(int token, u32 val);
 extern void GXBegin(int prim, int vtxfmt, u16 nverts);
 extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
-extern F32Pair LastReadFinished_803DEB50;
+extern F32Pair lbl_803DEB50;
 extern f32 lbl_803DEB54;
 extern const f32 lbl_803DEB64;
 extern f32 lbl_803DEB70;
@@ -798,7 +798,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
         DCInvalidateRange(gRcpWarpDistortDisplayList, 0x6640);
         GXBeginDisplayList(gRcpWarpDistortDisplayList, 0x6640);
         i = 0;
-        span = LastReadIssued_803DEB58.lo;
+        span = lbl_803DEB58.lo;
         half = lbl_803DEB5C;
         step = lbl_803DEB54;
         for (; i < 0x10; i++)
@@ -901,7 +901,7 @@ void gxFn_80052dc0(void)
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
     GXSetTexCopySrc(0, 0, 32, 32);
-    C_MTXOrtho(omtx, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, LastReadIssued_803DEB58.lo);
+    C_MTXOrtho(omtx, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, lbl_803DEB7C, lbl_803DEB5C, lbl_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(GX_BM_NONE, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
     gxSetZMode_(0, GX_EQUAL, 0);
@@ -1137,7 +1137,7 @@ void initFn_800534f8(void)
     cfg = &lbl_8030D028[0].radius;
     slots = (RcpDistortSlot*)gRcpDistortSlots;
     radiusScale = gRcpDistortScaleA;
-    strengthScale = LastReadFinished_803DEB50.lo;
+    strengthScale = lbl_803DEB50.lo;
     do
     {
         strength = cfg[i * 2 + 1];

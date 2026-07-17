@@ -65,13 +65,13 @@ extern u32 renderFlags;
 #define RENDERFLAG_DRAW_DISTANCE   0x10000
 #define RENDERFLAG_OVERCAST        0x40000
 
-extern f32 encoderType_803DEBF8;
-extern f32 displayOffsetH_803DEBFC;
+extern f32 lbl_803DEBF8;
+extern f32 lbl_803DEBFC;
 extern f32 lbl_803DEBCC;
 extern f32 lbl_803DEBDC;
-extern f32 changeMode_803DEC00;
+extern f32 lbl_803DEC00;
 extern f32 gLightmapDegToBamScale;
-extern F32Pair changed_803DEC08;
+extern F32Pair lbl_803DEC08;
 extern f32 lbl_803DEC0C;
 extern FrustumPlane gViewFrustumPlanes[];
 extern f32 fn_80293D0C(int v);
@@ -85,7 +85,7 @@ extern void fn_800704FC(int a, int b, int c);
 extern void _gxSetTevColor1(int a, int b, int c, int d);
 extern void _gxSetTevColor2(int a, int b, int c, int d);
 extern u8 lbl_803DCE98; /* count of allocated blocks */
-extern f32 shdwChanged_803DEC18;
+extern f32 lbl_803DEC18;
 extern void mapBlockRender_drawDimmedAabbLights(int* p1, int* obj, float* p3);
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
 extern void mapBlockRender_drawLightmapIndirectPasses(int* obj, int v, int* state, float* p3);
@@ -104,7 +104,7 @@ extern void GXSetChanAmbColor(int chan, GXColor8* c);
 extern void GXSetNumChans(u8 nChans);
 extern u32 cloudGetLayerTextureSize(f32 * a, f32 * b);
 extern u32 lbl_803DCE34;
-extern f32 shdwChangeMode_803DEC10;
+extern f32 lbl_803DEC10;
 extern void mapDebugRender(void* p);
 extern u16 lbl_803DCEAC;
 extern u8 lbl_803DCE06;
@@ -204,12 +204,12 @@ void updateVisibleGeometry(void)
     cam = (u8*)Camera_GetCurrentViewSlot();
     if ((renderFlags & RENDERFLAG_WIDESCREEN) != 0 || (renderFlags & RENDERFLAG_DRAW_DISTANCE) != 0)
     {
-        scale = Camera_GetFovY() / encoderType_803DEBF8;
+        scale = Camera_GetFovY() / lbl_803DEBF8;
     }
     else
     {
         scale = Camera_GetFovY();
-        scale *= displayOffsetH_803DEBFC;
+        scale *= lbl_803DEBFC;
     }
     xx = *(f32*)(cam + 0x44) - playerMapOffsetX;
     yy = *(f32*)(cam + 0x48);
@@ -222,7 +222,7 @@ void updateVisibleGeometry(void)
     st.rotY = -*(s16*)(cam + 0x52);
     st.rotZ = *(s16*)(cam + 0x54);
     setMatrixFromObjectPos(m, &st);
-    Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, changeMode_803DEC00, &ox, &oy, &oz);
+    Matrix_TransformPoint(m, lbl_803DEBCC, *(f32*)&lbl_803DEBCC, lbl_803DEC00, &ox, &oy, &oz);
     gViewFrustumPlanes[0].normalX = ox;
     gViewFrustumPlanes[n = 0].normalY = oy;
     gViewFrustumPlanes[n = 0].normalZ = oz;
@@ -234,7 +234,7 @@ void updateVisibleGeometry(void)
     tt = fn_80293AC4(fov);
     ratio = fn_80293D0C(fov) / tt;
     ratio2 = ratio * ratio;
-    ff = changed_803DEC08.lo;
+    ff = lbl_803DEC08.lo;
     tt = ff * ratio2;
     tt = fn_80292248(sqrtf(ff * tt + ratio2));
     ff = floor(tt);
@@ -846,14 +846,14 @@ void sceneDraw(void)
     lbl_803DCE34 = cloudGetLayerTextureSize(&skyA, &skyB);
     if (lbl_803DCE34 != 0)
     {
-        *(f32*)(q + 0x3f48) = shdwChangeMode_803DEC10;
+        *(f32*)(q + 0x3f48) = lbl_803DEC10;
         *(f32*)(q + 0x3f4c) = lbl_803DEBCC;
         *(f32*)(q + 0x3f50) = lbl_803DEBCC;
-        *(f32*)(q + 0x3f54) = shdwChangeMode_803DEC10 * playerMapOffsetX + skyA;
+        *(f32*)(q + 0x3f54) = lbl_803DEC10 * playerMapOffsetX + skyA;
         *(f32*)(q + 0x3f58) = lbl_803DEBCC;
         *(f32*)(q + 0x3f5c) = lbl_803DEBCC;
-        *(f32*)(q + 0x3f60) = shdwChangeMode_803DEC10;
-        *(f32*)(q + 0x3f64) = shdwChangeMode_803DEC10 * playerMapOffsetZ + skyB;
+        *(f32*)(q + 0x3f60) = lbl_803DEC10;
+        *(f32*)(q + 0x3f64) = lbl_803DEC10 * playerMapOffsetZ + skyB;
         *(f32*)(q + 0x3f68) = lbl_803DEBCC;
         *(f32*)(q + 0x3f6c) = lbl_803DEBCC;
         *(f32*)(q + 0x3f70) = lbl_803DEBCC;
@@ -1000,7 +1000,7 @@ void sceneDraw(void)
     }
     if (bEnableViewFinderHud != 0)
     {
-        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18, 0x40, 0);
+        drawViewFinderAperture(lbl_803DEC14, lbl_803DEC18, 0x40, 0);
     }
     if (bEnableColorFilter == 1)
     {
@@ -1454,7 +1454,7 @@ void lightmap_sortTransparentDrawQueue(void)
 #pragma dont_inline off
 
 
-extern f32 CurrTiming_803DEC20;
+extern f32 lbl_803DEC20;
 
 asm void fn_8005D3B4(u8* obj, u8* model, s32 b)
 {
@@ -1478,7 +1478,7 @@ _psq:
     psq_l f0, 12(r29), 1, 5
     psq_l f1, 6(r29), 1, 5
     psq_l f2, 14(r29), 1, 5
-    lfs f3, CurrTiming_803DEC20
+    lfs f3, lbl_803DEC20
     lfs f6, 40(r30)
     fmadds f9, f2, f3, f6
     psq_l f4, 8(r29), 1, 5
@@ -1486,7 +1486,7 @@ _psq:
     lfs f7, 56(r30)
     fmadds f10, f2, f3, f7
     psq_l f5, 10(r29), 1, 5
-    lfs f2, displayOffsetH_803DEBFC
+    lfs f2, lbl_803DEBFC
     lfs f8, 24(r30)
     fmadds f1, f1, f3, f8
     fmadds f0, f0, f3, f8

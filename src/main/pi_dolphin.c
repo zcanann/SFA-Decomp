@@ -1028,7 +1028,7 @@ extern f32 lbl_803DEAF8;
 extern f32 lbl_803DEAFC;
 extern f32 lbl_803DEB00;
 extern int lbl_803DCD84;
-extern f32 bootThisDol_803DEAE8;
+extern f32 lbl_803DEAE8;
 extern f32 lbl_803DEAEC;
 extern f32 lbl_803DEAF0;
 extern void GXSetTevColor(int id, void* color);
@@ -6191,7 +6191,7 @@ typedef struct
     int b;
 } PiColorS10;
 
-extern int WidthTable_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
+extern int lbl_803DEAB0; /* first word of a PiColorS10 (through 803DEAC0) */
 extern int lbl_803DEAB8;
 extern int lbl_803DEABC;
 extern int lbl_803DEAC0;
@@ -6606,7 +6606,7 @@ void fn_8004C7AC(void* tex0, void* tex1, void* tex2, s16 w, s16 h)
         GXSetTevSwapMode(lbl_803DCD90 + 4, GX_TEV_SWAP0, GX_TEV_SWAP0);
         GXSetTevKColorSel(lbl_803DCD90 + 4, GX_TEV_KCSEL_1_4);
         lbl_803DCD30 = 1;
-        cs10 = *(PiColorS10*)&WidthTable_803DEAB0;
+        cs10 = *(PiColorS10*)&lbl_803DEAB0;
         GXSetTevColorS10(1, &cs10);
         ck1 = lbl_803DEAB8;
         GXSetTevKColor(lbl_803DCD74, &ck1);
@@ -6676,8 +6676,8 @@ void fn_8004CE0C(void* viewMtx)
     }
     newshadows_getReflectionScrollOffsets(&sx, &sy);
     PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
-    mtx70[0][0] = bootThisDol_803DEAE8;
-    mtx70[1][1] = bootThisDol_803DEAE8;
+    mtx70[0][0] = lbl_803DEAE8;
+    mtx70[1][1] = lbl_803DEAE8;
     GXLoadTexMtxImm(mtx70, GX_TEXMTX1, GX_MTX2x4);
     GXSetTexCoordGen2(GX_TEXCOORD2, GX_TG_MTX2x4, GX_TG_POS, GX_TEXMTX1, GX_FALSE, GX_PTIDENTITY);
     GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD2, GX_TEXMAP2);
@@ -7119,7 +7119,7 @@ void fn_8004DA54(char* p1)
 extern void fn_8006C510(void* out);
 extern f32 lbl_803DEB1C;
 extern f32 lbl_803DEB20;
-extern f32 LastLength_803DEB24;
+extern f32 lbl_803DEB24;
 extern f32 lbl_803DEB28;
 extern f32 SaveStart_803DEAD0;
 
@@ -7166,17 +7166,17 @@ void fn_8004E0FC(void)
     m1e8[2][1] = lbl_803DEACC;
     m1e8[2][2] = lbl_803DEB1C;
     m1e8[2][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetZ);
-    m1b8[0][0] = LastLength_803DEB24;
+    m1b8[0][0] = lbl_803DEB24;
     m1b8[0][1] = lbl_803DEACC;
     m1b8[0][2] = lbl_803DEACC;
     m1b8[0][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetX);
     m1b8[1][0] = lbl_803DEACC;
-    m1b8[1][1] = LastLength_803DEB24;
+    m1b8[1][1] = lbl_803DEB24;
     m1b8[1][2] = lbl_803DEACC;
     m1b8[1][3] = lbl_803DEACC;
     m1b8[2][0] = lbl_803DEACC;
     m1b8[2][1] = lbl_803DEACC;
-    m1b8[2][2] = LastLength_803DEB24;
+    m1b8[2][2] = lbl_803DEB24;
     m1b8[2][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetZ);
     PSMTXConcat(m1e8, invView, m1e8);
     PSMTXConcat(mf8, m1e8, m1e8);
@@ -7301,7 +7301,7 @@ void fn_8004E0FC(void)
 
 extern f32 lbl_803DEAC4;
 extern void fn_8006C528(void* out);
-extern f32 ResetCoverCallback_803DEB2C;
+extern f32 lbl_803DEB2C;
 
 void renderHeavyFog(void* fogColor)
 {
@@ -7391,7 +7391,7 @@ void renderHeavyFog(void* fogColor)
         m6c[2][1] = lbl_803DEACC;
         m6c[2][2] = lbl_803DEACC;
         m6c[2][3] = lbl_803DEAC8;
-        PSMTXRotRad(mrot, 0x78, ResetCoverCallback_803DEB2C);
+        PSMTXRotRad(mrot, 0x78, lbl_803DEB2C);
         PSMTXConcat(mrot, m6c, m6c);
         PSMTXConcat(m6c, iv, m6c);
         GXLoadTexMtxImm(m6c, lbl_803DCD80 + 6, 0);
@@ -8256,7 +8256,7 @@ void fn_80050FF4(u8 mode)
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-extern f32 Breaking_803DEB40;
+extern f32 lbl_803DEB40;
 
 void fn_800510F0(void* p1, u8 flag2, u8 flag3)
 {
@@ -8274,7 +8274,7 @@ void fn_800510F0(void* p1, u8 flag2, u8 flag3)
     }
     else
     {
-        PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+        PSMTXScale(mtxA, lbl_803DEB40, *(f32*)&lbl_803DEB40, lbl_803DEACC);
         PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
         PSMTXConcat(mtxB, mtxA, mtxA);
         GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
@@ -8335,7 +8335,7 @@ void textureFn_80051348(void* p1, u8 p2)
     int out_c;
     int out_8;
     int texmap;
-    PSMTXScale(mtxA, Breaking_803DEB40, *(f32*)&Breaking_803DEB40, lbl_803DEACC);
+    PSMTXScale(mtxA, lbl_803DEB40, *(f32*)&lbl_803DEB40, lbl_803DEACC);
     PSMTXTrans(mtxB, lbl_803DEADC, *(f32*)&lbl_803DEADC, lbl_803DEAC8);
     PSMTXConcat(mtxB, mtxA, mtxA);
     GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);

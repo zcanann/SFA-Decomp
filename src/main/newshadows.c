@@ -227,9 +227,9 @@ extern u8 fn_800626C8(int* obj, int frames);
 extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
 extern void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 
-extern const double TokenCB_803DED58;
+extern const double lbl_803DED58;
 
-extern const double DrawDone_803DED60;
+extern const double lbl_803DED60;
 
 extern inline float sqrtf(float x)
 {
@@ -237,28 +237,28 @@ extern inline float sqrtf(float x)
     if (x > lbl_803DED28)
     {
         double guess = __frsqrte((double)x);
-        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
-        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
-        guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * x);
+        guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * x);
+        guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * x);
+        guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * x);
         y = (float)(x * guess);
         return y;
     }
     return x;
 }
 
-extern const f32 Ydchuff_803DED80;
+extern const f32 lbl_803DED80;
 extern const f32 Ydchuff_803DED90;
-extern const double TokenCB_803DED58;
-extern const double DrawDone_803DED60;
-extern const f32 CPUFifo_803DED38;
-extern const f32 GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern const double lbl_803DED58;
+extern const double lbl_803DED60;
+extern const f32 lbl_803DED38;
+extern const f32 lbl_803DED3C, lbl_803DED40;
 extern const f32 lbl_803DED2C;
-extern const f32 Vdchuff_803DEDC0;
+extern const f32 lbl_803DEDC0;
 extern const f32 Vdchuff_803DEDD0;
 extern const f32 Vdchuff_803DEDD4;
-extern const f32 Uachuff_803DEE00;
+extern const f32 lbl_803DEE00;
 extern const f32 lbl_803DED08;
-extern const f32 Yachuff_803DEDE0;
+extern const f32 lbl_803DEDE0;
 extern const f32 Yachuff_803DEDE4, Yachuff_803DEDE8;
 extern const f32 Vdchuff_803DEDD8, Vdchuff_803DEDDC;
 extern const f32 lbl_803DED10;
@@ -269,13 +269,13 @@ extern const f32 Uachuff_803DEE14, Uachuff_803DEE18, Uachuff_803DEE1C;
 extern const f32 lbl_803DED0C;
 extern const f32 lbl_803DED14, Chan_803DED18;
 extern const f32 Enabled_803DED20, BarnacleEnabled_803DED24;
-extern const f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+extern const f32 lbl_803DED34, lbl_803DED48;
 extern const f32 Udchuff_803DEDAC, Udchuff_803DEDB0, Udchuff_803DEDB4, Udchuff_803DEDB8, Udchuff_803DEDBC;
 extern const f32 gNewShadowFovY;
 extern const f32 lbl_803DED70, lbl_803DED74, gNewShadowAspectWide, gNewShadowAspectNarrow;
-extern const f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
-extern const f32 FinishQueue_803DED68;
-extern const f32 FinishQueue_803DED6C;
+extern const f32 lbl_803DED44, lbl_803DED4C, lbl_803DED50;
+extern const f32 lbl_803DED68;
+extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 
 extern u32 FUN_80003494();
@@ -1610,9 +1610,9 @@ static void fillSmallDiskTexture(void)
             off = lowoff + (j & 3) * 8;
             off += (j >> 2) * 0x40;
             off += 0x60;
-            dx = cy * __GXCurrentThread_803DED40;
+            dx = cy * lbl_803DED40;
             dz = (f32)j - lbl_803DED10;
-            dz = dz * __GXCurrentThread_803DED40;
+            dz = dz * lbl_803DED40;
             dx = dx * Yachuff_803DEDF4;
             dz = dz * Yachuff_803DEDF4;
             d2 = dx * dx + dz * dz;
@@ -1664,21 +1664,21 @@ static void fillFalloffTexture(void)
         lowoff = i & 7;
         cy = i - Dev_803DED1C;
         lowoff += rowoff;
-        cy = cy * Yachuff_803DEDE0;
+        cy = cy * lbl_803DEDE0;
         for (; j < 0x80; j++)
         {
             int off;
             f32 cx, d2;
             base = (u8*)gNewShadowFalloffTexture;
             off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
+            cx = ((f32)j - Dev_803DED1C) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy * cy);
             base[off] =
-                (d2 < CPUFifo_803DED38)
+                (d2 < lbl_803DED38)
                     ? 0xa0
                     : ((d2 > lbl_803DED2C)
                            ? 0
-                           : (int)(160.0f * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38)));
+                           : (int)(160.0f * (lbl_803DED2C - (d2 - lbl_803DED38) / lbl_803DED38)));
         }
     }
 }
@@ -1722,7 +1722,7 @@ static void fillRingTexture(void)
     {
         int rowoff, lowoff;
         f32 cy2;
-        cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0;
+        cy = ((f32)i - Dev_803DED1C) * lbl_803DEDE0;
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
@@ -1734,7 +1734,7 @@ static void fillRingTexture(void)
             f32 cx, d2;
             base = (u8*)gNewShadowRingTexture;
             off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0;
+            cx = ((f32)j - Dev_803DED1C) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f)
             {
@@ -1842,9 +1842,9 @@ void allocLotsOfTextures(void)
                     f32 rcb = rc;
                     d3 = sqrtf(rcb * rcb + cc2 * cc2);
                 }
-                n1 = -fn_802943F4(Uachuff_803DEE00 * d1);
-                n2 = __fabs(fn_802943F4(Uachuff_803DEE00 * d2));
-                n3 = __fabs(fn_802943F4(Uachuff_803DEE00 * d3));
+                n1 = -fn_802943F4(lbl_803DEE00 * d1);
+                n2 = __fabs(fn_802943F4(lbl_803DEE00 * d2));
+                n3 = __fabs(fn_802943F4(lbl_803DEE00 * d3));
                 a = n1 - (f32)n2;
                 b = n1 - (f32)n3;
                 if (a > mx)
@@ -1885,11 +1885,11 @@ void allocLotsOfTextures(void)
                         f32 rcb = rc;
                         d3 = sqrtf(rcb * rcb + cc2 * cc2);
                     }
-                    n1 = -fn_802943F4(Uachuff_803DEE00 * d1);
-                    n2 = -fn_802943F4(Uachuff_803DEE00 * d2);
-                    n3 = -fn_802943F4(Uachuff_803DEE00 * d3);
-                    a = inv * (Vdchuff_803DEDC0 * (n1 - n2)) + Vdchuff_803DEDC0;
-                    b = inv * (Vdchuff_803DEDC0 * (n1 - n3)) + Vdchuff_803DEDC0;
+                    n1 = -fn_802943F4(lbl_803DEE00 * d1);
+                    n2 = -fn_802943F4(lbl_803DEE00 * d2);
+                    n3 = -fn_802943F4(lbl_803DEE00 * d3);
+                    a = inv * (lbl_803DEDC0 * (n1 - n2)) + lbl_803DEDC0;
+                    b = inv * (lbl_803DEDC0 * (n1 - n3)) + lbl_803DEDC0;
                     if (d1 < lbl_803DED2C)
                     {
                         d1 = sqrtf(lbl_803DED2C - d1);
@@ -1938,14 +1938,14 @@ void allocLotsOfTextures(void)
         lowoff = i & 7;
         cy = i - Dev_803DED1C;
         lowoff += rowoff;
-        cy = cy * Yachuff_803DEDE0;
+        cy = cy * lbl_803DEDE0;
         cy = __fabsf(cy);
         cy = cy * cy;
         for (; j < 0x80; j++)
         {
             u8* base = (u8*)gNewShadowRadialTexture;
             int off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = __fabsf(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0);
+            f32 cx = __fabsf(((f32)j - Dev_803DED1C) * lbl_803DEDE0);
             f32 d2 = sqrtf(cx * cx + cy);
             f32 v = lbl_803DED2C - d2;
             if (v < lbl_803DED28)
@@ -1970,13 +1970,13 @@ void allocLotsOfTextures(void)
     lbl_803DCF94 = (int)textureAlloc(4, 4, 3, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 4; i++)
     {
-        f32 x = i / 3.0f - CPUFifo_803DED38;
+        f32 x = i / 3.0f - lbl_803DED38;
         int lowoff = (i & 3) * 2;
         int rowoff = (i >> 2) * 0x20;
         int t;
         t = lbl_803DCF94 + lowoff;
         t += rowoff;
-        *(u16*)(t + 0x60) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)CPUFifo_803DED38 & 0xff));
+        *(u16*)(t + 0x60) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)lbl_803DED38 & 0xff));
         t = lbl_803DCF94 + lowoff;
         t += rowoff;
         *(u16*)(t + 0x68) = (u16)((((int)(255.0f * x + 128.0f) & 0xff) << 8) | ((int)Uachuff_803DEE14 & 0xff));
@@ -2139,17 +2139,17 @@ void renderShadows(int unused0, int unused1, int unused2)
             if ((u8)texIdx < 3)
             {
                 w = 0x100;
-                orthoHalf = CPUFifo_803DED38;
+                orthoHalf = lbl_803DED38;
             }
             else if ((u8)texIdx < 5)
             {
                 w = 0x80;
-                orthoHalf = GPFifo_803DED3C;
+                orthoHalf = lbl_803DED3C;
             }
             else
             {
                 w = 0x40;
-                orthoHalf = __GXCurrentThread_803DED40;
+                orthoHalf = lbl_803DED40;
             }
             if ((u8)texIdx == 0)
                 screenW = w << 1;
@@ -2166,12 +2166,12 @@ void renderShadows(int unused0, int unused1, int unused2)
             dot24[2] = -((ObjModelState*)of64)->shadowOffsetZ;
             {
                 f32 dot = PSVECDotProduct(dot24, vA);
-                if (dot < lbl_803DED2C && dot > CPGPLinked_803DED44)
+                if (dot < lbl_803DED2C && dot > lbl_803DED44)
                 {
                     f32 mag;
-                    proj[0] = GXOverflowSuspendInProgress_803DED48 * dot24[0] + BreakPointCB_803DED4C * vA[0];
-                    proj[1] = GXOverflowSuspendInProgress_803DED48 * dot24[1] + BreakPointCB_803DED4C * vA[1];
-                    proj[2] = GXOverflowSuspendInProgress_803DED48 * dot24[2] + BreakPointCB_803DED4C * vA[2];
+                    proj[0] = lbl_803DED48 * dot24[0] + lbl_803DED4C * vA[0];
+                    proj[1] = lbl_803DED48 * dot24[1] + lbl_803DED4C * vA[1];
+                    proj[2] = lbl_803DED48 * dot24[2] + lbl_803DED4C * vA[2];
                     mag = PSVECMag(proj);
                     if (mag > lbl_803DED28)
                     {
@@ -2179,9 +2179,9 @@ void renderShadows(int unused0, int unused1, int unused2)
                     }
                 }
             }
-            if (vA[1] > __GXOverflowCount_803DED50)
+            if (vA[1] > lbl_803DED50)
             {
-                vA[1] = __GXOverflowCount_803DED50;
+                vA[1] = lbl_803DED50;
                 PSVECNormalize(vA, vA);
             }
             vAx = vA[0];
@@ -2202,7 +2202,7 @@ void renderShadows(int unused0, int unused1, int unused2)
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
                 if (mag > lbl_803DED28)
                 {
-                    f32 inv = FinishQueue_803DED68 / mag;
+                    f32 inv = lbl_803DED68 / mag;
                     dirX *= inv;
                     dirY *= inv;
                     dirZ *= inv;
@@ -2233,7 +2233,7 @@ void renderShadows(int unused0, int unused1, int unused2)
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
-            C_MTXOrtho(mOrtho, vAx, vAz, vAx, vAz, lbl_803DED2C, FinishQueue_803DED6C);
+            C_MTXOrtho(mOrtho, vAx, vAz, vAx, vAz, lbl_803DED2C, lbl_803DED6C);
             GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho((f32*)castSlot, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf, orthoHalf);
@@ -2291,15 +2291,15 @@ void renderShadows(int unused0, int unused1, int unused2)
             }
             PSMTXTrans(mTrans, -fx, -((GameObject*)obj)->anim.localPosY, -fz);
             {
-                f32 s = CPUFifo_803DED38 / *(f32*)of64;
+                f32 s = lbl_803DED38 / *(f32*)of64;
                 mScale[0] = s;
                 mScale[1] = 0.0f;
                 mScale[2] = 0.0f;
-                mScale[3] = CPUFifo_803DED38;
+                mScale[3] = lbl_803DED38;
                 mScale[4] = 0.0f;
                 mScale[5] = 0.0f;
                 mScale[6] = s;
-                mScale[7] = CPUFifo_803DED38;
+                mScale[7] = lbl_803DED38;
                 mScale[8] = 0.0f;
                 mScale[9] = 0.0f;
                 mScale[10] = 0.0f;
@@ -2349,7 +2349,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        Camera_SetAspectRatio(Ydchuff_803DED80);
+        Camera_SetAspectRatio(lbl_803DED80);
         ((void (*)(int, int))Camera_UpdateProjection)(0, 0);
     }
     else
@@ -2386,9 +2386,9 @@ void shadowCreate(int* obj)
         {
             double guess = __frsqrte((double)dist2);
             volatile f32 root;
-            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
-            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
-            guess = TokenCB_803DED58 * guess * (DrawDone_803DED60 - guess * guess * dist2);
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
+            guess = lbl_803DED58 * guess * (lbl_803DED60 - guess * guess * dist2);
             root = (f32)(dist2 * guess);
             dist2 = root;
         }
@@ -2812,7 +2812,7 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
         if (frame < place[0])
         {
             f32 mx, mz, t, s0, tmp, p2lo, d2, sq, ratio, frac, depth;
-            t = GPFifo_803DED3C + (place[0] - frame) / place[0];
+            t = lbl_803DED3C + (place[0] - frame) / place[0];
             if (t > lbl_803DED2C)
                 t = lbl_803DED2C;
             s0 = sqrtf(t);
@@ -2855,7 +2855,7 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
                 acc5 = s0 * g + acc5;
                 over = over / depth;
                 acc6 = acc6 + over;
-                acc6 = CPUFifo_803DED38 * (lbl_803DED2C - frame * Vdchuff_803DEDD0) + acc6;
+                acc6 = lbl_803DED38 * (lbl_803DED2C - frame * Vdchuff_803DEDD0) + acc6;
             }
         }
     }
@@ -2863,7 +2863,7 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
         acc5 = lbl_803DED2C;
     if (acc6 > *(f32*)&lbl_803DED2C)
         acc6 = *(f32*)&lbl_803DED2C;
-    *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDD4;
+    *out1 = lbl_803DED40 * acc6 + Vdchuff_803DEDD4;
     *out2 = acc5;
 }
 #pragma opt_common_subs off
@@ -2951,7 +2951,7 @@ void initFn_8006d020(void)
                 int dst = gNewShadowNoiseTexFrames[tex] + lowoff + rowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
-                fn_8006CD20(row * Yachuff_803DEDE0, col * Yachuff_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
+                fn_8006CD20(row * lbl_803DEDE0, col * lbl_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
                 hi = (int)(lbl_803DED08 * o2);
                 lo = (int)(lbl_803DED08 * o1);
                 *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
@@ -2978,11 +2978,11 @@ void initFn_8006d020(void)
             dst += (col & 3) * 8;
             dst += (col >> 2) * 0x200;
             cv = Yachuff_803DEDE8 * col;
-            n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
+            n1 = fn_802943F4(lbl_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
-            prod = Vdchuff_803DEDC0 * prod + Vdchuff_803DEDC0;
-            fa = Vdchuff_803DEDC0 * n1 + Vdchuff_803DEDC0;
+            prod = lbl_803DEDC0 * prod + lbl_803DEDC0;
+            fa = lbl_803DEDC0 * n1 + lbl_803DEDC0;
             lo = fa;
             hi = prod;
             *(u16*)(dst + 0x60) = (u16)(lo | ((hi & 0xffff) << 8));
