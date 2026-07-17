@@ -1,5 +1,23 @@
 # Investigation: shared vs local int→float conversion magic (`lbl_803E3070`/`3068`)
 
+> **SUPERSEDED 2026-07-17 — this document's central claim and conclusion are WRONG.**
+>
+> - **"Only 4 objects reference the shared external symbol" is wrong: it is 133 objects,
+>   219 external refs.** The campfire DLL is not special.
+> - **The pattern is not a link artifact and not a dead end.** The cause is
+>   **unclaimed or over-claimed split spans**: a unit referencing a magic it does not
+>   itself pool means the owning span is either uncarved (→ pool-claim frontier,
+>   194 of the 219 refs) or claimed by the wrong unit (→ TU-boundary REDRAW, 25 refs;
+>   **20 of those 25 point into `dimsnowball`**, whose `.sdata2` over-claims a span
+>   swallowing ~13 sibling DIM units' pools).
+> - **The `@NNN`-vs-`lbl_` naming is a NON-ISSUE.** 463 units mint a local `@NNN` magic
+>   and many score `.sdata2` **100.0** anyway — objdiff matches anonymous atoms fine.
+>   **No unit is blocked by naming.**
+>
+> Authoritative pool model: `docs/mwcc_re/POOL_ORDER.md`. The factual sections below
+> (what the constants are, the emitted idiom) remain correct; the counts and the
+> conclusion do not.
+
 **Question (from the kaldachom confound):** why do a few objects reference a
 *shared external* int→float magic constant while every other build pools a
 *local* copy — and is it fixable?
