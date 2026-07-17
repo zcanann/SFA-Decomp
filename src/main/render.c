@@ -363,8 +363,8 @@ int fn_80006B1C(ModelRenderInstrsState* src, ModelRenderInstrsState* dst, int co
 void fn_80007F78(ObjAnimState* anim, s16* dst, s16* out)
 {
     f32 t = anim->framePhase;
-    u64 end;
     u64 outPos = (u32)out;
+    u64 end;
     int curB = anim->frameStreamStride;
     u64 posA = (u32)anim->frameStreamCursor;
     u64 tp = (u32)anim->moveFrameData + 4;
