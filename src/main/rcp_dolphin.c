@@ -283,7 +283,7 @@ void FUN_800537a0(u32 unused1, u32 unused2, int format, char param4, u32 param5,
     tex = FUN_80017830(tex + 0x60, 6);
     if (tex != 0)
     {
-        FUN_800033a8(tex, 0, 100);
+        memset((void*)tex, 0, 100);
         *(char*)&((Texture*)tex)->format = (char)format;
         *(short*)(tex + 10) = (short)((u64)dims >> 0x20);
         *(short*)(tex + 0xc) = (short)dims;

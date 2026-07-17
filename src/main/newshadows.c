@@ -124,8 +124,8 @@ extern u32 DAT_803ddc5c;
 extern u32 DAT_803ddc60;
 extern u32 DAT_803ddc64;
 extern u32 DAT_803ddc68;
-extern const f64 DOUBLE_803df9d8;
-extern const f64 DOUBLE_803df9e0;
+extern const f64 lbl_803DED58;
+extern const f64 lbl_803DED60;
 extern const f64 DOUBLE_803dfa48;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC2D0;
@@ -278,7 +278,6 @@ extern const f32 lbl_803DED68;
 extern const f32 lbl_803DED6C;
 extern f32 gMapSavedPlayerOffsetX, gMapSavedPlayerOffsetZ;
 
-extern u32 FUN_80003494();
 extern u32 FUN_8000693c();
 extern u32 FUN_8000694c();
 extern u32 FUN_80006954();
@@ -871,10 +870,10 @@ void newshadows_renderQueuedShadowCasters(void)
             {
                 if ((((ObjModelState*)model)->flags & 0x20) != 0)
                 {
-                    FUN_80003494((u32)savedRow0, obj + 0xc, 0xc);
-                    FUN_80003494((u32)savedRow1, obj + 0x18, 0xc);
-                    FUN_80003494(obj + 0xc, (u32)(model + 8), 0xc);
-                    FUN_80003494(obj + 0x18, (u32)(model + 8), 0xc);
+                    memcpy(savedRow0, (void*)(obj + 0xc), 0xc);
+                    memcpy(savedRow1, (void*)(obj + 0x18), 0xc);
+                    memcpy((void*)(obj + 0xc), model + 8, 0xc);
+                    memcpy((void*)(obj + 0x18), model + 8, 0xc);
                 }
                 slotByte = shadowSlot & 0xff;
                 slotOff = slotByte * 0x68;
@@ -942,10 +941,10 @@ void newshadows_renderQueuedShadowCasters(void)
                     if ((double)lbl_803DF9A8 < dotLen)
                     {
                         invSqrt = 1.0 / SQRT(dotLen);
-                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0);
-                        invSqrt = DOUBLE_803df9d8 * invSqrt * -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0);
-                        dotLen = (double)(float)(dotLen * DOUBLE_803df9d8 * invSqrt *
-                                                 -(dotLen * invSqrt * invSqrt - DOUBLE_803df9e0));
+                        invSqrt = lbl_803DED58 * invSqrt * -(dotLen * invSqrt * invSqrt - lbl_803DED60);
+                        invSqrt = lbl_803DED58 * invSqrt * -(dotLen * invSqrt * invSqrt - lbl_803DED60);
+                        dotLen = (double)(float)(dotLen * lbl_803DED58 * invSqrt *
+                                                 -(dotLen * invSqrt * invSqrt - lbl_803DED60));
                     }
                     if ((double)lbl_803DF9A8 < dotLen)
                     {
@@ -1058,8 +1057,8 @@ void newshadows_renderQueuedShadowCasters(void)
                 shadowSlot = shadowSlot + 1;
                 if ((((ObjModelState*)model)->flags & 0x20) != 0)
                 {
-                    FUN_80003494(obj + 0xc, savedRow0, 0xc);
-                    FUN_80003494(obj + 0x18, savedRow1, 0xc);
+                    memcpy((void*)(obj + 0xc), savedRow0, 0xc);
+                    memcpy((void*)(obj + 0x18), savedRow1, 0xc);
                 }
             }
             queueEntry = queueEntry + 3;
@@ -1147,9 +1146,9 @@ void newshadows_queueShadowCaster(int object)
         if ((double)lbl_803DF9A8 < dist)
         {
             invSqrt = 1.0 / SQRT(dist);
-            invSqrt = DOUBLE_803df9d8 * invSqrt * -(dist * invSqrt * invSqrt - DOUBLE_803df9e0);
-            invSqrt = DOUBLE_803df9d8 * invSqrt * -(dist * invSqrt * invSqrt - DOUBLE_803df9e0);
-            dist = (double)(float)(dist * DOUBLE_803df9d8 * invSqrt * -(dist * invSqrt * invSqrt - DOUBLE_803df9e0));
+            invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
+            invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
+            dist = (double)(float)(dist * lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60));
         }
         slotOff = DAT_803ddbf8 * 0xc;
         *(float*)(&DAT_8038ef0c + slotOff) =
@@ -1442,9 +1441,9 @@ void newshadows_buildShadowDirectionTexture(void)
             if (epsilon < len)
             {
                 invSqrt = 1.0 / SQRT(len);
-                invSqrt = DOUBLE_803df9d8 * invSqrt * -(len * invSqrt * invSqrt - DOUBLE_803df9e0);
-                invSqrt = DOUBLE_803df9d8 * invSqrt * -(len * invSqrt * invSqrt - DOUBLE_803df9e0);
-                len = (double)(float)(len * DOUBLE_803df9d8 * invSqrt * -(len * invSqrt * invSqrt - DOUBLE_803df9e0));
+                invSqrt = lbl_803DED58 * invSqrt * -(len * invSqrt * invSqrt - lbl_803DED60);
+                invSqrt = lbl_803DED58 * invSqrt * -(len * invSqrt * invSqrt - lbl_803DED60);
+                len = (double)(float)(len * lbl_803DED58 * invSqrt * -(len * invSqrt * invSqrt - lbl_803DED60));
             }
             intensity = lbl_803DF9A8;
             if (len <= falloffLimit)
