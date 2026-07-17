@@ -106,6 +106,10 @@ void CameraModeWorldMap_update(u8* obj)
     u16 buttons;
     f32 spd = lbl_803E1A28;
     f32 mdx, mdz;
+    f32 a;
+    f32 b;
+    f32 sn;
+    f32 dx, dz;
     s16 pitchDelta;
 
     focus = (GameObject*)camera->anim.targetObj;
@@ -196,12 +200,12 @@ void CameraModeWorldMap_update(u8* obj)
                 if (gCamWorldMapState->focusBlendTimer != 0)
                 {
                     GameObject* f = ObjList_FindObjectById(gCamWorldMapState->focusObjectId);
-                    f32 dz = f->anim.worldPosZ - objA->anim.worldPosZ;
-                    f32 dx = f->anim.worldPosX - objA->anim.worldPosX;
                     CameraModeWorldMapState* st;
                     s16 angleDelta;
                     f32 cur;
                     f32 tgt;
+                    dx = f->anim.worldPosX - objA->anim.worldPosX;
+                    dz = f->anim.worldPosZ - objA->anim.worldPosZ;
                     gCamWorldMapState->targetAngle = (s16)(0x8000 - getAngle(dx, dz));
                     angleDelta = (s16)((st = gCamWorldMapState)->targetAngle - (u16)camera->anim.rotX);
                     if (angleDelta > 0x8000)
@@ -317,7 +321,7 @@ void CameraModeWorldMap_update(u8* obj)
                 }
                 camera->anim.rotY = camera->anim.rotY + angleDelta / gCamWorldMapState->settleFrames;
                 {
-                    f32 a, sn, cs, sn54, cs54;
+                    f32 cs, sn54, cs54;
                     f32 t6, t5, px, pz;
                     f32 dxx, dyy, dzz;
                     a = gCamWorldMapPi * (f32)(u16)(ang - 0x39dc) / gCamWorldMapAngleScale;
@@ -342,10 +346,13 @@ void CameraModeWorldMap_update(u8* obj)
                     my = (u16)(my + 0x514);
                 }
                 {
-                    f32 b = gCamWorldMapPi * my / gCamWorldMapAngleScale;
-                    f32 sb = mathCosf(b);
-                    f32 cb = -mathSinf(b);
-                    f32 radius = lbl_803E1A60;
+                    f32 sb;
+                    f32 cb;
+                    f32 radius;
+                    b = gCamWorldMapPi * my / gCamWorldMapAngleScale;
+                    sb = mathCosf(b);
+                    cb = -mathSinf(b);
+                    radius = lbl_803E1A60;
                     g->anim.localPosX = radius * cb + camera->anim.worldPosX;
                     g->anim.localPosY = camera->anim.worldPosY + lbl_80319DF8[(s8) * &g->anim.bankIndex];
                     g->anim.localPosZ = radius * sb + camera->anim.worldPosZ;
