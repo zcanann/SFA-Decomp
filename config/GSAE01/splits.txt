@@ -1568,6 +1568,7 @@ main/dll/dll_00E3_fireball.c:
 	.text       start:0x8016F16C end:0x80170004
 	.data       start:0x80320984 end:0x803209C0
 	.sdata      start:0x803DBD58 end:0x803DBD60
+	.sdata2     start:0x803E3330 end:0x803E3384
 
 main/dll/dll_00E4_flamethrowerspe.c:
 	.text       start:0x80170004 end:0x801702D4

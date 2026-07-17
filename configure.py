@@ -1199,7 +1199,12 @@ config.libs = [
             Object(NonMatching, "main/dll/DIM/dll_00C7_dim2roofrub.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00C8_depthoffieldpoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00E2_staff.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_00E3_fireball.c", cflags=cflags_dll_noopt),
+            Object(
+                MatchingFor("GSAE01"),
+                "main/dll/dll_00E3_fireball.c",
+                cflags=cflags_dll_noopt,
+                section_alignments={".data": 4},
+            ),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00E4_flamethrowerspe.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00E5_shield.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0125_curve.c", cflags=cflags_dll_noopt),
