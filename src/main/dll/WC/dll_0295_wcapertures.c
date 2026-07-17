@@ -99,6 +99,16 @@ void wcapertures_free(GameObject* obj)
     }
 }
 
+static void wcapertures_setGlowEnabled(GameObject* obj, u8 enabled)
+{
+    WCAperturesState* state = obj->extra;
+
+    if (state->light != NULL)
+    {
+        modelLightStruct_setEnabled(state->light, enabled, 0.0f);
+    }
+}
+
 void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WCAperturesState* state = (obj)->extra;
@@ -119,7 +129,7 @@ void wcapertures_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     }
     if (visible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E6E2C);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -137,9 +147,9 @@ void wcapertures_hitDetect(GameObject* obj)
             ev[1] = 1;
         else
             ev[1] = 0;
-        col[0] = lbl_803E6E30;
-        col[1] = lbl_803E6E34;
-        col[2] = lbl_803E6E28;
+        col[0] = 5.0f;
+        col[1] = -0.788130045f;
+        col[2] = 0.0f;
         (*gPartfxInterface)
             ->spawnObject((void*)obj, WCAPERTURES_PARTFX_OPEN, ev, WCAPERTURES_PARTFX_KIND,
                           WCAPERTURES_PARTFX_INVALID_HANDLE, col);
@@ -174,7 +184,7 @@ void wcapertures_update(GameObject* obj)
             fn_802969F0(player) == WCAPERTURES_PLAYER_STATE)
         {
             state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
-            if (Camera_GetFovY() <= lbl_803E6E38 && (obj->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
+            if (Camera_GetFovY() <= 6.0f && (obj->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG))
             {
                 mainSetBits(setup->openBit, 1);
                 state->mode = WCAPERTURES_MODE_OPEN;
@@ -207,11 +217,11 @@ void wcapertures_update(GameObject* obj)
     {
         if (objAnim->alpha > WCAPERTURES_LIGHT_ENABLE_THRESHOLD)
         {
-            modelLightStruct_setEnabled(light, 1, lbl_803E6E2C);
+            modelLightStruct_setEnabled(light, 1, 1.0f);
         }
         else
         {
-            modelLightStruct_setEnabled(light, 0, lbl_803E6E2C);
+            modelLightStruct_setEnabled(light, 0, 1.0f);
         }
     }
 }
@@ -242,11 +252,11 @@ void wcapertures_init(GameObject* obj, WCAperturesSetup* setup)
         modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);
         if (objAnim->bankIndex == 0)
             modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
-                                       WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
+                                       WCAPERTURES_LIGHT_BLUE_HI, 30.0f);
         else
             modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO, WCAPERTURES_LIGHT_BLUE_LO, 0xff,
-                                       0xff, lbl_803E6E3C);
-        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
+                                       0xff, 30.0f);
+        modelLightStruct_setGlowProjectionRadius(state->light, 20.0f);
     }
 }
 
