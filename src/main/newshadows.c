@@ -2322,7 +2322,9 @@ void fn_8006CD20(f32 px, f32 pz, f32 frame, f32* placements, int count, f32* out
             if (sq <= depth)
             {
                 f32 sqd = sq / depth;
-                f32 g = sqrtf(lbl_803DED2C - sqd);
+                f32 g;
+                sqd = lbl_803DED2C - sqd;
+                g = sqrtf(sqd);
                 acc5 = s0 * g + acc5;
                 over = over / depth;
                 acc6 = acc6 + over;
