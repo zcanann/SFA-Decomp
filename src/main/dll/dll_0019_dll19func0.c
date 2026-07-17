@@ -79,10 +79,8 @@ typedef struct
     u32 w0, w1;
 } IdPair;
 
-const u32 lbl_803E1C18 = 0x02C402CD;
-const u32 lbl_803E1C1C = 0x02CE02CF;
-const u32 lbl_803E1C20 = 0x000B000B;
-const u32 lbl_803E1C24 = 0x000B000B;
+const IdPair lbl_803E1C18 = {0x02C402CD, 0x02CE02CF};
+const IdPair lbl_803E1C20 = {0x000B000B, 0x000B000B};
 const u32 lbl_803E1C28 = 2;
 
 
@@ -573,8 +571,8 @@ int dll_19_func15(u8* obj, int spawnType, int unused, int alt)
     f32 scale;
 
     scale = 0.0f;
-    *(IdPair*)ids1 = *(IdPair*)&lbl_803E1C18;
-    *(IdPair*)ids2 = *(IdPair*)&lbl_803E1C20;
+    *(IdPair*)ids1 = lbl_803E1C18;
+    *(IdPair*)ids2 = lbl_803E1C20;
     if (spawnType == 0)
     {
         return 0;
