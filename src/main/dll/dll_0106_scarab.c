@@ -503,7 +503,7 @@ void Scarab_update(GameObject* obj)
                     (sp = &bufs.sph)->vals[0] = lbl_803E39F8;
                     sp->a = -1;
                     sp->b = 0;
-                    hitDetect_calcSweptSphereBounds(&bounds, (f32*)&start, (f32*)&end, (f32*)sp, 1);
+                    hitDetect_calcSweptSphereBounds(&bounds, &start.x, &end.x, sp->vals, 1);
                 }
                 hitDetectFn_800691c0(obj, &bounds, 0, 1);
                 count = hitDetectFn_80067958(obj, (f32*)&start, (f32*)&end, 1, bufs.hitBuf, 0);
@@ -650,7 +650,7 @@ void Scarab_update(GameObject* obj)
                     obj->anim.localPosX = obj->anim.velocityX * timeDelta + obj->anim.localPosX;
                     obj->anim.localPosZ = obj->anim.velocityZ * timeDelta + obj->anim.localPosZ;
                     speed = sqrtf(obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ);
-                    ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent*)obj, &phase);
+                    ObjAnim_SampleRootCurvePhase(speed, &obj->anim, &phase);
                     ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
@@ -661,7 +661,7 @@ void Scarab_update(GameObject* obj)
                     sp->a = -1;
                     sp->b = 10;
                     hitDetect_calcSweptSphereBounds(&bounds, &obj->anim.previousLocalPosX, &obj->anim.localPosX,
-                                                     (f32*)sp, 1);
+                                                     sp->vals, 1);
                 }
                 hitDetectFn_800691c0(obj, &bounds, 0, 1);
                 hits = hitDetectFn_80067958(obj, &obj->anim.previousLocalPosX, &obj->anim.localPosX, 1, bufs.hitBuf, 0);
