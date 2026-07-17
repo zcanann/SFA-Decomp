@@ -2432,7 +2432,7 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 
 
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
-extern int zlbDecompress(void* dst, int size, int out, void* src);
+extern int zlbDecompress(u8* src, int size, u8* dst, void* outp);
 
 typedef struct PathPoint
 {
@@ -3521,7 +3521,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                zlbDecompress((u8*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange((void*)destBuf, decompSize);
             }
@@ -3540,7 +3540,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((void*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                zlbDecompress((u8*)(MLDF_QPTR + (offsetFlags + 0x10)), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange((void*)destBuf, decompSize);
             }
@@ -3558,8 +3558,8 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             }
             else if (hdr->magic == 0xfacefeed)
             {
-                zlbDecompress((void*)(qptr + (hdr->auxSize + (int)hdr - qptr + 0x28)), hdr->compressedSize - 0x10,
-                              destBuf, &hdr->decompressedSize);
+                zlbDecompress((u8*)(qptr + (hdr->auxSize + (int)hdr - qptr + 0x28)), hdr->compressedSize - 0x10,
+                              (u8*)destBuf, &hdr->decompressedSize);
                 DCStoreRange((void*)destBuf, hdr->decompressedSize);
             }
         }
@@ -3567,7 +3567,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         {
             fileBuf = qptr + (offsetFlags & 0xffffff);
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
+            zlbDecompress((u8*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf, &decompSize);
             DCStoreRange((void*)destBuf, decompSize);
         }
         else if (fileId == 0x20 || fileId == 0x4b)
@@ -3581,7 +3581,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                zlbDecompress((u8*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange((void*)destBuf, decompSize);
             }
@@ -3597,7 +3597,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
             if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
             {
                 decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-                zlbDecompress((void*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, destBuf,
+                zlbDecompress((u8*)(MLDF_QPTR + (entryIndex + 0x10)), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf,
                               &decompSize);
                 DCStoreRange((void*)destBuf, decompSize);
             }
@@ -3638,7 +3638,7 @@ int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 leng
         if (strncmp((char*)fileBuf, sZlbBlockTag, 3) == 0)
         {
             decompSize = ZLB_HDR(fileBuf)->decompressedSize;
-            zlbDecompress((void*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, destBuf, &decompSize);
+            zlbDecompress((u8*)(fileBuf + 0x10), ZLB_HDR(fileBuf)->compressedSize, (u8*)destBuf, &decompSize);
         }
         mm_free((void*)fileBuf);
     }
@@ -3770,7 +3770,7 @@ void piRomLoadSection(int romOffset, int mapIndex, int destBuf)
         hdr = (struct PackHeader*)(lbl_8035F3E8[0x1d] + romOffset);
         if (hdr->magic == 0xfacefeed)
         {
-            zlbDecompress((void*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, destBuf, &hdr->decompressedSize);
+            zlbDecompress((u8*)(lbl_8035F208[mapIndex] + 0x10), hdr->compressedSize, (u8*)destBuf, &hdr->decompressedSize);
             DCStoreRange((void*)destBuf, hdr->decompressedSize);
         }
     }
@@ -5580,22 +5580,21 @@ extern u8 lbl_8036F880[0x8000];
 #define ZADV(n)    (pos += (n), src += pos >> 3, pos &= 7, sh = 0x20 - pos)
 #define ZW(tbl, i) (*(u16*)(((u8*)(tbl) + (i)) + (i)))
 
-int zlbDecompress(void* srcv, int size, int dstv, void* outp)
+int zlbDecompress(u8* src, int size, u8* dst, void* outp)
 {
+    u8* distTblP;
     int pos;
     int val;
-    u8* distTblP;
-    int lenMax;
     u8* distBitsP;
     u16* curCnt;
-    u8* curLens;
     u16* p16;
     u8* p8;
     int cnt;
-    int bl;
+    int len;
     int n;
     int k;
     int j;
+    int lenMax;
     int i;
     u16 zeroh;
     u8 zero;
@@ -5606,16 +5605,15 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
     volatile int final;
     int hclen;
     int hdist;
+    u8* curLens;
     int distMax;
     u16* lenTblP;
     int sh;
-    u8* src;
     u8* lenBitsP;
-    u8* dst;
-    dst = (u8*)dstv - 1;
+    dst = dst - 1;
     pos = 0;
     sh = 0x20;
-    src = (u8*)srcv + 2;
+    src = src + 2;
     do
     {
         {
@@ -5638,7 +5636,6 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
         }
         if (type == 0)
         {
-            int len;
             if (pos != 0)
             {
                 src += 1;
@@ -5760,14 +5757,14 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                 }
                 {
                     u8* cnts;
-                    bl = 7;
+                    size = 7;
                     cnts = lbl_803DCD20;
                 blscan:
                     {
-                        int cb = cnts[bl];
+                        int cb = cnts[size];
                         if (cb == 0)
                         {
-                            bl--;
+                            size--;
                             goto blscan;
                         }
                     }
@@ -5776,13 +5773,13 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         j = 1;
                         code = 0;
                         t18 = lbl_803DCD18;
-                        for (; j <= bl; j++)
+                        for (; j <= size; j++)
                         {
                             int cj = cnts[j];
                             if (cj != 0)
                             {
                                 t18[j] = code;
-                                code += cj << (bl - j);
+                                code += cj << (size - j);
                             }
                         }
                     }
@@ -5798,7 +5795,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                             int len = lens[i];
                             if (len != 0)
                             {
-                                for (k = 0; k < 1 << (bl - len); k++)
+                                for (k = 0; k < 1 << (size - len); k++)
                                 {
                                     int c = t18[len] + 1;
                                     t18[len] = c;
@@ -5821,7 +5818,7 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                     u8* bp;
                     u16* cw;
                     {
-                        int t8b = 8 - bl;
+                        int t8b = 8 - size;
                         extra = 0;
                         if (pos > t8b)
                         {
@@ -5829,10 +5826,10 @@ int zlbDecompress(void* srcv, int size, int dstv, void* outp)
                         }
                     }
                     v = ZROT8(src[0]) | extra;
-                    v &= (1 << bl) - 1;
+                    v &= (1 << size) - 1;
                     brev = lbl_8030CDE0;
                     {
-                        int r24 = bl + 0x18;
+                        int r24 = size + 0x18;
                         u32 bi = brev[v];
                         bi = __rlwnm(bi, r24, 24, 31);
                         sp = lbl_803778D4 + bi;
