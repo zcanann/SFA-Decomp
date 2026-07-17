@@ -1474,7 +1474,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01B9_sccloudrunnera.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801dd170.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01BA_sctotempuzzle.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/SC/dll_01BB_sctotembond.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01BB_sctotembond.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/SC/dll_01BC_sctotemstrength.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_01BD_paymentkiosk.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/draghead.c"),

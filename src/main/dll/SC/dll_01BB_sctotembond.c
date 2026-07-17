@@ -83,14 +83,27 @@ STATIC_ASSERT(sizeof(TotemBondOrbPlacement) == 0x38);
 
 extern u16 gTotemBondRingGameBits[];
 extern u16 gTotemBondOrbGameBits[];
-extern f32 gTotemBondOrbSpawnRadius;
-extern f32 lbl_803E563C;
-extern const f32 lbl_803E5654;
-extern f32 lbl_803E5658;
-extern f32 gTotemBondRingRotateSpeed;
-extern f32 gTotemBondCameraDistance;
-extern f32 lbl_803E5650;
 
+
+void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius);
+
+static void sc_totembond_beginOrbGame(ScTotemBondObject* obj, ScTotemBondState* state)
+{
+    state->active = 1;
+    obj->yaw = 0x3fff;
+    state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
+    ObjHits_DisableObject((u32)obj);
+    sc_totembond_spawnGameBitOrbs(obj, state, -130.0f);
+    mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
+    obj->mapAlpha = 0;
+    state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
+    state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
+    (*gGameUIInterface)->setShowWorldMapHud(1);
+    hudFn_8011f38c(1);
+    (*gScreenTransitionInterface)->step(0x1e, 1);
+    state->spawnTimer = 30.0f;
+    Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
+}
 
 #pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
@@ -212,7 +225,7 @@ void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5650);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void sc_totembond_hitDetect(void)
@@ -223,7 +236,7 @@ static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBon
 {
     int player;
 
-    state->completionTimer = lbl_803E5654;
+    state->completionTimer = 0.0f;
     player = (int)Obj_GetPlayerObject();
     (*gMapEventInterface)->clearRestartPoint();
     (*gCameraInterface)->setMode(SC_TOTEMBOND_CAMMODE_DEFAULT, 0, 3, 0, NULL, 0, 0);
@@ -256,41 +269,30 @@ void sc_totembond_update(ScTotemBondObject* obj)
     u8 availableCount;
     u8 nextRing;
     u8 allOrbsCollected;
+    f32 zero;
 
+    zero = 0.0f;
     state = obj->state;
     player = (int)Obj_GetPlayerObject();
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_START_ORBS) != 0)
     {
-        state->active = 1;
-        obj->yaw = 0x3fff;
-        state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
-        ObjHits_DisableObject((u32)obj);
-        sc_totembond_spawnGameBitOrbs(obj, state, gTotemBondOrbSpawnRadius);
-        mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
-        obj->mapAlpha = 0;
-        state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
-        state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
-        (*gGameUIInterface)->setShowWorldMapHud(1);
-        hudFn_8011f38c(1);
-        (*gScreenTransitionInterface)->step(0x1e, 1);
-        state->spawnTimer = lbl_803E563C;
-        Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 1);
+        sc_totembond_beginOrbGame(obj, state);
     }
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_ORBS_ACTIVE) != 0)
     {
-        if (state->spawnTimer != lbl_803E5654)
+        if (state->spawnTimer != zero)
         {
             state->spawnTimer -= timeDelta;
-            if (state->spawnTimer < lbl_803E5654)
+            if (state->spawnTimer < zero)
             {
-                state->spawnTimer = lbl_803E5654;
+                state->spawnTimer = zero;
             }
         }
-        else if (state->completionTimer != lbl_803E5654)
+        else if (state->completionTimer != zero)
         {
             state->completionTimer -= timeDelta;
-            if (state->completionTimer <= lbl_803E5654)
+            if (state->completionTimer <= zero)
             {
                 sc_totembond_finishOrbGame(obj, state);
                 return;
@@ -322,14 +324,14 @@ void sc_totembond_update(ScTotemBondObject* obj)
                 }
                 if (allOrbsCollected)
                 {
-                    state->completionTimer = lbl_803E5658;
+                    state->completionTimer = 35.0f;
                     fn_8011F6D4(0);
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
             }
             if ((int)((u32)(u16)obj->yaw >> 13) != state->ringIndex)
             {
-                obj->yaw = (s16) - ((gTotemBondRingRotateSpeed * timeDelta) - (f32)(s32)obj->yaw);
+                obj->yaw = (s16) - ((512.0f * timeDelta) - (f32)(s32)obj->yaw);
                 if ((int)((u32)(u16)obj->yaw >> 13) == state->ringIndex)
                 {
                     mainSetBits(gTotemBondRingGameBits[state->ringIndex], 1);
@@ -339,12 +341,12 @@ void sc_totembond_update(ScTotemBondObject* obj)
 
         fn_80296124((GameObject*)player, (Vec3f*)&obj->x, (Vec3s*)&obj->yaw, 0);
         state->x = obj->x;
-        state->y = lbl_803E563C + obj->y;
+        state->y = 30.0f + obj->y;
         state->z = obj->z;
         state->yaw = (s16)(0x8000 - obj->yaw);
         state->pitch = obj->pitch;
         state->roll = obj->roll;
-        state->cameraDistance = gTotemBondCameraDistance;
+        state->cameraDistance = 72.0f;
         (*gCameraInterface)->releaseAction(state, 0x18);
     }
 
