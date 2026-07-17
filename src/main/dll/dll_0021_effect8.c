@@ -6,6 +6,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 #include "main/vecmath.h"
 #include "main/dll/modgfx.h"
 #include "main/maketex_random_api.h"
@@ -53,6 +54,19 @@ extern f32 lbl_803DFE04;
 extern f32 lbl_803DFE08;
 extern f32 lbl_803DFE0C;
 extern f32 lbl_803DFE10;
+
+ObjectDescriptor6 lbl_80310B50 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect8_initialise,
+    (ObjectDescriptorCallback)Effect8_release,
+    0,
+    (ObjectDescriptorCallback)Effect8_func03_nop,
+    (ObjectDescriptorCallback)Effect8_func04,
+    (ObjectDescriptorCallback)Effect8_func05,
+};
 
 void Effect8_func03_nop(void)
 {
