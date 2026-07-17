@@ -325,4 +325,5 @@ def main():
     sys.stderr.write(f"[encoding-identical fns checked: {checked}] [findings: {len(findings)}]\n")
 
 
-main()
+if __name__ == "__main__":
+    main()

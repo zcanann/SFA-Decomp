@@ -139,7 +139,7 @@ typedef struct DepthReadRequest
     s32 key;   /* 0x8: opaque request key */
 } DepthReadRequest;
 
-extern f32 __THPInfo;
+extern f32 lbl_803DEE90;
 
 extern DepthReadRequest gDepthReadResults[0x14];
 extern DepthReadRequest gDepthReadPendingQueue[0x14];
@@ -152,11 +152,11 @@ extern u8 lbl_8030E8B0[];
 extern f32 gWaterFxState[4];
 extern u8 gWaterRipples[0x1000];
 extern u8 gWaterSplashQuads[0x3800];
-extern f32 Gbase;
+extern f32 lbl_803DEE40;
 extern void* gWaterFxTextures[4];
 extern f32 lbl_803DEE38, lbl_803DEE3C, lbl_803DEE44, lbl_803DEE48, lbl_803DEE58;
 extern f32 lbl_803DEE5C, lbl_803DEE64;
-extern f32 Gwid;
+extern f32 lbl_803DEE60;
 extern f32 lbl_803DEED8, lbl_803DEEE8, lbl_803DEEEC, lbl_803DEEF0, lbl_803DEEF4;
 extern f32 lbl_803DEF24, lbl_803DEF28, lbl_803DEF30, lbl_803DEF34, lbl_803DEF38;
 extern f32 lbl_803DEF3C, lbl_803DEF40, lbl_803DEF44, lbl_803DEF48;
@@ -538,13 +538,13 @@ void drawFn_8006f500(void)
                 tTop = lbl_803DEE38;
                 tBot = Vachuff_803DEE20;
                 PSMTXRotRad(rot, 0x7a,
-                            lbl_803DEE3C * (Gbase * (f32)(int)(0x8000 - *(u16*)(quad + 0x30))) / lbl_803DEE44);
+                            lbl_803DEE3C * (lbl_803DEE40 * (f32)(int)(0x8000 - *(u16*)(quad + 0x30))) / lbl_803DEE44);
             }
             else
             {
                 tTop = Vachuff_803DEE20;
                 tBot = lbl_803DEE38;
-                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(u32) * (u16*)(quad + 0x30)) / lbl_803DEE44);
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (lbl_803DEE40 * (f32)(u32) * (u16*)(quad + 0x30)) / lbl_803DEE44);
             }
             PSMTXTrans(trans, lbl_803DEE48, *(f32*)&lbl_803DEE48, Vachuff_803DEE20);
             PSMTXConcat(rot, trans, rot);
@@ -808,8 +808,8 @@ void mapInitFn_8006fccc(void)
     *(u32*)(base + 0x18) = (u32)textureLoadAsset(0x1A);
     *(u32*)(base + 0x1C) = (u32)textureLoadAsset(0x646);
     *(f32*)(base + 0x00) = lbl_803DEE5C;
-    *(f32*)(base + 0x04) = Gwid;
-    *(f32*)(base + 0x08) = Gwid;
+    *(f32*)(base + 0x04) = lbl_803DEE60;
+    *(f32*)(base + 0x08) = lbl_803DEE60;
     *(f32*)(base + 0x0C) = lbl_803DEE64;
     gWaterFxDisabled = 0;
     gWaterQuadWriteIdx = 0;
@@ -885,7 +885,7 @@ extern f32 lbl_803DEE70;
 extern f32 lbl_803DEE74;
 extern f32 lbl_803DEE78;
 extern f32 lbl_803DEE7C;
-extern f32 Gq;
+extern f32 lbl_803DEE80;
 extern int lbl_803DD03C;
 extern int lbl_803968C0[];
 
@@ -919,7 +919,7 @@ void matrixFn_8006ff0c(float* mat, short* out, f32 fov, f32 aspect, f32 near, f3
         }
         else
         {
-            *(s16*)out = (s16)(Gq / (near + far));
+            *(s16*)out = (s16)(lbl_803DEE80 / (near + far));
             if (*(u16*)out == 0)
             {
                 *out = 1;
@@ -938,7 +938,7 @@ void normalize(f32* x, f32* y, f32* z)
     f32 len;
 
     len = sqrtf(*z * *z + (*x * *x + *y * *y));
-    scale = __THPInfo / len;
+    scale = lbl_803DEE90 / len;
     *x = *x * scale;
     *y = *y * scale;
     *z = *z * scale;

@@ -2718,7 +2718,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
 }
 
 extern f32 lbl_803DEBEC;
-extern f32 PreCB;
+extern f32 lbl_803DEBF0;
 extern char gViewFrustumPlanes[];
 
 int ViewFrustum_IsSphereVisible(float* center, float radius)
@@ -2961,7 +2961,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     else
     {
         y0 = lbl_803DEBEC;
-        y1 = PreCB;
+        y1 = lbl_803DEBF0;
     }
     plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < FRUSTUM_PLANE_COUNT; i++)
