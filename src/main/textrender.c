@@ -2961,11 +2961,6 @@ void mainLoopDoGameText(void)
 
 char sGameTextSequencePathFormat[] = "gametext/Sequences/%d_%s.bin";
 
-/* 4 unreferenced zero bytes sit between the sequence path format and the
- * task-text allow list in retail .data (0x802C9EE4); the declspec keeps this
- * filler out of .sdata so the section layout matches. */
-__declspec(section ".data") int sGameTextUnused[1] = {0};
-
 /* Task (fortune-teller) text ids that may be shown; 0-terminated. */
 s16 gGameTextTaskTextAllowList[12] = {
     0x69, 0x6d, 0x83, 0x490, 0x493, 0x492, 0x180, 0x47f, 0x1d, 0x20, 0x3c8, 0,
