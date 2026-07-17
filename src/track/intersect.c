@@ -242,9 +242,9 @@ typedef struct
     Vec pos;
 } SplashFxParams;
 
-extern f32 Vachuff_803DEE20;
-extern f32 __THPHuffmanBits_803DEE24;
-extern f32 __THPHuffmanSizeTab_803DEE28;
+extern f32 lbl_803DEE20;
+extern f32 lbl_803DEE24;
+extern f32 lbl_803DEE28;
 
 /* opt_common_subs off: the retail build re-truncates the u8 `flags`/`j`
  * loop values (clrlwi ,,24) at each use rather than caching the masked form. */
@@ -355,7 +355,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
     if (sfxTab != NULL)
     {
         vec = vecs + vecIdx * 3;
-        if (((BaddieState*)st)->waterDepth > Vachuff_803DEE20)
+        if (((BaddieState*)st)->waterDepth > lbl_803DEE20)
         {
             (*gWaterfxInterface)->spawnImpactSurface(obj, flags, vecs, st, unused);
             sfx = 5;
@@ -379,7 +379,7 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
         return;
     }
     i = 0;
-    scale = __THPHuffmanBits_803DEE24 * scale;
+    scale = lbl_803DEE24 * scale;
     while (flags != 0)
     {
         vec = vecs + i * 3;
@@ -399,9 +399,9 @@ void objAudioFn_8006ef38(u8* obj, s8* hits, u8 type, f32* vecs, u8* st, f32 unus
             ps.id = sfx;
             ps.unk4 = 0;
             ps.unk2 = 0;
-            v.x = __THPHuffmanSizeTab_803DEE28 * ((GameObject*)obj)->anim.velocityX;
-            v.y = __THPHuffmanSizeTab_803DEE28 * ((GameObject*)obj)->anim.velocityY;
-            v.z = __THPHuffmanSizeTab_803DEE28 * ((GameObject*)obj)->anim.velocityZ;
+            v.x = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityX;
+            v.y = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityY;
+            v.z = lbl_803DEE28 * ((GameObject*)obj)->anim.velocityZ;
             if (sfx == 6 || sfx == 3)
             {
                 cnt = randomGetRange(2, 4);
@@ -444,7 +444,7 @@ void timeFn_8006f400(f32 step)
         value = a[0x33];
         if (value != 0)
         {
-            if ((f32)(u32)value - step <= Vachuff_803DEE20)
+            if ((f32)(u32)value - step <= lbl_803DEE20)
             {
                 a[0x33] = 0;
             }
@@ -456,7 +456,7 @@ void timeFn_8006f400(f32 step)
         value = b[0x0E];
         if (value != 0)
         {
-            if ((f32)(u32)value - step <= Vachuff_803DEE20)
+            if ((f32)(u32)value - step <= lbl_803DEE20)
             {
                 b[0x0E] = 0;
             }
@@ -511,7 +511,7 @@ void drawFn_8006f500(void)
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
     selectTexture((Texture*)gWaterFxTextures[gWaterFxBank], 0);
     view = Camera_GetViewMatrix();
-    PSMTXTrans(camTrans, -playerMapOffsetX, Vachuff_803DEE20, -playerMapOffsetZ);
+    PSMTXTrans(camTrans, -playerMapOffsetX, lbl_803DEE20, -playerMapOffsetZ);
     PSMTXConcat((MtxP)view, camTrans, posMtx);
     GXLoadPosMtxImm(posMtx, GX_PNMTX0);
     gxSetZMode_(1, 3, 0);
@@ -536,19 +536,19 @@ void drawFn_8006f500(void)
             if (quad[0x34] != 0)
             {
                 tTop = lbl_803DEE38;
-                tBot = Vachuff_803DEE20;
+                tBot = lbl_803DEE20;
                 PSMTXRotRad(rot, 0x7a,
                             lbl_803DEE3C * (lbl_803DEE40 * (f32)(int)(0x8000 - *(u16*)(quad + 0x30))) / lbl_803DEE44);
             }
             else
             {
-                tTop = Vachuff_803DEE20;
+                tTop = lbl_803DEE20;
                 tBot = lbl_803DEE38;
                 PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (lbl_803DEE40 * (f32)(u32) * (u16*)(quad + 0x30)) / lbl_803DEE44);
             }
-            PSMTXTrans(trans, lbl_803DEE48, *(f32*)&lbl_803DEE48, Vachuff_803DEE20);
+            PSMTXTrans(trans, lbl_803DEE48, *(f32*)&lbl_803DEE48, lbl_803DEE20);
             PSMTXConcat(rot, trans, rot);
-            PSMTXTrans(trans, __THPHuffmanBits_803DEE24, *(f32*)&__THPHuffmanBits_803DEE24, Vachuff_803DEE20);
+            PSMTXTrans(trans, lbl_803DEE24, *(f32*)&lbl_803DEE24, lbl_803DEE20);
             PSMTXConcat(trans, rot, rot);
             GXLoadTexMtxImm(rot, GX_TEXMTX0, GX_MTX2x4);
             GXBegin(GX_QUADS, GX_VTXFMT2, 4);
@@ -561,7 +561,7 @@ void drawFn_8006f500(void)
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
             }
-            GXWGFifo.f32 = Vachuff_803DEE20;
+            GXWGFifo.f32 = lbl_803DEE20;
             GXWGFifo.f32 = tTop;
             {
                 f32 px, py, pz;
@@ -594,7 +594,7 @@ void drawFn_8006f500(void)
                 GXWGFifo.f32 = py;
                 GXWGFifo.f32 = pz;
             }
-            GXWGFifo.f32 = Vachuff_803DEE20;
+            GXWGFifo.f32 = lbl_803DEE20;
             GXWGFifo.f32 = tBot;
         }
     }
@@ -669,11 +669,11 @@ void playerEarthWalkerAudioFn_8006f950(u8* obj, f32* pos, u8 flip, u8 type)
         }
         PSVECNormalize(&norm, &norm);
         axis.x = lbl_803DEE38;
-        axis.y = Vachuff_803DEE20;
-        axis.z = Vachuff_803DEE20;
+        axis.y = lbl_803DEE20;
+        axis.z = lbl_803DEE20;
         if (__fabs(PSVECDotProduct(&norm, &axis)) >= lbl_803DEE58)
         {
-            axis.x = Vachuff_803DEE20;
+            axis.x = lbl_803DEE20;
             axis.z = lbl_803DEE38;
         }
         PSVECCrossProduct(&norm, &axis, &perp);
