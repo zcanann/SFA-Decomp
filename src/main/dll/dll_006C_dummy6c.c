@@ -6,6 +6,18 @@
  * objects, state, or behaviour live here.
  */
 #include "main/dll/dll_006C_dummy6c.h"
+#include "main/object_descriptor.h"
+
+ObjectDescriptor4 lbl_80313AD0 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_4_SLOTS,
+    (ObjectDescriptorCallback)Dummy6C_initialise,
+    (ObjectDescriptorCallback)Dummy6C_release,
+    0,
+    (ObjectDescriptorCallback)Dummy6C_func03_ret_0,
+};
 
 int Dummy6C_func03_ret_0(void)
 {

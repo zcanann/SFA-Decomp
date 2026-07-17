@@ -314,11 +314,3 @@ u32 lbl_80313A40[28] = {0xfc180000, 0xfc180000, 0x000003e8, 0x0000fc18, 0x003f00
 u32 lbl_80313AB0[8] = {
     0x00000000, 0x00000000,        0x00000000, 0x00030000, (u32)dll_6B_func00_nop, (u32)dll_6B_func01_nop,
     0x00000000, (u32)dll_6B_func03};
-u32 lbl_80313AD0[8] = {0x00000000,
-                       0x00000000,
-                       0x00000000,
-                       0x00030000,
-                       (u32)Dummy6C_initialise,
-                       (u32)Dummy6C_release,
-                       0x00000000,
-                       (u32)Dummy6C_func03_ret_0};
