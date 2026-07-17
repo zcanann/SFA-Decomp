@@ -44,7 +44,7 @@ enum
     SB_FIREBALL_HIT_BURST_B = 10
 };
 
-/* obj->unkF4 life timer set at init, decremented by framesThisStep */
+/* obj->userData1 life timer set at init, decremented by framesThisStep */
 #define SB_FIREBALL_LIFETIME 0x4b0
 
 extern void objfx_spawnFlaggedTrailBurst(int* obj, f32 f, int a, int b, int c, void* d);
@@ -100,15 +100,15 @@ void SB_FireBall_update(GameObject* obj)
     state = obj->extra;
     if (state->owner == NULL)
     {
-        state->owner = *(void**)&obj->unkF8;
+        state->owner = *(void**)&obj->userData2;
     }
 
     if (state->owner != NULL)
     {
         obj->anim.rotX = 0;
         obj->anim.rotZ = (s16)(obj->anim.rotZ + framesThisStep * SB_FIREBALL_SPIN_STEP);
-        obj->unkF4 -= framesThisStep;
-        if (obj->unkF4 < 0)
+        obj->userData1 -= framesThisStep;
+        if (obj->userData1 < 0)
         {
             Obj_FreeObject(obj);
             return;
@@ -152,7 +152,7 @@ void SB_FireBall_update(GameObject* obj)
 void SB_FireBall_init(GameObject* obj)
 {
     SBFireBallState* state = obj->extra;
-    obj->unkF4 = SB_FIREBALL_LIFETIME;
+    obj->userData1 = SB_FIREBALL_LIFETIME;
     state->launched = 0;
 }
 

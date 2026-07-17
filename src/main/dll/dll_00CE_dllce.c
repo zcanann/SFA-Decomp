@@ -852,7 +852,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         GroundBaddieState* sub = ((GameObject*)p1)->extra;
     f32 t;
 
-    if (visible == 0 || ((GameObject*)p1)->unkF4 != 0 || sub->targetState == 0)
+    if (visible == 0 || ((GameObject*)p1)->userData1 != 0 || sub->targetState == 0)
     {
         return;
     }
@@ -879,7 +879,7 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
 
     sub = obj->extra;
     setup = *(int*)&obj->anim.placementData;
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
@@ -894,13 +894,13 @@ void dll_CE_update(GameObject* obj, int unusedA, int unusedB)
             *(u8*)&obj->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
-    else if (obj->unkF8 == 0)
+    else if (obj->userData2 == 0)
     {
         obj->anim.localPosX = ((ObjPlacement*)setup)->posX;
         obj->anim.localPosY = ((ObjPlacement*)setup)->posY;
         obj->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
         (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
-        obj->unkF8 = 1;
+        obj->userData2 = 1;
     }
     else
     {

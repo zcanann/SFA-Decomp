@@ -85,8 +85,8 @@ void fn_80185868(GameObject* obj, f32 arg)
     sub->liftTimer = 800;
     sub->launchPhase = 0;
     sub->rideState = 0;
-    (obj)->unkF8 = 0;
-    (obj)->unkF4 = 2;
+    (obj)->userData2 = 0;
+    (obj)->userData1 = 2;
     ObjHits_EnableObject((int)obj);
     ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
     sub->spitTimer = 0;
@@ -136,7 +136,7 @@ void dll_107_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderSt
     default:
         goto end;
     }
-    if ((obj)->unkF8 != 0)
+    if ((obj)->userData2 != 0)
     {
         if (renderState == -1)
         {
@@ -262,7 +262,7 @@ void dll_107_update(GameObject* obj)
             state->ventState = 0;
             ObjHits_EnableObject((int)obj);
             *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-            (obj)->unkF4 = 0;
+            (obj)->userData1 = 0;
         }
         return;
     }
@@ -293,7 +293,7 @@ void dll_107_update(GameObject* obj)
             int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
             if ((void*)cam != (void*)obj && (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
-                (obj)->unkF8 == 0)
+                (obj)->userData2 == 0)
             {
                 buttonDisable(0, PAD_BUTTON_A);
                 Obj_GetYawDeltaToObject(obj, player, (f32*)yawBuf);
@@ -307,7 +307,7 @@ void dll_107_update(GameObject* obj)
                 state->riding = 1;
                 state->spitTimer = 600;
             }
-            if ((obj)->unkF8 == 0)
+            if ((obj)->userData2 == 0)
             {
                 ObjHits_EnableObject((int)obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
@@ -335,12 +335,12 @@ void dll_107_update(GameObject* obj)
                 ObjMsg_SendToObject(player, UNUSED107_MSG_PLAYER_GRAB, obj,
                                     (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
-            if ((obj)->unkF8 == 1)
+            if ((obj)->userData2 == 1)
             {
                 state->rideState = 2;
             }
             st21 = state->rideState;
-            if ((s8)st21 == 2 && (obj)->unkF8 == 0 && player->anim.currentMove != 0x447)
+            if ((s8)st21 == 2 && (obj)->userData2 == 0 && player->anim.currentMove != 0x447)
             {
                 state->rideState = 0;
                 state->launchPhase = 1;
@@ -360,7 +360,7 @@ void dll_107_update(GameObject* obj)
                 vecRotateZXY(&rot.ang, &(obj)->anim.velocityX);
                 Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_6a);
             }
-            else if ((s8)st21 == 2 && (obj)->unkF8 == 0)
+            else if ((s8)st21 == 2 && (obj)->userData2 == 0)
             {
                 f32 fz;
                 state->rideState = 0;
@@ -436,7 +436,7 @@ void dll_107_update(GameObject* obj)
             (obj)->anim.velocityZ = fz;
             state->ventState = 500;
             state->launchPhase = 0;
-            (obj)->unkF8 = 0;
+            (obj)->userData2 = 0;
             ObjHits_EnableObject((int)obj);
             *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
             ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
@@ -509,7 +509,7 @@ void dll_107_init(int obj, int pArg)
     {
         sub->radius = gWindLift107DefaultRadius;
     }
-    ((GameObject*)obj)->unkF4 = 0;
+    ((GameObject*)obj)->userData1 = 0;
     if (((GameObject*)obj)->anim.modelState != NULL)
     {
         p64 = *(int*)&((GameObject*)obj)->anim.modelState;

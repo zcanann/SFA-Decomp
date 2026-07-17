@@ -637,7 +637,7 @@ void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char vi
         {
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
-        else if (obj->unkF8 != 0 && visible != -1)
+        else if (obj->userData2 != 0 && visible != -1)
         {
             obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
         }
@@ -857,7 +857,7 @@ void SmallBasket_update(GameObject* obj)
             if (state->carryState == 0)
             {
                 flag[0] = 0;
-                if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && ((obj)->unkF8 == 0) &&
+                if (((buttonGetDisabled(0) & PAD_BUTTON_A) == 0) && ((obj)->userData2 == 0) &&
                     (ObjTrigger_IsSet((int)obj) != 0))
                 {
                     state->carryAngle = -0x8000;
@@ -870,7 +870,7 @@ void SmallBasket_update(GameObject* obj)
                 {
                     state->carryAttached = 1;
                 }
-                if ((obj)->unkF8 == 0)
+                if ((obj)->userData2 == 0)
                 {
                     ObjHits_EnableObject(obj);
                     if ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0))
@@ -910,11 +910,11 @@ void SmallBasket_update(GameObject* obj)
                         Sfx_PlayFromObject(0, SFXTRIG_id_10a);
                     }
                 }
-                if ((obj)->unkF8 == 1)
+                if ((obj)->userData2 == 1)
                 {
                     *(u8*)&state->carryState = 2;
                 }
-                if (((state->carryState == 2) && ((obj)->unkF8 == 0)) ||
+                if (((state->carryState == 2) && ((obj)->userData2 == 0)) ||
                     ((state->disguiseGated != 0) && (playerIsDisguised(player) == 0)))
                 {
                     if (fn_8029669C(player) != 0)
@@ -1019,7 +1019,7 @@ void SmallBasket_update(GameObject* obj)
                 (obj)->anim.velocityZ = zf;
                 state->disableTimer = 500;
                 state->throwState = 0;
-                (obj)->unkF8 = 0;
+                (obj)->userData2 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
@@ -1036,7 +1036,7 @@ void SmallBasket_update(GameObject* obj)
                 (obj)->anim.velocityZ = zf;
                 state->disableTimer = 500;
                 state->throwState = 0;
-                (obj)->unkF8 = 0;
+                (obj)->userData2 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8*)&(obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
                 ObjHits_ClearHitVolumes((ObjAnimComponent*)obj);
@@ -1060,7 +1060,7 @@ void SmallBasket_update(GameObject* obj)
                 state->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
-        if ((obj)->unkF8 == 0)
+        if ((obj)->userData2 == 0)
         {
             (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }

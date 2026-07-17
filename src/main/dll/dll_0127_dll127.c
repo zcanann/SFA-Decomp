@@ -109,8 +109,8 @@ void dll_127_init(short* obj, int def)
     {
         objAnim->bankIndex = 0;
     }
-    ((GameObject*)obj)->unkF4 = 0;
-    ((GameObject*)obj)->unkF8 = 0;
+    ((GameObject*)obj)->userData1 = 0;
+    ((GameObject*)obj)->userData2 = 0;
 }
 
 void dll_127_release_nop(void)

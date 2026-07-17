@@ -263,7 +263,7 @@ void warpPadPlayerStandingOn(GameObject* obj)
             if (Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gWarpPadTriggerDist)
             {
                 (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-                (obj)->unkF4 = state->activateDelay;
+                (obj)->userData1 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
@@ -276,7 +276,7 @@ void warpPadPlayerStandingOn(GameObject* obj)
             (ObjTrigger_IsSet((int)obj) != 0))
         {
             (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-            (obj)->unkF4 = state->activateDelay;
+            (obj)->userData1 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
         }
@@ -285,13 +285,13 @@ void warpPadPlayerStandingOn(GameObject* obj)
 updateTimer:
     if (state->countdownActive != 0)
     {
-        if ((obj)->unkF4 > 0)
+        if ((obj)->userData1 > 0)
         {
-            (obj)->unkF4 = (obj)->unkF4 - framesThisStep;
+            (obj)->userData1 = (obj)->userData1 - framesThisStep;
         }
         else
         {
-            (obj)->unkF4 = 0;
+            (obj)->userData1 = 0;
             state->countdownActive = 0;
         }
     }

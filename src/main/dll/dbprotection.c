@@ -241,7 +241,7 @@ void fn_801DFA28(GameObject* obj)
     tricky = state->targetObj;
     if (tricky == NULL)
         goto end;
-    if ((tricky != NULL) && (tricky->unkF4 == 0))
+    if ((tricky != NULL) && (tricky->userData1 == 0))
     {
         fn_801EED5C(tricky, &state->homeX, &state->homeY, &state->homeZ);
     }
@@ -310,7 +310,7 @@ void fn_801DFA28(GameObject* obj)
         camShake = lbl_803E56C8;
         Sfx_StopObjectChannel((int)obj, 1);
         DBPROT_CAMERA_SHAKE(&camShake, 0);
-        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->userData1 = 1;
         tx = ((SBGalleonState*)state)->homeX - lbl_803E56DC;
         tz = lbl_803E56E0 * mathCosf((gDBprotPi * (f32)((SBGalleonState*)state)->bobPhase) / gDBprotAngleUnit) +
              ((SBGalleonState*)state)->homeZ;
@@ -420,7 +420,7 @@ void fn_801DFA28(GameObject* obj)
         }
         break;
     case 1:
-        ((GameObject*)obj)->unkF4 = 2;
+        ((GameObject*)obj)->userData1 = 2;
         camShake = lbl_803E56C8;
         DBPROT_CAMERA_SHAKE(&camShake, 0);
         if (((SBGalleonState*)state)->headingLatch != 0)
@@ -610,7 +610,7 @@ void fn_801DFA28(GameObject* obj)
         camShake = lbl_803E56C8;
         Sfx_StopObjectChannel((int)obj, 2);
         DBPROT_CAMERA_SHAKE(&camShake, 0);
-        ((GameObject*)obj)->unkF4 = 3;
+        ((GameObject*)obj)->userData1 = 3;
         if (((SBGalleonState*)state)->headingLatch != 0)
         {
             ((SBGalleonState*)state)->headingLatch -= 1;
@@ -643,7 +643,7 @@ void fn_801DFA28(GameObject* obj)
             break;
         case 5:
             speedTarget = lbl_803E5708;
-            ((GameObject*)obj)->unkF4 = 4;
+            ((GameObject*)obj)->userData1 = 4;
             tx = ((SBGalleonState*)state)->homeX - lbl_803E5780;
             tz = ((SBGalleonState*)state)->homeZ;
             ty = ((SBGalleonState*)state)->homeY - lbl_803E5724;
@@ -687,7 +687,7 @@ void fn_801DFA28(GameObject* obj)
         dist = sqrtf(dx * dx + dz * dz);
         if ((((SBGalleonState*)state)->phase == 5) && (dist < lbl_803E579C))
         {
-            ((GameObject*)obj)->unkF4 = 5;
+            ((GameObject*)obj)->userData1 = 5;
         }
         if (dist < threshold)
         {
@@ -813,7 +813,7 @@ void fn_801DFA28(GameObject* obj)
         }
         break;
     default:
-        ((GameObject*)obj)->unkF4 = 7;
+        ((GameObject*)obj)->userData1 = 7;
         break;
     }
     if (((SBGalleonState*)state)->phase < 2)
@@ -944,7 +944,7 @@ void DBprotection_updateShield(int* obj)
     f32 angleCos;
 
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = 7;
+    ((GameObject*)obj)->userData1 = 7;
 
     if (mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
         mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 && mainGetBit(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0)

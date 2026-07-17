@@ -271,15 +271,15 @@ void worldplanet_update(GameObject* obj)
             }
             pauseMenuSetupTitle(WORLDPLANET_SELECT_TITLE_TEXT_ID, gWorldPlanetTitleStringIds[state->selectedPlanet],
                                 0x19, 0);
-            /* obj->unkF4 is the GameObject's generic per-instance state word
+            /* obj->userData1 is the GameObject's generic per-instance state word
              * (its meaning is per-DLL); worldplanet uses it as a one-shot latch:
              * 0 until the first selection has been set up, 1 thereafter. This
              * block runs on a real selection change OR that first frame, but the
              * camera swoosh (releaseAction) + select SFX below are gated on the
              * latch so they fire only on genuine changes, not on the initial open. */
-            if (prevPlanet != state->selectedPlanet || (obj)->unkF4 == 0)
+            if (prevPlanet != state->selectedPlanet || (obj)->userData1 == 0)
             {
-                if ((obj)->unkF4 != 0)
+                if ((obj)->userData1 != 0)
                 {
                     objId = tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
@@ -292,7 +292,7 @@ void worldplanet_update(GameObject* obj)
                     planetObj = ObjList_FindObjectByIdLegacy(tbl[0][gWorldPlanetSelectionToIndex[state->selectedPlanet]]);
                     ((WorldObjState*)((GameObject*)planetObj)->extra)->effectState = 1;
                 }
-                (obj)->unkF4 = 1;
+                (obj)->userData1 = 1;
             }
         }
         gWorldPlanetPathProgress = gWorldPlanetPathProgress + gWorldPlanetPathProgressStep;

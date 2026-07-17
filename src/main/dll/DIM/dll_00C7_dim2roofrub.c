@@ -30,7 +30,7 @@ typedef struct Dim2roofrubPlacement
     f32 posY;
     f32 posZ;
     s32 mapId;         /* 0x14: ObjPlacement-head map id (after posX/Y/Z) */
-    s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
+    s16 animDataIndex; /* 0x18 anim-data set selector (-1 = none); obj.userData1 = animDataIndex+1 */
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
@@ -155,12 +155,12 @@ void dim2roofrub_init(int* obj, int* params)
     ((Dim2roofrubState*)state)->unk94 = 0;
     ((Dim2roofrubState*)state)->unk116 = 0;
     ((Dim2roofrubState*)state)->unk114 = 0;
-    ((GameObject*)obj)->unkF8 = 0;
-    f4 = ((GameObject*)obj)->unkF4;
+    ((GameObject*)obj)->userData2 = 0;
+    f4 = ((GameObject*)obj)->userData1;
     if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
+        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
     else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
     {
@@ -169,7 +169,7 @@ void dim2roofrub_init(int* obj, int* params)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
         }
-        ((GameObject*)obj)->unkF4 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
+        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
@@ -216,7 +216,7 @@ void dim2roofrub_spawnEffects(int* obj)
     Dim2FxVec v;
     int flags;
 
-    if ((((GameObject*)obj)->unkF8 & 4) != 0)
+    if ((((GameObject*)obj)->userData2 & 4) != 0)
     {
         u8 i = 0;
         f32 scale = gDim2RoofRubEffectScale;
@@ -232,7 +232,7 @@ void dim2roofrub_spawnEffects(int* obj)
         }
     }
     v.fade = lbl_803E3244;
-    flags = ((GameObject*)obj)->unkF8;
+    flags = ((GameObject*)obj)->userData2;
     if ((flags & 1) != 0)
     {
         int count;
@@ -350,13 +350,13 @@ void dim2roofrub_update(int* obj)
             switch (b)
             {
             case DIM2ROOFRUB_EVENT_TOGGLE_LIGHT:
-                ((GameObject*)obj)->unkF8 ^= 1;
+                ((GameObject*)obj)->userData2 ^= 1;
                 break;
             case DIM2ROOFRUB_EVENT_TOGGLE_HEAVY:
-                ((GameObject*)obj)->unkF8 ^= 2;
+                ((GameObject*)obj)->userData2 ^= 2;
                 break;
             case DIM2ROOFRUB_EVENT_TOGGLE_FX:
-                ((GameObject*)obj)->unkF8 ^= 4;
+                ((GameObject*)obj)->userData2 ^= 4;
                 break;
             case DIM2ROOFRUB_EVENT_SPAWN_DUST:
             {

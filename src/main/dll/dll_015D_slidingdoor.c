@@ -10,7 +10,7 @@
  * trigger command (1=close-done, 2=open-done). SeqFn returns 1 in the steady
  * states and 0 mid-transition.
  *
- * SlidingDoor_update fires once (latched via obj->unkF4): it preempts the
+ * SlidingDoor_update fires once (latched via obj->userData1): it preempts the
  * placement's preemptEvent if the door is already moving and runs the
  * placement's startup sequence (data[0x1e], -1 = none).
  */
@@ -151,7 +151,7 @@ void SlidingDoor_update(u8* obj)
 {
     u8* sub;
     u8* data;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
         return;
     sub = ((GameObject*)obj)->extra;
     data = *(u8**)&((GameObject*)obj)->anim.placementData;
@@ -170,7 +170,7 @@ void SlidingDoor_update(u8* obj)
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);
         }
     }
-    *(u32*)&((GameObject*)obj)->unkF4 = 1;
+    *(u32*)&((GameObject*)obj)->userData1 = 1;
 }
 
 void SlidingDoor_init(u8* obj, u8* data)
@@ -178,7 +178,7 @@ void SlidingDoor_init(u8* obj, u8* data)
     u8* sub;
     f32 scale;
     u32 doorState = 0;
-    *(u32*)&((GameObject*)obj)->unkF4 = doorState;
+    *(u32*)&((GameObject*)obj)->userData1 = doorState;
     ((GameObject*)obj)->anim.rotX = (s16)(data[0x1f] << 8);
     ((GameObject*)obj)->animEventCallback = SlidingDoor_SeqFn;
     scale = (f32)(u32)data[0x21] / 64.0f;

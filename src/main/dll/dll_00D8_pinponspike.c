@@ -114,10 +114,10 @@ void pinponspike_update(int obj)
     f32 vy;
     f32 vz;
 
-    if (((GameObject*)obj)->unkF4 > 0)
+    if (((GameObject*)obj)->userData1 > 0)
     {
-        ((GameObject*)obj)->unkF4 = (int)((f32)((GameObject*)obj)->unkF4 - timeDelta);
-        if (((GameObject*)obj)->unkF4 <= 0)
+        ((GameObject*)obj)->userData1 = (int)((f32)((GameObject*)obj)->userData1 - timeDelta);
+        if (((GameObject*)obj)->userData1 <= 0)
         {
             Obj_FreeObject((GameObject*)obj);
             return;
@@ -145,7 +145,7 @@ void pinponspike_update(int obj)
         {
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
-            ((GameObject*)obj)->unkF4 = 0x78;
+            ((GameObject*)obj)->userData1 = 0x78;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
@@ -157,7 +157,7 @@ void pinponspike_update(int obj)
         {
             int i;
             ((GameObject*)obj)->anim.alpha = 0;
-            ((GameObject*)obj)->unkF4 = 0x78;
+            ((GameObject*)obj)->userData1 = 0x78;
             ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->flags &= ~OBJHITS_PRIORITY_STATE_ENABLED;
             for (i = 0; i < 0x19; i++)
             {
@@ -174,7 +174,7 @@ void pinponspike_update(int obj)
 
 void pinponspike_init(GameObject* obj)
 {
-    (obj)->unkF4 = 0;
+    (obj)->userData1 = 0;
     ObjHits_DisableObject((int)obj);
     (obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);

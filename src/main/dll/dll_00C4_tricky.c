@@ -1905,7 +1905,7 @@ void tricky_handleDefeat(GameObject* obj, int state)
         ((TrickyState*)state)->flags2DC = 0;
         (obj)->anim.flags = (obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         (obj)->anim.alpha = 0;
-        *(u32*)&(obj)->unkF4 = 1;
+        *(u32*)&(obj)->userData1 = 1;
         if ((u32)((ObjPlacement*)setup)->mapId == 0xFFFFFFFF)
         {
             Obj_FreeObject(obj);

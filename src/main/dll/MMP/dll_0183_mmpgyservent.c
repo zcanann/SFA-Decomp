@@ -2,8 +2,8 @@
  * mmpgyservent (DLL 0x183) - Moon Mountain Pass geyser vent.
  *
  * An intermittent steam/geyser emitter. While its placement gamebit is
- * clear the vent cycles: an idle countdown (unkF4) re-rolls a random idle
- * delay and a random active duration (unkF8) when it lapses; during the
+ * clear the vent cycles: an idle countdown (userData1) re-rolls a random idle
+ * delay and a random active duration (userData2) when it lapses; during the
  * active window it spawns geyser particles (effect 0x724) and keeps a
  * looped vent sound (sfx 0x450) alive each frame. Setting the placement
  * gamebit disables the vent entirely.
@@ -50,18 +50,18 @@ void mmp_gyservent_update(GameObject* obj)
     int def = *(int*)&(obj)->anim.placementData;
     if (mainGetBit(((MmpGyserventPlacement*)def)->disableBit) != 0)
         return;
-    (obj)->unkF4 -= framesThisStep;
-    if ((obj)->unkF4 < 0)
+    (obj)->userData1 -= framesThisStep;
+    if ((obj)->userData1 < 0)
     {
-        (obj)->unkF4 = randomGetRange(0x46, 0xF0);
-        (obj)->unkF8 = randomGetRange(0x1E, 0x3C);
+        (obj)->userData1 = randomGetRange(0x46, 0xF0);
+        (obj)->userData2 = randomGetRange(0x1E, 0x3C);
     }
-    if ((obj)->unkF8 == 0)
+    if ((obj)->userData2 == 0)
         return;
-    (obj)->unkF8 -= framesThisStep;
-    if ((obj)->unkF8 <= 0)
+    (obj)->userData2 -= framesThisStep;
+    if ((obj)->userData2 <= 0)
     {
-        (obj)->unkF8 = 0;
+        (obj)->userData2 = 0;
     }
     else
     {
@@ -73,7 +73,7 @@ void mmp_gyservent_update(GameObject* obj)
 void mmp_gyservent_init(GameObject* obj)
 {
     obj->objectFlags |= (MMPGYSERVENT_OBJFLAG_HIDDEN | MMPGYSERVENT_OBJFLAG_HITDETECT_DISABLED);
-    *(u32*)&obj->unkF4 = randomGetRange(0xa, 0xc8);
+    *(u32*)&obj->userData1 = randomGetRange(0xa, 0xc8);
     obj->anim.alpha = 0;
     *(u8*)&obj->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
 }

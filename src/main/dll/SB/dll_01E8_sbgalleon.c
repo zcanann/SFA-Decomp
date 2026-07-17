@@ -522,7 +522,7 @@ void SB_Galleon_update(GameObject* obj)
         {
             (*gMapEventInterface)->setObjGroupStatus(*(u8*)((char*)obj + 0x34), 1, 1);
         }
-        obj->unkF4 = 0;
+        obj->userData1 = 0;
     }
     else
     {

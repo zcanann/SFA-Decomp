@@ -559,7 +559,7 @@ void SB_CloudRunner_update(GameObject* obj)
             }
         }
     }
-    obj->unkF4 = 0;
+    obj->userData1 = 0;
     prevSubState = state->rideSubState;
     state->burstCooldown = (s8)(state->burstCooldown - framesThisStep);
     if (state->burstCooldown < 0)
@@ -577,7 +577,7 @@ void SB_CloudRunner_update(GameObject* obj)
         break;
     case RIDE_SUBSTATE_DISMOUNT_A:
     case RIDE_SUBSTATE_DISMOUNT_B:
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
         break;
     }
     state->tiltZ = state->tiltZ + (f32)(int)obj->anim.rotZ * timeDelta / lbl_803E5CBC;

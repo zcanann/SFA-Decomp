@@ -109,7 +109,7 @@ void gcrobotlightbea_hitDetect(GameObject* obj)
     vec[2] = ((ObjHitsPriorityState*)hit)->localPosY;
     if (voxmaps_traceWorldLine((void*)((char*)obj + 0xc), vec) == 0)
         return;
-    if ((obj)->unkF4 != 0 || ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(
+    if ((obj)->userData1 != 0 || ((int (*)(int, f32*, f32, int, f32*, int, int, int, int, int))objBboxFn_800640cc)(
                                  (int)obj + 0xc, vec, 1.0f, 0, out, (int)obj, 4, -1, 0, 0) == 0)
     {
         ((Bit80*)&sub->hitFlags)->top = 1;

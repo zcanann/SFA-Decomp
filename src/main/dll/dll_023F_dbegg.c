@@ -320,7 +320,7 @@ void dbegg_setupFromDef(GameObject* obj, u8* state)
         (obj)->anim.velocityX = fz;
         (obj)->anim.velocityY = fz;
         (obj)->anim.velocityZ = fz;
-        (obj)->unkF8 = 0;
+        (obj)->userData2 = 0;
         *(f32*)state = fz;
     }
 }
@@ -689,7 +689,7 @@ void dbegg_update(GameObject* obj)
         switch (egg->mode)
         {
         case DBEGG_MODE_FALLING:
-            if ((obj)->unkF8 == 0)
+            if ((obj)->userData2 == 0)
             {
                 hitState->flags |= 1;
             }
@@ -737,7 +737,7 @@ void dbegg_update(GameObject* obj)
             }
             break;
         case DBEGG_MODE_SETTLED:
-            if ((obj)->unkF8 == 0)
+            if ((obj)->userData2 == 0)
             {
                 hitState->flags |= 1;
             }
@@ -841,7 +841,7 @@ void dbegg_update(GameObject* obj)
                 ((DbEggState*)pickupState)->msg11E = 0;
                 ((DbEggState*)pickupState)->msg120 = lbl_803E61CC;
                 ObjMsg_SendToObject(playerObj, DBEGG_MSG_IN_RANGE, obj, pickupState + 0x11c);
-                (obj)->unkF8 = 0;
+                (obj)->userData2 = 0;
             }
             else if (getButtonsJustPressed(0) & PAD_BUTTON_A)
             {

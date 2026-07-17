@@ -168,7 +168,7 @@ void collectible_setDisabled(int* obj, int flag)
     }
 }
 
-int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->unkF4; }
+int collectible_getIsHidden(int* obj) { return ((GameObject*)obj)->userData1; }
 
 GenPropsWGPipe GXWGFifo : (0xCC008000);
 
@@ -265,7 +265,7 @@ void collectible_applyPickup(int* obj)
         break;
     }
     ((GameObject*)obj)->anim.rootMotionScale = ((GameObject*)obj)->anim.modelInstance->rootMotionScaleBase;
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
 }
 
 void collectible_updateLooseMotion(int* obj)
@@ -560,7 +560,7 @@ void collectible_free(GameObject *obj)
 void collectible_render(GameObject *obj, int a, int b, int c, int d, s8 visible)
 {
     int state = *(int*)&(obj)->extra;
-    if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && (obj)->unkF4 == 0
+    if (visible != 0 && ((CollectibleState*)state)->despawnTimer == lbl_803E345C && (obj)->userData1 == 0
         && ((obj)->anim.seqId == 0x156 || ((CollectibleState*)state)->visibilityBitClear == 0))
     {
         if ((((ObjAnimComponent*)obj)->modelInstance->flags & 0x10000) != 0 && ((CollectibleState*)state)->useColor != 0)
@@ -663,12 +663,12 @@ void collectible_update(int obj)
                 ((CollectibleState*)state)->hideFrames = 0;
                 state[0x37] &= ~1;
                 ((GameObject*)obj)->anim.alpha = 255;
-                ((GameObject*)obj)->unkF4 = 0;
+                ((GameObject*)obj)->userData1 = 0;
             }
         }
         break;
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         if (((GameObject*)obj)->anim.hitReactState != NULL)
         {
@@ -678,7 +678,7 @@ void collectible_update(int obj)
         ObjHits_DisableObject((u32)obj);
         if (((CollectibleState*)state)->hideGameBit != -1 && mainGetBit((s32)((CollectibleState*)state)->hideGameBit) == 0)
         {
-            ((GameObject*)obj)->unkF4 = 0;
+            ((GameObject*)obj)->userData1 = 0;
         }
     }
     else
@@ -757,13 +757,13 @@ void collectible_init(GameObject *obj, int setup)
     ((CollectibleState*)state)->hideGameBit = ((CollectibleSetup*)setup)->hideGameBit;
     if (((CollectibleState*)state)->hideGameBit != -1)
     {
-        *(u32*)&(obj)->unkF4 = mainGetBit(((CollectibleState*)state)->hideGameBit);
+        *(u32*)&(obj)->userData1 = mainGetBit(((CollectibleState*)state)->hideGameBit);
     }
     else
     {
-        *(u32*)&(obj)->unkF4 = 0;
+        *(u32*)&(obj)->userData1 = 0;
     }
-    if ((obj)->unkF4 == 0)
+    if ((obj)->userData1 == 0)
     {
         data = (obj)->anim.modelInstance->extraSetupData;
         if (data != 0)

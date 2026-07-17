@@ -84,7 +84,7 @@ void ecsh_creator_update(GameObject* obj)
 
     def = (u8*)obj->anim.placementData;
     state = (EcshCreatorState*)obj->extra;
-    if (obj->unkF8 == 0 && (u32)mainGetBit(state->gameBit) != 0)
+    if (obj->userData2 == 0 && (u32)mainGetBit(state->gameBit) != 0)
     {
         res = Resource_Acquire(ECSH_SHRINE_RESOURCE, 1);
         (*(EcshSetupFn*)(*(int*)res + 4))((s16*)obj, 0, 0, 1, -1, 0);
@@ -92,7 +92,7 @@ void ecsh_creator_update(GameObject* obj)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_wp_hitpos_6);
         Resource_Release(res);
         state->active = 1;
-        obj->unkF8 = 1;
+        obj->userData2 = 1;
     }
     if (state->active != 0)
     {
@@ -142,7 +142,7 @@ void ecsh_creator_init(GameObject* obj, s8* defArg)
     EcshCreatorState* state = (EcshCreatorState*)obj->extra;
     EcshCreatorPlacement* def = (EcshCreatorPlacement*)defArg;
     obj->anim.rotX = (s16)((s32)def->rotByte << 8);
-    obj->unkF8 = 0;
+    obj->userData2 = 0;
     state->countdown = ECSH_COUNTDOWN_START;
     state->active = 0;
     *(u8*)((char*)obj + 0x37) = 0xff; /* anim.pad37[0], adjacent to anim.alpha */

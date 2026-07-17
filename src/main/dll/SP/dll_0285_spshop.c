@@ -421,28 +421,28 @@ void shop_update(GameObject* obj)
         staffToggle(player, 0);
     }
 
-    if ((obj)->unkF4 == 0)
+    if ((obj)->userData1 == 0)
     {
         (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 0, 1);
         (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 5, 1);
         (*gMapEventInterface)->setObjGroupStatus((obj)->anim.mapEventSlot, 6, 1);
         mainSetBits(GAMEBIT_SHOP_Unk0617, 1);
         skyFn_80088c94(7, 1);
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
 
-    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && (obj)->unkF8 == 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) != 0u && (obj)->userData2 == 0)
     {
         envFxActFn_800887f8(0);
         getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_A, 0);
         getEnvfxActInt((int)obj, (int)obj, SPSHOP_ENVFX_B, 0);
-        (obj)->unkF8 = 1;
+        (obj)->userData2 = 1;
         return;
     }
 
-    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) == 0u && (obj)->unkF8 != 0)
+    if ((u32)mainGetBit(GAMEBIT_SHOP_Unk0D21) == 0u && (obj)->userData2 != 0)
     {
-        (obj)->unkF8 = 0;
+        (obj)->userData2 = 0;
     }
 }
 
@@ -460,7 +460,7 @@ static inline void shop_initBody(GameObject* obj, int objDef)
         item += 0xc;
     }
     Music_Trigger(MUSICTRIG_communicator, 1);
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
     mainSetBits(GAMEBIT_PlayerInShop, 1);
 }
 #pragma inline_max_size reset

@@ -139,11 +139,11 @@ void CFPowerBase_update(GameObject* obj)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_PROMPT_SUPPRESSED);
     }
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
         (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
-        obj->unkF4 = 0;
+        obj->userData1 = 0;
     }
     if ((obj->anim.resetHitboxFlags & INTERACT_FLAG_ACTIVATED) != 0)
     {
@@ -198,7 +198,7 @@ void CFPowerBase_init(GameObject* obj, u8* params)
     if (mainGetBit(sub->typeBit) != 0)
     {
         obj->anim.resetHitboxFlags = (u8)(obj->anim.resetHitboxFlags | INTERACT_FLAG_DISABLED);
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
 }
 

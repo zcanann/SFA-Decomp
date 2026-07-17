@@ -111,7 +111,7 @@ void WaterFallSpray_update(int* objParam)
                 Sfx_KeepAliveLoopedObjectSoundPtrIntLegacy(obj, state->sfxIdB & 0xffff);
             }
 
-            cooldown = ((GameObject*)obj)->unkF4;
+            cooldown = ((GameObject*)obj)->userData1;
             if (cooldown <= 0)
             {
                 dx = ((GameObject*)obj)->anim.worldPosX - playerObj->anim.worldPosX;
@@ -144,11 +144,11 @@ void WaterFallSpray_update(int* objParam)
                         }
                     }
                 }
-                *(u32*)&((GameObject*)obj)->unkF4 = -data[0]->count;
+                *(u32*)&((GameObject*)obj)->userData1 = -data[0]->count;
             }
             else if (cooldown > 0)
             {
-                *(u32*)&((GameObject*)obj)->unkF4 = cooldown - framesThisStep;
+                *(u32*)&((GameObject*)obj)->userData1 = cooldown - framesThisStep;
             }
         }
     }
@@ -166,7 +166,7 @@ void WaterFallSpray_init(u8* obj, u8* dataRaw)
     ((GameObject*)obj)->anim.rotY = b;
     c = (s16)((s32)data->rotXSeed << 8);
     ((GameObject*)obj)->anim.rotX = c;
-    *(u32*)&((GameObject*)obj)->unkF4 = 0;
+    *(u32*)&((GameObject*)obj)->userData1 = 0;
     ((GameObject*)obj)->animEventCallback = WaterFallSpray_SeqFn;
     mapId = (*(WaterFallSprayPlacement**)&((GameObject*)obj)->anim.placementData)->mapId;
     switch (mapId)

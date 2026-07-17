@@ -579,7 +579,7 @@ int dll_19_func16(u8* obj, u8* baddieState, int unusedA, int unusedB, int* table
                 ((Dll19Placement*)state)->flags = ((Dll19Placement*)state)->flags & ~DLL19_FLAG_OSC_ACTIVE;
                 ((BaddieState*)baddieState)->hitPoints = 0;
                 ((GameObject*)obj)->anim.alpha = 0;
-                ((GameObject*)obj)->unkF4 = 1;
+                ((GameObject*)obj)->userData1 = 1;
                 ((GameObject*)obj)->anim.flags = ((GameObject*)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
                 (*gMapEventInterface)->addTime(*(int*)(other + 20), (f32)(s32)(*(s16*)(other + 44) * 60));
             }
@@ -882,22 +882,22 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     {
         if (obj->anim.seqId == 636)
         {
-            obj->unkF4 = (mainGetBit(((GroundBaddieState*)state)->gameBitA) == 0);
+            obj->userData1 = (mainGetBit(((GroundBaddieState*)state)->gameBitA) == 0);
         }
         else
         {
-            obj->unkF4 = mainGetBit(((GroundBaddieState*)state)->gameBitA);
+            obj->userData1 = mainGetBit(((GroundBaddieState*)state)->gameBitA);
         }
     }
     else
     {
-        obj->unkF4 = 0;
+        obj->userData1 = 0;
     }
     if ((*gMapEventInterface)->shouldNotSaveTime(*(int*)(config + 20)) == 0)
     {
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         ObjHits_DisableObject((u32)obj);
         obj->anim.flags = obj->anim.flags | OBJANIM_FLAG_HIDDEN;
@@ -907,11 +907,11 @@ void dll_19_func18(GameObject* obj, u8* config, u8* state, int moveArg0, int mov
     ObjHits_EnableObject((u32)obj);
     if ((s8)config[46] == -1)
     {
-        obj->unkF8 = 1;
+        obj->userData2 = 1;
     }
     else
     {
-        obj->unkF8 = 0;
+        obj->userData2 = 0;
     }
     if (b1 == 0 && (flags & 0x20) == 0)
     {

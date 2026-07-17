@@ -239,7 +239,7 @@ void sc_musictree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis
             state = (SCMusicTreeState*)&((ScLevelControlState*)state)->fog0C;
         }
     }
-    obj->unkF8 = 1;
+    obj->userData2 = 1;
 }
 
 void sc_musictree_hitDetect(void)
@@ -273,7 +273,7 @@ void sc_musictree_update(GameObject* obj)
     {
         ((ScMusictreeState*)inner)->moveStepScale = ((ScMusictreeState*)inner)->moveStepScale - 0.001f;
     }
-    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_SATELLITES) && obj->unkF8 != 0)
+    if ((((ScMusictreeState*)inner)->flags & SCMUSICTREE_FLAG_SATELLITES) && obj->userData2 != 0)
     {
         for (i = 0, p = (int*)inner, q = (int*)inner; i < 3; i++)
         {
@@ -417,7 +417,7 @@ void sc_musictree_init(GameObject* obj, SCMusicTreeSetup* setup)
     obj->anim.rotY = (s16)((setup->rotZByte - 0x7f) << 7);
     obj->anim.rotX = (s16)((u32)setup->yawByte << 8);
     obj->anim.rootMotionScale = 3.6f * setup->scale;
-    obj->unkF8 = 0;
+    obj->userData2 = 0;
     obj->objectFlags = (u16)(obj->objectFlags | SCMUSICTREE_OBJFLAG_HITDETECT_DISABLED);
     ratio = (f32)(s32)
     randomGetRange(1, 99) / 100.0f;

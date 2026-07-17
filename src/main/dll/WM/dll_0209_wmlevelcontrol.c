@@ -172,10 +172,10 @@ void fn_801F3F18(GameObject* obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((obj->unkF4 & 4) == 0)
+    if ((obj->userData1 & 4) == 0)
     {
         skyFn_80089710Legacy(1, 1, 0);
-        obj->unkF4 |= 4;
+        obj->userData1 |= 4;
     }
     else
     {

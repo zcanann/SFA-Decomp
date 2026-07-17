@@ -384,7 +384,7 @@ void kaldachom_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visibl
     state = *(int*)&obj->extra;
     if (visible != 0)
     {
-        switch (obj->unkF4)
+        switch (obj->userData1)
         {
         case 0:
             if (((GroundBaddieState*)state)->glowAlpha != lbl_803E3060.f)
@@ -421,7 +421,7 @@ void kaldachom_update(GameObject* obj)
 
     state = *(int*)&obj->extra;
     ref = *(int*)&obj->anim.placementData;
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         if ((((CampfireState*)state)->substate != 3) &&
             (cond = (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)ref)->mapId), cond != 0))

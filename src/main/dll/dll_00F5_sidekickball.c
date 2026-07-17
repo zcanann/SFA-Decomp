@@ -96,7 +96,7 @@ void SidekickBall_free(int obj)
 
 void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (((GameObject*)obj)->unkF8 == 0 || visible == -1)
+    if (((GameObject*)obj)->userData2 == 0 || visible == -1)
     {
         objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E36A0);
     }
@@ -186,13 +186,13 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
         }
     }
 
-    if (((GameObject*)obj)->unkF8 == 1)
+    if (((GameObject*)obj)->userData2 == 1)
     {
         params->triggerHit = 2;
     }
     if (params->triggerHit != 2)
         goto end;
-    if (((GameObject*)obj)->unkF8 != 0)
+    if (((GameObject*)obj)->userData2 != 0)
         goto end;
 
     if (fn_8029669C(player) == 0)
@@ -292,7 +292,7 @@ void SidekickBall_update(GameObject* self)
         *(u8*)&((GameObject*)self)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)self)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
         gotHit = 0;
-        if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->unkF8 == 0 &&
+        if ((buttonGetDisabled(0) & 0x100) == 0u && ((GameObject*)self)->userData2 == 0 &&
             ObjTrigger_IsSet((int)self) != 0)
         {
             ObjHits_DisableObject((u32)self);

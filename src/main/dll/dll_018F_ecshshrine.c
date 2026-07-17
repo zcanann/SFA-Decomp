@@ -466,10 +466,10 @@ void ecsh_shrine_update(s16* obj)
             (*gGameUIInterface)->showNpcDialogue(0x285, 0x14, 0x8c, 1);
         }
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
-        if (((GameObject*)obj)->unkF4 == 0)
+        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - 1;
+        if (((GameObject*)obj)->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
             getEnvfxActVoid(obj, player, ECSH_SHRINE_ENVFX_A, 0);
@@ -888,7 +888,7 @@ void ecsh_shrine_init(s16* obj, s8* def)
     ((EcshShrineState*)sub)->introTextLatch = gv;
     gEcShShrineActiveObject = obj;
     ObjGroup_AddObject((int)obj, ECSHSHRINE_OBJGROUP);
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     if (*(void**)sub == NULL)
     {
         *(ModelLightStruct**)sub = objCreateLight(NULL, 1);

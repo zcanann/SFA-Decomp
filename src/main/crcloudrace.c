@@ -199,7 +199,7 @@ void crcloudrace_update(CrCloudRaceObject* obj)
     CrCloudRaceState* state;
 
     state = obj->state;
-    if (obj->unkF8 == 0)
+    if (obj->userData2 == 0)
     {
         eventActive = mainGetBit(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR);
         if (eventActive != 0)
@@ -209,7 +209,7 @@ void crcloudrace_update(CrCloudRaceObject* obj)
             mainSetBits(CRCLOUDRACE_GAMEBIT_EFFECT_CLEAR, 0);
             unlockLevel(0, 0, 1);
         }
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
     crcloudrace_updateRaceState((int)obj);
     state->flags &= ~1;

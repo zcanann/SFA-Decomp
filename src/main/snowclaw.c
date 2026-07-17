@@ -150,7 +150,7 @@ void snowclaw_release(void);
 void snowclaw_initialise(void);
 void snowclaw_free(GameObject* obj);
 void snowclaw_init(int* obj, u8* init);
-void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int unkF4Value);
+void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value);
 void snowclaw_updateMountAttack(GameObject* obj, int mount);
 void snowclaw_syncMountTransform(GameObject* obj, int sub, int p2, int p3, int p4, int p5, int opacity, int mountAlpha,
                                  int enabled);
@@ -249,7 +249,7 @@ void snowclaw_init(int* obj, u8* init)
 }
 
 #pragma dont_inline on
-void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int unkF4Value)
+void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int userData1Value)
 {
     int player;
     int obj2;
@@ -291,7 +291,7 @@ void snowclaw_spawnDropBomb(GameObject* obj, void* owner, int launchMode, int un
         spawned = loadObjectAtObject(obj, (ObjPlacement*)obj2);
         if (spawned != NULL)
         {
-            spawned->unkF4 = (u8)unkF4Value;
+            spawned->userData1 = (u8)userData1Value;
             spawned->ownerObj = (void*)owner;
         }
     }

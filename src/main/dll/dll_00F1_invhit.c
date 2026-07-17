@@ -3,7 +3,7 @@
  * effect family. One placement type drives several distinct hit-volume
  * behaviours selected by InvHitState.mode (def[0x1a], 0..7):
  *   0  proximity damage: scan the player (and Tricky) and bump the
- *      hit-priority counters once they fall inside unkF8 range.
+ *      hit-priority counters once they fall inside userData2 range.
  *   1  attach to an owner object's hit list (ObjList_ContainsObject).
  *   2  passive shape/radius hit volume.
  *   3  publish the object's world position to lbl_803AC780 while the
@@ -42,7 +42,7 @@ typedef struct InvHitState
 typedef struct InvhitObjectDef
 {
     u8 pad0[0x18];
-    u8 radius;       /* 0x18: primaryRadius / unkF8 seed */
+    u8 radius;       /* 0x18: primaryRadius / userData2 seed */
     u8 shapeFlags;   /* 0x19 */
     u8 mode;         /* 0x1a: InvHitState.mode selector */
     u8 pad1b[0x1C - 0x1B];
@@ -140,7 +140,7 @@ void InvHit_update(int* obj)
             f32 dy = ((GameObject*)obj)->anim.localPosY - victim->anim.localPosY;
             f32 dz = ((GameObject*)obj)->anim.localPosZ - victim->anim.localPosZ;
             f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (dist < (f32)((GameObject*)obj)->unkF8)
+            if (dist < (f32)((GameObject*)obj)->userData2)
             {
                 u8* victimHits = *(u8**)&((GameObject*)victim)->anim.hitReactState;
                 victimHits[0x71] += 1;
@@ -179,13 +179,13 @@ void InvHit_update(int* obj)
         break;
     }
     case INVHIT_MODE_ATTACH:
-        ObjList_ContainsObject(((GameObject*)obj)->unkF4);
+        ObjList_ContainsObject(((GameObject*)obj)->userData1);
         break;
     case INVHIT_MODE_SELF_FREE:
     {
         ObjHitsPriorityState* hitState = *(ObjHitsPriorityState**)&((GameObject*)obj)->anim.hitReactState;
         char* ownerHitSlot;
-        char* ownerHitState = *(char**)(((GameObject*)obj)->unkF4 + 0x54);
+        char* ownerHitState = *(char**)(((GameObject*)obj)->userData1 + 0x54);
         int j;
 
         j = 0;
@@ -212,12 +212,12 @@ void InvHit_update(int* obj)
         f32 thr;
         int i;
 
-        ((GameObject*)obj)->unkF8 -= framesThisStep;
+        ((GameObject*)obj)->userData2 -= framesThisStep;
         if (*(void**)&((ObjHitsPriorityState*)hitState)->lastHitObject != NULL)
         {
             ((ObjHitsPriorityState*)hitState)->flags = 0;
         }
-        targetObj = *(char**)&((GameObject*)obj)->unkF4;
+        targetObj = *(char**)&((GameObject*)obj)->userData1;
         if (targetObj != NULL)
         {
             f32 dx;
@@ -287,7 +287,7 @@ void InvHit_init(int* obj, u8* def)
     switch (state->mode)
     {
     case INVHIT_MODE_PROXIMITY_DAMAGE:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
+        ((GameObject*)obj)->userData2 = ((InvhitObjectDef*)def)->radius;
         break;
     case INVHIT_MODE_FIXED_RADIUS:
         sub[0x62] = 1;
@@ -303,12 +303,12 @@ void InvHit_init(int* obj, u8* def)
         sub[0x6b] = 0;
         break;
     case INVHIT_MODE_PUBLISH_POS:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData2 = ((InvhitObjectDef*)def)->radius;
+        ((GameObject*)obj)->userData1 = 0;
         break;
     case INVHIT_MODE_LOCKON_GATE:
-        ((GameObject*)obj)->unkF8 = ((InvhitObjectDef*)def)->radius;
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData2 = ((InvhitObjectDef*)def)->radius;
+        ((GameObject*)obj)->userData1 = 0;
         break;
     case INVHIT_MODE_SELF_FREE:
         sub[0x62] = 1;
@@ -352,7 +352,7 @@ void InvHit_init(int* obj, u8* def)
         ((ObjHitsPriorityState*)sub)->primaryRadius = 0xa;
         ((ObjHitsPriorityState*)sub)->flags = 3;
         *(int*)&((ObjHitsPriorityState*)sub)->objectHitMask = 0x10;
-        ((GameObject*)obj)->unkF8 = 0x78;
+        ((GameObject*)obj)->userData2 = 0x78;
         {
             char* anchorObj = *(char**)&((InvhitObjectDef*)def)->anchorObj;
             if (anchorObj != NULL)

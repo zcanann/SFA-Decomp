@@ -265,8 +265,8 @@ void fn_802BF4D8(GameObject* obj)
     {
         dist = lbl_803E83B4;
     }
-    ((GameObject*)newObj)->unkF4 = dist;
-    ((GameObject*)newObj)->unkF8 = (int)obj;
+    ((GameObject*)newObj)->userData1 = dist;
+    ((GameObject*)newObj)->userData2 = (int)obj;
     ((GameObject*)newObj)->anim.rotZ = 0;
     ((GameObject*)newObj)->anim.rotY = 0;
     ((GameObject*)newObj)->anim.rotX = 0;
@@ -355,8 +355,8 @@ int DR_CloudRunner_stateHandler06(GameObject* obj, int baddie)
             ((GameObject*)newObj)->anim.velocityX = dir[0];
             ((GameObject*)newObj)->anim.velocityY = dir[1];
             ((GameObject*)newObj)->anim.velocityZ = dir[2];
-            ((GameObject*)newObj)->unkF4 = 0xb4;
-            ((GameObject*)newObj)->unkF8 = (int)obj;
+            ((GameObject*)newObj)->userData1 = 0xb4;
+            ((GameObject*)newObj)->userData2 = (int)obj;
             ((GameObject*)newObj)->anim.rotZ = 0;
             ((GameObject*)newObj)->anim.rotY = 0;
             ((GameObject*)newObj)->anim.rotX = 0;
@@ -916,7 +916,7 @@ int DR_CloudRunner_stateHandler01(GameObject* obj, int baddie)
     }
     if ((u32)mainGetBit(((DRCloudRunnerPlacement*)placement)->enableGameBit) != 0)
     {
-        (obj)->unkF4 = 0;
+        (obj)->userData1 = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
         ((ByteFlags*)&inner->flagsBC0)->b10 = inner->airTimeRemaining > 0;
@@ -1101,7 +1101,7 @@ void DR_CloudRunner_free(GameObject* obj)
 void DR_CloudRunner_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vis)
 {
     CloudRunnerState* inner = (obj)->extra;
-    if ((obj)->unkF4 == 0)
+    if ((obj)->userData1 == 0)
     {
         if (vis == -1)
         {

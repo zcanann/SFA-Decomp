@@ -77,18 +77,18 @@ void gpsh_objcreator_update(int* obj)
     sub = ((GameObject*)obj)->extra;
     if (mainGetBit(0x5af) != 0)
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        ((GameObject*)obj)->userData2 = 0;
         ((GpshShrineFlags*)(sub + 5))->b80 = 0;
         *(u8*)((char*)obj + 0x37) = 0xff;
         ((GameObject*)obj)->anim.alpha = 0xff;
     }
     if (((GpshShrineFlags*)(sub + 5))->b80) return;
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         if (mainGetBit(0x148) != 0)
         {
             *(f32*)sub = 100.0f;
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
         }
     }
     if ((u8)Obj_IsLoadingLocked() == 0) return;
@@ -121,7 +121,7 @@ void gpsh_objcreator_init(int* obj, int* def)
     state = ((GameObject*)obj)->extra;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)((GpshObjcreatorObjectDef*)def)->rotX << 8);
     zero = 0;
-    ((GameObject*)obj)->unkF8 = zero;
+    ((GameObject*)obj)->userData2 = zero;
     ((GpshObjcreatorState*)state)->objTypeIndex = (u8)((GpshObjcreatorObjectDef*)def)->objTypeIndex;
     ((GpshShrineFlags*)((char*)state + 5))->b80 = 0;
     *(u8*)((char*)obj + 0x37) = 0xff;

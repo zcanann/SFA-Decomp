@@ -319,10 +319,10 @@ void gpsh_shrine_update(GameObject *obj)
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
             }
         }
-        if ((obj)->unkF4 != 0)
+        if ((obj)->userData1 != 0)
         {
-            (obj)->unkF4 -= 1;
-            if ((obj)->unkF4 == 0)
+            (obj)->userData1 -= 1;
+            if ((obj)->userData1 == 0)
             {
                 skyFn_80088c94(7, 1);
                 getEnvfxActInt((int)obj, (int)player, GPSH_SHRINE_ENVFX_A, 0);
@@ -510,7 +510,7 @@ void gpsh_shrine_init(int* obj, int* def)
     mainSetBits(0x14e, 0);
     mainSetBits(0x14a, 0);
     mainSetBits(0x14b, 0);
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     if (*(void**)state == NULL)
     {
         *(void**)state = objCreateLight(0, 1);

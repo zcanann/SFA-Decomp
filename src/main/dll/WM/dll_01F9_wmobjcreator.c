@@ -170,7 +170,7 @@ void WM_ObjCreator_update(GameObject* obj)
             /* dead-on-this-path state recycled as the spawn-ok flag
                    (#119: lands the flag web in state's r29 = retail) */
             state = (WmObjCreatorState*)0;
-            if (obj->unkF8 == 0)
+            if (obj->userData2 == 0)
             {
                 state = (WmObjCreatorState*)1;
                 if (mainGetBit(GAMEBIT_WM_GALLEON_GONE) != 0)
@@ -205,9 +205,9 @@ void WM_ObjCreator_update(GameObject* obj)
                 spawned = Obj_SetupObject(setup, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
                 if ((u32)spawned != 0)
                 {
-                    ((GameObject*)spawned)->unkF4 = 8;
+                    ((GameObject*)spawned)->userData1 = 8;
                 }
-                obj->unkF8 = 1;
+                obj->userData2 = 1;
             }
             break;
         }

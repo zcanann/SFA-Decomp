@@ -196,11 +196,11 @@ void sc_levelcontrol_update(GameObject *obj)
     int state = *(int*)&(obj)->extra;
     GameObject* player = Obj_GetPlayerObject();
 
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        if ((obj)->unkF4 == 2)
+        if ((obj)->userData1 == 2)
         {
             getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_A, 0);
             getEnvfxActImmediatelyInt(0, 0, SCLEVELCONTROL_ENVFX_B, 0);
@@ -228,7 +228,7 @@ void sc_levelcontrol_update(GameObject *obj)
                 getEnvfxActInt(0, 0, SCLEVELCONTROL_ENVFX_E, 0);
             }
         }
-        (obj)->unkF4 = 0;
+        (obj)->userData1 = 0;
     }
     if (((SnowFlags22*)&((ScLevelControlState*)state)->flags22)->bit7 == 0 && (u32)mainGetBit(GAMEBIT_LV_ChallengeGate2Complete) != 0)
     {
@@ -328,10 +328,10 @@ void sc_levelcontrol_update(GameObject *obj)
         {
             ((ScLevelControlState*)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState*)state)->fog08 = lbl_803E5568;
-            if ((obj)->unkF8 != 0)
+            if ((obj)->userData2 != 0)
             {
                 skyFn_80088e54(1, lbl_803E5554);
-                (obj)->unkF8 = 0;
+                (obj)->userData2 = 0;
             }
         }
         else
@@ -561,13 +561,13 @@ void sc_levelcontrol_init(GameObject *obj)
     unlockLevel(mapGetDirIdx(SCLEVELCONTROL_MAP_SWAPCIRCLE), 0, 0);
     if (getSaveGameLoadStatus() != 0)
     {
-        (obj)->unkF4 = 2;
+        (obj)->userData1 = 2;
     }
     else
     {
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
-    (obj)->unkF8 = 1;
+    (obj)->userData2 = 1;
 }
 
 void sc_levelcontrol_release(void)

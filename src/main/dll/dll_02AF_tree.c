@@ -92,7 +92,7 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
     int i;
     TreeState* ts;
 
-    if ((obj)->unkF8 != 0)
+    if ((obj)->userData2 != 0)
     {
         ts = state;
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++)
@@ -144,7 +144,7 @@ void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
                     &state->ambientEffectPos[i][2], 0);
             }
         }
-        obj->unkF8 = 1;
+        obj->userData2 = 1;
     }
 }
 
@@ -166,7 +166,7 @@ void tree_init(GameObject* obj, TreeSetup* setup)
     obj->anim.rotX = (s16)(setupData->rotX << 8);
     *(u8*)&obj->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
     obj->objectFlags |= TREE_OBJECT_FLAGS_INIT;
-    obj->unkF8 = 0;
+    obj->userData2 = 0;
     if (setupData->scale != 0)
     {
         state->scale = (f32)(u32)setupData->scale / gTreeScaleByteNormalizer;

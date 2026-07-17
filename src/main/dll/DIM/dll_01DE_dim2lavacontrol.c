@@ -39,8 +39,8 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 u8 lbl_803DBF28[8] = {0xFF, 0xCD, 0xB9, 0xAA, 0, 0, 0, 0};
 
-/* Env-effect ids co-activated on the unkF4 restore tick (immediately when
-   unkF4==2, else deferred); opaque distinct roles per index. */
+/* Env-effect ids co-activated on the userData1 restore tick (immediately when
+   userData1==2, else deferred); opaque distinct roles per index. */
 #define DIM2LAVACONTROL_ENVFX_A 0x163
 #define DIM2LAVACONTROL_ENVFX_B 0x166
 #define DIM2LAVACONTROL_ENVFX_C 0x165
@@ -121,9 +121,9 @@ void dim2lavacontrol_update(int obj)
 {
     int diff;
     GameObject* heldObj;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
-        if (((GameObject*)obj)->unkF4 == 2)
+        if (((GameObject*)obj)->userData1 == 2)
         {
             getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_A, 0);
             getEnvfxActImmediatelyInt(0, 0, DIM2LAVACONTROL_ENVFX_B, 0);
@@ -137,7 +137,7 @@ void dim2lavacontrol_update(int obj)
             getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_C, 0);
             getEnvfxActInt(0, 0, DIM2LAVACONTROL_ENVFX_D, 0);
         }
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
     }
     obj = *(int*)&((GameObject*)obj)->extra;
     switch (((Dim2lavacontrolState*)obj)->phase)
@@ -201,11 +201,11 @@ void dim2lavacontrol_init(GameObject *obj, int param2)
     int gameBitState;
     if (getSaveGameLoadStatus() != 0)
     {
-        (obj)->unkF4 = 2;
+        (obj)->userData1 = 2;
     }
     else
     {
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
     for (i = 1; (u8)i <= 0x2d; i++)
     {

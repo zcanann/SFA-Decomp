@@ -160,7 +160,7 @@ void DIMCannon_init(int* obj, int* arg)
     {
         void* state;
         int* p;
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
         p = *(int**)&((GameObject*)obj)->anim.modelState;
         if (p != 0)
         {

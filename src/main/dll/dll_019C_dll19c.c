@@ -57,14 +57,14 @@ void dll_19C_update(int* obj)
 
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
     sub = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF8 != 0)
+    if (((GameObject*)obj)->userData2 != 0)
     {
         if (mainGetBit(0x1d4) != 0)
         {
-            ((GameObject*)obj)->unkF8 = 0;
+            ((GameObject*)obj)->userData2 = 0;
         }
     }
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         if (mainGetBit(GAMEBIT_WM_KrazTest1TorchesActive) != 0)
         {
@@ -74,7 +74,7 @@ void dll_19C_update(int* obj)
             Sfx_PlayFromObject(0, SFXTRIG_hitpos_6);
             Resource_Release(res);
             ((Dll19CState*)sub)->active = 1;
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
         }
     }
     if (((Dll19CState*)sub)->active != 0)
@@ -104,7 +104,7 @@ void dll_19C_init(GameObject *obj, u8* initData)
     register int self = (int)obj;
     register int state = *(int*)&((GameObject*)self)->extra;
     *(short*)self = (short)((int)((Dll19CPlacement*)initData)->rotXByte << 8);
-    ((GameObject*)self)->unkF8 = 0;
+    ((GameObject*)self)->userData2 = 0;
     ((Dll19CState*)state)->spawnTimer = 0x64;
     ((Dll19CState*)state)->active = 0;
     *(int*)state = 0;

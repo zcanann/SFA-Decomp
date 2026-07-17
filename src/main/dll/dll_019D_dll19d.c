@@ -171,7 +171,7 @@ void dll_19D_update(GameObject* obj)
 
         frames = framesThisStep;
         lifetime = *(int*)(self + 0xf4);
-        ((GameObject*)self)->unkF4 = lifetime - frames;
+        ((GameObject*)self)->userData1 = lifetime - frames;
         if ((int)(lifetime - frames) < 0)
         {
             Obj_FreeObject((GameObject*)self);

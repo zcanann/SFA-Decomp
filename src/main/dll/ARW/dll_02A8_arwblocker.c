@@ -85,7 +85,7 @@ void ARWBlocker_update(GameObject* obj)
         objAnim->alpha = alpha;
         (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject((int)obj);
-        if ((obj)->unkF4 == 0)
+        if ((obj)->userData1 == 0)
         {
             switch (state->sequenceMode)
             {
@@ -97,7 +97,7 @@ void ARWBlocker_update(GameObject* obj)
                 (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
                 break;
             }
-            (obj)->unkF4 = 1;
+            (obj)->userData1 = 1;
         }
     }
 }

@@ -221,14 +221,14 @@ int babycloudrunner_tryCapture(void* p)
     if (flag != 0)
     {
         s16toFloat(&sub->unk00, 0x3c);
-        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->userData1 = 1;
         ((GameObject*)obj)->anim.rotX = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
         mainSetBits(q->enableBit, 1);
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
         return 1;
     }
     objAudioFn_800393f8Legacy(obj, sub->audioBlock, 0x296, 0x1000, -1, 1);
@@ -465,7 +465,7 @@ void babycloudrunner_update(int* obj)
     {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
-        if (((GameObject*)obj)->unkF4 < 0)
+        if (((GameObject*)obj)->userData1 < 0)
         {
             if (def->runnerGameBit != -1)
             {
@@ -481,7 +481,7 @@ void babycloudrunner_update(int* obj)
         }
         else
         {
-            ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
+            ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - 1;
         }
     }
     else

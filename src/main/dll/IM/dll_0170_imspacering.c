@@ -45,7 +45,7 @@ void IMSpaceRing_hitDetect(void)
 void IMSpaceRing_update(GameObject* obj)
 {
     s16* placement = *(s16**)&obj->anim.placementData;
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         obj->anim.rotX = (s16)(obj->anim.rotX + placement[0xd] * framesThisStep);
     }
@@ -65,7 +65,7 @@ void IMSpaceRing_update(GameObject* obj)
 void IMSpaceRing_init(GameObject* obj, s8* placement)
 {
     obj->anim.rotX = (s16)((s32)placement[0x18] << 8);
-    obj->unkF4 = randomGetRange(0, 1);
+    obj->userData1 = randomGetRange(0, 1);
 }
 
 void IMSpaceRing_release(void)

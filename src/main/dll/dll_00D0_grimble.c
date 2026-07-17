@@ -13,7 +13,7 @@
  * edge or losing line-of-sight to the target flips the reversed flag and
  * picks a new randomized targetProgress. The render pass spawns bone/object
  * particle effects from the unk400 fx-flag bits. When the object is asleep
- * (unkF4 != 0) update wakes it from the saved map-event time slot.
+ * (userData1 != 0) update wakes it from the saved map-event time slot.
  */
 #include "main/game_object.h"
 #include "main/dll/objfx_api.h"
@@ -367,7 +367,7 @@ void grimble_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     char* state = obj->extra;
     char* sub = *(char**)&((GroundBaddieState*)state)->control;
 
-    if (visible == 0 || obj->unkF4 != 0)
+    if (visible == 0 || obj->userData1 != 0)
     {
         return;
     }
@@ -404,7 +404,7 @@ void grimble_update(GameObject* obj)
     state = obj->extra;
     sub = *(char**)&((GroundBaddieState*)state)->control;
     def = *(int*)&obj->anim.placementData;
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
         if ((*gMapEventInterface)->shouldNotSaveTime(((GrimblePlacement*)def)->mapId) != 0)
         {

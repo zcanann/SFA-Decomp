@@ -140,12 +140,12 @@ void dim_levelcontrol_update(GameObject *obj)
         Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
         st->b3 = 1;
     }
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         if ((u32)mainGetBit(GAMEBIT_DIM_FlewTo) == 0 ||
             ((u32)mainGetBit(0x17) != 0 && mainGetBit(0xead) == 0))
         {
-            if ((obj)->unkF4 == 2)
+            if ((obj)->userData1 == 2)
             {
                 getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_A, 0);
                 getEnvfxActImmediatelyInt(0, 0, DIMLEVELCONTROL_ENVFX_B, 0);
@@ -160,7 +160,7 @@ void dim_levelcontrol_update(GameObject *obj)
                 getEnvfxActInt(0, 0, DIMLEVELCONTROL_ENVFX_D, 0);
             }
         }
-        (obj)->unkF4 = 0;
+        (obj)->userData1 = 0;
     }
     if (st->groupStatus != 0)
     {
@@ -259,11 +259,11 @@ void dim_levelcontrol_init(GameObject *obj)
     st->timer = lbl_803E4A28;
     if (getSaveGameLoadStatus() != 0)
     {
-        (obj)->unkF4 = 2;
+        (obj)->userData1 = 2;
     }
     else
     {
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
     for (i = 1; i <= 38; i++)
     {

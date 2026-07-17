@@ -161,7 +161,7 @@ int Carryable_updateRenderState(int* obj, int flag)
             ((GameObject*)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    if (((GameObject*)obj)->unkF8 != 0)
+    if (((GameObject*)obj)->userData2 != 0)
     {
         if (flag != -1)
             return 0;
@@ -193,7 +193,7 @@ int Carryable_updateHeld(u8* obj)
         t = (void*)*(u8**)(obj + 0x78);
         if ((t[((GameObject*)obj)->hitVolumeIndex].e & 0xf) == 6 && (buttonGetDisabled(0) & PAD_BUTTON_A) == 0 &&
             (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
-            ((GameObject*)obj)->unkF8 == 0)
+            ((GameObject*)obj)->userData2 == 0)
         {
             *(s16*)held = 0;
             buttonDisable(0, PAD_BUTTON_A);
@@ -205,7 +205,7 @@ int Carryable_updateHeld(u8* obj)
             ((CarryableUpdateHeldState*)held)->flags |= CARRYABLE_FLAG_JUST_GRABBED;
             ((CarryableUpdateHeldState*)held)->isHeld = 1;
         }
-        if (((GameObject*)obj)->unkF8 == 0)
+        if (((GameObject*)obj)->userData2 == 0)
         {
             GameObject* hit;
             int cnt, i, j;
@@ -279,11 +279,11 @@ int Carryable_updateHeld(u8* obj)
                 ((CarryableUpdateHeldState*)held)->isHeld = 0;
             }
         }
-        if (((GameObject*)obj)->unkF8 == 1)
+        if (((GameObject*)obj)->userData2 == 1)
         {
             ((CarryableUpdateHeldState*)held)->carryState = CARRY_STATE_PUTDOWN;
         }
-        if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_PUTDOWN && ((GameObject*)obj)->unkF8 == 0)
+        if (((CarryableUpdateHeldState*)held)->carryState == CARRY_STATE_PUTDOWN && ((GameObject*)obj)->userData2 == 0)
         {
             u8* h2 = ((GameObject*)obj)->extra;
             *(u8*)&((CarryableUpdateHeldState*)h2)->carryState = CARRY_STATE_RESTING;
@@ -312,7 +312,7 @@ void Carryable_init(GameObject* obj, int state)
     s->carryState = CARRY_STATE_RESTING;
     s->pad4[0] = 0;
     s->isHeld = 0;
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
 }
 
 void Carryable_release(void)

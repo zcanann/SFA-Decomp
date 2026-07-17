@@ -3,7 +3,7 @@
  * boss ship. It rides its parent galleon object, pinning its local position
  * to the origin every frame, and picks one of three animation play speeds
  * depending on the galleon's animation type (anim.seqId 0x139) and its
- * unkF4 phase counter. The remaining handlers (free/hitDetect/init/release/
+ * userData1 phase counter. The remaining handlers (free/hitDetect/init/release/
  * initialise) are stubs - the mast is purely cosmetic.
  */
 #include "main/dll/sbshipheadstate_struct.h"
@@ -57,7 +57,7 @@ void SB_ShipMast_update(GameObject* obj)
     parent = obj->anim.parent;
     if (parent == NULL)
         return;
-    phase = parent->unkF4;
+    phase = parent->userData1;
     obj->anim.localPosX = 0.0f;
     obj->anim.localPosY = 0.0f;
     obj->anim.localPosZ = 0.0f;

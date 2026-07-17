@@ -889,7 +889,7 @@ int enemy_SeqFn(GameObject* node, int unused, ObjAnimUpdateState* animUpdate)
     int i;
     int* obj;
 
-    if (((GameObject*)node)->unkF4 != 0)
+    if (((GameObject*)node)->userData1 != 0)
         return 0;
     ((TrickyState*)sub)->flags2DC |= 0x8000LL;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
@@ -1620,7 +1620,7 @@ void enemy_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     int* state = ((GameObject*)obj)->extra;
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (((GameObject*)obj)->userData1)
         {
         case 0:
             ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)((int*)obj, p2, p3, p4, p5,
@@ -1762,7 +1762,7 @@ void enemy_update(int obj)
         *(u32*)&((EnemyState*)state)->controlFlags = *(u32*)&((EnemyState*)state)->controlFlags & ~1LL;
         return;
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         if (((EnemyPlacement*)setup)->gameBit2 != -1)
         {
@@ -1929,7 +1929,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
     u8* state = (obj)->extra;
     f32 fz;
 
-    (obj)->unkF4 = 0;
+    (obj)->userData1 = 0;
     if (flag == 0)
     {
         if (((EnemyPlacement*)setup)->gameBit2 != -1)
@@ -1938,36 +1938,36 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
             {
                 if (mainGetBit(((EnemyPlacement*)setup)->gameBit) == 0)
                 {
-                    (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
+                    (obj)->userData1 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
                 }
             }
             else
             {
-                (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
+                (obj)->userData1 = mainGetBit(((EnemyPlacement*)setup)->gameBit2) == 0;
             }
         }
         if (*(u32*)&((ObjPlacement*)setup)->mapId != 0xFFFFFFFF)
         {
-            if ((obj)->unkF4 == 0)
+            if ((obj)->userData1 == 0)
             {
                 if (((EnemyPlacement*)setup)->gameBit != -1)
                 {
-                    (obj)->unkF4 = mainGetBit(((EnemyPlacement*)setup)->gameBit);
+                    (obj)->userData1 = mainGetBit(((EnemyPlacement*)setup)->gameBit);
                 }
-                if ((obj)->unkF4 == 0)
+                if ((obj)->userData1 == 0)
                 {
                     if (((EnemyPlacement*)setup)->respawnEnabled != 0)
                     {
                         if ((*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) == 0)
                         {
-                            (obj)->unkF4 = 1;
+                            (obj)->userData1 = 1;
                         }
                     }
                 }
             }
         }
     }
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         (obj)->anim.alpha = 0;
@@ -2137,7 +2137,7 @@ void enemy_init(GameObject* obj, u8* setup, int flag)
         {
             ((EnemyState*)state)->flags &= ~0x3800;
         }
-        if ((obj)->unkF4 != 0)
+        if ((obj)->userData1 != 0)
         {
             ((EnemyState*)state)->controlFlags |= 0x1000;
             *(u32*)&((EnemyState*)state)->initialFlags = *(u32*)&((EnemyState*)state)->initialFlags & ~0x1000LL;

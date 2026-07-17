@@ -892,11 +892,11 @@ void SH_LevelControl_update(GameObject* obj)
     val = mainGetBit(GAMEBIT_SH_Related0D36);
     if (val != 0)
     {
-        if ((obj)->unkF8 != 2)
+        if ((obj)->userData2 != 2)
         {
-            (obj)->unkF8 = 2;
+            (obj)->userData2 = 2;
             envFxActFn_800887f8(0);
-            if ((obj)->unkF4 == 2)
+            if ((obj)->userData1 == 2)
             {
                 getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
                 getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_B, 0);
@@ -917,10 +917,10 @@ void SH_LevelControl_update(GameObject* obj)
         val = mainGetBit(GAMEBIT_SH_Related0D35);
         if (val != 0)
         {
-            if ((obj)->unkF8 != 1)
+            if ((obj)->userData2 != 1)
             {
-                (obj)->unkF8 = 1;
-                if ((obj)->unkF4 == 2)
+                (obj)->userData2 = 1;
+                if ((obj)->userData1 == 2)
                 {
                     envFxActFn_800887f8(0);
                     getEnvfxActImmediatelyInt(0, 0, SHLEVELCONTROL_ENVFX_A, 0);
@@ -938,10 +938,10 @@ void SH_LevelControl_update(GameObject* obj)
                 }
             }
         }
-        else if ((obj)->unkF8 != 0)
+        else if ((obj)->userData2 != 0)
         {
-            (obj)->unkF8 = 0;
-            if ((obj)->unkF4 == 2)
+            (obj)->userData2 = 0;
+            if ((obj)->userData1 == 2)
             {
                 fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
                 envFxActFn_800887f8(0x3f);
@@ -970,15 +970,15 @@ void SH_LevelControl_init(GameObject* obj)
     obj->animEventCallback = SH_LevelControl_SeqFn;
     objectFlags = (u32)obj->objectFlags | SHOPKEEPER_OBJFLAG_HIDDEN;
     obj->objectFlags = objectFlags;
-    obj->unkF8 = 3;
+    obj->userData2 = 3;
 
     if (getSaveGameLoadStatus() != 0)
     {
-        obj->unkF4 = 2;
+        obj->userData1 = 2;
     }
     else
     {
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
 
     ((ShLevelcontrolState*)state)->unk10 = -1;

@@ -307,7 +307,7 @@ int cfguardian_setScale(int* obj)
 }
 
 /* cfguardianFlyAlongPath: fly the guardian along a rom-curve path. On the first
- * tick (unkF4 == 0) it steers to the nearest curve point then opens the
+ * tick (userData1 == 0) it steers to the nearest curve point then opens the
  * curve walker; thereafter it advances the walker, snaps the object to
  * the sampled position, sticks to the ground and blends the yaw toward
  * the heading of travel. Returns 1 once the path is exhausted. */
@@ -325,11 +325,11 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
     moved = 1;
     ret = 0;
     ground = lbl_803E4110;
-    if (obj->unkF4 == -1)
+    if (obj->userData1 == -1)
     {
         return 1;
     }
-    if (obj->unkF4 == 0)
+    if (obj->userData1 == 0)
     {
         sel = pointId;
         pt = (int)findRomCurvePointNearObject((int*)obj, sel, 0, 2);
@@ -342,7 +342,7 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
             curveArgs[0] = 0x19;
             curveArgs[1] = 0x15;
             (*gRomCurveInterface)->initCurve((void*)walker, (void*)obj, lbl_803E4120, curveArgs, sel);
-            obj->unkF4 = 1;
+            obj->userData1 = 1;
             moved = 1;
         }
     }
@@ -358,7 +358,7 @@ int cfguardianFlyAlongPath(GameObject* obj, int walker, f32 t, int pointId, int 
         obj->anim.localPosZ = ((CfCurveWalker*)walker)->posZ;
         if (ret != 0)
         {
-            obj->unkF4 = -1;
+            obj->userData1 = -1;
         }
         if (hitDetectFn_800658a4(obj, obj->anim.localPosX, obj->anim.localPosY, obj->anim.localPosZ, &ground, 0) ==
             0)
@@ -540,7 +540,7 @@ int cfguardian_updateMain(GameObject* obj)
         {
             sub->questState = CFGUARDIAN_RELEASE_SEQ;
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
-            obj->unkF4 = 0;
+            obj->userData1 = 0;
             mainSetBits(GAMEBIT_GUARDIAN_PRISONGUARD_STAND_DOWN, 1);
             sub->flagsA9B |= GUARDIAN_FLAG_MOVE_LATCHED;
         }
@@ -604,7 +604,7 @@ int cfguardian_updateMain(GameObject* obj)
                     sub->landingPhase = 2;
                     obj->anim.localPosY -= ground;
                     sub->chatterState = GUARDIAN_CHATTER_READY;
-                    obj->unkF4 = 0;
+                    obj->userData1 = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
                         RomCurvePlacementDef* pt =
@@ -808,7 +808,7 @@ int cfguardian_updateMain(GameObject* obj)
         {
             sub->questState = CFGUARDIAN_FLY_OUT;
             ObjAnim_SetCurrentMove((int)obj, GUARDIAN_MOVE_FLY, lbl_803E4110, 0);
-            obj->unkF4 = 0;
+            obj->userData1 = 0;
         }
         break;
     case CFGUARDIAN_FLY_OUT: /* final flight out */
@@ -1052,7 +1052,7 @@ void cfguardian_init(int* obj, u8* params)
         return;
     ObjMsg_AllocQueue((void*)obj, 4);
     sub->questState = mainGetBit(GAMEBIT_GUARDIAN_QUEST_STATE);
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     ((GameObject*)obj)->animEventCallback = cfguardian_SeqFn;
     ((GameObject*)obj)->anim.rotX = (s16)(((CfGuardianMapData*)params)->rotXByte << 8);
     sub->landingPhase = 0;

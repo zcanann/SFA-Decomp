@@ -8,7 +8,7 @@
  * game bit of any scene spot it is taken from; while down it snaps to
  * the nearest scene spot in range and sets/clears that spot's bit by
  * whether the column variant (seqId 500 + modelIndex) belongs there.
- * The unkF4 bits carry the held/down handshake between frames, and the
+ * The userData1 bits carry the held/down handshake between frames, and the
  * carryable is hidden + the pickup icon raised while the player stands
  * close holding nothing.
  */
@@ -103,7 +103,7 @@ void WM_Column_update(int obj)
     nearest = 10000.0f;
     if ((*gCarryableInterface)->getAnimState(obj, *(int*)&((GameObject*)obj)->extra) != 0)
     {
-        if ((((GameObject*)obj)->unkF4 & 2) != 0)
+        if ((((GameObject*)obj)->userData1 & 2) != 0)
         {
             objects = ObjList_GetObjects(&i, &count);
             for (; i < count; i++)
@@ -127,19 +127,19 @@ void WM_Column_update(int obj)
         {
             (*gCarryableInterface)->setVisible(state, 0);
             setAButtonIcon(5);
-            *(u32*)&((GameObject*)obj)->unkF4 |= 1;
+            *(u32*)&((GameObject*)obj)->userData1 |= 1;
         }
         else
         {
             (*gCarryableInterface)->setVisible(state, 1);
         }
-        *(u32*)&((GameObject*)obj)->unkF4 &= ~2;
+        *(u32*)&((GameObject*)obj)->userData1 &= ~2;
     }
     else
     {
         /* just put down: snap to the nearest scene spot and set/clear
            its bit by whether this column variant belongs there */
-        if ((((GameObject*)obj)->unkF4 & 1) != 0)
+        if ((((GameObject*)obj)->userData1 & 1) != 0)
         {
             objects = ObjList_GetObjects(&i, &count);
             for (; i < count; i++)
@@ -170,14 +170,14 @@ void WM_Column_update(int obj)
         if ((playerFlags & 0x4000) != 0)
         {
             (*gCarryableInterface)->setVisible(state, 0);
-            *(u32*)&((GameObject*)obj)->unkF4 |= 2;
+            *(u32*)&((GameObject*)obj)->userData1 |= 2;
         }
         else
         {
             (*gCarryableInterface)->setVisible(state, 1);
-            *(u32*)&((GameObject*)obj)->unkF4 &= ~2;
+            *(u32*)&((GameObject*)obj)->userData1 &= ~2;
         }
-        *(u32*)&((GameObject*)obj)->unkF4 &= ~1;
+        *(u32*)&((GameObject*)obj)->userData1 &= ~1;
     }
 }
 
@@ -186,7 +186,7 @@ void WM_Column_init(GameObject* obj, WmColumnPlacement* mapData)
     int state = *(int*)&obj->extra;
     obj->anim.rotX = (s16)(mapData->rotXByte << 8);
     obj->objectFlags |= WMCOLUMN_OBJFLAG_HITDETECT_DISABLED;
-    obj->unkF4 = 0;
+    obj->userData1 = 0;
     obj->anim.bankIndex = mapData->modelIndex;
     if (obj->anim.bankIndex >= obj->anim.modelInstance->modelCount)
     {

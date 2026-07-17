@@ -61,7 +61,7 @@ void ShipBattle_free(int* obj)
     int light;
     (*gObjectTriggerInterface)->freeState((u8*)state);
     ((void (*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
-    light = ((GameObject*)obj)->unkF8;
+    light = ((GameObject*)obj)->userData2;
     if (light != 0)
     {
         ModelLightStruct_free((ModelLightStruct*)light);
@@ -155,13 +155,13 @@ void ShipBattle_init(GameObject* obj, int def)
     state->unk24 = 1.0f / (1.0f + (f32)((ShipBattleObjectDef*)def)->dampingDivisor);
     state->unk28 = -1;
 
-    chainIndex = obj->unkF4;
+    chainIndex = obj->userData1;
     if (chainIndex == 0)
     {
         if (((ShipBattleObjectDef*)def)->segmentIndex != 1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
-            obj->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+            obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
             goto light_setup;
         }
     }
@@ -175,7 +175,7 @@ void ShipBattle_init(GameObject* obj, int def)
             {
                 (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)def);
             }
-            obj->unkF4 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
+            obj->userData1 = ((ShipBattleObjectDef*)def)->segmentIndex + 1;
         }
     }
 
@@ -189,7 +189,7 @@ light_setup:
             modelLightStruct_setDiffuseColor((ModelLightStruct*)light, 200, 60, 0, 0);
             modelLightStruct_setDistanceAttenuation((ModelLightStruct*)light, 30.0f, 80.0f);
         }
-        obj->unkF8 = light;
+        obj->userData2 = light;
     }
 
     lbl_803DDC50[0] = lbl_803E5958;

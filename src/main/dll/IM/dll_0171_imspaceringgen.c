@@ -106,7 +106,7 @@ void IMSpaceRingGen_update(GameObject* obj)
             }
         }
         obj->anim.alpha = alpha;
-        if (obj->unkF4 == 0 && Obj_IsLoadingLocked() != 0)
+        if (obj->userData1 == 0 && Obj_IsLoadingLocked() != 0)
         {
             for (i = 0; i < 10; i++)
             {
@@ -132,7 +132,7 @@ void IMSpaceRingGen_update(GameObject* obj)
                 Obj_SetupObject((ObjPlacement*)ring, 5, obj->anim.mapEventSlot, -1,
                                 (void*)*(int*)&obj->anim.parent);
             }
-            obj->unkF4 = 1;
+            obj->userData1 = 1;
         }
         objMove((GameObject*)obj, state->ringA->anim.localPosX - obj->anim.localPosX,
                 (9.0f + state->ringA->anim.localPosY) - obj->anim.localPosY,
@@ -146,7 +146,7 @@ void IMSpaceRingGen_update(GameObject* obj)
 
 void IMSpaceRingGen_init(GameObject* obj)
 {
-    obj->unkF4 = 0;
+    obj->userData1 = 0;
     lbl_803DDB48 = obj;
 }
 

@@ -112,9 +112,9 @@ void Lamp_update(int obj)
 
     if (((GameObject*)obj)->anim.seqId != LAMP_SEQ_STATIC)
     {
-        if (((GameObject*)obj)->unkF8 == 0)
+        if (((GameObject*)obj)->userData2 == 0)
         {
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
             ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / 100.0f, (ObjAnimComponent*)obj);
         }
         ObjAnim_AdvanceCurrentMove((int)obj, 0.003f, timeDelta, NULL);
@@ -161,7 +161,7 @@ void Lamp_init(int* obj, int* def)
     }
     ((GameObject*)obj)->anim.rotY = 0;
     ((GameObject*)obj)->anim.rotZ = 0;
-    ((GameObject*)obj)->unkF8 = 0;
+    ((GameObject*)obj)->userData2 = 0;
     *state = 1;
     ((GameObject*)obj)->animEventCallback = Lamp_SeqFn;
 }

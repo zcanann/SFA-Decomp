@@ -5,7 +5,7 @@
  * timeDelta) and probes nearby surfaces with hitDetectFn_80065e50; on
  * contact it snaps to the surface top and registers itself in that
  * surface owner's slot list. When the player grabs it (resetHitboxMode
- * bit 1, unkF8 toggles) it disables its own hit volume, latches a
+ * bit 1, userData2 toggles) it disables its own hit volume, latches a
  * pending message (msgHi/msgLo), and on the action button (0x100)
  * releases and forwards the message via ObjMsg_SendToObject. Render
  * gates model-state shadow fade-out on the active trigger sequence.
@@ -70,12 +70,12 @@ void dll_1FF_free_nop(void)
 {
 }
 
-/* visible is -1 while held (unkF8 set), otherwise a 0/non-0 flag; gate
+/* visible is -1 while held (userData2 set), otherwise a 0/non-0 flag; gate
    shadow fade-out on whether a trigger sequence is active. */
 void dll_1FF_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     s32 isVisible;
-    if (((GameObject*)obj)->unkF8 != 0)
+    if (((GameObject*)obj)->userData2 != 0)
     {
         isVisible = visible;
         if (isVisible != -1)
@@ -124,7 +124,7 @@ void dll_1FF_update(int obj)
     {
         grab[0] = 0;
         if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 &&
-            ((GameObject*)obj)->unkF8 == 0)
+            ((GameObject*)obj)->userData2 == 0)
         {
             state->msgLo = grab[0];
             state->msgHi = 0x28;
@@ -136,7 +136,7 @@ void dll_1FF_update(int obj)
         {
             state->sendFlag = 1;
         }
-        if (((GameObject*)obj)->unkF8 == 0)
+        if (((GameObject*)obj)->userData2 == 0)
         {
             ObjHits_EnableObject(obj);
             *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
@@ -182,11 +182,11 @@ void dll_1FF_update(int obj)
             state->sendFlag = 0;
             buttonDisable(0, DLL1FF_BUTTON_ACTION);
         }
-        if (((GameObject*)obj)->unkF8 == 1)
+        if (((GameObject*)obj)->userData2 == 1)
         {
             state->grabPhase = 2;
         }
-        if (state->grabPhase == 2 && ((GameObject*)obj)->unkF8 == 0)
+        if (state->grabPhase == 2 && ((GameObject*)obj)->userData2 == 0)
         {
             state->grabPhase = 0;
             state->sendFlag = 0;

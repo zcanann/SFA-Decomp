@@ -4,7 +4,7 @@
  * per-axis extents (in unsigned world units) and an optional shape flag;
  * SkeetlaWall_setScale unpacks these into a float[6] min/max array for
  * the engine's collision layer.  The render function delegates to
- * objRenderModelAndHitVolumes only when unkF4 == 0 (default/inactive shape).
+ * objRenderModelAndHitVolumes only when userData1 == 0 (default/inactive shape).
  */
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
@@ -63,7 +63,7 @@ void SkeetlaWall_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (((GameObject*)obj)->userData1)
         {
         case 0:
             ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);

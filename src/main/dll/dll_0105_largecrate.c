@@ -424,7 +424,7 @@ void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 rende
     }
     else
     {
-        if ((obj)->unkF8 != 0)
+        if ((obj)->userData2 != 0)
         {
             if (renderState != -1)
             {

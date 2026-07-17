@@ -365,7 +365,7 @@ void Transporter_init(GameObject* obj, u8* params)
     state->activateDelay = 400;
     state->flags = 0;
     obj->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
-    obj->unkF4 = 0;
+    obj->userData1 = 0;
     obj->animEventCallback = Transporter_SeqFn;
     *(u8*)&obj->anim.resetHitboxMode = (u8)(*(u8*)&obj->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
 

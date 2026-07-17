@@ -202,8 +202,8 @@ void DIMbossspit_update(GameObject* obj)
     state = *(int*)&(obj)->extra;
     if (*(s16*)state == 0)
     {
-        (obj)->unkF4 -= framesThisStep;
-        if ((obj)->unkF4 < 0)
+        (obj)->userData1 -= framesThisStep;
+        if ((obj)->userData1 < 0)
         {
             Obj_FreeObject(obj);
             return;
@@ -276,7 +276,7 @@ void DIMbossspit_init(int obj)
         modelLightStruct_setupGlow(((DIMbossspitState*)state)->light, 0, 0, 255, 0, 127, lbl_803E4D7C);
         modelLightStruct_setGlowProjectionRadius(((DIMbossspitState*)state)->light, lbl_803E4D80);
     }
-    ((GameObject*)obj)->unkF4 = 0xb4;
+    ((GameObject*)obj)->userData1 = 0xb4;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, 0, 0, 0);
     ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj, 0);
     ((DIMbossspitState*)state)->unk0 = 0;

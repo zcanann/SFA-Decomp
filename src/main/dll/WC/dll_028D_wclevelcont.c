@@ -829,7 +829,7 @@ void wclevelcont_update(GameObject* obj)
     WcLevelControlState* state = obj->extra;
     f32 sunTime;
 
-    if (obj->unkF4 == 0)
+    if (obj->userData1 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_WC_MagicCaveRelated0E05) == 0)
         {
@@ -840,7 +840,7 @@ void wclevelcont_update(GameObject* obj)
             skyFn_80088e54(0, lbl_803E6DA8);
             mainSetBits(GAMEBIT_WC_MagicCaveRelated0E05, 1);
         }
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
     switch ((*gMapEventInterface)->getMapAct(obj->anim.mapEventSlot))
     {

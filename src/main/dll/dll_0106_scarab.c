@@ -298,7 +298,7 @@ void Scarab_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 
     if (((ScarabState*)state)->despawnTimer == 0)
     {
-        if (obj->unkF8 != 0)
+        if (obj->userData2 != 0)
         {
             if (visible != -1)
             {

@@ -14,7 +14,7 @@
  * IDENTITY NOTE: DbshShrineObject is this family's view of the engine
  * GameObject record (triggerRadius@0=anim.rotX slot, x/y/z@0xC=localPos,
  * startX/Y/Z@0x18=worldPos, runtime@0xB8=extra, messageFn@0xBC=unkBC,
- * introDelay@0xF4=unkF4); retiring it to GameObject casts is parked as a
+ * introDelay@0xF4=userData1); retiring it to GameObject casts is parked as a
  * recipe-#77-class retype. */
 typedef struct DbshShrineFlags {
     u8 latchStarted : 1;

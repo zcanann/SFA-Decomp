@@ -182,8 +182,8 @@ void lavaball1be_update(s16* obj)
         ((GameObject*)obj)->anim.rotX = ((GameObject*)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject*)obj)->anim.rotY = ((GameObject*)obj)->anim.rotY + framesThisStep * 0x12c;
         ((GameObject*)obj)->anim.velocityY = -(gDimLavaDebrisGravity * timeDelta - ((GameObject*)obj)->anim.velocityY);
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
-        if (((GameObject*)obj)->unkF4 < 0)
+        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - framesThisStep;
+        if (((GameObject*)obj)->userData1 < 0)
         {
             Obj_FreeObject((GameObject*)obj);
         }
@@ -281,7 +281,7 @@ void lavaball1be_init(s16* obj, u8* p)
         s.rot[1] = randomGetRange(-0x2ee0, 0x2ee0);
         s.rot[0] = randomGetRange(0, 0xfffe);
         vecRotateZXY((s16*)((u8*)&s + 12), (f32*)&s.vec);
-        ((GameObject*)obj)->unkF4 = 0x4b;
+        ((GameObject*)obj)->userData1 = 0x4b;
         ((GameObject*)obj)->anim.velocityX = s.vec.x;
         ((GameObject*)obj)->anim.velocityY = s.vec.y;
         ((GameObject*)obj)->anim.velocityZ = s.vec.z;

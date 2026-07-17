@@ -21,7 +21,7 @@ extern u8 lbl_803DB411;    /* trigger-interface update parameter */
 typedef struct ScCloudrunneraPlacement
 {
     u8 pad0[0x18 - 0x0];
-    s16 animDataIndex; /* anim-data set selector (-1 = none); obj.unkF4 = animDataIndex+1 */
+    s16 animDataIndex; /* anim-data set selector (-1 = none); obj.userData1 = animDataIndex+1 */
     s16 gameBit; /* GameBit id -> seq->gameBit */
     u8 pad1C[0x24 - 0x1C];
     u8 posOffsetDecayFactor; /* 0x24: decay input; posOffsetDecay = base/(base + this) */
@@ -205,14 +205,14 @@ void sc_cloudrunnera_init(GameObject *obj, int def)
     base = 1.0f;
     seq->posOffsetDecay = base / (base + (f32)(u32)((ScCloudrunneraPlacement*)def)->posOffsetDecayFactor);
     seq->curveId = -1;
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
 
-    objF4 = (obj)->unkF4;
+    objF4 = (obj)->userData1;
     if (objF4 == 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)seq, (u8*)def);
-        (obj)->unkF4 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
+        (obj)->userData1 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
     }
     else if (objF4 != 0 && ((ScCloudrunneraPlacement*)def)->animDataIndex != objF4 - 1)
     {
@@ -222,7 +222,7 @@ void sc_cloudrunnera_init(GameObject *obj, int def)
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)seq, (u8*)def);
         }
-        (obj)->unkF4 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
+        (obj)->userData1 = ((ScCloudrunneraPlacement*)def)->animDataIndex + 1;
     }
     if ((obj)->anim.modelState != NULL)
     {

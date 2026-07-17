@@ -140,7 +140,7 @@ void VFP_LevelControl_update(GameObject* obj)
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if ((obj)->unkF4 == 0 && mainGetBit(GAMEBIT_VFP_INTRO_DONE) == 0u)
+    if ((obj)->userData1 == 0 && mainGetBit(GAMEBIT_VFP_INTRO_DONE) == 0u)
     {
         if (mainGetBit(GAMEBIT_VFP_SKY_PENDING) != 0u)
         {
@@ -150,7 +150,7 @@ void VFP_LevelControl_update(GameObject* obj)
             skyFn_80088e54(1, 0.0f);
             mainSetBits(GAMEBIT_VFP_SKY_PENDING, 0);
         }
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
 
     coordsToMapCell(((GameObject*)player)->anim.localPosX, ((GameObject*)player)->anim.localPosZ);

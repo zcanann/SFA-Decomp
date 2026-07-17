@@ -44,10 +44,10 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 
 int SB_CageKyte_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
-    int holdTimer = obj->unkF4;
+    int holdTimer = obj->userData1;
     if (holdTimer > 0)
     {
-        obj->unkF4 = holdTimer - 1;
+        obj->userData1 = holdTimer - 1;
     }
     obj->anim.resetHitboxFlags |= SB_CAGEKYTE_HITBOX_RESET_BIT;
     animUpdate->hitVolumePair = -2;
@@ -86,9 +86,9 @@ void SB_CageKyte_update(GameObject* obj)
     GameObject* player;
 
     timer = obj->extra;
-    if (obj->unkF4 > 0)
+    if (obj->userData1 > 0)
     {
-        obj->unkF4 = obj->unkF4 - 1;
+        obj->userData1 = obj->userData1 - 1;
     }
 
     obj->anim.resetHitboxFlags |= SB_CAGEKYTE_HITBOX_RESET_BIT;

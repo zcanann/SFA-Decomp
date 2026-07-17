@@ -183,7 +183,7 @@ void SB_ShipHead_update(GameObject* obj)
             Sfx_StopObjectChannel((int)obj, 0x40);
         }
     }
-    galleonPhase = ((GameObject*)galleon)->unkF4;
+    galleonPhase = ((GameObject*)galleon)->userData1;
     hs = object->extra;
     if (*(void**)&hs->target == 0)
     {
@@ -211,7 +211,7 @@ void SB_ShipHead_update(GameObject* obj)
             break;
         }
     }
-    if ((SB_GALLEON_VTBL(galleon)->getPhase((int)galleon) >= 2) && (object->unkF8 <= 0) &&
+    if ((SB_GALLEON_VTBL(galleon)->getPhase((int)galleon) >= 2) && (object->userData2 <= 0) &&
         (((u32)(galleonPhase - 3) <= 1 || (galleonPhase == 5))) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) &&
         (((GameObject*)hit)->anim.seqId != SB_FIREBALL_OBJID))
     {
@@ -221,20 +221,20 @@ void SB_ShipHead_update(GameObject* obj)
         if (hs->health <= 0)
         {
             SB_GALLEON_VTBL(galleon)->onPartDestroyed((int)galleon);
-            object->unkF8 = 300;
+            object->userData2 = 300;
             ObjHits_DisableObject((u32)obj);
         }
     }
-    if (0 < object->unkF8)
+    if (0 < object->userData2)
     {
-        object->unkF8 = object->unkF8 - framesThisStep;
+        object->userData2 = object->userData2 - framesThisStep;
     }
     if (galleonPhase == 8)
     {
-        object->unkF4 = object->unkF4 + 1;
-        if (10 < object->unkF4)
+        object->userData1 = object->userData1 + 1;
+        if (10 < object->userData1)
         {
-            object->unkF4 = 0;
+            object->userData1 = 0;
         }
     }
     if ((galleonPhase == 5) && (gSbShipHeadPrevGalleonPhase != 5))
@@ -247,7 +247,7 @@ void SB_ShipHead_update(GameObject* obj)
         (Obj_IsLoadingLocked() != 0))
     {
         gSbShipHeadHasFiredFireball = 1;
-        object->unkF4 = object->unkF4 + framesThisStep;
+        object->userData1 = object->userData1 + framesThisStep;
         Sfx_PlayFromObject((int)obj, SFXTRIG_gcexp1_c);
         object->anim.localPosY += lbl_803E5848;
         object->anim.localPosZ = object->anim.localPosZ - lbl_803E584C;
@@ -270,8 +270,8 @@ void SB_ShipHead_update(GameObject* obj)
         ((GameObject*)proj)->anim.velocityX = ddx * speedScale;
         ((GameObject*)proj)->anim.velocityY = ddy * speedScale;
         ((GameObject*)proj)->anim.velocityZ = ddz * speedScale;
-        ((GameObject*)proj)->unkF4 = 0x78;
-        ((GameObject*)proj)->unkF8 = hs->target;
+        ((GameObject*)proj)->userData1 = 0x78;
+        ((GameObject*)proj)->userData2 = hs->target;
     }
     if ((fireCue == 1) && (Obj_IsLoadingLocked() != 0))
     {

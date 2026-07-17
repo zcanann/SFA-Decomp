@@ -7,7 +7,7 @@
  * TU: 0x801E4288-0x801E42F8.
  *
  * The door faces a placement-supplied heading and, once its arming GameBit
- * is set, runs trigger sequence 0 a single time (latched through obj->unkF4)
+ * is set, runs trigger sequence 0 a single time (latched through obj->userData1)
  * to play the open animation. Each tick it also forces hitbox-reset bit 0x10.
  */
 #include "main/dll/shipbattlestate_struct.h"
@@ -74,12 +74,12 @@ void SB_SeqDoor_update(GameObject* obj)
 {
     if (obj->anim.seqId == SB_SEQDOOR_SEQ_ID)
     {
-        if (obj->unkF4 == 0)
+        if (obj->userData1 == 0)
         {
             if ((u32)mainGetBit(SB_SEQDOOR_ARM_GAMEBIT) != 0u)
             {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                obj->unkF4 = 1;
+                obj->userData1 = 1;
             }
         }
     }

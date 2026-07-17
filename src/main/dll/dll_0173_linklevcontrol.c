@@ -44,7 +44,7 @@ enum
     AREA_CELL_49 = 0x49
 };
 
-/* unkF4 records how the object was spawned: fresh start vs loaded save. */
+/* userData1 records how the object was spawned: fresh start vs loaded save. */
 enum
 {
     LEVCON_SAVE_STATUS_FRESH = 1,
@@ -138,7 +138,7 @@ void link_levcontrol_applyEnterAreaEffects(int* obj)
     {
     case AREA_CELL_47:
         fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
-        if (((GameObject*)obj)->unkF4 == LEVCON_SAVE_STATUS_LOADED)
+        if (((GameObject*)obj)->userData1 == LEVCON_SAVE_STATUS_LOADED)
         {
             envFxActFn_800887f8(0x3f);
         }
@@ -229,11 +229,11 @@ void link_levcontrol_init(int* obj)
     ((GameObject*)obj)->objectFlags |= LINKLEVCONTROL_OBJFLAG_HIDDEN;
     if (getSaveGameLoadStatus() != 0)
     {
-        ((GameObject*)obj)->unkF4 = LEVCON_SAVE_STATUS_LOADED;
+        ((GameObject*)obj)->userData1 = LEVCON_SAVE_STATUS_LOADED;
     }
     else
     {
-        ((GameObject*)obj)->unkF4 = LEVCON_SAVE_STATUS_FRESH;
+        ((GameObject*)obj)->userData1 = LEVCON_SAVE_STATUS_FRESH;
     }
 }
 

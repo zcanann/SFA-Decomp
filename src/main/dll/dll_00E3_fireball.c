@@ -377,7 +377,7 @@ void Fireball_update(int* obj)
 {
     int* state = ((GameObject*)obj)->extra;
 #define hitState ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)
-    int* other = *(int**)&((GameObject*)obj)->unkF8;
+    int* other = *(int**)&((GameObject*)obj)->userData2;
     int* params = *(int**)&((GameObject*)obj)->anim.placementData;
     f32 zero = 0.0f;
 
@@ -479,7 +479,7 @@ void Fireball_update(int* obj)
         {
             if ((((GameObject*)other)->objectFlags & FIREBALL_OBJFLAG_FREED) != 0)
             {
-                ((GameObject*)obj)->unkF8 = 0;
+                ((GameObject*)obj)->userData2 = 0;
             }
             else
             {
@@ -516,7 +516,7 @@ void Fireball_update(int* obj)
                 8.0f *
                 mathCosf(3.1415927f * (f32)((FireballState*)state)->spiralPhase / 32768.0f);
         }
-        if ((((GameObject*)obj)->unkF4 -= framesThisStep) < 0)
+        if ((((GameObject*)obj)->userData1 -= framesThisStep) < 0)
         {
             Obj_FreeObject((GameObject*)obj);
         }

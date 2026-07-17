@@ -190,7 +190,7 @@ void SB_KyteCage_update(GameObject* obj)
     }
     if ((obj)->anim.parent != NULL)
     {
-        int kind = ((GameObject*)(obj)->anim.parent)->unkF4;
+        int kind = ((GameObject*)(obj)->anim.parent)->userData1;
         s16* mvec = objModelGetVecFn_800395d8(obj, 0);
         if (mvec != 0 && kind < 9 && (obj)->anim.currentMove != SB_KYTECAGE_MOVE_NEAR)
         {

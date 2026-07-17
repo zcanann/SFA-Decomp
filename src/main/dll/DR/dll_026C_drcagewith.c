@@ -70,9 +70,9 @@ void DR_CageWith_free(GameObject* obj, int arg)
         GameObject* child = state->linkedObject;
         if (child != 0)
         {
-            child->unkF4 = 0;
+            child->userData1 = 0;
         }
-        state->spawnedObject->unkF4 = 0;
+        state->spawnedObject->userData1 = 0;
         Obj_FreeObject(state->spawnedObject);
     }
     ObjGroup_RemoveObject((int)obj, DRCAGEWITH_OBJGROUP);
@@ -150,7 +150,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
             ((GameObject*)spawned)->anim.localPosY = (obj)->anim.localPosZ;
             spawned = (ObjPlacement*)Obj_SetupObject(spawned, 5, (obj)->anim.mapEventSlot, -1, (obj)->anim.parent);
             ((GameObject*)spawned)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-            ((GameObject*)spawned)->unkF4 = 1;
+            ((GameObject*)spawned)->userData1 = 1;
             state->spawnedObject = (GameObject*)spawned;
             return;
         }
@@ -165,7 +165,7 @@ void DR_CageWith_hitDetect(GameObject* obj)
             nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
-                ((GameObject*)nearest)->unkF4 = 0;
+                ((GameObject*)nearest)->userData1 = 0;
                 state->linkedObject = NULL;
             }
             return;
@@ -192,10 +192,10 @@ void DR_CageWith_hitDetect(GameObject* obj)
             nearest = (int*)ObjGroup_FindNearestObject(DRCAGEWITH_TARGET_OBJGROUP, (int)obj, &maxDist);
             if (nearest != NULL && ((GameObject*)nearest)->anim.seqId == 1049)
             {
-                ((GameObject*)nearest)->unkF4 = 1;
+                ((GameObject*)nearest)->userData1 = 1;
                 state->linkedObject = (GameObject*)nearest;
                 ((GameObject*)nearest)->anim.rotZ = state->spawnedObject->anim.rotZ;
-                state->spawnedObject->unkF4 = 1;
+                state->spawnedObject->userData1 = 1;
             }
             if (state->linkedObject != NULL && (state->linkedObject->objectFlags & DRCAGEWITH_OBJFLAG_FREED) != 0)
             {

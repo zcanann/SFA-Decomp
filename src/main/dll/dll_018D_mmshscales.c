@@ -119,11 +119,11 @@ void MMSH_Scales_init(int* obj, s16* def)
     ((MmshScalesState*)state)->unk6E = -1;
     ((MmshScalesState*)state)->dampingFactor = 1.0f / (1.0f + (f32)(u32)((u8*)def)[36]);
     ((MmshScalesState*)state)->unk28 = -1;
-    loadedBank = ((GameObject*)obj)->unkF4;
+    loadedBank = ((GameObject*)obj)->userData1;
     if (loadedBank == 0 && def[12] != 1)
     {
         (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
-        ((GameObject*)obj)->unkF4 = def[12] + 1;
+        ((GameObject*)obj)->userData1 = def[12] + 1;
     }
     else if (loadedBank != 0 && def[12] != loadedBank - 1)
     {
@@ -132,7 +132,7 @@ void MMSH_Scales_init(int* obj, s16* def)
         {
             (*gObjectTriggerInterface)->loadAnimData(state, (u8*)def);
         }
-        ((GameObject*)obj)->unkF4 = def[12] + 1;
+        ((GameObject*)obj)->userData1 = def[12] + 1;
     }
     if (Obj_IsLoadingLocked() == 0)
         return;

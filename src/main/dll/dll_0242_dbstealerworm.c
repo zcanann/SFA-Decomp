@@ -2277,7 +2277,7 @@ void dbstealerworm_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 vi
         ((GameObject*)sub->linkedObj)->anim.localPosZ = (obj)->anim.localPosZ;
         ((GameObject*)sub->linkedObj)->anim.localPosY += 30.0f;
     }
-    if (visible == 0 || (obj)->unkF4 != 0 || state->targetState == 0)
+    if (visible == 0 || (obj)->userData1 != 0 || state->targetState == 0)
     {
         return;
     }
@@ -2362,7 +2362,7 @@ void dbstealerworm_update(u8* objp)
     }
     if (mainGetBit(((GroundBaddieState*)blob)->gameBitC) != 0)
     {
-        if (((GameObject*)obj)->unkF4 != 0)
+        if (((GameObject*)obj)->userData1 != 0)
         {
             if ((((GroundBaddieState*)blob)->configFlags & 4) == 0 &&
                 (*gMapEventInterface)->shouldNotSaveTime(*(int*)&((DbstealerwormPlacement*)data)->eventConfigId) != 0)
@@ -2377,13 +2377,13 @@ void dbstealerworm_update(u8* objp)
                 *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
             }
         }
-        else if (((GameObject*)obj)->unkF8 == 0)
+        else if (((GameObject*)obj)->userData2 == 0)
         {
             ((GameObject*)obj)->anim.localPosX = ((DbstealerwormPlacement*)data)->homePosX;
             ((GameObject*)obj)->anim.localPosY = ((DbstealerwormPlacement*)data)->homePosY;
             ((GameObject*)obj)->anim.localPosZ = ((DbstealerwormPlacement*)data)->homePosZ;
             (*gObjectTriggerInterface)->runSequence(((DbstealerwormPlacement*)data)->seqId, (void*)obj, -1);
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
         }
         else
         {

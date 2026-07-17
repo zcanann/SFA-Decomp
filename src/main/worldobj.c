@@ -337,15 +337,15 @@ void worldobj_update(GameObject* obj)
         obj->anim.rotX = lbl_803E668C * timeDelta + (f32)obj->anim.rotX;
         break;
     case 0x5dc:
-        if (obj->unkF4 == 0)
+        if (obj->userData1 == 0)
         {
-            obj->unkF4 = ObjList_FindObjectByIdLegacy(0x431dc);
-            ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->unkF4, 0);
+            obj->userData1 = ObjList_FindObjectByIdLegacy(0x431dc);
+            ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->userData1, 0);
         }
-        if (obj->unkF8 == 0)
+        if (obj->userData2 == 0)
         {
-            obj->unkF8 = ObjList_FindObjectByIdLegacy(0x4325b);
-            ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->unkF8, 0);
+            obj->userData2 = ObjList_FindObjectByIdLegacy(0x4325b);
+            ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, obj->userData2, 0);
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL)
@@ -441,7 +441,7 @@ void worldobj_update(GameObject* obj)
     case 0x5d6:
     case 0x5d7:
     case 0x5d8:
-        if (obj->unkF8 == 0)
+        if (obj->userData2 == 0)
         {
             child = ObjList_FindObjectByIdLegacy(state->attachChildObjectId);
             if ((void*)child != NULL)
@@ -450,10 +450,10 @@ void worldobj_update(GameObject* obj)
                 ((GameObject*)child)->anim.alpha = 0x96;
                 ((GameObject*)child)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ((void (*)(void*, int, u16))ObjLink_AttachChild)(obj, child, 0);
-                obj->unkF8 = 1;
+                obj->userData2 = 1;
             }
         }
-        if (obj->unkF4 != 0 && *(void**)&state->lookAtTargetRef != NULL)
+        if (obj->userData1 != 0 && *(void**)&state->lookAtTargetRef != NULL)
         {
             view = Camera_GetCurrentViewSlot();
             dx = view->x - obj->anim.localPosX;

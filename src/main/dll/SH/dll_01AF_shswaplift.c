@@ -129,7 +129,7 @@ void warpstonelift_init(GameObject* obj, s8* def)
     int* state = obj->extra;
     int i;
     obj->anim.rotX = (s16)((s32)def[0x18] << 8);
-    obj->unkF4 = 0;
+    obj->userData1 = 0;
     for (i = 0; i < 2; i++)
     {
         if (mainGetBit(lbl_803DC058[i]) != 0)

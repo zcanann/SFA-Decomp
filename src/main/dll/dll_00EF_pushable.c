@@ -651,9 +651,9 @@ u32 pushable_SeqFn(short* obj, short* refObj, ObjAnimUpdateState* animUpdate)
             animUpdate->movementState = 0;
         }
     }
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
-        ((GameObject*)obj)->unkF8 = 2;
+        ((GameObject*)obj)->userData2 = 2;
     }
     if ((obj[0x23] == 0x21e) || (obj[0x23] == 0x411))
     {

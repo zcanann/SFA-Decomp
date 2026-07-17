@@ -91,7 +91,7 @@ void drmusiccont_update(GameObject* obj)
 
     cloudSetOverridePosition(gDrMusicControlCloudOverridePosX, gDrMusicControlCloudOverridePosY,
                              gDrMusicControlCloudOverridePosZ);
-    if ((obj)->unkF4 == 0)
+    if ((obj)->userData1 == 0)
     {
         if ((u32)mainGetBit(GAMEBIT_DRArwingRelated0E7B) == 0)
         {
@@ -102,7 +102,7 @@ void drmusiccont_update(GameObject* obj)
             skyFn_80088e54(0, lbl_803E6BD8);
             mainSetBits(GAMEBIT_DRArwingRelated0E7B, 1);
         }
-        (obj)->unkF4 = 1;
+        (obj)->userData1 = 1;
     }
 
     SCGameBitLatch_Update(&state->gameBitLatch, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);

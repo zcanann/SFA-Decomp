@@ -173,8 +173,8 @@ void SB_CloudBall_update(GameObject* obj)
         obj->anim.localPosX = state->posX;
         obj->anim.localPosY = state->posY;
         obj->anim.localPosZ = state->posZ;
-        obj->unkF4 = obj->unkF4 - framesThisStep;
-        if (obj->unkF4 < 0 ||
+        obj->userData1 = obj->userData1 - framesThisStep;
+        if (obj->userData1 < 0 ||
             (player != NULL && (((GameObject*)player)->objectFlags & SBCLOUDBALL_OBJFLAG_PARENT_SLACK) != 0))
         {
             if (state->fadeTimer == lbl_803E58EC)

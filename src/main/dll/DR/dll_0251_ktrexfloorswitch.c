@@ -100,17 +100,17 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     f32 cx, cz, xLo, xHi, zLo, zHi;
     *(Vec3Blob*)vecA = *(Vec3Blob*)lbl_802C2560;
     *(Vec3Blob*)vecB = *(Vec3Blob*)lbl_802C256C;
-    (obj)->unkF8 = (obj)->unkF4;
-    (obj)->unkF4 = mainGetBit(((KtrexfloorswitchPlacement*)placement)->activeBit);
+    (obj)->userData2 = (obj)->userData1;
+    (obj)->userData1 = mainGetBit(((KtrexfloorswitchPlacement*)placement)->activeBit);
     tex = objFindTexture(obj, 0, 0);
-    if ((obj)->unkF4 <= 1)
+    if ((obj)->userData1 <= 1)
     {
         tex->textureId = 0;
-        if ((obj)->unkF4 == 0 && (obj)->unkF8 != 0)
+        if ((obj)->userData1 == 0 && (obj)->userData2 != 0)
         {
             ((KtrexfloorswitchState*)state)->flags |= KTREXFLOORSWITCH_FLAG_SINKING;
         }
-        if ((obj)->unkF4 != 0 && (obj)->unkF8 == 0)
+        if ((obj)->userData1 != 0 && (obj)->userData2 == 0)
         {
             int curveId;
             int curveBits;
@@ -140,7 +140,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     }
     else
     {
-        if ((obj)->unkF8 != 0)
+        if ((obj)->userData2 != 0)
         {
             tex->textureId = 0x100;
             ((KtrexfloorswitchState*)state)->flags &= ~KTREXFLOORSWITCH_FLAG_CHARGE_LOCKED;
@@ -173,7 +173,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
     {
         ((KtrexfloorswitchState*)state)->graceTimer = 0;
     }
-    if ((s8) * (s8*)(*(int*)((char*)obj + 0x58) + 0x10f) > 0 && (obj)->unkF4 == 2)
+    if ((s8) * (s8*)(*(int*)((char*)obj + 0x58) + 0x10f) > 0 && (obj)->userData1 == 2)
     {
         player = Obj_GetPlayerObject();
         if (player != 0)
@@ -341,7 +341,7 @@ void KT_RexFloorSwitch_update(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_en_birdymornin11);
     }
     gKTrexFloorSwitchPrevMoved = (s8)moved;
-    if ((obj)->unkF4 == 2)
+    if ((obj)->userData1 == 2)
     {
         if ((s8)((KtrexfloorswitchState*)state)->graceTimer != 0)
         {
@@ -408,8 +408,8 @@ void KT_RexFloorSwitch_init(GameObject* obj, char* placement)
     int curve;
     obj->anim.rotX = (s16)(((KtrexfloorswitchPlacement*)placement)->rotByte << 8);
     ((KtrexfloorswitchState*)extra)->chargeTimer = (f32)(u32)((KtrexfloorswitchPlacement*)placement)->chargeReload;
-    obj->unkF4 = 1;
-    obj->unkF8 = 1;
+    obj->userData1 = 1;
+    obj->userData2 = 1;
     {
         KtrexfloorswitchPlacement* pl = (KtrexfloorswitchPlacement*)*(int*)&obj->anim.placementData;
         curve = ((int (*)(f32, f32, f32, int*, int, int))(*gRomCurveInterface)->find)(

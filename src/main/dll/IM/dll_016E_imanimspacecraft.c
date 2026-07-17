@@ -178,9 +178,9 @@ void imanimspacecraft_hitDetect(void)
 
 void imanimspacecraft_update(GameObject* obj)
 {
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
         return;
-    obj->unkF4 = 1;
+    obj->userData1 = 1;
 }
 
 void imanimspacecraft_init(GameObject* obj)

@@ -361,8 +361,8 @@ void SB_ShipGun_update(GameObject* obj)
                 spawned->anim.localPosY = boost * spawned->anim.velocityY + spawned->anim.localPosY;
                 spawned->anim.localPosZ = boost * spawned->anim.velocityZ + spawned->anim.localPosZ;
                 spawned->anim.rotX = getAngle(spawned->anim.velocityX, spawned->anim.velocityZ);
-                spawned->unkF4 = SB_SHIPGUN_CANNONBALL_LIFETIME;
-                spawned->unkF8 = *state;
+                spawned->userData1 = SB_SHIPGUN_CANNONBALL_LIFETIME;
+                spawned->userData2 = *state;
                 Camera_EnableViewYOffset();
                 CameraShake_SetAllMagnitudes(0.1f);
                 Sfx_PlayFromObject((int)obj, SB_SHIPGUN_FIRE_ANIM);

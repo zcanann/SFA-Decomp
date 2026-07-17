@@ -12,7 +12,7 @@
  * target, clamps + damps the velocity, moves the object, and turns it to face
  * the player.
  *
- * Hagabon_update handles the dormant-until-armed state (unkF4): while waiting it
+ * Hagabon_update handles the dormant-until-armed state (userData1): while waiting it
  * polls its placement game bit / the map-event save-time gate, then fades in.
  * Once active it fades out on a priority hit, plays the swipe/lock/creak sfx,
  * adds map time and sets the placement game bit, and re-evaluates chase state.
@@ -232,7 +232,7 @@ void Hagabon_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        switch (obj->unkF4)
+        switch (obj->userData1)
         {
         case 0:
             objRenderModelAndHitVolumes(obj, 1.0f);
@@ -283,7 +283,7 @@ void Hagabon_update(int obj)
     oldCurve = state->curve;
     data = *(int*)&((GameObject*)obj)->anim.placementData;
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         if ((((HagabonPlacement*)data)->armGameBit != -1) && (mainGetBit(((HagabonPlacement*)data)->armGameBit) != 0))
         {
@@ -293,7 +293,7 @@ void Hagabon_update(int obj)
         {
             return;
         }
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
         ((GameObject*)obj)->anim.alpha = 1;
         state->flags |= HAGABON_FLAG_FADE_IN;
         Sfx_PlayFromObject(obj, SFXTRIG_dn_seal4_c);
@@ -319,7 +319,7 @@ void Hagabon_update(int obj)
             ((GameObject*)obj)->anim.alpha = (f32)(u32)((GameObject*)obj)->anim.alpha - timeDelta;
             if (((GameObject*)obj)->anim.alpha <= 6)
             {
-                ((GameObject*)obj)->unkF4 = 1;
+                ((GameObject*)obj)->userData1 = 1;
                 ((GameObject*)obj)->anim.alpha = 0;
                 state->flags &= ~HAGABON_FLAG_FADE_OUT;
                 Sfx_StopFromObject(obj, SFXTRIG_en_twiggysnap11);
@@ -423,7 +423,7 @@ void Hagabon_init(GameObject* obj, int data, int skip_alloc)
     {
         if (mainGetBit(placement->armGameBit) != 0)
         {
-            obj->unkF4 = 1;
+            obj->userData1 = 1;
         }
     }
 }

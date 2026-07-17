@@ -1,7 +1,7 @@
 /*
  * dll_00CF cannonclaw - a trigger-once cannon-arm awakener: plays move 0x208
  * until the Tricky object's gate game bit fires, then disables its own hits
- * and stops animating (unkF4 latch).
+ * and stops animating (userData1 latch).
  *
  * This TU also owns grimble_initialiseStateHandlerTables (builds Grimble's
  * two state-handler dispatch tables in .bss). The Grimble/TumbleWeedBush
@@ -68,7 +68,7 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (((GameObject*)obj)->userData1)
         {
         case 0:
             ((void (*)(int, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E2F30);
@@ -88,7 +88,7 @@ void cannonclaw_update(u8* obj)
     GameObject* trickyObj;
     getTrickyObject();
     trickyObj = ObjList_FindObjectById(CANNONCLAW_OBJID_TRICKY);
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
         return;
     if (((GameObject*)obj)->anim.currentMove != CANNONCLAW_MOVE_ARM)
     {
@@ -99,7 +99,7 @@ void cannonclaw_update(u8* obj)
         return;
     if (mainGetBit(trickyObj->anim.placementData[13]) == 0)
         return;
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
         (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
     ObjHits_DisableObject((u32)obj);

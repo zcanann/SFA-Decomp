@@ -98,11 +98,11 @@ void DFSH_ObjCreator_update(GameObject* obj)
 
     if (mainGetBit(0x589) != 0)
     {
-        (obj)->unkF8 = 0;
+        (obj)->userData2 = 0;
         return;
     }
 
-    if ((obj)->unkF8 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
+    if ((obj)->userData2 == 0 && mainGetBit((s8)setup[0x1f] + 0xf6) != 0)
     {
         resource = Resource_Acquire(0x82, 1);
         (*(void (**)(int, int, int, int, int, int))(*(int*)resource + 4))((int)obj, 0, 0, 1, -1, 0);
@@ -110,7 +110,7 @@ void DFSH_ObjCreator_update(GameObject* obj)
         Sfx_PlayFromObject((int)obj, SFXTRIG_hitpos_6);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
-        (obj)->unkF8 = 1;
+        (obj)->userData2 = 1;
     }
 
     if (state->spawnTimerStep != 0)
@@ -157,7 +157,7 @@ void DFSH_ObjCreator_init(GameObject* obj, s8* def)
 {
     DfshObjCreatorState* state = (obj)->extra;
     (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
     *(u8*)((char*)obj + 0x37) = 0xFF;

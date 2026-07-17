@@ -159,7 +159,7 @@ void DoorF4_update(int* obj)
 {
     DoorF4State* state = ((GameObject*)obj)->extra;
     state->triggerLatch = 0;
-    if (((GameObject*)obj)->unkF4 == 0)
+    if (((GameObject*)obj)->userData1 == 0)
     {
         int* src = *(int**)&((GameObject*)obj)->anim.placementData;
         s16 type;
@@ -190,7 +190,7 @@ void DoorF4_update(int* obj)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
-        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->userData1 = 1;
     }
 }
 
@@ -364,7 +364,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             s = mathCosf(ang[0]);
             sd = -(def->head.posX * sd + def->head.posZ * s) +
                  (sd * ((GameObject*)player)->anim.localPosX + s * ((GameObject*)player)->anim.localPosZ);
-            if (((GameObject*)obj)->unkF8 == 0)
+            if (((GameObject*)obj)->userData2 == 0)
             {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658)
                 {
@@ -436,14 +436,14 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
                         break;
                     }
                 }
-                if (sd < lbl_803E3648 && ((GameObject*)obj)->unkF8 == 0)
+                if (sd < lbl_803E3648 && ((GameObject*)obj)->userData2 == 0)
                 {
                     animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_A | OBJSEQ_CONTROL_SET_STATE_LATCH;
                 }
             }
             else
             {
-                if (((GameObject*)obj)->unkF8 == 1)
+                if (((GameObject*)obj)->userData2 == 1)
                 {
                     animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_A;
                 }
@@ -483,7 +483,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
         }
         break;
     }
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         if (active != 0)
         {
@@ -494,7 +494,7 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_CLEAR_LATCH_B;
     }
-    ((GameObject*)obj)->unkF8 = active;
+    ((GameObject*)obj)->userData2 = active;
     if ((((GameObject*)obj)->anim.seqId == 0x13e || ((GameObject*)obj)->anim.seqId == 0x151) && sub->triggerLatch != 0)
     {
         animUpdate->sequenceControlFlags |= OBJSEQ_CONTROL_SET_LATCH_B;
@@ -623,9 +623,9 @@ int DoorF4_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             animUpdate->eventIds[i] = 0;
         }
     }
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
         return 3;
     }
     return 0;

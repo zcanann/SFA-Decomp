@@ -41,7 +41,7 @@ typedef struct SpiritPrizePlacement
 {
     u8 pad0[0x14 - 0x0];
     s32 mapId;        /* 0x14: placement map id; == DISABLED sentinel means inert */
-    s16 triggerOrder; /* 0x18: trigger sequence index; -1 = none, stored as obj->unkF4 = +1 */
+    s16 triggerOrder; /* 0x18: trigger sequence index; -1 = none, stored as obj->userData1 = +1 */
     s16 mapParam1A;   /* 0x1a: copied to state->mapParam1A */
     u8 pad1C[0x24 - 0x1C];
     u8 scaleParam; /* 0x24: feeds spawnScale = base / (base + scaleParam) */
@@ -231,13 +231,13 @@ void SpiritPrize_init(int* obj, u8* init)
     state->targetObjectId = -1;
     state->spawnScale = 1.0f / (1.0f + (f32)(u32)placement->scaleParam);
     state->triggerHandle = -1;
-    triggerId = ((GameObject*)obj)->unkF4;
+    triggerId = ((GameObject*)obj)->userData1;
     if (triggerId == 0)
     {
         if (placement->triggerOrder != 1)
         {
             (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
+            ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
             goto afterTrigger;
         }
     }
@@ -250,7 +250,7 @@ void SpiritPrize_init(int* obj, u8* init)
             {
                 (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
             }
-            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
+            ((GameObject*)obj)->userData1 = placement->triggerOrder + 1;
         }
     }
 afterTrigger:;

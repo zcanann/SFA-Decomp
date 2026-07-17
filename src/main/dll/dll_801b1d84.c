@@ -75,7 +75,7 @@ void DIMwooddoor_updateFallingDebris(int* obj)
                 ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                           ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
-                ((GameObject*)obj)->unkF4 = 1180;
+                ((GameObject*)obj)->userData1 = 1180;
                 *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
                 ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
@@ -83,14 +83,14 @@ void DIMwooddoor_updateFallingDebris(int* obj)
         if ((mainGetBit(GAMEBIT_DIM2_CannonRelated085E) != 0 && mainGetBit(GAMEBIT_CannonRelated0C2D) == 0) ||
             (mainGetBit(GAMEBIT_DIM2_CannonRelated0874) != 0 && mainGetBit(GAMEBIT_CannonRelated0C2E) == 0))
         {
-            ((GameObject*)obj)->unkF4 = 1200;
+            ((GameObject*)obj)->userData1 = 1200;
         }
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->contactFlags != 0)
         {
             ObjHitbox_SetSphereRadius((ObjAnimComponent*)obj,
                                       ((DIMwooddoorUpdateFallingDebrisState*)extra)->hitboxRadius);
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
-            ((GameObject*)obj)->unkF4 = 1180;
+            ((GameObject*)obj)->userData1 = 1180;
             *(s8*)&((DIMwooddoorUpdateFallingDebrisState*)extra)->state = DIMWOODDOOR_DEBRIS_STATE_EXPLODED;
             ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -99,8 +99,8 @@ void DIMwooddoor_updateFallingDebris(int* obj)
     case DIMWOODDOOR_DEBRIS_STATE_EXPLODED:
         break;
     }
-    ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 + framesThisStep;
-    if (((GameObject*)obj)->unkF4 > 1200)
+    ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 + framesThisStep;
+    if (((GameObject*)obj)->userData1 > 1200)
     {
         Obj_FreeObject((GameObject*)obj);
     }

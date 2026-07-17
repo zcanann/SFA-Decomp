@@ -141,7 +141,7 @@ void SB_Propeller_update(GameObject* obj)
     }
     if (objAnim->parent != NULL)
     {
-        parentTimer = ((GameObject*)objAnim->parent)->unkF4;
+        parentTimer = ((GameObject*)objAnim->parent)->userData1;
         if ((objAnim->seqId != SB_PROPELLER_SEQ_ID) && (parentTimer < 4))
         {
             state->spinBlend = state->spinRate / lbl_803E581C;
@@ -154,16 +154,16 @@ void SB_Propeller_update(GameObject* obj)
                 state->spinBlend = lbl_803E5820;
             }
         }
-        object->unkF4 = object->unkF4 - framesThisStep;
-        if (object->unkF4 < 0)
+        object->userData1 = object->userData1 - framesThisStep;
+        if (object->userData1 < 0)
         {
-            object->unkF4 = 0;
+            object->userData1 = 0;
         }
-        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)) && (object->unkF4 == 0)) &&
+        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)) && (object->userData1 == 0)) &&
                (((void*)hit != NULL && ((void*)hit != (void*)Obj_GetPlayerObject())))) &&
               ((((GameObject*)hit)->anim.seqId != SB_PROPELLER_SEQ_ID &&
                 ((((GameObject*)hit)->anim.seqId != SB_OTHER_SEQ_ID &&
-                  ((object->unkF4 = 0x14, objAnim->parent != NULL))))))) &&
+                  ((object->userData1 = 0x14, objAnim->parent != NULL))))))) &&
              ((camA == 2 || (camA == 5)))) &&
             (objAnim->seqId == SB_PROPELLER_SEQ_ID))
         {
@@ -180,7 +180,7 @@ void SB_Propeller_update(GameObject* obj)
                 Sfx_PlayFromObject((int)obj, SB_PROPELLER_SFX_DESTROYED);
             }
         }
-        if (object->unkF4 == 0)
+        if (object->userData1 == 0)
         {
             ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumePriority = 6;
             ((ObjHitsPriorityState*)objAnim->hitReactState)->hitVolumeId = 1;

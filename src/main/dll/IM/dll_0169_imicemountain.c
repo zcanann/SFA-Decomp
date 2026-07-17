@@ -159,7 +159,7 @@ void imicemountain_updateEventState(int* obj)
             mainSetBits(GAMEBIT_IM_BikeRelated0E6A, 1);
             mainSetBits(GAMEBIT_IM_BikeRelated0E6B, 1);
         }
-        if (((GameObject*)obj)->unkF4 == 0)
+        if (((GameObject*)obj)->userData1 == 0)
         {
             getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
             getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
@@ -169,7 +169,7 @@ void imicemountain_updateEventState(int* obj)
             getLActionsVoid6(obj, obj, 0x17c, 0, 0, 0);
             getLActionsVoid6(obj, obj, 0x17b, 0, 0, 0);
             (*gCloudActionInterface)->func09Nop(1);
-            ((GameObject*)obj)->unkF4 = 1;
+            ((GameObject*)obj)->userData1 = 1;
         }
         break;
     case 4:
@@ -253,13 +253,13 @@ void IMIceMountain_hitDetect(void)
 void IMIceMountain_update(int* obj)
 {
     IMIceMountainState* extra = ((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF4 == 0)
+    if (((GameObject*)obj)->userData1 == 0)
     {
         getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_A, 0);
         getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_B, 0);
         getEnvfxActVoid(obj, obj, IMICEMOUNTAIN_ENVFX_D, 0);
         (*gCloudActionInterface)->func09Nop(1);
-        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->userData1 = 1;
     }
     switch (extra->mapEventState)
     {

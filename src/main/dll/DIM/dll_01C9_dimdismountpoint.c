@@ -70,9 +70,9 @@ void DIMDismountPoint_free(int obj) { ObjGroup_RemoveObject(obj, DIMDISMOUNT_GRO
 
 void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
-    if (visible == 0 || (obj)->unkF8 != 0)
+    if (visible == 0 || (obj)->userData2 != 0)
     {
-        if ((obj)->unkF8 != 0)
+        if ((obj)->userData2 != 0)
         {
             objRenderFn_80041018((GameObject*)obj);
         }
@@ -135,7 +135,7 @@ void DIMDismountPoint_init(u8* obj, u8* params)
     sub[2] = mathCosf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNZ */
     sub[3] = -(sub[0] * ((GameObject*)obj)->anim.localPosX + sub[1] * ((GameObject*)obj)->anim.localPosY + sub[2] * ((
         GameObject*)obj)->anim.localPosZ); /* planeD */
-    ((GameObject*)obj)->unkF8 = 1;
+    ((GameObject*)obj)->userData2 = 1;
 }
 
 void DIMDismountPoint_release(void)

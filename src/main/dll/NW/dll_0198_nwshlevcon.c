@@ -4,7 +4,7 @@
  *
  * Drives the area's intro: on init it unlocks the connecting level
  * (map 0x28), starts ambient music track 6 and arms its setup game
- * bits, then counts a one-frame delay (unkF4) before restoring the sky
+ * bits, then counts a one-frame delay (userData1) before restoring the sky
  * and environment fx. Its trigger sequence hands the player an item and
  * opens the next batch of object groups / map act. On free it stops the
  * music and clears its progress bit.
@@ -89,10 +89,10 @@ void nwsh_levcon_hitDetect(void)
 
 void nwsh_levcon_update(int* obj)
 {
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - 1;
-        if (((GameObject*)obj)->unkF4 == 0)
+        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - 1;
+        if (((GameObject*)obj)->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
             getEnvfxActInt(0, 0, NWSH_LEVCON_ENVFX_A, 0);
@@ -107,7 +107,7 @@ void nwsh_levcon_init(int* obj)
     ((GameObject*)obj)->animEventCallback = NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(MUSICTRIG_ewt_chase, 1);
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     mainSetBits(GAMEBIT_K6_Entered, 1);
     mainSetBits(GAMEBIT_SETPIECE_ACTIVE, 1);
 }

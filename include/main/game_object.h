@@ -18,7 +18,7 @@
  *    ObjSeqState / GroundBaddieState live here - see baddie_state.h)
  *  - 0xBC..0xC8 ptrs: anim.c/object.c/objseq.c list links + callbacks
  *  - 0xE4/0xE5/0xE6/0xEB: object.c bookkeeping bytes
- *  - 0xF4/0xF8 s32: anim.c/campfire.c flag words (*(int *) sites)
+ *  - 0xF4/0xF8 s32: userData1/userData2, generic per-instance scratch
  *  - 0xFC/0x100/0x104 f32: object.c
  * The record extends past 0x108; total size unverified - do not take
  * sizeof(GameObject) or index arrays of it.
@@ -65,8 +65,18 @@ typedef struct GameObject
     u8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
     u8 fadeCounter;    /* obj+0xF0 ++ toward the fade limit each tick */
     u8 unkF1[3];
-    s32 unkF4;
-    s32 unkF8;
+    s32 userData1; /* obj+0xF4/0xF8: two generic per-instance scratch words. No
+        engine file reads or writes them - every access is in an object-class
+        file, and each class picks its own role and width: countdown timer
+        (iceball/kaldachompspit/mmshwaterspike, -= timeDelta), one-shot latch
+        (worldplanet/suntemple/collectible), gamebit bool (enemy/lightfoot),
+        object handle (worldobj ObjList_FindObjectByIdLegacy), status enum
+        (linklevcontrol LEVCON_SAVE_STATUS_*), f32 via launder
+        (drakorhoverpad), s16 half-word (dll_0127), packed event ids
+        (mmshwaterspike). Declared s32 = the widest common access; classes
+        needing another type launder through a cast. Deliberately NOT given a
+        role name - the role belongs to the class, not the engine. */
+    s32 userData2;
     f32 externalVelX; /* obj+0xFC..0x104: velocity imparted externally
         (carrier object's velocity / move-data velocity), added to
         anim.velocity in the localPos integration */
@@ -120,7 +130,7 @@ STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, colorFadeRed) == 0xEC);
 STATIC_ASSERT(offsetof(GameObject, colorFadeGreen) == 0xED);
 STATIC_ASSERT(offsetof(GameObject, colorFadeBlue) == 0xEE);
-STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
+STATIC_ASSERT(offsetof(GameObject, userData1) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
 #endif

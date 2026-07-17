@@ -101,7 +101,7 @@ void BaddieInterestP_update(int* obj)
                     if (vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX,
                                               &((GameObject*)other)->anim.worldPosX) < 1600.0f)
                     {
-                        if (((GameObject*)obj)->unkF4 == 0)
+                        if (((GameObject*)obj)->userData1 == 0)
                         {
                             if ((int)randomGetRange(1, 100) <= ((BaddieinterestpPlacement*)params)->prob)
                             {
@@ -184,7 +184,7 @@ void BaddieInterestP_update(int* obj)
                                     break;
                                 }
                             }
-                            ((GameObject*)obj)->unkF4 = 1;
+                            ((GameObject*)obj)->userData1 = 1;
                         }
                         found = 1;
                     }
@@ -193,7 +193,7 @@ void BaddieInterestP_update(int* obj)
             }
             if (found == 0)
             {
-                ((GameObject*)obj)->unkF4 = 0;
+                ((GameObject*)obj)->userData1 = 0;
             }
         }
     }

@@ -159,13 +159,13 @@ void dimlavasmash_update(int* obj)
         hitState = (ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState;
         hitState->flags &= ~1;
     }
-    else if (((GameObject*)obj)->unkF4 == 0)
+    else if (((GameObject*)obj)->userData1 == 0)
     {
         if ((s8)state[0] != -1)
         {
             (*gObjectTriggerInterface)->runSequence((s8)state[0], obj, -1);
         }
-        ((GameObject*)obj)->unkF4 = 1;
+        ((GameObject*)obj)->userData1 = 1;
     }
 }
 

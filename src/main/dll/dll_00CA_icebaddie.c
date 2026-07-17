@@ -1416,7 +1416,7 @@ void iceBaddie_render(GameObject* obj, int fwdArg2, int fwdArg3, int fwdArg4, in
     GroundBaddieState* state = (obj)->extra;
     f32 zero = 0.0f;
 
-    if (visible == 0 || (obj)->unkF4 != 0 || state->targetState == 0)
+    if (visible == 0 || (obj)->userData1 != 0 || state->targetState == 0)
     {
         return;
     }
@@ -1451,7 +1451,7 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
 
     sub = (obj)->extra;
     setup = *(int*)&(obj)->anim.placementData;
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
             (*gMapEventInterface)->shouldNotSaveTime(((ObjPlacement*)setup)->mapId) != 0)
@@ -1466,13 +1466,13 @@ void iceBaddie_update(GameObject* obj, int unusedA, int unusedB)
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
     }
-    else if ((obj)->unkF8 == 0)
+    else if ((obj)->userData2 == 0)
     {
         (obj)->anim.localPosX = ((ObjPlacement*)setup)->posX;
         (obj)->anim.localPosY = ((ObjPlacement*)setup)->posY;
         (obj)->anim.localPosZ = ((ObjPlacement*)setup)->posZ;
         (*gObjectTriggerInterface)->runSequence(*(s8*)(setup + 0x2e), (void*)obj, -1);
-        (obj)->unkF8 = 1;
+        (obj)->userData2 = 1;
     }
     else
     {

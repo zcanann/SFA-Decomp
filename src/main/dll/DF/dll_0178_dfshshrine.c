@@ -362,10 +362,10 @@ void DFSH_Shrine_update(int objArg)
     base[0] = gDfShShrineRewardTable;
     state = obj->extra;
     player = (int)Obj_GetPlayerObject();
-    if (obj->unkF4 != 0)
+    if (obj->userData1 != 0)
     {
-        obj->unkF4 = obj->unkF4 - 1;
-        if (obj->unkF4 == 0)
+        obj->userData1 = obj->userData1 - 1;
+        if (obj->userData1 == 0)
         {
             skyFn_80088c94(7, 1);
             getEnvfxActInt((int)obj, player, DFSH_SHRINE_ENVFX_A, 0);
@@ -567,7 +567,7 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     {
         state->light = objCreateLight(NULL, 1);
     }
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     mainSetBits(GAMEBIT_MMP_EnteredKrazoaShrine, 1);
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }

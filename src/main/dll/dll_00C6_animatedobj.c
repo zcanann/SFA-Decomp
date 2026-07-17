@@ -306,12 +306,12 @@ void animatedobj_init(int* obj, int* params)
     ((AnimatedobjState*)state)->unk116 = 0;
     ((AnimatedobjState*)state)->unk114 = 0;
     ((AnimatedobjState*)state)->unkE8 = 0;
-    f4 = ((GameObject*)obj)->unkF4;
+    f4 = ((GameObject*)obj)->userData1;
     if (f4 == 0 && ((AnimatedobjPlacement*)params)->loadKey != 1)
     {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
+        ((GameObject*)obj)->userData1 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
     else if (f4 != 0 && ((AnimatedobjPlacement*)params)->loadKey != f4 - 1)
     {
@@ -321,7 +321,7 @@ void animatedobj_init(int* obj, int* params)
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8*)state, (u8*)params);
         }
-        ((GameObject*)obj)->unkF4 = ((AnimatedobjPlacement*)params)->loadKey + 1;
+        ((GameObject*)obj)->userData1 = ((AnimatedobjPlacement*)params)->loadKey + 1;
     }
     {
         ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;

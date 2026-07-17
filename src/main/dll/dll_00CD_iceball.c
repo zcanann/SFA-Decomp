@@ -1,7 +1,7 @@
 /*
  * iceball (DLL 0x00CD) - the ChukChuk ice-spitter's projectile.
  *
- * IceBall_update integrates the iceball each frame: an unkF4 lifetime timer,
+ * IceBall_update integrates the iceball each frame: an userData1 lifetime timer,
  * primed to 0xb4 (180 frames), counts down by timeDelta (freeing the object at
  * <0), gravity (0.07f) and drag (0.97f) are applied to the Y
  * velocity, the model is spun (rotX/rotY/rotZ += 910), and it is moved + given
@@ -177,8 +177,8 @@ void IceBall_update(u16* obj, int unused)
     int objInt;
 
     objInt = (int)obj;
-    ((GameObject*)objInt)->unkF4 = (s32)((f32)((GameObject*)objInt)->unkF4 - timeDelta);
-    if (((GameObject*)objInt)->unkF4 < 0)
+    ((GameObject*)objInt)->userData1 = (s32)((f32)((GameObject*)objInt)->userData1 - timeDelta);
+    if (((GameObject*)objInt)->userData1 < 0)
     {
         Obj_FreeObject((GameObject*)objInt);
         return;
@@ -205,21 +205,21 @@ void IceBall_update(u16* obj, int unused)
     {
         fn_8015FCCC((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
-        ((GameObject*)objInt)->unkF4 = 120;
+        ((GameObject*)objInt)->userData1 = 120;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
     else if ((*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->contactFlags != 0)
     {
         fn_8015FBEC((GameObject*)(objInt));
         ((GameObject*)objInt)->anim.alpha = 0;
-        ((GameObject*)objInt)->unkF4 = 120;
+        ((GameObject*)objInt)->userData1 = 120;
         (*(ObjHitsPriorityState**)&((GameObject*)objInt)->anim.hitReactState)->flags &= ~1;
     }
 }
 
 void IceBall_init(GameObject* obj)
 {
-    obj->unkF4 = 0xb4;
+    obj->userData1 = 0xb4;
     ObjHits_DisableObject((int)obj);
     obj->anim.alpha = 0xff;
 }

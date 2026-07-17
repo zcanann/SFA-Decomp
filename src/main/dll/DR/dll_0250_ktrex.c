@@ -135,13 +135,13 @@ int ktrex_animEventCallback(GameObject* obj, int unused, ObjAnimUpdateState* ani
         }
     }
     ktrex_updateAttackEffects(obj);
-    if ((obj)->unkF8 == 0)
+    if ((obj)->userData2 == 0)
     {
-        (obj)->unkF8 = 1;
+        (obj)->userData2 = 1;
     }
-    else if ((obj)->unkF8 == 3)
+    else if ((obj)->userData2 == 3)
     {
-        (obj)->unkF8 = 4;
+        (obj)->userData2 = 4;
     }
     return 0;
 }
@@ -453,7 +453,7 @@ void ktrex_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible)
     {
         return;
     }
-    switch ((obj)->unkF4)
+    switch ((obj)->userData1)
     {
     case 0:
         break;
@@ -517,16 +517,16 @@ void ktrex_update(int obj)
     int phase;
     f32 dx, dz, frac;
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         return;
     }
     gKTRexRuntime = ((GameObject*)obj)->extra;
     runtime = gKTRexRuntime;
-    if (((GameObject*)obj)->unkF8 == 1)
+    if (((GameObject*)obj)->userData2 == 1)
     {
         Music_Trigger(MUSICTRIG_mammoth_walk, 1);
-        ((GameObject*)obj)->unkF8 = 2;
+        ((GameObject*)obj)->userData2 = 2;
         runtime->unk270 = 11;
         runtime->moveJustStartedB = 1;
     }
@@ -932,7 +932,7 @@ void ktrex_init(GameObject* obj, char* arg, int flag)
     gKTRexState->phaseCountdown = 4;
     rt->hitCountdown = 3;
     gKTRexResource = Resource_Acquire(0x5a, 1);
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
     gKTRexMapBlock = mapBlockFn_800592e4();
     gKTRexState->light = objCreateLight(0, 1);
     if (gKTRexState->light != 0)
@@ -1745,10 +1745,10 @@ int ktrex_stateHandlerA01(GameObject* obj, KTRexRuntime* runtime)
         gKTRexState->stateTimer -= timeDelta;
         if (gKTRexState->stateTimer <= lbl_803E67F0)
         {
-            if (obj->unkF8 != 3)
+            if (obj->userData2 != 3)
             {
                 (*gScreenTransitionInterface)->start(30, 1);
-                obj->unkF8 = 3;
+                obj->userData2 = 3;
             }
         }
         if (gKTRexState->stateTimer <= lbl_803E67B8)

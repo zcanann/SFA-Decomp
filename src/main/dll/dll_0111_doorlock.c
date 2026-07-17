@@ -3,7 +3,7 @@
  *
  * A lockable door/gate placed from a DoorLockPlacement. Its
  * lock state mirrors a per-instance game bit (DoorLockPlacement::lockGameBit):
- * when set, the door is hidden (alpha 0) or its hittable flag (unkF8) cleared,
+ * when set, the door is hidden (alpha 0) or its hittable flag (userData2) cleared,
  * depending on the placement mode flags at def+0x1B / modeFlags.
  *
  * Lock_DoorLock_update polls trigger conditions (ObjTrigger_IsSet[ById] against the
@@ -66,7 +66,7 @@ int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpd
         }
         animUpdate->triggerCommand = 0;
     }
-    obj->unkF8 = 0;
+    obj->userData2 = 0;
     return 0;
 }
 
@@ -84,12 +84,12 @@ void Lock_DoorLock_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0)
     {
-        if (((GameObject*)obj)->unkF8 == 0)
+        if (((GameObject*)obj)->userData2 == 0)
         {
             goto render_basic;
         }
     }
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         return;
     }
@@ -131,11 +131,11 @@ void Lock_DoorLock_update(GameObject* obj)
         {
             if (state->unlocked != 0)
             {
-                (obj)->unkF8 = 0;
+                (obj)->userData2 = 0;
             }
             else
             {
-                (obj)->unkF8 = 1;
+                (obj)->userData2 = 1;
             }
         }
         if (state->unlocked == 0)
@@ -176,14 +176,14 @@ void Lock_DoorLock_update(GameObject* obj)
                 else
                 {
                     state->unlocked = 1;
-                    (obj)->unkF4 = 1;
+                    (obj)->userData1 = 1;
                 }
                 buttonDisable(0, PAD_BUTTON_A);
             }
         }
         else
         {
-            if ((obj)->unkF4 == 0)
+            if ((obj)->userData1 == 0)
             {
                 if ((((DoorlockPlacement*)def)->unlockSequenceId != -1) &&
                     (((DoorlockPlacement*)def)->queuedSequenceId != 0))
@@ -206,7 +206,7 @@ void Lock_DoorLock_update(GameObject* obj)
                     (*gObjectTriggerInterface)
                         ->runSequence((int)((DoorlockPlacement*)def)->unlockSequenceId, (void*)obj, seqFlags);
                 }
-                (obj)->unkF4 = 1;
+                (obj)->userData1 = 1;
             }
             *(u8*)&(obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
         }
@@ -247,11 +247,11 @@ void Lock_DoorLock_init(short* obj, DoorLockPlacement* config)
     {
         if (state->unlocked != 0)
         {
-            ((GameObject*)obj)->unkF8 = 0;
+            ((GameObject*)obj)->userData2 = 0;
         }
         else
         {
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
         }
     }
 }

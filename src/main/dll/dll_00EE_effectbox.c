@@ -87,7 +87,7 @@ void EffectBox_update(GameObject* obj)
     int gb;
 
     def = *(int*)&obj->anim.placementData;
-    gb = obj->unkF8;
+    gb = obj->userData2;
     if ((gb <= -1) || (((EffectboxPlacement*)def)->gameBitValue != mainGetBit(gb)))
     {
         cosY = mathCosf((EFFECTBOX_PI * (f32) - (((EffectboxPlacement*)def)->rotYaw << 8)) / EFFECTBOX_ANGLE_SCALE);
@@ -171,19 +171,19 @@ void EffectBox_init(GameObject* obj, EffectboxPlacement* def)
 {
     s16 gameBit;
     u32 flags;
-    if ((obj)->unkF4 == 0)
+    if ((obj)->userData1 == 0)
     {
         fn_8002B860((int)obj);
     }
-    (obj)->unkF4 = 1;
+    (obj)->userData1 = 1;
     gameBit = def->gameBitIndex;
     if (gameBit > -1)
     {
-        (obj)->unkF8 = gameBit;
+        (obj)->userData2 = gameBit;
     }
     else
     {
-        (obj)->unkF8 = -1;
+        (obj)->userData2 = -1;
     }
     flags = (u32)(obj)->objectFlags | (EFFECTBOX_OBJFLAG_HIDDEN | EFFECTBOX_OBJFLAG_HITDETECT_DISABLED);
     (obj)->objectFlags = flags;

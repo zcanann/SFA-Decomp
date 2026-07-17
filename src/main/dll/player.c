@@ -8885,7 +8885,7 @@ void fn_802A4B4C(GameObject* obj)
     void* p = *(void**)((char*)inner + 0x7f8);
     if (p != NULL)
     {
-        ((GameObject*)p)->unkF8 = 1;
+        ((GameObject*)p)->userData2 = 1;
     }
     *(u32*)&((PlayerState*)inner)->flags360 |= PLAYER_FLAG_TELEPORTED;
 }
@@ -8986,7 +8986,7 @@ int playerState05(GameObject* obj, int state)
             f32 amt;
             if (obj->anim.currentMoveProgress > lbl_803E7E98)
             {
-                ((GameObject*)sub)->unkF8 = 1;
+                ((GameObject*)sub)->userData2 = 1;
             }
             amt = interpolate((f32)inner->targetObjectBearing, lbl_803E805C, timeDelta);
             inner->targetYaw = (f32)inner->targetYaw + amt;
@@ -16389,7 +16389,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                     (**(void (**)(int))((char*)(*gPlayerInterface) + 0x10))(obj2);
                     *(int*)&((PlayerState*)inner)->baddie.unk31C = 0;
                     *(int*)&((PlayerState*)inner)->baddie.unk318 = 0;
-                    ((GameObject*)obj)->unkF4 = 0;
+                    ((GameObject*)obj)->userData1 = 0;
                     ((PlayerState*)inner)->baddie.cameraYaw = 0;
                     ((PlayerState*)inner)->baddie.physicsActive = 1;
                     *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
@@ -16413,7 +16413,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 (**(void (**)(int))((char*)(*gPlayerInterface) + 0x10))(obj2);
                 *(int*)&((PlayerState*)inner)->baddie.unk31C = 0;
                 *(int*)&((PlayerState*)inner)->baddie.unk318 = 0;
-                ((GameObject*)obj)->unkF4 = 0;
+                ((GameObject*)obj)->userData1 = 0;
                 ((PlayerState*)inner)->baddie.cameraYaw = 0;
                 ((PlayerState*)inner)->baddie.physicsActive = 1;
                 *(u32*)((char*)inner + 4) = *(u32*)((char*)inner + 4) & ~0x100000;
@@ -16647,7 +16647,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 sp3 = spd * -mathCosf(gPlayerPi * (f32) * (s16*)(obj2 + 0x478) / 32768.0f);
                 (*gObjectTriggerInterface)
                     ->setOverridePos(spd * -mathSinf(gPlayerPi * (f32) * (s16*)(obj2 + 0x478) / 32768.0f), dy2, sp3);
-                (*gObjectTriggerInterface)->runSequence(((GameObject*)obj)->unkF4, (void*)obj, -1);
+                (*gObjectTriggerInterface)->runSequence(((GameObject*)obj)->userData1, (void*)obj, -1);
                 break;
             }
             case 0xf:
@@ -18440,7 +18440,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
     {
         fn_8003B0D0(obj, target, (CharacterEyeAnimState*)actor->eyeAnimState, 0x19);
     }
-    if (obj->unkF8 == 0)
+    if (obj->userData2 == 0)
     {
         challenge->previousPhase2 = challenge->previousPhase;
         challenge->previousPhase = challenge->phase;
@@ -18451,7 +18451,7 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
         int meterPosition =
             (s16)(lbl_803E81B0 * mathSinf(gPlayerPi2 * (f32)challenge->phase / lbl_803E81B8));
         int successRange = (int)(lbl_803E81B0 * controls->scales[challenge->difficulty]);
-        if (obj->unkF8 == 0)
+        if (obj->userData2 == 0)
         {
             if ((s16)challenge->phase * (s16)challenge->previousPhase < 0)
             {
@@ -18460,18 +18460,18 @@ int Lightfoot_UpdateButtonTimingChallenge(GameObject* obj, int state, f32 fv)
         }
         setAButtonIcon(6);
         fearTestMeterSetRange(0x60, (u8)successRange, meterPosition);
-        if ((getButtonsJustPressed(0) & 0x100) && obj->unkF8 == 0)
+        if ((getButtonsJustPressed(0) & 0x100) && obj->userData2 == 0)
         {
             int distanceFromCenter = meterPosition < 0 ? -meterPosition : meterPosition;
             if (distanceFromCenter <= successRange)
             {
                 Sfx_PlayFromObject(0, SFXTRIG_menuups16k);
-                obj->unkF8 = 2;
+                obj->userData2 = 2;
             }
             else
             {
                 Sfx_PlayFromObject(0, SFXTRIG_lowoxy_beep);
-                obj->unkF8 = 3;
+                obj->userData2 = 3;
             }
             fn_8011F6D4(0);
         }
@@ -18728,16 +18728,16 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     (*(void (*)(int, int, int, void*, void*, void*))(*(int*)(*gBaddieControlInterface + 0x14)))(
         obj, (int)Obj_GetPlayerObject(), 0x10, (char*)p + 0x1e, (char*)p + 0x20, (char*)p + 0x22);
     ((PlayerState*)state)->baddie.targetDistance = (f32)(u32) * (u16*)((int)p + 0x22);
-    mode = ((GameObject*)obj)->unkF8;
+    mode = ((GameObject*)obj)->userData2;
     if (mode == 2)
     {
         (*gObjectTriggerInterface)->runSequence(0, (void*)obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
+        ((GameObject*)obj)->userData2 = 1;
     }
     else if (mode == 3)
     {
         (*gObjectTriggerInterface)->runSequence(1, (void*)obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
+        ((GameObject*)obj)->userData2 = 1;
     }
     else
     {

@@ -5,7 +5,7 @@
  * (state[0]) from the placement data, update spins it on rotX/rotZ each
  * frame scaled by timeDelta, fades alpha out over the final stretch, and
  * frees itself once the counter runs out; render draws the model while
- * obj->unkF4 == 0.
+ * obj->userData1 == 0.
  */
 #include "main/dll/dll_00DD_gcbaddieshield_api.h"
 #include "main/game_object.h"
@@ -31,7 +31,7 @@ void GCbaddieShield_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (((GameObject*)obj)->userData1)
         {
         case 0:
             objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);

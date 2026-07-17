@@ -80,8 +80,8 @@ STATIC_ASSERT(offsetof(WCPushBlockObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(WCPushBlockObject, velocityX) == offsetof(ObjAnimComponent, velocityX));
 STATIC_ASSERT(offsetof(WCPushBlockObject, currentMove) == offsetof(ObjAnimComponent, currentMove));
 STATIC_ASSERT(offsetof(WCPushBlockObject, linkedObject) == offsetof(ObjAnimComponent, targetObj));
-STATIC_ASSERT(offsetof(WCPushBlockObject, actionState) == offsetof(GameObject, unkF4));
-STATIC_ASSERT(offsetof(WCPushBlockObject, spawnPath) == offsetof(GameObject, unkF8));
+STATIC_ASSERT(offsetof(WCPushBlockObject, actionState) == offsetof(GameObject, userData1));
+STATIC_ASSERT(offsetof(WCPushBlockObject, spawnPath) == offsetof(GameObject, userData2));
 
 typedef struct WCPushBlockState
 {

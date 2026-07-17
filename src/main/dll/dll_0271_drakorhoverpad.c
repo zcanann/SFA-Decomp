@@ -460,7 +460,7 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
             lbl_803E6A38 *
             ((f32)(u32)AMP_NODE->tangentMag *
              mathSinf(gDrakorHoverpadPi * (f32)(int)(AMP_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->unkF8 = CM_NODE->z;
+        *(f32*)&((GameObject*)p)->userData2 = CM_NODE->z;
         ((GameObject*)p)->externalVelX = AMP_NODE->z;
         ((GameObject*)p)->externalVelY =
             lbl_803E6A38 *
@@ -493,7 +493,7 @@ int drakorhoverpad_update(RomCurveWalker* curve, int maxIndex)
             lbl_803E6A38 *
             ((f32)(u32)TGT_NODE->tangentMag *
              mathSinf(gDrakorHoverpadPi * (f32)(int)(TGT_NODE->tangentPitch << 8) / gDrakorHoverpadAngleScale));
-        *(f32*)&((GameObject*)p)->unkF8 = CM_NODE->z;
+        *(f32*)&((GameObject*)p)->userData2 = CM_NODE->z;
         ((GameObject*)p)->externalVelX = TGT_NODE->z;
         ((GameObject*)p)->externalVelY =
             lbl_803E6A38 *

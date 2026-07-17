@@ -486,8 +486,8 @@ void CFCrate_init(GameObject* obj, int aux)
         (obj)->anim.rotY = 0;
         (obj)->anim.rotZ = 0;
         (obj)->anim.rootMotionScale = zeroF;
-        (obj)->unkF4 = 0;
-        (obj)->unkF8 = 0;
+        (obj)->userData1 = 0;
+        (obj)->userData2 = 0;
         state->oscVelB = lbl_803E3E40;
         state->oscVelA = 0.5f;
         state->unk32 = 0;

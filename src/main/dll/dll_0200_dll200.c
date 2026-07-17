@@ -198,7 +198,7 @@ void dll_200_init(int* obj, int* arg)
 {
     Dll200State* state;
     Dll200Placement* def = (Dll200Placement*)arg;
-    ((GameObject*)obj)->unkF4 = 0;
+    ((GameObject*)obj)->userData1 = 0;
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def->rotXByte << 8);
     ((GameObject*)obj)->animEventCallback = dll_200_SeqFn;
     state = ((GameObject*)obj)->extra;

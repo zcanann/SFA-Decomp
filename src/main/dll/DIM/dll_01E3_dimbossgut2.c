@@ -194,7 +194,7 @@ void DIM_BossGut2_update(GameObject* obj)
     } stk;
 
     state = obj->extra;
-    if (((obj)->unkF4 == 0) &&
+    if (((obj)->userData1 == 0) &&
         (((obj)->anim.parent != NULL ||
           (result = objPosToMapBlockIdx((obj)->anim.localPosX, (obj)->anim.localPosY, (obj)->anim.localPosZ),
            result >= 0))))

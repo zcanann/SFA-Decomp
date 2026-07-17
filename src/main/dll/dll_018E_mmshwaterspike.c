@@ -1,7 +1,7 @@
 /*
  * mmshwaterspike (DLL 0x18E) - rising water-spike hazard in Mushroom Mountain
  * (mmsh). Each instance tracks an XYZ-animator object by packed ID (stored at
- * unkF8) to read its current height; if the animator is missing it falls back to
+ * userData2) to read its current height; if the animator is missing it falls back to
  * hit-detect against nearby water surfaces. The spike rises toward a placement-
  * defined ceiling (maxHeight) and spawns a waterfx ripple when it surfaces.
  */
@@ -60,7 +60,7 @@ void mmsh_waterspike_update(int obj)
 
     placement = *(int*)&((GameObject*)obj)->anim.placementData;
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, MMSHWATERSPIKE_HIT_VOLUME_SLOT, 1, 0);
-    animObj = ObjList_FindObjectById(((GameObject*)obj)->unkF8);
+    animObj = ObjList_FindObjectById(((GameObject*)obj)->userData2);
     if (animObj != NULL)
     {
         riseDelta = objFn_801948c0(animObj, 3) - ((GameObject*)obj)->anim.localPosY;
@@ -98,10 +98,10 @@ void mmsh_waterspike_update(int obj)
     else
     {
         ((GameObject*)obj)->anim.localPosY = newY;
-        ((GameObject*)obj)->unkF4 = ((GameObject*)obj)->unkF4 - framesThisStep;
-        if (((GameObject*)obj)->unkF4 <= 0)
+        ((GameObject*)obj)->userData1 = ((GameObject*)obj)->userData1 - framesThisStep;
+        if (((GameObject*)obj)->userData1 <= 0)
         {
-            ((GameObject*)obj)->unkF4 = randomGetRange(0x3c, 0xf0);
+            ((GameObject*)obj)->userData1 = randomGetRange(0x3c, 0xf0);
             if (riseDelta == 0.0f)
             {
                 (*gWaterfxInterface)->spawnRipple(
@@ -118,11 +118,11 @@ void mmsh_waterspike_init(GameObject* obj, s16* def)
     register u32 packedEventIds;
     register u32 lowEventId;
     ObjHits_EnableObject((int)obj);
-    (obj)->unkF4 = 0;
+    (obj)->userData1 = 0;
     packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdHigh << 16;
     lowEventId = (u32)(u16)((MmshWaterspikeObjectDef*)def)->xyzAnimIdLow;
     packedEventIds |= lowEventId;
-    *(u32*)&(obj)->unkF8 = packedEventIds;
+    *(u32*)&(obj)->userData2 = packedEventIds;
 }
 
 void mmsh_waterspike_release(void)

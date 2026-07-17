@@ -6,7 +6,7 @@
  * on burst, fast spin), the default is the green poison spit (green glow,
  * particle fx 0x714/0x715, sfx 0x278 on init / 0x279 on burst). It bursts
  * early when its hit-react target is the player or Tricky, on any contact,
- * or once its unkF4 lifetime runs out, then frees itself.
+ * or once its userData1 lifetime runs out, then frees itself.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_channel_volume_api.h"
@@ -56,7 +56,7 @@ void kaldachompspit_burst(GameObject* obj)
 
     state = (obj)->extra;
     (obj)->anim.alpha = 0;
-    (obj)->unkF4 = 0xdc;
+    (obj)->userData1 = 0xdc;
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
     hitState->flags &= ~1;
     if (state->light != NULL)
@@ -130,15 +130,15 @@ void KaldaChompSpit_update(int obj)
 
     objAnim = &((GameObject*)obj)->anim;
     state = ((GameObject*)obj)->extra;
-    ((GameObject*)obj)->unkF4 = (int)((f32)((GameObject*)obj)->unkF4 - timeDelta);
-    if (((GameObject*)obj)->unkF4 < 0)
+    ((GameObject*)obj)->userData1 = (int)((f32)((GameObject*)obj)->userData1 - timeDelta);
+    if (((GameObject*)obj)->userData1 < 0)
     {
         Sfx_StopObjectChannel(obj, 0x7f);
         Obj_FreeObject((GameObject*)obj);
     }
     else if (objAnim->alpha != 0)
     {
-        if (((GameObject*)obj)->unkF4 < 0x11b)
+        if (((GameObject*)obj)->userData1 < 0x11b)
         {
             ((GameObject*)obj)->anim.velocityY = -(0.07f * timeDelta - ((GameObject*)obj)->anim.velocityY);
             if ((f32)(u32)objAnim->alpha - (alphaDecay = 4.0f * timeDelta) > 0.0f)
@@ -171,7 +171,7 @@ void KaldaChompSpit_update(int obj)
         ObjHits_EnableObject((u32)obj);
         if (((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->lastHitObject != 0)
         {
-            if (((GameObject*)obj)->unkF4 < 0x17c)
+            if (((GameObject*)obj)->userData1 < 0x17c)
             {
                 kaldachompspit_burst((GameObject*)(obj));
                 return;
@@ -229,7 +229,7 @@ void KaldaChompSpit_init(GameObject* obj)
     KaldaChompSpitState* state;
 
     state = obj->extra;
-    (obj)->unkF4 = 400;
+    (obj)->userData1 = 400;
     ObjHits_DisableObject((u32)obj);
     (obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject((int)obj, SFXTRIG_whiz3_c);

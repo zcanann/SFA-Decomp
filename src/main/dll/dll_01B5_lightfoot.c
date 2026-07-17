@@ -105,7 +105,7 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)p1)->unkF4)
+        switch (((GameObject*)p1)->userData1)
         {
         case 0:
             objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8188);
@@ -181,11 +181,11 @@ void lightfoot_update(GameObject* obj)
         case 0x49941:
             if (mainGetBit(0xc44))
             {
-                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->userData1 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                (obj)->unkF4 = 1;
+                (obj)->userData1 = 1;
             }
             break;
         case 0x499AC:
@@ -216,11 +216,11 @@ void lightfoot_update(GameObject* obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->userData1 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                (obj)->unkF4 = 1;
+                (obj)->userData1 = 1;
             }
             break;
         case 0x499B0:
@@ -251,19 +251,19 @@ void lightfoot_update(GameObject* obj)
                         Sfx_PlayFromObject(0, SFXTRIG_sc_menuups16k_409);
                     }
                 }
-                (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
+                (obj)->userData1 = mainGetBit(((GroundBaddieState*)inner)->gameBitA);
             }
             else
             {
-                (obj)->unkF4 = 1;
+                (obj)->userData1 = 1;
             }
             break;
         default:
-            (obj)->unkF4 = mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0;
+            (obj)->userData1 = mainGetBit(((GroundBaddieState*)inner)->gameBitA) == 0;
             break;
         }
 
-        if ((obj)->unkF4 != 0)
+        if ((obj)->userData1 != 0)
         {
             ObjHits_DisableObject((u32)obj);
             (obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -275,7 +275,7 @@ void lightfoot_update(GameObject* obj)
         }
     }
 
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         if ((((ObjPlacement*)p30)->mapId == 0x499B5 && mainGetBit(0xc42) &&
              (mainGetBit(0xc3b) == 0 || mainGetBit(0xc3c) == 0 || mainGetBit(0xc3d) == 0)) ||
@@ -297,7 +297,7 @@ void lightfoot_update(GameObject* obj)
         {
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             Lightfoot_ResetScriptedPosition(obj);
-            (obj)->unkF8 = 0;
+            (obj)->userData2 = 0;
             ((GroundBaddieState*)inner)->flags400 &= ~0x2;
         }
         Lightfoot_UpdatePlayerInteraction((int)obj, inner, inner);
@@ -357,7 +357,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         ((LightfootSub*)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub*)sub)->unk4 = (int)&lbl_803DC6F4;
         *(u8*)&(obj)->anim.resetHitboxMode = (u8)(*(u8*)&(obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
-        (obj)->unkF8 = 0;
+        (obj)->userData2 = 0;
     }
     else
     {
@@ -443,7 +443,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
             break;
         case 0x499b5:
         case 0x499b6:
-            (obj)->unkF4 = 1;
+            (obj)->userData1 = 1;
             ((LightfootSub*)sub)->unk0 = (int)(base + 0x30);
             ((LightfootSub*)sub)->unk4 = (int)(base + 0x40);
             break;
@@ -457,7 +457,7 @@ void lightfoot_init(GameObject* obj, int def, int flag)
     ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C, (ObjAnimComponent*)obj);
     ((LightfootSub*)sub)->unk2A = (u16)(randomGetRange(0, 1) != 0 ? 0x133 : 0x134);
     ((LightfootSub*)sub)->animTimer = lbl_803E81C0;
-    if ((obj)->unkF4 != 0)
+    if ((obj)->userData1 != 0)
     {
         ObjHits_DisableObject((u32)obj);
     }

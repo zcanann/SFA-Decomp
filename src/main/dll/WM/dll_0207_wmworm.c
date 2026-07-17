@@ -12,7 +12,7 @@
  * placement) the worm drifts toward the player at 1% of the offset per
  * time unit and spins; once per approach it emits a burst of
  * state->burstCount particle effects, then cools down for that many
- * frames in obj->unkF4 before it may fire again. Out of range it snaps
+ * frames in obj->userData1 before it may fire again. Out of range it snaps
  * back to its recorded home position.
  */
 #include "main/dll/partfx_interface.h"
@@ -96,7 +96,7 @@ void WM_Worm_update(GameObject* obj)
                 obj->anim.localPosZ = dz * timeDelta + obj->anim.localPosZ;
             }
             burstCount = state->burstCount;
-            if (burstCount >= 0 || (burstCount < 0 && obj->unkF4 <= 0))
+            if (burstCount >= 0 || (burstCount < 0 && obj->userData1 <= 0))
             {
                 if (burstCount == 0)
                 {
@@ -116,11 +116,11 @@ void WM_Worm_update(GameObject* obj)
                 }
                 /* cooldown: burstCount frames before the next burst
                    (negated; the guard above re-fires at <= 0) */
-                obj->unkF4 = -state->burstCount;
+                obj->userData1 = -state->burstCount;
             }
-            else if (burstCount < 0 && obj->unkF4 > 0)
+            else if (burstCount < 0 && obj->userData1 > 0)
             {
-                obj->unkF4 -= framesThisStep;
+                obj->userData1 -= framesThisStep;
             }
         }
     }
@@ -140,11 +140,11 @@ void WM_Worm_init(GameObject* obj, WmWormSetup* setup)
     state->unk0C = 0;
     if (state->burstCount < 1)
     {
-        obj->unkF4 = state->burstCount;
+        obj->userData1 = state->burstCount;
     }
     else
     {
-        obj->unkF4 = 0;
+        obj->userData1 = 0;
     }
     state->homeX = obj->anim.localPosX;
     state->homeY = obj->anim.localPosY;

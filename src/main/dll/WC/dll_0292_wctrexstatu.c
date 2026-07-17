@@ -6,7 +6,7 @@
  * from a save), it is nudged up by a fixed height. Once triggered - either
  * because its raisedBit game bit is already set at init, or via anim event
  * WCTREXSTATU_CALLBACK_TRIGGER - it swaps to the triggered texture and sets
- * unkF4, after which hitDetect periodically emits a dust particle effect.
+ * userData1, after which hitDetect periodically emits a dust particle effect.
  * getObjectTypeId picks the render model from the placement's modelIndex.
  */
 #include "main/dll/partfx_interface.h"
@@ -48,7 +48,7 @@ int wctrexstatu_interactCallback(GameObject* obj, int unused, ObjAnimUpdateState
             {
                 texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
-            obj->unkF4 = 1;
+            obj->userData1 = 1;
         }
     }
 
@@ -91,7 +91,7 @@ void wctrexstatu_hitDetect(GameObject* obj)
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
     GameObject* gameObj = (GameObject*)obj;
 
-    if (gameObj->unkF4 != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0)
+    if (gameObj->userData1 != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0)
     {
         if (objAnim->bankIndex == 0)
         {
@@ -139,7 +139,7 @@ void wctrexstatu_init(GameObject* obj, WCTrexStatueSetup* setup, int fromLoad)
         {
             texture->textureId = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
-        obj->unkF4 = 1;
+        obj->userData1 = 1;
     }
 }
 

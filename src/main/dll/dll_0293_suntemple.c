@@ -226,7 +226,7 @@ void suntemple_update(GameObject* obj)
                 else
                 {
                     state->activationLatched = 1;
-                    gameObj->unkF4 = 1; /* latches "post-activate"; gates the preempt path below */
+                    gameObj->userData1 = 1; /* latches "post-activate"; gates the preempt path below */
                 }
                 buttonDisable(0, SUNTEMPLE_BUTTON_DISABLE_MASK);
             }
@@ -234,7 +234,7 @@ void suntemple_update(GameObject* obj)
     }
     else
     {
-        if (gameObj->unkF4 == 0 && cfg->triggerSlot != -1 && cfg->preemptSequenceId != 0)
+        if (gameObj->userData1 == 0 && cfg->triggerSlot != -1 && cfg->preemptSequenceId != 0)
         {
             (*gObjectTriggerInterface)->preempt((int)obj, cfg->preemptSequenceId);
             flags = 1;
@@ -254,7 +254,7 @@ void suntemple_update(GameObject* obj)
         }
         gameObj->anim.resetHitboxFlags |= INTERACT_FLAG_DISABLED;
     }
-    gameObj->unkF4 = 1;
+    gameObj->userData1 = 1;
 }
 
 void suntemple_init(GameObject* obj, SunTempleSetup* setup)

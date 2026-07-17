@@ -150,7 +150,7 @@ void CFPrisonCage_hitDetect(int* obj)
 void CFPrisonCage_update(int* obj)
 {
     int seqIndex;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         switch (((GameObject*)obj)->anim.seqId)
         {
@@ -163,7 +163,7 @@ void CFPrisonCage_update(int* obj)
             break;
         }
         (*gObjectTriggerInterface)->runSequence(seqIndex, obj, -1);
-        ((GameObject*)obj)->unkF4 = 0;
+        ((GameObject*)obj)->userData1 = 0;
     }
 }
 
@@ -171,7 +171,7 @@ void CFPrisonCage_init(int* obj, u8* def)
 {
     ObjMsg_AllocQueue(obj, 1);
     ((GameObject*)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     ((GameObject*)obj)->animEventCallback = CFPrisonCage_SeqFn;
     /* switch: pose thrown/reset from the bit; cage: jump the open
        sequence forward when already opened */

@@ -117,7 +117,7 @@ void DFP_ObjCreator_update(GameObject* obj)
                 setup->gameBit2 = -1;
                 setup->objDefId = 0xdc;
                 newObj = Obj_SetupObject(&setup->base, 5, obj->anim.mapEventSlot, -1, obj->anim.parent);
-                newObj->unkF4 = data->spawnedObjUnkF4;
+                newObj->userData1 = data->spawnedObjUnkF4;
             }
             break;
         }

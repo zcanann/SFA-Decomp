@@ -5,7 +5,7 @@
  * sfx. Each tick it integrates its position, spins, spawns three partfx
  * bursts (a base puff, a velocity-aligned trail and a scaled trail),
  * fades out over its final frames and frees itself when its lifetime
- * (unkF4) expires.
+ * (userData1) expires.
  */
 #include "main/dll/modgfx_interface.h"
 #include "main/dll/partfx_interface.h"
@@ -106,10 +106,10 @@ void SB_MiniFire_update(GameObject* obj)
     buf[4] = 0.0f;
     buf[5] = 0.0f;
     buf[2] = 1.0f;
-    if (obj->unkF4 <= 0x3c)
+    if (obj->userData1 <= 0x3c)
     {
-        buf[2] = obj->unkF4 / 60.0f;
-        obj->anim.alpha = (u8)(int)(255.0f * ((f32)obj->unkF4 / 60.0f));
+        buf[2] = obj->userData1 / 60.0f;
+        obj->anim.alpha = (u8)(int)(255.0f * ((f32)obj->userData1 / 60.0f));
     }
     *(s16*)((char*)buf + 4) = 0;
     *(s16*)((char*)buf + 2) = 0;
@@ -128,8 +128,8 @@ void SB_MiniFire_update(GameObject* obj)
     (*gPartfxInterface)->spawnObject((void*)obj, SBMINIFIRE_PARTFX, buf, 1, -1, NULL);
     obj->anim.rotX = obj->anim.rotX + framesThisStep * 0x374;
     obj->anim.rotY = obj->anim.rotY + framesThisStep * 0x12c;
-    obj->unkF4 = obj->unkF4 - framesThisStep;
-    if (obj->unkF4 < 0)
+    obj->userData1 = obj->userData1 - framesThisStep;
+    if (obj->userData1 < 0)
     {
         Obj_FreeObject((GameObject*)obj);
     }
@@ -139,7 +139,7 @@ void SB_MiniFire_init(GameObject* obj)
 {
     void* resource;
 
-    obj->unkF4 = 180;
+    obj->userData1 = 180;
     obj->anim.velocityX = -(0.01f * (f32)(s32)randomGetRange(20, 40) + 0.8f);
     obj->anim.velocityY = 0.0f;
     obj->anim.velocityZ = -0.3f;

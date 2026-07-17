@@ -255,7 +255,7 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
 
     setup = *(int*)&((GameObject*)obj)->anim.placementData;
     sub = *(int*)&((GameObject*)obj)->extra;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         return 0;
     }
@@ -369,14 +369,14 @@ void dll_CB_update(int* obj)
 
     sub = ((GameObject*)obj)->extra;
     def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
         return;
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         ((GameObject*)obj)->anim.localPosX = ((DllCBPlacement*)def)->posX;
         ((GameObject*)obj)->anim.localPosY = ((DllCBPlacement*)def)->posY;
         ((GameObject*)obj)->anim.localPosZ = ((DllCBPlacement*)def)->posZ;
-        ((GameObject*)obj)->unkF8 = 1;
+        ((GameObject*)obj)->userData2 = 1;
         return;
     }
     if ((sub->flags400 & 2) != 0)
@@ -458,7 +458,7 @@ void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     s32 v = visible;
     if (v != 0)
     {
-        switch (((GameObject*)obj)->unkF4)
+        switch (((GameObject*)obj)->userData1)
         {
         case 0:
             objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2E8C);

@@ -63,8 +63,8 @@ typedef struct CrCloudRaceObject {
   CrCloudRaceState *state;
   int (*animEventCallback)(int obj, int unused, ObjAnimUpdateState *animUpdate);
   u8 unkC0[0x34];
-  int unkF4;
-  int unkF8;
+  int userData1;
+  int userData2;
 } CrCloudRaceObject;
 
 STATIC_ASSERT(sizeof(CrCloudRaceState) == 0x10);
@@ -77,8 +77,8 @@ STATIC_ASSERT(offsetof(CrCloudRaceObject, anim) == 0x00);
 STATIC_ASSERT(offsetof(CrCloudRaceObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(CrCloudRaceObject, state) == 0xB8);
 STATIC_ASSERT(offsetof(CrCloudRaceObject, animEventCallback) == 0xBC);
-STATIC_ASSERT(offsetof(CrCloudRaceObject, unkF4) == 0xF4);
-STATIC_ASSERT(offsetof(CrCloudRaceObject, unkF8) == 0xF8);
+STATIC_ASSERT(offsetof(CrCloudRaceObject, userData1) == 0xF4);
+STATIC_ASSERT(offsetof(CrCloudRaceObject, userData2) == 0xF8);
 
 extern ObjectDescriptor gCrCloudRaceObjDescriptor;
 

@@ -97,7 +97,7 @@ void dll_19A_update(int obj)
     state = ((GameObject*)obj)->extra;
     if (mainGetBit(GAMEBIT_DLL19A_RESET) != 0)
     {
-        ((GameObject*)obj)->unkF8 = 0;
+        ((GameObject*)obj)->userData2 = 0;
         *state = 100;
         state[1] = 0;
         *(u8*)(obj + 0x37) = 0xff; /* pad37[0], distinct from anim.alpha at 0x36 */
@@ -105,7 +105,7 @@ void dll_19A_update(int obj)
     }
     else
     {
-        if ((((GameObject*)obj)->unkF8 == 0) &&
+        if ((((GameObject*)obj)->userData2 == 0) &&
             (mainGetBit(((Dll19APlacement*)setup)->gateBitIndex + GAMEBIT_DLL19A_GATE_BASE) != 0))
         {
             res = Resource_Acquire(0x82, 1);
@@ -114,7 +114,7 @@ void dll_19A_update(int obj)
             Sfx_PlayFromObject(obj, SFXTRIG_hitpos_6);
             Resource_Release(res);
             state[1] = 1;
-            ((GameObject*)obj)->unkF8 = 1;
+            ((GameObject*)obj)->userData2 = 1;
         }
         if (state[1] != 0)
         {
@@ -165,7 +165,7 @@ void dll_19A_init(GameObject* obj, s8* def)
 {
     int* state = (obj)->extra;
     (obj)->anim.rotX = (s16)((s32)def[0x1E] << 8);
-    (obj)->unkF8 = 0;
+    (obj)->userData2 = 0;
     *(s16*)state = 100;
     ((Dll199State*)state)->unk2 = 0;
     *(u8*)((char*)obj + 0x37) = 0xFF; /* pad37[0], distinct from anim.alpha at 0x36 */

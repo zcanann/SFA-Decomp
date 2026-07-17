@@ -138,7 +138,7 @@ void VFP_ObjCreator_update(int* obj)
             {
                 break;
             }
-            ((GameObject*)spawned)->unkF8 = 0x1f4;
+            ((GameObject*)spawned)->userData2 = 0x1f4;
             {
                 f32 vz;
                 f32 vxy = 0.0f;

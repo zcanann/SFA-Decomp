@@ -48,19 +48,19 @@ void cfperch_hitDetect(void)
 
 void cfperch_update(int* obj)
 {
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
     {
         if (mainGetBit(GAMEBIT_CF_UncleFlewOff) == 0)
         {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
-    ((GameObject*)obj)->unkF4 = 0;
+    ((GameObject*)obj)->userData1 = 0;
 }
 
 void cfperch_init(int* obj)
 {
-    ((GameObject*)obj)->unkF4 = 1;
+    ((GameObject*)obj)->userData1 = 1;
     ((GameObject*)obj)->animEventCallback = CFPerch_SeqFn;
 }
 

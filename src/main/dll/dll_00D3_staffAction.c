@@ -443,7 +443,7 @@ void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
     slideMtx = (f32*)(state + 4);
     if (visible != 0)
     {
-        switch ((obj)->unkF4)
+        switch ((obj)->userData1)
         {
         case 0:
             if ((((LandedArwingState*)state)->surfaceMode == 6) &&
@@ -903,16 +903,16 @@ void dll_D3_update(int* obj)
         }
     }
 
-    if (((GameObject*)obj)->unkF4 != 0)
+    if (((GameObject*)obj)->userData1 != 0)
         return;
 
-    if (((GameObject*)obj)->unkF8 == 0)
+    if (((GameObject*)obj)->userData2 == 0)
     {
         ((GameObject*)obj)->anim.localPosX = ((DllD3Placement*)trans)->posX;
         ((GameObject*)obj)->anim.localPosY = ((DllD3Placement*)trans)->posY;
         ((GameObject*)obj)->anim.localPosZ = ((DllD3Placement*)trans)->posZ;
         (*gObjectTriggerInterface)->runSequence(((DllD3Placement*)trans)->seqIndex, obj, -1);
-        ((GameObject*)obj)->unkF8 = 1;
+        ((GameObject*)obj)->userData2 = 1;
         return;
     }
 

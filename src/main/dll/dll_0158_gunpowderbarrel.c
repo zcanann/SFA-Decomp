@@ -1180,7 +1180,7 @@ void gunpowderbarrel_init(int obj, u8* def)
     ObjGroup_AddObject(obj, GUNPOWDERBARREL_UPDATE_OBJGROUP);
     ObjGroup_AddObject(obj, CFGUARDIAN_OBJGROUP);
     ObjMsg_AllocQueue((void*)obj, 8);
-    ((GameObject*)obj)->unkF8 = 0;
+    ((GameObject*)obj)->userData2 = 0;
     state->homingHeadingA = 0;
     state->homingHeadingB = 0;
     state->heldByCarryInterface = 0;
