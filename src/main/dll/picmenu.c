@@ -268,18 +268,16 @@ OSMessage PopReadedBuffer(void)
 
 void THPRead_Reader(void)
 {
-    int i;
-    AttractMoviePlayer* mp[1];
     AttractMovieReadBuffer* req;
     u32 readOff;
     u32 readSize;
     char* base;
+    int i;
 
     base = gPicMenuReadThreadArea;
     i = 0;
-    mp[0] = (AttractMoviePlayer*)&lbl_803A5D60;
-    readOff = mp[0]->initOffset;
-    readSize = mp[0]->initReadSize;
+    readOff = lbl_803A5D60.initOffset;
+    readSize = lbl_803A5D60.initReadSize;
 
     while (1)
     {
@@ -289,12 +287,12 @@ void THPRead_Reader(void)
         OSReceiveMessage((OSMessageQueue*)(base + 0x13C8), &msgVal, OS_MESSAGE_BLOCK);
         req = (AttractMovieReadBuffer*)msgVal;
 
-        res = DVDReadPrio(&mp[0]->fileInfo, req->ptr, readSize, readOff, 2);
+        res = DVDReadPrio(&lbl_803A5D60.fileInfo, req->ptr, readSize, readOff, 2);
         if (res != (s32)readSize)
         {
             if (res == -1)
             {
-                mp[0]->dvdError = -1;
+                lbl_803A5D60.dvdError = -1;
             }
             if (i == 0)
             {
@@ -310,14 +308,14 @@ void THPRead_Reader(void)
         readSize = *(u32*)req->ptr;
 
         {
-            u32 cols = mp[0]->header.mNumFrames;
-            u32 bOff = mp[0]->initReadFrame;
+            u32 cols = lbl_803A5D60.header.mNumFrames;
+            u32 bOff = lbl_803A5D60.initReadFrame;
             u32 pos = (i + bOff) % cols;
             if (pos == cols - 1)
             {
-                if (mp[0]->playFlags & 1)
+                if (lbl_803A5D60.playFlags & 1)
                 {
-                    readOff = mp[0]->header.mMovieDataOffsets;
+                    readOff = lbl_803A5D60.header.mMovieDataOffsets;
                 }
                 else
                 {
@@ -382,62 +380,59 @@ void AttractMovieVideo_Decode(void* param)
 {
     AttractMoviePlayer* player;
     char* db;
+    AttractMoviePlayer* player2;
+    void** readMsg;
+    u8* componentKind;
     u32 i;
     u32* compSizes;
+    char* dvdData;
+    OSMessage tmpBuf;
 
     db = gPicMenuVideoDecodeThreadArea;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
     player = &lbl_803A5D60;
 
+    dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
+    OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
+    readMsg = tmpBuf;
+    i = 0;
+    player2 = &lbl_803A5D60;
+    componentKind = (u8*)player2;
+
+    while (i < player->compInfo.mNumComponents)
     {
-        AttractMoviePlayer* player2;
-        u8* componentKind;
-        void** readMsg;
-        char* dvdData;
-        OSMessage tmpBuf;
-
-        dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr + player->compInfo.mNumComponents * sizeof(u32) + 8;
-        OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
-        readMsg = tmpBuf;
-        i = 0;
-        player2 = &lbl_803A5D60;
-        componentKind = (u8*)player2;
-
-        while (i < player->compInfo.mNumComponents)
+        switch (componentKind[0x70])
         {
-            switch (componentKind[0x70])
+        case THP_COMPONENT_VIDEO:
+        {
+            s32 dec = THPVideoDecode(dvdData, ((AttractMovieTextureSet*)readMsg)->yTexture,
+                                     ((AttractMovieTextureSet*)readMsg)->uTexture,
+                                     ((AttractMovieTextureSet*)readMsg)->vTexture, player2->thpWorkArea);
+            player2->videoError = dec;
+            if (dec != 0)
             {
-            case THP_COMPONENT_VIDEO:
+                if (gPicMenuVideoDecodePrepareReady != 0)
+                {
+                    PrepareReady(0);
+                    gPicMenuVideoDecodePrepareReady = 0;
+                }
+                OSSuspendThread((OSThread*)(db + 0x1058));
+            }
+            ((AttractMovieTextureSet*)readMsg)->frameNumber = ((AttractMovieReadBuffer*)param)->frameNumber;
+            OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
             {
-                s32 dec = THPVideoDecode(dvdData, ((AttractMovieTextureSet*)readMsg)->yTexture,
-                                         ((AttractMovieTextureSet*)readMsg)->uTexture,
-                                         ((AttractMovieTextureSet*)readMsg)->vTexture, player2->thpWorkArea);
-                player2->videoError = dec;
-                if (dec != 0)
-                {
-                    if (gPicMenuVideoDecodePrepareReady != 0)
-                    {
-                        PrepareReady(0);
-                        gPicMenuVideoDecodePrepareReady = 0;
-                    }
-                    OSSuspendThread((OSThread*)(db + 0x1058));
-                }
-                ((AttractMovieTextureSet*)readMsg)->frameNumber = ((AttractMovieReadBuffer*)param)->frameNumber;
-                OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
-                {
-                    u32 intr = OSDisableInterrupts();
-                    player2->videoDecodeCount++;
-                    OSRestoreInterrupts(intr);
-                }
-                gAttractMovieIdleFrameCount = 0;
-                break;
+                u32 intr = OSDisableInterrupts();
+                player2->videoDecodeCount++;
+                OSRestoreInterrupts(intr);
             }
-            }
-            dvdData += *compSizes;
-            compSizes++;
-            componentKind++;
-            i++;
+            gAttractMovieIdleFrameCount = 0;
+            break;
         }
+        }
+        dvdData += *compSizes;
+        compSizes++;
+        componentKind++;
+        i++;
     }
 
     if (gPicMenuVideoDecodePrepareReady != 0)
