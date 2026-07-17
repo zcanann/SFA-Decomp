@@ -3,7 +3,7 @@
 
 CARDControl __CARDBlock[2];
 
-u16 __CARDEncode;
+u32 __CARDEncode;
 
 DVDDiskID __CARDDiskNone;
 

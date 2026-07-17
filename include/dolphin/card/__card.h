@@ -64,7 +64,7 @@ s32 __CARDUpdateFatBlock(s32 chan, u16* fat, CARDCallback callback);
 
 // CARDBios
 extern CARDControl __CARDBlock[2];
-extern u16 __CARDEncode;
+extern u32 __CARDEncode;
 
 extern DVDDiskID* __CARDDiskID;
 extern DVDDiskID __CARDDiskNone;
