@@ -18,32 +18,37 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/dll/dll_0028_effect15.h"
 
-extern f32 lbl_803E0110;
-extern f32 lbl_803E0114;
-extern f32 lbl_803E0118;
-extern f32 lbl_803E011C;
-extern f32 lbl_803E0120;
-extern f32 lbl_803E0124;
-extern f32 lbl_803E0128;
-extern f32 lbl_803E012C;
-extern f32 lbl_803E0130;
-extern f32 lbl_803E0134;
-extern f32 lbl_803E0138;
-extern f32 lbl_803E013C;
-extern f32 lbl_803E0140;
-extern f32 lbl_803E0144;
-extern f32 lbl_803E0148;
-extern f32 lbl_803E014C;
-extern f32 lbl_803E0150;
-extern f32 lbl_803E0154;
-extern f32 lbl_803E0158;
-extern f32 lbl_803E015C;
-extern f32 lbl_803E0160;
-extern f32 lbl_803E0164;
-extern f32 lbl_803E0168;
-extern f32 lbl_803E016C;
-extern f32 lbl_803E0170;
-extern f32 lbl_803E0174;
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E0110 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E0114 = 0.000015f;
+__declspec(section ".sdata2") f32 lbl_803E0118 = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803E011C = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E0120 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803E0124 = 50.0f;
+__declspec(section ".sdata2") f32 lbl_803E0128 = 100.0f;
+__declspec(section ".sdata2") f32 lbl_803E012C = 0.001f;
+__declspec(section ".sdata2") f32 lbl_803E0130 = 0.0003f;
+__declspec(section ".sdata2") f32 lbl_803E0134 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803E0138 = 0.04f;
+__declspec(section ".sdata2") f32 lbl_803E013C = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803E0140 = 0.00005f;
+__declspec(section ".sdata2") f32 lbl_803E0144 = 3.0f;
+__declspec(section ".sdata2") f32 lbl_803E0148 = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E014C = 0.0022f;
+__declspec(section ".sdata2") f32 lbl_803E0150 = 0.002f;
+__declspec(section ".sdata2") f32 lbl_803E0154 = 0.00012f;
+__declspec(section ".sdata2") f32 lbl_803E0158 = 0.0021f;
+__declspec(section ".sdata2") f32 lbl_803E015C = 0.0015f;
+__declspec(section ".sdata2") f32 lbl_803E0160 = 0.0075f;
+__declspec(section ".sdata2") f32 lbl_803E0164 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E0168 = 2.0f;
+__declspec(section ".sdata2") f32 lbl_803E016C = 0.000945f;
+__declspec(section ".sdata2") f32 lbl_803E0170 = 0.0002f;
+__declspec(section ".sdata2") f32 lbl_803E0174 = 0.3f;
+// BIAS lbl_803E0178 minted by compiler
+#pragma explicit_zero_data reset
+#pragma force_active reset
 WaterfxCfg gEffect15DefaultSpawnParams;
 
 /*
