@@ -720,7 +720,6 @@ static void fillBoxRows(u8* map, int* box)
     }
 }
 
-#pragma opt_propagation off
 extern void mapFn_80057d24(int x, int z, int* box0, int* box1, int* box2, int* box3, int layer,
                            int one, int v);
 
@@ -805,7 +804,6 @@ void renderSceneGeometry(int* p1, s8* order)
     }
     while (layer >= 0);
 }
-#pragma opt_propagation reset
 extern u8 bEnableMotionBlur;
 extern f32 lbl_803DB62C;
 extern void renderMotionBlur(f32 v);
