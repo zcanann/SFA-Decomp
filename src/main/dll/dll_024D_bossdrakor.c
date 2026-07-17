@@ -162,13 +162,13 @@ int bossdrakor_seqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
 #pragma dont_inline on
 void bossdrakor_updateHeadTracking(GameObject* obj, int state)
 {
+    BossDrakorState* drakorState;
     s16* neck;
-    s16* vecF;
-    s16* vec10;
-    int step;
-    int step2;
-    int v;
-    s16 d;
+    s16* upperJaw;
+    s16* lowerJaw;
+    int neckStep;
+    int jawStep;
+    s16 jawDelta;
     /* Partfx spawn parameter block (breath/steam emitted from the neck bone). */
     struct
     {
@@ -176,48 +176,50 @@ void bossdrakor_updateHeadTracking(GameObject* obj, int state)
         s16 mode;
         f32 val;
         f32 vec[3];
-    } prm;
+    } partfxParams;
 
+    drakorState = (BossDrakorState*)state;
     neck = objModelGetVecFn_800395d8(obj, 0xe);
     if (neck != NULL)
     {
-        step = ((v = (s16)-neck[0]) < -(framesThisStep << 8))
+        neckStep = (s16)-neck[0];
+        neckStep = (neckStep < -(framesThisStep << 8))
                    ? -(framesThisStep << 8)
-                   : ((v > (framesThisStep << 8)) ? (framesThisStep << 8) : v);
-        neck[0] += (s16)step;
-        PSVECSubtract(&((BossDrakorState*)state)->homePosX, &(obj)->anim.localPosX, prm.vec);
-        prm.val = lbl_803E651C;
-        if (fn_80080150(&((BossDrakorState*)state)->jawAnimAngle) != 0)
+                   : ((neckStep > (framesThisStep << 8)) ? (framesThisStep << 8) : neckStep);
+        neck[0] += (s16)neckStep;
+        PSVECSubtract(&drakorState->homePosX, &obj->anim.localPosX, partfxParams.vec);
+        partfxParams.val = lbl_803E651C;
+        if (fn_80080150(&drakorState->jawAnimAngle) != 0)
         {
-            vecF = objModelGetVecFn_800395d8(obj, 0xf);
-            if (vecF != NULL)
+            upperJaw = objModelGetVecFn_800395d8(obj, 0xf);
+            if (upperJaw != NULL)
             {
-                vec10 = objModelGetVecFn_800395d8(obj, 0x10);
-                if (vec10 != NULL)
+                lowerJaw = objModelGetVecFn_800395d8(obj, 0x10);
+                if (lowerJaw != NULL)
                 {
-                    d = (int)(((BossDrakorState*)state)->jawAnimAngle * lbl_803DC19A) - (u16)vecF[1];
-                    if (d > 0x8000)
+                    jawDelta = (int)(drakorState->jawAnimAngle * lbl_803DC19A) - (u16)upperJaw[1];
+                    if (jawDelta > 0x8000)
                     {
-                        d = (s16)((int)d - 0xffff);
+                        jawDelta = (s16)((int)jawDelta - 0xffff);
                     }
-                    if (d < -0x8000)
+                    if (jawDelta < -0x8000)
                     {
-                        d += 0xffff;
+                        jawDelta += 0xffff;
                     }
-                    step2 = (d < -lbl_803DC198 * framesThisStep)
+                    jawStep = (jawDelta < -lbl_803DC198 * framesThisStep)
                                 ? -lbl_803DC198 * framesThisStep
-                                : ((d > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : d);
-                    d = (s16)step2;
-                    vecF[1] += d;
-                    vec10[1] -= d;
-                    if (timerCountDown(&((BossDrakorState*)state)->jawAnimAngle) != 0)
+                                : ((jawDelta > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : jawDelta);
+                    jawDelta = (s16)jawStep;
+                    upperJaw[1] += jawDelta;
+                    lowerJaw[1] -= jawDelta;
+                    if (timerCountDown(&drakorState->jawAnimAngle) != 0)
                     {
-                        storeZeroToFloatParam(&((BossDrakorState*)state)->jawAnimAngle);
+                        storeZeroToFloatParam(&drakorState->jawAnimAngle);
                     }
-                    if (((BossDrakorState*)state)->jawAnimAngle > lbl_803E6520)
+                    if (drakorState->jawAnimAngle > lbl_803E6520)
                     {
-                        prm.mode = 45000;
-                        (*gPartfxInterface)->spawnObject((void*)obj, BOSSDRAKOR_PARTFX, &prm, 1, -1, NULL);
+                        partfxParams.mode = 45000;
+                        (*gPartfxInterface)->spawnObject((void*)obj, BOSSDRAKOR_PARTFX, &partfxParams, 1, -1, NULL);
                     }
                 }
             }
