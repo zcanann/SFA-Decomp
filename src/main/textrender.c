@@ -2258,11 +2258,11 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     int languageTableOffset;
     GameTextLoadSlot* slot;
     GameTextLoadSlot* freeSlot;
-    u8* gameTextBase;
+    GameTextRuntime* gameTextBase;
     u8* languageTable;
     int i;
 
-    gameTextBase = gGameTextBase;
+    gameTextBase = (GameTextRuntime*)gGameTextBase;
     languageId = curLanguage;
     languageTableOffset = languageId << 3;
     languageTable = (u8*)sLanguageNameTable;
@@ -2280,7 +2280,7 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
         return;
     }
 
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    slot = gameTextBase->loadSlots;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do
     {
@@ -2304,8 +2304,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
         slot++;
     } while (i-- != 0);
 
-    *(int*)(gameTextBase + GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET) = 1;
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    gameTextBase->fonts[GAMETEXT_SLOT_CUTSCENE].mode = 1;
+    slot = gameTextBase->loadSlots;
     freeSlot = (slot->active == 0)       ? slot
                : ((++slot)->active == 0) ? slot
                : ((++slot)->active == 0) ? slot
@@ -2321,10 +2321,10 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
     freeSlot->languageId = curLanguage;
     freeSlot->active = 1;
     freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
-    sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextSequencePathFormat, sequenceId,
+    sprintf(gameTextBase->path, sGameTextSequencePathFormat, sequenceId,
             *(char**)(languageTable + languageTableOffset));
     setFileInfo(&freeSlot->fileInfo);
-    freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+    freeSlot->loadHandle = loadFileByPathAsync(gameTextBase->path,
                                                &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
