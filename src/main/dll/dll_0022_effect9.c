@@ -25,6 +25,7 @@
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 #include "main/vecmath.h"
 #include "main/dll/modgfx.h"
 #include "main/dll/dll_0022_effect9.h"
@@ -72,6 +73,19 @@ extern f32 lbl_803DFE98;
 extern f32 lbl_803DFE9C;
 extern f32 lbl_803DFEA0;
 extern f32 lbl_803DFEA4;
+
+ObjectDescriptor6 lbl_80310BD8 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_6_SLOTS,
+    (ObjectDescriptorCallback)Effect9_initialise,
+    (ObjectDescriptorCallback)Effect9_release,
+    0,
+    (ObjectDescriptorCallback)Effect9_func03_nop,
+    (ObjectDescriptorCallback)Effect9_func04,
+    (ObjectDescriptorCallback)Effect9_func05,
+};
 
 void Effect9_func03_nop(void)
 {
