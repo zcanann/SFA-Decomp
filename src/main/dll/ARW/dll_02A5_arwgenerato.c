@@ -104,10 +104,8 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
 }
 #pragma dont_inline reset
 
-__declspec(section ".sdata2") f32 lbl_803E7150 = 1.0f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E7154 = 0.0f;
-#pragma explicit_zero_data reset
+const f32 lbl_803E7150 = 1.0f;
+const f32 lbl_803E7154 = 0.0f;
 
 int arwgenerato_getExtraSize(void)
 {
