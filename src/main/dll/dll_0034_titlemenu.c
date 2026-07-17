@@ -62,9 +62,6 @@ extern s32 gAttractMovieIdleFrameCount;
 extern u16* gRenderModeObj;
 
 typedef u8 (*TitleMenuShouldShowCreditsRenderFn)(u8* obj);
-extern f32 lbl_803E1D10;
-extern f32 lbl_803E1D14;
-extern f32 lbl_803E1D18;
 
 /* TitleMenuTextEntry.flags: row is hidden / non-selectable (cleared on the
    highlighted entry, set on the rest). */
@@ -77,7 +74,6 @@ extern void titleScreenFn_801368c4(s8 arg);
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern u8 gAttractMovieLoopCompleted;
 extern u8 lbl_803DD6F8;
-extern f32 lbl_803E1D28;
 
 extern u8* lbl_803DD498;
 
@@ -95,7 +91,7 @@ void TitleMenu_render(u8* obj)
     if (menuAction == TITLE_MENU_CAMERA_ACTION_ACTIVE)
     {
         gameTextSetDrawFunc(titleScreenTextDrawFunc);
-        titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14, lbl_803E1D18);
+        titleScreenPositionElements(-380.0f + (f32)(gTitleMenuSelectionFade * 0x1a4) / 255.0f, 254.0f);
         gameTextBoxFn_80134d40(0, 0, 0);
         (*gScreenTransitionInterface)->getProgress();
         (*(VtableFn*)((int)gTitleMenuLinkInterface->vtable + 0x30))(0xff);
@@ -311,7 +307,7 @@ int TitleMenu_run(void)
 
     menuId = TitleMenu_GetFadeState();
     gTitleMenuSelection = TitleMenu_GetSelection();
-    if (((lbl_803E1D28 == titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
+    if (((1.0f == titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
         (gAttractMoviePlaybackEnabled == 0))
     {
         gTitleMenuSelectionFadeStep = TITLE_MENU_SELECTION_FADE_STEP;
@@ -486,7 +482,7 @@ void TitleMenu_initialise(void)
         ((gAttractMovieState == NATTRACTMODE_MOVIE_READY) || (gAttractMovieState == NATTRACTMODE_MOVIE_STATE_RELEASED)))
     {
         n_attractmode_prepareMovie();
-        titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
+        titleScreenPositionElements(-380.0f, 254.0f);
         gAttractMoviePlaybackEnabled = 1;
         Movie_SetVolumeFade(0, 0);
         audioSetVolumesU8(0, 10, 1, 0, 0);
@@ -494,7 +490,7 @@ void TitleMenu_initialise(void)
     }
     else
     {
-        titleScreenPositionElements(lbl_803E1D10, lbl_803E1D18);
+        titleScreenPositionElements(-380.0f, 254.0f);
         gAttractMoviePlaybackEnabled = 0;
         Movie_SetVolumeFade(0, 1);
     }

@@ -26,10 +26,6 @@
 #include "main/object_descriptor.h"
 
 extern u8 lbl_803DB411;
-extern f32 lbl_803E4E98;
-extern f32 lbl_803E4E9C;
-extern f32 lbl_803E4EB0;
-extern f32 lbl_803E4EB4;
 
 /* placements carrying this id in their mapId are inert and never spawn */
 #define SPIRITPRIZE_PLACEMENT_DISABLED 0x4ca62
@@ -73,16 +69,15 @@ typedef struct SpiritPrizeState
     f32 sfxTimer;
 } SpiritPrizeState;
 
-void SpiritPrize_hitDetect(void)
+
+int SpiritPrize_getExtraSize(void)
 {
+    return sizeof(SpiritPrizeState);
 }
 
-void SpiritPrize_release(void)
+int SpiritPrize_getObjectTypeId(void)
 {
-}
-
-void SpiritPrize_initialise(void)
-{
+    return 0x8;
 }
 
 void SpiritPrize_free(GameObject* obj)
@@ -101,71 +96,6 @@ void SpiritPrize_free(GameObject* obj)
     (*gObjectTriggerInterface)->freeState((u8*)state);
 }
 
-void SpiritPrize_init(int* obj, u8* init)
-{
-    SpiritPrizePlacement* placement;
-    SpiritPrizeState* state;
-    int triggerId;
-
-    placement = (SpiritPrizePlacement*)init;
-    state = ((GameObject*)obj)->extra;
-    if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED)
-        return;
-    state->mapParam1A = placement->mapParam1A;
-    state->targetObjectId = -1;
-    state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)placement->scaleParam);
-    state->triggerHandle = -1;
-    triggerId = ((GameObject*)obj)->unkF4;
-    if (triggerId == 0)
-    {
-        if (placement->triggerOrder != 1)
-        {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
-            goto afterTrigger;
-        }
-    }
-    if (triggerId != 0)
-    {
-        if (placement->triggerOrder != triggerId - 1)
-        {
-            (*gObjectTriggerInterface)->freeState((u8*)state);
-            if (placement->triggerOrder != -1)
-            {
-                (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
-            }
-            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
-        }
-    }
-afterTrigger:;
-    if (((GameObject*)obj)->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
-    {
-        state->useDetachedLight = 1;
-    }
-    if (state->light == NULL)
-    {
-        state->light = objCreateLight(state->useDetachedLight != 0 ? NULL : obj, 1);
-        if (state->light != NULL)
-        {
-            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
-            modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
-        }
-    }
-    ((GameObject*)obj)->anim.alpha = 0;
-    ((GameObject*)obj)->anim.pad37[0] = 0;
-    state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
-}
-
-int SpiritPrize_getExtraSize(void)
-{
-    return sizeof(SpiritPrizeState);
-}
-int SpiritPrize_getObjectTypeId(void)
-{
-    return 0x8;
-}
-
 void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     SpiritPrizeState* state;
@@ -175,16 +105,20 @@ void SpiritPrize_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     isVisible = visible;
     if (isVisible != 0)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4E98);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
         if (state->useDetachedLight != 0)
         {
-            objParticleFn_80099d84((GameObject*)obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, state->light);
+            objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, state->light);
         }
         else
         {
-            objParticleFn_80099d84((GameObject*)obj, lbl_803E4E98, 7, *(f32*)&lbl_803E4E98, NULL);
+            objParticleFn_80099d84((GameObject*)obj, 1.0f, 7, 1.0f, NULL);
         }
     }
+}
+
+void SpiritPrize_hitDetect(void)
+{
 }
 
 void SpiritPrize_update(GameObject* obj)
@@ -268,7 +202,7 @@ void SpiritPrize_update(GameObject* obj)
     }
 
     state->sfxTimer -= timeDelta;
-    if (state->sfxTimer < lbl_803E4E9C)
+    if (state->sfxTimer < 0.0f)
     {
         GameObject* player;
 
@@ -282,6 +216,71 @@ void SpiritPrize_update(GameObject* obj)
         }
     }
 }
+
+void SpiritPrize_init(int* obj, u8* init)
+{
+    SpiritPrizePlacement* placement;
+    SpiritPrizeState* state;
+    int triggerId;
+
+    placement = (SpiritPrizePlacement*)init;
+    state = ((GameObject*)obj)->extra;
+    if (placement->mapId == SPIRITPRIZE_PLACEMENT_DISABLED)
+        return;
+    state->mapParam1A = placement->mapParam1A;
+    state->targetObjectId = -1;
+    state->spawnScale = 1.0f / (1.0f + (f32)(u32)placement->scaleParam);
+    state->triggerHandle = -1;
+    triggerId = ((GameObject*)obj)->unkF4;
+    if (triggerId == 0)
+    {
+        if (placement->triggerOrder != 1)
+        {
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
+            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
+            goto afterTrigger;
+        }
+    }
+    if (triggerId != 0)
+    {
+        if (placement->triggerOrder != triggerId - 1)
+        {
+            (*gObjectTriggerInterface)->freeState((u8*)state);
+            if (placement->triggerOrder != -1)
+            {
+                (*gObjectTriggerInterface)->loadAnimData((u8*)state, init);
+            }
+            ((GameObject*)obj)->unkF4 = placement->triggerOrder + 1;
+        }
+    }
+afterTrigger:;
+    if (((GameObject*)obj)->anim.seqId != SPIRITPRIZE_SEQID_OBJECTBOUND_LIGHT)
+    {
+        state->useDetachedLight = 1;
+    }
+    if (state->light == NULL)
+    {
+        state->light = objCreateLight(state->useDetachedLight != 0 ? NULL : obj, 1);
+        if (state->light != NULL)
+        {
+            modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
+            modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
+            modelLightStruct_setDistanceAttenuation(state->light, 80.0f, 100.0f);
+        }
+    }
+    ((GameObject*)obj)->anim.alpha = 0;
+    ((GameObject*)obj)->anim.pad37[0] = 0;
+    state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
+}
+
+void SpiritPrize_release(void)
+{
+}
+
+void SpiritPrize_initialise(void)
+{
+}
+
 
 ObjectDescriptor gSpiritPrizeObjDescriptor = {
     0,

@@ -371,6 +371,7 @@ main/dll/dll_0024_effect11.c:
 	.text       start:0x800C4864 end:0x800C56E0
 	.data       start:0x80310D20 end:0x80310D7C
 	.bss        start:0x8039C3C8 end:0x8039C3E0
+	.sdata2     start:0x803DFF38 end:0x803DFFA8
 
 main/dll/dll_0025_effect12.c:
 	.text       start:0x800C56E0 end:0x800C65B4
@@ -1140,6 +1141,7 @@ main/dll/dll_0034_titlemenu.c:
 	.text       start:0x801165BC end:0x8011730C
 	.data       start:0x8031A1D8 end:0x8031A3B0
 	.sbss       start:0x803DD610 end:0x803DD658
+	.sdata2     start:0x803E1D10 end:0x803E1D2C
 
 main/dll/dll_3b.c:
 	.text       start:0x8011730C end:0x801175A4
@@ -1239,6 +1241,7 @@ main/dll/dll_003C_tumbleweedbush.c:
 main/dll/dll_003D_titlemenuitem.c:
 	.text       start:0x80131540 end:0x80132008
 	.bss        start:0x803A9DB8 end:0x803A9DD0
+	.sdata2     start:0x803E21E8 end:0x803E21FC
 
 main/dll/dll_003E_dummy3e.c:
 	.text       start:0x80132008 end:0x80132024
@@ -1498,6 +1501,7 @@ main/dll/dll_00D6_kaldachomme.c:
 main/dll/dll_00D7_kaldachompspit.c:
 	.text       start:0x801696D4 end:0x80169EF4
 	.data       start:0x80320490 end:0x803204C8
+	.sdata2     start:0x803E30E0 end:0x803E3110
 
 main/dll/dll_00D8_pinponspike.c:
 	.text       start:0x80169EF4 end:0x8016A3C8
@@ -2526,6 +2530,7 @@ main/dll/DF/dll_0178_dfshshrine.c:
 main/dll/dll_017A_spiritprize.c:
 	.text       start:0x801C3618 end:0x801C3B68
 	.data       start:0x80326048 end:0x80326080
+	.sdata2     start:0x803E4E98 end:0x803E4EB8
 
 main/dll/DF/dll_0179_dfshobjcreator.c:
 	.text       start:0x801C3B68 end:0x801C3E3C

@@ -13,7 +13,7 @@
  * loaded by id from lbl_8031C2A8; _initialise / _release manage that cache.
  *
  * Slider drag accumulator state (lbl_803DD918/91C/920) and the smoothing
- * constants (lbl_803E21F0/F4/F8) live in the front-menu DLL.
+ * constants (0.3f/F4/F8) live in the front-menu DLL.
  */
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_003D_titlemenuitem.h"
@@ -47,14 +47,24 @@
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
-extern f32 lbl_803E21F0;
-extern f32 lbl_803E21F4;
-extern f32 lbl_803E21F8;
 void* lbl_803A9DB8[TITLE_MENU_ITEM_TEXTURE_COUNT]; /* cached menu textures */
 extern s16 lbl_8031C2A8[TITLE_MENU_ITEM_TEXTURE_COUNT];   /* texture asset ids for the cache */
 
 extern void drawTexture(void* texture, f32 x, f32 y, u8 alpha, u16 scale);
 extern void gameTextSetWindowStrPos(int windowId, int x, int y);
+
+
+void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
+{
+    if (flag != 0)
+    {
+        item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_A_TOGGLE_PENDING);
+    }
+    else
+    {
+        item->flags = (u8)(item->flags | TITLE_MENU_FLAG_A_TOGGLE_PENDING);
+    }
+}
 
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
@@ -227,7 +237,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
         if (((s16)sliderDelta != 0) && (!(lbl_803DD91C < item->minValue) || ((s16)sliderDelta >= 0)) &&
             (!(lbl_803DD91C > item->maxValue) || ((s16)sliderDelta <= 0)))
         {
-            lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) + lbl_803DD918);
+            lbl_803DD918 = (s16)(0.3f * (f32)(s16)(sliderDelta - lbl_803DD918) + lbl_803DD918);
             Sfx_KeepAliveLoopedObjectSound(0, SFXTRIG_pda_compassbeep);
         }
         else
@@ -235,8 +245,8 @@ void TitleMenuItem_update(TitleMenuItem* item)
             lbl_803DD918 = 0;
         }
 
-        lbl_803DD91C += lbl_803DD918 / lbl_803E21F4;
-        item->value = (s16)(lbl_803E21F8 + lbl_803DD91C);
+        lbl_803DD91C += lbl_803DD918 / 150.0f;
+        item->value = (s16)(0.5f + lbl_803DD91C);
 
         if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0)
         {
@@ -244,7 +254,7 @@ void TitleMenuItem_update(TitleMenuItem* item)
             previewVolume = item->value;
             Sfx_SetObjectSfxVolume(0, SFXTRIG_pda_compassbeep,
                                    clampedVolume < 0 ? 0 : (previewVolume > 0x7f ? 0x7f : previewVolume),
-                                   lbl_803E21F8);
+                                   0.5f);
         }
         break;
     default:
@@ -289,34 +299,11 @@ void TitleMenuItem_update(TitleMenuItem* item)
         Music_PlayTrackByIndex(item->value);
     }
 }
+
 #pragma opt_propagation reset
-
-void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
-{
-    if (flag != 0)
-    {
-        item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_A_TOGGLE_PENDING);
-    }
-    else
-    {
-        item->flags = (u8)(item->flags | TITLE_MENU_FLAG_A_TOGGLE_PENDING);
-    }
-}
-
 void TitleMenuItem_free(void)
 {
     mmFreeLegacyNoArg();
-}
-
-void TitleMenuItem_initialise(void)
-{
-    void** slots = lbl_803A9DB8;
-    slots[0] = NULL;
-    slots[1] = NULL;
-    slots[2] = NULL;
-    slots[3] = NULL;
-    slots[4] = NULL;
-    slots[5] = NULL;
 }
 
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue, s16 maxValue, s16 value)
@@ -418,3 +405,15 @@ void TitleMenuItem_release(void)
         lbl_803A9DB8[i] = NULL;
     }
 }
+
+void TitleMenuItem_initialise(void)
+{
+    void** slots = lbl_803A9DB8;
+    slots[0] = NULL;
+    slots[1] = NULL;
+    slots[2] = NULL;
+    slots[3] = NULL;
+    slots[4] = NULL;
+    slots[5] = NULL;
+}
+
