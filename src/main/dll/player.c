@@ -11744,20 +11744,24 @@ void fn_802AA014(GameObject* obj)
 {
     void* o;
     int slot;
-    PlayerState* inner;
     ObjPlacement* setup;
+    f32 v[3];
+    f32 fov, ycomp, cot, aspect, xcomp, len;
+    f32 scale;
+    f32 mix;
+    f32 t;
+    int res, h2, hw;
+    PlayerState* inner;
 
     inner = obj->extra;
     slot = (int)Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked())
     {
-        f32 v[3];
-
-        setup = (ObjPlacement*)Obj_AllocObjectSetup(0x24, 0x14b);
-        *(u8*)((char*)setup + 4) = 2;
-        *(u8*)((char*)setup + 5) = 1;
-        *(u8*)((char*)setup + 6) = 0xff;
-        *(u8*)((char*)setup + 7) = 0xff;
+        setup = Obj_AllocObjectSetup(0x24, 0x14b);
+        setup->color[0] = 2;
+        setup->color[1] = 1;
+        setup->color[2] = 0xff;
+        setup->color[3] = 0xff;
         setup->posX = *(f32*)((char*)slot + 0xc);
         setup->posY = *(f32*)((char*)slot + 0x10);
         setup->posZ = *(f32*)((char*)slot + 0x14);
@@ -11765,12 +11769,6 @@ void fn_802AA014(GameObject* obj)
         o = Obj_SetupObject(setup, 5, -1, -1, NULL);
         if (o != NULL)
         {
-            f32 fov, ycomp, cot, aspect, xcomp, len;
-            f32 scale;
-            f32 mix;
-            f32 t;
-            int res, h2, hw;
-
             *(s16*)((char*)o + 6) |= 0x2000;
             res = getScreenResolution();
             hw = res >> 17;
