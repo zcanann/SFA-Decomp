@@ -162,7 +162,7 @@ u8 gObjfsaWalkGroupActive[0xB8];
 #define OBJFSA_EXIT_INSIDE(WGP, XF, ZF)                                                                                \
     exitFz = (f32)(ZF);                                                                                                \
     exitFx = (f32)(XF);                                                                                                \
-    for (normalIdx = 0, edge = normalIdx; edge < 4; edge++, normalIdx += 2)                                                    \
+    for (normalIdx = (edge = 0); edge < 4; edge++, normalIdx += 2)                                                    \
     {                                                                                                                  \
         if ((WGP)->planeOffsets[edge] +                                                                                \
                 (exitFx * (f32)((s16*)(WGP))[normalIdx] + exitFz * (f32)((s16*)(WGP))[normalIdx + 1]) >                \
@@ -1465,8 +1465,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     int pi;
     u32 gi;
     u8 groupA;
-    u8 edge;
     u8 normalIdx;
+    u8 edge;
     int pairId;
     u16 pairGid;
     int zid;
@@ -1502,6 +1502,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     ObjfsaWalkGroup* wg;
     ObjfsaWalkGroup* wgT;
     ObjfsaWalkGroup* wgBT;
+    s16 sx;
+    s16 sz;
     patchBase[0] = gObjfsaPatches;
     mapBlockFn_80059c2c(blockFlags);
 
@@ -1763,11 +1765,11 @@ void walkgroupFindExitPointFn_800dc398(void)
                 goto exit0Done;
             }
         scan0:
-            OBJFSA_EXIT_INSIDE(wgT, (pC = p)->exit0X, p->exit0Z);
+            OBJFSA_EXIT_INSIDE(wgT, (sx = (pC = p)->exit0X), (sz = p->exit0Z));
             pB = pC;
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgBT, pC->exit0X, pC->exit0Z);
+                OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
                 if (edge != 4)
                     goto update0;
             }
@@ -1784,10 +1786,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                 goto exit1Done;
             }
         scan1:
-            OBJFSA_EXIT_INSIDE(wgT, pC->exit1X, pC->exit1Z);
+            OBJFSA_EXIT_INSIDE(wgT, (sx = pC->exit1X), (sz = pC->exit1Z));
             if (edge != 4)
             {
-                OBJFSA_EXIT_INSIDE(wgBT, pC->exit1X, pC->exit1Z);
+                OBJFSA_EXIT_INSIDE(wgBT, sx, sz);
                 if (edge != 4)
                     goto update1;
             }
