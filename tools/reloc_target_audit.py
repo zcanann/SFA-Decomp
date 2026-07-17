@@ -21,7 +21,24 @@ still appears (e.g. CSE folding two loads of 0.5 into one) is reported only unde
 
 Reloc kinds covered beyond SDA21: ADDR32, ADDR16_HA/LO/16 (absolute address and
 hi/lo pairs) and REL24 (call targets -- catches calling a neighbouring function).
-REL24 targets compare by SYMBOL NAME, not value: a call's meaning is its callee.
+REL24 targets compare by resolved ADDRESS: the same callee is routinely spelled
+two ways (our `FUN_80259288` vs retail's `GXSetCullMode`).
+
+Why the multiset and not a positional pairing of reloc offsets: a positional
+compare looks stronger but silently mis-pairs. In mcmd_exec's macHandleActive
+(99.27%) our early codegen diverges enough to shift the first block of call
+sites, so offset 0x130 holds voiceRegister for us and inpSetMidiLastNote for
+retail, and the two re-sync from 0x34c on -- the source order is correct and the
+"wrong call" is pure alignment drift. The multiset cannot see offsets, so it is
+immune. Positional pairing is only trustworthy once a function is otherwise
+aligned (all other sites identical), and then it should be corroborated
+independently -- e.g. by arity, as in objprint_dolphin's GXSetBlendMode bug.
+
+Known false-positive classes, all filtered or benign:
+  - _savegpr_N / _restgpr_N differing in N: encodes how many GPRs the prologue
+    saves, a register-allocation artifact, never a semantic difference.
+  - A symbol's st_size disagreeing between the objects (see `n = 4` below).
+  - Ghidra alias names (handled by resolving calls to addresses).
 
 Usage: python3 tools/reloc_target_audit.py [out.json] [--counts]
 """
