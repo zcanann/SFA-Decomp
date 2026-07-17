@@ -32,9 +32,21 @@
 
 extern int gAttractMovieAudioThreadActive;
 
+typedef struct AttractMovieFreeQueueAndStack
+{
+    OSMessageQueue queue;      /* free-buffer queue */
+    u32 threadStack[0x1000 / 4];
+} AttractMovieFreeQueueAndStack;
+
+typedef struct AttractMovieDecodeThread
+{
+    OSThread thread; /* audio decode worker thread */
+    u32 pad310[0x10 / 4];
+} AttractMovieDecodeThread;
+
 OSMessageQueue lbl_803A4460; /* ready-buffer queue */
-OSMessageQueue lbl_803A4480; /* free-buffer queue */
-OSThread lbl_803A54A0;       /* audio decode worker thread */
+AttractMovieFreeQueueAndStack lbl_803A4480;
+AttractMovieDecodeThread lbl_803A54A0;
 
 void* PopDecodedAudioBuffer(int flags)
 {
@@ -49,7 +61,7 @@ void* PopDecodedAudioBuffer(int flags)
 
 void PushFreeAudioBuffer(void* message)
 {
-    OSSendMessage(&lbl_803A4480, message, OS_MESSAGE_NOBLOCK);
+    OSSendMessage(&lbl_803A4480.queue, message, OS_MESSAGE_NOBLOCK);
 }
 
 #pragma dont_inline on
@@ -66,7 +78,7 @@ void AttractMovieAudio_Decode(void* readBufferArg)
     audioFrame = readBuffer->ptr + (lbl_803A5D60.compInfo.mNumComponents * sizeof(u32)) + THP_FRAME_HEADER_SIZE;
     {
         AttractMovieAudioBuffer* received;
-        OSReceiveMessage(&lbl_803A4480, &received, OS_MESSAGE_BLOCK);
+        OSReceiveMessage(&lbl_803A4480.queue, &received, OS_MESSAGE_BLOCK);
         audioBuf[0] = received;
     }
     for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++)
@@ -114,7 +126,7 @@ void* AudioDecoderForOnMemory(void* param)
             }
             else
             {
-                OSSuspendThread(&lbl_803A54A0);
+                OSSuspendThread(&lbl_803A54A0.thread);
             }
         }
         else
@@ -146,7 +158,7 @@ void AudioDecodeThreadCancel(void)
 {
     if (gAttractMovieAudioThreadActive != 0)
     {
-        OSCancelThread(&lbl_803A54A0);
+        OSCancelThread(&lbl_803A54A0.thread);
         gAttractMovieAudioThreadActive = 0;
     }
 }
@@ -155,6 +167,6 @@ void AudioDecodeThreadStart(void)
 {
     if (gAttractMovieAudioThreadActive != 0)
     {
-        OSResumeThread(&lbl_803A54A0);
+        OSResumeThread(&lbl_803A54A0.thread);
     }
 }

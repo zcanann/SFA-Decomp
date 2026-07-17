@@ -1106,7 +1106,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_0019_dll19func0.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0032_titlescreeninit.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0033_nrareware.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_3b.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_3b.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/n_options.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/n_pausemenu.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_3e.c", cflags=cflags_dll_noopt),
