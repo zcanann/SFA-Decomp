@@ -638,3 +638,93 @@ absorbs the already-matched mikaladon plus the trailing seqobj11e functions.
    than retail (retail imports it `*UND*` from the neighbour's pool) ⇒ **sub-mechanism #2**, a second
    TU; count the biases (N ubias / M sbias in the carve = N/M distinct minting TUs) and redraw the
    boundary so the trailing functions mint their own magic.
+
+
+## ★★ BLOCKED CLASS — "can a live-minted `(f32)(s32)`/`(f32)(u32)` bias be named+exported?" — DEFINITIVE NEGATIVE (2026-07-17)
+
+The single largest open vein was whether any **compile-time** or **splits/symbols** construct can make
+MWCC emit a live-minted conversion-bias atom as a **named global export** (the dtk-rename equivalent),
+which would unblock tricky/enemy and the ~31-unit "bias-external / shared-merge" class. Probed
+exhaustively against `build/compilers/GC/2.0/mwcceppc.exe` (session scratch
+`.../scratchpad/biasprobe/*.c`, drivers `mw.sh` = `cflags_dll_noopt`, `mwbase.sh` = `cflags_base`).
+**Answer: NO — and the premise is a red herring.** The extern-bias reloc seen in retail split objects
+is a **dtk SPLIT ARTIFACT**, not a compiler-level export; there was never a bias to "export". Details:
+
+### The two conversion shapes, and why neither is simultaneously fused-and-external in source
+| form | codegen | bias binding | notes |
+|---|---|---|---|
+| **native idiom** `(float)s` | **fused `fsubs f0,f0,fB`** (`ec .. .. 28`) + `xoris rY,rX,0x8000` | **always LOCAL `@NNN`** minted in this TU's `.sdata2` | fusion is intrinsic to MWCC's int→float code generator — it **survives `-opt nopeephole,noschedule`** (the DLL-noopt class). Under peephole/O4 the bias load is **CSE'd/hoisted once** into a reg and reused across conversions — this reproduces retail's `lfd fB,BIAS@sda21` + N×`fsubs` pattern byte-for-byte. |
+| **manual double-arith** `(f32)(*(f64*)&hilo - extern_bias)` | **UNFUSED `fsub;frsp`** (`fc .. .. 28` + `fc .. 00 18`) | **EXTERNAL** (`gBias@sda21`), no local atom | `fsub`+`frsp` does **NOT** contract to `fsubs` — confirmed under **both** `nopeephole` **and** `cflags_base` (peephole+`-fp_contract on`). fp_contract governs fmadd, not sub→round. |
+
+So source can have *fused+local* or *unfused+external*, **never fused+external**. Inline asm gets both
+(what the banned dolphin `axfx_reverb_std_handle_i2f_magic` does) — banned outside `src/dolphin/`.
+
+### Compile-time probe matrix (all leave the mint LOCAL `@NNN` and the conversion referencing it)
+| probe | construct | result |
+|---|---|---|
+| `base.c` | `(float)s` alone | mint `@6` local; conv → `@6`. Baseline. |
+| `ds1.c` | `__declspec(section ".sdata2") double gBias = <magic>;` at value | named global at off 0 **and** separate local `@6` at off 8 (DUPLICATE, +8 stray). conv → `@6`. |
+| `dsA/dsB` | `__declspec(export)` / `__declspec(weak)` on the value global | mint `@6` still separate & referenced; the global sits dead. |
+| `prA.c` | `#pragma force_active on` around the value global | identical — mint unaffected. |
+| `sc1.c` | `static const double gBias = <magic>;` (forced live) | collapses to one *named* atom **plus** a separate `@6`; conv → `@6`. No dedup with the mint. |
+| `ext1.c` | `extern const double gBias;` at exact value, **referenced in the same fn** as the conversion, peephole ON | mint `@6` and extern `gBias` are **two distinct loads** — MWCC never unifies its internal bias with a user symbol. |
+
+**MWCC's conversion-bias constant lives in a namespace hermetically sealed from user data.** No
+`__declspec`, `#pragma`, `static`/`extern const`, value-coincidence, or `-fp_contract` makes the mint
+bind global, adopt a name, or reference an external. (mwld does no `.sdata2` dedup either, so a
+same-value named def anywhere in the link cannot absorb the mint.)
+
+### Why the "bias-external" retail objects LOOK like they export/import a bias — dtk artifact
+Retail `dll_01CA_dimexplosion.o` and `dll_01C6_dimcannon.o` each have **no `.sdata2` section**, yet
+emit **fully fused `fsubs` + `xoris 0x8000`** (the *native-idiom* shape) loading the bias from an
+**UND external** `lbl_803E49xx`/`lbl_803E48C0`. That shape is one **MWCC only ever produces with a
+LOCAL mint**. The only consistent explanation, confirmed structurally: **dtk, when splitting the
+retail DOL, lifted each unit's own locally-minted bias atom out of that unit's `.sdata2` into a shared
+`auto_*_sdata2.o` grab-bag (the whole DIM level pool is one contiguous run `803E4860..`), and
+rewrote the unit's reloc from local-`@N` to extern-`lbl_<addr>`.** The bias was **never** a
+cross-TU compiler export; it is the unit's own mint, relocated by the tooling.
+
+Corollaries proven while probing:
+- `lbl_803E4948` (dimexplosion's "extern" bias) is imported by **dimexplosion alone** — a *sole*
+  importer, not a shared symbol. It is dimexplosion's displaced own mint.
+- `lbl_803E48C0` (dimcannon's) **is** imported by two units (dimcannon **and** dimwooddoor) — a
+  genuinely shared bias ⇒ those two were **one original TU**.
+- A complete unit with **no** conversion (dimwooddoor2) references shared-pool **floats** as plain
+  `extern f32 lbl_803E49xx` and matches with **no claim** — extern *float* shims are fine; only the
+  *bias* (which MWCC refuses to extern-reference with fusion) is the wall.
+
+### The real gate is POOL GEOMETRY, not a missing bias mechanism
+To match a "bias-external" target you must make the **target** own the atom (redraw the split so the
+unit has its own `.sdata2` claim). Then our MWCC output — native idiom, local fused mint — matches the
+redrawn target **by construction** (`fsubs` bytes already identical; only the reloc symbol flips from
+extern to the unit's own atom). This is the ordinary **pool-claim / merged-TU / boundary-redraw**
+technique. Three sub-cases:
+1. **Sole importer, contiguous own atom-run at a claimable 8-aligned boundary** → **pool-claim** (the
+   unit mints its bias, claim the address). *This vein is EXHAUSTED* — bucketA's `pure.py` found only
+   two clean pure-bias-emitters tree-wide (`wcearthwalker`, `waterflowwe`), both landed.
+2. **Sole importer but geometrically entangled** (dimexplosion's atoms interleave dimdismountpoint's;
+   the grab-bag is non-cleanly-recuttable) → blocked without a merged-TU; often non-contiguous ⇒ dead.
+3. **Genuinely shared bias (≥2 importers)** (dimcannon+dimwooddoor@48C0, dim2lift, sbgalleon, dfbarrel,
+   lightfoot, drpickup, worldplanet_lighting, …) → **merged-TU wrapper only** (one TU mints once, all
+   sharers use it) — expensive, touches complete siblings, and blocked wherever the geometry won't
+   linearise (duplicate same-type biases in one candidate pool ⇒ >1 TU ⇒ can't merge to one mint).
+
+### Splits/symbols tooling angle (mission #4/#5) — cannot substitute for geometry
+- `symbols.txt` `scope:global/local` governs **dtk's split-object generation**, not the symbol tables
+  of the source `.o` files we feed mwld; it cannot rename or rebind our local `@N` mint.
+- Renaming+globalising our mint post-compile (objcopy `--redefine-sym`/`--globalize-symbol`) is inert
+  for matching: it does **not relocate** the atom — the atom stays at the unit's own link position, so
+  the DOL `.sdata2` layout still diverges from a mid-pool shared address. Placing an atom at a specific
+  mid-pool address **requires that unit to own that pool position** = a splits.txt boundary redraw,
+  which is exactly sub-cases 1–3 above.
+
+### ⇒ Verdict and guidance for future agents
+**There is no compile-time, `__declspec`, `#pragma`, `extern`/`static`, or splits/symbols construct
+that makes a live-minted bias a named global export, or that emits a *fused* conversion against an
+external bias in clean C.** Stop hunting for a bias-export crack. The tricky/enemy and 31-unit
+"bias-external" class are gated **entirely by pool geometry** (mergeability / contiguity), and reduce
+to the existing merged-TU/boundary-redraw work — not to any missing compiler feature.
+Note also (supersedes the census's bias framing of tricky/enemy): per `tricky-family-3tu-map`, tricky
+mints its own bias in its own claimed pool and enemy (TU-C) mints its own; **tricky/enemy is actually
+gated on a param-web CODE cap** (`dll_00C9_enemy fn_8014C11C` 99.44, r28↔r29 / r4↔r5 pair-transposition),
+not on any bias mechanism.
