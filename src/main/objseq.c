@@ -3758,6 +3758,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
     int stop;
     int frame;
     f32 val;
+    f32 fval;
     f32 rate;
     f32 prevX;
     f32 prevZ;
@@ -3895,7 +3896,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
                         }
                         val = *(f32*)&lbl_803DEFC8 / rate;
                         ((ObjSeqState*)seq)->fade = ((ObjSeqState*)seq)->fade - val;
-                        if (((ObjSeqState*)seq)->fade < lbl_803DEFB0)
+                        fval = ((ObjSeqState*)seq)->fade;
+                        if (fval < lbl_803DEFB0)
                         {
                             ((ObjSeqState*)seq)->fade = lbl_803DEFB0;
                         }
@@ -3904,19 +3906,17 @@ void ObjSeq_RebuildCurveStateToFrame(u8* obj, u8* seqObj, u8* seq, int mode)
             }
             else
             {
-                f32 wrap;
-                f32 low;
                 ((GameObject*)activeObj)->anim.currentMoveProgress += speed;
-                wrap = lbl_803DEFC8;
-                while (((GameObject*)activeObj)->anim.currentMoveProgress > wrap)
+                val = lbl_803DEFC8;
+                while (((GameObject*)activeObj)->anim.currentMoveProgress > val)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress -= wrap;
+                    ((GameObject*)activeObj)->anim.currentMoveProgress -= val;
                 }
-                low = lbl_803DEFB0;
-                wrap = lbl_803DEFC8;
-                while (((GameObject*)activeObj)->anim.currentMoveProgress < low)
+                rate = lbl_803DEFC8;
+                val = lbl_803DEFB0;
+                while (val > ((GameObject*)activeObj)->anim.currentMoveProgress)
                 {
-                    ((GameObject*)activeObj)->anim.currentMoveProgress += wrap;
+                    ((GameObject*)activeObj)->anim.currentMoveProgress += rate;
                 }
             }
         }
@@ -4848,7 +4848,7 @@ int ObjSeq_update(u8* obj, f32 t)
                     }
                     rate = lbl_803DEFC8;
                     val = lbl_803DEFB0;
-                    while (((GameObject*)activeObj)->anim.currentMoveProgress < val)
+                    while (val > ((GameObject*)activeObj)->anim.currentMoveProgress)
                     {
                         ((GameObject*)activeObj)->anim.currentMoveProgress += rate;
                     }
