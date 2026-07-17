@@ -2681,6 +2681,7 @@ void expgfx_updateFrameState(int sourceMode, int sourceId)
 }
 
 #pragma dont_inline on
+#pragma opt_propagation off
 int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slotType, int boundsTemplateId)
 {
     u32 behaviorFlags;
@@ -2696,6 +2697,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
     u32 maskHighWord;
     u32 maskLowWord;
     u32 inverseBit;
+    u32 highBits;
     short poolIndex;
     short slotIndex;
     s16 texT0 = 0;
@@ -2740,11 +2742,13 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             u8* mb = (u8*)runtime + (pi & 1) * 8;
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
-            bit = 1 << (pi >> 1);
-            maskHighWord = (u32)((int)bit >> 0x1f) | maskHighWord;
-            maskLowWord = bit | maskLowWord;
-            *(u32*)(mb + 4116) = maskLowWord;
-            *(u32*)(mb + 4112) = maskHighWord;
+            bit = 1;
+            bit = bit << (pi >> 1);
+            highBits = (u32)((int)bit >> 0x1f);
+            bit = maskLowWord | bit;
+            highBits = maskHighWord | highBits;
+            *(u32*)(mb + 4116) = bit;
+            *(u32*)(mb + 4112) = highBits;
         }
         else
         {
@@ -2752,11 +2756,13 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
             u8* mb = (u8*)runtime + (pi & 1) * 8;
             maskHighWord = *(u32*)(mb + 4112);
             maskLowWord = *(u32*)(mb + 4116);
-            inverseBit = ~(u32)(1 << (pi >> 1));
-            maskHighWord = (u32)((int)inverseBit >> 0x1f) & maskHighWord;
-            maskLowWord = inverseBit & maskLowWord;
-            *(u32*)(mb + 4116) = maskLowWord;
-            *(u32*)(mb + 4112) = maskHighWord;
+            bit = 1 << (pi >> 1);
+            inverseBit = ~bit;
+            highBits = (u32)((int)inverseBit >> 0x1f);
+            inverseBit = maskLowWord & inverseBit;
+            highBits = maskHighWord & highBits;
+            *(u32*)(mb + 4116) = inverseBit;
+            *(u32*)(mb + 4112) = highBits;
         }
         slot = (ExpgfxSlot*)(runtime->slotPoolBases[pi] + slotIndex * EXPGFX_SLOT_SIZE);
         quadVertices = (ExpgfxQuadVertex*)slot;
@@ -3013,6 +3019,7 @@ int expgfx_addremove(ExpgfxSpawnConfig* config, int preferredPoolIndex, int slot
         return slot->sequenceId;
     }
 }
+#pragma opt_propagation reset
 #pragma dont_inline reset
 
 #pragma ppc_unroll_speculative off
