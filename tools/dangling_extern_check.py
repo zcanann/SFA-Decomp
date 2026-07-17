@@ -17,6 +17,10 @@ dangling name ends in an 8-hex-digit address that resolves to a real
 symbol, the repair is mechanical: rename the source reference to whatever
 symbols.txt defines at that address. --fixable lists exactly that subset.
 
+Objects whose source no longer exists are skipped -- see source_for().
+Counting them roughly doubles every number here and buries the real
+findings under danglers frozen into stale artifacts.
+
 Usage:
   tools/dangling_extern_check.py            # every dangling extern
   tools/dangling_extern_check.py --fixable  # only the mechanically fixable
@@ -50,9 +54,29 @@ def load_symbols():
     return names, by_addr
 
 
+def source_for(obj):
+    """The source an object was built from, or None if it is an orphan.
+
+    Renaming a unit leaves its old .o behind in the build tree; ninja no
+    longer regenerates it, so its symbols are frozen at whatever the tree
+    looked like before the rename. Those stale objects would otherwise
+    dominate the report with danglers no source actually contains.
+    """
+    stem = os.path.splitext(os.path.relpath(obj, OBJS))[0]
+    for ext in ('.c', '.cpp', '.cp', '.s', '.S'):
+        path = os.path.join(ROOT, 'src', stem + ext)
+        if os.path.exists(path):
+            return path
+    return None
+
+
 def scan_objects():
     provided, undef = set(), collections.defaultdict(list)
-    objs = sorted(glob.glob(os.path.join(OBJS, '**', '*.o'), recursive=True))
+    every = sorted(glob.glob(os.path.join(OBJS, '**', '*.o'), recursive=True))
+    objs = [o for o in every if source_for(o)]
+    orphans = len(every) - len(objs)
+    if orphans:
+        print('[skipped %d orphaned objects with no source]' % orphans)
     for obj in objs:
         out = subprocess.run([NM, obj], capture_output=True, text=True).stdout
         for line in out.splitlines():
