@@ -3114,13 +3114,14 @@ void expgfx_initialise(void)
     u32* poolActiveMasks;
     s8* poolActiveCounts;
     s16* poolSlotTypeIds[1];
-    u32* slotPoolBases;
+    u32* slotPoolBases[1];
     int poolIndex[1];
     int groupCount;
 
     runtime = EXPGFX_RUNTIME_DATA;
     poolActiveMasks = runtime->poolActiveMasks;
     poolActiveCounts = runtime->poolActiveCounts;
+    slotPoolBases[0] = NULL;
     poolSlotTypeIds[0] = gExpgfxStaticPoolSlotTypeIds;
     for (groupCount = EXPGFX_POOL_GROUP_COUNT; groupCount != 0; groupCount--)
     {
@@ -3154,13 +3155,13 @@ void expgfx_initialise(void)
         poolSlotTypeIds[0] += 8;
     }
 
-    slotPoolBases = runtime->slotPoolBases;
+    slotPoolBases[0] = runtime->slotPoolBases;
     do
     {
-        *slotPoolBases = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
-        memset((void*)*slotPoolBases, 0, EXPGFX_POOL_BYTES);
-        DCFlushRange((void*)*slotPoolBases, EXPGFX_POOL_BYTES);
-        slotPoolBases++;
+        *slotPoolBases[0] = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
+        memset((void*)*slotPoolBases[0], 0, EXPGFX_POOL_BYTES);
+        DCFlushRange((void*)*slotPoolBases[0], EXPGFX_POOL_BYTES);
+        slotPoolBases[0]++;
         poolIndex[0]++;
     } while (poolIndex[0] < EXPGFX_POOL_COUNT);
     memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
