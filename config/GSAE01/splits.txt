@@ -2236,6 +2236,7 @@ main/dll/dll_016A_crrockfall.c:
 	.text       start:0x801ACCFC end:0x801AD440
 	.data       start:0x803236B8 end:0x80323708
 	.sbss       start:0x803DDB40 end:0x803DDB48
+	.sdata2     start:0x803E46E8 end:0x803E4734
 
 main/dll/dll_016B_magiclight.c:
 	.text       start:0x801AD440 end:0x801AD7E4

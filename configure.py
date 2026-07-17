@@ -1339,7 +1339,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/CC/dll_018B_cclevcontrol.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_801ac01c.c"),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_0169_imicemountain.c"),
-            Object(NonMatching, "main/dll/dll_016A_crrockfall.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_016A_crrockfall.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_016B_magiclight.c"),
             Object(NonMatching, "main/dll/dll_016C_dll16c.c"),
             Object(MatchingFor("GSAE01"), "main/dll/IM/dll_016D_imicepillar.c", cflags=cflags_dll_noopt),
