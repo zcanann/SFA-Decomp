@@ -33,7 +33,7 @@ u32 lbl_803DCFCC;
 u32 lbl_803DCFC8;
 u32 lbl_803DCFC4;
 u32 gNewShadowRadialTexture;
-u32 lbl_803DCFBC;
+Texture* lbl_803DCFBC;
 u32 lbl_803DCFB8;
 u32 lbl_803DCFB4;
 u32 gNewShadowRingTexture;
@@ -181,7 +181,7 @@ extern u32 lbl_803DCFC8;
 extern u32 gNewShadowRingTexture;
 extern u32 lbl_803DCFB4;
 extern u32 lbl_803DCFB8;
-extern u32 lbl_803DCFBC;
+extern Texture* lbl_803DCFBC;
 extern u32 gNewShadowRadialTexture;
 extern u32 gNewShadowRampTexture;
 extern u32 gNewShadowDiskTexture;
@@ -2421,7 +2421,7 @@ void fn_8006C528(u32* p)
 }
 void fn_8006C534(u32* p)
 {
-    *p = lbl_803DCFBC;
+    *p = (u32)lbl_803DCFBC;
 }
 void fn_8006C540(u32* p)
 {
@@ -2694,7 +2694,7 @@ void findSomething(void* needle)
 
 void fn_8006CB24(void)
 {
-    mm_free((void*)lbl_803DCFBC);
+    mm_free(lbl_803DCFBC);
     lbl_803DCFBC = 0;
 }
 #pragma opt_loop_invariants off
@@ -2709,53 +2709,53 @@ void fn_8006CB50(void)
     int yhi;
     int ylo;
     int y, x;
-    lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
+    f32 fy;
+    f32 fx;
+    f32 dist;
+    f32 ny;
+    f32 s;
+    f32 t;
+    f32 py;
+    f32 px;
+    lbl_803DCFBC = textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++)
     {
-        f32 fy;
         x = 0;
         yhi = (y >> 2) * 0x20;
         ylo = (y & 3) * 2;
-        fy = y - Udchuff_803DEDAC;
+        fy = y - 127.5f;
         for (; x < 0x100; x++)
         {
-            char* rowBase;
-            char* row;
-            char* addr;
-            f32 fx;
-            f32 dist;
-            f32 ny;
-            f32 nx;
-            f32 s;
-            rowBase = (char*)lbl_803DCFBC + ylo;
+            u8* rowBase;
+            u8* row;
+            u8* addr;
+            rowBase = (u8*)lbl_803DCFBC + ylo;
             row = rowBase + yhi;
             row += (x & 3) * 8;
             addr = row + (x >> 2) * 0x800;
-            fx = x - Udchuff_803DEDAC;
+            fx = x - 127.5f;
             dist = sqrtf(fy * fy + fx * fx);
             ny = fy / dist;
-            nx = fx / dist;
-            if (dist <= Udchuff_803DEDB8)
+            fx /= dist;
+            if (dist <= 112.0f)
             {
-                f32 t = lbl_803DED34 * (Udchuff_803DEDB0 - GXOverflowSuspendInProgress_803DED48 * dist);
-                s = t * Udchuff_803DEDB4;
+                t = 2.0f * (100.8f - 0.9f * dist);
+                s = t * 0.00390625f;
             }
             else
             {
-                s = lbl_803DED28;
+                s = 0.0f;
             }
             {
-                f32 py;
-                f32 px;
                 ny = ny * s;
-                nx = nx * s;
-                py = Vdchuff_803DEDC0 * ny + Udchuff_803DEDBC;
-                px = Vdchuff_803DEDC0 * nx + Udchuff_803DEDBC;
+                fx = fx * s;
+                py = 127.0f * ny + 128.0f;
+                px = 127.0f * fx + 128.0f;
                 *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
             }
         }
     }
-    DCFlushRange((char*)lbl_803DCFBC + 0x60, *(u32*)((char*)lbl_803DCFBC + 0x44));
+    DCFlushRange(lbl_803DCFBC + 1, lbl_803DCFBC->dataSize);
 }
 #pragma opt_loop_invariants reset
 #pragma opt_propagation reset
