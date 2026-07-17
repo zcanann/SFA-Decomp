@@ -716,12 +716,10 @@ void AudioStream_UpdateFadeTimer(void)
     }
 }
 
-#pragma dont_inline on
 void AudioStream_SetDefaultVolume(u8 volume)
 {
     gAudioStreamDefaultVolume = volume;
 }
-#pragma dont_inline reset
 
 #pragma dont_inline on
 void AudioStream_Init(void)
