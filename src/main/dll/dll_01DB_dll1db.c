@@ -12,10 +12,10 @@
  *   STATE_RISING (3): integrates upward velocity until localPosY reaches
  *                     topPosY, then latches STATE_TOP.
  *   STATE_FALLING(4): integrates downward velocity until localPosY reaches
- *                     topPosY - lbl_803E4B24, then latches STATE_BOTTOM.
+ *                     topPosY - 235.5f, then latches STATE_BOTTOM.
  * Player contact is detected by scanning the contact-object list at obj+0x58
- * for the player object. Motion constants live in the lbl_803E4B0C..B24 pool;
- * lbl_803E4B08 is the render LOD/scale passed to objRenderModelAndHitVolumes.
+ * for the player object. Motion constants live in the 0.0f..B24 pool;
+ * 1.0f is the render LOD/scale passed to objRenderModelAndHitVolumes.
  *
  * dll_1DB_init reads the romlist placement (rotXByte at 0x18, and the boardedBit
  * at 0x1E whose game-bit value selects the initial up/down rest state) and sets
@@ -81,14 +81,6 @@ enum
     STATE_FALLING = 4
 };
 
-extern f32 lbl_803E4B08; /* render scale */
-extern f32 lbl_803E4B0C;
-extern f32 lbl_803E4B10;
-extern f32 lbl_803E4B14;
-extern f32 lbl_803E4B18;
-extern f32 lbl_803E4B1C;
-extern f32 lbl_803E4B20;
-extern f32 lbl_803E4B24;
 
 
 int dll_1DB_getExtraSize(void)
@@ -108,7 +100,7 @@ void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B08);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1DB_hitDetect(void)
@@ -153,13 +145,13 @@ void dll_1DB_update(int obj)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
             ((Dll1DBState*)sub)->state = STATE_FALLING;
-            ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
+            ((Dll1DBState*)sub)->velocity = 0.0f;
         }
         if (mainGetBit(((Dll1DBPlacement*)state)->triggerBit) != 0)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
             ((Dll1DBState*)sub)->state = STATE_FALLING;
-            ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
+            ((Dll1DBState*)sub)->velocity = 0.0f;
         }
         break;
     case STATE_BOTTOM:
@@ -170,7 +162,7 @@ void dll_1DB_update(int obj)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
                 ((Dll1DBState*)sub)->state = STATE_RISING;
-                ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
+                ((Dll1DBState*)sub)->velocity = 0.0f;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
                 mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 0);
             }
@@ -181,7 +173,7 @@ void dll_1DB_update(int obj)
             {
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_wickpickup16);
                 ((Dll1DBState*)sub)->state = STATE_RISING;
-                ((Dll1DBState*)sub)->velocity = lbl_803E4B0C;
+                ((Dll1DBState*)sub)->velocity = 0.0f;
                 ((Dll1DBState*)sub)->boardedFlag = 0;
                 mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 0);
             }
@@ -190,12 +182,12 @@ void dll_1DB_update(int obj)
     case STATE_RISING:
         ((Dll1DBState*)sub)->velocity =
             ((Dll1DBState*)sub)->velocity +
-            (lbl_803E4B10 * timeDelta + lbl_803E4B14 * (f32)(s32)(((Dll1DBState*)sub)->velocity < lbl_803E4B0C));
+            (0.02f * timeDelta + 0.1f * (f32)(s32)(((Dll1DBState*)sub)->velocity < 0.0f));
         {
             f32 v = ((Dll1DBState*)sub)->velocity;
-            if (v > lbl_803E4B18)
+            if (v > 1.5f)
             {
-                ((Dll1DBState*)sub)->velocity = *(f32*)&lbl_803E4B18;
+                ((Dll1DBState*)sub)->velocity = 1.5f;
             }
         }
         ((GameObject*)obj)->anim.localPosY =
@@ -213,20 +205,20 @@ void dll_1DB_update(int obj)
         }
         break;
     case STATE_FALLING:
-        ((Dll1DBState*)sub)->velocity = lbl_803E4B1C * timeDelta + ((Dll1DBState*)sub)->velocity;
+        ((Dll1DBState*)sub)->velocity = -0.02f * timeDelta + ((Dll1DBState*)sub)->velocity;
         {
             f32 v = ((Dll1DBState*)sub)->velocity;
-            if (v < lbl_803E4B20)
+            if (v < -1.5f)
             {
-                ((Dll1DBState*)sub)->velocity = *(f32*)&lbl_803E4B20;
+                ((Dll1DBState*)sub)->velocity = -1.5f;
             }
         }
         ((GameObject*)obj)->anim.localPosY =
             ((Dll1DBState*)sub)->velocity * timeDelta + ((GameObject*)obj)->anim.localPosY;
-        if (((GameObject*)obj)->anim.localPosY < ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24)
+        if (((GameObject*)obj)->anim.localPosY < ((Dll1DBPlacement*)state)->topPosY - 235.5f)
         {
             Sfx_PlayFromObject(obj, SFXTRIG_en_lflsh2_b);
-            ((GameObject*)obj)->anim.localPosY = ((Dll1DBPlacement*)state)->topPosY - lbl_803E4B24;
+            ((GameObject*)obj)->anim.localPosY = ((Dll1DBPlacement*)state)->topPosY - 235.5f;
             ((Dll1DBState*)sub)->state = STATE_BOTTOM;
             mainSetBits(((Dll1DBPlacement*)state)->boardedBit, 1);
         }

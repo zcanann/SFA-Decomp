@@ -56,13 +56,16 @@ typedef struct Dim2iciclePlacement
     s16 impactGameBit;
 } Dim2iciclePlacement;
 
-extern f32 lbl_803E4B80;
-extern f32 lbl_803E4B6C;
-extern f32 lbl_803E4B70;
-extern f32 lbl_803E4B74;
-extern f32 lbl_803E4B78;
-extern f32 lbl_803E4B7C;
-extern f32 lbl_803E4B68;
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E4B68 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E4B6C = 0.333f;
+__declspec(section ".sdata2") f32 lbl_803E4B70 = -100000.0f;
+__declspec(section ".sdata2") f32 lbl_803E4B74 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E4B78 = -10.0f;
+__declspec(section ".sdata2") f32 lbl_803E4B7C = 10.0f;
+__declspec(section ".sdata2") f32 lbl_803E4B80 = 0.0f;
+#pragma explicit_zero_data reset
 
 int dim2icicle_getExtraSize(void) { return 0xc; }
 
@@ -236,3 +239,7 @@ ObjectDescriptor gDIM2IcicleObjDescriptor = {
     (ObjectDescriptorCallback)dim2icicle_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)dim2icicle_getExtraSize,
 };
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const f32 lbl_803E4B90[2] = {1.0f, 0.0f};

@@ -2342,7 +2342,7 @@ dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
 main/dll/DIM/dll_01C2_dimsnowball1c2.c:
 	.text       start:0x801B13E8 end:0x801B15D8
 	.data       start:0x80325360 end:0x80325398
-	.sdata2     start:0x803E4860 end:0x803E4CD0
+	.sdata2     start:0x803E4860 end:0x803E4B08
 
 main/dll/DIM/dll_01C3_dimgate.c:
 	.text       start:0x801B15D8 end:0x801B17F4
@@ -2437,14 +2437,17 @@ main/dll/dll_01DA_dll1da.c:
 main/dll/dll_01DB_dll1db.c:
 	.text       start:0x801B8B70 end:0x801B8F7C
 	.data       start:0x80325840 end:0x80325878
+	.sdata2     start:0x803E4B08 end:0x803E4B30
 
 main/dll/DIM/dll_01DC_dim2icefloe.c:
 	.text       start:0x801B8F7C end:0x801B93FC
 	.data       start:0x80325878 end:0x803258B0
+	.sdata2     start:0x803E4B30 end:0x803E4B68
 
 main/dll/DIM/dll_01DD_dim2icicle.c:
 	.text       start:0x801B93FC end:0x801B9810
 	.data       start:0x803258B0 end:0x803258E8
+	.sdata2     start:0x803E4B68 end:0x803E4B98
 
 main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 	.text       start:0x801B9810 end:0x801B9CB4
@@ -2454,6 +2457,7 @@ main/dll/DIM/dll_01DE_dim2lavacontrol.c:
 main/dll/dll_01DF_dll1df.c:
 	.text       start:0x801B9CB4 end:0x801B9ECC
 	.data       start:0x80325928 end:0x80325960
+	.sdata2     start:0x803E4B98 end:0x803E4CD0
 
 main/dll/dll_801b9ecc.c:
 	.text       start:0x801B9ECC end:0x801BA224

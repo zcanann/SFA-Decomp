@@ -2,7 +2,7 @@
  * DLL 0x01DF — a small placed scenery/effect object (TU 0x801B9CB4..0x801B9ECC).
  *
  * init seeds rotation from three placement bytes, optionally scales the model's
- * root motion by a placement flag, primes lbl_803E4BAC into state->unk10 (0x10),
+ * root motion by a placement flag, primes 0.01f into state->unk10 (0x10),
  * and OR-merges model-state flags (0x810) and object flags (0x2000). render draws
  * the model when visible. update recolours the object's first texture each frame
  * and, when the player comes within range, runs a countdown that spawns particle
@@ -25,8 +25,6 @@
 #define DLL1DF_OBJFLAG_HITDETECT_DISABLED 0x2000
 /* particle effect seeded on the proximity-countdown tick while the player is near */
 #define DLL1DF_PARTFX 525
-extern f32 lbl_803E4B98;
-extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4, lbl_803E4BA8, lbl_803E4BAC;
 typedef struct Dll1DFPlaceData
 {
     ObjPlacement base;
@@ -43,7 +41,7 @@ typedef struct Dll1DFState
     u8 unk5;
     u8 unk6;
     u8 pad7[0x10 - 0x7];
-    f32 unk10; /* 0x10: primed to lbl_803E4BAC at init */
+    f32 unk10; /* 0x10: primed to 0.01f at init */
     u8 pad14[0x24 - 0x14];
     f32 spawnTimer; /* 0x24: counts down by timeDelta while player is near */
 } Dll1DFState;
@@ -62,7 +60,7 @@ void dll_1DF_free(void)
 
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4B98);
+    if (visible != 0) objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1DF_hitDetect(void)
@@ -82,14 +80,14 @@ void dll_1DF_update(GameObject* obj)
     {
         if (obj->anim.seqId == 209)
         {
-            f32 v = lbl_803E4B9C;
+            f32 v = 0.0f;
             tex->colorR = v;
             tex->colorG = v;
             tex->colorB = v;
         }
         else
         {
-            f32 v = lbl_803E4B9C;
+            f32 v = 0.0f;
             tex->colorR = v;
             tex->colorG = v;
             tex->colorB = v;
@@ -97,14 +95,14 @@ void dll_1DF_update(GameObject* obj)
     }
     player = Obj_GetPlayerObject();
     dist = vec3f_distanceSquared(&player->anim.worldPosX, &obj->anim.worldPosX);
-    if (dist < lbl_803E4BA0)
+    if (dist < 90000.0f)
     {
         t = sub->spawnTimer - timeDelta;
         sub->spawnTimer = t;
-        if (t < lbl_803E4B9C)
+        if (t < 0.0f)
         {
             (*gPartfxInterface)->spawnObject(obj, DLL1DF_PARTFX, NULL, 2, -1, NULL);
-            sub->spawnTimer = lbl_803E4BA4;
+            sub->spawnTimer = 12.0f;
         }
     }
 }
@@ -121,9 +119,9 @@ void dll_1DF_init(GameObject* obj, Dll1DFPlaceData* p)
     if (scaleParam != 0)
     {
         objDef = *(void**)&obj->anim.modelInstance;
-        obj->anim.rootMotionScale = ((ObjDef*)objDef)->rootMotionScaleBase * ((f32)scaleParam / lbl_803E4BA8);
+        obj->anim.rootMotionScale = ((ObjDef*)objDef)->rootMotionScaleBase * ((f32)scaleParam / 255.0f);
     }
-    ((Dll1DFState*)obj->extra)->unk10 = lbl_803E4BAC;
+    ((Dll1DFState*)obj->extra)->unk10 = 0.01f;
     modelState = *(void**)&obj->anim.modelState;
     if (modelState != NULL)
     {
@@ -156,3 +154,75 @@ ObjectDescriptor lbl_80325928 = {
     (ObjectDescriptorCallback)dll_1DF_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)dll_1DF_getExtraSize,
 };
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const f32 lbl_803E4BB8 = 2e+02f;
+const f32 lbl_803E4BBC = 1e+02f;
+const f32 lbl_803E4BC0 = 0.9f;
+const f32 lbl_803E4BC4 = 2.5f;
+const f32 lbl_803E4BC8 = 5.0f;
+const f32 lbl_803E4BCC = 2.0f;
+const f32 lbl_803E4BD0 = 12.0f;
+const f32 lbl_803E4BD4 = 0.002f;
+const f32 lbl_803E4BD8 = 0.0f;
+const f32 lbl_803E4BDC = 0.0f;
+const f32 lbl_803E4BE0 = 176.0f;
+const f32 lbl_803E4BE4 = -0.0f;
+const f32 lbl_803E4BE8 = 0.01f;
+const f32 lbl_803E4BEC = 7.8e+02f;
+const f32 lbl_803E4BF0 = 0.008f;
+const f32 lbl_803E4BF4 = 1e+01f;
+const f32 lbl_803E4BF8 = 4.0f;
+const f32 lbl_803E4BFC = 2e+01f;
+const f32 lbl_803E4C00 = 0.005f;
+const f32 lbl_803E4C04 = 0.006f;
+const f32 lbl_803E4C08 = 0.0025f;
+const f32 lbl_803E4C0C = 0.95f;
+const f32 lbl_803E4C10 = 0.3f;
+const f32 lbl_803E4C14 = 0.025f;
+const f32 lbl_803E4C18 = 0.55f;
+const f32 lbl_803E4C1C = 0.25f;
+const f32 lbl_803E4C20 = 0.35f;
+const f32 lbl_803E4C24 = 0.021f;
+const f32 lbl_803E4C28 = 4e+01f;
+const f32 lbl_803E4C2C = 8e+01f;
+const f32 lbl_803E4C30 = 155.0f;
+const f32 lbl_803E4C34 = -75.0f;
+const f32 lbl_803E4C38 = 0.5f;
+const f32 lbl_803E4C3C = -15.0f;
+const f32 lbl_803E4C40 = -2e+01f;
+const f32 lbl_803E4C44 = 1.0f;
+const f32 lbl_803E4C48 = -6.0f;
+const f32 lbl_803E4C4C = 0.2f;
+const f32 lbl_803E4C50 = -0.3f;
+const f32 lbl_803E4C54 = -1.0f;
+const f32 lbl_803E4C58 = 0.1f;
+const f32 lbl_803E4C5C = -0.25f;
+const f32 lbl_803E4C60 = -0.2f;
+const f32 lbl_803E4C64 = -0.1f;
+const f32 lbl_803E4C68 = -1.5f;
+const f32 lbl_803E4C6C = 3e+01f;
+const f32 lbl_803E4C70 = 0.17f;
+const f32 gDim2IcicleLightDuration = 3.6e+03f;
+const f32 lbl_803E4C78 = 3e+02f;
+const f32 lbl_803E4C7C = 0.0f;
+const f32 lbl_803E4C80 = 0.005f;
+const f32 lbl_803E4C84 = 1.0f;
+const f32 lbl_803E4C88[2] = {0.0f, 0.0f};
+const f32 lbl_803E4C90 = 0.0f;
+const f32 lbl_803E4C94 = 0.005f;
+const f32 lbl_803E4C98 = 0.01f;
+const f32 lbl_803E4C9C = 3e+01f;
+const f32 lbl_803E4CA0 = 5e+01f;
+const f32 lbl_803E4CA4 = 0.028f;
+const f32 lbl_803E4CA8 = 16.0f;
+const f32 lbl_803E4CAC = 3.0f;
+const f32 lbl_803E4CB0 = 9e+01f;
+const f32 lbl_803E4CB4 = 0.125f;
+const f32 lbl_803E4CB8 = 1.0f;
+const f32 lbl_803E4CBC = 1e+02f;
+const f32 lbl_803E4CC0 = 8.0f;
+const f32 lbl_803E4CC4 = -0.1f;
+const f32 lbl_803E4CC8 = 7.8e+02f;
+const f32 lbl_803E4CCC = 2e+01f;
