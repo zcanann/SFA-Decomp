@@ -260,28 +260,129 @@ of the decl list to identify it; then lever 1/2 moves it.
 
 ## 8. Validation status & rerun recipe
 
-Dynamic validation on this box is **blocked by a machine-level Rosetta wedge**: every fresh
-x86_64 exec (wibo, fresh-inode copies, hash-perturbed copies, even a freshly clang-built
-x86_64 hello) hangs in uninterruptible `U` state at exec; `arch -x86_64 /usr/bin/true`
-(pre-cached Apple binary) works. Same syndrome family as the memory note
-"build-contention-configure-deadlock"; likely needs an oahd/syspolicyd restart or reboot
-(system settings — not touched). Static cross-validation instead: every recorded observation in
-INVESTIGATION_dll14_residuals.md is reproduced by this model (§7), with zero contradictions.
+### 8.1 RETRACTION: the "Rosetta wedge" blocker is REFUTED (2026-07-17)
 
-Ready-to-run artifacts for when x86 exec recovers (all in scratchpad/webnum/):
-- `wn_trace_lldb.py` — corrected tracer: logs cls/idx/pri/flags/obj/NAME plus the REAL caller
-  (`ra2=[esp+56]` → site tags WL2/WL3/WL4/L_9d48/L_locals/L_tempA/L_tempB/L_978c, and
-  `ra1=[esp+24]` which must always read 0x4d0556). Run:
-  `lldb --batch -O 'command script import .../wn_trace_lldb.py' -O 'wn_trace_setup' -o run -- \
-   build/tools/wibo build/compilers/GC/2.0/mwcceppc.exe <cflags_base -lang=c> -c probe.c -o out/`
-- `probe/probe_4regions.c` (decl order == first-use order) and `probe/probe_order.c` (init
-  order permuted gamma,delta,beta,alpha vs decl alpha..i): identical `N cls=4` idx sequences
-  for the named vars across both probes confirms decl-order (list) vs first-use; per-site tags
-  directly confirm which band every commit is in, and whether L_9d48 stays silent (the one
-  [inf] left).
-- Disasm evidence: `webnum/caller_4c26.txt` (the refuted 0x4c29xx region),
-  `webnum/commit_4fe4.txt` (commit fn + counter save/restore + reset),
-  `webnum/codegen_numberwebs.txt` (worklists + in-order pass + driver fragment).
+The previously stated blocker — "a machine-level Rosetta wedge; every fresh x86_64 exec hangs in
+uninterruptible `U` state" — is **wrong and must not be relied on**. Measured on the same box
+(macOS 15.5 / Darwin 24.5, arm64):
+
+- `build/tools/wibo build/compilers/GC/2.0/mwcceppc.exe -version` → **0.04 s, exit 0**.
+- A real compile (`-c probe.c -o out/`) produces a valid `probe.o`. x86_64 exec is HEALTHY.
+
+The `U`-state processes that motivated the old diagnosis are a **symptom, not the cause**: they
+are processes left suspended by a failed debugger attach (see 8.2). They appear only after an
+lldb attempt, are unkillable by `kill -9`, and hang any subsequent `ps aux` (use `pgrep`
+instead). They do not affect compiles, and they clear on reboot.
+
+### 8.2 THE REAL BLOCKER: Developer mode is disabled
+
+```
+$ DevToolsSecurity -status
+Developer mode is currently disabled.
+```
+
+With developer mode off, `taskgated` must raise a GUI authorization dialog before granting
+task-port access. In a headless/CLI context nothing can answer it, so the request blocks
+forever. This reproduces every observed symptom exactly:
+
+- `lldb ... -o run` hangs in `Process::WaitForProcessToStop` → `Listener::GetEventInternal` →
+  `std::condition_variable::wait` (confirmed by `sample` on the hung lldb). The inferior never
+  runs — no `.o` is produced.
+- `process attach --pid N` → `error: attach failed: lost connection` (debugserver dies).
+- The target is left wedged in unkillable `U` state → the pile-up blamed above.
+
+**This is NOT Rosetta-specific.** The decisive control: lldb hangs identically launching a
+**native arm64** `/bin/echo`. lldb cannot debug *anything* on this box. Any future note blaming
+Rosetta, wibo, or oahd for a debugger failure should re-run that control first.
+
+**This route is PROVEN — only the machine state regressed.** `INVESTIGATION_dll14_residuals.md`
+records `pri_trace_lldb.py` as "WORKS on macOS", bootstrap-armed through wibo `resolveImports`,
+and `webmap_lldb.py` as having "ran successfully on the walkgroup probe (2701 instructions)",
+yielding real readings (the cd-base web committing at idx 48, pri=2). The same lldb+wibo
+mechanism this doc needs has already produced measurements on this box. Nothing about the
+method is broken; developer mode has since been turned off (an OS update will do this).
+
+**The fix (one command, but a human must run it):** `sudo DevToolsSecurity -enable`. This needs
+admin rights and changes a system security setting, so an agent must not run it — ask the user.
+Enabling developer mode is the standard, persistent, machine-wide prerequisite for using any
+debugger on macOS, and is what the earlier working traces implicitly relied on. Expect this to
+be sufficient on its own.
+
+**Possible second prerequisite — UNPROVEN, try without it first:** `build/tools/wibo` ships
+**unsigned** ("code object is not signed at all"). Signing a copy with
+`com.apple.security.get-task-allow` visibly changed lldb's failure surface (it began reaching
+`run` and emitting the shared-cache warning instead of stalling earlier), but did **not** fix
+the hang, and the historical traces above evidently ran against an unsigned wibo — so signing
+is very likely unnecessary. Recorded only in case it matters once developer mode is on. If
+used, sign a **copy** (never the shared `build/tools/wibo` — lanes share the tree):
+
+```
+cp build/tools/wibo /tmp/<scratch>/wibo_dbg
+cat > /tmp/<scratch>/ent.xml <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>com.apple.security.get-task-allow</key><true/>
+</dict></plist>
+EOF
+codesign -s - -f --entitlements /tmp/<scratch>/ent.xml /tmp/<scratch>/wibo_dbg
+```
+
+Verified: the signed copy still runs mwcc normally, and it advances lldb past target creation
+into `run` (where developer mode then blocks it).
+
+### 8.3 Side-paths already REFUTED — do not re-attempt
+
+Each was tested with a control; none is the answer:
+
+| Attempt | Result |
+|---|---|
+| `ROSETTA_DEBUGSERVER_PORT=9999` | **Ignored** on macOS 15.5. A/B control: the var makes no difference; the process exits normally and never waits. No listener is ever opened. (An initial "it waited!" reading was a false positive from a shell `wait`; the A/B caught it.) |
+| `LLDB_DEBUGSERVER_PATH=/Library/Apple/usr/libexec/oah/debugserver` | Same hang. |
+| `arch -x86_64 lldb` (lldb has an x86_64 slice) | Same hang (removes the shared-cache warning; does not fix it). |
+| `settings set target.preload-symbols false` / `symbols.enable-external-lookup false` | Same hang. The "libobjc read from process memory / reduce debugging performance" warning is a **red herring** — it is not the hang. |
+| `gdb` (per the old `validate_select.sh`) | Not installed on this box and unavailable for arm64 macOS. |
+
+If developer mode cannot be enabled, the fallback is **not** another debugger attempt: it is
+static binary instrumentation of the PE (trampoline at 0x4fe563 into a code cave, logging via a
+wibo-implemented Win32 write). That is a real but self-contained lift and does not need
+task-port access.
+
+### 8.4 Ready-to-run artifacts
+
+**The previously listed `scratchpad/webnum/` artifacts are GONE** — `scratchpad/` is untracked
+and was never committed, so `wn_trace_lldb.py`, the probes, and `caller_4c26.txt` /
+`commit_4fe4.txt` / `codegen_numberwebs.txt` no longer exist anywhere in the tree. The disasm
+evidence files are regenerable from §9's addresses via `objdump -d --start-address=…
+--stop-address=…`.
+
+The tracer has been rescued from a lane scratch dir and is now **tracked** at
+**`tools/mwcc_re/wn_trace_lldb.py`** (log path via `$WN_TRACE_LOG`; header documents the two
+prerequisites from §8.2). It logs cls/idx/pri/flags/obj/NAME plus the real caller
+(`ra2=[esp+56]` → site tags `L1_prescan`/`L2_LOCALS`/`L3_tempA`/`L4_tempAT`/`L5_TOC`), and
+flags any `ra1=[esp+24]` that is not 0x4d0556.
+
+```
+WN_TRACE_LOG=/tmp/wn.txt lldb --batch \
+  -o 'command script import tools/mwcc_re/wn_trace_lldb.py' \
+  -o 'wn_trace_setup' -o run -o quit -- \
+  /tmp/<scratch>/wibo_dbg build/compilers/GC/2.0/mwcceppc.exe <cflags_base -lang=c> \
+  -c probe.c -o out/
+```
+
+**It has never produced a single line of output** — developer mode has blocked every run. Treat
+it as UNVALIDATED code, not a working tool: a detector that has never shown a positive is
+worthless. Before trusting any new reading, run it against a function whose answer is already
+known (`worldplanet_init`, `expgfx_free`, `dll_3b.AttractMovieAudio_Decode`,
+`tex_dolphin.mapBlockRender_drawLightmapIndirectPasses` — all 100% via `[1]` promotion; or
+`mapUnload`, retail = plain decl order r31→r27) and confirm it reproduces that ground truth
+first.
+
+The probe pair still to rebuild: `probe_4regions.c` (decl order == first-use order) vs
+`probe_order.c` (init order permuted gamma,delta,beta,alpha against decl alpha..i). Identical
+`N cls=4` idx sequences across both would confirm decl-order (list position) over first-use;
+the per-site tags say which band each commit lands in, and whether `L1_prescan` stays silent —
+the one `[inf]` left in §4.
 
 ## 9. Key addresses (for follow-up sessions)
 
