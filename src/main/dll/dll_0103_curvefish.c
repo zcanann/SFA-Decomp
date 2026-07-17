@@ -15,9 +15,7 @@
  *      is stepped along the path with yaw turning capped at 0x180/frame.
  *      Reaching the route end (curveFn_800da23c) resets to stage 0.
  *
- * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
- * gCurveFishObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
- * range (0x80321568..0x803216B8) owns them in retail.
+ * Its descriptor follows the implementation below.
  */
 #include "main/game_object.h"
 #include "main/dll/player_api.h"
@@ -305,3 +303,20 @@ void CurveFish_init(GameObject* obj, u8* setup)
 }
 
 const float lbl_803E392C = 0.0f;
+
+ObjectDescriptor gCurveFishObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)CurveFish_init,
+    (ObjectDescriptorCallback)CurveFish_update,
+    0,
+    0,
+    0,
+    0,
+    CurveFish_getExtraSize,
+};

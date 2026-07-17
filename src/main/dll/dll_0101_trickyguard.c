@@ -14,10 +14,7 @@
  * TrickyGuard_init seeds rotX from the placement yaw byte and marks the
  * object with TRICKYGUARD_OBJECT_FLAG.
  *
- * This TU is the shared DLL bundle for objects 0x00FE..0x0103 - it also
- * defines the ObjectDescriptors for magicplant, trickywarp, staypoint,
- * duster and curvefish, whose callbacks live in their own TUs (declared
- * in dll_00FE_magicplant.h).
+ * The descriptor follows the implementation below.
  */
 #include "main/game_object.h"
 #include "main/objprint_render_api.h"
@@ -73,10 +70,19 @@ void TrickyGuard_init(s16* obj, u8* placement)
     ((GameObject*)obj)->objectFlags = flags;
 }
 
-/*
- * The ObjectDescriptors for magicplant, trickywarp, trickyguard, staypoint,
- * duster and curvefish are all defined (and owned in the retail binary) by
- * dll_0100_trickywarp.c; the retail dll_0101 object contains only the two
- * functions above (.text 0xfc, no .data). Ghidra over-attributed copies of
- * those descriptors to this TU - they are not emitted here.
- */
+ObjectDescriptor gTrickyGuardObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)TrickyGuard_init,
+    (ObjectDescriptorCallback)TrickyGuard_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};

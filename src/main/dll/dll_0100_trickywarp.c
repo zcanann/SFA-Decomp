@@ -11,9 +11,8 @@
  * candidate set) accordingly. It deactivates itself while on screen
  * (ViewFrustum_IsSphereVisible) so the warp can't trigger in view.
  *
- * This TU is also the home of the ObjectDescriptors for the sibling DLLs
- * built from the same source family (magicplant, trickyguard, staypoint,
- * duster, curvefish); their callbacks live in their own units.
+ * Its ObjectDescriptor follows the implementation below. The adjacent
+ * object DLLs each own their corresponding descriptor.
  */
 #include "main/frustum.h"
 #include "main/object_api.h"
@@ -197,23 +196,6 @@ void TrickyWarp_init(s16* obj, u8* placement)
     *obj = (s16)((u32)placement[0x1a] << 8);
 }
 
-ObjectDescriptor gMagicPlantObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_init,
-    (ObjectDescriptorCallback)MagicPlant_update,
-    0,
-    (ObjectDescriptorCallback)MagicPlant_render,
-    (ObjectDescriptorCallback)MagicPlant_free,
-    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
-    MagicPlant_getExtraSize,
-};
-
 ObjectDescriptor gTrickyWarpObjDescriptor = {
     0,
     0,
@@ -229,72 +211,4 @@ ObjectDescriptor gTrickyWarpObjDescriptor = {
     (ObjectDescriptorCallback)TrickyWarp_free,
     0,
     TrickyWarp_getExtraSize,
-};
-
-ObjectDescriptor gTrickyGuardObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)TrickyGuard_init,
-    (ObjectDescriptorCallback)TrickyGuard_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gStayPointObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)StayPoint_init,
-    (ObjectDescriptorCallback)StayPoint_update,
-    0,
-    0,
-    0,
-    0,
-    0,
-};
-
-ObjectDescriptor gDusterObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)duster_init,
-    (ObjectDescriptorCallback)duster_update,
-    (ObjectDescriptorCallback)duster_hitDetect,
-    (ObjectDescriptorCallback)duster_render,
-    0,
-    0,
-    duster_getExtraSize,
-};
-
-ObjectDescriptor gCurveFishObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)CurveFish_init,
-    (ObjectDescriptorCallback)CurveFish_update,
-    0,
-    0,
-    0,
-    0,
-    CurveFish_getExtraSize,
 };

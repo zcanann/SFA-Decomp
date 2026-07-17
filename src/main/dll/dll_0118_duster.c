@@ -2,10 +2,6 @@
  * duster (DLL 0x118) - a drifting collectible "dust" object the player
  * gathers and deposits.
  *
- * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
- * gDusterObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
- * range (0x80321568..0x803216B8) owns them in retail.
- *
  * Each duster activates from its placement game bit; once active it settles
  * to the nearest floor hit, drifts (driftDir / random heading), advances its
  * canned move, and reacts to priority hits. When the player is close and
@@ -387,4 +383,21 @@ void duster_init(GameObject* obj, u8* params)
     ObjMsg_AllocQueue((void*)obj, 1);
     (obj)->animEventCallback = duster_SeqFn;
 }
+
+ObjectDescriptor gDusterObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)duster_init,
+    (ObjectDescriptorCallback)duster_update,
+    (ObjectDescriptorCallback)duster_hitDetect,
+    (ObjectDescriptorCallback)duster_render,
+    0,
+    0,
+    duster_getExtraSize,
+};
 

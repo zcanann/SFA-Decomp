@@ -1713,24 +1713,29 @@ main/dll/dll_00FD.c:
 
 main/dll/dll_00FE_magicplant.c:
 	.text       start:0x8017F4F4 end:0x8017FF0C
+	.data       start:0x80321568 end:0x803215A0
 	.sdata      start:0x803DBD98 end:0x803DBDA0
 
 main/dll/dll_0100_trickywarp.c:
 	.text       start:0x8017FF0C end:0x8018023C
-	.data       start:0x80321568 end:0x803216B8
+	.data       start:0x803215A0 end:0x803215D8
 
 main/dll/dll_0101_trickyguard.c:
 	.text       start:0x8018023C end:0x80180338
+	.data       start:0x803215D8 end:0x80321610
 
 main/dll/dll_0102_staypoint.c:
 	.text       start:0x80180338 end:0x801804C8
+	.data       start:0x80321610 end:0x80321648
 
 main/dll/dll_0118_duster.c:
 	.text       start:0x801804C8 end:0x80180DC8
+	.data       start:0x80321648 end:0x80321680
 	.sdata2     start:0x803E38D8 end:0x803E38E4
 
 main/dll/dll_0103_curvefish.c:
 	.text       start:0x80180DC8 end:0x801814D0
+	.data       start:0x80321680 end:0x803216B8
 	.sdata2     start:0x803E38E8 end:0x803E3930
 
 main/dll/dll_801814d0.c:

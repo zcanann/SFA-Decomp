@@ -1,7 +1,5 @@
 /*
- * magicplant (DLL 0x00FE) - the swaying magic-plant object plus the
- * ObjectDescriptors for the sibling objects whose code lives in this
- * DLL (TrickyWarp, TrickyGuard, StayPoint, Duster, CurveFish).
+ * magicplant (DLL 0x00FE) - the swaying magic-plant object.
  *
  * A magic plant holds a coloured gem (spawned as a magicgem object, dll_00FF).
  * The placement's gemColor byte picks the gem: 0 green / 1 red / 2 yellow /
@@ -466,3 +464,20 @@ void MagicPlant_init(GameObject* obj, MagicPlantSetup* setup)
     }
     plant->seqCallback = MagicPlant_SeqFn;
 }
+
+ObjectDescriptor gMagicPlantObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)MagicPlant_init,
+    (ObjectDescriptorCallback)MagicPlant_update,
+    0,
+    (ObjectDescriptorCallback)MagicPlant_render,
+    (ObjectDescriptorCallback)MagicPlant_free,
+    (ObjectDescriptorCallback)MagicPlant_getObjectTypeId,
+    MagicPlant_getExtraSize,
+};

@@ -14,9 +14,7 @@
  * if the player is within range - issues the stay command to Tricky
  * through Tricky's vtable (slot at (tricky + 0x68) -> [0] -> 0x28).
  *
- * The ObjectDescriptors for the 0x00FE..0x0103 bundle (including
- * gStayPointObjDescriptor) live in dll_0100_trickywarp.c, whose .data split
- * range (0x80321568..0x803216B8) owns them in retail.
+ * The descriptor follows the implementation below.
  */
 #include "main/game_object.h"
 #include "main/objprint_render_api.h"
@@ -103,3 +101,20 @@ void StayPoint_init(u16* obj)
     flags |= STAYPOINT_OBJECT_FLAG;
     ((GameObject*)obj)->objectFlags = flags;
 }
+
+ObjectDescriptor gStayPointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)StayPoint_init,
+    (ObjectDescriptorCallback)StayPoint_update,
+    0,
+    0,
+    0,
+    0,
+    0,
+};
