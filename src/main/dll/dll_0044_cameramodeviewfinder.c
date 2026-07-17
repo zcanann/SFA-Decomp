@@ -319,6 +319,7 @@ void CameraModeViewfinder_update(s16* obj)
 {
     GameObject* targetObj;
     int brightness;
+    GameObject* exitTarget;
     int camObj;
     int angleDiff;
     f32 outA;
@@ -455,13 +456,13 @@ void CameraModeViewfinder_update(s16* obj)
         if (brightness != 0)
         {
             (*gCameraInterface)->setMode(VIEWFINDER_CAMMODE_DEFAULT, 0, 1, 0, NULL, 0, 0xff);
-            targetObj = (GameObject*)((GameObject*)obj)->anim.targetObj;
-            if (targetObj != NULL)
+            exitTarget = (GameObject*)((GameObject*)obj)->anim.targetObj;
+            if (exitTarget != NULL)
             {
-                targetObj->anim.alpha = 0xff;
-                if (Obj_GetPlayerObject() == targetObj)
+                exitTarget->anim.alpha = 0xff;
+                if (Obj_GetPlayerObject() == exitTarget)
                 {
-                    Player_GetHeldObject(targetObj, &shadow);
+                    Player_GetHeldObject(exitTarget, &shadow);
                     if (shadow != NULL)
                     {
                         shadow->anim.alpha = 0xff;
