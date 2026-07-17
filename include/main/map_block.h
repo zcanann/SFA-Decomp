@@ -35,7 +35,7 @@ typedef struct MapBlockData {
     void* gcPolygons; /* 0x4C: MapTriIndex[] collision mesh (stride 8), count = nPolygons @0x98 */
     void* polygonGroups; /* 0x50: MapTriGroup[] (stride 0x14), count = polyGroupCount @0x9A */
     void* textures; /* 0x54: texture IDs */
-    s32 vertices; /* 0x58: base of the VertexS16 array (stride 6), walked by index*6 */
+    u8* vertices; /* 0x58: base of the packed VertexS16 array (stride 6) */
     void* vertexColors; /* 0x5C: RGBA4444 (stride 2) */
     void* vertexTexCoords; /* 0x60: vec2s (stride 4) */
     MapShader* shaders; /* 0x64: count = layerCount @0xA2 */
@@ -49,7 +49,8 @@ typedef struct MapBlockData {
     u16 nRenderInstrsMain; /* 0x84: stream size in bytes */
     u16 nRenderInstrsTransp; /* 0x86 */
     u16 nRenderInstrsWater; /* 0x88 */
-    u8 pad8A[0x90 - 0x8A];
+    u8 pad8A[0x8E - 0x8A];
+    s16 collisionYOffset; /* 0x8E: added to collision-group and vertex Y coordinates */
     u16 vertexCount; /* 0x90: entries in the vertices array (DCStoreRange size = count*6) */
     u8 pad92[0x98 - 0x92];
     u16 nPolygons; /* 0x98: entries in gcPolygons (cacheAllocAndCopy size = count<<3) */

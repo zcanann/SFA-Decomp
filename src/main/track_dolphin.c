@@ -4256,7 +4256,7 @@ int flags;
 
 u8 doEdges;
 {
-    int cells[16];
+    MapBlockData* cells[16];
     f32 e2[3];
     f32 e1[3];
     f32 e0[3];
@@ -4268,13 +4268,13 @@ u8 doEdges;
     f32 en[3];
     int offA;
     int count, layer;
-    int last;
     int* firstp;
+    int last;
     int mask16;
     int f40, f80, f200, f120, f20, f8, f100, f4;
     int gx0, gz0, gx1, gz1;
     int offB;
-    int *cellp, *cw;
+    MapBlockData **cellp, **cw;
     int *descp, *dw;
     int offC;
     int relx0, relz0, relx1, relz1;
@@ -4285,6 +4285,11 @@ u8 doEdges;
     int bb;
     int dmaflip;
     f32* vertp;
+    int gx, gz;
+    MapBlockData** p1;
+    int* q1;
+    MapBlockData** p2;
+    int* q2;
 
     x0 = x0 - gMapBlockOriginWorldX;
     z0 = z0 - gMapBlockOriginWorldZ;
@@ -4315,8 +4320,6 @@ u8 doEdges;
     dw = descp;
     do
     {
-        int gx, gz;
-        int *p1, *q1, *p2, *q2;
         p1 = cw;
         q1 = dw;
         for (gx = gx0; gx <= gx1 && count < 16; gx++)
@@ -4325,10 +4328,10 @@ u8 doEdges;
             q2 = q1;
             for (gz = gz0; gz <= gz1 && count < 16; gz++)
             {
-                u8* blk = mapGetBlockAtPos(gx, gz, layer);
+                MapBlockData* blk = mapGetBlockAtPos(gx, gz, layer);
                 if (blk != NULL)
                 {
-                    *p2 = (int)blk;
+                    *p2 = blk;
                     q2[0] = gx * 0x280;
                     q2[2] = gz * 0x280;
                     p2++;
@@ -4350,12 +4353,12 @@ u8 doEdges;
     }
 
     {
-        int c0 = cells[0];
+        MapBlockData* c0 = cells[0];
         void* p = fn_800606DC((int*)c0, 0);
         dmaflip = 0;
         offA = 0;
-        cacheAllocAndCopy(p, *(u16*)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
-        cacheAllocAndCopy(*(void**)(c0 + 0x58), *(u16*)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
+        cacheAllocAndCopy(p, c0->nPolygons << 3, &offA, &offB, 0x2000);
+        cacheAllocAndCopy(c0->vertices, c0->vertexCount * 6, &offB, &offC, 0x2000);
     }
     i = 0;
     firstp = (int*)gTrackGridOrigin;
@@ -4371,7 +4374,7 @@ u8 doEdges;
     for (; i < count; i++)
     {
         int vb;
-        int blk;
+        MapBlockData* blk;
         int dxoff, dzoff;
         s16 mask;
         s16 bit;
@@ -4383,7 +4386,7 @@ u8 doEdges;
         vb = offB;
         if (i < last)
         {
-            int next = cellp[1];
+            MapBlockData* next = cellp[1];
             int nextBase;
             void* p;
             int c13, c14;
@@ -4391,8 +4394,8 @@ u8 doEdges;
             nextBase = dmaflip + 0x2000;
             p = fn_800606DC((int*)next, 0);
             offA = dmaflip;
-            c13 = cacheAllocAndCopy(p, *(u16*)(next + 0x98) << 3, &offA, &offB, nextBase);
-            c14 = cacheAllocAndCopy(*(void**)(next + 0x58), *(u16*)(next + 0x90) * 6, &offB, &offC, nextBase);
+            c13 = cacheAllocAndCopy(p, next->nPolygons << 3, &offA, &offB, nextBase);
+            c14 = cacheAllocAndCopy(next->vertices, next->vertexCount * 6, &offB, &offC, nextBase);
             cacheQueueWait((u8)(c13 + c14));
         }
         else
@@ -4432,15 +4435,14 @@ u8 doEdges;
                 mask |= bit;
             bit = bit << 1;
         }
-        tri0 = *(u8**)(blk + 0x50);
+        tri0 = blk->polygonGroups;
         tri = tri0;
-        triEnd = (u32)tri0 + *(u16*)(blk + 0x9a) * 0x14;
+        triEnd = (u32)tri0 + blk->polyGroupCount * 0x14;
         mask16 = mask;
         for (; (u32)tri < triEnd; tri += 0x14)
         {
             u32 tf = ((MapTriGroup*)tri)->flags;
             u8 type;
-            int yoff;
             int t0;
             u8* vq;
 
@@ -4464,10 +4466,9 @@ u8 doEdges;
                     continue;
                 type = 2;
             }
-            yoff = *(s16*)(blk + 0x8e);
-            if (((MapTriGroup*)tri)->minY + yoff > y1)
+            if (((MapTriGroup*)tri)->minY + blk->collisionYOffset > y1)
                 continue;
-            if (((MapTriGroup*)tri)->maxY + yoff < y0)
+            if (((MapTriGroup*)tri)->maxY + blk->collisionYOffset < y0)
                 continue;
             if (((MapTriGroup*)tri)->minX > relx1)
                 continue;
@@ -4504,7 +4505,7 @@ u8 doEdges;
                 vp = (s16*)(vb + ((MapTriIndex*)vq)->vert[0] * 6);
                 minX = vp[0] >> 3;
                 maxX = minX;
-                minY = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
+                minY = (vp[1] >> 3) + blk->collisionYOffset;
                 maxY = minY;
                 minZ = vp[2] >> 3;
                 maxZ = minZ;
@@ -4524,7 +4525,7 @@ u8 doEdges;
                     int x, yy, z;
                     vp = (s16*)(vb + *tw * 6);
                     x = vp[0] >> 3;
-                    yy = (vp[1] >> 3) + *(s16*)(blk + 0x8e);
+                    yy = (vp[1] >> 3) + blk->collisionYOffset;
                     z = vp[2] >> 3;
                     if (x > maxX)
                         maxX = x;
