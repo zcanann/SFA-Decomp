@@ -91,7 +91,6 @@ extern u8 gDusterEbaMoveTable[];
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
 union DusterConstF32 { f32 f; };
-#pragma explicit_zero_data on
 const union DusterConstF32 lbl_803E2A20 = { 15.0f };
 const union DusterConstF32 lbl_803E2A24 = { 50.0f };
 const union DusterConstF32 lbl_803E2A28 = { -15.0f };
@@ -101,7 +100,7 @@ const union DusterConstF32 lbl_803E2A34 = { 25.0f };
 const union DusterConstF32 lbl_803E2A38 = { 0.1f };
 const union DusterConstF32 lbl_803E2A3C = { 0.97f };
 const union DusterConstF32 lbl_803E2A40 = { 1.5f };
-__declspec(section ".sdata2") f32 lbl_803E2A44 = 0.0f;
+const f32 lbl_803E2A44 = 0.0f;
 const union DusterConstF32 lbl_803E2A48 = { 15.0f };
 const union DusterConstF32 lbl_803E2A4C = { 30.0f };
 const union DusterConstF32 lbl_803E2A50 = { 3.25f };
@@ -109,8 +108,7 @@ const union DusterConstF32 lbl_803E2A54 = { 1.0f };
 const union DusterConstF32 lbl_803E2A58 = { 0.02f };
 const union DusterConstF32 lbl_803E2A5C = { 0.045f };
 const union DusterConstF32 lbl_803E2A60 = { 0.0f };
-__declspec(section ".sdata2") f32 lbl_803E2A64 = 0.0f;
-#pragma explicit_zero_data off
+const f32 lbl_803E2A64 = 0.0f;
 extern const f32 gDusterDayStartSeconds;
 extern const f32 gDusterDayEndSeconds;
 extern const f32 lbl_803E2A78;
