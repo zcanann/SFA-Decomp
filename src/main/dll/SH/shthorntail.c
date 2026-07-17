@@ -16,14 +16,13 @@
 #include "main/vecmath.h"
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/frame_timing.h"
+#include "main/mapEventTypes.h"
 
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
-extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MIN_TIME;
-extern f32 SHTHORNTAIL_PROXIMITY_ALERT_MAX_TIME;
-extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
 extern char sSHthorntailSourceFile[];
 extern char sThorntailEnteredInvalidState[];
-extern SHthorntailEventInterface** gMapEventInterface;
+
+#pragma dont_inline on
 
 void SHthorntail_updateState(SHthorntailObject* obj, SHthorntailRuntime* runtime)
 {
@@ -188,7 +187,7 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject* obj, SHthorntailRunti
             if (gameBitValue != 0)
             {
                 (*gMapEventInterface)
-                    ->triggerEvent(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT, SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
+                    ->setMapAct(SHTHORNTAIL_ROOT_MODE3_TRIGGER_EVENT, SHTHORNTAIL_ROOT_MODE3_TRIGGER_ARG);
                 runtime->impactSfxTable = gSHthorntailRootControlMode3Locomotion5EventImpactSfxTable;
             }
             else
@@ -282,7 +281,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
             triggerIsSet = mainGetBit(triggerEventId);
             if (triggerIsSet != 0)
             {
-                (*gMapEventInterface)->setAnimEvent((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 0);
+                (*gMapEventInterface)->setObjGroupStatus((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 0);
                 runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
                 randomTime = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN, SHTHORNTAIL_IDLE_WAIT_MAX);
                 runtime->idleTimer = (float)randomTime;
@@ -299,7 +298,7 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
             {
                 runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
                 runtime->behaviorState = SHTHORNTAIL_STATE_ROOT_MODE2_EVENT;
-                (*gMapEventInterface)->setAnimEvent((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 1);
+                (*gMapEventInterface)->setObjGroupStatus((int)obj->animObjId, SHTHORNTAIL_ROOT_MODE2_TRIGGER_ANIM_EVENT, 1);
                 mainSetBits(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION7_GAMEBIT, 1);
                 return;
             }
@@ -310,3 +309,5 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject* obj, SHthorntailRunti
     }
     SHthorntail_updateState(obj, runtime);
 }
+
+#pragma dont_inline reset

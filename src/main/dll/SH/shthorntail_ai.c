@@ -13,6 +13,7 @@
  *    player distance, leash radius, facing error and frustum visibility.
  */
 #include "dolphin/os/OSReport.h"
+#include "main/gamebits.h"
 #include "main/dll/SH/shthorntail_ai.h"
 #include "main/vecmath.h"
 #include "main/frustum.h"

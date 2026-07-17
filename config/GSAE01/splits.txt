@@ -2619,18 +2619,11 @@ main/dll/SH/dll_01AC_shqueenearthwalker.c:
 	.data       start:0x80326E18 end:0x80326E98
 	.sdata      start:0x803DBFC8 end:0x803DBFF8
 
-main/dll/SH/shthorntail_ai.c:
-	.text       start:0x801D4CD0 end:0x801D5174
-	.data       start:0x80326E98 end:0x803274BC
+main/dll/SH/shthorntailgroup.c:
+	.text       start:0x801D4CD0 end:0x801D6914
+	.data       start:0x80326E98 end:0x80327598
 	.sdata      start:0x803DBFF8 end:0x803DC038
-
-main/dll/SH/shthorntail.c:
-	.text       start:0x801D5174 end:0x801D58E4
-	.data       start:0x803274BC end:0x8032753C
-
-main/dll/SH/dll_01AD_shthorntail.c:
-	.text       start:0x801D58E4 end:0x801D6914
-	.data       start:0x8032753C end:0x80327598
+	.sdata2     start:0x803E5428 end:0x803E5448
 
 main/dll/scshgroup.c:
 	.text       start:0x801D6914 end:0x801D7BA8

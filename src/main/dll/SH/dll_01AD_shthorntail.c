@@ -65,9 +65,7 @@ typedef u8 (*SHThorntailHitReactUpdateFn)(int obj, ObjHitReactEntry* table, u32 
 
 extern f32 SHTHORNTAIL_TIMER_DONE_THRESHOLD;
 extern f32 SHTHORNTAIL_CLOSE_ATTACK_DISTANCE;
-extern f32 SHTHORNTAIL_IDLE_COUNTDOWN_TIME;
 extern f32 lbl_803E5448;
-extern SHthorntailDataTables gSHthorntailDataTables;
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern u32 lbl_803E5410;
@@ -88,6 +86,8 @@ extern void objAudioFn_8006ef38(int obj, int joint, int pointCount, int pathPoin
                                 f32 scaleY);
 extern u32 modelInitBones();
 extern void fn_8003B228(GameObject* obj, int p2);
+
+#pragma dont_inline on
 
 void SHthorntail_updateLevelControlMode1(u32 objectId, SHthorntailRuntime* runtime, SHthorntailConfig* config)
 {
@@ -208,7 +208,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     int randomIdleWait;
     SHthorntailDataTables* dataTables;
 
-    dataTables = &gSHthorntailDataTables;
+    dataTables = (SHthorntailDataTables*)&gSHthorntailDataTables;
     runtime->impactSfxTable = dataTables->levelMode0DefaultImpactSfxTable;
     switch (runtime->locomotionMode)
     {
@@ -277,6 +277,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject* obj, SHthorntailRunt
     }
     SHthorntail_updateState(obj, runtime);
 }
+
+#pragma dont_inline reset
 
 u32 SHthorntail_updateLevelControlState(SHthorntailObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
