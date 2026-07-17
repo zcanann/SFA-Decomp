@@ -40,125 +40,8 @@
 
 typedef void (*BombPlantExplodeUpdateFn)(void* obj, void* stateEntry, void* state);
 
-extern f32 lbl_803E5370;
-
-extern f32 gBombPlantExplosionScale;
-extern f32 lbl_803E536C;
-extern f32 gBombPlantSporeOffsetScale;
-extern f32 gBombPlantGrowRateMin;
-extern f32 gBombPlantGrowDuration;
-extern f32 gBombPlantTriggerDistSq;
-extern f32 gBombPlantGrowRateDecay;
-extern f32 lbl_803E5380;
 extern u8 gBombPlantStateTable[];
 
-int bombplant_getExtraSize(void)
-{
-    return 0x18;
-}
-
-int bombplant_getObjectTypeId(void)
-{
-    return 0;
-}
-
-void bombplant_free(void)
-{
-}
-
-void bombplant_hitDetect(void)
-{
-}
-
-void bombplant_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes((GameObject*)p1, lbl_803E5370); }
-
-void bombplant_explode(int* obj, int unused, int* p3)
-{
-    BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
-    void* trickyObj = getTrickyObject();
-    s16 gbId;
-    int i;
-    if (trickyObj != NULL)
-    {
-        trickyImpress((GameObject*)trickyObj);
-    }
-    Sfx_PlayFromObject(obj, SFXTRIG_bombplant_woompf);
-    {
-        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
-    }
-    spawnExplosionLegacy((int)obj, gBombPlantExplosionScale, 0, 1, 1, 1, 0, 1, 0);
-    ((BombPlantState*)p3)->stateIndex = 1;
-    ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
-    gbId = p4->gameBit;
-    if (gbId != -1)
-    {
-        mainSetBits(gbId, 0);
-    }
-    else
-    {
-        for (i = 0; i < 3; i++)
-        {
-            bombplant_throwSpore(obj, p3);
-        }
-    }
-}
-
-/* Spore spawn descriptor (Obj_AllocObjectSetup 0x24): ObjPlacement head
- * extended with the spore's seeded yaw / parent-rotX slots. */
-typedef struct
-{
-    u8 unk00[2];
-    s16 unk02;
-    u8 color[4];   /* 0x04 */
-    f32 posX;      /* 0x08 */
-    f32 posY;      /* 0x0c */
-    f32 posZ;      /* 0x10 */
-    s32 mapId;     /* 0x14 */
-    u8 pad18[0x1a - 0x18];
-    s16 spawnYaw;  /* 0x1a */
-    s16 rotXSeed;  /* 0x1c */
-    u8 pad1e[0x24 - 0x1e];
-} BombplantSporeSpawn;
-
-/* Spawns a spore object: builds a matrix from
- * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-#pragma opt_common_subs off
-void bombplant_throwSpore(int* obj, int* p2)
-{
-    BombplantSporeSpawn* spore;
-    BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
-
-    if (Obj_IsLoadingLocked())
-    {
-        MatrixTransform bd;
-        f32 mtx[16];
-        f32 tz, ty, tx;
-
-        spore = (BombplantSporeSpawn*)Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
-        bd.rotX = ((GameObject*)obj)->anim.rotX;
-        bd.rotY = ((GameObject*)obj)->anim.rotY;
-        bd.rotZ = ((GameObject*)obj)->anim.rotZ;
-        bd.x = lbl_803E536C;
-        bd.y = lbl_803E536C;
-        bd.z = lbl_803E536C;
-        bd.scale = lbl_803E5370;
-        setMatrixFromObjectPos(mtx, &bd);
-        Matrix_TransformPoint(mtx, lbl_803E536C, lbl_803E5370, lbl_803E536C, &tx, &ty, &tz);
-        bd.x = gBombPlantSporeOffsetScale * tx;
-        bd.y = gBombPlantSporeOffsetScale * ty;
-        bd.z = gBombPlantSporeOffsetScale * tz;
-        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.x;
-        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.y;
-        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.z;
-        spore->color[1] = 1;
-        spore->color[0] = 2;
-        spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
-        spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
-        Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
-    }
-}
-#pragma opt_common_subs reset
 
 /* Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
@@ -177,8 +60,8 @@ int bombplant_SeqFn(int* obj)
         ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)src)->posX;
         ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)src)->posY;
         ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)src)->posZ;
-        ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
-        ((EnemyMushroomState*)state)->riseDuration = gBombPlantGrowDuration;
+        ((GameObject*)obj)->anim.rootMotionScale = 1e-05f;
+        ((EnemyMushroomState*)state)->riseDuration = 135.0f;
         ((EnemyMushroomState*)state)->heightTarget = ((EnemyMushroomState*)state)->baseScale;
         ((EnemyMushroomState*)state)->riseStep = ((EnemyMushroomState*)state)->heightTarget / ((EnemyMushroomState*)
             state)->riseDuration;
@@ -209,50 +92,125 @@ int bombplant_SeqFn(int* obj)
     return 0;
 }
 
-void bombplant_init(GameObject *obj, void* param, int flag)
+static void bombplant_tryBeginGrow(void* obj, void* state)
 {
-    void* state;
-    void* p4c;
-    s16 bitId;
+    void* plr = Obj_GetPlayerObject();
+    f32 dist = vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
 
-    state = (obj)->extra;
-    (obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
-    (obj)->objectFlags |= BOMBPLANT_OBJFLAG_HITDETECT_DISABLED;
-    (obj)->animEventCallback = bombplant_SeqFn;
-    ((BombPlantState*)state)->growTargetScale = (obj)->anim.rootMotionScale;
-
-    if (flag != 0)
+    if (dist > 6400.0f)
     {
-        return;
+        ((BombPlantState*)state)->stateIndex = 2;
+        ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
     }
+}
 
-    bitId = ((BombplantPlacement*)param)->gameBit;
-    if (bitId != -1 && mainGetBit(bitId) == 0)
+/* Spore spawn descriptor (Obj_AllocObjectSetup 0x24): ObjPlacement head
+ * extended with the spore's seeded yaw / parent-rotX slots. */
+typedef struct
+{
+    u8 unk00[2];
+    s16 unk02;
+    u8 color[4];   /* 0x04 */
+    f32 posX;      /* 0x08 */
+    f32 posY;      /* 0x0c */
+    f32 posZ;      /* 0x10 */
+    s32 mapId;     /* 0x14 */
+    u8 pad18[0x1a - 0x18];
+    s16 spawnYaw;  /* 0x1a */
+    s16 rotXSeed;  /* 0x1c */
+    u8 pad1e[0x24 - 0x1e];
+} BombplantSporeSpawn;
+
+/* Spawns a spore object: builds a matrix from
+ * the parent's grid pos, transforms a unit offset, and seeds the new object. */
+#pragma opt_common_subs off
+#pragma auto_inline off
+void bombplant_throwSpore(int* obj, int* p2)
+{
+    BombplantSporeSpawn* spore;
+    BombplantPlacement* base = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
+
+    if (Obj_IsLoadingLocked())
     {
-        p4c = (obj)->anim.placementData;
-        (obj)->anim.alpha = 0xff;
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
-        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
-        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-        (obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
-        ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
-        ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
-        ((BombPlantState*)state)->growRate =
-            ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
-        ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
-        ObjHits_RefreshObjectState((int)obj);
-        ((BombPlantState*)state)->stateIndex = 1;
+        MatrixTransform bd;
+        f32 mtx[16];
+        f32 tz, ty, tx;
+
+        spore = (BombplantSporeSpawn*)Obj_AllocObjectSetup(0x24, BOMBPLANT_CHILD_OBJ_SPORE);
+        bd.rotX = ((GameObject*)obj)->anim.rotX;
+        bd.rotY = ((GameObject*)obj)->anim.rotY;
+        bd.rotZ = ((GameObject*)obj)->anim.rotZ;
+        bd.x = 0.0f;
+        bd.y = 0.0f;
+        bd.z = 0.0f;
+        bd.scale = 1.0f;
+        setMatrixFromObjectPos(mtx, &bd);
+        Matrix_TransformPoint(mtx, 0.0f, 1.0f, 0.0f, &tx, &ty, &tz);
+        bd.x = 26.0f * tx;
+        bd.y = 26.0f * ty;
+        bd.z = 26.0f * tz;
+        spore->posX = ((GameObject*)obj)->anim.localPosX + bd.x;
+        spore->posY = ((GameObject*)obj)->anim.localPosY + bd.y;
+        spore->posZ = ((GameObject*)obj)->anim.localPosZ + bd.z;
+        spore->color[1] = 1;
+        spore->color[0] = 2;
+        spore->spawnYaw = (s16)((s32)base->spawnYawByte << 8);
+        spore->rotXSeed = ((GameObject*)obj)->anim.rotX;
+        Obj_SetupObject((ObjPlacement*)spore, 5, -1, -1, NULL);
+    }
+}
+#pragma auto_inline reset
+#pragma opt_common_subs reset
+
+int bombplant_getExtraSize(void)
+{
+    return 0x18;
+}
+
+int bombplant_getObjectTypeId(void)
+{
+    return 0;
+}
+
+void bombplant_free(void)
+{
+}
+
+void bombplant_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { objRenderModelAndHitVolumes((GameObject*)p1, 1.0f); }
+
+void bombplant_hitDetect(void)
+{
+}
+
+void bombplant_explode(int* obj, int unused, int* p3)
+{
+    BombplantPlacement* p4 = (BombplantPlacement*)((GameObject*)obj)->anim.placementData;
+    void* trickyObj = getTrickyObject();
+    s16 gbId;
+    int i;
+    if (trickyObj != NULL)
+    {
+        trickyImpress((GameObject*)trickyObj);
+    }
+    Sfx_PlayFromObject(obj, SFXTRIG_bombplant_woompf);
+    {
+        int* p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        ((ObjHitsPriorityState*)p)->flags = (s16)(((ObjHitsPriorityState*)p)->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
+    }
+    spawnExplosionLegacy((int)obj, 100.0f, 0, 1, 1, 1, 0, 1, 0);
+    ((BombPlantState*)p3)->stateIndex = 1;
+    ((BombPlantState*)p3)->flags = (u8)(((BombPlantState*)p3)->flags | BOMBPLANT_FLAG_STATE_ENTERED);
+    gbId = p4->gameBit;
+    if (gbId != -1)
+    {
+        mainSetBits(gbId, 0);
     }
     else
     {
-        p4c = (obj)->anim.placementData;
-        (obj)->anim.alpha = 0xff;
-        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
-        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
-        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-        ObjHits_RefreshObjectState((int)obj);
+        for (i = 0; i < 3; i++)
+        {
+            bombplant_throwSpore(obj, p3);
+        }
     }
 }
 
@@ -262,9 +220,7 @@ void bombplant_update(void* obj)
     u8* entry;
     void* param;
     void* p4c;
-    void* plr;
     void* p50;
-    f32 dist;
     s16 bitId;
     int hitType;
     f32 hit[3];
@@ -299,31 +255,17 @@ void bombplant_update(void* obj)
         {
             if (mainGetBit(bitId) != 0)
             {
-                plr = Obj_GetPlayerObject();
-                dist =
-                    vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
-                if (dist > gBombPlantTriggerDistSq)
-                {
-                    ((BombPlantState*)state)->stateIndex = 2;
-                    ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
-                }
+                bombplant_tryBeginGrow(obj, state);
             }
         }
         else
         {
             f32 t = ((BombPlantState*)state)->growTimer - timeDelta;
             ((BombPlantState*)state)->growTimer = t;
-            if (t <= lbl_803E536C)
+            if (t <= 0.0f)
             {
-                plr = Obj_GetPlayerObject();
-                dist =
-                    vec3f_distanceSquared(&((GameObject*)obj)->anim.worldPosX, (f32*)((u8*)plr + 0x18));
-                if (dist > gBombPlantTriggerDistSq)
-                {
-                    ((BombPlantState*)state)->stateIndex = 2;
-                    ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
-                }
-                ((BombPlantState*)state)->growTimer = lbl_803E536C;
+                bombplant_tryBeginGrow(obj, state);
+                ((BombPlantState*)state)->growTimer = 0.0f;
             }
         }
         break;
@@ -339,8 +281,8 @@ void bombplant_update(void* obj)
             ((GameObject*)obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
             ((GameObject*)obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
             ((GameObject*)obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
-            ((GameObject*)obj)->anim.rootMotionScale = gBombPlantGrowRateMin;
-            ((BombPlantState*)state)->growDuration = gBombPlantGrowDuration;
+            ((GameObject*)obj)->anim.rootMotionScale = 1e-05f;
+            ((BombPlantState*)state)->growDuration = 135.0f;
             ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
             ((BombPlantState*)state)->growRate =
                 ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
@@ -349,18 +291,18 @@ void bombplant_update(void* obj)
         }
         if (((GameObject*)obj)->anim.rootMotionScale > ((BombPlantState*)state)->growStartScale)
         {
-            ((BombPlantState*)state)->growRate = ((BombPlantState*)state)->growRate / gBombPlantGrowRateDecay;
+            ((BombPlantState*)state)->growRate = ((BombPlantState*)state)->growRate / 1.1f;
         }
-        if (((BombPlantState*)state)->growRate < gBombPlantGrowRateMin)
+        if (((BombPlantState*)state)->growRate < 1e-05f)
         {
-            ((BombPlantState*)state)->growRate = lbl_803E536C;
+            ((BombPlantState*)state)->growRate = 0.0f;
         }
         ((GameObject*)obj)->anim.rootMotionScale =
             ((BombPlantState*)state)->growRate * timeDelta + ((GameObject*)obj)->anim.rootMotionScale;
         {
             f32 t = ((BombPlantState*)state)->growTimer - timeDelta;
             ((BombPlantState*)state)->growTimer = t;
-            if (t < lbl_803E536C)
+            if (t < 0.0f)
             {
                 ((BombPlantState*)state)->stateIndex = 0;
                 ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
@@ -404,7 +346,7 @@ void bombplant_update(void* obj)
                 Sfx_PlayFromObject(obj, SFXTRIG_mv_ladderslide16);
                 hitX = hitX + playerMapOffsetX;
                 hitZ = hitZ + playerMapOffsetZ;
-                objLightFn_8009a1dc(obj, lbl_803E5380, lightVec, 1, 0);
+                objLightFn_8009a1dc(obj, 0.014f, lightVec, 1, 0);
                 Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 ((BombPlantState*)state)->stateIndex = 4;
                 ((BombPlantState*)state)->flags |= BOMBPLANT_FLAG_STATE_ENTERED;
@@ -461,7 +403,7 @@ void bombplant_update(void* obj)
 
     if (((GameObject*)obj)->anim.currentMove != *(s16*)entry)
     {
-        ObjAnim_SetCurrentMove((int)obj, *(s16*)entry, lbl_803E536C, 0);
+        ObjAnim_SetCurrentMove((int)obj, *(s16*)entry, 0.0f, 0);
     }
 
     if (ObjAnim_AdvanceCurrentMove(
@@ -481,6 +423,53 @@ epilogue:
 #undef hitY
 #undef hitZ
 
+void bombplant_init(GameObject *obj, void* param, int flag)
+{
+    void* state;
+    void* p4c;
+    s16 bitId;
+
+    state = (obj)->extra;
+    (obj)->anim.rotX = (s16)((s32)((BombplantPlacement*)param)->objectTypeParam << 8);
+    (obj)->objectFlags |= BOMBPLANT_OBJFLAG_HITDETECT_DISABLED;
+    (obj)->animEventCallback = bombplant_SeqFn;
+    ((BombPlantState*)state)->growTargetScale = (obj)->anim.rootMotionScale;
+
+    if (flag != 0)
+    {
+        return;
+    }
+
+    bitId = ((BombplantPlacement*)param)->gameBit;
+    if (bitId != -1 && mainGetBit(bitId) == 0)
+    {
+        p4c = (obj)->anim.placementData;
+        (obj)->anim.alpha = 0xff;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
+        (obj)->anim.rootMotionScale = 1e-05f;
+        ((BombPlantState*)state)->growDuration = 135.0f;
+        ((BombPlantState*)state)->growStartScale = ((BombPlantState*)state)->growTargetScale;
+        ((BombPlantState*)state)->growRate =
+            ((BombPlantState*)state)->growStartScale / ((BombPlantState*)state)->growDuration;
+        ((BombPlantState*)state)->growTimer = ((BombPlantState*)state)->growDuration;
+        ObjHits_RefreshObjectState((int)obj);
+        ((BombPlantState*)state)->stateIndex = 1;
+    }
+    else
+    {
+        p4c = (obj)->anim.placementData;
+        (obj)->anim.alpha = 0xff;
+        (obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+        (obj)->anim.localPosX = ((BombplantPlacement*)p4c)->posX;
+        (obj)->anim.localPosY = ((BombplantPlacement*)p4c)->posY;
+        (obj)->anim.localPosZ = ((BombplantPlacement*)p4c)->posZ;
+        ObjHits_RefreshObjectState((int)obj);
+    }
+}
+
 u8 gBombPlantStateTable[] =
 {
     0x00, 0x00, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0x0B, 0x00, 0x00, 0x00,
@@ -496,3 +485,4 @@ void* gBombPlantObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (voi
 u8 lbl_80326D98[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 void* gBombPlantSporeObjDescriptor[15] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_init, BombPlantSpore_update, (void*)0x00000000, (void*)0x00000000, BombPlantSpore_free, (void*)0x00000000, BombPlantSpore_getExtraSize, (void*)0x00000000 };
 void* gBombPlantingSpotObjDescriptor[14] = { (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00090000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, BombPlantingSpot_init, BombPlantingSpot_update, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000, (void*)0x00000000 };
+

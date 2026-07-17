@@ -2707,6 +2707,7 @@ main/dll/SH/dll_01A8_shkillermushroom.c:
 main/dll/dll_01A9_bombplant.c:
 	.text       start:0x801D286C end:0x801D3378
 	.data       start:0x80326D20 end:0x80326E18
+	.sdata2     start:0x803E5358 end:0x803E5384
 
 main/dll/dll_01AA_bombplantspore.c:
 	.text       start:0x801D3378 end:0x801D3FF4
