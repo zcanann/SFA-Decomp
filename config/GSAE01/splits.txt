@@ -3059,6 +3059,9 @@ main/dll/WM/dll_0215_wmnewcrystal.c:
 	.data       start:0x80328E58 end:0x80329050
 	.sdata2     start:0x803E6038 end:0x803E6060
 
+main/dll/VF/dll_021E_vfpblock1.c:
+	.data       start:0x80329050 end:0x80329088
+
 main/dll/VF/dll_0216_vfplevelcontrol.c:
 	.text       start:0x801F9804 end:0x801F9D78
 	.sdata      start:0x803DC148 end:0x803DC150
@@ -3095,7 +3098,7 @@ main/dll/VF/dll_021D_vfplift.c:
 
 main/light.c:
 	.text       start:0x801FB9AC end:0x801FD4A8
-	.data       start:0x80329050 end:0x803291D8
+	.data       start:0x80329088 end:0x803291D8
 
 main/main.c:
 	.text       start:0x801FD4A8 end:0x801FE118

@@ -837,6 +837,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_021B.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/VF/dll_021C_vfpladders.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/VF/dll_021D_vfplift.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/VF/dll_021E_vfpblock1.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_024D_bossdrakor.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_024E_drakordthornbush.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/audio/snd3d.c", mw_version="GC/1.2.5n"),
