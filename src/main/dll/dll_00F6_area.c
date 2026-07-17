@@ -10,25 +10,10 @@
 #include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/dll/dll_00F6_area.h"
-#include "main/dll/dll_0111_doorlock.h"
-#include "main/dll/dll_0112_seqobject.h"
-#include "main/dll/dll_00F8_levelname.h"
-#include "main/dll/MMP/dll_010F_mmpbridge.h"
-#include "main/dll/dll_00FB_pressureswitchfb.h"
-#include "main/dll/screenOverlay.h"
-#include "main/dll/cloudprisoncontrol.h"
 
 #define AREA_OBJFLAG_UPDATE_DISABLED    0x8000
 #define AREA_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-/* auto 0x80320fd0-0x803211a0 */
-extern void Door_getExtraSize(void);
-extern void Door_init(void);
-extern void Door_render(void);
-extern void Door_update(GameObject*);
-extern void ProjectileSwitch_free(void);
-extern void ProjectileSwitch_getExtraSize(void);
-extern void ProjectileSwitch_getObjectTypeId(void);
 int area_getExtraSize(void)
 {
     return 0x0;
@@ -83,106 +68,3 @@ ObjectDescriptor gAreaObjDescriptor = {
     (ObjectDescriptorCallback)area_getObjectTypeId,
     area_getExtraSize,
 };
-
-u32 gLevelNameObjDescriptor[14] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   (u32)LevelName_initialise,
-                                   (u32)LevelName_release,
-                                   0x00000000,
-                                   (u32)LevelName_init,
-                                   (u32)LevelName_update,
-                                   (u32)LevelName_hitDetect,
-                                   (u32)LevelName_render,
-                                   (u32)LevelName_free,
-                                   (u32)LevelName_getObjectTypeId,
-                                   (u32)LevelName_getExtraSize};
-u32 lbl_80321008[4] = {0x00031ccf, 0x00000522, 0x00031ce0, 0x00000e6e};
-u32 gProjectileSwitchObjDescriptor[14] = {0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00090000,
-                                          (u32)ProjectileSwitch_initialise,
-                                          (u32)ProjectileSwitch_release,
-                                          0x00000000,
-                                          (u32)ProjectileSwitch_init,
-                                          (u32)ProjectileSwitch_update,
-                                          (u32)ProjectileSwitch_hitDetect,
-                                          (u32)ProjectileSwitch_render,
-                                          (u32)ProjectileSwitch_free,
-                                          (u32)ProjectileSwitch_getObjectTypeId,
-                                          (u32)ProjectileSwitch_getExtraSize};
-u32 gInvisibleHitSwitchObjDescriptor[14] = {0x00000000,
-                                            0x00000000,
-                                            0x00000000,
-                                            0x00090000,
-                                            0x00000000,
-                                            0x00000000,
-                                            0x00000000,
-                                            (u32)InvisibleHitSwitch_init,
-                                            (u32)InvisibleHitSwitch_update,
-                                            0x00000000,
-                                            0x00000000,
-                                            0x00000000,
-                                            0x00000000,
-                                            (u32)InvisibleHitSwitch_getExtraSize};
-u32 gPressureSwitchFBObjDescriptor[14] = {0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00090000,
-                                          0x00000000,
-                                          0x00000000,
-                                          0x00000000,
-                                          (u32)PressureSwitchFB_init,
-                                          (u32)PressureSwitchFB_update,
-                                          0x00000000,
-                                          0x00000000,
-                                          (u32)PressureSwitchFB_free,
-                                          0x00000000,
-                                          (u32)PressureSwitchFB_getExtraSize};
-u32 gDoorObjDescriptor[14] = {
-    0x00000000,     0x00000000,       0x00000000, 0x00090000,       0x00000000, 0x00000000, 0x00000000,
-    (u32)Door_init, (u32)Door_update, 0x00000000, (u32)Door_render, 0x00000000, 0x00000000, (u32)Door_getExtraSize};
-u32 gMMP_BridgeObjDescriptor[14] = {0x00000000,
-                                    0x00000000,
-                                    0x00000000,
-                                    0x00090000,
-                                    (u32)mmp_bridge_initialise,
-                                    (u32)mmp_bridge_release,
-                                    0x00000000,
-                                    (u32)mmp_bridge_init,
-                                    (u32)mmp_bridge_update,
-                                    (u32)mmp_bridge_hitDetect,
-                                    (u32)mmp_bridge_render,
-                                    (u32)mmp_bridge_free,
-                                    (u32)mmp_bridge_getObjectTypeId,
-                                    (u32)mmp_bridge_getExtraSize};
-u32 gDoorLockObjDescriptor[14] = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00090000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  (u32)Lock_DoorLock_init,
-                                  (u32)Lock_DoorLock_update,
-                                  0x00000000,
-                                  (u32)Lock_DoorLock_render,
-                                  (u32)Lock_DoorLock_free,
-                                  0x00000000,
-                                  (u32)Lock_DoorLock_getExtraSize};
-u32 gSeqObjectObjDescriptor[14] = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   (u32)SeqObject_init,
-                                   (u32)SeqObject_update,
-                                   0x00000000,
-                                   (u32)SeqObject_render,
-                                   (u32)SeqObject_free,
-                                   (u32)SeqObject_getObjectTypeId,
-                                   (u32)SeqObject_getExtraSize};

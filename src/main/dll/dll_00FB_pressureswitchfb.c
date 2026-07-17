@@ -28,6 +28,7 @@
 #include "main/frame_timing.h"
 #include "main/dll/dll_00FB_pressureswitchfb.h"
 #include "main/dll/player_api.h"
+#include "main/object_descriptor.h"
 
 #define PRESSURESWITCHFB_PARTFX                  0x7c3
 #define PRESSURESWITCHFB_STATE_IDLE              0
@@ -492,3 +493,14 @@ void PressureSwitchFB_init(GameObject* obj, PressureswitchfbPlacement* params)
     state->trackedObjects[9] = NULL;
     obj->animEventCallback = PressureSwitchFB_SeqFn;
 }
+
+ObjectDescriptor gPressureSwitchFBObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0, 0, 0,
+    (ObjectDescriptorCallback)PressureSwitchFB_init,
+    (ObjectDescriptorCallback)PressureSwitchFB_update,
+    0, 0,
+    (ObjectDescriptorCallback)PressureSwitchFB_free,
+    0,
+    PressureSwitchFB_getExtraSize,
+};

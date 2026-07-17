@@ -1703,38 +1703,46 @@ main/dll/dll_00F5_sidekickball.c:
 
 main/dll/dll_00F6_area.c:
 	.text       start:0x8017A00C end:0x8017A048
-	.data       start:0x80320F98 end:0x803211A0
+	.data       start:0x80320F98 end:0x80320FD0
 
 main/dll/dll_00F8_levelname.c:
 	.text       start:0x8017A048 end:0x8017A350
+	.data       start:0x80320FD0 end:0x80321008
 	.sdata2     start:0x803E36E0 end:0x803E36F0
 	.sdata2     start:0x803E36F0 end:0x803E3700
 
 main/dll/dll_00F9_projectileswitch.c:
 	.text       start:0x8017A350 end:0x8017A8EC
+	.data       start:0x80321008 end:0x80321050
 	.sdata2     start:0x803E3700 end:0x803E3730
 
 main/dll/dll_00FA_invisiblehitswitch.c:
 	.text       start:0x8017A8EC end:0x8017AC2C
+	.data       start:0x80321050 end:0x80321088
 	.sdata2     start:0x803E3730 end:0x803E3750
 
 main/dll/dll_00FB_pressureswitchfb.c:
 	.text       start:0x8017AC2C end:0x8017B5C8
+	.data       start:0x80321088 end:0x803210C0
 
 main/dll/dll_0110_door.c:
 	.text       start:0x8017B5C8 end:0x8017BB80
+	.data       start:0x803210C0 end:0x803210F8
 	.sdata2     start:0x803E3780 end:0x803E3798
 
 main/dll/MMP/dll_010F_mmpbridge.c:
 	.text       start:0x8017BB80 end:0x8017BCF8
+	.data       start:0x803210F8 end:0x80321130
 	.sdata      start:0x803DBD90 end:0x803DBD98
 
 main/dll/dll_0111_doorlock.c:
 	.text       start:0x8017BCF8 end:0x8017C294
+	.data       start:0x80321130 end:0x80321168
 	.sdata2     start:0x803E3798 end:0x803E379C
 
 main/dll/dll_0112_seqobject.c:
 	.text       start:0x8017C294 end:0x8017C7A4
+	.data       start:0x80321168 end:0x803211A0
 	.sdata2     start:0x803E37A0 end:0x803E37A4
 
 main/dll/dll_0113_seqobj2.c:

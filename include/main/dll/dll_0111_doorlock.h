@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
+#include "main/object_descriptor.h"
 
 typedef struct DoorLockPlacement
 {
@@ -24,7 +25,7 @@ typedef struct DoorLockState
     u8 unlocked;
 } DoorLockState;
 
-extern u32 gDoorLockObjDescriptor[14];
+extern ObjectDescriptor gDoorLockObjDescriptor;
 
 int Lock_DoorLock_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate);
 int Lock_DoorLock_getExtraSize(void);

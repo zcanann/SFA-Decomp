@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objanim_update.h"
+#include "main/object_descriptor.h"
 
 typedef struct SeqObjectPlacement
 {
@@ -27,7 +28,7 @@ typedef struct SeqObjectState
     u8 pad02;
 } SeqObjectState;
 
-extern u32 gSeqObjectObjDescriptor[14];
+extern ObjectDescriptor gSeqObjectObjDescriptor;
 
 void objCallOnloadCallback(GameObject* obj);
 int SeqObject_SeqFn(GameObject* obj, int* unused, ObjAnimUpdateState* animUpdate);

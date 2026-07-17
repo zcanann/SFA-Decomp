@@ -18,6 +18,7 @@
 #include "main/objseq.h"
 #include "main/obj_group.h"
 #include "main/rcp_dolphin.h"
+#include "main/object_descriptor.h"
 
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
@@ -238,3 +239,15 @@ void SeqObject_init(GameObject* obj, SeqObjectPlacement* params)
     state->triggerBitState = 0;
     obj->objectFlags = (u16)(obj->objectFlags | SEQOBJECT_OBJFLAG_HITDETECT_DISABLED);
 }
+
+ObjectDescriptor gSeqObjectObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0, 0, 0,
+    (ObjectDescriptorCallback)SeqObject_init,
+    (ObjectDescriptorCallback)SeqObject_update,
+    0,
+    (ObjectDescriptorCallback)SeqObject_render,
+    (ObjectDescriptorCallback)SeqObject_free,
+    (ObjectDescriptorCallback)SeqObject_getObjectTypeId,
+    SeqObject_getExtraSize,
+};

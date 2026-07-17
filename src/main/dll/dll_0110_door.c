@@ -11,6 +11,7 @@
 #include "main/audio/sfx_play_int_return_legacy_api.h"
 #include "main/audio/sfx_stop_object_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 #define DOOR_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -280,3 +281,14 @@ void Door_init(int* obj, u8* def)
         }
     }
 }
+
+ObjectDescriptor gDoorObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0, 0, 0,
+    (ObjectDescriptorCallback)Door_init,
+    (ObjectDescriptorCallback)Door_update,
+    0,
+    (ObjectDescriptorCallback)Door_render,
+    0, 0,
+    Door_getExtraSize,
+};

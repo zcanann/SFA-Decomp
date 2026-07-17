@@ -23,6 +23,7 @@
 #include "main/dll/dll_0111_doorlock.h"
 #include "main/gamebits.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 #include "main/pad.h"
 
 
@@ -255,3 +256,15 @@ void Lock_DoorLock_init(short* obj, DoorLockPlacement* config)
         }
     }
 }
+
+ObjectDescriptor gDoorLockObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0, 0, 0,
+    (ObjectDescriptorCallback)Lock_DoorLock_init,
+    (ObjectDescriptorCallback)Lock_DoorLock_update,
+    0,
+    (ObjectDescriptorCallback)Lock_DoorLock_render,
+    (ObjectDescriptorCallback)Lock_DoorLock_free,
+    0,
+    Lock_DoorLock_getExtraSize,
+};

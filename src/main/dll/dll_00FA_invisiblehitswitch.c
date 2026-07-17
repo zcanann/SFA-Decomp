@@ -5,6 +5,7 @@
 
 #include "main/game_object.h"
 #include "main/gamebits.h"
+#include "main/object_descriptor.h"
 
 union InvisibleHitSwitchConstF32 { f32 f; };
 const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
@@ -174,3 +175,12 @@ void InvisibleHitSwitch_init(GameObject *obj, u8* placement)
         break;
     }
 }
+
+ObjectDescriptor gInvisibleHitSwitchObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0, 0, 0,
+    (ObjectDescriptorCallback)InvisibleHitSwitch_init,
+    (ObjectDescriptorCallback)InvisibleHitSwitch_update,
+    0, 0, 0, 0,
+    InvisibleHitSwitch_getExtraSize,
+};

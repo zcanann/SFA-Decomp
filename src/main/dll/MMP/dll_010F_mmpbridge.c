@@ -14,6 +14,7 @@
 #include "main/frame_timing.h"
 #include "main/objhits.h"
 #include "main/dll/MMP/dll_010F_mmpbridge.h"
+#include "main/object_descriptor.h"
 
 char lbl_803DBD90[] = "S %d\n";
 
@@ -93,3 +94,17 @@ void mmp_bridge_release(void)
 void mmp_bridge_initialise(void)
 {
 }
+
+ObjectDescriptor gMMP_BridgeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    mmp_bridge_initialise,
+    mmp_bridge_release,
+    0,
+    (ObjectDescriptorCallback)mmp_bridge_init,
+    (ObjectDescriptorCallback)mmp_bridge_update,
+    (ObjectDescriptorCallback)mmp_bridge_hitDetect,
+    (ObjectDescriptorCallback)mmp_bridge_render,
+    (ObjectDescriptorCallback)mmp_bridge_free,
+    (ObjectDescriptorCallback)mmp_bridge_getObjectTypeId,
+    mmp_bridge_getExtraSize,
+};

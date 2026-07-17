@@ -16,8 +16,7 @@
  * setting the enable game bit and jumping straight to phase 1.
  *
  * Render/hitDetect/free/release/initialise are empty; behaviour is driven
- * entirely by update() and the sequence callback. The object descriptor
- * lives in the sibling area unit's table (dll_00F6_area .data+0x38).
+ * entirely by update() and the sequence callback.
  */
 #include "main/dll/tFrameAnimator.h"
 #include "main/object_api.h"
@@ -28,6 +27,7 @@
 #include "main/textrender_api.h"
 #include "main/vecmath.h"
 #include "main/dll/dll_00F8_levelname.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #define LEVELNAME_OBJFLAG_HITDETECT_DISABLED 0x2000
@@ -175,3 +175,17 @@ void LevelName_release(void)
 void LevelName_initialise(void)
 {
 }
+
+ObjectDescriptor gLevelNameObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    LevelName_initialise,
+    LevelName_release,
+    0,
+    (ObjectDescriptorCallback)LevelName_init,
+    (ObjectDescriptorCallback)LevelName_update,
+    (ObjectDescriptorCallback)LevelName_hitDetect,
+    (ObjectDescriptorCallback)LevelName_render,
+    (ObjectDescriptorCallback)LevelName_free,
+    (ObjectDescriptorCallback)LevelName_getObjectTypeId,
+    LevelName_getExtraSize,
+};
