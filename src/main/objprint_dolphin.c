@@ -2348,15 +2348,14 @@ void modelDoRenderInstrs(int* obj, int* obj2, u8* m, u8 mode)
             PSMTXConcat(vm, wm, fm);
         }
         {
-            u8* idp = gObjGxPosMtxIdTable;
             f32 z;
-            GXLoadPosMtxImm(fm, idp[9]);
+            GXLoadPosMtxImm(fm, gObjGxPosMtxIdTable[9]);
             z = lbl_803DEA04;
             fm[3] = z;
             fm[7] = z;
             fm[11] = z;
             PSMTXConcat(fm, sm, fm);
-            GXLoadNrmMtxImm(fm, idp[9]);
+            GXLoadNrmMtxImm(fm, gObjGxPosMtxIdTable[9]);
             GXLoadTexMtxImm(fm, gObjGxTexMtxIdTable[9], 0);
         }
     }
