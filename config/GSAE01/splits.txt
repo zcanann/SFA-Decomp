@@ -4122,9 +4122,19 @@ main/audio/voice_unregister.c:
 	.text       start:0x8027A2B4 end:0x8027A330
 
 main/audio/voice_conv.c:
-	extab       start:0x80005988 end:0x80005998
-	extabindex  start:0x800061DC end:0x800061F4
-	.text       start:0x8027A330 end:0x8027A660
+	.text       start:0x8027A330 end:0x8027A4E0
+
+main/audio/synth_ac.c:
+	extab       start:0x80005988 end:0x80005990
+	extabindex  start:0x800061DC end:0x800061E8
+	.text       start:0x8027A4E0 end:0x8027A60C
+	.sdata2     start:0x803E7818 end:0x803E782C
+
+main/audio/synth_adsr.c:
+	extab       start:0x80005990 end:0x80005998
+	extabindex  start:0x800061E8 end:0x800061F4
+	.text       start:0x8027A60C end:0x8027A660
+	.sdata2     start:0x803E7830 end:0x803E7848
 
 main/audio/adsr_setup.c:
 	extab       start:0x80005998 end:0x800059A0

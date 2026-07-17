@@ -1,19 +1,8 @@
 #include "main/audio/voice_manage.h"
 #include "main/audio/synth_config.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-
-#pragma exceptions on
 
 extern u8 voiceMidiKeySlots[][SYNTH_VOICE_MIDI_KEY_COUNT];
 extern u8 voiceDirectSlots[];
-extern f32 voicePitchUpTable[];
-extern f32 voicePitchDownTable[];
-extern f32 lbl_803E7818;
-extern f32 lbl_803E7828;
-extern f32 lbl_803E7830;
-extern f32 lbl_803E7834;
-extern f32 lbl_803E7838;
-extern asm u32 __cvt_fp2unsigned(register f64 d);
 
 /*
  * Mark all entries of the MIDI voice-id table and direct voice-id table
@@ -96,65 +85,4 @@ void voiceInitRegistrationTables(void)
     voiceDirectSlots[61] = SYNTH_VOICE_REGISTRATION_FREE;
     voiceDirectSlots[62] = SYNTH_VOICE_REGISTRATION_FREE;
     voiceDirectSlots[63] = SYNTH_VOICE_REGISTRATION_FREE;
-}
-
-/*
- * Convert a u16 sample-rate-style value to a scaled int via the magic
- * f64 conversion trick.
- */
-int voiceScaleSampleRate(u16 x)
-{
-    return (int)(lbl_803E7818 * (f32)(u32)x);
-}
-
-/*
- * Pitch-table lookup with semitone interpolation: from cents-encoded
- * input (high byte = base note, low byte = fractional semitone),
- * pick a base frequency from one of two tables (above/below center
- * note), scale by fraction, then convert to a u32 sample-rate ratio.
- */
-u32 voiceGetPitchRatio(u8 noteIn, u32 packed)
-{
-    u8 baseNote;
-    f32 freq;
-
-    if (packed == 0xffffffffU)
-    {
-        packed = 0x40005622;
-    }
-    baseNote = (u8)(packed >> 24);
-    if (noteIn != baseNote)
-    {
-        if (baseNote < noteIn)
-        {
-            freq = voicePitchUpTable[noteIn - baseNote];
-        }
-        else
-        {
-            freq = voicePitchDownTable[baseNote - noteIn];
-        }
-        freq = (f32)(u32)(packed & 0xffffff) * freq;
-    }
-    else
-    {
-        freq = (f32)(u32)(packed & 0xffffff);
-    }
-    return __cvt_fp2unsigned((lbl_803E7828 * freq) / (f32)SYNTH_CONFIGURATION->sampleRate);
-}
-
-/*
- * dB-to-linear-level conversion via pow + magic conversion.
- */
-u32 voiceConvertDbToLinear(u32 dbCents)
-{
-    f32 scaledDb;
-    f32 ex;
-    f32 base;
-    f32 result;
-
-    scaledDb = (f32)(s32)dbCents;
-    ex = lbl_803E7838 * scaledDb;
-    base = powf(lbl_803E7834, ex);
-    result = lbl_803E7830 * base;
-    return __cvt_fp2unsigned(result);
 }
