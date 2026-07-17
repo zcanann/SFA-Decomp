@@ -1538,6 +1538,10 @@ void* ObjSeq_FindTargetObject(u8* obj)
 }
 #pragma dont_inline off
 
+#define ObjSeq_GetObjects(unused, count) ((GameObject**)ObjList_GetObjects((unused), (count)))
+#define ObjSeq_FindGameObjectTarget(obj)  ObjSeq_FindTargetObject((u8*)(obj))
+#define ObjSeq_UpdateGameObject(obj, t)   ObjSeq_update((u8*)(obj), (t))
+
 void ObjSeq_runBgCmds(void)
 {
     int ok;
@@ -1573,7 +1577,7 @@ void ObjSeq_runBgCmds(void)
 
     base = lbl_80396918;
     state = (ObjSeqRunBgState*)base;
-    objects = (GameObject**)ObjList_GetObjects(&unused, &objectCount);
+    objects = ObjSeq_GetObjects(&unused, &objectCount);
     if (lbl_803DD060 != lbl_803DD062)
     {
         lbl_803DD062 = lbl_803DD060;
@@ -1641,7 +1645,7 @@ void ObjSeq_runBgCmds(void)
                 seqp = candidate->extra;
                 if (model != NULL && model->slot == index)
                 {
-                    if (model->targetType >= 4 && ObjSeq_FindTargetObject((u8*)candidate) == NULL)
+                    if (model->targetType >= 4 && ObjSeq_FindGameObjectTarget(candidate) == NULL)
                     {
                         ok = 0;
                         logPrintf(sObjSequenceMissingObjectFormat, model->targetType - 4);
@@ -1672,7 +1676,7 @@ void ObjSeq_runBgCmds(void)
                 {
                     seqp->runState = 2;
                     seqp->pendingStartFrame = xrot;
-                    ObjSeq_update((u8*)candidate, lbl_803DEFC8);
+                    ObjSeq_UpdateGameObject(candidate, lbl_803DEFC8);
                     Obj_GetWorldPosition(candidate, &candidate->anim.worldPosX,
                                          &candidate->anim.worldPosY, &candidate->anim.worldPosZ);
                 }
