@@ -97,6 +97,9 @@ typedef struct
     void* textures[3]; /* 0x10 */
     int mode;          /* 0x1c */
     f32 timer;         /* 0x20 */
+    u8 dirId;          /* 0x24 */
+    u8 languageId;     /* 0x25 */
+    u8 pad26[2];       /* 0x26 */
 } TextFont;
 
 typedef struct GameTextBox
@@ -164,6 +167,30 @@ typedef struct
     u8 active;
     u8 sourceId;
 } GameTextLoadSlot;
+
+typedef struct
+{
+    u8 pad00[8];
+    char** text;
+} GameTextFadeEntry;
+
+typedef struct
+{
+    f32 fadeElapsed[8];
+    f32 fadeTimers[8];
+    GameTextFadeEntry fadeEntries[8];
+    u8 pad00a0[0x2e0];
+    char path[0x40];
+    char commandStringBuffer[0x800];
+    GameTextSlot commands[0x80];
+    TextFont fonts[4];
+    GameTextLoadSlot loadSlots[8];
+} GameTextRuntime;
+STATIC_ASSERT(offsetof(GameTextRuntime, path) == 0x380);
+STATIC_ASSERT(offsetof(GameTextRuntime, commandStringBuffer) == 0x3c0);
+STATIC_ASSERT(offsetof(GameTextRuntime, commands) == 0xbc0);
+STATIC_ASSERT(offsetof(GameTextRuntime, fonts) == 0x15c0);
+STATIC_ASSERT(offsetof(GameTextRuntime, loadSlots) == 0x1660);
 
 typedef struct GameTextCharset
 {
@@ -1859,23 +1886,23 @@ int gameTextGetState(int i)
 void gameTextRun(void)
 {
     GameTextSlot* cmd;
-    u8* gameTextBase;
+    GameTextRuntime* gameTextBase;
     int sourceId;
     GameTextLoadSlot* freeSlot;
-    u8* pending;
+    TextFont* pending;
     int dirId;
     int i;
     int languageId;
     GameTextLoadSlot* slot;
-    u8* textWindow;
+    GameTextBox* textBox;
     int color;
     double fadeLimit;
     double zero;
 
-    gameTextBase = gGameTextBase;
-    cmd = (GameTextSlot*)(gameTextBase + 0xbc0);
+    gameTextBase = (GameTextRuntime*)gGameTextBase;
+    cmd = gameTextBase->commands;
 
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    slot = gameTextBase->loadSlots;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do
     {
@@ -1887,13 +1914,13 @@ void gameTextRun(void)
     } while (i-- != 0);
 
     sourceId = 0;
-    pending = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET;
+    pending = gameTextBase->fonts;
     do
     {
-        dirId = pending[0x24];
+        dirId = pending->dirId;
         if ((u8)dirId != GAMETEXT_INVALID_DIR)
         {
-            slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+            slot = gameTextBase->loadSlots;
             freeSlot = (slot->active == 0)       ? slot
                        : ((++slot)->active == 0) ? slot
                        : ((++slot)->active == 0) ? slot
@@ -1906,27 +1933,27 @@ void gameTextRun(void)
 
             if (freeSlot != NULL)
             {
-                languageId = pending[0x25];
+                languageId = pending->languageId;
                 freeSlot->state = 1;
-                freeSlot->dirId = dirId;
+                freeSlot->dirId = (u8)dirId;
                 freeSlot->languageId = languageId;
                 freeSlot->active = 1;
                 freeSlot->sourceId = sourceId;
-                sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
-                        sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
+                sprintf(gameTextBase->path, sGameTextMapPathFormat,
+                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
                 setFileInfo(&freeSlot->fileInfo);
-                freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
+                freeSlot->loadHandle = loadFileByPathAsync(gameTextBase->path,
                                                            &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
                 setFileInfo(NULL);
-                pending[0x24] = GAMETEXT_INVALID_DIR;
-                pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
+                pending->dirId = GAMETEXT_INVALID_DIR;
+                pending->languageId = GAMETEXT_INVALID_LANGUAGE;
             }
         }
-        pending += 0x28;
+        pending++;
         sourceId++;
     } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
 
-    slot = (GameTextLoadSlot*)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    slot = gameTextBase->loadSlots;
     i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do
     {
@@ -1942,12 +1969,12 @@ void gameTextRun(void)
 
     i = GAMETEXT_LOAD_SLOT_COUNT;
     {
-        f32* timer = (f32*)(gameTextBase + 0x40);
-        f32* alpha = (f32*)(gameTextBase + 0x20);
-        u8* entry = gameTextBase + 0xa0;
+        f32* timer = gameTextBase->fadeTimers + 8;
+        f32* alpha = gameTextBase->fadeElapsed + 8;
+        GameTextFadeEntry* entry = gameTextBase->fadeEntries + 8;
         zero = lbl_803DE704;
         fadeLimit = gGameTextFadeLimit;
-        while (timer--, alpha--, entry -= 0xc, i-- != 0)
+        while (timer--, alpha--, entry--, i-- != 0)
         {
             if ((double)*timer > zero)
             {
@@ -1956,7 +1983,7 @@ void gameTextRun(void)
                 {
                     *timer = zero;
                     *alpha = zero;
-                    sprintf(**(char***)(entry + 8), lbl_803DB3D4);
+                    sprintf(*entry->text, lbl_803DB3D4);
                 }
             }
         }
@@ -1971,11 +1998,11 @@ void gameTextRun(void)
         gameTextFonts->timer = lbl_803DE704;
     }
 
-    textWindow = (u8*)gTextBoxes;
+    textBox = gTextBoxes;
     for (i = 148; i != 0; i--)
     {
-        *(u16*)(textWindow + 0x1c) &= ~1;
-        textWindow += 0x20;
+        textBox->flags &= ~1;
+        textBox++;
     }
 
     lbl_803DC99C = 0;
@@ -2002,8 +2029,10 @@ void gameTextRun(void)
         case 4:
         {
             int t1 = cmd->arg2;
-            *(s16*)((u8*)gTextBoxes + cmd->arg0 * 0x20 + 0x18) = (s16)cmd->arg1;
-            *(s16*)((u8*)gTextBoxes + cmd->arg0 * 0x20 + 0x1a) = t1;
+            *(s16*)((u8*)gTextBoxes + cmd->arg0 * sizeof(GameTextBox) +
+                    offsetof(GameTextBox, cursorX)) = (s16)cmd->arg1;
+            *(s16*)((u8*)gTextBoxes + cmd->arg0 * sizeof(GameTextBox) +
+                    offsetof(GameTextBox, cursorY)) = t1;
             break;
         }
         case 1:
@@ -2029,9 +2058,9 @@ void gameTextRun(void)
             int t3 = cmd->arg3;
             int t2 = cmd->arg1;
             int t1 = cmd->arg0;
-            textWindow = (u8*)gTextBoxes + t2 * 0x20;
-            *(s16*)(textWindow + 0x18) = cmd->arg2;
-            *(s16*)(textWindow + 0x1a) = t3;
+            textBox = &gTextBoxes[t2];
+            textBox->cursorX = cmd->arg2;
+            textBox->cursorY = t3;
             gameTextRenderStrs((char*)t1, t2);
             break;
         }
@@ -2042,7 +2071,7 @@ void gameTextRun(void)
             }
             else
             {
-                gCurTextBox = (u8*)gTextBoxes + cmd->arg0 * 0x20;
+                gCurTextBox = &gTextBoxes[cmd->arg0];
             }
             break;
         case 9:
@@ -2080,7 +2109,7 @@ void gameTextRun(void)
             break;
         }
         case 15:
-            gameTextFonts = (TextFont*)(gameTextBase + cmd->arg0 * 0x28 + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET);
+            gameTextFonts = &gameTextBase->fonts[cmd->arg0];
             gameTextCharset = cmd->arg0;
             if (cmd->arg0 == 2)
             {
@@ -2098,14 +2127,14 @@ void gameTextRun(void)
         Sfx_StopFromObject(0, SFXTRIG_clock_loop);
     }
     gGameTextCommandCount = 0;
-    lbl_803DC9C4 = (char*)(gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET);
+    lbl_803DC9C4 = gameTextBase->commandStringBuffer;
 
     i = 0x94;
-    textWindow = (u8*)gTextBoxes + 0x1280;
-    while (textWindow -= 0x20, i-- != 0)
+    textBox = &gTextBoxes[148];
+    while (textBox--, i-- != 0)
     {
-        *(s16*)(textWindow + 0x18) = 0;
-        *(s16*)(textWindow + 0x1a) = 0;
+        textBox->cursorX = 0;
+        textBox->cursorY = 0;
     }
     gCurTextBox = NULL;
 }
