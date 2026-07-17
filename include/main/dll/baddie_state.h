@@ -80,7 +80,13 @@ typedef struct BaddieState {
      * index read through "moveSpeed" would be semantically false). */
     f32 moveSpeed; /* per-mode movement speed */
     f32 gravity;
-    f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
+    /* per-family tuning scalar (160.0f baddiewhirlpool/snowworm, 240.0f-250.0f
+     * firecrawler); the families disagree on what it measures, so it is left raw.
+     * The generic owner reads it as a DISTANCE threshold ((u16)(int) cast, dist <
+     * mid); firecrawler and newseqobj divide a frame counter by it instead.
+     * baddiewhirlpool and snowworm stash the previous value into userData2 before
+     * overwriting - that save-slot pairing is the only relation to 0x33B. */
+    f32 unk2A8;
     f32 speedScale;
     u16 hitCounter; /* hit/impact counter (lhz-only reads in all families; sth stores) */
     u8 pad2B2[0x2B8 - 0x2B2];
