@@ -256,7 +256,7 @@ def main():
     mode.add_argument("--seq", help="mnemonics in order, gaps allowed, e.g. 'extsb. rlwimi'")
     mode.add_argument("--csrc", help="regex over reference C source; shows resulting asm")
     mode.add_argument("--stats", action="store_true", help="corpus size summary")
-    ap.add_argument("--project", help="comma list to restrict (dkr,jfg,mp4)")
+    ap.add_argument("--project", help="comma list to restrict (" + ",".join(R.RECIPES) + ")")
     ap.add_argument("--profile", default="both_off",
                     help="both_off|peep_on|sched_on|both_on|all (default both_off)")
     ap.add_argument("--limit", type=int, default=25)

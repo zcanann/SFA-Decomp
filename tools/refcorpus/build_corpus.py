@@ -56,8 +56,35 @@ def _write_generated_headers(rec: R.Recipe) -> Optional[str]:
     gen_dir = R.REPO_ROOT / R.GEN_ROOT / rec.name
     gen_dir.mkdir(parents=True, exist_ok=True)
     for fname, content in gen.items():
-        (gen_dir / fname).write_text(content)
+        path = gen_dir / fname
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
     return str((R.REPO_ROOT / R.GEN_ROOT / rec.name).relative_to(R.REPO_ROOT))
+
+
+def _prepare_source(rec: R.Recipe, src: str) -> str:
+    """Return an optional generated compatibility copy, leaving imports untouched."""
+    if not rec.transform:
+        return src
+    source = R.REPO_ROOT / src
+    rel = str(source.relative_to(rec.abs_root))
+    original = source.read_text(errors="ignore")
+    transformed = R.TRANSFORMS[rec.transform](rec, rel, original)
+    if transformed == original:
+        return src
+    out = R.REPO_ROOT / R.GEN_ROOT / "sources" / rec.name / rel
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(transformed)
+    return str(out.relative_to(R.REPO_ROOT))
+
+
+def _source_flags(rec: R.Recipe, src: str) -> List[str]:
+    rel = "/" + str((R.REPO_ROOT / src).relative_to(rec.abs_root))
+    flags: List[str] = []
+    for pattern, values in rec.source_flags.items():
+        if re.search(pattern, rel):
+            flags.extend(values)
+    return flags
 
 
 def _include_args(rec: R.Recipe, gen_dir: Optional[str]) -> List[str]:
@@ -94,12 +121,15 @@ def _base_argv(rec: R.Recipe, gen_dir: Optional[str], profile_flags: List[str]) 
     argv = [R.WIBO, R.COMPILER] + list(R.BASE_CFLAGS)
     if rec.char_unsigned:
         argv += ["-char", "unsigned"]
+    if rec.relax_pointers:
+        argv += ["-relax_pointers"]
     if rec.use_shim:
         argv += ["-prefix", R.SHIM]
     argv += ["-maxerrors", "1"]
     argv += _include_args(rec, gen_dir)
     for d in rec.defines:
         argv += ["-D" + d]
+    argv += list(rec.extra_flags)
     argv += list(profile_flags)
     return argv
 
@@ -134,13 +164,20 @@ def _init_worker(base_argvs: Dict, cache_key_extra: Dict):
 def _compile_one(job: Dict) -> Dict:
     rec_name, profile, src = job["rec"], job["profile"], job["src"]
     argv = list(_JOB_CTX["argvs"][(rec_name, profile)])
+    # Some projects use ambiguous sibling includes such as "types.h" in many
+    # directories. GC/2.0 does not reliably search the input file's directory,
+    # so recipes can explicitly put it ahead of their project-wide include dirs.
+    if job.get("include_source_dir"):
+        argv[2:2] = ["-i", str(Path(src).parent)]
+    argv += job.get("source_flags", [])
+    compile_src = job.get("compile_src", src)
     out_o = job["out_o"]
     out_s = job["out_s"]
     Path(out_o).parent.mkdir(parents=True, exist_ok=True)
 
     # cache: (source bytes, full argv, compiler size, shim+gen key)
     try:
-        src_bytes = Path(src).read_bytes()
+        src_bytes = Path(compile_src).read_bytes()
     except OSError:
         return {**job, "ok": False, "nfuncs": 0, "reason": "source unreadable"}
     key = hashlib.sha1()
@@ -154,7 +191,7 @@ def _compile_one(job: Dict) -> Dict:
         n = sum(1 for _ in open(out_s) if FUNC_LABEL_RE.match(_))
         return {**job, "ok": True, "nfuncs": n, "reason": "", "cached": True}
 
-    full = argv + ["-c", src, "-o", out_o]
+    full = argv + ["-c", compile_src, "-o", out_o]
     proc = subprocess.run(full, cwd=str(R.REPO_ROOT), capture_output=True, text=True)
     if proc.returncode != 0 or not Path(out_o).exists():
         for stale in (out_o, out_s, str(hash_path)):
@@ -176,19 +213,25 @@ def _compile_one(job: Dict) -> Dict:
 def build(projects: Optional[List[str]], profiles: List[str], jobs: int,
           force: bool, limit: Optional[int]) -> Dict:
     recs = R.resolve(projects)
+    active_recs: List[R.Recipe] = []
     base_argvs: Dict = {}
     cache_extra: Dict = {}
     all_jobs: List[Dict] = []
 
     for rec in recs:
+        if not rec.abs_root.is_dir():
+            print(f"[refcorpus] skipping {rec.name}: missing {rec.abs_root}")
+            continue
+        active_recs.append(rec)
         gen_dir = _write_generated_headers(rec)
         # cache-bust key component: shim + generated header contents
         extra = ""
         if rec.use_shim:
             extra += (R.REPO_ROOT / R.SHIM).read_text()
         if gen_dir:
-            for f in sorted((R.REPO_ROOT / gen_dir).glob("*")):
-                extra += f.read_text()
+            root = R.REPO_ROOT / gen_dir
+            for f in sorted(p for p in root.rglob("*") if p.is_file()):
+                extra += str(f.relative_to(root)) + "\0" + f.read_text()
         cache_extra[rec.name] = hashlib.sha1(extra.encode()).hexdigest()
 
         srcs = _enumerate_sources(rec)
@@ -201,6 +244,9 @@ def build(projects: Optional[List[str]], profiles: List[str], jobs: int,
                 stem = f"{R.OUT_ROOT}/{rec.name}/{profile}/{rel}"
                 all_jobs.append({
                     "rec": rec.name, "profile": profile, "src": src,
+                    "compile_src": _prepare_source(rec, src),
+                    "source_flags": _source_flags(rec, src),
+                    "include_source_dir": rec.include_source_dir,
                     "out_o": stem[:-2] + ".o" if stem.endswith(".c") else stem + ".o",
                     "out_s": stem[:-2] + ".s" if stem.endswith(".c") else stem + ".s",
                 })
@@ -213,7 +259,7 @@ def build(projects: Optional[List[str]], profiles: List[str], jobs: int,
                 except OSError:
                     pass
 
-    print(f"[refcorpus] {len(recs)} project(s), {len(profiles)} profile(s), "
+    print(f"[refcorpus] {len(active_recs)} project(s), {len(profiles)} profile(s), "
           f"{len(all_jobs)} compile jobs, {jobs} workers")
     results: List[Dict] = []
     with mp.Pool(jobs, initializer=_init_worker, initargs=(base_argvs, cache_extra)) as pool:
@@ -223,7 +269,7 @@ def build(projects: Optional[List[str]], profiles: List[str], jobs: int,
                 ok = sum(1 for r in results if r["ok"])
                 print(f"  ... {i}/{len(all_jobs)}  ok={ok}")
 
-    return _summarize(recs, profiles, results)
+    return _summarize(active_recs, profiles, results)
 
 
 def _summarize(recs, profiles, results) -> Dict:
@@ -245,14 +291,18 @@ def _summarize(recs, profiles, results) -> Dict:
     cov_path = R.REPO_ROOT / R.OUT_ROOT / "coverage.json"
     cov: Dict = json.loads(cov_path.read_text()) if cov_path.exists() else {}
     for rec in recs:
-        cov[rec.name] = {}
+        per_project = cov.setdefault(rec.name, {})
         for profile in profiles:
             rs = [r for r in results if r["rec"] == rec.name and r["profile"] == profile]
             ok = [r for r in rs if r["ok"]]
+            zero = [r for r in ok if r["nfuncs"] == 0]
             fails = [{"src": r["src"], "reason": r["reason"]} for r in rs if not r["ok"]]
-            cov[rec.name][profile] = {
+            per_project[profile] = {
                 "files_total": len(rs), "files_ok": len(ok),
+                "files_code": len(ok) - len(zero),
+                "files_zero_funcs": len(zero),
                 "funcs": sum(r["nfuncs"] for r in ok), "fails": fails,
+                "zero_func_sources": [r["src"] for r in zero],
             }
     (R.REPO_ROOT / R.OUT_ROOT / "coverage.json").write_text(json.dumps(cov, indent=1))
 
@@ -261,7 +311,7 @@ def _summarize(recs, profiles, results) -> Dict:
         p = per.get("both_off") or next(iter(per.values()))
         pct = 100.0 * p["files_ok"] / p["files_total"] if p["files_total"] else 0.0
         print(f"  {name:5s}  {p['files_ok']:4d}/{p['files_total']:<4d} files "
-              f"({pct:5.1f}%)   {p['funcs']:5d} funcs/profile")
+              f"({pct:5.1f}%)  code={p['files_code']:4d}  {p['funcs']:5d} funcs/profile")
     total_funcs = sum(pp["funcs"] for per in cov.values() for pp in per.values())
     print(f"  total asm samples across all profiles (full corpus): {total_funcs}")
     print(f"  wrote {R.OUT_ROOT}/manifest.json and coverage.json")
@@ -277,7 +327,9 @@ def _list_fails():
     for name, per in cov.items():
         prof = per.get("both_off") or next(iter(per.values()))
         reasons = Counter(f["reason"] for f in prof["fails"])
-        print(f"\n### {name}: {len(prof['fails'])} failing units (profile both_off)")
+        print(f"\n### {name}: {len(prof['fails'])} failing, "
+              f"{prof.get('files_zero_funcs', 0)} zero-function successful units "
+              "(profile both_off)")
         for reason, n in reasons.most_common():
             print(f"  {n:3d}  {reason}")
 
