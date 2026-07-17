@@ -356,14 +356,29 @@ extern void GXSetScissor(int a, int b, int c, int d);
 extern int getDrawDistanceFlag_8005cd48(void);
 extern void* memcpy(void* d, const void* s, int n);
 
+static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
+{
+    u32 sum[1];
+    int k[1];
+    sum[0] = 0;
+    for (k[0] = 0; k[0] < window; k[0]++)
+    {
+        sum[0] += row[k[0]];
+    }
+    for (k[0] = 0; k[0] < size; k[0]++)
+    {
+        blurred[k[0]] = sum[0] / window;
+        sum[0] -= row[k[0]];
+        sum[0] += (row + window)[k[0]];
+    }
+}
+
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
     u8 blurred[128];
     u8 row[152];
     u8* data;
-    u32 sum[1];
     u32 i;
-    int k[1];
 
     data = texData + 0x60;
     if (window % 8 == 0)
@@ -397,17 +412,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 *dst = fill;
                 dst++;
             }
-            sum[0] = 0;
-            for (k[0] = sum[0]; k[0] < window; k[0]++)
-            {
-                sum[0] += row[k[0]];
-            }
-            for (k[0] = 0; k[0] < size; k[0]++)
-            {
-                blurred[k[0]] = sum[0] / window;
-                sum[0] -= row[k[0]];
-                sum[0] += (row + window)[k[0]];
-            }
+            boxBlurRow(row, blurred, size, window);
             src = (u32*)blurred;
             wp = tile;
             for (x = 0; x < size; x += 8)
@@ -451,17 +456,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     *dst = fill;
                     dst++;
                 }
-                sum[0] = 0;
-                for (k[0] = 0; k[0] < window; k[0]++)
-                {
-                    sum[0] += row[k[0]];
-                }
-                for (k[0] = 0; k[0] < size; k[0]++)
-                {
-                    blurred[k[0]] = sum[0] / window;
-                    sum[0] -= row[k[0]];
-                    sum[0] += (row + window)[k[0]];
-                }
+                boxBlurRow(row, blurred, size, window);
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
                 {
@@ -508,17 +503,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                 *dst = fillhw;
                 dst++;
             }
-            sum[0] = 0;
-            for (k[0] = 0; k[0] < window; k[0]++)
-            {
-                sum[0] += row[k[0]];
-            }
-            for (k[0] = 0; k[0] < size; k[0]++)
-            {
-                blurred[k[0]] = sum[0] / window;
-                sum[0] -= row[k[0]];
-                sum[0] += (row + window)[k[0]];
-            }
+            boxBlurRow(row, blurred, size, window);
             src = (u16*)blurred;
             for (x = 0; x < size; x += 8)
             {
@@ -563,17 +548,7 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     *dst = fillhw;
                     dst++;
                 }
-                sum[0] = 0;
-                for (k[0] = 0; k[0] < window; k[0]++)
-                {
-                    sum[0] += row[k[0]];
-                }
-                for (k[0] = 0; k[0] < size; k[0]++)
-                {
-                    blurred[k[0]] = sum[0] / window;
-                    sum[0] -= row[k[0]];
-                    sum[0] += (row + window)[k[0]];
-                }
+                boxBlurRow(row, blurred, size, window);
                 bp = blurred;
                 for (yy = 0; yy < size; yy += 4)
                 {
