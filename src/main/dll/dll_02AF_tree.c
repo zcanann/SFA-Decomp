@@ -25,7 +25,6 @@
 #include "main/vecmath.h"
 #include "main/shader_api.h"
 #include "main/objprint_api.h"
-#include "main/dll/dll_02B0_brokenpipe.h"
 #include "main/dll/dll_02AF_tree.h"
 #include "main/game_object.h"
 #include "main/object_api.h"
@@ -375,7 +374,6 @@ f32 gTreeEffectColors[] = {
     0.0f, 350.0f, 0.0f, 130.0f, 25.0f, 300.0f, 0.0f, 80.0f,  0.0f,  50.0f,  0.0f, 50.0f,
 };
 
-/* descriptor/ptr table auto 0x8032bc90-0x8032bd00 */
 ObjectDescriptor gTreeObjDescriptor = {
     0,
     0,
@@ -393,19 +391,3 @@ ObjectDescriptor gTreeObjDescriptor = {
     tree_getExtraSize,
 };
 
-ObjectDescriptor gBrokenPipeObjDescriptor = {
-    0,
-    0,
-    0,
-    0x00090000,
-    NULL,
-    NULL,
-    NULL,
-    (ObjectDescriptorCallback)brokenpipe_init,
-    (ObjectDescriptorCallback)brokenpipe_update,
-    NULL,
-    NULL,
-    NULL,
-    NULL,
-    brokenpipe_getExtraSize,
-};
