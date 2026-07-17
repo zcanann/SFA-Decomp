@@ -3534,6 +3534,7 @@ main/dll/DR/dll_0283_drbarrelgr.c:
 main/dll/WC/dll_028A_wcearthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
 	.data       start:0x8032AEC0 end:0x8032AF40
+	.sdata2     start:0x803E6D00 end:0x803E6D08
 
 main/dll/dll_028B.c:
 	.text       start:0x80223D18 end:0x8022408C
@@ -3720,6 +3721,7 @@ main/dll/dll_02AE_waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
 	.data       start:0x8032BBA8 end:0x8032BBE0
 	.sbss       start:0x803DDDA8 end:0x803DDDB8
+	.sdata2     start:0x803E72D8 end:0x803E72E8
 
 main/dll/dll_02AF_tree.c:
 	.text       start:0x802356CC end:0x80236154
