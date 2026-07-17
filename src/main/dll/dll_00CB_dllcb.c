@@ -99,8 +99,9 @@ void ChukChuk_setScale(int obj, int v);
 
 int fn_80160534(int* obj);
 
-#pragma scheduling off
+
 #pragma peephole off
+#pragma scheduling off
 int fn_801601C4(GameObject* obj, GroundBaddieState* state)
 {
     GroundBaddieState* sub;
@@ -143,6 +144,47 @@ int fn_801601C4(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
+int fn_8016032C(int* obj, GroundBaddieState* state)
+{
+    if ((s8)state->baddie.moveJustStartedB != 0)
+    {
+        f32 fz;
+        (*gPlayerInterface)->setState(obj, state, 0);
+        fz = lbl_803E2E7C;
+        ((GameObject*)obj)->anim.velocityY = fz;
+        state->baddie.animSpeedA = fz;
+        state->baddie.animSpeedC = fz;
+    }
+    if (((GameObject*)obj)->anim.velocityY < lbl_803E2E80)
+    {
+        f32 fz = lbl_803E2E68.f;
+        ((GameObject*)obj)->anim.velocityY = fz;
+        state->baddie.animSpeedA = fz;
+        state->baddie.animSpeedC = fz;
+        return 6;
+    }
+    {
+        f32 d = lbl_803E2E88;
+        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY / d;
+        state->baddie.animSpeedA = state->baddie.animSpeedA / d;
+        state->baddie.animSpeedC = state->baddie.animSpeedC / d;
+    }
+    return 0;
+}
+
+int fn_801603E8(int* obj, u8* obj2)
+{
+    GroundBaddieState* x = ((GameObject*)obj)->extra;
+    if ((s8)obj2[0x27b] != 0)
+    {
+        (*(VtableFn*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, x->triggerId, -1, 0);
+    }
+    return 0;
+}
+
+#pragma dont_inline reset
+
+#pragma dont_inline on
 int fn_8016043C(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
@@ -170,7 +212,86 @@ int fn_8016043C(GameObject* obj, GroundBaddieState* state)
     return 0;
 }
 
+#pragma scheduling on
+int fn_8016050C(int p1, u8* obj)
+{
+    if ((s8)obj[0x354] < 1)
+        return 3;
+    return 6;
+}
+
+#pragma scheduling off
+int fn_8016052C(void)
+{
+    return 0x6;
+}
+
+#pragma peephole on
+int fn_80160534(int* obj)
+{
+    GroundBaddieState* sub = ((GameObject*)obj)->extra;
+    u8 step;
+    if (((GameObject*)obj)->anim.alpha >= (step = framesThisStep))
+    {
+        ((GameObject*)obj)->anim.alpha = ((GameObject*)obj)->anim.alpha - step;
+    }
+    else
+    {
+        ((GameObject*)obj)->anim.alpha = 0;
+    }
+    if (((GameObject*)obj)->anim.alpha == 0)
+    {
+        mainSetBits(sub->gameBitB, 0);
+        mainSetBits(sub->gameBitA, 1);
+    }
+    return 0;
+}
+
+int fn_801605A8(short* out, u8* obj)
+{
+    f32 f = lbl_803E2E68.f;
+    ((BaddieState*)obj)->animSpeedA = f;
+    ((BaddieState*)obj)->animSpeedB = f;
+    ((BaddieState*)obj)->physicsActive = 1;
+    out[2] = ((BaddieState*)obj)->spawnRotZ;
+    out[1] = ((BaddieState*)obj)->spawnRotY;
+    return 0;
+}
+
+#pragma peephole off
+int fn_801605D4(int* obj, GroundBaddieState* def)
+{
+    GroundBaddieState* state = ((GameObject*)obj)->extra;
+    if ((s8)def->baddie.moveJustStartedA != 0)
+    {
+        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68.f, 0);
+        *(s8*)&def->baddie.moveDone = 0;
+    }
+    *(s8*)&def->baddie.physicsActive = 1;
+    ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
+    ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
+    ((void (*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8*)def, (int*)state,
+                                                                                 lbl_803E2E8C, lbl_803E2E90);
+    def->baddie.moveSpeed = lbl_803E2E94 * def->baddie.animSpeedA;
+    return 0;
+}
+
+#pragma peephole on
+int fn_80160690(short* out, u8* obj)
+{
+    f32 f = lbl_803E2E68.f;
+    ((BaddieState*)obj)->animSpeedA = f;
+    ((BaddieState*)obj)->animSpeedB = f;
+    ((BaddieState*)obj)->moveSpeed = f;
+    ((BaddieState*)obj)->physicsActive = 1;
+    out[2] = ((BaddieState*)obj)->spawnRotZ;
+    out[1] = ((BaddieState*)obj)->spawnRotY;
+    (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
+    return 0;
+}
+
 #pragma dont_inline on
+#pragma peephole off
 void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
 {
     int setup;
@@ -201,9 +322,7 @@ void fn_801606F0(int obj, void* seq, int sub, GroundBaddieState* state)
     (*gPlayerInterface)->update((void*)obj, state, timeDelta, timeDelta, gDllCBMoveHandlers, gDllCBStateHandlers);
     *(int*)&((GameObject*)obj)->pendingParentObj = ((GroundBaddieState*)sub)->savedObjC0;
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 __declspec(section ".sdata2") f32 lbl_803E2EA8 = 2e+01f;
 const union DllCBConstF32 lbl_803E2EAC = { 0.0f };
 
@@ -245,8 +364,8 @@ void fn_8016083C(int* obj, GroundBaddieState* sub, GroundBaddieState* state)
         *(int*)&state->baddie.targetObj = (int)Obj_GetPlayerObject();
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline reset
 int dll_CB_seqFn(short* obj, int p2, u8* e)
 {
     int setup;
@@ -324,43 +443,68 @@ int dll_CB_seqFn(short* obj, int p2, u8* e)
     return ((GroundBaddieState*)sub)->subMode != 0;
 }
 
-#pragma scheduling on
 #pragma peephole on
-
+#pragma scheduling on
 void dll_CB_func0B_nop(void)
 {
 }
 
-void dll_CB_release_nop(void)
+#pragma peephole off
+#pragma scheduling off
+s16 dll_CB_setScale(int* obj)
 {
+    return ((BaddieState*)((GameObject*)obj)->extra)->controlMode;
 }
 
-#pragma scheduling off
-#pragma peephole off
-void dll_CB_init(int* obj, u8* params, int extra)
+int dll_CB_getExtraSize_ret_1040(void)
 {
-    GroundBaddieState* sub;
-    u8 flags;
+    return 0x410;
+}
 
-    sub = ((GameObject*)obj)->extra;
-    flags = 0x16;
-    if (extra != 0)
-        flags |= 1;
-    if ((params[0x2b] & 1) == 0)
-        flags |= 8;
-    ((GameObject*)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
-    ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
-    ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
-        obj, params, (u8*)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
-    ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
-    (*gPlayerInterface)->setState(obj, sub, 0);
-    sub->baddie.substate = 0;
-    if (sub->aggroRange < 0x32)
+int dll_CB_getObjectTypeId(void)
+{
+    return 0x14b;
+}
+
+void dll_CB_free(int* obj)
+{
+    GroundBaddieState* state = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject((int)obj, DLLCB_OBJGROUP);
     {
-        sub->aggroRange = 0x32;
+        int* sub = ((GameObject*)obj)->childObjs[0];
+        if (sub != NULL)
+        {
+            Obj_FreeObject((GameObject*)sub);
+            ((GameObject*)obj)->childObjs[0] = NULL;
+        }
+    }
+    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 1);
+}
+
+#pragma scheduling on
+void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        switch (((GameObject*)obj)->userData1)
+        {
+        case 0:
+            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2E8C);
+            break;
+        }
     }
 }
 
+#pragma peephole on
+#pragma scheduling off
+void dll_CB_hitDetect(int* obj)
+{
+    void* a = ((GameObject*)obj)->extra;
+    (*gPlayerInterface)->updateVelocityState(obj, a, gDllCBMoveHandlers);
+}
+
+#pragma peephole off
 void dll_CB_update(int* obj)
 {
     RomCurveWalker* path;
@@ -407,138 +551,38 @@ void dll_CB_update(int* obj)
     ((GameObject*)obj)->anim.localPosZ = path->posZ;
 }
 
-int fn_8016052C(void)
+void dll_CB_init(int* obj, u8* params, int extra)
 {
-    return 0x6;
-}
-int dll_CB_getExtraSize_ret_1040(void)
-{
-    return 0x410;
-}
-int dll_CB_getObjectTypeId(void)
-{
-    return 0x14b;
-}
+    GroundBaddieState* sub;
+    u8 flags;
 
-s16 dll_CB_setScale(int* obj)
-{
-    return ((BaddieState*)((GameObject*)obj)->extra)->controlMode;
-}
-
-#pragma scheduling on
-int fn_8016050C(int p1, u8* obj)
-{
-    if ((s8)obj[0x354] < 1)
-        return 3;
-    return 6;
-}
-
-#pragma scheduling off
-int fn_801603E8(int* obj, u8* obj2)
-{
-    GroundBaddieState* x = ((GameObject*)obj)->extra;
-    if ((s8)obj2[0x27b] != 0)
+    sub = ((GameObject*)obj)->extra;
+    flags = 0x16;
+    if (extra != 0)
+        flags |= 1;
+    if ((params[0x2b] & 1) == 0)
+        flags |= 8;
+    ((GameObject*)obj)->anim.rotY = (s16)((s8)params[0x28] << 8);
+    ((GameObject*)obj)->anim.rotZ = (s16)((s8)params[0x27] << 8);
+    ((void (*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(
+        obj, params, (u8*)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
+    ((GameObject*)obj)->animEventCallback = dll_CB_seqFn;
+    (*gPlayerInterface)->setState(obj, sub, 0);
+    sub->baddie.substate = 0;
+    if (sub->aggroRange < 0x32)
     {
-        (*(VtableFn*)((char*)(*gBaddieControlInterface) + 0x4c))(obj, x->triggerId, -1, 0);
+        sub->aggroRange = 0x32;
     }
-    return 0;
 }
 
 #pragma peephole on
-void dll_CB_hitDetect(int* obj)
-{
-    void* a = ((GameObject*)obj)->extra;
-    (*gPlayerInterface)->updateVelocityState(obj, a, gDllCBMoveHandlers);
-}
-
 #pragma scheduling on
-#pragma peephole off
-void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+void dll_CB_release_nop(void)
 {
-    s32 v = visible;
-    if (v != 0)
-    {
-        switch (((GameObject*)obj)->userData1)
-        {
-        case 0:
-            objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E2E8C);
-            break;
-        }
-    }
 }
 
+#pragma peephole off
 #pragma scheduling off
-#pragma peephole on
-int fn_801605A8(short* out, u8* obj)
-{
-    f32 f = lbl_803E2E68.f;
-    ((BaddieState*)obj)->animSpeedA = f;
-    ((BaddieState*)obj)->animSpeedB = f;
-    ((BaddieState*)obj)->physicsActive = 1;
-    out[2] = ((BaddieState*)obj)->spawnRotZ;
-    out[1] = ((BaddieState*)obj)->spawnRotY;
-    return 0;
-}
-
-int fn_80160690(short* out, u8* obj)
-{
-    f32 f = lbl_803E2E68.f;
-    ((BaddieState*)obj)->animSpeedA = f;
-    ((BaddieState*)obj)->animSpeedB = f;
-    ((BaddieState*)obj)->moveSpeed = f;
-    ((BaddieState*)obj)->physicsActive = 1;
-    out[2] = ((BaddieState*)obj)->spawnRotZ;
-    out[1] = ((BaddieState*)obj)->spawnRotY;
-    (*gPlayerInterface)->rotateTowardTarget(out, obj, 5);
-    return 0;
-}
-
-#pragma peephole off
-int fn_8016032C(int* obj, GroundBaddieState* state)
-{
-    if ((s8)state->baddie.moveJustStartedB != 0)
-    {
-        f32 fz;
-        (*gPlayerInterface)->setState(obj, state, 0);
-        fz = lbl_803E2E7C;
-        ((GameObject*)obj)->anim.velocityY = fz;
-        state->baddie.animSpeedA = fz;
-        state->baddie.animSpeedC = fz;
-    }
-    if (((GameObject*)obj)->anim.velocityY < lbl_803E2E80)
-    {
-        f32 fz = lbl_803E2E68.f;
-        ((GameObject*)obj)->anim.velocityY = fz;
-        state->baddie.animSpeedA = fz;
-        state->baddie.animSpeedC = fz;
-        return 6;
-    }
-    {
-        f32 d = lbl_803E2E88;
-        ((GameObject*)obj)->anim.velocityY = ((GameObject*)obj)->anim.velocityY / d;
-        state->baddie.animSpeedA = state->baddie.animSpeedA / d;
-        state->baddie.animSpeedC = state->baddie.animSpeedC / d;
-    }
-    return 0;
-}
-
-int fn_801605D4(int* obj, GroundBaddieState* def)
-{
-    GroundBaddieState* state = ((GameObject*)obj)->extra;
-    if ((s8)def->baddie.moveJustStartedA != 0)
-    {
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68.f, 0);
-        *(s8*)&def->baddie.moveDone = 0;
-    }
-    *(s8*)&def->baddie.physicsActive = 1;
-    ((GameObject*)obj)->anim.rotZ = def->baddie.spawnRotZ;
-    ((GameObject*)obj)->anim.rotY = def->baddie.spawnRotY;
-    ((void (*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8*)def, (int*)state,
-                                                                                 lbl_803E2E8C, lbl_803E2E90);
-    def->baddie.moveSpeed = lbl_803E2E94 * def->baddie.animSpeedA;
-    return 0;
-}
-
 void dll_CB_initialise(void)
 {
     ((void**)gDllCBMoveHandlers)[0] = fn_80160690;
@@ -553,39 +597,6 @@ void dll_CB_initialise(void)
     gDllCBStateHandlers[5] = fn_801601C4;
 }
 
-#pragma peephole on
-int fn_80160534(int* obj)
-{
-    GroundBaddieState* sub = ((GameObject*)obj)->extra;
-    u8 step;
-    if (((GameObject*)obj)->anim.alpha >= (step = framesThisStep))
-    {
-        ((GameObject*)obj)->anim.alpha = ((GameObject*)obj)->anim.alpha - step;
-    }
-    else
-    {
-        ((GameObject*)obj)->anim.alpha = 0;
-    }
-    if (((GameObject*)obj)->anim.alpha == 0)
-    {
-        mainSetBits(sub->gameBitB, 0);
-        mainSetBits(sub->gameBitA, 1);
-    }
-    return 0;
-}
 
-#pragma peephole off
-void dll_CB_free(int* obj)
-{
-    GroundBaddieState* state = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject((int)obj, DLLCB_OBJGROUP);
-    {
-        int* sub = ((GameObject*)obj)->childObjs[0];
-        if (sub != NULL)
-        {
-            Obj_FreeObject((GameObject*)sub);
-            ((GameObject*)obj)->childObjs[0] = NULL;
-        }
-    }
-    ((void (*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int*)state, 1);
-}
+#pragma peephole reset
+#pragma scheduling reset

@@ -1175,7 +1175,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_00CE_dllce.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00CC_chukchuk.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00CD_iceball.c"),
-            Object(NonMatching, "main/dll/dll_00CB_dllcb.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_00CB_dllcb.c"),
             Object(MatchingFor("GSAE01"), "main/dll/grimblegroup.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00CF_cannonclaw.c"),
             Object(MatchingFor("GSAE01"), "main/dll/tumbleweedgroup.c", cflags=cflags_dll_noopt),
