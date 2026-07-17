@@ -695,6 +695,15 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
 }
 #pragma dont_inline off
 #pragma opt_common_subs off
+typedef struct CameraViewportEntry {
+    u8 pad00[0x20];
+    s32 scissorX;
+    s32 scissorY;
+    s32 scissorX2;
+    s32 scissorY2;
+    s32 flags;
+} CameraViewportEntry;
+
 void Camera_UpdateProjection(void* viewportArg)
 {
     u8 viewIndex = gCameraCurrentViewIndex;
@@ -703,22 +712,21 @@ void Camera_UpdateProjection(void* viewportArg)
     u32 screenWidth = resolution >> 16;
     u32 screenHeight = resolution & 0xffff;
     u8* base = gCameraViewportEntries;
-    u8* viewportEntry = base + viewIndex * 0x34;
+    CameraViewportEntry* viewport = (CameraViewportEntry*)(base + viewIndex * sizeof(CameraViewportEntry));
 
-    if ((*(int*)(viewportEntry + 0x30) & 1) != 0)
+    if ((viewport->flags & 1) != 0)
     {
         u8 savedViewIndex = gCameraCurrentViewIndex;
 
         gCameraCurrentViewIndex = viewIndex;
-        viewportEntry = base + (viewIndex & 0xff) * 0x34;
-        gxSetScissorRect(0, 0, *(s32*)(viewportEntry + 0x20), *(s32*)(viewportEntry + 0x24),
-                         *(s32*)(viewportEntry + 0x28), *(s32*)(viewportEntry + 0x2c));
+        viewport = (CameraViewportEntry*)(base + (viewIndex & 0xff) * sizeof(CameraViewportEntry));
+        gxSetScissorRect(0, 0, viewport->scissorX, viewport->scissorY, viewport->scissorX2, viewport->scissorY2);
 
-        viewportEntry = gCameraViewportEntries;
-        viewportEntry += gCameraCurrentViewIndex * 0x34;
-        if ((*(int*)(viewportEntry + 0x30) & 1) == 0)
+        viewport = (CameraViewportEntry*)gCameraViewportEntries;
+        activeViewIndex = gCameraCurrentViewIndex;
+        viewport += activeViewIndex;
+        if ((viewport->flags & 1) == 0)
         {
-            activeViewIndex = gCameraCurrentViewIndex;
             gCameraViewportScreenParams[activeViewIndex * 8 + 4] = 0;
             gCameraViewportScreenParams[activeViewIndex * 8 + 5] = 0;
             gCameraViewportScreenParams[activeViewIndex * 8 + 0] = 0;
@@ -735,12 +743,12 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
-                                  lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
-                                  *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, lbl_803DE628,
+                                   lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE62C,
+                                   lbl_803DE62C, lbl_803DE62C);
             C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
-                                  *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
+                                   lbl_803DE62C, lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         gCameraCurrentViewIndex = viewIndex;
@@ -751,9 +759,9 @@ void Camera_UpdateProjection(void* viewportArg)
         u32 halfScreenHeight = screenHeight >> 1;
 
         activeViewIndex = gCameraCurrentViewIndex;
-        viewportEntry = gCameraViewportEntries;
-        viewportEntry += activeViewIndex * 0x34;
-        if ((*(int*)(viewportEntry + 0x30) & 1) == 0)
+        viewport = (CameraViewportEntry*)gCameraViewportEntries;
+        viewport += activeViewIndex;
+        if ((viewport->flags & 1) == 0)
         {
             s16 scaledHalfHeight;
 
@@ -773,12 +781,12 @@ void Camera_UpdateProjection(void* viewportArg)
         {
             C_MTXPerspective(gCameraProjectionMatrix, gCameraFovY, gCameraAspectRatio, gCameraNearPlane,
                              gCameraFarPlane);
-            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, *(f32*)&lbl_803DE628,
-                                  lbl_803DE62C, *(f32*)&lbl_803DE62C);
-            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, *(f32*)&lbl_803DE62C,
-                                  *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_80396850, gCameraFovY, gCameraAspectRatio, lbl_803DE628, lbl_803DE628,
+                                   lbl_803DE62C, lbl_803DE62C);
+            C_MTXLightPerspective((f32*)lbl_803967F0, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE62C,
+                                   lbl_803DE62C, lbl_803DE62C);
             C_MTXLightPerspective((f32*)lbl_80396820, gCameraFovY, gCameraAspectRatio, lbl_803DE62C, lbl_803DE630,
-                                  *(f32*)&lbl_803DE62C, *(f32*)&lbl_803DE62C);
+                                   lbl_803DE62C, lbl_803DE62C);
         }
         GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
         Camera_ApplyCurrentViewport(viewportArg);
