@@ -1918,9 +1918,6 @@ int RomCurve_getControlPointId(int curve, int exclude, int pickIdx)
     }
     return -1;
 }
-#pragma dont_inline off
-
-#pragma dont_inline on
 int RomCurve_getUnblockedControlPointId(int curve, int exclude, int pickIdx)
 {
     int candidates[4];
