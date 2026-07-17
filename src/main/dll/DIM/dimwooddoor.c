@@ -64,16 +64,8 @@ extern s16 lbl_803DBF02;
 extern s16 lbl_803DBF04;
 extern f32 lbl_803DBEF0;
 extern f32 lbl_803DBF14;
-extern f32 lbl_803E48A4;
-extern f32 lbl_803E48AC;
 extern f32 gDimWoodDoorPi;
 extern f32 gDimWoodDoorAngleHalfCircle;
-extern f32 lbl_803E48B8;
-extern f32 lbl_803E48C8;
-extern f32 lbl_803E48CC;
-extern f32 lbl_803E48D0;
-extern f32 lbl_803E48D4;
-extern f32 lbl_803E48D8;
 
 void DIMwooddoor_spawnShard(int obj, u8 variant)
 {
@@ -127,7 +119,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
     }
 
     launchSpeed = state->launchSpeed;
-    launchScale = lbl_803E48AC * launchSpeed;
+    launchScale = 2.0f * launchSpeed;
     *(s16*)shard = ((GameObject*)obj)->anim.rotX + modelVec[1];
     angle = (gDimWoodDoorPi * (f32)(s32) * (s16*)shard) / gDimWoodDoorAngleHalfCircle;
     ((GameObject*)shard)->anim.velocityX = launchScale * -mathSinf(angle);
@@ -146,7 +138,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
         state->launchDelay = (s16)(randomGetRange(config->delayMin, config->delayMax) << 2);
     }
 
-    ObjAnim_SetCurrentMove(obj, 0, lbl_803E48B8, 0);
+    ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
     Sfx_PlayFromObject(obj, SFXTRIG_tr_jrumbalp);
 }
 
@@ -225,8 +217,8 @@ void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 t
         dz = state->targetZ - state->posZ;
         distSq = dx * dx + dz * dz;
         dist = sqrtf(distSq);
-        heightDelta = (lbl_803E48C8 + state->posY) - state->targetY;
-        distSq = (distSq < lbl_803E48C8) ? lbl_803E48C8 : distSq;
+        heightDelta = (10.0f + state->posY) - state->targetY;
+        distSq = (distSq < 10.0f) ? 10.0f : distSq;
         if ((distSq < (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2))) ||
             (heightDelta < lbl_803DBF14) ||
             ((((GameObject*)player)->objectFlags & DIMWOODDOOR_OBJFLAG_PARENT_SLACK) != 0))
@@ -237,11 +229,11 @@ void DIMwooddoor_updateShardAim(GameObject* obj, f32 targetX, f32 targetY, f32 t
                      ? distSq
                      : (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
 
-        accel = (lbl_803E48A4 * -lbl_803DBEF0) * distSq;
-        accelDenom = lbl_803E48CC * heightDelta - lbl_803E48D0 * dist;
-        accel = accel / ((accelDenom < lbl_803E48D4) ? accelDenom : lbl_803E48D4);
-        accel = (lbl_803E48B8 > accel) ? lbl_803E48B8 : accel;
+        accel = (0.01f * -lbl_803DBEF0) * distSq;
+        accelDenom = 8.0f * heightDelta - 4.0f * dist;
+        accel = accel / ((accelDenom < -1.0f) ? accelDenom : -1.0f);
+        accel = (0.0f > accel) ? 0.0f : accel;
         accel = sqrtf(accel);
-        state->launchSpeed += (accel - state->launchSpeed) / lbl_803E48D8;
+        state->launchSpeed += (accel - state->launchSpeed) / 80.0f;
     }
 }
