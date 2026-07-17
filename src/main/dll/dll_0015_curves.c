@@ -44,7 +44,7 @@
 #include "main/audio/audio_control_api.h"
 #include "main/pad.h"
 
-u32 sCurvesCachedHitObj;
+GameObject* sCurvesCachedHitObj;
 s32 sCurvesCachedHitCount;
 
 typedef struct CurvesHitScratch
@@ -1013,24 +1013,16 @@ f32 dll_15_func0B(GameObject* obj, f32 x, f32 baseY, f32 z, f32 height)
 
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll)
 {
-    int queryMode;
-    TrackGroundHit** hitPointCursor;
-    RomCurvePoint* outPoint;
     int pairCount;
+    RomCurvePoint* outPoint;
+    TrackGroundHit** hitPointCursor;
     TrackGroundHit** hitPoints;
 
-    if ((u32)obj != sCurvesCachedHitObj)
+    if (obj != sCurvesCachedHitObj)
     {
-        sCurvesCachedHitObj = (int)obj;
-        if (queryAll != 0)
-        {
-            queryMode = 1;
-        }
-        else
-        {
-            queryMode = -2;
-        }
-        sCurvesCachedHitCount = hitDetectFn_80065e50(obj, x, (obj)->anim.worldPosY, z, &hitPoints, queryMode, 0);
+        sCurvesCachedHitObj = obj;
+        sCurvesCachedHitCount =
+            hitDetectFn_80065e50(obj, x, obj->anim.worldPosY, z, &hitPoints, queryAll != 0 ? 1 : -2, 0);
         if (ROMCURVE_GETCURVES_MAX_POINTS < sCurvesCachedHitCount)
         {
             sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
@@ -1043,7 +1035,7 @@ RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, in
             outPoint[pairCount].y = hitPointCursor[0]->normalX;
             outPoint[pairCount].z = hitPointCursor[0]->normalY;
             outPoint[pairCount].w = hitPointCursor[0]->normalZ;
-            outPoint[pairCount].flags = (u32)hitPointCursor[0]->object;
+            outPoint[pairCount].object = hitPointCursor[0]->object;
             outPoint[pairCount].type = hitPointCursor[0]->surfaceType;
             hitPointCursor++;
         }

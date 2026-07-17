@@ -97,7 +97,7 @@ typedef struct RomCurvePoint
     f32 y;
     f32 z;
     f32 w;
-    u32 flags;
+    GameObject* object;
     u8 type;
 } RomCurvePoint;
 
@@ -185,7 +185,7 @@ STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotX) == ROMCURVE_PLACEMENT_ROT_X_O
 STATIC_ASSERT(offsetof(CurvePlacementParams, specialAngle) == ROMCURVE_PLACEMENT_SPECIAL_ANGLE_OFFSET);
 
 STATIC_ASSERT(sizeof(RomCurvePoint) == ROMCURVE_POINT_SIZE);
-STATIC_ASSERT(offsetof(RomCurvePoint, flags) == 0x10);
+STATIC_ASSERT(offsetof(RomCurvePoint, object) == 0x10);
 STATIC_ASSERT(offsetof(RomCurvePoint, type) == 0x14);
 
 STATIC_ASSERT(sizeof(RomCurveSegmentProjection) == 0x24);
