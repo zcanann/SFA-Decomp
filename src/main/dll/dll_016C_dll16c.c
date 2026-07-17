@@ -62,114 +62,47 @@ extern f32 lbl_803E475C;
 extern f32 lbl_803E4760;
 extern f32 lbl_803E4764;
 
-void dll_16C_release(void)
-{
-}
 
-void dll_16C_initialise(void)
-{
-}
-
-int dll_16C_getExtraSize(void)
-{
-    return 0x24;
-}
-int dll_16C_getObjectTypeId(void)
-{
-    return 0x3;
-}
-
-void dll_16C_free(GameObject* obj)
-{
-    GameObject* child = obj->childObjs[0];
-    if (child != NULL)
-        Obj_FreeObject(child);
-}
-
-#pragma scheduling off
 #pragma peephole off
-void dll_16C_hitDetect(GameObject* obj)
+#pragma scheduling off
+/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
+ * extra block, optionally re-issuing a move on the sub-object first. */
+#pragma auto_inline off
+void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
+                                    int opacity, int reissueMove)
 {
-    Dll16CState* extra = (obj)->extra;
-    GameObject* p = extra->linkedObj;
-    if (p != NULL)
+    if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
     {
-        if ((*(int (**)(void*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
-        {
-            dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
-        }
+        u8 saved = *(u8*)((char*)src + 0x37);
+        *(u8*)((char*)src + 0x37) = opacity;
+        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
+        *(u8*)((char*)src + 0x37) = saved;
     }
+    dst->anim.previousWorldPosX = dst->anim.worldPosX;
+    dst->anim.previousWorldPosY = dst->anim.worldPosY;
+    dst->anim.previousWorldPosZ = dst->anim.worldPosZ;
+    dst->anim.previousLocalPosX = dst->anim.localPosX;
+    dst->anim.previousLocalPosY = dst->anim.localPosY;
+    dst->anim.previousLocalPosZ = dst->anim.localPosZ;
+    {
+        f32 x, y, z;
+        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
+        dst->anim.localPosX = x;
+        dst->anim.localPosY = y;
+        dst->anim.localPosZ = z;
+    }
+    dst->anim.rotX = src->anim.rotX;
+    dst->anim.rotY = src->anim.rotY;
+    dst->anim.rotZ = src->anim.rotZ;
+    dst->anim.worldPosX = dst->anim.localPosX;
+    dst->anim.worldPosY = dst->anim.localPosY;
+    dst->anim.worldPosZ = dst->anim.localPosZ;
+    dst->anim.velocityX = src->anim.velocityX;
+    dst->anim.velocityY = src->anim.velocityY;
+    dst->anim.velocityZ = src->anim.velocityZ;
 }
 
-void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    Dll16CState* extra;
-    GameObject* linkedObj;
-    int hit;
-
-    if (obj->anim.seqId != DLL16C_RENDER_GATE_SEQID)
-    {
-        if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
-        {
-            if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0)
-                return;
-        }
-        extra = obj->extra;
-        linkedObj = extra->linkedObj;
-        hit = 0;
-        if (linkedObj != NULL)
-        {
-            if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
-            {
-                hit = 1;
-            }
-        }
-        if (hit != 0)
-        {
-            obj->anim.flags |= 8;
-            visible = objUpdateOpacity(linkedObj);
-            dll_16C_syncSubObjectTransform(obj, linkedObj, p1, p2, p3, p4, visible, extra->opacity, 1);
-        }
-        else
-        {
-            obj->anim.flags &= ~8;
-        }
-        if (visible != 0 && extra->opacity != 0)
-        {
-            u8 saved = *(u8*)((char*)obj + 0x37);
-            if (hit != 0)
-            {
-                *(u8*)((char*)obj + 0x37) = extra->opacity;
-            }
-            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                        lbl_803E4758);
-            ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
-            *(u8*)((char*)obj + 0x37) = saved;
-        }
-    }
-    else
-    {
-        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
-                                                                                    lbl_803E4758);
-    }
-}
-
-void dll_16C_init(GameObject* obj, void* placement)
-{
-    Dll16CState* extra;
-    obj->animEventCallback = dll_16C_SeqFn;
-    if (obj->anim.modelState != NULL)
-    {
-        obj->anim.modelState->flags |= 0x4000;
-        obj->anim.modelState->shadowTintA = 100;
-        obj->anim.modelState->shadowTintB = 150;
-    }
-    extra = obj->extra;
-    extra->linkedObj = NULL;
-    extra->subObjIndex = ((Dll16CPlacement*)placement)->subObjIndex;
-    extra->opacity = 0xff;
-}
-
+#pragma auto_inline on
 /* dll_16C_SeqFn: per-frame sequence callback - manage the spawned sub-object
  * from a small id table, then run the map-event sub-object state callbacks. */
 int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -245,40 +178,91 @@ int dll_16C_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
     return 0;
 }
 
-/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
- * extra block, optionally re-issuing a move on the sub-object first. */
-void dll_16C_syncSubObjectTransform(GameObject* dst, GameObject* src, int p1, int p2, int p3, int p4, int visible,
-                                    int opacity, int reissueMove)
+#pragma peephole reset
+#pragma scheduling reset
+int dll_16C_getExtraSize(void)
 {
-    if (reissueMove != 0 && (s8)visible != 0 && opacity > 0)
+    return 0x24;
+}
+
+int dll_16C_getObjectTypeId(void)
+{
+    return 0x3;
+}
+
+void dll_16C_free(GameObject* obj)
+{
+    GameObject* child = obj->childObjs[0];
+    if (child != NULL)
+        Obj_FreeObject(child);
+}
+
+#pragma peephole off
+#pragma scheduling off
+void dll_16C_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    Dll16CState* extra;
+    GameObject* linkedObj;
+    int hit;
+
+    if (obj->anim.seqId != DLL16C_RENDER_GATE_SEQID)
     {
-        u8 saved = *(u8*)((char*)src + 0x37);
-        *(u8*)((char*)src + 0x37) = opacity;
-        (*(void (**)(GameObject*, int, int, int, int, int))(**(int**)&src->anim.dll + 0x10))(src, p1, p2, p3, p4, -1);
-        *(u8*)((char*)src + 0x37) = saved;
+        if (mainGetBit(GAMEBIT_IM_TrickyRelated006E) != 0)
+        {
+            if (mainGetBit(GAMEBIT_IM_HutRelated0382) == 0)
+                return;
+        }
+        extra = obj->extra;
+        linkedObj = extra->linkedObj;
+        hit = 0;
+        if (linkedObj != NULL)
+        {
+            if ((*(int (**)(GameObject*))(**(int**)((char*)linkedObj + 0x68) + 0x38))(linkedObj) == 2)
+            {
+                hit = 1;
+            }
+        }
+        if (hit != 0)
+        {
+            obj->anim.flags |= 8;
+            visible = objUpdateOpacity(linkedObj);
+            dll_16C_syncSubObjectTransform(obj, linkedObj, p1, p2, p3, p4, visible, extra->opacity, 1);
+        }
+        else
+        {
+            obj->anim.flags &= ~8;
+        }
+        if (visible != 0 && extra->opacity != 0)
+        {
+            u8 saved = *(u8*)((char*)obj + 0x37);
+            if (hit != 0)
+            {
+                *(u8*)((char*)obj + 0x37) = extra->opacity;
+            }
+            ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
+                                                                                        lbl_803E4758);
+            ObjPath_GetPointWorldPosition(obj, 1, &extra->pathPointX, &extra->pathPointY, &extra->pathPointZ, 0);
+            *(u8*)((char*)obj + 0x37) = saved;
+        }
     }
-    dst->anim.previousWorldPosX = dst->anim.worldPosX;
-    dst->anim.previousWorldPosY = dst->anim.worldPosY;
-    dst->anim.previousWorldPosZ = dst->anim.worldPosZ;
-    dst->anim.previousLocalPosX = dst->anim.localPosX;
-    dst->anim.previousLocalPosY = dst->anim.localPosY;
-    dst->anim.previousLocalPosZ = dst->anim.localPosZ;
+    else
     {
-        f32 x, y, z;
-        (*(void (**)(GameObject*, f32*, f32*, f32*))(**(int**)&src->anim.dll + 0x28))(src, &x, &y, &z);
-        dst->anim.localPosX = x;
-        dst->anim.localPosY = y;
-        dst->anim.localPosZ = z;
+        ((void (*)(GameObject*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p1, p2, p3, p4,
+                                                                                    lbl_803E4758);
     }
-    dst->anim.rotX = src->anim.rotX;
-    dst->anim.rotY = src->anim.rotY;
-    dst->anim.rotZ = src->anim.rotZ;
-    dst->anim.worldPosX = dst->anim.localPosX;
-    dst->anim.worldPosY = dst->anim.localPosY;
-    dst->anim.worldPosZ = dst->anim.localPosZ;
-    dst->anim.velocityX = src->anim.velocityX;
-    dst->anim.velocityY = src->anim.velocityY;
-    dst->anim.velocityZ = src->anim.velocityZ;
+}
+
+void dll_16C_hitDetect(GameObject* obj)
+{
+    Dll16CState* extra = (obj)->extra;
+    GameObject* p = extra->linkedObj;
+    if (p != NULL)
+    {
+        if ((*(int (**)(void*))(**(int**)((char*)p + 0x68) + 0x38))(p) == 2)
+        {
+            dll_16C_syncSubObjectTransform(obj, extra->linkedObj, 0, 0, 0, 0, 0, 0, 0);
+        }
+    }
 }
 
 /* dll_16C_update: re-link the spawned sub-object, then while active/visible run
@@ -387,6 +371,33 @@ void dll_16C_update(GameObject* obj)
         }
     }
 }
+
+void dll_16C_init(GameObject* obj, void* placement)
+{
+    Dll16CState* extra;
+    obj->animEventCallback = dll_16C_SeqFn;
+    if (obj->anim.modelState != NULL)
+    {
+        obj->anim.modelState->flags |= 0x4000;
+        obj->anim.modelState->shadowTintA = 100;
+        obj->anim.modelState->shadowTintB = 150;
+    }
+    extra = obj->extra;
+    extra->linkedObj = NULL;
+    extra->subObjIndex = ((Dll16CPlacement*)placement)->subObjIndex;
+    extra->opacity = 0xff;
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+void dll_16C_release(void)
+{
+}
+
+void dll_16C_initialise(void)
+{
+}
+
 
 ObjectDescriptor lbl_80323740 = {
     0,

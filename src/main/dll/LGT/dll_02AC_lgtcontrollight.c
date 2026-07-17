@@ -21,6 +21,8 @@
 #define CONTROLLIGHT_MODE_INVERTED    1
 #define CONTROLLIGHT_LAST_BIT_INVALID 0xff
 
+
+
 int ControlLight_getExtraSize(void)
 {
     return sizeof(ControlLightState);
@@ -35,23 +37,12 @@ void ControlLight_free(void)
 {
 }
 
-void ControlLight_hitDetect(void)
-{
-}
-
 void ControlLight_render(void)
 {
 }
 
-void ControlLight_init(GameObject* obj, int setup)
+void ControlLight_hitDetect(void)
 {
-    ControlLightSetup* setupData = (ControlLightSetup*)setup;
-    ControlLightState* state = obj->extra;
-
-    state->gameBit = setupData->gameBit;
-    state->radius = setupData->radius;
-    state->invertMode = setupData->invertMode % 2;
-    state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }
 
 #pragma opt_loop_invariants off
@@ -116,8 +107,19 @@ void ControlLight_update(GameObject* obj)
 
     state->lastBit = newBit;
 }
-#pragma optimization_level reset
+
 #pragma opt_loop_invariants reset
+#pragma optimization_level reset
+void ControlLight_init(GameObject* obj, int setup)
+{
+    ControlLightSetup* setupData = (ControlLightSetup*)setup;
+    ControlLightState* state = obj->extra;
+
+    state->gameBit = setupData->gameBit;
+    state->radius = setupData->radius;
+    state->invertMode = setupData->invertMode % 2;
+    state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
+}
 
 void ControlLight_release(void)
 {
@@ -126,6 +128,7 @@ void ControlLight_release(void)
 void ControlLight_initialise(void)
 {
 }
+
 
 ObjectDescriptor gControlLightObjDescriptor = {
     0,
