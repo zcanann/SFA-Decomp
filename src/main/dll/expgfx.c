@@ -1301,7 +1301,7 @@ foundFirst:
                 }
                 else
                 {
-                    u8* attached;
+                    GameObject* attached;
 
                     texT0 = 0;
                     texT1 = 0;
@@ -1644,9 +1644,10 @@ foundFirst:
                         quad[3].texS = texS0;
                         quad[3].texT = texT1;
                     }
-                    attached = (u8*)((ExpgfxTableEntry*)((u8*)runtime->expTab + (((u32)slot->encodedTableIndex >> 1) &
-                                                                                 EXPGFX_SLOT_TABLE_INDEX_MASK) *
-                                                                                    16))
+                    attached = (GameObject*)((ExpgfxTableEntry*)((u8*)runtime->expTab +
+                                                                 (((u32)slot->encodedTableIndex >> 1) &
+                                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
+                                                                     16))
                                    ->attachedTableKey;
                     rot.x = 0.0f;
                     rot.y = 0.0f;
@@ -1700,8 +1701,8 @@ foundFirst:
                             srcVel[2] = slot->sourcePosW.value;
                             if (attached != NULL)
                             {
-                                ((void (*)(f32*, f32*, u8))Obj_RotateLocalOffsetByYaw)(
-                                    &slot->sourcePosY.value, srcVel, *(attached + 0x35));
+                                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY.value, srcVel,
+                                                           attached->anim.transformMatrixIndex);
                             }
                         }
                     }
