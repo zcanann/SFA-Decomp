@@ -29,7 +29,6 @@ u8 gTumbleweedCollisionPointData[8] = {0x41, 0xC8, 0, 0, 0, 0, 0, 0};
 #define TUMBLEWEED_OBJGROUP 3
 #define TUMBLEWEED_OBJGROUP_SECONDARY 0x31
 
-extern f32 lbl_803E2F5C;
 extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
@@ -337,10 +336,10 @@ void tumbleweed_updateStateMachine(GameObject* obj)
                 else
                 {
                     u32 dpdi = (u16)dpdist;
-                    if ((f32)dpdi > lbl_803E2F5C && dpdi != 0)
+                    if ((f32)dpdi > 10.0f && dpdi != 0)
                     {
                         f32 denom;
-                        obj->anim.velocityX = obj->anim.velocityX - dpx / (denom = lbl_803E2F5C * dpdi);
+                        obj->anim.velocityX = obj->anim.velocityX - dpx / (denom = 10.0f * dpdi);
                         obj->anim.velocityZ = obj->anim.velocityZ - dpz / denom;
                     }
                 }
