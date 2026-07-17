@@ -24,9 +24,9 @@
 
 int gDim2PrisonMammothStateHandlers[4];
 extern void* gDim2PrisonMammothDefaultStateHandler;
-extern f32 gPrisonMammothMoveSpeedTable;
-extern s16 gPrisonMammothMoveIdTable;
-extern u8 gPrisonMammothStateFlagsTable;
+extern f32 gPrisonMammothMoveSpeedTable[2];
+extern s16 gPrisonMammothMoveIdTable[2];
+extern u8 gPrisonMammothStateFlagsTable[4];
 extern ObjHitReactEntry gPrisonMammothHitReactEntry[];
 
 int dim2prisonmammoth_defaultStateHandler(void)
@@ -47,8 +47,8 @@ int dim2prisonmammoth_stateHandler03(GameObject* obj, int state)
     if (*(s8*)&((BaddieState*)state)->moveJustStartedA != 0)
     {
         int k = randomGetRange(0, 1);
-        ((BaddieState*)state)->moveSpeed = (&gPrisonMammothMoveSpeedTable)[k];
-        ObjAnim_SetCurrentMove((int)obj, (&gPrisonMammothMoveIdTable)[k], 0.0f, 0);
+        ((BaddieState*)state)->moveSpeed = gPrisonMammothMoveSpeedTable[k];
+        ObjAnim_SetCurrentMove((int)obj, gPrisonMammothMoveIdTable[k], 0.0f, 0);
     }
     if (*(s8*)&((BaddieState*)state)->moveDone != 0)
     {
@@ -191,7 +191,7 @@ void dim2prisonmammoth_update(int obj)
     f32 matrix[16];
     int inner = *(int*)&((GameObject*)obj)->extra;
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode &= ~INTERACT_FLAG_DISABLED;
-    if (((&gPrisonMammothStateFlagsTable)[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
+    if ((gPrisonMammothStateFlagsTable[((Dim2prisonmammothState*)inner)->stateIndex] & 8) == 0)
     {
         ((Dim2prisonmammothState*)inner)->hitReactState =
             ((u8 (*)(int, ObjHitReactEntry*, u32, u32, f32*))ObjHitReact_Update)(

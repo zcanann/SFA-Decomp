@@ -207,7 +207,7 @@ int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
     changed = 0;
     blend = (obj)->anim.currentMoveProgress;
     phase = 0;
-    while ((&lbl_803DC748)[phase] != (obj)->anim.currentMove && phase < 2)
+    while (lbl_803DC748[phase] != (obj)->anim.currentMove && phase < 2)
     {
         phase++;
     }
@@ -255,7 +255,7 @@ int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, (&lbl_803DC748)[phase], blend, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748[phase], blend, 0);
         }
     }
 
@@ -399,9 +399,9 @@ int DIMSnowHorn1_stateHandler07(GameObject* obj, int state)
         *(s16*)((char*)state + 0x338) = 0;
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.005f;
         ((DIMSnowHorn1State*)state)->baddie.velSmoothTime = 8.0f;
-        if ((obj)->anim.currentMove != lbl_803DC748)
+        if ((obj)->anim.currentMove != lbl_803DC748[0])
         {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, fz, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748[0], fz, 0);
         }
     }
     switch ((obj)->anim.currentMove)
@@ -410,7 +410,7 @@ int DIMSnowHorn1_stateHandler07(GameObject* obj, int state)
     case 0x20a:
         if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
         {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, 0.0f, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748[0], 0.0f, 0);
             ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.005f;
         }
         break;
@@ -723,9 +723,9 @@ int DIMSnowHorn1_stateHandler02(GameObject* obj, int state, f32 fv)
     *(u32*)((char*)state) |= 0x200000;
     ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.005f;
 
-    if ((obj)->anim.currentMove != lbl_803DC748)
+    if ((obj)->anim.currentMove != lbl_803DC748[0])
     {
-        ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC748[0], k, 0);
     }
 
     inner->countdownTimer = randomGetRange(0x4b0, 0x960);
@@ -760,9 +760,9 @@ int DIMSnowHorn1_stateHandler01(GameObject* obj, int state, f32 fv)
     if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
         ((DIMSnowHorn1State*)state)->baddie.moveSpeed = 0.005f;
-        if ((obj)->anim.currentMove != lbl_803DC748)
+        if ((obj)->anim.currentMove != lbl_803DC748[0])
         {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748[0], k, 0);
         }
         inner->countdownTimer = randomGetRange(0x4b0, 0x960);
     }
