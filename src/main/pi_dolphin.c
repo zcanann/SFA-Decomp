@@ -5404,31 +5404,30 @@ int fn_8004B218(void* q_, u32 n_)
 
 int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
 {
-    int clearIndex;
     int i;
     PathSearchNode* node;
-    u32* heap;
-    int s;
-    u32 pri;
+    PathHeapEntry* heap;
+    int nodeCount;
+    u32 priority;
     int parent;
-    u16 idx;
+    u16 nodeIndex;
     u16* heapHalves;
-    u16 v;
+    u16 startNodeIndex;
 
     queue->heapSize = 0;
     queue->nodeCount = 0;
-    for (clearIndex = 0; clearIndex < 0xfe; clearIndex++)
+    for (i = 0; i < 0xfe; i++)
     {
-        queue->heap[clearIndex].priority = 0;
-        queue->nodes[clearIndex].visited = 0;
+        queue->heap[i].priority = 0;
+        queue->nodes[i].visited = 0;
     }
     queue->startPoint = startPoint;
     queue->targetPosition = targetPosition;
     queue->pathId = pathId;
     queue->routeFlags = routeFlags & 1;
     queue->closestDistance = 10000;
-    s = queue->nodeCount;
-    if (s == 0xfe)
+    nodeCount = queue->nodeCount;
+    if (nodeCount == 0xfe)
     {
         node = NULL;
     }
@@ -5441,23 +5440,23 @@ int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, i
         node->distanceToTarget = (u32)vec3f_distanceSquared(node->point->position, queue->targetPosition);
     }
     i = node->distanceToTarget + node->routeDistance;
-    heap = (u32*)queue->heap;
+    heap = queue->heap;
     heapHalves = (u16*)queue->heap;
-    v = queue->nodeCount - 1;
-    heapHalves[(++queue->heapSize) * 4 + 2] = v;
-    *(u32*)((int)heap + queue->heapSize * 8) = -1 - i;
+    startNodeIndex = queue->nodeCount - 1;
+    heapHalves[(++queue->heapSize) * 4 + 2] = startNodeIndex;
+    heap[queue->heapSize].priority = -1 - i;
     i = queue->heapSize;
-    pri = *(u32*)((int)heap + i * 8);
-    idx = heapHalves[i * 4 + 2];
-    *heap = -1;
-    while (parent = i >> 1, *(u32*)(heapHalves + parent * 4) < pri)
+    priority = heap[i].priority;
+    nodeIndex = heapHalves[i * 4 + 2];
+    heap[0].priority = -1;
+    while (parent = i >> 1, *(u32*)(heapHalves + parent * 4) < priority)
     {
         *(u16*)((int)heap + i * 8 + 4) = *(u16*)((int)heap + (int)((long)parent * 8) + 4);
         *(u32*)((int)heap + i * 8) = *(u32*)((int)heap + (int)((long)parent * 8));
         i = parent;
     }
-    *(u32*)((int)heap + i * 8) = pri;
-    heapHalves[i * 4 + 2] = idx;
+    heap[i].priority = priority;
+    heapHalves[i * 4 + 2] = nodeIndex;
     return 0;
 }
 
