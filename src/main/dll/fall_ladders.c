@@ -36,22 +36,6 @@ int lbl_803DBCD0[2] = {2, 3};
 
 #define FALL_LADDERS_HIT_VOLUME_SLOT 0x18
 
-extern f32 lbl_803E294C;
-extern f32 lbl_803E2958;
-extern f32 lbl_803E2940;
-extern f32 lbl_803E2944;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E2968;
-extern f32 lbl_803E296C;
-extern f32 lbl_803E2970;
-extern f32 lbl_803E2974;
-extern f32 lbl_803E2978;
-extern f32 lbl_803E297C;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2980;
-extern f32 lbl_803E2984;
-extern f32 lbl_803E2988;
-extern f32 lbl_803E298C;
 
 extern void fn_8014CF7C(int obj, int state, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int state, f32* vec, f32 a, f32 b, f32 c, int d);
