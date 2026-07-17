@@ -131,9 +131,6 @@ void worldobj_spawnGreatFoxEffects(GameObject* obj)
     objfx_spawnLightPulseLegacy(obj, lbl_803E6654 * obj->anim.rootMotionScale, 1, 0, 6,
                           lbl_803E6658, &params);
 }
-#pragma dont_inline off
-
-#pragma dont_inline on
 void worldobj_spawnAsteroidBatch(GameObject* obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId)
 {
     s16 rot[3];

@@ -420,7 +420,6 @@ void modelLightStruct_startColorFade(ModelLightStruct* light, int mode, s16 fram
     }
 }
 #pragma dont_inline off
-#pragma dont_inline off
 
 void modelLightStruct_updateGlowAlpha(ModelLightStruct* light)
 {

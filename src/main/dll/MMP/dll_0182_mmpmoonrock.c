@@ -126,8 +126,6 @@ int fn_801A78C8(GameObject* obj, f32 x, f32 y, f32 z, f32 y2, f32* out1, int* ou
     }
     return 0;
 }
-#pragma dont_inline off
-#pragma dont_inline on
 void fn_801A79E0(GameObject* obj)
 {
     TrackBBoxHit hitScratch;

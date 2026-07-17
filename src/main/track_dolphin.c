@@ -4634,8 +4634,6 @@ u8 doEdges;
 
 /* trackIntersect -- rebuild the intersection line table from map blocks when
  * a refresh has been requested. */
-#pragma opt_dead_assignments off
-#pragma opt_dead_assignments on
 void trackIntersect(void)
 {
     s16 counts[0x47];
