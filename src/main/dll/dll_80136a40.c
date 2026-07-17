@@ -33,6 +33,7 @@
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
 #include "dolphin/gx/GXMisc.h"
+#include "dolphin/os/OSContext.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/object_api.h"
 #include "main/model.h"
@@ -148,7 +149,7 @@ extern u32 gDebugPrintOriginY;
 extern u16 debugPrintXpos;
 extern u16 debugPrintYpos;
 extern s16 gErrExceptionType;
-extern u32 gErrContext;
+extern OSContext* gErrContext;
 extern u32 lbl_803DDA38;
 extern u32 lbl_803DDA34;
 extern f32 lbl_803E23DC;
@@ -257,7 +258,7 @@ u8 gDebugFontGlyphs[580] = {
     115, 0,   0,   0,   9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,  120, 9,   37,  48,  56,
     120, 0,   0,   0,   0,
 };
-void errDisplayHandler(s16 a, u32 b, u32 c, u32 d);
+void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d);
 static inline void errDisplayFillBackdrop(int xcb, int x)
 {
     int row;
@@ -929,7 +930,7 @@ void errDisplayThreadMain(void)
     u32* p;
     u8 lvl;
     u32 r, rr;
-    int rp;
+    u32* rp;
     int rows;
     u16 fill;
 
@@ -998,8 +999,8 @@ void errDisplayThreadMain(void)
                     h2++;
                 }
             }
-            debugPrintfxy(0x10, 0x3f, sErrFmtPC, *(u32*)(gErrContext + 0x198));
-            debugPrintfxy(0x10, 0x4b, sErrFmtSP, *(u32*)(gErrContext + 4));
+            debugPrintfxy(0x10, 0x3f, sErrFmtPC, gErrContext->srr0);
+            debugPrintfxy(0x10, 0x4b, sErrFmtSP, gErrContext->gpr[1]);
             if (enableDebugText != 0)
             {
                 h = 0xe380;
@@ -1014,7 +1015,7 @@ void errDisplayThreadMain(void)
             }
             debugPrintfxy(0x10, 0x60, strs + 0x1e4);
             y = 0x6c;
-            p = (u32*)**(u32**)(gErrContext + 4);
+            p = (u32*)*(u32*)gErrContext->gpr[1];
             n = 0;
             while (p != (u32*)0xffffffff && n++ != 8)
             {
@@ -1062,7 +1063,7 @@ void errDisplayThreadMain(void)
             y += 0x51;
             if (sp == NULL)
             {
-                sp = *(u32**)(gErrContext + 4);
+                sp = (u32*)gErrContext->gpr[1];
                 depth = 0;
             }
             else if (hold-- == 0)
@@ -1072,7 +1073,7 @@ void errDisplayThreadMain(void)
                 depth++;
                 if (sp == (u32*)0xffffffff)
                 {
-                    sp = *(u32**)(gErrContext + 4);
+                    sp = (u32*)gErrContext->gpr[1];
                     depth = 0;
                 }
             }
@@ -1098,13 +1099,12 @@ void errDisplayThreadMain(void)
             {
                 rr = r & 0xff;
                 debugPrintfxy(0xc, y + 0xc, lbl_803DBC34, rr, rr + 7);
-                rp = gErrContext + rr * 4;
-                debugPrintfxy(0x10, y + 0x18, strs + 0x22c, *(u32*)(gErrContext + (u8)r * 4), *(u32*)(rp + 4),
-                              *(u32*)(rp + 8), *(u32*)(rp + 0xc));
+                rp = &gErrContext->gpr[rr];
+                debugPrintfxy(0x10, y + 0x18, strs + 0x22c, gErrContext->gpr[(u8)r], rp[1],
+                              rp[2], rp[3]);
                 y += 0x24;
-                rp = gErrContext + rr * 4;
-                debugPrintfxy(0x10, y, strs + 0x22c, *(u32*)(rp + 0x10), *(u32*)(rp + 0x14), *(u32*)(rp + 0x18),
-                              *(u32*)(rp + 0x1c));
+                rp = &gErrContext->gpr[rr];
+                debugPrintfxy(0x10, y, strs + 0x22c, rp[4], rp[5], rp[6], rp[7]);
             }
             if (enableDebugText != 0)
             {
@@ -1144,7 +1144,7 @@ void errDisplayThreadMain(void)
 
 /* Stash 4 args to four globals and resume
  * the thread at &gErrDisplayThread. */
-void errDisplayHandler(s16 a, u32 b, u32 c, u32 d)
+void errDisplayHandler(s16 a, OSContext* b, u32 c, u32 d)
 {
     gErrExceptionType = a;
     gErrContext = b;
