@@ -1137,7 +1137,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_003E_dummy3e.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0031_minimap.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_003F_dll3f.c"),
-            Object(NonMatching, "main/dll/dll_0040_credits.c"),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_0040_credits.c"),
             Object(NonMatching, "main/dll/dll_0041_warpstoneui.c"),
             Object(NonMatching, "main/dll/dll_02C0_front.c"),
             Object(NonMatching, "main/dll/dll_80136a40.c", cflags=cflags_dll_noopt),
