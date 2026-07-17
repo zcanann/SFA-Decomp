@@ -90,23 +90,6 @@ int dll_FC_getExtraSize_ret_8(void);
 int dll_FC_getObjectTypeId(void);
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 
-ObjectDescriptor gWM_ColumnObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)WM_Column_initialise,
-    (ObjectDescriptorCallback)WM_Column_release,
-    0,
-    (ObjectDescriptorCallback)WM_Column_init,
-    (ObjectDescriptorCallback)WM_Column_update,
-    (ObjectDescriptorCallback)WM_Column_hitDetect,
-    (ObjectDescriptorCallback)WM_Column_render,
-    (ObjectDescriptorCallback)WM_Column_free,
-    (ObjectDescriptorCallback)WM_Column_getObjectTypeId,
-    WM_Column_getExtraSize,
-};
-
 ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     0,
     0,

@@ -22,6 +22,7 @@
 #include "main/gamebits.h"
 #include "main/obj_group.h"
 #include "main/obj_list.h"
+#include "main/dll/groundAnimator.h"
 
 /* object group this column joins */
 #define WMCOLUMN_OBJGROUP        4
@@ -42,6 +43,23 @@ typedef struct WmColumnPlacement
 } WmColumnPlacement;
 
 STATIC_ASSERT(offsetof(WmColumnPlacement, gameBit) == 0x1E);
+
+ObjectDescriptor gWM_ColumnObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)WM_Column_initialise,
+    (ObjectDescriptorCallback)WM_Column_release,
+    0,
+    (ObjectDescriptorCallback)WM_Column_init,
+    (ObjectDescriptorCallback)WM_Column_update,
+    (ObjectDescriptorCallback)WM_Column_hitDetect,
+    (ObjectDescriptorCallback)WM_Column_render,
+    (ObjectDescriptorCallback)WM_Column_free,
+    (ObjectDescriptorCallback)WM_Column_getObjectTypeId,
+    WM_Column_getExtraSize,
+};
 
 int WM_Column_getExtraSize(void)
 {
