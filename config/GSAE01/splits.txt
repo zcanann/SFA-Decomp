@@ -3158,11 +3158,12 @@ main/dll/crate.c:
 
 main/dll/DF/dll_0233_dfpstatue1.c:
 	.text       start:0x802081F4 end:0x8020848C
+	.data       start:0x80329AD8 end:0x80329B10
 	.sdata2     start:0x803E6480 end:0x803E6488
 
 main/dll/DF/dll_0234_dfpperchsw.c:
 	.text       start:0x8020848C end:0x80208508
-	.data       start:0x80329AD8 end:0x80329B71
+	.data       start:0x80329B10 end:0x80329B71
 
 main/dll/DF/dll_0235_dfptargetblock.c:
 	.text       start:0x80208508 end:0x80208FDC

@@ -45,23 +45,6 @@ void DFP_PerchWitch_initialise(void)
 {
 }
 
-ObjectDescriptor gDfpstatue1ObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)DFP_Statue1_initialise,
-    (ObjectDescriptorCallback)DFP_Statue1_release,
-    0,
-    (ObjectDescriptorCallback)DFP_Statue1_init,
-    (ObjectDescriptorCallback)DFP_Statue1_update,
-    (ObjectDescriptorCallback)DFP_Statue1_hitDetect,
-    (ObjectDescriptorCallback)DFP_Statue1_render,
-    (ObjectDescriptorCallback)DFP_Statue1_free,
-    (ObjectDescriptorCallback)DFP_Statue1_getObjectTypeId,
-    DFP_Statue1_getExtraSize,
-};
-
 ObjectDescriptor gDfperchwitchObjDescriptor = {
     0,
     0,
