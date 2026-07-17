@@ -148,7 +148,8 @@ typedef struct MapCellEnt
     s16 y;
     s16 z;
     s16 state;
-    s16 unk8;
+    s8 cellIndex;
+    s8 romListIndex;
     s16 unkA;
 } MapCellEnt;
 
@@ -782,10 +783,17 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
 
 typedef struct
 {
-    u32 field_0;
-    s16 field_4;
-    u16 field_6;
+    u32 romList;
+    s16 mapId;
+    u16 flags;
 } BlockEntry;
+
+typedef struct MapRomListGrid
+{
+    s16 width;
+    u8 unk02[0xa];
+    u32* cells;
+} MapRomListGrid;
 
 extern BlockEntry gShaderRomListSlots[8];
 extern s8 gShaderRomListSlotCount;
@@ -801,6 +809,21 @@ static inline int mapFindRomListSlot(char* slots, int id)
         if (*(void**)q2 != NULL && id == *(s16*)(q2 + 4))
             return i2;
         q2 += 8;
+        i2++;
+    }
+    return -1;
+}
+
+static inline int mapFindRomListSlotAndAdvance(char** slots, int id)
+{
+    int i2 = 0;
+    int cn = gShaderRomListSlotCount;
+    int k;
+    for (k = 0; k < cn; k++)
+    {
+        if (*(void**)*slots != NULL && id == *(s16*)(*slots + 4))
+            return i2;
+        *slots += 8;
         i2++;
     }
     return -1;
@@ -926,7 +949,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 
 char lbl_803822C8[0x41A0];
 
-extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
+extern void mapBlockFn_80059354(int p1, int p2, MapCellEnt* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 
 extern void MapBlock_init(GameObject* blk);
@@ -949,7 +972,7 @@ int mapLoadBlock(int cellX, int cellZ, int worldX, int worldZ, int layer)
     slotIdx = cellX + (cellZ << 4);
     entry += slotIdx * 12;
 
-    mapBlockFn_80059354(worldX, worldZ, (s16*)entry, layer);
+    mapBlockFn_80059354(worldX, worldZ, (MapCellEnt*)entry, layer);
 
     blockId = *(s16*)(entry + 6);
     if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1)
@@ -1475,10 +1498,10 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
         return;
     }
     base = gShaderMapRomBuffers[1];
-    e2 = (s16*)(base + gShaderRomListSlots[idx].field_4 * 10);
+    e2 = (s16*)(base + gShaderRomListSlots[idx].mapId * 10);
     aa = a - e2[0];
     bb = b - e2[2];
-    ptr0 = gShaderRomListSlots[idx].field_0;
+    ptr0 = gShaderRomListSlots[idx].romList;
     if (idx == -1)
     {
         o0[0] = -1;
@@ -2229,81 +2252,80 @@ void* fn_80059334(int a, int b)
 #pragma ppc_unroll_factor_limit 4
 
 extern s16 lbl_803DCE90;
-extern int lbl_803DCE84;
+extern u16* lbl_803DCE84;
 
-void mapBlockFn_80059354(int x, int z, s16* out, int layer)
+void mapBlockFn_80059354(int x, int z, MapCellEnt* out, int layer)
 {
     int id;
-    char* p6;
-    char* entry;
-    char* p2;
-    int cv4;
+    char* activeFlags;
+    MapRomListGrid* grid;
+    int adjacentMapId2;
+    char* slots;
     int slot;
-    int cv3;
-    s16* pairs;
-    s16* rects;
-    u32 v;
-    int k;
+    int adjacentMapId1;
+    s16* adjacentMapIds;
+    s16* mapBounds;
+    u32 cell;
 
     id = mapCoordsToId(x, z, layer);
     if (id != -1)
     {
-        p2 = (char*)gShaderRomListSlots;
-        slot = mapFindRomListSlot(p2, id);
+        slots = (char*)gShaderRomListSlots;
+        slot = mapFindRomListSlot(slots, id);
         if (slot == -1)
             slot = mapProcessRomList(id);
-        *(s8*)((p6 = (char*)gShaderRomListSlots + 6) + slot * 8) = 1;
-        entry = (char*)*(u32*)((char*)gShaderRomListSlots + slot * 8);
-        pairs = (s16*)gShaderMapRomBuffers[2];
-        cv3 = (s8)pairs[id << 1];
-        cv4 = pairs[(id << 1) + 1];
-        cv4 = (s8)cv4;
-        out[0] = id;
-        out[1] = cv3;
-        out[2] = cv4;
-        if (cv3 != -1)
+        *(s8*)((activeFlags = (char*)gShaderRomListSlots + 6) + slot * 8) = 1;
+        grid = (MapRomListGrid*)gShaderRomListSlots[slot].romList;
+        adjacentMapIds = (s16*)gShaderMapRomBuffers[2];
+        adjacentMapId1 = (s8)adjacentMapIds[id << 1];
+        adjacentMapId2 = adjacentMapIds[(id << 1) + 1];
+        adjacentMapId2 = (s8)adjacentMapId2;
+        out->x = id;
+        out->y = adjacentMapId1;
+        out->z = adjacentMapId2;
+        if (adjacentMapId1 != -1)
         {
-            slot = mapFindRomListSlot(p2, cv3);
+            slot = mapFindRomListSlot(slots, adjacentMapId1);
             if (slot == -1)
-                slot = mapProcessRomList(cv3);
-            *(s8*)(p6 + slot * 8) = 1;
+                slot = mapProcessRomList(adjacentMapId1);
+            *(s8*)(activeFlags + slot * 8) = 1;
         }
-        if (cv4 != -1)
+        if (adjacentMapId2 != -1)
         {
-            slot = mapFindRomListSlot(p2, cv4);
+            slot = mapFindRomListSlotAndAdvance(&slots, adjacentMapId2);
             if (slot == -1)
-                slot = mapProcessRomList(cv4);
-            *(s8*)(p6 + slot * 8) = 1;
+                slot = mapProcessRomList(adjacentMapId2);
+            *(s8*)(activeFlags + slot * 8) = 1;
         }
-        rects = (s16*)(gShaderMapRomBuffers[1] + id * 10);
-        z = z - rects[2];
-        x = x - rects[0];
-        v = *(u32*)(*(int*)(entry + 0xc) + (x + z * *(s16*)entry) * 4);
-        *(s8*)((char*)out + 8) = (v >> 0x11) & 0x3f;
-        *(s8*)((char*)out + 9) = (v >> 0x17) & 0xff;
-        if (*(s8*)((char*)out + 9) == 0xFF)
-            *(s8*)((char*)out + 9) = -1;
-        if (*(s8*)((char*)out + 9) == -1)
+        mapBounds = (s16*)(gShaderMapRomBuffers[1] + id * 10);
+        x = x - mapBounds[0];
+        z = z - mapBounds[2];
+        cell = grid->cells[x + z * grid->width];
+        out->cellIndex = (cell >> 0x11) & 0x3f;
+        out->romListIndex = (cell >> 0x17) & 0xff;
+        if (out->romListIndex == 0xFF)
+            out->romListIndex = -1;
+        if (out->romListIndex == -1)
         {
-            out[3] = -1;
+            out->state = -1;
         }
         else
         {
-            if (*(s8*)((char*)out + 9) >= lbl_803DCE90)
-                *(s8*)((char*)out + 9) = lbl_803DCE90 - 1;
-            out[3] = *(s8*)((char*)out + 8) + *(u16*)(lbl_803DCE84 + *(s8*)((char*)out + 9) * 2);
-            if (out[3] >= *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2))
-                out[3] = *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2) - 1;
+            if (out->romListIndex >= lbl_803DCE90)
+                out->romListIndex = lbl_803DCE90 - 1;
+            out->state = out->cellIndex + lbl_803DCE84[out->romListIndex];
+            if (out->state >= lbl_803DCE84[lbl_803DCE90])
+                out->state = lbl_803DCE84[lbl_803DCE90] - 1;
         }
     }
     else
     {
-        out[0] = -1;
-        out[1] = -1;
-        out[2] = -1;
-        out[3] = -2;
-        *(s8*)((char*)out + 9) = -1;
-        *(s8*)((char*)out + 8) = 0;
+        out->x = -1;
+        out->y = -1;
+        out->z = -1;
+        out->state = -2;
+        out->romListIndex = -1;
+        out->cellIndex = 0;
     }
 }
 #pragma ppc_unroll_factor_limit 8
