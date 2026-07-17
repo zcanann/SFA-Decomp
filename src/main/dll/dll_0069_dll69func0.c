@@ -21,10 +21,12 @@
 /* spawnEffect effect group per variant (docblock: "0xc11 for variant 2, else 0x5e0"). */
 #define DLL69_EFFECT_ID_VARIANT2 0xc11
 #define DLL69_EFFECT_ID_DEFAULT  0x5e0
+#define DLL69_CMDLIST_FLAG_TOGGLE 0x40000
 
 extern u8 lbl_803137F8[];
 extern f32 lbl_803E0A00, lbl_803E0A04, lbl_803E0A08, lbl_803E0A0C, lbl_803E0A10, lbl_803E0A14, lbl_803E0A18;
 
+#pragma opt_propagation off
 void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unused, int* overrideParams)
 {
     ModgfxPointerSpawnPacket buf;
@@ -169,11 +171,13 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
     buf.flags |= flags | 0x80;
     if (variant == 2)
     {
-        buf.flags ^= 0x40000;
+        u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
+        buf.flags ^= mask;
     }
     else
     {
-        buf.flags |= 0x40000LL;
+        u32 mask = DLL69_CMDLIST_FLAG_TOGGLE;
+        buf.flags |= mask;
     }
     if ((buf.flags & 1) != 0)
     {
@@ -194,6 +198,7 @@ void dll_69_func03(u8* sourceObj, int variant, u8* posSource, u32 flags, int unu
         ->spawnEffect(&buf, 0, 8, (u8*)(int)lbl_803137F8, 4, &base[0x50],
                       variant == 2 ? DLL69_EFFECT_ID_VARIANT2 : DLL69_EFFECT_ID_DEFAULT, 0);
 }
+#pragma opt_propagation reset
 
 void dll_69_func01_nop(void)
 {
