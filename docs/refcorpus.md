@@ -30,6 +30,22 @@ Each source unit is compiled in **four profiles** — the peephole × scheduling
 Total ≈ **42k function-asm samples**. Output lives under `build/refcorpus/` (gitignored, ~250M);
 the reference clones live under `reference_projects/{dkr,jfg}` (also gitignored).
 
+## Get the sources
+
+`reference_projects/` is gitignored, so a fresh checkout has none of them and the corpus
+searches 0 funcs until they are cloned. Clone all three, then build:
+
+```bash
+mkdir -p reference_projects
+git clone https://github.com/mariopartyrd/marioparty4        reference_projects/marioparty4
+git clone https://github.com/DavidSM64/Diddy-Kong-Racing     reference_projects/dkr
+git clone https://github.com/Ryan-Myers/Jet-Force-Gemini     reference_projects/jfg
+```
+
+`--depth 1` is fine; only the working tree is read. The dir names are the `root` fields in
+`recipes.py` and must match. No ROM or upstream toolchain is needed — we compile with our own
+MWCC GC/2.0, and the stub generators cover the ROM-derived headers.
+
 ## Build
 
 ```bash
