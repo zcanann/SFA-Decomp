@@ -72,30 +72,39 @@ typedef struct
 
 typedef struct
 {
-    int* obj;
+    GameObject* obj;
     f32 scale;
     u8 flags;
 } NewShadowCaster;
+
+#define NEW_SHADOW_MAX_QUEUED_CASTERS 300
+#define NEW_SHADOW_MAX_CASTERS 100
+#define NEW_SHADOW_MAX_CAST_TEXTURES 8
+#define NEW_SHADOW_FRAME_COUNT 3
 
 typedef struct
 {
     f32 modelMtx[12];
     f32 texMtx[12];
-    u32 texture;
+    Texture* texture;
     u8 lod;
     u8 dirIndex;
     u8 pad66[2];
 } NewShadowCastSlot;
 
-#define NEW_SHADOW_MAX_QUEUED_CASTERS 300
-#define NEW_SHADOW_MAX_CASTERS 100
-#define NEW_SHADOW_MAX_CAST_TEXTURES 8
+typedef struct
+{
+    NewShadowEntry entries[0x21];
+    Texture* frameTextures[NEW_SHADOW_FRAME_COUNT];
+    u8 pad2A0[0x360 - 0x2A0];
+    NewShadowCaster casters[NEW_SHADOW_MAX_QUEUED_CASTERS];
+    NewShadowCastSlot castSlots[NEW_SHADOW_MAX_CASTERS];
+    Texture* castTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
+} NewShadowData;
 
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
 #define NEW_SHADOW_ENTRY_CAPACITY 0x25
-
-#define NEW_SHADOW_FRAME_COUNT 3
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 extern int gNewShadowNoiseTexFrames[0x10];
@@ -158,8 +167,8 @@ extern void GXLoadTexObj(void* obj, int id);
 extern void GXLoadTexObjPreLoaded(void* obj, void* region, int id);
 extern void GXPreLoadEntireTexture(void* obj, void* region);
 extern void objRender(int a, int b, int c, int d, int* obj, int e);
-extern u8 fn_800626C8(int* obj, int frames);
-extern void fn_8008923C(int* obj, f32* a, f32* b, f32* c);
+extern u8 fn_800626C8(GameObject* obj, int frames);
+extern void fn_8008923C(GameObject* obj, f32* a, f32* b, f32* c);
 extern void objRenderShadowIfVisible(GameObject* obj, int a, int b, int c, int d, int e);
 
 extern const double lbl_803DED58;
@@ -282,7 +291,7 @@ extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz
 extern void set_shadowFlag_803dcc29(int x);
 extern void fn_80061094(f32* v, f32* out, f32 x);
 extern void mapGetBlocks(int* a, int* b);
-extern f32* ObjModel_GetJointMatrix(int* model, int joint);
+extern f32* ObjModel_GetJointMatrix(ObjModel* model, int joint);
 extern void C_MTXLightOrtho(f32* m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
 extern void GXSetProjection(f32* m, int type);
 extern void GXSetCopyFilter(GXBool aa, const u8 sample_pattern[12][2], GXBool vf, const u8 vfilter[7]);
@@ -1521,7 +1530,7 @@ extern NewShadowEntry gNewShadowEntries[0x294 / sizeof(NewShadowEntry)];
 
 void renderShadows(int unused0, int unused1, int unused2)
 {
-    char* casterPtr;
+    NewShadowCaster* casterPtr;
     f32 *vAp1, *vAp2, *mc54p;
     f32 dirY, dirZ, vAy, dirX, sCamX, sCamY;
     int savedRotY;
@@ -1532,7 +1541,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     f32 vA[3], v30[3];
     f32 dot24[3], proj[3];
     CameraViewSlot* slot;
-    char* B = (char*)gNewShadowEntries;
+    NewShadowData* shadowData = (NewShadowData*)gNewShadowEntries;
     int blkArr, blkCount;
     s8 casterIdx;
     f32 sCamZ, savedFovY, vAx, vAz, orthoHalf;
@@ -1541,7 +1550,7 @@ void renderShadows(int unused0, int unused1, int unused2)
     if (gNewShadowCasterCount == 0)
         return;
     Camera_DisableViewYOffset();
-    fn_8006B830((ShadowSortEntry*)(B + 0x360), gNewShadowCasterCount);
+    fn_8006B830((ShadowSortEntry*)shadowData->casters, gNewShadowCasterCount);
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrentViewSlot();
     savedFovY = Camera_GetFovY();
@@ -1562,33 +1571,33 @@ void renderShadows(int unused0, int unused1, int unused2)
     texIdx = 0;
     slotIdx = 0;
     casterIdx = 0;
-    casterPtr = B + 0x360;
+    casterPtr = shadowData->casters;
     mc54p = &mc54[0];
     vAp2 = &vA[2];
     vAp1 = &vA[1];
-    for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterIdx++, casterPtr += 0xc)
+    for (; casterIdx < gNewShadowCasterCount && casterIdx < NEW_SHADOW_MAX_CASTERS; casterPtr++, casterIdx++)
     {
-        int* obj = *(int**)casterPtr;
-        int* of64 = (int*)obj[0x64 / 4];
+        GameObject* obj = casterPtr->obj;
+        ObjModelState* modelState = obj->anim.modelState;
         u8 lod;
         u8 kind;
         int screenW = 0, w = 0;
-        char* castSlot;
+        NewShadowCastSlot* castSlot;
         Camera_SetCurrentViewIndex(0);
         lod = fn_800626C8(obj, framesThisStep);
         Camera_SetCurrentViewIndex(1);
         if (lod <= 4)
             continue;
-        if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
+        if ((modelState->flags & 0x20) != 0)
         {
-            memcpy(mc48, (char*)obj + 0xc, 0xc);
-            memcpy(mc54p, (char*)obj + 0x18, 0xc);
-            memcpy((char*)obj + 0xc, (char*)of64 + 0x20, 0xc);
-            memcpy((char*)obj + 0x18, (char*)of64 + 0x20, 0xc);
+            memcpy(mc48, &obj->anim.localPos, sizeof(Vec3f));
+            memcpy(mc54p, &obj->anim.worldPos, sizeof(Vec3f));
+            memcpy(&obj->anim.localPos, &modelState->overrideWorldPosX, sizeof(Vec3f));
+            memcpy(&obj->anim.worldPos, &modelState->overrideWorldPosX, sizeof(Vec3f));
         }
-        castSlot = B + (u8)slotIdx * 0x68 + 0x1170;
-        *(u8*)(castSlot + 0x64) = lod;
-        if ((u8)texIdx < 8 && (kind = *(u8*)(casterPtr + 8)) != 0)
+        castSlot = &shadowData->castSlots[(u8)slotIdx];
+        castSlot->lod = lod;
+        if ((u8)texIdx < NEW_SHADOW_MAX_CAST_TEXTURES && (kind = casterPtr->flags) != 0)
         {
             if ((u8)texIdx < 3)
             {
@@ -1611,13 +1620,13 @@ void renderShadows(int unused0, int unused1, int unused2)
                 screenW = w;
             if (kind == 2)
             {
-                w = *(u16*)((char*)((int*)obj[0x64 / 4])[1] + 0xa);
+                w = obj->anim.modelState->shadowTexture->width;
                 screenW = w;
             }
             fn_8008923C(obj, vA, vAp1, vAp2);
-            dot24[0] = -((ObjModelState*)of64)->shadowOffsetX;
-            dot24[1] = -((ObjModelState*)of64)->shadowOffsetY;
-            dot24[2] = -((ObjModelState*)of64)->shadowOffsetZ;
+            dot24[0] = -modelState->shadowOffsetX;
+            dot24[1] = -modelState->shadowOffsetY;
+            dot24[2] = -modelState->shadowOffsetZ;
             {
                 f32 dot = PSVECDotProduct(dot24, vA);
                 if (dot < lbl_803DED2C && dot > lbl_803DED44)
@@ -1629,7 +1638,8 @@ void renderShadows(int unused0, int unused1, int unused2)
                     mag = PSVECMag(proj);
                     if (mag > lbl_803DED28)
                     {
-                        PSVECScale(proj, vA, lbl_803DED2C / mag);
+                        mag = lbl_803DED2C / mag;
+                        PSVECScale(proj, vA, mag);
                     }
                 }
             }
@@ -1663,24 +1673,24 @@ void renderShadows(int unused0, int unused1, int unused2)
                 }
             }
             slot->parentObject = NULL;
-            ((ObjModelState*)of64)->shadowOffsetX = -vA[0];
-            ((ObjModelState*)of64)->shadowOffsetY = -vA[1];
-            ((ObjModelState*)of64)->shadowOffsetZ = -vA[2];
+            modelState->shadowOffsetX = -vA[0];
+            modelState->shadowOffsetY = -vA[1];
+            modelState->shadowOffsetZ = -vA[2];
             setScreenWidth(screenW);
             {
-                f32* m = ObjModel_GetJointMatrix((int*)Obj_GetActiveModel((GameObject*)obj), 0);
+                f32* m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
                 slot->x = dirX + m[3];
                 slot->y = dirY + m[7];
                 slot->z = dirZ + m[11];
             }
-            if (*(u32*)&((GameObject*)obj)->anim.parent == 0)
+            if (obj->anim.parent == NULL)
             {
                 slot->x += gMapSavedPlayerOffsetX;
                 slot->z += gMapSavedPlayerOffsetZ;
             }
-            vAz = *(f32*)of64;
+            vAz = modelState->shadowScale;
             vAx = -vAz;
-            if (*(u32*)&((GameObject*)obj)->anim.parent != 0)
+            if (obj->anim.parent != NULL)
             {
                 slot->x += playerMapOffsetX;
                 slot->z += playerMapOffsetZ;
@@ -1690,32 +1700,35 @@ void renderShadows(int unused0, int unused1, int unused2)
             C_MTXOrtho(mOrtho, vAx, vAz, vAx, vAz, lbl_803DED2C, lbl_803DED6C);
             GXSetProjection(mOrtho, GX_ORTHOGRAPHIC);
             Camera_UpdateViewMatrices();
-            C_MTXLightOrtho((f32*)castSlot, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf, orthoHalf);
+            C_MTXLightOrtho(castSlot->modelMtx, vAz, vAx, vAx, vAz, orthoHalf, orthoHalf, orthoHalf, orthoHalf);
             {
                 f32* vm = Camera_GetViewMatrix();
-                PSMTXCopy(vm, (f32*)(castSlot + 0x30));
-                PSMTXConcat((f32*)castSlot, vm, (f32*)castSlot);
-                ((ObjModelState*)obj[0x64 / 4])->shadowCastSlot = castSlot;
+                PSMTXCopy(vm, castSlot->texMtx);
+                PSMTXConcat(castSlot->modelMtx, vm, castSlot->modelMtx);
+                obj->anim.modelState->shadowCastSlot = castSlot;
                 {
-                    char* texPool = B + 0x3a10;
-                    char* texSlot = texPool + (u8)texIdx * 4;
-                    *(int*)(castSlot + 0x60) = *(int*)texSlot;
-                    *(u8*)(castSlot + 0x65) = lbl_803DB668[(u8)texIdx];
-                    objRenderShadowIfVisible((GameObject*)(obj), 0, 0, 0, 0, 0);
-                    if (*(u8*)(casterPtr + 8) == 2)
+                    Texture** texturePool = shadowData->castTextures;
+                    Texture** texture = texturePool + (u8)texIdx;
+                    castSlot->texture = *texture;
+                    castSlot->dirIndex = lbl_803DB668[(u8)texIdx];
+                    objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
+                    if (casterPtr->flags == 2)
                     {
                         gxSetZMode_(1, GX_LEQUAL, 1);
-                        PSMTXScale((f32*)(castSlot + 0x30), lbl_803DED28, lbl_803DED28, lbl_803DED28);
-                        *(f32*)(castSlot + 0x38) = lbl_803DED70;
-                        *(f32*)(castSlot + 0x3c) = lbl_803DED74;
-                        *(f32*)(castSlot + 0x5c) = lbl_803DED2C;
-                        PSMTXConcat((f32*)(castSlot + 0x30), vm, (f32*)(castSlot + 0x30));
+                        PSMTXScale(castSlot->texMtx, lbl_803DED28, lbl_803DED28, lbl_803DED28);
+                        castSlot->texMtx[2] = lbl_803DED70;
+                        castSlot->texMtx[3] = lbl_803DED74;
+                        castSlot->texMtx[11] = lbl_803DED2C;
+                        PSMTXConcat(castSlot->texMtx, vm, castSlot->texMtx);
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, GX_TF_Z8, GX_FALSE);
-                        GXSetCopyFilter(0, gRenderModeObj->sample_pattern, 0, gRenderModeObj->vfilter);
-                        GXCopyTex((void*)(*(int*)((char*)obj[0x64 / 4] + 4) + 0x60), GX_TRUE);
+                        {
+                            GXRenderModeObj* renderMode = gRenderModeObj;
+                            GXSetCopyFilter(0, renderMode->sample_pattern, 0, renderMode->vfilter);
+                        }
+                        GXCopyTex(obj->anim.modelState->shadowTexture + 1, GX_TRUE);
                         setDisplayCopyFilter();
-                        *(int*)(castSlot + 0x60) = *(int*)((char*)obj[0x64 / 4] + 4);
+                        castSlot->texture = obj->anim.modelState->shadowTexture;
                     }
                     else
                     {
@@ -1724,8 +1737,8 @@ void renderShadows(int unused0, int unused1, int unused2)
                             gxSetZMode_(1, GX_LEQUAL, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
                             GXSetTexCopyDst(w, w, GX_CTF_R4, GX_TRUE);
-                            GXCopyTex((void*)(*(int*)texSlot + 0x60), GX_TRUE);
-                            *(int*)(castSlot + 0x60) = *(int*)texSlot;
+                            GXCopyTex(*texture + 1, GX_TRUE);
+                            castSlot->texture = *texture;
                         }
                         texIdx++;
                     }
@@ -1735,50 +1748,52 @@ void renderShadows(int unused0, int unused1, int unused2)
         else
         {
             f32 fx, fz;
-            *(int*)(castSlot + 0x60) = *(int*)((char*)obj[0x64 / 4] + 4);
-            fx = ((GameObject*)obj)->anim.localPosX;
-            fz = ((GameObject*)obj)->anim.localPosZ;
-            if (*(u32*)&((GameObject*)obj)->anim.parent == 0)
+            castSlot->texture = obj->anim.modelState->shadowTexture;
+            fx = obj->anim.localPosX;
+            fz = obj->anim.localPosZ;
+            if (obj->anim.parent == NULL)
             {
                 fx -= playerMapOffsetX;
                 fz -= playerMapOffsetZ;
             }
-            PSMTXTrans(mTrans, -fx, -((GameObject*)obj)->anim.localPosY, -fz);
+            PSMTXTrans(mTrans, -fx, -obj->anim.localPosY, -fz);
             {
-                f32 s = lbl_803DED38 / *(f32*)of64;
+                f32 s = lbl_803DED38 / modelState->shadowScale;
                 mScale[0] = s;
-                mScale[1] = 0.0f;
-                mScale[2] = 0.0f;
+                mScale[1] = lbl_803DED28;
+                mScale[2] = lbl_803DED28;
                 mScale[3] = lbl_803DED38;
-                mScale[4] = 0.0f;
-                mScale[5] = 0.0f;
+                mScale[4] = lbl_803DED28;
+                mScale[5] = lbl_803DED28;
                 mScale[6] = s;
                 mScale[7] = lbl_803DED38;
-                mScale[8] = 0.0f;
-                mScale[9] = 0.0f;
-                mScale[10] = 0.0f;
-                mScale[11] = 1.0f;
+                mScale[8] = lbl_803DED28;
+                mScale[9] = lbl_803DED28;
+                mScale[10] = lbl_803DED28;
+                mScale[11] = lbl_803DED2C;
             }
-            PSMTXConcat(mScale, mTrans, (f32*)castSlot);
-            ((ObjModelState*)of64)->shadowOffsetX = v30[0];
-            ((ObjModelState*)of64)->shadowOffsetY = v30[1];
-            ((ObjModelState*)of64)->shadowOffsetZ = v30[2];
-            ((ObjModelState*)obj[0x64 / 4])->shadowCastSlot = castSlot;
+            PSMTXConcat(mScale, mTrans, castSlot->modelMtx);
+            modelState->shadowOffsetX = v30[0];
+            modelState->shadowOffsetY = v30[1];
+            modelState->shadowOffsetZ = v30[2];
+            obj->anim.modelState->shadowCastSlot = castSlot;
         }
         slotIdx++;
-        if ((*(u32*)&((ObjModelState*)of64)->flags & 0x20) != 0)
+        if ((modelState->flags & 0x20) != 0)
         {
-            memcpy((char*)obj + 0xc, mc48, 0xc);
-            memcpy((char*)obj + 0x18, mc54p, 0xc);
+            memcpy(&obj->anim.localPos, mc48, sizeof(Vec3f));
+            memcpy(&obj->anim.worldPos, mc54p, sizeof(Vec3f));
         }
     }
     if ((u8)texIdx > 1)
     {
+        GXRenderModeObj* renderMode;
         gxSetZMode_(1, GX_LEQUAL, 1);
-        GXSetCopyFilter(0, gRenderModeObj->sample_pattern, 0, gRenderModeObj->vfilter);
+        renderMode = gRenderModeObj;
+        GXSetCopyFilter(0, renderMode->sample_pattern, 0, renderMode->vfilter);
         GXSetTexCopySrc(0, 0, 0x100, 0x100);
         GXSetTexCopyDst(0x100, 0x100, GX_CTF_R8, GX_FALSE);
-        GXCopyTex((void*)(*(int*)(B + 0x3a14) + 0x60), GX_TRUE);
+        GXCopyTex(shadowData->castTextures[1] + 1, GX_TRUE);
         GXPixModeSync();
         setDisplayCopyFilter();
     }
@@ -1830,7 +1845,7 @@ void shadowCreate(int* obj)
     f32 dx, dy, dz, dist2;
     if (gNewShadowCasterCount < NEW_SHADOW_MAX_QUEUED_CASTERS)
     {
-        gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
+        gNewShadowCasterTable[gNewShadowCasterCount].obj = (GameObject*)obj;
         cam = gNewShadowCurrentViewSlot;
         dx = ((GameObject*)obj)->anim.worldPosX - cam->x;
         dy = ((GameObject*)obj)->anim.worldPosY - cam->y;

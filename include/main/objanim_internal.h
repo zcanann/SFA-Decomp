@@ -9,6 +9,7 @@
 
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;
+typedef struct Texture Texture;
 
 extern const f32 gObjAnimProgressOne;
 extern const f32 gObjAnimProgressZero;
@@ -299,7 +300,7 @@ typedef struct ObjAnimBank {
 
 typedef struct ObjModelState {
   f32 shadowScale;
-  void *shadowTexture;
+  Texture *shadowTexture;
   void *shadowWorkBuffer;
   void *shadowCastSlot;
   void *shadowRenderResource;
