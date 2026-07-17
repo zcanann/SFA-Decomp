@@ -41,7 +41,6 @@
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
-extern u32 FUN_800069f4();
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
 
@@ -268,26 +267,6 @@ MapBlockData* mapGetBlock(int i)
 {
     if (i < 0 || i >= lbl_803DCE98) return 0;
     return gMapBlocks[i];
-}
-
-u32 FUN_8005d018(char enable)
-{
-    if (enable == '\0')
-    {
-        renderFlags = renderFlags & ~(u32)RENDERFLAG_WIDESCREEN;
-        FUN_800069f4((double)lbl_803DB670);
-    }
-    else
-    {
-        renderFlags = renderFlags | RENDERFLAG_WIDESCREEN;
-        FUN_800069f4((double)widescreenAspect_803DEC1C);
-    }
-    return 0;
-}
-
-u32 FUN_8005d06c(void)
-{
-    return renderFlags & RENDERFLAG_WIDESCREEN;
 }
 
 extern u32 lbl_8037E0C0[];
