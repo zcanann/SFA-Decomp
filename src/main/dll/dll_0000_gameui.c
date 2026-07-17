@@ -2831,7 +2831,7 @@ HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
     {0x0A9F, 0x046F}, {0x0AA4, 0x0470}, {0x0AA9, 0x0471}, {0x0AAE, 0x0472}, {0x0AB3, 0x0473},
 };
 
-__declspec(section ".data") u32 lbl_8031AF14[2] = {0x22B, 0x50};
+u32 lbl_8031AF14[2] = {0x22B, 0x50};
 
 u32 lbl_8031AF1C[6] = {0x219, 0x66, 0x100, (u32)&lbl_8031AF14, 0x200, (u32)&lbl_8031AF1C};
 
