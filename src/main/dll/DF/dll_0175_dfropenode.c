@@ -4,6 +4,7 @@
  * rope/cradle model and plays creak sfx.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/DF/dfropenode.h"
 #include "main/dll/dfbarrelanim.h"
@@ -38,8 +39,18 @@ extern f32 gRopeNodeMaxDistance;
 extern f32 gRopeNodeDamping;
 extern const f32 gRopeNodeBoundsMargin;
 
-extern u8 lbl_80325E00[];
-extern u8 lbl_80325E60[];
+u32 gRopeNodeSegmentDataA[24] = {
+    0x00000064, 0x00000000, 0x01000000, 0xffffffff, 0xff38ff9c, 0x00000000,
+    0x00000000, 0xffffffff, 0x00c8ff9c, 0x00000000, 0x02000000, 0xffffffff,
+    0x00000001, 0x00000000, 0x01000200, 0xffffffff, 0xff38ff9c, 0x00000000,
+    0x00000200, 0xffffffff, 0x00c8ff9c, 0x00000000, 0x02000200, 0xffffffff,
+};
+u32 gRopeNodeSegmentDataB[24] = {
+    0x000000c8, 0x00000000, 0x00800000, 0xffffff80, 0xfe70ff38, 0x00000000,
+    0x00000000, 0xffffff80, 0x0190ff38, 0x00000000, 0x01000000, 0xffffff80,
+    0x000000c8, 0x00000000, 0x00800100, 0xffffff80, 0xfe70ff38, 0x00000000,
+    0x00000100, 0xffffff80, 0x0190ff38, 0x00000000, 0x01000100, 0xffffff80,
+};
 const u8 gRopeNodeDisplayList[96] = {
     0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -475,7 +486,7 @@ void dfropenode_render(int obj, int p2, int p3)
         for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
         {
             node++;
-            fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
+            fn_801C0BF8((u8*)gRopeNodeSegmentDataA, extra->angle, (node - 1)->pos, node->pos, matrix);
             drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
         }
         if (((DfropenodePlacement*)objDef)->textureIndex == 1)
@@ -492,7 +503,7 @@ void dfropenode_render(int obj, int p2, int p3)
             for (segment = 0; segment < (int)(extra->rope->count - 1); segment++)
             {
                 node++;
-                fn_801C0BF8(lbl_80325E60, extra->angle, (node - 1)->pos, node->pos, matrix);
+                fn_801C0BF8((u8*)gRopeNodeSegmentDataB, extra->angle, (node - 1)->pos, node->pos, matrix);
                 drawFn_8005cf8c((int)matrix, gRopeNodeDisplayList, 6);
             }
         }
@@ -666,3 +677,29 @@ void dfropenode_initialise(void)
         (gRopeNodeTextures)[i] = textureLoadAsset((gRopeNodeTextureAssetIds)[i]);
     }
 }
+
+ObjectDescriptor20 gDFropenodeObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_20_SLOTS,
+    (ObjectDescriptorCallback)dfropenode_initialise,
+    (ObjectDescriptorCallback)dfropenode_release,
+    0,
+    (ObjectDescriptorCallback)dfropenode_init,
+    (ObjectDescriptorCallback)dfropenode_update,
+    (ObjectDescriptorCallback)dfropenode_hitDetect,
+    (ObjectDescriptorCallback)dfropenode_render,
+    (ObjectDescriptorCallback)dfropenode_free,
+    (ObjectDescriptorCallback)dfropenode_getObjectTypeId,
+    dfropenode_getExtraSize,
+    (ObjectDescriptorCallback)dfropenode_getPlaneEquation,
+    (ObjectDescriptorCallback)dfropenode_getWorldPosAtPhase,
+    (ObjectDescriptorCallback)dfropenode_advancePhaseByDistance,
+    (ObjectDescriptorCallback)dfropenode_applyForceAtPhase,
+    (ObjectDescriptorCallback)dfropenode_findNearestRopePoint,
+    (ObjectDescriptorCallback)dfropenode_getAngle,
+    (ObjectDescriptorCallback)dfropenode_setVisible,
+    (ObjectDescriptorCallback)dfropenode_isVisible,
+    (ObjectDescriptorCallback)dfropenode_setMinY,
+    (ObjectDescriptorCallback)dfropenode_clearLinkedObj,
+};
+
+u32 lbl_80325F20[12] = {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

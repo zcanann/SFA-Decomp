@@ -10,6 +10,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 #include "main/obj_group.h"
 #include "main/obj_message.h"
@@ -319,3 +320,19 @@ void DIM_BossGut2_release(void)
 void DIM_BossGut2_initialise(void)
 {
 }
+
+ObjectDescriptor12 gDIM_BossGut2ObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)DIM_BossGut2_initialise,
+    (ObjectDescriptorCallback)DIM_BossGut2_release,
+    0,
+    (ObjectDescriptorCallback)DIM_BossGut2_init,
+    (ObjectDescriptorCallback)DIM_BossGut2_update,
+    (ObjectDescriptorCallback)DIM_BossGut2_hitDetect,
+    (ObjectDescriptorCallback)DIM_BossGut2_render,
+    (ObjectDescriptorCallback)DIM_BossGut2_free,
+    (ObjectDescriptorCallback)DIM_BossGut2_getObjectTypeId,
+    DIM_BossGut2_getExtraSize,
+    (ObjectDescriptorCallback)DIM_BossGut2_setScale,
+    (ObjectDescriptorCallback)DIM_BossGut2_func0B,
+};

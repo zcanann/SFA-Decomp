@@ -5,6 +5,7 @@
  * state 2 drives a cosine pulse of the texture id.
  */
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/objtexture.h"
 #include "main/gamebits.h"
@@ -159,3 +160,17 @@ void DFSH_Door2Speci_release(void)
 void DFSH_Door2Speci_initialise(void)
 {
 }
+
+ObjectDescriptor gDFSH_Door2SpeciObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_initialise,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_release,
+    0,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_init,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_update,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_hitDetect,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_render,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_free,
+    (ObjectDescriptorCallback)DFSH_Door2Speci_getObjectTypeId,
+    DFSH_Door2Speci_getExtraSize,
+};

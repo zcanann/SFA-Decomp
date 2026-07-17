@@ -7,6 +7,7 @@
  */
 #include "main/obj_group.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/dll/DF/DFcradle.h"
 #include "main/gamebits.h"
 
@@ -76,3 +77,17 @@ void ccriverflow_init(CCriverflowObject* obj, CCriverflowMapData* params)
         params->speedByte = CCRIVERFLOW_DEFAULT_SPEED;
     }
 }
+
+ObjectDescriptor gCCriverflowObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)ccriverflow_init,
+    (ObjectDescriptorCallback)ccriverflow_update,
+    0,
+    (ObjectDescriptorCallback)ccriverflow_render,
+    (ObjectDescriptorCallback)ccriverflow_free,
+    0,
+    ccriverflow_getExtraSize,
+};

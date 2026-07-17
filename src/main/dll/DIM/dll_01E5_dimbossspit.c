@@ -13,6 +13,7 @@
 #include "main/pad_api.h"
 #include "main/vecmath.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_render_legacy.h"
 #include "main/object_api.h"
 #include "main/model.h"
@@ -289,3 +290,17 @@ void DIMbossspit_release(void)
 void DIMbossspit_initialise(void)
 {
 }
+
+ObjectDescriptor gDIM_BossSpitObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DIMbossspit_initialise,
+    (ObjectDescriptorCallback)DIMbossspit_release,
+    0,
+    (ObjectDescriptorCallback)DIMbossspit_init,
+    (ObjectDescriptorCallback)DIMbossspit_update,
+    (ObjectDescriptorCallback)DIMbossspit_hitDetect,
+    (ObjectDescriptorCallback)DIMbossspit_render,
+    (ObjectDescriptorCallback)DIMbossspit_free,
+    (ObjectDescriptorCallback)DIMbossspit_getObjectTypeId,
+    DIMbossspit_getExtraSize,
+};

@@ -11,6 +11,7 @@
 #include "main/vecmath.h"
 #include "main/render_envfx_api.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/audio/sfx.h"
 #include "main/object_api.h"
 #include "main/object_render.h"
@@ -406,3 +407,19 @@ void DIMbosstonsil_initialise(void)
     ((void (**)(void))lbl_803DDBA8)[0] = DIMbosstonsil_enableHitReaction;
     ((void (**)(void))lbl_803DDBA8)[1] = DIMbosstonsil_updateHitReaction;
 }
+
+ObjectDescriptor12 gDIM_BossTonsilObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_12_SLOTS,
+    (ObjectDescriptorCallback)DIMbosstonsil_initialise,
+    (ObjectDescriptorCallback)DIMbosstonsil_release,
+    0,
+    (ObjectDescriptorCallback)DIMbosstonsil_init,
+    (ObjectDescriptorCallback)DIMbosstonsil_update,
+    (ObjectDescriptorCallback)DIMbosstonsil_hitDetect,
+    (ObjectDescriptorCallback)DIMbosstonsil_render,
+    (ObjectDescriptorCallback)DIMbosstonsil_free,
+    (ObjectDescriptorCallback)DIMbosstonsil_getObjectTypeId,
+    DIMbosstonsil_getExtraSize,
+    (ObjectDescriptorCallback)DIMbosstonsil_setScale,
+    (ObjectDescriptorCallback)DIMbosstonsil_func0B,
+};

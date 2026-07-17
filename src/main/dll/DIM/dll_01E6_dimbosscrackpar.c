@@ -10,6 +10,7 @@
 #include "main/dll/partfx_interface.h"
 #include "main/dll_000A_expgfx.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 
 #define DIMBOSSCRACKPAR_BASE_PARTICLE_ID  1222 /* crack-site particle, offset by particleIndex */
 #define DIMBOSSCRACKPAR_GLOW_PARTICLE_ID  1224 /* fixed glow burst particle */
@@ -79,3 +80,17 @@ void DIMbosscrackpar_release(void)
 void DIMbosscrackpar_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMbosscrackparObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DIMbosscrackpar_initialise,
+    (ObjectDescriptorCallback)DIMbosscrackpar_release,
+    0,
+    (ObjectDescriptorCallback)DIMbosscrackpar_init,
+    (ObjectDescriptorCallback)DIMbosscrackpar_update,
+    (ObjectDescriptorCallback)DIMbosscrackpar_hitDetect,
+    (ObjectDescriptorCallback)DIMbosscrackpar_render,
+    (ObjectDescriptorCallback)DIMbosscrackpar_free,
+    (ObjectDescriptorCallback)DIMbosscrackpar_getObjectTypeId,
+    DIMbosscrackpar_getExtraSize,
+};

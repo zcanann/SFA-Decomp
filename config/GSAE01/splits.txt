@@ -2434,7 +2434,7 @@ main/dll/DIM/DIMboss.c:
 
 main/dll/DIM/dll_01E1_dimbossgut.c:
 	.text       start:0x801BDBE0 end:0x801BDCF8
-	.data       start:0x80325BF8 end:0x80325F88
+	.data       start:0x80325BF8 end:0x80325C30
 
 main/dll/dll_223.c:
 	.text       start:0x801BDCF8 end:0x801BE19C
@@ -2444,29 +2444,36 @@ main/dll/DIM/dimbossspit.c:
 
 main/dll/DIM/dll_01E2_dimbosstonsil.c:
 	.text       start:0x801BE44C end:0x801BEEA0
+	.data       start:0x80325C30 end:0x80325C70
 	.sbss       start:0x803DDB90 end:0x803DDBB8
 
 main/dll/DIM/dimgut2group.c:
 	.text       start:0x801BEEA0 end:0x801BF8D8
+	.data       start:0x80325C70 end:0x80325CB0
 	.sdata2     start:0x803E4CD0 end:0x803E4D34
 
 main/dll/DIM/dll_01E5_dimbossspit.c:
 	.text       start:0x801BF8D8 end:0x801BFFF4
+	.data       start:0x80325CB0 end:0x80325CE8
 	.sdata2     start:0x803E4D58 end:0x803E4D60
 
 main/dll/dll_01E4_magicmaker.c:
 	.text       start:0x801BFFF4 end:0x801C02B8
+	.data       start:0x80325CE8 end:0x80325D30
 	.sdata2     start:0x803E4D90 end:0x803E4D98
 
 main/dll/DIM/dll_01E6_dimbosscrackpar.c:
 	.text       start:0x801C02B8 end:0x801C04B8
+	.data       start:0x80325D30 end:0x80325D68
 
 main/dll/DIM/dll_01E7_dimbossfire.c:
 	.text       start:0x801C04B8 end:0x801C0A60
+	.data       start:0x80325D68 end:0x80325DC8
 	.sdata2     start:0x803E4DC8 end:0x803E4DD0
 
 main/dll/CC/dll_0174_ccriverflow.c:
 	.text       start:0x801C0A60 end:0x801C0BF8
+	.data       start:0x80325DC8 end:0x80325E00
 	.sdata2     start:0x803E4DD8 end:0x803E4DE0
 
 main/dll/dll_801c0bf8.c:
@@ -2484,10 +2491,12 @@ main/dll/dfbarrelanim.c:
 main/dll/DF/dll_0175_dfropenode.c:
 	.text       start:0x801C1740 end:0x801C26E0
 	.rodata     start:0x802C2358 end:0x802C23B8
+	.data       start:0x80325E00 end:0x80325F50
 	.sdata      start:0x803DBF40 end:0x803DBF60
 
 main/dll/DF/dll_0177_dfshdoor2speci.c:
 	.text       start:0x801C26E0 end:0x801C2914
+	.data       start:0x80325F50 end:0x80325F88
 	.sdata2     start:0x803E4E48 end:0x803E4E50
 
 main/dll/DF/dll_0178_dfshshrine.c:

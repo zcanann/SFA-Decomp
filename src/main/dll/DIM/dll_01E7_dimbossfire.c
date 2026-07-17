@@ -15,6 +15,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebits.h"
 #include "main/game_object.h"
+#include "main/object_descriptor.h"
 #include "main/object_api.h"
 #include "main/model_light.h"
 #include "main/obj_placement.h"
@@ -26,7 +27,6 @@
 #define DIMBOSSFIRE_HIT_VOLUME_SLOT 9
 #define DIMBOSSFIRE_OBJFLAG_RENDERED 0x800
 
-extern f32 lbl_80325D68[];
 extern f32 lbl_803E4DA0;
 extern f32 lbl_803E4DA4;
 extern f32 lbl_803E4DA8;
@@ -63,6 +63,10 @@ typedef struct DimbossfirePlacement
 #define DIMBOSSFIRE_FLAME_COUNT 10
 #define DIMBOSSFIRE_COOLDOWN_MIN 0xf0  /* minimum random cooldown in frames */
 #define DIMBOSSFIRE_COOLDOWN_MAX 0x1e0 /* maximum random cooldown in frames */
+
+f32 gDimbossfireActiveDurations[DIMBOSSFIRE_FLAME_COUNT] = {
+    160.0f, 30.0f, 110.0f, 160.0f, 80.0f, 40.0f, 120.0f, 60.0f, 120.0f, 120.0f,
+};
 
 /* partfx ids: burst = spawned 0x32x on START_BURST; sustained = spawned each
  * active frame. orange = flameColor!=0, green = flameColor==0 (matches the
@@ -123,7 +127,7 @@ void dimbossfire_update(GameObject *obj)
         {
             mainSetBits((int)placement->triggerGameBit, 0);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
-            state->activeTimer = lbl_80325D68[state->flameIndex];
+            state->activeTimer = gDimbossfireActiveDurations[state->flameIndex];
             state->initialActiveTimer = state->activeTimer;
             state->flameIndex += 1;
             if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
@@ -140,7 +144,7 @@ void dimbossfire_update(GameObject *obj)
             state->cooldownTimer = (f32)(int)
             randomGetRange(DIMBOSSFIRE_COOLDOWN_MIN, DIMBOSSFIRE_COOLDOWN_MAX);
             state->flags = state->flags | DIMBOSSFIRE_FLAG_START_BURST;
-            state->activeTimer = lbl_80325D68[state->flameIndex];
+            state->activeTimer = gDimbossfireActiveDurations[state->flameIndex];
             state->initialActiveTimer = state->activeTimer;
             state->flameIndex += 1;
             if (state->flameIndex >= DIMBOSSFIRE_FLAME_COUNT)
@@ -263,3 +267,17 @@ void dimbossfire_release(void)
 void dimbossfire_initialise(void)
 {
 }
+
+ObjectDescriptor gDIMbossfireObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dimbossfire_initialise,
+    (ObjectDescriptorCallback)dimbossfire_release,
+    0,
+    (ObjectDescriptorCallback)dimbossfire_init,
+    (ObjectDescriptorCallback)dimbossfire_update,
+    (ObjectDescriptorCallback)dimbossfire_hitDetect,
+    (ObjectDescriptorCallback)dimbossfire_render,
+    (ObjectDescriptorCallback)dimbossfire_free,
+    (ObjectDescriptorCallback)dimbossfire_getObjectTypeId,
+    dimbossfire_getExtraSize,
+};
