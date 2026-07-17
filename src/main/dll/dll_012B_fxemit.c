@@ -295,14 +295,14 @@ void FxEmit_free(FxEmitObject* obj)
     (*gModgfxInterface)->freeSourceEffects(obj);
 }
 
-void FxEmit_hitDetect(void)
-{
-}
-
 void FxEmit_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible == 0)
         return;
+}
+
+void FxEmit_hitDetect(void)
+{
 }
 
 void FxEmit_update(FxEmitObject* obj)
@@ -498,3 +498,7 @@ ObjectDescriptor gFXEmitObjDescriptor = {
 };
 
 char sCFTreasSharpyDebugFormat[12] = "%x   %f %f\n\000";
+
+#pragma explicit_zero_data on
+__declspec(section ".data") s32 gFXEmitUnused = 0;
+#pragma explicit_zero_data off
