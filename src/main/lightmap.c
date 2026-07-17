@@ -703,6 +703,24 @@ void renderObjects(s8* opacity)
         }
     }
 }
+static void fillBoxRows(u8* map, int* box)
+{
+    int y, x0;
+    int xs, xe;
+    u8* p;
+    for (y = box[2]; y <= box[3]; y++)
+    {
+        xs = box[0];
+        p = map + (y + 7) * 0x10 + xs;
+        xe = box[1];
+        for (x0 = xs; x0 <= xe; x0++)
+        {
+            p[7] = 1;
+            p++;
+        }
+    }
+}
+
 #pragma opt_propagation off
 extern void mapFn_80057d24(int x, int z, int* box0, int* box1, int* box2, int* box3, int layer,
                            int one, int v);
@@ -717,7 +735,6 @@ void renderSceneGeometry(int* p1, s8* order)
     void** layerTablePtr;
     int* layerFlagPtr;
     int idx;
-    int y, x0;
     int k[1];
     int row, col;
     int oi, ii;
@@ -745,54 +762,10 @@ void renderSceneGeometry(int* p1, s8* order)
             *p = 0;
             p++;
         }
-        for (y = box0[2]; y <= box0[3]; y++)
-        {
-            int xs = box0[0];
-            int xe;
-            p = map + (y + 7) * 0x10 + xs;
-            xe = box0[1];
-            for (x0 = xs; x0 <= xe; x0++)
-            {
-                p[7] = 1;
-                p++;
-            }
-        }
-        for (y = box1[2]; y <= box1[3]; y++)
-        {
-            int xs = box1[0];
-            int xe;
-            p = map + (y + 7) * 0x10 + xs;
-            xe = box1[1];
-            for (x0 = xs; x0 <= xe; x0++)
-            {
-                p[7] = 1;
-                p++;
-            }
-        }
-        for (y = box2[2]; y <= box2[3]; y++)
-        {
-            int xs = box2[0];
-            int xe;
-            p = map + (y + 7) * 0x10 + xs;
-            xe = box2[1];
-            for (x0 = xs; x0 <= xe; x0++)
-            {
-                p[7] = 1;
-                p++;
-            }
-        }
-        for (y = box3[2]; y <= box3[3]; y++)
-        {
-            int xs = box3[0];
-            int xe;
-            p = map + (y + 7) * 0x10 + xs;
-            xe = box3[1];
-            for (x0 = xs; x0 <= xe; x0++)
-            {
-                p[7] = 1;
-                p++;
-            }
-        }
+        fillBoxRows(map, box0);
+        fillBoxRows(map, box1);
+        fillBoxRows(map, box2);
+        fillBoxRows(map, box3);
         for (oi = 0; oi < 16; oi++)
         {
             row = order[oi];
