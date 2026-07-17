@@ -950,7 +950,7 @@ void gxTextureFn_80052efc(void)
     int clearSlot;
     u8 group;
     int k;
-    int model;
+    int model[1];
     u8* tex;
 
     gxFn_80052dc0();
@@ -1012,9 +1012,9 @@ void gxTextureFn_80052efc(void)
         if (((Texture*)((RcpDistortSlot*)slots[0])[i].texture)->refCount != 0 &&
             ((RcpDistortSlot*)slots[0])[i].mode == 0 && gRcpDistortGroup == ((RcpDistortSlot*)slots[0])[i].group)
         {
-            model = ((RcpDistortSlot*)slots[0])[i].model;
+            model[0] = ((RcpDistortSlot*)slots[0])[i].model;
             modelTextureFn_80089970(2 - (i - 3));
-            gxLoadObjectLights((GameObject*)model, lights);
+            gxLoadObjectLights((GameObject*)model[0], lights);
             lightGetColor(0, &outColor.r, &outColor.g, &outColor.b);
             GXSetChanAmbColor(GX_COLOR0, outColor);
             lightFn_80052974((f32)(i * 0x20), lbl_803DEB60);
