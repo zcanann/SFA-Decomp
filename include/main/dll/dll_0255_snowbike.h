@@ -5,7 +5,14 @@
 #include "global.h"
 
 #include "main/game_object.h"
+#include "main/checkpoint_interface.h"
 #include "main/objseq.h"
+
+typedef struct SnowBikeRouteFlags {
+    u8 hi : 4;
+    u8 active : 1;
+    u8 lo : 3;
+} SnowBikeRouteFlags;
 
 /* Per-object extra state for the rideable SnowBike / CloudRunner bike.
  * Offsets recovered from SnowBike_init/SnowBike_update derefs; the
@@ -20,25 +27,31 @@ typedef struct SnowBikeState {
     f32 unk01C;             /* 0x01c */
     f32 unk020;             /* 0x020 */
     f32 unk024;             /* 0x024 */
-    u8 pad028[0x4];
-    s16 riderYawOnFree;             /* 0x02c: rider yaw on free */
-    s16 riderPitchOnFree;             /* 0x02e: rider pitch on free */
-    u8 pad030[0x4];
-    f32 unk034;             /* 0x034 */
-    int checkpointIndexA;             /* 0x038 */
-    int checkpointIndexB;             /* 0x03c */
-    int checkpointIndexC;             /* 0x040 */
-    int unk044;             /* 0x044 */
-    u8 pad048[0x4];
+    union {
+        CheckpointRouteState routeState;
+        CheckpointRankItem rankItem;
+        struct {
+            u8 pad028[0x4];
+            s16 riderYawOnFree;             /* 0x02c: rider yaw on free */
+            s16 riderPitchOnFree;           /* 0x02e: rider pitch on free */
+            u8 pad030[0x4];
+            f32 unk034;                     /* 0x034 */
+            int checkpointIndexA;           /* 0x038 */
+            int checkpointIndexB;           /* 0x03c */
+            int checkpointIndexC;           /* 0x040 */
+            int unk044;                     /* 0x044 */
+            u8 pad048[0x4];
+        };
+    };
     f32 riderPosX;             /* 0x04c: rider pos X on free */
     f32 riderPosY;             /* 0x050: rider pos Y on free */
     f32 riderPosZ;             /* 0x054: rider pos Z on free */
     u8 unk058;              /* 0x058 */
     u8 pad059[0x3];
-    u8 unk05C;              /* 0x05c */
+    u8 routeFilter;         /* 0x05c: checkpoint route filter from object params */
     u8 unk05D;              /* 0x05d */
     u8 pad05E[0x2];
-    char *gameBitPtr;       /* 0x060: base+0xa4+bikeType*6; points to a pair of s16 GameBit ids (mainGetBit at +0/+2) */
+    s16 *gameBitPtr;        /* 0x060: points to a pair of GameBit ids */
     u8 pad064[0x1];
     s8 collisionHitType;    /* 0x065: path-collision secondaryHitType (-1 = use plain non-Ex setup) */
     u8 pad066[0x2];
@@ -72,10 +85,13 @@ typedef struct SnowBikeState {
     s16 savedRotZ;             /* 0x41e: saved anim.rotZ (restored after temp halo modify) */
     u8 unk420;              /* 0x420 */
     s8 riderMode;              /* 0x421: rider mode */
-    s8 unk422;              /* 0x422 */
+    s8 routeRank;           /* 0x422: current checkpoint-route rank */
     u8 pad423;
     f32 impactShakeTimer;   /* 0x424: accumulates timeDelta while grounded; drives doRumble + CameraShake_SetAllMagnitudes */
-    u8 flags428;            /* 0x428: SnowBikeFlags overlay byte */
+    union {
+        u8 flags428;        /* 0x428: SnowBikeFlags overlay byte */
+        SnowBikeRouteFlags routeFlags;
+    };
     u8 pad429[0x3];
     int linkedObj;             /* 0x42c: linked object */
     f32 unk430;             /* 0x430 */
@@ -161,7 +177,7 @@ STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
 void SnowBike_update(GameObject* obj);
 void SnowBike_resetToRomListPosition(GameObject* obj);
-void fn_801EAE4C(short* obj, int stateRaw);
+void fn_801EAE4C(GameObject* obj, SnowBikeState* state);
 void fn_801EB0D4(u32 obj, int stateRaw);
 void fn_801EB634(GameObject* obj, int stateRaw);
 int SnowBike_SeqFn(short* obj, int unused, ObjSeqState* seq);

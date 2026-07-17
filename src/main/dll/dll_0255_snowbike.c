@@ -391,7 +391,7 @@ void SnowBike_resetToRomListPosition(GameObject* obj)
 
 s32 SnowBike_func14(int* obj)
 {
-    return ((SnowBikeState*)((GameObject*)obj)->extra)->unk422;
+    return ((SnowBikeState*)((GameObject*)obj)->extra)->routeRank;
 }
 
 f32 SnowBike_func13(GameObject* obj, f32* out)
@@ -794,7 +794,7 @@ void SnowBike_update(GameObject* obj)
     break;
     case 2:
     {
-        fn_801EAE4C((short*)obj, (int)state);
+        fn_801EAE4C(obj, (SnowBikeState*)state);
         if (((SnowBikeFlags*)(state + 0x428))->b02)
         {
             if (drshackle_updateAttachedPosition(obj, (ShackleSwingState*)state) != 0)
@@ -993,7 +993,7 @@ static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int fla
     ((SnowBikeState*)state)->checkpointIndexA = -1;
     ((SnowBikeState*)state)->checkpointIndexB = -1;
     ((SnowBikeState*)state)->checkpointIndexC = -1;
-    ((SnowBikeState*)state)->unk05C = params->param1c;
+    ((SnowBikeState*)state)->routeFilter = params->param1c;
     ((SnowBikeState*)state)->unk05D = params->param1d;
     ((SnowBikeState*)state)->posSnapshotX = ((GameObject*)obj)->anim.localPosX;
     ((SnowBikeState*)state)->posSnapshotY = ((GameObject*)obj)->anim.localPosY;
@@ -1091,7 +1091,7 @@ static inline void SnowBike_initBody(int obj, SnowBikePlacement* params, int fla
     fv = ((SnowBikeState*)state)->velLimitZ;
     ((SnowBikeState*)state)->distanceScaleLimit = fv;
     ((SnowBikeState*)state)->baseVelLimitZ = fv;
-    ((SnowBikeState*)state)->gameBitPtr = (char*)((int)base + 0xa4 + ((SnowBikeState*)state)->bikeType * 6);
+    ((SnowBikeState*)state)->gameBitPtr = (s16*)((int)base + 0xa4 + ((SnowBikeState*)state)->bikeType * 6);
     if (((SnowBikeState*)state)->bikeType == 0)
     {
         if (!((SnowBikeFlags*)(state + 0x428))->b02)

@@ -55,7 +55,7 @@ typedef struct HightopFlags
 #define DRHIGHTOP_PARTFX_COLLISION_SPRAY 0x553
 #define DRHIGHTOP_HIT_VOLUME_SLOT        0x15
 
-extern char lbl_803AD088[];
+extern CheckpointRankItem lbl_803AD088;
 extern int gDrHighTopHitObjectKinds[];
 extern int lbl_803DC0BC;
 extern f32 lbl_803DC0C8;
@@ -111,96 +111,92 @@ extern f32 lbl_803E5C0C;
 extern f32 lbl_803E5C10;
 extern f32 lbl_803E5C14;
 
-void fn_801EAE4C(short* obj, int stateRaw)
+void fn_801EAE4C(GameObject* obj, SnowBikeState* st)
 {
-    f32 tickDir;
-    u32 bitVal;
-    SnowBikeState* st = (SnowBikeState*)stateRaw;
-    s16 angDelta;
-    u32 absDelta;
-    u16 uRet;
-    s8 ch;
+    f32 pathStep;
+    u32 gameBitSet;
+    u32 absoluteHeadingDelta;
+    s16 headingDelta;
+    u16 routeHeading;
+    s8 routeRank;
 
     if ((u32)(st->flags428 >> 3 & 1) == 0)
     {
-        st->checkpointIndexA = 0xffffffff;
-        st->checkpointIndexB = 0xffffffff;
-        st->checkpointIndexC = 0xffffffff;
-        st->unk044 = 0;
+        st->routeState.startCheckpointId = -1;
+        st->routeState.matchedCheckpointId = -1;
+        st->routeState.currentCheckpointId = -1;
+        st->routeState.linkDepth = 0;
         lbl_803DC0BC = -1;
-        bitVal = mainGetBit((int)*(short*)st->gameBitPtr);
-        if (bitVal != 0)
+        gameBitSet = mainGetBit(st->gameBitPtr[0]);
+        if (gameBitSet != 0)
         {
-            ((HightopFlags3*)&st->flags428)->active = 1;
+            st->routeFlags.active = 1;
         }
         if ((u32)(st->flags428 >> 3 & 1) != 0)
         {
             if ((u32)(st->flags428 >> 1 & 1) != 0)
             {
-                SnowBike_resetToRomListPosition((GameObject*)(obj));
+                SnowBike_resetToRomListPosition(obj);
             }
             else
             {
                 (*gCheckpointInterface)
-                    ->findRouteForObject((GameObject*)obj, (CheckpointRouteState*)(stateRaw + 0x28), st->unk05C);
+                    ->findRouteForObject(obj, &st->routeState, st->routeFilter);
             }
-            (*gCheckpointInterface)->rewindRoute((CheckpointRouteState*)(stateRaw + 0x28));
+            (*gCheckpointInterface)->rewindRoute(&st->routeState);
         }
     }
     else
     {
         if ((u32)(st->flags428 >> 1 & 1) == 0)
         {
-            uRet = (*gCheckpointInterface)->getRouteHeading((GameObject*)obj, (CheckpointRouteState*)(stateRaw + 0x28));
-            angDelta = *obj - uRet;
-            if (0x8000 < angDelta)
+            routeHeading = (*gCheckpointInterface)->getRouteHeading(obj, &st->routeState);
+            headingDelta = obj->anim.rotX - routeHeading;
+            if (0x8000 < headingDelta)
             {
-                angDelta = angDelta - 0xffff;
+                headingDelta = headingDelta - 0xffff;
             }
-            if (angDelta < -0x8000)
+            if (headingDelta < -0x8000)
             {
-                angDelta = angDelta + 0xffff;
+                headingDelta = headingDelta + 0xffff;
             }
-            absDelta = ((int)angDelta >= 0) ? angDelta : -angDelta;
-            /* Branchless "absDelta <= lbl_803DC0DC": the sign bit (>>0x1f) of
-             * ((x>>1) - (x & absDelta)), x = absDelta ^ lbl_803DC0DC, is 0
-             * exactly when absDelta does not exceed the threshold. Advance the
-             * path progress forward while within tolerance, else back it off. */
-            if ((int)((u32)(((int)(absDelta ^ lbl_803DC0DC) >> 1) - ((absDelta ^ lbl_803DC0DC) & absDelta)) >> 0x1f) ==
+            absoluteHeadingDelta = ((int)headingDelta >= 0) ? headingDelta : -headingDelta;
+            if ((int)((u32)(((int)(absoluteHeadingDelta ^ lbl_803DC0DC) >> 1) -
+                             ((absoluteHeadingDelta ^ lbl_803DC0DC) & absoluteHeadingDelta)) >> 0x1f) ==
                 0)
             {
-                tickDir = timeDelta;
+                pathStep = timeDelta;
             }
             else
             {
-                tickDir = -timeDelta;
+                pathStep = -timeDelta;
             }
-            st->pathProgress = st->pathProgress + tickDir;
-            tickDir = st->pathProgress;
+            st->pathProgress = st->pathProgress + pathStep;
+            pathStep = st->pathProgress;
             st->pathProgress =
-                (tickDir < lbl_803E5AE8) ? lbl_803E5AE8 : ((tickDir > lbl_803E5B68) ? lbl_803E5B68 : tickDir);
+                (pathStep < lbl_803E5AE8) ? lbl_803E5AE8 : ((pathStep > lbl_803E5B68) ? lbl_803E5B68 : pathStep);
             if (st->pathProgress > lbl_803E5B7C)
             {
                 gameTextShow(0x475);
             }
-            (*gCheckpointInterface)->queueRouteRankItem((CheckpointRankItem*)(stateRaw + 0x28));
-            st->unk422 = (s8)(*gCheckpointInterface)->getRouteRank((CheckpointRankItem*)(stateRaw + 0x28));
-            ch = st->unk422;
-            if ((ch == 1) && (lbl_803DC0BC == -1))
+            (*gCheckpointInterface)->queueRouteRankItem(&st->rankItem);
+            st->routeRank = (s8)(*gCheckpointInterface)->getRouteRank(&st->rankItem);
+            routeRank = st->routeRank;
+            if ((routeRank == 1) && (lbl_803DC0BC == -1))
             {
                 lbl_803DC0BC = -1;
             }
             else
             {
-                lbl_803DC0BC = ch;
-                *(int*)(lbl_803AD088 + 0x1c) = st->unk044;
-                *(f32*)(lbl_803AD088 + 0xc) = st->unk034;
+                lbl_803DC0BC = routeRank;
+                lbl_803AD088.linkDepth = st->routeState.linkDepth;
+                lbl_803AD088.routeProgress = st->routeState.routeProgress;
             }
         }
-        bitVal = mainGetBit((int)*(short*)(st->gameBitPtr + 2));
-        if (bitVal != 0)
+        gameBitSet = mainGetBit(st->gameBitPtr[1]);
+        if (gameBitSet != 0)
         {
-            ((HightopFlags3*)&st->flags428)->active = 0;
+            st->routeFlags.active = 0;
         }
     }
 }
