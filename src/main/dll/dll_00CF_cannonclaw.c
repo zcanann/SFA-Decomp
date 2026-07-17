@@ -27,7 +27,6 @@ extern f32 lbl_803E2F30;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
 
-#pragma dont_inline on
 #pragma scheduling off
 void grimble_initialiseStateHandlerTables(void)
 {
@@ -48,7 +47,6 @@ void grimble_initialiseStateHandlerTables(void)
     gGrimbleStateHandlersB[4] = grimble_stateHandlerB04;
     gGrimbleStateHandlersB[5] = grimble_stateHandlerB05;
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 int cannonclaw_getExtraSize(void)
