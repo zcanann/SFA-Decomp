@@ -95,7 +95,7 @@ typedef struct
     u16* entries;      /* 0x04 */
     int glyphCount;    /* 0x08 */
     int entryCount;    /* 0x0c */
-    void* textures[3]; /* 0x10 */
+    Texture* textures[3]; /* 0x10 */
     int mode;          /* 0x1c */
     f32 timer;         /* 0x20 */
     u8 dirId;          /* 0x24 */
@@ -108,7 +108,8 @@ typedef struct GameTextBox
     u8 unk00[8];
     u16 width;
     u16 height;
-    u8 unk0C[7];
+    u8 unk0C[6];
+    u8 alignment;
     u8 style;
     s16 x;
     s16 y;
@@ -126,6 +127,13 @@ typedef struct
     u32 key;
     int len;
 } CtrlCharEntry;
+
+typedef struct
+{
+    char* name;
+    u8 sizeIdx;
+    u8 pad05[3];
+} LanguageName;
 
 /*
  * A disc-status message: the id of the equivalent gametext entry, its line
@@ -287,8 +295,9 @@ typedef struct
 
 extern int curLanguage;
 extern TextFont* gameTextFonts;
-extern void* gameTextDrawFunc;
-extern char* sLanguageNameTable[][2];
+typedef void (*GameTextDrawFunc)(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+extern GameTextDrawFunc gameTextDrawFunc;
+extern LanguageName sLanguageNameTable[];
 extern GameTextBox gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern const f32 lbl_803DE70C;
@@ -768,8 +777,8 @@ void gameTextSetWindow(u8* textBox)
 
 static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
 {
-    TextGlyph* g;
     int cnt;
+    TextGlyph* g;
 
     g = gameTextFonts->glyphs;
     cnt = gameTextFonts->glyphCount;
@@ -784,7 +793,7 @@ static inline TextGlyph* findGlyph(u32 ch, int glyphLang)
     return NULL;
 }
 
-void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
+void textRenderStr(u8* str, GameTextBox* win, f32 x, f32 y, f32 lineH, int mode)
 {
     int realign;
     f32 fx0, fy0, fx1, fy1;
@@ -794,11 +803,11 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     int n2;
     int i;
     int skipGlyph;
-    u8* p;
     TextGlyph* g;
-    u8* winBase;
+    u8* p;
+    GameTextBox* winBase;
     int glyphLang;
-    void* tex;
+    Texture* tex;
     f32 spaceExtra;
     f32 measW;
     f32 measN;
@@ -816,10 +825,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     }
     else
     {
-        {
-            u8* tbl = (u8*)sLanguageNameTable;
-            glyphLang = tbl[curLanguage * 8 + 4];
-        }
+        glyphLang = sLanguageNameTable[curLanguage].sizeIdx;
     }
     curTexPage = -1;
     realign = 1;
@@ -829,7 +835,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     }
 
     if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(CHEAT_DINO_LANGUAGE) &&
-        win == (u8*)gTextBoxes + 0x140)
+        win == &gTextBoxes[10])
     {
         translateToDinoLanguage(str);
     }
@@ -845,9 +851,9 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
         textBlendSetupFn_80078a7c();
     }
 
-    x = x + (f32) * (s16*)(win + 0x14);
-    y = y + (f32) * (s16*)(win + 0x16);
-    winBase = (u8*)gTextBoxes;
+    x = x + win->x;
+    y = y + win->y;
+    winBase = gTextBoxes;
 
     while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
     {
@@ -871,19 +877,19 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 glyphLang = params[0];
                 break;
             case TEXT_CTRL_ALIGN_LEFT:
-                win[0x12] = TEXT_ALIGN_LEFT;
+                win->alignment = TEXT_ALIGN_LEFT;
                 realign = 1;
                 break;
             case TEXT_CTRL_ALIGN_RIGHT:
-                win[0x12] = TEXT_ALIGN_RIGHT;
+                win->alignment = TEXT_ALIGN_RIGHT;
                 realign = 1;
                 break;
             case TEXT_CTRL_ALIGN_CENTER:
-                win[0x12] = TEXT_ALIGN_CENTER;
+                win->alignment = TEXT_ALIGN_CENTER;
                 realign = 1;
                 break;
             case TEXT_CTRL_ALIGN_JUSTIFY:
-                win[0x12] = TEXT_ALIGN_JUSTIFY;
+                win->alignment = TEXT_ALIGN_JUSTIFY;
                 realign = 1;
                 break;
             case TEXT_CTRL_COLOR:
@@ -927,7 +933,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
         if (realign != 0)
         {
-            switch (win[0x12])
+            switch (win->alignment)
             {
             case TEXT_ALIGN_LEFT:
                 spaceExtra = lbl_803DE704;
@@ -935,13 +941,13 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
             case TEXT_ALIGN_RIGHT:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
-                x = (f32) * (s16*)(win + 0x14) + ((f32)(u32) * (u16*)(win + 8) - measW);
+                x = win->x + ((f32)win->width - measW);
                 break;
             case TEXT_ALIGN_CENTER:
                 spaceExtra = lbl_803DE704;
                 gameTextMeasureString(p, lbl_803DC9A0, &measW, NULL, 0, 0, -1);
-                x = (f32)(u32) * (u16*)(win + 8) - measW;
-                x = x * lbl_803DE70C + (f32) * (s16*)(win + 0x14);
+                x = (f32)win->width - measW;
+                x = x * lbl_803DE70C + win->x;
                 break;
             case TEXT_ALIGN_JUSTIFY:
             {
@@ -964,7 +970,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                         acc += getControlCharLen(innerCh) * 2;
                     }
                 }
-                spaceExtra = ((f32)(u32) * (u16*)(win + 8) - measW) / spaceCount;
+                spaceExtra = ((f32)win->width - measW) / spaceCount;
                 break;
             }
             }
@@ -1046,12 +1052,11 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 int iw = g->advanceX + (g->width + g->offsetX);
                 int ih = g->advanceY + (g->height + g->offsetY);
                 GXGetScissor(&scisX, &scisY, &scisW, &scisH);
-                gxSetScissorRect(0, 0, *(s16*)(winBase + 0xfd4), *(s16*)(winBase + 0xfd6),
-                                 *(s16*)(winBase + 0xfd4) + *(u16*)(winBase + 0xfc8),
-                                 *(s16*)(winBase + 0xfd6) + *(u16*)(winBase + 0xfca));
-                fx0 = (f32)(*(s16*)(winBase + 0xfd4) + ((*(u16*)(winBase + 0xfc8) - iw) >> 1));
+                gxSetScissorRect(0, 0, winBase[126].x, winBase[126].y, winBase[126].x + winBase[126].width,
+                                 winBase[126].y + winBase[126].height);
+                fx0 = (f32)(winBase[126].x + ((winBase[126].width - iw) >> 1));
                 fx1 = fx0 + iw;
-                fy0 = (f32)(*(s16*)(winBase + 0xfd6) + ((*(u16*)(winBase + 0xfca) - ih) >> 1));
+                fy0 = (f32)(winBase[126].y + ((winBase[126].height - ih) >> 1));
                 fy1 = fy0 + ih;
                 fx0 = fx0 * lbl_803DE710;
                 fx1 = fx1 * lbl_803DE710;
@@ -1075,7 +1080,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
                 {
                     curTexPage = g->page;
                     tex = gameTextFonts->textures[g->page];
-                    selectTexture((Texture*)tex, 0);
+                    selectTexture(tex, 0);
                     if (lbl_802C8680[g->lang * 16 + 6] == 1)
                     {
                         if (mode != 0)
@@ -1108,16 +1113,15 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
             if (gameTextDrawFunc != NULL)
             {
-                f32 sH = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xc);
-                f32 sW = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xa);
-                ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
-                    fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
-                    (v0 + (f32)(g->height << 5)) / sH);
+                f32 sH = 32.0f * tex->height;
+                f32 sW = 32.0f * tex->width;
+                gameTextDrawFunc(fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
+                                 (v0 + (f32)(g->height << 5)) / sH);
             }
             else
             {
-                f32 sH = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xc);
-                f32 sW = 32.0f * (f32)(u32) * (u16*)((u8*)tex + 0xa);
+                f32 sH = 32.0f * tex->height;
+                f32 sW = 32.0f * tex->width;
                 textRenderChar((int)fx0, fy0, fx1, fy1, u0 / sW, v0 / sH, (u0 + (f32)(g->width << 5)) / sW,
                                (v0 + (f32)(g->height << 5)) / sH);
             }
@@ -1940,7 +1944,7 @@ void gameTextRun(void)
                 freeSlot->active = 1;
                 freeSlot->sourceId = sourceId;
                 sprintf(gameTextBase->path, sGameTextMapPathFormat,
-                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId][0]);
+                         sMapDirectoryNameTable[dirId], sLanguageNameTable[languageId].name);
                 setFileInfo(&freeSlot->fileInfo);
                 freeSlot->loadHandle = loadFileByPathAsync(gameTextBase->path,
                                                            &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
@@ -2415,7 +2419,7 @@ void gameTextLoadForCurMap(int sourceId)
         freeSlot->active = 1;
         freeSlot->sourceId = sourceId;
         sprintf((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET), sGameTextMapPathFormat,
-                sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang][0]);
+                sMapDirectoryNameTable[slotDir], sLanguageNameTable[slotLang].name);
         setFileInfo(&freeSlot->fileInfo);
         freeSlot->loadHandle = loadFileByPathAsync((char*)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET),
                                                    &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
