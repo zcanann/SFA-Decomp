@@ -191,8 +191,13 @@ f32 lbl_8030EA58[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EA70[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EA88[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
 f32 lbl_8030EAA0[2][3] = {{0.5f, 0.0f, 0.0f}, {0.0f, 0.5f, 0.0f}};
-extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8, lbl_803DEEAC;
-extern u8 lbl_803DEEB0, lbl_803DEEB2;
+typedef struct StageCountTable
+{
+    u8 count[7];
+} StageCountTable;
+
+extern u32 lbl_803DEEA0, lbl_803DEEA4, lbl_803DEEA8;
+extern StageCountTable lbl_803DEEAC;
 extern u32 lbl_803DEEB8, lbl_803DEEBC, lbl_803DEEC0, lbl_803DEEC4;
 extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4, lbl_803E8450;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
@@ -3839,8 +3844,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     Blk28 buf_70;
     Blk28 buf_54;
     Blk28 buf_38;
-    u32 stab1;
-    u32 stab0;
+    StageCountTable stab;
     GXColor temp;
     GXColor color2;
     f32 vec3[3];
@@ -3857,9 +3861,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     buf_70 = *(Blk28*)&lbl_802C1EA8.blk[3];
     buf_54 = *(Blk28*)&lbl_802C1EA8.blk[4];
     buf_38 = *(Blk28*)&lbl_802C1EA8.blk[5];
-    stab0 = lbl_803DEEAC;
-    *(u16*)((u8*)&stab1 + 0) = *(u16*)&lbl_803DEEB0;
-    ((u8*)&stab1)[2] = lbl_803DEEB2;
+    stab = lbl_803DEEAC;
     *(u32*)&fog_var = lbl_803E8450;
 
     PSMTXConcat((f32(*)[4])obj, mtx, mtx_110);
@@ -3893,7 +3895,7 @@ void fn_80077EF8(GameObject* obj, u8* node, Mtx mtx, f32 scale)
     GXSetTevKColor(0, temp);
 
     stage_base = 0;
-    stage_count = ((u8*)&stab0)[stage_idx];
+    stage_count = stab.count[stage_idx];
     if (stage_count != 0)
     {
         GXSetTevDirect(GX_TEVSTAGE0);
