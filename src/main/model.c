@@ -122,7 +122,7 @@ extern f32 gMapSavedPlayerOffsetZ;
 void setGQR7Packed(int a, int b, int c, int d);
 void setGQR6_2(int a, int b, int c, int d);
 asm void modelBoneTransforms_next(void);
-static u8* modelGetBoneMtx(u8* m, int idx);
+static inline void* modelGetBoneMtx(ObjModel* model, int idx);
 asm void ObjModel_TransformVerticesWithTranslation(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 asm void ObjModel_TransformVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
 asm void ObjModel_TransformQuadVerticesLinear(register u8* m1, register u8* m2, register u8* src, register int d1, register int d2, register int count);
@@ -1837,52 +1837,42 @@ void cacheQueueWait(int sync);
 #pragma ppc_unroll_speculative on
 #pragma scheduling on
 #pragma peephole on
-static u8* modelGetBoneMtx(u8* m, int idx)
+static inline void* modelGetBoneMtx(ObjModel* model, int idx)
 {
-    u32 cnt;
     int lim;
+    u32 cnt;
+    int joint = idx;
+    u8* base;
 
-    cnt = *(u8*)(*(u8**)m + 0xf3);
-    if (cnt != 0)
+    cnt = model->file->jointCount;
+    lim = cnt != 0 ? cnt + model->file->extraJointCount : 1;
+    if (joint >= lim)
     {
-        lim = cnt + *(u8*)(*(u8**)m + 0xf4);
+        joint = 0;
     }
-    else
-    {
-        lim = 1;
-    }
-    if (idx >= lim)
-    {
-        idx = 0;
-    }
-    return ((ObjModel*)m)->jointMatrices[*(u16*)(m + 0x18) & 1] + idx * 0x40;
+    base = model->jointMatrices[model->bufferFlags & 1];
+    return base + joint * 0x40;
 }
+
 #pragma scheduling reset
 #pragma peephole reset
 
-void modelInitBoneMtxs(u8* m, u8* out)
+void modelInitBoneMtxs(ObjModel* model, f32* out)
 {
-    u8* hdr;
+    ModelFileHeader* hdr;
     u32 i;
-    u8* mtx;
-    int boneOff;
-    ModelBone* bone;
-    u8* dst;
     f32 tmp[12];
 
-    hdr = *(u8**)m;
-    i = 0;
-    boneOff = 0;
-    dst = out;
-    for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
+    hdr = model->file;
+    for (i = 0; i < hdr->jointCount; i++)
     {
-        mtx = modelGetBoneMtx(m, i);
-        bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
-        PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
-        PSMTXConcat((f32*)mtx, tmp, tmp);
-        PSMTXReorder(tmp, (f32*)dst);
-        boneOff += 0x1c;
-        dst += 0x30;
+        f32* mtx = modelGetBoneMtx(model, i);
+        PSMTXTrans(tmp,
+            -((ModelBone*)hdr->jointData)[i].tail[0],
+            -((ModelBone*)hdr->jointData)[i].tail[1],
+            -((ModelBone*)hdr->jointData)[i].tail[2]);
+        PSMTXConcat(mtx, tmp, tmp);
+        PSMTXReorder(tmp, out + i * 12);
     }
 }
 #pragma opt_propagation off
@@ -1930,7 +1920,7 @@ void modelInitBoneMtxs2(u8* m, u8* out2, u8* out)
         dst = out;
         for (; i < ((ModelFileHeader*)hdr)->jointCount; i++)
         {
-            mtx = modelGetBoneMtx(m, i);
+            mtx = modelGetBoneMtx((ObjModel*)m, i);
             bone = (ModelBone*)(((ModelFileHeader*)hdr)->jointData + boneOff);
             PSMTXTrans(tmp, -bone->tail[0], -bone->tail[1], -bone->tail[2]);
             PSMTXConcat((f32*)mtx, tmp, tmp);
