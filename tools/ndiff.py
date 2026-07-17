@@ -144,9 +144,9 @@ def main() -> None:
 
     repo_root = Path(__file__).resolve().parent.parent
     config_path = repo_root / "build" / args.version / "config.json"
-    objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump"
+    objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump.exe"
     if not objdump_path.is_file():
-        objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump.exe"
+        objdump_path = repo_root / "build" / "binutils" / "powerpc-eabi-objdump"
 
     unit = resolve_unit(load_units(config_path), args.unit)
     target_object = repo_root / Path(unit["object"])
