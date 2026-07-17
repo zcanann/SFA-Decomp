@@ -21,6 +21,8 @@
  * trigger state so the burst variant can detect a midline crossing.
  */
 #include "main/dll/partfx_interface.h"
+#include "main/gamebits.h"
+#include "main/audio/sfx.h"
 #include "main/dll/trickycurve_object.h"
 #include "main/object_api.h"
 #include "main/game_object.h"

@@ -52,8 +52,6 @@ typedef struct TrickyCurveBurstFxParams
 #define DFPFORCEAW_PARTFX_BURST_PARTICLE 0x5fd /* spawned 10x */
 
 extern f32 lbl_803E6448;
-extern void fn_80206C18(int* obj);
-extern void fn_80206968(int* obj);
 
 void TrickyCurve_updateBurstTrigger(GameObject* obj)
 {
@@ -219,11 +217,11 @@ void TrickyCurve_update(int* obj)
     }
     else if (state == 2)
     {
-        fn_80206C18(obj);
+        ((void (*)(int*))fn_80206C18)(obj);
     }
     else if (state == 3)
     {
-        fn_80206968(obj);
+        ((void (*)(int*))fn_80206968)(obj);
     }
 }
 

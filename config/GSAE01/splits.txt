@@ -3101,15 +3101,10 @@ main/dll/DF/dll_022F_dfpfloorbar.c:
 	.sdata2     start:0x803E6408 end:0x803E6418
 	.sdata2     start:0x803E6418 end:0x803E6438
 
-main/dll/tesla.c:
-	.text       start:0x80206968 end:0x80206F30
+main/dll/teslagroup.c:
+	.text       start:0x80206968 end:0x8020768C
 	.sbss       start:0x803DDCF0 end:0x803DDCF8
-
-main/dll/infopoint.c:
-	.text       start:0x80206F30 end:0x8020718C
-
-main/dll/DF/dll_0231_dfpforceaw.c:
-	.text       start:0x8020718C end:0x8020768C
+	.sdata2     start:0x803E6438 end:0x803E6448
 
 main/dll/DF/dll_0232_dfprotatep.c:
 	.text       start:0x8020768C end:0x80208098
