@@ -127,17 +127,17 @@ __declspec(section ".sdata2") f32 lbl_803E4EC0 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E4EC4 = 0.0026000000070780516f;
 __declspec(section ".sdata2") f32 lbl_803E4EC8 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E4ECC = 0.052000001072883606f;
-__declspec(section ".sdata2") const f32 lbl_803E4ED0 = 127.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4ED4 = 0.5f;
-__declspec(section ".sdata2") const f32 gLaserBeamAimPi = 3.1415927f;
-__declspec(section ".sdata2") const f32 gLaserBeamAimAngleScale = 32768.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EE0 = 5.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EE4 = 25.0f;
+const f32 lbl_803E4ED0 = 127.0f;
+const f32 lbl_803E4ED4 = 0.5f;
+const f32 gLaserBeamAimPi = 3.1415927f;
+const f32 gLaserBeamAimAngleScale = 32768.0f;
+const f32 lbl_803E4EE0 = 5.0f;
+const f32 lbl_803E4EE4 = 25.0f;
 __declspec(section ".sdata2") f32 lbl_803E4EE8 = 63.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EEC = 2.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EF0 = -20.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EF4 = 20.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4EF8 = 0.04f;
+const f32 lbl_803E4EEC = 2.0f;
+const f32 lbl_803E4EF0 = -20.0f;
+const f32 lbl_803E4EF4 = 20.0f;
+const f32 lbl_803E4EF8 = 0.04f;
 
 int DFSH_LaserBeam_getExtraSize(void)
 {
