@@ -15987,16 +15987,23 @@ void playerItemGetAnimFn(int obj, int inner, int state)
 #pragma opt_loop_invariants reset
 #pragma opt_propagation off
 #pragma inline_max_size(7)
+
+typedef struct PlayerSeqPlacement {
+    ObjPlacement base;
+    u8 pad18[8];
+    s8 movementEnabled;
+} PlayerSeqPlacement;
+
+STATIC_ASSERT(offsetof(PlayerSeqPlacement, movementEnabled) == 0x20);
+
 int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
 {
-    int ctrl;
-    register int va;
+    int tbl = (int)lbl_80332EC0;
+    PlayerSeqPlacement* placement = (PlayerSeqPlacement*)((GameObject*)obj2)->anim.placementData;
+    PlayerState* inner = ((GameObject*)obj)->extra;
+    int result = 0;
+    int va;
     int vb;
-    int tbl;
-    int mapVal;
-    int result;
-    register PlayerState* inner;
-    u8 found;
     f32 npos[3];
     f32 pz;
     f32 py;
@@ -16004,10 +16011,6 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
     int objCount;
     f32 nearArg;
 
-    tbl = (int)lbl_80332EC0;
-    ctrl = *(int*)&((GameObject*)obj2)->anim.placementData;
-    inner = ((GameObject*)obj)->extra;
-    result = 0;
     va = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 0);
     vb = (int)objModelGetVecFn_800395d8((GameObject*)(obj), 9);
     seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_802A93F4;
@@ -16085,7 +16088,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
                 }
             }
         }
-        if (*(s8*)(ctrl + 0x20) == 0 || (c = (s8)seq->movementState) == 3 || c == 2)
+        if (placement->movementEnabled == 0 || (c = (s8)seq->movementState) == 3 || c == 2)
         {
             seq->flags = seq->savedFlags;
             if ((s8)seq->movementState != 2)
@@ -16460,6 +16463,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 3:
             {
                 f32 best;
+                u8 found;
                 obj2 = (int)ObjGroup_GetObjects(10, &objCount);
                 found = 0;
                 best = 10000.0f;
@@ -16781,6 +16785,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState* seq, int endFlag)
             case 0x28:
             {
                 int h;
+                int mapVal;
                 switch (coordsToMapCell(((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosZ))
                 {
                 case 0x13:
