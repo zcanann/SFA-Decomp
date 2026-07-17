@@ -91,3 +91,53 @@ Flagging in case the .text cost was unintended: the EWColorTbl f32->u32 retype +
 
 ## CORRECTION: fn_80007F78 is MWCC, NOT ProDG (2026-07-17)
 Direct signature check: fn_80007F78 has 0 mcrxr, 0 addme, 0 andi., 0 clrlwi, 0 stmw, and a standard MWCC prologue (stwu r1,-160(r1); mflr r0; stw r0,164(r1)). It is NOT ProDG - my earlier "probable ProDG too" note on it was wrong. ONLY the unclaimed gap_03_80006C6C_text region in render.o carries the mcrxr signature. fn_80007F78's residual (17-saved-reg permutation storm on 64-bit bitstream math) is a genuine MWCC allocator coloring wall, not a compiler mismatch. The ProDG-island handoff still stands for the gap region and zlbDecompress; just not for fn_80007F78.
+
+## trig.c / k_tan.c fastCastS16ToFloat-family stack offset - MECHANISM IDENTIFIED, source-unreachable (2026-07-17)
+The `sth r0,10(r1)` / `addi r3,r1,10` vs our `12` divergence in 8 fns (trig: fsin16, fcos16Approx,
+fsin16Precise, fcos16Precise, fn_80293AC4, fn_80293D0C; k_tan: fsin16Approx, fcos16) is NOT a local-block
+ordering question. **The -O0 stack-layout law (measured, and confirmed 3x against retail):**
+- The incoming parameter home area starts at offset 8 and packs each DECLARED param at its natural
+  size/alignment, **whether or not the param is ever homed** (a param promoted straight to r31 with
+  `mr r31,r3` still reserves its slot). Address-taken locals begin at `8 + paramAreaSize`; within the
+  block they are filled from the block TOP downward in declaration order (last-declared sits at the base).
+- Measured base per signature (GC/1.2.5n, `-O0 -opt functions -inline auto -schedule off`):
+  `()`->8, `(char)`->10, `(s16)`->10, `(int)`/`(float)`/`(ptr)`->12, `(int,s16)`->14, `(s16,int)`->16,
+  `(s16,s16)`->12, `(float,float*,float*)`->20.
+- Retail oracles that CONFIRM the law: trig.o `fn_80293C64(float,float*,float*)` n@20; trig.o
+  `fn_80293DA4(float x)` n@12; trig_float_helpers.o `angleToVec2(int,float*,float*)` angle@20 (matched unit).
+- Version discriminator: 1.0/1.1/1.2.5/1.2.5n reserve the param area; **1.1p1 and 1.3/1.3.2/1.3.2r/2.0/
+  2.0p1/2.5/2.6/2.7/3.0a3/3.0a5 do not (base 8)**. Only the 1.2.x family reproduces trig's frame
+  (40 bytes, `_savefpr_30`, r31@20), so the version is right.
+
+=> retail's base of 10 means **paramAreaSize == 2, i.e. the declared param is 2 bytes wide**. But retail's
+body reads `r31` RAW with zero extension (`mr r31,r3; rlwinm r0,r31,2,14,29` and `rlwinm r0,r31,0,16,18`),
+which is int-param codegen; our `int angle` source is instruction-for-instruction identical to retail
+(T=91 = C=91, sole diff = the two offsets). **The two facts are mutually exclusive under every reachable
+config:** a 2-byte param costs an `extsh`/`clrlwi` per read in all of 1.0/1.1/1.1p1/1.2.5/1.2.5n/1.3/
+1.3.2/1.3.2r/2.0/2.0p1/2.5/2.6/2.7/3.0a3/3.0a5. Measured on the real unit: `int angle` = 99.973 (base
+wrong), `s16 angle` = 97.162 (base RIGHT, +2 extsh), `s16 angle` + `#pragma peephole on` = 99.122 (base
+right, extensions gone, but the param copy becomes `addi r31,r3,0` and r3 is copy-propagated into the
+rlwinm). Baseline (`int angle`) is the local optimum; do not "fix" the offset without also killing the
+extension.
+
+**Corroboration from a second, structurally unrelated function in the same unit:** retail `fn_80293C64`
+has `addi r30,r3,0` / `addi r31,r4,0` (a **peephole-ONLY** trait - no-peephole emits `mr r30,r3`) AND
+`fmr f1,f28` before the `trigReduceQuadrant` call (a **no-peephole-ONLY** trait - peephole always elides
+it as a redundant copy). Verified across 1.0/1.1/1.1p1/1.2.5/1.2.5n x {`functions`, `functions,peephole`}
+and across `noprop/nocse/nolifetimes/nodead/nodeadstore/space/speed/level=0/nofunctions` peephole
+sub-combinations: **no configuration produces both**. Same shape of contradiction as fsin16.
+
+=> **Conclusion: retail trig.c/k_tan.c were built by a 1.2.5-family peephole variant that (a) eliminates
+redundant sign/zero extensions and (b) does NOT do the `mr`->`addi` copy rewrite / copy-propagation /
+copy-elision our peephole does.** This is a compiler-build question, not a source-spelling one - two
+independent functions in the same TU each need one peephole trait and one non-peephole trait
+simultaneously. Ruled out exhaustively: all 16 in-repo GC compilers (+ 1.2.5n `mwcceppc_old.exe`), ~30
+`-opt`/driver flag combinations, ~19 pragmas (incl. `optimize_for_size`, `global_optimizer off`,
+`no_register_coloring`, `opt_*`), 436 param-type x reduce-spelling x switch-spelling source variants
+(ANSI s16/u16/short/ushort, K&R short/ushort, K&R + prototype, `register`, `const`, `volatile`, 2-byte
+`enum` under `#pragma enumsalwaysint off`, 2-byte struct/union by value - MWCC passes those by pointer),
+and the ghost-group route (an inlined `static` helper's locals AND its by-value `s16` param both land at
+`8 + paramAreaSize`, i.e. 12, not 10 - inlining does not create a slot below the param area).
+**Payoff if a matching compiler build is ever sourced: k_tan -> 100 (flip) and 6 of trig's 10 sub-100 fns
+-> 100.** trig's remaining gap is then fn_80293C64 (98.75), mathSinf/fn_80293DA4/fn_80293F7C (~99.7, a
+shared `lhz r4,12(r1)`/`lwz r3,8(r1)` vs `lhz r3`/`lwz r0` two-register rotation).
