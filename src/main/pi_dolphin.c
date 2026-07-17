@@ -158,7 +158,6 @@ extern u32 FUN_8025b054();
 extern u32 FUN_8025c510();
 extern u32 GXSetBlendMode();
 
-extern u32 gTitleScreenCreditDelay;
 extern int lbl_803DCD6C;
 extern int lbl_803DCD70;
 extern int lbl_803DCD74;
@@ -3772,11 +3771,6 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alpha
         lbl_803DCD6C = lbl_803DCD6C + 1;
     }
     return;
-}
-
-u8 FUN_80048094(void)
-{
-    return gTitleScreenCreditDelay;
 }
 
 void FUN_8004812c(int tex, int arg)

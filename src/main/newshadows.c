@@ -77,7 +77,19 @@ typedef struct
     u8 flags;
 } NewShadowCaster;
 
+typedef struct
+{
+    f32 modelMtx[12];
+    f32 texMtx[12];
+    u32 texture;
+    u8 lod;
+    u8 dirIndex;
+    u8 pad66[2];
+} NewShadowCastSlot;
+
+#define NEW_SHADOW_MAX_QUEUED_CASTERS 300
 #define NEW_SHADOW_MAX_CASTERS 100
+#define NEW_SHADOW_MAX_CAST_TEXTURES 8
 
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
@@ -87,20 +99,6 @@ typedef struct
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
 extern int gNewShadowNoiseTexFrames[0x10];
-extern u32 DAT_8038ee48;
-extern int DAT_8038ef08;
-extern u32 DAT_8038ef0c;
-extern u32 DAT_8038ef10;
-extern u32 DAT_8038fd18;
-extern u32 DAT_8038fd48;
-extern u32 DAT_8038fd50;
-extern u32 DAT_8038fd54;
-extern u32 DAT_8038fd74;
-extern u32 DAT_8038fd78;
-extern u32 DAT_8038fd7c;
-extern u32 DAT_8038fd7d;
-extern int DAT_803925b8;
-extern u32 DAT_803925bc;
 extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern const f64 gNewShadowU32ToDoubleBias;
@@ -199,13 +197,13 @@ extern const f32 lbl_803DEDE0;
 extern const f32 lbl_803DEDE4, lbl_803DEDE8;
 extern const f32 lbl_803DEDD8, lbl_803DEDDC;
 extern const f32 lbl_803DED10;
-extern const f32 Dev_803DED1C;
+extern const f32 lbl_803DED1C;
 extern const f32 lbl_803DEDEC, lbl_803DEDF0, lbl_803DEDF4, lbl_803DEDF8, lbl_803DEDFC;
 extern const f32 lbl_803DEE04;
 extern const f32 lbl_803DEE14, lbl_803DEE18, lbl_803DEE1C;
 extern const f32 lbl_803DED0C;
-extern const f32 lbl_803DED14, Chan_803DED18;
-extern const f32 Enabled_803DED20, BarnacleEnabled_803DED24;
+extern const f32 lbl_803DED14, lbl_803DED18;
+extern const f32 lbl_803DED20, lbl_803DED24;
 extern const f32 lbl_803DED34, lbl_803DED48;
 extern const f32 lbl_803DEDAC, lbl_803DEDB0, lbl_803DEDB4, lbl_803DEDB8, lbl_803DEDBC;
 extern const f32 gNewShadowFovY;
@@ -528,18 +526,18 @@ void newshadows_captureProjectedShadow(u16* object)
         (double)(lbl_803DED0C * ((GameObject*)object)->anim.hitboxScale * ((GameObject*)object)->anim.rootMotionScale),
         &projX, &projY, &projZ, &scaleX, &scaleY, &projW);
     scaleX = lbl_803DED14 * scaleX + lbl_803DED10;
-    scaleY = Chan_803DED18 * scaleY + lbl_803DED10;
+    scaleY = lbl_803DED18 * scaleY + lbl_803DED10;
     maxScale = scaleY;
     if (scaleY < scaleX)
     {
         maxScale = scaleX;
     }
-    invScale = (double)(Dev_803DED1C / maxScale);
+    invScale = (double)(lbl_803DED1C / maxScale);
     tmpX = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
     tmpY = -(double)projX;
     dirY = (double)projY;
-    FUN_8025da64((double)(float)((double)lbl_803DED14 * tmpY), (double)(float)((double)Chan_803DED18 * dirY),
-                 (double)Enabled_803DED20, (double)BarnacleEnabled_803DED24, (double)lbl_803DED28, (double)lbl_803DED2C);
+    FUN_8025da64((double)(float)((double)lbl_803DED14 * tmpY), (double)(float)((double)lbl_803DED18 * dirY),
+                 (double)lbl_803DED20, (double)lbl_803DED24, (double)lbl_803DED28, (double)lbl_803DED2C);
     if (lbl_803DED28 <= projZ)
     {
         **(float**)(object + 0x32) = lbl_803DED28;
@@ -564,15 +562,15 @@ void newshadows_captureProjectedShadow(u16* object)
     FUN_80006988();
     tmpX = (double)lbl_803DED14;
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) = (float)(tmpX * -tmpY);
-    tmpY = (double)Chan_803DED18;
+    tmpY = (double)lbl_803DED18;
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) = (float)(tmpY * -dirY);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) =
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + tmpX);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) =
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + tmpY);
-    maxScale = Dev_803DED1C;
+    maxScale = lbl_803DED1C;
     shadowSlot = *(float**)(object + 0x32);
-    shadowSlot[5] = -(Dev_803DED1C * *shadowSlot - shadowSlot[5]);
+    shadowSlot[5] = -(lbl_803DED1C * *shadowSlot - shadowSlot[5]);
     shadowSlot = *(float**)(object + 0x32);
     shadowSlot[6] = -(maxScale * *shadowSlot - shadowSlot[6]);
     return;
@@ -633,486 +631,6 @@ void newshadows_sortQueuedShadowCasters(int queueBase, int casterCount)
             } while (remaining != 0);
         }
     }
-    return;
-}
-
-void newshadows_renderQueuedShadowCasters(void)
-{
-    u16 savedWord0;
-    u16 savedWord2;
-    u32 slotByte;
-    int slotOff;
-    u16* light;
-    u16 visibility;
-    u32 randVal;
-    int* entryPtr;
-    int pivot;
-    float* viewMtx;
-    float* shadowMtx;
-    float* model;
-    int obj;
-    u32 baseTexSize;
-    u32 texSize;
-    char casterIdx;
-    u8 dirShadowCount;
-    u32 shadowSlot;
-    int* queueEntry;
-    double invSqrt;
-    double savedZParam;
-    double dotLen;
-    double savedF21;
-    double savedF22;
-    double savedF23;
-    double shadowScale;
-    double savedF24;
-    double savedF25;
-    double savedLightZ;
-    double savedF26;
-    double savedLightY;
-    double savedF27;
-    double savedLightX;
-    double savedF28;
-    double ndirX;
-    double savedF29;
-    double savedF30;
-    double ndirZ;
-    double savedF31;
-    double ndirY;
-    double savedPs21;
-    double savedPs22;
-    double savedPs23;
-    double savedPs24;
-    double savedPs25;
-    double savedPs26;
-    double savedPs27;
-    double savedPs28;
-    double savedPs29;
-    double savedPs30;
-    double savedPs31;
-    u32 tmpOutB;
-    u32 tmpOutA;
-    float blendX;
-    float blendY;
-    float blendZ;
-    float objDirX;
-    float objDirY;
-    float objDirZ;
-    float defaultDirX;
-    float defaultDirY;
-    float defaultDirZ;
-    float dirX;
-    float dirY;
-    float dirZ;
-    u8 savedRow0[12];
-    u8 savedRow1[12];
-    float projMtx[16];
-    float scaleMtx0;
-    float scaleMtx1;
-    float scaleMtx2;
-    float scaleMtx3;
-    float scaleMtx4;
-    float scaleMtx5;
-    float scaleMtx6;
-    float scaleMtx7;
-    float scaleMtx8;
-    float scaleMtx9;
-    float scaleMtx10;
-    float scaleMtx11;
-    float transMtx[12];
-    float lightMtx[24];
-    u32 dcvtHiA;
-    u32 dcvtLoA;
-    u32 dcvtHiB;
-    u32 dcvtLoB;
-    int savedFlag;
-    float spillF21;
-    float psSpill21;
-    float spillF22;
-    float psSpill22;
-    float spillF23;
-    float psSpill23;
-    float spillF24;
-    float psSpill24;
-    float spillF25;
-    float psSpill25;
-    float spillF26;
-    float psSpill26;
-    float spillF27;
-    float psSpill27;
-    float spillF28;
-    float psSpill28;
-    float spillF29;
-    float psSpill29;
-    float spillF30;
-    float psSpill30;
-    float spillF31;
-    float psSpill31;
-
-    spillF31 = (float)savedF31;
-    psSpill31 = (float)savedPs31;
-    spillF30 = (float)savedF30;
-    psSpill30 = (float)savedPs30;
-    spillF29 = (float)savedF29;
-    psSpill29 = (float)savedPs29;
-    spillF28 = (float)savedF28;
-    psSpill28 = (float)savedPs28;
-    spillF27 = (float)savedF27;
-    psSpill27 = (float)savedPs27;
-    spillF26 = (float)savedF26;
-    psSpill26 = (float)savedPs26;
-    spillF25 = (float)savedF25;
-    psSpill25 = (float)savedPs25;
-    spillF24 = (float)savedF24;
-    psSpill24 = (float)savedPs24;
-    spillF23 = (float)savedF23;
-    psSpill23 = (float)savedPs23;
-    spillF22 = (float)savedF22;
-    psSpill22 = (float)savedPs22;
-    spillF21 = (float)savedF21;
-    psSpill21 = (float)savedPs21;
-    FUN_8028680c();
-    if (gNewShadowCasterCount != 0)
-    {
-        FUN_800069b8();
-        newshadows_sortQueuedShadowCasters(-0x7fc710f8, gNewShadowCasterCount);
-        FUN_80006954(1);
-        light = FUN_800069a8();
-        savedZParam = FUN_800069f8();
-        FUN_80006a00((double)gNewShadowFovY);
-        FUN_800069f4((double)lbl_803DED2C);
-        savedLightX = (double)*(float*)(light + 6);
-        savedLightY = (double)*(float*)(light + 8);
-        savedLightZ = (double)*(float*)(light + 10);
-        savedFlag = (int)(short)light[1];
-        savedWord0 = *light;
-        savedWord2 = light[2];
-        light[1] = 0;
-        defaultDirX = lbl_803DED28;
-        defaultDirY = lbl_803DED2C;
-        defaultDirZ = lbl_803DED28;
-        FUN_80060710((double)lbl_803DED34, &defaultDirX, lightMtx);
-        FUN_800606a4(&tmpOutA, &tmpOutB);
-        dirShadowCount = 0;
-        shadowSlot = 0;
-        queueEntry = &DAT_8038ef08;
-        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)gNewShadowCasterCount && (casterIdx < NEW_SHADOW_MAX_CASTERS));
-             casterIdx = casterIdx + '\x01')
-        {
-            obj = *queueEntry;
-            model = (float*)((GameObject*)obj)->anim.modelState;
-            FUN_80006954(0);
-            visibility = FUN_80061198(obj, framesThisStep);
-            FUN_80006954(1);
-            if (4 < (visibility & 0xff))
-            {
-                if ((((ObjModelState*)model)->flags & 0x20) != 0)
-                {
-                    memcpy(savedRow0, (void*)(obj + 0xc), 0xc);
-                    memcpy(savedRow1, (void*)(obj + 0x18), 0xc);
-                    memcpy((void*)(obj + 0xc), model + 8, 0xc);
-                    memcpy((void*)(obj + 0x18), model + 8, 0xc);
-                }
-                slotByte = shadowSlot & 0xff;
-                slotOff = slotByte * 0x68;
-                shadowMtx = (float*)(&DAT_8038fd18 + slotOff);
-                (&DAT_8038fd7c)[slotOff] = visibility;
-                if ((dirShadowCount < 8) && (*(char*)(queueEntry + 2) != '\0'))
-                {
-                    if (dirShadowCount < 3)
-                    {
-                        baseTexSize = 0x100;
-                        shadowScale = (double)lbl_803DED38;
-                    }
-                    else if (dirShadowCount < 5)
-                    {
-                        baseTexSize = 0x80;
-                        shadowScale = (double)lbl_803DED3C;
-                    }
-                    else
-                    {
-                        baseTexSize = 0x40;
-                        shadowScale = (double)lbl_803DED40;
-                    }
-                    texSize = baseTexSize;
-                    if (dirShadowCount == 0)
-                    {
-                        texSize = baseTexSize << 1;
-                    }
-                    if (*(char*)(queueEntry + 2) == '\x02')
-                    {
-                        texSize = (u32) * (u16*)(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 10);
-                        baseTexSize = texSize;
-                    }
-                    FUN_80080f6c(obj, &dirX, &dirY, &dirZ);
-                    objDirX = -model[5];
-                    objDirY = -model[6];
-                    objDirZ = -model[7];
-                    dotLen = FUN_80247f90(&objDirX, &dirX);
-                    if ((dotLen < (double)lbl_803DED2C) && ((double)lbl_803DED44 < dotLen))
-                    {
-                        blendX = lbl_803DED48 * objDirX + lbl_803DED4C * dirX;
-                        blendY = lbl_803DED48 * objDirY + lbl_803DED4C * dirY;
-                        blendZ = lbl_803DED48 * objDirZ + lbl_803DED4C * dirZ;
-                        dotLen = SeekTwiceBeforeRead(&blendX);
-                        if ((double)lbl_803DED28 < dotLen)
-                        {
-                            FUN_80247edc((double)(float)((double)lbl_803DED2C / dotLen), &blendX, &dirX);
-                        }
-                    }
-                    if (lbl_803DED50 < dirY)
-                    {
-                        dirY = lbl_803DED50;
-                        FUN_80247ef8(&dirX, &dirX);
-                    }
-                    ndirX = -(double)dirX;
-                    ndirY = -(double)dirY;
-                    ndirZ = -(double)dirZ;
-                    randVal = FUN_80017730();
-                    gNewShadowLightAngleX = randVal & 0xffff;
-                    randVal = FUN_80017730();
-                    gNewShadowLightAngleY = (randVal & 0xffff) - 0x3fc8;
-                    light[1] = gNewShadowLightAngleY;
-                    *light = gNewShadowLightAngleX;
-                    dotLen = (double)(float)(ndirZ * ndirZ +
-                                             (double)(float)(ndirX * ndirX + (double)(float)(ndirY * ndirY)));
-                    if ((double)lbl_803DED28 < dotLen)
-                    {
-                        invSqrt = 1.0 / SQRT(dotLen);
-                        invSqrt = lbl_803DED58 * invSqrt * -(dotLen * invSqrt * invSqrt - lbl_803DED60);
-                        invSqrt = lbl_803DED58 * invSqrt * -(dotLen * invSqrt * invSqrt - lbl_803DED60);
-                        dotLen = (double)(float)(dotLen * lbl_803DED58 * invSqrt *
-                                                 -(dotLen * invSqrt * invSqrt - lbl_803DED60));
-                    }
-                    if ((double)lbl_803DED28 < dotLen)
-                    {
-                        dotLen = (double)(float)((double)lbl_803DED68 / dotLen);
-                        ndirX = (double)(float)(ndirX * dotLen);
-                        ndirY = (double)(float)(ndirY * dotLen);
-                        ndirZ = (double)(float)(ndirZ * dotLen);
-                    }
-                    *(u32*)(light + 0x20) = 0;
-                    model[5] = -dirX;
-                    model[6] = -dirY;
-                    model[7] = -dirZ;
-                    FUN_8006f788(texSize);
-                    entryPtr = (int*)FUN_80017a54(obj);
-                    pivot = FUN_80017970(entryPtr, 0);
-                    *(float*)(light + 6) = (float)(ndirX + (double)*(float*)(pivot + 0xc));
-                    *(float*)(light + 8) = (float)(ndirY + (double)*(float*)(pivot + 0x1c));
-                    *(float*)(light + 10) = (float)(ndirZ + (double)*(float*)(pivot + 0x2c));
-                    if (*(int*)&((GameObject*)obj)->anim.parent == 0)
-                    {
-                        *(float*)(light + 6) = *(float*)(light + 6) + gMapSavedPlayerOffsetX;
-                        *(float*)(light + 10) = *(float*)(light + 10) + gMapSavedPlayerOffsetZ;
-                    }
-                    dotLen = (double)*model;
-                    ndirX = -dotLen;
-                    if (*(int*)&((GameObject*)obj)->anim.parent != 0)
-                    {
-                        *(float*)(light + 6) = *(float*)(light + 6) + playerMapOffsetX;
-                        *(float*)(light + 10) = *(float*)(light + 10) + playerMapOffsetZ;
-                    }
-                    FUN_8025da88(2, 2, texSize - 4, texSize - 4);
-                    ndirZ = (double)lbl_803DED28;
-                    dcvtHiA = 0x43300000;
-                    dcvtHiB = 0x43300000;
-                    dcvtLoA = texSize;
-                    dcvtLoB = texSize;
-                    FUN_8025da64(ndirZ, ndirZ, (double)(float)((double)(u32)texSize),
-                                 (double)(float)((double)(u32)texSize), ndirZ, (double)lbl_803DED2C);
-                    FUN_80247dfc(ndirX, dotLen, ndirX, dotLen, (double)lbl_803DED2C, (double)lbl_803DED6C, projMtx);
-                    FUN_8025d6ac(projMtx, 1);
-                    FUN_80006984();
-                    FUN_80247b70(dotLen, ndirX, ndirX, dotLen, shadowScale, shadowScale, shadowScale, shadowScale,
-                                 shadowMtx);
-                    viewMtx = (float*)FUN_80006974();
-                    FUN_802475e4(viewMtx, (float*)(&DAT_8038fd48 + slotOff));
-                    FUN_80247618(shadowMtx, viewMtx, shadowMtx);
-                    ((ObjModelState*)model)->shadowCastSlot = shadowMtx;
-                    entryPtr = &DAT_803925b8 + dirShadowCount;
-                    (&DAT_8038fd78)[slotByte * 0x1a] = *entryPtr;
-                    (&DAT_8038fd7d)[slotOff] = lbl_803DB668[dirShadowCount];
-                    FUN_8003b7dc(obj);
-                    if (*(char*)(queueEntry + 2) == '\x02')
-                    {
-                        gxSetZMode_(1, GX_LEQUAL, 1);
-                        shadowScale = (double)lbl_803DED28;
-                        FUN_80247a7c(shadowScale, shadowScale, shadowScale, (float*)(&DAT_8038fd48 + slotOff));
-                        (&DAT_8038fd50)[slotByte * 0x1a] = lbl_803DED70;
-                        (&DAT_8038fd54)[slotByte * 0x1a] = lbl_803DED74;
-                        (&DAT_8038fd74)[slotByte * 0x1a] = lbl_803DED2C;
-                        FUN_80247618((float*)(&DAT_8038fd48 + slotOff), viewMtx, (float*)(&DAT_8038fd48 + slotOff));
-                        FUN_80259400(0, 0, texSize, texSize);
-                        FUN_80259504((u16)texSize, (u16)texSize, 0x11, 0);
-                        FUN_80259858('\0', (u8*)gRenderModeObj + 0x1a, '\0', (u8*)gRenderModeObj + 0x32);
-                        FUN_80259c0c(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 0x60, 1);
-                        FUN_80045be8();
-                        (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
-                    }
-                    else
-                    {
-                        if (dirShadowCount == 0)
-                        {
-                            gxSetZMode_(1, GX_LEQUAL, 1);
-                            FUN_80259400(0, 0, texSize, texSize);
-                            FUN_80259504((u16)baseTexSize, (u16)baseTexSize, 0x20, 1);
-                            FUN_80259c0c(*entryPtr + 0x60, 1);
-                            (&DAT_8038fd78)[slotByte * 0x1a] = *entryPtr;
-                        }
-                        dirShadowCount = dirShadowCount + 1;
-                    }
-                }
-                else
-                {
-                    (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
-                    shadowScale = (double)((GameObject*)obj)->anim.localPosX;
-                    dotLen = (double)((GameObject*)obj)->anim.localPosZ;
-                    if (*(int*)&((GameObject*)obj)->anim.parent == 0)
-                    {
-                        shadowScale = (double)(float)(shadowScale - (double)playerMapOffsetX);
-                        dotLen = (double)(float)(dotLen - (double)playerMapOffsetZ);
-                    }
-                    FUN_80247a48(-shadowScale, -(double)((GameObject*)obj)->anim.localPosY, -dotLen, transMtx);
-                    scaleMtx0 = lbl_803DED38 / *model;
-                    scaleMtx1 = lbl_803DED28;
-                    scaleMtx2 = lbl_803DED28;
-                    scaleMtx3 = lbl_803DED38;
-                    scaleMtx4 = lbl_803DED28;
-                    scaleMtx5 = lbl_803DED28;
-                    scaleMtx7 = lbl_803DED38;
-                    scaleMtx8 = lbl_803DED28;
-                    scaleMtx9 = lbl_803DED28;
-                    scaleMtx10 = lbl_803DED28;
-                    scaleMtx11 = lbl_803DED2C;
-                    scaleMtx6 = scaleMtx0;
-                    FUN_80247618(&scaleMtx0, transMtx, shadowMtx);
-                    model[5] = defaultDirX;
-                    model[6] = defaultDirY;
-                    model[7] = defaultDirZ;
-                    ((ObjModelState*)model)->shadowCastSlot = shadowMtx;
-                }
-                shadowSlot = shadowSlot + 1;
-                if ((((ObjModelState*)model)->flags & 0x20) != 0)
-                {
-                    memcpy((void*)(obj + 0xc), savedRow0, 0xc);
-                    memcpy((void*)(obj + 0x18), savedRow1, 0xc);
-                }
-            }
-            queueEntry = queueEntry + 3;
-        }
-        if (1 < dirShadowCount)
-        {
-            gxSetZMode_(1, GX_LEQUAL, 1);
-            FUN_80259858('\0', (u8*)gRenderModeObj + 0x1a, '\0', (u8*)gRenderModeObj + 0x32);
-            FUN_80259400(0, 0, 0x100, 0x100);
-            FUN_80259504(0x100, 0x100, 0x28, 0);
-            FUN_80259c0c(DAT_803925bc + 0x60, 1);
-            FUN_80258c24();
-            FUN_80045be8();
-        }
-        FUN_8006f790();
-        *(float*)(light + 6) = (float)savedLightX;
-        *(float*)(light + 8) = (float)savedLightY;
-        *(float*)(light + 10) = (float)savedLightZ;
-        light[1] = savedFlag;
-        *light = savedWord0;
-        light[2] = savedWord2;
-        shadowSlot = FUN_8005d00c();
-        if (shadowSlot == 0)
-        {
-            shadowSlot = FUN_8005d06c();
-            if (shadowSlot == 0)
-            {
-                FUN_80006954(0);
-                FUN_80006a00(savedZParam);
-                FUN_800069f4((double)lbl_803DB670);
-                FUN_8000694c();
-            }
-            else
-            {
-                FUN_80006954(0);
-                FUN_80006a00(savedZParam);
-                FUN_800069f4((double)lbl_803DED80);
-                FUN_8000694c();
-            }
-        }
-        else
-        {
-            FUN_80006954(0);
-            FUN_80006a00(savedZParam);
-            shadowSlot = FUN_8005d06c();
-            if (shadowSlot == 0)
-            {
-                FUN_800069f4((double)gNewShadowAspectNarrow);
-            }
-            else
-            {
-                FUN_800069f4((double)gNewShadowAspectWide);
-            }
-            FUN_8000694c();
-        }
-        FUN_80006984();
-        FUN_800069d4();
-        FUN_80006988();
-        FUN_800069bc();
-    }
-    FUN_80286858();
-    return;
-}
-
-void newshadows_queueShadowCaster(int object)
-{
-    ObjAnimComponent* objAnim;
-    ObjModelInstance* modelDef;
-    float dx;
-    float dy;
-    float dz;
-    int slotOff;
-    double invSqrt;
-    double dist;
-
-    if (gNewShadowCasterCount < 300)
-    {
-        objAnim = (ObjAnimComponent*)object;
-        modelDef = objAnim->modelInstance;
-        (&DAT_8038ef08)[gNewShadowCasterCount * 3] = object;
-        dx = ((GameObject*)object)->anim.worldPosX - *(float*)((u8*)gNewShadowCurrentViewSlot + 0xc);
-        dy = ((GameObject*)object)->anim.worldPosY - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x10);
-        dz = ((GameObject*)object)->anim.worldPosZ - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x14);
-        dist = (double)(dz * dz + dx * dx + dy * dy);
-        if ((double)lbl_803DED28 < dist)
-        {
-            invSqrt = 1.0 / SQRT(dist);
-            invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
-            invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
-            dist = (double)(float)(dist * lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60));
-        }
-        slotOff = gNewShadowCasterCount * 0xc;
-        *(float*)(&DAT_8038ef0c + slotOff) =
-            (float)((double)((GameObject*)object)->anim.modelState->shadowScale / dist);
-        if (modelDef->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
-        {
-            (&DAT_8038ef10)[slotOff] = 1;
-            if ((modelDef->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) != 0)
-            {
-                (&DAT_8038ef10)[slotOff] = 2;
-                *(float*)(&DAT_8038ef0c + slotOff) = lbl_803DED90;
-            }
-        }
-        else
-        {
-            (&DAT_8038ef10)[slotOff] = 0;
-        }
-        gNewShadowCasterCount = gNewShadowCasterCount + 1;
-    }
-    return;
-}
-
-void newshadows_getShadowTextureTable4x8(int* tableOut, int* columnsOut, int* rowsOut)
-{
-    *tableOut = (int)&DAT_8038ee48;
-    *columnsOut = 4;
-    *rowsOut = 8;
     return;
 }
 
@@ -1304,7 +822,7 @@ void newshadows_updateFrameState(void)
         {
             if ((double)nearDepth < focusDepth)
             {
-                texSize = (u32)((Dev_803DED1C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
+                texSize = (u32)((lbl_803DED1C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
                 cvtScratch = (s64)(int)texSize;
             }
             else
@@ -1418,16 +936,16 @@ void shadowRenderFn_8006b558(int* obj)
                                   (((GameObject*)obj)->anim.hitboxScale * ((GameObject*)obj)->anim.rootMotionScale),
                               &vA, &vB, &vC, &vD, &vE, &vF);
     vD = lbl_803DED14 * vD + lbl_803DED10;
-    vE = Chan_803DED18 * vE + lbl_803DED10;
+    vE = lbl_803DED18 * vE + lbl_803DED10;
     if (vD > vE)
         m = vD;
     else
         m = vE;
-    sc = Dev_803DED1C / m;
+    sc = lbl_803DED1C / m;
     objScale = ((GameObject*)obj)->anim.rootMotionScale * sc;
     nx = -vA;
     ny = vB;
-    GXSetViewport(*(f32*)&lbl_803DED14 * nx, *(f32*)&Chan_803DED18 * ny, Enabled_803DED20, BarnacleEnabled_803DED24,
+    GXSetViewport(*(f32*)&lbl_803DED14 * nx, *(f32*)&lbl_803DED18 * ny, lbl_803DED20, lbl_803DED24,
                   lbl_803DED28, lbl_803DED2C);
     if (vC < *(f32*)&lbl_803DED28)
     {
@@ -1453,11 +971,11 @@ void shadowRenderFn_8006b558(int* obj)
     }
     Camera_ApplyFullViewport();
     ((f32*)obj[0x64 / 4])[5] = lbl_803DED14 * (-nx);
-    ((f32*)obj[0x64 / 4])[6] = Chan_803DED18 * (-ny);
+    ((f32*)obj[0x64 / 4])[6] = lbl_803DED18 * (-ny);
     ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] + lbl_803DED14;
-    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] + Chan_803DED18;
-    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
-    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - Dev_803DED1C * ((f32*)obj[0x64 / 4])[0];
+    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] + lbl_803DED18;
+    ((f32*)obj[0x64 / 4])[5] = ((f32*)obj[0x64 / 4])[5] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
+    ((f32*)obj[0x64 / 4])[6] = ((f32*)obj[0x64 / 4])[6] - lbl_803DED1C * ((f32*)obj[0x64 / 4])[0];
 }
 #pragma dont_inline on
 #pragma ppc_unroll_speculative on
@@ -1598,7 +1116,7 @@ static void fillFalloffTexture(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - Dev_803DED1C;
+        cy = i - lbl_803DED1C;
         lowoff += rowoff;
         cy = cy * lbl_803DEDE0;
         for (; j < 0x80; j++)
@@ -1607,7 +1125,7 @@ static void fillFalloffTexture(void)
             f32 cx, d2;
             base = (u8*)gNewShadowFalloffTexture;
             off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            cx = ((f32)j - Dev_803DED1C) * lbl_803DEDE0;
+            cx = ((f32)j - lbl_803DED1C) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy * cy);
             base[off] =
                 (d2 < lbl_803DED38)
@@ -1658,7 +1176,7 @@ static void fillRingTexture(void)
     {
         int rowoff, lowoff;
         f32 cy2;
-        cy = ((f32)i - Dev_803DED1C) * lbl_803DEDE0;
+        cy = ((f32)i - lbl_803DED1C) * lbl_803DEDE0;
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
@@ -1670,7 +1188,7 @@ static void fillRingTexture(void)
             f32 cx, d2;
             base = (u8*)gNewShadowRingTexture;
             off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            cx = ((f32)j - Dev_803DED1C) * lbl_803DEDE0;
+            cx = ((f32)j - lbl_803DED1C) * lbl_803DEDE0;
             d2 = sqrtf(cx * cx + cy2);
             if (d2 < 0.25f || d2 > 0.75f)
             {
@@ -1872,7 +1390,7 @@ void allocLotsOfTextures(void)
         j = 0;
         rowoff = (i >> 3) * 0x20;
         lowoff = i & 7;
-        cy = i - Dev_803DED1C;
+        cy = i - lbl_803DED1C;
         lowoff += rowoff;
         cy = cy * lbl_803DEDE0;
         cy = __fabsf(cy);
@@ -1881,7 +1399,7 @@ void allocLotsOfTextures(void)
         {
             u8* base = (u8*)gNewShadowRadialTexture;
             int off = lowoff + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60;
-            f32 cx = __fabsf(((f32)j - Dev_803DED1C) * lbl_803DEDE0);
+            f32 cx = __fabsf(((f32)j - lbl_803DED1C) * lbl_803DEDE0);
             f32 d2 = sqrtf(cx * cx + cy);
             f32 v = lbl_803DED2C - d2;
             if (v < lbl_803DED28)
@@ -2304,13 +1822,13 @@ void renderShadows(int unused0, int unused1, int unused2)
 #pragma opt_common_subs on
 #pragma opt_dead_assignments reset
 #pragma opt_loop_invariants reset
-extern NewShadowCaster gNewShadowCasterTable[0x36CC / sizeof(NewShadowCaster)];
+extern NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
 
 void shadowCreate(int* obj)
 {
     CameraViewSlot* cam;
     f32 dx, dy, dz, dist2;
-    if (gNewShadowCasterCount < 0x12c)
+    if (gNewShadowCasterCount < NEW_SHADOW_MAX_QUEUED_CASTERS)
     {
         gNewShadowCasterTable[gNewShadowCasterCount].obj = obj;
         cam = gNewShadowCurrentViewSlot;
@@ -2349,7 +1867,7 @@ void shadowCreate(int* obj)
 #pragma ppc_unroll_speculative on
 extern u8 lbl_8038E1E8[0x80];
 
-void fn_8006C4C0(int* p1, int* p2, int* p3)
+void newshadows_getShadowTextureTable4x8(int* p1, int* p2, int* p3)
 {
     *p1 = (int)lbl_8038E1E8;
     *p2 = 4;
@@ -2612,13 +2130,15 @@ void maybeHudFn_8006c91c(void)
         else if (z <= lo)
             v = 0x40;
         else
-            v = (int)(Dev_803DED1C * (hi - z) / (hi - lo));
+            v = (int)(lbl_803DED1C * (hi - z) / (hi - lo));
         if ((u8)v != lbl_803DCF80)
             fn_80069EB8();
     }
 }
 
-NewShadowCaster gNewShadowCasterTable[0x36CC / sizeof(NewShadowCaster)];
+NewShadowCaster gNewShadowCasterTable[NEW_SHADOW_MAX_QUEUED_CASTERS];
+NewShadowCastSlot gNewShadowCastSlots[NEW_SHADOW_MAX_CASTERS];
+u32 gNewShadowCastTextures[NEW_SHADOW_MAX_CAST_TEXTURES];
 #pragma ppc_unroll_speculative on
 
 

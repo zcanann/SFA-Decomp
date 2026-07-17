@@ -142,7 +142,7 @@ static inline s16* objFindJointVecByKey(GameObject* obj, int key)
 }
 
 extern u32 objRenderFuzzFn_8003d6f8();
-extern void fn_8006C4C0(int* a, int* b, int* c);
+extern void newshadows_getShadowTextureTable4x8(int* a, int* b, int* c);
 extern f32 lbl_803DE9A4;
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
@@ -2047,7 +2047,7 @@ int modelRenderCb_8003c268(int obj, int* model, int ropIdx)
         GXSetTevKColor(GX_KCOLOR0, kc2);
         GXSetTevKAlphaSel(GX_TEVSTAGE5, GX_TEV_KASEL_K0_A);
         GXSetTevKColorSel(GX_TEVSTAGE5, GX_TEV_KCSEL_K0);
-        fn_8006C4C0(&a174, &b178, &stk380);
+        newshadows_getShadowTextureTable4x8(&a174, &b178, &stk380);
         selectTexture((Texture*)(*(void**)(a174 + ((lbl_803DCC44 - 0xc) + lbl_803DCC3D * b178) * 4)), 5);
         PSMTXScale(mtx5, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
         GXLoadTexMtxImm(mtx5, GX_PTTEXMTX3, GX_MTX3x4);
