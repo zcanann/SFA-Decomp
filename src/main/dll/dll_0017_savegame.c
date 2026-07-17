@@ -50,7 +50,7 @@
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
-s8 gSaveGameMapActCacheIdx;
+s8 gSaveGameMapActCacheIdx[2];
 static int sSaveGameUnused0;
 int gSaveGameObjGroupCacheIdx[2];
 u8 saveGameLoadStatus;
@@ -909,9 +909,9 @@ u8 SaveGame_getMapAct(int idx)
 {
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
         idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
-    if (idx != gSaveGameMapActCacheIdx)
+    if (idx != gSaveGameMapActCacheIdx[0])
     {
-        gSaveGameMapActCacheIdx = idx;
+        gSaveGameMapActCacheIdx[0] = idx;
         if (idx < 0 || idx >= SAVEGAME_MAP_COUNT || gSaveGameMapActBits[idx] == 0)
         {
             *((s8*)&gSaveGameMapActCacheIdx + 1) = 0;
@@ -931,7 +931,7 @@ void SaveGame_gplaySetAct(int idx, int act)
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
         idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
     mainSetBits(gSaveGameMapActBits[idx], act);
-    gSaveGameMapActCacheIdx = idx;
+    gSaveGameMapActCacheIdx[0] = idx;
     *((s8*)&gSaveGameMapActCacheIdx + 1) = act;
     j = idx;
     if (j >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
@@ -1092,7 +1092,7 @@ void* SaveGame_getLast(void)
 void loadMapForCurrentSaveGame(void)
 {
     char* base;
-    gSaveGameMapActCacheIdx = -1;
+    gSaveGameMapActCacheIdx[0] = -1;
     gSaveGameObjGroupCacheIdx[0] = -1;
     unlockLevel(0, 0, 1);
     memset((char*)gSaveGameData + 0x6ec, 0, 0x884);
@@ -1240,7 +1240,7 @@ void SaveGame_initialise(void)
         memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
     }
     pRestartPoint = 0;
-    gSaveGameMapActCacheIdx = -1;
+    gSaveGameMapActCacheIdx[0] = -1;
     gSaveGameObjGroupCacheIdx[0] = -1;
     memset(base + 0x244, 0, 0xe4);
     base[0x24a] = 0;
