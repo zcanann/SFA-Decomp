@@ -1829,35 +1829,42 @@ main/dll/dll_0121_infotext.c:
 
 main/dll/CC/dll_0122_cctestinfot.c:
 	.text       start:0x8018BB00 end:0x8018BC48
-	.data       start:0x80321D78 end:0x80321F38
+	.data       start:0x80321D78 end:0x80321DB0
 	.sdata2     start:0x803E3C88 end:0x803E3C90
 
 main/dll/dll_0124_deathgas.c:
 	.text       start:0x8018BC48 end:0x8018C000
+	.data       start:0x80321DB0 end:0x80321DE8
 	.sdata2     start:0x803E3C90 end:0x803E3CC4
 
 main/dll/dll_0123_fuelcell.c:
 	.text       start:0x8018C000 end:0x8018C7D8
+	.data       start:0x80321DE8 end:0x80321E20
 	.sdata2     start:0x803E3CC8 end:0x803E3D14
 
 main/dll/dll_010E_deathseq.c:
 	.text       start:0x8018C7D8 end:0x8018CD64
+	.data       start:0x80321E20 end:0x80321E58
 	.sdata2     start:0x803E3D18 end:0x803E3D5C
 
 main/dll/dll_0127_dll127.c:
 	.text       start:0x8018CD64 end:0x8018CEE4
+	.data       start:0x80321E58 end:0x80321E90
 	.sdata2     start:0x803E3D60 end:0x803E3D78
 
 main/dll/dll_0129_campfire.c:
 	.text       start:0x8018CEE4 end:0x8018D4AC
+	.data       start:0x80321E90 end:0x80321EC8
 	.sdata2     start:0x803E3D78 end:0x803E3DB0
 
 main/dll/DR/dll_0128_kttorch.c:
 	.text       start:0x8018D4AC end:0x8018D6E8
+	.data       start:0x80321EC8 end:0x80321F00
 	.sdata2     start:0x803E3DB0 end:0x803E3DD8
 
 main/dll/CF/dll_012A_cfcrate.c:
 	.text       start:0x8018D6E8 end:0x8018E6C4
+	.data       start:0x80321F00 end:0x80321F38
 	.sdata      start:0x803DBDE8 end:0x803DBDF0
 	.sdata2     start:0x803E3DD8 end:0x803E3E40
 

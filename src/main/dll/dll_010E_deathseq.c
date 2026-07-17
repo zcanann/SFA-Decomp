@@ -17,6 +17,7 @@
 #include "main/dll/dll_010E_deathseq.h"
 #include "main/dll/player_status.h"
 #include "main/dll/tricky_api.h"
+#include "main/object_descriptor.h"
 
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
@@ -216,3 +217,12 @@ void DeathSeq_release(void)
 void DeathSeq_initialise(void)
 {
 }
+
+ObjectDescriptor gDeathSeqObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)DeathSeq_initialise, (ObjectDescriptorCallback)DeathSeq_release, 0,
+    (ObjectDescriptorCallback)DeathSeq_init, (ObjectDescriptorCallback)DeathSeq_update,
+    (ObjectDescriptorCallback)DeathSeq_hitDetect, (ObjectDescriptorCallback)DeathSeq_render,
+    (ObjectDescriptorCallback)DeathSeq_free, (ObjectDescriptorCallback)DeathSeq_getObjectTypeId,
+    DeathSeq_getExtraSize,
+};

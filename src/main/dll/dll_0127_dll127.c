@@ -14,6 +14,8 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
+#include "main/dll/dll_0127_dll127.h"
 
 typedef struct Dll127Placement
 {
@@ -118,3 +120,12 @@ void dll_127_release_nop(void)
 void dll_127_initialise_nop(void)
 {
 }
+
+ObjectDescriptor lbl_80321E58 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_127_initialise_nop, (ObjectDescriptorCallback)dll_127_release_nop, 0,
+    (ObjectDescriptorCallback)dll_127_init, (ObjectDescriptorCallback)dll_127_update,
+    (ObjectDescriptorCallback)dll_127_hitDetect_nop, (ObjectDescriptorCallback)dll_127_render,
+    (ObjectDescriptorCallback)dll_127_free_nop, (ObjectDescriptorCallback)dll_127_getObjectTypeId,
+    dll_127_getExtraSize_ret_0,
+};

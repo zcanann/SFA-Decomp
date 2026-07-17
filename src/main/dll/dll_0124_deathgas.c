@@ -8,6 +8,8 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/pi_dolphin_api.h"
+#include "main/object_descriptor.h"
+#include "main/dll/dll_0124_deathgas.h"
 
 #define DEATHGAS_OBJFLAG_HIDDEN 0x4000
 #define DEATHGAS_AIRMETER_BGTEXTURE 0x603
@@ -146,3 +148,20 @@ void DeathGas_init(int* obj)
     state->noFog = 1;
     state->radius = *(f32*)((char*)obj + 64);
 }
+
+ObjectDescriptor gDeathGasObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)DeathGas_init,
+    (ObjectDescriptorCallback)DeathGas_update,
+    0,
+    0,
+    (ObjectDescriptorCallback)DeathGas_free,
+    0,
+    DeathGas_getExtraSize,
+};

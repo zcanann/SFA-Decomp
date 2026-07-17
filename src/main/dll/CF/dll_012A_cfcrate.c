@@ -22,6 +22,8 @@
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
+#include "main/dll/CF/dll_012A_cfcrate.h"
 #include "main/object_render_legacy.h"
 
 extern f32 lbl_803E3E40;
@@ -513,3 +515,12 @@ void CFCrate_release(void)
 void CFCrate_initialise(void)
 {
 }
+
+ObjectDescriptor gCFCrateObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFCrate_initialise, (ObjectDescriptorCallback)CFCrate_release, 0,
+    (ObjectDescriptorCallback)CFCrate_init, (ObjectDescriptorCallback)CFCrate_update,
+    (ObjectDescriptorCallback)CFCrate_hitDetect, (ObjectDescriptorCallback)CFCrate_render,
+    (ObjectDescriptorCallback)CFCrate_free, (ObjectDescriptorCallback)CFCrate_getObjectTypeId,
+    CFCrate_getExtraSize,
+};

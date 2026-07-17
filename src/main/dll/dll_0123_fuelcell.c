@@ -19,6 +19,7 @@
 #include "main/newclouds.h"
 #include "main/model.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "main/object_descriptor.h"
 
 #define FUELCELL_OBJGROUP 0x4f
 
@@ -310,3 +311,10 @@ void FuelCell_init(GameObject* obj)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }
+
+ObjectDescriptor gFuelCellObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
+    (ObjectDescriptorCallback)FuelCell_init, (ObjectDescriptorCallback)FuelCell_update, 0,
+    (ObjectDescriptorCallback)FuelCell_render, (ObjectDescriptorCallback)FuelCell_free, 0,
+    FuelCell_getExtraSize,
+};

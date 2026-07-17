@@ -11,6 +11,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
+#include "main/dll/dll_0129_campfire.h"
 #define CAMPFIRE_HIT_VOLUME_SLOT 0x1f
 /* CampfireExtra - the per-class extra state block (GameObject.extra) for the
  * campfire object class; CampFire_getExtraSize() returns 0x14. Single-owner;
@@ -235,3 +237,10 @@ void CampFire_init(int obj, int defArg)
         modelLightStruct_setGlowProjectionRadius(state->light, 30.0f);
     }
 }
+
+ObjectDescriptor gCampFireObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
+    (ObjectDescriptorCallback)CampFire_init, (ObjectDescriptorCallback)CampFire_update, 0,
+    (ObjectDescriptorCallback)CampFire_render, (ObjectDescriptorCallback)CampFire_free,
+    (ObjectDescriptorCallback)CampFire_getObjectTypeId, CampFire_getExtraSize,
+};

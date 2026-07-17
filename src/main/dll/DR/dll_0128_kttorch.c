@@ -14,6 +14,7 @@
 #include "main/frame_timing.h"
 #include "main/object_render_legacy.h"
 #include "main/dll/DR/dll_0128_kttorch.h"
+#include "main/object_descriptor.h"
 
 int KT_Torch_getExtraSize(void)
 {
@@ -113,3 +114,12 @@ void KT_Torch_release(void)
 void KT_Torch_initialise(void)
 {
 }
+
+ObjectDescriptor gKT_TorchObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)KT_Torch_initialise, (ObjectDescriptorCallback)KT_Torch_release, 0,
+    (ObjectDescriptorCallback)KT_Torch_init, (ObjectDescriptorCallback)KT_Torch_update,
+    (ObjectDescriptorCallback)KT_Torch_hitDetect, (ObjectDescriptorCallback)KT_Torch_render,
+    (ObjectDescriptorCallback)KT_Torch_free, (ObjectDescriptorCallback)KT_Torch_getObjectTypeId,
+    KT_Torch_getExtraSize,
+};
