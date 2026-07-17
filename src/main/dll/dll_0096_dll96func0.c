@@ -20,13 +20,19 @@
 /* effect id spawned by this DLL's modgfx emitter (spawnEffect textureAssetId arg). */
 #define DLL96_EFFECT_ID 0x89
 
-extern f32 lbl_803E12C0;
-extern f32 lbl_803E12C4;
-extern f32 lbl_803E12C8;
-extern f32 lbl_803E12CC;
-extern f32 lbl_803E12D0;
-extern f32 lbl_803E12D4;
-extern f32 lbl_803E12D8;
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E12C0 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E12C4 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E12C8 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803E12CC = 10.5f;
+__declspec(section ".sdata2") f32 lbl_803E12D0 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E12D4 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E12D8 = 255.0f;
+const f32 lbl_803E12DC = 0.0f;
+// BIAS lbl_803E12E0 minted by compiler
+#pragma explicit_zero_data reset
+#pragma force_active reset
 extern u8 lbl_803175E8[];
 
 int dll_96_func03(int sourceObj, int variant, int posSource, u32 flags)

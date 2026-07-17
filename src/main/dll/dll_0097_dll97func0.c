@@ -23,18 +23,55 @@ u8 lbl_803DB948[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 #define DLL97_EFFECT_ID 0x3c
 
 
-extern f32 lbl_803E12F0;
-extern f32 lbl_803E12F8;
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E12E8 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E12EC = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E12F0 = 155.0f;
+__declspec(section ".sdata2") f32 lbl_803E12F4 = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803E12F8 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E12FC = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E1300 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E1304 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E1308 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E130C = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E1310 = 2.0f;
+const f32 lbl_803E1314 = 0.0f;
+const f32 lbl_803E1318 = 0.0f;
+const f32 lbl_803E131C = 0.22f;
+const f32 lbl_803E1320 = 0.3f;
+const f32 lbl_803E1324 = 255.0f;
+const f32 lbl_803E1328 = -7.0f;
+const f32 lbl_803E132C = 7.0f;
+const f32 lbl_803E1330 = 1.0f;
+const f32 lbl_803E1334 = -1.0f;
+const f32 lbl_803E1338 = -2.0f;
+const f32 lbl_803E133C = 2.0f;
+const f32 lbl_803E1340 = 1.0f;
+const f32 lbl_803E1344 = 0.0f;
+const f32 lbl_803E1348 = 155.0f;
+const f32 lbl_803E134C = 55.0f;
+const f32 lbl_803E1350 = 0.15f;
+const f32 lbl_803E1354 = 0.1f;
+const f32 lbl_803E1358 = -0.5f;
+const f32 lbl_803E135C = 4.0f;
+const f32 lbl_803E1360 = 25.0f;
+const f32 lbl_803E1364 = 8.0f;
+const f32 lbl_803E1368 = 2.0f;
+const f32 lbl_803E136C = 0.0f;
+const f32 lbl_803E1370 = 0.0f;
+const f32 lbl_803E1374 = 1.0f;
+const f32 lbl_803E1378 = 0.2f;
+const f32 lbl_803E137C = 0.01f;
+const f32 lbl_803E1380 = 0.8f;
+const f32 lbl_803E1384 = 255.0f;
+const f32 lbl_803E1388 = 1.8f;
+const f32 lbl_803E138C = 3.0f;
+const f32 lbl_803E1390 = 4.0f;
+const f32 lbl_803E1394 = 200.0f;
+#pragma explicit_zero_data reset
+#pragma force_active reset
 extern u8 lbl_80317810[];
-extern f32 lbl_803E12E8;
-extern f32 lbl_803E12EC;
-extern f32 lbl_803E12F4;
-extern f32 lbl_803E12FC;
-extern f32 lbl_803E1300;
-extern f32 lbl_803E1304;
-extern f32 lbl_803E1308;
-extern f32 lbl_803E130C;
-extern f32 lbl_803E1310;
 
 #pragma inline_max_size(2000)
 static inline void dll_97_func03Body(u8* base, int sourceObj, int variant, int posSource, u32 flags, u32 unused,

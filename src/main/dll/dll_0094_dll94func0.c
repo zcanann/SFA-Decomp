@@ -23,18 +23,33 @@ u8 lbl_803DB938[8] = {0, 1, 0, 0, 0, 0, 0, 0};
 
 
 extern u8 lbl_803DB938[8]; /* texture/resource handle */
-extern f32 lbl_803E1270;
-extern f32 lbl_803E1278;
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1268 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E126C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E1270 = 155.0f;
+__declspec(section ".sdata2") f32 lbl_803E1274 = 55.0f;
+__declspec(section ".sdata2") f32 lbl_803E1278 = 0.15f;
+__declspec(section ".sdata2") f32 lbl_803E127C = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E1280 = -0.5f;
+__declspec(section ".sdata2") f32 lbl_803E1284 = 4.0f;
+__declspec(section ".sdata2") f32 lbl_803E1288 = 25.0f;
+__declspec(section ".sdata2") f32 lbl_803E128C = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E1290 = 2.0f;
+const f32 lbl_803E1294 = 0.0f;
+const f32 lbl_803E1298 = 0.014f;
+const f32 lbl_803E129C = 0.03f;
+const f32 lbl_803E12A0 = 255.0f;
+const f32 lbl_803E12A4 = 0.0f;
+const f32 lbl_803E12A8 = 85.0f;
+const f32 lbl_803E12AC = 80.0f;
+const f32 lbl_803E12B0 = 100.0f;
+const f32 lbl_803E12B4 = -80.0f;
+const f32 lbl_803E12B8 = 2.0f;
+const f32 lbl_803E12BC = 0.0f;
+#pragma explicit_zero_data reset
+#pragma force_active reset
 extern u8 lbl_80317488[];
-extern f32 lbl_803E1268;
-extern f32 lbl_803E126C; /* 0.0f */
-extern f32 lbl_803E1274;
-extern f32 lbl_803E127C;
-extern f32 lbl_803E1280;
-extern f32 lbl_803E1284;
-extern f32 lbl_803E1288;
-extern f32 lbl_803E128C;
-extern f32 lbl_803E1290;
 
 void dll_95_func01_nop(void); /* forward decl to align function set with v1.0 asm; defined in dll_0095 */
 

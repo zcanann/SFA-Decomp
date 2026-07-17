@@ -19,13 +19,19 @@
 #define DLL93_EFFECT_ID 0x89
 
 extern u8 lbl_80317260[];
-extern f32 lbl_803E1240;
-extern f32 lbl_803E1244;
-extern f32 lbl_803E1248;
-extern f32 lbl_803E124C;
-extern f32 lbl_803E1250;
-extern f32 lbl_803E1254;
-extern f32 lbl_803E1258;
+#pragma force_active on
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E1240 = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E1244 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E1248 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E124C = 10.5f;
+__declspec(section ".sdata2") f32 lbl_803E1250 = 255.0f;
+__declspec(section ".sdata2") f32 lbl_803E1254 = 1.1f;
+__declspec(section ".sdata2") f32 lbl_803E1258 = 1.2f;
+const f32 lbl_803E125C = 0.0f;
+// BIAS lbl_803E1260 minted by compiler
+#pragma explicit_zero_data reset
+#pragma force_active reset
 
 void dll_93_func03(int sourceObj, int variant, int posSource, u32 flags)
 {
