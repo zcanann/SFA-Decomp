@@ -16,6 +16,7 @@
  */
 #include "main/dll/drexplodable_types.h"
 #include "main/object.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 
 STATIC_ASSERT(sizeof(DrExplodableChunk) == 0x70);
@@ -195,3 +196,20 @@ void SlidingDoor_release(void)
 void SlidingDoor_initialise(void)
 {
 }
+
+ObjectDescriptor gSlidingDoorObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)SlidingDoor_initialise,
+    (ObjectDescriptorCallback)SlidingDoor_release,
+    0,
+    (ObjectDescriptorCallback)SlidingDoor_init,
+    (ObjectDescriptorCallback)SlidingDoor_update,
+    (ObjectDescriptorCallback)SlidingDoor_hitDetect,
+    (ObjectDescriptorCallback)SlidingDoor_render,
+    (ObjectDescriptorCallback)SlidingDoor_free,
+    (ObjectDescriptorCallback)SlidingDoor_getObjectTypeId,
+    SlidingDoor_getExtraSize,
+};

@@ -26,7 +26,6 @@
 #include "main/model.h"
 #include "track/intersect_api.h"
 #include "main/dll/dll_015F_attractor.h"
-#include "main/dll/dll_015D_slidingdoor.h"
 #include "main/dll/dll_0166_exploded.h"
 #include "main/dll/IM/IMspacecraft.h"
 #include "main/dll/MMP/dll_017E_mmplevelcontrol.h"
@@ -463,20 +462,6 @@ u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     (u32)explodable_free,
                                     0x00000000,
                                     (u32)explodable_getExtraSize};
-u32 gSlidingDoorObjDescriptor[14] = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x00090000,
-                                     (u32)SlidingDoor_initialise,
-                                     (u32)SlidingDoor_release,
-                                     0x00000000,
-                                     (u32)SlidingDoor_init,
-                                     (u32)SlidingDoor_update,
-                                     (u32)SlidingDoor_hitDetect,
-                                     (u32)SlidingDoor_render,
-                                     (u32)SlidingDoor_free,
-                                     (u32)SlidingDoor_getObjectTypeId,
-                                     (u32)SlidingDoor_getExtraSize};
 u32 gAttractorObjDescriptor[16] = {0x00000000,
                                    0x00000000,
                                    0x00000000,
