@@ -246,6 +246,59 @@ anomaly is exactly this rule.
 - Bias atoms are per-type and TU-wide; a second bias in a carve means a second *type*, not a second
   TU (already in the census).
 
+## ★ `.text` discriminates LITERAL vs NAMED-CONST DEF — the hoist is the tell
+
+Pool bytes cannot tell a literal from a `static const` def: both put the same 4 bytes at the same
+slot. **`.text` can**, and the discriminator is one observable:
+
+| spelling | compare canonicalisation | load placement |
+|---|---|---|
+| plain literal `2.0f` | **const-first** (`fcmpu frA=const`, either source order) | **hoisted to the head of the basic block that dominates all its uses** |
+| `f32 k; k = 2.0f;` (non-const local) | **none** — `frA` = the syntactic LHS | at the use, *only when written as the RHS* |
+| `static const f32 g = 2.0f;` + **`*(f32*)&g`** | none — `frA` = the syntactic LHS | **at the use**, always |
+| `static const f32 g = 2.0f;` + bare `g` | const-first | hoisted — **and it emits TWO atoms** (the def *and* a re-folded literal) |
+
+⇒ **If retail materialises a constant at its use and canonicalises the compare const-first, it is a
+named `const` def read through a cast-deref — no other spelling produces that pair.** The literal
+hoists; the non-const local loses the canonicalisation. This is the `.text`-level twin of Rule B: a
+cast-deref const *is* a memory reference, so it reproduces exactly what the `extern f32 lbl_*` shim
+was doing — which is why the pre-respell source matched while every literal spelling rotates.
+
+★**Corollary — the hoist is the whole bug, the operand order is a symptom.** A hoisted literal stays
+live across an intervening diamond, so it *interferes* with the condition's constant and is pushed one
+register up (`f0`->`f1`), which swaps the two `fcmpu` operand fields even though the semantics are
+identical. Fix the placement and the registers fall out; do not chase the operand order directly.
+★**Cheap probe**: a 6-line standalone `.c` under the unit's real cflags reproduces this in <1s. Do it
+before sweeping the real unit — the real-file loop is ~4s a variant and decl-order sweeps are inert.
+
+### Worked confirmation — drakorhoverpad (`dll_0271_drakorhoverpad.c`, pool `803E6A38..6AA0`), 2026-07-17
+The bias rule's worked example above is correct and lands byte-exact on the first compile. Two ghosts,
+both defined between `setScale` and the `#pragma dont_inline on` window (i.e. between `func0F` and
+`update`, as the bias forced):
+- `drakorhoverpad_initPathCurve(obj, p)` — group `{300.0f, 0.01f}`: the `initCurve(...,300.0f,...)` +
+  `Curve_AdvanceAlongPath(...,0.01f)` attach, inlined into `updateMain`'s activate arm.
+- `drakorhoverpad_nodeWobbleSin/Cos(slot, angle)` — group `{pi, 32768.0f, SBIAS, UBIAS}`: the per-node
+  bob `2.0f * ((f32)(u32)node->tangentMag * mathSinf(pi * (f32)(angle<<8) / 32768.0f))`, **duplicated
+  verbatim at 12 sites** in `update`. It is the file's only source of BOTH biases (signed `angle<<8`,
+  unsigned `tangentMag`) — which is exactly why the bias pair sits in *its* group and `update`'s own
+  group is just `{-1.0f}`. The Cos twin adds no atoms (dedup) and so is invisible to the pool.
+- ★**Take the SLOT, not the node** (`DrakorCurveNode** slot`): retail re-reads the node pointer either
+  side of `mathSinf` (an intervening call kills the CSE). A `DrakorCurveNode*` param is evaluated once
+  at the call site into a saved reg and costs `.text`. This is the caller-holds-it test from the
+  parameter rule, resolved the *other* way: the caller does **not** hold it across the call.
+- ★**`gDrakorHoverpadPi`/`gDrakorHoverpadAngleScale` were referenced by NOTHING once literalised** —
+  a pool atom with zero users tree-wide is the strongest ghost tell there is (an *uncalled* ghost).
+  Here they had users, and the users' clusters read the helper's body straight off.
+- Post-literalisation repairs: `limit = limit + K` -> the accumulator-first form is **wrong** here
+  (`K` is the const def, so no canonicalisation to undo — keep `limit = limit + *(f32*)&g`); `*= 0.5f`
+  on an alias-opaque `*(f32*)p` **reloads** instead of reusing the CSE'd local (a cast-deref store is
+  alias-opaque), so keep `cur * half` with a non-const `f32 half` local.
+
+Claim `.sdata2 [0x803E6A38, 0x803E6AA0)`; pool **byte-exact (104 B)**, all 29 retail functions
+byte-exact. Gated in an origin clean-room on `ed0550d779`: `main.dol: OK`, complete_units **842 ->
+843**, matched_data 1179495 -> 1179599 (**+104 B**), complete_code +7176, **matched_code FLAT**
+(2414780).
+
 ## Landed
 
 - **sctotembond** (`main/dll/SC/dll_01BB_sctotembond.c`), 2026-07-17: ghost
