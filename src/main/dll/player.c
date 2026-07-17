@@ -10238,28 +10238,6 @@ int fn_802A71E0(int obj, int a, int b, int* p6, int* p7, f32 e, f32 f, int n, in
 
 s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 fv, u32 mask)
 {
-    typedef struct
-    {
-        int hitObj;
-        f32 minX;
-        f32 maxX;
-        f32 minY;
-        f32 maxY;
-        f32 minZ;
-        f32 maxZ;
-        f32 nx;
-        f32 ny;
-        f32 nz;
-        f32 nw;
-        u8 padA[0xc];
-        f32 g38;
-        f32 g3c;
-        f32 g40;
-        f32 dist;
-        u8 padB[9];
-        s8 kind;
-        u8 padC[2];
-    } SweepHit;
     f32* dir;
     int objCount;
     f32 nearDist;
@@ -10283,7 +10261,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         f32 y;
         f32 z;
     } pfx;
-    SweepHit buf;
+    TrackBBoxHit buf;
     u8 useAlt;
     f32 hd;
     f32 dp;
@@ -10310,7 +10288,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
     sc0p[0] = lbl_803E808C * vec[0];
     sc0p[1] = lbl_803E808C * vec[1];
     sc0p[2] = lbl_803E808C * vec[2];
-    *(u32*)&((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_LEDGE_DETECTED;
+    ((PlayerState*)state)->flags360 &= ~PLAYER_FLAG_LEDGE_DETECTED;
     for (i = 0; i < PLAYER_SWEEP_DIR_COUNT; i++)
     {
         if ((mask & dirMasks[i]) == 0)
@@ -10353,7 +10331,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         }
         case 0:
         case 10:
-            if (((u32) * (u8*)(state + 0x3f1) & 1) == 0)
+            if (((u32)((PlayerState*)state)->flags3F1 & 1) == 0)
             {
                 logPrintf(sNotOnGroundFailureMessage);
                 continue;
@@ -10374,7 +10352,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         case 2:
         {
             u8 b2;
-            if (((u32) * (u8*)(state + 0x3f1) & 1) == 0)
+            if (((u32)((PlayerState*)state)->flags3F1 & 1) == 0)
             {
                 u8 b = ((PlayerState*)state)->flags3F0;
                 if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0)
@@ -10393,7 +10371,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         case 6:
         {
             u8 b2;
-            if (((u32) * (u8*)(state + 0x3f1) & 1) == 0)
+            if (((u32)((PlayerState*)state)->flags3F1 & 1) == 0)
             {
                 u8 b = ((PlayerState*)state)->flags3F0;
                 if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0)
@@ -10415,7 +10393,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         }
         if (ok == 0)
         {
-            if (*(f32*)(state2 + 0x298) < lbl_803E7EFC)
+            if (((PlayerState*)state2)->baddie.inputMagnitude < lbl_803E7EFC)
             {
                 continue;
             }
@@ -10460,15 +10438,15 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             end[1] = ((GameObject*)obj)->anim.localPosY;
             end[2] = ((GameObject*)obj)->anim.localPosZ;
         }
-        hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, (TrackBBoxHit*)&buf, (GameObject*)obj, 1, dirs[i],
+        hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, (GameObject*)obj, 1, dirs[i],
                                 0xff, 10);
         if (flagA != 0 && hit != 0)
         {
-            ((PlayerState*)state)->probeHitDist = buf.dist;
+            ((PlayerState*)state)->probeHitDist = buf.distance;
         }
         if (flagB != 0 && hit != 0)
         {
-            dp = buf.nx * dir[0] + buf.ny * dir[1] + buf.nz * dir[2];
+            dp = buf.normalX * dir[0] + buf.normalY * dir[1] + buf.normalZ * dir[2];
             switch (i)
             {
             case 3:
@@ -10482,10 +10460,10 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             case 2:
             case 4:
             case 6:
-                if (((u32) * (u8*)(state + 0x3f1) & 1) != 0)
+                if (((u32)((PlayerState*)state)->flags3F1 & 1) != 0)
                 {
-                    if (dp > lbl_803E8090 || (((GameObject*)obj)->anim.localPosY > buf.g3c - lbl_803E7ED8 &&
-                                              ((GameObject*)obj)->anim.localPosY > buf.g40 - lbl_803E7ED8))
+                    if (dp > lbl_803E8090 || (((GameObject*)obj)->anim.localPosY > buf.upperY1 - lbl_803E7ED8 &&
+                                              ((GameObject*)obj)->anim.localPosY > buf.upperY2 - lbl_803E7ED8))
                     {
                         hit = 0;
                     }
@@ -10515,27 +10493,27 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                 start[0] = ((GameObject*)obj)->anim.localPosX;
                 start[1] = ((GameObject*)obj)->anim.localPosY;
                 start[2] = ((GameObject*)obj)->anim.localPosZ;
-                end[0] = -(lbl_803E808C * buf.nx - ((GameObject*)obj)->anim.localPosX);
+                end[0] = -(lbl_803E808C * buf.normalX - ((GameObject*)obj)->anim.localPosX);
                 end[1] = ((GameObject*)obj)->anim.localPosY;
-                end[2] = -(lbl_803E808C * buf.nz - ((GameObject*)obj)->anim.localPosZ);
+                end[2] = -(lbl_803E808C * buf.normalZ - ((GameObject*)obj)->anim.localPosZ);
             }
             else
             {
-                start[0] = lbl_803E808C * buf.nx + ((GameObject*)obj)->anim.localPosX;
+                start[0] = lbl_803E808C * buf.normalX + ((GameObject*)obj)->anim.localPosX;
                 start[1] = ((GameObject*)obj)->anim.localPosY;
-                start[2] = lbl_803E808C * buf.nz + ((GameObject*)obj)->anim.localPosZ;
+                start[2] = lbl_803E808C * buf.normalZ + ((GameObject*)obj)->anim.localPosZ;
                 end[0] = ((GameObject*)obj)->anim.localPosX;
                 end[1] = ((GameObject*)obj)->anim.localPosY;
                 end[2] = ((GameObject*)obj)->anim.localPosZ;
             }
-            hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, (TrackBBoxHit*)&buf, (GameObject*)obj, 1,
+            hit = objBboxFn_800640cc(start, end, lbl_803E7EA4, 3, &buf, (GameObject*)obj, 1,
                                     dirs[i], 0xff, 10);
         }
         if (hit == 0)
         {
             continue;
         }
-        hd = buf.dist;
+        hd = buf.distance;
         if (useAlt != 0)
         {
             hd = lbl_803E808C - hd;
@@ -10544,13 +10522,13 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
         {
         case 0:
         {
-            int t = buf.hitObj;
-            if ((u32)t == 0)
+            GameObject* target = buf.object;
+            if (target == NULL)
             {
                 continue;
             }
-            if ((*(int (*)(int)) * (int*)((char*)*(int*)*(int*)(t + 0x68) + 0x2c))(t) != 0 &&
-                *(f32*)(state2 + 0x298) > lbl_803E7EFC && hd <= lbl_803E7ED4 + lbl_803DC6C0)
+            if ((*(int (*)(int)) * (int*)((char*)target->anim.dll[0] + 0x2c))((int)target) != 0 &&
+                ((PlayerState*)state2)->baddie.inputMagnitude > lbl_803E7EFC && hd <= lbl_803E7ED4 + lbl_803DC6C0)
             {
                 switch (
                     ((int (*)(int, int, void*, int, f32*, f32))fn_802A8EE4)(obj, state, &buf, state + 0x5a8, end, hd))
@@ -10565,31 +10543,32 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             {
                 continue;
             }
-            if (*(u8*)(t + 0xaf) & 8)
+            if (target->anim.resetHitboxFlags & 8)
             {
                 continue;
             }
-            *(u32*)&((PlayerState*)state)->flags360 |= PLAYER_FLAG_LEDGE_DETECTED;
+            ((PlayerState*)state)->flags360 |= (u32)PLAYER_FLAG_LEDGE_DETECTED;
             if ((*(int*)&((PlayerState*)state2)->baddie.unk31C & 0x100) == 0)
             {
                 continue;
             }
-            ((PlayerState*)state)->surfaceNormalX = buf.nx;
-            ((PlayerState*)state)->surfaceNormalY = buf.ny;
-            ((PlayerState*)state)->surfaceNormalZ = buf.nz;
-            ((PlayerState*)state)->surfaceNormalW = buf.g38;
+            ((PlayerState*)state)->surfaceNormalX = buf.normalX;
+            ((PlayerState*)state)->surfaceNormalY = buf.normalY;
+            ((PlayerState*)state)->surfaceNormalZ = buf.normalZ;
+            ((PlayerState*)state)->surfaceNormalW = buf.upperY0;
             *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
-            if ((u32)buf.hitObj != 0)
+            if (buf.object != NULL)
             {
-                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(state + 0x664), (f32*)(state + 0x668),
-                                               (f32*)(state + 0x66c), buf.hitObj);
-                ((PlayerState*)state)->contactObject = buf.hitObj;
+                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], &((PlayerState*)state)->contactPointX,
+                                               &((PlayerState*)state)->contactPointY,
+                                               &((PlayerState*)state)->contactPointZ, (u32)buf.object);
+                ((PlayerState*)state)->contactObject = (int)buf.object;
             }
             else
             {
-                *(f32*)(state + 0x664) = end[0];
-                *(f32*)(state + 0x668) = end[1];
-                *(f32*)(state + 0x66c) = end[2];
+                ((PlayerState*)state)->contactPointX = end[0];
+                ((PlayerState*)state)->contactPointY = end[1];
+                ((PlayerState*)state)->contactPointZ = end[2];
                 ((PlayerState*)state)->contactObject = 0;
             }
             return 6;
@@ -10603,22 +10582,23 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             {
                 continue;
             }
-            ((PlayerState*)state)->surfaceNormalX = buf.nx;
-            ((PlayerState*)state)->surfaceNormalY = buf.ny;
-            ((PlayerState*)state)->surfaceNormalZ = buf.nz;
-            ((PlayerState*)state)->surfaceNormalW = buf.g38;
+            ((PlayerState*)state)->surfaceNormalX = buf.normalX;
+            ((PlayerState*)state)->surfaceNormalY = buf.normalY;
+            ((PlayerState*)state)->surfaceNormalZ = buf.normalZ;
+            ((PlayerState*)state)->surfaceNormalW = buf.upperY0;
             *(u8*)&((PlayerState*)state)->stickEdgeLatch = 0;
-            if ((u32)buf.hitObj != 0)
+            if (buf.object != NULL)
             {
-                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], (f32*)(state + 0x664), (f32*)(state + 0x668),
-                                               (f32*)(state + 0x66c), buf.hitObj);
-                ((PlayerState*)state)->contactObject = buf.hitObj;
+                Obj_TransformWorldPointToLocal(end[0], end[1], end[2], &((PlayerState*)state)->contactPointX,
+                                               &((PlayerState*)state)->contactPointY,
+                                               &((PlayerState*)state)->contactPointZ, (u32)buf.object);
+                ((PlayerState*)state)->contactObject = (int)buf.object;
             }
             else
             {
-                *(f32*)(state + 0x664) = end[0];
-                *(f32*)(state + 0x668) = end[1];
-                *(f32*)(state + 0x66c) = end[2];
+                ((PlayerState*)state)->contactPointX = end[0];
+                ((PlayerState*)state)->contactPointY = end[1];
+                ((PlayerState*)state)->contactPointZ = end[2];
                 ((PlayerState*)state)->contactObject = 0;
             }
             return 0xd;
@@ -10699,10 +10679,10 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
             {
                 continue;
             }
-            ((PlayerState*)state)->hitNormalX = buf.nx;
-            ((PlayerState*)state)->hitNormalY = buf.ny;
-            ((PlayerState*)state)->hitNormalZ = buf.nz;
-            ((PlayerState*)state)->hitNormalW = buf.nw;
+            ((PlayerState*)state)->hitNormalX = buf.normalX;
+            ((PlayerState*)state)->hitNormalY = buf.normalY;
+            ((PlayerState*)state)->hitNormalZ = buf.normalZ;
+            ((PlayerState*)state)->hitNormalW = buf.normalW;
             return 0xb;
         }
         case 11:
@@ -10723,7 +10703,7 @@ s8 playerCheckIfClimbingOntoWall(int obj, int state, int state2, void* out, f32 
                         lo = buf.minX;
                         pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
                         lo = buf.minY;
-                        pfx.y = lo + (buf.g3c - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
+                        pfx.y = lo + (buf.upperY1 - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
                         lo = buf.minZ;
                         pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) / lbl_803E7F5C;
                         pfx.scale = lbl_803E7EE0;
