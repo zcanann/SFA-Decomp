@@ -38,6 +38,7 @@
 #include "main/dll/dll_018E_mmshwaterspike.h"
 #include "main/object_descriptor.h"
 #include "main/dll/player_api.h"
+#include "main/dll/tricky_api.h"
 
 /* env-effect ids fired when the shrine load-trigger timer expires (index-style; roles opaque) */
 /* camera mode DLL 0x4c = dll_004C_camDebug */
@@ -88,7 +89,6 @@ enum MMSHShrinePhase
     MMSH_SHRINE_PHASE_RESET = 5       /* clear flags, return to idle         */
 };
 
-extern void fn_8011F6D4(u32 x);
 extern void fearTestMeterSetRange(u8 channel, u8 param, s16 value);
 
 typedef struct DFSHLaserBeamConfig

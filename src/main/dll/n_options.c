@@ -28,6 +28,7 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXBump.h"
+#include "main/dll/FRONT/picmenu.h"
 
 typedef struct
 {
@@ -73,7 +74,6 @@ extern void GXSetAlphaCompare(GXCompare comp0, u8 ref0, GXAlphaOp op, GXCompare 
 extern void GXSetTevOrder(GXTevStageID stage, GXTexCoordID coord, GXTexMapID map, GXChannelID color);
 extern void GXSetNumTevStages(u8 nStages);
 extern void fn_8004C7AC(void* yTexture, void* uTexture, void* vTexture, int width, int height);
-extern void PushFreeTextureSet(OSMessage msg);
 
 u16 gAttractMovieVolumeScale[128] = {
     0,     2,     8,     18,    32,    50,    73,    99,    130,   164,   203,   245,   292,   343,   398,   457,

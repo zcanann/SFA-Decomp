@@ -30,6 +30,7 @@
 #include "main/objfx.h"
 #include "main/vecmath.h"
 #include "main/object_descriptor.h"
+#include "main/dll/objfx.h"
 
 #define SBCLOUDBALL_OBJFLAG_PARENT_SLACK 0x1000
 #define SBCLOUDBALL_PARTFX               0xa8
@@ -75,7 +76,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 #define SB_CLOUD_BALL_TRAIL_PARTICLE_SCALE 0.22f
 extern f32 gSbCloudBallLightAttenNear;
 extern f32 gSbCloudBallLightAttenFar;
-extern void objfx_spawnFlaggedTrailBurst(void* obj, u8 mode, int effectParam, int f4, int origin, f32 scale);
 
 int SB_CloudBall_getExtraSize(void)
 {

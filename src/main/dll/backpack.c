@@ -22,6 +22,7 @@
 #include "main/obj_message.h"
 #include "main/player_control_interface.h"
 #include "main/frame_timing.h"
+#include "main/dll/baddie_control_interface.h"
 
 /* obj+0xB8 overlay used only by TriggerLaunchTarget; the named fields line
    up with GroundBaddieState (triggerId/gameBitA at 0x3F0/0x3F2, unk405). */
@@ -44,7 +45,6 @@ typedef struct LandedArwingTriggerLaunchTargetState
 /* part of LANDED_ARWING_FLAG_LAUNCHING (0x02004000): mark launch active */
 #define LANDED_ARWING_FLAG_BOUNCE 0x4000
 
-extern int* gBaddieControlInterface;
 extern f32 lbl_803E2FD8;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FE0;

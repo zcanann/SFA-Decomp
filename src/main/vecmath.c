@@ -4,6 +4,8 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "stdlib.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 
 typedef f32 Mtx[3][4];
 
@@ -24,9 +26,7 @@ extern f32 gVecMathTwoPi;
 extern f32 lbl_803DE7F4;
 
 extern float fcos16(int angle);
-extern int rand(void);
 extern f32 fsin16(int angle);
-extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 
 void setMatrixFromObjectPos(f32* m, const MatrixTransform* transform);
 

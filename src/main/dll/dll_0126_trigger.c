@@ -59,6 +59,7 @@
 #include "main/dll/headdisplay.h"
 #include "main/dll/mmp_gyservent.h"
 #include "main/audio/sfx.h"
+#include "main/sky.h"
 
 #define Sfx_StopFromObjectLegacy(obj, sfxId) \
     ((void (*)(void*, int))Sfx_StopFromObject)((obj), (sfxId))
@@ -86,7 +87,6 @@ extern int mainGetBit(int eventId);
 extern void fn_8006FC00(int v);
 extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
 extern void mainSetBits(int eventId, int value);
-extern void envFxFn_800887cc(void);
 extern int fn_80198B68(int obj, int p2);
 extern void fn_80198DE8(int obj, int target);
 extern void fn_80198A00(int obj, int target);

@@ -126,6 +126,7 @@
 #include "main/shader_map_text_api.h"
 #undef SHADER_MAP_TEXT_DIRECT_INT_CALL
 #include "track/intersect_hud_api.h"
+#include "main/dll/dll_0011_screens.h"
 
 u16 lbl_803DBA30 = 420;
 f32 lbl_803DBA34 = 0.3f;
@@ -776,8 +777,6 @@ extern const f32 lbl_803E21C0;
 extern const f32 lbl_803E21C4;
 extern const f32 lbl_803E21C8;
 extern const f32 lbl_803E21CC;
-extern int hintTextMapFn_800ea264(void);
-extern u8 getCurTaskHintTextMap(void);
 extern u16* saveGameGetCurHint(void);
 extern u8 pauseDisabled;
 extern u8 gPauseMenuTransitionStarted;

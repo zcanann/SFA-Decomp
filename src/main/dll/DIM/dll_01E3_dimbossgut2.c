@@ -24,11 +24,11 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 #include "main/curve.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define DIMBOSSGUT2_OBJGROUP 3
 #define DIMBOSSGUT2_PARTFX   0x32b
 
-extern int* gBaddieControlInterface;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D10;
 

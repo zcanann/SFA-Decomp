@@ -19,6 +19,7 @@
 #include "main/lightmap_text_color_api.h"
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/rcp_dolphin_api.h"
+#include "main/dll/dll_0015_save_settings.h"
 
 struct JapaneseDiscStatusResource;
 struct EnglishDiscStatusResource;
@@ -340,7 +341,6 @@ extern int gSubtitleLineCount;
 extern Texture* gGameTextBoxEdgeTexture;
 extern u32 lbl_80339C40[];
 
-extern int saveFileStruct_isCheatActive(u8 idx);
 extern void _textSetColor(int unused, int a, int b, int c, int d);
 extern void textRenderSetup(void);
 extern void textRenderSetupFn_800795e8(void);

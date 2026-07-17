@@ -42,6 +42,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/dll/DB/DBstealerworm.h"
+#include "main/dll/SB/dll_01E9_sbpropeller.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING  0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING  0xa3d
@@ -141,7 +142,6 @@ extern f32 lbl_803E57B4;
 extern f32 lbl_803E57B8;
 
 extern void fn_801EED5C(GameObject* obj, f32* x, f32* y, f32* z);
-extern u32 sbGetPropeller(void);
 
 
 ObjectDescriptor15 gSB_GalleonObjDescriptor = {

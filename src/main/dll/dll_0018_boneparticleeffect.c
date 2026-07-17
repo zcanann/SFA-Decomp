@@ -22,6 +22,7 @@
 #include "main/dll/dll_0018_boneparticleeffect.h"
 #include "main/vecmath.h"
 #include "main/camera.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 s16 gBoneParticleEffectTimer;
 s32 gBoneParticleScrollOffset;
@@ -55,7 +56,6 @@ __declspec(section ".sdata2") f32 gBoneParticleDriftMin = -500.0f;
 __declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
 __declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
-extern void GXSetCullMode(int mode);
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
 extern void PSMTXMultVec(void* m, void* src, void* dst);

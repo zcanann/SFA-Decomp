@@ -42,6 +42,7 @@
 #include "main/vecmath.h"
 #include "main/frame_timing.h"
 #include "main/audio/audio_control_api.h"
+#include "main/pad.h"
 
 u32 sCurvesCachedHitObj;
 s32 sCurvesCachedHitCount;
@@ -88,7 +89,6 @@ extern const f32 lbl_803E06BC;
 extern const f32 lbl_803E06C0;
 
 extern void fn_80063368(short* obj);
-extern void setRumbleEnabled(u8 enabled);
 
 RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 RomCurvePoint* curves_getCurves(GameObject* obj, f32 x, f32 z, u32* outCount, int queryAll);

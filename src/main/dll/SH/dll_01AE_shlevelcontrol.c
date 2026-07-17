@@ -92,14 +92,13 @@ extern f32 lbl_803E54B4; /* 0.0f floor: bloop-timer expiry, hud-text floor, sky-
 extern f32 gShLevelControlHudTextDuration;
 
 #include "main/dll/SH/dll_01AF_shswaplift.h"
+#include "main/pad.h"
 
 extern void sh_staff_getExtraSize(void);
 extern void sh_staff_free(void);
 extern void sh_staff_render(GameObject*);
 extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
-extern void padClearAnalogInputX(int port);
-extern void padClearAnalogInputY(int port);
 
 void SH_LevelControl_setMusic(short* state);
 

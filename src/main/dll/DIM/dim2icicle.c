@@ -32,6 +32,7 @@
 #include "main/rcp_dolphin.h"
 #include "main/sky_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define DIM2ICICLE_ADVANCE_MSG 0xe0001 /* notify the struck object to advance its hit reaction */
 
@@ -47,7 +48,6 @@ static inline int* DIM2Icicle_GetActiveModel(void* obj)
 
 extern u32 gDIMbossAnimTable[];
 extern u32 gDIMbossHitDetectAnimTable[];
-extern int* gBaddieControlInterface;
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4BC8;
 extern f32 lbl_803E4BD8;

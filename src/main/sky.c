@@ -32,6 +32,7 @@
 #include "main/object_descriptor.h"
 #include "main/loaded_file_flags.h"
 #include "track/intersect_screen_api.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 u8* gSky2State;
 s8 gSky2DrawMode;
@@ -234,19 +235,7 @@ extern void PSMTXMultVecSR(f32* m, f32* src, f32* dst);
 extern void PSVECNormalize(void* src, void* dst);
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
-extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
-extern void GXSetTevOrder(int stage, int coord, int map, int color);
-extern void GXSetTevDirect(int stage);
-extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
-extern void GXSetTevSwapMode(int stage, int ras, int tex);
-extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int reg);
-extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int reg);
 extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
-extern void GXSetNumIndStages(int n);
-extern void GXSetNumChans(int n);
-extern void GXSetNumTexGens(int n);
-extern void GXSetNumTevStages(int n);
 extern void fn_8007880C(void);
 extern void fn_80069B1C(void* a, void* b, f32 t, void* c);
 extern void fn_8005CECC(int mode);

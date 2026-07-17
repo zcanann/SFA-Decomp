@@ -29,6 +29,7 @@
 #include "main/textrender_api.h"
 #include "main/fileio.h"
 #include "track/intersect_hud_api.h"
+#include "main/sky.h"
 
 f32 lbl_803DD5F4;
 s8 gTitleScreenInitFrameStartPending;
@@ -73,7 +74,6 @@ extern f32 gTitleScreenInitFadeFrames;
 extern f32 lbl_803E1D00;
 
 extern void drawTexture(double x, double y, int texture, u32 alpha, u32 flags);
-extern void loadSunAndMoon(void);
 
 void runLoadingScreens(void)
 {

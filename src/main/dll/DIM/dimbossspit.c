@@ -18,6 +18,7 @@
 #include "main/player_control_interface.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/frame_timing.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG    0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
@@ -36,7 +37,6 @@ extern f32 lbl_803DDBA0;
 extern f32 lbl_803DDBA4;
 extern u8 lbl_803DDBA8[8];
 extern u8 lbl_803DDBB0[8];
-extern int* gBaddieControlInterface;
 extern f32 lbl_803E4C90;
 extern f32 lbl_803E4C9C;
 extern f32 lbl_803E4CB4;

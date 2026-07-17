@@ -37,6 +37,7 @@
 #include "main/track_dolphin_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/dll/player.h"
 
 s16 gObjPartitionPivot;
 void* lbl_803DCBC0;
@@ -226,7 +227,6 @@ extern void* textureFn_8006c5c4(void);
 extern void playerUpdateWhileTimeStopped(u8* obj);
 extern void playerRenderQuakeSpell(void);
 extern void playerUpdate(u8* obj);
-extern void playerDoHitDetection(int obj);
 extern void fn_80013B6C(int* p, int n);
 extern void mapLoadForObject(int id, void* obj);
 extern int loadModLines(int n, s16* out);

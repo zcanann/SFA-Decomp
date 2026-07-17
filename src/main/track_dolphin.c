@@ -34,6 +34,9 @@
 #include "main/pause_menu_api.h"
 #include "main/pi_dolphin.h"
 #include "dolphin/os/OSCache.h"
+#include "main/voxmaps.h"
+#include "track/intersect_api.h"
+#include "main/rcp_dolphin_api.h"
 
 u32 gTrackTriangleBufferEnd;
 s16 gTrackTriangleCount;
@@ -330,8 +333,6 @@ extern const f32 __AR_InternalSize;
 extern const f32 lbl_803DECF0;
 extern const f32 lbl_803DECF4;
 extern const f32 lbl_803DECF8;
-extern int gMapBlockOriginWorldX;
-extern int gMapBlockOriginWorldZ;
 extern const f32 lbl_803DECCC;
 extern const f32 lbl_803DECD0;
 extern const f32 lbl_803DECD4;
@@ -343,7 +344,6 @@ extern void PSVECCrossProduct(f32* a, f32* b, f32* out);
 extern void PSVECScale(f32* src, f32* dst, f32 s);
 extern void PSVECNormalize(f32* src, f32* dst);
 extern f32 PSVECSquareMag(f32* v);
-extern void* textureLoad(int texId, u8 flag);
 extern int textureAlloc512(void);
 extern u32 textureFn_8006c5c4(void);
 extern void GXLoadPosMtxImm(void* mtx, int slot);
@@ -387,9 +387,7 @@ extern void objectShadow_setupSwappedProjectedTexture(int hdr, void* col, void* 
 extern void objectShadow_setupProjectedTexture(int hdr, void* col, void* mtx);
 extern void fn_80077AD8(int hdr, void* col, void* mtx, f32 f);
 extern void fn_80077EF8(GameObject* hdr, void* col, void* mtx, f32 f);
-extern void gxTextureFn_800794e0(void);
 extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
-extern void gxBlendFn_800789ac(void);
 extern u8 skyFn_8008919c(int);
 extern void skyBuildSunModelMatrix(f32* out);
 extern void* fn_8008912C(void);

@@ -38,6 +38,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/baddie_setmove.h"
 
 typedef struct GroundBaddieModelChainDescriptor
 {
@@ -81,7 +82,6 @@ typedef struct
    player*, hud, ObjModelChain). DAT_/lbl_/PTR_ are shared .data/.sdata
    tables and FP constants. */
 
-extern void fn_8014D08C(GameObject* obj, int state, int a, f32 f, int b, int c);
 extern int fn_8014C11C(int obj, f32 f, int a, int b, u8* tbl);
 extern void fn_8015039C(GameObject* obj, u8* state);
 extern u8 fn_8014FFB4(GameObject* obj, u8* state, int a);

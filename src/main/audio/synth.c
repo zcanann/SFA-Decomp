@@ -12,6 +12,9 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/hw_voice_start.h"
+#include "main/audio/data_tables.h"
+#include "main/audio/sal_dsp.h"
+#include "main/audio/vid_init.h"
 
 #pragma exceptions on
 
@@ -116,7 +119,6 @@ extern u16 inpGetAuxA(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern u16 inpGetAuxB(u8 studio, u8 channel, u8 auxIndex, u8 handleIndex);
 extern s16 sndSin(u32 packed);
 
-extern void* dataGetKeymap(u16 sampleId);
 extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 vidFlag, u32* rejected);
 extern u32 audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi,
                                  u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio,
@@ -309,7 +311,6 @@ typedef struct LAYER
     u8 reserved[3];
 } LAYER;
 
-extern void* dataGetLayer(u16 id, u16* count);
 u32 StartKeymap(u16 id, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                 u8 section, u16 step, u16 trackid, u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 
@@ -1478,12 +1479,9 @@ extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
 extern void inpFXCopyCtrl(u8 controller, u32 dstHandle, u32 srcHandle);
 extern void macSetExternalKeyoff(McmdVoiceState* slot);
 extern void macSampleEndNotify(void);
-extern void* salMalloc(u32 size);
 extern void memset(void* dst, int value, u32 size);
 extern void inpInit(u32 unused);
 extern void macInit(void);
-extern void vidInit(void);
-extern void salFree(void* ptr);
 extern u32 synthMessageCallback;
 
 /*

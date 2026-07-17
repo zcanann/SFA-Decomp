@@ -18,6 +18,7 @@
 #include "main/loaded_file_flags.h"
 #include "main/table_file.h"
 #include "main/frame_timing.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 int gModelTabEntryCount;
 s16* gModelResourceBuffer;
@@ -37,8 +38,6 @@ u16 gModelCopyChunkWordLimit = 0x2A0;
 #define GX_AOP_AND 0
 #define GX_LEQUAL 3
 #define GX_ALWAYS 7
-extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void* memset(void* dst, int val, int n);
 extern f32 gModelPhaseWrapPeriod;
 extern void shaderInit(u8* def, void* out, int arg, int n);

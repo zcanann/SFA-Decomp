@@ -23,11 +23,11 @@
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
+#include "main/dll/baddie_control_interface.h"
 
 STATIC_ASSERT(sizeof(ChukChukState) == 0x18);
 STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 
-extern int* gBaddieControlInterface;
 
 __declspec(section ".sdata2") f32 lbl_803E2EB0 = -100.0f;
 __declspec(section ".sdata2") f32 gScarabTargetStandoffDist = 45.0f;

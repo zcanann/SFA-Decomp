@@ -41,6 +41,10 @@
 #include "main/gameloop_api.h"
 #include "main/dll/dll_0016_screentransition.h"
 #include "track/intersect_card_api.h"
+#include "main/dll/dll_0059_dll59func0.h"
+#include "main/dll/dll_005C_dll5cfunc0.h"
+#include "main/dll/dll_005D_dll5dfunc0.h"
+#include "main/pad.h"
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
@@ -192,7 +196,6 @@ extern f32 lbl_803E06D4;
 const SaveGameDefaultPosition gSaveGameDefaultPosition = {
     570.6483764648438f, -82.0f, 15790.8203125f};
 
-extern void stopRumble2(void);
 extern void mapLoadByCoords(f32 x, f32 y, f32 z, int act);
 void loadMapForCurrentSaveGame(void);
 
@@ -1307,14 +1310,8 @@ extern void Carryable_stopCarrying();
 extern void Carryable_updateHeld();
 extern void Carryable_updateRenderState();
 extern void StaffCollision_func03();
-extern void dll_59_func00_nop();
-extern void dll_59_func01_nop();
 extern void dll_59_func03();
-extern void dll_5C_func00_nop();
-extern void dll_5C_func01_nop();
 extern void dll_5C_func03();
-extern void dll_5D_func00_nop();
-extern void dll_5D_func01_nop();
 extern void dll_5D_func03();
 extern void modgfx_func03();
 extern void screens_initialise();

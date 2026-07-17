@@ -111,6 +111,7 @@ typedef void (*PSVECScaleLegacyFn)(f32 scale, f32* src, f32* dst);
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/player_control_interface.h"
+#include "main/sky.h"
 
 /* forward declarations for graduated functions */
 void playerUpdateTail(int a, int b, f32* vec, int c, int mode, f32 angle);
@@ -3860,7 +3861,6 @@ int playerStateAimStaff(int obj, int state)
     return 0;
 }
 
-extern int getSkyColorFn_80088e30(int idx);
 extern void objAudioFn_8006edcc();
 
 extern u8 lbl_803DC6A8[8];

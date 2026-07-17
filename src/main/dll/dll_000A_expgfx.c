@@ -28,6 +28,9 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/render_mode_api.h"
+#include "main/dll/objfx.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
+#include "main/dll/viewfinder.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -167,7 +170,6 @@ ExpgfxWGPipe GXWGFifo : (0xCC008000);
 extern u64 FUN_80286830();
 extern ExpgfxBounds gExpgfxPoolBounds[];
 extern u8 lbl_803DD253;
-extern f32 lbl_803DF384;
 extern f32 lbl_803DF418;
 extern f64 gExpgfxU16ToDoubleBias;
 extern f32 gExpgfxYVelocityPositiveLimit;
@@ -182,9 +184,6 @@ extern f32 fn_80138F78(void* tricky);
 #define getSkyDirection          fn_800897D4
 extern u16 gExpgfxPhaseAngleA;
 extern u16 gExpgfxPhaseAngleB;
-extern f32 lbl_803DF38C;
-extern f32 lbl_803DF390;
-extern f32 lbl_803DF3B0;
 extern const f32 lbl_803DF3C8;
 extern const f32 lbl_803DF3CC;
 extern const f32 lbl_803DF3D0;
@@ -205,7 +204,6 @@ extern const f32 lbl_803DF408;
 extern const f32 lbl_803DF40C;
 extern const f32 gExpgfxU16ToUnitScale;
 extern void _textSetColor(int unused, int a, int b, int c, int d);
-extern void angleToVec2(int angle, f32* cosOut, f32* sinOut);
 extern void setupReflectionIndirectTev(u32 flag);
 extern void fn_80079180(void);
 extern void fn_8007D670(void);
@@ -213,11 +211,6 @@ extern void fn_8007D670(void);
 #define setupExpgfxRenderState fn_8007D670
 #define applyDepthModeOverrideViewport fn_8000F83C
 extern const f32 lbl_803DF414;
-extern f32 lbl_803DB790;
-extern const f32 lbl_803DF350;
-extern const f32 lbl_803DF354;
-extern const f32 lbl_803DF358;
-extern const f32 lbl_803DF35C;
 extern const f32 lbl_803DF41C;
 extern const f32 lbl_803DF420;
 extern const f32 lbl_803DF424;

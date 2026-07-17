@@ -18,6 +18,7 @@
 #include "main/obj_message.h"
 #include "main/object_api.h"
 #include "main/shader_api.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define DIMBOSSTONSIL_HIT_EFFECT_ID     0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
@@ -29,7 +30,6 @@
 /* particle-spawn flag word: bit 0x200000 | bit 0x1 */
 #define DIMBOSSTONSIL_HIT_FX_FLAGS 0x200001
 
-extern int* gBaddieControlInterface;
 extern f32 lbl_803DDB98;
 extern f32 lbl_803DDB9C;
 extern f32 lbl_803DDBA0;

@@ -43,6 +43,7 @@
 #include "main/objprint_character_api.h"
 #include "main/objprint_sound_api.h"
 #include "main/audio/sfx_play_int_u16_legacy_api.h"
+#include "track/intersect_api.h"
 
 u8 lbl_803DBE20[8] = {0, 0xDD, 0, 0xDE, 0, 0xE0, 0, 0};
 
@@ -171,7 +172,6 @@ extern void objSeqInitFn_80080078(void* p, int n);
 const GuardianMsg gCfGuardianHeadingTemplate = {7, 8, 7, 8}; /* active/idle heading-pair template (cfguardian_SeqFn) */
 extern int animatedObjGetSeqId(int* p);
 extern int cfguardian_updateMain();
-extern void normalize(f32* x, f32* y, f32* z);
 extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern f32 Vec_xzDistance(void* a, void* b);
 extern int gCfGuardianIdleMoveTable[]; /* per-quest-state idle move id (-1 = none) */

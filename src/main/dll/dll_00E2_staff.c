@@ -50,6 +50,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
+#include "main/rcp_dolphin_api.h"
 
 s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 #define STAFF_QUAKE_HIT_VOLUME_SLOT 17
@@ -1178,7 +1179,6 @@ int staff_getExtraSize(void)
 
 
 
-extern void* textureLoad(int texId, u8 flag);
 
 static inline void staff_initialiseBody(s16* p, int i)
 {

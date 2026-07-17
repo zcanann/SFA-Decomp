@@ -1,5 +1,6 @@
 #include "main/audio/snd3d_calc.h"
 #include "main/audio/synth_voice.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #pragma exceptions on
 
@@ -52,7 +53,6 @@ extern f32 lbl_803E78B8;
 extern f32 lbl_803E78BC;
 extern f32 lbl_803E78C0;
 
-extern double __frsqrte(double x);
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 

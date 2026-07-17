@@ -28,6 +28,7 @@
 #include "main/dll/dll_0015_save_settings.h"
 #include "main/dll/savegame.h"
 #include "track/intersect_card_api.h"
+#include "main/dll/dll_0057_cameramodetitle.h"
 
 u8 gTitleMenuPanelOpen;
 s8 gTitleMenuLoadDelay;
@@ -81,7 +82,6 @@ extern f32 lbl_803E1D18;
 
 #pragma dont_inline on
 
-extern float titleScreenGetCamProgress(void);
 extern void titleScreenFn_80130464(u8 v);
 
 extern void titleScreenFn_801368a4(u8 arg);

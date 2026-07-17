@@ -36,6 +36,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/player_control_interface.h"
+#include "main/dll/baddie_control_interface.h"
 
 /* object group this object belongs to */
 #define KALDACHOM_OBJGROUP 3
@@ -72,7 +73,6 @@ f32 gKaldachomMouthSpawnScratch;
 f32 gKaldachomDustSpawnScratch;
 extern void* gKaldaChomStateHandlersB[];
 extern void* gKaldaChomStateHandlersA[];
-extern int* gBaddieControlInterface;
 void* gKaldachomEffectResource;
 extern f32 lbl_803E3060;
 extern f32 lbl_803E307C;

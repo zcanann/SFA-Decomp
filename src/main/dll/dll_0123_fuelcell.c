@@ -18,10 +18,9 @@
 #include "main/frame_timing.h"
 #include "main/newclouds.h"
 #include "main/model.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 #define FUELCELL_OBJGROUP 0x4f
-extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
-extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 
 #define GX_BM_NONE 0
 #define GX_BM_BLEND 1

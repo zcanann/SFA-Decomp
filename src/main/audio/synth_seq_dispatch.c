@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
+#include "main/audio/inp_midi.h"
 
 #pragma exceptions on
 
@@ -153,9 +154,6 @@ extern u8 lbl_803DE224;
 extern int synthGetNextChannelEvent(u8 i);
 extern void synthInsertChannelEvent(int slot, int item);
 extern u8* synthReadVariablePair(u8* p, u16* tagOut, s16* valueOut);
-extern void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value);
-extern void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value);
-extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void synthStartHandleFromRequest(int request, u32* outHandle, u8 noLock);
 extern void synthFlushCallbacks(void);
 extern u32* synthAllocCallback(s32 triggerValue, u8 controllerIndex);

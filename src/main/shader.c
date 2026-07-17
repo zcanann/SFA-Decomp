@@ -69,6 +69,7 @@ extern u8 lbl_80386648[];
 extern const f32 gMapBlockWorldSize;
 
 #include "main/object.h"
+#include "track/intersect_api.h"
 
 int lbl_803DB620 = -1;
 s8 lbl_803DB624[8] = {0, -2, -1, 1, 2, 0, 0, 0};
@@ -1228,7 +1229,6 @@ extern u8 bEnableMotionBlur;
 extern int lbl_803DCE00;
 extern u8 lbl_803DCEBD;
 extern f32 gShaderDefaultTimeOfDay;
-extern void mapInitFn_8006fccc(void);
 void beginLoadingMap(void)
 {
     char* base;

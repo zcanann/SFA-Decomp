@@ -45,6 +45,7 @@
 #include "main/obj_message.h"
 #include "main/player_control_interface.h"
 #include "main/object_render.h"
+#include "main/frame_timing.h"
 
 /* object group this object belongs to */
 #define DLLCE_OBJGROUP 3
@@ -124,7 +125,6 @@ extern void* gChukChukMoveHandlers[];
 extern void* gChukChukCheckHandlers[];
 extern void* gIceBaddieStateHandlersB[];
 extern void* gIceBaddieStateHandlersA[];
-extern f32 timeDelta;
 
 
 

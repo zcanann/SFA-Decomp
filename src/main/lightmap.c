@@ -37,6 +37,7 @@
 #include "main/dll/dll_0000_gameui.h"
 #include "main/dll/dll_00E2_staff_api.h"
 #include "main/dll/savegame_env_api.h"
+#include "main/sky.h"
 
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
@@ -145,7 +146,6 @@ extern void* lbl_803DCE68;
 extern void GXClearVtxDesc(void);
 extern void GXSetVtxDesc(GXAttr attr, GXAttrType type);
 extern void GXBegin(GXPrimitive type, GXVtxFmt vtxfmt, u16 nverts);
-extern void envFxFn_80088884(void);
 extern void* gMinimapInterface;
 extern void* lbl_803DCAB0;
 extern s32 lbl_803DCE00;

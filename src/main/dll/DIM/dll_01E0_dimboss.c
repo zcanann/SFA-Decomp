@@ -39,6 +39,7 @@
 #include "main/frame_timing.h"
 #include "main/player_control_interface.h"
 #include "main/obj_group.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define DIMBOSS_OBJGROUP 3
 
@@ -78,7 +79,6 @@ extern void fn_801B9ECC(void);
 extern u32 gDIMbossSequenceFlags;
 extern f32 lbl_803E4C70;
 extern u32 lbl_802C2338[];
-extern int* gBaddieControlInterface;
 extern void* gDIMbossHitEffectResource;
 extern u8 lbl_803DDB84;
 extern f32 lbl_803E4BD8;

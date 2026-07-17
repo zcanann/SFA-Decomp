@@ -7,6 +7,7 @@
 #include "main/audio/synth_config.h"
 #include "main/audio/synth_job_queue.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/floorf.h"
 
 #pragma exceptions on
 
@@ -78,7 +79,6 @@ extern u32 fn_8026E9D0(u8 ch, u32 dt);
 extern int synthUpdateCallbacks(void);
 extern void synthFreeCallback(void* cb);
 extern void synthRecycleVoiceCallbacks(void* song);
-extern float floorf(float x);
 
 void synthSetStudioChannelScale(int value, u8 bank, u8 key);
 

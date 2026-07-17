@@ -32,6 +32,7 @@
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 #include "main/player_control_interface.h"
+#include "main/dll/baddie_control_interface.h"
 
 typedef struct GrimblePlacement
 {
@@ -43,7 +44,6 @@ typedef struct GrimblePlacement
 #define GRIMBLE_OBJGROUP    3
 #define DFROPENODE_OBJGROUP 0x17 /* DLL 0x175 dfropenode (path nodes) */
 
-extern int* gBaddieControlInterface;
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
 extern void* gGrimbleStateHandlersA[11];

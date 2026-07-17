@@ -29,6 +29,7 @@
 #include "main/dll/savegame_env_api.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/gx/GXDispList.h"
+#include "main/dll/modgfx.h"
 
 struct LoadedTextureEntry* gLoadedTextures;
 u16* gRcpTexIdRemap;
@@ -266,8 +267,6 @@ static void gxLoadObjectLights(GameObject* model, ModelLightStruct** lights);
 
 #define RCP_DISTORT_TEXTURE_ID 0x5dc
 
-extern u32 FUN_800033a8();
-extern u32 FUN_80017830();
 extern int FUN_8025a850();
 extern u32 GXSetBlendMode();
 extern u64 FUN_80286834();

@@ -68,6 +68,8 @@ int lbl_803DB42C = 0x16A;
 #include "main/fileio.h"
 #include "main/textrender_api.h"
 #include "main/object_render_legacy.h"
+#include "main/dll/dll_0011_screens.h"
+#include "main/voxmaps.h"
 
 f32 gGameLoopResetFadeOutTimer;
 void* lbl_803DCAFC;
@@ -763,7 +765,6 @@ u32 mainGetBit(int eventId)
     return result;
 }
 #pragma optimization_level 3
-extern void gameBitFn_800ea2e0(u8 id);
 
 void mainSetBits(int eventId, int value)
 {
@@ -1042,7 +1043,6 @@ int getGameState(void)
     return gameState;
 }
 
-extern void gameBitFn_800ea2e0(u8 id);
 #pragma peephole off
 
 void setTimeStop(int stop)
@@ -1113,7 +1113,6 @@ extern void viFn_8004a56c(int arg);
 extern void mapInitFn_8006fccc(void);
 
 extern void playerInitFuncPtrsEntry(void);
-extern void loadTaskTexts(void);
 
 extern int getDataFileSize(int id);
 
@@ -1344,7 +1343,6 @@ void gameUpdate(void)
 }
 
 
-extern void voxmaps_updateTimers(void);
 extern void debugPrintDraw(int a);
 extern void drawRect(f32 sx, f32 sy, int x, int y);
 

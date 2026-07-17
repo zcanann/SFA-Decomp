@@ -26,6 +26,7 @@
 #include "main/audio/sfx.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/dll/waterfx.h"
 
 typedef struct CfPrisonGuardMapData
 {
@@ -54,7 +55,6 @@ STATIC_ASSERT(sizeof(CfPrisonGuardState) == 0x3c);
 extern f32 lbl_803E4268;
 extern f32 lbl_803E4260;
 extern f32 lbl_803E4264;
-extern int waterfx_consumePendingImpactNearPoint(f32* vec, f32 r);
 
 /* CFPrisonGuard_SeqFn: drive the guard state machine - ramp/reset the
  * alarm on cues, bail when captured or freed, watch player distance and

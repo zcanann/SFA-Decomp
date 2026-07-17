@@ -36,6 +36,7 @@
 #include "main/obj_query.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "track/intersect_api.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance)                                                           \
     ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
@@ -91,7 +92,6 @@ extern void TitleScreenInit_initialise(void);
 extern void n_rareware_initialise(void);
 
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
-extern void normalize(f32* x, f32* y, f32* z);
 
 /* Animation-channel helpers implemented by objprint.c. */
 void objFn_8003acfc(GameObject* obj, int* types, int count, char* out);

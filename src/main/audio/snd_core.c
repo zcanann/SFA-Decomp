@@ -2,12 +2,12 @@
 #include "main/audio/hw_init.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/synth_config.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 #pragma exceptions on
 
 extern u8 gSynthInitialized;
 extern void IFFifoAlloc(void);
-extern double __frsqrte(double x);
 extern const float lbl_803E78C8;
 extern const double lbl_803E78D0;
 extern const double lbl_803E78D8;
