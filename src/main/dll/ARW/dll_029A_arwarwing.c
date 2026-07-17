@@ -158,6 +158,41 @@ enum
     ARWING_MODE_WARPOUT = 6
 };
 
+int gArwingPathSetupData[30] = {
+    0,           0,           0,           1103626240,  -1073741824, -1038090240, -1043857408, -1073741824,
+    -1038090240, 0,           0,           1110179840,  1095761920,  0,           -1049624576, -1051721728,
+    0,           -1049624576, 1102577664,  0,           -1041235968, -1044905984, 0,           -1041235968,
+    1095761920,  1097859072,  -1044381696, -1051721728, 1097859072,  -1044381696,
+};
+
+int sArwingPathName[] = {
+    1097859072, 1082130432, 1082130432, 1082130432, 1092616192,
+    1092616192, 1092616192, 1092616192, 1084227584, 1084227584,
+};
+
+f32 lbl_8032B4A8[30] = {
+    0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f,
+    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+};
+
+ObjectDescriptor gARWArwingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwarwing_initialise,
+    (ObjectDescriptorCallback)arwarwing_release,
+    NULL,
+    (ObjectDescriptorCallback)arwarwing_init,
+    (ObjectDescriptorCallback)arwarwing_update,
+    (ObjectDescriptorCallback)arwarwing_hitDetect,
+    (ObjectDescriptorCallback)arwarwing_render,
+    (ObjectDescriptorCallback)arwarwing_free,
+    (ObjectDescriptorCallback)arwarwing_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)arwarwing_getExtraSize,
+};
+
 GameObject* getArwing(void)
 {
     return gArwing;
@@ -1514,15 +1549,3 @@ void arwarwing_init(GameObject* obj)
     }
 }
 #pragma scheduling reset
-
-int gArwingPathSetupData[30] = {
-    0,           0,           0,           1103626240,  -1073741824, -1038090240, -1043857408, -1073741824,
-    -1038090240, 0,           0,           1110179840,  1095761920,  0,           -1049624576, -1051721728,
-    0,           -1049624576, 1102577664,  0,           -1041235968, -1044905984, 0,           -1041235968,
-    1095761920,  1097859072,  -1044381696, -1051721728, 1097859072,  -1044381696,
-};
-
-int sArwingPathName[] = {
-    1097859072, 1082130432, 1082130432, 1082130432, 1092616192,
-    1092616192, 1092616192, 1092616192, 1084227584, 1084227584,
-};
