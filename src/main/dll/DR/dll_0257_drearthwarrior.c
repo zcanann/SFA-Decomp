@@ -246,6 +246,12 @@ typedef struct
     f32 m[4][4];
 } EWColorTbl;
 
+typedef struct
+{
+    int* modelIds;
+    s32 count;
+} EWModelChainEntry;
+
 #define PAD_BUTTON_A 0x100
 
 #define DREARTHWARRIOR_OBJGROUP           0xa
@@ -292,7 +298,7 @@ extern u8 gDREarthWarriorRowIndices[];
 extern EWPathRange lbl_802C2CA8;
 extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
-extern char gEarthWarriorTailChainDesc;
+extern EWModelChainEntry* gEarthWarriorTailChainDesc;
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
 extern void fn_802BC788(GameObject*);
 
@@ -1537,6 +1543,9 @@ u8 gDREarthWarriorRowIndices[960] = {
 /* --- .data reconstruction (0x803351F8-0x803352AC) --- */
 
 int lbl_8033566C[4] = {0x17, 0x18, 0x19, 0x1A};
+
+EWModelChainEntry lbl_803DC760 = {lbl_8033566C, 4};
+EWModelChainEntry* gEarthWarriorTailChainDesc = &lbl_803DC760;
 
 void* gDR_EarthWarriorObjDescriptor[29] = {(void*)0x00000000,
                                            (void*)0x00000000,
