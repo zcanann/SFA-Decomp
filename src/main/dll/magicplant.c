@@ -58,9 +58,6 @@ extern f32 lbl_803E28C0;
 extern f32 lbl_803E28C4;
 extern f32 lbl_803E28C8;
 extern f32 lbl_803E28CC;
-extern f32 lbl_803E28A0;
-extern f32 lbl_803E28A4;
-extern f32 lbl_803E28A8;
 extern f32 lbl_803E28F4;
 extern f32 lbl_803E290C;
 extern f32 lbl_803E2910;
@@ -91,39 +88,6 @@ extern void fn_8014CF7C(int obj, int state, f32 f1, f32 f2, int p3, int p4);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
-void mikaladon_init(GameObject* obj, int state)
-{
-    f32 zero;
-    f32 lblA;
-    f32 a, b;
-
-    zero = lbl_803E286C;
-    ((BaddieState*)state)->speedScale = zero;
-    ((BaddieState*)state)->unk2E4 = 1;
-    ((BaddieState*)state)->unk308 = lbl_803E28A0;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E28A4;
-    lblA = lbl_803E2894;
-    ((BaddieState*)state)->unk304 = lblA;
-    ((BaddieState*)state)->unk320 = 1;
-    *(f32*)&((BaddieState*)state)->eventFlags = lblA;
-    ((BaddieState*)state)->unk321 = 3;
-    ((BaddieState*)state)->unk318 = lblA;
-    ((BaddieState*)state)->unk322 = 1;
-    ((BaddieState*)state)->unk31C = lblA;
-    *(f32*)(state + 0x324) = obj->anim.localPosX;
-    *(f32*)(state + 0x328) = obj->anim.localPosY;
-    *(f32*)(state + 0x32c) = obj->anim.localPosZ;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->inWhirlpoolGroup = 0;
-    *(s16*)(state + 0x338) = 0;
-    *(f32*)(state + 0x330) = zero;
-    *(f32*)(state + 0x334) = zero;
-    ((BaddieState*)state)->pathStep = lbl_803E28A8;
-
-    fn_80293018(*(u16*)(state + 0x338), &a, &b);
-    obj->anim.localPosX = a * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
-    obj->anim.localPosZ = b * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
-}
 
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
 {

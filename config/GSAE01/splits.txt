@@ -1352,8 +1352,12 @@ main/dll/seqobj11e.c:
 	.sdata      start:0x803DBCA8 end:0x803DBCB8
 	.sdata2     start:0x803E27F8 end:0x803E2898
 
+main/dll/mikaladon.c:
+	.text       start:0x80152EC0 end:0x80152FA8
+	.sdata2     start:0x803E28A0 end:0x803E28B0
+
 main/dll/magicplant.c:
-	.text       start:0x80152EC0 end:0x80153CF8
+	.text       start:0x80152FA8 end:0x80153CF8
 	.data       start:0x8031F2D8 end:0x8031F2F8
 	.sdata      start:0x803DBCB8 end:0x803DBCD0
 
