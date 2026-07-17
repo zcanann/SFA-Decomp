@@ -16,7 +16,6 @@
 #include "main/object_api.h"
 #include "main/texture.h"
 
-#pragma dont_inline on
 void expgfx_updateResourceEntries(int unused)
 {
     ExpgfxResourceEntry* entry;
@@ -42,7 +41,6 @@ void expgfx_updateResourceEntries(int unused)
     }
 }
 
-#pragma dont_inline reset
 int expgfx_acquireResourceEntry(int resourceId)
 {
     int i;
