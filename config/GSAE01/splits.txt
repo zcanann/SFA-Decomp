@@ -4779,6 +4779,7 @@ main/dll/DIM/dll_0256_dimsnowhorn1.c:
 	.text       start:0x802B9780 end:0x802BC0D0
 	.data       start:0x80335030 end:0x803351A8
 	.bss        start:0x803DB0F0 end:0x803DB160
+	.sdata2     start:0x803E8230 end:0x803E82C0
 
 main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
 	.text       start:0x802BC0D0 end:0x802BC7C0

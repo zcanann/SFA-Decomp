@@ -370,8 +370,74 @@ three genuine bugs were buried under ~600 lines of phantom diff. Resolve pool at
 `.sdata2` symbols (`gKTRexLaneThreatHalfWidth` = `POOL+0x8C`) to pool offsets on both sides too, or
 byte-identical functions read as broken.
 
+## ★ NAMED CONST DEFS sit at their DECLARATION position — and need EXTERNAL linkage to survive
+
+A file-scope `const` **definition** is not a codegen anon: it is data the front end emits, and it is
+**not** deduplicated against the literal pool (collectible carries `40400000` twice — once as
+`sCollectiblePathWord[0]`, once as an anon `3.0f`). Two rules govern it, both probed on dimsnowhorn1:
+
+1. **Position = the declaration's position in the file**, interleaved among the function groups exactly
+   like a group of its own. Defs are **not** bucketed to the head of the pool. collectible's defs lead
+   its pool only because they are declared above every function; a def written *below* the last
+   function pools *after* the last function's group.
+2. **An unreferenced `static const` is dropped entirely** — MWCC emits nothing. To reproduce a def
+   that no `.text` references, it must have **external linkage** (`const f32 gFoo = 0.0f;`), which the
+   front end must emit whether or not anything uses it. (`__declspec(section ".sdata2")` is equivalent
+   here and unnecessary — plain external-linkage `const` already lands in `.sdata2`.)
+
+★**THE DIAGNOSTIC — a duplicate value is PROOF of a def.** Literals dedup TU-wide, first creator wins,
+so **one value can never occupy two anon slots**. An atom whose bytes equal an atom already in the
+pool is therefore *not* a literal and *not* a ghost's literal: it is a **const def**, and its slot
+tells you which line of the file declared it. Combined with rule 2, an atom that duplicates an earlier
+value **and has zero users tree-wide** is an external-linkage `const` whose only use was
+const-propagated away — exactly the "bare `const` re-folds and emits TWO atoms" row of the
+literal-vs-named-const table, seen from the pool side.
+
+### Worked confirmation — dimsnowhorn1 (`dll_0256_dimsnowhorn1.c`, pool `803E8230..82C0`), 2026-07-17
+The pool is bracketed by a def at each end and holds one ghost in the middle:
+
+```
+803E8230  01010101                  <- DEF: static const u32 sDIMSnowHorn1PathFlags[1] (declared at top)
+803E8234  0.0 │ 8238 0.013 │ 823C 0.9        <- stateHandler0B
+803E8240  ... 826C │ 8270 SBIAS               <- stateHandler0A (+ its bias, appended after)
+...
+803E82A4  0.14 │ 82A8 -4.0                    <- fn_802BB4B4
+803E82AC  -30.0 │ 82B0 -20.0                  <- GHOST: DIMSnowHorn1_updateOverridePos
+803E82B4  10000.0                             <- DIMSnowHorn1_update
+803E82B8  0.17                                <- DIMSnowHorn1_init
+803E82BC  0.0                                 <- DEF: const f32 gDIMSnowHorn1ZeroOffset (declared at BOTTOM)
+```
+- The **head** atom `01010101` is non-float (`lwz`+`stw` to a stack slot, then `addi rN,r1,8` passed as
+  an out-param — a memory copy, not an `lfs`). It is first-used by `init`, the second-to-last
+  function, yet pools at the head. It is **not** a ghost's local-array image: MWCC will not inline a
+  helper whose local's address escapes into a call, so such a ghost would stay in `.text`. It is a
+  file-scope def, and `init` simply reads it (`int stk = sDIMSnowHorn1PathFlags[0];`) — the
+  `collectible` spelling.
+- The **tail** `0.0` duplicates `803E8234` ⇒ by the diagnostic above it cannot be a literal ⇒ def,
+  declared below `initialise`, external linkage (a `static const` there compiled to nothing).
+- The **ghost** is forced by a rule-1 inversion that no spelling of `update` can reach: `10000.0f`
+  (an `if` condition at `update+0x270`) is *emitted* long before `-30.0f`/`-20.0f` (arguments of a
+  `Matrix_TransformPoint` at `update+0x59c`), yet pools *after* them. Separate statements, so rules
+  3/4 do not apply and rule 1 demands source order — the only fit is that the `-30/-20` statement
+  belongs to an **earlier group**. Hoisting the trailing model-override block (`v`/`matrix` locals +
+  `setMatrixFromObjectPos` + `Matrix_TransformPoint`) into a `static` defined between `fn_802BB4B4`
+  and `update` gives `update` the group `{10000}` and lands the pool byte-exact on the first compile —
+  the helper's address-taken locals are no obstacle here because they never escape *its* frame.
+
+144-byte pool byte-exact, all 39 retail functions byte-exact, `.text` unchanged.
+
 ## Landed
 
+- **dimsnowhorn1** (`dll_0256_dimsnowhorn1.c`), 2026-07-17: 31 `extern f32 lbl_803E82*` /
+  `gDIMSnowHorn1Gravity` shims -> literals; recover the pool's two **const defs** (head
+  `static const u32 sDIMSnowHorn1PathFlags[1] = {0x01010101}` read at `[0]` by `init`, tail
+  external-linkage `const f32 gDIMSnowHorn1ZeroOffset = 0.0f` below `initialise`) and one **ghost**,
+  `DIMSnowHorn1_updateOverridePos` (the trailing `setMatrixFromObjectPos` +
+  `Matrix_TransformPoint(matrix, 0.0f, -30.0f, -20.0f, ...)` block, hoisted above `update`; it owns
+  `{-30, -20}` and leaves `update` holding `{10000}`). Claim `.sdata2 [0x803E8230, 0x803E82C0)`; pool
+  byte-exact (144 B), all 39 retail functions byte-exact. Gated in an origin clean-room on
+  `d34db1bf46`: `main.dol: OK`, complete_units **851 -> 852**, matched_data +144 B, complete_code
+  +10576, **matched_code FLAT**.
 - **ktrex** (`dll_0250_ktrex.c`), 2026-07-17: recover **two** ghosts —
   `ktrex_getLaneMaskForTimer` (owns the `u8[4]` lane-mask init image at the pool head) and
   `ktrex_hasLaneLerpOvershot` (owns the single `0.1f` atom, hand-inlined in `stateHandlerA02`) — plus
