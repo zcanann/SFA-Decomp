@@ -13,7 +13,7 @@ fi
 for i in $(seq 1 240); do
   if mkdir "$LOCKDIR" 2>/dev/null; then
     trap 'rmdir "$LOCKDIR" 2>/dev/null' EXIT
-    git add -- "$@" && git commit -q -m "$MSG"
+    git add -- "$@" && git commit -q -m "$MSG" -- "$@"
     rc=$?
     rmdir "$LOCKDIR" 2>/dev/null; trap - EXIT
     exit $rc
