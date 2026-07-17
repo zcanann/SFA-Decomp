@@ -5053,10 +5053,10 @@ void waitNextFrame(void)
         oneOverTimeDelta = lbl_803DEA78;
     }
     frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
-    lbl_803DB411 = frames;
-    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)lbl_803DB411;
     framesThisStep = frames;
-    if (lbl_803DB411 < 1)
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)framesThisStep;
+    lbl_803DB411 = frames;
+    if (framesThisStep < 1)
     {
         framesThisStep = 1;
     }
