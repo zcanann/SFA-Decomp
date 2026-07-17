@@ -1082,6 +1082,7 @@ config.libs = [
             Object(Matching, "main/dll/dll_bf.c"),
             Object(Matching, "main/dll/dll_c4.c"),
             Object(NonMatching, "main/dll/CAM/camcontrol.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/CAM/cammodes.c", cflags=cflags_dll_noopt),
             Object(Matching, "main/dll/dll_53.c"),
             Object(NonMatching, "main/dll/camshipbattle5c.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0047_cameramodeteststrength.c", cflags=cflags_dll_noopt),

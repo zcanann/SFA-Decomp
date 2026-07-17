@@ -988,9 +988,12 @@ main/dll/dll_bc.c:
 
 main/dll/CAM/camcontrol.c:
 	.text       start:0x8010224C end:0x80103524
-	.data       start:0x80319B14 end:0x80319CB4
+	.data       start:0x80319B14 end:0x80319B54
 	.bss        start:0x803A4228 end:0x803A43C0
 	.sbss       start:0x803DD4B8 end:0x803DD528
+
+main/dll/CAM/cammodes.c:
+	.data       start:0x80319B58 end:0x80319CB4
 
 main/dll/cutcam.c:
 	.text       start:0x80103524 end:0x801046F4
