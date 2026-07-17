@@ -437,7 +437,7 @@ void fn_80157CDC(int obj, int state)
     } CrawlerDescE;
     CrawlerDescE* d = (CrawlerDescE*)gCrawlerDescriptorTable;
     CrawlerSubDesc* sub;
-    CrawlerSubDesc* entry = d[((BaddieState*)state)->userData].p;
+    CrawlerSubDesc* entry = d[((BaddieState*)state)->inWhirlpoolGroup].p;
     u8 i;
 
     gCrawlerHitSfxTimer = gCrawlerHitSfxTimer - timeDelta;
@@ -511,7 +511,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
     } CrawlerDesc;
     u8 idx;
     CrawlerDesc* d = (CrawlerDesc*)gCrawlerDescriptorTable;
-    CrawlerSeq16* tbl = d[(idx = ((BaddieState*)state)->userData)].seq;
+    CrawlerSeq16* tbl = d[(idx = ((BaddieState*)state)->inWhirlpoolGroup)].seq;
 
     if (cmd == 0xe)
     {
@@ -563,7 +563,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
     }
     ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x40;
     ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags & ~0x40LL;
-    if (cmd == 0x10 && ((BaddieState*)state)->userData != 0)
+    if (cmd == 0x10 && ((BaddieState*)state)->inWhirlpoolGroup != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x20;
         return;
@@ -572,7 +572,7 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
     if (((FCVars*)state)->reactStep != 0)
     {
         u8 step;
-        if (((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             step = 4;
         }
@@ -615,23 +615,23 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
         {
             ((BaddieState*)state)->hitCounter = ((BaddieState*)state)->hitCounter - damage;
         }
-        if (((BaddieState*)state)->hitCounter == 0 && ((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->hitCounter == 0 && ((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             crawler_checkNearbyActive((int)obj, state);
         }
         return;
     }
 
-    if ((((BaddieState*)state)->userData == 0 && cmd == 0x11 &&
+    if ((((BaddieState*)state)->inWhirlpoolGroup == 0 && cmd == 0x11 &&
          mainGetBit(GAMEBIT_STAFF_ABILITY_SUPER_QUAKE) != 0) ||
-        ((BaddieState*)state)->userData == 1)
+        ((BaddieState*)state)->inWhirlpoolGroup == 1)
     {
         u8 v;
         Baddie_SetMove((int*)obj, state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
         ((FCVars*)state)->flagsC = tbl[1].flagC;
         (obj)->hitVolumeIndex = ((FCVars*)state)->flagsC & 1;
         ((FCVars*)state)->reactStep = tbl[1].next9;
-        v = ((BaddieState*)state)->userData;
+        v = ((BaddieState*)state)->inWhirlpoolGroup;
         if (v == 0)
         {
             ((FCVars*)state)->emergeTimer = 6.0f * (f32)((FCVars*)state)->hitCountScalar;
@@ -721,10 +721,10 @@ void crawler_onHit(GameObject* obj, u8* state, u8* attacker, int cmd, int p5, in
 void crawler_updateC(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
-    u8* t8 = d[((BaddieState*)state)->userData].tbl8;
-    u8* t0 = d[((BaddieState*)state)->userData].tbl0;
-    CrawlerSeq16* seq = d[((BaddieState*)state)->userData].seq;
-    u8* tC = d[((BaddieState*)state)->userData].tblC;
+    u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
+    u8* t0 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl0;
+    CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
+    u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
     RomCurveWalker* base = *(RomCurveWalker**)state;
     f32 scale = 1.0f;
     f32 cap;
@@ -745,7 +745,7 @@ void crawler_updateC(s16* obj, u8* state)
             ((BaddieState*)state)->controlFlags =
                 ((BaddieState*)state)->controlFlags & ~(u64)BADDIE_CONTROL_PATH_FOLLOW;
         }
-        if (((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             crawler_checkNearbyActive((int)obj, state);
         }
@@ -896,7 +896,7 @@ void crawler_updateC(s16* obj, u8* state)
                         ((FCVars*)state)->flagsD = ((FCVars*)state)->flagsD & ~0x18;
                         {
                             f32 v = ((FCVars*)state)->pathSpeed;
-                            int j = ((BaddieState*)state)->userData * 0xc;
+                            int j = ((BaddieState*)state)->inWhirlpoolGroup * 0xc;
                             if (v > *(f32*)((int)gCrawlerSpeedThresholds + j))
                             {
                                 ((FCVars*)state)->moveStartFlags = 1;
@@ -945,12 +945,12 @@ void crawler_updateC(s16* obj, u8* state)
 void crawler_updateB(s16* obj, u8* state)
 {
     CrawlerDescriptor* d = (CrawlerDescriptor*)gCrawlerDescriptorTable;
-    u8* t10 = d[((BaddieState*)state)->userData].tbl10;
-    u8* t8 = d[((BaddieState*)state)->userData].tbl8;
-    u8* tC = d[((BaddieState*)state)->userData].tblC;
-    CrawlerSeq16* seq = d[((BaddieState*)state)->userData].seq;
-    u8* t4 = d[((BaddieState*)state)->userData].tbl4;
-    u8* t18 = d[((BaddieState*)state)->userData].tbl18;
+    u8* t10 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl10;
+    u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl8;
+    u8* tC = d[((BaddieState*)state)->inWhirlpoolGroup].tblC;
+    CrawlerSeq16* seq = d[((BaddieState*)state)->inWhirlpoolGroup].seq;
+    u8* t4 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl4;
+    u8* t18 = d[((BaddieState*)state)->inWhirlpoolGroup].tbl18;
     f32 cap;
     int count;
     int i;
@@ -964,7 +964,7 @@ void crawler_updateB(s16* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
-        if (((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
@@ -1169,10 +1169,10 @@ void crawler_update(int* obj, u8* state)
         u8 pad2[4];
     } CrawlerDescL;
     CrawlerDescL* d = (CrawlerDescL*)gCrawlerDescriptorTable;
-    CrawlerSeq12* t9 = d[((BaddieState*)state)->userData].t10;
-    u8* t8 = d[((BaddieState*)state)->userData].t18;
-    u8* t7 = d[((BaddieState*)state)->userData].tC;
-    CrawlerSeq16* t6 = d[((BaddieState*)state)->userData].t14;
+    CrawlerSeq12* t9 = d[((BaddieState*)state)->inWhirlpoolGroup].t10;
+    u8* t8 = d[((BaddieState*)state)->inWhirlpoolGroup].t18;
+    u8* t7 = d[((BaddieState*)state)->inWhirlpoolGroup].tC;
+    CrawlerSeq16* t6 = d[((BaddieState*)state)->inWhirlpoolGroup].t14;
     f32 cap;
     int i;
     u8* p;
@@ -1187,7 +1187,7 @@ void crawler_update(int* obj, u8* state)
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
-        if (((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->inWhirlpoolGroup == 0)
         {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
