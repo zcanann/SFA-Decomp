@@ -495,7 +495,6 @@ void quakeSpellFn_8016cee8(int* obj, GameObject* player)
         }
     }
 }
-#pragma dont_inline on
 #pragma opt_common_subs reset
 void staffSetGlow(GameObject* obj, u8 attackType, u8 enable)
 {
@@ -503,7 +502,6 @@ void staffSetGlow(GameObject* obj, u8 attackType, u8 enable)
     ((StaffState*)state)->glowAttackType = attackType;
     ((StaffState*)state)->glowEnable = enable;
 }
-#pragma dont_inline reset
 
 extern u8 gStaffQuakeSpellState[0x28];
 
