@@ -87,8 +87,6 @@ void mmFreeDeferred(void* p);
 void mmFree(void* p);
 void* mmAlloc(int size, int type, int flag);
 
-#pragma dont_inline off
-
 void memcpyToCache(void* dst, void* src, u32 count)
 {
     if (gAttractMovieState != 4 && gAttractMovieState != 0)
@@ -361,8 +359,6 @@ int roundUpTo32(int x)
     }
     return x;
 }
-
-#pragma dont_inline off
 
 #pragma dont_inline on
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int itemTag, int tag)
@@ -874,8 +870,6 @@ void texFlagFn_80023cbc(int v)
 {
     lbl_803DCB10 = v;
 }
-#pragma dont_inline off
-
 void* mmAlloc(int size, int type, int flag)
 {
     void* result;
