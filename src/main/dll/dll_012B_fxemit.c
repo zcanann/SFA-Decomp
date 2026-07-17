@@ -54,9 +54,6 @@ __declspec(section ".sdata2") f32 lbl_803E3E48 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E3E4C = 0.0f;
 #pragma explicit_zero_data off
 __declspec(section ".sdata2") f32 lbl_803E3E50 = 0.1f;
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3E54 = 0.0f;
-#pragma explicit_zero_data off
 
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg)                                                         \
     (*gPartfxInterface)->spawnObject((void*)(obj), id, data, flags, model, (void*)(arg))
