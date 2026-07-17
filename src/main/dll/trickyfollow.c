@@ -810,10 +810,9 @@ state_selected:
         dir = route->reverse;
         if (((dir == 0) && (route->atSegmentEnd != 0)) || ((dir != 0 && (route->atSegmentEnd == 0))))
         {
-            u8* nextRouteNode = trickySelectRouteEntry(state, route->nodeA4, dir & 0xff);
-            if (nextRouteNode != 0)
+            if ((node = trickySelectRouteEntry(state, route->nodeA4, dir & 0xff)) != 0)
             {
-                curveFn_800da23c(route, nextRouteNode);
+                curveFn_800da23c(route, node);
                 type = *(s8*)((u8*)route->node9C + 0x1a);
                 switch (type)
                 {
@@ -1024,6 +1023,7 @@ state_selected:
         {
             f32 dx;
             f32 dz;
+            f32 arcCoefficient;
             TrickyJumpArc* arc = (TrickyJumpArc*)(state + 0x64);
             node = route->nodeA0;
             dx = ((GameObject*)node)->anim.rootMotionScale - ((GameObject*)obj)->anim.worldPosX;
@@ -1039,9 +1039,10 @@ state_selected:
             arc->landX = ((GameObject*)node)->anim.rootMotionScale;
             arc->landZ = ((GameObject*)node)->anim.localPosY;
             k = arc->duration;
-            arc->riseCoeff = -(gTrickyFollowArcCoefficient * k * k -
+            arcCoefficient = gTrickyFollowArcCoefficient * k;
+            arc->riseCoeff = -(arcCoefficient * k -
                                (((GameObject*)node)->anim.localPosX - ((GameObject*)obj)->anim.worldPosY)) /
-                             k;
+                              k;
             objAnimFn_8013a3f0((int)obj, 0x16, v, 0x4000000);
             ((TrickyState*)state)->arcMoveProgress = arc->time / arc->duration;
             ((TrickyState*)state)->speed = lbl_803E24A4;
