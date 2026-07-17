@@ -228,10 +228,11 @@ void fn_80095164(WaterParticle* s)
 
 void waterfx_drawFn_800953fc(void)
 {
-    int k;
-    int j;
-    int i;
     int m;
+    f32* pos;
+    int i;
+    int j;
+    int k;
     void* dl;
     u8 a[1];
 
@@ -244,10 +245,13 @@ void waterfx_drawFn_800953fc(void)
         {
             if (i == 0)
             {
-                f32* pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
-                f32 ang = gWaterfxPi * (f32)(j * 2) / lbl_803DF314;
-                f32 sv = fn_802942EC(ang);
-                f32 cv = fn_80293F7C(ang);
+                f32 ang;
+                f32 sv;
+                f32 cv;
+                pos = (f32*)((u8*)gWaterfxSplashPosArray + j * 12);
+                ang = gWaterfxPi * (f32)(j * 2) / lbl_803DF314;
+                sv = fn_802942EC(ang);
+                cv = fn_80293F7C(ang);
                 pos[0] = sv;
                 pos[1] = lbl_803DF300;
                 pos[2] = cv;
