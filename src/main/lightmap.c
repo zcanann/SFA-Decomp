@@ -152,34 +152,36 @@ extern s32 lbl_803DCE00;
 typedef union
 {
     u8 u8;
-    s16 s16;
     u16 u16;
     u32 u32;
+    s8 s8;
+    s16 s16;
+    s32 s32;
     f32 f32;
-} WGPipe;
+} PPCWGPipe;
 
-WGPipe wgfifo : (0xCC008000);
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 void renderShadowType3(u8* obj, u32 b, s32 offset);
 static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z)
 {
-    wgfifo.s16 = x;
-    wgfifo.s16 = y;
-    wgfifo.s16 = z;
+    GXWGFifo.s16 = x;
+    GXWGFifo.s16 = y;
+    GXWGFifo.s16 = z;
 }
 static inline void GXColor4u8(const u8 r, const u8 g, const u8 b, const u8 a)
 {
-    wgfifo.u8 = r;
-    wgfifo.u8 = g;
-    wgfifo.u8 = b;
-    wgfifo.u8 = a;
+    GXWGFifo.u8 = r;
+    GXWGFifo.u8 = g;
+    GXWGFifo.u8 = b;
+    GXWGFifo.u8 = a;
 }
 static inline void GXTexCoord2s16(const s16 s, const s16 t)
 {
-    wgfifo.s16 = s;
-    wgfifo.s16 = t;
+    GXWGFifo.s16 = s;
+    GXWGFifo.s16 = t;
 }
-static inline void GXPosition1x8(const u8 x) { wgfifo.u8 = x; }
+static inline void GXPosition1x8(const u8 x) { GXWGFifo.u8 = x; }
 
 #pragma opt_propagation off
 #pragma peephole off
@@ -1299,10 +1301,24 @@ void setPendingMapLoad(int v)
     else renderFlags &= ~RENDERFLAG_PENDING_MAP_LOAD;
 }
 #pragma peephole on
+typedef struct LightmapVertex
+{
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 pad;
+    s16 s;
+    s16 t;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} LightmapVertex;
+
 void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
 {
-    s16* posPtr;
-    int clrPtr, texPtr;
+    const LightmapVertex* vertices = (const LightmapVertex*)vertexBase;
+    const LightmapVertex* vertex;
     int tri, vtx;
 
     /* Emit triCount triangles as GX_TRIANGLES; each vertex is 16 bytes:
@@ -1319,13 +1335,12 @@ void drawFn_8005cf8c(int vertexBase, const u8* triList, int triCount)
         for (vtx = 0; vtx < 3; vtx++)
         {
             GXPosition1x8(0);
-            posPtr = (s16*)(vertexBase + list[vtx + 1] * 0x10);
-            GXPosition3s16(posPtr[0], posPtr[1], posPtr[2]);
-            clrPtr = vertexBase + list[vtx + 1] * 0x10;
-            GXColor4u8(*(u8*)(clrPtr + 0xc), *(u8*)(clrPtr + 0xd), *(u8*)(clrPtr + 0xe),
-                       *(u8*)(clrPtr + 0xf));
-            texPtr = vertexBase + list[vtx + 1] * 0x10;
-            GXTexCoord2s16(*(s16*)(texPtr + 8), *(s16*)(texPtr + 10));
+            vertex = &vertices[list[vtx + 1]];
+            GXPosition3s16(vertex->x, vertex->y, vertex->z);
+            vertex = &vertices[list[vtx + 1]];
+            GXColor4u8(vertex->r, vertex->g, vertex->b, vertex->a);
+            vertex = &vertices[list[vtx + 1]];
+            GXTexCoord2s16(vertex->s, vertex->t);
         }
         triList = triList + 0x10;
     }
