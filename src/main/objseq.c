@@ -126,6 +126,10 @@ typedef struct ObjSeqPlacement
     f32 baseX;
     f32 groundOffset;
     f32 baseZ;
+    u8 pad14[8];
+    s16 targetType;
+    u8 pad1E;
+    s8 slot;
 } ObjSeqPlacement;
 
 extern void ObjSeq_onMapSetup(void);
@@ -419,6 +423,37 @@ typedef struct SeqRunTables
     u8 pad3[0xb0];
     s16 modes[0x55];
 } SeqRunTables;
+
+typedef struct ObjSeqQueuedBgCmd
+{
+    s16 index;
+    s16 xrot;
+    s16 yrot;
+} ObjSeqQueuedBgCmd;
+
+typedef struct ObjSeqRunBgState
+{
+    u8 pad0000[0x2A80];
+    ObjSeqQueuedBgCmd queuedCmds[0x1E];
+    u8 pad2B34[0x338C - 0x2B34];
+    u8 slotMarks[0x55];
+    u8 pad33E1[0x3740 - 0x33E1];
+    f32 slotDistances[0x55];
+    f32 previousSlotDistances[0x55];
+    s8 pendingFrames[0x55];
+    u8 pad3A3D[3];
+    u8 slotStates[0x55];
+    u8 pad3A95[0x3B44 - 0x3A95];
+    s8 boolFlags[0x58];
+    s8 conditionFlags[0x58];
+    u8 slotResults[0x58];
+    u8 previousSlotResults[0x58];
+} ObjSeqRunBgState;
+
+STATIC_ASSERT(offsetof(ObjSeqRunBgState, slotMarks) == 0x338C);
+STATIC_ASSERT(offsetof(ObjSeqRunBgState, pendingFrames) == 0x39E8);
+STATIC_ASSERT(offsetof(ObjSeqRunBgState, boolFlags) == 0x3B44);
+STATIC_ASSERT(offsetof(ObjSeqRunBgState, slotResults) == 0x3BF4);
 
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState* out, RomCurveNode* curve, RomCurveNode* next, f32 t,
                                           int flag);
@@ -1480,23 +1515,23 @@ void ObjSeq_runBgCmds(void)
 {
     int ok;
     int keepCount;
-    void** objects;
+    GameObject** objects;
     int matchCount;
-    void** objPtr;
+    GameObject** objPtr;
     u8* base;
-    u8* cmd;
-    s16* keepWalk;
-    s16* keepBase;
+    ObjSeqRunBgState* state;
+    ObjSeqQueuedBgCmd* cmd;
+    ObjSeqQueuedBgCmd* keepWalk;
+    ObjSeqQueuedBgCmd* keepBase;
     int count;
     int i;
     int index;
     int xrot;
-    u8* model;
-    u8* seqp;
-    u8* candidate;
-    u8** mp;
+    ObjSeqPlacement* model;
+    ObjSeqState* seqp;
+    GameObject* candidate;
+    GameObject** mp;
     int n;
-    int k;
     s8* pending;
     u8* results;
     u8* actions;
@@ -1504,24 +1539,25 @@ void ObjSeq_runBgCmds(void)
     f32* frames;
     u8* marks;
     s8 frames8;
-    u8* matched[0x28];
-    s16 keepBuf[0x5a];
+    GameObject* matched[0x28];
+    ObjSeqQueuedBgCmd keepBuf[0x1e];
     int objectCount;
     int unused;
 
     base = lbl_80396918;
-    objects = (void**)ObjList_GetObjects(&unused, &objectCount);
+    state = (ObjSeqRunBgState*)base;
+    objects = (GameObject**)ObjList_GetObjects(&unused, &objectCount);
     if (lbl_803DD060 != lbl_803DD062)
     {
         lbl_803DD062 = lbl_803DD060;
     }
 
-    pending = (s8*)(base + 0x39e8);
-    results = base + 0x3bf4;
-    actions = base + 0x3c4c;
-    dists = (f32*)(base + 0x3740);
-    frames = (f32*)(base + 0x3894);
-    marks = base + 0x338c;
+    pending = state->pendingFrames;
+    results = state->slotResults;
+    actions = state->previousSlotResults;
+    dists = state->slotDistances;
+    frames = state->previousSlotDistances;
+    marks = state->slotMarks;
     frames8 = framesThisStep;
 
     for (i = 0; i < 0x55; i++)
@@ -1553,40 +1589,39 @@ void ObjSeq_runBgCmds(void)
 
     count = gObjSeqBgCmdCount;
     keepCount = 0;
-    cmd = base + count * 6;
-    cmd += 0x2a80;
+    cmd = (ObjSeqQueuedBgCmd*)(base + 0x2a80) + count;
     keepBase = keepBuf;
     keepWalk = keepBase;
     while (count > 0)
     {
-        cmd -= 6;
+        cmd--;
         count--;
-        index = *(s16*)cmd;
-        xrot = *(s16*)(cmd + 2);
+        index = cmd->index;
+        xrot = cmd->xrot;
         i = 0;
-        base[index + 0x3b44] = 0;
-        base[index + 0x3b9c] = 0;
-        base[index + 0x3a40] = 0;
+        state->boolFlags[index] = 0;
+        state->conditionFlags[index] = 0;
+        state->slotStates[index] = 0;
         matchCount = 0;
         ok = 1;
         objPtr = objects;
         for (; i < objectCount; i++)
         {
             candidate = *objPtr;
-            if (((GameObject*)candidate)->anim.classId == 0x10)
+            if (candidate->anim.classId == 0x10)
             {
-                model = *(u8**)(candidate + 0x4c);
-                seqp = *(u8**)(candidate + 0xb8);
-                if (model != NULL && (s8)model[0x1f] == index)
+                model = (ObjSeqPlacement*)candidate->anim.placementData;
+                seqp = candidate->extra;
+                if (model != NULL && model->slot == index)
                 {
-                    if (*(s16*)(model + 0x1c) >= 4 && ObjSeq_FindTargetObject(candidate) == NULL)
+                    if (model->targetType >= 4 && ObjSeq_FindTargetObject((u8*)candidate) == NULL)
                     {
                         ok = 0;
-                        logPrintf(sObjSequenceMissingObjectFormat, *(s16*)(model + 0x1c) - 4);
+                        logPrintf(sObjSequenceMissingObjectFormat, model->targetType - 4);
                     }
                     else
                     {
-                        ((ObjSeqState*)seqp)->targetObj = NULL;
+                        seqp->targetObj = NULL;
                     }
                     if (matchCount < 0x28)
                     {
@@ -1602,22 +1637,21 @@ void ObjSeq_runBgCmds(void)
         for (; n < matchCount; n++)
         {
             candidate = *mp;
-            model = *(u8**)(candidate + 0x4c);
-            if (model != NULL && (s8)model[0x1f] == index)
+            model = (ObjSeqPlacement*)candidate->anim.placementData;
+            if (model != NULL && model->slot == index)
             {
-                seqp = *(u8**)(candidate + 0xb8);
+                seqp = candidate->extra;
                 if (ok != 0)
                 {
-                    ((ObjSeqState*)seqp)->runState = 2;
-                    ((ObjSeqState*)seqp)->pendingStartFrame = xrot;
-                    ObjSeq_update(candidate, lbl_803DEFC8);
-                    Obj_GetWorldPosition(candidate, &((GameObject*)candidate)->anim.worldPosX,
-                                         &((GameObject*)candidate)->anim.worldPosY,
-                                         &((GameObject*)candidate)->anim.worldPosZ);
+                    seqp->runState = 2;
+                    seqp->pendingStartFrame = xrot;
+                    ObjSeq_update((u8*)candidate, lbl_803DEFC8);
+                    Obj_GetWorldPosition(candidate, &candidate->anim.worldPosX,
+                                         &candidate->anim.worldPosY, &candidate->anim.worldPosZ);
                 }
                 else
                 {
-                    ((ObjSeqState*)seqp)->runState = 3;
+                    seqp->runState = 3;
                 }
             }
             mp++;
@@ -1625,17 +1659,17 @@ void ObjSeq_runBgCmds(void)
 
         if (ok == 0)
         {
-            *keepWalk = index;
-            keepWalk += 3;
-            keepBuf[keepCount++ * 3 + 1] = xrot;
+            keepWalk->index = index;
+            keepWalk++;
+            keepBuf[keepCount++].xrot = xrot;
         }
     }
 
-    for (k = 0; k < keepCount; k++)
+    for (i = 0; i < keepCount; i++)
     {
-        ((s16*)(base + 0x2a80))[k * 3] = keepBase[0];
-        ((s16*)(base + 0x2a80))[k * 3 + 1] = keepBase[1];
-        keepBase += 3;
+        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].index = keepBase->index;
+        ((ObjSeqQueuedBgCmd*)(base + 0x2a80))[i].xrot = keepBase->xrot;
+        keepBase++;
     }
     gObjSeqBgCmdCount = keepCount;
 }
