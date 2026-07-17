@@ -2257,18 +2257,15 @@ extern char sGameTextSequencePathFormat[];
 
 void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
 {
-    int oldHeap;
-    int languageId;
-    int languageTableOffset;
     GameTextLoadSlot* slot;
-    GameTextLoadSlot* freeSlot;
+    int oldHeap;
     GameTextRuntime* gameTextBase;
+    int languageTableOffset;
     u8* languageTable;
     int i;
 
     gameTextBase = (GameTextRuntime*)gGameTextBase;
-    languageId = curLanguage;
-    languageTableOffset = languageId << 3;
+    languageTableOffset = curLanguage << 3;
     languageTable = (u8*)sLanguageNameTable;
     oldHeap = testAndSet_onlyUseHeap3(0);
     if (getGameState() != 0 && getGameState() != 1)
@@ -2310,26 +2307,26 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId)
 
     gameTextBase->fonts[GAMETEXT_SLOT_CUTSCENE].mode = 1;
     slot = gameTextBase->loadSlots;
-    freeSlot = (slot->active == 0)       ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-               : ((++slot)->active == 0) ? slot
-                                         : NULL;
+    slot = (slot->active == 0)       ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+           : ((++slot)->active == 0) ? slot
+                                     : NULL;
 
-    freeSlot->state = 1;
-    freeSlot->dirId = sequenceSlotDir;
-    freeSlot->languageId = curLanguage;
-    freeSlot->active = 1;
-    freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
+    slot->state = 1;
+    slot->dirId = sequenceSlotDir;
+    slot->languageId = curLanguage;
+    slot->active = 1;
+    slot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
     sprintf(gameTextBase->path, sGameTextSequencePathFormat, sequenceId,
-            *(char**)(languageTable + languageTableOffset));
-    setFileInfo(&freeSlot->fileInfo);
-    freeSlot->loadHandle = loadFileByPathAsync(gameTextBase->path,
-                                               &freeSlot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
+            ((LanguageName*)(languageTable + languageTableOffset))->name);
+    setFileInfo(&slot->fileInfo);
+    slot->loadHandle = loadFileByPathAsync(gameTextBase->path,
+                                           &slot->loadedSize, 1, gameTextOpenCallback_8001b3d0);
     setFileInfo(NULL);
     testAndSet_onlyUseHeap3(oldHeap);
 }
