@@ -53,7 +53,7 @@ extern int* gTitleMenuLinkInterface;
 
 extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
 
-u8 gWarpStoneUiMenuItems[0x168];
+WarpstoneMenuItem gWarpStoneUiMenuItems[WARPSTONE_UI_ENTRY_COUNT];
 WarpstoneEntry gWarpStoneUiEntryTable[WARPSTONE_UI_ENTRY_COUNT] = {
     {0x0ABA, 1, 0}, {0x0ABD, 4, 0}, {0x0ABE, 5, 0}, {0x0ABF, 6, 0}, {0x0AC0, 7, 0}, {0x0AC1, 8, 0},
 };
@@ -62,57 +62,56 @@ int gWarpStoneUiSelectedIndices[0x6];
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_lifetimes off
-int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out)
+int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
+                             const WarpstoneEntry* entries, int count, int* selectedIndices)
 {
-    u8* idp;
-    u8* sp;
-    u8* dp;
+    const WarpstoneEntry* entryp;
+    const WarpstoneMenuItem* sourceItem = templates;
+    WarpstoneMenuItem* outputItem = items;
     int yoff;
     int slot;
     int entry;
     int tmp;
-    u8* lastDst;
+    WarpstoneMenuItem* lastDst;
 
-    sp = src;
-    dp = dst;
     lastDst = NULL;
     entry = 0;
     slot = 0;
-    idp = ids;
+    entryp = entries;
     for (; slot < count; slot++)
     {
-        if ((u32)mainGetBit(*(s16*)idp) != 0)
+        if (mainGetBit(entryp->bit) != 0)
         {
             entry++;
         }
-        idp += 4;
+        entryp++;
     }
     tmp = (count - entry) * 0x2a / 2 + 0x52;
     slot = 0;
     entry = slot;
-    idp = ids;
+    entryp = entries;
     yoff = tmp;
     for (; entry < count; entry++)
     {
-        if ((u32)mainGetBit(*(s16*)idp) != 0)
+        if (mainGetBit(entryp->bit) != 0)
         {
-            memcpy(dp, sp, 0x3c);
-            lastDst = dp;
-            *(s16*)(dp + 6) = yoff;
-            *(s8*)(dp + 0x1a) = (s8)(slot - 1);
-            *(s8*)(dp + 0x1b) = (s8)(slot + 1);
-            *out = entry;
-            out++;
-            dp += 0x3c;
+            memcpy(outputItem, sourceItem, sizeof(WarpstoneMenuItem));
+            lastDst = outputItem;
+            outputItem->y = yoff;
+            outputItem->previousItem = slot - 1;
+            outputItem->nextItem = slot + 1;
+            selectedIndices[0] = entry;
+            selectedIndices++;
+            outputItem++;
             yoff += 0x2a;
             slot++;
         }
-        idp += 4;
-        sp += 0x3c;
+        entryp++;
+        sourceItem++;
     }
     if (lastDst != NULL)
     {
-        *(s8*)(lastDst + 0x1b) = -1;
+        lastDst->nextItem = -1;
     }
     return slot;
 }
@@ -155,12 +154,13 @@ void WarpstoneUI_showUI(int arg)
         gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
         if (gWarpStoneUiMenuActive == 0)
         {
-            itemCount = WarpstoneUI_getMenuItems(gWarpStoneUiMenuItemTemplates, gWarpStoneUiMenuItems,
-                                                 (u8*)gWarpStoneUiEntryTable, WARPSTONE_UI_ENTRY_COUNT,
+            itemCount = WarpstoneUI_getMenuItems((WarpstoneMenuItem*)gWarpStoneUiMenuItemTemplates,
+                                                 gWarpStoneUiMenuItems, gWarpStoneUiEntryTable,
+                                                 WARPSTONE_UI_ENTRY_COUNT,
                                                  gWarpStoneUiSelectedIndices);
             (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))(
-                (char*)(*gTitleMenuLinkInterface) + 4))(gWarpStoneUiMenuItems, itemCount, 0, 0, 0, 0, 0x14, 200, 0xff,
-                                                        0xff, 0xff, 0xff);
+                (char*)(*gTitleMenuLinkInterface) + 4))((u8*)gWarpStoneUiMenuItems, itemCount, 0, 0, 0, 0, 0x14,
+                                                        200, 0xff, 0xff, 0xff, 0xff);
             gWarpStoneUiMenuActive = 1;
         }
         sel = (**(int (**)(void))((char*)(*gTitleMenuLinkInterface) + 0xc))();

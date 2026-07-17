@@ -10,7 +10,20 @@ typedef struct
     u8 b3; /* unused/padding */
 } WarpstoneEntry;
 
-int WarpstoneUI_getMenuItems(u8* src, u8* dst, u8* ids, int count, int* out);
+typedef struct
+{
+    u16 textId;
+    u16 boxId;
+    s16 x;
+    s16 y;
+    u8 pad08[0x12];
+    s8 previousItem;
+    s8 nextItem;
+    u8 pad1C[0x20];
+} WarpstoneMenuItem;
+
+int WarpstoneUI_getMenuItems(const WarpstoneMenuItem* templates, WarpstoneMenuItem* items,
+                             const WarpstoneEntry* entries, int count, int* selectedIndices);
 void WarpstoneUI_setState(int val);
 void WarpstoneUI_showUI(int arg);
 void WarpstoneUI_frameEnd(void);
