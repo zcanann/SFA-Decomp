@@ -411,7 +411,6 @@ GasVentTableEntry gExplodableBreakRecipeTable[16] = {
     {2071, 2072, 705, 50, 0, {0, 0}},
 };
 
-/* remaining descriptor/ptr tables are not yet assigned to their individual DLL units */
 u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     0x00000000,
                                     0x00000000,
@@ -426,25 +425,3 @@ u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     (u32)explodable_free,
                                     0x00000000,
                                     (u32)explodable_getExtraSize};
-u32 gExplodedObjDescriptor[20] = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x000a0000,
-                                  (u32)exploded_initialise,
-                                  (u32)exploded_release,
-                                  0x00000000,
-                                  (u32)exploded_init,
-                                  (u32)exploded_update,
-                                  (u32)exploded_hitDetect,
-                                  (u32)exploded_render,
-                                  (u32)exploded_free,
-                                  (u32)exploded_getObjectTypeId,
-                                  (u32)exploded_getExtraSize,
-                                  (u32)exploded_setScale,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00000000};
-u32 lbl_803230F8[12] = {0xffffffff, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-                        0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};

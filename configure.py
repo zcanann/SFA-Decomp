@@ -1323,7 +1323,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_0157_spiritdoorspirit.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0158_gunpowderbarrel.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0159_blasted.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_015A_explodable.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_015A_explodable.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_015B_cfforcefield.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_015D_slidingdoor.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_015F_attractor.c", cflags=cflags_dll_noopt),

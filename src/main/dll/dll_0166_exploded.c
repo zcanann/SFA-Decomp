@@ -3,6 +3,7 @@
 #include "main/object_render_legacy.h"
 #include "main/obj_placement.h"
 #include "main/dll/dll_0166_exploded.h"
+#include "main/object_descriptor.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
 #include "main/model.h"
@@ -318,3 +319,25 @@ void exploded_initialise(void)
 {
 }
 
+ObjectDescriptor16 gExplodedObjDescriptor = {
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x000a0000,
+    (ObjectDescriptorCallback)exploded_initialise,
+    (ObjectDescriptorCallback)exploded_release,
+    NULL,
+    (ObjectDescriptorCallback)exploded_init,
+    (ObjectDescriptorCallback)exploded_update,
+    (ObjectDescriptorCallback)exploded_hitDetect,
+    (ObjectDescriptorCallback)exploded_render,
+    (ObjectDescriptorCallback)exploded_free,
+    (ObjectDescriptorCallback)exploded_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)exploded_getExtraSize,
+    (ObjectDescriptorCallback)exploded_setScale,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+};
