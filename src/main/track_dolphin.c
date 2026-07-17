@@ -4668,29 +4668,28 @@ void trackIntersect(void)
 {
     s16 counts[0x47];
     s16 edges[0x6a4 * 2];
-    s16* q;
-    u8* rp;
-    int toff;
-    int bi;
-    int base;
-    int fo;
-    int fi;
-    int tn;
-    int k;
-    int gx, gz;
+    s16* sourceCoord;
+    u8* linePoint;
+    int sourceOffset;
+    int blockIndex;
+    int rowOffset;
+    int orderOffset;
+    int orderIndex;
+    int sourceIndex;
+    int endpoint;
+    int gridX, gridZ;
     int layer;
     IntersectLine* line;
-    int off;
     int i;
-    u8* lines;
-    s16* indices;
-    s16 first;
-    s16 second;
-    int j;
-    int sorted;
-    s16 prev, t;
-    f32 fz0;
-    f32 x, y, z;
+    int lineOffset;
+    u8* lineBytes;
+    s16* sortOrder;
+    s16 firstLine;
+    s16 secondLine;
+    int sortIndex;
+    int sortComplete;
+    s16 previousType, segmentType;
+    f32 pointX, pointY, pointZ;
 
     lbl_803DCF44 = 0;
     if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0)
@@ -4723,51 +4722,55 @@ void trackIntersect(void)
     for (layer = 0; layer < 5; layer++)
     {
         u8* idx = mapGetBlockIdx(layer);
-        for (gz = 0, base = 0; gz < 0x10; base += 0x10, gz++)
+        for (gridZ = 0, rowOffset = 0; gridZ < 0x10; rowOffset += 0x10, gridZ++)
         {
-            gx = 0;
-            bi = base;
-            fz0 = lbl_803DECE0 * gz;
-            for (; gx < 0x10; bi++, gx++)
+            f32 blockZ;
+            gridX = 0;
+            blockIndex = rowOffset;
+            blockZ = lbl_803DECE0 * gridZ;
+            for (; gridX < 0x10; blockIndex++, gridX++)
             {
-                if ((s8)idx[bi] >= 0)
+                if ((s8)idx[blockIndex] >= 0)
                 {
-                    MapBlockData* blk = mapGetBlock((s8)idx[bi]);
-                    f32 fx0;
-                    tn = 0;
-                    toff = 0;
-                    fx0 = lbl_803DECE0 * gx;
-                    for (; tn < *(u16*)((u8*)blk + 0x9c); toff += 0x14, tn++)
+                    MapBlockData* blk = mapGetBlock((s8)idx[blockIndex]);
+                    f32 blockX;
+                    sourceIndex = 0;
+                    sourceOffset = 0;
+                    blockX = lbl_803DECE0 * gridX;
+                    for (; sourceIndex < blk->hitCount; sourceOffset += 0x14, sourceIndex++)
                     {
                         if (gIntersectLineCount < 0x5dc)
                         {
-                            s16* tp = (s16*)((int)blk->hits + toff);
+                            IntersectModLineSource* sourceLine =
+                                (IntersectModLineSource*)((u8*)blk->hits + sourceOffset);
+                            s16* sourcePoints = sourceLine->x;
                             IntersectLine* rec = (IntersectLine*)(lbl_803DCF34 + gIntersectLineCount * 0x10);
-                            f32 fx, fz;
-                            rec->end0 = *((u8*)tp + 0xc);
-                            rec->end1 = *((u8*)tp + 0xd);
-                            *(u8*)&rec->kind = *((u8*)tp + 0xf);
+                            f32 mapOriginX, mapOriginZ;
+                            rec->end0 = sourceLine->endpointData[0];
+                            rec->end1 = sourceLine->endpointData[1];
+                            rec->kind = sourceLine->kind;
                             if ((rec->kind & 0x3f) == 0x11)
                             {
-                                rec->kind = *(u8*)&rec->kind & ~0x3f;
-                                rec->kind = *(u8*)&rec->kind | 2;
+                                rec->kind &= ~0x3f;
+                                rec->kind |= 2;
                             }
-                            rec->flags = *((u8*)tp + 0xe);
+                            rec->flags = sourceLine->flags;
                             *(s8*)&rec->flags = rec->flags ^ 0x10;
-                            rec->param = tp[8];
-                            fx = fx0 + playerMapOffsetX;
-                            fz = fz0 + playerMapOffsetZ;
-                            k = 0;
-                            q = tp;
-                            rp = (u8*)rec;
-                            for (; k < 2; q++, rp += 2, k++)
+                            rec->param = sourceLine->param;
+                            mapOriginX = blockX + playerMapOffsetX;
+                            mapOriginZ = blockZ + playerMapOffsetZ;
+                            endpoint = 0;
+                            sourceCoord = sourcePoints;
+                            linePoint = (u8*)rec;
+                            for (; endpoint < 2; sourceCoord++, linePoint += 2, endpoint++)
                             {
-                                x = fx + q[0];
-                                y = q[2];
-                                z = q[4] + fz;
+                                pointX = mapOriginX + sourceCoord[0];
+                                pointY = sourceCoord[2];
+                                pointZ = sourceCoord[4] + mapOriginZ;
                                 if (gIntersectPointCount < 0x6a4)
                                 {
-                                    *(s16*)(rp + 4) = insertPoint(gIntersectLineCount, edges, x, y, z);
+                                    *(s16*)(linePoint + 4) =
+                                        insertPoint(gIntersectLineCount, edges, pointX, pointY, pointZ);
                                 }
                             }
                             counts[rec->kind & 0x3f]++;
@@ -4779,13 +4782,15 @@ void trackIntersect(void)
         }
     }
 
-    for (i = 0, off = i; i < gIntersectLineCount; off += sizeof(IntersectLine), i++)
+    i = 0;
+    lineOffset = i;
+    for (; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
     {
         int pointIndex;
         s16* pointEdges;
         s16 adjacentLine;
 
-        line = (IntersectLine*)(lbl_803DCF34 + off);
+        line = (IntersectLine*)(lbl_803DCF34 + lineOffset);
         pointIndex = line->pt[0] * 2;
         pointEdges = &edges[pointIndex];
         adjacentLine = pointEdges[0];
@@ -4828,28 +4833,29 @@ void trackIntersect(void)
 
     if (lbl_803DCF40 != 0)
     {
-        for (i = 0, off = i; i < gIntersectLineCount; i++, off += 2)
+        for (i = 0, lineOffset = i; i < gIntersectLineCount; i++, lineOffset += 2)
         {
-            *(s16*)(lbl_803DCF40 + off) = i;
+            *(s16*)(lbl_803DCF40 + lineOffset) = i;
         }
-        sorted = 0;
-        while (sorted == 0)
+        sortComplete = 0;
+        while (sortComplete == 0)
         {
-            sorted = 1;
-            for (j = 0, off = j; j < gIntersectLineCount - 1; off += 2, j++)
+            sortComplete = 1;
+            for (sortIndex = 0, lineOffset = sortIndex; sortIndex < gIntersectLineCount - 1;
+                 lineOffset += 2, sortIndex++)
             {
                 int firstType;
 
-                lines = (u8*)lbl_803DCF34;
-                indices = (s16*)(lbl_803DCF40 + off);
-                first = indices[0];
-                firstType = (s8)lines[first * sizeof(IntersectLine) + 3] & 0x3f;
-                second = indices[1];
-                if (firstType < ((s8)lines[second * sizeof(IntersectLine) + 3] & 0x3f))
+                lineBytes = (u8*)lbl_803DCF34;
+                sortOrder = (s16*)(lbl_803DCF40 + lineOffset);
+                firstLine = sortOrder[0];
+                firstType = (s8)lineBytes[firstLine * sizeof(IntersectLine) + 3] & 0x3f;
+                secondLine = sortOrder[1];
+                if (firstType < ((s8)lineBytes[secondLine * sizeof(IntersectLine) + 3] & 0x3f))
                 {
-                    indices[0] = second;
-                    *(s16*)(lbl_803DCF40 + off + 2) = first;
-                    sorted = 0;
+                    sortOrder[0] = secondLine;
+                    *(s16*)(lbl_803DCF40 + lineOffset + 2) = firstLine;
+                    sortComplete = 0;
                 }
             }
         }
@@ -4860,9 +4866,9 @@ void trackIntersect(void)
         counts[i - 1] += counts[i];
     }
 
-    for (i = 0, off = i; i < gIntersectLineCount; off += sizeof(IntersectLine), i++)
+    for (i = 0, lineOffset = i; i < gIntersectLineCount; lineOffset += sizeof(IntersectLine), i++)
     {
-        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
+        int typeIndex = ((s8) * (u8*)(lbl_803DCF34 + lineOffset + 3) & 0x3f) + 1;
         s16 typeOffset = counts[typeIndex]++;
         *(s16*)(gIntersectLineIndexTable + typeOffset * 2) = i;
     }
@@ -4876,31 +4882,35 @@ void trackIntersect(void)
         gIntersectSegmentTypeTable[i] = 0xffff;
     }
 
-    prev = -1;
-    for (fo = (fi = 0); fi < gIntersectLineCount; fo += 2, fi++)
+    previousType = -1;
+    orderIndex = 0;
+    orderOffset = orderIndex;
+    for (; orderIndex < gIntersectLineCount; orderOffset += 2, orderIndex++)
     {
-        t = (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + fo) * 0x10 + 3) & 0x3f);
-        if (t >= 0x14)
+        segmentType =
+            (s16)((s8) * (u8*)(lbl_803DCF34 + *(s16*)(gIntersectLineIndexTable + orderOffset) * 0x10 + 3) &
+                  0x3f);
+        if (segmentType >= 0x14)
         {
-            t = 1;
+            segmentType = 1;
             debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
         }
-        if (prev != t)
+        if (previousType != segmentType)
         {
-            u16 v = fi;
-            int ti = t * 2;
+            u16 v = orderIndex;
+            int ti = segmentType * 2;
             gIntersectSegmentTypeTable[ti] = v;
-            if (prev != -1)
+            if (previousType != -1)
             {
-                int pi = prev * 2;
+                int pi = previousType * 2;
                 gIntersectSegmentTypeTable[pi + 1] = v;
             }
-            prev = t;
+            previousType = segmentType;
         }
     }
-    if (prev != -1)
+    if (previousType != -1)
     {
-        int pi = prev * 2;
+        int pi = previousType * 2;
         gIntersectSegmentTypeTable[pi + 1] = gIntersectLineCount;
     }
     lbl_803DCF44 = 1;
