@@ -74,10 +74,10 @@ typedef struct
     u8 rest : 6;
 } SnowclawAaFlags;
 
-typedef struct
+typedef struct SnowClawDropObjectTable
 {
-    s16 v[5];
-} SnowClawAnimTbl;
+    s16 objectIds[5];
+} SnowClawDropObjectTable;
 
 typedef struct
 {
@@ -138,7 +138,7 @@ extern int seqStreamLookupFn_8007fff8(void* table, int count, int key);
 extern int fn_801EC9F4(GameObject* obj);
 extern int fn_801EC9BC(GameObject* obj);
 const u32 gSnowClawPulseTable[8] = {0, 1, 2, 3, 1, 1, 2, 2};
-const SnowClawAnimTbl gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
+const SnowClawDropObjectTable gSnowClawDropObjectTable = {{0x23, 0x69, 0x33, 0x64, 0x1D}};
 extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
 extern f32 lbl_803DC218;
@@ -600,7 +600,7 @@ void snowclaw_update(GameObject* obj)
     u32* pulseType;
     u32* pulseMode;
     f32 pulseVec[3];
-    SnowClawAnimTbl dropTable;
+    SnowClawDropObjectTable dropTable;
     const SnowClawPulse4* pulseSrc;
 
     pulseTable = gSnowClawPulseTable;
@@ -636,7 +636,7 @@ void snowclaw_update(GameObject* obj)
         ObjHits_EnableObject((int)sub);
     }
 
-    dropTable = *(const SnowClawAnimTbl*)(pulseTable + 8);
+    dropTable = *(const SnowClawDropObjectTable*)(pulseTable + 8);
     if (*(s8*)&((SnowclawState*)inner)->dropIndex != ((SnowclawState*)inner)->dropIndexApplied)
     {
         if (obj->childObjs[0] != NULL)
@@ -648,7 +648,8 @@ void snowclaw_update(GameObject* obj)
         if (*(s8*)&((SnowclawState*)inner)->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
         {
             *(int*)&obj->childObjs[0] =
-                (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
+                (int)Obj_SetupObject(Obj_AllocObjectSetup(
+                                         0x18, dropTable.objectIds[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
                                      obj->anim.mapEventSlot, -1, obj->anim.parent);
             obj->childCount = 1;
         }
@@ -736,7 +737,7 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
     int* sub;
     int* inner;
     int i;
-    SnowClawAnimTbl tbl;
+    SnowClawDropObjectTable tbl;
     f32 dist;
 
     dist = lbl_803E6708;
@@ -853,7 +854,8 @@ int snowclaw_animEventCallback(GameObject* obj, int a2, ObjSeqState* seq)
         if (*(s8*)&((SnowclawState*)inner)->dropIndex > 0 && Obj_IsLoadingLocked() != 0)
         {
             *(int*)&obj->childObjs[0] =
-                (int)Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
+                (int)Obj_SetupObject(Obj_AllocObjectSetup(
+                                         0x18, tbl.objectIds[*(s8*)&((SnowclawState*)inner)->dropIndex]), 4,
                                      obj->anim.mapEventSlot, -1, obj->anim.parent);
             obj->childCount = 1;
         }
