@@ -3432,20 +3432,25 @@ main/dll/ARW/dll_029A_arwarwing.c:
 
 main/dll/dll_029B_arwingandrossstuff.c:
 	.text       start:0x8022E418 end:0x8022EDA4
+	.data       start:0x8032B608 end:0x8032B640
 	.sdata      start:0x803DC3D0 end:0x803DC3E0
 
 main/dll/ARW/dll_029C_arwarwingbo.c:
 	.text       start:0x8022EDA4 end:0x8022F1D8
+	.data       start:0x8032B640 end:0x8032B678
 
 main/dll/ARW/dll_029D_arwarwinggu.c:
 	.text       start:0x8022F1D8 end:0x8022F52C
+	.data       start:0x8032B678 end:0x8032B6B0
 	.sdata2     start:0x803E7068 end:0x803E7070
 
 main/dll/dll_029E_Dummy29E.c:
 	.text       start:0x8022F52C end:0x8022F558
+	.data       start:0x8032B6B0 end:0x8032B6E8
 
 main/dll/ARW/dll_029F_arwbombcoll.c:
 	.text       start:0x8022F558 end:0x8022FA00
+	.data       start:0x8032B6E8 end:0x8032B720
 	.sdata2     start:0x803E7070 end:0x803E7098
 
 main/dll/dll_02A0_ring.c:

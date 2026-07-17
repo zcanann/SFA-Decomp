@@ -46,6 +46,23 @@ f32 lbl_803DC3D8 = 10.0f;
 #define ARWINGANDROSSSTUFF_OBJFLAG_PARENT_SLACK 0x1000
 #define ARWINGANDROSSSTUFF_HIT_VOLUME_SLOT      0xf
 
+ObjectDescriptor gArwingAndrossStuffObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwingandrossstuff_initialise,
+    (ObjectDescriptorCallback)arwingandrossstuff_release,
+    NULL,
+    (ObjectDescriptorCallback)arwingandrossstuff_init,
+    (ObjectDescriptorCallback)arwingandrossstuff_update,
+    (ObjectDescriptorCallback)arwingandrossstuff_hitDetect,
+    (ObjectDescriptorCallback)arwingandrossstuff_render,
+    (ObjectDescriptorCallback)arwingandrossstuff_free,
+    (ObjectDescriptorCallback)arwingandrossstuff_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)arwingandrossstuff_getExtraSize,
+};
+
 #pragma opt_common_subs off
 void arwprojectile_createLinkedEffect(GameObject* obj, u8 enable)
 {

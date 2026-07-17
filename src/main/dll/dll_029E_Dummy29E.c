@@ -6,6 +6,24 @@
  * table.
  */
 #include "main/dll/dll_029E_dummy.h"
+#include "main/object_descriptor.h"
+
+ObjectDescriptor lbl_8032B6B0 = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)Dummy29E_initialise,
+    (ObjectDescriptorCallback)Dummy29E_release,
+    NULL,
+    (ObjectDescriptorCallback)Dummy29E_init,
+    (ObjectDescriptorCallback)Dummy29E_update,
+    (ObjectDescriptorCallback)Dummy29E_hitDetect,
+    (ObjectDescriptorCallback)Dummy29E_render,
+    (ObjectDescriptorCallback)Dummy29E_free,
+    (ObjectDescriptorCallback)Dummy29E_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)Dummy29E_getExtraSize,
+};
 
 int Dummy29E_getExtraSize(void)
 {

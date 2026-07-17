@@ -31,6 +31,23 @@
 #define ARWARWINGBO_OBJFLAG_PARENT_SLACK 0x1000
 #define PAD_BUTTON_B                     0x200
 
+ObjectDescriptor gARWArwingBoObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwarwingbo_initialise,
+    (ObjectDescriptorCallback)arwarwingbo_release,
+    NULL,
+    (ObjectDescriptorCallback)arwarwingbo_init,
+    (ObjectDescriptorCallback)arwarwingbo_update,
+    (ObjectDescriptorCallback)arwarwingbo_hitDetect,
+    (ObjectDescriptorCallback)arwarwingbo_render,
+    (ObjectDescriptorCallback)arwarwingbo_free,
+    (ObjectDescriptorCallback)arwarwingbo_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)arwarwingbo_getExtraSize,
+};
+
 int arwarwingbo_getExtraSize(void)
 {
     return 0xc;

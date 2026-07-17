@@ -23,12 +23,30 @@
 #include "main/dll/ARW/dll_029A_arwarwing.h"
 #include "main/gameloop_api.h"
 #include "main/dll/dll_02A0_ring.h"
+#include "main/object_descriptor.h"
 
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/object_render_legacy.h"
 
 #define ARWBOMBCOLL_HIT_VOLUME_SLOT 0x13
+
+ObjectDescriptor gARWBombCollObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ARWBombColl_initialise,
+    (ObjectDescriptorCallback)ARWBombColl_release,
+    NULL,
+    (ObjectDescriptorCallback)ARWBombColl_init,
+    (ObjectDescriptorCallback)ARWBombColl_update,
+    (ObjectDescriptorCallback)ARWBombColl_hitDetect,
+    (ObjectDescriptorCallback)ARWBombColl_render,
+    (ObjectDescriptorCallback)ARWBombColl_free,
+    (ObjectDescriptorCallback)ARWBombColl_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)ARWBombColl_getExtraSize,
+};
 
 void arwbombcoll_setLifetime(GameObject* obj, int lifetime)
 {
