@@ -145,21 +145,3 @@ ObjectDescriptor gCrFuelTankObjDescriptor = {
     (ObjectDescriptorCallback)crfueltank_getObjectTypeId,
     crfueltank_getExtraSize,
 };
-
-/* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
-ObjectDescriptor gProximityMineObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)ProximityMine_initialise,
-    (ObjectDescriptorCallback)ProximityMine_release,
-    0,
-    (ObjectDescriptorCallback)ProximityMine_init,
-    (ObjectDescriptorCallback)ProximityMine_update,
-    (ObjectDescriptorCallback)ProximityMine_hitDetect,
-    (ObjectDescriptorCallback)ProximityMine_render,
-    (ObjectDescriptorCallback)ProximityMine_free,
-    (ObjectDescriptorCallback)ProximityMine_getObjectTypeId,
-    ProximityMine_getExtraSize,
-};
