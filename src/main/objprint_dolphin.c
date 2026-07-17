@@ -138,6 +138,18 @@ void objRenderChild(int* child, int* parent, u8 isShadow);
 #define GX_TEXMAP_NULL    0xff
 #define GX_TEVSTAGE0      0
 #define GX_TEV_SWAP0      0
+#define GX_TEXMAP0        0
+#define GX_TEXCOORD1      1
+#define GX_CS_DIVIDE_2    3
+#define GX_CA_TEXA        4
+#define GX_CA_RASA        5
+#define GX_CC_KONST       0xe
+#define GX_TEV_KCSEL_K0   0xc
+#define GX_TEV_KASEL_K0_A 0x1c
+#define GX_TG_MTX2x4      1
+#define GX_TG_TEX0        4
+#define GX_IDENTITY       0x3c
+#define GX_PTTEXMTX0      0x40
 #define GX_FOG_NONE       0
 #define GX_VA_PNMTXIDX    0
 #define GX_VA_TEX0MTXIDX  1
@@ -284,21 +296,21 @@ void objRenderFuzzFn_8003d6f8(void* objArg)
         modelLightChannels_applyGXControls();
         ModelLightStruct_free(renderHandle);
     }
-    GXSetTevKColor(0, *(ObjGXColor*)&savedEnvColor);
-    GXSetTevKAlphaSel(0, 0x1c);
-    GXSetTevKColorSel(0, 0xc);
+    GXSetTevKColor(GX_KCOLOR0, *(ObjGXColor*)&savedEnvColor);
+    GXSetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K0_A);
+    GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
     newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
     selectTexture(*(Texture**)(shadowTable + ((lbl_803DCC44 >> 2) + lbl_803DCC3D * shadowStride) * 4), 0);
     PSMTXScale(mtx, lbl_803DEA38, *(f32*)&lbl_803DEA38, lbl_803DEA1C);
     GXLoadTexMtxImm(mtx, 0x40, 0);
-    GXSetTexCoordGen2(1, 1, 4, 0x3c, 1, 0x40);
-    GXSetTevDirect(0);
-    GXSetTevOrder(0, 1, 0, 4);
-    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xe);
-    GXSetTevAlphaIn(0, 7, 4, 5, 7);
-    GXSetTevSwapMode(0, 0, 0);
-    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(0, 0, 0, 3, 1, 0);
+    GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_TRUE, GX_PTTEXMTX0);
+    GXSetTevDirect(GX_TEVSTAGE0);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD1, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_KONST);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
+    GXSetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_DIVIDE_2, GX_TRUE, GX_TEVPREV);
     GXSetNumTevStages(1);
     GXSetNumIndStages(0);
     GXSetNumTexGens(2);

@@ -1201,8 +1201,8 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     textureFn_8004c264((Texture*)this, 0);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
     GXSetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K0);
-    GXSetTevKColor(0, colB);
-    GXSetTevDirect(0);
+    GXSetTevKColor(GX_KCOLOR0, colB);
+    GXSetTevDirect(GX_TEVSTAGE0);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_TEXC, GX_CC_KONST, GX_CC_ZERO);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
@@ -1211,7 +1211,7 @@ void pauseMenuMapFn_8011de20(void* this, u8 a, s16 b, int c)
     GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     if (*(void**)((char*)this + 0x50) != NULL)
     {
-        GXSetTevDirect(1);
+        GXSetTevDirect(GX_TEVSTAGE1);
         GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
         GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
         GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_A0, GX_CA_TEXA, GX_CA_ZERO);
@@ -1323,8 +1323,8 @@ int fn_8011E0D8(int* this, int* p2, int p3)
     fn_8006C5CC((u32*)&tex2);
     selectTexture((Texture*)((void*)tex2), 1);
     GXSetTevKAlphaSel(GX_TEVSTAGE2, GX_TEV_KASEL_K0_A);
-    GXSetTevKColor(0, *(GXColor*)&gTrickyHudIconKColor);
-    GXSetTevDirect(2);
+    GXSetTevKColor(GX_KCOLOR0, *(GXColor*)&gTrickyHudIconKColor);
+    GXSetTevDirect(GX_TEVSTAGE2);
     GXSetTevOrder(GX_TEVSTAGE2, GX_TEXCOORD2, GX_TEXMAP1, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE2, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_CPREV);
     GXSetTevAlphaIn(GX_TEVSTAGE2, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_APREV);
