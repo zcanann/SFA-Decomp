@@ -18,9 +18,6 @@
 #include "main/textrender_api.h"
 #include "main/texture.h"
 
-#pragma force_active on
-#pragma force_active reset
-
 #define INFOPOINT_OBJFLAG_HITDETECT_DISABLED 0x2000
 
 /* shared font/texture asset loaded at init (see file header). */
