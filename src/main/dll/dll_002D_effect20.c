@@ -6,8 +6,8 @@
  * fills a PartFxSpawn request (position, velocity, scale, lifetime, texture,
  * colors, behavior/render flags) per-id and hands it to
  * gExpgfxInterface->spawnEffect. Most parameters are randomized via
- * randomGetRange and scaled by the lbl_803Exxxx float constants in this DLL's
- * data; vecRotateZXY orients velocity into the source's frame.
+ * randomGetRange and scaled by per-id float constants; vecRotateZXY orients
+ * velocity into the source's frame.
  *
  * Effect20_func05 advances this DLL's shared animation phases each step
  * (gEffect20StepScrollA/88C scroll accumulators wrapped at 1.0, and the
@@ -69,10 +69,10 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
     PartFxSpawn cfg;
 
     ret = 0;
-    gEffect20SpawnScrollA = gEffect20SpawnScrollA + 0.001f;
+    gEffect20SpawnScrollA += 0.001f;
     if (gEffect20SpawnScrollA > 1.0f)
         gEffect20SpawnScrollA = 0.1f;
-    gEffect20SpawnScrollB = gEffect20SpawnScrollB + 0.0003f;
+    gEffect20SpawnScrollB += 0.0003f;
     if (gEffect20SpawnScrollB > 1.0f)
         gEffect20SpawnScrollB = 0.3f;
     if (sourceObj == 0)
@@ -202,13 +202,9 @@ int Effect20_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParam
         break;
     case 0x7a3:
         intVal = randomGetRange(0xffff8001, 0x7fff);
-        angle = (3.1415927f * (f32)(s32)intVal) / 32768.0f;
-        trigVal = mathCosf(angle);
-        radius = 0.005f * (f32)(s32)randomGetRange(100, 0x96);
-        cfg.velocityX = radius * trigVal;
-        trigVal = mathSinf(angle);
-        radius = 0.005f * (f32)(s32)randomGetRange(100, 0x96);
-        cfg.velocityY = radius * trigVal;
+        cfg.velocityX = (0.005f * (f32)(s32)randomGetRange(100, 0x96)) *
+                        mathCosf(angle = (3.1415927f * (f32)(s32)intVal) / 32768.0f);
+        cfg.velocityY = (0.005f * (f32)(s32)randomGetRange(100, 0x96)) * mathSinf(angle);
         cfg.velocityZ = 0.0f;
         cfg.lifetimeFrames = randomGetRange(0x14, 0x1e);
         cfg.behaviorFlags = 0x480000;

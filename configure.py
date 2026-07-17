@@ -911,7 +911,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_002A_effect17.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_002B_effect18.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_002C_effect19.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/dll_002D_effect20.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/dll_002D_effect20.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0003_checkpoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0016_screentransition.c"),
             Object(MatchingFor("GSAE01"), "main/dll/dll_0004_dummy04.c"),
