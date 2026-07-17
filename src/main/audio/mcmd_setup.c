@@ -13,9 +13,6 @@ extern int adsrSetup(McmdEnvelopeState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
-extern const f32 lbl_803E77F0;  /* 4096.0f */
-extern const f32 lbl_803E77F4;  /* attack scale epsilon */
-extern const f32 lbl_803E77F8;  /* decay scale epsilon */
 
 typedef struct SampleInfo
 {
@@ -371,7 +368,7 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
                              ((u8*)&adsr_ptr->dls.atime)[2] << 16 | ((u8*)&adsr_ptr->dls.atime)[3] << 24;
             adsr.dls.dtime = ((u8*)&adsr_ptr->dls.dtime)[0] << 0 | ((u8*)&adsr_ptr->dls.dtime)[1] << 8 |
                              ((u8*)&adsr_ptr->dls.dtime)[2] << 16 | ((u8*)&adsr_ptr->dls.dtime)[3] << 24;
-            adsr.dls.slevel = lbl_803E77F0 * sScale;
+            adsr.dls.slevel = 4096.0f * sScale;
             adsr.dls.rtime = adsr_ptr->dls.rtime >> 8 | adsr_ptr->dls.rtime << 8;
             ascale = ((u8*)&adsr_ptr->dls.ascale)[0] << 0 | ((u8*)&adsr_ptr->dls.ascale)[1] << 8 |
                      ((u8*)&adsr_ptr->dls.ascale)[2] << 16 | ((u8*)&adsr_ptr->dls.ascale)[3] << 24;
@@ -380,13 +377,13 @@ void mcmdSetADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
             if (ascale != 0x80000000)
             {
-                attackProd = lbl_803E77F4 * svoice->volumeBase;
+                attackProd = 1.1920928955078125e-7f * svoice->volumeBase;
                 adsr.dls.atime += (s32)(attackProd * ascale);
             }
 
             if (dscale != 0x80000000)
             {
-                decayProd = lbl_803E77F8 * svoice->keyBase;
+                decayProd = 0.0078125f * svoice->keyBase;
                 adsr.dls.dtime += (s32)(decayProd * dscale);
             }
 
@@ -437,12 +434,12 @@ void mcmdSetPitchADSR(McmdVoiceState* svoice, McmdCommandArgs* cstep)
 
     if (ascale != 0x80000000)
     {
-        f32 prod = lbl_803E77F4 * svoice->volumeBase;
+        f32 prod = 1.1920928955078125e-7f * svoice->volumeBase;
         adsr.dls.atime += (s32)(prod * ascale);
     }
     if (dscale != 0x80000000)
     {
-        f32 prod = lbl_803E77F8 * svoice->keyBase;
+        f32 prod = 0.0078125f * svoice->keyBase;
         adsr.dls.dtime += (s32)(prod * dscale);
     }
 
@@ -485,7 +482,3 @@ void voiceConfigureParamRamp(McmdVoiceState* svoice, McmdCommandArgs* cstep, u8 
 
     MAC_CFLAGS(svoice) |= MAC_FLAG64(0x2000, 0);
 }
-
-const f32 lbl_803E77F0 = 4096.0f;
-const f32 lbl_803E77F4 = 1.1920928955078125e-7f;
-const f32 lbl_803E77F8 = 0.0078125f;

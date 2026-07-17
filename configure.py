@@ -1658,7 +1658,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/data_tables.c", mw_version="GC/1.2.5n"),
             Object(MatchingFor("GSAE01"), "main/audio/mcmd_wait.c", mw_version="GC/1.2.5n"),
             Object(MatchingFor("GSAE01"), "main/audio/mcmd_loop.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/audio/mcmd_setup.c", mw_version="GC/1.2.5n"),
+            Object(MatchingFor("GSAE01"), "main/audio/mcmd_setup.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/mcmd_exec.c", mw_version="GC/1.2.5n"),
             Object(MatchingFor("GSAE01"), "main/audio/vid_get.c"),
             Object(MatchingFor("GSAE01"), "main/audio/voice_id.c", mw_version="GC/1.2.5n"),
