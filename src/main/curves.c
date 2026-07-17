@@ -7,9 +7,6 @@
 int gCurveCachedSampleCount = -1;
 
 f32 gCurveForwardDiffStep;
-#pragma explicit_zero_data on
-int lbl_803DB274 = 0;
-#pragma explicit_zero_data off
 
 typedef f32 (*CurveEvalPtrFirst)(f32* values, f32 t, f32* outTangent);
 

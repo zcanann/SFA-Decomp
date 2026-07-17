@@ -37,7 +37,7 @@ main/curves.c:
 	.text       start:0x8000FE8C end:0x80010FF4
 	.data       start:0x802C6010 end:0x802C6160
 	.bss        start:0x80338790 end:0x803387A0
-	.sdata      start:0x803DB270 end:0x803DB278
+	.sdata      start:0x803DB270 end:0x803DB274
 	.sbss       start:0x803DC8B0 end:0x803DC8B8
 
 main/voxmaps.c:
