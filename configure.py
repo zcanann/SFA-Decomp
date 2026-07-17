@@ -1673,7 +1673,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/audio/snd_reverb.c", mw_version="GC/1.2.5n"),
             Object(MatchingFor("GSAE01"), "dolphin/axfx/reverb_std_create.c", mw_version="GC/1.2.5n"),
             Object(
-                NonMatching,
+                MatchingFor("GSAE01"),
                 "dolphin/MSL_C/PPCEABI/bare/H/math_float_helpers.c",
                 mw_version="GC/1.2.5n",
                 extra_cflags=["-inline", "off", *msl_math_extra],
