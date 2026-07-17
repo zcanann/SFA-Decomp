@@ -28,23 +28,19 @@
 #include "dolphin/gx/GXPixel.h"
 #include "dolphin/gx/GXTexture.h"
 #include "dolphin/gx/GXBump.h"
+#include "dolphin/gx/GXTev.h"
 #include "main/dll/FRONT/picmenu.h"
 
-typedef struct
-{
-    u32 a;
-    u32 b;
-} TevColorS10Pair;
+static const GXColorS10 sMovieTevColor0 = {-90, 0, -114, 135};
+static const GXColor sMovieKColor0 = {0x00, 0x00, 0xE2, 0x58};
+static const GXColor sMovieKColor1 = {0xB3, 0x00, 0x00, 0xB6};
+static const GXColor sMovieKColor2 = {0xFF, 0x00, 0xFF, 0x80};
 
 #define MOVIE_VOLUME_MAX      0x7f
 #define MOVIE_FADE_FRAMES_MAX 60000
 #define S16_MIN               (-0x8000)
 #define S16_MAX               0x7fff
 
-extern TevColorS10Pair lbl_803E1D30; /* TEV color-S10 / k-color constants */
-extern u32 lbl_803E1D38;
-extern u32 lbl_803E1D3C;
-extern u32 lbl_803E1D40;
 extern s32 lbl_803DD660;               /* texture-set free queue active */
 extern AIDCallback lbl_803DD668;       /* AI DMA done callback */
 extern s32 lbl_803DD66C;               /* DMA callback phase */
@@ -63,8 +59,6 @@ extern void GXSetTevColorOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTe
                             GXTevRegID out_reg);
 extern void GXSetTevAlphaOp(GXTevStageID stage, GXTevOp op, GXTevBias bias, GXTevScale scale, GXBool clamp,
                             GXTevRegID out_reg);
-extern u32 GXSetTevColorS10();
-extern u32 GXSetTevKColor();
 extern void GXSetTevKColorSel(GXTevStageID stage, GXTevKColorSel sel);
 extern void GXSetTevKAlphaSel(GXTevStageID stage, GXTevKAlphaSel sel);
 extern void GXSetTevSwapMode(GXTevStageID stage, GXTevSwapSel ras_sel, GXTevSwapSel tex_sel);
@@ -91,10 +85,6 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
 {
     int halfHeight;
     int halfWidth;
-    u32 kColor0;
-    u32 kColor1;
-    u32 kColor2;
-    TevColorS10Pair tevColorS10;
     GXTexObj yTexObj;
     GXTexObj uTexObj;
     GXTexObj vTexObj;
@@ -144,14 +134,10 @@ void THPPlayerDrawCurrentFrame(void* yBuf, void* uBuf, void* vBuf, u32 width, u3
     GXSetTevAlphaOp(GX_TEVSTAGE3, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
     GXSetTevSwapMode(GX_TEVSTAGE3, GX_TEV_SWAP0, GX_TEV_SWAP0);
     GXSetTevKColorSel(GX_TEVSTAGE3, GX_TEV_KCSEL_K2);
-    tevColorS10 = lbl_803E1D30;
-    GXSetTevColorS10(GX_TEVREG0, &tevColorS10);
-    kColor0 = lbl_803E1D38;
-    GXSetTevKColor(GX_KCOLOR0, &kColor0);
-    kColor1 = lbl_803E1D3C;
-    GXSetTevKColor(GX_KCOLOR1, &kColor1);
-    kColor2 = lbl_803E1D40;
-    GXSetTevKColor(GX_KCOLOR2, &kColor2);
+    GXSetTevColorS10(GX_TEVREG0, sMovieTevColor0);
+    GXSetTevKColor(GX_KCOLOR0, sMovieKColor0);
+    GXSetTevKColor(GX_KCOLOR1, sMovieKColor1);
+    GXSetTevKColor(GX_KCOLOR2, sMovieKColor2);
     GXSetTevSwapModeTable(GX_TEV_SWAP0, GX_CH_RED, GX_CH_GREEN, GX_CH_BLUE, GX_CH_ALPHA);
     GXInitTexObj(&yTexObj, yBuf, width, height, GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
     GXInitTexObjLOD(&yTexObj, GX_NEAR, GX_NEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
