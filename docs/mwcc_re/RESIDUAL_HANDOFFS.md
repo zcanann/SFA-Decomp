@@ -88,3 +88,6 @@ The "reorder functions to retail .text order (per-fn bytes identical, fuzzy-neut
 
 ## DR_EarthWarrior_init 100 -> 98.806 after 6367e3f168 (rodata ownership restore)
 Flagging in case the .text cost was unintended: the EWColorTbl f32->u32 retype + EWPathRange pad + extern->in-TU moves in dll_0257_drearthwarrior.c dropped DR_EarthWarrior_init from 100 to 98.806 (fresh rm+ninja, isofuzzy). If the data ownership is worth the fn cost (mmpmoonrock precedent), ignore; if not, the init codegen regression is isolated to that commit's drearthwarrior hunk.
+
+## CORRECTION: fn_80007F78 is MWCC, NOT ProDG (2026-07-17)
+Direct signature check: fn_80007F78 has 0 mcrxr, 0 addme, 0 andi., 0 clrlwi, 0 stmw, and a standard MWCC prologue (stwu r1,-160(r1); mflr r0; stw r0,164(r1)). It is NOT ProDG - my earlier "probable ProDG too" note on it was wrong. ONLY the unclaimed gap_03_80006C6C_text region in render.o carries the mcrxr signature. fn_80007F78's residual (17-saved-reg permutation storm on 64-bit bitstream math) is a genuine MWCC allocator coloring wall, not a compiler mismatch. The ProDG-island handoff still stands for the gap region and zlbDecompress; just not for fn_80007F78.
