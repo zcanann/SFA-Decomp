@@ -174,7 +174,7 @@ int hightop_stateHandler09(GameObject* obj, HighTopRuntime* stateArg)
         state->savedControlMode = 9;
         for (i = 0; i < 4; i++)
         {
-            mainSetBits((&gHighTopProgressGameBitIds)[i], i > prevCount);
+            mainSetBits(gHighTopProgressGameBitIds[i], i > prevCount);
         }
         if (prevCount == 3)
         {
@@ -738,7 +738,7 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt)
     changed = 0;
     moveSpeed = (obj)->anim.currentMoveProgress;
     band = 0;
-    while ((&gHighTopBandMoveIds)[band] != (obj)->anim.currentMove && band < 2)
+    while (gHighTopBandMoveIds[band] != (obj)->anim.currentMove && band < 2)
     {
         band++;
     }
@@ -777,7 +777,7 @@ int hightop_stateHandler02(GameObject* obj, HighTopRuntime* stateArg, f32 dt)
     }
     if (changed != 0)
     {
-        ObjAnim_SetCurrentMove((int)obj, (&gHighTopBandMoveIds)[band], moveSpeed, 0);
+        ObjAnim_SetCurrentMove((int)obj, gHighTopBandMoveIds[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0xa);
     }
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
@@ -801,9 +801,9 @@ int hightop_stateHandler01(GameObject* obj, HighTopRuntime* stateArg)
         *(s16*)((char*)stateArg + 0x338) = 0;
         stateArg->baddie.moveSpeed = 0.005f;
         stateArg->baddie.velSmoothTime = 18.0f;
-        if ((obj)->anim.currentMove != gHighTopBandMoveIds)
+        if ((obj)->anim.currentMove != gHighTopBandMoveIds[0])
         {
-            ObjAnim_SetCurrentMove((int)obj, gHighTopBandMoveIds, zero, 0);
+            ObjAnim_SetCurrentMove((int)obj, gHighTopBandMoveIds[0], zero, 0);
         }
     }
     if (stateArg->baddie.inputMagnitude < 0.1f)
@@ -864,12 +864,12 @@ void hightop_playMovementSfx(GameObject* obj, HighTopRuntime* state2, HighTopRun
         {
             idx = 1;
         }
-        Sfx_PlayFromObject((u32)obj, (u16)(&gHighTopMovementSfxIds)[idx]);
+        Sfx_PlayFromObject((u32)obj, (u16)gHighTopMovementSfxIds[idx]);
     }
     if ((s32)state->baddie.eventFlags & 0x100)
     {
         fn_8009A8C8(obj, 1000.0f);
-        Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds);
+        Sfx_PlayFromObject((u32)obj, gHighTopMovementSfxIds[0]);
     }
 }
 

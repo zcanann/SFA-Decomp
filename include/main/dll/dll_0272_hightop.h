@@ -117,13 +117,13 @@ extern void* gHighTopDefaultStateHandler;
 extern const HtInitData gHighTopLookInitData1;
 extern const HtInitData gHighTopLookInitData2;
 extern int gHighTopAirMeterInitValue;
-extern s16 gHighTopMovementSfxIds;
+extern s16 gHighTopMovementSfxIds[2];
 extern f32 gHighTopGroundMarkerMtx[];
-extern s16 gHighTopBandMoveIds;
+extern s16 gHighTopBandMoveIds[2];
 extern f32 gHighTopBandSpeedThresholds[];
 extern int gHighTopIdleSequenceWeights[];
 extern int gHighTopIdleSequenceIds[];
-extern s16 gHighTopProgressGameBitIds;
+extern s16 gHighTopProgressGameBitIds[4];
 
 int hightop_stateHandler01(GameObject* obj, HighTopRuntime* runtime);
 int hightop_stateHandler02(GameObject* obj, HighTopRuntime* runtime, f32 dt);
