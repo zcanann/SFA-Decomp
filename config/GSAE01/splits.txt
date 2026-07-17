@@ -457,7 +457,7 @@ main/dll/dll_0012_unk.c:
 	.data       start:0x803114D8 end:0x80311518
 	.sbss       start:0x803DD458 end:0x803DD460
 
-main/dll/dll_0014_unk.c:
+main/dll/Hcurves.c:
 	.text       start:0x800D9EE8 end:0x800E5434
 	.data       start:0x80311518 end:0x803116E0
 	.bss        start:0x8039CAE8 end:0x803A2C38
