@@ -9,6 +9,7 @@
  */
 #include "main/game_object.h"
 #include "main/object.h"
+#include "main/object_descriptor.h"
 #include "main/gamebits.h"
 #include "main/gamebit_ids.h"
 #include "main/dll/SH/dll_01A6_shtricky.h"
@@ -87,7 +88,19 @@ void sh_tricky_init(int* obj)
         (u16)(((GameObject*)obj)->objectFlags | (SHTRICKY_OBJFLAG_HIDDEN | SHTRICKY_OBJFLAG_HITDETECT_DISABLED));
 }
 
-void* gSH_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
-                                     (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, sh_tricky_init,
-                                     sh_tricky_update,  (void*)0x00000000,     (void*)0x00000000, (void*)0x00000000,
-                                     (void*)0x00000000, sh_tricky_getExtraSize};
+ObjectDescriptor gSH_trickyObjDescriptor = {
+    0,
+    0,
+    0,
+    0x00090000,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)sh_tricky_init,
+    (ObjectDescriptorCallback)sh_tricky_update,
+    0,
+    0,
+    0,
+    0,
+    (ObjectDescriptorExtraSizeCallback)sh_tricky_getExtraSize,
+};
