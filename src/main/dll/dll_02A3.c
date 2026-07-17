@@ -15,12 +15,33 @@
 #include "main/object.h"
 #include "main/object_api.h"
 #include "main/vecmath.h"
+#include "main/dll/ARW/dll_02A2_arwspeedstr.h"
 #include "main/dll/ARW/dll_02A3.h"
 
 int lbl_803DDD94;
 int lbl_803DDD90;
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+
+void fn_80231028(GameObject* obj, int speed)
+{
+    ARWSpeedStrState* state = obj->extra;
+    state->speed = speed;
+}
+
+void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity)
+{
+    obj->anim.velocityX = velocity->x;
+    obj->anim.velocityY = velocity->y;
+    obj->anim.velocityZ = velocity->z;
+}
+
+__declspec(section ".sdata2") f32 lbl_803E7118 = 1.0f;
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E711C = 0.0f;
+#pragma explicit_zero_data reset
+__declspec(section ".sdata2") f32 lbl_803E7120 = 8.0f;
+__declspec(section ".sdata2") f32 lbl_803E7124 = 255.0f;
 
 int dll_2A3_getExtraSize_ret_12(void)
 {
@@ -106,17 +127,4 @@ void dll_2A3_release_nop(void)
 
 void dll_2A3_initialise_nop(void)
 {
-}
-
-void fn_8023134C(GameObject* obj, int lifetime)
-{
-    Dll2A3State* state = obj->extra;
-    state->lifetime = lifetime;
-}
-
-void fn_8023137C(GameObject* obj, Dll2A3Velocity* velocity)
-{
-    obj->anim.velocityX = velocity->x;
-    obj->anim.velocityY = velocity->y;
-    obj->anim.velocityZ = velocity->z;
 }

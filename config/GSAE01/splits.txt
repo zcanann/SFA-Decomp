@@ -3473,18 +3473,21 @@ main/dll/ARW/dll_02A1_arwlevelcon.c:
 	.data       start:0x8032B7D0 end:0x8032B808
 
 main/dll/ARW/dll_02A2_arwspeedstr.c:
-	.text       start:0x80230E2C end:0x80231074
+	.text       start:0x80230E2C end:0x80231028
+	.sdata2     start:0x803E70F8 end:0x803E7100
 
 main/dll/dll_02A3.c:
-	.text       start:0x80231074 end:0x80231398
+	.text       start:0x80231028 end:0x8023134C
 	.sbss       start:0x803DDD90 end:0x803DDD98
+	.sdata2     start:0x803E7110 end:0x803E7130
 
 main/dll/dll_02A4.c:
-	.text       start:0x80231398 end:0x80231964
+	.text       start:0x8023134C end:0x802315EC
+	.sdata2     start:0x803E7130 end:0x803E7138
 
 main/dll/ARW/dll_02A5_arwgenerato.c:
-	.text       start:0x80231964 end:0x80231A90
-	.sdata2     start:0x803E7158 end:0x803E7160
+	.text       start:0x802315EC end:0x80231A90
+	.sdata2     start:0x803E7148 end:0x803E7160
 
 main/dll/ARW/dll_02A6_arwsquadron.c:
 	.text       start:0x80231A90 end:0x802331B0

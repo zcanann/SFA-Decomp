@@ -93,16 +93,3 @@ void ARWSpeedStr_release(void)
 void ARWSpeedStr_initialise(void)
 {
 }
-
-void fn_80231028(GameObject* obj, int speed)
-{
-    ARWSpeedStrState* state = obj->extra;
-    state->speed = speed;
-}
-
-void fn_80231058(GameObject* obj, ARWSpeedStrVelocity* velocity)
-{
-    obj->anim.velocityX = velocity->x;
-    obj->anim.velocityY = velocity->y;
-    obj->anim.velocityZ = velocity->z;
-}
