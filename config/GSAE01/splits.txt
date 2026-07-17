@@ -3450,6 +3450,7 @@ main/dll/ARW/dll_029F_arwbombcoll.c:
 
 main/dll/dll_02A0_ring.c:
 	.text       start:0x8022FA00 end:0x802308B4
+	.data       start:0x8032B720 end:0x8032B7D0
 	.sdata2     start:0x803E7098 end:0x803E70E0
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:

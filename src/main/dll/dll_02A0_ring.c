@@ -13,7 +13,7 @@
  * toward the Arwing with a spiralling particle burst before snapping back
  * to their placement position and hiding.
  *
- * Per-mode timing/particle parameters come from lbl_8032B720[mode]
+ * Per-mode timing/particle parameters come from gRingModeParams[mode]
  * (RingTable); the optional glow is a ModelLightStruct.
  */
 #include "main/dll/partfx_interface.h"
@@ -24,6 +24,7 @@
 #include "main/frame_timing.h"
 #include "main/gamebits.h"
 #include "main/model_light.h"
+#include "main/object_descriptor.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
 #include "main/object_api.h"
@@ -63,6 +64,31 @@
 #define RING_MODEL_DEFAULT  0
 #define RING_MODEL_ALT      1
 #define RING_OBJFLAG_HIDDEN 0x4000
+
+RingTable gRingModeParams[] = {
+    {0x7A4, 0x7A5, 0x2000, 100, -0x1000, 1850.0f},
+    {0x7A2, 0x7A3, 0x4000, 50, 0x1000, 732.0f},
+    {0x7A2, 0x7A3, 0x4000, 50, 0x1000, 732.0f},
+    {0x7A4, 0x7A5, 0x2000, 100, -0x1000, 1850.0f},
+    {0x7A2, 0x7A3, 0x4000, 50, 0x1000, 732.0f},
+};
+
+ObjectDescriptor gRingObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ring_initialise,
+    (ObjectDescriptorCallback)ring_release,
+    NULL,
+    (ObjectDescriptorCallback)ring_init,
+    (ObjectDescriptorCallback)ring_update,
+    (ObjectDescriptorCallback)ring_hitDetect,
+    (ObjectDescriptorCallback)ring_render,
+    (ObjectDescriptorCallback)ring_free,
+    (ObjectDescriptorCallback)ring_getObjectTypeId,
+    ring_getExtraSize,
+};
 
 #pragma dont_inline on
 void arwbombcoll_updateMovingAxis(GameObject* obj, RingState* state)
@@ -212,12 +238,6 @@ int arwbombcoll_checkArwingCollision(GameObject* obj, RingState* state, int arwi
 }
 #pragma dont_inline reset
 
-__declspec(section ".sdata2") f32 lbl_803E70B0 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E70B4 = 3.0f;
-__declspec(section ".sdata2") f32 lbl_803E70B8 = 1000.0f;
-__declspec(section ".sdata2") f32 lbl_803E70BC = 60.0f;
-__declspec(section ".sdata2") f32 lbl_803E70C0 = 120.0f;
-
 int ring_getExtraSize(void)
 {
     return sizeof(RingState);
@@ -248,7 +268,7 @@ void ring_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     {
         queueGlowRender(state->light);
     }
-    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E70B0);
+    objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 
@@ -280,7 +300,7 @@ void ring_update(GameObject* obj)
     switch (state->phase)
     {
     case RING_PHASE_HIDDEN:
-        alpha = (int)((f32)(u32)obj->anim.alpha - lbl_803E70B4 * timeDelta);
+        alpha = (int)((f32)(u32)obj->anim.alpha - 3.0f * timeDelta);
         if (alpha < 0)
         {
             alpha = 0;
@@ -306,7 +326,7 @@ void ring_update(GameObject* obj)
         }
         return;
     case RING_PHASE_ACTIVE:
-        alpha = (int)((f32)(u32)obj->anim.alpha + lbl_803E70B4 * timeDelta);
+        alpha = (int)((f32)(u32)obj->anim.alpha + 3.0f * timeDelta);
         if (alpha > RING_ALPHA_OPAQUE)
             alpha = RING_ALPHA_OPAQUE;
         obj->anim.alpha = alpha;
@@ -367,7 +387,7 @@ void ring_update(GameObject* obj)
         Ring_onCollect(obj, state, arwing);
             }
         }
-        obj->anim.rotX = (f32)(int)obj->anim.rotX + lbl_803E70B8 * timeDelta;
+        obj->anim.rotX = (f32)(int)obj->anim.rotX + 1000.0f * timeDelta;
         break;
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > 0.0f)
@@ -384,25 +404,25 @@ void ring_update(GameObject* obj)
             }
             {
                 f32 sixty;
-                if (state->pullTimer > (sixty = lbl_803E70BC))
+                if (state->pullTimer > (sixty = 60.0f))
                 {
-                    obj->anim.rotX = (s16)(obj->anim.rotX + lbl_8032B720[state->mode].f10);
+                    obj->anim.rotX = (s16)(obj->anim.rotX + gRingModeParams[state->mode].spinStep);
                     {
                         f32 frac = (state->pullTimer - sixty) / sixty;
                         obj->anim.rootMotionScale = frac * obj->anim.modelInstance->rootMotionScaleBase;
                     }
-                    if (lbl_803E70C0 != state->pullTimer)
+                    if (120.0f != state->pullTimer)
                     {
                         Obj_BuildWorldTransformMatrix(obj, mtx, 0);
-                        for (ang = -0x7fff; ang < 0x7fff; ang += lbl_8032B720[state->mode].f8)
+                        for (ang = -0x7fff; ang < 0x7fff; ang += gRingModeParams[state->mode].spiralAngleStep)
                         {
                             dir[0] =
                                 10.0f * mathCosf(3.1415927f *
-                                                 (f32)(ang + (int)(state->pullTimer * lbl_8032B720[state->mode].f14)) /
+                                                 (f32)(ang + (int)(state->pullTimer * gRingModeParams[state->mode].spiralPhaseSpeed)) /
                                                  32768.0f);
                             dir[1] =
                                 10.0f * mathSinf(3.1415927f *
-                                                 (f32)(ang + (int)(state->pullTimer * lbl_8032B720[state->mode].f14)) /
+                                                 (f32)(ang + (int)(state->pullTimer * gRingModeParams[state->mode].spiralPhaseSpeed)) /
                                                  32768.0f);
                             dir[2] = 0.0f;
                             PSMTXMultVecSR((MtxP)mtx, (const Vec*)dir, (Vec*)dir);
@@ -410,13 +430,13 @@ void ring_update(GameObject* obj)
                             spawnBuf[4] = dir[1] + obj->anim.localPosY;
                             spawnBuf[5] = dir[2] + obj->anim.localPosZ;
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f0, spawnBuf, RING_PARTFX_FLAGS, -1,
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].spiralEffectId, spawnBuf, RING_PARTFX_FLAGS, -1,
                                               &obj->anim.velocityX);
                         }
                     }
@@ -426,10 +446,10 @@ void ring_update(GameObject* obj)
                 {
                     if (state->flags.bit40 != 0)
                     {
-                        for (ang = 0; ang < lbl_8032B720[state->mode].fc; ang++)
+                        for (ang = 0; ang < gRingModeParams[state->mode].burstCount; ang++)
                         {
                             (*gPartfxInterface)
-                                ->spawnObject((void*)obj, lbl_8032B720[state->mode].f4, NULL, 2, -1, NULL);
+                                ->spawnObject((void*)obj, gRingModeParams[state->mode].burstEffectId, NULL, 2, -1, NULL);
                         }
                     }
                     state->flags.bit40 = 0;
@@ -456,7 +476,7 @@ void ring_update(GameObject* obj)
         }
         else
         {
-            state->pullTimer = lbl_803E70C0;
+            state->pullTimer = 120.0f;
         }
         break;
     case RING_PHASE_COLLECTED:
@@ -469,8 +489,6 @@ void ring_update(GameObject* obj)
     }
 }
 
-
-__declspec(section ".sdata2") f32 lbl_803E70D8 = 20.0f;
 
 void ring_init(GameObject* obj, RingPlacement* setup)
 {
@@ -527,7 +545,7 @@ void ring_init(GameObject* obj, RingPlacement* setup)
     if (state->mode == RING_MODE_WC_MOON || state->mode == RING_MODE_WC_SUN)
     {
         f->bit10 = 1;
-        state->arwingYOffset = lbl_803E70D8;
+        state->arwingYOffset = 20.0f;
     }
     else
     {

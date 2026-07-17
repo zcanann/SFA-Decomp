@@ -45,12 +45,12 @@ typedef struct RingPlacement
 
 typedef struct RingTable
 {
-    int f0;
-    int f4;
-    int f8;
-    int fc;
-    int f10;
-    f32 f14;
+    int spiralEffectId;
+    int burstEffectId;
+    int spiralAngleStep;
+    int burstCount;
+    int spinStep;
+    f32 spiralPhaseSpeed;
 } RingTable;
 
 STATIC_ASSERT(sizeof(RingFlags) == 0x1);
@@ -71,16 +71,7 @@ STATIC_ASSERT(offsetof(RingPlacement, linkId) == 0x1A);
 STATIC_ASSERT(offsetof(RingPlacement, pullHeight) == 0x1C);
 STATIC_ASSERT(offsetof(RingPlacement, activateBit) == 0x20);
 
-extern f32 lbl_803E70B0;
-extern f32 lbl_803E70B4;
-extern f32 lbl_803E70B8;
-extern f32 lbl_803E70BC;
-extern f32 lbl_803E70C0;
-extern f32 lbl_803E70C4;
-extern f32 lbl_803E70C8;
-extern f32 lbl_803E70CC;
-extern f32 lbl_803E70D8;
-extern RingTable lbl_8032B720[];
+extern RingTable gRingModeParams[];
 
 int ring_getExtraSize(void);
 int ring_getObjectTypeId(void);
