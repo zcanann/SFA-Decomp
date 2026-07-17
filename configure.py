@@ -1305,7 +1305,12 @@ config.libs = [
             Object(NonMatching, "main/dll/mmp_gyservent.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0126_trigger.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_0145_cloudprisoncontrol.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/CF/dll_0148_cfguardian.c", cflags=cflags_dll_noopt),
+            Object(
+                MatchingFor("GSAE01"),
+                "main/dll/CF/dll_0148_cfguardian.c",
+                cflags=cflags_dll_noopt,
+                section_alignments={".data": 4},
+            ),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_0149_cfwindlift.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014A_cfpowerbase.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/CF/dll_014B_cfmaincrystal.c", cflags=cflags_dll_noopt),
