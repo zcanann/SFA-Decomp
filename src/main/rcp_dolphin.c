@@ -154,7 +154,7 @@ extern u8 gRcpWarpDistortListBuilt;
 extern u32 gRcpWarpDistortListSize;
 extern F32Pair LastReadFinished_803DEB50;
 extern f32 lbl_803DEB54;
-extern f32 lbl_803DEB64;
+extern const f32 lbl_803DEB64;
 extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;
 typedef struct RcpDistortSlot
@@ -778,10 +778,9 @@ extern u8 gRcpWarpDistortDisplayList[0x6640];
 
 void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) */
 {
-    f32 z;
-    f32 span;
     f32 step;
     f32 half;
+    f32 span;
     f32 x0;
     f32 y;
     f32 ySq;
@@ -802,7 +801,6 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
         span = LastReadIssued_803DEB58.lo;
         half = lbl_803DEB5C;
         step = lbl_803DEB54;
-        z = lbl_803DEB64;
         for (; i < 0x10; i++)
         {
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT4, 0x22);
@@ -826,7 +824,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
                 }
                 *(volatile f32*)0xCC008000 = x0;
                 *(volatile f32*)0xCC008000 = y;
-                *(volatile f32*)0xCC008000 = z;
+                *(volatile f32*)0xCC008000 = lbl_803DEB64;
                 *(volatile f32*)0xCC008000 = x0;
                 *(volatile f32*)0xCC008000 = y;
                 *(volatile f32*)0xCC008000 = bulge;
@@ -841,7 +839,7 @@ void lightFn_80052974(f32 a, f32 b) /* params unused; callers pass (i*32, 0.0f) 
                 }
                 *(volatile f32*)0xCC008000 = x1;
                 *(volatile f32*)0xCC008000 = y;
-                *(volatile f32*)0xCC008000 = z;
+                *(volatile f32*)0xCC008000 = lbl_803DEB64;
                 *(volatile f32*)0xCC008000 = x1;
                 *(volatile f32*)0xCC008000 = y;
                 *(volatile f32*)0xCC008000 = bulge;
@@ -1989,7 +1987,7 @@ doneBank1:
     *(u32*)(firstTex + 0x4c) = size;
     slot = 0;
     entry = gLoadedTextures;
-    for (; slot < gLoadedTextureCount; slot++, entry++)
+    for (; slot < gLoadedTextureCount; entry++, slot++)
     {
         if (entry->key == -1)
         {

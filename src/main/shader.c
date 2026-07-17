@@ -2114,7 +2114,6 @@ void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
     u8* self = lbl_803DCE78;
     int tabOff = idx * 7 << 2;
     int offset0 = *(int*)(lbl_803DCE7C + tabOff);
-    int x, y;
 
     getTabEntry(self, MLDF_FILEID_MAPS_BIN, offset0, *(int*)((lbl_803DCE7C + 8) + tabOff) - offset0);
     *(int*)(self + 0xc) = (int)self + *(int*)((lbl_803DCE7C + 4) + tabOff) - *(int*)(lbl_803DCE7C + tabOff);
@@ -2124,11 +2123,11 @@ void mapInitSetRects(s16* rect, u8* bitmap, int originX, int originY, int idx)
     rect[3] = rect[2] + *(s16*)(self + 2) - 1;
     *(s8*)((char*)rect + 8) = *(s16*)(self + 4);
     *(s8*)((char*)rect + 9) = *(s16*)(self + 6);
-    for (y = 0; (s16)y < *(s16*)(self + 2); y++)
+    for (originY = 0; (s16)originY < *(s16*)(self + 2); originY++)
     {
-        for (x = 0; (s16)x < *(s16*)(self + 0); x++)
+        for (originX = 0; (s16)originX < *(s16*)(self + 0); originX++)
         {
-            int pixelIdx = (s16)x + (s16)y * *(s16*)(self + 0);
+            int pixelIdx = (s16)originX + (s16)originY * *(s16*)(self + 0);
             if ((int)(*(u32*)(*(int*)(self + 0xc) + pixelIdx * 4) >> 23 & 0xff) != 0xff)
             {
                 bitmap[pixelIdx >> 3] |= 1 << (pixelIdx & 7);
