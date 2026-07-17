@@ -1,7 +1,6 @@
 /*
- * DragonRock Palace laser-beam object (DLL 0x236; "DFP_LaserBe") - a
- * legacy/disabled object: every callback (init/update/render/free) only
- * logs "No Longer supported" via OSReport.
+ * Legacy/disabled laser object (DLL 0x236; "DFP_LaserBe"): every callback
+ * only logs "No Longer supported" via OSReport.
  */
 #include "dolphin/os.h"
 #include "main/dll/CF/laser.h"
