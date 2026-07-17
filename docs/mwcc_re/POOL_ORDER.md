@@ -119,6 +119,39 @@ cfg.velocityY = (0.005f * (f32)(s32)randomGetRange(100, 0x96)) * mathSinf(angle)
 ```
 456-byte pool byte-exact, `.text` unchanged at 33024/33024.
 
+## ★★ BLOCKED CLASS: a live-minted conversion bias CANNOT be exported cross-TU from source (tricky/enemy, 2026-07-17)
+
+The seqobj11e / barrelgener / mcmd_setup bias-redraws all landed because their minted biases are
+**scope:local — referenced only inside their own TU**. A bias that is **directly loaded (`lfd @sda21`)
+by other DLLs' object code** (i.e. it is genuinely cross-TU shared, `scope:global`) is a different,
+**currently-unsolved** case. `dll_00C4_tricky`'s `gTrickyS32ToDoubleBias` (0x803E2460, offset 0x88 in
+tricky's carve) is minted by tricky's early `(f32)(s32)` conversions AND imported (UND, real `lfd`
+loads) by **6 external NonMatching DLLs**: skeetla, tricky_substates, tricky_flameguard,
+tricky_rollroute, weapone6, animobjd2. To flip tricky the source `.o` must **export** that atom.
+
+Every source-C spelling was probed (2026-07-17) and each fails:
+| spelling | result | why it fails |
+|---|---|---|
+| `const f64 g = 4503601774854144.0;` (task recipe) | **DUPLICATE** — `.o .sdata2` = 0x98 not 0x90 | the named def lands at 0x88 but the conversion still **mints its own `@124` at 0x90** and references `@124`, not the named def; the exported def is dead. |
+| `__declspec(section ".sdata2") f64 g` | same duplicate (0x98) | ditto |
+| `const union { f64 d; } g = {...}` | same duplicate (0x98) | external linkage never merges with the internal minted atom |
+| `static const f64 g` | single atom (0x90) **but named `@124`** (local) | dedups into the minted atom, but the minted atom wins the name → **no export**, 6 importers fail `undefined`. |
+
+★**Root law: MWCC's `(f32)(s32)` codegen always mints a *fresh* internal bias atom and never reuses a
+same-value data def; a same-value data def with external linkage never merges into it (intra-`.o` const
+merge does NOT happen — proven: the 0x98 `.o` links to a 0x98 `.sdata2`, DOL checksum fails).** So the
+one atom cannot be simultaneously *minted-and-referenced* (needs internal linkage) and *exported*
+(needs external linkage). The retail split has it as a single `scope:global` atom only because **dtk
+renames tricky's local minted atom at split time** — a step the mwcc source build has no equivalent of.
+
+★**Diagnostic trap hit here:** with the `const f64` recipe, `report.json` reads **complete_units 867
+(tricky `complete=True`)** because objdiff is `@sda21`-blind — yet `ninja build/GSAE01/ok` **FAILS**
+(`main.dol` checksum, +8 stray bias bytes). This is the canonical "gate on `ok`, never report.json" case.
+
+⇒ **The tricky ∪ enemy merged-TU redraw is blocked at TU-A's export step, independent of the .text/pool
+restructure.** It needs a new technique to name+export a live-minted bias (or to flip all 6 bystanders
+so they mint their own and the imports disappear — a large, unrelated scope). Bank until one exists.
+
 ## ★ TRAP: objdiff `.text` 100% does NOT mean the linked bytes match (`@sda21`)
 
 `lfs f1, sym@sda21(rX)` is a **relocation** in the `.o`: the base register and displacement fields are
