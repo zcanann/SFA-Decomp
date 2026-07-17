@@ -1154,5 +1154,3 @@ int ObjAnim_SetCurrentMove(int objAnimHandle, int moveId, f32 moveProgress, int 
 
 char gObjAnimMissingCachedMoveWarning[] =
     "<objanim.c -- setBlendMove> WARNING tried to load anim -1 from cache modno %d\n";
-
-int gObjHitsActiveHitVolumeObjects[OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT] = {0};
