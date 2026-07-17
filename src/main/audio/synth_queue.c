@@ -2,11 +2,21 @@
 
 #pragma exceptions on
 
-typedef struct SynthSeqRuntime
+typedef union SynthSeqRuntime
 {
-    u8 unk0000[0x1400];
-    SynthVoice voices[SYNTH_MAX_VOICES];
+    struct
+    {
+        u8 callbackStorage[0x1400];
+        SynthVoice voices[SYNTH_MAX_VOICES];
+    } data;
+    u8 bytes[0x1400 + sizeof(SynthVoice) * SYNTH_MAX_VOICES];
 } SynthSeqRuntime;
+
+typedef struct SynthVoiceRuntimeView
+{
+    u8 callbackStorage[0x1400];
+    SynthVoice voice;
+} SynthVoiceRuntimeView;
 
 /* MusyX sequencer arrangement data (ARR). */
 typedef struct SynthArrangement
@@ -494,7 +504,7 @@ void synthFreeHandle(u32 handle)
     SynthSeqRuntime* runtime;
     u32 found;
     u32 i;
-    u8* row;
+    SynthVoiceRuntimeView* runtimeView;
 
     runtime = &lbl_803AF550;
 
@@ -529,9 +539,9 @@ done:
 
     if ((found & 0x80000000) == 0)
     {
-        row = (u8*)runtime + found * 6248;
-        voice = (SynthVoice*)(row + 0x1400);
-        switch (((SynthVoice*)(row + 0x1400))->state)
+        runtimeView = (SynthVoiceRuntimeView*)(runtime->bytes + found * 6248);
+        voice = &runtimeView->voice;
+        switch (runtimeView->voice.state)
         {
         case SYNTH_VOICE_STATE_QUEUED:
             if (voice->prev != 0)
@@ -544,26 +554,23 @@ done:
             }
 
             {
-                SynthVoice* base;
                 i = 0;
-                base = voice;
                 for (; i < 2; i++)
                 {
-                    SynthCallbackLink* cb = base->callbackLists[0];
-                    while (cb != 0)
+                    SynthCallbackLink* callback = voice->callbackLists[i];
+                    while (callback != 0)
                     {
-                        voiceKillById(cb->callbackId);
-                        cb = cb->next;
+                        voiceKillById(callback->callbackId);
+                        callback = callback->next;
                     }
-                    base = (SynthVoice*)((u8*)base + 4);
                 }
             }
             {
-                SynthCallbackLink* cb = runtime->voices[found].callbackLists[2];
-                while (cb != 0)
+                SynthCallbackLink* callback = runtime->data.voices[found].callbackLists[2];
+                while (callback != 0)
                 {
-                    voiceKillById(cb->callbackId);
-                    cb = cb->next;
+                    voiceKillById(callback->callbackId);
+                    callback = callback->next;
                 }
             }
             synthRecycleVoiceCallbacks(voice);
@@ -595,8 +602,8 @@ done:
     }
     else
     {
-        if ((voice = &runtime->voices[found & 0x7fffffffu], runtime->voices[found & 0x7fffffffu].state) !=
-            SYNTH_VOICE_STATE_FREE)
+        if ((voice = &runtime->data.voices[found & 0x7fffffffu],
+             runtime->data.voices[found & 0x7fffffffu].state) != SYNTH_VOICE_STATE_FREE)
         {
             voice->pendingUpdate.output = 0;
         }
