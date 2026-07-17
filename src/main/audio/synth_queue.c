@@ -76,7 +76,7 @@ extern void inpResetChannelDefaults(u8 a, u8 b);
  */
 extern int voiceKillById(u32 id);
 
-static void BuildTransTab(u8* tab, SynthPage* page)
+static inline void BuildTransTab(u8* tab, SynthPage* page)
 {
     u8 i;
 
