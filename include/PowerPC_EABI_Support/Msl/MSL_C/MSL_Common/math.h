@@ -20,7 +20,7 @@ extern "C" {
 
 int abs(int);
 double acos(double);
-float fn_802920A4(float);
+float acosf(float);
 double asin(double);
 double atan(double);
 double atan2(double, double);

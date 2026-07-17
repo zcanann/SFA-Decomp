@@ -104,7 +104,7 @@ _MATH_INLINE float __kernel_sin(float x)
 {
     return (float)asin((double)x);
 }
-_MATH_INLINE float fn_802920A4(float x)
+_MATH_INLINE float acosf(float x)
 {
     return (float)acos((double)x);
 }

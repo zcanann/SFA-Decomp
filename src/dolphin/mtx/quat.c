@@ -2,7 +2,7 @@
 #include "dolphin/mtx.h"
 #include "ffcc/symbols_shared.h"
 
-float fn_802920A4(float x);
+float acosf(float x);
 
 float sinf(float x);
 float cosf(float x);
@@ -213,7 +213,7 @@ void C_QUATSlerp(const Quaternion *p, const Quaternion *q, Quaternion *r, f32 t)
     }
 
     if (cos_th <= 0.99999f) {
-        theta = fn_802920A4(cos_th);
+        theta = acosf(cos_th);
         sin_th = sinf(theta);
 
         tp = sinf((1.0f - t) * theta) / sin_th;

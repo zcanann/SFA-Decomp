@@ -76,7 +76,7 @@ float fn_80291FF4(float x) {
     return lbl_803E79E8 - lbl_803E79CC * p;
 }
 
-float fn_802920A4(float x) {
+float acosf(float x) {
     float ax = __fabsf(x);
     float y;
     float p;

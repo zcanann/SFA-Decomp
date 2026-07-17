@@ -1,7 +1,7 @@
 double acos(double);
 double pow(double, double);
 
-float fn_802920A4(float x)
+float acosf(float x)
 {
     return (float)acos(x);
 }

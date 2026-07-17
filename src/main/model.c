@@ -113,7 +113,7 @@ extern void fn_80025F38(int* a, int b, u8* p, u8* q);
 extern void modelAnimFn_800246a0(u8* dst, u8* model, u8* ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 extern void fn_80007F78(u8 * ch, s16 * outRot, s16 * outRot2);
 extern void PSMTXTranspose(f32 * src, f32 * dst);
-extern f32 fn_802920A4(f32 x);
+extern f32 acosf(f32 x);
 extern const f32 gModelDotClampMax;
 extern f32 gModelDotClampMin;
 extern f32 gMapSavedPlayerOffsetX;
@@ -1254,7 +1254,7 @@ void fn_80025F38(int* a, int b, u8* blend, u8* chain)
                 }
                 PSMTXTranspose(tmp, mt);
                 PSMTXMultVecSR(mt, axis, axis);
-                PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
+                PSMTXRotAxisRad(m, axis, acosf(dot));
             }
             else
             {
@@ -1350,7 +1350,7 @@ void fn_80026308(int* a, int b, u8* blend, u8* chain, int cb, int cbArg)
             }
             PSMTXTranspose(tmp, mt);
             PSMTXMultVecSR(mt, axis, axis);
-            PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
+            PSMTXRotAxisRad(m, axis, acosf(dot));
         }
         else
         {
