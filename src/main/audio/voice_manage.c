@@ -33,7 +33,7 @@ static u8 priorityGroupHeads[0x100];
 static u16 prioritySortLinks[0x200];
 static VoiceListNode freeList[0x40];
 
-static void voiceInitFreeList(void)
+static inline void voiceInitFreeList(void)
 {
     u32 i;
 
@@ -49,7 +49,7 @@ static void voiceInitFreeList(void)
     voiceListInsert = synthInfo.voiceCount - 1;
 }
 
-static void voiceInitPrioSort(void)
+static inline void voiceInitPrioSort(void)
 {
     u32 i;
 
