@@ -6390,17 +6390,13 @@ void pauseMenuFn_80129ee0(void)
         {
         case 0:
         {
-            int camMode;
             int audioFree;
+            int camMode;
             int canOpen;
             camMode = (*gCameraInterface)->getMode();
             canOpen = 1;
-            audioFree = 0;
-            if ((player == 0 || !(player->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
-                getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0)
-            {
-                audioFree = 1;
-            }
+            audioFree = (player == 0 || !(player->objectFlags & GAMEUI_OBJFLAG_PARENT_SLACK)) &&
+                getCurSeqNoInt() == 0 && AudioStream_IsPreparing() == 0;
             if (audioFree == 0 && camMode != 0x51)
             {
                 canOpen = 0;
