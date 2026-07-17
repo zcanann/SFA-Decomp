@@ -1691,6 +1691,7 @@ main/dll/dll_00F4_doorf4.c:
 main/dll/dll_00F5_sidekickball.c:
 	.text       start:0x801793A4 end:0x8017A00C
 	.data       start:0x80320F30 end:0x80320F98
+	.sdata2     start:0x803E3688 end:0x803E36E0
 
 main/dll/dll_00F6_area.c:
 	.text       start:0x8017A00C end:0x8017A048

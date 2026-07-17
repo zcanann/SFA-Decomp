@@ -45,27 +45,7 @@
 /* GameCube controller button masks */
 #define PAD_BUTTON_A 0x100
 #define PAD_BUTTON_Y 0x800
-extern const f32 lbl_803E369C;
-extern const f32 lbl_803E36A0;
-extern f32 gSidekickBallFadeDuration;
-extern const f32 gSidekickBallActiveTimeout;
-extern const f32 gSidekickBallMaxAlpha;
-extern const f32 lbl_803E3688;
-extern const f32 lbl_803E368C;
-extern const f32 lbl_803E3690;
-extern const f32 lbl_803E3694;
-extern const f32 lbl_803E3698;
 extern void fn_8002A5DC(int obj);
-extern const f32 gSidekickBallRestitution;
-extern const f32 lbl_803E36B4;
-extern const f32 gSidekickBallFloorDamping;
-extern const f32 lbl_803E36BC;
-extern const f32 lbl_803E36C0;
-extern const f32 lbl_803E36C4;
-extern const f32 gSidekickBallGravity;
-extern const f32 lbl_803E36CC;
-extern const f32 lbl_803E36D0;
-extern const f32 lbl_803E36D4;
 extern char sSidekickBallYVelDepthFormat[];
 extern char sSidekickBallDotFormat[];
 extern u8 gSidekickBallPathPointData[];
@@ -79,9 +59,20 @@ enum SidekickBallMode
     SIDEKICK_BALL_FADING = 5,
 };
 
-int SidekickBall_getExtraSize(void)
+void fn_8017962C(GameObject* obj);
+int fn_80179650(GameObject* obj);
+void fn_80179678(GameObject* obj, GameObject* source);
+void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c);
+
+
+static inline int fltEqual(f32 a, f32 b)
 {
-    return 0x2cc;
+    return a == b;
+}
+
+static inline int fltNotEqual(f32 a, f32 b)
+{
+    return a != b;
 }
 
 int fn_801793A4(GameObject* obj)
@@ -89,52 +80,12 @@ int fn_801793A4(GameObject* obj)
     return *((u8*)(int*)obj->extra + 0x274) == 0;
 }
 
-void SidekickBall_free(int obj)
-{
-    mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
-}
-
-void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    if (((GameObject*)obj)->userData2 == 0 || visible == -1)
-    {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E36A0);
-    }
-}
-
-void fn_8017962C(GameObject* obj)
-{
-    SidekickBallState* state = obj->extra;
-    u8 mode = state->ballMode;
-    if (mode != SIDEKICK_BALL_THROWN && mode != SIDEKICK_BALL_HELD)
-        return;
-    state->fadeTimer = lbl_803E369C;
-}
-
-int fn_80179650(GameObject* obj)
-{
-    int result = 0;
-    u8 mode = (*(SidekickBallState**)&obj->extra)->ballMode;
-    if (mode == SIDEKICK_BALL_HELD || mode == SIDEKICK_BALL_MOVING)
-        result = 1;
-    return result;
-}
-
-void fn_80179678(GameObject* obj, GameObject* source)
-{
-    SidekickBallState* state = ((GameObject*)obj)->extra;
-    state->fadeTimer = lbl_803E369C;
-    state->ballMode = SIDEKICK_BALL_IDLE;
-    ObjHits_DisableObject((int)obj);
-    state->hittableLatch = 0;
-}
-
-void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
+static inline void sidekickBallThrow(GameObject* obj, f32 a, f32 b, f32 c)
 {
     SidekickBallState* state = obj->extra;
     int objId;
     state->ballMode = SIDEKICK_BALL_THROWN;
-    state->fadeTimer = lbl_803E369C;
+    state->fadeTimer = 0.0f;
     *(f32*)((char*)obj + 36) = a;
     obj->anim.velocityY = b;
     obj->anim.velocityZ = c;
@@ -145,6 +96,7 @@ void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
     state->launchY = obj->anim.localPosY;
     state->launchZ = obj->anim.localPosZ;
 }
+
 
 void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
 {
@@ -202,15 +154,15 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     params->triggerArmed = 1;
 
     {
-        f32 k = lbl_803E3688;
-        ((GameObject*)obj)->anim.velocityY = k * (lbl_803E3690 * *(f32*)((char*)playerState + 0x298) + lbl_803E368C);
-        ((GameObject*)obj)->anim.velocityZ = k * (lbl_803E3698 * *(f32*)((char*)playerState + 0x298) + lbl_803E3694);
+        f32 k = 0.75f;
+        ((GameObject*)obj)->anim.velocityY = k * (0.25f * *(f32*)((char*)playerState + 0x298) + 2.2f);
+        ((GameObject*)obj)->anim.velocityZ = k * (-0.25f * *(f32*)((char*)playerState + 0x298) + -2.2f);
     }
 
-    ((GameObject*)lcl)->anim.localPosX = lbl_803E369C;
-    ((GameObject*)lcl)->anim.localPosY = lbl_803E369C;
-    ((GameObject*)lcl)->anim.localPosZ = lbl_803E369C;
-    ((GameObject*)lcl)->anim.rootMotionScale = lbl_803E36A0;
+    ((GameObject*)lcl)->anim.localPosX = 0.0f;
+    ((GameObject*)lcl)->anim.localPosY = 0.0f;
+    ((GameObject*)lcl)->anim.localPosZ = 0.0f;
+    ((GameObject*)lcl)->anim.rootMotionScale = 1.0f;
     ((GameObject*)lcl)->anim.rotZ = 0;
     ((GameObject*)lcl)->anim.rotY = 0;
     {
@@ -227,20 +179,82 @@ void trickyBallFn_801793b8(GameObject* obj, SidekickBallState* params)
     }
     vecRotateZXY(lcl, &((GameObject*)obj)->anim.velocityX);
 
-    fn_801796BC((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
+    sidekickBallThrow((GameObject*)obj, *(f32*)((char*)obj + 36), ((GameObject*)obj)->anim.velocityY,
                 ((GameObject*)obj)->anim.velocityZ);
     goto end;
 
 fading:
     params->triggerHit = 0;
     params->sendHoldMessage[0] = 0;
-    params->fadeTimer = gSidekickBallFadeDuration;
+    params->fadeTimer = 60.0f;
     params->ballMode = SIDEKICK_BALL_FADING;
 
 end:
     if (params->sendHoldMessage[0] != 0)
     {
         ObjMsg_SendToObject(player, SIDEKICKBALL_MSG_PLAYER_GRAB, (void*)obj, 0);
+    }
+}
+
+void fn_8017962C(GameObject* obj)
+{
+    SidekickBallState* state = obj->extra;
+    u8 mode = state->ballMode;
+    if (mode != SIDEKICK_BALL_THROWN && mode != SIDEKICK_BALL_HELD)
+        return;
+    state->fadeTimer = 0.0f;
+}
+
+int fn_80179650(GameObject* obj)
+{
+    int result = 0;
+    u8 mode = (*(SidekickBallState**)&obj->extra)->ballMode;
+    if (mode == SIDEKICK_BALL_HELD || mode == SIDEKICK_BALL_MOVING)
+        result = 1;
+    return result;
+}
+
+void fn_80179678(GameObject* obj, GameObject* source)
+{
+    SidekickBallState* state = ((GameObject*)obj)->extra;
+    state->fadeTimer = 0.0f;
+    state->ballMode = SIDEKICK_BALL_IDLE;
+    ObjHits_DisableObject((int)obj);
+    state->hittableLatch = 0;
+}
+
+void fn_801796BC(GameObject* obj, f32 a, f32 b, f32 c)
+{
+    SidekickBallState* state = obj->extra;
+    int objId;
+    state->ballMode = SIDEKICK_BALL_THROWN;
+    state->fadeTimer = 0.0f;
+    *(f32*)((char*)obj + 36) = a;
+    obj->anim.velocityY = b;
+    obj->anim.velocityZ = c;
+    ObjHits_EnableObject(objId = (int)obj);
+    ObjHits_SyncObjectPositionIfDirty((GameObject*)objId);
+    state->hittableLatch = 1;
+    state->launchX = obj->anim.localPosX;
+    state->launchY = obj->anim.localPosY;
+    state->launchZ = obj->anim.localPosZ;
+}
+
+int SidekickBall_getExtraSize(void)
+{
+    return 0x2cc;
+}
+
+void SidekickBall_free(int obj)
+{
+    mainSetBits(GAMEBIT_ITEM_TrickyBall_Usable, 1);
+}
+
+void SidekickBall_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (((GameObject*)obj)->userData2 == 0 || visible == -1)
+    {
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -274,9 +288,9 @@ void SidekickBall_update(GameObject* self)
         state->ballMode == SIDEKICK_BALL_MOVING)
     {
         state->fadeTimer = state->fadeTimer + timeDelta;
-        if (state->fadeTimer >= gSidekickBallActiveTimeout)
+        if (state->fadeTimer >= 300.0f)
         {
-            state->fadeTimer = lbl_803E369C;
+            state->fadeTimer = 0.0f;
             state->ballMode = SIDEKICK_BALL_FADING;
         }
     }
@@ -308,13 +322,13 @@ void SidekickBall_update(GameObject* self)
         break;
     case SIDEKICK_BALL_FADING:
         state->fadeTimer = state->fadeTimer + timeDelta;
-        if (state->fadeTimer >= *(f32*)&gSidekickBallFadeDuration)
+        if (state->fadeTimer >= 60.0f)
         {
             Obj_FreeObject((GameObject*)self);
             return;
         }
         {
-            f32 v = gSidekickBallMaxAlpha * state->fadeTimer / gSidekickBallFadeDuration;
+            f32 v = 255.0f * state->fadeTimer / 60.0f;
             ((GameObject*)self)->anim.alpha = (u8)(0xFF - (int)v);
         }
         break;
@@ -369,7 +383,7 @@ u8 trickyBallMove(GameObject* obj)
     state = obj->extra;
     hasCollisionNormal = 0;
     movedFromCache = 0;
-    restitution = gSidekickBallRestitution;
+    restitution = 0.7f;
     speed = restitution;
 
     ObjHits_EnableObject((u32)obj);
@@ -384,18 +398,18 @@ u8 trickyBallMove(GameObject* obj)
              ? state->prevPos[2] - obj->anim.localPosZ
              : -(state->prevPos[2] - obj->anim.localPosZ);
 
-    if ((dx + dy + dz) < lbl_803E36B4)
+    if ((dx + dy + dz) < 0.01f)
     {
     }
     else
     {
         PSVECSubtract(&obj->anim.localPosX, state->prevPos, collisionNormal);
-        speed = restitution = gSidekickBallRestitution;
+        speed = restitution = 0.7f;
         hasCollisionNormal = 1;
         movedFromCache = 1;
     }
 
-    if (state->floorHeight > *(f32*)&lbl_803E369C)
+    if (state->floorHeight > 0.0f)
     {
         state->floorY = state->floorBaseY;
         state->floorDepth = state->floorHeight;
@@ -403,11 +417,11 @@ u8 trickyBallMove(GameObject* obj)
     }
     else
     {
-        if (state->floorY != lbl_803E369C)
+        if (fltNotEqual(state->floorY, 0.0f))
         {
             if (obj->anim.localPosY > state->floorY)
             {
-                state->floorY = lbl_803E369C;
+                state->floorY = 0.0f;
             }
             else
             {
@@ -422,20 +436,20 @@ u8 trickyBallMove(GameObject* obj)
 
     if (hasFloorDepth != 0)
     {
-        obj->anim.velocityX *= gSidekickBallFloorDamping;
-        obj->anim.velocityY *= gSidekickBallFloorDamping;
-        obj->anim.velocityZ *= gSidekickBallFloorDamping;
-        obj->anim.velocityY += lbl_803E36BC * timeDelta;
+        obj->anim.velocityX *= 0.95f;
+        obj->anim.velocityY *= 0.95f;
+        obj->anim.velocityZ *= 0.95f;
+        obj->anim.velocityY += 0.025f * timeDelta;
         OSReport(sSidekickBallYVelDepthFormat, obj->anim.velocityY, state->floorDepth);
-        if ((obj->anim.velocityY < lbl_803E36C0) &&
-            (obj->anim.velocityY > lbl_803E36C4) && (state->floorDepth < lbl_803E36A0))
+        if ((obj->anim.velocityY < 0.2f) &&
+            (obj->anim.velocityY > -0.2f) && (state->floorDepth < 1.0f))
         {
             return 1;
         }
     }
     else if (hasCollisionNormal == 0)
     {
-        obj->anim.velocityY -= gSidekickBallGravity * timeDelta;
+        obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
     ((void (*)(int, f32, f32, f32))objMove)(
@@ -460,21 +474,21 @@ u8 trickyBallMove(GameObject* obj)
         reflectedY = -obj->anim.velocityY;
         reflectedZ = -obj->anim.velocityZ;
         speed = sqrtf(reflectedX * reflectedX + reflectedY * reflectedY + reflectedZ * reflectedZ);
-        if (speed > lbl_803E36CC)
+        if (speed > 0.5f)
         {
             Sfx_PlayFromObject((int)obj, SFXTRIG_baptr1_c);
         }
-        if (lbl_803E369C != speed)
+        if (0.0f != speed)
         {
-            invSpeed = lbl_803E36A0 / speed;
+            invSpeed = 1.0f / speed;
             reflectedX *= invSpeed;
             reflectedY *= invSpeed;
             reflectedZ *= invSpeed;
         }
-        dot = lbl_803E36D0 * ((reflectedX * collisionNormal[0]) + (reflectedY * collisionNormal[1]) +
+        dot = 2.0f * ((reflectedX * collisionNormal[0]) + (reflectedY * collisionNormal[1]) +
                               (reflectedZ * collisionNormal[2]));
         logPrintf(sSidekickBallDotFormat, dot);
-        if (dot > lbl_803E369C)
+        if (dot > 0.0f)
         {
             obj->anim.velocityX = collisionNormal[0] * dot;
             obj->anim.velocityY = collisionNormal[1] * dot;
@@ -482,7 +496,7 @@ u8 trickyBallMove(GameObject* obj)
             obj->anim.velocityX -= reflectedX;
             obj->anim.velocityY -= reflectedY;
             obj->anim.velocityZ -= reflectedZ;
-            if ((state->floorY == lbl_803E369C) && (speed < lbl_803E36D4) && (state->hasCollisionNormal != 0))
+            if (fltEqual(state->floorY, 0.0f) && (speed < 0.3f) && (state->hasCollisionNormal != 0))
             {
                 return 2;
             }
@@ -492,7 +506,7 @@ u8 trickyBallMove(GameObject* obj)
 
     if (movedFromCache != 0)
     {
-        obj->anim.velocityY -= gSidekickBallGravity * timeDelta;
+        obj->anim.velocityY -= 0.05f * timeDelta;
     }
 
     fn_8002A5DC((int)obj);
@@ -513,7 +527,7 @@ void SidekickBall_init(GameObject* obj)
     memset(state, 0, 0x2cc);
     Obj_GetPlayerObject(); /* result discarded; the call is emitted in the target */
     ((SidekickBallState*)state)->ballMode = SIDEKICK_BALL_IDLE; /* explicit post-memset store in target */
-    ((TFrameAnimatorState*)state)->fadeTimer = lbl_803E369C;
+    ((TFrameAnimatorState*)state)->fadeTimer = 0.0f;
     obj->objectFlags |= SIDEKICKBALL_OBJFLAG_HITDETECT_DISABLED;
     objDef = *(int*)&obj->anim.hitReactState;
     ((TFrameAnimatorState*)state)->primaryRadius = (f32)((ObjHitsPriorityState*)objDef)->primaryRadius;
@@ -528,10 +542,6 @@ void SidekickBall_init(GameObject* obj)
 }
 
 u8 gSidekickBallPathPointData[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
-
-char sSidekickBallDotFormat[] = " dot %f ";
 
 /* .data fill (reconstructed to match dll_00F5_sidekickball.o) */
 ObjectDescriptor gSidekickBallObjDescriptor = {0,
@@ -548,3 +558,7 @@ ObjectDescriptor gSidekickBallObjDescriptor = {0,
                                                (ObjectDescriptorCallback)SidekickBall_free,
                                                0,
                                                SidekickBall_getExtraSize};
+
+char sSidekickBallYVelDepthFormat[] = "yvel %f, depth %f\n";
+
+char sSidekickBallDotFormat[] = " dot %f ";
