@@ -26,11 +26,9 @@
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
 
-#pragma force_active on
 union DllF7ConstF32 { f32 f; };
-__declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3400 = { 0.0f };
-__declspec(section ".sdata2") const union DllF7ConstF32 lbl_803E3404 = { 1.0f };
-#pragma force_active reset
+const union DllF7ConstF32 lbl_803E3400 = { 0.0f };
+const union DllF7ConstF32 lbl_803E3404 = { 1.0f };
 
 #define DLLF7_OBJGROUP        0x3e
 #define DLLF7_TARGET_OBJGROUP 0x4

@@ -60,15 +60,11 @@ STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 #include "main/object_render_legacy.h"
 #include "main/audio/sfx.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E4848 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E484C = 0.0625f;
 union DimSnowballConstF32 { f32 f; };
-__declspec(section ".sdata2") const union DimSnowballConstF32 lbl_803E4850 = { 0.0f };
+const union DimSnowballConstF32 lbl_803E4850 = { 0.0f };
 __declspec(section ".sdata2") f32 lbl_803E4854 = 1000.0f;
-#pragma explicit_zero_data off
-#pragma force_active reset
 
 s16 lbl_803DBEE8 = 0x3E6;
 

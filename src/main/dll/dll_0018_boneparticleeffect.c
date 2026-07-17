@@ -47,14 +47,12 @@ s32 gBoneParticleBufferFlip;
 extern void* gBoneParticleEffectBuffers[];
 extern f32 gBoneParticleDriftVelocity;
 union BoneParticleConstF32 { f32 f; };
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
-#pragma explicit_zero_data off
+const union BoneParticleConstF32 lbl_803DF4A8 = { 0.0f };
 __declspec(section ".sdata2") f32 gBoneParticleDriftMax = 500.0f;
 __declspec(section ".sdata2") f32 lbl_803DF4B0 = -1.0f;
 __declspec(section ".sdata2") f32 gBoneParticleDriftMin = -500.0f;
-__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
-__declspec(section ".sdata2") const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
+const union BoneParticleConstF32 lbl_803DF4B8 = { 1.0f };
+const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);

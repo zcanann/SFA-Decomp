@@ -51,7 +51,7 @@ union WispBaddieConstF32
 {
     f32 f;
 };
-__declspec(section ".sdata2") const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
+const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
 __declspec(section ".sdata2") f32 lbl_803E26EC = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F4 = 0.9f;

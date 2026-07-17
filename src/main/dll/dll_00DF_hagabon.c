@@ -74,7 +74,7 @@ __declspec(section ".sdata2") f32 lbl_803E2618 = 1000.0f;
 __declspec(section ".sdata2") f32 gHagabonPi = 3.1415927f;
 __declspec(section ".sdata2") f32 lbl_803E2620 = 32768.0f;
 union HagabonConstF32 { f32 f; };
-__declspec(section ".sdata2") const union HagabonConstF32 lbl_803E2624 = { 0.001f };
+const union HagabonConstF32 lbl_803E2624 = { 0.001f };
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 STATIC_ASSERT(sizeof(HagabonState) == 0x28);
 STATIC_ASSERT(offsetof(HagabonState, wavePhaseA) == 0x20);

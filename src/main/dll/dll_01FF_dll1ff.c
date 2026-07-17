@@ -19,15 +19,11 @@
 #include "main/frame_timing.h"
 #include "main/object_render.h"
 
-#pragma force_active on
-#pragma explicit_zero_data on
 union Dll1FFConstF32 { f32 f; };
-__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D80 = { 1.0f };
-__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D84 = { 0.1f };
-__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D88 = { 40.0f };
-__declspec(section ".sdata2") const union Dll1FFConstF32 lbl_803E5D8C = { 0.0f };
-#pragma explicit_zero_data off
-#pragma force_active reset
+const union Dll1FFConstF32 lbl_803E5D80 = { 1.0f };
+const union Dll1FFConstF32 lbl_803E5D84 = { 0.1f };
+const union Dll1FFConstF32 lbl_803E5D88 = { 40.0f };
+const union Dll1FFConstF32 lbl_803E5D8C = { 0.0f };
 
 /* dll_1FF_getExtraSize == 0x8 (grabbable hook). */
 typedef struct Dll1FFState

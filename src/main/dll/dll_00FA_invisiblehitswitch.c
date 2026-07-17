@@ -6,10 +6,8 @@
 #include "main/game_object.h"
 #include "main/gamebits.h"
 
-#pragma force_active on
 union InvisibleHitSwitchConstF32 { f32 f; };
-__declspec(section ".sdata2") const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
-#pragma force_active reset
+const union InvisibleHitSwitchConstF32 lbl_803E3730 = { 0.0f };
 
 #define INVISIBLEHITSWITCH_OBJFLAG_HIDDEN 0x4000
 #define INVISIBLEHITSWITCH_OBJFLAG_HITDETECT_DISABLED 0x2000
