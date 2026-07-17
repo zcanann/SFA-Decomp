@@ -19,10 +19,8 @@ force_active:
   - lbl_803E2A44
   - lbl_803E2A64
   # dll_012B_fxemit.c: the retail link retained this unreferenced .sdata2 zero
-  # atom and a dead 4-byte .data global; dropping either would shorten the
-  # pool/section and shift every later SDA2 reference.
+  # atom; dropping it would shorten the pool and shift later SDA2 references.
   - lbl_803E3E44
-  - gFXEmitUnused
   # dll_0158_gunpowderbarrel.c: the retail link retained this unreferenced
   # .sdata zero atom; dropping it would shorten the section and shift
   # every later SDA reference.

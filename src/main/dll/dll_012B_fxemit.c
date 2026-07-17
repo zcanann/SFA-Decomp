@@ -498,7 +498,3 @@ ObjectDescriptor gFXEmitObjDescriptor = {
 };
 
 char sCFTreasSharpyDebugFormat[12] = "%x   %f %f\n\000";
-
-#pragma explicit_zero_data on
-__declspec(section ".data") s32 gFXEmitUnused = 0;
-#pragma explicit_zero_data off

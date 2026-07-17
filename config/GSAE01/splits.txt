@@ -1890,7 +1890,7 @@ main/dll/CF/dll_012A_cfcrate.c:
 
 main/dll/dll_012B_fxemit.c:
 	.text       start:0x8018E6C4 end:0x8018F148
-	.data       start:0x80321F38 end:0x80321F80
+	.data       start:0x80321F38 end:0x80321F7C
 	.sdata2     start:0x803E3E40 end:0x803E3E60
 
 main/dll/dll_0130_areafxemit.c:
