@@ -75,6 +75,18 @@ STATIC_ASSERT(offsetof(SkyLightSlotView, scaledAmbientR) == 0x84);
 STATIC_ASSERT(offsetof(SkyLightSlotView, lightR) == 0x8C);
 STATIC_ASSERT(offsetof(SkyLightSlotView, overrideDirectionX) == 0xA8);
 
+/* View used while fading a slot's computed color toward its override color. */
+typedef struct SkyColorBlendView {
+    u8 unk00[0x74];
+    u8 targetR;
+    u8 targetG;
+    u8 targetB;
+    u8 unk77[0x41];
+    f32 factor;
+} SkyColorBlendView;
+
+STATIC_ASSERT(offsetof(SkyColorBlendView, factor) == 0xB8);
+
 typedef struct SkyState {
     u8 unk00;
     u8 unk01;

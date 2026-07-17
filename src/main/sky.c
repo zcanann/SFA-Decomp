@@ -2503,26 +2503,26 @@ void skyFn_8008a04c(void)
     int part;
     int red;
     int iofs;
-    f32* vec;
     int green;
-    f32* pA;
-    f32* pB;
-    f32* pC;
-    int idx7;
-    int idx14;
+    f32* blendAlphaCurve;
+    f32* ambientIntensityCurve;
+    f32* lightIntensityCurve;
+    int greenCurveOffset;
+    int blueCurveOffset;
     u8* color;
     int part4;
     int i;
+    f32* vec;
     int rawR;
     int blue;
     int rawG;
-    int cC;
-    int cB;
-    int cA;
+    int lightIntensity;
+    int ambientIntensity;
+    u8 blendAlpha;
     f32 tc;
     f32 blend;
     f32 time2;
-    u8* p;
+    SkyColorBlendView* slot;
     f32 zero;
     f32 frac;
     f32 dayStart;
@@ -2537,8 +2537,8 @@ void skyFn_8008a04c(void)
     }
     else
     {
-        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < *(f32*)&lbl_803DF058)
-                 ? *(f32*)&lbl_803DF058
+        tc = (((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay < lbl_803DF058)
+                 ? lbl_803DF058
                  : ((((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay > lbl_803DF05C)
                         ? lbl_803DF05C
                         : ((SkyState*)gSkyState)->timeOfDay / gSkySecondsPerDay);
@@ -2564,11 +2564,11 @@ void skyFn_8008a04c(void)
         }
         iofs = i = 0;
         part4 = part * 4;
-        pA = &((f32*)((u8*)vec + 0x40))[part];
-        pB = &((f32*)((u8*)vec + 0x18))[part];
-        pC = &((f32*)((u8*)vec + 0x2c))[part];
-        idx7 = (part + 7) * 4;
-        idx14 = (part + 0xe) * 4;
+        blendAlphaCurve = &((f32*)((u8*)vec + 0x40))[part];
+        ambientIntensityCurve = &((f32*)((u8*)vec + 0x18))[part];
+        lightIntensityCurve = &((f32*)((u8*)vec + 0x2c))[part];
+        greenCurveOffset = (part + 7) * 4;
+        blueCurveOffset = (part + 0xe) * 4;
         color = &gSkyCurrentTextureColor;
         zero = lbl_803DF058;
         dayStart = gSkyDayStartTime;
@@ -2576,26 +2576,26 @@ void skyFn_8008a04c(void)
         {
             if ((u32)((gSkyState[iofs + 0xc1] >> 7) & 1) != 0)
             {
-                cA = 0xc8;
-                cB = 0;
-                cC = 0x60;
+                blendAlpha = 0xc8;
+                ambientIntensity = 0;
+                lightIntensity = 0x60;
             }
             else
             {
-                cA = (u8)Curve_EvalLinearValuesFirst(pA, frac, 0);
-                cB = Curve_EvalLinearValuesFirst(pB, frac, 0);
-                cC = Curve_EvalLinearValuesFirst(pC, frac, 0);
+                blendAlpha = (u8)Curve_EvalLinearValuesFirst(blendAlphaCurve, frac, 0);
+                ambientIntensity = Curve_EvalLinearValuesFirst(ambientIntensityCurve, frac, 0);
+                lightIntensity = Curve_EvalLinearValuesFirst(lightIntensityCurve, frac, 0);
             }
             rawR = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + part4 + 0x20, frac, 0);
-            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + idx7 + 0x20, frac, 0);
-            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + idx14 + 0x20, frac, 0);
-            p = gSkyState + iofs;
-            blend = *(f32*)&((GameObject*)p)->extra;
+            rawG = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + greenCurveOffset + 0x20, frac, 0);
+            blue = Curve_EvalCatmullRomValuesFirst(gSkyState + iofs + blueCurveOffset + 0x20, frac, 0);
+            slot = (SkyColorBlendView*)(gSkyState + iofs);
+            blend = slot->factor;
             if (blend != zero)
             {
-                rawR = (int)(blend * ((f32)p[0x74] - rawR) + rawR);
-                rawG = (int)(blend * ((f32)p[0x75] - rawG) + rawG);
-                blue = (int)(blend * ((f32)p[0x76] - blue) + blue);
+                rawR = (int)(blend * ((f32)slot->targetR - rawR) + rawR);
+                rawG = (int)(blend * ((f32)slot->targetG - rawG) + rawG);
+                blue = (int)(blend * ((f32)slot->targetB - blue) + blue);
             }
             if (rawR < 0)
             {
@@ -2638,13 +2638,15 @@ void skyFn_8008a04c(void)
             time2 = ((SkyState*)gSkyState)->timeOfDay;
             if (time2 >= dayStart && time2 <= lbl_803DF088)
             {
-                fn_80089A60(i, vec[0], vec[1], vec[2], red, green, blue, cB, cC, cA);
+                fn_80089A60(i, vec[0], vec[1], vec[2], red, green, blue, ambientIntensity, lightIntensity,
+                            blendAlpha);
             }
             else
             {
-                fn_80089A60(i, -vec[3], vec[4], -vec[5], red, green, blue, cB, cC, cA);
+                fn_80089A60(i, -vec[3], vec[4], -vec[5], red, green, blue, ambientIntensity, lightIntensity,
+                            blendAlpha);
             }
-            iofs += 0xa4;
+            iofs += sizeof(SkyLight);
             i++;
         } while (i < 2);
         fn_80089A60(2, lbl_803DF058, lbl_803DF058, lbl_803DF058, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
