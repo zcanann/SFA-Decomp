@@ -192,6 +192,29 @@ typedef struct IntersectLine
     u8 pad0E[2]; /* 0xe */
 } IntersectLine;
 
+typedef struct IntersectModLineSource
+{
+    s16 x[2];
+    s16 y[2];
+    s16 z[2];
+    u8 endpointData[2];
+    u8 flags;
+    s8 kind;
+    s16 param;
+    u8 pad12[2];
+} IntersectModLineSource;
+
+typedef struct IntersectModLineObject
+{
+    u8 pad00[0x30];
+    IntersectModLineSource* sourceLines; /* 0x30 */
+    IntersectLine* lines;        /* 0x34 */
+    u8 (*groupRanges)[2];        /* 0x38 */
+    f32* points;                 /* 0x3c */
+    u8 pad40[0x1c];
+    u8 sourceLineCount;          /* 0x5c */
+} IntersectModLineObject;
+
 typedef struct AngleXf
 {
     s16 rotX;
@@ -948,83 +971,87 @@ int insertPoint(int val, s16* arr, f32 x, f32 y, f32 z)
 char sTrackIntersectFuncOverflowFormat[] = "trackIntersect: FUNC OVERFLOW %d\n";
 
 #pragma opt_loop_invariants off
-void intersectModLineBuild(int* obj)
+void intersectModLineBuild(IntersectModLineObject* obj)
 {
-    s16 link[0xd48];
+    s16 pointLinks[0xd48];
+    IntersectLine* line;
     int seg;
     int segCount;
-    u8* sp;
+    IntersectModLineSource* sourceLine;
+    int off;
     int li;
     s16 prev;
 
     mapBlockFlag = 1;
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
-    segCount = *(u8*)((char*)obj + 0x5c);
-    for (seg = 0, sp = *(u8**)&((GameObject*)obj)->anim.parent; seg < segCount; sp += 0x14, seg++)
+    segCount = obj->sourceLineCount;
+    for (seg = 0, sourceLine = obj->sourceLines; seg < segCount; sourceLine++, seg++)
     {
-        IntersectLine* line;
         int i;
         if (gIntersectLineCount < 0x5dc)
         {
             line = (IntersectLine*)((u8*)lbl_803DCF34 + gIntersectLineCount * 0x10);
-            line->end0 = sp[0xc];
-            line->end1 = sp[0xd];
-            *(u8*)&line->kind = sp[0xf];
+            line->end0 = sourceLine->endpointData[0];
+            line->end1 = sourceLine->endpointData[1];
+            *(u8*)&line->kind = sourceLine->kind;
             if ((line->kind & 0x3f) == 0x11)
             {
                 line->kind &= ~0x3f;
                 line->kind |= 2;
             }
-            line->flags = sp[0xe];
+            line->flags = sourceLine->flags;
             *(s8*)&line->flags ^= 0x10;
-            line->param = *(s16*)(sp + 0x10);
+            line->param = sourceLine->param;
             for (i = 0; i < 2; i++)
             {
-                f32 x = (f32)(s16) * (s16*)(sp + i * 2 + 0);
-                f32 y = (f32)(s16) * (s16*)(sp + i * 2 + 4);
-                f32 z = (f32)(s16) * (s16*)(sp + i * 2 + 8);
+                f32 x = sourceLine->x[i];
+                f32 y = sourceLine->y[i];
+                f32 z = sourceLine->z[i];
                 if (gIntersectPointCount < 0x6a4)
-                    line->pt[i] = insertPoint(gIntersectLineCount, link, x, y, z);
+                    line->pt[i] = insertPoint(gIntersectLineCount, pointLinks, x, y, z);
             }
             gIntersectLineCount++;
         }
     }
     {
-        int off;
-        for (li = 0, off = li; li < gIntersectLineCount; off += 0x10, li++)
+        li = 0;
+        off = li;
+        for (; li < gIntersectLineCount; off += 0x10, li++)
         {
-            IntersectLine* line = (IntersectLine*)((u8*)lbl_803DCF34 + off);
-            int t0 = line->pt[0] * 2;
-            s16* e0 = &link[t0];
-            s16* e1;
-            if (e0[0] > -1 && e0[0] != li)
-                line->adj[0] = e0[0];
-            else if (e0[1] > -1 && e0[1] != li)
-                line->adj[0] = e0[1];
+            int pointLinkIndex;
+            s16* firstPointLinks;
+            s16* secondPointLinks;
+            line = (IntersectLine*)((u8*)lbl_803DCF34 + off);
+            pointLinkIndex = line->pt[0] * 2;
+            firstPointLinks = &pointLinks[pointLinkIndex];
+            if (firstPointLinks[0] > -1 && firstPointLinks[0] != li)
+                line->adj[0] = firstPointLinks[0];
+            else if (firstPointLinks[1] > -1 && firstPointLinks[1] != li)
+                line->adj[0] = firstPointLinks[1];
             else
                 line->adj[0] = -1;
             {
-                int t1 = line->pt[1] * 2;
-                e1 = &link[t1];
+                pointLinkIndex = line->pt[1] * 2;
+                secondPointLinks = &pointLinks[pointLinkIndex];
             }
-            if (e1[0] > -1 && e1[0] != li)
-                line->adj[1] = e1[0];
-            else if (e1[1] > -1 && e1[1] != li)
-                line->adj[1] = e1[1];
+            if (secondPointLinks[0] > -1 && secondPointLinks[0] != li)
+                line->adj[1] = secondPointLinks[0];
+            else if (secondPointLinks[1] > -1 && secondPointLinks[1] != li)
+                line->adj[1] = secondPointLinks[1];
             else
                 line->adj[1] = -1;
         }
     }
     if (gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28 == 0)
         return;
-    obj[0x34 / 4] = (int)mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
-    *(int*)((char*)obj + 0x3c) = *(int*)((char*)obj + 0x34) + gIntersectLineCount * 0x10;
-    *(int*)((char*)obj + 0x38) = *(int*)((char*)obj + 0x3c) + gIntersectPointCount * 0xc;
+    obj->lines = mmAlloc(gIntersectLineCount * 0x10 + gIntersectPointCount * 0xc + 0x28, 0xffff00ff, 0);
+    obj->points = (f32*)((u8*)obj->lines + gIntersectLineCount * 0x10);
+    obj->groupRanges = (u8(*)[2])((u8*)obj->points + gIntersectPointCount * 0xc);
     {
         int k;
         for (k = 0; k < 40; k++)
-            (*(u8**)((char*)obj + 0x38))[k] = 0xff;
+            (*(u8**)&obj->groupRanges)[k] = 0xff;
     }
     prev = -1;
     for (li = 0; li < gIntersectLineCount; li++)
@@ -1047,40 +1074,44 @@ void intersectModLineBuild(int* obj)
         }
         if ((s16)grp != prev)
         {
-            *(u8*)(*(int*)((char*)obj + 0x38) + grp * 2) = li;
+            obj->groupRanges[grp][0] = li;
             if (prev != -1)
-                *(u8*)(*(int*)((char*)obj + 0x38) + prev * 2 + 1) = li;
+                obj->groupRanges[prev][1] = li;
             prev = grp;
         }
         {
             int m;
             for (m = 0; m < li; m++)
             {
-                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) == (s16)best)
-                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 8) = li;
-                if (*(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) == best)
-                    *(s16*)((u8*)*(int*)((char*)obj + 0x34) + m * 0x10 + 0xa) = li;
+                if (obj->lines[m].adj[0] == (s16)best)
+                    obj->lines[m].adj[0] = li;
+                if (obj->lines[m].adj[1] == best)
+                    obj->lines[m].adj[1] = li;
             }
         }
         {
+            int lineOff;
             int n;
-            for (n = 0; n < gIntersectLineCount; n++)
+            n = 0;
+            lineOff = n;
+            for (; n < gIntersectLineCount; lineOff += 0x10, n++)
             {
-                if (((IntersectLine*)lbl_803DCF34)[n].kind != 0x14)
+                line = (IntersectLine*)(lbl_803DCF34 + lineOff);
+                if (line->kind != 0x14)
                 {
-                    if ((s16)best == ((IntersectLine*)lbl_803DCF34)[n].adj[0])
-                        ((IntersectLine*)lbl_803DCF34)[n].adj[0] = li;
-                    if ((s16)best == ((IntersectLine*)lbl_803DCF34)[n].adj[1])
-                        ((IntersectLine*)lbl_803DCF34)[n].adj[1] = li;
+                    if ((s16)best == line->adj[0])
+                        line->adj[0] = li;
+                    if ((s16)best == ((IntersectLine*)(lbl_803DCF34 + lineOff))->adj[1])
+                        ((IntersectLine*)(lbl_803DCF34 + lineOff))->adj[1] = li;
                 }
             }
         }
-        memcpy((char*)*(int*)((char*)obj + 0x34) + li * 0x10, (char*)lbl_803DCF34 + best * 0x10, 0x10);
+        memcpy(&obj->lines[li], (char*)lbl_803DCF34 + best * 0x10, 0x10);
         *(u8*)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
     }
     if ((s16)prev != -1)
-        (*(u8(**)[2])((char*)obj + 0x38))[prev][1] = gIntersectLineCount;
-    memcpy((void*)*(int*)((char*)obj + 0x3c), lbl_803DCF38, gIntersectPointCount * 0xc);
+        obj->groupRanges[prev][1] = gIntersectLineCount;
+    memcpy(obj->points, lbl_803DCF38, gIntersectPointCount * 0xc);
     gIntersectLineCount = 0;
     gIntersectPointCount = 0;
 }
