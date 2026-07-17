@@ -2,6 +2,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objhits.h"
+#include "main/objanim.h"
 
 static inline s16* ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve* curve)
 {
