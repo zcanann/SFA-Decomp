@@ -42,9 +42,8 @@
 char colorFilterColor[4] = "\xFF\x70\x40";
 u8 colorScale = 0xFF;
 extern u32 FUN_800069f4();
-extern u32 DAT_803dda68;
-extern f32 lbl_803DC2D0;
-extern f32 lbl_803DF89C;
+extern f32 widescreenAspect_803DEC1C;
+extern f32 lbl_803DB670;
 
 void sceneDraw(void);
 void sceneDrawTransparentPolys(void);
@@ -269,33 +268,24 @@ MapBlockData* mapGetBlock(int i)
     return gMapBlocks[i];
 }
 
-/*
- * DAT_803dda68 is the shadow-map render-state bitfield used by FUN_8005d018
- * (0x8 shadow-map enable, also swaps the shadow bias lbl_803DC2D0/lbl_803DF89C)
- * and its getter FUN_8005d06c. The related renderFlags draw-mode bits are set
- * by gameFlagFn_8005cd24 (0x20000 reflection-pass enable), setDrawLights (0x40
- * lights enable, mirrored into env-state offset 0x40 bit 3),
- * setDrawCloudsAndLights (0x50 clouds+lights), and setPendingMapLoad
- * (0x1000 pending-map-load).
- */
 u32 FUN_8005d018(char enable)
 {
     if (enable == '\0')
     {
-        DAT_803dda68 = DAT_803dda68 & 0xfffffff7;
-        FUN_800069f4((double)lbl_803DC2D0);
+        renderFlags = renderFlags & ~(u32)RENDERFLAG_WIDESCREEN;
+        FUN_800069f4((double)lbl_803DB670);
     }
     else
     {
-        DAT_803dda68 = DAT_803dda68 | 8;
-        FUN_800069f4((double)lbl_803DF89C);
+        renderFlags = renderFlags | RENDERFLAG_WIDESCREEN;
+        FUN_800069f4((double)widescreenAspect_803DEC1C);
     }
     return 0;
 }
 
 u32 FUN_8005d06c(void)
 {
-    return DAT_803dda68 & 8;
+    return renderFlags & RENDERFLAG_WIDESCREEN;
 }
 
 extern u32 lbl_8037E0C0[];

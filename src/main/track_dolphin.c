@@ -274,8 +274,6 @@ typedef struct
 
 #define MAP_DYNAMIC_SLOT_COUNT 64
 
-extern u32 DAT_803ddc00;
-extern u32 DAT_803ddc38;
 extern const f32 lbl_803DEC50;
 extern f32 lbl_803DECB4;
 extern f32 lbl_803DECB0;
@@ -658,8 +656,8 @@ void FUN_80064384(int param)
         } while (blockCount != 0);
         row = row + 1;
     } while (row < 0x40);
-    FUN_80017790(DAT_803ddc38 + 0x60, texAddr, 0);
-    DAT_803ddc00 = param;
+    FUN_80017790(lbl_803DCFB8 + 0x60, texAddr, 0);
+    lbl_803DCF80 = param;
     return;
 }
 

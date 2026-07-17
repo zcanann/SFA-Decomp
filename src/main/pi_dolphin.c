@@ -158,9 +158,6 @@ extern u32 FUN_8025b054();
 extern u32 FUN_8025c510();
 extern u32 GXSetBlendMode();
 
-extern u32 DAT_8032f2b4;
-extern u32 DAT_803dc234;
-extern u32* DAT_803dd970;
 extern u32 gTitleScreenCreditDelay;
 extern u32 gDebugGlyphUScale;
 extern u32 gDebugTextColorA;
@@ -3638,13 +3635,14 @@ int mapGetDirIdx(int idx)
 #pragma scheduling on
 void FUN_80045be8(void)
 {
-    if ((DAT_803dd970 == &DAT_8032f2b4) || (DAT_803dd970[0x18] != '\0'))
+    u8* p = (u8*)gRenderModeObj;
+    if ((p == GXNtsc480Prog) || (p[0x18] != '\0'))
     {
-        FUN_80259858(DAT_803dd970[0x19], DAT_803dd970 + 0x1a, '\0', DAT_803dd970 + 0x32);
+        FUN_80259858(p[0x19], p + 0x1a, '\0', p + 0x32);
     }
     else
     {
-        FUN_80259858(DAT_803dd970[0x19], DAT_803dd970 + 0x1a, '\x01', &DAT_803dc234);
+        FUN_80259858(p[0x19], p + 0x1a, '\x01', lbl_803DB5D4);
     }
     return;
 }

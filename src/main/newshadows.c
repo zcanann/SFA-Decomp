@@ -101,29 +101,6 @@ extern u32 DAT_8038fd7c;
 extern u32 DAT_8038fd7d;
 extern int DAT_803925b8;
 extern u32 DAT_803925bc;
-extern u32 DAT_803dc070;
-extern u32 DAT_803dc2c8;
-extern u32 DAT_803dd970;
-extern u32 DAT_803ddbf8;
-extern u32 DAT_803ddbfc;
-extern u32 DAT_803ddc00;
-extern u32 DAT_803ddc04;
-extern u32 DAT_803ddc08;
-extern u32 DAT_803ddc0c;
-extern u32 DAT_803ddc10;
-extern u32 DAT_803ddc18;
-extern u32 DAT_803ddc1c;
-extern u32 DAT_803ddc20;
-extern u32 DAT_803ddc30;
-extern u32 DAT_803ddc38;
-extern u32 DAT_803ddc3c;
-extern u32 DAT_803ddc40;
-extern u32 DAT_803ddc54;
-extern u32 DAT_803ddc58;
-extern u32 DAT_803ddc5c;
-extern u32 DAT_803ddc60;
-extern u32 DAT_803ddc64;
-extern u32 DAT_803ddc68;
 extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern const f64 DOUBLE_803dfa48;
@@ -620,8 +597,8 @@ void newshadows_captureProjectedShadow(u16* object)
         gxSetZMode_(1, GX_LEQUAL, 1);
         FUN_80259400(0x100, 0xb0, 0x80, 0x80);
         FUN_80259504(0x80, 0x80, 0x2a, 0);
-        FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60, 1);
-        fn_8006A028((u8*)(&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3], 0x80, 0x10, 0);
+        FUN_80259c0c((&DAT_8038ee3c)[gNewShadowFrameIndex] + 0x60, 1);
+        fn_8006A028((u8*)(&DAT_8038ee3c)[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
         **(float**)(object + 0x32) = (float)((double)lbl_803DF9AC / invScale);
     }
     FUN_80006988();
@@ -834,10 +811,10 @@ void newshadows_renderQueuedShadowCasters(void)
     spillF21 = (float)savedF21;
     psSpill21 = (float)savedPs21;
     FUN_8028680c();
-    if (DAT_803ddbf8 != 0)
+    if (gNewShadowCasterCount != 0)
     {
         FUN_800069b8();
-        newshadows_sortQueuedShadowCasters(-0x7fc710f8, DAT_803ddbf8);
+        newshadows_sortQueuedShadowCasters(-0x7fc710f8, gNewShadowCasterCount);
         FUN_80006954(1);
         light = FUN_800069a8();
         savedZParam = FUN_800069f8();
@@ -858,13 +835,13 @@ void newshadows_renderQueuedShadowCasters(void)
         dirShadowCount = 0;
         shadowSlot = 0;
         queueEntry = &DAT_8038ef08;
-        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)DAT_803ddbf8 && (casterIdx < NEW_SHADOW_MAX_CASTERS));
+        for (casterIdx = '\0'; ((int)casterIdx < (int)(u32)gNewShadowCasterCount && (casterIdx < NEW_SHADOW_MAX_CASTERS));
              casterIdx = casterIdx + '\x01')
         {
             obj = *queueEntry;
             model = (float*)((GameObject*)obj)->anim.modelState;
             FUN_80006954(0);
-            visibility = FUN_80061198(obj, DAT_803dc070);
+            visibility = FUN_80061198(obj, framesThisStep);
             FUN_80006954(1);
             if (4 < (visibility & 0xff))
             {
@@ -931,11 +908,11 @@ void newshadows_renderQueuedShadowCasters(void)
                     ndirY = -(double)dirY;
                     ndirZ = -(double)dirZ;
                     randVal = FUN_80017730();
-                    DAT_803ddc04 = randVal & 0xffff;
+                    gNewShadowLightAngleX = randVal & 0xffff;
                     randVal = FUN_80017730();
-                    DAT_803ddc08 = (randVal & 0xffff) - 0x3fc8;
-                    light[1] = DAT_803ddc08;
-                    *light = DAT_803ddc04;
+                    gNewShadowLightAngleY = (randVal & 0xffff) - 0x3fc8;
+                    light[1] = gNewShadowLightAngleY;
+                    *light = gNewShadowLightAngleX;
                     dotLen = (double)(float)(ndirZ * ndirZ +
                                              (double)(float)(ndirX * ndirX + (double)(float)(ndirY * ndirY)));
                     if ((double)lbl_803DF9A8 < dotLen)
@@ -994,7 +971,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     ((ObjModelState*)model)->shadowCastSlot = shadowMtx;
                     entryPtr = &DAT_803925b8 + dirShadowCount;
                     (&DAT_8038fd78)[slotByte * 0x1a] = *entryPtr;
-                    (&DAT_8038fd7d)[slotOff] = (&DAT_803dc2c8)[dirShadowCount];
+                    (&DAT_8038fd7d)[slotOff] = lbl_803DB668[dirShadowCount];
                     FUN_8003b7dc(obj);
                     if (*(char*)(queueEntry + 2) == '\x02')
                     {
@@ -1007,7 +984,7 @@ void newshadows_renderQueuedShadowCasters(void)
                         FUN_80247618((float*)(&DAT_8038fd48 + slotOff), viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                         FUN_80259400(0, 0, texSize, texSize);
                         FUN_80259504((u16)texSize, (u16)texSize, 0x11, 0);
-                        FUN_80259858('\0', (u8*)(DAT_803dd970 + 0x1a), '\0', (u8*)(DAT_803dd970 + 0x32));
+                        FUN_80259858('\0', (u8*)gRenderModeObj + 0x1a, '\0', (u8*)gRenderModeObj + 0x32);
                         FUN_80259c0c(*(int*)(*(int*)&((GameObject*)obj)->anim.modelState + 4) + 0x60, 1);
                         FUN_80045be8();
                         (&DAT_8038fd78)[slotByte * 0x1a] = *(u32*)(*(int*)&((GameObject*)obj)->anim.modelState + 4);
@@ -1066,7 +1043,7 @@ void newshadows_renderQueuedShadowCasters(void)
         if (1 < dirShadowCount)
         {
             gxSetZMode_(1, GX_LEQUAL, 1);
-            FUN_80259858('\0', (u8*)(DAT_803dd970 + 0x1a), '\0', (u8*)(DAT_803dd970 + 0x32));
+            FUN_80259858('\0', (u8*)gRenderModeObj + 0x1a, '\0', (u8*)gRenderModeObj + 0x32);
             FUN_80259400(0, 0, 0x100, 0x100);
             FUN_80259504(0x100, 0x100, 0x28, 0);
             FUN_80259c0c(DAT_803925bc + 0x60, 1);
@@ -1134,14 +1111,14 @@ void newshadows_queueShadowCaster(int object)
     double invSqrt;
     double dist;
 
-    if (DAT_803ddbf8 < 300)
+    if (gNewShadowCasterCount < 300)
     {
         objAnim = (ObjAnimComponent*)object;
         modelDef = objAnim->modelInstance;
-        (&DAT_8038ef08)[DAT_803ddbf8 * 3] = object;
-        dx = ((GameObject*)object)->anim.worldPosX - *(float*)(DAT_803ddc68 + 0xc);
-        dy = ((GameObject*)object)->anim.worldPosY - *(float*)(DAT_803ddc68 + 0x10);
-        dz = ((GameObject*)object)->anim.worldPosZ - *(float*)(DAT_803ddc68 + 0x14);
+        (&DAT_8038ef08)[gNewShadowCasterCount * 3] = object;
+        dx = ((GameObject*)object)->anim.worldPosX - *(float*)((u8*)gNewShadowCurrentViewSlot + 0xc);
+        dy = ((GameObject*)object)->anim.worldPosY - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x10);
+        dz = ((GameObject*)object)->anim.worldPosZ - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x14);
         dist = (double)(dz * dz + dx * dx + dy * dy);
         if ((double)lbl_803DF9A8 < dist)
         {
@@ -1150,7 +1127,7 @@ void newshadows_queueShadowCaster(int object)
             invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
             dist = (double)(float)(dist * lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60));
         }
-        slotOff = DAT_803ddbf8 * 0xc;
+        slotOff = gNewShadowCasterCount * 0xc;
         *(float*)(&DAT_8038ef0c + slotOff) =
             (float)((double)((GameObject*)object)->anim.modelState->shadowScale / dist);
         if (modelDef->shadowType == OBJ_SHADOW_TYPE_MODEL_GEOMETRIC)
@@ -1166,7 +1143,7 @@ void newshadows_queueShadowCaster(int object)
         {
             (&DAT_8038ef10)[slotOff] = 0;
         }
-        DAT_803ddbf8 = DAT_803ddbf8 + 1;
+        gNewShadowCasterCount = gNewShadowCasterCount + 1;
     }
     return;
 }
@@ -1188,48 +1165,48 @@ void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
 
 void newshadows_getShadowTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc30;
+    *textureOut = gNewShadowRingTexture;
     return;
 }
 
 void newshadows_getBlankShadowTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc38;
+    *textureOut = lbl_803DCFB8;
     return;
 }
 
 void newshadows_getShadowDirectionTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc3c;
+    *textureOut = (int)lbl_803DCFBC;
     return;
 }
 
 void newshadows_getSoftShadowTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc40;
+    *textureOut = gNewShadowRadialTexture;
     return;
 }
 
 void newshadows_getShadowRampTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc1c;
+    *textureOut = gNewShadowRampTexture;
     return;
 }
 
 int newshadows_getSmallShadowTexture(void)
 {
-    return DAT_803ddc54;
+    return gNewShadowSmallDiskTexture;
 }
 
 void newshadows_getShadowDiskTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc58;
+    *textureOut = gNewShadowDiskTexture;
     return;
 }
 
 void newshadows_getShadowNoiseTexture(int* textureOut)
 {
-    *textureOut = DAT_803ddc60;
+    *textureOut = gNewShadowCausticTexture;
     return;
 }
 
@@ -1240,54 +1217,54 @@ double newshadows_getShadowNoiseScale(void)
 
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
-    if (((Texture*)DAT_803ddbfc)->preloaded == '\0')
+    if (((Texture*)gNewShadowReflectionTexture)->preloaded == '\0')
     {
-        FUN_8025b054((u32*)(DAT_803ddbfc + 0x20), textureSlot);
+        FUN_8025b054((u32*)(gNewShadowReflectionTexture + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((u32*)(DAT_803ddbfc + 0x20), ((Texture*)DAT_803ddbfc)->tmemAddr, textureSlot);
+        FUN_8025aeac((u32*)(gNewShadowReflectionTexture + 0x20), ((Texture*)gNewShadowReflectionTexture)->tmemAddr, textureSlot);
     }
     return;
 }
 
 int newshadows_getShadowRenderTexture(void)
 {
-    return DAT_803ddbfc;
+    return (int)gNewShadowReflectionTexture;
 }
 
 int newshadows_getInverseShadowRampTexture(void)
 {
-    return DAT_803ddc18;
+    return gNewShadowInverseRampTexture;
 }
 
 int newshadows_getRadialFalloffTexture(void)
 {
-    return DAT_803ddc10;
+    return gNewShadowFalloffTexture;
 }
 
 void newshadows_bindShadowCaptureTexture(int textureSlot)
 {
-    if (((Texture*)DAT_803ddc64)->preloaded == '\0')
+    if (((Texture*)gNewShadowReflectionSmallTexture)->preloaded == '\0')
     {
-        FUN_8025b054((u32*)(DAT_803ddc64 + 0x20), textureSlot);
+        FUN_8025b054((u32*)(gNewShadowReflectionSmallTexture + 0x20), textureSlot);
     }
     else
     {
-        FUN_8025aeac((u32*)(DAT_803ddc64 + 0x20), ((Texture*)DAT_803ddc64)->tmemAddr, textureSlot);
+        FUN_8025aeac((u32*)(gNewShadowReflectionSmallTexture + 0x20), ((Texture*)gNewShadowReflectionSmallTexture)->tmemAddr, textureSlot);
     }
     return;
 }
 
 void newshadows_refreshShadowCaptureTexture(void)
 {
-    FUN_800709e8((double)lbl_803DF9A8, (double)lbl_803DF9A8, DAT_803ddbfc, 0xff, 0x40);
+    FUN_800709e8((double)lbl_803DF9A8, (double)lbl_803DF9A8, (int)gNewShadowReflectionTexture, 0xff, 0x40);
     FUN_80259400(0, 0, 0x50, 0x3c);
     FUN_80259504(0x50, 0x3c, 4, 0);
-    FUN_80259c0c(DAT_803ddc64 + 0x60, 1);
-    if (((Texture*)DAT_803ddc64)->preloaded != '\0')
+    FUN_80259c0c(gNewShadowReflectionSmallTexture + 0x60, 1);
+    if (((Texture*)gNewShadowReflectionSmallTexture)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddc64 + 0x20, ((Texture*)DAT_803ddc64)->tmemAddr);
+        FUN_8025b280(gNewShadowReflectionSmallTexture + 0x20, ((Texture*)gNewShadowReflectionSmallTexture)->tmemAddr);
     }
     return;
 }
@@ -1296,19 +1273,19 @@ void newshadows_flushShadowRenderTargets(void)
 {
     FUN_80259400(0, 0, 0x280, 0x1e0);
     FUN_80259504(0x140, 0xf0, 4, 1);
-    FUN_80259c0c(DAT_803ddbfc + 0x60, 0);
+    FUN_80259c0c(gNewShadowReflectionTexture + 0x60, 0);
     FUN_80259400(0, 0, 0x280, 0x1e0);
     FUN_80259504(0x140, 0xf0, 0x11, 1);
-    FUN_80259c0c(DAT_803ddc5c + 0x60, 0);
-    if (((Texture*)DAT_803ddbfc)->preloaded != '\0')
+    FUN_80259c0c(gNewShadowReflectionTexture2 + 0x60, 0);
+    if (((Texture*)gNewShadowReflectionTexture)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddbfc + 0x20, ((Texture*)DAT_803ddbfc)->tmemAddr);
+        FUN_8025b280(gNewShadowReflectionTexture + 0x20, ((Texture*)gNewShadowReflectionTexture)->tmemAddr);
     }
-    if (((Texture*)DAT_803ddc5c)->preloaded != '\0')
+    if (((Texture*)gNewShadowReflectionTexture2)->preloaded != '\0')
     {
-        FUN_8025b280(DAT_803ddc5c + 0x20, ((Texture*)DAT_803ddc5c)->tmemAddr);
+        FUN_8025b280(gNewShadowReflectionTexture2 + 0x20, ((Texture*)gNewShadowReflectionTexture2)->tmemAddr);
     }
-    if ((((Texture*)DAT_803ddbfc)->preloaded == '\0') || (((Texture*)DAT_803ddc5c)->preloaded == '\0'))
+    if ((((Texture*)gNewShadowReflectionTexture)->preloaded == '\0') || (((Texture*)gNewShadowReflectionTexture2)->preloaded == '\0'))
     {
         FUN_8025b210();
     }
@@ -1348,14 +1325,14 @@ void newshadows_updateFrameState(void)
             lbl_803DDC28 = lbl_803DDC28 - lbl_803DFA1C;
         }
     }
-    DAT_803ddbf8 = 0;
-    DAT_803ddc68 = (int)FUN_800069a8();
-    DAT_803ddc20 = DAT_803ddc20 + (u16)DAT_803dc070 * 0x28a;
-    cvtScratch = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(DAT_803ddc20)));
+    gNewShadowCasterCount = 0;
+    gNewShadowCurrentViewSlot = (CameraViewSlot*)FUN_800069a8();
+    lbl_803DCFA0 = lbl_803DCFA0 + (u16)framesThisStep * 0x28a;
+    cvtScratch = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(lbl_803DCFA0)));
     depth = (double)FUN_802947f8();
     lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
-    DAT_803ddc0c = (char)(DAT_803ddc0c + 1) + (char)((DAT_803ddc0c + 1) / 3) * -3;
+    gNewShadowFrameIndex = (char)(gNewShadowFrameIndex + 1) + (char)((gNewShadowFrameIndex + 1) / 3) * -3;
     shadowMapEnabled = FUN_80048094();
     if (shadowMapEnabled != '\0')
     {
@@ -1379,7 +1356,7 @@ void newshadows_updateFrameState(void)
         {
             texSize = 0;
         }
-        if ((texSize & 0xff) != DAT_803ddc00)
+        if ((texSize & 0xff) != lbl_803DCF80)
         {
             FUN_80064384(texSize & 0xff);
         }
@@ -1396,8 +1373,8 @@ void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
 
 void newshadows_freeShadowDirectionTexture(void)
 {
-    FUN_80017814(DAT_803ddc3c);
-    DAT_803ddc3c = 0;
+    FUN_80017814(lbl_803DCFBC);
+    lbl_803DCFBC = 0;
     return;
 }
 
@@ -1419,7 +1396,7 @@ void newshadows_buildShadowDirectionTexture(void)
     double len;
     u64 convBias;
 
-    DAT_803ddc3c = FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
+    lbl_803DCFBC = (Texture*)FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
     convBiasConst = DOUBLE_803dfa48;
     encodeScale = lbl_803DFA40;
     encodeBias = lbl_803DFA3C;
@@ -1450,7 +1427,7 @@ void newshadows_buildShadowDirectionTexture(void)
             {
                 intensity = lbl_803DF9B4 * -(float)((double)lbl_803DF9C8 * len - (double)lbl_803DFA30) * lbl_803DFA34;
             }
-            *(u16*)(DAT_803ddc3c + (y & 3) * 2 + ((int)y >> 2) * 0x20 + (x & 3) * 8 + ((int)x >> 2) * 0x800 + 0x60) =
+            *(u16*)((u8*)lbl_803DCFBC + (y & 3) * 2 + ((int)y >> 2) * 0x20 + (x & 3) * 8 + ((int)x >> 2) * 0x800 + 0x60) =
                 (u16)(int)(encodeScale * (float)(dx / len) * intensity + encodeBias) |
                 (u16)(((int)(encodeScale * (float)(dy / len) * intensity + encodeBias) & 0xffffU) << 8);
             x = x + 1;
@@ -1458,7 +1435,7 @@ void newshadows_buildShadowDirectionTexture(void)
         } while (xCount != 0);
         y = y + 1;
     } while ((int)y < 0x100);
-    FUN_802420e0(DAT_803ddc3c + 0x60, *(int*)(DAT_803ddc3c + 0x44));
+    FUN_802420e0((u8*)lbl_803DCFBC + 0x60, *(int*)((u8*)lbl_803DCFBC + 0x44));
     return;
 }
 #pragma peephole reset
