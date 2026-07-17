@@ -3672,6 +3672,7 @@ main/dll/dll_02B5_timer.c:
 	.text       start:0x8023852C end:0x80238AB0
 	.data       start:0x8032BEC0 end:0x8032BEF8
 	.sdata      start:0x803DC418 end:0x803DC420
+	.sdata2     start:0x803E7408 end:0x803E7428
 
 main/dll/dll_02B6_cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4

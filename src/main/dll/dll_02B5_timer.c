@@ -44,6 +44,45 @@ f32 lbl_803DC41C = 5.0f;
 #define LIGHT_FIELD_2F8_OFFSET 0x2f8
 #define LIGHT_FIELD_4C_OFFSET  0x4c
 
+void timer_addDuration(GameObject* obj, int duration)
+{
+    TimerState* state = obj->extra;
+    if (((int (*)(int))fn_80080150)((int)state) != 0)
+    {
+        state->countdownTimer = state->countdownTimer + duration;
+        if (state->mode == TIMER_MODE_GLOBAL)
+        {
+            gameTimerInit(GAME_TIMER_ID, (int)(state->countdownTimer / 60.0f));
+            timerSetToCountUp();
+        }
+    }
+}
+
+void timer_clearManualFlags(GameObject* obj)
+{
+    TimerState* state = (obj)->extra;
+    state->flags.manual = 0;
+    state->flags.expired = 0;
+}
+
+void timer_forceStart(GameObject* obj)
+{
+    TimerState* state = (obj)->extra;
+    state->flags.manual = 1;
+}
+
+int timer_isEffectMode(GameObject* obj)
+{
+    TimerState* state = (obj)->extra;
+    return state->mode == TIMER_MODE_EFFECT;
+}
+
+int timer_hasExpired(GameObject* obj)
+{
+    TimerState* state = (obj)->extra;
+    return state->flags.expired;
+}
+
 int timer_getExtraSize(void)
 {
     return sizeof(TimerState);
@@ -60,45 +99,6 @@ void timer_free(GameObject* obj)
     gameTimerStop();
 }
 
-int timer_hasExpired(GameObject* obj)
-{
-    TimerState* state = (obj)->extra;
-    return state->flags.expired;
-}
-
-int timer_isEffectMode(GameObject* obj)
-{
-    TimerState* state = (obj)->extra;
-    return state->mode == TIMER_MODE_EFFECT;
-}
-
-void timer_clearManualFlags(GameObject* obj)
-{
-    TimerState* state = (obj)->extra;
-    state->flags.manual = 0;
-    state->flags.expired = 0;
-}
-
-void timer_forceStart(GameObject* obj)
-{
-    TimerState* state = (obj)->extra;
-    state->flags.manual = 1;
-}
-
-void timer_addDuration(GameObject* obj, int duration)
-{
-    TimerState* state = obj->extra;
-    if (((int (*)(int))fn_80080150)((int)state) != 0)
-    {
-        state->countdownTimer = state->countdownTimer + duration;
-        if (state->mode == TIMER_MODE_GLOBAL)
-        {
-            gameTimerInit(GAME_TIMER_ID, (int)(state->countdownTimer / lbl_803E7408));
-            timerSetToCountUp();
-        }
-    }
-}
-
 void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     TimerState* state = (obj)->extra;
@@ -110,23 +110,8 @@ void timer_render(GameObject* obj, int p2, int p3, int p4, int p5, f32 scale)
     }
     if ((obj)->ownerObj == NULL)
     {
-        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E7418);
+        objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
     }
-}
-
-void timer_init(GameObject* obj, TimerSetup* setup)
-{
-    TimerState* state = (obj)->extra;
-    TimerSetup* setupData = setup;
-
-    storeZeroToFloatParam(&state->countdownTimer);
-    state->mode = setupData->mode;
-    state->lightScale = lbl_803E7424;
-    state->flags.expired = 0;
-    state->flags.manual = 0;
-    state->lightSlot = NULL;
-    ObjGroup_AddObject((int)obj, TIMER_OBJGROUP);
-    state->flags.flag20 = 0;
 }
 
 void timer_update(GameObject* obj)
@@ -207,7 +192,7 @@ void timer_update(GameObject* obj)
                 if (state->lightSlot != NULL)
                 {
                     modelLightStruct_setupGlow(state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
-                    modelLightStruct_setPosition(state->lightSlot, lbl_803E741C, lbl_803E7420, *(f32*)&lbl_803E741C);
+                    modelLightStruct_setPosition(state->lightSlot, 0.0f, 3.0f, 0.0f);
                 }
                 break;
             }
@@ -242,7 +227,7 @@ void timer_update(GameObject* obj)
                 {
                     Sfx_PlayFromObject((int)obj, SFXTRIG_barrel_timerbeep);
                 }
-                modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, lbl_803E741C);
+                modelLightStruct_setEnabled(state->lightSlot, (u8)scroll, 0.0f);
             }
             flags->flag20 = scroll;
         }
@@ -251,6 +236,21 @@ void timer_update(GameObject* obj)
             modelLightStruct_updateGlowAlpha(state->lightSlot);
         }
     }
+}
+
+void timer_init(GameObject* obj, TimerSetup* setup)
+{
+    TimerState* state = (obj)->extra;
+    TimerSetup* setupData = setup;
+
+    storeZeroToFloatParam(&state->countdownTimer);
+    state->mode = setupData->mode;
+    state->lightScale = 0.04f;
+    state->flags.expired = 0;
+    state->flags.manual = 0;
+    state->lightSlot = NULL;
+    ObjGroup_AddObject((int)obj, TIMER_OBJGROUP);
+    state->flags.flag20 = 0;
 }
 
 ObjectDescriptor gTimerObjDescriptor = {

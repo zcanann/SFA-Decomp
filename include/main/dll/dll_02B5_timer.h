@@ -47,13 +47,8 @@ STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
 STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
 STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
-extern f32 lbl_803E7408;
-extern f32 lbl_803E7418;
-extern f32 lbl_803E7424;
 extern f32 lbl_803DC418;
 extern f32 lbl_803DC41C;
-extern f32 lbl_803E741C;
-extern f32 lbl_803E7420;
 
 int timer_getExtraSize(void);
 void timer_free(GameObject* obj);
