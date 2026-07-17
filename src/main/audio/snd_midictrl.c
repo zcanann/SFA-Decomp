@@ -213,12 +213,12 @@ void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value)
         inpSetMidiCtrl(ctrl & 31, channel, set, value >> 7);
         inpSetMidiCtrl((ctrl & 31) + 32, channel, set, value & 0x7f);
     }
-    else if (ctrl == 128 || ctrl == 129)
+    else if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_PITCH_BEND + 1)
     {
         inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
         inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
     }
-    else if (ctrl == 132 || ctrl == 133)
+    else if (ctrl == MCMD_CTRL_DOPPLER || ctrl == MCMD_CTRL_DOPPLER + 1)
     {
         inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
         inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
