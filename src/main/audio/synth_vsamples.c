@@ -256,7 +256,7 @@ typedef struct
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_ROUND        0xfff
 #define SYNTH_VIRTUAL_SAMPLE_RELEASE_SHIFT        0x1000
 
-extern u16 synthLoadedGroupCount;
+extern s16 synthLoadedGroupCount;
 
 extern u32 hwGetVirtualSampleState(int slot);
 extern u32 hwVoiceInStartup(int slot);

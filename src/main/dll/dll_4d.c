@@ -36,7 +36,7 @@
 /* lbl_803DBA28 active-panel id and lbl_803DD706 render-stale countdown
    are owned by dll_0037_optionsscreen.c */
 extern MenuPanelGroup lbl_8031ACB8;
-extern u8 lbl_803DBA28;
+extern s8 lbl_803DBA28;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern u8 lbl_803DD706;
