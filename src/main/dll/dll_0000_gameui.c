@@ -624,9 +624,9 @@ extern GridEntry lbl_8031BB90[];
 extern GridEntry lbl_8031BD90[];
 extern f32 lbl_803DD748;
 extern f32 lbl_803DD74C;
-extern s16 lbl_803DD750;
-extern s16 lbl_803DD752;
-extern s16 lbl_803DD754;
+extern u16 lbl_803DD750;
+extern u16 lbl_803DD752;
+extern u16 lbl_803DD754;
 extern s16 lbl_803DD756;
 extern u8 lbl_803DD758;
 extern s16 lbl_803DD75C;
@@ -637,7 +637,7 @@ extern u8 lbl_803DD7D6;
 extern f32 lbl_803DD7FC;
 extern GridEntry* lbl_803DD824;
 extern u8 lbl_803DD734;
-extern u16* lbl_803DD7A4;
+extern GameTextDef* lbl_803DD7A4;
 extern int lbl_803DD8E0;
 extern f32 lbl_803DBA34;
 extern f32 lbl_803DBA38;
@@ -783,7 +783,7 @@ extern const f32 lbl_803E21C0;
 extern const f32 lbl_803E21C4;
 extern const f32 lbl_803E21C8;
 extern const f32 lbl_803E21CC;
-extern u16* saveGameGetCurHint(void);
+extern GameTextDef* saveGameGetCurHint(void);
 extern u8 pauseDisabled;
 extern u8 gPauseMenuTransitionStarted;
 extern f32 lbl_803DD7DC;
@@ -4900,27 +4900,31 @@ void drawArwingHud(int unused1, int unused2, int unused3)
  */
 
 
-void pauseMenuDraw(int arg1, int arg2, int arg3)
+void pauseMenuDraw(int boxDrawParamA, int boxDrawParamB, int boxDrawParamC)
 {
     PauseTbl* statusTable;
     GameObject* player;
     ObjModel* model;
     s32 alpha;
     s32 x;
-    s32 idx;
-    s32 rnd1;
-    s32 rnd2;
-    s32 y;
-    s32 i;
-    s32 acc;
+    s32 stringOffset;
+    s32 randomWidth;
+    s32 randomHeight;
+    s32 panelAlpha;
+    s32 stringIndex;
+    s32 textY;
     f32 timer;
-    s32 val;
-    s32 h;
-    s32 b38, b34, b30, b2c;
-    s32 sp28, sp24, sp20, sp1c;
-    char buf1[4];
-    s32 b14, b10, bc, b8;
-    char buf2[12];
+    s32 textHeight;
+    s32 lineHeight;
+    s32 boundsLeft, boundsRight, boundsTop, boundsBottom;
+    s32 measureLeft, measureRight, measureTop, measureBottom;
+    union
+    {
+        int initial;
+        char text[4];
+    } characterCount;
+    s32 tokenLeft, tokenRight, tokenTop, tokenBottom;
+    char tokenCountText[12];
 
     statusTable = (PauseTbl*)lbl_8031AE20;
     player = Obj_GetPlayerObject();
@@ -4933,7 +4937,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     switch (pauseMenuState)
     {
     case 0:
-        boxDrawFn_8012975c(arg1, arg2, arg3);
+        boxDrawFn_8012975c(boxDrawParamA, boxDrawParamB, boxDrawParamC);
         break;
     case 1:
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
@@ -4947,28 +4951,28 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
-                    *(u16*)&lbl_803DD754);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+                    lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
-        y = (s32)((f32)(s16)alpha * lbl_803DD850);
+        panelAlpha = (s32)((f32)(s16)alpha * lbl_803DD850);
         {
-            f64 tmp = (double)(s16)y * (lbl_803E2080 - (double)lbl_803DD75C);
+            f64 tmp = (double)(s16)panelAlpha * (lbl_803E2080 - (double)lbl_803DD75C);
             x = (s32)(tmp * lbl_803E2088);
         }
         timer = gameTextFn_80019c00();
         if (timer != lbl_803E1E3C)
         {
-            rnd1 = randomGetRange(0, 0x1e) * 2;
-            rnd2 = randomGetRange(0, 0x1e) * 2;
-            drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094, 0xff, (u8)((s16)y / 2),
-                            0x230, 0x190, rnd2, rnd1);
+            randomWidth = randomGetRange(0, 0x1e) * 2;
+            randomHeight = randomGetRange(0, 0x1e) * 2;
+            drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094, 0xff,
+                            (u8)((s16)panelAlpha / 2), 0x230, 0x190, randomHeight, randomWidth);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
             model->bufferFlags &= ~0x8;
@@ -4994,7 +4998,7 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             }
             fn_80127F24(x);
             lbl_803DD824 = lbl_803DD7C4 ? statusTable->gridBD0 : statusTable->grid9F8;
-            fn_80128470(y);
+            fn_80128470(panelAlpha);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5014,23 +5018,23 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
-                    *(u16*)&lbl_803DD754);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+                    lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
         timer = gameTextFn_80019c00();
         if (timer != lbl_803E1E3C)
         {
-            rnd1 = randomGetRange(0, 0x1e) * 2;
-            rnd2 = randomGetRange(0, 0x1e) * 2;
+            randomWidth = randomGetRange(0, 0x1e) * 2;
+            randomHeight = randomGetRange(0, 0x1e) * 2;
             drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094, 0xff, (u8)((s16)alpha / 2),
-                            0x230, 0x190, rnd2, rnd1);
+                            0x230, 0x190, randomHeight, randomWidth);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5051,25 +5055,23 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             if (lbl_803DD8E0 == lbl_803DD7D6)
             {
-                if (lbl_803DD7A4 != 0 && *(u16*)((u8*)lbl_803DD7A4 + 2) >= 2)
+                if (lbl_803DD7A4 != 0 && lbl_803DD7A4->count >= 2)
                 {
-                    acc = 0x96;
-                    i = 1;
-                    idx = 4;
-                    while (i < *(u16*)((u8*)lbl_803DD7A4 + 2))
+                    textY = 0x96;
+                    stringIndex = 1;
+                    stringOffset = 4;
+                    while (stringIndex < lbl_803DD7A4->count)
                     {
-                        gameTextShowStr(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx), 0x79, 0xf0, acc);
-                        gameTextMeasureS32(*(void**)((u8*)*(void**)((u8*)lbl_803DD7A4 + 8) + idx), 0x79, 0, 0,
-                                           &sp28, &sp24, &sp20, &sp1c);
-                        h = *(u16*)((u8*)lbl_802C8680 +
-                                   (u32)(u8)((u8*)sLanguageNameTable)[getCurLanguage() * 8 + 4] * 16 + 0xa);
-                        val = sp1c - sp20;
-                        acc += (val > h) ? val
-                                         : *(u16*)((u8*)lbl_802C8680 +
-                                                   (u32)(u8)((u8*)sLanguageNameTable)[getCurLanguage() * 8 + 4] * 16 +
-                                                   0xa);
-                        idx += 4;
-                        i++;
+                        gameTextShowStr(*(void**)((u8*)lbl_803DD7A4->strings + stringOffset), 0x79, 0xf0, textY);
+                        gameTextMeasureS32(*(void**)((u8*)lbl_803DD7A4->strings + stringOffset), 0x79, 0, 0,
+                                           &measureLeft, &measureRight, &measureTop, &measureBottom);
+                        lineHeight = lbl_802C8680[sLanguageNameTable[getCurLanguage()].sizeIdx].lineHeight;
+                        textHeight = measureBottom - measureTop;
+                        textY += (textHeight > lineHeight)
+                                     ? textHeight
+                                     : lbl_802C8680[sLanguageNameTable[getCurLanguage()].sizeIdx].lineHeight;
+                        stringOffset += 4;
+                        stringIndex++;
                     }
                 }
             }
@@ -5096,23 +5098,23 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
         alpha = hudElementOpacity * lbl_803DD760;
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
-                    *(u16*)&lbl_803DD754);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+                    lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
         timer = gameTextFn_80019c00();
         if (timer != lbl_803E1E3C)
         {
-            rnd1 = randomGetRange(0, 0x1e) * 2;
-            rnd2 = randomGetRange(0, 0x1e) * 2;
+            randomWidth = randomGetRange(0, 0x1e) * 2;
+            randomHeight = randomGetRange(0, 0x1e) * 2;
             drawFn_8011e8d8(((HudTextures*)hudTextures)->tex150, lbl_803E2090, lbl_803E2094, 0xff, (u8)((s16)alpha / 2),
-                            0x230, 0x190, rnd2, rnd1);
+                            0x230, 0x190, randomHeight, randomWidth);
             model = Obj_GetActiveModel(lbl_803DD860[1]);
             objRender(0, 0, 0, 0, lbl_803DD860[1], 1);
             model->bufferFlags &= ~0x8;
@@ -5144,12 +5146,12 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             case 8:
             {
                 MapEventInterface* mapEvents = *gMapEventInterface;
-                int* info = mapEvents->getCurCharacterState();
-                *(int*)buf1 = lbl_803E1E04;
+                PauseMenuCharacterState* characterState = mapEvents->getCurCharacterState();
+                characterCount.initial = lbl_803E1E04;
                 gameTextFn_80016810(0x3e0, 0xc8, 0x118);
-                sprintf(buf1, lbl_803DBB68, *(u8*)((u8*)info + 9));
+                sprintf(characterCount.text, lbl_803DBB68, characterState->healCount);
                 lbl_803DBA8C = lbl_803E1E64;
-                gameTextShowStr(buf1, 0x93, 0x14a, 0xdc);
+                gameTextShowStr(characterCount.text, 0x93, 0x14a, 0xdc);
                 lbl_803DBA8C = lbl_803E20A0;
                 pauseMenuDrawElement(((HudTextures*)hudTextures)->tex134, lbl_803E1ECC, lbl_803E2018, 0x100, alpha,
                                      0x258, 0);
@@ -5157,22 +5159,21 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             }
             }
             {
-                int* box;
+                TextSlot* textBox;
                 lbl_803DBA8C = lbl_803E1E64;
-                box = gameTextGetBox(0x7f);
-            gameTextBoundsS32(0x3cd, 0, 0, &b38, &b34, &b30, &b2c);
-                val = b34 - b38;
-                *(u8*)((u8*)lbl_803DD824 + 8) = val;
-                *(s16*)((u8*)lbl_803DD824 + 2) =
-                    lbl_803DBA8C * (f32)(s32)(*(s16*)((u8*)box + 0x14) + *(u16*)((u8*)box + 8) - (val >> 1) - 0x140) +
-                    lbl_803E1F34;
+                textBox = gameTextGetBox(0x7f);
+                gameTextBoundsS32(0x3cd, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                textHeight = boundsRight - boundsLeft;
+                lbl_803DD824[0].trailX = textHeight;
+                lbl_803DD824[0].x =
+                    lbl_803DBA8C * (f32)(s32)(textBox->f14 + textBox->f08 - (textHeight >> 1) - 0x140) + lbl_803E1F34;
 
-                box = gameTextGetBox(0x80);
-            gameTextBoundsS32(0x3cc, 0, 0, &b38, &b34, &b30, &b2c);
-                val = b34 - b38;
-                *(u8*)((u8*)lbl_803DD824 + 0x28) = val;
-                x = *(s16*)((u8*)box + 0x14) + (val >> 1) - 0x140;
-                *(s16*)((u8*)lbl_803DD824 + 0x22) = lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34;
+                textBox = gameTextGetBox(0x80);
+                gameTextBoundsS32(0x3cc, 0, 0, &boundsLeft, &boundsRight, &boundsTop, &boundsBottom);
+                textHeight = boundsRight - boundsLeft;
+                lbl_803DD824[1].trailX = textHeight;
+                x = textBox->f14 + (textHeight >> 1) - 0x140;
+                lbl_803DD824[1].x = lbl_803DBA8C * (f32)(s32)x + lbl_803E1F34;
 
                 if (lbl_803DD7D8 != 0)
                 {
@@ -5207,13 +5208,13 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
     case 11:
         lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
         lbl_803DD748 = lbl_803DD748 + timeDelta;
-        lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-        lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-        lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+        lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
+        lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+        lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
-                    *(u16*)&lbl_803DD754);
+        fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+                    lbl_803DD754);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         model->bufferFlags &= ~0x8;
@@ -5231,33 +5232,34 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             s32 textX;
             s16* taskTextIds;
             gameTextFn_80016810(0x440, 0, 0x78);
-            gameTextBoundsS32(0x440, 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + 5;
+            gameTextBoundsS32(0x440, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            textX = (tokenBottom - tokenTop) + 5;
             {
                 u8* thresholds = &statusTable->tokens[0].thresh;
-                sprintf(buf2, lbl_803DBB58, thresholds[lbl_803DD756 * 8]);
+                sprintf(tokenCountText, lbl_803DBB58, thresholds[lbl_803DD756 * 8]);
             }
-            gameTextShowStr(buf2, 0x79, 0, textX + 0x78);
-            gameTextMeasureS32(buf2, 0x79, 0, 0, &b14, &b10, &bc, &b8);
+            gameTextShowStr(tokenCountText, 0x79, 0, textX + 0x78);
+            gameTextMeasureS32(tokenCountText, 0x79, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
             {
-                s32 textWidth = b8 - bc;
+                s32 textWidth = tokenBottom - tokenTop;
                 textX = textWidth + textX;
             }
             textX += 5;
             gameTextFn_80016810(0x441, 0, textX + 0x78);
-            gameTextBoundsS32(0x441, 0, 0, &b14, &b10, &bc, &b8);
-            textX += b8 - bc;
+            gameTextBoundsS32(0x441, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            textX += tokenBottom - tokenTop;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0x78);
-            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
+            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+                              &tokenBottom);
             {
-                s32 textWidth = b8 - bc;
+                s32 textWidth = tokenBottom - tokenTop;
                 textX = textWidth + textX;
             }
             textX += 0xa;
             gameTextFn_80016810(0x442, 0, textX + 0x78);
-            gameTextBoundsS32(0x442, 0, 0, &b14, &b10, &bc, &b8);
-            textX += b8 - bc;
+            gameTextBoundsS32(0x442, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x43a, 0, textX + 0x82);
             break;
         }
@@ -5266,12 +5268,13 @@ void pauseMenuDraw(int arg1, int arg2, int arg3)
             s16* taskTextIds;
             s32 textX;
             gameTextFn_80016810(0x443, 0, 0xa0);
-            gameTextBoundsS32(0x443, 0, 0, &b14, &b10, &bc, &b8);
-            textX = (b8 - bc) + 5;
+            gameTextBoundsS32(0x443, 0, 0, &tokenLeft, &tokenRight, &tokenTop, &tokenBottom);
+            textX = (tokenBottom - tokenTop) + 5;
             taskTextIds = &statusTable->tokens[0].alt;
             gameTextFn_80016810(taskTextIds[lbl_803DD756 * 4], 0, textX + 0xa0);
-            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &b14, &b10, &bc, &b8);
-            textX += b8 - bc;
+            gameTextBoundsS32(taskTextIds[lbl_803DD756 * 4], 0, 0, &tokenLeft, &tokenRight, &tokenTop,
+                              &tokenBottom);
+            textX += tokenBottom - tokenTop;
             gameTextFn_80016810(0x444, 0, textX + 0xaa);
             break;
         }
@@ -5315,13 +5318,13 @@ void pauseMenuDrawStatus_801274A0(GameObject* arg1)
     alpha = hudElementOpacity * lbl_803DD760;
     lbl_803DD850 = mathCosf(lbl_803E1EC8 * lbl_803DD7BC / lbl_803E1E94);
     lbl_803DD748 += timeDelta;
-    lbl_803DD750 = (s16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
-    lbl_803DD752 = (s16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
-    lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
+    lbl_803DD750 = (u16)(lbl_803DBA4C * fn_802943F4(lbl_803DD748 * lbl_803DBA40));
+    lbl_803DD752 = (u16)(lbl_803DD74C * fn_802943F4(lbl_803DD748 * lbl_803DBA44) + lbl_803DBA54);
+    lbl_803DD754 = (u16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = lbl_803E2070 * lbl_803DD760;
     lbl_803DBA34 = lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760);
-    fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, *(u16*)&lbl_803DD750, *(u16*)&lbl_803DD752,
-                *(u16*)&lbl_803DD754);
+    fn_8011EF50(lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, lbl_803DBA3C, lbl_803DD750, lbl_803DD752,
+                lbl_803DD754);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
     model->bufferFlags &= ~0x8;
@@ -6874,7 +6877,7 @@ void pauseMenuFn_80129ee0(void)
                 lbl_803DD770 = 0;
                 lbl_803DD772 = 0;
                 pauseMenuFn_8012b77c();
-                if (lbl_803DD7A4 == 0 || *lbl_803DD7A4 == 0xffff)
+                if (lbl_803DD7A4 == 0 || lbl_803DD7A4->identifier == 0xffff)
                 {
                     lbl_803DD7A4 = saveGameGetCurHint();
                 }
@@ -9683,7 +9686,7 @@ u8 bButtonIcon;
 s16 aButtonIcon;
 u8 lbl_803DD7A9;
 s8 lbl_803DD7A8;
-u16* lbl_803DD7A4;
+GameTextDef* lbl_803DD7A4;
 short lbl_803DD7A2;
 s8 lbl_803DD7A0;
 s16 lbl_803DD79E;
@@ -9728,9 +9731,9 @@ u8 gTrickyHudShowNearestInfo;
 u8 gPauseMenuTokenConfirmFlag;
 u8 lbl_803DD758;
 s16 lbl_803DD756;
-s16 lbl_803DD754;
-s16 lbl_803DD752;
-s16 lbl_803DD750;
+u16 lbl_803DD754;
+u16 lbl_803DD752;
+u16 lbl_803DD750;
 f32 lbl_803DD74C;
 f32 lbl_803DD748;
 int gGameUiScreenWidthOffset;
