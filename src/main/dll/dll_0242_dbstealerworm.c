@@ -786,18 +786,19 @@ int dbstealerworm_stateHandlerA0C(GameObject* obj, int baddie, f32 t)
 }
 #pragma opt_common_subs reset
 
+#pragma opt_lifetimes off
 int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
 {
 
     extern int lbl_8032971C[];
     extern f32 lbl_8032972C[];
+    DbStealerwormControl* sub;
     GroundBaddieState* blob = (obj)->extra;
-    DbStealerwormControl* sub = (DbStealerwormControl*)blob->control;
-    int c30 = sub->objGroup;
+    int c30;
     int tmpA;
     int tmpB;
-    int i;
     int found;
+    int i;
     int q;
     int* objs;
     GameObject* player;
@@ -821,6 +822,8 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     int cnt2;
     f32 yawf;
 
+    sub = (DbStealerwormControl*)blob->control;
+    c30 = sub->objGroup;
     sub->flags14 |= DBWORM_FLAG14_FX_DUST;
     sub->flags15 &= ~4;
     if (ObjGroup_ContainsObject(*(int*)&((BaddieState*)baddie)->targetObj, c30) == 0)
@@ -848,7 +851,8 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     {
         if (((GameObject*)*objs)->anim.seqId == 0x539)
         {
-            if (q == (u32)(**(int (**)(int, int, int))(*(int*)(*(int*)(*objs + 0x68)) + 0x24))(*objs, 0x83, 0))
+            tmpB = (**(int (**)(int, int, int))(*(int*)(*(int*)(*objs + 0x68)) + 0x24))(*objs, 0x83, 0);
+            if ((u32)tmpB == q)
             {
                 found = 1;
             }
@@ -1030,6 +1034,7 @@ int dbstealerworm_stateHandlerA0B(GameObject* obj, int baddie, f32 t)
     }
     return 0;
 }
+#pragma opt_lifetimes reset
 __declspec(section ".sdata2") f32 lbl_803E6310 = 0.015625f;
 #pragma opt_common_subs off
 int dbstealerworm_stateHandlerA0A(GameObject* obj, int baddie)
