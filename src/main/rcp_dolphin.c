@@ -2105,7 +2105,7 @@ void loadTextureFiles(void)
     int* out;
     int n;
 
-    gLoadedTextures = (LoadedTextureEntry*)mmAlloc(0x2bc0, 6, 0);
+    gLoadedTextures = mmAlloc(0x2bc0, 6, 0);
     gLoadedTextureCount = n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEX0_TAB_A);
     gRcpTexBankTable[0] = p;
@@ -2113,7 +2113,7 @@ void loadTextureFiles(void)
         goto countBank0;
     goto doneBank0;
 countBank0:
-    while (*p != -1)
+    while (p[0] != -1)
     {
         p++;
         n++;
@@ -2127,7 +2127,7 @@ doneBank0:
         goto countBank1;
     goto doneBank1;
 countBank1:
-    while (*p != -1)
+    while (p[0] != -1)
     {
         p++;
         n++;
@@ -2137,7 +2137,7 @@ doneBank1:
     n = 0;
     p = getCurrentDataFile(MLDF_FILEID_TEXPRE_TAB);
     gRcpTexBankTable[2] = p;
-    while (*p != -1)
+    while (p[0] != -1)
     {
         p++;
         n++;
@@ -2149,17 +2149,17 @@ doneBank1:
     for (n = 0; n < 2; n++)
     {
         int m = 0;
-        p = *q;
-        while (*p != -1)
+        p = q[0];
+        while (p[0] != -1)
         {
             p++;
             m++;
         }
-        *out = m - 1;
+        out[0] = m - 1;
         q++;
         out++;
     }
-    gRcpTexHeaderBuffer = (void*)mmAlloc(0x120, 6, 0);
+    gRcpTexHeaderBuffer = mmAlloc(0x120, 6, 0);
     textureLoad(0, 0);
 }
 
