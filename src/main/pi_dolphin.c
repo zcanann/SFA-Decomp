@@ -2427,6 +2427,50 @@ char sRomlistZlbPathFormat[] = "%s.romlist.zlb";
 extern asm BOOL OSRestoreInterrupts(register BOOL level);
 extern int zlbDecompress(void* dst, int size, int out, void* src);
 
+typedef struct PathPoint
+{
+    u8 padding[8];
+    f32 position[3];
+} PathPoint;
+
+typedef struct PathSearchNode
+{
+    PathPoint* point;
+    u32 distanceToTarget;
+    u32 routeDistance;
+    u8 parentIndex;
+    u8 childIndex;
+    u8 visited;
+    u8 padding;
+} PathSearchNode;
+
+typedef struct PathHeapEntry
+{
+    u32 priority;
+    u16 nodeIndex;
+    u16 padding;
+} PathHeapEntry;
+
+typedef struct PathSearch
+{
+    PathSearchNode* nodes;
+    PathHeapEntry* heap;
+    PathPoint** path;
+    f32* targetPosition;
+    s32 pathId;
+    u32 reserved14;
+    PathPoint* startPoint;
+    s32 currentNode;
+    s16 nodeCount;
+    s16 heapSize;
+    u32 closestDistance;
+    u8 routeFlags;
+    u8 padding29;
+    s16 pathCount;
+    s16 pathIndex;
+    u16 padding2E;
+} PathSearch;
+
 #pragma dont_inline on
 #pragma optimize_for_size reset
 int loadAndDecompressDataFile(int fileId, int destBuf, int offsetFlags, u32 length, u32* sizeOut, int entryIndex,
@@ -4987,35 +5031,38 @@ void fn_8004AAD4(u8* arr, int size, int idx)
 
 void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
 {
+    PathSearch* search = (PathSearch*)q;
+    PathPoint* point = (PathPoint*)obj;
     int pos;
     u16* hh;
     u16 v;
     int cnt2;
-    int* node;
+    PathSearchNode* node;
     u32* heap;
+    PathSearchNode* scanNode;
     int z[2];
     int n;
-    int* node4;
+    PathSearchNode* node4;
     int visited;
     int cnt;
     if (fn_8004AA24(q, elem) != 0)
     {
-        cnt = *(s16*)((char*)q + 0x20);
+        cnt = search->nodeCount;
         if (cnt != 0xfe)
         {
-            node = (int*)(*q + ((*(s16*)((char*)q + 0x20))++) * 0x10);
-            *node = (int)obj;
-            node[2] = d;
-            *(u8*)(node + 3) = (u16)idx;
-            node[1] = (u32)vec3f_distanceSquared((f32*)(*node + 8), (f32*)q[3]);
+            node = &search->nodes[search->nodeCount++];
+            node->point = point;
+            node->routeDistance = d;
+            node->parentIndex = (u16)idx;
+            node->distanceToTarget = (u32)vec3f_distanceSquared(node->point->position, search->targetPosition);
         }
-        heap = (u32*)q[1];
-        hh = (u16*)q[1];
+        heap = (u32*)search->heap;
+        hh = (u16*)search->heap;
         v = cnt;
-        hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
-        *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = 0xfffffffe;
+        hh[++search->heapSize * 4 + 2] = v;
+        *(u32*)((int)heap + search->heapSize * 8) = 0xfffffffe;
         {
-            int i = *(s16*)((char*)q + 0x22);
+            int i = search->heapSize;
             u32 pri = *(u32*)((int)heap + i * 8);
             u16 idx16 = hh[i * 4 + 2];
             int parent;
@@ -5032,13 +5079,13 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
     }
     z[0] = 0;
     z[1] = z[0];
-    cnt2 = *(s16*)((char*)q + 0x20);
+    cnt2 = search->nodeCount;
     for (n = cnt2; n > 0; n--)
     {
-        char** node2 = (char**)(*q + z[1]);
-        if (*node2 == obj)
+        scanNode = (PathSearchNode*)((u8*)search->nodes + z[1]);
+        if (scanNode->point == point)
         {
-            visited = *(u8*)((char*)node2 + 0xe);
+            visited = scanNode->visited;
             goto found;
         }
         z[1] += 0x10;
@@ -5048,8 +5095,8 @@ void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj)
 found:
     if (z[0] >= 0 && visited == 0)
     {
-        int* node3 = (int*)(*q + z[0] * 0x10);
-        if (d < node3[2])
+        PathSearchNode* node3 = &search->nodes[z[0]];
+        if (d < node3->routeDistance)
         {
             u32 newpri;
             int s2;
@@ -5057,11 +5104,11 @@ found:
             u16 target;
             u32* entry;
             u32 old;
-            *(u8*)((char*)node3 + 0xc) = idx;
-            node3[2] = d;
-            newpri = node3[1] + node3[2];
-            s2 = *(s16*)((char*)q + 0x22);
-            heap = (u32*)q[1];
+            node3->parentIndex = idx;
+            node3->routeDistance = d;
+            newpri = node3->distanceToTarget + node3->routeDistance;
+            s2 = search->heapSize;
+            heap = (u32*)search->heap;
             hh = (u16*)heap;
             j = 0;
             target = z[0];
@@ -5105,24 +5152,24 @@ found:
         }
         else
         {
-            node4 = (int*)(*q + ((*(s16*)((char*)q + 0x20))++) * 0x10);
-            *node4 = (int)obj;
-            node4[2] = d;
-            *(u8*)(node4 + 3) = (u16)idx;
-            node4[1] = (u32)vec3f_distanceSquared((f32*)(*node4 + 8), (f32*)q[3]);
+            node4 = &search->nodes[search->nodeCount++];
+            node4->point = point;
+            node4->routeDistance = d;
+            node4->parentIndex = (u16)idx;
+            node4->distanceToTarget = (u32)vec3f_distanceSquared(node4->point->position, search->targetPosition);
         }
         if (node4 != NULL)
         {
-            if ((u32)node4[1] > q[9])
+            if (node4->distanceToTarget > search->closestDistance)
             {
-                u32 newpri = node4[1] + node4[2];
-                heap = (u32*)q[1];
+                u32 newpri = node4->distanceToTarget + node4->routeDistance;
+                heap = (u32*)search->heap;
                 hh = (u16*)heap;
                 v = cnt2;
-                hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
-                *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
+                hh[++search->heapSize * 4 + 2] = v;
+                *(u32*)((int)heap + search->heapSize * 8) = -1 - newpri;
                 {
-                    int i = *(s16*)((char*)q + 0x22);
+                    int i = search->heapSize;
                     u32 pri = *(u32*)((int)heap + i * 8);
                     u16 idx16 = hh[i * 4 + 2];
                     int parent;
@@ -5140,18 +5187,18 @@ found:
             else
             {
                 u32 newpri;
-                if ((u32)node4[1] < q[9])
+                if (node4->distanceToTarget < search->closestDistance)
                 {
-                    q[9] = node4[1];
+                    search->closestDistance = node4->distanceToTarget;
                 }
-                newpri = node4[1] + node4[2];
-                heap = (u32*)q[1];
+                newpri = node4->distanceToTarget + node4->routeDistance;
+                heap = (u32*)search->heap;
                 hh = (u16*)heap;
                 v = cnt2;
-                hh[++(*(s16*)((char*)q + 0x22)) * 4 + 2] = v;
-                *(u32*)((int)heap + *(s16*)((char*)q + 0x22) * 8) = -1 - newpri;
+                hh[++search->heapSize * 4 + 2] = v;
+                *(u32*)((int)heap + search->heapSize * 8) = -1 - newpri;
                 {
-                    int i = *(s16*)((char*)q + 0x22);
+                    int i = search->heapSize;
                     u32 pri = *(u32*)((int)heap + i * 8);
                     u16 idx16 = hh[i * 4 + 2];
                     int parent;
@@ -5347,50 +5394,6 @@ int fn_8004B218(void* q_, u32 n_)
 }
 #pragma ppc_unroll_speculative on
 #pragma ppc_unroll_speculative off
-
-typedef struct PathPoint
-{
-    u8 padding[8];
-    f32 position[3];
-} PathPoint;
-
-typedef struct PathSearchNode
-{
-    PathPoint* point;
-    u32 distanceToTarget;
-    u32 routeDistance;
-    u8 parentIndex;
-    u8 childIndex;
-    u8 visited;
-    u8 padding;
-} PathSearchNode;
-
-typedef struct PathHeapEntry
-{
-    u32 priority;
-    u16 nodeIndex;
-    u16 padding;
-} PathHeapEntry;
-
-typedef struct PathSearch
-{
-    PathSearchNode* nodes;
-    PathHeapEntry* heap;
-    PathPoint** path;
-    f32* targetPosition;
-    s32 pathId;
-    u32 reserved14;
-    PathPoint* startPoint;
-    s32 currentNode;
-    s16 nodeCount;
-    s16 heapSize;
-    u32 closestDistance;
-    u8 routeFlags;
-    u8 padding29;
-    s16 pathCount;
-    s16 pathIndex;
-    u16 padding2E;
-} PathSearch;
 
 int fn_8004B31C(PathSearch* queue, PathPoint* startPoint, f32* targetPosition, int pathId, u8 routeFlags)
 {
