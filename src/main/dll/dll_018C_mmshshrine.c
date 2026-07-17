@@ -227,17 +227,17 @@ ObjectDescriptor gMMSH_ShrineObjDescriptor = {
     MMSH_Shrine_getExtraSize,
 };
 
-__declspec(section ".sdata2") const f32 lbl_803E4F08 = 512.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F0C = 128.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F10 = 192.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F14 = 20.0f;
-__declspec(section ".sdata2") const f32 gLaserBeamOrbitPi = 3.1415927f;
-__declspec(section ".sdata2") const f32 gLaserBeamOrbitAngleScale = 32768.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F20 = 600.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F24 = 0.005f;
-__declspec(section ".sdata2") const f32 lbl_803E4F28 = 12.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F2C = 30.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F30 = 255.0f;
+const f32 lbl_803E4F08 = 512.0f;
+const f32 lbl_803E4F0C = 128.0f;
+const f32 lbl_803E4F10 = 192.0f;
+const f32 lbl_803E4F14 = 20.0f;
+const f32 gLaserBeamOrbitPi = 3.1415927f;
+const f32 gLaserBeamOrbitAngleScale = 32768.0f;
+const f32 lbl_803E4F20 = 600.0f;
+const f32 lbl_803E4F24 = 0.005f;
+const f32 lbl_803E4F28 = 12.0f;
+const f32 lbl_803E4F2C = 30.0f;
+const f32 lbl_803E4F30 = 255.0f;
 
 #pragma dont_inline on
 /*
@@ -321,9 +321,9 @@ void fn_801C4664(void* objArg)
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E4F40 = 0.0f;
 #pragma explicit_zero_data reset
-__declspec(section ".sdata2") const f32 lbl_803E4F44 = 72.0f;
-__declspec(section ".sdata2") const f32 lbl_803E4F48 = 0.0010416667209938169f;
-__declspec(section ".sdata2") const f32 lbl_803E4F4C = 96.0f;
+const f32 lbl_803E4F44 = 72.0f;
+const f32 lbl_803E4F48 = 0.0010416667209938169f;
+const f32 lbl_803E4F4C = 96.0f;
 
 #pragma dont_inline on
 /*
