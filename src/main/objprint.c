@@ -25,7 +25,7 @@
 #include "dolphin/gx/GXCull.h"
 #include "dolphin/gx/GXLighting.h"
 #include "dolphin/gx/GXPixel.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/k_cos.h"
+#include "main/atan2f.h"
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXGeometry.h"
 #include "dolphin/gx/GXTev.h"

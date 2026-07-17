@@ -1,4 +1,4 @@
-typedef unsigned int u32;
+#include "dolphin/types.h"
 
 extern float lbl_803E79C8;
 extern float lbl_803E79E8;
