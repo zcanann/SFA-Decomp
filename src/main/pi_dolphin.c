@@ -230,9 +230,16 @@ struct MldfTables
     s16 owners[0x60];         /* mapId owning the slot, -1 = free */
 };
 
+typedef u8 MldfArenaBlock[0x20000];
+enum
+{
+    MLDF_ROM_LIST_WORDS_FROM_ARENA_END =
+        (sizeof(MldfArenaBlock) - offsetof(struct MldfTables, romList)) / sizeof(int)
+};
+
 struct MldfIterators
 {
-    u32* ptrs;
+    void** ptrs;
     s16* owners;
     int* ids;
     char** names;
@@ -4233,7 +4240,7 @@ int initLoadFiles(void)
         lbl_803DCC88 = 0;
         lbl_803DCC8C = stackCreate(0x5e, 0x40);
         i = 0;
-        rom = tbl->romList;
+        rom = (int*)((MldfArenaBlock*)tbl + 1) - MLDF_ROM_LIST_WORDS_FROM_ARENA_END;
         for (; i < 0x75; rom++, i++)
         {
             *rom = 0;
@@ -4245,7 +4252,7 @@ int initLoadFiles(void)
         lbl_803DCC98 = 0;
         for (i = 0,
              himem = (u8*)tbl + 0x20000,
-             it.ptrs = (u32*)(himem - 27176),
+             it.ptrs = (void**)(himem - 27176),
              it.owners = (s16*)(himem - 26824),
              it.ids = (int*)(himem - 28360),
              it.names = sResourceFileNameTable,
@@ -4312,9 +4319,9 @@ int initLoadFiles(void)
                     fileInfo = (DVDFileInfo*)AtomicSList_PopIntLegacy(lbl_803DCC8C);
                     DVDOpen(*it.names, fileInfo);
                     *it.sizes = fileInfo->length;
-                    *it.ptrs = (u32)mmAlloc(*it.sizes + 0x20, 0x7d7d7d7d, 0);
+                    *it.ptrs = mmAlloc(*it.sizes + 0x20, 0x7d7d7d7d, 0);
                     lbl_803DCC88 = lbl_803DCC88 + 1;
-                    DVDReadAsyncPrio(fileInfo, (void*)*it.ptrs, *it.sizes, 0, dvdReadCb_80041d30, 2);
+                    DVDReadAsyncPrio(fileInfo, *it.ptrs, *it.sizes, 0, dvdReadCb_80041d30, 2);
                 }
                 *it.owners = -1;
                 *it.ids = -1;
