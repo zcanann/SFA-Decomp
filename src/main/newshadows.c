@@ -299,25 +299,40 @@ extern void* memcpy(void* d, const void* s, int n);
 
 static inline void boxBlurRow(u8* row, u8* blurred, int size, int window)
 {
-    u32 sum[1];
-    int k[1];
-    sum[0] = 0;
-    for (k[0] = 0; k[0] < window; k[0]++)
+    u32 sum;
+    int k;
+
+    sum = 0;
+    for (k = 0; k < window; k++)
     {
-        sum[0] += row[k[0]];
+        sum += row[k];
     }
-    for (k[0] = 0; k[0] < size; k[0]++)
+    for (k = 0; k < size; k++)
     {
-        blurred[k[0]] = sum[0] / window;
-        sum[0] -= row[k[0]];
-        sum[0] += (row + window)[k[0]];
+        blurred[k] = sum / window;
+        sum -= row[k];
+        sum += row[window + k];
     }
 }
 
+typedef union ShadowBlurOutput
+{
+    u8 bytes[128];
+    u16 halfwords[64];
+    u32 words[32];
+} ShadowBlurOutput;
+
+typedef union ShadowBlurRow
+{
+    u8 bytes[152];
+    u16 halfwords[76];
+    u32 words[38];
+} ShadowBlurRow;
+
 void fn_8006A028(u8* texData, int size, int window, u32 fill)
 {
-    u8 blurred[128];
-    u8 row[152];
+    ShadowBlurOutput blurred;
+    ShadowBlurRow row;
     u8* data;
     u32 i;
 
@@ -330,14 +345,14 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
         for (y = 0; y < size; y++)
         {
             u32* tile = (u32*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
-            u32* dst = (u32*)row;
+            u32* dst = row.words;
             u32* src;
             u32* wp;
             u32 x;
 
             for (i = 0; i < nfill; i++)
             {
-                *dst = fill;
+                dst[0] = fill;
                 dst++;
             }
             src = tile;
@@ -350,11 +365,11 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             }
             for (i = 0; i < nfill; i++)
             {
-                *dst = fill;
+                dst[0] = fill;
                 dst++;
             }
-            boxBlurRow(row, blurred, size, window);
-            src = (u32*)blurred;
+            boxBlurRow(row.bytes, blurred.bytes, size, window);
+            src = blurred.words;
             wp = tile;
             for (x = 0; x < size; x += 8)
             {
@@ -370,18 +385,18 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (x = 0; x < size; x++)
             {
                 u8* col = data + ((x & 7) + (x >> 3) * 32);
-                u32* dst = (u32*)row;
+                u32* dst = row.words;
                 u8* gp;
                 u8* bp;
                 u32 yy;
 
                 for (i = 0; i < nfill; i++)
                 {
-                    *dst = fill;
+                    dst[0] = fill;
                     dst++;
                 }
                 gp = col;
-                bp = row + (window >> 1);
+                bp = row.bytes + (window >> 1);
                 for (yy = 0; yy < size; yy += 4)
                 {
                     bp[0] = gp[0];
@@ -391,14 +406,14 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     bp += 4;
                     gp += (size >> 3) * 32;
                 }
-                dst = (u32*)(row + (size + (window >> 1)));
+                dst = (u32*)(row.bytes + (size + (window >> 1)));
                 for (i = 0; i < nfill; i++)
                 {
-                    *dst = fill;
+                    dst[0] = fill;
                     dst++;
                 }
-                boxBlurRow(row, blurred, size, window);
-                bp = blurred;
+                boxBlurRow(row.bytes, blurred.bytes, size, window);
+                bp = blurred.bytes;
                 for (yy = 0; yy < size; yy += 4)
                 {
                     col[0] = bp[0];
@@ -420,13 +435,13 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
         for (y = 0; y < size; y++)
         {
             u16* tile = (u16*)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
-            u16* dst = (u16*)row;
+            u16* dst = row.halfwords;
             u16* src;
             u32 x;
 
             for (i = 0; i < nfill; i++)
             {
-                *dst = fillhw;
+                dst[0] = fillhw;
                 dst++;
             }
             src = tile;
@@ -441,11 +456,11 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             }
             for (i = 0; i < nfill; i++)
             {
-                *dst = fillhw;
+                dst[0] = fillhw;
                 dst++;
             }
-            boxBlurRow(row, blurred, size, window);
-            src = (u16*)blurred;
+            boxBlurRow(row.bytes, blurred.bytes, size, window);
+            src = blurred.halfwords;
             for (x = 0; x < size; x += 8)
             {
                 tile[0] = src[0];
@@ -462,18 +477,18 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
             for (x = 0; x < size; x++)
             {
                 u8* col = data + ((x & 7) + (x >> 3) * 32);
-                u16* dst = (u16*)row;
+                u16* dst = row.halfwords;
                 u8* gp;
                 u8* bp;
                 u32 yy;
 
                 for (i = 0; i < nfill; i++)
                 {
-                    *dst = fillhw;
+                    dst[0] = fillhw;
                     dst++;
                 }
                 gp = col;
-                bp = row + (window >> 1);
+                bp = row.bytes + (window >> 1);
                 for (yy = 0; yy < size; yy += 4)
                 {
                     bp[0] = gp[0];
@@ -483,14 +498,14 @@ void fn_8006A028(u8* texData, int size, int window, u32 fill)
                     bp += 4;
                     gp += (size >> 3) * 32;
                 }
-                dst = (u16*)(row + (size + (window >> 1)));
+                dst = (u16*)(row.bytes + (size + (window >> 1)));
                 for (i = 0; i < nfill; i++)
                 {
-                    *dst = fillhw;
+                    dst[0] = fillhw;
                     dst++;
                 }
-                boxBlurRow(row, blurred, size, window);
-                bp = blurred;
+                boxBlurRow(row.bytes, blurred.bytes, size, window);
+                bp = blurred.bytes;
                 for (yy = 0; yy < size; yy += 4)
                 {
                     col[0] = bp[0];
