@@ -899,7 +899,7 @@ u16 inpGetAuxB(u8 studio, u8 index, u8 midi, u8 midiSet)
     return _GetInputValue(0, &inpAuxB.slots[studio][index], midi, midiSet);
 }
 
-static void inpResetGlobalMIDIDirtyFlags(void)
+static inline void inpResetGlobalMIDIDirtyFlags(void)
 {
     u32 i;
     u32 j;
