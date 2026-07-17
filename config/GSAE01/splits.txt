@@ -1573,7 +1573,7 @@ main/dll/dll_00DD_gcbaddieshield.c:
 
 main/dll/dll_00DE_baddieinterestp.c:
 	.text       start:0x8016BB10 end:0x8016BE70
-	.data       start:0x803206C8 end:0x80320700
+	.data       start:0x803206C8 end:0x80320730
 	.sdata2     start:0x803E3220 end:0x803E3228
 
 main/dll/dll_00C6_animatedobj.c:

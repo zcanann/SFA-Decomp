@@ -285,8 +285,9 @@ extern ResourceDescriptor lbl_8031A178, lbl_8031A1A0, lbl_8031A304, lbl_8031A82C
     lbl_8031ADA4, lbl_8031ADD0;
 extern ResourceDescriptor lbl_8031ADF8, lbl_8031C020, lbl_8031C168, lbl_8031C1E4, lbl_8031C2B4, lbl_8031C300,
     lbl_8031C5D0, lbl_8031C5F8;
-extern ResourceDescriptor lbl_8031CC10, lbl_8031CDB8, lbl_80320700, lbl_80321428, lbl_80321788, lbl_803218E8,
-    lbl_80321E58, lbl_803230F8;
+extern ResourceDescriptor lbl_8031CC10, lbl_8031CDB8, lbl_80321428, lbl_80321788, lbl_803218E8, lbl_80321E58,
+    lbl_803230F8;
+extern ResourceDescriptorCallbacks8 lbl_80320700;
 extern ResourceDescriptor lbl_80323740, lbl_80325928, lbl_80325F20, lbl_80327BA8, lbl_80328AD8, lbl_80328E28,
     lbl_80328F00, lbl_80329340;
 extern ResourceDescriptor lbl_803298D0, Dummy245, Dummy246, Dummy244, Dummy247, Dummy248, Dummy24A, Dummy24B;
@@ -1123,7 +1124,7 @@ ResourceDescriptor* gResourceDescriptors[] = {
     &lbl_80319A40,
     NULL,
     &gTrickyObjDescriptor,
-    &lbl_80320700,
+    (ResourceDescriptor*)&lbl_80320700,
     &gAnimatedObjDescriptor,
     &gDIM2RoofRubObjDescriptor,
     &gDepthOfFieldPointObjDescriptor,
