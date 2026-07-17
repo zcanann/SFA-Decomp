@@ -2318,11 +2318,11 @@ void ObjHits_CheckTrackContact(int objA, int objB)
 
 void ObjHits_Update(int objectCount)
 {
-    u8 skeletonScratchB[1052];
+    u8 skeletonScratchB[1036];
     u8 skeletonScratchC[1040];
     u8 skeletonHits[1512];
     u8 skeletonScratchD[100];
-    u8 skeletonScratchE[84];
+    u8 skeletonScratchE[100];
     int candidateIndex;
     ObjHitsSweepEntry** entrySlot;
     int listCount;
