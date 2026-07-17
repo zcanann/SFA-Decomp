@@ -41,17 +41,6 @@ extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
 extern u8 lbl_803DE36A;
 extern SndSpatialListener* s3dListenerRoot;
-extern f32 lbl_803E7880;
-extern f32 lbl_803E7890;
-extern f64 lbl_803E7898;
-extern f32 lbl_803E78A0;
-extern f32 lbl_803E78A4;
-extern f64 lbl_803E78A8;
-extern f32 lbl_803E78B0;
-extern f32 lbl_803E78B4;
-extern f32 lbl_803E78B8;
-extern f32 lbl_803E78BC;
-extern f32 lbl_803E78C0;
 
 extern u32 synthFXSetCtrl(u32 handle, u8 controller, int value);
 extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
@@ -223,7 +212,7 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
     {
         {
-            u32 v = (u32)(int)(lbl_803E78A0 * (emitter->age * distance));
+            u32 v = (u32)(int)(127.0f * (emitter->age * distance));
             if ((v & 0xff) > 0x7f)
             {
                 v = 0x7f;
@@ -233,15 +222,15 @@ void s3dApplyEmitterControls(Snd3DEmitter* emitter, f32 distance, f32 pan, f32 u
     }
     else
     {
-        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, S3D_CLAMP_7BIT((u32)(int)(lbl_803E78A0 * distance)));
+        synthFXSetCtrl(handle, S3D_CTRL_VOLUME, S3D_CLAMP_7BIT((u32)(int)(127.0f * distance)));
     }
 
-    synthFXSetCtrl(handle, S3D_CTRL_PAN, S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 + pan))));
+    synthFXSetCtrl(handle, S3D_CTRL_PAN, S3D_CLAMP_7BIT((u32)(int)(64.0f * (1.0f + pan))));
 
     synthFXSetCtrl(handle, S3D_CTRL_SPATIAL_AZIMUTH,
-                   S3D_CLAMP_7BIT((u32)(int)(lbl_803E78B4 * (lbl_803E78A4 - azimuth))));
+                   S3D_CLAMP_7BIT((u32)(int)(64.0f * (1.0f - azimuth))));
 
-    pitch = lbl_803E78B8 * pitch;
+    pitch = 8192.0f * pitch;
     if ((u32)pitch > S3D_CTRL_14BIT_LIMIT)
     {
         value14 = S3D_CTRL_14BIT_LIMIT;
@@ -407,16 +396,8 @@ void s3dStartQueuedEmitters(void)
     Snd3DEmitter* emitter;
     u32 handle;
     u8 studio;
-    f32 one;
-    f32 zero;
-    f32 upperWindow;
-    f32 lowerWindow;
     f32 distanceDelta;
 
-    zero = lbl_803E7880;
-    one = lbl_803E78A4;
-    upperWindow = lbl_803E78C0;
-    lowerWindow = lbl_803E78BC;
 
     for (groupIndex = 0; groupIndex < lbl_803DE36B; groupIndex++)
     {
@@ -435,11 +416,11 @@ void s3dStartQueuedEmitters(void)
             }
 
             distanceDelta = node->distance - startGroup[groupIndex].sortedHead->distance;
-            if (distanceDelta <= lowerWindow)
+            if (distanceDelta <= 0.08f)
             {
                 goto next_node;
             }
-            if (distanceDelta <= upperWindow)
+            if (distanceDelta <= 0.15f)
             {
                 emitter = node->emitter;
                 if (++emitter->retryCounter < 0x14)
@@ -488,11 +469,11 @@ void s3dStartQueuedEmitters(void)
             if ((emitter->flags & S3D_EMITTER_FLAG_SKIP_FADE_IN) == 0)
             {
                 emitter->flags |= S3D_EMITTER_FLAG_AGE_OUT;
-                emitter->age = zero;
+                emitter->age = 0.0f;
             }
             else
             {
-                emitter->age = one;
+                emitter->age = 1.0f;
             }
             s3dApplyEmitterControls(emitter, node->distance, node->pan, node->frontBack, node->azimuth, node->pitch);
             emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;

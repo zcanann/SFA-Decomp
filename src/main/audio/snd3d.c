@@ -5,7 +5,6 @@
 #include "main/audio/synth_job_init.h"
 #include "main/audio/vsample_alloc.h"
 #include "main/audio/synth_virtual_sample.h"
-#include "main/audio/synth_delay.h"
 #include "main/audio/synth_control.h"
 #include "main/audio/snd_synth_api.h"
 #include "main/audio/synth_voice.h"
@@ -38,13 +37,11 @@ extern SndStudioInputLink* s3dDoorRoot;
 extern u32 snd_used_studios;
 extern u8 snd_base_studio;
 extern u8 snd_max_studios;
+extern u32 synthSendKeyOff(u32 handle);
 extern u8 lbl_803DE36A;
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
-extern f32 lbl_803E7880;
-extern f32 lbl_803E78A4;
-extern f32 lbl_803E78C4;
 extern void dataInit(int p1, void* p2);
 
 void s3dHandle(void)
@@ -53,9 +50,6 @@ void s3dHandle(void)
     Snd3DEmitter* next;
     SndSpatialEntry* entry;
     u32 flags;
-    f32 ageLimit;
-    f32 ageStep;
-    f32 zeroDist;
     f32 distance;
     f32 azimuth;
     f32 pitch;
@@ -73,9 +67,6 @@ void s3dHandle(void)
     lbl_803DE36C = 0;
     lbl_803DE36D = 0;
     emitter = s3dEmitterRoot;
-    zeroDist = lbl_803E7880;
-    ageStep = lbl_803E78C4;
-    ageLimit = lbl_803E78A4;
 
     for (; emitter != (Snd3DEmitter*)0x0; emitter = next)
     {
@@ -102,12 +93,12 @@ void s3dHandle(void)
         {
             if ((flags & S3D_EMITTER_FLAG_PLAYING) != 0)
             {
-                if ((zeroDist == distance) && ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                if ((0.0f == distance) && ((flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
                 {
                     emitter->flags |= S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                 }
-                else if ((zeroDist == distance) && ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0))
+                else if ((0.0f == distance) && ((flags & S3D_EMITTER_FLAG_REMOVE_AT_ORIGIN) != 0))
                 {
                     S3D_UNLINK_EMITTER(emitter);
                     emitter->flags &= 0xffff;
@@ -167,7 +158,7 @@ void s3dHandle(void)
                 {
                     s3dInsertSortedEmitter(emitter, distance);
                 }
-                if ((zeroDist == distance) && ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
+                if ((0.0f == distance) && ((emitter->flags & S3D_EMITTER_FLAG_STOP_AT_ORIGIN) != 0))
                 {
                     synthSendKeyOff(emitter->handle);
                     emitter->handle = S3D_INVALID_FX_HANDLE;
@@ -187,8 +178,8 @@ void s3dHandle(void)
             }
             if ((emitter->flags & S3D_EMITTER_FLAG_AGE_OUT) != 0)
             {
-                emitter->age += ageStep;
-                if (emitter->age >= ageLimit)
+                emitter->age += 0.3f;
+                if (emitter->age >= 1.0f)
                 {
                     emitter->flags &= ~S3D_EMITTER_FLAG_AGE_OUT;
                 }
@@ -199,7 +190,7 @@ void s3dHandle(void)
             entry = emitter->entry;
             if (((entry == (SndSpatialEntry*)0x0) ||
                  ((entry != (SndSpatialEntry*)0x0) && (entry->assignedVoice != 0xff))) &&
-                (zeroDist != distance))
+                (0.0f != distance))
             {
                 emitter->flags &= ~S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                 emitter->flags |= S3D_EMITTER_FLAG_PLAYING;
