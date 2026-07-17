@@ -16,10 +16,6 @@ force_active:
   # dll_012B_fxemit.c: the retail link retained this unreferenced .sdata2 zero
   # atom; dropping it would shorten the pool and shift later SDA2 references.
   - lbl_803E3E44
-  # dll_00E1_wispbaddie.c: the retail link retained this unreferenced .sdata2
-  # zero atom; dropping it would shorten the pool and shift later SDA2
-  # references.
-  - lbl_803E2724
   # aram_data.c: the retail link retained this unreferenced .bss block;
   # dropping it would shorten the section and shift every later .bss address.
   - lbl_803D4868

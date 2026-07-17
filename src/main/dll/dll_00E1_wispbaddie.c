@@ -51,6 +51,13 @@ union WispBaddieConstF32
 {
     f32 f;
 };
+
+typedef struct WispTriggerDistanceParams
+{
+    f32 scale;
+    f32 minimum;
+} WispTriggerDistanceParams;
+
 const union WispBaddieConstF32 lbl_803E26E8 = {0.006f};
 __declspec(section ".sdata2") f32 lbl_803E26EC = 30.0f;
 __declspec(section ".sdata2") f32 lbl_803E26F0 = 40.0f;
@@ -80,7 +87,6 @@ extern f32 lbl_803E2710;
 extern f32 lbl_803E2714;
 extern f32 lbl_803E2718;
 extern f32 lbl_803E271C;
-extern f32 lbl_803E2720;
 extern void fn_8014CF7C(int obj, int state, f32 e, f32 f, int c, int d);
 extern f32 lbl_803E2728;
 extern f32 lbl_803E272C;
@@ -319,6 +325,7 @@ void wispbaddie_update(GameObject* obj)
 
 void wispbaddie_init(GameObject* obj, int setup, int initialised)
 {
+    extern const WispTriggerDistanceParams lbl_803E2720;
     WispBaddieState* state;
     f32 value;
 
@@ -326,7 +333,7 @@ void wispbaddie_init(GameObject* obj, int setup, int initialised)
     value = (f32) * (s16*)(setup + 0x1a) / lbl_803E271C;
     state->maxHitRadius = value;
     state->hitRadius = value;
-    state->triggerDistance = lbl_803E2720 * (f32) * (s8*)(setup + 0x19);
+    state->triggerDistance = lbl_803E2720.scale * (f32) * (s8*)(setup + 0x19);
     state->particleId = 0x337;
 
     if (initialised == 0)
@@ -647,8 +654,7 @@ __declspec(section ".sdata2") f32 lbl_803E2710 = 250.0f;
 __declspec(section ".sdata2") f32 lbl_803E2714 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E2718 = 60.0f;
 __declspec(section ".sdata2") f32 lbl_803E271C = 25.0f;
-__declspec(section ".sdata2") f32 lbl_803E2720 = 4.0f;
-__declspec(section ".sdata2") f32 lbl_803E2724 = 0.0f;
+const WispTriggerDistanceParams lbl_803E2720 = {4.0f, 0.0f};
 __declspec(section ".sdata2") f32 lbl_803E2728 = 60.0f;
 __declspec(section ".sdata2") f32 lbl_803E272C = 0.005f;
 __declspec(section ".sdata2") f32 lbl_803E2730 = 0.17f;
