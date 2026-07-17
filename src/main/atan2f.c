@@ -27,6 +27,15 @@ extern double lbl_803E7A98;
 extern double lbl_803E7AA0;
 extern double lbl_803E7AA8;
 
+typedef union FloatWord {
+    float value;
+    u32 bits;
+} FloatWord;
+
+static inline u32 float_bits(const float *value) {
+    return ((const FloatWord *)value)->bits;
+}
+
 #pragma peephole on
 float __kernel_cos(float y, float x) {
     float ax = __fabsf(x);
@@ -34,7 +43,7 @@ float __kernel_cos(float y, float x) {
     float r;
     float r2;
     float value;
-    int quadrant;
+    s32 quadrant;
 
     if (ax > ay) {
         r = ay / ax;
@@ -46,7 +55,7 @@ float __kernel_cos(float y, float x) {
         value = lbl_803E79C8 - r * (lbl_803E7A0C * r2 + lbl_803E7A08);
     }
 
-    quadrant = (*(u32 *)&y & 0x80000000) | ((*(u32 *)&x >> 1) & 0x40000000);
+    quadrant = (float_bits(&y) & 0x80000000) | ((float_bits(&x) & 0x80000000) >> 1);
     switch (quadrant) {
         case 0x00000000:
             return value;
