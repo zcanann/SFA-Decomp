@@ -1197,7 +1197,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/dll_00DD_gcbaddieshield.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00DE_baddieinterestp.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00C6_animatedobj.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DIM/dll_00C7_dim2roofrub.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DIM/dll_00C7_dim2roofrub.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00C8_depthoffieldpoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00E2_staff.c", cflags=cflags_dll_noopt),
             Object(
