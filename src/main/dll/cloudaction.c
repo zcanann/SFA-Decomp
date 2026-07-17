@@ -130,6 +130,15 @@ void* cloudGetLayerTextureSize(f32* out1, f32* out2)
     return NULL;
 }
 
+const union CloudActionConstF32 lbl_803DF2C0 = { 300.0f };
+const union CloudActionConstF32 lbl_803DF2C4 = { 40.0f };
+const union CloudActionConstF32 lbl_803DF2C8 = { 0.5f };
+const union CloudActionConstF32 lbl_803DF2CC = { 2.0f };
+const union CloudActionConstF32 lbl_803DF2D0 = { 255.0f };
+const union CloudActionConstF32 lbl_803DF2D4 = { 1.0f };
+const union CloudActionConstF32 lbl_803DF2D8 = { 50.0f };
+const union CloudActionConstF32 lbl_803DF2DC = { 3.0f };
+
 void __kill_critical_regions(void)
 {
 }
@@ -353,16 +362,6 @@ void renderClouds(int a, int b, int c, int d)
         objRender(a, b, c, d, (int)lbl_8039AB28.lowerCloudObj, 1);
     }
 }
-
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C0 = { 300.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C4 = { 40.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2C8 = { 0.5f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2CC = { 2.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D0 = { 255.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D4 = { 1.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2D8 = { 50.0f };
-__declspec(section ".sdata2") const union CloudActionConstF32 lbl_803DF2DC = { 3.0f };
-
 
 void cloudaction_func05(void)
 {
