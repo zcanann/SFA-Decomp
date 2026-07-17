@@ -50,10 +50,10 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
     ObjHitsPriorityState* hitState;
 
-    if (state->baddie.userData == 0)
+    if (state->baddie.userData2 == 0)
     {
         ObjGroup_AddObject((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
-        state->baddie.userData = 1;
+        state->baddie.userData2 = 1;
     }
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, ICEBADDIE_HIT_VOLUME_SLOT, 1, 0);
     hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
@@ -67,10 +67,10 @@ void iceBaddie_enterWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 #pragma fp_contract reset
 void iceBaddie_leaveWhirlpoolGroup(GameObject* obj, GroundBaddieState* state)
 {
-    if (state->baddie.userData != 0)
+    if (state->baddie.userData2 != 0)
     {
         ObjGroup_RemoveObject((int)obj, ICEBADDIE_OBJGROUP_SECONDARY);
-        state->baddie.userData = 0;
+        state->baddie.userData2 = 0;
     }
     *(u16*)obj = (float)(int)(obj)->anim.rotX - 256.0f * timeDelta;
 }
@@ -83,7 +83,7 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
 {
     f32 fz;
     state->baddie.speedScale = 60.0f;
-    *(char*)&state->baddie.userData = state->baddie.unk2A8;
+    *(char*)&state->baddie.userData2 = state->baddie.unk2A8;
     state->baddie.unk2A8 = 160.0f;
     state->baddie.unk2E4 = 0x42001;
     state->baddie.unk308 = 0.01f;
@@ -96,8 +96,8 @@ void baddie_initWhirlpoolState(int* obj, GroundBaddieState* state)
     state->baddie.unk318 = fz;
     state->baddie.unk322 = 7;
     state->baddie.unk31C = fz;
-    state->baddie.seqEntryIndex = 1;
-    state->baddie.userData = 0;
+    state->baddie.userData1 = 1;
+    state->baddie.userData2 = 0;
     ObjModel_SetRenderCallback((u8*)Obj_GetActiveModel((GameObject*)obj), renderWhirlpool);
 }
 

@@ -9,7 +9,7 @@
  * projectiles toward the tracked object, line-of-sight gating through the
  * voxel maps, hit-reaction message handling, and particle-fx spawning.
  * BaddieState->controlFlags bit 0x2000 gates path advance; 0x40000000 the
- * attack window; userData holds per-instance counters/flags.
+ * attack window; userData2 holds per-instance counters/flags.
  */
 #include "main/dll/partfx_interface.h"
 #include "main/audio/sfx_ids.h"
@@ -71,7 +71,7 @@ extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
 void vambat_updateWhileFrozen(int obj, int state, int unused, int msgFlag)
 {
-    if (((BaddieState*)state)->userData != 0)
+    if (((BaddieState*)state)->userData2 != 0)
     {
         if (msgFlag == 16)
         {
@@ -107,7 +107,7 @@ void fn_80153040(GameObject* obj, int state)
         hitState = (ObjHitsPriorityState*)(obj)->anim.hitReactState;
         hitState->suppressOutgoingHits = 0;
     }
-    if (((BaddieState*)state)->userData != 0)
+    if (((BaddieState*)state)->userData2 != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x80;
     }
@@ -163,7 +163,7 @@ void fn_80153248(GameObject* obj, int state)
     int trackedObj;
 
     curve = *(RomCurveWalker**)state;
-    if (((BaddieState*)state)->userData != 0)
+    if (((BaddieState*)state)->userData2 != 0)
     {
         ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x80;
     }
@@ -254,10 +254,10 @@ void vambat_init(GameObject* obj, int state)
     switch (obj->anim.seqId)
     {
     case 0x7c6:
-        ((BaddieState*)state)->userData = 1;
+        ((BaddieState*)state)->userData2 = 1;
         break;
     default:
-        ((BaddieState*)state)->userData = 0;
+        ((BaddieState*)state)->userData2 = 0;
         break;
     }
 }

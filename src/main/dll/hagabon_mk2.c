@@ -300,7 +300,7 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
         CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
-        ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].mode;
+        ((BaddieState*)state)->userData1 = sq[((BaddieState*)state)->userData1].mode;
         ((FCVars*)state)->emergeTimer = lbl_803E2C38;
         Sfx_StopFromObject((int)obj, SFXTRIG_baddie_rach_death);
     }
@@ -340,9 +340,9 @@ void hagabonMK2_updateB(s16* obj, u8* state)
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
-        i = ((BaddieState*)state)->seqEntryIndex * 0xc;
+        i = ((BaddieState*)state)->userData1 * 0xc;
         Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
-        ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
+        ((BaddieState*)state)->userData1 = sq[((BaddieState*)state)->userData1].next;
     }
 
     if (((FCVars*)state)->engineTimer > lbl_803E2C30)
@@ -479,7 +479,7 @@ void hagabonMK2_update(s16* obj, u8* state)
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0)
     {
-        ((BaddieState*)state)->seqEntryIndex = 3;
+        ((BaddieState*)state)->userData1 = 3;
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
     sidekickToy_accelerateTowardTarget3D(
@@ -489,11 +489,11 @@ void hagabonMK2_update(s16* obj, u8* state)
         lbl_803E2C50, ((BaddieState*)state)->unk304);
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        i = ((BaddieState*)state)->seqEntryIndex * 0xc;
+        i = ((BaddieState*)state)->userData1 * 0xc;
         Baddie_SetMove((int*)obj, state, *(u8*)(gCrawlerSeqTable + i + 8), *(f32*)((int)gCrawlerSeqTable + i), 0, 0);
         {
             CrawlerSeq12* sq = (CrawlerSeq12*)gCrawlerSeqTable;
-            ((BaddieState*)state)->seqEntryIndex = sq[((BaddieState*)state)->seqEntryIndex].next;
+            ((BaddieState*)state)->userData1 = sq[((BaddieState*)state)->userData1].next;
         }
     }
     pw = powfBitEstimate(((BaddieState*)state)->unk304, timeDelta);
@@ -564,7 +564,7 @@ void crawler_initTailModel(int* obj, int* st)
     {
         f32* fbase = (f32*)gCrawlerSeqTable;
         u8* bbase = gCrawlerSeqTable;
-        u32 idx = ((BaddieState*)st)->seqEntryIndex;
+        u32 idx = ((BaddieState*)st)->userData1;
         u32 off = idx * 0xc;
         Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
     }

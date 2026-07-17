@@ -89,7 +89,7 @@ u32 fn_8014FFB4(GameObject* obj, int state, u32 allowNewEvent)
     WispEventRow* row;
     u32 sf2;
 
-    sequenceIndex = ((BaddieState*)state)->userData;
+    sequenceIndex = ((BaddieState*)state)->userData2;
     sequenceBase = base + sequenceIndex * 0x28;
     eventRows = *(WispEventRow**)(sequenceBase + 0x1444);
     stateFlags = ((BaddieState*)state)->controlFlags;

@@ -242,7 +242,7 @@ void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int s
         Baddie_SetMove((int*)obj, st, 5, 0.5f, 0, 0);
     }
     r = randomGetRange(0, 3);
-    ((BaddieState*)st)->seqEntryIndex = base[r];
+    ((BaddieState*)st)->userData1 = base[r];
     ((BaddieState*)st)->reactionFlags |= 0x8;
     if (sub > (int)((BaddieState*)st)->hitCounter)
     {
@@ -352,34 +352,34 @@ void snowworm_update(int* obj, u8* state)
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0 &&
-        ((BaddieState*)state)->seqEntryIndex <= 1)
+        ((BaddieState*)state)->userData1 <= 1)
     {
         if (((FCVars*)state)->turnDelta != 0 || (int)randomGetRange(0, 0x14) < 10)
         {
-            ((BaddieState*)state)->seqEntryIndex = 1;
+            ((BaddieState*)state)->userData1 = 1;
         }
         else
         {
-            ((BaddieState*)state)->seqEntryIndex = 7;
+            ((BaddieState*)state)->userData1 = 7;
         }
         ((BaddieState*)state)->controlFlags |= (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        *(char*)&((BaddieState*)state)->seqEntryIndex += 1;
-        if (((BaddieState*)state)->seqEntryIndex > gSnowwormSeqIndexMax[((FCVars*)state)->turnDelta])
+        *(char*)&((BaddieState*)state)->userData1 += 1;
+        if (((BaddieState*)state)->userData1 > gSnowwormSeqIndexMax[((FCVars*)state)->turnDelta])
         {
-            ((BaddieState*)state)->seqEntryIndex = gSnowwormSeqIndexReset[((FCVars*)state)->turnDelta];
+            ((BaddieState*)state)->userData1 = gSnowwormSeqIndexReset[((FCVars*)state)->turnDelta];
         }
         if (((FCVars*)state)->moveTableIndex < 4)
         {
-            i = ((BaddieState*)state)->seqEntryIndex * 0xc;
+            i = ((BaddieState*)state)->userData1 * 0xc;
             Baddie_SetMove(obj, state, (tbl + i)[8], *(f32*)((int)tbl + i), 0, 0);
         }
         else
         {
-            i = ((BaddieState*)state)->seqEntryIndex * 0xc;
+            i = ((BaddieState*)state)->userData1 * 0xc;
             Baddie_SetMove(obj, state, (tbl + i)[9], *(f32*)((int)tbl + i), 0, 0);
         }
         if (((GameObject*)obj)->anim.currentMove == 9)
@@ -388,7 +388,7 @@ void snowworm_update(int* obj, u8* state)
         }
         else if (((GameObject*)obj)->anim.currentMove == 1)
         {
-            int r = randomGetRange(0, ((BaddieState*)state)->userData);
+            int r = randomGetRange(0, ((BaddieState*)state)->userData2);
             s16 a = randomGetRange(-0x8000, 0x7fff);
             f32 angle = (gCrawlerPi * a) / gCrawlerHalfCircleBams;
             ((GameObject*)obj)->anim.localPosX =
@@ -415,16 +415,16 @@ void snowworm_applyReactionState(int* obj, int* st)
         s16 a = ((GameObject*)obj)->anim.currentMove;
         if (a == 7)
         {
-            ((BaddieState*)st)->seqEntryIndex = 1;
+            ((BaddieState*)st)->userData1 = 1;
         }
         else if (a != 0)
         {
-            ((BaddieState*)st)->seqEntryIndex = 0;
+            ((BaddieState*)st)->userData1 = 0;
         }
         {
             u8* bbase = t1;
             f32* fbase = (f32*)t1;
-            u32 idx2 = ((BaddieState*)st)->seqEntryIndex;
+            u32 idx2 = ((BaddieState*)st)->userData1;
             u32 off = idx2 * 0xc;
             Baddie_SetMove(obj, st, bbase[off + 8], *(f32*)((char*)fbase + off), 0, 0);
         }
@@ -435,7 +435,7 @@ void snowworm_applyReactionState(int* obj, int* st)
 void crawler_initVariant(int* obj, int* st)
 {
     ((BaddieState*)st)->speedScale = 60.0f;
-    /* 0x33b: crawler variant selector (shares slot with BaddieState.userData);
+    /* 0x33b: crawler variant selector (shares slot with BaddieState.userData2);
      * kept raw - single site, member spelling off u8* st is byte-risky. */
     *((u8*)st + 0x33b) = ((BaddieState*)st)->unk2A8;
     ((BaddieState*)st)->unk2A8 = 160.0f;
@@ -452,7 +452,7 @@ void crawler_initVariant(int* obj, int* st)
         *((u8*)st + 0x322) = 7;
         ((BaddieState*)st)->unk31C = d;
     }
-    ((BaddieState*)st)->seqEntryIndex = 1;
+    ((BaddieState*)st)->userData1 = 1;
     ((FCVars*)st)->turnDelta = (u16)(((GameObject*)obj)->anim.seqId == 0x84b);
 }
 

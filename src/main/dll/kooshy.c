@@ -117,7 +117,7 @@ void fn_8015383C(GameObject* obj, int state)
     u32 rnd;
     s16 angle;
 
-    ((BaddieState*)state)->userData = ((BaddieState*)state)->userData & 0x7f;
+    ((BaddieState*)state)->userData2 = ((BaddieState*)state)->userData2 & 0x7f;
     losDetected = 0;
     vec[0] = (obj)->anim.localPosX - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
     vec[1] = (obj)->anim.localPosY - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosY;
@@ -157,37 +157,37 @@ void fn_8015383C(GameObject* obj, int state)
     {
         hit = 0;
     }
-    flagByte = ((BaddieState*)state)->userData;
+    flagByte = ((BaddieState*)state)->userData2;
     if ((flagByte & 0x40) == 0)
     {
         Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_blooplaugh3, 2);
         Baddie_SetMove(obj, state, 2, lbl_803E290C, 0, 0);
-        ((BaddieState*)state)->userData = (u8)((((BaddieState*)state)->userData) | 0x40);
-        ((BaddieState*)state)->seqEntryIndex = 0;
+        ((BaddieState*)state)->userData2 = (u8)((((BaddieState*)state)->userData2) | 0x40);
+        ((BaddieState*)state)->userData1 = 0;
     }
     else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
         u8 mode;
         if ((u8)hit != 0)
         {
-            if (((BaddieState*)state)->seqEntryIndex != 0)
+            if (((BaddieState*)state)->userData1 != 0)
             {
-                ((BaddieState*)state)->seqEntryIndex -= 1;
+                ((BaddieState*)state)->userData1 -= 1;
                 mode = (u8)(obj)->anim.currentMove;
             }
             else if ((obj)->anim.currentMove != 5 && losDetected)
             {
                 mode = 5;
-                ((BaddieState*)state)->seqEntryIndex =
-                    gMagicPlantSeqEntryTable[((BaddieState*)state)->userData & 3];
-                ((BaddieState*)state)->userData =
-                    (u8)((*(s8*)&((BaddieState*)state)->userData + 1) & 0xc3);
+                ((BaddieState*)state)->userData1 =
+                    gMagicPlantSeqEntryTable[((BaddieState*)state)->userData2 & 3];
+                ((BaddieState*)state)->userData2 =
+                    (u8)((*(s8*)&((BaddieState*)state)->userData2 + 1) & 0xc3);
             }
             else
             {
                 mode = 4;
                 rnd = randomGetRange(1, 2);
-                ((BaddieState*)state)->seqEntryIndex = rnd;
+                ((BaddieState*)state)->userData1 = rnd;
             }
         }
         else
@@ -227,7 +227,7 @@ sharedTail:
 
 void fn_80153BFC(GameObject* obj, int state)
 {
-    ((BaddieState*)state)->userData = ((BaddieState*)state)->userData & 0xbf;
+    ((BaddieState*)state)->userData2 = ((BaddieState*)state)->userData2 & 0xbf;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 && (obj)->anim.currentMove != 1)
     {
         Sfx_PlayFromObjectLimited((int)obj, SFXTRIG_baddie_eggsnatch_movelp, 2);
@@ -253,8 +253,8 @@ void kooshy_init(int unused, int state)
     ((BaddieState*)state)->unk318 = pathStepInit;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = eventFlagsVal;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->userData = 0;
+    ((BaddieState*)state)->userData1 = 0;
+    ((BaddieState*)state)->userData2 = 0;
     *(f32*)(state + 0x324) = lbl_803E2930;
     ((BaddieState*)state)->pathStep = pathStepInit;
 }

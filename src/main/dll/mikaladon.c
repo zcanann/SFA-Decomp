@@ -60,8 +60,8 @@ void mikaladon_init(GameObject* obj, int state)
     *(f32*)(state + 0x324) = obj->anim.localPosX;
     *(f32*)(state + 0x328) = obj->anim.localPosY;
     *(f32*)(state + 0x32c) = obj->anim.localPosZ;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->userData = 0;
+    ((BaddieState*)state)->userData1 = 0;
+    ((BaddieState*)state)->userData2 = 0;
     *(s16*)(state + 0x338) = 0;
     *(f32*)(state + 0x330) = zero;
     *(f32*)(state + 0x334) = zero;

@@ -95,7 +95,7 @@ void fn_80154870(GameObject* obj, int* state)
         *(u32*)&state[0xb9] |= 0x10000LL;
         ((FireflyState*)state)->trackTimer = 0.0f;
     }
-    (obj)->anim.rotY = -(1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
+    (obj)->anim.rotY = -(1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->userData1) -
                          (f32)(obj)->anim.rotY);
     if (flag == 0)
     {
@@ -121,7 +121,7 @@ void fn_80154870(GameObject* obj, int* state)
                 if ((obj)->anim.currentMoveProgress > 0.5f)
                 {
                     ((FireflyState*)state)->breathTimer = 300.0f;
-                    ((BaddieState*)state)->userData += 1;
+                    ((BaddieState*)state)->userData2 += 1;
                 }
                 else
                 {
@@ -158,8 +158,8 @@ void fn_80154870(GameObject* obj, int* state)
             }
         }
     }
-    ((BaddieState*)state)->seqEntryIndex += 1;
-    (obj)->anim.rotY = (1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
+    ((BaddieState*)state)->userData1 += 1;
+    (obj)->anim.rotY = (1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->userData1) +
                         (f32)(obj)->anim.rotY);
     ((void (*)(int, int*))fn_80154328)((int)obj, state);
 }
@@ -187,8 +187,8 @@ void fn_80154C24(GameObject* obj, int state)
     ((FireflyState*)state)->breathTimer = fval;
     ((FireflyState*)state)->anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
-    ((BaddieState*)state)->seqEntryIndex = randVal;
-    ((BaddieState*)state)->userData = 0;
+    ((BaddieState*)state)->userData1 = randVal;
+    ((BaddieState*)state)->userData2 = 0;
     ((FireflyState*)state)->unk330 = 30.0f;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;

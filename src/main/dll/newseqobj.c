@@ -1,7 +1,7 @@
 /*
  * sidekick-toy baddie reaction + update handlers. The object is a
  * curve-following toy/pet baddie driven by per-family anim tables keyed off
- * BaddieState.userData (state[0x33b]):
+ * BaddieState.userData2 (state[0x33b]):
  *   - sidekickToy_handleHitMessage: hit/message reaction handler. Maps incoming message ids
  *     (0xe..0x1f) onto reaction flags (BaddieState.reactionFlags 8/0x10/0x28),
  *     starts a new anim move from the per-family row tables, decrements the
@@ -430,7 +430,7 @@ __declspec(section ".sdata2") f32 lbl_803E27A0 = 0.03f;
 void fn_80150EDC(GameObject* obj, void* state)
 {
     u8* table = lbl_8031DD30;
-    u8 idx = ((BaddieState*)state)->userData;
+    u8 idx = ((BaddieState*)state)->userData2;
     void* animCtrl = *(void**)(table + idx * 0x28 + 0x143c);
     void* idleSrc = *(void**)(table + idx * 0x28 + 0x1454);
     u8* seqRows = *(u8**)(table + idx * 0x28 + 0x1458);
@@ -516,7 +516,7 @@ void fn_80150EDC(GameObject* obj, void* state)
         ((BaddieState*)state)->unk308 =
             ((BaddieState*)state)->pathStep *
             (((f32)(u32) * (u16*)((u8*)state + 0x2a4) / ((BaddieState*)state)->unk2A8 / 60.0f) *
-             ((f32*)(table + 0x1538))[((BaddieState*)state)->userData]);
+             ((f32*)(table + 0x1538))[((BaddieState*)state)->userData2]);
         if (((BaddieState*)state)->unk308 < lbl_803E27A0)
         {
             ((BaddieState*)state)->unk308 = *(f32*)&lbl_803E27A0;

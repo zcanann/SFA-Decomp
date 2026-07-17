@@ -79,7 +79,7 @@ void fn_80152040(int* obj, u8* state)
     int* def = *(int**)&((GameObject*)obj)->anim.placementData;
     u32 flags;
 
-    if (((BaddieState*)state)->seqEntryIndex == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
+    if (((BaddieState*)state)->userData1 == 2 && mainGetBit(*(s16*)((char*)def + 0x1c)) == 0)
     {
         *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
             (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
@@ -96,7 +96,7 @@ void fn_80152040(int* obj, u8* state)
     flags = ((BaddieState*)state)->controlFlags;
     if (flags & BADDIE_CONTROL_JUST_TRIGGERED)
     {
-        if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].unk4 != 0)
+        if (gSeq11EStateTable[((BaddieState*)state)->userData1].unk4 != 0)
         {
             ((BaddieState*)state)->controlFlags = flags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
         }
@@ -107,56 +107,56 @@ void fn_80152040(int* obj, u8* state)
         int anim;
         u8* animTbl;
 
-        if (((BaddieState*)state)->seqEntryIndex == 0)
+        if (((BaddieState*)state)->userData1 == 0)
         {
             if (flags & 0x20000000)
             {
                 if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
                 {
-                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
+                    ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].alt;
                 }
                 else
                 {
-                    ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+                    ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].next;
                 }
             }
         }
-        else if (((BaddieState*)state)->seqEntryIndex == 2)
+        else if (((BaddieState*)state)->userData1 == 2)
         {
             if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0 || !(((BaddieState*)state)->controlFlags & 0x20000000))
             {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+                ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].next;
             }
         }
-        else if (((BaddieState*)state)->seqEntryIndex == 3)
+        else if (((BaddieState*)state)->userData1 == 3)
         {
             if (mainGetBit(*(s16*)((char*)def + 0x1c)) != 0)
             {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].alt;
+                ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].alt;
             }
             else
             {
-                ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+                ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].next;
             }
         }
         else
         {
-            ((BaddieState*)state)->seqEntryIndex = gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].next;
+            ((BaddieState*)state)->userData1 = gSeq11EStateTable[((BaddieState*)state)->userData1].next;
         }
         anim = ((GameObject*)obj)->anim.currentMove;
-        if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->seqEntryIndex * 12])
+        if (anim != (animTbl = (u8*)gSeq11EStateTable + 8)[((BaddieState*)state)->userData1 * 12])
         {
-            if (animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 0 &&
-                animTbl[((BaddieState*)state)->seqEntryIndex * 12] != 4)
+            if (animTbl[((BaddieState*)state)->userData1 * 12] != 0 &&
+                animTbl[((BaddieState*)state)->userData1 * 12] != 4)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_eggsnatch_carry3);
             }
             ((SeqObj11ESetMovePointerStateFn)fn_8014D08C)(
-                (GameObject*)obj, state, animTbl[((BaddieState*)state)->seqEntryIndex * 12],
-                *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->seqEntryIndex * 12), 0, 0xf);
+                (GameObject*)obj, state, animTbl[((BaddieState*)state)->userData1 * 12],
+                *(f32*)((u8*)gSeq11EStateTable + ((BaddieState*)state)->userData1 * 12), 0, 0xf);
         }
     }
-    if (gSeq11EStateTable[((BaddieState*)state)->seqEntryIndex].flagB != 0)
+    if (gSeq11EStateTable[((BaddieState*)state)->userData1].flagB != 0)
     {
         fn_80151DB8(obj, state);
     }
@@ -356,11 +356,11 @@ void fn_80152514(int* obj, u8* state)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d);
             }
-            ((BaddieState*)state)->seqEntryIndex = 1;
+            ((BaddieState*)state)->userData1 = 1;
         }
         else
         {
-            ((BaddieState*)state)->seqEntryIndex = 0;
+            ((BaddieState*)state)->userData1 = 0;
         }
     }
     else
@@ -371,15 +371,15 @@ void fn_80152514(int* obj, u8* state)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_dn_boar1_c_18d);
             }
-            ((BaddieState*)state)->seqEntryIndex = 1;
+            ((BaddieState*)state)->userData1 = 1;
         }
         else
         {
-            ((BaddieState*)state)->seqEntryIndex = 0;
+            ((BaddieState*)state)->userData1 = 0;
         }
         ((GameObject*)obj)->anim.rotX += *(s8*)((char*)def + 0x2a);
     }
-    if (((BaddieState*)state)->seqEntryIndex != 0)
+    if (((BaddieState*)state)->userData1 != 0)
     {
         ((GameObject*)obj)->anim.velocityY += lbl_803DBCB0 * timeDelta;
     }
@@ -534,7 +534,7 @@ void fn_80152B90(int* obj, u8* state)
     fn_80293018(*(u16*)(state + 0x338), &sinOut, &cosOut);
     sinOut = sinOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
     cosOut = cosOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
-    if (((BaddieState*)state)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->userData1 == 0)
     {
         f32 dx;
         f32 dz;
@@ -544,23 +544,23 @@ void fn_80152B90(int* obj, u8* state)
         dz = *(f32*)(state + 0x32c) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
         if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * ((BaddieState*)state)->unk2A8)
         {
-            ((BaddieState*)state)->seqEntryIndex = 1;
-            ((BaddieState*)state)->userData = 0;
+            ((BaddieState*)state)->userData1 = 1;
+            ((BaddieState*)state)->userData2 = 0;
         }
     }
-    else if (((BaddieState*)state)->seqEntryIndex == 1)
+    else if (((BaddieState*)state)->userData1 == 1)
     {
         y = ((GameObject*)obj)->anim.localPosY - lbl_803E2884 * timeDelta;
         if (y <= *(f32*)(state + 0x328) - lbl_803E2888)
         {
-            ((BaddieState*)state)->seqEntryIndex = 2;
+            ((BaddieState*)state)->userData1 = 2;
         }
         else
         {
-            ((BaddieState*)state)->userData = (f32)(u32)((BaddieState*)state)->userData + timeDelta;
-            if (((BaddieState*)state)->userData > 0x64)
+            ((BaddieState*)state)->userData2 = (f32)(u32)((BaddieState*)state)->userData2 + timeDelta;
+            if (((BaddieState*)state)->userData2 > 0x64)
             {
-                ((BaddieState*)state)->userData = 0;
+                ((BaddieState*)state)->userData2 = 0;
                 if (Obj_IsLoadingLocked() != 0)
                 {
                     u8* setup;
@@ -589,7 +589,7 @@ void fn_80152B90(int* obj, u8* state)
         y = lbl_803E288C * timeDelta + ((GameObject*)obj)->anim.localPosY;
         if (y >= *(f32*)(state + 0x328))
         {
-            ((BaddieState*)state)->seqEntryIndex = 0;
+            ((BaddieState*)state)->userData1 = 0;
         }
     }
     ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (sinOut - ((GameObject*)obj)->anim.localPosX);

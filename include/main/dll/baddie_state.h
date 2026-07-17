@@ -135,8 +135,20 @@ typedef struct BaddieState {
     u8 unk332[4];
     s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */
     u8 unk338[2];
-    u8 seqEntryIndex; /* indexes the 16B SeqEntry anim table (entry + i*16), wraps to 1 past the count */
-    u8 userData; /* ObjGroup 80 membership latch */
+    /* 0x33A/0x33B: two bytes of PER-FAMILY scratch - the consumers agree on
+     * nothing. 0x33A is a 16B-SeqEntry index (seqObj11D), a 12B-move-table
+     * index (duster_wb/snowworm/hagabon/seqObj11E), a chain-node index
+     * (fireCrawler), a day/night tri-state (duster), a countdown (kooshy) and
+     * a free-running angle phase seeded randomGetRange(0, 0xff) and read
+     * (f32)(u32) (fireflyLantern, which also steps 0x33A signed via
+     * *(char*)&). 0x33B is an ObjGroup-80 latch (baddieWhirlpool), a family
+     * index (seqObj11D), a variant/anim index (fireCrawler/newSeqObj/snowworm/
+     * wispBaddieSeq), a counter (fireflyLantern), a 60-frame countdown
+     * (weevil), an f32-accumulating timer (seqObj11E) and packed flag bits +
+     * a 2-bit index (kooshy/magicPlant). The owning generic enemy DLL only
+     * bulk-zeroes both. */
+    u8 userData1;
+    u8 userData2;
     u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];

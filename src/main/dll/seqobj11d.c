@@ -6,7 +6,7 @@
  * sequence entries (SeqEntry: anim id + reaction mask + colour bytes).
  *
  * The per-frame update walks those tables to pick the next animation,
- * stepping the seq-entry index (state+0x33a) until it finds an entry whose
+ * stepping the per-family index (state+0x33a) until it finds an entry whose
  * reaction mask matches the baddie's control flags, then drives the model
  * (fn_8014D08C / ObjAnim_SetMoveProgress) and the hit-volume priority
  * (ObjHitsPriorityState). fn_801511E8 picks the next move when far from the
@@ -116,7 +116,7 @@ void fn_801511E8(GameObject* obj, u8* state)
     while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
            (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
     {
-        (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
+        (((GroundBaddieState*)state)->baddie.userData1)++;
         if (state[0x33a] > entry[8])
         {
             state[0x33a] = 1;
@@ -128,7 +128,7 @@ void fn_801511E8(GameObject* obj, u8* state)
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
         (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
-    (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
+    (((GroundBaddieState*)state)->baddie.userData1)++;
     if (state[0x33a] > entry[8])
     {
         state[0x33a] = 1;
@@ -171,7 +171,7 @@ void fn_801513AC(GameObject* obj, u8* state)
         {
             while ((*(u8*)(entry + state[0x33a] * 16 + 10) & 1) != 0)
             {
-                (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
+                (((GroundBaddieState*)state)->baddie.userData1)++;
                 if (state[0x33a] > entry[8])
                 {
                     state[0x33a] = 1;
@@ -186,7 +186,7 @@ void fn_801513AC(GameObject* obj, u8* state)
     while (*(u32*)(entry + (idx = state[0x33a]) * 16 + 4) != 0 &&
            (((GroundBaddieState*)state)->baddie.controlFlags & *(u32*)(entry + idx * 16 + 4)) == 0)
     {
-        (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
+        (((GroundBaddieState*)state)->baddie.userData1)++;
         if (state[0x33a] > entry[8])
         {
             state[0x33a] = 1;
@@ -198,7 +198,7 @@ void fn_801513AC(GameObject* obj, u8* state)
     fn_8014D08C(obj, (int)state, (entry + state[0x33a] * 16)[8], ((SeqEntry*)(entry + state[0x33a] * 16))->speed, 0, 3);
     ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
         (ObjAnimComponent*)obj, *(f32*)(lbl_8031DD30 + entry[state[0x33a] * 16 + 8] * 4));
-    (((GroundBaddieState*)state)->baddie.seqEntryIndex)++;
+    (((GroundBaddieState*)state)->baddie.userData1)++;
     if (state[0x33a] > entry[8])
     {
         state[0x33a] = 1;

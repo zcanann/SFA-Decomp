@@ -153,9 +153,9 @@ void fn_8015625C(u32 obj, int state)
     if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
     }
-    if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
+    if ((((BaddieState*)state)->userData1 != 0) && (moveSpeed > lbl_803E2A98))
     {
         ((BaddieState*)state)->unk308 = lbl_803E2ACC;
         if (((BaddieState*)state)->hitCounter != 0)
@@ -173,7 +173,7 @@ void fn_8015625C(u32 obj, int state)
     }
     else
     {
-        ((BaddieState*)state)->seqEntryIndex = 0;
+        ((BaddieState*)state)->userData1 = 0;
         if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
         {
             ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
@@ -264,9 +264,9 @@ void fn_8015652C(u32 obj, int state)
     if (((moveSpeed > lbl_803E2A98) && (((GameObject*)obj)->anim.velocityY < lbl_803E2AC8)) ||
         ((((BaddieState*)state)->controlFlags & 0x8000000) != 0))
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
     }
-    if ((((BaddieState*)state)->seqEntryIndex != 0) && (moveSpeed > lbl_803E2A98))
+    if ((((BaddieState*)state)->userData1 != 0) && (moveSpeed > lbl_803E2A98))
     {
         ((BaddieState*)state)->unk308 = lbl_803E2ACC;
         if (((BaddieState*)state)->hitCounter != 0)
@@ -284,7 +284,7 @@ void fn_8015652C(u32 obj, int state)
     }
     else
     {
-        ((BaddieState*)state)->seqEntryIndex = 0;
+        ((BaddieState*)state)->userData1 = 0;
         if (((BaddieState*)state)->unk308 > lbl_803E2ADC)
         {
             ((BaddieState*)state)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState*)state)->unk308);
@@ -385,7 +385,7 @@ void mutatedEbaUpdateWhileFrozen(u32 obj, int state, u32 unused, int eventKind)
             else
             {
                 Baddie_SetMove(obj, state, 4, lbl_803E2B04, 0, 0);
-                ((BaddieState*)state)->seqEntryIndex = 0;
+                ((BaddieState*)state)->userData1 = 0;
                 Sfx_PlayFromObject(obj, SFXTRIG_baddie_kooshy_call);
                 ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 8;
             }
@@ -401,26 +401,26 @@ void fn_80156B0C(u32 obj, int state)
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumePriority = 10;
     ((ObjHitsPriorityState*)((GameObject*)obj)->anim.hitReactState)->hitVolumeId = 1;
     if (((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_JUST_TRIGGERED) != 0) &&
-        (((BaddieState*)state)->seqEntryIndex <= 1))
+        (((BaddieState*)state)->userData1 <= 1))
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
         ((BaddieState*)state)->controlFlags = ((BaddieState*)state)->controlFlags | (u64)BADDIE_CONTROL_SEQUENCE_DRIVEN;
     }
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        ((BaddieState*)state)->seqEntryIndex += 1;
-        if (10 < ((BaddieState*)state)->seqEntryIndex)
+        ((BaddieState*)state)->userData1 += 1;
+        if (10 < ((BaddieState*)state)->userData1)
         {
-            ((BaddieState*)state)->seqEntryIndex = 3;
+            ((BaddieState*)state)->userData1 = 3;
         }
         if (*(u16*)(state + 0x2a0) < 4)
         {
-            tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
+            tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
             Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
         else
         {
-            tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
+            tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
             Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 9], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
         }
     }
@@ -435,16 +435,16 @@ void fn_80156C34(u32 obj, int state)
 
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        phase = ((BaddieState*)state)->seqEntryIndex;
+        phase = ((BaddieState*)state)->userData1;
         if (phase == 0)
         {
-            ((BaddieState*)state)->seqEntryIndex += 1;
+            ((BaddieState*)state)->userData1 += 1;
         }
         else if (phase >= 2)
         {
-            ((BaddieState*)state)->seqEntryIndex = 0;
+            ((BaddieState*)state)->userData1 = 0;
         }
-        tblOff = (u32)((BaddieState*)state)->seqEntryIndex * 0xc;
+        tblOff = (u32)((BaddieState*)state)->userData1 * 0xc;
         Baddie_SetMove(obj, state, gDusterEbaMoveTable[tblOff + 8], *(float*)(gDusterEbaMoveTable + tblOff), 0, 0);
     }
     fn_80156950(obj, state);
@@ -467,7 +467,7 @@ void mutatedEbaInit(u32 unused, int state)
     ((BaddieState*)state)->unk318 = fa;
     ((BaddieState*)state)->unk322 = 3;
     ((BaddieState*)state)->unk31C = fa;
-    ((BaddieState*)state)->seqEntryIndex = 1;
+    ((BaddieState*)state)->userData1 = 1;
     ((BaddieState*)state)->hitCounter = 0xa;
     return;
 }

@@ -79,7 +79,7 @@ checkedKind:
     }
     else if (condV != 0)
     {
-        if (((BaddieState*)state)->userData == 0)
+        if (((BaddieState*)state)->userData2 == 0)
         {
             ((BaddieState*)state)->reactionFlags = ((BaddieState*)state)->reactionFlags | 0x8;
             *(s16*)&((BaddieState*)state)->hitCounter = 0;
@@ -92,7 +92,7 @@ checkedKind:
         *(f32*)(state + 0x324) = lbl_803E2944;
         Baddie_SetMove(obj, state, 4, lbl_803E2948, 0, 3);
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
-        ((BaddieState*)state)->userData = 0x3c;
+        ((BaddieState*)state)->userData2 = 0x3c;
     }
     else
     {
@@ -108,7 +108,7 @@ void fn_80153E0C(GameObject* obj, int state)
     u8 ctr;
 
     curve = *(RomCurveWalker**)state;
-    ((BaddieState*)state)->seqEntryIndex = 0;
+    ((BaddieState*)state)->userData1 = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_PATH_FOLLOW) != 0)
     {
@@ -169,10 +169,10 @@ void fn_80153E0C(GameObject* obj, int state)
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
         Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_25e);
     }
-    ctr = ((BaddieState*)state)->userData;
+    ctr = ((BaddieState*)state)->userData2;
     if (ctr != 0)
     {
-        ((BaddieState*)state)->userData--;
+        ((BaddieState*)state)->userData2--;
     }
 }
 
@@ -224,9 +224,9 @@ void fn_801540A0(int obj, int state)
     {
         *(u32*)&((BaddieState*)state)->unk2E4 |= (u64)0x10000;
     }
-    else if (((BaddieState*)state)->seqEntryIndex == 0)
+    else if (((BaddieState*)state)->userData1 == 0)
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
         Baddie_SetMove(obj, state, 1, lbl_803E296C, 0, 3);
     }
     else if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0 &&
@@ -239,9 +239,9 @@ void fn_801540A0(int obj, int state)
     }
     ((GameObject*)obj)->anim.rotY = ((BaddieState*)state)->spawnRotY;
     ((GameObject*)obj)->anim.rotZ = ((BaddieState*)state)->spawnRotZ;
-    if (((BaddieState*)state)->userData != 0)
+    if (((BaddieState*)state)->userData2 != 0)
     {
-        ((BaddieState*)state)->userData -= 1;
+        ((BaddieState*)state)->userData2 -= 1;
     }
 }
 
@@ -265,8 +265,8 @@ void fn_801542AC(int unused, u8* state)
     *(f32*)((char*)state + 804) = fc;
     *(f32*)((char*)state + 808) = fc;
     *(f32*)((char*)state + 812) = fc;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->userData = 0;
+    ((BaddieState*)state)->userData1 = 0;
+    ((BaddieState*)state)->userData2 = 0;
     *(f32*)((char*)state + 816) = lbl_803E298C;
     ((BaddieState*)state)->pathStep = lbl_803E2958;
 }

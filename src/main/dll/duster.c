@@ -24,7 +24,7 @@
  *
  * Shared idioms: controlFlags bit 0x40000000 = "move just landed / can
  * react this frame"; unk2E4 bit 0x10000 = facing/tracking latch;
- * seqEntryIndex is the per-creature phase counter. SFX ids identify each
+ * userData1 is the per-creature phase counter. SFX ids identify each
  * creature's voice set (fox_*, en_*, watery_*, foxcom_*).
  */
 #include "main/audio/sfx_ids.h"
@@ -250,7 +250,7 @@ void fn_801554B4(int* obj, int state)
         {
             ((DusterState*)state)->planeAxisRatio = (cv[2] - ((DusterState*)state)->planeAnchorZ) / sideAxis[2];
         }
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
     }
 }
 
@@ -273,7 +273,7 @@ void fn_801557D4(int* obj, int state)
 {
     int cond;
 
-    if (((BaddieState*)state)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->userData1 == 0)
     {
         fn_801554B4(obj, state);
     }
@@ -297,7 +297,7 @@ void fn_80155884(int* obj, int state)
 {
     int cond;
 
-    if (((BaddieState*)state)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->userData1 == 0)
     {
         fn_801554B4(obj, state);
     }
@@ -326,7 +326,7 @@ void fn_80155948(int* obj, int state)
     u16 outIds[2];
     float outVec[3];
 
-    if (((BaddieState*)state)->seqEntryIndex == 0)
+    if (((BaddieState*)state)->userData1 == 0)
     {
         fn_801554B4(obj, state);
     }
@@ -386,8 +386,8 @@ void rachnopInit(u32 unused, int state)
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
     ((DusterState*)state)->phaseTimer = lbl_803E2A00;
-    ((BaddieState*)state)->seqEntryIndex = 0;
-    ((BaddieState*)state)->userData = 0;
+    ((BaddieState*)state)->userData1 = 0;
+    ((BaddieState*)state)->userData2 = 0;
     ((BaddieState*)state)->pathStep = fa;
     return;
 }
@@ -472,15 +472,15 @@ void timeOfDayFn_80155cf8(int obj, int state)
     {
         isDaytime = 0;
     }
-    if ((isDaytime != 0) && (((BaddieState*)state)->seqEntryIndex == 0))
+    if ((isDaytime != 0) && (((BaddieState*)state)->userData1 == 0))
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 1, lbl_803E2A78, 0, 0);
     }
-    else if ((isDaytime == 0) && (((BaddieState*)state)->seqEntryIndex == 2))
+    else if ((isDaytime == 0) && (((BaddieState*)state)->userData1 == 2))
     {
-        ((BaddieState*)state)->seqEntryIndex = 1;
+        ((BaddieState*)state)->userData1 = 1;
         *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
         Baddie_SetMove(obj, state, 3, lbl_803E2A78, 0, 0);
     }
@@ -495,7 +495,7 @@ void baddieUpdateWhileFrozen_80155e10(u32 obj, int state, u32 unused1, int event
     }
     else if (eventKind == 0x11)
     {
-        if ((((BaddieState*)state)->seqEntryIndex == 2) && (((GameObject*)obj)->anim.currentMove != 5))
+        if ((((BaddieState*)state)->userData1 == 2) && (((GameObject*)obj)->anim.currentMove != 5))
         {
             Baddie_SetMove(obj, state, 5, lbl_803E2A7C, 0, 0);
         }
@@ -529,21 +529,21 @@ void fn_80155F20(GameObject* obj, int state)
     ((DusterState*)state)->phaseTimer = lbl_803E2A60.f;
     if ((((BaddieState*)state)->controlFlags & BADDIE_CONTROL_SEQUENCE_DRIVEN) != 0)
     {
-        if (((BaddieState*)state)->seqEntryIndex == 1)
+        if (((BaddieState*)state)->userData1 == 1)
         {
             if ((obj)->anim.currentMove == 1)
             {
-                ((BaddieState*)state)->seqEntryIndex = 2;
+                ((BaddieState*)state)->userData1 = 2;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 & ~0x10000LL;
             }
             else if ((obj)->anim.currentMove == 3)
             {
-                ((BaddieState*)state)->seqEntryIndex = 0;
+                ((BaddieState*)state)->userData1 = 0;
                 *(u32*)&((BaddieState*)state)->unk2E4 = *(u32*)&((BaddieState*)state)->unk2E4 | 0x10000LL;
                 Baddie_SetMove(obj, state, 0, lbl_803E2A54.f, 0, 0);
             }
         }
-        else if ((((BaddieState*)state)->seqEntryIndex == 2) && ((obj)->anim.currentMove != 2))
+        else if ((((BaddieState*)state)->userData1 == 2) && ((obj)->anim.currentMove != 2))
         {
             Baddie_SetMove(obj, state, 2, lbl_803E2A54.f, 0, 0);
         }
@@ -610,7 +610,7 @@ void baddieInit_80156188(u32 unused, int state)
     ((BaddieState*)state)->unk318 = lbl_803E2A54.f;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fb;
-    ((BaddieState*)state)->seqEntryIndex = 0;
+    ((BaddieState*)state)->userData1 = 0;
     ((DusterState*)state)->phaseTimer = lbl_803E2A60.f;
     ((BaddieState*)state)->pathStep = fa;
     return;
