@@ -2797,7 +2797,7 @@ void fn_8006CB50(void)
             fx /= dist;
             if (dist <= 112.0f)
             {
-                t = 2.0f * (100.8f - 0.9f * dist);
+                t = 2.0f * (0.9f * 112.0f - 0.9f * dist);
                 s = t * 0.00390625f;
             }
             else
