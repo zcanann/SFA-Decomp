@@ -40,6 +40,7 @@
 #include "main/obj_list.h"
 #include "dolphin/gx/GXEnum.h"
 #include "main/render_mode_api.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 ModgfxPendingSpawn* gModgfxPendingSpawnStartCursor;
 ModgfxPendingSpawn* gModgfxPendingSpawnWriteCursor;
@@ -257,7 +258,6 @@ void dll_0B_func0F(int source, u8 mode, u8 flagByte, int word40, int word3C)
     gModgfxSpawnContext.textureFrameTimer = 0;
 }
 
-extern void GXSetCullMode(int mode);
 
 #define GX_CULL_NONE  0
 #define GX_CULL_FRONT 1
@@ -797,7 +797,6 @@ void dll_0B_func0A(s16* p)
     *p = -1;
 }
 
-extern void GXLoadPosMtxImm(void* mtx, int id);
 extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);

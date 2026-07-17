@@ -19,20 +19,7 @@ extern f32 lbl_803E4C80;
 extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
-extern void ccriverflow_free(void);
-extern void ccriverflow_getExtraSize(void);
-extern void ccriverflow_init(void);
-extern void ccriverflow_render(void);
-extern void ccriverflow_update(void);
-extern void DFSH_Door2Speci_free(void);
 extern void DFSH_Door2Speci_getExtraSize(void);
-extern void DFSH_Door2Speci_getObjectTypeId(void);
-extern void DFSH_Door2Speci_hitDetect(void);
-extern void DFSH_Door2Speci_init(GameObject*);
-extern void DFSH_Door2Speci_initialise(void);
-extern void DFSH_Door2Speci_release(void);
-extern void DFSH_Door2Speci_render(void);
-extern void DFSH_Door2Speci_update(void);
 extern void DIMbosscrackpar_free(void);
 extern void DIMbosscrackpar_getExtraSize(void);
 extern void DIMbosscrackpar_getObjectTypeId(void);
@@ -44,6 +31,9 @@ extern void DIMbosscrackpar_render(void);
 extern void DIMbosscrackpar_update(void);
 #include "main/dll/DIM/dll_01E3_dimbossgut2.h"
 #include "main/dll/dll_01E4_magicmaker.h"
+#include "main/dll/DF/DFlantern.h"
+#include "main/dll/DF/DFcradle.h"
+#include "main/dll/DF/dll_199.h"
 
 int DIM_BossGut_SeqFn(int obj, int runtime, ObjAnimUpdateState* animUpdate)
 {

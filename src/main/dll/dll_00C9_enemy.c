@@ -44,6 +44,7 @@
 #include "main/model_engine.h"
 #include "main/model_light.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 int lbl_803DBC58[2] = {2, 3};
 f32 lbl_803DBC60 = 20.0f;
@@ -147,12 +148,6 @@ extern f32 lbl_803E25F0;
 extern f32 lbl_803E25F4;
 extern void baddieFn_8014a304(int* a, int* s, f32 v);
 extern f32 lbl_803E25D8;
-extern f32 PSVECMag(f32* v);
-extern void PSVECNormalize(f32* src, f32* dst);
-extern void PSVECCrossProduct(f32* a, f32* b, f32* c);
-extern f32 PSVECDotProduct(f32* a, f32* b);
-extern void PSMTXRotAxisRad(void* mtx, f32* axis, f32 angle);
-extern void PSMTXMultVecSR(void* mtx, f32* src, f32* dst);
 extern f32 lbl_803E25C4;
 extern f32 lbl_803E25E8;
 extern u32 fn_80154C24();

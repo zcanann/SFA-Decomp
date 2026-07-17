@@ -26,6 +26,7 @@
 #include "main/dll/FRONT/attract_movie.h"
 #include "dolphin/thp/THPPlayer.h"
 #include "string.h"
+#include "main/fileio.h"
 
 char sPicMenuThpMagic[] = "THP";
 
@@ -52,7 +53,6 @@ extern s32 gPicMenuVideoDecodeThreadCreated;
 extern s32 gPicMenuVideoDecodePrepareReady;
 extern u32 gAttractMovieIdleFrameCount; /* sbss slot is 8 bytes; upper word unreferenced */
 
-extern int DVDRead(void* fileInfo, void* buf, int size, int offset);
 extern s32 THPVideoDecode(void* file, void* tileY, void* tileU, void* tileV, void* work);
 extern void AttractMovieAudio_DmaCallback(void);
 

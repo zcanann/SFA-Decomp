@@ -23,6 +23,7 @@
 #include "main/vecmath.h"
 #include "main/camera.h"
 #include "dolphin/gx/GXLegacyDecls.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 s16 gBoneParticleEffectTimer;
 s32 gBoneParticleScrollOffset;
@@ -56,7 +57,6 @@ const union BoneParticleConstF32 lbl_803DF4BC = { 20.02f };
 
 extern void _textSetColor(void* ctx, int r, int g, int b, int a);
 extern void textureFn_800541ac(void* ctx, void* tex, int a, int b, int c, int d, int e);
-extern void PSMTXMultVec(void* m, void* src, void* dst);
 
 static inline int* Modgfx_GetActiveModel(void* obj)
 {

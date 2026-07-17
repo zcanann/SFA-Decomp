@@ -42,6 +42,7 @@
 #include "main/camera.h"
 #include "dolphin/gx/GXEnum.h"
 #include "string.h"
+#include "main/sky.h"
 
 CloudActionRuntime lbl_8039AB28;
 
@@ -58,7 +59,6 @@ __declspec(section ".sdata2") f32 lbl_803DF2B0 = 0.0001f;
 __declspec(section ".sdata2") f32 lbl_803DF2B4 = 0.0f;
 #pragma explicit_zero_data reset
 
-extern void fn_8008DAE8(int obj);
 extern void fn_800412B8(int a, int b, int c);
 extern void objRender(int a, int b, int c, int d, int obj, int flag);
 extern int shouldDrawClouds(void);
@@ -67,8 +67,6 @@ extern void GXGetScissor(int* x, int* y, int* w, int* h);
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 extern void fn_8003BB7C(int a);
 extern void GXSetColorUpdate(int enable);
-extern void fn_8008EDE8(f32* pos);
-extern int fn_8008912C(void);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);

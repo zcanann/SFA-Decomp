@@ -31,6 +31,7 @@
 #include "main/dll/objfx.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 #include "main/dll/viewfinder.h"
+#include "main/dll/dll_000B_dll0b.h"
 
 int lbl_803DD278;
 int lbl_803DD274;
@@ -131,7 +132,6 @@ extern void dll_0B_func06(void);
 
 extern void dll_0B_func05(void);
 
-extern void dll_0B_func04(void);
 
 extern void dll_0B_onMapSetup(void);
 

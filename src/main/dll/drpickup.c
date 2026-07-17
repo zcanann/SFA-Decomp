@@ -5,6 +5,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
+#include "dolphin/mtx/mtx_legacy.h"
 
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
@@ -15,7 +16,6 @@ extern f32 lbl_803E5C28;
 extern f32 lbl_803E5C2C;
 extern f32 lbl_803E5C30;
 
-extern void PSVECAdd(const void* a, const void* b, void* ab);
 
 void fn_801EC1AC(int obj, int state)
 {

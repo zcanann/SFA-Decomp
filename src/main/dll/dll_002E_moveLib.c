@@ -37,6 +37,8 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "track/intersect_api.h"
+#include "main/dll/FRONT/dll_0032_n_rareware.h"
+#include "main/dll/FRONT/dll_39.h"
 
 #define Obj_GetYawDeltaToObjectLegacy(obj, target, distance)                                                           \
     ((int (*)())Obj_GetYawDeltaToObject)((obj), (target), (distance))
@@ -76,20 +78,10 @@ extern f32 lbl_803E1CD8;
 extern f32 lbl_803E1CDC;
 extern f32 lbl_803E1CE0;
 
-extern void TitleScreenInit_render(void);
-extern void n_rareware_render(void);
 
-extern void TitleScreenInit_frameEnd(void);
-extern void n_rareware_frameEnd(void);
 
-extern void TitleScreenInit_frameStart(void);
-extern void n_rareware_frameStart(void);
 
-extern void TitleScreenInit_release(void);
-extern void n_rareware_release(void);
 
-extern void TitleScreenInit_initialise(void);
-extern void n_rareware_initialise(void);
 
 extern int Curve_AdvanceAlongPath(RomCurveWalker* curve);
 

@@ -53,6 +53,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 s8 lbl_803DBC08 = -1;
 s8 lbl_803DBC09 = -1;
@@ -129,14 +130,7 @@ extern void PSMTXTrans(void*, f32, f32, f32);
 extern f32 lbl_803E231C;
 extern f32 lbl_803E2320;
 extern f32 lbl_803E2324;
-extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
-extern void GXSetCurrentMtx(u32 id);
 #define GX_ORTHOGRAPHIC 1 /* GXProjectionType (GXEnum.h): GX_PERSPECTIVE=0, GX_ORTHOGRAPHIC=1 */
-extern void GXSetProjection(f32* matrix, s32 mode);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int attr, int type);
-extern void GXSetCullMode(int mode);
-extern void GXBegin(int type, int fmt, int n);
 extern f32 hudMatrix[];
 #define GX_PNMTX0    0 /* GXPosNrmMtx (GXEnum.h): GX_PNMTX0=0 */
 #define GX_VA_POS    9

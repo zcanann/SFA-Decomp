@@ -27,6 +27,7 @@
 #include "main/dll/player_api.h"
 #include "main/dll/objfsa.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "dolphin/MSL_C/PPCEABI/bare/H/trig_float_helpers.h"
 
 typedef struct DusterState
 {
@@ -49,7 +50,6 @@ typedef struct FCVars
 #define FIRECRAWLER_HIT_VOLUME_SLOT      9
 #define LANTERNFIREFLY_OBJGROUP 0x30 /* DLL 0x10C lanternfirefly */
 
-extern void fn_80292E20(u32 angle, f32* outSin, f32* outCos);
 extern f32 lbl_803DBCE0;
 extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCE8;

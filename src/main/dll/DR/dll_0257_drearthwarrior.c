@@ -40,6 +40,7 @@
 #include "main/player_control_interface.h"
 #include "main/maketex_timer_api.h"
 #include "main/vecmath.h"
+#include "main/dll/DIM/dll_01D9_dim2prisonmammoth.h"
 
 #define storeZeroToFloatParamLegacy(timer) \
     ((void (*)(int))storeZeroToFloatParam)((timer))
@@ -300,7 +301,6 @@ extern EWPathRange lbl_802C2CB4;
 extern EWColorTbl gDREarthWarriorColors;
 extern EWModelChainEntry* gEarthWarriorTailChainDesc;
 extern void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2);
-extern void fn_802BC788(GameObject*);
 
 void fn_802BCA10(GameObject* obj, int sub, int state);
 

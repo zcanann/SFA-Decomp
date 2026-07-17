@@ -66,6 +66,7 @@
 #include "main/dll/DF/dll_022E_dfpdoorswitch.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "string.h"
+#include "main/dll/baddie_control_interface.h"
 
 #define ObjGroup_FindNearestObjectForObjectLegacy(group, obj, distance) \
     ((int (*)())ObjGroup_FindNearestObjectForObject)((group), (obj), (distance))
@@ -340,7 +341,6 @@ int dbstealerworm_stateHandlerB05(GameObject* obj, int baddie)
 /* hit-volume slot reconfigured across the worm's movement states */
 #define DBSTEALERWORM_HIT_VOLUME_SLOT 10
 
-extern void** gBaddieControlInterface;
 extern int lbl_80329634[];
 extern int lbl_80329640[];
 extern int gDbStealerwormSfxIds[];

@@ -51,6 +51,7 @@
 #include "main/gamebit_ids.h"
 #include "main/frame_timing.h"
 #include "main/rcp_dolphin_api.h"
+#include "dolphin/gx/GXLegacyDecls.h"
 
 s16 sStaffSwipeTextureIdTable[4] = {0xC7F, 0x3EC, 0, 0};
 #define STAFF_QUAKE_HIT_VOLUME_SLOT 17
@@ -189,13 +190,6 @@ typedef struct SwipeVertex
     s16 alpha;
     s16 pad12;
 } SwipeVertex;
-extern void GXSetBlendMode(int a, int b, int c, int d);
-extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
-extern void GXSetCullMode(int a);
-extern void GXClearVtxDesc(void);
-extern void GXSetVtxDesc(int a, int b);
-extern void GXSetCurrentMtx(u32 id);
-extern void GXBegin(int type, int fmt, int n);
 #define GX_BM_BLEND    1
 #define GX_BL_ONE      1
 #define GX_BL_SRCALPHA 4
@@ -560,7 +554,6 @@ void superQuakeFn_8016d9fc(f32* pos)
 }
 
 extern void quakeSpellTextureFn_8007366c(int param);
-extern void GXLoadPosMtxImm(f32* m, int id);
 extern f32 gStaffHalfPi;
 
 void quakeSpellTextureFn_8016dbf4(void)

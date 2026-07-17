@@ -22,6 +22,7 @@
 #include "main/dll/WM/dll_01FA_wmseqobject.h"
 #include "main/dll/WM/dll_01FD_wmlasertarget.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_01FE_pressureswitch.h"
 
 u32 lbl_803DC0F0 = 3;
 
@@ -373,15 +374,6 @@ extern u8 dll_1FF_initialise_nop[];
 extern u8 dll_1FF_release_nop[];
 extern u8 dll_1FF_render[];
 extern u8 dll_1FF_update[];
-extern u8 PressureSwitch_free[];
-extern u8 PressureSwitch_getExtraSize[];
-extern u8 PressureSwitch_getObjectTypeId[];
-extern u8 PressureSwitch_hitDetect[];
-extern u8 PressureSwitch_init[];
-extern u8 PressureSwitch_initialise[];
-extern u8 PressureSwitch_release[];
-extern u8 PressureSwitch_render[];
-extern u8 PressureSwitch_update[];
 
 u32 gWM_seqobjectObjDescriptor[14] = {0x00000000,
                                       0x00000000,

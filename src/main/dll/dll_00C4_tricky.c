@@ -50,6 +50,7 @@
 #include "main/voxmaps.h"
 #include "main/frame_timing.h"
 #include "main/track_dolphin_api.h"
+#include "main/dll/DR/dll_026B_drchimmey.h"
 
 typedef struct BaddieInstantiateWeaponPlacement
 {
@@ -311,7 +312,6 @@ extern void fn_801B17F4(GameObject*);
 extern void fn_801B6D40(void);
 extern void fn_801FD4A8(GameObject*);
 extern void fn_801B0784(GameObject*);
-extern void drchimmey_countdownCallback(void);
 extern void fn_801DA9CC(GameObject*);
 extern void fn_8003B228(GameObject* obj, void* p);
 

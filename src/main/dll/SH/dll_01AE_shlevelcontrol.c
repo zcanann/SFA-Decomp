@@ -93,10 +93,10 @@ extern f32 gShLevelControlHudTextDuration;
 
 #include "main/dll/SH/dll_01AF_shswaplift.h"
 #include "main/pad.h"
+#include "main/dll/DR/DRearthwalk.h"
 
 extern void sh_staff_getExtraSize(void);
 extern void sh_staff_free(void);
-extern void sh_staff_render(GameObject*);
 extern void sh_staff_update(GameObject*);
 extern int isScreenTransitionActive(void);
 

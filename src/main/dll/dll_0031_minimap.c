@@ -42,6 +42,7 @@
 #include "main/textrender_api.h"
 #undef TEXTRENDER_DIRECT_INT_CURSOR_CALL
 #include "main/pause_menu_api.h"
+#include "main/dll/dll_003F_dll3f.h"
 
 u8 gMinimapEnabled = 1;
 s8 gMinimapSavedViewMode = -1;
@@ -70,15 +71,10 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId);
 /* group owned by another DLL, queried here */
 #define FUELCELL_OBJGROUP 0x4f /* DLL 0x123 fuelcell */
 
-extern void dll_3F_updateTimerReadout(void);
 
-extern void dll_3F_frameEnd_nop(void);
 
-extern void dll_3F_frameStart_ret_0(void);
 
-extern void dll_3F_release(void);
 
-extern void dll_3F_initialise(void);
 
 #define MINIMAP_OBJFLAG_PARENT_SLACK 0x1000
 

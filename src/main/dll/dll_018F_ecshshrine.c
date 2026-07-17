@@ -68,6 +68,7 @@
 #include "main/dll/dll_0191_ecshcreator.h"
 #include "main/dll/player_staff_api.h"
 #include "main/dll/player_api.h"
+#include "main/dll/creator1C4.h"
 
 typedef struct EcshIntPair
 {
@@ -156,10 +157,6 @@ extern void gpsh_shrine_getObjectTypeId(void);
 extern void gpsh_shrine_free(void);
 extern void gpsh_shrine_render(GameObject*);
 extern void gpsh_shrine_hitDetect(void);
-extern void gpsh_shrine_update(GameObject*);
-extern void gpsh_shrine_init(void);
-extern void gpsh_shrine_release(void);
-extern void gpsh_shrine_initialise(void);
 
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState

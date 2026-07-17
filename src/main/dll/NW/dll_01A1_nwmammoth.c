@@ -28,6 +28,7 @@
 #include "main/dll/dll_00C9_enemy.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_render.h"
+#include "main/dll/path_control_interface.h"
 
 u8 lbl_803DBF70[4] = {1, 0, 0, 0};
 u8 lbl_803DBF74[4] = {1, 1, 0, 0};
@@ -114,7 +115,6 @@ extern void fn_801CDF94(GameObject* obj, void* state, int flag);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
 extern u8 gNwMammothPathSetupDataB[];
-extern NwMammothPathControlInterface** gPathControlInterface;
 extern u32 lbl_803E5208;
 extern f32 lbl_803E5254;
 extern f32 gNwMammothDefaultAnimStepScale;

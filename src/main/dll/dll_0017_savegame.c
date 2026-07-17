@@ -45,6 +45,8 @@
 #include "main/dll/dll_005C_dll5cfunc0.h"
 #include "main/dll/dll_005D_dll5dfunc0.h"
 #include "main/pad.h"
+#include "main/dll/dll_005A_staffcollisionfunc03.h"
+#include "main/dll/dll_005B_modgfxfunc03.h"
 
 u32 pRestartPoint;
 u8* lbl_803DD498;
@@ -1309,8 +1311,6 @@ extern void Carryable_setSuppressPositionSave();
 extern void Carryable_stopCarrying();
 extern void Carryable_updateHeld();
 extern void Carryable_updateRenderState();
-extern void StaffCollision_func03();
-extern void modgfx_func03();
 extern void screens_initialise();
 extern void screens_release();
 extern void screens_remove();
