@@ -123,10 +123,17 @@ STATIC_ASSERT(offsetof(DrLaserCannonState, flags) == DR_LASERCANNON_STATE_FLAGS)
 STATIC_ASSERT(offsetof(DrLaserCannonState, bobPhase) == DR_LASERCANNON_STATE_BOB_PHASE);
 STATIC_ASSERT(sizeof(DrLaserCannonState) == DR_LASERCANNON_EXTRA_SIZE);
 
+typedef struct DrLaserCannonJointRotation
+{
+    s16 x;
+    s16 y;
+    s16 z;
+} DrLaserCannonJointRotation;
+
 int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCannonAim* out, int maxRate, f32* eyePos)
 {
     s16 negClampS;
-    s16* vec;
+    DrLaserCannonJointRotation* vec;
     f32 d[3];
     f32* dp;
     f32 horiz;
@@ -138,7 +145,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     s16 wrapDelta;
 
     /* Fetch the barrel's secondary rotation vector (pitch channel) from the model. */
-    vec = objModelGetVecFn_800395d8(self, 0xb);
+    vec = (DrLaserCannonJointRotation*)objModelGetVecFn_800395d8(self, 0xb);
     if (vec == NULL)
     {
         return 0;
@@ -147,7 +154,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     if (target == NULL)
     {
         self->anim.rotX = (s16)(self->anim.rotX >> 1);
-        *vec = (s16)(*vec >> 1);
+        vec->x = (s16)(vec->x >> 1);
         return 0;
     }
     /* Vector from the cannon's eye position to the target. */
@@ -213,7 +220,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
     /* Same wrap-and-step interpolation applied to the pitch channel. */
     if (vec != NULL)
     {
-        wrapDelta = out->pitch - (u16)*vec;
+        wrapDelta = out->pitch - (u16)vec->x;
         if (wrapDelta > 0x8000)
         {
             wrapDelta = wrapDelta - 0xFFFF;
@@ -225,7 +232,7 @@ int drlasercannon_aimAtTarget(GameObject* self, GameObject* target, DrLaserCanno
         wrapDelta = (wrapDelta < -gLaserCannonMaxAimStep)
                         ? -gLaserCannonMaxAimStep
                         : (s16)((wrapDelta > gLaserCannonMaxAimStep) ? gLaserCannonMaxAimStep : wrapDelta);
-        *vec = (s16)((f32)*vec + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
+        vec->x = (s16)((f32)vec->x + interpolate((f32)wrapDelta, lbl_803E68E4, timeDelta));
     }
     /* Report whether yaw is still far (> 0x100) from the target, i.e. not yet on-aim. */
     delta = self->anim.rotX - out->yaw;
