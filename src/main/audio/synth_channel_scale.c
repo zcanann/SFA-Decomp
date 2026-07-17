@@ -167,6 +167,7 @@ void fn_8026EC44(u32 dt)
     SynthSong* song;
     SynthSong* next;
     SynthSong* cs;
+    u32 mm;
     u8 fade;
     f32 c0;
     f64 absRange;
@@ -187,8 +188,9 @@ void fn_8026EC44(u32 dt)
             gSynthCurrentVoiceSlotIndex = song->index;
             fade = synthIsFadeOutActive(song->fadeIdx);
             cs = gSynthCurrentVoice;
+            mm = cs->multiMode;
             lbl_803DE224 = fade;
-            if (cs->multiMode == 0)
+            if (mm == 0)
             {
                 synthHandleMasterTrack(0);
                 synthSetTickDelta(gSynthCurrentVoice->streams, dt, c0, c1, range, absRange);
