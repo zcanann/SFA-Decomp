@@ -80,6 +80,35 @@ python3 tools/refcorpus/search_corpus.py --stats
 Symbols in the corpus equal the C function names (MWCC doesn't mangle C), so `--show-c` and
 `--csrc` can round-trip between asm and source.
 
+`--asm` is a regex over the whole function's normalized text, so `\n` matches across
+instructions and backreferences can tie a register across lines — that is how you pin a
+shape rather than a mnemonic:
+
+```bash
+# an address add whose result is used at a displacement, while the same base+index
+# is also used indexed -- \1 \2 \3 tie the registers together
+python3 tools/refcorpus/search_corpus.py \
+  --asm '(?m)^add r(\d+),r(\d+),r(\d+)\n\w+ r\d+,\d+\(r\1\)\n\w+x f?\d+,r\2,r\3' --show-c
+```
+
+Findings that came out of the corpus (each traced to a named reference function):
+
+- **Element-address addressing** (`dkr audspat_play_sound_at_position`, `dkr
+  catmull_rom_interpolation`, `mp4 GetLinear`). For a uniform typed `arr[idx].field`
+  spelling, GC/2.0 loads the **offset-0 field with the indexed form** (`lfsx`/`lhzx`/`lwzx`
+  off base+index) and every **nonzero offset as a displacement off a single `add`**. The
+  `add` materializes at the **first nonzero-offset use** -- interleaved with call-argument
+  marshalling, not hoisted to the statement head. An argument spelled with raw `u8*`
+  arithmetic sits outside that typed tree and keeps its own indexed load.
+- **Unfolded `beq X; b Y`** (`mp4 HuAR_DVDtoARAM`, `dkr get_lockup_status`). An early-return
+  guard whose `return` yields a **value** leaves the pair unfolded, because the then-block is
+  real code placed after the fallthrough. A bare `return;` (void) makes the then-block the
+  epilogue itself and GC/2.0 always folds it to a single conditional -- no source spelling
+  tested recovers the pair in that case.
+- **Ternary → unfolded branch pair** (`dkr audspat_reverb_get_strength_at_point`, via its
+  `ABS2` macro). `(x >= 0) ? x : -x` emits the branch-over-branch pair plus a negate, rather
+  than a folded conditional.
+
 ## How it works / caveats
 
 - **Base flags** = SFA's exact main-lib flags from `build.ninja`
