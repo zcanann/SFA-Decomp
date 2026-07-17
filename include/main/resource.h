@@ -10,6 +10,27 @@ typedef struct ResourceDescriptor {
     u8 data[0];
 } ResourceDescriptor;
 
+typedef void (*ResourceDescriptorCallback)(void);
+
+typedef struct ResourceDescriptorCallbacks7 {
+    u32 metadata[4];
+    ResourceDescriptorCallback callbacks[7];
+} ResourceDescriptorCallbacks7;
+
+typedef struct ResourceDescriptorCallbacks8 {
+    u32 metadata[4];
+    ResourceDescriptorCallback callbacks[8];
+} ResourceDescriptorCallbacks8;
+
+typedef struct ResourceDescriptorCallbacks12 {
+    u32 metadata[4];
+    ResourceDescriptorCallback callbacks[12];
+} ResourceDescriptorCallbacks12;
+
+STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks7) == 0x2C);
+STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks8) == 0x30);
+STATIC_ASSERT(sizeof(ResourceDescriptorCallbacks12) == 0x40);
+
 extern ResourceDescriptor* gResourceDescriptors[];
 extern void* gResourceLoadedHandles[];
 extern u16 gResourceRefCounts[];
