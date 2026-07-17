@@ -65,7 +65,7 @@ const Vec3x gDRCloudRunnerVecTable[5] = {
     {0.0f, 0.0f, 15.0f},
     {0.0f, 0.0f, 30.0f},
     {0.0f, 0.35f, 0.0f},
-    {0.0f, 0.0f, 1.0f},
+    {0.0f, 1.0f, 0.0f},
     {0.0f, 0.0f, 1.0f},
 };
 

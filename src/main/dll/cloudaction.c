@@ -46,14 +46,18 @@
 #include "main/resource.h"
 
 CloudActionRuntime lbl_8039AB28;
+__declspec(section ".data") u32 lbl_8039AB44;
 
-GameObject* lbl_803DD1F0;
+GameObject* lbl_803DD1F0[2];
 u8 cloudOverridePosition;
 f32 lbl_803DD1E8;
 f32 lbl_803DD1E4;
 f32 lbl_803DD1E0;
 
 volatile f32 gCloudActionGlareQuadSize = 8000.0f;
+#pragma explicit_zero_data on
+f32 lbl_803DB784 = 0.0f;
+#pragma explicit_zero_data reset
 
 __declspec(section ".sdata2") f32 lbl_803DF2B0 = 0.0001f;
 #pragma explicit_zero_data on

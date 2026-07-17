@@ -2,8 +2,6 @@
 #include "main/audio/synth_delay.h"
 #include "main/audio/snd_synth_api.h"
 
-#pragma exceptions on
-
 typedef struct
 {
     f32 vol[129];
@@ -113,6 +111,7 @@ static void CalcBusDPL2(f32* vol_tab, f32* v_out, f32 vol, SAL_PANINFO* pi, SalV
                            pi->rpan_fm * gSnd3dRoomVolTable.pan[pi->rpan_im + 1]);
 }
 
+#pragma exceptions on
 void salCalcVolumeMatrix(u8 voltab_index, f32* out, u32 pan, u32 span, u32 itd, u32 dpl2, f32 vol, f32 auxa, f32 auxb)
 {
     SalVolTab* tabs;

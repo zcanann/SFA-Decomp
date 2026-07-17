@@ -597,9 +597,23 @@ extern u16 gHeadDisplayPanelWidth;
 extern u16 gHeadDisplayPanelHeight;
 extern s16 gHeadDisplayFadeAlpha;
 extern u16 lbl_803DD77C;
+struct PauseMenuMapTables
+{
+    GridEntry entries[14];
+    s16 gameBits[12];
+    GridEntry grid[13];
+};
+
+struct PauseMenuPanelAnimTable
+{
+    f32 speeds[6];
+    u32 idleVoiceIds[12];
+    s32 timedStates[12];
+};
+
 extern u8 gHeadDisplayEntryTable[];
 extern GameObject* gHeadDisplayModelObjs[];
-extern f32 lbl_8031BFA8[];
+extern struct PauseMenuPanelAnimTable lbl_8031BFA8;
 extern const f32 lbl_803E2040;
 extern const f32 lbl_803E2044;
 extern const f32 lbl_803E2048;
@@ -761,7 +775,7 @@ extern int lbl_803DD8A8;
 extern int yButtonItemFlags;
 extern s16 gYButtonUsedBit;
 extern s16 gYButtonActiveBit;
-extern GridEntry lbl_8031B818[];
+extern struct PauseMenuMapTables lbl_8031B818;
 extern f32 lbl_803DBAC0;
 extern const f32 lbl_803E2104;
 extern const f64 lbl_803E2108;
@@ -2837,7 +2851,7 @@ HighScoreTitleIdEntry gHighScoreTitleIdTable[5] = {
     {0x0A9F, 0x046F}, {0x0AA4, 0x0470}, {0x0AA9, 0x0471}, {0x0AAE, 0x0472}, {0x0AB3, 0x0473},
 };
 
-u32 lbl_8031AF14[2] = {0x22B, 0x50};
+__declspec(section ".data") u32 lbl_8031AF14[2] = {0x22B, 0x50};
 
 u32 lbl_8031AF1C[6] = {0x219, 0x66, 0x100, (u32)&lbl_8031AF14, 0x200, (u32)&lbl_8031AF1C};
 
@@ -2961,7 +2975,8 @@ u8 gHudButtonIcons[] = {
     0x3C, 0x00, 0x0B, 0x00, 0x1D, 0x00, 0x0C, 0x00, 0x49, 0x00, 0x0C,
 };
 
-GridEntry lbl_8031B818[] = {
+struct PauseMenuMapTables lbl_8031B818 = {
+    {
     {72, 289, 467, 256, 16, 12, 10, 0, {12, -1, 3, 12}, 1.7f, 1101, 937, 0, {0, 0, 0}},
     {72, 576, 411, 256, 16, 12, 10, 0, {8, -1, 12, -1}, 1.7f, 1102, 937, 1, {0, 0, 0}},
     {72, 187, 280, 256, 16, 12, 10, 0, {7, 5, 3, 5}, 1.7f, 1103, 937, 2, {0, 0, 0}},
@@ -2976,14 +2991,12 @@ GridEntry lbl_8031B818[] = {
     {72, 549, 162, 256, 16, 12, 10, 0, {-1, 1, 10, -1}, 1.7f, 1011, 937, 11, {0, 0, 0}},
     {72, 404, 404, 256, 16, 12, 10, 0, {4, 0, 0, 1}, 1.7f, 1012, 937, 12, {0, 0, 0}},
     {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
-};
-
-s16 gPauseMenuMapGameBits[] = {
+    },
+    {
     0x07E5, 0x05A3, 0x059D, 0x07E9, 0x0835, 0x05A2,
     0x059E, 0x082E, 0x05A1, 0x05A0, 0x082F, 0x07DD,
-};
-
-GridEntry gPauseMenuMapGrid[] = {
+    },
+    {
     {38, 167, 206, 256, 48, 48, 20, 15, {-1, 5, -1, 1}, 1.5f, 1288, 1300, 0, {0, 0, 0}},
     {38, 242, 206, 256, 48, 48, 20, 15, {-1, 6, 0, 2}, 1.5f, 1289, 1300, 1, {0, 0, 0}},
     {38, 317, 206, 256, 48, 48, 20, 15, {-1, 7, 1, 3}, 1.5f, 1290, 1300, 2, {0, 0, 0}},
@@ -2997,6 +3010,7 @@ GridEntry gPauseMenuMapGrid[] = {
     {38, 242, 406, 256, 48, 48, 20, 15, {6, -1, -1, 11}, 1.5f, 1298, 1300, 10, {0, 0, 0}},
     {38, 317, 406, 256, 48, 48, 20, 15, {7, -1, 10, -1}, 1.5f, 1299, 1300, 11, {0, 0, 0}},
     {0, 0, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}, 0.0f, -1, -1, 0, {0, 0, 0}},
+    },
 };
 
 GridEntry lbl_8031BB90[] = {
@@ -3042,14 +3056,10 @@ GridEntry lbl_8031BD90[] = {
 
 u32 lbl_8031BF90[] = {0x6A8, 0x6A9, 0x6AA, 0x6AB, 0x752, 0x6AC};
 
-f32 lbl_8031BFA8[] = {0.007f, 0.01f, 0.01f, 0.01f, 0.01f, 0.01f};
-
-u32 gPauseMenuIdleVoiceIds[] = {
-    0, 0, 0, 0x2715, 0, 0x2730, 0, 0, 0, 0, 0, 0,
-};
-
-s32 gPauseMenuTimedStates[] = {
-    0, 0, 0, 5, 0, 5, 0, 0, 0, 0, 0, 0,
+struct PauseMenuPanelAnimTable lbl_8031BFA8 = {
+    {0.007f, 0.01f, 0.01f, 0.01f, 0.01f, 0.01f},
+    {0, 0, 0, 0x2715, 0, 0x2730, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 5, 0, 5, 0, 0, 0, 0, 0, 0},
 };
 u32 lbl_8031C020[33] = {0x00000000,
                         0x00000000,
@@ -4632,7 +4642,7 @@ void drawFn_80125424(void)
                       (f32)(u32)gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
         if (gHeadDisplayModelObjs[panelType] != NULL)
         {
-            ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[panelType], lbl_8031BFA8[panelType], timeDelta, NULL);
+            ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[panelType], lbl_8031BFA8.speeds[panelType], timeDelta, NULL);
             if (gHeadDisplayModelObjs[panelType]->anim.placementDataAddress > 0x90000000u)
             {
                 gHeadDisplayModelObjs[panelType]->anim.placementDataAddress = 0;
@@ -5688,7 +5698,7 @@ void fn_80128470(int alpha)
         int n = (s16)alpha * lbl_803DD75C;
         gameTextSetColorInt(0xff, 0xff, 0xff, (int)((double)n * lbl_803E2088));
         lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
-        if (lbl_803DD824 == lbl_8031B818)
+        if (lbl_803DD824 == lbl_8031B818.entries)
         {
             int o1, o2, o3, o4;
             gameTextFn_8001628c(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
@@ -5770,7 +5780,7 @@ void fn_80128A7C(u8 i, int alpha, int flag)
         x = lbl_803DD824[i].x;
         y = lbl_803DD824[i].y;
         ofs = lbl_803DD824[i].ofs6 - cnt;
-        if (i != lbl_803DD7D8 || lbl_803DD824 == lbl_8031B818)
+        if (i != lbl_803DD7D8 || lbl_803DD824 == lbl_8031B818.entries)
         {
             s16 idv = lbl_803DD824[i].id;
             if (idv == 0x4a || idv == 0x4c)
@@ -7532,7 +7542,7 @@ void pauseMenuAnimateCarousel(void)
         sel = lbl_803DD784 * sel;
         *(f32*)((u8*)lbl_803A9410[k] + 0x8) = sel * lbl_803E2190;
         *((u8*)lbl_803A9410[k] + 0x37) = 0xff;
-        ObjAnim_AdvanceCurrentMove((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta,
+        ObjAnim_AdvanceCurrentMove((int)lbl_803A9410[k], lbl_8031BFA8.speeds[k], timeDelta,
                                                                      &animEvents);
         a = lbl_803E1E64 * mathSinf(lbl_803E1EC8 * (f32)(gPauseMenuSwivelAngle + k * step) / lbl_803E1E94);
         a = lbl_803DD784 * a;
@@ -9739,3 +9749,6 @@ u8 lbl_803DD734;
 int lbl_803DD730;
 u8* lbl_803DD72C;
 u8 lbl_803DD728;
+#pragma explicit_zero_data on
+__declspec(section ".data") u32 lbl_8031C164 = 0;
+#pragma explicit_zero_data reset

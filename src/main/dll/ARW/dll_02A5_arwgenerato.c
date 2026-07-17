@@ -104,9 +104,6 @@ void fn_802317A8(GameObject* obj, ARWGeneratorState* state, ARWGeneratorSetup* s
 }
 #pragma dont_inline reset
 
-const f32 lbl_803E7150 = 1.0f;
-const f32 lbl_803E7154 = 0.0f;
-
 int arwgenerato_getExtraSize(void)
 {
     return 4;
@@ -123,7 +120,7 @@ void arwgenerato_free(void)
 
 void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E7150);
+    objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void arwgenerato_hitDetect(void)
@@ -135,7 +132,7 @@ void arwgenerato_update(GameObject* obj)
     ARWGeneratorState* state = (obj)->extra;
     ARWGeneratorSetup* mapData = (ARWGeneratorSetup*)(obj)->anim.placementData;
     f32 timer = state->spawnTimer;
-    f32 thr = lbl_803E7154;
+    f32 thr = 0.0f;
 
     if (timer > thr)
     {

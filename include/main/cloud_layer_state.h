@@ -8,12 +8,12 @@ extern f32 lbl_803DD1E0;
 extern f32 lbl_803DD1E4;
 extern f32 lbl_803DD1E8;
 extern u8 cloudOverridePosition;
-extern GameObject *lbl_803DD1F0;
+extern GameObject *lbl_803DD1F0[2];
 
 #define gCloudOverridePositionZ lbl_803DD1E0
 #define gCloudOverridePositionY lbl_803DD1E4
 #define gCloudOverridePositionX lbl_803DD1E8
 #define gCloudOverridePositionValid cloudOverridePosition
-#define gCloudOverrideObject lbl_803DD1F0
+#define gCloudOverrideObject lbl_803DD1F0[0]
 
 #endif
