@@ -524,6 +524,7 @@ void waterfx_func05(int obj, int renderParam)
     WaterEntry* g;
     int i;
     int vertexOffset;
+    int j;
     f32 thr;
     WaterDrawObj dp;
     if (gWaterfxRippleCount != 0 || gWaterfxWakeCount != 0 || gWaterfxSplashCount != 0 ||
@@ -555,7 +556,7 @@ void waterfx_func05(int obj, int renderParam)
                                   (u8*)gWaterfxRippleVtxDesc + descriptorOffset, 2);
             }
         }
-        i = 0;
+        j = 0;
         if (gWaterfxSplashCount != 0)
         {
             fn_8007BD8C((int)gWaterfxSplashTexture0, (int)gWaterfxSplashTexture1);
@@ -568,7 +569,7 @@ void waterfx_func05(int obj, int renderParam)
             GXSetVtxDesc(GX_VA_CLR0, GX_INDEX16);
             GXSetVtxDesc(GX_VA_TEX0, GX_INDEX16);
         }
-        for (poolOffset = 0, thr = lbl_803DF2EC; i < WATERFX_MAX_SPLASHES; poolOffset += 0x3c, i++)
+        for (poolOffset = 0, thr = lbl_803DF2EC; j < WATERFX_MAX_SPLASHES; poolOffset += 0x3c, j++)
         {
             s = (WaterParticle*)((char*)gWaterfxSplashPool + poolOffset);
             if (s->f10 < thr)
