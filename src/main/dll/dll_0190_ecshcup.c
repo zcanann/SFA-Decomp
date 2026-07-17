@@ -52,19 +52,19 @@ typedef struct
 #define ECSHCUP_PARTFX_TRANSITION 0x271
 #define ECSHCUP_HIT_VOLUME_SLOT   10
 
-__declspec(section ".sdata2") const f32 lbl_803E5060 = 1.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5064 = 500.0f;
+const f32 lbl_803E5060 = 1.0f;
+const f32 lbl_803E5064 = 500.0f;
 #pragma explicit_zero_data on
-__declspec(section ".sdata2") const f32 lbl_803E5068 = 0.0f;
+const f32 lbl_803E5068 = 0.0f;
 #pragma explicit_zero_data reset
-__declspec(section ".sdata2") const f32 lbl_803E506C = 10.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5070 = 100.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5074 = 0.02f;
-__declspec(section ".sdata2") const f32 lbl_803E5078 = 0.5f;
-__declspec(section ".sdata2") const f32 lbl_803E507C = 2.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5080 = 255.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5084 = 50.0f;
-__declspec(section ".sdata2") const f32 lbl_803E5088 = 30.0f;
+const f32 lbl_803E506C = 10.0f;
+const f32 lbl_803E5070 = 100.0f;
+const f32 lbl_803E5074 = 0.02f;
+const f32 lbl_803E5078 = 0.5f;
+const f32 lbl_803E507C = 2.0f;
+const f32 lbl_803E5080 = 255.0f;
+const f32 lbl_803E5084 = 50.0f;
+const f32 lbl_803E5088 = 30.0f;
 u32 gEcShCupNearestObject;
 const CupVec3 lbl_802C23B8 = {0.0f, 0.0f, 0.0f};
 
