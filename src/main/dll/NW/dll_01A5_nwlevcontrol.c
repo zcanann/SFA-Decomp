@@ -126,7 +126,6 @@ int nw_levcontrol_getExtraSize(void)
 {
     return 0x14;
 }
-
 /* On free, restore the default environment fx (only if this slot's object
  * group is no longer active) and always stop the challenge timer. */
 void nw_levcontrol_free(GameObject* obj)
@@ -368,6 +367,3 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setObjGroupStatus(7, 0x1c, 0);
     (*gMapEventInterface)->setObjGroupStatus(7, 9, 1);
 }
-
-#pragma force_active on
-#pragma force_active reset

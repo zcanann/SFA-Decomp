@@ -25,8 +25,6 @@
 #include "main/object_render_legacy.h"
 #include "main/pad.h"
 
-#pragma force_active on
-#pragma force_active reset
 
 /* placement view used for the def+0xNN byte/halfword derefs in this TU */
 typedef struct DoorlockPlacement

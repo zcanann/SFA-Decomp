@@ -19,8 +19,6 @@
 #include "main/obj_group.h"
 #include "main/rcp_dolphin.h"
 
-#pragma force_active on
-#pragma force_active reset
 
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);

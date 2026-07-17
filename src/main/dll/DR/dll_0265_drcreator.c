@@ -186,6 +186,3 @@ void DR_Creator_initialise(void)
 }
 
 char sDrCreatorTimeFormat[15] = " Time %i : %i \000";
-
-#pragma force_active on
-#pragma force_active reset

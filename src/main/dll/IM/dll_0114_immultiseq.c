@@ -17,8 +17,6 @@
 #include "main/obj_group.h"
 #include "main/object_render_legacy.h"
 
-#pragma force_active on
-#pragma force_active reset
 
 STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
 STATIC_ASSERT(sizeof(IMMultiSeqPlacement) == 0x34);

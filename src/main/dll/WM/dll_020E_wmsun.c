@@ -588,6 +588,3 @@ ObjectDescriptor gWM_sunObjDescriptor = {
     (ObjectDescriptorCallback)wmsun_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)wmsun_getExtraSize,
 };
-
-#pragma force_active on
-#pragma force_active reset

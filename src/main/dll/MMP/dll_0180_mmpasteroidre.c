@@ -98,8 +98,6 @@ int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animU
     return 0;
 }
 
-#pragma force_active on
-#pragma force_active reset
 
 #pragma peephole on
 

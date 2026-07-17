@@ -21,8 +21,6 @@
 #include "main/object_render_legacy.h"
 #include "main/dll/dll_0115_dll115.h"
 
-#pragma force_active on
-#pragma force_active reset
 
 /* object group this object joins while active */
 #define DLL115_OBJGROUP 0xf
