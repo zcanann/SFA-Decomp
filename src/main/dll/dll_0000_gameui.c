@@ -4527,6 +4527,14 @@ typedef struct HeadDisplayEntry
     u16 unkA;
 } HeadDisplayEntry;
 
+typedef struct HeadDisplayScanlineState
+{
+    int lineOffset;
+    int wavePhaseA;
+    int wavePhaseB;
+    int drawY;
+} HeadDisplayScanlineState;
+
 typedef void (*HeadDisplayDrawTextureFn)(void* tex, f32 x, f32 y, u8 alpha, int arg);
 typedef void (*HeadDisplayDrawScaledTextureFn)(void* tex, f32 x, f32 y, u8 alpha, int arg, int w, int h, int mode);
 
@@ -4535,19 +4543,19 @@ typedef void (*HeadDisplayDrawScaledTextureFn)(void* tex, f32 x, f32 y, u8 alpha
 
 void drawFn_80125424(void)
 {
-    int iv[4];
+    HeadDisplayScanlineState scanline;
     u32 width;
     u32 height;
-    int type;
-    int ypos;
-    int alphaI;
-    int alphaTmp;
-    int randX;
-    int randY;
-    s16 alpha;
-    u32 h;
+    int panelType;
+    int viewportY;
+    int clampedAlpha;
+    int waveAlpha;
+    int noiseX;
+    int noiseY;
+    u32 clampedHeight;
     f32 wave;
-    f32 camPos;
+    f32 cameraOrigin;
+    s16 panelAlpha;
     if (gHeadDisplayActive != 0)
     {
         if ((s8)lbl_803DD7A8 == 0)
@@ -4576,37 +4584,37 @@ void drawFn_80125424(void)
             gHeadDisplayPanelHeight = gHeadDisplayPanelHeight + framesThisStep * 10;
             gHeadDisplayFadeAlpha = gHeadDisplayFadeAlpha + framesThisStep * 0x17;
         }
-        alphaI = gHeadDisplayFadeAlpha;
-        if (alphaI < 0)
+        clampedAlpha = gHeadDisplayFadeAlpha;
+        if (clampedAlpha < 0)
         {
-            alphaI = 0;
+            clampedAlpha = 0;
         }
-        else if (alphaI > 0xff)
+        else if (clampedAlpha > 0xff)
         {
-            alphaI = 0xff;
+            clampedAlpha = 0xff;
         }
-        alpha = alphaI;
-        gHeadDisplayFadeAlpha = alpha;
-        h = gHeadDisplayPanelHeight;
-        if (h > 0x6e)
+        panelAlpha = clampedAlpha;
+        gHeadDisplayFadeAlpha = panelAlpha;
+        clampedHeight = gHeadDisplayPanelHeight;
+        if (clampedHeight > 0x6e)
         {
-            h = 0x6e;
+            clampedHeight = 0x6e;
         }
-        gHeadDisplayPanelHeight = h;
+        gHeadDisplayPanelHeight = clampedHeight;
         width = gHeadDisplayPanelWidth;
-        height = (u16)h;
-        type = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
-        switch (type)
+        height = (u16)clampedHeight;
+        panelType = gHeadDisplayEntryTable[gHeadDisplayEntryIdx * HEADREC_STRIDE + HEADREC_PANEL_TYPE];
+        switch (panelType)
         {
         default:
         case 1:
-            ypos = 0x19a;
+            viewportY = 0x19a;
             break;
         case 3:
-            ypos = 0x195;
+            viewportY = 0x195;
             break;
         case 2:
-            ypos = 0x186;
+            viewportY = 0x186;
             break;
         }
         GXSetScissor(0x1ea, width, 0x78, height);
@@ -4616,23 +4624,23 @@ void drawFn_80125424(void)
         Camera_SetCurrentViewIndex(1);
         lbl_803DD7E0 = ((int (*)(void))Camera_IsViewYOffsetEnabled)();
         Camera_DisableViewYOffset();
-        camPos = lbl_803E1E3C;
-        Camera_SetCurrentViewPosition(camPos, camPos, camPos);
+        cameraOrigin = lbl_803E1E3C;
+        Camera_SetCurrentViewPosition(cameraOrigin, cameraOrigin, cameraOrigin);
         Camera_SetCurrentViewRotation(0x8000, 0, 0);
         Camera_UpdateViewMatrices();
         Camera_RebuildProjectionMatrix();
-        GXSetViewport(lbl_803E2048, ypos - lbl_803E2024, (f32)(u32)gRenderModeObj->fbWidth,
+        GXSetViewport(lbl_803E2048, viewportY - lbl_803E2024, (f32)(u32)gRenderModeObj->fbWidth,
                       (f32)(u32)gRenderModeObj->xfbHeight, lbl_803E1E3C, lbl_803E1E68);
-        if (gHeadDisplayModelObjs[type] != NULL)
+        if (gHeadDisplayModelObjs[panelType] != NULL)
         {
-            ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[type], lbl_8031BFA8[type], timeDelta, NULL);
-            if (gHeadDisplayModelObjs[type]->anim.placementDataAddress > 0x90000000u)
+            ObjAnim_AdvanceCurrentMove((int)gHeadDisplayModelObjs[panelType], lbl_8031BFA8[panelType], timeDelta, NULL);
+            if (gHeadDisplayModelObjs[panelType]->anim.placementDataAddress > 0x90000000u)
             {
-                gHeadDisplayModelObjs[type]->anim.placementDataAddress = 0;
+                gHeadDisplayModelObjs[panelType]->anim.placementDataAddress = 0;
             }
-            gHeadDisplayModelObjs[type]->anim.renderAlpha = 0xff;
-            objRender(0, 0, 0, 0, gHeadDisplayModelObjs[type], 1);
-            Obj_GetActiveModel(gHeadDisplayModelObjs[type])->bufferFlags &= ~8;
+            gHeadDisplayModelObjs[panelType]->anim.renderAlpha = 0xff;
+            objRender(0, 0, 0, 0, gHeadDisplayModelObjs[panelType], 1);
+            Obj_GetActiveModel(gHeadDisplayModelObjs[panelType])->bufferFlags &= ~8;
         }
         Camera_SetCurrentViewIndex(0);
         if (lbl_803DD7E0 != 0)
@@ -4645,45 +4653,45 @@ void drawFn_80125424(void)
         Camera_ApplyFullViewport();
         GXSetScissor(0, 0, 0x280, 0x1e0);
         lbl_803DD77C += 1;
-        iv[0] = 0;
-        iv[1] = iv[0];
-        iv[2] = iv[0];
-        for (; iv[0] < (int)height; iv[0] += 4)
+        scanline.lineOffset = 0;
+        scanline.wavePhaseA = scanline.lineOffset;
+        scanline.wavePhaseB = scanline.lineOffset;
+        for (; scanline.lineOffset < (int)height; scanline.lineOffset += 4)
         {
-            wave = lbl_803E204C * fsin16Approx((u16)(iv[1] + lbl_803DD77C * 0x1838));
-            wave = lbl_803E204C * fsin16Approx((u16)(iv[2] + lbl_803DD77C * 0xfa0)) + wave;
-            alphaTmp = (int)((f32)(s16)alpha * (lbl_803E2050 + wave));
-            alphaI = alphaTmp < 0 ? 0 : alphaTmp;
-            randX = randomGetRange(0, 0x1e) << 1;
-            randY = randomGetRange(0, 0x1e) << 1;
-            iv[3] = width;
-            iv[3] += iv[0];
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)iv[3],
-                               (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
-            alphaI = (int)((f32)(s16)alpha * (lbl_803E2010 + wave));
-            if (alphaI < 0)
+            wave = lbl_803E204C * fsin16Approx((u16)(scanline.wavePhaseA + lbl_803DD77C * 0x1838));
+            wave = lbl_803E204C * fsin16Approx((u16)(scanline.wavePhaseB + lbl_803DD77C * 0xfa0)) + wave;
+            waveAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2050 + wave));
+            clampedAlpha = waveAlpha < 0 ? 0 : waveAlpha;
+            noiseX = randomGetRange(0, 0x1e) << 1;
+            noiseY = randomGetRange(0, 0x1e) << 1;
+            scanline.drawY = width;
+            scanline.drawY += scanline.lineOffset;
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)scanline.drawY,
+                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+            clampedAlpha = (int)((f32)(s16)panelAlpha * (lbl_803E2010 + wave));
+            if (clampedAlpha < 0)
             {
-                alphaI = 0;
+                clampedAlpha = 0;
             }
-            randX = randomGetRange(0, 0x1e) << 1;
-            randY = randomGetRange(0, 0x1e) << 1;
-            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(iv[3] + 2),
-                               (u8)(alphaI > 0xff ? 0xff : alphaI), 0x100, 0x78, 2, randY, randX);
-            iv[1] += 0x3520;
-            iv[2] += 0x1f40;
+            noiseX = randomGetRange(0, 0x1e) << 1;
+            noiseY = randomGetRange(0, 0x1e) << 1;
+            drawPartialTexture(hudTextures[84], lbl_803E2040, (f32)(scanline.drawY + 2),
+                               (u8)(clampedAlpha > 0xff ? 0xff : clampedAlpha), 0x100, 0x78, 2, noiseY, noiseX);
+            scanline.wavePhaseA += 0x3520;
+            scanline.wavePhaseB += 0x1f40;
         }
-        HEAD_DISPLAY_DRAW_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width - 5, alpha, 0x100);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width - 5, alpha, 0x100, 0x78, 5, 0);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2054, (s16)width, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width - 5, panelAlpha, 0x100);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width - 5, panelAlpha, 0x100, 0x78, 5, 0);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2054, (s16)width, panelAlpha, 0x100, 5,
                                          (s16)height, 0);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, alpha, 0x100,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[13], lbl_803E2040, (s16)width + (s16)(int)height, panelAlpha, 0x100,
                                          0x78, 5, 2);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2058, (s16)width, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[11], lbl_803E2058, (s16)width, panelAlpha, 0x100, 5,
                                          (s16)height, 1);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5,
                                          5, 3);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width - 5, alpha, 0x100, 5, 5, 1);
-        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, alpha, 0x100, 5,
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2058, (s16)width - 5, panelAlpha, 0x100, 5, 5, 1);
+        HEAD_DISPLAY_DRAW_SCALED_TEXTURE(hudTextures[10], lbl_803E2054, (s16)width + (s16)(int)height, panelAlpha, 0x100, 5,
                                          5, 2);
     }
 }
