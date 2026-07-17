@@ -72,18 +72,6 @@
 #include "main/pad_api.h"
 #include "main/dll/dll_0273_firepipe.h"
 
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCE8;
-extern f32 lbl_803DBCEC;
-extern int lbl_803DBCF0[2];
-extern int lbl_803DBCF8[2];
-extern u8 lbl_8031FBB8[];
-extern u8 lbl_8031FBD0[];
-extern u8 lbl_8031FBE8[];
-extern u8 lbl_8031FC00[];
-extern u8 lbl_8031FC18[];
-
 typedef struct CrawlerModelChainList
 {
     u8* modelIds;
@@ -92,16 +80,9 @@ typedef struct CrawlerModelChainList
 
 STATIC_ASSERT(sizeof(CrawlerModelChainList) == 8);
 
-extern CrawlerModelChainList lbl_803DBD00;
-extern CrawlerModelChainList lbl_803DBD08;
-extern CrawlerModelChainList lbl_803DBD10;
-extern CrawlerModelChainList lbl_803DBD18;
-extern CrawlerModelChainList lbl_803DBD20;
 extern u8 gSnowwormSeqIndexReset[4];
 extern u8 gSnowwormSeqIndexMax[4];
 extern u8 lbl_803DBD30[4];
-extern u8 lbl_803DBD34[4];
-extern u8 lbl_803DBD38[8];
 
 /* group owned by another DLL, queried here */
 #define LANTERNFIREFLY_OBJGROUP          0x30 /* DLL 0x10C lanternfirefly */
@@ -133,114 +114,16 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern f32 lbl_803E2B18;
-extern f32 lbl_803E2B38;
-extern f32 lbl_803E2B40;
-extern f32 lbl_803E2B4C;
-extern f32 lbl_803E2B64;
-extern f32 lbl_803E2B68;
-extern f32 lbl_803E2B6C;
-extern f32 lbl_803E2B70;
-extern f32 lbl_803E2B74;
-extern f32 lbl_803E2B78;
-extern f32 lbl_803E2C3C;
-extern f32 lbl_803E2C58;
-extern f32 lbl_803E2C7C;
-extern f32 lbl_803E2C80;
-extern f32 lbl_803E2C84;
-extern f32 lbl_803E2C88;
-extern f32 lbl_803E2C8C;
-extern f32 lbl_803E2C90;
-extern f32 lbl_803E2C94;
-extern u8 gCrawlerSeqTable[];
-extern void* gCrawlerModelChainIds[];
-extern void* gCrawlerDescriptorTable[];
 extern u8* gCrawlerReactionTables[];
 
-extern f32 lbl_803E2C1C;
-extern f32 lbl_803E2C20;
-extern f32 lbl_803E2C24;
-extern f32 lbl_803E2BA0;
-extern f32 lbl_803E2BA4;
-extern f32 lbl_803E2BB8;
-extern f32 lbl_803E2BD4;
-extern f32 lbl_803E2BE4;
-extern const f32 lbl_803E2BE8;
-extern f32 lbl_803E2BEC;
-extern f32 lbl_803E2BF0;
-extern f32 lbl_803E2BF4;
-extern f32 lbl_803E2BF8;
-extern f32 lbl_803E2BFC;
-extern f32 lbl_803E2C00;
-extern f32 lbl_803E2C04;
-extern f32 lbl_803E2C08;
-extern f32 gCrawlerS8Norm127;
-extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
-extern int gCrawlerNearbyObjectBuffer[0x20];
-extern f32 lbl_803E2B80;
 extern f32 lbl_803E2C98;
 extern f32 lbl_803E2C9C;
 extern f32 gCrawlerPi;
 extern f32 gCrawlerHalfCircleBams;
 extern f32 lbl_803E2CA8;
-extern f32 lbl_803E2B84;
-extern f32 lbl_803E2B88;
 extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern f32 lbl_803E2B2C;
-extern f32 lbl_803E2B28;
-extern f32 lbl_803E2B34;
-extern f32 lbl_803E2B30;
-extern f32 lbl_803E2B44;
-extern f32 lbl_803E2B60;
-extern f32 lbl_803DBCE0;
-extern f32 lbl_803DBCE4;
-extern f32 lbl_803DBCEC;
 
-extern f32 lbl_803E2BA8;
 void fn_80157B58(int* obj, u8* state);
-
-extern f32 lbl_803E2C74;
-extern f32 lbl_803E2C30;
-extern f32 lbl_803E2C34;
-extern f32 lbl_803E2C10;
-extern f32 lbl_803E2C14;
-extern f32 lbl_803E2C18;
-extern f32 lbl_803E2C48;
-extern f32 lbl_803E2C78;
-extern f32 lbl_803E2C50;
-extern f32 lbl_803E2C70;
-extern f32 lbl_803E2C54;
-extern f32 lbl_803E2C38;
-extern f32 lbl_803E2C40;
-extern f32 gCrawlerSfxVolMax127;
-extern f32 lbl_803E2B3C;
-extern f32 lbl_803E2B48;
-extern f32 lbl_803E2B50;
-extern f32 lbl_803DBCE8;
-extern f32 gCrawlerHitSfxTimer;
-extern f32 lbl_803E2BAC;
-extern f32 lbl_803E2BB0;
-extern f32 lbl_803E2BB4;
-
-extern u8 gCrawlerSpeedThresholds[];
-extern f32 lbl_803E2BA0;
-extern f32 lbl_803E2BA4;
-extern f32 lbl_803E2BBC;
-extern f32 lbl_803E2BC0;
-extern f32 lbl_803E2BC4;
-extern f32 lbl_803E2BC8;
-extern f32 lbl_803E2BCC;
-extern f32 lbl_803E2BD0;
-extern f32 lbl_803E2BD8;
-extern f32 lbl_803E2BDC;
-extern f32 lbl_803E2BE0;
-extern f32 lbl_803E2C44;
-extern f32 lbl_803E2C4C;
-extern f32 lbl_803E2C5C;
-extern f32 lbl_803E2C60;
-extern f32 lbl_803E2C64;
-extern f32 lbl_803E2C68;
-extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
 /*
  * FCVars - file-local overlay naming the crawler/HagabonMK2-family scratch
@@ -326,7 +209,6 @@ void fn_8015A52C(s16* obj)
 }
 
 #pragma dont_inline reset
-
 
 void snowworm_updateWhileFrozen(int obj, int* st, int p3, int cmd, int p5, int sub)
 {
