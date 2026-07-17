@@ -4970,7 +4970,7 @@ int ObjSeq_update(u8* obj, f32 t)
             ((ObjAnimBank*)action)->currentState->eventCountdown = (u16)(int)(lbl_803DF050 * state->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
-        if (state->groundSnapEnabled == 1 &&
+        if ((s8)state->groundSnapEnabled == 1 &&
             hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, scratch, 0) == 0)
         {

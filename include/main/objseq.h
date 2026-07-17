@@ -130,7 +130,7 @@ struct ObjSeqState {
     s32 savedFrame; /* saved frame value restored into curFrame */
     s8 useRootMotionSpeed; /* 0x78: script-toggled; when set (and unk7B==0) movement speed comes from ObjAnim_SampleRootCurvePhase (root-motion) instead of the track-9 speed curve */
     u8 unk79;
-    s8 groundSnapEnabled; /* 0x7A: script-toggled; when set, the seq object is snapped to the detected floor (hitDetectFn_800658a4 / RomCurveInterp_EvaluateOffsetPosition ground adjust) */
+    u8 groundSnapEnabled; /* 0x7A: script-toggled; when set, the seq object is snapped to the detected floor (hitDetectFn_800658a4 / RomCurveInterp_EvaluateOffsetPosition ground adjust) */
     s8 unk7B;
     s8 pendingConditionId; /* 1-based; ObjSeq_EvaluateCondition(pendingConditionId-1), cleared when satisfied */
     u8 unk7D;
