@@ -7867,3 +7867,70 @@ on any fn matching this signature: pure r30<->r31 (or r27<->r31) base/counter sw
 Bank on sight. gameTextRun 97.59 / hudDrawButtons 98.47 / objRenderShadow2 98.29 are at ceiling for this
 class; their remaining gap is entirely this welded permutation (hudDrawButtons also carries a #70
 named-vs-anon @174 reloc = score-neutral, and one tail add/addi reassoc inside the same welded web).
+
+## Jul16 — DEFINITIVE CLOSURE: struct-by-value arg-materialization position (Q1-prehoist reverse) = allocation-pinned, NOT call-site-projectable
+Target: objprint_dolphin.c modelDoRenderInstrs (99.14, idle-clean at baseline). Two GXSetFog struct-by-value
+sites (lines 2411/2437): `GXSetFog(GX_FOG_NONE, 0.0f,0.0f,0.0f,0.0f, *(ObjGXColor*)&lbl_803DB468)`. Color is
+arg6 -> hidden stack-copy passed by ptr in r4. The 2 residual regions are PURE POSITION (T=938 C=938 instrs):
+- OUR build: `lwz r0,lbl; stw r0,16(r1); addi r4,r1,16; li r3,0; lfs f1; fmr x3; bl` (addi r4 EARLY, out of source order)
+- TARGET:    `lwz r0,lbl; stw r0,16(r1); li r3,0; lfs f1; fmr x3; addi r4,r1,16; bl` (addi r4 LATE, source order, right before bl)
+Same for the 2nd site at 12(r1). This is the "Q1-prehoist reverse" flagged unknown.
+
+EVIDENCE (probes + corpus, all under exact objprint cflags -O4,p -opt nopeephole,noschedule):
+- 8 ISOLATED PROBES (minimal / if-else / register-pressure+loop / 480B frame / named-const float / two-fog-in-
+  branches / faithful preceding TEV-call sequence / large faithful conditional-tev-stack-arg) ALL emit the
+  TARGET (LATE/deferred) order. No call-site struct-arg C shape reproduces the EARLY order in isolation ->
+  the early materialization is a property of the REAL function's global allocation state, not the call shape.
+- REAL-FN edits: (a) float literal 0.0f -> named `lbl_803DEA04` fixes the @80->lbl reloc (score-neutral per #70)
+  but is addi-position INERT and reorders li-r3/lfs the WRONG way (99.139 unchanged). (b) hoisting `ObjGXColor
+  fog=*(...)` local REGRESSES 99.139->98.838 (adds a real copy: local slot + arg-slot). Both reverted.
+- CORPUS (mp4/both_off, our compiler, adjacency-scanned 9684 funcs): the EARLY out-of-order shape
+  `addi r4/r5/r6,r1,K` immediately before a float-arg `lfs` is the COMMON default (57 total / 15+ named:
+  mapspace GetPolygonCircleMtx, sprput HuSprDisp, thpmain THPViewSprFunc, sprman HuSprBegin, mg_setup
+  ExecMGSetup, ...). The LATE source-order shape `fmr; addi r4-6,r1,K; bl` is RARE (18 total / ~1 clean named).
+  So OUR build matches MWCC's COMMON default; the TARGET achieved the RARE deferred ordering. Both orderings
+  provably occur under our compiler => NOT a universal weld, but the selector is global register-allocation /
+  CIR-priority state in a complex function, with NO call-site source projection.
+
+VERDICT: Q1-prehoist-reverse (struct/color by-value arg stack-copy-address materialized early vs deferred) is
+NOT controllable from the call-site C. It is pinned by the same global Color_Select/CIR-priority tiebreak that
+drives the #108 reg-perm sea (this fn's ndiff is otherwise all #108 GPR-perm + #82 FP-perm + #70 @-reloc). The
+target's deferral is the uncommon coloring outcome; matching it would require reproducing the exact allocation
+state, which the struct-arg shape cannot steer. CLOSE this class; bank on sight for any GX*/struct-by-value
+call whose only residual is an `addi rN,r1,K` position flip with equal instr count. modelDoRenderInstrs 99.14
+is at ceiling for these 2 sites (remaining gap = welded #108/#82/#70).
+
+## Jul16 DEFINITIVE CLOSURE: reverse-peephole-fold (bne;b vs beq) — fabs-select FP-coalesce tension
+Target emits UNFOLDED `cror eq,gt,eq; bne +8; b LBL; fneg` (2 branches) for an fabs guard where our MWCC
+folds to a single `beq`. Blocks track_dolphin hitDetectFn_800658a4 (98.31) + fn_80065768 (98.61) first-element
+abs blocks (loop iterations ALREADY match — loop uses the ternary). Also dll_00D9 Pollen_burst 98.92,
+player fn_802B0EA4 99.67. RESULT: mutual-exclusion CONFIRMED with corpus + recovered-pass evidence; CLOSED.
+
+MECHANISM (both directions tested empirically on hitDetectFn_800658a4, build-idle):
+- **Baseline if/else in-place** `if(cur>=X){}else{cur=-cur;} best=cur;` -> PERFECT FP regs
+  (`fneg f1,f1; fmr f2,f1`, cur stays f1) BUT codegen FOLDS to single `beq` (1 region, T=69 C=68). = 98.308.
+- **Ternary / ABS_INV** `cur = cur>=X ? cur : -cur;` -> UNFOLDS the branch correctly (bne;b matches target),
+  BUT the immediately-following unconditional `best=cur` is COALESCED by Coloring into best's reg
+  (`fneg f2,f1` / `fneg f0,f1`), scrambling f0<->f1 + de-duping the __AR_Callback const load. = 96.846 (LOSS).
+- CORPUS PROOF the ternary IS the canonical unfold source: mp4/both_off `fn_1_1F84` uses `ABS_INV(x)` =
+  `((x)>=0)?(x):-(x)` (ext_math.h) and emits the EXACT `cror eq,gt,eq; bne;b; fneg` — 19 contiguous
+  bne;b;fneg hits corpus-wide. In MP4 the abs result feeds ARITHMETIC (no immediate copy to a live var),
+  so the coalesce never arises; in hitDetect the abs result is copied to loop-carried `best` (f2) -> coalesce.
+- The TENSION is real & source-inseparable: UNFOLD needs the select(ternary) CIR form; CORRECT FP regs need
+  the if/else in-place form (cur modified in place, best a separate non-coalesced copy). No single source
+  form yields both. Target has both because retail's Coloring left the "wasteful" `fmr f2,f1` (element-0 abs
+  in f1 then copied) un-coalesced — an #82 FP-perm we cannot reproduce (optimal coalesce is forced).
+
+PRAGMA SWEEP (all inert / worse):
+- `#pragma peephole off` around the fn: fold SURVIVES (still beq). Recovered `Peephole.c` has NO bne;b->beq
+  rule (branch rules are only CR-source coalesce 0x505610 + cmpli0-record fusion 0x505820) => the empty-then
+  ->beq inversion is done in CIR->PCode CONTROL-FLOW LOWERING, not peephole. NO pragma reaches it.
+- `#pragma opt_propagation off` + ternary: does NOT stop the best=cur coalesce (coalesce is in Coloring, not
+  propagation) AND introduces an addressing regression (slwi;add vs addi) -> 3 regions C=71. Worse.
+- keep/negate `best=` in BOTH ternary arms: MWCC emits per-arm fmr -> C=70 (extra instr). Worse.
+
+VERDICT: bne;b-vs-beq fabs-guard = welded compound cap = {CIR-lowering empty-then->beq fold (no-pragma)} XOR
+{ternary unfold + Coloring #82 abs->best coalesce}. Bank on sight for any first-element/scalar fabs whose sole
+residual is an unfolded `cror;bne;b;fneg` feeding an immediate copy to a loop-carried FP var. hitDetectFn_800658a4
+98.31 & fn_80065768 98.61 are at ceiling. (register-only locals: render dead-store bne;b crack needs a memory
+local to weld the store while surviving the branch-around; absent here, and adding one costs an stfs.)
