@@ -144,6 +144,10 @@ extern const f32 lbl_803E2AF8;
 extern const f32 lbl_803E2AFC;
 extern const f32 lbl_803E2B00;
 extern const f32 lbl_803E2B04;
+extern const f32 lbl_803E2B08;
+extern const f32 lbl_803E2B0C;
+extern const f32 lbl_803E2B10;
+extern const f32 lbl_803E2B14;
 extern const f32 lbl_803E2B38;
 extern const f32 lbl_803E2B3C;
 extern const f32 lbl_803E2B40;
@@ -1033,14 +1037,14 @@ void mutatedEbaInit(u32 unused, int state)
 {
     float fa;
 
-    ((BaddieState*)state)->speedScale = lbl_803E2A84;
+    ((BaddieState*)state)->speedScale = lbl_803E2B08;
     *(u32*)&((BaddieState*)state)->unk2E4 = 0x46001;
-    ((BaddieState*)state)->unk308 = lbl_803E2A58.f;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E2A88;
-    ((BaddieState*)state)->unk304 = lbl_803E2A8C;
+    ((BaddieState*)state)->unk308 = lbl_803E2B0C;
+    ((BaddieState*)state)->animDeltaScale = lbl_803E2B10;
+    ((BaddieState*)state)->unk304 = lbl_803E2B14;
     ((BaddieState*)state)->unk320 = 0;
-    fa = lbl_803E2A54.f;
-    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2A54.f;
+    fa = lbl_803E2B04;
+    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E2B04;
     ((BaddieState*)state)->unk321 = 4;
     ((BaddieState*)state)->unk318 = fa;
     ((BaddieState*)state)->unk322 = 3;
