@@ -4644,6 +4644,7 @@ dolphin/MSL_C/PPCEABI/bare/H/ctype_funcs.c:
 
 dolphin/MSL_C/PPCEABI/bare/H/uart_console_io_gcn.c:
 	.text       start:0x80294684 end:0x8029471C
+	.sbss       start:0x803DE418 end:0x803DE41C
 
 dolphin/MSL_C/PPCEABI/bare/H/hyperbolicsf.c:
 	.text       start:0x8029471C end:0x80294724

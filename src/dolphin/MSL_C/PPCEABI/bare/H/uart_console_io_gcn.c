@@ -3,7 +3,7 @@
 extern int InitializeUART(u32);
 extern int WriteUARTN(void* buf, u32 n);
 
-extern s32 lbl_803DE418;
+static s32 initialized;
 
 int __write_console(int handle, void* buf, u32* count, void* idle_fn) {
     int result = 0;
@@ -13,10 +13,10 @@ int __write_console(int handle, void* buf, u32* count, void* idle_fn) {
     (void)idle_fn;
     (void)unused;
 
-    if (!lbl_803DE418) {
+    if (!initialized) {
         result = InitializeUART(0xE100);
         if (result == 0) {
-            lbl_803DE418 = 1;
+            initialized = 1;
         }
     }
 
