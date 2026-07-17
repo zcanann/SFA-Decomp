@@ -18,6 +18,7 @@
 #include "main/gamebits.h"
 #include "main/dll/CF/dll_014A_cfpowerbase.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 STATIC_ASSERT(sizeof(CfPowerBaseState) == 0x6);
 
@@ -208,3 +209,12 @@ void CFPowerBase_release(void)
 void CFPowerBase_initialise(void)
 {
 }
+
+ObjectDescriptor gCFPowerBaseObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFPowerBase_initialise, (ObjectDescriptorCallback)CFPowerBase_release, 0,
+    (ObjectDescriptorCallback)CFPowerBase_init, (ObjectDescriptorCallback)CFPowerBase_update,
+    (ObjectDescriptorCallback)CFPowerBase_hitDetect, (ObjectDescriptorCallback)CFPowerBase_render,
+    (ObjectDescriptorCallback)CFPowerBase_free, (ObjectDescriptorCallback)CFPowerBase_getObjectTypeId,
+    CFPowerBase_getExtraSize,
+};

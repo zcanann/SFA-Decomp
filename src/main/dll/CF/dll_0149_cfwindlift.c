@@ -564,7 +564,6 @@ u8 gWindLiftSeqGamebitTable[] = {
     0x00, 0x00, 0x00, 0x95, 0x00, 0x00, 0x0A, 0x99, 0x00, 0x00, 0x00, 0x95,
 };
 
-/* Object descriptors exported by this DLL bundle. */
 ObjectDescriptor gWindLiftObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
     (ObjectDescriptorCallback)WindLift_initialise, (ObjectDescriptorCallback)WindLift_release, 0,
@@ -572,20 +571,4 @@ ObjectDescriptor gWindLiftObjDescriptor = {
     (ObjectDescriptorCallback)WindLift_hitDetect, (ObjectDescriptorCallback)WindLift_render,
     (ObjectDescriptorCallback)WindLift_free, (ObjectDescriptorCallback)WindLift_getObjectTypeId,
     WindLift_getExtraSize,
-};
-ObjectDescriptor gCFPowerBaseObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)CFPowerBase_initialise, (ObjectDescriptorCallback)CFPowerBase_release, 0,
-    (ObjectDescriptorCallback)CFPowerBase_init, (ObjectDescriptorCallback)CFPowerBase_update,
-    (ObjectDescriptorCallback)CFPowerBase_hitDetect, (ObjectDescriptorCallback)CFPowerBase_render,
-    (ObjectDescriptorCallback)CFPowerBase_free, (ObjectDescriptorCallback)CFPowerBase_getObjectTypeId,
-    CFPowerBase_getExtraSize,
-};
-ObjectDescriptor gCFMainCrystalObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)CFMainCrystal_initialise, (ObjectDescriptorCallback)CFMainCrystal_release, 0,
-    (ObjectDescriptorCallback)CFMainCrystal_init, (ObjectDescriptorCallback)CFMainCrystal_update,
-    (ObjectDescriptorCallback)CFMainCrystal_hitDetect, (ObjectDescriptorCallback)CFMainCrystal_render,
-    (ObjectDescriptorCallback)CFMainCrystal_free, (ObjectDescriptorCallback)CFMainCrystal_getObjectTypeId,
-    CFMainCrystal_getExtraSize,
 };

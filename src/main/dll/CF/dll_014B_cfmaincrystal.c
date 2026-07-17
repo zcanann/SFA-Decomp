@@ -21,6 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath.h"
 #include "main/audio/sfx.h"
+#include "main/object_descriptor.h"
 
 #define CFMAINCRYSTAL_PYLON_FRAMES 0x78 /* beam hold time once reported */
 #define CFMAINCRYSTAL_CHARGE_START 0x5A /* charge frames granted by 0x57 */
@@ -394,3 +395,12 @@ void CFMainCrystal_release(void)
 void CFMainCrystal_initialise(void)
 {
 }
+
+ObjectDescriptor gCFMainCrystalObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)CFMainCrystal_initialise, (ObjectDescriptorCallback)CFMainCrystal_release, 0,
+    (ObjectDescriptorCallback)CFMainCrystal_init, (ObjectDescriptorCallback)CFMainCrystal_update,
+    (ObjectDescriptorCallback)CFMainCrystal_hitDetect, (ObjectDescriptorCallback)CFMainCrystal_render,
+    (ObjectDescriptorCallback)CFMainCrystal_free, (ObjectDescriptorCallback)CFMainCrystal_getObjectTypeId,
+    CFMainCrystal_getExtraSize,
+};
