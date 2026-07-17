@@ -142,6 +142,7 @@ typedef struct CratePickupSetup /* dropType 9 (0x259) */
     s16 field20; /* 0x20 */
 } CratePickupSetup;
 
+
 f32 largecrate_getReticleDistance(GameObject* obj)
 {
     u8* state = obj->extra;
@@ -400,6 +401,15 @@ int largecrate_spawnDropContents(GameObject* obj, int player, int state)
     return 0;
 }
 
+int LargeCrate_SeqFn(int* obj)
+{
+    if (((GameObject*)obj)->seqIndex != -1)
+    {
+        (*gCameraInterface)->setTargetReticleOverride((int)obj);
+    }
+    return 0;
+}
+
 int largecrate_getExtraSize(void)
 {
     return 0x2c;
@@ -408,6 +418,12 @@ int largecrate_getExtraSize(void)
 int largecrate_getObjectTypeId(void)
 {
     return 0;
+}
+
+void largecrate_free(int obj)
+{
+    (*gModgfxInterface)->detachSource((void*)obj);
+    Resource_Release(lbl_803DDAC8);
 }
 
 void largecrate_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 renderState)
@@ -598,21 +614,6 @@ void largecrate_update(GameObject* obj)
     }
 }
 
-void largecrate_free(int obj)
-{
-    (*gModgfxInterface)->detachSource((void*)obj);
-    Resource_Release(lbl_803DDAC8);
-}
-
-int LargeCrate_SeqFn(int* obj)
-{
-    if (((GameObject*)obj)->seqIndex != -1)
-    {
-        (*gCameraInterface)->setTargetReticleOverride((int)obj);
-    }
-    return 0;
-}
-
 void largecrate_init(GameObject* obj, u8* initData)
 {
     int state;
@@ -697,6 +698,7 @@ void largecrate_release(void)
 void largecrate_initialise(void)
 {
 }
+
 
 /* .data table (attributed from auto object; pointer tables regenerate ADDR32 relocs) */
 void* gScarabObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,  (void*)0x00000000, (void*)0x00090000,

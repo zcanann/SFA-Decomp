@@ -105,43 +105,18 @@ extern const f32 lbl_803E4A90;
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
-static inline ObjModel* DIM2snowball_GetActiveModel(GameObject* obj)
-{
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    return (ObjModel*)objAnim->banks[objAnim->bankIndex];
-}
 
-#pragma scheduling on
-#pragma peephole on
-
-#pragma scheduling off
+#pragma explicit_zero_data off
 #pragma peephole off
-void dll_1D6_hitDetect(void)
-{
-}
-
-void dll_1D6_release(void)
-{
-}
-
-void dll_1D6_initialise(void)
-{
-}
-
+#pragma scheduling off
 int dll_1D6_getExtraSize(void)
 {
     return 0x20;
 }
+
 int dll_1D6_getObjectTypeId(void)
 {
     return 0x0;
-}
-
-void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
 }
 
 void dll_1D6_free(int* obj)
@@ -156,53 +131,28 @@ void dll_1D6_free(int* obj)
     (gDll1D6SlotInUse)[state->slot] = 0;
 }
 
-void dll_1D6_init(int* obj, u8* paramsBytes)
+void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    Dll1D6Placement* params = (Dll1D6Placement*)paramsBytes;
-    Dll1D6State* extra;
-    ObjModel* model;
-    int i;
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
+}
 
-    ((GameObject*)obj)->anim.rotX = (s16)(params->rotXParam << 8);
-    extra = ((GameObject*)obj)->extra;
-    model = DIM2snowball_GetActiveModel((GameObject*)(obj));
-    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
-    extra->upTimer = params->upTimer;
-    if (extra->upTimer < 15)
-    {
-        extra->upTimer = 15;
-    }
-    extra->downTimer = params->downTimer;
-    if (extra->downTimer < 15)
-    {
-        extra->downTimer = 15;
-    }
-    {
-        f32 k = lbl_803E4A88;
-        extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
-        extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
-        extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
-    }
-    extra->flags1D = mainGetBit(496) ? 2 : 0;
-    for (i = 0; i < 4; i++)
-    {
-        if ((gDll1D6SlotInUse)[i] == 0)
-        {
-            (gDll1D6SlotInUse)[i] = 1;
-            extra->slot = i;
-            i = 4;
-        }
-    }
-    extra->bufA = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
-    extra->bufB = mmAlloc(40, 18, 0);
-    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
-    ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
+void dll_1D6_hitDetect(void)
+{
+}
+
+#pragma peephole reset
+#pragma scheduling reset
+static inline ObjModel* DIM2snowball_GetActiveModel(GameObject* obj)
+{
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    return (ObjModel*)objAnim->banks[objAnim->bankIndex];
 }
 
 #pragma opt_common_subs off
+#pragma peephole off
+#pragma scheduling off
 void dll_1D6_update(int* obj)
 {
     Dll1D6State* extra;
@@ -350,6 +300,62 @@ void dll_1D6_update(int* obj)
         extra->flags1D &= ~2;
     }
 }
+
+#pragma opt_common_subs on
+void dll_1D6_init(int* obj, u8* paramsBytes)
+{
+    Dll1D6Placement* params = (Dll1D6Placement*)paramsBytes;
+    Dll1D6State* extra;
+    ObjModel* model;
+    int i;
+
+    ((GameObject*)obj)->anim.rotX = (s16)(params->rotXParam << 8);
+    extra = ((GameObject*)obj)->extra;
+    model = DIM2snowball_GetActiveModel((GameObject*)(obj));
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
+    extra->upTimer = params->upTimer;
+    if (extra->upTimer < 15)
+    {
+        extra->upTimer = 15;
+    }
+    extra->downTimer = params->downTimer;
+    if (extra->downTimer < 15)
+    {
+        extra->downTimer = 15;
+    }
+    {
+        f32 k = lbl_803E4A88;
+        extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
+        extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
+        extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
+        extra->hitRangeSqB = extra->hitRangeSqB * extra->hitRangeSqB;
+    }
+    extra->flags1D = mainGetBit(496) ? 2 : 0;
+    for (i = 0; i < 4; i++)
+    {
+        if ((gDll1D6SlotInUse)[i] == 0)
+        {
+            (gDll1D6SlotInUse)[i] = 1;
+            extra->slot = i;
+            i = 4;
+        }
+    }
+    extra->bufA = mmAlloc(40, 18, 0);
+    getTabEntry(extra->bufA, MLDF_FILEID_LACTIONS_BIN, (gDll1D6SlotTabIndex)[extra->slot] * 40, 40);
+    extra->bufB = mmAlloc(40, 18, 0);
+    getTabEntry(extra->bufB, MLDF_FILEID_LACTIONS_BIN, ((gDll1D6SlotTabIndex)[extra->slot] + 1) * 40, 40);
+    ((GameObject*)obj)->objectFlags |= DLL1D6_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void dll_1D6_release(void)
+{
+}
+
+void dll_1D6_initialise(void)
+{
+}
+
 
 ObjectDescriptor dll_1D6 = {
     0,

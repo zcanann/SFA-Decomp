@@ -30,6 +30,7 @@ extern const f32 lbl_803E4E10;
 extern const f32 lbl_803E4E14;
 extern f32 lbl_803E4E18;
 
+
 DFRope* DFRope_Create(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 unused, s32 count,
                       f32 tickScale)
 {
@@ -174,14 +175,14 @@ void dfropenode_setVisible(int obj, int value)
     }
 }
 
-void dfropenode_clearLinkedObj(int obj)
-{
-    ((DFropenodeObject*)obj)->extra->linkedObj = 0;
-}
-
 int dfropenode_getAngle(int obj)
 {
     return ((DFropenodeObject*)obj)->extra->angle;
+}
+
+void dfropenode_clearLinkedObj(int obj)
+{
+    ((DFropenodeObject*)obj)->extra->linkedObj = 0;
 }
 
 f32 fn_801C1698(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ)
@@ -222,3 +223,4 @@ f32 fn_801C1698(f32* x, f32* y, f32* z, f32 startX, f32 startY, f32 startZ, f32 
     }
     return t;
 }
+

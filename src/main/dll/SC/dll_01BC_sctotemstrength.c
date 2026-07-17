@@ -72,6 +72,8 @@ extern f32 lbl_803E56A4;
 #define SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN             0x4000
 #define SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+
+
 /* platform1_control: tug-of-war rope
  * minigame. Resolves the anchor object, applies sequence events, then per
  * frame works the rope position from A-press mashing, runs both pull anims
@@ -355,29 +357,18 @@ done:
     return ret;
 }
 
-void sc_totemstrength_free(void)
-{
-}
-
-void sc_totemstrength_hitDetect(void)
-{
-}
-
-void sc_totemstrength_release(void)
-{
-}
-
-void sc_totemstrength_initialise(void)
-{
-}
-
 int sc_totemstrength_getExtraSize(void)
 {
     return 0x34;
 }
+
 int sc_totemstrength_getObjectTypeId(void)
 {
     return 0x0;
+}
+
+void sc_totemstrength_free(void)
+{
 }
 
 void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -385,19 +376,8 @@ void sc_totemstrength_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E567C);
 }
 
-void sc_totemstrength_init(int* obj)
+void sc_totemstrength_hitDetect(void)
 {
-    GameObject* self = (GameObject*)obj;
-    Platform1State* st = self->extra;
-    self->animEventCallback = platform1_control;
-    self->objectFlags |= (SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN | SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED);
-    self->anim.rotX = (s16)-10496;
-    st->currentTrackOffset = -10496;
-    st->transitionStep = 0;
-    st->linkedObject = 0;
-    st->savedPosX = self->anim.localPosX;
-    st->savedPosY = self->anim.localPosY;
-    st->savedPosZ = self->anim.localPosZ;
 }
 
 /* sc_totemstrength_update: drive the
@@ -478,6 +458,30 @@ void sc_totemstrength_update(u8* obj)
         }
     }
 }
+
+void sc_totemstrength_init(int* obj)
+{
+    GameObject* self = (GameObject*)obj;
+    Platform1State* st = self->extra;
+    self->animEventCallback = platform1_control;
+    self->objectFlags |= (SC_TOTEMSTRENGTH_OBJFLAG_HIDDEN | SC_TOTEMSTRENGTH_OBJFLAG_HITDETECT_DISABLED);
+    self->anim.rotX = (s16)-10496;
+    st->currentTrackOffset = -10496;
+    st->transitionStep = 0;
+    st->linkedObject = 0;
+    st->savedPosX = self->anim.localPosX;
+    st->savedPosY = self->anim.localPosY;
+    st->savedPosZ = self->anim.localPosZ;
+}
+
+void sc_totemstrength_release(void)
+{
+}
+
+void sc_totemstrength_initialise(void)
+{
+}
+
 
 ObjectDescriptor gSC_totemstrengthObjDescriptor = {
     0,

@@ -91,6 +91,7 @@ extern f32 gTotemBondRingRotateSpeed;
 extern f32 gTotemBondCameraDistance;
 extern f32 lbl_803E5650;
 
+
 #pragma dont_inline on
 void sc_totembond_spawnGameBitOrbs(ScTotemBondObject* obj, ScTotemBondState* state, f32 radius)
 {
@@ -191,25 +192,20 @@ u32 sc_totembond_SeqFn(ScTotemBondObject* obj, u32 unused, ObjAnimUpdateState* a
 }
 
 #pragma dont_inline reset
-void sc_totembond_hitDetect(void)
-{
-}
-
-void sc_totembond_release(void)
-{
-}
-
-void sc_totembond_initialise(void)
-{
-}
-
 int sc_totembond_getExtraSize(void)
 {
     return 0x28;
 }
+
 int sc_totembond_getObjectTypeId(void)
 {
     return 0x0;
+}
+
+void sc_totembond_free(int obj)
+{
+    Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
+    fn_8011F6D4(0);
 }
 
 void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
@@ -219,10 +215,8 @@ void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5650);
 }
 
-void sc_totembond_free(int obj)
+void sc_totembond_hitDetect(void)
 {
-    Music_Trigger(MUSICTRIG_WLC_Puzzle_f0, 0);
-    fn_8011F6D4(0);
 }
 
 static inline void sc_totembond_finishOrbGame(ScTotemBondObject* obj, ScTotemBondState* state)
@@ -373,6 +367,14 @@ void sc_totembond_init(ScTotemBondObject* obj, int params)
     obj->objectFlags = flags;
 }
 
+void sc_totembond_release(void)
+{
+}
+
+void sc_totembond_initialise(void)
+{
+}
+
 int fn_801DE320(u16* gameBitIds, u16 newValue)
 {
     u16 values[4];
@@ -407,6 +409,7 @@ int fn_801DE320(u16* gameBitIds, u16 newValue)
     }
     return changed;
 }
+
 
 u16 gTotemBondRingGameBits[] = {
     0x064D, 0x064E, 0x064F, 0x0650, 0x0A4C, 0x0A4D, 0x0A4E, 0x0A4F,

@@ -148,6 +148,16 @@ u16 gDfShShrineRewardTable[50] = {
     4,   37054, 4,   37083, 4,    37063, 4,    37065, 4,    37066, 4,    37067, 4,    37068, 4,     37070,
 };
 extern const f32 lbl_803E4E8C;
+void DFSH_Shrine_update(int objArg);
+void DFSH_Shrine_hitDetect(void);
+void DFSH_Shrine_release(void);
+void DFSH_Shrine_initialise(void);
+void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init);
+void DFSH_Shrine_hitDetect(void);
+void DFSH_Shrine_update(int objArg);
+void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init);
+void DFSH_Shrine_release(void);
+void DFSH_Shrine_initialise(void);
 
 void fn_801C2914(int obj)
 {
@@ -325,11 +335,6 @@ void DFSH_Shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-void DFSH_Shrine_update(int objArg);
-void DFSH_Shrine_hitDetect(void);
-void DFSH_Shrine_release(void);
-void DFSH_Shrine_initialise(void);
-void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init);
 
 ObjectDescriptor gDFSH_ShrineObjDescriptor = {
     0,
@@ -347,6 +352,9 @@ ObjectDescriptor gDFSH_ShrineObjDescriptor = {
     (ObjectDescriptorCallback)DFSH_Shrine_getObjectTypeId,
     DFSH_Shrine_getExtraSize,
 };
+void DFSH_Shrine_hitDetect(void)
+{
+}
 
 void DFSH_Shrine_update(int objArg)
 {
@@ -531,18 +539,6 @@ void DFSH_Shrine_update(int objArg)
     }
 }
 
-void DFSH_Shrine_hitDetect(void)
-{
-}
-
-void DFSH_Shrine_release(void)
-{
-}
-
-void DFSH_Shrine_initialise(void)
-{
-}
-
 void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
 {
     DfshShrineState* state;
@@ -571,3 +567,12 @@ void DFSH_Shrine_init(int* obj, DfshShrinePlacement* init)
     mainSetBits(GAMEBIT_MMP_EnteredKrazoaShrine, 1);
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
+
+void DFSH_Shrine_release(void)
+{
+}
+
+void DFSH_Shrine_initialise(void)
+{
+}
+

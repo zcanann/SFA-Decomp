@@ -65,6 +65,9 @@ typedef struct ObjUpdateRomCurveFollowVelocityState
 /* update group a dispensed barrel is added to (GunpowderBarrel DLL 0x158) */
 #define BARREL_UPDATE_OBJGROUP 25
 
+
+
+#pragma explicit_zero_data off
 int barrelgener_getLinkId(GameObject* obj)
 {
     BarrelGeneratorSetup* setup = (BarrelGeneratorSetup*)(obj)->anim.placementData;
@@ -105,24 +108,6 @@ void barrelgener_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 }
 
 void barrelgener_hitDetect(void)
-{
-}
-
-void barrelgener_init(GameObject* obj)
-{
-    BarrelGeneratorState* state = (obj)->extra;
-
-    ObjGroup_AddObject((int)obj, BARRELGENER_OBJGROUP);
-    state->releaseAnimPlaying = 0;
-    state->queuedObject = NULL;
-    storeZeroToFloatParam(&state->releaseTimer);
-}
-
-void barrelgener_release(void)
-{
-}
-
-void barrelgener_initialise(void)
 {
 }
 
@@ -185,6 +170,175 @@ void barrelgener_update(GameObject* obj)
         state->releaseAnimPlaying =
             !ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E6C34, timeDelta, 0);
     }
+}
+
+void barrelgener_init(GameObject* obj)
+{
+    BarrelGeneratorState* state = (obj)->extra;
+
+    ObjGroup_AddObject((int)obj, BARRELGENER_OBJGROUP);
+    state->releaseAnimPlaying = 0;
+    state->queuedObject = NULL;
+    storeZeroToFloatParam(&state->releaseTimer);
+}
+
+void barrelgener_release(void)
+{
+}
+
+void barrelgener_initialise(void)
+{
+}
+
+int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int count, f32 intensity,
+                               ModelLight** light)
+{
+    int spawned;
+    int i;
+    f32 pos[3];
+
+    spawned = 0;
+    if (lbl_803E6C38 == intensity)
+    {
+        spawned = 0;
+        for (i = 0; i < count; i++)
+        {
+            if (entries[i] != 0)
+            {
+                mm_free_(entries[i]);
+                entries[i] = 0;
+            }
+        }
+        if (*light != 0)
+        {
+            modelLightStruct_freeSlot(light);
+        }
+        return 0;
+    }
+
+    for (i = 0; i < count; i++)
+    {
+        if (entries[i] != 0)
+        {
+            lightningRender(entries[i]);
+            entries[i]->timer += framesThisStep;
+            if ((f32)(u32)entries[i]->timer > lbl_803DC3A8)
+            {
+                mm_free_(entries[i]);
+                entries[i] = 0;
+            }
+        }
+        else if (spawned == 0)
+        {
+            pos[0] = obj->anim.localPosX;
+            pos[1] = obj->anim.localPosY;
+            pos[2] = obj->anim.localPosZ;
+            pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
+            entries[i] =
+                lightningCreateU16Promoted((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, lbl_803DC3A0,
+                                           lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
+            spawned = 1;
+        }
+    }
+
+    if (*light == 0)
+    {
+        *light = modelLightStruct_createPointLight(obj, 0x80, 0x80, 0xff, 0);
+        if (*light != 0)
+        {
+            modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
+            modelLightStruct_setDistanceAttenuation(*light, intensity, lbl_803E6C44 + intensity);
+        }
+    }
+    return 1;
+}
+
+#pragma opt_loop_invariants off
+int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, Vec3f* outPos)
+{
+    f32 pos[3];
+    f32 step[3];
+    f32 vel[3];
+    int gridOut[2];
+    int gridB[2];
+    int gridA[2];
+    int i;
+
+    if ((GameObject*)obj != Obj_GetPlayerObject())
+    {
+        PSVECSubtract((const Vec*)&(obj)->anim.localPosX, (const Vec*)&(obj)->anim.previousLocalPosX, (Vec*)vel);
+    }
+    else
+    {
+        vel[0] = (obj)->anim.velocityX;
+        vel[1] = (obj)->anim.velocityY;
+        vel[2] = (obj)->anim.velocityZ;
+    }
+    PSVECScale((const Vec*)vel, (Vec*)vel, oneOverTimeDelta);
+    pos[0] = (obj)->anim.localPosX;
+    pos[1] = lbl_803E6C58 + (obj)->anim.localPosY;
+    pos[2] = (obj)->anim.localPosZ;
+    for (i = 0; i < 5; i++)
+    {
+        PSVECScale((const Vec*)vel, (Vec*)step,
+                   PSVECDistance((const Vec*)pos, (const Vec*)targetPos) / dt);
+        PSVECAdd((const Vec*)((int)obj + 0xc), (const Vec*)step, (Vec*)pos);
+    }
+    outPos->x = pos[0];
+    outPos->y = pos[1];
+    outPos->z = pos[2];
+    voxmaps_worldToGrid((void*)targetPos, (s16*)gridA);
+    voxmaps_worldToGrid(pos, (s16*)gridB);
+    return voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) != 0;
+}
+
+#pragma opt_loop_invariants reset
+int voxmaps_traceWorldLine(void* startPos, void* endPos)
+{
+    int grid1[2];
+    int grid2[2];
+    int out[2];
+
+    voxmaps_worldToGrid(startPos, (s16*)grid1);
+    voxmaps_worldToGrid(endPos, (s16*)grid2);
+    return voxmaps_traceLine((VoxPos*)grid1, (VoxPos*)grid2, (VoxPos*)out, NULL, 0);
+}
+
+void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
+{
+    f32 endPos[3];
+    f32 scaled[3];
+    int gridA[2];
+    int gridB[2];
+    int gridOut[2];
+    int e0;
+    int e1;
+
+    PSVECNormalize((const Vec*)dir, (Vec*)dir);
+    PSVECScale((const Vec*)dir, (Vec*)scaled, scale);
+    PSVECAdd((const Vec*)scaled, (const Vec*)origin, (Vec*)endPos);
+    voxmaps_worldToGrid(origin, (s16*)gridA);
+    voxmaps_worldToGrid(endPos, (s16*)gridB);
+    if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) == 0)
+        voxmaps_gridToWorld(endPos, (s16*)gridOut);
+    *(Vec3f*)out = *(Vec3f*)endPos;
+}
+
+void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
+{
+    struct
+    {
+        f32 _pad[3];
+        f32 vec[3];
+    } s;
+
+    s.vec[0] = pos->x + playerMapOffsetX;
+    s.vec[1] = pos->y;
+    s.vec[2] = pos->z + playerMapOffsetZ;
+    objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
+    Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
 #pragma optimization_level 2
@@ -252,52 +406,8 @@ void Obj_SteerVelocityTowardVector(GameObject* obj, Vec3f* currentVelocity, Vec3
     obj->anim.velocityY = n2[1] * t;
     obj->anim.velocityZ = n2[2] * t;
 }
+
 #pragma optimization_level reset
-
-int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32 advanceStep, f32 arriveRadius,
-                                     f32 speed, int flag)
-{
-    int result;
-    f32 delta[3];
-    f32 dist, ang;
-
-    result = 0;
-    delta[0] = obj->anim.localPosX - route->posX;
-    delta[2] = obj->anim.localPosZ - route->posZ;
-    dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
-    if (dist < arriveRadius)
-    {
-        if (Curve_AdvanceAlongPath(&route->curve, advanceStep) != 0 || route->atSegmentEnd != 0)
-        {
-            if ((*gRomCurveInterface)->goNextPoint(route) != 0)
-                result = -1;
-            else
-                result = *(s8*)((int)route->node9C + 0x18);
-        }
-        speed = lbl_803E6C78 * advanceStep;
-    }
-    delta[0] = route->posX - obj->anim.localPosX;
-    delta[1] = route->posY - obj->anim.localPosY;
-    delta[2] = route->posZ - obj->anim.localPosZ;
-    if ((u8)flag == 0)
-    {
-        ObjUpdateRomCurveFollowVelocityState* state = obj->extra;
-        s16 raw;
-        delta[0] = obj->anim.localPosX - route->posX;
-        delta[2] = obj->anim.localPosZ - route->posZ;
-        raw = (s16)getAngle(delta[0], delta[2]);
-        ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
-        state->velZ = speed * -mathSinf(ang);
-        state->velX = speed * -mathCosf(ang);
-    }
-    else
-    {
-        Obj_SteerVelocityTowardVector(obj, (Vec3f*)&obj->anim.velocityX, (Vec3f*)delta, speed,
-                                      speed / lbl_803E6C7C, lbl_803E6C80);
-    }
-    return result;
-}
-
 int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* route, f32 advanceStep,
                                             f32 arriveRadius, f32 speed, int flag, int* pickIdx)
 {
@@ -343,84 +453,48 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(GameObject* obj, RomCurveWalker* rou
     return result;
 }
 
-void Obj_SpawnHitLightAndFade(GameObject* obj, const Vec3f* pos, f32 scale)
+int Obj_UpdateRomCurveFollowVelocity(GameObject* obj, RomCurveWalker* route, f32 advanceStep, f32 arriveRadius,
+                                     f32 speed, int flag)
 {
-    struct
+    int result;
+    f32 delta[3];
+    f32 dist, ang;
+
+    result = 0;
+    delta[0] = obj->anim.localPosX - route->posX;
+    delta[2] = obj->anim.localPosZ - route->posZ;
+    dist = sqrtf(delta[0] * delta[0] + delta[2] * delta[2]);
+    if (dist < arriveRadius)
     {
-        f32 _pad[3];
-        f32 vec[3];
-    } s;
-
-    s.vec[0] = pos->x + playerMapOffsetX;
-    s.vec[1] = pos->y;
-    s.vec[2] = pos->z + playerMapOffsetZ;
-    objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
-    Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
-}
-
-int Obj_UpdateLightningCluster(GameObject* obj, LightningEffect** entries, int count, f32 intensity,
-                               ModelLight** light)
-{
-    int spawned;
-    int i;
-    f32 pos[3];
-
-    spawned = 0;
-    if (lbl_803E6C38 == intensity)
-    {
-        spawned = 0;
-        for (i = 0; i < count; i++)
+        if (Curve_AdvanceAlongPath(&route->curve, advanceStep) != 0 || route->atSegmentEnd != 0)
         {
-            if (entries[i] != 0)
-            {
-                mm_free_(entries[i]);
-                entries[i] = 0;
-            }
+            if ((*gRomCurveInterface)->goNextPoint(route) != 0)
+                result = -1;
+            else
+                result = *(s8*)((int)route->node9C + 0x18);
         }
-        if (*light != 0)
-        {
-            modelLightStruct_freeSlot(light);
-        }
-        return 0;
+        speed = lbl_803E6C78 * advanceStep;
     }
-
-    for (i = 0; i < count; i++)
+    delta[0] = route->posX - obj->anim.localPosX;
+    delta[1] = route->posY - obj->anim.localPosY;
+    delta[2] = route->posZ - obj->anim.localPosZ;
+    if ((u8)flag == 0)
     {
-        if (entries[i] != 0)
-        {
-            lightningRender(entries[i]);
-            entries[i]->timer += framesThisStep;
-            if ((f32)(u32)entries[i]->timer > lbl_803DC3A8)
-            {
-                mm_free_(entries[i]);
-                entries[i] = 0;
-            }
-        }
-        else if (spawned == 0)
-        {
-            pos[0] = obj->anim.localPosX;
-            pos[1] = obj->anim.localPosY;
-            pos[2] = obj->anim.localPosZ;
-            pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            entries[i] =
-                lightningCreateU16Promoted((const Vec3f*)&obj->anim.localPosX, (const Vec3f*)pos, lbl_803DC3A0,
-                                           lbl_803DC3A4, lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
-            spawned = 1;
-        }
+        ObjUpdateRomCurveFollowVelocityState* state = obj->extra;
+        s16 raw;
+        delta[0] = obj->anim.localPosX - route->posX;
+        delta[2] = obj->anim.localPosZ - route->posZ;
+        raw = (s16)getAngle(delta[0], delta[2]);
+        ang = gBarrelGenPi * (f32)(-raw) / gBarrelGenAngleHalfRange;
+        state->velZ = speed * -mathSinf(ang);
+        state->velX = speed * -mathCosf(ang);
     }
-
-    if (*light == 0)
+    else
     {
-        *light = modelLightStruct_createPointLight(obj, 0x80, 0x80, 0xff, 0);
-        if (*light != 0)
-        {
-            modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
-            modelLightStruct_setDistanceAttenuation(*light, intensity, lbl_803E6C44 + intensity);
-        }
+        Obj_SteerVelocityTowardVector(obj, (Vec3f*)&obj->anim.velocityX, (Vec3f*)delta, speed,
+                                      speed / lbl_803E6C7C, lbl_803E6C80);
     }
-    return 1;
+    return result;
 }
 
 #pragma opt_common_subs off
@@ -490,78 +564,7 @@ void Obj_SmoothTurnAnglesTowardVelocity(GameObject* obj, const Vec3f* velocity, 
         anim->rotY += (int)(delta * rate);
     }
 }
-#pragma opt_common_subs reset
 
-#pragma opt_loop_invariants off
-int Obj_PredictInterceptPoint(GameObject* obj, f32 dt, const Vec3f* targetPos, Vec3f* outPos)
-{
-    f32 pos[3];
-    f32 step[3];
-    f32 vel[3];
-    int gridOut[2];
-    int gridB[2];
-    int gridA[2];
-    int i;
-
-    if ((GameObject*)obj != Obj_GetPlayerObject())
-    {
-        PSVECSubtract((const Vec*)&(obj)->anim.localPosX, (const Vec*)&(obj)->anim.previousLocalPosX, (Vec*)vel);
-    }
-    else
-    {
-        vel[0] = (obj)->anim.velocityX;
-        vel[1] = (obj)->anim.velocityY;
-        vel[2] = (obj)->anim.velocityZ;
-    }
-    PSVECScale((const Vec*)vel, (Vec*)vel, oneOverTimeDelta);
-    pos[0] = (obj)->anim.localPosX;
-    pos[1] = lbl_803E6C58 + (obj)->anim.localPosY;
-    pos[2] = (obj)->anim.localPosZ;
-    for (i = 0; i < 5; i++)
-    {
-        PSVECScale((const Vec*)vel, (Vec*)step,
-                   PSVECDistance((const Vec*)pos, (const Vec*)targetPos) / dt);
-        PSVECAdd((const Vec*)((int)obj + 0xc), (const Vec*)step, (Vec*)pos);
-    }
-    outPos->x = pos[0];
-    outPos->y = pos[1];
-    outPos->z = pos[2];
-    voxmaps_worldToGrid((void*)targetPos, (s16*)gridA);
-    voxmaps_worldToGrid(pos, (s16*)gridB);
-    return voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) != 0;
-}
-#pragma opt_loop_invariants reset
-
-int voxmaps_traceWorldLine(void* startPos, void* endPos)
-{
-    int grid1[2];
-    int grid2[2];
-    int out[2];
-
-    voxmaps_worldToGrid(startPos, (s16*)grid1);
-    voxmaps_worldToGrid(endPos, (s16*)grid2);
-    return voxmaps_traceLine((VoxPos*)grid1, (VoxPos*)grid2, (VoxPos*)out, NULL, 0);
-}
-
-void voxmaps_traceScaledVectorEnd(f32* out, void* origin, f32* dir, f32 scale)
-{
-    f32 endPos[3];
-    f32 scaled[3];
-    int gridA[2];
-    int gridB[2];
-    int gridOut[2];
-    int e0;
-    int e1;
-
-    PSVECNormalize((const Vec*)dir, (Vec*)dir);
-    PSVECScale((const Vec*)dir, (Vec*)scaled, scale);
-    PSVECAdd((const Vec*)scaled, (const Vec*)origin, (Vec*)endPos);
-    voxmaps_worldToGrid(origin, (s16*)gridA);
-    voxmaps_worldToGrid(endPos, (s16*)gridB);
-    if (voxmaps_traceLine((VoxPos*)gridA, (VoxPos*)gridB, (VoxPos*)gridOut, NULL, 0) == 0)
-        voxmaps_gridToWorld(endPos, (s16*)gridOut);
-    *(Vec3f*)out = *(Vec3f*)endPos;
-}
 
 ObjectDescriptor gBarrelGenerObjDescriptor = {
     0,

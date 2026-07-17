@@ -97,90 +97,6 @@ __declspec(section ".sdata2") f32 lbl_803E3270 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E3274 = 6.0f;
 __declspec(section ".sdata2") f32 lbl_803E3278 = 2.5f;
 __declspec(section ".sdata2") f32 gDim2RoofRubPi = 3.1415927410125732f;
-#pragma explicit_zero_data off
-
-int dim2roofrub_getExtraSize(void)
-{
-    return 0x140;
-}
-void dim2roofrub_free(int* obj)
-{
-    (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
-    ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
-    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
-}
-
-
-
-u32 lbl_80320768[] = {
-    0x00000000, 0x3FD5A1CB, 0xC0253F7D, 0x3C23D70A, 0x06100000, 0x402F3B64, 0x3F4B020C, 0xBFFA1CAC, 0x3C23D70A,
-    0x09200000, 0x402EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0x4032E148, 0xBF795810, 0xBFF8F5C3,
-    0x3C23D70A, 0x09200000, 0x4033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000, 0xC02F3B64, 0x3F4B020C,
-    0xBFFC28F6, 0x3C23D70A, 0x09200000, 0xC02EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0xC032E148,
-    0xBF795810, 0xBFFC49BA, 0x3C23D70A, 0x09200000, 0xC033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000,
-    0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
-};
-
-ObjectDescriptor gDIM2RoofRubObjDescriptor = {
-    0,
-    0,
-    0,
-    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    0,
-    0,
-    0,
-    (ObjectDescriptorCallback)dim2roofrub_init,
-    (ObjectDescriptorCallback)dim2roofrub_update,
-    0,
-    (ObjectDescriptorCallback)dim2roofrub_render,
-    (ObjectDescriptorCallback)dim2roofrub_free,
-    0,
-    dim2roofrub_getExtraSize,
-};
-
-void dim2roofrub_init(int* obj, int* params)
-{
-    int* state;
-    int f4;
-    objSetSlot((GameObject*)obj, 0x64);
-    state = ((GameObject*)obj)->extra;
-    ((Dim2roofrubState*)state)->unk6A = ((Dim2roofrubPlacement*)params)->unk1A;
-    ((Dim2roofrubState*)state)->unk6E = -1;
-    {
-        f32 d = lbl_803E3270;
-        ((Dim2roofrubState*)state)->dampingFactor = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
-    }
-    ((Dim2roofrubState*)state)->unk28 = -1;
-    ((Dim2roofrubState*)state)->unk98 = 0;
-    ((Dim2roofrubState*)state)->unk94 = 0;
-    ((Dim2roofrubState*)state)->unk116 = 0;
-    ((Dim2roofrubState*)state)->unk114 = 0;
-    ((GameObject*)obj)->userData2 = 0;
-    f4 = ((GameObject*)obj)->userData1;
-    if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
-    {
-        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
-        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
-    }
-    else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
-    {
-        (*gObjectTriggerInterface)->freeState((u8*)state);
-        if (((Dim2roofrubPlacement*)params)->animDataIndex != -1)
-        {
-            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
-        }
-        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
-    }
-    {
-        ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
-        if (modelState != NULL)
-        {
-            modelState->shadowTintA = 0x64;
-            ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
-        }
-    }
-}
-
 typedef struct Dim2FxRow
 {
     f32 x;
@@ -191,7 +107,6 @@ typedef struct Dim2FxRow
     u8 b2;
     u8 pad[2];
 } Dim2FxRow;
-
 typedef struct Dim2FxVec
 {
     u8 pad[8];
@@ -200,17 +115,30 @@ typedef struct Dim2FxVec
     f32 y;
     f32 z;
 } Dim2FxVec;
+typedef struct Dim2PartVec
+{
+    u8 pad[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} Dim2PartVec;
+#pragma opt_propagation reset
 
+GenPropsWGPipe GXWGFifo : (0xCC008000);
 #define DIM2ROOFRUB_SEQID_SLIDE 0xa8
 #define DIM2ROOFRUB_SEQID_TREAD 0x451
-
 #define DIM2ROOFRUB_EVENT_TOGGLE_LIGHT 1
 #define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY 2
 #define DIM2ROOFRUB_EVENT_TOGGLE_FX    3
 #define DIM2ROOFRUB_EVENT_SPAWN_DUST   4
-/* dust particle spawned 3x on the SPAWN_DUST anim event */
 #define DIM2ROOFRUB_PARTFX 2046
+extern u32 lbl_80320768[];
+void dim2roofrub_free(int* obj);
+void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5);
+void dim2roofrub_update(int* obj);
+void dim2roofrub_init(int* obj, int* params);
 
+#pragma explicit_zero_data off
 void dim2roofrub_spawnEffects(int* obj)
 {
     Dim2FxVec v;
@@ -275,6 +203,57 @@ void dim2roofrub_spawnEffects(int* obj)
     }
 }
 
+int dim2roofrub_getExtraSize(void)
+{
+    return 0x140;
+}
+
+
+
+
+u32 lbl_80320768[] = {
+    0x00000000, 0x3FD5A1CB, 0xC0253F7D, 0x3C23D70A, 0x06100000, 0x402F3B64, 0x3F4B020C, 0xBFFA1CAC, 0x3C23D70A,
+    0x09200000, 0x402EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0x4032E148, 0xBF795810, 0xBFF8F5C3,
+    0x3C23D70A, 0x09200000, 0x4033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000, 0xC02F3B64, 0x3F4B020C,
+    0xBFFC28F6, 0x3C23D70A, 0x09200000, 0xC02EB852, 0x3F476C8B, 0xBF73B646, 0x3C23D70A, 0x07200000, 0xC032E148,
+    0xBF795810, 0xBFFC49BA, 0x3C23D70A, 0x09200000, 0xC033F7CF, 0xBF810625, 0xBF747AE1, 0x3C23D70A, 0x07200000,
+    0x00000000, 0x3ECF5C29, 0x403CED91, 0x3C23D70A, 0x08400000,
+};
+
+ObjectDescriptor gDIM2RoofRubObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    0,
+    0,
+    0,
+    (ObjectDescriptorCallback)dim2roofrub_init,
+    (ObjectDescriptorCallback)dim2roofrub_update,
+    0,
+    (ObjectDescriptorCallback)dim2roofrub_render,
+    (ObjectDescriptorCallback)dim2roofrub_free,
+    0,
+    dim2roofrub_getExtraSize,
+};
+void dim2roofrub_free(int* obj)
+{
+    (*gObjectTriggerInterface)->freeState(((GameObject*)obj)->extra);
+    ((void (*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
+    Sfx_StopObjectChannelPtrLegacy(obj, 0x7f);
+}
+
+
+#define DIM2ROOFRUB_SEQID_SLIDE 0xa8
+#define DIM2ROOFRUB_SEQID_TREAD 0x451
+
+#define DIM2ROOFRUB_EVENT_TOGGLE_LIGHT 1
+#define DIM2ROOFRUB_EVENT_TOGGLE_HEAVY 2
+#define DIM2ROOFRUB_EVENT_TOGGLE_FX    3
+#define DIM2ROOFRUB_EVENT_SPAWN_DUST   4
+/* dust particle spawned 3x on the SPAWN_DUST anim event */
+#define DIM2ROOFRUB_PARTFX 2046
+
 void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
 {
     f32 mWorld[12];
@@ -324,14 +303,6 @@ void dim2roofrub_render(int* obj, int p2, int p3, int p4, int p5)
         ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3270);
     }
 }
-
-typedef struct Dim2PartVec
-{
-    u8 pad[0xc];
-    f32 x;
-    f32 y;
-    f32 z;
-} Dim2PartVec;
 
 #pragma opt_propagation off
 void dim2roofrub_update(int* obj)
@@ -409,9 +380,50 @@ void dim2roofrub_update(int* obj)
         }
     }
 }
-#pragma opt_propagation reset
 
-GenPropsWGPipe GXWGFifo : (0xCC008000);
+#pragma opt_propagation reset
+void dim2roofrub_init(int* obj, int* params)
+{
+    int* state;
+    int f4;
+    objSetSlot((GameObject*)obj, 0x64);
+    state = ((GameObject*)obj)->extra;
+    ((Dim2roofrubState*)state)->unk6A = ((Dim2roofrubPlacement*)params)->unk1A;
+    ((Dim2roofrubState*)state)->unk6E = -1;
+    {
+        f32 d = lbl_803E3270;
+        ((Dim2roofrubState*)state)->dampingFactor = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
+    }
+    ((Dim2roofrubState*)state)->unk28 = -1;
+    ((Dim2roofrubState*)state)->unk98 = 0;
+    ((Dim2roofrubState*)state)->unk94 = 0;
+    ((Dim2roofrubState*)state)->unk116 = 0;
+    ((Dim2roofrubState*)state)->unk114 = 0;
+    ((GameObject*)obj)->userData2 = 0;
+    f4 = ((GameObject*)obj)->userData1;
+    if (f4 == 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != 1)
+    {
+        (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
+        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
+    }
+    else if (f4 != 0 && ((Dim2roofrubPlacement*)params)->animDataIndex != f4 - 1)
+    {
+        (*gObjectTriggerInterface)->freeState((u8*)state);
+        if (((Dim2roofrubPlacement*)params)->animDataIndex != -1)
+        {
+            (*gObjectTriggerInterface)->loadAnimData((u8*)state, (u8*)params);
+        }
+        ((GameObject*)obj)->userData1 = ((Dim2roofrubPlacement*)params)->animDataIndex + 1;
+    }
+    {
+        ObjModelState* modelState = ((GameObject*)obj)->anim.modelState;
+        if (modelState != NULL)
+        {
+            modelState->shadowTintA = 0x64;
+            ((GameObject*)obj)->anim.modelState->shadowTintB = 0x96;
+        }
+    }
+}
 
 static inline void swipePos3f32(const f32 x, const f32 y, const f32 z)
 {
@@ -433,3 +445,4 @@ static inline void swipeTexCoord2f32(const f32 s, const f32 t)
     GXWGFifo.f32 = s;
     GXWGFifo.f32 = t;
 }
+

@@ -126,6 +126,28 @@ extern const f32 lbl_803E398C;
 extern const f32 lbl_803E3990;
 extern const f32 lbl_803E3994;
 extern f32 lbl_803E3998;
+typedef struct SmallbasketObjectDef
+{
+    u8 pad0[0x18 - 0x0];
+    s8 rotX;
+    u8 subtype;
+    s16 unk1A;
+    s16 respawnMinutes;
+    s16 enableGameBit;
+    s16 leashRange;
+    u8 pad22[0x24 - 0x22];
+    f32 unk24;
+} SmallbasketObjectDef;
+typedef struct
+{
+    s16 h0;
+    s16 h1;
+    s16 h2;
+    f32 fx;
+    f32 fy;
+    f32 fz;
+    f32 fw;
+} BasketMathArgs;
 
 #pragma opt_propagation off
 int fn_801816F8(u8* obj, u8* player, u8* dataIn)
@@ -456,8 +478,8 @@ int fn_801816F8(u8* obj, u8* player, u8* dataIn)
     }
     return 1;
 }
-#pragma opt_propagation reset
 
+#pragma opt_propagation reset
 int smallbasket_resolveCollision(u8* obj)
 {
     typedef struct
@@ -575,18 +597,6 @@ int smallbasket_resolveCollision(u8* obj)
     return 0;
 }
 
-int SmallBasket_getExtraSize(void)
-{
-    return 0x24;
-}
-
-void SmallBasket_free(GameObject* obj)
-{
-    (*gModgfxInterface)->detachSource(obj);
-    Resource_Release(gSmallBasketResource);
-    ObjGroup_RemoveObject((int)obj, SMALLBASKET_OBJGROUP);
-}
-
 void objThrowFn_80182504(GameObject* obj)
 {
     struct LocalArgs
@@ -619,6 +629,18 @@ void objThrowFn_80182504(GameObject* obj)
     vecRotateZXY(&local.f8, &obj->anim.velocityX);
 }
 
+int SmallBasket_getExtraSize(void)
+{
+    return 0x24;
+}
+
+void SmallBasket_free(GameObject* obj)
+{
+    (*gModgfxInterface)->detachSource(obj);
+    Resource_Release(gSmallBasketResource);
+    ObjGroup_RemoveObject((int)obj, SMALLBASKET_OBJGROUP);
+}
+
 void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char visible)
 {
     int extra;
@@ -647,6 +669,7 @@ void SmallBasket_render(GameObject* obj, int p2, int p3, int p4, int p5, char vi
         }
     }
 }
+
 ObjectDescriptor gSmallBasketObjDescriptor = {
     0,
     0,
@@ -663,90 +686,6 @@ ObjectDescriptor gSmallBasketObjDescriptor = {
     0,
     SmallBasket_getExtraSize,
 };
-
-typedef struct SmallbasketObjectDef
-{
-    u8 pad0[0x18 - 0x0];
-    s8 rotX;
-    u8 subtype;
-    s16 unk1A;
-    s16 respawnMinutes;
-    s16 enableGameBit;
-    s16 leashRange;
-    u8 pad22[0x24 - 0x22];
-    f32 unk24;
-} SmallbasketObjectDef;
-
-void SmallBasket_init(GameObject* obj, int def)
-{
-    CfperchState* state;
-    s16 v1c;
-    s16 mode;
-
-    state = (obj)->extra;
-    ObjHits_DisableObject(obj);
-    ObjGroup_AddObject((int)obj, SMALLBASKET_OBJGROUP);
-
-    v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
-    if (v1c == 0)
-    {
-        state->respawnDelay = 0;
-    }
-    else
-    {
-        state->respawnDelay = v1c * 0x3c;
-    }
-
-    gSmallBasketResource = Resource_Acquire(SMALLBASKET_RESOURCE_ID, 1);
-    state->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
-    state->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
-    (obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
-    state->enableGameBit = ((SmallbasketObjectDef*)def)->enableGameBit;
-    state->leashRange = ((SmallbasketObjectDef*)def)->leashRange;
-    if (state->leashRange == 0)
-    {
-        state->leashRange = 0x14;
-    }
-    state->respawnTimer = 0x320;
-    (obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
-    state->subtype = ((SmallbasketObjectDef*)def)->subtype;
-    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
-    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
-    (obj)->anim.previousLocalPosX = (obj)->anim.localPosZ;
-
-    if ((u32)mainGetBit(state->enableGameBit) != 0)
-    {
-        state->hiddenTimer = 1;
-        ObjHits_DisableObject(obj);
-    }
-
-    mode = (obj)->anim.seqId;
-    if (mode == 0x3cf)
-    {
-        state->sfxId = 0x60;
-    }
-    else if (mode == 0x662)
-    {
-        state->disguiseGated = 1;
-        state->sfxId = 0x37d;
-    }
-    else
-    {
-        state->sfxId = 0x4a;
-    }
-}
-
-typedef struct
-{
-    s16 h0;
-    s16 h1;
-    s16 h2;
-    f32 fx;
-    f32 fy;
-    f32 fz;
-    f32 fw;
-} BasketMathArgs;
-
 void SmallBasket_update(GameObject* obj)
 {
     GameObject* player;
@@ -1066,4 +1005,64 @@ void SmallBasket_update(GameObject* obj)
         }
     }
 }
+
+void SmallBasket_init(GameObject* obj, int def)
+{
+    CfperchState* state;
+    s16 v1c;
+    s16 mode;
+
+    state = (obj)->extra;
+    ObjHits_DisableObject(obj);
+    ObjGroup_AddObject((int)obj, SMALLBASKET_OBJGROUP);
+
+    v1c = ((SmallbasketObjectDef*)def)->respawnMinutes;
+    if (v1c == 0)
+    {
+        state->respawnDelay = 0;
+    }
+    else
+    {
+        state->respawnDelay = v1c * 0x3c;
+    }
+
+    gSmallBasketResource = Resource_Acquire(SMALLBASKET_RESOURCE_ID, 1);
+    state->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
+    state->unk1F = (u8)((SmallbasketObjectDef*)def)->unk1A;
+    (obj)->anim.rotX = (s16)(((SmallbasketObjectDef*)def)->rotX << 8);
+    state->enableGameBit = ((SmallbasketObjectDef*)def)->enableGameBit;
+    state->leashRange = ((SmallbasketObjectDef*)def)->leashRange;
+    if (state->leashRange == 0)
+    {
+        state->leashRange = 0x14;
+    }
+    state->respawnTimer = 0x320;
+    (obj)->objectFlags |= SMALLBASKET_OBJFLAG_HITDETECT_DISABLED;
+    state->subtype = ((SmallbasketObjectDef*)def)->subtype;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosX;
+    (obj)->anim.previousLocalPosY = (obj)->anim.localPosY;
+    (obj)->anim.previousLocalPosX = (obj)->anim.localPosZ;
+
+    if ((u32)mainGetBit(state->enableGameBit) != 0)
+    {
+        state->hiddenTimer = 1;
+        ObjHits_DisableObject(obj);
+    }
+
+    mode = (obj)->anim.seqId;
+    if (mode == 0x3cf)
+    {
+        state->sfxId = 0x60;
+    }
+    else if (mode == 0x662)
+    {
+        state->disguiseGated = 1;
+        state->sfxId = 0x37d;
+    }
+    else
+    {
+        state->sfxId = 0x4a;
+    }
+}
+
 

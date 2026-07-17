@@ -47,6 +47,8 @@
 #define WCTEMPLEBRI_OBJFLAG_HIDDEN             0x4000
 #define WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED 0x2000
 
+
+
 void wctemplebri_updateModelWarp(GameObject* obj, WCTempleBriState* state)
 {
     ObjTextureRuntimeSlot* tex;
@@ -125,8 +127,8 @@ int wctemplebri_SeqFn(GameObject* obj, int p2, ObjAnimUpdateState* animUpdate)
     }
     return 0;
 }
-#pragma dont_inline off
 
+#pragma dont_inline off
 int wctemplebri_getExtraSize(void)
 {
     return WCTEMPLEBRI_EXTRA_SIZE;
@@ -162,14 +164,6 @@ void wctemplebri_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
 }
 
 void wctemplebri_hitDetect(void)
-{
-}
-
-void wctemplebri_release(void)
-{
-}
-
-void wctemplebri_initialise(void)
 {
 }
 
@@ -234,8 +228,8 @@ void wctemplebri_update(GameObject* obj)
         }
     }
 }
-#pragma dont_inline off
 
+#pragma dont_inline off
 void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
 {
     ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
@@ -302,6 +296,15 @@ void wctemplebri_init(GameObject* obj, WCTempleBriSetup* setup)
     obj->objectFlags |= (WCTEMPLEBRI_OBJFLAG_HIDDEN | WCTEMPLEBRI_OBJFLAG_HITDETECT_DISABLED);
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
+
+void wctemplebri_release(void)
+{
+}
+
+void wctemplebri_initialise(void)
+{
+}
+
 
 ObjectDescriptor gWCTempleBriObjDescriptor = {
     0,

@@ -47,10 +47,7 @@
     ((void (*)(void*, int, int, void*, f32, int))objfx_spawnRandomBurst)(                                       \
         (void*)(obj), (type), (count), (origin), (mult), (flags))
 
-int tree_getExtraSize(void)
-{
-    return sizeof(TreeState);
-}
+
 
 void tree_spawnAmbientEffect(GameObject* obj, TreeState* state, s8 index)
 {
@@ -123,8 +120,14 @@ void tree_updateAmbientEffects(GameObject* obj, TreeState* state)
         }
     }
 }
-#pragma dont_inline off
 
+#pragma dont_inline reset
+int tree_getExtraSize(void)
+{
+    return sizeof(TreeState);
+}
+
+#pragma dont_inline off
 void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     TreeSetup* setup = (TreeSetup*)obj->anim.placementData;
@@ -145,89 +148,6 @@ void tree_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
         }
         obj->userData2 = 1;
-    }
-}
-
-void tree_init(GameObject* obj, TreeSetup* setup)
-{
-    TreeSetup* setupData = setup;
-    TreeState* state = obj->extra;
-    ObjAnimEventList animOut;
-
-    state->swayTimer = lbl_803E730C;
-    state->ambientBurstTimer = lbl_803E72F8;
-    state->proximityRadius = setupData->proximityRadiusHalf << 1;
-    state->flags = setupData->flagsHi;
-    state->flags = state->flags << 8;
-    state->flags |= setupData->flagsLo;
-    state->playerBurstCooldown = lbl_803E72F8;
-    obj->anim.rotZ = (s16)(setupData->rotZ << 8);
-    obj->anim.rotY = (s16)(setupData->rotY << 8);
-    obj->anim.rotX = (s16)(setupData->rotX << 8);
-    *(u8*)&obj->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
-    obj->objectFlags |= TREE_OBJECT_FLAGS_INIT;
-    obj->userData2 = 0;
-    if (setupData->scale != 0)
-    {
-        state->scale = (f32)(u32)setupData->scale / gTreeScaleByteNormalizer;
-        obj->anim.rootMotionScale = state->scale;
-        if (obj->anim.rootMotionScale == lbl_803E72F8)
-        {
-            obj->anim.rootMotionScale = lbl_803E7308;
-        }
-        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
-    }
-    else
-    {
-        state->scale = lbl_803E7308;
-    }
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72F8, 0);
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
-    if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
-    {
-        state->flags |= TREE_FLAG_HIT_ENABLED;
-    }
-    switch (obj->anim.seqId)
-    {
-    case 0x798:
-        state->effectProfileIndex = 0xa;
-        break;
-    case 0x799:
-        state->effectProfileIndex = 0x9;
-        break;
-    case 0x70d:
-        state->effectProfileIndex = 0x8;
-        break;
-    case 0x70c:
-        state->effectProfileIndex = 0x7;
-        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(lbl_803E732C * obj->anim.rootMotionScale), -0x5,
-                                   0x64);
-        break;
-    case 0x625:
-        state->effectProfileIndex = 0x6;
-        break;
-    case 0x77a:
-        state->effectProfileIndex = 0x5;
-        break;
-    case 0x624:
-        state->effectProfileIndex = 0x4;
-        break;
-    case 0x39:
-        state->effectProfileIndex = 0x3;
-        break;
-    case 0x10b:
-        state->effectProfileIndex = 0x2;
-        break;
-    case 0x5d1:
-        state->effectProfileIndex = 0x1;
-        break;
-    default:
-        state->effectProfileIndex = 0x0;
-        break;
-    }
-    if (!(state->flags & TREE_FLAG_HIT_ENABLED))
-    {
-        ObjHits_DisableObject((u32)obj);
     }
 }
 
@@ -366,6 +286,91 @@ void tree_update(GameObject* obj)
         }
     }
 }
+
+#pragma opt_common_subs reset
+void tree_init(GameObject* obj, TreeSetup* setup)
+{
+    TreeSetup* setupData = setup;
+    TreeState* state = obj->extra;
+    ObjAnimEventList animOut;
+
+    state->swayTimer = lbl_803E730C;
+    state->ambientBurstTimer = lbl_803E72F8;
+    state->proximityRadius = setupData->proximityRadiusHalf << 1;
+    state->flags = setupData->flagsHi;
+    state->flags = state->flags << 8;
+    state->flags |= setupData->flagsLo;
+    state->playerBurstCooldown = lbl_803E72F8;
+    obj->anim.rotZ = (s16)(setupData->rotZ << 8);
+    obj->anim.rotY = (s16)(setupData->rotY << 8);
+    obj->anim.rotX = (s16)(setupData->rotX << 8);
+    *(u8*)&obj->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
+    obj->objectFlags |= TREE_OBJECT_FLAGS_INIT;
+    obj->userData2 = 0;
+    if (setupData->scale != 0)
+    {
+        state->scale = (f32)(u32)setupData->scale / gTreeScaleByteNormalizer;
+        obj->anim.rootMotionScale = state->scale;
+        if (obj->anim.rootMotionScale == lbl_803E72F8)
+        {
+            obj->anim.rootMotionScale = lbl_803E7308;
+        }
+        obj->anim.rootMotionScale = obj->anim.rootMotionScale * obj->anim.modelInstance->rootMotionScaleBase;
+    }
+    else
+    {
+        state->scale = lbl_803E7308;
+    }
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72F8, 0);
+    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E7308, *(f32*)&lbl_803E7308, &animOut);
+    if (state->flags & TREE_FLAG_AMBIENT_EFFECTS)
+    {
+        state->flags |= TREE_FLAG_HIT_ENABLED;
+    }
+    switch (obj->anim.seqId)
+    {
+    case 0x798:
+        state->effectProfileIndex = 0xa;
+        break;
+    case 0x799:
+        state->effectProfileIndex = 0x9;
+        break;
+    case 0x70d:
+        state->effectProfileIndex = 0x8;
+        break;
+    case 0x70c:
+        state->effectProfileIndex = 0x7;
+        ObjHitbox_SetCapsuleBounds((ObjAnimComponent*)obj, (int)(lbl_803E732C * obj->anim.rootMotionScale), -0x5,
+                                   0x64);
+        break;
+    case 0x625:
+        state->effectProfileIndex = 0x6;
+        break;
+    case 0x77a:
+        state->effectProfileIndex = 0x5;
+        break;
+    case 0x624:
+        state->effectProfileIndex = 0x4;
+        break;
+    case 0x39:
+        state->effectProfileIndex = 0x3;
+        break;
+    case 0x10b:
+        state->effectProfileIndex = 0x2;
+        break;
+    case 0x5d1:
+        state->effectProfileIndex = 0x1;
+        break;
+    default:
+        state->effectProfileIndex = 0x0;
+        break;
+    }
+    if (!(state->flags & TREE_FLAG_HIT_ENABLED))
+    {
+        ObjHits_DisableObject((u32)obj);
+    }
+}
+
 #pragma opt_common_subs reset
 
 f32 gTreeEffectColors[] = {

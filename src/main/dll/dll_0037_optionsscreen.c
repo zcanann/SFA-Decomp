@@ -124,8 +124,9 @@ u32 lbl_8031ACF8[10] = {0x00000000, 0x00000000, 0x00000000, 0x00050000,
         0x00000000, (u32)OptionsScreen_frameStart, (u32)OptionsScreen_frameEnd,
         (u32)OptionsScreen_render};
 
-#pragma scheduling off
+
 #pragma peephole off
+#pragma scheduling off
 void OptionsScreen_render(int arg)
 {
     int alpha;
@@ -186,30 +187,11 @@ void OptionsScreen_render(int arg)
     }
 }
 
-#pragma peephole on
-void OptionsScreen_initialise(void)
+void OptionsScreen_frameEnd(void)
 {
-    (*gScreenTransitionInterface)->step(20, 5);
-    gameTextLoadDir(21);
-    lbl_803DD70C = 0;
-    lbl_803DD708 = getSaveFileStruct();
-    if (lbl_803DD6F8 == 0)
-    {
-        optionsMenu_openGeneralPanel();
-    }
-    else if (lbl_803DD6F8 == 1)
-    {
-        optionsMenu_openAudioPanel();
-    }
-    else
-    {
-        languageMenuInit();
-    }
-    lbl_803DD706 = 2;
-    lbl_803DD705 = 0;
-    lbl_803DD6F9 = 0;
 }
 
+#pragma peephole on
 static inline void optionsScreenFreeMenuItems(void)
 {
     int i;
@@ -352,10 +334,31 @@ int OptionsScreen_frameStart(void)
     return 0;
 }
 
-void OptionsScreen_frameEnd(void)
-{
-}
-
 void OptionsScreen_release(void)
 {
 }
+
+#pragma peephole on
+void OptionsScreen_initialise(void)
+{
+    (*gScreenTransitionInterface)->step(20, 5);
+    gameTextLoadDir(21);
+    lbl_803DD70C = 0;
+    lbl_803DD708 = getSaveFileStruct();
+    if (lbl_803DD6F8 == 0)
+    {
+        optionsMenu_openGeneralPanel();
+    }
+    else if (lbl_803DD6F8 == 1)
+    {
+        optionsMenu_openAudioPanel();
+    }
+    else
+    {
+        languageMenuInit();
+    }
+    lbl_803DD706 = 2;
+    lbl_803DD705 = 0;
+    lbl_803DD6F9 = 0;
+}
+

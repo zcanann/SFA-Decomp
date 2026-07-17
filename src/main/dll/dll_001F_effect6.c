@@ -78,18 +78,9 @@ ObjectDescriptor6 lbl_80310A20 = {
     (ObjectDescriptorCallback)Effect6_func05,
 };
 
-void Effect6_func03_nop(void)
-{
-}
 
-void Effect6_release(void)
-{
-}
-
-void Effect6_initialise(void)
-{
-}
-
+#pragma peephole off
+#pragma scheduling off
 /*
  * Field names inherited from ExpgfxSpawnConfig (include/main/expgfx_internal.h),
  * the consumer-side definition of this 0x64-byte spawn request consumed by
@@ -97,8 +88,6 @@ void Effect6_initialise(void)
  * (colorWord0..2 are the u16 spelling of the consumer's ExpgfxSpawnColorPair;
  * effectIdByte/modelIdByte land in bytes the consumer currently ignores).
  */
-#pragma scheduling off
-#pragma peephole off
 int Effect6_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams, u32 spawnFlags, u8 modelId,
                    u16* extraArgs)
 {
@@ -333,3 +322,18 @@ void Effect6_func05(void)
     }
     gEffect6Osc1Value = mathSinf(gEffect6Pi * (f32)(s16)gEffect6Osc1Angle / gEffect6SineAngleScale);
 }
+
+#pragma peephole reset
+#pragma scheduling reset
+void Effect6_func03_nop(void)
+{
+}
+
+void Effect6_release(void)
+{
+}
+
+void Effect6_initialise(void)
+{
+}
+

@@ -183,6 +183,7 @@ u32 gECSH_ShrineObjDescriptor[19] = {0x00000000,
                                      (u32)ecsh_shrine_setCupPos,
                                      (u32)ecsh_shrine_checkCupPick};
 
+
 void ecsh_shrine_updateMotion(MmShrineAnimObj* obj)
 {
     ObjPlacement* config;
@@ -306,17 +307,6 @@ int ecsh_shrine_SeqFn(void* objArg, int unused, void* eventListArg)
     return 0;
 }
 
-void ecsh_shrine_getPhaseAndSpiritCup(int* outAnimState, u8* outSpiritCup)
-{
-    int* obj = (int*)gEcShShrineActiveObject;
-    int* inner;
-    if (obj == NULL)
-        return;
-    inner = ((GameObject*)obj)->extra;
-    *outSpiritCup = ((EcshShrineState*)inner)->spiritCup;
-    *outAnimState = ((EcshShrineState*)inner)->animState;
-}
-
 void ecsh_shrine_checkCupPick(u8 cupIndex)
 {
     int* obj = (int*)gEcShShrineActiveObject;
@@ -342,6 +332,17 @@ void ecsh_shrine_setCupPos(u8 cupIndex, f32 x, f32 z)
     slot = gEcShShrineCupSlotMap[cupIndex];
     gEcShShrinePuzzleState[slot].a = x;
     gEcShShrinePuzzleState[slot].b = z;
+}
+
+void ecsh_shrine_getPhaseAndSpiritCup(int* outAnimState, u8* outSpiritCup)
+{
+    int* obj = (int*)gEcShShrineActiveObject;
+    int* inner;
+    if (obj == NULL)
+        return;
+    inner = ((GameObject*)obj)->extra;
+    *outSpiritCup = ((EcshShrineState*)inner)->spiritCup;
+    *outAnimState = ((EcshShrineState*)inner)->animState;
 }
 
 void ecsh_shrine_getCupPos(u8 cupIndex, f32* outX, f32* outZ)
@@ -375,8 +376,22 @@ int ecsh_shrine_getObjectTypeId(void)
     return 0;
 }
 
-void ecsh_shrine_hitDetect(void)
+void ecsh_shrine_free(int* obj)
 {
+    int* inner = ((GameObject*)obj)->extra;
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
+    Music_Trigger(MUSICTRIG_krazoa_doors_open, 0);
+    if (*(void**)inner != NULL)
+    {
+        ModelLightStruct_free(*(ModelLightStruct**)inner);
+        *(void**)inner = NULL;
+    }
+    ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
+    mainSetBits(GAMEBIT_WMRelated0A7F, 1);
 }
 
 void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
@@ -398,24 +413,11 @@ void ecsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visi
     objParticleFn_80099d84((GameObject*)obj, lbl_803E4FC8, 7, *(f32*)&lbl_803E4FC8, (ModelLightStruct*)*inner);
 }
 
-void ecsh_shrine_free(int* obj)
+void ecsh_shrine_hitDetect(void)
 {
-    int* inner = ((GameObject*)obj)->extra;
-    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
-    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
-    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
-    Music_Trigger(MUSICTRIG_krazoa_doors_open, 0);
-    if (*(void**)inner != NULL)
-    {
-        ModelLightStruct_free(*(ModelLightStruct**)inner);
-        *(void**)inner = NULL;
-    }
-    ObjGroup_RemoveObject((int)obj, ECSHSHRINE_OBJGROUP);
-    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
-    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, 1);
-    mainSetBits(GAMEBIT_WMRelated0A7F, 1);
 }
 
+#pragma opt_strength_reduction off
 /*
  * Main state machine.
  *
@@ -436,7 +438,6 @@ void ecsh_shrine_free(int* obj)
  *   8->2->5/0->1->4->2 etc. as each shuffle iteration plays out, with 7/9
  *   used as round-entry/exit and 5 as the guess-resolution state.
  */
-#pragma opt_strength_reduction off
 void ecsh_shrine_update(s16* obj)
 {
     f32 t[2];
@@ -848,16 +849,8 @@ void ecsh_shrine_update(s16* obj)
         }
     }
 }
+
 #pragma opt_strength_reduction reset
-
-void ecsh_shrine_release(void)
-{
-}
-
-void ecsh_shrine_initialise(void)
-{
-}
-
 void ecsh_shrine_init(s16* obj, s8* def)
 {
     int* sub = ((GameObject*)obj)->extra;
@@ -895,3 +888,12 @@ void ecsh_shrine_init(s16* obj, s8* def)
     }
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
+
+void ecsh_shrine_release(void)
+{
+}
+
+void ecsh_shrine_initialise(void)
+{
+}
+

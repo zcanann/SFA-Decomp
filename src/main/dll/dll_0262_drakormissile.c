@@ -59,26 +59,25 @@ f32 gDrakorMissileProximityDetonateDist = 50.0f;
 #define DRAKORMISSILE_ACTIVE_SFX_A       965
 #define DRAKORMISSILE_ACTIVE_SFX_B       966
 
-int drakormissile_getExtraSize(void)
+
+
+void drakormissile_abortStraightFlight(GameObject* obj)
 {
-    return DRAKORMISSILE_EXTRA_SIZE;
+    DrakorMissileState* state = obj->extra;
+    if (state->state == DRAKORMISSILE_STATE_STRAIGHT)
+    {
+        state->state = DRAKORMISSILE_STATE_EXPLODING;
+    }
 }
 
-int drakormissile_getObjectTypeId(void)
+void drakormissile_modelMtxFn(GameObject* obj)
 {
-    return DRAKORMISSILE_OBJECT_TYPE_ID;
-}
-
-void drakormissile_hitDetect(void)
-{
-}
-
-void drakormissile_initialise(void)
-{
-}
-
-void drakormissile_release(void)
-{
+    DrakorMissileState* state = (obj)->extra;
+    state->flags |= 1;
+    if (state->state == DRAKORMISSILE_STATE_FADEOUT)
+    {
+        Obj_FreeObject((GameObject*)obj);
+    }
 }
 
 #pragma opt_common_subs off
@@ -113,10 +112,8 @@ void drakormissile_startActiveLaunch(GameObject* obj)
     Sfx_PlayFromObject((int)obj, DRAKORMISSILE_ACTIVE_SFX_A);
     Sfx_PlayFromObject((int)obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
-#pragma opt_common_subs reset
 
 #pragma fp_contract off
-#pragma opt_common_subs off
 void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameObject* target, f32 speed)
 {
     ModelLightStruct* light;
@@ -192,8 +189,79 @@ void drakormissile_startStraightLaunch(GameObject* obj, GameObject* from, GameOb
     (obj)->anim.rootMotionScale = lbl_803E6958 * (obj)->anim.modelInstance->rootMotionScaleBase;
     Sfx_PlayFromObject((int)obj, SFXTRIG_dn_boar1_c_173);
 }
+
 #pragma fp_contract reset
 #pragma opt_common_subs reset
+int drakormissile_setScale(GameObject* obj)
+{
+    DrakorMissileState* state = obj->extra;
+    return state->state == DRAKORMISSILE_STATE_FADEOUT;
+}
+
+int drakormissile_getExtraSize(void)
+{
+    return DRAKORMISSILE_EXTRA_SIZE;
+}
+
+int drakormissile_getObjectTypeId(void)
+{
+    return DRAKORMISSILE_OBJECT_TYPE_ID;
+}
+
+void drakormissile_free(GameObject* obj)
+{
+    DrakorMissileState* state = (obj)->extra;
+    ModelLightStruct* light = state->light;
+    if (light != NULL)
+    {
+        ModelLightStruct_free(light);
+        state->light = NULL;
+    }
+    ObjGroup_RemoveObject((int)obj, DRAKORMISSILE_GROUP_ID);
+}
+
+void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
+{
+    s16 savedRotZ;
+    s16 savedRotY;
+    int i;
+    DrakorMissileState* state = (obj)->extra;
+    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
+    if (visible != 0 && state->state != DRAKORMISSILE_STATE_FADEOUT)
+    {
+        f32 savedScale;
+        int* model;
+        char* m;
+        savedRotZ = (obj)->anim.rotZ;
+        savedRotY = (obj)->anim.rotY;
+        savedScale = (obj)->anim.rootMotionScale;
+        objAnim->bankIndex = 1;
+        model = (int*)Obj_GetActiveModel(obj);
+        i = 0;
+        for (; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
+        {
+            state->trailYaw[i] += state->trailYawStep[i];
+            state->trailPitch[i] += state->trailPitchStep[i];
+            (obj)->anim.rotZ = state->trailYaw[i];
+            (obj)->anim.rotY = state->trailPitch[i];
+            *(u16*)((char*)model + 0x18) &= ~8;
+            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+        }
+        (obj)->anim.rotZ = savedRotZ;
+        (obj)->anim.rotY = savedRotY;
+        (obj)->anim.rootMotionScale = savedScale;
+        objAnim->bankIndex = 0;
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
+        if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
+        {
+            queueGlowRender(state->light);
+        }
+    }
+}
+
+void drakormissile_hitDetect(void)
+{
+}
 
 void drakormissile_update(int obj)
 {
@@ -337,82 +405,6 @@ void drakormissile_update(int obj)
     }
 }
 
-int drakormissile_setScale(GameObject* obj)
-{
-    DrakorMissileState* state = obj->extra;
-    return state->state == DRAKORMISSILE_STATE_FADEOUT;
-}
-
-void drakormissile_abortStraightFlight(GameObject* obj)
-{
-    DrakorMissileState* state = obj->extra;
-    if (state->state == DRAKORMISSILE_STATE_STRAIGHT)
-    {
-        state->state = DRAKORMISSILE_STATE_EXPLODING;
-    }
-}
-
-void drakormissile_modelMtxFn(GameObject* obj)
-{
-    DrakorMissileState* state = (obj)->extra;
-    state->flags |= 1;
-    if (state->state == DRAKORMISSILE_STATE_FADEOUT)
-    {
-        Obj_FreeObject((GameObject*)obj);
-    }
-}
-
-void drakormissile_free(GameObject* obj)
-{
-    DrakorMissileState* state = (obj)->extra;
-    ModelLightStruct* light = state->light;
-    if (light != NULL)
-    {
-        ModelLightStruct_free(light);
-        state->light = NULL;
-    }
-    ObjGroup_RemoveObject((int)obj, DRAKORMISSILE_GROUP_ID);
-}
-
-void drakormissile_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, s8 visible)
-{
-    s16 savedRotZ;
-    s16 savedRotY;
-    int i;
-    DrakorMissileState* state = (obj)->extra;
-    ObjAnimComponent* objAnim = (ObjAnimComponent*)obj;
-    if (visible != 0 && state->state != DRAKORMISSILE_STATE_FADEOUT)
-    {
-        f32 savedScale;
-        int* model;
-        char* m;
-        savedRotZ = (obj)->anim.rotZ;
-        savedRotY = (obj)->anim.rotY;
-        savedScale = (obj)->anim.rootMotionScale;
-        objAnim->bankIndex = 1;
-        model = (int*)Obj_GetActiveModel(obj);
-        i = 0;
-        for (; i < DRAKORMISSILE_RENDER_TRAIL_COUNT; i++)
-        {
-            state->trailYaw[i] += state->trailYawStep[i];
-            state->trailPitch[i] += state->trailPitchStep[i];
-            (obj)->anim.rotZ = state->trailYaw[i];
-            (obj)->anim.rotY = state->trailPitch[i];
-            *(u16*)((char*)model + 0x18) &= ~8;
-            objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        }
-        (obj)->anim.rotZ = savedRotZ;
-        (obj)->anim.rotY = savedRotY;
-        (obj)->anim.rootMotionScale = savedScale;
-        objAnim->bankIndex = 0;
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
-        {
-            queueGlowRender(state->light);
-        }
-    }
-}
-
 void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup)
 {
     DrakorMissileState* state = (obj)->extra;
@@ -444,3 +436,12 @@ void drakormissile_init(GameObject* obj, DrakorMissileSetup* setup)
         state->trailPitchStep[i] = randomGetRange(-0x400, 0x400);
     }
 }
+
+void drakormissile_release(void)
+{
+}
+
+void drakormissile_initialise(void)
+{
+}
+

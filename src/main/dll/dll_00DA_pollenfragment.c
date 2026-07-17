@@ -114,54 +114,15 @@ extern f32 lbl_803E3178;
 extern f32 lbl_803E317C;
 extern f32 lbl_803E3180;
 
-void pollenfragment_init(GameObject* obj, int config)
-{
-    s8 pollenType;
-    u32 randomValue;
-    int spawnCount;
-    u32* state;
 
-    state = *(u32**)&(obj)->extra;
-    if (*(char*)(config + 0x19) == '\x01')
-    {
-        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E3198;
-    }
-    else
-    {
-        randomValue = randomGetRange(0xb4, 300);
-        *(float*)&((XyzAnimatorState*)state)->unk8 = (float)(int)randomValue;
-    }
-    pollenType = *(s8*)(config + 0x19);
-    pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
-    *(s8*)(config + 0x19) = pollenType;
-    state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
-    if ((int)*(short*)state[7] != 0)
-    {
-        Sfx_PlayFromObjectLimitedIntReturnLegacy((int)obj, (int)*(short*)state[7] & 0xffff, 3);
-    }
-    spawnCount = 4;
-    do
-    {
-        (*gPartfxInterface)->spawnObject((void*)obj, (int)*(short*)(state[7] + 6), NULL, 1, -1, NULL);
-    } while (spawnCount-- != 0);
-    if (!((PollenFragmentDef*)state[7])->timed)
-    {
-        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E319C;
-    }
-    ObjHits_SetTargetMask(obj, 4);
-    ((XyzAnimatorState*)state)->unk18 = 0;
-    *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
-    ((XyzAnimatorState*)state)->rowCount = 0;
-    s16toFloatLegacy(state + 9, 0xe10);
-    storeZeroToFloatParamLegacy(state + 8);
+int pollenfragment_getExtraSize(void)
+{
+    return 0x28;
 }
 
-void pollenfragment_release(void)
+int pollenfragment_getObjectTypeId(void)
 {
-}
-
-void pollenfragment_initialise(void)
-{
+    return 0x0;
 }
 
 void pollenfragment_free(GameObject* obj)
@@ -173,15 +134,6 @@ void pollenfragment_free(GameObject* obj)
         inner[6] = 0;
     }
     (*gExpgfxInterface)->freeSource2((u32)obj);
-}
-
-int pollenfragment_getExtraSize(void)
-{
-    return 0x28;
-}
-int pollenfragment_getObjectTypeId(void)
-{
-    return 0x0;
 }
 
 void pollenfragment_render(int* obj, int p2, int p3, int p4, int p5)
@@ -228,8 +180,8 @@ void pollenfragment_hitDetect(GameObject* obj)
     }
 }
 
-#pragma opt_strength_reduction on
 #pragma opt_common_subs on
+#pragma opt_strength_reduction on
 void pollenfragment_update(int obj)
 {
     u8* extra;
@@ -382,6 +334,59 @@ void pollenfragment_update(int obj)
         s16toFloatLegacy(extra + 0x20, 0x78);
     }
 }
+
+#pragma opt_common_subs reset
+#pragma opt_strength_reduction reset
+void pollenfragment_init(GameObject* obj, int config)
+{
+    s8 pollenType;
+    u32 randomValue;
+    int spawnCount;
+    u32* state;
+
+    state = *(u32**)&(obj)->extra;
+    if (*(char*)(config + 0x19) == '\x01')
+    {
+        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E3198;
+    }
+    else
+    {
+        randomValue = randomGetRange(0xb4, 300);
+        *(float*)&((XyzAnimatorState*)state)->unk8 = (float)(int)randomValue;
+    }
+    pollenType = *(s8*)(config + 0x19);
+    pollenType = (pollenType < 0) ? 0 : ((pollenType > 5u) ? 5 : pollenType);
+    *(s8*)(config + 0x19) = pollenType;
+    state[7] = (u32)lbl_8032059C[*(char*)(config + 0x19)];
+    if ((int)*(short*)state[7] != 0)
+    {
+        Sfx_PlayFromObjectLimitedIntReturnLegacy((int)obj, (int)*(short*)state[7] & 0xffff, 3);
+    }
+    spawnCount = 4;
+    do
+    {
+        (*gPartfxInterface)->spawnObject((void*)obj, (int)*(short*)(state[7] + 6), NULL, 1, -1, NULL);
+    } while (spawnCount-- != 0);
+    if (!((PollenFragmentDef*)state[7])->timed)
+    {
+        *(float*)&((XyzAnimatorState*)state)->unk8 = lbl_803E319C;
+    }
+    ObjHits_SetTargetMask(obj, 4);
+    ((XyzAnimatorState*)state)->unk18 = 0;
+    *(f32*)&((XyzAnimatorState*)state)->vertexCount = *(f32*)(state[7] + 0xc);
+    ((XyzAnimatorState*)state)->rowCount = 0;
+    s16toFloatLegacy(state + 9, 0xe10);
+    storeZeroToFloatParamLegacy(state + 8);
+}
+
+void pollenfragment_release(void)
+{
+}
+
+void pollenfragment_initialise(void)
+{
+}
+
 #pragma opt_strength_reduction reset
 #pragma opt_common_subs reset
 

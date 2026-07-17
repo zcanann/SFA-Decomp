@@ -52,10 +52,16 @@ extern f32 lbl_803E192C;
 extern f32 lbl_803E1930;
 extern f32 lbl_803E1940;
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
-
-void CameraModeCombat_copyToCurrent(void)
-{
-}
+typedef struct {
+    u8 b0 : 1;
+    u8 b1 : 1;
+    u8 b2 : 1;
+    u8 b3 : 1;
+    u8 b4 : 1;
+    u8 b5 : 1;
+    u8 b6 : 1;
+    u8 b7 : 1;
+} CameraModeCombatFlags;
 
 void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f32* targetY)
 {
@@ -112,16 +118,10 @@ void fn_8010BF08(CameraObject* camera, float* outX, float* outY, float* outZ, f3
     }
     gCamCombatState->pathBlendTargetIndex = target->hitVolumeIndex;
 }
-typedef struct {
-    u8 b0 : 1;
-    u8 b1 : 1;
-    u8 b2 : 1;
-    u8 b3 : 1;
-    u8 b4 : 1;
-    u8 b5 : 1;
-    u8 b6 : 1;
-    u8 b7 : 1;
-} CameraModeCombatFlags;
+
+void CameraModeCombat_copyToCurrent(void)
+{
+}
 
 void CameraModeCombat_free(CameraObject* camera)
 {
@@ -472,8 +472,8 @@ void CameraModeCombat_update(short* cam)
         }
     }
 }
-#pragma opt_common_subs reset
 
+#pragma opt_common_subs reset
 void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** targetPtr)
 {
     float dx;
@@ -534,7 +534,6 @@ void CameraModeCombat_init(CameraObject* camera, u32 unused, GameObject** target
     return;
 }
 
-
 void CameraModeCombat_release(void)
 {
 }
@@ -542,6 +541,7 @@ void CameraModeCombat_release(void)
 void CameraModeCombat_initialise(void)
 {
 }
+
 
 ResourceDescriptorCallbacks8 lbl_80319CE8 = {{0x00000000,
                         0x00000000,

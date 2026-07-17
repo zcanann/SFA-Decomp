@@ -29,113 +29,7 @@ extern f32 gExplodedBounceRestitution;
 extern f32 gExplodedGravity;
 extern void fn_80065684(double x, double y, double z, void* obj, f32* out, int flags);
 
-void exploded_free(void)
-{
-}
-
-void exploded_hitDetect(void)
-{
-}
-
-void exploded_release(void)
-{
-}
-
-void exploded_initialise(void)
-{
-}
-
-int exploded_getExtraSize(void)
-{
-    return 0x6c;
-}
-
-u8 exploded_setScale(int* obj)
-{
-    return ((ExplodedObjectState*)(int*)((GameObject*)obj)->extra)->explodePhase;
-}
-
-void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43F4);
-}
-
-u32 exploded_getObjectTypeId(ExplodedObject* obj)
-{
-    return (obj->mapData->objectTypeTag << 11) | 0x400;
-}
-
-void exploded_update(int* obj)
-{
-    ExplodedObject* o = (ExplodedObject*)obj;
-    ExplodedObjectState* state = o->state;
-    u8 stateVal = state->explodePhase;
-    int flag;
-    switch (stateVal)
-    {
-    case EXPLODED_PHASE_IDLE:
-        break;
-    case EXPLODED_PHASE_ACTIVE:
-        if (exploded_stepDebrisPhysics(o, state) != 0)
-        {
-            state->explodePhase = EXPLODED_PHASE_IDLE;
-        }
-        break;
-    case EXPLODED_PHASE_EXPIRED:
-        break;
-    }
-    if (state->durationFrames != -1)
-    {
-        s32 elapsedFrames = state->elapsedFrames + framesThisStep;
-        s32 durationFrames;
-        state->elapsedFrames = elapsedFrames;
-        durationFrames = state->durationFrames;
-        if (elapsedFrames >= durationFrames)
-        {
-            state->durationFrames = -1;
-            o->alpha = 0;
-            o->flags06 = (s16)(o->flags06 | 0x4000);
-            flag = 1;
-            goto check;
-        }
-        else
-        {
-            s32 remainingFrames = durationFrames - state->elapsedFrames;
-            if (remainingFrames < 0xff)
-            {
-                o->alpha = remainingFrames;
-            }
-        }
-    }
-    flag = 0;
-check:
-    if (flag != 0)
-    {
-        state->explodePhase = EXPLODED_PHASE_EXPIRED;
-    }
-}
-
-/* exploded_init: store the map object tag, scale the model using the map
- * byte, then enable physics if any initial velocity/acceleration is present. */
-void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
-{
-    ExplodedObjectState* state;
-    obj->objectTypeTag = data->objectTypeTag;
-    state = obj->state;
-    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
-    exploded_initDebrisState(obj, data, extra, state);
-    if (data->initialVelocityX != 0 || data->initialVelocityY != 0 || data->initialVelocityZ != 0 ||
-        data->accelerationX != 0 || data->accelerationY != 0 || data->accelerationZ != 0)
-    {
-        state->explodePhase = EXPLODED_PHASE_ACTIVE;
-    }
-    else
-    {
-        state->explodePhase = EXPLODED_PHASE_IDLE;
-    }
-}
+void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, ExplodedObjectMapData* data);
 
 void exploded_initDebrisState(ExplodedObject* obj, ExplodedObjectMapData* data, int computeModelCenter,
                               ExplodedObjectState* state)
@@ -243,6 +137,36 @@ void exploded_seedDebrisMotion(ExplodedObject* obj, ExplodedObjectState* state, 
     }
 }
 
+u8 exploded_setScale(int* obj)
+{
+    return ((ExplodedObjectState*)(int*)((GameObject*)obj)->extra)->explodePhase;
+}
+
+int exploded_getExtraSize(void)
+{
+    return 0x6c;
+}
+
+u32 exploded_getObjectTypeId(ExplodedObject* obj)
+{
+    return (obj->mapData->objectTypeTag << 11) | 0x400;
+}
+
+void exploded_free(void)
+{
+}
+
+void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E43F4);
+}
+
+void exploded_hitDetect(void)
+{
+}
+
 /* Exploded debris physics step: integrate local velocity and spin, bounce from
  * the stored floor height, and return nonzero once the shard comes to rest. */
 int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
@@ -322,3 +246,82 @@ int exploded_stepDebrisPhysics(ExplodedObject* obj, ExplodedObjectState* state)
     obj->z = obj->velocityZ * timeDelta + obj->z;
     return stopped;
 }
+
+void exploded_update(int* obj)
+{
+    ExplodedObject* o = (ExplodedObject*)obj;
+    ExplodedObjectState* state = o->state;
+    u8 stateVal = state->explodePhase;
+    int flag;
+    switch (stateVal)
+    {
+    case EXPLODED_PHASE_IDLE:
+        break;
+    case EXPLODED_PHASE_ACTIVE:
+        if (exploded_stepDebrisPhysics(o, state) != 0)
+        {
+            state->explodePhase = EXPLODED_PHASE_IDLE;
+        }
+        break;
+    case EXPLODED_PHASE_EXPIRED:
+        break;
+    }
+    if (state->durationFrames != -1)
+    {
+        s32 elapsedFrames = state->elapsedFrames + framesThisStep;
+        s32 durationFrames;
+        state->elapsedFrames = elapsedFrames;
+        durationFrames = state->durationFrames;
+        if (elapsedFrames >= durationFrames)
+        {
+            state->durationFrames = -1;
+            o->alpha = 0;
+            o->flags06 = (s16)(o->flags06 | 0x4000);
+            flag = 1;
+            goto check;
+        }
+        else
+        {
+            s32 remainingFrames = durationFrames - state->elapsedFrames;
+            if (remainingFrames < 0xff)
+            {
+                o->alpha = remainingFrames;
+            }
+        }
+    }
+    flag = 0;
+check:
+    if (flag != 0)
+    {
+        state->explodePhase = EXPLODED_PHASE_EXPIRED;
+    }
+}
+
+/* exploded_init: store the map object tag, scale the model using the map
+ * byte, then enable physics if any initial velocity/acceleration is present. */
+void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra)
+{
+    ExplodedObjectState* state;
+    obj->objectTypeTag = data->objectTypeTag;
+    state = obj->state;
+    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
+    exploded_initDebrisState(obj, data, extra, state);
+    if (data->initialVelocityX != 0 || data->initialVelocityY != 0 || data->initialVelocityZ != 0 ||
+        data->accelerationX != 0 || data->accelerationY != 0 || data->accelerationZ != 0)
+    {
+        state->explodePhase = EXPLODED_PHASE_ACTIVE;
+    }
+    else
+    {
+        state->explodePhase = EXPLODED_PHASE_IDLE;
+    }
+}
+
+void exploded_release(void)
+{
+}
+
+void exploded_initialise(void)
+{
+}
+

@@ -82,6 +82,7 @@ ObjectDescriptor gLightFootObjDescriptor = {
     (ObjectDescriptorExtraSizeCallback)lightfoot_getExtraSize,
 };
 
+
 int lightfoot_getExtraSize(void)
 {
     return 0x440;
@@ -90,42 +91,6 @@ int lightfoot_getExtraSize(void)
 int lightfoot_getObjectTypeId(void)
 {
     return 0x14b;
-}
-
-void lightfoot_hitDetect(void)
-{
-}
-
-void lightfoot_release(void)
-{
-}
-
-void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
-{
-    s32 v = visible;
-    if (v != 0)
-    {
-        switch (((GameObject*)p1)->userData1)
-        {
-        case 0:
-            objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8188);
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void lightfoot_initialise(void)
-{
-    lbl_803DB0DC[0] = (int)Lightfoot_UpdateAnimationCycle;
-    lbl_803DB0DC[1] = (int)Lightfoot_UpdateButtonTimingChallenge;
-    lbl_803DB0DC[2] = (int)Lightfoot_UpdateTargetAnimationCycle;
-    lbl_803DB0DC[3] = (int)Lightfoot_UpdateRandomTurn;
-    lbl_803DB0DC[4] = (int)Lightfoot_UpdateWanderSteering;
-    lbl_803DB0D0[0] = (int)Lightfoot_UpdateChallengeGateInteraction;
-    lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
-    lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
 
 void lightfoot_free(GameObject* obj, int flag)
@@ -149,6 +114,26 @@ void lightfoot_free(GameObject* obj, int flag)
         }
     }
     (*(void (*)(int, int, int))(*(int*)(*gBaddieControlInterface + 0x40)))((int)obj, inner, 0x20);
+}
+
+void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+    s32 v = visible;
+    if (v != 0)
+    {
+        switch (((GameObject*)p1)->userData1)
+        {
+        case 0:
+            objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E8188);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void lightfoot_hitDetect(void)
+{
 }
 
 void lightfoot_update(GameObject* obj)
@@ -462,3 +447,20 @@ void lightfoot_init(GameObject* obj, int def, int flag)
         ObjHits_DisableObject((u32)obj);
     }
 }
+
+void lightfoot_release(void)
+{
+}
+
+void lightfoot_initialise(void)
+{
+    lbl_803DB0DC[0] = (int)Lightfoot_UpdateAnimationCycle;
+    lbl_803DB0DC[1] = (int)Lightfoot_UpdateButtonTimingChallenge;
+    lbl_803DB0DC[2] = (int)Lightfoot_UpdateTargetAnimationCycle;
+    lbl_803DB0DC[3] = (int)Lightfoot_UpdateRandomTurn;
+    lbl_803DB0DC[4] = (int)Lightfoot_UpdateWanderSteering;
+    lbl_803DB0D0[0] = (int)Lightfoot_UpdateChallengeGateInteraction;
+    lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
+    lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
+}
+

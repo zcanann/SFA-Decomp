@@ -110,22 +110,6 @@ ObjectDescriptor13 gAppleOnTreeObjDescriptor = {
     (ObjectDescriptorCallback)AppleOnTree_modelMtxFn,
 };
 
-static inline void appleontree_markFallen(GameObject* obj)
-{
-    int state = *(int*)&(obj)->extra;
-    if (((obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
-    {
-        Obj_FreeObject(obj);
-    }
-    else
-    {
-        if ((obj)->anim.hitReactState != NULL)
-        {
-            ObjHits_DisableObject((int)obj);
-        }
-        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
-    }
-}
 
 void AppleOnTree_setPosition(GameObject* obj, float* pos)
 {
@@ -148,63 +132,20 @@ void AppleOnTree_setPosition(GameObject* obj, float* pos)
     obj->anim.localPosZ = pos[2];
 }
 
-/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
- * range, either send a trigger event (first contact) or apply healing +
- * particle FX + sfx + free-or-disable. */
-void appleontree_handleCollectableHit(GameObject* obj)
+static inline void appleontree_markFallen(GameObject* obj)
 {
-    int state = *(int*)&obj->extra;
-    GameObject* player = Obj_GetPlayerObject();
-
-    if (!(Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
-        return;
-    if (!(Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupRange))
-        return;
-
-    if (mainGetBit(GAMEBIT_SawApple) == 0)
+    int state = *(int*)&(obj)->extra;
+    if (((obj)->anim.flags & OBJANIM_FLAG_OWNS_PLACEMENT_DATA) != 0)
     {
-        (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
-        ((AppleOnTreeState*)state)->triggerGameBit = -1;
-        ((AppleOnTreeState*)state)->pickupMsgValue = 0;
-        ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
-        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
-        mainSetBits(GAMEBIT_SawApple, 1);
-        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
+        Obj_FreeObject(obj);
     }
     else
     {
-        playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
-        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
-        Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
-        appleontree_markFallen(obj);
-    }
-}
-
-void AppleOnTree_setScale(void)
-{
-}
-
-int AppleOnTree_getExtraSize(void)
-{
-    return 0x64;
-}
-
-u8 AppleOnTree_modelMtxFn(int* obj)
-{
-    return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState;
-}
-
-void AppleOnTree_free(int* obj)
-{
-    (*gExpgfxInterface)->freeSource((u32)obj);
-}
-
-void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
-{
-    AppleOnTreeState* inner = ((GameObject*)obj)->extra;
-    if ((inner->flags & 2) == 0)
-    {
-        objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, lbl_803E37C8);
+        if ((obj)->anim.hitReactState != NULL)
+        {
+            ObjHits_DisableObject((int)obj);
+        }
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 2);
     }
 }
 
@@ -311,7 +252,67 @@ void fn_8017D854(GameObject* obj, int msg)
         }
     }
 }
+
 #pragma opt_lifetimes reset
+/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
+ * range, either send a trigger event (first contact) or apply healing +
+ * particle FX + sfx + free-or-disable. */
+void appleontree_handleCollectableHit(GameObject* obj)
+{
+    int state = *(int*)&obj->extra;
+    GameObject* player = Obj_GetPlayerObject();
+
+    if (!(Vec_xzDistance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupXZRange))
+        return;
+    if (!(Vec_distance(&player->anim.worldPosX, &obj->anim.worldPosX) < gAppleOnTreePickupRange))
+        return;
+
+    if (mainGetBit(GAMEBIT_SawApple) == 0)
+    {
+        (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
+        ((AppleOnTreeState*)state)->triggerGameBit = -1;
+        ((AppleOnTreeState*)state)->pickupMsgValue = 0;
+        ((AppleOnTreeState*)state)->unk60 = lbl_803E37C8;
+        ObjMsg_SendToObject(player, APPLEONTREE_MSG_IN_RANGE, obj, state + 0x5c);
+        mainSetBits(GAMEBIT_SawApple, 1);
+        ((AppleOnTreeState*)state)->flags = (u8)(((AppleOnTreeState*)state)->flags | 4);
+    }
+    else
+    {
+        playerAddHealth(player, ((AppleOnTreeState*)state)->healthRestore);
+        itemPickupDoParticleFxLegacy((int)obj, lbl_803E37C8, 0xff, 0x28);
+        Sfx_PlayFromObject((int)obj, SFXTRIG_cam90_c);
+        appleontree_markFallen(obj);
+    }
+}
+
+u8 AppleOnTree_modelMtxFn(int* obj)
+{
+    return ((AppleOnTreeState*)(int*)((GameObject*)obj)->extra)->animState;
+}
+
+void AppleOnTree_setScale(void)
+{
+}
+
+int AppleOnTree_getExtraSize(void)
+{
+    return 0x64;
+}
+
+void AppleOnTree_free(int* obj)
+{
+    (*gExpgfxInterface)->freeSource((u32)obj);
+}
+
+void AppleOnTree_render(int obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    AppleOnTreeState* inner = ((GameObject*)obj)->extra;
+    if ((inner->flags & 2) == 0)
+    {
+        objRenderModelAndHitVolumesFwdLegacy(obj, p1, p2, p3, p4, lbl_803E37C8);
+    }
+}
 
 int fn_8017DCD4(GameObject* obj, int state, f32 y)
 {
@@ -824,7 +825,6 @@ void AppleOnTree_update(int objArg)
 switchD_8017e864_caseD_7:
     return;
 }
-#pragma inline_max_size reset
 
 void AppleOnTree_init(int obj, int def)
 {
@@ -905,6 +905,7 @@ void AppleOnTree_init(int obj, int def)
         ObjMsg_AllocQueue((void*)obj, 2);
     }
 }
+
 
 ObjectDescriptor gDllFCObjDescriptor = {
     0,

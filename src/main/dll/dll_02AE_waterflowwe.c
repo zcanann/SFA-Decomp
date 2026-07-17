@@ -37,6 +37,8 @@ GameObject* gWaterFlowPhaseDriver;
 #define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED     0x02
 #define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
 
+
+
 #pragma opt_dead_assignments off
 void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
 {
@@ -146,8 +148,8 @@ void waterflowwe_calcCurrentVector(GameObject* obj, f32* vx, f32* vz)
         *vz = zero;
     }
 }
-#pragma opt_dead_assignments reset
 
+#pragma opt_dead_assignments reset
 int waterflowwe_getExtraSize(void)
 {
     return sizeof(WaterFlowWeState);
@@ -156,27 +158,6 @@ int waterflowwe_getExtraSize(void)
 int waterflowwe_getObjectTypeId(void)
 {
     return 0;
-}
-
-void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
-{
-    GameObject* object = obj;
-    WaterFlowWeSetup* setupData = setup;
-
-    object->anim.rotZ = (s16)(setupData->rotZ << 8);
-    object->anim.rotY = (s16)(setupData->rotY << 8);
-    object->anim.rotX = (s16)(setupData->rotX << 8);
-    if (setupData->scale != 0)
-    {
-        object->anim.rootMotionScale = (f32)(u32)setupData->scale / gWaterFlowScaleDivisor;
-        if (object->anim.rootMotionScale == lbl_803E72B0)
-        {
-            object->anim.rootMotionScale = lbl_803E72E8;
-        }
-        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
-    }
-    object->objectFlags = (u16)(object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT);
-    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72B0, 0);
 }
 
 void waterflowwe_free(GameObject* obj)
@@ -240,6 +221,27 @@ void waterflowwe_update(GameObject* obj)
     }
 }
 
+void waterflowwe_init(GameObject* obj, WaterFlowWeSetup* setup)
+{
+    GameObject* object = obj;
+    WaterFlowWeSetup* setupData = setup;
+
+    object->anim.rotZ = (s16)(setupData->rotZ << 8);
+    object->anim.rotY = (s16)(setupData->rotY << 8);
+    object->anim.rotX = (s16)(setupData->rotX << 8);
+    if (setupData->scale != 0)
+    {
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / gWaterFlowScaleDivisor;
+        if (object->anim.rootMotionScale == lbl_803E72B0)
+        {
+            object->anim.rootMotionScale = lbl_803E72E8;
+        }
+        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
+    }
+    object->objectFlags = (u16)(object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT);
+    ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E72B0, 0);
+}
+
 void waterflowwe_release(void)
 {
 }
@@ -250,6 +252,7 @@ void waterflowwe_initialise(void)
     gWaterFlowIdlePhase = lbl_803E72B0;
     gWaterFlowFlowPhase = lbl_803E72B0;
 }
+
 
 ObjectDescriptor gWaterFlowWeObjDescriptor = {
     0,

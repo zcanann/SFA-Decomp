@@ -62,6 +62,8 @@ int gDIMSnowHorn1StateHandlers[12];
 #define SNOWHORN1_FLAG_HITVOL_PRIO   0x8  /* suppress hit-volume priority this frame */
 #define SNOWHORN1_FLAG_SEQ_TRIGGERED 0x20 /* interaction sequence armed */
 
+
+
 void DIMSnowHorn1_func23(void)
 {
 }
@@ -69,189 +71,6 @@ void DIMSnowHorn1_func23(void)
 int DIMSnowHorn1_defaultStateHandler(void)
 {
     return 0x0;
-}
-
-int DIMSnowHorn1_stateHandler04(GameObject* obj, int state)
-{
-    f32 k = lbl_803E8234;
-    int idx;
-
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    (obj)->anim.velocityX = k;
-    (obj)->anim.velocityY = k;
-    (obj)->anim.velocityZ = k;
-    *(u32*)((char*)state) |= 0x200000;
-
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
-    {
-        idx = randomGetRange(0, 1);
-        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
-        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
-    }
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
-    {
-        return -2;
-    }
-    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-    {
-        (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
-        buttonDisable(0, PAD_BUTTON_A);
-    }
-    return 0;
-}
-
-int DIMSnowHorn1_stateHandler00(GameObject* obj)
-{
-    DIMSnowHorn1State* inner = obj->extra;
-
-    switch (inner->mode)
-    {
-    case 0:
-        if (mainGetBit(0xf3))
-        {
-            inner->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
-        }
-        return 2;
-    case 5:
-        return 3;
-    case 4:
-        if (mainGetBit(0x1db))
-            return 8;
-        return 6;
-    case 1:
-        if (mainGetBit(GAMEBIT_ITEM_DIMAlpineRoot_16F))
-            return 8;
-        if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028))
-            return 7;
-        if (mainGetBit(GAMEBIT_DIM_FoundInjuredSnowHorn))
-            return 7;
-        return 6;
-    case 3:
-        return 8;
-    default:
-        return 8;
-    }
-}
-
-int DIMSnowHorn1_stateHandler02(GameObject* obj, int state, f32 fv)
-{
-    DIMSnowHorn1State* inner = (obj)->extra;
-    f32 k = lbl_803E8234;
-    s16 timer;
-
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    (obj)->anim.velocityX = k;
-    (obj)->anim.velocityY = k;
-    (obj)->anim.velocityZ = k;
-    *(u32*)((char*)state) |= 0x200000;
-    ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
-
-    if ((obj)->anim.currentMove != lbl_803DC748)
-    {
-        ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
-    }
-
-    inner->countdownTimer = randomGetRange(0x4b0, 0x960);
-    timer = inner->countdownTimer - (int)fv;
-    inner->countdownTimer = timer;
-    if (timer <= 0)
-    {
-        return -4;
-    }
-    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-    {
-        (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
-        buttonDisable(0, PAD_BUTTON_A);
-    }
-    return 0;
-}
-
-int DIMSnowHorn1_stateHandler03(GameObject* obj, int state)
-{
-    DIMSnowHorn1State* inner = (obj)->extra;
-    f32 k = lbl_803E8234;
-    int idx;
-
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    (obj)->anim.velocityX = k;
-    (obj)->anim.velocityY = k;
-    (obj)->anim.velocityZ = k;
-    *(u32*)((char*)state) |= 0x200000;
-
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
-    {
-        idx = randomGetRange(0, 1);
-        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
-        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
-    }
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
-    {
-        return -1;
-    }
-    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-    {
-        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
-        {
-            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
-        }
-        else
-        {
-            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-        }
-        buttonDisable(0, PAD_BUTTON_A);
-    }
-    return 0;
-}
-
-int DIMSnowHorn1_stateHandler01(GameObject* obj, int state, f32 fv)
-{
-    DIMSnowHorn1State* inner = (obj)->extra;
-    f32 k = lbl_803E8234;
-    s16 timer;
-
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
-    (obj)->anim.velocityX = k;
-    (obj)->anim.velocityY = k;
-    (obj)->anim.velocityZ = k;
-    *(u32*)((char*)state) |= 0x200000;
-
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
-    {
-        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
-        if ((obj)->anim.currentMove != lbl_803DC748)
-        {
-            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
-        }
-        inner->countdownTimer = randomGetRange(0x4b0, 0x960);
-    }
-
-    timer = inner->countdownTimer - (int)fv;
-    inner->countdownTimer = timer;
-    if (timer <= 0)
-    {
-        return -3;
-    }
-    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-    {
-        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
-        {
-            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
-        }
-        else
-        {
-            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
-        }
-        buttonDisable(0, PAD_BUTTON_A);
-    }
-    return 0;
 }
 
 int DIMSnowHorn1_stateHandler0B(GameObject* obj, int state)
@@ -299,6 +118,153 @@ int DIMSnowHorn1_stateHandler0B(GameObject* obj, int state)
     if ((obj)->anim.currentMoveProgress > lbl_803E823C)
     {
         return 8;
+    }
+    return 0;
+}
+
+int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
+{
+    int near;
+    DIMSnowHorn1State* inner;
+    int phase;
+    int moveIdx;
+    int changed;
+    int useNormal;
+    f32 speed;
+    f32 target;
+    f32 f2;
+    f32 blend;
+    f32 nearDist;
+
+    nearDist = lbl_803E8240;
+    near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
+    inner = (obj)->extra;
+    if (mainGetBit(GAMEBIT_SNOWHORN_RIDING) != 0)
+    {
+        if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
+        {
+            Sfx_PlayFromObject((int)obj, SFXTRIG_hightop_call1);
+        }
+    }
+    *(int*)((char*)state + 0) |= 0x200000;
+    if (((DIMSnowHorn1State*)state)->baddie.inputMagnitude < lbl_803E824C)
+    {
+        *(s16*)((char*)state + 0x334) = 0;
+        ((DIMSnowHorn1State*)state)->baddie.turnRate = 0;
+        ((DIMSnowHorn1State*)state)->baddie.inputMagnitude = lbl_803E8234;
+    }
+    if (*(s16*)((char*)state + 0x334) < 0x5a)
+    {
+        (obj)->anim.rotX =
+            lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
+            (f32)(s16) * &(obj)->anim.rotX;
+    }
+    else
+    {
+        return 8;
+    }
+
+    speed = ((DIMSnowHorn1State*)state)->baddie.inputMagnitude;
+    if (speed < *(f32*)&lbl_803E8234)
+    {
+        speed = lbl_803E8234;
+    }
+    if (speed > lbl_803E8258)
+    {
+        speed = lbl_803E8258;
+    }
+    if (inner->airMeterValue == 0)
+    {
+        speed = lbl_803E8234;
+    }
+    target = lbl_803E825C * speed;
+    if (target < lbl_803E8234)
+    {
+        target = lbl_803E8234;
+    }
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = t * ((target - ((DIMSnowHorn1State*)state)->baddie.animSpeedC) /
+                                                          ((DIMSnowHorn1State*)state)->baddie.velSmoothTime) +
+                                                     ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
+
+    if ((obj)->anim.rotY > 0)
+    {
+        target = target - lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
+    }
+    else
+    {
+        target = target - lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
+    }
+    if (target < lbl_80335128[2])
+    {
+        target = lbl_80335128[2];
+    }
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = t * ((target - ((DIMSnowHorn1State*)state)->baddie.animSpeedA) /
+                                                          ((DIMSnowHorn1State*)state)->baddie.velSmoothTime) +
+                                                     ((DIMSnowHorn1State*)state)->baddie.animSpeedA;
+
+    changed = 0;
+    blend = (obj)->anim.currentMoveProgress;
+    phase = 0;
+    while ((&lbl_803DC748)[phase] != (obj)->anim.currentMove && phase < 2)
+    {
+        phase++;
+    }
+    if (phase >= 2)
+    {
+        phase = 0;
+    }
+    if ((obj)->anim.currentMove == 0x208)
+    {
+        phase = 1;
+    }
+
+    f2 = ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
+    moveIdx = phase * 2;
+    if (f2 < lbl_80335128[moveIdx])
+    {
+        if (phase == 1)
+        {
+            return 8;
+        }
+        phase--;
+        changed = 1;
+    }
+    else if (f2 >= lbl_80335128[moveIdx + 1])
+    {
+        if (phase == 0)
+        {
+            blend = lbl_803E8234;
+        }
+        phase++;
+        changed = 1;
+    }
+
+    useNormal = 1;
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && (obj)->anim.currentMove == 0x208)
+    {
+        changed = 1;
+        useNormal = 0;
+    }
+    if (changed != 0)
+    {
+        if (phase == 1 && useNormal != 0)
+        {
+            ObjAnim_SetCurrentMove((int)obj, 0x208, blend, 0);
+        }
+        else
+        {
+            ObjAnim_SetCurrentMove((int)obj, (&lbl_803DC748)[phase], blend, 0);
+        }
+    }
+
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
+        (int)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
+    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A) != 0)
+    {
+        if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        {
+            return 0xc;
+        }
     }
     return 0;
 }
@@ -670,246 +636,187 @@ int DIMSnowHorn1_stateHandler05(GameObject* obj, int state)
     return 0;
 }
 
-int DIMSnowHorn1_stateHandler0A(GameObject* obj, int state, f32 t)
+int DIMSnowHorn1_stateHandler04(GameObject* obj, int state)
 {
-    int near;
-    DIMSnowHorn1State* inner;
-    int phase;
-    int moveIdx;
-    int changed;
-    int useNormal;
-    f32 speed;
-    f32 target;
-    f32 f2;
-    f32 blend;
-    f32 nearDist;
+    f32 k = lbl_803E8234;
+    int idx;
 
-    nearDist = lbl_803E8240;
-    near = ObjGroup_FindNearestObject(OBJGROUP_SNOWHORN_PUZZLE, obj, &nearDist);
-    inner = (obj)->extra;
-    if (mainGetBit(GAMEBIT_SNOWHORN_RIDING) != 0)
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
+    *(u32*)((char*)state) |= 0x200000;
+
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
     {
-        if (RandomTimer_UpdateRangeTrigger((char*)inner + 0xd04, lbl_803E8244, lbl_803E8248) != 0)
+        idx = randomGetRange(0, 1);
+        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+    }
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
+    {
+        return -2;
+    }
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    {
+        (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
+        buttonDisable(0, PAD_BUTTON_A);
+    }
+    return 0;
+}
+
+int DIMSnowHorn1_stateHandler03(GameObject* obj, int state)
+{
+    DIMSnowHorn1State* inner = (obj)->extra;
+    f32 k = lbl_803E8234;
+    int idx;
+
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
+    *(u32*)((char*)state) |= 0x200000;
+
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
+    {
+        idx = randomGetRange(0, 1);
+        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803DC740[idx];
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC73C[idx], lbl_803E8234, 0);
+    }
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0)
+    {
+        return -1;
+    }
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    {
+        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
         {
-            Sfx_PlayFromObject((int)obj, SFXTRIG_hightop_call1);
-        }
-    }
-    *(int*)((char*)state + 0) |= 0x200000;
-    if (((DIMSnowHorn1State*)state)->baddie.inputMagnitude < lbl_803E824C)
-    {
-        *(s16*)((char*)state + 0x334) = 0;
-        ((DIMSnowHorn1State*)state)->baddie.turnRate = 0;
-        ((DIMSnowHorn1State*)state)->baddie.inputMagnitude = lbl_803E8234;
-    }
-    if (*(s16*)((char*)state + 0x334) < 0x5a)
-    {
-        (obj)->anim.rotX =
-            lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State*)state)->baddie.turnRate * t / lbl_803E8254) +
-            (f32)(s16) * &(obj)->anim.rotX;
-    }
-    else
-    {
-        return 8;
-    }
-
-    speed = ((DIMSnowHorn1State*)state)->baddie.inputMagnitude;
-    if (speed < *(f32*)&lbl_803E8234)
-    {
-        speed = lbl_803E8234;
-    }
-    if (speed > lbl_803E8258)
-    {
-        speed = lbl_803E8258;
-    }
-    if (inner->airMeterValue == 0)
-    {
-        speed = lbl_803E8234;
-    }
-    target = lbl_803E825C * speed;
-    if (target < lbl_803E8234)
-    {
-        target = lbl_803E8234;
-    }
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = t * ((target - ((DIMSnowHorn1State*)state)->baddie.animSpeedC) /
-                                                          ((DIMSnowHorn1State*)state)->baddie.velSmoothTime) +
-                                                     ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
-
-    if ((obj)->anim.rotY > 0)
-    {
-        target = target - lbl_803E8260 * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
-    }
-    else
-    {
-        target = target - lbl_803E826C * mathSinf(lbl_803E8264 * (f32)(s16) * &(obj)->anim.rotY / lbl_803E8268);
-    }
-    if (target < lbl_80335128[2])
-    {
-        target = lbl_80335128[2];
-    }
-    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = t * ((target - ((DIMSnowHorn1State*)state)->baddie.animSpeedA) /
-                                                          ((DIMSnowHorn1State*)state)->baddie.velSmoothTime) +
-                                                     ((DIMSnowHorn1State*)state)->baddie.animSpeedA;
-
-    changed = 0;
-    blend = (obj)->anim.currentMoveProgress;
-    phase = 0;
-    while ((&lbl_803DC748)[phase] != (obj)->anim.currentMove && phase < 2)
-    {
-        phase++;
-    }
-    if (phase >= 2)
-    {
-        phase = 0;
-    }
-    if ((obj)->anim.currentMove == 0x208)
-    {
-        phase = 1;
-    }
-
-    f2 = ((DIMSnowHorn1State*)state)->baddie.animSpeedC;
-    moveIdx = phase * 2;
-    if (f2 < lbl_80335128[moveIdx])
-    {
-        if (phase == 1)
-        {
-            return 8;
-        }
-        phase--;
-        changed = 1;
-    }
-    else if (f2 >= lbl_80335128[moveIdx + 1])
-    {
-        if (phase == 0)
-        {
-            blend = lbl_803E8234;
-        }
-        phase++;
-        changed = 1;
-    }
-
-    useNormal = 1;
-    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveDone != 0 && (obj)->anim.currentMove == 0x208)
-    {
-        changed = 1;
-        useNormal = 0;
-    }
-    if (changed != 0)
-    {
-        if (phase == 1 && useNormal != 0)
-        {
-            ObjAnim_SetCurrentMove((int)obj, 0x208, blend, 0);
+            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
         }
         else
         {
-            ObjAnim_SetCurrentMove((int)obj, (&lbl_803DC748)[phase], blend, 0);
+            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
         }
+        buttonDisable(0, PAD_BUTTON_A);
+    }
+    return 0;
+}
+
+int DIMSnowHorn1_stateHandler02(GameObject* obj, int state, f32 fv)
+{
+    DIMSnowHorn1State* inner = (obj)->extra;
+    f32 k = lbl_803E8234;
+    s16 timer;
+
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
+    *(u32*)((char*)state) |= 0x200000;
+    ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
+
+    if ((obj)->anim.currentMove != lbl_803DC748)
+    {
+        ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
     }
 
-    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-        (int)obj, ((DIMSnowHorn1State*)state)->baddie.animSpeedA, &((DIMSnowHorn1State*)state)->baddie.moveSpeed);
-    if ((*(int*)&((DIMSnowHorn1State*)state)->baddie.unk31C & PAD_BUTTON_A) != 0)
+    inner->countdownTimer = randomGetRange(0x4b0, 0x960);
+    timer = inner->countdownTimer - (int)fv;
+    inner->countdownTimer = timer;
+    if (timer <= 0)
     {
-        if ((void*)near == NULL || (*(u8*)&((GameObject*)near)->anim.resetHitboxMode & INTERACT_FLAG_IN_RANGE) == 0)
+        return -4;
+    }
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    {
+        (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
+        buttonDisable(0, PAD_BUTTON_A);
+    }
+    return 0;
+}
+
+int DIMSnowHorn1_stateHandler01(GameObject* obj, int state, f32 fv)
+{
+    DIMSnowHorn1State* inner = (obj)->extra;
+    f32 k = lbl_803E8234;
+    s16 timer;
+
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedC = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedB = k;
+    ((DIMSnowHorn1State*)state)->baddie.animSpeedA = k;
+    (obj)->anim.velocityX = k;
+    (obj)->anim.velocityY = k;
+    (obj)->anim.velocityZ = k;
+    *(u32*)((char*)state) |= 0x200000;
+
+    if (*(s8*)&((DIMSnowHorn1State*)state)->baddie.moveJustStartedA != 0)
+    {
+        ((DIMSnowHorn1State*)state)->baddie.moveSpeed = lbl_803E827C;
+        if ((obj)->anim.currentMove != lbl_803DC748)
         {
-            return 0xc;
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DC748, k, 0);
         }
+        inner->countdownTimer = randomGetRange(0x4b0, 0x960);
+    }
+
+    timer = inner->countdownTimer - (int)fv;
+    inner->countdownTimer = timer;
+    if (timer <= 0)
+    {
+        return -3;
+    }
+    if (*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+    {
+        if (inner->flags & SNOWHORN1_FLAG_SEQ_TRIGGERED)
+        {
+            (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 2) + 6, (void*)obj, -1);
+        }
+        else
+        {
+            (*gObjectTriggerInterface)->runSequence(5, (void*)obj, -1);
+        }
+        buttonDisable(0, PAD_BUTTON_A);
     }
     return 0;
 }
 
-void DIMSnowHorn1_func21(void)
+int DIMSnowHorn1_stateHandler00(GameObject* obj)
 {
-}
+    DIMSnowHorn1State* inner = obj->extra;
 
-int DIMSnowHorn1_func20(void)
-{
-    return 0;
-}
-
-f32 DIMSnowHorn1_func19(GameObject* obj, f32* out)
-{
-    DIMSnowHorn1State* state = obj->extra;
-    if (state->baddie.controlMode == 0xa)
+    switch (inner->mode)
     {
-        *out = -state->baddie.moveSpeed;
-    }
-    else
-    {
-        *out = lbl_803E827C;
-    }
-    return lbl_803E8234;
-}
-
-void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
-{
-    (void)unused;
-    *out_f = lbl_803E8234;
-    *out_i = 0;
-}
-
-void DIMSnowHorn1_setMountMode(GameObject* obj, int value)
-{
-    u8 mode = (u8)value;
-    ((DIMSnowHorn1State*)obj->extra)->mountMode = mode;
-}
-
-int DIMSnowHorn1_func16(void)
-{
-    return 0;
-}
-
-void DIMSnowHorn1_func15(s16* packed, f32* outX, f32* outY, f32* outZ)
-{
-    MatrixTransform transform;
-    f32 matrix[16];
-
-    transform.x = *(f32*)(packed + 6);
-    transform.y = *(f32*)(packed + 8);
-    transform.z = *(f32*)(packed + 10);
-    transform.rotX = packed[0];
-    transform.rotY = packed[1];
-    transform.rotZ = packed[2];
-    transform.scale = lbl_803E8258;
-    setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E8298, lbl_803E829C, outX, outY, outZ);
-}
-
-int DIMSnowHorn1_func14(GameObject* obj)
-{
-    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA8F != 0)
-    {
+    case 0:
+        if (mainGetBit(0xf3))
+        {
+            inner->flags |= SNOWHORN1_FLAG_SEQ_TRIGGERED;
+        }
         return 2;
+    case 5:
+        return 3;
+    case 4:
+        if (mainGetBit(0x1db))
+            return 8;
+        return 6;
+    case 1:
+        if (mainGetBit(GAMEBIT_ITEM_DIMAlpineRoot_16F))
+            return 8;
+        if (mainGetBit(GAMEBIT_ITEM_AlpineRoot_028))
+            return 7;
+        if (mainGetBit(GAMEBIT_DIM_FoundInjuredSnowHorn))
+            return 7;
+        return 6;
+    case 3:
+        return 8;
+    default:
+        return 8;
     }
-    return 1;
-}
-
-int DIMSnowHorn1_render2(GameObject* obj)
-{
-    DIMSnowHorn1State* state = obj->extra;
-    if ((state->flags & SNOWHORN1_FLAG_RIDING) != 0)
-    {
-        mainSetBits(GAMEBIT_SNOWHORN_RIDING, 0);
-        state->flags = (u8)(state->flags & ~SNOWHORN1_FLAG_RIDING);
-        return 1;
-    }
-    return 0;
-}
-
-void DIMSnowHorn1_modelMtxFn(GameObject* obj, f32* out_x, f32* out_y, f32* out_z)
-{
-    DIMSnowHorn1State* state = obj->extra;
-    *out_x = state->pathPosX;
-    *out_y = state->pathPosY;
-    *out_z = state->pathPosZ;
-}
-
-int DIMSnowHorn1_func11(GameObject* obj)
-{
-    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA90 != 0)
-    {
-        return 1;
-    }
-    return 2;
 }
 
 int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState* animUpdate)
@@ -1011,6 +918,101 @@ void DIMSnowHorn1_func22(GameObject* obj, f32 scale)
     fn_8003B950(gDIMSnowHorn1ModelMtx);
 }
 
+void DIMSnowHorn1_func21(void)
+{
+}
+
+int DIMSnowHorn1_func20(void)
+{
+    return 0;
+}
+
+f32 DIMSnowHorn1_func19(GameObject* obj, f32* out)
+{
+    DIMSnowHorn1State* state = obj->extra;
+    if (state->baddie.controlMode == 0xa)
+    {
+        *out = -state->baddie.moveSpeed;
+    }
+    else
+    {
+        *out = lbl_803E827C;
+    }
+    return lbl_803E8234;
+}
+
+void DIMSnowHorn1_func18(void* unused, f32* out_f, int* out_i)
+{
+    (void)unused;
+    *out_f = lbl_803E8234;
+    *out_i = 0;
+}
+
+void DIMSnowHorn1_setMountMode(GameObject* obj, int value)
+{
+    u8 mode = (u8)value;
+    ((DIMSnowHorn1State*)obj->extra)->mountMode = mode;
+}
+
+int DIMSnowHorn1_func16(void)
+{
+    return 0;
+}
+
+void DIMSnowHorn1_func15(s16* packed, f32* outX, f32* outY, f32* outZ)
+{
+    MatrixTransform transform;
+    f32 matrix[16];
+
+    transform.x = *(f32*)(packed + 6);
+    transform.y = *(f32*)(packed + 8);
+    transform.z = *(f32*)(packed + 10);
+    transform.rotX = packed[0];
+    transform.rotY = packed[1];
+    transform.rotZ = packed[2];
+    transform.scale = lbl_803E8258;
+    setMatrixFromObjectPos(matrix, &transform);
+    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E8298, lbl_803E829C, outX, outY, outZ);
+}
+
+int DIMSnowHorn1_func14(GameObject* obj)
+{
+    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA8F != 0)
+    {
+        return 2;
+    }
+    return 1;
+}
+
+int DIMSnowHorn1_render2(GameObject* obj)
+{
+    DIMSnowHorn1State* state = obj->extra;
+    if ((state->flags & SNOWHORN1_FLAG_RIDING) != 0)
+    {
+        mainSetBits(GAMEBIT_SNOWHORN_RIDING, 0);
+        state->flags = (u8)(state->flags & ~SNOWHORN1_FLAG_RIDING);
+        return 1;
+    }
+    return 0;
+}
+
+void DIMSnowHorn1_modelMtxFn(GameObject* obj, f32* out_x, f32* out_y, f32* out_z)
+{
+    DIMSnowHorn1State* state = obj->extra;
+    *out_x = state->pathPosX;
+    *out_y = state->pathPosY;
+    *out_z = state->pathPosZ;
+}
+
+int DIMSnowHorn1_func11(GameObject* obj)
+{
+    if (((DIMSnowHorn1State*)obj->extra)->queryFlagA90 != 0)
+    {
+        return 1;
+    }
+    return 2;
+}
+
 int DIMSnowHorn1_setScale(GameObject* obj)
 {
     DIMSnowHorn1State* state;
@@ -1099,8 +1101,8 @@ void fn_802BB998(int obj, int pointState, int inputState)
         pointIndex++;
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline reset
 int DIMSnowHorn1_getExtraSize(void)
 {
     return 0xd0c;
@@ -1432,47 +1434,6 @@ void DIMSnowHorn1_update(GameObject* obj)
                           &(obj)->anim.modelState->overrideWorldPosY, &(obj)->anim.modelState->overrideWorldPosZ);
 }
 
-#pragma opt_propagation off
-void DIMSnowHorn1_release(void)
-{
-    void* zero;
-    void** p;
-    void* v;
-    p = (void**)(int)&gDIMSnowHorn1Texture;
-    zero = NULL;
-    v = *p;
-    if (v != NULL)
-    {
-        textureFree((Texture*)((u8*)v));
-    }
-    *p = zero;
-}
-#pragma opt_propagation reset
-
-#pragma opt_propagation off
-void DIMSnowHorn1_initialise(void)
-{
-    s16* src;
-    void** dst;
-    ((void**)gDIMSnowHorn1StateHandlers)[0] = (void*)DIMSnowHorn1_stateHandler00;
-    ((void**)gDIMSnowHorn1StateHandlers)[1] = (void*)DIMSnowHorn1_stateHandler01;
-    ((void**)gDIMSnowHorn1StateHandlers)[2] = (void*)DIMSnowHorn1_stateHandler02;
-    ((void**)gDIMSnowHorn1StateHandlers)[3] = (void*)DIMSnowHorn1_stateHandler03;
-    ((void**)gDIMSnowHorn1StateHandlers)[4] = (void*)DIMSnowHorn1_stateHandler04;
-    ((void**)gDIMSnowHorn1StateHandlers)[5] = (void*)DIMSnowHorn1_stateHandler05;
-    ((void**)gDIMSnowHorn1StateHandlers)[6] = (void*)DIMSnowHorn1_stateHandler06;
-    ((void**)gDIMSnowHorn1StateHandlers)[7] = (void*)DIMSnowHorn1_stateHandler07;
-    ((void**)gDIMSnowHorn1StateHandlers)[8] = (void*)DIMSnowHorn1_stateHandler08;
-    ((void**)gDIMSnowHorn1StateHandlers)[9] = (void*)DIMSnowHorn1_stateHandler09;
-    ((void**)gDIMSnowHorn1StateHandlers)[10] = (void*)DIMSnowHorn1_stateHandler0A;
-    ((void**)gDIMSnowHorn1StateHandlers)[11] = (void*)DIMSnowHorn1_stateHandler0B;
-    *(void**)&gDIMSnowHorn1DefaultStateHandler = (void*)DIMSnowHorn1_defaultStateHandler;
-    src = &gDIMSnowHorn1TextureId;
-    dst = &gDIMSnowHorn1Texture;
-    *dst = (void*)textureLoad(*src, 0);
-}
-#pragma opt_propagation reset
-
 void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
 {
     u8* base = gDIMSnowHorn1ConfigTable;
@@ -1561,6 +1522,45 @@ void DIMSnowHorn1_init(GameObject* obj, int def, int spawnFlag)
         }
     }
 }
+
+#pragma opt_propagation off
+void DIMSnowHorn1_release(void)
+{
+    void* zero;
+    void** p;
+    void* v;
+    p = (void**)(int)&gDIMSnowHorn1Texture;
+    zero = NULL;
+    v = *p;
+    if (v != NULL)
+    {
+        textureFree((Texture*)((u8*)v));
+    }
+    *p = zero;
+}
+
+void DIMSnowHorn1_initialise(void)
+{
+    s16* src;
+    void** dst;
+    ((void**)gDIMSnowHorn1StateHandlers)[0] = (void*)DIMSnowHorn1_stateHandler00;
+    ((void**)gDIMSnowHorn1StateHandlers)[1] = (void*)DIMSnowHorn1_stateHandler01;
+    ((void**)gDIMSnowHorn1StateHandlers)[2] = (void*)DIMSnowHorn1_stateHandler02;
+    ((void**)gDIMSnowHorn1StateHandlers)[3] = (void*)DIMSnowHorn1_stateHandler03;
+    ((void**)gDIMSnowHorn1StateHandlers)[4] = (void*)DIMSnowHorn1_stateHandler04;
+    ((void**)gDIMSnowHorn1StateHandlers)[5] = (void*)DIMSnowHorn1_stateHandler05;
+    ((void**)gDIMSnowHorn1StateHandlers)[6] = (void*)DIMSnowHorn1_stateHandler06;
+    ((void**)gDIMSnowHorn1StateHandlers)[7] = (void*)DIMSnowHorn1_stateHandler07;
+    ((void**)gDIMSnowHorn1StateHandlers)[8] = (void*)DIMSnowHorn1_stateHandler08;
+    ((void**)gDIMSnowHorn1StateHandlers)[9] = (void*)DIMSnowHorn1_stateHandler09;
+    ((void**)gDIMSnowHorn1StateHandlers)[10] = (void*)DIMSnowHorn1_stateHandler0A;
+    ((void**)gDIMSnowHorn1StateHandlers)[11] = (void*)DIMSnowHorn1_stateHandler0B;
+    *(void**)&gDIMSnowHorn1DefaultStateHandler = (void*)DIMSnowHorn1_defaultStateHandler;
+    src = &gDIMSnowHorn1TextureId;
+    dst = &gDIMSnowHorn1Texture;
+    *dst = (void*)textureLoad(*src, 0);
+}
+
 
 u8 gDIMSnowHorn1ConfigTable[] = {
     0xC5, 0xE0, 0xD0, 0x00, 0xC4, 0x9E, 0xA0, 0x00, 0x46, 0x49, 0xC4, 0x00, 0x81, 0x10, 0x00, 0x00, 0xC5, 0xFD,

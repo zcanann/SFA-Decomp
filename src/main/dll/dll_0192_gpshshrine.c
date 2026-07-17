@@ -74,58 +74,6 @@ ObjectDescriptor gGPSH_ShrineObjDescriptor = {
     (ObjectDescriptorCallback)gpsh_shrine_free, (ObjectDescriptorCallback)gpsh_shrine_getObjectTypeId,
     gpsh_shrine_getExtraSize,
 };
-
-void gpsh_shrine_hitDetect(void)
-{
-}
-
-int gpsh_shrine_getExtraSize(void) { return 0x18; }
-int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
-
-void gpsh_shrine_free(int* obj)
-{
-    void** state = ((GameObject*)obj)->extra;
-    void* light = state[0];
-
-    if (light != NULL)
-    {
-        ModelLightStruct_free((ModelLightStruct*)light);
-        state[0] = NULL;
-    }
-    gameTimerStop();
-    ObjGroup_RemoveObject((int)obj, GPSHSHRINE_OBJGROUP);
-    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
-    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
-    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
-    Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
-    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
-    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(0xc91) == 0);
-}
-
-void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    void** state = (obj)->extra;
-
-    if (visible == 0)
-    {
-        void* light = state[0];
-        if (light != NULL)
-        {
-            modelLightStruct_setEnabled((ModelLightStruct*)light, 0, lbl_803E5038);
-        }
-    }
-    else
-    {
-        void* light = state[0];
-        if (light != NULL)
-        {
-            modelLightStruct_setEnabled((ModelLightStruct*)light, 1, lbl_803E5038);
-        }
-        ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5038);
-        objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32*)&lbl_803E5038, state[0]);
-    }
-}
-
 typedef struct GpshShrineState
 {
     ModelLightStruct* light;
@@ -139,64 +87,6 @@ typedef struct GpshShrineState
     u8 flagRest : 7;
     u8 pad16[0x18 - 0x16];
 } GpshShrineState;
-
-STATIC_ASSERT(sizeof(GpshShrineState) == 0x18);
-STATIC_ASSERT(offsetof(GpshShrineState, timer) == 0x04);
-STATIC_ASSERT(offsetof(GpshShrineState, sfxTimer) == 0x08);
-STATIC_ASSERT(offsetof(GpshShrineState, anglePhase) == 0x0C);
-STATIC_ASSERT(offsetof(GpshShrineState, solvedCount) == 0x12);
-STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
-
-int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
-{
-    GpshShrineState* sub;
-    GameObject* player;
-    int i;
-    u8 ev;
-    ModelLightStruct* light;
-
-    sub = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
-    animUpdate->activeHitVolumePair = -1;
-    animUpdate->sequenceEventActive = 0;
-    for (i = 0; i < animUpdate->eventCount; i++)
-    {
-        ev = animUpdate->eventIds[i];
-        if (ev != 0)
-        {
-            switch (ev)
-            {
-            case 3:
-                sub->activatedFlag = 1;
-                break;
-            case 7:
-                objSetAnimStateFlags((GameObject*)player, 0x80, 1);
-                mainSetBits(0x12b, 1);
-                mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
-                (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
-                break;
-            case 14:
-                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-                light = sub->light;
-                if (light != NULL)
-                {
-                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
-                }
-                break;
-            case 15:
-                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                light = sub->light;
-                if (light != NULL)
-                {
-                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
-                }
-                break;
-            }
-        }
-        animUpdate->eventIds[i] = 0;
-    }
-    return 0;
-}
 
 void fn_801C70F0(s16* obj)
 {
@@ -260,6 +150,116 @@ void fn_801C70F0(s16* obj)
             }
         }
     }
+}
+
+int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
+{
+    GpshShrineState* sub;
+    GameObject* player;
+    int i;
+    u8 ev;
+    ModelLightStruct* light;
+
+    sub = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++)
+    {
+        ev = animUpdate->eventIds[i];
+        if (ev != 0)
+        {
+            switch (ev)
+            {
+            case 3:
+                sub->activatedFlag = 1;
+                break;
+            case 7:
+                objSetAnimStateFlags((GameObject*)player, 0x80, 1);
+                mainSetBits(0x12b, 1);
+                mainSetBits(GAMEBIT_ITEM_Spirit5_Got, 1);
+                (*gMapEventInterface)->setMapAct(GPSHSHRINE_MAP_SHRINE, 5);
+                break;
+            case 14:
+                ((GameObject*)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
+                light = sub->light;
+                if (light != NULL)
+                {
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+                }
+                break;
+            case 15:
+                ((GameObject*)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
+                light = sub->light;
+                if (light != NULL)
+                {
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
+                }
+                break;
+            }
+        }
+        animUpdate->eventIds[i] = 0;
+    }
+    return 0;
+}
+
+int gpsh_shrine_getExtraSize(void) { return 0x18; }
+
+int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
+
+void gpsh_shrine_free(int* obj)
+{
+    void** state = ((GameObject*)obj)->extra;
+    void* light = state[0];
+
+    if (light != NULL)
+    {
+        ModelLightStruct_free((ModelLightStruct*)light);
+        state[0] = NULL;
+    }
+    gameTimerStop();
+    ObjGroup_RemoveObject((int)obj, GPSHSHRINE_OBJGROUP);
+    Music_Trigger(MUSICTRIG_DIM_Snow, 0);
+    Music_Trigger(MUSICTRIG_CC_Visit1, 0);
+    Music_Trigger(MUSICTRIG_vfp_walkabout, 0);
+    Music_Trigger(MUSICTRIG_krazoa_tunnel_2, 0);
+    mainSetBits(GAMEBIT_ECSH_InShrine, 0);
+    mainSetBits(GAMEBIT_SHRINE_MUSIC_LOCK, mainGetBit(0xc91) == 0);
+}
+
+
+STATIC_ASSERT(sizeof(GpshShrineState) == 0x18);
+STATIC_ASSERT(offsetof(GpshShrineState, timer) == 0x04);
+STATIC_ASSERT(offsetof(GpshShrineState, sfxTimer) == 0x08);
+STATIC_ASSERT(offsetof(GpshShrineState, anglePhase) == 0x0C);
+STATIC_ASSERT(offsetof(GpshShrineState, solvedCount) == 0x12);
+STATIC_ASSERT(offsetof(GpshShrineState, puzzleState) == 0x14);
+void gpsh_shrine_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    void** state = (obj)->extra;
+
+    if (visible == 0)
+    {
+        void* light = state[0];
+        if (light != NULL)
+        {
+            modelLightStruct_setEnabled((ModelLightStruct*)light, 0, lbl_803E5038);
+        }
+    }
+    else
+    {
+        void* light = state[0];
+        if (light != NULL)
+        {
+            modelLightStruct_setEnabled((ModelLightStruct*)light, 1, lbl_803E5038);
+        }
+        ((void (*)(void*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E5038);
+        objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32*)&lbl_803E5038, state[0]);
+    }
+}
+
+void gpsh_shrine_hitDetect(void)
+{
 }
 
 void gpsh_shrine_update(GameObject *obj)
@@ -526,4 +526,5 @@ void gpsh_shrine_release(void)
 void gpsh_shrine_initialise(void)
 {
 }
+
 

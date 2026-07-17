@@ -59,159 +59,6 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-void explodable_render(void)
-{
-}
-
-int explodable_getExtraSize(void)
-{
-    return 0x6e8;
-}
-
-void explodable_free(GameObject* obj, int flag)
-{
-    int state;
-    int i = -1;
-    int slotPtr;
-    GameObject* child;
-
-    state = *(int*)&(obj)->extra;
-    ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
-    if (flag == 0)
-    {
-        slotPtr = state - 4;
-        while (slotPtr += 4, ++i < 15)
-        {
-            child = ((DrExplodableState*)slotPtr)->children[0];
-            if (child != NULL)
-            {
-                Obj_FreeObject(child);
-            }
-        }
-    }
-}
-
-void explodable_update(GameObject* obj)
-{
-    int slotPtr;
-    int def;
-    int i;
-    int state;
-    int status;
-    int fragObj;
-
-    state = *(int*)&(obj)->extra;
-    def = *(int*)&(obj)->anim.placementData;
-    if (((DrExplodableState*)state)->phase6E4 != EXPLODABLE_PHASE_BROKEN)
-    {
-        if (((DrExplodableState*)state)->phase6E4 == EXPLODABLE_PHASE_WAIT)
-        {
-            if ((u32)mainGetBit(((ExplodablePlacement*)def)->activateGameBit) != 0)
-            {
-                explodable_buildFragments(obj, def, 0, state);
-                if (((DrExplodableState*)state)->breakSfx != 0)
-                {
-                    Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
-                }
-                ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BREAKING;
-                (obj)->anim.alpha = 0;
-            }
-            else
-            {
-                return;
-            }
-        }
-        else
-        {
-            i = 0;
-            slotPtr = state;
-            do
-            {
-                fragObj = *(int*)(slotPtr + 0x690);
-                if ((void*)fragObj != NULL)
-                {
-                    status = (*(VtableFn*)(*(int*)*(int*)(fragObj + 0x68) + FRAGMENT_VTABLE_STATUS))(fragObj);
-                    switch (status)
-                    {
-                    case 2:
-                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        Obj_FreeObject(*(GameObject**)(slotPtr + 0x690));
-                        *(int*)(slotPtr + 0x690) = 0;
-                        break;
-                    case 0:
-                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
-                        if ((((DrExplodableState*)state)->flags6CC & (1 << i)) == 0)
-                        {
-                            ((DrExplodableState*)state)->flags6CC |= 1 << i;
-                        }
-                        break;
-                    }
-                }
-                slotPtr += 4;
-                i++;
-            } while (i < 0xf);
-        }
-    }
-}
-
-void explodable_init(GameObject* obj, int setup)
-{
-    int state = *(int*)&(obj)->extra;
-    int base;
-    GasVentTableEntry* e;
-    u32 count;
-
-    ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
-    state = *(int*)&(obj)->extra;
-    count = ((ExplodablePlacement*)setup)->fragmentCount;
-    if (count == 0)
-    {
-        count = 1;
-    }
-    ((DrExplodableState*)state)->count6D4 = count;
-    *(int*)&((DrExplodableState*)state)->flags6CC = 0;
-    ((DrExplodableState*)state)->children[0] = 0;
-    ((DrExplodableState*)state)->children[1] = 0;
-    ((DrExplodableState*)state)->children[2] = 0;
-    ((DrExplodableState*)state)->children[3] = 0;
-    ((DrExplodableState*)state)->children[4] = 0;
-    ((DrExplodableState*)state)->children[5] = 0;
-    ((DrExplodableState*)state)->children[6] = 0;
-    ((DrExplodableState*)state)->children[7] = 0;
-    ((DrExplodableState*)state)->children[8] = 0;
-    ((DrExplodableState*)state)->children[9] = 0;
-    ((DrExplodableState*)state)->children[10] = 0;
-    ((DrExplodableState*)state)->children[11] = 0;
-    ((DrExplodableState*)state)->children[12] = 0;
-    ((DrExplodableState*)state)->children[13] = 0;
-    ((DrExplodableState*)state)->children[14] = 0;
-    (obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
-    (obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
-    (obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
-    if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
-    {
-        ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BROKEN;
-    }
-    for (base = 0; base < 16; base++)
-    {
-        if ((obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
-        {
-            ((DrExplodableState*)state)->recipeIndex = base;
-            break;
-        }
-    }
-    if (((ExplodablePlacement*)setup)->scaleParam == 0)
-    {
-        ((ExplodablePlacement*)setup)->scaleParam = 0x14;
-    }
-    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
-                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
-    e = gExplodableBreakRecipeTable;
-    if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
-    {
-        (obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
-    }
-}
 
 int explodable_spawnFragmentObject(GameObject* obj, int objType, int chunkSrc, int fragmentIndex)
 {
@@ -409,6 +256,161 @@ void explodable_computeFragmentLaunch(GameObject* obj, int chunkSlot, int def)
         }
     }
 }
+
+int explodable_getExtraSize(void)
+{
+    return 0x6e8;
+}
+
+void explodable_free(GameObject* obj, int flag)
+{
+    int state;
+    int i = -1;
+    int slotPtr;
+    GameObject* child;
+
+    state = *(int*)&(obj)->extra;
+    ObjGroup_RemoveObject(obj, EXPLODABLE_OBJ_GROUP);
+    if (flag == 0)
+    {
+        slotPtr = state - 4;
+        while (slotPtr += 4, ++i < 15)
+        {
+            child = ((DrExplodableState*)slotPtr)->children[0];
+            if (child != NULL)
+            {
+                Obj_FreeObject(child);
+            }
+        }
+    }
+}
+
+void explodable_render(void)
+{
+}
+
+void explodable_update(GameObject* obj)
+{
+    int slotPtr;
+    int def;
+    int i;
+    int state;
+    int status;
+    int fragObj;
+
+    state = *(int*)&(obj)->extra;
+    def = *(int*)&(obj)->anim.placementData;
+    if (((DrExplodableState*)state)->phase6E4 != EXPLODABLE_PHASE_BROKEN)
+    {
+        if (((DrExplodableState*)state)->phase6E4 == EXPLODABLE_PHASE_WAIT)
+        {
+            if ((u32)mainGetBit(((ExplodablePlacement*)def)->activateGameBit) != 0)
+            {
+                explodable_buildFragments(obj, def, 0, state);
+                if (((DrExplodableState*)state)->breakSfx != 0)
+                {
+                    Sfx_PlayFromObject(obj, ((DrExplodableState*)state)->breakSfx & 0xffff);
+                }
+                ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BREAKING;
+                (obj)->anim.alpha = 0;
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            i = 0;
+            slotPtr = state;
+            do
+            {
+                fragObj = *(int*)(slotPtr + 0x690);
+                if ((void*)fragObj != NULL)
+                {
+                    status = (*(VtableFn*)(*(int*)*(int*)(fragObj + 0x68) + FRAGMENT_VTABLE_STATUS))(fragObj);
+                    switch (status)
+                    {
+                    case 2:
+                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
+                        Obj_FreeObject(*(GameObject**)(slotPtr + 0x690));
+                        *(int*)(slotPtr + 0x690) = 0;
+                        break;
+                    case 0:
+                        mainSetBits(((ExplodablePlacement*)def)->doneGameBit, 1);
+                        if ((((DrExplodableState*)state)->flags6CC & (1 << i)) == 0)
+                        {
+                            ((DrExplodableState*)state)->flags6CC |= 1 << i;
+                        }
+                        break;
+                    }
+                }
+                slotPtr += 4;
+                i++;
+            } while (i < 0xf);
+        }
+    }
+}
+
+void explodable_init(GameObject* obj, int setup)
+{
+    int state = *(int*)&(obj)->extra;
+    int base;
+    GasVentTableEntry* e;
+    u32 count;
+
+    ObjGroup_AddObject(obj, EXPLODABLE_OBJ_GROUP);
+    state = *(int*)&(obj)->extra;
+    count = ((ExplodablePlacement*)setup)->fragmentCount;
+    if (count == 0)
+    {
+        count = 1;
+    }
+    ((DrExplodableState*)state)->count6D4 = count;
+    *(int*)&((DrExplodableState*)state)->flags6CC = 0;
+    ((DrExplodableState*)state)->children[0] = 0;
+    ((DrExplodableState*)state)->children[1] = 0;
+    ((DrExplodableState*)state)->children[2] = 0;
+    ((DrExplodableState*)state)->children[3] = 0;
+    ((DrExplodableState*)state)->children[4] = 0;
+    ((DrExplodableState*)state)->children[5] = 0;
+    ((DrExplodableState*)state)->children[6] = 0;
+    ((DrExplodableState*)state)->children[7] = 0;
+    ((DrExplodableState*)state)->children[8] = 0;
+    ((DrExplodableState*)state)->children[9] = 0;
+    ((DrExplodableState*)state)->children[10] = 0;
+    ((DrExplodableState*)state)->children[11] = 0;
+    ((DrExplodableState*)state)->children[12] = 0;
+    ((DrExplodableState*)state)->children[13] = 0;
+    ((DrExplodableState*)state)->children[14] = 0;
+    (obj)->anim.rotX = ((ExplodablePlacement*)setup)->rotX;
+    (obj)->anim.rotY = ((ExplodablePlacement*)setup)->rotY;
+    (obj)->anim.rotZ = ((ExplodablePlacement*)setup)->rotZ;
+    if ((u32)mainGetBit(((ExplodablePlacement*)setup)->doneGameBit) != 0)
+    {
+        ((DrExplodableState*)state)->phase6E4 = EXPLODABLE_PHASE_BROKEN;
+    }
+    for (base = 0; base < 16; base++)
+    {
+        if ((obj)->anim.seqId == gExplodableBreakRecipeTable[base].key)
+        {
+            ((DrExplodableState*)state)->recipeIndex = base;
+            break;
+        }
+    }
+    if (((ExplodablePlacement*)setup)->scaleParam == 0)
+    {
+        ((ExplodablePlacement*)setup)->scaleParam = 0x14;
+    }
+    (obj)->anim.rootMotionScale = (obj)->anim.modelInstance->rootMotionScaleBase *
+                                  (f32)(int)((ExplodablePlacement*)setup)->scaleParam / lbl_803E435C;
+    e = gExplodableBreakRecipeTable;
+    if ((e[((DrExplodableState*)state)->recipeIndex].flags & 1) != 0)
+    {
+        (obj)->objectFlags |= EXPLODABLE_OBJFLAG_HIDDEN;
+    }
+}
+
 
 GasVentTableEntry gExplodableBreakRecipeTable[16] = {
     {124, 876, 216, 1, 0, {0, 0}},    {2098, 2099, 705, 50, 0, {0, 0}}, {147, 1408, 0, 100, 0, {0, 0}},

@@ -65,43 +65,6 @@ extern void DIMwooddoor_spawnShard(int* obj, int p2);
 
 extern f32 lbl_803E48EC;
 extern f32 gDimCannonAnimAdvanceSpeed;
-
-
-void DIMCannon_hitDetect(void)
-{
-}
-
-void DIMCannon_release(void)
-{
-}
-
-void DIMCannon_initialise(void)
-{
-}
-
-void DIMCannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    u8* def;
-    u8* sub;
-    s16 saved;
-
-    def = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (((GameObject*)obj)->anim.seqId != 0x1d6)
-    {
-        sub = ((GameObject*)obj)->extra;
-        saved = ((GameObject*)obj)->anim.rotX;
-        ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x28] << 8);
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
-        ((GameObject*)obj)->anim.rotX = saved;
-        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &((DimCannonState*)sub)->posX, &((DimCannonState*)sub)->posY,
-                                      &((DimCannonState*)sub)->posZ, 0);
-    }
-    else
-    {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
-    }
-}
-
 typedef struct DimcannonPlacement
 {
     u8 pad0[0x1A - 0x0];
@@ -113,7 +76,6 @@ typedef struct DimcannonPlacement
     s8 unk28;
     u8 pad29[0x30 - 0x29];
 } DimcannonPlacement;
-
 typedef struct DimcannonState
 {
     u8 pad0[0x7 - 0x0];
@@ -124,273 +86,7 @@ typedef struct DimcannonState
     s8 unkB;
     u8 padC[0x10 - 0xC];
 } DimcannonState;
-
-int DIMCannon_getExtraSize(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
-        return 0xc;
-    return 0xb4;
-}
-
-int DIMCannon_getObjectTypeId(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
-        return 0x0;
-    return 0x0;
-}
-
-void DIMCannon_free(int* obj)
-{
-    if (((GameObject*)obj)->anim.seqId != 0x1d6)
-    {
-        ((void (*)(void))((int**)*gGameUIInterface)[0x18])();
-        Resource_Release(lbl_803DDB50);
-        lbl_803DDB50 = NULL;
-    }
-    ObjGroup_RemoveObject((int)obj, DIMCANNON_OBJGROUP);
-}
-
 #define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
-
-void DIMCannon_init(int* obj, int* arg)
-{
-    ObjMsg_AllocQueue(obj, 4);
-
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
-    {
-        void* state;
-        int* p;
-        ((GameObject*)obj)->userData1 = 0;
-        p = *(int**)&((GameObject*)obj)->anim.modelState;
-        if (p != 0)
-        {
-            *(int*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0xc10;
-            p = *(int**)&((GameObject*)obj)->anim.modelState;
-            *(u32*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0x8000LL;
-        }
-        state = ((GameObject*)obj)->extra;
-        ((DimcannonState*)state)->unk9 = randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkA = randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unkB = randomGetRange(-0x64, 0x64);
-        ((DimcannonState*)state)->unk7 = 1;
-        p = *(int**)&((GameObject*)obj)->anim.hitReactState;
-        if (p != 0)
-        {
-            *(s16*)&((ObjHitsPriorityState*)p)->trackContactMask = 1;
-        }
-        ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HIDDEN;
-    }
-    else
-    {
-        void* state = ((GameObject*)obj)->extra;
-        u8 i;
-
-        if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED)
-        {
-            int v = 0;
-            if (mainGetBit(GAMEBIT_DIM_CannonRelated0C17) && mainGetBit(GAMEBIT_DIM_CannonRelated0A21))
-            {
-                v = 1;
-            }
-            ((DimCannonState*)state)->hasActivated = v;
-        }
-
-        for (i = 0; i < 0xa; i += 5)
-        {
-            ((DimCannonState*)state)->aimHistX[i + 0] = ((GameObject*)obj)->anim.localPosX;
-            ((DimCannonState*)state)->aimHistY[i + 0] = ((GameObject*)obj)->anim.localPosY;
-            ((DimCannonState*)state)->aimHistZ[i + 0] = ((GameObject*)obj)->anim.localPosZ;
-            ((DimCannonState*)state)->aimHistX[i + 1] = ((GameObject*)obj)->anim.localPosX;
-            ((DimCannonState*)state)->aimHistY[i + 1] = ((GameObject*)obj)->anim.localPosY;
-            ((DimCannonState*)state)->aimHistZ[i + 1] = ((GameObject*)obj)->anim.localPosZ;
-            ((DimCannonState*)state)->aimHistX[i + 2] = ((GameObject*)obj)->anim.localPosX;
-            ((DimCannonState*)state)->aimHistY[i + 2] = ((GameObject*)obj)->anim.localPosY;
-            ((DimCannonState*)state)->aimHistZ[i + 2] = ((GameObject*)obj)->anim.localPosZ;
-            ((DimCannonState*)state)->aimHistX[i + 3] = ((GameObject*)obj)->anim.localPosX;
-            ((DimCannonState*)state)->aimHistY[i + 3] = ((GameObject*)obj)->anim.localPosY;
-            ((DimCannonState*)state)->aimHistZ[i + 3] = ((GameObject*)obj)->anim.localPosZ;
-            ((DimCannonState*)state)->aimHistX[i + 4] = ((GameObject*)obj)->anim.localPosX;
-            ((DimCannonState*)state)->aimHistY[i + 4] = ((GameObject*)obj)->anim.localPosY;
-            ((DimCannonState*)state)->aimHistZ[i + 4] = ((GameObject*)obj)->anim.localPosZ;
-        }
-
-        ((DimCannonState*)state)->refreshTimer = 0x80;
-        ((DimCannonState*)state)->unk98 = lbl_803E48B8;
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        ((GameObject*)obj)->animEventCallback = DIMCannon_SeqFn;
-        ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
-        lbl_803DDB50 = Resource_Acquire(0x79, 1);
-        if (mainGetBit(((DimcannonPlacement*)arg)->resetGameBit))
-        {
-            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
-            ((DimCannonState*)state)->fireState = 5;
-        }
-        ((DimCannonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
-        ((DimCannonState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
-        ((DimCannonState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
-    }
-
-    ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HITDETECT_DISABLED;
-}
-
-void DIMCannon_update(int* obj)
-{
-    char* state;
-    void* player;
-    int* src = *(int**)&((GameObject*)obj)->anim.placementData;
-
-    if (((GameObject*)obj)->anim.seqId == 0x1d6)
-    {
-        DIMwooddoor_updateFallingDebris(obj);
-        return;
-    }
-
-    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) &&
-        mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
-    {
-        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
-            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
-    }
-
-    state = ((GameObject*)obj)->extra;
-    player = Obj_GetPlayerObject();
-    if (playerGetFocusObject((GameObject*)player) != NULL)
-    {
-        *(int*)&((DimCannonState*)state)->targetPlayer = 0;
-    }
-    else
-    {
-        ((DimCannonState*)state)->targetPlayer = player;
-    }
-
-    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-
-    switch (((DimCannonState*)state)->fireState)
-    {
-    case 0:
-        if (mainGetBit(((DimcannonPlacement*)src)->armGameBit))
-        {
-            ((DimCannonState*)state)->fireState = 4;
-        }
-        break;
-    case 5:
-    {
-        s8 t = ((DimCannonState*)state)->chargeTimer;
-        if (t > 0)
-        {
-            ((DimCannonState*)state)->chargeTimer = (s8)(t - framesThisStep);
-        }
-        else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
-        {
-            int* focusObj;
-            ((DimCannonState*)state)->airMeterCharge = 0;
-            ((DimCannonState*)state)->shutdownTimer = 0;
-            focusObj = obj;
-            (*gCameraInterface)->setMode(CAMMODE_CANNON, 1, 0, 4, &focusObj, 0x32, 0xff);
-            buttonDisable(0, PAD_BUTTON_A);
-            ((DimCannonState*)state)->fireState = 3;
-            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
-            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
-        }
-        ((DimCannonState*)state)->fireRequested = 0;
-        ((DimCannonState*)state)->aimYaw = 0;
-        ((DimCannonState*)state)->aimPitch = 0;
-        break;
-    }
-    case 4:
-        DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
-                                   *(f32*)&((DimCannonState*)state)->aimTargetY, ((DimCannonState*)state)->aimTargetZ,
-                                   ((DimCannonState*)state)->distance);
-        if (mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
-        {
-            ((DimCannonState*)state)->fireState = 5;
-        }
-        else if (((DimCannonState*)state)->targetPlayer != 0 && !mainGetBit(((DimcannonPlacement*)src)->holdGameBit))
-        {
-            f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                                  &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
-            int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF10;
-            if (d < v / lbl_803E48EC)
-            {
-                ((DimCannonState*)state)->fireState = 1;
-            }
-        }
-        ((DimCannonState*)state)->fireRequested = 0;
-        ((DimCannonState*)state)->aimYaw = 0;
-        ((DimCannonState*)state)->aimPitch = 0;
-        break;
-    case 1:
-        if (mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
-        {
-            ((DimCannonState*)state)->fireState = 5;
-            break;
-        }
-        if (mainGetBit(((DimcannonPlacement*)src)->holdGameBit))
-        {
-            ((DimCannonState*)state)->fireState = 4;
-            break;
-        }
-        if (((DimCannonState*)state)->targetPlayer != 0)
-        {
-            ((DimCannonState*)state)->refreshTimer += framesThisStep;
-            if (((DimCannonState*)state)->refreshTimer > 0xa)
-            {
-                u8 j;
-                ((DimCannonState*)state)->refreshTimer = 0;
-                for (j = 0; j < 9; j++)
-                {
-                    ((DimCannonState*)state)->aimHistX[j] = ((DimCannonState*)state)->aimHistX[j + 1];
-                    ((DimCannonState*)state)->aimHistY[j] = ((DimCannonState*)state)->aimHistY[j + 1];
-                    ((DimCannonState*)state)->aimHistZ[j] = ((DimCannonState*)state)->aimHistZ[j + 1];
-                    if (j == 0 || ((DimCannonState*)state)->aimHistY[j] > *(f32*)&((DimCannonState*)state)->aimTargetY)
-                    {
-                        *(f32*)&((DimCannonState*)state)->aimTargetY = ((DimCannonState*)state)->aimHistY[j];
-                    }
-                }
-                ((DimCannonState*)state)->aimHistX[9] =
-                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosX;
-                ((DimCannonState*)state)->aimHistY[9] =
-                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosY;
-                ((DimCannonState*)state)->aimHistZ[9] =
-                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosZ;
-                *(f32*)&((DimCannonState*)state)->aimTargetX = ((DimCannonState*)state)->aimHistX[0];
-                ((DimCannonState*)state)->aimTargetZ = ((DimCannonState*)state)->aimHistZ[0];
-            }
-            if (((DimCannonState*)state)->aimYaw > 0)
-            {
-                ((DimCannonState*)state)->aimYaw -= framesThisStep;
-            }
-            if (((DimCannonState*)state)->aimPitch > 0)
-            {
-                ((DimCannonState*)state)->aimPitch -= framesThisStep;
-            }
-            ((DimCannonState*)state)->distance =
-                getXZDistance(&((GameObject*)obj)->anim.worldPosX,
-                              &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
-            DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
-                                       *(f32*)&((DimCannonState*)state)->aimTargetY,
-                                       ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
-            DIMwooddoor_spawnShard(obj, 0);
-            {
-                f32 d2 = ((DimCannonState*)state)->distance;
-                int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF0C;
-                if (d2 > v / lbl_803E48EC)
-                {
-                    ((DimCannonState*)state)->fireState = 4;
-                }
-            }
-        }
-        else
-        {
-            ((DimCannonState*)state)->fireState = 4;
-        }
-        break;
-    }
-
-    gDimCannonAnimAdvanceSpeedCur = gDimCannonAnimAdvanceSpeed;
-    ObjAnim_AdvanceCurrentMove((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
-}
 
 int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 {
@@ -566,6 +262,310 @@ int DIMCannon_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
 
     return 0;
 }
+
+int DIMCannon_getExtraSize(int* obj)
+{
+    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+        return 0xc;
+    return 0xb4;
+}
+
+int DIMCannon_getObjectTypeId(int* obj)
+{
+    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+        return 0x0;
+    return 0x0;
+}
+
+void DIMCannon_free(int* obj)
+{
+    if (((GameObject*)obj)->anim.seqId != 0x1d6)
+    {
+        ((void (*)(void))((int**)*gGameUIInterface)[0x18])();
+        Resource_Release(lbl_803DDB50);
+        lbl_803DDB50 = NULL;
+    }
+    ObjGroup_RemoveObject((int)obj, DIMCANNON_OBJGROUP);
+}
+
+void DIMCannon_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8* def;
+    u8* sub;
+    s16 saved;
+
+    def = *(u8**)&((GameObject*)obj)->anim.placementData;
+    if (((GameObject*)obj)->anim.seqId != 0x1d6)
+    {
+        sub = ((GameObject*)obj)->extra;
+        saved = ((GameObject*)obj)->anim.rotX;
+        ((GameObject*)obj)->anim.rotX = (s16)((s8)def[0x28] << 8);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
+        ((GameObject*)obj)->anim.rotX = saved;
+        ObjPath_GetPointWorldPosition((GameObject*)obj, 0, &((DimCannonState*)sub)->posX, &((DimCannonState*)sub)->posY,
+                                      &((DimCannonState*)sub)->posZ, 0);
+    }
+    else
+    {
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E48E8);
+    }
+}
+
+void DIMCannon_hitDetect(void)
+{
+}
+
+void DIMCannon_update(int* obj)
+{
+    char* state;
+    void* player;
+    int* src = *(int**)&((GameObject*)obj)->anim.placementData;
+
+    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    {
+        DIMwooddoor_updateFallingDebris(obj);
+        return;
+    }
+
+    if ((*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_DISABLED) &&
+        mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
+    {
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode =
+            (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
+    }
+
+    state = ((GameObject*)obj)->extra;
+    player = Obj_GetPlayerObject();
+    if (playerGetFocusObject((GameObject*)player) != NULL)
+    {
+        *(int*)&((DimCannonState*)state)->targetPlayer = 0;
+    }
+    else
+    {
+        ((DimCannonState*)state)->targetPlayer = player;
+    }
+
+    ((GameObject*)obj)->anim.flags = (s16)(((GameObject*)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
+
+    switch (((DimCannonState*)state)->fireState)
+    {
+    case 0:
+        if (mainGetBit(((DimcannonPlacement*)src)->armGameBit))
+        {
+            ((DimCannonState*)state)->fireState = 4;
+        }
+        break;
+    case 5:
+    {
+        s8 t = ((DimCannonState*)state)->chargeTimer;
+        if (t > 0)
+        {
+            ((DimCannonState*)state)->chargeTimer = (s8)(t - framesThisStep);
+        }
+        else if (*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED)
+        {
+            int* focusObj;
+            ((DimCannonState*)state)->airMeterCharge = 0;
+            ((DimCannonState*)state)->shutdownTimer = 0;
+            focusObj = obj;
+            (*gCameraInterface)->setMode(CAMMODE_CANNON, 1, 0, 4, &focusObj, 0x32, 0xff);
+            buttonDisable(0, PAD_BUTTON_A);
+            ((DimCannonState*)state)->fireState = 3;
+            (*gObjectTriggerInterface)->runSequence(0, obj, -1);
+            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
+            *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        }
+        ((DimCannonState*)state)->fireRequested = 0;
+        ((DimCannonState*)state)->aimYaw = 0;
+        ((DimCannonState*)state)->aimPitch = 0;
+        break;
+    }
+    case 4:
+        DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
+                                   *(f32*)&((DimCannonState*)state)->aimTargetY, ((DimCannonState*)state)->aimTargetZ,
+                                   ((DimCannonState*)state)->distance);
+        if (mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
+        {
+            ((DimCannonState*)state)->fireState = 5;
+        }
+        else if (((DimCannonState*)state)->targetPlayer != 0 && !mainGetBit(((DimcannonPlacement*)src)->holdGameBit))
+        {
+            f32 d = getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                                  &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
+            int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF10;
+            if (d < v / lbl_803E48EC)
+            {
+                ((DimCannonState*)state)->fireState = 1;
+            }
+        }
+        ((DimCannonState*)state)->fireRequested = 0;
+        ((DimCannonState*)state)->aimYaw = 0;
+        ((DimCannonState*)state)->aimPitch = 0;
+        break;
+    case 1:
+        if (mainGetBit(((DimcannonPlacement*)src)->resetGameBit))
+        {
+            ((DimCannonState*)state)->fireState = 5;
+            break;
+        }
+        if (mainGetBit(((DimcannonPlacement*)src)->holdGameBit))
+        {
+            ((DimCannonState*)state)->fireState = 4;
+            break;
+        }
+        if (((DimCannonState*)state)->targetPlayer != 0)
+        {
+            ((DimCannonState*)state)->refreshTimer += framesThisStep;
+            if (((DimCannonState*)state)->refreshTimer > 0xa)
+            {
+                u8 j;
+                ((DimCannonState*)state)->refreshTimer = 0;
+                for (j = 0; j < 9; j++)
+                {
+                    ((DimCannonState*)state)->aimHistX[j] = ((DimCannonState*)state)->aimHistX[j + 1];
+                    ((DimCannonState*)state)->aimHistY[j] = ((DimCannonState*)state)->aimHistY[j + 1];
+                    ((DimCannonState*)state)->aimHistZ[j] = ((DimCannonState*)state)->aimHistZ[j + 1];
+                    if (j == 0 || ((DimCannonState*)state)->aimHistY[j] > *(f32*)&((DimCannonState*)state)->aimTargetY)
+                    {
+                        *(f32*)&((DimCannonState*)state)->aimTargetY = ((DimCannonState*)state)->aimHistY[j];
+                    }
+                }
+                ((DimCannonState*)state)->aimHistX[9] =
+                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosX;
+                ((DimCannonState*)state)->aimHistY[9] =
+                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosY;
+                ((DimCannonState*)state)->aimHistZ[9] =
+                    ((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.localPosZ;
+                *(f32*)&((DimCannonState*)state)->aimTargetX = ((DimCannonState*)state)->aimHistX[0];
+                ((DimCannonState*)state)->aimTargetZ = ((DimCannonState*)state)->aimHistZ[0];
+            }
+            if (((DimCannonState*)state)->aimYaw > 0)
+            {
+                ((DimCannonState*)state)->aimYaw -= framesThisStep;
+            }
+            if (((DimCannonState*)state)->aimPitch > 0)
+            {
+                ((DimCannonState*)state)->aimPitch -= framesThisStep;
+            }
+            ((DimCannonState*)state)->distance =
+                getXZDistance(&((GameObject*)obj)->anim.worldPosX,
+                              &((GameObject*)((DimCannonState*)state)->targetPlayer)->anim.worldPosX);
+            DIMwooddoor_updateShardAim((GameObject*)(obj), *(f32*)&((DimCannonState*)state)->aimTargetX,
+                                       *(f32*)&((DimCannonState*)state)->aimTargetY,
+                                       ((DimCannonState*)state)->aimTargetZ, ((DimCannonState*)state)->distance);
+            DIMwooddoor_spawnShard(obj, 0);
+            {
+                f32 d2 = ((DimCannonState*)state)->distance;
+                int v = ((DimcannonPlacement*)src)->triggerRange * lbl_803DBF0C;
+                if (d2 > v / lbl_803E48EC)
+                {
+                    ((DimCannonState*)state)->fireState = 4;
+                }
+            }
+        }
+        else
+        {
+            ((DimCannonState*)state)->fireState = 4;
+        }
+        break;
+    }
+
+    gDimCannonAnimAdvanceSpeedCur = gDimCannonAnimAdvanceSpeed;
+    ObjAnim_AdvanceCurrentMove((int)obj, gDimCannonAnimAdvanceSpeed, timeDelta, NULL);
+}
+
+
+#define DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED 0x13
+
+void DIMCannon_init(int* obj, int* arg)
+{
+    ObjMsg_AllocQueue(obj, 4);
+
+    if (((GameObject*)obj)->anim.seqId == 0x1d6)
+    {
+        void* state;
+        int* p;
+        ((GameObject*)obj)->userData1 = 0;
+        p = *(int**)&((GameObject*)obj)->anim.modelState;
+        if (p != 0)
+        {
+            *(int*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0xc10;
+            p = *(int**)&((GameObject*)obj)->anim.modelState;
+            *(u32*)&((ObjHitsPriorityState*)p)->secondaryRadiusY |= 0x8000LL;
+        }
+        state = ((GameObject*)obj)->extra;
+        ((DimcannonState*)state)->unk9 = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unkA = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unkB = randomGetRange(-0x64, 0x64);
+        ((DimcannonState*)state)->unk7 = 1;
+        p = *(int**)&((GameObject*)obj)->anim.hitReactState;
+        if (p != 0)
+        {
+            *(s16*)&((ObjHitsPriorityState*)p)->trackContactMask = 1;
+        }
+        ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HIDDEN;
+    }
+    else
+    {
+        void* state = ((GameObject*)obj)->extra;
+        u8 i;
+
+        if (((GameObject*)obj)->anim.mapEventSlot == DIMCANNON_MAP_EVENT_SLOT_PLAYER_OPERATED)
+        {
+            int v = 0;
+            if (mainGetBit(GAMEBIT_DIM_CannonRelated0C17) && mainGetBit(GAMEBIT_DIM_CannonRelated0A21))
+            {
+                v = 1;
+            }
+            ((DimCannonState*)state)->hasActivated = v;
+        }
+
+        for (i = 0; i < 0xa; i += 5)
+        {
+            ((DimCannonState*)state)->aimHistX[i + 0] = ((GameObject*)obj)->anim.localPosX;
+            ((DimCannonState*)state)->aimHistY[i + 0] = ((GameObject*)obj)->anim.localPosY;
+            ((DimCannonState*)state)->aimHistZ[i + 0] = ((GameObject*)obj)->anim.localPosZ;
+            ((DimCannonState*)state)->aimHistX[i + 1] = ((GameObject*)obj)->anim.localPosX;
+            ((DimCannonState*)state)->aimHistY[i + 1] = ((GameObject*)obj)->anim.localPosY;
+            ((DimCannonState*)state)->aimHistZ[i + 1] = ((GameObject*)obj)->anim.localPosZ;
+            ((DimCannonState*)state)->aimHistX[i + 2] = ((GameObject*)obj)->anim.localPosX;
+            ((DimCannonState*)state)->aimHistY[i + 2] = ((GameObject*)obj)->anim.localPosY;
+            ((DimCannonState*)state)->aimHistZ[i + 2] = ((GameObject*)obj)->anim.localPosZ;
+            ((DimCannonState*)state)->aimHistX[i + 3] = ((GameObject*)obj)->anim.localPosX;
+            ((DimCannonState*)state)->aimHistY[i + 3] = ((GameObject*)obj)->anim.localPosY;
+            ((DimCannonState*)state)->aimHistZ[i + 3] = ((GameObject*)obj)->anim.localPosZ;
+            ((DimCannonState*)state)->aimHistX[i + 4] = ((GameObject*)obj)->anim.localPosX;
+            ((DimCannonState*)state)->aimHistY[i + 4] = ((GameObject*)obj)->anim.localPosY;
+            ((DimCannonState*)state)->aimHistZ[i + 4] = ((GameObject*)obj)->anim.localPosZ;
+        }
+
+        ((DimCannonState*)state)->refreshTimer = 0x80;
+        ((DimCannonState*)state)->unk98 = lbl_803E48B8;
+        *(u8*)&((GameObject*)obj)->anim.resetHitboxMode |= INTERACT_FLAG_DISABLED;
+        ((GameObject*)obj)->animEventCallback = DIMCannon_SeqFn;
+        ((GameObject*)obj)->anim.rotX = (s16)((s8) * (s8*)((char*)arg + 0x28) << 8);
+        lbl_803DDB50 = Resource_Acquire(0x79, 1);
+        if (mainGetBit(((DimcannonPlacement*)arg)->resetGameBit))
+        {
+            *(u8*)&((DimCannonState*)state)->chargeTimer = 0x3c;
+            ((DimCannonState*)state)->fireState = 5;
+        }
+        ((DimCannonState*)state)->posX = ((GameObject*)obj)->anim.localPosX;
+        ((DimCannonState*)state)->posY = ((GameObject*)obj)->anim.localPosY;
+        ((DimCannonState*)state)->posZ = ((GameObject*)obj)->anim.localPosZ;
+    }
+
+    ((GameObject*)obj)->objectFlags |= DIMCANNON_OBJFLAG_HITDETECT_DISABLED;
+}
+
+void DIMCannon_release(void)
+{
+}
+
+void DIMCannon_initialise(void)
+{
+}
+
 
 ObjectDescriptor gDIMCannonObjDescriptor = {
     0,
