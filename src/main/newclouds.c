@@ -134,22 +134,11 @@ static inline void snowFifoTexCoord2s16(s16 s, s16 t)
     GXWGFifo.s16 = t;
 }
 
-typedef union
-{
-    u8 u8;
-    s16 s16;
-    u16 u16;
-    u32 u32;
-    f32 f32;
-} StarWGPipe;
-
-StarWGPipe starWgfifo : (0xCC008000);
-
 static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
 {
-    starWgfifo.s16 = x;
-    starWgfifo.s16 = y;
-    starWgfifo.s16 = z;
+    (*(PPCWGPipe2*)&GXWGFifo).s16 = x;
+    (*(PPCWGPipe2*)&GXWGFifo).s16 = y;
+    (*(PPCWGPipe2*)&GXWGFifo).s16 = z;
 }
 
 #pragma dont_inline off
@@ -2496,11 +2485,8 @@ extern const f32 lbl_803DF29C;
 extern const f32 lbl_803DF2A0;
 extern const f32 lbl_803DF2A4;
 
-#pragma opt_propagation off
 void titleScreenDrawFn_80093db4(void)
 {
-    void** lw;
-    u16* sw;
     int k;
     int j;
     f32* constellation;
@@ -2539,11 +2525,11 @@ void titleScreenDrawFn_80093db4(void)
     gNewCloudStarsInitialized = 1;
     gNewCloudStarTextureA = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_A);
     gNewCloudStarTextureB = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_B);
-    for (k = 0, lw = (void**)gNewCloudStarDisplayLists, sw = (u16*)gNewCloudStarDisplayListSizes; k < 0x5c; lw++, sw++, k++)
+    for (k = 0; k < 0x5c; k++)
     {
-        *lw = mmAlloc(0x220, 0x7f7f7fff, 0);
-        DCInvalidateRange(*lw, 0x220);
-        GXBeginDisplayList(*lw, 0x220);
+        gNewCloudStarDisplayLists[k] = mmAlloc(0x220, 0x7f7f7fff, 0);
+        DCInvalidateRange(gNewCloudStarDisplayLists[k], 0x220);
+        GXBeginDisplayList(gNewCloudStarDisplayLists[k], 0x220);
         GXResetWriteGatherPipe();
         GXBegin(GX_POINTS, GX_VTXFMT0, 0x32);
         for (j = 0; j < 0x32; j++)
@@ -2653,12 +2639,11 @@ void titleScreenDrawFn_80093db4(void)
             GXWGFifo.s16 = 0;
             GXWGFifo.s16 = 0;
         }
-        *sw = GXEndDisplayList();
+        gNewCloudStarDisplayListSizes[k] = GXEndDisplayList();
     }
     mm_free(constellation);
     GXSetMisc(1, 8);
 }
-#pragma opt_propagation reset
 
 int gNewCloudMusicIdByType[5] = {43, 0, 0, 0, 0};
 
