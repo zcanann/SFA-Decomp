@@ -85,9 +85,9 @@ typedef struct
 
 #define NEW_SHADOW_FRAME_COUNT 3
 
-extern u32 DAT_8038ee3c;
+extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
+extern int gNewShadowNoiseTexFrames[0x10];
 extern u32 DAT_8038ee48;
-extern int DAT_8038eec8;
 extern int DAT_8038ef08;
 extern u32 DAT_8038ef0c;
 extern u32 DAT_8038ef10;
@@ -562,8 +562,8 @@ void newshadows_captureProjectedShadow(u16* object)
         gxSetZMode_(1, GX_LEQUAL, 1);
         FUN_80259400(0x100, 0xb0, 0x80, 0x80);
         FUN_80259504(0x80, 0x80, 0x2a, 0);
-        FUN_80259c0c((&DAT_8038ee3c)[gNewShadowFrameIndex] + 0x60, 1);
-        fn_8006A028((u8*)(&DAT_8038ee3c)[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
+        FUN_80259c0c(gNewShadowFrameTextures[gNewShadowFrameIndex] + 0x60, 1);
+        fn_8006A028((u8*)gNewShadowFrameTextures[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
         **(float**)(object + 0x32) = (float)((double)lbl_803DED2C / invScale);
     }
     FUN_80006988();
@@ -1123,7 +1123,7 @@ void newshadows_getShadowTextureTable4x8(int* tableOut, int* columnsOut, int* ro
 
 void newshadows_getShadowTextureTable16(int* tableOut, int* countOut)
 {
-    *tableOut = (int)&DAT_8038eec8;
+    *tableOut = (int)gNewShadowNoiseTexFrames;
     *countOut = 0x10;
     return;
 }
