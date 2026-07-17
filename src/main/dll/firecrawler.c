@@ -121,89 +121,28 @@ typedef struct FirepipeSetup
     u8 unk22;          /* 0x22 */
     u8 unk23;          /* 0x23 */
 } FirepipeSetup;
-extern f32 lbl_803E2CC0;
-extern f32 lbl_803E2CC4;
-extern f32 lbl_803E2CC8;
-extern f32 lbl_803E2CCC;
-extern f32 lbl_803E2CD0;
-extern f32 lbl_803E2CD4;
-extern f32 lbl_803E2B18;
-extern f32 lbl_803E2B38;
-extern f32 lbl_803E2B40;
-extern f32 lbl_803E2B4C;
-extern f32 lbl_803E2B64;
-extern f32 lbl_803E2B68;
-extern f32 lbl_803E2B6C;
-extern f32 lbl_803E2B70;
-extern f32 lbl_803E2B74;
-extern f32 lbl_803E2B78;
-extern f32 lbl_803E2C3C;
-extern f32 lbl_803E2C58;
-extern f32 lbl_803E2C7C;
-extern f32 lbl_803E2C80;
-extern f32 lbl_803E2C84;
-extern f32 lbl_803E2C88;
-extern f32 lbl_803E2C8C;
-extern f32 lbl_803E2C90;
-extern f32 lbl_803E2C94;
 extern u8 gCrawlerSeqTable[];
 extern void* gCrawlerModelChainIds[];
 extern void* gCrawlerDescriptorTable[];
-extern f32 lbl_803E2CBC;
 extern u8* gCrawlerReactionTables[];
 
-extern f32 lbl_803E2CB8;
-extern f32 lbl_803E2C1C;
-extern f32 lbl_803E2C20;
-extern f32 lbl_803E2C24;
 extern f32 gCrawlerS8Norm127;
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);
 int gCrawlerNearbyObjectBuffer[0x20];
-extern f32 lbl_803E2C98;
-extern f32 lbl_803E2C9C;
 extern f32 gCrawlerPi;
 extern f32 gCrawlerHalfCircleBams;
-extern f32 lbl_803E2CA8;
 extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
-extern f32 lbl_803E2B2C;
-extern f32 lbl_803E2B28;
-extern f32 lbl_803E2B34;
-extern f32 lbl_803E2B30;
-extern f32 lbl_803E2B44;
-extern f32 lbl_803E2B60;
 extern f32 lbl_803DBCE0;
 extern f32 lbl_803DBCE4;
 extern f32 lbl_803DBCEC;
 
 void fn_80157B58(int* obj, u8* state);
 
-extern f32 lbl_803E2C74;
-extern f32 lbl_803E2C30;
-extern f32 lbl_803E2C34;
-extern f32 lbl_803E2C10;
-extern f32 lbl_803E2C14;
-extern f32 lbl_803E2C18;
-extern f32 lbl_803E2C48;
-extern f32 lbl_803E2C78;
-extern f32 lbl_803E2C50;
-extern f32 lbl_803E2C70;
-extern f32 lbl_803E2C54;
-extern f32 lbl_803E2C38;
-extern f32 lbl_803E2C40;
 extern f32 gCrawlerSfxVolMax127;
-extern f32 lbl_803E2B3C;
-extern f32 lbl_803E2B48;
-extern f32 lbl_803E2B50;
 extern f32 lbl_803DBCE8;
 f32 gCrawlerHitSfxTimer;
 
 extern u8 gCrawlerSpeedThresholds[];
-extern f32 lbl_803E2C44;
-extern f32 lbl_803E2C4C;
-extern f32 lbl_803E2C5C;
-extern f32 lbl_803E2C60;
-extern f32 lbl_803E2C64;
-extern f32 lbl_803E2C68;
 extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
 
 /*

@@ -21,9 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/voxmaps.h"
 
-extern int lbl_803DBCB8[2];
 extern u8 gMagicPlantSeqEntryTable[8];
-extern int lbl_803DBCC8[2];
 
 #define MAGICPLANT_OBJFLAG_PARENT_SLACK 0x1000
 
@@ -36,44 +34,8 @@ extern int lbl_803DBCC8[2];
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-extern const f32 lbl_803E28B0;
-extern f32 lbl_803E28BC;
-extern f32 lbl_803E28D0;
-extern f32 lbl_803E28DC;
-extern f32 lbl_803E28E0;
-extern f32 lbl_803E28E4;
-extern f32 lbl_803E28E8;
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
-extern f32 lbl_803E28B4;
-extern f32 lbl_803E28B8;
-extern f32 lbl_803E28C0;
-extern f32 lbl_803E28C4;
-extern f32 lbl_803E28C8;
-extern f32 lbl_803E28CC;
-extern f32 lbl_803E28F4;
-extern f32 lbl_803E290C;
-extern f32 lbl_803E2910;
-extern f32 lbl_803E2924;
-extern f32 lbl_803E2928;
-extern f32 lbl_803E292C;
-extern f32 lbl_803E2930;
-extern f32 lbl_803E28D4;
-extern f32 lbl_803E28D8;
-extern f32 lbl_803E28F0;
-extern f32 lbl_803E2900;
-extern f32 lbl_803E2904;
-extern f32 lbl_803E2908;
-extern f64 lbl_803E2918;
-extern f64 lbl_803E2938;
-extern f32 lbl_803E2940;
-extern f32 lbl_803E2944;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E2920;
-extern f32 lbl_803E294C;
-extern f32 lbl_803E2950;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2958;
 void fn_8014D08C(GameObject* obj, int state, u8 moveId, f32 speed, int p5, int flags);
 #define Baddie_SetMove(obj, state, moveId, speed, p5, flags)                                                           \
     fn_8014D08C((GameObject*)(obj), (int)(state), (moveId), (speed), (p5), (flags))

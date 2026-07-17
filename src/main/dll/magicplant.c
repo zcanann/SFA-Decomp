@@ -43,29 +43,6 @@ int lbl_803DBCC8[2] = {2, 3};
 #define MAGICPLANT_PARTFX          0x802
 #define MAGICPLANT_HIT_VOLUME_SLOT 0xe
 
-extern f32 lbl_803E286C;
-extern f32 lbl_803E2894;
-extern f32 lbl_803E28F4;
-extern f32 lbl_803E290C;
-extern f32 lbl_803E2910;
-extern f32 lbl_803E2924;
-extern f32 lbl_803E2928;
-extern f32 lbl_803E292C;
-extern f32 lbl_803E2930;
-extern f32 lbl_803E28F0;
-extern f32 lbl_803E2900;
-extern f32 lbl_803E2904;
-extern f32 lbl_803E2908;
-extern f64 lbl_803E2918;
-extern f64 lbl_803E2938;
-extern f32 lbl_803E2940;
-extern f32 lbl_803E2944;
-extern f32 lbl_803E2948;
-extern f32 lbl_803E2920;
-extern f32 lbl_803E294C;
-extern f32 lbl_803E2950;
-extern f32 lbl_803E2954;
-extern f32 lbl_803E2958;
 
 union MagicPlantConstF32 { f32 f; };
 const union MagicPlantConstF32 lbl_803E28B0 = { 0.0f };
