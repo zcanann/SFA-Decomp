@@ -1618,10 +1618,10 @@ void walkgroupFindExitPointFn_800dc398(void)
                 }
                 wg->planes[3].normalX = (s16)(32767.0f * dxn);
                 wg->planes[3].normalZ = (s16)(32767.0f * dzn);
-                *(po) = -((f32)wg->planes[3].normalX * (x3) + (f32)wg->planes[3].normalZ * (z3));
+                *po = -(wg->planes[3].normalX * x3 + wg->planes[3].normalZ * z3);
 
-                wg->maxY = (s16)(lbl_803E05D0 * (f32)curve->maxYExtent + curve->y);
-                wg->minY = (s16)-(lbl_803E05D0 * (f32)curve->minYExtent - curve->y);
+                wg->maxY = (s16)(lbl_803E05D0 * curve->maxYExtent + curve->y);
+                wg->minY = (s16)-(lbl_803E05D0 * curve->minYExtent - curve->y);
 
                 for (slot = 0, slotPtr = (char*)curve; slot < 4; slot++)
                 {
@@ -1705,8 +1705,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                             OBJFSA_SET_NEWPATCH_PLANE(3, objfsaCorner(*(s8*)(slotPtr + 0x35), scale, &curve->z) - z3,
                                                       x3 - objfsaCorner(*(s8*)(slotPtr + 0x34), scale, &curve->x), x3, z3);
 
-                            fy0 = lbl_803E05D0 * (f32)curve->maxYExtent + curve->y;
-                            fy1 = lbl_803E05D0 * (f32)linked->maxYExtent + linked->y;
+                            fy0 = lbl_803E05D0 * curve->maxYExtent + curve->y;
+                            fy1 = lbl_803E05D0 * linked->maxYExtent + linked->y;
                             if (fy0 > fy1)
                             {
                                 fyv = fy0;
@@ -1719,8 +1719,8 @@ void walkgroupFindExitPointFn_800dc398(void)
                                 lp = (char*)&OBJFSA_NEWPATCH;
                                 ((ObjfsaPatch*)lp)->maxY = fyv;
                             }
-                            fy0 = -(lbl_803E05D0 * (f32)curve->minYExtent - curve->y);
-                            fy1 = -(lbl_803E05D0 * (f32)linked->minYExtent - linked->y);
+                            fy0 = -(lbl_803E05D0 * curve->minYExtent - curve->y);
+                            fy1 = -(lbl_803E05D0 * linked->minYExtent - linked->y);
                             if (fy0 < fy1)
                             {
                                 fyv = fy0;
@@ -1751,17 +1751,17 @@ void walkgroupFindExitPointFn_800dc398(void)
         {
             wgT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[0] * 40 + 0x3000));
             wgBT = (ObjfsaWalkGroup*)((char*)patchBase[0] + (pp[1] * 40 + 0x3000));
-            fdx = (f32)(p->exit1X - p->exit0X);
-            fdz = (f32)(p->exit1Z - p->exit0Z);
+            fdx = p->exit1X - p->exit0X;
+            fdz = p->exit1Z - p->exit0Z;
 
             iter = 0;
             goto scan0;
         update0:
-            p->exit0X = (s16)((f32)p->exit0X + fdx / div);
-            p->exit0Z = (s16)((f32)p->exit0Z + fdz / div);
+            p->exit0X = (s16)(p->exit0X + fdx / div);
+            p->exit0Z = (s16)(p->exit0Z + fdz / div);
             if (iter++ == 100)
             {
-                OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff, (int)(u32)p->groupId >> 8);
+                OSReport(sObjfsaMissingPatchExitPoint0, p->groupId & 0xff, p->groupId >> 8);
                 goto exit0Done;
             }
         scan0:
@@ -1778,11 +1778,11 @@ void walkgroupFindExitPointFn_800dc398(void)
             iter = 0;
             goto scan1;
         update1:
-            pC->exit1X = (s16)((f32)pB->exit1X - fdx / div);
-            pC->exit1Z = (s16)((f32)pC->exit1Z - fdz / div);
+            pC->exit1X = (s16)(pB->exit1X - fdx / div);
+            pC->exit1Z = (s16)(pC->exit1Z - fdz / div);
             if (iter++ == 100)
             {
-                OSReport(sObjfsaMissingPatchExitPoint1, pC->groupId & 0xff, (int)(u32)pC->groupId >> 8);
+                OSReport(sObjfsaMissingPatchExitPoint1, pC->groupId & 0xff, pC->groupId >> 8);
                 goto exit1Done;
             }
         scan1:
