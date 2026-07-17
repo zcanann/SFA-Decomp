@@ -13,9 +13,9 @@ extern int adsrSetup(McmdEnvelopeState* state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
-extern f32 lbl_803E77F0;  /* 4096.0f */
-extern f32 lbl_803E77F4;  /* attack scale epsilon */
-extern f32 lbl_803E77F8;  /* decay scale epsilon */
+extern const f32 lbl_803E77F0;  /* 4096.0f */
+extern const f32 lbl_803E77F4;  /* attack scale epsilon */
+extern const f32 lbl_803E77F8;  /* decay scale epsilon */
 
 typedef struct SampleInfo
 {
@@ -486,6 +486,6 @@ void voiceConfigureParamRamp(McmdVoiceState* svoice, McmdCommandArgs* cstep, u8 
     MAC_CFLAGS(svoice) |= MAC_FLAG64(0x2000, 0);
 }
 
-__declspec(section ".sdata2") f32 lbl_803E77F0 = 4096.0f;
-__declspec(section ".sdata2") f32 lbl_803E77F4 = 1.1920928955078125e-7f;
-__declspec(section ".sdata2") f32 lbl_803E77F8 = 0.0078125f;
+const f32 lbl_803E77F0 = 4096.0f;
+const f32 lbl_803E77F4 = 1.1920928955078125e-7f;
+const f32 lbl_803E77F8 = 0.0078125f;
