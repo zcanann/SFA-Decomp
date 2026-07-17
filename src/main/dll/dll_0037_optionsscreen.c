@@ -45,6 +45,15 @@
 #define OPTIONSSCREEN_PANEL_GAMEPLAY 2
 #define OPTIONSSCREEN_PANEL_MISC     3
 
+typedef struct OptionsScreenPanelConfig {
+    u16* items;
+    u32 reserved;
+    u16 itemLayout;
+    u16 selectionTextId;
+    u16 headingTextId;
+    u16 padding;
+} OptionsScreenPanelConfig;
+
 extern TitleMenuControl* gTitleMenuItemInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
 s8 lbl_803DBA28 = -1;      /* active panel id (-1 = none) */
@@ -103,10 +112,12 @@ u16 lbl_8031AC04[90] = {
     0x0000, 0x0109, 0x017c, 0x0000, 0xffff, 0xffff, 0x0000, 0x0000, 0x0000, 0xffff, 0xffff, 0xff00, 0x0000, 0x0000, 0x0000, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000};
 
-u32 lbl_8031ACB8[16] = {(u32)lbl_8031A8F8, 0x00000000, 0x03040330, 0x03670000,
-        (u32)lbl_8031AA9C, 0x00000000, 0x0603035c, 0x03680000,
-        (u32)lbl_8031A9AC, 0x00000000, 0x0403035a, 0x03680000,
-        (u32)lbl_8031AC04, 0x00000000, 0x0203035b, 0x03680000};
+OptionsScreenPanelConfig lbl_8031ACB8[4] = {
+    {lbl_8031A8F8, 0, 0x0304, 0x0330, 0x0367, 0},
+    {lbl_8031AA9C, 0, 0x0603, 0x035c, 0x0368, 0},
+    {lbl_8031A9AC, 0, 0x0403, 0x035a, 0x0368, 0},
+    {lbl_8031AC04, 0, 0x0203, 0x035b, 0x0368, 0},
+};
 
 u32 lbl_8031ACF8[10] = {0x00000000, 0x00000000, 0x00000000, 0x00050000,
         (u32)OptionsScreen_initialise, (u32)OptionsScreen_release,
