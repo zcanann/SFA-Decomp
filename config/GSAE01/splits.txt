@@ -1374,7 +1374,7 @@ main/dll/seqobj11e.c:
 
 main/dll/mikaladon.c:
 	.text       start:0x80152EC0 end:0x80152FA8
-	.sdata2     start:0x803E28A0 end:0x803E28B0
+	.sdata2     start:0x803E28A0 end:0x803E28AC
 
 main/dll/magicplant.c:
 	.text       start:0x80152FA8 end:0x80153640
@@ -1464,7 +1464,7 @@ main/dll/dll_00CB_dllcb.c:
 main/dll/grimblegroup.c:
 	.text       start:0x80161130 end:0x80162FC0
 	.data       start:0x80320178 end:0x803201E8
-	.sdata2     start:0x803E2EB0 end:0x803E2F30
+	.sdata2     start:0x803E2EB0 end:0x803E2F2C
 
 main/dll/dll_00CF_cannonclaw.c:
 	.text       start:0x80162FC0 end:0x801631C8
@@ -2671,7 +2671,7 @@ main/dll/NW/nwmammothgroup.c:
 main/dll/NW/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24
 	.rodata     start:0x802C23E8 end:0x802C23F8
-	.sdata2     start:0x803E5260 end:0x803E5270
+	.sdata2     start:0x803E5260 end:0x803E526C
 
 main/dll/NW/dll_01A3_nwanimice.c:
 	.text       start:0x801CFB24 end:0x801CFBB4
@@ -2926,7 +2926,7 @@ main/dll/laserturretgroup.c:
 	.data       start:0x80328370 end:0x803283E0
 	.sdata      start:0x803DC0A0 end:0x803DC0B0
 	.sbss       start:0x803DDC58 end:0x803DDC5C
-	.sdata2     start:0x803E59F8 end:0x803E5A30
+	.sdata2     start:0x803E59F8 end:0x803E5A2C
 
 main/dll/dll_0284_shopitem.c:
 	.text       start:0x801E832C end:0x801E8EA4
@@ -3061,7 +3061,7 @@ main/dll/fireflygroup.c:
 	.text       start:0x801F4C04 end:0x801F568C
 	.data       start:0x80328C30 end:0x80328C68
 	.sdata      start:0x803DC128 end:0x803DC130
-	.sdata2     start:0x803E5EA8 end:0x803E5EF8
+	.sdata2     start:0x803E5EA8 end:0x803E5EF4
 
 main/dll/WM/dll_020C_wmspiritplace.c:
 	.text       start:0x801F568C end:0x801F654C
@@ -3162,7 +3162,7 @@ main/dll/dll_0241_drakorenergy.c:
 	.text       start:0x801FF9B0 end:0x801FFE18
 	.data       start:0x80329378 end:0x803293B8
 	.sdata      start:0x803DC160 end:0x803DC180
-	.sdata2     start:0x803E6298 end:0x803E62A8
+	.sdata2     start:0x803E6298 end:0x803E62A4
 
 main/dll/dll_0242_dbstealerworm.c:
 	.text       start:0x801FFE18 end:0x80203C78
@@ -3453,7 +3453,7 @@ main/dll/dll_0273_firepipe.c:
 	.text       start:0x8021F8CC end:0x80220608
 	.data       start:0x8032AC90 end:0x8032ACC8
 	.sdata      start:0x803DC340 end:0x803DC358
-	.sdata2     start:0x803E6BA0 end:0x803E6BB0
+	.sdata2     start:0x803E6BA0 end:0x803E6BAC
 
 main/dll/DR/dll_0279_drenergydisc.c:
 	.text       start:0x80220608 end:0x80220808
@@ -3599,7 +3599,7 @@ main/dll/ARW/dll_029F_arwbombcoll.c:
 main/dll/dll_02A0_ring.c:
 	.text       start:0x8022FA00 end:0x802308B4
 	.data       start:0x8032B720 end:0x8032B7D0
-	.sdata2     start:0x803E7098 end:0x803E70E0
+	.sdata2     start:0x803E7098 end:0x803E70DC
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:
 	.text       start:0x802308B4 end:0x80230E2C
