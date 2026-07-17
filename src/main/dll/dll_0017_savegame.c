@@ -52,7 +52,7 @@ u32 pRestartPoint;
 u8* lbl_803DD498;
 s8 gSaveGameMapActCacheIdx;
 static int sSaveGameUnused0;
-int gSaveGameObjGroupCacheIdx;
+int gSaveGameObjGroupCacheIdx[2];
 u8 saveGameLoadStatus;
 
 s8 gSaveGameCurrentSlot = -1;
@@ -769,8 +769,8 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         }
 
         mainSetBits(gSaveGameMapObjGroupBits[idx], newStatus);
-        gSaveGameObjGroupCacheIdx = idx;
-        (&gSaveGameObjGroupCacheIdx)[1] = newStatus;
+        gSaveGameObjGroupCacheIdx[0] = idx;
+        gSaveGameObjGroupCacheIdx[1] = newStatus;
 
         if (value != 0)
         {
@@ -897,12 +897,12 @@ int SaveGame_gplayGetObjGroupStatus(int idx, int shift)
 {
     if (idx >= SAVEGAME_EXTENDED_MAP_THRESHOLD)
         idx = *(u8*)((char*)gExtendedMapActLookup + idx - SAVEGAME_EXTENDED_MAP_THRESHOLD);
-    if (idx != gSaveGameObjGroupCacheIdx)
+    if (idx != gSaveGameObjGroupCacheIdx[0])
     {
-        gSaveGameObjGroupCacheIdx = idx;
-        (&gSaveGameObjGroupCacheIdx)[1] = mainGetBit(gSaveGameMapObjGroupBits[idx]);
+        gSaveGameObjGroupCacheIdx[0] = idx;
+        gSaveGameObjGroupCacheIdx[1] = mainGetBit(gSaveGameMapObjGroupBits[idx]);
     }
-    return ((&gSaveGameObjGroupCacheIdx)[1] >> shift) & 1;
+    return (gSaveGameObjGroupCacheIdx[1] >> shift) & 1;
 }
 
 u8 SaveGame_getMapAct(int idx)
@@ -1093,7 +1093,7 @@ void loadMapForCurrentSaveGame(void)
 {
     char* base;
     gSaveGameMapActCacheIdx = -1;
-    gSaveGameObjGroupCacheIdx = -1;
+    gSaveGameObjGroupCacheIdx[0] = -1;
     unlockLevel(0, 0, 1);
     memset((char*)gSaveGameData + 0x6ec, 0, 0x884);
     cutsceneExit();
@@ -1241,7 +1241,7 @@ void SaveGame_initialise(void)
     }
     pRestartPoint = 0;
     gSaveGameMapActCacheIdx = -1;
-    gSaveGameObjGroupCacheIdx = -1;
+    gSaveGameObjGroupCacheIdx[0] = -1;
     memset(base + 0x244, 0, 0xe4);
     base[0x24a] = 0;
     base[0x246] = 1;
