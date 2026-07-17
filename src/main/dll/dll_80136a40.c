@@ -820,8 +820,8 @@ void debugTextDrawToFrameBuffer(int x, int y, u8* grid, int unused)
                 a2++;
                 a3++;
             }
-            DCStoreRange((char*)debugDrawFrameBuffer + c0 * 2, 0x10);
-            DCStoreRange((char*)debugDrawFrameBuffer + c1 * 2, 0x10);
+            DCStoreRange(debugDrawFrameBuffer + c0, 0x10);
+            DCStoreRange(debugDrawFrameBuffer + c1, 0x10);
             row0 += 0x500;
             row1 += 0x500;
         }
