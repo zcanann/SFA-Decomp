@@ -38,9 +38,6 @@
 #include "main/audio/music_trigger_ids.h"
 #include "main/frame_timing.h"
 
-u8 gNewCloudStarsInitialized;
-char* gNewCloudStarTextureB;
-char* gNewCloudStarTextureA;
 u8 gNewCloudBlizzardActivePrev;
 void* lbl_803DD1C8;
 void* lbl_803DD1C4;
@@ -65,10 +62,6 @@ f32 gNewCloudOvercastFadeLevel = 1.0f;
 f32 lbl_803DB764 = 1.0f;
 f32 lbl_803DB768 = 1.0f;
 int gNewCloudWindSourcesInit = 1;
-u8 gNewCloudStarAlphaRanges[8] = {0xA0, 0xAA, 0x82, 0x8C, 0x64, 0x6E, 0x50, 0x5A};
-#pragma explicit_zero_data on
-int gNewCloudStarFogColor = 0;
-#pragma explicit_zero_data off
 extern f32 lbl_803DF1A0;
 extern const f32 lbl_803DF1A4;
 extern int snowPrintSnowCloud(int arg, int x);
@@ -130,12 +123,6 @@ static inline void snowFifoTexCoord2s16(s16 s, s16 t)
     GXWGFifo.s16 = t;
 }
 
-static inline void starFifoPosition3s16(s16 x, s16 y, s16 z)
-{
-    (*(PPCWGPipe2*)&GXWGFifo).s16 = x;
-    (*(PPCWGPipe2*)&GXWGFifo).s16 = y;
-    (*(PPCWGPipe2*)&GXWGFifo).s16 = z;
-}
 
 #pragma dont_inline off
 
@@ -1621,8 +1608,6 @@ void dll_07_func09(void)
 
 
 
-#define NEWCLOUD_TEXTURE_STAR_A 0xc21 /* gNewCloudStarTextureA */
-#define NEWCLOUD_TEXTURE_STAR_B 0xc22 /* gNewCloudStarTextureB */
 WindSource gNewCloudWindSources[NEWCLOUD_WIND_SOURCE_COUNT];
 
 #pragma dont_inline reset
@@ -2000,16 +1985,6 @@ void dll_07_func06(void)
 extern void fn_800790AC(void);
 
 
-u8 gNewCloudStarColorRanges[24] = {
-    0xD0, 0xFF, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0x80, 0xA0, 0xD0, 0xFF,
-    0xD0, 0xFF, 0xA0, 0xD0, 0x80, 0xA0, 0xD0, 0xFF, 0x80, 0xA0, 0xD0, 0xFF,
-};
-u16 gNewCloudStarDisplayListSizes[0x5C];
-void* gNewCloudStarDisplayLists[0x5C];
-extern const f32 gNewCloudStarFadeInTime;
-extern const f32 lbl_803DF284;
-extern const f32 gNewCloudStarFadeOutTime;
-extern const f32 lbl_803DF28C;
 
 #pragma dont_inline reset
 #pragma dont_inline on
@@ -2368,281 +2343,6 @@ void newclouds_initialise(void)
 {
     gNewCloudInitialized = 0;
 }
-#pragma opt_common_subs off
-void drawSkyStars(void)
-{
-    int timeOk;
-    int start;
-    int i;
-    int alpha;
-    int div;
-    int red;
-    int green;
-    int blue;
-    int a;
-    u8* colRange;
-    FogColor color;
-    f32 t;
-
-    timeOk = (*gSkyInterface)->getSunPosition(&t);
-    if (isOvercastByteLegacy() != 0)
-    {
-        if (timeOk != 0)
-        {
-            if (t > gNewCloudStarFadeInTime)
-            {
-                alpha = 0xff;
-            }
-            else
-            {
-                alpha = (lbl_803DF284 * (t / gNewCloudStarFadeInTime));
-            }
-        }
-        else
-        {
-            if (t > gNewCloudStarFadeOutTime || lbl_803DF28C == t)
-            {
-                return;
-            }
-            alpha = (lbl_803DF284 - lbl_803DF284 * (t / gNewCloudStarFadeOutTime));
-        }
-        start = 0x4c;
-        div = 2;
-    }
-    else
-    {
-        start = 0;
-        alpha = 0xff;
-        div = 1;
-    }
-    GXSetCullMode(GX_CULL_NONE);
-    Camera_RebuildProjectionMatrix();
-    GXClearVtxDesc();
-    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-    textureSetupFn_800799c0();
-    fn_800790AC();
-    textRenderSetupFn_80079804();
-    gxBlendFn_800789ac();
-    color = *(FogColor*)&gNewCloudStarFogColor;
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
-    Camera_UpdateViewMatrices();
-    GXLoadPosMtxImm(Camera_GetViewRotationMatrix(), GX_PNMTX0);
-    GXSetCurrentMtx(GX_PNMTX0);
-    for (i = start; i < 0x5c; i++)
-    {
-        colRange = &gNewCloudStarColorRanges[(i & 3) * 6];
-        red = randomGetRange(colRange[0], colRange[1]);
-        green = randomGetRange(colRange[2], colRange[3]);
-        blue = randomGetRange(colRange[4], colRange[5]);
-        if (i < 0x4c)
-        {
-            colRange = &gNewCloudStarAlphaRanges[((i & 0xc) >> 2) * 2];
-            a = (alpha * randomGetRange(colRange[0], colRange[1])) >> 8;
-        }
-        else
-        {
-            a = alpha;
-        }
-        _gxSetTevColor2((u8)red, (u8)green, (u8)blue, (u8)a);
-        if (i == 0x4c)
-        {
-            selectTexture((Texture*)gNewCloudStarTextureA, 0);
-            textureSetupFn_800799c0();
-            textRenderSetupFn_800795e8();
-            textRenderSetupFn_80079804();
-        }
-        else if (i == 0x54)
-        {
-            selectTexture((Texture*)gNewCloudStarTextureB, 0);
-        }
-        if (i < 0x4c)
-        {
-            GXSetPointSize((u8)randomGetRange(0xc, 0xc), GX_TO_ONE);
-        }
-        else if (i & 4)
-        {
-            GXSetPointSize((u8)(randomGetRange(0x30, 0x3c) / div), GX_TO_ONE);
-        }
-        else
-        {
-            GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / div), GX_TO_ONE);
-        }
-        GXCallDisplayList(gNewCloudStarDisplayLists[i], gNewCloudStarDisplayListSizes[i]);
-    }
-}
-#pragma opt_common_subs reset
-
-
-extern const f32 gNewCloudStarRadius;
-extern const f32 gNewCloudStarAxisThreshold;
-extern const f32 lbl_803DF298;
-extern const f32 lbl_803DF29C;
-extern const f32 lbl_803DF2A0;
-extern const f32 lbl_803DF2A4;
-
-void titleScreenDrawFn_80093db4(void)
-{
-    int k;
-    int j;
-    f32* constellation;
-    f32* cp;
-    int i;
-    int idx;
-    f32 v[3];
-    f32 mtx1[12];
-    f32 mtx2[12];
-
-    GXSetMisc(1, 0);
-    testAndSet_onlyUseHeap3(0);
-    constellation = mmAlloc(0x4b0, 0x7f7f7fff, 0);
-    testAndSet_onlyUseHeap3(1);
-    for (i = 0, cp = constellation; i < 0x64; i++)
-    {
-        do
-        {
-            v[0] = (int)
-            randomGetRange(-5000, 5000);
-            v[1] = (int)
-            randomGetRange(-5000, 5000);
-            v[2] = (int)
-            randomGetRange(-5000, 5000);
-        }
-        while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
-        PSVECNormalize(v, v);
-        PSVECScale(v, v, gNewCloudStarRadius);
-        cp[0] = v[0];
-        cp[1] = v[1];
-        cp[2] = v[2];
-        cp += 3;
-    }
-    gNewCloudStarsInitialized = 1;
-    gNewCloudStarTextureA = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_A);
-    gNewCloudStarTextureB = textureLoadAsset(NEWCLOUD_TEXTURE_STAR_B);
-    for (k = 0; k < 0x5c; k++)
-    {
-        gNewCloudStarDisplayLists[k] = mmAlloc(0x220, 0x7f7f7fff, 0);
-        DCInvalidateRange(gNewCloudStarDisplayLists[k], 0x220);
-        GXBeginDisplayList(gNewCloudStarDisplayLists[k], 0x220);
-        GXResetWriteGatherPipe();
-        GXBegin(GX_POINTS, GX_VTXFMT0, 0x32);
-        for (j = 0; j < 0x32; j++)
-        {
-            if (randomGetRange(0, 9) < 5)
-            {
-                do
-                {
-                    v[0] = (int)
-                    randomGetRange(-5000, 5000);
-                    v[1] = (int)
-                    randomGetRange(-5000, 5000);
-                    v[2] = (int)
-                    randomGetRange(-5000, 5000);
-                }
-                while (0.0f == v[0] && 0.0f == v[1] && 0.0f == v[2]);
-                PSVECNormalize(v, v);
-                PSVECScale(v, v, gNewCloudStarRadius);
-            }
-            else
-            {
-                f64 ax;
-                idx = randomGetRange(0, 0x63);
-                v[0] = constellation[idx * 3];
-                v[1] = constellation[idx * 3 + 1];
-                v[2] = constellation[idx * 3 + 2];
-                ax = __fabs(v[0]);
-                if (ax > gNewCloudStarAxisThreshold)
-                {
-                    PSMTXRotRad(mtx1, 0x79,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
-                    PSMTXRotRad(mtx2, 0x7a,
-                                (lbl_803DF298 *
-                                    (lbl_803DF29C *
-                                        (lbl_803DF2A0 *
-                                            randomGetRange(-0x8000, 0x8000))
-                    )
-                    )
-                    /
-                    lbl_803DF2A4
-                    )
-                    ;
-                }
-                else
-                {
-                    f64 ay = __fabs(v[1]);
-                    if (ay > gNewCloudStarAxisThreshold)
-                    {
-                        PSMTXRotRad(mtx1, 0x78,
-                                    (lbl_803DF298 *
-                                        (lbl_803DF29C *
-                                            (lbl_803DF2A0 *
-                                                randomGetRange(-0x8000, 0x8000))
-                        )
-                        )
-                        /
-                        lbl_803DF2A4
-                        )
-                        ;
-                        PSMTXRotRad(mtx2, 0x7a,
-                                    (lbl_803DF298 *
-                                        (lbl_803DF29C *
-                                            (lbl_803DF2A0 *
-                                                randomGetRange(-0x8000, 0x8000))
-                        )
-                        )
-                        /
-                        lbl_803DF2A4
-                        )
-                        ;
-                    }
-                    else
-                    {
-                        PSMTXRotRad(mtx1, 0x78,
-                                    (lbl_803DF298 *
-                                        (lbl_803DF29C *
-                                            (lbl_803DF2A0 *
-                                                randomGetRange(-0x8000, 0x8000))
-                        )
-                        )
-                        /
-                        lbl_803DF2A4
-                        )
-                        ;
-                        PSMTXRotRad(mtx2, 0x79,
-                                    (lbl_803DF298 *
-                                        (lbl_803DF29C *
-                                            (lbl_803DF2A0 *
-                                                randomGetRange(-0x8000, 0x8000))
-                        )
-                        )
-                        /
-                        lbl_803DF2A4
-                        )
-                        ;
-                    }
-                }
-                PSMTXConcat((void*)mtx2, (void*)mtx1, (void*)mtx1);
-                PSMTXMultVecSR(mtx1, v, v);
-            }
-            starFifoPosition3s16(v[0], v[1], v[2]);
-            GXWGFifo.s16 = 0;
-            GXWGFifo.s16 = 0;
-        }
-        gNewCloudStarDisplayListSizes[k] = GXEndDisplayList();
-    }
-    mm_free(constellation);
-    GXSetMisc(1, 8);
-}
-
 int gNewCloudMusicIdByType[5] = {43, 0, 0, 0, 0};
 
 char sSnowFreeSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowFreeSnowCloud\n";
@@ -2670,8 +2370,6 @@ char lbl_8030F670[] =
 };
 char sSnowKillSnowCloudInvalidCloudId[] = "!!! Error non-existant cloud id - %i - in snowKillSnowCloud\n";
 
-/* descriptor/ptr table auto 0x8030f788-0x8030f7b0 */
-u32 lbl_8030F788[10] = { 0x00000000, 0x00000000, 0x00000000, 0x00050000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 };
 
 /* fill missing .data symbols */
 u32 lbl_8030F5B4[15] = { 0x00000000, 0x00000000, 0x00000000, 0x000a0000, (u32)newclouds_initialise, (u32)newclouds_release, 0x00000000, (u32)newclouds_updateEnvfxAct, (u32)newclouds_onMapSetup, (u32)newclouds_killSnowCloud, (u32)dll_07_func06, (u32)dll_07_func07, (u32)dll_07_func08, (u32)dll_07_func09, (u32)dll_07_func0A_nop };

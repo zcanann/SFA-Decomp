@@ -233,12 +233,20 @@ main/sky.c:
 	.sbss       start:0x803DD128 end:0x803DD190
 
 main/newclouds.c:
-	.text       start:0x8008ED88 end:0x8009436C
+	.text       start:0x8008ED88 end:0x80093AE0
 	.rodata     start:0x802C1FA8 end:0x802C1FD8
-	.data       start:0x8030F5A0 end:0x8030F7B0
-	.bss        start:0x8039A818 end:0x8039AB28
-	.sdata      start:0x803DB760 end:0x803DB780
-	.sbss       start:0x803DD190 end:0x803DD1E0
+	.data       start:0x8030F5A0 end:0x8030F770
+	.bss        start:0x8039A818 end:0x8039A900
+	.sdata      start:0x803DB760 end:0x803DB770
+	.sbss       start:0x803DD190 end:0x803DD1D0
+
+main/skystars.c:
+	.text       start:0x80093AE0 end:0x8009436C
+	.data       start:0x8030F770 end:0x8030F7B0
+	.bss        start:0x8039A900 end:0x8039AB28
+	.sdata      start:0x803DB770 end:0x803DB780
+	.sbss       start:0x803DD1D0 end:0x803DD1E0
+	.sdata2     start:0x803DF280 end:0x803DF2B0
 
 main/dll/cloudaction.c:
 	.text       start:0x8009436C end:0x80094F7C
