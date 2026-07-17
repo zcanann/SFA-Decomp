@@ -25,10 +25,8 @@
 #include "main/dll/dll_01F5_shipbattle.h"
 #include "main/object_descriptor.h"
 
-#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E5958 = 0.0f;
-#pragma force_active reset
 
 STATIC_ASSERT(sizeof(SBCloudBallState) == 0x24);
 STATIC_ASSERT(sizeof(SBFireBallState) == 0x18);
@@ -43,7 +41,6 @@ STATIC_ASSERT(sizeof(ShipBattleState) == 0x140);
 extern void** gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 
-extern f32 lbl_803E5958;
 extern u8 lbl_803DB411;
 f32 lbl_803DDC50[2];
 
