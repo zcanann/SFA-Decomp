@@ -5128,7 +5128,7 @@ void fn_8029DAE0(GameObject* obj, int* p2)
 int playerState1D(int obj, PlayerState* state, f32 fv)
 {
     HeadMoveTable* tbl = (HeadMoveTable*)lbl_80332EC0;
-    int prev;
+    u8 prev;
     int* tblB;
     GameObject* self = (GameObject*)obj;
     PlayerState* inner = self->extra;
@@ -5140,8 +5140,6 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
     f32 t2;
     f32 xc;
     f32 yc;
-    f32 xT;
-    f32 yT;
     f32 yOut;
     ColPair col;
 
@@ -5217,13 +5215,18 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
         doXform = 0;
         break;
     }
-    prev = *(u8*)&inner->stickDirection;
+    prev = inner->stickDirection;
     t = (f32)padGetStickXS8(0) / lbl_803E7FA8;
     xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
     t2 = (f32)padGetStickYS8(0) / lbl_803E7FA8;
     yc = (t2 < lbl_803E7ECC) ? lbl_803E7ECC : ((t2 > lbl_803E7EE0) ? lbl_803E7EE0 : t2);
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0)
     {
+        f32 component;
+        f32 k;
+        f32 yT;
+        f32 xT;
+
         if (yc > lbl_803E7F14)
         {
             xT = lbl_803E7FDC - lbl_803E7F48 * yc;
@@ -5250,21 +5253,23 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
         }
         else
         {
-            if (inner->stickTargetX <= lbl_803E7F6C && inner->stickTargetX >= lbl_803E7FDC &&
-                inner->stickTargetY <= lbl_803E7F6C && inner->stickTargetY >= lbl_803E7FDC)
+            component = inner->stickTargetX;
+            if (component <= lbl_803E7F6C && component >= lbl_803E7FDC)
             {
-                inner->stickDirection = 0;
-                nextMove = 0x5f;
-                state->baddie.moveSpeed = lbl_803E7EF8;
+                component = inner->stickTargetY;
+                if (component <= lbl_803E7F6C && component >= lbl_803E7FDC)
+                {
+                    inner->stickDirection = 0;
+                    nextMove = 0x5f;
+                    state->baddie.moveSpeed = lbl_803E7EF8;
+                }
             }
             xT = lbl_803E7EA4;
             yT = lbl_803E7EA4;
         }
-        {
-            f32 k = lbl_803E7EFC;
-            inner->stickTargetX = k * (xT - inner->stickTargetX) + inner->stickTargetX;
-            inner->stickTargetY = k * (yT - inner->stickTargetY) + inner->stickTargetY;
-        }
+        k = lbl_803E7EFC;
+        inner->stickTargetX = k * (xT - inner->stickTargetX) + inner->stickTargetX;
+        inner->stickTargetY = k * (yT - inner->stickTargetY) + inner->stickTargetY;
     }
     if (((ByteFlags*)((char*)inner + 0x3f3))->b80 == 0 &&
         ((*(int*)&state->baddie.unk318 & 0x100) == 0 || inner->stickEdgeLatch != 0 ||
@@ -5295,7 +5300,7 @@ int playerState1D(int obj, PlayerState* state, f32 fv)
                 Sfx_PlayFromObject(obj, SFXTRIG_literun116);
             }
             *(u32*)&inner->flags360 |= 0x200LL;
-            if (inner->stickDirection != (u8)prev || *(s8*)&inner->latchedStickDir == 0)
+            if (inner->stickDirection != prev || *(s8*)&inner->latchedStickDir == 0)
             {
                 ((ByteFlags*)((char*)inner + 0x3f2))->b01 = 1;
                 inner->latchedStickDir = 0;
