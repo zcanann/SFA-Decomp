@@ -3013,7 +3013,8 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState* state, f32* offse
         segment = i - 1;
         {
             f32* times = (f32*)state;
-            segmentT = segment + (t - times[segment + 2]) / (times[segment + 3] - times[segment + 2]);
+            segmentT = segment;
+            segmentT += (t - times[segment + 2]) / (times[segment + 3] - times[segment + 2]);
         }
         segmentT = segmentT * lbl_803DF01C;
 
