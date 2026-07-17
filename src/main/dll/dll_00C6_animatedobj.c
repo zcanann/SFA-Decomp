@@ -92,11 +92,6 @@ extern void** gTitleMenuControlInterfaceCopy;
 
 
 extern void Obj_SetModelRenderOpAlpha(int* obj, int alpha);
-#pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E3228 = 1.0f;
-__declspec(section ".sdata2") f32 lbl_803E322C = 0.0f;
-__declspec(section ".sdata2") f32 lbl_803E3230 = 3.1415927410125732f;
-#pragma explicit_zero_data off
 
 
 
@@ -176,13 +171,13 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16*)(*gCameraInterface)->getCamera();
         ((GameObject*)cam)->anim.rotY += 0x8000;
-        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E3228;
+        ((GameObject*)cam)->anim.rootMotionScale = 1.0f;
         Obj_BuildWorldTransformMatrix((GameObject*)cam, mCam, 0);
         ((GameObject*)cam)->anim.rotY += 0x8000;
-        ((GameObject*)cam)->anim.rootMotionScale = lbl_803E322C;
+        ((GameObject*)cam)->anim.rootMotionScale = 0.0f;
         PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
-        PSMTXRotRad(mRotY, 'y', lbl_803E3230);
-        PSMTXRotRad(mRotZ, 'z', lbl_803E3230);
+        PSMTXRotRad(mRotY, 'y', 3.1415927f);
+        PSMTXRotRad(mRotZ, 'z', 3.1415927f);
         PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
         PSMTXConcat(mTransNeg, mCam, mA);
         PSMTXConcat(mRotY, mA, mB);
@@ -194,7 +189,7 @@ void animatedobj_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     else
     {
-        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, lbl_803E3228);
+        ((void (*)(int*, int, int, int, int, f32))objRenderModelAndHitVolumes)(obj, p2, p3, p4, p5, 1.0f);
     }
 }
 
@@ -266,9 +261,9 @@ void animatedobj_update(int* obj)
                         alloc = (void*)Obj_AllocObjectSetup(0x18, ANIMATEDOBJ_CHILD_OBJ);
                         child = (int*)Obj_SetupObject((ObjPlacement*)alloc, 4, -1, -1, 0);
                         ObjLink_AttachChild((int)obj, (int)child, 0);
-                        ObjAnim_SetCurrentMove((int)child, 0, lbl_803E322C, 0);
+                        ObjAnim_SetCurrentMove((int)child, 0, 0.0f, 0);
                         ObjAnim_AdvanceCurrentMove(
-                            (int)child, lbl_803E3228, timeDelta, NULL);
+                            (int)child, 1.0f, timeDelta, NULL);
                     }
                     break;
                 case 0xb:
@@ -297,7 +292,7 @@ void animatedobj_init(int* obj, int* params)
     ((AnimatedobjState*)state)->unk6A = ((AnimatedobjPlacement*)params)->unk1A;
     ((AnimatedobjState*)state)->unk6E = -1;
     {
-        f32 d = lbl_803E3228;
+        f32 d = 1.0f;
         ((AnimatedobjState*)state)->unk24 = d / (d + (f32)(u32) * (u8*)((char*)params + 0x24));
     }
     ((AnimatedobjState*)state)->unk28 = -1;
