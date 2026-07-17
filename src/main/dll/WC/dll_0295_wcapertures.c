@@ -25,6 +25,7 @@
 #include "main/object_api.h"
 #include "main/model.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #pragma dont_inline on
 
@@ -256,3 +257,12 @@ void wcapertures_release(void)
 void wcapertures_initialise(void)
 {
 }
+
+ObjectDescriptor gWCApertureSObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wcapertures_initialise, (ObjectDescriptorCallback)wcapertures_release, 0,
+    (ObjectDescriptorCallback)wcapertures_init, (ObjectDescriptorCallback)wcapertures_update,
+    (ObjectDescriptorCallback)wcapertures_hitDetect, (ObjectDescriptorCallback)wcapertures_render,
+    (ObjectDescriptorCallback)wcapertures_free, (ObjectDescriptorCallback)wcapertures_getObjectTypeId,
+    wcapertures_getExtraSize,
+};

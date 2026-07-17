@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
 #define WCTEMPLE_SEQUENCE_SLOT_CLOSED 0
@@ -80,3 +81,12 @@ void wctemple_release(void)
 void wctemple_initialise(void)
 {
 }
+
+ObjectDescriptor gWCTempleObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wctemple_initialise, (ObjectDescriptorCallback)wctemple_release, 0,
+    (ObjectDescriptorCallback)wctemple_init, (ObjectDescriptorCallback)wctemple_update,
+    (ObjectDescriptorCallback)wctemple_hitDetect, (ObjectDescriptorCallback)wctemple_render,
+    (ObjectDescriptorCallback)wctemple_free, (ObjectDescriptorCallback)wctemple_getObjectTypeId,
+    wctemple_getExtraSize,
+};

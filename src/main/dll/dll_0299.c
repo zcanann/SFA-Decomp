@@ -18,6 +18,7 @@ void* lbl_803DDD80;
 #include "main/game_object.h"
 #include "main/resource.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 
 #define DLL0299_OBJFLAG_HITDETECT_DISABLED 0x2000
 
@@ -85,3 +86,12 @@ void dll_299_release_nop(void)
 void dll_299_initialise_nop(void)
 {
 }
+
+ObjectDescriptor dll_299 = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dll_299_initialise_nop, (ObjectDescriptorCallback)dll_299_release_nop, 0,
+    (ObjectDescriptorCallback)dll_299_init, (ObjectDescriptorCallback)dll_299_update,
+    (ObjectDescriptorCallback)dll_299_hitDetect_nop, (ObjectDescriptorCallback)dll_299_render_nop,
+    (ObjectDescriptorCallback)dll_299_free, (ObjectDescriptorCallback)dll_299_getObjectTypeId,
+    dll_299_getExtraSize_ret_2,
+};

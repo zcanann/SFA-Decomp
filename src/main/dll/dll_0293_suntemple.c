@@ -39,6 +39,7 @@
 #include "main/pad.h"
 #include "main/shader_api.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 const Vec3f lbl_802C25D8 = {-6318.10009765625f, -1232.0f, -5884.0f};
 
@@ -295,3 +296,12 @@ void suntemple_release(void)
 void suntemple_initialise(void)
 {
 }
+
+ObjectDescriptor gSunTempleObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)suntemple_initialise, (ObjectDescriptorCallback)suntemple_release, 0,
+    (ObjectDescriptorCallback)suntemple_init, (ObjectDescriptorCallback)suntemple_update,
+    (ObjectDescriptorCallback)suntemple_hitDetect, (ObjectDescriptorCallback)suntemple_render,
+    (ObjectDescriptorCallback)suntemple_free, (ObjectDescriptorCallback)suntemple_getObjectTypeId,
+    suntemple_getExtraSize,
+};

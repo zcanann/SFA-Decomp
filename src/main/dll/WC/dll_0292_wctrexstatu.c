@@ -18,6 +18,7 @@
 #include "main/objtexture.h"
 #include "main/vecmath.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
 
@@ -149,3 +150,12 @@ void wctrexstatu_release(void)
 void wctrexstatu_initialise(void)
 {
 }
+
+ObjectDescriptor gWCTrexStatuObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)wctrexstatu_initialise, (ObjectDescriptorCallback)wctrexstatu_release, 0,
+    (ObjectDescriptorCallback)wctrexstatu_init, (ObjectDescriptorCallback)wctrexstatu_update,
+    (ObjectDescriptorCallback)wctrexstatu_hitDetect, (ObjectDescriptorCallback)wctrexstatu_render,
+    (ObjectDescriptorCallback)wctrexstatu_free, (ObjectDescriptorCallback)wctrexstatu_getObjectTypeId,
+    wctrexstatu_getExtraSize,
+};

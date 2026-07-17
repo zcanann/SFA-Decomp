@@ -3412,24 +3412,29 @@ main/dll/WC/dll_0291_wctile.c:
 
 main/dll/WC/dll_028F_wcpressures.c:
 	.text       start:0x80227BB8 end:0x802281CC
-	.data       start:0x8032B1E8 end:0x8032B348
+	.data       start:0x8032B1E8 end:0x8032B230
 
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478
+	.data       start:0x8032B230 end:0x8032B268
 
 main/dll/dll_0293_suntemple.c:
 	.text       start:0x80228478 end:0x80228B38
 	.rodata     start:0x802C25D8 end:0x802C25E4
+	.data       start:0x8032B268 end:0x8032B2A0
 
 main/dll/dll_0294_wctemple.c:
 	.text       start:0x80228B38 end:0x80228C68
+	.data       start:0x8032B2A0 end:0x8032B2D8
 
 main/dll/dll_0299.c:
 	.text       start:0x80228C68 end:0x80228EDC
+	.data       start:0x8032B2D8 end:0x8032B310
 	.sbss       start:0x803DDD80 end:0x803DDD88
 
 main/dll/WC/dll_0295_wcapertures.c:
 	.text       start:0x80228EDC end:0x802293F8
+	.data       start:0x8032B310 end:0x8032B348
 
 main/dll/WC/dll_0296_wctempledia.c:
 	.text       start:0x802293F8 end:0x8022999C

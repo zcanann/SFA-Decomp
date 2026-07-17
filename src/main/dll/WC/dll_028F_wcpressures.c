@@ -19,12 +19,7 @@
 #include "main/obj_group.h"
 #include "main/objtexture.h"
 #include "main/debug.h"
-#include "main/dll/dll_0293_suntemple.h"
-#include "main/dll/dll_0294_wctemple.h"
-#include "main/dll/WC/dll_0292_wctrexstatu.h"
 #include "main/dll/WC/dll_028F_wcpressures.h"
-#include "main/dll/WC/dll_0295_wcapertures.h"
-#include "main/dll/dll_0299.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
 
@@ -306,77 +301,4 @@ ObjectDescriptor gWCPressureSObjDescriptor = {
 };
 
 char sWCPressuresActivateFormat[] = " Avitvate %i ";
-
-ObjectDescriptor gWCTrexStatuObjDescriptor = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x00090000,
-                                     (ObjectDescriptorCallback)wctrexstatu_initialise,
-                                     (ObjectDescriptorCallback)wctrexstatu_release,
-                                     0x00000000,
-                                     (ObjectDescriptorCallback)wctrexstatu_init,
-                                     (ObjectDescriptorCallback)wctrexstatu_update,
-                                     (ObjectDescriptorCallback)wctrexstatu_hitDetect,
-                                     (ObjectDescriptorCallback)wctrexstatu_render,
-                                     (ObjectDescriptorCallback)wctrexstatu_free,
-                                     (ObjectDescriptorCallback)wctrexstatu_getObjectTypeId,
-                                     wctrexstatu_getExtraSize};
-ObjectDescriptor gSunTempleObjDescriptor = {0x00000000,
-                                   0x00000000,
-                                   0x00000000,
-                                   0x00090000,
-                                   (ObjectDescriptorCallback)suntemple_initialise,
-                                   (ObjectDescriptorCallback)suntemple_release,
-                                   0x00000000,
-                                   (ObjectDescriptorCallback)suntemple_init,
-                                   (ObjectDescriptorCallback)suntemple_update,
-                                   (ObjectDescriptorCallback)suntemple_hitDetect,
-                                   (ObjectDescriptorCallback)suntemple_render,
-                                   (ObjectDescriptorCallback)suntemple_free,
-                                   (ObjectDescriptorCallback)suntemple_getObjectTypeId,
-                                   suntemple_getExtraSize};
-ObjectDescriptor gWCTempleObjDescriptor = {0x00000000,
-                                  0x00000000,
-                                  0x00000000,
-                                  0x00090000,
-                                  (ObjectDescriptorCallback)wctemple_initialise,
-                                  (ObjectDescriptorCallback)wctemple_release,
-                                  0x00000000,
-                                  (ObjectDescriptorCallback)wctemple_init,
-                                  (ObjectDescriptorCallback)wctemple_update,
-                                  (ObjectDescriptorCallback)wctemple_hitDetect,
-                                  (ObjectDescriptorCallback)wctemple_render,
-                                  (ObjectDescriptorCallback)wctemple_free,
-                                  (ObjectDescriptorCallback)wctemple_getObjectTypeId,
-                                  wctemple_getExtraSize};
-ObjectDescriptor dll_299 = {
-    0,
-    0,
-    0,
-    0x00090000,
-    (ObjectDescriptorCallback)dll_299_initialise_nop,
-    (ObjectDescriptorCallback)dll_299_release_nop,
-    NULL,
-    (ObjectDescriptorCallback)dll_299_init,
-    (ObjectDescriptorCallback)dll_299_update,
-    (ObjectDescriptorCallback)dll_299_hitDetect_nop,
-    (ObjectDescriptorCallback)dll_299_render_nop,
-    (ObjectDescriptorCallback)dll_299_free,
-    (ObjectDescriptorCallback)dll_299_getObjectTypeId,
-    dll_299_getExtraSize_ret_2,
-};
-ObjectDescriptor gWCApertureSObjDescriptor = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x00090000,
-                                     (ObjectDescriptorCallback)wcapertures_initialise,
-                                     (ObjectDescriptorCallback)wcapertures_release,
-                                     0x00000000,
-                                     (ObjectDescriptorCallback)wcapertures_init,
-                                     (ObjectDescriptorCallback)wcapertures_update,
-                                     (ObjectDescriptorCallback)wcapertures_hitDetect,
-                                     (ObjectDescriptorCallback)wcapertures_render,
-                                     (ObjectDescriptorCallback)wcapertures_free,
-                                     (ObjectDescriptorCallback)wcapertures_getObjectTypeId,
-                                     wcapertures_getExtraSize};
 
