@@ -58,9 +58,6 @@
 f32 lbl_803DBE80 = 10.0f;
 f32 lbl_803DBE84 = 0.4f;
 f32 lbl_803DBE88 = 170.0f;
-#pragma explicit_zero_data on
-f32 lbl_803DBE8C = 0.0f;
-#pragma explicit_zero_data off
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY 0xe
 

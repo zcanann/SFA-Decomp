@@ -2128,7 +2128,7 @@ main/dll/dll_0157_spiritdoorspirit.c:
 main/dll/dll_0158_gunpowderbarrel.c:
 	.text       start:0x801A0B14 end:0x801A27B8
 	.data       start:0x80322D28 end:0x80322D68
-	.sdata      start:0x803DBE80 end:0x803DBE90
+	.sdata      start:0x803DBE80 end:0x803DBE8C
 	.sdata2     start:0x803E42C0 end:0x803E4348
 
 main/dll/dll_0159_blasted.c:

@@ -28,10 +28,6 @@ force_active:
   # zero atom; dropping it would shorten the pool and shift later SDA2
   # references.
   - lbl_803E2724
-  # dll_0158_gunpowderbarrel.c: the retail link retained this unreferenced
-  # .sdata zero atom; dropping it would shorten the section and shift
-  # every later SDA reference.
-  - lbl_803DBE8C
   # dll_0019_dll19func0.c: the retail link retained these unreferenced .sdata2
   # child-id atoms (only their pair-heads are addressed); dropping them would
   # shorten the pool and shift every later SDA2 reference.
