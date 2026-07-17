@@ -13,6 +13,9 @@ name: main
 # containing vidListNodes storage rather than by this symbol directly.
 force_active:
   - voicePrioritySortLinks
+  # nwmammothgroup.c: the retail link retained this unreferenced .sdata2 zero
+  # atom; dropping it would shorten the pool and shift later SDA2 references.
+  - lbl_803E5204
   # duster.c pool constants: the retail link retained these unreferenced
   # .sdata2 zero atoms, and dropping them would shorten the pool and shift
   # every later SDA2 reference.

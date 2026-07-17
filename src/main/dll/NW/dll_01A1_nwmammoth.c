@@ -70,7 +70,6 @@ enum NwMammothRuntimeFlag
     NW_MAMMOTH_RUNTIME_RESET_PATH = 0x20,
     NW_MAMMOTH_RUNTIME_UI_MESSAGE = 0x40,
 };
-extern u32 objAudioFn_8006ef38();
 
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
@@ -111,7 +110,6 @@ extern GameObject* tumbleweedbush_findNearestActive(void* pos);
 extern void fn_80163980(int o);
 extern f32 lbl_803E5210;
 extern void fn_8003A168(GameObject* obj, void* p);
-extern void fn_801CDF94(GameObject* obj, void* state, int flag);
 extern u8 gNwMammothTables[];
 extern u8 gNwMammothPathSetupDataA[];
 extern u8 gNwMammothPathSetupDataB[];
@@ -121,99 +119,43 @@ extern f32 gNwMammothDefaultAnimStepScale;
 
 int fn_801CE078(int* obj, u8* state);
 
-int NW_mammoth_getExtraSize(void)
-{
-    return 0x48c;
-}
+int NW_mammoth_getExtraSize(void);
+void NW_mammoth_free(GameObject* obj);
+void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
+void NW_mammoth_update(NwMammothObject* obj, int unused);
+void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isReload);
 
-#pragma dont_inline on
-void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
-{
-    NwMammothState* state = (NwMammothState*)baddie;
+u8 gNwMammothTables[40] = {0x02, 0xDA, 0x03, 0x75, 0x00, 0x30, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x44,
+                           0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00, 0x02, 0xDA, 0x03, 0x75, 0x00, 0x31, 0xFF, 0xFF,
+                           0x00, 0x00, 0x00, 0x00, 0x3C, 0x44, 0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00};
 
-    (void)mapData;
-    if (fn_801CE078((int*)obj, (u8*)baddie) != 0)
-        return;
+u8 gNwMammothPathSetupDataA[] = {
+    0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x41, 0xA0, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
+};
 
-    switch (state->stateIndex)
-    {
-    case 0:
-        state->triggerList = lbl_803DBF70;
-        if (mainGetBit(211) != 0)
-        {
-            state->stateIndex = 1;
-        }
-        break;
-    case 1:
-        state->triggerList = lbl_803DBF74;
-        switch (mainGetBit(GAMEBIT_ITEM_AlpineRoot_Used))
-        {
-        case 0:
-            if (ObjTrigger_IsSetById(obj, 1398) != 0)
-            {
-                mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 1);
-                gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
-                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
-                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-                state->stateIndex = 2;
-            }
-            break;
-        case 1:
-            state->stateIndex = 2;
-            break;
-        default:
-            state->stateIndex = 3;
-            break;
-        }
-        break;
-    case 2:
-        state->triggerList = lbl_803DBF78;
-        if (ObjTrigger_IsSetById(obj, 1398) != 0)
-        {
-            mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 2);
-            gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
-            (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
-            state->stateIndex = 3;
-            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-        }
-        break;
-    case 3:
-        state->triggerList = lbl_803DBF7C;
-        break;
-    }
-}
+u8 gNwMammothPathSetupDataB[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x25,
+    0x00, 0x24, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x29, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23,
+    0x00, 0x00, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
+    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3,
+    0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0xBC, 0x23, 0xD7, 0x0A,
+    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3C, 0x03,
+    0x12, 0x6F, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
+    0x3B, 0xC4, 0x9B, 0xA6, 0x3B, 0x44, 0x9B, 0xA6, 0x3B, 0xC4, 0x9B, 0xA6,
+};
 
-void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
-{
-    NwMammothState* state = (NwMammothState*)baddie;
+u8 lbl_803268B4[24] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x29, 0x29, 0x28,
+                       0x28, 0x28, 0x29, 0x29, 0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00};
+int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
+int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
 
-    (void)mapData;
-    switch (state->stateIndex)
-    {
-    case 4:
-        state->triggerList = lbl_803DBFB4;
-        if (ObjTrigger_IsSetById(obj, 418) != 0)
-        {
-            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
-            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
-            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
-            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
-            state->stateIndex = 5;
-        }
-        break;
-    case 5:
-        state->triggerList = lbl_803DBFB8;
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
-        {
-            state->stateIndex = 6;
-        }
-        break;
-    case 6:
-        state->triggerList = lbl_803DBFBC;
-        break;
-    }
-}
+void* gNW_mammothObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, (void*)0x00090000,
+                                      (void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, NW_mammoth_init,
+                                      NW_mammoth_update, (void*)0x00000000,      NW_mammoth_render, NW_mammoth_free,
+                                      (void*)0x00000000, NW_mammoth_getExtraSize};
 
 typedef struct
 {
@@ -221,6 +163,7 @@ typedef struct
     f32 pos[3];
 } WoPartfxBlock;
 
+#pragma dont_inline on
 int fn_801CE078(int* obj, u8* st)
 {
     u8 night;
@@ -307,152 +250,19 @@ int fn_801CE078(int* obj, u8* st)
     return 1;
 }
 
-void fn_801CEA14(short* obj, u8* st, u8* mapData)
-{
-    NwMammothState* state = (NwMammothState*)st;
-    switch (fn_801CE078((int*)obj, st))
-    {
-    case -1:
-        state->pathSpeed -= gNwMammothPathAccel * timeDelta;
-        if (state->pathSpeed < gNwMammothPathSpeedMin)
-        {
-            state->pathSpeed = lbl_803E520C;
-        }
-        break;
-    case 0:
-        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < gNwMammothPlayerNearDistSq)
-        {
-            state->pathSpeed -= gNwMammothPathDecel * timeDelta;
-            if (state->pathSpeed < gNwMammothPathSpeedMin)
-            {
-                state->pathSpeed = lbl_803E520C;
-            }
-        }
-        else
-        {
-            state->pathSpeed += gNwMammothPathAccel * timeDelta;
-            if (state->pathSpeed > gNwMammothPathSpeedMax)
-            {
-                state->pathSpeed = *(f32*)&gNwMammothPathSpeedMax;
-            }
-        }
-        break;
-    case 1:
-        return;
-    }
-    switch (state->stateIndex)
-    {
-    case 8:
-    {
-        Curve* cv = (Curve*)&state->curveState;
-        if (Curve_AdvanceAlongPath(cv, state->pathSpeed) != 0 || cv->idx != 0)
-        {
-            (*gRomCurveInterface)->goNextPoint(cv);
-        }
-        {
-            f32 dx = cv->sample[0] - ((GameObject*)obj)->anim.localPosX;
-            f32 dz = cv->sample[2] - ((GameObject*)obj)->anim.localPosZ;
-            ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
-                                         &state->animStepScale);
-        }
-        ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
-        ((GameObject*)obj)->anim.localPosX = cv->sample[0];
-        ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
-        if (state->pathSpeed <= lbl_803E520C)
-        {
-            state->stateIndex = 7;
-        }
-        break;
-    }
-    case 7:
-        if (state->pathSpeed > lbl_803E5250)
-        {
-            state->stateIndex = 8;
-        }
-        break;
-    }
-    if (((NwMammothMapData*)mapData)->behaviorMode == 1)
-    {
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
-        {
-            state->triggerList = lbl_803DBF90;
-        }
-        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
-        {
-            state->triggerList = lbl_803DBF8C;
-        }
-        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
-        {
-            state->triggerList = lbl_803DBF88;
-        }
-        else if (mainGetBit(0x9e) != 0)
-        {
-            state->triggerList = lbl_803DBF84;
-        }
-        else
-        {
-            state->triggerList = lbl_803DBF80;
-        }
-    }
-    else
-    {
-        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
-        {
-            state->triggerList = lbl_803DBFA4;
-        }
-        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
-        {
-            state->triggerList = lbl_803DBFA0;
-        }
-        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
-        {
-            state->triggerList = lbl_803DBF9C;
-        }
-        else if (mainGetBit(0x9e) != 0)
-        {
-            state->triggerList = lbl_803DBF98;
-        }
-        else
-        {
-            state->triggerList = lbl_803DBF94;
-        }
-    }
-}
-
-void NW_mammoth_free(GameObject* obj);
-void NW_mammoth_render(GameObject* obj, u32 p2, u32 p3, u32 p4, u32 p5, char visible);
-
-u8 gNwMammothTables[40] = {0x02, 0xDA, 0x03, 0x75, 0x00, 0x30, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x44,
-                           0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00, 0x02, 0xDA, 0x03, 0x75, 0x00, 0x31, 0xFF, 0xFF,
-                           0x00, 0x00, 0x00, 0x00, 0x3C, 0x44, 0x9B, 0xA6, 0x00, 0x00, 0x00, 0x00};
-
-u8 gNwMammothPathSetupDataA[] = {
-    0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0xC1, 0xA0, 0x00, 0x00, 0x41, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x41, 0xA0, 0x00, 0x00, 0xC1, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0xA0, 0x00, 0x00,
-};
-
-u8 gNwMammothPathSetupDataB[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x25,
-    0x00, 0x24, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23, 0x00, 0x29, 0x00, 0x23, 0x00, 0x23, 0x00, 0x23,
-    0x00, 0x00, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3,
-    0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x3B, 0xA3, 0xD7, 0x0A, 0xBC, 0x23, 0xD7, 0x0A,
-    0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3C, 0x03,
-    0x12, 0x6F, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A, 0x3B, 0xA3, 0xD7, 0x0A,
-    0x3B, 0xC4, 0x9B, 0xA6, 0x3B, 0x44, 0x9B, 0xA6, 0x3B, 0xC4, 0x9B, 0xA6,
-};
-
-u8 lbl_803268B4[24] = {0x04, 0x14, 0x14, 0x04, 0x14, 0x04, 0x04, 0x04, 0x00, 0x29, 0x29, 0x28,
-                       0x28, 0x28, 0x29, 0x29, 0x29, 0x29, 0x29, 0x04, 0x09, 0x03, 0x09, 0x00};
-int gNwMammothBushObjectIds[4] = {0x4ABDA, 0x4ABDB, 0x4ABDC, 0x4ABDD};
-int gNwMammothBushGameBits[4] = {0xF22, 0xF23, 0xF24, 0xF25};
-
-void* gNW_mammothObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, (void*)0x00090000,
-                                      (void*)0x00000000, (void*)0x00000000,      (void*)0x00000000, NW_mammoth_init,
-                                      NW_mammoth_update, (void*)0x00000000,      NW_mammoth_render, NW_mammoth_free,
-                                      (void*)0x00000000, NW_mammoth_getExtraSize};
+__declspec(section ".sdata2") f32 gNwMammothSfxInterval = 900.0f;
+__declspec(section ".sdata2") f32 gNwMammothTumbleweedDistSqThreshold = 250000.0f;
+__declspec(section ".sdata2") f32 gNwMammothCaptureDist = 6.25f;
+__declspec(section ".sdata2") f32 gNwMammothAirMeterFull = 200.0f;
+__declspec(section ".sdata2") f32 gNwMammothAirMeterPerSegment = 66.666664f;
+__declspec(section ".sdata2") f32 gNwMammothPathAccel = 0.01f;
+__declspec(section ".sdata2") f32 gNwMammothPathSpeedMin = 0.05f;
+__declspec(section ".sdata2") f32 gNwMammothPlayerNearDistSq = 6400.0f;
+__declspec(section ".sdata2") f32 gNwMammothPathDecel = 0.02f;
+__declspec(section ".sdata2") f32 gNwMammothPathSpeedMax = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803E5250 = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803E5254 = 1000.0f;
+__declspec(section ".sdata2") f32 gNwMammothDefaultAnimStepScale = 0.005f;
 
 void fn_801CE2BC(int* obj, u8* st, short* objDef)
 {
@@ -685,7 +495,212 @@ void fn_801CE2BC(int* obj, u8* st, short* objDef)
         }
     }
 }
+
+void fn_801CEA14(short* obj, u8* st, u8* mapData)
+{
+    NwMammothState* state = (NwMammothState*)st;
+    switch (fn_801CE078((int*)obj, st))
+    {
+    case -1:
+        state->pathSpeed -= gNwMammothPathAccel * timeDelta;
+        if (state->pathSpeed < gNwMammothPathSpeedMin)
+        {
+            state->pathSpeed = lbl_803E520C;
+        }
+        break;
+    case 0:
+        if ((((NwMammothObject*)obj)->hitboxFlags & 4) || state->playerDistanceSq < gNwMammothPlayerNearDistSq)
+        {
+            state->pathSpeed -= gNwMammothPathDecel * timeDelta;
+            if (state->pathSpeed < gNwMammothPathSpeedMin)
+            {
+                state->pathSpeed = lbl_803E520C;
+            }
+        }
+        else
+        {
+            state->pathSpeed += gNwMammothPathAccel * timeDelta;
+            if (state->pathSpeed > gNwMammothPathSpeedMax)
+            {
+                state->pathSpeed = *(f32*)&gNwMammothPathSpeedMax;
+            }
+        }
+        break;
+    case 1:
+        return;
+    }
+    switch (state->stateIndex)
+    {
+    case 8:
+    {
+        Curve* cv = (Curve*)&state->curveState;
+        if (Curve_AdvanceAlongPath(cv, state->pathSpeed) != 0 || cv->idx != 0)
+        {
+            (*gRomCurveInterface)->goNextPoint(cv);
+        }
+        {
+            f32 dx = cv->sample[0] - ((GameObject*)obj)->anim.localPosX;
+            f32 dz = cv->sample[2] - ((GameObject*)obj)->anim.localPosZ;
+            ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz), (ObjAnimComponent*)obj,
+                                         &state->animStepScale);
+        }
+        ((GameObject*)obj)->anim.rotX = (s16)(getAngle(cv->tangent[0], cv->tangent[2]) + 0x8000);
+        ((GameObject*)obj)->anim.localPosX = cv->sample[0];
+        ((GameObject*)obj)->anim.localPosZ = cv->sample[2];
+        if (state->pathSpeed <= lbl_803E520C)
+        {
+            state->stateIndex = 7;
+        }
+        break;
+    }
+    case 7:
+        if (state->pathSpeed > lbl_803E5250)
+        {
+            state->stateIndex = 8;
+        }
+        break;
+    }
+    if (((NwMammothMapData*)mapData)->behaviorMode == 1)
+    {
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
+        {
+            state->triggerList = lbl_803DBF90;
+        }
+        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
+        {
+            state->triggerList = lbl_803DBF8C;
+        }
+        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
+        {
+            state->triggerList = lbl_803DBF88;
+        }
+        else if (mainGetBit(0x9e) != 0)
+        {
+            state->triggerList = lbl_803DBF84;
+        }
+        else
+        {
+            state->triggerList = lbl_803DBF80;
+        }
+    }
+    else
+    {
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19D) != 0)
+        {
+            state->triggerList = lbl_803DBFA4;
+        }
+        else if (mainGetBit(GAMEBIT_ITEM_NWSnowHornArtifact_Got) != 0)
+        {
+            state->triggerList = lbl_803DBFA0;
+        }
+        else if (mainGetBit(GAMEBIT_NW_RescuedSnowHornGateKeeper) != 0)
+        {
+            state->triggerList = lbl_803DBF9C;
+        }
+        else if (mainGetBit(0x9e) != 0)
+        {
+            state->triggerList = lbl_803DBF98;
+        }
+        else
+        {
+            state->triggerList = lbl_803DBF94;
+        }
+    }
+}
+
+void fn_801CED2C(int obj, int baddie, NwMammothMapData* mapData)
+{
+    NwMammothState* state = (NwMammothState*)baddie;
+
+    (void)mapData;
+    switch (state->stateIndex)
+    {
+    case 4:
+        state->triggerList = lbl_803DBFB4;
+        if (ObjTrigger_IsSetById(obj, 418) != 0)
+        {
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+            mainSetBits(GAMEBIT_SnowHornArtifact19D, 1);
+            mainSetBits(GAMEBIT_ITEM_NWSnowHornArtifact_Used, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE5, 1);
+            mainSetBits(GAMEBIT_ITEM_SnowHornArtifactEE6, 1);
+            state->stateIndex = 5;
+        }
+        break;
+    case 5:
+        state->triggerList = lbl_803DBFB8;
+        if (mainGetBit(GAMEBIT_SnowHornArtifact19F) != 0)
+        {
+            state->stateIndex = 6;
+        }
+        break;
+    case 6:
+        state->triggerList = lbl_803DBFBC;
+        break;
+    }
+}
+
+void fn_801CEE0C(int obj, int baddie, NwMammothMapData* mapData)
+{
+    NwMammothState* state = (NwMammothState*)baddie;
+
+    (void)mapData;
+    if (fn_801CE078((int*)obj, (u8*)baddie) != 0)
+        return;
+
+    switch (state->stateIndex)
+    {
+    case 0:
+        state->triggerList = lbl_803DBF70;
+        if (mainGetBit(211) != 0)
+        {
+            state->stateIndex = 1;
+        }
+        break;
+    case 1:
+        state->triggerList = lbl_803DBF74;
+        switch (mainGetBit(GAMEBIT_ITEM_AlpineRoot_Used))
+        {
+        case 0:
+            if (ObjTrigger_IsSetById(obj, 1398) != 0)
+            {
+                mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 1);
+                gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
+                (*gObjectTriggerInterface)->runSequence(2, (void*)obj, -1);
+                state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+                state->stateIndex = 2;
+            }
+            break;
+        case 1:
+            state->stateIndex = 2;
+            break;
+        default:
+            state->stateIndex = 3;
+            break;
+        }
+        break;
+    case 2:
+        state->triggerList = lbl_803DBF78;
+        if (ObjTrigger_IsSetById(obj, 1398) != 0)
+        {
+            mainSetBits(GAMEBIT_ITEM_AlpineRoot_Used, 2);
+            gameBitDecrement(GAMEBIT_ITEM_IMAlpineRoot_Count);
+            (*gObjectTriggerInterface)->runSequence(4, (void*)obj, -1);
+            state->stateIndex = 3;
+            state->runtimeFlags = (u8)(state->runtimeFlags | NW_MAMMOTH_RUNTIME_MENU_LOCK);
+        }
+        break;
+    case 3:
+        state->triggerList = lbl_803DBF7C;
+        break;
+    }
+}
 #pragma dont_inline reset
+
+int NW_mammoth_getExtraSize(void)
+{
+    return 0x48c;
+}
 
 void NW_mammoth_free(GameObject* obj)
 {
@@ -846,7 +861,7 @@ static inline void nw_mammoth_updateBody(NwMammothObject* obj, int unused)
     }
     objAudioFn_8006ef38((int)obj, &state->animEvents, 8, state->pathPoints, state->pathState, lbl_803E5210,
                         *(f32*)&lbl_803E5210);
-    fn_801CDF94((GameObject*)obj, state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
+    fn_801CDF94((GameObject*)obj, (int)state, table->stateFlags[state->stateIndex] & NW_MAMMOTH_STATE_FLAG_TRIGGER_REFRESH);
     state->runtimeFlags = (u8)(state->runtimeFlags & ~NW_MAMMOTH_RUNTIME_TRIGGER_REFRESH);
     if (((state->runtimeFlags & NW_MAMMOTH_RUNTIME_MENU_LOCK) == 0) && (ObjTrigger_IsSet((int)obj) != 0))
     {
@@ -949,6 +964,18 @@ void NW_mammoth_init(NwMammothObject* obj, NwMammothMapData* mapData, int isRelo
     }
     ObjGroup_AddObject((int)obj, NW_MAMMOTH_GROUP_ID);
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 void* gNW_trickyObjDescriptor[14] = {(void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, (void*)0x00090000,
                                      (void*)0x00000000, (void*)0x00000000,     (void*)0x00000000, NW_tricky_init,

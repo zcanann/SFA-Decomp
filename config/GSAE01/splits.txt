@@ -2628,13 +2628,11 @@ main/dll/NW/dll_019F_nwtreebrid.c:
 	.text       start:0x801CD7DC end:0x801CDC78
 	.sdata2     start:0x803E51F8 end:0x803E5200
 
-main/dll/NW/dll_01A0_nwgeyser.c:
-	.text       start:0x801CDC78 end:0x801CE078
-
-main/dll/NW/dll_01A1_nwmammoth.c:
-	.text       start:0x801CE078 end:0x801CF78C
+main/dll/NW/nwmammothgroup.c:
+	.text       start:0x801CDC78 end:0x801CF78C
 	.data       start:0x803267C0 end:0x80326B2C
 	.sdata      start:0x803DBF70 end:0x803DBFC0
+	.sdata2     start:0x803E5200 end:0x803E525C
 
 main/dll/NW/dll_01A2_nwtricky.c:
 	.text       start:0x801CF78C end:0x801CFB24

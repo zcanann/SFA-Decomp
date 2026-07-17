@@ -35,10 +35,17 @@
 #define NWGEYSER_OBJFLAG_UPDATE_DISABLED    0x8000
 
 extern u8 lbl_803268B4[];
-extern f32 lbl_803E5200;
-extern f32 lbl_803E520C;
-extern f32 lbl_803E5210;
-extern f32 lbl_803E5214;
+
+#pragma explicit_zero_data on
+__declspec(section ".sdata2") f32 lbl_803E5200 = 512.0f;
+__declspec(section ".sdata2") f32 lbl_803E5204 = 0.0f;
+__declspec(section ".sdata2") u32 lbl_803E5208 = 0x01010101;
+__declspec(section ".sdata2") f32 lbl_803E520C = 0.0f;
+__declspec(section ".sdata2") f32 lbl_803E5210 = 1.0f;
+__declspec(section ".sdata2") f32 lbl_803E5214 = 40000.0f;
+__declspec(section ".sdata2") f32 lbl_803E5218 = 30.0f;
+#pragma explicit_zero_data reset
+
 
 extern void objAudioFn_8006ef38(int obj, void* events, int pointCount, void* points, void* scratch, f32 scaleX,
                                 f32 scaleZ);
@@ -139,6 +146,7 @@ int nw_mammoth_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate
     return 0;
 }
 
+#pragma dont_inline on
 void fn_801CDF94(GameObject* obj, int state, int flag)
 {
     if (flag != 0 && ((NwMammothState*)state)->playerObject != NULL &&
@@ -167,3 +175,4 @@ void fn_801CDF94(GameObject* obj, int state, int flag)
         characterDoEyeAnimsState(obj, state + 0x40c);
     }
 }
+#pragma dont_inline reset
