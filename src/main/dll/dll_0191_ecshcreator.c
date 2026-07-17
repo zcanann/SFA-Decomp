@@ -23,6 +23,7 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
 #include "main/dll/dll_0191_ecshcreator.h"
+#include "main/object_descriptor.h"
 
 #define ECSH_SHRINE_RESOURCE 0x82 /* shrine setup resource (Resource_Acquire id) */
 #define ECSH_SHRINE_OBJ_TYPE 0x11 /* object type id of the spawned shrine */
@@ -39,6 +40,15 @@ typedef struct EcshCreatorPlacement
     s8 gameBitOffset;    /* 0x1f: added to spawned child gameBit */
     u8 groupSlotOffset;  /* 0x20: added to base group slot */
 } EcshCreatorPlacement;
+
+ObjectDescriptor gECSH_CreatorObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ecsh_creator_initialise, (ObjectDescriptorCallback)ecsh_creator_release, 0,
+    (ObjectDescriptorCallback)ecsh_creator_init, (ObjectDescriptorCallback)ecsh_creator_update,
+    (ObjectDescriptorCallback)ecsh_creator_hitDetect, (ObjectDescriptorCallback)ecsh_creator_render,
+    (ObjectDescriptorCallback)ecsh_creator_free, (ObjectDescriptorCallback)ecsh_creator_getObjectTypeId,
+    ecsh_creator_getExtraSize,
+};
 
 int ecsh_creator_getExtraSize(void)
 {

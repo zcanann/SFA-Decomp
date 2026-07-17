@@ -8,6 +8,11 @@
 void gpsh_shrine_update(GameObject* obj);
 void gpsh_shrine_init(int* obj, int* def);
 int GPSH_Shrine_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate);
+int gpsh_shrine_getExtraSize(void);
+int gpsh_shrine_getObjectTypeId(void);
+void gpsh_shrine_free(int* obj);
+void gpsh_shrine_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible);
+void gpsh_shrine_hitDetect(void);
 void gpsh_shrine_release(void);
 void gpsh_shrine_initialise(void);
 

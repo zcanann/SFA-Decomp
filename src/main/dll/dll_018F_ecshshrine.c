@@ -65,10 +65,8 @@
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/audio/music_trigger_ids.h"
 #include "main/gamebit_ids.h"
-#include "main/dll/dll_0191_ecshcreator.h"
 #include "main/dll/player_staff_api.h"
 #include "main/dll/player_api.h"
-#include "main/dll/creator1C4.h"
 
 typedef struct EcshIntPair
 {
@@ -151,12 +149,6 @@ extern f32 lbl_803E4FF0;
 extern int lbl_803DDBC0;
 extern void* gEcShShrineActiveObject;
 extern EcshIntPair lbl_803E8470;
-
-extern void gpsh_shrine_getExtraSize(void);
-extern void gpsh_shrine_getObjectTypeId(void);
-extern void gpsh_shrine_free(void);
-extern void gpsh_shrine_render(GameObject*);
-extern void gpsh_shrine_hitDetect(void);
 
 /*
  * The shell-game working set: the 6 cups' (x,z) positions (see EcshPuzzleState
@@ -858,12 +850,6 @@ void ecsh_shrine_update(s16* obj)
 }
 #pragma opt_strength_reduction reset
 
-/* 4 unreferenced zero bytes sit between ecsh_shrine_update's jump tables and
- * gECSH_CreatorObjDescriptor in retail .data (0x80326324); nothing references
- * them. The declspec keeps this 4-byte filler out of .sdata so the section
- * layout matches. */
-__declspec(section ".data") int gEcShShrineUnused[1] = {0};
-
 void ecsh_shrine_release(void)
 {
 }
@@ -909,33 +895,3 @@ void ecsh_shrine_init(s16* obj, s8* def)
     }
     mainSetBits(GAMEBIT_ECSH_InShrine, 1);
 }
-
-/* descriptor/ptr table auto 0x80326328-0x80326398 */
-u32 gECSH_CreatorObjDescriptor[14] = {0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00090000,
-                                      (u32)ecsh_creator_initialise,
-                                      (u32)ecsh_creator_release,
-                                      0x00000000,
-                                      (u32)ecsh_creator_init,
-                                      (u32)ecsh_creator_update,
-                                      (u32)ecsh_creator_hitDetect,
-                                      (u32)ecsh_creator_render,
-                                      (u32)ecsh_creator_free,
-                                      (u32)ecsh_creator_getObjectTypeId,
-                                      (u32)ecsh_creator_getExtraSize};
-u32 gGPSH_ShrineObjDescriptor[14] = {0x00000000,
-                                     0x00000000,
-                                     0x00000000,
-                                     0x00090000,
-                                     (u32)gpsh_shrine_initialise,
-                                     (u32)gpsh_shrine_release,
-                                     0x00000000,
-                                     (u32)gpsh_shrine_init,
-                                     (u32)gpsh_shrine_update,
-                                     (u32)gpsh_shrine_hitDetect,
-                                     (u32)gpsh_shrine_render,
-                                     (u32)gpsh_shrine_free,
-                                     (u32)gpsh_shrine_getObjectTypeId,
-                                     (u32)gpsh_shrine_getExtraSize};

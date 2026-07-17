@@ -66,6 +66,15 @@ extern f32 lbl_803E5028;
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
 
+ObjectDescriptor gGPSH_ShrineObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)gpsh_shrine_initialise, (ObjectDescriptorCallback)gpsh_shrine_release, 0,
+    (ObjectDescriptorCallback)gpsh_shrine_init, (ObjectDescriptorCallback)gpsh_shrine_update,
+    (ObjectDescriptorCallback)gpsh_shrine_hitDetect, (ObjectDescriptorCallback)gpsh_shrine_render,
+    (ObjectDescriptorCallback)gpsh_shrine_free, (ObjectDescriptorCallback)gpsh_shrine_getObjectTypeId,
+    gpsh_shrine_getExtraSize,
+};
+
 void gpsh_shrine_hitDetect(void)
 {
 }
