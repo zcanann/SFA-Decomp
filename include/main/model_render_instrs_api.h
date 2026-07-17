@@ -4,7 +4,7 @@
 #include "types.h"
 
 typedef struct ModelRenderInstrsState {
-    void* instrs;
+    u8* instrs;
     s32 byteCount;
     s32 bitCount;
     s32 fieldC;

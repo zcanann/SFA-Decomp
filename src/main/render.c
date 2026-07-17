@@ -190,11 +190,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             curBit = state->bit;
             bo = curBit >> 3;
             packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo] |= (packed >> 16) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 2] |= packed & 0xff;
             state->bit += bitWidth;
             state->bit += gap;
@@ -235,11 +235,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             curBit = state->bit;
             bo = curBit >> 3;
             packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo] |= (packed >> 16) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 2] |= packed & 0xff;
             state->bit += bitWidth;
             state->bit += gap;
@@ -282,11 +282,11 @@ u8* modelRenderFn_80006744(u8* p, int count, ModelRenderInstrsState* state, int 
             curBit = state->bit;
             bo = curBit >> 3;
             packed <<= ((8 - (curBit & 7)) + sh16);
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo] |= (packed >> 16) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 1] |= (packed >> 8) & 0xff;
-            dp = (u8*)state->instrs;
+            dp = state->instrs;
             dp[bo + 2] |= packed & 0xff;
             state->bit += bitWidth;
         }
