@@ -73,8 +73,6 @@ STATIC_ASSERT(sizeof(Dim2SnowballState) == 0xb0);
 STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 
-extern f32 lbl_803E4A40;
-extern f32 lbl_803E4A44;
 
 static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
@@ -112,7 +110,7 @@ void dimtruthhornice_update(int* obj)
                 mainSetBits(extra->gameBit, 1);
                 ObjHits_DisableObject(obj);
                 extra->phase = TRUTHHORNICE_PHASE_SHATTERING;
-                extra->timer = lbl_803E4A40;
+                extra->timer = 0.0f;
             }
         }
         else
@@ -132,7 +130,7 @@ void dimtruthhornice_update(int* obj)
         {
             f32 desc[6];
             extra->timer = extra->timer + timeDelta;
-            if (extra->timer > lbl_803E4A44)
+            if (extra->timer > 20.0f)
             {
                 int i;
                 extra->phase = TRUTHHORNICE_PHASE_SHATTERED;

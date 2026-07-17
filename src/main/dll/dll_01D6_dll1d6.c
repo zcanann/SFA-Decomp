@@ -95,13 +95,6 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 
 #define DLL1D6_OBJFLAG_HITDETECT_DISABLED 0x2000
 
-extern const f32 lbl_803E4A78;
-extern f32 lbl_803E4A88;
-extern const f32 lbl_803E4A7C;
-extern f32 lbl_803E4A80;
-extern f32 lbl_803E4A84;
-extern const f32 lbl_803E4A8C;
-extern const f32 lbl_803E4A90;
 
 FbWGPipe GXWGFifo : (0xCC008000);
 
@@ -135,7 +128,7 @@ void dll_1D6_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E4A78);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 
 void dll_1D6_hitDetect(void)
@@ -173,7 +166,7 @@ void dll_1D6_update(int* obj)
         {
             extra->flags1D |= 4;
             extra->bobPhase = (f32)(int)randomGetRange(20, 40);
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
+            extra->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
         }
         extra->downTimer -= framesThisStep;
         extra->dizzyTimer = extra->dizzyTimer - framesThisStep;
@@ -184,7 +177,7 @@ void dll_1D6_update(int* obj)
         if (extra->downTimer <= 0)
         {
             model = DIM2snowball_GetActiveModel((GameObject*)(obj));
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.1f, 16);
             extra->upTimer = ((Dll1D6Placement*)def)->upTimer;
             if (extra->upTimer < 15)
             {
@@ -201,7 +194,7 @@ void dll_1D6_update(int* obj)
         p28 = *(void**)((char*)model + 0x28);
         if (p28 != NULL && (extra->flags1D & 4) != 0)
         {
-            if (*(f32*)p28 >= lbl_803E4A78)
+            if (*(f32*)p28 >= 1.0f)
             {
                 extra->flags1D &= ~4;
             }
@@ -209,7 +202,7 @@ void dll_1D6_update(int* obj)
         extra->upTimer -= framesThisStep;
         if (extra->upTimer <= 0)
         {
-            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
+            ObjModel_SetBlendChannelTargets(model, 0, -1, 0, -0.1f, 16);
             extra->downTimer = ((Dll1D6Placement*)def)->downTimer;
             if (extra->downTimer < 15)
             {
@@ -253,11 +246,11 @@ void dll_1D6_update(int* obj)
     if ((extra->flags1D & 2) != 0)
     {
         ly = ((GameObject*)obj)->anim.localPosY - player->anim.localPosY;
-        if (ly < lbl_803E4A88)
+        if (ly < 0.0f)
         {
             ly = -ly;
         }
-        if (ly < lbl_803E4A8C)
+        if (ly < 50.0f)
         {
             lz = lz * lz;
             if (lz <= extra->hitRangeSqA)
@@ -280,15 +273,15 @@ void dll_1D6_update(int* obj)
     if ((extra->flags1D & 4) != 0)
     {
         extra->bobPhase = extra->bobRate * timeDelta + extra->bobPhase;
-        if (extra->bobPhase > lbl_803E4A90)
+        if (extra->bobPhase > 40.0f)
         {
-            extra->bobRate = -(f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->bobPhase = lbl_803E4A90;
+            extra->bobRate = -(f32)(int)randomGetRange(6, 10) / 20.0f;
+            extra->bobPhase = 40.0f;
         }
-        else if (extra->bobPhase < lbl_803E4A7C)
+        else if (extra->bobPhase < 20.0f)
         {
-            extra->bobRate = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
-            extra->bobPhase = lbl_803E4A7C;
+            extra->bobRate = (f32)(int)randomGetRange(6, 10) / 20.0f;
+            extra->bobPhase = 20.0f;
         }
     }
     if (mainGetBit(496) != 0)
@@ -312,8 +305,8 @@ void dll_1D6_init(int* obj, u8* paramsBytes)
     ((GameObject*)obj)->anim.rotX = (s16)(params->rotXParam << 8);
     extra = ((GameObject*)obj)->extra;
     model = DIM2snowball_GetActiveModel((GameObject*)(obj));
-    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A88, 0);
-    ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4A78);
+    ObjModel_SetBlendChannelTargets(model, 0, -1, 0, 0.0f, 0);
+    ObjModel_SetBlendChannelWeight(model, 0, 1.0f);
     extra->upTimer = params->upTimer;
     if (extra->upTimer < 15)
     {
@@ -325,7 +318,7 @@ void dll_1D6_init(int* obj, u8* paramsBytes)
         extra->downTimer = 15;
     }
     {
-        f32 k = lbl_803E4A88;
+        f32 k = 0.0f;
         extra->hitRangeSqA = k * ((GameObject*)obj)->anim.rootMotionScale;
         extra->hitRangeSqA = extra->hitRangeSqA * extra->hitRangeSqA;
         extra->hitRangeSqB = k * ((GameObject*)obj)->anim.rootMotionScale;
@@ -373,3 +366,31 @@ ObjectDescriptor dll_1D6 = {
     (ObjectDescriptorCallback)dll_1D6_getObjectTypeId,
     (ObjectDescriptorExtraSizeCallback)dll_1D6_getExtraSize,
 };
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const f32 lbl_803E4AA0 = 1.0f;
+const f32 lbl_803E4AA4 = 0.9f;
+const f32 lbl_803E4AA8 = -0.1f;
+const f32 lbl_803E4AAC = 0.05f;
+const f32 lbl_803E4AB0 = 0.98f;
+const f32 lbl_803E4AB4 = 0.1f;
+const f32 lbl_803E4AB8 = 36.0f;
+const f32 lbl_803E4ABC = 0.75f;
+const f32 lbl_803E4AC0[2] = {2.1f, 0.0f};
+const f32 lbl_803E4AC8 = 2.859375f;
+const f32 lbl_803E4ACC = 0.0f;
+const f32 lbl_803E4AD0 = 0.0f;
+const f32 lbl_803E4AD4 = 0.0f;
+const f32 lbl_803E4AD8 = 1.0f;
+const f32 lbl_803E4ADC = 0.5f;
+const f32 lbl_803E4AE0 = 0.85f;
+const f32 lbl_803E4AE4 = 0.9f;
+const f32 lbl_803E4AE8 = 0.1f;
+const f32 lbl_803E4AEC = -0.1f;
+const f32 lbl_803E4AF0 = 0.0f;
+const f32 lbl_803E4AF4 = 6.5f;
+const f32 lbl_803E4AF8 = 2.0f;
+const f32 lbl_803E4AFC = 0.8f;
+const f32 lbl_803E4B00 = 0.2f;
+const f32 lbl_803E4B04 = 5.0f;

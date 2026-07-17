@@ -32,11 +32,6 @@ STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 #define DIMMAGICBRIDGE_GAMEBIT_TRIGGER 0x1ef
 #define DIMMAGICBRIDGE_GAMEBIT_LATCH   0x1e8
 
-extern f32 lbl_803E4A18;
-extern f32 lbl_803E4A00;
-extern f32 lbl_803E4A04;
-extern f32 lbl_803E4A08;
-extern f32 lbl_803E4A0C;
 
 #pragma scheduling off
 #pragma peephole off
@@ -52,7 +47,7 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
     model = Obj_GetActiveModel((GameObject*)obj);
     mdl = model->file;
     i = 0;
-    amp = lbl_803E4A00;
+    amp = 65535.0f;
     for (; cnt = mdl->vertexCount, i < cnt; i++)
     {
         s16* vc = ObjModel_GetCurrentVertexCoords(model, i);
@@ -61,11 +56,11 @@ void dimmagicbridge_updateVertexWave(GameObject* obj, u8* sub)
         wavePos = wavePos + state->wavePhase;
         if (*vb > 0)
         {
-            *vc = lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) + (f32)(int)*vb;
+            *vc = 256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) + (f32)(int)*vb;
         }
         else
         {
-            *vc = -(lbl_803E4A04 * mathSinf((lbl_803E4A08 * (f32)(int)wavePos) / lbl_803E4A0C) - (f32)(int)*vb);
+            *vc = -(256.0f * mathSinf((3.1415927f * (f32)(int)wavePos) / 32768.0f) - (f32)(int)*vb);
         }
     }
     DCStoreRange((void*)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
@@ -166,7 +161,7 @@ void dimmagicbridge_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible = visible;
     if (isVisible != 0)
-        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, lbl_803E4A18);
+        objRenderModelAndHitVolumes(obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimmagicbridge_hitDetect(void)
@@ -278,3 +273,13 @@ void dimmagicbridge_release(void)
 void dimmagicbridge_initialise(void)
 {
 }
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const f32 lbl_803E4A1C = 0.0f;
+const f32 lbl_803E4A20 = 1.0f;
+const f32 lbl_803E4A24 = 0.0f;
+const f32 lbl_803E4A28 = 3e+02f;
+const f32 lbl_803E4A2C = 0.0f;
+const f32 lbl_803E4A30[2] = {1.0f, 0.0f};
+const f32 lbl_803E4A38[2] = {1.0f, 0.0f};

@@ -70,13 +70,7 @@ STATIC_ASSERT(sizeof(Dim2PathGeneratorState) == 0x9a8);
 #define OBJ_GROUP_CONVEYORS        22
 #define MUSIC_TRACK_CONVEYOR       0xdf
 
-extern f32 lbl_803E4A58;
 
-extern f32 lbl_803E4A5C;
-extern f32 lbl_803E4A60;
-extern f32 lbl_803E4A64;
-extern f32 lbl_803E4A68;
-extern f32 lbl_803E4A6C;
 
 static inline int* DIM2snowball_GetActiveModel(GameObject *obj)
 {
@@ -136,7 +130,7 @@ void dim2conveyor_free(int obj) { ObjGroup_RemoveObject(obj, OBJ_GROUP_CONVEYORS
 void dim2conveyor_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4A58);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dim2conveyor_hitDetect(void)
@@ -162,7 +156,7 @@ void dim2conveyor_update(int* obj)
         if (mainGetBit(GAMEBIT_CONVEYOR_SWAP) != 0)
         {
             extra->swapTimer = extra->swapTimer + timeDelta;
-            if (extra->swapTimer > lbl_803E4A5C)
+            if (extra->swapTimer > 100.0f)
             {
                 if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
                 {
@@ -174,7 +168,7 @@ void dim2conveyor_update(int* obj)
                     mainSetBits(GAMEBIT_CONVEYOR_REVERSE, 0);
                     mainSetBits(GAMEBIT_CONVEYOR_FORWARD, 1);
                 }
-                extra->swapTimer = lbl_803E4A60;
+                extra->swapTimer = 0.0f;
             }
         }
         if (mainGetBit(GAMEBIT_CONVEYOR_FORWARD) != 0)
@@ -193,13 +187,13 @@ void dim2conveyor_update(int* obj)
 
 void dim2conveyor_init(int* obj, u8* params)
 {
-    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / lbl_803E4A64;
+    f32 scale = (f32) * (s16*)((char*)params + 0x1a) / 5.0f;
     Dim2ConveyorState* extra;
     *(s16*)obj = (s16)(*(s8*)((char*)params + 0x18) << 8);
     extra = ((GameObject*)obj)->extra;
-    extra->scrollX = scale * mathSinf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->scrollY = scale * mathCosf(lbl_803E4A68 * (f32) * (s16*)obj / lbl_803E4A6C);
-    extra->swapTimer = lbl_803E4A60;
+    extra->scrollX = scale * mathSinf(3.1415927f * (f32) * (s16*)obj / 32768.0f);
+    extra->scrollY = scale * mathCosf(3.1415927f * (f32) * (s16*)obj / 32768.0f);
+    extra->swapTimer = 0.0f;
     extra->musicHold = 0;
     ObjGroup_AddObject((u32)obj, OBJ_GROUP_CONVEYORS);
     ((GameObject*)obj)->objectFlags |= DIM2CONVEYOR_OBJFLAG_HITDETECT_DISABLED;
