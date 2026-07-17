@@ -1814,34 +1814,27 @@ int expgfx_addToTable(u32 resourceHandle, u32 sourceId, u32 attachedTableKey, s1
 #pragma opt_strength_reduction on
 int expgfx_updateSourceFrameFlags(void* sourceObject)
 {
-    ExpgfxSourceObject* source;
-    ExpgfxTrackedSourceFrameMask* mask;
-    int signedPoolIndex;
-    u32 highBits;
+    s16 signedPoolIndex;
     int result;
-    u32* poolSourceIds;
+    void** poolSourceIds;
     int poolIndex;
-    u8* poolFrameFlags;
-    u32 bit;
     result = EXPGFX_SOURCE_FRAME_STATE_NONE;
     lbl_803DD253 = 0;
     poolIndex = 0;
-    source = (ExpgfxSourceObject*)sourceObject;
     poolSourceIds = gExpgfxTrackedPoolSourceIds;
 
-    while ((s16)poolIndex < EXPGFX_POOL_COUNT)
+    for (; (s16)poolIndex < EXPGFX_POOL_COUNT; poolSourceIds++, poolIndex++)
     {
-        poolFrameFlags = &gExpgfxStaticPoolFrameFlags[poolIndex];
-        if ((source->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) || (*poolSourceIds == (u32)sourceObject))
+        if ((((ExpgfxSourceObject*)sourceObject)->objType == EXPGFX_SOURCE_OBJTYPE_MATCH_ALL) ||
+            (*poolSourceIds == sourceObject))
         {
-            signedPoolIndex = (s16)poolIndex;
-            bit = 1 << (signedPoolIndex >> 1);
-            highBits = (u32)((s32)bit >> 31);
-            mask = &gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1];
-            if ((((u64)(((u64)(u32)(highBits) << 32) | (u32)(bit))) &
-                 ((u64)(((u64)(u32)(mask->highWord) << 32) | (u32)(mask->lowWord)))) != 0)
+            s64 frameBit;
+
+            signedPoolIndex = poolIndex;
+            frameBit = 1 << (signedPoolIndex >> 1);
+            if ((frameBit & gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1]) != 0)
             {
-                *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
+                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_B;
                 if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A)
                 {
                     result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -1853,7 +1846,7 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
             }
             else
             {
-                *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_A;
+                gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_A;
                 if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_B)
                 {
                     result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -1866,10 +1859,8 @@ int expgfx_updateSourceFrameFlags(void* sourceObject)
         }
         else
         {
-            *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_NONE;
+            gExpgfxStaticPoolFrameFlags[poolIndex] = EXPGFX_SOURCE_FRAME_STATE_NONE;
         }
-        poolSourceIds++;
-        poolIndex++;
     }
 
     return result;
@@ -3186,8 +3177,8 @@ void expgfx_initialise(void)
 /* .bss block 0x8039AB58-0x8039BE98 */
 u8 gExpgfxRuntimeData[0x980];
 ExpgfxTableEntry gExpgfxTableEntries[0x550 / sizeof(ExpgfxTableEntry)];
-u32 gExpgfxTrackedPoolSourceIds[0x50];
-ExpgfxTrackedSourceFrameMask gExpgfxTrackedSourceFrameMasks[0xB0 / sizeof(ExpgfxTrackedSourceFrameMask)];
+void* gExpgfxTrackedPoolSourceIds[0x50];
+u64 gExpgfxTrackedSourceFrameMasks[0xB0 / sizeof(u64)];
 u32 gExpgfxSlotActiveMasks[0x50];
 u32 gExpgfxSlotPoolBases[0x50];
 
