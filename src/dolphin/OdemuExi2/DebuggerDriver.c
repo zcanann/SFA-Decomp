@@ -1,25 +1,19 @@
 #include <dolphin/exi.h>
 
-u8 lbl_803DE3DC;
+u8 EXIInputFlag;
 
-u8* lbl_803DE3D8;
+u8* pEXIInputFlag;
 
-s32 lbl_803DE3D4;
+s32 RecvDataLeng;
 
-u32 lbl_803DE3D0;
+u32 SendMailData;
 
-void (*lbl_803DE3CC)(u32, OSContext*);
+void (*DBGCallback)(u32, OSContext*);
 
-__OSInterruptHandler lbl_803DE3C8;
+__OSInterruptHandler MTRCallback;
 
 u8 lbl_803DC630[8] = { 0x80 };
 
-#define MTRCallback lbl_803DE3C8
-#define DBGCallback lbl_803DE3CC
-#define SendMailData lbl_803DE3D0
-#define RecvDataLeng lbl_803DE3D4
-#define pEXIInputFlag lbl_803DE3D8
-#define EXIInputFlag lbl_803DE3DC
 #define SendCount lbl_803DC630[0]
 
 #define ROUND_UP(x, align) (((x) + (align)-1) & (-(align)))

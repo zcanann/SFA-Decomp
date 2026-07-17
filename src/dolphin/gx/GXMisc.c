@@ -5,14 +5,11 @@
 #define __GXData gx
 
 extern GXDrawSyncCallback __CARDEncode;
-extern GXDrawDoneCallback lbl_803DE0DC;
-extern u8 lbl_803DE0E0;
-extern OSThreadQueue lbl_803DE0E4;
+extern GXDrawDoneCallback DrawDoneCB;
+extern u8 DrawDone;
+extern OSThreadQueue FinishQueue;
 
 #define TokenCB __CARDEncode
-#define DrawDoneCB lbl_803DE0DC
-#define DrawDone lbl_803DE0E0
-#define FinishQueue lbl_803DE0E4
 
 void GXSetMisc(GXMiscToken token, u32 val) {
     if (token == GX_MT_XF_FLUSH) {
