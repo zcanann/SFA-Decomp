@@ -2375,26 +2375,26 @@ int fn_800630D8(f32* p4, f32* p5, f32 cx, f32 cy, f32 r, s8 flag)
 
 #pragma optimization_level 2
 #pragma opt_propagation off
-void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
+void fn_80069B1C(Texture* src1, Texture* src2, f32 blend, Texture* dst)
 {
     u32 fmt;
     u32 w;
     u32 h;
     u32 wA;
-    int i12;
-    int i4;
-    int i6;
-    int texA;
-    int texB;
+    int rowDataOffset;
+    int tileColumnOffset;
+    int pixelColumnOffset;
+    int pixelA;
+    int pixelB;
     int j;
     int i;
     u32 wB;
-    int redA;
     int redB;
-    int bf;
-    int rf;
-    int gf;
-    u16 outv;
+    int redA;
+    int blue;
+    int red;
+    int green;
+    u16 outputPixel;
 
     if (src1 == NULL)
         return;
@@ -2402,20 +2402,20 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         return;
     if (dst == NULL)
         return;
-    fmt = *(u8*)(src1 + 0x16);
+    fmt = src1->format;
     if (fmt != 4 && fmt != 6)
         return;
-    if (*(u8*)(src2 + 0x16) != fmt)
+    if (src2->format != fmt)
         return;
-    if (*(u8*)(dst + 0x16) != fmt)
+    if (dst->format != fmt)
         return;
-    w = *(u16*)(src1 + 0xa);
-    if (w != *(u16*)(src2 + 0xa))
+    w = src1->width;
+    if (w != src2->width)
         return;
-    h = *(u16*)(src1 + 0xc);
-    if (h != *(u16*)(src2 + 0xc))
+    h = src1->height;
+    if (h != src2->height)
         return;
-    if (w != *(u16*)(dst + 0xa) || h != *(u16*)(dst + 0xc))
+    if (w != dst->width || h != dst->height)
     {
         return;
     }
@@ -2424,92 +2424,92 @@ void fn_80069B1C(u8* src1, u8* src2, u8* dst, f32 blend)
         wB = (0xff - wA) & 0xff;
         if (fmt == 4)
         {
-            for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
+            for (i = 0; i < (int)src1->height; i++)
             {
                 u8 *pa0, *pt, *pa2, *pa, *pb, *pc;
                 u32 wd;
                 j = 0;
                 w = i & 0xfffffffc;
                 h = (i & 3) * 8;
-                for (; j < (int)(wd = *(u16*)(src1 + 0xa)); j++)
+                for (; j < (int)(wd = src1->width); j++)
                 {
-                    i6 = (j & 3) * 2;
-                    pa0 = src1 + i6;
-                    i4 = (j >> 2) * 0x20;
-                    pt = pa0 + i4;
+                    pixelColumnOffset = (j & 3) * 2;
+                    pa0 = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (j >> 2) * 0x20;
+                    pt = pa0 + tileColumnOffset;
                     pa2 = pt + h;
-                    i12 = (int)wd * w * 2;
-                    pa = pa2 + i12;
-                    texA = *(u16*)(pa + 0x60);
-                    redA = (u8)(((int)(texA & 0xf800) >> 8) | ((int)(texA & 0xe000) >> 13));
-                    pb = src2 + i6;
-                    pb += i4;
+                    rowDataOffset = (int)wd * w * 2;
+                    pa = pa2 + rowDataOffset;
+                    pixelA = *(u16*)(pa + 0x60);
+                    redA = (u8)(((int)(pixelA & 0xf800) >> 8) | ((int)(pixelA & 0xe000) >> 13));
+                    pb = (u8*)src2 + pixelColumnOffset;
+                    pb += tileColumnOffset;
                     pb += h;
-                    pb += i12;
-                    texB = *(u16*)(pb + 0x60);
-                    redB = (u8)(((int)(texB & 0xf800) >> 8) | ((int)(texB & 0xe000) >> 13));
-                    bf = ((u8)(((int)(wA * (u8)(((texA & 0x1f) << 3) | ((int)(texA & 0x1c) >> 2))) >> 8) +
-                               ((int)(wB * (u8)(((texB & 0x1f) << 3) | ((int)(texB & 0x1c) >> 2))) >> 8)) &
-                          0xf8) >>
-                         3;
-                    rf = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
-                    gf = ((u8)(((int)(wA * (u8)(((int)(texA & 0x7e0) >> 3) | ((int)(texA & 0x600) >> 9))) >> 8) +
-                               ((int)(wB * (u8)(((int)(texB & 0x7e0) >> 3) | ((int)(texB & 0x600) >> 9))) >> 8)) &
-                          0xfc)
-                         << 3;
-                    outv = bf | (rf | gf);
-                    pt = dst + i6;
-                    pt += i4;
+                    pb += rowDataOffset;
+                    pixelB = *(u16*)(pb + 0x60);
+                    redB = (u8)(((int)(pixelB & 0xf800) >> 8) | ((int)(pixelB & 0xe000) >> 13));
+                    blue = ((u8)(((int)(wA * (u8)(((pixelA & 0x1f) << 3) | ((int)(pixelA & 0x1c) >> 2))) >> 8) +
+                               ((int)(wB * (u8)(((pixelB & 0x1f) << 3) | ((int)(pixelB & 0x1c) >> 2))) >> 8)) &
+                           0xf8) >>
+                          3;
+                    red = ((u8)(((int)(redA * wA) >> 8) + ((int)(redB * wB) >> 8)) & 0xf8) << 8;
+                    green = ((u8)(((int)(wA * (u8)(((int)(pixelA & 0x7e0) >> 3) | ((int)(pixelA & 0x600) >> 9))) >> 8) +
+                               ((int)(wB * (u8)(((int)(pixelB & 0x7e0) >> 3) | ((int)(pixelB & 0x600) >> 9))) >> 8)) &
+                           0xfc)
+                          << 3;
+                    outputPixel = blue | (red | green);
+                    pt = (u8*)dst + pixelColumnOffset;
+                    pt += tileColumnOffset;
                     pt += h;
-                    pc = pt + i12;
-                    *(u16*)(pc + 0x60) = outv;
+                    pc = pt + rowDataOffset;
+                    *(u16*)(pc + 0x60) = outputPixel;
                 }
             }
         }
         else
         {
-            for (i = 0; i < (int)*(u16*)(src1 + 0xc); i++)
+            for (i = 0; i < (int)src1->height; i++)
             {
-                int i5, i4;
+                int tileRowGroupOffset, tileRowOffset;
                 u32 wd;
                 j = 0;
-                i5 = (i >> 2) * 8;
-                i4 = (i & 3) * 8;
-                for (; j < (int)(wd = *(u16*)(src1 + 0xa)); j++)
+                tileRowGroupOffset = (i >> 2) * 8;
+                tileRowOffset = (i & 3) * 8;
+                for (; j < (int)(wd = src1->width); j++)
                 {
-                    int i9 = (j & 3) * 2;
-                    int i12;
-                    int i6;
+                    int pixelColumnOffset = (j & 3) * 2;
+                    int tileColumnOffset;
+                    int rowDataOffset;
                     u8 *at, *ad, *bd, *bt, *ct, *cd;
                     int aLo, bLo, aHi, bHi;
-                    bt = src1 + i9;
-                    i12 = (j >> 2) * 0x40;
-                    at = bt + i12;
-                    bt = at + i4;
-                    i6 = (int)wd * i5 * 2;
-                    ad = bt + i6;
-                    bt = src2 + i9;
-                    bt += i12;
-                    bt += i4;
-                    bd = bt + i6;
+                    bt = (u8*)src1 + pixelColumnOffset;
+                    tileColumnOffset = (j >> 2) * 0x40;
+                    at = bt + tileColumnOffset;
+                    bt = at + tileRowOffset;
+                    rowDataOffset = (int)wd * tileRowGroupOffset * 2;
+                    ad = bt + rowDataOffset;
+                    bt = (u8*)src2 + pixelColumnOffset;
+                    bt += tileColumnOffset;
+                    bt += tileRowOffset;
+                    bd = bt + rowDataOffset;
                     aLo = (u8) * (u16*)(ad + 0x60);
                     bLo = (u8) * (u16*)(bd + 0x60);
-                    texA = *(u16*)(ad + 0x80);
-                    aHi = (u8)((int)(texA & 0xff00) >> 8);
-                    texB = *(u16*)(bd + 0x80);
-                    bHi = (u8)((int)(texB & 0xff00) >> 8);
-                    ct = dst + i9;
-                    cd = ct + i12;
-                    cd += i4;
+                    pixelA = *(u16*)(ad + 0x80);
+                    aHi = (u8)((int)(pixelA & 0xff00) >> 8);
+                    pixelB = *(u16*)(bd + 0x80);
+                    bHi = (u8)((int)(pixelB & 0xff00) >> 8);
+                    ct = (u8*)dst + pixelColumnOffset;
+                    cd = ct + tileColumnOffset;
+                    cd += tileRowOffset;
                     cd += 0x60;
-                    *(u16*)(cd + i6) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
-                    *(u16*)(cd + (int)*(u16*)(src1 + 0xa) * i5 * 2 + 0x20) =
+                    *(u16*)(cd + rowDataOffset) = (u8)(((int)(aLo * wA) >> 8) + ((int)(bLo * wB) >> 8));
+                    *(u16*)(cd + (int)src1->width * tileRowGroupOffset * 2 + 0x20) =
                         ((u8)(((int)(aHi * wA) >> 8) + ((int)(bHi * wB) >> 8)) << 8) |
-                        (u8)(((int)(wA * (u8)texA) >> 8) + ((int)(wB * (u8)texB) >> 8));
+                        (u8)(((int)(wA * (u8)pixelA) >> 8) + ((int)(wB * (u8)pixelB) >> 8));
                 }
             }
         }
-        DCStoreRange(dst + 0x60, *(int*)(dst + 0x44));
+        DCStoreRange((u8*)dst + sizeof(Texture), dst->dataSize);
     }
 }
 #pragma opt_propagation reset
