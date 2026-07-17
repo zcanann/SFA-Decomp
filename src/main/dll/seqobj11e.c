@@ -489,11 +489,13 @@ void gcRobotPatrol_init(GameObject* obj, int state)
     Sfx_AddLoopedObjectSound((u32)obj, SFXTRIG_tr_bcrek1_c);
 }
 
+#pragma force_active on
 #pragma explicit_zero_data on
 __declspec(section ".sdata2") f32 lbl_803E2864 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E2868 = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E286C = 60.0f;
 #pragma explicit_zero_data off
+#pragma force_active reset
 
 void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
 {
@@ -506,118 +508,6 @@ void mikaladon_updateWhileFrozen(int obj, int state, int unused, int msg)
     *(u32*)&((BaddieState*)state)->unk2E4 |= 0x20;
     ((BaddieState*)state)->reactionFlags |= 0x8;
 }
-
-/* fn_80152B90: firefly hover update: circle drift, bob between heights,
- * periodically drop a spawned object, ambient sfx timers. */
-
-extern void fn_8014CD1C(int* obj, u8* state, int p3, f32 a, f32 b, int p6);
-extern f32 lbl_803E2868;
-extern f32 lbl_803E286C;
-extern f32 lbl_803E2878;
-extern f32 lbl_803E287C;
-extern f32 lbl_803E2880;
-extern f32 lbl_803E2884;
-extern f32 lbl_803E2888;
-extern f32 lbl_803E288C;
-extern f32 lbl_803E2890;
-extern f32 lbl_803E2894;
-extern f32 lbl_803E2810;
-
-#pragma peephole off
-void fn_80152B90(int* obj, u8* state)
-{
-    f32 y;
-    f32 sinOut;
-    f32 cosOut;
-
-    *(u16*)(state + 0x338) = lbl_803E287C * timeDelta + (f32)(u32) * (u16*)(state + 0x338);
-    fn_80293018(*(u16*)(state + 0x338), &sinOut, &cosOut);
-    sinOut = sinOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x324);
-    cosOut = cosOut * ((BaddieState*)state)->unk2A8 + *(f32*)(state + 0x32c);
-    if (((BaddieState*)state)->userData1 == 0)
-    {
-        f32 dx;
-        f32 dz;
-
-        y = ((GameObject*)obj)->anim.localPosY;
-        dx = *(f32*)(state + 0x324) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosX;
-        dz = *(f32*)(state + 0x32c) - ((GameObject*)((BaddieState*)state)->trackedObj)->anim.localPosZ;
-        if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * ((BaddieState*)state)->unk2A8)
-        {
-            ((BaddieState*)state)->userData1 = 1;
-            ((BaddieState*)state)->userData2 = 0;
-        }
-    }
-    else if (((BaddieState*)state)->userData1 == 1)
-    {
-        y = ((GameObject*)obj)->anim.localPosY - lbl_803E2884 * timeDelta;
-        if (y <= *(f32*)(state + 0x328) - lbl_803E2888)
-        {
-            ((BaddieState*)state)->userData1 = 2;
-        }
-        else
-        {
-            ((BaddieState*)state)->userData2 = (f32)(u32)((BaddieState*)state)->userData2 + timeDelta;
-            if (((BaddieState*)state)->userData2 > 0x64)
-            {
-                ((BaddieState*)state)->userData2 = 0;
-                if (Obj_IsLoadingLocked() != 0)
-                {
-                    u8* setup;
-                    int* spawned;
-
-                    setup = (u8*)Obj_AllocObjectSetup(0x24, SEQOBJ11E_GCROBOT_DROP_OBJ);
-                    ((ObjPlacement*)setup)->posX = ((GameObject*)obj)->anim.localPosX;
-                    ((ObjPlacement*)setup)->posY = lbl_803E2878 + ((GameObject*)obj)->anim.localPosY;
-                    ((ObjPlacement*)setup)->posZ = ((GameObject*)obj)->anim.localPosZ;
-                    ((ObjPlacement*)setup)->color[0] = 1;
-                    ((ObjPlacement*)setup)->color[1] = 1;
-                    ((ObjPlacement*)setup)->color[2] = 0xff;
-                    ((ObjPlacement*)setup)->color[3] = 0xff;
-                    spawned = (int*)loadObjectAtObject((GameObject*)obj, (ObjPlacement*)setup);
-                    if (spawned != 0)
-                    {
-                        *(int**)((char*)spawned + 0xc4) = obj;
-                        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_249);
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        y = lbl_803E288C * timeDelta + ((GameObject*)obj)->anim.localPosY;
-        if (y >= *(f32*)(state + 0x328))
-        {
-            ((BaddieState*)state)->userData1 = 0;
-        }
-    }
-    ((GameObject*)obj)->anim.velocityX = oneOverTimeDelta * (sinOut - ((GameObject*)obj)->anim.localPosX);
-    ((GameObject*)obj)->anim.velocityY = oneOverTimeDelta * (y - ((GameObject*)obj)->anim.localPosY);
-    ((GameObject*)obj)->anim.velocityZ = oneOverTimeDelta * (cosOut - ((GameObject*)obj)->anim.localPosZ);
-    fn_8014CD1C(obj, state, 0xf, lbl_803E2890, lbl_803E2894, 0);
-    *(f32*)(state + 0x334) = *(f32*)(state + 0x334) - timeDelta;
-    if (*(f32*)(state + 0x334) <= lbl_803E2868)
-    {
-        *(f32*)(state + 0x334) = (f32)(int)randomGetRange(0x3c, 0x78);
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_31);
-    }
-    *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
-    if (*(f32*)(state + 0x330) <= lbl_803E2868)
-    {
-        *(f32*)(state + 0x330) = lbl_803E286C;
-        Sfx_PlayFromObject((u32)obj, SFXTRIG_id_24a);
-    }
-}
-
-__declspec(section ".sdata2") f32 lbl_803E2878 = 5.0f;
-__declspec(section ".sdata2") f32 lbl_803E287C = 75.0f;
-__declspec(section ".sdata2") f32 lbl_803E2880 = 1.3f;
-__declspec(section ".sdata2") f32 lbl_803E2884 = 0.5f;
-__declspec(section ".sdata2") f32 lbl_803E2888 = 500.0f;
-__declspec(section ".sdata2") f32 lbl_803E288C = 1.5f;
-__declspec(section ".sdata2") f32 lbl_803E2890 = 7.5f;
-__declspec(section ".sdata2") f32 lbl_803E2894 = 1.0f;
 
 Seq11ERow gSeq11EStateTable[6] = {
     {3.0f, 0x1, 0, 1, 4, 1}, {2.0f, 0x0, 1, 2, 2, 1}, {3.0f, 0x1, 2, 3, 3, 1},
