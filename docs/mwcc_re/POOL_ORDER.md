@@ -84,6 +84,24 @@ Derived 2026-07-17 by probe (`probe/q*.c`, `probe/w*.c`, `probe/y*.c`, `probe/z*
 not a ghost: rules 3 and 4 are the only two constructs that invert numbering against emission. Read
 which one fits and you have recovered the original statement shape.
 
+5. **★ A sunk statement is `IroPropagate`, and the mechanism tells you what blocks it.** Rule 1's
+   "if MWCC *sinks* a statement" clause is not scheduling (these DLLs compile `-opt noschedule`) — it
+   is **copy/expression propagation**: a local whose *sole* use is later has its whole defining
+   expression propagated down to the use site, and its literals number at the **sunk** position.
+   Proven by `-opt nopropagation`, which restores the un-sunk numbering exactly.
+   ⇒ **The blocker is aliasing.** An operand loaded from an `extern`/global cannot move across an
+   intervening call, so the statement stays put. This is why a pool can look plausible while the
+   source still spells `extern f32 lbl_*` and **rotates the moment you literalise it** — the shim was
+   doing the pinning. Levers that restore the un-sunk order (probed under `-O4,p -opt
+   nopeephole,noschedule`): `volatile` local, a second use of the local, `*(f32*)&local = expr;`,
+   `#pragma opt_dead_assignments off`. ★All four cost `.text`, and a plain non-`const` named local
+   does **not** work here (it const-props straight back — this is a *different* failure from the
+   literal-hoist regression the named local does fix). If none is free, the statement genuinely was
+   not sunk in retail and an operand was a real memory reference — re-read the shape, don't force it.
+   Worked case: `dll_0049_cameramodecombat.c::CameraModeCombat_update`, `zoom = (f32)(s32)(9000 -
+   diff) / 9000.0f;` immediately above an `interpolate()` call — pools `35, 0.04, 9000` as a literal
+   and `9000, 35, 0.04` (= retail) as an extern or under `opt_propagation off`.
+
 ### Worked confirmation — effect20 (`dll_002D_effect20.c`, pool `803E0310..04D8`), 2026-07-17
 Retail pools `0.005f, pi, 32768.0f` but **emits** `pi (+0x780), 32768 (+0x7a4), 0.005 (+0x7e0)`.
 Source with a `angle`/`trigVal`/`radius` temp per statement pools `pi, 32768, 0.005` — statements are
@@ -120,6 +138,32 @@ MWCC canonicalises a commutative `+` constant-first (rule 2), which swaps the tw
 — same `fadds f1,f1,f0`, same fuzzy score, 4 different instructions in the DOL. **A pool claim must be
 gated on `ninja build/GSAE01/ok`, never on the unit's fuzzy percent.** Corollary: use the compound
 form for any accumulator whose RHS mixes the accumulator with a constant.
+
+## ★ The bias is a GROUP TERMINATOR — the strongest boundary discriminator
+
+Re-probed 2026-07-17: a function's conversion biases are appended after **all** of that function's
+literals, even when the conversion is codegen'd in the *middle* (`gA = x*2.0f; gB = (float)n;
+gC = x*3.0f;` pools `2.0, 3.0, sbias`, **not** `2.0, sbias, 3.0`), and with both bias types present
+(`2.0, 3.0, sbias, ubias`). The next function's literals then follow the bias (`... sbias │ 5.0`).
+
+⇒ **An atom that sits AFTER a group's bias belongs to a LATER group. No exceptions.** This reads
+group boundaries straight off the bytes, and it is often the only way to separate a ghost's extent
+from its caller's: ghosts and callers share atoms by dedup, so the first-use "owner" map cannot.
+
+Worked example — `dll_0271_drakorhoverpad.o`, pool `803E6A38..6AA0`:
+```
+6A38 2.0 │ 6A3C 0.0  6A40 10 │ 6A44 5.0 │ 6A48 1.0
+6A4C 300 │ 6A50 0.01 │ 6A54 pi │ 6A58 32768 │ 6A5C pad │ 6A60 SBIAS │ 6A68 UBIAS
+6A70 -1.0 │ 6A74 -2.0 │ 6A78 0.8 ...
+```
+`-1.0` is referenced by **only** `drakorhoverpad_update` (at its `+0xc00`), yet it pools *after* the
+biases that appear to terminate update's group. The naive reading ("update owns `pi..UBIAS` and
+`-1`") is therefore impossible. The bias rule forces the correct one: `{300, 0.01, pi, 32768, SBIAS,
+UBIAS}` is **one ghost group** — a static defined between `func0F` and `update` that does both a
+signed and an unsigned int->float conversion, inlined into `updateMain` (which is what first-uses
+300/0.01). `update` is defined *after* it, so update's `pi`/`32768`/bias uses are plain **dedup
+hits**, and update's own group is just `{-1.0}`. Without the bias rule this unit reads as an
+unexplainable rotation.
 
 ## Probe matrix
 
@@ -203,6 +247,16 @@ anomaly is exactly this rule.
   TU (already in the census).
 
 ## Landed
+
+- **sctotembond** (`main/dll/SC/dll_01BB_sctotembond.c`), 2026-07-17: ghost
+  `sc_totembond_beginOrbGame(obj, state)` = the whole `START_ORBS` event block, hand-inlined into
+  `update`; group `{-130.0f, 30.0f}` (the `spawnGameBitOrbs` radius arg, then `spawnTimer`) pooled
+  ahead of `spawnGameBitOrbs`'s own `{pi, 32768, sbias}`. Defined above the file's `#pragma
+  dont_inline` window so it re-inlines byte-identically. Plus 11 `extern f32 lbl_803E5*` -> literals
+  and a named non-`const` `f32 zero` local in `update` (inline `0.0f` hoists to the front of the
+  compare; retail loads the field first). Claim `.sdata2 [0x803E5638, 0x803E5664)`, pool byte-exact
+  (44 B). Clean-room on `c164ff5698`: `main.dol: OK`, complete_units 815 -> 816, matched_data +44 B,
+  **matched_code FLAT**.
 
 - **effect20** (`dll_002D_effect20.c`), 2026-07-17: recover `case 0x7a3` as a call-argument shape
   (rule 3 above) + `+=` on the two scroll accumulators (the `@sda21` trap above) + claim
