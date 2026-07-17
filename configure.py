@@ -1383,7 +1383,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DIM/dim2icicle.c", cflags=cflags_dll_noopt),
             Object(
                 MatchingFor("GSAE01"),
-                "main/dll/DIM/dll_01E0_dimboss.c",
+                "main/dll/DIM/DIMboss.c",
                 cflags=cflags_dll_noopt,
                 section_alignments={".data": 4},
             ),

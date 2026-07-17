@@ -12,8 +12,8 @@ symbols.txt. base = symbol_address - built_symbol_offset.
 
 Usage:
     python3 tools/link_data_range.py <src-obj> <retail-obj> <section>
-    python3 tools/link_data_range.py build/GSAE01/src/main/dll/DIM/dll_01E0_dimboss.o \
-            build/GSAE01/obj/main/dll/DIM/dll_01E0_dimboss.o .data
+    python3 tools/link_data_range.py build/GSAE01/src/main/dll/DIM/DIMboss.o \
+            build/GSAE01/obj/main/dll/DIM/DIMboss.o .data
 
 Caveats: shared .sdata2 constant pools and layout mismatches will produce a range
 that overlaps another split or fails the link — the DOL SHA1 is the only proof.

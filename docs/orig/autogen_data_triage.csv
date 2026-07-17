@@ -122,7 +122,7 @@ address,section,size_bytes,class,subtype_reason,likely_owner,owner_confidence
 0x80325600,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_01CE_dll1ce.c,high
 0x803256A8,.data,760,ptr-table,reloc-dense pointer/jump/vtable table,dll_01CF_dll1cf.c,high
 0x80325AC8,.data,60,data-table,opaque .data table (needs inspection),dim2icicle.c,high
-0x80325B94,.data,100,ptr-table,reloc-dense pointer/jump/vtable table,dll_01E0_dimboss.c,high
+0x80325B94,.data,100,ptr-table,reloc-dense pointer/jump/vtable table,DIMboss.c,high
 0x80325C30,.data,856,data-table,structured .data (relocs/pointers present),dll_01E1_dimbossgut.c,high
 0x80325FEC,.data,316,ptr-table,reloc-dense pointer/jump/vtable table,dll_0178_dfshshrine.c,high
 0x80326168,.data,112,ptr-table,reloc-dense pointer/jump/vtable table,dll_018C_mmshshrine.c,high
