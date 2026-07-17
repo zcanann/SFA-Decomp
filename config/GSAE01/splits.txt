@@ -518,6 +518,7 @@ main/dll/dll_0060_dll60func0.c:
 main/dll/dll_0061_dll61func0.c:
 	.text       start:0x800EDA28 end:0x800EDE74
 	.sdata      start:0x803DB8C0 end:0x803DB8C8
+	.sdata2     start:0x803E0858 end:0x803E0898
 
 main/dll/dll_0062_dll62func0.c:
 	.text       start:0x800EDE74 end:0x800EE25C
