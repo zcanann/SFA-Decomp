@@ -1448,9 +1448,10 @@ void trickyUpdateApproachSpeed(u8* obj, f32 baseRadius, u8* state, f32* targetPo
         {
             if (candidate > lbl_803E23DC)
             {
-                if (candidate < ((TrickyState*)state)->speed)
+                f32 curSpeed = ((TrickyState*)state)->speed;
+                if (candidate < curSpeed)
                 {
-                    f32 step = lbl_803E241C * timeDelta + ((TrickyState*)state)->speed;
+                    f32 step = lbl_803E241C * timeDelta + curSpeed;
                     ((TrickyState*)state)->speed = (step < candidate) ? candidate : step;
                     return;
                 }
