@@ -37,17 +37,11 @@
 u8* gSky2State;
 s8 gSky2DrawMode;
 static u32 sSkyUnusedD;
-u8 gSkyCurrentTextureColor;
-static u8 sSkyUnusedC2;
-static u8 sSkyUnusedC1;
+u8 gSkyCurrentTextureColor[3];
 static u8 sSkyUnusedC0;
-u8 gSkyCurrentAmbientColor;
-static u8 sSkyUnusedB2;
-static u8 sSkyUnusedB1;
+u8 gSkyCurrentAmbientColor[3];
 static u8 sSkyUnusedB0;
-u8 gSkyCurrentLightColor;
-static u8 sSkyUnusedA2;
-static u8 sSkyUnusedA1;
+u8 gSkyCurrentLightColor[3];
 static u8 sSkyUnusedA0;
 u8 gSkySunPositionPrev;
 ModelLightStruct* gSkyMoonLight;
@@ -55,9 +49,7 @@ u8 gSkyOverrideLightDirectionEnabled;
 f32 gSkyOverrideLightIntensity;
 u8 gSkyOverrideLightColorEnabled;
 static u8 sSkyUnused02;
-static u8 sSkyUnused01;
-static u8 sSkyUnused00;
-u8 gSkyOverrideLightColor;
+u8 gSkyOverrideLightColor[3];
 int gSkyObjectsInitialized;
 void* gSkySkyTexture;
 void* gSkyMoonObject;
@@ -122,13 +114,13 @@ extern u8* gSkySunObject;
 extern void* gSkyMoonObject;
 extern void* gSkySkyTexture;
 extern int gSkyObjectsInitialized;
-extern u8 gSkyOverrideLightColor;
+extern u8 gSkyOverrideLightColor[3];
 extern u8 gSkyOverrideLightColorEnabled;
 extern f32 gSkyOverrideLightIntensity;
 extern u8 gSkyOverrideLightDirectionEnabled;
-extern u8 gSkyCurrentLightColor;
-extern u8 gSkyCurrentAmbientColor;
-extern u8 gSkyCurrentTextureColor;
+extern u8 gSkyCurrentLightColor[3];
+extern u8 gSkyCurrentAmbientColor[3];
+extern u8 gSkyCurrentTextureColor[3];
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 lbl_803DF058;
 extern const f32 lbl_803DF05C;
@@ -411,8 +403,8 @@ void skyGetCurrentTextureColor(u8* red, u8* green, u8* blue)
 
     if (gSkyState != NULL)
     {
-        *red = gSkyCurrentTextureColor;
-        color = &gSkyCurrentTextureColor;
+        *red = gSkyCurrentTextureColor[0];
+        color = gSkyCurrentTextureColor;
         *green = color[1];
         *blue = color[2];
         return;
@@ -432,10 +424,10 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
 
     if (gSkyOverrideLightColorEnabled != 0)
     {
-        red = gSkyOverrideLightColor;
+        red = gSkyOverrideLightColor[0];
         *ambientRed = red;
         *lightRed = red;
-        color = &gSkyOverrideLightColor;
+        color = gSkyOverrideLightColor;
         green = color[1];
         *ambientGreen = green;
         *lightGreen = green;
@@ -447,12 +439,12 @@ void skyGetCurrentAmbientAndLightColors(u8* ambientRed, u8* ambientGreen, u8* am
 
     if (gSkyState != NULL)
     {
-        *ambientRed = gSkyCurrentAmbientColor;
-        color = &gSkyCurrentAmbientColor;
+        *ambientRed = gSkyCurrentAmbientColor[0];
+        color = gSkyCurrentAmbientColor;
         *ambientGreen = color[1];
         *ambientBlue = color[2];
-        *lightRed = gSkyCurrentLightColor;
-        color = &gSkyCurrentLightColor;
+        *lightRed = gSkyCurrentLightColor[0];
+        color = gSkyCurrentLightColor;
         *lightGreen = color[1];
         *lightBlue = color[2];
         return;
@@ -503,8 +495,8 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 {
     u8* color;
 
-    gSkyOverrideLightColor = red;
-    color = &gSkyOverrideLightColor;
+    gSkyOverrideLightColor[0] = red;
+    color = gSkyOverrideLightColor;
     color[1] = green;
     color[2] = blue;
 }
@@ -1067,9 +1059,9 @@ void loadLightFn_8008bbc4(void)
     }
     gSkyOverrideLightDirectionEnabled = 0;
     gSkyOverrideLightColorEnabled = 0;
-    gSkyOverrideLightColor = 0xff;
-    (&gSkyOverrideLightColor)[1] = 0xff;
-    (&gSkyOverrideLightColor)[2] = 0xff;
+    gSkyOverrideLightColor[0] = 0xff;
+    gSkyOverrideLightColor[1] = 0xff;
+    gSkyOverrideLightColor[2] = 0xff;
     if (gSkySunLight == NULL)
     {
         gSkySunLight = objCreateLight(0, 1);
@@ -2569,7 +2561,7 @@ void skyFn_8008a04c(void)
         lightIntensityCurve = &((f32*)((u8*)vec + 0x2c))[part];
         greenCurveOffset = (part + 7) * 4;
         blueCurveOffset = (part + 0xe) * 4;
-        color = &gSkyCurrentTextureColor;
+        color = gSkyCurrentTextureColor;
         zero = lbl_803DF058;
         dayStart = gSkyDayStartTime;
         do
@@ -2631,7 +2623,7 @@ void skyFn_8008a04c(void)
             }
             if (i == 0)
             {
-                gSkyCurrentTextureColor = red;
+                gSkyCurrentTextureColor[0] = red;
                 color[1] = green;
                 color[2] = blue;
             }
@@ -3127,11 +3119,11 @@ void skyFn_8008aee8(void)
         gradA = tbl[idxA];
         idxB = (s16)(sky[(((SkyTimeBlend*)sky)->phase + 1) % 8 + 0x87] - 0xc38) * 6;
         gradB = tbl[idxB];
-        gSkyCurrentLightColor = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        gSkyCurrentLightColor[0] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         channel = tbl + 1;
         gradA = channel[idxA];
         gradB = channel[idxB];
-        lightColor = &gSkyCurrentLightColor;
+        lightColor = gSkyCurrentLightColor;
         lightColor[1] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         channel = tbl + 2;
         gradA = channel[idxA];
@@ -3140,11 +3132,11 @@ void skyFn_8008aee8(void)
         channel = tbl + 3;
         gradA = channel[idxA];
         gradB = channel[idxB];
-        gSkyCurrentAmbientColor = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
+        gSkyCurrentAmbientColor[0] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         channel = tbl + 4;
         gradA = channel[idxA];
         gradB = channel[idxB];
-        ambientColor = &gSkyCurrentAmbientColor;
+        ambientColor = gSkyCurrentAmbientColor;
         ambientColor[1] = (u8)(int)(tc * (f32)(gradB - gradA) + (f32)(u32)gradA);
         channel = tbl + 5;
         gradA = channel[idxA];

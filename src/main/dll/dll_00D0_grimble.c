@@ -46,7 +46,7 @@ typedef struct GrimblePlacement
 
 extern int lbl_803200E0[];
 extern int lbl_80320158[];
-extern void* gGrimbleStateHandlersA[11];
+extern void* gGrimbleStateHandlersA[10];
 extern void* gGrimbleStateHandlersB[6];
 extern f32 lbl_803E2EB8;
 extern f32 lbl_803E2EBC;
