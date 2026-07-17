@@ -152,7 +152,3 @@ ObjectDescriptor gDIMSnowBall1C2ObjDescriptor = {
     (ObjectDescriptorCallback)dimsnowball1c2_getObjectTypeId,
     dimsnowball1c2_getExtraSize,
 };
-
-#pragma force_active on
-/* .sdata2 constant pool */
-const f32 lbl_803E4878[2] = {1.0f, 0.0f};

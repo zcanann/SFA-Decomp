@@ -28,8 +28,6 @@ typedef struct DimgatePlacement
     s16 gateGameBit;
 } DimgatePlacement;
 
-extern f32 lbl_803E4878;
-
 int dimgate_SeqFn(void) { return 0x0; }
 int dimgate_getExtraSize(void) { return 0x1; }
 int dimgate_getObjectTypeId(void) { return 0x0; }
@@ -41,7 +39,7 @@ void dimgate_free(void)
 void dimgate_render(GameObject *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
-    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, lbl_803E4878);
+    if (v != 0) objRenderModelAndHitVolumes((int)obj, p2, p3, p4, p5, 1.0f);
 }
 
 void dimgate_hitDetect(void)
@@ -105,7 +103,7 @@ void dimgate_init(GameObject *obj, s8* p_unused_passthrough)
     if (mainGetBit(((DimgatePlacement*)param)->gateGameBit) != 0)
     {
         inner[0] = DIMGATE_STATE_OPEN;
-        (obj)->anim.currentMoveProgress = lbl_803E4878;
+        (obj)->anim.currentMoveProgress = 1.0f;
     }
     else
     {
