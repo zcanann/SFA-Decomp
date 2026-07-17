@@ -32,6 +32,7 @@
 #include "main/obj_group.h"
 #include "main/obj_message.h"
 #include "main/audio/music_trigger_ids.h"
+#include "main/object_descriptor.h"
 
 #define DBSHSHRINE_OBJGROUP   0xb
 #define DBSHSHRINE_MAP_SHRINE 0xb
@@ -396,3 +397,12 @@ void dbsh_shrine_release(void)
 void dbsh_shrine_initialise(void)
 {
 }
+
+ObjectDescriptor gDBSH_ShrineObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)dbsh_shrine_initialise, (ObjectDescriptorCallback)dbsh_shrine_release, 0,
+    (ObjectDescriptorCallback)dbsh_shrine_init, (ObjectDescriptorCallback)dbsh_shrine_update,
+    (ObjectDescriptorCallback)dbsh_shrine_hitDetect, (ObjectDescriptorCallback)dbsh_shrine_render,
+    (ObjectDescriptorCallback)dbsh_shrine_free, (ObjectDescriptorCallback)dbsh_shrine_getObjectTypeId,
+    dbsh_shrine_getExtraSize,
+};

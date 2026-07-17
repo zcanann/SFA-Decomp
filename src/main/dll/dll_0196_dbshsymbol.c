@@ -29,6 +29,7 @@
 #include "main/pad.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/frame_timing.h"
+#include "main/object_descriptor.h"
 
 u8 gDbShSymbolScuffPlayed = 1;
 
@@ -308,3 +309,10 @@ void DBSH_Symbol_init(int* obj)
 
     ((GameObject*)obj)->anim.modelState->flags &= ~(u64)DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
+
+ObjectDescriptor gDBSH_SymbolObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
+    (ObjectDescriptorCallback)DBSH_Symbol_init, (ObjectDescriptorCallback)DBSH_Symbol_update, 0,
+    (ObjectDescriptorCallback)DBSH_Symbol_render, (ObjectDescriptorCallback)DBSH_Symbol_free, 0,
+    DBSH_Symbol_getExtraSize,
+};

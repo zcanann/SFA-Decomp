@@ -1,4 +1,4 @@
-/* DLL 0x0192 — GPS-H shrine objects [801C70F0-801C7724) */
+/* DLL 0x0192 - GPS-H shrine objects [801C70F0-801C7724) */
 #include "main/obj_placement.h"
 #include "main/dll/objfx_api.h"
 #include "main/vecmath_distance_api.h"
@@ -8,10 +8,6 @@
 #include "main/vecmath.h"
 #include "main/render_envfx_api.h"
 #include "main/dll/gpshshrineflags_struct.h"
-#include "main/dll/dll_0195_dbshshrine.h"
-#include "main/dll/dll_0194_gpshscene.h"
-#include "main/dll/dll_0190_ecshcup.h"
-#include "main/dll/cup1C3.h"
 #include "main/dll/player_api.h"
 #include "main/game_object.h"
 #include "main/dll/SH/dll_01AE_shlevelcontrol.h"
@@ -522,44 +518,3 @@ void gpsh_shrine_initialise(void)
 {
 }
 
-/* descriptor/ptr table auto 0x803263b8-0x803264e0 */
-u32 lbl_803263B8[3] = { 0x00280028, 0x00300030, 0x002d002d };
-ObjectDescriptor10WithPadding gGPSH_ObjCreatorObjDescriptor = {
-    {0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-     (ObjectDescriptorCallback)gpsh_objcreator_initialise, (ObjectDescriptorCallback)gpsh_objcreator_release, 0,
-     (ObjectDescriptorCallback)gpsh_objcreator_init, (ObjectDescriptorCallback)gpsh_objcreator_update,
-     (ObjectDescriptorCallback)gpsh_objcreator_hitDetect, (ObjectDescriptorCallback)gpsh_objcreator_render,
-     (ObjectDescriptorCallback)gpsh_objcreator_free, (ObjectDescriptorCallback)gpsh_objcreator_getObjectTypeId,
-     gpsh_objcreator_getExtraSize},
-    0,
-};
-ObjectDescriptor gGPSH_SceneObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)gpsh_scene_initialise, (ObjectDescriptorCallback)gpsh_scene_release, 0,
-    (ObjectDescriptorCallback)gpsh_scene_init, (ObjectDescriptorCallback)gpsh_scene_update,
-    (ObjectDescriptorCallback)gpsh_scene_hitDetect, (ObjectDescriptorCallback)gpsh_scene_render,
-    (ObjectDescriptorCallback)gpsh_scene_free, (ObjectDescriptorCallback)gpsh_scene_getObjectTypeId,
-    gpsh_scene_getExtraSize,
-};
-ObjectDescriptor gECSH_CupObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)ecsh_cup_initialise, (ObjectDescriptorCallback)ecsh_cup_release, 0,
-    (ObjectDescriptorCallback)ecsh_cup_init, (ObjectDescriptorCallback)ecsh_cup_update,
-    (ObjectDescriptorCallback)ecsh_cup_hitDetect, (ObjectDescriptorCallback)ecsh_cup_render,
-    (ObjectDescriptorCallback)ecsh_cup_free, (ObjectDescriptorCallback)ecsh_cup_getObjectTypeId,
-    ecsh_cup_getExtraSize,
-};
-ObjectDescriptor gDBSH_ShrineObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
-    (ObjectDescriptorCallback)dbsh_shrine_initialise, (ObjectDescriptorCallback)dbsh_shrine_release, 0,
-    (ObjectDescriptorCallback)dbsh_shrine_init, (ObjectDescriptorCallback)dbsh_shrine_update,
-    (ObjectDescriptorCallback)dbsh_shrine_hitDetect, (ObjectDescriptorCallback)dbsh_shrine_render,
-    (ObjectDescriptorCallback)dbsh_shrine_free, (ObjectDescriptorCallback)dbsh_shrine_getObjectTypeId,
-    dbsh_shrine_getExtraSize,
-};
-ObjectDescriptor gDBSH_SymbolObjDescriptor = {
-    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS, 0, 0, 0,
-    (ObjectDescriptorCallback)DBSH_Symbol_init, (ObjectDescriptorCallback)DBSH_Symbol_update, 0,
-    (ObjectDescriptorCallback)DBSH_Symbol_render, (ObjectDescriptorCallback)DBSH_Symbol_free, 0,
-    DBSH_Symbol_getExtraSize,
-};

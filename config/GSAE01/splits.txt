@@ -2513,27 +2513,32 @@ main/dll/dll_0191_ecshcreator.c:
 
 main/dll/dll_0192_gpshshrine.c:
 	.text       start:0x801C70F0 end:0x801C8084
-	.data       start:0x80326398 end:0x803264E0
+	.data       start:0x80326398 end:0x803263B8
 
 main/dll/dll_0193_gpshobjcreator.c:
 	.text       start:0x801C8084 end:0x801C82C8
+	.data       start:0x803263B8 end:0x80326400
 	.sdata2     start:0x803E5048 end:0x803E5058
 
 main/dll/dll_0194_gpshscene.c:
 	.text       start:0x801C82C8 end:0x801C835C
+	.data       start:0x80326400 end:0x80326438
 
 main/dll/dll_0190_ecshcup.c:
 	.text       start:0x801C835C end:0x801C8B68
 	.rodata     start:0x802C23B8 end:0x802C23C4
+	.data       start:0x80326438 end:0x80326470
 	.sbss       start:0x803DDBC8 end:0x803DDBD0
 	.sdata2     start:0x803E5060 end:0x803E50A0
 
 main/dll/dll_0195_dbshshrine.c:
 	.text       start:0x801C8B68 end:0x801C9660
+	.data       start:0x80326470 end:0x803264A8
 	.sdata2     start:0x803E50A0 end:0x803E50E0
 
 main/dll/dll_0196_dbshsymbol.c:
 	.text       start:0x801C9660 end:0x801C9E54
+	.data       start:0x803264A8 end:0x803264E0
 	.sdata      start:0x803DBF68 end:0x803DBF70
 	.sdata2     start:0x803E50E0 end:0x803E511C
 

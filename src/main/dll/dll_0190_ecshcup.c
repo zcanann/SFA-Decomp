@@ -11,6 +11,7 @@
 #include "main/game_object.h"
 #include "main/objhits.h"
 #include "main/vecmath.h"
+#include "main/object_descriptor.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 
 typedef struct EcshCupState
@@ -303,3 +304,12 @@ void ecsh_cup_release(void)
 void ecsh_cup_initialise(void)
 {
 }
+
+ObjectDescriptor gECSH_CupObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)ecsh_cup_initialise, (ObjectDescriptorCallback)ecsh_cup_release, 0,
+    (ObjectDescriptorCallback)ecsh_cup_init, (ObjectDescriptorCallback)ecsh_cup_update,
+    (ObjectDescriptorCallback)ecsh_cup_hitDetect, (ObjectDescriptorCallback)ecsh_cup_render,
+    (ObjectDescriptorCallback)ecsh_cup_free, (ObjectDescriptorCallback)ecsh_cup_getObjectTypeId,
+    ecsh_cup_getExtraSize,
+};

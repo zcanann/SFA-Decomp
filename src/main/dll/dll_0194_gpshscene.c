@@ -4,6 +4,7 @@
 
 #include "main/game_object.h"
 #include "main/object_render_legacy.h"
+#include "main/object_descriptor.h"
 extern f32 lbl_803E5058;
 
 typedef struct GpshScenePlacement
@@ -50,3 +51,12 @@ void gpsh_scene_release(void)
 void gpsh_scene_initialise(void)
 {
 }
+
+ObjectDescriptor gGPSH_SceneObjDescriptor = {
+    0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)gpsh_scene_initialise, (ObjectDescriptorCallback)gpsh_scene_release, 0,
+    (ObjectDescriptorCallback)gpsh_scene_init, (ObjectDescriptorCallback)gpsh_scene_update,
+    (ObjectDescriptorCallback)gpsh_scene_hitDetect, (ObjectDescriptorCallback)gpsh_scene_render,
+    (ObjectDescriptorCallback)gpsh_scene_free, (ObjectDescriptorCallback)gpsh_scene_getObjectTypeId,
+    gpsh_scene_getExtraSize,
+};

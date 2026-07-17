@@ -12,6 +12,8 @@
 #include "main/object_render_legacy.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx.h"
+#include "main/dll/creator1C4.h"
+#include "main/object_descriptor.h"
 
 typedef struct GpshObjcreatorState
 {
@@ -47,7 +49,6 @@ STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, base.posX) == 0x8);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, rotByte) == 0x18);
 STATIC_ASSERT(offsetof(GpshObjcreatorSpawnSetup, unk1A) == 0x1a);
 STATIC_ASSERT(sizeof(GpshObjcreatorSpawnSetup) == 0x24);
-
 
 extern s16 lbl_803263B8[];
 
@@ -134,3 +135,15 @@ void gpsh_objcreator_release(void)
 void gpsh_objcreator_initialise(void)
 {
 }
+
+s16 lbl_803263B8[6] = {0x28, 0x28, 0x30, 0x30, 0x2d, 0x2d};
+
+ObjectDescriptor10WithPadding gGPSH_ObjCreatorObjDescriptor = {
+    {0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+     (ObjectDescriptorCallback)gpsh_objcreator_initialise, (ObjectDescriptorCallback)gpsh_objcreator_release, 0,
+     (ObjectDescriptorCallback)gpsh_objcreator_init, (ObjectDescriptorCallback)gpsh_objcreator_update,
+     (ObjectDescriptorCallback)gpsh_objcreator_hitDetect, (ObjectDescriptorCallback)gpsh_objcreator_render,
+     (ObjectDescriptorCallback)gpsh_objcreator_free, (ObjectDescriptorCallback)gpsh_objcreator_getObjectTypeId,
+     gpsh_objcreator_getExtraSize},
+    0,
+};
