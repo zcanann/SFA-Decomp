@@ -3460,6 +3460,7 @@ main/dll/dll_02A0_ring.c:
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:
 	.text       start:0x802308B4 end:0x80230E2C
+	.data       start:0x8032B7D0 end:0x8032B808
 
 main/dll/ARW/dll_02A2_arwspeedstr.c:
 	.text       start:0x80230E2C end:0x80231074

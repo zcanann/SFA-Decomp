@@ -36,6 +36,23 @@
 /* camera mode DLL 0x56 = dll_0056_cameramodearwing */
 #define ARWLEVELCON_CAMMODE_ARWING 0x56
 
+ObjectDescriptor gARWLevelConObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)arwlevelcon_initialise,
+    (ObjectDescriptorCallback)arwlevelcon_release,
+    NULL,
+    (ObjectDescriptorCallback)arwlevelcon_init,
+    (ObjectDescriptorCallback)arwlevelcon_update,
+    (ObjectDescriptorCallback)arwlevelcon_hitDetect,
+    (ObjectDescriptorCallback)arwlevelcon_render,
+    (ObjectDescriptorCallback)arwlevelcon_free,
+    (ObjectDescriptorCallback)arwlevelcon_getObjectTypeId,
+    (ObjectDescriptorExtraSizeCallback)arwlevelcon_getExtraSize,
+};
+
 void arwlevelcon_onSeqFree(GameObject* obj)
 {
     ARWLevelConState* state = obj->extra;
