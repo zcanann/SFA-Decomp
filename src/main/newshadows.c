@@ -105,40 +105,6 @@ extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern const f64 gNewShadowU32ToDoubleBias;
 extern f32 lbl_803DC074;
-extern f32 lbl_803DC2D0;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803DDB4C;
-extern f32 lbl_803DDB50;
-extern f32 lbl_803DDC24;
-extern f32 lbl_803DDC28;
-extern f32 lbl_803DDC2C;
-extern const f32 lbl_803DF98C;
-extern const f32 lbl_803DF990;
-extern const f32 lbl_803DF994;
-extern const f32 lbl_803DF998;
-extern const f32 lbl_803DF99C;
-extern const f32 lbl_803DF9A0;
-extern const f32 lbl_803DF9A4;
-extern const f32 lbl_803DF9A8;
-extern const f32 lbl_803DF9AC;
-extern const f32 lbl_803DF9B0;
-extern const f32 lbl_803DF9B4;
-extern const f32 lbl_803DF9B8;
-extern const f32 lbl_803DF9BC;
-extern const f32 lbl_803DF9C0;
-extern const f32 lbl_803DF9C4;
-extern const f32 lbl_803DF9C8;
-extern const f32 lbl_803DF9CC;
-extern const f32 lbl_803DF9D0;
-extern const f32 lbl_803DF9E8;
-extern const f32 lbl_803DF9EC;
-extern const f32 lbl_803DF9F0;
-extern const f32 lbl_803DF9F4;
-extern const f32 lbl_803DF9F8;
-extern const f32 lbl_803DF9FC;
-extern const f32 lbl_803DFA00;
-extern const f32 lbl_803DFA10;
 extern const f32 lbl_803DFA14;
 extern const f32 lbl_803DFA18;
 extern const f32 lbl_803DFA1C;
@@ -148,7 +114,6 @@ extern const f32 lbl_803DFA30;
 extern const f32 lbl_803DFA34;
 extern const f32 lbl_803DFA38;
 extern const f32 lbl_803DFA3C;
-extern const f32 lbl_803DFA40;
 extern u32 gNewShadowSmallDiskTexture;
 extern char* gNewShadowReflectionTexture;
 extern u32 lbl_803DCF94;
@@ -563,26 +528,26 @@ void newshadows_captureProjectedShadow(u16* object)
 
     FUN_80017a50(object, mtx, '\0');
     FUN_8000693c(
-        (double)(((GameObject*)object)->anim.localPosX - lbl_803DDA58), (double)((GameObject*)object)->anim.localPosY,
-        (double)(((GameObject*)object)->anim.localPosZ - lbl_803DDA5C),
-        (double)(lbl_803DF98C * ((GameObject*)object)->anim.hitboxScale * ((GameObject*)object)->anim.rootMotionScale),
+        (double)(((GameObject*)object)->anim.localPosX - playerMapOffsetX), (double)((GameObject*)object)->anim.localPosY,
+        (double)(((GameObject*)object)->anim.localPosZ - playerMapOffsetZ),
+        (double)(lbl_803DED0C * ((GameObject*)object)->anim.hitboxScale * ((GameObject*)object)->anim.rootMotionScale),
         &projX, &projY, &projZ, &scaleX, &scaleY, &projW);
-    scaleX = lbl_803DF994 * scaleX + lbl_803DF990;
-    scaleY = lbl_803DF998 * scaleY + lbl_803DF990;
+    scaleX = lbl_803DED14 * scaleX + lbl_803DED10;
+    scaleY = Chan_803DED18 * scaleY + lbl_803DED10;
     maxScale = scaleY;
     if (scaleY < scaleX)
     {
         maxScale = scaleX;
     }
-    invScale = (double)(lbl_803DF99C / maxScale);
+    invScale = (double)(Dev_803DED1C / maxScale);
     tmpX = (double)(float)((double)((GameObject*)object)->anim.rootMotionScale * invScale);
     tmpY = -(double)projX;
     dirY = (double)projY;
-    FUN_8025da64((double)(float)((double)lbl_803DF994 * tmpY), (double)(float)((double)lbl_803DF998 * dirY),
-                 (double)lbl_803DF9A0, (double)lbl_803DF9A4, (double)lbl_803DF9A8, (double)lbl_803DF9AC);
-    if (lbl_803DF9A8 <= projZ)
+    FUN_8025da64((double)(float)((double)lbl_803DED14 * tmpY), (double)(float)((double)Chan_803DED18 * dirY),
+                 (double)Enabled_803DED20, (double)BarnacleEnabled_803DED24, (double)lbl_803DED28, (double)lbl_803DED2C);
+    if (lbl_803DED28 <= projZ)
     {
-        **(float**)(object + 0x32) = lbl_803DF9A8;
+        **(float**)(object + 0x32) = lbl_803DED28;
     }
     else
     {
@@ -599,20 +564,20 @@ void newshadows_captureProjectedShadow(u16* object)
         FUN_80259504(0x80, 0x80, 0x2a, 0);
         FUN_80259c0c((&DAT_8038ee3c)[gNewShadowFrameIndex] + 0x60, 1);
         fn_8006A028((u8*)(&DAT_8038ee3c)[(gNewShadowFrameIndex + 1) % 3], 0x80, 0x10, 0);
-        **(float**)(object + 0x32) = (float)((double)lbl_803DF9AC / invScale);
+        **(float**)(object + 0x32) = (float)((double)lbl_803DED2C / invScale);
     }
     FUN_80006988();
-    tmpX = (double)lbl_803DF994;
+    tmpX = (double)lbl_803DED14;
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) = (float)(tmpX * -tmpY);
-    tmpY = (double)lbl_803DF998;
+    tmpY = (double)Chan_803DED18;
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) = (float)(tmpY * -dirY);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) =
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x14) + tmpX);
     *(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) =
         (float)((double)*(float*)(*(int*)&((GameObject*)object)->anim.modelState + 0x18) + tmpY);
-    maxScale = lbl_803DF99C;
+    maxScale = Dev_803DED1C;
     shadowSlot = *(float**)(object + 0x32);
-    shadowSlot[5] = -(lbl_803DF99C * *shadowSlot - shadowSlot[5]);
+    shadowSlot[5] = -(Dev_803DED1C * *shadowSlot - shadowSlot[5]);
     shadowSlot = *(float**)(object + 0x32);
     shadowSlot[6] = -(maxScale * *shadowSlot - shadowSlot[6]);
     return;
@@ -818,8 +783,8 @@ void newshadows_renderQueuedShadowCasters(void)
         FUN_80006954(1);
         light = FUN_800069a8();
         savedZParam = FUN_800069f8();
-        FUN_80006a00((double)lbl_803DF9B0);
-        FUN_800069f4((double)lbl_803DF9AC);
+        FUN_80006a00((double)gNewShadowFovY);
+        FUN_800069f4((double)lbl_803DED2C);
         savedLightX = (double)*(float*)(light + 6);
         savedLightY = (double)*(float*)(light + 8);
         savedLightZ = (double)*(float*)(light + 10);
@@ -827,10 +792,10 @@ void newshadows_renderQueuedShadowCasters(void)
         savedWord0 = *light;
         savedWord2 = light[2];
         light[1] = 0;
-        defaultDirX = lbl_803DF9A8;
-        defaultDirY = lbl_803DF9AC;
-        defaultDirZ = lbl_803DF9A8;
-        FUN_80060710((double)lbl_803DF9B4, &defaultDirX, lightMtx);
+        defaultDirX = lbl_803DED28;
+        defaultDirY = lbl_803DED2C;
+        defaultDirZ = lbl_803DED28;
+        FUN_80060710((double)lbl_803DED34, &defaultDirX, lightMtx);
         FUN_800606a4(&tmpOutA, &tmpOutB);
         dirShadowCount = 0;
         shadowSlot = 0;
@@ -861,17 +826,17 @@ void newshadows_renderQueuedShadowCasters(void)
                     if (dirShadowCount < 3)
                     {
                         baseTexSize = 0x100;
-                        shadowScale = (double)lbl_803DF9B8;
+                        shadowScale = (double)lbl_803DED38;
                     }
                     else if (dirShadowCount < 5)
                     {
                         baseTexSize = 0x80;
-                        shadowScale = (double)lbl_803DF9BC;
+                        shadowScale = (double)lbl_803DED3C;
                     }
                     else
                     {
                         baseTexSize = 0x40;
-                        shadowScale = (double)lbl_803DF9C0;
+                        shadowScale = (double)lbl_803DED40;
                     }
                     texSize = baseTexSize;
                     if (dirShadowCount == 0)
@@ -888,20 +853,20 @@ void newshadows_renderQueuedShadowCasters(void)
                     objDirY = -model[6];
                     objDirZ = -model[7];
                     dotLen = FUN_80247f90(&objDirX, &dirX);
-                    if ((dotLen < (double)lbl_803DF9AC) && ((double)lbl_803DF9C4 < dotLen))
+                    if ((dotLen < (double)lbl_803DED2C) && ((double)lbl_803DED44 < dotLen))
                     {
-                        blendX = lbl_803DF9C8 * objDirX + lbl_803DF9CC * dirX;
-                        blendY = lbl_803DF9C8 * objDirY + lbl_803DF9CC * dirY;
-                        blendZ = lbl_803DF9C8 * objDirZ + lbl_803DF9CC * dirZ;
+                        blendX = lbl_803DED48 * objDirX + lbl_803DED4C * dirX;
+                        blendY = lbl_803DED48 * objDirY + lbl_803DED4C * dirY;
+                        blendZ = lbl_803DED48 * objDirZ + lbl_803DED4C * dirZ;
                         dotLen = SeekTwiceBeforeRead(&blendX);
-                        if ((double)lbl_803DF9A8 < dotLen)
+                        if ((double)lbl_803DED28 < dotLen)
                         {
-                            FUN_80247edc((double)(float)((double)lbl_803DF9AC / dotLen), &blendX, &dirX);
+                            FUN_80247edc((double)(float)((double)lbl_803DED2C / dotLen), &blendX, &dirX);
                         }
                     }
-                    if (lbl_803DF9D0 < dirY)
+                    if (lbl_803DED50 < dirY)
                     {
-                        dirY = lbl_803DF9D0;
+                        dirY = lbl_803DED50;
                         FUN_80247ef8(&dirX, &dirX);
                     }
                     ndirX = -(double)dirX;
@@ -915,7 +880,7 @@ void newshadows_renderQueuedShadowCasters(void)
                     *light = gNewShadowLightAngleX;
                     dotLen = (double)(float)(ndirZ * ndirZ +
                                              (double)(float)(ndirX * ndirX + (double)(float)(ndirY * ndirY)));
-                    if ((double)lbl_803DF9A8 < dotLen)
+                    if ((double)lbl_803DED28 < dotLen)
                     {
                         invSqrt = 1.0 / SQRT(dotLen);
                         invSqrt = lbl_803DED58 * invSqrt * -(dotLen * invSqrt * invSqrt - lbl_803DED60);
@@ -923,9 +888,9 @@ void newshadows_renderQueuedShadowCasters(void)
                         dotLen = (double)(float)(dotLen * lbl_803DED58 * invSqrt *
                                                  -(dotLen * invSqrt * invSqrt - lbl_803DED60));
                     }
-                    if ((double)lbl_803DF9A8 < dotLen)
+                    if ((double)lbl_803DED28 < dotLen)
                     {
-                        dotLen = (double)(float)((double)lbl_803DF9E8 / dotLen);
+                        dotLen = (double)(float)((double)lbl_803DED68 / dotLen);
                         ndirX = (double)(float)(ndirX * dotLen);
                         ndirY = (double)(float)(ndirY * dotLen);
                         ndirZ = (double)(float)(ndirZ * dotLen);
@@ -942,25 +907,25 @@ void newshadows_renderQueuedShadowCasters(void)
                     *(float*)(light + 10) = (float)(ndirZ + (double)*(float*)(pivot + 0x2c));
                     if (*(int*)&((GameObject*)obj)->anim.parent == 0)
                     {
-                        *(float*)(light + 6) = *(float*)(light + 6) + lbl_803DDB50;
-                        *(float*)(light + 10) = *(float*)(light + 10) + lbl_803DDB4C;
+                        *(float*)(light + 6) = *(float*)(light + 6) + gMapSavedPlayerOffsetX;
+                        *(float*)(light + 10) = *(float*)(light + 10) + gMapSavedPlayerOffsetZ;
                     }
                     dotLen = (double)*model;
                     ndirX = -dotLen;
                     if (*(int*)&((GameObject*)obj)->anim.parent != 0)
                     {
-                        *(float*)(light + 6) = *(float*)(light + 6) + lbl_803DDA58;
-                        *(float*)(light + 10) = *(float*)(light + 10) + lbl_803DDA5C;
+                        *(float*)(light + 6) = *(float*)(light + 6) + playerMapOffsetX;
+                        *(float*)(light + 10) = *(float*)(light + 10) + playerMapOffsetZ;
                     }
                     FUN_8025da88(2, 2, texSize - 4, texSize - 4);
-                    ndirZ = (double)lbl_803DF9A8;
+                    ndirZ = (double)lbl_803DED28;
                     dcvtHiA = 0x43300000;
                     dcvtHiB = 0x43300000;
                     dcvtLoA = texSize;
                     dcvtLoB = texSize;
                     FUN_8025da64(ndirZ, ndirZ, (double)(float)((double)(u32)texSize),
-                                 (double)(float)((double)(u32)texSize), ndirZ, (double)lbl_803DF9AC);
-                    FUN_80247dfc(ndirX, dotLen, ndirX, dotLen, (double)lbl_803DF9AC, (double)lbl_803DF9EC, projMtx);
+                                 (double)(float)((double)(u32)texSize), ndirZ, (double)lbl_803DED2C);
+                    FUN_80247dfc(ndirX, dotLen, ndirX, dotLen, (double)lbl_803DED2C, (double)lbl_803DED6C, projMtx);
                     FUN_8025d6ac(projMtx, 1);
                     FUN_80006984();
                     FUN_80247b70(dotLen, ndirX, ndirX, dotLen, shadowScale, shadowScale, shadowScale, shadowScale,
@@ -976,11 +941,11 @@ void newshadows_renderQueuedShadowCasters(void)
                     if (*(char*)(queueEntry + 2) == '\x02')
                     {
                         gxSetZMode_(1, GX_LEQUAL, 1);
-                        shadowScale = (double)lbl_803DF9A8;
+                        shadowScale = (double)lbl_803DED28;
                         FUN_80247a7c(shadowScale, shadowScale, shadowScale, (float*)(&DAT_8038fd48 + slotOff));
-                        (&DAT_8038fd50)[slotByte * 0x1a] = lbl_803DF9F0;
-                        (&DAT_8038fd54)[slotByte * 0x1a] = lbl_803DF9F4;
-                        (&DAT_8038fd74)[slotByte * 0x1a] = lbl_803DF9AC;
+                        (&DAT_8038fd50)[slotByte * 0x1a] = lbl_803DED70;
+                        (&DAT_8038fd54)[slotByte * 0x1a] = lbl_803DED74;
+                        (&DAT_8038fd74)[slotByte * 0x1a] = lbl_803DED2C;
                         FUN_80247618((float*)(&DAT_8038fd48 + slotOff), viewMtx, (float*)(&DAT_8038fd48 + slotOff));
                         FUN_80259400(0, 0, texSize, texSize);
                         FUN_80259504((u16)texSize, (u16)texSize, 0x11, 0);
@@ -1009,21 +974,21 @@ void newshadows_renderQueuedShadowCasters(void)
                     dotLen = (double)((GameObject*)obj)->anim.localPosZ;
                     if (*(int*)&((GameObject*)obj)->anim.parent == 0)
                     {
-                        shadowScale = (double)(float)(shadowScale - (double)lbl_803DDA58);
-                        dotLen = (double)(float)(dotLen - (double)lbl_803DDA5C);
+                        shadowScale = (double)(float)(shadowScale - (double)playerMapOffsetX);
+                        dotLen = (double)(float)(dotLen - (double)playerMapOffsetZ);
                     }
                     FUN_80247a48(-shadowScale, -(double)((GameObject*)obj)->anim.localPosY, -dotLen, transMtx);
-                    scaleMtx0 = lbl_803DF9B8 / *model;
-                    scaleMtx1 = lbl_803DF9A8;
-                    scaleMtx2 = lbl_803DF9A8;
-                    scaleMtx3 = lbl_803DF9B8;
-                    scaleMtx4 = lbl_803DF9A8;
-                    scaleMtx5 = lbl_803DF9A8;
-                    scaleMtx7 = lbl_803DF9B8;
-                    scaleMtx8 = lbl_803DF9A8;
-                    scaleMtx9 = lbl_803DF9A8;
-                    scaleMtx10 = lbl_803DF9A8;
-                    scaleMtx11 = lbl_803DF9AC;
+                    scaleMtx0 = lbl_803DED38 / *model;
+                    scaleMtx1 = lbl_803DED28;
+                    scaleMtx2 = lbl_803DED28;
+                    scaleMtx3 = lbl_803DED38;
+                    scaleMtx4 = lbl_803DED28;
+                    scaleMtx5 = lbl_803DED28;
+                    scaleMtx7 = lbl_803DED38;
+                    scaleMtx8 = lbl_803DED28;
+                    scaleMtx9 = lbl_803DED28;
+                    scaleMtx10 = lbl_803DED28;
+                    scaleMtx11 = lbl_803DED2C;
                     scaleMtx6 = scaleMtx0;
                     FUN_80247618(&scaleMtx0, transMtx, shadowMtx);
                     model[5] = defaultDirX;
@@ -1065,14 +1030,14 @@ void newshadows_renderQueuedShadowCasters(void)
             {
                 FUN_80006954(0);
                 FUN_80006a00(savedZParam);
-                FUN_800069f4((double)lbl_803DC2D0);
+                FUN_800069f4((double)lbl_803DB670);
                 FUN_8000694c();
             }
             else
             {
                 FUN_80006954(0);
                 FUN_80006a00(savedZParam);
-                FUN_800069f4((double)lbl_803DFA00);
+                FUN_800069f4((double)lbl_803DED80);
                 FUN_8000694c();
             }
         }
@@ -1083,11 +1048,11 @@ void newshadows_renderQueuedShadowCasters(void)
             shadowSlot = FUN_8005d06c();
             if (shadowSlot == 0)
             {
-                FUN_800069f4((double)lbl_803DF9FC);
+                FUN_800069f4((double)gNewShadowAspectNarrow);
             }
             else
             {
-                FUN_800069f4((double)lbl_803DF9F8);
+                FUN_800069f4((double)gNewShadowAspectWide);
             }
             FUN_8000694c();
         }
@@ -1120,7 +1085,7 @@ void newshadows_queueShadowCaster(int object)
         dy = ((GameObject*)object)->anim.worldPosY - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x10);
         dz = ((GameObject*)object)->anim.worldPosZ - *(float*)((u8*)gNewShadowCurrentViewSlot + 0x14);
         dist = (double)(dz * dz + dx * dx + dy * dy);
-        if ((double)lbl_803DF9A8 < dist)
+        if ((double)lbl_803DED28 < dist)
         {
             invSqrt = 1.0 / SQRT(dist);
             invSqrt = lbl_803DED58 * invSqrt * -(dist * invSqrt * invSqrt - lbl_803DED60);
@@ -1136,7 +1101,7 @@ void newshadows_queueShadowCaster(int object)
             if ((modelDef->renderFlags & OBJDEF_RENDERFLAG_PROJECTED_SHADOW) != 0)
             {
                 (&DAT_8038ef10)[slotOff] = 2;
-                *(float*)(&DAT_8038ef0c + slotOff) = lbl_803DFA10;
+                *(float*)(&DAT_8038ef0c + slotOff) = lbl_803DED90;
             }
         }
         else
@@ -1212,7 +1177,7 @@ void newshadows_getShadowNoiseTexture(int* textureOut)
 
 double newshadows_getShadowNoiseScale(void)
 {
-    return (double)lbl_803DDC24;
+    return (double)lbl_803DCFA4;
 }
 
 void newshadows_bindShadowRenderTexture(int textureSlot)
@@ -1258,7 +1223,7 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
 
 void newshadows_refreshShadowCaptureTexture(void)
 {
-    FUN_800709e8((double)lbl_803DF9A8, (double)lbl_803DF9A8, (int)gNewShadowReflectionTexture, 0xff, 0x40);
+    FUN_800709e8((double)lbl_803DED28, (double)lbl_803DED28, (int)gNewShadowReflectionTexture, 0xff, 0x40);
     FUN_80259400(0, 0, 0x50, 0x3c);
     FUN_80259504(0x50, 0x3c, 4, 0);
     FUN_80259c0c(gNewShadowReflectionSmallTexture + 0x60, 1);
@@ -1314,15 +1279,15 @@ void newshadows_updateFrameState(void)
     scrollDisabled = FUN_800176d0();
     if (scrollDisabled == 0)
     {
-        lbl_803DDC2C = lbl_803DFA14 * lbl_803DC074 + lbl_803DDC2C;
-        lbl_803DDC28 = lbl_803DFA18 * lbl_803DC074 + lbl_803DDC28;
-        if (lbl_803DFA1C < lbl_803DDC2C)
+        gNewShadowReflectionScrollX = lbl_803DFA14 * lbl_803DC074 + gNewShadowReflectionScrollX;
+        gNewShadowReflectionScrollY = lbl_803DFA18 * lbl_803DC074 + gNewShadowReflectionScrollY;
+        if (lbl_803DFA1C < gNewShadowReflectionScrollX)
         {
-            lbl_803DDC2C = lbl_803DDC2C - lbl_803DFA1C;
+            gNewShadowReflectionScrollX = gNewShadowReflectionScrollX - lbl_803DFA1C;
         }
-        if (lbl_803DFA1C < lbl_803DDC28)
+        if (lbl_803DFA1C < gNewShadowReflectionScrollY)
         {
-            lbl_803DDC28 = lbl_803DDC28 - lbl_803DFA1C;
+            gNewShadowReflectionScrollY = gNewShadowReflectionScrollY - lbl_803DFA1C;
         }
     }
     gNewShadowCasterCount = 0;
@@ -1330,7 +1295,7 @@ void newshadows_updateFrameState(void)
     lbl_803DCFA0 = lbl_803DCFA0 + (u16)framesThisStep * 0x28a;
     cvtScratch = ((u64)(((u64)(u32)(0x43300000) << 32) | (u32)(lbl_803DCFA0)));
     depth = (double)FUN_802947f8();
-    lbl_803DDC24 = (float)((double)lbl_803DFA20 * depth);
+    lbl_803DCFA4 = (float)((double)lbl_803DFA20 * depth);
     FUN_800606a8();
     gNewShadowFrameIndex = (char)(gNewShadowFrameIndex + 1) + (char)((gNewShadowFrameIndex + 1) / 3) * -3;
     shadowMapEnabled = FUN_80048094();
@@ -1344,7 +1309,7 @@ void newshadows_updateFrameState(void)
         {
             if ((double)nearDepth < focusDepth)
             {
-                texSize = (u32)((lbl_803DF99C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
+                texSize = (u32)((Dev_803DED1C * (float)(depth - focusDepth)) / (float)(depth - (double)nearDepth));
                 cvtScratch = (s64)(int)texSize;
             }
             else
@@ -1366,8 +1331,8 @@ void newshadows_updateFrameState(void)
 
 void newshadows_getShadowNoiseScroll(float* xOffsetOut, float* yOffsetOut)
 {
-    *xOffsetOut = lbl_803DDC2C;
-    *yOffsetOut = lbl_803DDC28;
+    *xOffsetOut = gNewShadowReflectionScrollX;
+    *yOffsetOut = gNewShadowReflectionScrollY;
     return;
 }
 
@@ -1398,11 +1363,11 @@ void newshadows_buildShadowDirectionTexture(void)
 
     lbl_803DCFBC = (Texture*)FUN_800537a0(0x100, 0x100, 3, '\0', 0, 0, 0, 1, 1);
     convBiasConst = gNewShadowU32ToDoubleBias;
-    encodeScale = lbl_803DFA40;
+    encodeScale = lbl_803DEDC0;
     encodeBias = lbl_803DFA3C;
     centerOffset = lbl_803DFA2C;
     y = 0;
-    epsilon = (double)lbl_803DF9A8;
+    epsilon = (double)lbl_803DED28;
     falloffLimit = (double)lbl_803DFA38;
     do
     {
@@ -1422,10 +1387,10 @@ void newshadows_buildShadowDirectionTexture(void)
                 invSqrt = lbl_803DED58 * invSqrt * -(len * invSqrt * invSqrt - lbl_803DED60);
                 len = (double)(float)(len * lbl_803DED58 * invSqrt * -(len * invSqrt * invSqrt - lbl_803DED60));
             }
-            intensity = lbl_803DF9A8;
+            intensity = lbl_803DED28;
             if (len <= falloffLimit)
             {
-                intensity = lbl_803DF9B4 * -(float)((double)lbl_803DF9C8 * len - (double)lbl_803DFA30) * lbl_803DFA34;
+                intensity = lbl_803DED34 * -(float)((double)lbl_803DED48 * len - (double)lbl_803DFA30) * lbl_803DFA34;
             }
             *(u16*)((u8*)lbl_803DCFBC + (y & 3) * 2 + ((int)y >> 2) * 0x20 + (x & 3) * 8 + ((int)x >> 2) * 0x800 + 0x60) =
                 (u16)(int)(encodeScale * (float)(dx / len) * intensity + encodeBias) |

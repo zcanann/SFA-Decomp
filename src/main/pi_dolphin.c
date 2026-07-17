@@ -159,9 +159,9 @@ extern u32 FUN_8025c510();
 extern u32 GXSetBlendMode();
 
 extern u32 gTitleScreenCreditDelay;
-extern u32 gDebugGlyphUScale;
-extern u32 gDebugTextColorA;
-extern u32 gDebugScreenHeight;
+extern int lbl_803DCD6C;
+extern int lbl_803DCD70;
+extern int lbl_803DCD74;
 extern char* sResourceFileNameTable[];
 extern char sRomlistZlbPathFormat[];
 extern char sResourceFileNameAudioTab[];
@@ -3708,7 +3708,7 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alpha
         }
         if (!rgbResolved)
         {
-            *rgbOut = gDebugTextColorA;
+            *rgbOut = lbl_803DCD70;
         }
     }
     if (doAlpha == '\0')
@@ -3760,16 +3760,16 @@ void FUN_80047d88(char* color, char doRgb, char doAlpha, u32* rgbOut, u32* alpha
         }
         if (!alphaResolved)
         {
-            *alphaOut = gDebugGlyphUScale;
+            *alphaOut = lbl_803DCD6C;
         }
     }
     if ((!rgbResolved) || (!alphaResolved))
     {
         colorWord[0] = *(u32*)color;
-        FUN_8025c510(gDebugScreenHeight, (u8*)colorWord);
-        gDebugScreenHeight = gDebugScreenHeight + 1;
-        gDebugTextColorA = gDebugTextColorA + 1;
-        gDebugGlyphUScale = gDebugGlyphUScale + 1;
+        FUN_8025c510(lbl_803DCD74, (u8*)colorWord);
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
     }
     return;
 }
