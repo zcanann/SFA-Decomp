@@ -487,9 +487,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     float* p;
     int i;
     int j;
-    f32 angScale; /* 32768.0f = angle units per pi */
     f32 dz;
-    f32 pi;
     f32 dx;
     f32 rad;
     f32 sinv;
@@ -522,11 +520,9 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
     i = 1;
     ang = 0xaaa;
     p = path + 3;
-    pi = lbl_803E168C;
-    angScale = lbl_803E1690;
     do
     {
-        rad = (pi * (f32)(s16)ang) / angScale;
+        rad = (3.1415927f * (f32)(s16)ang) / 32768.0f;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
@@ -535,7 +531,7 @@ void camMoveFn_80104040(CameraObject* camera, GameObject* target)
         p[0] = t + target->anim.worldPosX;
         p[1] = camera->anim.worldPosY;
         p[2] = z;
-        rad = (pi * (f32)(s16)(-i * 0xaaa)) / angScale;
+        rad = (3.1415927f * (f32)(s16)(-i * 0xaaa)) / 32768.0f;
         cosv = mathSinf(rad);
         sinv = mathCosf(rad);
         t = dx * sinv - dz * cosv;
