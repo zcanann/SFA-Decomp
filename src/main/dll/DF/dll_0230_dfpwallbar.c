@@ -12,8 +12,6 @@
 #include "main/gamebit_ids.h"
 #include "main/dll/DF/dll_0230_dfpwallbar.h"
 
-#pragma dont_inline on
-
 #define DFPWALLBAR_OBJFLAG_HIDDEN 0x4000
 
 /* seqId of the DragonRock spell-puzzle controller object this bar links
