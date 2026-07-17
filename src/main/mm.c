@@ -410,14 +410,11 @@ int heapSpawnSlot(int region, int idx, int size, int type, int newType, int item
     }
     return idx;
 }
-#pragma dont_inline off
-
 DeferredFree gMmDeferredFreeStack[0x3E80 / sizeof(DeferredFree)];
 
 void* gMmStoreArray[0x20];
 
 
-#pragma dont_inline on
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int itemTag, int tag)
 {
     int oldSize;
@@ -452,9 +449,6 @@ int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int 
     }
     return idx;
 }
-#pragma dont_inline off
-
-#pragma dont_inline on
 void heapFree(int region, int idx)
 {
     s16 next;
@@ -682,9 +676,6 @@ void mmFreeTick(int arg)
                  g[0]->regions[3].numSlots);
     }
 }
-#pragma dont_inline off
-
-#pragma dont_inline on
 void mm_free(void* p)
 {
     if (gMmFreeDelay == 0)
