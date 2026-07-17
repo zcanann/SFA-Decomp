@@ -21,7 +21,7 @@
 
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/fdlibm.h"
 
-extern const double lbl_803E7948;
+static const double two54 = 1.8014398509481984e+16;
 
 #ifdef __STDC__
 double frexp(double x, int* eptr)
@@ -39,7 +39,7 @@ int* eptr;
 	if (ix >= 0x7ff00000 || ((ix | lx) == 0))
 		return x;          /* 0,inf,nan */
 	if (ix < 0x00100000) { /* subnormal */
-		x *= lbl_803E7948;
+		x *= two54;
 		hx    = __HI(x);
 		ix    = hx & 0x7fffffff;
 		*eptr = -54;
@@ -49,5 +49,3 @@ int* eptr;
 	__HI(x) = hx;
 	return x;
 }
-
-__declspec(section ".sdata2") const double lbl_803E7948 = 1.8014398509481984e+16;
