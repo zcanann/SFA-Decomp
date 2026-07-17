@@ -1590,6 +1590,22 @@ void goToNextMapLayer(void)
     }
     renderFlags |= 0x4000;
 }
+static inline void mapMarkRectRows(char* g3, int* rect)
+{
+    int xx, zz;
+    for (zz = rect[2]; zz <= rect[3]; zz++)
+    {
+        char* gp;
+        xx = rect[0];
+        gp = g3 + (zz + 7) * 16 + xx;
+        for (; xx <= rect[1]; xx++)
+        {
+            gp[7] = -3;
+            gp++;
+        }
+    }
+}
+
 #pragma opt_dead_assignments off
 #pragma opt_propagation off
 #pragma opt_unroll_loops off
@@ -1935,48 +1951,15 @@ void doPendingMapLoads(void)
                             for (layer = 0; layer < 5; layer++)
                             {
                                 char* g3;
-                                int zz, xx;
                                 s8 cnt2;
                                 mapFn_80057d24(gMapBlockOriginX + 7, gMapBlockOriginZ + 7, rectA, rectB, rectC, rectD,
                                                layer, 0, slot);
                                 g3 = (char*)*aBase;
                                 gMapLayerCellStates = (s8*)*cBase;
-                                for (zz = rectA[2]; zz <= rectA[3]; zz++)
-                                {
-                                    char* gp = g3 + rectA[0] + (zz + 7) * 16;
-                                    for (xx = rectA[0]; xx <= rectA[1]; xx++)
-                                    {
-                                        gp[7] = -3;
-                                        gp++;
-                                    }
-                                }
-                                for (zz = rectB[2]; zz <= rectB[3]; zz++)
-                                {
-                                    char* gp = g3 + rectB[0] + (zz + 7) * 16;
-                                    for (xx = rectB[0]; xx <= rectB[1]; xx++)
-                                    {
-                                        gp[7] = -3;
-                                        gp++;
-                                    }
-                                }
-                                for (zz = rectC[2]; zz <= rectC[3]; zz++)
-                                {
-                                    char* gp = g3 + rectC[0] + (zz + 7) * 16;
-                                    for (xx = rectC[0]; xx <= rectC[1]; xx++)
-                                    {
-                                        gp[7] = -3;
-                                        gp++;
-                                    }
-                                }
-                                for (zz = rectD[2]; zz <= rectD[3]; zz++)
-                                {
-                                    char* gp = g3 + rectD[0] + (zz + 7) * 16;
-                                    for (xx = rectD[0]; xx <= rectD[1]; xx++)
-                                    {
-                                        gp[7] = -3;
-                                        gp++;
-                                    }
-                                }
+                                mapMarkRectRows(g3, rectA);
+                                mapMarkRectRows(g3, rectB);
+                                mapMarkRectRows(g3, rectC);
+                                mapMarkRectRows(g3, rectD);
                                 {
                                     int cn2 = 0;
                                     int zc[2];
