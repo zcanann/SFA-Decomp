@@ -45,11 +45,7 @@ int gMmpAsteroidDustHeightParam;
 
 #pragma scheduling off
 
-#pragma force_active on
-
 #define MMP_ASTEROID_PI 3.14159274f
-
-#pragma force_active reset
 
 int mmp_asteroid_re_SeqFn(GameObject* obj, int unused, ObjAnimUpdateState* animUpdate)
 {

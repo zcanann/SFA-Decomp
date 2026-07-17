@@ -21,10 +21,8 @@
 #include "main/dll/IM/dll_016F_imspacethruster.h"
 #include "main/object_descriptor.h"
 
-#pragma force_active on
 #define IM_SPACE_THRUSTER_WEIGHT_MAX 1.0f
 #define IM_SPACE_THRUSTER_ALPHA_TO_WEIGHT_SCALE 255.0f
-#pragma force_active reset
 
 s16 gImSpaceThrusterKeyframeIndexA[6] = {0x160, 0x161, 0x162, 0x163, 0x165, 0};
 s16 gImSpaceThrusterKeyframeIndexB[6] = {3, 4, 5, 6, 7, 0};
