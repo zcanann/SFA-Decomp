@@ -69,8 +69,15 @@ typedef struct ObjSeqBgCmd
 {
     int object;
     s16 param;
-    s8 opcode;
-    s8 pad;
+    union
+    {
+        struct
+        {
+            s8 opcode;
+            s8 pad;
+        };
+        s16 flags;
+    };
 } ObjSeqBgCmd;
 
 typedef struct RomCurveNode
@@ -112,6 +119,14 @@ typedef struct ObjCurveKey
     u8 pad05;
     s16 frame;
 } ObjCurveKey;
+
+typedef struct ObjSeqPlacement
+{
+    u8 pad00[8];
+    f32 baseX;
+    f32 groundOffset;
+    f32 baseZ;
+} ObjSeqPlacement;
 
 extern void ObjSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void* entries, int count);
@@ -1034,7 +1049,7 @@ int ObjSeq_ExecuteActionCommand(u8* obj, u8* action, u8** cmdPtr, s8 flags, void
     u8* entry;
     int opcode;
     int sub;
-    int restart;
+    s8 restart;
     int reps;
     int val;
     int slot;
@@ -4475,11 +4490,11 @@ int ObjSeq_update(u8* obj, f32 t)
     u8* action;
     u8* activeObj;
     f32 scratch[2];
-    u8* model;
+    ObjSeqPlacement* placement;
     u8* seq;
     ObjSeqState* state;
     u8* p;
-    u8* entry;
+    ObjSeqBgCmd* entry;
     int runs;
     int step;
     int slot;
@@ -4490,7 +4505,9 @@ int ObjSeq_update(u8* obj, f32 t)
     int opcode;
     int found;
     int pressed;
-    int restart;
+    s8 restart;
+    s8 rewindStep;
+    u8 conditionOpcode;
     int aInt;
     f32 val;
     f32 rate;
@@ -4505,8 +4522,8 @@ int ObjSeq_update(u8* obj, f32 t)
 
     runs = 0;
     step = lbl_803DB411;
-    model = *(u8**)&((GameObject*)obj)->anim.placementData;
-    if (model == NULL)
+    placement = (ObjSeqPlacement*)((GameObject*)obj)->anim.placementData;
+    if (placement == NULL)
     {
         return 1;
     }
@@ -4533,7 +4550,7 @@ int ObjSeq_update(u8* obj, f32 t)
         return 0;
     }
 
-    slot = (s8)state->slot;
+    slot = state->slot;
     if (base[slot + 0x338c] == 1)
     {
         state->curFrame = ((s16*)(base + 0x3694))[slot];
@@ -4559,14 +4576,14 @@ int ObjSeq_update(u8* obj, f32 t)
             }
         }
     }
-    (base + (s8)state->slot)[0x3cf4] = 0;
+    (base + state->slot)[0x3cf4] = 0;
 
     do
     {
         lbl_803DD113 = 0;
         if (state->runState == 0)
         {
-            obj[0x36] = 0;
+            ((GameObject*)obj)->anim.alpha = 0;
             return 1;
         }
 
@@ -4577,15 +4594,15 @@ int ObjSeq_update(u8* obj, f32 t)
             ((GameObject*)activeObj)->pendingParentObj = obj;
             ((GameObject*)activeObj)->objectFlags |= OBJECT_OBJFLAG_SEQ_ATTACHED;
         }
-        else if ((s8)state->unk7B == 0 && (s8)state->movementState < 4)
+        else if (state->unk7B == 0 && state->movementState < 4)
         {
-            *(s8*)&state->movementState = -1;
+            state->movementState = -1;
         }
 
-        slot = (s8)state->slot;
-        if ((s8)base[slot + 0x3c4c] != 0 && (s8)base[slot + 0x39e8] != 0)
+        slot = state->slot;
+        if ((s8)base[slot + 0x3c4c] != 0 && (rewindStep = (s8)base[slot + 0x39e8]) != 0)
         {
-            state->curFrame -= base[slot + 0x39e8];
+            state->curFrame -= rewindStep;
             if (state->curFrame < 0)
             {
                 state->curFrame = 0;
@@ -4597,82 +4614,82 @@ int ObjSeq_update(u8* obj, f32 t)
         lbl_803DD0D8 = 0;
         if (activeObj != obj)
         {
-            objCallSeqFn(activeObj, obj, seq, (base + (s8)state->slot)[0x3c4c]);
+            objCallSeqFn(activeObj, obj, seq, (base + state->slot)[0x3c4c]);
             lbl_803DD0D8 = 1;
         }
 
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_B) != 0)
         {
-            (base + (s8)state->slot)[0x3b9c] = 1;
+            (base + state->slot)[0x3b9c] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_B) != 0)
         {
-            (base + (s8)state->slot)[0x3b9c] = 0;
+            (base + state->slot)[0x3b9c] = 0;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_LATCH_A) != 0)
         {
-            (base + (s8)state->slot)[0x3b44] = 1;
+            (base + state->slot)[0x3b44] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_LATCH_A) != 0)
         {
-            (base + (s8)state->slot)[0x3b44] = 0;
+            (base + state->slot)[0x3b44] = 0;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_SET_STATE_LATCH) != 0)
         {
-            (base + (s8)state->slot)[0x3a40] = 1;
+            (base + state->slot)[0x3a40] = 1;
         }
         if ((state->sequenceControlFlags & OBJSEQ_CONTROL_CLEAR_STATE_LATCH) != 0)
         {
-            (base + (s8)state->slot)[0x3a40] = 0;
+            (base + state->slot)[0x3a40] = 0;
         }
 
         if (state->runState == 2)
         {
-            ObjSeq_SetupInitialPlaybackState(obj, &activeObj, seq, model, (void**)&action);
+            ObjSeq_SetupInitialPlaybackState(obj, &activeObj, seq, (u8*)placement, (void**)&action);
             return 0;
         }
 
-        if ((s8)(base + (s8)state->slot)[0x3c4c] == 1)
+        if ((s8)(base + state->slot)[0x3c4c] == 1)
         {
             step = 0;
         }
-        else if ((s8)(base + (s8)state->slot)[0x3c4c] == 2)
+        else if ((s8)(base + state->slot)[0x3c4c] == 2)
         {
             state->curFrame = state->endFrame;
             lbl_803DD112 = 1;
         }
-        else if ((s8)(base + (s8)state->slot)[0x3c4c] == 3)
+        else if ((s8)(base + state->slot)[0x3c4c] == 3)
         {
             found = objSeqFindConditional(seq, obj);
             if (found > -1)
             {
-                (base + (s8)state->slot)[0x3cf4] = 1;
+                (base + state->slot)[0x3cf4] = 1;
                 state->curFrame = found;
                 state->prevFrame = state->curFrame;
             }
         }
 
-        if (state->targetObj != NULL && *(s16*)((u8*)state->targetObj + 0xb4) != -1 &&
-            ((base + (s8)state->slot)[0x3538] & 0x10) == 0)
+        if (state->targetObj != NULL && ((GameObject*)state->targetObj)->seqIndex != -1 &&
+            ((base + state->slot)[0x3538] & 0x10) == 0)
         {
             (*gCameraInterface)->setLetterbox(0x41, 1);
         }
 
-        slot = (s8)state->slot;
+        slot = state->slot;
         if (base[slot + 0x3590] != 0)
         {
             state->heading = ((s16*)(base + 0x35e8))[slot];
         }
 
-        if ((s8)state->pendingConditionId != 0)
+        if (state->pendingConditionId != 0)
         {
-            if (ObjSeq_EvaluateCondition((s8)state->pendingConditionId - 1, seq, (int)model) == 0)
+            if (ObjSeq_EvaluateCondition(state->pendingConditionId - 1, seq, (int)placement) == 0)
             {
                 state->pendingConditionId = 0;
             }
             else
             {
-                ((f32*)(base + 0x3740))[(s8)state->slot] = (f32)state->curFrame;
+                ((f32*)(base + 0x3740))[state->slot] = (f32)state->curFrame;
                 return 0;
             }
         }
@@ -4696,9 +4713,9 @@ int ObjSeq_update(u8* obj, f32 t)
         if (action != NULL)
         {
             val = ObjSeq_SampleTrackCurve(seq, 13, state->prevFrame);
-            prevX = *(f32*)(model + 0x8) + val;
+            prevX = placement->baseX + val;
             val = ObjSeq_SampleTrackCurve(seq, 11, state->prevFrame);
-            prevZ = *(f32*)(model + 0x10) + val;
+            prevZ = placement->baseZ + val;
         }
         state->curFrame = state->prevFrame;
 
@@ -4706,13 +4723,13 @@ int ObjSeq_update(u8* obj, f32 t)
         {
             state->curFrame += 1;
             val = ObjSeq_SampleTrackCurve(seq, 13, state->curFrame);
-            px = *(f32*)(model + 0x8) + val;
+            px = placement->baseX + val;
             val = ObjSeq_SampleTrackCurve(seq, 11, state->curFrame);
-            pz = *(f32*)(model + 0x10) + val;
+            pz = placement->baseZ + val;
 
             if (state->curFrame > 0 && (state->flags & 4) != 0)
             {
-                if ((s8)state->useRootMotionSpeed == 1 && (s8)state->unk7B == 0 &&
+                if (state->useRootMotionSpeed == 1 && state->unk7B == 0 &&
                     action != NULL)
                 {
                     f32 dx = px - prevX;
@@ -4753,7 +4770,8 @@ int ObjSeq_update(u8* obj, f32 t)
                         }
                         val = *(f32*)&lbl_803DEFC8 / rate;
                         state->fade = state->fade - val;
-                        if (state->fade < lbl_803DEFB0)
+                        fval = state->fade;
+                        if (fval < lbl_803DEFB0)
                         {
                             state->fade = lbl_803DEFB0;
                         }
@@ -4762,16 +4780,16 @@ int ObjSeq_update(u8* obj, f32 t)
                 else
                 {
                     ((GameObject*)activeObj)->anim.currentMoveProgress += scratch[1];
-                    rate = lbl_803DEFC8;
-                    while (((GameObject*)activeObj)->anim.currentMoveProgress > rate)
+                    fval = lbl_803DEFC8;
+                    while (((GameObject*)activeObj)->anim.currentMoveProgress > fval)
                     {
-                        ((GameObject*)activeObj)->anim.currentMoveProgress -= rate;
+                        ((GameObject*)activeObj)->anim.currentMoveProgress -= fval;
                     }
-                    fval = lbl_803DEFB0;
-                    val = lbl_803DEFC8;
-                    while (((GameObject*)activeObj)->anim.currentMoveProgress < fval)
+                    rate = lbl_803DEFC8;
+                    val = lbl_803DEFB0;
+                    while (((GameObject*)activeObj)->anim.currentMoveProgress < val)
                     {
-                        ((GameObject*)activeObj)->anim.currentMoveProgress += val;
+                        ((GameObject*)activeObj)->anim.currentMoveProgress += rate;
                     }
                 }
             }
@@ -4829,14 +4847,13 @@ int ObjSeq_update(u8* obj, f32 t)
 
         for (k = 0; k < 10; k++)
         {
-            u8 op;
             aInt = k + 300;
-            op = seq[aInt];
-            if (op == 0)
+            conditionOpcode = seq[aInt];
+            if (conditionOpcode == 0)
             {
                 continue;
             }
-            switch (op)
+            switch (conditionOpcode)
             {
             case 0x12:
                 if ((getButtonsJustPressed(0) & PAD_BUTTON_A) == 0)
@@ -4875,7 +4892,7 @@ int ObjSeq_update(u8* obj, f32 t)
             }
             if (pressed != 0)
             {
-                (base + (s8)state->slot)[0x3cf4] = 1;
+                (base + state->slot)[0x3cf4] = 1;
                 state->curFrame = ((ObjSeqState*)seq)->conditionFrames[k];
                 state->prevFrame = state->curFrame;
                 state->conditionOpcodes[0] = 0;
@@ -4894,7 +4911,7 @@ int ObjSeq_update(u8* obj, f32 t)
 
         if ((s8)lbl_803DD0D8 == 0 && activeObj != obj)
         {
-            objCallSeqFn(activeObj, obj, seq, (base + (s8)state->slot)[0x3c4c]);
+            objCallSeqFn(activeObj, obj, seq, (base + state->slot)[0x3c4c]);
         }
 
         if (state->sequenceControlFlags != 0)
@@ -4909,33 +4926,33 @@ int ObjSeq_update(u8* obj, f32 t)
                 state->prevFrame = state->curFrame;
             }
             state->sequenceControlFlags = 0;
-            (base + (s8)state->slot)[0x3cf4] = restart;
+            (base + state->slot)[0x3cf4] = restart;
         }
 
         state->eventCount = 0;
         state->unk80 = 0;
         if (action != NULL && (state->flags & 4) != 0)
         {
-            *(u16*)(*(u8**)(action + 0x2c) + 0x58) = (u16)(int)(lbl_803DF050 * state->fade);
+            ((ObjAnimBank*)action)->currentState->eventCountdown = (u16)(int)(lbl_803DF050 * state->fade);
         }
         ObjSeq_UpdateCurvePosition(obj, seq);
-        if ((s8)state->groundSnapEnabled == 1 &&
+        if (state->groundSnapEnabled == 1 &&
             hitDetectFn_800658a4((GameObject*)obj, ((GameObject*)obj)->anim.localPosX, ((GameObject*)obj)->anim.localPosY,
                                  ((GameObject*)obj)->anim.localPosZ, scratch, 0) == 0)
         {
             ((GameObject*)obj)->anim.localPosY =
                 ((GameObject*)obj)->anim.localPosY +
-                ((((GameObject*)obj)->anim.localPosY - scratch[0]) - *(f32*)(model + 0xc));
+                ((((GameObject*)obj)->anim.localPosY - scratch[0]) - placement->groundOffset);
         }
-        *(s16*)obj += state->heading;
+        ((GameObject*)obj)->anim.rotX += state->heading;
         ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
         for (k = 0; k < lbl_803DD0C0; k++)
         {
-            entry = base + k * 8;
-            entry = (u8*)((int)entry + 0x2b34);
-            if (seqDoSubCmd0B(obj, activeObj, seq, *(u8**)entry, *(s16*)(entry + 6), *(s16*)(entry + 4), 0, 0) != 0)
+            entry = (ObjSeqBgCmd*)(base + k * 8);
+            entry = (ObjSeqBgCmd*)((int)entry + 0x2b34);
+            if (seqDoSubCmd0B(obj, activeObj, seq, (u8*)entry->object, entry->flags, entry->param, 0, 0) != 0)
             {
                 k = lbl_803DD0C0;
             }
@@ -4971,14 +4988,14 @@ int ObjSeq_update(u8* obj, f32 t)
         }
         else
         {
-            slot = (s8)state->slot;
+            slot = state->slot;
             if ((s8)base[slot + 0x3cf4] != 0)
             {
                 ((s16*)(base + 0x3694))[slot] = state->curFrame;
-                (base + (s8)state->slot)[0x338c] = 2;
-                ((f32*)(base + 0x3740))[(s8)state->slot] = (f32)state->curFrame;
+                (base + state->slot)[0x338c] = 2;
+                ((f32*)(base + 0x3740))[state->slot] = (f32)state->curFrame;
             }
-            if (-1.0f == ((f32*)(base + 0x3740))[slot = (s8)state->slot])
+            if (-1.0f == ((f32*)(base + 0x3740))[slot = state->slot])
             {
                 if (lbl_803DB724 == slot)
                 {
@@ -4995,8 +5012,8 @@ int ObjSeq_update(u8* obj, f32 t)
                         }
                     }
                 }
-                ((f32*)(base + 0x3740))[(s8)state->slot] =
-                    step + ((f32*)(base + 0x3894))[(s8)state->slot];
+                ((f32*)(base + 0x3740))[state->slot] =
+                    step + ((f32*)(base + 0x3894))[state->slot];
             }
         }
 
