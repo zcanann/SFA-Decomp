@@ -36,9 +36,14 @@
 
 extern u8 lbl_803268B4[];
 
+typedef struct NwGeyserTextureScrollParams
+{
+    f32 unitsPerSecond;
+    f32 initialOffset;
+} NwGeyserTextureScrollParams;
+
 #pragma explicit_zero_data on
-__declspec(section ".sdata2") f32 lbl_803E5200 = 512.0f;
-__declspec(section ".sdata2") f32 lbl_803E5204 = 0.0f;
+const NwGeyserTextureScrollParams gNwGeyserTextureScrollParams = {512.0f, 0.0f};
 __declspec(section ".sdata2") u32 lbl_803E5208 = 0x01010101;
 __declspec(section ".sdata2") f32 lbl_803E520C = 0.0f;
 __declspec(section ".sdata2") f32 lbl_803E5210 = 1.0f;
@@ -66,7 +71,8 @@ int NW_geyser_SeqFn(int* obj, int unused, ObjAnimUpdateState* animUpdate)
     }
     tex0 = objFindTexture((GameObject*)(obj), 0, 0);
     objFindTexture((GameObject*)(obj), 1, 0);
-    tex0->offsetT = (s16)(tex0->offsetT + (s32)(lbl_803E5200 * timeDelta));
+    tex0->offsetT =
+        (s16)(tex0->offsetT + (s32)(gNwGeyserTextureScrollParams.unitsPerSecond * timeDelta));
     if (tex0->offsetT > 0x4e80)
     {
         tex0->offsetT -= 0x4e80;
