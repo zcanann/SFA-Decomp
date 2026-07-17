@@ -566,7 +566,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
 
     {
         u8* texGlobals;
-        int rec;
+        int rec[1];
 
         texGlobals = lbl_8037E0C0;
         bitPos = ((BitStreamReader*)stream)->bitPos;
@@ -579,12 +579,12 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             bits = bits | (u32)(*(u8*)(byteBase + 2) << 16);
         }
         ((BitStreamReader*)stream)->bitPos = bitPos + 8;
-        rec = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
+        rec[0] = (int)&((MapBlockData*)block)->bounds[(bits >> (bitPos & 7)) & 0xff];
         if ((shader != NULL) && ((SHADER_FLAGS(shader) & 2) != 0))
         {
             goto end;
         }
-        if (mapBlockBounds_ComputeAndTestPlanes(rec, block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT,
+        if (mapBlockBounds_ComputeAndTestPlanes(rec[0], block, (FrustumPlane*)(texGlobals + 0x987c), FRUSTUM_PLANE_COUNT,
                                                 &minX, &minY, &minZ, &maxX, &maxY, &maxZ) == 0)
         {
             goto end;
@@ -594,7 +594,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             flags = SHADER_FLAGS(shader);
             if ((flags & 0x80000000) != 0)
             {
-                fn_8005D3B4IntLegacy(rec, block, ((MapBlockBoundsRec*)rec)->selector);
+                fn_8005D3B4IntLegacy(rec[0], block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 5;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -603,7 +603,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
             }
             else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0))
             {
-                fn_8005D3B4IntLegacy(rec, block, ((MapBlockBoundsRec*)rec)->selector);
+                fn_8005D3B4IntLegacy(rec[0], block, ((MapBlockBoundsRec*)rec[0])->selector);
                 {
                     int shadowType = 4;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
@@ -695,7 +695,7 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                         else
                         {
                             u8 mirrorVisible = mapBlockBounds_ComputeAndTestPlanes(
-                                rec, block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
+                                rec[0], block, (FrustumPlane*)(texGlobals + 0x9818), FRUSTUM_PLANE_COUNT, &minX, &minY,
                                 &minZ, &maxX, &maxY, &maxZ);
                             if ((mirrorVisible != 0 && (u8)visArg != 0) || (mirrorVisible == 0 && (u8)visArg == 0))
                             {
@@ -722,12 +722,12 @@ void mapBlockRender_callList(u32 passSelect, u32 visArg, int block, u8* shader, 
                     textureFn_800528bc();
                 }
             }
-            GXCallDisplayList(((MapBlockBoundsRec*)rec)->dlist, ((MapBlockBoundsRec*)rec)->dlistSize);
+            GXCallDisplayList(((MapBlockBoundsRec*)rec[0])->dlist, ((MapBlockBoundsRec*)rec[0])->dlistSize);
             flags = SHADER_FLAGS(shader);
             if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
-                (mapBlockBounds_HasCornerPastDepthThreshold(rec, mtx) != 0))
+                (mapBlockBounds_HasCornerPastDepthThreshold(rec[0], mtx) != 0))
             {
-                fn_8005D3B4IntLegacy(rec, block, 0x17);
+                fn_8005D3B4IntLegacy(rec[0], block, 0x17);
                 {
                     int shadowType = 6;
                     *(int*)((u8*)&((TexShadowRow*)texGlobals)->type + lbl_803DCE30 * sizeof(TexShadowRow)) = shadowType;
