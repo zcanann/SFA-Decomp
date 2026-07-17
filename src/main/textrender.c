@@ -2758,7 +2758,10 @@ void setLanguageFn_8001ad64(void* reqp)
                 DCFlushRange((u8*)slot[4] + 0x60, *(u32*)((u8*)slot[4] + 0x44));
             }
         }
-        p += (int)(w * h * bpp) >> 4;
+        {
+            u32 area = w * h;
+            p += (int)(area * bpp) >> 4;
+        }
         slot = slot + 1;
     }
     size = (u32)((u8*)texStart - *(u8**)(req + 0x3c));
@@ -2779,7 +2782,8 @@ void setLanguageFn_8001ad64(void* reqp)
     cs->entries = cs->entries + delta;
     for (i = 0; i < cs->count; i++)
     {
-        *(int*)(cs->entries + i * 12 + 8) = *(int*)(cs->entries + i * 12 + 8) + delta;
+        int ev = *(int*)(cs->entries + i * 12 + 8);
+        *(int*)(cs->entries + i * 12 + 8) = ev + delta;
     }
     strs2 = (int*)((u8*)strs + delta);
     for (i = 0; i < numStrings; i++)
