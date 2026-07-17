@@ -43,11 +43,12 @@ typedef struct SnowBikeState {
     s8 collisionHitType;    /* 0x065: path-collision secondaryHitType (-1 = use plain non-Ex setup) */
     u8 pad066[0x2];
     f32 pathProgress;             /* 0x068 */
-    u8 pad06C[0x100];       /* 0x178: path-control block lives in here */
+    u8 pad06C[0x100];
     f32 refPosX;             /* 0x16c: position reference X */
     f32 refPosY;             /* 0x170: position reference Y */
     f32 refPosZ;             /* 0x174: position reference Z */
-    u8 pad178[0xB8];
+    u8 pad178[0xB8];        /* 0x178: path-control block lives in here; passed as
+                               gPathControlInterface->attachObject(obj, state + 0x178) */
     u8 dampPresetModeRaw;   /* 0x230: un-latched preset selector copied into dampPresetMode */
     u8 pad231[0xDF];
     s16 unk310;             /* 0x310 */
