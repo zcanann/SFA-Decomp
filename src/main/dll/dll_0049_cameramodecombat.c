@@ -13,6 +13,7 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/frame_timing.h"
 #include "main/dll/player_api.h"
+#include "main/dll/dll_0049_cameramodecombat.h"
 
 s32 gCamCombatPrevYawDiff;
 CameraModeCombatState* gCamCombatState;

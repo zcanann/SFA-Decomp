@@ -23,6 +23,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/audio/sfx_trigger_ids.h"
 #include "main/objhits.h"
+#include "main/dll/DIM/dll_01E5_dimbossspit.h"
 
 /* Partfx by phase (state unk0): FLIGHT_TRAIL streams while the spit ball flies
  * (state 0); BURST is the continuous expanding fx during the burst (takes the

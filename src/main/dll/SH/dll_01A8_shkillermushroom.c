@@ -47,6 +47,7 @@
 #include "main/audio/sfx_keep_alive_api.h"
 #include "main/audio/sfx_play_pointer_legacy_api.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_01A8_shkillermushroom.h"
 
 typedef struct EnemymushroomPlacement
 {

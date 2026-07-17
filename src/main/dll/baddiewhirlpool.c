@@ -34,13 +34,12 @@
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/dll_00CD_iceball.h"
 #include "main/voxmaps.h"
+#include "main/obj_group.h"
 
 #define ICEBADDIE_OBJGROUP_SECONDARY 80
 #define ICEBADDIE_HIT_VOLUME_SLOT    10
 
 extern void renderWhirlpool(void);
-extern void ObjGroup_AddObject(int obj, int group);
-extern void ObjGroup_RemoveObject(int obj, int group);
 
 #pragma scheduling off
 #pragma peephole off

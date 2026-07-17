@@ -25,6 +25,7 @@
 #include "main/dll/dll_0015_curves.h"
 #include "main/textrender_api.h"
 #include "main/dll/hint_text_api.h"
+#include "main/dll/dll_0011_screens.h"
 
 u32 lbl_803DD4AC;
 u32 lbl_803DD4A8;

@@ -30,6 +30,7 @@
 #include "dolphin/gx/GXBump.h"
 #include "dolphin/gx/GXTev.h"
 #include "main/dll/FRONT/picmenu.h"
+#include "main/dll/FRONT/n_options.h"
 
 static const GXColorS10 sMovieTevColor0 = {-90, 0, -114, 135};
 static const GXColor sMovieKColor0 = {0x00, 0x00, 0xE2, 0x58};

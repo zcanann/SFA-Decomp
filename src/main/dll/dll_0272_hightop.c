@@ -76,9 +76,6 @@ const HtInitData gHighTopLookInitData2 = {{8, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF, 0xF,
 
 void HighTop_hitDetect(GameObject* obj);
 void HighTop_update(GameObject* obj);
-extern int gHighTopIdleSequenceIds[3];
-extern int gHighTopIdleSequenceWeights[3];
-extern f32 gHighTopBandSpeedThresholds[4];
 int HighTop_getExtraSize(void);
 int HighTop_getObjectTypeId(void);
 void HighTop_free(int obj);

@@ -34,6 +34,7 @@
 #include "string.h"
 #include "main/object_transform.h"
 #include "main/player_control_interface.h"
+#include "main/dll/dll_0019_dll19func0.h"
 
 GameObject* gDll19NearestObj;
 u32 lbl_803DD5E0;

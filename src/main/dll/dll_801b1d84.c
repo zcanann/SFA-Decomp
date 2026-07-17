@@ -8,6 +8,7 @@
 #include "main/objhits.h"
 #include "main/frame_timing.h"
 #include "main/gamebit_ids.h"
+#include "main/dll/dll_801b1d84.h"
 
 
 enum DIMwooddoorDebrisState

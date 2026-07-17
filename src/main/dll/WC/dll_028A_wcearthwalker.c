@@ -63,7 +63,6 @@ typedef u8 (*EarthWalkerHitReactUpdateFn)(int obj, ObjHitReactEntry* reactionEnt
                                           u32 reactionState, float* reactionStepScale);
 void earthwalker_init(GameObject* obj, int setup);
 void earthwalker_update(int obj);
-extern ObjHitReactEntry gEarthWalkerHitReactEntries[1];
 void earthwalker_init(GameObject* obj, int setup);
 void earthwalker_release(void);
 void earthwalker_initialise(void);

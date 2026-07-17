@@ -29,6 +29,7 @@
 #include "main/dll/player_api.h"
 #include "main/obj_message.h"
 #include "main/frame_timing.h"
+#include "main/dll/tesla.h"
 
 #define TRICKY_CURVE_GAMEBIT_HIT       0x468
 #define TRICKY_CURVE_PLAYER_ANIM_SLIDE 0x1d7

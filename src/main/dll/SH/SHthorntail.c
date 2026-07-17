@@ -1,6 +1,7 @@
 #include "../src/main/dll/SH/shthorntail_ai.c"
 #include "../src/main/dll/SH/shthorntail_state.c"
 #include "../src/main/dll/SH/dll_01AD_shthorntail.c"
+#include "main/dll/SH/SHthorntail.h"
 
 __declspec(section ".sdata2") f32 lbl_803E5448 = 1.0f;
 __declspec(section ".sdata2") f32 lbl_803E544C = 0.17f;

@@ -25,6 +25,7 @@
 #include "main/objprint_api.h"
 #include "main/gamebits.h"
 #include "main/audio/sfx_trigger_ids.h"
+#include "main/dll/dll_00F7_dllf7.h"
 
 union DllF7ConstF32 { f32 f; };
 const union DllF7ConstF32 lbl_803E3400 = { 0.0f };

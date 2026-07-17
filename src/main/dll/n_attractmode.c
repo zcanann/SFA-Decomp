@@ -8,7 +8,6 @@
 #include "main/dll/dll_02C0_front_api.h"
 #include "main/mm.h"
 
-extern s32 gAttractMovieState;
 extern u8 gAttractMoviePreparePending;
 extern void* gAttractMovieBuffer0;
 extern void* gAttractMovieBuffer1;

@@ -30,6 +30,7 @@
 #include "main/dll/skeetla_anim_api.h"
 #include "main/dll/skeetla.h"
 #include "main/dll/flameblast_api.h"
+#include "main/dll/tumbleweedbush.h"
 
 typedef struct TrickyGrowlState
 {

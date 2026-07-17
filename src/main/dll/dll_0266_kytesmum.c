@@ -64,8 +64,6 @@ s16 gKytesMumRoamEventSfxTable[4] = {0x1B4, 0x1B5, 0x1B6, 0};
 const s32 gKytesMumQuestBits[3] = {0x43, 0x30A, -1};
 const s32 gKytesMumTriggerIds[3] = {0, 2, -1};
 
-extern u8 gKytesMumMoveSets[];
-extern int gKytesMumQuestIdleSfxTable[];
 void kytesmum_initialise(void);
 
 int kytesmum_updateInteractionRangeCallback(GameObject* obj, int unused, u8* arg)

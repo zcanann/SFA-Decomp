@@ -6,6 +6,7 @@
 #include "main/dll/dll_0000_gameui_api.h"
 #include "main/minimap_api.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_0121_infotext.h"
 
 #define INFOTEXT_OBJFLAG_HIDDEN 0x4000
 #define INFOTEXT_OBJFLAG_HITDETECT_DISABLED 0x2000

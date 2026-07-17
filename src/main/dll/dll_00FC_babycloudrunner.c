@@ -26,6 +26,7 @@
 #include "main/objseq.h"
 #include "main/gamebits.h"
 #include "main/vecmath.h"
+#include "main/dll/dll_00FC_babycloudrunner.h"
 
 typedef struct BabyCloudRunnerPlacement
 {

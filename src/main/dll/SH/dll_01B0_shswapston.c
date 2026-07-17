@@ -403,6 +403,7 @@ void warpstone_hitDetect(GameObject* obj)
 
 #include "main/dll/SC/SClantern.h"
 #include "main/audio/sfx.h"
+#include "main/dll/SC/dll_01B0_shswapston.h"
 
 int lbl_803DC038 = 300;
 int lbl_803DC03C = 1;

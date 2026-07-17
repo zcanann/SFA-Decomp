@@ -25,6 +25,7 @@
 #include "main/obj_message.h"
 #include "main/gamebit_ids.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_017B_dfshlaserbeam.h"
 
 typedef struct DFSHLaserBeamConfig
 {

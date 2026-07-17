@@ -18,6 +18,7 @@
 #include "main/frame_timing.h"
 #include "main/vecmath_distance_api.h"
 #include "main/object_descriptor.h"
+#include "main/dll/dll_011F_magiccavetop.h"
 
 /* Release camera back to the default gameplay mode (cameramode DLL 0x42). */
 #define MAGICCAVETOP_CAMMODE_DEFAULT 0x42
