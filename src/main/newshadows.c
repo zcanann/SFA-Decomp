@@ -25,7 +25,7 @@
 
 CameraViewSlot* gNewShadowCurrentViewSlot;
 u32 gNewShadowReflectionSmallTexture;
-u32 gNewShadowCausticTexture;
+Texture* gNewShadowCausticTexture;
 u32 gNewShadowReflectionTexture2;
 u32 gNewShadowDiskTexture;
 u32 gNewShadowSmallDiskTexture;
@@ -107,7 +107,7 @@ typedef struct
 #define NEW_SHADOW_ENTRY_CAPACITY 0x25
 
 extern u32 gNewShadowFrameTextures[NEW_SHADOW_FRAME_COUNT];
-extern int gNewShadowNoiseTexFrames[0x10];
+extern Texture* gNewShadowNoiseTexFrames[0x10];
 extern const f64 lbl_803DED58;
 extern const f64 lbl_803DED60;
 extern const f64 gNewShadowU32ToDoubleBias;
@@ -131,7 +131,7 @@ extern u32 gNewShadowRadialTexture;
 extern u32 gNewShadowRampTexture;
 extern u32 gNewShadowDiskTexture;
 extern u32 gNewShadowReflectionTexture2;
-extern u32 gNewShadowCausticTexture;
+extern Texture* gNewShadowCausticTexture;
 extern f32 gNewShadowReflectionScrollY;
 extern f32 lbl_803DCFA4;
 extern u32 gNewShadowBumpTexture;
@@ -1485,7 +1485,7 @@ void newshadows_getShadowTextureTable4x8(int* p1, int* p2, int* p3)
     *p3 = 8;
 }
 
-extern int gNewShadowNoiseTexFrames[0x10];
+extern Texture* gNewShadowNoiseTexFrames[0x10];
 
 void textureFn_8006c4e0(int* p1, int* p2)
 {
@@ -1560,7 +1560,7 @@ void getReflectionTexture2(u32* p)
 }
 void getTextureFn_8006c5e4(u32* p)
 {
-    *p = gNewShadowCausticTexture;
+    *p = (u32)gNewShadowCausticTexture;
 }
 
 u8 lbl_8038E1E8[0x80];
@@ -1578,7 +1578,7 @@ void objShadowFn_8006c5f0(GameObject* obj, u32* outTable, f32* outF, int* outX, 
     *outY = (int)obj->anim.modelState->shadowOffsetY;
 }
 
-int gNewShadowNoiseTexFrames[0x10];
+Texture* gNewShadowNoiseTexFrames[0x10];
 #pragma peephole reset
 #pragma peephole on
 #pragma scheduling reset
@@ -1958,9 +1958,9 @@ void initFn_8006d020(void)
     while (placed < 0x32 && attempts < 10000u)
     {
         f32 *px, *pz, *prad;
-        e[0] = (f32)(int)randomGetRange(8, 0x10);
-        e[3] = lbl_803DEDD8 * (f32)(int)randomGetRange(5, 10);
-        e[4] = e[3] * (lbl_803DEDD8 * (f32)(int)randomGetRange(0x14, 0x32));
+        e[0] = (f32)randomGetRange(8, 0x10);
+        e[3] = lbl_803DEDD8 * (f32)randomGetRange(5, 10);
+        e[4] = e[3] * (lbl_803DEDD8 * (f32)randomGetRange(0x14, 0x32));
         attempts = 0;
         px = &e[1];
         pz = &e[2];
@@ -1968,8 +1968,8 @@ void initFn_8006d020(void)
         do
         {
             f32* o;
-            *px = lbl_803DEDDC * (f32)(int)randomGetRange(0, 999);
-            *pz = lbl_803DEDDC * (f32)(int)randomGetRange(0, 999);
+            *px = lbl_803DEDDC * (f32)randomGetRange(0, 999);
+            *pz = lbl_803DEDDC * (f32)randomGetRange(0, 999);
             collide = 0;
             j = 0;
             o = gNewShadowPlacements;
@@ -2006,7 +2006,7 @@ void initFn_8006d020(void)
     tex = 0;
     for (; tex < 0x10; tex++)
     {
-        gNewShadowNoiseTexFrames[tex] = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+        gNewShadowNoiseTexFrames[tex] = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
         for (row = 0; row < 0x40; row++)
         {
             int rowoff, lowoff;
@@ -2017,19 +2017,19 @@ void initFn_8006d020(void)
             {
                 f32 o1, o2;
                 int hi, lo;
-                int dst = gNewShadowNoiseTexFrames[tex] + lowoff + rowoff;
+                int dst = (int)gNewShadowNoiseTexFrames[tex] + lowoff + rowoff;
                 dst += (col & 3) * 8;
                 dst += (col >> 2) * 0x200;
                 fn_8006CD20(row * lbl_803DEDE0, col * lbl_803DEDE0, tex, gNewShadowPlacements, count, &o1, &o2);
                 hi = (int)(lbl_803DED08 * o2);
                 lo = (int)(lbl_803DED08 * o1);
-                *(u16*)(dst + 0x60) = (u16)(((hi & 0xffff) << 8) | lo);
+                *(u16*)(dst + 0x60) = ((hi & 0xffff) << 8) | lo;
             }
         }
-        DCFlushRange((void*)(gNewShadowNoiseTexFrames[tex] + 0x60), *(u32*)(gNewShadowNoiseTexFrames[tex] + 0x44));
+        DCFlushRange(gNewShadowNoiseTexFrames[tex] + 1, gNewShadowNoiseTexFrames[tex]->dataSize);
     }
 
-    gNewShadowCausticTexture = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+    gNewShadowCausticTexture = textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++)
     {
         int rowoff, lowoff;
@@ -2042,7 +2042,7 @@ void initFn_8006d020(void)
         {
             f32 cv, n1, n2, prod, fa;
             int hi, lo;
-            int dst = gNewShadowCausticTexture + lowoff;
+            u8* dst = (u8*)gNewShadowCausticTexture + lowoff;
             dst += rowoff;
             dst += (col & 3) * 8;
             dst += (col >> 2) * 0x200;
@@ -2054,10 +2054,10 @@ void initFn_8006d020(void)
             fa = lbl_803DEDC0 * n1 + lbl_803DEDC0;
             lo = fa;
             hi = prod;
-            *(u16*)(dst + 0x60) = (u16)(lo | ((hi & 0xffff) << 8));
+            *(u16*)(dst + 0x60) = lo | ((hi & 0xffff) << 8);
         }
     }
-    DCFlushRange((void*)(gNewShadowCausticTexture + 0x60), *(u32*)(gNewShadowCausticTexture + 0x44));
+    DCFlushRange(gNewShadowCausticTexture + 1, gNewShadowCausticTexture->dataSize);
 
     gNewShadowReflectionScrollX = lbl_803DED28;
     gNewShadowReflectionScrollY = lbl_803DED28;
