@@ -12,6 +12,7 @@
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/maketex_timer_api.h"
 #include "main/object_api.h"
+#include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/gamebits.h"
 #include "main/frame_timing.h"
@@ -49,14 +50,13 @@ typedef struct CfForceFieldMapData
     u8 pad22[0x28 - 0x22];
 } CfForceFieldMapData;
 
-/* per-style emitter tuning record in lbl_80322ED8 (3 entries) */
 typedef struct CfForceFieldEmitter
 {
     int effectId;
-    int pad04;
+    int unk04;
     int angleStep;
-    int pad0c;
-    int pad10;
+    int unk0C;
+    int unk10;
     f32 waveScale;
 } CfForceFieldEmitter;
 
@@ -79,7 +79,12 @@ STATIC_ASSERT(sizeof(CfForceFieldEmitter) == 0x18);
 extern f32 lbl_803DBE90;   /* ring radius scale */
 extern int lbl_803DBE94;   /* burst position jitter, +/- units */
 extern int lbl_803DBE98;   /* collapse rotY rate */
-extern int lbl_80322ED8[]; /* CfForceFieldEmitter[3] style table */
+
+CfForceFieldEmitter lbl_80322ED8[3] = {
+    {0x7a4, 0x7a5, 0x4000, 100, -0x1000, 1850.0f},
+    {0x7a2, 0x7a3, 0x4000, 50, 0x1000, 732.0f},
+    {0x7a2, 0x7a3, 0x4000, 50, 0x1000, 732.0f},
+};
 
 int cfforcefield_getExtraSize(void)
 {
@@ -151,7 +156,7 @@ void cfforcefield_update(u8* obj)
                 ((GameObject*)obj)->anim.rotZ = (s16)(512.0f * timeDelta + (f32)(s32)((GameObject*)obj)->anim.rotZ);
 
                 angle = -0x7fff;
-                emitter = (CfForceFieldEmitter*)((u8*)lbl_80322ED8 + style * 0x18);
+                emitter = &lbl_80322ED8[style];
                 wavePtr = &emitter->waveScale;
                 stepPtr = &emitter->angleStep;
                 for (; angle < 0x7fff; angle += *stepPtr)
@@ -222,3 +227,20 @@ void cfforcefield_release(void)
 void cfforcefield_initialise(void)
 {
 }
+
+ObjectDescriptor gCFForceFieldObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    (ObjectDescriptorCallback)cfforcefield_initialise,
+    (ObjectDescriptorCallback)cfforcefield_release,
+    0,
+    (ObjectDescriptorCallback)cfforcefield_init,
+    (ObjectDescriptorCallback)cfforcefield_update,
+    (ObjectDescriptorCallback)cfforcefield_hitDetect,
+    (ObjectDescriptorCallback)cfforcefield_render,
+    (ObjectDescriptorCallback)cfforcefield_free,
+    (ObjectDescriptorCallback)cfforcefield_getObjectTypeId,
+    cfforcefield_getExtraSize,
+};

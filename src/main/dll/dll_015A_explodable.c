@@ -61,39 +61,30 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-extern void cfforcefield_getExtraSize(void);
 extern void cfmagicwall_getExtraSize(void);
 extern void cflevelcontrol_getExtraSize(void);
 
-extern void cfforcefield_getObjectTypeId(void);
 extern void cfmagicwall_getObjectTypeId(void);
 extern void cflevelcontrol_getObjectTypeId(void);
 
-extern void cfforcefield_free(void);
 extern void cfmagicwall_free(void);
 extern void cflevelcontrol_free(void);
 
-extern void cfforcefield_render(void);
 extern void cfmagicwall_render(void);
 extern void cflevelcontrol_render(void);
 
-extern void cfforcefield_hitDetect(void);
 extern void cfmagicwall_hitDetect(void);
 extern void cflevelcontrol_hitDetect(void);
 
-extern void cfforcefield_update(void);
 extern void cfmagicwall_update(GameObject*);
 extern void cflevelcontrol_update(GameObject*);
 
-extern void cfforcefield_init(void);
 extern void cfmagicwall_init(void);
 extern void cflevelcontrol_init(void);
 
-extern void cfforcefield_release(void);
 extern void cfmagicwall_release(void);
 extern void cflevelcontrol_release(void);
 
-extern void cfforcefield_initialise(void);
 extern void cfmagicwall_initialise(void);
 extern void cflevelcontrol_initialise(void);
 
@@ -457,7 +448,7 @@ GasVentTableEntry gExplodableBreakRecipeTable[16] = {
     {2071, 2072, 705, 50, 0, {0, 0}},
 };
 
-/* descriptor/ptr table auto 0x80322ea0-0x80323198 */
+/* remaining descriptor/ptr tables are not yet assigned to their individual DLL units */
 u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     0x00000000,
                                     0x00000000,
@@ -472,23 +463,6 @@ u32 gExplodableObjDescriptor[14] = {0x00000000,
                                     (u32)explodable_free,
                                     0x00000000,
                                     (u32)explodable_getExtraSize};
-u32 lbl_80322ED8[18] = {0x000007a4, 0x000007a5, 0x00004000, 0x00000064, 0xfffff000, 0x44e74000,
-                        0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000,
-                        0x000007a2, 0x000007a3, 0x00004000, 0x00000032, 0x00001000, 0x44370000};
-u32 gCFForceFieldObjDescriptor[14] = {0x00000000,
-                                      0x00000000,
-                                      0x00000000,
-                                      0x00090000,
-                                      (u32)cfforcefield_initialise,
-                                      (u32)cfforcefield_release,
-                                      0x00000000,
-                                      (u32)cfforcefield_init,
-                                      (u32)cfforcefield_update,
-                                      (u32)cfforcefield_hitDetect,
-                                      (u32)cfforcefield_render,
-                                      (u32)cfforcefield_free,
-                                      (u32)cfforcefield_getObjectTypeId,
-                                      (u32)cfforcefield_getExtraSize};
 u32 gSlidingDoorObjDescriptor[14] = {0x00000000,
                                      0x00000000,
                                      0x00000000,
