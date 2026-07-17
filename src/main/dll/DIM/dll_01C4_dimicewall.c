@@ -30,8 +30,6 @@ typedef struct DimicewallPlacement
 
 
 
-extern f32 lbl_803E4880;
-extern f32 lbl_803E4884;
 
 int fn_801B17F4(GameObject *obj, int delta)
 {
@@ -53,8 +51,8 @@ void dimicewall_update(int* obj)
         {
             f32 desc[6];
             int i;
-            desc[2] =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / lbl_803E4880;
-            desc[5] = lbl_803E4884;
+            desc[2] =(f32)(s8)((DimicewallPlacement*)def)->shatterScale / 50.0f;
+            desc[5] = 0.0f;
             for (i = 45; i != 0; i--)
             {
                 desc[3] = desc[2] * (0.1f * (f32)(int)
@@ -133,3 +131,34 @@ ObjectDescriptor gDIMIceWallObjDescriptor = {
     0,
     dimicewall_getExtraSize,
 };
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const f32 lbl_803E4898 = 1.0f;
+const f32 lbl_803E489C = 0.0f;
+const f32 lbl_803E48A0 = 5e+01f;
+const f32 lbl_803E48A4 = 0.01f;
+const f32 lbl_803E48A8 = 0.5f;
+const f32 lbl_803E48AC = 2.0f;
+const f32 gDimWoodDoorPi = 3.1415927f;
+const f32 gDimWoodDoorAngleHalfCircle = 32768.0f;
+const f32 lbl_803E48B8 = 0.0f;
+const f32 lbl_803E48BC = 0.0f;
+const f32 lbl_803E48C0 = 176.0f;
+const f32 lbl_803E48C4 = -0.0f;
+const f32 lbl_803E48C8 = 1e+01f;
+const f32 lbl_803E48CC = 8.0f;
+const f32 lbl_803E48D0 = 4.0f;
+const f32 lbl_803E48D4 = -1.0f;
+const f32 lbl_803E48D8 = 8e+01f;
+const f32 lbl_803E48DC = 0.0f;
+const f32 lbl_803E48E0 = 176.0f;
+const f32 lbl_803E48E4 = 0.0f;
+const f32 lbl_803E48E8 = 1.0f;
+const f32 lbl_803E48EC = 1e+02f;
+const f32 gDimCannonAnimAdvanceSpeed = 0.025f;
+const f32 lbl_803E48F4 = 0.0f;
+const f32 lbl_803E48F8 = 1.0f;
+const f32 lbl_803E48FC = 0.0f;
+const f32 lbl_803E4900 = 1.0f;
+const f32 lbl_803E4904 = 0.0f;

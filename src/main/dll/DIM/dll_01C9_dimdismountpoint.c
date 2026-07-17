@@ -27,11 +27,6 @@ typedef struct DimdismountpointState
     f32 planeD;  /* plane distance (dot(N, pos)) */
 } DimdismountpointState;
 
-extern f32 lbl_803E4910;
-extern f32 lbl_803E4908;
-extern f32 lbl_803E4914;
-extern f32 lbl_803E4918;
-extern f32 lbl_803E490C;
 
 void DIMDismountPoint_func0B(GameObject *obj, int flag)
 {
@@ -50,7 +45,7 @@ int DIMDismountPoint_setScale(GameObject *obj)
         (((DimdismountpointState*)state)->planeNX * ((GameObject*)player)->anim.localPosX +
             ((DimdismountpointState*)state)->planeNY * ((GameObject*)player)->anim.localPosY));
 
-    if (result >= lbl_803E4908)
+    if (result >= 0.0f)
     {
         side = 0;
     }
@@ -79,7 +74,7 @@ void DIMDismountPoint_render(GameObject *obj, int p1, int p2, int p3, int p4, s8
     }
     else
     {
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E490C);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
     }
 }
 
@@ -92,7 +87,7 @@ void DIMDismountPoint_update(int* obj)
     int* nearest;
     f32 dist;
 
-    dist = lbl_803E4910;
+    dist = 500.0f;
     nearest = (int*)ObjGroup_FindNearestObject(DIMCONVEYOR_GROUP, (u32)obj, &dist);
     *(u8*)&((GameObject*)obj)->anim.resetHitboxMode = (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode & ~INTERACT_FLAG_DISABLED);
     if (mainGetBit(DIMDISMOUNT_GAMEBIT_DONE) != 0)
@@ -130,9 +125,9 @@ void DIMDismountPoint_init(u8* obj, u8* params)
     ObjGroup_AddObject((u32)obj, DIMDISMOUNT_GROUP);
     ((GameObject*)obj)->anim.rotX = (s16)((s8)params[0x18] << 8);
     sub = ((GameObject*)obj)->extra;
-    sub[0] = mathSinf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNX */
-    sub[1] = lbl_803E4908;                                                     /* planeNY */
-    sub[2] = mathCosf(lbl_803E4914 * (f32)(s32) * (s16*)obj / lbl_803E4918); /* planeNZ */
+    sub[0] = mathSinf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f); /* planeNX */
+    sub[1] = 0.0f;                                                     /* planeNY */
+    sub[2] = mathCosf(3.1415927f * (f32)(s32) * (s16*)obj / 32768.0f); /* planeNZ */
     sub[3] = -(sub[0] * ((GameObject*)obj)->anim.localPosX + sub[1] * ((GameObject*)obj)->anim.localPosY + sub[2] * ((
         GameObject*)obj)->anim.localPosZ); /* planeD */
     ((GameObject*)obj)->userData2 = 1;
@@ -164,3 +159,59 @@ ObjectDescriptor12 gDIMDismountPointObjDescriptor = {
     (ObjectDescriptorCallback)DIMDismountPoint_setScale,
     (ObjectDescriptorCallback)DIMDismountPoint_func0B,
 };
+
+#pragma force_active on
+/* .sdata2 constant pool */
+const u32 lbl_803E4928 = 0xFFFFFFFF;
+const f32 lbl_803E492C = 1.0f;
+const f32 lbl_803E4930 = 15.0f;
+const f32 lbl_803E4934 = 1e+01f;
+const f32 lbl_803E4938 = 255.0f;
+const f32 lbl_803E493C = 25.0f;
+const f32 lbl_803E4940 = 8.0f;
+const f32 lbl_803E4944 = 0.0f;
+const f32 lbl_803E4948 = 176.0f;
+const f32 lbl_803E494C = -0.0f;
+const f32 lbl_803E4950 = 7.5f;
+const f32 lbl_803E4954 = 2.5f;
+const f32 lbl_803E4958 = 3.0f;
+const f32 lbl_803E495C = 0.09f;
+const f32 lbl_803E4960 = 0.0f;
+const f32 lbl_803E4964 = 0.0f;
+const f32 lbl_803E4968 = 2.1427498f;
+const f32 lbl_803E496C = -6.6188688e+22f;
+const f32 lbl_803E4970 = 32768.0f;
+const f32 lbl_803E4974 = 0.00390625f;
+const f32 lbl_803E4978 = 2.3927f;
+const f32 lbl_803E497C = 4.5681372e-11f;
+const f32 lbl_803E4980 = 7.5f;
+const f32 lbl_803E4984 = 0.0f;
+const f32 lbl_803E4988 = -1.0f;
+const f32 lbl_803E498C = 0.0f;
+const f64 lbl_803E4990 = 4503599627370496.0;
+const f32 lbl_803E4998 = 0.2f;
+const f32 lbl_803E499C = 0.5f;
+const f32 lbl_803E49A0 = 0.95f;
+const f32 lbl_803E49A4 = 0.1f;
+const f32 lbl_803E49A8 = 1e+02f;
+const f32 lbl_803E49AC = 0.4f;
+const f32 lbl_803E49B0 = 5.0f;
+const f32 lbl_803E49B4 = 2e+01f;
+const f32 lbl_803E49B8 = 6.0f;
+const f32 lbl_803E49BC = 2.0f;
+const f32 lbl_803E49C0 = 0.01f;
+const f32 lbl_803E49C4 = 65535.0f;
+const f32 lbl_803E49C8 = 16384.0f;
+const f32 lbl_803E49CC = 1.5f;
+const f32 lbl_803E49D0 = 1.0f;
+const f32 lbl_803E49D4 = 0.0f;
+const f32 lbl_803E49D8 = 0.95f;
+const f32 lbl_803E49DC = 0.9f;
+const f32 lbl_803E49E0 = 0.025f;
+const f32 lbl_803E49E4 = -4.0f;
+const f32 lbl_803E49E8 = 1.0f;
+const f32 lbl_803E49EC = 82.0f;
+const f32 lbl_803E49F0 = -0.1f;
+const f32 lbl_803E49F4 = -5.0f;
+const f32 lbl_803E49F8 = 0.1f;
+const f32 lbl_803E49FC = 8.0f;
