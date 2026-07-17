@@ -18,7 +18,7 @@
  */
 #include "main/dll/baddie_state.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.h"
+#include "main/trig.h"
 #include "main/dll/baddie_setmove.h"
 #include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"

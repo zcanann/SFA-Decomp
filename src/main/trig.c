@@ -1,5 +1,5 @@
 #include "dolphin.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.h"
+#include "main/trig.h"
 
 extern float lbl_803E7C80;
 extern float lbl_803E7C84;

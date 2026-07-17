@@ -21,7 +21,7 @@
 #include "main/frame_timing.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
-#include "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.h"
+#include "main/trig.h"
 #include "main/vecmath.h"
 #include "main/dll/baddie_state.h"
 #include "main/audio/sfx.h"

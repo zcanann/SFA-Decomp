@@ -1737,11 +1737,11 @@ config.libs = [
             ),
             Object(
                 NonMatching,
-                "dolphin/MSL_C/PPCEABI/bare/H/e_rem_pio2.c",
+                "main/trig.c",
                 mw_version="GC/1.2.5n",
                 cflags=msl_math_o0_cflags,
                 extra_cflags=["-O0", "-opt", "functions", "-inline", "auto", *msl_math_extra],
-                progress_category="sdk",
+                progress_category="game",
             ),
             Object(
                 NonMatching,
