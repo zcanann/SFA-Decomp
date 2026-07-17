@@ -2510,7 +2510,7 @@ void skyFn_8008a04c(void)
     int rawG;
     int lightIntensity;
     int ambientIntensity;
-    u8 blendAlpha;
+    int blendAlpha;
     f32 tc;
     f32 blend;
     f32 time2;
@@ -2554,7 +2554,8 @@ void skyFn_8008a04c(void)
             frac = (tc - init_803DF080) / lbl_803DF07C;
             part = 3;
         }
-        iofs = i = 0;
+        i = 0;
+        iofs = i;
         part4 = part * 4;
         blendAlphaCurve = &((f32*)((u8*)vec + 0x40))[part];
         ambientIntensityCurve = &((f32*)((u8*)vec + 0x18))[part];
@@ -2647,7 +2648,7 @@ void skyFn_8008a04c(void)
 #pragma opt_common_subs reset
 
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int red, int green, int blue, int ambientIntensity,
-                 int lightIntensity, u8 blendAlpha)
+                 int lightIntensity, int blendAlpha)
 {
     f32 dir[3];
     int ambientR;
