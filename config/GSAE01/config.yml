@@ -23,6 +23,10 @@ force_active:
   # pool/section and shift every later SDA2 reference.
   - lbl_803E3E44
   - gFXEmitUnused
+  # dll_0158_gunpowderbarrel.c: the retail link retained this unreferenced
+  # .sdata zero atom; dropping it would shorten the section and shift
+  # every later SDA reference.
+  - lbl_803DBE8C
 
 # Path to the main.dol file.
 object: sys/main.dol

@@ -58,6 +58,9 @@
 f32 lbl_803DBE80 = 10.0f;
 f32 lbl_803DBE84 = 0.4f;
 f32 lbl_803DBE88 = 170.0f;
+#pragma explicit_zero_data on
+f32 lbl_803DBE8C = 0.0f;
+#pragma explicit_zero_data off
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BLAST 5
 #define GUNPOWDERBARREL_HIT_VOLUME_SLOT_BODY 0xe
 
@@ -1092,7 +1095,7 @@ void gunpowderbarrel_update(GameObject *obj)
                 ObjHits_MarkObjectPositionDirty((ObjAnimComponent*)obj);
                 gunpowderbarrel_launchAtTarget(obj, 1);
             }
-            else if (0.0f == Player_GetLiftVelocityY((int)player)) /* no lift: gentle toss */
+            else if (0.0f == fn_80296214(player)) /* no lift: gentle toss */
             {
                 ObjHits_SyncObjectPositionIfDirty((GameObject*)obj);
                 gunpowderbarrel_launchAtTarget(obj, 0);
