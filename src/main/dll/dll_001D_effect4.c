@@ -20,89 +20,92 @@ f32 gEffect4SpawnCyclePhaseSlow = 0.3f;
 f32 gEffect4TickCyclePhaseFast = 0.1f;
 f32 gEffect4TickCyclePhaseSlow = 0.3f;
 
-extern f32 lbl_803DFA88;
-extern f32 lbl_803DFA8C;
-extern f32 lbl_803DFA90;
-extern f32 lbl_803DFA98;
 extern f32 gEffect4Pi;
 extern f32 gEffect4SinPhaseScale;
-extern f32 gEffect4SpawnCyclePhaseSlowStep;
-extern f32 lbl_803DFA9C;
-extern f32 lbl_803DFAA0;
-extern f32 lbl_803DFAA4;
-extern f32 lbl_803DFAA8;
-extern f32 lbl_803DFAAC;
-extern f32 lbl_803DFAB0;
-extern f32 lbl_803DFAB4;
-extern f32 lbl_803DFAB8;
-extern f32 lbl_803DFABC;
-extern f32 lbl_803DFAC0;
-extern f32 lbl_803DFAC4;
-extern f32 lbl_803DFAC8;
-extern f32 lbl_803DFACC;
-extern f32 lbl_803DFAD0;
-extern f32 lbl_803DFAD4;
-extern f32 lbl_803DFAD8;
-extern f32 lbl_803DFADC;
-extern f32 lbl_803DFAE0;
-extern f32 lbl_803DFAE4;
-extern f32 lbl_803DFAE8;
-extern f32 lbl_803DFAEC;
-extern f32 lbl_803DFAF0;
-extern f32 lbl_803DFAF4;
-extern f32 lbl_803DFAF8;
-extern f32 lbl_803DFAFC;
-extern f32 lbl_803DFB00;
-extern f32 lbl_803DFB04;
-extern f32 lbl_803DFB08;
-extern f32 lbl_803DFB0C;
-extern f32 lbl_803DFB10;
-extern f32 lbl_803DFB14;
-extern f32 lbl_803DFB18;
-extern f32 lbl_803DFB1C;
-extern f32 lbl_803DFB20;
-extern f32 lbl_803DFB24;
-extern f32 lbl_803DFB28;
-extern f32 lbl_803DFB2C;
-extern f32 lbl_803DFB30;
-extern f32 lbl_803DFB34;
-extern f32 lbl_803DFB38;
-extern f32 lbl_803DFB3C;
-extern f32 lbl_803DFB40;
-extern f32 lbl_803DFB44;
-extern f32 lbl_803DFB48;
-extern f32 lbl_803DFB4C;
-extern f32 lbl_803DFB50;
-extern f32 lbl_803DFB54;
-extern f32 lbl_803DFB58;
-extern f32 lbl_803DFB5C;
-extern f32 lbl_803DFB60;
-extern f32 lbl_803DFB64;
-extern f32 lbl_803DFB68;
-extern f32 lbl_803DFB6C;
-extern f32 lbl_803DFB70;
-extern f32 lbl_803DFB74;
-extern f32 lbl_803DFB78;
-extern f32 lbl_803DFB7C;
-extern f32 lbl_803DFB80;
-extern f32 lbl_803DFB84;
-extern f32 lbl_803DFB88;
-extern f32 lbl_803DFB8C;
-extern f32 lbl_803DFB90;
-extern f32 lbl_803DFB94;
-extern f32 lbl_803DFB98;
-extern f32 lbl_803DFB9C;
-extern f32 lbl_803DFBA0;
-extern f32 lbl_803DFBA4;
-extern f32 lbl_803DFBA8;
-extern f32 lbl_803DFBAC;
-extern f32 lbl_803DFBB0;
-extern f32 lbl_803DFBB4;
-extern f32 lbl_803DFBB8;
-extern f32 lbl_803DFBBC;
-extern f32 lbl_803DFBC0;
-extern f32 lbl_803DFBC4;
-extern f32 lbl_803DFBC8;
+
+__declspec(section ".sdata2") f32 lbl_803DFA88 = 0.001f;
+__declspec(section ".sdata2") f32 lbl_803DFA8C = 0.1f;
+__declspec(section ".sdata2") f32 lbl_803DFA90 = 1.0f;
+__declspec(section ".sdata2") f32 gEffect4SpawnCyclePhaseSlowStep = 0.0003f;
+__declspec(section ".sdata2") f32 lbl_803DFA98 = 0.3f;
+union Effect4ConstF32 { f32 f; };
+const union Effect4ConstF32 lbl_803DFA9C = { 0.0f };
+__declspec(section ".sdata2") f32 lbl_803DFAA0 = 0.022f;
+__declspec(section ".sdata2") f32 lbl_803DFAA4 = 3.5e-06f;
+__declspec(section ".sdata2") f32 lbl_803DFAA8 = 12.0f;
+__declspec(section ".sdata2") f32 lbl_803DFAAC = 1.75e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFAB0 = 0.01f;
+__declspec(section ".sdata2") f32 lbl_803DFAB4 = 5e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFAB8 = 4.5e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFABC = 0.005f;
+__declspec(section ".sdata2") f32 lbl_803DFAC0 = 3.5e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFAC4 = 0.008f;
+__declspec(section ".sdata2") f32 lbl_803DFAC8 = 2.5e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFACC = 0.0002f;
+__declspec(section ".sdata2") f32 lbl_803DFAD0 = 0.0037f;
+__declspec(section ".sdata2") f32 lbl_803DFAD4 = 0.05f;
+__declspec(section ".sdata2") f32 lbl_803DFAD8 = 0.04f;
+__declspec(section ".sdata2") f32 lbl_803DFADC = 0.065f;
+__declspec(section ".sdata2") f32 lbl_803DFAE0 = 0.0015f;
+__declspec(section ".sdata2") f32 lbl_803DFAE4 = 0.0018f;
+__declspec(section ".sdata2") f32 lbl_803DFAE8 = 0.0005f;
+__declspec(section ".sdata2") f32 lbl_803DFAEC = 0.045f;
+__declspec(section ".sdata2") f32 lbl_803DFAF0 = 0.013f;
+__declspec(section ".sdata2") f32 lbl_803DFAF4 = 0.006f;
+__declspec(section ".sdata2") f32 lbl_803DFAF8 = 0.015f;
+__declspec(section ".sdata2") f32 lbl_803DFAFC = 0.8f;
+__declspec(section ".sdata2") f32 lbl_803DFB00 = 0.035f;
+__declspec(section ".sdata2") f32 lbl_803DFB04 = 0.0007f;
+__declspec(section ".sdata2") f32 lbl_803DFB08 = 2e-06f;
+__declspec(section ".sdata2") f32 lbl_803DFB0C = 0.0012f;
+__declspec(section ".sdata2") f32 lbl_803DFB10 = 0.0006f;
+__declspec(section ".sdata2") f32 lbl_803DFB14 = 0.0016f;
+__declspec(section ".sdata2") f32 lbl_803DFB18 = 2.2e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB1C = 8e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB20 = 0.2f;
+__declspec(section ".sdata2") f32 lbl_803DFB24 = 0.02f;
+__declspec(section ".sdata2") f32 lbl_803DFB28 = 0.0032f;
+__declspec(section ".sdata2") f32 lbl_803DFB2C = 0.00047f;
+__declspec(section ".sdata2") f32 lbl_803DFB30 = 1e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFB34 = 2.6e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFB38 = 0.03f;
+__declspec(section ".sdata2") f32 lbl_803DFB3C = 0.000945f;
+__declspec(section ".sdata2") f32 lbl_803DFB40 = 0.0004f;
+__declspec(section ".sdata2") f32 lbl_803DFB44 = -0.03f;
+__declspec(section ".sdata2") f32 lbl_803DFB48 = 0.002f;
+__declspec(section ".sdata2") f32 lbl_803DFB4C = 0.0001545f;
+__declspec(section ".sdata2") f32 lbl_803DFB50 = 0.016f;
+__declspec(section ".sdata2") f32 lbl_803DFB54 = 0.026f;
+__declspec(section ".sdata2") f32 lbl_803DFB58 = 1.35f;
+__declspec(section ".sdata2") f32 lbl_803DFB5C = 0.45f;
+__declspec(section ".sdata2") f32 lbl_803DFB60 = 0.0001f;
+__declspec(section ".sdata2") f32 lbl_803DFB64 = 35.0f;
+__declspec(section ".sdata2") f32 lbl_803DFB68 = 4e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB6C = 6e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB70 = 0.25f;
+__declspec(section ".sdata2") f32 lbl_803DFB74 = 1.3e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB78 = 0.4f;
+__declspec(section ".sdata2") f32 lbl_803DFB7C = 0.5f;
+__declspec(section ".sdata2") f32 lbl_803DFB80 = 0.113f;
+__declspec(section ".sdata2") f32 lbl_803DFB84 = 0.12f;
+__declspec(section ".sdata2") f32 lbl_803DFB88 = 45.0f;
+__declspec(section ".sdata2") f32 lbl_803DFB8C = 7e-06f;
+__declspec(section ".sdata2") f32 lbl_803DFB90 = 1.2f;
+__declspec(section ".sdata2") f32 lbl_803DFB94 = 6.8e-05f;
+__declspec(section ".sdata2") f32 lbl_803DFB98 = 1e+01f;
+__declspec(section ".sdata2") f32 lbl_803DFB9C = -0.1f;
+__declspec(section ".sdata2") f32 lbl_803DFBA0 = 0.69f;
+__declspec(section ".sdata2") f32 lbl_803DFBA4 = -0.15f;
+__declspec(section ".sdata2") f32 lbl_803DFBA8 = -0.01f;
+__declspec(section ".sdata2") f32 lbl_803DFBAC = 0.00015f;
+__declspec(section ".sdata2") f32 lbl_803DFBB0 = 0.0065f;
+__declspec(section ".sdata2") f32 lbl_803DFBB4 = 0.0105f;
+__declspec(section ".sdata2") f32 lbl_803DFBB8 = 0.0025f;
+__declspec(section ".sdata2") f32 lbl_803DFBBC = -1.0f;
+__declspec(section ".sdata2") f32 lbl_803DFBC0 = 1.3e+02f;
+__declspec(section ".sdata2") f32 lbl_803DFBC4 = 0.00035f;
+__declspec(section ".sdata2") f32 lbl_803DFBC8 = 0.003f;
+const union Effect4ConstF32 lbl_803DFBCC = { 0.0f };
 
 ObjectDescriptor6 lbl_803108A0 = {
     0,
@@ -137,13 +140,13 @@ void Effect4_func05(void)
     f32 step;
     sum = gEffect4TickCyclePhaseFast + (step = lbl_803DFA88 * timeDelta);
     gEffect4TickCyclePhaseFast = sum;
-    if (sum > 1.0f)
+    if (sum > *(f32*)&lbl_803DFA90)
     {
         gEffect4TickCyclePhaseFast = lbl_803DFA8C;
     }
     sum = gEffect4TickCyclePhaseSlow + step;
     gEffect4TickCyclePhaseSlow = sum;
-    if (sum > 1.0f)
+    if (sum > *(f32*)&lbl_803DFA90)
     {
         gEffect4TickCyclePhaseSlow = lbl_803DFA98;
     }
@@ -253,10 +256,10 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     PartFxSpawn cfg;
 
     gEffect4SpawnCyclePhaseFast = gEffect4SpawnCyclePhaseFast + lbl_803DFA88;
-    if (gEffect4SpawnCyclePhaseFast > 1.0f)
+    if (gEffect4SpawnCyclePhaseFast > *(f32*)&lbl_803DFA90)
         gEffect4SpawnCyclePhaseFast = lbl_803DFA8C;
     gEffect4SpawnCyclePhaseSlow = gEffect4SpawnCyclePhaseSlow + gEffect4SpawnCyclePhaseSlowStep;
-    if (gEffect4SpawnCyclePhaseSlow > 1.0f)
+    if (gEffect4SpawnCyclePhaseSlow > *(f32*)&lbl_803DFA90)
         gEffect4SpawnCyclePhaseSlow = lbl_803DFA98;
     if (sourceObj == 0)
         return -1;
@@ -277,13 +280,13 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     cfg.renderFlags = 0;
     cfg.effectIdByte = effectId;
     cfg.attachedSource = sourceObj;
-    cfg.startPosX = lbl_803DFA9C;
-    cfg.startPosY = lbl_803DFA9C;
-    cfg.startPosZ = lbl_803DFA9C;
-    cfg.velocityX = lbl_803DFA9C;
-    cfg.velocityY = lbl_803DFA9C;
-    cfg.velocityZ = lbl_803DFA9C;
-    cfg.scale = lbl_803DFA9C;
+    cfg.startPosX = lbl_803DFA9C.f;
+    cfg.startPosY = lbl_803DFA9C.f;
+    cfg.startPosZ = lbl_803DFA9C.f;
+    cfg.velocityX = lbl_803DFA9C.f;
+    cfg.velocityY = lbl_803DFA9C.f;
+    cfg.velocityZ = lbl_803DFA9C.f;
+    cfg.scale = lbl_803DFA9C.f;
     cfg.lifetimeFrames = 0;
     cfg.quadVertex3Pad06 = -1;
     cfg.initialAlpha = 0xff;
@@ -311,9 +314,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1c9:
         cfg.startPosZ = lbl_803DFAA8;
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = 0;
         es.ry = 0;
@@ -364,9 +367,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1c5:
         cfg.startPosX = lbl_803DFAB8;
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
@@ -380,9 +383,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1c4:
         cfg.startPosX = lbl_803DFAC0;
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
@@ -397,9 +400,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
     case 0x1c6:
         cfg.startPosX = lbl_803DFAC8 + (f32)(s32)randomGetRange(0, 0x5a);
         cfg.startPosY = (f32)(s32)randomGetRange(-0xa, 0xa);
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = 0;
         es.ry = 0;
@@ -813,9 +816,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
             cfg.lifetimeFrames = 0x78;
             cfg.velocityX = lbl_803DFB5C;
         }
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
@@ -903,9 +906,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = lbl_803DFA9C;
-        cfg.sourcePosZ = lbl_803DFA9C;
-        cfg.sourcePosW = lbl_803DFA9C;
+        cfg.sourcePosY = lbl_803DFA9C.f;
+        cfg.sourcePosZ = lbl_803DFA9C.f;
+        cfg.sourcePosW = lbl_803DFA9C.f;
         cfg.lifetimeFrames = 0xa0;
         cfg.linkGroup = 0x10;
         cfg.behaviorFlags = 0x6100214;
@@ -921,9 +924,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.sourceVecX = randomGetRange(0, 0xffff);
         cfg.sourceVecY = randomGetRange(0, 0xffff);
         cfg.sourceVecX = randomGetRange(0, 0xffff);
-        cfg.sourcePosY = lbl_803DFA9C;
-        cfg.sourcePosZ = lbl_803DFA9C;
-        cfg.sourcePosW = lbl_803DFA9C;
+        cfg.sourcePosY = lbl_803DFA9C.f;
+        cfg.sourcePosZ = lbl_803DFA9C.f;
+        cfg.sourcePosW = lbl_803DFA9C.f;
         cfg.lifetimeFrames = 0xa0;
         cfg.linkGroup = 0x10;
         cfg.behaviorFlags = 0x6100214;
@@ -954,9 +957,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         break;
     case 0x1ab:
         cfg.startPosX = lbl_803DFB88;
-        es.a = lbl_803DFA9C;
-        es.b = lbl_803DFA9C;
-        es.c = lbl_803DFA9C;
+        es.a = lbl_803DFA9C.f;
+        es.b = lbl_803DFA9C.f;
+        es.c = lbl_803DFA9C.f;
         es.w = lbl_803DFA90;
         es.rz = randomGetRange(0, 0xffff);
         es.ry = randomGetRange(0, 0xffff);
@@ -1022,9 +1025,9 @@ int Effect4_func04(void* sourceObj, int effectId, PartFxSpawnParams* spawnParams
         cfg.sourceVecZ = 0;
         cfg.sourceVecY = 0x5fb4;
         cfg.sourceVecX = -0x3fff;
-        cfg.sourcePosY = lbl_803DFA9C;
-        cfg.sourcePosZ = lbl_803DFA9C;
-        cfg.sourcePosW = lbl_803DFA9C;
+        cfg.sourcePosY = lbl_803DFA9C.f;
+        cfg.sourcePosZ = lbl_803DFA9C.f;
+        cfg.sourcePosW = lbl_803DFA9C.f;
         break;
     case 0x1bf:
         cfg.startPosX = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x64, 0x64);

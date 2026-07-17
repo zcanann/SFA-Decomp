@@ -325,6 +325,7 @@ main/dll/dll_001D_effect4.c:
 	.data       start:0x803108A0 end:0x803109B4
 	.sdata      start:0x803DB7D0 end:0x803DB7E0
 	.sbss       start:0x803DD350 end:0x803DD360
+	.sdata2     start:0x803DFA88 end:0x803DFBD8
 
 main/dll/dll_001E_effect5.c:
 	.text       start:0x800BC244 end:0x800BD43C
