@@ -299,8 +299,88 @@ byte-exact. Gated in an origin clean-room on `ed0550d779`: `main.dol: OK`, compl
 843**, matched_data 1179495 -> 1179599 (**+104 B**), complete_code +7176, **matched_code FLAT**
 (2414780).
 
+## ★ THE PARAMETER RULE — reassigning a param forces the ARG to materialise at the call site
+
+When MWCC inlines a helper, an argument that is used **exactly once and never written** is not
+evaluated at the call at all: `IroPropagate` substitutes the argument *expression* into the body and
+the load lands wherever the body happens to need it. Retail's shape is often the opposite — the arg
+is loaded first, into its own register, and stays live across the body's early code.
+
+The switch is whether the parameter is **an lvalue the body assigns to**:
+
+| helper body | codegen at an inlined call site |
+|---|---|
+| `return tbl[(timer >> 1) & 3];` (param read once) | arg load **sunk into the body**, folded into the use, reusing `r0` |
+| `timer = (timer >> 1) & 3; return tbl[timer];` | arg load **emitted at the call**, held in its own reg across the body |
+
+A written parameter cannot be propagated (its value is no longer the caller's expression), so MWCC
+must give it a home and fill it before the body runs. Cost: **zero instructions** — the assignment
+folds into the existing shift/mask.
+
+⇒ **The tell:** ours computes the argument late and reuses the scratch register; retail computes it
+first and parks it in a *different* register across intervening code. That register split is the
+signature — a rotated arg register is not a colouring cap, it is a propagated parameter.
+
+★This is the counterpart of the granularity rule. Shrinking the ghost cannot reach it (the body's own
+locals are re-coloured after inlining, so decl-order sweeps inside a ghost are inert), and neither can
+any call-site spelling: `int t = st->timerFA; f(t);` and `u16 t = ...;` are both propagated straight
+through. **The lever lives in the callee's parameter list, not in the caller and not in the pool.**
+
+### Worked confirmation — ktrex (`dll_0250_ktrex.c`, pool `803E67B0..6854`), 2026-07-17
+**Two** ghosts, and the second one owns a *single* literal — proof that a ghost group can be one atom
+wide and still be the only thing standing between a finished pool and a rotated one:
+
+```
+803E67B0  02080104                      <- ghost #1: ktrex_getLaneMaskForTimer (a LOCAL ARRAY IMAGE)
+803E67B4  0.1                           <- ghost #2: ktrex_hasLaneLerpOvershot (ONE atom)
+803E67B8  0.0 │ 67BC 50.0 │ 67C0 0.3    <- ktrex_spawnRandomEnergyArc
+803E67C4  ...                           <- exactly first-use-in-.text order from here on
+```
+- Ghost #1's group is a **`u8 laneMasks[4] = {2,8,1,4}` init image**, not a float — `.sdata2` holds
+  non-float data, and an atom is only a float if every access is `lfs`/`lfd`. Here `lwz`+`stw` to a
+  stack slot proves a memory copy of a local array template. First-used by `update` (`.text` +0x331C,
+  the second-to-last function) yet pooled at the **head** ⇒ a genuine inversion ⇒ ghost.
+- Ghost #2 was the last unknown: `0.1f` pools *second* but `spawnRandomEnergyArc` (the first `.text`
+  function to touch it) emits it **third**, after `0.0` and `50.0`. Rules 3/4 cannot reach it — the
+  three atoms are in *separate statements*, and `0.1f`/`0.3f` are both arguments of the **same**
+  `lightningCreate` call yet are split around `0.0`/`50.0`. Only a group boundary explains it. The
+  ghost is the `u8`-returning lane predicate hand-inlined in `stateHandlerA02` (`u8 result;` + `goto
+  haveResult`, the crrockfall `int inRange;` signature) — `(laneLerpT - laneFrac) > 0.1f` with the
+  operands swapped on `timerFA & 1`. It owns `0.1f`; `spawnRandomEnergyArc`'s group is then plainly
+  `{0.0, 50.0, 0.3}` in emission order, and the whole 164-byte pool falls out byte-exact.
+- ★**Both ghosts sit above `.text` fn0** (`shouldAdvanceArenaPhase`), which pools **no atoms** and is
+  therefore transparent — a group boundary can hide behind an atom-less function, so "the first
+  `.text` function" is never a safe anchor for where the pool head belongs.
+- Post-literalisation repairs, one per class, all three from the tables above:
+  `point1[1] = point1[1] + 50.0f` -> **`+=`** (the `@sda21` trap: const-first canonicalisation swaps
+  the two loads at fuzzy 100); `bobPhase != 0.0f` -> a **non-const `f32 zero` local** (retail keeps the
+  placement *and* the field-first compare — the literal hoists, `static const`+cast-deref regressed
+  `init` too); and the parameter rule above for `update`.
+
+Claim `.sdata2 [0x803E67B0, 0x803E6854)`; pool **byte-exact (164 B)**, all 40 retail functions
+byte-exact (relocs resolved, branches normalised). Gated in an origin clean-room on `d34db1bf46`:
+`main.dol: OK`, complete_units **850 -> 851**, matched_data 1179875 -> 1180039 (**+164 B**, 97.4471 ->
+97.4610), complete_code 1429316 -> 1444424 (49.8374 -> 50.3642), **matched_code FLAT** (2413564).
+
+★**Gate hygiene note.** A per-function `.text` comparator MUST normalise branch targets to
+fn-relative offsets: a recovered ghost adds a function to *our* `.o` and shifts every later function's
+address, so raw `-drz` output diffs on every `b`/`bl`/`beq` operand. Un-normalised, this unit read
+"7/40 identical, 21 regressions" when it was in fact **36/40 with 16 real instructions**, and the
+three genuine bugs were buried under ~600 lines of phantom diff. Resolve pool atoms *and* named
+`.sdata2` symbols (`gKTRexLaneThreatHalfWidth` = `POOL+0x8C`) to pool offsets on both sides too, or
+byte-identical functions read as broken.
+
 ## Landed
 
+- **ktrex** (`dll_0250_ktrex.c`), 2026-07-17: recover **two** ghosts —
+  `ktrex_getLaneMaskForTimer` (owns the `u8[4]` lane-mask init image at the pool head) and
+  `ktrex_hasLaneLerpOvershot` (owns the single `0.1f` atom, hand-inlined in `stateHandlerA02`) — plus
+  the parameter rule on the first, `+=` on the arc y-offset, and a non-const `zero` local in `render`.
+  34 `extern f32 lbl_803E67*` shims -> literals. Claim `.sdata2 [0x803E67B0, 0x803E6854)`; pool
+  byte-exact (164 B), all 40 retail functions byte-exact. Gated in an origin clean-room on
+  `d34db1bf46`: `main.dol: OK`, complete_units **850 -> 851**, matched_data 1179875 -> 1180039
+  (+164 B, 97.4471 -> 97.4610), complete_code 1429316 -> 1444424 (49.8374 -> 50.3642),
+  **matched_code FLAT**.
 - **sctotembond** (`main/dll/SC/dll_01BB_sctotembond.c`), 2026-07-17: ghost
   `sc_totembond_beginOrbGame(obj, state)` = the whole `START_ORBS` event block, hand-inlined into
   `update`; group `{-130.0f, 30.0f}` (the `spawnGameBitOrbs` radius arg, then `spawnTimer`) pooled
