@@ -71,8 +71,6 @@ typedef struct PADClampRegion {
     s8 minSubstick;
     s8 maxSubstick;
     s8 xySubstick;
-    s8 radStick;
-    s8 radSubstick;
 } PADClampRegion;
 
 typedef void (*PADSamplingCallback)(void);

@@ -1,16 +1,14 @@
 #include <dolphin.h>
-typedef struct PADClampExtents {
-    u8 minTrigger;
-    u8 maxTrigger;
-    s8 minStick;
-    s8 maxStick;
-    s8 xyStick;
-    s8 minSubstick;
-    s8 maxSubstick;
-    s8 xySubstick;
-} PADClampExtents;
-
-extern PADClampExtents lbl_803DC580;
+PADClampRegion ClampRegion = {
+    30,
+    180,
+    15,
+    72,
+    40,
+    15,
+    59,
+    31,
+};
 
 
 // prototypes
@@ -76,26 +74,26 @@ void PADClamp(PADStatus * status) {
 
     for (i = 0; i < 4; i++, status++) {
         if (status->err == PAD_ERR_NONE) {
-            ClampStick(&status->stickX, &status->stickY, lbl_803DC580.maxStick, lbl_803DC580.xyStick, lbl_803DC580.minStick);
+            ClampStick(&status->stickX, &status->stickY, ClampRegion.maxStick, ClampRegion.xyStick, ClampRegion.minStick);
             ClampStick(
-                &status->substickX, &status->substickY, lbl_803DC580.maxSubstick, lbl_803DC580.xySubstick,
-                lbl_803DC580.minSubstick
+                &status->substickX, &status->substickY, ClampRegion.maxSubstick, ClampRegion.xySubstick,
+                ClampRegion.minSubstick
             );
-            if (status->triggerLeft <= lbl_803DC580.minTrigger) {
+            if (status->triggerLeft <= ClampRegion.minTrigger) {
                 status->triggerLeft = 0;
             } else {
-                if (lbl_803DC580.maxTrigger < status->triggerLeft) {
-                    status->triggerLeft = lbl_803DC580.maxTrigger;
+                if (ClampRegion.maxTrigger < status->triggerLeft) {
+                    status->triggerLeft = ClampRegion.maxTrigger;
                 }
-                status->triggerLeft -= lbl_803DC580.minTrigger;
+                status->triggerLeft -= ClampRegion.minTrigger;
             }
-            if (status->triggerRight <= lbl_803DC580.minTrigger) {
+            if (status->triggerRight <= ClampRegion.minTrigger) {
                 status->triggerRight = 0;
             } else {
-                if (lbl_803DC580.maxTrigger < status->triggerRight) {
-                    status->triggerRight = lbl_803DC580.maxTrigger;
+                if (ClampRegion.maxTrigger < status->triggerRight) {
+                    status->triggerRight = ClampRegion.maxTrigger;
                 }
-                status->triggerRight -= lbl_803DC580.minTrigger;
+                status->triggerRight -= ClampRegion.minTrigger;
             }
         }
     }
