@@ -193,17 +193,17 @@ typedef struct GuardianAngleParams
     f32 x, y, z;
 } GuardianAngleParams;
 
-void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
+void fn_801845FC(GameObject* obj, TrackGroundHit* groundHit, u8 mode, f32* p3)
 {
-    f32* velCache = ((GameObject*)obj)->extra;
+    f32* velCache = obj->extra;
     GuardianAngleParams rotParams;
     f32 buf[3];
 
     if (mode == 1)
     {
-        buf[0] = p2[1];
-        buf[1] = p2[2];
-        buf[2] = p2[3];
+        buf[0] = groundHit->normalX;
+        buf[1] = groundHit->normalY;
+        buf[2] = groundHit->normalZ;
     }
     else if (mode == 0)
     {
@@ -214,19 +214,18 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     else if (mode == 2)
     {
         f32 sq, d;
-        ((GameObject*)obj)->anim.velocityX = p3[0];
-        ((GameObject*)obj)->anim.velocityZ = p3[2];
-        sq = ((GameObject*)obj)->anim.velocityX * ((GameObject*)obj)->anim.velocityX +
-             ((GameObject*)obj)->anim.velocityZ * ((GameObject*)obj)->anim.velocityZ;
+        obj->anim.velocityX = p3[0];
+        obj->anim.velocityZ = p3[2];
+        sq = obj->anim.velocityX * obj->anim.velocityX + obj->anim.velocityZ * obj->anim.velocityZ;
         if (sq != lbl_803E39F8)
         {
             sq = sqrtf(sq);
         }
-        ((GameObject*)obj)->anim.velocityX = ((GameObject*)obj)->anim.velocityX / (d = lbl_803E39FC * sq);
-        ((GameObject*)obj)->anim.velocityZ = ((GameObject*)obj)->anim.velocityZ / d;
-        velCache[0] = ((GameObject*)obj)->anim.velocityX;
-        velCache[1] = ((GameObject*)obj)->anim.velocityZ;
-        ((GameObject*)obj)->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
+        obj->anim.velocityX = obj->anim.velocityX / (d = lbl_803E39FC * sq);
+        obj->anim.velocityZ = obj->anim.velocityZ / d;
+        velCache[0] = obj->anim.velocityX;
+        velCache[1] = obj->anim.velocityZ;
+        obj->anim.rotX = (u16)getAngle(-p3[0], -p3[2]);
         return;
     }
 
@@ -236,25 +235,25 @@ void fn_801845FC(u8* obj, f32* p2, u8 mode, f32* p3)
     rotParams.w = lbl_803E3A00;
     rotParams.c = 0;
     rotParams.b = 0;
-    rotParams.a = ((GameObject*)obj)->anim.rotX;
+    rotParams.a = obj->anim.rotX;
 
     vecRotateZXY(&rotParams.a, buf);
 
-    if (p2)
+    if (groundHit)
     {
         u16 a = getAngle(buf[0], buf[1]);
-        ((GameObject*)obj)->anim.rotY = (u16)getAngle(buf[2], buf[1]);
-        ((GameObject*)obj)->anim.rotZ = a;
+        obj->anim.rotY = (u16)getAngle(buf[2], buf[1]);
+        obj->anim.rotZ = a;
     }
     else
     {
-        ((GameObject*)obj)->anim.rotZ = 0;
-        ((GameObject*)obj)->anim.rotY = getAngle(p3[0] + p3[2], p3[1]);
-        if (((GameObject*)obj)->anim.rotY < 0)
+        obj->anim.rotZ = 0;
+        obj->anim.rotY = getAngle(p3[0] + p3[2], p3[1]);
+        if (obj->anim.rotY < 0)
         {
-            ((GameObject*)obj)->anim.rotY *= -1;
+            obj->anim.rotY *= -1;
         }
-        ((GameObject*)obj)->anim.rotX = getAngle(p3[0], p3[2]);
+        obj->anim.rotX = getAngle(p3[0], p3[2]);
     }
 }
 
@@ -347,7 +346,7 @@ void Scarab_update(GameObject* obj)
 
     struct
     {
-        u8 hitResults[84];
+        TrackBBoxHit bboxHit;
         u8 hitBuf[64];
         ScarabSphere sph;
     } bufs;
@@ -357,7 +356,7 @@ void Scarab_update(GameObject* obj)
     ScarabVec3 end;
     f32 vsub[3];
     TrackGroundHit** list;
-    int msg;
+    u32 msg;
     f32 phase;
     ScarabMoney money1;
     ScarabMoney money2;
@@ -376,7 +375,6 @@ void Scarab_update(GameObject* obj)
     int yawDelta;
     int count;
     int i;
-    f32** p;
     u8 hits;
 
     best[0] = 0;
@@ -388,7 +386,7 @@ void Scarab_update(GameObject* obj)
     player = Obj_GetPlayerObject();
     if ((state->flags28 & 1) != 0)
     {
-        while (ObjMsg_Pop(obj, (u32*)&msg, 0, 0) != 0)
+        while (ObjMsg_Pop(obj, &msg, 0, 0) != 0)
         {
             switch (msg)
             {
@@ -414,7 +412,7 @@ void Scarab_update(GameObject* obj)
         if (state->despawnTimer <= 0)
         {
             state->despawnTimer = 0;
-            Obj_FreeObject((GameObject*)obj);
+            Obj_FreeObject(obj);
         }
     }
     else
@@ -441,7 +439,7 @@ void Scarab_update(GameObject* obj)
             if (flag == 0)
             {
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
-                                          (TrackBBoxHit*)bufs.hitResults, obj, 8, -1, 0, 0);
+                                          &bufs.bboxHit, obj, 8, -1, 0, 0);
             }
             if (flag != 0)
             {
@@ -514,7 +512,7 @@ void Scarab_update(GameObject* obj)
                 obj->anim.localPosZ = end.z;
                 if (count != 0)
                 {
-                    fn_801845FC((u8*)obj, 0, 0, (f32*)((u8*)&bufs + 84));
+                    fn_801845FC(obj, 0, 0, (f32*)((u8*)&bufs + 84));
                 }
             }
             if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe)
@@ -597,7 +595,7 @@ void Scarab_update(GameObject* obj)
                     }
                     else
                     {
-                        fn_801845FC((u8*)obj, (f32*)list[best[0]], 1, (f32*)bufs.hitBuf);
+                        fn_801845FC(obj, list[best[0]], 1, (f32*)bufs.hitBuf);
                     }
                 }
                 else
@@ -656,7 +654,7 @@ void Scarab_update(GameObject* obj)
                     ObjAnim_AdvanceCurrentMove((int)obj, phase, timeDelta, NULL);
                 }
                 flag = objBboxFn_800640cc(&obj->anim.previousLocalPosX, &obj->anim.localPosX, lbl_803E3A00, 0,
-                                          (TrackBBoxHit*)bufs.hitResults, obj, 8, -1, 0, 0);
+                                          &bufs.bboxHit, obj, 8, -1, 0, 0);
                 {
                     ScarabSphere* sp;
                     (sp = &bufs.sph)->vals[0] = lbl_803E3A00;
@@ -699,7 +697,7 @@ void Scarab_update(GameObject* obj)
                 if (list != NULL)
                 {
                     obj->anim.localPosY = list[best[0]]->height;
-                    fn_801845FC((u8*)obj, (f32*)list[best[0]], 1, (f32*)bufs.hitBuf);
+                    fn_801845FC(obj, list[best[0]], 1, (f32*)bufs.hitBuf);
                 }
                 else
                 {
