@@ -66,7 +66,7 @@ typedef struct
     s16 textureIds[0x40]; /* 0x948 */
     void* itemTextures[0x40]; /* 0x9c8 */
     u8 _padAC8[0x158]; /* 0xac8 */
-    char* anims[4]; /* 0xc20 */
+    struct GameObject* anims[4]; /* 0xc20 */
 } CMenuHud;
 
 typedef struct

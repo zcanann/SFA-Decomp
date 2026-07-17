@@ -229,6 +229,12 @@ typedef struct TrickyAirMeter
     u8 pad2E[0x48 - 0x2E];
 } TrickyAirMeter;
 
+typedef struct PauseMenuCharacterState
+{
+    u8 _pad0[9];
+    u8 healCount;
+} PauseMenuCharacterState;
+
 typedef struct
 {
     int w[6];
@@ -6227,7 +6233,7 @@ void pauseMenuFn_80129ee0(void)
     u8 isArwing;
     u8 menuMin;
     u8 menuMax;
-    u8* charState;
+    PauseMenuCharacterState* charState;
     u8 hintBuf[13];
     u8 analogX;
     u8 analogY;
@@ -6238,7 +6244,7 @@ void pauseMenuFn_80129ee0(void)
     objIsCurModelNotZero(player);
     menuMin = 1;
     menuMax = 5;
-    charState = (u8*)(*gMapEventInterface)->getCurCharacterState();
+    charState = (*gMapEventInterface)->getCurCharacterState();
     if (!gameTextFn_80019c00())
     {
         btn = getButtonsJustPressed(0);
@@ -6261,7 +6267,7 @@ void pauseMenuFn_80129ee0(void)
     {
         menuMin = 4;
     }
-    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
+    if (lbl_803DB424 == 0 || getNextTaskHintText() < 3 ||
         (player != 0 &&
          coordsToMapCell(player->anim.localPosX, player->anim.localPosZ) == 0 && playerGetFocusObject(player) != NULL))
     {
@@ -6284,42 +6290,42 @@ void pauseMenuFn_80129ee0(void)
         {
             if ((*gMapEventInterface)->getMapAct(cell) == 1)
             {
-                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
+                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 5;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 0xc;
                 }
             }
             else if ((*gMapEventInterface)->getMapAct(lbl_803DD8E0) == 2)
             {
-                if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
+                if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 0))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 1))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 2))
                 {
                     lbl_803DD8E0 = 6;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 3))
                 {
                     lbl_803DD8E0 = 0xa;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 4))
                 {
                     lbl_803DD8E0 = 9;
                 }
-                else if ((u8)(*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
+                else if ((*gMapEventInterface)->getObjGroupStatus(lbl_803DD8E0, 5))
                 {
                     lbl_803DD8E0 = 3;
                 }
@@ -6485,10 +6491,10 @@ void pauseMenuFn_80129ee0(void)
                 case 2:
                 case 3:
                 {
-                    char* anim = hud->anims[lbl_803DBA64];
-                    if (*(u32*)(anim + 0x4c) > 0x90000000)
+                    GameObject* anim = hud->anims[lbl_803DBA64];
+                    if ((u32)anim->anim.placementData > 0x90000000)
                     {
-                        *(u32*)(anim + 0x4c) = 0;
+                        anim->anim.placementData = NULL;
                     }
                 }
                 }
@@ -6514,10 +6520,10 @@ void pauseMenuFn_80129ee0(void)
                 case 2:
                 case 3:
                 {
-                    char* anim = hud->anims[lbl_803DBA64];
-                    if (*(u32*)(anim + 0x4c) > 0x90000000)
+                    GameObject* anim = hud->anims[lbl_803DBA64];
+                    if ((u32)anim->anim.placementData > 0x90000000)
                     {
-                        *(u32*)(anim + 0x4c) = 0;
+                        anim->anim.placementData = NULL;
                     }
                 }
                 }
@@ -6632,7 +6638,7 @@ void pauseMenuFn_80129ee0(void)
                     } cleanup;
                     GameObject** p;
                     cleanup.index = 0;
-                    p = (GameObject**)&hud->anims[0];
+                    p = &hud->anims[0];
                     for (; cleanup.index < 4; p++, cleanup.index++)
                     {
                         if (*p != 0)
@@ -6856,7 +6862,7 @@ void pauseMenuFn_80129ee0(void)
         case 4:
             if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160)
             {
-                lbl_803DD730 = (u16)getNextTaskHintText();
+                lbl_803DD730 = getNextTaskHintText();
                 lbl_803DD770 = 0;
                 lbl_803DD772 = 0;
                 pauseMenuFn_8012b77c();
@@ -6940,7 +6946,7 @@ void pauseMenuFn_80129ee0(void)
                     lbl_803DD784 = 0;
                     break;
                 case 8:
-                    charState[9] -= 1;
+                    charState->healCount -= 1;
                     playerHeal(player);
                     gameTextLoadDir(lbl_803DD8DC);
                     pauseMenuState = 2;
