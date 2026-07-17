@@ -1581,7 +1581,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0280_drcloudper.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0281_drearthcal.c"),
             Object(NonMatching, "main/dll/dll_0282_barrelgener.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/DR/dll_0283_drbarrelgr.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/DR/dll_0283_drbarrelgr.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WC/dll_028A_wcearthwalker.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_028B.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/WC/dll_028C_wcbouncycra.c", cflags=cflags_dll_noopt),

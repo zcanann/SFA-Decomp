@@ -3353,6 +3353,7 @@ main/dll/DR/dll_0283_drbarrelgr.c:
 	.text       start:0x802227EC end:0x80223004
 	.data       start:0x8032AE88 end:0x8032AEC0
 	.sdata      start:0x803DC3B0 end:0x803DC3B8
+	.sdata2     start:0x803E6CC8 end:0x803E6CD0
 
 main/dll/WC/dll_028A_wcearthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
