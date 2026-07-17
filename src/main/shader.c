@@ -1647,25 +1647,25 @@ typedef struct MapBlockCleanup
 
 void doPendingMapLoads(void)
 {
+    int cnt;
+    int* aBase;
+    int* cBase;
+    char* base;
+    MapLoadRec* savedBlocks;
+    u8 waited;
+    int doLoad;
+    int* eBase;
     int col;
     char* g2;
     int slot;
     MapLoadRec* rowCursor;
-    int* eBase;
-    u8 waited;
     int layer;
     int zb[2];
     int i;
-    char* base;
     MapLoadRec* recsCursor;
     MapLoadRec* cellCursor;
-    int doLoad;
-    int cnt;
-    MapLoadRec* savedBlocks;
     f32 dz;
     int gx, gz;
-    int* aBase;
-    int* cBase;
     int row;
     int t2;
     int k2;
