@@ -87,43 +87,44 @@ CheckpointRouteEntry* Checkpoint_find(s32 key, s32* idx_out)
 }
 
 #pragma dont_inline off
-s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out3, u8 mode, f32 fa, f32 fb)
+s32 fn_800D55BC(CheckpointRouteEntry* checkpoint, s32 linkIndex, f32* outX, f32* outY, f32* outZ, u8 mode,
+                f32 lateralOffset, f32 verticalOffset)
 {
     f32 cosB;
-    s32 local_idx;
-    s32 j;
+    s32 routeIndex;
+    s32 outputCount;
     f32 cosA;
     f32 sinA;
-    CheckpointRouteEntry* q;
+    CheckpointRouteEntry* nextCheckpoint;
     f32 sinB;
     f32 sclA;
     f32 sclB;
-    s32 i;
-    s32 ret;
-    f32* currentOutZ;
+    s32 pointIndex;
+    s32 result;
+    f32* zPoints;
 
-    ret = 1;
-    if (p == NULL)
+    result = 1;
+    if (checkpoint == NULL)
     {
         return 0;
     }
-    q = Checkpoint_find(p->forwardLinkIds[idx], &local_idx);
-    if (q == NULL)
+    nextCheckpoint = Checkpoint_find(checkpoint->forwardLinkIds[linkIndex], &routeIndex);
+    if (nextCheckpoint == NULL)
     {
-        q = Checkpoint_find(p->forwardLinkIds[1 - idx], &local_idx);
-        ret = 2;
+        nextCheckpoint = Checkpoint_find(checkpoint->forwardLinkIds[1 - linkIndex], &routeIndex);
+        result = 2;
     }
-    if (q == NULL)
+    if (nextCheckpoint == NULL)
     {
         return 0;
     }
 
-    cosA = -mathSinf(gCheckpointPi * (p->heading << 8) / gCheckpointAngleToRadians);
-    sinA = -mathCosf(gCheckpointPi * (p->heading << 8) / gCheckpointAngleToRadians);
-    cosB = -mathSinf(gCheckpointPi * (q->heading << 8) / gCheckpointAngleToRadians);
-    sinB = -mathCosf(gCheckpointPi * (q->heading << 8) / gCheckpointAngleToRadians);
-    sclA = gCheckpointWidthScale * p->width;
-    sclB = gCheckpointWidthScale * q->width;
+    cosA = -mathSinf(gCheckpointPi * (checkpoint->heading << 8) / gCheckpointAngleToRadians);
+    sinA = -mathCosf(gCheckpointPi * (checkpoint->heading << 8) / gCheckpointAngleToRadians);
+    cosB = -mathSinf(gCheckpointPi * (nextCheckpoint->heading << 8) / gCheckpointAngleToRadians);
+    sinB = -mathCosf(gCheckpointPi * (nextCheckpoint->heading << 8) / gCheckpointAngleToRadians);
+    sclA = gCheckpointWidthScale * checkpoint->width;
+    sclB = gCheckpointWidthScale * nextCheckpoint->width;
 
     if (mode == 1)
     {
@@ -131,80 +132,92 @@ s32 fn_800D55BC(CheckpointRouteEntry* p, s32 idx, f32* out1, f32* out2, f32* out
         f32 prodB;
         f32 prodC;
         f32 prodD;
-        j = 0;
-        i = 0;
-        currentOutZ = out3;
+        outputCount = 0;
+        pointIndex = 0;
+        zPoints = outZ;
         prodA = sclA * sinA;
         prodB = sclB * sinB;
         prodC = sclA * -cosA;
         prodD = sclB * -cosB;
         do
         {
-            out1[0] = p->sideOffsets[i] * prodA + p->posX;
-            out1[1] = q->sideOffsets[i] * prodB + q->posX;
-            out1[2] = 2.0f * (p->waveAmplitude * mathSinf(3.1415927f * (p->wavePhase << 8) / 32768.0f));
-            out1[3] = 2.0f * (q->waveAmplitude * mathSinf(3.1415927f * (q->wavePhase << 8) / 32768.0f));
-            out2[0] = sclA * p->heightOffsets[i] + p->posY;
-            out2[1] = sclB * q->heightOffsets[i] + q->posY;
-            out2[2] = 0.0f;
-            out2[3] = 0.0f;
-            currentOutZ[0] = p->sideOffsets[i] * prodC + p->posZ;
-            currentOutZ[1] = q->sideOffsets[i] * prodD + q->posZ;
-            currentOutZ[2] = 2.0f * (p->waveAmplitude * mathCosf(3.1415927f * (p->wavePhase << 8) / 32768.0f));
-            currentOutZ[3] = 2.0f * (q->waveAmplitude * mathCosf(3.1415927f * (q->wavePhase << 8) / 32768.0f));
-            i += 1;
-            out1 += 4;
-            out2 += 4;
-            currentOutZ += 4;
-            j += 4;
-        } while (j < 0x10);
+            outX[0] = checkpoint->sideOffsets[pointIndex] * prodA + checkpoint->posX;
+            outX[1] = nextCheckpoint->sideOffsets[pointIndex] * prodB + nextCheckpoint->posX;
+            outX[2] = 2.0f * (checkpoint->waveAmplitude *
+                              mathSinf(3.1415927f * (checkpoint->wavePhase << 8) / 32768.0f));
+            outX[3] = 2.0f * (nextCheckpoint->waveAmplitude *
+                              mathSinf(3.1415927f * (nextCheckpoint->wavePhase << 8) / 32768.0f));
+            outY[0] = sclA * checkpoint->heightOffsets[pointIndex] + checkpoint->posY;
+            outY[1] = sclB * nextCheckpoint->heightOffsets[pointIndex] + nextCheckpoint->posY;
+            outY[2] = 0.0f;
+            outY[3] = 0.0f;
+            zPoints[0] = checkpoint->sideOffsets[pointIndex] * prodC + checkpoint->posZ;
+            zPoints[1] = nextCheckpoint->sideOffsets[pointIndex] * prodD + nextCheckpoint->posZ;
+            zPoints[2] = 2.0f * (checkpoint->waveAmplitude *
+                                 mathCosf(3.1415927f * (checkpoint->wavePhase << 8) / 32768.0f));
+            zPoints[3] = 2.0f * (nextCheckpoint->waveAmplitude *
+                                 mathCosf(3.1415927f * (nextCheckpoint->wavePhase << 8) / 32768.0f));
+            pointIndex += 1;
+            outX += 4;
+            outY += 4;
+            zPoints += 4;
+            outputCount += 4;
+        } while (outputCount < 0x10);
     }
     else if (mode == 0)
     {
-        out1[0] = fa * (sclA * sinA) + p->posX;
-        out1[1] = fa * (sclB * sinB) + q->posX;
-        out1[2] = lbl_803E04E4 * (p->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out1[3] = lbl_803E04E4 * (q->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
-        out2[0] = sclA * fb + p->posY;
-        out2[1] = sclB * fb + q->posY;
+        outX[0] = lateralOffset * (sclA * sinA) + checkpoint->posX;
+        outX[1] = lateralOffset * (sclB * sinB) + nextCheckpoint->posX;
+        outX[2] = lbl_803E04E4 * (checkpoint->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (checkpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outX[3] = lbl_803E04E4 * (nextCheckpoint->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (nextCheckpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outY[0] = sclA * verticalOffset + checkpoint->posY;
+        outY[1] = sclB * verticalOffset + nextCheckpoint->posY;
         {
             f32 zero = lbl_803E04E8;
-            out2[2] = zero;
-            out2[3] = zero;
+            outY[2] = zero;
+            outY[3] = zero;
         }
-        out3[0] = fa * (sclA * -cosA) + p->posZ;
-        out3[1] = fa * (sclB * -cosB) + q->posZ;
-        out3[2] = lbl_803E04E4 * (p->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out3[3] = lbl_803E04E4 * (q->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
+        outZ[0] = lateralOffset * (sclA * -cosA) + checkpoint->posZ;
+        outZ[1] = lateralOffset * (sclB * -cosB) + nextCheckpoint->posZ;
+        outZ[2] = lbl_803E04E4 * (checkpoint->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (checkpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outZ[3] = lbl_803E04E4 * (nextCheckpoint->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (nextCheckpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
     }
     else
     {
         s32 pointIdx = mode - 2;
-        out1[0] = p->sideOffsets[pointIdx] * (sclA * sinA) + p->posX;
-        out1[1] = q->sideOffsets[pointIdx] * (sclB * sinB) + q->posX;
-        out1[2] = lbl_803E04E4 * (p->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out1[3] = lbl_803E04E4 * (q->waveAmplitude *
-                                  mathSinf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
-        out2[0] = sclA * p->heightOffsets[pointIdx] + p->posY;
-        out2[1] = sclB * q->heightOffsets[pointIdx] + q->posY;
+        outX[0] = checkpoint->sideOffsets[pointIdx] * (sclA * sinA) + checkpoint->posX;
+        outX[1] = nextCheckpoint->sideOffsets[pointIdx] * (sclB * sinB) + nextCheckpoint->posX;
+        outX[2] = lbl_803E04E4 * (checkpoint->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (checkpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outX[3] = lbl_803E04E4 * (nextCheckpoint->waveAmplitude *
+                                  mathSinf(gCheckpointPi * (nextCheckpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outY[0] = sclA * checkpoint->heightOffsets[pointIdx] + checkpoint->posY;
+        outY[1] = sclB * nextCheckpoint->heightOffsets[pointIdx] + nextCheckpoint->posY;
         {
             f32 zero = lbl_803E04E8;
-            out2[2] = zero;
-            out2[3] = zero;
+            outY[2] = zero;
+            outY[3] = zero;
         }
-        out3[0] = p->sideOffsets[pointIdx] * (sclA * -cosA) + p->posZ;
-        out3[1] = q->sideOffsets[pointIdx] * (sclB * -cosB) + q->posZ;
-        out3[2] = lbl_803E04E4 * (p->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (p->wavePhase << 8) / gCheckpointAngleToRadians));
-        out3[3] = lbl_803E04E4 * (q->waveAmplitude *
-                                  mathCosf(gCheckpointPi * (q->wavePhase << 8) / gCheckpointAngleToRadians));
+        outZ[0] = checkpoint->sideOffsets[pointIdx] * (sclA * -cosA) + checkpoint->posZ;
+        outZ[1] = nextCheckpoint->sideOffsets[pointIdx] * (sclB * -cosB) + nextCheckpoint->posZ;
+        outZ[2] = lbl_803E04E4 * (checkpoint->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (checkpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
+        outZ[3] = lbl_803E04E4 * (nextCheckpoint->waveAmplitude *
+                                  mathCosf(gCheckpointPi * (nextCheckpoint->wavePhase << 8) /
+                                           gCheckpointAngleToRadians));
     }
-    return ret;
+    return result;
 }
 
 /* Look up a checkpoint by key and emit a random local offset, then pick the
