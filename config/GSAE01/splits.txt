@@ -2962,13 +2962,11 @@ main/dll/WM/dll_020A_wmgeneralscales.c:
 	.data       start:0x80328BD0 end:0x80328C2C
 	.sdata2     start:0x803E5E98 end:0x803E5EA8
 
-main/dll/LGT/lgtcontrollight.c:
-	.text       start:0x801F4C04 end:0x801F4F88
-
-main/dll/dll_020B_firefly.c:
-	.text       start:0x801F4F88 end:0x801F568C
+main/dll/fireflygroup.c:
+	.text       start:0x801F4C04 end:0x801F568C
 	.data       start:0x80328C30 end:0x80328C68
 	.sdata      start:0x803DC128 end:0x803DC130
+	.sdata2     start:0x803E5EB0 end:0x803E5EF8
 
 main/dll/WM/dll_020C_wmspiritplace.c:
 	.text       start:0x801F568C end:0x801F654C

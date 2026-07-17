@@ -67,7 +67,7 @@ STATIC_ASSERT(offsetof(FireFlyState, messageParam) == 0x80);
 STATIC_ASSERT(sizeof(FireFlyState) == FIREFLY_EXTRA_SIZE);
 
 extern s16 lbl_803DC128;
-extern f32 lbl_803E5EA8;
+extern const f32 lbl_803E5EA8;
 extern f32 lbl_803E5ED8;
 extern f32 lbl_803E5EDC;
 extern f32 lbl_803E5EE0;

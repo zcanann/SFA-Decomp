@@ -34,6 +34,7 @@ int firefly_animEventCallback(GameObject* obj)
     return 0;
 }
 
+#pragma dont_inline on
 void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record)
 {
     record->src0X = obj->anim.localPosX;
@@ -49,23 +50,25 @@ void fn_801F4C28(GameObject* obj, LgtFireFlyRec* record)
     record->src3Y = obj->anim.localPosY;
     record->src3Z = obj->anim.localPosZ;
     record->baseX = lbl_803E5EAC;
-    record->baseY = lbl_803E5EB0;
-    record->baseZ = lbl_803E5EB4;
+    record->baseY = 0.0275f;
+    record->baseZ = 1.0f;
     record->unk68 = 0;
     record->unk67 = 0;
     record->angleStep = randomGetRange(FIREFLY_ANGLE_STEP_MIN, FIREFLY_ANGLE_STEP_MAX);
     record->angle = randomGetRange(0, FIREFLY_ANGLE_INIT_MAX);
     record->ampMax = FIREFLY_AMP_MAX;
     record->unk66 = 4;
-    record->radiusMin = lbl_803E5EB8;
-    record->radius = lbl_803E5EBC;
+    record->radiusMin = 50.0f;
+    record->radius = 40.0f;
     record->posX = obj->anim.localPosX;
     record->posY = obj->anim.localPosY;
     record->posZ = obj->anim.localPosZ;
     record->firstFrame = 1;
-    record->unk78 = lbl_803E5EC0;
+    record->unk78 = 1200.0f;
 }
+#pragma dont_inline reset
 
+#pragma dont_inline on
 void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
 {
     struct
@@ -80,7 +83,7 @@ void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
         f32 scratch3;
     } rot;
 
-    record->offX = lbl_803E5EC4;
+    record->offX = 0.0f;
     if (record->firstFrame != 0)
     {
         record->offY = (f32)(s32)record->ampMax;
@@ -90,9 +93,9 @@ void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
     {
         record->offY = (f32)(s32)randomGetRange(0, record->ampMax);
     }
-    if (record->radius < lbl_803E5EC8)
+    if (record->radius < 21.0f)
     {
-        record->offZ = lbl_803E5EC4;
+        record->offZ = 0.0f;
     }
     else
     {
@@ -100,10 +103,10 @@ void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
                        (f32)(s32)randomGetRange(FIREFLY_RADIUS_MARGIN, (s16)(s32)record->radius);
     }
     record->angle += (s16)randomGetRange(FIREFLY_ANGLE_ADVANCE_MIN, FIREFLY_ANGLE_ADVANCE_MAX);
-    rot.scratch1 = lbl_803E5EC4;
-    rot.scratch2 = lbl_803E5EC4;
-    rot.scratch3 = lbl_803E5EC4;
-    rot.scratch0 = lbl_803E5EB4;
+    rot.scratch1 = 0.0f;
+    rot.scratch2 = 0.0f;
+    rot.scratch3 = 0.0f;
+    rot.scratch0 = 1.0f;
     rot.rotY = 0;
     rot.rotX = 0;
     rot.rotZ = record->angle;
@@ -112,6 +115,7 @@ void fn_801F4D54(GameObject* obj, LgtFireFlyRec* record)
     record->offY += record->posY;
     record->offZ += record->posZ;
 }
+#pragma dont_inline reset
 
 void fn_801F4ECC(GameObject* obj, BoulderShakeRec* record)
 {
@@ -124,7 +128,7 @@ void fn_801F4ECC(GameObject* obj, BoulderShakeRec* record)
     record->histX2 = record->histX3;
     record->histY2 = record->histY3;
     record->histZ2 = record->histZ3;
-    record->amplitude = lbl_803E5ED8 * (f32)(s32)randomGetRange(0xa0, 0xb4);
+    record->amplitude = 0.00015f * (f32)(s32)randomGetRange(0xa0, 0xb4);
     record->histX3 = record->liveX;
     record->histY3 = record->liveY;
     record->histZ3 = record->liveZ;

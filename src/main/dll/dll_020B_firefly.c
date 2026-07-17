@@ -90,14 +90,14 @@ void FireFlyFn_801f4f88(GameObject* obj)
     int player = (int)Obj_GetPlayerObject();
     if ((int)objAnim->alpha < FIREFLY_ALPHA_OPAQUE)
     {
-        int newAlpha = (int)(lbl_803E5EDC * timeDelta + (f32)(int)objAnim->alpha); /* 2.0f */
+        int newAlpha = (int)(2.0f * timeDelta + (f32)(int)objAnim->alpha);
         if (newAlpha > FIREFLY_ALPHA_OPAQUE)
             newAlpha = FIREFLY_ALPHA_OPAQUE;
         objAnim->alpha = newAlpha;
     }
-    if (state->splineT > lbl_803E5EB4) /* 1.0f */
+    if (state->splineT > 1.0f)
     {
-        state->splineT = state->splineT - lbl_803E5EB4;
+        state->splineT = state->splineT - 1.0f;
         if (state->pathAge >= 4)
         {
             state->pathAge += 1;
@@ -115,7 +115,7 @@ void FireFlyFn_801f4f88(GameObject* obj)
         state->splineX[2] = state->splineX[3];
         state->splineY[2] = state->splineY[3];
         state->splineZ[2] = state->splineZ[3];
-        state->splineSpeed = lbl_803E5ED8 * (f32)(int)randomGetRange(0xa0, 0xb4); /* 0.00015f */
+        state->splineSpeed = 0.00015f * (f32)(int)randomGetRange(0xa0, 0xb4);
         state->splineX[3] = state->targetX;
         state->splineY[3] = state->targetY;
         state->splineZ[3] = state->targetZ;
@@ -162,9 +162,9 @@ void FireFlyFn_801f4f88(GameObject* obj)
                 ->spawnObject((void*)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL, FIREFLY_PARTFX_KIND,
                               FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
-        if ((curAlpha = state->proximityAlpha) < (maxAlpha = lbl_803E5EE0)) /* 0.003f */
+        if ((curAlpha = state->proximityAlpha) < (maxAlpha = 0.003f))
         {
-            state->proximityAlpha = curAlpha + lbl_803E5EE4; /* 0.00001f */
+            state->proximityAlpha += 0.00001f;
             if (state->proximityAlpha > maxAlpha)
             {
                 state->proximityAlpha = maxAlpha;
@@ -176,9 +176,9 @@ void FireFlyFn_801f4f88(GameObject* obj)
         f32 minAlpha;
         f32 curAlpha;
 
-        if ((curAlpha = state->proximityAlpha) > (minAlpha = lbl_803E5EE8)) /* 0.001f */
+        if ((curAlpha = state->proximityAlpha) > (minAlpha = 0.001f))
         {
-            state->proximityAlpha = curAlpha - lbl_803E5EE4;
+            state->proximityAlpha = curAlpha - 0.00001f;
             if (state->proximityAlpha < minAlpha)
             {
                 state->proximityAlpha = minAlpha;
@@ -189,9 +189,9 @@ void FireFlyFn_801f4f88(GameObject* obj)
         f32 dy = (obj)->anim.localPosY - ((GameObject*)player)->anim.localPosY;
         if ((state->flags & FIREFLY_FLAG_PLAYER_TOUCHED) == 0)
         {
-            if (dy < lbl_803E5EEC && dy > lbl_803E5EC4) /* 35.0f / 0.0f */
+            if (dy < 35.0f && dy > 0.0f)
             {
-                if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) < lbl_803E5EF0) /* 225.0f */
+                if (getXZDistance(&(obj)->anim.worldPosX, (f32*)(player + 0x18)) < 225.0f)
                 {
                     state->flags = (u8)(state->flags | FIREFLY_FLAG_PLAYER_TOUCHED);
                     if (mainGetBit(FIREFLY_FIRST_TOUCH_BIT) == 0)
@@ -258,7 +258,7 @@ void firefly_update(GameObject* obj)
         {
             FireFlyState* st = obj->extra;
             obj->anim.flags = (s16)(obj->anim.flags | FIREFLY_OBJFLAG_HIDDEN);
-            st->despawnTimer = 180.0f;
+            st->despawnTimer = lbl_803E5EA8;
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_A);
             gameBitIncrement(FIREFLY_COLLECT_COUNT_BIT_B);
             Sfx_PlayFromObject((int)obj, SFXTRIG_lockoff22);
@@ -284,16 +284,16 @@ void firefly_update(GameObject* obj)
     {
         if (timerCountDown(&state->lifeTimer) != 0)
         {
-            state->despawnTimer = 180.0f;
+            state->despawnTimer = lbl_803E5EA8;
         }
-        if (state->despawnTimer > lbl_803E5EC4) /* 0.0f */
+        if (state->despawnTimer > 0.0f)
         {
             state->despawnTimer -= timeDelta;
             if (state->despawnTimer > lbl_803DC128) /* 170 */
             {
-                itemPickupDoParticleFxLegacy(obj, lbl_803E5EDC, 4, 5);
+                itemPickupDoParticleFxLegacy(obj, 2.0f, 4, 5);
             }
-            if (state->despawnTimer <= lbl_803E5EC4)
+            if (state->despawnTimer <= 0.0f)
             {
                 Obj_FreeObject(obj);
             }
