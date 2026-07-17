@@ -2288,6 +2288,7 @@ main/dll/DIM/dll_01BE_dimlava.c:
 	.text       start:0x801AF9E4 end:0x801B02BC
 	.rodata     start:0x802C2318 end:0x802C2328
 	.data       start:0x80323B08 end:0x80323B48
+	.sdata2     start:0x803E47D0 end:0x803E480C
 
 main/dll/DIM/dll_01BF_dimlavaball.c:
 	.text       start:0x801B02BC end:0x801B0670
