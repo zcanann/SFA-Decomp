@@ -2756,7 +2756,8 @@ void fn_8006CB24(void)
     lbl_803DCFBC = 0;
 }
 #pragma opt_loop_invariants off
-#pragma opt_propagation off
+#pragma opt_propagation reset
+#pragma opt_propagation on
 #pragma peephole reset
 #pragma peephole off
 #pragma ppc_unroll_speculative on
