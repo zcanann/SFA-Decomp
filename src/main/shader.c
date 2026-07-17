@@ -2867,16 +2867,15 @@ int objUpdateOpacity(GameObject* obj)
 #pragma ppc_unroll_factor_limit 4
 void mapDebugRender(int* state)
 {
+    int y1;
+    int y0;
     int sz;
-    int wz;
     char* blk;
     int dy;
     int sx;
-    int y1;
     int y0a;
     int bz;
     int ci;
-    int y0;
     int wx;
     f32 cy;
     int bx;
@@ -2890,6 +2889,7 @@ void mapDebugRender(int* state)
     int cell;
     int v;
     int n;
+    int wz;
 
     if (lbl_803DCDED != 0)
     {
@@ -2934,8 +2934,8 @@ void mapDebugRender(int* state)
             else
                 step = 80;
             row = dy / step;
-            cz = wz / 80;
             cx = wx / 80;
+            cz = wz / 80;
             cell = row * 0x40;
             cell += cz * 8;
             cell += cx;
