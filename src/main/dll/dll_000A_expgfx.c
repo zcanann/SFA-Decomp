@@ -463,22 +463,21 @@ int expgfxGetSlot(short* poolIndexOut, short* slotIndexOut, short slotType, int 
     poolSlotTypeIds[0] = &gExpgfxStaticPoolSlotTypeIds[0];
     poolActiveCounts = runtime->poolActiveCounts;
     activeCountWalk = poolActiveCounts;
-    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT; batchGroup++)
+    for (batchGroup = 0; batchGroup < EXPGFX_POOL_SEARCH_BATCH_COUNT;
+         sourceIdWalk[0] += EXPGFX_POOL_SEARCH_BATCH_SIZE,
+             activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE, batchGroup++)
     {
-        for (batchSlot = 0; batchSlot < EXPGFX_POOL_SEARCH_BATCH_SIZE; batchSlot++)
+        for (batchSlot = 0; batchSlot < EXPGFX_POOL_SEARCH_BATCH_SIZE;
+             batchSlot++, poolSlotTypeIds[0]++, searchIndex++)
         {
             if ((sourceIdWalk[0][batchSlot] == sourceId) && (slotType == *poolSlotTypeIds[0]) &&
                 (activeCountWalk[batchSlot] < EXPGFX_SLOTS_PER_POOL))
             {
-                foundPoolIndex = (s16)searchIndex;
+                foundPoolIndex = searchIndex;
                 foundPool = 1;
                 goto poolSearchDone;
             }
-            poolSlotTypeIds[0]++;
-            searchIndex++;
         }
-        sourceIdWalk[0] += EXPGFX_POOL_SEARCH_BATCH_SIZE;
-        activeCountWalk += EXPGFX_POOL_SEARCH_BATCH_SIZE;
     }
 poolSearchDone:
 
@@ -486,7 +485,7 @@ poolSearchDone:
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
-        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * 4);
+        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * sizeof(u32));
         currentMask = *activeMaskPtr;
         for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
@@ -509,7 +508,7 @@ poolSearchDone:
         {
             if (*poolActiveCounts <= 0)
             {
-                foundPoolIndex = (s16)searchIndex;
+                foundPoolIndex = searchIndex;
                 foundPool = 1;
                 runtime->poolActiveCounts[searchIndex] = 0;
                 break;
@@ -521,7 +520,7 @@ poolSearchDone:
         searchIndex = preferredPoolIndex;
         if (runtime->poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL)
         {
-            foundPoolIndex = (s16)preferredPoolIndex;
+            foundPoolIndex = preferredPoolIndex;
             foundPool = 1;
         }
     }
@@ -530,7 +529,7 @@ poolSearchDone:
     {
         slotIndex = 0;
         chosenPool = foundPoolIndex;
-        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * 4);
+        activeMaskPtr = (u32*)((u8*)runtime->poolActiveMasks + chosenPool * sizeof(u32));
         currentMask = *activeMaskPtr;
         for (; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++)
         {
