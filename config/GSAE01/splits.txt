@@ -1386,11 +1386,15 @@ main/dll/hoodedzyck.c:
 	.text       start:0x80156D44 end:0x80157988
 
 main/dll/firecrawler.c:
-	.text       start:0x80157988 end:0x8015A52C
+	.text       start:0x80157988 end:0x8015983C
 	.data       start:0x8031FAE8 end:0x8031FD58
 	.bss        start:0x803AC4A8 end:0x803AC528
 	.sdata      start:0x803DBCE0 end:0x803DBD40
 	.sbss       start:0x803DDA70 end:0x803DDA78
+
+main/dll/hagabon_mk2.c:
+	.text       start:0x8015983C end:0x8015A52C
+	.sdata2     start:0x803E2C28 end:0x803E2C30
 
 main/dll/snowworm.c:
 	.text       start:0x8015A52C end:0x8015AD60

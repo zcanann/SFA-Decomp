@@ -1170,6 +1170,7 @@ config.libs = [
             Object(MatchingFor("GSAE01"), "main/dll/duster_wb.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/hoodedzyck.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/firecrawler.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/hagabon_mk2.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/snowworm.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/dll_00CA_icebaddie.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/dll_00CE_dllce.c", cflags=cflags_dll_noopt),
