@@ -35,7 +35,6 @@
 
 #define DLL199_MAP_SHRINE 0xb /* NW shrine map-event id (setMapAct) */
 
-extern f32 lbl_803E5158;
 
 /* Env-fx ids activated per anim seq event (getEnvfxAct 3rd arg):
  * A on event 1, B on event 2 (default id when no override is set). */
@@ -46,13 +45,6 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern int* gTitleMenuControlInterface;
 u32 lbl_803DDBD8;
-extern f32 lbl_803E515C;
-extern f32 lbl_803E5160;
-extern f32 lbl_803E5164;
-extern f32 lbl_803E5168;
-extern f32 lbl_803E516C;
-extern f32 lbl_803E5170;
-extern f32 lbl_803E5174;
 void dll_199_initialise(void);
 void dll_199_release(void);
 void dll_199_init(GameObject* obj, int def);
@@ -218,7 +210,7 @@ void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
     if (v != 0)
-        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, lbl_803E5158);
+        objRenderModelAndHitVolumes(p1, p2, p3, p4, p5, 1.0f);
 }
 void dll_199_hitDetect(void)
 {
@@ -240,7 +232,7 @@ void dll_199_update(int obj)
 
     state = ((GameObject*)obj)->extra;
     player = Obj_GetPlayerObject();
-    dist = lbl_803E515C;
+    dist = 1000.0f;
     ((GameObject*)obj)->anim.worldPosX = ((GameObject*)obj)->anim.localPosX;
     ((GameObject*)obj)->anim.worldPosY = ((GameObject*)obj)->anim.localPosY;
     ((GameObject*)obj)->anim.worldPosZ = ((GameObject*)obj)->anim.localPosZ;
@@ -308,26 +300,26 @@ void dll_199_update(int obj)
     else
     {
         found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_1, player, &dist);
-        if ((found != 0) && (dist < lbl_803E5160) && (dist > lbl_803E5164))
+        if ((found != 0) && (dist < 300.0f) && (dist > 100.0f))
         {
             dz = found->anim.localPosZ - player->anim.localPosZ;
-            if (dz <= lbl_803E5168)
+            if (dz <= 0.0f)
             {
-                if (dz < lbl_803E5168)
+                if (dz < 0.0f)
                 {
-                    dz = dz * lbl_803E516C;
+                    dz *= -1.0f;
                 }
                 if (state[4] != 0x1e)
                 {
                     state[4] = 0x1e;
                 }
-                brightness = (int)((f32)state[4] * ((dz - lbl_803E5164) / lbl_803E5170));
+                brightness = (int)((f32)state[4] * ((dz - 100.0f) / 200.0f));
                 if ((s16)brightness < 1)
                 {
                     brightness = 1;
                 }
                 (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(3, brightness & 0xff);
-                brightness = (int)((f32)state[2] * ((lbl_803E5170 - (dz - lbl_803E5164)) / *(f32*)&lbl_803E5170));
+                brightness = (int)((f32)state[2] * ((200.0f - (dz - 100.0f)) / 200.0f));
                 if ((s16)brightness < 1)
                 {
                     brightness = 1;
@@ -401,7 +393,7 @@ void dll_199_update(int obj)
                                                                                          0);
             state[5] = 1;
             (*gObjectTriggerInterface)->runSequence(2, (void*)obj, 0xffffffff);
-            dist = lbl_803E5174;
+            dist = 10000.0f;
             found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
             if (found != 0)
             {
@@ -424,7 +416,7 @@ void dll_199_update(int obj)
             ((Dll199State*)state)->unk10 = 0;
             break;
         case 3:
-            dist = lbl_803E5174;
+            dist = 10000.0f;
             found = ObjGroup_FindNearestObjectLegacy(DLL199_TARGET_OBJGROUP_2, (GameObject*)obj, &dist);
             if (found != 0)
             {

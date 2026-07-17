@@ -82,7 +82,7 @@ u8 cmbsrc_shouldActivate(CmbSrcObject* obj, CmbSrcState* sourceState, CmbSrcMapD
     if ((mapData->behaviorFlags & CMBSRC_BEHAVIOR_HIT_MODE_MASK) == 0x10)
     {
         f32 timer = sourceState->inactiveTimer;
-        f32 limit = lbl_803E7360;
+        f32 limit = 0.0f;
         if (timer != limit)
         {
             sourceState->inactiveTimer = timer - timeDelta;
@@ -162,15 +162,15 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     viewSlot = Camera_GetCurrentViewSlot();
     if (sourceState->active == 0)
     {
-        sourceState->radius = lbl_803E7374 * setup->radius;
+        sourceState->radius = 2.0f * setup->radius;
     }
     else
     {
-        f32 t = sourceState->hitCharge / lbl_803E7378;
-        f32 radiusScaled = setup->radius * lbl_803E737C;
-        f32 fullRadius = lbl_803E7374 * setup->radius;
+        f32 t = sourceState->hitCharge / 15.0f;
+        f32 radiusScaled = setup->radius / 4.0f;
+        f32 fullRadius = 2.0f * setup->radius;
         sourceState->radius += interpolate(t * (fullRadius - radiusScaled) + radiusScaled - sourceState->radius,
-                                           lbl_803E7380, timeDelta);
+                                           0.1f, timeDelta);
     }
         dist = Vec_distance(&viewSlot->worldX, &cmbsrc->objAnim.worldPosX);
     if (sourceState->active == 1)
@@ -189,7 +189,7 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     }
     sourceState->effectTimer -= timeDelta;
     sourceState->pulseTimer -= timeDelta;
-    if (sourceState->effectTimer <= lbl_803E7360)
+    if (sourceState->effectTimer <= 0.0f)
     {
         if (setup->effectMode < CMBSRC_EFFECT_MODE_COUNT)
         {
@@ -216,11 +216,11 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
         }
         if (sourceState->active == 1)
         {
-            sourceState->effectTimer += lbl_803E7384;
+            sourceState->effectTimer += 10.0f;
         }
         else
         {
-            sourceState->effectTimer += lbl_803E7378;
+            sourceState->effectTimer += 15.0f;
         }
     }
     if ((cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED) || (sourceState->flags & CMBSRC_STATE_EXTERNAL_ACTIVE))
@@ -236,13 +236,13 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
                 }
             }
             objfx_spawnLightPulseLegacy((GameObject*)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode,
-                                  (f32)(u32)setup->pulseDistance / lbl_803E7388, 0);
+                                  (f32)(u32)setup->pulseDistance / 255.0f, 0);
             break;
         case CMBSRC_SEQ_DEFAULT:
         default:
             if (sourceState->active == 1)
             {
-                if (sourceState->pulseTimer <= lbl_803E7360)
+                if (sourceState->pulseTimer <= 0.0f)
                 {
                     if (CMBSRC_SUBMODE_COUNT > setup->pulseSubMode)
                     {
@@ -251,33 +251,33 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
                             subMode = setup->pulseSubMode;
                         }
                     }
-                    sourceState->pulseTimer += lbl_803E738C;
+                    sourceState->pulseTimer += 1.0f;
                 }
             }
-            vec[0] = lbl_803E7360;
+            vec[0] = 0.0f;
             if (cmbsrc->objAnim.seqId == CMBSRC_SEQ_TWALL)
             {
                 if (sourceState->active == 0)
                 {
-                    vec[1] = lbl_803E7390;
+                    vec[1] = -5.0f;
                 }
                 else
                 {
-                    vec[1] = lbl_803E7394;
+                    vec[1] = 3.5f;
                 }
             }
             else
             {
                 if (sourceState->active == 0)
                 {
-                    vec[1] = lbl_803E7390;
+                    vec[1] = -5.0f;
                 }
                 else
                 {
-                    vec[1] = lbl_803E7360;
+                    vec[1] = 0.0f;
                 }
             }
-            vec[2] = *(f32*)&lbl_803E7360;
+            vec[2] = 0.0f;
             fn_80098B18Legacy((int)cmbsrc, sourceState->radius, colorIdx, effectMode, subMode, vec);
             break;
         }
@@ -285,14 +285,14 @@ void cmbsrc_updateVisuals(CmbSrcObject* cmbsrc, CmbSrcState* sourceState)
     if (sourceState->active == 1 && (setup->behaviorFlags & CMBSRC_BEHAVIOR_ACTIVE_PARTICLES))
     {
         sourceState->particleTimer -= timeDelta;
-        if (sourceState->particleTimer <= lbl_803E7360)
+        if (sourceState->particleTimer <= 0.0f)
         {
             if (cmbsrc->objectFlags & CMBSRC_OBJFLAG_RENDERED)
             {
                 param[2] = sourceState->radius;
                 (*gPartfxInterface)->spawnObject(cmbsrc, CMBSRC_PARTICLE_EFFECT_ID, param, 2, -1, NULL);
             }
-            sourceState->particleTimer += lbl_803E7398;
+            sourceState->particleTimer += 5.0f;
         }
     }
 }
@@ -370,7 +370,7 @@ void cmbsrc_render(CmbSrcObject* cmbsrc, int p2, int p3, int p4, int p5, s8 visi
         }
         if ((setup->flags & CMBSRC_MAP_RENDER_MODEL) != 0)
         {
-            objRenderModelAndHitVolumes((int)cmbsrc, p2, p3, p4, p5, lbl_803E738C);
+            objRenderModelAndHitVolumes((int)cmbsrc, p2, p3, p4, p5, 1.0f);
         }
     }
 }
@@ -388,18 +388,18 @@ void cmbsrc_hitDetect(CmbSrcObject* cmbsrc)
         if (state->priorityHitType == CMBSRC_HIT_TYPE_DAMAGE)
         {
             state->hitCharge -= 1;
-            state->hitRecoverTimer = lbl_803E7384;
+            state->hitRecoverTimer = 10.0f;
         }
         {
             f32 timer = state->hitRecoverTimer;
-            f32 limit = lbl_803E7360;
+            f32 limit = 0.0f;
             if (timer != limit)
             {
                 state->hitRecoverTimer = timer - timeDelta;
                 if (state->hitRecoverTimer <= limit)
                 {
                     state->hitCharge += 1;
-                    state->hitRecoverTimer = lbl_803E7384;
+                    state->hitRecoverTimer = 10.0f;
                 }
             }
         }
@@ -430,7 +430,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             state->active = 0;
             if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(state->light, 0, lbl_803E7374);
+                modelLightStruct_setEnabled(state->light, 0, 2.0f);
             }
             if (setup->flags & CMBSRC_MAP_LOOP_SOUND)
             {
@@ -478,7 +478,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
             state->active = 1;
             if (state->light != NULL)
             {
-                modelLightStruct_setEnabled(state->light, 1, lbl_803E7374);
+                modelLightStruct_setEnabled(state->light, 1, 2.0f);
             }
             if (!state->hitFlags.disabled)
             {
@@ -489,7 +489,7 @@ int cmbsrc_update(CmbSrcObject* cmbsrc)
                 mainSetBits(setup->gameBit, 1);
             }
             state->hitCharge = CMBSRC_MAX_HIT_CHARGE;
-            state->inactiveTimer = lbl_803E7360;
+            state->inactiveTimer = 0.0f;
         }
         break;
     }

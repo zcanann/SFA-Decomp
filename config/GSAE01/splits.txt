@@ -349,12 +349,14 @@ main/dll/dll_0020_effect7.c:
 	.data       start:0x80310A78 end:0x80310B50
 	.sdata      start:0x803DB800 end:0x803DB810
 	.sbss       start:0x803DD380 end:0x803DD390
+	.sdata2     start:0x803DFCD8 end:0x803DFD98
 
 main/dll/dll_0021_effect8.c:
 	.text       start:0x800BF978 end:0x800C11CC
 	.data       start:0x80310B50 end:0x80310BD8
 	.sdata      start:0x803DB810 end:0x803DB820
 	.sbss       start:0x803DD390 end:0x803DD3A0
+	.sdata2     start:0x803DFD98 end:0x803DFE28
 
 main/dll/dll_0022_effect9.c:
 	.text       start:0x800C11CC end:0x800C291C
@@ -1055,6 +1057,7 @@ main/dll/dll_004D_cameramodenpcspeak.c:
 	.data       start:0x80319DA8 end:0x80319E08
 	.sdata      start:0x803DB9A8 end:0x803DB9C8
 	.sbss       start:0x803DD580 end:0x803DD588
+	.sdata2     start:0x803E19D0 end:0x803E1A24
 
 main/dll/dll_004E_cameramodeworldmap.c:
 	.text       start:0x8010E51C end:0x8010F2F8
@@ -2643,6 +2646,7 @@ main/dll/dll_0199_dll199.c:
 	.text       start:0x801CA9C0 end:0x801CB7A8
 	.data       start:0x80326550 end:0x803265DC
 	.sbss       start:0x803DDBD8 end:0x803DDBE0
+	.sdata2     start:0x803E5158 end:0x803E5180
 
 main/dll/dll_019A_dll19a.c:
 	.text       start:0x801CB7A8 end:0x801CBA98
@@ -3036,6 +3040,7 @@ main/dll/dll_0200_dll200.c:
 	.text       start:0x801F20D4 end:0x801F2E80
 	.rodata     start:0x802C2470 end:0x802C2488
 	.data       start:0x80328898 end:0x80328A68
+	.sdata2     start:0x803E5D98 end:0x803E5DC4
 
 main/dll/WM/dll_0201_wmcolrise.c:
 	.text       start:0x801F2E80 end:0x801F30DC
@@ -3416,6 +3421,7 @@ main/dll/dll_0266_kytesmum.c:
 	.rodata     start:0x802C2578 end:0x802C2590
 	.data       start:0x8032A7C0 end:0x8032A8B0
 	.sdata      start:0x803DC2C8 end:0x803DC2D0
+	.sdata2     start:0x803E6980 end:0x803E69A4
 
 main/dll/DR/dll_0265_drcreator.c:
 	.text       start:0x80219A88 end:0x8021A008
@@ -3710,6 +3716,7 @@ main/dll/dll_02B1_cmbsrc.c:
 	.text       start:0x80236298 end:0x80237574
 	.data       start:0x8032BD00 end:0x8032BDE8
 	.sdata      start:0x803DC3E0 end:0x803DC3E8
+	.sdata2     start:0x803E7358 end:0x803E73C4
 
 main/dll/dll_02B2_dustmotesou.c:
 	.text       start:0x80237574 end:0x80237808

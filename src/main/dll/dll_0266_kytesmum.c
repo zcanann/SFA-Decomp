@@ -228,14 +228,14 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg)
             (*gObjectTriggerInterface)->runSequence(randomGetRange(0, 1), (void*)obj, -1);
         }
     }
-    if ((tricky != 0 && Vec_xzDistance(&(obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) < gKytesMumFleeDistance) ||
+    if ((tricky != 0 && Vec_xzDistance(&(obj)->anim.worldPosX, (f32*)((char*)tricky + 0x18)) < 40.0f) ||
         (player != 0 &&
-         Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < gKytesMumFleeDistance))
+         Vec_xzDistance(&(obj)->anim.worldPosX, &((GameObject*)player)->anim.worldPosX) < 40.0f))
     {
         if ((obj)->anim.currentMove != 9)
         {
-            ObjAnim_SetCurrentMove((int)obj, 9, lbl_803E698C, 0);
-            runtime->animSpeed = lbl_803E6990;
+            ObjAnim_SetCurrentMove((int)obj, 9, 0.0f, 0);
+            runtime->animSpeed = 0.006f;
             if (tricky != 0)
             {
                 (*(void (**)(int*, int, int))((char*)*(void**)*(void**)((char*)tricky + 0x68) + 0x34))(tricky, 0, 0);
@@ -317,9 +317,10 @@ void kytesmum_free(int obj)
 
 void kytesmum_render(void* obj, int p2, int p3, int p4, int p5, char visible)
 {
+    f32 scale = 1.0f;
     if (visible != 0)
     {
-        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, (double)lbl_803E6994);
+        objRenderModelAndHitVolumesFwdDoubleLegacy(obj, p2, p3, p4, p5, scale);
     }
 }
 
@@ -338,7 +339,7 @@ void kytesmum_update(GameObject* obj)
     short moveIdx;
     int nearest;
 
-    nearDist = gKytesMumNearestSearchDist;
+    nearDist = 200.0f;
     if (runtime->questComplete == 0)
     {
         if (runtime->updateCallback((int)obj) != 0)
@@ -361,17 +362,17 @@ void kytesmum_update(GameObject* obj)
         logPrintf(sKytesMumYawDiffMessage);
         if (kytesMum->currentMove != runtime->moveSet->moves[2])
         {
-            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
+            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[2], 0.0f, 0);
         }
         kytesMum->yaw = (s16)(kytesMum->yaw + ((diff + 1) >> 4));
-        runtime->animSpeed = lbl_803E699C * (f32)(diff / 1024);
+        runtime->animSpeed = 0.01f * (f32)(diff / 1024);
         absDiff = diff;
         absDiff = (absDiff >= 0) ? absDiff : -absDiff;
         if (absDiff < 0x400)
         {
             kytesMum->yaw = (s16)(setup->yaw << 8);
-            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[randomGetRange(0, 1)], lbl_803E698C, 0);
-            runtime->animSpeed = lbl_803E699C;
+            ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[randomGetRange(0, 1)], 0.0f, 0);
+            runtime->animSpeed = 0.01f;
         }
     }
     if ((s16)(runtime->idleSfxTimer -= framesThisStep) < 0)
@@ -384,8 +385,8 @@ void kytesmum_update(GameObject* obj)
                                                                     (ObjAnimEventList*)runtime->animEvents) != 0)
     {
         moveIdx = (s16)((int)randomGetRange(0, 7) != 0 ? 0 : ((int)randomGetRange(0, 1) != 0 ? 1 : 4));
-        ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
-        runtime->animSpeed = (moveIdx == 0) ? lbl_803E699C : lbl_803E69A0;
+        ObjAnim_SetCurrentMove((int)obj, runtime->moveSet->moves[moveIdx], 0.0f, 0);
+        runtime->animSpeed = (moveIdx == 0) ? 0.01f : 0.005f;
     }
     kytesmum_playAnimationEventSfx((int)obj, runtime->animEvents, runtime->eventSfxTable);
     characterDoEyeAnimsState(obj, runtime->eyeAnimState);
@@ -441,10 +442,10 @@ void kytesmum_init(GameObject* obj, KytesMumSetup* setup)
         break;
     }
     runtime->idleSfxTable = (ObjSoundDef*)&moveSets[3];
-    runtime->animSpeed = lbl_803E699C;
+    runtime->animSpeed = 0.01f;
     startMove = randomGetRange(0, 1) * 2;
     startMove = *(s16*)((char*)runtime->moveSet + startMove);
-    ObjAnim_SetCurrentMove((int)obj, startMove, lbl_803E698C, 0);
+    ObjAnim_SetCurrentMove((int)obj, startMove, 0.0f, 0);
     kytesMum->objectFlags |= KYTESMUM_OBJFLAG_HITDETECT_DISABLED;
 }
 

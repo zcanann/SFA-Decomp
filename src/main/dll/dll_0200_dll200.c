@@ -44,15 +44,8 @@ STATIC_ASSERT(sizeof(Dll200State) == 0x28);
  * which suspends the normal map-act scripted update for that tick. */
 #define DLL200_MODE_HITREACTING 0x80
 
-extern f32 lbl_803E5DC0;
-extern f32 lbl_803E5D98;
 const ItemIdSet3 gArwingAttachmentItemSetWander = {0x166, 0x167, 0x256};
 const ItemIdSet3 gArwingAttachmentItemSetIdle = {0x166, 0x167, 0x256};
-extern f32 lbl_803E5D9C;
-extern f32 lbl_803E5DA8;
-extern f32 lbl_803E5DAC;
-extern f32 lbl_803E5DB0;
-extern f32 lbl_803E5DB4;
 void dll_200_update(int obj);
 extern ArwAttachTarget gArwingAttachmentTargets[];
 extern char sArwingAttachmentDiffFormat[9];
@@ -78,18 +71,18 @@ void fn_801F20D4(GameObject* obj)
     {
         if ((obj)->anim.currentMove != 7)
         {
-            ObjAnim_SetCurrentMove((int)obj, 7, lbl_803E5D98, 0);
+            ObjAnim_SetCurrentMove((int)obj, 7, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
                                                                      NULL);
     }
     else
     {
         if ((obj)->anim.currentMove != 2)
         {
-            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
+            ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
         }
-        ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+        ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
                                                                      NULL);
     }
     if ((*(u8*)&(obj)->anim.resetHitboxMode & INTERACT_FLAG_ACTIVATED) != 0 && mainGetBit(763) == 0)
@@ -197,7 +190,7 @@ void fn_801F2290(int obj)
                 }
                 else
                 {
-                    ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].moveId, lbl_803E5D98, 0);
+                    ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].moveId, 0.0f, 0);
                     state->animSpeed = gArwingAttachmentTargets[state->prevMode].speed;
                     state->mode = 13;
                 }
@@ -210,7 +203,7 @@ void fn_801F2290(int obj)
                     if ((f32)(int)((GameObject*)obj)->anim.currentMove ==
                         gArwingAttachmentTargets[state->prevMode].moveId)
                     {
-                        ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].altMoveId, lbl_803E5D98,
+                        ObjAnim_SetCurrentMove(obj, gArwingAttachmentTargets[state->prevMode].altMoveId, 0.0f,
                                                0);
                         state->animSpeed = gArwingAttachmentTargets[state->prevMode].speed;
                     }
@@ -232,10 +225,10 @@ void fn_801F2290(int obj)
                 {
                     if (((GameObject*)obj)->anim.currentMove != 59)
                     {
-                        ObjAnim_SetCurrentMove(obj, 59, lbl_803E5D98, 0);
-                        state->animSpeed = lbl_803E5DA8;
+                        ObjAnim_SetCurrentMove(obj, 59, 0.0f, 0);
+                        state->animSpeed = 0.04f;
                     }
-                    spd = lbl_803E5DAC;
+                    spd = 0.25f;
                     ((GameObject*)obj)->anim.velocityX = spd * (dx / dist);
                     ((GameObject*)obj)->anim.velocityZ = spd * (dy / dist);
                     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, spd, &state->animSpeed);
@@ -244,8 +237,8 @@ void fn_801F2290(int obj)
                 {
                     if (((GameObject*)obj)->anim.currentMove != 12)
                     {
-                        ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
-                        state->animSpeed = lbl_803E5DB0;
+                        ObjAnim_SetCurrentMove(obj, 12, 0.0f, 0);
+                        state->animSpeed = 0.01f;
                     }
                     if (diff > 0)
                     {
@@ -256,11 +249,11 @@ void fn_801F2290(int obj)
                         ((GameObject*)obj)->anim.rotX = (s16)(((GameObject*)obj)->anim.rotX - framesThisStep * 300);
                     }
                 }
-                if (dist < lbl_803E5DB4)
+                if (dist < 4.0f)
                 {
                     state->prevMode = state->mode;
                     state->mode = 12;
-                    spd = lbl_803E5D98;
+                    spd = 0.0f;
                     ((GameObject*)obj)->anim.velocityX = spd;
                     ((GameObject*)obj)->anim.velocityZ = spd;
                 }
@@ -283,9 +276,9 @@ void fn_801F27E4(GameObject* obj)
     state = *(int*)&(obj)->extra;
     if ((obj)->anim.currentMove != 2)
     {
-        ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5D98, 0);
+        ObjAnim_SetCurrentMove((int)obj, 2, 0.0f, 0);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+    ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
                                                                  NULL);
     ((Dll200State*)state)->latch24 = 1;
     if (((Dll200State*)state)->latch24 == 0)
@@ -478,10 +471,10 @@ void dll_200_render(GameObject* obj, int p1, int p2, int p3, int p4, s8 visible)
     {
         if ((u32)mainGetBit(0x2bd) == 0u)
             return;
-        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E5DC0);
+        objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
         return;
     }
-    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, lbl_803E5DC0);
+    objRenderModelAndHitVolumes((int)obj, p1, p2, p3, p4, 1.0f);
 }
 
 void dll_200_hitDetect_nop(void)
@@ -517,9 +510,9 @@ void dll_200_update(int obj)
                 (u8)(*(u8*)&((GameObject*)obj)->anim.resetHitboxMode | INTERACT_FLAG_DISABLED);
             if (((GameObject*)obj)->anim.currentMove != 2)
             {
-                ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
+                ObjAnim_SetCurrentMove(obj, 2, 0.0f, 0);
             }
-            ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D9C, (f32)(u32)framesThisStep,
+            ObjAnim_AdvanceCurrentMove((int)obj, 0.005f, (f32)(u32)framesThisStep,
                                                                          NULL);
             break;
         case 6:
@@ -552,8 +545,8 @@ void dll_200_init(int* obj, int* arg)
     state->mode = 1;
     state->prevMode = 0xc;
     state->modeTimer = 0x12c;
-    state->animSpeed = lbl_803E5D98;
-    state->unk14 = lbl_803E5DC0;
+    state->animSpeed = 0.0f;
+    state->unk14 = 1.0f;
 }
 
 void dll_200_release_nop(void)

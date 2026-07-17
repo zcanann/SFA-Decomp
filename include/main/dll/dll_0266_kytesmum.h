@@ -99,19 +99,12 @@ int kytesmum_updateNearPlayerCallback(GameObject* obj, int unused, u8* arg);
 int kytesmum_updateQuestStateCallback(GameObject* obj, int unused, u8* arg);
 void kytesmum_playAnimationEventSfx(int obj, u8* arg, s16* sfxData);
 
-extern f32 lbl_803E6994;
-extern f32 gKytesMumNearestSearchDist;
-extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
 extern const s32 gKytesMumQuestBits[3];
 extern const s32 gKytesMumTriggerIds[3];
 extern int gKytesMumQuestIdleSfxTable[];
-extern f32 gKytesMumFleeDistance;
-extern f32 lbl_803E698C;
-extern f32 lbl_803E6990;
 extern u8 gKytesMumMoveSets[];
 extern s16 gKytesMumRoamEventSfxTable[4];
 extern int lbl_803DC2D0;
-extern f32 lbl_803E699C;
 
 #endif /* MAIN_DLL_DLL_0266_KYTESMUM_H_ */
