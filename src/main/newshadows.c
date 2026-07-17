@@ -77,6 +77,11 @@ typedef struct
     u8 flags;
 } NewShadowCaster;
 
+typedef struct
+{
+    u16 packedXY;
+} NewShadowVectorTexel;
+
 #define NEW_SHADOW_MAX_QUEUED_CASTERS 300
 #define NEW_SHADOW_MAX_CASTERS 100
 #define NEW_SHADOW_MAX_CAST_TEXTURES 8
@@ -1852,7 +1857,8 @@ void fn_8006CB50(void)
                 fx = fx * s;
                 py = 127.0f * ny + 128.0f;
                 px = 127.0f * fx + 128.0f;
-                *(u16*)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
+                ((NewShadowVectorTexel*)(addr + 0x60))->packedXY =
+                    (u16)((int)px | (((int)py & 0xffff) << 8));
             }
         }
     }
