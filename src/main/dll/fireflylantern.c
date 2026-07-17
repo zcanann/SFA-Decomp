@@ -34,30 +34,7 @@
 
 #define FIREFLYLANTERN_HIT_VOLUME_SLOT 0xe
 
-extern void fn_8014C678(int obj, int* state, f32* vec, f32 a, f32 b, f32 c, int d);
-extern void fn_8014CD1C(int obj, int* state, int a, f32 x, f32 y, int b);
-extern void fn_8014CF7C(int obj, int* state, f32 x, f32 z, int a, int b);
-extern void fn_80154328(int obj, int* state);
 extern void fn_8015536C(f32* out, f32* axis, f32 a, f32 b);
-extern u32 lbl_803DBCD0;
-extern f32 lbl_803E2990;
-extern f32 lbl_803E2994;
-extern f32 lbl_803E29A0;
-extern f32 lbl_803E29A4;
-extern f32 lbl_803E29B0;
-extern f32 lbl_803E29B4;
-extern f32 lbl_803E29BC;
-extern f32 lbl_803E29C0;
-extern f32 lbl_803E29C4;
-extern f64 lbl_803E29C8;
-extern f32 lbl_803E29D0;
-extern f32 lbl_803E29D4;
-extern f32 lbl_803E29E0;
-extern f32 lbl_803E29E4;
-extern f32 lbl_803E29E8;
-extern f32 lbl_803E29EC;
-extern f32 lbl_803E29F0;
-extern f32 lbl_803E29F4;
 extern f32 gFireflyLanternPathStepScale;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
@@ -102,9 +79,9 @@ void fn_80154870(GameObject* obj, int* state)
         Sfx_PlayFromObject((u32)obj, SFXTRIG_windlift_loop);
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
-        ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || curve->atSegmentEnd != 0) &&
+        ((Curve_AdvanceAlongPath(curve, 0.0f) != 0 || curve->atSegmentEnd != 0) &&
          ((*gRomCurveInterface)->goNextPoint(curve) != 0)) &&
-        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, lbl_803E29B0, (int*)&lbl_803DBCD0, -1) !=
+        ((*gRomCurveInterface)->initCurve((RomCurveWalker*)*state, (void*)obj, 700.0f, (int*)&lbl_803DBCD0, -1) !=
          0))
     {
         *(u32*)&state[0xb7] &= ~0x2000LL;
@@ -112,54 +89,55 @@ void fn_80154870(GameObject* obj, int* state)
     ObjHits_SetHitVolumeSlot((ObjAnimComponent*)obj, FIREFLYLANTERN_HIT_VOLUME_SLOT, 1, 0);
     flag = playerGetFlags3F0Bit5((GameObject*)(Obj_GetPlayerObject()));
     dvec[0] = *(f32*)(state[0xa7] + 0xc) - (obj)->anim.localPosX;
-    dvec[1] = lbl_803E2990;
+    dvec[1] = 0.0f;
     dvec[2] = *(f32*)(state[0xa7] + 0x14) - (obj)->anim.localPosZ;
     if (((u32)state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject()))
     {
         *(u32*)&state[0xb9] |= 0x10000LL;
-        ((FireflyState*)state)->trackTimer = lbl_803E2990;
+        ((FireflyState*)state)->trackTimer = 0.0f;
     }
-    (obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
+    (obj)->anim.rotY = -(1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->seqEntryIndex) -
                          (f32)(obj)->anim.rotY);
     if (flag == 0)
     {
-        fval = lbl_803E2990;
+        fval = 0.0f;
         (obj)->anim.velocityX = fval;
         (obj)->anim.velocityZ = fval;
         curve = (RomCurveWalker*)state[0xa7];
-        fn_8014CF7C((int)obj, state, *(f32*)((u8*)curve + 0xc), *(f32*)((u8*)curve + 0x14), 10, 0);
+        ((void (*)(int, int*, f32, f32, int, int))fn_8014CF7C)((int)obj, state, *(f32*)((u8*)curve + 0xc),
+                                                                  *(f32*)((u8*)curve + 0x14), 10, 0);
     }
     else
     {
-        fn_8014C678((int)obj, state, dvec, lbl_803E29A0, lbl_803E29B4, *(f32*)&lbl_803E29B4, 1);
-        fn_8014CD1C((int)obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
+        ((void (*)(int, int*, f32*, f32, f32, f32, int))fn_8014C678)((int)obj, state, dvec, 2.0f, 0.1f, 0.1f, 1);
+        ((void (*)(int, int*, int, f32, f32, int))fn_8014CD1C)((int)obj, state, 0xf, 7.5f, 1.0f, 0);
     }
     if (state[0xb7] & 0x40000000U)
     {
-        fval = *(f32*)&lbl_803E2990;
+        fval = 0.0f;
         if (fval == ((FireflyState*)state)->breathTimer)
         {
             if (flag == 0)
             {
-                if ((obj)->anim.currentMoveProgress > lbl_803E29A4)
+                if ((obj)->anim.currentMoveProgress > 0.5f)
                 {
-                    ((FireflyState*)state)->breathTimer = lbl_803E29E0;
+                    ((FireflyState*)state)->breathTimer = 300.0f;
                     ((BaddieState*)state)->inWhirlpoolGroup += 1;
                 }
                 else
                 {
-                    ((FireflyState*)state)->breathTimer = lbl_803E29E4;
+                    ((FireflyState*)state)->breathTimer = 120.0f;
                 }
             }
-            else if ((obj)->anim.currentMoveProgress > lbl_803E29C8)
+            else if ((obj)->anim.currentMoveProgress > 0.5)
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
-                *(f32*)(state + 0xc2) = lbl_803E29D0;
+                *(f32*)(state + 0xc2) = -0.02f;
             }
             else
             {
                 Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
-                *(f32*)(state + 0xc2) = lbl_803E29D4;
+                *(f32*)(state + 0xc2) = 0.02f;
             }
         }
         else
@@ -168,23 +146,23 @@ void fn_80154870(GameObject* obj, int* state)
             if (((FireflyState*)state)->breathTimer <= fval)
             {
                 ((FireflyState*)state)->breathTimer = fval;
-                if ((obj)->anim.currentMoveProgress > lbl_803E29C8)
+                if ((obj)->anim.currentMoveProgress > 0.5)
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_hit);
-                    *(f32*)(state + 0xc2) = lbl_803E29D0;
+                    *(f32*)(state + 0xc2) = -0.02f;
                 }
                 else
                 {
                     Sfx_PlayFromObject((u32)obj, SFXTRIG_baddie_kooshy_death);
-                    *(f32*)(state + 0xc2) = lbl_803E29B4;
+                    *(f32*)(state + 0xc2) = 0.1f;
                 }
             }
         }
     }
     ((BaddieState*)state)->seqEntryIndex += 1;
-    (obj)->anim.rotY = (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
+    (obj)->anim.rotY = (1024.0f * fn_80293DA4(0.19634955f * (f32)(u32)((BaddieState*)state)->seqEntryIndex) +
                         (f32)(obj)->anim.rotY);
-    fn_80154328((int)obj, state);
+    ((void (*)(int, int*))fn_80154328)((int)obj, state);
 }
 #pragma opt_common_subs reset
 
@@ -193,26 +171,26 @@ void fn_80154C24(GameObject* obj, int state)
     float fval;
     u32 randVal;
 
-    ((BaddieState*)state)->speedScale = lbl_803E29E8;
+    ((BaddieState*)state)->speedScale = 40.0f;
     ((BaddieState*)state)->unk2E4 = 0x8000009;
-    ((BaddieState*)state)->unk308 = lbl_803E29D0;
-    ((BaddieState*)state)->animDeltaScale = lbl_803E29B4;
-    ((BaddieState*)state)->unk304 = lbl_803E29EC;
+    ((BaddieState*)state)->unk308 = -0.02f;
+    ((BaddieState*)state)->animDeltaScale = 0.1f;
+    ((BaddieState*)state)->unk304 = 0.97f;
     ((BaddieState*)state)->unk320 = 0;
-    fval = lbl_803E29F0;
-    *(float*)&((BaddieState*)state)->eventFlags = lbl_803E29F0;
+    fval = 1.5f;
+    *(float*)&((BaddieState*)state)->eventFlags = 1.5f;
     ((BaddieState*)state)->unk321 = 1;
-    ((BaddieState*)state)->unk318 = lbl_803E2994;
+    ((BaddieState*)state)->unk318 = 1.0f;
     ((BaddieState*)state)->unk322 = 0;
     ((BaddieState*)state)->unk31C = fval;
-    fval = lbl_803E2990;
+    fval = 0.0f;
     ((FireflyState*)state)->trackTimer = fval;
     ((FireflyState*)state)->breathTimer = fval;
     ((FireflyState*)state)->anchorY = obj->anim.localPosY;
     randVal = randomGetRange(0, 0xff);
     ((BaddieState*)state)->seqEntryIndex = randVal;
     ((BaddieState*)state)->inWhirlpoolGroup = 0;
-    ((FireflyState*)state)->unk330 = lbl_803E29F4;
+    ((FireflyState*)state)->unk330 = 30.0f;
     randVal = randomGetRange(0x32, 0x4b);
     fval = (f32)(s32)randVal;
     fval = gFireflyLanternPathStepScale * fval;

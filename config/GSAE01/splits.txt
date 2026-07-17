@@ -1369,12 +1369,10 @@ main/dll/weevil.c:
 	.text       start:0x80153CF8 end:0x80154328
 	.sdata2     start:0x803E2960 end:0x803E2968
 
-main/dll/fall_ladders.c:
-	.text       start:0x80154328 end:0x80154870
+main/dll/fallladdersgroup.c:
+	.text       start:0x80154328 end:0x80154FB4
 	.sdata      start:0x803DBCD0 end:0x803DBCD8
-
-main/dll/fireflylantern.c:
-	.text       start:0x80154870 end:0x80154FB4
+	.sdata2     start:0x803E2990 end:0x803E29F8
 
 main/dll/fireflylantern_steer.c:
 	.text       start:0x80154FB4 end:0x8015536C
