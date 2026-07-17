@@ -8,6 +8,7 @@
  * stubs are the mode's vtable no-ops.
  */
 #include "main/camera_object.h"
+#include "main/resource.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/game_object.h"
 #include "main/dll/player_motion.h"
@@ -173,7 +174,7 @@ void CameraModeForceBehind_initialise(void)
 {
 }
 
-u32 lbl_80319EC8[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeForceBehind_initialise, (u32)CameraModeForceBehind_release,
-        0x00000000, (u32)CameraModeForceBehind_init, (u32)CameraModeForceBehind_update,
-        (u32)CameraModeForceBehind_free, (u32)CameraModeForceBehind_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319EC8 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeForceBehind_initialise, (ResourceDescriptorCallback)CameraModeForceBehind_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeForceBehind_init, (ResourceDescriptorCallback)CameraModeForceBehind_update,
+        (ResourceDescriptorCallback)CameraModeForceBehind_free, (ResourceDescriptorCallback)CameraModeForceBehind_copyToCurrent, 0x00000000}};

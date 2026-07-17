@@ -8,6 +8,7 @@
  * cloning the orientation and field of view - then holds that pose fixed.
  */
 #include "main/camera_object.h"
+#include "main/resource.h"
 #include "main/object_transform.h"
 #include "main/dll/dll_004C_camDebug.h"
 
@@ -48,15 +49,15 @@ void CameraModeFixed_initialise(void)
 {
 }
 
-u32 lbl_80319D78[12] = {0x00000000,
+ResourceDescriptorCallbacks8 lbl_80319D78 = {{0x00000000,
                        0x00000000,
                        0x00000000,
-                       0x00060000,
-                       (u32)CameraModeFixed_initialise,
-                       (u32)CameraModeFixed_release,
+                       0x00060000},
+                      {(ResourceDescriptorCallback)CameraModeFixed_initialise,
+                       (ResourceDescriptorCallback)CameraModeFixed_release,
                        0x00000000,
-                       (u32)CameraModeFixed_init,
-                       (u32)CameraModeFixed_update,
-                       (u32)CameraModeFixed_free,
-                       (u32)CameraModeFixed_copyToCurrent,
-                       0x00000000};
+                       (ResourceDescriptorCallback)CameraModeFixed_init,
+                       (ResourceDescriptorCallback)CameraModeFixed_update,
+                       (ResourceDescriptorCallback)CameraModeFixed_free,
+                       (ResourceDescriptorCallback)CameraModeFixed_copyToCurrent,
+                       0x00000000}};

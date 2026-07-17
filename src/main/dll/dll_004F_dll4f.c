@@ -1,5 +1,6 @@
 /* DLL 0x004F - Camera mode misc handler [0x8010F2F8-0x8010F540). */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_trig_api.h"
 #include "main/curve.h"
 #include "main/camera_object.h"
@@ -80,7 +81,7 @@ void dll_4F_initialise_nop(void)
 {
 }
 
-u32 lbl_80319E38[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)dll_4F_initialise_nop, (u32)dll_4F_release_nop,
-        0x00000000, (u32)dll_4F_init, (u32)dll_4F_update,
-        (u32)dll_4F_func05, (u32)dll_4F_func06_nop, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319E38 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)dll_4F_initialise_nop, (ResourceDescriptorCallback)dll_4F_release_nop,
+        0x00000000, (ResourceDescriptorCallback)dll_4F_init, (ResourceDescriptorCallback)dll_4F_update,
+        (ResourceDescriptorCallback)dll_4F_func05, (ResourceDescriptorCallback)dll_4F_func06_nop, 0x00000000}};

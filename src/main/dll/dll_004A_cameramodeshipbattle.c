@@ -1,5 +1,6 @@
 /* DLL 0x4A - CameraModeShipBattle [8010BF08-8010C0D8) */
 #include "main/mm.h"
+#include "main/resource.h"
 
 #include "main/camera_object.h"
 #include "main/dll/CAM/camshipbattle_state.h"
@@ -187,15 +188,15 @@ void CameraModeShipBattle_initialise(void)
 {
 }
 
-u32 lbl_80319D18[12] = {0x00000000,
+ResourceDescriptorCallbacks8 lbl_80319D18 = {{0x00000000,
                        0x00000000,
                        0x00000000,
-                       0x00060000,
-                       (u32)CameraModeShipBattle_initialise,
-                       (u32)CameraModeShipBattle_release,
+                       0x00060000},
+                      {(ResourceDescriptorCallback)CameraModeShipBattle_initialise,
+                       (ResourceDescriptorCallback)CameraModeShipBattle_release,
                        0x00000000,
-                       (u32)CameraModeShipBattle_init,
-                       (u32)CameraModeShipBattle_update,
-                       (u32)CameraModeShipBattle_free,
-                       (u32)CameraModeShipBattle_copyToCurrent,
-                       0x00000000};
+                       (ResourceDescriptorCallback)CameraModeShipBattle_init,
+                       (ResourceDescriptorCallback)CameraModeShipBattle_update,
+                       (ResourceDescriptorCallback)CameraModeShipBattle_free,
+                       (ResourceDescriptorCallback)CameraModeShipBattle_copyToCurrent,
+                       0x00000000}};

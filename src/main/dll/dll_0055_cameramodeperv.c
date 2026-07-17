@@ -13,6 +13,7 @@
  * no-op stubs.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camperv_state.h"
@@ -75,7 +76,7 @@ void CameraModePerv_initialise(void)
 {
 }
 
-u32 lbl_80319F58[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModePerv_initialise, (u32)CameraModePerv_release,
-        0x00000000, (u32)CameraModePerv_init, (u32)CameraModePerv_update,
-        (u32)CameraModePerv_free, (u32)CameraModePerv_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319F58 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModePerv_initialise, (ResourceDescriptorCallback)CameraModePerv_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModePerv_init, (ResourceDescriptorCallback)CameraModePerv_update,
+        (ResourceDescriptorCallback)CameraModePerv_free, (ResourceDescriptorCallback)CameraModePerv_copyToCurrent, 0x00000000}};

@@ -14,6 +14,7 @@
  * callbacks referenced from the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/camera_object.h"
 #include "main/camera_interface.h"
@@ -195,7 +196,7 @@ void dll_54_initialise_nop(void)
 {
 }
 
-u32 dll_54[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)dll_54_initialise_nop, (u32)dll_54_release_nop,
-        0x00000000, (u32)dll_54_init, (u32)dll_54_update,
-        (u32)dll_54_func05, (u32)dll_54_func06_nop, 0x00000000};
+ResourceDescriptorCallbacks8 dll_54 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)dll_54_initialise_nop, (ResourceDescriptorCallback)dll_54_release_nop,
+        0x00000000, (ResourceDescriptorCallback)dll_54_init, (ResourceDescriptorCallback)dll_54_update,
+        (ResourceDescriptorCallback)dll_54_func05, (ResourceDescriptorCallback)dll_54_func06_nop, 0x00000000}};

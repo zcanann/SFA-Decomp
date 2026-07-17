@@ -13,6 +13,7 @@
  * empty mode-table slots shared with the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
@@ -81,7 +82,7 @@ void CameraModeCannon_initialise(void)
 {
 }
 
-u32 lbl_80319E98[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeCannon_initialise, (u32)CameraModeCannon_release,
-        0x00000000, (u32)CameraModeCannon_init, (u32)CameraModeCannon_update,
-        (u32)CameraModeCannon_free, (u32)CameraModeCannon_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319E98 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeCannon_initialise, (ResourceDescriptorCallback)CameraModeCannon_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeCannon_init, (ResourceDescriptorCallback)CameraModeCannon_update,
+        (ResourceDescriptorCallback)CameraModeCannon_free, (ResourceDescriptorCallback)CameraModeCannon_copyToCurrent, 0x00000000}};

@@ -11,6 +11,7 @@
  *
  */
 #include "main/dll/cameramodetitlepose_struct.h"
+#include "main/resource.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/dll_0015_save_settings.h"
@@ -241,17 +242,17 @@ CameraModeTitlePose gCamTitlePoseTable[5] = {
 };
 
 /* descriptor/ptr table auto 0x8031a01c-0x8031a0e0 */
-u32 lbl_8031A01C[11] = {0x00000000,
+ResourceDescriptorCallbacks7 lbl_8031A01C = {{0x00000000,
                         0x00000000,
                         0x00000000,
-                        0x00060000,
-                        (u32)CameraModeTitle_initialise,
-                        (u32)CameraModeTitle_release,
+                        0x00060000},
+                       {(ResourceDescriptorCallback)CameraModeTitle_initialise,
+                        (ResourceDescriptorCallback)CameraModeTitle_release,
                         0x00000000,
-                        (u32)CameraModeTitle_init,
-                        (u32)CameraModeTitle_update,
-                        (u32)CameraModeTitle_loadVolumes,
-                        (u32)CameraModeTitle_moveCam};
+                        (ResourceDescriptorCallback)CameraModeTitle_init,
+                        (ResourceDescriptorCallback)CameraModeTitle_update,
+                        (ResourceDescriptorCallback)CameraModeTitle_loadVolumes,
+                        (ResourceDescriptorCallback)CameraModeTitle_moveCam}};
 u32 lbl_8031A048[3] = {0x00000000, 0x00000000, 0x00000000};
 u32 lbl_8031A054[3] = {0x00000000, 0x00000000, 0x00000000};
 u32 dll_19[32] = {0x00000000,

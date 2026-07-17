@@ -14,6 +14,7 @@
  * Most of the mode's vtable slots are empty no-op stubs.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "main/dll/player_api.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
@@ -174,7 +175,7 @@ void CameraModeCloudRunner_initialise(void)
 {
 }
 
-u32 lbl_80319EF8[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeCloudRunner_initialise, (u32)CameraModeCloudRunner_release,
-        0x00000000, (u32)CameraModeCloudRunner_init, (u32)CameraModeCloudRunner_update,
-        (u32)CameraModeCloudRunner_free, (u32)CameraModeCloudRunner_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319EF8 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeCloudRunner_initialise, (ResourceDescriptorCallback)CameraModeCloudRunner_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeCloudRunner_init, (ResourceDescriptorCallback)CameraModeCloudRunner_update,
+        (ResourceDescriptorCallback)CameraModeCloudRunner_free, (ResourceDescriptorCallback)CameraModeCloudRunner_copyToCurrent, 0x00000000}};

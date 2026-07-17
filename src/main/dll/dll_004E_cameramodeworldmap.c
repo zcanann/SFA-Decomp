@@ -18,6 +18,7 @@
  * gates entry to each mode.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "main/object_api.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/dll/CAM/camworldmap_state.h"
@@ -432,7 +433,7 @@ void CameraModeWorldMap_initialise(void)
 {
 }
 
-u32 lbl_80319E08[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeWorldMap_initialise, (u32)CameraModeWorldMap_release,
-        0x00000000, (u32)CameraModeWorldMap_init, (u32)CameraModeWorldMap_update,
-        (u32)CameraModeWorldMap_free, (u32)CameraModeWorldMap_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319E08 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeWorldMap_initialise, (ResourceDescriptorCallback)CameraModeWorldMap_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeWorldMap_init, (ResourceDescriptorCallback)CameraModeWorldMap_update,
+        (ResourceDescriptorCallback)CameraModeWorldMap_free, (ResourceDescriptorCallback)CameraModeWorldMap_copyToCurrent, 0x00000000}};

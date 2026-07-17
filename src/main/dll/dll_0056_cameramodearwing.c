@@ -1,5 +1,5 @@
 /*
- * DLL 0x56 — camera mode "arwing" [80110E30-801115E4)
+ * DLL 0x56 - camera mode "arwing" [80110E30-801115E4)
  *
  * Camera mode that follows the Arwing flight vehicle. Shared work state lives
  * in the global gCamArwingWork (CameraArwingWork): _init seeds the camera offset
@@ -15,6 +15,7 @@
  * initialise / per-mode nops) this DLL leaves unimplemented.
  */
 #include "main/camera_interface.h"
+#include "main/resource.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/frame_timing.h"
 #include "main/game_object.h"
@@ -271,7 +272,7 @@ void CameraModeArwing_initialise(void)
 {
 }
 
-u32 lbl_80319F88[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeArwing_initialise, (u32)CameraModeArwing_release,
-        0x00000000, (u32)CameraModeArwing_init, (u32)CameraModeArwing_update,
-        (u32)CameraModeArwing_free, (u32)CameraModeArwing_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319F88 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeArwing_initialise, (ResourceDescriptorCallback)CameraModeArwing_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeArwing_init, (ResourceDescriptorCallback)CameraModeArwing_update,
+        (ResourceDescriptorCallback)CameraModeArwing_free, (ResourceDescriptorCallback)CameraModeArwing_copyToCurrent, 0x00000000}};

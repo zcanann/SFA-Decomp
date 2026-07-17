@@ -18,6 +18,7 @@
  * camera's local frame.
  */
 #include "main/dll/CAM/camclimb_state.h"
+#include "main/resource.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/mm.h"
 #include "main/camera_interface.h"
@@ -237,15 +238,15 @@ void CameraModeClimb_initialise(void)
 {
 }
 
-u32 lbl_80319D48[12] = {0x00000000,
+ResourceDescriptorCallbacks8 lbl_80319D48 = {{0x00000000,
                        0x00000000,
                        0x00000000,
-                       0x00060000,
-                       (u32)CameraModeClimb_initialise,
-                       (u32)CameraModeClimb_release,
+                       0x00060000},
+                      {(ResourceDescriptorCallback)CameraModeClimb_initialise,
+                       (ResourceDescriptorCallback)CameraModeClimb_release,
                        0x00000000,
-                       (u32)CameraModeClimb_init,
-                       (u32)CameraModeClimb_update,
-                       (u32)CameraModeClimb_free,
-                       (u32)CameraModeClimb_copyToCurrent,
-                       0x00000000};
+                       (ResourceDescriptorCallback)CameraModeClimb_init,
+                       (ResourceDescriptorCallback)CameraModeClimb_update,
+                       (ResourceDescriptorCallback)CameraModeClimb_free,
+                       (ResourceDescriptorCallback)CameraModeClimb_copyToCurrent,
+                       0x00000000}};

@@ -1,5 +1,6 @@
 /* DLL 0x0049 (cameramodecombat) - Camera mode combat handlers [0x8010BF08-0x8010CEC0). */
 #include "main/camera_interface.h"
+#include "main/resource.h"
 #include "dolphin/mtx/mtx_legacy.h"
 #include "main/camera.h"
 #include "main/dll/CAM/camcombat_state.h"
@@ -542,15 +543,15 @@ void CameraModeCombat_initialise(void)
 {
 }
 
-u32 lbl_80319CE8[12] = {0x00000000,
+ResourceDescriptorCallbacks8 lbl_80319CE8 = {{0x00000000,
                         0x00000000,
                         0x00000000,
-                        0x00060000,
-                        (u32)CameraModeCombat_initialise,
-                        (u32)CameraModeCombat_release,
+                        0x00060000},
+                       {(ResourceDescriptorCallback)CameraModeCombat_initialise,
+                        (ResourceDescriptorCallback)CameraModeCombat_release,
                         0x00000000,
-                        (u32)CameraModeCombat_init,
-                        (u32)CameraModeCombat_update,
-                        (u32)CameraModeCombat_free,
-                        (u32)CameraModeCombat_copyToCurrent,
-                        0x00000000};
+                        (ResourceDescriptorCallback)CameraModeCombat_init,
+                        (ResourceDescriptorCallback)CameraModeCombat_update,
+                        (ResourceDescriptorCallback)CameraModeCombat_free,
+                        (ResourceDescriptorCallback)CameraModeCombat_copyToCurrent,
+                        0x00000000}};

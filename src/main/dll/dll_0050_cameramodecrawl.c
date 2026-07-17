@@ -17,6 +17,7 @@
  * shared with the sibling camera-mode DLLs.
  */
 #include "main/mm.h"
+#include "main/resource.h"
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
 #include "main/frame_timing.h"
@@ -166,7 +167,7 @@ void CameraModeCrawl_initialise(void)
 {
 }
 
-u32 lbl_80319E68[12] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeCrawl_initialise, (u32)CameraModeCrawl_release,
-        0x00000000, (u32)CameraModeCrawl_init, (u32)CameraModeCrawl_update,
-        (u32)CameraModeCrawl_free, (u32)CameraModeCrawl_copyToCurrent, 0x00000000};
+ResourceDescriptorCallbacks8 lbl_80319E68 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeCrawl_initialise, (ResourceDescriptorCallback)CameraModeCrawl_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeCrawl_init, (ResourceDescriptorCallback)CameraModeCrawl_update,
+        (ResourceDescriptorCallback)CameraModeCrawl_free, (ResourceDescriptorCallback)CameraModeCrawl_copyToCurrent, 0x00000000}};

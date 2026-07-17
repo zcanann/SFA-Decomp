@@ -14,6 +14,7 @@
  * shared orbit-position solver used by both.
  */
 #include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/resource.h"
 #include "main/game_object.h"
 #include "dolphin/MSL_C/PPCEABI/bare/H/math_api.h"
 #include "main/mm.h"
@@ -80,10 +81,10 @@ void CameraModeNpcSpeak_initialise(void)
 {
 }
 
-u32 lbl_80319DA8[11] = {0x00000000, 0x00000000, 0x00000000, 0x00060000,
-        (u32)CameraModeNpcSpeak_initialise, (u32)CameraModeNpcSpeak_release,
-        0x00000000, (u32)CameraModeNpcSpeak_init, (u32)CameraModeNpcSpeak_update,
-        (u32)CameraModeNpcSpeak_free, (u32)CameraModeNpcSpeak_copyToCurrent};
+ResourceDescriptorCallbacks7 lbl_80319DA8 = {{0x00000000, 0x00000000, 0x00000000, 0x00060000},
+        {(ResourceDescriptorCallback)CameraModeNpcSpeak_initialise, (ResourceDescriptorCallback)CameraModeNpcSpeak_release,
+        0x00000000, (ResourceDescriptorCallback)CameraModeNpcSpeak_init, (ResourceDescriptorCallback)CameraModeNpcSpeak_update,
+        (ResourceDescriptorCallback)CameraModeNpcSpeak_free, (ResourceDescriptorCallback)CameraModeNpcSpeak_copyToCurrent}};
 
 void CameraModeNpcSpeak_init(u8* obj, int unused, u8* initData)
 {
