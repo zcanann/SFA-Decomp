@@ -66,6 +66,121 @@ __declspec(section ".sdata2") f32 lbl_803E3030 = 6.0f;
 __declspec(section ".sdata2") f32 gStaffActionBoundsSearchRadius = 1e+06f;
 __declspec(section ".sdata2") f32 lbl_803E3038 = 0.014f;
 
+typedef struct StaffBits
+{
+    u8 hi : 4;
+    u8 b3 : 1;
+    u8 b2 : 1;
+    u8 b1 : 1;
+    u8 b0 : 1;
+} StaffBits;
+
+u32 fn_801659B8(s16* obj, u32* params);
+void fn_80165B3C(GameObject* obj, int state);
+void fn_80166840(GameObject* obj, int state, f32* hit, f32* end);
+void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend);
+void fn_80166444(int obj, int state);
+void fn_80166E38(f32* out, f32* forward, f32* up);
+void fn_80167550(GameObject* obj, GameObject* otherObj);
+
+u32 fn_801659B8(s16* obj, u32* params)
+{
+    LandedArwingState* state;
+    GameObject* o;
+
+    o = (GameObject*)obj;
+
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&o->extra)->control;
+    *(u8*)((int)params + 0x34d) = 1;
+    if (*(s8*)((int)params + 0x27a) != 0)
+    {
+        state->speed = lbl_803E3004;
+        ObjHits_EnableObject((u32)o);
+        o->anim.velocityX = -(state->speed) * fsin16Precise((u16)*(s16*)o);
+        o->anim.velocityY = lbl_803E2FDC;
+        o->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*(s16*)o);
+        *params |= 0x2004000;
+        ObjAnim_SetCurrentMove((int)o, 0, lbl_803E2FDC, 0);
+        state->animSpeed = lbl_803E2FDC;
+    }
+    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)o, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
+    *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
+    *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject((int)o);
+    (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
+    if (*(s8*)((int)params + 0x27a) != 0)
+    {
+        if (state->surfaceMode == 6)
+        {
+            if (((state->flags92 >> 2) & 1) != 0u)
+            {
+                fn_80165B3C(o, (int)state);
+            }
+            else
+            {
+                fn_80166444((int)o, (int)state);
+            }
+        }
+        else
+        {
+            landedarwing_moveSurfaceCrawler(obj, state);
+        }
+    }
+    return 0;
+}
+
+void fn_80165B3C(GameObject* obj, int state)
+{
+    f32 radius;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 start[3];
+    f32 end[3];
+    TrackQueryBounds bounds;
+    struct
+    {
+        f32 hit[16];
+        f32 hitRadius;
+        u8 pad[0x10];
+        u8 hitType;
+        u8 pad2[0x1f];
+    } hitScratch;
+    f32 damping;
+    int hitFound;
+
+    radius = lbl_803E3020;
+    (obj)->anim.velocityY = (obj)->anim.velocityY - lbl_803E2FF4;
+    (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = gStaffActionVelocityDamping);
+    (obj)->anim.velocityY = (obj)->anim.velocityY * damping;
+    (obj)->anim.velocityZ = (obj)->anim.velocityZ * damping;
+    start[0] = (obj)->anim.localPosX;
+    start[1] = (obj)->anim.localPosY;
+    start[2] = (obj)->anim.localPosZ;
+    end[0] = start[0] + (obj)->anim.velocityX;
+    end[1] = start[1] + (obj)->anim.velocityY;
+    end[2] = start[2] + (obj)->anim.velocityZ;
+    hitScratch.hitRadius = lbl_803E2FDC;
+    hitScratch.hitType = 3;
+    hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
+    hitDetectFn_800691c0(obj, &bounds, 0, 1);
+    hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
+    if (hitFound != 0)
+    {
+        {
+            int zero = 0;
+            ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = zero;
+        }
+        fn_80166840(obj, state, hitScratch.hit, end);
+    }
+    else
+    {
+        (obj)->anim.localPosX = end[0];
+        (obj)->anim.localPosY = end[1];
+        (obj)->anim.localPosZ = end[2];
+    }
+}
+
 void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
 {
     int headingAngle;
@@ -370,350 +485,6 @@ void landedarwing_moveSurfaceCrawler(short* obj, LandedArwingState* state)
     return;
 }
 
-void dll_D3_hitDetect_nop(void)
-{
-}
-
-int dll_D3_getExtraSize_ret_1188(void)
-{
-    return 0x4a4;
-}
-int dll_D3_getObjectTypeId(void)
-{
-    return 0x49;
-}
-
-void dll_D3_free(int obj)
-{
-    int* inner = ((GameObject*)obj)->extra;
-    ObjGroup_RemoveObject(obj, STAFFACTION_OBJGROUP);
-    if (((GameObject*)obj)->childObjs[0] != NULL)
-    {
-        Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
-        *(int*)&((GameObject*)obj)->childObjs[0] = 0;
-    }
-    (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
-}
-
-typedef struct StaffBits
-{
-    u8 hi : 4;
-    u8 b3 : 1;
-    u8 b2 : 1;
-    u8 b1 : 1;
-    u8 b0 : 1;
-} StaffBits;
-#pragma dont_inline on
-void fn_80166E38(f32* out, f32* forward, f32* up)
-{
-    f32 rt[3];
-    f32 upRecomputed[3];
-    f32 fwd[3];
-    fwd[0] = forward[0];
-    fwd[1] = forward[1];
-    fwd[2] = forward[2];
-    Vec3_Normalize(fwd);
-    Vec3_Cross(up, fwd, rt);
-    Vec3_Normalize(rt);
-    Vec3_Cross(rt, fwd, upRecomputed);
-    Vec3_Normalize(upRecomputed);
-    {
-        f32(*mat)[4] = (f32(*)[4])out;
-        mat[0][0] = -rt[0];
-        mat[0][1] = -rt[1];
-        mat[0][2] = -rt[2];
-        mat[1][0] = -upRecomputed[0];
-        mat[1][1] = -upRecomputed[1];
-        mat[1][2] = -upRecomputed[2];
-        mat[2][0] = -fwd[0];
-        mat[2][1] = -fwd[1];
-        mat[2][2] = -fwd[2];
-    }
-}
-#pragma dont_inline reset
-
-void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
-{
-    int state;
-    f32* slideMtx;
-    f32 mtx[15];
-    f32 scale;
-
-    state = (int)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
-    slideMtx = (f32*)(state + 4);
-    if (visible != 0)
-    {
-        switch ((obj)->userData1)
-        {
-        case 0:
-            if ((((LandedArwingState*)state)->surfaceMode == 6) &&
-                ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
-            {
-                if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
-                {
-                    fn_80166E38(slideMtx, &(obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
-                }
-                scale = (obj)->anim.rootMotionScale;
-                initRotationMtx(mtx, scale, scale, scale);
-                mtx44_mult(mtx, slideMtx, mtx);
-                mtx[12] = (obj)->anim.localPosX - playerMapOffsetX;
-                mtx[13] = (obj)->anim.localPosY;
-                mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
-                fn_8003B950((f32*)mtx);
-                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
-                fn_8003B950(0);
-            }
-            else
-            {
-                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
-            }
-            break;
-        }
-    }
-}
-
-u32 fn_801659B8(s16* obj, u32* params)
-{
-    LandedArwingState* state;
-    GameObject* o;
-
-    o = (GameObject*)obj;
-
-    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&o->extra)->control;
-    *(u8*)((int)params + 0x34d) = 1;
-    if (*(s8*)((int)params + 0x27a) != 0)
-    {
-        state->speed = lbl_803E3004;
-        ObjHits_EnableObject((u32)o);
-        o->anim.velocityX = -(state->speed) * fsin16Precise((u16)*(s16*)o);
-        o->anim.velocityY = lbl_803E2FDC;
-        o->anim.velocityZ = -(state->speed) * fcos16Precise((u16)*(s16*)o);
-        *params |= 0x2004000;
-        ObjAnim_SetCurrentMove((int)o, 0, lbl_803E2FDC, 0);
-        state->animSpeed = lbl_803E2FDC;
-    }
-    ObjHits_SetHitVolumeSlot((ObjAnimComponent*)o, STAFFACTION_HIT_VOLUME_SLOT, 1, -1);
-    *(u8*)(*(int*)&o->anim.hitReactState + 0x6c) = 9;
-    *(u8*)(*(int*)&o->anim.hitReactState + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject((int)o);
-    (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
-    if (*(s8*)((int)params + 0x27a) != 0)
-    {
-        if (state->surfaceMode == 6)
-        {
-            if (((state->flags92 >> 2) & 1) != 0u)
-            {
-                fn_80165B3C(o, (int)state);
-            }
-            else
-            {
-                fn_80166444((int)o, (int)state);
-            }
-        }
-        else
-        {
-            landedarwing_moveSurfaceCrawler(obj, state);
-        }
-    }
-    return 0;
-}
-
-void fn_80165B3C(GameObject* obj, int state)
-{
-    f32 radius;
-    f32 dx;
-    f32 dy;
-    f32 dz;
-    f32 start[3];
-    f32 end[3];
-    TrackQueryBounds bounds;
-    struct
-    {
-        f32 hit[16];
-        f32 hitRadius;
-        u8 pad[0x10];
-        u8 hitType;
-        u8 pad2[0x1f];
-    } hitScratch;
-    f32 damping;
-    int hitFound;
-
-    radius = lbl_803E3020;
-    (obj)->anim.velocityY = (obj)->anim.velocityY - lbl_803E2FF4;
-    (obj)->anim.velocityX = (obj)->anim.velocityX * (damping = gStaffActionVelocityDamping);
-    (obj)->anim.velocityY = (obj)->anim.velocityY * damping;
-    (obj)->anim.velocityZ = (obj)->anim.velocityZ * damping;
-    start[0] = (obj)->anim.localPosX;
-    start[1] = (obj)->anim.localPosY;
-    start[2] = (obj)->anim.localPosZ;
-    end[0] = start[0] + (obj)->anim.velocityX;
-    end[1] = start[1] + (obj)->anim.velocityY;
-    end[2] = start[2] + (obj)->anim.velocityZ;
-    hitScratch.hitRadius = lbl_803E2FDC;
-    hitScratch.hitType = 3;
-    hitDetect_calcSweptSphereBounds(&bounds, start, end, &radius, 1);
-    hitDetectFn_800691c0(obj, &bounds, 0, 1);
-    hitFound = hitDetectFn_80067958((GameObject*)obj, start, end, 1, hitScratch.hit, 0x20);
-    if (hitFound != 0)
-    {
-        {
-            int zero = 0;
-            ((StaffBits*)&((LandedArwingState*)state)->flags92)->b2 = zero;
-        }
-        fn_80166840(obj, state, hitScratch.hit, end);
-    }
-    else
-    {
-        (obj)->anim.localPosX = end[0];
-        (obj)->anim.localPosY = end[1];
-        (obj)->anim.localPosZ = end[2];
-    }
-}
-
-void fn_80166840(GameObject* obj, int state, f32* hit, f32* end)
-{
-    f32 speed;
-    f32 planeX;
-    f32 planeZ;
-    f32 planeY;
-    f32 planeW;
-    f32 response[3];
-    f32 plane[4];
-    f32 scale;
-    f32 velX;
-    f32 velY;
-    f32 velZ;
-    f32 stateX;
-    f32 stateY;
-    f32 stateZ;
-    f32 objX;
-    f32 objY;
-    f32 objZ;
-    f32 len;
-
-    scale = lbl_803E3020;
-    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + (objX = obj->anim.localPosX);
-    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + (objY = obj->anim.localPosY);
-    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + (objZ = obj->anim.localPosZ);
-    velX = scale * obj->anim.velocityX + objX;
-    velY = scale * obj->anim.velocityY + objY;
-    velZ = scale * obj->anim.velocityZ + objZ;
-    planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
-    planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
-    planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
-    len = sqrtf(planeZ * planeZ + (planeX * planeX + planeY * planeY));
-    if (len > lbl_803E2FDC)
-    {
-        len = lbl_803E2FF4 / len;
-        planeX *= len;
-        planeY *= len;
-        planeZ *= len;
-    }
-    planeW = -(stateZ * planeZ + (stateX * planeX + stateY * planeY));
-    plane[0] = planeX;
-    plane[1] = planeY;
-    plane[2] = planeZ;
-    plane[3] = planeW;
-    Vec3_Cross(plane, hit, response);
-    Vec3_Normalize(response);
-    speed = lbl_803E3004;
-    obj->anim.velocityX = lbl_803E3004 * response[0];
-    obj->anim.velocityY = speed * response[1];
-    obj->anim.velocityZ = speed * response[2];
-    ((LandedArwingState*)state)->surfaceNormalX = hit[0];
-    ((LandedArwingState*)state)->surfaceNormalY = hit[1];
-    ((LandedArwingState*)state)->surfaceNormalZ = hit[2];
-    ((LandedArwingState*)state)->surfacePlaneD = hit[3];
-    obj->anim.localPosX = end[0] + ((LandedArwingState*)state)->surfaceNormalX;
-    obj->anim.localPosY = end[1] + ((LandedArwingState*)state)->surfaceNormalY;
-    obj->anim.localPosZ = end[2] + ((LandedArwingState*)state)->surfaceNormalZ;
-}
-
-void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend)
-{
-    LandedArwingState* state;
-    int mode;
-    f32 vx;
-    f32 vy;
-    f32 vz;
-    f32 len;
-    f32 scale;
-    f32 dot;
-
-    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
-    if ((u32)(state->flags92 >> 2 & 1) == 0)
-    {
-        vx = targetX - (obj)->anim.localPosX;
-        vy = targetY - (obj)->anim.localPosY;
-        vz = targetZ - (obj)->anim.localPosZ;
-        len = sqrtf(vz * vz + (vx * vx + vy * vy));
-        if (len >= lbl_803E2FDC)
-        {
-            scale = state->speed / len;
-            vx *= scale;
-            vy *= scale;
-            vz *= scale;
-        }
-        vx = blend * (vx - (obj)->anim.velocityX) + (obj)->anim.velocityX;
-        vy = blend * (vy - (obj)->anim.velocityY) + (obj)->anim.velocityY;
-        vz = blend * (vz - (obj)->anim.velocityZ) + (obj)->anim.velocityZ;
-        mode = state->surfaceMode;
-        switch (mode)
-        {
-        case 0:
-        case 1:
-            vx = 0.0f;
-            len = sqrtf(vy * vy + vz * vz);
-            if (len != lbl_803E2FDC)
-            {
-                scale = state->speed / len;
-                vy *= scale;
-                vz *= scale;
-            }
-            break;
-        case 2:
-        case 3:
-            vz = 0.0f;
-            len = sqrtf(vx * vx + vy * vy);
-            if (len != lbl_803E2FDC)
-            {
-                scale = state->speed / len;
-                vx *= scale;
-                vy *= scale;
-            }
-            break;
-        case 4:
-        case 5:
-            vy = 0.0f;
-            len = sqrtf(vx * vx + vz * vz);
-            if (len != lbl_803E2FDC)
-            {
-                scale = state->speed / len;
-                vx *= scale;
-                vz *= scale;
-            }
-            break;
-        case 6:
-            dot = vz * state->surfaceNormalZ + (vx * state->surfaceNormalX + vy * state->surfaceNormalY);
-            vx = -(dot * state->surfaceNormalX - vx);
-            vy = -(dot * state->surfaceNormalY - vy);
-            vz = -(dot * state->surfaceNormalZ - vz);
-            len = sqrtf(vz * vz + (vx * vx + vy * vy));
-            if (len != lbl_803E2FDC)
-            {
-                scale = state->speed / len;
-                vx *= scale;
-                vy *= scale;
-                vz *= scale;
-            }
-            break;
-        }
-        (obj)->anim.velocityX = vx;
-        (obj)->anim.velocityY = vy;
-        (obj)->anim.velocityZ = vz;
-    }
-}
-
 void fn_80166444(int obj, int state)
 {
     f32 one;
@@ -838,6 +609,245 @@ void fn_80166444(int obj, int state)
         }
     }
     ((StaffBits*)&((LandedArwingState*)state)->flags92)->b3 = 1;
+}
+
+void fn_80166840(GameObject* obj, int state, f32* hit, f32* end)
+{
+    f32 speed;
+    f32 planeX;
+    f32 planeZ;
+    f32 planeY;
+    f32 planeW;
+    f32 response[3];
+    f32 plane[4];
+    f32 scale;
+    f32 velX;
+    f32 velY;
+    f32 velZ;
+    f32 stateX;
+    f32 stateY;
+    f32 stateZ;
+    f32 objX;
+    f32 objY;
+    f32 objZ;
+    f32 len;
+
+    scale = lbl_803E3020;
+    stateX = scale * ((LandedArwingState*)state)->surfaceNormalX + (objX = obj->anim.localPosX);
+    stateY = scale * ((LandedArwingState*)state)->surfaceNormalY + (objY = obj->anim.localPosY);
+    stateZ = scale * ((LandedArwingState*)state)->surfaceNormalZ + (objZ = obj->anim.localPosZ);
+    velX = scale * obj->anim.velocityX + objX;
+    velY = scale * obj->anim.velocityY + objY;
+    velZ = scale * obj->anim.velocityZ + objZ;
+    planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
+    planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
+    planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
+    len = sqrtf(planeZ * planeZ + (planeX * planeX + planeY * planeY));
+    if (len > lbl_803E2FDC)
+    {
+        len = lbl_803E2FF4 / len;
+        planeX *= len;
+        planeY *= len;
+        planeZ *= len;
+    }
+    planeW = -(stateZ * planeZ + (stateX * planeX + stateY * planeY));
+    plane[0] = planeX;
+    plane[1] = planeY;
+    plane[2] = planeZ;
+    plane[3] = planeW;
+    Vec3_Cross(plane, hit, response);
+    Vec3_Normalize(response);
+    speed = lbl_803E3004;
+    obj->anim.velocityX = lbl_803E3004 * response[0];
+    obj->anim.velocityY = speed * response[1];
+    obj->anim.velocityZ = speed * response[2];
+    ((LandedArwingState*)state)->surfaceNormalX = hit[0];
+    ((LandedArwingState*)state)->surfaceNormalY = hit[1];
+    ((LandedArwingState*)state)->surfaceNormalZ = hit[2];
+    ((LandedArwingState*)state)->surfacePlaneD = hit[3];
+    obj->anim.localPosX = end[0] + ((LandedArwingState*)state)->surfaceNormalX;
+    obj->anim.localPosY = end[1] + ((LandedArwingState*)state)->surfaceNormalY;
+    obj->anim.localPosZ = end[2] + ((LandedArwingState*)state)->surfaceNormalZ;
+}
+
+void updateConstrainedChaseVelocity(GameObject* obj, f32 targetX, f32 targetY, f32 targetZ, f32 blend)
+{
+    LandedArwingState* state;
+    int mode;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+    f32 len;
+    f32 scale;
+    f32 dot;
+
+    state = (LandedArwingState*)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
+    if ((u32)(state->flags92 >> 2 & 1) == 0)
+    {
+        vx = targetX - (obj)->anim.localPosX;
+        vy = targetY - (obj)->anim.localPosY;
+        vz = targetZ - (obj)->anim.localPosZ;
+        len = sqrtf(vz * vz + (vx * vx + vy * vy));
+        if (len >= lbl_803E2FDC)
+        {
+            scale = state->speed / len;
+            vx *= scale;
+            vy *= scale;
+            vz *= scale;
+        }
+        vx = blend * (vx - (obj)->anim.velocityX) + (obj)->anim.velocityX;
+        vy = blend * (vy - (obj)->anim.velocityY) + (obj)->anim.velocityY;
+        vz = blend * (vz - (obj)->anim.velocityZ) + (obj)->anim.velocityZ;
+        mode = state->surfaceMode;
+        switch (mode)
+        {
+        case 0:
+        case 1:
+            vx = *(f32*)&lbl_803E2FDC;
+            len = sqrtf(vy * vy + vz * vz);
+            if (len != lbl_803E2FDC)
+            {
+                scale = state->speed / len;
+                vy *= scale;
+                vz *= scale;
+            }
+            break;
+        case 2:
+        case 3:
+            vz = *(f32*)&lbl_803E2FDC;
+            len = sqrtf(vx * vx + vy * vy);
+            if (len != lbl_803E2FDC)
+            {
+                scale = state->speed / len;
+                vx *= scale;
+                vy *= scale;
+            }
+            break;
+        case 4:
+        case 5:
+            vy = *(f32*)&lbl_803E2FDC;
+            len = sqrtf(vx * vx + vz * vz);
+            if (len != lbl_803E2FDC)
+            {
+                scale = state->speed / len;
+                vx *= scale;
+                vz *= scale;
+            }
+            break;
+        case 6:
+            dot = vz * state->surfaceNormalZ + (vx * state->surfaceNormalX + vy * state->surfaceNormalY);
+            vx = -(dot * state->surfaceNormalX - vx);
+            vy = -(dot * state->surfaceNormalY - vy);
+            vz = -(dot * state->surfaceNormalZ - vz);
+            len = sqrtf(vz * vz + (vx * vx + vy * vy));
+            if (len != lbl_803E2FDC)
+            {
+                scale = state->speed / len;
+                vx *= scale;
+                vy *= scale;
+                vz *= scale;
+            }
+            break;
+        }
+        (obj)->anim.velocityX = vx;
+        (obj)->anim.velocityY = vy;
+        (obj)->anim.velocityZ = vz;
+    }
+}
+
+int dll_D3_getExtraSize_ret_1188(void)
+{
+    return 0x4a4;
+}
+
+int dll_D3_getObjectTypeId(void)
+{
+    return 0x49;
+}
+
+void dll_D3_free(int obj)
+{
+    int* inner = ((GameObject*)obj)->extra;
+    ObjGroup_RemoveObject(obj, STAFFACTION_OBJGROUP);
+    if (((GameObject*)obj)->childObjs[0] != NULL)
+    {
+        Obj_FreeObject(((GameObject*)obj)->childObjs[0]);
+        *(int*)&((GameObject*)obj)->childObjs[0] = 0;
+    }
+    (*(void (*)(int, int*, int))(*(int*)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
+}
+
+void dll_D3_render(GameObject* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int state;
+    f32* slideMtx;
+    f32 mtx[15];
+    f32 scale;
+
+    state = (int)((GroundBaddieState*)*(int*)&(obj)->extra)->control;
+    slideMtx = (f32*)(state + 4);
+    if (visible != 0)
+    {
+        switch ((obj)->userData1)
+        {
+        case 0:
+            if ((((LandedArwingState*)state)->surfaceMode == 6) &&
+                ((((u32)((LandedArwingState*)state)->flags92 >> 3) & 1) != 0))
+            {
+                if ((((u32)((LandedArwingState*)state)->flags92 >> 2) & 1) == 0)
+                {
+                    fn_80166E38(slideMtx, &(obj)->anim.velocityX, &((LandedArwingState*)state)->surfaceNormalX);
+                }
+                scale = (obj)->anim.rootMotionScale;
+                initRotationMtx(mtx, scale, scale, scale);
+                mtx44_mult(mtx, slideMtx, mtx);
+                mtx[12] = (obj)->anim.localPosX - playerMapOffsetX;
+                mtx[13] = (obj)->anim.localPosY;
+                mtx[14] = (obj)->anim.localPosZ - playerMapOffsetZ;
+                fn_8003B950((f32*)mtx);
+                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
+                fn_8003B950(0);
+            }
+            else
+            {
+                objRenderModelAndHitVolumesFwdLegacy(obj, p2, p3, p4, p5, lbl_803E2FF4);
+            }
+            break;
+        }
+    }
+}
+
+#pragma dont_inline on
+void fn_80166E38(f32* out, f32* forward, f32* up)
+{
+    f32 rt[3];
+    f32 upRecomputed[3];
+    f32 fwd[3];
+    fwd[0] = forward[0];
+    fwd[1] = forward[1];
+    fwd[2] = forward[2];
+    Vec3_Normalize(fwd);
+    Vec3_Cross(up, fwd, rt);
+    Vec3_Normalize(rt);
+    Vec3_Cross(rt, fwd, upRecomputed);
+    Vec3_Normalize(upRecomputed);
+    {
+        f32(*mat)[4] = (f32(*)[4])out;
+        mat[0][0] = -rt[0];
+        mat[0][1] = -rt[1];
+        mat[0][2] = -rt[2];
+        mat[1][0] = -upRecomputed[0];
+        mat[1][1] = -upRecomputed[1];
+        mat[1][2] = -upRecomputed[2];
+        mat[2][0] = -fwd[0];
+        mat[2][1] = -fwd[1];
+        mat[2][2] = -fwd[2];
+    }
+}
+#pragma dont_inline reset
+
+void dll_D3_hitDetect_nop(void)
+{
 }
 
 #include "main/dll/treasurechest_state.h"
@@ -1071,6 +1081,16 @@ void dll_D3_init(GameObject* obj, int def, int flag)
     extra->unk_40 = fz;
 }
 
+void fn_80167550(GameObject* obj, GameObject* otherObj)
+{
+    int* state = obj->extra;
+    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
+}
+
+void dll_D3_release_nop(void)
+{
+}
+
 void dll_D3_initialise(void)
 {
     gLandedArwingStateHandlers[0] = fn_801659B8;
@@ -1079,14 +1099,4 @@ void dll_D3_initialise(void)
     gLandedArwingStateHandlers[3] = LandedArwing_UpdateBounceFade;
     gLandedArwingStateHandlers[4] = LandedArwing_TriggerLaunchTarget;
     gLandedArwingDefaultStateHandler = LandedArwing_ReturnZero;
-}
-
-void dll_D3_release_nop(void)
-{
-}
-
-void fn_80167550(GameObject* obj, GameObject* otherObj)
-{
-    int* state = obj->extra;
-    ((void (*)(int*, int*, int))((void**)*gPlayerInterface)[5])((int*)obj, state, 2);
 }
