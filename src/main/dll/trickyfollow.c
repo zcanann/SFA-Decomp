@@ -89,7 +89,7 @@ extern int isPointWithinPatchGroup(f32* pos, int walkGroup, u32 patch);
 extern int trickyMove(u8* obj, void* moveState);
 extern void trickyRankLinkedRouteCandidates(u8* obj, u8* flags, int walkGroup, int* routes);
 extern int trickyFindReachableRouteIndex(u8* state, int* routes, u8* flags, u16 group);
-extern u8* trickySelectRouteEntry(u8* state, void* route, u8 dir);
+extern void* trickySelectRouteEntry(u8* state, u8* routeDef, u32 routeFlagValue);
 extern int fn_800DA980(RomCurveWalker* route, void* fromNode, void* toNode, void* targetNode);
 extern void RomCurve_stepClamped(RomCurveWalker* state, f32 dt);
 extern void trickyAdvanceRouteTargetAhead(u8* obj, RomCurveWalker* route, f32 speed);
